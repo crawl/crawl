@@ -45,7 +45,7 @@ ENDMAP
 
 # Outer ring subvaults
 NAME:   evilmike_ambush_outer_basic
-TAGS:   evilmike_ambush_outer allow_dup
+TAGS:   evilmike_ambush_outer allow_dup unrand
 WEIGHT: 25
 SUBST:  G : Gx..
 SUBST:  x : xcbwnm
@@ -65,7 +65,7 @@ G       G
 ENDMAP
 
 NAME:    evilmike_ambush_outer_pillars
-TAGS:    evilmike_ambush_outer allow_dup
+TAGS:    evilmike_ambush_outer allow_dup unrand
 SHUFFLE: x.
 SUBST:   x : xxxccvvbmG
 : if you.in_branch("Dis") then
@@ -84,7 +84,7 @@ x       x
 ENDMAP
 
 NAME:    evilmike_ambush_outer_corners
-TAGS:    evilmike_ambush_outer allow_dup
+TAGS:    evilmike_ambush_outer allow_dup unrand
 SUBST:   y : x., x : xxxcccvvbm
 MAP
  xy...yx
@@ -99,7 +99,7 @@ xx     xx
 ENDMAP
 
 NAME:    evilmike_ambush_outer_doors
-TAGS:    evilmike_ambush_outer allow_dup
+TAGS:    evilmike_ambush_outer allow_dup unrand
 WEIGHT:  5
 SHUFFLE: +D
 SUBST:   D : +x

@@ -25,9 +25,9 @@ function init_research(e, disc)
   e.tags('patrolling')
   e.weight('1')
   if you.in_branch("Elf") then
-     e.kmons('0 = deep elf mage w:20 / deep elf knight w:5 / deep elf archer w:5')
+     e.kmons('0 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / deep elf archer w:5')
   else
-     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf mage')
+     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
   end
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')
@@ -114,7 +114,7 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_geology
-MONS:    basilisk, earth elemental, gargoyle / catoblepas
+MONS:    basilisk, earth elemental, boulder beetle / catoblepas
 KMONS:   D = iron dragon
 COLOUR:  .x012345D = brown
 FTILE:   .+x012345D = floor_pebble_brown
@@ -156,7 +156,7 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_thanatology
-MONS:    macabre mass hd:4 / small abomination
+MONS:    small abomination
 MONS:    place:Depths:$ skeleton, ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
@@ -180,11 +180,10 @@ ENDMAP
 
 NAME:    hangedman_research_metamorphosis
 MONS:    wolf spider, ice beast, vampire bat, hog
-MONS:    insubstantial wisp, porcupine
 KMONS:   D = fire dragon
-COLOUR:  .0123456D = lightmagenta
-FTILE:   .n+0123456D = floor_nerves
-SHUFFLE: 1234, 56
+COLOUR:  .01234D = lightmagenta
+FTILE:   .n+01234D = floor_nerves
+SHUFFLE: 1234
 : init_research(_G, 'transmutation')
 MAP
 @'''@'''@
@@ -192,14 +191,14 @@ abcd+dcba
 b.n...n.b
 c1n...n2c
 d3nn.nn4d
-a.0.5.0.a
+a.0...0.a
 b.nnnnn.b
-c.6.D.6.c
+c.0.D.0.c
 dcbadacbd
 ENDMAP
 
 NAME:   hangedman_research_quantum
-MONS:   insubstantial wisp w:7 / blink frog / jumping spider w:7, spatial vortex
+MONS:   blink frog / jumping spider w:7, spatial vortex
 KMONS:  D = eldritch tentacle
 MARKER: D = lua:fog_machine { cloud_type = "translocational energy", \
             pow_min = 3, pow_max = 10, delay = 50, size = 1, walk_dist = 1 }

@@ -21,7 +21,7 @@ SetCompressor /SOLID lzma
 Name "${DCSS} ${VERSION}"
 Outfile "stone_soup-${VERSION}-${WINARCH}-installer.exe"
 XPStyle on
-!define MUI_ICON util\crawl.ico
+!define MUI_ICON dat\tiles\stone_soup_icon.ico
 
 !define MUI_ABORTWARNING
 

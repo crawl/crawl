@@ -63,6 +63,7 @@
 #include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -176,22 +177,6 @@ bool EquipOffDelay::try_interrupt()
             && !yesno("Keep disrobing?", false, 0, false))
         {
             mprf("You stop removing your %s.", _eq_category(equip).c_str());
-            return true;
-        }
-        else
-            was_prompted = true;
-    }
-    return false;
-}
-
-bool BlurryScrollDelay::try_interrupt()
-{
-    if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep reading the scroll?", false, 0, false))
-        {
-            mpr("You stop reading the scroll.");
             return true;
         }
         else
@@ -360,29 +345,6 @@ static command_type _get_running_command()
     return direction_to_command(you.running.pos.x, you.running.pos.y);
 }
 
-/**
- * Can the player currently read the given scroll?
- *
- * Prints corresponding messages if the answer is false.
- *
- * @param inv_slot      The scroll in question.
- * @return              false if the player is confused, berserk, silenced,
- *                      etc; true otherwise.
- */
-static bool _can_read_scroll(const item_def& scroll)
-{
-    // prints its own messages
-    if (!player_can_read())
-        return false;
-
-    const string illiteracy_reason = cannot_read_item_reason(scroll);
-    if (illiteracy_reason.empty())
-        return true;
-
-    mpr(illiteracy_reason);
-    return false;
-}
-
 void clear_macro_process_key_delay()
 {
     if (dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
@@ -420,11 +382,6 @@ void PasswallDelay::start()
 void ShaftSelfDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
-}
-
-void BlurryScrollDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin reading the scroll.");
 }
 
 void ExsanguinateDelay::start()
@@ -487,6 +444,31 @@ void BaseRunDelay::handle()
         if (want_clear_messages())
             clear_messages();
         process_command(cmd);
+        if (you.turn_is_over
+            && (you.running.is_any_travel() || you.running.is_rest()))
+        {
+            you.running.turns_passed++;
+            // sanity check: if we get up to a large number of turns on
+            // an explore, run, or rest delay, something is extremely buggy
+            // and we should both rescue the player, and generate a crash
+            // report. The thresholds are very heuristic:
+            // Rest delay, 500 turns. This is a bit more than 2x what it takes
+            // a maxed troll to heal.
+            // Travel delay, 2000. Just a big number that is quite a bit
+            // bigger than any travel delay I have been able to generate. If
+            // anyone can generate this on demand it should be raised. (Or
+            // eventually, removed?)
+            // For debuggers: runmode if negative is a meaningful delay type,
+            // but when positive is used as a counter, so if it's a very large
+            // number in the assert message, this is a wait delay
+
+            const int buggy_threshold = you.running.is_rest()
+                ? 500
+                : (ZOT_CLOCK_PER_FLOOR / BASELINE_DELAY / 3);
+            ASSERTM(you.running.turns_passed < buggy_threshold,
+                    "Excessive delay, %d turns passed, delay type %d",
+                    you.running.turns_passed, you.running.runmode);
+        }
     }
 
     if (!you.turn_is_over)
@@ -537,16 +519,6 @@ bool MultidropDelay::invalidated()
     {
         // Ran out of things to drop.
         you.turn_is_over = false;
-        you.time_taken = 0;
-        return true;
-    }
-    return false;
-}
-
-bool BlurryScrollDelay::invalidated()
-{
-    if (!_can_read_scroll(scroll))
-    {
         you.time_taken = 0;
         return true;
     }
@@ -650,17 +622,12 @@ void JewelleryOnDelay::finish()
 #ifdef USE_SOUND
     parse_sound(WEAR_JEWELLERY_SOUND);
 #endif
-    puton_ring(jewellery, false, false);
+    puton_ring(jewellery, false, false, true);
 }
 
 void EquipOnDelay::finish()
 {
     const unsigned int old_talents = your_talents(false).size();
-
-    set_ident_flags(equip, ISFLAG_IDENT_MASK);
-    if (is_artefact(equip))
-        equip.flags |= ISFLAG_NOTED_ID;
-
     const bool is_amulet = equip.base_type == OBJ_JEWELLERY;
     const equipment_type eq_slot = is_amulet ? EQ_AMULET :
                                                get_armour_slot(equip);
@@ -670,15 +637,6 @@ void EquipOnDelay::finish()
         parse_sound(EQUIP_ARMOUR_SOUND);
 #endif
     mprf("You finish putting on %s.", equip.name(DESC_YOUR).c_str());
-
-    if (eq_slot == EQ_BODY_ARMOUR)
-    {
-        if (you.duration[DUR_ICY_ARMOUR] != 0
-            && !is_effectively_light_armour(&equip))
-        {
-            remove_ice_armour();
-        }
-    }
 
     equip_item(eq_slot, equip.link);
 
@@ -711,6 +669,7 @@ void MemoriseDelay::finish()
     mpr("You finish memorising.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);
+    quiver::on_actions_changed();
 }
 
 void PasswallDelay::finish()
@@ -721,7 +680,7 @@ void PasswallDelay::finish()
     if (dest.x == 0 || dest.y == 0)
         return;
 
-    switch (grd(dest))
+    switch (env.grid(dest))
     {
     default:
         if (!you.is_habitable(dest))
@@ -780,23 +739,6 @@ void PasswallDelay::finish()
 void ShaftSelfDelay::finish()
 {
     you.do_shaft_ability();
-}
-
-void BlurryScrollDelay::finish()
-{
-    // Make sure the scroll still exists, the player isn't confused, etc
-    if (_can_read_scroll(scroll))
-    {
-        read_scroll(scroll);
-        // we are now probably out of sync with regular world_reacts timing, so
-        // trigger any fineffs that might have been caused by reading this
-        // scroll, e.g. torment vs. TRJ. Otherwise they'd have to wait until
-        // the next world_reacts.
-        // TODO: is there a more general condition that this can be triggered
-        // under? it might impact other obscure cases, e.g. passwalling with
-        // spiny.
-        fire_final_effects();
-    }
 }
 
 void DropItemDelay::finish()
@@ -878,6 +820,7 @@ void run_macro(const char *macroname)
             --delay->duration;
     }
 #else
+    mprf(MSGCH_ERROR, "CLua bindings not available on this build!");
     UNUSED(macroname);
     stop_delay();
 #endif
@@ -889,7 +832,6 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
                                               activity_interrupt ai,
                                               const activity_interrupt_data &at)
 {
-#ifdef CLUA_BINDINGS
     lua_State *ls = clua.state();
     if (!ls || ai == activity_interrupt::force)
         return MB_TRUE;
@@ -918,9 +860,6 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
     {
         return MB_TRUE;
     }
-#else
-    UNUSED(_activity_interrupt_name);
-#endif
     return MB_MAYBE;
 }
 
@@ -1168,7 +1107,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             }
         }
         if (you.has_mutation(MUT_SCREAM)
-            && x_chance_in_y(3 + you.get_mutation_level(MUT_SCREAM) * 3, 100))
+            && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100))
         {
             yell(mon);
         }
@@ -1268,6 +1207,7 @@ bool interrupt_activity(activity_interrupt ai,
         _monster_warning(ai, at, delay, msgs_buf);
         // Teleport stops stair delays.
         stop_delay(ai == activity_interrupt::teleport);
+        quiver::set_needs_redraw();
 
         return true;
     }
@@ -1280,6 +1220,7 @@ bool interrupt_activity(activity_interrupt ai,
     {
         if (_should_stop_activity(you.delay_queue[i].get(), ai, at))
         {
+            quiver::set_needs_redraw();
             // Do we have a queued run delay? If we do, flush the delay queue
             // so that stop running Lua notifications happen.
             for (int j = i; j < size; ++j)
@@ -1305,7 +1246,7 @@ bool interrupt_activity(activity_interrupt ai,
 // Must match the order of activity_interrupt.h!
 static const char *activity_interrupt_names[] =
 {
-    "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "hungry", "message",
+    "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
     "sense_monster", "mimic"
 };

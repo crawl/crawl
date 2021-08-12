@@ -24,8 +24,8 @@ ENDMAP
 NAME: david_orc_1_choice
 TAGS: orc_entry
 MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
-ITEM: % / scroll of teleportation / scroll of remove curse / scroll of identify
-ITEM: % / w:2 * / scroll of blinking / scroll of fear
+ITEM: % / scroll of teleportation ident:type / scroll of identify ident:type
+ITEM: % / w:2 * / scroll of blinking ident:type / scroll of fear ident:type
 SHUFFLE: %1
 ORIENT: float
 KFEAT: O = enter_orcish_mines
@@ -190,8 +190,9 @@ MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM:   1 = gold w:5 / nothing / animal skin / \
-             potion of degeneration w:20 / potion of haste w:2 / \
-             potion of might w:2
+             potion of degeneration ident:type w:20 / \
+             potion of haste ident:type w:2 / \
+             potion of might ident:type w:2
 KFEAT:   1 = 1
 ITEM:    club, potion of degeneration ident:type, gold w:5
 ITEM:    gold w:2 / nothing, potion of degeneration ident:type
@@ -527,7 +528,7 @@ NAME:   kennysheep_orc_monster_closet_entryway
 TAGS:   orc_entry
 KFEAT:  O = enter_orcish_mines
 MONS:   gnoll / gnoll sergeant / orc warrior / orc w:15 /\
-                big kobold / ogre
+                kobold brigand / ogre
 MONS:   troll
 MAP
 xxxxxxx
@@ -680,8 +681,8 @@ MONS:    patrolling orc warlord
 MONS:    patrolling orc sorcerer
 MONS:    patrolling orc high priest
 MONS:    deep elf knight / deep elf archer
-MONS:    deep elf mage / nothing
-MONS:    deep elf mage / nothing w:20
+MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:20
+MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:40
 ITEM:    good_item scimitar / good_item chain mail
 SUBST:   = : +x
 MAP
@@ -937,10 +938,10 @@ ENDMAP
 NAME:   rock_pile
 TAGS:   no_item_gen no_monster_gen transparent
 DEPTH:  Orc
-MONS:   orc ; hunting sling . stone q:30
+MONS:   orc ; hunting sling . stone q:30, boulder beetle
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
-NSUBST: b = 6:1 / *:d
+NSUBST: b = 1:2 / 5:1 / *:d
 SUBST:  1 = 1 .
 MAP
      . .
@@ -1720,7 +1721,7 @@ MONS: nothing w:20 / fungus
 SUBST: . = ..4
 NSUBST: 3 = 5:3 / 1:I / 4:P / *:.
 SUBST: P = .4
-: if is_validating() then
+: if is_validating() or dgn.persist.grunt_orc_gardens_store == nil then
 KFEAT: A = any shop
 : else
 : kfeat("A = " .. dgn.persist.grunt_orc_gardens_store)
@@ -1983,7 +1984,7 @@ MONS: gelid demonspawn / infernal demonspawn / \
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
 KFEAT: A = w:20 general shop / distillery shop / scroll shop
-KFEAT: B = book shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = antique weapon shop / antique armour shop
 KFEAT: P = enter_pandemonium
 TILE:  c = wall_stone_dark
@@ -2028,7 +2029,7 @@ KMONS:  4 = Erolcha / ogre mage, ogre mage
 KMONS:  5 = Nergalle / orc sorcerer, orc sorcerer
 NSUBST: . = 8:1 / 16:2 / 8:3
 KFEAT:  A = distillery shop / scroll shop
-KFEAT:  B = book shop / gadget shop
+KFEAT:  B = book shop / jewellery shop
 KFEAT:  C = antique weapon shop / antique armour shop
 NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
 KFEAT:  ' = floor

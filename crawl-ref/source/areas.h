@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum class area_centre_type
 {
     none,

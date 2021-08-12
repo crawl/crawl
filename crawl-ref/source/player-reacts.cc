@@ -173,7 +173,8 @@ static void _decrement_petrification(int delay)
     {
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
-        // flesh when not petrified
+        // flesh when not petrified. (Unfortunately, species::skin_name doesn't
+        // really work here..)
         const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
                                             "flesh" :
                                             get_form()->flesh_equivalent;
@@ -197,11 +198,21 @@ static void _decrement_petrification(int delay)
             // magical, inluding tengu, as there's no flapping of wings. Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
-            you.fully_petrify(nullptr);
+            you.fully_petrify();
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");
     }
+}
+
+static void _decrement_attraction(int delay)
+{
+    if (!you.duration[DUR_ATTRACTIVE])
+        return;
+
+    attract_monsters();
+    if (_decrement_a_duration(DUR_ATTRACTIVE, delay))
+        mpr("You feel less attractive to monsters.");
 }
 
 static void _decrement_paralysis(int delay)
@@ -425,6 +436,7 @@ void player_reacts_to_monsters()
         detect_items(-1);
     }
 
+    _decrement_attraction(you.time_taken);
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
@@ -456,6 +468,7 @@ static bool _check_recite()
     {
         mprf(MSGCH_DURATION, "Your recitation is interrupted.");
         you.duration[DUR_RECITE] = 0;
+        you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
         return false;
     }
     return true;
@@ -494,6 +507,7 @@ static void _handle_recitation(int step)
                 speech << ' ' << closure;
         }
         mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
+        you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
     }
 }
 
@@ -572,11 +586,12 @@ static void _decrement_durations()
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != transformation::bat
+    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
+        || you.form != transformation::bat
         || you.transform_uncancellable)
     {
         if (form_can_fly()
-            || form_likes_water() && feat_is_water(grd(you.pos())))
+            || form_likes_water() && feat_is_water(env.grid(you.pos())))
         {
             // Disable emergency flight if it was active
             you.props.erase(EMERGENCY_FLIGHT_KEY);
@@ -660,13 +675,13 @@ static void _decrement_durations()
         disjunction_spell();
 
     // Should expire before flight.
-    if (you.duration[DUR_TORNADO])
+    if (you.duration[DUR_VORTEX])
     {
-        tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
-        if (_decrement_a_duration(DUR_TORNADO, delay,
+        polar_vortex_damage(&you, min(delay, you.duration[DUR_VORTEX]));
+        if (_decrement_a_duration(DUR_VORTEX, delay,
                                   "The winds around you start to calm down."))
         {
-            you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
+            you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);
         }
     }
 
@@ -688,7 +703,6 @@ static void _decrement_durations()
         else if ((you.duration[DUR_FLIGHT] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
             you.duration[DUR_FLIGHT] = 0;
             you.props.erase(EMERGENCY_FLIGHT_KEY);
         }
@@ -773,7 +787,7 @@ static void _decrement_durations()
     }
 
     if (!you.duration[DUR_ANCESTOR_DELAY]
-        && in_good_standing(GOD_HEPLIAKLQANA)
+        && have_passive(passive_t::frail)
         && hepliaklqana_ancestor() == MID_NOBODY)
     {
         _try_to_respawn_ancestor();
@@ -823,24 +837,21 @@ static void _update_equipment_attunement_by_health()
     vector<string> eq_list;
     bool plural = false;
 
-    if (!you.activated[EQ_AMULET] && you.wearing(EQ_AMULET, AMU_REGENERATION))
-    {
-        eq_list.push_back("amulet");
-        you.activated.set(EQ_AMULET);
-    }
-
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
     {
         if (you.melded[slot] || you.equip[slot] == -1 || you.activated[slot])
             continue;
         const item_def &arm = you.inv[you.equip[slot]];
-        if (armour_type_prop(arm.sub_type, ARMF_REGENERATION)
-            || is_artefact(arm) && artefact_property(arm, ARTP_REGENERATION))
+        if (is_artefact(arm) && artefact_property(arm, ARTP_REGENERATION)
+            || arm.base_type == OBJ_ARMOUR
+               && armour_type_prop(arm.sub_type, ARMF_REGENERATION)
+            || arm.is_type(OBJ_JEWELLERY, AMU_REGENERATION))
         {
-            eq_list.push_back(
+            eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
+                slot == EQ_AMULET ? "amulet" :
                 slot != EQ_BODY_ARMOUR ?
                     item_slot_name(static_cast<equipment_type>(slot)) :
-                    is_artefact(arm) ? get_artefact_name(arm) : "armour");
+                    "armour");
 
             if (slot == EQ_GLOVES || slot == EQ_BOOTS)
                 plural = true;
@@ -959,9 +970,6 @@ void player_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-    if (you.has_mutation(MUT_DEMONIC_GUARDIAN))
-        check_demonic_guardian();
-
     if (you.unrand_reacts.any())
         unrand_reacts();
 
@@ -984,8 +992,6 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == transformation::wisp && !you.stasis())
-            uncontrolled_blink();
     }
 
     abyss_maybe_spawn_xp_exit();
@@ -995,10 +1001,6 @@ void player_reacts()
 
     if (env.level_state & LSTATE_SLIMY_WALL)
         slime_wall_damage(&you, you.time_taken);
-
-    // Icy shield and armour melt over lava.
-    if (grd(you.pos()) == DNGN_LAVA)
-        maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
     _decrement_durations();
 
@@ -1015,7 +1017,6 @@ void player_reacts()
 
     _regenerate_hp_and_mp(you.time_taken);
 
-    dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

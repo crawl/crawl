@@ -15,6 +15,8 @@
 #include "recite-type.h"
 #include "spl-cast.h"
 
+class dist;
+
 #define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
 #define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
@@ -46,6 +48,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_BRIBE_AMOUNT 3000
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
+#define GOZAG_MAX_SHOPS 3
 
 #define USKAYAW_AUDIENCE_TIMER "uskayaw_audience_timer"
 #define USKAYAW_BOND_TIMER "uskayaw_bond_timer"
@@ -56,6 +59,14 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define WU_JIAN_HEAVENLY_STORM_KEY "wu_jian_heavenly_storm_amount"
 #define WU_JIAN_HEAVENLY_STORM_INITIAL 5
 #define WU_JIAN_HEAVENLY_STORM_MAX 15
+
+#define AVAILABLE_CURSE_KEY "available_curses"
+#define CURSE_KNOWLEDGE_KEY "current_curse_offer"
+
+#define ASHENZARI_CURSE_PROGRESS_KEY "ashenzari_progress_to_next_curse"
+#define ASHENZARI_CURSE_DELAY_KEY "ashenzari_curse_delay"
+#define ASHENZARI_BASE_PIETY 2
+#define ASHENZARI_PIETY_SCALE 168
 
 struct bolt;
 class stack_iterator;
@@ -105,7 +116,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
 bool kiku_take_corpse();
-bool kiku_gift_necronomicon();
+bool kiku_gift_capstone_spells();
 
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
@@ -118,16 +129,20 @@ void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
 bool cheibriados_slouch();
 void cheibriados_time_step(int pow);
-bool ashenzari_transfer_knowledge();
-bool ashenzari_end_transfer(bool finished = false, bool force = false);
-bool ashenzari_curse_item(int num_rc);
+
+void ashenzari_offer_new_curse();
+bool ashenzari_curse_item();
+bool ashenzari_uncurse_item();
+string desc_curse_skills(const CrawlStoreValue& curse);
+string curse_abbr(const CrawlStoreValue& curse);
+string curse_name(const CrawlStoreValue& curse);
+const vector<skill_type>& curse_skills(const CrawlStoreValue& curse);
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
 
-int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
@@ -141,7 +156,7 @@ bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
 spret qazlal_upheaval(coord_def target, bool quiet = false,
-                           bool fail = false);
+                           bool fail = false, dist *player_target=nullptr);
 spret qazlal_elemental_force(bool fail);
 bool qazlal_disaster_area();
 
@@ -162,9 +177,6 @@ int cell_has_valid_target(coord_def where);
 bool ru_apocalypse();
 string ru_sacrifice_vector(ability_type sac);
 
-int pakellas_effective_hex_power(int pow);
-int pakellas_surge_devices();
-
 bool uskayaw_stomp();
 bool uskayaw_line_pass();
 spret uskayaw_grand_finale(bool fail);
@@ -179,3 +191,6 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret);
 bool wu_jian_do_wall_jump(coord_def targ);
 spret wu_jian_wall_jump_ability();
 void wu_jian_heavenly_storm();
+
+void okawaru_remove_heroism();
+void okawaru_remove_finesse();

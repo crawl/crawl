@@ -23,16 +23,17 @@ int: 10
 dex: 7
 levelup_stat_frequency: 5
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
+  - SPF_NO_BONES
 mutations:
   1:
     MUT_CAMOUFLAGE: 1
     MUT_GELATINOUS_BODY: 1
+    MUT_NIMBLE_SWIMMER: 1
+    MUT_TENTACLE_ARMS: 1
 fake_mutations:
   - long: You cannot wear most types of armour.
     short: almost no armour
-  - long: You are very stealthy in the water. (Stealth+)
-    short: stealthy swim
 recommended_jobs:
   - JOB_TRANSMUTER
   - JOB_WIZARD

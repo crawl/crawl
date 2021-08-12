@@ -16,10 +16,15 @@ also fine. If this is an offline game or an issue with the build process,
 please include your OS and OS version; if this is an online game please
 include your browser and version.*
 
-**DCSS VERSION:**
+**DCSS VERSION AND GAME INFORMATION:**
 *e.g. "0.18", ""0.19-a0-1891-ge1d1fe8". If you can launch the game, you can
 find this information by pressing ?v; the version will be at the top of the
-screen. If not, check the changelog in the 'docs' directory.*
+screen. If not, check the changelog in the 'docs' directory. If this is
+a vault issue, it will be particularly helpful to provide the game seed (found
+in the morgue after a completed game) and identify the dungeon level, so that
+we can reproduce it. If relevant, please provide the server and username.
+For online play, a morgue link for a completed game will give all of this
+information.*
 
 **DESCRIPTION:**
 *What happened? What went wrong? What else was going on at the time of the

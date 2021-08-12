@@ -518,7 +518,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\files.cc" />
     <ClCompile Include="..\fineff.cc" />
     <ClCompile Include="..\fontwrapper-ft.cc" />
-    <ClCompile Include="..\food.cc" />
     <ClCompile Include="..\format.cc" />
     <ClCompile Include="..\fprop.cc" />
     <ClCompile Include="..\game-options.cc" />
@@ -563,7 +562,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\l-dgntil.cc" />
     <ClCompile Include="..\l-feat.cc" />
     <ClCompile Include="..\l-file.cc" />
-    <ClCompile Include="..\l-food.cc" />
     <ClCompile Include="..\l-global.cc" />
     <ClCompile Include="..\l-item.cc" />
     <ClCompile Include="..\l-los.cc" />
@@ -582,6 +580,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\melee-attack.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
+    <ClCompile Include="..\mon-explode.cc" />
     <ClCompile Include="..\movement.cc" />
     <ClCompile Include="..\ng-setup.cc" />
     <ClCompile Include="..\ng-wanderer.cc" />
@@ -726,7 +725,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\spl-miscast.cc" />
     <ClCompile Include="..\spl-monench.cc" />
     <ClCompile Include="..\spl-other.cc" />
-    <ClCompile Include="..\spl-pick.cc" />
     <ClCompile Include="..\spl-selfench.cc" />
     <ClCompile Include="..\spl-summoning.cc" />
     <ClCompile Include="..\spl-tornado.cc" />
@@ -875,7 +873,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\command.h" />
     <ClInclude Include="..\compflag.h" />
     <ClInclude Include="..\conduct-type.h" />
-    <ClInclude Include="..\confirm-butcher-type.h" />
     <ClInclude Include="..\confirm-prompt-type.h" />
     <ClInclude Include="..\coord-circle.h" />
     <ClInclude Include="..\coord.h" />
@@ -947,7 +944,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\flood-find.h" />
     <ClInclude Include="..\flush-reason-type.h" />
     <ClInclude Include="..\fontwrapper-ft.h" />
-    <ClInclude Include="..\food.h" />
     <ClInclude Include="..\form-data.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\fprop.h" />
@@ -1042,6 +1038,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-death.h" />
     <ClInclude Include="..\mon-ench.h" />
     <ClInclude Include="..\mon-enum.h" />
+    <ClInclude Include="..\mon-explode.h" />
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-gear.h" />
     <ClInclude Include="..\mon-grow.h" />
@@ -1168,7 +1165,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\spl-miscast.h" />
     <ClInclude Include="..\spl-monench.h" />
     <ClInclude Include="..\spl-other.h" />
-    <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\spl-selfench.h" />
     <ClInclude Include="..\spl-summoning.h" />
     <ClInclude Include="..\spl-transloc.h" />

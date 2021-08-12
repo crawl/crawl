@@ -9,53 +9,36 @@ tree2
 tree3
 tree4
 tree5
-%weight 2
 tree6
-tree6_bright
-%weight 10
 tree7
 tree8
-%weight 6
 tree9
-%weight 10
 tree10
 tree11
-%weight 3
 tree12
-%weight 7
 tree13
-%weight 2
-tree14
-tree14a
-tree14b
-tree14c
-%weight 4
-tree15
-tree15a
-tree16
-%weight 10
 
 %variation DNGN_TREE yellow
-tree1_yellow DNGN_TREE_YELLOW
-tree2_yellow
-%weight 2
-tree6_yellow
-%weight 10
+tree_fall1 DNGN_TREE_YELLOW
+tree_fall4
+tree_fall5
+tree_fall9
 
 %variation DNGN_TREE lightred
-tree1_lightred DNGN_TREE_LIGHTRED
-tree2_lightred
+tree_fall2 DNGN_TREE_LIGHTRED
+tree_fall3
 
 %variation DNGN_TREE red
-tree1_red DNGN_TREE_RED
-tree2_red
-tree7_red
-tree10_red
+tree_fall6 DNGN_TREE_RED
+tree_fall7
+tree_fall8
 
-# this may need to change, but it should make things a bit simpler
-%variation DNGN_TREE darkgray
-tree1_dead DNGN_TREE_DEAD
-tree2_dead
+%variation DNGN_TREE brown
+tree_dead1 DNGN_TREE_DEAD
+tree_dead2
+tree_dead3
+tree_dead4
+tree_dead5
 
 %weight 10
 mangrove1 DNGN_MANGROVE
@@ -64,6 +47,30 @@ mangrove2
 %weight 5
 mangrove3
 
+tree_petrified1 DNGN_PETRIFIED_TREE
+tree_petrified2
+tree_petrified3
+
+tree_demonic1 DNGN_DEMONIC_TREE
+tree_demonic2
+tree_demonic3
+tree_demonic4
+tree_demonic5
+tree_demonic6
+tree_demonic7
+tree_demonic8
+tree_demonic9
+tree_demonic10
+tree_demonic11
+tree_demonic12
+tree_demonic13
+tree_demonic14
+tree_demonic15
+tree_demonic16
+
+# We put the berserk icon on the dngn tilesheet for rendering purposes.
+%sdir misc/icons
+berserk AWOKEN_OVERLAY
 
 ## doors
 %sdir dngn/doors
@@ -225,7 +232,7 @@ statue_iron DNGN_STATUE_IRON
 gravestone_blank DNGN_GRAVESTONE
 gravestone_writing1
 gravestone_writing2
-gravestone_ornate DNGN_GRAVESTONE_ORNATE
+zshrine DNGN_ZONGULDROK_SHRINE
 
 # start TAG_MAJOR_VERSION == 34
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
@@ -681,9 +688,27 @@ monster_threat_trivial THREAT_TRIVIAL
 monster_threat_easy THREAT_EASY
 monster_threat_tough THREAT_TOUGH
 monster_threat_nasty THREAT_NASTY
-ray RAY
-ray_multi RAY_MULTI
-ray_out_of_range RAY_OUT_OF_RANGE
+
+%texture none
+%start
+%pal 140 140 85 150
+%blank 32 32
+%rim 1
+%finish HIGHLIGHT_DARK_YELLOW
+%syn RAY_OUT_OF_RANGE
+
+%start
+%pal 255 255 100 150
+%blank 32 32
+%finish HIGHLIGHT_YELLOW
+%syn RAY
+
+%start
+%pal 255 255 100 190
+%blank 32 32
+%finish HIGHLIGHT_BRIGHT_YELLOW
+%syn RAY_MULTI
+
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
 effect/sanctuary SANCTUARY

@@ -5,7 +5,13 @@
 
 #pragma once
 
-#include "ouch.h"
+#include <string>
+
+#include "kill-method-type.h"
+#include "maybe-bool.h"
+#include "monster.h"
+
+using std::string;
 
 #define XOM_CLOUD_TRAIL_TYPE_KEY "xom_cloud_trail_type"
 

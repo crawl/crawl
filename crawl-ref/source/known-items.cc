@@ -14,6 +14,7 @@
 #include "known-items.h"
 #include "libutil.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unicode.h"
 
 class KnownMenu : public InvMenu
@@ -121,6 +122,8 @@ public:
 #endif
         else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
+        else if (item->is_type(OBJ_BOOKS, 0))
+            name = "spellbooks";
         else if (item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
@@ -129,10 +132,15 @@ public:
         else if (item->base_type == OBJ_RUNES)
             name = "runes";
         else if (item->sub_type == get_max_subtype(item->base_type))
-            name = "unknown " + lowercase_string(item_class_name(item->base_type));
+        {
+            name = "unknown "
+                   + lowercase_string(item_class_name(item->base_type));
+        }
+        else if (item->base_type == OBJ_JEWELLERY)
+            name = pluralise(item->name(DESC_DBNAME));
         else
         {
-            name = item->name(DESC_PLAIN,false,true,false,false,flags);
+            name = item->name(DESC_PLAIN, false, true, false, false, flags);
             name = pluralise(name);
         }
 
@@ -221,8 +229,11 @@ static bool _identified_item_names(const item_def *it1,
                                    const item_def *it2)
 {
     int flags = it1->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
-    return it1->name(DESC_PLAIN, false, true, false, false, flags)
-         < it2->name(DESC_PLAIN, false, true, false, false, flags);
+    description_level_type desc =
+        it1->base_type == OBJ_JEWELLERY ? DESC_DBNAME : DESC_PLAIN;
+
+    return it1->name(desc, false, true, false, false, flags)
+         < it2->name(desc, false, true, false, false, flags);
 }
 
 // Allocate (with new) a new item_def with the given base and sub types,
@@ -260,7 +271,9 @@ void check_item_knowledge(bool unknown_items)
 {
     vector<const item_def*> items;
     vector<const item_def*> items_missile; //List of missiles should go after normal items
+#if TAG_MAJOR_VERSION == 34
     vector<const item_def*> items_food;    //List of foods should come next
+#endif
     vector<const item_def*> items_misc;
     vector<const item_def*> items_other;   //List of other items should go after everything
     vector<SelItem> selected_items;
@@ -274,9 +287,6 @@ void check_item_knowledge(bool unknown_items)
         for (const auto j : all_item_subtypes(i))
         {
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
-                continue;
-
-            if (i == OBJ_BOOKS && (j > MAX_FIXED_BOOK || !unknown_items))
                 continue;
 
             if (you.type_ids[i][j] != unknown_items) // logical xor
@@ -319,7 +329,6 @@ void check_item_knowledge(bool unknown_items)
                 || i == MISC_BOTTLED_EFREET
                 || i == MISC_RUNE_OF_ZOT
                 || i == MISC_STONE_OF_TREMORS
-                || i == MISC_XOMS_CHESSBOARD
                 || i == MISC_FAN_OF_GALES
                 || i == MISC_SACK_OF_SPIDERS
                 || i == MISC_LAMP_OF_FIRE
@@ -337,7 +346,7 @@ void check_item_knowledge(bool unknown_items)
         {
             { OBJ_BOOKS, BOOK_MANUAL },
             { OBJ_GOLD, 1 },
-            { OBJ_BOOKS, NUM_BOOKS },
+            { OBJ_BOOKS, 0 },
             { OBJ_RUNES, NUM_RUNE_TYPES },
         };
         for (auto e : misc_list)
@@ -346,7 +355,9 @@ void check_item_knowledge(bool unknown_items)
 
     sort(items.begin(), items.end(), _identified_item_names);
     sort(items_missile.begin(), items_missile.end(), _identified_item_names);
+#if TAG_MAJOR_VERSION == 34
     sort(items_food.begin(), items_food.end(), _identified_item_names);
+#endif
     sort(items_misc.begin(), items_misc.end(), _identified_item_names);
 
     KnownMenu menu;
@@ -374,7 +385,9 @@ void check_item_knowledge(bool unknown_items)
                                               : known_item_mangle, 'a', false);
 
     ml = menu.load_items(items_missile, known_item_mangle, ml, false);
+#if TAG_MAJOR_VERSION == 34
     ml = menu.load_items(items_food, known_item_mangle, ml, false);
+#endif
     ml = menu.load_items(items_misc, known_item_mangle, ml, false);
     if (!items_other.empty())
     {
@@ -389,7 +402,9 @@ void check_item_knowledge(bool unknown_items)
 
     deleteAll(items);
     deleteAll(items_missile);
+#if TAG_MAJOR_VERSION == 34
     deleteAll(items_food);
+#endif
     deleteAll(items_misc);
     deleteAll(items_other);
 

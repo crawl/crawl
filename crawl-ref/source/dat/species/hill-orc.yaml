@@ -4,8 +4,6 @@ name: Hill Orc
 short_name: HO
 difficulty: Simple
 difficulty_priority: 100
-species_flags:
-  - orcish
 aptitudes:
   xp: 0
   hp: 1

@@ -40,6 +40,7 @@
 #include "spl-book.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "tilepick-p.h"
 #include "travel.h"
@@ -53,10 +54,8 @@ using namespace ui;
 static species_type _get_hints_species(unsigned int type);
 static job_type     _get_hints_job(unsigned int type);
 static bool         _hints_feat_interesting(dungeon_feature_type feat);
-static void         _hints_describe_disturbance(int x, int y, ostringstream& ostr);
 static void         _hints_describe_cloud(int x, int y, ostringstream& ostr);
 static void         _hints_describe_feature(int x, int y, ostringstream& ostr);
-static bool         _water_is_disturbed(int x, int y);
 static void         _hints_healing_reminder();
 
 static int _get_hints_cols()
@@ -160,7 +159,7 @@ static string _print_hints_menu(hints_types type)
     }
 
     return make_stringf("%c - %s %s %s",
-            letter, species_name(_get_hints_species(type)).c_str(),
+            letter, species::name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
 
@@ -292,11 +291,11 @@ static species_type _get_hints_species(unsigned int type)
     switch (type)
     {
     case HINT_BERSERK_CHAR:
-        return SP_MINOTAUR;
+        return SP_HILL_ORC;
     case HINT_MAGIC_CHAR:
         return SP_DEEP_ELF;
     case HINT_RANGER_CHAR:
-        return SP_HALFLING;
+        return SP_MINOTAUR;
     default:
         // Use something fancy for debugging.
         return SP_TENGU;
@@ -645,7 +644,7 @@ static void _hints_healing_reminder()
                     "should retreat into areas you've already explored and "
                     "cleared of monsters; resting on the edge of the explored "
                     "terrain increases the chances of your rest being "
-                    "interrupted by wandering monsters. For resting, press "
+                    "interrupted by wandering monsters. To rest, press "
                     "<w>5</w> or <w>Shift-numpad 5</w>"
                     "<tiles>, or <w>click the rest button</w></tiles>"
                     ".";
@@ -654,8 +653,8 @@ static void _hints_healing_reminder()
                 && you.can_go_berserk())
             {
                 text += "\nAlso, berserking might help you not to lose so much "
-                        "health in the first place. To use your abilities type "
-                        "<w>a</w>.";
+                        "health in the first place. To use your abilities "
+                        "press <w>a</w>.";
             }
             mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
@@ -818,10 +817,9 @@ static bool _advise_use_wand()
         case WAND_FLAME:
         case WAND_PARALYSIS:
         case WAND_ICEBLAST:
-        case WAND_ENSLAVEMENT:
+        case WAND_CHARMING:
         case WAND_ACID:
-        case WAND_RANDOM_EFFECTS:
-        case WAND_DISINTEGRATION:
+        case WAND_MINDBURST:
             return true;
         }
     }
@@ -991,7 +989,7 @@ void hints_first_item(const item_def &item)
 
 static string _describe_portal(const coord_def &gc)
 {
-    const dungeon_feature_type feat = grd(gc);
+    const dungeon_feature_type feat = env.grid(gc);
     string text;
 
     // For the sake of completeness, though it's very unlikely that a
@@ -1043,8 +1041,6 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_NEW_LEVEL:
     case HINT_YOU_ENCHANTED:
     case HINT_YOU_POISON:
-    case HINT_YOU_ROTTING:
-    case HINT_YOU_CURSED:
     case HINT_GLOWING:
     case HINT_CAUGHT_IN_NET:
     case HINT_YOU_SILENCE:
@@ -1056,7 +1052,6 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_RETREAT_CASTER:
     case HINT_YOU_MUTATED:
     case HINT_NEW_ABILITY_GOD:
-    case HINT_NEW_ABILITY_MUT:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_CONVERT:
     case HINT_GOD_DISPLEASED:
@@ -1082,14 +1077,9 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_YOU_POISON:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
-    case HINT_FLYING:
-    case HINT_INACCURACY:
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
-#if TAG_MAJOR_VERSION == 34
-    case HINT_MEMORISE_FAILURE:
-#endif
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
     case HINT_ANIMATE_CORPSE_SKELETON:
@@ -1154,7 +1144,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "You have picked up your first scroll"
                 "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_SCROLL))
-             << "</w>'). Type </console>"
+             << "</w>'). Press </console>"
                 "<tiles>. Simply <w>left-click</w> on it, or press </tiles>"
                 "<w>%</w> to read it.\n"
                 "Once you've identified a scroll, either with a scroll of "
@@ -1168,7 +1158,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "You have picked up your first wand"
                 "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_WAND))
-             << "</w>'). Type </console>"
+             << "</w>'). Press </console>"
                 "<tiles>. Simply <w>left-click</w> on it, or press </tiles>"
                 "<w>%</w> to evoke it.\n"
                 "If you find more wands of the same type, they'll merge "
@@ -1180,17 +1170,18 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "You have picked up a book"
                 "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
-             << "'</w>) </console>"
-                "If it's a spellbook, you can pick it up to add its spells "
-                "to your library. You'll be able to memorise spells from "
-                "it via <w>%</w>, and cast them with <w>%</w>.</console>";
+             << "</w>')</console>"
+                ". On pickup, its spells are immediately added to your "
+                "library. You'll be able to memorise spells from it via "
+                "<w>%</w>, and cast them with <w>%</w>.";
         cmd.push_back(CMD_MEMORISE_SPELL);
         cmd.push_back(CMD_CAST_SPELL);
 
         if (you_worship(GOD_TROG))
         {
-            text << god_name(GOD_TROG)
-                 << " hates it when you memorise or study magic, though.";
+            text << " "
+                 << god_name(GOD_TROG)
+                 << " hates it when you study or use magic, though!";
             cmd.push_back(CMD_USE_ABILITY);
         }
         break;
@@ -1214,10 +1205,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (Hints.hints_type == HINT_BERSERK_CHAR)
         {
             text << "\nYou should probably stick with axes. Checking other "
-                    "axes' enchantments can be worthwhile, but weapons can be "
-                    "cursed and difficult to remove, so unless you have a "
-                    "scroll of remove curse, only wield weapons you're ready "
-                    "to be stuck with!";
+                    "axes' enchantments can be worthwhile, though!";
         }
         break;
 
@@ -1273,16 +1261,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_REMOVE_ARMOUR);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        if (
-#if TAG_MAJOR_VERSION == 34
-            you.species == SP_CENTAUR ||
-#endif
-            you.species == SP_MINOTAUR)
+        if (you.get_innate_mutation_level(MUT_HORNS) > 0)
         {
-            text << "\nNote that as a " << species_name(you.species)
-                 << " you will be unable to wear "
-                 << (you.species == SP_CENTAUR ? "boots" : "helmets")
-                 << ".";
+            text << "\nNote that because of your horns you will be unable"
+                    " to wear helmets. "
+                    "(Press <w>%</w> to see a list of your mutations and "
+                    "innate abilities.)";
+            cmd.push_back(CMD_DISPLAY_MUTATIONS);
         }
         break;
 
@@ -1305,7 +1290,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             else
             {
                 text << "That <console>";
-                string glyph = glyph_to_tagstr(get_item_glyph(mitm[i]));
+                string glyph = glyph_to_tagstr(get_item_glyph(env.item[i]));
                 const string::size_type found = glyph.find("%");
                 if (found != string::npos)
                     glyph.replace(found, 1, "percent");
@@ -1313,7 +1298,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 text << "</console>is a corpse.";
 #ifdef USE_TILE
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
-                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
+                tiles.add_text_tag(TAG_TUTORIAL, env.item[i].name(DESC_A), gc);
 #endif
             }
         }
@@ -1328,7 +1313,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_AMULET))
              << "</w>')"
-             << ". Type <w>%</w> to put it on and <w>%</w> to remove "
+             << ". Press <w>%</w> to put it on and <w>%</w> to remove "
                 "it. You can view its properties from your <w>%</w>nventory</console>"
              << "<tiles>. You can click on it to put it on, and click again "
                 "to remove it. By <w>right-clicking</w> on it, you can view its "
@@ -1346,8 +1331,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "it. As usual, selecting it from your <w>%</w>nventory "
                 "might give you more information.";
         cmd.push_back(CMD_EVOKE);
-        cmd.push_back(CMD_WIELD_WEAPON);
-        cmd.push_back(CMD_EVOKE_WIELDED);
+        cmd.push_back(CMD_EVOKE);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
@@ -1369,9 +1353,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console> ('<yellow>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_GOLD))
              << "</yellow>')</console>"
-                ". Unlike most other objects in Crawl it doesn't show up in "
-                "your inventory, takes up no space in your inventory, weighs "
-                "nothing and can't be dropped. Gold can be used to buy "
+                ". Unlike most other objects in Crawl it takes up no space in "
+                "your inventory and can't be dropped. Gold can be used to buy "
                 "items from shops, and is appreciated by certain gods.";
         break;
 
@@ -1427,7 +1410,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 " (or by <w>left-clicking</w>)"
 #endif
                 ", like stairs; unlike stairs, however, hatches are a one-way "
-                " trip, so be careful when descending!";
+                "trip, so be careful when descending!";
         cmd.push_back(CMD_GO_UPSTAIRS);
         cmd.push_back(CMD_GO_DOWNSTAIRS);
         break;
@@ -1562,7 +1545,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
             string altar = "An altar to ";
-            altar += god_name(feat_altar_god(grd(gc)));
+            altar += god_name(feat_altar_god(env.grid(gc)));
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
 #endif
@@ -1612,8 +1595,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         text << "\n\nIf there's anything you want which you can't afford yet "
                 "you can hold <w>Shift</w> and press the corresponding letter "
-                "to put them on your shopping list. The game will then remind "
-                "you when you gather enough gold to buy them.";
+                "to put it on your shopping list. The game will then remind "
+                "you when you gather enough gold to buy it.";
         break;
 
     case HINT_SEEN_DOOR:
@@ -1752,41 +1735,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             learned_something_new(HINT_YOU_ENCHANTED);
             Hints.hints_just_triggered = true;
         }
-        text << "Poison will slowly reduce your health. You can wait it out "
-                "with <w>%</w>, if you're in combat or lethally poisoned, "
+        text << "Poison will rapidly reduce your health. You can wait it out "
+                "with <w>%</w>, but if you're in combat or lethally poisoned, "
                 "you'll probably want to quaff a potion of curing.";
         cmd.push_back(CMD_REST);
         break;
 
-    case HINT_YOU_ROTTING:
-        // Hack: Reset hints_just_triggered, to force recursive calling of
-        //       learned_something_new().
-        Hints.hints_just_triggered = false;
-        learned_something_new(HINT_YOU_ENCHANTED);
-        Hints.hints_just_triggered = true;
-
-        text << "Ugh, your flesh has been rotted away! This reduces your"
-                "<w>maximum</w> health (your usual maximum health will be "
-                "indicated by a number in parentheses).\n"
-                "Whenever you drink potions of curing and heal wounds, "
-                "some rot will be cured, but you'll be healed less.";
-        cmd.push_back(CMD_QUAFF);
-        break;
-
-    case HINT_YOU_CURSED:
-        text << "Cursed equipment, once worn or wielded, cannot be dropped or "
-                "removed. Scrolls of remove curse will remove all curses "
-                "from your current equipment.";
-        break;
-
-    case HINT_REMOVED_CURSE:
-        text << "The curses on your worn equipment have been removed, so you "
-                "can now unequip any previously cursed items.";
-        break;
-
     case HINT_MULTI_PICKUP:
         text << "There are a lot of items here. You choose what to pick up "
-                "from a menu: type <w>%</w> "
+                "from a menu: press <w>%</w> "
 #ifdef USE_TILE
                 "or <w>click</w> on the player doll "
 #endif
@@ -1957,23 +1914,14 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_POSTBERSERK:
         text << "Berserking is extremely exhausting! Afterwards you are slowed "
-                "down and occasionally even pass out. You won't be able to "
-                "berserk again until enough time passes for your exhaustion to "
-                "fade.";
+                "down, and you won't be able to berserk again until enough "
+                "time passes for your exhaustion to fade.";
         break;
 
     case HINT_RUN_AWAY:
         text << "Whenever your health is very low and you're in danger of "
                 "dying, check your options carefully. Often, retreat or use "
                 "of some item might be a viable alternative to fighting on.";
-
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_CENTAUR)
-        {
-            text << " As a four-legged centaur, you are particularly quick - "
-                    "running away is usually an option!";
-        }
-#endif
 
         if (you_worship(GOD_TROG) && you.can_go_berserk())
         {
@@ -2044,68 +1992,36 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         break;
 
-    case HINT_NEW_ABILITY_MUT:
-        text << "That mutation granted you a new ability. Press <w>%</w> to "
-                "take a look at your abilities or to use one of them.";
-        cmd.push_back(CMD_USE_ABILITY);
-        break;
-
     case HINT_NEW_ABILITY_ITEM:
-        // Specialcase flight because it's a guaranteed trigger in the
-        // tutorial.
-        if (you.evokable_flight())
-        {
-            text << "Flight will allow you to cross deep water or lava. To "
-                    "activate it, select the corresponding ability in the "
-                    "ability menu (<w>%</w>"
-#ifdef USE_TILE_LOCAL
-                    " or via <w>mouseclick</w> in the <w>command panel</w>"
-#endif
-                    "). Once flying, keep an eye on the status line and "
-                    "messages, as most forms of flight have a limited "
-                    "duration.";
-        }
-        else
-        {
-            text << "That item you just equipped granted you a new ability. "
-                    "Press <w>%</w> "
+        text << "That item you just equipped granted you a new ability. "
+                "Press <w>%</w> "
 #ifdef USE_TILE
-                    "(or <w>click</w> in the <w>command panel</w>) "
+                "(or <w>click</w> in the <w>command panel</w>) "
 #endif
-                    "to take a look at your abilities or to use one of them.";
-        }
+                "to take a look at your abilities or to use one of them.";
         cmd.push_back(CMD_USE_ABILITY);
         break;
 
     case HINT_ITEM_RESISTANCES:
-        text << "Equipping this item affects your resistances. Check the "
-                "overview screen (<w>%</w>"
-#ifdef USE_TILE_LOCAL
-                " or click on the <w>character overview button</w> in the "
-                "command panel"
-#endif
-                ") for details.";
-        cmd.push_back(CMD_RESISTS_SCREEN);
-        break;
-
-    case HINT_FLYING:
-        if (you.evokable_flight())
+        // Specialcase flight because it's a guaranteed trigger in the
+        // tutorial.
+        if (you.equip_flight())
         {
-            text << "To stop flying, use the corresponding ability "
-                    "in the ability menu (<w>%</w>).";
-            cmd.push_back(CMD_USE_ABILITY);
+            text << "Flight will allow you to cross deep water or lava. Items "
+                    "that allow you to fly will activate automatically when "
+                    "worn.";
         }
-        break;
-
-    case HINT_INACCURACY:
-        text << "Not all items are useful, and some of them are outright "
-                "harmful. Press <w>%</w> ";
+        else
+        {
+            text << "Equipping this item affects your resistances. Check the "
+                    "overview screen (<w>%</w>"
 #ifdef USE_TILE_LOCAL
-        text << "or <w>click</w> on your equipped amulet to remove it.";
-#else
-        text << "to remove your amulet.";
+                    " or click on the <w>character overview button</w> in the "
+                    "command panel"
 #endif
-        cmd.push_back(CMD_REMOVE_JEWELLERY);
+                    ") for details.";
+            cmd.push_back(CMD_RESISTS_SCREEN);
+        }
         break;
 
             // TODO: rethink this v
@@ -2119,7 +2035,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 return print_hint("HINT_CONVERT Gozag");
             case GOD_RU:
                 return print_hint("HINT_CONVERT Ru");
-            // usk?
+            case GOD_USKAYAW:
+                return print_hint("HINT_CONVERT Uskayaw");
             default:
                 print_hint("HINT_CONVERT");
 
@@ -2138,7 +2055,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "annoying your god. ";
 
         text << "In any case, you'd better reread the religious description. "
-                "To do so, type <w>%</w>"
+                "To do so, press <w>%</w>"
 #ifdef USE_TILE
                 " or press <w>Shift</w> and <w>right-click</w> on your avatar"
 #endif
@@ -2252,15 +2169,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_WIELD_WEAPON:
     {
         int wpn = you.equip[EQ_WEAPON];
-        if (wpn != -1
-            && you.inv[wpn].base_type == OBJ_WEAPONS
-            && you.inv[wpn].cursed())
-        {
-            // Don't trigger if the wielded weapon is cursed.
-            Hints.hints_events[seen_what] = true;
-            return;
-        }
-
         if (Hints.hints_type == HINT_RANGER_CHAR && wpn != -1
             && you.inv[wpn].is_type(OBJ_WEAPONS, WPN_SHORTBOW))
         {
@@ -2271,7 +2179,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         else
         {
             text << "You can easily switch back to your weapon in slot a by "
-                    "pressing <w>%</w>. To change the slot of an item, type "
+                    "pressing <w>%</w>. To change the slot of an item, press "
                     "<w>%i</w> and choose the appropriate slots.";
             cmd.push_back(CMD_WEAPON_SWAP);
             cmd.push_back(CMD_ADJUST_INVENTORY);
@@ -2527,11 +2435,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "There are many dangers in Crawl. Luckily, there are ways to "
                 "(at least partially) resist some of them, if you are "
                 "fortunate enough to find them. There are two basic variants "
-                "of resistances: the innate magic resistance that depends on "
-                "your species, grows with experience level, and protects "
-                "against hostile enchantments; and the specific resistances "
-                "against certain types of magic and also other effects, e.g. "
-                "fire or draining.\n"
+                "of resistances: the innate willpower that depends on your "
+                "species, grows with experience level, and protects against"
+                "many magical effects; and the specific resistances against "
+                "certain other effects, e.g. fire or draining.\n"
                 "You can find items in the dungeon or gain mutations that will "
                 "increase (or lower) one or more of your resistances. To view "
                 "your current set of resistances, "
@@ -2631,10 +2538,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "to have a look at your skills and manage their training.";
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
-#if TAG_MAJOR_VERSION == 34
-    case HINT_MEMORISE_FAILURE: // lmao
-        break;
-#endif
     case HINT_FUMBLING_SHALLOW_WATER:
         text << "Fighting in shallow water will sometimes cause you to slip "
                 "and fumble your attack. If possible, try to fight on "
@@ -2829,7 +2732,7 @@ string hints_memorise_info()
              "display by <w>clicking on the</w> corresponding <w>tab</w>."
              "\n\nAlternatively, ";
 #endif
-        m += "you can type <w>%</w> and choose a spell, e.g. <w>a</w> (check "
+        m += "you can press <w>%</w> and choose a spell, e.g. <w>a</w> (check "
              "with <w>?</w>). For attack spells you'll ";
         cmd.push_back(CMD_CAST_SPELL);
     }
@@ -2884,7 +2787,7 @@ static string _hints_throw_stuff(const item_def &item)
 {
     string result;
 
-    result  = "To do this, type <w>%</w> to fire, then ";
+    result  = "To do this, press <w>%</w> to fire, then ";
     if (item.slot)
     {
         result += "<w>";
@@ -2911,10 +2814,8 @@ static string _hints_throw_stuff(const item_def &item)
 // before putting on this item.
 void check_item_hint(const item_def &item, unsigned int num_old_talents)
 {
-    if (item.cursed())
-        learned_something_new(HINT_YOU_CURSED);
-    else if (Hints.hints_events[HINT_NEW_ABILITY_ITEM]
-             && your_talents(false).size() > num_old_talents)
+    if (Hints.hints_events[HINT_NEW_ABILITY_ITEM]
+        && your_talents(false).size() > num_old_talents)
     {
         learned_something_new(HINT_NEW_ABILITY_ITEM);
     }
@@ -2952,7 +2853,7 @@ string hints_describe_item(const item_def &item)
                     // It grants a resistance.
                     ostr << "\nThis weapon offers its wearer protection from "
                             "certain sources. For an overview of your "
-                            "resistances (among other things) type <w>%</w>"
+                            "resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
                             " or click on your avatar with the <w>right mouse "
                             "button</w>"
@@ -2967,7 +2868,6 @@ string hints_describe_item(const item_def &item)
 
             item_def *weap = you.slot_item(EQ_WEAPON, false);
             bool wielded = (weap && weap->slot == item.slot);
-            bool long_text = false;
 
             if (!wielded)
             {
@@ -2999,11 +2899,10 @@ string hints_describe_item(const item_def &item)
                          << "</w> for a while, so maybe you should "
                             "continue training that rather than <w>"
                          << skill_name(curr_wpskill)
-                         << "</w>. (Type <w>%</w> to see the skill "
+                         << "</w>. (Press <w>%</w> to see the skill "
                             "management screen for the actual numbers.)";
 
                     cmd.push_back(CMD_DISPLAY_SKILLS);
-                    long_text = true;
                 }
             }
             else // wielded weapon
@@ -3039,14 +2938,6 @@ string hints_describe_item(const item_def &item)
                      << "enchantment or have special properties, good or bad.";
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
-            }
-            if (item_known_cursed(item) && !long_text)
-            {
-                ostr << "\n\nOnce wielded, a cursed weapon can't be "
-                        "unwielded until the curse has been lifted by "
-                        "reading a scroll of remove curse.";
-
-                Hints.hints_events[HINT_YOU_CURSED] = false;
             }
             Hints.hints_events[HINT_SEEN_WEAPON] = false;
             break;
@@ -3099,21 +2990,11 @@ string hints_describe_item(const item_def &item)
         case OBJ_ARMOUR:
         {
             bool wearable = true;
-#if TAG_MAJOR_VERSION == 34
-            if (you.species == SP_CENTAUR && item.sub_type == ARM_BOOTS)
+            if (you.get_innate_mutation_level(MUT_HORNS) > 0
+                && is_hard_helmet(item))
             {
-                ostr << "As a Centaur you cannot wear boots. "
-                        "(Type <w>%</w> to see a list of your mutations and "
-                        "innate abilities.)";
-                cmd.push_back(CMD_DISPLAY_MUTATIONS);
-                wearable = false;
-            }
-            else
-#endif
-            if (you.species == SP_MINOTAUR && is_hard_helmet(item))
-            {
-                ostr << "As a Minotaur you cannot wear helmets. "
-                        "(Type <w>%</w> to see a list of your mutations and "
+                ostr << "Because of your horns you cannot wear helmets. "
+                        "(Press <w>%</w> to see a list of your mutations and "
                         "innate abilities.)";
                 cmd.push_back(CMD_DISPLAY_MUTATIONS);
                 wearable = false;
@@ -3171,17 +3052,11 @@ string hints_describe_item(const item_def &item)
             }
             if (wearable)
             {
-                if (item_known_cursed(item))
-                {
-                    ostr << "\nA cursed piece of armour, once worn, cannot be "
-                            "removed again until the curse has been lifted by "
-                            "reading a scroll of remove curse.";
-                }
                 if (gives_resistance(item))
                 {
                     ostr << "\n\nThis armour offers its wearer protection from "
                             "certain sources. For an overview of your"
-                            " resistances (among other things) type <w>%</w>"
+                            " resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
                             " or click on your avatar with the <w>right mouse "
                             "button</w>"
@@ -3227,7 +3102,7 @@ string hints_describe_item(const item_def &item)
             break;
 
         case OBJ_SCROLLS:
-            ostr << "Type <w>%</w> to read this scroll"
+            ostr << "Press <w>%</w> to read this scroll"
 #ifdef USE_TILE
                     "or simply click on it with your <w>left mouse button</w>"
 #endif
@@ -3249,19 +3124,13 @@ string hints_describe_item(const item_def &item)
             cmd.push_back(CMD_WEAR_JEWELLERY);
             cmd.push_back(CMD_REMOVE_JEWELLERY);
 
-            if (item_known_cursed(item))
-            {
-                ostr << "\nA cursed piece of jewellery will stick to its "
-                        "wearer when equipped, and cannot be removed until "
-                        "you read a scroll of remove curse.";
-            }
             if (gives_resistance(item))
             {
                 ostr << "\n\nThis "
                      << (item.sub_type < NUM_RINGS ? "ring" : "amulet")
                      << " offers its wearer protection "
                         "from certain sources. For an overview of your "
-                        "resistances (among other things) type <w>%</w>"
+                        "resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
                         " or click on your avatar with the <w>right mouse "
                         "button</w>"
@@ -3280,7 +3149,7 @@ string hints_describe_item(const item_def &item)
             break;
         }
         case OBJ_POTIONS:
-            ostr << "Type <w>%</w> to quaff this potion"
+            ostr << "Press <w>%</w> to quaff this potion"
 #ifdef USE_TILE
                     "or simply click on it with your <w>left mouse button</w>"
 #endif
@@ -3293,16 +3162,16 @@ string hints_describe_item(const item_def &item)
             if (item.sub_type == BOOK_MANUAL)
             {
                 ostr << "A manual can greatly help you in training a skill. "
-                        "As long as you are carrying it, the skill in "
-                        "question will be trained more efficiently and will "
-                        "level up faster.";
+                        "After you pick one up, the skill in question will be "
+                        "trained more efficiently and will level up faster "
+                        "until you exhaust the manual's contents.";
                 cmd.push_back(CMD_READ);
             }
             else // It's a spellbook!
             {
-                ostr << "\nIt's a book, you can pick it up to add its "
-                        "spells to your spell library. (View your spell "
-                        " library with <w>%</w>";
+                ostr << "\nYou can pick up a spellbook to add its spells to "
+                        "your spell library. (View your spell library with "
+                        "<w>%</w>.)";
                 cmd.push_back(CMD_MEMORISE_SPELL);
             }
             ostr << "\n";
@@ -3317,15 +3186,14 @@ string hints_describe_item(const item_def &item)
             break;
 
        case OBJ_STAVES:
-            ostr << "This staff can enhance your spellcasting, possibly "
-                    "making a certain spell school more powerful, or "
-                    "making difficult magic easier to cast. ";
+            ostr << "This staff can enhance your spellcasting, making spells "
+                    "of its related spell school more powerful.";
 
             if (gives_resistance(item))
             {
                 ostr << "It also offers its wielder protection from "
                         "certain sources. For an overview of your "
-                        "resistances (among other things) type <w>%</w>"
+                        "resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
                         " or click on your avatar with the <w>right mouse "
                         "button</w>"
@@ -3373,8 +3241,7 @@ string hints_describe_item(const item_def &item)
 bool hints_pos_interesting(int x, int y)
 {
     return cloud_at(coord_def(x, y))
-           || _water_is_disturbed(x, y)
-           || _hints_feat_interesting(grd[x][y]);
+           || _hints_feat_interesting(env.grid[x][y]);
 }
 
 static bool _hints_feat_interesting(dungeon_feature_type feat)
@@ -3391,7 +3258,6 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
 string hints_describe_pos(int x, int y)
 {
     ostringstream ostr;
-    _hints_describe_disturbance(x, y, ostr);
     _hints_describe_cloud(x, y, ostr);
     _hints_describe_feature(x, y, ostr);
     if (ostr.str().empty())
@@ -3403,13 +3269,11 @@ string hints_describe_pos(int x, int y)
 
 static void _hints_describe_feature(int x, int y, ostringstream& ostr)
 {
-    const dungeon_feature_type feat = grd[x][y];
+    const dungeon_feature_type feat = env.grid[x][y];
     const coord_def            where(x, y);
 
     if (!ostr.str().empty())
         ostr << "\n\n";
-
-    bool boring = false;
 
     switch (feat)
     {
@@ -3453,9 +3317,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     case DNGN_TRAP_WEB:
         ostr << "Some areas of the dungeon, such as the Spider Nest, may "
                 "be strewn with giant webs that may ensnare you for a short "
-                "time and notify nearby spiders of your location. "
-                "Players in Spider Form can safely navigate the webs (as "
-                "can incorporeal entities and various oozes). ";
+                "time. Players in Spider Form can safely navigate the webs (as "
+                "can incorporeal entities and various oozes).";
         Hints.hints_events[HINT_SEEN_WEB] = false;
         break;
 
@@ -3550,17 +3413,40 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                         "general, the gods will help their followers, "
                         "bestowing powers of all sorts upon them, but many "
                         "of them demand a life of dedication, constant "
-                        "tributes or entertainment in return.\n"
-                        "You can get information about <w>"
-                     << god_name(altar_god)
-                     << "</w> by pressing <w>></w> while standing on the "
-                        "altar. Before taking up the responding faith "
-                        "you'll be asked for confirmation.";
+                        "tributes or entertainment in return.\n";
+                if (altar_god == GOD_ECUMENICAL)
+                {
+                    ostr << "This particular altar is so ancient that you "
+                            "cannot make out which god it is dedicated to! "
+                            "Converting here by pressing <w>></w> while "
+                            "standing on the altar will enter you into service "
+                            "of a random god, who will grant you some "
+                            "additional piety in thanks.";
+                }
+                else
+                {
+                    ostr << "You can get information about <w>"
+                         << god_name(altar_god)
+                         << "</w> by pressing <w>></w> while standing on the "
+                            "altar. Before taking up the responding faith "
+                            "you'll be asked for confirmation.";
+                }
             }
             else if (you_worship(altar_god))
             {
                 // If we don't have anything to say, return early.
                 return;
+            }
+            else if (altar_god == GOD_ECUMENICAL)
+            {
+                ostr << "This particular altar is so ancient that you cannot "
+                        "make out which god it is dedicated to, and "
+                     << god_name(you.religion)
+                     << " probably won't like it if you switch allegiance. If "
+                        "you want to take the risk, you can convert here by "
+                        "pressing <w>></w> while standing on the altar. Doing "
+                        "so will enter you into service of a random god, who "
+                        "will grant you some additional piety in thanks.";
             }
             else
             {
@@ -3593,24 +3479,6 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                 ostr << "Beware, sometimes these can be deadly!";
             break;
         }
-        else
-        {
-            // Describe blood-stains even for boring features.
-            if (!is_bloodcovered(where))
-                return;
-            boring = true;
-        }
-    }
-
-    if (is_bloodcovered(where))
-    {
-        if (!boring)
-            ostr << "\n\n";
-
-        ostr << "Many forms of combat will spatter the surroundings with blood"
-                " (if the victim has any, that is). Some monsters, like jackals "
-                "or vampires, can smell blood from a distance and may come "
-                "looking.";
     }
 }
 
@@ -3656,30 +3524,6 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
                 "you and a square, you won't be able to see anything in that "
                 "square.";
     }
-}
-
-static void _hints_describe_disturbance(int x, int y, ostringstream& ostr)
-{
-    if (!_water_is_disturbed(x, y))
-        return;
-    if (!ostr.str().empty())
-        ostr << "\n\n";
-    ostr << "The strange disturbance means that there's a monster hiding "
-            "under the surface of the shallow water. Submerged monsters will "
-            "not be autotargeted when doing a ranged attack while there are "
-            "other, visible targets in sight. Of course you can still target "
-            "it manually if you wish to.";
-}
-
-static bool _water_is_disturbed(int x, int y)
-{
-    const coord_def c(x,y);
-    const monster* mon = monster_at(c);
-
-    if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
-        return false;
-
-    return !mon->visible_to(&you) && !mon->airborne();
 }
 
 bool hints_monster_interesting(const monster* mons)
@@ -3819,9 +3663,9 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 
 void hints_observe_cell(const coord_def& gc)
 {
-    if (feat_is_escape_hatch(grd(gc)))
+    if (feat_is_escape_hatch(env.grid(gc)))
         learned_something_new(HINT_SEEN_ESCAPE_HATCH, gc);
-    else if (feat_is_branch_entrance(grd(gc)))
+    else if (feat_is_branch_entrance(env.grid(gc)))
         learned_something_new(HINT_SEEN_BRANCH, gc);
     else if (is_feature('>', gc))
         learned_something_new(HINT_SEEN_STAIRS, gc);
@@ -3829,19 +3673,19 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(HINT_SEEN_TRAP, gc);
-    else if (feat_is_runed(grd(gc)))
+    else if (feat_is_runed(env.grid(gc)))
         learned_something_new(HINT_SEEN_RUNED_DOOR, gc);
-    else if (feat_is_door(grd(gc)))
+    else if (feat_is_door(env.grid(gc)))
         learned_something_new(HINT_SEEN_DOOR, gc);
-    else if (grd(gc) == DNGN_ENTER_SHOP)
+    else if (env.grid(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
-    else if (feat_is_portal_entrance(grd(gc)))
+    else if (feat_is_portal_entrance(env.grid(gc)))
         learned_something_new(HINT_SEEN_PORTAL, gc);
 
     const int it = you.visible_igrd(gc);
     if (it != NON_ITEM)
     {
-        const item_def& item(mitm[it]);
+        const item_def& item(env.item[it]);
 
         if (Options.feature_item_brand != CHATTR_NORMAL
             && (is_feature('>', gc) || is_feature('<', gc)))

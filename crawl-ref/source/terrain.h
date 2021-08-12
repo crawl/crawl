@@ -6,11 +6,14 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "command-type.h"
 #include "enum.h"
 #include "god-type.h"
 #include "terrain-change-type.h"
+
+using std::vector;
 
 class  actor;
 struct coord_def;
@@ -59,6 +62,7 @@ bool feat_is_trap(dungeon_feature_type feat);
 command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 bool feat_is_tree(dungeon_feature_type feat);
+bool feat_is_flammable(dungeon_feature_type feat);
 bool feat_is_metal(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);
@@ -91,6 +95,7 @@ bool feat_is_critical(dungeon_feature_type feat);
 bool feat_is_valid_border(dungeon_feature_type feat);
 bool feat_is_mimicable(dungeon_feature_type feat, bool strict = true);
 bool feat_is_shaftable(dungeon_feature_type feat);
+bool feat_suppress_blood(dungeon_feature_type feat);
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
 

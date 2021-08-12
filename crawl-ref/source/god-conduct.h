@@ -40,7 +40,6 @@ void did_hurt_conduct(conduct_type thing_done, const monster &victim, int damage
 void god_conduct_turn_start();
 
 bool god_punishes_spell(spell_type spell, god_type god);
-bool god_hates_cannibalism(god_type god);
 
 conduct_type god_hates_item_handling(const item_def& item);
 

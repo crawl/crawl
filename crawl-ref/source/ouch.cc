@@ -72,10 +72,15 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
     {
-        if (you.has_mutation(MUT_ICEMAIL))
+        if (you.has_mutation(MUT_CONDENSATION_SHIELD))
         {
             if (!you.duration[DUR_ICEMAIL_DEPLETED])
-                mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
+            {
+                if (you.has_mutation(MUT_ICEMAIL))
+                    mprf(MSGCH_DURATION, "Your icy defenses dissipate!");
+                else
+                    mprf(MSGCH_DURATION, "Your condensation shield dissipates!");
+            }
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }
@@ -152,7 +157,9 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
+    case BEAM_STUN_BOLT:
     case BEAM_ELECTRICITY:
+    case BEAM_THUNDER:
         hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)
@@ -168,12 +175,23 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
-            int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
-            pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
-            poison_player(pois, source, kaux);
 
-            if (player_res_poison() > 0)
-                canned_msg(MSG_YOU_RESIST);
+            if (beam->origin_spell == SPELL_SPIT_POISON &&
+                beam->agent(true)->is_monster() &&
+                beam->agent(true)->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
+            {
+                curare_actor(beam->agent(), &you, 2, "concentrated venom",
+                             beam->agent(true)->name(DESC_PLAIN));
+            }
+            else
+            {
+                int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
+                pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
+                poison_player(pois, source, kaux);
+
+                if (player_res_poison() > 0)
+                    canned_msg(MSG_YOU_RESIST);
+            }
         }
 
         break;
@@ -203,7 +221,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // drain_player handles the messaging here
-            drain_player(min(75, 35 + original * 2 / 3), true);
+            drain_player(original, true);
         }
         break;
 
@@ -238,7 +256,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_MIASMA:
-        if (you.res_rotting())
+        if (you.res_miasma())
         {
             if (doEffects)
                 canned_msg(MSG_YOU_RESIST);
@@ -256,14 +274,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             mpr("You writhe in agony!");
             xom_is_stimulated(200);
         }
-        break;
-    }
-
-    case BEAM_AIR:
-    {
-        // Airstrike.
-        if (you.airborne())
-            hurted += hurted / 2;
         break;
     }
 
@@ -314,18 +324,6 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     }
 }
 
-static void _lose_level_abilities()
-{
-    if (you.attribute[ATTR_PERM_FLIGHT]
-        && !you.racial_permanent_flight()
-        && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-    {
-        you.increase_duration(DUR_FLIGHT, 50, 100);
-        you.attribute[ATTR_PERM_FLIGHT] = 0;
-        mprf(MSGCH_WARN, "You feel your flight won't last long.");
-    }
-}
-
 void lose_level()
 {
     // Because you.experience is unsigned long, if it's going to be
@@ -344,7 +342,6 @@ void lose_level()
 
     calc_hp();
     calc_mp();
-    _lose_level_abilities();
 
     char buf[200];
     sprintf(buf, "HP: %d/%d MP: %d/%d",
@@ -399,16 +396,17 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (power > 0)
     {
+        const int mhp = 1 + div_rand_round(power * get_real_hp(false, false),
+                750);
+        you.hp_max_adj_temp -= mhp;
+        you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
+                you.hp_max_adj_temp);
+
+        dprf("Drained by %d max hp (%d total)", mhp, you.hp_max_adj_temp);
+        calc_hp();
+
         mpr("You feel drained.");
         xom_is_stimulated(15);
-
-        you.attribute[ATTR_XP_DRAIN] += power;
-        // Losing skills may affect AC/EV.
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-
-        dprf("Drained by %d points (%d total)", power, you.attribute[ATTR_XP_DRAIN]);
-
         return true;
     }
 
@@ -519,7 +517,7 @@ static void _maybe_ru_retribution(int dam, mid_t death_source)
             dam += you.hp;
 
         monster* mons = monster_by_mid(death_source);
-        if (dam <= 0 || !mons)
+        if (dam <= 0 || !mons || death_source == MID_YOU_FAULTLESS)
             return;
 
         ru_retribution_fineff::schedule(mons, &you, dam);
@@ -549,6 +547,21 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         mprf("%s scurries out from under your cloak.", m->name(DESC_A).c_str());
         check_lovelessness(*m);
+    }
+}
+
+static void _maybe_summon_demonic_guardian(int dam, kill_method_type death_type)
+{
+    if (death_type == KILLED_BY_POISON)
+        return;
+    // low chance to summon on any hit that dealt damage
+    // always tries to summon if the hit did 50% max hp or if we're about to die
+    if (you.has_mutation(MUT_DEMONIC_GUARDIAN)
+        && (x_chance_in_y(dam, you.hp_max)
+            || dam > you.hp_max / 2
+            || you.hp * 5 < you.hp_max))
+    {
+        check_demonic_guardian();
     }
 }
 
@@ -708,7 +721,7 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    if (x_chance_in_y(slow_sources, 100))
+    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
         slow_player(10 + random2(5));
 }
 
@@ -737,7 +750,7 @@ static void _place_player_corpse(bool explode)
 static void _wizard_restore_life()
 {
     if (you.hp_max <= 0)
-        unrot_hp(9999);
+        undrain_hp(9999);
     while (you.hp_max <= 0)
         you.hp_max_adj_perm++, calc_hp();
     if (you.hp <= 0)
@@ -784,16 +797,47 @@ int do_shave_damage(int dam)
 
 // Determine what's threatening for purposes of sacrifice drink and reading.
 // the statuses are guaranteed not to happen if the incoming damage is less
-// than 4% max hp. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 20% max health damage or <30% max health
-// current hp.
+// than 5% max hp. Otherwise, they scale up with damage taken and with lower
+// health, becoming certain at 20% max health damage.
 static bool _is_damage_threatening (int damage_fraction_of_hp)
 {
-    int hp_fraction = you.hp * 100 / you.hp_max;
+    const int hp_fraction = you.hp * 100 / you.hp_max;
     return damage_fraction_of_hp > 5
             && hp_fraction <= 85
             && (damage_fraction_of_hp + random2(20) >= 20
-                || random2(100) < hp_fraction);
+                || random2(100) > hp_fraction);
+}
+
+// Palentongas curl up after the first time they've been hit in a round.
+static void _consider_curling(kill_method_type death_type)
+{
+    if (!you.has_mutation(MUT_CURL)
+        || you.props[PALENTONGA_CURL_KEY].get_bool())
+    {
+        return;
+    }
+
+    switch (death_type)
+    {
+        case KILLED_BY_MONSTER:
+        case KILLED_BY_BEAM:
+        case KILLED_BY_DEATH_EXPLOSION:
+        case KILLED_BY_TRAP:
+        case KILLED_BY_BOUNCE:
+        case KILLED_BY_REFLECTION:
+        case KILLED_BY_DISINT:
+        case KILLED_BY_HEADBUTT:
+        case KILLED_BY_ROLLING:
+        case KILLED_BY_BEING_THROWN:
+        case KILLED_BY_COLLISION:
+            break;
+        default:
+            // stuff like poison, smiting, etc
+            return;
+    }
+
+    you.props[PALENTONGA_CURL_KEY] = true;
+    you.redraw_armour_class = true;
 }
 
 /** Hurt the player. Isn't it fun?
@@ -846,6 +890,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 
+    _consider_curling(death_type);
+
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING
                         || death_type == KILLED_BY_LEAVING;
@@ -871,7 +917,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         // Check _is_damage_threatening separately for read and drink so they
         // don't always trigger in unison when you have both.
-        if (you.get_mutation_level(MUT_NO_READ))
+        if (you.get_mutation_level(MUT_READ_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -882,7 +928,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
         }
 
-        if (you.get_mutation_level(MUT_NO_DRINK))
+        if (you.get_mutation_level(MUT_DRINK_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -907,7 +953,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             mp = min(mp, you.magic_points);
 
             dam -= mp;
-            dec_mp(mp);
+            drain_mp(mp);
 
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshhold by spirit shield.
@@ -944,14 +990,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         if (you.hp > 0 && dam > 0)
         {
-            if (Options.hp_warning
-                && you.hp <= (you.hp_max * Options.hp_warning) / 100
-                && (death_type != KILLED_BY_POISON || poison_is_lethal()))
-            {
-                flash_view_delay(UA_HP, RED, 50);
-                mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
-                dungeon_events.fire_event(DET_HP_WARNING);
-            }
+            if (death_type != KILLED_BY_POISON || poison_is_lethal())
+                flush_hp();
 
             hints_healing_check();
 
@@ -976,6 +1016,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);
             _maybe_spawn_rats(dam, death_type);
+            _maybe_summon_demonic_guardian(dam, death_type);
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (sanguine_armour_valid())

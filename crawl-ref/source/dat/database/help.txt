@@ -159,8 +159,10 @@ level-map
 <w>-</w> or <w>+</w>     : Scroll level map 20 grids up or down.
 <w>.</w>          : Start travel (also <w>Enter</w> and <w>,</w> and <w>;</w>).
              (Moves cursor to the last travel destination if still on @.)
-<w>[</w> or <w>]</w>     : Examine the next higher or lower level
-<w>G</w>          : Go to another level by branch and depth
+<w>[</w> or <w>]</w>     : Examine the next higher or lower level.
+             (Moves cursor to the staircase destination if a known staircase is
+             highlighted.)
+<w>G</w>          : Go to another level by branch and depth.
 <w>o</w>          : Move the cursor to the next autoexplore target.
 <w>{</w> or <w>}</w>     : Zoom out or in (tiles only).
 
@@ -233,14 +235,24 @@ interlevel-travel.altar.prompt
 
  <w>Enter</w>  : Repeat last interlevel travel.
 %%%%
+annotate.prompt
+
+<h>Annotate (select level):
+ <w>Enter</w> or <w>.</w> : Annotate current level.
+ any <w>letter</w> : Annotate a level in the branch corresponding to the letter.
+ <w><<</w>          : Annotate the level upstairs.
+ <w>></w>          : Annotate the level downstairs.
+ <w>Ctrl-P</w>     : Annotate a level in the branch above this one.
+ <w>!</w>          : Show list of dungeon branches.
+
+%%%%
 skill-menu
 
                         <h>Skill management</h>
 
 You gain experience for killing monsters (and very few other activities). This
 experience is used to train skills. The skill screen allows you to select which
-skills to train. A skill can only be trained if there's some available means of
-exercising it; see "Training restrictions" below for details.
+skills to train.
 
 By pressing its letter, you can cycle if and how a skill is trained:
   <darkgrey>- deselected</darkgrey>    Skill will not be trained.
@@ -263,28 +275,18 @@ How fast you train a skill is governed by the following factors:
   - skill manuals: Rare books giving an aptitude bonus of <lightred>+4</lightred> in one skill.
 
 On top of that, there are some effects which directly modify a skill, for
-example draining, having trained a related skill (crosstraining), or certain
-god powers. Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <green>green</green>.
+example having trained a related skill (crosstraining), or certain god powers.
+Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <green>green</green>.
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
 which will be used to train this skill.
 
 Apart from (de)selecting skills, you also have the following toggles:
   <w>/</w> :  Switch between automatic and manual training modes.
-  <w>*</w> :  Display all skills, even those you can't train yet.
+  <w>*</w> :  Display all skills, even those which aren't currently useful.
   <w>?</w> :  Allows you to read the descriptions of skills.
-  <w>_</w> :  Show or hide skill level modifications (drain, god powers, crosstraining).
+  <w>_</w> :  Show or hide skill level modifications (god powers, crosstraining).
   <w>!</w> :  Switch between displaying training percentage, skill cost, or training
        targets.
-
-                        <h>Training restrictions</h>
-Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
-can always be trained. For the rest:
-  - Weapon skills require carrying a weapon of the appropriate type.
-  - Shields requires that you be carrying a shield.
-  - Evocations requires carrying an evocable item.
-  - Spell schools require knowing a spell of the school.
-  - Necromancy can also be trained when worshipping Kikubaaqudgha.
-  - Invocations requires worshipping a god whose abilities require it.
 %%%%
 spell-library
 <h>Spell Library</h>
@@ -310,3 +312,403 @@ set with <w>Ctrl-F</w>. If <w>Enter</w> is pressed at the prompt without enterin
 that will reset the filter to none.
 You can filter spells by name and by spell school.
 %%%%
+wiz-monster
+<h>Create specified monster</h>
+
+To create a monster with the default equipment for its species, simply enter
+the species name, such as <w>kobold</w> or <w>Yiuf</w>.
+
+A hydra can be given a specific number of heads by calling it an n<w>-headed</w>
+<w>hydra</w> (with a maximum of 20 heads):
+
+<w>four-headed hydra</w>
+
+To set the colour a (very) ugly thing takes when it is first created, use:
+
+<w>white very ugly thing</w>
+
+The valid colours are <w>brown</w>, <w>cyan</w>, <w>green</w>, <w>purple</w>, <w>red</w> and <w>white</w>.
+
+A mutant beast can be customized by prefacing it with a maturity level and/or
+hyphen-separated set of traits, as follows:
+
+<w>mature shock-weird mutant beast</w>
+
+The valid maturity levels are <w>larval</w>, <w>juvenile</w>, <w>mature</w>, <w>elder</w> and <w>primal</w>. The
+facets are <w>sting</w>, <w>bat</w>, <w>fire</w>, <w>weird</w>, <w>shock</w> and <w>ox</w>.
+
+A slime creature's size can be set to other than normal using the prefixes
+<w>large</w>, <w>very large</w>, <w>enormous</w> or <w>titanic</w>:
+
+<w>very large slime creature</w>
+
+If a monster is a member of a band, you can request that it be eligible for
+band members by adding the keyword <w>band</w> to the name. For instance:
+
+<w>orc warlord band</w>
+
+Specifying <w>band</w> doesn't force bands to be placed - it requests that the game
+use the normal chances of creating a band. A band will only be placed if there
+is space for it.
+
+A monster can be given specific items by following the monster name with a
+semi-colon and then with an item list. For example:
+
+<w>orc ; rapier | quick blade . chain mail | plate armour</w>
+
+will generate an orc wielding either a rapier or a quick blade and wearing
+either chain mail or plate armour. Randarts and ego items are only generated
+if they are explicitly requested. Note that any items that the monster was
+originally generated with will be removed and destroyed. This can be used to
+force a monster to have no items whatsoever:
+
+<w>orc; nothing</w>
+
+For further information, see <cyan>docs/develop/levels/syntax.txt</cyan>, section <cyan>ITEMS</cyan>.
+Any reference to a slash (<w>/</w>) should be replaced with a pipe (<w>|</w>) and any comma
+(<w>,</w>) with a full stop (<w>.</w>).
+
+The same syntax is also used to create a specific type of dancing weapon:
+
+<w>dancing weapon; rapier</w>
+
+Limitations: If a monster is given a random launcher, there is no way to force
+the ammo type to match the launcher type. As a special case, however, a
+launcher dancing weapon is always generated with some suitable ammunition.
+
+You can specify that a monster will always generate a corpse by using the tag
+<w>always_corpse</w>, or that it will never generate a corpse with <w>never_corpse</w>.
+
+By default, monsters are generated asleep. This is changed by prefixing the
+name with <w>generate_awake</w>.
+
+<w>generate_awake boulder beetle</w>
+
+A prefix of <w>patrolling</w> prevents it from walking out of sight of the the place
+where it was created.
+
+You can set the monster's god using the <w>god</w>: specifier as follows:
+
+<w>orc god:the_shining_one</w>
+
+If the monster is to be a gift of the specified god, this should be suffixed
+with <w>god_gift</w>:
+
+<w>orc god:the_shining_one god_gift</w>
+
+Note that the monster will not be considered a god gift unless <w>god_gift</w> is
+explicitly set.
+
+You can set the monster's faction by specifying <w>att</w>: one of:
+
+* <w>att:hostile</w> -- the default
+* <w>att:friendly</w> -- tame, will follow you
+* <w>att:neutral</w> -- hostile to both you and att:hostile monsters
+* <w>att:good_neutral</w> -- hostile to att:hostile
+* <w>att:fellow_slime</w> -- tame, won't follow you
+
+Monsters can be given colours that override their default colour:
+
+<w>col:darkgrey fungus</w>
+
+The colour <w>any</w> can be given, in which case a random colour will be chosen.
+
+You can override the displayed monster tile using the <w>tile</w>: specifier as
+follows:
+
+<w>rat tile:mons_giant_bat</w>
+
+In tiles version, this would create a monster that uses the "<cyan>mons_giant_bat</cyan>"
+tile, but is otherwise identical to a rat. In ASCII mode, this will do
+nothing.
+
+If you want to place a random monster suitable for the level the map is
+generated on, you can use
+
+<w>random</w>
+
+If you want to place a random monster suitable for some other place, you can
+use a place: tag in the monster spec:
+
+<w>place:Abyss</w>
+
+Using <w>place</w>: implies that you want a random monster. You can also request
+zombies from random monsters suitable for some other depth as (e.g.):
+
+<w>place:Elf:3 zombie</w>
+
+The available modifiers are <w>zombie</w>, <w>skeleton</w>, <w>simulacrum</w>, and <w>spectre</w>.
+
+<h>Overriding Monster Names</h>
+
+Individual monsters can be given names as follows:
+
+<w>kobold name:Durwent</w>
+
+This will cause the monster to appear as "<cyan>Durwent the kobold</cyan>". Spaces can be
+placed in the name by substituting them with the _ symbol. It is worth noting
+that "<cyan>the <<race></cyan>" will be appended to all names, which should be considered
+when coming up with them.
+
+There are three different modifiers that can be used on a name:
+<w>name_adjective</w>, <w>name_suffix and </w>name_replace. <w>name_adjective</w> makes the
+name act as an adjective. For example:
+
+<w>kobold name:ugly name_adjective</w>
+
+Will cause "<cyan>An ugly kobold</cyan>", "<cyan>The ugly kobold hits you</cyan>", and so on.
+
+<w>name_suffix</w> does the same, but after the monster's base name:
+
+<w>kobold name:wearing_mittens name_suffix</w>
+
+Will give "<cyan>A kobold wearing mittens</cyan>", "<cyan>The kobold wearing mittens hits you</cyan>",
+and so on.
+
+<w>name_replace</w> causes the base name to be replaced by given name, as if the
+monster was a unique:
+
+<w>kobold name:Durwent name_replace</w>
+
+Will result in "<cyan>Durwent</cyan>" rather than "<cyan>Durwent the Kobold</cyan>". The corpse will
+still be a "<cyan>kobold corpse of Durwent</cyan>".
+
+<w>name_species</w> uses the name for corpses as-is, without prefixing it with
+"<cyan>kobold</cyan> <cyan>corpse of X</cyan>" for <w>name_replace</w>. It also avoids the usual name tag
+that displays above unique and renamed monsters in local tiles.
+
+In combination with <w>name_replace</w> or <w>name_species</w>, there are two further tags
+that can be used when renaming monsters, but not giving them an actual "name":
+<w>name_descriptor</w>, and <w>name_definite</w>.
+
+For example:
+
+<w>kobold name:goblin name_replace</w>
+
+Will result in "<cyan>goblin hits you</cyan>". However, adding <w>name_descriptor</w> from the
+above flags will result in "<cyan>The goblin hits you</cyan>" and in the description of the
+monster, "<cyan>A goblin</cyan>".
+
+<w>kobold name:goblin name_replace name_descriptor</w>
+
+The <w>name_definite</w> flag ensures that it is never referred to as "<cyan>a</cyan>" or "<cyan>an</cyan>",
+but that the definite object is always used. Therefore, you will see "<cyan>The
+<cyan>goblin</cyan> <cyan>hits you</cyan>", as per above, but also "<cyan>The goblin</cyan>" in its description.
+Setting <w>name_definite</w> will automatically set the flag <w>name_descriptor</w>,
+therefore meaning that:
+
+<w>kobold name:goblin name_replace name_definite</w>
+
+is exactly the same as:
+
+<w>kobold name:goblin name_replace name_descriptor name_definite</w>
+
+<w>name_zombie</w> can be used to redefine already zombified monsters (including
+skeletons, simulacra and spectrals).
+
+Finally, <w>name_nocorpse</w> will cause the name to be completely ignored for
+corpses. For example:
+
+<w>wizard name:sad name_adjective name_nocorpse</w>
+
+will result in "<cyan>a sad wizard</cyan>" that leaves "<cyan>a wizard corpse</cyan>".
+
+For instances where space in definitions is limited, you can use abbreviated
+forms of these tags:
+
+* <w>name_suffix</w> -> <w>n_suf</w>
+* <w>name_adjective</w> -> <w>n_adj</w>
+* <w>name_replace</w> -> <w>n_rpl</w>
+* <w>name_species</w> -> <w>n_spe</w>
+* <w>name_descriptor</w> -> <w>n_des</w>
+* <w>name_definite</w> -> <w>n_the</w>
+* <w>name_zombie</w> -> <w>n_zom</w>
+* <w>name_nocorpse</w> -> <w>n_noc</w>
+
+<h>Overriding Monster Stats</h>
+
+Further monster customisation can be made by using <w>hd</w> and <w>hp</w>. These two tags
+allow you to completely overwrite the original hit dice and hit points of a
+monster:
+
+<w>kobold hd:20</w>
+
+Creates a kobold with a hit dice of 20. As its hp is randomised, based on its
+hit dice, this will also be re-rolled. Monsters with a specific hit point
+value will not have this value change.
+
+You can also have a specific value for hit points:
+
+<w>kobold hp:20</w>
+
+Creates a kobold with 20 hit points. This is also useful for monsters (such as
+statues) which come with non-randomised HP values.
+
+Monsters can be marked as summoned by using <w>dur</w> and <w>sum</w> tags. The <w>dur</w> tag
+accepts an integer between 1 and 6 inclusive. The <w>sum</w> tag accepts the name of
+a spell (parsed as per the <w>spells</w> tag, described below) or any of <w>clone</w>
+(Rakshasa), <w>animate</w> (from animate dead), <w>chaos</w> (made from pure chaos), <w>miscast</w>
+(summoned from by spell miscast effect), <w>zot</w> (summoned by a Zot trap), <w>wrath</w>
+(summoned by a god in an act of retribution), <w>aid</w> (summoned by a god in order
+to give aid).
+
+Of the spells, <w>shadow_creatures</w> has the most significant effect, in that
+monsters will dissipate into the shadows rather than disappear in a puff of
+smoke. Using non-summoning spells will also have no effect.
+
+Tagging a monster with <w>seen</w> will override the system and force that monster to
+be marked as already viewed; this means that it won't generate messages such
+as "<cyan>A kobold comes into view</cyan>".
+
+<h>Overriding Monster Spells</h>
+
+Monster spell sets can be overridden with a <w>spells</w>: tag, used as follows:
+
+*<w>goblin spells:throw_flame.50.wizard</w>
+*<w>ancient lich spells:symbol_of_torment.26.wizard; glaciate.51.wizard</w>
+
+(a list of spell slots, consisting of a spell name with spaces replaced with
+underscores, a frequency of casting and set of spell slot flags specified
+afterwards with <w>.</w>, with slots separated by <w>;</w>. There should be no spaces around
+the <w>;</w> or after the <w>spells</w>: prefix)
+
+Spell names must exactly match the names in <cyan>spl-data.h</cyan>, with spaces replaced
+by underscores. Spell frequencies are an (x in 200) chance that that spell
+will be cast. Spell flags include:
+
+* <w>natural</w>, <w>magical</w>, <w>demonic</w>, <w>wizard</w>, or <w>priest</w> - the manner in which this
+spell is being cast. Wizards and priests can be silenced and will trigger
+appropriate conducts (Trog will appreciate killing wizards, Beogh will
+appreciate killing priests). Magical, demonic, and wizard spells are subject
+to anti-magic effects. Natural spells do not generate noise.
+* <w>emergency</w> - the monster will only cast the spell when low on health.
+* <w>breath</w> - the spell is a breath weapon, and using it triggers a breath
+timeout during which the spell cannot be cast again.
+* <w>no_silent</w> - the spell cannot be used while silent, even if it is an ability
+type normally not subject to silence.
+* <w>instant</w> - the spell does not expend the monster's energy; they may take
+another action on the same turn.
+* <w>noisy</w> - forces the spell to make noise even if it is a natural ability.
+
+You may use <w>none</w> specify that a slot should be left empty. You can force a
+spell-less monster with:
+
+<w>orc wizard spells:none</w>
+
+<h>Setting enchantments</h>
+
+You may give a monster any number of enchantments. It may start hasted, blind,
+have permanent RMsl, etc. The syntax is <w>ench:<<name>:<<degree>:<<duration></w> or
+<w>perm_ench:<<name>:<<degree></w>. The <w><<degree></w> and <w><<duration></w> fields may be
+omitted.
+
+For example:
+
+* <w>orc perm_ench:blind perm_ench:mad</w>
+* <w>dream sheep ench:sticky_flame</w>
+* <w>stone giant dur:1 ench:berserk</w>
+
+%%%%
+macro-menu
+
+<h>Editing macros and keymaps</h>
+
+To edit a current macro/keymap, select from the menu using the arrow keys or
+by hotkey. (Hotkeys that are used to navigate the menu can be selected by
+arrow keys). To create a new mapping by entering a key, use the [<w>~</w>] key
+or the corresponding menu item, and then enter the key. This allows you to
+create (and edit) mappings that use menu keys. Use the [<w>!</w>] key to switch
+to keymap editing mode (see below for more information on keymaps).
+
+<w>Macros</w> allow remapping keys that are sent to the game when inputting
+commands. This can be used to redefine a command key, or to define an unused
+key. They map a key to a sequence of keystrokes, and keystrokes do carry over
+into submenus.
+
+Example 1: mapping <w>e</w> to <w>p</w> would let the `e` key trigger the same
+command as the `p` key (which on the default settings is autofire).
+
+Example 2: mapping <w>1</w> to the sequence <w>zaf</w> would let the `1` key
+cast a spell that is on the letter `a` with default targeting.
+
+Example 3: mapping <w>F1</w> to <w>Q&a</w> would let the F1 key quiver the spell
+that is on letter `a`.
+
+<w>Keymaps</w> are lower-level key substitutions that replace keys entirely with
+a sequence of keystrokes. They are recommended for changing keys uniformly to
+deal with alternative keyboard layouts. Keymaps are contextual, and the
+default/"regular" context is used anywhere that a non-specialized context is not
+active. Macros take the result of keymaps as input.
+
+Example: In some European keyboard layouts, the § symbol replaces ~. Therefore,
+it could be useful to keymap § to ~ in both the regular and menu keymap contexts
+so that the main menu and macro menu become a bit easier to access. (In other
+layouts, this applies instead to ½.)
+
+When used for mapping commands, keymaps can have unexpected side effects: e.g.
+mapping <w>1</w> to <w>zaf</w> via keymap is not recommended, because this will
+make it hard to type `1` when entering a skill target.
+
+<w>Keycodes</w>: Both macros and keymaps accept keycodes when describing the
+action, in the form of <w>\{n}</w> to enter keycode <w>n</w>. (Use <w>\\</w> to
+enter a backslash.) For example, use <w>\{9}</w> to enter the keycode for the
+<w>tab</w> button. You can bind macros and keymaps by keycode by using <w>~~</w>
+at the macro edit menu.
+
+<w>Saving</w>: Bindings edited at this menu are saved in a .macro file in your
+save directory. They will be overridden by settings in your options file. See
+the `macro` command in options_guide.txt for more information.
+
+%%%%
+console-keycodes
+
+<h>Keycodes for console and webtiles</h>
+
+Positive values are ASCII character codes. Negative values are crawl-internal
+keycodes for special keys. The sign is required for these to be interpreted
+correctly. Keyboards vary quite a bit, and so not all of these bindings are
+available on all keyboards; cases where there is often variation are indicated
+specifically below. When entering a keycode in a macro action, or in your rc
+file, use the following syntax for keycode n: <w>\{n}</w>
+
+The following is a quick-reference for some of the main keys you might want to
+bind.
+
+<w>8</w>: Backspace (and/or Delete, depending on keyboard)
+<w>9</w>: Tab
+<w>13</w>: Return (and/or Enter, depending on keyboard)
+<w>27</w>: Escape
+
+<w>-233</w>: Shift-Tab
+<w>-222</w>: Ctrl-Tab (on some keyboards)
+<w>-255</w>: Delete (on some keyboards)
+<w>-265</w>: F1   <w>-264</w>: F2   <w>-263</w>: F3   <w>-262</w>: F4   <w>-261</w>: F5
+<w>-260</w>: F6   <w>-259</w>: F7   <w>-258</w>: F8   <w>-257</w>: F9   <w>-256</w>: F10
+Console-only: <w>-255</w>: F11   <w>-254</w>: F12
+
+<w>Number pad and navigation keys:</w>
+
+On many keyboards, <w>numlock</w> switches between the number keys and
+navigation keys. Modifiers for these keys may not work on all keyboards. When
+modified number pad keys do work, Shift and Ctrl typically treats those keys as
+modified navigation keys regardless of numlock status.
+
+<w>-245</w>: PgDn    <w>-234</w>: Shift-PgDn    <w>-223</w>: Ctrl-PgDn
+<w>-246</w>: PgUp    <w>-235</w>: Shift-PgUp    <w>-224</w>: Ctrl-PgUp
+<w>-247</w>: Clear   <w>-236</w>: Shift-Clear   <w>-225</w>: Ctrl-Clear
+<w>-248</w>: End     <w>-237</w>: Shift-End     <w>-226</w>: Ctrl-End
+<w>-249</w>: Home    <w>-238</w>: Shift-Home    <w>-227</w>: Ctrl-Home
+<w>-250</w>: Insert  <w>-239</w>: Shift-Insert  <w>-228</w>: Ctrl-Insert
+<w>-251</w>: Right   <w>-240</w>: Shift-Right   <w>-229</w>: Ctrl-Right
+<w>-252</w>: Left    <w>-241</w>: Shift-Left    <w>-230</w>: Ctrl-Left
+<w>-253</w>: Down    <w>-242</w>: Shift-Down    <w>-231</w>: Ctrl-Down
+<w>-254</w>: Up      <w>-243</w>: Shift-Up      <w>-232</w>: Ctrl-Up
+
+<w>-1007</w>: Numpad 7   <w>-1008</w>: Numpad 8   <w>-1009</w>: Numpad 9
+<w>-1004</w>: Numpad 4   <w>-1005</w>: Numpad 5   <w>-1006</w>: Numpad 6
+<w>-1001</w>: Numpad 1   <w>-1002</w>: Numpad 2   <w>-1003</w>: Numpad 3
+<w>-1000</w>: Numpad 0
+<w>-1010</w>: Numpad enter (on some keyboards)
+
+Some number pad punctuation keys may not be distinguished from their "regular"
+counterparts, again depending on keyboard.

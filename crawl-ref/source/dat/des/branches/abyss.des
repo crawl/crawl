@@ -69,7 +69,8 @@ ENDMAP
 NAME:  marbit_kobold_abyss_entry
 TAGS:  no_monster_gen nolayout_encompass
 WEIGHT: 5
-MONS:  big kobold ; boomerang ego:dispersal, kobold demonologist
+MONS:  kobold brigand ; boomerang ego:dispersal, kobold demonologist
+KPROP: 1 = no_tele_into
 : abyss_entry(_G, '_')
 MAP
 xxxxxxxxxxxxxxx
@@ -106,10 +107,11 @@ xb.....bx
 ENDMAP
 
 NAME:    abyss_entry_glasseish
-TAGS:    nolayout_encompass transparent
+TAGS:    nolayout_encompass
 WEIGHT:  5
 : abyss_entry(_G, 'O')
 KPROP:   T = no_tele_into
+KMASK:   .O = !opaque
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    demonic plant
@@ -164,7 +166,7 @@ x.x.x.F.xxx
 ENDMAP
 
 NAME: nicolae_abyss_entry_one_way_or_another
-TAGS: nolayout_encompass patrolling
+TAGS: nolayout_encompass patrolling transparent
 : abyss_entry(_G, 'O')
 NSUBST: 1 = 1111111112 / .
 # All of these are guaranteed to have banishment in their spell sets.
@@ -319,7 +321,7 @@ MONS:   fire bat w:12 / bat simulacrum / spectral bat / bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf demonologist
-MONS:   worker ant w:40 / vampire mosquito w:20 / hornet
+MONS:   scorpion w:40 / vampire mosquito w:20 / hornet
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion / death scarab
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
@@ -595,7 +597,7 @@ NAME:    hangedman_shadowy_showcase
 TAGS:    transparent no_monster_gen
 MONS:    shadow wraith / unseen horror / thrashing horror, lurking horror
 MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
-MONS:    large abomination / ghoul / death ooze w:2, ancient zyme
+MONS:    large abomination / ghoul, ancient zyme
 MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
 KMONS:   8 = starcursed mass
 KMONS:   9 = floating eye / chaos spawn / anaconda perm_ench:shapeshifter w:2
@@ -957,7 +959,7 @@ MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          glowing shapeshifter
 ITEM:    superb_item
 ITEM:    bolt good_item q:40 / arrow good_item q:40, any magical staff
-ITEM:    scroll of magic mapping q:4 / scroll of random uselessness q:4
+ITEM:    scroll of magic mapping q:4 / scroll of noise q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
 ITEM:    demon blade ego:chaos good_item ident:type / \
          demon trident ego:chaos good_item ident:type / \
@@ -1116,7 +1118,7 @@ ENDMAP
 NAME:    hangedman_abyss_rune_flesh_and_stone
 TAGS:    abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  5
-MONS:    catoblepas, earth elemental, basilisk, gargoyle
+MONS:    catoblepas, earth elemental, basilisk, boulder beetle
 MONS:    catoblepas skeleton, air elemental, death drake
 ITEM:    potion of flight q:1 ident:type
 KMONS:   O = patrolling war gargoyle
@@ -1151,9 +1153,9 @@ ENDMAP
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
-KMONS:  2 = golden eye / eye of draining w:4 / floating eye w:2
+KMONS:  2 = golden eye / floating eye w:2
 KMONS:  3O = flying skull
-KMONS:  4 = large abomination / small abomination w:6 / macabre mass w:2
+KMONS:  4 = large abomination / small abomination w:6
 KMONS:  5 = cacodemon
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
@@ -1320,7 +1322,7 @@ ENDMAP
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
 MONS:   fire bat, chaos spawn, fire dragon / ice dragon, ogre mage
-KMONS:  OL = lich / ancient lich w:1
+KMONS:  OL = lich / ancient lich w:1 / dread lich w:1
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 NSUBST: L = 1:O / *:L
@@ -1460,11 +1462,10 @@ KMONS:   5 = thrashing horror
 KMONS:   6 = lurking horror
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
-KITEM:   4d = scroll of random uselessness w:15 q:1 / \
+KITEM:   4d = scroll of noise w:15 q:1 / \
          club w:6 / stone q:1 / dart q:1 ego:atropa / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   5 = wand of random effects / wand of flame / whip not_cursed w:2 / \
-         hat not_cursed mundane w:5
+KITEM:   5 = wand of flame / whip w:2 / hat mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
@@ -1602,7 +1603,7 @@ MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
          / very ugly thing / quicksilver dragon / shadow dragon
 MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
          / blizzard demon / executioner / angel / daeva
-KMONS:   R = hellephant / ancient lich / hell sentinel / profane servitor
+KMONS:   R = hellephant / ancient lich / dread lich / hell sentinel / profane servitor
 KITEM:   O = abyssal rune of Zot
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
 MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
@@ -1920,7 +1921,7 @@ NAME:   evilmike_abyss_exit_16
 TAGS:   abyss_exit
 NSUBST: . = 1:O / *:.
 SUBST:  c = cbx, . = .....12
-MONS:   slime creature, ooze / jelly
+MONS:   slime creature, endoplasm / jelly
 : init_abyss_exit(_G, "O")
 MAP
 c+c+c+c+c+c
@@ -1953,7 +1954,7 @@ x...x...x
 ENDMAP
 
 NAME:   evilmike_abyss_exit_kraken
-TAGS:   abyss_exit
+TAGS:   abyss_exit no_pool_fixup
 NSUBST: w = 1:m / *:w
 KFEAT:  m = w
 KMONS:  m = kraken
@@ -2068,9 +2069,11 @@ MARKER: P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
              size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
              spread_rate=3, start_clouds=1, colour="blue" }
 KFEAT:  _ = altar_lugonu
-KMONS:  1 = big kobold w:80 ; short sword | rapier | quick blade w:3 /\
-            big kobold w:10 ; quick blade ego:distortion w:6 | \
-                              rapier ego:distortion | short sword ego:distortion
+KMONS:  1 = kobold brigand w:80 ; dart ego:poisoned | dart ego:curare w:5 \
+                . short sword | rapier | quick blade w:3 \
+            / kobold brigand w:10 ; dart ego:poisoned | dart ego:curare w:5 \
+                . quick blade ego:distortion w:6 | rapier ego:distortion \
+                    | short sword ego:distortion
 : init_abyss_exit(_G, "P")
 MAP
   ccccc

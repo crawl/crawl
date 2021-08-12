@@ -19,6 +19,7 @@
 #include "command.h"
 #include "describe.h"
 #include "env.h"
+#include "evoke.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "initfile.h"
@@ -41,9 +42,11 @@
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
+#include "tile-env.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
@@ -127,7 +130,7 @@ const string &InvEntry::get_dbname() const
 
 bool InvEntry::is_cursed() const
 {
-    return item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed();
+    return item->cursed();
 }
 
 bool InvEntry::is_glowing() const
@@ -181,7 +184,7 @@ bool InvEntry::has_star() const
 
 string InvEntry::get_filter_text() const
 {
-    return item_prefix(*item) + " " + get_text();
+    return item_prefix(*item, false) + " " + get_text();
 }
 
 string InvEntry::get_text(bool need_cursor) const
@@ -519,9 +522,12 @@ string no_selectables_message(int item_selector)
     case OSEL_BEOGH_GIFT:
         return "You aren't carrying anything you can give to a follower.";
     case OSEL_CURSABLE:
-        return "You don't have any cursable items.";
+        return "You aren't wearing any cursable items.";
     case OSEL_UNCURSED_WORN_RINGS:
         return "You aren't wearing any uncursed rings.";
+    case OSEL_QUIVER_ACTION:
+    case OSEL_QUIVER_ACTION_FORCE:
+        return "You don't have any quiverable items.";
     }
 
     return "You aren't carrying any such object.";
@@ -543,7 +549,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 
 bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background)
 {
-    tileidx_t idx = tileidx_item(get_item_info(item));
+    tileidx_t idx = tileidx_item(get_item_known_info(item));
     if (!idx)
         return false;
 
@@ -552,12 +558,12 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         const equipment_type eq = item_equip_slot(item);
         if (eq != EQ_NONE)
         {
-            if (item_known_cursed(item))
+            if (item.cursed())
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED);
             else
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP);
         }
-        else if (item_known_cursed(item))
+        else if (item.cursed())
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
@@ -579,9 +585,9 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
-                ch = env.tile_flv(c).floor;
+                ch = tile_env.flv(c).floor;
             else if (ch == TILE_WALL_NORMAL)
-                ch = env.tile_flv(c).wall;
+                ch = tile_env.flv(c).wall;
 
             tileset.emplace_back(ch);
         }
@@ -1104,19 +1110,15 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_WIELD:
         return item_is_wieldable(i);
 
-    case OBJ_SCROLLS:
-        return itype == OBJ_SCROLLS
-               || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
-
     case OSEL_EVOKABLE:
-        return item_is_evokable(i, true);
+        // assumes valid link...would break with evoking from floor?
+        return item_is_evokable(i, true) && item_is_evokable(i, true, false);//evoke_check(i.link, true);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
 
     case OSEL_CURSED_WORN:
-        return i.cursed() && item_is_equipped(i)
-               && (&i != you.weapon() || is_weapon(i));
+        return i.cursed() && item_is_equipped(i);
 
 #if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
@@ -1146,11 +1148,16 @@ bool item_is_selected(const item_def &i, int selector)
                 && !item_is_equipped(i);
 
     case OSEL_CURSABLE:
-        return item_is_cursable(i);
+        return item_is_equipped(i) && item_is_cursable(i);
 
     case OSEL_UNCURSED_WORN_RINGS:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY
             && !jewellery_is_amulet(i);
+
+    case OSEL_QUIVER_ACTION:
+        return in_inventory(i) && quiver::slot_to_action(i.link)->is_valid();
+    case OSEL_QUIVER_ACTION_FORCE:
+        return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
 
     default:
         return false;
@@ -1345,7 +1352,7 @@ static string _drop_menu_titlefn(const Menu *m, const string &)
  */
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 {
-    unsigned char  keyin = '?';
+    unsigned char  keyin = '?'; // TODO: this should not be unsigned, get_ch returns a signed int!
     int            ret = PROMPT_ABORT;
 
     bool           need_redraw = false;
@@ -1523,21 +1530,22 @@ static bool _has_warning_inscription(const item_def& item,
 // corresponding slot which has a warning inscription. If this is the case,
 // prompt the user for confirmation.
 bool check_old_item_warning(const item_def& item,
-                             operation_types oper)
+                            operation_types oper,
+                            bool check_melded)
 {
     item_def old_item;
     string prompt;
     bool penance = false;
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
-        if (!you.weapon())
+        if (!you.slot_item(EQ_WEAPON, check_melded))
             return true;
 
         int equip = you.equip[EQ_WEAPON];
         if (equip == -1 || item.link == equip)
             return true;
 
-        old_item = *you.weapon();
+        old_item = *you.slot_item(EQ_WEAPON, check_melded);
         if (!needs_handle_warning(old_item, OPER_WIELD, penance))
             return true;
 
@@ -1584,6 +1592,8 @@ bool check_old_item_warning(const item_def& item,
         return true;
 
     // now ask
+    if (old_item.cursed())
+        prompt += "and destroy ";
     prompt += old_item.name(DESC_INVENTORY);
     prompt += "?";
     if (penance)
@@ -1598,7 +1608,6 @@ static string _operation_verb(operation_types oper)
     case OPER_WIELD:          return "wield";
     case OPER_QUAFF:          return "quaff";
     case OPER_DROP:           return "drop";
-    case OPER_EAT:            return "eat";
     case OPER_TAKEOFF:        return "take off";
     case OPER_WEAR:           return "wear";
     case OPER_PUTON:          return "put on";
@@ -1643,10 +1652,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (_has_warning_inscription(item, oper))
         return true;
 
-    // Curses first.
-    if (item_known_cursed(item)
-        && (oper == OPER_WIELD && is_weapon(item) && !_is_wielded(item)
-            || oper == OPER_PUTON || oper == OPER_WEAR))
+    // Curses first. Warn if something would take off (i.e. destroy) the cursed item.
+    if (item.cursed()
+        && (oper == OPER_WIELD && is_weapon(item)
+            || oper == OPER_PUTON || oper == OPER_WEAR
+            || oper == OPER_TAKEOFF || oper == OPER_REMOVE))
     {
         return true;
     }
@@ -1668,7 +1678,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         && !you_worship(GOD_GOZAG)
         && !you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM))
+        && !you_worship(GOD_XOM)
+        && !you_worship(GOD_ASHENZARI))
     {
         return true;
     }
@@ -1732,23 +1743,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_EVOKE && god_hates_item(item))
     {
         penance = true;
-        return true;
-    }
-
-    // If you're invis from an item, warn that you're about to get an extra dose
-    // of contam from removing it. This check is rough, since we need to
-    // establish that the operation is a removal, the item being removed is in
-    // fact the +Invis one, and no other +Invis sources exist, and the player
-    // is currently invis from +Invis.
-    if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE || (oper == OPER_WIELD && item_is_equipped(item)))
-        && (
-                (is_artefact(item) && artefact_property(item, ARTP_INVISIBLE))
-                || (item.base_type == OBJ_ARMOUR && get_armour_ego_type(item) == SPARM_INVISIBILITY)
-            )
-        && you.evokable_invis() < 2 // If you've got 2 sources, removing 1 is fine.
-        && you.duration[DUR_INVIS] > 1
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
         return true;
     }
 
@@ -1884,15 +1878,8 @@ int prompt_invent_item(const char *prompt,
     const bool auto_list = !(flags & invprompt_flag::manual_list);
     const bool allow_easy_quit = !(flags & invprompt_flag::escape_only);
 
-    if (!any_items_of_type(type_expect)
-        && type_expect == OSEL_THROWABLE
-        && (oper == OPER_FIRE || oper == OPER_QUIVER)
-        && mtype == menu_type::invlist)
-    {
-        type_expect = OSEL_ANY;
-    }
-
-    if (!any_items_of_type(type_expect) && type_expect != OSEL_WIELD)
+    if (!any_items_of_type(type_expect) && type_expect != OSEL_WIELD
+        && type_expect != OSEL_QUIVER_ACTION)
     {
         mprf(MSGCH_PROMPT, "%s",
              no_selectables_message(type_expect).c_str());
@@ -1909,6 +1896,7 @@ int prompt_invent_item(const char *prompt,
 
     if (auto_list)
     {
+        need_prompt = false;
         need_getch = false;
 
         if (any_items_of_type(type_expect))
@@ -2079,14 +2067,14 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    return is_weapon(item) && you.species != SP_FELID;
+    return is_weapon(item) && !you.has_mutation(MUT_NO_GRASPING);
 }
 
 /// Does the item only serve to produce summons or allies?
 static bool _item_ally_only(const item_def &item)
 {
     if (item.base_type == OBJ_WANDS)
-        return item.sub_type == WAND_ENSLAVEMENT;
+        return item.sub_type == WAND_CHARMING;
     else if (item.base_type == OBJ_MISCELLANY)
     {
         switch (item.sub_type)
@@ -2125,7 +2113,8 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-        if (entry->evoke_func && item_type_known(item))
+        if ((entry->evoke_func || entry->targeted_evoke_func)
+            && item_type_known(item))
         {
             if (no_evocables)
             {
@@ -2172,11 +2161,15 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     case OBJ_WANDS:
         return true;
 
+    // TODO: move these out of evoke
     case OBJ_WEAPONS:
         if ((!wielded || !unskilled) && !msg)
             return false;
 
-        if (unskilled && weapon_reach(item) > REACH_NONE && item_type_known(item))
+        // XX code duplication with evoke_check
+        if (unskilled
+            && (weapon_reach(item) > REACH_NONE && item_type_known(item)
+                || you.weapon() && is_range_weapon(*you.weapon())))
         {
             if (!wielded)
             {

@@ -5,7 +5,11 @@
 
 #pragma once
 
+#include <vector>
+
 #include "player.h"
+
+using std::vector;
 
 const int MAX_SKILL_ORDER = 100;
 struct skill_state
@@ -22,11 +26,11 @@ struct skill_state
     FixedVector<unsigned int, NUM_SKILLS> training_targets;
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
+    FixedVector<unsigned int, NUM_SKILLS> skill_manual_points;
     int skill_cost_level;
     unsigned int total_experience;
     bool auto_training;
     int exp_available;
-    vector<int> manual_charges;
 
     void save();
     bool state_saved() const;
@@ -58,7 +62,7 @@ unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);
 void check_skill_cost_change();
 
-bool training_restricted(skill_type sk);
+bool skill_default_shown(skill_type sk);
 void reassess_starting_skills();
 bool check_selected_skills();
 void init_train();
@@ -84,6 +88,7 @@ int get_skill_progress(skill_type sk, int level, int points, int scale);
 int get_skill_progress(skill_type sk, int scale);
 int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
+const char *skill_abbr(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
 skill_type str_to_skill_safe(const string &skill);
 
@@ -103,6 +108,7 @@ skill_type best_skill(skill_type min_skill, skill_type max_skill,
 void init_skill_order();
 
 bool is_removed_skill(skill_type skill);
+bool can_sacrifice_skill(mutation_type mut);
 bool is_useless_skill(skill_type skill);
 bool is_harmful_skill(skill_type skill);
 bool can_enable_skill(skill_type sk, bool override = false);
@@ -125,9 +131,6 @@ int elemental_preference(spell_type spell, int scale = 1);
 
 void skill_menu(int flag = 0, int exp = 0);
 void dump_skills(string &text);
-int skill_transfer_amount(skill_type sk);
-int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
-                          bool simu, bool boost = false);
 int skill_bump(skill_type skill, int scale = 1);
 void fixup_skills();
 

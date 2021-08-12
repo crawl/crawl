@@ -26,16 +26,15 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    Lesson 5: Gods and Divine Abilities
 ORDER:   5
 ORIENT:  encompass
-KFEAT:   bABCDEFHI = .
-COLOUR:  ABCDEFHI = lightblue
-FTILE:   ABCDEFHI = tutorial_pad
+KFEAT:   bABCDEHI = .
+COLOUR:  ABCDEHI = lightblue
+FTILE:   ABCDEHI = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
-ITEM:    mace mundane not_cursed
-ITEM:    book of clouds
-MONS:    rat always_corpse
-MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
-MONS:    gnoll ; mace ego:none not_cursed
+ITEM:    mace mundane
+MONS:    rat
+MONS:    hobgoblin ; short sword ego:none | w:5 mace ego:none
+MONS:    gnoll ; mace ego:none
 MONS:    orc wizard spells:magic_dart.35.wizard;blink.18.wizard
 MARKER:  A = lua:tutorial5.msg("dungeon_overview")
 MARKER:  _ = lua:tutorial5.msg("altar")
@@ -76,21 +75,21 @@ xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx....C......1.....xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxx.xxxxxxxxxx.....xxxxxxxxxxx.x}xxxxxxxxxxx
-xxxxxx.xxxxxxxxxxxx.xxxxxxxxxxxx.....xxxxxxxxxx
-xxxxxxBxxxxxxxxxxxx.xxxxxxxxxx....1...xxxxxxxxx
-xtt..G.G..ttxxxxxxx.xxxxxxxxx...2....)xxxxxxxxx
-xt........txxxxxxxx.xxxxxH....1....1xxxxxxxxxxx
-x..mmm.mmm..xxxxxxx.xxxx.xxxxx...2...xxxxxxxxxx
-x..mYbbbYm..xxxxxxx.xxxx.xxxxxxx..4.xxxxxxxxxxx
-x...bb_bb...xxxxxxxDxxxxx..xxxxxx.]xxxxxxxxxxxx
-x..mVbbbVm..xxxxxxx+xxxxxxx.xxxxxxxxxxxxxxxxxxx
-x..mmm.mmm..xxxxxx...xxxxxxx...xxxxxxxxxxxxxxxx
-xt.........txxxxxx...xxxxxx..1...xxxxxxxxxxxxxx
-xtt..G.G..ttxxxxxx...xxxxxxx..1...xxxxxxxxxxxxx
-xxxxxxAxxxxxxxxxxx...xxxxxxxx....xxxxxxxxxxxxxx
-xxxxxx.xxxxxxxxxxx...xxxxxxxxxxxx.xxxxxxxxxxxxx
-xxxxxx.xxxxxxxxxxx.3.xxxxxxxxxxxxxFxxxxxxxxxxxx
+xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.xxxxxxxxxxxx.xxxxxxxxxxxxx)xxxxxxxxxxxxx
+xxxxxxBxxxxxxxxxxxx.xxxxxxxxx}........]xxxxxxxx
+xtt..G.G..ttxxxxxxx.xxxxxxxxx.....1...xxxxxxxxx
+xt........txxxxxxxx.xxxxxxxxx........4xxxxxxxxx
+x..mmm.mmm..xxxxxxx.xxxxxxxxxx.1......xxxxxxxxx
+x..mYbbbYm..xxxxxxx.xxxxxxxxxxx....2.xxxxxxxxxx
+x...bb_bb...xxxxxxxDxxxxxxxxxxxx2....xxxxxxxxxx
+x..mVbbbVm..xxxxxxx+xxxxxxxxxxxx....xxxxxxxxxxx
+x..mmm.mmm..xxxxxx...xxxxxxxxxxx..1.xxxxxxxxxxx
+xt.........txxxxxx...xxxxxxxxxxxx..xxxxxxxxxxxx
+xtt..G.G..ttxxxxxx...xxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxAxxxxxxxxxxx...xxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxx.xxxxxxxxxxx...xxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxx.xxxxxxxxxxx.3.xxxxxxxxxxxxxHxxxxxxxxxxxx
 xxxxxx+xxxxxxxxxxxxExxxxxxxxxxx...xxxxxxxxxxxxx
 xxx...d...xxxxxxxxx............xxxxxxxxxxxxxxxx
 xxx.[.{.(.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

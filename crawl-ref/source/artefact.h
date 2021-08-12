@@ -50,6 +50,8 @@ struct unrandart_entry
     const char *unid_name;   // un-id'd name of unrandart
     const char *type_name;   // custom item type
     const char *inscrip;     // extra inscription
+    const char *dbrand;      // description of extra brand
+    const char *descrip;     // description of extra power
 
     object_class_type base_type;
     uint8_t           sub_type;
@@ -73,6 +75,7 @@ struct unrandart_entry
     setup_missile_type (*launch)(item_def* item, bolt* beam,
                                  string* ammo_name, bool* returning);
     bool (*evoke_func)(item_def *item, bool* did_work, bool* unevokable);
+    bool (*targeted_evoke_func)(item_def *item, bool* did_work, bool* unevokable, dist* target);
 };
 
 bool is_known_artefact(const item_def &item);
@@ -120,6 +123,7 @@ int artefact_known_property(const item_def &item, artefact_prop_type prop);
 void artefact_learn_prop(item_def &item, artefact_prop_type prop);
 
 bool make_item_randart(item_def &item, bool force_mundane = false);
+void make_ashenzari_randart(item_def &item);
 bool make_item_unrandart(item_def &item, int unrand_index);
 void setup_unrandart(item_def &item, bool creating = true);
 
@@ -134,12 +138,14 @@ void artefact_set_property(item_def           &item,
                            artefact_prop_type  prop,
                            int                 val);
 
+/// Type for the value of an artefact property
 enum artp_value_type
 {
-    ARTP_VAL_BOOL,
-    ARTP_VAL_POS,
-    ARTP_VAL_BRAND,
-    ARTP_VAL_ANY,
+    ARTP_VAL_BOOL,  ///< bool (e.g. Fly)
+    ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
+    ARTP_VAL_BRAND, ///< Brand (e.g. flaming, vorpal).
+                    ///      See \ref brand_type in item-prop-enum.h
+    ARTP_VAL_ANY,   ///< int (e.g. dex-4, AC+4, SH+8)
 };
 artp_value_type artp_potential_value_types(artefact_prop_type prop);
 

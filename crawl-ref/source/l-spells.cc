@@ -9,6 +9,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-zap.h"
+#include "describe.h"
 
 /*** Is this spell memorised?
  * @tparam string spellname
@@ -173,8 +174,13 @@ LUAFN(l_spells_fail)
     PLUARET(number, failure_rate_to_int(raw_spell_fail(spell)));
 }
 
-/*** The failure severity of the spell.
- * TODO: Document these numbers
+/*** The miscast severity of the spell as a number in [0,5].
+ * 0: light grey, no chance of damaging miscast
+ * 1: white, <= 10% max HP damage
+ * 2: yellow, <= 30% max HP damage
+ * 3: light red, <= 50% max HP damage
+ * 4: red, <= 70% max HP damage
+ * 5: magenta, > 70% max HP damage (potentially lethal)
  * @tparam string name
  * @treturn int
  * @function fail_severity
@@ -183,6 +189,17 @@ LUAFN(l_spells_fail_severity)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     PLUARET(number, fail_severity(spell));
+}
+
+/*** The current spellpower (as an integer percentage 0-100).
+ * @tparam string name
+ * @treturn int
+ * @function power_perc
+ */
+LUAFN(l_spells_power_perc)
+{
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    PLUARET(number, spell_power_percent(spell));
 }
 
 /*** The current spellpower (in bars).
@@ -306,6 +323,55 @@ LUAFN(l_spells_god_loathes)
     PLUARET(boolean, god_loathes_spell(spell, god));
 }
 
+/*** Cast a spell at a target. If the target is not provided, enters interactive
+ * targeting.
+ *
+ * @tparam string spell name
+ * @tparam[opt=0] number x coordinate
+ * @tparam[opt=0] number y coordinate
+ * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @treturn boolean whether an action took place
+ * @function cast
+ */
+static int l_spells_cast(lua_State *ls)
+{
+    if (you.turn_is_over)
+        return 0;
+    const string spell_name = luaL_checkstring(ls, 1);
+    spell_type spell = spell_by_name(spell_name, false);
+    if (!is_valid_spell(spell))
+    {
+        luaL_argerror(ls, 1, ("Invalid spell: " + spell_name).c_str());
+        return 0;
+    }
+    PLAYERCOORDS(c, 2, 3);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+    quiver::spell_to_action(spell)->trigger(target);
+    PLUARET(boolean, you.turn_is_over);
+}
+
+/*** Describe a spell.
+ * Provide the complete text description of a spell as displayed in the
+ * game UI
+ * @tparam string spell name
+ * @treturn string description
+ * @function describe
+ */
+static int l_spells_describe(lua_State *ls)
+{
+    const string spell_name = luaL_checkstring(ls, 1);
+    spell_type spell = spell_by_name(spell_name, false);
+    if (!is_valid_spell(spell))
+    {
+        luaL_argerror(ls, 1, ("Invalid spell: " + spell_name).c_str());
+        return 0;
+    }
+    PLUARET(string, player_spell_desc(spell).c_str());
+}
+
+
 static const struct luaL_reg spells_clib[] =
 {
     { "memorised"     , l_spells_memorised },
@@ -320,6 +386,7 @@ static const struct luaL_reg spells_clib[] =
     { "fail_severity" , l_spells_fail_severity },
     { "power"         , l_spells_power },
     { "max_power"     , l_spells_max_power },
+    { "power_perc"    , l_spells_power_perc },
     { "dir_or_target" , l_spells_dir_or_target },
     { "target"        , l_spells_target },
     { "dir"           , l_spells_dir },
@@ -327,6 +394,8 @@ static const struct luaL_reg spells_clib[] =
     { "god_likes"     , l_spells_god_likes },
     { "god_hates"     , l_spells_god_hates },
     { "god_loathes"   , l_spells_god_loathes },
+    { "cast"          , l_spells_cast },
+    { "describe"      , l_spells_describe },
     { nullptr, nullptr }
 };
 

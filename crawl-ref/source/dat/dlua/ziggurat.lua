@@ -213,7 +213,8 @@ mset(spec_fn(function ()
   local d = math.max(6, you.depth() * 2 + you.zigs_completed() - 2)
   local e = math.max(1, you.depth() + you.zigs_completed() - 18)
   return "place:Snake:$ w:125 / naga sharpshooter w:5 / guardian serpent w:5 / " ..
-         "nagaraja w:" .. d .. " / quicksilver dragon w:" .. e
+         "salamander tyrant w:" .. d .. " / nagaraja w:" .. d .. " / " ..
+         "quicksilver dragon w:" .. e
 end))
 
 mset(spec_fn(function ()
@@ -248,7 +249,8 @@ end))
 mset(spec_fn(function ()
   local d = 5 + 5 * you.zigs_completed()
   return "place:Slime:$ w:1500 / floating eye w:" .. d .. " / " ..
-         "azure jelly w:" .. d * 5 .. " / acid blob w:" .. d * 14
+         "azure jelly w:" .. d .. " / quicksilver ooze w:" .. d .. " / " ..
+         "rockslime w:" .. d * 3 .. " / acid blob w:" .. d * 14
 end))
 
 mset(spec_fn(function ()
@@ -275,7 +277,7 @@ mset(spec_fn(function ()
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ w:" .. d .. " / " ..
          "glowing shapeshifter / sphinx w:5 / " ..
          "titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
-         "ancient lich w:" .. e
+         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
 end))
 
 mset(spec_fn(function ()
@@ -284,14 +286,14 @@ mset(spec_fn(function ()
   return "place:Crypt:$ 9 w:255 / ancient champion w:" .. d - 5 .. " / " ..
          "curse skull w:" .. d - 5 .. " / profane servitor w:" .. d - 5 .. " / " ..
          "bone dragon w:" .. d .. " / revenant w:" .. d .. " / " ..
-         "ancient lich w:" .. e
+         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
 end))
 
 mset(spec_fn(function ()
   local d = you.zigs_completed()
   local e = 20 + you.depth() * 4 + you.zigs_completed() * 2
   return "place:Tomb:$ 9 w:760 / bennu w:" .. d + 10 .. " / " ..
-         "mummy priest w:" .. d .. " / greater mummy w:" .. e
+         "mummy priest w:" .. d .. " / royal mummy w:" .. e
 end))
 
 mset(spec_fn(function ()
@@ -358,7 +360,7 @@ end), { weight = 2 }))
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
   local e = 10 + you.zigs_completed() * 3
-  return "insubstantial wisp / raiju / air elemental / " ..
+  return "raiju / air elemental / " ..
          "shock serpent w:" .. d .. " / spark wasp w:" .. d .. " / " ..
          "spriggan air mage w:" .. e .. " / storm dragon w:" .. e .. " / " ..
          "titan w:" .. e .. " / electric golem w:" .. e
@@ -368,7 +370,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
   local f = 20 + you.zigs_completed() * 4
-  return "gargoyle w:30 / earth elemental w:30 / " ..
+  return "gargoyle w:20 / earth elemental w:20 / boulder beetle w:20 / " ..
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
          "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..

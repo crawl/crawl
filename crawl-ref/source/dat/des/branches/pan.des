@@ -36,7 +36,7 @@ function pan_lord_epilogue(name)
     crawl.mpr(msgs[name], "warning")
     crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
     -- Counterpart to branch_rune_desc from lookup-help.cc
-    crawl.mpr("It guards the " .. runes[name] .. " rune of Zot.")
+    crawl.mpr("They guard the " .. runes[name] .. " rune of Zot.")
     crawl.take_note('Entered the realm of ' .. name .. '.')
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
 end
@@ -50,7 +50,7 @@ function pan_lord_setup(_G, name)
                  "cacodemon w:300 / tormentor / " ..
                  "tentacled monstrosity w:5 / " ..
                  "floating eye / golden eye band / eye of devastation / " ..
-                 "eye of draining / shining eye / very ugly thing band / "..
+                 "shining eye / very ugly thing band / "..
                  "monstrous corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
@@ -202,7 +202,7 @@ end
 function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
     e.mons("common demon / base demonspawn w:2")
-    e.mons("lesser demon")
+    e.mons("common demon / nothing")
     if e.is_validating() then return end
     if crawl.x_chance_in_y(you.depth() + 3, you.depth() + 5) then
         e.tags("luniq_hellpanabyss_threat_entry")
@@ -211,13 +211,18 @@ function pan_entry_vault_contents(e, glyph)
                       .. "   lorocyproca / tormentor / shadow demon")
     else
         e.subst("12 = .")
-        e.kmons(glyph .. " = lesser demon")
+        e.kmons(glyph .. " = common demon / nothing")
     end
 end
 
-function pan_declare_demonic_rune()
-  crawl.mpr("The tension of great conflict fills the air!", "warning")
-  crawl.mpr("The demonic rune of Zot may be found here.")
+function pan_declare_demonic_rune(holy)
+  if holy then
+    crawl.mpr("The tension of great conflict fills the air!", "warning")
+    crawl.mpr("The demonic rune of Zot may be found here.")
+  else
+    crawl.mpr("A powerful Pandemonium lord resides here.", "warning")
+    crawl.mpr("It guards the demonic rune of Zot.")
+  end
 end
 
 function pan_highlights_setup(e)
@@ -636,7 +641,7 @@ NSUBST:     O = 1:O / *:|
 TILE:       c = dngn_stone_wall_yellow
 MONS:       patrolling mnoleg
 MONS:       floating eye / golden eye / eye of devastation / \
-            eye of draining / shining eye
+            shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
 MONS:       cacodemon
 MONS:       neqoxec
@@ -2370,10 +2375,13 @@ ENDMAP
 NAME: nicolae_pan_performance_anxiety
 TAGS: no_trap_gen
 WEIGHT: 1
-KMONS:  p = human / elf / orc / naga / centaur / draconian / ogre / \
-            minotaur / troll / kobold / mummy / ghoul / spriggan / felid / \
-            deep dwarf / octopode / vampire / base draconian / demigod / \
-            demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
+KMONS:  p = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
+            ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
+            mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
+            octopode; nothing / vampire spells:. / formicid; nothing / \
+            gargoyle; nothing / vine stalker; nothing / djinni / \
+            merfolk; nothing / palentonga / gnoll; nothing / barachi / \
+            demonspawn / demigod / tengu; nothing
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)
@@ -2521,6 +2529,9 @@ ENDMAP
 #    from being insufficient, shows player-visible error messages) -
 #    some validator check is needed for the concept to work.
 NAME:   pan_demonic_rune_highlights
+# mark this as removed so that it doesn't get tested, remove if this ever is
+# made to work:
+TAGS:   removed
 ORIENT: float
 WEIGHT: 0
 : pan_highlights_setup(_G)
@@ -2532,13 +2543,18 @@ epilogue{{
 NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
-MONS:   pandemonium lord, eye of draining
+MONS:   pandemonium lord, ghost moth
 MONS:   black sun, lorocyproca, any demon
 KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
 KITEM:  O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:  m = iron_grate
 KFEAT:  { = {
@@ -2569,7 +2585,7 @@ MAP
 ENDMAP
 
 NAME:    serial_pan_draining_one
-MONS:    eye of draining, any demon
+MONS:    ghost moth, any demon
 SHUFFLE: CDE
 SUBST:   C : vv..., DE = .
 KMASK:   1 = opaque
@@ -2586,7 +2602,7 @@ CCm1mDDD
 ENDMAP
 
 NAME:    serial_pan_draining_two
-MONS:    eye of draining, any demon
+MONS:    ghost moth, any demon
 SHUFFLE: CD
 SUBST:   C : vvv., D = .
 KMASK:   1 = opaque
@@ -2605,7 +2621,7 @@ ENDMAP
 
 NAME:    serial_pan_draining_three
 WEIGHT:  4
-MONS:    eye of draining, any demon
+MONS:    ghost moth, any demon
 SUBST:   - : +.
 : serial_pan_setup(_G, "boxes")
 MAP
@@ -2628,6 +2644,11 @@ KMONS:   O = pandemonium lord
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:   { = {
 SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff / Gg / Hh
@@ -2701,6 +2722,11 @@ MONS:    tormentor, smoke demon, any demon
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:   m = iron_grate
 KFEAT:   { = {
@@ -2767,6 +2793,11 @@ KMONS:  P = pandemonium lord
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
 KITEM:  O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT: 5 = W
 KFEAT: 6 = w
@@ -2856,6 +2887,11 @@ ITEM:    any potion
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:   D = granite_statue
 KFEAT:   X = rock_wall
@@ -2890,11 +2926,11 @@ xp.x.....................---------------_....xXXX
 xxxx.....................---------------_.d6.xXXX
    x.xxxxxxxxxxxxxxxxx..x---------------_....xXXX
    x.x0d0x.d0x0d.x0d0x..x---------------xxxxxxXXX
-   x.x0..x0..x..0x..0x..x-------------1-x
-   x._..............._..x2-------------3x
-   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   x.x0..x0..x..0x..0x..x-------------1-xxxxxxXXX
+   x._..............._..x2-------------3xxxxxxXXX
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: serial_pan_fixed_disco_one
@@ -3942,7 +3978,7 @@ ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
 ITEM:   any good_item
 ITEM:   potion of cancellation
-ITEM:   potion of might / potion of brilliance / potion of stabbing
+ITEM:   potion of might / potion of brilliance
 ITEM:   any
 NSUBST: i = 2=ghh / 3=ghhiii / *:i
 MONS:   angel
@@ -3976,7 +4012,7 @@ SUBST:  D& = +, '"- = ., H = G, C = c
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
 epilogue{{
 if not you.have_rune("demonic") then
-  pan_declare_demonic_rune()
+  pan_declare_demonic_rune(true)
 end
 }}
 MAP

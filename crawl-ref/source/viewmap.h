@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "coordit.h"
 #include "env.h"
 #include "files.h"
@@ -11,6 +13,8 @@
 #include "tileview.h"
 #include "travel.h"
 #include "viewchar.h"
+
+using std::vector;
 
 class levelview_excursion : public level_excursion
 {

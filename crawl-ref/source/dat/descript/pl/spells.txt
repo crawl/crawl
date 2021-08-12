@@ -91,6 +91,11 @@ Ten czar uwalnia ogromne elektryczne wyładowanie które przepływa od celu do
 celu. Jeśli jednak cele nie są wystarczająco blisko siebie, piorun ten zamiast
 tego pójdzie w ziemię.
 %%%%
+Charm spell
+
+Ten czar, jeśli nie zostanie odparty, tymczasowo przejmuje kontrolę nad wybraną
+istotą.
+%%%%
 Confuse spell
 
 Ten czar, jeśli nie zostanie odparty, powoduje tymczasowe zaćmienie umysłu u
@@ -160,11 +165,6 @@ Ten czar tymczasowo nadaje rzucającemu postać wielkiego ognistego smoka, dają
 kły, pazury, nieludzko twardą skórę jak i zdolność ziania ogniem. Jeśli
 rzucający jest smokowcem, smok zamiast tego zachowa kolor jak i typ oddechu
 (np. biali smokowcy zmieniają się w lodowe smoki i zioną chłodem).
-%%%%
-Enslavement spell
-
-Ten czar, jeśli nie zostanie odparty, tymczasowo przejmuje kontrolę nad wybraną
-istotą.
 %%%%
 Fire Brand spell
 

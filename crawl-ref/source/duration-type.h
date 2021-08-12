@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum duration_type
 {
     DUR_INVIS,
@@ -81,7 +83,7 @@ enum duration_type
     DUR_TELEPATHY,
 #endif
     DUR_PETRIFIED,
-    DUR_LOWERED_MR,
+    DUR_LOWERED_WL,
     DUR_REPEL_STAIRS_MOVE,
     DUR_REPEL_STAIRS_CLIMB,
     DUR_CLOUD_TRAIL,
@@ -94,8 +96,10 @@ enum duration_type
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
+#if TAG_MAJOR_VERSION == 34
     DUR_SCRYING,
-    DUR_TORNADO,
+#endif
+    DUR_VORTEX,
     DUR_LIQUEFYING,
     DUR_HEROISM,
     DUR_FINESSE,
@@ -108,7 +112,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_SHROUD_OF_GOLUBRIA,
 #endif
-    DUR_TORNADO_COOLDOWN,
+    DUR_VORTEX_COOLDOWN,
 #if TAG_MAJOR_VERSION == 34
     DUR_NAUSEA,
 #endif
@@ -147,9 +151,9 @@ enum duration_type
     DUR_GRASPING_ROOTS,
     DUR_SLEEP_IMMUNITY,
     DUR_FIRE_VULN,
-    DUR_ELIXIR_HEALTH,
-    DUR_ELIXIR_MAGIC,
+    DUR_ELIXIR,
 #if TAG_MAJOR_VERSION == 34
+    DUR_ELIXIR_MAGIC,
     DUR_ANTENNAE_EXTEND,
 #endif
     DUR_TROGS_HAND,
@@ -187,7 +191,9 @@ enum duration_type
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
+#if TAG_MAJOR_VERSION == 34
     DUR_DEVICE_SURGE,
+#endif
     DUR_DOOM_HOWL,
 #if TAG_MAJOR_VERSION == 34
     DUR_DOOM_HOWL_IMMUNITY,
@@ -209,6 +215,13 @@ enum duration_type
     DUR_SHAFT_IMMUNITY,
     DUR_NOXIOUS_BOG,
     DUR_FROZEN_RAMPARTS,
+#if TAG_MAJOR_VERSION == 34
     DUR_STABBING,
+#endif
+    DUR_ATTRACTIVE,
+    DUR_LOCKED_DOWN,
+    DUR_WORD_OF_CHAOS_COOLDOWN,
+    DUR_SICKNESS,
+    DUR_BLINKBOLT_COOLDOWN,
     NUM_DURATIONS
 };

@@ -678,11 +678,13 @@ volcanic_wall4
 volcanic_wall5
 volcanic_wall6
 
-%variation WALL_VOLCANIC blue
-%hue 0 240
-%lum -10 240
-%repeat WALL_VOLCANIC WALL_VOLCANIC_BLUE
-%resetcol
+wall_moon0 WALL_MOON
+wall_moon1
+wall_moon2
+wall_moon3
+wall_moon4
+wall_moon5
+wall_moon6
 
 %weight 5
 crystal_wall00 WALL_CRYSTAL_SQUARES

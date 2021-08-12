@@ -57,7 +57,7 @@ Wishful Thinking
 # FIXME: should appear on amulets only
 Yendor
 %%%%
-_suspicion_name_
+_suspicion_no_conflict_name_
 
 Doubts
 
@@ -78,8 +78,12 @@ Suspected Treachery
 Suspicion
 
 Trepidation
+%%%%
+_suspicion_name_
 
-w:20
+@_suspicion_no_conflict_name_@
+
+w:2
 @_conflict_name_@
 %%%%
 ######################################################

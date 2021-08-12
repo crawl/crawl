@@ -3,14 +3,28 @@ define(["jquery", "comm", "client", "./ui", "./enums", "./cell_renderer",
 function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     "use strict";
 
+    var describe_scale = 2.0;
+
     function fmt_body_txt(txt)
     {
         return txt
+            // preserve all leading spaces
+            .split("\n")
+            .map(function (s) { return s.replace(/^\s+/, function (m)
+                    {
+                        // TODO: or mark as preformatted? something else?
+                        return m.replace(/\s/g, "&nbsp;");
+                    }).trim();
+                })
+            .join("\n")
+            // convert double linebreaks into paragraph markers
             .split("\n\n")
-            .map(function (s) { return "<p>"+s.trim()+"</p>"; })
+            .map(function (s) { return "<p>" + s + "</p>"; })
             .filter(function (s) { return s !== "<p></p>"; })
             .join("")
-            .split("\n").join("<br>");
+            // replace single linebreaks with manual linebreaks
+            .split("\n")
+            .join("<br>");
     }
 
     function _fmt_spellset_html(desc)
@@ -49,10 +63,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 var label = " " + letter + " - "+spell.title;
                 $item.append("<span>" + label + "</span>");
 
-                if (spell.hex_chance !== undefined)
-                    $item.append("<span>("+spell.hex_chance+") </span>");
+                if (spell.effect !== undefined)
+                    $item.append("<span>" + util.formatted_string_to_html(spell.effect) + " </span>");
                 if (spell.range_string !== undefined)
-                    $item.append("<span>" + util.formatted_string_to_html(spell.range_string) +" </span>");
+                    $item.append("<span>" + util.formatted_string_to_html(spell.range_string) + " </span>");
 
                 $list.append($item);
                 if (colour)
@@ -116,9 +130,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         if (desc.tile)
         {
             var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
+            util.init_canvas(canvas[0],
+                renderer.cell_width * describe_scale,
+                renderer.cell_height * describe_scale);
             renderer.init(canvas[0]);
-            renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, desc.tile.ymax, false);
+            renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0,
+                desc.tile.ymax, false, describe_scale);
         }
         else
             canvas.remove();
@@ -145,9 +162,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
             var canvas = $feat.find(".header > canvas");
             var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
+            util.init_canvas(canvas[0],
+                renderer.cell_width * describe_scale,
+                renderer.cell_height * describe_scale);
             renderer.init(canvas[0]);
-            renderer.draw_from_texture(feat.tile.t, 0, 0, feat.tile.tex, 0, 0, feat.tile.ymax, false);
+            renderer.draw_from_texture(feat.tile.t, 0, 0, feat.tile.tex, 0, 0,
+                feat.tile.ymax, false, describe_scale);
             $popup.append($feat);
         });
         var s = scroller($popup[0]);
@@ -175,11 +195,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
+        util.init_canvas(canvas[0],
+            renderer.cell_width * describe_scale,
+            renderer.cell_height * describe_scale);
         renderer.init(canvas[0]);
 
         desc.tiles.forEach(function (tile) {
-            renderer.draw_from_texture(tile.t, 0, 0, tile.tex, 0, 0, tile.ymax, false);
+            renderer.draw_from_texture(tile.t, 0, 0, tile.tex, 0, 0, tile.ymax,
+                false, describe_scale);
         });
 
         return $popup;
@@ -208,9 +231,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
+        util.init_canvas(canvas[0],
+            renderer.cell_width * describe_scale,
+            renderer.cell_height * describe_scale);
         renderer.init(canvas[0]);
-        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, desc.tile.ymax, false);
+        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0,
+            desc.tile.ymax, false, describe_scale);
 
         return $popup;
     }
@@ -227,9 +253,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
             var canvas = $card.find(".header > canvas");
             var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
+            util.init_canvas(canvas[0],
+                renderer.cell_width * describe_scale,
+                renderer.cell_height * describe_scale);
             renderer.init(canvas[0]);
-            renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false);
+            renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false,
+                describe_scale);
             $popup.append($card);
         });
         var s = scroller($popup[0]);
@@ -252,11 +281,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         });
         paneset_cycle($body);
 
-        if (desc.vampire !== undefined)
+        if (desc.vampire_alive !== undefined)
         {
             var css = ".vamp-attrs th:nth-child(%d) { background: #111; }";
             css += " .vamp-attrs td:nth-child(%d) { color: white; background: #111; }";
-            css = css.replace(/%d/g, desc.vampire + 1);
+            css = css.replace(/%d/g, desc.vampire_alive ? 2 : 3);
             $vamp.children("style").html(css);
             var vs = scroller($vamp[0]);
             $popup.on("keydown keypress", function (event) {
@@ -305,10 +334,13 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var canvas = $popup.find(".header > canvas")[0];
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas(canvas, renderer.cell_width, renderer.cell_height);
+        util.init_canvas(canvas,
+            renderer.cell_width * describe_scale,
+            renderer.cell_height * describe_scale);
         renderer.init(canvas);
         renderer.draw_from_texture(desc.tile.t, 0, 0,
-                                   desc.tile.tex, 0, 0, 0, false);
+                                   desc.tile.tex, 0, 0, 0, false,
+                                   describe_scale);
 
         var $body = $popup.children(".body");
         var $footer = $popup.find(".footer > .paneset");
@@ -324,13 +356,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     .addClass("fg"+desc.colour).html(desc.title);
         $panes.eq(0).find(".god-favour td.favour")
                     .addClass("fg"+desc.colour).html(desc.favour);
-        if (desc.bondage)
-        {
-            $panes.eq(0).find(".god-favour")
-                .after("<div class=tbl>"
-                        + util.formatted_string_to_html(desc.bondage)
-                        + "</div>");
-        }
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
         var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;
@@ -425,7 +450,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+        util.init_canvas($canvas[0],
+            renderer.cell_width * describe_scale,
+            renderer.cell_height * describe_scale);
         renderer.init($canvas[0]);
 
         if ((desc.fg_idx >= main.MAIN_MAX) && desc.doll)
@@ -446,7 +473,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     yofs += desc.mcache[mind][2];
                 }
                 renderer.draw_player(doll_part[0],
-                        0, 0, xofs, yofs, doll_part[1]);
+                        0, 0, xofs, yofs, doll_part[1], describe_scale);
             });
         }
 
@@ -456,7 +483,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 if (mcache_part) {
                     var yofs = Math.max(0, player.get_tile_info(mcache_part[0]).h - 32);
                     renderer.draw_player(mcache_part[0],
-                            0, 0, mcache_part[1], mcache_part[2]+yofs);
+                            0, 0, mcache_part[1], mcache_part[2]+yofs,
+                            undefined, describe_scale);
                 }
             });
         }
@@ -464,13 +492,13 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         {
             renderer.draw_foreground(0, 0, { t: {
                 fg: { value: desc.fg_idx }, bg: 0,
-            }});
+            }}, describe_scale);
         }
 
         renderer.draw_foreground(0, 0, { t: {
             fg: enums.prepare_fg_flags(desc.flag),
             bg: 0,
-        }});
+        }}, describe_scale);
 
         for (var i = 0; i < $panes.length; i++)
             scroller($panes.eq(i)[0]);
@@ -522,9 +550,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var t = gui.STARTUP_STONESOUP, tex = enums.texture.GUI;
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
+        util.init_canvas($canvas[0],
+            renderer.cell_width * describe_scale,
+            renderer.cell_height * describe_scale);
         renderer.init($canvas[0]);
-        renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false);
+        renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false,
+            describe_scale);
 
         return $popup;
     }

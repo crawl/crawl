@@ -26,7 +26,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
         if you.absdepth() >= 14 then
             e.mons("wolf / black bear w:4 / yak w:2")
         else
-            e.mons("hippogriff / elephant w:4 / dream sheep w:2")
+            e.mons("wyvern / elephant w:4 / dream sheep w:2")
         end
     else
         if you.absdepth() >= 12 then
@@ -34,7 +34,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
             e.mons("hell rat")
         elseif you.absdepth() >= 8 then
             e.mons("centaur / troll")
-            e.mons("porcupine")
+            e.mons("elephant")
         elseif you.absdepth() >= 5 then
             e.mons("gnoll / ogre w:1")
             e.mons("river rat")
@@ -94,9 +94,8 @@ function beast_lair_populate_mons_small(e)
     else
         local monster_list = {}
         if you.depth() < 4 then
-            monster_list = { "porcupine", "porcupine", "bullfrog", "wolf",
-                             "yak", "komodo dragon", "cane toad",
-                             "crocodile" }
+            monster_list = { "black bear", "water moccasin", "bullfrog",
+                             "wolf", "yak", "komodo dragon", "cane toad" }
         else
             monster_list = { "yak", "yak", "polar bear", "death yak",
                              "elephant", "cane toad", "komodo dragon",
@@ -164,8 +163,8 @@ ENDMAP
 NAME:    david_lair_generic
 TAGS:    lair_entry transparent
 ORIENT:  float
-MONS:    crocodile / basilisk
-MONS:    hippogriff, yak / death yak w:2, elephant
+MONS:    black bear / basilisk
+MONS:    wyvern, yak / death yak w:2, elephant
 KMONS:   P = plant / fungus
 SHUFFLE: 234, A1
 SUBST:   A = ., P = P.
@@ -207,8 +206,8 @@ NAME:    dpeg_lair_monsters
 TAGS:    ruin lair_entry transparent
 ORIENT:  float
 MONS:    yak, death yak
-MONS:    iguana w:20 / crocodile w:20 / komodo dragon / basilisk w:5
-MONS:    river rat / porcupine / hell rat / quokka / rat
+MONS:    iguana w:20 / black bear w:20 / komodo dragon / basilisk w:5
+MONS:    river rat / hell rat / quokka / rat
 MONS:    bullfrog w:40 / blink frog / cane toad
 SHUFFLE: 1345
 NSUBST:  1 = 2:11112 / * = 1..
@@ -261,8 +260,8 @@ ENDMAP
 NAME:   minmay_lair_entry_grove
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
-MONS:   crocodile / basilisk w:4, yak, black bear / wolf
-MONS:   porcupine w:14 / iguana w:2 / scorpion w:2
+MONS:   wyvern / basilisk w:4, yak, black bear / wolf
+MONS:   water moccasin w:14 / iguana w:2 / scorpion w:2
 KMONS:  P = plant / bush w:2 / fungus w:2
 KFEAT:  O = enter_lair
 NSUBST: . = 1:1 / 2:2 / 2:4 / 2 = 12 / 1 = 4. / 12:P / * = .:450 t:20 P:40
@@ -288,6 +287,10 @@ MAP
 ENDMAP
 
 # Lava Lair entry
+# TODO: this vault will veto without a path to the O tile, which lowers the
+# probability below weight 1. It would be better to not use vetoes to control
+# the probability. This vault vetos around 80-85% of the time in the
+# placement.lua test script case (completely open level)
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
@@ -319,7 +322,7 @@ MAP
 .@........wwwwww-.....
 ..-.-.-..wwwwwww.-..-.
 ..--w..wwwwwwwww-.--..
-...--w.wwwwwwww-www-..
+...--w.wwwwwwwwwwww-..
 ...wwww-wwwwwwwwww--..
 ..wwwwww--w--w2wwww..@
 ..wwwwww--....wwww---.
@@ -338,7 +341,7 @@ NAME:    erik_lair_dragon
 TAGS:    lair_entry no_rotate
 ORIENT:  float
 MONS:    steam dragon / acid dragon / swamp drake
-MONS:    basilisk / wyvern w:25 / komodo dragon / crocodile w:25
+MONS:    basilisk / wyvern / komodo dragon
 NSUBST:  2 = 3=2 / 3=2. / .
 SHUFFLE: %!*O
 SUBST:   z = .xc, ! = %
@@ -380,8 +383,8 @@ ENDMAP
 NAME:   due_lair_maze_entry_diamond
 TAGS:   lair_entry transparent
 ORIENT: float
-MONS:   porcupine w:50 / scorpion / bullfrog w:30 / \
-        black bear w:25 / crocodile w:15 / yak
+MONS:   water moccasin w:30 / scorpion / bullfrog w:30 / \
+        black bear w:25 / yak / komodo dragon w:5
 KMONS:  P = plant / fungus
 KFEAT:  O = enter_lair
 SUBST:  P = P:60 `
@@ -412,8 +415,8 @@ ENDMAP
 NAME:   grunt_lair_entry_orc_guard_hut
 TAGS:   lair_entry transparent
 ORIENT: float
-MONS:   porcupine w:50 / bullfrog w:30 / scorpion w:20 / \
-        black bear w:20 / crocodile / yak
+MONS:   bullfrog w:30 / scorpion w:20 / black bear w:20 / yak \
+        / komodo dragon w:5
 MONS:   patrolling orc warrior
 KMONS:  P = plant / fungus
 KFEAT:  O = enter_lair
@@ -800,36 +803,6 @@ t1tt1ttt21tt
      tt1t.t
 ENDMAP
 
-NAME:   wad_woods_antlair
-TAGS:   uniq_anthill
-DEPTH:  Lair:2-
-: wad_woods_setup(_G, "rock", 5, false, 0, 0, 0)
-MONS:   worker ant, soldier ant
-KMONS:  8 = entropy weaver
-KMONS:  Q = queen ant
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  8' = .
-: else
-SUBST:  ' = %
-: end
-MAP
-xxxxxxxxxxx1.xxxx
-xxx1xxx1xt.t.txxx
-x1xx1%..t1t.1x.tx
-xx..1.t...WWt%.x.
-xxxx.t.t.1tWWtt1.
-xxxxxxx1.....t.t.
-xxxxxx.x.x.1x...t
-xxxx.x.7xxx.xx.xx
-xxx6x.x.xxx.x.xxx
-xxxx.x.6x7..x.x7x
-x'x.x6x.W.x7x%86x
-x7.'x.xWWW.x86Q*x
-xx6xxxxxxxx6xx*%x
-xxxxxxxxxxxxxxxxx
-ENDMAP
-
 NAME:   wad_woods_river_01
 TAGS:   extra
 DEPTH:  D:2-, Lair
@@ -1050,8 +1023,8 @@ KMONS:  8 = meliai
 KITEM:  8 = %
 KFEAT:  a = x
 : wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
+: if you.in_branch("Lair") and you.depth() < 4
+:  or you.in_branch("D") and you.depth() < 12 then
 SUBST:  8 = 6
 : end
 KMASK:  W = no_monster_gen
@@ -1060,21 +1033,21 @@ TILE:   a = wall_wax
 MAP
         ttttttt..t    tt.
       .ttt.t.tt...t  ttt..
-    ttt.tt..tt.1t.t.1t.1.t...
- t.t1ttt.1..1WW.1t....t1...t...
-t.1t..t.1..tWWW.t.1.1..t.tt..tt.
-ttt.t11.1t...tWW.1t.t1..tt...ttt
-tttt.1..aaamaaa1Wt.t...t..tt1ttt
+    ttt.tt..tt.1t.t.1t...t...
+ t.t1ttt....1WW..t....t1...t...
+t..t..t.1..tWWW.t...1..t.tt..tt.
+ttt.t1...t...tWW.1t.t...tt...ttt
+tttt....aaamaaa1Wt.t...t..tt1ttt
 t.t1.t1aa6.a66aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt
   tt.aa86a7a.a.6aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
  t1.1aa66a.a.a.8aa.t...t.t.ttttt
-tt.1..aaa.aba6aaa.11.t..tttt%ttt
-t.t.1..aa.8a6.aaWW.t.tt.tt11t
+tt.1..aaa.aba6aaa.1..t..tttt%ttt
+t.t....aa.8a6.aaWW.t.tt.tt..t
 tt.t.1.1aaaaaaaWWwW1.t..t.tt
- tt.t111....t1WWwW.....1ttt
-  11.t.tt1.tt.tWWt1.1tt...
+ tt.t1.1....t1WWwW.....1ttt
+  1..t.tt..tt.tWWt1.1tt...
     t.tttxtttt1ttttttxx.
       .txxxt   ttxxtttt.
 ENDMAP
@@ -1143,10 +1116,12 @@ NAME:    grunt_forest_small_clearings
 TAGS:    transparent extra decor
 DEPTH:   Lair
 MONS:    plant / bush
-KMASK:   G = no_monster_gen
+KPROP:   G = no_tele_into
 SHUFFLE: Ww. / ''` / ''`
 SUBST:   t = t.., '` = 1:49 .:405
-SUBST:   G = w., W = WW., w = wwW
+SUBST:   G = w-, W = WW., w = wwW
+KMASK:   w- = no_monster_gen
+KMASK:   w- = opaque
 MAP
  tt@@@tt
 t.......t
@@ -1210,6 +1185,7 @@ MONS:   plant / bush
 NSUBST: t = 2:t / * = t..
 SUBST:  T = t, * = **t
 KPROP:  * = no_tele_into
+KMASK:  * = opaque
 MAP
  tt@@@tt
 t.......t
@@ -1874,8 +1850,7 @@ NAME:    pond_and_an_island_with_a_cottage
 ORIENT:  float
 DEPTH:   Lair:3-, !Lair:$
 MONS:    necromancer, elephant zombie
-MONS:    crocodile zombie / basilisk zombie / \
-         komodo dragon zombie w:4
+MONS:    basilisk zombie / komodo dragon zombie
 SHUFFLE: 23
 NSUBST:  2 = 1:2 / * = 2., 3 = 1:3 / * = 3.
 SUBST:   % = %%%%%$$$**|
@@ -2426,7 +2401,7 @@ NAME: cheibrodos_lair_overgrown_chateau
 TAGS: no_item_gen no_monster_gen
 DEPTH: Lair:2-, !Lair:$
 ORIENT: float
-MONS: water moccasin / porcupine, hornet, crocodile, bullfrog / cane toad
+MONS: water moccasin / black bear, hornet, yak, bullfrog / cane toad
 MONS: black mamba / komodo dragon / w:3 rime drake, hydra / lindwurm
 KMONS: PA = plant
 KFEAT: A = W
@@ -2603,7 +2578,7 @@ TAGS:   patrolling no_monster_gen no_pool_fixup
 PLACE:  Lair:$
 ORIENT: southeast
 MONS:   rime drake / swamp drake / acid dragon / steam dragon
-MONS:   basilisk / komodo dragon, iguana / crocodile
+MONS:   basilisk / komodo dragon, iguana
 MONS:   fire dragon, swamp dragon
 KMONS:  P = plant
 SUBST:  - = wwWW....%Ptt233, W = WWW., ? = 12**
@@ -2648,7 +2623,7 @@ WEIGHT:  14
 # duos of bovids / elephantae, fantasy hybrids), then bosses.
 MONS:    wolf / blink frog / yak / hell rat w:2
 MONS:    basilisk, rime drake, lindwurm
-MONS:    hippogriff, manticore, catoblepas
+MONS:    wyvern, manticore, catoblepas
 KMONS:   8 = water moccasin
 KMONS:   9 : cane toad w:90 / hornet
 KMONS:   0 : black mamba w:90 / wolf spider
@@ -2741,60 +2716,84 @@ ENDMAP
 
 ##############################################################################
 # Vaguely Jungle Book (R. Kipling) inspired.
-# When the anaconda is slain, the elephant statues will become dire elephants!
 #
-NAME:   due_jungle_book
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen
-ORIENT: north
-PLACE:  Lair:$
-MONS:   plant, elephant
+# This vault formerly released dire elephants from statues via a lua trigger
+# after the anaconda died, which was spoilery. I've revised it to have a
+# necromancy theme, with necromancers' Bind Soul being a somewhat analogous
+# on-death effect compared to the old vault. -gammafunk
+NAME:    due_jungle_book
+TAGS:    no_pool_fixup no_wall_fixup no_monster_gen
+PLACE:   Lair:$
+ORIENT:  north
+# A necromancy-themed loot item behind the obsidian statue.
+ITEM:    morg w:1 / rapier ego:pain w:5 / rapier ego:draining w:5 \
+         / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
+         / demon blade ego:draining / sword of zonguldruk w:1 \
+         / great sword ego:draining / triple sword ego:draining \
+         / demon whip ego:pain w:5 / demon whip ego:draining w:5 \
+         / eveningstar ego:draining / scetpre of torment w:1 \
+         / great mace ego:draining / majin-bo w:1 / lajatang ego:draining \
+         / broad axe ego:draining / battleaxe ego:draining \
+         / executioner's axe ego:draining / shadow dragon scales \
+         / cigotuvi's embrace w:1 / amulet of regeneration randart \
+         / ring of positive energy randart / staff of death \
+         / book of necromancy / book of death / book of unlife \
+         / randbook owner:Kikubaaqudgh disc:necromancy \
+         / necronomicon w:1
+KMONS:   pq = withered plant
+MONS:    elephant skeleton / elephant zombie / spectral elephant \
+         / elephant simulacrum / spectral cane toad / cane toad simulacrum
+MONS:    elephant, cane toad / death yak
+MONS:    spectral death yak w:20 / death yak simulacrum w:20 \
+         / dire elephant skeleton / dire elephant zombie \
+         / spectral dire elephant w:5 / dire elephant simulacrum w:5
+MONS:    dire elephant, patrolling necromancer, obsidian statue
 # The anaconda's name is Kaa.
-KMONS:  S = anaconda
-KFEAT:  S = deep_water
-KITEM:  U = superb_item
-KITEM:  Q = superb_item
-KFEAT:  o = granite_statue
-KFEAT:  i = granite_statue
-SUBST:  X = xxx.., P = 1........., T = tttxxc
-KPROP:  U = no_tele_into
-{{
-function elephant_statue()
-  return
-end
-
-set_feature_name("granite_statue", "elephant-shaped statue")
-}}
-MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
-MARKER: o = lua:portal_desc { slaved_to="elephant" }
-MARKER: G = lua:props_marker { veto_destroy="veto" }
-MARKER: o = lua:monster_on_death { \
-            target="anaconda_guard", \
-            new_monster="generate_awake dire elephant", \
-            message_seen="The elephant guardians awaken!", \
-            message_unseen="You hear a distant trumpeting.", \
-            master_name="elephant", \
-            veto_destroy="veto", \
-         }
-COLOUR: oG = green
-TILE:   oG = dngn_statue_elephant_jade
-TILE:   i = dngn_statue_elephant
+KMONS:   R = spectral anaconda
+KFEAT:   R = deep_water
+# Thin out elephant/dire elephant bands of central necromancers a bit.
+SUBST:   2 = 22., 5 = 55.
+# DE/FH/JK will always have a monster set, with one a guaranteed necromancer
+# plus band, next a 50% chance to be a # necromancer band, 50% chance to be
+# derived undead band, last guaranteed derived undead band. Necromancer band is
+# 4 live monsters on average, mostly elephants, sometimes other beasts mixed
+# in. Derived undead band is a stonger derived undead with 4 weaker ones on
+# average.
+SHUFFLE: DE / FH / JK
+SUBST:   D = 6, E = 23...
+SHUFFLE: FH / SZ
+SUBST:   F = 6, H = 23..., JS = 4, KZ = 11...
+# LM / NO / PQ each have 50% chance of being a derived undead band, 50% chance
+# of nothing.
+SHUFFLE: LM / NO / PQ
+SHUFFLE: LM / SZ
+SUBST:   L = 4, M = 11..., SZ = .
+SHUFFLE: NO / SZ
+SUBST:   N = 4, O = 11..., SZ = .
+SHUFFLE: PQ / SZ
+SUBST:   P = 4, Q = 11..., SZ = .
+SUBST:   a = tttxxc, p = p-, q = q., r = xxx.., - = .:100 Z, Z = 12345
+COLOUR:  t = brown
+TILE:    t = dngn_tree_dead
+TILE:    G = dngn_statue_elephant
+: set_feature_name("tree", "dead tree")
 MAP
-  xxxxxxxxxxx
- xxxxxXX.XXXxx
-xxxxX.....PPXxx
-xxtt.........Xxx                           xxxx
-xttitxx.X..X..XxxcccccccccccccccccccccccxxxxT.xxx...@
-xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
-xtttxccco.Gc....GccPWWcco..%cccP..ccP....P.G.o.TTxxx.
-xttxcccc...c.P...+P.WwW+...%Qc.....+.....c.c...TTTx..
-xxccccccPc.ccccPGc.WwwS+...%|c.22..c.Pcccc.P.cTTccc..
-xccccccc+c.P.PccccPwwwwco..%cc.22..cccc.P..c+ccccccc.
-xcc1...PPccccP.P.cWwWWPccccccc%...PcP.PPccccPP1..%cc.
-xcc......cccccccPcccW.ccco.occcP.ccc.ccccccc......cc.
-xccP.1..%ccttTccP.PcccccG.V.GcccccP.PccTttcc1....Pcc.
-xxcccccccct....cccP.P.P1P...P1P.P.Pccc....tcccccccc.
- TxTcccTt.......tcccccccc+++cccccccct.......tcccTt..@
-   @........@@...........@@@....T......@@..........@
+   xxxcccccccc
+  xxtttrrLrrrcc
+ xxttrqqMMM.qrcc
+xxxttq...MM..qrcc                           ccccc
+xxtt..rrqr..r..rcccccccccccccccccccccccccccccaaGttq.
+xtt7ttcccc++c++ccccccccccccccccccccccccccccaaaKKJttqq.
+xtdttccccG--c..OOGcc.WWccGqqqGccqqqccQQ.....qqGKKGttt.
+xtttcccccp-pcq.OON+..WwW+.55%|cG.2..+QQQqqc.cq.Kaaatq.
+xxxcccccc-c-ccccOGcqWwwR+.56**c|$22.cPqcccc---caaccc..
+xxccccccc+cp--pccccqwwwwcG5qqGc*%22.cccc---pc+ccccccc.
+xxccGEEqq.cccc---pcWWWWqccnnnccG62qqcp--pcccc.qqHHGcc.
+xxcc*DE..qccccccc-cccWqcccGpGcccqqccc-cccccccq..HF*cc.
+xxccGEEqqqccttaccp-pcccccGpYpGccnncp-pccattccqqqHHGcc.
+ xxcccccccctq..qccc-----------------cccq..qtcccccccc..
+ .axacccatq..  .qtcccccccc+++cccccccctq.  .qqtcccatq.
+ ..........     ..........@@@....a.....     ........
 ENDMAP
 
 ##############################################################################
@@ -2864,13 +2863,14 @@ KMONS:   4 = blink frog
 KMONS:   5 = komodo dragon / hydra
 KMONS:   6 = patrolling tyrant leech
 KMONS:   7 = electric eel
+KMONS:   8 = goliath frog
 KMONS:   p = plant
 ITEM:    any good_item
-KFEAT:   12367p = W
+KFEAT:   123678p = W
 # Previously 11.6 bullfrogs, 16.6 cane toads,
 # and 7.1 vampire mosquitoes on average.
-NSUBST:  XW = 6:1 / 8:2 / 6:3 / 12 = 11WWW / 16 = 22WWW / 8 = 44WWW
-NSUBST:  W = 3 = 667 / *:W, 5 = 1:5 / *:4
+NSUBST:  XW = 3:1 / 5:2 / 5:3 / 8 = 11WWW / 12 = 22WWW / 8 = 44WWW
+NSUBST:  W = 3 = 678 / *:W, 5 = 1:5 / *:4W
 NSUBST:  % = 1:d / 1:* / * = %%*|
 SHUFFLE: AB, CD
 SUBST:   AB = x, CD = w
@@ -2894,7 +2894,7 @@ x.WWWWWXXXxxppppp5WWWWWDDWWWW...
 ..WWWWWWWW6pp%%%%pp6WWWWDDWWWW..
 ..WWWWCWWW4ppp%%%pp4WWWWWDWWWW..
 .WWWWCCWWWW4ppppppxxXXWWWWWWWW..
-.WWCCCCCWWWW54ppxxxxxxXXXWWWWW.x
+.WWCCCCCWWWW5WppxxxxxxXXXWWWWW.x
 .WWWCCWWWWWWWWWWWWW..xxxxXXXWW.x
 .WWWCWWWWWWWWWBWWWWWWW..xxxxXX.x
 ..WWCWWWWWWBBBBWWWWWWWWWWWWxxxxx
@@ -3038,9 +3038,9 @@ NSUBST:  7 = 1:7 / 2 = 7. / *:.
                              .. " / merfolk skeleton w:1")
 }}
 MAP
-                xxxxxx
-          xxxxxxx5P.Pxx
-         xxP..5.5..P..xxxxxx
+                xxxxxxxxxxxxxx
+          xxxxxxx5P.Pxxxxxxxxx
+         xxP..5.5..P..xxxxxxxx
         xxP5d5.5.5P.P..xxP.xxx
        xx.5.5.5ccccccc....P..x
        x...5.ccc.d...ccc.P..xx
@@ -3069,35 +3069,45 @@ ENDMAP
 # An ancient temple flooded with waters brought forth by a mystic avatar.
 #
 NAME:    gammafunk_lair_ancient_temple
-PLACE:   Lair:$
 TAGS:    no_pool_fixup no_monster_gen
+PLACE:   Lair:$
 ORIENT:  float
-KMONS:   ~ = plant
-KMONS:   1 = water moccasin / crocodile / hornet / wyvern / cane toad
+KITEM:   % = any
+KITEM:   * = star_item
+KITEM:   | = superb_item
+: kitem("d = " .. dgn.loot_potions)
+KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
+         / trident randart / trident of the octopus king w:2 \
+         / demon trident w:5 / phial of floods / ring of the octopus king w:2
+KMONS:   p = plant
+KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
-KMONS:   3 = sea snake / manticore / wind drake / harpy
-KMONS:   4 = dire elephant / hydra
+KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy
+KMONS:   4 = dire elephant / hydra / torpor snail
 KMONS:   5 = patrolling merfolk avatar
-KFEAT:   ~12345%*|! = W
-KITEM:   % = any no_pickup
-KITEM:   * = star_item no_pickup
-KITEM:   | = superb_item no_pickup
-KITEM:   ! = any good_item no_pickup
-# Two of three locations will be collapsed wall openings, and the remaining one
-# will be a closed wall. Each opening will have 1-4 wall tiles replaced with
-# land, with the corresponding walls tiles having been moved nearby.
-SHUFFLE: defghijkopqr / suyzABCDEFHI / JKLMNOPQRSTU
-SHUFFLE: def / pqr, ghi / jko, suy / FHI, zAB / CDE
-SHUFFLE: defghijkopqr / defghijkoVYY / defghiVYYVYY / defVYYVYYVYY
-SUBST:   KLNOQRTUY = -, JMPSV = c
-SHUFFLE: suyzABCDEFHI / suyzABCDEVYY / suyzABVYYVYY / suyVYYVYYVYY
-SUBST:   dgjpszCF = `, ehkquADHY = -, V = c, a = ccc., G = GGGW`, " = .-
-NSUBST:  f = 1:c / -, i = 1:c / -, o = 1:c / -, r = 1:c / -
-NSUBST:  y = 1:c / -, B = 1:c / -, E = 1:c / -, I = 1:c / -
+KFEAT:   p12345de%*| = W
+NSUBST:  % = 2=d / 2=d% / e / %%*|
+# Open up squares on the fixed portions of the temple walls, on the outer
+# colums, and in the inner room.
+SUBST:   c = c:20 .:1 W:1, a = ccc-, q = cccc'
+# Each wall has a 50% chance of being broken open
+SHUFFLE: DEFHJ / uuyzz
+SUBST:   u = -, y = c, z = '
+SHUFFLE: KLMNO / uuyzz
+SUBST:   u = -, y = c, z = '
+SHUFFLE: PQRSZ / uuyzz
+SUBST:   u = -, y = c, z = '
+# For broken wall areas, put four wall squares in the area, spread out in a way
+# that prevents clumping. Also put some dry floor in these areas.
+SHUFFLE: DE, HJ, KL, NO, PQ, SZ
+NSUBST:  DFH = 4=c, DEF = 2=. / 2=.- / -, HJ = 2=. / 2=.' / '
+NSUBST:  KMN = 4=c, KLM = 2=. / 2=.- / -, NO = 2=. / 2=.' / '
+NSUBST:  PRS = 4=c, PQR = 2=. / 2=.- / -, SZ = 2=. / 2=.' / '
 # Monsters of each tier are distributed across outer and inner portions.
-NSUBST:  - = 8:1 / 6:2 / 6 = 12WW / 4 = 3WW / *:W
-NSUBST:  ' = 3:2 / 3 = 23W / 2 = 3334 / 1:5 / W, % = 1:! / 1:* / * = %%*|
-SUBST:   W = W:125 ~:10
+NSUBST:  - = 12=1W / 8=2W / 4=3W / 2=4WWW / W, ' = 4=2W / 8=3W / 5 / W
+# Ruin statues, possibly place inner chamber doors. Also replace some shallow
+# water with floor and some with plants throughout the map.
+SUBST:   G = GGGW., + : +.W, W = W:125 .:10 p:10, " = W.
 COLOUR:  c = white
 MAP
 """"""""""""""""""""""""
@@ -3106,22 +3116,22 @@ MAP
 "----------------------"
 "----aa---a--a---aa----"
 "aa--c------------c--aa"
-"aa--c----yBDI----c--aa"
-"----cG---uBEH---Gc----"
-"----cccccszCFccccc----"
-"aa--cG'''uADH'''Gc--aa"
-"aa--c''''yAEI''''c--aa"
-"----c''''''''''''c----"
-"---edeff'%%%%'LLKJK---"
-"aa-ighhi'%ww%'ONNMO-aa"
-"aa-ojkok'%ww%'QRQPR-aa"
-"---qpqrr'%%%%'UUTST---"
-"----c''''''''''''c----"
-"aa--c''''''''''''c--aa"
-"aa--cG''''''''''Gc--aa"
+"aa--c---LKLKLK---c--aa"
+"----cG--KLKLKL--Gc----"
+"----cccccMMMMccccc----"
+"aa--cU''ONONON''Uc--aa"
+"aa--c'''GONONG'''c--aa"
+"--EDcHJ'qqqqqq'SZcPQ--"
+"--DEFJH'q%%%%q'ZSRQP--"
+"a-EDFHJ'q%ww%q'SZRPQ-a"
+"a-DEFJH'q%ww%q'ZSRQP-a"
+"--EDFHJ'q%%%%q'SZRPQ--"
+"--DEcJH'qq++qq'ZScQP--"
+"aa--c'''G''''G'''c--aa"
+"aa--cU''''''''''Uc--aa"
 "----ccccc----ccccc----"
 "----cG----------Gc----"
-"aa--c-----GG-----c--aa"
+"aa--c-a-a-GG-a-a-c--aa"
 "aa--c------------c--aa"
 "----aa-aaa--aaa-aa----"
 "----------------------"
@@ -3193,4 +3203,66 @@ xAxxxx..;.;.;.lln"----"nlx`.`...xGxxx
               xxxxxxxxxxxllxxx
                  xxxxxxxxxxxx
                      xxxxxxx
+ENDMAP
+
+###############################################################################
+# An abyssal version of the forest ending
+# monster set drawn from weaker abyss spawns and lair branch abyssal visitors
+NAME:    hellmonk_lair_end_abyssal_woods
+PLACE:   Lair:$
+ORIENT:  northwest
+MONS:    blink frog / basilisk w:3, small abomination
+MONS:    shapeshifter / chaos spawn / smoke demon / ynoxinul
+MONS:    ancient zyme, ugly thing / large abomination,  thrashing horror
+KMONS:   7M = spriggan ; rapier ego:distortion
+KFEAT:   u = demonic_tree
+KFEAT:   N = enter_abyss
+KFEAT:   _ = altar_lugonu
+SUBST:   " = '.
+COLOUR:  '%M = magenta
+FTILE:   '%MN_u = floor_nerves_magenta
+NSUBST:  %d = 2=| / 3=* / %
+NSUBST:  1 = 5=1 / 1.., 2 = 4=2 / 2..
+NSUBST:  4 = 4 / 3, ' = 2=6 / 2=56 / 3=O / 5=5543O. / .
+SUBST:   7M = 7O
+# 33% chance for an additional opening at the south.
+SHUFFLE: yzD / JKL / JKL
+SUBST:   y = @, zD= ., JK = t, L = p
+# 33% chance for an additional opening at the north east.
+SHUFFLE: EFH / JKL / JKL
+SUBST:   E = @, FH= ., JK = t, L = p
+SUBST:   a = tt..., q = pp..., p = tttu, s = rr..., r = tu
+{{
+  dgn.delayed_decay(_G, 'O', "spriggan skeleton / wolf skeleton w:3"
+                             .. " / polar bear skeleton w:2"
+                             .. " / black bear skeleton w:2")
+}}
+MAP
+ttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttpppppppppppttpppptt
+ttttttttttttttttttttttttttttppppdd7..pp.2ppppFFFE
+ttttttt..tttt.tttatttttttpppp22...pp.....222HHHFF
+tttttta.aa..4....attttttppq......pppppp1....24ppt
+ttttt.......O...tatttttpp1...11ppppppppp..ppppptt
+tttt...tt..aa11atttttppp2.....1pppppqqp..rrtttttt
+ttt...tttttttt1..ppppp..1111pp222pp......2rrtttt
+ttt..ttttttttttt.2.pp.4.1pppppp2....qqrss..rrt
+tta......tttttttt..q..1pppuuuupppp4ppprrrr12rtt
+tt..t.....ttttttt...2qppuuuMNuuuupppttttrrs4rt
+tt11ttt22...tttt..2pppppu%%''%%uuutttttrr..rrt
+tt1attttt...ttt...ppppdpuu'''_''%utttttr..rrtt
+ta1ttttttt2.tt...pppd54ppu%''''uurrrrrrrs..rtt
+tt11ttttt....111qpppa.2ppuuuu''urr"".rr.41rrtt
+tt..ttttttt.111....tt..qppttr'''''"s....ssrtt
+ttt..tttttttttttpp...2..qpttrr''''sss.rrrrrt
+ttta...atttttttttppDD..qpptttrrrr'""..rttttt
+tttt..atttttttttppzzpppppttttttr''""rrrtt
+tttta..attttttttpzzzttttttt   trrrrrrttt
+ttttt...ttttttttppzy          tttttttt
+ttttta...tttttttttt               ttt
+ttttttt.@ttt
+ttttttt
+tttt
+tt
+t
 ENDMAP

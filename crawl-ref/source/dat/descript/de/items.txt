@@ -579,11 +579,6 @@ scroll of magic mapping
 
 Diese Schriftrolle offenbart die Umgebungen von demjenigen, der es liest.
 %%%%
-scroll of random uselessness
-
-Man wird leicht durch den Umstand geblendet das diese Schriftrolle überhaupt
-funktioniert, jedoch ist diese im wesentlichen nutzlos.
-%%%%
 scroll of remove curse
 
 Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.
@@ -683,44 +678,10 @@ Rüstung von der steifen und knubbeligen Haut eines allgemeinen Trolls gemacht.
 Es regeneriert magisch das Fleisch seines Trägers an einer ziemlich langsamen
 Rate (wenn bereits ein Troll).
 %%%%
-wand of cold
-
-Ein magisches Gerät welches großartige Bolzen aus Kälte wirft.
-%%%%
-wand of disintegration
-
-Ein magisches Gerät, das die physische Struktur von irgendetwas außer den
-härtesten Wänden — sogar starre Bildsäulen ganz zu schweigen vom Fleisch stört.
-%%%%
-wand of enslavement
-
-Ein magisches Gerät welches in einer Kreatur sklavischen Gehorsam verursacht.
-%%%%
-wand of fire
-
-Ein magisches Gerät welches großartige Bolzen aus Flammen wirft.
-%%%%
-wand of fireball
-
-Ein magisches Gerät welches explodierende Feuerstöße wirft.
-%%%%
-wand of invisibility
-
-Ein magisches Gerät welches eine Kreatur vor den Blicken Anderer versteckt.
-%%%%
-wand of magic darts
-
-Ein magisches Gerät, das kleine Bolzen der zerstörenden Energie wirft. Sie
-verfehlen nie.
-%%%%
 wand of polymorph
 
 Ein magisches Gerät, das ein Wesen veranlasst, in eine andere Form umgemodelt
 zu werden. Es ist gegen Gestalt ändernde Wesen besonders wirksam.
-%%%%
-wand of random effects
-
-Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
 %%%%
 whip
 

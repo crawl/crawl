@@ -13,6 +13,7 @@
 #include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
+#include "describe.h"
 #include "env.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -21,6 +22,7 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "mon-util.h"
+#include "mpr.h"
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
@@ -78,9 +80,9 @@ void lua_push_floor_items(lua_State *ls, int link)
 {
     lua_newtable(ls);
     int index = 0;
-    for (; link != NON_ITEM; link = mitm[link].link)
+    for (; link != NON_ITEM; link = env.item[link].link)
     {
-        clua_push_item(ls, &mitm[link]);
+        clua_push_item(ls, &env.item[link]);
         lua_rawseti(ls, -2, ++index);
     }
 }
@@ -380,9 +382,7 @@ IDEFN(ego, do_ego)
  */
 IDEF(cursed)
 {
-    bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
-                       && item->cursed();
-    lua_pushboolean(ls, cursed);
+    lua_pushboolean(ls, item && item->cursed());
     return 1;
 }
 
@@ -835,7 +835,8 @@ IDEF(spells)
 IDEF(artprops)
 {
     if (!item || !item->defined() || !is_artefact(*item)
-        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES))
+        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES)
+        || item->base_type == OBJ_BOOKS)
     {
         return 0;
     }
@@ -965,6 +966,20 @@ IDEF(inscription)
     return 1;
 }
 
+/*** Item description string, as displayed in the game UI.
+ * @field description string
+ */
+IDEF(description)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushstring(ls, get_item_description(*item, true, false).c_str());
+
+    return 1;
+}
+
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1062,8 +1077,6 @@ IDEFN(inc_quantity, do_inc_quantity)
 static iflags_t _str_to_item_status_flags(string flag)
 {
     iflags_t flags = 0;
-    if (flag.find("curse") != string::npos)
-        flags &= ISFLAG_KNOW_CURSE;
     // type is dealt with using item_type_known.
     //if (flag.find("type") != string::npos)
     //    flags &= ISFLAG_KNOW_TYPE;
@@ -1371,21 +1384,22 @@ static int l_item_equipped_at(lua_State *ls)
     return 1;
 }
 
-/*** Get the Item we should fire by default.
- * @treturn Item|nil returns nil if there is no default quiver item
+/*** Get the ammo Item we should fire by default.
+ * @treturn Item|nil returns nil if something other than ammo is quivered
  * @function fired_item
  */
 static int l_item_fired_item(lua_State *ls)
 {
-    int q = you.m_quiver.get_fire_item();
+    const auto a = quiver::get_secondary_action();
+    if (!a->is_valid() || !a->is_enabled())
+        return 0;
+
+    const int q = a->get_item();
 
     if (q < 0 || q >= ENDOFPACK)
         return 0;
 
-    if (q != -1 && !fire_warn_if_impossible(true))
-        clua_push_item(ls, &you.inv[q]);
-    else
-        lua_pushnil(ls);
+    clua_push_item(ls, &you.inv[q]);
 
     return 1;
 }
@@ -1508,7 +1522,7 @@ static int l_item_shopping_list(lua_State *ls)
 /*** See the items offered by acquirement.
  * Only works when the acquirement menu is active.
  * @treturn array|nil An array of @{Item} objects or nil if not acquiring.
- * @function shop_inventory
+ * @function acquirement_items
  */
 static int l_item_acquirement_items(lua_State *ls)
 {
@@ -1527,6 +1541,39 @@ static int l_item_acquirement_items(lua_State *ls)
     }
 
     return 1;
+}
+
+/*** Fire an item in inventory at a target, either an evokable or a throwable
+ * ammo. This will work for launcher ammo, but only if the launcher is wielded.
+ * Some evokables (e.g. artefact weapons) may also need to be wielded.
+ *
+ * @tparam number the item's slot
+ * @tparam[opt=0] number x coordinate
+ * @tparam[opt=0] number y coordinate
+ * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @tparam[opt=false] boolean whether to allow fumble throwing of non-activatable items
+ * @treturn boolean whether an action took place
+ * @function fire
+ */
+static int l_item_fire(lua_State *ls)
+{
+    if (you.turn_is_over)
+        return 0;
+    const int slot = luaL_safe_checkint(ls, 1);
+
+    if (slot < 0 || slot > ENDOFPACK || !you.inv[slot].defined())
+    {
+        luaL_argerror(ls, 1,
+                        make_stringf("Invalid item slot: %d", slot).c_str());
+        return 0;
+    }
+    PLAYERCOORDS(c, 2, 3);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+    const bool force = lua_toboolean(ls, 5); // can be nil
+    quiver::slot_to_action(slot, force)->trigger(target);
+    PLUARET(boolean, you.turn_is_over);
 }
 
 struct ItemAccessor
@@ -1581,6 +1628,7 @@ static ItemAccessor item_attrs[] =
     { "encumbrance",       l_item_encumbrance },
     { "is_in_shop",        l_item_is_in_shop },
     { "inscription",       l_item_inscription },
+    { "description",       l_item_description },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },
@@ -1628,6 +1676,7 @@ static const struct luaL_reg item_lib[] =
     { "shop_inventory",    l_item_shop_inventory },
     { "shopping_list",     l_item_shopping_list },
     { "acquirement_items", l_item_acquirement_items },
+    { "fire",              l_item_fire },
     { nullptr, nullptr },
 };
 

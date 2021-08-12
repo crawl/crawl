@@ -38,17 +38,15 @@ aptitudes:
   poison_magic: 6
   invocations: 9
   evocations: 8
-str: 10
-int: 10
-dex: 10
+str: 7
+int: 7
+dex: 7
 levelup_stat_frequency: 4
 mutations:
   1:
     MUT_STRONG_NOSE: 1
     MUT_FANGS: 1
-fake_mutations:
-  - long: Your experience applies equally to all skills.
-    short: distributed training
+    MUT_DISTRIBUTED_TRAINING: 1
 recommended_jobs:
   - JOB_WARPER
   - JOB_ARCANE_MARKSMAN

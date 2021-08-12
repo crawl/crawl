@@ -71,7 +71,7 @@ will rest for 100 turns, or until fully healed.
 death random 3
 
 Remember to use those scrolls, potions or wands you've found. Learn to
-improvise: identify your items by using them.
+improvise: you will need to identify potions and scrolls by using them.
 %%%%
 death random 4
 
@@ -86,8 +86,8 @@ corridor so that they are forced to fight you one on one.
 %%%%
 finished
 
-Congrats! You survived until the end of the hint mode — be sure to try the
-other ones as well. Note that the command help screen
+Congrats! You survived until the end of hints mode — be sure to try the
+other characters as well. Note that the command help screen
 (<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) will look very different from now
 on. Here's a last playing hint:
 %%%%
@@ -125,11 +125,11 @@ file with <input>$cmd[CMD_CHARACTER_DUMP]</input>.
 %%%%
 finished random 1
 
-Crawl has a macro function built in: press <input>~m</input> to define a macro
-by first specifying a trigger key (say, <input>F1</input>) and a command
-sequence, for example <input>za.</input>. The latter will make the
-<input>F1</input> key always zap the spell in slot a at the nearest monster.
-For more information on macros, type
+Crawl has a macro function built in: press <input>$cmd[CMD_MACRO_MENU]</input>
+to define a macro by first specifying a trigger key (say, <input>F1</input>)
+and a command sequence, for example <input>za.</input>. The latter will make
+the <input>F1</input> key always zap the spell in slot a at the nearest
+monster. For more information on macros, type
 <input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
 %%%%
 finished random 2
@@ -141,14 +141,8 @@ complain if it can't find either file.
 %%%%
 finished random 3
 
-You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
-(Internet Relay Chat) channel on freenode (<w>irc.freenode.net</w>).
-%%%%
-dissection reminder
-
-Don't forget that you can butcher corpses with <input>$cmd[CMD_BUTCHER]</input>
-<localtiles>, or by clicking on corpses in the floor part of your inventory
-with the <input>left mouse button</input></localtiles>.
+You can ask other Crawl players for advice and help using any of the community
+resources described at http://crawl.develz.org/
 %%%%
 HINT_CONVERT Xom
 
@@ -161,17 +155,26 @@ can hope for is to avoid letting Xom grow bored!
 HINT_CONVERT Gozag
 
 You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
-cares about gold; each divine power costs gold, and they grow more expensive
-with use. Still, that gold won't do you any good if you're dead, and Gozag's
-Potion Petition can be a huge help in combat!
+cares about gold; each divine power costs gold, and your foes turn to gold on
+death.
 %%%%
 HINT_CONVERT Ru
 
 You've just converted to worshipping <w>Ru</w>. Unlike other gods, Ru grants
-piety (divine favour) in exchange for personal sacrifices, like giving up your
-ability to drink potions while endangered; the more piety you have, the more
-abilities Ru will grant, and the more powerful those abilities will become.
-Ru will offer sacrifices as you explore the depths of the dungeon.
+piety (divine favour) in exchange for permanent sacrifices, like giving up your
+ability to drink potions while endangered, or losing the ability to train
+certain skills. The more piety you have, the more abilities Ru will grant, and
+the more powerful those abilities will become. Ru will offer more sacrifices as
+you explore the depths of the dungeon.
+%%%%
+HINT_CONVERT Uskayaw
+
+You've just converted to worshipping <w>Uskayaw</w>. Unlike other gods,
+Uskayaw's favour cannot be gradually gained as you explore the dungeon or slay
+monsters. Instead, piety with Uskayaw is gained rapidly in combat as you deal
+damage. The longer you remain in combat and the more damage you deal, the
+greater the powers you will be offered. Once combat ends, Uskayaw's favour will
+be quickly lost, and must be regained in the next battle.
 %%%%
 HINT_CONVERT
 

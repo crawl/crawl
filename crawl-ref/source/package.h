@@ -3,11 +3,18 @@
 #define USE_ZLIB
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 #ifdef USE_ZLIB
 #include <zlib.h>
 #endif
+
+using std::map;
+using std::pair;
+using std::set;
+using std::string;
+using std::vector;
 
 #if !defined(DGAMELAUNCH) && !defined(__ANDROID__) && !defined(DEBUG_DIAGNOSTICS)
 #define DO_FSYNC

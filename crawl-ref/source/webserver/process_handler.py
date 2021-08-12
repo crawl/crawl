@@ -70,7 +70,15 @@ def handle_new_socket(path, event):
         process = CrawlProcessHandler(game_info, username,
                                       unowned_process_logger)
         processes[abspath] = process
-        process.connect(abspath)
+
+        try:
+            process.connect(abspath)
+        except ConnectionRefusedError:
+            self.logger.error("Crawl process socket connection refused for %s, socketpath '%s'.",
+                game_info["id"], abspath, exc_info=True)
+            del processes[abspath]
+            return
+
         process.logger.info("Found a %s game.", game_info["id"])
 
         # Notify lobbys
@@ -272,7 +280,7 @@ class CrawlProcessHandlerBase(object):
     def handle_notification_raw(self, username, text):
         # type: (str, str) -> None
         msg = ("<span class='chat_msg'>%s</span>" % text)
-        self.send_to_user(username, "chat", content=msg)
+        self.send_to_user(username, "chat", content=msg, meta=True)
 
     def handle_notification(self, username, text):
         # type: (str, str) -> None
@@ -625,7 +633,16 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             try:
                 with open(lockfile) as f:
                     pid = f.readline()
-                pid = int(pid)
+
+                try:
+                    pid = int(pid)
+                except ValueError:
+                    # pidfile is empty or corrupted, can happen if the server
+                    # crashed. Just clear it...
+                    self.logger.error("Invalid PID from lockfile %s, clearing", lockfile)
+                    self._purge_stale_lock()
+                    return
+
                 self._stale_pid = pid
                 self._stale_lockfile = lockfile
                 if firsttime:

@@ -86,7 +86,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/fight.cc \
     $(CRAWL_PATH)/files.cc \
     $(CRAWL_PATH)/fineff.cc \
-    $(CRAWL_PATH)/food.cc \
     $(CRAWL_PATH)/format.cc \
     $(CRAWL_PATH)/fprop.cc \
     $(CRAWL_PATH)/game-options.cc \
@@ -126,7 +125,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/l-dgntil.cc \
     $(CRAWL_PATH)/l-feat.cc \
     $(CRAWL_PATH)/l-file.cc \
-    $(CRAWL_PATH)/l-food.cc \
     $(CRAWL_PATH)/l-global.cc \
     $(CRAWL_PATH)/l-item.cc \
     $(CRAWL_PATH)/l-los.cc \
@@ -169,6 +167,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-clone.cc \
     $(CRAWL_PATH)/mon-death.cc \
     $(CRAWL_PATH)/mon-ench.cc \
+    $(CRAWL_PATH)/mon-explode.cc \
     $(CRAWL_PATH)/mon-gear.cc \
     $(CRAWL_PATH)/mon-grow.cc \
     $(CRAWL_PATH)/mon-info.cc \
@@ -233,7 +232,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/spl-miscast.cc \
     $(CRAWL_PATH)/spl-monench.cc \
     $(CRAWL_PATH)/spl-other.cc \
-    $(CRAWL_PATH)/spl-pick.cc \
     $(CRAWL_PATH)/spl-selfench.cc \
     $(CRAWL_PATH)/spl-summoning.cc \
     $(CRAWL_PATH)/spl-tornado.cc \

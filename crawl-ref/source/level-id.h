@@ -6,6 +6,11 @@
 #pragma once
 
 #include "coord-def.h"
+#include "tag-version.h"
+#include "branch-type.h"
+
+class reader;
+class writer;
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
@@ -24,7 +29,7 @@ public:
     // 'pos' on the current level leads to.
     static level_id get_next_level_id(const coord_def &pos);
 
-    // Important that if run after this, ::valid() is false.
+    // Important that if run after this, ::is_valid() is false.
     level_id()
         : branch(BRANCH_DUNGEON), depth(-1)
     {

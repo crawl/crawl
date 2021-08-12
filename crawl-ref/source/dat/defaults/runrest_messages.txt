@@ -1,4 +1,4 @@
-    stop := runrest_stop_message
+stop := runrest_stop_message
 ignore := runrest_ignore_message
 
 ignore += Jiyva gurgles merrily
@@ -28,6 +28,24 @@ stop += found.*trap
 stop += You have blundered into a Zot trap
 stop += You (are sucked|fall) into a shaft and drop
 stop += A sentinel's mark forms upon you\.
+
+## Zot is coming!
+stop += You have lingered too long
+stop += Zot draws nearer
+stop += Zot has nearly found you
+stop += Zot already knows
+stop += Zot's attention fixes on you
+
+# Announcements of timed portal vaults:
+stop += interdimensional caravan
+stop += distant snort
+stop += roar of battle
+stop += wave of frost
+stop += hiss of flowing sand
+stop += sound of rushing water
+stop += oppressive heat about you
+stop += crackle of arcane power
+stop += hear a distant wind
 
 # Enchantments
 #

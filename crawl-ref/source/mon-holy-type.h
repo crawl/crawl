@@ -1,5 +1,7 @@
 #pragma once
 
+#include "enum.h"
+
 enum mon_holy_type_flags
 {
     MH_NONE              = 0,

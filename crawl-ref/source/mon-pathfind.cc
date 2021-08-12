@@ -5,6 +5,7 @@
 #include "directn.h"
 #include "env.h"
 #include "los.h"
+#include "misc.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
 #include "religion.h"
@@ -63,7 +64,7 @@ int mons_tracking_range(const monster* mon)
 monster_pathfind::monster_pathfind()
     : mons(nullptr), start(), target(), pos(), allow_diagonals(true),
       traverse_unmapped(false), range(0), min_length(0), max_length(0),
-      dist(), prev(), hash()
+      dist(), prev(), hash(), traversable_cache()
 {
 }
 
@@ -137,7 +138,10 @@ bool monster_pathfind::start_pathfind(bool msg)
     max_length = min_length = grid_distance(pos, target);
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
+        {
             dist[i][j] = INFINITE_DISTANCE;
+            traversable_cache[i][j] = MB_MAYBE;
+        }
 
     dist[pos.x][pos.y] = 0;
 
@@ -201,7 +205,7 @@ bool monster_pathfind::calc_path_to_neighbours()
         if (!in_bounds(npos))
             continue;
 
-        if (!traversable(npos) && npos != target)
+        if (!traversable_memoized(npos) && npos != target)
             continue;
 
         // Ignore this grid if it takes us above the allowed distance
@@ -388,16 +392,23 @@ vector<coord_def> monster_pathfind::calc_waypoints()
     return waypoints;
 }
 
+bool monster_pathfind::traversable_memoized(const coord_def& p)
+{
+    if (traversable_cache[p.x][p.y] == MB_MAYBE)
+        traversable_cache[p.x][p.y] = frombool(traversable(p));
+    return tobool(traversable_cache[p.x][p.y], false);
+}
+
 bool monster_pathfind::traversable(const coord_def& p)
 {
-    if (!traverse_unmapped && grd(p) == DNGN_UNSEEN)
+    if (!traverse_unmapped && env.grid(p) == DNGN_UNSEEN)
         return false;
 
     // XXX: Hack to be somewhat consistent with uses of
     //      opc_immob elsewhere in pathfinding.
     //      All of this should eventually be replaced by
     //      giving the monster a proper pathfinding LOS.
-    if (opc_immob(p) == OPC_OPAQUE && !feat_is_closed_door(grd(p)))
+    if (opc_immob(p) == OPC_OPAQUE && !feat_is_closed_door(env.grid(p)))
     {
         // XXX: Ugly hack to make thorn hunters use their briars for defensive
         //      cover instead of just pathing around them.
@@ -408,20 +419,13 @@ bool monster_pathfind::traversable(const coord_def& p)
             return true;
         }
 
-        else if (mons && mons->type == MONS_WANDERING_MUSHROOM
-                 && monster_at(p)
-                 && monster_at(p)->type == MONS_TOADSTOOL)
-        {
-            return true;
-        }
-
         return false;
     }
 
     if (mons)
         return mons_traversable(p);
 
-    return feat_has_solid_floor(grd(p));
+    return feat_has_solid_floor(env.grid(p));
 }
 
 // Checks whether a given monster can pass over a certain position, respecting
@@ -451,7 +455,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (feat_is_closed_door(grd(npos)))
+    if (feat_is_closed_door(env.grid(npos)))
         return 2;
 
     // Travelling through water, entering or leaving water is more expensive

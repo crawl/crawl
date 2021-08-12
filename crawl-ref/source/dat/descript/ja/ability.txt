@@ -402,19 +402,6 @@ Cure Bad Mutation ability
 
 無作為に選ばれた悪性の突然変異を1つ取り除く。
 %%%%
-Scrying ability
-
-壁を透視できる超常的な視界を得ることができる。これはガラスを通してでさえ、
-壁の向こうの物体を呪文や能力の対象にするのに充分でない。
-%%%%
-Transfer Knowledge ability
-
-別のスキルを強化するためにあなたのスキル1つの経験値の一部を捧げる。
-%%%%
-End Transfer Knowledge ability
-
-スキル経験値の移行を中止する。
-%%%%
 Shadow Step ability
 
 怪物があなたの暗影の中に居て、

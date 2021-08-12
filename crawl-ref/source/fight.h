@@ -37,7 +37,7 @@ int apply_chunked_AC(int dam, int ac);
 
 int melee_confuse_chance(int HD);
 
-bool wielded_weapon_check(item_def *weapon);
+bool wielded_weapon_check(const item_def *weapon, string attack_verb="");
 
 stab_type find_stab_type(const actor *attacker,
                          const actor &defender,
@@ -45,13 +45,23 @@ stab_type find_stab_type(const actor *attacker,
 
 int stab_bonus_denom(stab_type stab);
 
+bool force_player_cleave(coord_def target);
+bool attack_cleaves(const actor &attacker, int which_attack = -1);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0,
                            wu_jian_attack_type wu_jian_attack
-                               = WU_JIAN_ATTACK_NONE);
+                               = WU_JIAN_ATTACK_NONE,
+                           bool is_projected = false);
+
+class attack;
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
+int mon_to_hit_base(int hd, bool skilled, bool ranged);
+int mon_to_hit_pct(int to_land, int ev);
+int mon_shield_bypass(int hd);
+int mon_beat_sh_pct(int shield_bypass, int shield_class);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
@@ -74,4 +84,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
 
-bool otr_stop_summoning_prompt(string verb = "summon");
+string rude_stop_summoning_reason();
+bool rude_stop_summoning_prompt(string verb = "summon");
+
+bool can_reach_attack_between(coord_def source, coord_def target);

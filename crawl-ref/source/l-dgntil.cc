@@ -7,6 +7,7 @@
 
 #include "cluautil.h"
 #include "env.h"
+#include "tile-env.h"
 #include "mapdef.h"
 #include "stringutil.h"
 #include "rltiles/tiledef-dngn.h"
@@ -63,8 +64,8 @@ LUAFN(dgn_change_rock_tile)
         luaL_argerror(ls, 1, error.c_str());
         return 0;
     }
-    env.tile_default.wall     = rock;
-    env.tile_default.wall_idx =
+    tile_env.default_flavour.wall     = rock;
+    tile_env.default_flavour.wall_idx =
         store_tilename_get_index(tilename);
 
     PLUARET(string, tilename.c_str());
@@ -83,8 +84,8 @@ LUAFN(dgn_change_floor_tile)
         luaL_argerror(ls, 1, error.c_str());
         return 0;
     }
-    env.tile_default.floor     = floor;
-    env.tile_default.floor_idx =
+    tile_env.default_flavour.floor     = floor;
+    tile_env.default_flavour.floor_idx =
         store_tilename_get_index(tilename);
 
     PLUARET(string, tilename.c_str());
@@ -111,8 +112,8 @@ LUAFN(dgn_tile_feat_changed)
 
     if (lua_isnil(ls, 3))
     {
-        env.tile_flv(c).feat     = 0;
-        env.tile_flv(c).feat_idx = 0;
+        tile_env.flv(c).feat     = 0;
+        tile_env.flv(c).feat_idx = 0;
         return 0;
     }
 
@@ -127,8 +128,8 @@ LUAFN(dgn_tile_feat_changed)
         luaL_argerror(ls, 1, error.c_str());
         return 0;
     }
-    env.tile_flv(c).feat     = feat;
-    env.tile_flv(c).feat_idx =
+    tile_env.flv(c).feat     = feat;
+    tile_env.flv(c).feat_idx =
         store_tilename_get_index(tilename);
 
     return 0;
@@ -140,8 +141,8 @@ LUAFN(dgn_tile_floor_changed)
 
     if (lua_isnil(ls, 3))
     {
-        env.tile_flv(c).floor     = 0;
-        env.tile_flv(c).floor_idx = 0;
+        tile_env.flv(c).floor     = 0;
+        tile_env.flv(c).floor_idx = 0;
         return 0;
     }
 
@@ -156,8 +157,8 @@ LUAFN(dgn_tile_floor_changed)
         luaL_argerror(ls, 1, error.c_str());
         return 0;
     }
-    env.tile_flv(c).floor     = floor;
-    env.tile_flv(c).floor_idx =
+    tile_env.flv(c).floor     = floor;
+    tile_env.flv(c).floor_idx =
         store_tilename_get_index(tilename);
 
     return 0;

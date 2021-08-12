@@ -211,7 +211,7 @@ xx.xx                 xx.xx
    x....xxxxxxxxxxx....x
    xx....xx.....xx....xx
     x......xxxxx......x
-    xx.....xx xx.....xx
+    xx.....xxxxx.....xx
      x......xxx......x
      xx......x......xx
       x.............x
@@ -232,6 +232,23 @@ c.......c
 +.).].}.+
 c.......c
 ccccccccc
+ENDMAP
+
+##############################################################
+NAME:    pf_arrival_petrified_forest
+TAGS:    arrival
+ORIENT:  float
+KFEAT:   t = petrified_tree
+MAP
+  xxx
+xxxtxx
+xxt{txx
+xxt..txx
+xxx..txx
+@xt.txx@
+x..t.t.x
+xxxxt.xx
+xxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -1119,7 +1136,7 @@ ORIENT: float
 SUBST:  T : t.TTTTT
 SUBST:  T = t:66 .:33 >:1
 COLOUR: . = brown
-COLOUR: t = w:2 darkgrey / w:1 brown
+COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP
@@ -2077,6 +2094,7 @@ ENDMAP
 
 NAME:   giann_bridges
 TAGS:   arrival no_monster_gen
+KPROP:  W = no_tele_into
 MONS:   plant
 ORIENT: float
 MAP
@@ -2385,4 +2403,107 @@ xx..{.........+
 xxx........Gxxx
  xxxwwwwwxx+x
    xxxxxxx
+ENDMAP
+
+NAME:     amcnicky_arrival_double_pillar
+TAGS:     arrival no_monster_gen no_item_gen no_pool_fixup
+ORIENT:   float
+SHUFFLE:  JK
+SUBST:    p:xxxwwwlvt, J:x, K:@
+MAP
+JKKKKKKKJ
+J.......J
+J.pp....J
+J.pp....J
+x......xx
+x.xxxx.xx
+x.x....xx
+xxx.{.xxx
+xx....x.x
+xx.xxxx.x
+xx......x
+J....pp.J
+J....pp.J
+J.......J
+JKKKKKKKJ
+ENDMAP
+
+NAME:     amcnicky_arrival_single_pillar
+TAGS:     arrival no_monster_gen no_item_gen no_pool_fixup
+ORIENT:   float
+SHUFFLE:  JK
+SUBST:    p:xxxwwwlvt, J:x, K:@
+MAP
+JKKKKKKKJ
+J.......J
+J.pp....J
+J.pp....J
+x......xx
+x.xxxx.xx
+x.x....xx
+xxx.{.xxx
+  x...x
+  xxxxx
+ENDMAP
+
+NAME:   amcnicky_arrival_feature_with_door
+TAGS:   arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT: float
+SUBST:  p:xxxtttvblWAGTVY
+MAP
+xxxxxxxx+xxxxx
+x{...........@
+xxxxxx.......x
+     xx..p..xx
+      xx...xx
+       xx.xx
+        xxx
+ENDMAP
+
+NAME:   amcnicky_arrival_flooded_fountain
+TAGS:   arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT: float
+MAP
+xxxxxxxx
+xVww{..x
+xwww...x
+xwww...x
+xww.xx.x
+xw..xx.x
+x......x
+xT.....+
+x......x
+x...xx.x
+x...xx.x
+x......x
+x......x
+xT..>..x
+xxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_arrival_choice
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: float
+SUBST:  p:}}>
+MAP
+    xxx
+xxxxxpx
+x{....x
+xxxxx.x
+    x+x
+ENDMAP
+
+NAME:     amcnicky_arrival_underground_garden
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+MAP
+  ttttttttttx
+ tt.....tx.{t
+tt..........t
+t....t.t...tx
+t.....T.....t
+t....t.t....t
+tt.........tt
+ tt.......tt
+  ttt@@@ttt
 ENDMAP

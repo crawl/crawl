@@ -19,8 +19,9 @@ static const unordered_map<misc_item_type, evoker_data, std::hash<int>> xp_evoke
     { MISC_PHIAL_OF_FLOODS, { "phial_debt", 10, 1 } },
     { MISC_HORN_OF_GERYON, { "horn_debt", 10, 1 } },
     { MISC_LIGHTNING_ROD,  { "rod_debt", 3, LIGHTNING_MAX_CHARGE } },
-    { MISC_TIN_OF_TREMORSTONES, { "tin_debt", 6, 3 } },
+    { MISC_TIN_OF_TREMORSTONES, { "tin_debt", 10, 2 } },
     { MISC_PHANTOM_MIRROR, { "mirror_debt", 10, 1 } },
-    { MISC_BOX_OF_BEASTS, { "box_debt", 6, 3 } },
-    { MISC_CONDENSER_VANE, { "condenser_debt", 8, 2 } },
+    { MISC_BOX_OF_BEASTS, { "box_debt", 10, 1 } },
+    { MISC_CONDENSER_VANE, { "condenser_debt", 10, 1 } },
+    { MISC_XOMS_CHESSBOARD, { "chess_debt", 2, 15 } },
 };

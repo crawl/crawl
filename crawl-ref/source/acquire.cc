@@ -46,6 +46,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unwind.h"
 #include "ui.h"
@@ -63,7 +64,7 @@ static armour_type _useless_armour_type();
  * @param skill     The skill in question; e.g. SK_ARMOUR.
  * @param mult      A multiplier to the skill, for higher precision.
  * @return          A rounded value of that skill; e.g. _skill_rdiv(SK_ARMOUR)
- *                  for a value of 10.1 will return 11 90% of the time &
+ *                  for a value of 10.9 will return 11 90% of the time &
  *                  10 the remainder.
  */
 static int _skill_rdiv(skill_type skill, int mult = 1)
@@ -447,11 +448,9 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
     // based on empirical data where pure-shield MDs get skills like 17 sh
-    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f. Pretend formicid
-    // shield skill is 0 so they always weight towards 2H.
-    const int shield_sk = you.species == SP_FORMICID
-        ? 0
-        : _skill_rdiv(SK_SHIELDS) * species_apt_factor(SK_SHIELDS);
+    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f.
+    const int shield_sk = _skill_rdiv(SK_SHIELDS)
+                          * species_apt_factor(SK_SHIELDS);
     const int want_shield = min(2 * shield_sk, best_sk) + 10;
     const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
@@ -557,9 +556,7 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
     int result = 0;
 
     // Rings are (number of usable rings) times as common as amulets.
-    // XXX: unify this with the actual check for ring slots
-    const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
-                       - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
+    const int ring_num = you.arm_count();
 
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
@@ -639,6 +636,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
         {MISC_CONDENSER_VANE,
             (you.seen_misc[MISC_CONDENSER_VANE] ? 0 : 20)},
+        {MISC_XOMS_CHESSBOARD,
+            (you.seen_misc[MISC_XOMS_CHESSBOARD] ? 0 : 20)},
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -651,7 +650,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
                              MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
                              MISC_PHIAL_OF_FLOODS,
-                             MISC_CONDENSER_VANE);
+                             MISC_CONDENSER_VANE,
+                             MISC_XOMS_CHESSBOARD);
     }
 
     return *choice;
@@ -668,17 +668,15 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent */)
 {
-    // basic total: 120
     vector<pair<wand_type, int>> weights = {
-        { WAND_ACID,            18 },
-        { WAND_ICEBLAST,        18 },
-        { WAND_ENSLAVEMENT,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 8 },
-        { WAND_PARALYSIS,       8 },
-        { WAND_DISINTEGRATION,  5 },
+        { WAND_ACID,            20 },
+        { WAND_ICEBLAST,        20 },
+        { WAND_CHARMING,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 10 },
+        { WAND_PARALYSIS,       10 },
+        { WAND_MINDBURST,  8 },
         { WAND_POLYMORPH,       5 },
         { WAND_DIGGING,         5 },
-        { WAND_RANDOM_EFFECTS,  2 },
-        { WAND_FLAME,           1 },
+        { WAND_FLAME,           2 },
     };
 
     // Unknown wands get a huge weight bonus.
@@ -731,7 +729,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.species == SP_FELID)
+    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR))
         return OBJ_RANDOM;
 
     int type_wanted = OBJ_RANDOM;
@@ -797,7 +795,10 @@ static int _spell_weight(spell_type spell)
 // weights of all unknown spells in the book.
 static int _book_weight(book_type book)
 {
-    ASSERT_RANGE(book, 0, MAX_FIXED_BOOK + 1);
+    ASSERT_RANGE(book, 0, NUM_BOOKS);
+    ASSERT(book != BOOK_MANUAL);
+    ASSERT(book != BOOK_RANDART_LEVEL);
+    ASSERT(book != BOOK_RANDART_THEME);
 
     int total_weight = 0;
     for (spell_type stype : spellbook_template(book))
@@ -918,6 +919,8 @@ static bool _acquire_manual(item_def &book)
                     choose_random_weighted(weights, end(weights)));
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
+    // Preidentify.
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
 
     return true;
 }
@@ -942,16 +945,13 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int total_weights = 0;
 
         // Pick a random spellbook according to unknown spells contained.
-        int weights[MAX_FIXED_BOOK + 1] = { 0 };
-        for (int bk = 0; bk <= MAX_FIXED_BOOK; bk++)
+        int weights[NUM_BOOKS] = { 0 };
+        for (int bk = 0; bk < NUM_BOOKS; bk++)
         {
             const auto bkt = static_cast<book_type>(bk);
 
-            if (is_rare_book(bkt) && agent == GOD_SIF_MUNA
-                || item_type_removed(OBJ_BOOKS, bk))
-            {
+            if (!book_exists(bkt))
                 continue;
-            }
 
             weights[bk]    = _book_weight(bkt);
             total_weights += weights[bk];
@@ -977,7 +977,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             max(1, (_skill_rdiv(SK_SPELLCASTING) + 2) / 3);
 
         book.sub_type  = BOOK_RANDART_LEVEL;
-        if (!make_book_level_randart(book, level))
+        if (!make_book_level_randart(book, level, agent == GOD_SIF_MUNA))
             return false;
         break;
     }
@@ -1185,15 +1185,6 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying pain weapon after Necro sac!";
     }
 
-    // Sif Muna shouldn't gift special books.
-    // (The spells therein are still fair game for randart books.)
-    if (agent == GOD_SIF_MUNA
-        && is_rare_book(static_cast<book_type>(item.sub_type)))
-    {
-        ASSERT(item.base_type == OBJ_BOOKS);
-        return "Destroying sif-gifted rarebook!";
-    }
-
     return ""; // all OK
 }
 
@@ -1241,7 +1232,7 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
         }
 
-        item_def &acq_item(mitm[thing_created]);
+        item_def &acq_item(env.item[thing_created]);
         _adjust_brand(acq_item, divine, agent);
 
         // For plain armour, try to change the subtype to something
@@ -1309,26 +1300,11 @@ int acquirement_create_item(object_class_type class_wanted,
         if (class_wanted == OBJ_WANDS)
             acq_item.plus = max(static_cast<int>(acq_item.plus), 3 + random2(3));
         else if (class_wanted == OBJ_GOLD)
-        {
-            // New gold acquirement formula from dpeg.
-            // Min=220, Max=5520, Mean=1218, Std=911
-            int quantity_rnd = roll_dice(1, 8); // ensure rnd sequence points
-            quantity_rnd *= roll_dice(1, 8);
-            quantity_rnd *= roll_dice(1, 8);
-            acq_item.quantity = 10 * (20
-                                    + roll_dice(1, 20)
-                                    + quantity_rnd);
-        }
+            acq_item.quantity = random_range(200, 1400, 2);
         else if (class_wanted == OBJ_MISSILES && !divine)
             acq_item.quantity *= 5;
         else if (quant > 1)
             acq_item.quantity = quant;
-
-        // Remove curse flag from item, unless worshipping Ashenzari.
-        if (have_passive(passive_t::want_curses))
-            do_curse_item(acq_item, true);
-        else
-            do_uncurse_item(acq_item);
 
         if (acq_item.base_type == OBJ_BOOKS)
         {
@@ -1354,14 +1330,6 @@ int acquirement_create_item(object_class_type class_wanted,
             case RING_EVASION:
             case RING_SLAYING:
                 acq_item.plus = GOOD_RING_PLUS;
-                break;
-
-            case RING_ATTENTION:
-            case RING_TELEPORTATION:
-            case AMU_INACCURACY:
-                // These are the only truly bad pieces of jewellery.
-                if (!one_chance_in(9))
-                    make_item_randart(acq_item);
                 break;
 
             default:
@@ -1415,16 +1383,16 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
-    item_set_appearance(mitm[thing_created]); // cleanup
+    item_set_appearance(env.item[thing_created]); // cleanup
 
     if (thing_created != NON_ITEM)
     {
-        ASSERT(mitm[thing_created].is_valid());
-        mitm[thing_created].props[ACQUIRE_KEY].get_int() = agent;
+        ASSERT(env.item[thing_created].is_valid());
+        env.item[thing_created].props[ACQUIRE_KEY].get_int() = agent;
     }
 
-    ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
-    ASSERT(!god_hates_item(mitm[thing_created]));
+    ASSERT(!is_useless_item(env.item[thing_created], false) || agent == GOD_XOM);
+    ASSERT(!god_hates_item(env.item[thing_created]));
 
     // If we have a zero coord_def, don't move the item to the grid. Used for
     // generating scroll of acquirement items.
@@ -1437,7 +1405,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // If a god wants to give you something but the floor doesn't want it,
     // it counts as a failed acquirement - no piety, etc cost.
-    if (feat_destroys_items(grd(pos))
+    if (feat_destroys_items(env.grid(pos))
         && agent > GOD_NO_GOD
         && agent < NUM_GODS)
     {
@@ -1679,10 +1647,10 @@ static item_def _acquirement_item_def(object_class_type item_type)
 
     if (item_index != NON_ITEM)
     {
-        ASSERT(!god_hates_item(mitm[item_index]));
+        ASSERT(!god_hates_item(env.item[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
-        item = mitm[item_index];
+        item = env.item[item_index];
         set_ident_flags(item,
                 // Act as if we've recieved this item already to prevent notes.
                 ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
@@ -1692,22 +1660,36 @@ static item_def _acquirement_item_def(object_class_type item_type)
     return item;
 }
 
-static void _make_acquirement_items()
+vector<object_class_type> shuffled_acquirement_classes(bool scroll)
 {
     vector<object_class_type> rand_classes;
 
-    if (you.species != SP_FELID)
+    if (!you.has_mutation(MUT_NO_ARMOUR))
+        rand_classes.emplace_back(OBJ_ARMOUR);
+
+    if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_ARMOUR);
         rand_classes.emplace_back(OBJ_STAVES);
     }
 
     rand_classes.emplace_back(OBJ_JEWELLERY);
     rand_classes.emplace_back(OBJ_BOOKS);
 
-    const int num_wanted = min(3, (int) rand_classes.size());
+    // dungeon generation
+    if (!scroll)
+    {
+        rand_classes.emplace_back(OBJ_MISCELLANY);
+        rand_classes.emplace_back(OBJ_WANDS);
+    }
     shuffle_array(rand_classes);
+    return rand_classes;
+}
+
+static void _make_acquirement_items()
+{
+    vector<object_class_type> rand_classes = shuffled_acquirement_classes(true);
+    const int num_wanted = min(3, (int) rand_classes.size());
 
     CrawlVector &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
     acq_items.empty();
@@ -1749,7 +1731,6 @@ bool acquirement_menu()
 
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 
-#ifdef CLUA_BINDINGS
     int index = 0;
     if (!clua.callfn("c_choose_acquirement", ">d", &index))
     {
@@ -1761,7 +1742,6 @@ bool acquirement_menu()
         _create_acquirement_item(acq_items[index - 1]);
         return true;
     }
-#endif
 
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();

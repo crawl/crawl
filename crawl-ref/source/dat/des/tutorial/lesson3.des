@@ -44,10 +44,10 @@ KFEAT:   ABC = .
 COLOUR:  defgABC = lightblue
 FTILE:   defgABC = tutorial_pad
 # "useful" is for keeping the boots from turning into bardings
-ITEM:    pair of boots mundane not_cursed useful
+ITEM:    pair of boots mundane useful
 ITEM:    scroll of fog q:1
 ITEM:    scroll of fear q:1
-ITEM:    scimitar ego:venom not_cursed
+ITEM:    flail ego:venom
 MONS:    goblin ; nothing
 MONS:    rat, giant cockroach, hobgoblin ; nothing
 MARKER:  d = lua:tutorial3.msg("armour")
@@ -69,8 +69,6 @@ epilogue{{
   if crawl.game_started() then
     crawl.tutorial_hint("HINT_MULTI_PICKUP")
     crawl.tutorial_hint("HINT_CHOOSE_STAT")
-    crawl.tutorial_hint("HINT_YOU_CURSED")
-    crawl.tutorial_hint("HINT_REMOVED_CURSE")
     crawl.clear_messages(true)
     crawl.tutorial_msg("tutorial3 start")
     tutorial_intro()
@@ -119,13 +117,12 @@ COLOUR:  ABdefghi = lightblue
 FTILE:   ABdefghi = tutorial_pad
 RTILE:   c = wall_vines
 ITEM:    potion of curing q:1
-ITEM:    ratskin_cloak
+ITEM:    cloak_of_starlight
 ITEM:    wand of flame charges:9 ident:all
 ITEM:    wand of digging charges:15 ident:all
-ITEM:    amulet of inaccuracy mundane cursed
-ITEM:    scroll of remove curse q:1 ident:all
-MONS:    goblin ; hunting sling ego:none not_cursed . stone q:30 . dagger \
-         ego:none not_cursed
+ITEM:    amulet of faith
+MONS:    goblin ; hunting sling ego:none . stone q:30 . dagger \
+         ego:none
 MONS:    gnoll ; spear mundane
 MARKER:  A = lua:tutorial3.msg("trap")
 MARKER:  d = lua:tutorial3.msg("potion")
@@ -133,7 +130,6 @@ MARKER:  e = lua:tutorial3.msg("artefact_armour")
 MARKER:  f = lua:tutorial3.msg("wand_fire")
 MARKER:  g = lua:tutorial3.msg("wand_digging")
 MARKER:  h = lua:tutorial3.msg("amulet")
-MARKER:  i = lua:tutorial3.msg("scroll_remove_curse")
 MARKER:  B = lua:tutorial3.msg("drop")
 epilogue{{
   if crawl.game_started() then
@@ -158,14 +154,14 @@ cc..d......ccccc..2..c
 cc.....ccccccccc.....c
 cccccccccccccccccc.ccc
 ccccccccccc.....cc.ccc
-ccc..)..ccc..g.....ccc
-cccc...cccc.....cccccc
-cccccBccccccxbvccccccc
-ccccc+ccccccxbvccccccc
-ccccc.ccccccxbvccccccc
-ccc.....ccc.....cccccc
-ccc..i...+...h..cccccc
-ccc.....ccc.....cccccc
+ccccccccccc..g.....ccc
+ccccccccccc.....cccccc
+ccccccccccccxbvccccccc
+ccccccccccccxbvccccccc
+ccccccccccccxbvccccccc
+cccccc..ccc.....cccccc
+cccccc).B+...h..cccccc
+cccccc..ccc.....cccccc
 cccccccccccccccccccccc
 ENDMAP
 
@@ -183,7 +179,7 @@ FTILE:   .{)deS = floor_swamp, t = floor_grass
 FTILE:   ABCde = tutorial_pad
 FTILE:   c = wall_vines
 KFEAT:   S = general shop use_all ; \
-             ring of flight mundane not_cursed | potion of curing | \
+             ring of flight mundane | potion of curing | \
              potion of heal wounds | potion of heal wounds q:2 | \
              potion of might | wand of paralysis | ring mail | \
              buckler ego:none | ring of slaying | scroll of enchant weapon
@@ -191,7 +187,7 @@ ITEM:    gold q:40
 ITEM:    gold q:220
 MONS:    gnoll ; flail ego:none | morningstar ego:none | spear ego:none . \
          leather armour | ring mail
-MONS:    crimson imp
+MONS:    ufetubus
 MONS:    orc ; scimitar ego:none | battleaxe ego:none | trident ego:none . \
          ring mail | chain mail
 MARKER:  d = lua:tutorial3.msg("gold");

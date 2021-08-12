@@ -7,6 +7,7 @@
 #include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-main.h"
 #include "rltiles/tiledef-player.h"
+#include "tag-version.h"
 #include "tiledoll.h"
 #include "tilemcache.h"
 #include "tilepick.h"
@@ -612,7 +613,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     // Summoned and anim. weap. icons will overlap if you have a
     // summoned dancing weapon, but that's rare and still looks okay.
-    if (fg & TILE_FLAG_ANIM_WEP)
+    if (fg & TILE_FLAG_ANIM_OBJ)
         m_buf_icons.add(TILEI_ANIMATED_WEAPON, x, y);
     if (fg & TILE_FLAG_SUMMONED)
         m_buf_icons.add(TILEI_SUMMONED, x, y);

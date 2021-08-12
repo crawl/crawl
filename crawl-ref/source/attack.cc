@@ -39,6 +39,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "xom.h"
 
@@ -76,6 +77,10 @@ bool attack::handle_phase_attempted()
 bool attack::handle_phase_blocked()
 {
     damage_done = 0;
+
+    if (attacker->is_player())
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+
     return true;
 }
 
@@ -122,7 +127,8 @@ bool attack::handle_phase_damaged()
 bool attack::handle_phase_killed()
 {
     monster* mon = defender->as_monster();
-    if (!invalid_monster(mon)) {
+    if (!invalid_monster(mon))
+    {
         // Was this a reflected missile from the player?
         if (responsible->mid == MID_YOU_FAULTLESS)
             monster_die(*mon, KILL_YOU_MISSILE, YOU_FAULTLESS);
@@ -135,9 +141,6 @@ bool attack::handle_phase_killed()
 
 bool attack::handle_phase_end()
 {
-    // This may invalidate both the attacker and defender.
-    fire_final_effects();
-
     return true;
 }
 
@@ -243,9 +246,9 @@ int attack::calc_pre_roll_to_hit(bool random)
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
-            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
+            && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
-            mhit += mitm[jewellery].plus;
+            mhit += env.item[jewellery].plus;
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
@@ -267,7 +270,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
     modifiers -= 5 * attacker->inaccuracy();
 
     if (attacker->confused())
-        modifiers -= 5;
+        modifiers += CONFUSION_TO_HIT_MALUS;
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -286,7 +289,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
         // This can only help if you're visible!
         const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
-            modifiers -= 2 * how_transparent;
+            modifiers += TRANSLUCENT_SKIN_TO_HIT_MALUS * how_transparent;
 
         // defender backlight bonus and umbra penalty.
         if (defender->backlit(false))
@@ -437,7 +440,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
         if (attk_type == AT_WEAP_ONLY)
         {
             int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
-            if (weap == NON_ITEM || is_range_weapon(mitm[weap]))
+            if (weap == NON_ITEM || is_range_weapon(env.item[weap]))
                 attk_type = AT_NONE;
             else
                 attk_type = AT_HIT;
@@ -500,9 +503,9 @@ bool attack::distortion_affects_defender()
 
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       10,  BANISH,
+                                                       5,  BANISH,
                                                        20, BLINK,
-                                                       10,  NONE);
+                                                       15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
         return false;
@@ -511,10 +514,9 @@ bool attack::distortion_affects_defender()
     {
     case SMALL_DMG:
         special_damage += 1 + random2avg(7, 2);
-        // No need to call attack_strength_punctuation here,
-        // since special damage < 7, so it will always return "."
-        special_damage_message = make_stringf("Space bends around %s.",
-                                              defender_name(false).c_str());
+        special_damage_message = make_stringf("Space bends around %s%s",
+                                              defender_name(false).c_str(),
+                                              attack_strength_punctuation(special_damage).c_str());
         break;
     case BIG_DMG:
         special_damage += 3 + random2avg(24, 2);
@@ -593,7 +595,7 @@ static bool _is_chaos_polyable(const actor &defender)
     if (!mon)
         return true;
 
-    return !mons_is_firewood(*mon) && !mons_immune_magic(*mon);
+    return !mons_is_firewood(*mon) && !mons_invuln_will(*mon);
 }
 
 static bool _is_chaos_slowable(const actor &defender)
@@ -795,7 +797,7 @@ static const vector<chaos_attack_type> chaos_types = {
           return !(d.holiness() & (MH_UNDEAD | MH_NONLIVING)); } },
     { AF_CHAOTIC,   SPWPN_CHAOS,         10,
       nullptr },
-    { AF_DRAIN_XP,  SPWPN_DRAINING,      5,
+    { AF_DRAIN,  SPWPN_DRAINING,      5,
       [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
@@ -805,8 +807,7 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
       [](const actor &d) { return d.antimagic_susceptible(); } },
     { AF_CONFUSE,   SPWPN_CONFUSE,       2,
-      [](const actor &d) {
-          return !(d.holiness() & (MH_NONLIVING | MH_PLANT)); } },
+      [](const actor &d) { return !d.clarity(); } },
     { AF_DISTORT,   SPWPN_DISTORTION,    2,
       nullptr },
 };
@@ -871,7 +872,7 @@ void attack::drain_defender()
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
                                           (1 + random2(damage_done)) / 2);
 
-    if (defender->drain_exp(attacker, true, 20 + min(35, damage_done)))
+    if (defender->drain(attacker, true, 1 + damage_done))
     {
         if (defender->is_player())
             obvious_effect = true;
@@ -966,7 +967,7 @@ void attack::stab_message()
         if (coinflip())
         {
             mprf("You %s %s from a blind spot!",
-                  (you.species == SP_FELID) ? "pounce on" : "strike",
+                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
                   defender->name(DESC_THE).c_str());
         }
         else
@@ -984,13 +985,13 @@ void attack::stab_message()
         else
         {
             mprf("You %s %s from behind!",
-                  (you.species == SP_FELID) ? "pounce on" : "strike",
+                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
                   defender->name(DESC_THE).c_str());
         }
         break;
     case 2:
     case 1:
-        if (you.species == SP_FELID && coinflip())
+        if (you.has_mutation(MUT_PAWS) && coinflip())
         {
             mprf("You pounce on the unaware %s!",
                  defender->name(DESC_PLAIN).c_str());
@@ -1067,15 +1068,12 @@ string attack::defender_name(bool allow_reflexive)
 
 int attack::player_stat_modify_damage(int damage)
 {
-    int dammod = 39;
-
-    if (you.strength() > 10)
-        dammod += (random2(you.strength() - 9) * 2);
-    else if (you.strength() < 10)
-        dammod -= (random2(11 - you.strength()) * 3);
-
-    damage *= dammod;
-    damage /= 39;
+    // At 10 strength, damage is multiplied by 1.0
+    // Each point of strength over 10 increases this by 0.025 (2.5%),
+    // strength below 10 reduces the multiplied by the same amount.
+    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
+    damage *= max(1.0, 75 + 2.5 * you.strength());
+    damage /= 100;
 
     return damage;
 }
@@ -1204,19 +1202,17 @@ int attack::calc_damage()
 
             const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
             if (jewellery != NON_ITEM
-                && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
+                && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
             {
-                wpn_damage_plus += mitm[jewellery].plus;
+                wpn_damage_plus += env.item[jewellery].plus;
             }
 
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
             if (wpn_damage_plus >= 0)
-                damage += random2(wpn_damage_plus);
+                damage += random2(1 + wpn_damage_plus);
             else
                 damage -= random2(1 - wpn_damage_plus);
-
-            damage -= 1 + random2(3);
         }
 
         damage_max += attk_damage;
@@ -1286,13 +1282,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
 int attack::apply_defender_ac(int damage, int damage_max, ac_type ac_rule) const
 {
     ASSERT(defender);
-    int stab_bypass = 0;
-    if (stab_bonus)
-    {
-        stab_bypass = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
-        stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
-    }
-    int after_ac = defender->apply_ac(damage, damage_max, ac_rule, stab_bypass);
+    int after_ac = defender->apply_ac(damage, damage_max, ac_rule);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
@@ -1347,7 +1337,7 @@ bool attack::attack_shield_blocked(bool verbose)
                                       : atk_name(DESC_ITS).c_str());
         }
 
-        defender->shield_block_succeeded(attacker);
+        defender->shield_block_succeeded();
 
         return true;
     }
@@ -1581,7 +1571,7 @@ bool attack::apply_damage_brand(const char *what)
         }
         else if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()),
                                                      100)
-                 || defender->as_monster()->check_clarity())
+                 || defender->as_monster()->clarity())
         {
             beam_temp.apply_enchantment_to_monster(defender->as_monster());
             obvious_effect = beam_temp.obvious_effect;
@@ -1601,15 +1591,6 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_ACID:
         defender->splash_with_acid(attacker, 3);
-        break;
-
-    case SPWPN_SPECTRAL:
-        if (attacker->is_player())
-        {
-            const monster* mon = defender->as_monster();
-            if (mon && !mons_is_firewood(*mon))
-                handle_spectral_brand();
-        }
         break;
 
 
@@ -1697,8 +1678,17 @@ int attack::player_stab_weapon_bonus(int damage)
         damage /= 10;
     }
 
+    // There's both a flat and multiplicative component to
+    // stab bonus damage.
+
     damage *= 12 + div_rand_round(stab_skill, 100 * stab_bonus);
     damage /= 12;
+
+    // The flat component is loosely based on the old stab_bypass bonus.
+    // Essentially, it's an extra quarter-point of damage for every
+    // point of weapon + stealth skill, divided by stab_bonus - that is,
+    // quartered again if the target isn't sleeping, paralysed, or petrified.
+    damage += random2(div_rand_round(stab_skill, 200 * stab_bonus));
 
     return damage;
 }
@@ -1751,9 +1741,8 @@ void attack::player_stab_check()
     stab_type st = find_stab_type(&you, *defender);
     // Find stab type is also used for displaying information about monsters,
     // so upgrade the stab type for !stab and the Spriggan's Knife here
-    if ((using_weapon()
+    if (using_weapon()
         && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
-        || you.duration[DUR_STABBING] > 0 && coinflip())
         && st != STAB_NO_STAB)
     {
         st = STAB_SLEEPING;

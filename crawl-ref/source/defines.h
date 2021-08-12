@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <cstdint>
+
+#include "macros.h"
+
 // In this case, an x86 CPU will use x87 math for floating point calculations,
 // which uses 80 bit intermediate results, andleads to difference from the
 // (much more common, in 2019) SSE-based calculations.
@@ -125,6 +129,10 @@ const int MAPGEN_BORDER    = 2;
 // changing this affects the total number of shops in a game
 #define MAX_RANDOM_SHOPS  5
 
+// range of overflow temples
+#define MIN_OVERFLOW_LEVEL 3
+#define MAX_OVERFLOW_LEVEL 10
+
 #define MAX_BRANCH_DEPTH 27
 COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
 
@@ -140,16 +148,11 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 const int BASELINE_DELAY  = 10;
 const int INVIS_CONTAM_PER_TURN = 30;
 
-const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
-const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
-
-const int CHUNK_BASE_NUTRITION    = 1000;
-
-const int ICEMAIL_MAX  = 10;
+const int ICEMAIL_MAX  = 8;
 const int ICEMAIL_TIME = 30 * BASELINE_DELAY;
 
-// This value is used to mark immune levels of MR
-const int MAG_IMMUNE = 5000;
+// This value is used to mark immune levels of WL
+const int WILL_INVULN = 5000;
 
 // This is the damage amount used to signal insta-death
 const int INSTANT_DEATH = -9999;
@@ -177,8 +180,7 @@ const int UNUSABLE_SKILL = -99;
 
 const int AGILITY_BONUS = 5;
 
-#define TORNADO_RADIUS 5
-#define VORTEX_RADIUS 3
+#define POLAR_VORTEX_RADIUS 5
 
 #define VAULTS_ENTRY_RUNES 1
 #define ZOT_ENTRY_RUNES 3
@@ -194,13 +196,6 @@ const int AGILITY_BONUS = 5;
 #define berserk_div(x) div_rand_round((x) * 2, 3)
 
 #define MAX_MONSTER_HP 10000
-
-// some shortcuts:
-#define menv   env.mons
-#define mitm   env.item
-#define grd    env.grid
-#define mgrd   env.mgrid
-#define igrd   env.igrid
 
 // colours, such pretty colours ...
 // The order is important (IRGB bit patterns).
@@ -276,6 +271,7 @@ enum CHAR_ATTRIBUTES
 // CTRL sequences. This is a macro because a lot of the type
 // it wants to be used in case labels.
 #define CONTROL(xxx)          ((xxx) - 'A' + 1)
+#define UNCONTROL(xxx)        ((xxx) + 'A' - 1)
 
 #define ARRAYSZ(x) (sizeof(x) / sizeof(x[0]))
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])

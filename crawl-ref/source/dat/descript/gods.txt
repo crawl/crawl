@@ -10,15 +10,6 @@ all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge
 and foresight, but be warned: to Ashenzari, power and blessing and curse are
 all the same thing.
 %%%%
-Ashenzari extra
-
-Ashenzari provides worshippers with a bounty of knowledge about their
-surroundings. Followers are able to glimpse the shape of the dungeon around
-them, and can sense portals to other realms. They can detect nearby items and
-traps, and can sense monsters and gain an indication of how dangerous they
-are. While equipped with cursed equipment, they can also identify on sight the
-properties of other items of that type that are found.
-%%%%
 Beogh
 
 Beogh is an evil deity, worshipped by the cave orcs native to the dungeon. Only
@@ -39,7 +30,7 @@ time and its needless disturbances.
 Dithmenos
 
 Dithmenos the Shadowed desires all to be darkness. Followers of Dithmenos gain
-a strange and otherwordly affinity to the shadows of their environment. This
+a strange and otherworldly affinity to the shadows of their environment. This
 god despises the physical world and constantly seeks to encroach on it.
 Dithmenos therefore rewards those who wield death and destruction while
 gradually consuming them with darkness.
@@ -75,14 +66,6 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
-Wu Jian
-
-The Wu Jian Council is a congregation of martial monks, ascended to divinity
-after battling their way out of the afterlife. Disciples of the Council are
-able to execute acrobatic martial maneuvers, such as wall jumps, spinning
-attacks and punishing lunges. They will eventually become able to request
-help in the form of a storm of heavenly clouds.
-%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -96,9 +79,9 @@ Kikubaaqudgha
 Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
 the powers of death. An evil god, Kikubaaqudgha requires worshippers to cause
 the death and destruction of as many creatures as possible. In exchange,
-Kikubaaqudgha offers great assistance to the aspiring necromancer: spellbooks
-filled with dark magic, protection against necromantic backlash, and an endless
-supply of bodies taken from Kikubaaqudgha's vast mausoleum.
+Kikubaaqudgha offers great assistance to the aspiring necromancer: knowledge
+of dark magic, protection against necromantic backlash, and an endless supply of
+bodies taken from Kikubaaqudgha's vast mausoleum.
 %%%%
 Lugonu
 
@@ -184,7 +167,7 @@ absolutely forbidden the use of spell magic.
 %%%%
 Uskayaw
 
-Uskayaw the Reveler is a god of ecstatic dance. On the surface, Uskayaw
+Uskayaw the Reveller is a god of ecstatic dance. On the surface, Uskayaw
 appreciates many forms of worship, but in the dungeon most worshippers stick to
 the dance of combat. Uskayaw appreciates the passion and rhythm of combat,
 rewarding followers for each strike they deliver and for the damage they deal
@@ -199,6 +182,14 @@ access to some of the fearsome spells in Vehumet's library. One's devotion to
 Vehumet can be proven by the causing of as much carnage and destruction as
 possible.
 %%%%
+Wu Jian
+
+The Wu Jian Council is a congregation of martial monks, ascended to divinity
+after battling their way out of the afterlife. Disciples of the Council are
+able to execute acrobatic martial maneuvers, such as wall jumps, spinning
+attacks and punishing lunges. They will eventually become able to request
+help in the form of a storm of heavenly clouds.
+%%%%
 Xom
 
 Xom is a wild and unpredictable god of chaos, who seeks not worshippers but
@@ -212,8 +203,7 @@ Yredelemnul the Dark is a god worshipped by those who seek powers over death
 and the undead. Followers can raise legions of servile undead, and gain a
 number of other useful powers with which to make better use of the souls of
 the living. Yredelemnul especially favours those who would destroy holy
-creatures, which oppose the realm of undeath, and the nonliving, which exist
-outside of it.
+creatures, which oppose the realm of undeath.
 %%%%
 Zin
 
@@ -226,13 +216,12 @@ while keeping some piety.
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts followers to garb themselves with curses, and appreciates
-exploration while using cursed armour, jewellery or weapons. Followers will
-soon be granted the ability to scry through walls. Ashenzari will passively
-grant followers increased skills depending on how cursed they are by equipment
-associated with those skills, and will reveal the invisible and grant clarity
-of mind. The truly devout will gain the ability to transfer a portion of their
-knowledge from one skill to another.
+Ashenzari exhorts followers to curse their possessions, periodically offering
+these curses to worshippers as they explore. Cursed equipment cannot be enchanted
+and only be removed by shattering it forever. However, these curses do improve
+specific skills. They also please Ashenzari, who will reveal the invisible and
+grant clarity of mind. The truly devout will gain a fragment of Ashenzari's
+astral sight, letting them see through walls.
 %%%%
 Beogh powers
 
@@ -314,23 +303,15 @@ mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
-Wu Jian powers
-
-Disciples of the Council learn to perform three martial techniques while moving
-around in combat. Martial techniques are incompatible with more elaborate
-methods of moving, and do not combine with charging, digging, hopping, or
-rampaging. They will also be taught to move at unfathomable speeds for short
-distances, and become able to summon a storm of golden clouds to increase their
-precision and damage for as long as they keep using martial attacks.
-%%%%
 Kikubaaqudgha powers
 
 Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
-prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
-effects of necromantic miscasts, death curses, and may even shield them from
-unholy torment. Especially fervent followers may invoke torment themselves by
-sacrificing a cadaver, and Kikubaaqudgha will eventually allow followers to
-either receive the Necronomicon, or to have their weapon imbued with pain.
+prowess with gifts of Necromancy spells. Kikubaaqudgha will protect followers
+from the effects of necromantic miscasts, death curses, and may even shield them
+from unholy torment. Especially fervent followers may invoke torment themselves
+by sacrificing a cadaver, and Kikubaaqudgha will eventually allow followers to
+either receive knowledge of the most powerful and forbidden necromantic magic,
+or to have their weapon imbued with pain.
 %%%%
 Lugonu powers
 
@@ -424,11 +405,11 @@ intervene to save a follower's life.
 Trog powers
 
 Trog offers various powers to help followers in battle. Followers will gain the
-ability to go berserk at will, and to rapidly heal their wounds while
-increasing resistance to hostile enchantments. Later, followers may call in
-powerful raging allies. Eventually, Trog will gift followers with weapons
-focused on damage.
-%%%%
+ability to go berserk at will, and Trog will extend the duration of their
+berserk rage on killing foes. Trog will grant followers the ability to rapidly
+heal their wounds while fortifying their willpower, and later the ability to
+call in powerful raging allies. Eventually, Trog will gift followers with
+weapons, often with antimagic effects.
 %%%%
 Uskayaw powers
 
@@ -449,6 +430,15 @@ upon killing beings. As they gain favour, they will also gain enhancements to
 their destructive spells — first assistance in casting such spells and then
 increased range for conjurations. Vehumet will offer followers the knowledge of
 increasingly powerful destructive spells as they gain piety.
+%%%%
+Wu Jian powers
+
+Disciples of the Council learn to perform three martial techniques while moving
+around in combat. Martial techniques are incompatible with more elaborate
+methods of moving, and do not combine with charging, digging, hopping, or
+rampaging. They will also be taught to move at unfathomable speeds for short
+distances, and become able to summon a storm of golden clouds to increase their
+precision and damage for as long as they keep using martial attacks.
 %%%%
 Xom powers
 
@@ -545,13 +535,6 @@ too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
 %%%%
-Wu Jian wrath
-
-Those who turn against the Council must be prepared to endure death by a
-thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
-the sudden spring of traps, the flying daggers and the armies of animated
-weapons that will ambush the betrayer.
-%%%%
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
@@ -642,6 +625,13 @@ Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by crystal spears and firestorms. Their
 own conjurations, too, are wont to misfire at the worst possible moments.
 %%%%
+Wu Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a
+thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
+the sudden spring of traps, the flying daggers and the armies of animated
+weapons that will ambush the betrayer.
+%%%%
 Xom wrath
 
 Unfaithful ex-followers will find themselves suffering through Xom's bad moods
@@ -659,7 +649,7 @@ also afflict those stricken by Yredremnul's wrath.
 Zin wrath
 
 Those under Zin's wrath will find their beneficial mutations stripped away,
-their bellies emptied, their enemies alerted, and their senses confounded by the
+their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
 %%%%
 Wu Jian extra

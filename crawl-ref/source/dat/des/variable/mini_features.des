@@ -914,24 +914,25 @@ NAME:   minmay_stone_trees_large
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Lair
 WEIGHT: 1
-SUBST:  T = t.
+SHUFFLE: TR
+SUBST:  T = t., R = .
 MAP
 ...................
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctTtccctTtccct.
+.tccctRtccctTtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
-...T.....T.....T...
+...T.....R.....T...
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctTtccctTtccct.
+.tccctRtccctTtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
-...T.....T.....T...
+...T.....R.....T...
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctTtccctTtccct.
+.tccctTtccctRtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
 ...................
@@ -1609,8 +1610,9 @@ NAME:    hangedman_decor_clover_reticule
 TAGS:    transparent extra decor
 DEPTH:   D, Depths
 SHUFFLE: ABCDE
-SUBST:   A : z:9 .:1, B : z., C : z.., DE = '
+SUBST:   A : z:9 ':1, B : z', C : z'', DE = '
 KPROP:   ' = no_tele_into
+KMASK:   ' = opaque
 : init_hm_decor_walldepth(_G, "z")
 MAP
       .......
@@ -1859,7 +1861,7 @@ SUBST: w : wwl
 MAP
      .......
    ...wwwww.@.
-  ..www.xxxx...
+  ..wwwwxxxx...
  ..wwwxxx.x.xx..
  .wwwwx.x..xxww.
 ..wwwwx.....xww..
@@ -2664,6 +2666,46 @@ xxxxx
 xxxxx
 ENDMAP
 
+NAME:   amcnicky_mini_pool_small
+TAGS:   decor extra transparent
+SUBST:  p:wwwWWl
+MAP
+ xx.xx
+xx...xx
+x..p..x
+..ppp..
+x..p..x
+xx...xx
+ xx.xx
+ENDMAP
+
+NAME:   amcnicky_mini_rare_corridor_liquid
+TAGS:   extra transparent decor
+SUBST:  p:wl
+MAP
+xxxxxxxxxxx
+xpppppppppx
+@.........@
+xpppppppppx
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   amcnicky_mini_corridor_feature
+TAGS:   extra no_item_gen transparent
+# Total weight: 100
+SUBST:  p: ......GGGGttnlY
+MAP
+xx@xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx.xx
+xx.xx
+xp.px
+xx@xx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2897,7 +2939,7 @@ ENDMAP
 
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
-TAGS:   no_monster_gen extra
+TAGS:   no_monster_gen extra transparent
 ITEM:   stone w:15 / arrow / bolt / spear / any potion w:10
 MAP
 x+xx
@@ -2907,7 +2949,7 @@ xxxx
 ENDMAP
 
 NAME:    minmay_variable_closet
-TAGS:    extra
+TAGS:    extra transparent
 DEPTH:   D:9-, Depths
 ITEM:    any weapon, any missile, any armour, any scroll
 ITEM:    any jewellery, any potion, any book
@@ -2926,7 +2968,7 @@ ENDMAP
 
 NAME:   library_closet
 DEPTH:  D:9-, Depths, Elf, Crypt, Snake, Orc
-TAGS:   extra
+TAGS:   extra transparent
 WEIGHT: 5
 ITEM:   any book w:20 / any scroll / nothing
 MAP
@@ -2937,7 +2979,7 @@ xxxx
 ENDMAP
 
 NAME:   eino_small_chamber_without_monster
-TAGS:   allow_dup extra ruin_lair ruin_abyss
+TAGS:   allow_dup extra ruin_lair ruin_abyss transparent
 DEPTH:  D:4-, Depths, Lair, Abyss
 MAP
  xxxxx
@@ -2949,7 +2991,7 @@ xx...xx
 ENDMAP
 
 NAME:   eino_tiny_chamber
-TAGS:   allow_dup extra
+TAGS:   allow_dup extra transparent
 DEPTH:  D:2-, Depths, Elf, Crypt
 MAP
 xxxxx
@@ -2986,7 +3028,7 @@ ENDMAP
 NAME:   corexii_mini_fake_secret_closet
 DEPTH:  D:4-, Depths
 WEIGHT: 1
-TAGS:   no_monster_gen no_item_gen allow_dup extra
+TAGS:   no_monster_gen no_item_gen allow_dup extra transparent
 NSUBST: + = 1:+ / *:x, = = 1:+ / *:x
 SUBST:  d = %%%., e = **%.
 MAP
@@ -2997,7 +3039,7 @@ xxxxxxx
 ENDMAP
 
 NAME:   evilmike_butchery
-TAGS:   no_item_gen
+TAGS:   no_item_gen transparent
 DEPTH:  D:9-, Depths
 SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
@@ -3021,7 +3063,7 @@ ENDMAP
 NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
@@ -3043,7 +3085,7 @@ ENDMAP
 NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
@@ -3111,6 +3153,29 @@ MAP
 ..xxaaaxx..
 ..x..G..x..
 ...........
+ENDMAP
+
+NAME:    hellmonk_bongcloud_opening
+TAGS:    no_item_gen no_monster_gen no_trap_gen no_hmirror no_vmirror no_rotate
+TAGS:    decor extra transparent
+DEPTH:   D:5-, Depths, Orc, Elf
+ITEM:    piece from Xom's chessboard
+KFEAT:   H = G
+COLOUR:  d' = white
+COLOUR:  - = brown
+FTILE:   Gd' = floor_pebble_white
+FTILE:   H- = floor_pebble_brown
+MAP
+..........
+.GHGHGHGH.
+.HGHG-GHG.
+.'-'-'-'-.
+.-'-'H'-'.
+.'-'-G-'-.
+.-'-'-'-'.
+.GHGHdHGH.
+.HGHG-GHG.
+..........
 ENDMAP
 
 NAME: nicolae_benzene_ring
@@ -3185,7 +3250,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_zen_rock_garden
-TAGS: no_monster_gen no_trap_gen no_item_gen extra decor
+TAGS: no_monster_gen no_trap_gen no_item_gen extra decor transparent
 DEPTH: D:4-12
 SUBST: Q = TPW, T = tP, P = p'', Y = W', Z = tW, ' = ':13 r:1
 FTILE: tp'r = floor_sand
@@ -3275,7 +3340,7 @@ xx.........xx
 ENDMAP
 
 NAME:  kennysheep_small_spiral
-TAGS:  extra decor
+TAGS:  extra decor transparent
 DEPTH: D, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
 MAP
@@ -3399,15 +3464,15 @@ SUBST:  1 = l, 2 = l
 SUBST:  l = l w:20
 SUBST:  ? : w. , ! : w. , & : w.
 :  if you.in_branch("Geh") then
-TAGS:   transparent extra
+TAGS:   extra
 :  end
 MAP
 .......?.......
 ......&?.......
 .......??......
 ..&&&&???......
-&&&&?wwwww.....
-&&?wwwwwwwww&&.
+&&&&&wwwww.....
+&&&wwwwwwwww&&.
 .wwwwwlwwwwwww&
 ..&wwl1lwwwww&&
 ...wwwl2lwww&&.
@@ -3758,18 +3823,19 @@ MAP
 ENDMAP
 
 NAME:  minivault_21
-TAGS:  transparent allow_dup extra
+TAGS:  transparent extra
 DEPTH: D:8-, !D:$, Depths:2-, !Depths:$
+KMASK: |'<>* = opaque
 MAP
 ............
 ..xxxxxxxx..
 .x........x.
-.x.ccnccc.x.
-.x.c|..<c.x.
-.x.c.**.n.x.
-.x.n.**.c.x.
-.x.c>..|c.x.
-.x.cccncc.x.
+.x.xxmxxx.x.
+.x.x|''<x.x.
+.x.x'**'m.x.
+.x.m'**'x.x.
+.x.x>''|x.x.
+.x.xxxmxx.x.
 .x........x.
 ..xxxxxxxx..
 ............

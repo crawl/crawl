@@ -4,7 +4,7 @@
 #include "item-prop-enum.h"
 #include "item-status-flag-type.h"
 #include "mon-enum.h"
-#include "ouch.h"
+#include "kill-method-type.h"
 #include "pronoun-type.h"
 #include "spl-util.h" // spschool type definition
 
@@ -15,6 +15,8 @@ const int HIT_STRONG = 36;
 
 const int BACKLIGHT_TO_HIT_BONUS = 5;
 const int UMBRA_TO_HIT_MALUS = -3;
+const int CONFUSION_TO_HIT_MALUS = -5;
+const int TRANSLUCENT_SKIN_TO_HIT_MALUS = -2;
 
 class attack
 {
@@ -183,8 +185,7 @@ protected:
     string atk_name(description_level_type desc);
     string def_name(description_level_type desc);
     string wep_name(description_level_type desc = DESC_YOUR,
-                    iflags_t ignore_flags = ISFLAG_KNOW_CURSE
-                                            | ISFLAG_KNOW_PLUSES);
+                    iflags_t ignore_flags = ISFLAG_KNOW_PLUSES);
 
     attack_flavour random_chaos_attack_flavour();
     bool apply_poison_damage_brand();

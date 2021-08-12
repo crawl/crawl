@@ -19,12 +19,14 @@
 #include "monster.h"
 #include "notes.h"
 #include "ouch.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "stat-type.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #ifdef TOUCH_UI
 #include "rltiles/tiledef-gui.h"
 #include "tilepick.h"
@@ -103,9 +105,11 @@ bool attribute_increase()
 {
     const bool need_caps = Options.easy_confirm != easy_confirm_type::all;
 
+    const int statgain = species::get_stat_gain_multiplier(you.species);
+
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
-                                                  you.species == SP_DEMIGOD ?
+                                                  (statgain > 1) ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
@@ -145,8 +149,6 @@ bool attribute_increase()
         : "Increase (s)trength, (i)ntelligence, or (d)exterity? ");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
-
-    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
 
     bool tried_lua = false;
     int keyin;

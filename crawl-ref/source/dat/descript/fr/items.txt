@@ -803,11 +803,6 @@ scroll of magic mapping
 
 Ce parchemin révèle les environs de celui qui le lit.
 %%%%
-scroll of random uselessness
-
-Il est facile d'être aveuglé par le sentiment d'accomplissement que l'on a à
-faire marcher ce parchemin, au vu de sa particulière inutilité.
-%%%%
 scroll of remove curse
 
 Lire ce parchemin permet de libérer les objets que vous portez ou tenez en main
@@ -927,49 +922,14 @@ Une armure magique confectionnée à partir de la peau raide et bosselée d'un
 troll. Elle est capable de régénérer les tissus de son porteur à un rythme lent
 (sauf si le porteur est déjà un troll).
 %%%%
-wand of cold
-
-Un instrument magique permettant de tirer de puissants missiles de froid.
-%%%%
 wand of digging
 
 Un instrument magique qui creuse des tunnels a travers la roche brute.
-%%%%
-wand of disintegration
-
-Un instrument magique qui désagrège la structure physique de n'importe quoi, à
-l’exception notable des murs les plus durs – cela inclue les statues rigides,
-bref tout ce qui n'est pas de chair.
-%%%%
-wand of enslavement
-
-Un instrument magique qui provoque une servitude aveugle chez une créature.
-%%%%
-wand of fire
-
-Un instrument magique qui tire de puissants missiles de feu.
-%%%%
-wand of fireball
-
-Un instrument magique qui tire des salves de flammes explosives.
-%%%%
-wand of invisibility
-
-Un instrument magique qui cache une créature à la vue des autres.
-%%%%
-wand of magic darts
-
-Un instrument magique qui tire de petits missiles d'énergie destructrice. Ils
-ne ratent jamais.
 %%%%
 wand of polymorph
 
 Un instrument magique qui métamorphose la créature ciblée en une autre
 créature. Ceci est particulièrement efficace contre les changeurs de forme.
-%%%%
-wand of random effects
-
-Un instrument magique qui peut produire une grande variété d'effets.
 %%%%
 whip
 

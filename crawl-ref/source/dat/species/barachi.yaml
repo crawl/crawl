@@ -6,7 +6,7 @@ genus: "Frog"
 difficulty: Advanced
 difficulty_priority: 30
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
 aptitudes:
   xp: 0
   hp: 0
@@ -43,16 +43,14 @@ mutations:
   1:
     MUT_SLOW: 1
     MUT_HOP: 1
+    MUT_DAYSTALKER: 1
   13:
     MUT_HOP: 1
-fake_mutations:
-  - long: You can be seen from farther away. (+LOS)
-    short: +LOS
-  - long: You can swim through water.
-    short: swims
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
+  - JOB_WARPER
+  - JOB_ARCANE_MARKSMAN
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
 # start TAG_MAJOR_VERSION == 34

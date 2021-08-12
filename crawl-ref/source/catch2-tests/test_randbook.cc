@@ -6,12 +6,14 @@
 
 #include "randbook.h"
 #include "spl-book.h"
+#include "spl-util.h"
 
 TEST_CASE( "When setting book spell list", "[single-file]" ) {
 
     item_def book;
 
     SECTION("spells will be padded with SPELL_NO_SPELL") {
+        init_spell_descs();
         vector<spell_type> spells = {SPELL_MAGIC_DART, SPELL_CAUSE_FEAR};
 
         _set_book_spell_list(book, spells);
@@ -23,6 +25,7 @@ TEST_CASE( "When setting book spell list", "[single-file]" ) {
     }
 
     SECTION("the spell list will be truncated to RANDBOOK_SIZE entries") {
+        init_spell_descs();
         vector<spell_type> spells = {
             SPELL_FREEZE,
             SPELL_ANIMATE_SKELETON,

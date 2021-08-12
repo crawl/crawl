@@ -6,6 +6,7 @@
 #include "item-name.h"
 #include "player.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "travel.h"
 
 FixedVector<level_id, NUM_BRANCHES> brentry;

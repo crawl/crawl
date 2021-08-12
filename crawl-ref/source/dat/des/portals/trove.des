@@ -123,7 +123,7 @@ function trove.get_trove_item(e, value, base_item)
        {base="armour", type="fire dragon scales", quant=d(3)+d(3)},
        {base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
 
-  if you.race() ~= "Felid" and you.race() ~= "Octopode" and you.race() ~= "Draconian" then
+  if you.race() ~= "Felid" and you.race() ~= "Octopode" then
     for _, toll in ipairs(arm) do
       table.insert(prices, toll)
     end
@@ -179,7 +179,7 @@ function trove.get_trove_item(e, value, base_item)
 end
 
 function trove.get_trove_toll(e)
-  if crawl.one_chance_in(20) and you.race() ~= "Demigod" and you.god() ~= "Gozag" and you.god() ~= "Uskayaw" then
+  if crawl.one_chance_in(20) and you.race() ~= "Demigod" and you.god() ~= "Gozag" and you.god() ~= "Ashenzari" and you.god() ~= "Uskayaw" then
     return trove.get_toll_nopiety()
   else
     return trove.get_trove_toll_with_item(
@@ -317,7 +317,7 @@ G.O.G
 ENDMAP
 
 NAME:   enter_trove_3
-TAGS:   uniq_trove no_monster_gen no_wall_fixup
+TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: c = blue
@@ -331,6 +331,7 @@ ENDMAP
 
 # Of course, not everyone is willing for you to take their treasure...
 NAME:   enter_trove_5
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: e = blue
@@ -358,6 +359,7 @@ ENDMAP
 
 # Someone left some gold behind for you!
 NAME:   enter_trove_6
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 KFEAT:  X = +
@@ -374,6 +376,7 @@ ccc+ccc
 ENDMAP
 
 NAME: nicolae_trove_entry_columns
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -402,6 +405,7 @@ cc@cc
 ENDMAP
 
 NAME: nicolae_trove_entry_crystal
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 FTILE: b = floor_marble
@@ -416,6 +420,7 @@ ccccccccccc
 ENDMAP
 
 NAME: nicolae_trove_entry_diagonal
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -449,6 +454,7 @@ NAME: nicolae_trove_entry_isolated
 TAGS: no_pool_fixup transparent
 CHANCE: 5%
 KPROP: .O = no_tele_into
+KMASK: .O = opaque
 KFEAT: ' = .
 : trove.portal(_G)
 MAP
@@ -462,6 +468,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_path_of_doom
+TAGS: transparent
 CHANCE: 5%
 KMONS: O = patrolling guardian mummy
 KMONS: m = patrolling guardian mummy / nothing w:20
@@ -481,6 +488,7 @@ cc.....cc
 ENDMAP
 
 NAME: trove_entry_hex_spiral
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -577,8 +585,8 @@ KITEM:   f = acquire armour w:5 / any useful armour good_item / any armour w:2
 KITEM:   F = acquire weapon w:5 / any useful weapon good_item / any weapon w:2
 KITEM:   B = acquire book / acquire:sif_muna book / any book
 KITEM:   g = potion of curing / potion of heal wounds / potion of experience / \
-             potion of might / potion of stabbing / potion of brilliance / \
-             potion of resistance / potion of magic / potion of haste
+             potion of might / potion of brilliance / potion of resistance / \
+             potion of magic / potion of haste
 KFEAT:   w = W
 : trove.setup_features(_G)
 : trove.place_fog(_G, "blue smoke", 30)
@@ -700,7 +708,6 @@ ENDMAP
 
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
-WEIGHT: 15
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
@@ -729,7 +736,6 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_weapon_2
-WEIGHT: 15
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
@@ -779,7 +785,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_dr
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -798,7 +804,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_dr
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie
@@ -904,36 +910,82 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 # Misc items/evocations trove. 15 items.
-NAME:   trove_misc_throne_room
-WEIGHT: 15
-veto {{ return crawl.game_started()
-          and (you.base_skill("Evocations") < 4 and not crawl.one_chance_in(3)
-               or you.mutation("inability to use devices") == 1) }}
-COLOUR: x = blue
-COLOUR: ' = yellow
-SUBST:  d = dde
-FTILE:  ' : floor_limestone
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   any misc
-ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
-ITEM:   manual of evocations
+NAME:    trove_misc_throne_room
+ORIENT:  encompass
+WEIGHT:  15
+TAGS:    no_item_gen no_monster_gen allow_dup
+ITEM:    manual of evocations, tin of tremorstones, lightning rod
+ITEM:    condenser vane, phial of floods, box of beasts, phantom mirror
+ITEM:    acquire wand w:15 / acquire magical staff w:5
+SHUFFLE: efghij
+COLOUR:  x = blue
+COLOUR:  ' = yellow
+FTILE:   ' = floor_limestone
 : trove.setup_features(_G)
+veto {{ return crawl.game_started()
+        and (you.base_skill("Evocations") < 4
+             and not crawl.one_chance_in(3)
+             or you.mutation("inability to use devices") == 1) }}
 MAP
    xxx
-   xfx
+   xdx
  xxx+xxx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
+ xk'''kx
+ xe'''fx
+ xk'''kx
+ xg'''hx
+ xk'''kx
+ xi'''jx
+ xk'''kx
 xxxx+xxxx
 x.......x
 x<..A..<x
 xxxxxxxxx
+ENDMAP
+
+# This can generate weapons that are out of character for Trog, e.g. pain.
+# Just say they were looted from unwilling arena participants.
+NAME:   trove_trog_arena
+veto {{ return crawl.game_started()
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
+          and not crawl.one_chance_in(3) }}
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
+ITEM:   acquire weapon w:5 / acquire:trog weapon w:5 / \
+        any useful weapon good_item / any weapon w:2
+ITEM:   acquire:trog weapon
+KFEAT:  _ = altar_trog
+KFEAT:  m = iron_grate
+NSUBST: ; = 2:d / 4:X / *:'
+NSUBST: $ = 13:d / *:'
+KPROP:  X = bloody
+SUBST:  X : '
+FTILE:  +<dem_' = floor_dirt
+COLOUR: +<dem_' = brown
+: trove.setup_features(_G)
+MAP
+      xxxxxxxxxxx
+     xx''''<''''xx
+     x'''''''''''x
+     x'''mmmmm'''x
+xxxxxx''mm;;;mm''xxxxxx
+x$$$$x''m;;;;;m''x$$$$x
+x$$$$+''+;;;;;+''+$$$$x
+x$$$$x''m;;;;;m''x$$$$x
+xxxxxx''mm;;;mm''xxxxxx
+     x'''mmmmm'''x
+     x'''''''''''x
+     xx'''''''''xx
+      xxx'''''xxx
+        x''_''x
+        x''e''x
+        xx'''xx
+         xx+xx
+         x...x
+         x.A.x
+         x...x
+         xxxxx
 ENDMAP
 
 ###################################
@@ -986,6 +1038,10 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
+veto {{ return crawl.game_started()
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
+          and not crawl.one_chance_in(3) }}
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2

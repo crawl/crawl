@@ -38,8 +38,8 @@ function st_box_setup(e)
   e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
                golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
                iron dragon w:2 / swamp dragon / fire dragon / ice dragon /\
-               catoblepas / moth of wrath w:1 / ghost moth w:1 /\
-               eye of draining / floating eye / eye of devastation /\
+               catoblepas / moth of wrath w:1 / ghost moth /\
+               floating eye / eye of devastation /\
                glowing orange brain / nagaraja / guardian serpent /\
                vampire knight / vampire mage / deep elf sorcerer /\
                deep elf death mage / deep elf demonologist /\
@@ -707,7 +707,7 @@ ENDMAP
 
 NAME:   dpeg_vaults_hating_casters
 TAGS:   vaults_hard
-MONS:   eye of draining
+MONS:   ghost moth
 SUBST:  % = %%%$* , * = **|
 NSUBST: . = 6:0 / *:.
 SUBST:  0 = 00009, 8 = 889
@@ -923,8 +923,8 @@ TAGS: vaults_hard vaults_orient_s patrolling no_monster_gen
 KMONS: S = vault sentinel
 KMONS: G = vault guard
 KMONS: W = vault warden
-KMONS: P = ironheart preserver
-KMONS: C = ironbrand convoker
+KMONS: P = ironbound preserver
+KMONS: C = ironbound convoker
 SUBST: | = ||*
 MAP
    xxxxxxx
@@ -1171,7 +1171,7 @@ ENDMAP
 NAME:   kennysheep_vaults_gozag_temple
 TAGS:   vaults_hard no_item_gen uniq_kennysheep_gozag_temple
 WEIGHT: 5
-KMONS:  1 = ironheart preserver
+KMONS:  1 = ironbound preserver
 KMONS:  2 = vault warden
 KITEM:  | = gold good_item
 KITEM:  12 = gold
@@ -1255,7 +1255,7 @@ KFEAT: g = iron_grate
 KFEAT: ^ = alarm trap
 KMONS: 1 = vault guard
 KMONS: 2 = vault warden
-KMONS: 3 = ironheart preserver / ironbrand convoker
+KMONS: 3 = ironbound preserver / ironbound convoker
 NSUBST: 1 = 4:1 / 1:2 / 1:3 / *:., . = 2:^ / *:.
 SUBST: ' = .
 KPROP: P = no_tele_into

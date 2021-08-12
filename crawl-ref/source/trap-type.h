@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum trap_type
 {
     TRAP_DART,

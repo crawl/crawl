@@ -16,13 +16,11 @@
 #include "mon-pick.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "math.h" // ceil
 #include "spl-zap.h" // calc_spell_power
 #include "evoke.h" // wand_mp_cost
-#if TAG_MAJOR_VERSION == 34
-#include "god-abil.h" // pakellas_effective_hex_power
-#endif
 #include "describe.h" // describe_info, get_monster_db_desc
 
 #define MONINF_METATABLE "monster.info"
@@ -81,7 +79,7 @@ MIRET1(boolean, is_firewood, is(MB_FIREWOOD))
  * - 1 neutral
  * - 2 strict neutral (neutral but won't attack the player)
  * - 3 good neutral (neutral but won't attack friendlies)
- * - 4 friendly (created friendly, not enslavement)
+ * - 4 friendly (created friendly, not charmed)
  *
  * @treturn int
  * @function attitude
@@ -236,30 +234,30 @@ static int moninf_get_max_hp(lua_State *ls)
     return 1;
 }
 
-/*** The monster's MR level, in "pips" (number of +'s shown on its description).
+/*** The monster's WL level, in "pips" (number of +'s shown on its description).
  * Returns a value ranging from 0 to 125 (immune).
- * @treturn int MR level
- * @function mr
+ * @treturn int WL level
+ * @function wl
  */
-static int moninf_get_mr(lua_State *ls)
+static int moninf_get_wl(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, ceil(1.0*mi->res_magic()/MR_PIP));
+    lua_pushnumber(ls, ceil(1.0*mi->willpower()/WL_PIP));
     return 1;
 }
 
-/*** Your probability of defeating the monster's MR with a given spell or zap.
+/*** Your probability of defeating the monster's WL with a given spell or zap.
  * Returns a value ranging from 0 (no chance) to 100 (guaranteed success).
- *    Returns nil if MR does not apply or the spell can't be cast.
+ *    Returns nil if WL does not apply or the spell can't be cast.
  * @tparam string spell name
  * @tparam[opt] boolean true if this spell is evoked rather than cast;
  *    defaults to false
  * @treturn int|string|nil percent chance of success (0-100);
- *     returns "magic immune" if monster is immune;
- *     returns nil if MR does not apply.
- * @function defeat_mr
+ *     returns "infinite will" if monster is immune;
+ *     returns nil if WL does not apply.
+ * @function defeat_wl
  */
-static int moninf_get_defeat_mr(lua_State *ls)
+static int moninf_get_defeat_wl(lua_State *ls)
 {
     MONINF(ls, 1, mi);
     spell_type spell = spell_by_name(luaL_checkstring(ls, 2), false);
@@ -268,28 +266,23 @@ static int moninf_get_defeat_mr(lua_State *ls)
         (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (wand_mp_cost() + 9) / 9 :
         calc_spell_power(spell, true);
     spell_flags flags = get_spell_flags(spell);
-    bool mr_check = testbits(flags, spflag::MR_check)
+    bool wl_check = testbits(flags, spflag::WL_check)
         && testbits(flags, spflag::dir_or_target)
         && !testbits(flags, spflag::helpful);
-    if (power <= 0 || !mr_check)
+    if (power <= 0 || !wl_check)
     {
         lua_pushnil(ls);
         return 1;
     }
-    int mr = mi->res_magic();
-    if (mr == MAG_IMMUNE)
+    int wl = mi->willpower();
+    if (wl == WILL_INVULN)
     {
-        lua_pushstring(ls, "magic immune");
+        lua_pushstring(ls, "infinite will");
         return 1;
     }
     zap_type zap = spell_to_zap(spell);
     int eff_power = zap == NUM_ZAPS ? power : zap_ench_power(zap, power, false);
-#if TAG_MAJOR_VERSION == 34
-    int adj_power = is_evoked ? pakellas_effective_hex_power(eff_power) : eff_power;
-    int success = hex_success_chance(mr, adj_power, 100);
-#else
-    int success = hex_success_chance(mr, eff_power, 100);
-#endif
+    int success = hex_success_chance(wl, eff_power, 100);
     lua_pushnumber(ls, success);
     return 1;
 }
@@ -427,8 +420,27 @@ LUAFN(moninf_get_is)
     return 1;
 }
 
-/*** Get the monster's possible spells.
- * Returns a list of the monster's possible spellbooks. Each spellbook is given
+/*** Get the monster's flags.
+ * Returns all flags set for the moster, as a list of flag names.
+ * @treturn array
+ * @function flags
+ */
+LUAFN(moninf_get_flags)
+{
+    MONINF(ls, 1, mi);
+    lua_newtable(ls);
+    int index = 0;
+    for (std::map<string,int>::iterator it = mi_flags.begin(); it != mi_flags.end(); ++it)
+        if (mi->is(it->second))
+        {
+            lua_pushstring(ls, it->first.c_str());
+            lua_rawseti(ls, -2, ++index);
+        }
+    return 1;
+}
+
+/*** Get the monster's spells.
+ * Returns the monster's spellbook. The spellbook is given
  * as a list of spell names.
  * @treturn array
  * @function spells
@@ -442,20 +454,14 @@ LUAFN(moninf_get_spells)
     if (!mi->has_spells())
         return 1;
 
-    unique_books books = get_unique_spells(*mi);
-    const size_t num_books = books.size();
+    const vector<mon_spell_slot> &unique_slots = get_unique_spells(*mi);
+    vector<string> spell_titles;
 
-    for (size_t i = 0; i < num_books; ++i)
-    {
-        const vector<mon_spell_slot> &unique_slots = books[i];
-        vector<string> spell_titles;
+    for (const auto& slot : unique_slots)
+        spell_titles.emplace_back(spell_title(slot.spell));
 
-        for (const auto& slot : unique_slots)
-            spell_titles.emplace_back(spell_title(slot.spell));
-
-        clua_stringtable(ls, spell_titles);
-        lua_rawseti(ls, -2, i+1);
-    }
+    clua_stringtable(ls, spell_titles);
+    lua_rawseti(ls, -2, 1);
 
     return 1;
 }
@@ -473,10 +479,9 @@ static bool cant_see_you(const monster_info *mi)
  * The return value is a number representing the percentage of a top-tier stab
  * you can currently get by attacking the monster. Possible values are:
  *
- * - 1.0 Sleep and paralysis stabs.
- * - 0.5 Net, web, and petrification stabs.
- * - 0.25 Confusion, fear, and invisibility stabs.
- * - 0.166666666 Distraction stabs.
+ * - 1.0 Sleep, petrified, and paralysis stabs.
+ * - 0.25 Net, web, petrifying, confusion, fear, invisibility, and distraction
+ *   stabs
  * - 0.0 No stab bonus.
  *
  * @treturn number
@@ -485,17 +490,17 @@ static bool cant_see_you(const monster_info *mi)
 LUAFN(moninf_get_stabbability)
 {
     MONINF(ls, 1, mi);
-    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PARALYSED))
-        lua_pushnumber(ls, 1.0);
-    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
-             || mi->is(MB_PETRIFIED))
+    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PETRIFIED)
+            || mi->is(MB_PARALYSED))
     {
-        lua_pushnumber(ls, 0.5);
+        lua_pushnumber(ls, 1.0);
     }
-    else if (mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi))
+    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
+             || mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi)
+             || mi->is(MB_DISTRACTED))
+    {
         lua_pushnumber(ls, 0.25);
-    else if (mi->is(MB_DISTRACTED))
-        lua_pushnumber(ls, 0.16666666);
+    }
     else
         lua_pushnumber(ls, 0);
 
@@ -569,10 +574,10 @@ LUAFN(moninf_get_can_be_constricted)
     MONINF(ls, 1, mi);
     if (!mi->constrictor_name.empty()
         || !form_keeps_mutations()
-        || (you.species != SP_NAGA
-            || you.experience_level <= 12
-            || you.is_constricting())
-         && (you.species != SP_OCTOPODE || !you.has_usable_tentacle()))
+        || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
+                || you.is_constricting())
+            && (you.has_mutation(MUT_TENTACLE_ARMS)
+                || !you.has_usable_tentacle()))
     {
         lua_pushboolean(ls, false);
     }
@@ -712,6 +717,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(colour),
     MIREG(mname),
     MIREG(is),
+    MIREG(flags),
     MIREG(is_safe),
     MIREG(is_firewood),
     MIREG(stabbability),
@@ -742,8 +748,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_corr),
     MIREG(can_go_frenzy),
     MIREG(max_hp),
-    MIREG(mr),
-    MIREG(defeat_mr),
+    MIREG(wl),
+    MIREG(defeat_wl),
     MIREG(ac),
     MIREG(ev),
     MIREG(x_pos),

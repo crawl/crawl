@@ -159,7 +159,7 @@ yVV...VVyyyy
 yV.YYY`VVyyyyyyyyyyyyyyyyyyyyyyy
 yV.YAY`.Vyyyyyyyyyyyyyyxxxxyxxxy
 yV.YYY`.UUyyyyxxxxxxyxxx..xxxxxy
-yVV.```` UUUyUU....xxx.........@
+yVV.````.UUUyUU....xxx.........@
 yyVVVVU.``.UUU................xy
 yyyyyyUU.`````......`.`.`.`...xy
      yyUUU..`.``...``........xxy
@@ -1388,15 +1388,15 @@ xxxxx{''1''('1ww'[x
 xxxxx1'''1'''11ww'x
 xxxx?x''w.11''??1'x
 xxx??x''''''''2'1'x
-xxx?ww''11'''''?w'x
-xxxxww?''''''''''xx
-xxx?w?11?'22'2'''.x
-xxx?w11?''''w2''''x
+xxx?WW''11'''''?w'x
+xxxxWW?''''''''''xx
+xxx?W?11?'22'2'''.x
+xxx?W11?''''w2''''x
 xxxx???''1''???''xx
 xxxxx?''1??''??'xxx
 xxxx?x'''''2?''"xxx
-xxxx?x'''2''''""xxx
-xxxx?w''''2''"""xxx
+xxxxWx'''2''''""xxx
+xxxx?W''''2''"""xxx
 xxxxx'22w""""""xxxx
 xxxxxxx""2"""""xxxx
 xxxxxxx""2""22xxxxx
@@ -1543,7 +1543,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_arbitrary_a
-TAGS:    arrival
+TAGS:    arrival transparent
 ORIENT:  float
 SUBST:   ' : . x ':40, '=.x
 NSUBST:  . = 1:d / *:.
@@ -1551,7 +1551,7 @@ NSUBST:  { = 1:{ / *:.
 ITEM:    stone
 MAP
     xxxxxxxxxxxxxxxxx
-   xx''xx''''''xx''xx
+   xx''xx'''x''xx''xx
    x''..'..xxx.'x..'x
   xx'.{...xx'......'x
   x'.....x''..{...'xx
@@ -1567,7 +1567,7 @@ x'...'''x'.xx..'xxxxx
 x'...........xxxxxxxx
 xx'..{.xxx'....''xxxx
  xx'....xxxx''...''xx
-  xxxx'''x xxx''...'x
+  xxxx'''xxxxx''...'x
      xxxxxxxxxx..@..x
 ENDMAP
 
@@ -1746,7 +1746,7 @@ xx...vvvv..'xxxx..
 x'.vvvvvvv....xx..
 x..vvvvvv..xx'.x..
 xx..vv....xxxxBx..
-x{x'...xx{xxxx.b..
+x{x'...xx{xxxxbb..
 xxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -2094,7 +2094,7 @@ ENDMAP
 NAME:    onia_arrival_handbag
 TAGS:    arrival
 ORIENT:  float
-MONS:    w:30 rat / ooze / ball python
+MONS:    w:30 rat / endoplasm / ball python
 SHUFFLE: {[
 SUBST:   [=.
 MAP
@@ -2238,7 +2238,6 @@ KMASK:   Z = no_monster_gen
 SHUFFLE: TTV
 WEIGHT:  5
 KMASK:   T = no_monster_gen
-KPROP:   wZ = no_submerge
 KPROP:   wZ = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -2261,7 +2260,6 @@ KMASK:  w = no_monster_gen
 KMONS:  Z = electric eel
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
-KPROP:  wZ = no_submerge
 KPROP:  wZ = no_tele_into
 WEIGHT: 5
 MAP
@@ -2340,20 +2338,20 @@ ENDMAP
 NAME:    onia_arrival_zoo_common
 TAGS:    arrival no_trap_gen
 ORIENT:  float
+KPROP:   12345 = no_tele_into
 : if crawl.one_chance_in(10) then
 SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
-MONS:    worker ant / soldier ant / queen ant
+MONS:    imperial myrmidon / servant of whispers / ragged hierophant
 MONS:    worm / tyrant leech
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
-MONS:    frilled lizard / leopard gecko / iguana / crocodile / komodo dragon
+MONS:    frilled lizard / iguana / snapping turtle / komodo dragon
 MONS:    hog / jackal / wolf / hound
-MONS:    giant cockroach / worker ant / butterfly / killer bee /\
-         redback
+MONS:    giant cockroach / scorpion / butterfly / killer bee / redback
 MONS:    swamp worm / lindwurm / worm
 MONS:    swamp drake / hydra / wyvern / rime drake
 MONS:    polar bear / black bear
@@ -2496,7 +2494,7 @@ TAGS:    arrival no_monster_gen
 WEIGHT:  3
 ORIENT:  southeast
 NSUBST:  V = 2:+ / 2=v+ / *:v
-NSUBST:  U = 2:+ / 2=v+ / *:v
+NSUBST:  U = 1:+ / 2=v+ / *:v
 SUBST:   ' = .W
 NSUBST:  { = 1:{ / *:.
 MAP
@@ -2515,7 +2513,7 @@ MAP
 'WwwUUUwwwV<>Vwwwx
 'WwwU<UwwwVVVVwwwx
 'WwwU>Uwwwwwwwwwwx
-'wwwUUUwwwwwwwwwwx
+'wwwU+Uwwwwwwwwwwx
 'wwwwWwwwwwwwwwwwx
 xxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2596,7 +2594,7 @@ TILE:    ' = FLOOR_PEBBLE_BROWN / FLOOR_PEBBLE_DARKGRAY
 TILE:    t = DNGN_TREE_DEAD
 TILE:    G = DNGN_GRAVESTONE
 COLOUR:  ' = brown / darkgrey
-COLOUR:  t = darkgrey
+COLOUR:  t = brown
 SUBST:   t = t.
 : set_feature_name("granite_statue", "adventurer's gravestone")
 MAP
@@ -2656,6 +2654,7 @@ NAME:   sevenhm_arrival_forest_fort_small_1
 TAGS:   arrival no_monster_gen
 ORIENT: float
 WEIGHT: 1
+KPROP: 1 = no_tele_into
 NSUBST: { = { / T> , z = + / n+
 SUBST:  T = TTG
 : if crawl.one_chance_in(4) then
@@ -2685,6 +2684,7 @@ NAME:    sevenhm_arrival_forest_fort_small_2
 TAGS:    arrival no_pool_fixup no_monster_gen
 ORIENT:  float
 WEIGHT:  1
+KPROP: 1 = no_tele_into
 : if crawl.one_chance_in(4) then
 SUBST:   w : x, u : x, r : @
 : else
@@ -2926,12 +2926,13 @@ NAME:   lightli_arrival_windingriver
 ORIENT: float
 TAGS:   arrival no_monster_gen
 KMONS:  P = plant
-SUBST:  p = Pw
+KPROP:  q = no_tele_into
+SUBST:  p = Pw, q = Pw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
-xpwppwppppppwppp.p.p...x
-xwwwwwwpppppwwppp..w...x
-xwwwwwwwpwpwwwwppwwwwp.x
+xqwqqwqqqqqqwqqp.p.p...x
+xwwwwwwqqqqqwwqpp..w...x
+xwwwwwwwqwqwwwwqpwwwwp.x
 xwwwwwwwwwwwwwwwwww..w.+
 xw.wwwwwwwwwwwwwww.....+
 xp..w..wwwww..www..p.t.x
@@ -3236,6 +3237,7 @@ ORIENT: float
 TAGS: arrival no_monster_gen
 MONS: withered plant, plant
 KMASK: 12YUT = no_item_gen
+KPROP: 12YUT = no_tele_into
 MAP
 ......@......
 .ncncn+ncncn.
@@ -3260,7 +3262,7 @@ TILE:   t = dngn_tree_dead, \
         G = dngn_gravestone
 : set_feature_name("granite_statue", "a gravestone")
 COLOUR: ? = darkgrey:20 / lightgrey, \
-        t = darkgrey
+        t = brown
 MAP
 .........
 ..?????..
@@ -3345,7 +3347,7 @@ COLOUR:  .c = white
 : if (not crawl.game_started()) or race == "Vampire"
 :     or race == "Mummy" or race == "Ghoul" or race == "Octopode"
 :     or race == "Gargoyle" or race == "Vine Stalker"
-:     or race == "Palentonga" or race == "Yak" or race == "Formicid" then
+:     or race == "Djinni" or race == "Yak" or race == "Formicid" then
 :   ally = humanoid_ally
 : end
 :
@@ -3395,34 +3397,36 @@ ENDMAP
 
 ##############################################################
 NAME:   heliophobic_arrival_ceremonial_halls
-TAGS:   arrival no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen no_trap_gen transparent
 ORIENT: float
 TILE:   c = wall_marble
 FTILE:  '+{cG = floor_marble
 COLOUR: 'cG = white
 SUBST:  ' = .
 MAP
-.....ccc+ccc.....
-.....cG'''Gc.....
-..c..cc'c'cc..c..
-.ccc.cG'c'Gc.ccc.
-.ccc.cc'c'cc.ccc.
-..c..cG'c'Gc..c..
-.....cc'c'cc.....
-ccccccG'''Gcccccc
-cGcGcGc'''cGcGcGc
-c'''''''''''''''c
-+'ccc'''{'''ccc'+
-c'''''''''''''''c
-cGcGcGc'''cGcGcGc
-ccccccG'''Gcccccc
-.....cc'c'cc.....
-..c..cG'c'Gc..c..
-.ccc.cc'c'cc.ccc.
-.ccc.cG'c'Gc.ccc.
-..c..cc'c'cc..c..
-.....cG'''Gc.....
-.....ccc+ccc.....
+ ........@........
+ .....ccc+ccc.....
+ .....cG'''Gc.....
+ ..c..cc'c'cc..c..
+ .ccc.cG'c'Gc.ccc.
+ .ccc.cc'c'cc.ccc.
+ ..c..cG'c'Gc..c..
+ .....cc'c'cc.....
+ ccccccG'''Gcccccc
+ cGcGcGc'''cGcGcGc
+ c'''''''''''''''c
+@+'ccc'''{'''ccc'+@
+ c'''''''''''''''c
+ cGcGcGc'''cGcGcGc
+ ccccccG'''Gcccccc
+ .....cc'c'cc.....
+ ..c..cG'c'Gc..c..
+ .ccc.cc'c'cc.ccc.
+ .ccc.cG'c'Gc.ccc.
+ ..c..cc'c'cc..c..
+ .....cG'''Gc.....
+ .....ccc+ccc.....
+ ........@........
 ENDMAP
 
 ##############################################################
@@ -3495,4 +3499,96 @@ xx...x+   +xxx+   +x...xx
          x.....x
          xx...xx
           xxxxx
+ENDMAP
+
+##############################################################
+NAME:     amcnicky_arrival_blooded_trapdoor
+TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT:   float
+SHUFFLE:  pqr
+SUBST:    s:xxxtw, p:x, q:x, r:@
+SUBST:    ' = '..
+KPROP:    u = bloody
+MAP
+   xpppx
+   x'''x
+xxxx'>'xxxxxqqq
+x...'''.......q
+x.{........ss.q
+x.............x
+xxxxxxxxrrrrxxx
+ENDMAP
+
+NAME:     amcnicky_arrival_gap_in_the_tavern_cellar
+TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
+ORIENT:   float
+SHUFFLE:  su
+SUBST:    c=cx, -=-.
+KPROP:    c-V = bloody
+SUBST:    c:x
+SUBST:    r:xxxxvvWl, s:@, u:x
+MAP
+    xxxxxxx
+    xT...Tx
+    x..{..x
+    x.....x
+    x..>..x
+    xT...Vxc
+    xxxxxx-cc
+    xxxxxcc-c
+   s....cc-cc
+   s.rr.-c-c
+   s.rr.--cc
+   s....ccc
+    uuuu
+ENDMAP
+
+NAME:     amcnicky_arrival_wind_blow
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+NSUBST:   _ = 4:p / 4=p:2 . / *=.
+: dgn.delayed_decay(_G, 'p', 'deep dwarf skeleton')
+MAP
+      xxxxx
+      x__{xxx
+     xx.__..x
+     x_.....xx  xxxx
+    xx_...__.x xx..@
+xxxxx._.xx...xxx__.@
+x.___._.xxx......xx@
+x....__xx xx._.__xx@
+x.xx___x   x..._...@
+x.xx._.xx  xxxxxx..@
+x.._._..xx      xxxx
+x____.._.x
+xxxxxxx..x
+      x@@x
+ENDMAP
+
+NAME:     amcnicky_arrival_abandoned_market
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+NSUBST:   _ = 4:q / 4=q:2 . / *=.
+: dgn.delayed_decay(_G, 'q', 'deep dwarf skeleton')
+NSUBST:   - = 6=p / 6=p. / 6=px / *=.x
+SUBST:    r = x.
+KFEAT:    p = abandoned_shop
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxx--xx--xx--xx---x
+xxxxx....._......_.-x
+x{_._.._.._.._._...xx
+xx_.._..........._.xx
+xxx.....__...._....xx
+xxxxx......_.......-x
+xxxxxxxppprrrrrr.._-x
+      xxxxrr_--.._.xx
+          rr.--_...xx
+          rr..__.._-x
+           x.xx..._.@
+           x_xx_._..@
+           x__......@
+           x....___-x
+           x--xxx--xx
+           xxxxxxxxxx
 ENDMAP

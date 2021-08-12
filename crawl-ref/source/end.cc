@@ -32,6 +32,7 @@
 #include "startup.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "tilepick.h"
 #include "view.h"
 #include "xom.h"
@@ -132,6 +133,7 @@ bool fatal_error_notification(string error_msg)
                        + replace_all(error_msg, "<", "<<");
     error_msg += "</lightred>\n\n<cyan>Hit any key to exit, "
                  "ctrl-p for the full log.</cyan>";
+    linebreak_string(error_msg, cgetsize(GOTO_CRT).x - 1);
 
     auto prompt_ui =
                 make_shared<Text>(formatted_string::parse_string(error_msg));

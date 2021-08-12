@@ -24,9 +24,12 @@
 #include "dgn-height.h"
 #include "dungeon.h"
 #include "end.h"
+#include "mpr.h"
+#include "tile-env.h"
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
+#include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "invent.h"
 #include "libutil.h"
@@ -42,6 +45,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-player.h"
@@ -189,15 +193,15 @@ int store_tilename_get_index(const string& tilename)
 
     // Increase index by 1 to distinguish between first entry and none.
     unsigned int i;
-    for (i = 0; i < env.tile_names.size(); ++i)
-        if (tilename == env.tile_names[i])
+    for (i = 0; i < tile_env.names.size(); ++i)
+        if (tilename == tile_env.names[i])
             return i+1;
 
 #ifdef DEBUG_TILE_NAMES
     mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
 #endif
     // If not found, add tile name to vector.
-    env.tile_names.push_back(tilename);
+    tile_env.names.push_back(tilename);
     return i+1;
 }
 
@@ -631,7 +635,7 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
             string name = (*overlay)(x, y).floortile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).floor_idx =
+                tile_env.flv(gc).floor_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t floor;
@@ -639,14 +643,14 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 if (colour)
                     floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
-                env.tile_flv(gc).floor = floor + offset;
+                tile_env.flv(gc).floor = floor + offset;
                 has_floor = true;
             }
 
             name = (*overlay)(x, y).rocktile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).wall_idx =
+                tile_env.flv(gc).wall_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t rock;
@@ -654,14 +658,14 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 if (colour)
                     rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
-                env.tile_flv(gc).wall = rock + offset;
+                tile_env.flv(gc).wall = rock + offset;
                 has_rock = true;
             }
 
             name = (*overlay)(x, y).tile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).feat_idx =
+                tile_env.flv(gc).feat_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t feat;
@@ -676,15 +680,15 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 else
                     offset = random2(tile_dngn_count(feat));
 
-                if (!has_floor && grd(gc) == DNGN_FLOOR)
-                    env.tile_flv(gc).floor = feat + offset;
-                else if (!has_rock && grd(gc) == DNGN_ROCK_WALL)
-                    env.tile_flv(gc).wall = feat + offset;
+                if (!has_floor && env.grid(gc) == DNGN_FLOOR)
+                    tile_env.flv(gc).floor = feat + offset;
+                else if (!has_rock && env.grid(gc) == DNGN_ROCK_WALL)
+                    tile_env.flv(gc).wall = feat + offset;
                 else
                 {
                     if ((*overlay)(x, y).no_random)
                         offset = 0;
-                    env.tile_flv(gc).feat = feat + offset;
+                    tile_env.flv(gc).feat = feat + offset;
                 }
             }
         }
@@ -3525,7 +3529,12 @@ string map_def::apply_subvault(string_spec &spec)
         vault.svmask = &flags;
 
         if (!resolve_subvault(vault))
-            continue;
+        {
+            if (crawl_state.last_builder_error_fatal)
+                break;
+            else
+                continue;
+        }
 
         ASSERT(vault.map.width() <= vwidth);
         ASSERT(vault.map.height() <= vheight);
@@ -3547,6 +3556,12 @@ string map_def::apply_subvault(string_spec &spec)
     // Failure, drop subvault registrations.
     _reset_subvault_stack(reg_stack);
 
+    if (crawl_state.last_builder_error_fatal)
+    {
+        // I think the error should get printed elsewhere?
+        return make_stringf("Fatal lua error while resolving subvault '%s'",
+            tag.c_str());
+    }
     return make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                         tag.c_str(), tl.x, tl.y, br.x, br.y);
 }
@@ -3768,10 +3783,10 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")
                         cur_spells[i].flags |= MON_SPELL_PRIEST;
+                    if (slot_vals[j] == "vocal")
+                        cur_spells[i].flags |= MON_SPELL_VOCAL;
                     if (slot_vals[j] == "breath")
                         cur_spells[i].flags |= MON_SPELL_BREATH;
-                    if (slot_vals[j] == "no silent")
-                        cur_spells[i].flags |= MON_SPELL_NO_SILENT;
                     if (slot_vals[j] == "instant")
                         cur_spells[i].flags |= MON_SPELL_INSTANT;
                     if (slot_vals[j] == "noisy")
@@ -4222,7 +4237,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
-                     && (!mons_class_is_animated_weapon(type)
+                     && (!mons_class_is_animated_object(type)
                          || mspec.items.size() > 1)
                      && (type != MONS_ZOMBIE && type != MONS_SKELETON
                          || invalid_monster_type(mspec.monbase)
@@ -4232,6 +4247,26 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 // TODO: skip this error if the monspec is `nothing`
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
+            }
+            else if (mons_class_is_animated_object(type))
+            {
+                auto item = mspec.items.get_item(0);
+                const auto *unrand = item.ego < SP_FORBID_EGO
+                    ? get_unrand_entry(-item.ego) : nullptr;
+                const auto base = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->base_type : item.base_type;
+                const auto sub = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->sub_type : item.sub_type;
+
+                const auto def_slot = mons_class_is_animated_weapon(type)
+                    ? EQ_WEAPON
+                    : EQ_BODY_ARMOUR;
+
+                if (get_item_slot(base, sub) != def_slot)
+                {
+                    error = make_stringf("Monster '%s' needs a defining item.",
+                                         mon_str.c_str());
+                }
             }
         }
 
@@ -4955,7 +4990,9 @@ int str_to_ego(object_class_type item_type, string ego_str)
 {
     const char* armour_egos[] =
     {
+#if TAG_MAJOR_VERSION == 34
         "running",
+#endif
         "fire_resistance",
         "cold_resistance",
         "poison_resistance",
@@ -4966,7 +5003,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "intelligence",
         "ponderousness",
         "flying",
-        "magic_resistance",
+        "willpower",
         "protection",
         "stealth",
         "resistance",
@@ -5275,9 +5312,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         int id = 0;
         for (const auto &is : ids)
         {
-            if (is == "curse")
-                id |= ISFLAG_KNOW_CURSE;
-            else if (is == "type")
+            if (is == "type")
                 id |= ISFLAG_KNOW_TYPE;
             else if (is == "pluses")
                 id |= ISFLAG_KNOW_PLUSES;
@@ -5319,8 +5354,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
-    if (strip_tag(s, "not_cursed"))
-        result.props["uncursed"] = bool(true);
     if (strip_tag(s, "useful"))
         result.props["useful"] = bool(true);
     if (strip_tag(s, "unobtainable"))

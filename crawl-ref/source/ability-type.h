@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum ability_type
 {
     ABIL_NON_ABILITY = -1,
@@ -16,28 +18,26 @@ enum ability_type
     ABIL_BREATHE_STEAM,
     ABIL_BREATHE_MEPHITIC,
     ABIL_BREATHE_ACID,
-    ABIL_BLINK,
     // Others
 #if TAG_MAJOR_VERSION == 34
+    ABIL_BLINK,
     ABIL_DELAYED_FIREBALL,
 #endif
     // Abort duration-based spells
     ABIL_END_TRANSFORMATION,
 #if TAG_MAJOR_VERSION == 34
     ABIL_STOP_SINGING, // From song of slaying
-#endif
     ABIL_CANCEL_PPROJ,
+#endif
 
     // Species-specific abilities.
     // Demonspawn-only
     ABIL_DAMNATION,
-    // Tengu, Draconians
+    ABIL_WORD_OF_CHAOS,
+#if TAG_MAJOR_VERSION == 34
     ABIL_FLY,
-#if TAG_MAJOR_VERSION == 34
     ABIL_WISP_BLINK,
-#endif
     ABIL_STOP_FLYING,
-#if TAG_MAJOR_VERSION == 34
     ABIL_MUMMY_RESTORATION,
 #endif
     // Vampires
@@ -56,7 +56,9 @@ enum ability_type
     ABIL_HOP,
     // Palentongas
     ABIL_ROLLING_CHARGE,
-    ABIL_MAX_INTRINSIC = ABIL_ROLLING_CHARGE,
+    // Air Walk
+    ABIL_BLINKBOLT,
+    ABIL_MAX_INTRINSIC = ABIL_BLINKBOLT,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -66,9 +68,9 @@ enum ability_type
 #endif
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_FLIGHT,
-#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_EVOKE_FOG,
     ABIL_EVOKE_TELEPORT_CONTROL,
@@ -81,6 +83,7 @@ enum ability_type
     // Divine abilities
     // Zin
     ABIL_ZIN_SUSTENANCE = 1000,
+    ABIL_FIRST_RELIGIOUS_ABILITY = ABIL_ZIN_SUSTENANCE,
     ABIL_ZIN_RECITE,
     ABIL_ZIN_VITALISATION,
     ABIL_ZIN_IMPRISON,
@@ -98,7 +101,7 @@ enum ability_type
     ABIL_KIKU_RECEIVE_CORPSES = 1020,
     ABIL_KIKU_TORMENT,
     ABIL_KIKU_BLESS_WEAPON,
-    ABIL_KIKU_GIFT_NECRONOMICON,
+    ABIL_KIKU_GIFT_CAPSTONE_SPELLS,
     // Yredelemnul
     ABIL_YRED_INJURY_MIRROR = 1030,
     ABIL_YRED_ANIMATE_REMAINS,
@@ -126,7 +129,7 @@ enum ability_type
     ABIL_SIF_MUNA_DIVINE_EXEGESIS,
     // Trog
     ABIL_TROG_BERSERK = 1080,
-    ABIL_TROG_REGEN_MR,
+    ABIL_TROG_HAND,
     ABIL_TROG_BROTHERS_IN_ARMS,
     // Elyvilon
     ABIL_ELYVILON_LIFESAVING = 1090,
@@ -183,10 +186,15 @@ enum ability_type
     ABIL_CHEIBRIADOS_SLOUCH,
     ABIL_CHEIBRIADOS_DISTORTION,
     // Ashenzari
+#if TAG_MAJOR_VERSION == 34
     ABIL_ASHENZARI_SCRYING = 1160,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
     ABIL_ASHENZARI_CURSE,
+#else
+    ABIL_ASHENZARI_CURSE = 1160,
+#endif
+    ABIL_ASHENZARI_UNCURSE,
     // Dithmenos
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
@@ -267,9 +275,17 @@ enum ability_type
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
+    ABIL_LAST_RELIGIOUS_ABILITY = ABIL_STOP_RECALL,
 
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
     ABIL_CONVERT_TO_BEOGH,
+
+#ifdef WIZARD
+    ABIL_WIZ_BUILD_TERRAIN = 10000,
+    ABIL_FIRST_WIZ = ABIL_WIZ_BUILD_TERRAIN,
+    ABIL_WIZ_SET_TERRAIN,
+    ABIL_WIZ_CLEAR_TERRAIN,
+#endif
     NUM_ABILITIES
 };

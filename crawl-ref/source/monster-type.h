@@ -1,7 +1,9 @@
 #pragma once
 
+#include "tag-version.h"
+
 // NOTE: Changing this order will break saves! Appending does not.
-enum monster_type                      // menv[].type
+enum monster_type                      // env.mons[].type
 {
     MONS_PROGRAM_BUG,
         MONS_0 = MONS_PROGRAM_BUG,
@@ -10,7 +12,9 @@ enum monster_type                      // menv[].type
     MONS_GIANT_LIZARD,          // genus
 #endif
     MONS_FRILLED_LIZARD,
+#if TAG_MAJOR_VERSION == 34
     MONS_LEOPARD_GECKO,
+#endif
     MONS_IGUANA,
     MONS_KOMODO_DRAGON,
     MONS_BASILISK,
@@ -39,7 +43,9 @@ enum monster_type                      // menv[].type
     MONS_LABORATORY_RAT,
 #endif
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
+#if TAG_MAJOR_VERSION == 34
     MONS_PORCUPINE,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_PALENTONGA,
 #endif
@@ -73,7 +79,9 @@ enum monster_type                      // menv[].type
     MONS_BABY_ALLIGATOR,
 #endif
     MONS_ALLIGATOR,
+#if TAG_MAJOR_VERSION == 34
     MONS_CROCODILE,
+#endif
     MONS_HYDRA,
 #if TAG_MAJOR_VERSION == 34
     MONS_SHEEP,
@@ -88,8 +96,8 @@ enum monster_type                      // menv[].type
     MONS_DIRE_ELEPHANT,
     MONS_HELLEPHANT,
     MONS_MANTICORE,
-    MONS_HIPPOGRIFF,
 #if TAG_MAJOR_VERSION == 34
+    MONS_HIPPOGRIFF,
     MONS_GRIFFON,
 #endif
 #if TAG_MAJOR_VERSION > 34
@@ -101,6 +109,7 @@ enum monster_type                      // menv[].type
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
     MONS_BARACHI,
+    MONS_GOLIATH_FROG,
     MONS_BEAR,                  // genus
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -139,21 +148,28 @@ enum monster_type                      // menv[].type
     MONS_GOLDEN_DRAGON,
     MONS_PEARL_DRAGON,
 
-    MONS_OOZE,
+    MONS_ENDOPLASM,
     MONS_JELLY,
 #if TAG_MAJOR_VERSION == 34
     MONS_BROWN_OOZE,
     MONS_GIANT_AMOEBA,
+#else
+    MONS_ROCKSLIME,
+    MONS_QUICKSILVER_OOZE,
 #endif
     MONS_AZURE_JELLY,
+#if TAG_MAJOR_VERSION == 34
     MONS_DEATH_OOZE,
+#endif
     MONS_ACID_BLOB,
     MONS_SLIME_CREATURE,
 #if TAG_MAJOR_VERSION == 34
     MONS_PULSATING_LUMP,
 #endif
     MONS_FLOATING_EYE,
+#if TAG_MAJOR_VERSION == 34
     MONS_EYE_OF_DRAINING,
+#endif
     MONS_SHINING_EYE,
     MONS_EYE_OF_DEVASTATION,
     MONS_GREAT_ORB_OF_EYES,
@@ -162,6 +178,7 @@ enum monster_type                      // menv[].type
     MONS_DANCING_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
+    MONS_ANIMATED_ARMOUR,
 #endif
     MONS_HARPY,
 #if TAG_MAJOR_VERSION == 34
@@ -185,10 +202,10 @@ enum monster_type                      // menv[].type
     MONS_BUTTERFLY,
 #if TAG_MAJOR_VERSION == 34
     MONS_ANT_LARVA,
-#endif
     MONS_WORKER_ANT,
     MONS_SOLDIER_ANT,
     MONS_QUEEN_ANT,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_FORMICID,
 #endif
@@ -209,8 +226,8 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_BEETLE,
     MONS_BORING_BEETLE,
-    MONS_BOULDER_BEETLE,
 #endif
+    MONS_BOULDER_BEETLE,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEATH_SCARAB,
 #endif
@@ -307,7 +324,9 @@ enum monster_type                      // menv[].type
     MONS_FIRE_VORTEX,
     MONS_SPATIAL_VORTEX,
     MONS_INSUBSTANTIAL_WISP,
-#if TAG_MAJOR_VERSION == 34
+#if TAG_MAJOR_VERSION > 34
+    MONS_WILL_O_THE_WISP,
+#else
     MONS_VAPOUR,
 
     // Mimics:
@@ -355,7 +374,7 @@ enum monster_type                      // menv[].type
     MONS_GNOLL_SERGEANT,
     MONS_BOGGART,
     MONS_KOBOLD,
-    MONS_BIG_KOBOLD,
+    MONS_KOBOLD_BRIGAND,
     MONS_KOBOLD_DEMONOLOGIST,
     MONS_ORC,
     MONS_ORC_WARRIOR,
@@ -383,8 +402,9 @@ enum monster_type                      // menv[].type
     MONS_DEEP_ELF_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEEP_ELF_ARCHER,
+    MONS_DEEP_ELF_AIR_MAGE,
 #endif
-    MONS_DEEP_ELF_MAGE,
+    MONS_DEEP_ELF_FIRE_MAGE,
 #if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SUMMONER,
     MONS_DEEP_ELF_CONJURER,
@@ -417,6 +437,7 @@ enum monster_type                      // menv[].type
     MONS_TENGU_WARRIOR,
     MONS_TENGU_CONJURER,
     MONS_TENGU_REAVER,
+    MONS_FENSTRIDER_WITCH,
 #endif
     MONS_MINOTAUR,
     MONS_NAGA,
@@ -490,8 +511,11 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_VAULT_SENTINEL,
     MONS_VAULT_WARDEN,
-    MONS_IRONBRAND_CONVOKER,
-    MONS_IRONHEART_PRESERVER,
+    MONS_IRONBOUND_CONVOKER,
+    MONS_IRONBOUND_PRESERVER,
+    MONS_IRONBOUND_FROSTHEART,
+    MONS_IRONBOUND_THUNDERHULK,
+    MONS_IRONBOUND_BEASTMASTER,
     MONS_IMPERIAL_MYRMIDON,
     MONS_SERVANT_OF_WHISPERS,
     MONS_RAGGED_HIEROPHANT,
@@ -546,6 +570,7 @@ enum monster_type                      // menv[].type
     MONS_SALAMANDER,
 #if TAG_MAJOR_VERSION > 34
     MONS_SALAMANDER_MYSTIC,
+    MONS_SALAMANDER_TYRANT,
 #endif
 
     // Water monsters:
@@ -621,13 +646,16 @@ enum monster_type                      // menv[].type
     MONS_PANDEMONIUM_LORD,
 
     // Spiritual beings ('R')
+#if TAG_MAJOR_VERSION > 34
+    MONS_DJINNI,
+#endif
     MONS_EFREET,
     MONS_RAKSHASA,
 #if TAG_MAJOR_VERSION == 34
     MONS_RAKSHASA_FAKE,
-#endif
-#if TAG_MAJOR_VERSION > 34
+#else
     MONS_DRYAD,
+    MONS_ELEIONOMA,
     MONS_SNAPLASHER_VINE,
     MONS_SNAPLASHER_VINE_SEGMENT,
 #endif
@@ -647,14 +675,17 @@ enum monster_type                      // menv[].type
     MONS_SPATIAL_MAELSTROM,
     MONS_WORLDBINDER,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
+    MONS_BUNYIP,
 #endif
     MONS_ELDRITCH_TENTACLE,
     MONS_ELDRITCH_TENTACLE_SEGMENT,
     MONS_TENTACLED_MONSTROSITY,
     MONS_ABOMINATION_SMALL,
     MONS_ABOMINATION_LARGE,
+#if TAG_MAJOR_VERSION == 34
     MONS_CRAWLING_CORPSE,
     MONS_MACABRE_MASS,
+#endif
 
     // Undead:
 #if TAG_MAJOR_VERSION > 34
@@ -669,11 +700,13 @@ enum monster_type                      // menv[].type
     MONS_GHOUL,
 #if TAG_MAJOR_VERSION == 34
     MONS_FLAMING_CORPSE,
+#else
+    MONS_BLOATED_HUSK,
 #endif
     MONS_MUMMY,
     MONS_BOG_BODY,
     MONS_GUARDIAN_MUMMY,
-    MONS_GREATER_MUMMY,
+    MONS_ROYAL_MUMMY,
     MONS_MUMMY_PRIEST,
     MONS_VAMPIRE,
     MONS_VAMPIRE_KNIGHT,
@@ -696,6 +729,9 @@ enum monster_type                      // menv[].type
     MONS_PHANTASMAL_WARRIOR,
     MONS_LICH,
     MONS_ANCIENT_LICH,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DREAD_LICH,
+#endif
     MONS_DEATH_COB,
     MONS_CURSE_TOE,
     MONS_CURSE_SKULL,
@@ -878,6 +914,7 @@ enum monster_type                      // menv[].type
     MONS_TEST_SPAWNER,
 #if TAG_MAJOR_VERSION > 34
     MONS_TEST_STATUE,
+    MONS_TEST_BLOB,
     MONS_NAMELESS,              // summoning miscast
 #endif
 
@@ -918,8 +955,8 @@ enum monster_type                      // menv[].type
 
     MONS_VAULT_SENTINEL,
     MONS_VAULT_WARDEN,
-    MONS_IRONBRAND_CONVOKER,
-    MONS_IRONHEART_PRESERVER,
+    MONS_IRONBOUND_CONVOKER,
+    MONS_IRONBOUND_PRESERVER,
 
     MONS_ZOMBIE,
     MONS_SKELETON,
@@ -1064,6 +1101,22 @@ enum monster_type                      // menv[].type
     MONS_MAGGIE,
     MONS_NAMELESS,
     MONS_PALENTONGA,
+    MONS_BLOATED_HUSK,
+    MONS_BUNYIP,
+    MONS_GOLIATH_FROG,
+    MONS_ELEIONOMA,
+    MONS_FENSTRIDER_WITCH,
+    MONS_WILL_O_THE_WISP,
+    MONS_TEST_BLOB,
+    MONS_DREAD_LICH,
+    MONS_DEEP_ELF_AIR_MAGE,
+    MONS_ANIMATED_ARMOUR,
+    MONS_ROCKSLIME,
+    MONS_QUICKSILVER_OOZE,
+    MONS_IRONBOUND_FROSTHEART,
+    MONS_IRONBOUND_THUNDERHULK,
+    MONS_IRONBOUND_BEASTMASTER,
+    MONS_SALAMANDER_TYRANT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -1077,6 +1130,7 @@ enum monster_type                      // menv[].type
     RANDOM_MOBILE_MONSTER, // used for monster generation (shadow creatures)
     RANDOM_COMPATIBLE_MONSTER, // used for player shadow creatures (prevents repulsing summons)
     RANDOM_BANDLESS_MONSTER,
+    RANDOM_POLYMORPH_MONSTER, // choose from a per-monster set
 
     // A random draconian, either base coloured drac or specialised.
     RANDOM_DRACONIAN,

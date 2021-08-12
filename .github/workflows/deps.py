@@ -89,15 +89,16 @@ def install_llvm() -> None:
     run(["sudo", "bash", "/tmp/llvm.sh"])
     for binary in os.scandir("/usr/bin"):
         if binary.name.startswith("clang-") or binary.name.startswith("clang++-"):
-            run(
-                [
-                    "sudo",
-                    "ln",
-                    "-s",
-                    "/usr/bin/ccache",
-                    os.path.join("/usr/lib/ccache/", binary.name),
-                ],
-            )
+            if not os.path.exists(os.path.join("/usr/lib/ccache/", binary.name)):
+                run(
+                    [
+                        "sudo",
+                        "ln",
+                        "-s",
+                        "/usr/bin/ccache",
+                        os.path.join("/usr/lib/ccache/", binary.name),
+                    ],
+                )
 
 
 def setup_msys_ccache_symlinks() -> None:

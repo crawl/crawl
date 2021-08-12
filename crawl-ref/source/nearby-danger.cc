@@ -26,6 +26,7 @@
 #include "mon-tentacle.h"
 #include "player.h"
 #include "player-stats.h"
+#include "spl-damage.h"
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
@@ -34,28 +35,23 @@
 #include "traps.h"
 #include "travel.h"
 
-
-// HACK ALERT: In the following several functions, want_move is true if the
-// player is travelling. If that is the case, things must be considered one
-// square closer to the player, since we don't yet know where the player will
-// be next turn.
-
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
-static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
+static bool _mons_has_path_to_player(const monster* mon)
 {
-    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
-    {
-        int dist = grid_distance(you.pos(), mon->pos());
-        if (want_move)
-            dist--;
-        if (dist >= 2)
-            return false;
-    }
-
     // Short-cut if it's already adjacent.
     if (grid_distance(mon->pos(), you.pos()) <= 1)
         return true;
+
+    // Non-adjacent non-tentacle stationary monsters are only threatening
+    // because of any ranged attack they might posess, which is handled
+    // elsewhere in the safety checks. Presently all stationary monsters
+    // have a ranged attack, but if a melee stationary monster is introduced
+    // this will fail. Don't add a melee stationary monster it's not a good
+    // monster.
+    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
+        return false;
+
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
@@ -93,23 +89,25 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     return false;
 }
 
-bool mons_can_hurt_player(const monster* mon, const bool want_move)
+bool mons_can_hurt_player(const monster* mon)
 {
     // FIXME: This takes into account whether the player knows the map!
     //        It should, for the purposes of i_feel_safe. [rob]
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
-    //
-    // This also doesn't account for explosion radii, which is a false positive
-    // for a player waiting near (but not in range of) their own fulminant
-    // prism
-    if (_mons_has_path_to_player(mon, want_move) || mons_blows_up(*mon))
+    if (_mons_has_path_to_player(mon))
         return true;
 
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
+    //
+    // This also doesn't account for explosion radii, which is a false positive
+    // for a player waiting near (but not in range of) their own fulminant
+    // prism
     if (you.see_cell_no_trans(mon->pos())
-        && mons_has_ranged_attack(*mon))
+        && (mons_blows_up(*mon)
+            || mons_has_ranged_attack(*mon)
+            || mons_has_ranged_spell(*mon, false, true)))
     {
         return true;
     }
@@ -127,6 +125,10 @@ static bool _mons_is_always_safe(const monster *mon)
                && !mons_is_active_ballisto(*mon));
 }
 
+// HACK ALERT: In the following several functions, want_move is true if the
+// player is travelling. If that is the case, things must be considered one
+// square closer to the player, since we don't yet know where the player will
+// be next turn.
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
@@ -144,9 +146,8 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // Only seen through glass walls or within water?
                            // Assuming that there are no water-only/lava-only
                            // monsters capable of throwing or zapping wands.
-                           || !mons_can_hurt_player(mon, want_move)));
+                           || !mons_can_hurt_player(mon)));
 
-#ifdef CLUA_BINDINGS
     if (consider_user_options)
     {
         bool moving = you_are_delayed()
@@ -165,7 +166,6 @@ bool mons_is_safe(const monster* mon, const bool want_move,
             is_safe = result;
         }
     }
-#endif
 
     return is_safe;
 }
@@ -195,8 +195,11 @@ vector<monster* > get_nearby_monsters(bool want_move,
     vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
+        if (ri->distance_from(you.pos()) > range)
+            continue;
+
         if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()
@@ -395,7 +398,7 @@ void bring_to_safety()
         pos.x = random2(GXM);
         pos.y = random2(GYM);
         if (!in_bounds(pos)
-            || grd(pos) != DNGN_FLOOR
+            || env.grid(pos) != DNGN_FLOOR
             || cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
@@ -407,7 +410,7 @@ void bring_to_safety()
         }
 
         for (adjacent_iterator ai(pos); ai; ++ai)
-            if (grd(*ai) == DNGN_SLIMY_WALL)
+            if (env.grid(*ai) == DNGN_SLIMY_WALL)
             {
                 tries++;
                 continue;
@@ -438,7 +441,6 @@ void revive()
     // doesn't matter here.
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
-    you.disease = 0;
     you.magic_contamination = 0;
     restore_stat(STAT_ALL, 0, true);
 
@@ -451,16 +453,16 @@ void revive()
     you.clear_beholders();
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
-    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_XP_DRAIN] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
     decr_zot_clock();
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
-    if (you.duration[DUR_SCRYING])
-        you.xray_vision = false;
+    end_wait_spells(true);
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+        end_frozen_ramparts();
+
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 
@@ -473,7 +475,7 @@ void revive()
     you.props["corrosion_amount"] = 0;
     you.props.erase(SAP_MAGIC_KEY);
 
-    unrot_hp(9999);
+    undrain_hp(9999);
     set_hp(9999);
     set_mp(9999);
     you.pending_revival = false;

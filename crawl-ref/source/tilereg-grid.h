@@ -1,8 +1,12 @@
 #ifdef USE_TILE_LOCAL
 #pragma once
 
+#include <vector>
+
 #include "tiledgnbuf.h"
 #include "tilereg.h"
+
+using std::vector;
 
 class InventoryTile
 {
@@ -11,7 +15,7 @@ public:
 
     // tile index
     tileidx_t tile;
-    // mitm/you.inv idx (depends on flag & TILEI_FLAG_FLOOR)
+    // env.item/you.inv idx (depends on flag & TILEI_FLAG_FLOOR)
     int idx;
     // quantity of this item (0-999 valid, >999 shows as 999, <0 shows nothing)
     short quantity;

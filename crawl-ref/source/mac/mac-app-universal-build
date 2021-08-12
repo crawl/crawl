@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# [ds] NO_INLINE_DEPGEN because inline depgen behaves badly when specifying
-# multiple -arch flags to the Mac gcc.
-exec make BUILD_UNIVERSAL=y NO_INLINE_DEPGEN=y APPLE_GCC=y \
-          EXTRA_FLAGS='-DWIZARD' "$@"

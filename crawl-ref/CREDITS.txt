@@ -30,17 +30,18 @@
     Enne Walker
 
 * The administrators of public crawl servers, both present:
-    John Boyle (crawl.berotato.org)
     Jan Anders Bremer (underhound.eu)
     Rax E. Dillon (crawl.akrasiac.org)
+    dplusplus (lazy-life.ddo.jp)
+    floraline (crawl.kelbi.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
     Alex Jurkiewicz (crawl.project357.org)
     Marc H. Thoben (crawl.develz.org)
-    dplusplus (lazy-life.ddo.jp)
-    floraline (crawl.kelbi.org)
     Namanix (crawl.xtahua.com)
+    ZureaL (cbro.berotato.org)
   and past:
     Jan Anders Bremer (crawl.lantea.net)
+    John Boyle (crawl.berotato.org)
     joosa (rl.heh.fi)
     Medar, Zkyp (crawl.xtahua.com)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
@@ -96,6 +97,7 @@
     Steve 'nfogravity' Balady
     Max Bane
     G. Bailey
+    Alexei Barnes
     Beargit
     Bill Beher
     Alexander Beisig
@@ -104,6 +106,7 @@
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
+    Elliott Bernstein
     Bloax
     Terje Bø
     Erik Inge Bolsø
@@ -124,6 +127,7 @@
     Edgar Carballo
     Cedor
     Cerol
+    Marcelo Cerri
     Rahul Chandra
     Joe Childers
     Thom Chiovoloni
@@ -133,21 +137,26 @@
     Nicholas Connelly
     Tom Conrad
     Vitor 'Baconkid' Costa
+    RJ Cunningham
     Aaron Curtis
     Simon Curtis
     cut1less
     David Damerell
     Paul Dejean
     Denzi
+    dicedlemming
     Lothar Dierkes
+    dilly
     Doesnty
     Mark 'Palyth' Donahue
     Kevin Donnelly
     drachereborn
+    DreamDust
     Mike Drinen
     DrKe
     Kieron Dunbar
     Russell Dunk
+    Ebonnov
     John 'Elwin' Edwards
     elliott
     Micha Elsner
@@ -166,6 +175,7 @@
     Joshua Gelbard
     Peter Gerlagh
     Benoît Giannangeli
+    Gittourarmy
     Ben Goetter
     Aaron Golden
     Ed Gonzalez
@@ -180,7 +190,6 @@
     Tomas Krag Hansen
     Taylor Hedberg
     Anders Heggestøyl
-    hellmonk
     Alex Henry
     R. Dan Henry
     Max 'Ploomutoo' Hon-Anderson
@@ -195,7 +204,9 @@
     Matthew Ince
     Mitsuhiro Itakura
     Jeekaroose
+    Nick Johnstone
     Mikko Juola
+    Zhang Kai
     Kurt Kartaltepe
     Dominic Kempf
     Dominic 'dk' Kexel
@@ -214,6 +225,7 @@
     Ryan Kusnery
     Jukka Kuusisto
     Lorenzo Lami
+    Christopher Landry
     Lantier
     Maciej Lapinski
     Nikolai Lavsky
@@ -225,6 +237,7 @@
     Mark Lodato
     Matthew Ludivico
     Rob Lund
+    Sebastian Łużyński
     Lynn
     Michael Lynn
     Peter McLarnan
@@ -241,9 +254,11 @@
     James 'Eronarn' Meickle
     Jacob Meigs
     mgdelmonte
+    Midn8
     mikee
     Nathan Mills
     Andrew Minton
+    Mintice
     Byrel Mitchell
     Yer Mivvaggah
     Shawn M Moore
@@ -254,7 +269,6 @@
     nagdon
     Naruni
     neofelis
-    nicolae
     nirrattner
     Jonathon Nooner
     NormalPerson7
@@ -263,6 +277,7 @@
     Mattias Nyberg
     nyra
     Dylan O'Donnell
+    Heinrich Ody
     Chris Oelmueller
     John Olender
     Aaron Olowin
@@ -272,17 +287,21 @@
     Malwyn P
     palyth
     panicbit
+    Anders Papitto
     William Parker
     Pedro
     Pekkekke
     Arlen Phillips
     pikaro
     Lemuel Pitkin
+    Paul Pollack
     Poroing
     Iago Porto
+    Alexander Posch
     psywombats
     pubby
     Ashley Elizabeth Raine
+    randomMesh
     Edward Randtke
     Derek Ray
     RealzHS
@@ -302,8 +321,11 @@
     runrin
     Risto Saarelma
     Sebastian Salman
+    Petri Salminen
     Sandman25
+    Sastreii
     Brett Scarborough
+    Roderick Schertler
     sdynet
     Roman Sêk
     Brennan Shacklett
@@ -349,8 +371,10 @@
     Richard Wardin
     waylon531
     Steven Wheeler
+    WhiteShark
     Thomas Willem
     Evan Williams
+    Mara Williamson
     Jeremey Wilson
     wjchen
     ximxim
@@ -381,6 +405,7 @@ The Dungeon Crawl Stone Soup development team is:
     Michael Gagno
     gammafunk
     Shayne Halvorson
+    hellmonk
     Brendan Hickey
     Aidan Holm
     Pete Hurst
@@ -398,6 +423,7 @@ The Dungeon Crawl Stone Soup development team is:
     Neil Middleton
     Seve Monahan
     Neil Moore
+    nicolae
     Steven Noonan
     Stefan O'Rear
     Charles Otto

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tilecell.h"
+#include "coord-def.h"
 
 struct screen_cell_t
 {
@@ -21,15 +22,15 @@ class crawl_view_buffer
 public:
     crawl_view_buffer();
     crawl_view_buffer(const coord_def &sz);
+    crawl_view_buffer(const crawl_view_buffer &rhs);
     ~crawl_view_buffer();
 
     coord_def size() const { return m_size; }
-    void resize(const coord_def &sz);
     bool empty() const;
 
     operator screen_cell_t * () { return m_buffer; }
     operator const screen_cell_t * () const { return m_buffer; }
-    const crawl_view_buffer & operator = (const crawl_view_buffer &rhs);
+    const crawl_view_buffer & operator =(crawl_view_buffer rhs);
 
     template<class Indexer>
     screen_cell_t& operator () (const Indexer &i)
@@ -42,6 +43,7 @@ public:
     void clear();
     void draw();
 private:
+    void resize(const coord_def &sz);
     coord_def m_size;
     screen_cell_t *m_buffer;
 };

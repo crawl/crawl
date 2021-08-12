@@ -11,6 +11,7 @@
 #include "item-prop-enum.h"
 #include "reach-type.h"
 #include "size-type.h"
+#include "tag-version.h"
 
 struct bolt;
 
@@ -34,7 +35,7 @@ enum armour_flag
     ARMF_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
     // boolean resists
-    ARMF_RES_MAGIC          = 1 << 17,
+    ARMF_WILLPOWER          = 1 << 17,
     ARMF_RES_ELEC           = 1 << 18,
     ARMF_RES_POISON         = 1 << 19,
     ARMF_RES_CORR           = 1 << 20,
@@ -52,11 +53,7 @@ extern const set<pair<object_class_type, int> > removed_items;
 bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
-bool item_known_cursed(const item_def &item) PURE;
 bool item_is_cursable(const item_def &item);
-bool curse_an_item();
-void do_curse_item(item_def &item, bool quiet = true);
-void do_uncurse_item(item_def &item, bool check_bondage = true);
 inline constexpr bool item_type_has_curses(object_class_type base_type)
 {
         return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
@@ -154,6 +151,7 @@ skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 bool staff_uses_evocations(const item_def &item);
+skill_type staff_skill(stave_type s);
 bool item_skills(const item_def &item, set<skill_type> &skills);
 
 // launcher and ammo functions:
@@ -192,9 +190,9 @@ int evoker_max_charges(int evoker_type);
 bool jewellery_type_has_plusses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
+#if TAG_MAJOR_VERSION == 34
 
 // food functions:
-#if TAG_MAJOR_VERSION == 34
 bool is_real_food(food_type food) PURE;
 #endif
 
@@ -206,7 +204,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_poison(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_elec(const item_def &arm, bool check_artp) PURE;
 int get_armour_life_protection(const item_def &arm, bool check_artp) PURE;
-int get_armour_res_magic(const item_def &arm, bool check_artp) PURE;
+int get_armour_willpower(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_corr(const item_def &arm) PURE;
 int get_armour_repel_missiles(const item_def &arm, bool check_artp) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
@@ -217,7 +215,7 @@ int get_jewellery_res_cold(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_res_poison(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_res_elec(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_life_protection(const item_def &ring, bool check_artp) PURE;
-int get_jewellery_res_magic(const item_def &ring, bool check_artp) PURE;
+int get_jewellery_willpower(const item_def &ring, bool check_artp) PURE;
 bool get_jewellery_see_invisible(const item_def &ring, bool check_artp) PURE;
 
 int property(const item_def &item, int prop_type) PURE;
@@ -242,6 +240,12 @@ void seen_item(const item_def &item);
 static inline bool is_weapon(const item_def &item)
 {
     return item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES;
+}
+
+inline constexpr bool item_type_is_equipment(object_class_type base_type)
+{
+        return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
+               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES;
 }
 
 void remove_whitespace(string &str);

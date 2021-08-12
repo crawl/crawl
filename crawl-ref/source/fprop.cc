@@ -30,7 +30,7 @@ bool is_bloodcovered(const coord_def& p)
 
 bool is_icecovered(const coord_def& p)
 {
-    return feat_is_wall(grd(p)) && testbits(env.pgrid(p), FPROP_ICY);
+    return feat_is_wall(env.grid(p)) && testbits(env.pgrid(p), FPROP_ICY);
 }
 
 bool is_tide_immune(const coord_def &p)
@@ -50,8 +50,6 @@ feature_property_type str_to_fprop(const string &str)
         return FPROP_NO_TELE_INTO;
     if (str == "no_tide")
         return FPROP_NO_TIDE;
-    if (str == "no_submerge")
-        return FPROP_NO_SUBMERGE;
     if (str == "no_jiyva")
         return FPROP_NO_JIYVA;
 

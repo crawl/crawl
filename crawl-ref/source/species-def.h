@@ -1,18 +1,22 @@
 #pragma once
 
+#include <vector>
+
 #include "stat-type.h"
 #include "mon-enum.h"
 #include "mutation-type.h"
 #include "undead-state-type.h"
 
+using std::vector;
+
 enum species_flag
 {
     SPF_NONE        = 0,
-    SPF_ELVEN       = 1 << 0, /// If this species counts as an elf
-    SPF_DRACONIAN   = 1 << 1, /// If this is a draconian subspecies
-    SPF_ORCISH      = 1 << 2, /// If this species is a kind of orc
-    SPF_NO_HAIR     = 1 << 3, /// If members of the species are hairless
-    SPF_SMALL_TORSO = 1 << 4, /// Torso is smaller than body
+    SPF_DRACONIAN   = 1 << 0, /// If this is a draconian subspecies
+    SPF_NO_HAIR     = 1 << 1, /// If members of the species are hairless (flavor only)
+    SPF_NO_BONES    = 1 << 2, /// If members of the species have bones (flavor + minor physiology checks)
+    SPF_SMALL_TORSO = 1 << 3, /// Torso is smaller than body
+    SPF_BARDING     = 1 << 4, /// Whether the species wears bardings (instead of boots)
 };
 DEF_BITFIELD(species_flags, species_flag);
 
@@ -34,7 +38,7 @@ struct species_def
     int xp_mod; ///< Experience level modifier
     int hp_mod; ///< HP modifier (in tenths)
     int mp_mod; ///< MP modifier
-    int mr_mod; ///< MR modifier (multiplied by XL for base MR)
+    int wl_mod; ///< WL modifier (multiplied by XL for base WL)
     monster_type monster_species; ///< Corresponding monster (for display)
     habitat_type habitat; ///< Where it can live; HT_WATER -> no penalties
     undead_state_type undeadness; ///< What kind of undead (if any)

@@ -4,6 +4,8 @@
  */
 #pragma once
 
+#include "tag-version.h"
+
 enum species_type
 {
 #if TAG_MAJOR_VERSION == 34

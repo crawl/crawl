@@ -19,8 +19,8 @@ enum class passive_t
     none = 0,
 
     /// The god prefers that items be cursed: acquirement grants cursed items,
-    /// enchant scrolls and miscasts preserve curse status, and remove curse
-    /// allows selecting a subset of items.
+    /// enchant scrolls and miscasts preserve curse status, and identify
+    /// allows selecting a subset of items to uncurse.
     want_curses,
 
     /// You detect the presence of portals.
@@ -46,6 +46,9 @@ enum class passive_t
 
     /// You have innate clarity.
     clarity,
+
+    /// You have astral sight.
+    xray_vision,
 
     /// You get a boost to skills from cursed slots.
     bondage_skill_boost,
@@ -265,21 +268,20 @@ enum ru_interference
     DO_REDIRECT_ATTACK
 };
 
+bool god_gives_passive(god_type god, passive_t passive);
 bool have_passive(passive_t passive);
 bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
-void ash_init_bondage(player *y);
-void ash_check_bondage(bool msg = true);
-string ash_describe_bondage(int flags, bool level);
+int ash_scry_radius();
+void ash_check_bondage();
 bool god_id_item(item_def& item, bool silent = true);
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
-map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
 int gozag_gold_in_los(actor* whom);
 void gozag_detect_level_gold(bool count);
 int qazlal_sh_boost(int piety = you.piety);

@@ -5,10 +5,14 @@
 
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "mgen-data.h"
 #include "player.h"
 #include "religion-enum.h"
+
+using std::vector;
 
 #define MAX_PIETY      200
 #define HALF_MAX_PIETY (MAX_PIETY / 2)
@@ -51,6 +55,7 @@ void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
 void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
+int excom_xp_docked();
 
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
@@ -61,7 +66,8 @@ void handle_god_time(int /*time_delta*/);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
-bool player_can_join_god(god_type which_god);
+bool player_can_join_god(god_type which_god, bool temp = true);
+void join_trog_skills(void);
 void join_religion(god_type which_god);
 void god_pitch(god_type which_god);
 god_type choose_god(god_type def_god = NUM_GODS);
@@ -105,11 +111,15 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 string god_spell_warn_string(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
+
+void initialize_ashenzari_props();
 lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster* target);
+bool god_protects(const actor *agent, const monster *target, bool quiet=true);
+bool god_protects(const monster *target, bool quiet=true);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
 

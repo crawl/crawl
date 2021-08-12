@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "misc.h"
+#include "mpr.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -24,11 +25,6 @@
 #include "terrain.h"
 #include "tileview.h"
 #include "traps.h"
-
-string weird_glowing_colour()
-{
-    return getMiscString("glowing_colour_name");
-}
 
 // Make the player swap positions with a given monster.
 void swap_with_monster(monster* mon_to_swap)
@@ -96,7 +92,7 @@ void swap_with_monster(monster* mon_to_swap)
                 mpr("You become entangled in the net!");
             else
                 mpr("You get stuck in the web!");
-            you.redraw_quiver = true; // Account for being in a net.
+            quiver::set_needs_redraw();
             you.redraw_evasion = true;
         }
 
@@ -124,6 +120,12 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
         ++result;
 
     return result;
+}
+
+counted_monster_list::counted_monster_list(vector<monster *> ms)
+{
+    for (auto mon : ms)
+        add(mon);
 }
 
 void counted_monster_list::add(const monster* mons)

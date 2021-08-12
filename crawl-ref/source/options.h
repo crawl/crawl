@@ -2,10 +2,11 @@
 
 #include <algorithm>
 #include <unordered_set>
+#include <vector>
 
+#include "ability-type.h"
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
-#include "confirm-butcher-type.h"
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
 #include "feature.h"
@@ -18,7 +19,11 @@
 #include "pattern.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
+#include "spell-type.h"
 #include "tag-pref.h"
+#include "travel-open-doors-type.h"
+
+using std::vector;
 
 enum autosac_type
 {
@@ -204,7 +209,7 @@ public:
     bool        view_lock_y;
 
     // For an unlocked viewport, this will centre the viewport when scrolling.
-    bool        center_on_scroll;
+    bool        centre_on_scroll;
 
     // If symmetric_scroll is set, for diagonal moves, if the view
     // scrolls at all, it'll scroll diagonally.
@@ -229,14 +234,13 @@ public:
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
-    bool        travel_open_doors;     // open doors while exploring
+    travel_open_doors_type travel_open_doors; // open doors while exploring
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
-    confirm_butcher_type confirm_butcher; // When to prompt for butchery
     skill_focus_mode skill_focus; // is the focus skills available
     bool        auto_hide_spells; // hide new spells
 
@@ -251,6 +255,7 @@ public:
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
+    bool        always_use_static_targeters; // whether to use static targeters even in `z`
 
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
@@ -276,9 +281,16 @@ public:
     int         autofight_warning;      // Amount of real time required between
                                         // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
+    bool        always_show_zot;  // Whether to always show the Zot timer
 
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
+    unordered_set<spell_type, hash<int>> fire_order_spell;
+    unordered_set<ability_type, hash<int>> fire_order_ability;
+    bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
+
+    unordered_set<int> force_targeter; // spell types to always use a
+                                       // targeter for
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
@@ -478,6 +490,7 @@ public:
 
     // -1 and 0 mean no confirmation, other possible values are 1,2,3 (see fail_severity())
     int         fail_severity_to_confirm;
+    int         fail_severity_to_quiver;
 #ifdef WIZARD
     // Parameters for fight simulations.
     string      fsim_mode;
@@ -552,6 +565,7 @@ public:
     screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;
+    int         tile_window_ratio;
     maybe_bool  tile_use_small_layout;
 #endif
     int         tile_cell_pixels;
@@ -561,6 +575,8 @@ public:
     int         tile_map_pixels;
 
     bool        tile_force_overlay;
+    VColour     tile_overlay_col;           // Background color for message overlay
+    int         tile_overlay_alpha_percent; // Background alpha percent for message overlay
     // display settings
     int         tile_update_rate;
     int         tile_runrest_rate;
@@ -629,6 +645,8 @@ private:
                                 bool remove_interrupts);
     void set_fire_order(const string &full, bool append, bool prepend);
     void add_fire_order_slot(const string &s, bool prepend);
+    void set_fire_order_spell(const string &s, bool append, bool remove);
+    void set_fire_order_ability(const string &s, bool append, bool remove);
     void set_menu_sort(string field);
     void str_to_enemy_hp_colour(const string &, bool);
     void new_dump_fields(const string &text, bool add = true,
@@ -650,6 +668,8 @@ private:
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
+    void add_force_targeter(const string &s, bool prepend);
+    void remove_force_targeter(const string &s, bool prepend);
 
     static const string interrupt_prefix;
 

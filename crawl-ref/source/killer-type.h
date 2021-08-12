@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum killer_type                       // monster_die(), thing_thrown
 {
     KILL_NONE,                         // no killer
@@ -18,6 +20,6 @@ enum killer_type                       // monster_die(), thing_thrown
 #endif
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
     KILL_PACIFIED,                     // only used by milestones and notes
-    KILL_ENSLAVED,                     // only used by milestones and notes
+    KILL_CHARMD,                     // only used by milestones and notes
     KILL_SLIMIFIED,                    // only used by milestones and notes
 };

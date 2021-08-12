@@ -2,6 +2,7 @@
 
 #include "enum.h"
 #include "mon-info.h"
+#include "tag-version.h"
 #include "trap-type.h"
 
 #define MAP_MAGIC_MAPPED_FLAG   0x01
@@ -75,7 +76,7 @@ struct map_cell
         if (_mons)
             _mons = new monster_info(*_mons);
         if (_item)
-            _item = new item_info(*_item);
+            _item = new item_def(*_item);
     }
 
     ~map_cell()
@@ -104,7 +105,7 @@ struct map_cell
         if (_mons)
             _mons = new monster_info(*_mons);
         if (_item)
-            _item = new item_info(*_item);
+            _item = new item_def(*_item);
         return *this;
     }
 
@@ -153,7 +154,7 @@ struct map_cell
         _trap = tr;
     }
 
-    item_info* item() const
+    item_def* item() const
     {
         return _item;
     }
@@ -170,10 +171,10 @@ struct map_cell
         return ret;
     }
 
-    void set_item(const item_info& ii, bool more_items)
+    void set_item(const item_def& ii, bool more_items)
     {
         clear_item();
-        _item = new item_info(ii);
+        _item = new item_def(ii);
         if (more_items)
             flags |= MAP_MORE_ITEMS;
     }
@@ -317,6 +318,6 @@ private:
     colour_t _feat_colour;
     trap_type _trap:8;
     cloud_info* _cloud;
-    item_info* _item;
+    item_def* _item;
     monster_info* _mons;
 };

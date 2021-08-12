@@ -50,6 +50,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "travel.h"
 #include "unicode.h"
@@ -88,9 +89,7 @@ static void _sdump_vault_list(dump_params &);
 static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
-#ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
-#endif
 static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
@@ -150,11 +149,7 @@ static dump_section_handler dump_handlers[] =
     { "",               _sdump_newline       },
     { "-",              _sdump_separator     },
 
-#ifdef CLUA_BINDINGS
     { nullptr,          _sdump_lua           }
-#else
-    { nullptr,          nullptr              }
-#endif
 };
 
 static void dump_section(dump_params &par)
@@ -583,7 +578,6 @@ static void _sdump_separator(dump_params &par)
     par.text += string(79, '-') + "\n";
 }
 
-#ifdef CLUA_BINDINGS
 // Assume this is an arbitrary Lua function name, call the function and
 // dump whatever it returns.
 static void _sdump_lua(dump_params &par)
@@ -597,7 +591,6 @@ static void _sdump_lua(dump_params &par)
     else
         par.text += luatext;
 }
-#endif
 
 string chardump_desc(const item_def& item)
 {
@@ -912,7 +905,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power        Failure   Level" "\n";
+        text += " Your Spells              Type           Power      Damage    Failure   Level" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -945,13 +938,18 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += spell_power_string(spell);
 
-                spell_line = chop_string(spell_line, 54);
+                spell_line = chop_string(spell_line, 52);
+
+                const string spell_damage = spell_damage_string(spell);
+                spell_line += spell_damage.length() ? spell_damage : "N/A";
+
+                spell_line = chop_string(spell_line, 62);
 
                 spell_line += failure_rate_to_string(raw_spell_fail(spell));
 
-                spell_line = chop_string(spell_line, 66);
+                spell_line = chop_string(spell_line, 74);
 
-                spell_line += make_stringf("%-5d", spell_difficulty(spell));
+                spell_line += make_stringf("%d", spell_difficulty(spell));
 
                 spell_line += "\n";
 
@@ -970,7 +968,7 @@ static void _sdump_spells(dump_params &par)
     {
         verb = par.se? "contained" : "contains";
         text += "Your spell library " + verb + " the following spells:\n\n";
-        text += " Spells                   Type           Power        Failure   Level" "\n";
+        text += " Spells                   Type           Power      Damage    Failure   Level" "\n";
 
         auto const library = get_sorted_spell_list(true, false);
 
@@ -1004,16 +1002,21 @@ static void _sdump_spells(dump_params &par)
             else
                 spell_line += "Unusable";
 
-            spell_line = chop_string(spell_line, 54);
+            spell_line = chop_string(spell_line, 52);
+
+            const string spell_damage = spell_damage_string(spell);
+            spell_line += spell_damage.length() ? spell_damage : "N/A";
+
+            spell_line = chop_string(spell_line, 62);
 
             if (memorisable)
                 spell_line += failure_rate_to_string(raw_spell_fail(spell));
             else
                 spell_line += "N/A";
 
-            spell_line = chop_string(spell_line, 66);
+            spell_line = chop_string(spell_line, 74);
 
-            spell_line += make_stringf("%-5d", spell_difficulty(spell));
+            spell_line += make_stringf("%d", spell_difficulty(spell));
 
             spell_line += "\n";
 
@@ -1534,7 +1537,7 @@ string morgue_directory()
     return dir;
 }
 
-void dump_map(FILE *fp, bool debug, bool dist)
+void dump_map(FILE *fp, bool debug, bool dist, bool log)
 {
     if (debug)
     {
@@ -1584,18 +1587,18 @@ void dump_map(FILE *fp, bool debug, bool dist)
                     fputc('@', fp);
                 else if (testbits(env.pgrid[x][y], FPROP_HIGHLIGHT))
                     fputc('?', fp);
-                else if (dist && grd[x][y] == DNGN_FLOOR
+                else if (dist && env.grid[x][y] == DNGN_FLOOR
                          && travel_point_distance[x][y] > 0
                          && travel_point_distance[x][y] < 10)
                 {
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
-                else if (grd[x][y] >= NUM_FEATURES)
+                else if (env.grid[x][y] >= NUM_FEATURES)
                     fputc('!', fp);
                 else
                 {
                     fputs(OUTS(stringize_glyph(
-                               get_feature_def(grd[x][y]).symbol())), fp);
+                               get_feature_def(env.grid[x][y]).symbol())), fp);
                 }
             }
             fputc('\n', fp);
@@ -1632,15 +1635,22 @@ void dump_map(FILE *fp, bool debug, bool dist)
             fputc('\n', fp);
         }
     }
+
+    // for debug use in scripts, e.g. placement.lua
+    if (log)
+    {
+        string the_log = get_last_messages(NUM_STORED_MESSAGES, true);
+        fprintf(fp, "\n%s", the_log.c_str());
+    }
 }
 
-void dump_map(const char* fname, bool debug, bool dist)
+void dump_map(const char* fname, bool debug, bool dist, bool log)
 {
     FILE* fp = fopen_replace(fname);
     if (!fp)
         return;
 
-    dump_map(fp, debug, dist);
+    dump_map(fp, debug, dist, log);
 
     fclose(fp);
 }
@@ -1659,9 +1669,6 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     stash_file_name = file_name;
     stash_file_name += ".lst";
     StashTrack.dump(stash_file_name.c_str(), par.full_id);
-
-    string map_file_name = file_name + ".map";
-    dump_map(map_file_name.c_str());
 
     file_name += ".txt";
     FILE *handle = fopen_replace(file_name.c_str());

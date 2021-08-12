@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include "tag-version.h"
+
 class formatted_string;
 class writer;
 class reader;
@@ -43,7 +45,6 @@ enum hints_event_type
     HINT_SEEN_MISSILES,
     HINT_SEEN_ARMOUR,
     HINT_SEEN_RANDART,
-    HINT_SEEN_FOOD,
     HINT_SEEN_CARRION,
     HINT_SEEN_GOLD,
     // encountered dungeon features
@@ -59,9 +60,6 @@ enum hints_event_type
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
-#if TAG_MAJOR_VERSION == 34
-    HINT_SEEN_TOADSTOOL,
-#endif
     HINT_MONSTER_BRAND,
     HINT_MONSTER_FRIENDLY,
     HINT_MONSTER_SHOUT,
@@ -74,33 +72,24 @@ enum hints_event_type
     HINT_GAINED_RANGED_SKILL,
     HINT_CHOOSE_STAT,
     HINT_MAKE_CHUNKS,
-#if TAG_MAJOR_VERSION == 34
-    HINT_OFFER_CORPSE,
-#endif
     HINT_NEW_ABILITY_GOD,
+#if TAG_MAJOR_VERSION == 34
     HINT_NEW_ABILITY_MUT,
+#endif
     HINT_NEW_ABILITY_ITEM,
     HINT_FLEEING_MONSTER,
-    HINT_ROTTEN_FOOD,
     HINT_CONVERT,
     HINT_GOD_DISPLEASED,
     HINT_EXCOMMUNICATE,
     HINT_SPELL_MISCAST,
-#if TAG_MAJOR_VERSION == 34
-    HINT_SPELL_HUNGER,
-#endif
     HINT_GLOWING,
     HINT_YOU_RESIST,
     // status changes
     HINT_YOU_ENCHANTED,
-#if TAG_MAJOR_VERSION == 34
-    HINT_CONTAMINATED_CHUNK,
-    HINT_YOU_SICK,
-#endif
     HINT_YOU_POISON,
-    HINT_YOU_ROTTING,
+#if TAG_MAJOR_VERSION == 34
     HINT_YOU_CURSED,
-    HINT_YOU_HUNGRY,
+#endif
     HINT_YOU_STARVING,
     HINT_YOU_MUTATED,
     HINT_CAN_BERSERK,
@@ -131,23 +120,16 @@ enum hints_event_type
     // for the tutorial
     HINT_AUTOPICKUP_THROWN,
     HINT_TARGET_NO_FOE,
+#if TAG_MAJOR_VERSION == 34
     HINT_REMOVED_CURSE,
+#endif
     HINT_ITEM_RESISTANCES,
-    HINT_FLYING,
-    HINT_INACCURACY,
     HINT_HEALING_POTIONS,
     HINT_GAINED_SPELLCASTING,
     HINT_FUMBLING_SHALLOW_WATER,
-    HINT_EATING_ROTTEN_FOOD,
     HINT_CLOUD_WARNING,
-#if TAG_MAJOR_VERSION == 34
-    HINT_MEMORISE_FAILURE,
-#endif
     HINT_ANIMATE_CORPSE_SKELETON,
     HINT_SEEN_WEB,
-#if TAG_MAJOR_VERSION == 34
-    HINT_SEEN_ROD,
-#endif
     HINT_EVENTS_NUM
 };
 

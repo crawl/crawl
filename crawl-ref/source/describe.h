@@ -13,6 +13,7 @@
 #include "deck-type.h"
 #include "enum.h"
 #include "mon-util.h"
+#include "tag-version.h"
 #include "trap-type.h"
 
 struct monster_info;
@@ -71,8 +72,7 @@ string player_spell_desc(spell_type spell);
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled,
                     const monster_info *mon_owner = nullptr,
-                    const item_def* item = nullptr,
-                    bool show_booklist = false);
+                    const item_def* item = nullptr);
 
 void describe_ability(ability_type ability);
 void describe_deck(deck_type deck);
@@ -85,6 +85,8 @@ string get_skill_description(skill_type skill, bool need_title = false);
 void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const int hd);
+void describe_to_hit(const monster_info& mi, ostringstream &result,
+                     bool parenthesize = false);
 
 string get_command_description(const command_type cmd, bool terse);
 

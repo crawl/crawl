@@ -243,6 +243,16 @@ function c_choose_spell()
     return ret
 end
 
+--- Receive a message from the message window.
+--
+-- This hook can be re-defined to receive messages from the message window.
+-- It is called for each message after player configured mute settings are
+-- applied to the message.
+--
+-- @tparam string text The message text
+-- @tparam string channel The message channel name
+function c_message(text, channel) end
+
 -- The remainder of these hooks are called elsewhere in the codebase from
 -- various places. We document the user-intended ones here.
 

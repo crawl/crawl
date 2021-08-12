@@ -29,10 +29,8 @@ int update_monster_pane();
 const char *equip_slot_to_name(int equip);
 int equip_name_to_slot(const char *s);
 
-int stealth_breakpoint(int stealth);
+int stealth_pips();
 
 void print_overview_screen();
-
-string mutation_overview();
 
 string dump_overview_screen(bool full_id);

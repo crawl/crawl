@@ -16,8 +16,8 @@ vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers are opportunists who start with three powerful wands and a club.
-They aim to scrounge their other equipment from the dungeon.
+Artificers start with two wands, a magic chesspiece, and a club. They'll need
+to find better weapons and armour before their wands run out.
 %%%%
 Berserker
 
@@ -49,8 +49,8 @@ spell. More earthen spells are in their set of starting spells.
 %%%%
 Enchanter
 
-Enchanters use spells from the book of Maledictions to incapacitate their foes,
-and are equipped with an enchanted dagger.
+Enchanters know a variety of Hexes that can incapacitate their foes, and are
+equipped with an enchanted dagger.
 %%%%
 Fighter
 
@@ -59,8 +59,8 @@ choice and a potion of might.
 %%%%
 Fire Elementalist
 
-Fire Elementalists start with the book of Flames and know the Foxfire
-spell. Their other starting spells focus on destruction as well.
+Fire Elementalists have learned the Foxfire spell. Their other starting spells
+are likewise focused on fiery destruction.
 %%%%
 Gladiator
 
@@ -99,7 +99,8 @@ other Summonings spells in their library.
 %%%%
 Transmuter
 
-Transmuters learn spells to shift their form.
+Transmuters learn spells to shift their form, making them powerful unarmed
+fighters.
 %%%%
 Venom Mage
 

@@ -12,6 +12,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "losglobal.h"
+#include "mpr.h"
 #include "religion.h"
 #include "shout.h"
 #include "terrain.h"
@@ -37,18 +38,18 @@ static bool _allow_bleeding_on_square(const coord_def& where,
         return false;
 
     // No spattering into lava or water.
-    if (feat_is_lava(grd(where)) || feat_is_water(grd(where)))
+    if (feat_is_lava(env.grid(where)) || feat_is_water(env.grid(where)))
         return false;
 
     // No spattering into fountains (other than blood).
-    if (grd(where) == DNGN_FOUNTAIN_BLUE
-        || grd(where) == DNGN_FOUNTAIN_SPARKLING)
+    if (env.grid(where) == DNGN_FOUNTAIN_BLUE
+        || env.grid(where) == DNGN_FOUNTAIN_SPARKLING)
     {
         return false;
     }
 
     // The good gods like to keep their altars pristine.
-    if (is_good_god(feat_altar_god(grd(where))))
+    if (is_good_god(feat_altar_god(env.grid(where))))
         return false;
 
     return true;
@@ -126,12 +127,12 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (amount < 1)
         return;
 
-    bool ignite_blood = you.get_mutation_level(MUT_IGNITE_BLOOD)
-                        && you.see_cell(where);
+    int ignite_blood = you.get_mutation_level(MUT_IGNITE_BLOOD);
 
-    bool may_bleed = _allow_bleeding_on_square(where, ignite_blood);
+    bool may_bleed = _allow_bleeding_on_square(where,
+                        ignite_blood > 0 && you.see_cell(where));
 
-    if (ignite_blood)
+    if (ignite_blood && you.see_cell(where))
         amount *= 2;
 
     if (x_chance_in_y(amount, 20))
@@ -144,11 +145,13 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
             _orient_wall_blood(where, from, old_blood);
 
             // Don't apply penance for involuntary cloud placement.
-            if (ignite_blood
+            if (x_chance_in_y(ignite_blood, 3)
+                && you.see_cell(where)
                 && !cell_is_solid(where)
                 && !cloud_at(where))
             {
-                place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you, -1, -1,
+                int dur = 2 + ignite_blood + random2(2 * ignite_blood);
+                place_cloud(CLOUD_FIRE, where, dur, &you, -1, -1,
                             false);
             }
         }

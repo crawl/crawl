@@ -12,6 +12,7 @@
 #include "deck-type.h"
 #include "ability-type.h"
 #include "enum.h"
+#include "tag-version.h"
 
 #define NEMELEX_TRIPLE_DRAW_KEY "nemelex_triple_draw"
 #define NEMELEX_STACK_KEY       deck_name(DECK_STACK)
@@ -38,7 +39,7 @@ enum card_type
     CARD_ELIXIR,              // restoration of hp and mp
     CARD_SUMMON_DEMON,        // dual demons
     CARD_SUMMON_WEAPON,       // a dance partner
-    CARD_SUMMON_FLYING,       // swarms from the swamp
+    CARD_SUMMON_BEE,          // swarm of bees
     CARD_WILD_MAGIC,          // miscasts for everybody
     CARD_STAIRS,              // moves stairs around
     CARD_WRATH,               // random godly wrath

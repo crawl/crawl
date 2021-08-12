@@ -1,6 +1,6 @@
 define(["jquery", "comm", "./enums", "./map_knowledge", "./messages",
-        "./options"],
-function ($, comm, enums, map_knowledge, messages, options) {
+        "./options", "./util"],
+function ($, comm, enums, map_knowledge, messages, options, util) {
     "use strict";
 
     var player = {}, last_time;
@@ -14,9 +14,10 @@ function ($, comm, enums, map_knowledge, messages, options) {
     };
 
     var defense_boosters = {
-        "ac": "icy armour|protected from physical damage|sanguine armour|protection aura",
-        "ev": "agile|acrobat",
-        "sh": "divine shield",
+        "ac": "ice-armoured|protected from physical damage|sanguine armoured"
+              + "|under a protective aura|curled up",
+        "ev": "agile|acrobatic|in a heavenly storm",
+        "sh": "divinely shielded",
     }
 
     /**
@@ -158,11 +159,14 @@ function ($, comm, enums, map_knowledge, messages, options) {
             return String.fromCharCode("A".charCodeAt(0) + index - 26);
     }
 
-    function inventory_item_desc(index)
+    function inventory_item_desc(index, parens=false)
     {
         var item = player.inv[index];
         var elem = $("<span>");
-        elem.text(item.name);
+        if (parens)
+            elem.text("(" + item.name + ")");
+        else
+            elem.text(item.name);
         if (item.col != -1 && item.col != null)
             elem.addClass("fg" + item.col);
         return elem;
@@ -181,7 +185,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         else
             elem = inventory_item_desc(wielded);
 
-        if (player.has_status("corroded equipment"))
+        if (player.has_status("corroded"))
             elem.addClass("corroded_weapon");
 
         return elem;
@@ -189,17 +193,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
     function quiver()
     {
-        if (!player.quiver_available)
-        {
-            var elem = $("<span>");
-            elem.text("Quiver unavailable");
-            elem.addClass("fg8");
-            return elem;
-        }
-        else if (player.quiver_item == -1)
-            return "Nothing quivered";
-        else
-            return inventory_item_desc(player.quiver_item);
+        // any use for player.quiver_available any more?
+        return util.formatted_string_to_html(player.quiver_desc);
     }
 
     player.has_status_light = function (status_light, col)
@@ -242,7 +237,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
-        else if (type == "ac" && player.has_status("corroded equipment"))
+        else if (type == "ac" && player.has_status("corroded"))
             elem.addClass("degenerated_defense");
         else if (type == "sh" && player.god == "Qazlal"
                  && player.piety_rank > 0)
@@ -366,7 +361,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $("#stats_gozag_gold").text("");
             $("#stats_gozag_gold_label").css("padding-left", "0");
         }
-        $("#stats_gozag_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
+        $("#stats_gozag_gold").toggleClass("boosted_stat", !!player.has_status("gold aura"));
 
         $("#stats_species_god").text(species_god);
         $("#stats_piety").toggleClass("penance", !!player.penance);
@@ -391,6 +386,12 @@ function ($, comm, enums, map_knowledge, messages, options) {
         percentage_color("hp");
         percentage_color("mp");
         update_bar("hp");
+        // is there a better place to do this?
+        if (player.species == "Djinni")
+            $("#stats_mpline").hide();
+        else
+            $("#stats_mpline").show();
+
         update_bar("mp");
 
         update_defense("ac");
@@ -434,8 +435,14 @@ function ($, comm, enums, map_knowledge, messages, options) {
         $("#stats_weapon_letter").text(
             index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
         $("#stats_weapon").html(wielded_weapon());
-        $("#stats_quiver_letter").text(
-            index_to_letter(player.quiver_item) + ")");
+
+        // show launcher ammo to the right of the weapon, if it isn't currently
+        // shown in the regular quiver
+        if (player.launcher_item >= 0 && player.launcher_item != player.quiver_item)
+            $("#stats_launcher_quiver").html(inventory_item_desc(player.launcher_item, true));
+        else
+            $("#stats_launcher_quiver").html("");
+
         $("#stats_quiver").html(quiver());
     }
 
@@ -512,7 +519,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 str_max: 0, int_max: 0, dex_max: 0,
                 piety_rank: 0, penance: false,
                 status: [],
-                inv: {}, equip: {}, quiver_item: -1,
+                inv: {}, equip: {},
+                quiver_item: -1, launcher_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},
                 wizard: 0,

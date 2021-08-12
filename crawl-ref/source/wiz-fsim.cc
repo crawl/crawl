@@ -85,11 +85,13 @@ static skill_type _equipped_skill()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
+    const int missile = quiver::get_secondary_action()->get_item();
 
     if (iweap && is_weapon(*iweap))
         return item_attack_skill(*iweap);
 
-    if (!iweap && you.m_quiver.get_fire_item() != -1)
+    // TODO: could generalize this to handle non-ammo actions in fsim?
+    if (!iweap && missile >= 0 && you.inv[missile].base_type == OBJ_MISSILES)
         return SK_THROWING;
 
     return SK_UNARMED_COMBAT;
@@ -99,7 +101,7 @@ static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver.get_fire_item();
+    const int missile = quiver::get_secondary_action()->get_item();
 
     if (iweap)
     {
@@ -110,8 +112,11 @@ static string _equipped_weapon_name()
         return "Wielding: " + item_buf;
     }
 
-    if (missile != -1)
+    if (missile != -1 && you.inv[missile].defined()
+                && you.inv[missile].base_type == OBJ_MISSILES)
+    {
         return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
+    }
 
     return "Unarmed";
 }
@@ -142,7 +147,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 {
     fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
             defend ? "Defense" : "Attack",
-            species_name(you.species).c_str(),
+            species::name(you.species).c_str(),
             get_job_name(you.char_class),
             mon.name(DESC_PLAIN, true).c_str(),
             iter_limit,
@@ -152,7 +157,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 static void _write_you(FILE * o)
 {
     fprintf(o, "%s %s: XL %d   Str %d   Int %d   Dex %d\n",
-            species_name(you.species).c_str(),
+            species::name(you.species).c_str(),
             get_job_name(you.char_class),
             you.experience_level,
             you.strength(),
@@ -218,7 +223,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
     {
         if (!_equip_weapon(weapon, abort))
         {
-            int item = create_item_named("mundane not_cursed ident:all " + weapon,
+            int item = create_item_named("mundane ident:all " + weapon,
                                          you.pos(), &error);
             if (item == NON_ITEM)
                 return false;
@@ -247,8 +252,8 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 
             if (you.inv[i].name(DESC_PLAIN).find(missile) != string::npos)
             {
-                quiver_item(i);
-                you.redraw_quiver = true;
+                you.quiver_action.set_from_slot(i);
+                quiver::set_needs_redraw();
                 break;
             }
         }
@@ -359,6 +364,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     const coord_def you_start_pos = you.pos();
 
     unwind_var<int> mon_hp(mon.hit_points, mon.max_hit_points);
+    unwind_var<int> mon_heads(mon.num_heads, mon.num_heads);
     // 999 is arbitrary
     unwind_var<int> max_hp_override(you.hp_max, 999);
     unwind_var<int> hp_override(you.hp, you.hp_max);
@@ -366,7 +372,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
 
     const int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver.get_fire_item();
+    const int missile = quiver::get_secondary_action()->get_item();
 
     mon.shield_blocks = 0;
     you.shield_blocks = 0;
@@ -376,9 +382,11 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     {
         // first, ranged weapons. note: this includes
         // being empty-handed but having a missile quivered
-        if ((iweap && iweap->base_type == OBJ_WEAPONS &&
-                    is_range_weapon(*iweap))
-            || (!iweap && missile != -1))
+        // TODO: handle non-missile quivered items?
+        if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
+            && (iweap && iweap->base_type == OBJ_WEAPONS &&
+                    is_range_weapon(*iweap)
+                || !iweap && missile != -1))
         {
             ranged_attack attk(&you, &mon, &you.inv[missile], false);
             attk.simu = true;

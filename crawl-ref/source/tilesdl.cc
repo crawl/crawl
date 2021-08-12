@@ -148,7 +148,7 @@ static void _init_consoles()
     // The AttachConsole() function is XP/2003 Server and up, so we
     // need to do the GetModuleHandle()/GetProcAddress() dance.
     typedef BOOL (WINAPI *ac_func)(DWORD);
-    ac_func attach_console = (ac_func)GetProcAddress(
+    ac_func attach_console = (ac_func)(void *)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "AttachConsole");
 
     if (attach_console)
@@ -175,7 +175,7 @@ static void _shutdown_console()
 {
 #ifdef TARGET_OS_WINDOWS
     typedef BOOL (WINAPI *fc_func)();
-    fc_func free_console = (fc_func)GetProcAddress(
+    fc_func free_console = (fc_func)(void *)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "FreeConsole");
     if (free_console)
         free_console();
@@ -832,7 +832,7 @@ void TilesFramework::do_layout()
      * XXX: don't layout unless we're in a game / arena
      * this is to prevent layout code from accessing `you` while it's invalid.
      */
-    if (!species_type_valid(you.species))
+    if (!species::is_valid(you.species))
     {
         /* HACK: some code called while loading the game calls mprf(), so even
          * if we're not ready to do an actual layout, we should still give the
@@ -979,7 +979,9 @@ void TilesFramework::do_layout()
     m_region_tile->tile_ih = tile_ih;
 
     // Resize and place the message window.
-    m_region_msg->set_overlay(message_overlay);
+    VColour overlay_col = Options.tile_overlay_col;
+    overlay_col.a = (255 * Options.tile_overlay_alpha_percent)/100;
+    m_region_msg->set_overlay(message_overlay, overlay_col);
     if (message_overlay)
     {
         m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place
@@ -1010,6 +1012,16 @@ void TilesFramework::do_layout()
     crawl_view.viewsz.y = m_region_tile->my;
     crawl_view.msgsz.x = m_region_msg->mx;
     crawl_view.msgsz.y = m_region_msg->my;
+    if (crawl_view.viewsz.x == 0 || crawl_view.viewsz.y == 0
+        || crawl_view.msgsz.y == 0)
+    {
+        // TODO: if game_scale is too large, it would be better to drop the
+        // bad scale first. Also, it is possible to get an unusable but valid
+        // layout -- this only really protects against cases that will crash.
+        end(1, false,
+            "Failed to find a valid window layout:"
+            " screen too small or game_scale too large?");
+    }
     crawl_view.hudsz.x = m_region_stat->mx;
     crawl_view.hudsz.y = m_region_stat->my;
     crawl_view.init_view();

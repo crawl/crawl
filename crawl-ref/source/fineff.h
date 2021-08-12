@@ -10,6 +10,8 @@
 #include "mon-util.h"
 #include "mgen-data.h"
 
+struct bolt;
+
 class final_effect
 {
 public:
@@ -99,13 +101,13 @@ public:
     bool mergeable(const final_effect &a) const override;
     void fire() override;
 
-    static void schedule(const actor *blinker)
+    static void schedule(const actor *blinker, const actor *other = nullptr)
     {
-        final_effect::schedule(new blink_fineff(blinker));
+        final_effect::schedule(new blink_fineff(blinker, other));
     }
 protected:
-    blink_fineff(const actor *blinker)
-        : final_effect(0, blinker, coord_def())
+    blink_fineff(const actor *blinker, const actor *o)
+        : final_effect(o, blinker, coord_def())
     {
     }
 };
@@ -238,6 +240,34 @@ protected:
     coord_def position;
     int power;
     mon_attitude_type attitude;
+};
+
+class explosion_fineff : public final_effect
+{
+public:
+    // One explosion at a time, please.
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(bolt &beam, string boom, string sanct,
+                         bool inner_flame, const actor* flame_agent)
+    {
+        final_effect::schedule(new explosion_fineff(beam, boom, sanct,
+                                                    inner_flame, flame_agent));
+    }
+protected:
+    explosion_fineff(const bolt &beem, string boom, string sanct,
+                     bool flame, const actor* agent)
+        : final_effect(0, 0, coord_def()), beam(beem),
+          boom_message(boom), sanctuary_message(sanct),
+          inner_flame(flame), flame_agent(agent)
+    {
+    }
+    bolt beam;
+    string boom_message;
+    string sanctuary_message;
+    bool inner_flame;
+    const actor* flame_agent;
 };
 
 // A fineff that triggers a daction; otherwise the daction
@@ -399,6 +429,23 @@ public:
 protected:
     summon_dismissal_fineff(const actor * _defender)
         : final_effect(0, _defender, coord_def())
+    {
+    }
+};
+
+class spectral_weapon_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; };
+    void fire() override;
+
+    static void schedule(const actor &attack, const actor &defend)
+    {
+        final_effect::schedule(new spectral_weapon_fineff(attack, defend));
+    }
+protected:
+    spectral_weapon_fineff(const actor &attack, const actor &defend)
+        : final_effect(&attack, &defend, coord_def())
     {
     }
 };

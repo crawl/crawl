@@ -779,6 +779,7 @@ ENDMAP
 # nonominoes
 NAME:    minmay_nonomino_d4
 SHUFFLE: "'?!
+# TODO: this subst can sometimes wall in the b tile, which is likely to be floor
 SUBST:   ' = 0%, ? = 0%, ! = "
 : polyominoes_setup(_G)
 MAP

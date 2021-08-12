@@ -7,7 +7,7 @@
 #
 # <<1>>      Generic
 # <<2>>      Themed
-# <<3>>      Untagged
+# <<3>>      Multi
 #
 ###############################################################################
 
@@ -62,8 +62,8 @@ end
 # Gozag code uses it to find out where shops can normally place.
 NAME: serial_shops
 TAGS: allow_dup extra luniq
-DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-CHANCE: 20% (D)
+DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
+CHANCE: 15% (D)
 CHANCE: 20% (Depths)
 CHANCE: 30% (Orc)
 CHANCE: 40% (Elf, Vaults)
@@ -89,6 +89,7 @@ ENDMAP
 # <<1>> Generic.
 #       Tagged shop, may only contain a single shop. No threats.
 #
+
 NAME:   shop
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 100
@@ -127,8 +128,7 @@ NAME:   shop_scrolls
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 1
 KFEAT:  O = scroll shop
-ITEM:   nothing w:30 / scroll of noise w:2 /\
-        scroll of random uselessness w:8
+ITEM:   nothing w:30 / scroll of noise w:10
 MAP
 ddd
 dOd
@@ -292,6 +292,123 @@ cww.wwc
 ccc+ccc
 ENDMAP
 
+NAME:  nicolae_diamond_shop
+TAGS:  allow_dup extra shop transparent no_pool_fixup
+KFEAT: O = any shop
+SUBST: x : xcvbtGwl
+MAP
+...x...
+..x.x..
+.x...x.
+x..O..x
+.x...x.
+..x.x..
+...x...
+ENDMAP
+
+NAME:  nicolae_lakefront_shop
+TAGS:  allow_dup extra shop transparent no_pool_fixup
+KFEAT: O = any shop
+SUBST: G : GTUtwx, w : wl
+MAP
+xxxxxxxx
+x.....Gx
+..www..x
+.wwwww.x
+@wwwwwOx
+.wwwww.x
+..www..x
+x.....Gx
+xxxxxxxx
+ENDMAP
+
+NAME:  nicolae_square_shop
+TAGS:  allow_dup extra shop transparent
+KFEAT: O = any shop
+SUBST: c : cvbn
+MAP
+   ..cc
+ cc..cc
+ cc....
+...O...
+....cc
+cc..cc
+cc..
+ENDMAP
+
+NAME:    nicolae_inconvenience_store
+TAGS:    extra shop transparent no_pool_fixup
+DEPTH:   D:4-, Depths
+WEIGHT:  5
+KFEAT:   a = iron_grate
+KFEAT:   O = any shop
+SHUFFLE: xm/cn/va/ll/ww
+MAP
+.............
+.xxxxxmxxxxx.
+.x...........
+.x.xxxmxxxxx.
+.x.x.......x.
+.x.x.xmxxx.x.
+.x.x.x...x.x.
+.m.m.mOm.m.m.
+.x.x.xmx.x.x.
+.x.x.....x.x.
+.x.xxxmxxx.x.
+.x.........x.
+.xxxxxmxxxxx.
+.............
+ENDMAP
+
+NAME:    nicolae_stop_n_shop_1
+TAGS:    allow_dup extra shop transparent
+DEPTH:   D:4-, !D:$, Depths:2-, !Depths:$, Shoals:2-, !Shoals:$, Snake:2-, \
+         !Snake:$, Elf:2-, !Elf:$
+KFEAT:   O = any shop
+SHUFFLE: {}/[]/()
+SUBST:   D : G., E : G., F : G.
+MAP
+D...E
+.....
+..}...F
+.......
+E...O...E
+  .......
+  F...{..
+    .....
+    E...D
+ENDMAP
+
+NAME:    nicolae_stop_n_shop_2
+TAGS:    allow_dup extra shop transparent
+DEPTH:   D:4-, !D:$, Depths:2-, !Depths:$, Shoals:2-, !Shoals:$, Snake:2-, \
+         !Snake:$, Elf:2-, !Elf:$
+KFEAT:   O = any shop
+SHUFFLE: {}/[]/()
+SUBST:   D : G_, E : G_, F : G_
+CLEAR:   _
+MAP
+  E F E
+ .......
+D.}.O.{.D
+ .......
+  E F E
+ENDMAP
+
+NAME:  nicolae_take_the_stairs
+TAGS:  shop extra
+DEPTH: D:4-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Snake, !Snake:$, \
+       Elf, !Elf:$
+KFEAT: O = any shop
+SUBST: } = }])
+MAP
+.ccccccc.
+.n.....n.
+@n.O.}.n@
+.n.....n.
+.ccccccc.
+ENDMAP
+
 ###############################################################################
 # <<2>> Themed.
 #       Not tagged shop, but still contains one. Can have threats, and can have
@@ -328,14 +445,16 @@ NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen transparent
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
-KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
+KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
          w:8 sling bullet | w:7 tin of tremorstones | w:8 wand of digging | \
          w:5 randbook disc:earth | w:2 book of the earth | \
-         w:2 book of geomancy | w:4 staff of earth | w:1 crystal plate armour
+         w:2 book of geomancy | w:2 book of stone | w:2 book of iron | \
+         w:2 book of the moon | w:2 book of blasting |\
+         w:4 staff of earth | w:1 crystal plate armour
 SUBST:   ? = 2d.
 : if you.absdepth() < 16 then
 SUBST:   2 = 1
@@ -388,12 +507,15 @@ SUBST: G : YlG
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
 :   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
 :   book of necromancy | book of death | book of unlife | \
+:   book of pain | book of decay | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
-:   black_knights_horse_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
+:   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
 :   sword_of_zonguldrok w:1")
+: if not you.in_branch("D") then
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
+: end
 MAP
 ...   ...
 .G.a.s.G.
@@ -414,7 +536,9 @@ KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    any weapon ego:holy_wrath | scroll of holy word |\
    amulet of faith w:2 | ring of positive energy w:5 |\
    any armour ego:positive_energy w:5
+: if not you.in_branch("D") then
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
+: end
 KPROP: 1 = no_tele_into
 KMASK: 1 = opaque
 MONS: angel
@@ -460,8 +584,9 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
-   randbook disc:conjuration | book of the tempests | book of clouds | \
-   wand of iceblast | wand of flame | wand of disintegration | \
+   book of blasting |\
+   randbook disc:conjuration | book of storms | book of lightning | \
+   wand of iceblast | wand of flame | wand of mindburst | \
    condenser vane | staff of conjuration | \
    wand of acid | lightning rod | phial of floods | scroll of immolation | \
    book of flames | book of fire | book of air | manual of conjurations | \
@@ -563,7 +688,7 @@ SUBST: Aa = t, B = ..t, b = .
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
  scroll of blinking | scroll of teleportation w:15 | scroll of fog w:8 | \
  potion of flight | potion of invisibility w:8 | potion of haste w:3 | \
- ring of flight w:5 | ring of stealth w:4 | wand of digging w:4
+ ring of flight w:5 | wand of digging w:4
 MAP
   wwwwwwwww
  wwwwwwwwwww
@@ -610,6 +735,7 @@ TAGS:   transparent no_pool_fixup
 KPROP:  -1wP = no_tele_into
 KMASK:  -w = no_monster_gen
 KMASK:  -1wP = no_item_gen
+KMASK:  -1wP = opaque
 MONS:   hydra
 KMONS:  P = plant
 KFEAT:  P = shallow_water
@@ -680,7 +806,8 @@ local cpaEnchant = crawl.random2(6)
 
 -- Don't want to have the same items every time, but also don't want to pick
 -- the same unrandart twice. So build a custom list...
-local items = {"hat of pondering",
+local items = {"black knight's barding",
+               "hat of pondering",
                "crystal plate armour ego:ponderousness plus:" .. cpaEnchant,
                "plate armour ego:ponderousness plus:" .. plateEnchant}
 local itemCount = crawl.random2(2) + 1
@@ -737,7 +864,7 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
              "battleaxe | " ..
              "executioner's axe w:2 | " ..
              "book of fire w:5 | " ..
-             "book of the tempests w:5 | " ..
+             "the unrestrained analects w:5 | " ..
              "wand of iceblast"
 
 -- Unfortunately this can still result in the unrandart being picked twice or
@@ -777,19 +904,160 @@ MAP
 S
 ENDMAP
 
+# top tier equipment for a single gold... if you're on zot:5
+NAME:   hellmonk_bargain_basement
+DEPTH:  Zot:5
+WEIGHT: 3
+KFEAT:  S = general shop type:Last-Chance suffix:Deals greed:0 count:7 ; \
+ any ring randart w:15 | any amulet randart w:15 | quick blade randart | \
+ pearl dragon scales randart | executioner's axe randart | \
+ triple sword randart | triple crossbow randart | longbow randart | \
+ fustibalus randart | bardiche randart | eveningstar randart | \
+ crystal plate armour randart | any armour good_item randart w:50
+MAP
+  t
+ ...
+T.S.T
+ ...
+  T
+ENDMAP
+
+# The last holdout in a failed strip mall. A chance to pick up items at a
+# potentially very steep discount... if there's anything good left, that is.
+# The greed can range from 0 to 9 with an average of 4.5.
+# The item count can range from 1 to 7 with an average of 4.
+# There is a 0.2% chance of rolling greed = 0, which makes everything in the
+# store cost one gold. Hopefully it's not just +0 robes and scrolls of noise.
+NAME:   nicolae_shop_clearance
+TAGS:   transparent
+DEPTH:  D:4-, Depths, Orc, Elf, Snake, Shoals, Vaults, Zot
+{{
+local greed = crawl.roll_dice(9, 2) - 9
+local count = crawl.roll_dice(6, 2) - 5
+kfeat("S = general shop type:CLEARANCE_SALE! suffix:EVERYTHING_MUST_GO! \
+           greed:" .. greed .. " count:" .. count)
+}}
+KFEAT:  D = abandoned_shop
+NSUBST: D = S / D
+MAP
+xxxxxxx
+xD.D.Dx
+.......
+...V...
+.......
+xD.D.Dx
+xxxxxxx
+ENDMAP
+
+NAME:   nicolae_shop_firing_range
+TAGS:   transparent no_monster_gen no_item_gen no_tide
+DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KMONS:  DE = training dummy
+KITEM:  D = arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20, \
+            arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20, \
+            arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20
+KITEM:  H = arrow q:1 / bolt q:1 / sling bullet q:1 / javelin q:1 / dart q:1
+KITEM:  E = throwing net q:1
+# Launchers are weighted so they have the same total weight as the projectiles.
+# The slightly-higher weights go to the better weapons, because I'm nice.
+KFEAT:  S = weapon shop type:Firing suffix:Range ; dart | throwing net | \
+        sling bullet | boomerang | javelin | large rock | arrow | bolt | \
+        hunting sling w:11 | fustibalus w:12 | shortbow w:11 | longbow w:12 | \
+        hand crossbow w:11 | arbalest w:11 | triple crossbow w:12 | \
+        manual of throwing w:1 | manual of slings w:1 | manual of bows w:1 | \
+        manual of crossbows w:1
+NSUBST: D = E / D
+SUBST:  ' = H .:25
+MAP
+.....
+.xxxxxxxx
+.x'''''Dx
+.S'''''Dx
+.x'''''Dx
+.xxxxxxxx
+.....
+ENDMAP
+
+# Gadget shops are back! Well, one gadget shop is back.
+NAME:    nicolae_shop_gadgets
+TAGS:    transparent
+DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KFEAT:   S = general shop type:Gadget suffix:Gallery count:8 ; \
+         any wand | any misc
+SHUFFLE: cvmb
+MAP
+cc.vv
+c...v
+..S..
+m...b
+mm.bb
+ENDMAP
+
+# Sells wands with 66% more charges than the usual item-generation maximum,
+# with a matching 66% markup (rounded up to 70% because of how greed works.)
+NAME:    nicolae_shop_overcharged_wands
+TAGS:    transparent
+DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KFEAT:   S = general shop type:Overcharged suffix:Wands greed:17 count:6 ; \
+         wand of digging charges:15 | wand of iceblast charges:25 | \
+         wand of acid charges:25 | wand of charming charges:25 | \
+         wand of paralysis charges:25 | wand of polymorph charges:25 | \
+         wand of mindburst charges:40 | wand of flame charges:55
+SHUFFLE: bv/bc/cv/bm/vm/cm
+MAP
+.......
+..b.v..
+.b...v.
+...S...
+.v...b.
+..v.b..
+.......
+ENDMAP
+
+NAME:  nicolae_shop_self_help
+TAGS:  transparent no_pool_fixup
+DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KFEAT: S = book shop type:Self-Improvement suffix:Boutique count:4 ; \
+           any manual
+SUBST: T : TUw
+MAP
+ ww.ww
+www.www
+wwT.Tww
+...S...
+wwT.Tww
+www.www
+ ww.ww
+ENDMAP
+
+NAME:   nicolae_shop_sticking_my_neck_out
+TAGS:   transparent
+DEPTH:  D:4-, Depths, Elf, Snake
+KFEAT:  S = general shop type:Neck suffix:Hole count:7 use_all ; \
+        cloak | cloak | scarf | scarf | any amulet | any amulet | any amulet
+MAP
+cc     cc
+..c   c..
+...ccc...
+....S....
+...ccc...
+..c   c..
+cc     cc
+ENDMAP
+
 ###############################################################################
-# <<3>> Multi.
-#       Not tagged shop, and has no threats. Contain possibly multiple shops
-#       in a somewhat generic theme- kept here for a certain ease of reference.
+# <<3>> Multi
+#       Not tagged shop, and has no threats. Contain possibly multiple shops in
+#       a somewhat generic theme. Kept here for a certain ease of reference.
 #
 
 # 3 shops
 NAME:    minmay_shop_grove
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 MONS:    plant / bush w:2
-KFEAT:   B = gadget shop
+KFEAT:   B = book shop
 KFEAT:   C = jewellery shop
 SUBST:   1 : 1.
 SUBST:   1 = 1:9 .:1
@@ -810,7 +1078,7 @@ ENDMAP
 
 # 1 (33%) or 4 (66%) shops
 NAME:    minmay_shop_grid_forest
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 KFEAT:   A = any shop
 SHUFFLE: ABC
@@ -831,7 +1099,7 @@ ENDMAP
 
 # 1 (25%), 2 (25%), or 3 (50%) shops
 NAME:    minmay_shop_star
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop
@@ -861,7 +1129,7 @@ ENDMAP
 
 # 2 (50%) or 4 (50%) shops
 NAME:    minmay_shoptagon
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop
@@ -888,4 +1156,44 @@ xxd....B....dxx
   xxd..D..dxx
    xxd...dxx
     xxx@xxx
+ENDMAP
+
+NAME:  nicolae_specific_store
+TAGS:  extra transparent no_pool_fixup
+DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake
+KFEAT: D = general shop type:General suffix:Store
+KFEAT: E = general shop type:Specific suffix:Store count:1
+SUBST: G : GTUtwx, x : x:120 c:60 bv.
+MAP
+xx...xx
+xG...Gx
+xD...Ex
+xG...Gx
+xx...xx
+ENDMAP
+
+# Chance of X shops: 1: 15%, 2: 30%, 3: 30%, 4: 15%, 5: 5%, 6 : 5%
+NAME:    nicolae_wooded_promenade
+TAGS:    extra luniq_floating_shops transparent no_pool_fixup
+DEPTH:   D:4-, Depths, Elf, Snake
+KFEAT:   s = any shop
+# s = shop, y and z = two different kinds of features
+# Unshuffled corresponds to ysyzyz
+SHUFFLE: DEFHJK/ysyyzy/syyyyz/syzzys/syyzzs/yszzsy/ysyzsz/sysyzy/syszyz/ \
+         ysyszs/ysyszs/sssyzy/sssyzy/ssyzzs/ssysyz/syssys/ssyyss/sssysy/ \
+         ssssys/ssssss
+SUBST:   DFJ = y, HK = z, E = s, y : GGTTUt, z : GGTTUt, - : ww.
+MAP
+    xxxxxxxxxxx
+    xtttttttttx
+    xt.......tx
+    xt.D.E.F.tx
+    @.........@
+wwwwwwwww-wwwwwwwww
+wwwwwwwww-wwwwwwwww
+    @.........@
+    xt.H.J.K.tx
+    xt.......tx
+    xtttttttttx
+    xxxxxxxxxxx
 ENDMAP

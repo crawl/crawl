@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum caction_type    // Primary categorization of counted actions.
 {                    // A subtype and auxtype will also be given in each case:
     CACT_MELEE,      // weapon subtype or unrand index

@@ -111,8 +111,8 @@ static void _initialize()
     reset_all_monsters();
     init_anon();
 
-    igrd.init(NON_ITEM);
-    mgrd.init(NON_MONSTER);
+    env.igrid.init(NON_ITEM);
+    env.mgrid.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
     env.pgrid.init(terrain_property_t{});
 
@@ -137,7 +137,9 @@ static void _initialize()
     _loading_message("Loading spells and features...");
     init_feat_desc_cache();
     init_spell_name_cache();
-    init_spell_rarities();
+#ifdef DEBUG
+    validate_spellbooks();
+#endif
 
     // Read special levels and vaults.
     _loading_message("Loading maps...");
@@ -213,9 +215,9 @@ static void _zap_los_monsters()
     {
         if (items_also)
         {
-            int item = igrd(*ri);
+            int item = env.igrid(*ri);
 
-            if (item != NON_ITEM && mitm[item].defined())
+            if (item != NON_ITEM && env.item[item].defined())
                 destroy_item(item);
         }
 
@@ -226,6 +228,17 @@ static void _zap_los_monsters()
         dprf("Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str());
 
+        if (mons_is_or_was_unique(*mon))
+        {
+            if (mons_is_elven_twin(mon))
+            {
+                if (monster* sibling = mons_find_elven_twin_of(mon))
+                {
+                    sibling->flags |=MF_HARD_RESET;
+                    monster_die(*sibling, KILL_DISMISSED, NON_MONSTER, true, true);
+                }
+            }
+        }
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
@@ -288,7 +301,10 @@ static void _post_init(bool newc)
                old_level);
 
     if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
+    {
         generate_abyss();
+        save_level(level_id::current());
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
@@ -308,15 +324,17 @@ static void _post_init(bool newc)
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
     you.redraw_experience   = true;
-    you.redraw_quiver       = true;
     you.redraw_noise        = true;
     you.wield_change        = true;
     you.gear_change         = true;
+    quiver::set_needs_redraw();
+
 
     // Start timer on session.
     you.last_keypress_time = chrono::system_clock::now();
 
-#ifdef CLUA_BINDINGS
+    // in principle everything here might be skippable if CLUA_BINDINGS is not
+    // defined, but do it anyways for consistency with normal builds.
     clua.runhook("chk_startgame", "b", newc);
 
     read_init_file(true);
@@ -326,7 +344,6 @@ static void _post_init(bool newc)
     init_char_table(Options.char_set);
     init_show_table();
     init_monster_symbols();
-#endif
 
 #ifdef USE_TILE
     init_player_doll();
@@ -335,13 +352,15 @@ static void _post_init(bool newc)
 #endif
     update_player_symbol();
 
+    if (newc)
+        quiver::on_newchar(); // needs to happen after init file is read
+
     draw_border();
     new_level(!newc);
     update_turn_count();
     update_vision_range();
-    you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
-    ash_check_bondage(false);
+    ash_check_bondage();
 
     trackers_init_new_level();
 

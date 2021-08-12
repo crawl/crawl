@@ -9,6 +9,7 @@
 #include "ng-setup.h"
 #include "playable.h"
 #include "player.h"
+#include "spl-book.h"
 #include "stringutil.h"
 
 #include "job-data.h"
@@ -134,7 +135,7 @@ void give_job_skills(job_type job)
             const item_def *weap = you.weapon();
             skill = weap ? item_attack_skill(*weap) : SK_UNARMED_COMBAT;
             //XXX: WTF?
-            if (you.species == SP_FELID && job == JOB_FIGHTER)
+            if (you.has_mutation(MUT_NO_GRASPING) && job == JOB_FIGHTER)
                 amount += 2;
             // Don't give throwing hunters Short Blades skill.
             if (job_gets_ranged_weapons(job) && !(weap && is_range_weapon(*weap)))
@@ -142,6 +143,11 @@ void give_job_skills(job_type job)
         }
         you.skills[skill] += amount;
     }
+}
+
+vector<spell_type> get_job_spells(job_type job)
+{
+    return _job_def(job).library;
 }
 
 void debug_jobdata()

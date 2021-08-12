@@ -2,6 +2,8 @@
 
 #include <set>
 
+#include "macros.h"
+
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
 // DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING. This would break
@@ -251,6 +253,14 @@ enum tag_minor_version
     TAG_MINOR_MERGE_VETOES,        // Merge veto tags in vaults
     TAG_MINOR_APPENDAGE,           // Change beastly appendage
     TAG_MINOR_REALLY_UNSTACK_EVOKERS, // Unstack all evokers
+    TAG_MINOR_SETPOLY,             // Despoiler polymorph wands
+    TAG_MINOR_GOLDIFY_MANUALS,     // Move manuals out of the inventory
+    TAG_MINOR_UNCURSE,             // Remove curses from items
+    TAG_MINOR_NEW_ASHENZARI,       // New Ashenzari
+    TAG_MINOR_COMPRESS_BADMUTS,    // Reduce some mutations to 2 levels
+    TAG_MINOR_NEW_TREES,           // New tree types
+    TAG_MINOR_DISEASE,             // Turn disease into a normal duration
+    TAG_MINOR_BOOK_UNID,           // Remove book ID.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

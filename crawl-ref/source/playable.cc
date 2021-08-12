@@ -22,7 +22,7 @@
 
 string combo_type::abbr() const
 {
-    return string(get_species_abbrev(species)) + get_job_abbrev(job);
+    return string(species::get_abbrev(species)) + get_job_abbrev(job);
 }
 
 /* All non-disabled jobs */
@@ -48,8 +48,9 @@ vector<job_type> playable_jobs()
 
 vector<species_type> playable_species()
 {
-    auto species = all_species();
-    erase_if(species, [&](species_type sp) { return !is_starting_species(sp); });
+    auto species = species::get_all_species();
+    erase_if(species, [&](species_type sp)
+                                { return !species::is_starting_species(sp); });
     return species;
 }
 
@@ -79,7 +80,7 @@ vector<string> playable_job_names()
 vector<string> playable_species_names()
 {
     return stringify(playable_species(),
-                     [](species_type sp) { return species_name(sp); });
+                     [](species_type sp) { return species::name(sp); });
 }
 
 vector<string> playable_combo_names()
@@ -114,10 +115,10 @@ static JsonNode *_species_recommended_jobs(species_type sp)
 static JsonNode *_species_modifiers(species_type sp)
 {
     JsonNode *modifiers(json_mkobject());
-    json_append_member(modifiers, "xp", json_mknumber(species_exp_modifier(sp)));
-    json_append_member(modifiers, "hp", json_mknumber(species_hp_modifier(sp)));
-    json_append_member(modifiers, "mp", json_mknumber(species_mp_modifier(sp)));
-    json_append_member(modifiers, "mr", json_mknumber(species_mr_modifier(sp)));
+    json_append_member(modifiers, "xp", json_mknumber(species::get_exp_modifier(sp)));
+    json_append_member(modifiers, "hp", json_mknumber(species::get_hp_modifier(sp)));
+    json_append_member(modifiers, "mp", json_mknumber(species::get_mp_modifier(sp)));
+    json_append_member(modifiers, "mr", json_mknumber(species::get_wl_modifier(sp)));
     return modifiers;
 }
 
@@ -125,12 +126,12 @@ static JsonNode *_species_metadata(species_type sp,
                                    species_type derives = SP_UNKNOWN)
 {
     JsonNode *species(json_mkobject());
-    json_append_member(species, "name", json_mkstring(species_name(sp)));
-    json_append_member(species, "abbr", json_mkstring(get_species_abbrev(sp)));
+    json_append_member(species, "name", json_mkstring(species::name(sp)));
+    json_append_member(species, "abbr", json_mkstring(species::get_abbrev(sp)));
     if (derives != SP_UNKNOWN)
     {
         json_append_member(species, "derives",
-                           json_mkstring(species_name(derives)));
+                           json_mkstring(species::name(derives)));
     }
     json_append_member(species, "apts", _species_apts(sp));
     json_append_member(species, "modifiers", _species_modifiers(sp));
@@ -142,9 +143,9 @@ static JsonNode *_species_metadata(species_type sp,
 static JsonNode *_species_metadata_array()
 {
     JsonNode *species(json_mkarray());
-    for (const species_type sp : all_species())
+    for (const species_type sp : species::get_all_species())
     {
-        const bool sub_drac = sp != SP_BASE_DRACONIAN && species_is_draconian(sp);
+        const bool sub_drac = sp != SP_BASE_DRACONIAN && species::is_draconian(sp);
         const species_type derives = sub_drac ? SP_BASE_DRACONIAN : SP_UNKNOWN;
         json_append_element(species, _species_metadata(sp, derives));
     }
@@ -155,7 +156,7 @@ static JsonNode *_job_recommended_species(job_type job)
 {
     JsonNode *species(json_mkarray());
     for (const auto sp : job_recommended_species(job))
-        json_append_element(species, json_mkstring(species_name(sp)));
+        json_append_element(species, json_mkstring(species::name(sp)));
     return species;
 }
 

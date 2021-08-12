@@ -536,11 +536,6 @@ scroll of magic mapping
 
 この巻き物は読んだ者の周辺の地形を明らかにする。
 %%%%
-scroll of random uselessness
-
-この巻き物は何らかの機能を持っているかのように振る舞い、 uselessness of this
-scroll by the sense of achievement you get from getting it to work at all.
-%%%%
 scroll of remove curse
 
 この巻物を読み上げると、あなたの装備中のアイテムから呪いが取り除かれる。
@@ -623,44 +618,11 @@ troll leather armour
 よく見かけるトロルのゴワゴワでコブ状の皮から作られた鎧だ。
 これはかなり遅い速度だが不思議にも着用者の肉体を再生する（すでにトロルでなければ）。
 %%%%
-wand of cold
-
-強力な冷気の矢を放つ魔法の道具だ。
-%%%%
 wand of digging
 
 強化を受けていない岩を掘削する魔法の道具だ。
 %%%%
-wand of disintegration
-
-硬質の壁を除いてあらゆる物質構造を崩壊させる魔法の道具だ。
-肉体は言うまでもなく固定された石像でさえ崩壊する。
-%%%%
-wand of enslavement
-
-対象を奴隷として服従させる魔法の道具だ。
-%%%%
-wand of fire
-
-強力な炎の矢を放つ魔法の道具だ。
-%%%%
-wand of fireball
-
-炎の爆風を放つ魔法の道具だ。
-%%%%
-wand of invisibility
-
-対象を他者の視覚から隠蔽する魔法の道具だ。
-%%%%
-wand of magic darts
-
-小さな破壊エネルギーの矢を放つ魔法の道具だ。それらは絶対に外れることはない。
-%%%%
 wand of polymorph
 
 対象を別の形態に変化させる魔法の道具だ。特に不定形の生物に対して有効だ。
-%%%%
-wand of random effects
-
-変化に富んだ効果を引き起こす魔法の道具だ。
 %%%%

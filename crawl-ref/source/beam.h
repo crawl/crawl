@@ -5,15 +5,20 @@
 
 #pragma once
 
+#include <vector>
+
 #include "ac-type.h"
 #include "beam-type.h"
 #include "enchant-type.h"
+#include "externs.h"
+#include "killer-type.h"
 #include "mon-attitude-type.h"
-#include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
 #include "zap-type.h"
+
+using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -48,6 +53,8 @@ struct tracer_info
 
 struct bolt
 {
+    bolt();
+
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
@@ -87,6 +94,7 @@ struct bolt
     bool   pierce = false;        // Can the beam pass through a target and
                                   // hit another target behind the first?
     bool   is_explosion = false;
+    bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross
     string aux_source = "";       // source of KILL_MISC beams
 
@@ -97,6 +105,11 @@ struct bolt
 
     int    draw_delay = 15;       // delay used when drawing beam.
     int    explode_delay = 50;    // delay when drawing explosions.
+    bool   redraw_per_cell = true; // whether to force a redraw after every cell
+                                   // drawn during an animation. Not for
+                                   // explosions.
+                                   // TODO: why can't this behavior follow
+                                   // from draw_delay == 0?
 
     bolt*  special_explosion = nullptr; // For exploding with a different
                                         // flavour/damage/etc than the beam
@@ -104,14 +117,16 @@ struct bolt
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
     // Do we draw animations?
-    bool   animate = bool(Options.use_animations & UA_BEAM);
+    bool   animate;
     ac_type ac_rule = ac_type::normal;   // How defender's AC affects damage.
 #ifdef DEBUG_DIAGNOSTICS
     bool   quiet_debug = false;    // Disable any debug spam.
 #endif
 
     // OUTPUT parameters (tracing, ID)
-    bool obvious_effect = false; // did an 'obvious' effect happen?
+    bool obvious_effect = false; // is this a non-enchantment, or did it already
+                                 // show some effect or message? (Otherwise, we'll
+                                 // print the canned 'nothing happened.)
 
     bool seen = false;          // Has player seen the beam?
     bool heard = false;         // Has the player heard the beam?
@@ -158,7 +173,7 @@ private:
     bool nightvision = false;
 
 public:
-    bool is_enchantment() const; // no block/dodge, use magic resist
+    bool is_enchantment() const; // no block/dodge, use willpower
     void set_target(const dist &targ);
     void set_agent(const actor *agent);
     void setup_retrace();
@@ -182,6 +197,7 @@ public:
     bool can_affect_actor(const actor *act) const;
     bool can_affect_wall(const coord_def& p, bool map_knowledge = false) const;
     bool ignores_monster(const monster* mon) const;
+    bool ignores_player() const;
     bool can_knockback(const actor &act, int dam = -1) const;
     bool can_pull(const actor &act, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
@@ -191,7 +207,7 @@ public:
     bool has_saving_throw() const;
 
     void draw(const coord_def& p, bool force_refresh=true);
-    void drop_object();
+    void drop_object(bool allow_mulch=true);
 
     // Various explosion-related stuff.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
@@ -227,6 +243,7 @@ private:
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
     bool bush_immune(const monster &mons) const;
+    int apply_lighting(int base_hit, const actor &target) const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
@@ -332,12 +349,19 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
+bool zap_explodes(zap_type ztype);
+bool zap_is_enchantment(zap_type ztype);
 int zap_ench_power(zap_type z_type, int pow, bool is_monster);
+int zap_to_hit(zap_type z_type, int power, bool is_monster);
+dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
+colour_t zap_colour(zap_type z_type);
+
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
 int explosion_noise(int rad);
 
+bool always_shoot_through_monster(const actor *agent, const monster &mon);
 bool shoot_through_monster(const bolt& beam, const monster* victim);
 
 int omnireflect_chance_denom(int SH);

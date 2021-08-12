@@ -16,7 +16,7 @@
 
 const char * const standard_plural_qualifiers[] =
 {
-    " of ", " labeled ", nullptr
+    " of ", " labelled ", " from ", nullptr
 };
 
 bool is_vowel(const char32_t chr)
@@ -63,7 +63,7 @@ string pluralise(const string &name, const char * const qualifiers[],
             return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(name, "larva") || ends_with(name, "antenna")
-             || ends_with(name, "hypha"))
+             || ends_with(name, "hypha") || ends_with(name, "noma"))
     {
         return name + "e";
     }
@@ -396,7 +396,8 @@ string apply_description(description_level_type desc, const string &name,
     }
 }
 
-string thing_do_grammar(description_level_type dtype, string desc)
+string thing_do_grammar(description_level_type dtype, string desc,
+                        bool ignore_case)
 {
     // Avoid double articles.
     if (starts_with(desc, "the ") || starts_with(desc, "The ")
@@ -408,7 +409,7 @@ string thing_do_grammar(description_level_type dtype, string desc)
             dtype = DESC_PLAIN;
     }
 
-    if (dtype == DESC_PLAIN || isupper(desc[0]))
+    if (dtype == DESC_PLAIN || !ignore_case && isupper(desc[0]))
         return desc;
 
     switch (dtype)
@@ -424,7 +425,7 @@ string thing_do_grammar(description_level_type dtype, string desc)
     }
 }
 
-string get_desc_quantity(const int quant, const int total, string whose)
+string get_desc_quantity(const int quant, const int total, const string &whose)
 {
     if (total == quant)
         return uppercase_first(whose);

@@ -547,12 +547,6 @@ scroll of magic mapping
 
 Ten zwój tworzy mapę poziomu lochów wokół czytającego.
 %%%%
-scroll of random uselessness
-
-Kolejny głupi żart nudzących się czarodziei — ten zwój może mieć jeden z wielu
-różnych efektów, ale zawsze jest to coś niemal zupełnie bez żadnego
-zastosowania.
-%%%%
 scroll of remove curse
 
 Odczytanie tego zwoju usuwa wszystkie przekleństwa rzucone na przedmioty
@@ -660,53 +654,15 @@ Zaczarowana zbroja ze skóry trolla. Jest twardsza od zwykłej skórzanej zbroi,
 także daje nosicielowi część zdolności regeneracji właściwej trollom (chyba że
 nosiciel sam jest trollem).
 %%%%
-wand of cold
-
-Magiczny przedmiot który strzela wielki strugami zimna.
-%%%%
 wand of digging
 
 Magiczny przedmiot który potrafi rozpuścić nie wzmocnioną skałę, tworząc tunel.
-%%%%
-wand of disintegration
-
-Magiczny przedmiot który potrafi rozbić strukturę przedmiotów na kawałki.
-Działa zarówno na istoty (żywe czy martwe), jak i na statuy, ściany, itp.
-Wzmocniony kamień jest zbyt mocny aby dać się rozbić w ten sposób.
-%%%%
-wand of enslavement
-
-Magiczny przedmiot który powoduje ślepe posłuszeństwo wśród żywych istot.
-%%%%
-wand of fire
-
-Magiczny przedmiot który strzela wielkimi strugami ognia.
-%%%%
-wand of fireball
-
-Magiczny przedmiot który strzela kulami ognia które wybuchają w żądanym
-miejscu.
-%%%%
-wand of invisibility
-
-Magiczny przedmiot który czyni stworzenie na które został skierowany
-niewidzialnym.
-%%%%
-wand of magic darts
-
-Magiczny przedmiot który strzela małymi pociskami surowej magii, które zawsze
-trafiają.
 %%%%
 wand of polymorph
 
 Magiczny przedmiot który potrafi przemienić stworzenie w coś innego. Jest
 szczególnie efektywne wobec istot które naturalnie zmieniają formę: nie są one
 w stanie odeprzeć tego efektu.
-%%%%
-wand of random effects
-
-Magiczny przedmiot który w nieprzewidywalny sposób produkuje efekty
-jakiejkolwiek innej różdżki.
 %%%%
 whip
 

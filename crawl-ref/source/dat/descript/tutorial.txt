@@ -213,12 +213,14 @@ tutorial2 throwing
 You can fire your boomerangs at a monster with <input>$cmd[CMD_FIRE]</input>
 <localtiles> or by <input>clicking</input> on them in the inventory
 panel</localtiles>. To confirm the auto-targeted monster, press
-<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
+<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>. You can skip
+this and fire at the closest monster with <input>shift-tab</input> or <input>p</input>.
 %%%%
 tutorial2 wield_bow
 
 Pick up this shortbow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
-<localtiles> or by <input>mouseclick</input></localtiles>.
+<localtiles> or by <input>mouseclick</input></localtiles>. Then pick up the
+arrows and quiver them with <input>$cmd[CMD_QUIVER_ITEM]</input>.
 %%%%
 tutorial2 firing
 
@@ -252,13 +254,15 @@ tutorial2 exit
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
   <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon<localtiles>
   You can also do this by <input>clicking</input> on the weapon in your inventory.</localtiles>
+  <input>$cmd[CMD_QUIVER_ITEM]</input>  adjust your quiver
 
 <yellow>Monsters</yellow><localtiles>
   <input>mouseover</input>  examine a monster
   <input>rightclick</input> read a more detailed description</localtiles><nomouse>
   <input>$cmd[CMD_LOOK_AROUND]</input>  examine a monster
   <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</nomouse>
-  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fire ammunition at pre-targeted monster
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fire quiver at pre-targeted monster
+  <input>shift-tab</input>, <input>p</input> fire quiver at closest monster
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> target another monster<localtiles>
   You can also fire an item by <input>clicking</input> on it and the confirming the target with <input>Enter</input>.</localtiles>
 
@@ -304,10 +308,8 @@ tutorial3 ego_weapon
 
 An item described as <lightblue>runed</lightblue> or
 <lightblue>glowing</lightblue> will always be enchanted, or have special
-properties, or both. You need to wield this scimitar (with
-<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> or by
-<input>clicking</input> on it in the inventory panel</localtiles>) to find out
-what those are.
+properties, or both. Once you step on top of such an item, its properties will
+be revealed to you.
 %%%%
 tutorial3 inventory
 
@@ -361,10 +363,12 @@ tutorial3 artefact_armour
 #       things that would throw the tutorial off rails (cursed, Cursing,
 #       mutations, activatable abilities..)
 Items with <w>unusual names</w> are artefacts. Artefacts can have a number of
-special properties. Some items (such as this cloak) are known and come
-pre-identified, others are random and have unknown properties. Try equipping
-this cloak with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or
-<input>mouseclick</input> in the inventory panel</localtiles>.
+special properties. Some unique artefacts (such as this cloak) are always
+identified and may have special properties that cannot be found anywhere else!
+Others are generated with a random selection of properties, and are
+unidentified until you step on top of them. Try equipping this cloak with
+<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or <input>mouseclick</input>
+in the inventory panel</localtiles>.
 %%%%
 tutorial3 wand_fire
 
@@ -384,16 +388,10 @@ tutorial3 amulet
 Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
 or with <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%
-tutorial3 scroll_remove_curse
-
-The amulet is cursed and will not come off on its own. This scroll will remove
-all curses that are placed upon you. Try reading it with
-<input>$cmd[CMD_READ]</input><localtiles> or by <input>clicking</input> it in
-the inventory panel</localtiles>.
-%%%%
 tutorial3 drop
 
-The amulet is useless; you may want to drop it with
+This amulet would be very powerful if your character had a god to worship,
+but here and now, it's useless. You may want to drop it with
 <input>$cmd[CMD_DROP]</input><localtiles> or by
 <input>Shift-leftclicking</input> it in the inventory panel</localtiles>.
 %%%%
@@ -457,13 +455,12 @@ tutorial3 exit
   <input>$cmd[CMD_WEAR_JEWELLERY]</input>  put on jewellery
   <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  remove jewellery
   <input>$cmd[CMD_DROP]</input>  drop an item
-  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the item descriptions.<localtiles>
+  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the
+  item descriptions.<localtiles>
   And of course, <input>mouseclicks</input> also work.</localtiles>
 
 <yellow>Other</yellow>
   <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> access the command help
-  <input>$cmd[CMD_RESISTS_SCREEN]</input>  display character overview
-  <input>$cmd[CMD_USE_ABILITY]</input>  use an ability
   <input>$cmd[CMD_EXPLORE]</input>  explore automatically
   <input>$cmd[CMD_SEARCH_STASHES]</input> search for items/features previously seen<localtiles>
   Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
@@ -495,7 +492,11 @@ tutorial4 spellcasting
 ##       the player on their own.
 You can cast spells with <input>$cmd[CMD_CAST_SPELL]</input><localtiles> or by
 <input>clicking</input> on the spell tile</localtiles>. Press
-<input>$cmd[CMD_CAST_SPELL]?</input> to get a list of your spells.
+<input>$cmd[CMD_CAST_SPELL]?</input> to get a list of your spells. Spells,
+like ammo, are shown in the quiver slot, so you can use
+<input>$cmd[CMD_QUIVER_ITEM]</input> to ready a spell in the quiver. Use
+<input>$cmd[CMD_FIRE]</input> or <input>shift-tab</input> to fire the currently
+quivered spell.
 
 Once you are out of magic points, retreat and rest to regain them with
 <input>$cmd[CMD_REST]</input><localtiles> or by <input>clicking</input> the
@@ -545,18 +546,20 @@ single cloud in order to be more efficient with your magic.
 %%%%
 tutorial4 forget_spell
 
-Gaining an experience level and raising your Spellcasting skill gives you spell
+Gaining experience levels and raising your Spellcasting skill gives you spell
 slots to spend on spells. You can also <w>forget a memorised spell</w> to make
-space for a new one. The easiest way to do this is with a scroll of amnesia.
-Simply read the scroll (with <input>$cmd[CMD_READ]</input><localtiles> or by
+space for a new one by reading a scroll of amnesia. Read the scroll (with
+<input>$cmd[CMD_READ]</input><localtiles> or by
 <input>clicking</input> on it</localtiles>), and then select the spell you want
-to forget.
+to forget. You can relearn forgotten spells from your spell library later, as
+long as you have spell slots available.
 %%%%
 tutorial4 memorise2
 
-Again, memorise a new spell with <input>$cmd[CMD_MEMORISE_SPELL]</input>
-<localtiles> or by <input>clicking</input> on the memorisation tab and
-selecting the spell tile</localtiles>. And then raise yourself an undead army!
+After forgetting one of your old spells to make space, memorise this new spell
+with <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
+<input>clicking</input> on the memorisation tab and selecting the spell
+tile</localtiles>. Then try your new spell and summon some demonic allies!
 %%%%
 tutorial4 displace_allies
 
@@ -569,7 +572,8 @@ tutorial4 order_allies
 Try to let your allies do the killing! If necessary, you can order them about
 with <input>$cmd[CMD_SHOUT]</input>. Before opening this gate, you may want to
 wait with <input>$cmd[CMD_WAIT]</input> until your allies have caught
-up with you.
+up with you. Your summons will only stick around for a short time, so don't
+wait too long, or summon some new ones before starting a fight.
 %%%%
 tutorial4 heavy_armour
 
@@ -588,8 +592,10 @@ Make sure you are at full health and magic points before entering a new area.
 If necessary, rest up with <input>$cmd[CMD_REST]</input><localtiles> or by
 <input>mouseclick</input> in the command panel</localtiles>.
 
-Also, undead don't breathe, so you can cast Mephitic Cloud without harming your
-allies.
+You can only summon a limited number of allies at once from any given spell,
+so try to take advantage of a wide range of spells. For example, your summoned
+imps are resistant to poison, so you can cast Mephitic Cloud to fight alongside
+them without harming your allies.
 %%%%
 tutorial4 tutorial_end
 
@@ -606,6 +612,7 @@ tutorial4 exit
   <input>$cmd[CMD_CAST_SPELL]</input>  cast a spell<localtiles>
   You can also learn new spells via the <w>memorisation tab</w>.
   You can cast memorised spells via <input>leftclick</input>, and read their descriptions and check your spell proficiency by <input>mouseover</input> or <input>rightclick</input></localtiles>
+  <input>$cmd[CMD_QUIVER_ITEM]</input>  adjust your quiver
 
   <input>$cmd[CMD_REST]</input>  rest up to 100 turns to regain magic points and health
   <input>$cmd[CMD_SHOUT]</input>  order allies
@@ -637,7 +644,7 @@ you press <input>!</input><localtiles> or
 <input>rightclick</input></localtiles> on the religion screen, you can see a
 more detailed description.
 
-Confirm your choice with an uppercase <input>Y</input>.
+Confirm your choice with <input>J</input> or <input>Enter</input>.
 %%%%
 tutorial5 religion
 
@@ -661,10 +668,10 @@ panel</w></localtiles>.
 %%%%
 tutorial5 exhaustion
 
-A berserker rage is truly exhausting. While fatigued, you cannot berserk again
-and are also slowed. It's best to rest with <input>$cmd[CMD_REST]</input>
-<localtiles> (or via the <w>command panel</w>)</localtiles> until you feel fit
-again.
+A berserker rage is truly exhausting. After it ends, you cannot berserk again
+for a short while and are slowed. It's best to rest with
+<input>$cmd[CMD_REST]</input><localtiles> (or via the
+<w>command panel</w>)</localtiles> until you feel fit again.
 %%%%
 tutorial5 berserk2
 

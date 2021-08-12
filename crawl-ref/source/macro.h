@@ -6,10 +6,13 @@
 #pragma once
 
 #include <deque>
+#include <vector>
 
 #include "command-type.h"
 #include "enum.h"
 #include "KeymapContext.h"
+
+using std::vector;
 
 class key_recorder;
 typedef deque<int> keyseq;
@@ -45,7 +48,8 @@ int getch_with_command_macros();  // keymaps and macros (ie for commands)
 
 void flush_input_buffer(int reason);
 
-void macro_add_query();
+void macro_quick_add();
+void macro_menu();
 void macro_init();
 void macro_save();
 
@@ -108,7 +112,11 @@ void init_keybindings();
 command_type name_to_command(string name);
 string  command_to_name(command_type cmd);
 
+int function_keycode_fixup(int keycode);
+bool keycode_is_printable(int keycode);
+string keycode_to_name(int keycode, bool shorten = true);
 string keyseq_to_str(const keyseq &seq);
+keyseq parse_keyseq(string s);
 
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);

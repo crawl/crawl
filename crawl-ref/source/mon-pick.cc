@@ -31,6 +31,7 @@ int branch_ood_cap(branch_type branch)
     case BRANCH_LAIR:
         return 12;
     case BRANCH_ELF:
+    case BRANCH_SWAMP:
         return 7;
     case BRANCH_CRYPT:
     case BRANCH_TOMB:
@@ -43,18 +44,18 @@ int branch_ood_cap(branch_type branch)
 // only Pan currently
 monster_type pick_monster_no_rarity(branch_type branch)
 {
-    if (!population[branch].count)
+    if (!population[branch].size())
         return MONS_0;
 
-    return population[branch].pop[random2(population[branch].count)].value;
+    return population[branch][random2(population[branch].size())].value;
 }
 
 monster_type pick_monster_by_hash(branch_type branch, uint32_t hash)
 {
-    if (!population[branch].count)
+    if (!population[branch].size())
         return MONS_0;
 
-    return population[branch].pop[hash % population[branch].count].value;
+    return population[branch][hash % population[branch].size()].value;
 }
 
 monster_type pick_monster(level_id place, mon_pick_vetoer veto)
@@ -63,16 +64,16 @@ monster_type pick_monster(level_id place, mon_pick_vetoer veto)
     if (!place.is_valid())
         die("trying to pick a monster from %s", place.describe().c_str());
 #endif
-    return pick_monster_from(population[place.branch].pop, place.depth, veto);
+    return pick_monster_from(population[place.branch], place.depth, veto);
 }
 
 monster_type pick_monster(level_id place, monster_picker &picker, mon_pick_vetoer veto)
 {
     ASSERT(place.is_valid());
-    return picker.pick_with_veto(population[place.branch].pop, place.depth, MONS_0, veto);
+    return picker.pick_with_veto(population[place.branch], place.depth, MONS_0, veto);
 }
 
-monster_type pick_monster_from(const pop_entry *fpop, int depth,
+monster_type pick_monster_from(const vector<pop_entry>& fpop, int depth,
                                mon_pick_vetoer veto)
 {
     // XXX: If creating/destroying instances has performance issues, cache a
@@ -81,7 +82,7 @@ monster_type pick_monster_from(const pop_entry *fpop, int depth,
     return picker.pick_with_veto(fpop, depth, MONS_0, veto);
 }
 
-monster_type monster_picker::pick_with_veto(const pop_entry *weights,
+monster_type monster_picker::pick_with_veto(const vector<pop_entry>& weights,
                                             int level, monster_type none,
                                             mon_pick_vetoer vetoer)
 {
@@ -100,7 +101,7 @@ bool positioned_monster_picker::veto(monster_type mon)
 {
     // Actually pick a monster that is happy where we want to put it.
     // Fish zombies on land are helpless and uncool.
-    if (in_bounds(pos) && !monster_habitable_grid(mon, grd(pos)))
+    if (in_bounds(pos) && !monster_habitable_grid(mon, env.grid(pos)))
         return true;
     // Optional positional veto
     if (posveto && posveto(mon, pos)) return true;
@@ -131,20 +132,20 @@ monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
         if (depth < 1 || depth > branch_ood_cap(it->id))
             continue;
 
-        for (const pop_entry *pop = population[it->id].pop; pop->value; pop++)
+        for (const pop_entry& pop : population[it->id])
         {
-            if (depth < pop->minr || depth > pop->maxr)
+            if (depth < pop.minr || depth > pop.maxr)
                 continue;
 
-            if (veto ? (*veto)(pop->value) : picker.veto(pop->value))
+            if (veto ? (*veto)(pop.value) : picker.veto(pop.value))
                 continue;
 
             int rar = picker.rarity_at(pop, depth);
             ASSERT(rar > 0);
 
-            monster_type mons = pop->value;
+            monster_type mons = pop.value;
             if (!rarities[mons])
-                valid[nvalid++] = pop->value;
+                valid[nvalid++] = pop.value;
             if (rarities[mons] < rar)
                 rarities[mons] = rar;
         }
@@ -169,37 +170,47 @@ monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
 bool branch_has_monsters(branch_type branch)
 {
     ASSERT_RANGE(branch, 0, NUM_BRANCHES);
-    return population[branch].count != 0;
+    return population[branch].size();
 }
 
-const pop_entry* fish_population(branch_type br, bool lava)
+const vector<pop_entry>& fish_population(branch_type br, bool lava)
 {
     ASSERT_RANGE(br, 0, NUM_BRANCHES);
-    return (lava ? population_lava : population_water)[br].pop;
+    return (lava ? population_lava : population_water)[br];
 }
 
-const pop_entry* zombie_population(branch_type br)
+static bool _branch_uses_generic_late_zombies(branch_type br)
 {
     ASSERT_RANGE(br, 0, NUM_BRANCHES);
-    return population_zombie[br].pop;
+    return is_hell_branch(br) || br == BRANCH_CRYPT || br == BRANCH_TOMB
+        || br == BRANCH_ABYSS || br == BRANCH_PANDEMONIUM;
+}
+
+const vector<pop_entry>& zombie_population(branch_type br)
+{
+    ASSERT_RANGE(br, 0, NUM_BRANCHES);
+    if (_branch_uses_generic_late_zombies(br))
+        return pop_generic_late_zombie;
+    return population[br];
 }
 
 bool monster_in_population(branch_type branch, monster_type m, bool check_noncore)
 {
-    for (const pop_entry *pop = population[branch].pop; pop->value; pop++)
-        if (pop->value == m)
+    for (const pop_entry& pop : population[branch])
+        if (pop.value == m)
             return true;
     if (check_noncore)
     {
-        for (const pop_entry *pop = population_water[branch].pop; pop->value; pop++)
-            if (pop->value == m)
+        for (const pop_entry& pop : population_water[branch])
+            if (pop.value == m)
                 return true;
-        for (const pop_entry *pop = population_lava[branch].pop; pop->value; pop++)
-            if (pop->value == m)
+        for (const pop_entry& pop : population_lava[branch])
+            if (pop.value == m)
                 return true;
-        for (const pop_entry *pop = population_zombie[branch].pop; pop->value; pop++)
-            if (pop->value == m)
-                return true;
+        if (_branch_uses_generic_late_zombies(branch))
+            for (const pop_entry& pop : pop_generic_late_zombie)
+                if (pop.value == m)
+                    return true;
     }
     return false;
 }
@@ -210,14 +221,14 @@ int monster_probability(level_id place, monster_type m)
     if (!monster_in_population(place.branch, m, false))
         return -1;
     monster_picker picker = monster_picker();
-    return picker.probability_at(m, population[place.branch].pop, place.depth);
+    return picker.probability_at(m, population[place.branch], place.depth);
 }
 
 int monster_pop_depth_avg(branch_type branch, monster_type m)
 {
-    for (const pop_entry *pop = population[branch].pop; pop->value; pop++)
-        if (pop->value == m)
-            return max(0, (pop->minr + pop->maxr) / 2);
+    for (const pop_entry& pop : population[branch])
+        if (pop.value == m)
+            return max(0, (pop.minr + pop.maxr) / 2);
     // negative values *are* sometimes used in the data, but the above max will
     // prevent them from ever being naturally returned as an average.
     return -1;

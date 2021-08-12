@@ -10,10 +10,13 @@
 
 #include <numeric> // iota
 #include <queue>
+#include <vector>
+
+using std::vector;
 
 extern const struct coord_def Compass[9];
 
-bool mons_can_hurt_player(const monster* mon, const bool want_move = false);
+bool mons_can_hurt_player(const monster* mon);
 bool mons_is_safe(const monster* mon, const bool want_move = false,
                   const bool consider_user_options = true,
                   const bool check_dist = true);

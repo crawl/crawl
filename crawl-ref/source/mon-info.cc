@@ -14,6 +14,7 @@
 
 #include "act-iter.h"
 #include "artefact.h"
+#include "attack.h"
 #include "colour.h"
 #include "coordit.h"
 #include "english.h"
@@ -24,6 +25,7 @@
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-info-flag-name.h"
@@ -35,12 +37,14 @@
 #include "spl-goditem.h" // dispellable_enchantments
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #ifdef USE_TILE
 #include "tilepick.h"
 #endif
 #include "traps.h"
 
 #define SPELL_HD_KEY "spell_hd"
+#define NIGHTVISION_KEY "nightvision"
 
 /// Simple 1:1 mappings between monster enchantments & info flags.
 static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
@@ -58,15 +62,14 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_STICKY_FLAME,    MB_BURNING },
     { ENCH_PETRIFIED,       MB_PETRIFIED },
     { ENCH_PETRIFYING,      MB_PETRIFYING },
-    { ENCH_LOWERED_MR,      MB_VULN_MAGIC },
+    { ENCH_LOWERED_WL,      MB_LOWERED_WL },
     { ENCH_SWIFT,           MB_SWIFT },
     { ENCH_SILENCE,         MB_SILENCING },
     { ENCH_PARALYSIS,       MB_PARALYSED },
     { ENCH_SOUL_RIPE,       MB_POSSESSABLE },
     { ENCH_REGENERATION,    MB_REGENERATION },
-    { ENCH_RAISED_MR,       MB_RAISED_MR },
+    { ENCH_STRONG_WILLED,   MB_STRONG_WILLED },
     { ENCH_MIRROR_DAMAGE,   MB_MIRROR_DAMAGE },
-    { ENCH_FEAR_INSPIRING,  MB_FEAR_INSPIRING },
     { ENCH_DAZED,           MB_DAZED },
     { ENCH_MUTE,            MB_MUTE },
     { ENCH_BLIND,           MB_BLIND },
@@ -74,7 +77,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_MAD,             MB_MAD },
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
-    { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
+    { ENCH_ROLLING,         MB_ROLLING },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
     { ENCH_WORD_OF_RECALL,  MB_WORD_OF_RECALL },
@@ -85,8 +88,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_TOXIC_RADIANCE,  MB_TOXIC_RADIANCE },
     { ENCH_GRASPING_ROOTS,  MB_GRASPING_ROOTS },
     { ENCH_FIRE_VULN,       MB_FIRE_VULN },
-    { ENCH_TORNADO,         MB_TORNADO },
-    { ENCH_TORNADO_COOLDOWN, MB_TORNADO_COOLDOWN },
+    { ENCH_POLAR_VORTEX,         MB_VORTEX },
+    { ENCH_POLAR_VORTEX_COOLDOWN, MB_VORTEX_COOLDOWN },
     { ENCH_BARBS,           MB_BARBS },
     { ENCH_POISON_VULN,     MB_POISON_VULN },
     { ENCH_ICEMAIL,         MB_ICEMAIL },
@@ -116,7 +119,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
     { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
-
+    { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -148,7 +151,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return get_trapping_net(mons.pos(), true) == NON_ITEM
                ? MB_WEBBED : MB_CAUGHT;
     case ENCH_WATER_HOLD:
-        if (mons.res_water_drowning())
+        if (mons.res_water_drowning() > 0)
             return MB_WATER_HOLD;
         else
             return MB_WATER_HOLD_DROWN;
@@ -169,6 +172,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_SHORT_LIVED:
     case ENCH_SLOWLY_DYING:
         if (mons.type == MONS_WITHERED_PLANT)
             return MB_CRUMBLING;
@@ -213,7 +217,8 @@ static bool _is_public_key(string key)
      || key == MON_GENDER_KEY
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
-     || key == VAULT_HD_KEY )
+     || key == VAULT_HD_KEY
+     || key == POLY_SET_KEY)
     {
         return true;
     }
@@ -253,7 +258,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 
         // If there's an adjacent deep water tile, the segment
         // might be there instead.
-        if (grd(*ai) == DNGN_DEEP_WATER)
+        if (env.grid(*ai) == DNGN_DEEP_WATER)
         {
             const monster *mon = monster_at(*ai);
             if (mon && you.can_see(*mon))
@@ -268,7 +273,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
             return true;
         }
 
-        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
         {
             const monster *mon = monster_at(*ai);
 
@@ -344,7 +349,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
-    mr = mons_class_res_magic(type, base_type);
+    mr = mons_class_willpower(type, base_type);
     can_see_invis = mons_class_sees_invis(type, base_type);
 
     mitemuse = mons_class_itemuse(type);
@@ -544,11 +549,24 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (milev <= MILEV_NAME)
     {
-        if (type == MONS_DANCING_WEAPON
-            && m->inv[MSLOT_WEAPON] != NON_ITEM)
+        if (mons_class_is_animated_weapon(type))
         {
-            inv[MSLOT_WEAPON].reset(
-                new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
+            if (m->get_defining_object())
+            {
+                inv[MSLOT_WEAPON].reset(new item_def(
+                    get_item_known_info(*m->get_defining_object())));
+            }
+            // animated launchers may have a missile too
+            if (m->inv[MSLOT_MISSILE] != NON_ITEM)
+            {
+                inv[MSLOT_MISSILE].reset(new item_def(
+                    get_item_known_info(env.item[m->inv[MSLOT_MISSILE]])));
+            }
+        }
+        else if (type == MONS_ANIMATED_ARMOUR && m->get_defining_object())
+        {
+            inv[MSLOT_ARMOUR].reset(new item_def(
+                get_item_known_info(*m->get_defining_object())));
         }
         return;
     }
@@ -560,13 +578,16 @@ monster_info::monster_info(const monster* m, int milev)
     ac = m->armour_class(false);
     ev = m->evasion(ev_ignore::unided);
     base_ev = m->base_evasion();
-    mr = m->res_magic(false);
+    mr = m->willpower(false);
     can_see_invis = m->can_see_invisible(false);
+    if (m->nightvision())
+        props[NIGHTVISION_KEY] = true;
     mresists = get_mons_resists(*m);
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
     can_go_frenzy = m->can_go_frenzy(false);
+    can_feel_fear = m->can_feel_fear(false);
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune(false))
@@ -588,6 +609,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
+    if (!actor_is_susceptible_to_vampirism(*m))
+        mb.set(MB_CANT_DRAIN);
 
     dam = mons_get_damage_level(*m);
 
@@ -633,6 +656,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (you.beheld_by(*m))
         mb.set(MB_MESMERIZING);
 
+    if (you.afraid_of(m))
+        mb.set(MB_FEAR_INSPIRING);
+
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
         mb.set(MB_ENSLAVED);
 
@@ -656,7 +682,7 @@ monster_info::monster_info(const monster* m, int milev)
         ASSERT(m->ghost);
         ghost_demon& ghost = *m->ghost;
         i_ghost.species = ghost.species;
-        if (species_is_draconian(i_ghost.species) && ghost.xl < 7)
+        if (species::is_draconian(i_ghost.species) && ghost.xl < 7)
             i_ghost.species = SP_BASE_DRACONIAN;
         i_ghost.job = ghost.job;
         i_ghost.religion = ghost.religion;
@@ -711,7 +737,12 @@ monster_info::monster_info(const monster* m, int milev)
         else
             ok = true;
         if (ok)
-            inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
+        {
+            inv[i].reset(
+                new item_def(get_item_known_info(env.item[m->inv[i]])));
+            if (i == MSLOT_MISSILE && inv[i]->sub_type != MI_THROWING_NET)
+                inv[i]->quantity = 1;
+        }
     }
 
     fire_blocker = DNGN_UNSEEN;
@@ -764,6 +795,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (mons_has_ranged_attack(*m))
         mb.set(MB_RANGED_ATTACK);
 
+    if (is_ally_target(*m))
+        mb.set(MB_ALLY_TARGET);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
@@ -801,6 +835,24 @@ string monster_info::get_max_hp_desc() const
     return make_stringf("about %d", mhp);
 }
 
+/**
+ * Calculate some defender-specific effects on an attacker's to-hit.
+ */
+int monster_info::lighting_modifiers() const
+{
+    // Lighting effects.
+    if (is(MB_GLOWING)       // corona, silver corona (!)
+        || is(MB_BURNING)    // sticky flame
+        || is(MB_HALOED))
+    {
+        return BACKLIGHT_TO_HIT_BONUS;
+    }
+    if (is(MB_UMBRAED) && !you.nightvision())
+        return UMBRA_TO_HIT_MALUS;
+
+    return 0;
+}
+
 
 /**
  * Name the given mutant beast tier.
@@ -833,7 +885,7 @@ string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON])
     {
-        iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+        iflags_t ignore_flags = ISFLAG_KNOW_PLUSES;
         bool     use_inscrip  = false;
         return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
                          ignore_flags);
@@ -902,9 +954,15 @@ string monster_info::_core_name() const
             if (inv[MSLOT_WEAPON])
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
+                s = item.name(DESC_PLAIN, false, false, true, false);
+            }
+            break;
 
-                s = item.name(DESC_PLAIN, false, false, true, false,
-                               ISFLAG_KNOW_CURSE);
+        case MONS_ANIMATED_ARMOUR:
+            if (inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *inv[MSLOT_ARMOUR];
+                s = "animated " + item.name(DESC_PLAIN, false, false, true, false, ISFLAG_KNOW_PLUSES);
             }
             break;
 
@@ -1158,7 +1216,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
     // Never distinguish between dancing weapons.
     // The above checks guarantee that *both* monsters are of this type.
-    if (m1.type == MONS_DANCING_WEAPON)
+    if (m1.type == MONS_DANCING_WEAPON || m1.type == MONS_ANIMATED_ARMOUR)
         return false;
 
     if (m1.type == MONS_SLIME_CREATURE)
@@ -1228,7 +1286,8 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
-             || type == MONS_MUTANT_BEAST || !fullname)
+             || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
+             || !fullname)
     {
         return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }
@@ -1449,7 +1508,15 @@ bool monster_info::can_see_invisible() const
     return can_see_invis;
 }
 
-int monster_info::res_magic() const
+/**
+ * Does the monster described by this monster_info ignore umbra acc penalties?
+ */
+bool monster_info::nightvision() const
+{
+    return props.exists(NIGHTVISION_KEY);
+}
+
+int monster_info::willpower() const
 {
     return mr;
 }
@@ -1487,9 +1554,8 @@ reach_type monster_info::reach_range() const
                                              ? base_type : type);
     ASSERT(e);
 
-    reach_type range = e->attack[0].flavour == AF_REACH
-                       || e->attack[0].flavour == AF_REACH_STING
-                          ? REACH_TWO : REACH_NONE;
+    const attack_flavour fl = e->attack[0].flavour;
+    reach_type range = flavour_has_reach(fl) ? REACH_TWO : REACH_NONE;
 
     const item_def *weapon = inv[MSLOT_WEAPON].get();
     if (weapon)
@@ -1541,9 +1607,6 @@ bool monster_info::has_spells() const
     if (props.exists(CUSTOM_SPELLS_KEY))
         return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
 
-    if (props.exists(SEEN_SPELLS_KEY))
-        return true;
-
     // Almost all draconians have breath spells.
     if (mons_genus(draco_or_demonspawn_subspecies()) == MONS_DRACONIAN
         && draco_or_demonspawn_subspecies() != MONS_GREY_DRACONIAN
@@ -1552,13 +1615,13 @@ bool monster_info::has_spells() const
         return true;
     }
 
-    const vector<mon_spellbook_type> books = get_spellbooks(*this);
+    const mon_spellbook_type book = get_spellbook(*this);
 
-    if (books.size() == 0 || books[0] == MST_NO_SPELLS)
+    if (book == MST_NO_SPELLS)
         return false;
 
     // Ghosts / pan lords may have custom spell lists, so check spells directly
-    if (books[0] == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
+    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
         return spells.size() > 0;
 
     return true;
@@ -1697,12 +1760,12 @@ static bool _has_wand(const monster_info& mi)
 static string _condition_string(int num, int count,
                                 const monster_info_flag_name& name)
 {
-    if (1 < num && num < count)
-        return make_stringf("%d %s", num, name.plural.c_str());
-    else if (1 < num)
-        return name.plural;
+    const string& word = (1 == num) ? name.short_singular : name.plural;
+
+    if (count == num)
+        return word;
     else
-        return name.short_singular;
+        return make_stringf("%d %s", num, word.c_str());
 }
 
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
@@ -1752,7 +1815,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 
         if (missile_count)
         {
-            conditions.push_back(_condition_string(launcher_count, count,
+            conditions.push_back(_condition_string(missile_count, count,
                                                    {MB_UNSAFE, "missile",
                                                     "missile", "missiles"}));
         }
@@ -1781,7 +1844,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 monster_type monster_info::draco_or_demonspawn_subspecies() const
 {
     if (type == MONS_PLAYER_ILLUSION && mons_genus(type) == MONS_DRACONIAN)
-        return player_species_to_mons_species(i_ghost.species);
+        return species::to_mons_species(i_ghost.species);
     return ::draco_or_demonspawn_subspecies(type, base_type);
 }
 

@@ -1,6 +1,11 @@
 #pragma once
 
+#include <vector>
+
 #include "mon-info.h"
+#include "tag-version.h"
+
+using std::vector;
 
 struct monster_info_flag_name
 {
@@ -28,6 +33,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MESMERIZING, "mesmerising", "mesmerising", "mesmerising"},
     { MB_BERSERK, "berserk", "berserk", "berserk"},
     { MB_HASTED, "fast", "fast", "fast"},
+    { MB_ROLLING, "rolling", "rolling", "rolling"},
     { MB_INNER_FLAME, "inner flame", "inner flame", "inner flame"},
     { MB_MIRROR_DAMAGE, "reflects damage", "reflecting injuries", "reflect damage"},
     { MB_BOUND_SOUL, "soul bound", "soul bound", "souls bound"},
@@ -41,20 +47,20 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SILENCING, "silencing", "radiating silence", "silencing"},
     { MB_READY_TO_HOWL, "can howl", "ready to howl", "can howl"},
     { MB_BRILLIANCE_AURA, "brilliance aura", "brilliance aura", "brilliance auras"},
-    { MB_TORNADO, "tornado", "surrounded by raging winds", "tornadoes"},
-    { MB_TORNADO_COOLDOWN, "gusty", "surrounded by restless winds", "gusty"},
+    { MB_VORTEX, "vortex", "surrounded by a freezing vortex", "vortices"},
+    { MB_VORTEX_COOLDOWN, "gusty", "surrounded by restless winds", "gusty"},
     { MB_INSANE, "insane", "frenzied and insane", "insane"},
     { MB_FEAR_INSPIRING, "scary", "inspiring fear", "scary"},
     { MB_WORD_OF_RECALL, "chanting recall", "chanting recall", "chanting recall"},
     { MB_REPEL_MSL, "repels missiles", "repelling missiles", "repel missiles"},
     { MB_TOXIC_RADIANCE, "toxic aura", "radiating toxic energy", "toxic auras"},
+    { MB_CONCENTRATE_VENOM, "curare", "concentrated venom", "curare" },
     { MB_BLACK_MARK, "black mark", "absorbing vital energies", "black marks"},
-    { MB_OZOCUBUS_ARMOUR, "icy armour", "covered in an icy film", "icy armour"},
     { MB_ICEMAIL, "icemail", "surrounded by an icy envelope", "icemail"},
     { MB_RESISTANCE, "resistant", "unusually resistant", "resistant"},
     { MB_INVISIBLE, "invisible", "slightly transparent", "invisible"},
     { MB_REGENERATION, "regenerating", "regenerating", "regenerating"},
-    { MB_RAISED_MR, "resisting magic", "resistant to hostile enchantments", "resisting magic"},
+    { MB_STRONG_WILLED, "strong-willed", "strong-willed", "strong-willed"},
     { MB_INJURY_BOND, "sheltered", "sheltered from injuries", "sheltered"},
     { MB_GOZAG_INCITED, "incited", "incited by Gozag", "incited"},
     { MB_CLOUD_RING_THUNDER, "clouds", "surrounded by thunder", "clouds" },
@@ -92,14 +98,14 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MUTE, "mute", "mute", "mute"},
     { MB_FROZEN, "frozen", "encased in ice", "frozen"},
     { MB_WATER_HOLD, "engulfed", "engulfed", "engulfed"},
-    { MB_WATER_HOLD_DROWN, "drowning", "unable to breathe", "drowning"},
+    { MB_WATER_HOLD_DROWN, "asphyxiating", "asphyxiating", "asphyxiating"},
     { MB_BURNING, "burning", "covered in liquid flames", "burning"},
     { MB_POISONED, "poisoned", "poisoned", "poisoned"},
     { MB_MORE_POISONED, "very poisoned", "very poisoned", "very poisoned"},
     { MB_MAX_POISONED, "extremely poisoned", "extremely poisoned", "extremely poisoned"},
     { MB_SLOWED, "slow", "slow", "slow"},
     { MB_BREATH_WEAPON, "catching breath", "catching @possessive@ breath", "catching breath"},
-    { MB_VULN_MAGIC, "vulnerable", "susceptible to hostile enchantments", "vulnerable"},
+    { MB_LOWERED_WL, "weak-willed", "weak-willed", "weak-willed"},
     { MB_FIRE_VULN, "inflammable", "more vulnerable to fire", "inflammable"},
     { MB_POISON_VULN, "easily poisoned", "more vulnerable to poison", "easily poisoned"},
     { MB_WRETCHED, "misshapen", "misshapen and mutated", "misshapen"},
@@ -120,4 +126,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_PAIN_BOND, "pain bonded", "sharing @possessive@ pain", "pain bonded"},
     { MB_IDEALISED, "idealised", "idealised", "idealised"},
     { MB_ENSLAVED, "", "disembodied soul", "" },
+    { MB_ALLY_TARGET, "ally target", "ally target", "ally target"},
 };

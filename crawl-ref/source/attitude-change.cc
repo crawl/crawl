@@ -70,7 +70,7 @@ static void _fedhas_neutralise_plant(monster* plant);
 
 void beogh_follower_convert(monster* mons, bool orc_hit)
 {
-    if (!species_is_orcish(you.species) || crawl_state.game_is_arena())
+    if (!species::is_orcish(you.species) || crawl_state.game_is_arena())
         return;
 
     // For followers of Beogh, decide whether orcs will join you.
@@ -466,9 +466,7 @@ void gozag_break_bribe(monster* victim)
     ASSERT(victim); // XXX: change to monster &victim
 
     if (!victim->has_ench(ENCH_NEUTRAL_BRIBED)
-        && !victim->has_ench(ENCH_FRIENDLY_BRIBED)
-        && !victim->props.exists(NEUTRAL_BRIBE_KEY)
-        && !victim->props.exists(FRIENDLY_BRIBE_KEY))
+        && !victim->has_ench(ENCH_FRIENDLY_BRIBED))
     {
         return;
     }
@@ -476,8 +474,6 @@ void gozag_break_bribe(monster* victim)
     // Un-bribe the victim.
     victim->del_ench(ENCH_NEUTRAL_BRIBED);
     victim->del_ench(ENCH_FRIENDLY_BRIBED);
-    victim->props.erase(NEUTRAL_BRIBE_KEY);
-    victim->props.erase(FRIENDLY_BRIBE_KEY);
 
     // Make other nearby bribed monsters un-bribed, too.
     for (monster_iterator mi; mi; ++mi)

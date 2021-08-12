@@ -38,15 +38,19 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-damage.h" // cancel_polar_vortex
 #include "spl-transloc.h"
 #include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "travel.h"
 #include "xom.h"
+
+static const string TRAP_PROJECTILE_KEY = "trap_projectile";
 
 bool trap_def::active() const
 {
@@ -74,7 +78,7 @@ void trap_def::destroy(bool known)
     if (!in_bounds(pos))
         die("Trap position out of bounds!");
 
-    grd(pos) = DNGN_FLOOR;
+    env.grid(pos) = DNGN_FLOOR;
     if (known)
     {
         env.map_knowledge(pos).set_feature(DNGN_FLOOR);
@@ -116,7 +120,7 @@ void trap_def::prepare_ammo(int charges)
 
 void trap_def::reveal()
 {
-    grd(pos) = feature();
+    env.grid(pos) = feature();
 }
 
 string trap_def::name(description_level_type desc) const
@@ -175,11 +179,9 @@ bool trap_def::is_safe(actor* act) const
     if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
         return true;
 
-#ifdef CLUA_BINDINGS
     // Let players specify traps as safe via lua.
     if (clua.callbooleanfn(false, "c_trap_is_safe", "s", trap_name(type).c_str()))
         return true;
-#endif
 
     if (type == TRAP_DART)
         return you.hp > 15;
@@ -267,7 +269,7 @@ static void _mark_net_trapping(const coord_def& where)
     {
         net = get_trapping_net(where, false);
         if (net != NON_ITEM)
-            _maybe_split_nets(mitm[net], where);
+            _maybe_split_nets(env.item[net], where);
     }
 }
 
@@ -394,7 +396,7 @@ static bool _player_caught_in_web()
 
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
-    you.redraw_quiver       = true;
+    quiver::set_needs_redraw();
 
     // No longer stop_running() and stop_delay().
     return true;
@@ -446,10 +448,10 @@ static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] { lose_stat(STAT_RANDOM, 1 + random2avg(5, 2)); }, 4 },
     { [] { contaminate_player(7000 + random2avg(13000, 2), false); }, 4 },
     { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
-    { [] { dec_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
+    { [] { drain_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
     { [] { you.petrify(nullptr); }, 1 },
-    { [] { you.increase_duration(DUR_LOWERED_MR, random2(20), 20,
-                "You feel susceptible to magic."); }, 4 },
+    { [] { you.increase_duration(DUR_LOWERED_WL, 5 + random2(15), 20,
+                "Your willpower is stripped away!"); }, 4 },
     { [] { mons_word_of_recall(nullptr, 2 + random2(3)); }, 3 },
     { [] {
               mgen_data mg = mgen_data::hostile_at(RANDOM_DEMON_GREATER,
@@ -538,7 +540,10 @@ void trap_def::trigger(actor& triggerer)
         if (search_result == passage_type::free)
         {
             if (you_trigger)
+            {
                 mpr("You enter the passage of Golubria.");
+                cancel_polar_vortex();
+            }
             else
                 simple_monster_message(*m, " enters the passage of Golubria.");
 
@@ -568,7 +573,10 @@ void trap_def::trigger(actor& triggerer)
                 return !mons.no_tele() && monster_blink(&mons);
             }, pos);
         if (!you_trigger && you.see_cell_no_trans(pos))
+        {
             you.blink();
+            interrupt_activity(activity_interrupt::teleport);
+        }
         // Don't chain disperse
         triggerer.blink();
         break;
@@ -677,6 +685,13 @@ void trap_def::trigger(actor& triggerer)
         // Nets need LOF to hit the player, no netting through glass.
         if (!you.see_cell_no_trans(pos))
             break;
+        // Don't try to re-net the player when they're already netted/webbed.
+        if (you.attribute[ATTR_HELD])
+            break;
+        // Reduce brutality of traps.
+        if (!you_trigger && !one_chance_in(3))
+            break;
+
         bool triggered = you_trigger;
         if (m)
         {
@@ -698,31 +713,31 @@ void trap_def::trigger(actor& triggerer)
             }
         }
 
-        if (triggered)
+        if (!triggered)
+            break;
+
+        if (random2avg(2 * you.evasion(), 2) > 18 + env.absdepth0 / 2)
         {
-            item_def item = generate_trap_item();
-            copy_item_to_grid(item, you.pos());
-
-            if (random2avg(2 * you.evasion(), 2) > 18 + env.absdepth0 / 2)
-                mpr("A net drops to the ground!");
-            else
-            {
-                mpr("A large net falls onto you!");
-                if (player_caught_in_net())
-                {
-                    if (player_in_a_dangerous_place())
-                        xom_is_stimulated(50);
-
-                    // Mark the item as trapping; after this it's
-                    // safe to update the view.
-                    _mark_net_trapping(you.pos());
-                }
-            }
-
-            trap_destroyed = true;
+            mpr("You avoid being caught in a net.");
+            break;
         }
+
+        if (!player_caught_in_net())
+        {
+            mpr("The net is torn apart by your bulk.");
+            break;
         }
+
+        item_def item = generate_trap_item();
+        copy_item_to_grid(item, you.pos());
+        if (player_in_a_dangerous_place())
+            xom_is_stimulated(50);
+
+        // Mark the item as trapping; after this it's
+        // safe to update the view.
+        _mark_net_trapping(you.pos());
         break;
+        }
 
     case TRAP_WEB:
         if (triggerer.is_web_immune())
@@ -904,7 +919,7 @@ void destroy_trap(const coord_def& pos)
 
 trap_def* trap_at(const coord_def& pos)
 {
-    if (!feat_is_trap(grd(pos)))
+    if (!feat_is_trap(env.grid(pos)))
         return nullptr;
 
     auto it = env.trap.find(pos);
@@ -931,7 +946,7 @@ trap_type get_trap_type(const coord_def& pos)
 void stop_being_held()
 {
     you.attribute[ATTR_HELD] = 0;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
     you.redraw_evasion = true;
 }
 
@@ -993,13 +1008,13 @@ void free_self_from_net()
         return;
     }
 
-    int hold = mitm[net].net_durability;
+    int hold = env.item[net].net_durability;
     dprf("net.net_durability: %d", hold);
 
     const int damage = 1 + random2(4);
 
     hold -= damage;
-    mitm[net].net_durability = hold;
+    env.item[net].net_durability = hold;
 
     if (hold < NET_MIN_DURABILITY)
     {
@@ -1054,25 +1069,27 @@ void mons_clear_trapping_net(monster* mon)
 
 void free_stationary_net(int item_index)
 {
-    item_def &item = mitm[item_index];
-    if (item.is_type(OBJ_MISSILES, MI_THROWING_NET))
-    {
-        const coord_def pos = item.pos;
-        // Probabilistically mulch net based on damage done, otherwise
-        // reset damage counter (ie: item.net_durability).
-        if (x_chance_in_y(-item.net_durability, 9))
-            destroy_item(item_index);
-        else
-        {
-            item.net_durability = 0;
-            item.net_placed = false;
-        }
+    item_def &item = env.item[item_index];
+    if (!item.is_type(OBJ_MISSILES, MI_THROWING_NET))
+        return;
 
-        // Make sure we don't leave a bad trapping net in the stash
-        // FIXME: may leak info if a monster escapes an out-of-sight net.
-        StashTrack.update_stash(pos);
-        StashTrack.unmark_trapping_nets(pos);
+    const coord_def pos = item.pos;
+    // Probabilistically mulch net based on damage done, otherwise
+    // reset damage counter (ie: item.net_durability).
+    const bool mulch = item.props.exists(TRAP_PROJECTILE_KEY)
+                    || x_chance_in_y(-item.net_durability, 9);
+    if (mulch)
+        destroy_item(item_index);
+    else
+    {
+        item.net_durability = 0;
+        item.net_placed = false;
     }
+
+    // Make sure we don't leave a bad trapping net in the stash
+    // FIXME: may leak info if a monster escapes an out-of-sight net.
+    StashTrack.update_stash(pos);
+    StashTrack.unmark_trapping_nets(pos);
 }
 
 void clear_trapping_net()
@@ -1122,6 +1139,9 @@ item_def trap_def::generate_trap_item()
     }
     else
         set_item_ego_type(item, base, SPWPN_NORMAL);
+
+    // Make nets from net traps always mulch.
+    item.props[TRAP_PROJECTILE_KEY] = true;
 
     item_colour(item);
     return item;
@@ -1196,7 +1216,7 @@ void trap_def::shoot_ammo(actor& act, bool trig_smart)
         mprf("%s shoots out and hits %s shield.", shot.name(DESC_A).c_str(),
              owner.c_str());
 
-        act.shield_block_succeeded(0);
+        act.shield_block_succeeded();
     }
     else // OK, we've been hit.
     {
@@ -1366,6 +1386,7 @@ void roll_trap_effects()
     int trap_rate = trap_rate_for_place();
 
     you.trapped = you.num_turns && !have_passive(passive_t::avoid_traps)
+        && env.density > 0 // can happen with builder in debug state
         && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
 
@@ -1574,7 +1595,7 @@ void place_webs(int num)
             ts.pos.x = random2(GXM);
             ts.pos.y = random2(GYM);
             if (in_bounds(ts.pos)
-                && grd(ts.pos) == DNGN_FLOOR
+                && env.grid(ts.pos) == DNGN_FLOOR
                 && !map_masked(ts.pos, MMT_NO_TRAP))
             {
                 // Calculate weight.
@@ -1632,11 +1653,11 @@ bool ensnare(actor *fly)
 
     // If we're over water, an open door, shop, portal, etc, the web will
     // fail to attach and you'll be released after a single turn.
-    if (grd(fly->pos()) == DNGN_FLOOR)
+    if (env.grid(fly->pos()) == DNGN_FLOOR)
     {
         place_specific_trap(fly->pos(), TRAP_WEB, 1); // 1 ammo = destroyed on exit (hackish)
         if (you.see_cell(fly->pos()))
-            grd(fly->pos()) = DNGN_TRAP_WEB;
+            env.grid(fly->pos()) = DNGN_TRAP_WEB;
     }
 
     if (fly->is_player())

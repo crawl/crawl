@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "fprop.h"
 #include "god-conduct.h"
 #include "item-prop.h"
@@ -62,16 +63,6 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
 
     if (!using_weapon())
         wpn_skill = SK_THROWING;
-}
-
-// Duplicates describe.cc:_apply_defender_effects().
-int ranged_attack::calc_to_hit(bool random)
-{
-    int mhit = attack::calc_to_hit(random);
-    if (mhit == AUTOMATIC_HIT)
-        return AUTOMATIC_HIT;
-
-    return mhit;
 }
 
 int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
@@ -224,10 +215,7 @@ bool ranged_attack::handle_phase_dodged()
     if (defender->missile_repulsion() && orig_ev_margin >= 0)
     {
         if (needs_message && defender_visible)
-        {
             mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-            defender->ablate_repulsion();
-        }
 
         if (defender->is_player())
             count_action(CACT_DODGE, DODGE_REPEL);
@@ -288,15 +276,19 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if (using_weapon() || launch_type == launch_retval::THROWN)
+    if ((using_weapon() || launch_type == launch_retval::THROWN)
+        && (!defender->is_player() || !you.pending_revival))
     {
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
         {
             return false;
         }
-        if (apply_missile_brand())
+        if ((!defender->is_player() || !you.pending_revival)
+            && apply_missile_brand())
+        {
             return false;
+        }
     }
 
     // XXX: unify this with melee_attack's code
@@ -351,8 +343,7 @@ int ranged_attack::calc_base_unarmed_damage()
 int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
-    const int hd_mult = attacker->as_monster()->is_archer() ? 15 : 9;
-    return 18 + attacker->get_hit_dice() * hd_mult / 6;
+    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer(), true);
 }
 
 int ranged_attack::apply_damage_modifiers(int damage)
@@ -636,7 +627,7 @@ bool ranged_attack::apply_missile_brand()
         obvious_effect = curare_actor(attacker, defender,
                                       damage_done,
                                       projectile->name(DESC_PLAIN),
-                                      atk_name(DESC_PLAIN));
+                                      atk_name(DESC_A));
         break;
     case SPMSL_CHAOS:
         chaos_affects_defender();

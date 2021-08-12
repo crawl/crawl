@@ -13,6 +13,10 @@ extern "C" {
 #include <lualib.h>
 }
 
+#include <vector>
+
+using std::vector;
+
 lua_Integer luaL_safe_checkinteger(lua_State *L, int idx);
 lua_Integer luaL_safe_tointeger(lua_State *L, int idx);
 // override some #defines in the lua libs.
@@ -190,6 +194,10 @@ level_id dlua_level_id(lua_State *ls, int ndx);
 
 #define COORDSHOW(c, p1, p2) \
     GETCOORD(c, p1, p2, in_show_bounds)
+
+#define PLAYERCOORDS(p, p1, p2) \
+    const coord_def p = player2grid(coord_def(luaL_safe_checkint(ls,p1), \
+                                              luaL_safe_checkint(ls,p2)));
 
 #define FEAT(f, pos) \
 dungeon_feature_type f = check_lua_feature(ls, pos)

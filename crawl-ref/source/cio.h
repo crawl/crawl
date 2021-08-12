@@ -14,6 +14,7 @@
 
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
+ #include <SDL_keycode.h>
 #endif
 
 enum keyfun_action
@@ -201,6 +202,54 @@ enum KEYS
     CK_NUMPAD_MINUS,
 #endif
 
+#ifndef USE_TILE_LOCAL
+    // TODO: unconditionally define these
+    // numpad keys are still a mess; see unixcurses_defkeys for the source of
+    // some of these bindings. On local console, in my testing, most of the
+    // non-numerics still translate as regular versions of their keys.
+    CK_NUMPAD_SUBTRACT2 = -1020,
+    CK_NUMPAD_DECIMAL  = -1019,
+    CK_NUMPAD_SUBTRACT = -1018, // ???
+    CK_NUMPAD_ADD2     = -1017,
+    CK_NUMPAD_ADD      = -1016, // ???
+    CK_NUMPAD_MULTIPLY = -1015,
+    CK_NUMPAD_DIVIDE   = -1012,
+    CK_NUMPAD_ENTER    = -1010, // no idea how general this is
+    // the numbers themselves are a bit more sane
+    CK_NUMPAD_9 = -1009,
+    CK_NUMPAD_8,
+    CK_NUMPAD_7,
+    CK_NUMPAD_6,
+    CK_NUMPAD_5,
+    CK_NUMPAD_4,
+    CK_NUMPAD_3,
+    CK_NUMPAD_2,
+    CK_NUMPAD_1,
+    CK_NUMPAD_0,
+#endif
+
+// ugly...
+// TODO: should crawl just use one of these internally and convert?
+#ifdef USE_TILE_LOCAL
+    CK_F12 = -SDLK_F12,
+#elif defined(TARGET_OS_WINDOWS) // windows console
+    CK_F12 = -379, // -(VK_F12 | 256) // XX ...
+#else // ncurses console
+    CK_F12 = -276, // -KEY_F12 from ncurses
+#endif
+    CK_F11,
+    CK_F10,
+    CK_F9,
+    CK_F8,
+    CK_F7,
+    CK_F6,
+    CK_F5,
+    CK_F4,
+    CK_F3,
+    CK_F2,
+    CK_F1, // -265, aka -KEY_F1
+    CK_F0, // is this actually used?
+
     // Mouse codes.
     CK_MOUSE_MOVE  = -9999,
     CK_MOUSE_CMD,
@@ -277,6 +326,7 @@ public:
     void set_colour(COLOURS fg, COLOURS bg);
     void set_location(coord_def loc);
 
+    string get_prompt();
     void set_prompt(string p);
 
     void insert_char_at_cursor(int ch);

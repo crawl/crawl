@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+
+#include "macros.h"
+
 static inline uint64_t hash3(uint64_t x, uint64_t y, uint64_t z)
 {
     // Some compilers choke on big unsigneds, need to give them in hex.

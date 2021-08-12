@@ -20,11 +20,13 @@
 #include "jobs.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
+#include "mpr.h"
 #include "ng-input.h"
 #include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unwind.h"
 
 #define MAX_GHOST_DAMAGE     50
@@ -55,7 +57,7 @@ static spell_type search_order_conj[] =
     SPELL_QUICKSILVER_BOLT,
     SPELL_IOOD,
     SPELL_ENERGY_BOLT,
-    SPELL_DISINTEGRATE,
+    SPELL_MINDBURST,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
     SPELL_IRON_SHOT,
@@ -220,7 +222,6 @@ void ghost_demon::set_pan_lord_special_attack()
         4, _flavour_attack(AF_DRAIN_STR),
         4, _flavour_attack(AF_DRAIN_INT),
         2, _flavour_attack(AF_DRAIN_DEX),
-        10, _flavour_attack(AF_ROT),
         10, _flavour_attack(AF_DROWN),
         // Normal chance
         20, _brand_attack(SPWPN_FLAMING),
@@ -272,8 +273,6 @@ void ghost_demon::set_pan_lord_cloud_ring()
         cloud_ring_ench = ENCH_RING_OF_ACID;
     else if (brand == SPWPN_DRAINING)
         cloud_ring_ench = ENCH_RING_OF_DRAINING;
-    else if (att_flav == AF_ROT)
-        cloud_ring_ench = ENCH_RING_OF_MIASMA;
     else
     {
         cloud_ring_ench = random_choose_weighted(
@@ -437,7 +436,7 @@ void ghost_demon::init_player_ghost()
     // multi-level for players, boolean as an innate monster resistance
     set_resist(resists, MR_RES_STEAM, player_res_steam() ? 1 : 0);
     set_resist(resists, MR_RES_STICKY_FLAME, player_res_sticky_flame());
-    set_resist(resists, MR_RES_ROTTING, you.res_rotting());
+    set_resist(resists, MR_RES_MIASMA, you.res_miasma());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
     move_energy = 10;
@@ -735,27 +734,16 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     damage = max(1, damage * power / 100);
 }
 
-void ghost_demon::init_spectral_weapon(const item_def& weapon, int power)
+void ghost_demon::init_spectral_weapon(const item_def& weapon)
 {
-    int damg = property(weapon, PWPN_DAMAGE);
-
-    if (power > 100)
-        power = 100;
-
     colour = weapon.get_colour();
-    flies = true;
-
-    // Offense and defenses all scale with power.
-    xl        = 2 + div_rand_round(power, 4);
-    damage    = damg;
-    int scale = 250 * 150 / (50 + power);
-    damage   *= scale + 125;
-    damage   /= scale;
-
+    flies  = true;
+    xl     = 15;
+    damage = property(weapon, PWPN_DAMAGE) * 4 / 3;
     speed  = 30;
-    ev     = 10 + div_rand_round(power, 10);
-    ac     = 2 + div_rand_round(power, 10);
-    max_hp = 10 + div_rand_round(power, 3);
+    ev     = 15;
+    ac     = 7;
+    max_hp = random_range(20, 30);
 }
 
 // Used when creating ghosts: goes through and finds spells for the
@@ -906,7 +894,7 @@ bool debug_check_ghost(const ghost_demon &ghost)
         return false;
     if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
         return false;
-    if (!species_type_valid(ghost.species))
+    if (!species::is_valid(ghost.species))
         return false;
     if (!job_type_valid(ghost.job))
         return false;

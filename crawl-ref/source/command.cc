@@ -299,7 +299,7 @@ void list_jewellery()
 {
     string jstr;
     int cols = get_number_of_cols() - 1;
-    bool split = you.species == SP_OCTOPODE && cols > 84;
+    bool split = species::arm_count(you.species) > 2 && cols > 84;
 
     for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
@@ -346,11 +346,9 @@ void list_jewellery()
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
         item = colour_string(item, colour);
 
-        if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
-                you.get_mutation_level(MUT_MISSING_HAND))
-        {
+        // doesn't handle arbitrary arm counts
+        if (i == EQ_RING_SEVEN && you.arm_count() == 7)
             mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
-        }
         else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
@@ -396,7 +394,7 @@ static const char *targeting_help_wiz =
     "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
-    "<w>(</w>: place a mimic\n"
+    "<w>Ctrl-(</w>: place a mimic\n"
     "<w>Ctrl-B</w>: banish monster\n"
     "<w>Ctrl-K</w>: kill monster\n"
 ;
@@ -416,10 +414,10 @@ static const char *targeting_help_2 =
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
     "\n"
-    "<h>Firing or throwing a missile:\n"
-    "<w>(</w> : cycle to next suitable missile.\n"
-    "<w>)</w> : cycle to previous suitable missile.\n"
-    "<w>i</w> : choose from Inventory.\n"
+    "<h>Firing mode ('<w>f</w><h>' in main):\n"
+    "<w>Q</w> : choose fire action.\n"
+    "<w>(</w> : cycle to previous suitable action\n"
+    "<w>)</w> : cycle to next suitable action.\n"
 ;
 
 struct help_file
@@ -433,7 +431,7 @@ static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
     { "aptitudes.txt",     '%', false },
-    { "quickstart.txt",    '^', false },
+    { "quickstart.txt",     '^', false },
     { "macros_guide.txt",  '~', false },
     { "options_guide.txt", '&', false },
 #ifdef USE_TILE_LOCAL
@@ -509,14 +507,29 @@ int show_keyhelp_menu(const vector<formatted_string> &lines)
     return cmd_help.get_lastch();
 }
 
+void show_specific_helps(const vector<string> keys)
+{
+    // a fancier version of this might toggle between tabs, but this just
+    // concatenates
+    vector<formatted_string> formatted_lines;
+    size_t i = 0;
+    for (const auto &key : keys)
+    {
+        string help = getHelpString(key);
+        trim_string_right(help);
+        for (const string &line : split_string("\n", help, false, true))
+            formatted_lines.push_back(formatted_string::parse_string(line));
+
+        i++;
+        if (i < keys.size())
+            formatted_lines.emplace_back("");
+    }
+    show_keyhelp_menu(formatted_lines);
+}
+
 void show_specific_help(const string &key)
 {
-    string help = getHelpString(key);
-    trim_string_right(help);
-    vector<formatted_string> formatted_lines;
-    for (const string &line : split_string("\n", help, false, true))
-        formatted_lines.push_back(formatted_string::parse_string(line));
-    show_keyhelp_menu(formatted_lines);
+    show_specific_helps({ key });
 }
 
 void show_levelmap_help()
@@ -548,6 +561,11 @@ void show_interlevel_travel_depth_help()
 void show_interlevel_travel_altar_help()
 {
     show_specific_help("interlevel-travel.altar.prompt");
+}
+
+void show_annotate_help()
+{
+    show_specific_help("annotate.prompt");
 }
 
 void show_stash_search_help()
@@ -724,10 +742,11 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>Autofight:\n"
-            "<w>Tab</w>       : attack nearest monster,\n"
-            "            moving if necessary\n"
-            "<w>Shift-Tab</w> : attack nearest monster\n"
-            "            without moving\n");
+            "<w>Tab</w>          : attack nearest monster,\n"
+            "               moving if necessary\n"
+            "<w>Shift-Tab</w>, <w>p</w> : trigger quivered action;\n"
+            "               if targeted, aims at\n"
+            "               nearest monster\n");
 
     cols.add_formatted(
             0,
@@ -760,8 +779,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 0, item_types,
                          { CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                            CMD_FORCE_CAST_SPELL });
-    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves (<w>%</w>ield and e<w>%</w>oke)",
-                         { CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED });
+    _add_insert_commands(cols, 0, "<brown>|</brown> : staves (<w>%</w>ield)",
+                         { CMD_WIELD_WEAPON});
     _add_insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
                          { CMD_EVOKE });
     _add_insert_commands(cols, 0, "<yellow>$</yellow> : gold (<w>%</w> counts gold)",
@@ -795,15 +814,17 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<h>Non-Gameplay Commands / Info\n");
 
+    _add_command(cols, 0, CMD_GAME_MENU, "game menu", 2);
     _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
     _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
     _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
+    _add_command(cols, 0, CMD_MACRO_ADD, "quick add macro");
+    _add_command(cols, 0, CMD_MACRO_MENU, "edit macros");
     _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
     _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
     _add_insert_commands(cols, 0, 2, CMD_MAKE_NOTE,
                          "add note (use <w>%:</w> to read notes)",
                          { CMD_DISPLAY_COMMANDS });
-    _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
     _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
 #ifdef USE_TILE_LOCAL
     _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
@@ -901,18 +922,19 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Item Interaction:\n");
 
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
-    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
+    _add_command(cols, 1, CMD_FIRE, "Fire the currently quivered action", 2);
     _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
-    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be Quivered", 2);
+    _add_command(cols, 1, CMD_QUIVER_ITEM, "select action to be Quivered", 2);
+    _add_command(cols, 1, CMD_SWAP_QUIVER_RECENT, "swap between most recent quiver actions", 2);
     _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
-    _add_command(cols, 1, CMD_READ, "Read a scroll (or book on floor)", 2);
+    _add_command(cols, 1, CMD_READ, "Read a scroll", 2);
     _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item (<w>-</w> for none)", 2);
     _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
 
     _add_insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
                          { CMD_ADJUST_INVENTORY });
 
-    _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
+    _add_command(cols, 1, CMD_PRIMARY_ATTACK, "attack with wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
 
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
@@ -1062,9 +1084,9 @@ static void _add_formatted_hints_help(column_composer &cols)
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF));
     item_types +=
         "</brown> : </console>"
-        "staves (<w>%</w>ield and e<w>%</w>oke)";
+        "staves (<w>%</w>ield)";
     _add_insert_commands(cols, 1, item_types,
-                         { CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED });
+                         { CMD_WIELD_WEAPON });
 
     cols.add_formatted(1, " ", false);
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "inventory (select item to view)", 2);

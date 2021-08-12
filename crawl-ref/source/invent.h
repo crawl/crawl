@@ -15,6 +15,7 @@
 #include "item-prop-enum.h"
 #include "menu.h"
 #include "operation-types.h"
+#include "tag-version.h"
 
 enum object_selector
 {
@@ -40,14 +41,13 @@ enum object_selector
     OSEL_BRANDABLE_WEAPON        = -14,
     OSEL_ENCHANTABLE_WEAPON      = -15,
     OSEL_BLESSABLE_WEAPON        = -16,
-    OSEL_CURSABLE                = -17, // Items that are cursable and not
-                                        // known-cursed. Unknown-cursed items
-                                        // are included, to prevent information
-                                        // leakage.
+    OSEL_CURSABLE                = -17, // Items that are worn and cursable
 #if TAG_MAJOR_VERSION == 34
     OSEL_DIVINE_RECHARGE         = -18,
 #endif
     OSEL_UNCURSED_WORN_RINGS     = -19,
+    OSEL_QUIVER_ACTION           = -20,
+    OSEL_QUIVER_ACTION_FORCE     = -21,
 };
 
 /// Behaviour flags for prompt_invent_item().
@@ -251,7 +251,8 @@ const char *item_slot_name(equipment_type type);
 
 bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background);
 
-bool check_old_item_warning(const item_def& item, operation_types oper);
+bool check_old_item_warning(const item_def& item, operation_types oper,
+                            bool check_melded = false);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
 
 void init_item_sort_comparators(item_sort_comparators &list,

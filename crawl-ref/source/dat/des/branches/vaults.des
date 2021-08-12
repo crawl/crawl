@@ -35,9 +35,10 @@ end
 # Generic Vaults entry
 #
 NAME:    david_vaults_1
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    troll / two-headed ogre
-MONS:    necromancer / wizard / vampire w:4 / deep elf mage w:4
+MONS:    necromancer / wizard / vampire w:4 / \
+         deep elf pyromancer w:2 / deep elf zephyrmancer w:2
 SHUFFLE: !-
 SUBST:   ! = x, - = +, c : cxv
 NSUBST:  1 = 1:1 / * = 1.., 2 = 1:2 / * = 2..
@@ -58,7 +59,7 @@ ENDMAP
 # Vault monsters near stair
 #
 NAME: david_vaults_2
-TAGS: vaults_entry
+TAGS: vaults_entry transparent
 MONS: yaktaur captain, yaktaur, ogre mage, two-headed ogre
 MONS: glowing shapeshifter, shapeshifter
 SHUFFLE: 12 / 34 / 56
@@ -79,7 +80,7 @@ ENDMAP
 # Vaults patterns 0: vanguard
 #
 NAME:    david_vaults_3
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    human
 KMONS:   2 = orc knight / Urug, orc knight
 KMONS:   3 = centaur warrior w:20 / Nessos, centaur warrior
@@ -103,7 +104,7 @@ ENDMAP
 # Vaults patterns I
 #
 NAME:    david_vaults_4
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    fire dragon / ice dragon / hydra / lindwurm
 MONS:    freezing wraith / shadow wraith / wraith / phantasmal warrior
 MONS:    deep troll / iron troll / troll
@@ -153,7 +154,7 @@ ENDMAP
 # The Guard of Blades
 #
 NAME:   erik_vaults_1
-TAGS:   vaults_entry
+TAGS:   vaults_entry transparent
 MONS:   dancing weapon ; long sword good_item
 SUBST:  v : vcxxx
 KFEAT:  O = enter_vaults
@@ -173,7 +174,7 @@ ENDMAP
 # Above As Below
 #
 NAME:    erik_vaults_2
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    vault guard
 SUBST:   v : vxx, b : bcc
 KFEAT:   O = enter_vaults
@@ -193,7 +194,7 @@ ENDMAP
 # HangedMan's map
 #
 NAME:    hangedman_vaults_entry_quadrant_bands
-TAGS:    vaults_entry no_monster_gen no_item_gen patrolling
+TAGS:    vaults_entry no_monster_gen no_item_gen patrolling transparent
 ORIENT:  float
 MONS:    centaur warrior, centaur / nothing w:5
 MONS:    ogre mage, two-headed ogre / ogre w:16
@@ -201,9 +202,9 @@ MONS:    orc knight, orc priest / orc warrior / orc wizard / orc w:15
 KMONS:   7 = yaktaur
 KMONS:   8 = yaktaur / nothing w:5
 KMONS:   9 = deep elf knight / deep elf archer
-KMONS:   0 = deep elf mage / nothing w:5
+KMONS:   0 = deep elf pyromancer / deep elf zephyrmancer / nothing
 KMONS:   A = boggart / kobold demonologist
-KMONS:   B = big kobold / kobold w:5
+KMONS:   B = kobold brigand / kobold w:5
 KMONS:   C = skeletal warrior
 KMONS:   D = skeleton
 KMASK:   @` = !no_item_gen
@@ -262,7 +263,7 @@ ENDMAP
 # A fortification!
 #
 NAME: grunt_vaults_entry_fortified
-TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling
+TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling transparent
 ORIENT: north
 MONS: human ; arbalest . bolt q:10 . short sword | dagger . \
               leather armour w:5 | ring mail | scale mail / \
@@ -324,13 +325,13 @@ ENDMAP
 NAME:     skrybe_vaults_entry_preservation
 TAGS:     vaults_entry transparent
 ORIENT:   float
-MONS:     vault guard
 SHUFFLE:  AI , BJ , CK , DL
 SUBST:    A = v , B = v , C = v , D = v
 SUBST:    I = + , J = + , K = + , L = +
 SUBST:    E = vvm , F = vvm, G = vvm, H = vvm
+SHUFFLE:  vc
 KFEAT:    O = enter_vaults
-KMONS:    O = ironheart preserver
+KMONS:    O = ironbound preserver
 NSUBST:   $ = 1:O / *=.$%
 MAP
         @@
@@ -2279,7 +2280,7 @@ TAGS:    vaults_end_quadrant_prize vaults_end_quadrant_prize_mall unrand
 SHUFFLE: AB, CD
 SUBST:   A=+, B:xx+, C:xxx+, D:xxxx+
 NSUBST:  S = 2:S / 1:O / *:RRU9
-KFEAT:   S = jewellery shop / antique armour shop / gadget shop
+KFEAT:   S = jewellery shop / antique armour shop / distillery shop
 KFEAT:   R = general shop / book shop / scroll shop / antique weapon shop / distillery shop
 KFEAT:   U = stone_arch
 NSUBST:  ' = 22:9 / *:.

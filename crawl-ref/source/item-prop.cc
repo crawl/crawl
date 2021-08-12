@@ -32,6 +32,7 @@
 #include "skills.h"
 #include "spl-wpnench.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "xom.h"
 #include "xp-evoker-data.h"
@@ -159,7 +160,7 @@ static const armour_def Armour_prop[] =
     DRAGON_ARMOUR(ACID,        "acid",                    6,  -50,  400,
         ARMF_RES_CORR),
     DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,  600,
-        ARMF_RES_MAGIC),
+        ARMF_WILLPOWER),
     DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,  500,
         ARMF_RES_POISON),
     DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,  600,
@@ -753,9 +754,13 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, AMU_THE_GOURMAND },
     { OBJ_JEWELLERY, AMU_HARM },
     { OBJ_JEWELLERY, AMU_RAGE },
+    { OBJ_JEWELLERY, AMU_INACCURACY },
     { OBJ_JEWELLERY, RING_REGENERATION },
     { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
     { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
+    { OBJ_JEWELLERY, RING_TELEPORTATION },
+    { OBJ_JEWELLERY, RING_ATTENTION },
+    { OBJ_JEWELLERY, RING_STEALTH },
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
     { OBJ_STAVES,    STAFF_CHANNELING },
     { OBJ_STAVES,    STAFF_POWER },
@@ -782,7 +787,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
     { OBJ_BOOKS,     BOOK_ENVENOMATIONS },
     { OBJ_BOOKS,     BOOK_AKASHIC_RECORD },
-    { OBJ_BOOKS,     BOOK_BEASTS },
     { OBJ_BOOKS,     BOOK_BATTLE },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
@@ -796,7 +800,12 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_IRON },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
-    { OBJ_SCROLLS,   SCR_RECHARGING},
+    { OBJ_SCROLLS,   SCR_RECHARGING },
+    { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
+    { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
+    { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
+    { OBJ_SCROLLS,   SCR_REMOVE_CURSE },
+    { OBJ_SCROLLS,   SCR_RANDOM_USELESSNESS },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
     { OBJ_WANDS,     WAND_FROST_REMOVED },
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
@@ -810,9 +819,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_LIGHTNING_REMOVED },
     { OBJ_WANDS,     WAND_SCATTERSHOT_REMOVED },
     { OBJ_WANDS,     WAND_CLOUDS_REMOVED },
-    { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
-    { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
-    { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
+    { OBJ_WANDS,     WAND_RANDOM_EFFECTS_REMOVED },
     { OBJ_FOOD,      FOOD_CHUNK},
     { OBJ_FOOD,      FOOD_BREAD_RATION },
     { OBJ_FOOD,      FOOD_ROYAL_JELLY },
@@ -826,19 +833,6 @@ const set<pair<object_class_type, int> > removed_items =
 bool item_type_removed(object_class_type base, int subtype)
 {
     return removed_items.count({ base, subtype }) != 0;
-}
-
-// Some convenient functions to hide the bit operations and create
-// an interface layer between the code and the data in case this
-// gets changed again. - bwr
-
-//
-// Item cursed status functions:
-//
-bool item_known_cursed(const item_def &item)
-{
-    return _full_ident_mask(item) & ISFLAG_KNOW_CURSE
-           && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
 // If item is a new unrand, takes a note of it and returns true.
@@ -864,132 +858,26 @@ bool item_is_cursable(const item_def &item)
 {
     if (!item_type_has_curses(item.base_type))
         return false;
-    if (item_known_cursed(item))
+    if (item.cursed())
         return false;
-    return true;
-}
-
-// Curses a random player inventory item.
-bool curse_an_item()
-{
-    // allowing these would enable mummy scumming
-    if (have_passive(passive_t::want_curses))
-    {
-        mprf(MSGCH_GOD, "The curse is absorbed by %s.",
-             god_name(you.religion).c_str());
-        return false;
-    }
-
-    int count = 0;
-    item_def *found = nullptr;
-
-    for (auto &item : you.inv)
-    {
-        if (!item.defined())
-            continue;
-
-        if (!item_is_cursable(item))
-            continue;
-
-        // Item is valid for cursing, so we'll give it a chance.
-        count++;
-        if (one_chance_in(count))
-            found = &item;
-    }
-
-    // Any item to curse?
-    if (!found)
-        return false;
-
-    do_curse_item(*found, false);
-
     return true;
 }
 
 void auto_id_inventory()
 {
-    for (auto &item : you.inv)
-        if (item.defined())
+    for (int slot = 0; slot < ENDOFPACK; ++slot)
+    {
+        item_def &item = you.inv[slot];
+        if (item.defined() && !fully_identified(item))
+        {
             god_id_item(item, false);
-}
-
-void do_curse_item(item_def &item, bool quiet)
-{
-    // Already cursed?
-    if (item.flags & ISFLAG_CURSED)
-        return;
-
-    if (!is_weapon(item) && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY)
-    {
-        return;
-    }
-
-    if (!quiet)
-    {
-        mprf("Your %s glows black for a moment.",
-             item.name(DESC_PLAIN).c_str());
-
-        // If we get the message, we know the item is cursed now.
-        item.flags |= ISFLAG_KNOW_CURSE;
-    }
-
-    item.flags |= ISFLAG_CURSED;
-
-    // Xom is amused by the player's items being cursed, especially if
-    // they're worn/equipped.
-    if (in_inventory(item))
-    {
-        int amusement = 50;
-
-        if (item_is_equipped(item))
-        {
-            amusement *= 2;
-
-            if (you.equip[EQ_WEAPON] == item.link)
-            {
-                // Redraw the weapon.
-                you.wield_change = true;
-            }
-
-            ash_check_bondage();
-            auto_id_inventory();
+            item_def * moved = auto_assign_item_slot(item);
+            // We moved the item to later in the pack, so don't
+            // miss what we swapped with.
+            if (moved != nullptr && moved->link > slot)
+                --slot;
         }
-
-        xom_is_stimulated(amusement);
     }
-}
-
-/**
- * Attempt to un-curse the given item.
- *
- * @param item      The item in question.
- * @param check_bondage     Whether to update the player's Ash bondage status.
- *                          (Ash ?rc delays this until later.)
- */
-void do_uncurse_item(item_def &item, bool check_bondage)
-{
-    const bool in_inv = in_inventory(item);
-    if (!item.cursed())
-    {
-        if (in_inv)
-            item.flags |= ISFLAG_KNOW_CURSE;
-        return;
-    }
-
-    if (in_inv)
-    {
-        if (you.equip[EQ_WEAPON] == item.link)
-        {
-            // Redraw the weapon.
-            you.wield_change = true;
-        }
-        item.flags |= ISFLAG_KNOW_CURSE;
-    }
-    item.flags &= (~ISFLAG_CURSED);
-
-    if (check_bondage && in_inv)
-        ash_check_bondage();
 }
 
 /**
@@ -1058,7 +946,6 @@ bool item_ident(const item_def &item, iflags_t flags)
 
 void set_ident_flags(item_def &item, iflags_t flags)
 {
-    preserve_quiver_slots p;
     if ((item.flags & flags) != flags)
     {
         item.flags |= flags;
@@ -1067,7 +954,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
         if (in_inventory(item))
         {
             shopping_list.cull_identical_items(item);
-            item_skills(item, you.start_train);
+            item_skills(item, you.skills_to_show);
         }
     }
 
@@ -1104,12 +991,11 @@ void set_ident_flags(item_def &item, iflags_t flags)
 
 void unset_ident_flags(item_def &item, iflags_t flags)
 {
-    preserve_quiver_slots p;
     item.flags &= (~flags);
 }
 
 // Returns the mask of interesting identify bits for this item
-// (e.g., scrolls don't have know-cursedness).
+// (e.g., missiles don't have know-type).
 static iflags_t _full_ident_mask(const item_def& item)
 {
     // KNOW_PROPERTIES is only relevant for artefacts, handled later.
@@ -1121,33 +1007,19 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_ORBS:
     case OBJ_RUNES:
     case OBJ_GOLD:
+    case OBJ_BOOKS:
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
 #endif
         flagset = 0;
         break;
-    case OBJ_BOOKS:
-#if TAG_MAJOR_VERSION == 34
-        if (item.sub_type == BOOK_BUGGY_DESTRUCTION)
-        {
-            flagset = 0;
-            break;
-        }
-        // Intentional fall-through.
-#endif
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
     case OBJ_WANDS:
-        flagset = ISFLAG_KNOW_TYPE;
-        break;
     case OBJ_STAVES:
-        flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
-        break;
     case OBJ_JEWELLERY:
-        flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
-        if (jewellery_has_pluses(item))
-            flagset |= ISFLAG_KNOW_PLUSES;
+        flagset = ISFLAG_KNOW_TYPE;
         break;
     case OBJ_MISCELLANY:
         flagset = 0;
@@ -1553,7 +1425,7 @@ int wand_charge_value(int type)
 
     case WAND_ICEBLAST:
     case WAND_ACID:
-    case WAND_ENSLAVEMENT:
+    case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
         return 15;
@@ -1562,7 +1434,6 @@ int wand_charge_value(int type)
         return 24;
 
     case WAND_FLAME:
-    case WAND_RANDOM_EFFECTS:
         return 32;
     }
 }
@@ -1596,15 +1467,13 @@ bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
     {
-    // Monsters don't use it
-    case WAND_RANDOM_EFFECTS:
     // Monsters use it, but it's not an offensive wand
     case WAND_DIGGING:
         return false;
 
     case WAND_ACID:
-    case WAND_DISINTEGRATION:
-    case WAND_ENSLAVEMENT:
+    case WAND_MINDBURST:
+    case WAND_CHARMING:
     case WAND_FLAME:
     case WAND_ICEBLAST:
     case WAND_PARALYSIS:
@@ -1887,8 +1756,13 @@ skill_type item_attack_skill(const item_def &item)
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_STAVES)
         return SK_STAVES;
-    else if (item.base_type == OBJ_MISSILES && !has_launcher(item))
+    else if (item.base_type == OBJ_MISSILES && (!has_launcher(item)
+                || item.is_type(OBJ_MISSILES, MI_STONE)))
+    {
         return SK_THROWING;
+    }
+    // don't return skills for non-throwable ammo: without the launcher they're
+    // just chaff. (Or at least, I think this is the motivation.)
 
     // This is used to mark that only fighting applies.
     return SK_FIGHTING;
@@ -1912,11 +1786,13 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
     return item_attack_skill(wpn);
 }
 
-// True if item is a staff that deals extra damage based on Evocations skill.
+// True if item is a staff that deals extra damage based on Evocations skill,
+// or has an evocations-based passive effect (staff of Wucad Mu).
 bool staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
-        || is_unrandom_artefact(item, UNRAND_OLGREB))
+        || is_unrandom_artefact(item, UNRAND_OLGREB)
+        || is_unrandom_artefact(item, UNRAND_WUCAD_MU))
     {
         return true;
     }
@@ -1924,12 +1800,35 @@ bool staff_uses_evocations(const item_def &item)
     return item.base_type == OBJ_STAVES;
 }
 
+skill_type staff_skill(stave_type s)
+{
+    switch (s)
+    {
+    case STAFF_AIR:
+        return SK_AIR_MAGIC;
+    case STAFF_COLD:
+        return SK_ICE_MAGIC;
+    case STAFF_EARTH:
+        return SK_EARTH_MAGIC;
+    case STAFF_FIRE:
+        return SK_FIRE_MAGIC;
+    case STAFF_POISON:
+        return SK_POISON_MAGIC;
+    case STAFF_DEATH:
+        return SK_NECROMANCY;
+    case STAFF_CONJURATION:
+        return SK_CONJURATIONS;
+    default:
+        return SK_NONE;
+    }
+}
+
 bool item_skills(const item_def &item, set<skill_type> &skills)
 {
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         const skill_type skill = static_cast<skill_type>(item.plus);
-        if (training_restricted(skill))
+        if (!skill_default_shown(skill))
             skills.insert(skill);
     }
 
@@ -1937,8 +1836,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     // evokers allow training.
     if (item_is_evokable(item, false, false, true)
         || item.base_type == OBJ_JEWELLERY
-           && gives_ability(item)
-        || is_unrandom_artefact(item, UNRAND_SALAMANDER))
+           && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
@@ -1960,15 +1858,24 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     if (item_is_evokable(item, false, false, false)
         || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item)
-        || item.base_type == OBJ_WEAPONS
-           && get_weapon_brand(item) == SPWPN_SPECTRAL)
+        || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
 
-    skill_type sk = item_attack_skill(item);
-    if (sk != SK_FIGHTING && sk != SK_THROWING)
+    if (item.base_type == OBJ_STAVES)
+    {
+        const skill_type staff_sk
+                    = staff_skill(static_cast<stave_type>(item.sub_type));
+        if (staff_sk != SK_NONE)
+            skills.insert(staff_sk);
+    }
+
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_PAIN)
+        skills.insert(SK_NECROMANCY);
+
+    const skill_type sk = item_attack_skill(item);
+    if (sk != SK_FIGHTING)
         skills.insert(sk);
 
     return !skills.empty();
@@ -2162,6 +2069,7 @@ bool item_is_spellbook(const item_def &item)
 #if TAG_MAJOR_VERSION == 34
            && item.sub_type != BOOK_BUGGY_DESTRUCTION
 #endif
+           && item.sub_type != NUM_BOOKS
            && item.sub_type != BOOK_MANUAL;
 }
 
@@ -2218,10 +2126,11 @@ bool ring_has_stackable_effect(const item_def &item)
     case RING_PROTECTION_FROM_COLD:
     case RING_LIFE_PROTECTION:
     case RING_STEALTH:
-    case RING_ATTENTION:
     case RING_WIZARDRY:
     case RING_FIRE:
     case RING_ICE:
+    case RING_WILLPOWER:
+    case RING_MAGICAL_POWER:
         return true;
 
     default:
@@ -2230,11 +2139,11 @@ bool ring_has_stackable_effect(const item_def &item)
 
     return false;
 }
+#if TAG_MAJOR_VERSION == 34
 
 //
 // Food functions:
 //
-#if TAG_MAJOR_VERSION == 34
 bool is_real_food(food_type /*food*/)
 {
     return false;
@@ -2337,21 +2246,21 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
     return res;
 }
 
-int get_armour_res_magic(const item_def &arm, bool check_artp)
+int get_armour_willpower(const item_def &arm, bool check_artp)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     int res = 0;
 
     // intrinsic armour abilities
-    res += armour_type_prop(arm.sub_type, ARMF_RES_MAGIC) * MR_PIP;
+    res += armour_type_prop(arm.sub_type, ARMF_WILLPOWER) * WL_PIP;
 
     // check for ego resistance
-    if (get_armour_ego_type(arm) == SPARM_MAGIC_RESISTANCE)
-        res += MR_PIP;
+    if (get_armour_ego_type(arm) == SPARM_WILLPOWER)
+        res += WL_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += MR_PIP * artefact_property(arm, ARTP_MAGIC_RESISTANCE);
+        res += WL_PIP * artefact_property(arm, ARTP_WILLPOWER);
 
     return res;
 }
@@ -2396,6 +2305,9 @@ int get_armour_repel_missiles(const item_def &arm, bool check_artp)
 bool get_armour_rampaging(const item_def &arm, bool check_artp)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    if (is_unrandom_artefact(arm, UNRAND_SEVEN_LEAGUE_BOOTS))
+        return true;
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_RAMPAGING)
@@ -2502,17 +2414,17 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
     return res;
 }
 
-int get_jewellery_res_magic(const item_def &ring, bool check_artp)
+int get_jewellery_willpower(const item_def &ring, bool check_artp)
 {
     ASSERT(ring.base_type == OBJ_JEWELLERY);
 
     int res = 0;
 
-    if (ring.sub_type == RING_PROTECTION_FROM_MAGIC)
-        res += 40;
+    if (ring.sub_type == RING_WILLPOWER)
+        res += WL_PIP;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_property(ring, ARTP_MAGIC_RESISTANCE);
+        res += WL_PIP * artefact_property(ring, ARTP_WILLPOWER);
 
     return res;
 }
@@ -2620,10 +2532,6 @@ bool gives_ability(const item_def &item)
     {
     case OBJ_WEAPONS:
         break;
-    case OBJ_JEWELLERY:
-        if (item.sub_type == RING_FLIGHT)
-            return true;
-        break;
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
@@ -2643,9 +2551,12 @@ bool gives_ability(const item_def &item)
         return false;
 
     // Check for evokable randart properties.
-    for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
-            return true;
+    if (artefact_property(item, ARTP_INVISIBLE)
+        || artefact_property(item, ARTP_BLINK)
+        || artefact_property(item, ARTP_BERSERK))
+    {
+        return true;
+    }
 
     // Unrands that grant an evokable ability.
     if (is_unrandom_artefact(item, UNRAND_RCLOUDS))
@@ -2673,9 +2584,10 @@ bool gives_resistance(const item_def &item)
                 || item.sub_type == RING_PROTECTION_FROM_COLD
                 || item.sub_type == RING_RESIST_CORROSION
                 || item.sub_type == RING_LIFE_PROTECTION
-                || item.sub_type == RING_PROTECTION_FROM_MAGIC
+                || item.sub_type == RING_WILLPOWER
                 || item.sub_type == RING_FIRE
-                || item.sub_type == RING_ICE)
+                || item.sub_type == RING_ICE
+                || item.sub_type == RING_FLIGHT)
             {
                 return true;
             }
@@ -2691,7 +2603,7 @@ bool gives_resistance(const item_def &item)
         if (ego == SPARM_FIRE_RESISTANCE
             || ego == SPARM_COLD_RESISTANCE
             || ego == SPARM_POISON_RESISTANCE
-            || ego == SPARM_MAGIC_RESISTANCE
+            || ego == SPARM_WILLPOWER
             || ego == SPARM_RESISTANCE
             || ego == SPARM_PRESERVATION
             || ego == SPARM_POSITIVE_ENERGY)
@@ -2718,7 +2630,7 @@ bool gives_resistance(const item_def &item)
         return false;
 
     // Check for randart resistances.
-    for (int rap = 0; rap <= ARTP_NUM_PROPERTIES; rap++)
+    for (int rap = 0; rap < ARTP_NUM_PROPERTIES; rap++)
     {
         if (artefact_property(item, static_cast<artefact_prop_type>(rap))
             && (rap == ARTP_FIRE
@@ -2726,7 +2638,7 @@ bool gives_resistance(const item_def &item)
                 || rap == ARTP_ELECTRICITY
                 || rap == ARTP_POISON
                 || rap == ARTP_NEGATIVE_ENERGY
-                || rap == ARTP_MAGIC_RESISTANCE
+                || rap == ARTP_WILLPOWER
                 || rap == ARTP_RCORR
                 || rap == ARTP_RMUT))
         {
@@ -2896,8 +2808,6 @@ void seen_item(const item_def &item)
     item_def& malleable_item = const_cast<item_def &>(item);
 
     malleable_item.flags |= ISFLAG_SEEN;
-    if (have_passive(passive_t::identify_items))
-        malleable_item.flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.tithe_state)
     {
         malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE

@@ -500,6 +500,11 @@ Une créature mort-vivante conservée par les eaux saumâtres d'une tourbière.
 Même si elle a été réanimée par quelque magie méconnue, cette magie ne peut
 l'empêcher de se décomposer.
 %%%%
+boulder beetle
+
+Un gros scarabée gris avec une carapace dure comme la pierre, capable de rouler
+sur ses adversaires à une grande vitesse.
+%%%%
 brain worm
 
 Un ver mauve et visqueux avec un grande tête distendue, cette créature se
@@ -562,22 +567,11 @@ chimera
 Une grotesque parodie de la nature, cette créature fantastique se compose de
 trois bêtes individuels combinés en une seul.
 %%%%
-crawling corpse
-
-Un cadavre faiblement animé par nécromancie. Il est facilement destructible,
-mais aussi capable de fusionner avec d'autres pour former d'autres horreurs
-plus puissantes.
-%%%%
 crimson imp
 
 Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
 permanent, et ses cornes saillissent de façon obscène de ses plaques
 écailleuses.
-%%%%
-crocodile
-
-Un crocodile agressif avec une grande mâchoire fracassante et pleine de dents
-pointues.
 %%%%
 curse skull
 
@@ -673,11 +667,6 @@ magie infernale de la mort.
 deep elf knight
 
 Un combattant elfe profond aguerri.
-%%%%
-deep elf mage
-
-Un elfe profond ayant appris la magie meurtrière. Les mages elfes profonds
-connaissent tout un large panel de sorts nocifs.
 %%%%
 deep elf master archer
 
@@ -999,7 +988,7 @@ golden eye
 Un petit œil flottant, vif comme le vent et scintillant comme l'or. Il a un
 regard particulièrement hypnotique.
 %%%%
-greater mummy
+royal mummy
 
 Un ancien pharaon, embaumé puis condamné à la non-vie, maintenant capable de
 grands et terrifiants exploits de magie.
@@ -1069,11 +1058,6 @@ hill giant
 
 Bien qu'étant une des plus petite espèce de géant, ce géant des collines est
 encore bien assez grand pour être dangereux.
-%%%%
-hippogriff
-
-Une grande créature avec le postérieur d'un cheval et les ailes, la tête et les
-serres d'un aigle.
 %%%%
 hobgoblin
 
@@ -1168,11 +1152,6 @@ inept item mimic
 
 Apparemment un objet abandonné, mais en réalité, une bête déguisée.
 %%%%
-insubstantial wisp
-
-Une mince volute de gaz flottant, vacillante, se dissipant puis se reformant
-d'une manière aléatoire et déconcertante.
-%%%%
 iron devil
 
 Un humanoïde hideux recouvert d'une peau de métal. Alors qu'il manque d'attaque
@@ -1210,7 +1189,7 @@ iron troll
 Un énorme troll aux membres puissant et recouvert de plaques qui ressemblent
 légèrement à du fer rouillé, particulièrement à cause de leur dureté.
 %%%%
-ironheart preserver
+ironbound preserver
 
 De grandes silhouettes revêtus en armure lourde, les preservers protégent leurs
 alliés en acceptant généreusement une partie des blessures qui leur sont
@@ -1312,12 +1291,6 @@ attirée d'un instinct persistant vers le moment de la mort. Si puissant est
 cette impulsion envers elle même qu'elle saisit au passage d'autres âmes,
 perdant les derniers vestiges de sa conscience en la mémoire de la vie des
 autres.
-%%%%
-macabre mass
-
-Un ensemble de membres fusionnés et déformés, faiblement animés par
-nécromancie. C'est facile à exterminer mais c'est aussi capable de fusionner
-avec d'autres pour former d'autres horreurs plus puissantes.
 %%%%
 manticore
 
@@ -1549,10 +1522,6 @@ Un gros ours très fort et couvert d'un pelage d'un blanc brillant, habitué aux
 conditions climatiques basses. Comme tout les ursidés, l'ours polaire deviendra
 enragé s'il est grièvement blessé ou apeuré.
 %%%%
-porcupine
-
-Un rongeur vicieux vêtu de piquants pointus et ayant une morsure douloureuse.
-%%%%
 profane servitor
 
 Cet être blasphémateur fut autrefois un ange de L’Étincelant. Maintenant il
@@ -1568,13 +1537,6 @@ quasit
 
 Un petit démon lâche avec une longue queue pointue. Ses griffes acérées sont
 couvertes d'un venin qui raidit les muscles.
-%%%%
-queen ant
-
-Une fourmi boursouflée, couverte d'une armure chitineuse et possédant un poison
-puissant. C'est la souveraine de la colonie et, lorsqu'elle n'est pas dérangée,
-elle pond perpétuellement des œufs. Auparavant capable de voler, elle a depuis
-longtemps perdu ses ailes ; seul des moignons rudimentaires restent.
 %%%%
 queen bee
 
@@ -2041,12 +2003,6 @@ wolf
 
 Un canidé fort et sauvage, avec des dents tranchantes et un gros appétit.
 %%%%
-worker ant
-
-Un insecte sans ailes avec des mandibules acérées capable d'injecter un poison
-mortel. C'est une ouvrière, et sa tâche est de récupérer de la nourriture —
-n'importe quel être vivant qu'elle rencontre est un repas potentiel.
-%%%%
 worm
 
 Un annélide géant, luisant de slime et possédant des dents inhabituellement
@@ -2291,7 +2247,7 @@ Cette plante à perdu la guerre contre les influences drainantes, et même si sa
 forme physique reste intacte, son corps sans vie reste ici, indécomposé, tant
 que les petites créatures qui voudraient s'en nourrir naturellement préféreront
 s'en écarter. Et on dirait que cette plante est morte il y a des {{ if
-you.branch() == "Crypt" or you.branch() == "Tomb" then return "siècles"; else
+you.in_branch("Crypt") or you.in_branch("Tomb") then return "siècles"; else
 return "années"; end }} .
 %%%%
 zin angel

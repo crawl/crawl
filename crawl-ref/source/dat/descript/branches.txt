@@ -193,7 +193,7 @@ worse, some of these complexes offer only one exit...in the minotaur's lair.
 Bazaar
 
 While some merchants set up shop in the dungeon, others travel in caravans from
-place to place. The bazaars of these intinerant traders feature a number of
+place to place. The bazaars of these itinerant traders feature a number of
 different shops and often have better stock than the sedentary ones, sometimes
 even at a bargain.
 %%%%

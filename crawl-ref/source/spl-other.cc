@@ -9,6 +9,7 @@
 #include "spl-other.h"
 
 #include "act-iter.h"
+#include "coordit.h"
 #include "delay.h"
 #include "env.h"
 #include "god-companions.h"
@@ -16,7 +17,9 @@
 #include "message.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "movement.h" // passwall
 #include "place.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "terrain.h"
@@ -29,7 +32,7 @@ spret cast_sublimation_of_blood(int pow, bool fail)
         mpr("You can't draw power from your own body while in death's door.");
     else if (!you.can_bleed())
     {
-        if (you.species == SP_VAMPIRE)
+        if (you.has_mutation(MUT_VAMPIRISM))
             mpr("You don't have enough blood to draw power from your own body.");
         else
             mpr("Your body is bloodless.");
@@ -232,6 +235,14 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     }
 }
 
+bool passwall_simplified_check(const actor &act)
+{
+    for (adjacent_iterator ai(act.pos(), true); ai; ++ai)
+        if (_feat_is_passwallable(env.grid(*ai)))
+            return true;
+    return false;
+}
+
 passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_range)
     : start(act.pos()), delta(dir.sgn()),
       range(max_range),
@@ -249,7 +260,7 @@ passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_ran
         path.emplace_back(pos);
         if (in_bounds(pos))
         {
-            if (!_feat_is_passwallable(grd(pos)))
+            if (!_feat_is_passwallable(env.grid(pos)))
             {
                 if (!dest_found)
                 {
@@ -352,9 +363,9 @@ bool passwall_path::check_moveto() const
     // assumes is_valid()
 
     string terrain_msg;
-    if (grd(actual_dest) == DNGN_DEEP_WATER)
+    if (env.grid(actual_dest) == DNGN_DEEP_WATER)
         terrain_msg = "You sense a deep body of water on the other side of the rock.";
-    else if (grd(actual_dest) == DNGN_LAVA)
+    else if (env.grid(actual_dest) == DNGN_LAVA)
         terrain_msg = "You sense an intense heat on the other side of the rock.";
 
     // Pre-confirm exclusions in unseen squares as well as the actual dest
@@ -371,6 +382,10 @@ bool passwall_path::check_moveto() const
 
 spret cast_passwall(const coord_def& c, int pow, bool fail)
 {
+    // prompt player to end position-based ice spells
+    if (cancel_harmful_move(false))
+        return spret::abort;
+
     coord_def delta = c - you.pos();
     passwall_path p(you, delta, spell_range(SPELL_PASSWALL, pow));
     string fail_msg;
@@ -417,7 +432,7 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
     if (mons == nullptr
         || mons_intel(*mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
-        || mons->check_clarity()
+        || mons->clarity()
         || mons->res_poison() >= 3)
     {
         return 0;
@@ -464,5 +479,17 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
         you.redraw_evasion = true;
     }
 
+    return spret::success;
+}
+
+spret cast_invisibility(int pow, bool fail)
+{
+    if (!invis_allowed())
+        return spret::abort;
+
+    fail_check();
+
+    potionlike_effect(POT_INVISIBILITY, pow);
+    contaminate_player(1000 + random2(1000), true);
     return spret::success;
 }

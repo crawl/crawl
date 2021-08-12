@@ -516,19 +516,6 @@ Cure Bad Mutation ability
 
 Fjerner en tilfældigt valgt dårlig mutation.
 %%%%
-Scrying ability
-
-Få astralt syn, så du kan se gennem vægge. Det er ikke nok til at lade dig
-målrette besværgelser og evner, selv ikke dem, der virker gennem glas.
-%%%%
-Transfer Knowledge ability
-
-Ofrer en del af en af dine færdigheder for at forbedre en anden.
-%%%%
-End Transfer Knowledge ability
-
-Annullér en igangværende færdighedsoverførsel.
-%%%%
 Shadow Step ability
 
 Hvis et væsen i din umbra står stille nok til, at du kan fokusere på dets

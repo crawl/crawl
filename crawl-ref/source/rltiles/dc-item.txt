@@ -300,8 +300,11 @@ effect/boomerang3 MI_BOOMERANG3
 %rim 1
 dart1 MI_DART
 dart2
-dart-p MI_DART_P
+dart-a MI_DART_BLINDING
 dart-c MI_DART_CURARE
+dart-d MI_DART_FRENZY
+dart-p MI_DART_POISONED
+
 # flying needles
 effect/needle0 MI_DART0
 effect/needle1 MI_DART1
@@ -480,17 +483,24 @@ glove5
 
 ###### BOOTS
 %rim 1
-boots1_brown ARM_BOOTS
-boots2_jackboots
-boots3_stripe
-boots4_green
+boots1 ARM_BOOTS ARM_BOOTS_FIRST
+boots2 ARM_BOOTS_LAST
+boots_ego1 ARM_BOOTS_EGO_FIRST
+boots_ego2 ARM_BOOTS_EGO_LAST
+boots_art1 ARM_BOOTS_ART_FIRST
+boots_art2 ARM_BOOTS_ART_LAST
 
 ### Armour brands
 # The order of armour brands must be identical to the one defined
 # in item-prop-enum.h.
 %sdir item/armour/brands
+# start TAG_MAJOR_VERSION == 34
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
+# end TAG_MAJOR_VERSION
+# start TAG_MAJOR_VERSION == 35
+# i-fire-res BRAND_ARM_FIRE_RESISTANCE BRAND_ARM_FIRST
+# end TAG_MAJOR_VERSION
 i-cold-res BRAND_ARM_COLD_RESISTANCE
 i-poison-res BRAND_ARM_POISON_RESISTANCE
 i-see-invis BRAND_ARM_SEE_INVISIBLE
@@ -566,10 +576,10 @@ i-teleportation WAND_REMOVEME8
 i-lightning WAND_REMOVEME11
 # end TAG_MAJOR_VERSION
 i-polymorph WAND_POLYMORPH
-i-enslavement WAND_ENSLAVEMENT
+i-charming WAND_CHARMING
 i-acid WAND_ACID
-i-random_effects WAND_RANDOM_EFFECTS
 # start TAG_MAJOR_VERSION == 34
+i-random_effects WAND_REMOVEME14
 i-disintegration WAND_DISINTEGRATION
 i-clouds WAND_REMOVEME13
 i-scattershot WAND_REMOVEME12 WAND_ID_LAST
@@ -639,8 +649,10 @@ i-teleportation SCR_TELEPORTATION
 i-fear SCR_FEAR
 %back scroll-grey
 i-noise SCR_NOISE
+# start TAG_MAJOR_VERSION == 34
 %back scroll-yellow
 i-remove_curse SCR_REMOVE_CURSE
+# end TAG_MAJOR_VERSION
 # aka scroll of summoning
 %back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION
@@ -650,9 +662,9 @@ i-enchant_armour SCR_ENCHANT_ARMOUR
 %back scroll-red
 i-torment SCR_TORMENT
 %back scroll-grey
+# start TAG_MAJOR_VERSION == 34
 i-random_uselessness SCR_RANDOM_USELESSNESS
 %back scroll-grey
-# start TAG_MAJOR_VERSION == 34
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 # end TAG_MAJOR_VERSION
@@ -759,8 +771,10 @@ i-str RING_STRENGTH
 i-slaying RING_SLAYING
 i-see-invis RING_SEE_INVISIBLE
 i-r-corrosion RING_RESIST_CORROSION
+# start TAG_MAJOR_VERSION == 34
 i-attention RING_ATTENTION
 i-teleport RING_TELEPORTATION
+# end TAG_MAJOR_VERSION
 i-evasion RING_EVASION
 # start TAG_MAJOR_VERSION == 34
 i-s-attr RING_SUSTAIN_ATTRIBUTES
@@ -772,7 +786,7 @@ i-wizardry RING_WIZARDRY
 i-magical-power RING_MAGICAL_POWER
 i-flight RING_FLIGHT
 i-life-protection RING_LIFE_PROTECTION
-i-r-magic RING_PROTECTION_FROM_MAGIC
+i-r-magic RING_WILLPOWER
 i-fire RING_FIRE
 # start TAG_MAJOR_VERSION == 34
 i-ice RING_ICE
@@ -841,8 +855,8 @@ i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND
 i-rage AMU_REMOVEME1
 i-rage AMU_REMOVEME2
-# end TAG_MAJOR_VERSION
 i-inaccuracy AMU_INACCURACY
+# end TAG_MAJOR_VERSION
 i-rage AMU_NOTHING
 i-spirit AMU_GUARDIAN_SPIRIT
 i-faith AMU_FAITH
@@ -883,7 +897,7 @@ i-heal-wounds POT_HEAL_WOUNDS
 i-haste POT_HASTE
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
-i-stabbing POT_STABBING
+i-attraction POT_ATTRACTION
 # start TAG_MAJOR_VERSION == 34
 i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
@@ -924,7 +938,7 @@ i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
 i-good-mutation POT_REMOVEME9
 # (corresponds to POT_DUMMY_AGILITY)
-i-stabbing POT_REMOVEME10 POT_ID_LAST
+i-attraction POT_REMOVEME10 POT_ID_LAST
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
 # i-lignify POT_LIGNIFY POT_ID_LAST
@@ -1072,7 +1086,8 @@ misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_lightning_rod MISC_LIGHTNING_ROD
 misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
 misc_tremorstones MISC_TIN_OF_TREMORSTONES
-misc_condenser MISC_CONDENSER_VANE
+misc_vane MISC_CONDENSER_VANE
+misc_vane_inert MISC_CONDENSER_VANE_INERT
 %rim 1
 # start TAG_MAJOR_VERSION == 34
 misc_lantern MISC_LANTERN_OF_SHADOWS
@@ -1086,6 +1101,13 @@ misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
+misc_pawn MISC_CHESSPIECE_FIRST
+misc_rook
+misc_knight
+misc_bishop
+misc_queen
+misc_king
+misc_thimble MISC_CHESSPIECE_LAST
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus RUNE_TARTARUS

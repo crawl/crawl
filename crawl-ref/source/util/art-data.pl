@@ -29,8 +29,9 @@ my %field_type = (
     COLD     => "num",
     COLOUR   => "enum",
     CORRODE  => "bool",
-    CURSE    => "bool",
+    DBRAND   => "str",
     DEX      => "num",
+    DESCRIP  => "str",
     DRAIN    => "bool",
     ELEC     => "bool",
     EV       => "num",
@@ -45,7 +46,7 @@ my %field_type = (
     INV      => "bool",
     FLY      => "bool",
     LIFE     => "num",
-    MAGIC    => "num",
+    WILL     => "num",
     HP       => "num",
     MP       => "num",
     MUTATE   => "bool",
@@ -56,6 +57,7 @@ my %field_type = (
     NOTELEP  => "bool",
     NO_UPGRADE => "bool",
     POISON   => "bool",
+    RAMPAGE  => "bool",
     RANDAPP  => "bool",
     RCORR    => "bool",
     REGEN    => "num",
@@ -86,6 +88,7 @@ my %field_type = (
     melee_effects_func => "func",
     launch_func        => "func",
     evoke_func         => "func",
+    targeted_evoke_func => "func",
 
     plus      => "num",
     plus2     => "num",
@@ -200,7 +203,7 @@ sub finish_art
         $funcs = {};
     }
 
-    foreach my $func_name (qw(equip unequip world_reacts evoke melee_effects launch))
+    foreach my $func_name (qw(equip unequip world_reacts targeted_evoke evoke melee_effects launch))
     {
         my $val;
         if ($funcs->{$func_name})
@@ -284,19 +287,21 @@ sub process_line
 {
     my ($artefact, $line) = @_;
 
-    # A line can start with whitespace if it's a continuation of a field
-    # with a string value.
-    if ($line =~ /^\s/)
+    # A line can start with whitespace or a + if it's a continuation of a field
+    # with a string value. + at the start of the line becomes a newline before
+    # it is displayed, and any amount of whitespace becomes a single space.
+    if ($line =~ /^[\s+]/)
     {
         my $prev_field = $artefact->{_PREV_FIELD} || "";
         if ($field_type{$prev_field} eq "str")
         {
-            $line =~ s/^\s*//;
-            $artefact->{$prev_field} .= " " . $line;
+            my $sep = ($line =~ /^\+/) ? '\n' : ' ';
+            $line =~ s/^(\+|\s*)//;
+            $artefact->{$prev_field} .= $sep . $line;
         }
         else
         {
-            error($artefact, "line starts with whitespace");
+            error($artefact, "line starts with an invalid character");
         }
         return;
     }
@@ -515,7 +520,8 @@ sub process_line
 }
 
 my @art_order = (
-    "NAME", "APPEAR", "TYPE", "INSCRIP", "\n",
+    "NAME", "APPEAR", "TYPE", "\n",
+    "INSCRIP", "DBRAND", "DESCRIP", "\n",
     "base_type", "sub_type", "\n",
     "fallback_base_type", "fallback_sub_type", "FB_BRAND", "\n",
     "plus", "plus2", "COLOUR", "VALUE", "\n",
@@ -525,22 +531,22 @@ my @art_order = (
     # Remove five copies of "unused", when
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
-    "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
+    "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
-    "MUTATE", "unused", "SLAY", "CURSE", "STEALTH", "MP", "\n",
+    "MUTATE", "unused", "SLAY", "unused", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "unused", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
-    "SH", "HARM", "\n",
+    "SH", "HARM", "RAMPAGE", "\n",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
 #     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
-#     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
+#     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
 #     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
 #     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "\n",
-#     "MUTATE", "SLAY", "CURSE", "STEALTH", "MP", "\n",
+#     "MUTATE", "SLAY", "STEALTH", "MP", "\n",
 #     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
 #     "RMSL", "REGEN", "NO_UPGRADE", "RCORR", "\n",
 #     "RMUT", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
@@ -549,7 +555,7 @@ my @art_order = (
 # end TAG_MAJOR_VERSION
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",
-    "launch_func", "evoke_func",
+    "launch_func", "evoke_func", "targeted_evoke_func"
 );
 
 sub art_to_str
@@ -603,7 +609,7 @@ sub art_to_str
         {
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
-            $str .= (($part eq "TYPE" || $part eq "INSCRIP") && $temp eq "")
+            $str .= ($temp eq "" && $part =~ /^(TYPE|INSCRIP|DESCRIP|DBRAND)$/)
                 ? "nullptr" : "\"$temp\"";
         }
         else
@@ -621,16 +627,45 @@ sub art_to_str
     return ($str);
 }
 
+# Write $text to $filename unless it's already there.
+# Checking this first may reduce the number of files make attempts to rebuild.
+sub write_to_file($$)
+{
+    my ($filename, $text) = @_;
+    my $old_text = "!$text";
+
+    if (open(_, '<', $filename))
+    {
+        local $/;
+        $old_text = <_>;
+        if ($text eq $old_text)
+        {
+            unless (close _)
+            {
+                die "Couldn't close '$filename' after reading";
+            }
+            return
+        }
+    }
+
+    unless (open(_, '>', $filename))
+    {
+        die "Couldn't open '$filename' for writing";
+    }
+    print _ $text;
+
+    unless (close _)
+    {
+        die "Couldn't close '$filename' after writing";
+    }
+}
+
+
 sub write_data
 {
     print "    Generating $ART_DATA\n";
 
-    unless (open(HEADER, ">", $ART_DATA))
-    {
-        die "Couldn't open '$ART_DATA' for writing: $!\n";
-    }
-
-    print HEADER <<"ENDofTEXT";
+    my $text = <<"ENDofTEXT";
 /* Definitions for unrandom artefacts. */
 
 /**********************************************************************
@@ -658,14 +693,14 @@ ENDofTEXT
     my $artefact;
     foreach $artefact (@all_artefacts)
     {
-        print HEADER "/* UNRAND_$artefact->{_ENUM} */\n";
-        print HEADER art_to_str($artefact);
+        $text .= "/* UNRAND_$artefact->{_ENUM} */\n";
+        $text .= art_to_str($artefact);
     }
 
-    print HEADER <<FOOTER;
+    $text .= <<FOOTER;
 FOOTER
 
-    close(HEADER);
+    write_to_file $ART_DATA, $text;
 }
 
 sub unrand_enum_constants()
@@ -709,9 +744,7 @@ sub write_enums
 
     my $unrand_enum = unrand_enum_constants();
 
-    open my $artenum, '>', $ART_ENUM or die "Can't write $ART_ENUM: $!\n";
-
-    print $artenum <<ARTENUM;
+    my $text = <<ARTENUM;
 #pragma once
 
 /**********************************************************************
@@ -733,7 +766,7 @@ enum unrand_type
 $unrand_enum
 };
 ARTENUM
-    close $artenum;
+    write_to_file $ART_ENUM, $text;
 }
 
 sub write_tiles
@@ -742,10 +775,6 @@ sub write_tiles
     print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
-    unless (open(TILES, ">$tilefile"))
-    {
-        die "Couldn't open '$tilefile' for writing: $!\n";
-    }
 
     my %art_by_type = ();
     foreach my $artefact (@all_artefacts)
@@ -804,7 +833,7 @@ sub write_tiles
         }
     }
 
-    print TILES << "HEADER_END";
+        my $text = << "HEADER_END";
 
 # WARNING!
 #
@@ -819,20 +848,20 @@ HEADER_END
     # Output the tile definitions sorted by type (and thus path).
     foreach my $type (sort keys %art_by_type)
     {
-        print TILES "%sdir item/$type/artefact\n";
+        $text .= "%sdir item/$type/artefact\n";
 
         foreach my $needrim (sort keys %{$art_by_type{$type}})
         {
-            print TILES "%rim 1\n" if ($needrim);
+            $text .= "%rim 1\n" if ($needrim);
             foreach my $def (@{$art_by_type{$type}{$needrim}})
             {
-                print TILES "$def\n";
+                $text .= "$def\n";
             }
-            print TILES "%rim 0\n" if ($needrim);
+            $text .= "%rim 0\n" if ($needrim);
         }
-        print TILES "\n";
+        $text .= "\n";
     }
-    close(TILES);
+    write_to_file $tilefile, $text;
 
     my %parts;
     foreach my $artefact (@all_artefacts)
@@ -931,12 +960,8 @@ HEADER_END
     print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
-    unless (open(TILES, ">$tilefile"))
-    {
-        die "Couldn't open '$tilefile' for writing: $!\n";
-    }
 
-    print TILES << "HEADER_END";
+    $text = << "HEADER_END";
 /**********************************************************************
  * WARNING!
  *
@@ -976,19 +1001,19 @@ HEADER_END
         next if ($artefact->{TILE} eq "");
 
         my $enum = "UNRAND_$artefact->{_ENUM}";
-        print TILES (" " x 4) . "case $enum:"
+        $text .= (" " x 4) . "case $enum:"
             . " " x ($longest_enum - length($enum) + 2) . "return TILE_$enum;\n";
     }
-    print TILES (" " x 4) . "default: return 0;\n";
-    print TILES (" " x 4) . "}\n";
-    print TILES "}\n\n";
+    $text .= (" " x 4) . "default: return 0;\n";
+    $text .= (" " x 4) . "}\n";
+    $text .= "}\n\n";
 
-    print TILES "int unrandart_to_doll_tile(int unrand)\n{\n";
-    print TILES (" " x 4) . "switch (unrand)\n";
-    print TILES (" " x 4) . "{\n";
+    $text .= "int unrandart_to_doll_tile(int unrand)\n{\n";
+    $text .= (" " x 4) . "switch (unrand)\n";
+    $text .= (" " x 4) . "{\n";
     foreach my $part (sort keys %parts)
     {
-        print TILES (" " x 4) . "// $part\n";
+        $text .= (" " x 4) . "// $part\n";
         foreach my $artefact (@{$parts{$part}})
         {
             if (not defined $artefact->{TILE_EQ_ENUM})
@@ -999,14 +1024,14 @@ HEADER_END
             }
             my $enum   = "UNRAND_$artefact->{_ENUM}";
             my $t_enum = $artefact->{TILE_EQ_ENUM};
-            print TILES (" " x 4) . "case $enum:"
+            $text .= (" " x 4) . "case $enum:"
                 . " " x ($longest_enum - length($enum) + 2) . "return $t_enum;\n";
         }
     }
-    print TILES (" " x 4) . "default: return 0;\n";
-    print TILES (" " x 4) . "}\n";
-    print TILES "}\n\n";
-    close(TILES);
+    $text .= (" " x 4) . "default: return 0;\n";
+    $text .= (" " x 4) . "}\n";
+    $text .= "}\n\n";
+    write_to_file $tilefile, $text;
 }
 
 my %valid_func = (
@@ -1015,7 +1040,8 @@ my %valid_func = (
     world_reacts  => 1,
     melee_effects => 1,
     launch        => 1,
-    evoke         => 1
+    evoke         => 1,
+    targeted_evoke => 1
 );
 
 sub read_funcs

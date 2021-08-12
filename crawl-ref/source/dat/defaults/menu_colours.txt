@@ -3,8 +3,9 @@
 menu := menu_colour
 ae   := autopickup_exceptions
 
-# Items currently not affecting you.
+# Items currently not affecting you or (in some cases) not usable
 menu += darkgrey:(melded)
+menu += darkgrey:(inert)
 
 # Bad items
 menu += lightred:.*bad_item.*
@@ -32,17 +33,14 @@ menu += white:.*artefact.*
 #menu += white:.*identified.*artefact.*
 #menu += lightblue:.*unidentified.*artefact.*
 
-# Ego items
-#
-menu += lightblue:(^identified armour.* pair of .* of )
-menu += lightgrey:(^identified armour.* pair of )
-menu += lightblue:(^identified (weapon|armour).* of )
-menu += lightblue:(^identified weapon.* vampiric .*)
-menu += lightblue:(^identified weapon.* antimagic .*)
-
 # Possible egos
 menu += lightblue:^unidentified .*weapon.*(runed|glowing)
 menu += lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
+
+# Enchanté
+menu += green:enchanted
+menu += green:staff of
+menu += green:ego
 
 # Emergency items
 menu += yellow:.*emergency_item.*
@@ -55,7 +53,6 @@ menu += $dangerous:.*dangerous_item.*
 
 # Defaults for normal items
 menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
-menu += green:uncursed
 
 
 # Colouring of autoinscribed god gifts

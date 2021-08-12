@@ -103,6 +103,7 @@ public:
     vector<int> hotkeys;
     MenuEntryLevel level;
     bool preselected;
+    bool indent_no_hotkeys;
     void *data;
 
 #ifdef USE_TILE
@@ -116,7 +117,9 @@ public:
                int hotk = 0,
                bool preselect = false) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
-        hotkeys(), level(lev), preselected(preselect), data(nullptr)
+        hotkeys(), level(lev), preselected(preselect),
+        indent_no_hotkeys(false),
+        data(nullptr)
     {
         colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
                   lev == MEL_SUBTITLE ?  BLUE  :
@@ -147,19 +150,7 @@ public:
         return hotkeys.size() && hotkeys[0] == key;
     }
 
-    virtual string get_text(const bool unused = false) const
-    {
-        UNUSED(unused);
-        if (level == MEL_ITEM && hotkeys.size())
-        {
-            char buf[300];
-            snprintf(buf, sizeof buf,
-                    " %c %c %s", hotkeys[0], preselected ? '+' : '-',
-                                 text.c_str());
-            return string(buf);
-        }
-        return text;
-    }
+    virtual string get_text(const bool unused = false) const;
 
     virtual int highlight_colour() const
     {
@@ -250,6 +241,7 @@ public:
     virtual ~MenuHighlighter() { }
 };
 
+// if you update this, update mf in enums.js
 enum MenuFlag
 {
     MF_NOSELECT         = 0x00001,   ///< No selection is permitted
@@ -274,6 +266,7 @@ enum MenuFlag
     MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
     MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
     MF_SPECIAL_MINUS    = 0x20000,   ///< '-' isn't PGUP or clear multiselect
+    MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
 };
 
 class UIMenu;
@@ -309,9 +302,11 @@ public:
     bool minus_is_pageup() const;
     // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
+    void set_more(const string s);
     // Shows a stock message about scrolling the menu instead of -more-
     void set_more();
     const formatted_string &get_more() const { return more; }
+    void set_min_col_width(int w);
 
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true, bool indent = false);
@@ -329,6 +324,7 @@ public:
     }
 
     void update_menu(bool update_entries = false);
+    void set_hovered(int index);
 
     virtual int getkey() const { return lastch; }
 
@@ -349,16 +345,24 @@ public:
     selitem_tfn      f_selitem;
     keyfilter_tfn    f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
+    function<bool()> on_show;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
+    void cycle_hover(bool reverse=false);
+
+    bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
+
+    virtual bool process_key(int keyin);
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
-    void webtiles_scroll(int first);
+    void webtiles_scroll(int first, int hover);
     void webtiles_handle_item_request(int start, int end);
 #endif
 protected:
+    string _title_prompt_help_tag;
+
     MenuEntry *title;
     MenuEntry *title2;
     bool m_indent_title;
@@ -386,6 +390,7 @@ protected:
     bool alive;
 
     int last_selected;
+    int last_hovered;
     KeymapContext m_kmc;
 
     resumable_line_reader *m_filter;
@@ -400,7 +405,6 @@ protected:
         shared_ptr<ui::Box> vbox;
     } m_ui;
 
-protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
@@ -432,7 +436,8 @@ protected:
     virtual int pre_process(int key);
     virtual int post_process(int key);
 
-    bool in_page(int index) const;
+    bool in_page(int index, bool strict=false) const;
+    bool snap_in_page(int index);
     int get_first_visible() const;
 
     void deselect_all(bool update_view = true);
@@ -443,14 +448,9 @@ protected:
     bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;
 
-    bool title_prompt(char linebuf[], int bufsz, const char* prompt);
-
-    virtual bool process_key(int keyin);
-
     virtual string help_key() const { return ""; }
 
     virtual void update_title();
-protected:
     bool filter_with_regex(const char *re);
 };
 

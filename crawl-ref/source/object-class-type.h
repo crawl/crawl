@@ -1,6 +1,10 @@
 #pragma once
 
-enum object_class_type : uint8_t           // mitm[].base_type
+#include <cstdint>
+
+#include "tag-version.h"
+
+enum object_class_type : uint8_t           // env.item[].base_type
 {
     OBJ_WEAPONS,
     OBJ_MISSILES,
@@ -25,5 +29,5 @@ enum object_class_type : uint8_t           // mitm[].base_type
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
-    OBJ_DETECTED,    // unknown item; item_info only
+    OBJ_DETECTED,    // unknown item; pseudo-items on the map only
 };

@@ -17,8 +17,9 @@
 : crawl_require("dlua/vault.lua")
 
 NAME:   advil_vaults_ghost_guards
+TAGS:   allow_dup
 KITEM:  12 = superb_item / star_item
-KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
             vault warden
 KMONS:  2 = vault warden
 KMONS:  3 = player ghost
@@ -37,8 +38,9 @@ ENDMAP
 
 # based on st_lines
 NAME:   advil_vaults_ghost_lines
+TAGS:   allow_dup
 KITEM:  123 = superb_item / star_item
-KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
             vault warden
 KMONS:  2 = vault warden
 KMONS:  3 = player ghost
@@ -54,16 +56,19 @@ nnn==nnn
 ........
 ENDMAP
 
-NAME:  gammafunk_vaults_ghost_grave
-TAGS:  vaults_orient_w
+NAME:   gammafunk_vaults_ghost_grave
+TAGS:   allow_dup
+TAGS:   vaults_orient_w
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, ".")
-KMONS: p = withered plant
-KMONS: O = player ghost
-SUBST: t : tp
-TILE:  G = dngn_gravestone
-TILE:  t = dngn_tree_dead
+KMONS:  p = withered plant
+KMONS:  O = player ghost
+SUBST:  t : tp
+TILE:   G = dngn_gravestone
+TILE:   t = dngn_tree_dead
+COLOUR: t = brown
 : set_feature_name("granite_statue", "a gravestone")
+: set_feature_name("tree", "dead tree")
 : vaults_ghost_setup(_G)
 MAP
 ..x.....
@@ -76,6 +81,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_split
+TAGS:   allow_dup
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
 SUBST:  fg = |*, p : b., q : b., b : xbcv
@@ -98,7 +104,7 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_vaults_ghost_cemetery
-TAGS:    vaults_orient_s
+TAGS:    vaults_orient_s allow_dup
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
 # 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.
@@ -126,7 +132,7 @@ xnn===nnx
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_necromancy
-TAGS:   vaults_orient_w
+TAGS:   vaults_orient_w allow_dup
 KMONS:  O = player ghost
 MONS:   simulacrum place:Vaults:5 / spectre place:Vaults:5, lich
 : ghost_good_loot(_G)
@@ -172,13 +178,13 @@ TAGS:   vaults_orient_s
 KFEAT:  O = altar_okawaru
 KMONS:  OP = player ghost
 # Bad Oka gift.
-KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
-        animal skin cursed ident:all / robe cursed ident:all / \
-        leather armour cursed ident:all / whip cursed ident:all / \
-        spear cursed ident:all / short sword cursed ident:all / \
-        dagger cursed ident:all / hand axe cursed ident:all / \
-        scythe cursed ident:all / club cursed ident:all / \
-        hunting sling cursed ident:all
+KITEM:  O = hat damaged ident:all / cloak damaged ident:all / \
+        animal skin damaged ident:all / robe damaged ident:all / \
+        leather armour damaged ident:all / whip damaged ident:all / \
+        spear damaged ident:all / short sword damaged ident:all / \
+        dagger damaged ident:all / hand axe damaged ident:all / \
+        scythe damaged ident:all / club damaged ident:all / \
+        hunting sling damaged ident:all
 KITEM:  P = robe cursed plus:-8 randart ident:all
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
@@ -235,7 +241,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_vaults_ghost_reflecting_pool
-TAGS:   vaults_orient_s no_pool_fixup
+TAGS:   vaults_orient_s no_pool_fixup allow_dup
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, ".")
 KMONS:  O = player_ghost
@@ -254,7 +260,7 @@ xn=nx
 ENDMAP
 
 NAME:   ebering_vaults_ghost_disaster_area
-TAGS:   vaults_orient_s
+TAGS:   vaults_orient_s allow_dup
 KMONS:  O = player ghost
 NSUBST: ' = d / e / 8=wWl / .
 : lone_ghost_guarded_loot(_G, "O")
@@ -425,12 +431,12 @@ KITEM:   FJL = randbook owner:Kikubaaqudgha disc:necromancy numspells:6 \
 KITEM:   12 = superb_item / star_item
 KMONS:   DEF = player ghost
 KMONS:   HJ1 =  lich
-KMONS:   KL2 =  ancient lich
+KMONS:   KL2 =  ancient lich / dread lich
 # 1/7 chance for 3 ghosts, 2/7 chance for 2 ghosts, 4/7 chance for 1 ghost.
 # Any ghost that doesn't place will place a depth-appropriate lich instead.
 SHUFFLE: EF / EJ / EJ / HJ / HJ / HJ / HJ
 # For later branches, guarantee at least one ancient lich and upgrade ordinary
-# liches to ancient liches.
+# liches to ancient or dread liches.
 SUBST:   H = HHK, J = JJL
 NSUBST:  1 = 2 / 112
 # 1.5 loot items per ghost/lich total. Mix in good loot scrolls and potions.

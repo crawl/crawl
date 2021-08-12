@@ -210,6 +210,21 @@ bool Widget::on_event(const Event& event)
     return Widget::slots.event.emit(this, event);
 }
 
+void OverlayWidget::allocate_region(Region)
+{
+    // Occupies 0 space, and therefore will never clear the screen.
+    m_region = {0, 0, 0, 0};
+    _allocate_region();
+}
+
+void OverlayWidget::_expose()
+{
+    // forcibly ensure that renders will be called. This sidesteps the region
+    // based code for deciding whether anything should be rendered, and leaves
+    // it up to the OverlayWidget.
+    ui_root.needs_paint = true;
+}
+
 shared_ptr<Widget> ContainerVec::get_child_at_offset(int x, int y)
 {
     for (shared_ptr<Widget>& child : m_children)
@@ -622,10 +637,24 @@ void Text::set_highlight_pattern(string pattern, bool line)
 
 void Text::wrap_text_to_size(int width, int height)
 {
-    Size wrapped_size = { width, height };
-    if (m_wrapped_size == wrapped_size)
-        return;
-    m_wrapped_size = wrapped_size;
+    // don't recalculate if the previous calculation imposed no constraints
+    // on the text, and the new calculation would be the same or greater in
+    // size. This can happen through a sequence of _get_preferred_size calls
+    // for example.
+    if (m_wrapped_size.is_valid())
+    {
+        const bool cached_width_max = m_wrapped_sizereq.width <= 0
+                        || m_wrapped_sizereq.width > m_wrapped_size.width;
+        const bool cached_height_max = m_wrapped_sizereq.height <= 0
+                        || m_wrapped_sizereq.height > m_wrapped_size.height;
+        if ((width == m_wrapped_size.width || cached_width_max && (width <= 0 || width >= m_wrapped_size.width))
+            && (height == m_wrapped_size.height || cached_height_max && (height <= 0 || height >= m_wrapped_size.height)))
+        {
+            return;
+        }
+    }
+
+    m_wrapped_sizereq = Size(width, height);
 
     height = height ? height : 0xfffffff;
 
@@ -652,6 +681,10 @@ void Text::wrap_text_to_size(int width, int height)
         acc += n;
         tally += n;
     }
+
+    // if the request was to figure out the height, record the height found
+    m_wrapped_size.height = m_font->string_height(m_text_wrapped);
+    m_wrapped_size.width = m_font->string_width(m_text_wrapped);
 #else
     m_wrapped_lines.clear();
     formatted_string::parse_string_to_multiple(m_text.to_colour_string(), m_wrapped_lines, width);
@@ -667,6 +700,19 @@ void Text::wrap_text_to_size(int width, int height)
     }
     if (m_wrapped_lines.empty())
         m_wrapped_lines.emplace_back("");
+
+    m_wrapped_size.height = m_wrapped_lines.size();
+    if (width <= 0)
+    {
+        // only bother recalculating if there was no requested width --
+        // parse_string_to_multiple will exactly obey any explicit width value
+        int max_width = 0;
+        for (auto &fs : m_wrapped_lines)
+            max_width = max(max_width, fs.width());
+        m_wrapped_size.width = max_width;
+    }
+    else
+        m_wrapped_size.width = width;
 #endif
 }
 
@@ -1464,7 +1510,7 @@ void Scroller::_allocate_region()
     m_child->allocate_region(ch_reg);
 
 #ifdef USE_TILE_LOCAL
-    int shade_height = 12, ds = 4;
+    int shade_height = UI_SCROLLER_SHADE_SIZE, ds = 4;
     int shade_top = min({m_scroll/ds, shade_height, m_region.height/2});
     int shade_bot = min({(sr.nat-m_region.height-m_scroll)/ds, shade_height, m_region.height/2});
     const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 200);
@@ -1483,7 +1529,8 @@ void Scroller::_allocate_region()
         rect.set_col(col_a, col_b);
         m_shade_buf.add_primitive(rect);
     }
-    if (ch_reg.height > m_region.height && m_scrolbar_visible) {
+    if (ch_reg.height > m_region.height && m_scrolbar_visible)
+    {
         const int x = m_region.x+m_region.width;
         const float h_percent = m_region.height / (float)ch_reg.height;
         const int h = m_region.height*min(max(0.05f, h_percent), 1.0f);
@@ -1515,10 +1562,16 @@ bool Scroller::on_event(const Event& event)
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
+#endif
                 delta = m_region.height;
                 break;
 
             case '-': case CK_PGUP: case '<': case ';':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_SUBTRACT: case CK_NUMPAD_SUBTRACT2:
+#endif
                 delta = -m_region.height;
                 break;
 
@@ -2356,12 +2409,12 @@ void PlayerDoll::_pack_doll()
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_cent = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
     if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
@@ -2549,9 +2602,9 @@ void UIRoot::render()
         update_screen();
     }
 
-    if (is_cursor_enabled() && !cursor_pos.origin())
+    if (!cursor_pos.origin())
     {
-        cgotoxy(cursor_pos.x, cursor_pos.y, GOTO_CRT);
+        cursorxy(cursor_pos.x, cursor_pos.y);
         cursor_pos.reset();
     }
 #endif
@@ -2604,7 +2657,8 @@ void UIRoot::debug_render()
             sb.add(r.x, r.ey(), r.ex(), r.ey()+m.bottom, lc);
             sb.add(r.x-m.left, r.y, r.x, r.ey(), lc);
         }
-        if (auto w = get_focused_widget()) {
+        if (auto w = get_focused_widget())
+        {
             Region r = w->get_region();
             lb.add_square(r.x+1, r.y+1, r.ex(), r.ey(), VColour(128, 31, 239));
         }

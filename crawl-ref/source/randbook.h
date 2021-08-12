@@ -6,8 +6,11 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "spl-util.h"
+
+using std::vector;
 
 typedef function<bool(spschool discipline_1,
                       spschool discipline_2,
@@ -56,9 +59,8 @@ void name_book_theme_randart(item_def &book, spschool discipline_1,
                              spschool discipline_2,
                              string owner = "", string subject = "");
 
-bool make_book_level_randart(item_def &book, int level = -1);
+bool make_book_level_randart(item_def &book, int level = -1, bool sif = false);
 void make_book_roxanne_special(item_def *book);
-void make_book_kiku_gift(item_def &book, bool first);
 void acquire_themed_randbook(item_def &book, int agent);
 
 /* Public for testing purposes only: do not use elsewhere */

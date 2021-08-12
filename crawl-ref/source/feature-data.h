@@ -1,3 +1,7 @@
+#pragma once
+
+#include "tag-version.h"
+
 // In the default case, these translations hold:
 // unseen_colour -> seen_colour
 // seen_colour -> seen_em_colour
@@ -83,6 +87,27 @@ static feature_def feat_defs[] =
     DNGN_TREE, "tree", "tree",
     DCHAR_TREE, DCHAR_WALL_MAGIC,
     COLOUR_IS(ETC_TREE),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_MANGROVE, "mangrove", "mangrove",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(ETC_MANGROVE),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_DEMONIC_TREE, "demonic tree", "demonic_tree",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(ETC_RANDOM),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_PETRIFIED_TREE, "petrified tree", "petrified_tree",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(DARKGREY),
     FFT_OPAQUE | FFT_SOLID, MF_WALL,
 },
 
@@ -434,7 +459,7 @@ PORTAL_ENTRANCE(DNGN_ENTER_GAUNTLET, "gate leading to a gauntlet", "enter_gauntl
 PORTAL_ENTRANCE(DNGN_ENTER_ICE_CAVE, "frozen archway", "enter_ice_cave", WHITE),
 PORTAL_ENTRANCE(DNGN_ENTER_VOLCANO, "dark tunnel", "enter_volcano", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_WIZLAB, "magical portal", "enter_wizlab", ETC_SHIMMER_BLUE),
-PORTAL_ENTRANCE(DNGN_ENTER_DESOLATION, "ruined gateway", "enter_desolation", WHITE),
+PORTAL_ENTRANCE(DNGN_ENTER_DESOLATION, "crumbling gateway", "enter_desolation", WHITE),
 #if TAG_MAJOR_VERSION == 34
 PORTAL_EXIT(DNGN_EXIT_PORTAL_VAULT, "gate leading back out of this place", "exit_portal_vault", ETC_SHIMMER_BLUE),
 #endif
@@ -554,7 +579,7 @@ ALTAR(DNGN_ALTAR_BEOGH, "roughly hewn altar of Beogh", "altar_beogh", ETC_BEOGH)
 ALTAR(DNGN_ALTAR_JIYVA, "viscous altar of Jiyva", "altar_jiyva", ETC_SLIME),
 ALTAR(DNGN_ALTAR_FEDHAS, "blossoming altar of Fedhas", "altar_fedhas", GREEN),
 ALTAR(DNGN_ALTAR_CHEIBRIADOS, "snail-covered altar of Cheibriados", "altar_cheibriados", LIGHTCYAN),
-ALTAR(DNGN_ALTAR_ASHENZARI, "shattered altar of Ashenzari", "altar_ashenzari", LIGHTRED),
+ALTAR(DNGN_ALTAR_ASHENZARI, "broken altar of Ashenzari", "altar_ashenzari", LIGHTRED),
 ALTAR(DNGN_ALTAR_DITHMENOS, "shadowy altar of Dithmenos", "altar_dithmenos", ETC_DITHMENOS),
 ALTAR(DNGN_ALTAR_GOZAG, "opulent altar of Gozag", "altar_gozag", ETC_GOLD), // for the Gold God!
 ALTAR(DNGN_ALTAR_QAZLAL, "stormy altar of Qazlal", "altar_qazlal", ETC_ELEMENTAL),

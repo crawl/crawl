@@ -5,7 +5,7 @@ short_name: "Gr"
 difficulty: Simple
 difficulty_priority: 70
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
 aptitudes:
   xp: 0
   hp: -2
@@ -42,15 +42,15 @@ levelup_stats:
   - int
 mutations:
   1:
-    MUT_ROT_IMMUNITY: 1
     MUT_NEGATIVE_ENERGY_RESISTANCE: 1
     MUT_PETRIFICATION_RESISTANCE: 1
     MUT_SHOCK_RESISTANCE: 1
-    MUT_UNBREATHING: 1
+    MUT_TORMENT_RESISTANCE: 1
   14:
     MUT_BIG_WINGS: 1
 fake_mutations:
-  - long: You are resistant to torment.
+  - long: You are immune to sickness and miasma.
+  - short: sickness immunity
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR

@@ -10,6 +10,7 @@
 #include <cstdio>
 
 #include "player.h"
+#include "tag-version.h"
 
 #define MAX_NOTE_PLACE_LEN 8
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // This list must match the enchant_names array in mon-ench.cc
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:
@@ -42,7 +44,7 @@ enum enchant_type
 #endif
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
-    ENCH_LOWERED_MR,
+    ENCH_LOWERED_WL,
     ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
 #if TAG_MAJOR_VERSION == 34
@@ -70,12 +72,12 @@ enum enchant_type
     ENCH_PREPARING_RESURRECT,
 #endif
     ENCH_REGENERATION,
-    ENCH_RAISED_MR,
+    ENCH_STRONG_WILLED,
     ENCH_MIRROR_DAMAGE,
 #if TAG_MAJOR_VERSION == 34
     ENCH_MAGIC_ARMOUR,
-#endif
     ENCH_FEAR_INSPIRING,
+#endif
     ENCH_PORTAL_PACIFIED,
 #if TAG_MAJOR_VERSION == 34
     ENCH_WITHDRAWN,
@@ -84,7 +86,7 @@ enum enchant_type
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
-    ENCH_TORNADO,
+    ENCH_POLAR_VORTEX,
     ENCH_FAKE_ABJURATION,
     ENCH_DAZED,          // Dazed - less chance of acting each turn.
     ENCH_MUTE,           // Silenced.
@@ -100,9 +102,11 @@ enum enchant_type
     ENCH_BREATH_WEAPON,  // timer for breathweapon/similar spam
 #if TAG_MAJOR_VERSION == 34
     ENCH_DEATHS_DOOR,
-    ENCH_ROLLING,        // Boulder Beetle in ball form
 #endif
+    ENCH_ROLLING,        // Boulder Beetle in ball form
+#if TAG_MAJOR_VERSION == 34
     ENCH_OZOCUBUS_ARMOUR,
+#endif
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
     ENCH_SCREAMED,       // Starcursed scream timer
     ENCH_WORD_OF_RECALL, // Chanting word of recall
@@ -128,7 +132,7 @@ enum enchant_type
     ENCH_GRASPING_ROOTS,
     ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,
-    ENCH_TORNADO_COOLDOWN,
+    ENCH_POLAR_VORTEX_COOLDOWN,
     ENCH_MERFOLK_AVATAR_SONG,
     ENCH_BARBS,
 #if TAG_MAJOR_VERSION == 34
@@ -179,9 +183,9 @@ enum enchant_type
     ENCH_RING_OF_THUNDER,
 #if TAG_MAJOR_VERSION == 34
     ENCH_WHIRLWIND_PINNED,
-#endif
     ENCH_VORTEX,
     ENCH_VORTEX_COOLDOWN,
+#endif
     ENCH_VILE_CLUTCH,
     ENCH_WATERLOGGED,
     ENCH_RING_OF_FLAMES,
@@ -192,6 +196,7 @@ enum enchant_type
     ENCH_RING_OF_DRAINING,
     ENCH_RING_OF_ACID,
     ENCH_RING_OF_MIASMA,
+    ENCH_CONCENTRATE_VENOM,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

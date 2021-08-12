@@ -29,6 +29,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tiles-build-specific.h"
+#include "tag-version.h"
 #include "unwind.h"
 #include "view.h"
 
@@ -528,8 +529,10 @@ public:
 
     void resize()
     {
+        // if this is resized to 0, bad crashes will happen. N.b. I have no idea
+        // if this issue is what the following note is about:
         // XXX: broken (why?)
-        lines.resize(height());
+        lines.resize(max(height(), 1));
     }
 
     unsigned int out_width() const
@@ -592,6 +595,10 @@ public:
     // write to screen (without refresh)
     void show()
     {
+        // skip if there is no layout yet
+        if (width() <= 0)
+            return;
+
         // XXX: this should not be necessary as formatted_string should
         //      already do it
         textcolour(LIGHTGREY);
@@ -1010,10 +1017,16 @@ namespace msg
         current_message_tees.insert(this);
     }
 
-    tee::~tee()
+    void tee::force_update()
     {
         if (target)
             *target += get_store();
+        store.clear();
+    }
+
+    tee::~tee()
+    {
+        force_update();
         current_message_tees.erase(this);
     }
 
@@ -1181,7 +1194,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 
         case MSGCH_PLAIN:
         case MSGCH_FRIEND_ACTION:
-        case MSGCH_ROTTEN_MEAT:
         case MSGCH_EQUIPMENT:
         case MSGCH_EXAMINE:
         case MSGCH_EXAMINE_FILTER:
@@ -1389,7 +1401,6 @@ static void _debug_channel_arena(msg_channel_type channel)
     case MSGCH_RECOVERY:
     case MSGCH_INTRINSIC_GAIN:
     case MSGCH_MUTATION:
-    case MSGCH_ROTTEN_MEAT:
     case MSGCH_EQUIPMENT:
     case MSGCH_FLOOR_ITEMS:
     case MSGCH_MULTITURN_ACTION:
@@ -1458,6 +1469,19 @@ void msgwin_set_temporary(bool temp)
     }
 }
 
+msgwin_temporary_mode::msgwin_temporary_mode()
+    : previous(_temporary)
+{
+    msgwin_set_temporary(true);
+}
+
+msgwin_temporary_mode::~msgwin_temporary_mode()
+{
+    // RAII behaviour: embedding instances of this class within each other
+    // will only reset the mode once they are all cleared.
+    msgwin_set_temporary(previous);
+}
+
 void msgwin_clear_temporary()
 {
     buffer.roll_back();
@@ -1472,7 +1496,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     rng::generator rng(rng::UI);
 
     if (_msg_dump_file != nullptr)
-        fprintf(_msg_dump_file, "%s\n", text.c_str());
+        fprintf(_msg_dump_file, "%s\n", text.c_str()); // should this strip color tags?
 
     if (crawl_state.game_crashed)
         return;
@@ -1482,11 +1506,11 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
 #ifdef DEBUG_FATAL
     if (channel == MSGCH_ERROR)
-        die_noline("%s", text.c_str());
+        die_noline("%s", formatted_string::parse_string(text).tostring().c_str());
 #endif
 
     if (msg::uses_stderr(channel))
-        fprintf(stderr, "%s\n", text.c_str());
+        fprintf(stderr, "%s\n", formatted_string::parse_string(text).tostring().c_str());
 
     // Flush out any "comes into view" monster announcements before the
     // monster has a chance to give any other messages.
@@ -1519,6 +1543,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
             msgwin.show();
         return;
     }
+
+    clua.callfn("c_message", "ss", text.c_str(), channel_to_str(channel).c_str());
 
     bool domore = _check_more(text, channel);
     bool do_flash_screen = _check_flash_screen(text, channel);
@@ -1927,7 +1953,7 @@ void canned_msg(canned_message_type which_message)
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_TOO_CONFUSED:
-            mpr("You're too confused!");
+            mpr("You are too confused!");
             break;
         case MSG_PRESENT_FORM:
             mpr("You can't do that in your present form.");
@@ -1969,7 +1995,7 @@ void canned_msg(canned_message_type which_message)
         {
             const char* when =
             (which_message == MSG_EMPTY_HANDED_ALREADY ? "already" : "now");
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 mprf("Your mouth is %s empty.", when);
             else if (you.has_usable_claws(true))
                 mprf("You are %s empty-clawed.", when);
@@ -1996,9 +2022,6 @@ void canned_msg(canned_message_type which_message)
             break;
         case MSG_DISORIENTED:
             mpr("You feel momentarily disoriented.");
-            break;
-        case MSG_TOO_HUNGRY:
-            mpr("You're too hungry.");
             break;
         case MSG_DETECT_NOTHING:
             mpr("You detect nothing.");
@@ -2031,8 +2054,13 @@ void canned_msg(canned_message_type which_message)
             mpr("You feel your power returning.");
             break;
         case MSG_MAGIC_DRAIN:
-            mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+        {
+            if (you.has_mutation(MUT_HP_CASTING))
+                mpr("You feel momentarily drained.");
+            else
+                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             break;
+        }
         case MSG_SOMETHING_IN_WAY:
             mpr("There's something in the way.");
             break;

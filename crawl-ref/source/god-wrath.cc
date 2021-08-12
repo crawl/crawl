@@ -50,6 +50,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"
@@ -145,7 +146,7 @@ static bool _yred_random_zombified_hostile()
     return create_monster(temp, false);
 }
 
-static const pop_entry _okawaru_servants[] =
+static const vector<pop_entry> _okawaru_servants =
 { // warriors
   {  1,  3,   3, FALL, MONS_ORC },
   {  1,  3,   3, FALL, MONS_GNOLL },
@@ -171,7 +172,6 @@ static const pop_entry _okawaru_servants[] =
   { 13, 27,   1, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
   { 13, 27,   1, FLAT, RANDOM_BASE_DRACONIAN },
   { 15, 27,   2, FLAT, MONS_TITAN },
-  { 0,0,0,FLAT,MONS_0 }
 };
 
 static bool _okawaru_random_servant()
@@ -305,11 +305,8 @@ static bool _zin_retribution()
     // preaching/creeping doom theme
     const god_type god = GOD_ZIN;
 
-    int punishment = random2(6);
-
     // If not mutated, do something else instead.
-    if (punishment > 7 && !you.how_mutated())
-        punishment = random2(6);
+    const int punishment = you.how_mutated() ? random2(6) : random2(4);
 
     switch (punishment)
     {
@@ -354,11 +351,16 @@ static bool _cheibriados_retribution()
 
     // Determine the level of wrath
     int wrath_type = 0;
-    if (wrath_value < 2)       { wrath_type = 0; }
-    else if (wrath_value < 4)  { wrath_type = 1; }
-    else if (wrath_value < 8)  { wrath_type = 2; }
-    else if (wrath_value < 16) { wrath_type = 3; }
-    else                       { wrath_type = 4; }
+    if (wrath_value < 2)
+        wrath_type = 0;
+    else if (wrath_value < 4)
+        wrath_type = 1;
+    else if (wrath_value < 8)
+        wrath_type = 2;
+    else if (wrath_value < 16)
+        wrath_type = 3;
+    else
+        wrath_type = 4;
 
     // Strip away extra speed
     dec_haste_player(10000);
@@ -464,6 +466,10 @@ static spell_type _makhleb_destruction_type()
  */
 static monster* get_avatar(god_type god)
 {
+    // TODO: it would be better to abstract the fake monster code from both
+    // this and shadow monster and possibly use different monster types --
+    // doing it this way makes it easier for bugs where the two are conflated
+    // to creep in
     monster* avatar = shadow_monster(false);
     if (!avatar)
         return nullptr;
@@ -645,7 +651,7 @@ static bool _kikubaaqudgha_retribution()
     if (x_chance_in_y(you.experience_level, 27))
     {
         // torment, or 3 death curses of maximum power
-        if (!player_res_torment(false))
+        if (!you.res_torment())
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
@@ -820,7 +826,7 @@ static bool _trog_retribution()
         }
 
         _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls firey rage upon you!");
+                           god, " hurls fiery rage upon you!");
         _reset_avatar(*avatar);
     }
 
@@ -974,7 +980,7 @@ static bool _sif_muna_retribution()
     case 8:
         if (you.magic_points > 0)
         {
-            dec_mp(you.magic_points);
+            drain_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;
@@ -1250,15 +1256,15 @@ static void _jiyva_summon_slimes()
     const monster_type slimes[] =
     {
         MONS_FLOATING_EYE,
-        MONS_EYE_OF_DRAINING,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
         MONS_GLOWING_ORANGE_BRAIN,
         MONS_JELLY,
+        MONS_ROCKSLIME,
+        MONS_QUICKSILVER_OOZE,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
-        MONS_DEATH_OOZE,
         MONS_SLIME_CREATURE,
     };
 
@@ -1833,7 +1839,7 @@ static bool _dithmenos_retribution()
     return true;
 }
 
-static const pop_entry pop_qazlal_wrath[] =
+static const vector<pop_entry> pop_qazlal_wrath =
 {
   {  0, 12, 25, SEMI, MONS_AIR_ELEMENTAL },
   {  4, 12, 50, FLAT, MONS_WIND_DRAKE },
@@ -1852,10 +1858,8 @@ static const pop_entry pop_qazlal_wrath[] =
 
   {  0, 12, 25, SEMI, MONS_EARTH_ELEMENTAL },
   {  2, 10, 50, FLAT, MONS_BASILISK },
-  {  4, 14, 30, FLAT, MONS_CATOBLEPAS },
+  {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
   { 18, 27, 50, RISE, MONS_IRON_DRAGON },
-
-  { 0,0,0,FLAT,MONS_0 }
 };
 
 /**

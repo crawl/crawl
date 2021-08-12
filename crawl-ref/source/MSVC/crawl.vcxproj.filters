@@ -376,9 +376,6 @@
     <ClCompile Include="..\spl-selfench.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\spl-pick.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\spl-other.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -577,6 +574,9 @@
     <ClCompile Include="..\mon-ench.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\mon-explode.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
     <ClCompile Include="..\mon-death.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -695,9 +695,6 @@
       <Filter>cc</Filter>
     </ClCompile>
     <ClCompile Include="..\l-global.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\l-food.cc">
       <Filter>cc</Filter>
     </ClCompile>
     <ClCompile Include="..\l-file.cc">
@@ -833,9 +830,6 @@
       <Filter>cc</Filter>
     </ClCompile>
     <ClCompile Include="..\format.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\food.cc">
       <Filter>cc</Filter>
     </ClCompile>
     <ClCompile Include="..\fontwrapper-ft.cc">
@@ -1089,9 +1083,6 @@
     <ClInclude Include="..\conduct-type.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="..\confirm-butcher-type.h">
-      <Filter>h</Filter>
-    </ClInclude>
     <ClInclude Include="..\confirm-prompt-type.h">
       <Filter>h</Filter>
     </ClInclude>
@@ -1294,9 +1285,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\fontwrapper-ft.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\food.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\format.h">
@@ -1915,9 +1903,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\spl-other.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\spl-pick.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\spl-selfench.h">

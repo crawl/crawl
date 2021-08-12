@@ -545,7 +545,7 @@ static void _store_text_db(const string &in, DBM *db)
     _parse_text_db(inf, db);
 }
 
-static string _chooseStrByWeight(string entry, int fixed_weight = -1)
+static string _chooseStrByWeight(const string &entry, int fixed_weight = -1)
 {
     vector<string> parts;
     vector<int>    weights;

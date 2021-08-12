@@ -22,6 +22,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unicode.h"
 #include "view.h"
 
@@ -528,7 +529,8 @@ void make_user_note()
     Note unote(NOTE_USER_NOTE);
     unote.name = buf;
     // Only one screenshot a turn allowed
-    if (last_screen_turn != unote.turn) {
+    if (last_screen_turn != unote.turn)
+    {
         last_screen_turn = unote.turn;
         unote.screen = screenshot();
     }

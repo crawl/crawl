@@ -106,6 +106,17 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
+Creeping Frost cast
+
+@The_monster@ calls freezing cold from the walls.
+%%%%
+Goad Beasts cast
+
+@The_monster@ goads on nearby beasts.
+%%%%
+ironbound thunderhulk cast
+
+Electricity crackles from @the_monster@'s apparatus.
 %%%%
 Mara Summon cast
 
@@ -181,9 +192,13 @@ Phantom Mirror cast
 
 @The_monster@ weaves an illusion.
 %%%%
-Chant Fire Storm cast
+Pyroclastic Surge cast
 
-@The_monster@ begins to chant a fire storm spell!
+@The_monster@ calls gouts of flame from the lava!
+%%%%
+Eruption cast
+
+@The_monster@ rends the earth beneath you!
 %%%%
 Chant Word of Entropy cast
 
@@ -204,6 +219,14 @@ Wind Blast cast
 Harpoon Shot cast
 
 @The_monster@ fires a harpoon shot @at@ @target@.
+%%%%
+Throw Klown Pie cast
+
+@The_monster@ pies you viciously!
+%%%%
+Stunning Burst cast
+
+@The_monster@ fires a burst of electricity @at@ @target@.
 %%%%
 #################################################
 # These have special hard-coded messaging.
@@ -301,6 +324,10 @@ unseen Spit Poison cast
 
 You hear a spitting sound.
 %%%%
+Freeze cast
+
+@The_monster@ freezes @target@.
+%%%%
 Sticky Flame Splash cast
 
 @The_monster@ spits sticky flame @at@ @target@.
@@ -336,6 +363,10 @@ Slug Dart cast
 Paralysis Gaze cast
 
 @The_monster@ gazes piercingly through @target@!
+%%%%
+Weakening Gaze cast
+
+@The_monster@ gazes fiercely through @target@!
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -545,6 +576,10 @@ Metal Splinters war gargoyle cast
 
 @The_monster@ launches @beam@ @at@ @target@.
 %%%%
+Splinterspray cast
+
+@The_monster@ hurls a spray of @beam@ @at@ @target@.
+%%%%
 Crystal Bolt crystal guardian cast
 
 @The_monster@ fires a crystalline bolt @at@ @target@.
@@ -564,6 +599,10 @@ Bolt of Magma molten gargoyle cast
 Primal Wave elemental wellspring cast
 
 A torrent of water rises up through @the_monster@!
+%%%%
+Summon Water Elementals elemental wellspring cast
+
+Water spirits pour forth from @the_monster@!
 %%%%
 Invisibility shadow cast
 
@@ -637,14 +676,6 @@ Lightning Bolt electric golem cast
 
 @The_monster@ hurls @beam@ @at@ @target@.
 %%%%
-insubstantial wisp cast
-
-@The_monster@ thrums sharply.
-%%%%
-Blink insubstantial wisp cast
-
-__NONE
-%%%%
 unseen Warning Cry howler monkey cast
 
 You hear a tremendous hooting and howling!
@@ -668,6 +699,10 @@ Fireball hell hog cast
 Throw Barbs peacekeeper cast
 
 @The_monster@ hurls a @beam@ @at@ @target@.
+%%%%
+Woodweal cast
+
+@The_monster@ touches a tree and draws upon its vitality.
 %%%%
 ########################################################################
 # Monster species and genus messages.

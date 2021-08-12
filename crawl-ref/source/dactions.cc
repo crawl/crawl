@@ -23,6 +23,7 @@
 #include "mon-transit.h"
 #include "religion.h"
 #include "state.h"
+#include "tag-version.h"
 #include "view.h"
 
 static void _daction_hog_to_human(monster *mon, bool in_transit);
@@ -105,7 +106,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && testbits(mon->flags, MF_BAND_MEMBER)
                && mon->props.exists("pikel_band");
 
-    case DACT_OLD_ENSLAVED_SOULS_POOF:
+    case DACT_OLD_CHARMD_SOULS_POOF:
         return mons_enslaved_soul(*mon);
 
     case DACT_SLIME_NEW_ATTEMPT:
@@ -170,7 +171,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         bool in_transit)
 {
     // Transiting monsters exist outside the normal monster list (env.mons or
-    // menv for short). Be careful not to write them into the monster grid, by,
+    // env.mons for short). Be careful not to write them into the monster grid, by,
     // for example, calling monster::move_to_pos on them.
     // See _daction_hog_to_human for an example.
     switch (act)
@@ -209,7 +210,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 upgrade_hepliaklqana_ancestor(true);
             break;
 
-        case DACT_OLD_ENSLAVED_SOULS_POOF:
+        case DACT_OLD_CHARMD_SOULS_POOF:
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
@@ -269,7 +270,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
-    case DACT_OLD_ENSLAVED_SOULS_POOF:
+    case DACT_OLD_CHARMD_SOULS_POOF:
     case DACT_SLIME_NEW_ATTEMPT:
     case DACT_PIKEL_MINIONS:
     case DACT_KIRKE_HOGS:
@@ -293,12 +294,12 @@ static void _apply_daction(daction_type act)
     case DACT_REMOVE_JIYVA_ALTARS:
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) == DNGN_ALTAR_JIYVA)
-                grd(*ri) = DNGN_FLOOR;
+            if (env.grid(*ri) == DNGN_ALTAR_JIYVA)
+                env.grid(*ri) = DNGN_FLOOR;
         }
         break;
     case DACT_ROT_CORPSES:
-        for (auto &item : mitm)
+        for (auto &item : env.item)
             if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
                 item.freshness = 1; // thoroughly rotten
         break;
@@ -316,7 +317,7 @@ static void _apply_daction(daction_type act)
             if (feat->feat == DNGN_ABANDONED_SHOP)
             {
                 // TODO: clear shop data out?
-                grd(feat->pos) = DNGN_ABANDONED_SHOP;
+                env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
                 view_update_at(feat->pos);
                 env.markers.remove(feat);
             }
@@ -397,9 +398,9 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     *mon = orig;
 
     // If the hog is in transit, then it is NOT stored in the normal
-    // monster list (env.mons or menv for short). We cannot call move_to_pos
+    // monster list (env.mons or env.mons for short). We cannot call move_to_pos
     // on such a hog, because move_to_pos will attempt to update the
-    // monster grid (env.mgrid or mgrd for short). Since the hog is not
+    // monster grid (env.mgrid or env.mgrid for short). Since the hog is not
     // stored in the monster list, this will corrupt the grid. The transit code
     // will update the grid properly once the transiting hog has been placed.
     if (!in_transit)

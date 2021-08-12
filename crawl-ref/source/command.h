@@ -16,12 +16,14 @@
 void list_armour();
 void list_jewellery();
 
+void show_specific_helps(const vector<string> keys);
 void show_specific_help(const string& key);
 void show_levelmap_help();
 void show_targeting_help();
 void show_interlevel_travel_branch_help();
 void show_interlevel_travel_depth_help();
 void show_interlevel_travel_altar_help();
+void show_annotate_help();
 void show_stash_search_help();
 void show_skill_menu_help();
 void show_spell_library_help();

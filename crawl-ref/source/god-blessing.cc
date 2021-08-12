@@ -155,10 +155,8 @@ static void _gift_weapon_to_orc(monster* orc, int weapon_type)
  * Attempt to give a follower appropriate ammo.
  *
  * @param[in] orc               The orc to give ammo to.
- * @param[in] initial_gift      Whether this is starting ammo or a restock.
- * (Give more ammo when restocking than initially.)
  */
-void gift_ammo_to_orc(monster* orc, bool initial_gift)
+void gift_ammo_to_orc(monster* orc)
 {
     const item_def* launcher = orc->launcher();
 
@@ -173,9 +171,7 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
     if (ammo.sub_type == MI_STONE)
         ammo.sub_type = MI_SLING_BULLET; // ugly special case
 
-    ammo.quantity = 30 + random2(10);
-    if (initial_gift || !launcher)
-        ammo.quantity /= 2;
+    ammo.quantity = 10 + random2(10);
 
     const item_def* old_ammo = orc->missiles();
     // don't give a drop message - it'd come before the bless message
@@ -210,18 +206,12 @@ static string _beogh_bless_melee_weapon(monster* mon)
     {
         blessed = true;
     }
-    // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
+    // Enchant it. (Lower odds at high weapon enchantment.)
     if (!x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
         && enchant_weapon(wpn, true))
     {
         set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
         blessed = true;
-    }
-    if (wpn.cursed())
-    {
-        do_uncurse_item(wpn);
-        if (!blessed)
-            return "uncursed armament";
     }
 
     if (!blessed)
@@ -256,18 +246,12 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         {
            blessed = true;
         }
-        // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
+        // Enchant it. (Lower odds at high weapon enchantment.)
         if (!x_chance_in_y(launcher.plus, MAX_WPN_ENCHANT)
             && enchant_weapon(launcher, true))
         {
             set_ident_flags(launcher, ISFLAG_KNOW_PLUSES);
             blessed = true;
-        }
-        if (launcher.cursed())
-        {
-            do_uncurse_item(launcher);
-            if (!blessed)
-                return "uncursed armament";
         }
 
         // Otherwise gift ammunition.
@@ -306,7 +290,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         return ""; // ?
     }
 
-    gift_ammo_to_orc(mon, true);
+    gift_ammo_to_orc(mon);
     if (mon->missiles() == nullptr)
         dprf("Couldn't give initial ammo to follower");
     return "ranged armament";
@@ -431,7 +415,7 @@ static string _beogh_bless_armour(monster* mon)
         return "";
     }
 
-    item_def& arm(mitm[slot]);
+    item_def& arm(env.item[slot]);
 
     const int old_subtype = arm.sub_type;
     // 50% chance of improving armour/shield type
@@ -577,11 +561,6 @@ static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed
 // you out.
 static void _beogh_blessing_reinforcements()
 {
-    // Don't gift orcs if Toxic radiance is up, to avoid the player being
-    // penanced through no fault of their own.
-    if (you.duration[DUR_TOXIC_RADIANCE])
-        return;
-
     // Possible reinforcement.
     const monster_type followers[] =
     {
@@ -698,6 +677,11 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     {
         // 1/20 chance of spawning a palband
         if (!one_chance_in(5))
+            return false;
+
+        // Don't gift orcs if Toxic radiance is up, to avoid the player being
+        // penanced through no fault of their own.
+        if (you.duration[DUR_TOXIC_RADIANCE])
             return false;
 
         // If no follower was found, attempt to send

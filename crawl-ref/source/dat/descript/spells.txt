@@ -3,11 +3,6 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
-Absolute Zero spell
-
-Entirely removes the heat from the enemy nearest the caster, instantly
-freezing it into a block of solid ice.
-%%%%
 Acid Splash spell
 
 Spits a glob of acid at a nearby creature, covering it in corrosive slime
@@ -15,19 +10,18 @@ for a short time. It may also splash onto other nearby creatures on impact.
 %%%%
 Agony spell
 
-Cuts the resilience of an adjacent creature in half. This damage is never
+Cuts the health of an adjacent creature in half. This damage is never
 directly lethal.
 %%%%
 Agony Range spell
 
-Cuts the resilience of a target creature in half. This damage is never directly
+Cuts the health of a target creature in half. This damage is never directly
 lethal.
 %%%%
 Airstrike spell
 
 Causes the air around a creature to twist itself into a whirling vortex of
 meteorological fury. It does more damage to targets surrounded by empty space.
-It is especially effective against flying enemies.
 %%%%
 Alistair's Intoxication spell
 
@@ -36,6 +30,12 @@ attempting to confuse all intelligent living creatures within view (although
 poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
+%%%%
+Animate Armour spell
+
+Call upon the spirit of your worn armour to fight alongside you. The spirit moves
+slowly, but draws strength from the inherent protection of your own armour. At
+higher power, the spirit becomes more durable.
 %%%%
 Animate Dead spell
 
@@ -112,7 +112,7 @@ Beastly Appendage spell
     end
 }}
 
-While transformed, auxilliary armour on the affected body parts is melded.
+While transformed, auxiliary armour on the affected body parts is melded.
 %%%%
 Berserker Rage spell
 
@@ -125,7 +125,7 @@ increases health, speed, and damage dealt in melee.
 %%%%
 Bind Souls spell
 
-Bestows an enchantment on other nearby living creatures that may cause them to
+Bestows an enchantment on other nearby living creatures that causes them to
 rise as simulacra after being slain.
 %%%%
 Black Mark spell
@@ -136,11 +136,23 @@ deplete magical power.
 %%%%
 Blade Hands spell
 
-Causes long, scythe-shaped blades to grow from the caster's hands, increasing
-melee damage significantly.
+{{
+    local hands = you.hand() .. "s"
+    local description =
+               "Causes long, scythe-shaped blades to grow from the " ..
+               "caster's " .. hands .. ", increasing melee damage " ..
+               "significantly.\n\nWhile transformed, equipped weapons, " ..
+               "shields, and gloves are melded, and casting spells " ..
+               "becomes somewhat more difficult."
 
-While transformed, any equipped weapons are melded, and casting spells becomes
-somewhat more difficult.
+    if hands == "paws" then
+        return description .. " In addition, the clacking of blades " ..
+               "on the ground makes the caster slightly less stealthy."
+    else
+        return description
+    end
+}}
+
 %%%%
 Blink Allies Away spell
 
@@ -162,12 +174,12 @@ Translocates the caster a short distance towards a targeted enemy.
 Blink Other Close spell
 
 Translocates a targeted enemy a short distance towards the caster. It cannot be
-resisted by usual means of magic resistance.
+resisted by willpower.
 %%%%
 Blink Other spell
 
 Randomly translocates a targeted enemy a short distance. It cannot be resisted
-by usual means of magic resistance.
+by willpower.
 %%%%
 Blink Range spell
 
@@ -204,8 +216,7 @@ fire resistance.
 Borgnjor's Revivification spell
 
 Instantly heals any and all wounds suffered by the caster, but also permanently
-lessens their resilience to injury, to a degree dependent on (and inversely
-related to) power.
+damages their health, to a degree dependent on (and inversely related to) power.
 
 It is powerful enough to cancel the effects of Death's Door, although doing so
 will briefly paralyse the caster. It has no effect on the undead.
@@ -228,6 +239,20 @@ Brothers in Arms spell
 Call Canine Familiar spell
 
 Summons a solitary canine to the caster's aid.
+%%%%
+Call Down Damnation spell
+
+Blasts a targeted enemy with damnation, with no direct line of fire required.
+These unholy forces harm the victim and anyone adjacent, and are not affected
+by any means of protection, such as armour or resistances. However, certain
+creatures, usually those able to invoke damnation themselves, are entirely
+unscathed by damnation.
+%%%%
+Call Down Lightning spell
+
+Blasts a targeted enemy with lightning, with no direct line of fire required.
+The targeting magics need distance to function, so enemies that are adjacent
+or nearly adjacent cannot be struck by this.
 %%%%
 Call Imp spell
 
@@ -269,9 +294,14 @@ effects. The arc can touch upon the caster without harming them.
 %%%%
 Chain Lightning spell
 
-Releases a massive electrical discharge that arcs from target to target until
-it grounds out. It may ground out harmlessly if there are no targets
-sufficiently close to the caster. Its damage partially bypasses armour.
+Releases a massive electrical discharge that arcs to the creature nearest the
+caster and then outward from it. The further it travels, the less damage it
+does. Secondary arcs have limited range and do little damage to the caster.
+The spell's damage partially bypasses armour and resistance to electricity.
+%%%%
+Charm spell
+
+Causes an otherwise hostile creature to fight on the caster's side for a while.
 %%%%
 Chaos Breath spell
 
@@ -279,7 +309,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that may knock back airborne targets.
+Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
 Cleansing Flame spell
 
@@ -288,6 +318,11 @@ Cleansing Flame spell
 Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
+%%%%
+Concentrate Venom spell
+
+Intensifies the natural venom of the target monster. Poisonous bites and spit
+become intense enough to slow and asphyxiate.
 %%%%
 Confuse spell
 
@@ -317,7 +352,7 @@ exploding.
 %%%%
 Conjure Flame spell
 
-Create a cloud of magically sustained fire at the caster's feet. The fire takes
+Creates a cloud of magically sustained fire at the caster's feet. The fire takes
 a moment to begin burning with vigor and in its fragile initial state is easily
 smothered by either the caster or a wandering monster. Re-casting the spell
 will bring the fire fully to life, but will burn the caster.
@@ -343,6 +378,11 @@ Corrupting Pulse spell
 Instills a corruption within all visible targets, temporarily mutating their
 bodies in an adverse fashion. It cannot affect artificial beings, and the
 undead will decompose if affected.
+%%%%
+Creeping Frost spell
+
+Calls forth freezing cold from the walls. Any enemies of the caster standing
+next to those walls will be frozen and will find their movements slowed.
 %%%%
 Crystal Bolt spell
 
@@ -373,8 +413,8 @@ body believes itself to be dead — healing effects will do nothing.
 
 The caster will receive one warning shortly before the spell expires. After
 expiry, the spell cannot immediately be recast, but with high power the caster
-will be left more resilient when the effect ends. It has no effect on those who
-are already undead.
+will be left further from death when the effect ends. It has no effect on those
+who are already undead.
 %%%%
 Debugging Ray spell
 
@@ -394,11 +434,6 @@ Discord spell
 
 Drives nearby creatures into an insane frenzy, causing them to mercilessly
 attack anything and everything nearby with great strength and speed.
-%%%%
-Disintegrate spell
-
-Violently rends apart anything in a small volume of space. It can be used to
-cause severe damage, or remove a chunk of rock.
 %%%%
 Disjunction spell
 
@@ -491,8 +526,9 @@ with no direct line of fire required.
 %%%%
 Dream Dust spell
 
-Overwhelms the target with soporific dream dust, putting them to sleep.
-Additional dream sheep will increase the strength and duration of this effect.
+Overwhelms the target with soporific dream dust, putting them to sleep with an
+enchanting visual display. Additional dream sheep will increase the strength
+and duration of this effect.
 %%%%
 Druid's Call spell
 
@@ -505,10 +541,6 @@ Throws a bolt of electricity at the target, with high accuracy.
 Energy Bolt spell
 
 Fires a bolt of highly destructive energy.
-%%%%
-Enslavement spell
-
-Causes an otherwise hostile creature to fight on the caster's side for a while.
 %%%%
 Ensnare spell
 
@@ -525,12 +557,16 @@ Corrodes the target, with no direct line of fire required.
 %%%%
 Eringya's Noxious Bog spell
 
-Causes the caster to release a torrent of sludge, which transforms the dungeon
-into a toxic bog in the caster's wake. The sludge damages and poisons all
-monsters, even those resistant to poison. The sludge is temporary, cannot
-replace deep water or lava, and cannot be sustained out of the caster's sight.
-Spellpower will increase both the duration of the torrent and how long the
-sludge lingers.
+Causes the caster to release a torrent of sludge that transforms nearby areas
+into a toxic bog. The sludge damages and poisons all monsters, even those
+resistant to poison. The bog cannot form on areas adjacent to solid features,
+nor on areas that lack solid floor, like deep water or lava. The transformation
+is temporary and cannot be sustained out of the caster's sight. Spellpower will
+increase how long the bog lingers.
+%%%%
+Eruption spell
+
+Splits the earth to draw up a localized, short-lived volcano under the target.
 %%%%
 Excruciating Wounds spell
 
@@ -605,12 +641,14 @@ Conjures up a large cloud of lethally cold vapour.
 %%%%
 Frozen Ramparts spell
 
-Encases surrounding walls with ice for a short time. Victims that wander near
-the icy walls will be damaged, and this may temporarily slow cold-blooded
-creatures. The damage dealt bypasses any armour the target may have. Each
-victim is only ever affected by one icy wall at a time.
+Encases surrounding walls with ice for a short time as long as the caster
+refrains from moving. Victims that wander near the icy walls will be damaged,
+and this may temporarily slow cold-blooded creatures. The damage dealt bypasses
+any armour the target may have. Each victim is only ever affected by one icy
+wall at a time.
 
-The caster and any allies can walk safely past icy walls.
+The caster and any allies can safely remain near icy walls. The ice will crack
+and fall away if the caster moves to a new position.
 %%%%
 Fulminant Prism spell
 
@@ -658,13 +696,16 @@ Greater Servant of Makhleb spell
 
 Summons a major demon.
 %%%%
+Goad Beasts spell
+
+Provokes nearby beasts to act faster. The effect is fleeting, but repeated use
+can move even the most stubborn mule.
 %%%%
 Hailstorm spell
 
 Conjures a cannonade of hail. The eye of the storm is wide enough that monsters
 adjacent to the caster are unaffected. Due to the strong impact and cutting
-edges a significant portion of its damage bypasses cold resistance. However,
-creatures made of pure ice are immune.
+edges a significant portion of its damage bypasses cold resistance.
 %%%%
 Haste Other spell
 
@@ -689,17 +730,15 @@ Heal Other spell
 
 Heals a nearby ally.
 %%%%
-Call Down Damnation spell
-
-Blasts a targeted enemy with damnation, with no direct line of fire required.
-These unholy forces harm the victim and anyone adjacent, and are not affected
-by any means of protection, such as armour or resistances. However, certain
-creatures, usually those able to invoke damnation themselves, are entirely
-unscathed by damnation.
-%%%%
 Hurl Damnation spell
 
 <Hurl Damnation ability>
+%%%%
+Hurl Sludge spell
+
+Conjures a focused blast of highly toxic sludge, poisoning the victim and
+drenching their surroundings. The sludge damages and poisons all monsters,
+even those resistant to poison.
 %%%%
 Holy Breath spell
 
@@ -712,17 +751,6 @@ Holy Flames spell
 Traps an enemy in a ring of blessed flame. These flames are especially
 dangerous to undead and demonic creatures, and have no effect on holy
 creatures.
-%%%%
-Hydra Form spell
-
-Transforms the caster into an amphibious, many-headed hydra for a brief
-duration. Its multiple heads strike in all directions. Foes slain by the
-gnashing teeth are instantly devoured, reinvigorating the caster in their
-reptilian rampage. The caster gains innate armour and increased health, and
-becomes resistant to poison.
-
-While transformed, any equipped weapons and armour are melded. The form's
-number of heads is fixed upon casting the spell, and increases with power.
 %%%%
 Iceblast spell
 
@@ -778,8 +806,8 @@ is dependent on the size of the target.
 %%%%
 Invisibility spell
 
-Turns a targeted creature invisible. Turning invisible causes magical
-contamination and may eventually cause glowing, nullifying the invisibility.
+Turns the caster invisible. Turning invisible causes magical contamination
+and may eventually cause glowing, nullifying the invisibility.
 %%%%
 Invisibility Other spell
 
@@ -792,10 +820,10 @@ Hurls a large and heavy metal shot.
 Irradiate spell
 
 Transmutes an ultra-thin layer of the caster's skin (or equivalent) directly
-into pure magical energy, blasting adjacent creatures and bypassing any armour
-they may have. It heavily deforms its targets, weakening them and reducing
-their armour. The caster is not left entirely unaffected; some of the magic
-lingers, enough to leave them dangerously contaminated after a few castings.
+into pure magical energy, blasting adjacent creatures. It heavily deforms
+its targets, weakening them and reducing their armour. The caster is not left
+entirely unaffected; some of the magic lingers, enough to leave them
+dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -847,9 +875,8 @@ Beckons the target forward, attempting to place them adjacent to the caster.
 %%%%
 Lightning Bolt spell
 
-Fires a mighty bolt of lightning. It inflicts less damage than other similar
-bolts, but its damage partially bypasses armour and it can be bounced off walls
-to hit targets twice.
+Fires a mighty bolt of lightning. Its damage partially bypasses armour and
+it can be bounced off walls to hit targets twice.
 %%%%
 Magic Dart spell
 
@@ -880,18 +907,40 @@ Malmutate spell
 Bestows a mutation on a target. The mutation is almost always harmful. It
 cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
+Manifold Assault spell
+
+Launches melee attacks against multiple visible enemies, warping space into
+paradoxical configurations to allow one swing to be in many places. The effect
+is too imprecise to allow stabbing unsuspecting foes. At high power, it can be
+used to strike more enemies at once.
+%%%%
 Mara Summon spell
 
 Weaves illusions of the caster. Such illusions have the same physical prowess
 as the original, and can cast the same spells.
 %%%%
+Marshlight spell
+
+Conjures two balls of burning swamp gas adjacent to the caster. The balls will
+rapidly seek the nearest monster and burn them. Wizards attempted to copy this
+with the spell 'Foxfire', but their version is much less powerful.
+%%%%
 Mass Confusion spell
 
 Causes confusion in all who gaze upon the caster.
 %%%%
+Maxwell's Capacitive Coupling spell
+
+Gradually builds up electric charge in the caster. When a critical threshold is
+reached the charge couples with the nearest foe, vaporising them instantly.
+The resulting charge is so intense it bypasses even electrical immunity.
+Higher spell power will allow the caster to accumulate charge more rapidly.
+%%%%
 Mephitic Cloud spell
 
-Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
+Conjures up a short-lived cloud of noxious fumes, which may cause confusion in
+any creature not resistant to poison. Tougher, more experienced creatures are
+less likely to be affected.
 %%%%
 Mesmerise spell
 
@@ -901,8 +950,8 @@ caster's line of sight will end the effect.
 Metabolic Englaciation spell
 
 Lowers the metabolic rate of every creature in the caster's vicinity, slowing
-all those who are not resistant to cold. Those especially vulnerable to cold
-will be affected much more strongly, and tougher creatures will be slowed for a
+all those who are not resistant to cold. Cold-blooded creatures will be
+affected much more strongly, and tougher creatures will be slowed for a
 shorter time.
 %%%%
 Metal Splinters spell
@@ -912,16 +961,22 @@ reduced by armour.
 %%%%
 Miasma Breath spell
 
-Creates a large cloud of foul pestilence, slowing and rotting any living
-creatures it touches.
+Creates a large cloud of foul pestilence, poisoning and sometimes slowing any
+living creatures it touches.
 %%%%
 Might Other spell
 
-Significally increases a nearby ally's damage dealt in melee.
+Significantly increases a nearby ally's damage dealt in melee.
 %%%%
 Might spell
 
 Significantly increases the caster's damage in melee.
+%%%%
+Mindburst spell
+
+Launches a psychic attack. If it overcomes the victim's willpower, it
+'blows their mind' in a violently literal fashion, dealing damage that
+bypasses their armour entirely. It is useless against mindless creatures.
 %%%%
 Minor Healing spell
 
@@ -929,16 +984,15 @@ Heals a small amount of damage to the caster's body.
 %%%%
 Monstrous Menagerie spell
 
-Summons a powerful exotic creature to the caster's aid. It may call forth a
-harpy, manticore or lindwurm, and at high power may summon a sphinx, or an
-entire pack of harpies. With high power the individual creatures will also gain
-increased strength.
+Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
+or, at high power, even a sphinx. Casting the spell at higher power also
+increases the strength of the beasts themselves.
 %%%%
 Necromutation spell
 
 Transforms the caster into a lich — a powerful skeletal figure. The caster
-becomes more resistant to cold and hostile enchantments and completely immune
-to poison, rotting, negative energy and torment for the duration of the spell.
+becomes stronger-willed, more resistant to cold and completely immune to
+poison, miasma, negative energy, and torment for the duration of the spell.
 The caster's necromancy spells are increased in power, and they gain a draining
 melee attack. The caster also gains some of the more dubious benefits of having
 an undead body, such as a vulnerability to holy damage and Dispel Undead, and
@@ -951,7 +1005,7 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
-everything nearby for as long as the spell lasts.
+everything in line of sight for as long as the spell lasts.
 %%%%
 Orb of Destruction spell
 
@@ -1046,8 +1100,18 @@ Conjures forth a great cloud of lethal gases.
 %%%%
 Poisonous Vapours spell
 
-Turns the air around a targeted creature poisonous. Exceedingly little poison
-is created, generally just enough to poison the target before dispersing.
+Turns the air around a targeted creature toxic, directly inflicting poison on
+the target before dispersing.
+%%%%
+Polar Vortex spell
+
+Turns the air around the caster into a freezing vortex, doing tremendous damage
+to everyone caught in it that can only partially be mitigated by resistance to
+cold. Those affected will also be swept up into the air and tossed around.
+Only the eye of the storm is a safe place, and it follows the caster. The
+vortex is unable to follow the caster through long-distance translocations.
+The spell's effectiveness is greatly diminished in closed areas. After the
+vortex fades, it cannot be called forth again for a short time.
 %%%%
 Polymorph spell
 
@@ -1070,27 +1134,32 @@ Primal Wave spell
 Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
 %%%%
+Pyroclastic Surge spell
+
+Draws searing flames from lava. Any enemies of the caster standing
+next to or above lava will be burned.
+%%%%
 Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
-%%%%
-Random Bolt spell
-
-Fires, at random, a bolt of venom, negative energy, fire, cold, dispelling
-energy, electricity, or acid.
 %%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them
 easier to dodge. Single-target attacks are much easier to repel than
-penetrating attacks. Each time a missile is repelled the spell has a chance of
-expiring, with a lower chance of expiry at high power.
+penetrating attacks.
 %%%%
 Resonance Strike spell
 
 Calls a surge of power from the earth, striking an enemy within the caster's
 sight. The spell cascades through nearby constructs, growing in strength with
 each one standing near the target.
+%%%%
+Roll spell
+
+Roll into a ball, granting the boulder beetle tremendous speed as well as
+double melee damage. The roll may only be performed when at distance from a
+foe, and the beetle will always unroll after an attempted roll attack.
 %%%%
 Sandblast spell
 
@@ -1236,6 +1305,11 @@ Spit Poison spell
 
 <Spit Poison ability>
 %%%%
+Splinterspray spell
+
+Fires a directed stream of sharp wooden splinters. Its damage is strongly
+reduced by armour.
+%%%%
 Sporulate spell
 
 Releases a fast, gas-filled floating spore. After seeking out its foe, the
@@ -1262,7 +1336,7 @@ Statue Form spell
 Transforms the caster into a slow but extremely robust stone statue. The
 caster's melee damage, both unarmed and with weapons, is substantially
 increased. The caster's stone body is insulated from electricity and gains
-resistance to poison, rotting and negative energy.
+resistance to poison, miasma, and negative energy.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
@@ -1283,8 +1357,8 @@ for a short time.
 Still Winds spell
 
 Brings the air into unnatural stillness across a huge area, preventing anything
-short of a tornado from breaking the calm. The effect takes concentration to
-maintain, and only lasts a short time; if the caster is killed, clouds will
+short of a polar vortex from breaking the calm. The effect takes concentration
+to maintain, and only lasts a short time; if the caster is killed, clouds will
 begin to form again as normal.
 %%%%
 Sting spell
@@ -1298,10 +1372,27 @@ Stone Arrow spell
 
 Fires a sharp spine of rock.
 %%%%
-Strip Resistance spell
+Storm Form spell
 
-Greatly reduces the target's magic resistance, making them more vulnerable to
-hostile enchantments.
+Lets the caster walk through the air as a raging, lightning-filled tempest. The
+caster's melee attacks are strengthened, electrified, and strike all adjacent
+foes. The caster also flies, is more evasive, and resists electricity. They can
+launch themselves as a lightning bolt, blasting through everything in their way.
+The damage and evasion granted by storm form are highly dependent on the power
+with which it was cast.
+
+While transformed, any equipped weapons and armour are melded.
+%%%%
+Strip Willpower spell
+
+Greatly reduces the target's willpower, making them more vulnerable to a
+variety of magical effects.
+%%%%
+Stunning Burst spell
+
+Fires a weak electrical burst which, on impact, causes very brief paralysis.
+Willpower is of no use against this effect, but resistance to electricity can
+sometimes prevent it.
 %%%%
 Sublimation of Blood spell
 
@@ -1316,8 +1407,7 @@ Summons one or more air elementals.
 Summon Demon spell
 
 Opens a gate to the realm of Pandemonium and draws forth one of its inhabitants
-to serve the caster for a time. The demon's servitude is not guaranteed, but
-will be more likely with high power.
+to serve the caster for a time.
 %%%%
 Summon Dragon spell
 
@@ -1359,14 +1449,6 @@ and the trees of the forest will be awakened to deal damage to nearby enemies.
 Summon Greater Demon spell
 
 Calls forth one of the greater demons of Pandemonium to serve the caster.
-Demons summoned in this way have a chance to eventually break free from their
-summoner's control. With high power, the demon will be less likely to break
-free, but stronger demons are more likely to eventually turn against their
-summoner.
-
-Unlike other summons, demons which are only temporarily enslaved will not be
-dismissed when attacked by their summoner, but will instead become hostile
-immediately.
 %%%%
 Summon Guardian Golem spell
 
@@ -1433,6 +1515,10 @@ Summon Spectral Orcs spell
 Summons between one and three spectral orcs, specialised for melee combat
 and equipped with spectral weaponry and armour.
 %%%%
+Summon Tzitzimitl spell
+
+Summons a tzitzimitl, a demon of disease and despair.
+%%%%
 Summon Ufetubus spell
 
 Summons multiple ufetubi; small, annoying demons.
@@ -1458,7 +1544,7 @@ effect ends, the caster's movements will be sluggish for a time.
 Symbol of Torment spell
 
 Calls on the powers of darkness to cause agonising injury to any living thing
-in the caster's vicinity, cutting their resilience in half. This damage is
+in the caster's vicinity, cutting their health in half. This damage is
 never directly lethal.
 %%%%
 Teleport Other spell
@@ -1505,14 +1591,6 @@ Entombs the caster within walls of rock. These walls will push away objects in
 their way, but their growth is obstructed by the presence of any creature. They
 are not permanent, and will expire after a period of time.
 %%%%
-Tornado spell
-
-Turns the air around the caster into a mighty vortex, doing tremendous damage
-to everyone caught in it. Those affected will also be swept up into the air and
-tossed around. Only the eye of the storm is a safe place, and it follows the
-caster. The spell's effectiveness is greatly diminished in closed areas. After
-the tornado fades, it cannot be called forth again for a short time.
-%%%%
 Trog's Hand spell
 
 <Trog's Hand ability>
@@ -1523,8 +1601,8 @@ Animates the weapon of a targeted foe, ripping it from their hands and causing
 it to attack them relentlessly. Once the target dies, the weapon will fall to
 the ground shortly thereafter.
 
-Ranged weapons and certain powerful named artefacts cannot be affected, and
-any abilities that require evocation skill to trigger will not be active.
+Certain powerful named artefacts cannot be animated, and any properties that
+require skill in evocations will not be active.
 %%%%
 Twisted Resurrection spell
 
@@ -1553,14 +1631,6 @@ Volley of Thorns spell
 
 Launches a small hail of sharp thorns.
 %%%%
-Vortex spell
-
-Turns the air near the caster into a mighty, short-lived vortex, doing
-tremendous damage to everyone caught in it. Those affected will also be swept
-up into the air and tossed around. Only the eye of the storm is a safe place,
-and it follows the caster. After the vortex fades, it cannot be called forth
-again for a short time.
-%%%%
 Wall of Brambles spell
 
 Causes brambles to rapidly grow nearby. They have almost no structural
@@ -1576,12 +1646,17 @@ Waterstrike spell
 Causes the water around or under the target to violently swirl, dealing damage.
 It can affect targets standing in or flying above water.
 %%%%
+Weakening Gaze spell
+
+Irresistably weakens a creature's melee attacks for a period of time,
+requiring line of sight but not line of fire.
+%%%%
 Wereblood spell
 
-Transforms some of the caster's blood into that of a were-beast. Each
-non-summoned enemy the caster slays in combat quickens the pulse and
-temporarily enhances their melee and ranged effectiveness. The thrill of
-slaying gives the caster an uncontrollable urge to howl.
+Transforms some of the caster's blood into that of a were-beast, causing them
+to occasionally howl uncontrollably. While active, each non-summoned enemy the
+caster slays in combat temporarily enhances their melee and ranged
+effectiveness, and killing adjacent enemies also provides minor healing.
 
 The bonus only lasts for the duration of a single cast; retransforming the
 caster's blood calms the were-spirit and resets the bonus.
@@ -1590,6 +1665,11 @@ Wind Blast spell
 
 Causes a strong gust of wind, pushing away creatures and clouds in a cone.
 %%%%
+Woodweal spell
+
+Draws on the vitality of leaf and bark to heal a large amount of damage.
+Cannot be cast without a tree adjacent.
+%%%%
 Word of Recall spell
 
 Recalls intelligent allies from elsewhere on the same level to the caster,
@@ -1597,5 +1677,7 @@ after a short delay.
 %%%%
 Yara's Violent Unravelling spell
 
-Tears apart the bonds that bind enchantments to the target creature,
-transforming the magic into a spray of deadly, mutagenic radiation.
+If cast upon a creature already blessed (or cursed) with magical enchantments,
+those enchantments will be torn apart, transforming into a spray of
+destructive mutagenic radiation. The victim and anyone adjacent will be
+blasted and heavily deformed, weakening them and reducing their armour.

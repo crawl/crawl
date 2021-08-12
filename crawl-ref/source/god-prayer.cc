@@ -71,7 +71,11 @@ static god_type _altar_identify_ecumenical_altar()
 static bool _pray_ecumenical_altar()
 {
     if (yesno("You cannot tell which god this altar belongs to. Convert to "
-              "them anyway?", false, 'n'))
+              "them anyway?", false, 'n')
+        && (you_worship(GOD_NO_GOD)
+            || yesno(make_stringf("Really abandon %s for an unknown god?",
+                                  god_name(you.religion).c_str()).c_str(),
+                                  false, 'n')))
     {
         {
             // Don't check for or charge a Gozag service fee.
@@ -89,6 +93,8 @@ static bool _pray_ecumenical_altar()
 
         if (you_worship(GOD_RU))
             you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+        else if (you_worship(GOD_ASHENZARI))
+            you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
         else if (you_worship(GOD_XOM))
             xom_is_stimulated(200, XM_INTRIGUED, true);
         else
@@ -113,7 +119,7 @@ void try_god_conversion(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
     {
         mpr("A being of your status worships no god.");
         return;
@@ -208,9 +214,8 @@ int zin_tithe(const item_def& item, int quant, bool converting)
 enum class jiyva_slurp_result
 {
     none = 0,
-    food = 1 << 0,
-    hp   = 1 << 1,
-    mp   = 1 << 2,
+    hp   = 1 << 0,
+    mp   = 1 << 1,
 };
 DEF_BITFIELD(jiyva_slurp_results, jiyva_slurp_result);
 
@@ -228,10 +233,7 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
     const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
-    const int value = (item.base_type == OBJ_CORPSES ?
-                          50 * stepdown_value(max(1,
-                          max_corpse_chunks(item.mon_type)), 4, 4, 12, 12) :
-                      (is_worthless_consumable(item) ? 1 : shop_value));
+    const int value = is_worthless_consumable(item) ? 1 : shop_value;
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
@@ -248,11 +250,6 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
         return gain;
 
     int item_value = div_rand_round(stepped, 50);
-    if (have_passive(passive_t::slime_feed)
-        && x_chance_in_y(you.piety, MAX_PIETY))
-    {
-        gain.jiyva_bonus |= jiyva_slurp_result::food;
-    }
 
     if (have_passive(passive_t::slime_mp)
         && x_chance_in_y(you.piety, MAX_PIETY)
@@ -290,8 +287,6 @@ void jiyva_slurp_item_stack(const item_def& item, int quantity)
 
     if (gain.piety_gain > PIETY_NONE)
         simple_god_message(" appreciates your sacrifice.");
-    if (gain.jiyva_bonus & jiyva_slurp_result::food)
-        mpr("You feel a little less hungry.");
     if (gain.jiyva_bonus & jiyva_slurp_result::mp)
         canned_msg(MSG_GAIN_MAGIC);
     if (gain.jiyva_bonus & jiyva_slurp_result::hp)

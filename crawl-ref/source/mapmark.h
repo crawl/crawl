@@ -15,6 +15,7 @@
 #include "clua.h"
 #include "dgn-event.h"
 #include "map-marker-type.h"
+#include "tag-version.h"
 #include "terrain-change-type.h"
 
 //////////////////////////////////////////////////////////////////////////

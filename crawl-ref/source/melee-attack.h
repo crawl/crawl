@@ -5,6 +5,7 @@
 #include "attack.h"
 #include "fight.h"
 #include "random-var.h"
+#include "tag-version.h"
 
 enum unarmed_attack_type
 {
@@ -35,6 +36,7 @@ public:
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_riposte;      // long blade retaliation attack
+    bool         is_projected;    // projected weapon spell attack
     int          roll_dist;       // palentonga rolling charge distance
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
@@ -100,6 +102,9 @@ private:
     /* Race Effects */
     void do_minotaur_retaliation();
 
+    /* Item Effects */
+    void do_starlight();
+
     /* Brand / Attack Effects */
     bool do_knockback(bool trample = true);
 
@@ -121,6 +126,7 @@ private:
     void mons_do_eyeball_confusion();
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
+    void do_ooze_engulf();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.

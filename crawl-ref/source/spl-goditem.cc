@@ -14,6 +14,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "fight.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -35,6 +36,7 @@
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-dngn.h"
 #include "traps.h"
@@ -281,6 +283,13 @@ bool heal_monster(monster& patient, int amount)
  * [0,sides), re-rolling if they come up the same, and taking a min if they
  * come up distinct. The formula below computes the probability of rolling two
  * numbers that are both large enough, minus the probability they are the same.
+ * This probability is the sum of the geometric series with base
+ *  a = ((s - t) ^2 - (s - t)) / s^2
+ * and ratio
+ *  r = 1 / s
+ *
+ *  (a is the probability of both die being unequal and winning, r is the
+ *   probability of both coming up equal.)
  *
  * The reason for the + 1 in the inequality is that if the die is only one
  * larger than monster hp, the min of two distinct rolls is guaranteed to lose.
@@ -293,8 +302,8 @@ static int _pacify_chance(const monster_info& mi, const int pow, int scale)
     if (sides <= target + 1)
         return 0;
 
-    return (scale * ((sides - target) * (sides - target) - sides))
-         / (sides * sides);
+    return (scale * ((sides - target) * (sides - target) - (sides - target)))
+         / (sides * sides - sides);
 }
 
 static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
@@ -310,7 +319,10 @@ static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
     else
     {
         const int success = _pacify_chance(mi, pow, 100);
-        descs.push_back(make_stringf("chance to pacify: %d%%", success));
+        if (success == 0)
+            descs.push_back(make_stringf("chance to pacify: <<1%%"));
+        else
+            descs.push_back(make_stringf("chance to pacify: %d%%", success));
     }
     return descs;
 }
@@ -365,6 +377,7 @@ spret cast_healing(int pow, bool fail)
 struct player_debuff_effects
 {
     /// Attributes removed by a debuff.
+    // TODO: I'm nearly sure these are unused; REMOVEME!
     vector<attribute_type> attributes;
     /// Durations removed by a debuff.
     vector<duration_type> durations;
@@ -404,6 +417,80 @@ bool player_is_debuffable()
     _dispellable_player_buffs(buffs);
     return !buffs.durations.empty()
            || !buffs.attributes.empty();
+}
+
+/**
+ * Does the player have any magical effects that can be removed
+ * or any magical contamination?
+ *
+ * @return Whether cancellation will have any effect on the player.
+ */
+bool player_is_cancellable()
+{
+    return get_contamination_level() || player_is_debuffable();
+}
+
+/**
+ * Lists out the effects that will be removed by cancellation.
+ */
+string describe_player_cancellation()
+{
+    vector<string> effects;
+
+    // Try to clarify it doesn't remove all contam?
+    if (get_contamination_level())
+        effects.push_back("as magically contaminated");
+
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+    for (auto duration : buffs.durations)
+    {
+        if (duration == DUR_TRANSFORMATION)
+        {
+            effects.push_back("transformed");
+            continue;
+        }
+
+        status_info inf;
+        if (fill_status_info(duration, inf) && !inf.short_text.empty())
+        {
+            strip_suffix(inf.short_text, " (expiring)");
+            effects.push_back(inf.short_text);
+        }
+    }
+
+    // I hate this, but here are some awkward special cases.
+    // (I suspect there are more.)
+    static const vector<status_type> dispellable_statuses = {
+        STATUS_AIRBORNE,
+        STATUS_SPEED,
+        STATUS_INVISIBLE,
+        STATUS_BEHELD,
+    };
+    for (auto status : dispellable_statuses)
+    {
+        status_info inf;
+        if (fill_status_info(status, inf) && !inf.short_text.empty())
+        {
+            if (status == STATUS_AIRBORNE)
+            {
+                if (!you.attribute[ATTR_PERM_FLIGHT]
+                    && !you.racial_permanent_flight())
+                {
+                    effects.push_back("flying");
+                }
+                else
+                    effects.push_back("buoyant");
+            }
+            else
+            {
+                strip_suffix(inf.short_text, " (expiring)");
+                effects.push_back(inf.short_text);
+            }
+        }
+    }
+
+    return comma_separated_line(begin(effects), end(effects), " or ");
 }
 
 /**
@@ -449,6 +536,13 @@ void debuff_player()
         {
             len = 0;
             heal_flayed_effect(&you);
+        }
+        else if (duration == DUR_LIQUID_FLAMES)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You are no longer on fire.");
+            you.props.erase("sticky_flame_aux");
+            you.props.erase("sticky_flame_source");
         }
         else if (len > 1)
         {
@@ -640,150 +734,6 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _selectively_remove_curse(const string &pre_msg)
-{
-    bool used = false;
-
-    while (1)
-    {
-        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
-        {
-            mpr("You have uncursed all your worn items.");
-            return used;
-        }
-
-        int item_slot = prompt_invent_item("Uncurse which item?",
-                                           menu_type::invlist,
-                                           OSEL_CURSED_WORN, OPER_ANY,
-                                           invprompt_flag::escape_only);
-        if (prompt_failed(item_slot))
-            return used;
-
-        item_def& item(you.inv[item_slot]);
-
-        if (!item.cursed()
-            || !item_is_equipped(item)
-            || &item == you.weapon() && !is_weapon(item))
-        {
-            mpr("Choose a cursed equipped item, or Esc to abort.");
-            more();
-            continue;
-        }
-
-        if (!used && !pre_msg.empty())
-            mpr(pre_msg);
-
-        do_uncurse_item(item, false);
-        used = true;
-    }
-}
-
-bool remove_curse(bool alreadyknown, const string &pre_msg)
-{
-    if (have_passive(passive_t::want_curses) && alreadyknown)
-    {
-        if (_selectively_remove_curse(pre_msg))
-        {
-            ash_check_bondage();
-            return true;
-        }
-        else
-            return false;
-    }
-
-    bool success = false;
-
-    // Players can no longer wield armour and jewellery as weapons, so we do
-    // not need to check whether the EQ_WEAPON slot actually contains a weapon:
-    // only weapons (and staves) are both wieldable and cursable.
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
-    {
-        // Melded equipment can also get uncursed this way.
-        item_def * const it = you.slot_item(equipment_type(i), true);
-        if (it && it->cursed())
-        {
-            do_uncurse_item(*it);
-            success = true;
-        }
-    }
-
-    if (success)
-    {
-        if (!pre_msg.empty())
-            mpr(pre_msg);
-        mpr("You feel as if something is helping you.");
-        learned_something_new(HINT_REMOVED_CURSE);
-    }
-    else if (alreadyknown)
-        mprf(MSGCH_PROMPT, "None of your equipped items are cursed.");
-    else
-    {
-        if (!pre_msg.empty())
-            mpr(pre_msg);
-        mpr("You feel blessed for a moment.");
-    }
-
-    return success;
-}
-
-#if TAG_MAJOR_VERSION == 34
-static bool _selectively_curse_item(bool armour, const string &pre_msg)
-{
-    while (1)
-    {
-        int item_slot = prompt_invent_item("Curse which item?", menu_type::invlist,
-                                           armour ? OSEL_UNCURSED_WORN_ARMOUR
-                                                  : OSEL_UNCURSED_WORN_JEWELLERY,
-                                           OPER_ANY, invprompt_flag::escape_only);
-        if (prompt_failed(item_slot))
-            return false;
-
-        item_def& item(you.inv[item_slot]);
-
-        if (item.cursed()
-            || !item_is_equipped(item)
-            || armour && item.base_type != OBJ_ARMOUR
-            || !armour && item.base_type != OBJ_JEWELLERY)
-        {
-            mprf("Choose an uncursed equipped piece of %s, or Esc to abort.",
-                 armour ? "armour" : "jewellery");
-            more();
-            continue;
-        }
-
-        if (!pre_msg.empty())
-            mpr(pre_msg);
-        do_curse_item(item, false);
-        learned_something_new(HINT_YOU_CURSED);
-        return true;
-    }
-}
-
-bool curse_item(bool armour, const string &pre_msg)
-{
-    // Make sure there's something to curse first.
-    bool found = false;
-    int min_type, max_type;
-    if (armour)
-        min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
-    else
-        min_type = EQ_LEFT_RING, max_type = EQ_RING_AMULET;
-    for (int i = min_type; i <= max_type; i++)
-    {
-        if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
-            found = true;
-    }
-    if (!found)
-    {
-        mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
-             armour ? "armour" : "jewellery");
-        return false;
-    }
-
-    return _selectively_curse_item(armour, pre_msg);
-}
-#endif
-
 static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
     // power guidelines:
@@ -836,7 +786,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             }
 
             // don't try to shove the orb of zot into lava and/or crash
-            if (igrd(*ai) != NON_ITEM)
+            if (env.igrid(*ai) != NON_ITEM)
             {
                 if (!has_push_spaces(*ai, false, &adj_spots))
                 {
@@ -848,7 +798,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // Make sure we have a legitimate tile.
             proceed = false;
-            if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
+            if (cell_is_solid(*ai) && !feat_is_opaque(env.grid(*ai)))
             {
                 success = false;
                 none_vis = false;
@@ -882,21 +832,21 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         // closed doors are solid, but we don't want a behaviour difference
         // between open and closed doors
-        proceed = !cell_is_solid(*ai) || feat_is_door(grd(*ai));
+        proceed = !cell_is_solid(*ai) || feat_is_door(env.grid(*ai));
         if (!zin && monster_at(*ai))
             proceed = false;
 
         if (proceed)
         {
             // All items are moved aside for zin, tomb just skips the tile.
-            if (igrd(*ai) != NON_ITEM && zin)
+            if (env.igrid(*ai) != NON_ITEM && zin)
                 push_items_from(*ai, &adj_spots);
 
             // All traps are destroyed.
             if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
-                grd(*ai) = DNGN_FLOOR;
+                env.grid(*ai) = DNGN_FLOOR;
             }
 
             // Actually place the wall.
@@ -911,16 +861,16 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
                 // Make the walls silver.
                 env.grid_colours(*ai) = WHITE;
-                env.tile_flv(*ai).feat_idx =
+                tile_env.flv(*ai).feat_idx =
                         store_tilename_get_index("dngn_silver_wall");
-                env.tile_flv(*ai).feat = TILE_DNGN_SILVER_WALL;
+                tile_env.flv(*ai).feat = TILE_DNGN_SILVER_WALL;
                 if (env.map_knowledge(*ai).seen())
                 {
                     env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
                     env.map_knowledge(*ai).clear_item();
 #ifdef USE_TILE
-                    env.tile_bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
-                    env.tile_bk_fg(*ai) = 0;
+                    tile_env.bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
+                    tile_env.bk_fg(*ai) = 0;
 #endif
                 }
             }
@@ -1119,23 +1069,34 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
              attacker->conj_verb("speak").c_str());
     }
 
-    for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(where, LOS_SOLID, true); ri; ++ri)
         holy_word_monsters(*ri, pow, source, attacker);
+
+    // Sequencing so that we don't holy word a demonic guardian reacting to
+    // a player reading a holy word scroll on themselves (mantis 12600).
+    holy_word_monsters(where, pow, source, attacker);
 }
 
-void torment_player(actor *attacker, torment_source_type taux)
+void torment_player(const actor *attacker, torment_source_type taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     int hploss = 0;
 
-    if (!player_res_torment())
+    if (!you.res_torment())
     {
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
         // Statue form is only partial petrification.
-        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue)
             hploss /= 2;
+        if (you.has_mutation(MUT_TORMENT_RESISTANCE))
+            hploss /= 2;
+#if TAG_MAJOR_VERSION == 34
+        // Save compatibility for old demonspawn mutation -- now deterministic
+        if (you.has_mutation(MUT_STOCHASTIC_TORMENT_RESISTANCE))
+            hploss /= 2;
+#endif
     }
 
     // Kiku protects you from torment to a degree.
@@ -1205,7 +1166,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         break;
 
     case TORMENT_LURKING_HORROR:
-        type = KILLED_BY_SPORE;
+        type = KILLED_BY_DEATH_EXPLOSION;
         aux = "an exploding lurking horror";
         break;
 
@@ -1341,35 +1302,6 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
     bolt beam;
     setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
-}
-
-spret cast_random_effects(int pow, bolt& beam, bool fail)
-{
-    bolt tracer = beam;
-    if (!player_tracer(ZAP_DEBUGGING_RAY, 200, tracer, LOS_RADIUS))
-        return spret::abort;
-
-    fail_check();
-
-    // Extremely arbitrary list of possible effects.
-    zap_type zap = random_choose(ZAP_THROW_FLAME,
-                                 ZAP_THROW_FROST,
-                                 ZAP_SLOW,
-                                 ZAP_HASTE,
-                                 ZAP_PARALYSE,
-                                 ZAP_CONFUSE,
-                                 ZAP_TELEPORT_OTHER,
-                                 ZAP_INVISIBILITY,
-                                 ZAP_ICEBLAST,
-                                 ZAP_FIREBALL,
-                                 ZAP_BOLT_OF_DRAINING,
-                                 ZAP_VENOM_BOLT,
-                                 ZAP_MALMUTATE);
-    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
-
-    zapping(zap, pow, beam, false);
-
-    return spret::success;
 }
 
 void majin_bo_vampirism(monster &mon, int damage)

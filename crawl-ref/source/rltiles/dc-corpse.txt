@@ -15,9 +15,6 @@
 ## Insects ('a')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_cockroach CORPSE_GIANT_COCKROACH
-worker_ant CORPSE_WORKER_ANT
-soldier_ant CORPSE_SOLDIER_ANT
-queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
@@ -44,7 +41,6 @@ cat1 CORPSE_FELID
 
 ## Lizards ('l')
 frilled_lizard CORPSE_FRILLED_LIZARD
-leopard_gecko CORPSE_LEOPARD_GECKO
 iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
@@ -54,7 +50,6 @@ rat CORPSE_RAT
 quokka CORPSE_QUOKKA
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
-porcupine CORPSE_PORCUPINE
 %sdir mon/animals
 
 ## Spiders and insects ('s')
@@ -69,10 +64,9 @@ orb_spider CORPSE_ORB_SPIDER
 %sdir mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 
-## Turtles and crocodiles ('t')
+## Turtles and crabs ('t')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
@@ -111,6 +105,8 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 
 ## Beetles ('B')
+%sdir mon/animals
+boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
 
@@ -120,6 +116,7 @@ death_scarab CORPSE_DEATH_SCARAB
 bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 cane_toad CORPSE_CANE_TOAD
+goliath_frog CORPSE_GOLIATH_FROG
 
 ## Snakes ('S')
 ball_python CORPSE_BALL_PYTHON
@@ -181,6 +178,7 @@ mon/demihumanoids/merfolk/merfolk_water CORPSE_MERFOLK
 %sdir mon/humanoids
 dryad CORPSE_DRYAD
 water_nymph CORPSE_WATER_NYMPH
+eleionoma CORPSE_ELEIONOMA
 
 ## Rotting monsters ('n')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
@@ -260,11 +258,11 @@ mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 ## Hybrids ('H')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-hippogriff CORPSE_HIPPOGRIFF
 manticore CORPSE_MANTICORE
 %sdir mon/demihumanoids
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
+fenstrider_witch CORPSE_FENSTRIDER_WITCH
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 mon/unique/arachne_staveless CORPSE_ARACHNE
@@ -275,7 +273,6 @@ base3 CORPSE_MUTANT_BEAST
 %sdir mon/humanoids
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 kobold CORPSE_KOBOLD
-big_kobold CORPSE_BIG_KOBOLD
 
 ## Nagas ('N')
 %sdir mon/demihumanoids
@@ -296,8 +293,11 @@ deep_troll CORPSE_DEEP_TROLL
 ## Cephalopods ('x')
 %sdir player
 base/octopode1 CORPSE_OCTOPODE
+%sdir mon/animals
+bunyip CORPSE_BUNYIP
 
 ## Draconians ('d')
+%sdir player
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %start
 %compose drcwing/drcwing_black

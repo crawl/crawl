@@ -62,20 +62,18 @@ def global_announce(text):
         socket.send_announcement(text)
 
 def write_dgl_status_file():
-    f = None
+    process_info = ["%s#%s#%s#0x0#%s#%s#" %
+                            (socket.username, socket.game_id,
+                             (socket.process.human_readable_where()),
+                             str(socket.process.idle_time()),
+                             str(socket.process.watcher_count()))
+                        for socket in list(sockets)
+                        if socket.username and socket.is_running()]
     try:
-        f = open(config.dgl_status_file, "w")
-        for socket in list(sockets):
-            if socket.username and socket.is_running():
-                f.write("%s#%s#%s#0x0#%s#%s#\n" %
-                        (socket.username, socket.game_id,
-                         (socket.process.human_readable_where()),
-                         str(socket.process.idle_time()),
-                         str(socket.process.watcher_count())))
+        with open(config.dgl_status_file, "w") as f:
+            f.write("\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
-    finally:
-        if f: f.close()
 
 def status_file_timeout():
     write_dgl_status_file()
@@ -198,6 +196,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "register": self.register,
             "start_change_email": self.start_change_email,
             "change_email": self.change_email,
+            "start_change_password": self.start_change_password,
+            "change_password": self.change_password,
             "forgot_password": self.forgot_password,
             "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
@@ -205,6 +205,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
             "admin_announce": self.admin_announce,
+            "admin_pw_reset": self.admin_pw_reset,
+            "admin_pw_reset_clear": self.admin_pw_reset_clear
             }
 
     @admin_required
@@ -212,6 +214,27 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         global_announce(text)
         self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
         self.send_message("admin_log", text="Announcement made ('" + text + "')")
+
+    @admin_required
+    def admin_pw_reset(self, username):
+        user_info = userdb.get_user_info(username)
+        if not user_info:
+            self.send_message("admin_pw_reset_done", error="Invalid user")
+            return
+        ok, msg = userdb.generate_forgot_password(username)
+        if not ok:
+            self.send_message("admin_pw_reset_done", error=msg)
+        else:
+            self.logger.info("Admin user '%s' set a password token on account '%s'", self.username, username)
+            self.send_message("admin_pw_reset_done", email_body=msg, username=username, email=user_info[1])
+
+    @admin_required
+    def admin_pw_reset_clear(self, username):
+        ok, err = userdb.clear_password_token(username)
+        if ok:
+            self.logger.info("Admin user '%s' cleared the reset token on account '%s'", self.username, username)
+        else:
+            self.logger.info("Error trying to clear reset token for '%s': %s", username, err)
 
     client_closed = property(lambda self: (not self.ws_connection) or self.ws_connection.client_terminated)
 
@@ -321,6 +344,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # this code would be much simpler refactored using async
         def build_callback(game_key, call, next_callback):
             def update_save_info(data, returncode):
+                global sockets
+                if not self in sockets:
+                    return
                 if returncode == 0:
                     try:
                         save_dict = json_decode(data)[load_games.game_modes[game_key]]
@@ -382,14 +408,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         def disable_check(s):
             return s == "[slot full]"
         def send_game_links():
+            global sockets
+            if not self in sockets:
+                return # socket closed by the time this info was collected
             self.queue_message("html", id = "banner", content = banner_html)
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
-            play_html = to_unicode(self.render_string("game_links.html",
+            try:
+                play_html = to_unicode(self.render_string("game_links.html",
                                                   games = config.games,
                                                   save_info = self.save_info,
                                                   disabled = disable_check))
-            self.send_message("set_game_links", content = play_html)
+                self.send_message("set_game_links", content = play_html)
+            except:
+                self.logger.warning("Error on send_game_links callback",
+                                                                exc_info=True)
         # if no game links at all have been sent, immediately render the
         # empty version. This is so that if the server takes a while on
         # initial connect, the player sees something immediately.
@@ -473,6 +506,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             self.send_message("game_started")
             self.restore_mutelist()
+            self.process.handle_notification(self.process.username,
+                            "'/help' to see available chat commands")
 
             if config.dgl_mode:
                 if self.process.where == {}:
@@ -729,6 +764,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                              username, error)
             self.send_message("register_fail", reason = error)
 
+    def start_change_password(self):
+        self.send_message("start_change_password")
+
+    def change_password(self, cur_password, new_password):
+        if self.username is None:
+            self.send_message("change_password_fail", reason = "You need to log in to change your password.")
+            return
+
+        if not userdb.user_passwd_match(self.username, cur_password):
+            self.send_message("change_password_fail", reason = "Your password didn't match.")
+            self.logger.info("Non-matching current password during password change for %s", self.username)
+            return
+
+        error = userdb.change_password(self.user_id, new_password)
+        if error is None:
+            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
+            self.logger.info("User %s changed password.", self.username)
+            self.send_message("change_password_done")
+        else:
+            self.logger.info("Failed to change username for %s: %s", self.username, error)
+            self.send_message("change_password_fail", reason = error)
+
+
     def start_change_email(self):
         self.send_message("start_change_email", email = self.user_email)
 
@@ -762,8 +820,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("forgot_password_fail", reason = error)
 
     def reset_password(self, token, password):
-        if not getattr(config, "allow_password_reset", False):
-            return
         username, error = userdb.update_user_password_from_token(token,
                                                                  password)
         if error is None:
@@ -833,6 +889,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.logger.warning("Didn't know how to handle msg (user %s): %s",
                                     self.username and self.username or "[Anon]",
                                     obj["msg"])
+        except OSError as e:
+            # maybe should throw a custom exception from the socket call rather
+            # than rely on these cases?
+            excerpt = message[:50] if len(message) > 50 else message
+            trunc = "..." if len(message) > 50 else ""
+            if e.errno == errno.EAGAIN or e.errno == errno.ENOBUFS:
+                # errno is different on mac vs linux, maybe also depending on
+                # python version
+                self.logger.warning(
+                    "Socket buffer full; skipping JSON message ('%r%s')!",
+                                excerpt, trunc)
+            else:
+                self.logger.warning(
+                                "Error while handling JSON message ('%r%s')!",
+                                excerpt, trunc,
+                                exc_info=True)
         except Exception:
             excerpt = message[:50] if len(message) > 50 else message
             trunc = "..." if len(message) > 50 else ""
@@ -841,9 +913,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                 exc_info=True)
 
     def flush_messages(self):
-        # type: () -> Optional[tornado.concurrent.Future[None]]
+        # type: () -> bool
         if self.client_closed or len(self.message_queue) == 0:
-            return None
+            return False
         msg = ("{\"msgs\":["
                 + ",".join(self.message_queue)
                 + "]}")
@@ -860,15 +932,40 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 compressed += self._compressobj.flush(zlib.Z_SYNC_FLUSH)
                 compressed = compressed[:-4]
                 self.compressed_bytes_sent += len(compressed)
-                return self.write_message(compressed, binary=True)
+                f = self.write_message(compressed, binary=True)
             else:
                 self.uncompressed_bytes_sent += len(binmsg)
-                return self.write_message(binmsg)
+                f = self.write_message(binmsg)
+
+            # handle any exceptions lingering in the Future
+            # TODO: this whole call chain should be converted to use coroutines
+            def after_write_callback(f):
+                try:
+                    f.result()
+                except tornado.websocket.WebSocketClosedError as e:
+                    self.logger.warning("Connection closed during async write_message")
+                    if self.ws_connection is not None:
+                        self.ws_connection._abort()
+                except Exception as e:
+                    self.logger.warning("Exception during async write_message")
+                    self.logger.warning(e, exc_info=True)
+                    if self.ws_connection is not None:
+                        self.ws_connection._abort()
+
+            # extreme back-compat try-except block, `f` should be None in
+            # ancient tornado versions
+            try:
+                f.add_done_callback(after_write_callback)
+            except:
+                pass
+            # true means that something was queued up to send, but it may be
+            # async
+            return True
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             if self.ws_connection is not None:
                 self.ws_connection._abort()
-        return None
+            return False
 
     # n.b. this looks a lot like superclass write_message, but has a static
     # type signature that is not compatible with it, so we do not override
@@ -877,22 +974,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                        msg,      # type: str
                        send=True # type: bool
                        ):
-        # type: (...) -> Optional[tornado.concurrent.Future[None]]
+        # type: (...) -> bool
         if self.client_closed:
-            return None
+            return False
         self.message_queue.append(msg)
         if send:
             return self.flush_messages()
-        return None
+        return False
 
     def send_message(self, msg, **data):
-        # type: (str, Any) -> Optional[tornado.concurrent.Future[None]]
+        # type: (str, Any) -> bool
         """Sends a JSON message to the client."""
         data["msg"] = msg
         return self.append_message(json_encode(data), True)
 
     def queue_message(self, msg, **data):
-        # type: (str, Any) -> Optional[tornado.concurrent.Future[None]]
+        # type: (str, Any) -> bool
         data["msg"] = msg
         return self.append_message(json_encode(data), False)
 

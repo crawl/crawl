@@ -6,7 +6,6 @@
 * [Compiling](#compiling)
   * [Ubuntu / Debian](#ubuntu--debian)
   * [Fedora](#fedora)
-  * [Void Linux](#void)
   * [Other Linux / Unix](#other-linux--unix)
   * [macOS](#macOS)
   * [Windows](#windows)
@@ -498,8 +497,8 @@ font](http://www.yohng.com/software/terminalvector.html)
 
 ## Getting Help
 
-The best place to ask for help is `##crawl-dev` on Freenode IRC, where
-developers chat.
+The best place to ask for help is `#crawl-dev` on Libera IRC, where developers
+chat.
 
 You can also try [any of the community forums detailed in the
 README](../README.md#community).

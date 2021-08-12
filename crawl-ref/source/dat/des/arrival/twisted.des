@@ -91,11 +91,11 @@ KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
 KMONS:   D = orc ; nothing
 KMONS:   E = merfolk ; nothing
-KMONS:   F = halfling ; nothing
+KMONS:   F = barachi ; nothing
 KMONS:   G = kobold ; nothing
 KMONS:   H = spriggan ; nothing
 KMONS:   I = naga ; nothing
-KMONS:   J = centaur ; nothing
+KMONS:   J = djinni
 KMONS:   K = ogre ; nothing
 KMONS:   L = troll
 KMONS:   M = minotaur ; nothing
@@ -111,7 +111,7 @@ KMONS:   V = octopode ; nothing
 KMONS:   W = formicid ; nothing
 KMONS:   X = gargoyle ; nothing
 KMONS:   Y = vine stalker ; nothing
-KMONS:   Z = nothing
+KMONS:   Z = palentonga ; nothing
 MAP
  ccccc
  c.{.c
@@ -160,24 +160,29 @@ SUBST:   P = MNO
 KMASK:   EMNOQ = no_item_gen
 #
 # Player monsters:
-KMONS: M = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
-           draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
+KMONS: M = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
+           ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
            mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
            octopode; nothing / vampire spells:. / formicid; nothing / \
-           gargoyle; nothing / vine stalker; nothing
-# Player monsters, zombie versions (ghouls drop out because they need sustenance
-# and can't be reanimated once starved; gargoyles don't leave corpses):
-KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / ogre zombie / \
-           centaur zombie / draconian zombie / minotaur zombie / troll zombie / \
-           kobold zombie / mummy / spriggan zombie / merfolk zombie / \
-           dwarf zombie / felid zombie / octopode zombie / formicid zombie
+           gargoyle; nothing / vine stalker; nothing / djinni / \
+           merfolk; nothing / palentonga / gnoll; nothing / barachi / \
+           demonspawn / demigod / tengu; nothing
+# Player monsters, zombie versions (undead, vine stalkers, gargoyles and djinni
+# don't leave corpses):
+KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / \
+           draconian zombie / ogre zombie / minotaur zombie / troll zombie / \
+           kobold zombie / spriggan zombie / dwarf zombie / felid zombie / \
+           octopode zombie / formicid zombie / merfolk zombie / \
+           palentonga zombie / gnoll zombie / barachi zombie / \
+           demonspawn zombie / demigod zombie / tengu zombie
 # Player monsters, skeleton versions (octopodes and formicids drop out because
 # they have no skeletons):
 KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
-           centaur skeleton / draconian skeleton / ogre skeleton / \
-           minotaur skeleton / troll skeleton / kobold skeleton / mummy / \
-           spriggan skeleton / dwarf skeleton / merfolk skeleton / \
-           felid skeleton
+           draconian skeleton / ogre skeleton / minotaur skeleton / \
+           troll skeleton / kobold skeleton / spriggan skeleton / \
+           dwarf skeleton / felid skeleton / merfolk skeleton / \
+           palentonga skeleton / gnoll skeleton / barachi skeleton / \
+           demonspawn skeleton / demigod skeleton / tengu skeleton
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
@@ -267,10 +272,12 @@ ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_solitude
-TAGS:    arrival no_monster_gen
+TAGS:    arrival no_monster_gen transparent
 ORIENT:  float
 SHUFFLE: C{! / B(' / V["
 SUBST:   ([ = x
+# TODO: there are ways for " and ' to get to @, which seems odd. (It'll cause
+# issues if this map isn't transparent, at least.)
 SUBST:   C=., !=@
 SHUFFLE: B' / xx, V" / xx
 SUBST:   B=., '=+, V=., "=+
@@ -396,8 +403,9 @@ ENDMAP
 NAME:    erik_arrival_cave_to_temple
 # Intentionally higher chances for the non-Temple gods.
 TAGS:    cave_to_temple_subvault no_rotate no_trap_gen
-NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
 KPROP:   'tCD> = no_tele_into
+NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
+# TODO this mask probably doesn't work:
 KMASK:   'tCD> = no_item_gen
 : local rnd = crawl.random2(9)
 : if rnd == 0 then
@@ -414,12 +422,12 @@ SUBST:   t : U...., 23 = 0
 : elseif rnd == 2 then
 KFEAT:   C = altar_jiyva
 SUBST:   D = .
-KMONS:   1 = jelly / ooze
+KMONS:   1 = jelly / endoplasm
 SUBST:   t : U...., 23 = 0
 : else
 SUBST:   D = V
 KMONS:   1 : gnoll / orc / 0 w:20
-KMONS:   2 : big kobold / ogre / 0 w:60
+KMONS:   2 : ogre / 0 w:70
 KMONS:   3 : troll / 0 w:70
 SUBST:   t = T
 : end
@@ -644,9 +652,9 @@ ENDMAP
 NAME:    dpeg_arrival_caged_fury
 TAGS:    arrival no_rotate
 MONS:    w:30 nothing / giant cockroach / w:2 worm
-MONS:    w:30 nothing / ooze
+MONS:    w:30 nothing / endoplasm
 MONS:    w:20 nothing / jackal / rat
-MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
+MONS:    w:30 nothing / endoplasm / w:2 jelly / giant cockroach / w:2 worm / \
          w:5 jackal / w:5 rat
 ORIENT:  float
 FTILE:   1234ABCDEabcdem = floor_dirt
@@ -715,11 +723,13 @@ WEIGHT: 1
 KMONS: K = kraken att:neutral
 KFEAT: K = w
 NSUBST: ' = 12:! / *:'
-KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
-           draconian; nothing / ogre; nothing / minotaur; nothing / troll / \
-           kobold; nothing / mummy / ghoul / spriggan; nothing / \
-           dwarf; nothing / octopode; nothing / vampire spells:. / \
-           formicid; nothing / gargoyle; nothing / vine stalker; nothing
+KMONS: ! = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
+           ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
+           mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
+           octopode; nothing / vampire spells:. / formicid; nothing / \
+           gargoyle; nothing / vine stalker; nothing / djinni / \
+           merfolk; nothing / palentonga / gnoll; nothing / barachi / \
+           demonspawn / demigod / tengu; nothing
 KPROP: Kw'! = no_tele_into
 KMASK: '! = no_item_gen
 KFEAT: ' = .
@@ -746,11 +756,13 @@ WEIGHT: 1
 KMONS: K = kraken att:neutral
 KFEAT: K = w
 NSUBST: ' = 15:! / *:'
-KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
-           draconian; nothing / ogre; nothing / minotaur; nothing / troll / \
-           kobold; nothing / mummy / ghoul / spriggan; nothing / \
-           dwarf; nothing / octopode; nothing / vampire spells:. / \
-           formicid; nothing / gargoyle; nothing / vine stalker; nothing
+KMONS: ! = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
+           ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
+           mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
+           octopode; nothing / vampire spells:. / formicid; nothing / \
+           gargoyle; nothing / vine stalker; nothing / djinni / \
+           merfolk; nothing / palentonga / gnoll; nothing / barachi / \
+           demonspawn / demigod / tengu; nothing
 KPROP: Kw'! = no_tele_into
 KMASK: '! = no_item_gen
 KFEAT: ' = .
@@ -911,7 +923,7 @@ KMASK: uU = no_item_gen
 : if (not crawl.game_started()) or race == "Vampire"
 :     or race == "Mummy" or race == "Ghoul"
 :     or race == "Gargoyle" or race == "Vine Stalker"
-:     or race == "Palentonga" or race == "Yak" then
+:     or race == "Djinni" or race == "Yak" then
 :   mons = "human"
 : end
 : if you.race() == "Formicid" or you.race() == "Octopode" then

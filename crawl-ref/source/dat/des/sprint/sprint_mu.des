@@ -161,14 +161,13 @@ ENDMAP
 # Entry 1, Forest
 NAME: sprint_mu_entry_forest
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
-MONS: patrolling ooze / patrolling rat
+MONS: patrolling endoplasm / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
- scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation
@@ -193,14 +192,13 @@ ENDMAP
 # Entry 2, Cave
 NAME: sprint_mu_entry_cave
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
-MONS: patrolling ooze / patrolling rat
+MONS: patrolling endoplasm / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
- scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation
@@ -230,7 +228,7 @@ TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror
 KFEAT: E = altar_elyvilon
 KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
-KMONS: e = patrolling deep elf mage ; long sword ego:holy_wrath
+KMONS: e = patrolling deep elf pyromancer ; long sword ego:holy_wrath
 KITEM: e = potion of curing / potion of heal wounds
 KFEAT: B = altar_beogh
 KFEAT: O = altar_okawaru
@@ -411,10 +409,11 @@ ENDMAP
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
 TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror
-MONS: deep elf knight / deep elf mage w:30
+MONS: deep elf knight / deep elf pyromancer w:15 / deep elf zephyrmancer w:15
 MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
       deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-      w:5 deep elf mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+      w:2 deep elf pyromancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
+      w:2 deep elf zephyrmancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
@@ -515,7 +514,7 @@ KFEAT: q = shallow_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
 KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
- w:1 wand of disintegration
+ w:1 wand of mindburst
 KFEAT: _ = altar_fedhas
 KMONS: s = patrolling Urug
 KMONS: u = death drake
@@ -559,6 +558,7 @@ SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
 KFEAT: _ = altar_jiyva
+KITEM: _ = wand of digging ident:type
 KITEM: ! = slimy rune of zot
 SUBST: $ = ||*
 COLOUR: # = yellow
@@ -600,7 +600,7 @@ KMONS: 8 = anaconda
 SUBST: 5 = 5..
 SUBST: 5 = 5678
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 KITEM: $ = serpentine rune of zot
@@ -639,7 +639,7 @@ TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror
 MONS: Polyphemus, dream sheep, sea snake, Ilsuiw, merfolk javelineer
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
@@ -684,7 +684,7 @@ SUBST: p = 34.
 NSUBST: w = 2:? / *:w
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
@@ -758,7 +758,7 @@ SUBST: . = ...W
 SUBST: W = WWWW......p2
 KFEAT: ! = deep_water
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 KITEM: $ = decaying rune of zot
@@ -851,13 +851,12 @@ SUBST: G : GtTUVY
 SUBST: Y : TUY
 KFEAT: i = antique weapon shop
 KFEAT: d = antique armour shop
-KFEAT: e = gadget shop
 KFEAT: f = book shop
 KFEAT: h = jewellery shop
 KFEAT: j = distillery shop
 KFEAT: k = scroll shop
 KFEAT: * = any shop
-NSUBST: * = 1:i / 1:d / 1:e / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
+NSUBST: * = 1:i / 1:d / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
 COLOUR: Z = shimmer_blue
 KFEAT:  Z = closed_door
 MARKER: Z = lua:props_marker({ \
@@ -1100,7 +1099,7 @@ ENDMAP
 # Tomb 1, spiral
 NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
-MONS: patrolling greater mummy, patrolling mummy priest
+MONS: patrolling royal mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
 KFEAT: - = dart trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
@@ -1182,8 +1181,8 @@ KMONS: t = col:white generate_awake statue name:pristine name_adjective \
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant
-KFEAT: ! = gadget shop / armour shop / distillery shop
-KITEM: $ = wand of disintegration w:2 / potion of curing / star_item
+KFEAT: ! = armour shop / distillery shop
+KITEM: $ = wand of mindburst w:2 / potion of curing / star_item
 KMONS: C = patrolling ice devil
 KMONS: D = patrolling hell beast
 KMONS: E = patrolling sun demon
@@ -1362,7 +1361,7 @@ KITEM: 1 = icy rune of zot
 KITEM: 2 = superb_item, star_item
 KMONS: ! = patrolling ice fiend
 KITEM: ! = potion of resistance ident:all q:3, \
-           potion of stabbing ident:all q:3, potion of haste ident:all q:5
+           potion of attraction ident:all q:3, potion of haste ident:all q:5
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
@@ -1396,15 +1395,15 @@ KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
 KMONS: 2 = patrolling guardian mummy
 KMONS: 3 = patrolling quasit
 KMONS: 4 = patrolling shadow
-KMONS: 5 = patrolling greater mummy
+KMONS: 5 = patrolling royal mummy
 KMONS: 6 = orange crystal statue
 KMONS: 7 = ghost moth
 KMONS: & = gloorx vloq
 NSUBST: & = 1:& / 1:.
 KITEM: 1 = bone rune of zot
-KMONS: % = patrolling greater mummy
+KMONS: % = patrolling royal mummy
 KITEM: % = superb_item, superb_item, star_item, star_item, any, any
-KMONS: ? = patrolling greater mummy
+KMONS: ? = patrolling royal mummy
 KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey

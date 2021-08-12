@@ -1,5 +1,11 @@
 #pragma once
 
+#include <vector>
+
+#include "tag-version.h"
+
+using std::vector;
+
 /* Don't change the order of any enums in this file unless you are breaking
  * save compatibility. See ../docs/develop/save_compatibility.txt for
  * more details, including how to schedule both the current and future
@@ -201,8 +207,10 @@ enum jewellery_type
     RING_SLAYING,
     RING_SEE_INVISIBLE,
     RING_RESIST_CORROSION,
+#if TAG_MAJOR_VERSION == 34
     RING_ATTENTION,
     RING_TELEPORTATION,
+#endif
     RING_EVASION,
 #if TAG_MAJOR_VERSION == 34
     RING_SUSTAIN_ATTRIBUTES,
@@ -214,7 +222,7 @@ enum jewellery_type
     RING_MAGICAL_POWER,
     RING_FLIGHT,
     RING_LIFE_PROTECTION,
-    RING_PROTECTION_FROM_MAGIC,
+    RING_WILLPOWER,
     RING_FIRE,
     RING_ICE,
 #if TAG_MAJOR_VERSION == 34
@@ -243,8 +251,8 @@ enum jewellery_type
     AMU_THE_GOURMAND,
     AMU_CONSERVATION,
     AMU_CONTROLLED_FLIGHT,
-#endif
     AMU_INACCURACY,
+#endif
     AMU_NOTHING,
     AMU_GUARDIAN_SPIRIT,
     AMU_FAITH,
@@ -306,8 +314,8 @@ enum misc_item_type
     MISC_PHANTOM_MIRROR,
 #if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_ODDITIES,
-    MISC_XOMS_CHESSBOARD,
 #endif
+    MISC_XOMS_CHESSBOARD,
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
 
@@ -334,9 +342,7 @@ const vector<misc_item_type> misc_types =
     MISC_SACK_OF_SPIDERS,
 #endif
     MISC_PHANTOM_MIRROR,
-#if TAG_MAJOR_VERSION == 34
     MISC_XOMS_CHESSBOARD,
-#endif
     MISC_ZIGGURAT,
 #if TAG_MAJOR_VERSION == 34
     MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
@@ -401,13 +407,15 @@ enum scroll_type
     SCR_TELEPORTATION,
     SCR_FEAR,
     SCR_NOISE,
+#if TAG_MAJOR_VERSION == 34
     SCR_REMOVE_CURSE,
+#endif
     SCR_SUMMONING,
     SCR_ENCHANT_WEAPON,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
-    SCR_RANDOM_USELESSNESS,
 #if TAG_MAJOR_VERSION == 34
+    SCR_RANDOM_USELESSNESS,
     SCR_CURSE_WEAPON,
     SCR_CURSE_ARMOUR,
 #endif
@@ -439,7 +447,9 @@ enum special_armour_type
 {
     SPARM_FORBID_EGO = -1,
     SPARM_NORMAL,
+#if TAG_MAJOR_VERSION == 34
     SPARM_RUNNING,
+#endif
     SPARM_FIRE_RESISTANCE,
     SPARM_COLD_RESISTANCE,
     SPARM_POISON_RESISTANCE,
@@ -450,7 +460,7 @@ enum special_armour_type
     SPARM_INTELLIGENCE,
     SPARM_PONDEROUSNESS,
     SPARM_FLYING,
-    SPARM_MAGIC_RESISTANCE,
+    SPARM_WILLPOWER,
     SPARM_PROTECTION,
     SPARM_STEALTH,
     SPARM_RESISTANCE,
@@ -511,7 +521,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };
 
-enum special_ring_type // jewellery mitm[].special values
+enum special_ring_type // jewellery env.item[].special values
 {
     SPRING_RANDART = 200,
     SPRING_UNRANDART = 201,
@@ -738,10 +748,12 @@ enum wand_type
     WAND_LIGHTNING_REMOVED,
 #endif
     WAND_POLYMORPH,
-    WAND_ENSLAVEMENT,
+    WAND_CHARMING,
     WAND_ACID,
-    WAND_RANDOM_EFFECTS,
-    WAND_DISINTEGRATION,
+#if TAG_MAJOR_VERSION == 34
+    WAND_RANDOM_EFFECTS_REMOVED,
+#endif
+    WAND_MINDBURST,
 #if TAG_MAJOR_VERSION == 34
     WAND_CLOUDS_REMOVED,
     WAND_SCATTERSHOT_REMOVED,
@@ -749,16 +761,14 @@ enum wand_type
     NUM_WANDS
 };
 
+#if TAG_MAJOR_VERSION == 34
 enum food_type
 {
-#if TAG_MAJOR_VERSION == 34
     FOOD_RATION,
     FOOD_BREAD_RATION,
     FOOD_PEAR,
     FOOD_APPLE,
     FOOD_CHOKO,
-#endif
-#if TAG_MAJOR_VERSION == 34
     FOOD_ROYAL_JELLY,   // was: royal jelly
     FOOD_UNUSED, // was: royal jelly and/or pizza
     FOOD_FRUIT,  // was: snozzcumber
@@ -775,10 +785,8 @@ enum food_type
     FOOD_BEEF_JERKY,
     FOOD_CHEESE,
     FOOD_SAUSAGE,
-#endif
     FOOD_CHUNK,
-#if TAG_MAJOR_VERSION == 34
     FOOD_AMBROSIA,
-#endif
     NUM_FOODS
 };
+#endif

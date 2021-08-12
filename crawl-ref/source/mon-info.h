@@ -1,9 +1,13 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "enchant-type.h"
 #include "mon-util.h"
+#include "tag-version.h"
+
+using std::vector;
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"
 #define CLOUD_IMMUNE_MB_KEY "cloud_immune"
@@ -43,7 +47,7 @@ enum monster_info_flags
 #endif
     MB_PETRIFYING,
     MB_PETRIFIED,
-    MB_VULN_MAGIC,
+    MB_LOWERED_WL,
     MB_POSSESSABLE,
     MB_ENSLAVED,
     MB_SWIFT,
@@ -63,7 +67,7 @@ enum monster_info_flags
     MB_PREP_RESURRECT,
 #endif
     MB_REGENERATION,
-    MB_RAISED_MR,
+    MB_STRONG_WILLED,
     MB_MIRROR_DAMAGE,
     MB_SAFE,
     MB_UNSAFE,
@@ -105,11 +109,10 @@ enum monster_info_flags
     MB_NO_REGEN,
 #if TAG_MAJOR_VERSION == 34
     MB_SUPPRESSED,
-    MB_ROLLING,
 #endif
+    MB_ROLLING,
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
-    MB_OZOCUBUS_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     MB_MAGIC_ARMOUR,
 #endif
@@ -134,8 +137,8 @@ enum monster_info_flags
     MB_TOXIC_RADIANCE,
     MB_GRASPING_ROOTS,
     MB_FIRE_VULN,
-    MB_TORNADO,
-    MB_TORNADO_COOLDOWN,
+    MB_VORTEX,
+    MB_VORTEX_COOLDOWN,
     MB_BARBS,
     MB_POISON_VULN,
     MB_ICEMAIL,
@@ -191,6 +194,9 @@ enum monster_info_flags
     MB_CLOUD_RING_MIASMA,
     MB_WITHERING,
     MB_CRUMBLING,
+    MB_ALLY_TARGET,
+    MB_CANT_DRAIN,
+    MB_CONCENTRATE_VENOM,
     NUM_MB_FLAGS
 };
 
@@ -235,6 +241,7 @@ struct monster_info_base
     monster_spells spells;
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
+    bool can_feel_fear;
 
     uint32_t client_id;
 };
@@ -349,7 +356,9 @@ struct monster_info : public monster_info_base
 
     int randarts(artefact_prop_type ra_prop) const;
     bool can_see_invisible() const;
-    int res_magic() const;
+    bool nightvision() const;
+    int willpower() const;
+    int lighting_modifiers() const;
 
     int base_speed() const
     {
@@ -410,5 +419,3 @@ void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
                            int count);
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                             int start, int count, bool equipment);
-
-typedef function<vector<string> (const monster_info& mi)> (desc_filter);
