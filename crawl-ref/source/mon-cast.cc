@@ -12,6 +12,7 @@
 #include <functional>
 #include <unordered_set>
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
@@ -74,6 +75,7 @@
 #ifdef USE_TILE
 #include "rltiles/tiledef-dngn.h"
 #endif
+#include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "travel.h"
@@ -541,6 +543,20 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             blink_close(&caster);
         }
     } },
+    { SPELL_CORRUPT_LOCALE, {
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            if (player_in_branch(BRANCH_ABYSS))
+            {
+                // since it would just be a cantrip albeit with fun msg
+                return ai_action::bad();
+            } else
+            {
+                return ai_action::good();
+            }
+        }
+    }, },
 };
 
 /// Create the appropriate casting logic for a simple conjuration.
@@ -1788,6 +1804,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_SUMMON_TZITZIMITL:
     case SPELL_SUMMON_HELL_SENTINEL:
+    case SPELL_CORRUPT_LOCALE:
     case SPELL_GOAD_BEASTS:
         pbolt.range = 0;
         pbolt.glyph = 0;
@@ -2119,6 +2136,21 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
         return false;
 
     return true;
+}
+
+/**
+ * @param mon: caster, currently Mlioglotl
+ */
+static void _corrupt_locale(monster mons)
+{
+    // Note that this is flagged as a bad() idea for the ai, so should
+    // not be reached.
+    if (player_in_branch(BRANCH_ABYSS))
+        return;
+
+    mprf("%s corrupts the dungeon around him!", mons.name(DESC_THE).c_str());
+
+    lugonu_corrupt_level_monster(mons);
 }
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
@@ -6480,6 +6512,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->add_ench(ENCH_ROLLING);
         simple_monster_message(*mons,
                 " curls into a ball and begins rolling!");
+        return;
+
+    case SPELL_CORRUPT_LOCALE:
+        ASSERT(foe);
+        if (foe->is_player())
+            _corrupt_locale(*mons);
         return;
 
     case SPELL_GOAD_BEASTS:

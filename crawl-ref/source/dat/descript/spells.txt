@@ -373,6 +373,12 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
+Corrupt Locale spell
+
+Unleashes Abyssal energies in the immediate vicinity. This changes the
+appearance of the affected area and temporarily summons creatures from the
+Abyss. This cannot be used in the Abyss itself.
+%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their
