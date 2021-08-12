@@ -214,6 +214,15 @@ bool fill_status_info(int status, status_info& inf)
                           (-1 * you.props[FLAY_DAMAGE_KEY].get_int()));
         break;
 
+    case STATUS_NO_POTIONS:
+        // Don't double the light if under a duration
+        if (!player_in_branch(BRANCH_COCYTUS) || you.duration[DUR_NO_POTIONS])
+            break;
+        // use -Potion as a base
+        _fill_inf_from_ddef(DUR_NO_POTIONS, inf);
+        inf.short_text = "frozen potions";
+        inf.long_text  = "Your potions are frozen solid.";
+        // intentional fallthrough
     case DUR_NO_POTIONS:
         if (!you.can_drink(false))
             inf.light_colour = DARKGREY;

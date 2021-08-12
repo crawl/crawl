@@ -111,7 +111,8 @@ fire and brimstone rained down upon them.
 Cocytus
 
 Cocytus is a grim and frost-bitten wasteland. Intruders will find the biting
-winds and icy inhabitants of the wastes impeding their progress.
+winds and icy inhabitants of the wastes impeding their progress. The frigid
+cold congeals potions.
 %%%%
 Tartarus
 

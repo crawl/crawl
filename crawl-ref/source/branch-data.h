@@ -177,7 +177,7 @@ const Branch branches[NUM_BRANCHES] =
       brflag::no_items | brflag::dangerous_end,
       DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
       "Cocytus", "Cocytus", "Coc",
-      nullptr,
+      "Your potions freeze solid in the terrible cold.",
       LIGHTBLUE, LIGHTCYAN,
       'X', { RUNE_COCYTUS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
