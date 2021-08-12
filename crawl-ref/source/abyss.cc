@@ -1799,9 +1799,10 @@ static void _initialise_level_corrupt_seeds(int power)
 
     dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
 
-    // The corruption centreed on the player is free.
+    // The corruption seed centred on the player is guaranteed.
     _place_corruption_seed(you.pos(), high + 300);
 
+    // Other corruption seeds are not guaranteed
     for (int i = 0; i < nseeds; ++i)
     {
         coord_def where;
@@ -1822,6 +1823,14 @@ static void _initialise_level_corrupt_seeds(int power)
 static bool _incorruptible(monster_type mt)
 {
     return mons_is_abyssal_only(mt) || mons_class_holiness(mt) == MH_HOLY;
+}
+
+static bool _incorruptible_weaker(monster_type mt)
+{
+    // no tier 1 or 2 demons, or monsters with hit dice above 14
+    return mons_is_abyssal_only(mt) || mons_class_holiness(mt) == MH_HOLY
+    || mons_demon_tier(mt) == 1     || mons_demon_tier(mt) == 2
+    || mons_class_hit_dice(mt) > 14;
 }
 
 // Create a corruption spawn at the given position. Returns false if further
@@ -1856,6 +1865,39 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         return create_monster(mg);
     }
 
+    return false;
+}
+
+static bool _spawn_corrupted_servant_near_monster(const coord_def &pos, actor *as)
+{
+    // Simpler, and higher chance than the player version, though note that for
+    // the monster version this is triggered only once per cast, whereas with the
+    // player version this is tied to the timed effect associated with the corruption
+    // seeds. In short, fewer monsters will be summoned with this version.
+    if (x_chance_in_y(1, 2))
+        return true;
+
+    // Thirty tries for a place.
+    for (int i = 0; i < 30; ++i)
+    {
+        int offsetX = random2avg(4, 3);
+        offsetX += random2(3); // force a sequence point between random calls
+        int offsetY = random2avg(4, 3);
+        offsetY += random2(3); // ditto
+        coord_def p;
+        p.x = pos.x + random_choose(offsetX, -offsetX);
+        p.y = pos.y + random_choose(offsetY, -offsetY);
+        if (!in_bounds(p) || actor_at(p))
+            continue;
+        monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible_weaker);
+        ASSERT(mons);
+        if (!monster_habitable_grid(mons, env.grid(p)))
+            continue;
+        mgen_data mg(mons, BEH_HOSTILE, p);
+        mg.set_summoned(as, 5, 0);
+        mg.place = BRANCH_ABYSS;
+        return create_monster(mg);
+    }
     return false;
 }
 
@@ -2075,6 +2117,57 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     _corrupt_square_flavor(cenv, c);
 }
 
+static void _corrupt_square_monster(const corrupt_env &cenv, const coord_def &c)
+{
+    // See comment in _corrupt_square for details on this block. Note that
+    // this function differs in that the changes to terrain are temporary
+    dungeon_feature_type feat = DNGN_UNSEEN;
+    if (feat_altar_god(env.grid(c)) != GOD_NO_GOD)
+    {
+        if (!one_chance_in(3))
+            feat = DNGN_ALTAR_LUGONU;
+    }
+    else
+        feat = _abyss_proto_feature();
+
+    if (feat_is_trap(feat)
+        || feat == DNGN_UNSEEN
+        || (feat_is_traversable(env.grid(c)) && !feat_is_traversable(feat)
+            && coinflip()))
+    {
+        feat = DNGN_FLOOR;
+    }
+
+    if (feat_is_traversable(env.grid(c)) && !feat_is_traversable(feat)
+        && _is_crowded_square(c))
+    {
+        return;
+    }
+
+    if (!feat_is_traversable(env.grid(c)) && feat_is_traversable(feat)
+        && _is_sealed_square(c))
+    {
+        return;
+    }
+
+    if (feat == DNGN_EXIT_ABYSS)
+        feat = DNGN_ENTER_ABYSS;
+
+    // If we are trying to place a wall on top of a creature or item, try to
+    // move it aside. If this fails, simply place floor instead.
+    actor* act = actor_at(c);
+    if (feat_is_solid(feat) && (env.igrid(c) != NON_ITEM || act))
+    {
+        push_items_from(c, nullptr);
+        push_actor_from(c, nullptr, true);
+        if (actor_at(c) || env.igrid(c) != NON_ITEM)
+            feat = DNGN_FLOOR;
+    }
+    temp_change_terrain(c, feat, random_range(120, 300),
+                                    TERRAIN_CHANGE_GENERIC);
+    _corrupt_square_flavor(cenv, c);
+}
+
 static void _corrupt_level_features(const corrupt_env &cenv)
 {
     vector<coord_def> corrupt_seeds;
@@ -2114,6 +2207,57 @@ static void _corrupt_level_features(const corrupt_env &cenv)
     }
 }
 
+static void _corrupt_level_features_monster(const corrupt_env &cenv, monster mons)
+{
+    // the only "corruption seed" in the monster version is the casting monster
+    vector<coord_def> corrupt_seeds;
+    corrupt_seeds.push_back(mons.pos());
+
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        int idistance = GXM + GYM;
+        for (const coord_def seed : corrupt_seeds)
+            idistance = min(idistance, (*ri - seed).rdist());
+
+        const int ground_zero_radius = 2;
+
+        // Corruption odds are 100% within 2 squares, decaying to 30%
+        // at LOS range (radius 7). Even if the corruption roll is made,
+        // the feature still gets a chance to resist if it's a wall.
+        const int corrupt_perc_chance =
+            (idistance <= ground_zero_radius) ? 1000 :
+            max(0, 1000 - (sqr(idistance) - sqr(ground_zero_radius)) * 700 / 45);
+
+        // linear function that is at 30% at range 7, 15% at radius 20,
+        // maxed to 1%. Only affects outside of range 7. For cells within los
+        // that don't make the regular roll, this also gives them a 50%
+        // chance to get flavor-only corruption.
+        const int corrupt_flavor_chance =
+            (idistance <= 7) ? (corrupt_perc_chance + 1000) / 2 :
+            max(10, 380 - 150 * idistance / 13);
+
+        const int roll = random2(3000);
+
+        // In the monster version of the effect we have an extra check here
+        // which will prevent the effect from triggering _corrupt_square
+        // on anything other than clear dungeon floor, or basic rock wall.
+        // This stops the corruption from hitting stone/metal, and also
+        // from messing with things like doors
+        if (env.grid(*ri) == DNGN_FLOOR || env.grid(*ri) == DNGN_ROCK_WALL)
+        {   // acceptable tile to mess with
+            if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
+            _corrupt_square_monster(cenv, *ri);
+            else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+            _corrupt_square_flavor(cenv, *ri);
+        }
+        if (env.grid(*ri) == DNGN_STONE_WALL || env.grid(*ri) == DNGN_METAL_WALL)
+        {   // chance to change the colour of stone and metal walls though
+            if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+            _corrupt_square_flavor(cenv, *ri);
+        }
+    }
+}
+
 static bool _is_level_corrupted()
 {
     if (player_in_branch(BRANCH_ABYSS))
@@ -2132,6 +2276,18 @@ bool is_level_incorruptible(bool quiet)
     }
 
     return false;
+}
+
+//Mlioglotl can bring his glorified corruption to the dungeon an unlimited number of times
+bool is_level_incorruptible_monster()
+{
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
 }
 
 static void _corrupt_choose_colours(corrupt_env *cenv)
@@ -2175,6 +2331,32 @@ bool lugonu_corrupt_level(int power)
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
+#endif
+
+    return true;
+}
+
+//Currently only used for Mlioglotl. Might be more appropriate in mons-cast.cc
+//but convention looks to be to group abyss-related effects here.
+bool lugonu_corrupt_level_monster(monster mons)
+{
+    if (is_level_incorruptible_monster())
+        return false;
+
+    flash_view_delay(UA_MONSTER, MAGENTA, 200);
+
+    corrupt_env cenv;
+    _corrupt_choose_colours(&cenv);
+    _corrupt_level_features_monster(cenv, mons);
+
+    // Monster version does not use a timed effect to handle monster summons.
+    // This simplifies the effect and allows for the summons to be abjured once
+    // the monster is killed, as normal
+    _spawn_corrupted_servant_near_monster(mons.pos(), &mons);
+
+#ifndef USE_TILE_LOCAL
+    // Allow extra time for the flash to linger.
+    scaled_delay(300);
 #endif
 
     return true;

@@ -373,6 +373,11 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
+Corrupt Locale spell
+
+Tears apart reality within the dungeon in the immediate vicinity, allowing
+the denizens and horrors of the Abyss to temporarily be summoned through.
+%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their

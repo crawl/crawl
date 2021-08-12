@@ -3452,6 +3452,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CORRUPT_LOCALE, "Corrupt Locale",
+    spschool::translocation,
+    spflag::monster | spflag::area,
+    7,
+    0,
+    -1, -1,
+    0, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

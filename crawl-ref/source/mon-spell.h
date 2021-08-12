@@ -1252,6 +1252,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_MLIOGLOTL,
+      {
+       { SPELL_MIGHT, 8, MON_SPELL_NATURAL },
+       { SPELL_CAUSE_FEAR, 10, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
+       { SPELL_CORRUPT_LOCALE, 22, MON_SPELL_MAGICAL},
+      }
+    },
+
     // ('Y') Bovids and elephants.
     {  MST_CATOBLEPAS,
       {
