@@ -21,6 +21,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h" // walk_verb_to_present
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
@@ -900,7 +901,7 @@ void move_player_action(coord_def move)
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"
                           : you.form != transformation::none   ? "walk" // XX
-                          : lowercase_first(species::walking_verb(you.species));
+                          : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
