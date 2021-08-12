@@ -3188,6 +3188,10 @@ void read(item_def* scroll, dist *target)
 
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
+        const bool bad_item = (is_dangerous_item(*scroll, true)
+                                    || is_bad_item(*scroll))
+                            && Options.bad_item_prompt;
+
         if (stop_attack_prompt(hitfunc, verb_object.c_str(),
                                [which_scroll] (const actor* m)
                                {
@@ -3202,9 +3206,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if ((is_dangerous_item(*scroll, true)
-                  || is_bad_item(*scroll))
-                 && Options.bad_item_prompt
+        else if (bad_item
                  && !yesno(make_stringf("Really %s?%s",
                                         verb_object.c_str(),
                                         hostile_check ? ""
@@ -3215,7 +3217,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if (!hostile_check && !yesno(make_stringf(
+        else if (!bad_item && !hostile_check && !yesno(make_stringf(
             "You can't see any enemies this would affect, really %s?",
                                         verb_object.c_str()).c_str(),
                                                 false, 'n'))
