@@ -161,7 +161,7 @@ const Branch branches[NUM_BRANCHES] =
       brflag::no_items | brflag::dangerous_end,
       DNGN_ENTER_DIS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
       "Dis", "the Iron City of Dis", "Dis",
-      nullptr,
+      "An ancient malice corrodes your equipment.",
       CYAN, BROWN,
       'I', { RUNE_DIS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 

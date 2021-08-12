@@ -198,6 +198,12 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_CORROSION:
+        // No blank or double lights
+        if (you.corrosion_amount() == 0 || you.duration[DUR_CORROSION])
+            break;
+        _fill_inf_from_ddef(DUR_CORROSION, inf);
+        // Intentional fallthrough
     case DUR_CORROSION:
         inf.light_text = make_stringf("Corr (%d)",
                           (-4 * you.corrosion_amount()));

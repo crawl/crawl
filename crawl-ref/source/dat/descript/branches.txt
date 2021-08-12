@@ -101,7 +101,7 @@ Dis
 
 The Iron City of Dis is home to many of the most resilient guardians of hell.
 Those who do not belong in the halls of Dis will find the very earth itself
-opposing them.
+opposing them and their equipment corroded.
 %%%%
 Gehenna
 
