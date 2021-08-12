@@ -1756,8 +1756,13 @@ skill_type item_attack_skill(const item_def &item)
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_STAVES)
         return SK_STAVES;
-    else if (item.base_type == OBJ_MISSILES && !has_launcher(item))
+    else if (item.base_type == OBJ_MISSILES && (!has_launcher(item)
+                || item.is_type(OBJ_MISSILES, MI_STONE)))
+    {
         return SK_THROWING;
+    }
+    // don't return skills for non-throwable ammo: without the launcher they're
+    // just chaff. (Or at least, I think this is the motivation.)
 
     // This is used to mark that only fighting applies.
     return SK_FIGHTING;
