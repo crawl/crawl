@@ -6274,9 +6274,12 @@ int player_willpower(bool calc_unid, bool temp)
     if (you.duration[DUR_TROGS_HAND] && temp)
         rm += WL_PIP * 2;
 
-    // Enchantment effect
-    if (you.duration[DUR_LOWERED_WL] && temp)
+    // Enchantment/environment effect
+    if ((you.duration[DUR_LOWERED_WL]
+         || player_in_branch(BRANCH_TARTARUS)) && temp)
+    {
         rm /= 2;
+    }
 
     if (rm < 0)
         rm = 0;

@@ -740,6 +740,14 @@ bool fill_status_info(int status, status_info& inf)
         inf.long_text    = "You cannot resist fire.";
         break;
 
+    case STATUS_LOWERED_WL:
+        // Don't double the light if under a duration
+        if (!player_in_branch(BRANCH_TARTARUS) || you.duration[DUR_LOWERED_WL])
+            break;
+        if (player_in_branch(BRANCH_TARTARUS))
+            _fill_inf_from_ddef(DUR_LOWERED_WL, inf);
+        break;
+
     default:
         if (!found)
         {
