@@ -5932,6 +5932,16 @@ int player::armour_class_with_one_removal(item_def removed) const
                             get_armour_items_one_removal(removed));
 }
 
+int player::corrosion_amount() const
+{
+    int corrosion = 0;
+
+    if (duration[DUR_CORROSION])
+        corrosion += you.props[CORROSION_KEY].get_int();
+
+    return corrosion;
+}
+
 int player::armour_class_with_specific_items(vector<const item_def *> items) const
 {
     const int scale = 100;
@@ -5952,8 +5962,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     if (duration[DUR_SPWPN_PROTECTION])
         AC += 700;
 
-    if (duration[DUR_CORROSION])
-        AC -= 400 * you.props[CORROSION_KEY].get_int();
+    AC -= 400 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
 
@@ -6540,6 +6549,7 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
+    // Static environmental corrosion doesn't factor in
     int prev_corr = props[CORROSION_KEY].get_int();
     bool did_corrode = false;
     for (int i = 0; i < degree; i++)

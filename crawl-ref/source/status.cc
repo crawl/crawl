@@ -200,7 +200,7 @@ bool fill_status_info(int status, status_info& inf)
     {
     case DUR_CORROSION:
         inf.light_text = make_stringf("Corr (%d)",
-                          (-4 * you.props[CORROSION_KEY].get_int()));
+                          (-4 * you.corrosion_amount()));
         break;
 
     case DUR_FLAYED:
