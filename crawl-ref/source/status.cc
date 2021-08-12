@@ -715,7 +715,8 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_NO_SCROLL:
-        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
+            || player_in_branch(BRANCH_GEHENNA))
         {
             inf.light_colour = RED;
             inf.light_text   = "-Scroll";

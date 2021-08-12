@@ -106,7 +106,8 @@ opposing them and their equipment corroded.
 Gehenna
 
 Gehenna is a realm of lava, flames and damnation. Those who linger will have
-fire and brimstone rained down upon them.
+fire and brimstone rained down upon them. The acrid smoke renders scrolls
+unreadable.
 %%%%
 Cocytus
 

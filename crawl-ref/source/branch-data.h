@@ -169,7 +169,7 @@ const Branch branches[NUM_BRANCHES] =
       brflag::no_items | brflag::dangerous_end,
       DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
       "Gehenna", "Gehenna", "Geh",
-      nullptr,
+      "Your scrolls appear blurry in the acrid smoke.",
       BROWN, RED,
       'G', { RUNE_GEHENNA }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
