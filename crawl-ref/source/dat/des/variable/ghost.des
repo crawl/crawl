@@ -2508,3 +2508,43 @@ PnQ-aaa-Q-aaQnP'.
  .ccnc.......cnc..
  ...P..     ..P..
 ENDMAP
+
+NAME:   hellmonk_ghost_big_iron
+DEPTH:  D:8-13, Elf, Depths, Zot
+ORIENT: float
+ITEM:   randbook disc:earth spells:iron_shot, bolt q:1
+KMONS:  O = player ghost
+KMONS:  p = plant
+KMONS:  - = bush
+: if you.in_branch("D") then
+KMONS:  D = ynoxinul
+: elseif you.in_branch("Elf") then
+ITEM:   hat, pair of boots
+KMONS:  D = deep elf annihilator / ancient champion
+: elseif you.in_branch("Depths") then
+ITEM:   hat, pair of boots
+:item(dgn.loot_scrolls)
+KMONS:  D = ancient champion / deep elf annihilator / iron giant
+: else
+ITEM:   hat good_item, pair of boots, scroll of blinking ident:all
+KMONS:  D = draconian annihilator / iron giant / hell sentinel
+: end
+KFEAT:  ~ = abandoned_shop
+SUBST:  ~ = ~~~p, p = p''', - = -'
+FTILE:  defghODp~-' = floor_sand
+COLOUR: defghODp~-' = yellow
+:ghost_setup(_G)
+MAP
+.........
+.nnnnnnn.
+.npfegpn.
+.n~'d'~n.
+.nh'O'pn.
+.n~'''~n.
+.np'-'pn.
+.n~'''~n.
+.np'D'pn.
+.n~'''~n.
+.nnn=nnn.
+.........
+ENDMAP
