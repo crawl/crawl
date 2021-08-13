@@ -1121,6 +1121,15 @@ int attack::get_weapon_plus()
     return weapon->plus;
 }
 
+static int _core_apply_slaying(int damage, int plus)
+{
+    // somewhat odd: +0 is random2(1), and -1 is random2(0).
+    if (plus >= 0)
+        return damage + random2(1 + plus);
+    else
+        return damage - random2(1 - plus);
+}
+
 // Slaying and weapon enchantment. Apply this for slaying even if not
 // using a weapon to attack.
 int attack::player_apply_slaying_bonuses(int damage, bool aux)
@@ -1134,9 +1143,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
                                  || (weapon && is_range_weapon(*weapon)
                                             && using_weapon()));
 
-    damage += (damage_plus > -1) ? (random2(1 + damage_plus))
-                                 : (-random2(1 - damage_plus));
-    return damage;
+    return _core_apply_slaying(damage, damage_plus);
 }
 
 int attack::player_apply_final_multipliers(int damage)
@@ -1209,10 +1216,7 @@ int attack::calc_damage()
 
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
-            if (wpn_damage_plus >= 0)
-                damage += random2(1 + wpn_damage_plus);
-            else
-                damage -= random2(1 - wpn_damage_plus);
+            damage = _core_apply_slaying(damage, wpn_damage_plus);
         }
 
         damage_max += attk_damage;
