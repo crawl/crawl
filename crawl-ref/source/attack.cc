@@ -1123,7 +1123,7 @@ int attack::get_weapon_plus()
 
 static int _core_apply_slaying(int damage, int plus)
 {
-    // somewhat odd: +0 is random2(1), and -1 is random2(0).
+    // +0 is random2(1) (which is 0)
     if (plus >= 0)
         return damage + random2(1 + plus);
     else
