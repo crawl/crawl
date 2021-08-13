@@ -190,6 +190,14 @@ __LOUD_ROAR seen
 
 SOUND:@The_monster@ roars deafeningly!
 %%%%
+__RUSTLE unseen
+
+SOUND:You hear a loud rustle.
+%%%%
+__RUSTLE seen
+
+SOUND:@The_monster@'s pages rustle loudly.
+%%%%
 ############################################
 # End of default shouts
 ############################################

@@ -357,6 +357,11 @@ a moment to begin burning with vigor and in its fragile initial state is easily
 smothered by either the caster or a wandering monster. Re-casting the spell
 will bring the fire fully to life, but will burn the caster.
 %%%%
+Conjure Living Spells spell
+
+Creates several living, autonomous spells. These will attempt to cast themselves
+at the nearest foe, expending themselves in the process.
+%%%%
 Corona spell
 
 Causes a halo of glowing light to surround and effectively outline a creature.

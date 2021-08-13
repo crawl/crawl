@@ -1424,10 +1424,11 @@ static bool _shout_fits_monster(monster_type mc, int shout)
 
     switch (shout)
     {
-    // Bees, cherubs and two-headed ogres never fit.
+    // Bees, books, cherubs and two-headed ogres never fit.
     case S_SHOUT2:
     case S_BUZZ:
     case S_CHERUB:
+    case S_RUSTLE:
     // The beast cannot speak.
     case S_DEMON_TAUNT:
         return false;
@@ -4665,6 +4666,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "says",         // S_CHERUB -- they just speak normally.
         "squeals",
         "roars",
+        "rustles",      // dubious
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT

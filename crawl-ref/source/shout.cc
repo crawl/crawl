@@ -64,6 +64,7 @@ static const map<shout_type, string> default_msg_keys = {
     { S_CHERUB,         "__CHERUB" },
     { S_SQUEAL,         "__SQUEAL" },
     { S_LOUD_ROAR,      "__LOUD_ROAR" },
+    { S_RUSTLE,         "__RUSTLE" },
 };
 
 /**

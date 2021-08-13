@@ -1244,6 +1244,17 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props[MON_GENDER_KEY] = random_choose(GENDER_FEMALE, GENDER_MALE,
                                                    GENDER_NEUTRAL);
     }
+    
+    if (mg.props.exists(CUSTOM_SPELL_LIST_KEY))
+    {
+        for (int spell : mg.props[CUSTOM_SPELL_LIST_KEY].get_vector())
+        {
+            mon_spell_slot slot((spell_type)spell, 200, MON_SPELL_MAGICAL);
+            mon->spells.push_back(slot);
+        }
+        mon->props[CUSTOM_SPELLS_KEY] = true;
+    }
+
 
     if (mon->has_spell(SPELL_REPEL_MISSILES))
         mon->add_ench(ENCH_REPEL_MISSILES);

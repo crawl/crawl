@@ -228,6 +228,10 @@ Stunning Burst cast
 
 @The_monster@ fires a burst of electricity @at@ @target@.
 %%%%
+Conjure Living Spells cast
+
+@The_monster@ erupts in a flurry of living spells!
+%%%%
 #################################################
 # These have special hard-coded messaging.
 #################################################
@@ -791,6 +795,10 @@ Static Discharge shock serpent cast
 Corrupting Pulse wretched star cast
 
 @The_monster@ pulses with an eldritch light!
+%%%%
+living spell cast
+
+@The_monster@ casts itself @at@ @target@.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.
