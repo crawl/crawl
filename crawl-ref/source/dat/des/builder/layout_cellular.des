@@ -131,7 +131,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     subdivide_level_multiplier = .9,
   }
 
-  local bounds = padded_bounds(2,10)
+  local bounds = omnigrid.padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Begin with a number of "seed" cells that will grow to form structures
@@ -263,7 +263,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     subdivide_level_multiplier = .9,
   }
 
-  local bounds = padded_bounds(2,8)
+  local bounds = omnigrid.padded_bounds(2,8)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Seed a number of buildings
@@ -367,7 +367,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     subdivide_level_multiplier = .9,
   }
 
-  local bounds = padded_bounds(2,8)
+  local bounds = omnigrid.padded_bounds(2,8)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
   local doors = crawl.one_chance_in(3)
   local corners = false

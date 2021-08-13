@@ -29,15 +29,6 @@
 
   end
 
-  function padded_bounds(minpad,maxpad)
-    local gxm,gym = dgn.max_bounds()
-    local x1,y1,x2,y2 = 1,1,gxm-2,gym-2
-    return { x1 = x1 + crawl.random_range(minpad,maxpad),
-             y1 = y1 + crawl.random_range(minpad,maxpad),
-             x2 = x2 - crawl.random_range(minpad,maxpad),
-             y2 = y2 - crawl.random_range(minpad,maxpad) }
-  end
-
   -- Generate a floor plan based on omnigrid subdivision
   function omnigrid_floor_plan(room,options,gen)
 
@@ -335,7 +326,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
   local distort = you.in_branch("zot")
 
   local max_corridor = crawl.random_range((cavey or distort) and 4 or 2,10)
-  local bounds = padded_bounds(max_corridor,max_corridor + crawl.random_range(1,6))
+  local bounds = omnigrid.padded_bounds(max_corridor,max_corridor + crawl.random_range(1,6))
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- TODO: Allow specifying different inner and outer shapes. This will make it easy to do a multishape option
@@ -445,7 +436,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     grid_opts.minimum_size = math.max(grid_opts.minimum_size, thin and 4 or 5)
   end
 
-  local bounds = padded_bounds(2,10)
+  local bounds = omnigrid.padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Connect up the cells
