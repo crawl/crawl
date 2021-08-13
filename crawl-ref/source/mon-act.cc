@@ -2225,7 +2225,7 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
-    
+
     if (mons->type == MONS_VAUD)
         _vaud_lantern_burn(mons);
 

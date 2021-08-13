@@ -989,7 +989,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { NUM_WEAPONS,                    40 }, }, // 1/3 odds of weap
             {}, {}, 1,
         } },
-        
+
         { MONS_VAUD, {
             { { WPN_FLAIL,          45},    //Total weight 100
               { WPN_MACE,           29},
