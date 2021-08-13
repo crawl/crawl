@@ -1403,14 +1403,14 @@ bool Menu::process_key(int keyin)
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
         {
-            if (!on_single_selection)
-                return false;
             MenuEntry *item = sel[0];
-            // TODO: per item trigger code
-            if (!on_single_selection(*item))
-                return false;
-            deselect_all();
-            return true;
+            bool result = false;
+            if (item->on_select)
+                result = item->on_select(*item);
+            else if (on_single_selection)
+                result = on_single_selection(*item);
+            deselect_all(); // things break if this isn't here
+            return result;
         }
 
         update_title();
