@@ -615,6 +615,8 @@ static int _mons_class_halo_radius(monster_type type)
         return 1;  // only notionally holy
     case MONS_MENNAS:
         return 2;  // ???  Low on grace or what?
+    case MONS_VAUD:
+        return 4;
     default:
         return -1;
     }

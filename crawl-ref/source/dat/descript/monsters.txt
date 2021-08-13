@@ -471,6 +471,14 @@ Vashnia
 An elite marksnaga who leads a skilled team of sharpshooters. She is
 particularly skilled in translocation magic.
 %%%%
+Vaud
+
+A cowardly ogre once unfortunate enough to murder a saint in self defense.
+Seeking revenge, the fallen saint's deity of light cursed Vaud to forever
+carry a holy lantern, walking the dungeon until it has been purged.
+
+You will be burned each turn his holy lantern's light falls upon you.
+%%%%
 Xtahua
 
 An ancient and mighty dragon.

@@ -817,6 +817,7 @@ guardian_serpent MONS_GUARDIAN_SERPENT
 %sdir mon/unique
 %rim 0
 erolcha MONS_EROLCHA
+vaud MONS_VAUD
 %rim 1
 %sdir mon/humanoids
 ogre MONS_OGRE
