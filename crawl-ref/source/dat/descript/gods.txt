@@ -66,14 +66,6 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
-Wu Jian
-
-The Wu Jian Council is a congregation of martial monks, ascended to divinity
-after battling their way out of the afterlife. Disciples of the Council are
-able to execute acrobatic martial maneuvers, such as wall jumps, spinning
-attacks and punishing lunges. They will eventually become able to request
-help in the form of a storm of heavenly clouds.
-%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -190,6 +182,14 @@ access to some of the fearsome spells in Vehumet's library. One's devotion to
 Vehumet can be proven by the causing of as much carnage and destruction as
 possible.
 %%%%
+Wu Jian
+
+The Wu Jian Council is a congregation of martial monks, ascended to divinity
+after battling their way out of the afterlife. Disciples of the Council are
+able to execute acrobatic martial maneuvers, such as wall jumps, spinning
+attacks and punishing lunges. They will eventually become able to request
+help in the form of a storm of heavenly clouds.
+%%%%
 Xom
 
 Xom is a wild and unpredictable god of chaos, who seeks not worshippers but
@@ -302,15 +302,6 @@ monsters to slime, and eventually to reshape themselves to remove harmful
 mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
-%%%%
-Wu Jian powers
-
-Disciples of the Council learn to perform three martial techniques while moving
-around in combat. Martial techniques are incompatible with more elaborate
-methods of moving, and do not combine with charging, digging, hopping, or
-rampaging. They will also be taught to move at unfathomable speeds for short
-distances, and become able to summon a storm of golden clouds to increase their
-precision and damage for as long as they keep using martial attacks.
 %%%%
 Kikubaaqudgha powers
 
@@ -440,6 +431,15 @@ their destructive spells — first assistance in casting such spells and then
 increased range for conjurations. Vehumet will offer followers the knowledge of
 increasingly powerful destructive spells as they gain piety.
 %%%%
+Wu Jian powers
+
+Disciples of the Council learn to perform three martial techniques while moving
+around in combat. Martial techniques are incompatible with more elaborate
+methods of moving, and do not combine with charging, digging, hopping, or
+rampaging. They will also be taught to move at unfathomable speeds for short
+distances, and become able to summon a storm of golden clouds to increase their
+precision and damage for as long as they keep using martial attacks.
+%%%%
 Xom powers
 
 To worship Xom is to live riskily. In a good mood Xom may shower worshippers
@@ -535,13 +535,6 @@ too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
 %%%%
-Wu Jian wrath
-
-Those who turn against the Council must be prepared to endure death by a
-thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
-the sudden spring of traps, the flying daggers and the armies of animated
-weapons that will ambush the betrayer.
-%%%%
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
@@ -631,6 +624,13 @@ Vehumet wrath
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by crystal spears and firestorms. Their
 own conjurations, too, are wont to misfire at the worst possible moments.
+%%%%
+Wu Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a
+thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
+the sudden spring of traps, the flying daggers and the armies of animated
+weapons that will ambush the betrayer.
 %%%%
 Xom wrath
 

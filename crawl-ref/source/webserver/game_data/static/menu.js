@@ -573,6 +573,22 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 return false;
             })
 
+        if (menu.tag == "macro_mapping")
+        {
+            input.keypress(function (ev) {
+                var chr = String.fromCharCode(event.which);
+                if (chr == '?')
+                {
+                    // TODO: a popup from here does not take focus over
+                    // the input, which is still receiving keys. But I'm not
+                    // sure how to fix...
+                    comm.send_message("key", { keycode: ev.which });
+                    ev.preventDefault();
+                    return false;
+                }
+            });
+        }
+
         input.keydown(function (ev) {
             if (ev.which == 13)
             {

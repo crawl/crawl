@@ -4862,7 +4862,7 @@ bool ru_power_leap()
     while (1)
     {
         direction_chooser_args args;
-        args.restricts = DIR_LEAP;
+        args.restricts = DIR_ENFORCE_RANGE;
         args.mode = TARG_ANY;
         args.range = 3;
         args.needs_path = false;
@@ -5165,7 +5165,7 @@ bool uskayaw_line_pass()
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
-        args.restricts = DIR_LEAP;
+        args.restricts = DIR_ENFORCE_RANGE;
         args.mode = TARG_ANY;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Line Pass</white>";

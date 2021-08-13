@@ -172,6 +172,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_SHORT_LIVED:
     case ENCH_SLOWLY_DYING:
         if (mons.type == MONS_WITHERED_PLANT)
             return MB_CRUMBLING;
@@ -954,8 +955,6 @@ string monster_info::_core_name() const
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
                 s = item.name(DESC_PLAIN, false, false, true, false);
-                if (type == MONS_SPECTRAL_WEAPON)
-                    s = "spectral " + s;
             }
             break;
 

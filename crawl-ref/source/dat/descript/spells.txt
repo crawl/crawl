@@ -932,7 +932,7 @@ Causes confusion in all who gaze upon the caster.
 Maxwell's Capacitive Coupling spell
 
 Gradually builds up electric charge in the caster. When a critical threshold is
-reached the charge couples with the nearest foe, vapourizing them instantly.
+reached the charge couples with the nearest foe, vaporising them instantly.
 The resulting charge is so intense it bypasses even electrical immunity.
 Higher spell power will allow the caster to accumulate charge more rapidly.
 %%%%
@@ -1601,8 +1601,8 @@ Animates the weapon of a targeted foe, ripping it from their hands and causing
 it to attack them relentlessly. Once the target dies, the weapon will fall to
 the ground shortly thereafter.
 
-Ranged weapons and certain powerful named artefacts cannot be affected, and
-any abilities that require evocation skill to trigger will not be active.
+Certain powerful named artefacts cannot be animated, and any properties that
+require skill in evocations will not be active.
 %%%%
 Twisted Resurrection spell
 

@@ -1222,29 +1222,29 @@ KITEM:  O = ring of fire ident:type
 SUBST:  d = *%, e = %$, fghij = -
 NSUBST: - = 3=1 / 4=1' / 23 / 23'' / '
 :     elseif you.depth() < 9 then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:type w:5
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:all w:5
 SUBST:  d = *, e = *%, f = %$--, ghij = -
 NSUBST: - = 3=12 / 4=12'' / 3 / 3=3' / '
 :     elseif you.depth() < 12 then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:type w:5
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:all w:5
 SUBST:  e = *, f = %$, ghij = -
 NSUBST: - = 3=12 / 4=12'' / 2=3 / 3=3' / 45'''''' / '
 :     elseif you.depth() < 14 then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:all
 SUBST:  f = *, g = %$, hij = -
 NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67'''''' / '
 :     else
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:all
 SUBST:  f = |*, g = *%, h = %$--, ij = -
 NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67 / D''' / '
 :     end
 : elseif you.in_branch("Lair") then
-KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
+KITEM:  O = ring of fire ident:type / ring of fire randart ident:all
 SUBST:  f = *%, g = %$--, hij = -
 NSUBST: - = 4=1 / 5=1' / 2=4 / 2=4' / 7''' / '
 # Depths
 : else
-KITEM:  O = ring of fire randart ident:type
+KITEM:  O = ring of fire randart ident:all
 SUBST:  fghij = |*
 NSUBST: - = 4=1 / 6=1' / 5 / 2=5' / 6 / 2=6' / 2=7D / 2=7D'' / E' / '
 : end
@@ -1545,24 +1545,24 @@ SUBST:  e = *, f = %$, gh = -
 NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / -
 :     elseif you.depth() < 14 then
 KITEM:  O = ring of dexterity good_item ident:type / \
-            ring of dexterity randart ident:type w:5 / \
+            ring of dexterity randart ident:all w:5 / \
             ring of intelligence good_item ident:type / \
-            ring of intelligence randart ident:type w:5
+            ring of intelligence randart ident:all w:5
 SUBST:  f = *, g = %$, h = -
 NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
 :     else
 KITEM:  O = ring of dexterity good_item ident:type / \
-            ring of dexterity randart ident:type / \
+            ring of dexterity randart ident:all / \
             ring of intelligence good_item ident:type / \
-            ring of intelligence randart ident:type
+            ring of intelligence randart ident:all
 SUBST:  f = |*, g = *%, h = %$--
 NSUBST: - = 2=1 / 2=1- / 3=2 / 4=2- / -
 :     end
 : elseif you.in_branch("Orc") then
 KITEM:  O = ring of dexterity good_item ident:type / \
-            ring of dexterity randart ident:type w:5 / \
+            ring of dexterity randart ident:all w:5 / \
             ring of intelligence good_item ident:type / \
-            ring of intelligence randart ident:type w:5
+            ring of intelligence randart ident:all w:5
 SUBST:  f = *, g = %$, h = -
 NSUBST: - = 2=1 / 2=1- / 2=2 / 4=2- / -
 : end
@@ -2507,4 +2507,44 @@ PnQ-aaa-Q-aaQnP'.
  .cpQccc'''cccQcc.
  .ccnc.......cnc..
  ...P..     ..P..
+ENDMAP
+
+NAME:   hellmonk_ghost_big_iron
+DEPTH:  D:8-13, Elf, Depths, Zot
+ORIENT: float
+ITEM:   randbook disc:earth spells:iron_shot, bolt q:1
+KMONS:  O = player ghost
+KMONS:  p = plant
+KMONS:  - = bush
+: if you.in_branch("D") then
+KMONS:  D = ynoxinul
+: elseif you.in_branch("Elf") then
+ITEM:   hat, pair of boots
+KMONS:  D = deep elf annihilator / ancient champion
+: elseif you.in_branch("Depths") then
+ITEM:   hat, pair of boots
+:item(dgn.loot_scrolls)
+KMONS:  D = ancient champion / deep elf annihilator / iron giant
+: else
+ITEM:   hat good_item, pair of boots, scroll of blinking ident:all
+KMONS:  D = draconian annihilator / iron giant / hell sentinel
+: end
+KFEAT:  ~ = abandoned_shop
+SUBST:  ~ = ~~~p, p = p''', - = -'
+FTILE:  defghODp~-' = floor_sand
+COLOUR: defghODp~-' = yellow
+:ghost_setup(_G)
+MAP
+.........
+.nnnnnnn.
+.npfegpn.
+.n~'d'~n.
+.nh'O'pn.
+.n~'''~n.
+.np'-'pn.
+.n~'''~n.
+.np'D'pn.
+.n~'''~n.
+.nnn=nnn.
+.........
 ENDMAP

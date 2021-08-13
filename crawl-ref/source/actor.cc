@@ -206,12 +206,12 @@ int actor::inaccuracy() const
     return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
 }
 
-bool actor::res_corr(bool calc_unid, bool items) const
+bool actor::res_corr(bool calc_unid, bool temp) const
 {
-    return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
-                     || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
-                     || scan_artefacts(ARTP_RCORR, calc_unid)
-                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION, calc_unid));
+    return temp && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
+                    || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
+                    || scan_artefacts(ARTP_RCORR, calc_unid)
+                    || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION, calc_unid));
 }
 
 bool actor::cloud_immune(bool /*calc_unid*/, bool items) const
@@ -723,10 +723,6 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
 
-    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_MONSTER, "",
-                           "", false);
-    DIAG_ONLY(const int infdam = damage);
-
     string exclamations;
     if (damage <= 0 && is_player()
         && you.can_see(defender))
@@ -778,6 +774,10 @@ void actor::constriction_damage_defender(actor &defender, int duration)
 #endif
              exclamations.c_str());
     }
+
+    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_CONSTRICTION, "",
+                           "", false);
+    DIAG_ONLY(const int infdam = damage);
 
     dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
          name(DESC_PLAIN, true).c_str(),

@@ -481,6 +481,7 @@ SUBST:    FIJKLMNOPQ = G
 # Add greater mummies and traps to the long hall. About 16 greater mummies and
 # 6 traps on-average.
 SUBST:    ' = 2:24 ^ .:210
+KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
 COLOUR:   FIJKLMNOPQ = yellow
 TILE:     FIJKL = dngn_sarcophagus_pedestal_left
 TILE:     MNOPQ = dngn_sarcophagus_pedestal_right

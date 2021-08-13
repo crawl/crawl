@@ -339,6 +339,9 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
     if (!(mh & MH_NATURAL))
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
+    if (mh & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING))
+        resists |= MR_RES_TORMENT;
+
     return resists;
 }
 
@@ -5251,7 +5254,8 @@ bool mons_is_avatar(monster_type mc)
 
 bool mons_is_player_shadow(const monster& mon)
 {
-    return mon.type == MONS_PLAYER_SHADOW;
+    return mon.type == MONS_PLAYER_SHADOW
+        && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
 }
 
 bool mons_has_attacks(const monster& mon)

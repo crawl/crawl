@@ -536,8 +536,32 @@ static void _be_batty(monster &mons)
     mons.props[BATTY_TURNS_KEY] = 0;
 }
 
+static bool _fungal_move_check(monster &mon)
+{
+    // These monsters have restrictions on moving while you are looking.
+    if ((mon.type == MONS_WANDERING_MUSHROOM || mon.type == MONS_DEATHCAP)
+            && mon.foe_distance() > 1 // can attack if adjacent
+        || (mon.type == MONS_LURKING_HORROR
+            // 1 in los chance at max los
+            && mon.foe_distance() > random2(you.current_vision + 1)))
+    {
+        if (!mon.wont_attack() && is_sanctuary(mon.pos()))
+            return true;
+
+        if (mon_enemies_around(&mon))
+            return false;
+    }
+    return true;
+}
+
 static void _handle_movement(monster* mons)
 {
+    if (!_fungal_move_check(*mons))
+    {
+        mmov.reset();
+        return;
+    }
+
     _maybe_set_patrol_route(mons);
 
     if (sanctuary_exists())
@@ -2856,22 +2880,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         }
 
         return false;
-    }
-
-    // These monsters usually don't move while you are looking.
-    if (mons->type == MONS_WANDERING_MUSHROOM
-        || mons->type == MONS_DEATHCAP
-        || (mons->type == MONS_LURKING_HORROR
-            && mons->foe_distance() > random2(LOS_DEFAULT_RANGE + 1)))
-    {
-        if (!mons->wont_attack() && is_sanctuary(mons->pos()))
-            return true;
-
-        if (!mons->friendly() && you.see_cell(targ)
-            || mon_enemies_around(mons))
-        {
-            return false;
-        }
     }
 
     if (mons->type == MONS_MERFOLK_AVATAR)

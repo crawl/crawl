@@ -73,6 +73,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "target.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "transform.h"
@@ -1164,16 +1165,29 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     return false;
 }
 
-// this is a crude approximation used for the convenience UI targeter of
-// Dragon's call
-static vector<coord_def> _simple_find_all_actors(actor *a)
+static vector<coord_def> _find_blink_targets(actor *a)
 {
     vector<coord_def> result;
     if (!a)
         return result;
 
-    for (actor_near_iterator ai(a->pos(), LOS_NO_TRANS); ai; ++ai)
-        result.push_back((*ai)->pos());
+    for (radius_iterator ri(a->pos(), LOS_NO_TRANS); ri; ++ri)
+        if (valid_blink_destination(a, *ri))
+            result.push_back(*ri);
+
+    return result;
+}
+// this is a crude approximation used for the convenience UI targeter of
+// Dragon's call and Manifold Assault
+static vector<coord_def> _simple_find_all_hostiles(actor *a)
+{
+    vector<coord_def> result;
+    if (!a)
+        return result;
+
+    for (monster_near_iterator mi(a->pos(), LOS_NO_TRANS); mi; ++mi)
+        if (!mons_aligned(&you, *mi) && mons_is_threatening(**mi))
+            result.push_back((*mi)->pos());
 
     return result;
 }
@@ -1289,6 +1303,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maxwells_coupling>(range);
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
+    case SPELL_DISPERSAL:
+    case SPELL_DISJUNCTION:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
     case SPELL_SPIDER_FORM:
@@ -1342,6 +1359,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SHADOW_CREATURES: // TODO: dbl check packs
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2);
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1);
@@ -1362,8 +1380,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:
         return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
+    case SPELL_BLINK:
+        return make_unique<targeter_multiposition>(&you, _find_blink_targets(&you));
+    case SPELL_MANIFOLD_ASSAULT:
+        return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles(&you));
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
-        return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
+        return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles(&you));
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
 
@@ -1572,6 +1594,19 @@ static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
     return vector<string>{};
 }
 
+static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
+{
+    const int wl = mi.willpower();
+    if (mons_class_is_stationary(mi.type))
+        return vector<string>{"stationary"};
+
+    if (wl == WILL_INVULN)
+        return vector<string>{"will blink"};
+
+    const int success = hex_success_chance(wl, pow, 100);
+    return vector<string>{make_stringf("chance to teleport: %d%%", success)};
+}
+
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
 {
     monster dummy;
@@ -1659,7 +1694,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
     // Add success chance to targeted spells checking monster WL
     const bool wl_check = testbits(flags, spflag::WL_check)
                           && !testbits(flags, spflag::helpful);
-    if (wl_check)
+    if (wl_check && spell != SPELL_DISPERSAL)
     {
         const zap_type zap = spell_to_zap(spell);
         const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
@@ -1684,6 +1719,17 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_meph_chance, placeholders::_1);
         case SPELL_VAMPIRIC_DRAINING:
             return bind(_desc_vampiric_draining_valid, placeholders::_1);
+        case SPELL_STARBURST:
+        {
+            targeter_starburst* burst_hitf =
+                dynamic_cast<targeter_starburst*>(hitfunc);
+            if (!burst_hitf)
+                break;
+            targeter_starburst_beam* beam_hitf = &burst_hitf->beams[0];
+            return bind(_desc_hit_chance, placeholders::_1, beam_hitf);
+        }
+        case SPELL_DISPERSAL:
+            return bind(_desc_dispersal_chance, placeholders::_1, powc);
         default:
             break;
     }
@@ -1769,8 +1815,11 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
               testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
                                                    TARG_HOSTILE;
 
+        // TODO: if any other spells ever need this, add an spflag
+        // (right now otherwise used only on god abilities)
         const targeting_type dir =
-             testbits(flags, spflag::target) ? DIR_TARGET : DIR_NONE;
+            spell == SPELL_BLINKBOLT ? DIR_ENFORCE_RANGE
+            : testbits(flags, spflag::target) ? DIR_TARGET : DIR_NONE;
 
         // TODO: it's extremely inconsistent when this prompt shows up, not
         // sure why

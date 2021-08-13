@@ -2940,6 +2940,14 @@ static vector<string> _desc_holy_word(const monster_info& mi)
         return { "not susceptible" };
 }
 
+static vector<string> _desc_res_torment(const monster_info& mi)
+{
+    if (mi.resists() & (MR_RES_TORMENT))
+        return { "not susceptible" };
+    else
+        return { "susceptible" };
+}
+
 class targeter_finite_will : public targeter_multimonster
 {
 public:
@@ -2968,6 +2976,20 @@ public:
         if (loc == you.pos() && you.undead_or_demonic())
             return AFF_YES;
         return targeter_multimonster::is_affected(loc);
+    }
+};
+
+class targeter_torment : public targeter_multimonster
+{
+public:
+    targeter_torment() : targeter_multimonster(&you)
+    { }
+
+    bool affects_monster(const monster_info& mon)
+    {
+        // TODO: if this is ever used for the pain card it will need an
+        // override for the player in `is_affected`
+        return !bool(mon.resists() & MR_RES_TORMENT);
     }
 };
 
@@ -3022,6 +3044,8 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
         return make_unique<targeter_holy_word>();
     case SCR_SILENCE:
         return make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
+    case SCR_TORMENT:
+        return make_unique<targeter_torment>();
     default:
         return nullptr;
     }
@@ -3048,6 +3072,8 @@ static bool _scroll_targeting_check(scroll_type scroll, dist *target)
             args.get_desc_func = _desc_holy_word;
         else if (scroll == SCR_VULNERABILITY || scroll == SCR_IMMOLATION)
             args.get_desc_func = _desc_finite_wl;
+        else if (scroll == SCR_TORMENT)
+            args.get_desc_func = _desc_res_torment;
 
         args.mode = TARG_ANY;
         args.self = confirm_prompt_type::cancel;
@@ -3073,6 +3099,7 @@ bool scroll_has_targeter(scroll_type which_scroll)
     case SCR_IMMOLATION:
     case SCR_HOLY_WORD:
     case SCR_SILENCE:
+    case SCR_TORMENT:
         return true;
     default:
         return false;
@@ -3161,6 +3188,10 @@ void read(item_def* scroll, dist *target)
 
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
+        const bool bad_item = (is_dangerous_item(*scroll, true)
+                                    || is_bad_item(*scroll))
+                            && Options.bad_item_prompt;
+
         if (stop_attack_prompt(hitfunc, verb_object.c_str(),
                                [which_scroll] (const actor* m)
                                {
@@ -3175,9 +3206,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if ((is_dangerous_item(*scroll, true)
-                  || is_bad_item(*scroll))
-                 && Options.bad_item_prompt
+        else if (bad_item
                  && !yesno(make_stringf("Really %s?%s",
                                         verb_object.c_str(),
                                         hostile_check ? ""
@@ -3188,7 +3217,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if (!hostile_check && !yesno(make_stringf(
+        else if (!bad_item && !hostile_check && !yesno(make_stringf(
             "You can't see any enemies this would affect, really %s?",
                                         verb_object.c_str()).c_str(),
                                                 false, 'n'))

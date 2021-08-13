@@ -337,7 +337,7 @@ void direction_chooser::print_key_hints() const
                 break;
             case DIR_TARGET:
             case DIR_SHADOW_STEP:
-            case DIR_LEAP:
+            case DIR_ENFORCE_RANGE:
                 direction_hint = "Dir - move target";
                 break;
             }
@@ -1383,7 +1383,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     }
 
     // leap and shadow step never allow selecting from past the target point
-    if ((restricts == DIR_LEAP
+    if ((restricts == DIR_ENFORCE_RANGE
          || restricts == DIR_SHADOW_STEP
          || !allow_out_of_range)
         && !in_range(target()))
@@ -1665,7 +1665,7 @@ void direction_chooser::reinitialize_move_flags()
 // Returns true if we've completed targeting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
-    if (restricts != DIR_TARGET && restricts != DIR_SHADOW_STEP)
+    if (restricts == DIR_NONE)
     {
         // A direction is allowed, and we've selected it.
         moves.delta    = delta;
@@ -1805,7 +1805,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_CREATE_MIMIC:
         if (target() != you.pos())
         {
-            wizard_create_feature(target());
+            wizard_create_feature(target(), DNGN_UNSEEN, true);
             need_viewport_redraw = true;
         }
         return;
@@ -3845,7 +3845,9 @@ static void _debug_describe_feature_at(const coord_def &where)
     }
 
     char32_t ch = get_cell_glyph(where).ch;
-    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %x",
+    // TODO: expand out some of this in the cell description for console in a
+    // more readable fashion
+    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %x%s",
          where.x, where.y,
          ch == '<' ? "<<" : stringize_glyph(ch).c_str(),
          feature_desc.c_str(),
@@ -3855,7 +3857,8 @@ static void _debug_describe_feature_at(const coord_def &where)
          traveldest.c_str(),
          height_desc.c_str(),
          vault.c_str(),
-         env.map_knowledge(where).flags);
+         env.map_knowledge(where).flags,
+         (env.pgrid(where) & FPROP_NO_TELE_INTO) ? ", no_tele" : "");
 }
 #endif
 

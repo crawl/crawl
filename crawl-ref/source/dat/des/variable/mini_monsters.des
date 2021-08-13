@@ -7014,7 +7014,7 @@ NAME:    minmay_guarded_unrand_variability
 TAGS:    transparent
 DEPTH:   D:8-
 WEIGHT:  3
-ITEM:    mace_of_variability no_pickup ident:type
+ITEM:    mace_of_variability no_pickup ident:all
 MONS:    chaos spawn
 KFEAT:   _ = altar_xom
 # walls are carefully placed and guarantee no islands
@@ -7038,7 +7038,7 @@ NAME:    minmay_guarded_unrand_staff_of_olgreb
 TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   D:5-
 WEIGHT:  3
-ITEM:    staff_of_olgreb no_pickup ident:type
+ITEM:    staff_of_olgreb no_pickup ident:all
 : if you.depth() < 9 then
 MONS:    scorpion / redback w:5
 MONS:    killer bee
@@ -7108,7 +7108,7 @@ NAME:    minmay_guarded_unrand_wrath_of_trog
 TAGS:    transparent
 DEPTH:   D:13-, Depths
 WEIGHT:  3
-ITEM:    wrath_of_trog no_pickup ident:type
+ITEM:    wrath_of_trog no_pickup ident:all
 MONS:    spriggan berserker
 NSUBST:  1 = 3=1 / 9=1...... / .
 MAP
@@ -7131,7 +7131,7 @@ NAME:    minmay_guarded_unrand_skullcrusher
 TAGS:    transparent
 DEPTH:   D:12-, Crypt
 WEIGHT:  3
-ITEM:    skullcrusher no_pickup ident:type
+ITEM:    skullcrusher no_pickup ident:all
 MONS:    flying skull
 : if you.in_branch("Crypt") then
 MONS:    curse skull
@@ -7173,7 +7173,7 @@ NAME:    minmay_guarded_unrand_finisher
 TAGS:    transparent
 DEPTH:   D:7-
 WEIGHT:  3
-ITEM:    finisher no_pickup ident:type
+ITEM:    finisher no_pickup ident:all
 : if you.depth() < 13 then
 MONS:    wraith, skeletal warrior
 : else

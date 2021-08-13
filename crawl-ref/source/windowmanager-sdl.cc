@@ -803,6 +803,10 @@ static char32_t _key_suppresses_textinput(int keycode)
     case SDLK_PAGEDOWN:
         result_char = '3';
         break;
+    case SDLK_KP_PERIOD:
+    case SDLK_DELETE:
+        result_char = '.';
+        break;
     }
     if (result_char)
         utf8towc(&result, &result_char);

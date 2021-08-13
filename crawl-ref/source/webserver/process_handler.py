@@ -280,7 +280,7 @@ class CrawlProcessHandlerBase(object):
     def handle_notification_raw(self, username, text):
         # type: (str, str) -> None
         msg = ("<span class='chat_msg'>%s</span>" % text)
-        self.send_to_user(username, "chat", content=msg)
+        self.send_to_user(username, "chat", content=msg, meta=True)
 
     def handle_notification(self, username, text):
         # type: (str, str) -> None

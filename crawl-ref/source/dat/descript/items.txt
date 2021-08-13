@@ -515,7 +515,7 @@ A flail with long spikes and a heavy head.
 %%%%
 double sword
 
-A magical weapon with two razor-sharp blades.
+A fearsome weapon with a forked, razor-sharp blade.
 %%%%
 eggplant
 
@@ -530,7 +530,8 @@ forces of evil.
 %%%%
 eveningstar
 
-The opposite of a morningstar.
+The opposite of a morningstar. A balanced mace with a long shaft and a metal
+head covered in lethal spikes.
 %%%%
 everburning encyclopedia
 
@@ -1274,7 +1275,8 @@ considerable amount of time to load and fire.
 %%%%
 triple sword
 
-A magical weapon with three great razor-sharp blades.
+A formidable weapon created by a master craftsman. The blade of the sword forks
+into three great razor-sharp edges.
 %%%%
 trishula
 

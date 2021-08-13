@@ -1350,8 +1350,16 @@ public:
                 else if (keyin == '~')
                 {
                     char buff[10];
-                    set_more("Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]");
-                    if (!title_prompt(buff, sizeof(buff), "Enter keycode by number:"))
+                    set_more("[<w>?</w>] Keycode help. "
+                        "Quick reference: 8: [<w>bksp</w>], "
+                        "9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]"
+                        );
+                    if (!title_prompt(buff, sizeof(buff),
+                        "Enter keycode by number:"
+#ifndef USE_TILE_LOCAL
+                        , "console-keycodes"
+#endif
+                        ))
                     {
                         abort = true;
                         return false;
@@ -1389,7 +1397,13 @@ public:
             }
 
             if (keyin == '?')
-                show_specific_help("macro-menu");
+            {
+                show_specific_helps({ "macro-menu"
+#ifndef USE_TILE_LOCAL
+                    , "console-keycodes"
+#endif
+                    });
+            }
             else if (keyin == 'a')
                 return false; // legacy key
             return Menu::process_key(keyin);
@@ -1466,7 +1480,11 @@ public:
         case '~':
             return Menu::process_key(keyin);
         case '?':
-            show_specific_help("macro-menu");
+            show_specific_helps({ "macro-menu"
+#ifndef USE_TILE_LOCAL
+                    , "console-keycodes"
+#endif
+                    });
             return true;
         case CK_MOUSE_CMD:
         case '!':
@@ -1766,6 +1784,7 @@ string keycode_to_name(int keycode, bool shorten)
     case CK_NUMPAD_SUBTRACT2: return NP_DESC("-");
     case CK_NUMPAD_DECIMAL:  return NP_DESC(".");
     case CK_NUMPAD_DIVIDE:   return NP_DESC("/");
+    case CK_NUMPAD_ENTER:    return NP_DESC("enter");
 #endif
     default:
 #ifdef USE_TILE_LOCAL

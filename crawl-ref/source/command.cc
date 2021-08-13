@@ -507,14 +507,29 @@ int show_keyhelp_menu(const vector<formatted_string> &lines)
     return cmd_help.get_lastch();
 }
 
+void show_specific_helps(const vector<string> keys)
+{
+    // a fancier version of this might toggle between tabs, but this just
+    // concatenates
+    vector<formatted_string> formatted_lines;
+    size_t i = 0;
+    for (const auto &key : keys)
+    {
+        string help = getHelpString(key);
+        trim_string_right(help);
+        for (const string &line : split_string("\n", help, false, true))
+            formatted_lines.push_back(formatted_string::parse_string(line));
+
+        i++;
+        if (i < keys.size())
+            formatted_lines.emplace_back("");
+    }
+    show_keyhelp_menu(formatted_lines);
+}
+
 void show_specific_help(const string &key)
 {
-    string help = getHelpString(key);
-    trim_string_right(help);
-    vector<formatted_string> formatted_lines;
-    for (const string &line : split_string("\n", help, false, true))
-        formatted_lines.push_back(formatted_string::parse_string(line));
-    show_keyhelp_menu(formatted_lines);
+    show_specific_helps({ key });
 }
 
 void show_levelmap_help()

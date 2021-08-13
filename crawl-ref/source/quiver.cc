@@ -41,6 +41,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "rltiles/tiledef-icons.h"
+#include "wiz-dgn.h"
 
 static int _get_pack_slot(const item_def&);
 static bool _item_matches(const item_def &item, fire_type types,
@@ -1163,6 +1164,7 @@ namespace quiver
             if (!target.needs_targeting() && wait_spell_active(spell))
             {
                 crawl_state.prev_cmd = CMD_WAIT; // hackiness, but easy
+                update_acrobat_status();
                 you.turn_is_over = true;
                 return true;
             }
@@ -1362,6 +1364,12 @@ namespace quiver
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
             return palentonga_charge_possible(quiet, false);
+        case ABIL_BLINKBOLT:
+            if (!spell_no_hostile_in_range(SPELL_BLINKBOLT))
+                return true;
+            if (!quiet)
+                mpr("You can't see any hostile targets that would be affected.");
+            return false;
         default:
             return true;
         }
@@ -1461,6 +1469,10 @@ namespace quiver
             case ABIL_USKAYAW_LINE_PASS:
             case ABIL_USKAYAW_GRAND_FINALE:
             case ABIL_WU_JIAN_WALLJUMP:
+#ifdef WIZARD
+            case ABIL_WIZ_BUILD_TERRAIN:
+            case ABIL_WIZ_CLEAR_TERRAIN:
+#endif
                 return true;
             default:
                 return false;
@@ -1527,7 +1539,18 @@ namespace quiver
             qdesc.cprintf("Abil: ");
 
             qdesc.textcolour(quiver_color());
-            qdesc.cprintf("%s", ability_name(ability));
+            string abil_name = ability_name(ability);
+#ifdef WIZARD
+            int last_feat = you.props[WIZ_LAST_FEATURE_TYPE_PROP].get_int();
+            if (ability == ABIL_WIZ_BUILD_TERRAIN
+                && last_feat != DNGN_UNSEEN)
+            {
+                qdesc.cprintf("Build '%s'", dungeon_feature_name(
+                    static_cast<dungeon_feature_type>(last_feat)));
+            }
+            else
+#endif
+                qdesc.cprintf("%s", ability_name(ability));
 
             if (is_card_ability(ability))
                 qdesc.cprintf(" %s", nemelex_card_text(ability).c_str());

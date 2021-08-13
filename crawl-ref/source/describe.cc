@@ -1481,7 +1481,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
 
-        if (!you.could_wield(item, true) && crawl_state.need_save)
+        if (!you.could_wield(item, true, true) && crawl_state.need_save)
             description += "\nIt is too large for you to wield.";
     }
 
@@ -3714,7 +3714,7 @@ static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
-        { AF_BLINK,             "blink itself" },
+        { AF_BLINK,             "blink self" },
         { AF_BLINK_WITH,        "blink together with the defender" },
         { AF_COLD,              "deal up to %d extra cold damage" },
         { AF_CONFUSE,           "cause confusion" },
@@ -4741,7 +4741,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\nIt is quickly melting away.\n";
         break;
 
+    case MONS_BRIAR_PATCH: // death msg uses "crumbling"
     case MONS_PILLAR_OF_SALT:
+        // XX why are these "quick" here but "slow" elsewhere??
         if (mi.is(MB_SLOWLY_DYING))
             inf.body << "\nIt is quickly crumbling away.\n";
         break;
