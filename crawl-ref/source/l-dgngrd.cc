@@ -89,6 +89,13 @@ static int dgn_max_bounds(lua_State *ls)
     return 2;
 }
 
+static int dgn_builder_bounds(lua_State *ls)
+{
+    lua_pushnumber(ls, dgn_builder_x());
+    lua_pushnumber(ls, dgn_builder_y());
+    return 2;
+}
+
 static int dgn_in_bounds(lua_State *ls)
 {
     int x = luaL_safe_checkint(ls, 1);
@@ -142,6 +149,7 @@ const struct luaL_reg dgn_grid_dlib[] =
 
 { "grid", dgn_grid },
 { "max_bounds", dgn_max_bounds },
+{ "builder_bounds", dgn_builder_bounds },
 { "in_bounds", dgn_in_bounds },
 { "distance", dgn_distance },
 

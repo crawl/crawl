@@ -249,6 +249,16 @@ set<string> &get_uniq_map_names()
         return you.uniq_map_names;
 }
 
+int dgn_builder_x()
+{
+    return GXM;
+}
+
+int dgn_builder_y()
+{
+    return GYM;
+}
+
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
