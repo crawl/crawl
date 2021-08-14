@@ -1558,3 +1558,150 @@ P......................BBBBBBBBBBBB.....X...................P
 P...........................................................P
 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 ENDMAP
+
+NAME:     nicolae_desolation_pilgrimage
+TAGS:     no_dump no_monster_gen
+ORIENT:   encompass
+MONS:     saltling band
+KFEAT:    t = petrified_tree
+KFEAT:    < = exit_desolation
+KFEAT:    H = stone_arch
+KFEAT:    P = endless_salt
+SUBVAULT: D : desolation_ruin
+SUBVAULT: E : desolation_ruin
+SUBVAULT: F : desolation_ruin
+NSUBST:   < = 1=< / S / -
+SUBST:    ` = x.., DEF = .:1000 x:2 G:2 t:2 S:1, . = .:1000 1:8
+COLOUR:   P = white
+: set_border_fill_type('endless_salt')
+: set_feature_name("granite_statue", "ruined idol")
+TILE:     G = DNGN_CRUMBLED_COLUMN
+MARKER:   S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+              pow_min=6, pow_max=20, delay=5, size=15, spread_rate=10, }
+MAP
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+P.............................................................................P
+P..``......`..................................................................P
+P............`.....DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE..`...FFFFFFFFFFFFFFF..P
+P.............`....DDDDDDDDDDDDDDD..`...EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P....``.......`....DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...`..............DDDDDDDDDDDDDDD..S...EEEEEEEEEEEEEEE...S`.FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P............``....DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..``......``...S..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE.`....FFFFFFFFFFFFFFF..P
+P...``.............DDDDDDDDDDDDDDD..`...EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------..`...DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE...`..FFFFFFFFFFFFFFF..P
+P...---------..`...DDDDDDDDDDDDDDD...`..EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...----<----......DDDDDDDDDDDDDDD....`.EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------...`..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE..`...FFFFFFFFFFFFFFF..P
+P...--<-H-<--......DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------......DDDDDDDDDDDDDDD.`....EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...----<----...`..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE...`..FFFFFFFFFFFFFFF..P
+P...---------......DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------......DDDDDDDDDDDDDDD..`...EEEEEEEEEEEEEEE..`...FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE....`.FFFFFFFFFFFFFFF..P
+P....````......`S..DDDDDDDDDDDDDDD...`..EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P.............``...DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P.........`........DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE.`....FFFFFFFFFFFFFFF..P
+P..``.....`........DDDDDDDDDDDDDDD..S...EEEEEEEEEEEEEEE...S..FFFFFFFFFFFFFFF..P
+P.`........`....`..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE...`..FFFFFFFFFFFFFFF..P
+P....`.`......`....DDDDDDDDDDDDDDD.`....EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P........`............................`.......................................P
+P.............................................................................P
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ENDMAP
+
+NAME:    nicolae_desolation_temple
+TAGS:    no_dump no_monster_gen patrolling
+WEIGHT:  5
+ORIENT:  encompass
+KITEM:   %O = any weapon good_item / any armour good_item / randbook w:5 / \
+              any jewellery randart w:5 / gold good_item w:1
+KMONS:   1 = saltling band
+KMONS:   O2 = imperial myrmidon / halazid warlock / crystal guardian
+KMONS:   p = withered plant perm_ench:petrified
+KFEAT:   ! = iron_grate
+KFEAT:   < = exit_desolation
+KFEAT:   H = stone_arch
+KFEAT:   P = endless_salt
+KFEAT:   t = petrified_tree
+: if crawl.coinflip() then
+SHUFFLE: LMN
+: end
+NSUBST:  < = 1=< / S / -, % = 15=% / 10=| / .
+SUBST:   . = .:1000 1:6, ~ = P., t = tt., p = p.., V = VV., G = GG., ! = !..
+SUBST:   L = c:1 x:3 .:12, M = c:4 x:4 .:8, N = c:9 x:3 .:4, J = 1:9 2:1 .
+SUBST:   ` = x..
+COLOUR:  P = white
+: set_border_fill_type('endless_salt')
+: set_feature_name("granite_statue", "ruined idol")
+TILE:    G = DNGN_CRUMBLED_COLUMN
+MARKER:  S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+             pow_min=6, pow_max=20, delay=5, size=15, spread_rate=10, }
+MAP
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPP~..................................................~PPPPPPPPPPP
+PPPPPPP~..........`...........NN..........NN......................~PPPPPPP
+PPPP~........................NNNN....J...NNNN.......................~PPPPP
+PPP~....`....................NNNN........NNNN...............tt.......~PPPP
+PP~..........`......`.........NN..........NN.............ttt..tt......~PPP
+P~...`.......`..........................................t..ppp.t.......PPP
+P.......---------......................................t.pp...p.t......~PP
+P.......---------....`........MM..........MM..........ttp..1.O.p.t......PP
+P..`....----<----...`.........MM..........MM..........t..p..S...p.t.....PP
+P...`...---------...`..................................t.p..%..p.t......PP
+P...`...--<-H-<--....................S................t.t.pp..p.t.......~P
+P....`..---------.............LL..........LL.............t..pp.t.........P
+P.......----<----.....`.......LL..........LL..............t..t...........P
+P..`....---------........................................................P
+P.......---------...`....................................................P
+P....``......................MMMM........LLLL............................P
+P~..`........``....`........MM..MM......LL..LL...........................P
+PP......`..................MM....MM....LL....LL.........................~P
+PP~........................M......M....L......L.........................~P
+PPP~.......................M..J...M....L...J..L.........................~P
+PPPP.......................M......M....L......L.........................~P
+PPP~..........S............M......M....L......L............S............~P
+PP~........................M......M....L......L.........................~P
+PP.....MMMM........NNNN....NNN!!NNN!!!!MMM!!MMM....MMMM........LLLL......P
+PP....MM..MM......NN..NN...N..................M...MM..MM......LL..LL.....P
+P~...MM%..%MM....NN%..%NN..N.G......J.......G.M..MM%..%MM....LL%..%LL....P
+P....M......MMMNNN......NNNN..................MMMM......MMMLLL......L....P
+P....M...J..M....N..J...N..N..................M..M...J..M....L..J...L....P
+P....MM%..%!M....N!%..%NN..N....MM.M..M.MM....M..MM%..%!M....L!%..%LL....P
+P.....MM..!!......!!..NN...N....MM......MM....M...MM..!!......!!..LL....~P
+P......MMMM........NNNN....!..................!....MMMM........NNNN.....PP
+P.......M..................!....M..V..V..M....!..................N.....~PP
+P~...S..M.....J............!........S.......J.!............J.....N.....PPP
+P~......L..................!.J................!..................N..S..PPP
+P~......L..................!....M..V..V..M....!..................N.....PPP
+P~.....LLLL........MMMM....!..................!....NNNN........NNNN....PPP
+P~....LL..!!......!!..MM...L....MM......MM....N...NN..!!......!!..LL...~PP
+P....LL%..%!L....M!%..%MM..L....MM.M..M.MM....N..NN%..%!M....L!%..%LL...~P
+P....L...J..L....M..J...M..L..................N..N...J..M....L..J...L....P
+P....L......LLLMMM......MLLL..................NNNN......MMMMLL......L....P
+P....LL%..%LL.N..MM%..%MM..L.G.......J......G.N..NN%..%MM..M.LL%..%LL....P
+P.....LL..LL..N...MM..MM...L..................N...MM..MM...M..LL..LL.....P
+P......LLLL...N....MMMM....LLLMMMLL....NNNNNNNN....MMMM....L...LLLL.....~P
+P.............N..............%McM........LcL%..............L............PP
+P............NNNN...J.........MMM.G....G.LLL.........J...LLLL...........PP
+P.......S..NNN..NNN..........%M............L%..........LLL..LLL..S.....~PP
+P~.........N%....%NMMMM....MMMM.G.G....G.G.LLLL....LLLLL%....%L........PPP
+PP........NN..J...NN..................................LL...J..LL.......PPP
+PP~.......N...%%...!.....J..........MM..........J.....!...%%...L......~PPP
+PPP~......N...%%...!................MM................!...%%...L......PPPP
+PPPP......NN..2...NN..................................LL...2..LL.....~PPPP
+PPPP~......N%....%NMMMMMMLLLLLL.G.G....G.G.MMMMMMMMMMMML%....%L.....~PPPPP
+PPPPP~.....NNN..NNN...........L............M...........LLL..LLL....~PPPPPP
+PPPPPP~......NNNN........S....LLL.G.J..G.MMM....S........LLLL.....~PPPPPPP
+PPPPPPP~......................LcL........McM.....................~PPPPPPPP
+PPPPPPPP~.....................LLLLLLLMMMMMMM....................~PPPPPPPPP
+PPPPPPPPP~.....................................................~PPPPPPPPPP
+PPPPPPPPPPPP~.................................................~PPPPPPPPPPP
+PPPPPPPPPPPPPP~....................~~~~......................~PPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPP~~~............~PPPP~...................~PPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ENDMAP
