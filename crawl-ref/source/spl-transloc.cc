@@ -1582,7 +1582,8 @@ void attract_monsters()
     near_to_far_sorter sorter = {you.pos()};
     sort(targets.begin(), targets.end(), sorter);
 
-    for (monster *mi : targets) {
+    for (monster *mi : targets)
+    {
         const int orig_dist = grid_distance(you.pos(), mi->pos());
         if (orig_dist <= 1)
             continue;
