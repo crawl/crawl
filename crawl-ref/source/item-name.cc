@@ -3001,7 +3001,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.innate_sinv();
 
         case RING_POISON_RESISTANCE:
-            return player_res_poison(false, temp, false) > 0;
+            return player_res_poison(false, temp, false) > 0
+                   && (temp || !you.has_mutation(MUT_VAMPIRISM));
 
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);
