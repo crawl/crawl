@@ -54,6 +54,7 @@ function desolation_ruins_setup(e)
   e.nsubst("% = 4:% / 3:| / *:.")
   e.kitem("% = any weapon good_item / any armour good_item /\
                any jewellery randart w:5 / randbook w:5")
+  e.tile("G = DNGN_CRUMBLED_COLUMN")
 end
 }}
 
@@ -1284,29 +1285,29 @@ ENDMAP
 
 default-depth: Desolation
 
-NAME:       desolation_of_salt
-TAGS:       no_dump no_monster_gen
-ORIENT:     encompass
-SHUFFLE:    ABCDEF
-SUBVAULT:   A : desolation_ruin
-SUBVAULT:   B : desolation_ruin
-SUBVAULT:   C : desolation_ruin
-SUBST:      DEF = .:1000 x:2 G:2 t:2 S:1
-SUBST:      . = .:1000 1:8
-SUBST:      X = x.
-KFEAT:      t = petrified_tree
-KFEAT:      < = exit_desolation
-KFEAT:      H = stone_arch
-KFEAT:      O = permarock_wall
-KFEAT:      P = endless_salt
-COLOUR:     P = white
-MONS:       saltling band
-:           set_border_fill_type('endless_salt')
-:           set_feature_name("granite_statue", "ruined idol")
-MARKER:     S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-                                  pow_min=6, pow_max=20, \
-                                  delay=5, size=15, spread_rate=10, }
-
+NAME:     desolation_of_salt
+TAGS:     no_dump no_monster_gen
+ORIENT:   encompass
+SHUFFLE:  ABCDEF
+SUBVAULT: A : desolation_ruin
+SUBVAULT: B : desolation_ruin
+SUBVAULT: C : desolation_ruin
+SUBST:    DEF = .:1000 x:2 G:2 t:2 S:1
+SUBST:    . = .:1000 1:8
+SUBST:    X = x.
+KFEAT:    t = petrified_tree
+KFEAT:    < = exit_desolation
+KFEAT:    H = stone_arch
+KFEAT:    O = permarock_wall
+KFEAT:    P = endless_salt
+COLOUR:   P = white
+MONS:     saltling band
+:         set_border_fill_type('endless_salt')
+:         set_feature_name("granite_statue", "ruined idol")
+MARKER:   S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                                pow_min=6, pow_max=20, \
+                                delay=5, size=15, spread_rate=10, }
+TILE:     G = DNGN_CRUMBLED_COLUMN
 MAP
 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 P...........................................................P
