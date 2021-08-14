@@ -282,13 +282,13 @@ ENDMAP
 # Desolation mini-ruins entries
 #
 # The original layout for the Desolation featured a number of subvaults which
-# depicted the same building or feature in two subvaults, one of them with the 
-# building still intact and the other depicting it as a wrecked ruin. Many of 
-# the followup vaults followed a similar pattern. I've put those paired vaults 
+# depicted the same building or feature in two subvaults, one of them with the
+# building still intact and the other depicting it as a wrecked ruin. Many of
+# the followup vaults followed a similar pattern. I've put those paired vaults
 # at the front of the list, and the unpaired ones at the end. - nicolae
 #
 ##############################################################################
-# Paired mini-ruins 
+# Paired mini-ruins
 
 NAME:       desolation_ruin_diamond_intact
 TAGS:       desolation_ruin transparent
@@ -811,7 +811,7 @@ ccCc..X.....
 ENDMAP
 
 ################################################################################
-# A few of the paired subvaults have an intact subvault that is rarer and has 
+# A few of the paired subvaults have an intact subvault that is rarer and has
 # better loot. These pairs are below:
 
 # The rarer intact version of this armoury has all randart weapons and armour.
@@ -999,6 +999,106 @@ c..sc..cs..C
 c%Q.%....Q.c
 c%%..s...s.c
 cccccCCcs.CC
+ENDMAP
+
+# Featuring some tomb-appropriate constructs.
+NAME:   desolation_ruin_nicolae_tomb_intact
+TAGS:   desolation_ruin uniq_salt_tomb uniq_salt_special
+WEIGHT: 1
+KPROP:  3456%!' = no_tele_into
+KITEM:  3 = % / * w:5
+KITEM:  45 = |
+KITEM:  6 = %
+KITEM:  P = wand of digging charges:2
+KMONS:  3 = ushabti
+KMONS:  4 = halazid warlock
+KMONS:  5 = crystal guardian
+KMONS:  6 = ragged hierophant
+KMONS:  Pp = withered plant perm_ench:petrified
+KFEAT:  ! = iron_grate
+NSUBST: p = P / p
+: desolation_ruins_setup(_G)
+MAP
+............
+.1ppcccccccc
+.ppGc3'''%3c
+ccccc'''''%c
+c'6'c''cc'%c
+!'c'!''c4'|c
+!'c'!''c5'|c
+c'6'c''cc'%c
+ccccc'''''%c
+.ppGc3'''%3c
+.1ppcccccccc
+............
+ENDMAP
+
+NAME:  desolation_ruin_nicolae_tomb_wrecked
+TAGS:  desolation_ruin uniq_salt_tomb
+KFEAT: ! = iron_grate
+SUBST: - = x., c = c:90 x, 1 = 1.
+: desolation_ruins_setup(_G)
+MAP
+.....----...
+.1.-.1..xccc
+..-xx..--.%c
+ccccc......c
+c-%%c..cc.%c
+.-c.!%.c%..c
+-2c.!.1c%2.c
+c.%.-..ccx%c
+ccccc.--%xxc
+.--Gc..-..%c
+.1..ccx.1xcc
+....-......-
+ENDMAP
+
+# This library is intact enough to have preserved some scrolls from the salt.
+# It's also intact enough for the librarians to still be wandering around.
+NAME:   desolation_ruin_nicolae_library_intact
+TAGS:   desolation_ruin uniq_salt_special
+WEIGHT: 1
+KITEM:  Q = any scroll
+KITEM:  R = randbook
+: kitem("S = " .. dgn.good_scrolls)
+KMONS:  1 = saltling band
+KMONS:  2 = crystal guardian
+KMONS:  QRS- = saltling / nothing
+SUBST:  ` = QQRS-
+MAP
+cccccccccccc
+c`.2`cc`2.`c
+cc..cccc..cc
+c`..`cc`..`c
+cc..cccc..cc
+c`........`c
+cc........cc
+c..cccccc..c
+c.cc....cc.c
+c....1.....c
+cccc....cccc
+..Gcc..ccG..
+ENDMAP
+
+NAME:   desolation_ruin_nicolae_library_wrecked
+TAGS:   desolation_ruin
+KITEM:  R = randbook
+NSUBST: ` = 2=R / %, % = 5=% / ., 1 = 1=2 / 1
+SUBST:  - = x., c = c:50 x
+: desolation_ruins_setup(_G)
+MAP
+cccccccccccc
+c`..`x-%..%c
+c-..c-xc..cc
+c`1.`xc%...-
+cc..cccc..1-
+c%...-x--..-
+cc...%-xx-.-
+c..c-cccc..-
+c.cxx-.%cc.c
+-....1.....c
+--cc....xxxc
+..xcc..ccx..
 ENDMAP
 
 ################################################################################
@@ -1342,6 +1442,30 @@ ttpptc2...cc
 ..ttc%G%.c..
 ...ttc%cc...
 ....ttcc....
+ENDMAP
+
+NAME:   desolation_ruin_nicolae_gargoyle_perch
+TAGS:   desolation_ruin patrolling
+KITEM:  L = |
+KMONS:  3L = molten gargoyle
+KMONS:  4 = war gargoyle
+KMONS:  5 = gargoyle
+: desolation_ruins_setup(_G)
+NSUBST: 3 = 1=4 / 3., 3 = 3=L / 3, - = 4=. / .cc
+SUBST:  ` = c., c = c:50 x, G = GGG5
+MAP
+............
+...cc--cc...
+..Gc3..3cG..
+.ccc....ccc.
+.c3..``..3c.
+.-..`%%`..-.
+.-..`%%`..-.
+.c3..``..3c.
+.ccc....ccc.
+..Gc3..3cG..
+...cc--cc...
+............
 ENDMAP
 
 ##############################################################################
