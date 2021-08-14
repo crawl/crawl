@@ -508,7 +508,7 @@ class CrawlProcessHandlerBase(object):
             self.process.send_signal(subprocess.signal.SIGABRT)
             self.kill_timeout = None
 
-    interesting_info = ("xl", "char", "place", "god", "title")
+    interesting_info = ("xl", "char", "place", "turn", "dur", "god", "title")
     def set_where_info(self, newwhere):
         interesting = False
         for key in CrawlProcessHandlerBase.interesting_info:
