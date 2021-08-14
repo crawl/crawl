@@ -774,7 +774,7 @@ void ExsanguinateDelay::finish()
     you.vampire_alive = false;
     you.redraw_status_lights = true;
     calc_hp(true);
-    mpr("Now bloodless.");
+    mpr("You become bloodless.");
     vampire_update_transformations();
 }
 
@@ -782,7 +782,7 @@ void RevivifyDelay::finish()
 {
     you.vampire_alive = true;
     you.redraw_status_lights = true;
-    mpr("Now alive.");
+    mpr("You return to life.");
     temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
 }
