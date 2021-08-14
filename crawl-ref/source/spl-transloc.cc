@@ -1609,6 +1609,7 @@ void attract_monsters()
 
         mi->apply_location_effects(old_pos);
         mons_relocated(mi);
+        behaviour_event(mi, ME_ALERT, &you);
     }
 }
 
