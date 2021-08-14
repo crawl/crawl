@@ -212,6 +212,72 @@ MAP
 .......
 ENDMAP
 
+# "It is a massive effort to deny use. [...] It is an ordered place, but crude
+# in form, forbidding, and uncomfortable."
+NAME:   portal_desolation_entry_nicolae_forbidding_blocks
+TAGS:   transparent no_monster_gen
+WEIGHT: 3
+: desolation_portal(_G)
+SUBST:  - = ..;
+FTILE:  ;Oxc = FLOOR_SALT
+MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                              pow_min=6, pow_max=20, \
+                              delay=5, size=5, spread_rate=5, }
+MAP
+-------------------
+-ccccc;ccccc;ccccc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-;;;;;;;;;;;;;;;;;-
+-cxxxx;cc;cc;xxxxc-
+-cxxxx;cx;xc;xxxxc-
+-cxxxx;;;O;;;xxxxc-
+-cxxxx;cx;xc;xxxxc-
+-cxxxx;cc;cc;xxxxc-
+-;;;;;;;;;;;;;;;;;-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-ccccc;ccccc;ccccc-
+-------------------
+ENDMAP
+
+# "Walking through it, at ground level, the massive earthworks crowd in on
+# you, [...] a loss of connection to any sense of place."
+NAME:   portal_desolation_entry_nicolae_menacing_earthworks
+TAGS:   transparent no_monster_gen
+WEIGHT: 3
+: desolation_portal(_G)
+SUBST:  - = ...;
+FTILE:  ;Oc = FLOOR_SALT
+MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                              pow_min=6, pow_max=20, \
+                              delay=5, size=5, spread_rate=5, }
+MAP
+         c
+        -cc
+       c;;c-
+      -cc;;cc
+     c;;c;cc;-
+    -cc;;;;;;cc
+   c;;c;;;;;cc;-
+  -cc;;;;;;;;;;cc
+ cc;c;;;;;;;;;cc;-
+cc;;;;;;;O;;;;;;;cc
+ -;cc;;;;;;;;;c;cc
+  cc;;;;;;;;;;cc-
+   -;cc;;;;;c;;c
+    cc;;;;;;cc-
+     -;cc;c;;c
+      cc;;cc-
+       -c;;c
+        cc-
+         c
+ENDMAP
+
 ##############################################################################
 # Desolation mini-ruins entries
 #
