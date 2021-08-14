@@ -248,7 +248,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
   -- Make the borders less bad and sometimes some central wall regions.
   -- Customise a little in different branches. Small chance for
   -- individual buildings to have different materials.
-  local gxm,gym = dgn.max_bounds()
+  local gxm,gym = dgn.builder_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
   local open = not crawl.one_chance_in(4)
@@ -263,7 +263,14 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     subdivide_level_multiplier = .9,
   }
 
-  local bounds = omnigrid.padded_bounds(2,8)
+  local maxbounds = {
+    x1 = 1,
+    y1 = 1,
+    x2 = gxm - 2,
+    y2 = gym - 2,
+  }
+
+  local bounds = omnigrid.padded_bounds(2,8,maxbounds)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Seed a number of buildings

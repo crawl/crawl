@@ -88,7 +88,7 @@ function theme.add_gehenna_buildings(e)
 
     local depth_fraction = you.depth_fraction()
     local border = 4
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     local right  = gxm - 1 - border
     local bottom = gym - 1 - border
     local size_max = 6 + 4 * depth_fraction

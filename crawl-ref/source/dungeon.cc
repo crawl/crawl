@@ -249,14 +249,21 @@ set<string> &get_uniq_map_names()
         return you.uniq_map_names;
 }
 
+// TODO: datify into branch data
 int dgn_builder_x()
 {
-    return GXM;
+    if (is_hell_subbranch(you.where_are_you) && !at_branch_bottom())
+        return GXM / 2;
+    else
+        return GXM;
 }
 
 int dgn_builder_y()
 {
-    return GYM;
+    if (is_hell_subbranch(you.where_are_you) && !at_branch_bottom())
+        return GYM / 2;
+    else
+        return GYM;
 }
 
 /**********************************************************************

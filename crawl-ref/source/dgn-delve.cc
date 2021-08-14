@@ -97,14 +97,14 @@ static inline bool _in_map(map_lines *map, coord_def c)
 static bool _diggable(map_lines *map, coord_def c)
 {
     if (map)
-        return (*map)(c) == 'x';
+        return _in_map(map, c) && (*map)(c) == 'x';
     return env.grid(c) == DNGN_ROCK_WALL && !map_masked(c, MMT_VAULT);
 }
 
 static bool _dug(map_lines *map, coord_def c)
 {
     if (map)
-        return strchr(traversable_glyphs, (*map)(c));
+        return _in_map(map, c) && strchr(traversable_glyphs, (*map)(c));
     return env.grid(c) == DNGN_FLOOR;
 }
 
