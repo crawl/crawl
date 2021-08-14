@@ -54,7 +54,6 @@ function desolation_ruins_setup(e)
   e.nsubst("% = 4:% / 3:| / *:.")
   e.kitem("% = any weapon good_item / any armour good_item /\
                any jewellery randart w:5 / randbook w:5")
-  e.subst(".=,")
 end
 }}
 
@@ -219,7 +218,6 @@ ENDMAP
 ##############################################################################
 NAME:       desolation_ruin_diamond_intact
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SHUFFLE:    ABC
 SUBST:      A=c
 SUBST:      BC=%
@@ -241,7 +239,6 @@ ENDMAP
 
 NAME:       desolation_ruin_diamond_wrecked
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SUBST:      A=c.
 SUBST:      B=x.
 : desolation_ruins_setup(_G)
@@ -262,7 +259,6 @@ ENDMAP
 
 NAME:       desolation_ruin_lobes
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 WEIGHT:     20
 SHUFFLE:    AB
 SUBST:      A=c
@@ -287,7 +283,6 @@ ENDMAP
 
 NAME:       desolation_ruin_twins_intact
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SHUFFLE:    AB
 SUBST:      A=c
 SUBST:      B=%
@@ -309,7 +304,6 @@ ENDMAP
 
 NAME:       desolation_ruin_twins_wrecked
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SUBST:      A=c.
 SUBST:      B=x.
 SUBST:      C=cx
@@ -331,7 +325,6 @@ ENDMAP
 
 NAME:       desolation_ruin_cross_small
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 WEIGHT:     5
 SHUFFLE:    AB
 SUBST:      A=c
@@ -354,7 +347,6 @@ ENDMAP
 
 NAME:       desolation_ruin_cross_large
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 WEIGHT:     5
 SHUFFLE:    AB/CD/EF
 SUBST:      ABCF=c
@@ -376,7 +368,6 @@ MAP
 ENDMAP
 
 NAME:       desolation_ruin_cross_wrecked
-ORIENT:     float
 TAGS:       desolation_ruin transparent
 SUBST:      A=c.
 SUBST:      B=x.
@@ -399,7 +390,6 @@ ENDMAP
 
 NAME:       desolation_ruin_round
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 WEIGHT:     20
 SHUFFLE:    AD
 SHUFFLE:    BE
@@ -426,7 +416,6 @@ ENDMAP
 
 NAME:       desolation_ruin_pillars_intact
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SHUFFLE:    AC
 SHUFFLE:    BD
 SUBST:      AB=c
@@ -449,7 +438,6 @@ ENDMAP
 
 NAME:       desolation_ruin_pillars_wrecked
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SUBST:      A = c.
 SUBST:      B = x.
 NSUBST:     C = 7:G / *:.
@@ -473,7 +461,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_gallery_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: q = 1:1 / 2:2 / 1:112 / *:.
 : desolation_ruins_setup(_G)
 MAP
@@ -494,7 +481,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_gallery_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C = c., X = x.
 : desolation_ruins_setup(_G)
 MAP
@@ -517,7 +503,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_legs_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: C = 1:% / 1:c / 2=c% / *:%, D = 1:% / 1:c / 2=c% / *:%, \
         q = 2:1 / 1:2 / 1:12.. / *:.
 SUBST: G = GG.
@@ -540,7 +525,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_legs_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: D = 2:% / 1:C / 1:C% / *:%, E = 2:% / 1:C / 1:C% / *:%, \
         q = 2:1 / 1:2 / 1:12.. / *:.
 SUBST: G = xGG.., C = ccccx., X = x...
@@ -565,7 +549,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_fork_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB/CD, HIJ/KLM
 SUBST: AJK = G, CBHLM = c, I = ., D = %
  : desolation_ruins_setup(_G)
@@ -587,7 +570,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_fork_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: X = x.., C = ccx.
  : desolation_ruins_setup(_G)
 MAP
@@ -610,7 +592,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_tower_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C : c.
 NSUBST: B = 2:2 / 1:1 / 1:1.
  : desolation_ruins_setup(_G)
@@ -632,7 +613,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_tower_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: H = c / ., I = c / ., J = x / X
 SUBST: C = c., G = G., X = x., c = c:100 x
  : desolation_ruins_setup(_G)
@@ -656,7 +636,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_dome_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
  : desolation_ruins_setup(_G)
 MAP
 ............
@@ -676,7 +655,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_dome_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C = c., G = GG., X = x., c = c:60 x, k = c
  : desolation_ruins_setup(_G)
 MAP
@@ -699,7 +677,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_enclosure_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB
 SUBST: A = c, B = .
  : desolation_ruins_setup(_G)
@@ -721,7 +698,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_enclosure_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB
 SUBST: A = c, B = .:50 X, c = c:35 X, X = x.
  : desolation_ruins_setup(_G)
@@ -745,7 +721,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_arena_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
  : desolation_ruins_setup(_G)
 MAP
 ...cccccc...
@@ -765,7 +740,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_arena_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C = c., G = G., X = x., c = c:90 x
  : desolation_ruins_setup(_G)
 MAP
@@ -790,7 +764,6 @@ ENDMAP
 # (Though sometimes it still makes branded non-randarts, for some reason.)
 NAME: desolation_ruin_nicolae_armoury_intact
 TAGS: desolation_ruin transparent uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: i = 8:i / *:s
 KITEM: i = any weapon good_item randart / any armour good_item randart
@@ -815,7 +788,6 @@ ENDMAP
 # The more common wrecked armoury just has regular loot.
 NAME: desolation_ruin_nicolae_armoury_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: D = c:100 ., C = cccc., c = c:90 x, X = x., G = G.
  : desolation_ruins_setup(_G)
 MAP
@@ -840,7 +812,6 @@ ENDMAP
 # maintained by the faithful and contains more monsters but more treasures.
 NAME: desolation_ruin_nicolae_temple_intact
 TAGS: desolation_ruin transparent uniq_salt_temple uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: % = 5:% / 5:| / *:s
 KMONS: Q = patrolling halazid warlock / patrolling servant of whispers
@@ -869,7 +840,6 @@ ENDMAP
 # The wrecked version of the temple is nothing special.
 NAME: desolation_ruin_nicolae_temple_wrecked
 TAGS: desolation_ruin transparent uniq_salt_temple
-ORIENT: float
 SUBST: V = V%., G = G., C = cc., X = x., c = c:50 x
  : desolation_ruins_setup(_G)
 MAP
@@ -894,7 +864,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_crumbling_obelisks
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: HIJK/LMNO, MO
 NSUBST: q = 2:2 / *:1
 SUBST: HMN = c, IJKLO = ., c = c:50 x .:5, C = c:70 .
@@ -917,7 +886,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_outcropping
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: X = x., C = c.
  : desolation_ruins_setup(_G)
 MAP
@@ -938,7 +906,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_collapsed_rooms
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB, EF, PQ, RS, VW
 NSUBST: h = X / -, i = X / -, j = X / i, k = X / -, l = X / -, m = X / -, \
         n = X / -, o = X / -
@@ -963,7 +930,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_salt_wastes
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: - = 2:c / 2:x / 2=c. / 2=x. / 4:% / 1:G. / 2:1 / 2:2 / 1:S / *:.
 SUBST: C = c.., c = ccccx
 MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
@@ -988,7 +954,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_rundown_chambers
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: A = . / B, B = 1:. / 1:cc. / *:c, H = 1:2 / *:%, \
         I = 1:2 / 1:x / 1:x. / *:%
 SUBST: C = c., X = x., c = c:80 x
@@ -1011,7 +976,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_small_ruin
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: c = 4:- / *=cccx-, - = 7:% / 2:x / 2:2 / 2:1 / *:., . = S / .
 MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
                                   pow_min=6, pow_max=20, \
@@ -1034,7 +998,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_dungeon
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: F = M / .
 SUBST: M = m., X = x..., G = G., c = c:80 x
 KFEAT: m = iron_grate
@@ -1057,7 +1020,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_bits
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: % = 7:% / 2:1 / 2:2 / 2=x. / 2=G. / *:., X = 3:x / 3:. / *:X
 SUBST: X = x..., c = c:50 x .:5
 : desolation_ruins_setup(_G)
@@ -1079,7 +1041,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_hall_ruin
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C = ccx, B = ccx.., D = cx..., X = x., G = G%, c = c:50 x
 NSUBST: % = 2:2
 : desolation_ruins_setup(_G)
@@ -1101,7 +1062,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_hilbert_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: q = 2:1 / 2:2 / *:.
 : desolation_ruins_setup(_G)
 MAP
@@ -1122,7 +1082,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_hilbert_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: X = x...., c = c:70 x
 : desolation_ruins_setup(_G)
 MAP
@@ -1143,7 +1102,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_blocks_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: 2 = 2:2 / *:., - = 3:% / *:.
 : desolation_ruins_setup(_G)
 MAP
@@ -1164,7 +1122,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_blocks_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: D = . / 1:C / c, 1 = 3:1 / *:.
 SUBST: C = c., X = x., c = c:100 x
 : desolation_ruins_setup(_G)
@@ -1183,12 +1140,10 @@ C%%Cx..xxx..
 ccCc..X.....
 ENDMAP
 
-
 # A tower for learning forbidden, blasphemous magicks. (The added k means extra
 # blasphemy.) The loot is magical books, jewellery, and staves.
 NAME: desolation_ruin_nicolae_wiztower_intact
 TAGS: desolation_ruin transparent uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: - = 1:1 / 1=1. / 1:2 / 3:3 / 2=23.. / *:.
 KITEM: % = randbook w:50 / any jewellery randart / any magical staff
@@ -1211,7 +1166,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_wiztower_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB
 SUBST: G = G., C = c., X = x., c = c:60 x
 : desolation_ruins_setup(_G)
@@ -1230,11 +1184,9 @@ cc%..x.X..X.
 ..ccccCC.X..
 ENDMAP
 
-
 # Ancient vault of heretical loot, full of treasure and fat stacks of gold.
 NAME: desolation_ruin_nicolae_vault_intact
 TAGS: desolation_ruin transparent uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: % = 4:% / 4:| / 1:%| / 4:$ / 2:b / 2:g / *:s
 KMONS: 1b = saltling band
@@ -1265,7 +1217,6 @@ ENDMAP
 # The wrecked version of the vault has a few scattered coins remaining.
 NAME: desolation_ruin_nicolae_vault_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: s% = 5:$, Q = 2:1 / 2:2 / *:.
 SUBST: C = c., s = ., M = m., g = G., c = c:50 x
 KFEAT: m = iron_grate
@@ -1289,7 +1240,6 @@ ENDMAP
 # The petrified remnants of a forest within the realm.
 NAME:   desolation_ruin_ebering_petrified_1
 TAGS:   desolation_ruin transparent
-ORIENT: float
 KFEAT:  t = petrified_tree
 KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
 NSUBST: p = 1:S / *:p
@@ -1317,7 +1267,6 @@ ENDMAP
 
 NAME:   desolation_ruin_ebering_petrified_2
 TAGS:   desolation_ruin transparent
-ORIENT: float
 KFEAT:  t = petrified_tree
 KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
 SUBST:  X = tp.
@@ -1345,7 +1294,6 @@ ENDMAP
 # Some vague duality in the twin gods
 NAME:   desolation_ruin_ebering_petrified_temple
 TAGS:   desolation_ruin transparent
-ORIENT: float
 KFEAT:  t = petrified_tree
 KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
 SUBST:  c = ccx...
@@ -1366,9 +1314,6 @@ ttpptc2...cc
 ...ttc%cc...
 ....ttcc....
 ENDMAP
-
-
-
 
 ##############################################################################
 # The level itself
