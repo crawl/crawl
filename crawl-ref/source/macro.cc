@@ -970,22 +970,6 @@ public:
         action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
         set_title(new MenuEntry("", MEL_TITLE));
-        on_single_selection = [this](const MenuEntry& item)
-        {
-            status_msg = "";
-            update_macro_more();
-            if (item.data)
-                edit_mapping(*static_cast<keyseq *>(item.data));
-            else if (item.hotkeys.size() && item.hotkeys[0] == '~')
-                edit_mapping(keyseq());
-            else if (item.hotkeys.size() && item.hotkeys[0] == '-')
-            {
-                if (item_count() > 0)
-                    clear_all();
-            }
-
-            return true;
-        };
     }
 
     void fill_entries(int set_hover_keycode=0)
@@ -993,21 +977,36 @@ public:
         // TODO: this seems like somehow it should involve ui::Switcher, but I
         // have no idea how to use that class with a Menu
         clear();
-        add_entry(new MenuEntry("Create/edit " + mode_name() + " from key",
-            MEL_ITEM, 1, '~'));
+        add_entry(new MenuEntry("Create/edit " + mode_name() + " from key", '~',
+            [this](const MenuEntry &)
+                {
+                    edit_mapping(keyseq());
+                    return true;
+                }));
         if (get_map().size())
         {
-            add_entry(new MenuEntry("Clear all " + mode_name() + "s",
-                MEL_ITEM, 1, '-'));
+            add_entry(new MenuEntry("Clear all " + mode_name() + "s", '-',
+                [this](const MenuEntry &)
+                    {
+                        status_msg = "";
+                        update_macro_more();
+                        if (item_count() > 0)
+                            clear_all();
+                        return true;
+                    }));
             add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
             for (auto &mapping : get_map())
             {
                 // TODO: indicate if macro is from rc file somehow?
                 string action_str = vtostr(mapping.second);
                 action_str = replace_all(action_str, "<", "<<");
-                MenuEntry *me = new MenuEntry(action_str,
-                                                        MEL_ITEM, 1,
-                                                        (int) mapping.first[0]);
+                MenuEntry *me = new MenuEntry(action_str, (int) mapping.first[0],
+                    [this](const MenuEntry &item)
+                    {
+                        if (item.data)
+                            edit_mapping(*static_cast<keyseq *>(item.data));
+                        return true;
+                    });
                 me->data = (void *) &mapping.first;
                 add_entry(me);
                 if (set_hover_keycode == mapping.first[0])
@@ -1227,30 +1226,38 @@ public:
             reset_key_prompt();
             set_more(string(""));
 
-            add_entry(new MenuEntry("redefine", MEL_ITEM, 1, 'r'));
-            add_entry(new MenuEntry("redefine with raw key entry", MEL_ITEM, 1, 'R'));
-            if (!action.empty())
-                add_entry(new MenuEntry("clear", MEL_ITEM, 1, 'c'));
-            add_entry(new MenuEntry("abort", MEL_ITEM, 1, 'a'));
-
-            on_single_selection = [this](const MenuEntry& item)
-            {
-                set_more("");
-                if (!item.hotkeys.size())
-                    return true;
-                if (item.hotkeys[0] == 'r')
-                    return !edit_action();
-                else if (item.hotkeys[0] == 'R')
+            add_entry(new MenuEntry("redefine", 'r',
+                [this](const MenuEntry &)
                 {
+                    set_more("");
+                    return !edit_action();
+                }));
+
+            add_entry(new MenuEntry("redefine with raw key entry", 'R',
+                [this](const MenuEntry &)
+                {
+                    set_more("");
                     edit_action_raw();
                     return true;
-                }
-                else if (item.hotkeys[0] == 'c')
-                    action.clear();
-                else if (item.hotkeys[0] == 'a')
+                }));
+
+            if (!action.empty())
+            {
+                add_entry(new MenuEntry("clear", 'c',
+                    [this](const MenuEntry &)
+                    {
+                        action.clear();
+                        return false;
+                    }));
+            }
+
+            add_entry(new MenuEntry("abort", 'a',
+                [this](const MenuEntry &)
+                {
                     abort = true;
-                return false;
-            };
+                    return false;
+                }));
+
             if (last_hovered == -1)
                 cycle_hover();
         }
@@ -1422,6 +1429,9 @@ public:
 
     bool edit_mapping(keyseq key)
     {
+        status_msg = "";
+        update_macro_more();
+
         const bool existed = get_map().count(key);
 
         MappingEditMenu pop = MappingEditMenu(key,

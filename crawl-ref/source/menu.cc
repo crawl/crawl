@@ -1403,14 +1403,21 @@ bool Menu::process_key(int keyin)
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
         {
-            if (!on_single_selection)
-                return false;
             MenuEntry *item = sel[0];
-            // TODO: per item trigger code
-            if (!on_single_selection(*item))
-                return false;
-            deselect_all();
-            return true;
+            bool result = false;
+            if (item->on_select)
+                result = item->on_select(*item);
+            else if (on_single_selection) // currently, no menus use both
+                result = on_single_selection(*item);
+            // the UI for singleselect menus behaves oddly if anything is
+            // selected when it runs, because select acts as a toggle. So
+            // if the selection has been processed and the menu is
+            // continuing, clear the selection.
+            // TODO: this is a fairly clumsy api for menus that are
+            // trying to *do* something.
+            if (result)
+                deselect_all();
+            return result;
         }
 
         update_title();

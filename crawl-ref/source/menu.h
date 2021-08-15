@@ -105,6 +105,7 @@ public:
     bool preselected;
     bool indent_no_hotkeys;
     void *data;
+    function<bool(const MenuEntry&)> on_select;
 
 #ifdef USE_TILE
     vector<tile_def> tiles;
@@ -115,11 +116,13 @@ public:
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
                int hotk = 0,
-               bool preselect = false) :
+               bool preselect = false,
+               function<bool(const MenuEntry&)> action = nullptr) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
         hotkeys(), level(lev), preselected(preselect),
         indent_no_hotkeys(false),
-        data(nullptr)
+        data(nullptr),
+        on_select(action)
     {
         colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
                   lev == MEL_SUBTITLE ?  BLUE  :
@@ -127,6 +130,14 @@ public:
         if (hotk)
             hotkeys.push_back(hotk);
     }
+
+    // n.b. select code requires that the qty value be >0 (TODO, why)
+    MenuEntry(const string &txt, int hotk,
+                        function<bool(const MenuEntry&)> action)
+        : MenuEntry(txt, MEL_ITEM, 1, hotk, false, action)
+    {
+    }
+
     virtual ~MenuEntry() { }
 
     bool operator<(const MenuEntry& rhs) const
