@@ -8,6 +8,16 @@
 #
 # Currently set to never appear earlier than D:14, meaning this is always
 # post-lair.
+{{
+function ambush_stairs(e)
+    if you.in_branch("Dis") or you.in_branch("Coc") or you.in_branch("Tar")
+       or you.in_branch("Geh") then
+        e.nsubst("< = 1:{ / 1:}. / 1:>. / *:.")
+    else
+        e.nsubst("< = 1:{ / 1:( / 1:[} / 1:>")
+    end
+end
+}}
 
 NAME:     evilmike_ambush
 DEPTH:    Depths, !Depths:$, Elf, !Elf:$, Snake, !Snake:$, \
@@ -116,15 +126,16 @@ xx     xx
 ENDMAP
 
 # Inner subvaults. Always contains two stairs, with a large chance of having all 3
+# In hell always has the upstair, with a chance of downstairs or hatch
 NAME:    evilmike_ambush_inner_basic
 TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  25
 SHUFFLE: <AB
 SUBST:   AB = .
-NSUBST:  < = 1:{ / 1:( / 1:[} / 1:>
 : if you.in_branch("Dis") then
 TILE: G = dngn_statue_iron
 : end
+: ambush_stairs(_G)
 MAP
  ..A..
 ...<...
@@ -138,18 +149,20 @@ ENDMAP
 NAME:    evilmike_ambush_inner_wall_1
 TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  3
-SHUFFLE: AB / {(
+SHUFFLE: AB / {<
+SUBST:   { = <
 SUBST:   AB = .
 SHUFFLE: yxX / "">
 SUBST:   " = .
 SUBST:   y : x., X = x
 SUBST:   x : xxxccvvbmm
 SUBST:   > = }>
+: ambush_stairs(_G)
 MAP
  .....
 ...y...
 ...x...
-A{.X.(B
+A{.X.<B
 ...x...
 ...y...
  .....
@@ -158,18 +171,19 @@ ENDMAP
 NAME:    evilmike_ambush_inner_wall_2
 TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  3
-SHUFFLE: AB / {(
+SHUFFLE: AB / {<
 SUBST:   AB = .
 SHUFFLE: yxX / ""<
 SUBST:   " = .
 SUBST:   y : x., X = x
 SUBST:   x : xxxccvvbmm
 SUBST:   > = }>
+: ambush_stairs(_G)
 MAP
  .....
 ..y.y..
 ..x.x..
-A{X>X(B
+A{X>X<B
 ..x.x..
 ..y.y..
  .....
@@ -179,10 +193,10 @@ NAME:    evilmike_ambush_inner_pond
 TAGS:    evilmike_ambush_inner allow_dup
 SUBST:   w : wwwWWlm...
 SUBST:   > : >..
-NSUBST:  < = 1:{ / 1:( / 1:[} / 1:>
 : if you.in_branch("Dis") then
 TILE: G = dngn_statue_iron
 : end
+: ambush_stairs(_G)
 MAP
  .....
 ..>w<..
@@ -197,7 +211,7 @@ NAME:    evilmike_ambush_inner_cross
 TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  5
 SUBST:   y : x., z : x., x : xxxccvvbmm
-NSUBST:  < = 1:{ / 1:( / 1:[} / 1:>
+: ambush_stairs(_G)
 MAP
  ..y..
 ...x...
