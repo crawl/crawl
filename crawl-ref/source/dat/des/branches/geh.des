@@ -66,15 +66,15 @@ LLLlll11lllllLL
 ENDMAP
 
 ################################################################################
-
 NAME:    hangedman_generic_boss_arena
 TAGS:    no_monster_gen
 DEPTH:   Geh, !Geh:$
+ORIENT:  encompass
 MONS:    hell knight, hellion, balrug, balrug
 MONS:    hell hound, sun demon, hell hog
 KFEAT:   L = l
 SHUFFLE: dD, eE / fF / 56, 56 / 65 / 55 / 66 / 77 / '', ABC / 234 / <<<, 234 / 322
-NSUBST:  < : 1:) / 1:( / 1:[[[<<>
+NSUBST:  < : 1:} / 1:{ / 1:<<>
 SUBST:   ABC : v.., d : vLl, D : vvLl, eE : vvl.., fF : vvl.., v : xcv, ' = .
 KPROP:   l = no_cloud_gen
 MAP
@@ -111,8 +111,8 @@ ITEM:    any potion good_item
 KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8
 KFEAT:   L = l
 KPROP:   l = no_cloud_gen
-SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, ()~- / ()~- / -~(), () / {( / }) / '' / ''
-SUBST:   4 = 3, ' = .:99 >:1, ( = ( <:2, ) = ) >:2, ~- = .
+SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, {}~- / {}~- / -~{}
+SUBST:   4 = 3, { = { <:2, } = } >:2, ~- = .
 : if you.in_branch("Geh") then
 SUBST:   d$ = .
 : end
@@ -124,7 +124,7 @@ xcd$$cc.....cc$$dcx
 xc.~cc..x.x..cc..cx
 xc.cc..GxlxG..cc.cx
 xc....xxLllxx....cx
-xc.(...llLll...).cx
+xc.{...llLll...}.cx
 xc....xxllLxx....cx
 xc.cc..GxlxG..cc.cx
 xc..cc..x.x..cc-.cx
@@ -171,7 +171,7 @@ SUBST:   x : x:9 b:1, 7 = .
 :  end
 SHUFFLE: {` / `}
 SUBST:   { : .:4 A:3 B:3, } : .:2 C:3, ` = .
-NSUBST:  A = 1:{ / 1:} / *:., B = 1:{ / 1:[ / *:., C = 1:} / 1:] / *:.
+NSUBST:  A = 1:{ / 1:} / *:., B = 1:{ / 1:< / *:., C = 1:} / 1:> / *:.
 MAP
 xxxx@@....
 xllxxx......
@@ -191,7 +191,7 @@ ENDMAP
 NAME:    hangedman_elemental_corridor
 TAGS:    no_monster_gen no_pool_fixup allow_dup
 DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
-SHUFFLE: 123456, }] / }] / {[ / **
+SHUFFLE: 123456, }{ / **
 :  if you.in_branch("Geh") then
 MONS:    brimstone fiend / balrug / hellion
 MONS:    sun demon / smoke demon / hell knight
@@ -210,7 +210,7 @@ MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
 MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
 MONS:    hell hound w:8 / red draconian / fire elemental w:5 / \
          red very ugly thing w:15 / efreet w:12
-SUBST:   * = *||, {}[] = ***|, xc = xxxccb, 5 = 2, 6 = 4
+SUBST:   * = *||, {} = ***|, xc = xxxccb, 5 = 2, 6 = 4
 :  else
 KMONS:   123 = fire dragon
 KMONS:   456 = ice dragon
@@ -223,7 +223,7 @@ SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'
 KFEAT:   f = deep_water
 KFEAT:   F = lava
 KPROP:   lF = no_cloud_gen
-SUBST:   % = $:2 %:5 *:2, ] = ] >:5, [ = [ <:5, G : G:6 c:2 b:1 .:1
+SUBST:   % = $:2 %:5 *:2, G : G:6 c:2 b:1 .:1
 # Clearly, they commissioned the deep dwarves.
 MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 3, pow_max = 3, delay = 75, size_min = 2, size_max = 2, \
@@ -239,7 +239,7 @@ MAP
 xxcc...ccwwccxxxxxx
 xccc...ccccfccccccxx
 xccl..1cccccwcccwccxx
-xcFc...2%]%...6..wccx
+xcFc...2%{%...6..wccx
 xcFc.....G.G.....cfcx
 xccl..3...%}%5...cfcx
 xxcclccclccccc4..wccx
@@ -258,7 +258,6 @@ DEPTH:   Geh, !Geh:$
 TAGS:    transparent extra decor
 SHUFFLE: abcdefgh/!''''!!!/!!''!!''/!''!!''!/!'!'!'!'/!!!'!!!'/!!!!!!!'/''''''''
 SUBST:   { = }}}{
-SHUFFLE: }]), ([{
 SUBST:   'abcd = ., !efgh = l
 MAP
        .....
@@ -284,7 +283,6 @@ ENDMAP
 
 NAME:    nicolae_geh_lava_in_the_way
 DEPTH:   Geh:2-, !Geh:$
-SHUFFLE: {[(, }])
 KPROP:   '; = no_tele_into
 NSUBST:  ' = 1:1 / *:., ; = 1:1 / *:.
 KMONS:   1 = hellion
@@ -353,7 +351,7 @@ TAGS:    transparent extra decor allow_dup luniq
 DEPTH:   Geh, !Geh:$
 KFEAT:   ' = open_door
 # Randomized: lava pit edges, extra entrance, door pair openness.
-SUBST:   ! = {[(<}])> ':40 +:40 .:120
+SUBST:   ! = {<}> ':40 +:40 .:120
 SUBST:   d : ++++', e : +++++'", f : +++++'", g : +++++'"
 SHUFFLE: C`D- / C`D- / C`D- / E~F_, GH / GH / HG, JK / JK / KJ
 SUBST:   CFHK = c, - : ccc+, ~E = ., GJ = l
@@ -389,7 +387,6 @@ ENDMAP
 NAME: nicolae_geh_amphitheater
 TAGS: extra decor transparent
 DEPTH: Geh, !Geh:1
-SUBST: { = {[(
 MAP
    lllll
  lllclclll
@@ -412,6 +409,7 @@ NAME:   geh_old
 TAGS:   no_rotate
 ORIENT: encompass
 MONS:   patrolling Asmodeus, brimstone fiend, Balrug, molten gargoyle
+NSUBST: { = 1:{ / *:.
 : serpent_of_hell_setup(_G)
 : geh_setup(_G)
 MAP
@@ -471,7 +469,7 @@ xxxxxx...xx.........lllllllllllllllll...................xx{xxxxxxxxxxx
 xxxxxxxx..xx................lllllll.....................xxxxxxxxxxxxxx
 xxxxxxxxxxxx.........xxx.................xxxxxx......xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx....xxxxxxxx...xxx......xxxxxxxxxx.......xxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx(xxxxxxxxxxxx[xxxxx...xxxxxxxxxxxxxx...xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx{xxxxxxxxxxxx{xxxxx...xxxxxxxxxxxxxx...xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -496,12 +494,13 @@ NSUBST: X = 1:D / *:l
 SUBST:  4 = 34456778, % = $|
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
 SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
+NSUBST: { = 1:{ / *:.
 : geh_setup(_G)
 COLOUR: = = red
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
-x.(.."llv......+......................................+......vllll".{x
+x.{.."llv......+......................................+......vllll".{x
 x..."lllv.vvvv.v....4....lllllllll.llllllllll.........v.vvvv.vllll".'x
 x..."lllv.v2|v.v.......lllllllllll.llllllllllll...4...v.v|2v.vlll"..'x
 x'."llllv.v+vv.v.....lllllllllllcc+ccllllllllllll.....v.vv+v.vll"..'xx
@@ -513,7 +512,7 @@ x'.."lllv.v.....llllllccc..........cccccccccccllllllll..4..v.vlll".'xx
 x'."llllv.v....lllllllccc..........ccccccccccclllllllll....v.vlll".'xx
 x'."llllv.v....lllllllccc..........c..c....ccclllllllll....v.vlll"..'x
 x'."llllv.v...lllcccccc.+..........c..+..1.cccllllllllll...v.vllll".'x
-x'.."lllv.v...lllc$$$$c.+..........c..c....cccccccclllll...v.vllll".[x
+x'.."lllv.v...lllc$$$$c.+..........c..c....cccccccclllll...v.vllll".{x
 xx."llllv.v...lllc$$$$c.c.44....44.c..c2.2.c|||.nOclllll...v.vllll".'x
 x'.."lllv.v...lllc$2..c.cccccccccccc..c....c|||.n.clllll...v.vllll".'x
 x'.."lllv.v...lllc$...c.+..........c..c....c|||.n+clllll...v.vlll"..'x
@@ -568,7 +567,7 @@ ENDMAP
 # 70 x 68 - can be rotated
 NAME:    evilmike_geh
 ORIENT:  encompass
-SHUFFLE: ([{<
+NSUBST:  { = 1:{ / *:<
 KMASK:   . = no_monster_gen
 NSUBST:  A = 1:+ / *=+cc
 SUBST:   B = ccc+
@@ -634,9 +633,9 @@ Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc----------cllllL
 LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
 Llllllc---cG........{........Gc---c.........+--v--v---4-------c-cllllL
 LlllllN---cc.................cc---+..G.G.G.7c--------v--v--v-4+-cllllL
-Llllllc4---A7.v...<.G.(...v.7B---4c.....8...+----------------D+-nllllL
+Llllllc4---A7.v...{.G.{...v.7B---4c.....8...+----------------D+-nllllL
 LlllllN---cc.................cc---+..G.G.G.7c--------v--v--v-4+-cllllL
-Llllllc---cG........[........Gc---c.........+--v--v---4-------c-cllllL
+Llllllc---cG........{........Gc---c.........+--v--v---4-------c-cllllL
 LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
 Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc-------+--cllllL
 Lllllllc--c....vv.......vv....c--cllllllllRlcc-------c--vvv--ccccllllL
@@ -680,7 +679,7 @@ ORIENT:  encompass
 MONS:    patrolling Asmodeus, Brimstone Fiend, balrug
 MONS:    hellion, sun demon, fire giant, red devil / crimson imp w:20
 KMONS:   9 = molten gargoyle
-SHUFFLE: {[(<
+SHUFFLE: {<
 SUBST:   - = ll.
 SUBST:   _ = ..l
 KFEAT:   L = endless_lava
@@ -751,7 +750,7 @@ Ll-__-llllllll-_..............__________............._-lllll-_...._-lL
 Ll-_._--llllll-_...................................._-lllll-_....._-lL
 Lll-_.__--ll--_...................................._-llll--_....._-llL
 Lll-__..__--__......................................_-ll-__......_-llL
-Llll-__...__...................(.{..[.<.............._--_......__-lllL
+Llll-__...__.....................{..<................_--_......__-lllL
 Lllll--_____..........................................__.._____--llllL
 Lllllll-----__________..........................__________-----llllllL
 Llllllllllll----------__________________________----------lllllllllllL
@@ -801,9 +800,9 @@ ccccccccc.6.+........................c3c....cccccccllllllllll...cc+cc...lllg..cc
 cccccccccc..c.....4...5..............c+c....cccccccllllllcll..6ccc$ccc6..llc..cc
 ccccccccccc.c.................xxx...........ccccccclllllccc...ccc$3$ccc...ccc2cc
 ccccccccccccc................xx.xx..........ccccccc......c...ccccccccccc...c..cc
-ccccccccccccc...............xx*|*xx.........+..c..+..5.......cc*ccccc(cc.....2cc
+ccccccccccccc...............xx*|*xx.........+..c..+..5.......cc*ccccc.cc.....2cc
 ccccccccO|||+...4...1...5...g.|A|.x...D.....+..+..+..5.....6.+*3ccccc{.+.6....cc
-ccccccccccccc...............xx*|*xx.........+..c..+..5.......cc*ccccc[cc.....2cc
+ccccccccccccc...............xx*|*xx.........+..c..+..5.......cc*ccccc.cc.....2cc
 ccccccccccccc................xx.xx..........ccccccc......c...ccccccccccc...c..cc
 ccccccccccc.c.................xxx...........ccccccclllllccc...ccc$3$ccc...ccc2cc
 cccccccccc..c.....4...5..............c+c....cccccccllllllcll...ccc$ccc6..llc..cc
@@ -859,10 +858,10 @@ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 LLllllllllllllllllllllllllllllccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxLL
 LLllllllllllllll..............+....4....ccxXXXXXXXXXXXXXXXXXXXXXXXxxLL
-LLlll.B.......................c++cc+cc++cccX..................[..XXxLL
+LLlll.B.......................c++cc+cc++cccX.....................XXxLL
 LLll.6...........ll````````llcc.........ccc..```````x```````x...{.XxLL
 LLllB.vv-vvvvvvvvllllllllllll+...vd3dv...cc..llllllllllllllllll...XxLL
-LLll..v...v$$$.vvYlllllllllllc..f..e..f..cc..lllllllllllllllllll.(XxLL
+LLll..v...v$$$.vvYlllllllllllc..f..e..f..cc..lllllllllllllllllll..XxLL
 LLll..-.$..$.2$vvllllllFFllllc..f..e..f..cc..lllllllllllllllllll..XxLL
 LLll..v...v$..$vvYlllllxxllll+...vd.dv...cc.xlllllll.xllllllllllx.XxLL
 LLll..vv.vv.$$$vvllllllEEllllc.....v.....cc..llxllll.xlllllxllll`.XxLL
@@ -936,7 +935,6 @@ ORIENT:  encompass
 MONS:    patrolling Asmodeus, Brimstone Fiend, balrug
 MONS:    hellion, sun demon, fire giant, red devil / crimson imp w:20
 KMONS:   9 = molten gargoyle
-SHUFFLE: {[(
 SUBST:   - = ll.
 SUBST:   _ = ..l
 SUBST:   d = x.
@@ -1008,9 +1006,9 @@ Lllll-_........._-l-__........xxd......................dd.....d..._-lL
 Llll-_.........._-ll--__.............................dxxxxd......._-lL
 Llll-_.........._-llll--__.........d......ddd........dxxxxd......._-lL
 Lll-_.........._-lllllll--__.............xxxd...d.....xxxx........_-lL
-Lll-_.(......._-llllllllll--__.........dxxxxd.........dxxd........_-lL
+Lll-_........._-llllllllll--__.........dxxxxd.........dxxd........_-lL
 Lll-_........._-llllllllllll--__........dxxxd..........dd........_-llL
-Lll-_.{.[...._-lllllllllllllll--__.......dd....................._-lllL
+Lll-_.{......_-lllllllllllllll--__.......dd....................._-lllL
 Llll-_......_-llllllllllllllllll--__.........................___-llllL
 Llll-_______-lllllllllllllllllllll--_________________________---lllllL
 Lllll-------llllllllllllllllllllllll-------------------------llllllllL
