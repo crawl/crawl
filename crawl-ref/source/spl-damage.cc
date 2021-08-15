@@ -3699,17 +3699,16 @@ static void _discharge_maxwells_coupling()
     else
         mprf("The electricity discharges through %s!", mon->name(DESC_THE).c_str());
 
-    const coord_def pos = mon->pos();
-    bool goldify = have_passive(passive_t::goldify_corpses);
-
+    const bool goldify = have_passive(passive_t::goldify_corpses);
     if (goldify)
         simple_monster_message(*mon, " vaporises and condenses as gold!");
     else
         simple_monster_message(*mon, " vaporises in an electric haze!");
 
+    const coord_def pos = mon->pos();
     item_def* corpse = monster_die(*mon, KILL_YOU,
                                     actor_to_death_source(&you));
-    if (corpse)
+    if (corpse && !goldify)
         destroy_item(corpse->index());
 
     noisy(spell_effect_noise(SPELL_MAXWELLS_COUPLING), pos, you.mid);
