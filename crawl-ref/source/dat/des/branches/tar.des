@@ -147,15 +147,13 @@ MONS: Tzitzimitl, shadow demon / reaper, soul eater, necrophage, shadow imp
     lua_marker('1', trap_marker)
     lua_marker('e', trap_marker)
     lua_marker('}', trap_marker)
-    lua_marker(']', trap_marker)
-    lua_marker(')', trap_marker)
     lua_marker('d', props_marker {trap_wall=1})
     lua_marker('"', props_marker {trap_wall2=1})
 }}
 SUBST: d = c
 SUBST: e = 2
 COLOUR: c = lightmagenta
-KPROP: "H-}]) = no_tele_into
+KPROP: "H-} = no_tele_into
 MARKER: H = lua:fog_machine { \
                 pow_min = 10, pow_max = 10, delay = 10, \
                 size = 3, walk_dist = 1, spread_rate = 0, \
@@ -165,9 +163,9 @@ cccccccccccccccccccccc.......
 c...2...............cG.5.....
 cdcccccccccccccccccdcc...5...
 c--H":e:c9c8c8c0c0c0cG.4..5..
-c}--":::cdcdcdcdcdcdcc3.4..5.
-c]1H":::+............+......@
-c)--":::cdcdcdcdcdcdcc3.4..5.
+c---":::cdcdcdcdcdcdcc3.4..5.
+c}1H":::+............+......@
+c---":::cdcdcdcdcdcdcc3.4..5.
 c--H":e:c9c8c8c0c0c0cG.4..5..
 cdcccccccccccccccccdcc...5...
 c...2...............cG.5.....
@@ -178,6 +176,7 @@ ENDMAP
 NAME:    hangedman_snap_crack_crunch
 TAGS:    transparent no_monster_gen
 DEPTH:   Tar, !Tar:$, Zot:1-4
+ORIENT:  centre
 : if you.in_branch("Tar") then
 KMONS:   12 = patrolling reaper
 KMONS:   34 = patrolling tormentor
@@ -201,9 +200,9 @@ KMONS:   0 = soul eater
 KMONS:   Z = obsidian statue
 KFEAT:   Z = zot trap
 SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
-SUBST:   { : -_= |:3, } : -= |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
+SUBST:   { : -_ |:3, } : -_ |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
 SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
-NSUBST:  - = 1:{ / 1:}, _ = 1:[ / 1 = (:80 <, = = 1:] / 1 = ):80 >
+NSUBST:  - = 1:{ / 1:}, _ = 1:> / 1 = .:80 <
 NSUBST:  7 = 3:7 / 3:0 / 2 = 70
 MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
                 pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = 0 }
@@ -236,10 +235,10 @@ xxxxxx..cXc.....cXc..xx
 ENDMAP
 
 ##############################################################################
-
 NAME:    hangedman_restless_catacombs
 TAGS:    no_monster_gen
 DEPTH:   Tar, !Tar:$
+ORIENT:  encompass
 MONS:    soul eater, patrolling curse skull
 MONS:    skeletal warrior / phantasmal warrior w:6 / \
          shadow wraith w:4 / guardian mummy w:4 / \
@@ -249,37 +248,36 @@ KMONS:   67 = vampire mage
 KMONS:   89 = flayed ghost
 KMONS:   AB = mummy priest
 KMONS:   CD = lich
-NSUBST:  0 = 1:( / 1 : ):9 >:1 / 1 : 3:9 [:1 / 1:4 / 1:5 / 1:6 / 1:7 / *:3
+NSUBST:  0 = 1:{ / 1 :} / 1 : 3 / 1:4 / 1:5 / 1:6 / 1:7 / *:3
 SHUFFLE: 456789ABCD"
 SUBST:   " = 3
 MAP
-xxxxxxxxxxxxxxxxx
-xcccccccccccccccx
-xcG.c0c0c0c0c.Gcx
-xc.1c+c+c+c+c1.cx
-xccc.........cccx
-xc0+.........+0cx
-xccc...x.x...cccx
-xc0+..x...x..+0cx
-xccc....2....cccx
-xc0+..x...x..+0cx
-xccc...x.x...cccx
-xc0+.........+0cx
-xccc.........cccx
-xc.1c+c+c+c+c1.cx
-xcG.c0c0c0c0c.Gcx
-xcccccccccccccccx
-xxxxxxxxxxxxxxxxx
+ccccccccccccccc
+cG.c0c0c0c0c.Gc
+c.1c+c+c+c+c1.c
+ccc.........ccc
+c0+.........+0c
+ccc...x.x...ccc
+c0+..x...x..+0c
+ccc....2....ccc
+c0+..x...x..+0c
+ccc...x.x...ccc
+c0+.........+0c
+ccc.........ccc
+c.1c+c+c+c+c1.c
+cG.c0c0c0c0c.Gc
+ccccccccccccccc
 ENDMAP
 
 ################################################################################
 
 NAME:    hangedman_tartarus_temple_path
-TAGS:    transparent extra
+TAGS:    transparent
 DEPTH:   Tar, !Tar:$
+ORIENT:  centre
 SHUFFLE: hH / hH / Hh, iI / iI / Ii
 SUBST:   h : cccx, H : cxGF, i : cccx, I : cxGF
-SUBST:   d = d., + = +..., { = {}...., c = c:49 .:1, C = c
+SUBST:   d = d., + = +..., { = {}., c = c:49 .:1, C = c
 MARKER:  F = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
              pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = 0 }
 {{
@@ -521,12 +519,12 @@ ENDMAP
 NAME:    nicolae_tar_fractal_crypt
 DEPTH:   Tar, !Tar:$
 TAGS:    transparent
+ORIENT:  centre
 SHUFFLE: ae, bf, cg, dh
 SUBST:   e : ae, f : bf, g : cg, h : dh
 NSUBST:  a = + / x, b = + / x, c = + / x, d = + / x, e = + / x, f = + / x, \
-         g = + / x, h = + / x, > = 1:} / 1:] / 1:) / .
-SUBST:   d = x, 0 = 0009.., 9 = 998, ] = ...]>, ) = .....)>, X = ..x
-SHUFFLE: }])
+         g = + / x, h = + / x, > = 1:} / 1:>.. / .
+SUBST:   d = x, 0 = 0009.., 9 = 998, X = ..x
 KMONS:   0 = 0 / 0 band w:5
 KMONS:   9 = 9 band
 KMONS:   8 = 8 band
@@ -561,7 +559,7 @@ ENDMAP
 NAME:    hangedman_damned_closets
 TAGS:    no_monster_gen
 DEPTH:   Tar, !Tar:$
-ORIENT:  float
+ORIENT:  centre
 MONS:    shadow w:6 / shadow wraith / wraith w:6
 MONS:    soul eater, tormentor / shadow demon w:12
 MONS:    patrolling lost soul
@@ -570,7 +568,7 @@ KMONS:   78 = eidolon
 KMONS:   90 = phantasmal warrior
 KMONS:   AB : spectral titan / spectral ettin
 KMONS:   C = patrolling revenant w:19 / patrolling tzitzimitl w:1
-KFEAT:   C = } / ) / ] / > w:30 / floor w:5
+KFEAT:   C = }
 SHUFFLE: 4C / 56 / 78 / 90 / AB, 567890AB, yz / yz / zy, YZ / YZ / ZY
 SUBST:   X : x., y : xxx., z = ., { = {..
 MAP
@@ -606,7 +604,7 @@ ENDMAP
 NAME:    hangedman_tartarus_silent_blood_keep
 TAGS:    no_monster_gen transparent patrolling
 DEPTH:   Tar, !Tar:$
-ORIENT:  float
+ORIENT:  centre
 WEIGHT:  5
 MONS:    zombie / skeleton / spectral thing w:4
 MONS:    jiangshi / phantasmal warrior w:4 / shadow wraith w:4, vampire mage
@@ -616,7 +614,7 @@ MONS:    soul eater, tormentor w:3 / shadow demon w:1, silent spectre
 KMONS:   9 = reaper / lorocyproca w:6
 KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
-SUBST:   A : x.., B : x.., ] = ]>
+SUBST:   A : x.., B : x.., } = }>
 MAP
           xx  xx  xx  xx  xx  xx
          xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -625,9 +623,9 @@ MAP
     ....A......4c.3..4...B.....ccc...
   .............ccc+ccc......82ccccc..
 ...ccc1.......ccc.2.ccc..cccccc1c1cc.
-..ccccc18ccccccc)56..ccccc....+..7cc.
+..ccccc18ccccccc}56..ccccc....+..7cc.
 .cc1c1cccc....+J.3<4.J+....cccc1c1cc.
-.cc7..+....ccccc..65]ccccccc81ccccc..
+.cc7..+....ccccc..65}ccccccc81ccccc..
 .cc1c1cccccc..ccc.2.ccc.......1ccc...
 ..ccccc82......ccc+ccc.............
 ...ccc.....B...3..4.c3......A....
@@ -707,7 +705,7 @@ xxxx...........................................cccccccccccccccc...xxxx
 xxxx...........................................cccccccccccccccc...xxxx
 xxxx..............................................................xxxx
 xxxx..............................................................xxxx
-xxxx........(...........................................[.........xxxx
+xxxx..............................................................xxxx
 xxxx..............................................................xxxx
 xxxx..............................................................xxxx
 xxxx..............................{...............................xxxx
@@ -742,10 +740,10 @@ KMONS:    t = phantasmal warrior
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxx..............................................................xxxx
-xxxx.4.............................4.........................(..{.xxxx
+xxxx.4.............................4............................{.xxxx
 xxxx..ccccccccccccccccccccccccccccc...............................xxxx
 xxxx..c===========================+...............................xxxx
-xxxx..c===========================c.............................[.xxxx
+xxxx..c===========================c...............................xxxx
 xxxx..c===========================c...............................xxxx
 xxxx..c===========================c...............................xxxx
 xxxx..c===========================c..............3ccccccc3........xxxx
@@ -889,6 +887,7 @@ NSUBST: w = 3=Ew / 20=Fw / *:w
 NSUBST: ! = 2:. / *:c
 NSUBST: ? = 2:. / *:c
 NSUBST: ^ = 2:. / *:c
+NSUBST: { = 1:{ / *:.
 KMONS:  E = spectral kraken
 KMONS:  F = spectral swamp worm
 KFEAT:  EFw = deep_water
@@ -961,7 +960,7 @@ ccc"""""""cc"""""c""""""c""c"""""c"""c""""""c""""""""""ccc""""c"""""c"cc
 ccc"c"""""c""""""c""""""c""""""ccc""""""""""c""""""""""""c""ccc""c""c"cc
 cccccccc""c""""""cccc"""c""""""""ccccccc"""ccc"""""""""""c"""""""ccccccc
 ccc...c"""""""cccc""""""c""cc""""c...c"""""""c""""""c""""c""""""cc...ccc
-ccc.{..""""""""c"""""c""""""cc"""c.(.."""c""5cccc"""c"c""""""c"""..[.ccc
+ccc.{..""""""""c"""""c""""""cc"""c.{.."""c""5cccc"""c"c""""""c"""..{.ccc
 ccc...c""""""""c"""""c""""""c"""cc...c"""ccccc""""""c"c""""""c"""c...ccc
 cccccccccc"""""""""ccccccc"""""""ccccc"""""""""""""ccccc""""cccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1260,7 +1259,7 @@ NSUBST:   K = 1:D / *:.
 : serpent_of_hell_setup(_G)
 NSUBST:   P = 1:O / *:|
 KITEM:    $ = $ no_pickup
-SHUFFLE:  {([<
+NSUBST:   < = 1:{ / *:<
 : tar_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1270,7 +1269,7 @@ ccc..............................7.7..............................ccc
 c.....7cc.....................ccccccccc.....................cc7.....c
 c....cccccc.................ccc|||||||ccc.................cccccc....c
 c..cccccccccc.............ccc...........ccc.............cccccccccc..c
-c..cccccccccccc....{....ccc......5.5......ccc....[....cccccccccccc..c
+c..cccccccccccc....<....ccc......5.5......ccc....<....cccccccccccc..c
 c..cccccccccccccc.....ccc......ccccccc......ccc.....cccccccccccccc..c
 c..cccccccccccccccccccc......ccc.....ccc......cccccccccccccccccccc..c
 c..+......c...+...ccc......ccc.........ccc......ccc...+...c......+..c
@@ -1314,7 +1313,7 @@ c..+......+.4.+.6.+..7...ccc.............ccc...7..+.6.+.4.+......+..c
 c..+......c...+...ccc......ccc.........ccc......ccc...+...c......+..c
 c..cccccccccccccccccccc......ccc.....ccc......cccccccccccccccccccc..c
 c..cccccccccccccc.....ccc......ccccccc......ccc.....cccccccccccccc..c
-c..cccccccccccc....(....ccc......5.5......ccc....<....cccccccccccc..c
+c..cccccccccccc....<....ccc......5.5......ccc....<....cccccccccccc..c
 c..cccccccccc.............ccc...........ccc.............cccccccccc..c
 c....cccccc.................ccc|||||||ccc.................cccccc....c
 c.....7cc.....................ccccccccc.....................cc7.....c
