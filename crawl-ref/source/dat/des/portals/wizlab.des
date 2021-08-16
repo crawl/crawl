@@ -2009,6 +2009,10 @@ TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 TILE:       G = dngn_statue_centaur
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
+:           set_random_mon_list(
+:               "deep elf archer/ faun / satyr / " ..
+:               " naga sharpshooter / shambling mangrove / " ..
+:               "thorn hunter w:5 / eleionoma w:5 / deep elf master archer w:2")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Eringya's Formal Garden")
@@ -2091,6 +2095,10 @@ SUBST:      1=1.., 2=22..., ;:v+..
 NSUBST:     3 = 2:3 / 2:4 / *:3., 5 = 4:5 / *=5532.., 6 = 4:6 /*=65GGG
 NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:3 / 4:2 / *=11bG
 NSUBST:     e = 3:e / *=dff
+:           set_random_mon_list(
+:               "gargoyle / iron golem / molten gargoyle / " ..
+:               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
+:               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Maxwell's Workshop")
@@ -2170,6 +2178,11 @@ FTILE:  125.*d$G+ = floor_limestone
 FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
 TILE:   x = wall_brick
 TILE:   c = wall_church
+:           set_random_mon_list(
+:               "mana viper / tengu conjurer / ogre mage / " ..
+:               "deep elf knight / wizard / naga mage / " ..
+:               "salamander mystic / necromancer / vampire mage / " ..
+:               "tengu reaver w:1 / quicksilver dragon w:1")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Yara's Duelist Academy")
@@ -2259,6 +2272,10 @@ summon_marker:add_triggerer(DgnTriggerer:new {type="monster_dies",
 
 lua_marker('A', summon_marker)
 }}
+:           set_random_mon_list(
+:               "skeletal warrior / flayed ghost / phantasmal warrior / " ..
+:               "necromancer / vampire mage / shadow wraith / " ..
+:               "revenant w:2 / ancient champion w:2")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Borgnjor's Mausoleum")
@@ -2343,6 +2360,7 @@ NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 2:4 / *= 42., A = 1:< / *:A
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_w_marble
+:           set_random_mon_list("dancing weapon / rakshasa")
 :           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Tukima's Studio")
@@ -2426,6 +2444,10 @@ TILE:   c = wall_stone_gray
 FTILE:  H" = floor_crystal_squares
 FTILE:  N'12K = floor_w_marble
 FTILE:  -FTALD< = floor_grass
+:           set_random_mon_list(
+:               "wizard w:40 / necromancer / hell knight / " ..
+:               "deep troll earth mage / naga mage/ salamander mystic / " ..
+:               "fire giant w:1 / frost giant w:1")
 :           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Alistair's Party Mansion")
