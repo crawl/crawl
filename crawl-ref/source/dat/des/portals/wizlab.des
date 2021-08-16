@@ -2095,6 +2095,7 @@ SUBST:      1=1.., 2=22..., ;:v+..
 NSUBST:     3 = 2:3 / 2:4 / *:3., 5 = 4:5 / *=5532.., 6 = 4:6 /*=65GGG
 NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:3 / 4:2 / *=11bG
 NSUBST:     e = 3:e / *=dff
+TILE:       v = dngn_metal_wall_cyan
 :           set_random_mon_list(
 :               "gargoyle / iron golem / molten gargoyle / " ..
 :               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
