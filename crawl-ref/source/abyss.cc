@@ -2240,18 +2240,19 @@ static void _corrupt_level_features_monster(const corrupt_env &cenv, monster mon
 
         // In the monster version of the effect we have an extra check here
         // which will prevent the effect from triggering _corrupt_square
-        // on anything other than clear dungeon floor, or basic rock wall.
-        // This stops the corruption from hitting stone/metal, and also
+        // on anything other than clear dungeon floor.
+        // This stops the corruption from hitting walls, and also
         // from messing with things like doors
-        if (env.grid(*ri) == DNGN_FLOOR || env.grid(*ri) == DNGN_ROCK_WALL)
+        if (env.grid(*ri) == DNGN_FLOOR)
         {   // acceptable tile to mess with
             if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
             _corrupt_square_monster(cenv, *ri);
             else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
             _corrupt_square_flavor(cenv, *ri);
         }
-        if (env.grid(*ri) == DNGN_STONE_WALL || env.grid(*ri) == DNGN_METAL_WALL)
-        {   // chance to change the colour of stone and metal walls though
+        if (env.grid(*ri) == DNGN_STONE_WALL || env.grid(*ri) == DNGN_METAL_WALL
+        || env.grid(*ri) == DNGN_ROCK_WALL)
+        {   // chance to change the colour of walls though
             if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
             _corrupt_square_flavor(cenv, *ri);
         }
