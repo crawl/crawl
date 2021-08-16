@@ -1046,7 +1046,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     // Don't bother placing a cloud for living spells.
     if (mons->type == MONS_LIVING_SPELL)
         return;
-    
+
     // Chaos spawn always leave behind a cloud of chaos.
     if (mons->type == MONS_CHAOS_SPAWN)
     {

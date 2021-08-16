@@ -4069,7 +4069,7 @@ bool handle_mon_spell(monster* mons)
     // Reflection, fireballs, etc.
     if (!mons->alive())
         return true;
-    
+
     // Living spells die once they are cast.
     if (mons->type == MONS_LIVING_SPELL)
     {
@@ -5896,14 +5896,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
     }
-    
+
     case SPELL_CONJURE_LIVING_SPELLS:
     {
         const int hd = mons->spell_hd(spell_cast);
         const int n = living_spells_for(mons->type);
         const spell_type spell = living_spell_type_for(mons->type);
         // XXX: will crash if wizmode player tries to cast?
-        ASSERT(spell != SPELL_NO_SPELL); 
+        ASSERT(spell != SPELL_NO_SPELL);
         for (int i = 0; i < n; ++i)
         {
             mgen_data mg = mgen_data(MONS_LIVING_SPELL, SAME_ATTITUDE(mons),

@@ -1488,7 +1488,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MASS_CONFUSION, 20, MON_SPELL_MAGICAL },
       }
     },
-    
+
     {  MST_STRANGE_MACHINE,
       {
        { SPELL_SUMMON_ILLUSION, 50, MON_SPELL_MAGICAL },
@@ -1524,7 +1524,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MALMUTATE, 16, MON_SPELL_MAGICAL },
       }
     },
-    
+
     // (';') Walking Tomes.
     { MST_WALKING_TOME,
       {

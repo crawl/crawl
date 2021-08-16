@@ -1244,7 +1244,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props[MON_GENDER_KEY] = random_choose(GENDER_FEMALE, GENDER_MALE,
                                                    GENDER_NEUTRAL);
     }
-    
+
     if (mg.props.exists(CUSTOM_SPELL_LIST_KEY))
     {
         for (int spell : mg.props[CUSTOM_SPELL_LIST_KEY].get_vector())

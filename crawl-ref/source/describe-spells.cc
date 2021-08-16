@@ -444,7 +444,7 @@ static string _describe_living_spells(const monster_info &mon_owner)
     const int n = living_spells_for(mon_owner.type);
     const spell_type spell = living_spell_type_for(mon_owner.type);
     const string base_desc = _effect_string(spell, &mon_owner);
-    const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)", 
+    const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)",
             base_desc.c_str());
     return make_stringf("%dx%s", n, desc.c_str());
 }
@@ -454,7 +454,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
 {
     if (!mon_owner)
         return "";
-    
+
     if (spell == SPELL_CONJURE_LIVING_SPELLS)
         return _describe_living_spells(*mon_owner);
 
@@ -477,7 +477,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
             return "(immune)";
         return make_stringf("(%d%%)", hex_chance(spell, hd));
     }
-    
+
     if (spell == SPELL_SMITING)
         return "7-17"; // sigh
 

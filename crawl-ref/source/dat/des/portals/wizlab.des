@@ -2310,7 +2310,7 @@ ENDMAP
 # mirror in addition to some book and aux armour items (plus the weapons).
 NAME:   wizlab_tukima
 TAGS:   no_rotate
-ITEM:   hat good_item / pair of boots good_item / scarf good_item /\ 
+ITEM:   hat good_item / pair of boots good_item / scarf good_item /\
         cloak good_item pair of gloves good_item / randbook disc:hexes /\
         any book w:30 / book of maledictions
 ITEM:   phantom mirror
@@ -2374,4 +2374,107 @@ ccm.....mm.3...4...3.mm.....mcc
   ccmmmcccccc$ddd$ccccccmmmcc
    ccccc    ccmmmcc    ccccc
              ccccc
+ENDMAP
+
+###############################################################################
+# Alistair's Party Mansion
+# Designed by Hellmonk. Features degeneration clouds that statrot the player.
+# Monster set pulls from a variety of mage enemies and loot is mostly potions.
+NAME:       wizlab_alistair
+TAGS:       no_rotate
+ITEM:       potion of degeneration ident:all
+:item(dgn.loot_potions)
+ITEM:   potion of haste ident:all
+ITEM:   any book / randbook disc:poison disc2:transmutation w:5
+KITEM:  H" = gold q:1 no_pickup
+KITEM:  JKL = potion of degeneration ident:all
+MONS:   wizard / boggart w:2, very ugly thing / great orb of eyes /\
+        glowing orange brain / shapeshifter / entropy weaver / green death
+MONS:   necromancer / hell knight / merfolk aquamancer / spriggan air mage /\
+        deep elf elementalist / naga mage / salamander mystic / vampire mage /\
+        deep troll earth mage
+MONS:   wizard ; nothing / necromancer w:2 ; nothing
+MONS:   fire giant / frost giant / titan / tengu reaver
+KMONS:  J = wizard perm_ench:confusion ; nothing
+KMONS:  H = water nymph / merfolk siren ; nothing / wizard ; nothing /\
+           ogre mage ; nothing / orc warlord ; nothing / tentacled starspawn /\
+           dancing weapon / sphinx / deep elf zephyrmancer ; nothing
+KMONS:  F = spriggan druid / spriggan air mage w:5 / deep elf pyromancer
+KMONS:  E = water nymph / merfolk aquamancer / merfolk siren / wizard ; nothing
+KMONS:  D = stone giant
+KFEAT:  E = shallow_water
+KFEAT:  N = granite_statue
+NSUBST: A = 1:< / *:A, D = 1:D/*:-, W = 1:E / * = EWWWWWWW, F = 1:F / * = F---
+NSUBST: H = 1:H / *:", e = 4:e / 1:g / *=eeddg, 5 = 3:5 / *=5..
+NSUBST: 3 = 4:3 / *= 3..., ? = 3:? / *=?., 4 = 2:4 / *= 4...
+SUBST:  N = N'', ' = 1:15 2:20 K:15 ':850, . = d:1 .:15, - = L:1 -:70
+MARKER:     ? = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 50, \
+                size = 2, size_buildup_amnt = 3, \
+                size_buildup_time = 25, cloud_type = "degeneration" \
+            }
+MARKER:     H = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 50, \
+                size = 2, size_buildup_amnt = 3, \
+                size_buildup_time = 25, cloud_type = "degeneration" \
+            }
+TILE:   c = wall_stone_gray
+FTILE:  H" = floor_crystal_squares
+FTILE:  N'12K = floor_w_marble
+FTILE:  -FTALD< = floor_grass
+:           wizlab_setup(_G)
+epilogue{{
+            wizlab_milestone(_G, "Alistair's Party Mansion")
+}}
+MAP
+                  ccccc
+                  cefec
+                  ceeec
+                  ceeec
+    ccccccccccccccccc+c
+    c3.3+3?3c3..3+..?5c
+ccccc...c...c.3..c.3.5c
+ce5.c.3.c3..c...3c...5c
+ce.?+...cc+cc+cccc+cccc
+ce..c...+.....?....c
+ce5.c3..c..33..33..c
+ccccccccc+cccccccc+c
+    cee3c'''NNNN'''cccccccccc
+    c443c''''''''''+...?4..4c
+    ccc+c''N''''N''+..WWWW..c
+    c44?c''''''''''n.WWWWWW4c
+    c3..+''''NN''''n.WWWWWW.c
+    c...cN''""""'''n..WWWW..c
+    c+ccc'''"HH"'''n4......4c
+    c..3c'N'"HH"'N'cccccnn+nct
+    c4..+'''""""'''c5eecF----t
+    c4..c'''''''''Nc..3c-F-Ftt
+    ccc+c''''NN''''c3?.ct---tt
+    c44.c''N''''N''c...cF-T-Ft
+    c...+''''''''''c..3ct---tt
+    c...cNN'''''NN'+...cttFttt
+    c+ccccccc++ccccccccctt--tt
+    c..4.4.G....G.4.4..ct--Ftt
+    c.3..............3.ct--tttt
+    c..4G..........G4..ctt-tttt
+  ttc+ccccccc++ccccccc+ctF-tttt
+ tttc.....4cG..Gc4.....ct---ttt
+ttttc..3...cJ..Jc...3..ct--ttt
+ttttc......+....+......ct-tttt
+ttttc4...3.c....c.3...4ct--ttt
+ttttccccccccc++ccccccccc---tt
+ttttt--------DD----------Fttt
+tttttF---------------------tt
+tttttt------------------tttttt
+ ttttttt-----T-T------tttttttt
+  tttttt-------------ttttttttt
+    ttttt-----A------ttttttttt
+      tttt--T---T--tttttttttt
+       tttt---A----tttttttttt
+        ttt------ttttttttttt
+        ttt--T-T-ttttttttt
+         ttt----ttttttttt
+         ttttttttttttt
+         tttttttttttt
+          tttt  tttt
 ENDMAP
