@@ -45,6 +45,12 @@
 #--------------------------------------------------------------------
 #Borgnjnor |Corporeal and ghostly   |necromancy loot, gold   |
 #          |undead, warlocks        |                        |
+#--------------------------------------------------------------------
+#Tukima    |Dancing weapons,walking |aux armour, books,      |
+#          |tomes, rakshashas       |phantom mirror          |
+#--------------------------------------------------------------------
+#Alistair  |Lots of wizards, other  |potions and books       |
+#          |mages                   |                        |
 ##
 
 
@@ -85,6 +91,10 @@
 #Yara's Duelist Academy   |campus               |stone and trees
 #---------------------------------------------------------------
 #Borgnjor's Mausoleum     |split path           |tarlike
+#---------------------------------------------------------------
+#Tukima's Studio          |mirrored hall        |lightgray/white
+#---------------------------------------------------------------
+#Alistair's Party Mansion |rooms                |gray/green/white
 ##
 
 # TO-DO:
