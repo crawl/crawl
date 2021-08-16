@@ -3701,6 +3701,25 @@ static void _join_jiyva()
     simple_god_message(" grants you a jelly!");
 }
 
+static void _join_okawaru()
+{
+    bool needs_message = false;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_summoned()
+            && mi->summoner == MID_PLAYER
+            && mi->friendly())
+        {
+            mon_enchant abj = mi->get_ench(ENCH_ABJ);
+            abj.duration = 0;
+            mi->update_ench(abj);
+            needs_message = true;
+        }
+    }
+    if (needs_message)
+        mpr("Your summoned allies are dismissed!");
+}
+
 /// Setup when joining the sacred cult of Ru.
 static void _join_ru()
 {
@@ -3772,6 +3791,7 @@ static const map<god_type, function<void ()>> on_join = {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
+    { GOD_OKAWARU, _join_okawaru },
 #if TAG_MAJOR_VERSION == 34
     { GOD_PAKELLAS, _join_pakellas },
 #endif
