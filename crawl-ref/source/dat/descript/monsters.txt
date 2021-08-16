@@ -2327,6 +2327,11 @@ storm dragon
 A powerful dragon with a hide of thick matte scales almost like blue rubber,
 and enormous scaly wings crackling with sparks.
 %%%%
+strange machine
+
+A strange mechanical contraption, all hisses and pops. Shadows seem to dance
+across its reflective surface.
+%%%%
 sun demon
 
 A demonic figure shining with the heat and fury of a fallen star.

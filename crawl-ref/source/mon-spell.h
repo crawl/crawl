@@ -1488,6 +1488,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MASS_CONFUSION, 20, MON_SPELL_MAGICAL },
       }
     },
+    
+    {  MST_STRANGE_MACHINE,
+      {
+       { SPELL_SUMMON_ILLUSION, 50, MON_SPELL_MAGICAL },
+       { SPELL_SHADOW_CREATURES, 20, MON_SPELL_MAGICAL },
+      }
+    },
 
     // ('9') Gargoyles.
     {  MST_GARGOYLE,

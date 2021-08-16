@@ -2302,3 +2302,76 @@ cc..FF..1..ccc...ccc..3..FF..cc
               cVc
               ccc
 ENDMAP
+
+###############################################################################
+# Tukima's Studio
+# Reimplemented by Hellmonk. Features dancing weapons and walking tomes, plus
+# some strange machines that mirror the player. Loot always contains a phantom
+# mirror in addition to some book and aux armour items (plus the weapons).
+NAME:   wizlab_tukima
+TAGS:   no_rotate
+ITEM:   hat good_item / pair of boots good_item / scarf good_item /\ 
+        cloak good_item pair of gloves good_item / randbook disc:hexes /\
+        any book w:30 / book of maledictions
+ITEM:   phantom mirror
+MONS:   rakshasa, dancing weapon
+MONS:   dancing weapon; fustibalus ego:flaming w:15 /\
+        dancing weapon; fustibalus ego:freezing w:15 /\
+        dancing weapon; fustibalus ego:venom /\
+        dancing weapon; fustibalus ego:electrocution w:2 /\
+        dancing weapon; fustibalus randart ego:speed w:1 /\
+        dancing weapon; longbow ego:flaming w:15 /\
+        dancing weapon; longbow ego:freezing w:15 /\
+        dancing weapon; longbow ego:venom /\
+        dancing weapon; longbow ego:electrocution w:2 /\
+        dancing weapon; longbow randart ego:speed w:1 /\
+        dancing weapon; triple crossbow ego:flaming w:15 /\
+        dancing weapon; triple crossbow ego:freezing w:15 /\
+        dancing weapon; triple crossbow ego:venom w:5 /\
+        dancing weapon; triple crossbow ego:electrocution w:5 /\
+        dancing weapon; triple crossbow randart ego:speed w:1 /\
+        dancing weapon; triple crossbow ego:penetration w:1
+MONS:   walking frostbound tome / walking earthen tome / walking crystal tome /\
+        walking divine tome
+MONS:   strange machine
+SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 22...
+NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 2:4 / *= 42., A = 1:< / *:A
+TILE:       c = wall_stone_dark
+TILE:       V = dngn_dry_fountain_white
+LFLOORTILE: floor_w_marble
+:           wizlab_setup(_G)
+epilogue{{
+            wizlab_milestone(_G, "Tukima's Studio")
+}}
+MAP
+            ccccccc
+            ccmmmcc
+        ccccccA.Acccccc
+       ccm...c...c...mcc
+       cc.............cc
+      cc..ccm.....mcc..cc
+      c2.ccccm...mcccc.2c
+      cc.."""cm.mc"""..cc
+     cc..1c"""..."""c1..cc
+     cm...mcm.....mcm...mc
+     cm...mcm..2..mcm...mc
+     cm2..mcm1.V.1mcm..2mc
+     cm1..mcm..1..mcm..1mc
+     cm..2mcm2.2.2mcm2..mc
+     cc1..c'''...'''c..1cc
+     ccc..'''cm2mc'''..ccc
+      cc.1cccm...mccc1.cc
+     ccm..mcm1...1mcm..mcc
+     cm.3.mcm3.V.3mcm.3.mc
+    ccm..mccm2...2mccm..mcc
+  cccm...mcccm.5.mcccm...mcc
+  ccm2.-.1mcccm.mcccm1.-.2mcc
+ ccm2....mcccm121mcccm....2mcc
+ccm..mm...mmm.....mmm...mm..mcc
+cm4..cm......2.5.2......mc..4mc
+ccm.....mm.3...4...3.mm.....mcc
+ ccmd4.mccmmm$$$$$mmmccm.4dmcc
+  ccmmmcccccc$ddd$ccccccmmmcc
+   ccccc    ccmmmcc    ccccc
+             ccccc
+ENDMAP
