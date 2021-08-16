@@ -2219,9 +2219,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
-        fail_check();
         return cast_blink(fail);
-        break;
 
     case ABIL_EVOKE_BERSERK:    // randarts
         fail_check();
