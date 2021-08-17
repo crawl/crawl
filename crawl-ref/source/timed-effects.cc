@@ -380,19 +380,23 @@ static void _jiyva_effects(int /*time_delta*/)
 
 static void _evolve(int /*time_delta*/)
 {
-    if (!you.has_mutation(MUT_EVOLUTION))
+    const bool malignant = you.has_mutation(MUT_DEVOLUTION);
+    if (!malignant && !you.has_mutation(MUT_EVOLUTION))
         return;
-    if (you.attribute[ATTR_EVOL_XP]
-        <= (int)exp_needed(you.experience_level + 1))
-    {
-        return;
-    }
 
+    int xp_threshold = (int)exp_needed(you.experience_level + 1);
+    if (malignant)
+        xp_threshold /= 4;
+    if (you.attribute[ATTR_EVOL_XP] <= xp_threshold)
+        return;
+
+    // Intentionally erase any 'excess' XP to avoid this triggering
+    // too quickly in the early game after big XP gains.
     you.attribute[ATTR_EVOL_XP] = 0;
     mpr("You feel a genetic drift.");
-    bool evol = mutate(RANDOM_GOOD_MUTATION, "hidden potential",
-                       false, false, false, false, MUTCLASS_NORMAL);
-    if (!evol)
+    const mutation_type typ = malignant ? RANDOM_BAD_MUTATION : RANDOM_GOOD_MUTATION;
+    const char* const reason = malignant ? "hidden defects" : "hidden potential";
+    if (!mutate(typ, reason, false, false, false, false, MUTCLASS_NORMAL))
         return;
 
     int &muts = you.props[EVOLUTION_MUTS_KEY].get_int();
@@ -400,7 +404,10 @@ static void _evolve(int /*time_delta*/)
     if (muts >= 2)
     {
         muts -= 2;
-        delete_mutation(MUT_EVOLUTION, "hidden potential expressed", false);
+        if (malignant)
+            delete_mutation(MUT_DEVOLUTION, "hidden defects expressed", false);
+        else
+            delete_mutation(MUT_EVOLUTION, "hidden potential expressed", false);
     }
     more();
 }

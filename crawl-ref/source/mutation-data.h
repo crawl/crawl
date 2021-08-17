@@ -575,11 +575,27 @@ static const mutation_def mut_data[] =
    ""},
 
   {"You feel a hidden potential growing inside you.",
-   "The potential inside you grows deeper.",
+   "Your hidden genetic potential grows.",
    ""},
 
   {"You no longer feel a hidden potential within.",
    "Your hidden genetic potential wanes.",
+   ""},
+},
+
+{ MUT_DEVOLUTION, 4, 2, mutflag::bad, false,
+  "devolution",
+
+  {"You have hidden genetic defects.",
+   "You have terrible hidden genetic defects.",
+   ""},
+
+  {"You feel a hidden malignance growing inside you.",
+   "The malignance inside you grows.",
+   ""},
+
+  {"You no longer feel a malignance within.",
+   "Your genetic malignance weakens.",
    ""},
 },
 

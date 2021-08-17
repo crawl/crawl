@@ -183,11 +183,13 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  1},
     { MUT_BERSERK,             MUT_CLARITY,                 1},
     { MUT_FAST,                MUT_SLOW,                    1},
+    { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              1},
+    { MUT_EVOLUTION,           MUT_DEVOLUTION,              1},
+    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
     { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
     { MUT_HOOVES,              MUT_TALONS,                 -1}, // currently overridden by physiology_mutation_conflict
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
-    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
@@ -2000,6 +2002,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
 
         case MUT_EVOLUTION:
+        case MUT_DEVOLUTION:
             if (cur_base_level == 1)
                 you.props[EVOLUTION_MUTS_KEY] = 0;
             break;
@@ -2120,6 +2123,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         break;
 
     case MUT_EVOLUTION:
+    case MUT_DEVOLUTION:
         if (!you.mutation[mutat])
             you.props[EVOLUTION_MUTS_KEY] = 0;
         break;
