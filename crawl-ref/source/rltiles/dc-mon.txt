@@ -275,6 +275,7 @@ fulminant_prism4
 foxfire MONS_FOXFIRE
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
+creeping_inferno MONS_CREEPING_INFERNO
 %sdir mon/undead
 death_cob MONS_DEATH_COB /*'%'*/
 

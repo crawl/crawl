@@ -901,7 +901,8 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_BALLISTOMYCETE_SPORE
            || mc == MONS_LURKING_HORROR
            || mc == MONS_DANCING_WEAPON
-           || mc == MONS_LIGHTNING_SPIRE;
+           || mc == MONS_LIGHTNING_SPIRE
+           || mc == MONS_CREEPING_INFERNO;
 }
 
 bool mons_has_blood(monster_type mc)

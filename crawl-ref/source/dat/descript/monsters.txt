@@ -806,6 +806,13 @@ corrupter
 
 <demonspawn>
 %%%%
+creeping inferno
+
+A formless mass of ancient fire, bound by heat and malevolence. The slightest
+disturbance will destroy the bonds holding it together and unleash a fire
+storm. It longs for that release yet it seems somehow reluctant to move while
+being observed.
+%%%%
 crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign

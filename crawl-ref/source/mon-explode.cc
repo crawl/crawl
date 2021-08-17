@@ -21,6 +21,7 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "mpr.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "state.h"
 #include "stringutil.h"
@@ -52,6 +53,13 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
 
     beam.aux_source.clear();
     beam.attitude = origin.attitude;
+}
+
+void _setup_inferno_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    setup_fire_storm(&origin, 100, beam);
+    beam.refine_for_explosion();
 }
 
 void setup_spore_explosion(bolt & beam, const monster& origin)
@@ -160,6 +168,7 @@ static const map<monster_type, monster_explosion> explosions {
     { MONS_FULMINANT_PRISM, { _setup_prism_explosion } },
     { MONS_BENNU, { _setup_bennu_explosion, "fires are quelled" } },
     { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
+    { MONS_CREEPING_INFERNO, { _setup_inferno_explosion } },
 };
 
 // When this monster dies, does it explode?
