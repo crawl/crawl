@@ -1576,7 +1576,7 @@ void attract_monsters()
 {
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (!mi->friendly() && _can_beckon(**mi))
+        if (!mi->friendly() && !(*mi)->no_tele())
             targets.push_back(*mi);
 
     near_to_far_sorter sorter = {you.pos()};
@@ -1606,11 +1606,11 @@ void attract_monsters()
         if (!mi->move_to_pos(ray.pos()))
             continue;
 
-        mprf("%s is pulled toward you!", mi->name(DESC_THE).c_str());
+        mprf("%s is attracted toward you.", mi->name(DESC_THE).c_str());
 
+        _place_tloc_cloud(old_pos);
         mi->apply_location_effects(old_pos);
         mons_relocated(mi);
-        behaviour_event(mi, ME_ALERT, &you);
     }
 }
 
