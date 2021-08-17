@@ -992,6 +992,12 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
+            if (!you.can_see(*targ_monst) && you.is_stationary())
+            {
+                canned_msg(MSG_CANNOT_MOVE);
+                you.turn_is_over = false;
+                return;
+            }
             // Rampaging forcibly initiates the attack, but the attack
             // can still be cancelled.
             if (!rampaged && !you.can_see(*targ_monst)
