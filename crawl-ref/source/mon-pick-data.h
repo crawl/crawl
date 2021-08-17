@@ -655,36 +655,26 @@ POP_DEPTHS,
 },
 
 { // Gehenna
-  {  1,  7, 1950, FLAT, MONS_SKELETON },
-  {  1,  7, 1950, FLAT, MONS_ZOMBIE },
-  {  1,  7,  215, FALL, MONS_PHANTOM },
-  {  1,  7,  515, FALL, MONS_NECROPHAGE },
-  {  1,  7,  690, FALL, MONS_WIGHT },
-  {  0,  7,  570, FLAT, MONS_WRAITH },
-  {  1,  7,  705, FALL, MONS_SHADOW },
-  {  1,  7,  385, FLAT, MONS_FLYING_SKULL },
-  {  1,  9,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7,  215, FLAT, MONS_FLAYED_GHOST },
-  {  2,  8,   25, PEAK, MONS_BONE_DRAGON },
-  {  1,  9,  136, SEMI, MONS_LICH },
-  {  4,  7,    2, FLAT, MONS_ANCIENT_LICH },
-  {  2,  6,  215, FLAT, MONS_EFREET },
-  { -1,  7,  515, PEAK, MONS_HELL_KNIGHT },
-  {  1,  7,  350, FLAT, MONS_HELL_HOUND },
-  {  1,  7,  300, FLAT, MONS_HELL_HOG },
-  {  1,  7,  192, FALL, MONS_CRIMSON_IMP },
-  {  1, 12,  690, FALL, MONS_RED_DEVIL },
-  { -1,  7,   89, PEAK, MONS_RUST_DEVIL },
-  {  3,  7,    8, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  590, FLAT, MONS_HELLION },
-  {  1,  7,  365, FLAT, MONS_TORMENTOR },
-  {  1,  7,  192, FLAT, MONS_BALRUG },
-  {  1,  9,  385, SEMI, MONS_REAPER },
-  {  3,  7,   14, SEMI, MONS_HELL_SENTINEL },
-  {  3,  7,    8, PEAK, MONS_BRIMSTONE_FIEND },
-  {  1,  7,   46, FALL, MONS_FIRE_BAT },
-  {  2,  6,    8, PEAK, MONS_FIRE_CRAB },
-  {  1,  7,   30, FLAT, MONS_IRON_GOLEM },
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  400, FALL, MONS_HELL_HOG },
+  {  1,  7,  100, FLAT, MONS_HELL_HOG },
+  {  1,  5,  400, FALL, MONS_FIRE_GIANT },
+  {  1,  7,  100, FLAT, MONS_FIRE_GIANT },
+  {  1,  5,  200, FALL, MONS_SALAMANDER_TYRANT },
+  {  1,  7,   50, FLAT, MONS_SALAMANDER_TYRANT },
+  // "branch flavour" threats
+  {  1,  7,  450, SEMI, MONS_BALRUG },
+  {  7, 14,  450, FALL, MONS_BALRUG },
+  {  1,  7,  450, SEMI, MONS_SEARING_WRETCH },
+  {  7, 14,  450, FALL, MONS_SEARING_WRETCH },
+  // cut these off for deep super-ood
+  {  1, 12,   70, FLAT, MONS_STOKER },
+  {  1, 12,   30, FLAT, MONS_CREEPING_INFERNO },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_HELLEPHANT },
+  {  8, 14,  400, FLAT, MONS_HELLEPHANT },
+  {  1, 14,  400, RISE, MONS_BRIMSTONE_FIEND },
 },
 
 { // Cocytus
@@ -1250,9 +1240,9 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 }
 
 #define HELL_LAVA_POP {\
-  {  1,  8,   300, FALL, MONS_FIRE_ELEMENTAL },\
-  {  1,  6,    25, FALL, MONS_MOLTEN_GARGOYLE },\
-  {  1,  7,    25, FLAT, MONS_SMOKE_DEMON },\
+  {  1,  8,   300, FALL, MONS_FIRE_VORTEX },\
+  {  1,  7,    50, RISE, MONS_STOKER },\
+  {  1,  7,    50, FLAT, MONS_CREEPING_INFERNO },\
   {  1,  7,   100, FLAT, MONS_NO_MONSTER },\
 }
 
