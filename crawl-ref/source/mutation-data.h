@@ -570,16 +570,16 @@ static const mutation_def mut_data[] =
 { MUT_EVOLUTION, 4, 2, mutflag::good, false,
   "evolution",
 
-  {"You evolve.",
-   "You rapidly evolve.",
+  {"You have hidden genetic potential.",
+   "You have great hidden genetic potential.",
    ""},
 
-  {"You feel nature experimenting on you. Don't worry, failures die fast.",
-   "Your genes go into a fast flux.",
+  {"You feel a hidden potential growing inside you.",
+   "The potential inside you grows deeper.",
    ""},
 
-  {"Nature stops experimenting on you.",
-   "Your wild genetic ride slows down.",
+  {"You no longer feel a hidden potential within.",
+   "Your hidden genetic potential wanes.",
    ""},
 },
 

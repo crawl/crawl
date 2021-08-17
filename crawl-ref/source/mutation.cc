@@ -1999,6 +1999,11 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             invalidate_agrid(true);
             break;
 
+        case MUT_EVOLUTION:
+            if (cur_base_level == 1)
+                you.props[EVOLUTION_MUTS_KEY] = 0;
+            break;
+
         default:
             break;
         }
@@ -2112,6 +2117,11 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     case MUT_SILENCE_AURA:
         invalidate_agrid(true);
+        break;
+
+    case MUT_EVOLUTION:
+        if (!you.mutation[mutat])
+            you.props[EVOLUTION_MUTS_KEY] = 0;
         break;
 
     default:
