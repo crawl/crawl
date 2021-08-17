@@ -1779,7 +1779,6 @@ string keycode_to_name(int keycode, bool shorten)
             keycode = -keycode;
         // SDL_GetKeyName strips capitalization, so we don't want to use it for
         // printable keys.
-        fprintf(stderr, "keycode %d\n", keycode);
         return string(SDL_GetKeyName(keycode));
 #else
     {
