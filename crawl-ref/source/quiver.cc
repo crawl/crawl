@@ -557,12 +557,6 @@ namespace quiver
                 return;
             }
 
-            if (feat_is_solid(env.grid(target.target)))
-            {
-                canned_msg(MSG_SOMETHING_IN_WAY);
-                return;
-            }
-
             // Failing to hit someone due to a friend blocking is infuriating,
             // shadow-boxing empty space is not (and would be abusable to wait
             // with no penalty).
@@ -571,6 +565,24 @@ namespace quiver
 
             // Calculate attack delay now in case we have to apply it.
             const int attack_delay = you.attack_delay().roll();
+
+            if (feat_is_solid(env.grid(target.target)))
+            {
+                if (you.confused())
+                {
+                    mprf("You attack %s.",
+                         feature_description_at(target.target,
+                                                false, DESC_THE).c_str());
+                    you.time_taken = attack_delay;
+                    you.turn_is_over = true;
+                    return;
+                }
+                else
+                {
+                    canned_msg(MSG_SOMETHING_IN_WAY);
+                    return;
+                }
+            }
 
             // Check for a monster in the way. If there is one, it blocks the reaching
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
