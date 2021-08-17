@@ -24,11 +24,11 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "colour.h"
 #include "delay.h"
 #include "dgn-event.h"
 #include "end.h"
-#include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
@@ -38,6 +38,7 @@
 #include "hiscores.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -58,6 +59,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "spl-clouds.h"
+#include "spl-goditem.h"
 #include "spl-selfench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -898,12 +900,24 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                            && (death_type == KILLED_BY_LAVA
                                || death_type == KILLED_BY_WATER);
 
-    // death's door protects against everything but falling into water/lava,
-    // Zot, excessive rot, leaving the dungeon, or quitting.
-    if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
-        && death_type != KILLED_BY_ZOT && you.hp_max > 0)
+    if (!env_death && !non_death && death_type != KILLED_BY_ZOT
+        && you.hp_max > 0)
     {
-        return;
+        // death's door protects against everything but falling into
+        // water/lava, Zot, excessive rot, leaving the dungeon, or quitting.
+        if (you.duration[DUR_DEATHS_DOOR])
+            return;
+        // the dreamshard necklace protects from any fatal blow or death source
+        // that death's door would protect from, plus a chance of activating on
+        // hits for more than 80% of a player's remaining hitpoints
+        // (but doesn't activate while in death's door)
+        else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
+                 && (dam >= you.hp
+                     || ((dam * 100) / you.hp) > 80 && coinflip()))
+        {
+            dreamshard_shatter();
+            return;
+        }
     }
 
     if (dam > 0 && death_type != KILLED_BY_POISON)

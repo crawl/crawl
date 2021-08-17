@@ -10,6 +10,7 @@
 #include "art-enum.h"
 #include "attack.h"
 #include "cleansing-flame-source-type.h"
+#include "colour.h"
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
@@ -23,6 +24,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "los.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -31,8 +33,10 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "religion.h"
+#include "spl-clouds.h"
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
@@ -1313,4 +1317,57 @@ void majin_bo_vampirism(monster &mon, int damage)
         canned_msg(MSG_GAIN_HEALTH);
         inc_hp(hp_boost);
     }
+}
+
+/**
+ * Handle the dreamshard necklace.
+ **/
+void dreamshard_shatter()
+{
+    ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
+
+    mpr("Your necklace shatters, unleashing a wave of protective dreams!");
+
+    for (int i = 0; i < 5; i++)
+    {
+        flash_view(UA_PLAYER, random_uncommon_colour());
+        scaled_delay(200);
+    }
+
+    vector<string> dreams;
+    if (you.heal(random_range(you.hp_max*0.5, you.hp_max)))
+        dreams.push_back("health");
+
+    if (!you.allies_forbidden())
+    {
+        const int num = 2 + random2(4);
+        int created = 0;
+        for (int i = 0; i < num; ++i)
+        {
+            mgen_data mg(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
+                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD);
+            mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_NO_GOD);
+            if (create_monster(mg))
+                ++created;
+        }
+
+        if (created)
+            dreams.push_back("friendship");
+    }
+
+    if (!(env.level_state & LSTATE_STILL_WINDS))
+    {
+        dreams.push_back("clouds");
+        big_cloud(CLOUD_FLUFFY, &you, you.pos(), 50, 8 + random2(8));
+    }
+
+    mpr_comma_separated_list("You dream of ", dreams);
+
+    // when dreams spill out into reality it wakes you up
+    // put it here after the dream message so that a sleeping player who
+    // gets dreamsharded gets a nice message order
+    you.check_awaken(500);
+
+    dec_inv_item_quantity(you.slot_item(EQ_AMULET,1)->link, 1);
+    ash_check_bondage();
 }

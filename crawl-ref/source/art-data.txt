@@ -1587,6 +1587,17 @@ VALUE:    400
 DESCRIP:  It empowers its wearer's blows with all of their magic.
 +It causes its wearer's magical reserves to regenerate more quickly.
 
+NAME:     dreamshard necklace
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:   ETC_SILVER
+TILE:     urand_dreamshard
+INSCRIP:  *Dream
+BOOL:     drain, special
+VALUE:    2000
+DESCRIP:  It shatters if its wearer takes lethal or near-lethal damage,
+ preventing the blow and releasing protective dreams that heal and fight
+ for the wearer.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -1514,3 +1514,14 @@ static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
     if (!you.has_mutation(MUT_HP_CASTING))
         _equip_mpr(show_msgs, "The surge of magic dissipates.");
 }
+
+static void _DREAMSHARD_NECKLACE_equip(item_def * /*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel a whimsical energy watch over you.");
+}
+
+static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs)
+{
+    _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
+}
