@@ -534,7 +534,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
                 case SPWPN_ANTIMAGIC:
                     if (you.has_mutation(MUT_HP_CASTING))
-                        mpr("You feel a force failing to suppress your magic.")
+                        mpr("You feel a force failing to suppress your magic.");
                     else
                     {
                         // Even if your maxmp is 0.
