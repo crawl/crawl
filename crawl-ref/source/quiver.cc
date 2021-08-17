@@ -241,7 +241,7 @@ namespace quiver
         {
             untargeted_fire(*a);
             if (!a->target.isCancel)
-                a->trigger();
+                a->trigger(a->target);
         }
         // TODO: does this cause dbl "ok then"s in some places?
         if (a->target.isCancel && a->target.cmd_result == CMD_NO_CMD)
