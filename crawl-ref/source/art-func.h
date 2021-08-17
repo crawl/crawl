@@ -30,10 +30,12 @@
 #include "coordit.h"       // For distance_iterator()
 #include "death-curse.h"   // For the Scythe of Curses
 #include "english.h"       // For apostrophise
+#include "env.h"           // For placing dreamshard portal
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "god-conduct.h"   // did_god_conduct
 #include "god-passive.h"   // passive_t::want_curses
+#include "invent.h"        // For dreamshard shatter
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "message.h"
 #include "monster.h"
@@ -1619,4 +1621,56 @@ static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
+}
+
+////////////////////////////////////////////////////
+
+static bool _evoke_dreamshard_necklace()
+{
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 1750))
+    {
+        mpr("TEMP: falsepath");
+        return false;
+    }
+    //Do things
+    if (feat_is_critical(env.grid(you.pos())))
+    {
+        mpr("You can't place a gateway to the dream realms here.");
+        return false;
+    }
+
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_DREAMS);
+    mpr("You focus your skill and tear open the necklace");
+    return true;
+}
+
+static void _DREAMSHARD_NECKLACE_equip(item_def */*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel the call of a whimsical journey.");
+}
+
+static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs)
+{
+    _equip_mpr(show_msgs, "The world feels relentlessly logical and square.");
+}
+
+static bool _DREAMSHARD_NECKLACE_evoke(item_def *item, bool* did_work,
+                            bool* unevokable)
+{
+    if (!enough_mp(3, false))
+    {
+        *unevokable = true;
+        return true;
+    }
+
+    if (_evoke_dreamshard_necklace())
+    {
+        ASSERT(in_inventory(*item));
+        dec_inv_item_quantity(item->link, 1);
+        mpr("The necklace shatters as a portal is rended open from within.");
+        *did_work = true;
+        practise_evoking(1);
+    }
+    return true;
 }

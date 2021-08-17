@@ -1577,6 +1577,13 @@ VALUE:    400
 DESCRIP:  Its wearer moves as far as possible in that direction when moving
  towards enemies.
 
+NAME:     dreamshard necklace
+OBJ:      OBJ_JEWELLERY/AMU_MANA_REGENERATION
+COLOUR:   ETC_SILVER
+TILE:     urand_dreamshard
+INSCRIP:  +Portal
+BOOL:     fragile
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

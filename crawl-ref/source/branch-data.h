@@ -377,6 +377,18 @@ const Branch branches[NUM_BRANCHES] =
 #else
       '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 #endif
+
+    { BRANCH_DREAMS, NUM_BRANCHES, -1, -1, 3, 0,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_DREAMS, DNGN_EXIT_DREAMS, NUM_FEATURES,
+      "Dreams", "the Realm of Dreams", "Dreams",
+      "You enter the Realm of Dreams!",
+      BLUE, YELLOW,
+#if TAG_MAJOR_VERSION == 34
+      '%', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+#else
+      '"', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+#endif
 };
 
 /*

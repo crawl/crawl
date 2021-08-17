@@ -1071,6 +1071,9 @@ POP_DEPTHS,
 { // Arena
 },
 
+{ // Dreams
+},
+
 };
 
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
@@ -1224,6 +1227,7 @@ static const vector<pop_entry> population_water[] =
     GENERIC_WATER_POP, // Gauntlet
 #endif
     GENERIC_WATER_POP, // Arena
+    GENERIC_WATER_POP, // Dreams
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1327,6 +1331,7 @@ static const vector<pop_entry> population_lava[] =
     GENERIC_LAVA_POP, // Gauntlet
 #endif
     GENERIC_LAVA_POP, // Arena
+    GENERIC_LAVA_POP, // Dreams
 };
 
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

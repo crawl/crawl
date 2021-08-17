@@ -1,0 +1,49 @@
+##############################################################################
+#
+# The realm of dreams! (aMcNicky)
+#
+# A visit here is the player's reward for wearing the dreamshard necklace
+# and training a fair chunk of evocations.
+#
+# The twofold intentions of the portal are:
+# 1. to give the player a somewhat safer on-demand (but one-time use) portal
+#    that they can step into as a very strong 2-turn escape like a ziggurine.
+# 2. to provide an good level of loot (less than a trove, more than the
+#    average shop) as an additional pay-off.
+#
+# Slow moving monsters are included, along with a series of transformations,
+# mainly for flavour, but also to keep the action moving and ideally make
+# the player choose which items to take with them rather than a no brainer
+# of 'pick it all up and figure it out later'
+#
+# Please feel free to add more dreams in line with these principles!
+#
+##############################################################################
+# TODO: add dream maps, perhaps with some new transformations.
+
+
+default-depth: Dreams
+
+{{
+function dreams_setup(e)
+    e.tags("no_dump no_item_gen allow_dup no_monster_gen")
+    e.orient("encompass")
+    e.kfeat("< = exit_dreams")
+end
+}}
+
+NAME: amcnicky_dreams_1
+: dreams_setup(_G)
+MAP
+vvvvvvvvvvv
+v1'1'1'1'1v
+v'ooooooo'v
+v1o..>..o1v
+v'o.....o'v
+v1o..<..o1v
+v'o.....o'v
+v1o.....o1v
+v'ooooooo'v
+v1'1ooo1'1v
+vvvvvvvvvvv
+ENDMAP

@@ -274,3 +274,9 @@ Arena
 Okawaru's most favoured followers are granted access to the Arena to duel
 against their foes.
 %%%%
+Dreams
+
+Those who are truly enlightened, truly disturbed, or in possession of
+a dreamshard may one day find themselves awake within a dream. Dying here
+would be just as deadly as normal!
+%%%%
