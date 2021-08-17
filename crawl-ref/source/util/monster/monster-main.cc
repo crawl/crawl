@@ -1053,6 +1053,9 @@ int main(int argc, char* argv[])
                 case AF_WEAKNESS:
                     monsterattacks += colour(LIGHTRED, "(weakness)");
                     break;
+                case AF_SEAR:
+                    monsterattacks += colour(LIGHTRED, "(sear fire resist)");
+                    break;
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:

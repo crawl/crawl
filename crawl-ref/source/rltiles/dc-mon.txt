@@ -1030,6 +1030,7 @@ bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 %rim 0
 bloated_husk MONS_BLOATED_HUSK
+searing_wretch SEARING_WRETCH
 %rim 1
 ghoul MONS_GHOUL
 

@@ -2912,6 +2912,35 @@ void melee_attack::mons_apply_attack_flavour()
         if (coinflip())
             defender->weaken(attacker, 12);
         break;
+
+    case AF_SEAR:
+    {
+        if (!one_chance_in(3))
+            break;
+
+        bool visible_effect = false;
+        if (defender->is_player())
+        {
+            if (defender->res_fire() <= 3 && !you.duration[DUR_FIRE_VULN])
+                visible_effect = true;
+            you.increase_duration(DUR_FIRE_VULN, 3 + random2(attk_damage), 50);
+        }
+        else
+        {
+            if (!defender->as_monster()->has_ench(ENCH_FIRE_VULN))
+                visible_effect = true;
+            defender->as_monster()->add_ench(
+                mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+                            (3 + random2(attk_damage)) * BASELINE_DELAY));
+        }
+
+        if (needs_message && visible_effect)
+        {
+            mprf("%s fire resistance is stripped away!",
+                 def_name(DESC_ITS).c_str());
+        }
+        break;
+    }
     }
 }
 
