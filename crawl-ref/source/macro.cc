@@ -1766,6 +1766,8 @@ string keycode_to_name(int keycode, bool shorten)
     case CK_NUMPAD_ENTER:    return NP_DESC("enter");
 #endif
     default:
+        if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
+            return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
 #ifdef USE_TILE_LOCAL
         // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
         // numbers; convert back to plain SDL form
@@ -1773,12 +1775,10 @@ string keycode_to_name(int keycode, bool shorten)
             keycode = -keycode;
         // SDL_GetKeyName strips capitalization, so we don't want to use it for
         // printable keys.
+        fprintf(stderr, "keycode %d\n", keycode);
         return string(SDL_GetKeyName(keycode));
 #else
     {
-        if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
-            return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
-
         keyseq v;
         v.push_back(keycode);
         return vtostr(v);
