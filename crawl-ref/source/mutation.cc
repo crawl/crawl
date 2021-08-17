@@ -1230,12 +1230,17 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     return amusement;
 }
 
-static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
+static bool _accept_mutation(mutation_type mutat, bool temp, bool ignore_weight)
 {
     if (!_is_valid_mutation(mutat))
         return false;
 
     if (physiology_mutation_conflict(mutat))
+        return false;
+
+    // Devolution gives out permanent badmuts, so we don't want to give it as
+    // a temporary mut.
+    if (temp && mutat == MUT_DEVOLUTION)
         return false;
 
     const mutation_def& mdef = _get_mutation_def(mutat);
@@ -1321,7 +1326,7 @@ static mutation_type _get_random_xom_mutation()
         else if (one_chance_in(5))
             mutat = _get_mut_with_use(mutflag::xom);
     }
-    while (!_accept_mutation(mutat, false));
+    while (!_accept_mutation(mutat, false, false));
 
     return mutat;
 }
@@ -1331,7 +1336,8 @@ static mutation_type _get_random_qazlal_mutation()
     return _get_mut_with_use(mutflag::qazlal);
 }
 
-static mutation_type _get_random_mutation(mutation_type mutclass)
+static mutation_type _get_random_mutation(mutation_type mutclass,
+                                          mutation_permanence_class perm)
 {
     mutflag mt;
     switch (mutclass)
@@ -1356,7 +1362,7 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
     for (int attempt = 0; attempt < 100; ++attempt)
     {
         mutation_type mut = _get_mut_with_use(mt);
-        if (_accept_mutation(mut, true))
+        if (_accept_mutation(mut, perm == MUTCLASS_TEMPORARY, true))
             return mut;
     }
 
@@ -1781,7 +1787,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
     case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_mutation(which_mutation);
+        mutat = _get_random_mutation(which_mutation, mutclass);
         break;
     case RANDOM_XOM_MUTATION:
         mutat = _get_random_xom_mutation();
