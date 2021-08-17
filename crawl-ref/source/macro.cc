@@ -1769,6 +1769,10 @@ string keycode_to_name(int keycode, bool shorten)
         if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
             return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
 #ifdef USE_TILE_LOCAL
+        // SDL allows control modifiers for some extra punctuation
+        else if (keycode < 0 && keycode > SDLK_EXCLAIM - SDLK_a + 1)
+            return make_stringf("%s%c", CTRL_DESC(""), (char) (keycode + SDLK_a - 1));
+
         // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
         // numbers; convert back to plain SDL form
         if (keycode < 0)
@@ -2054,16 +2058,11 @@ string command_to_string(command_type cmd, bool tutorial)
         else
             result = string(1, (char) key);
     }
-    else if (key > 1000 && key <= 1009)
+    else if (key > 1000 && key <= 1009) // can this be removed?
     {
         const int numpad = (key - 1000);
         result = make_stringf("Numpad %d", numpad);
     }
-#ifdef USE_TILE_LOCAL
-    // SDL allows control modifiers for some extra punctuation
-    else if (key < 0 && key > SDLK_EXCLAIM - SDLK_a + 1)
-        result = make_stringf("Ctrl-%c", (char) (key + SDLK_a - 1));
-#endif
     else
         result = keycode_to_name(key, false);
 
