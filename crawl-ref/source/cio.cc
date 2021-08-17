@@ -97,9 +97,12 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("CTRL");
+            webtiles_send_more_text("CTRL");
+
             keyin = getchm(keymap);
             // return control-key
             keyin = CONTROL(toupper_safe(_numpad2vi(keyin)));
+            webtiles_send_more_text("");
         }
         else if (keyin == '/'
 #ifndef USE_TILE_LOCAL
@@ -110,9 +113,12 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("SHIFT");
+            webtiles_send_more_text("SHIFT");
+
             keyin = getchm(keymap);
             // return shift-key
             keyin = toupper_safe(_numpad2vi(keyin));
+            webtiles_send_more_text("");
         }
     }
 
