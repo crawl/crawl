@@ -5299,7 +5299,8 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         return MON_UNAFFECTED;
 
     // Check willpower.
-    if (has_saving_throw())
+    if (has_saving_throw()
+        && (flavour != BEAM_TELEPORT || mon != agent()))
     {
         if (mons_invuln_will(*mon))
             return MON_UNAFFECTED;
