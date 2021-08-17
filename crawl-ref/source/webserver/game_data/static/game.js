@@ -13,7 +13,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
 
     function setup_keycodes()
     {
-        // key_conversion.reset_keycodes();
+        key_conversion.reset_keycodes();
         // any keycode handling that needs to be versioned should be swapped
         // in here. TODO: cleaner API for this?
         // map some browser keycodes to internal keycodes used for numpad
@@ -29,24 +29,24 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
         key_conversion.simple[103] = -1007; // numpad 7
         key_conversion.simple[104] = -1008; // numpad 8
         key_conversion.simple[105] = -1009; // numpad 9
-        // key_conversion.simple[106] = -1015; // numpad *
-        // key_conversion.simple[107] = -1016; // numpad +
-        // key_conversion.simple[108] = -1019; // numpad . (some firefox versions? TODO: confirm)
-        // key_conversion.simple[109] = -1018; // numpad -
-        // key_conversion.simple[110] = -1019; // numpad .
-        // key_conversion.simple[111] = -1012; // numpad /
+        key_conversion.simple[106] = -1015; // numpad *
+        key_conversion.simple[107] = -1016; // numpad +
+        key_conversion.simple[108] = -1019; // numpad . (some firefox versions? TODO: confirm)
+        key_conversion.simple[109] = -1018; // numpad -
+        key_conversion.simple[110] = -1019; // numpad .
+        key_conversion.simple[111] = -1012; // numpad /
 
         // fix some function key issues (see note in key_conversions.js).
-        // key_conversion.simple[112] = -265; // F1
-        // key_conversion.simple[113] = -266; // F2
-        // key_conversion.simple[114] = -267; // F3
-        // key_conversion.simple[115] = -268; // F4
-        // key_conversion.simple[116] = -269; // F5
-        // key_conversion.simple[117] = -270; // F6
-        // key_conversion.simple[118] = -271; // F7
-        // key_conversion.simple[119] = -272; // F8
-        // key_conversion.simple[120] = -273; // F9
-        // key_conversion.simple[121] = -274; // F10
+        key_conversion.simple[112] = -265; // F1
+        key_conversion.simple[113] = -266; // F2
+        key_conversion.simple[114] = -267; // F3
+        key_conversion.simple[115] = -268; // F4
+        key_conversion.simple[116] = -269; // F5
+        key_conversion.simple[117] = -270; // F6
+        key_conversion.simple[118] = -271; // F7
+        key_conversion.simple[119] = -272; // F8
+        key_conversion.simple[120] = -273; // F9
+        key_conversion.simple[121] = -274; // F10
         // reserve F11 for the browser (full screen)
         // reserve F12 for toggling chat
     }
