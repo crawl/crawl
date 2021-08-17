@@ -359,7 +359,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define DBNAME_KEY "dbname"
 #define ITEM_TILE_NAME_KEY "item_tile_name"
 #define WORN_TILE_NAME_KEY "worn_tile_name"
-#define ITEM_TILE_KEY "worn_tile"
+#define ITEM_TILE_KEY "item_tile"
 #define WORN_TILE_KEY "worn_tile"
 #define MIMIC_KEY "mimic"
 #define THEME_BOOK_KEY "build_themed_book"
