@@ -1398,33 +1398,49 @@ static bool _give_trog_oka_gift(bool forced)
     else
         return false;
 
+    switch (gift_type)
+    {
+    case OBJ_MISSILES:
+        simple_god_message(" grants you ammunition!");
+        break;
+    case OBJ_WEAPONS:
+        simple_god_message(" grants you a weapon!");
+        break;
+    case OBJ_ARMOUR:
+        simple_god_message(" grants you armour!");
+        break;
+    default:
+        simple_god_message(" grants you bugs!");
+        break;
+    }
+
     const bool success =
         acquirement_create_item(gift_type, you.religion,
                 false, you.pos()) != NON_ITEM;
-    if (success)
+    if (!success)
     {
-        if (gift_type == OBJ_MISSILES)
-        {
-            simple_god_message(" grants you ammunition!");
-            _inc_gift_timeout(4 + roll_dice(2, 4));
-        }
-        else
-        {
-            if (gift_type == OBJ_WEAPONS)
-                simple_god_message(" grants you a weapon!");
-            else
-                simple_god_message(" grants you armour!");
-            // Okawaru charges extra for armour acquirements.
-            if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
-                _inc_gift_timeout(30 + random2avg(15, 2));
-
-            _inc_gift_timeout(30 + random2avg(19, 2));
-        }
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        mpr("...but nothing appears.");
+        return false;
     }
-    return success;
+    switch (gift_type)
+    {
+    case OBJ_MISSILES:
+        _inc_gift_timeout(4 + roll_dice(2, 4));
+        break;
+    case OBJ_ARMOUR:
+        if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
+            _inc_gift_timeout(30 + random2avg(15, 2));
+        // intentionally fallthrough to OBJ_WEAPONS
+    case OBJ_WEAPONS:
+        _inc_gift_timeout(30 + random2avg(19, 2));
+        break;
+    default:
+        break;
+    }
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    return true;
 }
 
 static bool _give_yred_gift(bool forced)
