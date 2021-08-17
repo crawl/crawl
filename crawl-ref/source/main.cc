@@ -2443,6 +2443,9 @@ void world_reacts()
         update_screen();
     }
 
+    // prevent monsters wandering into view and picking up an item before
+    // our next prep_input
+    maybe_update_stashes();
     update_monsters_in_view();
 
     reset_show_terrain();

@@ -3419,6 +3419,7 @@ static void _xom_good_teleport(int /*sever*/)
     {
         count++;
         you_teleport_now();
+        maybe_update_stashes();
         more();
         if (one_chance_in(10) || count >= 7 + random2(5))
             break;
@@ -3449,6 +3450,7 @@ static void _xom_bad_teleport(int /*sever*/)
     do
     {
         you_teleport_now();
+        maybe_update_stashes();
         more();
         if (count++ >= 7 + random2(5))
             break;
