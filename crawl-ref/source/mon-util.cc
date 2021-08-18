@@ -2019,7 +2019,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             return attk;
         }
 
-        if (mon.type == MONS_PLAYER_SHADOW)
+        if (mons_is_player_shadow(mon))
         {
             if (!you.weapon())
                 attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));

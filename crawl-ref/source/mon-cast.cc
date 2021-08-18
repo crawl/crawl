@@ -543,12 +543,6 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
 };
 
-/// Is the 'monster' actually a proxy for the player?
-static bool _caster_is_player_shadow(const monster &mons)
-{
-    return mons.type == MONS_PLAYER_SHADOW;
-}
-
 /// Create the appropriate casting logic for a simple conjuration.
 static mons_spell_logic _conjuration_logic(spell_type spell)
 {
@@ -666,7 +660,7 @@ static function<void(bolt&, const monster&, int)>
     return [flavour](bolt &beam, const monster &caster, int)
     {
         beam.flavour = flavour;
-        if (!_caster_is_player_shadow(caster))
+        if (!mons_is_player_shadow(caster))
             beam.target = caster.pos();
     };
 }
@@ -728,7 +722,7 @@ static void _setup_healing_beam(bolt &beam, const monster &caster)
 static void _setup_minor_healing(bolt &beam, const monster &caster, int)
 {
     _setup_healing_beam(beam, caster);
-    if (!_caster_is_player_shadow(caster))
+    if (!mons_is_player_shadow(caster))
         beam.target = caster.pos();
 }
 
@@ -753,7 +747,7 @@ static function<void(bolt&, const monster&, int)>
     {
         _setup_fake_beam(beam, caster);
         // Your shadow keeps your targetting.
-        if (_caster_is_player_shadow(caster))
+        if (mons_is_player_shadow(caster))
             return;
         beam.target = targeter(caster);
         beam.aimed_at_spot = true;  // to get noise to work properly
@@ -3540,7 +3534,7 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 {
     _setup_ghostly_beam(beam, power, 5);
     // Future-proofing: your shadow keeps your targetting.
-    if (_caster_is_player_shadow(caster))
+    if (mons_is_player_shadow(caster))
         return;
 
     beam.target = _mons_ghostly_sacrifice_target(caster, beam);
