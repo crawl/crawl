@@ -7438,6 +7438,19 @@ spectator
 
 VISUAL:@The_monster@ waves excitedly.
 
+w:5
+VISUAL:@The_monster@ bites into a ripe @_fruit_type_@.
+
+@The_monster@ @_shouts_@ with approval.
+
+@The_monster@ @_mumbles_@ to another spectator.
+
+w:5
+VISUAL:@The_monster@'s armor gleams in the torchlight.
+
+w:1
+VISUAL:@The_monster@, chosen of Okawaru, glows resplendent with favor.
+
 w:70
 __NONE
 %%%%
