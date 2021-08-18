@@ -2771,8 +2771,7 @@ void bolt::internal_ouch(int dam)
         dam *= 4;
 
     // The order of this is important.
-    if (monst && monst->type == MONS_PLAYER_SHADOW
-        && !monst->mname.empty())
+    if (monst && mons_is_wrath_avatar(*monst))
     {
         ouch(dam, KILLED_BY_DIVINE_WRATH, MID_NOBODY,
              aux_source.empty() ? nullptr : aux_source.c_str(), true,
@@ -4780,7 +4779,7 @@ bool bolt::bush_immune(const monster &mons) const
 
 void bolt::affect_monster(monster* mon)
 {
-    // Don't hit dead monsters.
+    // Don't hit dead or fake monsters.
     if (!mon->alive() || mon->type == MONS_PLAYER_SHADOW)
         return;
 
