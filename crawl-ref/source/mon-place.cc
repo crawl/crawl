@@ -1869,7 +1869,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_PRINCE_RIBBIT,   { {}, {{ BAND_BLINK_FROGS, {2, 5}, true }}}},
     { MONS_BLINK_FROG,      { {}, {{ BAND_BLINK_FROGS, {2, 5} }}}},
     { MONS_WIGHT,           { {}, {{ BAND_WIGHTS, {2, 5} }}}},
-    { MONS_ANCIENT_CHAMPION, { {2}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
+    { MONS_ANCIENT_CHAMPION, { {2, 0, []() {
+        return !player_in_hell(); }},
+                                  {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
     { MONS_SKELETAL_WARRIOR, { {}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true }}}},
     { MONS_CYCLOPS,         { { 0, 0, []() {
         return player_in_branch(BRANCH_SHOALS); }},
@@ -1953,7 +1955,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_LOM_LOBON,       { {}, {{ BAND_LOM_LOBON, {5, 8}, true }}}},
     { MONS_DEATH_SCARAB,    { {}, {{ BAND_DEATH_SCARABS, {3, 6} }}}},
     { MONS_SERAPH,          { {}, {{ BAND_HOLIES, {1, 4}, true }}}},
-    { MONS_IRON_GIANT,      { {}, {{ BAND_ANCIENT_CHAMPIONS, {2, 3}, true }}}},
+    { MONS_IRON_GIANT,      { {}, {{ BAND_IRON_GOLEMS, {2, 3}, true }}}},
     { MONS_SPARK_WASP,      { {0, 0, []() {
         return you.where_are_you == BRANCH_DEPTHS;
     }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
@@ -2171,7 +2173,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
     { BAND_VAMPIRE_MOSQUITOES,  {{{MONS_VAMPIRE_MOSQUITO, 1}}}},
-    { BAND_ANCIENT_CHAMPIONS,   {{{MONS_ANCIENT_CHAMPION, 1}}}},
+    { BAND_IRON_GOLEMS,         {{{MONS_IRON_GOLEM, 1}}}},
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
