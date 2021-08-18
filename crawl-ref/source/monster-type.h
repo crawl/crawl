@@ -471,6 +471,7 @@ enum monster_type                      // env.mons[].type
     MONS_SATYR,
 #endif
     MONS_OGRE,
+    MONS_OGRE_CATCHER,
     MONS_TWO_HEADED_OGRE,
     MONS_OGRE_MAGE,
     MONS_TROLL,

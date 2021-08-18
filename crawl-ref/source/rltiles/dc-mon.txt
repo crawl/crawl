@@ -820,6 +820,9 @@ erolcha MONS_EROLCHA
 %rim 1
 %sdir mon/humanoids
 ogre MONS_OGRE
+ogre_catcher1 MONS_OGRE_CATCHER
+ogre_catcher2
+ogre_catcher3
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
 ogre_mage MONS_OGRE_MAGE

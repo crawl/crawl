@@ -1785,6 +1785,11 @@ ogre
 A large, ugly, and fat creature, distantly related to orcs and goblins. It is
 tremendously strong.
 %%%%
+ogre catcher
+
+A large, ugly, and fat creature. You can see an unrelenting passion for
+squashing butterflies gleaming in it's tiny, stupid eyes.
+%%%%
 ogre mage
 
 A rare breed of ogre, skilled in the use of magic. It usually becomes a

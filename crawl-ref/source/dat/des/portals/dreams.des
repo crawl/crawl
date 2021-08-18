@@ -35,16 +35,43 @@ end
 NAME: amcnicky_dreams_1
 : dreams_setup(_G)
 TAGS: allow_dup no_trap_gen no_monster_gen generate_awake
-DESC: fluttering gently through a frog-filled meadow
-KMONS: 0 = goliath frog
+DESC: fluttering gently through an ogre-filled clearing
+WEIGHT: 10
+KMONS: 0 = ogre catcher
+KMONS: 1 = ogre catcher
+SUBST: 0 = 0.
 MAP
 0ttttttttttttttttttttttt
-0.tttttt*tt*t*tt*ttttt.*
+0.tttttt|tt|t|tt|ttttt.|
 0..t.....tt...tt.tttt...
 0................ttt....
-0..A..................<.
+1..A..................}.
 0................ttt....
 0..t.....tt...tt.tttt...
-0.tttttt*tt*t*tt*ttttt.*
+0.tttttt|tt|t|tt|ttttt.|
 0ttttttttttttttttttttttt
+ENDMAP
+
+NAME: amcnicky_dreams_2
+: dreams_setup(_G)
+TAGS: allow_dup no_trap_gen no_monster_gen generate_awake
+DESC: sprinting, squealing through a spriggan restaurant
+WEIGHT: 5000
+KMONS: 0 = spriggan col:red name:butcher n_suf ; robe . quick blade
+KMONS: 1 = spriggan col:white name:diner n_suf ; robe . dagger
+MAP
+v..1...1......1....1...v
+v.mmmmmmmmmmmmmmmmmmmm.v
+v.m0..{.............|m.v
+v.mmmmmmmmmmmmmmm.mmmm1v
+v.m|.......|.m..m.m1...v
+v1m..........mmmm.m.vvvv
+v.m...............m.vvvv
+v.m..........mmmm.m.vvvv
+v.m..........m..m.m.vvvv
+v1m|.........m1.m|m.vvvv
+v.m|.......<.m..m|m.vvvv
+v.mmmmmmmmmmmm..mmm.vvvv
+v...1..........1....vvvv
+vvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP

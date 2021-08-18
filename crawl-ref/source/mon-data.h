@@ -3828,6 +3828,21 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     {TILEP_MONS_OGRE}, TILE_CORPSE_OGRE
 },
 
+// only used in the butterfly dream vault, has more consistent damage output
+// to avoid surprising the player (we don't really want them to die in dreams)
+{
+    MONS_OGRE_CATCHER, 'O', BLUE, "ogre catcher",
+    M_WARM_BLOOD | M_SPEAKS,
+    MR_NO_FLAGS,
+    9, MONS_OGRE, MONS_OGRE, MH_NATURAL, 20,
+    { {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10} },
+    5, 275,
+    1, 6, MST_NO_SPELLS, true, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, ATTACK_ENERGY(13),
+    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID,
+    {TILEP_MONS_OGRE_CATCHER}, TILE_CORPSE_OGRE
+},
+
 // These guys get understated because the experience code can't see
 // that they wield two weapons... I'm raising their xp modifier. - bwr
 {
