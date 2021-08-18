@@ -31,6 +31,8 @@
 #include <string>
 #include <vector>
 
+// TODO: these includes look not very general relative to how other files
+// approach it...
 #ifdef USE_TILE_LOCAL
 #include <SDL.h>
 #include <SDL_keycode.h>
