@@ -311,6 +311,18 @@ static const form_entry formdata[] =
     { { "cleaving", "Your stormy fists strike out in all directions at once." },
       { "", "You are incredibly evasive." }
     }
+},
+
+{
+    transformation::butterfly, MONS_BUTTERFLY, "Butterfly", "butterfly-form", "butterfly",
+    "a sentient butterfly, fluttering by.",
+    EQF_PHYSICAL, MR_NO_FLAGS,
+    DEFAULT_DURATION, 0, 0, SIZE_SMALL, 4,
+    0, 0, 0, true, 0, false, 3,
+    SPWPN_NORMAL, LIGHTRED, "Delicate wings", { "hit", "stroke", "tickle", "nudge" },
+    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    "flap", 0, "wing", "", "place yourself before", "flesh",
+    {}
 }
 
 };

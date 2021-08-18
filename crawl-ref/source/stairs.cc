@@ -47,6 +47,7 @@
 #endif
 #include "tiles-build-specific.h"
 #include "timed-effects.h" // bezotted
+#include "transform.h" // stepping into dream realm
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -716,6 +717,20 @@ void floor_transition(dungeon_feature_type how,
 
     if (how == DNGN_ENTER_ZIGGURAT)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
+
+    if (how == DNGN_ENTER_DREAMS)
+        dungeon_terrain_changed(you.pos(), DNGN_FLOOR);
+    
+    if (whither == BRANCH_DREAMS)
+    {   // entering the dream
+        // TODO: more vaults/transformations than just the butterfly dream
+        transform(400,transformation::butterfly,true);
+    }
+
+    if (you.where_are_you == BRANCH_DREAMS && whither != BRANCH_DREAMS)
+    {   // leaving the dream
+        untransform();
+    }    
 
     if (how == DNGN_ENTER_PANDEMONIUM
         || how == DNGN_ENTER_ABYSS

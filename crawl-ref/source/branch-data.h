@@ -378,7 +378,7 @@ const Branch branches[NUM_BRANCHES] =
       '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 #endif
 
-    { BRANCH_DREAMS, NUM_BRANCHES, -1, -1, 3, 0,
+    { BRANCH_DREAMS, NUM_BRANCHES, -1, -1, 1, 27,
       brflag::no_x_level_travel | brflag::no_items,
       DNGN_ENTER_DREAMS, DNGN_EXIT_DREAMS, NUM_FEATURES,
       "Dreams", "the Realm of Dreams", "Dreams",

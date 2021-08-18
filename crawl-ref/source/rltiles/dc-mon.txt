@@ -1177,6 +1177,17 @@ tree_form TRAN_TREE
 mushroom_form TRAN_MUSHROOM
 shadow_form TRAN_SHADOW
 storm_form TRAN_STORM
+butterfly_form TRAN_BUTTERFLY
+butterfly_form1
+butterfly_form2
+butterfly_form3
+butterfly_form4
+butterfly_form5
+butterfly_form6
+butterfly_form7
+butterfly_form8
+butterfly_form9
+butterfly_form10
 %rim 1
 
 %sdir misc

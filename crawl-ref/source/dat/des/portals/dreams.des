@@ -34,16 +34,17 @@ end
 
 NAME: amcnicky_dreams_1
 : dreams_setup(_G)
+TAGS: allow_dup no_trap_gen no_monster_gen generate_awake
+DESC: fluttering gently through a frog-filled meadow
+KMONS: 0 = goliath frog
 MAP
-vvvvvvvvvvv
-v1'1'1'1'1v
-v'ooooooo'v
-v1o..>..o1v
-v'o.....o'v
-v1o..<..o1v
-v'o.....o'v
-v1o.....o1v
-v'ooooooo'v
-v1'1ooo1'1v
-vvvvvvvvvvv
+0ttttttttttttttttttttttt
+0.tttttt*tt*t*tt*ttttt.*
+0..t.....tt...tt.tttt...
+0................ttt....
+0..A..................<.
+0................ttt....
+0..t.....tt...tt.tttt...
+0.tttttt*tt*t*tt*ttttt.*
+0ttttttttttttttttttttttt
 ENDMAP

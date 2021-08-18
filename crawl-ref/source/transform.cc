@@ -995,6 +995,23 @@ public:
     bool can_offhand_punch() const override { return true; }
 };
 
+class FormButterfly : public Form
+{
+private:
+    FormButterfly() : Form(transformation::butterfly) { }
+    DISALLOW_COPY_AND_ASSIGN(FormButterfly);
+public:
+    static const FormButterfly &instance() { static FormButterfly inst; return inst; }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "You feel less beautiful.";
+    }
+};
+
 #if TAG_MAJOR_VERSION == 34
 
 /**
@@ -1093,6 +1110,7 @@ static const Form* forms[] =
     &FormHydra::instance(),
 #endif
     &FormStorm::instance(),
+    &FormButterfly::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -2215,6 +2233,8 @@ int form_base_movespeed(transformation tran)
         return 5; // but allowed minimum is six
     else if (tran == transformation::pig)
         return 7;
+    else if (tran == transformation::butterfly)
+        return 5;
     else
         return 10;
 }

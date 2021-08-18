@@ -448,7 +448,6 @@ zig_used DNGN_PORTAL_ZIGGURAT_GONE
 desolation_portal DNGN_PORTAL_DESOLATION
 desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
 dreams_portal DNGN_PORTAL_DREAMS
-dreams_portal_closed DNGN_PORTAL_DREAMS_GONE
 
 portal_unknown DNGN_UNKNOWN_PORTAL
 
