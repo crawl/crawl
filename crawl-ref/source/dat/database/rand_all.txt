@@ -833,16 +833,25 @@ Green
 
 Red
 
+w:5
+Amorous
+
 Antique
+
+Arcadian
 
 w:5
 Avant Garde
+
+Baleful
 
 Barnacled
 
 Beastly
 
 Bedazzling
+
+Bellicose
 
 Bespelled
 
@@ -854,7 +863,11 @@ Burnt
 
 Carved
 
+Caustic
+
 Cleverly Designed
+
+Contumacious
 
 Damp
 
@@ -872,9 +885,13 @@ Divine
 
 Doomed
 
+Dowdy
+
 Dull
 
 Durable
+
+Enormous
 
 Ethereal
 
@@ -885,6 +902,8 @@ Extremely Toothy
 Eye-covered
 
 Fabulous
+
+Feral
 
 Ferocious
 
@@ -915,7 +934,17 @@ Hairy
 
 Haunted
 
+Histrionic
+
 Indestructible
+
+Intense
+
+Irksome
+
+Jocular
+
+Lachrymose
 
 Living
 
@@ -926,13 +955,27 @@ Meager
 w:5
 Modern
 
+Mordant
+
+Narrow
+
+Nice
+
+Noxious
+
 Oily
 
 Ornamental
 
 Painted
 
+Parsimonious
+
 Powerful
+
+Puckish
+
+Quiescent
 
 Reasonable
 
@@ -951,6 +994,8 @@ Silly
 
 Slimy
 
+Solemn
+
 Soft
 
 Squeaky
@@ -967,13 +1012,21 @@ Tortured
 
 Transparent
 
+Ubiquitous
+
+Verdant
+
 Viny
+
+Voracious
 
 Weak
 
 Wicked
 
 Wonderful
+
+Zealous
 %%%%
 _fruit_name_
 
