@@ -71,6 +71,19 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
     return lookup(descriptors, type, "buggy");
 }
 
+static const char* _abil_type_vuln_core(bool silencable, bool antimagicable)
+{
+    // No one gets confused by the rare spells that are hit by silence
+    // but not antimagic, AFAIK. Let's keep it simple.
+    if (!antimagicable)
+        return "silence";
+    if (silencable)
+        return "silence and antimagic";
+    // Explicitly clarify about spells that are hit by antimagic but
+    // NOT silence, since those confuse players nonstop.
+    return "antimagic (but not silence)";
+}
+
 /**
  * What type of effects is this spell type vulnerable to?
  *
@@ -87,10 +100,8 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
     const bool antimagicable = type == MON_SPELL_WIZARD
                                || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
-    return make_stringf(", which are affected by%s%s%s",
-                        silencable ? " silence" : "",
-                        silencable && antimagicable ? " and" : "",
-                        antimagicable ? " antimagic" : "");
+    return make_stringf(", which are affected by %s",
+                        _abil_type_vuln_core(silencable, antimagicable));
 }
 
 /**
