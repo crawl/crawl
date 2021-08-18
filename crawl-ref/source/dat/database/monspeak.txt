@@ -2600,6 +2600,8 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 @The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
 
 @The_monster@ says, "I hate complainers so much."
+
+@The_monster says, "My @_fruit_name_@ was very bland! I hate that."
 %%%%
 Elf Donald
 
