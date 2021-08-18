@@ -7446,6 +7446,12 @@ VISUAL:@The_monster@ bites into a ripe @_fruit_type_@.
 @The_monster@ @_mumbles_@ to another spectator.
 
 w:5
+VISUAL:@The_monster@ waves a pennant with your name on it.
+
+w:5
+VISUAL:@The_monster@ waves a pennant, rooting for your enemy!
+
+w:5
 VISUAL:@The_monster@'s armor gleams in the torchlight.
 
 w:1
