@@ -217,6 +217,9 @@ of the @_adjective_@ @_armour_animal_@
 w:3
 of @_flower_name_@
 
+w:1
+of the @_fruit_name_@
+
 w:2
 of the @_critter_name_@
 
@@ -306,6 +309,9 @@ of the @_armour_animal_@
 
 w:3
 of @_flower_name_@
+
+w:3
+of the @_adjective_@ @_fruit_name_@
 
 w:5
 of @_evil_being_@
@@ -524,6 +530,9 @@ of Xom's @_xom_esteem_@
 
 w:2
 of Xom's @divine_esteem@
+
+w:2
+of the @_verbing_@ @_fruit_name_@
 
 # uses the long name
 w:1
