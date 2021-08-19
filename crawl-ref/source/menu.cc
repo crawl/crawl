@@ -1503,12 +1503,12 @@ void Menu::deselect_all(bool update_view)
 int Menu::get_first_visible() const
 {
     int y = m_ui.scroller->get_scroll();
-    for (int i = 0; i < (int)items.size(); i++)
+    for (int i = 0; i < (int) items.size(); i++)
     {
         // why does this use y2? It can lead to partially visible items in tiles
         int item_y2;
         m_ui.menu->get_item_region(i, nullptr, &item_y2);
-        if (item_y2 >= y)
+        if (item_y2 > y)
             return i;
     }
     return items.size();
@@ -2189,6 +2189,9 @@ bool Menu::snap_in_page(int index)
 {
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
+    const int vph = m_ui.scroller->get_region().height;
+    if (vph == 0) // ui not yet set up
+        return false;
 
     int y1, y2;
     m_ui.menu->get_item_region(index, &y1, &y2);
@@ -2197,8 +2200,7 @@ bool Menu::snap_in_page(int index)
     // important when the first item in a menu is a header
     if (index >= 1 && items[index - 1]->level != MEL_ITEM)
         m_ui.menu->get_item_region(index - 1, &y1, nullptr);
-    int vph = m_ui.scroller->get_region().height;
-    int vpy = m_ui.scroller->get_scroll();
+    const int vpy = m_ui.scroller->get_scroll();
 
     if (y2 >= vpy + vph)
         m_ui.scroller->set_scroll(y2 - vph
