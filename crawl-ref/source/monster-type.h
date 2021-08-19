@@ -317,6 +317,7 @@ enum monster_type                      // env.mons[].type
     MONS_AIR_ELEMENTAL,
 #if TAG_MAJOR_VERSION > 34
     MONS_IRON_ELEMENTAL,
+    MONS_QUICKSILVER_ELEMENTAL,
     MONS_ELEMENTAL_WELLSPRING,
 #endif
     MONS_TWISTER,        // air miscasts

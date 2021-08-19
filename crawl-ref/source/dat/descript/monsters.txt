@@ -1986,6 +1986,11 @@ A long and sinuous dragon, seemingly more neck and tail than anything else. Its
 skin shines like molten mercury, magical energies arc from its pointed snout,
 and it moves with terrifying swiftness.
 %%%%
+quicksilver elemental
+
+A mercurial spirit drawn from the elemental plane of earth, which exists in
+this world by inhabiting a shimmering body of liquid metal.
+%%%%
 quicksilver ooze
 
 A thin coating of shining, reflective goo, covering a great area and rushing
