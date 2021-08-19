@@ -1375,6 +1375,9 @@ bool Menu::process_key(int keyin)
         // seemingly intentional fallthrough
 #endif
     case CK_ENTER:
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_ENTER:
+#endif
         // TODO: hover and multiselect?
         if ((flags & MF_SINGLESELECT) && last_hovered >= 0)
             select_item_index(last_hovered, 1);
