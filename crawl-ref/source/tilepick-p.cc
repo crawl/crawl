@@ -482,12 +482,13 @@ tileidx_t tileidx_player()
 #if TAG_MAJOR_VERSION == 34
     case transformation::jelly:      ch = TILEP_MONS_JELLY;              break;
 #endif
-    case transformation::fungus:     ch = TILEP_TRAN_MUSHROOM;   break;
-    case transformation::shadow:     ch = TILEP_TRAN_SHADOW;     break;
-    case transformation::storm:      ch = TILEP_TRAN_STORM;      break;
-    case transformation::butterfly:  ch = TILEP_TRAN_BUTTERFLY;  break;
-    case transformation::weapon:     ch = TILEP_TRAN_WEAPON;     break;
-    case transformation::brain_worm: ch = TILEP_TRAN_BRAIN_WORM; break;
+    case transformation::fungus:      ch = TILEP_TRAN_MUSHROOM;    break;
+    case transformation::shadow:      ch = TILEP_TRAN_SHADOW;      break;
+    case transformation::storm:       ch = TILEP_TRAN_STORM;       break;
+    case transformation::butterfly:   ch = TILEP_TRAN_BUTTERFLY;   break;
+    case transformation::weapon:      ch = TILEP_TRAN_WEAPON;      break;
+    case transformation::brain_worm:  ch = TILEP_TRAN_BRAIN_WORM;  break;
+    case transformation::orb_of_fire: ch = TILEP_TRAN_ORB_OF_FIRE; break;
     case transformation::dragon:
     {
         switch (you.species)

@@ -1192,6 +1192,7 @@ butterfly_form10
 spectral_axe_form TRAN_WEAPON
 brain_worm_form TRAN_BRAIN_WORM
 %rim 1
+orb_of_fire_form TRAN_ORB_OF_FIRE
 
 %sdir misc
 unseen_monster MONS_UNKNOWN

@@ -1046,6 +1046,23 @@ public:
     }
 };
 
+class FormOrbOfFire : public Form
+{
+private:
+    FormOrbOfFire() : Form(transformation::orb_of_fire) { }
+    DISALLOW_COPY_AND_ASSIGN(FormOrbOfFire);
+public:
+    static const FormOrbOfFire &instance() { static FormOrbOfFire inst; return inst; }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "You feel a little more normal.";
+    }
+};
+
 #if TAG_MAJOR_VERSION == 34
 
 /**
@@ -1147,6 +1164,7 @@ static const Form* forms[] =
     &FormButterfly::instance(),
     &FormWeapon::instance(),
     &FormBrainWorm::instance(),
+    &FormOrbOfFire::instance(),
 };
 
 const Form* get_form(transformation xform)

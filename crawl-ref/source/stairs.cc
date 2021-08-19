@@ -755,6 +755,9 @@ void floor_transition(dungeon_feature_type how,
     } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 4)
     {   // dream 4 - brain worm in a brain
         transform(400,transformation::brain_worm,true);
+    } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 5)
+    {   // dream 4 - brain worm in a brain
+        transform(400,transformation::orb_of_fire,true);
     }
 
     // Some branch specific messages.

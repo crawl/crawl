@@ -344,8 +344,20 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 0, SIZE_SMALL, 10,
     10, 10, 0, true, 0, true, 12,
     SPWPN_NORMAL, LIGHTGREEN, "Fangs", { "nibble", "chomp", "bite", "gnash" },
-    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    FC_ENABLE, FC_DEFAULT, FC_ENABLE, false,
     "", 0, "", "", "", "flesh",
+    {}
+},
+
+{
+    transformation::orb_of_fire, MONS_ORB_OF_FIRE, "Orb of Fire", "orb-of-fire-form", "orb of fire",
+    "a ferocious sentient inferno.",
+    EQF_PHYSICAL, mrd(MR_RES_FIRE | MR_RES_ELEC, 3) | MR_RES_COLD | MR_VUL_WATER,
+    DEFAULT_DURATION, 0, 0, SIZE_LITTLE, 10,
+    10, 10, 0, true, 0, true, 12,
+    SPWPN_NORMAL, LIGHTGREEN, "Living inferno", { "melt", "incinerate", "burn", "destroy" },
+    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    "", 0, "", "", "", "cinders",
     {}
 }
 

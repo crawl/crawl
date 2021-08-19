@@ -31,6 +31,7 @@ enum class transformation
     butterfly,
     weapon,
     brain_worm,
+    orb_of_fire,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

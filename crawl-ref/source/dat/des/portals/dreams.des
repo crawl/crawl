@@ -61,6 +61,19 @@ function hall_of_blades_weapon_dreams(e)
   e.mons("dancing weapon att:neutral; good_item " .. weapon1 .. " ego:" .. ego1)
   e.mons("dancing weapon att:neutral; good_item " .. weapon2 .. " ego:" .. ego2)
 end
+
+function ice_cave_appearance_dreams(e)
+    -- Alter short feature descriptions for all ice cave destination vaults.
+    e.set_feature_name("rock_wall", "ice covered rock wall")
+    e.set_feature_name("stone_arch", "ice choked empty arch of ancient stone")
+    e.set_feature_name("shallow_water", "Some ice crusted shallow water")
+    e.set_feature_name("deep_water", "Some ice crusted deep water")
+    e.colour("a = white")
+    e.kfeat("a = x")
+    e.rtile("a = wall_ice_block")
+    e.colour(".1234 = blue")
+    e.ftile(".12345O+^ = floor_ice")
+end
 }}
 
 NAME: amcnicky_dreams_1
@@ -68,6 +81,7 @@ NAME: amcnicky_dreams_1
 TAGS: allow_dup generate_awake no_item_gen
 DESC: fluttering gently through an ogre-filled clearing
 DEPTH: Dreams:1
+LFLOORTILE: floor_dirt
 KMONS: 0 = ogre catcher
 SUBST: 0 = 0.
 MAP
@@ -89,18 +103,19 @@ DESC: sprinting, squealing through a spriggan restaurant
 DEPTH: Dreams:2
 KMONS: 0 = human col:red name:butcher n_suf ; robe . quick blade
 KMONS: 1 = human col:white name:diner n_suf ; robe . dagger
+NSUBST: K = 2:| / 2:* / *:.
 MAP
 v..1...1......1....1...v
 v.mmmmmmmmmmmmmmmmmmmm.v
-v.m0..{<...........|<m.v
+v.m0..{<...........K<m.v
 v.mmmmmmmmmmmmmmm.mmmm1v
-v.m|.......|.m..m.m1...v
-v1m..........mmmm.m.vvvv
-v.m...............m.vvvv
-v.m.}........mmmm.m.vvvv
-v.m..........m..m.m.vvvv
-v1m|.........m1.m|m.vvvv
-v.m|.......<.m..m<m.vvvv
+v.mK.....KKK.m..m.m1...v
+v1mK.........mmmm.m.vvvv
+v.mK..............m.vvvv
+v.mK}........mmmm.m.vvvv
+v.mK.........m..m.m.vvvv
+v1mK.........m1.mKm.vvvv
+v.mK.KKK...<.m..m<m.vvvv
 v.mmmmmmmmmmmm..mmm.vvvv
 v...1..........1....vvvv
 vvvvvvvvvvvvvvvvvvvvvvvv
@@ -153,24 +168,68 @@ ENDMAP
 NAME: amcnicky_dreams_4_inside_brain
 : dreams_setup(_G)
 DEPTH: Dreams:4
-DESC: having a delicious feast of brain matter
+DESC: feasting on brain matter
+KFEAT: J = rock_wall
+KFEAT: L = rock_wall
+KITEM: B = acquire book / acquire:sif_muna book / any book
+FTILE: K = floor_nerves
+TILE: J = wall_pebble_red
+TILE: L = wall_flesh
+NSUBST: K = 4:B / *:K
 MAP
-...XXXXXXXXX..
-.XXX...}...XX.
-XX.....x....XX
-X.....<x.....X
-.X..xxxx....XX
-XX.....xxxx..X
-X......x.....X
-X......x.....X
-XX.....x<....X
-XX...xxxxx...X
-X......x....X.
-XX.....x....XX
-.XX....{.....X
-..XXXXXXXXXXXX
+...LLLLLLLLL..
+.LLLKKK}KKKLL.
+LLKKKKKJKKKKLL
+LKKKKK<JKKKKKL
+LLKKJJJJKKKKLL
+LLKKKKKJJJJKKL
+LKKKKKKJKKKKKL
+LKKKKKKJKKKKKL
+LLKKKKKJKKKKKL
+LLKKKJJJJJKKKL
+LKKKKKKJKKKKLL
+LLKKKKKJKKKKLL
+.LLKKKK{KKKKKL
+..LLLLLLLLLLLL
 ENDMAP
 
-# todo: brainworm form, vault, and final vault
+NAME: amcnicky_final_dream_1_ice_cave
+: ice_cave_appearance_dreams(_G)
+: dreams_setup(_G)
+DEPTH: Dreams:5
+DESC: saying goodbye to the icecaves of home
+LFLOORTILE: floor_ice
+KMONS: J = orb_of_fire name:orb_of_ice n_rpl n_des spells:glaciate.80.magical col:lightblue tile:mons_orb_of_ice
+NSUBST: K = 2:| / 2:* / *:.
+{{
+lua_marker("+", portal_desc { iron_doors=1,
+                            door_open_prompt=
+                            "Your father turns to you and says,\n"
+                            .. "\"My dearest child, you've never really\n"
+                            .. " fit in around here much, but I'm ever so.\n"
+                            .. " proud of you. Go now, and give them hell!\"\n"
+                            .. "Proceed?" })
+}}
+
+MAP
+aaaaaaaaaaaaaa
+{.........aaaa
+aaaaa......aaa
+aaaaaa.....aaa
+aaaaaaaaa...aa
+aaaaaaaaa..aaa
+a<aaaaaaa.aaaa
+a+a.aaaaa...aa
+a.mJ.aaaa..aaa
+a.a.aa.....aaa
+a.aaa....KKKaa
+a.aaa....KKKKa
+a........KKKKa
+aaaaaaaaaaaaaa
+ENDMAP
+
+
+# todo: final vault
+# todo: noise on entry
 # todo: lots of vault balance
 # todo: lots of item balance (evocable based on skill feels bad - base it on xp gained?)
