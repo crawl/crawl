@@ -2,8 +2,7 @@
 #
 # The realm of dreams! (aMcNicky)
 #
-# A visit here is the player's reward for wearing the dreamshard necklace
-# and training a fair chunk of evocations.
+# A visit here is the player's reward for using the dreamshard necklace.
 #
 # The twofold intentions of the portal are:
 # 1. to give the player a somewhat safer on-demand (but one-time use) portal
@@ -26,26 +25,57 @@ default-depth: Dreams
 
 {{
 function dreams_setup(e)
-    e.tags("no_dump no_item_gen allow_dup no_monster_gen")
+    e.tags("no_dump no_trap_gen allow_dup no_monster_gen")
     e.orient("encompass")
     e.kfeat("< = exit_dreams")
+end
+
+function hall_of_blades_monsters_dreams(e)
+    e.mons("deep elf pyromancer att:neutral")
+    e.mons("deep elf knight att:neutral w:22")
+    e.mons("deep elf blademaster att:neutral")
+    e.mons("dancing weapon att:neutral ;")
+    hall_of_blades_weapon_dreams(e)
+end
+
+function hall_of_blades_weapon_dreams(e)
+  local long_blade_type = crawl.one_chance_in(2) and "double sword"
+                                                  or "triple sword"
+  local types = {"quick blade", long_blade_type,
+                 "executioner's axe", "eveningstar", "bardiche",
+                 "lajatang"}
+  local egos = {"flaming", "freezing", "electrocution", "venom",
+              "holy_wrath", "pain", "vampirism", "draining",
+              "antimagic", "distortion"}
+  local weapon1 = util.random_from(types)
+  local weapon2 = weapon1
+  while weapon2 == weapon1 do
+    weapon2 = util.random_from(types)
+  end
+  local ego1 = util.random_from(egos)
+  local ego2 = ego1
+  while ego2 == ego1 do
+    ego2 = util.random_from(egos)
+  end
+
+  e.mons("dancing weapon att:neutral; good_item " .. weapon1 .. " ego:" .. ego1)
+  e.mons("dancing weapon att:neutral; good_item " .. weapon2 .. " ego:" .. ego2)
 end
 }}
 
 NAME: amcnicky_dreams_1
 : dreams_setup(_G)
-TAGS: allow_dup no_trap_gen no_monster_gen generate_awake
+TAGS: allow_dup generate_awake no_item_gen
 DESC: fluttering gently through an ogre-filled clearing
-WEIGHT: 10
+DEPTH: Dreams:1
 KMONS: 0 = ogre catcher
-KMONS: 1 = ogre catcher
 SUBST: 0 = 0.
 MAP
 0ttttttttttttttttttttttt
 0.tttttt|tt|t|tt|ttttt.|
 0..t.....tt...tt.tttt...
-0................ttt....
-1..A..................}.
+0..<.............ttt..<.
+0..A..................}.
 0................ttt....
 0..t.....tt...tt.tttt...
 0.tttttt|tt|t|tt|ttttt.|
@@ -54,24 +84,93 @@ ENDMAP
 
 NAME: amcnicky_dreams_2
 : dreams_setup(_G)
-TAGS: allow_dup no_trap_gen no_monster_gen generate_awake
+TAGS: allow_dup generate_awake no_item_gen
 DESC: sprinting, squealing through a spriggan restaurant
-WEIGHT: 5000
-KMONS: 0 = spriggan col:red name:butcher n_suf ; robe . quick blade
-KMONS: 1 = spriggan col:white name:diner n_suf ; robe . dagger
+DEPTH: Dreams:2
+KMONS: 0 = human col:red name:butcher n_suf ; robe . quick blade
+KMONS: 1 = human col:white name:diner n_suf ; robe . dagger
 MAP
 v..1...1......1....1...v
 v.mmmmmmmmmmmmmmmmmmmm.v
-v.m0..{.............|m.v
+v.m0..{<...........|<m.v
 v.mmmmmmmmmmmmmmm.mmmm1v
 v.m|.......|.m..m.m1...v
 v1m..........mmmm.m.vvvv
 v.m...............m.vvvv
-v.m..........mmmm.m.vvvv
+v.m.}........mmmm.m.vvvv
 v.m..........m..m.m.vvvv
 v1m|.........m1.m|m.vvvv
-v.m|.......<.m..m|m.vvvv
+v.m|.......<.m..m<m.vvvv
 v.mmmmmmmmmmmm..mmm.vvvv
 v...1..........1....vvvv
 vvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
+
+NAME: amcnicky_dreams_3_hall_of_blades_hangedman_original
+: dreams_setup(_G)
+: hall_of_blades_monsters_dreams(_G)
+TAGS: allow_dup
+DESC: floating aimlessly through the hall of blades
+DEPTH: Dreams:3
+SHUFFLE:  CD / CD / DC / DC / DD
+SUBST:    C = c, D = ., E : c--, F : c--, c : cv
+FTILE:    - = floor_vault
+COLOUR:   - = lightgrey
+SUBST:    - = .
+NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccx
+xcccc-cccc-F-ccccc-F-cccc-ccccx
+x-cc-.-cc-...-ccc-...-cc-.-cc-x
+x.............<.<.............x
+x..--c--....|..}..|.....-c--..x
+x..-ccc-...............-ccc-..x
+x..ccccc...............ccccc..x
+x..-ccc-...............-ccc-..x
+x..--c--...............--c--..x
+x.............................x
+x.............................x
+x.............D|D.............x
+x............DDDDD............x
+x............DDDDD............x
+x............DDDDD............x
+x.............D|D.............x
+x.............................x
+x.............................x
+x..--c--...............--c--..x
+x..-ccc-...............-ccc-..x
+x..ccccc...............ccccc..x
+x..-ccc-...............-ccc-..x
+x..--c--...............--c--..x
+x..............{..............x
+x-cc-.-cc'''''ccc'''''cc-.-cc-x
+xcccc-cccc'F'++c++'F'cccc-ccccx
+xcccccccccccccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: amcnicky_dreams_4_inside_brain
+: dreams_setup(_G)
+DEPTH: Dreams:4
+DESC: having a delicious feast of brain matter
+MAP
+...XXXXXXXXX..
+.XXX...}...XX.
+XX.....x....XX
+X.....<x.....X
+.X..xxxx....XX
+XX.....xxxx..X
+X......x.....X
+X......x.....X
+XX.....x<....X
+XX...xxxxx...X
+X......x....X.
+XX.....x....XX
+.XX....{.....X
+..XXXXXXXXXXXX
+ENDMAP
+
+# todo: brainworm form, vault, and final vault
+# todo: lots of vault balance
+# todo: lots of item balance (evocable based on skill feels bad - base it on xp gained?)

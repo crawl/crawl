@@ -29,6 +29,8 @@ enum class transformation
 #endif
     storm,
     butterfly,
+    weapon,
+    brain_worm,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

@@ -320,8 +320,32 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 0, SIZE_SMALL, 4,
     0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, LIGHTRED, "Delicate wings", { "hit", "stroke", "tickle", "nudge" },
-    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    FC_ENABLE, FC_DEFAULT, FC_ENABLE, false,
     "flap", 0, "wing", "", "place yourself before", "flesh",
+    {}
+},
+
+{
+    transformation::weapon, MONS_SPECTRAL_WEAPON, "Weapon", "weapon-form", "weapon",
+    "an animated blade, protecting the halls.",
+    EQF_PHYSICAL, MR_NO_FLAGS,
+    DEFAULT_DURATION, 0, 0, SIZE_SMALL, 10,
+    10, 10, 0, true, 0, true, 12,
+    SPWPN_NORMAL, LIGHTGREEN, "Blade edge", { "slice", "slash", "chop", "stab" },
+    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    "", 0, "", "", "", "metal",
+    {}
+},
+
+{
+    transformation::brain_worm, MONS_WORM, "Brain Worm", "brain-worm-form", "brain worm",
+    "a brain-eating parasite.",
+    EQF_PHYSICAL, MR_NO_FLAGS,
+    DEFAULT_DURATION, 0, 0, SIZE_SMALL, 10,
+    10, 10, 0, true, 0, true, 12,
+    SPWPN_NORMAL, LIGHTGREEN, "Fangs", { "nibble", "chomp", "bite", "gnash" },
+    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    "", 0, "", "", "", "flesh",
     {}
 }
 

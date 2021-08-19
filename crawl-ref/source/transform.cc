@@ -1012,6 +1012,40 @@ public:
     }
 };
 
+class FormWeapon : public Form
+{
+private:
+    FormWeapon() : Form(transformation::weapon) { }
+    DISALLOW_COPY_AND_ASSIGN(FormWeapon);
+public:
+    static const FormWeapon &instance() { static FormWeapon inst; return inst; }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "You feel less metal.";
+    }
+};
+
+class FormBrainWorm : public Form
+{
+private:
+    FormBrainWorm() : Form(transformation::brain_worm) { }
+    DISALLOW_COPY_AND_ASSIGN(FormBrainWorm);
+public:
+    static const FormBrainWorm &instance() { static FormBrainWorm inst; return inst; }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "You feel a little more normal.";
+    }
+};
+
 #if TAG_MAJOR_VERSION == 34
 
 /**
@@ -1111,6 +1145,8 @@ static const Form* forms[] =
 #endif
     &FormStorm::instance(),
     &FormButterfly::instance(),
+    &FormWeapon::instance(),
+    &FormBrainWorm::instance(),
 };
 
 const Form* get_form(transformation xform)

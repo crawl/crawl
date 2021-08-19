@@ -718,15 +718,13 @@ void floor_transition(dungeon_feature_type how,
     if (how == DNGN_ENTER_ZIGGURAT)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
 
+    // remove the dream portal as its one-time use
+    // replacing with floor seems ok for now but probably something more
+    // dynamic could be used
     if (how == DNGN_ENTER_DREAMS)
         dungeon_terrain_changed(you.pos(), DNGN_FLOOR);
-    
-    if (whither == BRANCH_DREAMS)
-    {   // entering the dream
-        // TODO: more vaults/transformations than just the butterfly dream
-        transform(400,transformation::butterfly,true);
-    }
 
+    // remove transformations upon leaving the realm of dreams
     if (you.where_are_you == BRANCH_DREAMS && whither != BRANCH_DREAMS)
     {   // leaving the dream
         untransform();
@@ -742,6 +740,22 @@ void floor_transition(dungeon_feature_type how,
     // Actually change the player's branch and depth, along with some cleanup.
     _player_change_level_reset();
     _player_change_level(whither);
+
+    if (whither == BRANCH_DREAMS)
+    {   // entering a dream
+        // TODO: more vaults/transformations than just the butterfly dream
+        // dream 1 - butterfly meadow
+        transform(400,transformation::butterfly,true);        
+    } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 2)
+    {   // dream 2 - butchers
+        transform(400,transformation::pig,true);
+    } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 3)
+    {   // dream 3 - hall of blades / remove this one? is it as good as the others?
+        transform(400,transformation::weapon,true);
+    } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 4)
+    {   // dream 4 - brain worm in a brain
+        transform(400,transformation::brain_worm,true);
+    }
 
     // Some branch specific messages.
     if (old_level.branch == BRANCH_VESTIBULE

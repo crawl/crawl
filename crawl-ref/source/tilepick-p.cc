@@ -470,22 +470,24 @@ tileidx_t tileidx_player()
     case transformation::tree:
         break;
     // animals
-    case transformation::bat:       ch = TILEP_TRAN_BAT;       break;
-    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
-    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
+    case transformation::bat:        ch = TILEP_TRAN_BAT;       break;
+    case transformation::spider:     ch = TILEP_TRAN_SPIDER;    break;
+    case transformation::pig:        ch = TILEP_TRAN_PIG;       break;
 #if TAG_MAJOR_VERSION == 34
-    case transformation::porcupine: ch = TILEP_TRAN_PIG; break;
+    case transformation::porcupine:  ch = TILEP_TRAN_PIG;       break;
 #endif
     // non-animals
-    case transformation::ice_beast: ch = TILEP_TRAN_ICE_BEAST; break;
-    case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
+    case transformation::ice_beast:  ch = TILEP_TRAN_ICE_BEAST;          break;
+    case transformation::wisp:       ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
-    case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
+    case transformation::jelly:      ch = TILEP_MONS_JELLY;              break;
 #endif
-    case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
-    case transformation::shadow:    ch = TILEP_TRAN_SHADOW;    break;
-    case transformation::storm:     ch = TILEP_TRAN_STORM;     break;
-    case transformation::butterfly: ch = TILEP_TRAN_BUTTERFLY; break;
+    case transformation::fungus:     ch = TILEP_TRAN_MUSHROOM;   break;
+    case transformation::shadow:     ch = TILEP_TRAN_SHADOW;     break;
+    case transformation::storm:      ch = TILEP_TRAN_STORM;      break;
+    case transformation::butterfly:  ch = TILEP_TRAN_BUTTERFLY;  break;
+    case transformation::weapon:     ch = TILEP_TRAN_WEAPON;     break;
+    case transformation::brain_worm: ch = TILEP_TRAN_BRAIN_WORM; break;
     case transformation::dragon:
     {
         switch (you.species)

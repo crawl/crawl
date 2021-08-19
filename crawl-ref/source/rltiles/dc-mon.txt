@@ -820,9 +820,7 @@ erolcha MONS_EROLCHA
 %rim 1
 %sdir mon/humanoids
 ogre MONS_OGRE
-ogre_catcher1 MONS_OGRE_CATCHER
-ogre_catcher2
-ogre_catcher3
+ogre_catcher MONS_OGRE_CATCHER
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
 ogre_mage MONS_OGRE_MAGE
@@ -1191,6 +1189,8 @@ butterfly_form7
 butterfly_form8
 butterfly_form9
 butterfly_form10
+spectral_axe_form TRAN_WEAPON
+brain_worm_form TRAN_BRAIN_WORM
 %rim 1
 
 %sdir misc
