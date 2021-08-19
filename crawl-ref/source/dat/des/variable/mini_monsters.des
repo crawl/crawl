@@ -839,7 +839,7 @@ ITEM:   young poisoner's handbook / book of changes / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&sting&wereblood&spider_form
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-KITEM:  g = any potion q:2-3
+KITEM:  g = any potion q:2
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
