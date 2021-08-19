@@ -3980,7 +3980,6 @@ static string _monster_spells_description(const monster_info& mi)
 static const char *_speed_description(int speed)
 {
     // These thresholds correspond to the player mutations for fast and slow.
-    ASSERT(speed != 10);
     if (speed < 7)
         return "extremely slowly";
     else if (speed < 8)
@@ -3994,7 +3993,7 @@ static const char *_speed_description(int speed)
     else if (speed > 10)
         return "quickly";
 
-    return "buggily";
+    return "normally";
 }
 
 static void _add_energy_to_string(int speed, int energy, string what,
@@ -4004,9 +4003,9 @@ static void _add_energy_to_string(int speed, int energy, string what,
         return;
 
     const int act_speed = (speed * 10) / energy;
-    if (act_speed > 10)
+    if (act_speed > 10 || (act_speed == 10 && speed < 10))
         fast.push_back(what + " " + _speed_description(act_speed));
-    if (act_speed < 10)
+    if (act_speed < 10 || (act_speed == 10 && speed > 10))
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
