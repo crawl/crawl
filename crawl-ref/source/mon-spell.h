@@ -1243,6 +1243,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_PUTRID_MOUTH,
+      {
+       { SPELL_MIASMA_BREATH, 50, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_WARNING_CRY, 20, MON_SPELL_VOCAL | MON_SPELL_BREATH },
+      }
+    },
+
     // ('X') Greater horrors and tentacled things.
     {  MST_KRAKEN,
       {

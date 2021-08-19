@@ -1972,6 +1972,12 @@ program bug
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
 %%%%
+putrid mouth
+
+A starved spirit whose mouth is a pit of rot and emits vile fumes. Its putrid
+maw cannot eat the food it finds, so it moans with rage and desparate hunger.
+The filth on its claws is withering.
+%%%%
 purple draconian
 
 A muscular purple-scaled humanoid with a reptilian tail and small wings.

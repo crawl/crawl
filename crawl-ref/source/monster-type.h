@@ -747,6 +747,7 @@ enum monster_type                      // env.mons[].type
     MONS_JIANGSHI,
     MONS_SEARING_WRETCH,
     MONS_STOKER,
+    MONS_PUTRID_MOUTH,
 #endif
     MONS_SKELETON_SMALL,   // recolouring only
     MONS_SKELETON_LARGE,   // recolouring only
@@ -1131,6 +1132,7 @@ enum monster_type                      // env.mons[].type
     MONS_STOKER,
     MONS_QUICKSILVER_ELEMENTAL,
     MONS_CRYSTAL_ECHIDNA,
+    MONS_PUTRID_MOUTH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
