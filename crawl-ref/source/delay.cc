@@ -452,8 +452,8 @@ void BaseRunDelay::handle()
             // an explore, run, or rest delay, something is extremely buggy
             // and we should both rescue the player, and generate a crash
             // report. The thresholds are very heuristic:
-            // Rest delay, 500 turns. This is a bit more than 2x what it takes
-            // a maxed troll to heal.
+            // Rest delay, 700 turns. A maxed ogre at hp 1 with no regen bonus
+            // takes around 510 turns to heal fully.
             // Travel delay, 2000. Just a big number that is quite a bit
             // bigger than any travel delay I have been able to generate. If
             // anyone can generate this on demand it should be raised. (Or
@@ -462,10 +462,11 @@ void BaseRunDelay::handle()
             // but when positive is used as a counter, so if it's a very large
             // number in the assert message, this is a wait delay
 
+            const int regen_factor = you.duration[DUR_COLLAPSE] ? 4 : 1;
             const int buggy_threshold = you.running.is_rest()
-                ? 500
+                ? 700
                 : (ZOT_CLOCK_PER_FLOOR / BASELINE_DELAY / 3);
-            ASSERTM(you.running.turns_passed < buggy_threshold,
+            ASSERTM(you.running.turns_passed < buggy_threshold * regen_factor,
                     "Excessive delay, %d turns passed, delay type %d",
                     you.running.turns_passed, you.running.runmode);
         }
