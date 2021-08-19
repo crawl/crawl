@@ -818,6 +818,12 @@ crimson imp
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
 %%%%
+crystal echidna
+
+A spiny, long snouted rodent grown out of pure living crystal. It is
+immune to most forms of magic and hurls both crystalline bolts and painful
+barbs.
+%%%%
 crystal guardian
 
 An intricate animated statue made of heavily ensorcelled, tough crystal. It is

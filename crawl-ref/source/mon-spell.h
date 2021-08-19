@@ -557,6 +557,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('r') rodents
+    {  MST_CRYSTAL_ECHIDNA,
+      {
+       { SPELL_CRYSTAL_BOLT, 33, MON_SPELL_NATURAL },
+       { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('s') Spiders and insects.
     {  MST_JUMPING_SPIDER,
       {

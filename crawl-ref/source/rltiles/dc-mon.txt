@@ -124,6 +124,7 @@ gastronok MONS_GASTRONOK
 rat MONS_RAT
 green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
+crystal_echidna MONS_CRYSTAL_ECHIDNA
 %rim 1
 quokka MONS_QUOKKA
 %sdir mon/animals

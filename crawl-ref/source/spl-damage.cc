@@ -1099,6 +1099,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
     { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY,
                                 frag_damage_type::crystal } },
+    { MONS_CRYSTAL_ECHIDNA,   { "crystal", LIGHTGREEN,
+                                frag_damage_type::crystal } },
     { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED,
                                 frag_damage_type::crystal } },
     { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN,
