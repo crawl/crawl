@@ -1977,6 +1977,10 @@ static const map<monster_type, band_set> bands_by_leader = {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
+    { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
+                                   {{ BAND_BONE_DRAGONS, {1, 2}} }}},
+    { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
+                                   {{ BAND_SPECTRALS, {2, 6}} }}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2178,6 +2182,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
     { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 1}}}},
+    { BAND_BONE_DRAGONS,        {{{MONS_BONE_DRAGON, 1}}}},
+    { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
