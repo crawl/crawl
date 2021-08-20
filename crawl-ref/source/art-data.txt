@@ -1582,7 +1582,12 @@ OBJ:      OBJ_JEWELLERY/AMU_MANA_REGENERATION
 COLOUR:   ETC_SILVER
 TILE:     urand_dreamshard
 INSCRIP:  +Portal
-BOOL:     fragile
+BOOL:     drain, special
+REGEN:    1
+DESCRIP:  It can be shattered once to create a portal to the realm of dreams.
+ This will destroy the necklace. A suitably adventurous individual might
+ visit the realm of dreams to escape one's foes, or in search of great 
+ treasure, though it is not entirely without danger there.
 
 # This entry must always be last.
 ENUM:   DUMMY2

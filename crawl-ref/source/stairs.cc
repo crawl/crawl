@@ -35,6 +35,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -721,7 +722,7 @@ void floor_transition(dungeon_feature_type how,
     // remove the dream portal as its one-time use
     // replacing with floor seems ok for now but probably something more
     // dynamic could be used
-    if (how == DNGN_ENTER_DREAMS)
+    if (whither == BRANCH_DREAMS)
         dungeon_terrain_changed(you.pos(), DNGN_FLOOR);
 
     // remove transformations upon leaving the realm of dreams
@@ -745,19 +746,29 @@ void floor_transition(dungeon_feature_type how,
     {   // entering a dream
         // TODO: more vaults/transformations than just the butterfly dream
         // dream 1 - butterfly meadow
-        transform(400,transformation::butterfly,true);        
+        transform(400,transformation::butterfly,true);
+        yell();
+        mpr("You cry out in surprise at your new form!");
     } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 2)
     {   // dream 2 - butchers
         transform(400,transformation::pig,true);
+        yell();
+        mpr("You cry out in surprise at your new form!");
     } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 3)
     {   // dream 3 - hall of blades / remove this one? is it as good as the others?
         transform(400,transformation::weapon,true);
+        yell();
+        mpr("You cry out in surprise at your new form!");
     } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 4)
     {   // dream 4 - brain worm in a brain
         transform(400,transformation::brain_worm,true);
+        yell();
+        mpr("You cry out in surprise at your new form!");
     } else if (you.where_are_you == BRANCH_DREAMS && you.depth == 5)
     {   // dream 4 - brain worm in a brain
         transform(400,transformation::orb_of_fire,true);
+        yell();
+        mpr("You cry out in surprise at your new form!");
     }
 
     // Some branch specific messages.

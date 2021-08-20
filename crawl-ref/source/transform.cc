@@ -2288,7 +2288,7 @@ int form_base_movespeed(transformation tran)
     else if (tran == transformation::pig)
         return 7;
     else if (tran == transformation::butterfly)
-        return 5;
+        return 7;
     else
         return 10;
 }
