@@ -1449,7 +1449,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
             canned_msg(MSG_OK);
             return false;
         }
-      }
+    }
 
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
