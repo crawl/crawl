@@ -1,0 +1,8 @@
+You want to create your own Stone Soup offshoot? Cool. Here's some helpful advice:
+
+* Try to think of something interesting and compelling that your fork will contain.
+  People can just play older versions of Crawl, if your elevator pitch that consists of "reintroduce old content".
+
+* Increment "tag major", it will simplify your life. (XXX - how?)
+
+* If you use upstream commits after you start hacking on your fork, "merge" strategy will work better than "rebase".
