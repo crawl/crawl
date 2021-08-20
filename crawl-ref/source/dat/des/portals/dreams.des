@@ -2,13 +2,17 @@
 #
 # The realm of dreams! (amcnicky)
 #
-# A visit here is the player's reward for using the dreamshard necklace.
+# A visit here is the player's reward for finding and using the dreamshard 
+# necklace.
 #
 # The twofold intentions of the portal are:
-# 1. to give the player a somewhat safer on-demand (but one-time use) portal
+# 1. to give the player a somewhat safe on-demand (but one-time use) portal
 #    that they can step into as a very strong 2-turn escape like a ziggurine.
-# 2. to provide an good level of loot (less than a trove, more than the
-#    average shop) as an additional pay-off.
+#    (though it is harder to rest on the spot than in zig:1)
+# 2. to provide a good level of loot (less than a trove, more than the
+#    average shop) as a bonus for finding and using this item. Note that 3/5
+#    dreams make it difficult to collect all loot, so harvestable loot in
+#    practice is less than what appears on the floor.
 #
 # Slow moving monsters are included, along with a series of transformations,
 # mainly for flavour, but also to keep the action moving and ideally make
