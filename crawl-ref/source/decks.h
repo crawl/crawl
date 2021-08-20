@@ -41,7 +41,9 @@ enum card_type
     CARD_SUMMON_WEAPON,       // a dance partner
     CARD_SUMMON_BEE,          // swarm of bees
     CARD_WILD_MAGIC,          // miscasts for everybody
-    CARD_STAIRS,              // moves stairs around
+#if TAG_MAJOR_VERSION == 34
+    CARD_STAIRS_REMOVED,      // moved stairs around
+#endif
     CARD_WRATH,               // random godly wrath
     CARD_WRAITH,              // drain XP
 #if TAG_MAJOR_VERSION == 34
