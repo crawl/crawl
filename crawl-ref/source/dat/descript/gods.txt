@@ -303,12 +303,11 @@ their life's talents.
 %%%%
 Ignis powers
 
-Followers can draw upon the guttering flames of Ignis' power just a few times
-before only flickering embers remain. They can call a swarm of foxfires against
-their foes perhaps a dozen times, fill their surroundings with a sea of fire
-perhaps half a dozen times, or let Ignis' heat lift them to another level of
-the dungeon perhaps three times. No matter how depleted, Ignis will always
-grant followers resistance to fire.
+Followers can fill their surroundings with a sea of fire, can call a swarm of
+foxfires against their foes, or let Ignis' heat lift them to another level of
+the dungeon. However, the guttering flames of Ignis' power will only sustain a
+limited number of invocations before only flickering embers remain. No matter
+how depleted, Ignis will always grant followers resistance to fire.
 %%%%
 Jiyva powers
 
