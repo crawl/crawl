@@ -729,7 +729,7 @@ void floor_transition(dungeon_feature_type how,
     if (you.where_are_you == BRANCH_DREAMS && whither != BRANCH_DREAMS)
     {   // leaving the dream
         untransform();
-    }    
+    }
 
     if (how == DNGN_ENTER_PANDEMONIUM
         || how == DNGN_ENTER_ABYSS

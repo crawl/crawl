@@ -1664,5 +1664,5 @@ static bool _DREAMSHARD_NECKLACE_evoke(item_def *item, bool* did_work,
     {
         *unevokable = true;
         return true;
-    }    
+    }
 }
