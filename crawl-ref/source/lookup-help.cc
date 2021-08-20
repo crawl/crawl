@@ -347,6 +347,17 @@ static vector<string> _get_monster_keys(char32_t showchar)
     return mon_keys;
 }
 
+static vector<string> _get_card_keys()
+{
+    vector<string> names;
+    for (int i = 0; i < NUM_CARDS; ++i)
+    {
+        card_type card = static_cast<card_type>(i);
+        if (!card_is_removed(card))
+            names.push_back(make_stringf("%s card", card_name(card)));
+    }
+    return names;
+}
 
 static vector<string> _get_god_keys()
 {
@@ -442,22 +453,6 @@ static bool _feature_filter(string key, string /*body*/)
     return feat_by_desc(key) == DNGN_UNSEEN;
 }
 
-static bool _card_filter(string key, string /*body*/)
-{
-    lowercase(key);
-
-    // Every card description contains the keyword "card".
-    if (!strip_suffix(key, "card"))
-        return true;
-
-    for (int i = 0; i < NUM_CARDS; ++i)
-    {
-        if (key == lowercase_string(card_name(static_cast<card_type>(i))))
-            return false;
-    }
-    return true;
-}
-
 static bool _ability_filter(string key, string /*body*/)
 {
     lowercase(key);
@@ -527,24 +522,6 @@ static void _recap_feat_keys(vector<string> &keys)
             keys[i] = "A shop";
         else
             keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A);
-    }
-}
-
-static void _recap_card_keys(vector<string> &keys)
-{
-    for (unsigned int i = 0, size = keys.size(); i < size; i++)
-    {
-        lowercase(keys[i]);
-
-        for (int j = 0; j < NUM_CARDS; ++j)
-        {
-            card_type card = static_cast<card_type>(j);
-            if (keys[i] == lowercase_string(card_name(card)) + " card")
-            {
-                keys[i] = string(card_name(card)) + " card";
-                break;
-            }
-        }
     }
 }
 
@@ -1239,8 +1216,8 @@ static const vector<LookupType> lookup_types = {
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_ability, lookup_type::db_suffix),
-    LookupType('C', "card", _recap_card_keys, _card_filter,
-               nullptr, nullptr, _card_menu_gen,
+    LookupType('C', "card", nullptr, nullptr,
+               nullptr, _get_card_keys, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
     LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _item_menu_gen,

@@ -85,6 +85,7 @@ string deck_name(deck_type deck);
 string deck_description(deck_type deck);
 const string stack_top();
 const string stack_contents();
+bool card_is_removed(card_type card);
 
 #if TAG_MAJOR_VERSION == 34
 bool is_deck_type(uint8_t type);

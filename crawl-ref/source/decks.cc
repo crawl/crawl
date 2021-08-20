@@ -183,6 +183,20 @@ const char* card_name(card_type card)
     return "a very buggy card";
 }
 
+bool card_is_removed(card_type card)
+{
+    switch (card)
+    {
+#if TAG_MAJOR_VERSION == 34
+case CARD_FAMINE_REMOVED:
+case CARD_SHAFT_REMOVED:
+        return true;
+#endif
+    default:
+        return false;
+    }
+}
+
 card_type name_to_card(string name)
 {
     for (int i = 0; i < NUM_CARDS; i++)
