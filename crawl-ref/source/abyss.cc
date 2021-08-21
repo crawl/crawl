@@ -1861,8 +1861,10 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     return false;
 }
 
-static void _spawn_corrupted_servant_near_monster(const coord_def &pos, actor *as)
+static void _spawn_corrupted_servant_near_monster(const monster &who)
 {
+    const coord_def pos = who.pos();
+
     // Thirty tries for a place.
     for (int i = 0; i < 30; ++i)
     {
@@ -1875,8 +1877,8 @@ static void _spawn_corrupted_servant_near_monster(const coord_def &pos, actor *a
         ASSERT(mons);
         if (!monster_habitable_grid(mons, env.grid(p)))
             continue;
-        mgen_data mg(mons, BEH_HOSTILE, p);
-        mg.set_summoned(as, 3, 0);
+        mgen_data mg(mons, BEH_COPY, p);
+        mg.set_summoned(&who, 3, 0);
         mg.place = BRANCH_ABYSS;
         if (create_monster(mg))
             return;
@@ -2298,7 +2300,7 @@ bool lugonu_corrupt_level(int power)
     return true;
 }
 
-bool lugonu_corrupt_level_monster(monster mons)
+bool lugonu_corrupt_level_monster(const monster &who)
 {
     if (is_level_incorruptible_monster())
         return false;
@@ -2307,14 +2309,14 @@ bool lugonu_corrupt_level_monster(monster mons)
 
     corrupt_env cenv;
     _corrupt_choose_colours(&cenv);
-    _corrupt_level_features_monster(cenv, mons);
+    _corrupt_level_features_monster(cenv, who);
 
     // Monster version does not use a timed effect to handle monster summons.
     // This simplifies the effect and allows for the summons to be abjured once
     // the monster is killed, as normal
     const int count = random2(3) + 1;
     for (int i = 0; i < count; ++i)
-        _spawn_corrupted_servant_near_monster(mons.pos(), &mons);
+        _spawn_corrupted_servant_near_monster(who);
 
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.

@@ -44,7 +44,7 @@ void save_abyss_uniques();
 bool is_level_incorruptible(bool quiet = false);
 bool is_level_incorruptible_monster();
 bool lugonu_corrupt_level(int power);
-bool lugonu_corrupt_level_monster(monster mons);
+bool lugonu_corrupt_level_monster(const monster &who);
 void run_corruption_effects(int duration);
 void set_abyss_state(coord_def coord, uint32_t depth);
 void destroy_abyss();

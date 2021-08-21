@@ -101,6 +101,7 @@ static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
 static void _doom_howl(monster &mon);
 static void _mons_awaken_earth(monster &mon, const coord_def &target);
+static void _corrupt_locale(monster &mon);
 static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
@@ -545,17 +546,11 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_CORRUPT_LOCALE, {
         [](const monster &caster) {
-            const actor* foe = caster.get_foe();
-            ASSERT(foe);
-            if (player_in_branch(BRANCH_ABYSS))
-            {
-                // since it would just be a cantrip albeit with fun msg
-                return ai_action::bad();
-            } else
-            {
-                return ai_action::good();
-            }
-        }
+            return ai_action::good_or_impossible(!player_in_branch(BRANCH_ABYSS));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            _corrupt_locale(caster);
+        },
     }, },
 };
 
@@ -1804,7 +1799,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_SUMMON_TZITZIMITL:
     case SPELL_SUMMON_HELL_SENTINEL:
-    case SPELL_CORRUPT_LOCALE:
     case SPELL_GOAD_BEASTS:
         pbolt.range = 0;
         pbolt.glyph = 0;
@@ -2139,16 +2133,17 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 }
 
 /**
- * @param mon: caster, currently Mlioglotl
+ * @param mon: caster, currently only Mlioglotl
  */
-static void _corrupt_locale(monster mons)
+static void _corrupt_locale(monster &mons)
 {
     // Note that this is flagged as a bad() idea for the ai, so should
     // not be reached.
     if (player_in_branch(BRANCH_ABYSS))
         return;
 
-    mprf("%s corrupts the dungeon around him!", mons.name(DESC_THE).c_str());
+    mprf("%s corrupts the dungeon around %s!",
+         mons.name(DESC_THE).c_str(), mons.pronoun(PRONOUN_OBJECTIVE).c_str());
 
     lugonu_corrupt_level_monster(mons);
 }
@@ -6512,12 +6507,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->add_ench(ENCH_ROLLING);
         simple_monster_message(*mons,
                 " curls into a ball and begins rolling!");
-        return;
-
-    case SPELL_CORRUPT_LOCALE:
-        ASSERT(foe);
-        if (foe->is_player())
-            _corrupt_locale(*mons);
         return;
 
     case SPELL_GOAD_BEASTS:
