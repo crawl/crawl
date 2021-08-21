@@ -2021,7 +2021,6 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
     {
         ASSERT(min_unbuyable_idx < list->size());
 
-        vector<string> descs;
         for (unsigned int i = min_unbuyable_idx; i < list->size(); i++)
         {
             const CrawlHashTable &thing = (*list)[i];
@@ -2032,25 +2031,22 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
                 ASSERT(i > (unsigned int) min_unbuyable_idx);
                 break;
             }
-
             string desc;
-
             if (thing.exists(SHOPPING_THING_VERB_KEY))
                 desc += thing[SHOPPING_THING_VERB_KEY].get_string();
             else
                 desc = "buy";
             desc += " ";
-
             desc += describe_thing(thing, DESC_A);
-
-            descs.push_back(desc);
+            ASSERT(!desc.empty());
+            mpr("You now have enough gold to buy an item on your shopping list!");
+            const string returnMsg = make_stringf("Return to the shop to %s now?",
+                                     desc.c_str());
+            // Prompt for auto-travel to newly purchasable shopping list item
+            if (yesno(returnMsg.c_str(), true, 'n'))
+                start_translevel_travel(level_pos(thing_pos(thing)));
+            mpr("You can access your shopping list by pressing '$'.");
         }
-        ASSERT(!descs.empty());
-
-        mpr_comma_separated_list("You now have enough gold to ", descs,
-                                 ", or ");
-        mpr("You can access your shopping list by pressing '$'.");
-
         // Our gold has changed, maybe we can buy different things now.
         refresh();
     }
