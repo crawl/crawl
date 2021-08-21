@@ -78,7 +78,7 @@ static const char *_god_wrath_adjectives[] =
     "touch",            // Lugonu
     "wrath",            // Beogh
     "vengeance",        // Jiyva
-    "enmity",           // Fedhas Madhash
+    "enmity",           // Fedhas Madash
     "meddling",         // Cheibriados
     "doom",             // Ashenzari (unused)
     "darkness",         // Dithmenos
