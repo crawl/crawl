@@ -722,7 +722,7 @@ Your control over your magic has been sapped.
 %%%%
 Attr status
 
-Enemies are magically pulled toward you.
+Enemies are magically translocated toward you. (This won't wake them up.)
 %%%%
 Zot status
 
