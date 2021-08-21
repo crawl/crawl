@@ -545,7 +545,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         }
     } },
     { SPELL_CORRUPT_LOCALE, {
-        [](const monster &caster) {
+        [](const monster & /* caster */) {
             return ai_action::good_or_impossible(!player_in_branch(BRANCH_ABYSS));
         },
         [](monster &caster, mon_spell_slot, bolt&) {
