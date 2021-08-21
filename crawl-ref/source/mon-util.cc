@@ -2010,7 +2010,9 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     if (attk_number == 0)
     {
-        if (mons_is_demonspawn(mon.type))
+        if (m.has_ench(ENCH_FIRE_CHAMPION))
+            attk.flavour = AF_FIRE;
+        else if (mons_is_demonspawn(mon.type))
         {
             const monsterentry* mbase =
                 get_monster_data (draco_or_demonspawn_subspecies(mon));
@@ -3279,6 +3281,8 @@ mon_energy_usage mons_energy(const monster& mon)
     mon_energy_usage meu = mons_class_energy(mons_base_type(mon));
     if (mon.ghost)
         meu.move = meu.swim = mon.ghost->move_energy;
+    if (mon.has_ench(ENCH_FIRE_CHAMPION))
+        meu.move = meu.move * 2 / 3;
     return meu;
 }
 

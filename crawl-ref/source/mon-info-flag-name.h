@@ -127,4 +127,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_IDEALISED, "idealised", "idealised", "idealised"},
     { MB_ENSLAVED, "", "disembodied soul", "" },
     { MB_ALLY_TARGET, "ally target", "ally target", "ally target"},
+    { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
 };

@@ -5109,7 +5109,7 @@ bool monster::can_see_invisible(bool calc_unid) const
 
 bool monster::invisible() const
 {
-    return has_ench(ENCH_INVIS) && !backlit();
+    return has_ench(ENCH_INVIS) && !backlit() && !has_ench(ENCH_FIRE_CHAMPION);
 }
 
 bool monster::visible_to(const actor *looker) const

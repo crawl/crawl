@@ -35,6 +35,7 @@
 #include "mon-cast.h"
 #include "mon-pick.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "notes.h"
 #include "player-stats.h"
@@ -2043,15 +2044,91 @@ static bool _ignis_shaft()
     return true;
 }
 
+/**
+ *  Finds the highest HD monster in sight that would make a suitable vessel
+ *  for Ignis's vengeance.
+*/
+static monster* _ignis_champion_target()
+{
+    monster* best_mon = nullptr;
+    // Never pick monsters that are incredibly weak. That's just sad.
+    int min_xl = you.get_experience_level() / 2;
+    int seen = 0;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+        // Some of these cases are redundant. TODO: cleanup
+        if (!mon
+            || mons_is_firewood(*mon)
+            || !mons_can_use_stairs(*mon, DNGN_STONE_STAIRS_DOWN_I)
+            || mons_is_tentacle_or_tentacle_segment(mon->type)
+            || mon->is_stationary()
+            || mons_is_conjured(mon->type)
+            || mon->is_perm_summoned()
+            || mon->wont_attack())
+        {
+            continue;
+        }
+
+        // Don't anoint monsters with no melee attacks or with an
+        // existing attack flavour.
+        const mon_attack_def atk = mons_attack_spec(*mon, 0, true);
+        if (atk.type == AT_NONE || atk.flavour != AF_PLAIN)
+            continue;
+
+        // Don't pick something weaker than a different mon we've already seen.
+        const int hd = mon->get_experience_level();
+        if (hd < min_xl)
+            continue;
+
+        // Is this the new strongest thing we've seen? If so, reset the
+        // HD floor & the seen count.
+        if (hd > min_xl)
+        {
+            min_xl = hd;
+            seen = 0;
+        }
+
+        // Reservoir sampling among monsters of this HD.
+        ++seen;
+        if (one_chance_in(seen))
+            best_mon = mon;
+    }
+
+    return best_mon;
+}
+
+static bool _ignis_champion()
+{
+    monster *mon = _ignis_champion_target();
+    if (!mon)
+        return false;
+    // Message ordering is a bit touchy here.
+    // First, we say what we're doing. TODO: more fun messages
+    simple_god_message(make_stringf(" anoints %s as an instrument of vengeance!",
+                                    mon->name(DESC_THE).c_str()).c_str(), GOD_IGNIS);
+    // Then, we add the ench. This makes it visible if it wasn't, since it's both
+    // confusing and unfun for players otherwise.
+    mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION, 1));
+    // Then we fire off update_monsters_in_view() to make the next messages make more
+    // sense. This triggers 'comes into view' if needed.
+    update_monsters_in_view();
+    // Then we explain what 'fire champion' does, for those who don't go through xv
+    // with a fine-toothed comb afterward.
+    simple_monster_message(*mon, " is coated in flames, covering ground quickly"
+                                 " and attacking fiercely!");
+    // Then we alert it last. It's just reacting, after all.
+    behaviour_event(mon, ME_ALERT, &you);
+    return true;
+}
+
 static bool _ignis_retribution()
 {
-    const god_type god = GOD_IGNIS;
     if (one_chance_in(3) && _ignis_shaft())
         return true;
-    if (coinflip()) // placeholder
-        simple_god_message(" weeps fiery tears at your betrayal.", god);
-    else
-        _summon_ignis_elementals();
+    if (coinflip() && _ignis_champion())
+        return true;
+    _summon_ignis_elementals();
     return true;
 }
 

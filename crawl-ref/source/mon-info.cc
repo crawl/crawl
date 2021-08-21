@@ -120,6 +120,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
     { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
+    { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

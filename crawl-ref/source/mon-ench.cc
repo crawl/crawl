@@ -2070,7 +2070,7 @@ static const char *enchant_names[] =
 #endif
     "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
-    "ring_acid", "ring_miasma", "concentrate_venom",
+    "ring_acid", "ring_miasma", "concentrate_venom", "fire champion",
     "buggy", // NUM_ENCHANTMENTS
 };
 

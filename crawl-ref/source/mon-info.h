@@ -199,6 +199,7 @@ enum monster_info_flags
     MB_ALLY_TARGET,
     MB_CANT_DRAIN,
     MB_CONCENTRATE_VENOM,
+    MB_FIRE_CHAMPION,
     NUM_MB_FLAGS
 };
 

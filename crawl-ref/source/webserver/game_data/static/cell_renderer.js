@@ -1040,6 +1040,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.SLOWLY_DYING, x, y, -status_shift, 0, img_scale);
                 status_shift += 10;
             }
+            if (fg.FIRE_CHAMP)
+            {
+                this.draw_icon(icons.FIRE_CHAMP, x, y, -status_shift, 0, img_scale);
+                status_shift += 7;
+            }
 
             // Anim. weap. and summoned might overlap, but that's okay
             if (fg.ANIM_WEP)

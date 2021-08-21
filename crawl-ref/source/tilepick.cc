@@ -2005,6 +2005,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_POSSESSABLE;
     if (mons.is(MB_WITHERING) || mons.is(MB_CRUMBLING))
         ch |= TILE_FLAG_SLOWLY_DYING;
+    if (mons.is(MB_FIRE_CHAMPION))
+        ch |= TILE_FLAG_FIRE_CHAMP;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
