@@ -2794,16 +2794,18 @@ void bolt::internal_ouch(int dam)
             ouch(dam, KILLED_BY_BOUNCE, MID_PLAYER, name.c_str());
         else
         {
-            if (aimed_at_feet && effect_known)
+            if (self_targeted() && effect_known)
                 ouch(dam, KILLED_BY_SELF_AIMED, MID_PLAYER, name.c_str());
             else
                 ouch(dam, KILLED_BY_TARGETING, MID_PLAYER, name.c_str());
         }
     }
     else if (MON_KILL(thrower))
+    {
         ouch(dam, KILLED_BY_BEAM, source_id,
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
+    }
     else // KILL_MISC || (YOU_KILL && aux_source)
         ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
 }
@@ -3177,7 +3179,7 @@ bool bolt::misses_player()
     if (is_enchantment())
         return false;
 
-    if (!aimed_at_feet)
+    if (!self_targeted())
         practise_being_shot_at();
 
     defer_rand r;
@@ -3580,7 +3582,7 @@ void bolt::affect_player_enchantment(bool resistible)
             if (source_id == MID_PLAYER)
             {
                 // Beam from player rebounded and hit player.
-                if (!aimed_at_feet)
+                if (!self_targeted())
                     xom_is_stimulated(200);
             }
             else
@@ -4003,7 +4005,7 @@ void bolt::affect_player()
             // elsewhere.
             if (source_id == MID_PLAYER)
             {
-                if (!aimed_at_feet)
+                if (!self_targeted())
                     xom_is_stimulated(200);
             }
             else if (was_affected)
@@ -5107,8 +5109,23 @@ bool bolt::ignores_monster(const monster* mon) const
     return false;
 }
 
+bool bolt::self_targeted() const
+{
+    // aimed_at_feet isn't enough to determine this. Examples: wrath uses a
+    // fake monster at the player's position, xom's chesspiece fakes smite
+    // targeting by setting the monster as the source position.
+    const actor* a = agent(true);
+    // TODO: are there cases that should count as self-targeted without an
+    // agent?
+    return aimed_at_feet && a && a->pos() == source
+        && (!a->is_monster() || !mons_is_wrath_avatar(*a->as_monster()));
+}
+
 bool bolt::has_saving_throw() const
 {
+    if (self_targeted())
+        return false;
+
     switch (flavour)
     {
     case BEAM_HASTE:
@@ -5133,8 +5150,6 @@ bool bolt::has_saving_throw() const
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
         return false;
-    case BEAM_POLYMORPH:
-        return !aimed_at_feet; // Self-poly doesn't check will
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
     case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
@@ -5291,8 +5306,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         return MON_UNAFFECTED;
 
     // Check willpower.
-    if (has_saving_throw()
-        && (flavour != BEAM_TELEPORT || mon != agent()))
+    if (has_saving_throw())
     {
         if (mons_invuln_will(*mon))
             return MON_UNAFFECTED;
@@ -6452,7 +6466,7 @@ actor* bolt::agent(bool ignore_reflection) const
         nominal_source = reflector;
     }
 
-    // Check for whether this is actually a dith shadow, not you
+    // Check for whether this is actually a dith shadow or wrath avatar, not you
     if (monster* shadow = monster_at(you.pos()))
         if (shadow->type == MONS_PLAYER_SHADOW && nominal_source == MID_PLAYER)
             return shadow;

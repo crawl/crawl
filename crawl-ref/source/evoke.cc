@@ -1000,6 +1000,7 @@ static bool _xoms_chessboard()
     const monster * target = *random_iterator(targets);
     beam.source = target->pos();
     beam.target = target->pos();
+    beam.set_agent(&you);
 
     // List of possible effects. Mostly debuffs, a few buffs to keep it
     // exciting
