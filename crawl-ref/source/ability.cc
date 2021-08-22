@@ -323,10 +323,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {}, abflag::delay},
         { ABIL_REVIVIFY, "Revivify",
             0, 0, 0, {}, abflag::delay},
-    #if TAG_MAJOR_VERSION == 34
-        { ABIL_FLY, "Fly", 3, 0, 0, {fail_basis::xl, 42, 3}, abflag::none },
-        { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, {}, abflag::none },
-    #endif
         { ABIL_DAMNATION, "Hurl Damnation",
             0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
         { ABIL_WORD_OF_CHAOS, "Word of Chaos",
@@ -340,30 +336,18 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, {}, abflag::none },
         { ABIL_BLINKBOLT, "Blinkbolt", 0, 0, 0, {}, abflag::none },
 
-        // EVOKE abilities use Evocations and come from items.
-        // Teleportation and Blink can also come from mutations
-        // so we have to distinguish them (see above). The off items
-        // below are labeled EVOKE because they only work now if the
-        // player has an item with the evocable power (not just because
-        // you used a wand, potion, or miscast effect). I didn't see
-        // any reason to label them as "Evoke" in the text, they don't
-        // use or train Evocations (the others do).  -- bwr
-        { ABIL_EVOKE_BLINK, "Evoke Blink",
-            1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
+
+        // EVOKE abilities use Evocations and come from items.
+        { ABIL_EVOKE_BLINK, "Evoke Blink",
+            1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
             0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
-
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
             2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
-    #if TAG_MAJOR_VERSION == 34
-        { ABIL_EVOKE_FLIGHT, "Evoke Flight",
-            1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-    #endif
         { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
             5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
-
 
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, {}, abflag::none },
