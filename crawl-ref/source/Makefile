@@ -801,10 +801,6 @@ ifneq ($(SRC_BRANCH),$(filter master release stone_soup-%, $(SRC_BRANCH)))
 endif
 endif
 
-ifdef HAIKU_HYBRID_SECONDARY
-DEFINES_L += -DHAIKU_HYBRID_SECONDARY="\"$(HAIKU_HYBRID_SECONDARY)\""
-endif
-
 #
 # Figure out the build settings for this type of build
 #
