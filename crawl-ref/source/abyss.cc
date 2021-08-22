@@ -1992,7 +1992,7 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
     int floor = cenv.pick_floor_colour();
 
     if (feat == DNGN_ROCK_WALL || feat == DNGN_METAL_WALL
-        || feat == DNGN_STONE_WALL || feat == DNGN_TREE)
+        || feat == DNGN_STONE_WALL)
     {
         env.grid_colours(c) = cenv.rock_colour;
     }
@@ -2029,15 +2029,10 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
-    else if (feat == DNGN_TREE)
+    else if (feat_is_tree(feat))
     {
-        tileidx_t idx = tile_dngn_coloured(TILE_DNGN_TREE,
-                                           cenv.rock_colour);
-        // trees only have yellow, lightred, red, and darkgray (dead)
-        if (idx == TILE_DNGN_TREE)
-            idx = tile_dngn_coloured(TILE_DNGN_TREE, DARKGREY);
-        env.grid_colours(c) = DARKGREY;
-        tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        // This is technically not flavour because of how these burn but ok
+        dungeon_terrain_changed(c, DNGN_DEMONIC_TREE, false, false);
     }
 }
 
