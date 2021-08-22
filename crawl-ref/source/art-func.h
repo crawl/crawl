@@ -1620,3 +1620,20 @@ static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
 {
     _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
 }
+
+////////////////////////////////////////////////////
+
+static void _RCLOUDS_world_reacts(item_def */*item*/)
+{
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
+    {
+        monster* m = monster_at(*ri);
+        if (m && !m->wont_attack() && mons_is_threatening(*m)
+            && !cell_is_solid(*ri) && !cloud_at(*ri)
+            && one_chance_in(7))
+        {
+            mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());
+            place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
+        }
+    }
+}

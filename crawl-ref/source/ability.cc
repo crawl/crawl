@@ -346,8 +346,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
             2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
-        { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
-            5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
 
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, {}, abflag::none },
@@ -2236,16 +2234,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         contaminate_player(1000 + random2(2000), true);
         break;
 
-    case ABIL_EVOKE_THUNDER: // robe of Clouds
-        fail_check();
-        mpr("The folds of your robe billow into a mighty storm.");
-
-        for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
-            if (!cell_is_solid(*ri))
-                place_cloud(CLOUD_STORM, *ri, 8 + random2avg(8,2), &you);
-
-        break;
-
     case ABIL_END_TRANSFORMATION:
         fail_check();
         untransform();
@@ -3496,9 +3484,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_THUNDER:
-        return player_equip_unrand(UNRAND_RCLOUDS)
-               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_BERSERK:
         return you.evokable_berserk()
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
@@ -3552,7 +3537,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
-            ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
             ABIL_EVOKE_TURN_INVISIBLE,
 #ifdef WIZARD

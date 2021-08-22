@@ -76,9 +76,11 @@ enum ability_type
     ABIL_EVOKE_TELEPORT_CONTROL,
     ABIL_EVOKE_TWISTER,
     ABIL_EVOKE_RATSKIN,
-#endif
     ABIL_EVOKE_THUNDER,
     ABIL_MAX_EVOKE = ABIL_EVOKE_THUNDER,
+#else
+    ABIL_MAX_EVOKE = ABIL_EVOKE_TURN_INVISIBLE,
+#endif
 
     // Divine abilities
     // Zin
