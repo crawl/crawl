@@ -641,15 +641,9 @@ static void _maybe_leave_water(const coord_def pos)
 {
     ASSERT_IN_BOUNDS(pos);
 
-    // Rain clouds can occasionally leave shallow water or deepen it:
-    // If we're near lava, chance of leaving water is lower;
-    // if we're near deep water already, chance of leaving water
-    // is slightly higher.
-    if (!one_chance_in((5 + count_neighbours(pos, DNGN_LAVA)) -
-                            count_neighbours(pos, DNGN_DEEP_WATER)))
-    {
+    // Rain clouds can occasionally leave shallow water or deepen it.
+    if (!one_chance_in(5))
         return;
-    }
 
     dungeon_feature_type feat = env.grid(pos);
 
@@ -1031,7 +1025,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     switch (cloud.type)
     {
     case CLOUD_RAIN:
-        return act->is_fiery()? 0 : WILL_INVULN;
+        return act->is_fiery() ? 0 : WILL_INVULN;
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
