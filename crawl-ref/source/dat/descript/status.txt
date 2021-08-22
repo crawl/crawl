@@ -43,6 +43,10 @@ Regen status
 You regenerate health at an unnaturally fast rate. This is only shown for
 temporary regeneration.
 %%%%
+-Regen status
+
+Your health has stopped regenerating due to the presence of nearby monsters.
+%%%%
 RMsl status
 
 You repel missiles, improving your chance to evade them.
