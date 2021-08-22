@@ -3456,7 +3456,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         // fallthrough
     case ABIL_DIG:
         return you.can_burrow()
-                            && (form_keeps_mutations() || include_unusable);
+               && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
     case ABIL_ROLLING_CHARGE:
@@ -3471,12 +3471,12 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
     case ABIL_TRAN_BAT:
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
-                && !you.vampire_alive
-                && you.form != transformation::bat;
+               && !you.vampire_alive
+               && you.form != transformation::bat;
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
         return you.form == transformation::dragon
-                    && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
+               && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     // mutations
@@ -3484,7 +3484,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_HURL_DAMNATION);
     case ABIL_WORD_OF_CHAOS:
         return you.get_mutation_level(MUT_WORD_OF_CHAOS)
-                && (!silenced(you.pos()) || include_unusable);
+               && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
     // TODO: other god abilities
@@ -3495,16 +3495,16 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     // pseudo-evocations from equipped items
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_THUNDER:
         return player_equip_unrand(UNRAND_RCLOUDS)
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_BERSERK:
         return you.evokable_berserk()
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     default:
         // removed abilities handled here
         return false;
