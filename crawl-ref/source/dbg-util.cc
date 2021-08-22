@@ -121,13 +121,13 @@ void debug_dump_levgen()
 
 void debug_show_builder_logs()
 {
-    if (!you.props.exists("debug_builder_logs"))
+    if (!you.props.exists(DEBUG_BUILDER_LOGS_KEY))
     {
         mprf("This save was not generated on a build that stores logs.");
         return;
     }
     const string cur_level = level_id::current().describe();
-    CrawlHashTable &log_table = you.props["debug_builder_logs"].get_table();
+    CrawlHashTable &log_table = you.props[DEBUG_BUILDER_LOGS_KEY].get_table();
     if (!log_table.exists(cur_level)
         || log_table[cur_level].get_string().size() == 0)
     {

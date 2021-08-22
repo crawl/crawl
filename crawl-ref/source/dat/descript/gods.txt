@@ -111,8 +111,10 @@ Okawaru
 
 Okawaru is a dangerous and powerful god of battle. Followers are expected to
 constantly prove themselves in combat, and may channel Okawaru's might to
-enhance their prowess. Okawaru pays little heed to easy victories, but will
-reward worshippers for heroic feats against mighty foes.
+enhance their prowess. Okawaru demands that followers prove themselves by their
+own strength alone, and so worshippers are forbidden from gaining allies by any
+means. Okawaru pays little heed to easy victories, but will reward worshippers
+for heroic feats against mighty foes.
 %%%%
 Pakellas
 
@@ -167,12 +169,11 @@ absolutely forbidden the use of spell magic.
 %%%%
 Uskayaw
 
-Uskayaw the Reveller is a god of ecstatic dance. On the surface, Uskayaw
-appreciates many forms of worship, but in the dungeon most worshippers stick to
-the dance of combat. Uskayaw appreciates the passion and rhythm of combat,
-rewarding followers for each strike they deliver and for the damage they deal
-their foes. The longer the dance continues, the greater powers Uskayaw offers.
-When the dance ends, Uskayaw quickly loses interest.
+Uskayaw the Reveller is a god of ecstatic dance. In the dungeon, Uskayaw
+appreciates the passion and rhythm of combat, rewarding followers for each
+strike they deliver and for the damage they deal their foes. The longer the
+dance continues, the greater powers Uskayaw offers. When the dance ends,
+Uskayaw quickly loses interest.
 %%%%
 Vehumet
 
@@ -345,7 +346,8 @@ Okawaru powers
 
 Followers of Okawaru will gain the ability to temporarily increase their skills
 in combat, and, much later, to deal much faster blows. Okawaru will eventually
-gift followers with ammunition, weapons and armour.
+gift followers with ammunition, weapons and armour. The most favoured of
+Okawaru may challenge their foes to honourable single combat.
 %%%%
 Pakellas powers
 

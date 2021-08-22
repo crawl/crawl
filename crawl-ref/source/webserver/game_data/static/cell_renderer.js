@@ -705,20 +705,36 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     this.draw_blood_overlay(x, y, cell, bg_idx > dngn.FLOOR_MAX);
 
                 // Draw overlays
+                var ray_tile = 0;
                 if (cell.ov)
                 {
                     $.each(cell.ov, function (i, overlay)
-                           {
-                               if (overlay > dngn.DNGN_MAX)
-                                   return;
-                               else if (overlay &&
-                                   (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
-                                    overlay > dngn.FLOOR_MAX))
-                               {
-                                   renderer.draw_dngn(overlay, x, y);
-                               }
-                           });
+                        {
+                            if (overlay > dngn.DNGN_MAX)
+                                return;
+                            else if (overlay == dngn.RAY
+                                    || overlay == dngn.RAY_MULTI
+                                    || overlay == dngn.RAY_OUT_OF_RANGE)
+                            {
+                                // these need to be drawn last because of the
+                                // way alpha blending happens here, but for
+                                // hard-to-change reasons they are assembled on
+                                // the server side in the wrong order. (In local
+                                // tiles it's ok to blend them in any order.)
+                                // assumption: only one can appear on any tile.
+                                // TODO: a more general fix for this issue?
+                                ray_tile = overlay;
+                            }
+                            else if (overlay &&
+                                (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
+                                 overlay > dngn.FLOOR_MAX))
+                            {
+                                renderer.draw_dngn(overlay, x, y);
+                            }
+                        });
                 }
+                if (ray_tile)
+                    renderer.draw_dngn(ray_tile, x, y);
 
                 if (!bg.UNSEEN)
                 {

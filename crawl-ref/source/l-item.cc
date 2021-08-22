@@ -1588,7 +1588,7 @@ static ItemAccessor item_attrs[] =
     { "branded",           l_item_branded },
     { "god_gift",          l_item_god_gift },
     { "fully_identified",  l_item_fully_identified },
-    { "plus",              l_item_plus },
+    { PLUS_KEY,              l_item_plus },
     { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },

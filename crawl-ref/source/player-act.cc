@@ -377,7 +377,8 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform, bool quiet) const
 {
-    // Only ogres and trolls can wield large rocks (for sandblast).
+    // Some lingering flavor from the days where sandblast ammo was wielded.
+    // harmless.
     if (!can_throw_large_rocks()
         && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
     {

@@ -1095,11 +1095,12 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_TENGU_REAVER,
       {
-        { SPELL_VENOM_BOLT, 13, MON_SPELL_WIZARD },
-        { SPELL_BOLT_OF_FIRE, 13, MON_SPELL_WIZARD },
-        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
-        { SPELL_CORROSIVE_BOLT, 13, MON_SPELL_WIZARD },
-        { SPELL_LIGHTNING_BOLT, 13, MON_SPELL_WIZARD },
+        { SPELL_VENOM_BOLT, 11, MON_SPELL_WIZARD },
+        { SPELL_BOLT_OF_FIRE, 11, MON_SPELL_WIZARD },
+        { SPELL_BOLT_OF_COLD, 11, MON_SPELL_WIZARD },
+        { SPELL_CORROSIVE_BOLT, 11, MON_SPELL_WIZARD },
+        { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
+        { SPELL_BOLT_OF_DRAINING, 11, MON_SPELL_WIZARD },
       }
     },
 
@@ -1248,6 +1249,14 @@ static const mon_spellbook mspell_list[] =
     {  MST_NAMELESS,
       {
        { SPELL_ABJURATION, 60, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_MLIOGLOTL,
+      {
+       { SPELL_MIGHT, 18, MON_SPELL_NATURAL },
+       { SPELL_CAUSE_FEAR, 18, MON_SPELL_MAGICAL },
+       { SPELL_CORRUPT_LOCALE, 36, MON_SPELL_MAGICAL },
       }
     },
 

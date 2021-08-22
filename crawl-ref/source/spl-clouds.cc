@@ -59,7 +59,7 @@ spret conjure_flame(int pow, bool fail)
     }
     else
     {
-        you.props["cflame_dur"] = min(5 + (random2(pow)/2)
+        you.props[CFLAME_DUR_KEY] = min(5 + (random2(pow)/2)
                                                + (random2(pow)/2), 23);
         place_cloud(CLOUD_EMBERS, you.pos(), 1, &you);
         // Create a cloud for the time it takes to cast plus 1 aut, so that no

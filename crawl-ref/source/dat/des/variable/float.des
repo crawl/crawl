@@ -3314,9 +3314,9 @@ ITEM:   book of frost / book of ice / book of winter / book of rime / \
         ozocubu's autobiography / book of the tundra / manual of ice magic / \
         wand of iceblast ident:type / staff of cold ident:type / \
         ring of ice ident:type / phial of floods / ice dragon scales w:5
-KITEM:  2 = frostbite ident:type / \
-            battleaxe ego:freezing randart ident:type / \
-            broad axe ego:freezing randart ident:type
+KITEM:  2 = frostbite ident:all / \
+            battleaxe ego:freezing randart ident:all / \
+            broad axe ego:freezing randart ident:all
 : minmay_elemental_octagon_setup(_G)
 MAP
     xxx@xxx
@@ -7818,7 +7818,6 @@ TAGS:   transparent no_item_gen no_monster_gen no_trap_gen
 DEPTH:  D:10-
 KFEAT:  C = altar_lugonu
 KFEAT:  ' = floor
-KFEAT:  ~ = floor
 MONS:   kobold demonologist
 KMONS:  P = demonic plant
 KMONS:  p = plant

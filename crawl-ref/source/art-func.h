@@ -116,9 +116,9 @@ static bool _evoke_sceptre_of_asmodeus()
 static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
                             bool* unevokable)
 {
-    if (you.get_mutation_level(MUT_NO_LOVE))
+    if (you.allies_forbidden())
     {
-        mpr("You are hated by all, and nothing will answer your call!");
+        mpr("Nothing will answer your call!");
         *unevokable = true;
         return true;
     }
@@ -1452,6 +1452,16 @@ static void _BATTLE_world_reacts(item_def */*item*/)
     }
 }
 
+static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                  actor* /*defender*/, bool /*mondied*/, int /*dam*/)
+{
+    if (attacker)
+    {
+        aim_battlesphere(attacker, SPELL_MAGIC_DART);
+        trigger_battlesphere(attacker);
+    }
+}
+
 ////////////////////////////////////////////////////
 
 static void _EMBRACE_unequip(item_def *item, bool *show_msgs)
@@ -1609,4 +1619,21 @@ static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
+}
+
+////////////////////////////////////////////////////
+
+static void _RCLOUDS_world_reacts(item_def */*item*/)
+{
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
+    {
+        monster* m = monster_at(*ri);
+        if (m && !m->wont_attack() && mons_is_threatening(*m)
+            && !cell_is_solid(*ri) && !cloud_at(*ri)
+            && one_chance_in(7))
+        {
+            mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());
+            place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
+        }
+    }
 }

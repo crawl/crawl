@@ -1199,12 +1199,12 @@ static void _grab_followers()
     }
     else if (dowan && !duvessa)
     {
-        if (!dowan->props.exists("can_climb"))
+        if (!dowan->props.exists(CAN_CLIMB_KEY))
             dowan->flags &= ~MF_TAKING_STAIRS;
     }
     else if (!dowan && duvessa)
     {
-        if (!duvessa->props.exists("can_climb"))
+        if (!duvessa->props.exists(CAN_CLIMB_KEY))
             duvessa->flags &= ~MF_TAKING_STAIRS;
     }
 
@@ -2031,18 +2031,18 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
             // ensure these props can't be saved, otherwise the save is likely
             // to become unloadable
-            if (you.props.exists("force_map")
-                || you.props.exists("force_minivault"))
+            if (you.props.exists(FORCE_MAP_KEY)
+                || you.props.exists(FORCE_MINIVAULT_KEY))
             {
                 // TODO: is there a good way of doing this without the crash?
                 mprf(MSGCH_ERROR, "&P with '%s' failed; clearing force props and trying with random generation next.",
-                    you.props.exists("force_map")
-                    ? you.props["force_map"].get_string().c_str()
-                    : you.props["force_minivault"].get_string().c_str());
+                    you.props.exists(FORCE_MAP_KEY)
+                    ? you.props[FORCE_MAP_KEY].get_string().c_str()
+                    : you.props[FORCE_MINIVAULT_KEY].get_string().c_str());
                 // without a flush this mprf doesn't get saved
                 flush_prev_message();
-                you.props.erase("force_minivault");
-                you.props.erase("force_map");
+                you.props.erase(FORCE_MINIVAULT_KEY);
+                you.props.erase(FORCE_MAP_KEY);
             }
 
             if (crawl_state.need_save)

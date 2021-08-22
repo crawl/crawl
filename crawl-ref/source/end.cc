@@ -17,6 +17,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "ghost.h"
 #include "hints.h"
@@ -415,6 +416,18 @@ NORETURN void end_game(scorefile_entry &se)
                 && death_type != KILLED_BY_LAVA)
             {
                 mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+            }
+            // Doesn't depend on Okawaru worship - you can still lose the duel
+            // after abandoning.
+            if (actor* killer = se.killer())
+            {
+                if (killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
+                {
+                    const string msg = " crowns "
+                        + killer->name(DESC_THE, true)
+                        + " victorious!";
+                    simple_god_message(msg.c_str(), GOD_OKAWARU);
+                }
             }
             break;
         }

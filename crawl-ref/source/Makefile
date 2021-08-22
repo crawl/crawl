@@ -154,7 +154,7 @@ CFWARN_L += -Wextra \
 	    -Wno-type-limits \
 	    -Wno-uninitialized \
 
-DEFINES := -DTOURNEY='"0.27"' $(EXTERNAL_DEFINES)
+DEFINES := $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
 LDFLAGS :=
@@ -1203,6 +1203,20 @@ EXTRA_OBJECTS += version.o
 ifdef CONTRIBS
 INCLUDES_L += -isystem contrib/install/$(ARCH)/include
 LIBS += -Lcontrib/install/$(ARCH)/lib
+endif
+
+ifdef APPLE_PLATFORM
+# workaround: mac clang hardcodes (as far as I can tell) `-I /usr/local/include`
+# into the include path. Homebrew also installs into this directory. So a user
+# that has homebrew installed will get includes from there rather than contribs,
+# leading to build failures. This workaround relies on that if both -I and
+# -isystem are defined for the same path, then the -I version is ignored, which
+# effectively demotes this include path below the contrib -isystem paths.
+# TODO: it's not clear to me that using -isystem for contribs is at all the
+# right thing to do, since they are libraries we control, aren't actually
+# system libraries, and always take lower precedence than any -I that might be
+# caused by environment variables.
+INCLUDES_L += -isystem /usr/local/include
 endif
 
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)

@@ -12,6 +12,9 @@ struct bolt;
 struct dice_def;
 class dist;
 
+const int DEFAULT_SHATTER_DICE = 3;
+#define COUPLING_TIME_KEY "maxwells_charge_time"
+
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_smitey_damnation(int pow, bolt &beam);
@@ -29,9 +32,11 @@ bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret cast_freeze(int pow, monster* mons, bool fail);
 dice_def freeze_damage(int pow);
-spret cast_airstrike(int pow, const dist &beam, bool fail);
+spret cast_airstrike(int pow, coord_def target, bool fail);
+int airstrike_space_around(coord_def target, bool count_invis);
 spret cast_shatter(int pow, bool fail);
 dice_def shatter_damage(int pow, monster *mons = nullptr);
+int terrain_shatter_chance(coord_def where, const actor &agent);
 spret cast_irradiate(int powc, actor* who, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
 bool ignite_poison_affects(const actor* act);
@@ -100,7 +105,7 @@ spret cast_searing_ray(int pow, bolt &beam, bool fail);
 void handle_searing_ray();
 void end_searing_ray();
 
-vector<monster *> find_maxwells_possibles(int radius);
+vector<monster *> find_maxwells_possibles();
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
 void handle_maxwells_coupling();
 void end_maxwells_coupling(bool quiet = false);

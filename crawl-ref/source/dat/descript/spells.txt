@@ -373,6 +373,12 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
+Corrupt Locale spell
+
+Unleashes Abyssal energies in the immediate vicinity. This changes the
+appearance of the affected area and temporarily summons creatures from the
+Abyss. This cannot be used in the Abyss itself.
+%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their
@@ -381,8 +387,9 @@ undead will decompose if affected.
 %%%%
 Creeping Frost spell
 
-Calls forth freezing cold from the walls. Any enemies of the caster standing
-next to those walls will be frozen and will find their movements slowed.
+Calls forth freezing cold from the walls and other similarly solid terrain. Any
+enemies of the caster standing next to that terrain will be frozen and will find
+their movements slowed.
 %%%%
 Crystal Bolt spell
 
@@ -931,9 +938,9 @@ Causes confusion in all who gaze upon the caster.
 %%%%
 Maxwell's Capacitive Coupling spell
 
-Gradually builds up electric charge in the caster. When a critical threshold is
-reached the charge couples with the nearest foe, vaporising them instantly.
-The resulting charge is so intense it bypasses even electrical immunity.
+Gradually builds up electric charge in the caster, so long as they maintain
+focus (by waiting in place and not taking any other actions). When a threshold
+is reached, the charge couples with the nearest foe, vaporising them instantly.
 Higher spell power will allow the caster to accumulate charge more rapidly.
 %%%%
 Mephitic Cloud spell
@@ -1169,9 +1176,8 @@ damage is strongly reduced by armour.
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
-afflicted with this condition may cause the target to lose control over their
-magic, progressively hindering their chances of success as more spells are
-cast.
+afflicted with this condition causes the target to lose access to their magic,
+briefly preventing them from casting any further spells.
 %%%%
 Scattershot spell
 

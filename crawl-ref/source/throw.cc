@@ -187,7 +187,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
     item_def* item = active_item();
-    if (!item)
+    if (!item || !targeted() || item->base_type != OBJ_MISSILES)
         return descs;
 
     ranged_attack attk(&you, nullptr, item, is_pproj_active());

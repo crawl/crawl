@@ -151,6 +151,7 @@ namespace msg
 }
 
 void webtiles_send_messages(); // does nothing unless USE_TILE_WEB is defined
+void webtiles_send_more_text(string);
 
 void save_messages(writer& outf);
 void load_messages(reader& inf);

@@ -90,11 +90,6 @@ enum dungeon_feature_type
     DNGN_PASSAGE_OF_GOLUBRIA,
 #endif
 #if TAG_MAJOR_VERSION > 34
-    DNGN_TRAP_ARROW,
-    DNGN_TRAP_SPEAR,
-    DNGN_TRAP_BLADE,
-    DNGN_TRAP_DART,
-    DNGN_TRAP_BOLT,
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
 #endif
@@ -270,6 +265,9 @@ enum dungeon_feature_type
     DNGN_ENTER_VOLCANO,
     DNGN_ENTER_WIZLAB,
     DNGN_ENTER_DESOLATION,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENTER_ARENA,
+#endif
 
     DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
@@ -287,6 +285,9 @@ enum dungeon_feature_type
     DNGN_EXIT_LABYRINTH,
 #endif
     DNGN_EXIT_DESOLATION,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_EXIT_ARENA,
+#endif
 #if TAG_MAJOR_VERSION == 34
 
     DNGN_ALTAR_GOZAG,
@@ -327,6 +328,8 @@ enum dungeon_feature_type
     DNGN_PETRIFIED_TREE,
     DNGN_MANGROVE,
     DNGN_DEMONIC_TREE,
+    DNGN_ENTER_ARENA,
+    DNGN_EXIT_ARENA,
 #endif
 
     NUM_FEATURES

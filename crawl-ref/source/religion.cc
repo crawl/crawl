@@ -160,7 +160,8 @@ const vector<god_power> god_powers[NUM_GODS] =
         { 3, "Okawaru will now gift you ammunition as you gain piety.",
              "Okawaru will no longer gift you ammunition.",
              "Okawaru will gift you ammunition as you gain piety." },
-        { 5, ABIL_OKAWARU_FINESSE, "speed up your combat" },
+        { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
+        { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
         { 5, "Okawaru will now gift you equipment as you gain piety.",
              "Okawaru will no longer gift you equipment.",
              "Okawaru will gift you equipment as you gain piety." },
@@ -1253,7 +1254,7 @@ static int _pakellas_high_wand()
         WAND_ICEBLAST,
         WAND_ACID,
     };
-    if (!you.get_mutation_level(MUT_NO_LOVE))
+    if (!you.allies_forbidden())
         high_wands.emplace_back(WAND_CHARMING);
 
     return _preferably_unseen_item(high_wands, _seen_wand);
@@ -1299,7 +1300,7 @@ static bool _give_pakellas_gift()
     {
         // All the evoker options here are summon-based, so give another
         // low-level wand instead under Sacrifice Love.
-        if (you.get_mutation_level(MUT_NO_LOVE))
+        if (you.allies_forbidden())
         {
             basetype = OBJ_WANDS;
             subtype = _pakellas_low_wand();
@@ -1398,33 +1399,49 @@ static bool _give_trog_oka_gift(bool forced)
     else
         return false;
 
+    switch (gift_type)
+    {
+    case OBJ_MISSILES:
+        simple_god_message(" grants you ammunition!");
+        break;
+    case OBJ_WEAPONS:
+        simple_god_message(" grants you a weapon!");
+        break;
+    case OBJ_ARMOUR:
+        simple_god_message(" grants you armour!");
+        break;
+    default:
+        simple_god_message(" grants you bugs!");
+        break;
+    }
+
     const bool success =
         acquirement_create_item(gift_type, you.religion,
                 false, you.pos()) != NON_ITEM;
-    if (success)
+    if (!success)
     {
-        if (gift_type == OBJ_MISSILES)
-        {
-            simple_god_message(" grants you ammunition!");
-            _inc_gift_timeout(4 + roll_dice(2, 4));
-        }
-        else
-        {
-            if (gift_type == OBJ_WEAPONS)
-                simple_god_message(" grants you a weapon!");
-            else
-                simple_god_message(" grants you armour!");
-            // Okawaru charges extra for armour acquirements.
-            if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
-                _inc_gift_timeout(30 + random2avg(15, 2));
-
-            _inc_gift_timeout(30 + random2avg(19, 2));
-        }
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        mpr("...but nothing appears.");
+        return false;
     }
-    return success;
+    switch (gift_type)
+    {
+    case OBJ_MISSILES:
+        _inc_gift_timeout(4 + roll_dice(2, 4));
+        break;
+    case OBJ_ARMOUR:
+        if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
+            _inc_gift_timeout(30 + random2avg(15, 2));
+        // intentionally fallthrough to OBJ_WEAPONS
+    case OBJ_WEAPONS:
+        _inc_gift_timeout(30 + random2avg(19, 2));
+        break;
+    default:
+        break;
+    }
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    return true;
 }
 
 static bool _give_yred_gift(bool forced)
@@ -2890,7 +2907,9 @@ int initial_wrath_penance_for(god_type god)
 static void _ash_uncurse()
 {
     bool uncursed = false;
-    for (int eq_typ = EQ_FIRST_EQUIP; eq_typ < NUM_EQUIP; eq_typ++)
+    // iterate backwards so we shatter a ring on the macabre finger
+    // necklace before the amulet
+    for (int eq_typ = NUM_EQUIP - 1; eq_typ >= EQ_FIRST_EQUIP; eq_typ--)
     {
         const int slot = you.equip[eq_typ];
         if (slot == -1)
@@ -3190,6 +3209,8 @@ void excommunication(bool voluntary, god_type new_god)
             okawaru_remove_heroism();
         if (you.duration[DUR_FINESSE])
             okawaru_remove_finesse();
+        if (player_in_branch(BRANCH_ARENA))
+            okawaru_end_duel();
         break;
 
     default:
@@ -3696,6 +3717,25 @@ static void _join_jiyva()
     simple_god_message(" grants you a jelly!");
 }
 
+static void _join_okawaru()
+{
+    bool needs_message = false;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_summoned()
+            && mi->summoner == MID_PLAYER
+            && mi->friendly())
+        {
+            mon_enchant abj = mi->get_ench(ENCH_ABJ);
+            abj.duration = 0;
+            mi->update_ench(abj);
+            needs_message = true;
+        }
+    }
+    if (needs_message)
+        mpr("Your summoned allies are dismissed!");
+}
+
 /// Setup when joining the sacred cult of Ru.
 static void _join_ru()
 {
@@ -3767,6 +3807,7 @@ static const map<god_type, function<void ()>> on_join = {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
+    { GOD_OKAWARU, _join_okawaru },
 #if TAG_MAJOR_VERSION == 34
     { GOD_PAKELLAS, _join_pakellas },
 #endif

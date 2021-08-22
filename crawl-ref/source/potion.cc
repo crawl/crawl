@@ -540,7 +540,10 @@ public:
     bool effect(bool=true, int = 40, bool=true) const override
     {
         inc_mp(POT_MAGIC_MP);
-        mpr("Magic courses through your body.");
+        if (you.has_mutation(MUT_HP_CASTING))
+            mpr("Magic washes over you without effect.");
+        else
+            mpr("Magic courses through your body.");
         return true;
     }
 };

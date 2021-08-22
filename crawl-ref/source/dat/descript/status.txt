@@ -43,6 +43,10 @@ Regen status
 You regenerate health at an unnaturally fast rate. This is only shown for
 temporary regeneration.
 %%%%
+-Regen status
+
+Your health has stopped regenerating due to the presence of nearby monsters.
+%%%%
 RMsl status
 
 You repel missiles, improving your chance to evade them.
@@ -200,15 +204,18 @@ You are covered in ice, and your movement speed is reduced.
 %%%%
 Sap status
 
-Your magic is sapped. Each time you cast a spell, there is a chance of the
-severity of the effect increasing, which causes your spellcasting success rate
-to fall.
+Your magic is sapped. Casting a spell will cause you to lose access to your
+magic, briefly preventing you from casting any further spells.
+%%%%
+-Cast status
+
+You are unable to cast spells.
 %%%%
 Brainless status
 
 Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and will usually fail when attempting to read scrolls. The status will
-persist for a short while even after recovering your intelligence.
+spells, and cannot read scrolls. The status will persist for a short while even
+after recovering your intelligence.
 %%%%
 Clumsy status
 
@@ -218,8 +225,8 @@ while even after recovering your dexterity.
 %%%%
 Collapse status
 
-Your strength has fallen to 0. You are slowed, and your health regeneration is
-greatly reduced. The status will persist for a short while even after
+Your strength has fallen to 0. You are slowed, and you do not regenerate health
+while monsters are visible. The status will persist for a short while even after
 recovering your strength.
 %%%%
 DChan status
@@ -335,6 +342,11 @@ Your combat skills are temporarily increased.
 Finesse status
 
 Your combat speed is greatly increased.
+%%%%
+Duel status
+
+You are dueling a foe in Okawaru's Arena, and will be returned whence you came
+if you are victorious.
 %%%%
 Prot status
 
@@ -711,13 +723,9 @@ Water status
     return "You are currently " .. verb .. " " .. feat .. "."
 }}
 %%%%
--Wiz status
-
-Your control over your magic has been sapped.
-%%%%
 Attr status
 
-Enemies are magically pulled toward you.
+Enemies are magically translocated toward you. (This won't wake them up.)
 %%%%
 Zot status
 

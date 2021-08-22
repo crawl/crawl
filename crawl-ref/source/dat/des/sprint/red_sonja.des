@@ -24,8 +24,8 @@ MARKER: H = lua:fog_machine { \
              size = 10, walk_dist = 6, spread_rate= 4, \
              cloud_type= "foul pestilence" }
 MONS:   Ijyb, ogre, Sigmund, centaur warrior, Sonja, deep troll, hornet
-SUBST:  r = r.
-SUBST:  r = ~.
+SUBST:  r = ~.....
+KFEAT:  ~ = net trap
 KITEM:  I = potion of curing
 KITEM:  $ = gold q:27
 KMONS:  D = kobold demonologist
@@ -66,20 +66,20 @@ SUBVAULT: C : red_sonja_temple_small
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
-xxxc{.x.1+..x.3+$$xCCx$$+..Dx**xL$$f+gggggg+i$c~~+$$$$c|||$$$$$$cxxx
-xxxc..+..x.2+..x$$+CC+$$x.E.xx+x$xxxxggLggcc$E+~~x$$$$cc||$$$$$$cxxx
+xxxc{.x.1+..x.3+$$xCCx$$+..Dx**xL$$f+gggggg+i$c..+$$$$c|||$$$$$$cxxx
+xxxc..+..x.2+..x$$+CC+$$x.E.xx+x$xxxxggLggcc$E+..x$$$$cc||$$$$$$cxxx
 xxxc..BBBBBBBBBBBBBCCccccD..+RRx$x*xxxgggccccccc+x$$j$$ccccc$$$$cxxx
 xxxc..BBBBBBBBBBBBBccc**ccccxRR+$x+x$xxx+c|**cc..x$$$$$c$$$c$$$$cxxx
-xxxc..BBBBBBBBBBBBBWWW.4c$$cc+cccc~.$mbc.cc$$$c..xx$$$$c*Y*c$$$$cxxx
-xxxc..BBBBBBBBBBBBBWWWL.+.7c.rrrrc..$mmc..mmm$c..wxxx+xc$$$c$$$$cxxx
-xxxcTTBBBBBBBBBBBBBWWW.4c$$crrrrr+..$$$cc.mhm$c..wn|x*xxxx+c$$$$cxxx
-xxxcxxBBBBBBBBBBBBBx+xxxcc+cccrSrc~...dc..mmm$c.pwoxx+xLr..cc$$$cxxx
-xxxc$$BBBBBBBBBBBBB****xxxF+$crrrccc++cc.cc..$c..wxxrrrrr...cc$$cxxx
-xxxcccBBBBBBBBBBBBBx+xxx*xxx$crrccc..ccc..c+ccc..wxrrrrrrr...c$$cxxx
-xxxcYr.......+$.$+$$6$$+*Axx.crrcccc$$ccc.JJcFw..xxrrrrrr....cc$cxxx
+xxxc..BBBBBBBBBBBBBWWW.4c$$cc+cccc..$mbc.cc$$$c..xx$$$$c*Y*c$$$$cxxx
+xxxc..BBBBBBBBBBBBBWWWL.+.7c.....c..$mmc..mmm$c..wxxx+xc$$$c$$$$cxxx
+xxxcTTBBBBBBBBBBBBBWWW.4c$$c.....+..$$$cc.mhm$c..wn|x*xxxx+c$$$$cxxx
+xxxcxxBBBBBBBBBBBBBx+xxxcc+ccc.S.c....dc..mmm$c.pwoxx+xL...cc$$$cxxx
+xxxc$$BBBBBBBBBBBBB****xxxF+$c...ccc++cc.cc..$c..wxx........cc$$cxxx
+xxxcccBBBBBBBBBBBBBx+xxx*xxx$c..ccc..ccc..c+ccc..wx..........c$$cxxx
+xxxcY........+$.$+$$6$$+*Axx.c..cccc$$ccc.JJcFw..xx..........cc$cxxx
 xxxccc++++cccx$5$xxxxxxxxxxx$cc+c$$ce$c$cccJcqwp.c.....l|.....cecxxx
 xxxc..E....cccc.ccc.......xxucc*c$$$$$$$$$cJccc77c.....|k.....c$cxxx
-xxxcv......vc$c+c$cJJ......+$cccc$$$$$$$$$cJc.+77ccrrrrrrrrrrcc$cxxx
+xxxcv......vc$c+c$cJJ......+$cccc$$$$$$$$$cJc.+77cc..........cc$cxxx
 xxxc..c..E..c$I$I$c+++xxxxxxuc**+$$$$$$cccc+crxx+cc$$$$$$$$$$c$$cxxx
 xxxcv......vc$***$cPPPP...ExLccccc$$$ccc....crxWWWcc$$$$$$$$cc$$cxxx
 xxxc..E..c..cccccccPPP....x+.c***ccccc...ccccrxWWWWcc******cc$$$cxxx
@@ -136,14 +136,12 @@ ENDMAP
 NAME: red_sonja_temple_small_1
 TAGS: red_sonja_temple_small no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MONS: slime creature
-SUBST: r = r.
-SUBST: r = ~.
 KFEAT: J = altar_jiyva
 KFEAT: L = altar_lugonu
 KFEAT: M = altar_makhleb
 KFEAT: X = altar_xom
 MAP
 JL
-r1
+.1
 MX
 ENDMAP

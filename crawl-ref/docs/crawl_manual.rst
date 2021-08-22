@@ -196,7 +196,7 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
   Abbreviated to "Str". Increases your damage with melee and ranged weapons.
-  Affects your ability to use heavy armours and shields effectively.
+  Affects your ability to use heavy armours effectively.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -2075,7 +2075,7 @@ Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly
   damaging foes, hexes disable and debilitate them, allowing the Enchanter to
   finish the helpless creatures in combat. The Enchanter begins with a lightly
-  enchanted dagger, a robe, and a selection of hexes.
+  enchanted dagger, a robe, a potion of invisibility, and a selection of hexes.
 
 Mage backgrounds
 ================

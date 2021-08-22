@@ -1108,12 +1108,12 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
             mon->moveto(dst);
             if (mon->type == MONS_ELDRITCH_TENTACLE)
             {
-                if (mon->props.exists("base_position"))
+                if (mon->props.exists(BASE_POSITION_KEY))
                 {
                     coord_def delta = dst - src;
-                    coord_def base_pos = mon->props["base_position"].get_coord();
+                    coord_def base_pos = mon->props[BASE_POSITION_KEY].get_coord();
                     base_pos += delta;
-                    mon->props["base_position"].get_coord() = base_pos;
+                    mon->props[BASE_POSITION_KEY].get_coord() = base_pos;
                 }
 
             }

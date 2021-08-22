@@ -82,6 +82,7 @@
 #include "uncancel.h"
 #include "unicode.h"
 #include "view.h"
+#include "wiz-dgn.h"
 
 enum class abflag
 {
@@ -322,10 +323,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {}, abflag::delay},
         { ABIL_REVIVIFY, "Revivify",
             0, 0, 0, {}, abflag::delay},
-    #if TAG_MAJOR_VERSION == 34
-        { ABIL_FLY, "Fly", 3, 0, 0, {fail_basis::xl, 42, 3}, abflag::none },
-        { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, {}, abflag::none },
-    #endif
         { ABIL_DAMNATION, "Hurl Damnation",
             0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
         { ABIL_WORD_OF_CHAOS, "Word of Chaos",
@@ -339,30 +336,16 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, {}, abflag::none },
         { ABIL_BLINKBOLT, "Blinkbolt", 0, 0, 0, {}, abflag::none },
 
-        // EVOKE abilities use Evocations and come from items.
-        // Teleportation and Blink can also come from mutations
-        // so we have to distinguish them (see above). The off items
-        // below are labeled EVOKE because they only work now if the
-        // player has an item with the evocable power (not just because
-        // you used a wand, potion, or miscast effect). I didn't see
-        // any reason to label them as "Evoke" in the text, they don't
-        // use or train Evocations (the others do).  -- bwr
-        { ABIL_EVOKE_BLINK, "Evoke Blink",
-            1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
+
+        // EVOKE abilities use Evocations and come from items.
+        { ABIL_EVOKE_BLINK, "Evoke Blink",
+            1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
             0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
-
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
             2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
-    #if TAG_MAJOR_VERSION == 34
-        { ABIL_EVOKE_FLIGHT, "Evoke Flight",
-            1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-    #endif
-        { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
-            5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
-
 
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, {}, abflag::none },
@@ -419,6 +402,8 @@ static vector<ability_def> &_get_ability_list()
             2, 0, 1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_OKAWARU_FINESSE, "Finesse",
             5, 0, 3, {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_OKAWARU_DUEL, "Duel",
+            7, 0, 8, {fail_basis::invo, 80, 4, 20}, abflag::none },
 
         // Makhleb
         { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
@@ -650,6 +635,15 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
             0, 0, 0, {fail_basis::invo}, abflag::none },
+#ifdef WIZARD
+        { ABIL_WIZ_BUILD_TERRAIN, "Build terrain",
+            0, 0, 0, {}, abflag::instant },
+        { ABIL_WIZ_SET_TERRAIN, "Set terrain to build",
+            0, 0, 0, {}, abflag::instant },
+        { ABIL_WIZ_CLEAR_TERRAIN, "Clear terrain to floor",
+            0, 0, 0, {}, abflag::instant },
+#endif
+
     };
     return Ability_List;
 }
@@ -1017,7 +1011,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
-        if (you.get_mutation_level(MUT_NO_LOVE))
+        if (you.allies_forbidden())
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -1383,6 +1377,10 @@ static bool _can_blinkbolt(bool quiet)
 // TODO: Many more cases need to be added!
 static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 {
+#ifdef WIZARD
+    if (abil.ability >= ABIL_FIRST_WIZ)
+        return you.wizard;
+#endif
     if (you.berserk() && !testbits(abil.flags, abflag::berserk_ok))
     {
         if (!quiet)
@@ -2203,9 +2201,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
-        fail_check();
         return cast_blink(fail);
-        break;
 
     case ABIL_EVOKE_BERSERK:    // randarts
         fail_check();
@@ -2236,16 +2232,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
                           player_adjust_evoc_power(
                               you.skill(SK_EVOCATIONS, 2) + 5));
         contaminate_player(1000 + random2(2000), true);
-        break;
-
-    case ABIL_EVOKE_THUNDER: // robe of Clouds
-        fail_check();
-        mpr("The folds of your robe billow into a mighty storm.");
-
-        for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
-            if (!cell_is_solid(*ri))
-                place_cloud(CLOUD_STORM, *ri, 8 + random2avg(8,2), &you);
-
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -2533,6 +2519,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
         break;
+
+    case ABIL_OKAWARU_DUEL:
+        return okawaru_duel(fail);
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {
@@ -3169,6 +3158,31 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         }
         return spret::abort;
 
+#ifdef WIZARD
+    case ABIL_WIZ_BUILD_TERRAIN:
+    {
+        int &last_feat = you.props[WIZ_LAST_FEATURE_TYPE_PROP].get_int();
+        if (!wizard_create_feature(*target,
+                        static_cast<dungeon_feature_type>(last_feat), false))
+        {
+            return spret::abort;
+        }
+        break;
+    }
+    case ABIL_WIZ_CLEAR_TERRAIN:
+        if (!wizard_create_feature(*target, DNGN_FLOOR, false))
+            return spret::abort;
+        break;
+    case ABIL_WIZ_SET_TERRAIN:
+    {
+        auto feat = wizard_select_feature(false);
+        if (feat == DNGN_UNSEEN)
+            return spret::abort;
+        you.props[WIZ_LAST_FEATURE_TYPE_PROP] = static_cast<int>(feat);
+        mprf("Now building '%s'", dungeon_feature_name(feat));
+        break;
+    }
+#endif
     case ABIL_NON_ABILITY:
         fail_check();
         mpr("Sorry, you can't do that.");
@@ -3396,6 +3410,11 @@ bool is_card_ability(ability_type abil)
 
 bool player_has_ability(ability_type abil, bool include_unusable)
 {
+#ifdef WIZARD
+    if (abil >= ABIL_FIRST_WIZ)
+        return you.wizard;
+#endif
+
     // TODO: consolidate fixup checks into here?
     abil = fixup_ability(abil);
     if (abil == ABIL_NON_ABILITY || abil == NUM_ABILITIES)
@@ -3425,7 +3444,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         // fallthrough
     case ABIL_DIG:
         return you.can_burrow()
-                            && (form_keeps_mutations() || include_unusable);
+               && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
     case ABIL_ROLLING_CHARGE:
@@ -3440,12 +3459,12 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
     case ABIL_TRAN_BAT:
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
-                && !you.vampire_alive
-                && you.form != transformation::bat;
+               && !you.vampire_alive
+               && you.form != transformation::bat;
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
         return you.form == transformation::dragon
-                    && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
+               && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     // mutations
@@ -3453,7 +3472,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_HURL_DAMNATION);
     case ABIL_WORD_OF_CHAOS:
         return you.get_mutation_level(MUT_WORD_OF_CHAOS)
-                && (!silenced(you.pos()) || include_unusable);
+               && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
     // TODO: other god abilities
@@ -3464,16 +3483,13 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     // pseudo-evocations from equipped items
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_THUNDER:
-        return player_equip_unrand(UNRAND_RCLOUDS)
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_BERSERK:
         return you.evokable_berserk()
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     default:
         // removed abilities handled here
         return false;
@@ -3521,9 +3537,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
-            ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
-            ABIL_EVOKE_TURN_INVISIBLE
+            ABIL_EVOKE_TURN_INVISIBLE,
+#ifdef WIZARD
+            ABIL_WIZ_BUILD_TERRAIN,
+            ABIL_WIZ_SET_TERRAIN,
+            ABIL_WIZ_CLEAR_TERRAIN,
+#endif
         };
 
     for (auto a : check_order)
@@ -3707,6 +3727,10 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
+    case ABIL_WIZ_BUILD_TERRAIN:
+    case ABIL_WIZ_SET_TERRAIN:
+    case ABIL_WIZ_CLEAR_TERRAIN:
+        first_slot = letter_to_index('O'); // somewhat arbitrary, late in the alphabet
     default:
         break;
     }

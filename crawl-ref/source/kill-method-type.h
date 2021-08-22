@@ -55,5 +55,6 @@ enum kill_method_type
     KILLED_BY_BEING_THROWN,
     KILLED_BY_COLLISION,
     KILLED_BY_ZOT,
+    KILLED_BY_CONSTRICTION,
     NUM_KILLBY
 };

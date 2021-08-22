@@ -988,6 +988,13 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("You are protected from the effects of unwielding distortion weapons.\n");
         break;
 
+    case GOD_OKAWARU:
+        have_any = true;
+        desc.cprintf("%s requires that you fight alone, and prevents you from "
+                     "gaining allies.\n",
+                uppercase_first(god_name(which_god)).c_str());
+        break;
+
     default:
         break;
     }

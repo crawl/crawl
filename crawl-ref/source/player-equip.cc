@@ -533,8 +533,13 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_ANTIMAGIC:
-                    // Even if your maxmp is 0.
-                    mpr("You feel magic leave you.");
+                    if (you.has_mutation(MUT_HP_CASTING))
+                        mpr("You feel a force failing to suppress your magic.");
+                    else
+                    {
+                        // Even if your maxmp is 0.
+                        mpr("You feel magic leave you.");
+                    }
                     break;
 
                 case SPWPN_DISTORTION:
@@ -641,7 +646,8 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
             case SPWPN_ANTIMAGIC:
                 calc_mp();
-                mpr("You feel magic returning to you.");
+                if (!you.has_mutation(MUT_HP_CASTING))
+                    mpr("You feel magic returning to you.");
                 break;
 
             case SPWPN_SPECTRAL:

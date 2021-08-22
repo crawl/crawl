@@ -990,11 +990,11 @@ static bool _id_floor_item(item_def &item)
 
         // autopickup hack for previously-unknown items
         if (item_needs_autopickup(item))
-            item.props["needs_autopickup"] = true;
+            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         identify_item(item);
         // but skip ones that we discover to be useless
-        if (item.props.exists("needs_autopickup") && is_useless_item(item))
-            item.props.erase("needs_autopickup");
+        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+            item.props.erase(NEEDS_AUTOPICKUP_KEY);
         return true;
     }
 
@@ -1706,8 +1706,8 @@ static void _got_item(item_def& item)
     shopping_list.cull_identical_items(item);
     item.flags |= ISFLAG_HANDLED;
 
-    if (item.props.exists("needs_autopickup"))
-        item.props.erase("needs_autopickup");
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
+        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 }
 
 void get_gold(const item_def& item, int quant, bool quiet)
@@ -2990,7 +2990,7 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
     if (item.flags & ISFLAG_DROPPED)
         return false;
 
-    if (item.props.exists("needs_autopickup"))
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
         return true;
 
     return _is_option_autopickup(item, ignore_force);
@@ -4609,8 +4609,8 @@ item_def get_item_known_info(const item_def& item)
     static const char* copy_props[] =
     {
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
-        CORPSE_NAME_TYPE_KEY, "item_tile", "item_tile_name",
-        "worn_tile", "worn_tile_name", "needs_autopickup",
+        CORPSE_NAME_TYPE_KEY, ITEM_TILE_KEY, ITEM_TILE_NAME_KEY,
+        WORN_TILE_KEY, WORN_TILE_NAME_KEY, NEEDS_AUTOPICKUP_KEY,
         FORCED_ITEM_COLOUR_KEY, SPELL_LIST_KEY,
     };
     for (const char *prop : copy_props)
@@ -4713,13 +4713,13 @@ static void _identify_last_item(item_def &item)
         && (item.base_type == OBJ_STAVES
             || item.base_type == OBJ_JEWELLERY))
     {
-        item.props["needs_autopickup"] = true;
+        item.props[NEEDS_AUTOPICKUP_KEY] = true;
     }
 
     set_ident_type(item, true);
 
-    if (item.props.exists("needs_autopickup") && is_useless_item(item))
-        item.props.erase("needs_autopickup");
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
     const string class_name = item.base_type == OBJ_JEWELLERY ?
                                     item_base_name(item) :

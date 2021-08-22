@@ -214,8 +214,8 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Remove replacement tile, since it probably doesn't work for the
     // new monster.
-    mons->props.erase("monster_tile_name");
-    mons->props.erase("monster_tile");
+    mons->props.erase(MONSTER_TILE_NAME_KEY);
+    mons->props.erase(MONSTER_TILE_KEY);
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
@@ -304,7 +304,7 @@ void change_monster_type(monster* mons, monster_type targetc)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
-            mons->props["old_heads"].get_int() = mons->num_heads;
+            mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
     }
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
@@ -333,8 +333,8 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
 
     mons->mname = name;
-    mons->props["no_annotate"] = slimified && old_mon_unique;
-    mons->props.erase("dbname");
+    mons->props[NO_ANNOTATE_KEY] = slimified && old_mon_unique;
+    mons->props.erase(DBNAME_KEY);
 
     // Forget seen spells, since they are likely to have changed.
     mons->props.erase(SEEN_SPELLS_KEY);
@@ -345,7 +345,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->bind_spell_flags();
 
     // Forget various speech/shout Lua functions.
-    mons->props.erase("speech_prefix");
+    mons->props.erase(SPEECH_PREFIX_KEY);
 
     // Make sure we have a god if we've been polymorphed into a priest.
     mons->god = (mons->is_priest() && old_god == GOD_NO_GOD) ? GOD_NAMELESS

@@ -75,8 +75,8 @@ static const vector<pop_entry> population[] =
   {  1,  4, 1000, FLAT, MONS_ENDOPLASM },
   {  1,  3,  350, FLAT, MONS_DART_SLUG },
   {  1,  3,  500, FLAT, MONS_QUOKKA },
-  {  1,  3,  350, FLAT, MONS_JACKAL },
-  {  4,  5,  350, FALL, MONS_JACKAL },
+  {  1,  3,  200, FLAT, MONS_JACKAL },
+  {  4,  5,  200, FALL, MONS_JACKAL },
   {  4,  5,  500, FALL, MONS_QUOKKA },
   {  4,  5,  350, FALL, MONS_DART_SLUG },
   {  1,  8,  200, PEAK, MONS_GNOLL },
@@ -1068,6 +1068,8 @@ POP_DEPTHS,
 },
 #endif
 
+{ // Arena
+},
 
 };
 
@@ -1221,6 +1223,7 @@ static const vector<pop_entry> population_water[] =
 #if TAG_MAJOR_VERSION == 34
     GENERIC_WATER_POP, // Gauntlet
 #endif
+    GENERIC_WATER_POP, // Arena
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1323,6 +1326,7 @@ static const vector<pop_entry> population_lava[] =
 #if TAG_MAJOR_VERSION == 34
     GENERIC_LAVA_POP, // Gauntlet
 #endif
+    GENERIC_LAVA_POP, // Arena
 };
 
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

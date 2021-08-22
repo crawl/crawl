@@ -1128,15 +1128,15 @@ SH:       +8
 
 ENUM:     RCLOUDS
 NAME:     robe of Clouds
-INSCRIP:  +Thunder rCloud
+INSCRIP:  *Thunder rCloud
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +3
 COLOUR:   ETC_MIST
 TILE:     urand_clouds
 TILE_EQ:  robe_clouds
 BOOL:     elec
-DESCRIP:  It can be evoked to surround the wearer with storm clouds, with
- success rate depending on Evocations skill.
+DESCRIP:  It occasionally creates storm clouds above nearby enemies.
++It grants its wearer immunity to clouds.
 
 NAME:     hat of Pondering
 OBJ:      OBJ_ARMOUR/ARM_HAT
@@ -1549,6 +1549,7 @@ VALUE:    800
 DESCRIP:  It enhances your conjuration magic.
 +It summons a battlesphere in combat, with strength depending on Conjurations
  skill.
++Its strikes trigger the battlesphere's blasts.
 
 ENUM:     EMBRACE
 NAME:     Cigotuvi's embrace

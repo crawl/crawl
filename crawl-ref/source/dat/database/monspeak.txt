@@ -2600,6 +2600,8 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 @The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
 
 @The_monster@ says, "I hate complainers so much."
+
+@The_monster says, "My @_fruit_name_@ was very bland! I hate that."
 %%%%
 Elf Donald
 
@@ -2916,7 +2918,7 @@ w:50
 
 @The_monster@ says, "How come everyone is wearing a cloak down here?"
 
-@The_monster@ says, "I offered a draconian some spare armor, but he said it didn't fit."
+@The_monster@ says, "I offered a draconian some spare armour, but he said it didn't fit."
 
 @The_monster@ says, "I keep feeling something staring at me. Is it you?"
 
@@ -7424,4 +7426,42 @@ Gozag bribe
 Gozag permabribe
 
 @The_monster@ grins @at_foe@ greedily, jangling a coin purse.
+%%%%
+####################
+# Okawaru duel keys
+####################
+spectator
+
+@_spectator_speech_@
+
+# There are lots of spectators in each duel, so don't be too noisy.
+w:70
+__NONE
+%%%%
+_spectator_speech_
+
+@The_monster@ jeers @_loudly_or_repeatedly_@ at you.
+
+@The_monster@ cheers @_loudly_or_repeatedly_@.
+
+@The_monster@ @_shouts_@ with approval.
+
+@The_monster@ @_mutters_@ to another spectator.
+
+VISUAL:@The_monster@ waves excitedly.
+
+w:5
+VISUAL:@The_monster@ bites into a ripe @_fruit_name_@.
+
+w:5
+VISUAL:@The_monster@ waves a pennant with your name on it.
+
+w:5
+VISUAL:@The_monster@ waves a pennant, rooting for your enemy!
+
+w:5
+VISUAL:@The_monster@'s armour gleams in the torchlight.
+
+w:1
+VISUAL:@The_monster@, chosen of Okawaru, glows resplendent with favour.
 %%%%

@@ -319,8 +319,8 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     {
         mprf(MSGCH_WARN, "The flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("sticky_flame_source");
-        you.props.erase("sticky_flame_aux");
+        you.props.erase(STICKY_FLAMER_KEY);
+        you.props.erase(STICKY_FLAME_AUX_KEY);
     }
 }
 
@@ -734,7 +734,7 @@ static void _place_player_corpse(bool explode)
     dummy.type = player_mons(false);
     define_monster(dummy); // assumes player_mons is not a zombie
     dummy.position = you.pos();
-    dummy.props["always_corpse"] = true;
+    dummy.props[ALWAYS_CORPSE_KEY] = true;
     dummy.mname = you.your_name;
     dummy.set_hit_dice(you.experience_level);
     if (explode)
@@ -943,7 +943,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (dam != INSTANT_DEATH)
     {
         if (you.spirit_shield() && death_type != KILLED_BY_POISON
-            && !(aux && strstr(aux, "flay_damage")))
+            && !(aux && strstr(aux, FLAY_DAMAGE_KEY)))
         {
             // round off fairly (important for taking 1 damage at a time)
             int mp = div_rand_round(dam * you.magic_points,

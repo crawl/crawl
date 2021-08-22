@@ -27,6 +27,7 @@
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "item-prop.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -227,8 +228,8 @@ static monster* _do_split(monster* thing, const coord_def & target)
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
     new_slime->summoner = thing->summoner;
-    if (thing->props.exists("blame"))
-        new_slime->props["blame"] = thing->props["blame"].get_vector();
+    if (thing->props.exists(BLAME_KEY))
+        new_slime->props[BLAME_KEY] = thing->props[BLAME_KEY].get_vector();
 
     int split_off = thing->blob_size / 2;
     float max_per_blob = thing->max_hit_points / float(thing->blob_size);
@@ -292,6 +293,14 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // passed on if the merged slime subsequently splits. Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_slime->flags;
+
+    // Transfer duel status over to the merge target.
+    if (initial_slime->props.exists(OKAWARU_DUEL_CURRENT_KEY))
+    {
+        initial_slime->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+        merge_to->props[OKAWARU_DUEL_TARGET_KEY] = true;
+        merge_to->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    }
 
     // Merging costs the combined slime some energy. The idea is that if 2
     // slimes merge you can gain a space by moving away the turn after (maybe
@@ -785,7 +794,7 @@ void treant_release_fauna(monster& mons)
 
         if (fauna)
         {
-            fauna->props["band_leader"].get_int() = mons.mid;
+            fauna->props[BAND_LEADER_KEY].get_int() = mons.mid;
 
             // Give released fauna the same summon duration as their 'parent'
             if (abj.ench != ENCH_NONE)
@@ -979,8 +988,8 @@ bool mon_special_ability(monster* mons)
     {
         // If we would try to move into a briar (that we might have just created
         // defensively), let's see if we can shoot our foe through it instead
-        if (actor_at(mons->pos() + mons->props["mmov"].get_coord())
-            && actor_at(mons->pos() + mons->props["mmov"].get_coord())->type == MONS_BRIAR_PATCH
+        if (actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())
+            && actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())->type == MONS_BRIAR_PATCH
             && !one_chance_in(3))
         {
             actor *foe = mons->get_foe();
@@ -1002,7 +1011,7 @@ bool mon_special_ability(monster* mons)
         // Otherwise, if our foe is approaching us, we might want to raise a
         // defensive wall of brambles (use the number of brambles in the area
         // as some indication if we've already done this, and shouldn't repeat)
-        else if (mons->props["foe_approaching"].get_bool() == true
+        else if (mons->props[FOE_APPROACHING_KEY].get_bool() == true
                  && !mons_is_confused(*mons)
                  && coinflip())
         {

@@ -84,8 +84,6 @@
 #include "view.h"
 #include "xom.h"
 
-#define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)
-
 // Helper functions (some of these should probably be public).
 static void _ench_animation(int flavour, const monster* mon = nullptr,
                             bool force = false);
@@ -2771,8 +2769,7 @@ void bolt::internal_ouch(int dam)
         dam *= 4;
 
     // The order of this is important.
-    if (monst && monst->type == MONS_PLAYER_SHADOW
-        && !monst->mname.empty())
+    if (monst && mons_is_wrath_avatar(*monst))
     {
         ouch(dam, KILLED_BY_DIVINE_WRATH, MID_NOBODY,
              aux_source.empty() ? nullptr : aux_source.c_str(), true,
@@ -2797,16 +2794,18 @@ void bolt::internal_ouch(int dam)
             ouch(dam, KILLED_BY_BOUNCE, MID_PLAYER, name.c_str());
         else
         {
-            if (aimed_at_feet && effect_known)
+            if (self_targeted() && effect_known)
                 ouch(dam, KILLED_BY_SELF_AIMED, MID_PLAYER, name.c_str());
             else
                 ouch(dam, KILLED_BY_TARGETING, MID_PLAYER, name.c_str());
         }
     }
     else if (MON_KILL(thrower))
+    {
         ouch(dam, KILLED_BY_BEAM, source_id,
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
+    }
     else // KILL_MISC || (YOU_KILL && aux_source)
         ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
 }
@@ -3180,7 +3179,7 @@ bool bolt::misses_player()
     if (is_enchantment())
         return false;
 
-    if (!aimed_at_feet)
+    if (!self_targeted())
         practise_being_shot_at();
 
     defer_rand r;
@@ -3530,11 +3529,6 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_SAP_MAGIC:
-        if (!SAP_MAGIC_CHANCE())
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            break;
-        }
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
@@ -3588,7 +3582,7 @@ void bolt::affect_player_enchantment(bool resistible)
             if (source_id == MID_PLAYER)
             {
                 // Beam from player rebounded and hit player.
-                if (!aimed_at_feet)
+                if (!self_targeted())
                     xom_is_stimulated(200);
             }
             else
@@ -4011,7 +4005,7 @@ void bolt::affect_player()
             // elsewhere.
             if (source_id == MID_PLAYER)
             {
-                if (!aimed_at_feet)
+                if (!self_targeted())
                     xom_is_stimulated(200);
             }
             else if (was_affected)
@@ -4780,7 +4774,7 @@ bool bolt::bush_immune(const monster &mons) const
 
 void bolt::affect_monster(monster* mon)
 {
-    // Don't hit dead monsters.
+    // Don't hit dead or fake monsters.
     if (!mon->alive() || mon->type == MONS_PLAYER_SHADOW)
         return;
 
@@ -5115,8 +5109,23 @@ bool bolt::ignores_monster(const monster* mon) const
     return false;
 }
 
+bool bolt::self_targeted() const
+{
+    // aimed_at_feet isn't enough to determine this. Examples: wrath uses a
+    // fake monster at the player's position, xom's chesspiece fakes smite
+    // targeting by setting the monster as the source position.
+    const actor* a = agent(true);
+    // TODO: are there cases that should count as self-targeted without an
+    // agent?
+    return aimed_at_feet && a && a->pos() == source
+        && (!a->is_monster() || !mons_is_wrath_avatar(*a->as_monster()));
+}
+
 bool bolt::has_saving_throw() const
 {
+    if (self_targeted())
+        return false;
+
     switch (flavour)
     {
     case BEAM_HASTE:
@@ -5141,8 +5150,6 @@ bool bolt::has_saving_throw() const
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
         return false;
-    case BEAM_POLYMORPH:
-        return !aimed_at_feet; // Self-poly doesn't check will
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
     case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
@@ -5737,12 +5744,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_SAP_MAGIC:
-        if (!SAP_MAGIC_CHANCE())
-        {
-            if (you.can_see(*mon))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            break;
-        }
         if (!mon->has_ench(ENCH_SAP_MAGIC)
             && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, 0, agent())))
         {
@@ -6465,7 +6466,7 @@ actor* bolt::agent(bool ignore_reflection) const
         nominal_source = reflector;
     }
 
-    // Check for whether this is actually a dith shadow, not you
+    // Check for whether this is actually a dith shadow or wrath avatar, not you
     if (monster* shadow = monster_at(you.pos()))
         if (shadow->type == MONS_PLAYER_SHADOW && nominal_source == MID_PLAYER)
             return shadow;

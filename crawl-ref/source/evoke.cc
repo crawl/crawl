@@ -331,7 +331,8 @@ static bool _box_of_beasts()
 
 static bool _make_zig(item_def &zig)
 {
-    if (feat_is_critical(env.grid(you.pos())))
+    if (feat_is_critical(env.grid(you.pos()))
+        || player_in_branch(BRANCH_ARENA))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;
@@ -999,6 +1000,7 @@ static bool _xoms_chessboard()
     const monster * target = *random_iterator(targets);
     beam.source = target->pos();
     beam.target = target->pos();
+    beam.set_agent(&you);
 
     // List of possible effects. Mostly debuffs, a few buffs to keep it
     // exciting

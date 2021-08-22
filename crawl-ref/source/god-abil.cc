@@ -25,6 +25,7 @@
 #include "curse-type.h"
 #include "dactions.h"
 #include "database.h"
+#include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
@@ -79,6 +80,7 @@
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "sprint.h"
+#include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -4646,13 +4648,13 @@ bool ru_do_sacrifice(ability_type sac)
 
     // Update how many Ru sacrifices you have. This is used to avoid giving the
     // player extra silver damage.
-    if (you.props.exists("num_sacrifice_muts"))
+    if (you.props.exists(NUM_SACRIFICES_KEY))
     {
-        you.props["num_sacrifice_muts"] = num_sacrifices +
-            you.props["num_sacrifice_muts"].get_int();
+        you.props[NUM_SACRIFICES_KEY] = num_sacrifices +
+            you.props[NUM_SACRIFICES_KEY].get_int();
     }
     else
-        you.props["num_sacrifice_muts"] = num_sacrifices;
+        you.props[NUM_SACRIFICES_KEY] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
     set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
@@ -4862,7 +4864,7 @@ bool ru_power_leap()
     while (1)
     {
         direction_chooser_args args;
-        args.restricts = DIR_LEAP;
+        args.restricts = DIR_ENFORCE_RANGE;
         args.mode = TARG_ANY;
         args.range = 3;
         args.needs_path = false;
@@ -5165,7 +5167,7 @@ bool uskayaw_line_pass()
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
-        args.restricts = DIR_LEAP;
+        args.restricts = DIR_ENFORCE_RANGE;
         args.mode = TARG_ANY;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Line Pass</white>";
@@ -5934,6 +5936,100 @@ void wu_jian_heavenly_storm()
     invalidate_agrid(true);
 }
 
+bool okawaru_duel_active()
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY))
+            return true;
+    }
+
+    return false;
+}
+
+spret okawaru_duel(bool fail)
+{
+    if (okawaru_duel_active() || player_in_branch(BRANCH_ARENA))
+    {
+        mpr("You are already engaged in single combat!");
+        return spret::abort;
+    }
+
+    dist spd;
+    bolt beam;
+    beam.range = LOS_MAX_RANGE;
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_HOSTILE;
+    args.needs_path = false;
+    if (!spell_direction(spd, beam, &args))
+        return spret::abort;
+
+    if (beam.target == you.pos())
+    {
+        mpr("You cannot duel yourself!");
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You can see no monster there to duel!");
+        return spret::abort;
+    }
+
+    if (mons_is_firewood(*mons)
+        || mons_is_conjured(mons->type)
+        || mons_is_tentacle_or_tentacle_segment(mons->type)
+        || mons_primary_habitat(*mons) == HT_LAVA
+        || mons_primary_habitat(*mons) == HT_WATER
+        || mons->wont_attack())
+    {
+        mpr("You cannot duel that!");
+        return spret::abort;
+    }
+
+    if (mons_threat_level(*mons) < MTHRT_TOUGH)
+    {
+        simple_monster_message(*mons, " is not worthy to be dueled!");
+        return spret::abort;
+    }
+
+    if (mons->is_illusion())
+    {
+        fail_check();
+        mprf("You challenge %s to single combat, but %s is merely a clone!",
+             mons->name(DESC_THE).c_str(),
+             mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+        // Still costs a turn to gain the information.
+        return spret::success;
+    }
+    // Check this after everything else so as not to waste a turn when trying
+    // to duel a clone that's already invalid to be dueled for other reasons.
+    else if (mons->is_summoned())
+    {
+        mpr("You cannot duel that!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mprf("You enter into single combat with %s!",
+         mons->name(DESC_THE).c_str());
+
+    behaviour_event(mons, ME_ALERT, &you);
+    mons->props[OKAWARU_DUEL_TARGET_KEY] = true;
+    mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    mons->set_transit(level_id(BRANCH_ARENA));
+    mons->destroy_inventory();
+    monster_cleanup(mons);
+
+    stop_delay(true);
+    down_stairs(DNGN_ENTER_ARENA);
+
+    return spret::success;
+}
+
 void okawaru_remove_heroism()
 {
     mprf(MSGCH_DURATION, "You feel like a meek peon again.");
@@ -5946,4 +6042,29 @@ void okawaru_remove_finesse()
 {
     mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
     you.duration[DUR_FINESSE] = 0;
+}
+
+// End a duel, and send the duel target back with the player if it's still
+// alive.
+void okawaru_end_duel()
+{
+    ASSERT(player_in_branch(BRANCH_ARENA));
+    if (okawaru_duel_active())
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY))
+            {
+                mi->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+                mi->props[OKAWARU_DUEL_ABANDONED_KEY] = true;
+                mi->set_transit(current_level_parent());
+                mi->destroy_inventory();
+                monster_cleanup(*mi);
+            }
+        }
+    }
+
+    mpr("You are returned from the Arena.");
+    stop_delay(true);
+    down_stairs(DNGN_EXIT_ARENA);
 }

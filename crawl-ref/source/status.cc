@@ -19,6 +19,7 @@
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
+#include "spl-damage.h" // COUPLING_TIME_KEY
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
@@ -198,12 +199,12 @@ bool fill_status_info(int status, status_info& inf)
     {
     case DUR_CORROSION:
         inf.light_text = make_stringf("Corr (%d)",
-                          (-4 * you.props["corrosion_amount"].get_int()));
+                          (-4 * you.props[CORROSION_KEY].get_int()));
         break;
 
     case DUR_FLAYED:
         inf.light_text = make_stringf("Flay (%d)",
-                          (-1 * you.props["flay_damage"].get_int()));
+                          (-1 * you.props[FLAY_DAMAGE_KEY].get_int()));
         break;
 
     case DUR_NO_POTIONS:
@@ -561,33 +562,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_MAGIC_SAPPED:
-        if (you.props[SAP_MAGIC_KEY].get_int() >= 3)
-        {
-            inf.light_colour = RED;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "extremely magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been greatly sapped.";
-        }
-        else if (you.props[SAP_MAGIC_KEY].get_int() == 2)
-        {
-            inf.light_colour = LIGHTRED;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "very magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been significantly sapped.";
-        }
-        else if (you.props[SAP_MAGIC_KEY].get_int() == 1)
-        {
-            inf.light_colour = YELLOW;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been sapped.";
-        }
-        break;
-
     case STATUS_BRIBE:
     {
         int bribe = 0;
@@ -707,10 +681,30 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_MAXWELLS:
-        if (you.props.exists("maxwells_charge_time"))
+        if (you.props.exists(COUPLING_TIME_KEY))
         {
             inf.light_colour = LIGHTCYAN;
             inf.light_text   = _charge_text().c_str();
+        }
+        break;
+
+    case STATUS_DUEL:
+        if (okawaru_duel_active())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Duel";
+            inf.short_text   = "dueling";
+            inf.long_text    = "You are engaged in single combat.";
+        }
+        break;
+
+    case STATUS_NO_SCROLL:
+        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+        {
+            inf.light_colour = RED;
+            inf.light_text   = "-Scroll";
+            inf.short_text   = "unable to read";
+            inf.long_text    = "You cannot read scrolls.";
         }
         break;
 

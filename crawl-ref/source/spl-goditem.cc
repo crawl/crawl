@@ -541,8 +541,8 @@ void debuff_player()
         {
             len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase("sticky_flame_aux");
-            you.props.erase("sticky_flame_source");
+            you.props.erase(STICKY_FLAME_AUX_KEY);
+            you.props.erase(STICKY_FLAMER_KEY);
         }
         else if (len > 1)
         {

@@ -506,6 +506,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             self.send_message("game_started")
             self.restore_mutelist()
+            self.process.handle_notification(self.process.username,
+                            "'/help' to see available chat commands")
 
             if config.dgl_mode:
                 if self.process.where == {}:

@@ -33,6 +33,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -1799,9 +1800,10 @@ static void _initialise_level_corrupt_seeds(int power)
 
     dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
 
-    // The corruption centreed on the player is free.
+    // The corruption seed centred on the player is guaranteed.
     _place_corruption_seed(you.pos(), high + 300);
 
+    // Other corruption seeds are not guaranteed
     for (int i = 0; i < nseeds; ++i)
     {
         coord_def where;
@@ -1857,6 +1859,30 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     }
 
     return false;
+}
+
+static void _spawn_corrupted_servant_near_monster(const monster &who)
+{
+    const coord_def pos = who.pos();
+
+    // Thirty tries for a place.
+    for (int i = 0; i < 30; ++i)
+    {
+        coord_def p;
+        p.x = pos.x + random_choose(3, -3);
+        p.y = pos.y + random_choose(3, -3);
+        if (!in_bounds(p) || actor_at(p) || !cell_see_cell(pos, p, LOS_SOLID))
+            continue;
+        monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
+        ASSERT(mons);
+        if (!monster_habitable_grid(mons, env.grid(p)))
+            continue;
+        mgen_data mg(mons, BEH_COPY, p);
+        mg.set_summoned(&who, 3, 0);
+        mg.place = BRANCH_ABYSS;
+        if (create_monster(mg))
+            return;
+    }
 }
 
 static void _apply_corruption_effect(map_marker *marker, int duration)
@@ -1966,7 +1992,7 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
     int floor = cenv.pick_floor_colour();
 
     if (feat == DNGN_ROCK_WALL || feat == DNGN_METAL_WALL
-        || feat == DNGN_STONE_WALL || feat == DNGN_TREE)
+        || feat == DNGN_STONE_WALL)
     {
         env.grid_colours(c) = cenv.rock_colour;
     }
@@ -2003,15 +2029,10 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
-    else if (feat == DNGN_TREE)
+    else if (feat_is_tree(feat))
     {
-        tileidx_t idx = tile_dngn_coloured(TILE_DNGN_TREE,
-                                           cenv.rock_colour);
-        // trees only have yellow, lightred, red, and darkgray (dead)
-        if (idx == TILE_DNGN_TREE)
-            idx = tile_dngn_coloured(TILE_DNGN_TREE, DARKGREY);
-        env.grid_colours(c) = DARKGREY;
-        tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        // This is technically not flavour because of how these burn but ok
+        dungeon_terrain_changed(c, DNGN_DEMONIC_TREE, false, false);
     }
 }
 
@@ -2075,6 +2096,48 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     _corrupt_square_flavor(cenv, c);
 }
 
+static void _corrupt_square_monster(const corrupt_env &cenv, const coord_def &c)
+{
+    // See comment in _corrupt_square for details on this block. Note that
+    // this function differs in that the changes to terrain are temporary
+    dungeon_feature_type feat = DNGN_UNSEEN;
+    feat = _abyss_proto_feature();
+
+    if (feat_is_trap(feat)
+        || feat == DNGN_UNSEEN
+        || (feat_is_traversable(env.grid(c)) && !feat_is_traversable(feat)
+            && coinflip()))
+    {
+        feat = DNGN_FLOOR;
+    }
+
+    if (feat_is_traversable(env.grid(c)) && !feat_is_traversable(feat)
+        && _is_crowded_square(c))
+    {
+        return;
+    }
+
+    if (!feat_is_traversable(env.grid(c)) && feat_is_traversable(feat)
+        && _is_sealed_square(c))
+    {
+        return;
+    }
+
+    // If we are trying to place a wall on top of a creature or item, try to
+    // move it aside. If this fails, simply place floor instead.
+    actor* act = actor_at(c);
+    if (feat_is_solid(feat) && (env.igrid(c) != NON_ITEM || act))
+    {
+        push_items_from(c, nullptr);
+        push_actor_from(c, nullptr, true);
+        if (actor_at(c) || env.igrid(c) != NON_ITEM)
+            feat = DNGN_FLOOR;
+    }
+    temp_change_terrain(c, feat, random_range(60, 120),
+                                    TERRAIN_CHANGE_GENERIC);
+    _corrupt_square_flavor(cenv, c);
+}
+
 static void _corrupt_level_features(const corrupt_env &cenv)
 {
     vector<coord_def> corrupt_seeds;
@@ -2114,6 +2177,50 @@ static void _corrupt_level_features(const corrupt_env &cenv)
     }
 }
 
+static void _corrupt_level_features_monster(const corrupt_env &cenv, monster mons)
+{
+    // the only "corruption seed" in the monster version is the casting monster
+    for (radius_iterator ri(mons.pos(), LOS_DEFAULT); ri; ++ri)
+    {
+        const int idistance = (*ri - mons.pos()).rdist();
+
+        const int ground_zero_radius = 2;
+
+        // Corruption odds are 100% within 2 squares, decaying to 30%
+        // at LOS range (radius 7).
+        const int corrupt_perc_chance =
+            (idistance <= ground_zero_radius) ? 1000 :
+            max(0, 1000 - (sqr(idistance) - sqr(ground_zero_radius)) * 700 / 45);
+
+        // Monster version: don't affect outside of range 7.
+        // For cells within los that don't make the regular roll, this also
+        // gives them a 50% chance to get flavor-only corruption.
+        const int corrupt_flavor_chance = (corrupt_perc_chance + 1000) / 2;
+
+        const int roll = random2(3000);
+
+        // In the monster version of the effect we have an extra check here
+        // which will prevent the effect from triggering _corrupt_square
+        // on anything other than clear dungeon floor.
+        // This stops the corruption from breaking into vaults, opening
+        // temporary teleport closets for the player, and other unwanted
+        // outcomes.
+        if (env.grid(*ri) == DNGN_FLOOR)
+        {
+            if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
+                _corrupt_square_monster(cenv, *ri);
+            else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+                _corrupt_square_flavor(cenv, *ri);
+        }
+        else
+        {
+            // chance to change the colour of any grid
+            if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+                _corrupt_square_flavor(cenv, *ri);
+        }
+    }
+}
+
 static bool _is_level_corrupted()
 {
     if (player_in_branch(BRANCH_ABYSS))
@@ -2132,6 +2239,14 @@ bool is_level_incorruptible(bool quiet)
     }
 
     return false;
+}
+
+bool is_level_incorruptible_monster()
+{
+    if (player_in_branch(BRANCH_ABYSS))
+        return true;
+    else
+        return false;
 }
 
 static void _corrupt_choose_colours(corrupt_env *cenv)
@@ -2175,6 +2290,32 @@ bool lugonu_corrupt_level(int power)
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
+#endif
+
+    return true;
+}
+
+bool lugonu_corrupt_level_monster(const monster &who)
+{
+    if (is_level_incorruptible_monster())
+        return false;
+
+    flash_view_delay(UA_MONSTER, MAGENTA, 200);
+
+    corrupt_env cenv;
+    _corrupt_choose_colours(&cenv);
+    _corrupt_level_features_monster(cenv, who);
+
+    // Monster version does not use a timed effect to handle monster summons.
+    // This simplifies the effect and allows for the summons to be abjured once
+    // the monster is killed, as normal
+    const int count = random2(3) + 1;
+    for (int i = 0; i < count; ++i)
+        _spawn_corrupted_servant_near_monster(who);
+
+#ifndef USE_TILE_LOCAL
+    // Allow extra time for the flash to linger.
+    scaled_delay(300);
 #endif
 
     return true;

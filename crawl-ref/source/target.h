@@ -129,6 +129,17 @@ private:
     int pow;
 };
 
+class targeter_airstrike : public targeter
+{
+public:
+    targeter_airstrike();
+    aff_type is_affected(coord_def loc) override;
+    bool valid_aim(coord_def a) override;
+    bool can_affect_outside_range() override { return false; };
+    bool can_affect_walls() override { return false; };
+    bool can_affect_unseen() override { return true; }; // show empty space outside LOS
+};
+
 class targeter_reach : public targeter
 {
 public:
@@ -358,6 +369,7 @@ class targeter_shatter : public targeter_radius
 public:
     targeter_shatter(const actor *act) : targeter_radius(act, LOS_ARENA) { }
     bool can_affect_walls() override { return true; }
+    aff_type is_affected(coord_def loc) override;
 };
 
 // A fixed targeter for multi-position attacks, i.e. los stuff that
@@ -398,7 +410,7 @@ private:
 class targeter_maxwells_coupling : public targeter_multiposition
 {
 public:
-    targeter_maxwells_coupling(int range);
+    targeter_maxwells_coupling();
 };
 
 class targeter_multifireball : public targeter_multiposition
@@ -434,7 +446,6 @@ public:
     targeter_starburst(const actor *a, int range, int pow);
     bool valid_aim(coord_def) override { return true; }
     aff_type is_affected(coord_def loc) override;
-private:
     vector<targeter_starburst_beam> beams;
 };
 

@@ -12,6 +12,7 @@
 #include <functional>
 #include <unordered_set>
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
@@ -74,6 +75,7 @@
 #ifdef USE_TILE
 #include "rltiles/tiledef-dngn.h"
 #endif
+#include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "travel.h"
@@ -99,6 +101,7 @@ static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
 static void _doom_howl(monster &mon);
 static void _mons_awaken_earth(monster &mon, const coord_def &target);
+static void _corrupt_locale(monster &mon);
 static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
 static bool _mons_can_bind_soul(monster* binder, monster* bound);
@@ -126,6 +129,7 @@ static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
 static ai_action::goodness _foe_not_nearby(const monster &caster);
 static ai_action::goodness _foe_near_lava(const monster &caster);
+static ai_action::goodness _mons_likes_blinking(const monster &caster);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
@@ -510,13 +514,45 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _buff_beam_setup(BEAM_CONCENTRATE_VENOM)
     } },
+    { SPELL_BLINK, {
+        _mons_likes_blinking,
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            monster_blink(&caster);
+        }
+    }},
+    { SPELL_BLINK_RANGE, {
+        _mons_likes_blinking,
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            blink_range(&caster);
+        }
+    } },
+    { SPELL_BLINK_AWAY, {
+        _mons_likes_blinking,
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            blink_away(&caster, true);
+        }
+    } },
+    { SPELL_BLINK_CLOSE, {
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            if (adjacent(caster.pos(), foe->pos()))
+                return ai_action::bad();
+            return _mons_likes_blinking(caster);
+        },
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            blink_close(&caster);
+        }
+    } },
+    { SPELL_CORRUPT_LOCALE, {
+        [](const monster & /* caster */) {
+            return ai_action::good_or_impossible(!player_in_branch(BRANCH_ABYSS));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            _corrupt_locale(caster);
+        },
+    }, },
 };
-
-/// Is the 'monster' actually a proxy for the player?
-static bool _caster_is_player_shadow(const monster &mons)
-{
-    return mons.type == MONS_PLAYER_SHADOW;
-}
 
 /// Create the appropriate casting logic for a simple conjuration.
 static mons_spell_logic _conjuration_logic(spell_type spell)
@@ -635,7 +671,7 @@ static function<void(bolt&, const monster&, int)>
     return [flavour](bolt &beam, const monster &caster, int)
     {
         beam.flavour = flavour;
-        if (!_caster_is_player_shadow(caster))
+        if (!mons_is_player_shadow(caster))
             beam.target = caster.pos();
     };
 }
@@ -697,7 +733,7 @@ static void _setup_healing_beam(bolt &beam, const monster &caster)
 static void _setup_minor_healing(bolt &beam, const monster &caster, int)
 {
     _setup_healing_beam(beam, caster);
-    if (!_caster_is_player_shadow(caster))
+    if (!mons_is_player_shadow(caster))
         beam.target = caster.pos();
 }
 
@@ -722,7 +758,7 @@ static function<void(bolt&, const monster&, int)>
     {
         _setup_fake_beam(beam, caster);
         // Your shadow keeps your targetting.
-        if (_caster_is_player_shadow(caster))
+        if (mons_is_player_shadow(caster))
             return;
         beam.target = targeter(caster);
         beam.aimed_at_spot = true;  // to get noise to work properly
@@ -1690,10 +1726,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SWIFTNESS:
 #endif
     case SPELL_CREATE_TENTACLES:
-    case SPELL_BLINK:
-    case SPELL_BLINK_RANGE:
-    case SPELL_BLINK_AWAY:
-    case SPELL_BLINK_CLOSE:
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_CHAIN_OF_CHAOS:
@@ -2098,6 +2130,22 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
         return false;
 
     return true;
+}
+
+/**
+ * @param mon: caster, currently only Mlioglotl
+ */
+static void _corrupt_locale(monster &mons)
+{
+    // Note that this is flagged as a bad() idea for the ai, so should
+    // not be reached.
+    if (player_in_branch(BRANCH_ABYSS))
+        return;
+
+    mprf("%s corrupts the dungeon around %s!",
+         mons.name(DESC_THE).c_str(), mons.pronoun(PRONOUN_OBJECTIVE).c_str());
+
+    lugonu_corrupt_level_monster(mons);
 }
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
@@ -2523,6 +2571,14 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
     }
 }
 
+static ai_action::goodness _mons_likes_blinking(const monster &caster)
+{
+    if (caster.no_tele(true, false))
+        return ai_action::impossible();
+    // Prefer to keep a polar vortex going rather than blink.
+    return ai_action::good_or_bad(!caster.has_ench(ENCH_POLAR_VORTEX));
+}
+
 /// Can the caster see the given target's cell and lava next to (or under) them?
 static bool _near_visible_lava(const monster &caster, const actor &target)
 {
@@ -2883,8 +2939,8 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     ASSERT(foe);
 
     int num_vines = 1 + random2(3);
-    if (mon->props.exists("vines_awakened"))
-        num_vines = min(num_vines, 3 - mon->props["vines_awakened"].get_int());
+    if (mon->props.exists(VINES_AWAKENED_KEY))
+        num_vines = min(num_vines, 3 - mon->props[VINES_AWAKENED_KEY].get_int());
     bool seen = false;
 
     for (coord_def spot : spots)
@@ -2917,8 +2973,8 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
                         MG_FORCE_PLACE)
             .set_summoned(mon, 0, SPELL_AWAKEN_VINES, mon->god)))
         {
-            vine->props["vine_awakener"].get_int() = mon->mid;
-            mon->props["vines_awakened"].get_int()++;
+            vine->props[VINE_AWAKENER_KEY].get_int() = mon->mid;
+            mon->props[VINES_AWAKENED_KEY].get_int()++;
             mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, nullptr, 200));
             --num_vines;
             if (you.can_see(*vine))
@@ -3069,7 +3125,7 @@ static bool _wall_of_brambles(monster* mons)
     // We want to raise a defensive wall if we think our foe is moving to attack
     // us, and otherwise raise a wall further away to block off their escape.
     // (Each wall type uses different parameters)
-    bool defensive = mons->props["foe_approaching"].get_bool();
+    bool defensive = mons->props[FOE_APPROACHING_KEY].get_bool();
 
     coord_def aim_pos = you.pos();
     coord_def targ_pos = mons->pos();
@@ -3505,7 +3561,7 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 {
     _setup_ghostly_beam(beam, power, 5);
     // Future-proofing: your shadow keeps your targetting.
-    if (_caster_is_player_shadow(caster))
+    if (mons_is_player_shadow(caster))
         return;
 
     beam.target = _mons_ghostly_sacrifice_target(caster, beam);
@@ -3711,6 +3767,7 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     // Don't use blinking spells in sight of a trap the player can see if we're
     // allied with the player; this might do more harm than good to the player
     // restrict to the ones the player can see to avoid an information leak
+    // TODO: move this logic into _mons_likes_blinking?
     if (mons_aligned(&mons, &you)
         && (spell == SPELL_BLINK || spell == SPELL_BLINK_OTHER
             || spell == SPELL_BLINK_OTHER_CLOSE || spell == SPELL_BLINK_CLOSE
@@ -4029,40 +4086,20 @@ bool handle_mon_spell(monster* mons)
         setup_breath_timeout(mons);
 
     // FINALLY! determine primary spell effects {dlb}:
-    if (spell_cast == SPELL_BLINK)
-    {
-        // Why only cast blink if nearby? {dlb}
-        if (mons->can_see(you))
-        {
-            mons_cast_noise(mons, beem, spell_cast, flags);
-            monster_blink(mons);
-        }
-        else
-            return false;
-    }
-    else if (spell_cast == SPELL_BLINK_RANGE)
-        blink_range(mons);
-    else if (spell_cast == SPELL_BLINK_AWAY)
-        blink_away(mons, true);
-    else if (spell_cast == SPELL_BLINK_CLOSE)
-        blink_close(mons);
-    else
-    {
-        const bool battlesphere = mons->props.exists("battlesphere");
-        if (!(get_spell_flags(spell_cast) & spflag::utility))
-            make_mons_stop_fleeing(mons);
+    const bool battlesphere = mons->props.exists(BATTLESPHERE_KEY);
+    if (!(get_spell_flags(spell_cast) & spflag::utility))
+        make_mons_stop_fleeing(mons);
 
-        if (battlesphere)
-            aim_battlesphere(mons, spell_cast);
-        mons_cast(mons, beem, spell_cast, flags);
-        if (battlesphere)
-            trigger_battlesphere(mons);
-        if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
-        {
-            mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                       mons->get_ench(ENCH_SAP_MAGIC).agent(),
-                                       6 * BASELINE_DELAY));
-        }
+    if (battlesphere)
+        aim_battlesphere(mons, spell_cast);
+    mons_cast(mons, beem, spell_cast, flags);
+    if (battlesphere)
+        trigger_battlesphere(mons);
+    if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
+    {
+        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                                   mons->get_ench(ENCH_SAP_MAGIC).agent(),
+                                   6 * BASELINE_DELAY));
     }
 
     // Reflection, fireballs, etc.
@@ -4987,11 +5024,11 @@ static void _flay(const monster &caster, actor &defender, int damage)
     const int orig_hp = defender.stat_hp();
 
     defender.hurt(&caster, damage, BEAM_NONE,
-                  KILLED_BY_MONSTER, "", "flay_damage", true);
-    defender.props["flay_damage"].get_int() += orig_hp - defender.stat_hp();
+                  KILLED_BY_MONSTER, "", FLAY_DAMAGE_KEY, true);
+    defender.props[FLAY_DAMAGE_KEY].get_int() += orig_hp - defender.stat_hp();
 
     vector<coord_def> old_blood;
-    CrawlVector &new_blood = defender.props["flay_blood"].get_vector();
+    CrawlVector &new_blood = defender.props[FLAY_BLOOD_KEY].get_vector();
 
     // Find current blood spatters
     for (radius_iterator ri(defender.pos(), LOS_SOLID); ri; ++ri)
@@ -5347,7 +5384,7 @@ static void _mons_vortex(monster *mons)
 
     const int ench_dur = 60;
 
-    mons->props["polar_vortex_since"].get_int() = you.elapsed_time;
+    mons->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
     mon_enchant me(ENCH_POLAR_VORTEX, 0, mons, ench_dur);
     mons->add_ench(me);
 
@@ -5595,7 +5632,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BERSERKER_RAGE:
-        mons->props.erase("brothers_count");
+        mons->props.erase(BROTHERS_KEY);
         mons->go_berserk(true);
         return;
 
@@ -5860,7 +5897,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
 
         summon_berserker(power, mons, to_summon);
-        mons->props["brothers_count"].get_int()++;
+        mons->props[BROTHERS_KEY].get_int()++;
         return;
     }
 
@@ -7405,19 +7442,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         return ai_action::good_or_bad(mon->hit_points <= mon->max_hit_points / 2);
     }
 
-    case SPELL_BLINK_CLOSE:
-        ASSERT(foe);
-        if (adjacent(mon->pos(), foe->pos()))
-            return ai_action::bad();
-        // intentional fall-through
-    case SPELL_BLINK:
-    case SPELL_BLINK_RANGE:
-    case SPELL_BLINK_AWAY:
-        if (mon->no_tele(true, false))
-            return ai_action::impossible();
-        else // Prefer to keep a polar vortex going rather than blink.
-            return ai_action::good_or_bad(!mon->has_ench(ENCH_POLAR_VORTEX));
-
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
         return _foe_effect_viable(*mon, DUR_DIMENSION_ANCHOR, ENCH_DIMENSION_ANCHOR);
@@ -7469,7 +7493,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_AWAKEN_VINES:
         return ai_action::good_or_impossible(
                     (!mon->has_ench(ENCH_AWAKEN_VINES)
-                        || mon->props["vines_awakened"].get_int() <= 3)
+                        || mon->props[VINES_AWAKENED_KEY].get_int() <= 3)
                     && _awaken_vines(mon, true)); // test cast: would anything happen?
 
     case SPELL_WATERSTRIKE:
@@ -7497,8 +7521,8 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_BROTHERS_IN_ARMS:
         return ai_action::good_or_bad(
-            !mon->props.exists("brothers_count")
-               || mon->props["brothers_count"].get_int() < 2);
+            !mon->props.exists(BROTHERS_KEY)
+               || mon->props[BROTHERS_KEY].get_int() < 2);
 
     case SPELL_HOLY_FLAMES:
         return ai_action::good_or_impossible(!no_clouds);
@@ -7752,7 +7776,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_ROLL:
     {
-        const coord_def delta = mon->props["mmov"].get_coord();
+        const coord_def delta = mon->props[MMOV_KEY].get_coord();
         // We can roll if we have a foe we're not already adjacent to and where
         // we have a move that brings us closer.
         return ai_action::good_or_bad(

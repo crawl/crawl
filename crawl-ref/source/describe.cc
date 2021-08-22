@@ -718,22 +718,29 @@ static string _artefact_descrip(const item_def &item)
 
 static const char *trap_names[] =
 {
-    "dart",
-    "arrow", "spear",
+#if TAG_MAJOR_VERSION == 34
+    "dart", "arrow", "spear",
+#endif
 #if TAG_MAJOR_VERSION > 34
     "dispersal",
     "teleport",
 #endif
     "permanent teleport",
-    "alarm", "blade",
-    "bolt", "net", "Zot",
+    "alarm",
+#if TAG_MAJOR_VERSION == 34
+    "blade", "bolt",
+#endif
+    "net",
+    "Zot",
 #if TAG_MAJOR_VERSION == 34
     "needle",
 #endif
-    "shaft", "passage", "pressure plate", "web",
+    "shaft",
+    "passage",
+    "pressure plate",
+    "web",
 #if TAG_MAJOR_VERSION == 34
-    "gas", "teleport",
-    "shadow", "dormant shadow", "dispersal"
+    "gas", "teleport", "shadow", "dormant shadow", "dispersal"
 #endif
 };
 
@@ -3714,7 +3721,7 @@ static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
-        { AF_BLINK,             "blink itself" },
+        { AF_BLINK,             "blink self" },
         { AF_BLINK_WITH,        "blink together with the defender" },
         { AF_COLD,              "deal up to %d extra cold damage" },
         { AF_CONFUSE,           "cause confusion" },
@@ -4630,8 +4637,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     string db_name;
 
-    if (mi.props.exists("dbname"))
-        db_name = mi.props["dbname"].get_string();
+    if (mi.props.exists(DBNAME_KEY))
+        db_name = mi.props[DBNAME_KEY].get_string();
     else if (mi.mname.empty())
         db_name = mi.db_name();
     else
@@ -4741,7 +4748,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\nIt is quickly melting away.\n";
         break;
 
+    case MONS_BRIAR_PATCH: // death msg uses "crumbling"
     case MONS_PILLAR_OF_SALT:
+        // XX why are these "quick" here but "slow" elsewhere??
         if (mi.is(MB_SLOWLY_DYING))
             inf.body << "\nIt is quickly crumbling away.\n";
         break;
@@ -4949,11 +4958,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << ii->name(DESC_A, false, true);
     }
 
-    if (mons.props.exists("blame"))
+    if (mons.props.exists(BLAME_KEY))
     {
         inf.body << "\n\nMonster blame chain:\n";
 
-        const CrawlVector& blame = mons.props["blame"].get_vector();
+        const CrawlVector& blame = mons.props[BLAME_KEY].get_vector();
 
         for (const auto &entry : blame)
             inf.body << "    " << entry.get_string() << "\n";

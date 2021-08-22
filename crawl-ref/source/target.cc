@@ -740,6 +740,52 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
+targeter_airstrike::targeter_airstrike()
+{
+    agent = &you;
+    origin = aim = you.pos();
+}
+
+aff_type targeter_airstrike::is_affected(coord_def loc)
+{
+    if (loc == aim)
+    {
+        // Show how much bonus damage airstrike will do
+        // against the target.
+        const int space = airstrike_space_around(aim, false);
+        if (space <= 3)
+            return AFF_MAYBE;
+        if (space < 6)
+            return AFF_YES;
+        return AFF_MULTIPLE;
+    }
+
+    // Show the surrounding empty spaces.
+    if (!adjacent(loc, aim) || you.pos() == loc)
+        return AFF_NO;
+    const auto knowledge = env.map_knowledge(loc);
+    if (!knowledge.seen()
+        || feat_is_solid(knowledge.feat())
+        || env.map_knowledge(loc).monsterinfo())
+    {
+        return AFF_NO;
+    }
+    return AFF_LANDING;
+
+}
+
+bool targeter_airstrike::valid_aim(coord_def a)
+{
+    // XXX: copied from targeter_beam :(
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        if (you.see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    return true;
+}
+
 targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
     targeter_smite(act, ran, 1, 1, true, nullptr),
     pow(power)
@@ -1046,6 +1092,34 @@ aff_type targeter_radius::is_affected(coord_def loc)
         return AFF_NO;
 
     return AFF_YES;
+}
+
+aff_type targeter_shatter::is_affected(coord_def loc)
+{
+    if (loc == origin)
+        return AFF_NO; // Shatter doesn't affect the caster.
+
+    if (!cell_see_cell(loc, origin, LOS_ARENA))
+        return AFF_NO; // No shattering through glass... without work.
+
+    monster* mons = monster_at(loc);
+    if (!mons || !you.can_see(*mons))
+    {
+        const int terrain_chance = terrain_shatter_chance(loc, you);
+        if (terrain_chance == 100)
+            return AFF_YES;
+        else if (terrain_chance > 0)
+            return AFF_MAYBE;
+        return AFF_NO;
+    }
+
+    const dice_def dam = shatter_damage(200, mons);
+    const int dice = dam.num;
+    if (dice == DEFAULT_SHATTER_DICE)
+        return AFF_YES;
+    if (dice > DEFAULT_SHATTER_DICE)
+        return AFF_MULTIPLE;
+    return AFF_MAYBE;
 }
 
 targeter_thunderbolt::targeter_thunderbolt(const actor *act, int r,
@@ -1771,8 +1845,8 @@ aff_type targeter_chain_lightning::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_maxwells_coupling::targeter_maxwells_coupling(int range)
-    : targeter_multiposition(&you, find_maxwells_possibles(range))
+targeter_maxwells_coupling::targeter_maxwells_coupling()
+    : targeter_multiposition(&you, find_maxwells_possibles())
 {
     if (affected_positions.size() == 1)
         positive = AFF_YES;

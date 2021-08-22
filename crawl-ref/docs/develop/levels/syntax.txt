@@ -1214,15 +1214,15 @@ CLEAR:    Clear is a special kind of SUBST that only swaps glyphs to " ",
           This will erase the glyphs x, y and z from the map by turning
           them into spaces.
 
-KFEAT:    G = C / needle trap / antique armour shop / altar_zin
+KFEAT:    G = C / net trap / antique armour shop / altar_zin
           The KFEAT: directive allows you to specify a placeholder symbol
           that is replaced with another symbol, named feature, trap, or
           shop. For example, the line above will replace occurrences of G
-          with C (random altar), a needle trap, an antique armour shop, or
-          an altar of Zin. Different instances of G may receive different
-          replacements. To force a single replacement for all G,  use:
+          with C (random altar), a net trap, an antique armour shop, or an
+          altar of Zin. Different instances of G may receive different
+          replacements. To force a single replacement for all G, use:
 
-          KFEAT: G : C / needle trap / antique armour shop
+          KFEAT: G : C / net trap / antique armour shop
 
           You'll notice that "G" is the symbol of a granite statue. Kxxx
           directives allow you to assign arbitrary definitions to any symbol.

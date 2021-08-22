@@ -500,10 +500,10 @@ static void _set_allies_withdraw(const coord_def &target)
         mi->patrol_point = rally_point;
         mi->foe = MHITNOT;
 
-        mi->props.erase("last_pos");
-        mi->props.erase("idle_point");
-        mi->props.erase("idle_deadline");
-        mi->props.erase("blocked_deadline");
+        mi->props.erase(LAST_POS_KEY);
+        mi->props.erase(IDLE_POINT_KEY);
+        mi->props.erase(IDLE_DEADLINE_KEY);
+        mi->props.erase(BLOCKED_DEADLINE_KEY);
     }
 }
 

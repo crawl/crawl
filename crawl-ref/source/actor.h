@@ -313,7 +313,7 @@ public:
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
 
-    virtual bool res_corr(bool calc_unid = true, bool items = true) const;
+    virtual bool res_corr(bool calc_unid = true, bool temp = true) const;
     bool has_notele_item(bool calc_unid = true,
                          vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;

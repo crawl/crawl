@@ -339,6 +339,9 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
     if (!(mh & MH_NATURAL))
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
+    if (mh & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING))
+        resists |= MR_RES_TORMENT;
+
     return resists;
 }
 
@@ -1823,8 +1826,8 @@ void name_zombie(monster& mon, monster_type mc, const string &mon_name)
 
     // It's unlikely there's a desc for "Duvessa the elf skeleton", but
     // we still want to allow it if overridden.
-    if (!mon.props.exists("dbname"))
-        mon.props["dbname"] = mons_class_name(mon.type);
+    if (!mon.props.exists(DBNAME_KEY))
+        mon.props[DBNAME_KEY] = mons_class_name(mon.type);
 }
 
 void name_zombie(monster& mon, const monster& orig)
@@ -2016,7 +2019,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             return attk;
         }
 
-        if (mon.type == MONS_PLAYER_SHADOW)
+        if (mons_is_player_shadow(mon))
         {
             if (!you.weapon())
                 attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
@@ -2965,7 +2968,7 @@ void define_monster(monster& mons)
             mons.props[MIRRORED_GHOST_KEY] = true;
         }
         mons.set_ghost(ghost);
-        mons.ghost_init(!mons.props.exists("fake"));
+        mons.ghost_init(!mons.props.exists(FAKE_MON_KEY));
         break;
     }
 
@@ -3235,8 +3238,8 @@ bool give_monster_proper_name(monster& mon, bool orcs_only)
     }
 
     mon.mname = _get_proper_monster_name(mon);
-    if (!mon.props.exists("dbname"))
-        mon.props["dbname"] = mons_class_name(mon.type);
+    if (!mon.props.exists(DBNAME_KEY))
+        mon.props[DBNAME_KEY] = mons_class_name(mon.type);
 
     if (mon.friendly())
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon.mname));
@@ -3388,11 +3391,6 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
 habitat_type mons_secondary_habitat(const monster& mon)
 {
     return mons_class_secondary_habitat(mons_base_type(mon));
-}
-
-bool intelligent_ally(const monster& mon)
-{
-    return mon.attitude == ATT_FRIENDLY && mons_intel(mon) >= I_HUMAN;
 }
 
 int mons_power(monster_type mc)
@@ -3616,7 +3614,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     mon.del_ench(ENCH_HAUNTING, true, true);
 
     // Remove level annotation.
-    mon.props["no_annotate"] = true;
+    mon.props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(&mon);
 
     // Make the monster begin leaving the level.
@@ -4070,16 +4068,16 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
 
     // Band leaders can displace followers regardless of type considerations.
     // -cao
-    if (m2.props.exists("band_leader"))
+    if (m2.props.exists(BAND_LEADER_KEY))
     {
-        unsigned leader_mid = m2.props["band_leader"].get_int();
+        unsigned leader_mid = m2.props[BAND_LEADER_KEY].get_int();
         if (leader_mid == m1.mid)
             return true;
     }
     // And prevent followers to displace the leader to avoid constant swapping.
-    else if (m1.props.exists("band_leader"))
+    else if (m1.props.exists(BAND_LEADER_KEY))
     {
-        unsigned leader_mid = m1.props["band_leader"].get_int();
+        unsigned leader_mid = m1.props[BAND_LEADER_KEY].get_int();
         if (leader_mid == m2.mid)
             return false;
     }
@@ -5249,9 +5247,16 @@ bool mons_is_avatar(monster_type mc)
     return mons_class_flag(mc, M_AVATAR);
 }
 
+bool mons_is_wrath_avatar(const monster &mon)
+{
+    return mon.type == MONS_PLAYER_SHADOW // ugh
+        && mon.attitude != ATT_FRIENDLY;
+}
+
 bool mons_is_player_shadow(const monster& mon)
 {
-    return mon.type == MONS_PLAYER_SHADOW;
+    return mon.type == MONS_PLAYER_SHADOW
+        && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
 }
 
 bool mons_has_attacks(const monster& mon)

@@ -1,3 +1,13 @@
+Stone Soup 0.27.1 (20210820)
+----------------------------
+
+Bugfix and balance release
+--------------------------
+* The frequency of D:1 jackals is reduced.
+* Sigmund and Robin are nerfed gently.
+* Maxwell's Capacitative Coupling now has LOS range.
+* 80 other fixes, tweaks, copy-edits, and interface improvements.
+
 Stone Soup 0.27.0 (20210730)
 ----------------------------
 

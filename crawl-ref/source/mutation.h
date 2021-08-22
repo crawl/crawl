@@ -15,6 +15,8 @@ using std::vector;
 
 class formatted_string;
 
+#define EVOLUTION_MUTS_KEY "evolution_muts"
+
 enum class mutation_activity_type
 {
     INACTIVE, // form-based mutations in most forms
