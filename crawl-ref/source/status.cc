@@ -698,6 +698,16 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_NO_SCROLL:
+        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+        {
+            inf.light_colour = RED;
+            inf.light_text   = "-Scroll";
+            inf.short_text   = "unable to read";
+            inf.long_text    = "You cannot read scrolls.";
+        }
+        break;
+
     default:
         if (!found)
         {

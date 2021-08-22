@@ -462,11 +462,10 @@ void BaseRunDelay::handle()
             // but when positive is used as a counter, so if it's a very large
             // number in the assert message, this is a wait delay
 
-            const int regen_factor = you.duration[DUR_COLLAPSE] ? 4 : 1;
             const int buggy_threshold = you.running.is_rest()
                 ? 700
                 : (ZOT_CLOCK_PER_FLOOR / BASELINE_DELAY / 3);
-            ASSERTM(you.running.turns_passed < buggy_threshold * regen_factor,
+            ASSERTM(you.running.turns_passed < buggy_threshold,
                     "Excessive delay, %d turns passed, delay type %d",
                     you.running.turns_passed, you.running.runmode);
         }

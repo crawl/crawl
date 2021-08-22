@@ -1130,6 +1130,7 @@ bool regeneration_is_inhibited()
 {
     // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
+        || you.duration[DUR_COLLAPSE]
         || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1167,9 +1168,6 @@ int player_regen()
     // Bonus regeneration for alive vampires.
     if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
         rr += 20;
-
-    if (you.duration[DUR_COLLAPSE])
-        rr /= 4;
 
     if (you.duration[DUR_SICKNESS]
         || !player_regenerates_hp())

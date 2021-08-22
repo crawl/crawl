@@ -2821,7 +2821,7 @@ string cannot_read_item_reason(const item_def *item)
         return "You are too confused!";
 
     // no reading while threatened (Ru/random mutation)
-    if (you.duration[DUR_NO_SCROLLS])
+    if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
         return "You cannot read scrolls in your current state!";
 
     if (silenced(you.pos()))
@@ -3230,13 +3230,6 @@ void read(item_def* scroll, dist *target)
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
-
-    if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
-    {
-        mpr("You almost manage to decipher the scroll,"
-            " but fail in this attempt.");
-        return;
-    }
 
     const int prev_quantity = scroll->quantity;
     int link = in_inventory(*scroll) ? scroll->link : -1;

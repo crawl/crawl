@@ -485,11 +485,6 @@ static const duration_def duration_data[] =
       RED, "Horr",
       "horrified", "horror",
       "You are horrified, weakening your attacks and spells.", D_NO_FLAGS},
-    { DUR_NO_SCROLLS,
-      RED, "-Scroll",
-      "unable to read", "no scrolls",
-      "You cannot read scrolls.", D_NO_FLAGS,
-      {{ "You can read scrolls again." }, {}, true }},
     { DUR_DIVINE_SHIELD,
       0, "",
       "divinely shielded", "divine shield",
@@ -624,6 +619,8 @@ static const duration_def duration_data[] =
       {{ "", wu_jian_decrement_heavenly_storm }}},
     { DUR_SICKNESS, 0, "", "", "sickness", "", D_DISPELLABLE,
       {{ "You feel your health improve." }}},
+    { DUR_NO_SCROLLS, 0, "", "", "", "", D_NO_FLAGS,
+      {{ "You can read scrolls again." }, {}, true }},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

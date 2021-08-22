@@ -214,8 +214,8 @@ You are unable to cast spells.
 Brainless status
 
 Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and will usually fail when attempting to read scrolls. The status will
-persist for a short while even after recovering your intelligence.
+spells, and cannot read scrolls. The status will persist for a short while even
+after recovering your intelligence.
 %%%%
 Clumsy status
 
@@ -225,8 +225,8 @@ while even after recovering your dexterity.
 %%%%
 Collapse status
 
-Your strength has fallen to 0. You are slowed, and your health regeneration is
-greatly reduced. The status will persist for a short while even after
+Your strength has fallen to 0. You are slowed, and you do not regenerate health
+while monsters are visible. The status will persist for a short while even after
 recovering your strength.
 %%%%
 DChan status
