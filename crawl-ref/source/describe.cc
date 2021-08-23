@@ -3133,33 +3133,33 @@ string get_skill_description(skill_type skill, bool need_title)
 
     result += getLongDescription(lookup);
 
-    switch (skill)
+    if (skill == SK_INVOCATIONS)
     {
-        case SK_INVOCATIONS:
-            if (you.has_mutation(MUT_FORLORN))
-            {
-                result += "\n";
-                result += "How on earth did you manage to pick this up?";
-            }
-            else if (you_worship(GOD_TROG))
-            {
-                result += "\n";
-                result += "Note that Trog doesn't use Invocations, due to its "
-                          "close connection to magic.";
-            }
-            break;
+        if (you.has_mutation(MUT_FORLORN))
+        {
+            result += "\n";
+            result += "How on earth did you manage to pick this up?";
+        }
+        else if (invo_skill(you.religion) != SK_INVOCATIONS)
+        {
+            result += "\n";
+            result += uppercase_first(apostrophise(god_name(you.religion)))
+                      + " powers are not affected by the Invocations skill.";
+        }
+    }
+    else if (skill == invo_skill(you.religion))
+    {
+        result += "\n";
+        result += uppercase_first(apostrophise(god_name(you.religion)))
+                  + " powers are based on " + skill_name(skill) + " instead"
+                    " of Invocations skill.";
+    }
 
-        case SK_SPELLCASTING:
-            if (you_worship(GOD_TROG))
-            {
-                result += "\n";
-                result += "Keep in mind, though, that Trog would greatly "
-                          "disapprove of this.";
-            }
-            break;
-        default:
-            // No further information.
-            break;
+    if (is_harmful_skill(skill))
+    {
+        result += "\n";
+        result += uppercase_first(god_name(you.religion))
+                  + " strongly dislikes when you train this skill.";
     }
 
     return result;
