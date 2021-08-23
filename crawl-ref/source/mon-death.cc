@@ -665,22 +665,21 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
-    // Damage by the spectral weapon is considered to be the player's damage ---
-    // so the player does not lose any exp from dealing damage with a spectral weapon summon
-    // ditto hep ancestors (sigh)
+    // Damage by permanent divine allies (Beogh orcs and Yredelemnul gifts)
+    // counts for half experience. Hepliaklqana ancestors and all other allies
+    // grant full experience.
     if (!invalid_monster_index(killer)
-        && (env.mons[killer].type == MONS_SPECTRAL_WEAPON
-            || mons_is_hepliaklqana_ancestor(env.mons[killer].type))
-        && env.mons[killer].summoner == MID_PLAYER)
+        && env.mons[killer].is_divine_companion()
+        && !mons_is_hepliaklqana_ancestor(env.mons[killer].type))
     {
-        return 2;
+        return 1;
     }
 
     if (killer == MHITYOU || killer == YOU_FAULTLESS)
         return 2;
 
     if (_is_pet_kill(KILL_MON, killer))
-        return 1;
+        return 2;
 
     return 0;
 }
