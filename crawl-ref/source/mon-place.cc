@@ -372,7 +372,7 @@ static bool _has_big_aura(monster_type mt)
 static bool _is_incompatible_monster(monster_type mt)
 {
     return mons_class_is_stationary(mt)
-        || god_hates_monster(mt);
+           || god_hates_monster(mt);
 }
 
 static bool _is_banded_monster(monster_type mt)
@@ -2912,6 +2912,7 @@ conduct_type god_hates_monster(const monster &mon)
         if (mon.how_chaotic())
             return DID_CHAOS;
     }
+
     if (god_hates_spellcasting(you.religion) && mon.is_actual_spellcaster())
         return DID_SPELL_CASTING;
 

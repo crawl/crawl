@@ -1049,8 +1049,7 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
-spret cast_shadow_creatures(int st, god_type god, level_id place,
-                                 bool fail)
+spret cast_shadow_creatures(int st, god_type god, level_id place, bool fail)
 {
     if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
@@ -1072,43 +1071,21 @@ spret cast_shadow_creatures(int st, god_type god, level_id place,
                       .set_place(place),
             false))
         {
-            // In the rare cases that a specific spell set of a monster will
-            // cause anger, even if others do not, try rerolling
-            int tries = 0;
-            while (god_hates_monster(*mons) && ++tries <= 20)
-            {
-                // Save the enchantments, particularly ENCH_SUMMON etc.
-                mon_enchant_list ench = mons->enchantments;
-                FixedBitVector<NUM_ENCHANTMENTS> cache = mons->ench_cache;
-                if (mons_class_is_zombified(mons->type))
-                    define_zombie(mons, mons->base_monster, mons->type);
-                else
-                    define_monster(*mons);
-                mons->enchantments = ench;
-                mons->ench_cache = cache;
-            }
+            // Choose a new duration based on HD.
+            int x = max(mons->get_experience_level() - 3, 1);
+            int d = div_rand_round(17, x);
+            if (scroll)
+                d++;
+            if (d < 1)
+                d = 1;
+            if (d > 4)
+                d = 4;
+            mon_enchant me = mon_enchant(ENCH_ABJ, d);
+            me.set_duration(mons, &me);
+            mons->update_ench(me);
 
-            // If we didn't find a valid spell set yet, just give up
-            if (tries > 20)
-                monster_die(*mons, KILL_RESET, NON_MONSTER);
-            else
-            {
-                // Choose a new duration based on HD.
-                int x = max(mons->get_experience_level() - 3, 1);
-                int d = div_rand_round(17,x);
-                if (scroll)
-                    d++;
-                if (d < 1)
-                    d = 1;
-                if (d > 4)
-                    d = 4;
-                mon_enchant me = mon_enchant(ENCH_ABJ, d);
-                me.set_duration(mons, &me);
-                mons->update_ench(me);
-
-                // Set summon ID, to share summon cap with its band members
-                mons->props[SUMMON_ID_KEY].get_int() = mons->mid;
-            }
+            // Set summon ID, to share summon cap with its band members
+            mons->props[SUMMON_ID_KEY].get_int() = mons->mid;
 
             // Remove any band members that would turn hostile, and link their
             // summon IDs
