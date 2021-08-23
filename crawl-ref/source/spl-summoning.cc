@@ -2570,16 +2570,16 @@ spret cast_infestation(int pow, bolt &beam, bool fail)
 static const map<spell_type, int> summonsdata =
 {
     // Beasts
-    { SPELL_SUMMON_SMALL_MAMMAL,        4 },
+    { SPELL_SUMMON_SMALL_MAMMAL,        2 },
     { SPELL_CALL_CANINE_FAMILIAR,       1 },
-    { SPELL_SUMMON_ICE_BEAST,           3 },
-    { SPELL_SUMMON_HYDRA,               3 },
-    { SPELL_SUMMON_MANA_VIPER,          2 },
+    { SPELL_SUMMON_ICE_BEAST,           1 },
+    { SPELL_SUMMON_HYDRA,               2 },
+    { SPELL_SUMMON_MANA_VIPER,          1 },
     // General monsters
-    { SPELL_CALL_IMP,                   3 },
-    { SPELL_MONSTROUS_MENAGERIE,        3 },
+    { SPELL_CALL_IMP,                   1 },
+    { SPELL_MONSTROUS_MENAGERIE,        2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8 },
-    { SPELL_SHADOW_CREATURES,           4 },
+    { SPELL_SHADOW_CREATURES,           1 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1 },
     { SPELL_SUMMON_GUARDIAN_GOLEM,      1 },
     { SPELL_SPELLFORGED_SERVITOR,       1 },
