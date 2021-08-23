@@ -4264,15 +4264,26 @@ static string _monster_current_target_description(const monster_info &mi)
     if (!in_bounds(mi.pos) || !monster_at(mi.pos))
         return "";
     const monster *m = monster_at(mi.pos);
+
+    const char* pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
+    const bool plural = mi.pronoun_plurality();
+
     ostringstream result;
     if (mi.is(MB_ALLY_TARGET))
     {
         auto allies = find_allies_targeting(*m);
         if (allies.size() == 1)
-            result << "It is currently targeted by " << allies[0]->name(DESC_YOUR) << ".\n";
+        {
+            result << uppercase_first(pronoun) << " "
+                   << conjugate_verb("are", plural)
+                   << " currently targeted by "
+                   << allies[0]->name(DESC_YOUR) << ".\n";
+        }
         else
         {
-            result << "It is currently targeted by allies:\n";
+            result << uppercase_first(pronoun) << " "
+                   << conjugate_verb("are", plural)
+                   << " currently targeted by:\n";
             for (auto *a : allies)
                 result << "  " << a->name(DESC_YOUR) << "\n";
         }
@@ -4280,7 +4291,12 @@ static string _monster_current_target_description(const monster_info &mi)
 
     // TODO: this might be ambiguous, give a relative position?
     if (mi.attitude == ATT_FRIENDLY && m->get_foe())
-        result << "It is currently targeting " << m->get_foe()->name(DESC_THE) << ".\n";
+    {
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural)
+               << " currently targeting "
+               << m->get_foe()->name(DESC_THE) << ".\n";
+    }
 
     return result.str();
 }
