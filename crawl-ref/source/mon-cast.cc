@@ -7360,7 +7360,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     // Don't bother casting a summon spell if we're already at its cap
     if (summons_are_capped(monspell)
-        && count_summons(mon, monspell) >= summons_limit(monspell))
+        && count_summons(mon, monspell) >= summons_limit(monspell, false))
     {
         return ai_action::impossible();
     }

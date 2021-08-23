@@ -2596,55 +2596,60 @@ spret cast_infestation(int pow, bolt &beam, bool fail)
     return spret::success;
 }
 
-// spell type, cap
-static const map<spell_type, int> summonsdata =
+struct summon_cap
 {
-    // Beasts
-    { SPELL_SUMMON_SMALL_MAMMAL,        2 },
-    { SPELL_CALL_CANINE_FAMILIAR,       1 },
-    { SPELL_SUMMON_ICE_BEAST,           1 },
-    { SPELL_SUMMON_HYDRA,               2 },
-    { SPELL_SUMMON_MANA_VIPER,          1 },
-    // General monsters
-    { SPELL_CALL_IMP,                   1 },
-    { SPELL_MONSTROUS_MENAGERIE,        2 },
-    { SPELL_SUMMON_HORRIBLE_THINGS,     8 },
-    { SPELL_SHADOW_CREATURES,           1 },
-    { SPELL_SUMMON_LIGHTNING_SPIRE,     1 },
-    { SPELL_SUMMON_GUARDIAN_GOLEM,      1 },
-    { SPELL_SPELLFORGED_SERVITOR,       1 },
-    { SPELL_ANIMATE_ARMOUR,             1 },
-    // Monster spells
-    { SPELL_SUMMON_UFETUBUS,            8 },
-    { SPELL_SUMMON_HELL_BEAST,          8 },
-    { SPELL_SUMMON_UNDEAD,              8 },
-    { SPELL_SUMMON_DRAKES,              4 },
-    { SPELL_SUMMON_MUSHROOMS,           8 },
-    { SPELL_SUMMON_EYEBALLS,            4 },
-    { SPELL_WATER_ELEMENTALS,           3 },
-    { SPELL_FIRE_ELEMENTALS,            3 },
-    { SPELL_EARTH_ELEMENTALS,           3 },
-    { SPELL_AIR_ELEMENTALS,             3 },
-    { SPELL_SUMMON_SPECTRAL_ORCS,       3 },
-    { SPELL_FIRE_SUMMON,                4 },
-    { SPELL_SUMMON_MINOR_DEMON,         3 },
-    { SPELL_CALL_LOST_SOUL,             3 },
-    { SPELL_SUMMON_VERMIN,              5 },
-    { SPELL_FORCEFUL_INVITATION,        3 },
-    { SPELL_PLANEREND,                  6 },
-    { SPELL_SUMMON_DRAGON,              4 },
-    { SPELL_PHANTOM_MIRROR,             4 },
-    { SPELL_FAKE_MARA_SUMMON,           2 },
-    { SPELL_SUMMON_EMPEROR_SCORPIONS,   6 },
-    { SPELL_SUMMON_SCARABS,             8 },
-    { SPELL_SUMMON_HOLIES,              4 },
-    { SPELL_SUMMON_EXECUTIONERS,        3 },
-    { SPELL_AWAKEN_EARTH,               9 },
-    { SPELL_GREATER_SERVANT_MAKHLEB,    1 },
-    { SPELL_SUMMON_GREATER_DEMON,       3 },
-    { SPELL_SUMMON_DEMON,               3 },
-    { SPELL_SUMMON_TZITZIMITL,          3 },
-    { SPELL_SUMMON_HELL_SENTINEL,       3 },
+    int player_cap;
+    int monster_cap;
+};
+
+// spell type, player cap, monster cap
+static const map<spell_type, summon_cap> summonsdata =
+{
+    // Player- and monster-castable spells
+    { SPELL_SUMMON_SMALL_MAMMAL,      { 2, 4 } },
+    { SPELL_CALL_CANINE_FAMILIAR,     { 1, 1 } },
+    { SPELL_SUMMON_ICE_BEAST,         { 1, 3 } },
+    { SPELL_SUMMON_HYDRA,             { 2, 3 } },
+    { SPELL_SUMMON_MANA_VIPER,        { 1, 3 } },
+    { SPELL_CALL_IMP,                 { 1, 3 } },
+    { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
+    { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
+    { SPELL_SHADOW_CREATURES,         { 1, 4 } },
+    { SPELL_SUMMON_LIGHTNING_SPIRE,   { 1, 1 } },
+    { SPELL_SUMMON_GUARDIAN_GOLEM,    { 1, 1 } },
+    { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
+    { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
+    // Monster-only spells
+    { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
+    { SPELL_SUMMON_HELL_BEAST,        { 0, 8 } },
+    { SPELL_SUMMON_UNDEAD,            { 0, 8 } },
+    { SPELL_SUMMON_DRAKES,            { 0, 4 } },
+    { SPELL_SUMMON_MUSHROOMS,         { 0, 8 } },
+    { SPELL_SUMMON_EYEBALLS,          { 0, 4 } },
+    { SPELL_WATER_ELEMENTALS,         { 0, 3 } },
+    { SPELL_FIRE_ELEMENTALS,          { 0, 3 } },
+    { SPELL_EARTH_ELEMENTALS,         { 0, 3 } },
+    { SPELL_AIR_ELEMENTALS,           { 0, 3 } },
+    { SPELL_SUMMON_SPECTRAL_ORCS,     { 0, 3 } },
+    { SPELL_FIRE_SUMMON,              { 0, 4 } },
+    { SPELL_SUMMON_MINOR_DEMON,       { 0, 3 } },
+    { SPELL_CALL_LOST_SOUL,           { 0, 3 } },
+    { SPELL_SUMMON_VERMIN,            { 0, 5 } },
+    { SPELL_FORCEFUL_INVITATION,      { 0, 3 } },
+    { SPELL_PLANEREND,                { 0, 6 } },
+    { SPELL_SUMMON_DRAGON,            { 0, 4 } },
+    { SPELL_PHANTOM_MIRROR,           { 0, 4 } },
+    { SPELL_FAKE_MARA_SUMMON,         { 0, 2 } },
+    { SPELL_SUMMON_EMPEROR_SCORPIONS, { 0, 6 } },
+    { SPELL_SUMMON_SCARABS,           { 0, 8 } },
+    { SPELL_SUMMON_HOLIES,            { 0, 4 } },
+    { SPELL_SUMMON_EXECUTIONERS,      { 0, 3 } },
+    { SPELL_AWAKEN_EARTH,             { 0, 9 } },
+    { SPELL_GREATER_SERVANT_MAKHLEB,  { 0, 1 } },
+    { SPELL_SUMMON_GREATER_DEMON,     { 0, 3 } },
+    { SPELL_SUMMON_DEMON,             { 0, 3 } },
+    { SPELL_SUMMON_TZITZIMITL,        { 0, 3 } },
+    { SPELL_SUMMON_HELL_SENTINEL,     { 0, 3 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -2653,10 +2658,13 @@ bool summons_are_capped(spell_type spell)
     return summonsdata.count(spell);
 }
 
-int summons_limit(spell_type spell)
+int summons_limit(spell_type spell, bool player)
 {
-    const int *cap = map_find(summonsdata, spell);
-    return *cap;
+    const summon_cap *cap = map_find(summonsdata, spell);
+    if (!cap)
+        return 0;
+    else
+        return player ? cap->player_cap : cap->monster_cap;
 }
 
 static bool _spell_has_variable_cap(spell_type spell)
@@ -2696,7 +2704,7 @@ static void _expire_capped_summon(monster* mon, bool recurse)
 void summoned_monster(const monster *mons, const actor *caster,
                       spell_type spell)
 {
-    int cap = summons_limit(spell);
+    int cap = summons_limit(spell, caster->is_player());
     if (!cap) // summons aren't capped
         return;
 

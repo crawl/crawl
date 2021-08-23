@@ -3272,7 +3272,7 @@ static string _player_spell_desc(spell_type spell)
     }
 
     // Report summon cap
-    const int limit = summons_limit(spell);
+    const int limit = summons_limit(spell, true);
     if (limit)
     {
         description << "You can sustain at most " + number_in_words(limit)
@@ -3374,6 +3374,17 @@ static void _get_spell_description(const spell_type spell,
         else
             description += range_string(range, range, mons_char(mon_owner->type));
         description += "\n";
+
+        // Report summon cap
+        const int limit = summons_limit(spell, false);
+        if (limit)
+        {
+            description += make_stringf("%s can sustain at most %s creature%s "
+                               "summoned by this spell.\n",
+                               mon_owner->full_name(DESC_PLAIN).c_str(),
+                               number_in_words(limit).c_str(),
+                               limit > 1 ? "s" : "");
+        }
 
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & spflag::WL_check)
