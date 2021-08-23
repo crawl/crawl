@@ -499,6 +499,7 @@ enum monster_type                      // env.mons[].type
     MONS_JUGGERNAUT,
     MONS_IRON_GIANT,
     MONS_CACTUS_GIANT,
+    MONS_TAINTED_LEVIATHAN,
 #endif
     MONS_HUMAN,
 #if TAG_MAJOR_VERSION == 34
@@ -1133,6 +1134,7 @@ enum monster_type                      // env.mons[].type
     MONS_QUICKSILVER_ELEMENTAL,
     MONS_CRYSTAL_ECHIDNA,
     MONS_PUTRID_MOUTH,
+    MONS_TAINTED_LEVIATHAN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

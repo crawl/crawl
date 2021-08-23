@@ -2397,6 +2397,13 @@ tarantella
 A small but greatly-feared spider whose enchanted bite causes victims to break
 into a frenzied dance.
 %%%%
+tainted leviathan
+
+Before even the oldest of ancient liches mastered life and death, a group of
+titans attempted to pull themselves free of mortality through brute strength.
+They almost succeeded before rot dragged them to Ereshkigal. A glimmer of their
+former beauty remains, alluring despite the stench.
+%%%%
 tengu
 
 A humanoid figure with the head and talons of a bird. Its ferociously combative

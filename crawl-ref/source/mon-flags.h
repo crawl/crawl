@@ -179,6 +179,7 @@ enum monclass_flag_type : uint64_t
     /// is surrounded by a ring of clouds. Only one can be active at a time!
     M_THUNDER_RING      = BIT(58),
     M_FIRE_RING         = BIT(59),
+    M_MIASMA_RING       = BIT(60),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 

@@ -1079,6 +1079,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
+    case MONS_TAINTED_LEVIATHAN:
         item.base_type = OBJ_MISSILES;
         item.sub_type  = MI_LARGE_ROCK;
         break;

@@ -619,6 +619,7 @@ titan MONS_TITAN
 juggernaut MONS_JUGGERNAUT
 iron_giant MONS_IRON_GIANT
 cactus_giant MONS_CACTUS_GIANT
+tainted_leviathan MONS_TAINTED_LEVIATHAN
 %rim 1
 
 ## Drakes (also 'l')

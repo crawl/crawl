@@ -1253,6 +1253,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mons_class_flag(mon->type, M_THUNDER_RING))
         mon->add_ench(ENCH_RING_OF_THUNDER);
 
+    if (mons_class_flag(mon->type, M_MIASMA_RING))
+        mon->add_ench(ENCH_RING_OF_MIASMA);
+
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.
