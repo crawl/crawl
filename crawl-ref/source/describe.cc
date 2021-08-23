@@ -1064,18 +1064,17 @@ static skill_type _item_training_skill(const item_def &item)
 }
 
 /**
- * Whether it would make sense to set a training target for an item.
+ * Return whether the character is below a plausible training target for an
+ * item.
  *
  * @param item the item to check.
- * @param ignore_current whether to ignore any current training targets (e.g. if there is a higher target, it might not make sense to set a lower one).
+ * @param ignore_current if false, return false if there already is a higher
+ *        target set for this skill.
  */
-static bool _could_set_training_target(const item_def &item, bool ignore_current)
+static bool _is_below_training_target(const item_def &item, bool ignore_current)
 {
-    if (!crawl_state.need_save || is_useless_item(item)
-        || you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-    {
+    if (!crawl_state.need_save || is_useless_item(item))
         return false;
-    }
 
     const skill_type skill = _item_training_skill(item);
     if (skill == SK_NONE)
@@ -1087,6 +1086,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
        && you.skill(skill, 10, false, false) < target
        && (ignore_current || you.get_training_target(skill) < target);
 }
+
 
 /**
  * Produce the "Your skill:" line for item descriptions where specific skill targets
@@ -1192,7 +1192,9 @@ static void _append_weapon_stats(string &description, const item_def &item)
     const skill_type skill = _item_training_skill(item);
     const int mindelay_skill = _item_training_target(item);
 
-    const bool could_set_target = _could_set_training_target(item, true);
+    const bool below_target = _is_below_training_target(item, true);
+    const bool can_set_target = below_target
+        && in_inventory(item) && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
     if (skill == SK_SLINGS)
     {
@@ -1223,11 +1225,11 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (!is_useless_item(item))
     {
-        description += "\n    " + _your_skill_desc(skill,
-                    could_set_target && in_inventory(item), mindelay_skill);
+        description += "\n    "
+            + _your_skill_desc(skill, can_set_target, mindelay_skill);
     }
 
-    if (could_set_target)
+    if (below_target)
         _append_skill_target_desc(description, skill, mindelay_skill);
 }
 
@@ -1604,7 +1606,10 @@ static string _describe_ammo(const item_def &item)
     {
         const int throw_delay = (10 + dam / 2);
         const int target_skill = _item_training_target(item);
-        const bool could_set_target = _could_set_training_target(item, true);
+
+        const bool below_target = _is_below_training_target(item, true);
+        const bool can_set_target = below_target && in_inventory(item)
+            && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
         description += make_stringf(
             "\nBase damage: %d  Base attack delay: %.1f"
@@ -1619,10 +1624,9 @@ static string _describe_ammo(const item_def &item)
         if (!is_useless_item(item))
         {
             description += "\n    " +
-                    _your_skill_desc(SK_THROWING,
-                        could_set_target && in_inventory(item), target_skill);
+                    _your_skill_desc(SK_THROWING, can_set_target, target_skill);
         }
-        if (could_set_target)
+        if (below_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
@@ -1807,23 +1811,22 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "\n";
             description += "\nBase shield rating: "
                         + to_string(property(item, PARM_AC));
-            const bool could_set_target = _could_set_training_target(item, true);
+            const bool below_target = _is_below_training_target(item, true);
+            const bool can_set_target = below_target && in_inventory(item)
+                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
             if (!is_useless_item(item))
             {
                 description += "       Skill to remove penalty: "
                             + make_stringf("%d.%d", target_skill / 10,
-                                                target_skill % 10);
+                                                target_skill % 10) + "\n";
 
                 if (crawl_state.need_save)
                 {
-                    description += "\n                            "
-                        + _your_skill_desc(SK_SHIELDS,
-                          could_set_target && in_inventory(item), target_skill);
+                    description += _your_skill_desc(SK_SHIELDS, can_set_target,
+                                                    target_skill);
                 }
-                else
-                    description += "\n";
-                if (could_set_target)
+                if (below_target)
                 {
                     _append_skill_target_desc(description, SK_SHIELDS,
                                                                 target_skill);
@@ -2667,12 +2670,15 @@ static vector<command_type> _allowed_actions(const item_def& item)
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (item_equip_slot(item) == EQ_WEAPON)
         actions.push_back(CMD_UNWIELD_WEAPON);
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+        && _is_below_training_target(item, false))
+    {
+        actions.push_back(CMD_SET_SKILL_TARGET);
+    }
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (!item_is_equipped(item))
         {
             if (item_is_wieldable(item))
@@ -2680,14 +2686,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
         }
         break;
     case OBJ_MISSILES:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (!you.has_mutation(MUT_NO_GRASPING))
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (item_is_equipped(item))
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
