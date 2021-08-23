@@ -760,13 +760,13 @@ pelf-dandling
 
 fault-botching
 
-gravel-groveling
+gravel-grovelling
 
 boodle-bothering
 
 cabbage-coddling
 
-rhino-raveling
+rhino-ravelling
 
 thigh-biting
 

@@ -693,7 +693,7 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text   = "Duel";
-            inf.short_text   = "dueling";
+            inf.short_text   = "duelling";
             inf.long_text    = "You are engaged in single combat.";
         }
         break;

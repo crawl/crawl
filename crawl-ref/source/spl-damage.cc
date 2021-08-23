@@ -3073,7 +3073,7 @@ void handle_searing_ray()
     // If friendlies have moved into the beam path, give a chance to abort
     if (!player_tracer(zap, pow, beam))
     {
-        mpr("You stop channeling your searing ray.");
+        mpr("You stop channelling your searing ray.");
         end_searing_ray();
         return;
     }
@@ -3089,7 +3089,7 @@ void handle_searing_ray()
 
     if (++you.attribute[ATTR_SEARING_RAY] > 3)
     {
-        mpr("You finish channeling your searing ray.");
+        mpr("You finish channelling your searing ray.");
         end_searing_ray();
     }
 }
