@@ -1285,7 +1285,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             if (you.duration[DUR_SWIFTNESS])
                 return "this spell is already in effect.";
             if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
-                return "you're already traveling as fast as you can.";
+                return "you're already travelling as fast as you can.";
             if (you.is_stationary())
                 return "you can't move.";
         }

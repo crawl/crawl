@@ -231,7 +231,7 @@ recovering your strength.
 %%%%
 DChan status
 
-You are channeling the dead, causing any living creatures killed in your
+You are channelling the dead, causing any living creatures killed in your
 vicinity to be raised as spectral servants.
 %%%%
 Vit status
@@ -345,7 +345,7 @@ Your combat speed is greatly increased.
 %%%%
 Duel status
 
-You are dueling a foe in Okawaru's Arena, and will be returned whence you came
+You are duelling a foe in Okawaru's Arena, and will be returned whence you came
 if you are victorious.
 %%%%
 Prot status
@@ -464,7 +464,7 @@ You are unable to cast spells.
 %%%%
 Channel status
 
-You are channeling magical energy.
+You are channelling magical energy.
 %%%%
 Spider status
 
@@ -632,7 +632,7 @@ casting spells, are fine.)
 %%%%
 Ray status
 
-You are currently channeling a ray of searing magical energy. Pressing . will
+You are currently channelling a ray of searing magical energy. Pressing . will
 maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
 including recasting the spell, will end it.
 
