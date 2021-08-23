@@ -1361,7 +1361,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                            mg.summon_type != SPELL_TUKIMAS_DANCE,
                            mg.summon_type);
 
-        if (mg.summon_type > 0 && mg.summoner && !(mg.flags & MG_DONT_CAP))
+        if (mg.summon_type > 0 && mg.summoner)
         {
             // If this is a band member created by shadow creatures, link its
             // ID and don't count it against the summon cap

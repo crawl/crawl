@@ -215,7 +215,6 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 
     mgen_data mdata = _summon_data(*caster, type, 4, god,
                                    SPELL_MONSTROUS_MENAGERIE);
-    mdata.flags |= MG_DONT_CAP;
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
@@ -225,8 +224,6 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
-
-    summoned_monster(beast, &you, SPELL_MONSTROUS_MENAGERIE);
 
     if (you.can_see(*beast))
     {
@@ -2693,8 +2690,7 @@ int summons_limit(spell_type spell)
 
 static bool _spell_has_variable_cap(spell_type spell)
 {
-    return spell == SPELL_SHADOW_CREATURES
-           || spell == SPELL_MONSTROUS_MENAGERIE;
+    return spell == SPELL_SHADOW_CREATURES;
 }
 
 static void _expire_capped_summon(monster* mon, int delay, bool recurse)
