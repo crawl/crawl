@@ -1800,6 +1800,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_TZITZIMITL:
     case SPELL_SUMMON_HELL_SENTINEL:
     case SPELL_GOAD_BEASTS:
+    case SPELL_STOKE_FLAMES:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6490,6 +6491,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_GOAD_BEASTS:
         _cast_goad_beasts(mons);
+        return;
+
+    case SPELL_STOKE_FLAMES:
+        _summon(*mons, MONS_CREEPING_INFERNO, 1, slot);
         return;
 
     }

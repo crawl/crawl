@@ -1374,6 +1374,10 @@ which lashes out at the target. The stinger's impact will always poison a
 susceptible target. Even resistant targets have a chance to be poisoned and
 immune monsters will be damaged by the physical impact of the stinger.
 %%%%
+Stoke Flames spell
+
+Adds malice to hellish fires, binding it with flame into a creeping inferno.
+%%%%
 Stone Arrow spell
 
 Fires a sharp spine of rock.

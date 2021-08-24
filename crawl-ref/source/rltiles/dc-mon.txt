@@ -780,6 +780,7 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
+stoker MONS_STOKER
 %rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH

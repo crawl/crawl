@@ -2342,6 +2342,11 @@ steam dragon
 A relatively small grey dragon, with a resilient-looking scaly hide and steam
 pouring from its mouth.
 %%%%
+stoker
+
+A blacksmith who made an unholy pact in life, now chained to tend the fires of
+hell in undeath as payment.
+%%%%
 stone giant
 
 A gigantic humanoid with grey skin almost as hard as rock. It carries several
