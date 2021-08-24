@@ -1764,12 +1764,12 @@ string target_desc(const monster_info& mi, spell_type spell)
     int powc = calc_spell_power(spell, true);
     const int range = calc_spell_range(spell, powc, false);
     unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
-
     if (!hitfunc)
         return "";
-
     desc_filter addl_desc = targeter_addl_desc(spell, powc,
                                 get_spell_flags(spell), hitfunc.get());
+    if( !addl_desc )
+        return "";
     vector<string> d = addl_desc(mi);
     return comma_separated_line(d.begin(), d.end());
 }
