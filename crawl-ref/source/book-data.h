@@ -64,7 +64,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Dryads
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Fire
@@ -267,7 +266,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Dreams
     SPELL_HIBERNATION,
     SPELL_SPIDER_FORM,
-    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Alchemy
