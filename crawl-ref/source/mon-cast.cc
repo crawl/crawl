@@ -5307,6 +5307,8 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         if (in_bounds(*ai) && !cell_is_solid(*ai))
             affected.push_back(*ai);
 
+    shuffle_array(affected);
+
     if (Options.use_animations & UA_MONSTER)
     {
         for (coord_def pos : affected)
