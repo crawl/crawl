@@ -1019,7 +1019,7 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
-spret cast_shadow_creatures(int st, god_type god, level_id place, bool fail)
+spret cast_shadow_creatures(int st, god_type god, bool fail)
 {
     if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
@@ -1038,7 +1038,7 @@ spret cast_shadow_creatures(int st, god_type god, level_id place, bool fail)
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
                       .set_summoned(&you, scroll ? 2 : 1, st, god)
-                      .set_place(place),
+                      .set_place(level_id::current()),
             false))
         {
             // Choose a new duration based on HD.
@@ -2584,12 +2584,12 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_CALL_IMP,                 { 1, 3 } },
     { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
-    { SPELL_SHADOW_CREATURES,         { 1, 4 } },
     { SPELL_SUMMON_LIGHTNING_SPIRE,   { 1, 1 } },
     { SPELL_SUMMON_GUARDIAN_GOLEM,    { 1, 1 } },
     { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
     // Monster-only spells
+    { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
     { SPELL_SUMMON_HELL_BEAST,        { 0, 8 } },
     { SPELL_SUMMON_UNDEAD,            { 0, 8 } },
