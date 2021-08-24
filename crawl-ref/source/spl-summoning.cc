@@ -2656,7 +2656,7 @@ bool summons_are_capped(spell_type spell)
 int summons_limit(spell_type spell)
 {
     const int *cap = map_find(summonsdata, spell);
-    return *cap;
+    return cap ? *cap : 0;
 }
 
 static bool _spell_has_variable_cap(spell_type spell)
