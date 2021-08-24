@@ -3133,33 +3133,33 @@ string get_skill_description(skill_type skill, bool need_title)
 
     result += getLongDescription(lookup);
 
-    switch (skill)
+    if (skill == SK_INVOCATIONS)
     {
-        case SK_INVOCATIONS:
-            if (you.has_mutation(MUT_FORLORN))
-            {
-                result += "\n";
-                result += "How on earth did you manage to pick this up?";
-            }
-            else if (you_worship(GOD_TROG))
-            {
-                result += "\n";
-                result += "Note that Trog doesn't use Invocations, due to its "
-                          "close connection to magic.";
-            }
-            break;
+        if (you.has_mutation(MUT_FORLORN))
+        {
+            result += "\n";
+            result += "How on earth did you manage to pick this up?";
+        }
+        else if (invo_skill(you.religion) != SK_INVOCATIONS)
+        {
+            result += "\n";
+            result += uppercase_first(apostrophise(god_name(you.religion)))
+                      + " powers are not affected by the Invocations skill.";
+        }
+    }
+    else if (skill == invo_skill(you.religion))
+    {
+        result += "\n";
+        result += uppercase_first(apostrophise(god_name(you.religion)))
+                  + " powers are based on " + skill_name(skill) + " instead"
+                    " of Invocations skill.";
+    }
 
-        case SK_SPELLCASTING:
-            if (you_worship(GOD_TROG))
-            {
-                result += "\n";
-                result += "Keep in mind, though, that Trog would greatly "
-                          "disapprove of this.";
-            }
-            break;
-        default:
-            // No further information.
-            break;
+    if (is_harmful_skill(skill))
+    {
+        result += "\n";
+        result += uppercase_first(god_name(you.religion))
+                  + " strongly dislikes when you train this skill.";
     }
 
     return result;
@@ -4264,15 +4264,26 @@ static string _monster_current_target_description(const monster_info &mi)
     if (!in_bounds(mi.pos) || !monster_at(mi.pos))
         return "";
     const monster *m = monster_at(mi.pos);
+
+    const char* pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
+    const bool plural = mi.pronoun_plurality();
+
     ostringstream result;
     if (mi.is(MB_ALLY_TARGET))
     {
         auto allies = find_allies_targeting(*m);
         if (allies.size() == 1)
-            result << "It is currently targeted by " << allies[0]->name(DESC_YOUR) << ".\n";
+        {
+            result << uppercase_first(pronoun) << " "
+                   << conjugate_verb("are", plural)
+                   << " currently targeted by "
+                   << allies[0]->name(DESC_YOUR) << ".\n";
+        }
         else
         {
-            result << "It is currently targeted by allies:\n";
+            result << uppercase_first(pronoun) << " "
+                   << conjugate_verb("are", plural)
+                   << " currently targeted by:\n";
             for (auto *a : allies)
                 result << "  " << a->name(DESC_YOUR) << "\n";
         }
@@ -4280,7 +4291,12 @@ static string _monster_current_target_description(const monster_info &mi)
 
     // TODO: this might be ambiguous, give a relative position?
     if (mi.attitude == ATT_FRIENDLY && m->get_foe())
-        result << "It is currently targeting " << m->get_foe()->name(DESC_THE) << ".\n";
+    {
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural)
+               << " currently targeting "
+               << m->get_foe()->name(DESC_THE) << ".\n";
+    }
 
     return result.str();
 }

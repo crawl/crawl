@@ -215,7 +215,6 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 
     mgen_data mdata = _summon_data(*caster, type, 4, god,
                                    SPELL_MONSTROUS_MENAGERIE);
-    mdata.flags |= MG_DONT_CAP;
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
@@ -225,8 +224,6 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
-
-    summoned_monster(beast, &you, SPELL_MONSTROUS_MENAGERIE);
 
     if (you.can_see(*beast))
     {
@@ -1052,8 +1049,7 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
-spret cast_shadow_creatures(int st, god_type god, level_id place,
-                                 bool fail)
+spret cast_shadow_creatures(int st, god_type god, level_id place, bool fail)
 {
     if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
@@ -1075,43 +1071,21 @@ spret cast_shadow_creatures(int st, god_type god, level_id place,
                       .set_place(place),
             false))
         {
-            // In the rare cases that a specific spell set of a monster will
-            // cause anger, even if others do not, try rerolling
-            int tries = 0;
-            while (god_hates_monster(*mons) && ++tries <= 20)
-            {
-                // Save the enchantments, particularly ENCH_SUMMON etc.
-                mon_enchant_list ench = mons->enchantments;
-                FixedBitVector<NUM_ENCHANTMENTS> cache = mons->ench_cache;
-                if (mons_class_is_zombified(mons->type))
-                    define_zombie(mons, mons->base_monster, mons->type);
-                else
-                    define_monster(*mons);
-                mons->enchantments = ench;
-                mons->ench_cache = cache;
-            }
+            // Choose a new duration based on HD.
+            int x = max(mons->get_experience_level() - 3, 1);
+            int d = div_rand_round(17, x);
+            if (scroll)
+                d++;
+            if (d < 1)
+                d = 1;
+            if (d > 4)
+                d = 4;
+            mon_enchant me = mon_enchant(ENCH_ABJ, d);
+            me.set_duration(mons, &me);
+            mons->update_ench(me);
 
-            // If we didn't find a valid spell set yet, just give up
-            if (tries > 20)
-                monster_die(*mons, KILL_RESET, NON_MONSTER);
-            else
-            {
-                // Choose a new duration based on HD.
-                int x = max(mons->get_experience_level() - 3, 1);
-                int d = div_rand_round(17,x);
-                if (scroll)
-                    d++;
-                if (d < 1)
-                    d = 1;
-                if (d > 4)
-                    d = 4;
-                mon_enchant me = mon_enchant(ENCH_ABJ, d);
-                me.set_duration(mons, &me);
-                mons->update_ench(me);
-
-                // Set summon ID, to share summon cap with its band members
-                mons->props[SUMMON_ID_KEY].get_int() = mons->mid;
-            }
+            // Set summon ID, to share summon cap with its band members
+            mons->props[SUMMON_ID_KEY].get_int() = mons->mid;
 
             // Remove any band members that would turn hostile, and link their
             // summon IDs
@@ -2622,61 +2596,55 @@ spret cast_infestation(int pow, bolt &beam, bool fail)
     return spret::success;
 }
 
-struct summon_cap
-{
-    int type_cap;
-    int timeout;
-};
-
-// spell type, cap, timeout
-static const map<spell_type, summon_cap> summonsdata =
+// spell type, cap
+static const map<spell_type, int> summonsdata =
 {
     // Beasts
-    { SPELL_SUMMON_SMALL_MAMMAL,        { 4, 2 } },
-    { SPELL_CALL_CANINE_FAMILIAR,       { 1, 2 } },
-    { SPELL_SUMMON_ICE_BEAST,           { 3, 3 } },
-    { SPELL_SUMMON_HYDRA,               { 3, 2 } },
-    { SPELL_SUMMON_MANA_VIPER,          { 2, 2 } },
+    { SPELL_SUMMON_SMALL_MAMMAL,        4 },
+    { SPELL_CALL_CANINE_FAMILIAR,       1 },
+    { SPELL_SUMMON_ICE_BEAST,           3 },
+    { SPELL_SUMMON_HYDRA,               3 },
+    { SPELL_SUMMON_MANA_VIPER,          2 },
     // General monsters
-    { SPELL_CALL_IMP,                   { 3, 3 } },
-    { SPELL_MONSTROUS_MENAGERIE,        { 3, 2 } },
-    { SPELL_SUMMON_HORRIBLE_THINGS,     { 8, 8 } },
-    { SPELL_SHADOW_CREATURES,           { 4, 2 } },
-    { SPELL_SUMMON_LIGHTNING_SPIRE,     { 1, 2 } },
-    { SPELL_SUMMON_GUARDIAN_GOLEM,      { 1, 2 } },
-    { SPELL_SPELLFORGED_SERVITOR,       { 1, 2 } },
-    { SPELL_ANIMATE_ARMOUR,       { 1, 2 } },
+    { SPELL_CALL_IMP,                   3 },
+    { SPELL_MONSTROUS_MENAGERIE,        3 },
+    { SPELL_SUMMON_HORRIBLE_THINGS,     8 },
+    { SPELL_SHADOW_CREATURES,           4 },
+    { SPELL_SUMMON_LIGHTNING_SPIRE,     1 },
+    { SPELL_SUMMON_GUARDIAN_GOLEM,      1 },
+    { SPELL_SPELLFORGED_SERVITOR,       1 },
+    { SPELL_ANIMATE_ARMOUR,             1 },
     // Monster spells
-    { SPELL_SUMMON_UFETUBUS,            { 8, 2 } },
-    { SPELL_SUMMON_HELL_BEAST,          { 8, 2 } },
-    { SPELL_SUMMON_UNDEAD,              { 8, 2 } },
-    { SPELL_SUMMON_DRAKES,              { 4, 2 } },
-    { SPELL_SUMMON_MUSHROOMS,           { 8, 2 } },
-    { SPELL_SUMMON_EYEBALLS,            { 4, 2 } },
-    { SPELL_WATER_ELEMENTALS,           { 3, 2 } },
-    { SPELL_FIRE_ELEMENTALS,            { 3, 2 } },
-    { SPELL_EARTH_ELEMENTALS,           { 3, 2 } },
-    { SPELL_AIR_ELEMENTALS,             { 3, 2 } },
-    { SPELL_SUMMON_SPECTRAL_ORCS,       { 3, 2 } },
-    { SPELL_FIRE_SUMMON,                { 4, 2 } },
-    { SPELL_SUMMON_MINOR_DEMON,         { 3, 3 } },
-    { SPELL_CALL_LOST_SOUL,             { 3, 2 } },
-    { SPELL_SUMMON_VERMIN,              { 5, 2 } },
-    { SPELL_FORCEFUL_INVITATION,        { 3, 1 } },
-    { SPELL_PLANEREND,                  { 6, 1 } },
-    { SPELL_SUMMON_DRAGON,              { 4, 8 } },
-    { SPELL_PHANTOM_MIRROR,             { 4, 1 } },
-    { SPELL_FAKE_MARA_SUMMON,           { 2, 1 } },
-    { SPELL_SUMMON_EMPEROR_SCORPIONS,   { 6, 2 } },
-    { SPELL_SUMMON_SCARABS,             { 8, 1 } },
-    { SPELL_SUMMON_HOLIES,              { 4, 2 } },
-    { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
-    { SPELL_AWAKEN_EARTH,               { 9, 2 } },
-    { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
-    { SPELL_SUMMON_GREATER_DEMON,       { 3, 2 } },
-    { SPELL_SUMMON_DEMON,               { 3, 2 } },
-    { SPELL_SUMMON_TZITZIMITL,          { 3, 1 } },
-    { SPELL_SUMMON_HELL_SENTINEL,          { 3, 1 } },
+    { SPELL_SUMMON_UFETUBUS,            8 },
+    { SPELL_SUMMON_HELL_BEAST,          8 },
+    { SPELL_SUMMON_UNDEAD,              8 },
+    { SPELL_SUMMON_DRAKES,              4 },
+    { SPELL_SUMMON_MUSHROOMS,           8 },
+    { SPELL_SUMMON_EYEBALLS,            4 },
+    { SPELL_WATER_ELEMENTALS,           3 },
+    { SPELL_FIRE_ELEMENTALS,            3 },
+    { SPELL_EARTH_ELEMENTALS,           3 },
+    { SPELL_AIR_ELEMENTALS,             3 },
+    { SPELL_SUMMON_SPECTRAL_ORCS,       3 },
+    { SPELL_FIRE_SUMMON,                4 },
+    { SPELL_SUMMON_MINOR_DEMON,         3 },
+    { SPELL_CALL_LOST_SOUL,             3 },
+    { SPELL_SUMMON_VERMIN,              5 },
+    { SPELL_FORCEFUL_INVITATION,        3 },
+    { SPELL_PLANEREND,                  6 },
+    { SPELL_SUMMON_DRAGON,              4 },
+    { SPELL_PHANTOM_MIRROR,             4 },
+    { SPELL_FAKE_MARA_SUMMON,           2 },
+    { SPELL_SUMMON_EMPEROR_SCORPIONS,   6 },
+    { SPELL_SUMMON_SCARABS,             8 },
+    { SPELL_SUMMON_HOLIES,              4 },
+    { SPELL_SUMMON_EXECUTIONERS,        3 },
+    { SPELL_AWAKEN_EARTH,               9 },
+    { SPELL_GREATER_SERVANT_MAKHLEB,    1 },
+    { SPELL_SUMMON_GREATER_DEMON,       3 },
+    { SPELL_SUMMON_DEMON,               3 },
+    { SPELL_SUMMON_TZITZIMITL,          3 },
+    { SPELL_SUMMON_HELL_SENTINEL,       3 },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -2687,21 +2655,20 @@ bool summons_are_capped(spell_type spell)
 
 int summons_limit(spell_type spell)
 {
-    const summon_cap *cap = map_find(summonsdata, spell);
-    return cap ? cap->type_cap : 0;
+    const int *cap = map_find(summonsdata, spell);
+    return cap ? *cap : 0;
 }
 
 static bool _spell_has_variable_cap(spell_type spell)
 {
-    return spell == SPELL_SHADOW_CREATURES
-           || spell == SPELL_MONSTROUS_MENAGERIE;
+    return spell == SPELL_SHADOW_CREATURES;
 }
 
-static void _expire_capped_summon(monster* mon, int delay, bool recurse)
+static void _expire_capped_summon(monster* mon, bool recurse)
 {
     // Timeout the summon
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
-    abj.duration = delay;
+    abj.duration = 10;
     mon->update_ench(abj);
     // Mark our cap abjuration so we don't keep abjuring the same
     // one if creating multiple summons (also, should show a status light).
@@ -2719,7 +2686,7 @@ static void _expire_capped_summon(monster* mon, int delay, bool recurse)
                 && mi->props[SUMMON_ID_KEY].get_int() == summon_id
                 && !mi->has_ench(ENCH_SUMMON_CAPPED))
             {
-                _expire_capped_summon(*mi, delay, false);
+                _expire_capped_summon(*mi, false);
             }
         }
     }
@@ -2729,17 +2696,15 @@ static void _expire_capped_summon(monster* mon, int delay, bool recurse)
 void summoned_monster(const monster *mons, const actor *caster,
                       spell_type spell)
 {
-    const summon_cap *cap = map_find(summonsdata, spell);
+    int cap = summons_limit(spell);
     if (!cap) // summons aren't capped
         return;
-
-    int max_this_time = cap->type_cap;
 
     // Cap large abominations and tentacled monstrosities separately
     if (spell == SPELL_SUMMON_HORRIBLE_THINGS)
     {
-        max_this_time = (mons->type == MONS_ABOMINATION_LARGE ? max_this_time * 3 / 4
-                                                              : max_this_time * 1 / 4);
+        cap = (mons->type == MONS_ABOMINATION_LARGE ? cap * 3 / 4
+                                                    : cap * 1 / 4);
     }
 
     monster* oldest_summon = 0;
@@ -2789,8 +2754,8 @@ void summoned_monster(const monster *mons, const actor *caster,
         }
     }
 
-    if (oldest_summon && count > max_this_time)
-        _expire_capped_summon(oldest_summon, cap->timeout * 5, true);
+    if (oldest_summon && count > cap)
+        _expire_capped_summon(oldest_summon, true);
 }
 
 int count_summons(const actor *summoner, spell_type spell)
