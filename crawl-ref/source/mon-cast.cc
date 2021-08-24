@@ -5247,7 +5247,7 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
 }
 
 // Draconian stormcaller upheaval. Simplified compared to the player version.
-// Noisy! Causes terrain changes. Destroys doors/walls.
+// Noisy! Causes terrain changes.
 // Also used for Salamander Tyrants
 // TODO: Could use further simplification.
 static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
@@ -5303,23 +5303,9 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
     vector<coord_def> affected;
     affected.push_back(beam.target);
 
-    const int radius = 2;
-    for (radius_iterator ri(beam.target, radius, C_SQUARE, LOS_SOLID, true);
-         ri; ++ri)
-    {
-        if (!in_bounds(*ri) || cell_is_solid(*ri))
-            continue;
-
-        bool splash = true;
-        bool adj = adjacent(beam.target, *ri);
-        if (!adj)
-            splash = false;
-        if (adj || splash)
-        {
-            if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
-                affected.push_back(*ri);
-        }
-    }
+    for (adjacent_iterator ai(beam.target); ai; ++ai)
+        if (in_bounds(*ai) && !cell_is_solid(*ai))
+            affected.push_back(*ai);
 
     if (Options.use_animations & UA_MONSTER)
     {
@@ -5350,18 +5336,6 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
             case BEAM_AIR:
                 if (!cell_is_solid(pos) && !cloud_at(pos) && coinflip())
                     place_cloud(CLOUD_STORM, pos, random2(7), &mons);
-                break;
-            case BEAM_FRAG:
-                if (((env.grid(pos) == DNGN_ROCK_WALL
-                     || env.grid(pos) == DNGN_CLEAR_ROCK_WALL
-                     || env.grid(pos) == DNGN_SLIMY_WALL)
-                     && x_chance_in_y(1, 4)
-                     || feat_is_door(env.grid(pos))
-                     || env.grid(pos) == DNGN_GRATE))
-                {
-                    noisy(30, pos);
-                    destroy_wall(pos);
-                }
                 break;
             default:
                 break;

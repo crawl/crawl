@@ -3404,10 +3404,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!adj && max_radius > 1)
             chance -= 100;
         if (adj && max_radius > 1 || x_chance_in_y(chance, 100))
-        {
-            if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
-                affected.push_back(*ri);
-        }
+           affected.push_back(*ri);
     }
     if (!quiet)
         shuffle_array(affected);
@@ -3435,7 +3432,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         mprf(MSGCH_GOD, "%s", message.c_str());
     }
 
-    int wall_count = 0;
     beam.animate = false; // already drawn
 
     for (coord_def pos : affected)
@@ -3463,26 +3459,10 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
                                 &you);
                 }
                 break;
-            case BEAM_FRAG:
-                if (((env.grid(pos) == DNGN_ROCK_WALL
-                     || env.grid(pos) == DNGN_CLEAR_ROCK_WALL
-                     || env.grid(pos) == DNGN_SLIMY_WALL)
-                     && x_chance_in_y(pow / 4, 100)
-                    || feat_is_door(env.grid(pos))
-                    || env.grid(pos) == DNGN_GRATE))
-                {
-                    noisy(30, pos);
-                    destroy_wall(pos);
-                    wall_count++;
-                }
-                break;
             default:
                 break;
         }
     }
-
-    if (wall_count && !quiet)
-        mpr("Ka-crash!");
 
     return spret::success;
 }
