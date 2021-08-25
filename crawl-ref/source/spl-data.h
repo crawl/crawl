@@ -3452,7 +3452,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CORRUPT_LOCALE, "Corrupt Locale",
+    SPELL_CORRUPT_LOCALE, "Corrupt",
     spschool::translocation,
     spflag::monster | spflag::area,
     7,
