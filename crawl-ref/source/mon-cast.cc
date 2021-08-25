@@ -3505,6 +3505,9 @@ static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
         if (!mons_aligned(&caster, *mi))
             continue; // can only blow up allies ;)
 
+        if (mons_is_projectile(mi->type))
+            continue;
+
         tracer.target = mi->pos();
         fire_tracer(&caster, tracer, true, true);
         if (mons_is_threatening(**mi)) // only care about sacrificing real mons
