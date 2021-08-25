@@ -1768,7 +1768,7 @@ string target_desc(const monster_info& mi, spell_type spell)
         return "";
     desc_filter addl_desc = targeter_addl_desc(spell, powc,
                                 get_spell_flags(spell), hitfunc.get());
-    if( !addl_desc )
+    if ( !addl_desc )
         return "";
     vector<string> d = addl_desc(mi);
     return comma_separated_line(d.begin(), d.end());
