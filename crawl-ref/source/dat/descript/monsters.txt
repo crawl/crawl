@@ -754,6 +754,11 @@ butterfly
 A large, brightly coloured butterfly with beautifully patterned wings,
 fluttering incongruously through the darkness of the cave.
 %%%%
+cactus giant
+
+A green-skinned, spiny colossus, with a hearty barrel chest and a thirst for
+battle. Any foe that strikes it in melee will be lucky to live to regret it.
+%%%%
 cacodemon
 
 A hideously ugly demon of rage and legendary power, it disables its foes before

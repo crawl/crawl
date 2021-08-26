@@ -273,6 +273,12 @@ A frost-gripped tome describing icy spells, somewhat abridged. The Vaults are
 said to hold the full text, but the guardians of that place guard their
 treasures jealously.
 %%%%
+book of scorching
+
+A magical book, blasted and scoured by long exposure to the desert sun. Upon
+its badly-weathered pages lie the secrets to inflicting the desert's dangers
+upon the caster's foes.
+%%%%
 book of sloth
 
 A lazily written book.
@@ -311,10 +317,10 @@ book of the dragon
 A magical book of spells which allow some command over dragons and their
 aspects.
 %%%%
-book of the dryads
+book of the wilderness
 
-A book holding lore ripped from the deep forest, allowing its denizens to be
-called forth to serve the reader.
+A book holding lore ripped from distant and untamed lands, allowing their
+denizens to be called forth to serve the reader.
 {{
     if you.can_smell() then
         return "It smells distressingly musty."

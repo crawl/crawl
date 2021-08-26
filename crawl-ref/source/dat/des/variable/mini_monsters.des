@@ -1755,7 +1755,7 @@ DEPTH:   Depths, Elf, Crypt, Abyss
 MONS:    boggart, orc high priest, kobold demonologist
 MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
-ITEM:    book of callings w:5 / book of the dryads w:20 / grand grimoire w:5 / \
+ITEM:    book of callings w:5 / book of the wilderness w:20 / grand grimoire w:5 / \
          randbook disc:summoning numspells:6
 ITEM:    manual of summonings
 ITEM:    amulet of magic regeneration w:5 ident:type / \

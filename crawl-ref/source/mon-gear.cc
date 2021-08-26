@@ -787,6 +787,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { WPN_BATTLEAXE,          1 } }, {},
             { { SPWPN_FREEZING, 1 } },
         } },
+        { MONS_CACTUS_GIANT,    { { { WPN_GIANT_SPIKED_CLUB, 1 } } } },
         { MONS_ORC_WIZARD,      { { { WPN_DAGGER, 1 } } } },
         { MONS_ORC_SORCERER,    { { { WPN_DAGGER, 1 } } } },
         { MONS_NERGALLE,        { { { WPN_DAGGER, 1 } } } },

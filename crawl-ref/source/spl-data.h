@@ -3463,6 +3463,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_CACTUS, "Summon Cactus Giant",
+    spschool::summoning,
+    spflag::none,
+    5,
+    200,
+    -1, -1,
+    4, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -974,7 +974,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
-    case BOOK_DRYADS:                 return "the Dryads";
+    case BOOK_WILDERNESS:             return "the Wilderness";
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
     case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
@@ -1038,6 +1038,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_TOUCH:                  return "Touch";
     case BOOK_CHAOS:                  return "Chaos";
     case BOOK_HUNTER:                 return "the Hunter";
+    case BOOK_SCORCHING:              return "Scorching";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";

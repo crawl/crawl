@@ -1410,6 +1410,12 @@ Summon Air Elementals spell
 
 Summons one or more air elementals.
 %%%%
+Summon Cactus Giant spell
+
+Summons a warrior from a particularly prickly tribe. Foes that strike these
+giants in melee are in for a painful surprise! When cast at a higher power,
+older, more robust warriors will answer the call.
+%%%%
 Summon Demon spell
 
 Opens a gate to the realm of Pandemonium and draws forth one of its inhabitants

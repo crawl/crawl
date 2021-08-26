@@ -61,9 +61,10 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_HAILSTORM,
 },
 
-{   // Book of Dryads
+{   // Book of the Wilderness
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_SUMMON_CACTUS,
 },
 
 {   // Book of Fire
@@ -317,7 +318,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Spheres
     SPELL_BATTLESPHERE,
-    SPELL_FIREBALL,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_IOOD,
 },
@@ -481,6 +481,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_PORTAL_PROJECTILE,
     SPELL_LEDAS_LIQUEFACTION,
+},
+
+{ // Book of Scorching
+    SPELL_FOXFIRE,
+    SPELL_FIREBALL,
+    SPELL_SUMMON_CACTUS,
 },
 
 };

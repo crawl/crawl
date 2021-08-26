@@ -3029,9 +3029,10 @@ void melee_attack::do_spines()
             return;
         }
 
-        if (attacker->alive() && one_chance_in(3))
+        const bool cactus = defender->type == MONS_CACTUS_GIANT;
+        if (attacker->alive() && (cactus || one_chance_in(3)))
         {
-            int dmg = roll_dice(5, 4);
+            int dmg = roll_dice(5, cactus ? 8 : 4);
             int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
