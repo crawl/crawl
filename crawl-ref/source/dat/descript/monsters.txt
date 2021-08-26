@@ -2287,8 +2287,7 @@ and its prowess with advanced weaponry.
 spriggan druid
 
 A spriggan whose connection with the birds and the beasts is exceptionally
-strong. It will call forth nature's wrath against anyone who so much as snaps a
-twig.
+strong. If it dies, its sacrifice will temporarily strengthen nearby animals.
 %%%%
 spriggan rider
 
