@@ -2694,7 +2694,7 @@ void monster::set_hit_dice(int new_hit_dice)
     if (type == MONS_OKLOB_PLANT && !spells.empty()
         && spells[0].spell == SPELL_SPIT_ACID)
     {
-        spells[0].freq = 200 * hit_dice / 30;
+        spells[0].freq = 200 * hit_dice / 40;
     }
 }
 
