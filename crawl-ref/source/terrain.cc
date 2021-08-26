@@ -883,10 +883,10 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
+    // Consider pulling out damage from splash_with_acid() into
+    // its own function and calling that.
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
-
-    const int dice = act->is_player() ? 4 : 2;
-    const int base_dam = roll_dice(dice, strength);
+    const int base_dam = act->is_player() ? roll_dice(4, strength) : roll_dice(2, 4);
     const int dam = resist_adjust_damage(act, BEAM_ACID, base_dam);
     if (act->is_player())
     {
