@@ -1362,6 +1362,14 @@ VISUAL:@The_monster@ waves a bulging coin purse at you.
 @The_monster@ says, "You're as good as gold."
 
 @The_monster@ says, "I guess you can't buy your way into a good afterlife."
+%%%
+Ignis player ghost
+
+@The_monster@ says, "I burned twice as bright, and look where it got me..."
+
+VISUAL:@The_monster@ droops like a melted candle.
+
+@The_monster@ says, "Ashes to ashes... so for me, and next for you!"
 %%%%
 Jiyva player ghost
 
@@ -3254,6 +3262,31 @@ w:50
 @The_monster@ says, "Messiah? I hate messiahs."
 
 @The_monster@ bows and submits to you. "Nah, just kidding."
+%%%%
+Ignis Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Don't fight so hard! You'll just burn out."
+
+@The_monster@ says, "Huh, so Ignis will die when you do... how's that make you feel?"
+
+@The_monster@ says, "You'd think a god of fire would be a bit brighter."
+
+@The_monster@ says, "Feel like your fire's burning out? I hate that."
+
+@The_monster@ says, "You know a god's a real winner when you're their only follower, right?"
+
+@The_monster@ says, "Oh, I wondered where that burning smell was coming from."
+
+@The_monster@ says, "Why not join one of those new, up-and-coming flame gods instead?"
+
+@The_monster@ says, "Doesn't it hurt to go crashing headfirst through the ceiling?"
+
+@The_monster@ says, "Wow, you can rise to a higher floor... isn't that called 'climbing stairs'?"
+
+@The_monster@ says, "Wow, fire everywhere! I hate that."
 %%%%
 Jiyva Donald
 
