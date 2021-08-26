@@ -229,6 +229,7 @@ public:
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
     virtual void splash_with_acid(actor *evildoer, int acid_strength) = 0;
+    virtual void acid_corrode(int acid_strength) = 0;
     virtual bool corrode_equipment(const char* corrosion_source = "the acid",
                                    int degree = 1) = 0;
 

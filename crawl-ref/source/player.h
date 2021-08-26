@@ -729,6 +729,7 @@ public:
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer, int acid_strength) override;
+    void acid_corrode(int acid_strength) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
     void sentinel_mark(bool trap = false);

@@ -6556,10 +6556,9 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
  * @param evildoer the cause of this acid splash.
  * @param acid_strength The strength of the acid.
  */
-void player::splash_with_acid(const actor* evildoer, int acid_strength)
+void player::splash_with_acid(actor* evildoer, int acid_strength)
 {
-    if (binomial(3, acid_strength + 1, 30))
-        corrode_equipment();
+    acid_corrode(acid_strength);
 
     const int dam = roll_dice(4, acid_strength);
     const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
@@ -6575,6 +6574,12 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength)
         ouch(post_res_dam, KILLED_BY_ACID,
              evildoer ? evildoer->mid : MID_NOBODY);
     }
+}
+
+void player::acid_corrode(int acid_strength)
+{
+    if (binomial(3, acid_strength + 1, 30))
+        corrode_equipment();
 }
 
 bool player::drain(const actor */*who*/, bool quiet, int pow)

@@ -1477,7 +1477,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 simple_monster_message(*mons, " completely resists.");
         }
         else if (mons->res_acid() <= 0 && doFlavouredEffects)
-            mons->splash_with_acid(pbolt.agent());
+            mons->splash_with_acid(pbolt.agent(), -1);
         break;
     }
 
@@ -4019,7 +4019,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        you.splash_with_acid(agent(), 5, true);
+        you.splash_with_acid(agent(), 5);
 
     extra_range_used += range_used_on_hit();
 

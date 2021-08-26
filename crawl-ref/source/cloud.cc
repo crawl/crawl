@@ -247,7 +247,7 @@ static const cloud_data clouds[] = {
       YELLOW,                                   // colour
       { TILE_CLOUD_ACID, CTVARY_DUR },          // dur
       BEAM_ACID,                                // beam_effect
-      { 6, 36, true },                          // base, random damage
+      { 8, 22, true },                          // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
@@ -913,7 +913,9 @@ static int _cloud_base_damage(const actor *act,
 {
     const cloud_damage &dam = clouds[flavour].damage;
     const bool vs_player = act->is_player();
-    const int random_dam = _rand_dam(dam, vs_player);
+    const int random_dam = _rand_dam(dam, vs_player)
+    // Replicate the old acid_splash damage. Boy we hate players, huh?
+                         + (flavour == CLOUD_ACID && vs_player ? 12 : 0);
     const int base_dam = _base_dam(dam, vs_player);
     const int trials = dam.random/15 + 1;
 
@@ -1185,7 +1187,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_ACID:
-        act->splash_with_acid(5);
+        act->acid_corrode(5);
         return true;
 
     case CLOUD_NEGATIVE_ENERGY:
