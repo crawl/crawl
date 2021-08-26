@@ -9,7 +9,7 @@
 # 35 x 19
 # Ruined Dwarven Fortress Basement
 NAME:    elethiomel_arrival_fortress_basement
-TAGS:    arrival no_monster_gen no_rotate
+TAGS:    arrival no_monster_gen no_rotate transparent
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
@@ -42,7 +42,7 @@ ENDMAP
 ##############################################################
 # 46 x 14
 NAME:    elethiomel_arrival_infinity_welcomes_careful_drivers
-TAGS:    arrival no_rotate
+TAGS:    arrival no_rotate transparent
 ORIENT:  northwest
 KMASK:   a = no_monster_gen
 SUBST:   a : .
@@ -68,7 +68,7 @@ ENDMAP
 ##############################################################################
 # 33 x 25
 NAME:    dpeg_arrival_central
-TAGS:    arrival
+TAGS:    arrival transparent
 ORIENT:  float
 SHUFFLE: @ABC
 SUBST:   A=@x, B=@x, C=@x
@@ -103,7 +103,7 @@ ENDMAP
 ##############################################################################
 # 29 x 22
 NAME:    dpeg_arrival_castle
-TAGS:    arrival no_monster_gen no_rotate
+TAGS:    arrival no_monster_gen no_rotate transparent
 ITEM:    stone, nothing, nothing
 ORIENT:  float
 SHUFFLE: ]def
@@ -141,7 +141,7 @@ ENDMAP
 #############################################################################
 # 42x28
 NAME:    dpeg_cavernosity
-TAGS:    arrival no_monster_gen no_rotate
+TAGS:    arrival no_monster_gen no_rotate transparent
 ORIENT:  float
 MONS:    fungus
 SHUFFLE: {[(, UVW, XYZ
@@ -182,7 +182,7 @@ ENDMAP
 # 30x25
 # The Diamond Age, or A Young Lady's Illustrated Primer
 NAME:    elethiomel_arrival_diamonds
-TAGS:    arrival no_monster_gen no_rotate
+TAGS:    arrival no_monster_gen no_rotate transparent
 ORIENT:  west
 WEIGHT:  2
 MONS:    rat, goblin, bat, kobold
@@ -221,7 +221,7 @@ ENDMAP
 # Morbid curiosity
 # Monsters are easier. Made it harder for them to get out.
 NAME:    dpeg_arrival_morbid_curiosity
-TAGS:    arrival no_rotate no_monster_gen
+TAGS:    arrival no_rotate no_monster_gen transparent
 ORIENT:  float
 MONS:    goblin ; stone
 MONS:    hobgoblin ; stone
@@ -259,7 +259,7 @@ ENDMAP
 ##############################################################################
 # 29 x 21
 NAME:    matt_arrival_debris
-TAGS:    arrival
+TAGS:    arrival transparent
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
@@ -295,7 +295,7 @@ ENDMAP
 #            starts in a corner and is diagonally shaped
 # There's a forest outside the dungeon
 NAME:   kilobyte_arrival_exit_the_forest
-TAGS:   arrival no_rotate no_pool_fixup
+TAGS:   arrival no_rotate no_pool_fixup transparent
 ORIENT: northwest
 MONS:   plant
 FTILE:  .t1 = floor_moss
@@ -332,7 +332,7 @@ ENDMAP
 #############################################################################
 # 33 x 23
 NAME:   dpeg_arrival_circle_labyrinth_a
-TAGS:   arrival no_monster_gen no_rotate
+TAGS:   arrival no_monster_gen no_rotate transparent
 WEIGHT: 3
 ORIENT: float
 NSUBST: . = d / .
@@ -365,7 +365,7 @@ xx...xx....x+x.....x+x....xx...xx
 ENDMAP
 
 NAME:   dpeg_arrival_circle_labyrinth_b
-TAGS:   arrival no_monster_gen no_rotate
+TAGS:   arrival no_monster_gen no_rotate transparent
 WEIGHT: 1
 ORIENT: float
 NSUBST: . = 1:d / *:.
@@ -397,7 +397,7 @@ xx...xx....xxx.....xxx....xx...xx
 ENDMAP
 
 NAME:    dpeg_arrival_circle_labyrinth_c
-TAGS:    arrival no_monster_gen no_rotate
+TAGS:    arrival no_monster_gen no_rotate transparent
 WEIGHT:  6
 ORIENT:  float
 NSUBST:  X = 1:adgj / *:x
@@ -511,7 +511,7 @@ ENDMAP
 # 32x29
 NAME:    minmay_arrival_shoal_huts
 WEIGHT:  5
-TAGS:    arrival
+TAGS:    arrival transparent
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   ([ = .
@@ -552,7 +552,7 @@ ENDMAP
 ##############################################################################
 # 25x25
 NAME:   co_arrival_hexagon_in_a_hexagon
-TAGS:   arrival
+TAGS:   arrival transparent
 ORIENT: float
 WEIGHT: 1
 MONS:   plant
@@ -580,7 +580,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   co_arrival_hall_of_pillars
-TAGS:   arrival
+TAGS:   arrival transparent
 ORIENT: float
 WEIGHT: 1
 SUBST:  c : cccccvvb
@@ -617,7 +617,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    roderic_lyre
-TAGS:    arrival no_monster_gen no_trap_gen no_rotate
+TAGS:    arrival no_monster_gen no_trap_gen no_rotate transparent
 ORIENT:  float
 WEIGHT:  1
 SHUFFLE: EF
@@ -652,7 +652,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    sevenhm_arrival_forest_fort_large_1
-TAGS:    arrival no_monster_gen no_pool_fixup no_rotate
+TAGS:    arrival no_monster_gen no_pool_fixup no_rotate transparent
 ORIENT:  southeast
 WEIGHT:  3
 SUBST:   z = W., I = IG, r : cccvt., E = wW, ' : @x', ' = @x
@@ -684,7 +684,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    sevenhm_arrival_forest_fort_large_2
-TAGS:    arrival no_rotate no_monster_gen
+TAGS:    arrival no_rotate no_monster_gen transparent
 ORIENT:  northwest
 SUBST:   T : TTTV, p = tt., G = GGGG., z = ...T
 SHUFFLE: {[
@@ -709,7 +709,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    sevenhm_arrival_forest_fort_large_3
-TAGS:    arrival
+TAGS:    arrival transparent
 ORIENT:  float
 WEIGHT:  3
 SUBST:   T : TTTV, p = tt., G = GGG.
@@ -744,7 +744,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    sevenhm_arrival_forest_fort_large_4
-TAGS:    arrival
+TAGS:    arrival transparent
 ORIENT:  northwest
 SUBST:   p = 11., G = G..
 NSUBST:  { = { / ., [ = [ / .
@@ -779,7 +779,7 @@ ENDMAP
 # Crop circle vaults (Roderic)
 # Season indicated by colouring. Something special for tiles wanted? --dpeg
 NAME:   roderic_crop_circles_arrival_small
-TAGS:   arrival no_trap_gen
+TAGS:   arrival no_trap_gen transparent
 ORIENT: float
 MONS:   col:green plant, col:brown plant
 COLOUR: . = brown
@@ -809,7 +809,7 @@ ENDMAP
 
 # This vault has over 400 monsters (as plants) -- can this be too many? --dpeg
 NAME:   roderic_crop_circles_arrival_large
-TAGS:   arrival no_trap_gen
+TAGS:   arrival no_trap_gen transparent
 ORIENT: float
 WEIGHT: 1
 MONS:   col:green plant, col:brown plant
@@ -849,7 +849,7 @@ ENDMAP
 ##############################################################################
 # arrival octogonal star
 NAME:   roderic_octagonal_star
-TAGS:   arrival
+TAGS:   arrival transparent
 ORIENT: float
 MAP
    xxxx+xxxxxxx+xxxx
@@ -914,7 +914,7 @@ ENDMAP
 
 NAME: nicolae_arrival_somewhat_less_tricky_arrival
 ORIENT: float
-TAGS: arrival no_monster_gen no_trap_gen
+TAGS: arrival no_monster_gen no_trap_gen transparent
 SHUFFLE: GTt, ab, cd, ef, gh, ij, kl
 SUBST: acegik = ., bdfhjl = x
 MAP
@@ -948,7 +948,7 @@ ENDMAP
 #       arrival/large
 
 NAME:   kennysheep_arrival_seaside
-TAGS:   arrival no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen no_trap_gen transparent
 ORIENT: southeast
 KMONS:  p = plant
 KFEAT:  W = open_sea
@@ -988,7 +988,7 @@ ENDMAP
 
 ################################################################################
 NAME:       psy_arrival_wood_between_worlds
-TAGS:       arrival no_monster_gen no_trap_gen no_pool_fixup
+TAGS:       arrival no_monster_gen no_trap_gen no_pool_fixup transparent
 ORIENT:     float
 WEIGHT:     3
 FTILE:      t.qG^P{ = floor_grass
@@ -1025,7 +1025,7 @@ xxtttqPtt.ttt.ttPqtttxx
 ENDMAP
 
 NAME:   wander_arrival_estate
-TAGS:   arrival no_monster_gen no_item_gen
+TAGS:   arrival no_monster_gen no_item_gen transparent
 ORIENT: float
 MAP
 .................
@@ -1058,7 +1058,7 @@ MAP
 ENDMAP
 
 NAME:    wander_arrival_abandoned_jail
-TAGS:    arrival no_monster_gen no_item_gen
+TAGS:    arrival no_monster_gen no_item_gen transparent
 ORIENT:  float
 ITEM:    human skeleton / orc skeleton, \
          goblin skeleton / gnoll skeleton, \
@@ -1085,7 +1085,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    heliophobic_arrival_dark_side_of_the_moon
-TAGS:    arrival no_monster_gen no_trap_gen
+TAGS:    arrival no_monster_gen no_trap_gen transparent
 ORIENT:  float
 MARKER:  F = lua:fog_machine{ \
              pow_max = 32, delay_min = 20, delay_max = 200, \

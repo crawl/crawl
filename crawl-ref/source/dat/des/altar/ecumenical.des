@@ -134,6 +134,7 @@ xx.x
 ENDMAP
 
 NAME: chequers_ecumenical_altar_island
+TAGS: transparent
 SUBST: - = W:5 . t:5
 SUBST: s = W:5 .
 SUBST: S = w.
@@ -610,7 +611,7 @@ V.V.V
 ENDMAP
 
 NAME: hellmonk_ecumenical_altar_heavens_door
-TAGS: no_monster_gen
+TAGS: no_monster_gen transparent
 : if crawl.one_chance_in(5) then
 : door_vault_setup(_G)
 : end
@@ -721,6 +722,7 @@ ENDMAP
 # We want to avoid giving a player an immediate reroll for big piety
 # but the flavour of this one is too good.
 NAME:    hellmonk_ecumenical_altar_the_god_not_taken
+TAGS:    transparent
 WEIGHT:  1
 :if crawl.one_chance_in(10) then
 COLOUR:  t = lightred / red w:3
@@ -793,6 +795,7 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_dog_temple
+TAGS:   transparent
 WEIGHT: 5
 TAGS:   no_monster_gen
 KMONS:  a = jackal band
