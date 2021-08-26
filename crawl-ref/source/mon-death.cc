@@ -1714,31 +1714,30 @@ item_def* monster_die(monster& mons, killer_type killer,
         ASSERT(w_idx != NON_ITEM);
 
         // XXX: This can probably become mons.is_summoned(): there's no
-        // feasible way for a dancing weapon to "drop" it's weapon and somehow
+        // feasible way for a dancing weapon to "drop" its weapon and somehow
         // gain a summoned one, or vice versa.
-        bool summoned_it = env.item[w_idx].flags & ISFLAG_SUMMONED;
+        bool summoned_it =
+                env.item[w_idx].flags & ISFLAG_SUMMONED || mons.has_ench(ENCH_ABJ);
 
         if (!silent && !hard_reset && !was_banished)
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
-            if (!summoned_it
-                && (!have_passive(passive_t::goldify_corpses)
-                    || mons.has_ench(ENCH_ABJ)))
+            if (!summoned_it && have_passive(passive_t::goldify_corpses))
+            {
+                simple_monster_message(mons,
+                                       " turns to gold and falls from the air.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                killer = KILL_RESET;
+            }
+            else
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 silent = true;
             }
-            else
-            {
-                simple_monster_message(mons, " turns to gold and falls from the air.",
-                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-                killer = KILL_RESET;
-            }
         }
 
-        if (was_banished && !summoned_it && !hard_reset
-            && mons.has_ench(ENCH_ABJ))
+        if (was_banished && !summoned_it && !hard_reset)
         {
             if (is_unrandom_artefact(env.item[w_idx]))
                 set_unique_item_status(env.item[w_idx], UNIQ_LOST_IN_ABYSS);
