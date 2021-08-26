@@ -885,22 +885,22 @@ void slime_wall_damage(actor* act, int delay)
 
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
 
+    const int dice = act->is_player() ? 4 : 2;
+    const int base_dam = roll_dice(dice, strength);
+    const int dam = resist_adjust_damage(act, BEAM_ACID, base_dam);
     if (act->is_player())
-        you.splash_with_acid(nullptr, strength, false);
-    else
     {
-        monster* mon = act->as_monster();
-
-        const int dam = resist_adjust_damage(mon, BEAM_ACID,
-                                             roll_dice(2, strength));
-        if (dam > 0 && you.can_see(*mon))
-        {
-            const char *verb = act->is_icy() ? "melt" : "burn";
-            mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
-                  verb, mon->name(DESC_THE).c_str());
-        }
-        mon->hurt(nullptr, dam, BEAM_ACID);
+        mprf("You are splashed with acid%s%s",
+             dam > 0 ? "" : " but take no damage",
+             attack_strength_punctuation(dam).c_str());
     }
+    else if (dam > 0 && you.can_see(*act))
+    {
+        const char *verb = act->is_icy() ? "melt" : "burn";
+        mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
+              verb, act->name(DESC_THE).c_str());
+    }
+    act->hurt(nullptr, dam, BEAM_ACID);
 }
 
 int count_adjacent_icy_walls(const coord_def &pos)
