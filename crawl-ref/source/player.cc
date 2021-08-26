@@ -6555,13 +6555,10 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
  *
  * @param evildoer the cause of this acid splash.
  * @param acid_strength The strength of the acid.
- * @param allow_corrosion Whether to try and apply the corrosion debuff.
- * @param hurt_msg A message to display when dealing damage.
  */
-void player::splash_with_acid(const actor* evildoer, int acid_strength,
-                              bool allow_corrosion, const char* /*hurt_msg*/)
+void player::splash_with_acid(const actor* evildoer, int acid_strength)
 {
-    if (allow_corrosion && binomial(3, acid_strength + 1, 30))
+    if (binomial(3, acid_strength + 1, 30))
         corrode_equipment();
 
     const int dam = roll_dice(4, acid_strength);
