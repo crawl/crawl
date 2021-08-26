@@ -247,7 +247,7 @@ static const cloud_data clouds[] = {
       YELLOW,                                   // colour
       { TILE_CLOUD_ACID, CTVARY_DUR },          // dur
       BEAM_ACID,                                // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      { 6, 36, true },                          // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
@@ -1185,11 +1185,8 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_ACID:
-    {
-        const actor* agent = cloud.agent();
-        act->splash_with_acid(agent, 5, true);
+        act->splash_with_acid(5);
         return true;
-    }
 
     case CLOUD_NEGATIVE_ENERGY:
     {
