@@ -2287,7 +2287,8 @@ and its prowess with advanced weaponry.
 spriggan druid
 
 A spriggan whose connection with the birds and the beasts is exceptionally
-strong. If it dies, its sacrifice will temporarily strengthen nearby animals.
+strong. If it dies, its sacrifice will heal and temporarily strengthen nearby
+animals.
 %%%%
 spriggan rider
 
