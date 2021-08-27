@@ -70,8 +70,8 @@ NAME:    hangedman_generic_boss_arena
 TAGS:    no_monster_gen
 DEPTH:   Geh, !Geh:$
 ORIENT:  encompass
-MONS:    hell knight, hellion, balrug, balrug
-MONS:    hell hound, sun demon, hell hog
+MONS:    salamander tyrant, hellion, balrug, balrug
+MONS:    fire giant, searing wretch, hell hog
 KFEAT:   L = l
 SHUFFLE: dD, eE / fF / 56, 56 / 65 / 55 / 66 / 77 / '', ABC / 234 / <<<, 234 / 322
 NSUBST:  < : 1:} / 1:{ / 1:<<>
@@ -108,7 +108,7 @@ MONS:    red draconian scorcher
 MONS:    red draconian stormcaller
 MONS:    hellion
 ITEM:    any potion good_item
-KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8
+KMONS:   L = patrolling creeping inferno / nothing w:30
 KFEAT:   L = l
 KPROP:   l = no_cloud_gen
 SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, {}~- / {}~- / -~{}
@@ -140,22 +140,20 @@ NAME:    hangedman_elemental_grid_stream
 TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
 DEPTH:   Geh, Coc, Zot:1-4
 :  if you.in_branch("Geh") then
-KMONS:   1 = brimstone fiend w:9 / hell sentinel w:1
-KMONS:   2 = hellion / balrug
-KMONS:   34 = smoke demon / red devil
-KMONS:   56 = skeletal warrior ; broad axe ego:flaming ident:type | \
+KMONS:   1 = brimstone fiend
+KMONS:   2 = searing wretch / balrug
+KMONS:   34 = fire giant / hellephant w:5
+KMONS:   56 = ancient champion ; broad axe ego:flaming ident:type | \
          halberd ego:flaming ident:type w:7 | morningstar ego:flaming ident:type
-KMONS:   7 = hell knight
+KMONS:   7 = hell hog
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
 :  elseif you.in_branch("Coc") then
 KMONS:   1 = ice fiend
-KMONS:   2 = blizzard demon
-KMONS:   34 = ice devil
-KMONS:   56 = reaper ; scythe ego:freezing ident:type / shard shrike w:5
-KMONS:   7 = alligator snapping turtle skeleton / anaconda simulacrum / \
-         golden dragon simulacrum w:5 / iron troll simulacrum w:5 / hydra simulacrum
-KMONS:   0 = skeletal warrior ; hunting sling ego:freezing ident:type . sling bullet
+KMONS:   2 = wendigo band / nargun
+KMONS:   34 = frost giant / shard shrike w:5
+KMONS:   56 = reaper ; scythe ego:freezing ident:type
+KMONS:   7 = simulacrum
 SUBST:   l = w, W = .
 :  else
 KMONS:   1 = shard shrike
@@ -193,15 +191,12 @@ TAGS:    no_monster_gen no_pool_fixup allow_dup
 DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
 SHUFFLE: 123456, }{ / **
 :  if you.in_branch("Geh") then
-MONS:    brimstone fiend / balrug / hellion
-MONS:    sun demon / smoke demon / hell knight
+MONS:    brimstone fiend / hellephant
+MONS:    searing wretch / balrug / stoker w:5
 SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
 :  elseif you.in_branch("Coc") then
-MONS:    ice fiend / blizzard demon / shard shrike / \
-         reaper ; scythe ego:freezing ident:type
-MONS:    eight-headed hydra simulacrum w:2 / \
-         seven-headed hydra simulacrum w:2 / \
-         ice dragon simulacrum w:3 / freezing wraith w:3 / ice devil
+MONS:    ice fiend / shard shrike
+MONS:    wendigo band / simulacrum w:20
 SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
 :  elseif you.in_branch("Abyss") then
 MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
@@ -408,7 +403,7 @@ ENDMAP
 NAME:   geh_old
 TAGS:   no_rotate
 ORIENT: encompass
-MONS:   patrolling Asmodeus, brimstone fiend, Balrug, molten gargoyle
+MONS:   patrolling Asmodeus, brimstone fiend, Balrug, searing wretch / stoker w:1
 NSUBST: { = 1:{ / *:.
 : serpent_of_hell_setup(_G)
 : geh_setup(_G)
@@ -484,14 +479,13 @@ NAME:   geh_mu
 ORIENT: encompass
 TAGS:   no_rotate
 MONS:   patrolling Asmodeus, brimstone fiend
-MONS:   balrug, sun demon, hellion, fire giant
-KMONS:  7 = molten gargoyle
-KMONS:  8 = red devil
+MONS:   balrug, searing wretch, hellion, fire giant
+KMONS:  7 = hellephant
 # Place one Serpent in the inner circle.
 : serpent_of_hell_setup(_G)
 KFEAT:  D = lava
 NSUBST: X = 1:D / *:l
-SUBST:  4 = 34456778, % = $|
+SUBST:  4 = 3445677, % = $|
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
 SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
 NSUBST: { = 1:{ / *:.
@@ -579,12 +573,12 @@ SUBST:   N : ncc
 SUBST:   '" = -
 SHUFFLE: O1$ / *3|
 MONS:    patrolling asmodeus, brimstone fiend, brimstone fiend
-MONS:    sun demon, balrug, hellion, fire giant
-KMONS:   8 = sun demon / efreet / w:20 molten gargoyle
-KMONS:   9 = efreet
+MONS:    searing wretch, balrug, hellion, fire giant
+KMONS:   8 = searing wretch / stoker w:1 / hell hog
+KMONS:   9 = salamander tyrant
 NSUBST:  l = 10:R / 25:V / *:l
 SUBST:   R = RRV
-KMONS:   R = patrolling smoke demon
+KMONS:   R = patrolling stoker
 KMONS:   V = fire vortex
 : serpent_of_hell_setup(_G)
 SUBST:   4 = 444499566-
@@ -677,7 +671,7 @@ ENDMAP
 NAME:    geh_grunt
 ORIENT:  encompass
 MONS:    patrolling Asmodeus, Brimstone Fiend, balrug
-MONS:    hellion, sun demon, fire giant, red devil / crimson imp w:20
+MONS:    hellion, searing wretch, fire giant, salamander tyrant / stoker w:1
 KMONS:   9 = molten gargoyle
 SHUFFLE: {<
 SUBST:   - = ll.
@@ -761,7 +755,7 @@ ENDMAP
 
 ##############################################################################
 # Asmodeus (Gehenna) by Lightli
-# XXX: Disabled pending rebalancing.
+# XXX: Disabled pending rebalancing. Needs new monsters now
 ##############################################################################
 
 NAME: lightli_geh_unto_the_cruel
@@ -829,11 +823,10 @@ ENDMAP
 NAME:    geh_hangedman
 ORIENT:  encompass
 MONS:    patrolling Asmodeus, brimstone fiend, balrug
-MONS:    hellion, fire giant, hell knight, hell hog
-KMONS:   y = red devil w:20 / fire elemental / salamander
+MONS:    hellion, fire giant, salamander tyrant, hell hog
+KMONS:   y = creeping inferno / fire vortex w:30
 KMONS:   Y = molten gargoyle
-KMONS:   zZ = sun demon / efreet / smoke demon w:5 / \
-              fire dragon skeleton w:5
+KMONS:   zZ = searing wretch / hellephant / stoker w:2
 KITEM:   $ = $ no_pickup
 KFEAT:   yYZ = lava
 KFEAT:   L = endless_lava
@@ -933,7 +926,7 @@ ENDMAP
 NAME:    geh_grunt_pentagon
 ORIENT:  encompass
 MONS:    patrolling Asmodeus, Brimstone Fiend, balrug
-MONS:    hellion, sun demon, fire giant, red devil / crimson imp w:20
+MONS:    hellion, searing wretch, fire giant, salamander tyrant
 KMONS:   9 = molten gargoyle
 SUBST:   - = ll.
 SUBST:   _ = ..l
