@@ -104,7 +104,7 @@ NAME:   lemuel_nasty_pond
 DEPTH:  Tar
 TAGS:   no_pool_fixup no_rotate
 MONS:   withered plant
-MONS:   oklob plant, ghoul, necrophage, blizzard demon / green death
+MONS:   oklob plant, ghoul, putrid mouth, tainted leviathan
 SUBST:  W:w.
 SUBST:  Z:w.
 SUBST:  w = w .:1
@@ -133,7 +133,7 @@ ENDMAP
 NAME: grunt_tartarus_stairs_gauntlet_trap
 DEPTH: Tar, !Tar:$
 TAGS: generate_awake patrolling no_trap_gen
-MONS: Tzitzimitl, shadow demon / reaper, soul eater, necrophage, shadow imp
+MONS: Tzitzimitl, reaper, profane servitor, spectral thing, shadow wraith
 {{
     dgn.persist.grunt_gauntlet_trap_triggered = false
     local trap_marker = TriggerableFunction:new {
@@ -178,14 +178,14 @@ TAGS:    transparent no_monster_gen
 DEPTH:   Tar, !Tar:$, Zot:1-4
 ORIENT:  centre
 : if you.in_branch("Tar") then
-KMONS:   12 = patrolling reaper
+KMONS:   12 = patrolling bone dragon
 KMONS:   34 = patrolling tormentor
-KMONS:   56 = patrolling shadow demon
-KMONS:   7 = skeletal warrior
-KMONS:   8 = patrolling shadow imp
-KMONS:   AB = lich
-KMONS:   CD : vampire mage / mummy priest
-KMONS:   EF : shadow dragon w:5 / death drake
+KMONS:   56 = patrolling profane servitor
+KMONS:   7 = eidolon
+KMONS:   8 = patrolling shadow wraith
+KMONS:   AB = ancient lich / dread lich
+KMONS:   CD : doom hound
+KMONS:   EF : putrid mouth
 KITEM:   | = nothing
 : else
 KMONS:   12 = patrolling lich / ancient lich / dread lich
@@ -239,18 +239,10 @@ NAME:    hangedman_restless_catacombs
 TAGS:    no_monster_gen
 DEPTH:   Tar, !Tar:$
 ORIENT:  encompass
-MONS:    soul eater, patrolling curse skull
-MONS:    skeletal warrior / phantasmal warrior w:6 / \
-         shadow wraith w:4 / guardian mummy w:4 / \
-         ushabti w:2 / ghoul w:4
-KMONS:   45 = vampire knight
-KMONS:   67 = vampire mage
-KMONS:   89 = flayed ghost
-KMONS:   AB = mummy priest
-KMONS:   CD = lich
-NSUBST:  0 = 1:{ / 1 :} / 1 : 3 / 1:4 / 1:5 / 1:6 / 1:7 / *:3
-SHUFFLE: 456789ABCD"
-SUBST:   " = 3
+MONS:    shadow wraith, patrolling curse skull
+MONS:    royal mummy / ancient lich / dread lich
+MONS:    spectral thing / zombie
+NSUBST:  0 = 1:{ / 1 :} / 3:33. /  *:4
 MAP
 ccccccccccccccc
 cG.c0c0c0c0c.Gc
@@ -560,14 +552,14 @@ NAME:    hangedman_damned_closets
 TAGS:    no_monster_gen
 DEPTH:   Tar, !Tar:$
 ORIENT:  centre
-MONS:    shadow w:6 / shadow wraith / wraith w:6
-MONS:    soul eater, tormentor / shadow demon w:12
+MONS:    shadow wraith
+MONS:    putrid mouth, tormentor
 MONS:    patrolling lost soul
 KMONS:   56 = flayed ghost
 KMONS:   78 = eidolon
 KMONS:   90 = phantasmal warrior
 KMONS:   AB : spectral titan / spectral ettin
-KMONS:   C = patrolling revenant w:19 / patrolling tzitzimitl w:1
+KMONS:   C = patrolling tainted leviathan / patrolling tzitzimitl
 KFEAT:   C = }
 SHUFFLE: 4C / 56 / 78 / 90 / AB, 567890AB, yz / yz / zy, YZ / YZ / ZY
 SUBST:   X : x., y : xxx., z = ., { = {..
@@ -606,12 +598,12 @@ TAGS:    no_monster_gen transparent patrolling
 DEPTH:   Tar, !Tar:$
 ORIENT:  centre
 WEIGHT:  5
-MONS:    zombie / skeleton / spectral thing w:4
-MONS:    jiangshi / phantasmal warrior w:4 / shadow wraith w:4, vampire mage
+MONS:    zombie / skeleton / spectral thing w:20
+MONS:    jiangshi / shadow wraith w:4, doom hound
 MONS:    vampire knight ; demon whip | demon trident | demon blade . \
                           plate armour | chain mail
-MONS:    soul eater, tormentor w:3 / shadow demon w:1, silent spectre
-KMONS:   9 = reaper / lorocyproca w:6
+MONS:    putrid mouth, tormentor w:3, silent spectre
+KMONS:   9 = reaper
 KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
 SUBST:   A : x.., B : x.., } = }>
@@ -641,12 +633,12 @@ ENDMAP
 
 NAME:    tar_old
 ORIENT:  encompass
-MONS:    patrolling Ereshkigal, reaper, shadow demon, shadow
-MONS:    lich / ancient lich / dread lich, shadow dragon / death drake w:1
+MONS:    patrolling Ereshkigal, tainted leviathan, profane servitor
+MONS:    shadow wraith, ancient lich / dread lich, putrid mouth
 MONS:    tzitzimitl
-KMONS:   8 = ghoul
-KMONS:   9 = vampire mage / vampire knight
-KMONS:   0 = soul eater
+KMONS:   8 = bone dragon
+KMONS:   9 = doom hound
+KMONS:   0 = eidolon
 KMONS:   Z = skeleton / zombie
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569
@@ -721,8 +713,8 @@ ENDMAP
 ##############################################################################
 NAME:     tar_mu
 ORIENT:   encompass
-MONS:     patrolling Ereshkigal, tzitzimitl, reaper, soul eater, shadow demon
-MONS:     shadow dragon, shadow wraith
+MONS:     patrolling Ereshkigal, tzitzimitl, tainted leviathan, putrid mouth
+MONS:     profane servitor, bone dragon, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
 SUBVAULT: = : tar_mu_maze
@@ -731,11 +723,11 @@ SHUFFLE:  AB
 SUBST:    A = %
 SUBST:    B = x
 KFEAT:    % = .
-KMONS:    % = soul eater w:20 / shadow wraith w:15 / reaper w:5 / nothing w:20
+KMONS:    % = putrid mouth w:20 / shadow wraith w:15 / reaper w:5 / nothing w:20
 KITEM:    % = | / $
 SUBST:    4 = 3333444455566778
 KMONS:    s = eidolon
-KMONS:    t = phantasmal warrior
+KMONS:    t = shadow wraith
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -812,10 +804,10 @@ KFEAT:    L = zot trap
 KMONS:    M = tzitzimitl
 KFEAT:    N = floor
 KITEM:    N = superb_item
-KMONS:    N = patrolling tzitzimitl / patrolling soul eater
+KMONS:    N = patrolling tzitzimitl / patrolling putrid mouth
 KFEAT:    P = floor
 KITEM:    P = star_item
-KMONS:    P = patrolling reaper / nothing
+KMONS:    P = patrolling tainted leviathan / nothing
 KMONS:    Q = generate_awake unseen horror
 SUBST:    V = V / .
 MAP
@@ -878,7 +870,8 @@ ENDMAP
 
 NAME:   tar_minmay_river
 ORIENT: encompass
-MONS:   patrolling Ereshkigal, reaper, shadow demon, tzitzimitl, soul eater
+MONS:   patrolling Ereshkigal, tainted leviathan, profane servitor, tzitzimitl
+MONS:   putrid mouth
 FTILE:  "5!?^ = floor_green_bones
 SUBST:  5 = 5:10 3:1
 NSUBST: " = 2:4 / 4:3
@@ -1005,8 +998,8 @@ ORIENT: encompass
 
 NAME:    tar_grunt_ereshkigal
 TAGS:    tar_grunt_ereshkigal unrand
-MONS:    patrolling Ereshkigal, Tzitzimitl, shadow demon / reaper
-MONS:    lich w:40 / ancient lich / dread lich
+MONS:    patrolling Ereshkigal, Tzitzimitl, profane servitor / tainted leviathan
+MONS:    ancient lich / dread lich
 KMASK:   O = no_item_gen
 KITEM:   O = bone rune of Zot
 : serpent_of_hell_setup(_G)
@@ -1055,8 +1048,8 @@ ENDMAP
 
 NAME: tar_grunt_big_loot
 TAGS: tar_grunt_big_loot unrand
-MONS: Tzitzimitl / shadow dragon, shadow demon / reaper
-MONS: lich w:40 / ancient lich / dread lich
+MONS: Tzitzimitl / bone dragon, profane servitor / tainted leviathan
+MONS: ancient lich / dread lich
 MAP
 ..................
 .cccccccccccccccc.
@@ -1080,7 +1073,8 @@ ENDMAP
 
 NAME:   tar_grunt_small_loot
 TAGS:   tar_grunt_small_loot allow_dup unrand no_exits
-MONS:   shadow demon w:20 / reaper w:15 / shadow wraith w:10 / soul eater w:5
+MONS:   doom hound w:20 / profane servitor w:15 / shadow wraith w:10 / \
+        putrid mouth w:5
 NSUBST: x = 1:m / *:x
 MAP
 cccxccc
@@ -1234,14 +1228,14 @@ ENDMAP
 
 NAME:    tar_grunt_mons_1
 TAGS:    tar_grunt_mons_1 transparent allow_dup unrand
-MONS:    shadow imp
+MONS:    spectral thing
 MAP
 1
 ENDMAP
 
 NAME:    tar_grunt_mons_2
 TAGS:    tar_grunt_mons_2 transparent allow_dup unrand
-MONS:    soul eater
+MONS:    eidolon
 MAP
 1
 ENDMAP
@@ -1252,9 +1246,9 @@ ENDMAP
 
 NAME:     tar_grunt_cathedral
 ORIENT:   encompass
-MONS:     patrolling Ereshkigal, patrolling tzitzimitl, reaper, shadow demon
-MONS:     lich w:40 / ancient lich / dread lich, shadow dragon
-MONS:     shadow wraith / soul eater
+MONS:     patrolling Ereshkigal, patrolling tzitzimitl, tainted leviathan
+MONS:     doom hound, ancient lich / dread lich, bone dragon
+MONS:     shadow wraith / eidolon
 NSUBST:   K = 1:D / *:.
 : serpent_of_hell_setup(_G)
 NSUBST:   P = 1:O / *:|
