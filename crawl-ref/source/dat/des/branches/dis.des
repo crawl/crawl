@@ -40,7 +40,7 @@ function dis_divider(e, water)
    e.orient("north")
    e.depth("Dis:$")
    e.kmons("1 = hell sentinel")
-   e.kmons("2 = iron dragon / iron giant w:5")
+   e.kmons("2 = quicksilver elemental / iron giant w:5")
    if water then
       e.kfeat("2w = deep_water")
       e.kmask("w = no_monster_gen")
@@ -696,10 +696,10 @@ vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
 ENDMAP
 
 NAME:    dis_old
-MONS:    patrolling Dispater, brimstone fiend, Ice Fiend
-MONS:    rust devil, war gargoyle, iron dragon / iron giant w:5
+MONS:    patrolling Dispater, hell sentinel, iron giant
+MONS:    caustic shrike, war gargoyle, crystal echidna / iron dragon w:5
 KMONS:   7 = hell sentinel
-KMONS:   8 = quicksilver dragon
+KMONS:   8 = quicksilver elemental
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
@@ -739,11 +739,11 @@ ENDMAP
 
 NAME:    dis_mu
 KFEAT:   o = granite_statue
-MONS:    patrolling Dispater, brimstone fiend, ice fiend, rust devil
-MONS:    war gargoyle, iron dragon / iron giant w:5, iron troll
+MONS:    patrolling Dispater, hell sentinel, iron giant, caustic shrike
+MONS:    war gargoyle, crystal echidna / iron dragon w:5, ancient champion
 KMONS:   8 = iron golem
 KMONS:   9 = hell sentinel
-KMONS:   0 = quicksilver dragon
+KMONS:   0 = quicksilver elemental
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4:20 7
@@ -795,9 +795,9 @@ MAP
 ENDMAP
 
 NAME:    dis_grunt
-MONS:    patrolling Dispater, Hell Sentinel, iron dragon / iron giant w:5
-MONS:    rust devil / iron imp w:20
-MONS:    iron troll, quicksilver dragon, cacodemon
+MONS:    patrolling Dispater, Hell Sentinel, crystal echidna / iron dragon w:5
+MONS:    caustic shrike / ancient champion w:20
+MONS:    iron golem, quicksilver dragon, cacodemon
 SHUFFLE: AP / BQ / CR / DS / ET
 SUBST:   A = 1, BC = 2, DE = 7
 SUBST:   P = O, QRST = .
@@ -973,9 +973,9 @@ ENDMAP
 ##############################################################################
 NAME:    dis_st
 ORIENT:  encompass
-MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
-MONS:    iron troll, iron dragon / iron giant w:2
-MONS:    cacodemon / ancient champion w:8
+MONS:    patrolling Dispater, juggernaut, iron giant, hell sentinel
+MONS:    war gargoyle, crystal echidna / caustic shrike
+MONS:    ancient champion
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:{ / *:.
 # four hell sentinels in Dispater's building
@@ -1068,13 +1068,12 @@ ENDMAP
 NAME:    dis_hangedman
 TAGS:    no_monster_gen
 ORIENT:  encompass
-MONS:    rust devil w:40 / skeletal warrior
-MONS:    war gargoyle, brimstone fiend, ice fiend, hell sentinel
-MONS:    patrolling iron dragon / patrolling quicksilver dragon / \
-         patrolling iron giant w:5
+MONS:    caustic shrike / ancient champion w:40
+MONS:    war gargoyle, juggernaut, iron giant, hell sentinel
+MONS:    patrolling iron dragon / patrolling quicksilver elemental / \
+         patrolling crystal echidna
 MONS:    patrolling Dispater
-KMONS:   8 = vampire knight w:8 / hell knight band w:8 / ancient champion w:18 / \
-         reaper w:6 / cacodemon w:2 / executioner w:6 / balrug w:4 / \
+KMONS:   8 = ancient champion w:8 / \
          dancing weapon w:12 ; great mace good_item | glaive good_item | \
                                battleaxe good_item | great sword w:15 good_item
 NSUBST:  - = 1:+ / 1 : v:14 +:1 / *:v, = = 1:+ / 1 : v:14 +:1 / *:v
@@ -1162,9 +1161,9 @@ ENDMAP
 NAME:    dis_grunt_layers
 ORIENT:  encompass
 MONS:    patrolling Dispater, Hell Sentinel
-MONS:    iron dragon / iron giant w:5 / quicksilver dragon w:5
-MONS:    rust devil / iron imp w:20, iron troll
-MONS:    brimstone fiend, ice fiend
+MONS:    iron dragon / crystal echidna / quicksilver elemental w:5
+MONS:    caustic shrike / ancient champion w:20, war gargoyle
+MONS:    juggernaut, iron giant
 SHUFFLE: {<
 NSUBST:  2 = 3:6 / 3:7 / *:2
 NSUBST:  P = 1:1 / *:2
