@@ -1057,13 +1057,8 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         return;
 
     string prefix = " ";
-    if (corpse)
-    {
-        if (!mons_class_can_leave_corpse(mons_species(mons->type)))
-            return;
-
+    if (corpse && mons_class_can_leave_corpse(mons_species(mons->type)))
         prefix = "'s corpse ";
-    }
 
     string msg = summoned_poof_msg(mons) + "!";
 
@@ -1713,16 +1708,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         int w_idx = mons.inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);
 
-        // XXX: This can probably become mons.is_summoned(): there's no
-        // feasible way for a dancing weapon to "drop" its weapon and somehow
-        // gain a summoned one, or vice versa.
-        bool summoned_it =
-                env.item[w_idx].flags & ISFLAG_SUMMONED || mons.has_ench(ENCH_ABJ);
+        bool summoned_it = mons.is_summoned();
 
-        if (!silent && !hard_reset && !was_banished)
+        // Let summoned dancing weapons be handled like normal summoned creatures.
+        if (!was_banished && !summoned_it && !silent && !hard_reset)
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
-            if (!summoned_it && have_passive(passive_t::goldify_corpses))
+            if (have_passive(passive_t::goldify_corpses))
             {
                 simple_monster_message(mons,
                                        " turns to gold and falls from the air.",
