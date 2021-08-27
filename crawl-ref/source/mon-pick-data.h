@@ -606,6 +606,7 @@ POP_DEPTHS,
   {  1,  1,   52, FLAT, MONS_CACODEMON },
 },
 
+// Hell branches: OOD Cap 14
 { // Dis
   {  1,  7, 2000, FLAT, MONS_ZOMBIE },
   {  1, 12,  270, FALL, MONS_SKELETON },
