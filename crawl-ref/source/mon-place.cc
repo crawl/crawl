@@ -1625,7 +1625,8 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     zombie_picker picker = zombie_picker(pos, cs);
 
-    place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
+    place.depth = min(place.depth, branch_zombie_cap(place.branch));
+    place.depth = max(1, place.depth);
 
     const bool need_veto = really_in_d && !for_corpse;
     mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;

@@ -186,6 +186,15 @@ static bool _branch_uses_generic_late_zombies(branch_type br)
         || br == BRANCH_ABYSS || br == BRANCH_PANDEMONIUM;
 }
 
+int branch_zombie_cap(branch_type br)
+{
+    ASSERT_RANGE(br, 0, NUM_BRANCHES);
+    if (_branch_uses_generic_late_zombies(br))
+        return 15;
+    else
+        return branch_ood_cap(br);
+}
+
 const vector<pop_entry>& zombie_population(branch_type br)
 {
     ASSERT_RANGE(br, 0, NUM_BRANCHES);
