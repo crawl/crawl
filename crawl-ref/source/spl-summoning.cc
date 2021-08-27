@@ -2588,6 +2588,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_GUARDIAN_GOLEM,    { 1, 1 } },
     { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
+    { SPELL_HAUNT,                    { 8, 8 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
