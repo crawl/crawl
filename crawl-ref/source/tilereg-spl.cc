@@ -208,11 +208,14 @@ void SpellRegion::update()
         desc.idx      = (int) spell;
         desc.quantity = spell_mana(spell);
 
-        if (spell_is_useless(spell, true, true)
-            || spell_mana(spell) > you.magic_points)
-        {
+        bool enough_p;
+        if (you.has_mutation(MUT_HP_CASTING))
+            enough_p = enough_hp(spell_mana(spell), true, false);
+        else
+            enough_p = enough_mp(spell_mana(spell), true, false);
+
+        if (spell_is_useless(spell, true, true) || !enough_p)
             desc.flag |= TILEI_FLAG_INVALID;
-        }
 
         m_items.push_back(desc);
 
