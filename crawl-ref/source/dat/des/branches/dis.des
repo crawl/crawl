@@ -71,24 +71,15 @@ DEPTH:   Geh:2-, !Geh:$, Coc:2-, !Coc:$, Tar:2-, !Tar:$, Dis:2-, !Dis:$
 ORIENT:  encompass
 WEIGHT:  1
 # Specific allotment of monsters, terrain, and items for this small box.
-# Monsters are in three tiers: generic undead, specific fodder, bosses.
+# Monsters are in three tiers: generic undead (1), specific fodder (09),
+# bosses (2).
 # Terrain includes zot traps, and per-hell clouds, liquid, statues.
-# Items include generic hellspawn weapon drops and free skeletons.
-NSUBST:  . = 2:0 / 1:9 / 2:8 / 4 = 9:3 0:1 / 1 = 8:6 / 7:1 / *:.
-NSUBST:  . = 1:* / 1:d / 6 = *:2 d:3 / *:.
+NSUBST:  . = 2:1 / 1:0 / 2:9 / 4 = 0:3 1:1 / 1 = 9:6 / 2:1 / *:.
 NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:{ / 1:} / *:.
-KMONS:   0 = zombie / skeleton / necromancer w:6
-KITEM:   * = battleaxe no_pickup / great mace no_pickup / \
-             great sword no_pickup / glaive no_pickup / \
-             scythe good_item no_pickup w:5 / demon whip no_pickup w:5 / \
-             demon blade no_pickup w:5 / demon trident no_pickup w:5
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
 KFEAT:   ^ = zot trap
 : if you.in_branch("Geh") then
-KMONS:   9 = sun demon / smoke demon / hell knight / \
-             red devil w:5 / efreet w:5
-KMONS:   8 = hellion / balrug
-KMONS:   7 = brimstone fiend
+MONS:    zombie / skeleton
+MONS:    brimstone fiend / hellephant
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 8, pow_max = 10, delay = 100, \
              size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
@@ -96,12 +87,8 @@ SUBST:   ~ = l
 FTILE:   F = floor_volcanic
 COLOUR:  F = lightred
 : elseif you.in_branch("Coc") then
-KMONS:   9 = ice devil w:15 / ice dragon / simulacrum w:5 / \
-             skeletal warrior ; hunting sling ego:freezing ident:type . \
-             mundane sling bullet . mace ego:freezing ident:type
-KMONS:   8 = blizzard demon / lich / shard shrike / \
-             reaper ; scythe ego:freezing ident:type
-KMONS:   7 = ice fiend
+MONS:    simulacrum
+MONS:    ice fiend / shard shrike
 MARKER:  F = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 8, pow_max = 10, delay = 100, \
              size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
@@ -109,9 +96,8 @@ SUBST:   ~ = w
 FTILE:   F = floor_nerves_blue
 COLOUR:  F = lightblue
 : elseif you.in_branch("Tar") then
-KMONS:   9 = soul eater / shadow demon / vampire mage / flayed ghost
-KMONS:   8 = tormentor / revenant / mummy priest
-KMONS:   7 = tzitzimitl
+MONS:    spectral thing
+MONS:    tzitzimitl / tainted leviathan
 MARKER:  F = lua:fog_machine {cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 10, delay = 100, \
              size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
@@ -119,13 +105,8 @@ SUBST:   ~ = G
 FTILE:   F = floor_crystal_squares
 COLOUR:  F = lightmagenta
 : elseif you.in_branch("Dis") then
-KMONS:   9 = ynoxinul / rust devil w:5 / vampire knight w:5 / \
-             phantasmal warrior / skeletal warrior ; mundane arbalest . \
-             mundane bolt . mace good_item
-KMONS:   8 = war gargoyle / iron dragon /  \
-             dancing weapon ; great sword good_item | great mace good_item | \
-                              glaive good_item | battleaxe good_item
-KMONS:   7 = hell sentinel
+MONS:    zombie / skeleton
+MONS:    hell sentinel / iron giant
 SUBST:   xc = v, F~ = G
 COLOUR:  G = cyan
 TILE:    G = dngn_statue_iron
