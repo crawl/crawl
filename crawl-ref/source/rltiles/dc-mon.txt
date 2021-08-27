@@ -499,6 +499,7 @@ spellforged_servitor MONS_SPELLFORGED_SERVITOR
 gargoyle MONS_GARGOYLE
 war_gargoyle MONS_WAR_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
+nargun MONS_NARGUN
 
 ## Weaponry ('(')
 spectral_sbl MONS_SPECTRAL_SBL

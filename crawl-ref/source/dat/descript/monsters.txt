@@ -1782,6 +1782,13 @@ A malign force from the space between planes. It is hostile to the magic forces
 that removed it from its home. These horrors are often the result of mistaken
 summoning spells and have slain many aspiring wizards.
 %%%%
+nargun
+
+An ancient stone creature that has lived among these frozen caves since before
+Antaeus rent Cocytus into being. It tolerates its new neighbors begrudgingly,
+preferring the company of its petrified enemies. Veins of ice permeate its
+frozen stone flesh.
+%%%%
 necromancer
 
 An evil wizard who is devoted to the practice of death magic, the mastery of
