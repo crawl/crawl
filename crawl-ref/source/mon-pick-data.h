@@ -665,31 +665,26 @@ POP_DEPTHS,
 },
 
 { // Cocytus
-  {  1,  7, 1915, FLAT, MONS_SKELETON },
-  {  1,  7, 1915, FLAT, MONS_ZOMBIE },
-  {  1,  7,   70, FALL, MONS_SIMULACRUM },
-  {  1,  5,  136, FALL, MONS_PHANTOM },
-  { -1,  7,  260, SEMI, MONS_MUMMY },
-  {  1,  7,  136, FALL, MONS_NECROPHAGE },
-  {  1,  7,  420, FALL, MONS_WIGHT },
-  { -1,  7,  560, SEMI, MONS_WRAITH },
-  {  1,  6,  625, FALL, MONS_SHADOW },
-  {  1,  7,  970, FLAT, MONS_FREEZING_WRAITH },
-  {  1,  7,  640, SEMI, MONS_FLYING_SKULL },
-  {  1,  7,  515, FLAT, MONS_SKELETAL_WARRIOR },
-  {  1,  7,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  2,  7,   35, FLAT, MONS_BONE_DRAGON },
-  {  2,  8,   35, PEAK, MONS_LICH },
-  {  3,  7,    8, PEAK, MONS_ANCIENT_LICH },
-  {  1,  7,  890, FLAT, MONS_WHITE_IMP },
-  {  1,  7,  890, FLAT, MONS_ICE_DEVIL },
-  {  1,  7,   81, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  285, FLAT, MONS_TORMENTOR },
-  {  1,  7,  192, FLAT, MONS_BLIZZARD_DEMON },
-  {  1,  7,  455, RISE, MONS_REAPER },
-  {  1,  7,  955, FALL, MONS_ICE_BEAST },
-  {  1,  7,  305, FLAT, MONS_ICE_DRAGON },
-  {  1,  7,  270, RISE, MONS_SHARD_SHRIKE },
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  800, FALL, MONS_SIMULACRUM },
+  {  1,  7,  200, FLAT, MONS_SIMULACRUM },
+  {  1,  7,  100, FALL, MONS_FREEZING_WRAITH },
+  {  1,  7,   25, FLAT, MONS_FREEZING_WRAITH },
+  {  1,  7,  100, FALL, MONS_FROST_GIANT },
+  {  1,  7,   25, FLAT, MONS_FROST_GIANT },
+  // "branch flavour" threats
+  {  1,  7,  200, PEAK, MONS_TITAN }, // Antaeus brought pals
+  {  1,  7,   50, FLAT, MONS_AZURE_JELLY },
+  // don't include our guests in ood rolls
+  {  1,  7,  375, SEMI, MONS_WENDIGO },
+  {  7, 14,  500, FALL, MONS_WENDIGO },
+  {  1,  7,  375, SEMI, MONS_NARGUN },
+  {  7, 14,  500, FALL, MONS_NARGUN },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_SHARD_SHRIKE },
+  {  8, 14,  400, FLAT, MONS_SHARD_SHRIKE },
+  {  1, 14,  400, RISE, MONS_ICE_FIEND },
 },
 
 { // Tartarus
@@ -1107,13 +1102,9 @@ static const vector<pop_entry> pop_generic_late_zombie =
   {  1,  27,  500, FLAT, MONS_NO_MONSTER }, \
 }
 #define HELL_WATER_POP {\
-  {  1,  7,   150, FLAT, MONS_CANE_TOAD },\
-  {  1,  7,   120, FLAT, MONS_ALLIGATOR },\
-  {  1,  7,   130, FLAT, MONS_ANACONDA },\
-  {  1,  7,   230, FLAT, MONS_HYDRA },\
-  {  1,  7,    37, FLAT, MONS_KRAKEN },\
-  {  1,  7,   115, FLAT, MONS_WATER_ELEMENTAL },\
-  {  0,  8,    74, RISE, MONS_ELEMENTAL_WELLSPRING },\
+  {  0,  8,   100, FLAT, MONS_SIMULACRUM },\
+  {  0,  8,   100, RISE, MONS_ELEMENTAL_WELLSPRING },\
+  {  0,  6,   200, FALL, MONS_NO_MONSTER },\
 }
 // This is done to avoid duplicating the Depths list and can be
 // changed once TAG_MAJOR_VERSION > 35
