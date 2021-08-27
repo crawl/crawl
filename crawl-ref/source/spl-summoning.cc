@@ -616,14 +616,6 @@ static bool _fail_tukimas()
 }
 
 /**
- * Gets an item description for use in Tukima's Dance messages.
- **/
-static string _get_item_desc(const item_def* wpn, bool target_is_player)
-{
-    return wpn->name(target_is_player ? DESC_YOUR : DESC_THE);
-}
-
-/**
  * Checks if Tukima's Dance can actually affect the target (and anger them)
  *
  * @param target  The targeted monster (or player).
@@ -634,6 +626,7 @@ bool tukima_affects(const actor &target)
     const item_def* wpn = target.weapon();
     return wpn
            && is_weapon(*wpn)
+           && !target.is_player()
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
            // XX use god_protects here. But, need to know the caster too...
@@ -648,9 +641,8 @@ bool tukima_affects(const actor &target)
  **/
 static bool _check_tukima_validity(const actor *target)
 {
-    bool target_is_player = target == &you;
     const item_def* wpn = target->weapon();
-    bool can_see_target = target_is_player || target->visible_to(&you);
+    bool can_see_target = target->visible_to(&you);
 
     // See if the wielded item is appropriate.
     if (!wpn)
@@ -658,18 +650,14 @@ static bool _check_tukima_validity(const actor *target)
         if (!can_see_target)
             return _fail_tukimas();
 
-        if (target_is_player)
-            mpr(you.hands_act("twitch", "."));
-        else
-        {
-            // FIXME: maybe move hands_act to class actor?
-            bool plural = true;
-            const string hand = target->hand_name(true, &plural);
+        // FIXME: maybe move hands_act to class actor?
+        bool plural = true;
+        const string hand = target->hand_name(true, &plural);
 
-            mprf("%s %s %s.",
-                 apostrophise(target->name(DESC_THE)).c_str(),
-                 hand.c_str(), conjugate_verb("twitch", plural).c_str());
-        }
+        mprf("%s %s %s.",
+             apostrophise(target->name(DESC_THE)).c_str(),
+             hand.c_str(), conjugate_verb("twitch", plural).c_str());
+
         return false;
     }
 
@@ -686,7 +674,7 @@ static bool _check_tukima_validity(const actor *target)
         else
         {
             mprf("%s vibrate%s crazily for a second.",
-                 _get_item_desc(wpn, target_is_player).c_str(),
+                 wpn->name(DESC_THE).c_str(),
                  wpn->quantity > 1 ? "" : "s");
         }
         return false;
@@ -700,33 +688,21 @@ static bool _check_tukima_validity(const actor *target)
  * Actually animates the weapon of the target creature (no checks).
  *
  * @param pow               Spellpower.
- * @param target            The spell's target (monster or player)
+ * @param target            The spell's target.
  **/
 static void _animate_weapon(int pow, actor* target)
 {
-    bool target_is_player = target == &you;
     item_def * const wpn = target->weapon();
     ASSERT(wpn);
-    if (target_is_player)
-    {
-        // Clear temp branding so we don't change the brand permanently.
-        if (you.duration[DUR_EXCRUCIATING_WOUNDS])
-            end_weapon_brand(*wpn);
-
-        // Mark weapon as "thrown", so we'll autopickup it later.
-        wpn->flags |= ISFLAG_THROWN;
-    }
     // If sac love, the weapon will go after you, not the target.
-    const bool sac_love = you.allies_forbidden();
-    // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
-    const bool friendly = !target_is_player && !sac_love;
+    const bool hostile = you.allies_forbidden();
     const int dur = min(2 + (random2(pow) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
-                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                 hostile ? BEH_HOSTILE : BEH_FRIENDLY,
                  target->pos(),
-                 (target_is_player || sac_love) ? MHITYOU : target->mindex(),
-                 sac_love ? MG_NONE : MG_FORCE_BEH);
+                 hostile ? MHITYOU : target->mindex(),
+                 hostile ? MG_NONE : MG_FORCE_BEH);
     mg.set_summoned(&you, dur, SPELL_TUKIMAS_DANCE);
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
@@ -735,13 +711,12 @@ static void _animate_weapon(int pow, actor* target)
 
     if (!mons)
     {
-        mprf("%s twitches for a moment.",
-             _get_item_desc(wpn, target_is_player).c_str());
+        mprf("%s twitches for a moment.", wpn->name(DESC_THE).c_str());
         return;
     }
 
     // Don't haunt yourself under sac love.
-    if (!sac_love)
+    if (!hostile)
     {
         mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                    INFINITE_DURATION));
@@ -749,34 +724,29 @@ static void _animate_weapon(int pow, actor* target)
     }
 
     // We are successful. Unwield the weapon, removing any wield effects.
-    mprf("%s dances into the air!",
-         _get_item_desc(wpn, target_is_player).c_str());
-    if (target_is_player)
-        unwield_item();
-    else
+    mprf("%s dances into the air!", wpn->name(DESC_THE).c_str());
+
+    monster * const montarget = target->as_monster();
+    const int primary_weap = montarget->inv[MSLOT_WEAPON];
+    const mon_inv_type wp_slot = (primary_weap != NON_ITEM
+                                  && &env.item[primary_weap] == wpn) ?
+                                     MSLOT_WEAPON : MSLOT_ALT_WEAPON;
+    ASSERT(montarget->inv[wp_slot] != NON_ITEM);
+    ASSERT(&env.item[montarget->inv[wp_slot]] == wpn);
+
+    montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
+    montarget->inv[wp_slot] = NON_ITEM;
+
+    // Also steal ammo for launchers.
+    if (is_range_weapon(*wpn))
     {
-        monster * const montarget = target->as_monster();
-        const int primary_weap = montarget->inv[MSLOT_WEAPON];
-        const mon_inv_type wp_slot = (primary_weap != NON_ITEM
-                                      && &env.item[primary_weap] == wpn) ?
-                                         MSLOT_WEAPON : MSLOT_ALT_WEAPON;
-        ASSERT(montarget->inv[wp_slot] != NON_ITEM);
-        ASSERT(&env.item[montarget->inv[wp_slot]] == wpn);
-
-        montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
-        montarget->inv[wp_slot] = NON_ITEM;
-
-        // Also steal ammo for launchers.
-        if (is_range_weapon(*wpn))
+        const int ammo = montarget->inv[MSLOT_MISSILE];
+        if (ammo != NON_ITEM)
         {
-            const int ammo = montarget->inv[MSLOT_MISSILE];
-            if (ammo != NON_ITEM)
-            {
-                ASSERT(mons->inv[MSLOT_MISSILE] == NON_ITEM);
-                mons->inv[MSLOT_MISSILE] = ammo;
-                montarget->inv[MSLOT_MISSILE] = NON_ITEM;
-                env.item[ammo].set_holding_monster(*mons);
-            }
+            ASSERT(mons->inv[MSLOT_MISSILE] == NON_ITEM);
+            mons->inv[MSLOT_MISSILE] = ammo;
+            montarget->inv[MSLOT_MISSILE] = NON_ITEM;
+            env.item[ammo].set_holding_monster(*mons);
         }
     }
 
