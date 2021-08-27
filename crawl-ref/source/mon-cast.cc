@@ -150,6 +150,9 @@ static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
 static void _setup_ghostly_beam(bolt &beam, int power, int dice);
 static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
                                           int power);
+static ai_action::goodness _seracfall_goodness(const monster &caster);
+static bool _prepare_seracfall(monster &caster, bolt &beam);
+static void _setup_seracfall_beam(bolt& beam, const monster& caster, int power);
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell);
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(const actor* victim);
@@ -552,6 +555,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             _corrupt_locale(caster);
         },
     }, },
+    { SPELL_SERACFALL, {
+        _seracfall_goodness,
+        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
+            if (_prepare_seracfall(caster, pbolt))
+                _fire_simple_beam(caster, slot, pbolt);
+            else if (you.can_see(caster))
+                canned_msg(MSG_NOTHING_HAPPENS);
+        },
+        _setup_seracfall_beam,
+        MSPELL_LOGIC_NONE,
+        30, // 2.5x iceblast
+    } },
 };
 
 /// Create the appropriate casting logic for a simple conjuration.
@@ -3570,6 +3585,80 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 
     beam.target = _mons_ghostly_sacrifice_target(caster, beam);
     beam.aimed_at_spot = true;  // to get noise to work properly
+}
+
+/**
+ * Pick a simulacrum for seracfall
+ *
+ *  @param  caster       The monster casting the spell.
+ *  @return The target square, or an out of bounds coord if none was found.
+ */
+static coord_def _mons_seracfall_source(const monster &caster)
+{
+    bolt tracer;
+    setup_mons_cast(&caster, tracer, SPELL_ICEBLAST);
+    const int dam_scale = 1000;
+    int best_dam_fraction = dam_scale / 2;
+    coord_def best_source = coord_def(GXM+1, GYM+1); // initially out of bounds
+    tracer.target  = caster.target;
+    tracer.ex_size = 1;
+
+    for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->type != MONS_SIMULACRUM)
+            continue; // only hurl simulacra
+
+        if (!mons_aligned(&caster, *mi))
+            continue; // can only blow up allies ;)
+
+        if (!you.see_cell(mi->pos()))
+            continue; // don't hurl simulacra from out of player los
+
+        // beam is shot as if the simulac is falling onto the player
+        // so we treat the simulacrum as the "caster"
+        fire_tracer(*mi, tracer);
+
+        const int dam_fraction = _get_dam_fraction(tracer, dam_scale);
+        dprf("if seracfalling %s (aim %d,%d): ratio %d/%d",
+             mi->name(DESC_A, true).c_str(),
+             tracer.target.x, tracer.target.y, dam_fraction, dam_scale);
+        if (dam_fraction > best_dam_fraction)
+        {
+            best_source = mi->pos();
+            best_dam_fraction = dam_fraction;
+            dprf("setting best source (%d, %d)", best_source.x, best_source.y);
+        }
+    }
+
+    return best_source;
+}
+
+static ai_action::goodness _seracfall_goodness(const monster &caster)
+{
+    return ai_action::good_or_impossible(in_bounds(_mons_seracfall_source(caster)));
+}
+
+/// Everything short of the actual explosion. Returns whether to fire.
+static bool _prepare_seracfall(monster &caster, bolt &beam)
+{
+    beam.source = _mons_seracfall_source(caster);
+    monster* victim = monster_at(beam.source);
+    if (!victim || victim->mid == caster.mid)
+        return false; // assert?
+
+    // Beam origin message handled here
+    beam.seen = true;
+    mprf("%s collapses into a mass of ice!", victim->name(DESC_THE).c_str());
+    monster_die(*victim, &caster, true);
+    return true;
+}
+
+/// Setup and target a seracfall.
+static void _setup_seracfall_beam(bolt& beam, const monster& caster,
+                                          int power)
+{
+    zappy(spell_to_zap(SPELL_SERACFALL), power, true, beam);
+    beam.source = _mons_seracfall_source(caster);
 }
 
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell)

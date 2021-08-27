@@ -3485,6 +3485,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SERACFALL, "Seracfall",
+    spschool::conjuration | spschool::ice,
+    spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ICEBLAST,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

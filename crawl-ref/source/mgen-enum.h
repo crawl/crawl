@@ -118,6 +118,7 @@ enum band_type
     BAND_GOLEMS,
     BAND_LINDWURMS,
     BAND_DIRE_ELEPHANTS,
+    BAND_SIMULACRA,
     NUM_BANDS                   // always last
 };
 

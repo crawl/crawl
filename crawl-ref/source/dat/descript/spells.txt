@@ -1206,6 +1206,12 @@ Sentinel's Mark spell
 Bestows a strong beacon upon a targeted creature. It announces the presence
 and location of the marked creature to everyone on the same level.
 %%%%
+Seracfall spell
+
+Violently collapses a nearby simulacrum into a large mass of ice, which
+explodes on impact. The ice affects even cold-resistant creatures somewhat, due
+to the strong impact and cutting edges.
+%%%%
 Shadow Bolt spell
 
 Mimics a penetrating damaging spell cast by a Dithmenos worshipper, firing a

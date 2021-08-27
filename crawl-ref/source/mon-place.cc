@@ -1972,6 +1972,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_WIZARD,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
+    { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
 
 
     // special-cased band-sizes
@@ -2386,6 +2387,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_IRONBOUND_CONVOKER, 2},
                                   {MONS_GUARDIAN_SERPENT, 2},
                                   {MONS_IMPERIAL_MYRMIDON, 2}}}},
+    // for wendigo ammo, mostly
+    { BAND_SIMULACRA,         {{{MONS_SIMULACRUM, 1}}}},
 };
 
 /**

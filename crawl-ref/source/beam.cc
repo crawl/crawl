@@ -5917,6 +5917,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The ghostly flame explodes!",
         "the shriek of haunting fire",
     } },
+    { SPELL_SERACFALL, {
+        "The mass of ice explodes!",
+        "an explosion",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.

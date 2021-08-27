@@ -2619,6 +2619,13 @@ A capricious nature spirit, deeply bonded with the waters in which she lives.
 Wherever they flow, so may she, and ponds and rivers surge and leap at her
 whim.
 %%%%
+wendigo
+
+A gaunt spirit of frozen hunger, so ravenous it will consume friend and foe
+alike. According to legend if one cuts off its legs it will feast upon its own
+marrow. It stalks those lost wandering in the cold and hunts with the force of
+blizzards.
+%%%%
 white draconian
 
 A muscular white-scaled humanoid with a reptilian tail and small wings.

@@ -387,8 +387,9 @@ rakshasa MONS_RAKSHASA
 azrael MONS_AZRAEL
 %sdir mon/demons
 efreet MONS_EFREET
-%sdir mon/nonliving
 %rim 0
+wendigo MONS_WENDIGO
+%sdir mon/nonliving
 ancestor MONS_ANCESTOR
 ancestor_knight MONS_ANCESTOR_KNIGHT
 ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE

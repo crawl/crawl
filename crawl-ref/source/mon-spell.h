@@ -1158,6 +1158,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_WENDIGO,
+      {
+       { SPELL_SERACFALL, 50, MON_SPELL_MAGICAL },
+       { SPELL_STUNNING_BURST, 30, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('S') Snakes.
     {  MST_LAVA_SNAKE,
       {
