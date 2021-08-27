@@ -131,7 +131,8 @@ ENDMAP
 default-depth: Dis, !Dis:$
 
 NAME:   lemuel_mystery_crypt
-MONS:   guardian mummy w:6 / ushabti w:4 / mummy priest / royal mummy, lich
+MONS:   guardian mummy w:6 / ushabti w:4 / mummy priest / royal mummy
+MONS:   ancient lich / dread lich
 NSUBST: 1:1=}> / *=1
 # occasionally all downstairs are in this vault
 : dis_statues(_G)
@@ -155,8 +156,7 @@ ENDMAP
 # The Dragons of Dis
 # There is an 2/3 chance all the downstairs will be here.
 NAME:    lemuel_dis_dragons
-DEPTH:   Dis:2-6
-MONS:    iron dragon, iron dragon
+MONS:    iron dragon / crystal echidna, iron dragon
 SHUFFLE: ]})
 SUBST:   1=1. , }=}}> , )=..> , ]=..>
 MAP
@@ -176,10 +176,10 @@ ENDMAP
 ##############################################################################
 NAME: grunt_dis_stairs_iron_hall
 ORIENT: encompass
-TAGS: transparent patrolling
-MONS: iron dragon / quicksilver dragon, reaper w:7 / tormentor w:6
-MONS: iron troll
-MONS: rust devil / nothing, iron imp / nothing
+TAGS: transparent patrolling no_monster_gen
+MONS: iron dragon / quicksilver elemental, hellion / tormentor
+MONS: iron giant
+MONS: crystal echidna / nothing, war gargoyle / nothing
 {{
     dgn.persist.grunt_iron_hall_animated = false
     local trap_marker = TriggerableFunction:new {
@@ -233,29 +233,26 @@ ENDMAP
 NAME:    hangedman_dis_monolith
 TAGS:    transparent layout_city
 ORIENT:  centre
-MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
-         patrolling executioner
+MONS:    patrolling quicksilver elemental / patrolling iron dragon / \
+         patrolling war gargoyle
 MONS:    patrolling hell sentinel
-MONS:    rust devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
-         iron dragon zombie w:5 / iron troll skeleton w:5 / \
-         iron troll zombie w:5 / hell knight w:15
-MONS:    hellion / tormentor / reaper / ancient champion / \
+MONS:    hellion / tormentor / ancient champion / \
          dancing weapon w:20 ; great sword good_item | battleaxe good_item | \
                                glaive good_item | great mace good_item
 SHUFFLE: ABa / EFc
 NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
-SUBST:   ABCDE = 3:19 4:1, a = +, bc = v, V : v.
+SUBST:   ABCDE = 0:19 3:1, a = +, bc = v, V : v.
 MAP
 ....................
 .vv......vv......vv.
 .vv.v..v....v..v.vv.
-.vv...vv4vv4vv...vv.
+.vv...vv3vv3vv...vv.
 .vvv+vvvvvvvvvv+vvv.
-3vvAAAvvvvvvvvEEEvv3
-4vvvavvvvvvvvvvcvvv4
-3vvBBBvvvvvvvvFFFvv3
+0vvAAAvvvvvvvvEEEvv0
+3vvvavvvvvvvvvvcvvv3
+0vvBBBvvvvvvvvFFFvv0
 .vvv+vvvvvvvvvv+vvv.
-.vv...vv4vv4vv...vv.
+.vv...vv3vv3vv...vv.
 .vv.v..v....v..v.vv.
 .vv......vv......vv.
 ....................
@@ -263,13 +260,12 @@ ENDMAP
 
 ###############################################################################
 NAME:    nicolae_dis_hell_towers
-DEPTH:   Dis, !Dis:$
 ORIENT:  encompass
 TAGS:    no_monster_gen
 SHUFFLE: {}
 NSUBST:  a = + / v, b = + / v, c = + / v, d = + / v
 SUBST:   2 = 2., 0 = 00.
-KMONS:   12 = hell sentinel / executioner
+KMONS:   12 = hell sentinel / iron giant
 MAP
   vvvvv     vvvvv
  vv...vv   vv...vv
@@ -293,7 +289,6 @@ vv..0..vv vv..0..vv
 ENDMAP
 
 NAME:   nicolae_dis_strange_trophy_room
-DEPTH:  Dis
 ORIENT: centre
 TAGS:   transparent extra decor
 NSUBST: a = 2:+ / v, b = 2:+ / v, c = 2:+ / v, d = 2:+ / v, e = 2:+ / v
@@ -323,7 +318,6 @@ vvvv.....a   d....v
 ENDMAP
 
 NAME:    nicolae_dis_lava_storage_tank
-DEPTH:   Dis
 TAGS:    transparent extra decor layout_city
 SHUFFLE: ABCD/EFGH, IJK/LMN, OPQR/STUV
 SUBST:   ABHIRS = g, CDKP = ., EGJLNOQT = v, FMUV = l
@@ -344,7 +338,6 @@ MAP
 ENDMAP
 
 NAME:    nicolae_dis_iron_filings
-DEPTH:   Dis, !Dis:$
 ORIENT:  centre
 TAGS:    transparent extra decor layout_city
 SUBST:   } = }}}{
@@ -377,9 +370,9 @@ ENDMAP
 
 NAME:   lightli_tower_of_babel
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  Dis, !Dis:$
 ORIENT: encompass
 NSUBST: > = 1:2 / *:....0>
+NSUBST: 9 = 1:8 / *:9
 KMONS:  2 = patrolling iron giant
 KFEAT:  2 = }
 TILE:   c = wall_marble
@@ -390,7 +383,7 @@ MAP
  vvvv........0.0........vvvv
 vv.........c.....c.........vv
 v..>.cc....0..c..0....cc.>..v
-v....cc.......0.......cc....v
+v....cc.......9.......cc....v
 v......v.............v......v
 v.......v...vv.vv...v.......v
 v........vvvv...vvvv........v
@@ -399,7 +392,7 @@ v.......vvvvv...vvvvv.......v
 v..c0...vvvvvv.vvvvvv...0c..v
 v......vvvvvvv+vvvvvvv......v
 v.0....v...vv...vv...v....0.v
-v...c0......+.{.+......0c...v
+v...c9......+.{.+......9c...v
 v.0....v...vv...vv...v....0.v
 v......vvvvvvv+vvvvvvv......v
 v..c0...vvvvvv.vvvvvv...0...v
@@ -408,7 +401,7 @@ v........vvvv...vvvv........v
 v........vvvv...vvvv........v
 v.......v...vv.vv...v.......v
 v......v.............v......v
-v....cc.......0.......cc....v
+v....cc.......9.......cc....v
 v..>.cc....0..c..0....cc.>..v
 vv.........c.....c.........vv
  vvvv........0.0........vvvv
@@ -539,7 +532,6 @@ ENDMAP
 
 NAME:   hangedman_dis_chains
 TAGS:   transparent extra decor
-DEPTH:  Dis
 SUBST:  A : vv., B : vv., C : Gvv, D : Gvv
 : dis_statues(_G)
 MAP
@@ -602,23 +594,13 @@ ENDMAP
 
 # The rent rates are ridiculous.
 NAME:    hangedman_iron_city_apartments
-TAGS:    no_pool_fixup
-DEPTH:   Dis, !Dis:$
+TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  encompass
-MONS:    skeletal warrior / vampire w:6 / wight w:2          / \
-         zombie / skeleton / hell hound / rust devil w:14    / \
-         red devil / ice devil w:16 / sun demon w:6          / \
-         hellwing / soul eater w:6
-MONS:    reaper / hellion / tormentor / executioner w:2      / \
-         bone dragon / lich / ancient champion               / \
-         balrug w:2 / blizzard demon w:2 / shadow demon w:2  / \
-         iron dragon w:2 / quicksilver dragon w:2
+MONS:    ancient champion / war gargoyle / hellion / tormentor / \
+         crystal echidna w:2
+MONS:    ancient lich / dread lich / hell sentinel / iron giant / juggernaut
 KFEAT:   Z = zot trap
-# Standard floor spawn equipment drops, not real loot.
-KITEM:   d = battleaxe no_pickup / great mace no_pickup      / \
-             great sword no_pickup / glaive no_pickup        / \
-             scythe good_item no_pickup w:5
-NSUBST:  > = 1 = { / 1 = } / 2 = >:1 .:49 / * = ...de
+NSUBST:  > = 1 = { / 1 = } / 2 = >:1 .:49
 # Always place at least one door per room, possibly wider or multiplied.
 # Variation provided across either half of the vault and per-room.
 NSUBST:  A = 1:+ / *:-, B = 1:+ / *:-, C = 1:+ / *:-, D = 1:+ / *:-
@@ -637,7 +619,6 @@ NSUBST:  S = 2 = 1:3 2:1 .:1 / * = 1:4 .:1, T = 2 = 1:3 2:1 .:1 / * = 1:4 .:1
 NSUBST:  U = 1:. / 1:1 / * = 1:4 .:1, W = 2:. / 1:1 / 1 = 1:4 .:1
 NSUBST:  X = 1:2 / 1 = 1:3 2:1 .:1 / * = 1:4 .:1, Y = 2:2 / * = 1:4 .:1
 KMASK:   wl = no_monster_gen
-: dgn.delayed_decay(_G, 'e', 'human skeleton')
 # : dis_statues(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
