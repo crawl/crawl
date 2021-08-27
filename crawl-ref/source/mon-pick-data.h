@@ -607,6 +607,16 @@ POP_DEPTHS,
 },
 
 // Hell branches: OOD Cap 14
+// "cross-hell" threats (good for regular rolls, fall off and
+// let branch flavour take over as depth goes 8-12)
+#define CROSS_HELL_POP \
+  {  1,  7,  100, FLAT, MONS_HELLION },\
+  {  8, 12,  100, FALL, MONS_HELLION },\
+  {  1,  7,  100, FLAT, MONS_TORMENTOR },\
+  {  8, 12,  100, FALL, MONS_TORMENTOR },\
+  {  1, 12,   10, FLAT, MONS_ANCIENT_LICH },\
+  {  1, 12,   10, FLAT, MONS_DREAD_LICH }
+
 { // Dis
   {  1,  7, 2000, FLAT, MONS_ZOMBIE },
   {  1, 12,  270, FALL, MONS_SKELETON },
