@@ -1202,6 +1202,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
     }
 
     if (item.base_type == OBJ_STAVES
+        && item_type_known(item)
+        && staff_skill(static_cast<stave_type>(item.sub_type)) != SK_NONE
         && is_useless_skill(staff_skill(static_cast<stave_type>(item.sub_type))))
     {
         description += make_stringf(

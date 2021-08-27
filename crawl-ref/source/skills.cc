@@ -1578,11 +1578,13 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
 
 const char *skill_name(skill_type which_skill)
 {
+    ASSERT(which_skill < NUM_SKILLS);
     return skill_titles[which_skill][0];
 }
 
 const char * skill_abbr(skill_type which_skill)
 {
+    ASSERT(which_skill < NUM_SKILLS);
     return skill_titles[which_skill][6];
 }
 
@@ -2038,6 +2040,9 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 int species_apt(skill_type skill, species_type species)
 {
     static bool spec_skills_initialised = false;
+
+    if (skill >= NUM_SKILLS)
+        return UNUSABLE_SKILL;
     if (!spec_skills_initialised)
     {
         // Setup sentinel values to find errors more easily.
