@@ -79,7 +79,8 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         && !mons->is_summoned()
         && !mons->is_shapeshifter()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons->friendly())
+        && !mons->friendly()
+        && !mons->has_ench(ENCH_FIRE_CHAMPION))
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
