@@ -2010,7 +2010,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         case MUT_EVOLUTION:
         case MUT_DEVOLUTION:
             if (cur_base_level == 1)
+            {
                 you.props[EVOLUTION_MUTS_KEY] = 0;
+                set_evolution_mut_xp(mutat == MUT_DEVOLUTION);
+            }
             break;
 
         default:
@@ -3121,4 +3124,23 @@ void reset_powered_by_death_duration()
 {
     const int pbd_dur = random_range(2, 5);
     you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+}
+
+/// How much XP is required for your next [d]evolution mutation?
+int _evolution_mut_xp(bool malignant)
+{
+    int xp = exp_needed(you.experience_level + 1)
+             - exp_needed(you.experience_level);
+    if (malignant)
+        return xp / 4;
+    return xp;
+}
+
+/// Update you.attribute[ATTR_EVOL_XP].
+void set_evolution_mut_xp(bool malignant)
+{
+    // Intentionally erase any 'excess' XP to avoid this triggering
+    // too quickly in the early game after big XP gains.
+    you.attribute[ATTR_EVOL_XP] = _evolution_mut_xp(malignant);
+    dprf("setting evol XP to %d", you.attribute[ATTR_EVOL_XP]);
 }

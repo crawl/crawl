@@ -3013,7 +3013,6 @@ static void _tag_read_you(reader &th)
             }
         }
     }
-
 #endif
 
 #if TAG_MAJOR_VERSION == 34
@@ -3377,6 +3376,9 @@ static void _tag_read_you(reader &th)
     const int xl_remaining = you.get_max_xl() - you.experience_level;
     if (xl_remaining < 0)
         adjust_level(xl_remaining);
+
+    if (th.getMinorVersion() < TAG_MINOR_EVOLUTION_XP)
+        set_evolution_mut_xp(you.has_mutation(MUT_DEVOLUTION));
 #endif
 
     count = unmarshallUByte(th);

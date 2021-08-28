@@ -384,15 +384,10 @@ static void _evolve(int /*time_delta*/)
     if (!malignant && !you.has_mutation(MUT_EVOLUTION))
         return;
 
-    int xp_threshold = (int)exp_needed(you.experience_level + 1);
-    if (malignant)
-        xp_threshold /= 4;
-    if (you.attribute[ATTR_EVOL_XP] <= xp_threshold)
+    if (you.attribute[ATTR_EVOL_XP] > 0)
         return;
+    set_evolution_mut_xp(malignant);
 
-    // Intentionally erase any 'excess' XP to avoid this triggering
-    // too quickly in the early game after big XP gains.
-    you.attribute[ATTR_EVOL_XP] = 0;
     mpr("You feel a genetic drift.");
     const mutation_type typ = malignant ? RANDOM_BAD_MUTATION : RANDOM_GOOD_MUTATION;
     const char* const reason = malignant ? "hidden defects" : "hidden potential";
