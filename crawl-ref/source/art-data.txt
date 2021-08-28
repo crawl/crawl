@@ -1159,6 +1159,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 FB_BRAND: SPWPN_PAIN
 BOOL:     evil, seeinv, fly, drain
+INSCRIP:  Mesm
 DBRAND:   It occasionally summons demons to assist the wielder when it strikes
  in combat.
 DESCRIP:  Its wielder is mesmerised by any visible foes.
