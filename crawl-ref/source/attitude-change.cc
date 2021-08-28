@@ -68,32 +68,34 @@ void mons_att_changed(monster* mon)
 static void _jiyva_convert_slime(monster* slime);
 static void _fedhas_neutralise_plant(monster* plant);
 
+/// For followers of Beogh, decide whether orcs will join you.
 void beogh_follower_convert(monster* mons, bool orc_hit)
 {
     if (!species::is_orcish(you.species) || crawl_state.game_is_arena())
         return;
 
-    // For followers of Beogh, decide whether orcs will join you.
-    if (will_have_passive(passive_t::convert_orcs)
-        && mons_genus(mons->type) == MONS_ORC
-        && !mons->is_summoned()
-        && !mons->is_shapeshifter()
-        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons->friendly()
-        && !mons->has_ench(ENCH_FIRE_CHAMPION))
+    if (!will_have_passive(passive_t::convert_orcs)
+        || mons_genus(mons->type) != MONS_ORC
+        || mons->is_summoned()
+        || mons->is_shapeshifter()
+        || testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        || mons->friendly()
+        || mons->has_ench(ENCH_FIRE_CHAMPION))
     {
-        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
+        return;
+    }
 
-        const int hd = mons->get_experience_level();
+    mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        if (have_passive(passive_t::convert_orcs)
-            && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
-                 > random2(hd) + hd + random2(5))
-        {
-            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
-                                                              : conv_t::sight);
-            stop_running();
-        }
+    const int hd = mons->get_experience_level();
+
+    if (have_passive(passive_t::convert_orcs)
+        && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
+             > random2(hd) + hd + random2(5))
+    {
+        beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
+                                                          : conv_t::sight);
+        stop_running();
     }
 }
 
