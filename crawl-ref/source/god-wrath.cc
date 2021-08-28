@@ -2065,7 +2065,9 @@ static monster* _ignis_champion_target()
             || mon->is_stationary()
             || mons_is_conjured(mon->type)
             || mon->is_perm_summoned()
-            || mon->wont_attack())
+            || mon->wont_attack()
+            // no stealing another god's pals :P
+            || mon->is_priest())
         {
             continue;
         }
