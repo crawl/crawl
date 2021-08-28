@@ -3127,7 +3127,7 @@ void reset_powered_by_death_duration()
 }
 
 /// How much XP is required for your next [d]evolution mutation?
-int _evolution_mut_xp(bool malignant)
+static int _evolution_mut_xp(bool malignant)
 {
     int xp = exp_needed(you.experience_level + 1)
              - exp_needed(you.experience_level);
