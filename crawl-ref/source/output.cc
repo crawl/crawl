@@ -1929,25 +1929,23 @@ int stealth_pips()
     return (player_stealth() + STEALTH_PIP - 1) / STEALTH_PIP;
 }
 
-static string _stealth_bar(int sw)
+static string _stealth_bar(int label_length, int sw)
 {
     string bar;
     //no colouring
     bar += _determine_colour_string(0, 5);
-    bar += "Stlth    ";
+    bar += chop_string("Stlth", label_length);
 
     const int unadjusted_pips = stealth_pips();
     const int bar_len = 10;
     const int num_high_pips = unadjusted_pips % bar_len;
-    static const vector<string> pip_tiers = { ".", "+", "*", "#", "!" };
+    static const vector<char> pip_tiers = { '.', '+', '*', '#', '!' };
     const int max_tier = pip_tiers.size() - 1;
     const int low_tier = min(unadjusted_pips / bar_len, max_tier);
     const int high_tier = min(low_tier + 1, max_tier);
 
-    for (int i = 0; i < num_high_pips; i++)
-        bar += pip_tiers[high_tier];
-    for (int i = num_high_pips; i < bar_len; i++)
-        bar += pip_tiers[low_tier];
+    bar.append(num_high_pips, pip_tiers[high_tier]);
+    bar.append(bar_len-num_high_pips, pip_tiers[low_tier]);
     bar += "\n";
     linebreak_string(bar, sw);
     return bar;
@@ -2404,8 +2402,8 @@ static vector<formatted_string> _get_overview_resistances(
 {
     // 3 columns, splits at columns 20, 33
     column_composer cols(3, 20, 33);
-    // First column, resist name is up to 9 chars
-    int cwidth = 9;
+    // First column, resist name is up to 8 chars
+    int cwidth = 8;
     string out;
 
     const int rfire = player_res_fire(calc_unid);
@@ -2435,22 +2433,22 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Will", cwidth, rmagi, 5, true,
                             player_willpower(calc_unid) == WILL_INVULN) + "\n";
 
-    out += _stealth_bar(20) + "\n";
+    out += _stealth_bar(cwidth, 20) + "\n";
 
     const int regen = player_regen(); // round up
-    out += make_stringf("HPRegen  %d.%d%d/turn\n", regen/100, regen/10%10, regen%10);
+    out += chop_string("HPRegen", cwidth);
+    out += make_stringf("%d.%02d/turn\n", regen/100, regen%100);
 
+    out += chop_string("MPRegen", cwidth);
 #if TAG_MAJOR_VERSION == 34
     const bool etheric = player_equip_unrand(UNRAND_ETHERIC_CAGE);
     const int mp_regen = player_mp_regen() //round up
                          + (etheric ? 50 : 0); // on average
-    out += make_stringf("MPRegen  %d.%02d/turn%s\n",
-                        mp_regen / 100, mp_regen % 100,
+    out += make_stringf("%d.%02d/turn%s\n", mp_regen / 100, mp_regen % 100,
                         etheric ? "*" : "");
 #else
     const int mp_regen = player_mp_regen(); // round up
-    out += make_stringf("MPRegen  %d.%02d/turn\n",
-                        mp_regen / 100, mp_regen % 100);
+    out += make_stringf("%d.%02d/turn\n", mp_regen / 100, mp_regen % 100);
 #endif
 
     cols.add_formatted(0, out, false);
