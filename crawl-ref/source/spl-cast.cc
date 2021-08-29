@@ -1394,6 +1394,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles(&you));
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
+    case SPELL_FLAME_WAVE:
+        return make_unique<targeter_flame_wave>(range);
 
     default:
         break;
@@ -2380,6 +2382,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
+
+    case SPELL_FLAME_WAVE:
+        return cast_flame_wave(powc, fail);
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);

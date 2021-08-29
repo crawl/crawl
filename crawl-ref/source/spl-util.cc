@@ -1930,4 +1930,5 @@ void end_wait_spells(bool quiet)
 {
     end_searing_ray();
     end_maxwells_coupling(quiet);
+    end_flame_wave();
 }

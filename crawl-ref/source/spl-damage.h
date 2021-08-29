@@ -14,6 +14,7 @@ class dist;
 
 const int DEFAULT_SHATTER_DICE = 3;
 #define COUPLING_TIME_KEY "maxwells_charge_time"
+#define FLAME_WAVE_KEY "flame_waves"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -92,6 +93,10 @@ spret cast_starburst(int pow, bool fail, bool tracer=false);
 void foxfire_attack(const monster *foxfire, const actor *target);
 
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
+
+spret cast_flame_wave(int pow, bool fail);
+void handle_flame_wave();
+void end_flame_wave();
 
 spret cast_imb(int pow, bool fail);
 

@@ -217,6 +217,13 @@ public:
     }
 };
 
+class targeter_flame_wave : public targeter_radius
+{
+public:
+    targeter_flame_wave(int _range);
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_thunderbolt : public targeter
 {
 public:

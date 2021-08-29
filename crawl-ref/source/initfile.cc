@@ -1124,7 +1124,7 @@ void game_options::reset_options()
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_MAXWELLS_COUPLING, SPELL_IGNITION, SPELL_NOXIOUS_BOG,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
-          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH };
+          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE };
     always_use_static_targeters = false;
 
     // These are only used internally, and only from the commandline:

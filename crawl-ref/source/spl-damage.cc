@@ -3097,6 +3097,96 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     return spret::success;
 }
 
+static bool _prep_flame_wave(bolt &beam, int pow, int lvl)
+{
+    zappy(ZAP_FLAME_WAVE, pow, false, beam);
+    beam.set_agent(&you);
+    beam.origin_spell = SPELL_FLAME_WAVE;
+    beam.ex_size       = lvl;
+    beam.source = beam.target = you.pos();
+
+    bolt tracer_beam = beam;
+    tracer_beam.is_tracer = true;
+    tracer_beam.explode(false, true);
+    return !tracer_beam.beam_cancelled;
+}
+
+spret cast_flame_wave(int pow, bool fail)
+{
+    bolt beam;
+    if (!_prep_flame_wave(beam, pow, 1))
+        return spret::abort;
+
+    fail_check();
+
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode(true, true);
+
+    you.props[FLAME_WAVE_KEY] = 0;
+
+    string msg = "(Press <w>%</w> to intensify the flame waves.)";
+    insert_commands(msg, { CMD_WAIT });
+    mpr(msg);
+
+    return spret::success;
+}
+
+void handle_flame_wave()
+{
+    if (!you.props.exists(FLAME_WAVE_KEY))
+        return;
+
+    int &lvl = you.props[FLAME_WAVE_KEY].get_int();
+    ++lvl;
+    if (lvl == 1) // just cast it this turn
+        return;
+
+    if (crawl_state.prev_cmd != CMD_WAIT
+        || you.confused()
+        || you.berserk())
+    {
+        end_flame_wave();
+        return;
+    }
+
+    if (!enough_mp(1, true))
+    {
+        mpr("Without enough magic to sustain them, the waves of flame dissipate.");
+        end_flame_wave();
+        return;
+    }
+
+    const int pow = calc_spell_power(SPELL_FLAME_WAVE, true);
+    bolt beam;
+    if (!_prep_flame_wave(beam, pow, lvl))
+    {
+        mpr("You stop channeling waves of flame.");
+        end_flame_wave();
+        return;
+    }
+
+    aim_battlesphere(&you, SPELL_FLAME_WAVE);
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode(true, true);
+    trigger_battlesphere(&you);
+
+    pay_mp(1);
+    finalize_mp_cost();
+
+    if (lvl >= spell_range(SPELL_FLAME_WAVE, pow))
+    {
+        mpr("You finish channelling waves of flame.");
+        end_flame_wave();
+    }
+}
+
+void end_flame_wave()
+{
+    you.props.erase(FLAME_WAVE_KEY);
+}
+
 spret cast_searing_ray(int pow, bolt &beam, bool fail)
 {
     const spret ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr,
@@ -3724,7 +3814,9 @@ bool wait_spell_active(spell_type spell)
     return spell == SPELL_SEARING_RAY
                 && you.attribute[ATTR_SEARING_RAY] != 0
             || spell == SPELL_MAXWELLS_COUPLING
-                && you.props.exists(COUPLING_TIME_KEY);
+                && you.props.exists(COUPLING_TIME_KEY)
+            || spell == SPELL_FLAME_WAVE
+                && you.props.exists(FLAME_WAVE_KEY);
 }
 
 // returns the closest target to the player, choosing randomly if there are more

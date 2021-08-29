@@ -519,5 +519,6 @@ enum spell_type : int
     SPELL_STOKE_FLAMES,
     SPELL_SERACFALL,
     SPELL_SCORCH,
+    SPELL_FLAME_WAVE,
     NUM_SPELLS
 };

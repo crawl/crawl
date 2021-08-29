@@ -637,6 +637,23 @@ _mon_hex_zap(ZAP_CONFUSE, BEAM_CONFUSION),
 },
 
 {
+    ZAP_FLAME_WAVE,
+    "flame wave",
+    100,
+    new calcdice_calculator<3, 10, 2, 5>,
+    new tohit_calculator<40>,
+    nullptr,
+    nullptr,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
+{
     ZAP_IGNITION,
     "fireball",
     200,

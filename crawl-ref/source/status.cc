@@ -114,16 +114,8 @@ static void _mark_expiring(status_info& inf, bool expiring)
 
 static string _ray_text()
 {
-    // i feel like we could do this with math instead...
-    switch (you.attribute[ATTR_SEARING_RAY])
-    {
-        case 2:
-            return "Ray+";
-        case 3:
-            return "Ray++";
-        default:
-            return "Ray";
-    }
+    const int n_plusses = max(you.attribute[ATTR_SEARING_RAY] - 1, 0);
+    return "Ray" + string(n_plusses, '+');
 }
 
 static vector<string> _charge_strings = { "Charge-", "Charge/",
@@ -567,6 +559,15 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text   = _ray_text().c_str();
+        }
+        break;
+
+    case STATUS_FLAME_WAVE:
+        if (you.props.exists(FLAME_WAVE_KEY))
+        {
+            const int lvl = you.props[FLAME_WAVE_KEY].get_int();
+            inf.light_colour = WHITE;
+            inf.light_text   = "Wave" + string(lvl - 1, '+');
         }
         break;
 

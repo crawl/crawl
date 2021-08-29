@@ -1071,8 +1071,9 @@ namespace quiver
 
         switch (s)
         {
-        case SPELL_SEARING_RAY:          // for autofight to work, these need
-        case SPELL_MAXWELLS_COUPLING:    // to skip autofight targeting
+        case SPELL_SEARING_RAY:          // for autofight to work
+        case SPELL_FLAME_WAVE:           // these need to
+        case SPELL_MAXWELLS_COUPLING:    // skip autofight targeting
         case SPELL_LRD: // skip initial autotarget for LRD so that it doesn't
                         // fix on a close monster that can't be targeted. I'm
                         // not quite sure what the right thing to do is?
