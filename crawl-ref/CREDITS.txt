@@ -141,6 +141,7 @@
     Aaron Curtis
     Simon Curtis
     cut1less
+    Matthew Daley
     David Damerell
     Paul Dejean
     Denzi
