@@ -1,7 +1,8 @@
-define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
-        "./tileinfo-icons", "./tileinfo-dngn", "./enums", "./map_knowledge",
-        "./tileinfos", "./player", "./options", "contrib/jquery.json"],
-function ($, view_data, main, tileinfo_player, icons, dngn, enums,
+define(["jquery", "./view_data", "./tileinfo-gui", "./tileinfo-main",
+        "./tileinfo-player", "./tileinfo-icons", "./tileinfo-dngn", "./enums",
+        "./map_knowledge", "./tileinfos", "./player", "./options",
+        "contrib/jquery.json"],
+function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
           map_knowledge, tileinfos, player, options) {
     "use strict";
 
@@ -1185,6 +1186,13 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         draw_dngn: function(idx, x, y, img_scale)
         {
             this.draw_tile(idx, x, y, dngn,
+                undefined, undefined, undefined, undefined,
+                img_scale);
+        },
+
+        draw_gui: function(idx, x, y, img_scale)
+        {
+            this.draw_tile(idx, x, y, gui,
                 undefined, undefined, undefined, undefined,
                 img_scale);
         },
