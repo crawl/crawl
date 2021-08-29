@@ -159,7 +159,7 @@ void wizard_create_spec_monster_name()
         monster    &mon = env.mons[idx];
         ghost_demon ghost;
 
-        ghost.name = "John Doe";
+        ghost.name = random_choose("John Doe", "Jane Doe", "Jay Doe");
 
         char input_str[80];
         msgwin_get_line("Make player ghost which species? (case-sensitive) ",

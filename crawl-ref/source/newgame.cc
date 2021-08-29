@@ -410,7 +410,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     // Apologies to non-public servers.
     if (ng.type == GAME_TYPE_NORMAL)
     {
-        if (!yesno("Trunk games don't count for the tournament, you want "
+        if (!yesno("Trunk doesn't count for the tournament, you want "
                    TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
         {
             game_ended(game_exit::abort);
@@ -1084,13 +1084,14 @@ static job_group jobs_order[] =
     },
     {
         "Adventurer",
-        coord_def(0, 7), 20,
+        coord_def(0, 6), 20,
         { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, }
     },
     {
         "Zealot",
         coord_def(1, 0), 25,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT }
+        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CINDER_ACOLYTE,
+          JOB_CHAOS_KNIGHT }
     },
     {
         "Warrior-mage",

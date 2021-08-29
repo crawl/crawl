@@ -82,6 +82,7 @@
 #include "uncancel.h"
 #include "unicode.h"
 #include "view.h"
+#include "wiz-dgn.h"
 
 enum class abflag
 {
@@ -101,6 +102,7 @@ enum class abflag
     hostile             = 0x00001000, // failure summons a hostile (Makhleb)
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
+    quiet_fail          = 0x00008000, // no message on failure
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -185,6 +187,7 @@ skill_type invo_skill(god_type god)
         case GOD_WU_JIAN:
         case GOD_VEHUMET:
         case GOD_XOM:
+        case GOD_IGNIS:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
@@ -281,385 +284,394 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target=nullpt
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 
-// The description screen was way out of date with the actual costs.
-// This table puts all the information in one place... -- bwr
-//
-// The three numerical fields are: MP, HP, and piety.
-// Note:  piety_cost = val + random2((val + 1) / 2 + 1);
-//        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
-static const ability_def Ability_List[] =
+static vector<ability_def> &_get_ability_list()
 {
-    // NON_ABILITY should always come first
-    { ABIL_NON_ABILITY, "No ability", 0, 0, 0, {}, abflag::none },
-    { ABIL_SPIT_POISON, "Spit Poison",
-        0, 0, 0, {fail_basis::xl, 20, 1}, abflag::breath },
+    // construct on initialization v2:
+    // https://isocpp.org/wiki/faq/ctors#construct-on-first-use-v2
 
-    { ABIL_BREATHE_FIRE, "Breathe Fire",
-        0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
-    { ABIL_BREATHE_FROST, "Breathe Frost",
-        0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
-    { ABIL_BREATHE_POISON, "Breathe Poison Gas",
-        0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
-    { ABIL_BREATHE_MEPHITIC, "Breathe Noxious Fumes",
-        0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
-    { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
-        0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
-    { ABIL_BREATHE_POWER, "Breathe Dispelling Energy",
-        0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
-    { ABIL_BREATHE_STEAM, "Breathe Steam",
-        0, 0, 0, {fail_basis::xl, 20, 1}, abflag::breath },
-    { ABIL_BREATHE_ACID, "Breathe Acid",
-        0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+    // The description screen was way out of date with the actual costs.
+    // This table puts all the information in one place... -- bwr
+    //
+    // The three numerical fields are: MP, HP, and piety.
+    // Note:  piety_cost = val + random2((val + 1) / 2 + 1);
+    //        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
+    static vector<ability_def> Ability_List =
+    {
+        // NON_ABILITY should always come first
+        { ABIL_NON_ABILITY, "No ability", 0, 0, 0, {}, abflag::none },
+        { ABIL_SPIT_POISON, "Spit Poison",
+            0, 0, 0, {fail_basis::xl, 20, 1}, abflag::breath },
 
-    { ABIL_TRAN_BAT, "Bat Form",
-        2, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
-    { ABIL_EXSANGUINATE, "Exsanguinate",
-        0, 0, 0, {}, abflag::delay},
-    { ABIL_REVIVIFY, "Revivify",
-        0, 0, 0, {}, abflag::delay},
-#if TAG_MAJOR_VERSION == 34
-    { ABIL_FLY, "Fly", 3, 0, 0, {fail_basis::xl, 42, 3}, abflag::none },
-    { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, {}, abflag::none },
+        { ABIL_BREATHE_FIRE, "Breathe Fire",
+            0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+        { ABIL_BREATHE_FROST, "Breathe Frost",
+            0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+        { ABIL_BREATHE_POISON, "Breathe Poison Gas",
+            0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+        { ABIL_BREATHE_MEPHITIC, "Breathe Noxious Fumes",
+            0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+        { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
+            0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+        { ABIL_BREATHE_POWER, "Breathe Dispelling Energy",
+            0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+        { ABIL_BREATHE_STEAM, "Breathe Steam",
+            0, 0, 0, {fail_basis::xl, 20, 1}, abflag::breath },
+        { ABIL_BREATHE_ACID, "Breathe Acid",
+            0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
+
+        { ABIL_TRAN_BAT, "Bat Form",
+            2, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
+        { ABIL_EXSANGUINATE, "Exsanguinate",
+            0, 0, 0, {}, abflag::delay},
+        { ABIL_REVIVIFY, "Revivify",
+            0, 0, 0, {}, abflag::delay},
+        { ABIL_DAMNATION, "Hurl Damnation",
+            0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
+        { ABIL_WORD_OF_CHAOS, "Word of Chaos",
+            6, 0, 0, {fail_basis::xl, 50, 1}, abflag::max_hp_drain },
+
+        { ABIL_DIG, "Dig", 0, 0, 0, {}, abflag::instant | abflag::none },
+        { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 0, {}, abflag::delay },
+
+        { ABIL_HOP, "Hop", 0, 0, 0, {}, abflag::none },
+
+        { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, {}, abflag::none },
+        { ABIL_BLINKBOLT, "Blinkbolt", 0, 0, 0, {}, abflag::none },
+
+        { ABIL_HEAL_WOUNDS, "Heal Wounds",
+            0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
+
+        // EVOKE abilities use Evocations and come from items.
+        { ABIL_EVOKE_BLINK, "Evoke Blink",
+            1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
+        { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
+            0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
+        { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
+            2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
+
+        { ABIL_END_TRANSFORMATION, "End Transformation",
+            0, 0, 0, {}, abflag::none },
+
+        // INVOCATIONS:
+        // Zin
+        { ABIL_ZIN_RECITE, "Recite",
+            0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_ZIN_VITALISATION, "Vitalisation",
+            2, 0, 1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_ZIN_IMPRISON, "Imprison",
+            5, 0, 4, {fail_basis::invo, 60, 5, 20}, abflag::none },
+        { ABIL_ZIN_SANCTUARY, "Sanctuary",
+            7, 0, 15, {fail_basis::invo, 80, 4, 25}, abflag::none },
+        { ABIL_ZIN_DONATE_GOLD, "Donate Gold",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+
+        // The Shining One
+        { ABIL_TSO_DIVINE_SHIELD, "Divine Shield",
+            3, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame",
+            5, 0, 2, {fail_basis::invo, 70, 4, 25}, abflag::none },
+        { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
+            8, 0, 5, {fail_basis::invo, 80, 4, 25}, abflag::none },
+        { ABIL_TSO_BLESS_WEAPON, "Brand Weapon With Holy Wrath", 0, 0, 0,
+            {fail_basis::invo}, abflag::none },
+
+        // Kikubaaqudgha
+        { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
+            3, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_KIKU_TORMENT, "Torment",
+            4, 0, 8, {fail_basis::invo, 60, 5, 20}, abflag::none },
+        { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge", 0, 0, 0,
+            {fail_basis::invo}, abflag::none },
+        { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0,
+            {fail_basis::invo}, abflag::pain },
+
+        // Yredelemnul
+        { ABIL_YRED_INJURY_MIRROR, "Injury Mirror",
+            0, 0, 0, {fail_basis::invo, 40, 4, 20}, abflag::piety },
+        { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains",
+            2, 0, 0, {fail_basis::invo, 40, 4, 20}, abflag::none },
+        { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
+            2, 0, 0, {fail_basis::invo, 50, 4, 20}, abflag::none },
+        { ABIL_YRED_ANIMATE_DEAD, "Animate Dead",
+            2, 0, 0, {fail_basis::invo, 40, 4, 20}, abflag::none },
+        { ABIL_YRED_DRAIN_LIFE, "Drain Life",
+            6, 0, 2, {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul",
+            8, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
+
+        // Okawaru
+        { ABIL_OKAWARU_HEROISM, "Heroism",
+            2, 0, 1, {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_OKAWARU_FINESSE, "Finesse",
+            5, 0, 3, {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_OKAWARU_DUEL, "Duel",
+            7, 0, 8, {fail_basis::invo, 80, 4, 20}, abflag::none },
+
+        // Makhleb
+        { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
+            0, scaling_cost::fixed(1), 0, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
+            0, scaling_cost::fixed(4), 2, {fail_basis::invo, 40, 5, 20}, abflag::hostile },
+        { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
+            0, scaling_cost::fixed(6), generic_cost::range(0, 1),
+            {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
+            0, scaling_cost::fixed(10), 5,
+            {fail_basis::invo, 90, 2, 5}, abflag::hostile },
+
+        // Sif Muna
+        { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
+            0, 0, 2, {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
+            0, 0, 8, {fail_basis::invo}, abflag::none },
+        { ABIL_SIF_MUNA_DIVINE_EXEGESIS, "Divine Exegesis",
+            0, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::none },
+
+        // Trog
+        { ABIL_TROG_BERSERK, "Berserk",
+            0, 0, 0, {fail_basis::invo, 45, 0, 2}, abflag::none },
+        { ABIL_TROG_HAND, "Trog's Hand",
+            0, 0, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
+        { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
+            0, 0, generic_cost::range(5, 6),
+            {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
+
+        // Elyvilon
+        { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
+            0, 0, 0, {fail_basis::invo}, abflag::piety },
+        { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0,
+            generic_cost::range(0, 1), {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
+            2, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_ELYVILON_PURIFICATION, "Purification",
+            3, 0, 3, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
+        { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
+            2, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
+            0, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
+
+        // Lugonu
+        { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
+            1, 0, 10, {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_LUGONU_BEND_SPACE, "Bend Space",
+            1, scaling_cost::fixed(2), 0, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_LUGONU_BANISH, "Banish", 4, 0, generic_cost::range(3, 4),
+            {fail_basis::invo, 85, 7, 20}, abflag::none },
+        { ABIL_LUGONU_CORRUPT, "Corrupt", 7, scaling_cost::fixed(5), 10,
+            {fail_basis::invo, 70, 4, 25}, abflag::none },
+        { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 10, 0, 28,
+            {fail_basis::invo, 80, 4, 25}, abflag::pain },
+        { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0,
+            {fail_basis::invo}, abflag::none },
+
+        // Nemelex
+        { ABIL_NEMELEX_DRAW_DESTRUCTION, "Draw Destruction",
+            0, 0, 0, {fail_basis::invo}, abflag::card },
+        { ABIL_NEMELEX_DRAW_ESCAPE, "Draw Escape",
+            0, 0, 0, {fail_basis::invo}, abflag::card },
+        { ABIL_NEMELEX_DRAW_SUMMONING, "Draw Summoning",
+            0, 0, 0, {fail_basis::invo}, abflag::card },
+        { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
+            0, 0, 0, {fail_basis::invo}, abflag::card },
+        { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
+            2, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
+        { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
+            8, 0, 4, {fail_basis::invo, -1}, abflag::none }, // failure special-cased
+        { ABIL_NEMELEX_STACK_FIVE, "Stack Five",
+            5, 0, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
+
+        // Beogh
+        { ABIL_BEOGH_SMITING, "Smiting",
+            3, 0, generic_cost::fixed(3), {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
+            2, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+        { ABIL_BEOGH_RESURRECTION, "Resurrection",
+            0, 0, 28, {fail_basis::invo}, abflag::none },
+
+        // Jiyva
+        { ABIL_JIYVA_CALL_JELLY, "Request Jelly",
+            2, 0, 1, {fail_basis::invo}, abflag::none },
+        { ABIL_JIYVA_SLIMIFY, "Slimify",
+            4, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
+        { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
+            0, 0, 15, {fail_basis::invo}, abflag::none },
+
+        // Fedhas
+        { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
+            3, 0, 2, {fail_basis::invo, 30, 6, 20}, abflag::none},
+        { ABIL_FEDHAS_GROW_BALLISTOMYCETE, "Grow Ballistomycete",
+            4, 0, 4, {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_FEDHAS_OVERGROW, "Overgrow",
+            8, 0, 12, {fail_basis::invo, 70, 5, 20}, abflag::none},
+        { ABIL_FEDHAS_GROW_OKLOB, "Grow Oklob",
+            6, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
+
+        // Cheibriados
+        { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time",
+            3, 0, 1, {fail_basis::invo, 40, 4, 20}, abflag::none },
+        { ABIL_CHEIBRIADOS_DISTORTION, "Temporal Distortion",
+            4, 0, 3, {fail_basis::invo, 60, 5, 20}, abflag::instant },
+        { ABIL_CHEIBRIADOS_SLOUCH, "Slouch",
+            5, 0, 8, {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
+            10, 0, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
+
+        // Ashenzari
+        { ABIL_ASHENZARI_CURSE, "Curse Item",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+        { ABIL_ASHENZARI_UNCURSE, "Shatter the Chains",
+            0, 0, 0, {fail_basis::invo}, abflag::curse },
+
+        // Dithmenos
+        { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
+            4, 80, 5, {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
+            9, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::max_hp_drain },
+
+        // Ru
+        { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power", 0, 0, 0,
+            {fail_basis::invo}, abflag::exhaustion|abflag::max_hp_drain|abflag::conf_ok },
+        { ABIL_RU_POWER_LEAP, "Power Leap",
+            5, 0, 0, {fail_basis::invo}, abflag::exhaustion },
+        { ABIL_RU_APOCALYPSE, "Apocalypse",
+            8, 0, 0, {fail_basis::invo}, abflag::exhaustion|abflag::max_hp_drain },
+
+        { ABIL_RU_SACRIFICE_PURITY, "Sacrifice Purity",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_WORDS, "Sacrifice Words",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_DRINK, "Sacrifice Drink",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_ESSENCE, "Sacrifice Essence",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_HEALTH, "Sacrifice Health",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_STEALTH, "Sacrifice Stealth",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_ARTIFICE, "Sacrifice Artifice",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_LOVE, "Sacrifice Love",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_COURAGE, "Sacrifice Courage",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_ARCANA, "Sacrifice Arcana",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_NIMBLENESS, "Sacrifice Nimbleness",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_DURABILITY, "Sacrifice Durability",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_EXPERIENCE, "Sacrifice Experience",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_SKILL, "Sacrifice Skill",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_EYE, "Sacrifice an Eye",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_RESISTANCE, "Sacrifice Resistance",
+            0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+
+        // Gozag
+        { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
+            0, 0, 0, {fail_basis::invo}, abflag::gold },
+        { ABIL_GOZAG_CALL_MERCHANT, "Call Merchant",
+            0, 0, 0, {fail_basis::invo}, abflag::gold|abflag::none },
+        { ABIL_GOZAG_BRIBE_BRANCH, "Bribe Branch",
+            0, 0, 0, {fail_basis::invo}, abflag::gold },
+
+        // Qazlal
+        { ABIL_QAZLAL_UPHEAVAL, "Upheaval",
+            4, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
+            6, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
+        { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area",
+            7, 0, 10, {fail_basis::invo, 70, 4, 25}, abflag::none },
+
+        // Uskayaw
+        { ABIL_USKAYAW_STOMP, "Stomp",
+            3, 0, generic_cost::fixed(20), {fail_basis::invo}, abflag::none },
+        { ABIL_USKAYAW_LINE_PASS, "Line Pass",
+            4, 0, generic_cost::fixed(20), {fail_basis::invo}, abflag::none},
+        { ABIL_USKAYAW_GRAND_FINALE, "Grand Finale",
+            8, 0, generic_cost::fixed(0),
+            {fail_basis::invo, 120 + piety_breakpoint(4), 5, 1}, abflag::none},
+
+        // Hepliaklqana
+        { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
+            2, 0, 0, {fail_basis::invo}, abflag::none },
+        { ABIL_HEPLIAKLQANA_TRANSFERENCE, "Transference",
+            2, 0, 3, {fail_basis::invo, 40, 5, 20},
+            abflag::none },
+        { ABIL_HEPLIAKLQANA_IDEALISE, "Idealise",
+            4, 0, 4, {fail_basis::invo, 60, 4, 25},
+            abflag::none },
+
+        { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+        { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,   "Ancestor Life: Battlemage",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+        { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+
+        { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
+            0, 0, 0, {fail_basis::invo}, abflag::instant },
+
+        // Wu Jian
+        { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
+            0, 0, 2, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
+        { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
+            0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
+        // Lunge and Whirlwind abilities aren't menu abilities but currently need
+        // to exist for action counting, hence need enums/entries.
+        { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, {}, abflag::berserk_ok },
+        { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, {}, abflag::berserk_ok },
+        { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
+            0, 0, 0, {}, abflag::berserk_ok },
+
+        // Ignis
+        { ABIL_IGNIS_SEA_OF_FIRE, "Sea of Fire",
+            0, 0, 6, /*avg 15 uses from 150 to <30 piety*/
+            {fail_basis::invo}, abflag::quiet_fail },
+        { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
+            0, 0, 9, {fail_basis::invo}, abflag::quiet_fail },
+        { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
+            0, 0, 24, {fail_basis::invo}, abflag::none },
+
+        { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
+        { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+        { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
+            0, 0, 0, {fail_basis::invo}, abflag::none },
+#ifdef WIZARD
+        { ABIL_WIZ_BUILD_TERRAIN, "Build terrain",
+            0, 0, 0, {}, abflag::instant },
+        { ABIL_WIZ_SET_TERRAIN, "Set terrain to build",
+            0, 0, 0, {}, abflag::instant },
+        { ABIL_WIZ_CLEAR_TERRAIN, "Clear terrain to floor",
+            0, 0, 0, {}, abflag::instant },
 #endif
-    { ABIL_DAMNATION, "Hurl Damnation",
-        0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
-    { ABIL_WORD_OF_CHAOS, "Word of Chaos",
-        6, 0, 0, {fail_basis::xl, 50, 1}, abflag::max_hp_drain },
 
-    { ABIL_DIG, "Dig", 0, 0, 0, {}, abflag::instant | abflag::none },
-    { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 0, {}, abflag::delay },
-
-    { ABIL_HOP, "Hop", 0, 0, 0, {}, abflag::none },
-
-    { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, {}, abflag::none },
-    { ABIL_BLINKBOLT, "Blinkbolt", 0, 0, 0, {}, abflag::none },
-
-    // EVOKE abilities use Evocations and come from items.
-    // Teleportation and Blink can also come from mutations
-    // so we have to distinguish them (see above). The off items
-    // below are labeled EVOKE because they only work now if the
-    // player has an item with the evocable power (not just because
-    // you used a wand, potion, or miscast effect). I didn't see
-    // any reason to label them as "Evoke" in the text, they don't
-    // use or train Evocations (the others do).  -- bwr
-    { ABIL_EVOKE_BLINK, "Evoke Blink",
-        1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-    { ABIL_HEAL_WOUNDS, "Heal Wounds",
-        0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
-    { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-        0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
-
-    { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
-        2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
-#if TAG_MAJOR_VERSION == 34
-    { ABIL_EVOKE_FLIGHT, "Evoke Flight",
-        1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-#endif
-    { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
-        5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
-
-
-    { ABIL_END_TRANSFORMATION, "End Transformation",
-        0, 0, 0, {}, abflag::none },
-
-    // INVOCATIONS:
-    // Zin
-    { ABIL_ZIN_RECITE, "Recite",
-        0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
-    { ABIL_ZIN_VITALISATION, "Vitalisation",
-        2, 0, 1, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_ZIN_IMPRISON, "Imprison",
-        5, 0, 4, {fail_basis::invo, 60, 5, 20}, abflag::none },
-    { ABIL_ZIN_SANCTUARY, "Sanctuary",
-        7, 0, 15, {fail_basis::invo, 80, 4, 25}, abflag::none },
-    { ABIL_ZIN_DONATE_GOLD, "Donate Gold",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-
-    // The Shining One
-    { ABIL_TSO_DIVINE_SHIELD, "Divine Shield",
-        3, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame",
-        5, 0, 2, {fail_basis::invo, 70, 4, 25}, abflag::none },
-    { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
-        8, 0, 5, {fail_basis::invo, 80, 4, 25}, abflag::none },
-    { ABIL_TSO_BLESS_WEAPON, "Brand Weapon With Holy Wrath", 0, 0, 0,
-        {fail_basis::invo}, abflag::none },
-
-    // Kikubaaqudgha
-    { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
-        3, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_KIKU_TORMENT, "Torment",
-        4, 0, 8, {fail_basis::invo, 60, 5, 20}, abflag::none },
-    { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge", 0, 0, 0,
-        {fail_basis::invo}, abflag::none },
-    { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0,
-        {fail_basis::invo}, abflag::pain },
-
-    // Yredelemnul
-    { ABIL_YRED_INJURY_MIRROR, "Injury Mirror",
-        0, 0, 0, {fail_basis::invo, 40, 4, 20}, abflag::piety },
-    { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains",
-        2, 0, 0, {fail_basis::invo, 40, 4, 20}, abflag::none },
-    { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
-        2, 0, 0, {fail_basis::invo, 50, 4, 20}, abflag::none },
-    { ABIL_YRED_ANIMATE_DEAD, "Animate Dead",
-        2, 0, 0, {fail_basis::invo, 40, 4, 20}, abflag::none },
-    { ABIL_YRED_DRAIN_LIFE, "Drain Life",
-        6, 0, 2, {fail_basis::invo, 60, 4, 25}, abflag::none },
-    { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul",
-        8, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
-
-    // Okawaru
-    { ABIL_OKAWARU_HEROISM, "Heroism",
-        2, 0, 1, {fail_basis::invo, 30, 6, 20}, abflag::none },
-    { ABIL_OKAWARU_FINESSE, "Finesse",
-        5, 0, 3, {fail_basis::invo, 60, 4, 25}, abflag::none },
-
-    // Makhleb
-    { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
-        0, scaling_cost::fixed(1), 0, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
-        0, scaling_cost::fixed(4), 2, {fail_basis::invo, 40, 5, 20}, abflag::hostile },
-    { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
-        0, scaling_cost::fixed(6), generic_cost::range(0, 1),
-        {fail_basis::invo, 60, 4, 25}, abflag::none },
-    { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
-        0, scaling_cost::fixed(10), 5,
-        {fail_basis::invo, 90, 2, 5}, abflag::hostile },
-
-    // Sif Muna
-    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
-        0, 0, 2, {fail_basis::invo, 60, 4, 25}, abflag::none },
-    { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
-        0, 0, 8, {fail_basis::invo}, abflag::none },
-    { ABIL_SIF_MUNA_DIVINE_EXEGESIS, "Divine Exegesis",
-        0, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::none },
-
-    // Trog
-    { ABIL_TROG_BERSERK, "Berserk",
-        0, 0, 0, {fail_basis::invo, 45, 0, 2}, abflag::none },
-    { ABIL_TROG_HAND, "Trog's Hand",
-        0, 0, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
-    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
-        0, 0, generic_cost::range(5, 6),
-        {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
-
-    // Elyvilon
-    { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
-        0, 0, 0, {fail_basis::invo}, abflag::piety },
-    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0,
-        generic_cost::range(0, 1), {fail_basis::invo, 30, 6, 20}, abflag::none },
-    { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
-        2, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_ELYVILON_PURIFICATION, "Purification",
-        3, 0, 3, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
-    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
-        2, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
-        0, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
-
-    // Lugonu
-    { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
-        1, 0, 10, {fail_basis::invo, 30, 6, 20}, abflag::none },
-    { ABIL_LUGONU_BEND_SPACE, "Bend Space",
-        1, scaling_cost::fixed(2), 0, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_LUGONU_BANISH, "Banish", 4, 0, generic_cost::range(3, 4),
-        {fail_basis::invo, 85, 7, 20}, abflag::none },
-    { ABIL_LUGONU_CORRUPT, "Corrupt", 7, scaling_cost::fixed(5), 10,
-        {fail_basis::invo, 70, 4, 25}, abflag::none },
-    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 10, 0, 28,
-        {fail_basis::invo, 80, 4, 25}, abflag::pain },
-    { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0,
-        {fail_basis::invo}, abflag::none },
-
-    // Nemelex
-    { ABIL_NEMELEX_DRAW_DESTRUCTION, "Draw Destruction",
-        0, 0, 0, {fail_basis::invo}, abflag::card },
-    { ABIL_NEMELEX_DRAW_ESCAPE, "Draw Escape",
-        0, 0, 0, {fail_basis::invo}, abflag::card },
-    { ABIL_NEMELEX_DRAW_SUMMONING, "Draw Summoning",
-        0, 0, 0, {fail_basis::invo}, abflag::card },
-    { ABIL_NEMELEX_DRAW_STACK, "Draw Stack",
-        0, 0, 0, {fail_basis::invo}, abflag::card },
-    { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw",
-        2, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
-    { ABIL_NEMELEX_DEAL_FOUR, "Deal Four",
-        8, 0, 4, {fail_basis::invo, -1}, abflag::none }, // failure special-cased
-    { ABIL_NEMELEX_STACK_FIVE, "Stack Five",
-        5, 0, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
-
-    // Beogh
-    { ABIL_BEOGH_SMITING, "Smiting",
-        3, 0, generic_cost::fixed(3), {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
-        2, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
-    { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_BEOGH_RESURRECTION, "Resurrection",
-        0, 0, 28, {fail_basis::invo}, abflag::none },
-
-    // Jiyva
-    { ABIL_JIYVA_CALL_JELLY, "Request Jelly",
-        2, 0, 1, {fail_basis::invo}, abflag::none },
-    { ABIL_JIYVA_SLIMIFY, "Slimify",
-        4, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
-    { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
-        0, 0, 15, {fail_basis::invo}, abflag::none },
-
-    // Fedhas
-    { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
-        3, 0, 2, {fail_basis::invo, 30, 6, 20}, abflag::none},
-    { ABIL_FEDHAS_GROW_BALLISTOMYCETE, "Grow Ballistomycete",
-        4, 0, 4, {fail_basis::invo, 60, 4, 25}, abflag::none },
-    { ABIL_FEDHAS_OVERGROW, "Overgrow",
-        8, 0, 12, {fail_basis::invo, 70, 5, 20}, abflag::none},
-    { ABIL_FEDHAS_GROW_OKLOB, "Grow Oklob",
-        6, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
-
-    // Cheibriados
-    { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time",
-        3, 0, 1, {fail_basis::invo, 40, 4, 20}, abflag::none },
-    { ABIL_CHEIBRIADOS_DISTORTION, "Temporal Distortion",
-        4, 0, 3, {fail_basis::invo, 60, 5, 20}, abflag::instant },
-    { ABIL_CHEIBRIADOS_SLOUCH, "Slouch",
-        5, 0, 8, {fail_basis::invo, 60, 4, 25}, abflag::none },
-    { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
-        10, 0, 10, {fail_basis::invo, 80, 4, 25}, abflag::none },
-
-    // Ashenzari
-    { ABIL_ASHENZARI_CURSE, "Curse Item",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_ASHENZARI_UNCURSE, "Shatter the Chains",
-        0, 0, 0, {fail_basis::invo}, abflag::curse },
-
-    // Dithmenos
-    { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
-        4, 80, 5, {fail_basis::invo, 30, 6, 20}, abflag::none },
-    { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
-        9, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::max_hp_drain },
-
-    // Ru
-    { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power", 0, 0, 0,
-        {fail_basis::invo}, abflag::exhaustion|abflag::max_hp_drain|abflag::conf_ok },
-    { ABIL_RU_POWER_LEAP, "Power Leap",
-        5, 0, 0, {fail_basis::invo}, abflag::exhaustion },
-    { ABIL_RU_APOCALYPSE, "Apocalypse",
-        8, 0, 0, {fail_basis::invo}, abflag::exhaustion|abflag::max_hp_drain },
-
-    { ABIL_RU_SACRIFICE_PURITY, "Sacrifice Purity",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_WORDS, "Sacrifice Words",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_DRINK, "Sacrifice Drink",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_ESSENCE, "Sacrifice Essence",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_HEALTH, "Sacrifice Health",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_STEALTH, "Sacrifice Stealth",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_ARTIFICE, "Sacrifice Artifice",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_LOVE, "Sacrifice Love",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_COURAGE, "Sacrifice Courage",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_ARCANA, "Sacrifice Arcana",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_NIMBLENESS, "Sacrifice Nimbleness",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_DURABILITY, "Sacrifice Durability",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_EXPERIENCE, "Sacrifice Experience",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_SKILL, "Sacrifice Skill",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_EYE, "Sacrifice an Eye",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_SACRIFICE_RESISTANCE, "Sacrifice Resistance",
-        0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
-    { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-
-    // Gozag
-    { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
-        0, 0, 0, {fail_basis::invo}, abflag::gold },
-    { ABIL_GOZAG_CALL_MERCHANT, "Call Merchant",
-        0, 0, 0, {fail_basis::invo}, abflag::gold|abflag::none },
-    { ABIL_GOZAG_BRIBE_BRANCH, "Bribe Branch",
-        0, 0, 0, {fail_basis::invo}, abflag::gold },
-
-    // Qazlal
-    { ABIL_QAZLAL_UPHEAVAL, "Upheaval",
-        4, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
-    { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
-        6, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
-    { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area",
-        7, 0, 10, {fail_basis::invo, 70, 4, 25}, abflag::none },
-
-    // Uskayaw
-    { ABIL_USKAYAW_STOMP, "Stomp",
-        3, 0, generic_cost::fixed(20), {fail_basis::invo}, abflag::none },
-    { ABIL_USKAYAW_LINE_PASS, "Line Pass",
-        4, 0, generic_cost::fixed(20), {fail_basis::invo}, abflag::none},
-    { ABIL_USKAYAW_GRAND_FINALE, "Grand Finale",
-        8, 0, generic_cost::fixed(0),
-        {fail_basis::invo, 120 + piety_breakpoint(4), 5, 1}, abflag::none},
-
-    // Hepliaklqana
-    { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
-        2, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_HEPLIAKLQANA_TRANSFERENCE, "Transference",
-        2, 0, 3, {fail_basis::invo, 40, 5, 20},
-        abflag::none },
-    { ABIL_HEPLIAKLQANA_IDEALISE, "Idealise",
-        4, 0, 4, {fail_basis::invo, 60, 4, 25},
-        abflag::none },
-
-    { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE,   "Ancestor Life: Battlemage",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_HEPLIAKLQANA_TYPE_HEXER,        "Ancestor Life: Hexer",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-
-    { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
-        0, 0, 0, {fail_basis::invo}, abflag::instant },
-
-    // Wu Jian
-    { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
-        0, 0, 2, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
-    { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
-        0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
-    // Lunge and Whirlwind abilities aren't menu abilities but currently need
-    // to exist for action counting, hence need enums/entries.
-    { ABIL_WU_JIAN_LUNGE, "Lunge", 0, 0, 0, {}, abflag::berserk_ok },
-    { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, {}, abflag::berserk_ok },
-    { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
-        0, 0, 0, {}, abflag::berserk_ok },
-
-    { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
-};
+    };
+    return Ability_List;
+}
 
 static const ability_def& get_ability_def(ability_type abil)
 {
-    for (const ability_def &ab_def : Ability_List)
+    for (const ability_def &ab_def : _get_ability_list())
         if (ab_def.ability == abil)
             return ab_def;
 
-    return Ability_List[0];
+    return _get_ability_list()[0];
 }
 
 vector<ability_type> get_defined_abilities()
 {
     vector<ability_type> r;
-    for (const ability_def &ab_def : Ability_List)
+    for (const ability_def &ab_def : _get_ability_list())
         r.push_back(ab_def.ability);
     return r;
 }
@@ -694,7 +706,7 @@ static bool _invis_causes_drain()
  */
 ability_type ability_by_name(const string &key)
 {
-    for (const auto &abil : Ability_List)
+    for (const auto &abil : _get_ability_list())
     {
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
@@ -743,7 +755,7 @@ int get_gold_cost(ability_type ability)
     }
 }
 
-static string _nemelex_card_text(ability_type ability)
+string nemelex_card_text(ability_type ability)
 {
     int cards = deck_cards(ability_deck(ability));
 
@@ -847,7 +859,7 @@ const string make_cost_description(ability_type ability)
     {
         ret += ", ";
         ret += "A Card ";
-        ret += _nemelex_card_text(ability);
+        ret += nemelex_card_text(ability);
     }
 
     // If we haven't output anything so far, then the effect has no cost
@@ -1010,7 +1022,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
-        if (you.get_mutation_level(MUT_NO_LOVE))
+        if (you.allies_forbidden())
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -1371,11 +1383,32 @@ static bool _can_blinkbolt(bool quiet)
     return true;
 }
 
+static bool _can_rising_flame(bool quiet)
+{
+    if (you.duration[DUR_RISING_FLAME])
+    {
+        if (!quiet)
+            mpr("You're already rising!");
+        return false;
+    }
+    if (!level_above().is_valid())
+    {
+        if (!quiet)
+            mpr("You can't rise from this level!");
+        return false;
+    }
+    return true;
+}
+
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
 static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 {
+#ifdef WIZARD
+    if (abil.ability >= ABIL_FIRST_WIZ)
+        return you.wizard;
+#endif
     if (you.berserk() && !testbits(abil.flags, abflag::berserk_ok))
     {
         if (!quiet)
@@ -1742,6 +1775,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+    case ABIL_IGNIS_RISING_FLAME:
+        return _can_rising_flame(quiet);
+
     default:
         return true;
     }
@@ -1789,7 +1825,8 @@ bool activate_talent(const talent& tal, dist *target)
             count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
             return true;
         case spret::fail:
-            mpr("You fail to use your ability.");
+            if (!testbits(abil.flags, abflag::quiet_fail))
+                mpr("You fail to use your ability.");
             you.turn_is_over = true;
             return false;
         case spret::abort:
@@ -2196,9 +2233,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
-        fail_check();
         return cast_blink(fail);
-        break;
 
     case ABIL_EVOKE_BERSERK:    // randarts
         fail_check();
@@ -2231,16 +2266,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         contaminate_player(1000 + random2(2000), true);
         break;
 
-    case ABIL_EVOKE_THUNDER: // robe of Clouds
-        fail_check();
-        mpr("The folds of your robe billow into a mighty storm.");
-
-        for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
-            if (!cell_is_solid(*ri))
-                place_cloud(CLOUD_STORM, *ri, 8 + random2avg(8,2), &you);
-
-        break;
-
     case ABIL_END_TRANSFORMATION:
         fail_check();
         untransform();
@@ -2256,8 +2281,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
             mprf("You clear your throat and prepare to recite.");
-            you.increase_duration(DUR_RECITE_COOLDOWN,
-                                  3 + random2(10) + random2(30));
         }
         else
         {
@@ -2416,8 +2439,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_YRED_ANIMATE_DEAD:
         fail_check();
         canned_msg(MSG_CALL_DEAD);
-        animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1,
-                     BEH_FRIENDLY, MHITYOU, &you, "", GOD_YREDELEMNUL);
+        if (!animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1,
+                         BEH_FRIENDLY, MHITYOU, &you, "", GOD_YREDELEMNUL))
+        {
+            mpr("There are no remains here to animate!");
+            return spret::abort;
+        }
+
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
@@ -2523,6 +2551,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
         break;
+
+    case ABIL_OKAWARU_DUEL:
+        return okawaru_duel(fail);
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {
@@ -2833,14 +2864,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         return fedhas_grow_ballistomycete(fail);
 
     case ABIL_FEDHAS_OVERGROW:
-    {
-        fail_check();
-
-        if (!fedhas_overgrow())
-            return spret::abort;
-
-        break;
-    }
+        return fedhas_overgrow(fail);
 
     case ABIL_FEDHAS_GROW_OKLOB:
         return fedhas_grow_oklob(fail);
@@ -3141,6 +3165,20 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         fail_check();
         return wu_jian_wall_jump_ability();
 
+    case ABIL_IGNIS_FOXFIRE:
+        return foxfire_swarm();
+
+    case ABIL_IGNIS_SEA_OF_FIRE:
+        return sea_of_fire();
+
+    case ABIL_IGNIS_RISING_FLAME:
+        if (!_can_rising_flame(false))
+            return spret::abort;
+        mpr("You begin to rise into the air.");
+        // slightly faster than teleport
+        you.set_duration(DUR_RISING_FLAME, 2 + random2(3));
+        return spret::success;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3166,6 +3204,31 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         }
         return spret::abort;
 
+#ifdef WIZARD
+    case ABIL_WIZ_BUILD_TERRAIN:
+    {
+        int &last_feat = you.props[WIZ_LAST_FEATURE_TYPE_PROP].get_int();
+        if (!wizard_create_feature(*target,
+                        static_cast<dungeon_feature_type>(last_feat), false))
+        {
+            return spret::abort;
+        }
+        break;
+    }
+    case ABIL_WIZ_CLEAR_TERRAIN:
+        if (!wizard_create_feature(*target, DNGN_FLOOR, false))
+            return spret::abort;
+        break;
+    case ABIL_WIZ_SET_TERRAIN:
+    {
+        auto feat = wizard_select_feature(false);
+        if (feat == DNGN_UNSEEN)
+            return spret::abort;
+        you.props[WIZ_LAST_FEATURE_TYPE_PROP] = static_cast<int>(feat);
+        mprf("Now building '%s'", dungeon_feature_name(feat));
+        break;
+    }
+#endif
     case ABIL_NON_ABILITY:
         fail_check();
         mpr("Sorry, you can't do that.");
@@ -3386,8 +3449,18 @@ bool is_religious_ability(ability_type abil)
         && abil <= ABIL_LAST_RELIGIOUS_ABILITY;
 }
 
+bool is_card_ability(ability_type abil)
+{
+    return testbits(get_ability_def(abil).flags, abflag::card);
+}
+
 bool player_has_ability(ability_type abil, bool include_unusable)
 {
+#ifdef WIZARD
+    if (abil >= ABIL_FIRST_WIZ)
+        return you.wizard;
+#endif
+
     // TODO: consolidate fixup checks into here?
     abil = fixup_ability(abil);
     if (abil == ABIL_NON_ABILITY || abil == NUM_ABILITIES)
@@ -3417,7 +3490,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         // fallthrough
     case ABIL_DIG:
         return you.can_burrow()
-                            && (form_keeps_mutations() || include_unusable);
+               && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
     case ABIL_ROLLING_CHARGE:
@@ -3432,12 +3505,12 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
     case ABIL_TRAN_BAT:
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
-                && !you.vampire_alive
-                && you.form != transformation::bat;
+               && !you.vampire_alive
+               && you.form != transformation::bat;
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
         return you.form == transformation::dragon
-                    && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
+               && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     // mutations
@@ -3445,7 +3518,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_HURL_DAMNATION);
     case ABIL_WORD_OF_CHAOS:
         return you.get_mutation_level(MUT_WORD_OF_CHAOS)
-                && (!silenced(you.pos()) || include_unusable);
+               && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
     // TODO: other god abilities
@@ -3456,16 +3529,13 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     // pseudo-evocations from equipped items
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_THUNDER:
-        return player_equip_unrand(UNRAND_RCLOUDS)
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_BERSERK:
         return you.evokable_berserk()
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
-                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     default:
         // removed abilities handled here
         return false;
@@ -3513,9 +3583,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
-            ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
-            ABIL_EVOKE_TURN_INVISIBLE
+            ABIL_EVOKE_TURN_INVISIBLE,
+#ifdef WIZARD
+            ABIL_WIZ_BUILD_TERRAIN,
+            ABIL_WIZ_SET_TERRAIN,
+            ABIL_WIZ_CLEAR_TERRAIN,
+#endif
         };
 
     for (auto a : check_order)
@@ -3699,6 +3773,10 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
+    case ABIL_WIZ_BUILD_TERRAIN:
+    case ABIL_WIZ_SET_TERRAIN:
+    case ABIL_WIZ_CLEAR_TERRAIN:
+        first_slot = letter_to_index('O'); // somewhat arbitrary, late in the alphabet
     default:
         break;
     }

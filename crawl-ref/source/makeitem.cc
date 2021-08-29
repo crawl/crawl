@@ -335,19 +335,10 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_ANTIMAGIC:
+    case SPWPN_SPECTRAL:
     case SPWPN_REAPING: // only exists on Sword of Zonguldrok
         if (is_range_weapon(item))
             return false;
-        break;
-
-    case SPWPN_SPECTRAL:
-        if (is_range_weapon(item)
-            || (basic_hands_reqd(item, SIZE_MEDIUM) == HANDS_ONE
-                && type != WPN_CLUB))
-        {
-            // only on two-handers and clubs
-            return false;
-        }
         break;
 
     // Ranged-only brands.
@@ -1829,11 +1820,11 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        // Total weight: 1795
+        // Total weight: 1780
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
                                     45, OBJ_JEWELLERY,
-                                    60, OBJ_BOOKS,
+                                    45, OBJ_BOOKS,
                                     70, OBJ_WANDS,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,

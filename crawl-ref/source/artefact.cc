@@ -142,7 +142,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
 
         if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK))
+            || artefact_property(item, ARTP_BERSERK)
+            || artefact_property(item, ARTP_RAMPAGING))
         {
             return false;
         }
@@ -1008,6 +1009,7 @@ void artefact_properties(const item_def &item,
                          artefact_properties_t  &proprt)
 {
     ASSERT(is_artefact(item));
+    ASSERT(item.base_type != OBJ_BOOKS);
     ASSERT(item.props.exists(ARTEFACT_PROPS_KEY) || is_unrandom_artefact(item));
 
     if (item.props.exists(ARTEFACT_PROPS_KEY))
@@ -1033,8 +1035,8 @@ void artefact_properties(const item_def &item,
 int artefact_property(const item_def &item, artefact_prop_type prop)
 {
     ASSERT(is_artefact(item));
+    ASSERT(item.base_type != OBJ_BOOKS);
     ASSERT(item.props.exists(ARTEFACT_PROPS_KEY) || is_unrandom_artefact(item));
-
     if (item.props.exists(ARTEFACT_PROPS_KEY))
     {
         const CrawlVector &rap_vec =

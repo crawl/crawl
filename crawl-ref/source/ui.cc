@@ -1562,10 +1562,16 @@ bool Scroller::on_event(const Event& event)
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
+#endif
                 delta = m_region.height;
                 break;
 
             case '-': case CK_PGUP: case '<': case ';':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_SUBTRACT: case CK_NUMPAD_SUBTRACT2:
+#endif
                 delta = -m_region.height;
                 break;
 

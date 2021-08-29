@@ -1941,12 +1941,6 @@ function intrinsic_evil()
   return false
 end
 
--- not exactly gourmand, but close enough
-function intrinsic_gourmand()
-  return (you.race() == "Kobold" or you.race() == "Troll"
-          or you.race() == "Felid")
-end
-
 function intrinsic_undead()
   return (you.race() == "Ghoul" or you.race() == "Mummy"
           or you.race() == "Vampire")

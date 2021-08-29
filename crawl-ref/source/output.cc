@@ -969,7 +969,7 @@ static void _print_stats_wp(int y)
         item_def wpn = *you.weapon(); // copy
 
         if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
-            wpn.plus -= 4 * you.props["corrosion_amount"].get_int();
+            wpn.plus -= 4 * you.props[CORROSION_KEY].get_int();
 
         text = wpn.name(DESC_PLAIN, true, false, true);
     }
@@ -1430,6 +1430,7 @@ static string _level_description_string_hud()
     // Indefinite articles
     else if (place.branch != BRANCH_PANDEMONIUM
              && place.branch != BRANCH_DESOLATION
+             && place.branch != BRANCH_ARENA
              && !is_connected_branch(place.branch))
     {
         short_name = article_a(short_name);

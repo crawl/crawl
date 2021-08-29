@@ -20,6 +20,7 @@
 #include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "potion-type.h"
@@ -158,8 +159,6 @@ bool is_evil_item(const item_def& item, bool calc_unid)
         return item.sub_type == SCR_TORMENT;
     case OBJ_STAVES:
         return item.sub_type == STAFF_DEATH;
-    case OBJ_BOOKS:
-        return _is_book_type(item, is_evil_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_HORN_OF_GERYON;
     default:
@@ -268,6 +267,20 @@ static bool _is_potentially_hasty_item(const item_def& item)
 
 bool is_hasty_item(const item_def& item, bool calc_unid)
 {
+
+    if (is_artefact(item) && item.base_type != OBJ_BOOKS)
+    {
+        if ((calc_unid || item_ident(item, ISFLAG_KNOW_PROPERTIES)))
+        {
+            if (artefact_property(item, ARTP_RAMPAGING)
+                || artefact_property(item, ARTP_ANGRY))
+            {
+                return true;
+            }
+            // intentionally continue to other hasty checks
+        }
+    }
+
     if (item.base_type == OBJ_WEAPONS)
     {
         if (calc_unid || item_brand_known(item))

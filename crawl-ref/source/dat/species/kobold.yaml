@@ -33,7 +33,7 @@ mutations:
   1:
     MUT_NIGHTSTALKER: 3
 recommended_jobs:
-  - JOB_HUNTER
+  - JOB_BRIGAND
   - JOB_BERSERKER
   - JOB_ARCANE_MARKSMAN
   - JOB_ENCHANTER

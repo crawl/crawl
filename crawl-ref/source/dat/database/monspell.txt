@@ -259,6 +259,14 @@ unseen Spit Acid cast
 
 You hear a spitting sound.
 %%%%
+Acid Splash cast
+
+@The_monster@ spits acid @at@ @target@.
+%%%%
+unseen Acid Splash cast
+
+You hear a spitting sound.
+%%%%
 unseen Cold Breath cast
 
 You hear a roar.

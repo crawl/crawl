@@ -30,7 +30,6 @@
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
-#include "confirm-butcher-type.h"
 #include "defines.h"
 #include "delay.h"
 #include "describe.h"
@@ -98,6 +97,11 @@ extern char **NXArgv;
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
+
+// TODO:
+// because reset_options is called in the constructor, it's a magnet for
+// static initialization order issues.wrap this in a function per
+// https://isocpp.org/wiki/faq/ctors#construct-on-first-use-v2
 game_options Options;
 
 static string _get_save_path(string subdir);
@@ -169,13 +173,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
-#ifdef TARGET_OS_MACOSX
-        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), false),
-        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
-#else
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
-        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), false),
-#endif
+        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
@@ -1082,7 +1081,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
 
-    confirm_butcher        = confirm_butcher_type::normal;
     easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
@@ -1122,10 +1120,11 @@ void game_options::reset_options()
     set_fire_order_ability("all", false, false);
     fire_order_ability.erase(ABIL_TROG_BERSERK);
 
-    // TODO: what else?
     force_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
-          SPELL_MAXWELLS_COUPLING, SPELL_IGNITION, SPELL_NOXIOUS_BOG };
+          SPELL_MAXWELLS_COUPLING, SPELL_IGNITION, SPELL_NOXIOUS_BOG,
+          SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
+          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH };
     always_use_static_targeters = false;
 
     // These are only used internally, and only from the commandline:
@@ -1687,7 +1686,7 @@ string find_crawlrc()
     // rc_dir_names list.
     for (const string &rc_dir : SysEnv.rcdirs)
     {
-        for (const string &rc_fn : rc_dir_filenames)
+        for (const string rc_fn : rc_dir_filenames)
         {
             const string rc(catpath(rc_dir, rc_fn));
             if (file_exists(rc))
@@ -2864,15 +2863,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             allow_self_target = confirm_prompt_type::cancel;
         else if (field == "prompt")
             allow_self_target = confirm_prompt_type::prompt;
-    }
-    else if (key == "confirm_butcher")
-    {
-        if (field == "always")
-            confirm_butcher = confirm_butcher_type::always;
-        else if (field == "never")
-            confirm_butcher = confirm_butcher_type::never;
-        else if (field == "auto")
-            confirm_butcher = confirm_butcher_type::normal;
     }
     else if (key == "lua_file" && runscript)
     {

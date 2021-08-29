@@ -536,8 +536,32 @@ static void _be_batty(monster &mons)
     mons.props[BATTY_TURNS_KEY] = 0;
 }
 
+static bool _fungal_move_check(monster &mon)
+{
+    // These monsters have restrictions on moving while you are looking.
+    if ((mon.type == MONS_WANDERING_MUSHROOM || mon.type == MONS_DEATHCAP)
+            && mon.foe_distance() > 1 // can attack if adjacent
+        || (mon.type == MONS_LURKING_HORROR
+            // 1 in los chance at max los
+            && mon.foe_distance() > random2(you.current_vision + 1)))
+    {
+        if (!mon.wont_attack() && is_sanctuary(mon.pos()))
+            return true;
+
+        if (mon_enemies_around(&mon))
+            return false;
+    }
+    return true;
+}
+
 static void _handle_movement(monster* mons)
 {
+    if (!_fungal_move_check(*mons))
+    {
+        mmov.reset();
+        return;
+    }
+
     _maybe_set_patrol_route(mons);
 
     if (sanctuary_exists())
@@ -849,8 +873,8 @@ static bool _handle_swoop(monster& mons)
     if (!one_chance_in(4))
         return false;
 
-    if (mons.props.exists("swoop_cooldown")
-        && (you.elapsed_time < mons.props["swoop_cooldown"].get_int()))
+    if (mons.props.exists(SWOOP_COOLDOWN_KEY)
+        && (you.elapsed_time < mons.props[SWOOP_COOLDOWN_KEY].get_int()))
     {
         return false;
     }
@@ -884,7 +908,7 @@ static bool _handle_swoop(monster& mons)
         }
         mons.move_to_pos(tracer.path_taken[j+1]);
         fight_melee(&mons, defender);
-        mons.props["swoop_cooldown"].get_int() = you.elapsed_time
+        mons.props[SWOOP_COOLDOWN_KEY].get_int() = you.elapsed_time
                                                   + 40 + random2(51);
         return true;
     }
@@ -1358,9 +1382,9 @@ static void _pre_monster_move(monster& mons)
     }
 
     if (mons.type == MONS_SNAPLASHER_VINE
-        && mons.props.exists("vine_awakener"))
+        && mons.props.exists(VINE_AWAKENER_KEY))
     {
-        monster* awakener = monster_by_mid(mons.props["vine_awakener"].get_int());
+        monster* awakener = monster_by_mid(mons.props[VINE_AWAKENER_KEY].get_int());
         if (awakener && !awakener->can_see(mons))
         {
             simple_monster_message(mons, " falls limply to the ground.");
@@ -1387,23 +1411,23 @@ static void _pre_monster_move(monster& mons)
         actor* foe = mons.get_foe();
         if (foe)
         {
-            if (!mons.props.exists("foe_pos"))
-                mons.props["foe_pos"].get_coord() = foe->pos();
+            if (!mons.props.exists(FAUX_PAS_KEY))
+                mons.props[FAUX_PAS_KEY].get_coord() = foe->pos();
             else
             {
-                if (mons.props["foe_pos"].get_coord().distance_from(mons.pos())
+                if (mons.props[FAUX_PAS_KEY].get_coord().distance_from(mons.pos())
                     > foe->pos().distance_from(mons.pos()))
                 {
-                    mons.props["foe_approaching"].get_bool() = true;
+                    mons.props[FOE_APPROACHING_KEY].get_bool() = true;
                 }
                 else
-                    mons.props["foe_approaching"].get_bool() = false;
+                    mons.props[FOE_APPROACHING_KEY].get_bool() = false;
 
-                mons.props["foe_pos"].get_coord() = foe->pos();
+                mons.props[FAUX_PAS_KEY].get_coord() = foe->pos();
             }
         }
         else
-            mons.props.erase("foe_pos");
+            mons.props.erase(FAUX_PAS_KEY);
     }
 
     reset_battlesphere(&mons);
@@ -1548,11 +1572,14 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         return true;
     }
 
-    bolt beem = setup_targetting_beam(mons);
-    if (handle_throw(&mons, beem, false, false))
+    if (friendly_or_near)
     {
-        DEBUG_ENERGY_USE_REF("_handle_throw()");
-        return true;
+        bolt beem = setup_targetting_beam(mons);
+        if (handle_throw(&mons, beem, false, false))
+        {
+            DEBUG_ENERGY_USE_REF("_handle_throw()");
+            return true;
+        }
     }
 
     if (_handle_reaching(mons))
@@ -1560,6 +1587,10 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         DEBUG_ENERGY_USE_REF("_handle_reaching()");
         return true;
     }
+
+#ifndef DEBUG
+    UNUSED(old_energy);
+#endif
 
     return false;
 }
@@ -1829,7 +1860,7 @@ void handle_monster_move(monster* mons)
     // XXX: A bit hacky, but stores where we WILL move, if we don't take
     //      another action instead (used for decision-making)
     if (mons_stores_tracking_data(*mons))
-        mons->props["mmov"].get_coord() = mmov;
+        mons->props[MMOV_KEY].get_coord() = mmov;
 
     if (_mons_take_special_action(*mons, old_energy))
         return;
@@ -1913,10 +1944,10 @@ void handle_monster_move(monster* mons)
         //segment, kill the segment and adjust connectivity data.
         if (targ && mons_tentacle_adjacent(mons, targ))
         {
-            const bool basis = targ->props.exists("outwards");
-            monster* outward =  basis ? monster_by_mid(targ->props["outwards"].get_int()) : nullptr;
+            const bool basis = targ->props.exists(OUTWARDS_KEY);
+            monster* outward =  basis ? monster_by_mid(targ->props[OUTWARDS_KEY].get_int()) : nullptr;
             if (outward)
-                outward->props["inwards"].get_int() = mons->mid;
+                outward->props[INWARDS_KEY].get_int() = mons->mid;
 
             monster_die(*targ, KILL_MISC, NON_MONSTER, true);
             targ = nullptr;
@@ -1954,7 +1985,7 @@ void handle_monster_move(monster* mons)
         {
             // Don't count turns spent blocked by friendly creatures
             // (or the player) as an indication that we're stuck
-            mons->props.erase("blocked_deadline");
+            mons->props.erase(BLOCKED_DEADLINE_KEY);
         }
 
         if (invalid_monster(mons) || mons->is_stationary())
@@ -1992,6 +2023,11 @@ void handle_monster_move(monster* mons)
             mons->move_spurt -= 100;
         }
     }
+}
+
+void monster::catch_breath()
+{
+    decay_enchantment(ENCH_BREATH_WEAPON);
 }
 
 /**
@@ -2169,6 +2205,9 @@ static void _post_monster_move(monster* mons)
     if (mons->has_ench(ENCH_HELD))
         mons->struggle_against_net();
 
+    if (mons->has_ench(ENCH_BREATH_WEAPON))
+        mons->catch_breath();
+
     if (mons->type == MONS_ANCIENT_ZYME)
         _ancient_zyme_sicken(mons);
 
@@ -2203,9 +2242,9 @@ static void _post_monster_move(monster* mons)
     // (if they're somehow still alive) and regains the ability to summon new ones.
     if (mons->type == MONS_RAKSHASA && mons->hit_points == mons->max_hit_points
         && !mons->has_ench(ENCH_PHANTOM_MIRROR)
-        && mons->props.exists("emergency_clone"))
+        && mons->props.exists(EMERGENCY_CLONE_KEY))
     {
-        mons->props.erase("emergency_clone");
+        mons->props.erase(EMERGENCY_CLONE_KEY);
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->type == MONS_RAKSHASA && mi->summoner == mons->mid)
@@ -2261,14 +2300,15 @@ static void _clear_monster_flags()
 
 /**
 * On each monster turn, check to see if we need to update monster attitude.
-* At the time of writing, it just checks for MUT_NO_LOVE from Ru Sacrifice Love.
+* At the time of writing, it just checks for MUT_NO_LOVE from Ru Sacrifice Love
+* and Okawaru's ally-prevention conduct.
 *
 * @param mon     The targeted monster
 * @return        Void
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (you.get_mutation_level(MUT_NO_LOVE)
+    if (you.allies_forbidden()
         && !mons_is_conjured(mon->type))
     {
         mon->attitude = ATT_HOSTILE;
@@ -2843,22 +2883,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
     }
 
-    // These monsters usually don't move while you are looking.
-    if (mons->type == MONS_WANDERING_MUSHROOM
-        || mons->type == MONS_DEATHCAP
-        || (mons->type == MONS_LURKING_HORROR
-            && mons->foe_distance() > random2(LOS_DEFAULT_RANGE + 1)))
-    {
-        if (!mons->wont_attack() && is_sanctuary(mons->pos()))
-            return true;
-
-        if (!mons->friendly() && you.see_cell(targ)
-            || mon_enemies_around(mons))
-        {
-            return false;
-        }
-    }
-
     if (mons->type == MONS_MERFOLK_AVATAR)
     {
         // Don't voluntarily break LoS with a player we're mesmerising
@@ -2965,9 +2989,8 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
     }
 
-    // Wandering through a trap is OK if we're pretty healthy,
-    // really stupid, or immune to the trap.
-    if (!mons->is_trap_safe(targ, just_check))
+    // Wandering through a trap sometimes isn't allowed for friendlies.
+    if (!mons->is_trap_safe(targ))
         return false;
 
     // If we end up here the monster can safely move.

@@ -321,6 +321,11 @@ void give_items_skills(const newgame_def& ng)
 
         break;
 
+    case JOB_CINDER_ACOLYTE:
+        you.religion = GOD_IGNIS;
+        you.piety = 150;
+        break;
+
     default:
         break;
     }
@@ -329,6 +334,8 @@ void give_items_skills(const newgame_def& ng)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
     else if (you.char_class == JOB_CHAOS_KNIGHT)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
+    else if (you.char_class == JOB_CINDER_ACOLYTE)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, -1, SPWPN_FLAMING);
     else if (job_gets_ranged_weapons(you.char_class))
         _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
     else if (job_has_weapon_choice(you.char_class))

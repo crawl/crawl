@@ -35,7 +35,7 @@ KFEAT:   ABCDEF = .
 # TODO: pad g here was for spell hunger, what else could go here?
 COLOUR:  ABCDEFdef = lightblue
 FTILE:   ABCDEFdef = tutorial_pad
-ITEM:    randbook numspells:2 spells:magic_dart&mephitic_cloud title:Introduction_to_Spellcasting owner:player
+ITEM:    randbook numspells:2 spells:magic_dart&mephitic_cloud title:Introductory_Spellcasting owner:player
 ITEM:    ring of magical power
 ITEM:    ring of wizardry
 # TODO: g was rations for spell hunger, replace with something more modern

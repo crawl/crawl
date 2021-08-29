@@ -77,8 +77,13 @@ string Form::melding_description() const
         return "Your armour is entirely melded.";
     else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
         return "Your equipment is almost entirely melded.";
-    else if ((blocked_slots & EQF_STATUE) == EQF_STATUE)
+    else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
+             && (you_can_wear(EQ_GLOVES, false)
+                 || you_can_wear(EQ_BOOTS, false)
+                 || you_can_wear(EQ_BODY_ARMOUR, false)))
+    {
         return "Your equipment is partially melded.";
+    }
     // otherwise, rely on the form description to convey what is melded.
     return "";
 }
@@ -1735,7 +1740,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     nil_item.link = -1;
     if (just_check && !involuntary
         && which_trans == transformation::lich && rem_stuff.count(EQ_WEAPON)
-        && !check_old_item_warning(nil_item, OPER_WIELD))
+        && !check_old_item_warning(nil_item, OPER_WIELD, true))
     {
         canned_msg(MSG_OK);
         return false;
@@ -1928,7 +1933,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         // Heal a little extra if we gained max hp from this transformation
         if (form_hp_mod() != 10)
         {
-            int dam = you.props["flay_damage"].get_int();
+            int dam = you.props[FLAY_DAMAGE_KEY].get_int();
             you.heal((dam * form_hp_mod() / 10) - dam);
         }
         heal_flayed_effect(&you);
@@ -2166,6 +2171,8 @@ void merfolk_start_swimming(bool stepped)
     remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
+    ash_check_bondage();
+
 #ifdef USE_TILE
     init_player_doll();
 #endif
@@ -2178,6 +2185,8 @@ void merfolk_stop_swimming()
     you.fishtail = false;
     unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
+
+    ash_check_bondage();
 
 #ifdef USE_TILE
     init_player_doll();

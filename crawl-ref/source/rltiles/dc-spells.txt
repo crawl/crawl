@@ -150,7 +150,7 @@ manifold_assault MANIFOLD_ASSAULT
 blade_hands BLADE_HANDS
 beastly_appendage BEASTLY_APPENDAGE
 irradiate IRRADIATE
-hydra_form HYDRA_FORM
+storm_form STORM_FORM
 dragon_form DRAGON_FORM
 wereblood WEREBLOOD
 

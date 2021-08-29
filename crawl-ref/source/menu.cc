@@ -96,8 +96,9 @@ public:
         _invalidate_sizereq();
         _queue_allocation();
     };
-    void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
 #endif
+    void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
+    int get_min_col_width() { return m_min_col_width; }
 
     void update_item(int index);
     void update_items();
@@ -119,6 +120,7 @@ protected:
     Menu *m_menu;
     int m_height; // set by do_layout()
     int m_hover_idx = -1;
+    int m_min_col_width = -1;
 
 #ifdef USE_TILE_LOCAL
     void do_layout(int mw, int num_columns);
@@ -148,7 +150,6 @@ protected:
     LineBuffer m_line_buf, m_div_line_buf;
     FontBuffer m_text_buf;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
-    int m_min_col_width = -1;
 
 public:
     size_t shown_items() { return item_info.size(); }
@@ -934,6 +935,11 @@ void Menu::set_more(const formatted_string &fs)
     update_more();
 }
 
+void Menu::set_more(const string s)
+{
+    set_more(formatted_string::parse_string(s));
+}
+
 void Menu::set_more()
 {
     m_keyhelp_more = true;
@@ -946,13 +952,16 @@ void Menu::set_more()
     update_more();
 }
 
-#ifdef USE_TILE_LOCAL
 void Menu::set_min_col_width(int w)
 {
+#ifdef USE_TILE_LOCAL
     // w is in chars
     m_ui.menu->set_min_col_width(w * tiles.get_crt_font()->char_width());
-}
+#else
+    // n.b. this currently has no effect in webtiles unless the more is visible
+    m_ui.menu->set_min_col_width(w);
 #endif
+}
 
 void Menu::set_highlighter(MenuHighlighter *mh)
 {
@@ -1016,9 +1025,22 @@ void Menu::do_menu()
     m_ui.popup->on_keydown_event([this, &done](const KeyEvent& ev) {
         if (m_filter)
         {
+            if (ev.key() == '?' && _title_prompt_help_tag.size())
+            {
+                // TODO: only useful for non-general prompts, is there another
+                // help key that would be better?
+                show_specific_help(_title_prompt_help_tag);
+                return true;
+            }
+
             int key = m_filter->putkey(ev.key());
+
+            if (key == CK_ESCAPE)
+                m_filter->set_text("");
+
             if (key != -1)
             {
+                lastch = key;
                 delete m_filter;
                 m_filter = nullptr;
             }
@@ -1051,6 +1073,8 @@ void Menu::do_menu()
 #endif
 
     alive = true;
+    if (on_show)
+        done = !on_show();
     while (alive && !done && !crawl_state.seen_hups)
     {
 #ifdef USE_TILE_WEB
@@ -1120,22 +1144,24 @@ bool Menu::filter_with_regex(const char *re)
     return true;
 }
 
-bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
+bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag)
 {
     bool validline;
-#ifdef USE_TILE_WEB
-    mouse_control mc(MOUSE_MODE_PROMPT);
-    cgotoxy(1,1);
-    clear_to_end_of_line();
-    textcolour(WHITE);
-    cprintf("%s", prompt);
-    textcolour(LIGHTGREY);
-    line_reader reader(linebuf, bufsz, get_number_of_cols());
-    validline = !reader.read_line("");
-#else
-    UNUSED(prompt);
+
     ASSERT(!m_filter);
+    // XX show cursor in console
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "title_prompt");
+    tiles.json_write_string("prompt", prompt);
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
     m_filter = new resumable_line_reader(linebuf, bufsz);
+    m_filter->set_prompt(prompt);
+    // ugly to use a member variable for this, maybe generalize to a feature
+    // of line_reader?
+    _title_prompt_help_tag = help_tag;
     update_title();
     do
     {
@@ -1143,7 +1169,6 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
     }
     while (m_filter && !crawl_state.seen_hups);
     validline = linebuf[0];
-#endif
 
     return validline;
 }
@@ -1208,12 +1233,15 @@ bool Menu::process_key(int keyin)
         lastch = keyin;
         return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
     case ' ': case CK_PGDN: case '>': case '+':
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
+#endif
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
         if (!page_down() && is_set(MF_WRAP))
             m_ui.scroller->set_scroll(0);
         break;
-    case CK_PGUP:
+    case CK_PGUP: // XX why is '-' not used here, at least for non-multiselect menus?
     case '<':
         page_up();
         break;
@@ -1269,12 +1297,15 @@ bool Menu::process_key(int keyin)
             char linebuf[80] = "";
 
             const bool validline = title_prompt(linebuf, sizeof linebuf,
-                                                "Select what? (regex) ");
+                                                "Select what (regex)?");
 
             return (validline && linebuf[0]) ? filter_with_regex(linebuf) : true;
         }
         break;
     case '.':
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_DECIMAL:
+#endif
         if (last_selected == -1 && is_set(MF_MULTISELECT))
             last_selected = 0;
 
@@ -1344,6 +1375,9 @@ bool Menu::process_key(int keyin)
         // seemingly intentional fallthrough
 #endif
     case CK_ENTER:
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_ENTER:
+#endif
         // TODO: hover and multiselect?
         if ((flags & MF_SINGLESELECT) && last_hovered >= 0)
             select_item_index(last_hovered, 1);
@@ -1372,13 +1406,21 @@ bool Menu::process_key(int keyin)
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
         {
-            if (!on_single_selection)
-                return false;
             MenuEntry *item = sel[0];
-            if (!on_single_selection(*item))
-                return false;
-            deselect_all();
-            return true;
+            bool result = false;
+            if (item->on_select)
+                result = item->on_select(*item);
+            else if (on_single_selection) // currently, no menus use both
+                result = on_single_selection(*item);
+            // the UI for singleselect menus behaves oddly if anything is
+            // selected when it runs, because select acts as a toggle. So
+            // if the selection has been processed and the menu is
+            // continuing, clear the selection.
+            // TODO: this is a fairly clumsy api for menus that are
+            // trying to *do* something.
+            if (result)
+                deselect_all();
+            return result;
         }
 
         update_title();
@@ -1464,7 +1506,7 @@ void Menu::deselect_all(bool update_view)
 int Menu::get_first_visible() const
 {
     int y = m_ui.scroller->get_scroll();
-    for (int i = 0; i < (int)items.size(); i++)
+    for (int i = 0; i < (int) items.size(); i++)
     {
         // why does this use y2? It can lead to partially visible items in tiles
         int item_y2;
@@ -1483,12 +1525,24 @@ bool Menu::is_hotkey(int i, int key)
 
 void Menu::select_items(int key, int qty)
 {
-    if (key == ',') // Select all or apply filter if there is one.
+    if (key == ',' && !!(flags & MF_MULTISELECT)) // Select all or apply filter if there is one.
         select_index(-1, -2);
-    else if (key == '*') // Invert selection.
+    else if ((key == '*'
+#ifndef USE_TILE_LOCAL
+                || key == CK_NUMPAD_MULTIPLY
+#endif
+        ) && !!(flags & MF_MULTISELECT)) // Invert selection.
+    {
         select_index(-1, -1);
-    else if (key == '-') // Clear selection.
+    }
+    else if ((key == '-'
+#ifndef USE_TILE_LOCAL
+                || key == CK_NUMPAD_SUBTRACT || key == CK_NUMPAD_SUBTRACT2
+#endif
+            ) && !!(flags & MF_MULTISELECT)) // Clear selection. XX is there a singleselect menu where this should work?
+    {
         select_index(-1, 0);
+    }
     else
     {
         int first_entry = get_first_visible(), final = items.size();
@@ -1630,7 +1684,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    const bool    fake = m->props.exists("fake");
+    const bool    fake = m->props.exists(FAKE_MON_KEY);
     const coord_def c  = m->pos;
     tileidx_t       ch = TILE_FLOOR_NORMAL;
 
@@ -2006,8 +2060,18 @@ void Menu::update_more()
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
-    m_ui.more->set_text(more);
+    formatted_string shown_more = more;
+#ifndef USE_TILE_LOCAL
+    // hacky way of enforcing a min width for non-local-tiles when the more
+    // is visible. (Really targeted at webtiles.)
+    const int padding = m_ui.menu->get_min_col_width()
+                                    - static_cast<int>(more.tostring().size());
+    if (padding > 0)
+        shown_more += string(padding, ' ');
+#endif
+    m_ui.more->set_text(shown_more);
 
+    // XX could force webtiles more when it is padded?
     bool show_more = !more.ops.empty();
 #ifdef USE_TILE_LOCAL
     show_more = show_more && !m_keyhelp_more;
@@ -2020,7 +2084,7 @@ void Menu::update_more()
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
     tiles.json_write_string("more",
-            m_keyhelp_more ? "" : more.to_colour_string());
+            m_keyhelp_more ? "" : shown_more.to_colour_string());
     tiles.json_close_object();
     tiles.finish_message();
 #endif
@@ -2046,8 +2110,10 @@ void Menu::update_title()
 
     if (m_filter)
     {
-        fs.textcolour(WHITE);
-        fs.cprintf("Select what? (regex) %s", m_filter->get_text().c_str());
+        fs = formatted_string::parse_string(
+            m_filter->get_prompt().c_str())
+            // apply formatting only to the prompt
+            + " " + m_filter->get_text();
     }
     else
         fs = calc_title();
@@ -2126,6 +2192,9 @@ bool Menu::snap_in_page(int index)
 {
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
+    const int vph = m_ui.scroller->get_region().height;
+    if (vph == 0) // ui not yet set up
+        return false;
 
     int y1, y2;
     m_ui.menu->get_item_region(index, &y1, &y2);
@@ -2134,8 +2203,7 @@ bool Menu::snap_in_page(int index)
     // important when the first item in a menu is a header
     if (index >= 1 && items[index - 1]->level != MEL_ITEM)
         m_ui.menu->get_item_region(index - 1, &y1, nullptr);
-    int vph = m_ui.scroller->get_region().height;
-    int vpy = m_ui.scroller->get_scroll();
+    const int vpy = m_ui.scroller->get_scroll();
 
     if (y2 >= vpy + vph)
         m_ui.scroller->set_scroll(y2 - vph

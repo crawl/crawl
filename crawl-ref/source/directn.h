@@ -127,6 +127,7 @@ public:
     direction_chooser(dist& moves, const direction_chooser_args& args);
     bool noninteractive();
     bool choose_direction();
+    string target_description() const;
 
 private:
     void update_validity();

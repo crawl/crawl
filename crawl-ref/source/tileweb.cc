@@ -25,6 +25,7 @@
 #include "env.h"
 #include "files.h"
 #include "item-name.h"
+#include "item-prop.h" // is_weapon()
 #include "json.h"
 #include "json-wrapper.h"
 #include "lang-fake.h"
@@ -382,7 +383,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         keycode.check(JSON_NUMBER);
 
         // TODO: remove this fixup call
-        c = function_keycode_fixup((int) keycode->number_);
+        c = (int) keycode->number_;
     }
     else if (msgtype == "spectator_joined")
     {
@@ -1077,7 +1078,10 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        _send_item(c.inv[i], get_item_known_info(you.inv[i]), force_full);
+        item_def item = get_item_known_info(you.inv[i]);
+        if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.duration[DUR_CORROSION])
+            item.plus -= 4 * you.props[CORROSION_KEY].get_int();
+        _send_item(c.inv[i], item, force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1141,7 +1145,7 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= _update_int(force_full, current.sub_type, next.sub_type,
                            "sub_type", false);
     changed |= _update_int(force_full, current.plus, next.plus,
-                           "plus", false);
+                           PLUS_KEY, false);
     changed |= _update_int(force_full, current.plus2, next.plus2,
                            "plus2", false);
     changed |= _update_int(force_full, current.flags, next.flags,
@@ -1511,7 +1515,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 if (Options.tile_use_monster != MONS_0)
                 {
                     monster_info minfo(MONS_PLAYER, MONS_PLAYER);
-                    minfo.props["monster_tile"] =
+                    minfo.props[MONSTER_TILE_KEY] =
                         short(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
                     if (you.slot_item(EQ_WEAPON))

@@ -65,16 +65,6 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         wpn_skill = SK_THROWING;
 }
 
-// Duplicates describe.cc:_apply_defender_effects().
-int ranged_attack::calc_to_hit(bool random)
-{
-    int mhit = attack::calc_to_hit(random);
-    if (mhit == AUTOMATIC_HIT)
-        return AUTOMATIC_HIT;
-
-    return mhit;
-}
-
 int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);

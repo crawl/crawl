@@ -82,9 +82,20 @@ struct spell_desc
     tileidx_t tile;
 };
 
+// TODO: apply https://isocpp.org/wiki/faq/ctors#construct-on-first-use-v2
+// to spelldata
 #include "spl-data.h"
 
-static int spell_list[NUM_SPELLS];
+// spell_list is a static vector mapping spell_type enum values into positions
+// in spelldata. It is not initialized until game startup, so can't be relied
+// on in static constructors. (E.g., all spells register as invalid until
+// `init_spell_descs` has been run.)
+static vector<int> &_get_spell_list()
+{
+    // https://isocpp.org/wiki/faq/ctors#construct-on-first-use-v2
+    static vector<int> spell_list(NUM_SPELLS, -1);
+    return spell_list;
+}
 
 #define SPELLDATASIZE ARRAYSZ(spelldata)
 
@@ -97,8 +108,7 @@ static const struct spell_desc *_seekspell(spell_type spellid);
 // All this does is merely refresh the internal spell list {dlb}:
 void init_spell_descs()
 {
-    for (int i = 0; i < NUM_SPELLS; i++)
-        spell_list[i] = -1;
+    vector<int> &spell_list = _get_spell_list();
 
     for (unsigned int i = 0; i < SPELLDATASIZE; i++)
     {
@@ -136,10 +146,16 @@ void init_spell_descs()
 }
 
 typedef map<string, spell_type> spell_name_map;
-static spell_name_map spell_name_cache;
+
+static spell_name_map &_get_spell_name_cache()
+{
+    static spell_name_map spell_name_cache;
+    return spell_name_cache;
+}
 
 void init_spell_name_cache()
 {
+    spell_name_map &cache = _get_spell_name_cache();
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
@@ -150,13 +166,13 @@ void init_spell_name_cache()
         const char *sptitle = spell_title(type);
         ASSERT(sptitle);
         const string spell_name = lowercase_string(sptitle);
-        spell_name_cache[spell_name] = type;
+        cache[spell_name] = type;
     }
 }
 
 bool spell_data_initialized()
 {
-    return spell_name_cache.size() > 0;
+    return _get_spell_name_cache().size() > 0;
 }
 
 spell_type spell_by_name(string name, bool partial_match)
@@ -167,7 +183,7 @@ spell_type spell_by_name(string name, bool partial_match)
     lowercase(name);
 
     if (!partial_match)
-        return lookup(spell_name_cache, name, SPELL_NO_SPELL);
+        return lookup(_get_spell_name_cache(), name, SPELL_NO_SPELL);
 
     const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
                                               is_valid_spell, spell_title);
@@ -503,8 +519,11 @@ bool spell_is_direct_attack(spell_type spell)
 int spell_mana(spell_type which_spell, bool real_spell)
 {
     const int level = _seekspell(which_spell)->level;
-    if (real_spell && you.duration[DUR_BRILLIANCE])
+    if (real_spell && (you.duration[DUR_BRILLIANCE]
+                       || player_equip_unrand(UNRAND_FOLLY)))
+    {
         return level/2 + level%2; // round up
+    }
     return level;
 }
 
@@ -945,7 +964,7 @@ spschool skill2spell_type(skill_type spell_skill)
 static const spell_desc *_seekspell(spell_type spell)
 {
     ASSERT_RANGE(spell, 0, NUM_SPELLS);
-    const int index = spell_list[spell];
+    const int index = _get_spell_list()[spell];
     ASSERT(index != -1);
 
     return &spelldata[index];
@@ -954,7 +973,7 @@ static const spell_desc *_seekspell(spell_type spell)
 bool is_valid_spell(spell_type spell)
 {
     return spell > SPELL_NO_SPELL && spell < NUM_SPELLS
-           && spell_list[spell] != -1;
+           && _get_spell_list()[spell] != -1;
 }
 
 static bool _spell_range_varies(spell_type spell)
@@ -1163,12 +1182,12 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     // TODO: these checks were in separate places, but is this already covered
     // by cannot_use_schools?
     if (get_spell_disciplines(spell) & spschool::summoning
-        && you.get_mutation_level(MUT_NO_LOVE))
+        && you.allies_forbidden())
     {
         return "you cannot coerce anything to answer your summons.";
     }
 
-    // other Ru spells not affected by the school checks
+    // other ally spells not affected by the school checks
     switch (spell)
     {
     case SPELL_ANIMATE_DEAD:
@@ -1177,7 +1196,7 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:
     case SPELL_TUKIMAS_DANCE:
-        if (you.get_mutation_level(MUT_NO_LOVE))
+        if (you.allies_forbidden())
             return "you cannot coerce anything to obey you.";
         break;
     default:
@@ -1266,7 +1285,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             if (you.duration[DUR_SWIFTNESS])
                 return "this spell is already in effect.";
             if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
-                return "you're already traveling as fast as you can.";
+                return "you're already travelling as fast as you can.";
             if (you.is_stationary())
                 return "you can't move.";
         }
@@ -1290,7 +1309,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SPIDER_FORM:
         if (you.undead_state(temp) == US_UNDEAD)
             return "your undead flesh cannot be transformed.";
-        if (temp && you.is_lifeless_undead())
+        if (you.is_lifeless_undead(temp))
             return "your current blood level is not sufficient.";
         break;
 
@@ -1432,7 +1451,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_WEREBLOOD:
         if (you.undead_state(temp) == US_UNDEAD
-            || temp && you.is_lifeless_undead())
+            || you.is_lifeless_undead(temp))
         {
             return "you lack blood to transform.";
         }
@@ -1904,8 +1923,8 @@ bool spell_removed(spell_type spell)
     return removed_spells.count(spell) != 0;
 }
 
-void end_wait_spells()
+void end_wait_spells(bool quiet)
 {
     end_searing_ray();
-    end_maxwells_coupling();
+    end_maxwells_coupling(quiet);
 }

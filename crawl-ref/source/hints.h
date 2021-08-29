@@ -73,7 +73,9 @@ enum hints_event_type
     HINT_CHOOSE_STAT,
     HINT_MAKE_CHUNKS,
     HINT_NEW_ABILITY_GOD,
+#if TAG_MAJOR_VERSION == 34
     HINT_NEW_ABILITY_MUT,
+#endif
     HINT_NEW_ABILITY_ITEM,
     HINT_FLEEING_MONSTER,
     HINT_CONVERT,
@@ -85,7 +87,9 @@ enum hints_event_type
     // status changes
     HINT_YOU_ENCHANTED,
     HINT_YOU_POISON,
+#if TAG_MAJOR_VERSION == 34
     HINT_YOU_CURSED,
+#endif
     HINT_YOU_STARVING,
     HINT_YOU_MUTATED,
     HINT_CAN_BERSERK,
@@ -116,7 +120,9 @@ enum hints_event_type
     // for the tutorial
     HINT_AUTOPICKUP_THROWN,
     HINT_TARGET_NO_FOE,
+#if TAG_MAJOR_VERSION == 34
     HINT_REMOVED_CURSE,
+#endif
     HINT_ITEM_RESISTANCES,
     HINT_HEALING_POTIONS,
     HINT_GAINED_SPELLCASTING,

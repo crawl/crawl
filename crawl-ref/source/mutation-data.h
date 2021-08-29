@@ -570,16 +570,32 @@ static const mutation_def mut_data[] =
 { MUT_EVOLUTION, 4, 2, mutflag::good, false,
   "evolution",
 
-  {"You evolve.",
-   "You rapidly evolve.",
+  {"You have hidden genetic potential.",
+   "You have great hidden genetic potential.",
    ""},
 
-  {"You feel nature experimenting on you. Don't worry, failures die fast.",
-   "Your genes go into a fast flux.",
+  {"You feel a hidden potential growing inside you.",
+   "Your hidden genetic potential grows.",
    ""},
 
-  {"Nature stops experimenting on you.",
-   "Your wild genetic ride slows down.",
+  {"You no longer feel a hidden potential within.",
+   "Your hidden genetic potential wanes.",
+   ""},
+},
+
+{ MUT_DEVOLUTION, 4, 2, mutflag::bad, false,
+  "devolution",
+
+  {"You have hidden genetic defects.",
+   "You have terrible hidden genetic defects.",
+   ""},
+
+  {"You feel a hidden malignance growing inside you.",
+   "The malignance inside you grows.",
+   ""},
+
+  {"You no longer feel a malignance within.",
+   "Your genetic malignance weakens.",
    ""},
 },
 
@@ -888,7 +904,6 @@ static const mutation_def mut_data[] =
   {"You feel immune to miasma.", "", ""},
   {"You feel vulnerable to miasma.", "", ""},
 },
-#endif
 
 // species-dependent innate mutations
 { MUT_GOURMAND, 0, 1, mutflag::good, false,
@@ -898,6 +913,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
   {"", "", ""},
 },
+#endif
 
 { MUT_HOP, 0, 2, mutflag::good, true,
   "strong legs",
@@ -1703,7 +1719,7 @@ static const mutation_def mut_data[] =
 { MUT_HEX_ENHANCER, 0, 1, mutflag::good, false,
   "bedeviling",
 
-  {"Your maledictions are enhanced.", "", ""},
+  {"Your hexes are more powerful.", "", ""},
   {"You feel devilish.", "", ""},
   {"", "", ""},
 },

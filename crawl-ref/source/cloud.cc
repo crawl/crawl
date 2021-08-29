@@ -248,7 +248,7 @@ static const cloud_data clouds[] = {
       YELLOW,                                   // colour
       { TILE_CLOUD_ACID, CTVARY_DUR },          // dur
       BEAM_ACID,                                // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      { 8, 22, true },                          // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
@@ -518,18 +518,24 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
         mpr("You smother the flame.");
         return false;
     }
-    else if (monster_at(cloud.pos))
+    const monster *mons = monster_at(cloud.pos);
+    if (mons && !mons_is_conjured(mons->type))
     {
         mprf("%s smothers the flame.",
              monster_at(cloud.pos)->name(DESC_THE).c_str());
         return false;
     }
-    else
+
+    mpr("The fire ignites!");
+    int dur = 5 + random2avg(20, 2);      // ignis sea of flames duration
+    if (you.props.exists(CFLAME_DUR_KEY)) // this ember was created by cflame
     {
-        mpr("The fire ignites!");
-        place_cloud(CLOUD_FIRE, cloud.pos, you.props["cflame_dur"], &you);
-        return true;
+        dur = you.props[CFLAME_DUR_KEY].get_int();
+        you.props.erase(CFLAME_DUR_KEY);
     }
+    place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
+    you.props.erase(CFLAME_DUR_KEY);
+    return true;
 }
 
 /**
@@ -649,15 +655,9 @@ static void _maybe_leave_water(const coord_def pos)
 {
     ASSERT_IN_BOUNDS(pos);
 
-    // Rain clouds can occasionally leave shallow water or deepen it:
-    // If we're near lava, chance of leaving water is lower;
-    // if we're near deep water already, chance of leaving water
-    // is slightly higher.
-    if (!one_chance_in((5 + count_neighbours(pos, DNGN_LAVA)) -
-                            count_neighbours(pos, DNGN_DEEP_WATER)))
-    {
+    // Rain clouds can occasionally leave shallow water or deepen it.
+    if (!one_chance_in(5))
         return;
-    }
 
     dungeon_feature_type feat = env.grid(pos);
 
@@ -928,7 +928,9 @@ static int _cloud_base_damage(const actor *act,
 {
     const cloud_damage &dam = clouds[flavour].damage;
     const bool vs_player = act->is_player();
-    const int random_dam = _rand_dam(dam, vs_player);
+    const int random_dam = _rand_dam(dam, vs_player)
+    // Replicate the old acid_splash damage. Boy we hate players, huh?
+                         + (flavour == CLOUD_ACID && vs_player ? 12 : 0);
     const int base_dam = _base_dam(dam, vs_player);
     const int trials = dam.random/15 + 1;
 
@@ -1040,7 +1042,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     switch (cloud.type)
     {
     case CLOUD_RAIN:
-        return act->is_fiery()? 0 : WILL_INVULN;
+        return act->is_fiery() ? 0 : WILL_INVULN;
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
@@ -1209,11 +1211,8 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_ACID:
-    {
-        const actor* agent = cloud.agent();
-        act->splash_with_acid(agent, 5, true);
+        act->acid_corrode(5);
         return true;
-    }
 
     case CLOUD_NEGATIVE_ENERGY:
     {

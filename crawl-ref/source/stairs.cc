@@ -17,6 +17,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "dungeon.h" // place_specific_trap
 #include "env.h"
 #include "files.h"
 #include "god-passive.h" // passive_t::slow_abyss
@@ -29,6 +30,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mon-death.h"
+#include "mon-transit.h" // untag_followers
 #include "movement.h"
 #include "notes.h"
 #include "orb-type.h"
@@ -225,7 +227,7 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
              you.airborne() ? "fly" : "go",
              going_up ? "up" : "down");
     }
-    else
+    else if (stair != DNGN_ALTAR_IGNIS)
     {
         mprf("You %s %swards.",
              you.airborne() ? "fly" : "climb",
@@ -636,6 +638,42 @@ static bool _level_transition_moves_player(level_id dest,
     return dest.is_valid() != trying_to_exit;
 }
 
+level_id level_above()
+{
+    if (crawl_state.game_is_sprint())
+        return level_id();
+    // can't re-enter old zig floors; they get regenerated
+    if (player_in_branch(BRANCH_ZIGGURAT))
+        return level_id();
+    if (you.depth > 1)
+        return level_id(you.where_are_you, you.depth - 1);
+    if (!is_connected_branch(you.where_are_you))
+        return level_id(); // no rocketing out of the abyss, portals, pan...
+    const level_id entry = brentry[you.where_are_you];
+    if (entry.is_valid())
+        return entry;
+    return level_id();
+}
+
+void rise_through_ceiling()
+{
+    const level_id whither = level_above();
+    if (!whither.is_valid())
+    {
+        mpr("In a burst of heat and light, you rocket briefly upward... but you can't rise from here.");
+        return;
+    }
+
+    mpr("With a burst of heat and light, you rocket upward!");
+    untag_followers(); // XXX: is this needed?
+    floor_transition(DNGN_ALTAR_IGNIS /*hack*/, DNGN_ALTAR_IGNIS,
+                     whither, true, true, false, false);
+
+    // flavour! blow a hole through the floor
+    if (env.grid(you.pos()) == DNGN_FLOOR && !trap_at(you.pos()) /*needed?*/)
+        place_specific_trap(you.pos(), TRAP_SHAFT);
+}
+
 /**
  * Transition to a different level.
  *
@@ -769,7 +807,10 @@ void floor_transition(dungeon_feature_type how,
     case BRANCH_ABYSS:
         // There are no abyssal stairs that go up, so this whole case is only
         // when going down.
+        // -- unless you're a rocketeer!
         you.props.erase(ABYSS_SPAWNED_XP_EXIT_KEY);
+        if (old_level.depth > you.depth)
+            break;
         if (old_level.branch == BRANCH_ABYSS)
         {
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");

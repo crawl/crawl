@@ -135,8 +135,8 @@
 #include "throw.h"
 #ifdef USE_TILE
  #include "rltiles/tiledef-dngn.h"
- #include "tilepick.h"
 #endif
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
@@ -828,6 +828,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_REPLAY_MESSAGES:
     case CMD_REDRAW_SCREEN:
     case CMD_MACRO_ADD:
+    case CMD_MACRO_MENU:
     case CMD_SAVE_GAME:
     case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
@@ -1448,7 +1449,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
             canned_msg(MSG_OK);
             return false;
         }
-      }
+    }
 
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
@@ -1467,9 +1468,22 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     if (Options.warn_hatches)
     {
         if (feat_is_escape_hatch(ygrd))
-            return yesno("Really go through this one-way escape hatch?", true, 'n');
+        {
+            if (!yesno("Really go through this one-way escape hatch?", true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
+
         if (down && shaft) // voluntary shaft usage
-            return yesno("Really dive through this shaft in the floor?", true, 'n');
+        {
+            if (!yesno("Really dive through this shaft in the floor?", true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
     }
 
     return true;
@@ -1825,6 +1839,78 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 }
 
+class GameMenu : public Menu
+{
+// this could be easily generalized for other menus that select among commands
+// if it's ever needed
+public:
+    class CmdMenuEntry : public MenuEntry
+    {
+    public:
+        CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
+                                                command_type _cmd=CMD_NO_CMD)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd)
+        {
+            if (tileidx_command(cmd) != TILEG_TODO)
+                add_tile(tileidx_command(cmd));
+        }
+
+        command_type cmd;
+    };
+
+    command_type cmd;
+    GameMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP),
+          cmd(CMD_NO_CMD)
+    {
+        set_tag("game_menu");
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry(
+            string("<w>" CRAWL " ") + Version::Long + "</w>",
+            MEL_TITLE));
+        on_single_selection = [this](const MenuEntry& item)
+        {
+            const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
+            if (c)
+                cmd = c->cmd;
+            return false;
+        };
+    }
+
+    void fill_entries()
+    {
+        clear();
+        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
+        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
+        items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
+        add_entry(new CmdMenuEntry("Save and return to main menu",
+            MEL_ITEM, 'S', CMD_SAVE_GAME_NOW));
+        add_entry(new CmdMenuEntry("Generate and view character dump",
+            MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
+#ifdef USE_TILE_LOCAL
+        add_entry(new CmdMenuEntry("Edit player tile",
+            MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
+#endif
+        add_entry(new CmdMenuEntry("Edit macros",
+            MEL_ITEM, '~', CMD_MACRO_MENU));
+        add_entry(new CmdMenuEntry("Help and manual",
+            MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
+        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
+        add_entry(new CmdMenuEntry(
+                            "Quit and <lightred>abandon character</lightred>",
+            MEL_ITEM, 'Q', CMD_QUIT));
+    }
+
+    vector<MenuEntry *> show(bool reuse_selections = false) override
+    {
+        fill_entries();
+        cycle_hover();
+        return Menu::show(reuse_selections);
+    }
+};
+
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
 // calling this directly will not record the command for later replay; if you
@@ -1832,6 +1918,15 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
 void process_command(command_type cmd, command_type prev_cmd)
 {
     you.apply_berserk_penalty = true;
+
+    if (cmd == CMD_GAME_MENU)
+    {
+        GameMenu m;
+        m.show();
+        if (m.cmd == CMD_NO_CMD)
+            return;
+        cmd = m.cmd;
+    }
 
     switch (cmd)
     {
@@ -1905,7 +2000,8 @@ void process_command(command_type cmd, command_type prev_cmd)
     // Repeat commands.
     case CMD_REPEAT_CMD:     _do_cmd_repeat();  break;
     case CMD_PREV_CMD_AGAIN: _do_prev_cmd_again(); break;
-    case CMD_MACRO_ADD:      macro_add_query();    break;
+    case CMD_MACRO_ADD:      macro_quick_add();    break;
+    case CMD_MACRO_MENU:     macro_menu();    break;
 
     // Toggle commands.
     case CMD_DISABLE_MORE: crawl_state.show_more_prompt = false; break;
@@ -2007,7 +2103,6 @@ void process_command(command_type cmd, command_type prev_cmd)
         break;
 
     case CMD_EVOKE_WIELDED:
-    case CMD_FORCE_EVOKE_WIELDED:
         if (!evoke_item(you.equip[EQ_WEAPON]))
             flush_input_buffer(FLUSH_ON_FAILURE);
         break;
@@ -2080,6 +2175,7 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
         break;
 
+    case CMD_SHOW_CHARACTER_DUMP:
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))
             mpr("Char dump unsuccessful! Sorry about that.");
@@ -2087,6 +2183,8 @@ void process_command(command_type cmd, command_type prev_cmd)
         else
             tiles.send_dump_info("command", you.your_name);
 #endif
+        if (cmd == CMD_SHOW_CHARACTER_DUMP)
+            display_char_dump();
         break;
 
         // Travel commands.
@@ -2357,6 +2455,9 @@ void world_reacts()
         update_screen();
     }
 
+    // prevent monsters wandering into view and picking up an item before
+    // our next prep_input
+    maybe_update_stashes();
     update_monsters_in_view();
 
     reset_show_terrain();
@@ -2391,6 +2492,10 @@ void world_reacts()
     abyss_morph();
     apply_noises();
     handle_monsters(true);
+
+    // Monsters can schedule final effects, too!
+    // (mostly by exploding)
+    fire_final_effects();
 
     _check_banished();
 

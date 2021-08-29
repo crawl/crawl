@@ -426,7 +426,7 @@ tutorial3 go_shopping
 #       viewed.
 You now have enough gold to do some serious shopping! The quickest way back to
 the shop is by searching for it. Type <input>$cmd[CMD_SEARCH_STASHES]</input>,
-and then enter “<w>shop</w>”. Select the result to start traveling.<localtiles>
+and then enter “<w>shop</w>”. Select the result to start travelling.<localtiles>
 You can also <input>click</input> on the search button in the command panel, or
 use the minimap to return to the shop.</localtiles>
 %%%%
@@ -455,7 +455,8 @@ tutorial3 exit
   <input>$cmd[CMD_WEAR_JEWELLERY]</input>  put on jewellery
   <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  remove jewellery
   <input>$cmd[CMD_DROP]</input>  drop an item
-  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the item descriptions.<localtiles>
+  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the
+  item descriptions.<localtiles>
   And of course, <input>mouseclicks</input> also work.</localtiles>
 
 <yellow>Other</yellow>

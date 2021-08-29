@@ -120,6 +120,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
     { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
+    { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -172,6 +173,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_SHORT_LIVED:
     case ENCH_SLOWLY_DYING:
         if (mons.type == MONS_WITHERED_PLANT)
             return MB_CRUMBLING;
@@ -199,11 +201,11 @@ static bool _blocked_ray(const coord_def &where,
 
 static bool _is_public_key(string key)
 {
-    if (key == "helpless"
+    if (key == HELPLESS_KEY
      || key == "feat_type"
      || key == "glyph"
-     || key == "dbname"
-     || key == "monster_tile"
+     || key == DBNAME_KEY
+     || key == MONSTER_TILE_KEY
 #ifdef USE_TILE
      || key == TILE_NUM_KEY
 #endif
@@ -461,8 +463,8 @@ monster_info::monster_info(const monster* m, int milev)
     // Translate references to tentacles into just their locations
     if (mons_is_tentacle_or_tentacle_segment(type))
     {
-        _translate_tentacle_ref(*this, m, "inwards");
-        _translate_tentacle_ref(*this, m, "outwards");
+        _translate_tentacle_ref(*this, m, INWARDS_KEY);
+        _translate_tentacle_ref(*this, m, OUTWARDS_KEY);
     }
 
     base_type = m->base_monster;
@@ -706,9 +708,9 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     if (m->is_priest())
-        props["priest"] = true;
+        props[PRIEST_KEY] = true;
     else if (m->is_actual_spellcaster())
-        props["actual_spellcaster"] = true;
+        props[ACTUAL_SPELLCASTER_KEY] = true;
 
     // assumes spell hd modifying effects are always public
     const int spellhd = m->spell_hd();
@@ -750,12 +752,6 @@ monster_info::monster_info(const monster* m, int milev)
     {
         _blocked_ray(m->pos(), &fire_blocker);
     }
-
-    if (m->props.exists("quote"))
-        quote = m->props["quote"].get_string();
-
-    if (m->props.exists("description"))
-        description = m->props["description"].get_string();
 
     // init names of constrictor and constrictees
     constrictor_name = "";
@@ -954,8 +950,6 @@ string monster_info::_core_name() const
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
                 s = item.name(DESC_PLAIN, false, false, true, false);
-                if (type == MONS_SPECTRAL_WEAPON)
-                    s = "spectral " + s;
             }
             break;
 
@@ -1037,7 +1031,7 @@ string monster_info::common_name(description_level_type desc) const
 
     ostringstream ss;
 
-    if (props.exists("helpless"))
+    if (props.exists(HELPLESS_KEY))
         ss << "helpless ";
 
     if (is(MB_SUBMERGED))

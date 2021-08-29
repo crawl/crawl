@@ -23,6 +23,8 @@ void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,
                       string reason = "");
 bool you_teleport_to(const coord_def where,
                      bool move_monsters = false);
+bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,
+                          bool wizard_tele = false);
 
 spret cast_portal_projectile(int pow, bool fail);
 

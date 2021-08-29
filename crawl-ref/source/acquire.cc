@@ -617,21 +617,21 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent*/)
 {
-    const bool NO_LOVE = you.get_mutation_level(MUT_NO_LOVE);
+    const bool no_allies = you.allies_forbidden();
 
     const vector<pair<int, int> > choices =
     {
         // The player never needs more than one of these.
         {MISC_BOX_OF_BEASTS,
-            (NO_LOVE || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 20)},
+            (no_allies || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 20)},
         {MISC_PHANTOM_MIRROR,
-            (NO_LOVE || you.seen_misc[MISC_PHANTOM_MIRROR] ? 0 : 20)},
+            (no_allies || you.seen_misc[MISC_PHANTOM_MIRROR] ? 0 : 20)},
         // Tremorstones are better for heavily armoured characters.
         {MISC_TIN_OF_TREMORSTONES,
             (you.seen_misc[MISC_TIN_OF_TREMORSTONES]
-                     ? 0 : 5 + _skill_rdiv(SK_ARMOUR) / 3)},
+                ? 0 : 5 + _skill_rdiv(SK_ARMOUR) / 3)},
         {MISC_LIGHTNING_ROD,
-            (you.seen_misc[MISC_LIGHTNING_ROD]   ? 0 : 20)},
+            (you.seen_misc[MISC_LIGHTNING_ROD] ? 0 : 20)},
         {MISC_PHIAL_OF_FLOODS,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
         {MISC_CONDENSER_VANE,
@@ -650,7 +650,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
                              MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
                              MISC_PHIAL_OF_FLOODS,
-                             MISC_CONDENSER_VANE);
+                             MISC_CONDENSER_VANE,
+                             MISC_XOMS_CHESSBOARD);
     }
 
     return *choice;
@@ -668,14 +669,14 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent */)
 {
     vector<pair<wand_type, int>> weights = {
-        { WAND_ACID,            20 },
-        { WAND_ICEBLAST,        20 },
-        { WAND_CHARMING,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 10 },
-        { WAND_PARALYSIS,       10 },
-        { WAND_MINDBURST,  8 },
-        { WAND_POLYMORPH,       5 },
-        { WAND_DIGGING,         5 },
-        { WAND_FLAME,           2 },
+        { WAND_ACID,      20 },
+        { WAND_ICEBLAST,  20 },
+        { WAND_CHARMING,  you.allies_forbidden() ? 0 : 10 },
+        { WAND_PARALYSIS, 10 },
+        { WAND_MINDBURST, 8 },
+        { WAND_POLYMORPH, 5 },
+        { WAND_DIGGING,   5 },
+        { WAND_FLAME,     2 },
     };
 
     // Unknown wands get a huge weight bonus.

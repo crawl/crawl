@@ -210,7 +210,8 @@ static const vector<god_passive> god_passives[] =
 
     // Okawaru
     {
-        // None
+        { -1, passive_t::no_allies,
+              "are NOW prevented from gaining allies" },
     },
 
     // Makhleb
@@ -426,6 +427,11 @@ static const vector<god_passive> god_passives[] =
         { 1, passive_t::wu_jian_whirlwind, "lightly attack monsters by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks in an area by jumping off a solid obstacle." },
     },
+
+    // Ignis
+    {
+        { 0, passive_t::resist_fire, "resist fire." },
+    }, // TODO
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
@@ -656,7 +662,7 @@ bool god_id_item(item_def& item, bool silent)
         if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
             && item_needs_autopickup(item))
         {
-            item.props["needs_autopickup"] = true;
+            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         }
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -666,8 +672,8 @@ bool god_id_item(item_def& item, bool silent)
 
     if (ided & ~old_ided)
     {
-        if (item.props.exists("needs_autopickup") && is_useless_item(item))
-            item.props.erase("needs_autopickup");
+        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+            item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
         if (&item == you.weapon())
             you.wield_change = true;
@@ -1698,4 +1704,21 @@ void uskayaw_bonds_audience()
     }
     else // Reset the timer because we didn't actually execute.
         you.props[USKAYAW_BOND_TIMER] = 0;
+}
+
+// Clean up after a duel ends. If we're still in the Arena, start a timer to
+// kick the player back out (after they've had some time to loot), and if
+// we've left the Arena via the gate, clear the timer.
+void okawaru_handle_duel()
+{
+    if (player_in_branch(BRANCH_ARENA)
+        && !okawaru_duel_active()
+        && !you.duration[DUR_DUEL_COMPLETE])
+    {
+        you.set_duration(DUR_DUEL_COMPLETE, random_range(30, 40));
+    }
+
+    if (!player_in_branch(BRANCH_ARENA) && you.duration[DUR_DUEL_COMPLETE])
+        you.duration[DUR_DUEL_COMPLETE] = 0;
+
 }

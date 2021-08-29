@@ -136,7 +136,7 @@ spret cast_polar_vortex(int /*powc*/, bool fail)
     if (you.fishtail)
         merfolk_stop_swimming();
 
-    you.props["polar_vortex_since"].get_int() = you.elapsed_time;
+    you.props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
     _set_vortex_durations();
     if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
@@ -218,7 +218,7 @@ static int _rdam(int rage)
 
 static int _vortex_age(const actor *caster)
 {
-    const string name = "polar_vortex_since";
+    const string name = POLAR_VORTEX_KEY;
     if (caster->props.exists(name.c_str()))
         return you.elapsed_time - caster->props[name.c_str()].get_int();
     return 100; // for permanent vortices

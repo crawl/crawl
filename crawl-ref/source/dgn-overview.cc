@@ -793,9 +793,11 @@ static void _update_tracked_feature_annot(dungeon_feature_type feat,
     else if (new_num == 0)
     {
         level_annotations[li] = replace_all(level_annotations[li],
-                                            ", " + old_string, "");
+                                            old_string + ", ", "");
         level_annotations[li] = replace_all(level_annotations[li],
                                             old_string, "");
+        trim_string(level_annotations[li]);
+        strip_suffix(level_annotations[li], ",");
     }
 }
 
@@ -905,8 +907,8 @@ void set_unique_annotation(monster* mons, const level_id level)
         && mons->type != MONS_PLAYER_GHOST
         || testbits(mons->flags, MF_SPECTRALISED)
         || mons->is_illusion()
-        || mons->props.exists("no_annotate")
-            && mons->props["no_annotate"].get_bool())
+        || mons->props.exists(NO_ANNOTATE_KEY)
+            && mons->props[NO_ANNOTATE_KEY].get_bool())
 
     {
         return;

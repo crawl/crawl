@@ -331,7 +331,8 @@ static bool _box_of_beasts()
 
 static bool _make_zig(item_def &zig)
 {
-    if (feat_is_critical(env.grid(you.pos())))
+    if (feat_is_critical(env.grid(you.pos()))
+        || player_in_branch(BRANCH_ARENA))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;
@@ -872,7 +873,7 @@ static spret _tremorstone()
     return spret::success;
 }
 
-random_pick_entry<cloud_type> condenser_clouds[] =
+static const vector<random_pick_entry<cloud_type>> condenser_clouds =
 {
   { 0,   50, 200, FALL, CLOUD_MEPHITIC },
   { 0,  100, 125, PEAK, CLOUD_FIRE },
@@ -881,7 +882,6 @@ random_pick_entry<cloud_type> condenser_clouds[] =
   { 0,  110, 50, RISE, CLOUD_NEGATIVE_ENERGY },
   { 0,  110, 50, RISE, CLOUD_STORM },
   { 0,  110, 50, RISE, CLOUD_ACID },
-  { 0,0,0,FLAT,CLOUD_NONE }
 };
 
 static spret _condenser()
@@ -1000,6 +1000,7 @@ static bool _xoms_chessboard()
     const monster * target = *random_iterator(targets);
     beam.source = target->pos();
     beam.target = target->pos();
+    beam.set_agent(&you);
 
     // List of possible effects. Mostly debuffs, a few buffs to keep it
     // exciting

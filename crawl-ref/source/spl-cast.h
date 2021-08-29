@@ -36,7 +36,7 @@ enum class spflag
     unclean            = 0x00000200,      // counts as "unclean"
     chaotic            = 0x00000400,      // counts as "chaotic"
     hasty              = 0x00000800,      // counts as "hasty"
-    emergency          = 0x00001000,      // monsters use in emergencies
+                     //  0x00001000,
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
     area               = 0x00008000,      // area affect
@@ -116,6 +116,7 @@ int hex_success_chance(const int mr, int powc, int scale,
 class targeter;
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);
 bool spell_has_targeter(spell_type spell);
+string target_desc(const monster_info& mi, spell_type spell);
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       targeter* hitfunc);
 

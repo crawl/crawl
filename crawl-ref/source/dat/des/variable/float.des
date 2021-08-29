@@ -1857,90 +1857,92 @@ ENDMAP
 ##############################################################################
 # Elemental Laboratory (by Mu.)
 #
+# I've reworked "master elementalist" monster originally created by Mu for this
+# map into something that's a major threat. The contents of this vault have
+# been updated accordingly to pose a greater challenge with more reward. It's
+# now a rare runed door vault. --gammafunk
 NAME:   mu_elemental_laboratory
-TAGS:   no_monster_gen no_item_gen no_pool_fixup
+TAGS:   no_monster_gen no_item_gen no_pool_fixup patrolling
 DEPTH:  Depths, Elf, !Elf:$
 ORIENT: float
-MARKER: ! = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "flame" \
-            }
-MARKER: ? = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "thin mist" \
-            }
-MARKER: * = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "black smoke" \
-            }
-KMONS:  1 = fire elemental
-NSUBST: ; = 3:2 / *=l
-KMONS:  2 = molten gargoyle
-KFEAT:  2 = l
-KMONS:  e = earth elemental
-SUBST:  E = exxx....
-NSUBST: ' = 2:3 / 3:W / *:.
-KMONS:  3 = thorn hunter
-NSUBST: w = 3:4 / *:w
-KMONS:  4 = water elemental
-KFEAT:  4 = deep_water
-NSUBST: " = 3:5 / *:.
-KMONS:  5 = wind drake
-KMONS:  6 = air elemental
-KMONS:  7 = fire vortex
-KFEAT:  Z = <
-#
-: if you.in_branch("elf") then
-KMONS:  Z = deep elf elementalist ; \
-        robe ego:fire_resistance | \
-        robe ego:cold_resistance | \
-        robe ego:resistance . dagger ego:freezing | \
-        dagger ego:flaming | dagger ego:electrocution
+WEIGHT: 5
+KPROP:  qr = no_tele_into
+ITEM:   randbook disc:fire, randbook disc:ice, randbook disc:earth
+ITEM:   randbook disc:air
+ITEM:   manual of fire magic / manual of ice magic / manual of earth magic \
+        / manual of air magic
+ITEM:   ring of evasion randart / ring of protection randart \
+        / ring of fire randart / ring of ice randart
+ITEM:   staff of fire / staff of cold / staff of earth / staff of air
+: master_elementalist_setup(_G, "D")
+KFEAT:  a = iron_grate
+KFEAT:  p = l
+KFEAT:  rs = w
+: if you.in_branch("Elf") then
+# No fire elementals, since their flame clouds will tend to kill the elves in
+# this room.
+KMONS:  1 = salamander / deep elf pyromancer
+KMONS:  2 = fire giant
+KMONS:  3 = earth elemental / stone giant
+KMONS:  4 = war gargoyle
+KMONS:  5 = water elemental / elemental wellspring
+KMONS:  6 = frost giant
+KMONS:  7 = air elemental / deep elf zephyrmancer
+KMONS:  E = storm dragon
+# Depths
 : else
-KMONS:  Z = col:flash wizard hd:15 tile:mons_master_elementalist \
-        name:master_elementalist n_rpl n_des n_noc \
-        spells:iron_shot.11.wizard;summon_air_elementals.11.wizard;\
-               sticky_flame_range.11.wizard;\
-               summon_water_elementals.11.wizard;\
-               haste.11.wizard;blink.11.wizard \
-        ; robe ego:fire_resistance | robe ego:cold_resistance | \
-        robe ego:resistance \
-        . dagger ego:freezing | dagger ego:flaming | \
-        dagger ego:electrocution
+KMONS:  1 = fire giant
+KMONS:  2 = hellephant
+KMONS:  3 = war gargoyle / stone giant / iron dragon
+KMONS:  4 = iron giant
+KMONS:  5 = frost giant
+KMONS:  6 = shard shrike
+KMONS:  7 = storm dragon
+KMONS:  E = titan
 : end
-
-KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
-            randbook disc:earth
-KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
-            elemental_staff
+KFEAT:  5 = W
+NSUBST: d = d / e / f / g / h / i / j / *
+SUBST:  1 = 1.., - = 2pp..., 3 = 3.., x = xxx., ' = 4...., 5 = 5WW
+SUBST:  " = 6..., 7 = 7..., ` = s, ; = Ess...
+MARKER: p = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "flame", excl_rad = 0 }
+MARKER: q = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "calcifying dust", \
+                excl_rad = -1 }
+MARKER: r = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "freezing vapour", \
+                excl_rad = -1 }
+# Within the rooms where these machines place, placing them only on deep water
+# protects the monsters not immune to electricity from stepping there, since
+# those monsters are neither giant nor fly. Outside of these rooms, the runed
+# door keeps out monsters not immune to electricity are giant or fly.
+MARKER: s = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "thunder", excl_rad = 0 }
+TILE:   x = wall_pebble_lightgray
 MAP
        ccccccccc
-      ccE+'''cwcc
-     ccEEc'''cwwcc
-    ccEEEc'''cwwwcc
-   ccEEEEc'<'cwwwwcc
-  ccEEEEEc'''cwwwwwcc
- ccEEEEEEc''Wcwwwwwwcc
-ccEEEEEEEc'WW+wwwwwwwcc
-cEEEEEEEEcccccwwwwwwwwc
-ccccccc+ccB|Bcccccccc+c
-c;;;;;;;c$...$c"""""""c
-c;;;;;;;c$.Z.$c""?"?""c
-c;;;;;;;c$...$c"""""""c
-c+cccccccc...cc+ccccccc
-c........c+++c........c
-cc..!1.!1c...c.6..6..cc
- cc......c7.7c......cc
-  cc.....c...c.....cc
-   cc.1!.c.*.c.6..cc
-    cc...c...c...cc
-     cc..c.7.c..cc
-      cc.c...+.cc
-       c+ccccccc
-        @
+      cc3+.aqcwcc
+     cc3xc.aacw5cc
+    ccx3xc'''c5w5cc
+   cc3xx3c'''c5ww5cc
+  cc3x3x3c'''cw5ww5cc
+ cc3xxx3xcaaWc5ww5wwcc
+cc3xx3xxxcqaW+5w5wwwwcc
+cxx33x33xcccccwww55555c
+ccccccc+ccdddcccccccc+c
+c-----..cd...dcra"""WWc
+c--...--cd.D.dcaa"""aac
+c-.-----cd...dc.."""arc
+c+cccccccc...cc=ccccccc
+c111lll1lc+++c`77`77``c
+ccll1l1l1c;.;c```7``7cc
+ ccl1l1l1c;;.c`7```7cc
+  ccl1ll1c;.;c7`7`7cc
+   ccll1lc.;;c7``7cc
+    cc1llc;.;c`7`cc
+     cc1lc;;.c`7cc
+      cc1c;;;+7cc
+       c=ccccccc
 ENDMAP
 
 ##############################################################################
@@ -2718,8 +2720,8 @@ MONS:    deep troll
 # Fortunately, we have a permanently invisible 2 already.
 MONS:    lorocyproca
 : end
-ITEM:    arbalest, bolt, potion of curing, potion of heal wounds
-ITEM:    potion of invisibility
+ITEM:    arbalest, bolt, potion of curing ident:type , potion of heal wounds ident:type
+ITEM:    potion of invisibility ident:type
 : if you.in_branch("Geh") then
 SUBST: defgh = .
 : end
@@ -3312,9 +3314,9 @@ ITEM:   book of frost / book of ice / book of winter / book of rime / \
         ozocubu's autobiography / book of the tundra / manual of ice magic / \
         wand of iceblast ident:type / staff of cold ident:type / \
         ring of ice ident:type / phial of floods / ice dragon scales w:5
-KITEM:  2 = frostbite ident:type / \
-            battleaxe ego:freezing randart ident:type / \
-            broad axe ego:freezing randart ident:type
+KITEM:  2 = frostbite ident:all / \
+            battleaxe ego:freezing randart ident:all / \
+            broad axe ego:freezing randart ident:all
 : minmay_elemental_octagon_setup(_G)
 MAP
     xxx@xxx
@@ -3650,6 +3652,7 @@ MONS: death knight / w:5 wraith / w:1 freezing wraith / w:4 skeletal warrior
 ITEM: demon whip ego:pain / demon whip ego:draining / demon blade ego:pain \
       / demon blade ego:draining / demon trident ego:pain \
       / demon trident ego:draining
+KPROP: 1 = no_tele_into
 KFEAT: - = iron_grate
 NSUBST: " = 2 = w:2 d | / 5:* / 5=%$.
 NSUBST: ' = 3:* / 6:% / *:.
@@ -4625,7 +4628,7 @@ ENDMAP
 
 NAME:   gammafunk_worm_tunnel
 TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen
-DEPTH:  D:12-, Swamp
+DEPTH:  Lair, D:10-, Swamp
 ORIENT: float
 : item(dgn.good_aux_armour)
 : item(dgn.randart_aux_armour)
@@ -4633,21 +4636,33 @@ ITEM:   any good_item jewellery, any randart jewellery
 KMONS:  p = briar patch
 MONS:   swamp worm
 : if you.in_branch('D') then
-:   if you.depth() < 14 then
-NSUBST: * = * / .
+:   if you.depth() < 12 then
+KFEAT:  ^ = net trap
+SUBST:  F = E, D = 1ttttt
+:   elseif you.depth() < 14 then
+KFEAT:  ^ = net trap
+SUBST:  d = dde, f = ffg, % = %%*, F = E, D = 1tt
+# From D:14 and later we use Zot traps.
 :   else
-SUBST:  d = de, f = fg
-NSUBST: t = 1 / 2=1t / t, * = 2=* / .
+KFEAT:  ^ = zot trap
+SUBST:  d = de, f = fg, % = %*, D = 1t, F = ^
+:   end
+: elseif you.in_branch('Lair') then
+KFEAT:  ^ = net trap
+SUBST:  F = E
+:   if you.depth() < 4 then
+SUBST:  d = dddde, f = ffffg, % = %%%%*, F = E, D = 1tttt
+:   else
+SUBST:  d = ddde, f = fffg, % = %%%*, F = E, D = 1ttt
 :   end
 # Swamp
 : else
-SUBST:  d = e, f = g
-NSUBST: t = 2=1 / 4=1t / t
-: end
 KFEAT:  ^ = zot trap
-MARKER: D =  lua:fog_machine { cloud_type = "foul pestilence", pow_min = 3,  \
-                               pow_max = 5, delay = 5, start_clouds = 3, \
-                               size = 1, spread_rate = 0, excl_rad = 0 }
+SUBST:  d = e, f = g, % = *, D = 11t, F = ^
+: end
+MARKER: E =  lua:fog_machine { cloud_type = "foul pestilence", pow_min = 5,  \
+                               pow_max = 10, delay = 10, start_clouds = 1, \
+                               size = 1, spread_rate = 0, excl_rad = -1 }
 MARKER: P = lua:transp_loc("worm_tunnel_entry")
 MARKER: Q = lua:transp_dest_loc("worm_tunnel_entry")
 MARKER: R = lua:transp_loc("worm_tunnel_exit")
@@ -4656,123 +4671,191 @@ MAP
   ...S...
   .cnnnc.
   .cdRfc.
-...c***c.
+...c%%%c.
 .cccc+cccc.
-.n1lp.plcc.
-.cclp^pltn.
-.ntlp^Dncc.
-.cclp^pl1n.
-.ntlp^plcc.
-.ccnD^pltn.
+.cclpFpl1n.
 .n1lp^plcc.
-.cclp^pltn.
-.ntlp^Dncc.
+.ccnE^plDn.
+.nDlp^Encc.
 .cclp^pl1n.
-.ntlp^plcc.
-.ccnD^pltn.
 .n1lp^plcc.
-.cclp^pltn.
-.ntlp^plcc.
-.cclp^plcc.
-..ccpQpcc..
+.cclp^plDn.
+.cccpQpccc.
  ..cnnnc..
   ...P...
 ENDMAP
 
-# Based on the idea of the former vault boulder_indie by mumra, originally
-# suggested by ZorbaBeta. Reworked from that lua trap vault into something more
-# conventional, but with much more detail.
+# Based on the idea of the former vault called boulder_indie, made by mumra,
+# originally suggested by ZorbaBeta, which was a lua trap vault that placed a
+# boulder beetle in a long corridor. This vault uses a similar concept, but
+# places the boulder beetles in a non-spoilery way and greatly enhances the
+# theme and detail.
 NAME:    gammafunk_indiana_jones
 TAGS:    no_monster_gen no_trap_gen
 DEPTH:   D:8-, Lair
 ORIENT:  float
-ITEM:    whip good_item, hat good_item, any jewellery good_item
-ITEM:    whip randart / demon whip w:1, hat randart, any jewellery randart
-ITEM:    demon whip good_item
-KITEM:   k = any jewellery randart, gold, gold
-MONS:    boulder beetle
-KMONS:   K = lava snake
+# Item qualities that can upgrade with depth.
+ITEM:    whip good_item w:20 / snakebite w:1
+ITEM:    whip randart w:15 / demon whip w:4 / snakebite w:1
+ITEM:    demon whip good_item, hat good_item, hat randart
+ITEM:    any jewellery good_item, any jewellery randart
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+# We use boulder beetles at every depth, and lava snakes need a shared marker
+# definition, so defined here.
+KMONS:   2 = boulder beetle
+KMONS:   L = lava snake
 KMONS:   p = plant
-KFEAT:   ~ = closed_clear_door
-KFEAT:   ^ = zot trap
-KFEAT:   K = l
+KFEAT:   KL = l
+# Outer rock with normal tile, and inner chamber statues for Tomb theme in late
+# Dungeon and Spider.
 KFEAT:   a = x
-SHUFFLE: deF
+KFEAT:   qr = G
+# Randomize corpse and corpse loot loctions.
+SHUFFLE: dgF
+# Replace a small number of outer chamber walls with floor or trap.
+SUBST:   E = xD
+NSUBST:  H = D / x
 : if you.in_branch("D") then
-CLEAR:   '"
-:     if you.depth() < 11 then
-MONS:    redback
-# D must always be either floor or a trap (later depths) so that players can
-# see somewhat into the vault from the runed door. E and H always have one tile
-# turned to floor or (later) a trap. In the final treasure room, we initially
-# place flame clouds on L and place lava snakes. At later depths we use traps +
-# spiders instead.
-SUBST:   D = ., MN = L
-NSUBST:  - = 2 / 2=2. / ., E = . / x, H = . / x, J = 1 / ., l = K / 2=Kl / l
+:     if you.depth() < 12 then
+KMONS:   1 = redback / jumping spider w:5
+KMONS:   3 = lindwurm
+KFEAT:   3^ = net trap / dispersal trap
+# Outer chamber: place monsters and traps. We add one more monster and one half
+# more trap on-average with each depth increase condition. The D glyph will
+# always be either floor or a trap so that players can see somewhat into the
+# vault from the runed door.
+NSUBST:  D = ^- / -, - = 2=1 / 2=1. / .
+# Boulder beetle gate: We add one half more boulder beetle with each depth
+# increase condition.
+NSUBST:  J = 2 / 2. / .
+# Inner chamber: place gold and potion/scroll loot, adding one half more of
+# each on average with each depth increase condition. Also add one half more
+# lava snake and one half more lindwurm with each depth increase.
+NSUBST:  O = k. / $. / ., K = L / 2=LK / K, M = 3 / .
+# The "ruins" theme for earlier Dungeon and Lair.
+FTILE:   dgik$F123KLN^-.rxc = floor_pebble_yellow
+FTILE:   = = floor_pebble_yellow
+TILE:    x = wall_brick_brown_vines
+TILE:    r = dngn_statue_ancient_evil
 :     elseif you.depth() < 14 then
-MONS:    redback / jumping spider / tarantella w:5 / wolf spider w:5
-SUBST:   d = g, e = h, f = i, D = ., MN = L
-NSUBST:  - = 2=2 / 2=2. / ., E = . / x, H = . / x, J = 1 / 2=1.
-NSUBST:  l = 2=K / 2=Kl / l
+KMONS:   1 = redback / jumping spider / tarantella w:5 / wolf spider w:5
+KMONS:   3 = lindwurm
+KFEAT:   3^ = net trap / dispersal trap
+SUBST:   d = e
+NSUBST:  D = ^ / 2=^- / -, - = 4=1 / 4=1. / .
+NSUBST:  J = 2=2 / 2=2. / .
+SUBST:   i = j
+NSUBST:  N = $ / ., O = 2=k / $, M = 2=3 / 3. / ., K = 2=L / 3=LK / K
+FTILE:   egjk$F123KL^.rxc = floor_pebble_yellow
+FTILE:   = = floor_pebble_yellow
+TILE:    x = wall_brick_brown_vines
+TILE:    r = dngn_statue_ancient_evil
 :     else
-MONS:   redback w:5 / jumping spider / tarantella / wolf spider
-SUBST:   d = j, e = h, f = L, D = ^..., N = i
-NSUBST:  - = 2=2 / 4=2. / ., E = ^ / x, H = ^... / x, J = 2=1 / 1. / .
-# 3 M locations available for monsters on D:14-15, so always place one monster
-# on an L location that doesn't get a trap.
-NSUBST:  L = ^ / 2^ / M, M = 2 / 2.
+# We replace the ruins theme with the Tomb theme for D:14-15 and Spider.
+# Spectrals and death scarabs place in the inner chamber, with miasma cloud
+# generators replacing lava + fire clouds.
+KMONS:   1 = redback / jumping spider / tarantella / wolf spider
+KMONS:   Q = spectral wolf spider
+KMONS:   3 = death scarab
+KFEAT:   3^ = zot trap w:20 / net trap / dispersal trap
+SUBST:   d = f
+NSUBST:  D = ^ / 3=^- / -, - = 4=1 / 6=1. / .
+NSUBST:  J = 2=2 / 2.
+# Inner chamber: we have 4 available M squares for traps/scarabs.
+SUBST:   i = j
+NSUBST:  O = 2=k / k$, N = 2=$ / M, M = 2=3 / 3., K = 2=Q / 4=QP / P
+# Set Tomb theme visuals. Rock becomes stone, and set tombish tiles for floor,
+# wall, and statues, the latter being themed as sarcophagi.
+SUBST:   x = c
+TILE:    c = wall_tomb
+COLOUR:  rc = yellow
+TILE:    r = dngn_sarcophagus_pedestal_right
+FTILE:   fgjk$F123PQ^.rc = floor_sandstone
+FTILE:   = = floor_sandstone
+: set_feature_name("granite_statue", "sarcophagus")
 :     end
 : elseif you.in_branch("Lair") then
-# Add a border of ruined rock for Lair and Spider, adding plants for Lair.
-SUBST:   d = g, ' = a:9 p:1 ', " = @
-CLEAR:   '
-:     if you.depth() < 5 then
-MONS:   redback / jumping spider / tarantella / wolf spider
-SUBST:   D = ., MN = L
-NSUBST:  - = 2 / 3=2. / ., E = . / x, H = . / x, J = 1 / 1. / .
-NSUBST:  l = K / 3=Kl / l
+KMONS:   3 = lindwurm
+KFEAT:   3^ = net trap / dispersal trap
+:     if you.depth() < 4 then
+KMONS:   1 = redback / jumping spider / tarantella w:5 / wolf spider w:5
+NSUBST:  D = 2=^- / -, - = 2=1 / 4=1. / .
+NSUBST:  J = 2 / 2=2. / .
+NSUBST:  O = $ / k / ., K = L / 3=LK / K, M = 3 / 3. / .
 :     else
-MONS:    redback / jumping spider / tarantella w:5 / wolf spider w:5
-# Introduce zot traps and spiders in the final chamber from Lair:5-6, D:14-,
-# and Spider. Move jewellery from f to N. We want the traps to be adjacent to
-# the door so they're likely to actually trigger. Non-trapped tiles become M,
-# which we use to randomize monsters. 4 M locations available for Lair:5-6.
-SUBST:   e = h, f = L, D = ., N = f
-NSUBST:  - = 2=2 / 2=2. / ., E = ^. / x, H = . / x, J = 1 / 2=1., L = ^ / M
-NSUBST:  M = 2 / 2.
+KMONS:   1 = redback / jumping spider / tarantella w:5 / wolf spider w:5
+# We start upgrading quality of one of three weapon, hat, or jewellery items
+# with each depth increase.
+SUBST:   d = e
+NSUBST:  D = ^ / ^- / -, - = 3=1 / 4=1. / .
+NSUBST:  J = 2 / 3=2. / .
+NSUBST:  O = $ / k / $k, K = 2=L / 2=LK / K, M = 3 / 2=3. / .
 :     end
+# Add a border of ruined rock and plants for Lair.
+SUBST:   ' = a:9 p:1 '
+TILE:    r = dngn_statue_ancient_evil
+FTILE:   degik$F123KLN^.rxc = floor_pebble_yellow
+FTILE:   = = floor_pebble_yellow
+TILE:    x = wall_brick_brown_vines
+# Spider
 : else
-MONS:    redback w:5 / jumping spider / tarantella / wolf spider
-SUBST:   d = j, e = h, J = 1, f = L, D = ^., N = k, ' = a', " = @
-NSUBST:  - = 2=2 / 5=2. / ., E = ^ / x, H = ^.. / x, L = 2=^ / 2
-# 2 M locations available for Spider.
-SUBST:   M = 2
-CLEAR:   '
+KITEM:   N = $
+KMONS:   1 = jumping spider / tarantella / wolf spider / emperor scorpion w:5
+KMONS:   Q = spectral wolf spider / spectral emperor scorpion
+KMONS:   3N = death scarab
+KFEAT:   3^ = zot trap w:20 / net trap / dispersal trap
+SUBST:   d = f, g = h
+NSUBST:  D = 2=^ / 2=^- / -, - = 5=1 / 6=1. / .
+NSUBST:  J = 3=2 / 2.
+# Inner chamber: of of the six M+N squares, we use three for gold, additionally
+# placing a scarab on one, two for scarabs plus traps, and one more for 50%
+# chance of scarab + trap.
+SUBST:   i = j, O = k
+NSUBST:  K = 3=Q / 3=QP / P, NM = 2=$ / N / 2=3 / 3.
+# A border of ruined rock for Spider, but without plants. Then set up Tomb
+# theme for the interior.
+SUBST:   ' = a', x = c
+TILE:    c = wall_tomb
+COLOUR:  rc = yellow
+TILE:    r = dngn_sarcophagus_pedestal_right
+FTILE:   fhjk$F123NPQ^.rc = floor_sandstone
+: set_feature_name("granite_statue", "sarcophagus")
 : end
-MARKER:  L = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                   pow_max = 100, delay = 10, size = 1, walk_dist = 0, \
-                   excl_rad = 0 }
+TILE:    q = dngn_statue_ancient_hero
+CLEAR:   '
+MARKER:  K = lua:fog_machine { cloud_type = "flame", pow_max = 20, \
+                 delay_min = 30, delay_max = 50, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
+MARKER:  L = lua:fog_machine { cloud_type = "flame", pow_max = 20, \
+                 delay_min = 30, delay_max = 50, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
+MARKER:  P = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 10, \
+                 pow_max= 20, delay = 10, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
+MARKER:  Q = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 10, \
+                 pow_max = 20, delay = 10, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
 : dgn.delayed_decay(_G, 'F', 'human corpse')
-TILE:   x = wall_brick_brown_vines
-FTILE:  .^~defghijkFL12xc = floor_pebble_yellow
 MAP
-'''''''"'''''''''
-'aaaaaa@aaaaaaaa'
-'accccc=cccaaaaa'
+'''''''@'''''''''
+'aaaaapaaaaaaaaa'
+'aaaaaqpqaaaaaaa'
+'acxxxx=xxcaaaaa'
 'acxx---xxcaaaaa'
 'acx-xxxDxccaaaa'
 'acxx---dxxcccaa'
 'accxxxEFExxxcca'
-'aacccxxEe--xxca'
+'aacccxxEg--xxca'
 'aaaaccxxHHH-xca'
-'aaaaccxx---xxca'
-'aaaacxx-xxxxcca'
-'aaaacx~~~xcccaa'
-'aaaccxJJJxccaaa'
-'aaacxxn~nxxcaaa'
-'aaacxlLfLlxcaaa'
-'aaacxlMNMlxcaaa'
-'aaacxlllllxcaaa'
+'aaaacxxx---xxca'
+'aaaccx---xxxcca'
+'aaacxx===xxccaa'
+'aaacxJJJJJxcaaa'
+'aaacxx===xxcaaa'
+'aaacxKMMMKxcaaa'
+'aaacxKNNNKxcaaa'
+'aaacxKOOOKxcaaa'
+'aaacxKrirKxcaaa'
 'aaacxxxxxxxcaaa'
 'aaacccccccccaaa'
 'aaaaaaaaaaaaaaa'
@@ -7735,7 +7818,6 @@ TAGS:   transparent no_item_gen no_monster_gen no_trap_gen
 DEPTH:  D:10-
 KFEAT:  C = altar_lugonu
 KFEAT:  ' = floor
-KFEAT:  ~ = floor
 MONS:   kobold demonologist
 KMONS:  P = demonic plant
 KMONS:  p = plant
@@ -9223,80 +9305,76 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_its_a_trap
-TAGS:    no_monster_gen no_trap_gen no_tele_into
-# Allow placement in Vaults as a room.
-TAGS:    vaults_hard preserve_wall
-: if you.in_branch("Vaults") then
-TAGS:    passable
-: end
-DEPTH:   Crypt, D:$, Depths, Elf, Snake, Spider, Pan, Vaults, Zot
+TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
+# Allow placement in the Vaults branch as a room.
+TAGS:    vaults_hard passable
+DEPTH:   Crypt, D:14-, Depths, Elf, Snake, Pan, Vaults, Zot
 ORIENT:  float
-KMASK:   ^ = no_item_gen
+KMASK:   -+QR^01289de$*| = opaque
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:    any randart jewellery
-SHUFFLE: FGHI / JKLM
-NSUBST:  D = ^ / ., E = ^ / ., I = . / "
-SUBST:   FGH = ., JKLM = ", ' = ^., " = ^^., d = dd$
-# Supplement the 8s in Crypt and Zot since OOD defs in these branches aren't
-# very deep.
-: if you.in_branch("Crypt") then
-KMONS:   2 = ancient lich / dread lich
-NSUBST:  8 = 2 / 8
-: elseif you.in_branch("Pandemonium") then
-# 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
-KMONS:   2 = greater demon / nonbase demonspawn
-KMONS:   3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
-           / hell sentinel
-SUBST:   8 = 39, 9 = 02
-: elseif you.in_branch("Zot") then
-KMONS:   2 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
-SUBST:   8 = 28
-: end
 KFEAT:   ^ = zot trap
+SHUFFLE: FH / JK
+NSUBST:  D = ^ / -, E = ^ / -, H = - / "
+SUBST:   F = -, JK = ", ' = ^-, " = ^^-, d = dd$
+# Supplement the 8s in Crypt, Zot, and Pan since OOD defs in these branches
+# aren't very deep or are undefined.
+: if you.in_branch("Crypt") then
+KMONS:   1 = ancient lich / dread lich
+NSUBST:  8 = 1 / 8
+: elseif you.in_branch("Pandemonium") then
+KMONS:   1 = greater demon / nonbase demonspawn
+KMONS:   2 = executioner / brimstone fiend / ice fiend / tzitzimitl \
+           / hell sentinel
+SUBST:   8 = 29, 9 = 01
+: elseif you.in_branch("Zot") then
+KMONS:   1 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
+SUBST:   8 = 18
+: end
+# In Vaults we let the layout dictate wall type and need a border of floor.
+# In other branches, we remove the border squares.
+: if you.in_branch("Vaults") then
+SUBST:   c = x
+: else
+CLEAR:   `
+: end
 MARKER:  P = lua:transp_loc("its_a_trap_entry")
 MARKER:  Q = lua:transp_dest_loc("its_a_trap_entry")
 MARKER:  R = lua:transp_loc("its_a_trap_exit")
 MARKER:  S = lua:transp_dest_loc("its_a_trap_exit")
-: if you.in_branch("Vaults") then
-SUBST:   - = .
-: else
-CLEAR:   -
-: end
 MAP
-      ------------
-     --cccccccccc--
-    --cccccccccccc---
- ----ccccccccccccccc------
- -ccccccccDcc^ccccccccccc-
- -ccccccc.D....cccccccccc-
- -cccccc".c.ccc..cccccccc-
- -ccc.''."c"I.0'".ce^dccc-
- -ccc''.c"GHc.9'".c'*'nnn-
-..nnn^..cFc"I.0'"^+|^dnnn..
-@PnnnQ.^."""c.8'""c'*RnnnS@
-..nnn^..cJc"M.0'"^+|^dnnn..
- -ccc''.c"KLc.9'".c'*'nnn-
- -ccc.''."c"M.0'".c|^eccc-
- -cccccc".c.ccc..cccccccc-
- -ccccccc.E....cccccccccc-
- -ccccccccEcc^ccccccccccc-
- ----ccccccccccccccc------
-    --cccccccccccc---
-     --cccccccccc--
-      ------------
+     ````````````
+    ``cccccccccc``
+   ``cccccccccccc```
+ ```ccccccccccccccc```````
+ `ccccccccDcc^ccccccccccc`
+ `ccccccc-D----cccccccccc`
+ `cccccc"-c-ccc--cccccccc`
+ `ccc-''-"c"H-0'"-ce^dccc`
+ `ccc''-c"FFc-9'"-c'*'nnn`
+..nnn^--cFc"H-0'"^+|^dnnn..
+@PnnnQ-^-"""c-8'""c'*RnnnS@
+..nnn^--cJc"K-0'"^+|^dnnn..
+ `ccc''-c"JJc-9'"-c'*'nnn`
+ `ccc-''-"c"K-0'"-c|^eccc`
+ `cccccc"-c-ccc--cccccccc`
+ `ccccccc-E----cccccccccc`
+ `ccccccccEcc^ccccccccccc`
+ ```ccccccccccccccc```````
+   ``cccccccccccc```
+    ``cccccccccc``
+     ````````````
 ENDMAP
 
 NAME:   gammafunk_dig_for_victory
-TAGS:   no_monster_gen no_trap_gen no_tele_into
-# Allow placement in Vaults as a room.
-TAGS:   vaults_hard preserve_wall
-: if you.in_branch("Vaults") then
-TAGS:   passable
-: end
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
+# Allow placement in the Vaults branch as a room.
+TAGS:   vaults_hard passable
 # This must not place on a branch end so it can place a downhatch.
-DEPTH:  Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Vaults
+DEPTH:  Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Vaults, !Vaults:$
 DEPTH:  Zot, !Zot:$
 ORIENT: float
+KMASK:  -QRHK012389def$*| = opaque
 {{
 -- Guarantee at least 5 charges, and on-average give 50% more than usual.
 item("wand of digging charges:" .. tostring(5 + crawl.random2(6)) ..
@@ -9304,9 +9382,12 @@ item("wand of digging charges:" .. tostring(5 + crawl.random2(6)) ..
 item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 }}
 ITEM:   any randart jewellery
+KFEAT:  H = >
+KFEAT:  K = {
+KFEAT:  p = n
 # Do these substs now so they can be cleaned up by branch.
 NSUBST: D = 8 / 2=9 / 0, F = 8 / 2=9 / 0, J = 8 / 2=9 / 0, f = 2=f / |
-SUBST:  E = 89.., e = ee$
+SUBST:  E = 89--, e = ee$
 : if you.in_branch("D") or you.in_branch("Depths")
 :    or you.in_branch("Vaults") then
 KMONS:  1H = deep troll earth mage
@@ -9330,48 +9411,50 @@ SUBST:  8 = 28
 COLOUR: p = yellow
 TILE:   p = dngn_transparent_stone_yellow
 : end
-KFEAT:  H = >
-KFEAT:  K = {
-KFEAT:  p = n
+# In Vaults we let the layout dictate wall type and need a border of floor.
+# In other branches, we remove the border squares.
+: if you.in_branch("Vaults") then
+SUBST:   c = x
+: else
+CLEAR:   `
+: end
 MARKER: P = lua:transp_loc("dig_for_victory_entry")
 MARKER: Q = lua:transp_dest_loc("dig_for_victory_entry")
 MARKER: R = lua:transp_loc("dig_for_victory_exit")
 MARKER: S = lua:transp_dest_loc("dig_for_victory_exit")
-: if you.in_branch("Vaults") then
-SUBST:   ' = .
-: else
-CLEAR:   '
-: end
 MAP
-      ''''''''''''''''''
-      'cccccccccccccccc'
-      'cccccccccccccccc'
-      'cccccccccccccccc''
- ''''''ccp1mmDDDEEmmmcc''''''
- 'ccccccppppmDDDEmmmmccccccc'
- 'c.....mmmmmmmmmmmmmnfm*mfc'
- 'c.....mmmmmmmmmmmmmmmmmmmn'
- 'c.....mmmmmmmmmmmmmn*memen'
- .n.....mmmmmmmmmmJJmmmmmmmn.
-@PnQ.d.........mmmHJmn|mRm|nS@
- .n.....mmmmmmmmmmJJmmmmmmmn.
- 'c.....mmmmmmmmmmmmmn*memen'
- 'c.....mmmmmmmmmmmmmmmmmmmn'
- 'c.....mmmmmmmmmmmmmnfm*mfc'
- 'ccccccppppmFFFEmmmmccccccc'
- ''''''ccp1mmFFFEEmmmcc''''''
-      'cccccccccccccccc'
-      'cccccccccccccccc'
-      'cccccccccccccccc'
-      ''''''''''''''''''
+      ``````````````````
+      `cccccccccccccccc`
+      `cccccccccccccccc`
+      `cccccccccccccccc``
+ ``````ccp1mmDDDEEmmmcc``````
+ `ccccccppppmDDDEmmmmccccccc`
+ `c-----mmmmmmmmmmmmmnfm*mfc`
+ `c-----mmmmmmmmmmmmmmmmmmmn`
+ `c-----mmmmmmmmmmmmmn*memen`
+..n-----mmmmmmmmmmJJmmmmmmmn..
+@PnQ-d---------mmmHJmn|mRm|nS@
+..n-----mmmmmmmmmmJJmmmmmmmn..
+ `c-----mmmmmmmmmmmmmn*memen`
+ `c-----mmmmmmmmmmmmmmmmmmmn`
+ `c-----mmmmmmmmmmmmmnfm*mfc`
+ `ccccccppppmFFFEmmmmccccccc`
+ ``````ccp1mmFFFEEmmmcc``````
+      `cccccccccccccccc`
+      `cccccccccccccccc`
+      `cccccccccccccccc`
+      ``````````````````
 ENDMAP
 
 NAME:    emtedronai_trogs_sanctum
-TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen
-# Allow placement in Vaults as a room.
-TAGS:    vaults_hard preserve_wall passable
-DEPTH:   D:13-, Orc, Vaults, Depths
+TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
+# Allow placement in the Vaults branch as a room.
+TAGS:    vaults_hard passable
+DEPTH:   D:13-, Orc, Depths, Vaults
 ORIENT:  float
+KMASK:   ap+-_Y$*defgDEQ1234567 = opaque
+KMASK:   = = opaque
+KPROP:   -_$*defgDEQ123456 = bloody w:5 / nothing
 KITEM:   _ = necklace of bloodlust no_pickup / wrath of trog no_pickup
 ITEM:    manual of armour w:30 / manual of fighting w:30 / \
          manual of long blades / manual of axes / manual of maces & flails / \
@@ -9391,80 +9474,82 @@ ITEM:    plate armour good_item randart w:20 no_pickup / \
          crystal plate armour good_item no_pickup / \
          chain mail good_item randart no_pickup
 ITEM:    potion of berserk rage ident:type
+KMONS:   4 = generate_awake moth of wrath
+KMONS:   5 = deep troll earth mage
+KMONS:   6 = silent spectre
+KFEAT:   _ = altar_trog
+KFEAT:   ap = iron_grate
 SHUFFLE: def
-KPROP:   .$*def123456 = bloody w:5 / nothing
 : if you.in_branch("D") then
-MONS:    patrolling ettin / patrolling iron troll
-MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
-MONS:    ogre mage / wizard / deep elf pyromancer / deep elf zephyrmancer / \
-         boggart / necromancer
+KMONS:   1 = patrolling ettin / patrolling iron troll
+KMONS:   2 = troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
+KMONS:   3 = ogre mage / wizard / deep elf pyromancer / deep elf zephyrmancer \
+         / boggart / necromancer
 : elseif you.in_branch("Orc") then
-MONS:    patrolling stone giant / patrolling ettin
-MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5 \
+KMONS:   1 = patrolling stone giant / patrolling ettin
+KMONS:   2 = troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5 \
          / orc knight
 # The orcs mostly offer naughty elves to Trog's Sanctum, with a few naughty
 # orcs and ogres thrown in.
-MONS:    orc sorcerer w:5 / ogre mage w:5 / deep elf pyromancer w:30 / \
-         deep elf zephyrmancer w:30 / deep elf sorcerer / \
-         deep elf demonologist / deep elf annihilator
+KMONS:   3 = orc sorcerer w:5 / ogre mage w:5 / deep elf pyromancer w:30 \
+         / deep elf zephyrmancer w:30 / deep elf sorcerer \
+         / deep elf demonologist / deep elf annihilator
 KMONS:   7 = deep elf elementalist
-SUBST:   5 = 7, " = m
+SUBST:   5 = 7, p = m
 : elseif you.in_branch("Vaults") then
-MONS:    patrolling ettin / patrolling iron troll
-MONS:    two-headed ogre / cyclops / deep troll w:15 / stone giant
-MONS:    wizard / boggart / deep elf annihilator / deep elf demonologist \
-         / deep elf sorcerer / deep elf high priest / titan / lich
+KMONS:   1 = patrolling ettin / patrolling iron troll
+KMONS:   2 = two-headed ogre / cyclops / deep troll w:15 / stone giant
+KMONS:   3 = wizard / boggart / deep elf annihilator / deep elf demonologist \
+          / deep elf sorcerer / deep elf high priest / titan / lich
 # Depths
 : else
-MONS:    patrolling juggernaut
-MONS:    deep troll w:15 / spriggan berserker w:15 / stone giant / \
-         iron troll w:5 / ettin w:5
-MONS:    tengu conjurer / deep elf annihilator / deep elf demonologist / titan \
-         / deep elf sorcerer / spriggan air mage / lich / vampire mage
+KMONS:   1 = patrolling juggernaut
+KMONS:   2 = deep troll w:15 / spriggan berserker w:15 / stone giant \
+         / iron troll w:5 / ettin w:5
+KMONS:   3 = tengu conjurer / deep elf annihilator / deep elf demonologist \
+         / titan / deep elf sorcerer / spriggan air mage / lich / vampire mage
 : end
-MONS:    generate_awake moth of wrath, deep troll earth mage
-KMONS:   6 = silent spectre
-: dgn.delayed_decay(_G, '\'`', 'human skeleton')
-KFEAT:   _ = altar_trog
-KFEAT:   -" = iron_grate
-FTILE:   ` = floor_rough_lightred
-MARKER:  ` = lua:fog_machine { \
+: dgn.delayed_decay(_G, "DE", "human skeleton")
+FTILE:   E = floor_rough_lightred
+MARKER:  E = lua:fog_machine { \
                cloud_type = "flame", pow_min = 10, pow_max = 10, delay = 10, \
                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+# In Vaults we let the layout set the wall type and need a border of floor.  In
+# other branches, we remove the border squares.
+: if you.in_branch("Vaults") then
+SUBST:   v = x
+: else
+CLEAR:   `
+: end
 MARKER:  P = lua:transp_loc("trogsanc_entry")
 MARKER:  Q = lua:transp_dest_loc("trogsanc_entry")
 MARKER:  6 = lua:transp_loc("trogsanc_exit")
 MARKER:  R = lua:transp_dest_loc("trogsanc_exit")
-: if you.in_branch("Vaults") then
-SUBST:   E@ = ., F = @
-: else
-CLEAR:   EF
-: end
 MAP
-EEEEEEEEEEEEFEEEEEEEEEEEE
-Evvvvvvvv...@...vvvvvvvvE
-Evvvvvvvv.......vvvvvvvvE
-Evvvvvvvv.......vvvvvvvvE
-Evvvvvvvvnv.P.vnvvvvvvvvE
-Evvvvvvvv4vnnnv4vvvvvvvvE
-Evvvvvvvv-vnnnv-vvvvvvvvE
-Evvvvvvv..+.Q.+..vvvvvvvE
-Evvvvvv...+.'.+...vvvvvvE
-Evvvvv....v.g.v....vvvvvE
-Evvv`-..v-vnvnv-v..-`vvvE
-Evvvvv..-4vv6vv4-..vvvvvE
-Evvv4"22v-vn=nv-v22"4vvvE
-Evvv3v...$$e_f$$...v3vvvE
-Evvv3"....$*d*$...."3vvvE
-Evvv3v..Y..***..Y..v3vvvE
-Evvv5"......1......"5vvvE
-Evvvvv22.........22vvvvvE
-Evvvvv-v-vvnnnvv-v-vvvvvE
-Evvvvv4v`vvnnnvv`v4vvvvvE
-Evvvvvvvvv..R..vvvvvvvvvE
-Evvvvvvv4n.....n4vvvvvvvE
-Evvvvvvvvv..@..vvvvvvvvvE
-EEEEEEEEEEEEFEEEEEEEEEEEE
+`````````...@...`````````
+`vvvvvvvv.......vvvvvvvv`
+`vvvvvvvv.......vvvvvvvv`
+`vvvvvvvv.......vvvvvvvv`
+`vvvvvvvvnv.P.vnvvvvvvvv`
+`vvvvvvvv4vnnnv4vvvvvvvv`
+`vvvvvvvvavnnnvavvvvvvvv`
+`vvvvvvv--+-Q-+--vvvvvvv`
+`vvvvvv---+-D-+---vvvvvv`
+`vvvvv----v-g-v----vvvvv`
+`vvvEa--vavnvnvav--aEvvv`
+`vvvvv--a4vv6vv4a--vvvvv`
+`vvv4p22vavn=nvav22p4vvv`
+`vvv3v---$$e_f$$---v3vvv`
+`vvv3p----$*d*$----p3vvv`
+`vvv3v--Y--***--Y--v3vvv`
+`vvv5p------1------p5vvv`
+`vvvvv22---------22vvvvv`
+`vvvvvavavvnnnvvavavvvvv`
+`vvvvv4vEvvnnnvvEv4vvvvv`
+`vvvvvvvvv..R..vvvvvvvvv`
+`vvvvvvv4n.....n4vvvvvvv`
+`vvvvvvvvv.....vvvvvvvvv`
+``````````..@..``````````
 ENDMAP
 
 NAME:    nzn_random_ring

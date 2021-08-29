@@ -69,7 +69,10 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     use_popup = use_popup && str && allow_popup;
 #endif
 
-    Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE, "", KMC_CONFIRM);
+    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE;
+    if (allow_lowercase && use_popup)
+        flags |= MF_ARROWS_SELECT;
+    Menu pop(flags, "", KMC_CONFIRM);
     MenuEntry *status = nullptr;
 
     if (use_popup)
@@ -84,6 +87,16 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         pop.add_entry(status);
         pop.add_entry(y_me);
         pop.add_entry(n_me);
+        if (allow_lowercase && default_answer == 'y')
+            pop.set_hovered(1);
+        else if (allow_lowercase && default_answer == 'n')
+            pop.set_hovered(2);
+        pop.on_single_selection = [&pop](const MenuEntry& item)
+            {
+                if (item.hotkeys.size())
+                    return pop.process_key(item.hotkeys[0]);
+                return false;
+            };
     }
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)

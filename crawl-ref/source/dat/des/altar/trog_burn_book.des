@@ -43,7 +43,7 @@ end
 
 
 NAME:   trog_book
-TAGS:   temple_overflow_trog temple_overflow_1
+TAGS:   temple_overflow_trog temple_overflow_1 transparent
 KFEAT:  _ = altar_trog
 {{
 local tm = TriggerableFunction:new{func="callback.trog_book_convert_book",

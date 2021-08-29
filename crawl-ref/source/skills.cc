@@ -331,7 +331,7 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_o
     if (exsk == SK_FIGHTING)
         calc_hp(true, false);
 
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS)
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
         calc_mp();
 
     if (exsk == SK_DODGING || exsk == SK_ARMOUR)
@@ -1578,11 +1578,13 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
 
 const char *skill_name(skill_type which_skill)
 {
+    ASSERT(which_skill < NUM_SKILLS);
     return skill_titles[which_skill][0];
 }
 
 const char * skill_abbr(skill_type which_skill)
 {
+    ASSERT(which_skill < NUM_SKILLS);
     return skill_titles[which_skill][6];
 }
 
@@ -1725,6 +1727,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Blood Saint";
             else if (species == SP_PALENTONGA && skill_rank == 5 && god == GOD_QAZLAL)
                 result = "Rolling Thunder";
+            else if (species == SP_PALENTONGA && skill_rank == 5 && is_good_god(god))
+                result = "Holy Roller";
             else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Forbidden One";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
@@ -2036,6 +2040,9 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 int species_apt(skill_type skill, species_type species)
 {
     static bool spec_skills_initialised = false;
+
+    if (skill >= NUM_SKILLS)
+        return UNUSABLE_SKILL;
     if (!spec_skills_initialised)
     {
         // Setup sentinel values to find errors more easily.

@@ -134,7 +134,7 @@ void uncontrolled_blink(bool override_stasis)
     // First try to find a random square not adjacent to the player,
     // then one adjacent if that fails.
     if (!random_near_space(&you, you.pos(), target)
-             && !random_near_space(&you, you.pos(), target, true))
+        && !random_near_space(&you, you.pos(), target, true))
     {
         mpr("You feel jittery for a moment.");
         return;
@@ -752,8 +752,8 @@ void you_teleport()
 }
 
 // Should return true if we don't want anyone to teleport here.
-static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = true,
-                                  bool wizard_tele = false)
+bool cell_vetoes_teleport(const coord_def cell, bool check_monsters,
+                          bool wizard_tele)
 {
     // Monsters always veto teleport.
     if (monster_at(cell) && check_monsters)
@@ -878,7 +878,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
         if (!you.see_cell(pos))
             large_change = true;
 
-        if (_cell_vetoes_teleport(pos, true, wizard_tele))
+        if (cell_vetoes_teleport(pos, true, wizard_tele))
         {
             mprf(MSGCH_WARN, "Even you can't go there right now. Sorry!");
             return false;
@@ -895,7 +895,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             newpos = random_in_bounds();
         }
         while (--tries > 0
-               && (_cell_vetoes_teleport(newpos)
+               && (cell_vetoes_teleport(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_TELE_INTO)));
 
         // Running out of tries shouldn't happen; no message. Return false so
@@ -959,7 +959,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 {
     // Attempts to teleport the player from their current location to 'where'.
     // Follows this line of reasoning:
-    //   1. Check the location (against _cell_vetoes_teleport), if valid,
+    //   1. Check the location (against cell_vetoes_teleport), if valid,
     //      teleport the player there.
     //   2. If not because of a monster, and move_monster, teleport that
     //      monster out of the way, then teleport the player there.
@@ -976,9 +976,9 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     if (!in_bounds(where))
         return false;
 
-    if (_cell_vetoes_teleport(where))
+    if (cell_vetoes_teleport(where))
     {
-        if (monster_at(where) && move_monsters && !_cell_vetoes_teleport(where, false))
+        if (monster_at(where) && move_monsters && !cell_vetoes_teleport(where, false))
         {
             // dlua only, don't heed no_tele
             monster* mons = monster_at(where);
@@ -988,7 +988,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
         {
             for (adjacent_iterator ai(where); ai; ++ai)
             {
-                if (!_cell_vetoes_teleport(*ai))
+                if (!cell_vetoes_teleport(*ai))
                 {
                     where = *ai;
                     break;
@@ -996,7 +996,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
                 else
                 {
                     if (monster_at(*ai) && move_monsters
-                            && !_cell_vetoes_teleport(*ai, false))
+                            && !cell_vetoes_teleport(*ai, false))
                     {
                         monster* mons = monster_at(*ai);
                         mons->teleport(true);
@@ -1576,13 +1576,14 @@ void attract_monsters()
 {
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (!mi->friendly() && _can_beckon(**mi))
+        if (!mi->friendly() && !(*mi)->no_tele())
             targets.push_back(*mi);
 
     near_to_far_sorter sorter = {you.pos()};
     sort(targets.begin(), targets.end(), sorter);
 
-    for (monster *mi : targets) {
+    for (monster *mi : targets)
+    {
         const int orig_dist = grid_distance(you.pos(), mi->pos());
         if (orig_dist <= 1)
             continue;
@@ -1605,8 +1606,9 @@ void attract_monsters()
         if (!mi->move_to_pos(ray.pos()))
             continue;
 
-        mprf("%s is pulled toward you!", mi->name(DESC_THE).c_str());
+        mprf("%s is attracted toward you.", mi->name(DESC_THE).c_str());
 
+        _place_tloc_cloud(old_pos);
         mi->apply_location_effects(old_pos);
         mons_relocated(mi);
     }

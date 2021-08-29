@@ -128,6 +128,17 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 3 } },
 } },
 
+{ JOB_CINDER_ACOLYTE, {
+    "CA", "Cinder Acolyte",
+    7, 5, 0,
+    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL },
+    { SPELL_FOXFIRE },
+    { "robe" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 },
+      { SK_FIRE_MAGIC, 1 }, {SK_SPELLCASTING, 1} },
+} },
+
 { JOB_CONJURER, {
     "Cj", "Conjurer",
     -1, 10, 3,
@@ -167,13 +178,12 @@ static const map<job_type, job_def> job_data =
     0, 7, 5,
     { SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
     {
-        SPELL_CORONA,
         SPELL_HIBERNATION,
         SPELL_CONFUSING_TOUCH,
         SPELL_TUKIMAS_DANCE,
         SPELL_DAZZLING_FLASH,
     },
-    { "dagger plus:1", "robe" },
+    { "dagger plus:1", "robe", "potion of invisibility" },
     WCHOICE_NONE,
     { { SK_WEAPON, 1 }, { SK_HEXES, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 3 }, },

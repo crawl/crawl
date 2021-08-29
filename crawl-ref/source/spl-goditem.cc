@@ -283,6 +283,13 @@ bool heal_monster(monster& patient, int amount)
  * [0,sides), re-rolling if they come up the same, and taking a min if they
  * come up distinct. The formula below computes the probability of rolling two
  * numbers that are both large enough, minus the probability they are the same.
+ * This probability is the sum of the geometric series with base
+ *  a = ((s - t) ^2 - (s - t)) / s^2
+ * and ratio
+ *  r = 1 / s
+ *
+ *  (a is the probability of both die being unequal and winning, r is the
+ *   probability of both coming up equal.)
  *
  * The reason for the + 1 in the inequality is that if the die is only one
  * larger than monster hp, the min of two distinct rolls is guaranteed to lose.
@@ -295,8 +302,8 @@ static int _pacify_chance(const monster_info& mi, const int pow, int scale)
     if (sides <= target + 1)
         return 0;
 
-    return (scale * ((sides - target) * (sides - target) - sides))
-         / (sides * sides);
+    return (scale * ((sides - target) * (sides - target) - (sides - target)))
+         / (sides * sides - sides);
 }
 
 static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
@@ -312,7 +319,10 @@ static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
     else
     {
         const int success = _pacify_chance(mi, pow, 100);
-        descs.push_back(make_stringf("chance to pacify: %d%%", success));
+        if (success == 0)
+            descs.push_back(make_stringf("chance to pacify: <<1%%"));
+        else
+            descs.push_back(make_stringf("chance to pacify: %d%%", success));
     }
     return descs;
 }
@@ -531,8 +541,8 @@ void debuff_player()
         {
             len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase("sticky_flame_aux");
-            you.props.erase("sticky_flame_source");
+            you.props.erase(STICKY_FLAME_AUX_KEY);
+            you.props.erase(STICKY_FLAMER_KEY);
         }
         else if (len > 1)
         {
@@ -1059,8 +1069,12 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
              attacker->conj_verb("speak").c_str());
     }
 
-    for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(where, LOS_SOLID, true); ri; ++ri)
         holy_word_monsters(*ri, pow, source, attacker);
+
+    // Sequencing so that we don't holy word a demonic guardian reacting to
+    // a player reading a holy word scroll on themselves (mantis 12600).
+    holy_word_monsters(where, pow, source, attacker);
 }
 
 void torment_player(const actor *attacker, torment_source_type taux)

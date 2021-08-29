@@ -527,6 +527,11 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (stepped)
         _moveto_maybe_repel_stairs();
+
+    update_monsters_in_view();
+    maybe_update_stashes();
+    if (check_for_interesting_features() && you.running.is_explore())
+        stop_running();
 }
 
 // Use this function whenever the player enters (or lands and thus re-enters)
@@ -550,7 +555,8 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     // Better not be an unsubmerged monster either.
     ASSERT(!monster_at(p) || monster_at(p)->submerged()
            || fedhas_passthrough(monster_at(p))
-           || mons_is_player_shadow(*monster_at(p)));
+           || mons_is_player_shadow(*monster_at(p))
+           || mons_is_wrath_avatar(*monster_at(p)));
 
     // Move the player to new location.
     you.moveto(p, true);
@@ -1120,10 +1126,12 @@ static int _player_bonus_regen()
     return rr;
 }
 
-// Inhibited regeneration: stops regeneration when monsters are visible
+/// Is the player's hp regeneration inhibited by nearby monsters?
 bool regeneration_is_inhibited()
 {
+    // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
+        || you.duration[DUR_COLLAPSE]
         || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1162,11 +1170,7 @@ int player_regen()
     if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
         rr += 20;
 
-    if (you.duration[DUR_COLLAPSE])
-        rr /= 4;
-
     if (you.duration[DUR_SICKNESS]
-        || regeneration_is_inhibited()
         || !player_regenerates_hp())
     {
         rr = 0;
@@ -1279,8 +1283,13 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += get_form()->res_fire();
     }
 
+    if (have_passive(passive_t::resist_fire))
+        ++rf;
+
     if (rf > 3)
         rf = 3;
+    if (rf > 0 && you.penance[GOD_IGNIS])
+        rf = 0;
     if (temp && you.duration[DUR_FIRE_VULN])
         rf--;
     if (rf < -3)
@@ -1374,25 +1383,25 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     return rc;
 }
 
-bool player::res_corr(bool calc_unid, bool items) const
+bool player::res_corr(bool calc_unid, bool temp) const
 {
-    // dragonskin cloak: 0.5 to draconic resistances
-    if (items && calc_unid
-        && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+    if (temp)
     {
-        return true;
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            return true;
+
+        if (get_form()->res_acid())
+            return true;
+
+        if (you.duration[DUR_RESISTANCE])
+            return true;
     }
 
     if (have_passive(passive_t::resist_corrosion))
         return true;
 
     if (get_mutation_level(MUT_ACID_RESISTANCE))
-        return true;
-
-    if (get_form()->res_acid())
-        return true;
-
-    if (you.duration[DUR_RESISTANCE])
         return true;
 
     // TODO: why doesn't this use the usual form suppression mechanism?
@@ -1402,7 +1411,7 @@ bool player::res_corr(bool calc_unid, bool items) const
         return true;
     }
 
-    return actor::res_corr(calc_unid, items);
+    return actor::res_corr(calc_unid, temp);
 }
 
 int player_res_acid(bool calc_unid, bool items)
@@ -1468,7 +1477,7 @@ bool player_kiku_res_torment()
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     if (you.is_nonliving(temp)
-        || you.is_lifeless_undead(temp || you.undead_state() == US_SEMI_UNDEAD) // XX: ugly, can this be cleaned up?
+        || you.is_lifeless_undead(temp)
         || temp && get_form()->res_pois() == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
@@ -2115,16 +2124,7 @@ int player_shield_class()
         shield += you.skill(SK_SHIELDS, 38)
                 + min(you.skill(SK_SHIELDS, 38), 3 * 38);
 
-        int stat = 0;
-        if (item.sub_type == ARM_BUCKLER)
-            stat = you.dex() * 38;
-        else if (item.sub_type == ARM_TOWER_SHIELD)
-            stat = you.dex() * 12 + you.strength() * 26;
-        else
-            stat = you.dex() * 19 + you.strength() * 19;
-        stat = stat * (base_shield + 13) / 26;
-
-        shield += stat;
+        shield += you.dex() * 38 * (base_shield + 13) / 26;
     }
 
     // mutations
@@ -2430,7 +2430,8 @@ void apply_exp()
     _handle_god_wrath(exp_gained);
 
     // evolution mutation timer
-    you.attribute[ATTR_EVOL_XP] += exp_gained;
+    if (you.attribute[ATTR_EVOL_XP] > 0)
+        you.attribute[ATTR_EVOL_XP] -= exp_gained;
 
     // modified experience due to sprint inflation
     unsigned int skill_xp = exp_gained;
@@ -3253,11 +3254,6 @@ bool player::clarity(bool calc_unid, bool items) const
     return actor::clarity(calc_unid, items);
 }
 
-bool player::gourmand(bool /*calc_unid*/, bool /*items*/) const
-{
-    return you.get_mutation_level(MUT_GOURMAND) > 0;
-}
-
 /// Does the player have permastasis?
 bool player::stasis() const
 {
@@ -3875,10 +3871,12 @@ int get_real_mp(bool include_items)
     return enp;
 }
 
+/// Does the player currently regenerate hp? Used for resting.
 bool player_regenerates_hp()
 {
-    if (you.has_mutation(MUT_NO_REGENERATION))
+    if (you.has_mutation(MUT_NO_REGENERATION) || regeneration_is_inhibited())
         return false;
+
     return true;
 }
 
@@ -4124,8 +4122,8 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         learned_something_new(HINT_YOU_POISON);
     }
 
-    you.props["poisoner"] = source;
-    you.props["poison_aux"] = source_aux;
+    you.props[POISONER_KEY] = source;
+    you.props[POISON_AUX_KEY] = source_aux;
 
     // Display the poisoned segment of our health, in case we take no damage
     you.redraw_hit_points = true;
@@ -4276,8 +4274,8 @@ void reduce_player_poison(int amount)
     if (you.duration[DUR_POISONING] <= 0)
     {
         you.duration[DUR_POISONING] = 0;
-        you.props.erase("poisoner");
-        you.props.erase("poison_aux");
+        you.props.erase(POISONER_KEY);
+        you.props.erase(POISON_AUX_KEY);
         mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
     }
 
@@ -4401,8 +4399,8 @@ bool napalm_player(int amount, string source, string source_aux)
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
-    you.props["sticky_flame_source"] = source;
-    you.props["sticky_flame_aux"] = source_aux;
+    you.props[STICKY_FLAMER_KEY] = source;
+    you.props[STICKY_FLAME_AUX_KEY] = source_aux;
 
     return true;
 }
@@ -4418,8 +4416,8 @@ void dec_napalm_player(int delay)
         else
             mprf(MSGCH_WARN, "You dip into the water, and the flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("sticky_flame_source");
-        you.props.erase("sticky_flame_aux");
+        you.props.erase(STICKY_FLAMER_KEY);
+        you.props.erase(STICKY_FLAME_AUX_KEY);
         return;
     }
 
@@ -4795,8 +4793,8 @@ bool land_player(bool quiet)
 static void _end_water_hold()
 {
     you.duration[DUR_WATER_HOLD] = 0;
-    you.props.erase("water_holder");
-    you.props.erase("water_hold_substance");
+    you.props.erase(WATER_HOLDER_KEY);
+    you.props.erase(WATER_HOLD_SUBSTANCE_KEY);
 }
 
 bool player::clear_far_engulf(bool force)
@@ -4804,7 +4802,7 @@ bool player::clear_far_engulf(bool force)
     if (!you.duration[DUR_WATER_HOLD])
         return false;
 
-    monster * const mons = monster_by_mid(you.props["water_holder"].get_int());
+    monster * const mons = monster_by_mid(you.props[WATER_HOLDER_KEY].get_int());
     if (force || !mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
     {
         if (you.res_water_drowning())
@@ -4834,7 +4832,7 @@ void handle_player_drowning(int delay)
             div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
                             * delay,
                             BASELINE_DELAY * 10);
-        ouch(dam, KILLED_BY_WATER, you.props["water_holder"].get_int());
+        ouch(dam, KILLED_BY_WATER, you.props[WATER_HOLDER_KEY].get_int());
         mprf(MSGCH_WARN, "Your lungs strain for air!");
     }
 }
@@ -5217,6 +5215,7 @@ bool player::airborne() const
 
     return you.duration[DUR_FLIGHT]   // potions, polar vortex
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
+        || you.duration[DUR_RISING_FLAME] // flavour
         || permanent_flight(true);
 }
 
@@ -5328,6 +5327,13 @@ void player::banish(const actor* /*agent*/, const string &who, const int power,
     ASSERT(!crawl_state.game_is_arena());
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
+
+    if (player_in_branch(BRANCH_ARENA))
+    {
+        simple_god_message(" prevents your banishment from the Arena!",
+                           GOD_OKAWARU);
+        return;
+    }
 
     if (elapsed_time <= attribute[ATTR_BANISHMENT_IMMUNITY])
     {
@@ -5947,7 +5953,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
         AC += 700;
 
     if (duration[DUR_CORROSION])
-        AC -= 400 * you.props["corrosion_amount"].get_int();
+        AC -= 400 * you.props[CORROSION_KEY].get_int();
 
     AC += sanguine_armour_bonus();
 
@@ -6220,9 +6226,11 @@ int player::willpower(bool /*calc_unid*/) const
 
 int player_willpower(bool calc_unid, bool temp)
 {
-
     if (temp && you.form == transformation::shadow)
         return WILL_INVULN;
+
+    if (player_equip_unrand(UNRAND_FOLLY))
+        return 0;
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 
@@ -6532,12 +6540,12 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
-    int prev_corr = props["corrosion_amount"].get_int();
+    int prev_corr = props[CORROSION_KEY].get_int();
     bool did_corrode = false;
     for (int i = 0; i < degree; i++)
         if (!x_chance_in_y(prev_corr, prev_corr + 7))
         {
-            props["corrosion_amount"].get_int()++;
+            props[CORROSION_KEY].get_int()++;
             prev_corr++;
             did_corrode = true;
         }
@@ -6555,14 +6563,10 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
  *
  * @param evildoer the cause of this acid splash.
  * @param acid_strength The strength of the acid.
- * @param allow_corrosion Whether to try and apply the corrosion debuff.
- * @param hurt_msg A message to display when dealing damage.
  */
-void player::splash_with_acid(const actor* evildoer, int acid_strength,
-                              bool allow_corrosion, const char* /*hurt_msg*/)
+void player::splash_with_acid(actor* evildoer, int acid_strength)
 {
-    if (allow_corrosion && binomial(3, acid_strength + 1, 30))
-        corrode_equipment();
+    acid_corrode(acid_strength);
 
     const int dam = roll_dice(4, acid_strength);
     const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
@@ -6578,6 +6582,12 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
         ouch(post_res_dam, KILLED_BY_ACID,
              evildoer ? evildoer->mid : MID_NOBODY);
     }
+}
+
+void player::acid_corrode(int acid_strength)
+{
+    if (binomial(3, acid_strength + 1, 30))
+        corrode_equipment();
 }
 
 bool player::drain(const actor */*who*/, bool quiet, int pow)
@@ -7007,7 +7017,7 @@ bool player::is_lifeless_undead(bool temp) const
     if (temp && undead_state() == US_SEMI_UNDEAD)
         return !you.vampire_alive;
     else
-        return undead_state(temp) != US_ALIVE;
+        return undead_state(temp) == US_UNDEAD;
 }
 
 bool player::can_polymorph() const
@@ -7221,16 +7231,19 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
     return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
+bool player::shaftable() const
+{
+    return is_valid_shaft_level()
+        && feat_is_shaftable(env.grid(pos()))
+        && !duration[DUR_SHAFT_IMMUNITY];
+}
+
 // Used for falling into traps and other bad effects, but is a slightly
 // different effect from the player invokable ability.
 bool player::do_shaft()
 {
-    if (!is_valid_shaft_level()
-        || !feat_is_shaftable(env.grid(pos()))
-        || duration[DUR_SHAFT_IMMUNITY])
-    {
+    if (!shaftable())
         return false;
-    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.
@@ -8176,4 +8189,10 @@ void player::be_agile(int pow)
     you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
     if (!were_agile)
         you.redraw_evasion = true;
+}
+
+bool player::allies_forbidden()
+{
+    return get_mutation_level(MUT_NO_LOVE)
+           || have_passive(passive_t::no_allies);
 }

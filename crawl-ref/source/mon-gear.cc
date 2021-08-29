@@ -101,15 +101,16 @@ void give_specific_item(monster* mon, const item_def& tpl)
 static bool _should_give_unique_item(monster* mon)
 {
     // Don't give Natasha an item for dying.
-    return mon->type != MONS_NATASHA || !mon->props.exists("felid_revives");
+    return mon->type != MONS_NATASHA || !mon->props.exists(FELID_REVIVES_KEY);
 }
 
 static void _give_book(monster* mon, int level)
 {
     if (mon->type == MONS_ROXANNE)
     {
-        const int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
-                                                 : BOOK_EARTH);
+        // Statue form books, heh.
+        const int which_book = (one_chance_in(3) ? BOOK_SLOTH
+                                                 : BOOK_STONE);
 
         const int thing_created = items(false, OBJ_BOOKS, which_book, level);
 
@@ -1262,8 +1263,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     if (!is_artefact(env.item[thing_created]) && !floor_tile.empty())
     {
         ASSERT(!equip_tile.empty());
-        env.item[thing_created].props["item_tile_name"] = floor_tile;
-        env.item[thing_created].props["worn_tile_name"] = equip_tile;
+        env.item[thing_created].props[ITEM_TILE_NAME_KEY] = floor_tile;
+        env.item[thing_created].props[WORN_TILE_NAME_KEY] = equip_tile;
         bind_item_tile(env.item[thing_created]);
     }
 
@@ -1625,8 +1626,8 @@ static void _give_shield(monster* mon, int level)
                       level);
         if (shield && !is_artefact(*shield)) // ineligible...
         {
-            shield->props["item_tile_name"] = "buckler_spriggan";
-            shield->props["worn_tile_name"] = "buckler_spriggan";
+            shield->props[ITEM_TILE_NAME_KEY] = "buckler_spriggan";
+            shield->props[WORN_TILE_NAME_KEY] = "buckler_spriggan";
             bind_item_tile(*shield);
         }
         break;
@@ -1636,8 +1637,8 @@ static void _give_shield(monster* mon, int level)
                                        level * 2 + 1, 1);
         if (shield && !is_artefact(*shield))
         {
-            shield->props["item_tile_name"] = "tower shield_louise";
-            shield->props["worn_tile_name"] = "tower shield_louise";
+            shield->props[ITEM_TILE_NAME_KEY] = "tower shield_louise";
+            shield->props[WORN_TILE_NAME_KEY] = "tower shield_louise";
             bind_item_tile(*shield);
         }
         break;
@@ -1655,8 +1656,8 @@ static void _give_shield(monster* mon, int level)
             }
             if (!is_artefact(*shield))
             {
-                shield->props["item_tile_name"] = "kite_shield_donald";
-                shield->props["worn_tile_name"] = "kite_shield_donald";
+                shield->props[ITEM_TILE_NAME_KEY] = "kite_shield_donald";
+                shield->props[WORN_TILE_NAME_KEY] = "kite_shield_donald";
                 bind_item_tile(*shield);
             }
         }

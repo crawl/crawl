@@ -120,8 +120,8 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     corpse.props[MONSTER_HIT_DICE] = short(mons.get_experience_level());
     if (mons.mons_species() == MONS_HYDRA)
         corpse.props[CORPSE_HEADS] = short(mons.heads());
-    if (mons.props.exists("old_heads"))
-        corpse.props[CORPSE_HEADS] = short(mons.props["old_heads"].get_int());
+    if (mons.props.exists(OLD_HEADS_KEY))
+        corpse.props[CORPSE_HEADS] = short(mons.props[OLD_HEADS_KEY].get_int());
     COMPILE_CHECK(sizeof(mid_t) == sizeof(int));
     corpse.props[MONSTER_MID]      = int(mons.mid);
 
@@ -451,14 +451,14 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
 
     if (mtyp == MONS_DEEP_TROLL)
     {
-        item.props["item_tile_name"] = "deep_troll_leather";
-        item.props["worn_tile_name"] = "deep_troll_leather";
+        item.props[ITEM_TILE_NAME_KEY] = "deep_troll_leather";
+        item.props[WORN_TILE_NAME_KEY] = "deep_troll_leather";
         bind_item_tile(item);
     }
     else if (mtyp == MONS_IRON_TROLL)
     {
-        item.props["item_tile_name"] = "iron_troll_leather";
-        item.props["worn_tile_name"] = "iron_troll_leather";
+        item.props[ITEM_TILE_NAME_KEY] = "iron_troll_leather";
+        item.props[WORN_TILE_NAME_KEY] = "iron_troll_leather";
         bind_item_tile(item);
     }
 
@@ -513,7 +513,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
 {
     if (mons.is_summoned()
         || mons.flags & (MF_BANISHED | MF_HARD_RESET)
-        || mons.props.exists("pikel_band"))
+        || mons.props.exists(PIKEL_BAND_KEY))
     {
         return nullptr;
     }
@@ -525,7 +525,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
                    && mons_gives_xp(mons, you)
                    && !force;
 
-    const bool no_coinflip = mons.props.exists("always_corpse")
+    const bool no_coinflip = mons.props.exists(ALWAYS_CORPSE_KEY)
                              || force
                              || goldify;
 
@@ -665,22 +665,21 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
-    // Damage by the spectral weapon is considered to be the player's damage ---
-    // so the player does not lose any exp from dealing damage with a spectral weapon summon
-    // ditto hep ancestors (sigh)
+    // Damage by permanent divine allies (Beogh orcs and Yredelemnul gifts)
+    // counts for half experience. Hepliaklqana ancestors and all other allies
+    // grant full experience.
     if (!invalid_monster_index(killer)
-        && (env.mons[killer].type == MONS_SPECTRAL_WEAPON
-            || mons_is_hepliaklqana_ancestor(env.mons[killer].type))
-        && env.mons[killer].summoner == MID_PLAYER)
+        && env.mons[killer].is_divine_companion()
+        && !mons_is_hepliaklqana_ancestor(env.mons[killer].type))
     {
-        return 2;
+        return 1;
     }
 
     if (killer == MHITYOU || killer == YOU_FAULTLESS)
         return 2;
 
     if (_is_pet_kill(KILL_MON, killer))
-        return 1;
+        return 2;
 
     return 0;
 }
@@ -725,7 +724,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         || mons_is_firewood(*mons)
         || mons_is_object(mons->type)
         || mons_is_tentacle_or_tentacle_segment(mons->type)
-        || mons->props.exists("ely_wrath_healed")
+        || mons->props.exists(ELY_WRATH_HEALED_KEY)
         || mons->get_experience_level() < random2(you.experience_level)
         || !one_chance_in(3))
     {
@@ -747,7 +746,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
     dprf("monster hp: %d, max hp: %d", mons->hit_points, mons->max_hit_points);
 
     mons->hit_points = 1 + random2(mons->max_hit_points);
-    mons->props["ely_wrath_healed"] = true;
+    mons->props[ELY_WRATH_HEALED_KEY] = true;
 
     dprf("new hp: %d", mons->hit_points);
 
@@ -1284,15 +1283,15 @@ static bool _mons_reaped(actor &killer, monster& victim)
 
 static bool _reaping(monster &mons)
 {
-    if (!mons.props.exists("reaping_damage"))
+    if (!mons.props.exists(REAPING_DAMAGE_KEY))
         return false;
 
-    int rd = mons.props["reaping_damage"].get_int();
+    int rd = mons.props[REAPING_DAMAGE_KEY].get_int();
     dprf("Reaping chance: %d/%d", rd, mons.damage_total);
     if (!x_chance_in_y(rd, mons.damage_total))
         return false;
 
-    actor *killer = actor_by_mid(mons.props["reaper"].get_int());
+    actor *killer = actor_by_mid(mons.props[REAPER_KEY].get_int());
     if (killer)
         return _mons_reaped(*killer, mons);
     return false;
@@ -1444,7 +1443,7 @@ static void _special_corpse_messaging(monster &mons)
     // Avoid "Sigmund returns to its original shape as it dies.".
     unwind_var<monster_type> mt(mons.type, orig);
     const int num = mons.mons_species() == MONS_HYDRA
-                    ? mons.props["old_heads"].get_int()
+                    ? mons.props[OLD_HEADS_KEY].get_int()
                     : mons.number;
     unwind_var<unsigned int> number(mons.number, num);
     const string message = " returns to " +
@@ -1690,7 +1689,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         if (!silent && !mons_reset && !was_banished)
         {
-            simple_monster_message(mons, " vapourises!",
+            simple_monster_message(mons, " vaporises!",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
@@ -1814,6 +1813,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (wereblood_bonus <= 8) // cap at +9 slay
             you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
         if (you.hp < you.hp_max
+            && !you.duration[DUR_DEATHS_DOOR]
             && !mons_is_object(mons.type)
             && adjacent(mons.pos(), you.pos()))
         {
@@ -2164,7 +2164,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             // Now that Boris is dead, he can be replaced when new levels
             // are generated.
             you.unique_creatures.set(mons.type, false);
-            you.props["killed_boris_once"] = true;
+            you.props[KILLED_BORIS_KEY] = true;
         }
         if (mons.type == MONS_JORY && !in_transit)
             blood_spray(mons.pos(), MONS_JORY, 50);
@@ -2174,8 +2174,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             hogs_to_humans();
         }
-        else if ((mons_is_mons_class(&mons, MONS_NATASHA)
-                  || mons_genus(mons.type) == MONS_FELID)
+        else if ((mons_is_mons_class(&mons, MONS_NATASHA))
                  && !in_transit && !mons.pacified()
                  && mons_felid_can_revive(&mons))
         {
@@ -2201,12 +2200,18 @@ item_def* monster_die(monster& mons, killer_type killer,
                  && mons_bennu_can_revive(&mons))
         {
             // All this information may be lost by the time the monster revives.
-            const int revives = (mons.props.exists("bennu_revives"))
-                              ? mons.props["bennu_revives"].get_byte() : 0;
+            const int revives = (mons.props.exists(BENNU_REVIVES_KEY))
+                                ? mons.props[BENNU_REVIVES_KEY].get_byte() : 0;
+            const bool duel = mons.props.exists(OKAWARU_DUEL_CURRENT_KEY);
             const beh_type att = mons.has_ench(ENCH_CHARM)
-                                     ? BEH_HOSTILE : SAME_ATTITUDE(&mons);
+                                 ? BEH_HOSTILE : SAME_ATTITUDE(&mons);
 
-            bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe);
+            // Don't consider this a victory yet, and duel the new bennu.
+            if (duel)
+                mons.props.erase(OKAWARU_DUEL_CURRENT_KEY);
+
+            bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe,
+                                          duel);
         }
     }
 
@@ -2230,12 +2235,12 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         if (mons.type == MONS_SNAPLASHER_VINE)
         {
-            if (mons.props.exists("vine_awakener"))
+            if (mons.props.exists(VINE_AWAKENER_KEY))
             {
                 monster* awakener =
-                        monster_by_mid(mons.props["vine_awakener"].get_int());
+                        monster_by_mid(mons.props[VINE_AWAKENER_KEY].get_int());
                 if (awakener)
-                    awakener->props["vines_awakened"].get_int()--;
+                    awakener->props[VINES_AWAKENED_KEY].get_int()--;
             }
         }
         destroy_tentacle(&mons);
@@ -2343,6 +2348,20 @@ item_def* monster_die(monster& mons, killer_type killer,
         return corpse;
     }
 
+    // If there are other duel targets alive (due to a slime splitting), don't
+    // count this as winning the duel.
+    if (mons.props.exists(OKAWARU_DUEL_CURRENT_KEY))
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY) && *mi != &mons)
+            {
+                mons.props.erase(OKAWARU_DUEL_CURRENT_KEY);
+                break;
+            }
+        }
+    }
+
     mons_remove_from_grid(mons);
     fire_monster_death_event(&mons, killer, false);
 
@@ -2433,8 +2452,8 @@ void unawaken_vines(const monster* mons, bool quiet)
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_SNAPLASHER_VINE
-            && mi->props.exists("vine_awakener")
-            && monster_by_mid(mi->props["vine_awakener"].get_int()) == mons)
+            && mi->props.exists(VINE_AWAKENER_KEY)
+            && monster_by_mid(mi->props[VINE_AWAKENER_KEY].get_int()) == mons)
         {
             if (you.can_see(**mi))
                 ++vines_seen;
@@ -2465,13 +2484,13 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
                  act->name(DESC_ITS).c_str());
         }
 
-        act->heal(act->props["flay_damage"].get_int());
-        act->props.erase("flay_damage");
+        act->heal(act->props[FLAY_DAMAGE_KEY].get_int());
+        act->props.erase(FLAY_DAMAGE_KEY);
     }
 
-    for (const CrawlStoreValue& store : act->props["flay_blood"].get_vector())
+    for (const CrawlStoreValue& store : act->props[FLAY_BLOOD_KEY].get_vector())
         env.pgrid(store.get_coord()) &= ~FPROP_BLOODY;
-    act->props.erase("flay_blood");
+    act->props.erase(FLAY_BLOOD_KEY);
 }
 
 void end_flayed_effect(monster* ghost)
@@ -2555,11 +2574,11 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     // Keep the rider's name, if it had one (Mercenary card).
     if (!daddy->mname.empty() && mon.type == MONS_SPRIGGAN)
         mon.mname = daddy->mname;
-    if (daddy->props.exists("reaping_damage"))
+    if (daddy->props.exists(REAPING_DAMAGE_KEY))
     {
         dprf("Mounted kill: marking the other monster as reaped as well.");
-        mon.props["reaping_damage"].get_int() = daddy->props["reaping_damage"].get_int();
-        mon.props["reaper"].get_int() = daddy->props["reaper"].get_int();
+        mon.props[REAPING_DAMAGE_KEY].get_int() = daddy->props[REAPING_DAMAGE_KEY].get_int();
+        mon.props[REAPER_KEY].get_int() = daddy->props[REAPER_KEY].get_int();
     }
 
     return monster_die(mon, killer, killer_index, false, false, true);
@@ -2790,7 +2809,7 @@ void pikel_band_neutralise()
     {
         if (mi->type == MONS_LEMURE
             && testbits(mi->flags, MF_BAND_MEMBER)
-            && mi->props.exists("pikel_band")
+            && mi->props.exists(PIKEL_BAND_KEY)
             && mi->observable())
         {
             visible_minions++;
@@ -2836,7 +2855,7 @@ void hogs_to_humans()
         if (mons_genus(mi->type) != MONS_HOG)
             continue;
 
-        if (!mi->props.exists("kirke_band")
+        if (!mi->props.exists(KIRKE_BAND_KEY)
             && !mi->props.exists(ORIG_MONSTER_KEY))
         {
             continue;
@@ -2944,11 +2963,11 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Okay, let them climb stairs now.
-    mons->props["can_climb"] = true;
+    mons->props[CAN_CLIMB_KEY] = true;
     if (!in_transit)
-        mons->props["speech_prefix"] = "twin_died";
+        mons->props[SPEECH_PREFIX_KEY] = "twin_died";
     else
-        mons->props["speech_prefix"] = "twin_banished";
+        mons->props[SPEECH_PREFIX_KEY] = "twin_banished";
 
     // If you've stabbed one of them, the other one is likely asleep still.
     if (mons->asleep())
@@ -2974,7 +2993,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (i_killed)
     {
         key += "bytwin_";
-        mons->props["speech_prefix"] = "twin_ikilled";
+        mons->props[SPEECH_PREFIX_KEY] = "twin_ikilled";
     }
 
     // Drop the final '_'.
@@ -3082,8 +3101,8 @@ void elven_twins_unpacify(monster* twin)
 
 bool mons_felid_can_revive(const monster* mons)
 {
-    return !mons->props.exists("felid_revives")
-           || mons->props["felid_revives"].get_byte() < 2;
+    return !mons->props.exists(FELID_REVIVES_KEY)
+           || mons->props[FELID_REVIVES_KEY].get_byte() < 2;
 }
 
 void mons_felid_revive(monster* mons)
@@ -3117,8 +3136,8 @@ void mons_felid_revive(monster* mons)
 
     monster_type type = mons_is_mons_class(mons, MONS_NATASHA) ? MONS_NATASHA
                                                                : mons->type;
-    const int revives = (mons->props.exists("felid_revives"))
-                        ? mons->props["felid_revives"].get_byte() + 1
+    const int revives = (mons->props.exists(FELID_REVIVES_KEY))
+                        ? mons->props[FELID_REVIVES_KEY].get_byte() + 1
                         : 1;
 
     monster *newmons =
@@ -3134,12 +3153,12 @@ void mons_felid_revive(monster* mons)
             destroy_item(ii->index());
         }
 
-        newmons->props["felid_revives"].get_byte() = revives;
+        newmons->props[FELID_REVIVES_KEY].get_byte() = revives;
     }
 }
 
 bool mons_bennu_can_revive(const monster* mons)
 {
-    return !mons->props.exists("bennu_revives")
-           || mons->props["bennu_revives"].get_byte() < 1;
+    return !mons->props.exists(BENNU_REVIVES_KEY)
+           || mons->props[BENNU_REVIVES_KEY].get_byte() < 1;
 }

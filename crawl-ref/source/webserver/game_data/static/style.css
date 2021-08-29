@@ -48,9 +48,6 @@ body {
 #stats_piety {
     color: #fce94f; /* yellow */
 }
-#stats_gozag_gold{
-    color: #babdb6; /* lightgray */
-}
 #stats_piety.penance {
     color: #a40000; /* red */
 }
@@ -485,11 +482,11 @@ body {
     color: darkgray;
 }
 
-.menu .pattern_select {
+.menu .title_prompt {
     height: 1em;
     border: 0;
-    padding: 0;
-    margin: 0;
+    padding: 0px 2px 0px 2px;
+    margin: 0px 0px 0px 4px;
     font-family: monospace;
     font-size: 16px;
 }

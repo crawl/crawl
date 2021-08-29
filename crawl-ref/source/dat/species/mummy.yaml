@@ -53,11 +53,11 @@ mutations:
   26:
     MUT_NECRO_ENHANCER: 1
 recommended_jobs:
+  - JOB_CINDER_ACOLYTE
   - JOB_WIZARD
   - JOB_CONJURER
   - JOB_NECROMANCER
   - JOB_ICE_ELEMENTALIST
-  - JOB_FIRE_ELEMENTALIST
   - JOB_SUMMONER
 # start TAG_MAJOR_VERSION == 34
 create_enum: false

@@ -66,13 +66,12 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
-Wu Jian
+Ignis
 
-The Wu Jian Council is a congregation of martial monks, ascended to divinity
-after battling their way out of the afterlife. Disciples of the Council are
-able to execute acrobatic martial maneuvers, such as wall jumps, spinning
-attacks and punishing lunges. They will eventually become able to request
-help in the form of a storm of heavenly clouds.
+Ignis the Dying Flame offers followers power over fire in many forms. All of
+Ignis' power is offered unconditionally to any who would deign to worship, but
+once used, it can never be replenished. Ignis' other worshippers deserted long
+ago; the divine fire burns low, and soon it will go out.
 %%%%
 Jiyva
 
@@ -119,8 +118,10 @@ Okawaru
 
 Okawaru is a dangerous and powerful god of battle. Followers are expected to
 constantly prove themselves in combat, and may channel Okawaru's might to
-enhance their prowess. Okawaru pays little heed to easy victories, but will
-reward worshippers for heroic feats against mighty foes.
+enhance their prowess. Okawaru demands that followers prove themselves by their
+own strength alone, and so worshippers are forbidden from gaining allies by any
+means. Okawaru pays little heed to easy victories, but will reward worshippers
+for heroic feats against mighty foes.
 %%%%
 Pakellas
 
@@ -175,12 +176,11 @@ absolutely forbidden the use of spell magic.
 %%%%
 Uskayaw
 
-Uskayaw the Reveller is a god of ecstatic dance. On the surface, Uskayaw
-appreciates many forms of worship, but in the dungeon most worshippers stick to
-the dance of combat. Uskayaw appreciates the passion and rhythm of combat,
-rewarding followers for each strike they deliver and for the damage they deal
-their foes. The longer the dance continues, the greater powers Uskayaw offers.
-When the dance ends, Uskayaw quickly loses interest.
+Uskayaw the Reveller is a god of ecstatic dance. In the dungeon, Uskayaw
+appreciates the passion and rhythm of combat, rewarding followers for each
+strike they deliver and for the damage they deal their foes. The longer the
+dance continues, the greater powers Uskayaw offers. When the dance ends,
+Uskayaw quickly loses interest.
 %%%%
 Vehumet
 
@@ -189,6 +189,14 @@ assistance in commanding the hermetic arts, and the most favoured stand to gain
 access to some of the fearsome spells in Vehumet's library. One's devotion to
 Vehumet can be proven by the causing of as much carnage and destruction as
 possible.
+%%%%
+Wu Jian
+
+The Wu Jian Council is a congregation of martial monks, ascended to divinity
+after battling their way out of the afterlife. Disciples of the Council are
+able to execute acrobatic martial maneuvers, such as wall jumps, spinning
+attacks and punishing lunges. They will eventually become able to request
+help in the form of a storm of heavenly clouds.
 %%%%
 Xom
 
@@ -293,6 +301,14 @@ Hepliaklqana's service allows worshippers to restore and strengthen their
 ancestor, to swap them with other creatures, and to choose how to remember
 their life's talents.
 %%%%
+Ignis powers
+
+Followers can fill their surroundings with a sea of fire, can call a swarm of
+foxfires against their foes, or let Ignis' heat lift them to another level of
+the dungeon. However, the guttering flames of Ignis' power will only sustain a
+limited number of invocations before only flickering embers remain. No matter
+how depleted, Ignis will always grant followers resistance to fire.
+%%%%
 Jiyva powers
 
 Jiyva's followers can request jellies, which will consume nearby items and
@@ -302,15 +318,6 @@ monsters to slime, and eventually to reshape themselves to remove harmful
 mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
-%%%%
-Wu Jian powers
-
-Disciples of the Council learn to perform three martial techniques while moving
-around in combat. Martial techniques are incompatible with more elaborate
-methods of moving, and do not combine with charging, digging, hopping, or
-rampaging. They will also be taught to move at unfathomable speeds for short
-distances, and become able to summon a storm of golden clouds to increase their
-precision and damage for as long as they keep using martial attacks.
 %%%%
 Kikubaaqudgha powers
 
@@ -354,7 +361,8 @@ Okawaru powers
 
 Followers of Okawaru will gain the ability to temporarily increase their skills
 in combat, and, much later, to deal much faster blows. Okawaru will eventually
-gift followers with ammunition, weapons and armour.
+gift followers with ammunition, weapons and armour. The most favoured of
+Okawaru may challenge their foes to honourable single combat.
 %%%%
 Pakellas powers
 
@@ -439,6 +447,15 @@ upon killing beings. As they gain favour, they will also gain enhancements to
 their destructive spells — first assistance in casting such spells and then
 increased range for conjurations. Vehumet will offer followers the knowledge of
 increasingly powerful destructive spells as they gain piety.
+%%%%
+Wu Jian powers
+
+Disciples of the Council learn to perform three martial techniques while moving
+around in combat. Martial techniques are incompatible with more elaborate
+methods of moving, and do not combine with charging, digging, hopping, or
+rampaging. They will also be taught to move at unfathomable speeds for short
+distances, and become able to summon a storm of golden clouds to increase their
+precision and damage for as long as they keep using martial attacks.
 %%%%
 Xom powers
 
@@ -527,6 +544,14 @@ remains angered, potions will have a chance to fail when quaffed, and any
 foes that are encountered may be granted potions of their own to assist them
 against the ex-worshipper.
 %%%%
+Ignis wrath
+
+The wrath of Ignis is now weaker than that of most other gods. Apostates will
+find their resistance to fire stripped away completely, and will be periodically
+assaulted by fire elementals, find their enemies strengthened by fire, or even
+have the floor burned out from beneath them. Experienced and cautious adventurers
+will likely overmaster these assaults.
+%%%%
 Jiyva wrath
 
 Jiyva's vengeance is swift and gurgling. All slimes turn against those who
@@ -534,13 +559,6 @@ offend Jiyva, and Jiyva ensures a plentiful supply of further slimes. Victims,
 too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
-%%%%
-Wu Jian wrath
-
-Those who turn against the Council must be prepared to endure death by a
-thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
-the sudden spring of traps, the flying daggers and the armies of animated
-weapons that will ambush the betrayer.
 %%%%
 Kikubaaqudgha wrath
 
@@ -631,6 +649,13 @@ Vehumet wrath
 Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by crystal spears and firestorms. Their
 own conjurations, too, are wont to misfire at the worst possible moments.
+%%%%
+Wu Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a
+thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
+the sudden spring of traps, the flying daggers and the armies of animated
+weapons that will ambush the betrayer.
 %%%%
 Xom wrath
 

@@ -309,7 +309,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
     for (const monster* mon : monsters)
     {
         monster_info mi(mon);
-        const bool zin_ided = mon->props.exists("zin_id");
+        const bool zin_ided = mon->props.exists(ZIN_ID_KEY);
         const bool has_interesting_equipment
             = _is_mon_equipment_worth_listing(mi);
         if ((divine && !zin_ided)
@@ -1777,7 +1777,7 @@ static void _config_layers_menu()
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
 #endif
         );
-        mprf(MSGCH_PROMPT, "Press escape to toggle all layers. "
+        mprf(MSGCH_PROMPT, "Press 'a' to toggle all layers. "
                            "Press any other key to exit.");
 
         switch (get_ch())
@@ -1796,7 +1796,7 @@ static void _config_layers_menu()
                       _layers_saved = _layers |= LAYER_MONSTERS;
                   break;
 #endif
-        CASE_ESCAPE if (_layers)
+        case 'a': if (_layers)
                       _layers_saved = _layers = LAYERS_NONE;
                   else
                   {

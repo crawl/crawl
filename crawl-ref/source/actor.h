@@ -228,9 +228,8 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
-    virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
-                                  bool allow_corrosion = true,
-                                  const char* hurt_msg = nullptr) = 0;
+    virtual void splash_with_acid(actor *evildoer, int acid_strength) = 0;
+    virtual void acid_corrode(int acid_strength) = 0;
     virtual bool corrode_equipment(const char* corrosion_source = "the acid",
                                    int degree = 1) = 0;
 
@@ -313,9 +312,7 @@ public:
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
 
-    virtual bool gourmand(bool, bool) const { return false; }
-
-    virtual bool res_corr(bool calc_unid = true, bool items = true) const;
+    virtual bool res_corr(bool calc_unid = true, bool temp = true) const;
     bool has_notele_item(bool calc_unid = true,
                          vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;

@@ -718,22 +718,29 @@ static string _artefact_descrip(const item_def &item)
 
 static const char *trap_names[] =
 {
-    "dart",
-    "arrow", "spear",
+#if TAG_MAJOR_VERSION == 34
+    "dart", "arrow", "spear",
+#endif
 #if TAG_MAJOR_VERSION > 34
     "dispersal",
     "teleport",
 #endif
     "permanent teleport",
-    "alarm", "blade",
-    "bolt", "net", "Zot",
+    "alarm",
+#if TAG_MAJOR_VERSION == 34
+    "blade", "bolt",
+#endif
+    "net",
+    "Zot",
 #if TAG_MAJOR_VERSION == 34
     "needle",
 #endif
-    "shaft", "passage", "pressure plate", "web",
+    "shaft",
+    "passage",
+    "pressure plate",
+    "web",
 #if TAG_MAJOR_VERSION == 34
-    "gas", "teleport",
-    "shadow", "dormant shadow", "dispersal"
+    "gas", "teleport", "shadow", "dormant shadow", "dispersal"
 #endif
 };
 
@@ -1057,18 +1064,17 @@ static skill_type _item_training_skill(const item_def &item)
 }
 
 /**
- * Whether it would make sense to set a training target for an item.
+ * Return whether the character is below a plausible training target for an
+ * item.
  *
  * @param item the item to check.
- * @param ignore_current whether to ignore any current training targets (e.g. if there is a higher target, it might not make sense to set a lower one).
+ * @param ignore_current if false, return false if there already is a higher
+ *        target set for this skill.
  */
-static bool _could_set_training_target(const item_def &item, bool ignore_current)
+static bool _is_below_training_target(const item_def &item, bool ignore_current)
 {
-    if (!crawl_state.need_save || is_useless_item(item)
-        || you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-    {
+    if (!crawl_state.need_save || is_useless_item(item))
         return false;
-    }
 
     const skill_type skill = _item_training_skill(item);
     if (skill == SK_NONE)
@@ -1080,6 +1086,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
        && you.skill(skill, 10, false, false) < target
        && (ignore_current || you.get_training_target(skill) < target);
 }
+
 
 /**
  * Produce the "Your skill:" line for item descriptions where specific skill targets
@@ -1185,13 +1192,26 @@ static void _append_weapon_stats(string &description, const item_def &item)
     const skill_type skill = _item_training_skill(item);
     const int mindelay_skill = _item_training_target(item);
 
-    const bool could_set_target = _could_set_training_target(item, true);
+    const bool below_target = _is_below_training_target(item, true);
+    const bool can_set_target = below_target
+        && in_inventory(item) && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
     if (skill == SK_SLINGS)
     {
         description += make_stringf("\nFiring bullets:    Base damage: %d",
                                     base_dam +
                                     ammo_type_damage(MI_SLING_BULLET));
+    }
+
+    if (item.base_type == OBJ_STAVES
+        && item_type_known(item)
+        && staff_skill(static_cast<stave_type>(item.sub_type)) != SK_NONE
+        && is_useless_skill(staff_skill(static_cast<stave_type>(item.sub_type))))
+    {
+        description += make_stringf(
+            "\nYour inability to study %s prevents you from drawing on the"
+            " full power of this staff in melee.\n",
+            skill_name(staff_skill(static_cast<stave_type>(item.sub_type))));
     }
 
     description += make_stringf(
@@ -1205,11 +1225,11 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (!is_useless_item(item))
     {
-        description += "\n    " + _your_skill_desc(skill,
-                    could_set_target && in_inventory(item), mindelay_skill);
+        description += "\n    "
+            + _your_skill_desc(skill, can_set_target, mindelay_skill);
     }
 
-    if (could_set_target)
+    if (below_target)
         _append_skill_target_desc(description, skill, mindelay_skill);
 }
 
@@ -1273,16 +1293,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "\n\nIt hits all enemies adjacent to the wielder, "
                            "dealing less damage to those not targeted.";
             break;
-        case SK_LONG_BLADES:
-            description += "\n\nIt can be used to riposte, swiftly "
-                           "retaliating against a missed attack.";
-            break;
         case SK_SHORT_BLADES:
             {
                 string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
                                                            : "particularly";
                 description += "\n\nIt is " + adj + " good for stabbing"
-                               " unaware enemies.";
+                               " helpless or unaware enemies.";
             }
             break;
         default:
@@ -1295,8 +1311,16 @@ static string _describe_weapon(const item_def &item, bool verbose)
     const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
                            && !item_ident(item, ISFLAG_KNOW_PLUSES);
 
+    const unrandart_entry *entry = nullptr;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
+
     // special weapon descrip
-    if (item_type_known(item) && (spec_ench != SPWPN_NORMAL || enchanted))
+    if (item_type_known(item)
+        && (spec_ench != SPWPN_NORMAL || enchanted)
+        && !skip_ego)
     {
         description += "\n\n";
 
@@ -1304,18 +1328,11 @@ static string _describe_weapon(const item_def &item, bool verbose)
         {
         case SPWPN_FLAMING:
             if (is_range_weapon(item))
-            {
-                description += "It causes projectiles fired from it to burn "
-                    "those they strike,";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "It has been specially enchanted to burn "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes and up to half "
-                           "again as much damage against particularly "
-                           "susceptible opponents.";
+                description += "It";
+            description += " burns those it strikes, dealing additional fire "
+                "damage.";
             if (!is_range_weapon(item) &&
                 (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
             {
@@ -1325,84 +1342,58 @@ static string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_FREEZING:
             if (is_range_weapon(item))
-            {
-                description += "It causes projectiles fired from it to freeze "
-                    "those they strike,";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "It has been specially enchanted to freeze "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes "
-                    "and up to half again as much damage against particularly "
-                    "susceptible opponents.";
-            if (is_range_weapon(item))
-                description += " They";
-            else
-                description += " It";
-            description += " can also slow down cold-blooded creatures.";
+                description += "It";
+            description += " freezes those it strikes, dealing additional cold "
+                "damage. It can also slow down cold-blooded creatures.";
             break;
         case SPWPN_HOLY_WRATH:
             description += "It has been blessed by the Shining One";
             if (is_range_weapon(item))
-            {
-                description += ", and any ";
-                description += ammo_name(item);
-                description += " fired from it";
-            }
+                description += ", and any ammunition fired from it causes";
             else
-                description += " to";
-            description += " cause great damage to the undead and demons.";
+                description += " to cause";
+            description += " great damage to the undead and demons.";
             break;
         case SPWPN_ELECTROCUTION:
             if (is_range_weapon(item))
-            {
-                description += "It charges the ammunition it shoots with "
-                    "electricity; occasionally upon a hit, such missiles "
-                    "may discharge and cause terrible harm.";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "Occasionally, upon striking a foe, it can "
-                    "discharge electrical energy and cause terrible harm.";
-            }
+                description += "It";
+            description += " occasionally discharges a powerful burst of "
+                "electricity upon striking a foe.";
             break;
         case SPWPN_VENOM:
             if (is_range_weapon(item))
-                description += "It poisons the ammo it fires.";
+                description += "Any ammunition fired from it";
             else
-                description += "It poisons the flesh of those it strikes.";
+                description += "It";
+            description += " poisons the flesh of those it strikes.";
             break;
         case SPWPN_PROTECTION:
             description += "It grants its wielder temporary protection when "
                 "it strikes (+7 to AC).";
             break;
         case SPWPN_DRAINING:
-            description += "A truly terrible weapon, it drains the "
-                "life of those it strikes.";
+            description += "A truly terrible weapon, it drains the life of "
+                "any living foe it strikes.";
             break;
         case SPWPN_SPEED:
             description += "Attacks with this weapon are significantly faster.";
             break;
         case SPWPN_VORPAL:
             if (is_range_weapon(item))
-            {
-                description += "Any ";
-                description += ammo_name(item);
-                description += " fired from it inflicts extra damage.";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "It inflicts extra damage upon your "
-                    "enemies.";
-            }
+                description += "It";
+            description += " inflicts extra damage upon your enemies.";
             break;
         case SPWPN_CHAOS:
             if (is_range_weapon(item))
             {
                 description += "Each projectile launched from it has a "
-                               "different, random effect.";
+                    "different, random effect.";
             }
             else
             {
@@ -1411,42 +1402,52 @@ static string _describe_weapon(const item_def &item, bool verbose)
             }
             break;
         case SPWPN_VAMPIRISM:
-            description += "It inflicts no extra harm, but heals "
-                "its wielder when it wounds a living foe.";
+            description += "It occasionally heals its wielder for a portion "
+                "of the damage dealt when it wounds a living foe.";
             break;
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
                 "magic, it inflicts extra damage on living creatures.";
             break;
         case SPWPN_DISTORTION:
-            description += "It warps and distorts space around it. "
+            description += "It warps and distorts space around it, and may "
+                "blink, banish, or inflict extra damage upon those it strikes. "
                 "Unwielding it can cause banishment or high damage.";
             break;
         case SPWPN_PENETRATION:
-            description += "Ammo fired by it passes through the "
+            description += "Any ammunition fired by it passes through the "
                 "targets it hits, potentially hitting all targets in "
                 "its path until it reaches maximum range.";
             break;
         case SPWPN_REAPING:
-            description += "If a monster killed with it leaves a "
-                "corpse in good enough shape, the corpse is "
-                "reanimated as a zombie friendly to the killer.";
+            description += "Any living foe damaged by it may be reanimated "
+                "upon death as a zombie friendly to the wielder, with an "
+                "increasing chance as more damage is dealt.";
             break;
         case SPWPN_ANTIMAGIC:
             description += "It reduces the magical energy of the wielder, "
-                    "and disrupts the spells and magical abilities of those "
-                    "hit. Natural abilities and divine invocations are not "
-                    "affected.";
+                "and disrupts the spells and magical abilities of those it "
+                "strikes. Natural abilities and divine invocations are not "
+                "affected.";
             break;
         case SPWPN_SPECTRAL:
-            description += "When it strikes, its spirit leaps out and "
-                           "fights alongside the wielder.";
+            description += "When its wielder attacks, the weapon's spirit "
+                "leaps out and strikes again. The spirit shares a part of "
+                "any damage it takes with its wielder.";
+            break;
+        case SPWPN_ACID:
+             if (is_range_weapon(item))
+                description += "Any ammunition fired from it";
+            else
+                description += "It";
+            description += " is coated in acid, damaging and corroding those "
+                "it strikes.";
             break;
         case SPWPN_NORMAL:
             ASSERT(enchanted);
             description += "It has no special brand (it is not flaming, "
-                    "freezing, etc), but is still enchanted in some way - "
-                    "positive or negative.";
+                "freezing, etc), but is still enchanted in some way - "
+                "positive or negative.";
             break;
         }
     }
@@ -1487,7 +1488,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
 
-        if (!you.could_wield(item, true) && crawl_state.need_save)
+        if (!you.could_wield(item, true, true) && crawl_state.need_save)
             description += "\nIt is too large for you to wield.";
     }
 
@@ -1605,7 +1606,10 @@ static string _describe_ammo(const item_def &item)
     {
         const int throw_delay = (10 + dam / 2);
         const int target_skill = _item_training_target(item);
-        const bool could_set_target = _could_set_training_target(item, true);
+
+        const bool below_target = _is_below_training_target(item, true);
+        const bool can_set_target = below_target && in_inventory(item)
+            && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
         description += make_stringf(
             "\nBase damage: %d  Base attack delay: %.1f"
@@ -1620,10 +1624,9 @@ static string _describe_ammo(const item_def &item)
         if (!is_useless_item(item))
         {
             description += "\n    " +
-                    _your_skill_desc(SK_THROWING,
-                        could_set_target && in_inventory(item), target_skill);
+                    _your_skill_desc(SK_THROWING, can_set_target, target_skill);
         }
-        if (could_set_target)
+        if (below_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
@@ -1640,8 +1643,8 @@ static string _warlock_mirror_reflect_desc()
     const int SH = crawl_state.need_save ? player_shield_class() : 0;
     const int reflect_chance = 100 * SH / omnireflect_chance_denom(SH);
     return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
-           "% chance to reflect enchantments and other normally unblockable "
-           "effects.";
+           "% chance to reflect attacks against your willpower and other "
+           "normally unblockable effects.";
 }
 
 static string _describe_point_change(int points)
@@ -1808,23 +1811,22 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "\n";
             description += "\nBase shield rating: "
                         + to_string(property(item, PARM_AC));
-            const bool could_set_target = _could_set_training_target(item, true);
+            const bool below_target = _is_below_training_target(item, true);
+            const bool can_set_target = below_target && in_inventory(item)
+                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
             if (!is_useless_item(item))
             {
                 description += "       Skill to remove penalty: "
                             + make_stringf("%d.%d", target_skill / 10,
-                                                target_skill % 10);
+                                                target_skill % 10) + "\n";
 
                 if (crawl_state.need_save)
                 {
-                    description += "\n                            "
-                        + _your_skill_desc(SK_SHIELDS,
-                          could_set_target && in_inventory(item), target_skill);
+                    description += _your_skill_desc(SK_SHIELDS, can_set_target,
+                                                    target_skill);
                 }
-                else
-                    description += "\n";
-                if (could_set_target)
+                if (below_target)
                 {
                     _append_skill_target_desc(description, SK_SHIELDS,
                                                                 target_skill);
@@ -1856,8 +1858,14 @@ static string _describe_armour(const item_def &item, bool verbose)
 
     const special_armour_type ego = get_armour_ego_type(item);
 
+    const unrandart_entry *entry = nullptr;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
+
     // Only give a description for armour with a known ego.
-    if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
+    if (ego != SPARM_NORMAL && item_type_known(item) && verbose && !skip_ego)
     {
         description += "\n\n";
 
@@ -1885,7 +1893,7 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         // Only add a section break if we didn't already add one before
         // printing an ego-based property.
-        if (ego == SPARM_NORMAL || !verbose)
+        if (ego == SPARM_NORMAL || !verbose || skip_ego)
             description += "\n";
         description += "\n" + art_desc;
     }
@@ -2540,7 +2548,6 @@ void describe_feature_wide(const coord_def& pos)
         if (!hint_text.empty())
         {
             feat_info f = { "", "", "", tile_def(TILEG_TODO)};
-            f.title = "Hints.";
             f.body = hint_text;
             f.tile = tile_def(TILEG_STARTUP_HINTS);
             feats.emplace_back(f);
@@ -2663,12 +2670,15 @@ static vector<command_type> _allowed_actions(const item_def& item)
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (item_equip_slot(item) == EQ_WEAPON)
         actions.push_back(CMD_UNWIELD_WEAPON);
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+        && _is_below_training_target(item, false))
+    {
+        actions.push_back(CMD_SET_SKILL_TARGET);
+    }
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (!item_is_equipped(item))
         {
             if (item_is_wieldable(item))
@@ -2676,14 +2686,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
         }
         break;
     case OBJ_MISSILES:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (!you.has_mutation(MUT_NO_GRASPING))
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (item_is_equipped(item))
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
@@ -3127,33 +3133,33 @@ string get_skill_description(skill_type skill, bool need_title)
 
     result += getLongDescription(lookup);
 
-    switch (skill)
+    if (skill == SK_INVOCATIONS)
     {
-        case SK_INVOCATIONS:
-            if (you.has_mutation(MUT_FORLORN))
-            {
-                result += "\n";
-                result += "How on earth did you manage to pick this up?";
-            }
-            else if (you_worship(GOD_TROG))
-            {
-                result += "\n";
-                result += "Note that Trog doesn't use Invocations, due to its "
-                          "close connection to magic.";
-            }
-            break;
+        if (you.has_mutation(MUT_FORLORN))
+        {
+            result += "\n";
+            result += "How on earth did you manage to pick this up?";
+        }
+        else if (invo_skill(you.religion) != SK_INVOCATIONS)
+        {
+            result += "\n";
+            result += uppercase_first(apostrophise(god_name(you.religion)))
+                      + " powers are not affected by the Invocations skill.";
+        }
+    }
+    else if (skill == invo_skill(you.religion))
+    {
+        result += "\n";
+        result += uppercase_first(apostrophise(god_name(you.religion)))
+                  + " powers are based on " + skill_name(skill) + " instead"
+                    " of Invocations skill.";
+    }
 
-        case SK_SPELLCASTING:
-            if (you_worship(GOD_TROG))
-            {
-                result += "\n";
-                result += "Keep in mind, though, that Trog would greatly "
-                          "disapprove of this.";
-            }
-            break;
-        default:
-            // No further information.
-            break;
+    if (is_harmful_skill(skill))
+    {
+        result += "\n";
+        result += uppercase_first(god_name(you.religion))
+                  + " strongly dislikes when you train this skill.";
     }
 
     return result;
@@ -3266,7 +3272,7 @@ static string _player_spell_desc(spell_type spell)
     }
 
     // Report summon cap
-    const int limit = summons_limit(spell);
+    const int limit = summons_limit(spell, true);
     if (limit)
     {
         description << "You can sustain at most " + number_in_words(limit)
@@ -3368,6 +3374,17 @@ static void _get_spell_description(const spell_type spell,
         else
             description += range_string(range, range, mons_char(mon_owner->type));
         description += "\n";
+
+        // Report summon cap
+        const int limit = summons_limit(spell, false);
+        if (limit)
+        {
+            description += make_stringf("%s can sustain at most %s creature%s "
+                               "summoned by this spell.\n",
+                               mon_owner->full_name(DESC_PLAIN).c_str(),
+                               number_in_words(limit).c_str(),
+                               limit > 1 ? "s" : "");
+        }
 
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & spflag::WL_check)
@@ -3715,7 +3732,7 @@ static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
-        { AF_BLINK,             "blink itself" },
+        { AF_BLINK,             "blink self" },
         { AF_BLINK_WITH,        "blink together with the defender" },
         { AF_COLD,              "deal up to %d extra cold damage" },
         { AF_CONFUSE,           "cause confusion" },
@@ -4258,15 +4275,26 @@ static string _monster_current_target_description(const monster_info &mi)
     if (!in_bounds(mi.pos) || !monster_at(mi.pos))
         return "";
     const monster *m = monster_at(mi.pos);
+
+    const char* pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
+    const bool plural = mi.pronoun_plurality();
+
     ostringstream result;
     if (mi.is(MB_ALLY_TARGET))
     {
         auto allies = find_allies_targeting(*m);
         if (allies.size() == 1)
-            result << "It is currently targeted by " << allies[0]->name(DESC_YOUR) << ".\n";
+        {
+            result << uppercase_first(pronoun) << " "
+                   << conjugate_verb("are", plural)
+                   << " currently targeted by "
+                   << allies[0]->name(DESC_YOUR) << ".\n";
+        }
         else
         {
-            result << "It is currently targeted by allies:\n";
+            result << uppercase_first(pronoun) << " "
+                   << conjugate_verb("are", plural)
+                   << " currently targeted by:\n";
             for (auto *a : allies)
                 result << "  " << a->name(DESC_YOUR) << "\n";
         }
@@ -4274,7 +4302,12 @@ static string _monster_current_target_description(const monster_info &mi)
 
     // TODO: this might be ambiguous, give a relative position?
     if (mi.attitude == ATT_FRIENDLY && m->get_foe())
-        result << "It is currently targeting " << m->get_foe()->name(DESC_THE) << ".\n";
+    {
+        result << uppercase_first(pronoun) << " "
+               << conjugate_verb("are", plural)
+               << " currently targeting "
+               << m->get_foe()->name(DESC_THE) << ".\n";
+    }
 
     return result.str();
 }
@@ -4631,8 +4664,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     string db_name;
 
-    if (mi.props.exists("dbname"))
-        db_name = mi.props["dbname"].get_string();
+    if (mi.props.exists(DBNAME_KEY))
+        db_name = mi.props[DBNAME_KEY].get_string();
     else if (mi.mname.empty())
         db_name = mi.db_name();
     else
@@ -4742,7 +4775,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\nIt is quickly melting away.\n";
         break;
 
+    case MONS_BRIAR_PATCH: // death msg uses "crumbling"
     case MONS_PILLAR_OF_SALT:
+        // XX why are these "quick" here but "slow" elsewhere??
         if (mi.is(MB_SLOWLY_DYING))
             inf.body << "\nIt is quickly crumbling away.\n";
         break;
@@ -4950,11 +4985,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << ii->name(DESC_A, false, true);
     }
 
-    if (mons.props.exists("blame"))
+    if (mons.props.exists(BLAME_KEY))
     {
         inf.body << "\n\nMonster blame chain:\n";
 
-        const CrawlVector& blame = mons.props["blame"].get_vector();
+        const CrawlVector& blame = mons.props[BLAME_KEY].get_vector();
 
         for (const auto &entry : blame)
             inf.body << "    " << entry.get_string() << "\n";
@@ -5247,7 +5282,7 @@ string get_command_description(const command_type cmd, bool terse)
  *
  * @param cloud_type        The cloud_type in question.
  * @return e.g. "\nThis cloud is opaque; one tile will not block vision, but
- *      multiple will. \nClouds of this kind the player makes will vanish very
+ *      multiple will. \n\nClouds of this kind the player makes will vanish very
  *      quickly once outside the player's sight."
  */
 string extra_cloud_info(cloud_type cloud_type)
@@ -5257,8 +5292,8 @@ string extra_cloud_info(cloud_type cloud_type)
         "\nThis cloud is opaque; one tile will not block vision, but "
         "multiple will.";
     const string vanish_info
-        = make_stringf("\nClouds of this kind an adventurer makes will vanish "
-                       "%s once outside their sight.",
+        = make_stringf("\n\nClouds of this kind an adventurer makes will vanish"
+                       " %s once outside their sight.",
                        opaque ? "quickly" : "almost instantly");
     return opacity_info + vanish_info;
 }

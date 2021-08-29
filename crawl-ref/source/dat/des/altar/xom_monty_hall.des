@@ -37,6 +37,7 @@ end
 
 NAME:    dk_xom_monty_hall
 TAGS:    no_item_gen no_monster_gen temple_overflow_xom temple_overflow_1
+TAGS:    transparent
 WEIGHT:  3
 KFEAT:   _ = altar_xom
 MONS:    generate_awake iguana hd:1

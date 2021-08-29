@@ -47,9 +47,8 @@ bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
                        int spell = 0, bool friendly = true);
 spret cast_summon_demon(int pow);
 spret cast_shadow_creatures(int st = SPELL_SHADOW_CREATURES,
-                                 god_type god = GOD_NO_GOD,
-                                 level_id place = level_id::current(),
-                                 bool fail = false);
+                            god_type god = GOD_NO_GOD,
+                            bool fail = false);
 spret cast_summon_horrible_things(int pow, god_type god, bool fail);
 bool can_cast_malign_gateway();
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
@@ -113,12 +112,13 @@ spret cast_infestation(int pow, bolt &beam, bool fail);
 void summoned_monster(const monster* mons, const actor* caster,
                       spell_type spell);
 bool summons_are_capped(spell_type spell);
-int summons_limit(spell_type spell);
+int summons_limit(spell_type spell, bool player);
 int count_summons(const actor *summoner, spell_type spell);
 
 bool fedhas_wall_of_briars();
 spret fedhas_grow_ballistomycete(bool fail);
-bool fedhas_overgrow();
+spret fedhas_overgrow(bool fail);
 spret fedhas_grow_oklob(bool fail);
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
+spret foxfire_swarm();

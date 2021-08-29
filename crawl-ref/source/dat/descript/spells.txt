@@ -378,6 +378,12 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
+Corrupt spell
+
+Unleashes Abyssal energies in the immediate vicinity. This changes the
+appearance of the affected area and temporarily summons creatures from the
+Abyss. This cannot be used in the Abyss itself.
+%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their
@@ -386,8 +392,9 @@ undead will decompose if affected.
 %%%%
 Creeping Frost spell
 
-Calls forth freezing cold from the walls. Any enemies of the caster standing
-next to those walls will be frozen and will find their movements slowed.
+Calls forth freezing cold from the walls and other similarly solid terrain. Any
+enemies of the caster standing next to that terrain will be frozen and will find
+their movements slowed.
 %%%%
 Crystal Bolt spell
 
@@ -531,8 +538,9 @@ with no direct line of fire required.
 %%%%
 Dream Dust spell
 
-Overwhelms the target with soporific dream dust, putting them to sleep.
-Additional dream sheep will increase the strength and duration of this effect.
+Overwhelms the target with soporific dream dust, putting them to sleep with an
+enchanting visual display. Additional dream sheep will increase the strength
+and duration of this effect.
 %%%%
 Druid's Call spell
 
@@ -935,9 +943,9 @@ Causes confusion in all who gaze upon the caster.
 %%%%
 Maxwell's Capacitive Coupling spell
 
-Gradually builds up electric charge in the caster. When a critical threshold is
-reached the charge couples with the nearest foe, vapourizing them instantly.
-The resulting charge is so intense it bypasses even electrical immunity.
+Gradually builds up electric charge in the caster, so long as they maintain
+focus (by waiting in place and not taking any other actions). When a threshold
+is reached, the charge couples with the nearest foe, vaporising them instantly.
 Higher spell power will allow the caster to accumulate charge more rapidly.
 %%%%
 Mephitic Cloud spell
@@ -954,8 +962,8 @@ caster's line of sight will end the effect.
 Metabolic Englaciation spell
 
 Lowers the metabolic rate of every creature in the caster's vicinity, slowing
-all those who are not resistant to cold. Those especially vulnerable to cold
-will be affected much more strongly, and tougher creatures will be slowed for a
+all those who are not resistant to cold. Cold-blooded creatures will be
+affected much more strongly, and tougher creatures will be slowed for a
 shorter time.
 %%%%
 Metal Splinters spell
@@ -1173,9 +1181,8 @@ damage is strongly reduced by armour.
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
-afflicted with this condition may cause the target to lose control over their
-magic, progressively hindering their chances of success as more spells are
-cast.
+afflicted with this condition causes the target to lose access to their magic,
+briefly preventing them from casting any further spells.
 %%%%
 Scattershot spell
 
@@ -1605,8 +1612,8 @@ Animates the weapon of a targeted foe, ripping it from their hands and causing
 it to attack them relentlessly. Once the target dies, the weapon will fall to
 the ground shortly thereafter.
 
-Ranged weapons and certain powerful named artefacts cannot be affected, and
-any abilities that require evocation skill to trigger will not be active.
+Certain powerful named artefacts cannot be animated, and any properties that
+require skill in evocations will not be active.
 %%%%
 Twisted Resurrection spell
 
@@ -1653,7 +1660,7 @@ It can affect targets standing in or flying above water.
 Weakening Gaze spell
 
 Irresistably weakens a creature's melee attacks for a period of time,
-requiring line of sight but not not line of fire.
+requiring line of sight but not line of fire.
 %%%%
 Wereblood spell
 

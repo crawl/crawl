@@ -196,7 +196,7 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
   Abbreviated to "Str". Increases your damage with melee and ranged weapons.
-  Affects your ability to use heavy armours and shields effectively.
+  Affects your ability to use heavy armours effectively.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -816,7 +816,7 @@ require you to wield an appropriate device to inflict worthwhile damage. Upon
 impact, missiles may become destroyed. The chance for this to occur depends on
 the type of missile.
 
-The 'F' and 'f' commands can be used to fire or throws a missile. For launchers,
+The 'F' and 'f' commands can be used to fire or throw a missile. For launchers,
 the default ammo to be fired is shown next to your launcher, or optionally in
 the main "quiver" display below your launcher. Ammo (as well as many other
 items, spells, and abilities) can fill this quiver as well.
@@ -2046,6 +2046,12 @@ Chaos Knights
   who rewards or punishes according to whim. They begin with a lightly enchanted
   leather armour, and a simple weapon of their choice.
 
+Cinder Acolytes
+  Cinder Acolytes serve Ignis, the Dying Flame, who grants them incredible
+  power over fire... but there is only so much fire left to draw on, and once
+  it burns out, acolytes may need to abandon Ignis. They start with a robe,
+  a choice of flaming weapons, and the spell Foxfire.
+
 Warrior-mage backgrounds
 ========================
 
@@ -2075,7 +2081,7 @@ Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly
   damaging foes, hexes disable and debilitate them, allowing the Enchanter to
   finish the helpless creatures in combat. The Enchanter begins with a lightly
-  enchanted dagger, a robe, and a selection of hexes.
+  enchanted dagger, a robe, a potion of invisibility, and a selection of hexes.
 
 Mage backgrounds
 ================

@@ -127,6 +127,7 @@ static vector<mutation_type> removed_mutations =
         MUT_BLURRY_VISION,
         MUT_BLINK,
         MUT_UNBREATHING,
+        MUT_GOURMAND,
 #endif
     };
 
@@ -182,11 +183,13 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  1},
     { MUT_BERSERK,             MUT_CLARITY,                 1},
     { MUT_FAST,                MUT_SLOW,                    1},
+    { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              1},
+    { MUT_EVOLUTION,           MUT_DEVOLUTION,              1},
+    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
     { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
     { MUT_HOOVES,              MUT_TALONS,                 -1}, // currently overridden by physiology_mutation_conflict
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
-    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
@@ -407,7 +410,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
         return mutation_activity_type::INACTIVE;
 
-    if (mut == MUT_DEMONIC_GUARDIAN && you.get_mutation_level(MUT_NO_LOVE))
+    if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_NIMBLE_SWIMMER)
@@ -1227,12 +1230,17 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     return amusement;
 }
 
-static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
+static bool _accept_mutation(mutation_type mutat, bool temp, bool ignore_weight)
 {
     if (!_is_valid_mutation(mutat))
         return false;
 
     if (physiology_mutation_conflict(mutat))
+        return false;
+
+    // Devolution gives out permanent badmuts, so we don't want to give it as
+    // a temporary mut.
+    if (temp && mutat == MUT_DEVOLUTION)
         return false;
 
     const mutation_def& mdef = _get_mutation_def(mutat);
@@ -1318,7 +1326,7 @@ static mutation_type _get_random_xom_mutation()
         else if (one_chance_in(5))
             mutat = _get_mut_with_use(mutflag::xom);
     }
-    while (!_accept_mutation(mutat, false));
+    while (!_accept_mutation(mutat, false, false));
 
     return mutat;
 }
@@ -1328,7 +1336,8 @@ static mutation_type _get_random_qazlal_mutation()
     return _get_mut_with_use(mutflag::qazlal);
 }
 
-static mutation_type _get_random_mutation(mutation_type mutclass)
+static mutation_type _get_random_mutation(mutation_type mutclass,
+                                          mutation_permanence_class perm)
 {
     mutflag mt;
     switch (mutclass)
@@ -1353,7 +1362,7 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
     for (int attempt = 0; attempt < 100; ++attempt)
     {
         mutation_type mut = _get_mut_with_use(mt);
-        if (_accept_mutation(mut, true))
+        if (_accept_mutation(mut, perm == MUTCLASS_TEMPORARY, true))
             return mut;
     }
 
@@ -1778,7 +1787,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
     case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_mutation(which_mutation);
+        mutat = _get_random_mutation(which_mutation, mutclass);
         break;
     case RANDOM_XOM_MUTATION:
         mutat = _get_random_xom_mutation();
@@ -1842,7 +1851,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     ASSERT(rc == 0);
 
+#ifdef USE_TILE_LOCAL
     const unsigned int old_talents = your_talents(false).size();
+#endif
 
     const int levels = (which_mutation == RANDOM_CORRUPT_MUTATION
                          || which_mutation == RANDOM_QAZLAL_MUTATION)
@@ -1996,6 +2007,15 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             invalidate_agrid(true);
             break;
 
+        case MUT_EVOLUTION:
+        case MUT_DEVOLUTION:
+            if (cur_base_level == 1)
+            {
+                you.props[EVOLUTION_MUTS_KEY] = 0;
+                set_evolution_mut_xp(mutat == MUT_DEVOLUTION);
+            }
+            break;
+
         default:
             break;
         }
@@ -2029,11 +2049,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         update_screen();
     }
 #endif
-    if (crawl_state.game_is_hints()
-        && your_talents(false).size() > old_talents)
-    {
-        learned_something_new(HINT_NEW_ABILITY_MUT);
-    }
 #ifdef DEBUG
     if (mutclass != MUTCLASS_INNATE) // taken care of in perma_mutate. Skipping this here avoids validation issues in doing repairs.
         validate_mutations(false);
@@ -2114,6 +2129,12 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     case MUT_SILENCE_AURA:
         invalidate_agrid(true);
+        break;
+
+    case MUT_EVOLUTION:
+    case MUT_DEVOLUTION:
+        if (!you.mutation[mutat])
+            you.props[EVOLUTION_MUTS_KEY] = 0;
         break;
 
     default:
@@ -2947,9 +2968,9 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
                 result++;
         }
         if (you.species == SP_DEMONSPAWN
-            && you.props.exists("num_sacrifice_muts"))
+            && you.props.exists(NUM_SACRIFICES_KEY))
         {
-            result -= you.props["num_sacrifice_muts"].get_int();
+            result -= you.props[NUM_SACRIFICES_KEY].get_int();
         }
     }
 
@@ -2964,7 +2985,7 @@ void check_demonic_guardian()
 {
     // Players hated by all monsters don't get guardians, so that they aren't
     // swarmed by hostile executioners whenever things get rough.
-    if (you.get_mutation_level(MUT_NO_LOVE))
+    if (you.allies_forbidden())
         return;
 
     const int mutlevel = you.get_mutation_level(MUT_DEMONIC_GUARDIAN);
@@ -3103,4 +3124,23 @@ void reset_powered_by_death_duration()
 {
     const int pbd_dur = random_range(2, 5);
     you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+}
+
+/// How much XP is required for your next [d]evolution mutation?
+static int _evolution_mut_xp(bool malignant)
+{
+    int xp = exp_needed(you.experience_level + 1)
+             - exp_needed(you.experience_level);
+    if (malignant)
+        return xp / 4;
+    return xp;
+}
+
+/// Update you.attribute[ATTR_EVOL_XP].
+void set_evolution_mut_xp(bool malignant)
+{
+    // Intentionally erase any 'excess' XP to avoid this triggering
+    // too quickly in the early game after big XP gains.
+    you.attribute[ATTR_EVOL_XP] = _evolution_mut_xp(malignant);
+    dprf("setting evol XP to %d", you.attribute[ATTR_EVOL_XP]);
 }

@@ -1,8 +1,9 @@
-define(["jquery", "comm", "client", "./dungeon_renderer", "./display",
-        "./minimap", "./enums", "./messages", "./options", "./text", "./menu",
-        "./player", "./mouse_control", "./ui", "./ui-layouts"],
-function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
-          options) {
+define(["jquery", "comm", "client", "key_conversion", "./dungeon_renderer",
+        "./display", "./minimap", "./enums", "./messages", "./options",
+        "./text", "./menu", "./player", "./mouse_control", "./ui",
+        "./ui-layouts"],
+function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
+        enums, messages, options) {
     "use strict";
 
     var layout_parameters = null, ui_state, input_mode;
@@ -10,11 +11,52 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
     var msg_height;
     var show_diameter = 17;
 
+    function setup_keycodes()
+    {
+        key_conversion.reset_keycodes();
+        // any keycode handling that needs to be versioned should be swapped
+        // in here. TODO: cleaner API for this?
+        // map some browser keycodes to internal keycodes used for numpad
+        // keys; see libunix.cc unixcurses_defkeys() for the basis of these.
+        // (Otherwise, these end up getting collapsed with regular numbers.)
+        key_conversion.simple[96] = -1000; // numpad 0
+        key_conversion.simple[97] = -1001; // numpad 1
+        key_conversion.simple[98] = -1002; // numpad 2
+        key_conversion.simple[99] = -1003; // numpad 3
+        key_conversion.simple[100] = -1004; // numpad 4
+        key_conversion.simple[101] = -1005; // numpad 5
+        key_conversion.simple[102] = -1006; // numpad 6
+        key_conversion.simple[103] = -1007; // numpad 7
+        key_conversion.simple[104] = -1008; // numpad 8
+        key_conversion.simple[105] = -1009; // numpad 9
+        key_conversion.simple[106] = -1015; // numpad *
+        key_conversion.simple[107] = -1016; // numpad +
+        key_conversion.simple[108] = -1019; // numpad . (some firefox versions? TODO: confirm)
+        key_conversion.simple[109] = -1018; // numpad -
+        key_conversion.simple[110] = -1019; // numpad .
+        key_conversion.simple[111] = -1012; // numpad /
+
+        // fix some function key issues (see note in key_conversions.js).
+        key_conversion.simple[112] = -265; // F1
+        key_conversion.simple[113] = -266; // F2
+        key_conversion.simple[114] = -267; // F3
+        key_conversion.simple[115] = -268; // F4
+        key_conversion.simple[116] = -269; // F5
+        key_conversion.simple[117] = -270; // F6
+        key_conversion.simple[118] = -271; // F7
+        key_conversion.simple[119] = -272; // F8
+        key_conversion.simple[120] = -273; // F9
+        key_conversion.simple[121] = -274; // F10
+        // reserve F11 for the browser (full screen)
+        // reserve F12 for toggling chat
+    }
+
     function init()
     {
         layout_parameters = null;
         ui_state = -1;
         options.clear();
+        setup_keycodes();
     }
 
     $(document).on("game_preinit game_cleanup", init);

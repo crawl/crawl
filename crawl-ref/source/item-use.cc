@@ -374,8 +374,10 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
     return choice_made;
 }
 
-static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
-                                    bool quiet = false);
+static bool _safe_to_remove_or_wear(const item_def &item, const item_def
+                                    *old_item, bool remove, bool quiet = false);
+static bool _safe_to_remove_or_wear(const item_def &item,
+                                    bool remove, bool quiet = false);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -721,12 +723,14 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // At this point, we know it's possible to equip this item. However, there
     // might be reasons it's not advisable.
-    if (!check_warning_inscriptions(new_wpn, OPER_WIELD)
-        || !_safe_to_remove_or_wear(new_wpn, false))
+    if (!check_warning_inscriptions(new_wpn, OPER_WIELD))
     {
         canned_msg(MSG_OK);
         return false;
     }
+
+    if (!_safe_to_remove_or_wear(new_wpn, you.weapon(), false))
+        return false;
 
     // Unwield any old weapon.
     if (you.weapon())
@@ -1253,6 +1257,10 @@ bool wear_armour(int item)
 
     bool swapping = false;
     const equipment_type slot = get_armour_slot(*to_wear);
+
+    if (!_safe_to_remove_or_wear(*to_wear, you.slot_item(slot), false))
+        return false;
+
     if ((slot == EQ_CLOAK
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
@@ -1261,18 +1269,12 @@ bool wear_armour(int item)
            || slot == EQ_BODY_ARMOUR)
         && you.equip[slot] != -1)
     {
-        if (!takeoff_armour(you.equip[slot]))
+        if (!takeoff_armour(you.equip[slot], true))
             return false;
         swapping = true;
     }
 
     you.turn_is_over = true;
-
-    // TODO: It would be nice if we checked this before taking off the item
-    // currently in the slot. But doing so is not quite trivial. Also applies
-    // to jewellery.
-    if (!_safe_to_remove_or_wear(*to_wear, false))
-        return false;
 
     // If it's on the ground, pick it up. Once it's picked up, there should be
     // no aborting
@@ -1326,7 +1328,9 @@ static bool _can_takeoff_armour(int item)
 // TODO: It would be nice if this were made consistent with wear_armour,
 // wield_weapon, puton_ring, etc. in terms of taking a default value of -1,
 // which has the effect of prompting for an item to take off.
-bool takeoff_armour(int item)
+//
+/// noask suppresses the "stat zero" prompt.
+bool takeoff_armour(int item, bool noask)
 {
     if (!_can_takeoff_armour(item))
         return false;
@@ -1335,7 +1339,7 @@ bool takeoff_armour(int item)
 
     // It's possible to take this thing off, but if it would drop a stat
     // below 0, we should get confirmation.
-    if (!_safe_to_remove_or_wear(invitem, true))
+    if (!noask && !_safe_to_remove_or_wear(invitem, true))
         return false;
 
     const equipment_type slot = get_armour_slot(invitem);
@@ -1483,17 +1487,13 @@ static int _prompt_ring_to_remove()
     return you.equip[eqslot];
 }
 
-// Checks whether a to-be-worn or to-be-removed item affects
-// character stats and whether wearing/removing it could be fatal.
-// If so, warns the player, or just returns false if quiet is true.
-static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet)
+// Calculate the stat bonus from an item.
+// XXX: This needs to match _stat_modifier() and get_item_description().
+static void _item_stat_bonus(const item_def &item, int &prop_str,
+                             int &prop_dex, int &prop_int, bool remove)
 {
-    if (remove && !safe_to_remove(item, quiet))
-        return false;
+    prop_str = prop_dex = prop_int = 0;
 
-    int prop_str = 0;
-    int prop_dex = 0;
-    int prop_int = 0;
     if (item.base_type == OBJ_JEWELLERY
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
@@ -1546,6 +1546,19 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         prop_int *= -1;
         prop_dex *= -1;
     }
+}
+
+enum class afsz
+{
+    go, // asked the player, who said to to proceed.
+    stop, // asked the player (or didn't because of "quiet"), who said to stop.
+    noask // no <1 stats, so not asked.
+};
+
+static afsz _abort_for_stat_zero(const item_def &item, int prop_str,
+                                 int prop_dex, int prop_int,  bool remove,
+                                 bool quiet)
+{
     stat_type red_stat = NUM_STATS;
     if (prop_str >= you.strength() && you.strength() > 0)
         red_stat = STAT_STR;
@@ -1555,10 +1568,10 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         red_stat = STAT_DEX;
 
     if (red_stat == NUM_STATS)
-        return true;
+        return afsz::noask;
 
     if (quiet)
-        return false;
+        return afsz::stop;
 
     string verb = "";
     if (remove)
@@ -1582,9 +1595,39 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     if (!yesno(prompt.c_str(), true, 'n', true, false))
     {
         canned_msg(MSG_OK);
-        return false;
+        return afsz::stop;
     }
-    return true;
+    return afsz::go;
+}
+
+// Checks whether a to-be-worn or to-be-removed item affects
+// character stats and whether wearing/removing it could be fatal.
+// If so, warns the player, or just returns false if quiet is true.
+static bool _safe_to_remove_or_wear(const item_def &item, const item_def
+                                    *old_item, bool remove, bool quiet)
+{
+    if (remove && !safe_to_remove(item, quiet))
+        return false;
+
+    int str1 = 0, dex1 = 0, int1 = 0, str2 = 0, dex2 = 0, int2 = 0;
+    afsz asked = afsz::noask;
+    if (!remove && old_item)
+    {
+        _item_stat_bonus(*old_item, str1, dex1, int1, true);
+        asked = _abort_for_stat_zero(item, str1, dex1, int1, true, quiet);
+        if (afsz::stop == asked)
+            return false;
+    }
+    _item_stat_bonus(item, str2, dex2, int2, remove);
+    return afsz::go == asked
+        || afsz::stop != _abort_for_stat_zero(item, str1+str2, dex1+dex2,
+                                              int1+int2, remove, quiet);
+}
+
+static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
+                                    bool quiet)
+{
+    return _safe_to_remove_or_wear(item, 0, remove, quiet);
 }
 
 // Checks whether removing an item would cause flight to end and the
@@ -1697,7 +1740,10 @@ static bool _swap_rings(item_def& to_puton)
     // ring slot (even if we still have empty slots).
     else if (available == 1 && !Options.jewellery_prompt)
     {
-        if (!remove_ring(unwanted, false))
+        if (!_safe_to_remove_or_wear(to_puton, &you.inv[unwanted], false))
+            return false;
+
+        if (!remove_ring(unwanted, false, true))
             return false;
     }
     // We can't put a ring on without swapping - because we found
@@ -1725,7 +1771,10 @@ static bool _swap_rings(item_def& to_puton)
             return false;
         }
 
-        if (!remove_ring(unwanted, false))
+        if (!_safe_to_remove_or_wear(to_puton, &you.inv[unwanted], false))
+            return false;
+
+        if (!remove_ring(unwanted, false, true))
             return false;
     }
 
@@ -1901,16 +1950,14 @@ static bool _puton_amulet(item_def &item,
     }
 
     item_def *old_amu = you.slot_item(EQ_AMULET, true);
-    if (old_amu)
-    {
-        // Remove the previous one.
-        if (!remove_ring(old_amu->link, true))
-            return false;
 
-        // Check for stat loss.
-        if (!_safe_to_remove_or_wear(item, false))
-            return false;
-    }
+    // Check for stat loss.
+    if (!_safe_to_remove_or_wear(item, old_amu, false))
+        return false;
+
+    // Remove the previous one.
+    if (old_amu && !remove_ring(old_amu->link, true, true))
+        return false;
 
     // puton_ring already confirmed there's room for it
     int item_slot = _get_item_slot_maybe_with_move(item);
@@ -1921,7 +1968,7 @@ static bool _puton_amulet(item_def &item,
 
 // Put on a particular ring.
 static bool _puton_ring(item_def &item, bool prompt_slot,
-                        bool check_for_inscriptions)
+                        bool check_for_inscriptions, bool noask)
 {
     vector<equipment_type> current_jewellery = _current_ring_types();
 
@@ -1972,7 +2019,7 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
     // trying to equip.
 
     // Check for stat loss.
-    if (!_safe_to_remove_or_wear(item, false))
+    if (!noask && !_safe_to_remove_or_wear(item, false))
         return false;
 
     equipment_type hand_used = EQ_NONE;
@@ -1989,7 +2036,13 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
         // Allow swapping out a ring.
         else if (you.slot_item(hand_used, true))
         {
-            if (!remove_ring(you.equip[hand_used], false))
+            if (!noask && !_safe_to_remove_or_wear(item,
+                you.slot_item(hand_used, true), false))
+            {
+                return false;
+            }
+
+            if (!remove_ring(you.equip[hand_used], false, true))
                 return false;
 
             start_delay<JewelleryOnDelay>(1, item);
@@ -2033,7 +2086,7 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
 
 // Put on a ring or amulet. (Most of the work is in _puton_item.)
 bool puton_ring(item_def &to_puton, bool allow_prompt,
-                bool check_for_inscriptions)
+                bool check_for_inscriptions, bool noask)
 {
     if (you.berserk())
     {
@@ -2058,12 +2111,13 @@ bool puton_ring(item_def &to_puton, bool allow_prompt,
     if (to_puton.base_type == OBJ_JEWELLERY && jewellery_is_amulet(to_puton))
         return _puton_amulet(to_puton, check_for_inscriptions);
     const bool prompt = allow_prompt && Options.jewellery_prompt;
-    return _puton_ring(to_puton, prompt, check_for_inscriptions);
+    return _puton_ring(to_puton, prompt, check_for_inscriptions, noask);
 }
 
 // Wraps version of puton_ring with item_def param. If slot is -1, prompt for
 // which item to put on; otherwise, pass on the item in inventory slot
-bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
+bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions,
+                bool noask)
 {
     item_def *to_puton_ptr = nullptr;
     if (slot == -1)
@@ -2077,12 +2131,15 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
     else
         to_puton_ptr = &you.inv[slot];
 
-    return puton_ring(*to_puton_ptr, allow_prompt, check_for_inscriptions);
+    return puton_ring(*to_puton_ptr, allow_prompt, check_for_inscriptions,
+                      noask);
 }
 
 // Remove the ring/amulet at given inventory slot (or, if slot is -1, prompt
 // for which piece of jewellery to remove)
-bool remove_ring(int slot, bool announce)
+//
+// noask suppresses the "stat zero" prompt.
+bool remove_ring(int slot, bool announce, bool noask)
 {
     equipment_type hand_used = EQ_NONE;
     bool has_jewellery = false;
@@ -2194,7 +2251,7 @@ bool remove_ring(int slot, bool announce)
 
     const int removed_ring_slot = you.equip[hand_used];
     item_def &invitem = you.inv[removed_ring_slot];
-    if (!_safe_to_remove_or_wear(invitem, true))
+    if (!noask && !_safe_to_remove_or_wear(invitem, true))
         return false;
 
     // Remove the ring.
@@ -2764,7 +2821,7 @@ string cannot_read_item_reason(const item_def *item)
         return "You are too confused!";
 
     // no reading while threatened (Ru/random mutation)
-    if (you.duration[DUR_NO_SCROLLS])
+    if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
         return "You cannot read scrolls in your current state!";
 
     if (silenced(you.pos()))
@@ -2883,6 +2940,14 @@ static vector<string> _desc_holy_word(const monster_info& mi)
         return { "not susceptible" };
 }
 
+static vector<string> _desc_res_torment(const monster_info& mi)
+{
+    if (mi.resists() & (MR_RES_TORMENT))
+        return { "not susceptible" };
+    else
+        return { "susceptible" };
+}
+
 class targeter_finite_will : public targeter_multimonster
 {
 public:
@@ -2911,6 +2976,20 @@ public:
         if (loc == you.pos() && you.undead_or_demonic())
             return AFF_YES;
         return targeter_multimonster::is_affected(loc);
+    }
+};
+
+class targeter_torment : public targeter_multimonster
+{
+public:
+    targeter_torment() : targeter_multimonster(&you)
+    { }
+
+    bool affects_monster(const monster_info& mon)
+    {
+        // TODO: if this is ever used for the pain card it will need an
+        // override for the player in `is_affected`
+        return !bool(mon.resists() & MR_RES_TORMENT);
     }
 };
 
@@ -2965,6 +3044,8 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
         return make_unique<targeter_holy_word>();
     case SCR_SILENCE:
         return make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
+    case SCR_TORMENT:
+        return make_unique<targeter_torment>();
     default:
         return nullptr;
     }
@@ -2991,6 +3072,8 @@ static bool _scroll_targeting_check(scroll_type scroll, dist *target)
             args.get_desc_func = _desc_holy_word;
         else if (scroll == SCR_VULNERABILITY || scroll == SCR_IMMOLATION)
             args.get_desc_func = _desc_finite_wl;
+        else if (scroll == SCR_TORMENT)
+            args.get_desc_func = _desc_res_torment;
 
         args.mode = TARG_ANY;
         args.self = confirm_prompt_type::cancel;
@@ -3016,6 +3099,7 @@ bool scroll_has_targeter(scroll_type which_scroll)
     case SCR_IMMOLATION:
     case SCR_HOLY_WORD:
     case SCR_SILENCE:
+    case SCR_TORMENT:
         return true;
     default:
         return false;
@@ -3104,6 +3188,10 @@ void read(item_def* scroll, dist *target)
 
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
+        const bool bad_item = (is_dangerous_item(*scroll, true)
+                                    || is_bad_item(*scroll))
+                            && Options.bad_item_prompt;
+
         if (stop_attack_prompt(hitfunc, verb_object.c_str(),
                                [which_scroll] (const actor* m)
                                {
@@ -3118,9 +3206,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if ((is_dangerous_item(*scroll, true)
-                  || is_bad_item(*scroll))
-                 && Options.bad_item_prompt
+        else if (bad_item
                  && !yesno(make_stringf("Really %s?%s",
                                         verb_object.c_str(),
                                         hostile_check ? ""
@@ -3131,7 +3217,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if (!hostile_check && !yesno(make_stringf(
+        else if (!bad_item && !hostile_check && !yesno(make_stringf(
             "You can't see any enemies this would affect, really %s?",
                                         verb_object.c_str()).c_str(),
                                                 false, 'n'))
@@ -3144,13 +3230,6 @@ void read(item_def* scroll, dist *target)
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
-
-    if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
-    {
-        mpr("You almost manage to decipher the scroll,"
-            " but fail in this attempt.");
-        return;
-    }
 
     const int prev_quantity = scroll->quantity;
     int link = in_inventory(*scroll) ? scroll->link : -1;
@@ -3236,7 +3315,9 @@ void read(item_def* scroll, dist *target)
         break;
 
     case SCR_SUMMONING:
-        cast_shadow_creatures(MON_SUMM_SCROLL);
+        cancel_scroll =
+                    cast_shadow_creatures(MON_SUMM_SCROLL) == spret::abort
+                    && alreadyknown;
         break;
 
     case SCR_FOG:

@@ -63,6 +63,7 @@
 #include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -443,6 +444,31 @@ void BaseRunDelay::handle()
         if (want_clear_messages())
             clear_messages();
         process_command(cmd);
+        if (you.turn_is_over
+            && (you.running.is_any_travel() || you.running.is_rest()))
+        {
+            you.running.turns_passed++;
+            // sanity check: if we get up to a large number of turns on
+            // an explore, run, or rest delay, something is extremely buggy
+            // and we should both rescue the player, and generate a crash
+            // report. The thresholds are very heuristic:
+            // Rest delay, 700 turns. A maxed ogre at hp 1 with no regen bonus
+            // takes around 510 turns to heal fully.
+            // Travel delay, 2000. Just a big number that is quite a bit
+            // bigger than any travel delay I have been able to generate. If
+            // anyone can generate this on demand it should be raised. (Or
+            // eventually, removed?)
+            // For debuggers: runmode if negative is a meaningful delay type,
+            // but when positive is used as a counter, so if it's a very large
+            // number in the assert message, this is a wait delay
+
+            const int buggy_threshold = you.running.is_rest()
+                ? 700
+                : (ZOT_CLOCK_PER_FLOOR / BASELINE_DELAY / 3);
+            ASSERTM(you.running.turns_passed < buggy_threshold,
+                    "Excessive delay, %d turns passed, delay type %d",
+                    you.running.turns_passed, you.running.runmode);
+        }
     }
 
     if (!you.turn_is_over)
@@ -596,7 +622,7 @@ void JewelleryOnDelay::finish()
 #ifdef USE_SOUND
     parse_sound(WEAR_JEWELLERY_SOUND);
 #endif
-    puton_ring(jewellery, false, false);
+    puton_ring(jewellery, false, false, true);
 }
 
 void EquipOnDelay::finish()
@@ -748,7 +774,7 @@ void ExsanguinateDelay::finish()
     you.vampire_alive = false;
     you.redraw_status_lights = true;
     calc_hp(true);
-    mpr("Now bloodless.");
+    mpr("You become bloodless.");
     vampire_update_transformations();
 }
 
@@ -756,7 +782,7 @@ void RevivifyDelay::finish()
 {
     you.vampire_alive = true;
     you.redraw_status_lights = true;
-    mpr("Now alive.");
+    mpr("You return to life.");
     temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
 }
@@ -1027,7 +1053,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             && !(mon->flags & MF_KNOWN_SHIFTER))
         {
             zin_id = true;
-            mon->props["zin_id"] = true;
+            mon->props[ZIN_ID_KEY] = true;
             discover_shifter(*mon);
             god_warning = uppercase_first(god_name(you.religion))
                           + " warns you: "
@@ -1222,7 +1248,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
-    "sense_monster", "mimic"
+    "sense_monster", MIMIC_KEY
 };
 
 static const char *_activity_interrupt_name(activity_interrupt ai)

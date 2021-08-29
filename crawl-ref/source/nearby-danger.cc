@@ -26,6 +26,7 @@
 #include "mon-tentacle.h"
 #include "player.h"
 #include "player-stats.h"
+#include "spl-damage.h"
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
@@ -457,6 +458,11 @@ void revive()
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
+    end_wait_spells(true);
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+        end_frozen_ramparts();
+
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 
@@ -466,8 +472,7 @@ void revive()
             you.duration[dur] = 0;
 
     update_vision_range(); // in case you had darkness cast before
-    you.props["corrosion_amount"] = 0;
-    you.props.erase(SAP_MAGIC_KEY);
+    you.props[CORROSION_KEY] = 0;
 
     undrain_hp(9999);
     set_hp(9999);

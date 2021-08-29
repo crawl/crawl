@@ -877,6 +877,7 @@ enum monster_type                      // env.mons[].type
     MONS_BAI_SUZHEN,
     MONS_BAI_SUZHEN_DRAGON,
     MONS_MAGGIE,
+    MONS_MLIOGLOTL,
     MONS_HEADMASTER,
 #endif
     // Sprint uniques:
@@ -913,7 +914,7 @@ enum monster_type                      // env.mons[].type
     MONS_SENSED_FRIENDLY,
     MONS_PLAYER,                // a certain ugly creature
 #if TAG_MAJOR_VERSION > 34
-    MONS_PLAYER_SHADOW,         // Dithmenos
+    MONS_PLAYER_SHADOW,         // Dithmenos / god wrath
     MONS_ANCESTOR,              // Hepliaklqana
     MONS_ANCESTOR_KNIGHT,
     MONS_ANCESTOR_BATTLEMAGE,
@@ -955,7 +956,7 @@ enum monster_type                      // env.mons[].type
 
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
-    MONS_PLAYER_SHADOW,         // Dithmenos
+    MONS_PLAYER_SHADOW,         // Dithmenos / god wrath
 
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,
@@ -1125,6 +1126,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_THUNDERHULK,
     MONS_IRONBOUND_BEASTMASTER,
     MONS_SALAMANDER_TYRANT,
+    MONS_MLIOGLOTL,
     MONS_HEADMASTER,
     MONS_LIVING_SPELL,
     MONS_WALKING_TOME,

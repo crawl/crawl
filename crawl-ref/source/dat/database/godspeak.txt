@@ -456,6 +456,9 @@ else
     return "plaything"
 end
 }}
+######################################
+# Miscellaneous god messages.
+######################################
 %%%%
 recite_closure
 
@@ -478,6 +481,26 @@ w:5
 
 w:3
 "In fire! In pain!"
+%%%%
+Ignis elemental wrath
+
+"Attack, my last stalwart servants!"
+
+Ignis wails with rage, and rains down burning fury!
+
+Ignis calls forth spirits of fire to unmake you!
+
+"Burn! Burn until nothing is left!"
+
+"These will know how to inflict the punishment due to you!"
+
+"Betrayer! Apostate! Perish!"
+
+w:5
+"With a thousand fires I burned cities, but these will suffice for you!"
+
+w:5
+"My hands, my teeth, my burning tears: these will never betray me!"
 %%%%
 ######################################
 # Welcome messages on game restoration
@@ -533,6 +556,10 @@ Gozag says: Greed is good.
 Hepliaklqana welcome
 
 Hepliaklqana says: Your past becomes your present!
+%%%%
+Ignis welcome
+
+The flames of Ignis gently warm you.
 %%%%
 Jiyva welcome
 

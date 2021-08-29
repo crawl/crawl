@@ -118,6 +118,10 @@ A broken pillar
  remembrance...”
     -KJV Bible, 2 Samuel 18:18.
 %%%%
+A crumbling gateway
+
+<Desolation>
+%%%%
 A faded altar of an unknown god
 
 “Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I
@@ -139,6 +143,14 @@ A flagged portal
  But we conquered them, and slew them.”
     -Thomas Love Peacock, “The War Song of Dinas Vawr”. 1829.
 %%%%
+A gateway back into the Dungeon
+
+“O Progeny of Heaven! Empyreal Thrones!
+ With reason hath deep silence and demur
+ Seized us, though undismayed. Long is the way
+ And hard, that out of Hell leads up to light.”
+    -John Milton, _Paradise Lost_. 1674 (2nd Ed.)
+%%%%
 A gateway to Hell
 
 “I am the way into the city of woe.
@@ -159,7 +171,7 @@ A gateway to a ziggurat
 
 “Captain: Take off every ‘zig’!!
  Captain: For great justice.”
-    -Zero Wing
+    -_Zero Wing_. 1990.
 %%%%
 A gateway to the decaying netherworld of Tartarus
 
@@ -222,9 +234,31 @@ A rock wall
    A year whose days are long.”
     -Oscar Wilde, “The Ballad of Reading Gaol”. 1898.
 %%%%
+A shaft
+
+“Gravity, a mere nuisance to Christian, was a terror to Pope, Pagan, and
+ Despair. To the mouse and any smaller animal it presents practically no
+ dangers. You can drop a mouse down a thousand-yard mine shaft; and, on
+ arriving at the bottom it gets a slight shock and walks away, provided
+ that the ground is fairly soft. A rat is killed, a man is broken, a
+ horse splashes.”
+    -J.B.S. Haldane, “On Being The Right Size”. March 1926
+%%%%
+A staircase leading out of the dungeon
+
+“We shall not cease from exploration
+ And the end of all our exploring
+ Will be to arrive where we started
+ And know the place for the first time.”
+    -T.S. Eliot, “Little Gidding”, _Four Quartets_. 1943
+%%%%
 A staircase to the Ecumenical Temple
 
 <Temple>
+%%%%
+A staircase to the Elven Halls
+
+<Elven Halls>
 %%%%
 A staircase to the Orcish Mines
 
@@ -290,6 +324,11 @@ Antaeus
  was a son of Earth.”
     -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
+
+"The head foreman in the mine, called Antaeus,
+ was an obese giant with a thick black beard
+ who actually seemed to draw his strength from Mother Earth."
+    -Primo Levi, "The Periodic Table". 1975.
 %%%%
 arbalest
 
@@ -438,6 +477,38 @@ Crazy Yiuf
  Have all built their nests in my beard!’”
     -Edward Lear, _A Book of Nonsense [No. 1]_. 1846.
 %%%%
+Desolation
+
+“In the salt mines
+ I saw the salt
+ in this shaker.
+ I know you won’t believe me,
+ but there
+ it sings,
+ the salt sings, the skin
+ of the salt mines
+ sings
+ with a mouth choking
+ on dirt.
+ Alone
+ when I heard
+ the voice
+ of salt,
+ I trembled
+ in the empty
+ desert.
+ Near Antafagusta
+ the whole
+ salted plain
+ shouts out
+ in its
+ cracked
+ voice
+ a pitiful
+ song.”
+    -Pablo Neruda, "Ode to Salt", 1957.
+     trans. Philip Levine, published 2013
+%%%%
 Dispater
 
 “Hoc idem magis ostendit antiquius Iovis nomen: nam olim Diovis et Diespiter
@@ -465,6 +536,20 @@ Duvessa
  The best beauty is bred in the brain.’”
     -Aesop & Walter Crane, _The Baby's Own Aesop_, 36: “Brother & Sister”.
 1887.
+%%%%
+Elven Halls
+
+“Elves are wonderful. They provoke wonder.
+ Elves are marvelous. They cause marvels.
+ Elves are fantastic. They create fantasies.
+ Elves are glamorous. They project glamour.
+ Elves are enchanting. They weave enchantment.
+ Elves are terrific. They beget terror.
+ The thing about words is that meanings can twist just like a snake, and if you
+ want to find snakes look for them behind words that have changed their meaning.
+ No one ever said elves are _nice_.
+ Elves are _bad_.”
+    -Terry Pratchett, _Lords and Ladies_. 1992
 %%%%
 Edmund
 
@@ -723,6 +808,16 @@ Sticky Flame spell
  for the rest of his life.”
     -Terry Pratchett, “Jingo”. 1997.
 %%%%
+Storm Form spell
+
+“Stormform is said to cause
+ A tempest of winds and showers,
+ Beware its powers, beware its powers.
+ Though its coming brings the gods their night,
+ It obliges a bloodred spren.
+ Beware its end, beware its end.”
+    -Brandon Sanderson, “Words of Radiance”. 2014.
+%%%%
 Summon Demon spell
 
 “'Tis now the very witching time of night,
@@ -836,6 +931,17 @@ animal skin
  Why he put the skin side outside,
  Why he turned them inside outside.”
     -Anonymous, in Wells' _A Parody Anthology_, p. 120. 1904.
+%%%%
+Animate Dead spell
+
+“Remember, I am not recording the vision of a madman. The sun does not more
+ certainly shine in the heavens, than that which I now affirm is true. Some
+ miracle might have produced it, yet the stages of the discovery were distinct
+ and probable. After days and nights of incredible labour and fatigue, I
+ succeeded in discovering the cause of generation and life; nay, more, I became
+ myself capable of bestowing animation upon lifeless matter.”
+    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
+     Vol. I, Chapter 3. 1818 (1st Ed.)
 %%%%
 apocalypse crab
 
@@ -998,6 +1104,16 @@ cacodemon
  Cocytus.”
     -John Fletcher, _The Knight of Malta_. 1647.
 %%%%
+calcifying dust cloud
+
+“There is shadow under this red rock,
+ (Come in under the shadow of this red rock),
+ And I will show you something different from either
+ Your shadow at morning striding behind you
+ Or your shadow at evening rising to meet you;
+ I will show you fear in a handful of dust.”
+    -T.S. Eliot, "The Waste Land". 1922
+%%%%
 catoblepas
 
 “So passed he over into the island, taking with him the two brothers of
@@ -1060,6 +1176,14 @@ crimson imp
  substitute in their place imps.”
     -Martin Luther
 %%%%
+curse skull
+
+“Good friend for Jesus’ sake forbear,
+ To dig the dust enclosed here.
+ Blessed be the man that spares these stones,
+ And cursed be he that moves my bones.”
+    -Epitaph on William Shakespeare's grave
+%%%%
 daeva
 
 “Between these twain the Daevas also chose not aright, for infatuation came
@@ -1114,6 +1238,27 @@ demon whip
  fell, grasped vainly at the stone, and slid into the abyss.”
     -J.R.R. Tolkien, _The Fellowship of the Ring_. II, 5, “The Bridge of
      Khazad-dûm”. 1954.
+%%%%
+diamond obelisk
+
+“As one example of the meanings inherent in a form, let us examine a particular
+ form of vertical stone marker, variously called stele, obelisk, standing-stone,
+ and memorial column. These have been historically and commonly used to
+ commemorate honored phenomena. So, when a people wish to remember an important
+ relationship, event or personage, a location is dedicated to it and often
+ marked with an enduring and aspiring vertical form or sets of them. In natural
+ language, a vertical stone means: an aspiring connector between us (on earth)
+ and an ideal (up there); that we ‘stand up’ with pride about this honored
+ phenomenon. The marker is a symbolic inhabitation of the place it occupies. Its
+ size and workmanship is a sacrifice of much work and resources to a memory. It
+ is a strong suggestion (because we left it to them and it is of durable
+ material) that future people also give honor to the memorialized phenomenon.
+ When we use this particular physical form of the vertical marker, both its
+ historic use as an honorific and its meanings in natural language may well send
+ a message that this is an honored place, a place about a ‘good’ both in our
+ culture and in the culture of future observers.”
+    -“Expert Judgment on Markers to Deter Inadvertent Human Intrusion into the
+      Waste Isolation Pilot Plant”, Sandia National Laboratories report. 1993
 %%%%
 dire flail
 
@@ -1170,6 +1315,28 @@ efreet
  bring it to you before you stand up. I am powerful enough to do this.”
     -The Quran, Sura 27 Al-Naml
 %%%%
+eidolon
+
+“No sooner had sleep caught him, dissolving all his grief
+ as mists of refreshing slumber poured around him there—
+ his powerful frame was bone-weary from charging Hector
+ straight and hard to the walls of windswept Troy—
+ than the ghost of stricken Patroclus drifted up...
+ He was like the man to the life, every feature,
+ the same tall build and the fine eyes and voice
+ and the very robes that used to clothe his body.
+ Hovering at his head the phantom rose and spoke:
+ ‘Sleeping, Achilles? You’ve forgotten me, my friend.
+ You never neglected me in life, only now in death.
+ Bury me, quickly—let me pass the Gates of Hades.
+ They hold me off at a distance, all the souls,
+ the shades of the burnt-out, breathless dead,
+ never to let me cross the river, mingle with them...
+ They leave me to wander up and down, abandoned, lost
+ at the House of Death with the all-embracing gates.’”
+    -Homer, _The Iliad_, XXIII, 72-88.
+     trans. Robert Fagles, 1990.
+%%%%
 electric golem
 
 “I sing the Body electric”
@@ -1209,6 +1376,42 @@ emperor scorpion
     -Cassius Dio, _Roman History_, LXVI, xvii, 2. 222 A.D.
      trans. Earnest Cary, 1925.
 %%%%
+entropy weaver
+
+“SEE! warp is stretched
+ For warrior’s fall;
+ Lo, weft in loom,
+ ’Tis wet with blood;
+ Now, fight foreboding,
+ ’Neath friends’ swift fingers
+ Our gray woof waxeth
+ With war’s alarms,
+ Our warp blood-red,
+ Our weft corse-blue.
+
+ This woof is y-woven
+ With entrails of men;
+ This warp is hard weighted
+ With heads of the slain;
+ Spears blood-besprinkled
+ For spindles we use,
+ Our loom iron-bound,
+ And arrows our reels;
+ With swords for our shuttles
+ This war-woof we work;
+ So weave we, weird sisters,
+ Our war-winning woof.
+
+ Now war-winner walketh
+ To weave in her turn,
+ Now Sword-swinger steppeth,
+ Now Swift-stroke, now Storm;
+ When they speed the shuttle
+ How spear-heads shall flash!
+ Shields crash, and helm-gnawer
+ On harness bite hard!”
+    -_The Story of Burnt Njal_, trans. George Dasent. 1861
+%%%%
 ettin
 
 “But he had not been long in his hiding-hole, before the awful Ettin came in;
@@ -1231,6 +1434,20 @@ eveningstar
     -T. M. Allison, “The Flail and Kindred Tools (from a historical and
      literary standpoint)”, _Archaeologia Aeliana_, Third Series, vol. IV.
      1908.
+%%%%
+Executioner
+
+“Behold the Lord High Executioner
+ A personage of noble rank and title —
+ A dignified and potent officer
+ Whose functions are particularly vital!
+ Defer, defer
+ To the Lord High Executioner!
+ Defer, defer
+ To the noble Lord, to the noble Lord
+ To the Lord High Executioner!”
+    -Gilbert and Sullivan, “Behold the Lord High Executioner”,
+      _The Mikado_. 1885
 %%%%
 executioner's axe
 
@@ -1263,6 +1480,14 @@ falchion
  And these same crosses spoil me.”
     -William Shakespeare, _King Lear_, V, iii. 1608.
 %%%%
+fenstrider witch
+
+“All the infections that sun sucks up
+ From bogs, fens, flats, on Prosper fall and make him
+ By inch-meal a disease! His spirits hear me
+ And yet I needs must curse.”
+    -William Shakespeare, _The Tempest_, II, 2. 1611.
+%%%%
 fire crab
 
 “The planet brought forth scintillating jewelled scuttling crabs, which [they]
@@ -1287,13 +1512,22 @@ flail
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
      “Jon Huss and the Hussite Wars”. 1878.
 %%%%
+flayed ghost
+
+“Solamen miseris socios habuisse doloris.”
+    -Christopher Marlowe, _Doctor Faustus_. 1604
+%%%%
 flying skull
 
 “Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
  excellent fancy. He hath bore me on his back a thousand times, and now how
  abhorr'd in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1.
-1603.
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
+%%%%
+frozen axe "Frostbite"
+
+“Revenge is a dish best served cold.”
+    -Klingon proverb, _Star Trek II: The Wrath of Khan_. 1982
 %%%%
 ghost moth
 
@@ -1581,6 +1815,14 @@ iguana
     -_Khuddaka Nikāya_, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
      trans. Robert Chalmers, 1895.
 %%%%
+Injury Mirror ability
+
+“Will you take the pain
+ I will give to you?
+ Again and again
+ And will you return it?”
+    -Depeche Mode, "Strangelove". 1987
+%%%%
 Iskenderun's Battlesphere spell
 
 “Maxim 4: Close air support covereth a multitude of sins.”
@@ -1761,6 +2003,19 @@ manual
 “Manuals have their uses... but they are not to be confused with living.”
     -Robert Fulghum
 %%%%
+meliai
+
+“And Heaven came, bringing on night and longing for love, and he lay about Earth
+ spreading himself full upon her. Then the son from his ambush stretched forth
+ his left hand and in his right took the great long sickle with jagged teeth,
+ and swiftly lopped off his own father's members and cast them away to fall
+ behind him. And not vainly did they fall from his hand; for all the bloody
+ drops that gushed forth Earth received, and as the seasons moved round she bare
+ the strong Erinyes and the great Giants with gleaming armour, holding long
+ spears in their hands, and the Nymphs whom they call Meliae all over the
+ boundless earth.”
+    -Hesiod, _Theogony_, 182-187, trans. H.G. Evelyn-White. 1920
+%%%%
 merfolk
 
 “Again at length my thought reviving came,
@@ -1776,7 +2031,18 @@ merfolk
 %%%%
 merfolk aquamancer
 
-<merfolk>
+“Lord, Lord! methought, what pain it was to drown!
+ What dreadful noise of waters in mine ears!
+ What ugly sights of death within mine eyes!
+ Methought I saw a thousand fearful wrecks,
+ Ten thousand men that fishes gnawed upon,
+ Wedges of gold, great anchors, heaps of pearl,
+ Inestimable stones, unvalued jewels,
+ All scattered in the bottom of the sea:
+ Some lay in dead men’s skulls; and in those holes
+ Where eyes did once inhabit, there were crept,
+ As ’t were in scorn of eyes, reflecting gems.”
+    -William Shakespeare, _King Richard III_, I, iv. 1597
 %%%%
 merfolk avatar
 
@@ -1905,6 +2171,19 @@ nameless horror
  hideous, and it leaped straight out at Ged's face.”
     -Ursula K. Le Guin, _A Wizard Of Earthsea_. 1968.
 %%%%
+Necromutation spell
+
+“Don’t sing if you want to live long
+ They have no use for your song
+ You’re dead, you’re dead, you’re dead
+ You’re dead and outta this world
+
+ You’ll never get a second chance
+ Plan all your moves in advance
+ Stay dead, stay dead, stay dead
+ Stay dead and outta this world”
+    -Norma Tanega, “You’re Dead”. 1966
+%%%%
 needle
 
 “I pray that, risen from the dead,
@@ -1998,6 +2277,19 @@ orange demon
  Whose name supplies the long-sought rhyme for ‘orange.’”
     -Arthur Guiterman, “Local Note”. 1934.
 %%%%
+Orb Guardian
+
+“X gon' give it to ya (what)
+ F*** waitin' for you to get it on your own, X gon' deliver to ya
+ Knock knock, open up the door, it's real
+ With the non-stop pop-pop from stainless steel
+ [...]
+ First we gonna rock, then we gonna roll
+ Then we let it pop, go, let it go
+ X gon' give it to ya, he gon' give it to ya
+ X gon' give it to ya, he gon' give it to ya”
+    -DMX, "X Gon' Give It To Ya". 2002
+%%%%
 orb of fire
 
 “There 's not the smallest orb which thou behold'st
@@ -2029,6 +2321,16 @@ phantom
 “Who wondrous things concerning our welfare, And straunge phantomes doth lett
  us ofte foresee.”
     -Spenser, _The Faerie Queene_ II. xii. 47
+%%%%
+phantom mirror
+
+“Down at that far end of the hallway, the mirror hovered, shadowing us. We
+ discovered (very late at night such a discovery is inevitable) that there is
+ something monstrous about mirrors. That was when Bioy remembered a saying by
+ one of the heresiarchs of Uqbar: ‘Mirrors and copulation are abominable,
+ for they multiply the number of mankind.’”
+    -Jorge Luis Borges, _Tlön, Uqbar, Orbis Tertius_. 1947
+      trans. Andrew Hurley, 1998.
 %%%%
 phase bat
 
@@ -2094,6 +2396,39 @@ potion of degeneration
  literally takes the bread from the mouths of little children...
  then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
+%%%%
+potion of invisibility
+
+“I shall never forget that dawn, and the strange horror of seeing that my hands
+ had become as clouded glass, and watching them grow clearer and thinner as the
+ day went by, until at last I could see the sickly disorder of my room through
+ them, though I closed my transparent eyelids. My limbs became glassy, the bones
+ and arteries faded, vanished, and the little white nerves went last. I gritted
+ my teeth and stayed there to the end. At last only the dead tips of the
+ fingernails remained, pallid and white, and the brown stain of some acid, upon
+ my fingers.”
+    -H.G. Wells, _The Invisible Man_, Chapter 20. 1897
+%%%%
+potion of lignification
+
+“Before her prayer was ended, torpor seized
+ on all her body, and a thin bark closed
+ around her gentle bosom, and her hair
+ became as moving leaves; her arms were changed
+ to waving branches, and her active feet
+ as clinging roots were fastened to the ground—
+ her face was hidden with encircling leaves.”
+    -Ovid, _Metamorphoses_, Book I:253-259, trans. Brookes More. 1922
+%%%%
+potion of resistance
+
+“Aha! will fate play tricks upon me? Will the elements lay plots against me?
+ Shall fire, air, and water make a combined attack against me? Well, they
+ shall know what a determined man can do. I will not yield. I will not stir
+ a single foot backwards, and it will be seen whether man or nature is to
+ have the upper hand!”
+    -Jules Verne, _Journey into the Interior of the Earth_. 1864
+     trans. F.A. Malleson, 1877
 %%%%
 profane servitor
 
@@ -2256,8 +2591,10 @@ ring of magical power
 <ring>
 %%%%
 ring of poison resistance
-
-<ring>
+ Buttercup:    “And to think, all that time it was your cup that was poisoned.”
+ Man in Black: “They were both poisoned. I spent the last few years building
+                up an immunity to iocane powder.”
+    -_The Princess Bride_. 1987
 %%%%
 ring of positive energy
 
@@ -2273,11 +2610,33 @@ ring of protection from cold
 %%%%
 ring of protection from fire
 
-<ring>
+“And these three men, Shadrach, Meshach, and Abednego, fell down bound into the
+ midst of the burning fiery furnace.
+
+ Then Nebuchadnezzar the king was astonished, and rose up in haste, and spake,
+ and said unto his counsellors, Did not we cast three men bound into the midst
+ of the fire? They answered and said unto the king, True, O king.
+
+ He answered and said, Lo, I see four men loose, walking in the midst of the
+ fire, and they have no hurt; and the form of the fourth is like the Son of God.
+
+ Then Nebuchadnezzar came near to the mouth of the burning fiery furnace, and
+ spake, and said, Shadrach, Meshach, and Abednego, ye servants of the most high
+ God, come forth, and come hither. Then Shadrach, Meshach, and Abednego, came
+ forth of the midst of the fire.
+
+ And the princes, governors, and captains, and the king’s counsellors, being
+ gathered together, saw these men, upon whose bodies the fire had no power, nor
+ was an hair of their head singed, neither were their coats changed, nor the
+ smell of fire had passed on them.”
+    -KJV Bible, Daniel 3:23-27.
 %%%%
 ring of willpower
 
-<ring>
+“I am, indeed, a king, because I know how to rule myself.”
+    -Pietro Aretino, letter to Mr. Agostino Ricchi, May 10th, 1537. from
+      _The Works of Aretino, Translated into English from the original Italian_,
+      trans. Samuel Putnam. 1926
 %%%%
 ring of see invisible
 
@@ -2313,6 +2672,21 @@ rotten bat
 royal mummy
 
 <mummy>
+%%%%
+Sacrifice Love ability
+
+“Every thing is related in them which bears reference to my accursed origin;
+ the whole detail of that series of disgusting circumstances which produced it
+ is set in view; the minutest description of my odious and loathsome person is
+ given, in language which painted your own horrors, and rendered mine
+ ineffaceable. I sickened as I read. ‘Hateful day when I received life!’ I
+ exclaimed in agony. ‘Cursed creator! Why did you form a monster so hideous that
+ even you turned from me in disgust? God in pity made man beautiful and
+ alluring, after his own image; but my form is a filthy type of yours, more
+ horrid from its very resemblance. Satan had his companions, fellow-devils, to
+ admire and encourage him; but I am solitary and detested.’”
+    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
+     Vol. II, Chapter 7. 1818 (1st Ed.)
 %%%%
 salamander
 
@@ -2384,13 +2758,17 @@ scroll of enchant weapon
 %%%%
 scroll of fear
 
-“We can easily forgive a child who is afraid of the dark;
- the real tragedy of life is when men are afraid of the light.”
-    -Plato
+“I will revenge my injuries: if I cannot inspire love, I will cause fear.”
+    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
+     Vol. II, Chapter 9. 1818 (1st Ed.)
 %%%%
 scroll of fog
 
-<scroll>
+“I used to hate writing assignments, but now I enjoy them. I realized that the
+ purpose of writing is to inflate weak ideas, obscure poor reasoning, and
+ inhibit clarity. With a little practice, writing can be an intimidating and
+ impenetrable fog!”
+    -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993
 %%%%
 scroll of holy word
 
@@ -2414,11 +2792,34 @@ scroll of immolation
 %%%%
 scroll of magic mapping
 
-<scroll>
+“‘What a useful thing a pocket-map is!’ I remarked.
+ ‘That’s another thing we’ve learned from your Nation,’ said Mein Herr,
+    ‘map-making. But we’ve carried it much further than you. What do you
+    consider the largest map that would be really useful?’
+ ‘About six inches to the mile.’
+ ‘Only six inches!’ exclaimed Mein Herr. ‘We very soon got to six yards to the
+     mile. Then we tried a hundred yards to the mile. And then came the grandest
+     idea of all! We actually made a map of the country, on the scale of a mile
+     to the mile!’
+ ‘Have you used it much?’ I enquired.
+ ‘It has never been spread out, yet,’ said Mein Herr: ‘the farmers objected:
+     they said it would cover the whole country, and shut out the sunlight! So
+     we now use the country itself, as its own map, and I assure you it does
+     nearly as well.’”
+    -Lewis Carroll, _Sylvie and Bruno Concluded_, Chapter XI. 1895
 %%%%
 scroll of noise
 
-<scroll>
+“The nature of the place where the Library was founded—a sanatorium rumored to
+ harbor the pitiably deformed—had proven a lure to people with no desire at all
+ for ‘regular human communication.’ I remember the case of a man who was normal
+ in every respect, in words, in reasoning, in the practice of his profession,
+ but strayed from this ‘normalcy’ in only one way: his inexplicable need to fill
+ thousands of sheets of foolscap paper with seemingly meaningless words,
+ phonemes close to wailing sounds, cries of fury and pain in relentless
+ successions, fragments of sentences and pleas addressed to God-knows-whom.”
+    -Giorgio de Maria, _The Twenty Days of Turin_, 1975.
+     trans. Ramon Glazov, 2016
 %%%%
 scroll of silence
 
@@ -2635,6 +3036,29 @@ fustibalus
     -Virgil, Aeneid 9
      trans. E. Fairfax Taylor
 %%%%
+giant club "Skullcrusher"
+
+“Or burst the vanish’d Hero’s lofty mound;
+ Far on the solitary shore he sleeps:
+ He fell, and falling nations mourn’d around;
+ But now not one of saddening thousands weeps,
+ Nor warlike worshipper his vigil keeps
+ Where demi-gods appear’d, as records tell.
+ Remove yon skull from out the scatter’d heaps:
+ Is that a temple where a God may dwell?
+ Why ev’n the worm at last disdains her shatter’d cell!
+
+ Look on its broken arch, its ruin’d wall,
+ Its chambers desolate, and portals foul:
+ Yes, this was once Ambition’s airy hall,
+ The dome of Thought, the palace of the Soul:
+ Behold through each lack-lustre, eyeless hole,
+ The gay recess of Wisdom and of Wit
+ And Passion’s host, that never brook’d control:
+ Can all saint, sage, or sophist ever writ,
+ People this lonely tower, this tenement refit?”
+    -Lord Byron, _Childe Harold's Pilgrimage_, Canto the Second, Stanzas V-VI
+%%%%
 sling bullet
 
 “For when things are once come to the execution, there is no secrecy comparable
@@ -2692,6 +3116,20 @@ spatial vortex
  stuns the brain and numbs us with the black extra-cosmic gulfs it throws open
  before our frenzied eyes.”
     -H.P. Lovecraft, “The Colour out of Space”. 1927.
+%%%%
+spatial maelstrom
+
+“In any composition, the solid narrates the anomalies generated by the void, or
+ the infection of the void through the solid (where the void comes to the solid,
+ it works as a convoluting plague, a coiling swirling epidemic rather than a
+ nullifying process or a solid-annihilating agent); in a composition there is no
+ pure solid but a defiled one, a diseased and deflowered solid.
+ [...]
+ The only way that the solid can initialize its architectonic and compositional
+ activities (processes for survival, development, etc.) is by letting the void
+ in. The dynamic traits of solid can only be actuated when solid is eaten,
+ convoluted and messed up by the void. There is no other option for solid.”
+    -Reza Negarestani, _Cyclonopedia: Complicity with Anonymous Materials_. 2008
 %%%%
 spear
 
@@ -2833,6 +3271,27 @@ storm dragon scales
 
 <steam dragon scales>
 %%%%
+Summon Illusion spell
+
+“I am just a copy of a copy of a copy
+ Everything I say has come before
+ Assembled into something into something into something
+ I don’t know for certain anymore
+
+ I am just a shadow of a shadow of a shadow
+ Always trying to catch up with myself
+ I am just an echo of an echo of an echo
+ Listening to someone’s cry for help
+
+ Look what you had to start
+ Why all the change of heart?
+ You need to play your part
+ A copy of a copy of a—”
+    -Nine Inch Nails, “Copy Of A”. 2013
+
+# Sadly, player illusions don't seem to work with the database, so I can't
+# associate this quote with player illusions themselves.
+%%%%
 sun demon
 
 “Behold him setting in his western skies,
@@ -2863,6 +3322,25 @@ swamp worm
  Did, even as I, in the end rejoice,
  Since the voice of death must be His true voice.”
     -Arthur Edward Waite, “At The End of Things”. 1906.
+%%%%
+Swiftness spell
+
+“JUST WALK OUT
+ you can leave!!!
+  work
+  social thing
+  movies
+  home
+  class
+  dentist
+  clothes shoppi
+  too fancy weed store
+  cops if your quick
+  friend ships
+ IF IT SUCKS... HIT DA BRICKS!!
+ real winners quit” [sic]
+   -Admin, @dasharez0ne Twitter. March 30, 2018
+# https://twitter.com/dasharez0ne/status/979810839749210112/
 %%%%
 tengu
 
@@ -3013,6 +3491,12 @@ troll leather armour
  That is a thing that I'll not submit to.”
     -Henrik Ibsen, _Peer Gynt_ . 1867.
 %%%%
+tyrant leech
+ Scully: “Where the hell did it come from?”
+ Mulder: “I don’t know, but it looks like I’m going to have to tell Skinner
+          that his suspect is a giant bloodsucking worm after all.”
+    -_The X-Files_, “The Host”. 1994
+%%%%
 ufetubus
 
 “We were permitted to shriek in the tongue of dwarfs and demons”
@@ -3045,6 +3529,18 @@ unseen horror
  Floats, tho’ unseen, amongst us.”
     -Percy Bysshe Shelley, “Hymn to Intellectual Beauty”, I, 1-2. 1816.
 %%%%
+ushabti
+
+“Spell for causing a shabti to do work for a man in the realm of the dead:
+ O shabti, allotted to me, if I be summoned or if I be detailed to do any work
+ which has to be done in the realm of the dead, if indeed any obstacles are
+ implanted for you therewith as a man at his duties, you shall detail yourself
+ for me on every occasion of making arable the fields, of flooding the banks or
+ of conveying sand from east to west; ‘Here I am’, you shall say.
+
+    -Spell 6, _Book of the Dead_, from _Ancient Egyptian Book of the Dead:
+     Journey through the afterlife_, edited by John H. Taylor. 2010
+%%%%
 vampire
 
  • Scuze me. My friend Burt says you're a vampire hunter. 'zat so?
@@ -3067,11 +3563,11 @@ vampire bat
 %%%%
 very ugly thing
 
-“All the infections that sun sucks up
- From bogs, fens, flats, on Prosper fall and make him
- By inch-meal a disease! His spirits hear me
- And yet I needs must curse. ”
-    -William Shakespeare, _The Tempest_, II, 2. 1611.
+“I'm ugly, I'm ugly as sin,
+ But beautiful's out, ugly's in.
+ If you're ugly like me, you're in good company.
+ There are millions of us who are ugly.”
+    -_The Muppet Show_, “Ugly Song”. 1977
 %%%%
 vine stalker
 
@@ -3102,7 +3598,9 @@ wand of charming
 %%%%
 wand of digging
 
-<Passwall spell>
+“Great holes secretly are digged where earth’s pores ought to suffice, and
+ things have learnt to walk that ought to crawl.”
+    -H.P. Lovecraft, "The Festival". 1925
 %%%%
 wand of mindburst
 
@@ -3122,7 +3620,9 @@ wand of paralysis
 %%%%
 wand of polymorph
 
-<wand>
+“Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in
+ seinem Bett zu einem ungeheueren Ungeziefer verwandelt.”
+    -Franz Kafka, _Die Verwandlung_. 1915
 %%%%
 wand of random effects
 
@@ -3174,14 +3674,15 @@ Waterstrike spell
 
 %%%%
 Wereblood spell
-[Howling in the background]
- — Inga: Werewolf!
- — Dr. Frankenstein: Werewolf?
- — Igor: There.
- — Dr. Frankenstein: What?
- — Igor: There, wolf. There, castle.
-    -Young Frankenstein. 1974.
 
+“I was not there for rehearsal, I don’t need it any more
+ When I show up just in time to pop, you can clear the goddamn floor
+ Empty out the locker room, let me find my space
+ Let him who thinks he knows no fear look well upon my face
+
+ Nameless bodies in unremembered rooms
+ Know how a man becomes a beast when the wolfbane blooms”
+    -The Mountain Goats, “Werewolf Gimmick”. 2015
 %%%%
 wolf
 
@@ -3240,6 +3741,18 @@ wraith
  Although we grope with little faith,
  Give me the heart to fight—and lose.”
     -Louis Untermeyer, “Prayer”. 1919.
+%%%%
+wretched star
+
+“Stare into the sun
+ Wherever you may roam
+ Feel it calling you home
+ Despite the mounting danger
+ Stare into the sun
+ Let its fire fill you
+ Whatever doesn’t kill you
+ Only makes you stranger”
+    -The Sunbeams, “The Tug”. 2020
 %%%%
 ynoxinul
 

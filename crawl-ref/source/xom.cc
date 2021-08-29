@@ -2840,7 +2840,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > random2(5) && x_chance_in_y(7, sever)
-        && !you.get_mutation_level(MUT_NO_LOVE))
+        && !you.allies_forbidden())
     {
         return XOM_GOOD_SINGLE_ALLY;
     }
@@ -2854,13 +2854,13 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_SNAKES;
 
     if (tension > random2(10) && x_chance_in_y(10, sever)
-        && !you.get_mutation_level(MUT_NO_LOVE))
+        && !you.allies_forbidden())
     {
         return XOM_GOOD_ALLIES;
     }
     if (tension > random2(8) && x_chance_in_y(11, sever)
         && _find_monster_with_animateable_weapon()
-        && !you.get_mutation_level(MUT_NO_LOVE))
+        && !you.allies_forbidden())
     {
         return XOM_GOOD_ANIMATE_MON_WPN;
     }
@@ -3419,6 +3419,7 @@ static void _xom_good_teleport(int /*sever*/)
     {
         count++;
         you_teleport_now();
+        maybe_update_stashes();
         more();
         if (one_chance_in(10) || count >= 7 + random2(5))
             break;
@@ -3449,6 +3450,7 @@ static void _xom_bad_teleport(int /*sever*/)
     do
     {
         you_teleport_now();
+        maybe_update_stashes();
         more();
         if (count++ >= 7 + random2(5))
             break;

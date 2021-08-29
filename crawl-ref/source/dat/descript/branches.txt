@@ -269,3 +269,8 @@ of the cult's legendary treasure yet remain.
 
 # important note: the Twins were religion '2', as TSO is '1'. Not 'S'.
 %%%%
+Arena
+
+Okawaru's most favoured followers are granted access to the Arena to duel
+against their foes.
+%%%%

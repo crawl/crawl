@@ -380,31 +380,31 @@ static void _jiyva_effects(int /*time_delta*/)
 
 static void _evolve(int /*time_delta*/)
 {
-    if (int lev = you.get_mutation_level(MUT_EVOLUTION))
-        if (one_chance_in(2 / lev)
-            && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
-               > (int)exp_needed(you.experience_level + 1))
-        {
-            you.attribute[ATTR_EVOL_XP] = 0;
-            mpr("You feel a genetic drift.");
-            bool evol = one_chance_in(5) ?
-                delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
-                mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
-                       "evolution", false, false, false, false, MUTCLASS_NORMAL);
-            // it would kill itself anyway, but let's speed that up
-            if (one_chance_in(10)
-                && (!you.rmut_from_item()
-                    || one_chance_in(10)))
-            {
-                const string reason = (you.get_mutation_level(MUT_EVOLUTION) == 1)
-                                    ? "end of evolution"
-                                    : "decline of evolution";
-                evol |= delete_mutation(MUT_EVOLUTION, reason, false);
-            }
-            // interrupt the player only if something actually happened
-            if (evol)
-                more();
-        }
+    const bool malignant = you.has_mutation(MUT_DEVOLUTION);
+    if (!malignant && !you.has_mutation(MUT_EVOLUTION))
+        return;
+
+    if (you.attribute[ATTR_EVOL_XP] > 0)
+        return;
+    set_evolution_mut_xp(malignant);
+
+    mpr("You feel a genetic drift.");
+    const mutation_type typ = malignant ? RANDOM_BAD_MUTATION : RANDOM_GOOD_MUTATION;
+    const char* const reason = malignant ? "hidden defects" : "hidden potential";
+    if (!mutate(typ, reason, false, false, false, false, MUTCLASS_NORMAL))
+        return;
+
+    int &muts = you.props[EVOLUTION_MUTS_KEY].get_int();
+    ++muts;
+    if (muts >= 2)
+    {
+        muts -= 2;
+        if (malignant)
+            delete_mutation(MUT_DEVOLUTION, "hidden defects expressed", false);
+        else
+            delete_mutation(MUT_EVOLUTION, "hidden potential expressed", false);
+    }
+    more();
 }
 
 // Get around C++ dividing integers towards 0.
@@ -446,7 +446,7 @@ static struct timed_effect timed_effects[] =
 #endif
     { _abyss_speed,                  100,   300, false },
     { _jiyva_effects,                100,   300, false },
-    { _evolve,                      5000, 15000, false },
+    { _evolve,                       100,   300, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
@@ -1051,7 +1051,7 @@ void timeout_malign_gateways(int duration)
                     dur *= 10;
                     mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
                         caster, dur);
-                    tentacle->props["base_position"].get_coord()
+                    tentacle->props[BASE_POSITION_KEY].get_coord()
                                         = tentacle->pos();
                     tentacle->add_ench(kduration);
 

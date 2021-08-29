@@ -335,19 +335,21 @@ public:
     void fire() override;
 
     static void schedule(coord_def pos, int revives, beh_type attitude,
-                         unsigned short foe)
+                         unsigned short foe, bool duel)
     {
-        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe));
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe, duel));
     }
 protected:
     bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
-                        unsigned short _foe)
-        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe)
+                        unsigned short _foe, bool _duel)
+        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe),
+          duel(_duel)
     {
     }
     int revives;
     beh_type attitude;
     unsigned short foe;
+    bool duel;
 };
 
 class infestation_death_fineff : public final_effect

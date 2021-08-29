@@ -636,6 +636,12 @@ void init_element_colours()
                               {40, YELLOW},
                               {10, WHITE},
                             }));
+    add_element_colour(new random_element_colour_calc(
+                            ETC_CANDLES, "candles",
+                            { {40,  RED},
+                              {40,  YELLOW},
+                              {40,  WHITE},
+                            }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

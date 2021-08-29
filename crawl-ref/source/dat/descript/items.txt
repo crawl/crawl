@@ -222,8 +222,8 @@ recommended to wear a pair of warm gloves.
 %%%%
 book of iron
 
-An ancient, metal-bound spellbook, covered in dark red blotches. It's
-possible that these are rust stains... and it's possible they're not.
+An ancient, metal-bound spellbook, covered in dark red blotches. Are they
+rust stains, or..?
 %%%%
 book of lightning
 
@@ -291,7 +291,7 @@ book of the spheres
 
 A book containing a comprehensive, well-rounded collection of sphere-related
 spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
-but sadly, the remainder of the book has been completely vaporized.
+but sadly, the remainder of the book has been completely vaporised.
 %%%%
 book of stone
 
@@ -371,7 +371,7 @@ book of touch
 
 A book describing spells requiring very close proximity to their target. The
 author seems to have had a low opinion of their wizardly peers, and spends much
-of the text describing the hygeine and social etiquette needed to enter close
+of the text describing the hygiene and social etiquette needed to enter close
 proximity to other sentient beings.
 %%%%
 book of transfigurations
@@ -515,7 +515,7 @@ A flail with long spikes and a heavy head.
 %%%%
 double sword
 
-A magical weapon with two razor-sharp blades.
+A fearsome weapon with a forked, razor-sharp blade.
 %%%%
 eggplant
 
@@ -530,7 +530,8 @@ forces of evil.
 %%%%
 eveningstar
 
-The opposite of a morningstar.
+The opposite of a morningstar. A balanced mace with a long shaft and a metal
+head covered in lethal spikes.
 %%%%
 everburning encyclopedia
 
@@ -812,7 +813,7 @@ A potion containing the essence of life.
 potion of brilliance
 
 A potion which increases the power of the drinker's spells and halves their
-mana cost (rounding up).
+magic cost (rounding up).
 %%%%
 potion of cancellation
 
@@ -878,8 +879,9 @@ fire, cold, electricity, poison, and acid.
 %%%%
 potion of attraction
 
-A potion which makes the drinker attract enemies, pulling them quickly closer
-for the duration of the effect.
+A potion which makes the drinker attract enemies, translocating them quickly closer
+for the duration of the effect. The effect is surprisingly subtle, and unwary
+victims may sleep through it entirely.
 %%%%
 quad damage
 
@@ -1274,7 +1276,8 @@ considerable amount of time to load and fire.
 %%%%
 triple sword
 
-A magical weapon with three great razor-sharp blades.
+A formidable weapon created by a master craftsman. The blade of the sword forks
+into three great razor-sharp edges.
 %%%%
 trishula
 

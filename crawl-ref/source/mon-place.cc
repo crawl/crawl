@@ -372,7 +372,7 @@ static bool _has_big_aura(monster_type mt)
 static bool _is_incompatible_monster(monster_type mt)
 {
     return mons_class_is_stationary(mt)
-        || god_hates_monster(mt);
+           || god_hates_monster(mt);
 }
 
 static bool _is_banded_monster(monster_type mt)
@@ -830,7 +830,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         if (monster *member = _place_monster_aux(band_template, mon, place))
         {
             member->flags |= MF_BAND_MEMBER;
-            member->props["band_leader"].get_int() = mon->mid;
+            member->props[BAND_LEADER_KEY].get_int() = mon->mid;
             member->set_originating_map(mon->originating_map());
 
             // Priestly band leaders should have an entourage of the
@@ -845,10 +845,10 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
                 // has an artificially large XP modifier to compensate for
                 // this.
                 member->flags |= MF_NO_REWARD;
-                member->props["pikel_band"] = true;
+                member->props[PIKEL_BAND_KEY] = true;
             }
             else if (mon->type == MONS_KIRKE)
-                member->props["kirke_band"] = true;
+                member->props[KIRKE_BAND_KEY] = true;
         }
     }
     dprf(DIAG_DNGN, "Placing %s at %d,%d", mon->name(DESC_PLAIN, true).c_str(),
@@ -872,8 +872,8 @@ monster* get_free_monster()
 
 void mons_add_blame(monster* mon, const string &blame_string)
 {
-    const bool exists = mon->props.exists("blame");
-    CrawlStoreValue& blame = mon->props["blame"];
+    const bool exists = mon->props.exists(BLAME_KEY);
+    CrawlStoreValue& blame = mon->props[BLAME_KEY];
     if (!exists)
         blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
     blame.get_vector().push_back(blame_string);
@@ -1225,7 +1225,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {
-        mon->props["polar_vortex_since"].get_int() = you.elapsed_time;
+        mon->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
         mon->add_ench(mon_enchant(ENCH_POLAR_VORTEX, 0, 0, INFINITE_DURATION));
     }
 
@@ -1235,7 +1235,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         set_ancestor_spells(*mon);
         if (mg.props.exists(MON_GENDER_KEY)) // move this out?
             mon->props[MON_GENDER_KEY] = mg.props[MON_GENDER_KEY].get_int();
-        mon->props["dbname"] = mons_class_name(mon->type);
+        mon->props[DBNAME_KEY] = mons_class_name(mon->type);
     }
 
     if (mon->type == MONS_HELLBINDER || mon->type == MONS_CLOUD_MAGE
@@ -1289,19 +1289,28 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         else
             give_item(mon, place.absdepth(), summoned);
 
+
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
-        const item_def* wpn = mon->mslot_item(MSLOT_WEAPON);
+        item_def* wpn = mon->mslot_item(MSLOT_WEAPON);
         if (!wpn)
         {
-            mon->destroy_inventory();
-            env.mid_cache.erase(mon->mid);
-            mon->reset();
-            env.mgrid(fpos) = NON_MONSTER;
-            return 0;
+            // If they got created with an alt weapon, swap it in.
+            item_def* alt_wpn = mon->mslot_item(MSLOT_ALT_WEAPON);
+            if (alt_wpn != nullptr)
+            {
+                swap(mon->inv[MSLOT_WEAPON], mon->inv[MSLOT_ALT_WEAPON]);
+                wpn = alt_wpn;
+            } else {
+                mon->destroy_inventory();
+                env.mid_cache.erase(mon->mid);
+                mon->reset();
+                env.mgrid(fpos) = NON_MONSTER;
+                return 0;
+            }
         }
-        else
-            mon->colour = wpn->get_colour();
+
+        mon->colour = wpn->get_colour();
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -1364,12 +1373,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                            mg.summon_type != SPELL_TUKIMAS_DANCE,
                            mg.summon_type);
 
-        if (mg.summon_type > 0 && mg.summoner && !(mg.flags & MG_DONT_CAP))
+        if (mg.summon_type > 0 && mg.summoner)
         {
             // If this is a band member created by shadow creatures, link its
             // ID and don't count it against the summon cap
             if (mg.summon_type == SPELL_SHADOW_CREATURES && leader)
-                mon->props["summon_id"].get_int() = leader->mid;
+                mon->props[SUMMON_ID_KEY].get_int() = leader->mid;
             else
             {
                 summoned_monster(mon, mg.summoner,
@@ -1437,9 +1446,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             const monster* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
                                  + sum->full_name(DESC_A)));
-            if (sum->props.exists("blame"))
+            if (sum->props.exists(BLAME_KEY))
             {
-                const CrawlVector& oldblame = sum->props["blame"].get_vector();
+                const CrawlVector& oldblame = sum->props[BLAME_KEY].get_vector();
                 for (const auto &bl : oldblame)
                     mons_add_blame(mon, bl.get_string());
             }
@@ -2611,7 +2620,7 @@ static monster_type _pick_zot_exit_defender()
         // If Boris has spawned once and is not
         // currently alive he has a chance of coming for you on
         // the orb run
-        if (you.props["killed_boris_once"]
+        if (you.props[KILLED_BORIS_KEY]
             && !you.unique_creatures[MONS_BORIS] && one_chance_in(10))
         {
             return MONS_BORIS;
@@ -2867,7 +2876,7 @@ conduct_type god_hates_monster(monster_type type)
  */
 bool mons_can_hate(monster_type type)
 {
-    return you.get_mutation_level(MUT_NO_LOVE)
+    return you.allies_forbidden()
         // don't turn foxfire, guardian golem, etc hostile
         && !mons_is_conjured(type)
         // ignore things like tentacles, butterflies, plants, etc
@@ -2915,6 +2924,7 @@ conduct_type god_hates_monster(const monster &mon)
         if (mon.how_chaotic())
             return DID_CHAOS;
     }
+
     if (god_hates_spellcasting(you.religion) && mon.is_actual_spellcaster())
         return DID_SPELL_CASTING;
 
@@ -3126,7 +3136,7 @@ void replace_boris()
     // Initial generation is governed by the vault uniq_boris. Once he is killed
     // a first time, as long as he isn't alive somewhere, he can regenerate when
     // a new level is entered.
-    if (!you.props["killed_boris_once"]
+    if (!you.props[KILLED_BORIS_KEY]
         || you.unique_creatures[MONS_BORIS]
         || !one_chance_in(6))
     {

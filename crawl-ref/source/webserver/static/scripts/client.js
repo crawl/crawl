@@ -321,6 +321,36 @@ function (exports, $, key_conversion, chat, comm) {
         }
         if ($(document.activeElement).hasClass("text")) return;
 
+
+        // normalize numpad keycodes. I just couldn't find a good way to do this
+        // across browsers aside from use of the modern `code` values, but our
+        // key handling is generally not well kitted-out for these. We use
+        // relatively (but not fully) standard keycodes here that later get
+        // mapped to crawl-internal values on current versions.
+        if (e.originalEvent.code // TODO: update jquery
+            && e.which >= 48 && e.which <= 57
+            // don't do this unless the key would be further handled -- these
+            // keycodes are otherwise dropped
+            && 96 in key_conversion.simple)
+        {
+            switch (e.originalEvent.code)
+            {
+                case "Numpad0": e.which = 96; break;
+                case "Numpad1": e.which = 97; break;
+                case "Numpad2": e.which = 98; break;
+                case "Numpad3": e.which = 99; break;
+                case "Numpad4": e.which = 100; break;
+                case "Numpad5": e.which = 101; break;
+                case "Numpad6": e.which = 102; break;
+                case "Numpad7": e.which = 103; break;
+                case "Numpad8": e.which = 104; break;
+                case "Numpad9": e.which = 105; break;
+                // TODO: NumpadEqual behaves differently than other numpad
+                // keys, I'm leaving it alone for now
+                default: break;
+            }
+        }
+
         // Give the game a chance to handle the key
         if (!retrigger_event(e, "game_keydown"))
             return;
@@ -385,7 +415,7 @@ function (exports, $, key_conversion, chat, comm) {
                 e.preventDefault();
                 send_keycode(key_conversion.simple[e.which]);
             }
-            //else
+            // else
             //    log("Key: " + e.which);
         }
     }
@@ -980,6 +1010,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
         chat.clear();
+        key_conversion.reset_keycodes();
 
         watching = false;
     }
@@ -1068,6 +1099,13 @@ function (exports, $, key_conversion, chat, comm) {
         set("xl", data.xl);
         set("char", data.char);
         set("place", data.place);
+        if (data.turn && data.dur)
+        {
+            set("turn", data.turn);
+            set("dur", format_duration(parseInt(data.dur)));
+
+            new_list.removeClass("no_game_times");
+        }
         set("god", data.god || "");
         set("title", data.title);
         set("idle_time", format_idle_time(data.idle_time));
@@ -1148,6 +1186,29 @@ function (exports, $, key_conversion, chat, comm) {
         return "<a href='#watch-" + data.username + "'></a>";
     }
 
+    function format_duration(seconds)
+    {
+        var elem = $("<span></span>");
+        if (seconds == 0)
+        {
+            elem.text("");
+        }
+        else if (seconds < 60)
+        {
+            elem.text(seconds + "s");
+        }
+        else if (seconds < (60 * 60))
+        {
+            elem.text(Math.floor(seconds / 60) + "m");
+        }
+        else
+        {
+            elem.text(Math.floor(seconds / (60 * 60)) + "h " +
+                (Math.floor(seconds / 60) % 60) + "m");
+        }
+        return elem;
+    }
+
     function format_idle_time(seconds)
     {
         var elem = $("<span></span>");
@@ -1157,15 +1218,15 @@ function (exports, $, key_conversion, chat, comm) {
         }
         else if (seconds < 120)
         {
-            elem.text(seconds + " s");
+            elem.text(seconds + "s");
         }
         else if (seconds < (60 * 60))
         {
-            elem.text(Math.round(seconds / 60) + " min");
+            elem.text(Math.round(seconds / 60) + "m");
         }
         else
         {
-            elem.text(Math.round(seconds / (60 * 60)) + " h");
+            elem.text(Math.round(seconds / (60 * 60)) + "h");
         }
         return elem;
     }

@@ -2939,7 +2939,7 @@ ENDMAP
 
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
-TAGS:   no_monster_gen extra
+TAGS:   no_monster_gen extra transparent
 ITEM:   stone w:15 / arrow / bolt / spear / any potion w:10
 MAP
 x+xx
@@ -2949,7 +2949,7 @@ xxxx
 ENDMAP
 
 NAME:    minmay_variable_closet
-TAGS:    extra
+TAGS:    extra transparent
 DEPTH:   D:9-, Depths
 ITEM:    any weapon, any missile, any armour, any scroll
 ITEM:    any jewellery, any potion, any book
@@ -2968,7 +2968,7 @@ ENDMAP
 
 NAME:   library_closet
 DEPTH:  D:9-, Depths, Elf, Crypt, Snake, Orc
-TAGS:   extra
+TAGS:   extra transparent
 WEIGHT: 5
 ITEM:   any book w:20 / any scroll / nothing
 MAP
@@ -2979,7 +2979,7 @@ xxxx
 ENDMAP
 
 NAME:   eino_small_chamber_without_monster
-TAGS:   allow_dup extra ruin_lair ruin_abyss
+TAGS:   allow_dup extra ruin_lair ruin_abyss transparent
 DEPTH:  D:4-, Depths, Lair, Abyss
 MAP
  xxxxx
@@ -2991,7 +2991,7 @@ xx...xx
 ENDMAP
 
 NAME:   eino_tiny_chamber
-TAGS:   allow_dup extra
+TAGS:   allow_dup extra transparent
 DEPTH:  D:2-, Depths, Elf, Crypt
 MAP
 xxxxx
@@ -3028,7 +3028,7 @@ ENDMAP
 NAME:   corexii_mini_fake_secret_closet
 DEPTH:  D:4-, Depths
 WEIGHT: 1
-TAGS:   no_monster_gen no_item_gen allow_dup extra
+TAGS:   no_monster_gen no_item_gen allow_dup extra transparent
 NSUBST: + = 1:+ / *:x, = = 1:+ / *:x
 SUBST:  d = %%%., e = **%.
 MAP
@@ -3039,7 +3039,7 @@ xxxxxxx
 ENDMAP
 
 NAME:   evilmike_butchery
-TAGS:   no_item_gen
+TAGS:   no_item_gen transparent
 DEPTH:  D:9-, Depths
 SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
@@ -3063,7 +3063,7 @@ ENDMAP
 NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
@@ -3085,7 +3085,7 @@ ENDMAP
 NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
@@ -3157,7 +3157,7 @@ ENDMAP
 
 NAME:    hellmonk_bongcloud_opening
 TAGS:    no_item_gen no_monster_gen no_trap_gen no_hmirror no_vmirror no_rotate
-TAGS:    decor extra
+TAGS:    decor extra transparent
 DEPTH:   D:5-, Depths, Orc, Elf
 ITEM:    piece from Xom's chessboard
 KFEAT:   H = G
@@ -3250,7 +3250,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_zen_rock_garden
-TAGS: no_monster_gen no_trap_gen no_item_gen extra decor
+TAGS: no_monster_gen no_trap_gen no_item_gen extra decor transparent
 DEPTH: D:4-12
 SUBST: Q = TPW, T = tP, P = p'', Y = W', Z = tW, ' = ':13 r:1
 FTILE: tp'r = floor_sand
@@ -3340,7 +3340,7 @@ xx.........xx
 ENDMAP
 
 NAME:  kennysheep_small_spiral
-TAGS:  extra decor
+TAGS:  extra decor transparent
 DEPTH: D, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
 MAP

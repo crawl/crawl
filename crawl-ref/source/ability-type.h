@@ -76,9 +76,11 @@ enum ability_type
     ABIL_EVOKE_TELEPORT_CONTROL,
     ABIL_EVOKE_TWISTER,
     ABIL_EVOKE_RATSKIN,
-#endif
     ABIL_EVOKE_THUNDER,
     ABIL_MAX_EVOKE = ABIL_EVOKE_THUNDER,
+#else
+    ABIL_MAX_EVOKE = ABIL_EVOKE_TURN_INVISIBLE,
+#endif
 
     // Divine abilities
     // Zin
@@ -114,6 +116,7 @@ enum ability_type
     // Okawaru
     ABIL_OKAWARU_HEROISM = 1050,
     ABIL_OKAWARU_FINESSE,
+    ABIL_OKAWARU_DUEL,
     // Makhleb
     ABIL_MAKHLEB_MINOR_DESTRUCTION = 1060,
     ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
@@ -273,6 +276,11 @@ enum ability_type
     ABIL_WU_JIAN_WHIRLWIND,
     ABIL_WU_JIAN_WALLJUMP,
 
+    // Ignis
+    ABIL_IGNIS_SEA_OF_FIRE = 1300,
+    ABIL_IGNIS_FOXFIRE,
+    ABIL_IGNIS_RISING_FLAME,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
     ABIL_LAST_RELIGIOUS_ABILITY = ABIL_STOP_RECALL,
@@ -280,5 +288,12 @@ enum ability_type
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
     ABIL_CONVERT_TO_BEOGH,
+
+#ifdef WIZARD
+    ABIL_WIZ_BUILD_TERRAIN = 10000,
+    ABIL_FIRST_WIZ = ABIL_WIZ_BUILD_TERRAIN,
+    ABIL_WIZ_SET_TERRAIN,
+    ABIL_WIZ_CLEAR_TERRAIN,
+#endif
     NUM_ABILITIES
 };

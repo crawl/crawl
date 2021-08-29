@@ -111,7 +111,7 @@ MONS:   killer bee, meliai, queen bee, hornet
 KMASK:  1234*R = opaque
 KMONS:  *R = worm
 KITEM:  * = *
-KITEM:  R = potion of ambrosia
+KITEM:  R = potion of ambrosia ident:type
 SUBST:  ? : .w
 SUBST:  * : *:20 R:3
 # Since one has to dig the bees out, early meliai are fine.
@@ -146,7 +146,7 @@ NAME:   minivault_7
 TAGS:   uniq_beehive patrolling transparent
 DEPTH:  D:9-
 MONS:   queen bee, meliai, killer bee
-KITEM:  R = potion of ambrosia / nothing
+KITEM:  R = potion of ambrosia ident:type / nothing
 COLOUR: x = yellow
 TILE:   x = wall_wax
 : if you.absdepth() < 12 then
@@ -839,7 +839,7 @@ ITEM:   young poisoner's handbook / book of changes / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&sting&wereblood&spider_form
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
-KITEM:  g = any potion q:2-3
+KITEM:  g = any potion q:2
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
@@ -1762,7 +1762,7 @@ ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    box of beasts
 KITEM:   % = any, any / gold / nothing, any / nothing
-KITEM:   _ = scroll of summoning, scroll of summoning / nothing
+KITEM:   _ = scroll of summoning ident:type , scroll of summoning ident:type / nothing
 KFEAT:   _ = altar_sif_muna
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34
@@ -3174,8 +3174,8 @@ DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes
 KMASK:   %$de = opaque
 KITEM:   R = gold
-ITEM:    scroll of teleportation q:2 / wand of digging
-ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
+ITEM:    scroll of teleportation ident:type q:2 / wand of digging
+ITEM:    scroll of teleportation ident:type q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111122
 SHUFFLE: %!'"
@@ -3388,7 +3388,7 @@ MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
 # TODO: this potion once was an apple, maybe just remove this with no apple
 # flavor possible?
-ITEM:    potion of ambrosia
+ITEM:    potion of ambrosia ident:type
 NSUBST:  1 = 2:1 / *:.
 NSUBST:  d = 2:d / *:.
 SUBST:   3 = 33.
@@ -3714,7 +3714,8 @@ KMONS:   o = unseen horror
 KMONS:   p = hornet
 KMONS:   q = goliath frog
 KMONS:   r = wolf spider
-KITEM:   e = any armour good_item / any weapon good_item / scroll of acquirement
+KITEM:   e = any armour good_item / any weapon good_item / \
+             scroll of acquirement ident:type
 SHUFFLE: bcdfghjklnopqr
 MAP
 .............
@@ -3742,7 +3743,7 @@ KMASK:   x = no_wall_fixup
 KMASK:   189%*|de<> = opaque
 KPROP:   189%*|de<> = no_tele_into
 ITEM:    wand of digging ident:type
-ITEM:    scroll of teleportation q:2
+ITEM:    scroll of teleportation ident:type q:2
 MAP
 ...........
 .vvnvvvnvv.
@@ -7013,7 +7014,7 @@ NAME:    minmay_guarded_unrand_variability
 TAGS:    transparent
 DEPTH:   D:8-
 WEIGHT:  3
-ITEM:    mace_of_variability no_pickup ident:type
+ITEM:    mace_of_variability no_pickup ident:all
 MONS:    chaos spawn
 KFEAT:   _ = altar_xom
 # walls are carefully placed and guarantee no islands
@@ -7037,7 +7038,7 @@ NAME:    minmay_guarded_unrand_staff_of_olgreb
 TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   D:5-
 WEIGHT:  3
-ITEM:    staff_of_olgreb no_pickup ident:type
+ITEM:    staff_of_olgreb no_pickup ident:all
 : if you.depth() < 9 then
 MONS:    scorpion / redback w:5
 MONS:    killer bee
@@ -7107,7 +7108,7 @@ NAME:    minmay_guarded_unrand_wrath_of_trog
 TAGS:    transparent
 DEPTH:   D:13-, Depths
 WEIGHT:  3
-ITEM:    wrath_of_trog no_pickup ident:type
+ITEM:    wrath_of_trog no_pickup ident:all
 MONS:    spriggan berserker
 NSUBST:  1 = 3=1 / 9=1...... / .
 MAP
@@ -7130,7 +7131,7 @@ NAME:    minmay_guarded_unrand_skullcrusher
 TAGS:    transparent
 DEPTH:   D:12-, Crypt
 WEIGHT:  3
-ITEM:    skullcrusher no_pickup ident:type
+ITEM:    skullcrusher no_pickup ident:all
 MONS:    flying skull
 : if you.in_branch("Crypt") then
 MONS:    curse skull
@@ -7172,7 +7173,7 @@ NAME:    minmay_guarded_unrand_finisher
 TAGS:    transparent
 DEPTH:   D:7-
 WEIGHT:  3
-ITEM:    finisher no_pickup ident:type
+ITEM:    finisher no_pickup ident:all
 : if you.depth() < 13 then
 MONS:    wraith, skeletal warrior
 : else
@@ -7913,6 +7914,111 @@ x...1...x
 xx1...1xx
  xx.d.xx
   xxxxx
+ENDMAP
+
+NAME:   dilly_guarded_unrand_elemental_staff
+TAGS:   transparent patrolling no_monster_gen no_trap_gen
+DEPTH:  D:8-, Elf, Depths
+WEIGHT: 3
+KPROP:  alpwq'r = no_tele_into
+KMASK:  alpwq'r = no_item_gen
+KMASK:  alpwq'r = opaque
+KFEAT:  a = l
+KFEAT:  p = w
+: if you.in_branch("D") then
+# D:9-D:11
+:     if you.depth() < 12 then
+# Monsters 1 through 4 must be defined in order of fire, ice, earth, air.
+MONS:   fire elemental, rime drake / ice devil, gargoyle, steam dragon
+# Slot 5 are elemental themed moderate out of depth monsters, equivalent to no
+# worse than a 9 spawn.
+MONS:   efreet / white ugly thing / basilisk / boulder beetle / raiju \
+         / tengu conjurer
+# Slot 6 is an appropriate elementalist boss.
+MONS:   deep elf pyromancer ; elemental staff . robe good_item
+# Monster counts scale slowly, placing up to 1/3 of each type by Depths.
+SUBST:  1 = 1...., 2 = 2...., 3 = 3...., 4 = 4...., 5 = 5...
+# D:12-13
+:     elseif you.depth() < 14 then
+MONS:   deep elf pyromancer / efreet
+MONS:   rime drake / ice devil / white ugly thing
+MONS:   basilisk / boulder beetle / catoblepas
+MONS:   raiju / tengu conjurer
+MONS:   fire crab / fire dragon / freezing wraith / earth elemental \
+        / air elemental
+MONS:   deep elf zephyrmancer ; elemental staff . robe good_item
+SUBST:  1 = 1...., 2 = 2...., 3 = 3...., 4 = 4...., 5 = 5..
+# D:14-
+:     else
+MONS:   deep elf pyromancer / efreet / fire crab w:5 / fire dragon w:5
+MONS:   white ugly thing / freezing wraith / ice dragon w:5
+MONS:   catoblepas / boulder beetle / earth elemental
+MONS:   raiju / tengu conjurer / air elemental
+MONS:   white very ugly thing / stone giant / shock serpent \
+        / deep elf zephyrmancer
+MONS:   tengu reaver ; elemental staff \
+            . ring mail good_item | scale mail good_item . buckler good_item
+SUBST:  1 = 1..., 2 = 2..., 3 = 3..., 4 = 4..., 5 = 5.
+:     end
+: elseif you.in_branch("Elf") then
+MONS:   fire elemental / deep elf pyromancer / fire dragon w:5
+MONS:   water elemental / ice dragon w:5
+MONS:   earth elemental / stone giant w:5
+MONS:   air elemental / deep elf zephyrmancer
+MONS:   deep elf elementalist w:40 / fire giant / frost giant / iron dragon \
+        / storm dragon
+: master_elementalist_setup(_G, "6")
+SUBST:  1 = 1..., 2 = 2..., 3 = 3..., 4 = 4...
+# Depths
+: else
+MONS:   fire dragon / fire giant
+MONS:   ice dragon / frost giant
+MONS:   stone giant / iron troll / deep troll earth mage / iron dragon
+MONS:   spriggan air mage / storm dragon
+MONS:   hellephant / shard shrike / iron giant / titan
+: master_elementalist_setup(_G, "6")
+SUBST:  1 = 1.., 2 = 2.., 3 = 3.., 4 = 4..
+: end
+# Fog machine for each closed elemntal chamber.
+MARKER: a = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
+             pow_max = 10, delay_min = 10, delay_max = 50, size_min = 4, \
+             size_max = 13, excl_rad = -1 }
+MARKER: p = lua:fog_machine { cloud_type = "freezing vapour", pow_min = 5, \
+             pow_max = 10, delay_min = 10, delay_max = 50, size_min = 4, \
+             size_max = 13, excl_rad = -1 }
+MARKER: q = lua:fog_machine { cloud_type = "calcifying dust", pow_min = 5, \
+             pow_max = 10, delay_min = 10, delay_max = 50, size_min = 4, \
+             size_max = 13, excl_rad = -1 }
+MARKER: r = lua:fog_machine { cloud_type = "thunder", pow_min = 5, \
+             pow_max = 10, delay_min = 10, delay_max = 50, size_min = 4, \
+             size_max = 13, excl_rad = -1 }
+FTILE:  +123456alpwq'r. = floor_crystal_squares
+MAP
+              b
+             nbn
+            nblbn
+           nblllbn
+          bbllallbb
+         bbnblllbnbb
+        +b11nblbn11b+
+       bb...1nbn1...bb
+      bb4.5.1bbb1.5.3bb
+     nbn4...bb.bb...3nbn
+    nb'bn44b+...+b33nb'bn
+   nb'''bnbb.....bbnb'''bn
+  bb''r''bb...6...bb''q''bb
+   nb'''bnbb.....bbnb'''bn
+    nb'bn44b+...+b33nb'bn
+     nbn4...bb.bb...3nbn
+      bb4.5.2bbb2.5.3bb
+       bb...2nbn2...bb
+        +b22nbwbn22b+
+         bbnbwwwbnbb
+          bbwwpwwbb
+           nbwwwbn
+            nbwbn
+             nbn
+              b
 ENDMAP
 
 ###################################################################

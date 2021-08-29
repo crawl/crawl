@@ -228,7 +228,7 @@ public:
     bool is_patrolling() const;
     bool needs_abyss_transit() const;
     void set_transit(const level_id &destination);
-    bool is_trap_safe(const coord_def& where, bool just_check = false) const;
+    bool is_trap_safe(const coord_def& where) const;
     bool is_location_safe(const coord_def &place);
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);
@@ -399,7 +399,7 @@ public:
     int willpower(bool calc_unid = true) const override;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const override;
-    bool res_corr(bool calc_unid = true, bool items = true) const override;
+    bool res_corr(bool calc_unid = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 
     bool stasis() const override;
@@ -477,9 +477,8 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
-                          bool /*allow_corrosion*/ = true,
-                          const char* /*hurt_msg*/ = nullptr) override;
+    void splash_with_acid(actor *evildoer, int /*acid_strength*/) override;
+    void acid_corrode(int /*acid_strength*/) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
     int hurt(const actor *attacker, int amount,
@@ -545,6 +544,7 @@ public:
     void calc_speed();
     bool attempt_escape(int attempts = 1);
     void struggle_against_net();
+    void catch_breath();
     bool has_usable_tentacle() const override;
 
     bool is_child_tentacle() const;

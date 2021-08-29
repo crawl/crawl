@@ -129,9 +129,10 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
-#ifdef DEBUG_DIAGNOSTICS
-#define DEBUG_TRAVEL
-#endif
+// N.b. this #define only adds dprfs and so isn't very useful outside of a
+// debug build. It also makes long travel extremely slow when enabled on a
+// debug build.
+//#define DEBUG_TRAVEL
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -256,10 +257,6 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
 {
     if (!ignore_player_traversability)
     {
-        // Don't auto travel through toxic bogs
-        if (grid == DNGN_TOXIC_BOG)
-            return false;
-
         // If the feature is in travel_avoid_terrain, respect that.
         if (forbidden_terrain[grid])
             return false;
@@ -276,8 +273,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
             return true;
 
         // Permanently flying players can cross most hostile terrain.
-        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
+        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
+            || grid == DNGN_TOXIC_BOG)
+        {
             return you.permanent_flight();
+        }
     }
 
     return feat_is_traversable(grid, try_fallback);
@@ -674,6 +674,7 @@ static void _start_running()
 {
     _userdef_run_startrunning_hook();
     you.running.init_travel_speed();
+    you.running.turns_passed = 0;
     const bool unsafe = Options.travel_one_unsafe_move &&
                         (you.running == RMODE_TRAVEL
                          || you.running == RMODE_INTERLEVEL);
@@ -932,7 +933,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     }
 
     // Check whether this step puts us adjacent to any grid we haven't ever
-    // seen or any non-wall grid we cannot currently see.
+    // seen
     //
     // .tx      Moving onto t puts us adjacent to an unseen grid.
     // ?#@      --> Pick x instead.
@@ -941,9 +942,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
-            if (!you.see_cell(*ai)
-                && (!env.map_knowledge(*ai).seen()
-                    || !feat_is_wall(env.map_knowledge(*ai).feat())))
+            if (!you.see_cell(*ai) && !env.map_knowledge(*ai).seen())
             {
                 unseen = *ai;
                 break;
@@ -2263,6 +2262,7 @@ static god_type _god_from_initial(const char god_initial)
         case 'F': return GOD_FEDHAS;
         case 'G': return GOD_GOZAG;
         case 'H': return GOD_HEPLIAKLQANA;
+        case 'I': return GOD_IGNIS;
         case 'J': return GOD_JIYVA;
         case 'K': return GOD_KIKUBAAQUDGHA;
         case 'L': return GOD_LUGONU;
@@ -4303,7 +4303,7 @@ bool can_travel_interlevel()
 // Shift-running and resting.
 
 runrest::runrest()
-    : runmode(0), mp(0), hp(0), pos(0,0)
+    : runmode(0), mp(0), hp(0), pos(0,0), turns_passed(0)
 {
 }
 
@@ -4318,6 +4318,7 @@ void runrest::initialise(int dir, int mode)
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
+    turns_passed = 0;
     init_travel_speed();
 
     if (dir == RDIR_REST)
@@ -4540,6 +4541,7 @@ void runrest::clear()
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
     mp = hp = travel_speed = 0;
+    turns_passed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
@@ -4985,7 +4987,7 @@ bool check_for_interesting_features()
     // Scan through the shadow map, compare it with the actual map, and if
     // there are any squares of the shadow map that have just been
     // discovered and contain an item, or have an interesting dungeon
-    // feature, stop exploring.
+    // feature, announce the discovery and return true.
     explore_discoveries discoveries;
     for (vision_iterator ri(you); ri; ++ri)
     {

@@ -606,33 +606,11 @@ noise it creates, it will apply an enchantment making monsters all over the
 level aware of your location. Hostile monsters may trigger this trap themselves
 to invoke its effects against you, but your allies will avoid stepping on it.
 %%%%
-An arrow trap
-
-A mechanical trap that will fire an arrow when triggered.
-%%%%
-A blade trap
-
-A massive scythe-like blade hidden in a slit, with a counterweight that acts as
-a pendulum.
-%%%%
-A bolt trap
-
-A well-concealed hole containing a crossbow-like contraption with a
-self-loading mechanism.
-%%%%
 A dispersal trap
 
 Anyone stepping on this trap will translocate themself and anyone else in view
 to a new location nearby. Hostile monsters may trigger this trap, but your
 allies will avoid stepping on it.
-%%%%
-A mechanical trap
-
-A mechanical contraption designed to harm trespassers.
-%%%%
-A needle trap
-
-A mechanical contraption that shoots poisoned needles.
 %%%%
 A net trap
 
@@ -644,10 +622,6 @@ A pressure plate
 A trigger of some sort. You cannot tell what kind of trap it is attached to.
 Its complicated detection system will trigger the trap even when someone flies
 over it.
-%%%%
-A spear trap
-
-A mechanical contraption that shoots long sharp poles to skewer tresspassers.
 %%%%
 A teleport trap
 
@@ -720,7 +694,7 @@ A dark tunnel
 A portal leading to the heart of a volcano. Rocks are falling from the roof and
 sides of the tunnel, filling the entry.
 %%%%
-A ruined gateway
+A crumbling gateway
 
 A salt-encrusted arch, covered with carved entreaties to the good gods to
 contain the evils sealed therein. Whatever protections this arch once offered

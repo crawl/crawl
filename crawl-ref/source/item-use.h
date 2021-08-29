@@ -19,7 +19,7 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
-bool takeoff_armour(int index);
+bool takeoff_armour(int index, bool noask = false);
 
 void drink(item_def* potion = nullptr);
 
@@ -28,17 +28,17 @@ bool god_hates_brand(const int brand);
 bool safe_to_remove(const item_def &item, bool quiet = false);
 
 bool puton_ring(int slot = -1, bool allow_prompt = true,
-                bool check_for_inscriptions = true);
+                bool check_for_inscriptions = true, bool noask = false);
 
 bool puton_ring(item_def &to_puton, bool allow_prompt = true,
-                bool check_for_inscriptions = true);
+                bool check_for_inscriptions = true, bool noask = false);
 
 bool scroll_hostile_check(scroll_type which_scroll);
 string cannot_read_item_reason(const item_def *item);
 bool scroll_has_targeter(scroll_type which_scroll);
 void read(item_def* scroll = nullptr, dist *target=nullptr);
 
-bool remove_ring(int slot = -1, bool announce = false);
+bool remove_ring(int slot = -1, bool announce = false, bool noask = false);
 
 bool wear_armour(int slot = -1);
 

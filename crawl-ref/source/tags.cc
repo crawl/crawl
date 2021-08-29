@@ -1113,6 +1113,34 @@ static void _ensure_entry(branch_type br)
     die("no upstairs on %s???", level_id::current().describe().c_str());
 }
 
+static void _ensure_exit(branch_type br)
+{
+    dungeon_feature_type exit = branches[br].exit_stairs;
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (orig_terrain(*ri) == exit)
+            return;
+
+    // Find primary downstairs.
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (orig_terrain(*ri) == DNGN_STONE_STAIRS_DOWN_I)
+        {
+            for (distance_iterator di(*ri); di; ++di)
+                if (in_bounds(*di)
+                    && (env.grid(*di) == DNGN_FLOOR
+                        || env.grid(*di) == DNGN_SHALLOW_WATER))
+                {
+                    env.grid(*di) = exit; // No need to update LOS, etc.
+                    // Announce the repair even in non-debug builds.
+                    mprf(MSGCH_ERROR, "Placing missing branch exit: %s.",
+                         dungeon_feature_name(exit));
+                    return;
+                }
+            die("no floor to place a branch exit");
+        }
+    die("no downstairs on %s???", level_id::current().describe().c_str());
+}
+
 static void _add_missing_branches()
 {
     const level_id lc = level_id::current();
@@ -1298,6 +1326,15 @@ void tag_read(reader &inf, tag_type tag_id)
         EAT_CANARY;
 #if TAG_MAJOR_VERSION == 34
         _add_missing_branches();
+
+        // If an eleionoma destroyed the Swamp exit due to the bug fixed in
+        // 0d5cf04, put the branch exit on the closest floor or shallow water
+        // square we can find near the first down stairs.
+        if (you.where_are_you == BRANCH_SWAMP
+            && you.depth == 1)
+        {
+            _ensure_exit(BRANCH_SWAMP);
+        }
 #endif
         _shunt_monsters_out_of_walls();
         // The Abyss needs to visit other levels during level gen, before
@@ -2976,7 +3013,6 @@ static void _tag_read_you(reader &th)
             }
         }
     }
-
 #endif
 
 #if TAG_MAJOR_VERSION == 34
@@ -3340,6 +3376,9 @@ static void _tag_read_you(reader &th)
     const int xl_remaining = you.get_max_xl() - you.experience_level;
     if (xl_remaining < 0)
         adjust_level(xl_remaining);
+
+    if (th.getMinorVersion() < TAG_MINOR_EVOLUTION_XP)
+        set_evolution_mut_xp(you.has_mutation(MUT_DEVOLUTION));
 #endif
 
     count = unmarshallUByte(th);
@@ -3877,9 +3916,9 @@ static void _tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_STICKY_FLAME)
     {
         if (you.props.exists("napalmer"))
-            you.props["sticky_flame_source"] = you.props["napalmer"];
+            you.props[STICKY_FLAMER_KEY] = you.props["napalmer"];
         if (you.props.exists("napalm_aux"))
-            you.props["sticky_flame_aux"] = you.props["napalm_aux"];
+            you.props[STICKY_FLAME_AUX_KEY] = you.props["napalm_aux"];
     }
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && !you.props.exists(ORIGINAL_BRAND_KEY))
@@ -3945,7 +3984,7 @@ static void _tag_read_you(reader &th)
 
     if (you.props.exists("tornado_since"))
     {
-        you.props["polar_vortex_since"] = you.props["tornado_since"].get_int();
+        you.props[POLAR_VORTEX_KEY] = you.props["tornado_since"].get_int();
         you.props.erase("tornado_since");
     }
 
@@ -4363,7 +4402,7 @@ static void _tag_read_you_dungeon(reader &th)
     {
         const bool created = unmarshallBoolean(th);
 
-        if (j < NUM_MONSTERS)
+        if (j < NUM_MONSTERS && created)
             you.unique_creatures.set(j, created);
     }
 
@@ -4981,6 +5020,7 @@ void unmarshallItem(reader &th, item_def &item)
     // Negative MR was only supposed to exist for Folly, but paranoia.
     if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_WILLPOWER))
     {
         int prop_mr = artefact_property(item, ARTP_WILLPOWER);
@@ -4997,7 +5037,9 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     // Rescale stealth (range 10..79 and -10..-98) to discrete steps (+-50/100)
-    if (th.getMinorVersion() < TAG_MINOR_STEALTH_RESCALE && is_artefact(item))
+    if (th.getMinorVersion() < TAG_MINOR_STEALTH_RESCALE
+        && is_artefact(item)
+        && item.base_type != OBJ_BOOKS)
     {
         if (artefact_property(item, ARTP_STEALTH))
         {
@@ -5212,6 +5254,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_NO_NEGATIVE_VULN
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_NEGATIVE_ENERGY))
     {
         if (artefact_property(item, ARTP_NEGATIVE_ENERGY) < 0)
@@ -5220,6 +5263,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_NO_RPOIS_MINUS
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_POISON))
     {
         if (artefact_property(item, ARTP_POISON) < 0)
@@ -5228,6 +5272,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_TELEPORTITIS
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_CAUSE_TELEPORTATION) > 1)
     {
         artefact_set_property(item, ARTP_CAUSE_TELEPORTATION, 1);
@@ -5235,6 +5280,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_NO_TWISTER
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_TWISTER))
     {
         artefact_set_property(item, ARTP_TWISTER, 0);
@@ -5290,7 +5336,7 @@ void unmarshallItem(reader &th, item_def &item)
     }
     if (item.is_type(OBJ_FOOD, FOOD_RATION) && item.pos == ITEM_IN_INVENTORY)
     {
-        item.props["item_tile_name"] = "food_ration_inventory";
+        item.props[ITEM_TILE_NAME_KEY] = "food_ration_inventory";
         bind_item_tile(item);
     }
 
@@ -6802,20 +6848,20 @@ void unmarshallMonster(reader &th, monster& m)
     m.props.clear();
     m.props.read(th);
 
-    if (m.props.exists("monster_tile_name"))
+    if (m.props.exists(MONSTER_TILE_NAME_KEY))
     {
-        string tile = m.props["monster_tile_name"].get_string();
+        string tile = m.props[MONSTER_TILE_NAME_KEY].get_string();
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
             dprf("bad tile name: \"%s\".", tile.c_str());
-            m.props.erase("monster_tile_name");
-            if (m.props.exists("monster_tile"))
-                m.props.erase("monster_tile");
+            m.props.erase(MONSTER_TILE_NAME_KEY);
+            if (m.props.exists(MONSTER_TILE_KEY))
+                m.props.erase(MONSTER_TILE_KEY);
         }
         else // Update monster tile.
-            m.props["monster_tile"] = short(index);
+            m.props[MONSTER_TILE_KEY] = short(index);
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -6843,7 +6889,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.props.exists("siren_call"))
     {
-        m.props["merfolk_avatar_call"] = m.props["siren_call"].get_bool();
+        m.props[MERFOLK_AVATAR_CALL_KEY] = m.props["siren_call"].get_bool();
         m.props.erase("siren_call");
     }
 
@@ -7035,21 +7081,21 @@ static void _tag_read_level_monsters(reader &th)
     {
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mi->props.exists("inwards"))
+            if (mi->props.exists(INWARDS_KEY))
             {
-                const int old_midx = mi->props["inwards"].get_int();
+                const int old_midx = mi->props[INWARDS_KEY].get_int();
                 if (invalid_monster_index(old_midx))
-                    mi->props["inwards"].get_int() = MID_NOBODY;
+                    mi->props[INWARDS_KEY].get_int() = MID_NOBODY;
                 else
-                    mi->props["inwards"].get_int() = env.mons[old_midx].mid;
+                    mi->props[INWARDS_KEY].get_int() = env.mons[old_midx].mid;
             }
-            if (mi->props.exists("outwards"))
+            if (mi->props.exists(OUTWARDS_KEY))
             {
-                const int old_midx = mi->props["outwards"].get_int();
+                const int old_midx = mi->props[OUTWARDS_KEY].get_int();
                 if (invalid_monster_index(old_midx))
-                    mi->props["outwards"].get_int() = MID_NOBODY;
+                    mi->props[OUTWARDS_KEY].get_int() = MID_NOBODY;
                 else
-                    mi->props["outwards"].get_int() = env.mons[old_midx].mid;
+                    mi->props[OUTWARDS_KEY].get_int() = env.mons[old_midx].mid;
             }
             if (mons_is_tentacle_or_tentacle_segment(mi->type))
                 mi->tentacle_connect = env.mons[mi->tentacle_connect].mid;

@@ -21,6 +21,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h" // walk_verb_to_present
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
@@ -222,7 +223,7 @@ void remove_ice_movement()
 
 string water_hold_substance()
 {
-    return you.props["water_hold_substance"].get_string();
+    return you.props[WATER_HOLD_SUBSTANCE_KEY].get_string();
 }
 
 void remove_water_hold()
@@ -767,10 +768,6 @@ static void _finalize_cancelled_rampage_move()
 
     you.apply_berserk_penalty = true;
 
-    // rampaging is pretty dang hasty
-    if (you_worship(GOD_CHEIBRIADOS) && one_chance_in(2))
-        did_god_conduct(DID_HASTY, 1, true);
-
     // Rampaging prevents Wu Jian attacks, so we do not process them
     // here
     update_acrobat_status();
@@ -904,7 +901,7 @@ void move_player_action(coord_def move)
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"
                           : you.form != transformation::none   ? "walk" // XX
-                          : lowercase_first(species::walking_verb(you.species));
+                          : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
@@ -995,6 +992,12 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
+            if (!you.can_see(*targ_monst) && you.is_stationary())
+            {
+                canned_msg(MSG_CANNOT_MOVE);
+                you.turn_is_over = false;
+                return;
+            }
             // Rampaging forcibly initiates the attack, but the attack
             // can still be cancelled.
             if (!rampaged && !you.can_see(*targ_monst)
@@ -1188,14 +1191,8 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking;
 
-    if (you_worship(GOD_CHEIBRIADOS)
-        && (coinflip() && rampaged
-            || !attacking
-               && one_chance_in(10)
-               && player_equip_unrand(UNRAND_LIGHTNING_SCALES)))
-    {
+    if (rampaged || player_equip_unrand(UNRAND_LIGHTNING_SCALES))
         did_god_conduct(DID_HASTY, 1, true);
-    }
 
     bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking && !dug && !rampaged)

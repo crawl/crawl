@@ -909,10 +909,10 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     if (damage_brand == SPWPN_REAPING
         || damage_brand == SPWPN_CHAOS && one_chance_in(100))
     {
-        defender->props["reaping_damage"].get_int() += dam;
+        defender->props[REAPING_DAMAGE_KEY].get_int() += dam;
         // With two reapers of different friendliness, the most recent one
         // gets the zombie. Too rare a case to care any more.
-        defender->props["reaper"].get_int() = attacker->mid;
+        defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
     return defender->hurt(responsible, dam, flavour, kill_type,
                           "", aux_source.c_str(), clean);
@@ -959,7 +959,7 @@ string attack::evasion_margin_adverb()
 
 void attack::stab_message()
 {
-    defender->props["helpless"] = true;
+    defender->props[HELPLESS_KEY] = true;
 
     switch (stab_bonus)
     {
@@ -1003,7 +1003,7 @@ void attack::stab_message()
         break;
     }
 
-    defender->props.erase("helpless");
+    defender->props.erase(HELPLESS_KEY);
 }
 
 /* Returns the attacker's name
@@ -1121,6 +1121,15 @@ int attack::get_weapon_plus()
     return weapon->plus;
 }
 
+static int _core_apply_slaying(int damage, int plus)
+{
+    // +0 is random2(1) (which is 0)
+    if (plus >= 0)
+        return damage + random2(1 + plus);
+    else
+        return damage - random2(1 - plus);
+}
+
 // Slaying and weapon enchantment. Apply this for slaying even if not
 // using a weapon to attack.
 int attack::player_apply_slaying_bonuses(int damage, bool aux)
@@ -1129,14 +1138,12 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     if (!aux && using_weapon())
         damage_plus = get_weapon_plus();
     if (you.duration[DUR_CORROSION])
-        damage_plus -= 4 * you.props["corrosion_amount"].get_int();
+        damage_plus -= 4 * you.props[CORROSION_KEY].get_int();
     damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
                                  || (weapon && is_range_weapon(*weapon)
                                             && using_weapon()));
 
-    damage += (damage_plus > -1) ? (random2(1 + damage_plus))
-                                 : (-random2(1 - damage_plus));
-    return damage;
+    return _core_apply_slaying(damage, damage_plus);
 }
 
 int attack::player_apply_final_multipliers(int damage)
@@ -1209,10 +1216,7 @@ int attack::calc_damage()
 
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
-            if (wpn_damage_plus >= 0)
-                damage += random2(1 + wpn_damage_plus);
-            else
-                damage -= random2(1 - wpn_damage_plus);
+            damage = _core_apply_slaying(damage, wpn_damage_plus);
         }
 
         damage_max += attk_damage;
@@ -1560,7 +1564,7 @@ bool attack::apply_damage_brand(const char *what)
         if (attacker->is_player() && damage_brand == SPWPN_CONFUSE
             && you.duration[DUR_CONFUSING_TOUCH])
         {
-            beam_temp.ench_power = you.props["confusing touch power"].get_int();
+            beam_temp.ench_power = you.props[CONFUSING_TOUCH_KEY].get_int();
             int margin;
             if (beam_temp.try_enchant_monster(defender->as_monster(), margin)
                     == MON_AFFECTED)

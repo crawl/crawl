@@ -75,6 +75,7 @@ static const char *daction_names[] =
 #endif
     "ancestor vanishes",
     "upgrade ancestor",
+    "remove Ignis altars",
 };
 #endif
 
@@ -104,7 +105,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_PIKEL_MINIONS:
         return mon->type == MONS_LEMURE
                && testbits(mon->flags, MF_BAND_MEMBER)
-               && mon->props.exists("pikel_band");
+               && mon->props.exists(PIKEL_BAND_KEY);
 
     case DACT_OLD_CHARMD_SOULS_POOF:
         return mons_enslaved_soul(*mon);
@@ -119,7 +120,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && !mon->is_shapeshifter()
                // Must be one of Kirke's original band
                // *or* another monster that got porkalated
-               && (mon->props.exists("kirke_band")
+               && (mon->props.exists(KIRKE_BAND_KEY)
                    || mon->props.exists(ORIG_MONSTER_KEY));
 
     case DACT_BRIBE_TIMEOUT:
@@ -297,6 +298,11 @@ static void _apply_daction(daction_type act)
             if (env.grid(*ri) == DNGN_ALTAR_JIYVA)
                 env.grid(*ri) = DNGN_FLOOR;
         }
+        break;
+    case DACT_REMOVE_IGNIS_ALTARS:
+        for (rectangle_iterator ri(1); ri; ++ri)
+            if (env.grid(*ri) == DNGN_ALTAR_IGNIS)
+                env.grid(*ri) = DNGN_FLOOR;
         break;
     case DACT_ROT_CORPSES:
         for (auto &item : env.item)

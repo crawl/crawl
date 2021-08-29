@@ -219,7 +219,6 @@ spl-goditem.o \
 spl-miscast.o \
 spl-monench.o \
 spl-other.o \
-spl-pick.o \
 spl-selfench.o \
 spl-summoning.o \
 spl-transloc.o \
@@ -360,7 +359,6 @@ command-type.h.o \
 compflag.h.o \
 conduct-type.h.o \
 config.h.o \
-confirm-butcher-type.h.o \
 confirm-prompt-type.h.o \
 coord-def.h.o \
 ctest.h.o \
@@ -527,7 +525,6 @@ spl-goditem.h.o \
 spl-miscast.h.o \
 spl-monench.h.o \
 spl-other.h.o \
-spl-pick.h.o \
 spl-selfench.h.o \
 spl-summoning.h.o \
 spl-transloc.h.o \

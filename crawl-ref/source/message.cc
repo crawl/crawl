@@ -944,8 +944,23 @@ void webtiles_send_messages()
     tiles.json_close_object(true);
     tiles.finish_message();
 }
+
+void webtiles_send_more_text(string txt)
+{
+    if (!crawl_state.io_inited || !crawl_state.game_started)
+        return;
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "msgs");
+    tiles.json_treat_as_empty();
+    tiles.json_write_bool("more", txt.size());
+    tiles.json_write_string("more_text", txt);
+    tiles.json_close_object(true);
+    tiles.finish_message();
+}
+
 #else
 void webtiles_send_messages() { }
+void webtiles_send_more_text(string) { }
 #endif
 
 static FILE* _msg_dump_file = nullptr;

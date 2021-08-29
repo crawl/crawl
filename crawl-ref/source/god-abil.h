@@ -33,6 +33,10 @@ class dist;
 #define RU_SACRIFICE_PENALTY_KEY "ru_sacrifice_penalty"
 #define RU_SAC_XP_LEVELS 2
 
+#define OKAWARU_DUEL_TARGET_KEY "okawaru_duel_target"
+#define OKAWARU_DUEL_CURRENT_KEY "okawaru_duel_current"
+#define OKAWARU_DUEL_ABANDONED_KEY "okawaru_duel_abandoned"
+
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
 
@@ -192,5 +196,8 @@ bool wu_jian_do_wall_jump(coord_def targ);
 spret wu_jian_wall_jump_ability();
 void wu_jian_heavenly_storm();
 
+bool okawaru_duel_active();
+spret okawaru_duel(bool fail);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
+void okawaru_end_duel();

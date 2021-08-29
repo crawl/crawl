@@ -148,11 +148,6 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 const int BASELINE_DELAY  = 10;
 const int INVIS_CONTAM_PER_TURN = 30;
 
-const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
-const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
-
-const int CHUNK_BASE_NUTRITION    = 1000;
-
 const int ICEMAIL_MAX  = 8;
 const int ICEMAIL_TIME = 30 * BASELINE_DELAY;
 
@@ -187,9 +182,7 @@ const int AGILITY_BONUS = 5;
 
 #define POLAR_VORTEX_RADIUS 5
 
-#define VAULTS_ENTRY_RUNES 1
 #define ZOT_ENTRY_RUNES 3
-#define ZIG_ENTRY_RUNES 2
 
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 150
@@ -281,6 +274,10 @@ enum CHAR_ATTRIBUTES
 #define ARRAYSZ(x) (sizeof(x) / sizeof(x[0]))
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
 
+// The following keys are defined here because that was simpler
+// than finding a common header for them. Please define any future
+// keys in a more tightly scoped header.
+
 const char * const MONSTER_HIT_DICE = "monster-hit-dice";
 const char * const CORPSE_HEADS = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
@@ -292,6 +289,84 @@ const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
 const char * const THUNDERBOLT_CHARGES_KEY = "thunderbolt_charges";
 const char * const THUNDERBOLT_LAST_KEY    = "thunderbolt_last";
 const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
+
+#define REAPING_DAMAGE_KEY "reaping_damage"
+#define REAPER_KEY "reaper"
+#define BAND_LEADER_KEY "band_leader"
+#define ZIN_ID_KEY "zin_id"
+#define BLAME_KEY "blame"
+#define NO_ANNOTATE_KEY "no_annotate"
+#define BENNU_REVIVES_KEY "bennu_revives"
+#define FELID_REVIVES_KEY "felid_revives"
+#define SPECTRAL_WEAPON_KEY "spectral_weapon"
+#define FAKE_MON_KEY "fake"
+#define MMOV_KEY "mmov"
+#define MON_FOE_KEY "foe"
+#define FOE_APPROACHING_KEY "foe_approaching"
+#define FAUX_PAS_KEY "foe_pos"
+#define SWOOP_COOLDOWN_KEY "swoop_cooldown"
+#define VINE_AWAKENER_KEY "vine_awakener"
+#define VINES_AWAKENED_KEY "vines_awakened"
+#define OUTWARDS_KEY "outwards"
+#define INWARDS_KEY "inwards"
+#define BASE_POSITION_KEY "base_position"
+#define SUMMON_ID_KEY "summon_id"
+#define TRACKING_TARGET_KEY "tracking_target"
+#define BATTLESPHERE_KEY "battlesphere"
+#define FLAY_BLOOD_KEY "flay_blood"
+#define IDEAL_RANGE_KEY "ideal_range"
+#define LAST_POS_KEY "last_pos"
+#define IDLE_POINT_KEY "idle_point"
+#define IDLE_DEADLINE_KEY "idle_deadline"
+#define BLOCKED_DEADLINE_KEY "blocked_deadline"
+#define BROTHERS_KEY "brothers_count"
+#define OLD_HEADS_KEY "old_heads"
+#define ELY_WRATH_HEALED_KEY "ely_wrath_healed"
+#define CAN_CLIMB_KEY "can_climb"
+#define SPEECH_PREFIX_KEY "speech_prefix"
+#define MERFOLK_AVATAR_CALL_KEY "merfolk_avatar_call"
+#define PIKEL_BAND_KEY "pikel_band"
+#define KIRKE_BAND_KEY "kirke_band"
+#define CHARMED_DEMON_KEY "charmed_demon"
+#define EMERGENCY_CLONE_KEY "emergency_clone"
+
+#define HELPLESS_KEY "helpless"
+#define POISONER_KEY "poisoner"
+#define POISON_AUX_KEY "poison_aux"
+#define STICKY_FLAMER_KEY "sticky_flame_source"
+#define STICKY_FLAME_AUX_KEY "sticky_flame_aux"
+#define WATER_HOLDER_KEY "water_holder"
+#define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
+#define CORROSION_KEY "corrosion_amount"
+#define CONFUSING_TOUCH_KEY "confusing touch power"
+#define CFLAME_DUR_KEY "cflame_dur"
+#define NUM_SACRIFICES_KEY "num_sacrifice_muts"
+#define FLAY_DAMAGE_KEY "flay_damage"
+#define POLAR_VORTEX_KEY "polar_vortex_since"
+#define KILLED_BORIS_KEY "killed_boris_once"
+
+#define FORCE_MINIVAULT_KEY "force_minivault"
+#define FORCE_MAP_KEY "force_map"
+#define DEBUG_BUILDER_LOGS_KEY "debug_builder_logs"
+
+#define NEEDS_AUTOPICKUP_KEY "needs_autopickup"
+#define CHARGES_KEY "charges"
+#define PLUS_KEY "plus"
+#define IDENT_KEY "ident"
+#define USEFUL_KEY "useful"
+#define UNOBTAINABLE_KEY "unobtainable"
+#define NO_PICKUP_KEY "no_pickup"
+#define DBNAME_KEY "dbname"
+#define ITEM_TILE_NAME_KEY "item_tile_name"
+#define WORN_TILE_NAME_KEY "worn_tile_name"
+#define ITEM_TILE_KEY "item_tile"
+#define WORN_TILE_KEY "worn_tile"
+#define MIMIC_KEY "mimic"
+#define THEME_BOOK_KEY "build_themed_book"
+
+#define MONSTER_TILE_KEY "monster_tile"
+#define MONSTER_TILE_NAME_KEY "monster_tile_name"
+#define ALWAYS_CORPSE_KEY "always_corpse"
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

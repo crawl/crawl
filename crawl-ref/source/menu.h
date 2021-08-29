@@ -105,6 +105,7 @@ public:
     bool preselected;
     bool indent_no_hotkeys;
     void *data;
+    function<bool(const MenuEntry&)> on_select;
 
 #ifdef USE_TILE
     vector<tile_def> tiles;
@@ -115,11 +116,13 @@ public:
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
                int hotk = 0,
-               bool preselect = false) :
+               bool preselect = false,
+               function<bool(const MenuEntry&)> action = nullptr) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
         hotkeys(), level(lev), preselected(preselect),
         indent_no_hotkeys(false),
-        data(nullptr)
+        data(nullptr),
+        on_select(action)
     {
         colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
                   lev == MEL_SUBTITLE ?  BLUE  :
@@ -127,6 +130,14 @@ public:
         if (hotk)
             hotkeys.push_back(hotk);
     }
+
+    // n.b. select code requires that the qty value be >0 (TODO, why)
+    MenuEntry(const string &txt, int hotk,
+                        function<bool(const MenuEntry&)> action)
+        : MenuEntry(txt, MEL_ITEM, 1, hotk, false, action)
+    {
+    }
+
     virtual ~MenuEntry() { }
 
     bool operator<(const MenuEntry& rhs) const
@@ -302,6 +313,7 @@ public:
     bool minus_is_pageup() const;
     // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
+    void set_more(const string s);
     // Shows a stock message about scrolling the menu instead of -more-
     void set_more();
     const formatted_string &get_more() const { return more; }
@@ -344,10 +356,15 @@ public:
     selitem_tfn      f_selitem;
     keyfilter_tfn    f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
+    function<bool()> on_show;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
     void cycle_hover(bool reverse=false);
+
+    bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
+
+    virtual bool process_key(int keyin);
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
@@ -355,6 +372,8 @@ public:
     void webtiles_handle_item_request(int start, int end);
 #endif
 protected:
+    string _title_prompt_help_tag;
+
     MenuEntry *title;
     MenuEntry *title2;
     bool m_indent_title;
@@ -397,7 +416,6 @@ protected:
         shared_ptr<ui::Box> vbox;
     } m_ui;
 
-protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
@@ -441,14 +459,9 @@ protected:
     bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;
 
-    bool title_prompt(char linebuf[], int bufsz, const char* prompt);
-
-    virtual bool process_key(int keyin);
-
     virtual string help_key() const { return ""; }
 
     virtual void update_title();
-protected:
     bool filter_with_regex(const char *re);
 };
 

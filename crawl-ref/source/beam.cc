@@ -84,8 +84,6 @@
 #include "view.h"
 #include "xom.h"
 
-#define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)
-
 // Helper functions (some of these should probably be public).
 static void _ench_animation(int flavour, const monster* mon = nullptr,
                             bool force = false);
@@ -968,7 +966,6 @@ int bolt::range_used(bool leg_only) const
 void bolt::finish_beam()
 {
     extra_range_used = BEAM_STOP;
-    fire_final_effects();
 }
 
 void bolt::affect_wall()
@@ -985,9 +982,9 @@ void bolt::affect_wall()
             !feat_is_flammable(env.grid(pos())) &&
             env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto";
 
-        // XXX: should check env knowledge for feat_is_tree()
-        if (god_relevant && feat_is_tree(env.grid(pos())) && !vetoed
-            && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)
+        if (god_relevant && feat_is_tree(env.map_knowledge(pos()).feat())
+            && !vetoed && !is_targeting && YOU_KILL(thrower)
+            && !dont_stop_trees)
         {
             const string prompt =
                 make_stringf("Are you sure you want to burn %s?",
@@ -1480,7 +1477,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 simple_monster_message(*mons, " completely resists.");
         }
         else if (mons->res_acid() <= 0 && doFlavouredEffects)
-            mons->splash_with_acid(pbolt.agent());
+            mons->acid_corrode(5);
         break;
     }
 
@@ -2403,7 +2400,8 @@ void bolt::affect_endpoint()
             if (entry.first == you.pos())
                 tracer_affect_player();
             else if (monster* mon = monster_at(entry.first))
-                tracer_affect_monster(mon);
+                if (!ignores_monster(mon))
+                    tracer_affect_monster(mon);
 
             if (agent()->is_player() && beam_cancelled)
                 return;
@@ -2551,6 +2549,8 @@ void bolt::drop_object(bool allow_mulch)
             }
         }
 
+        if (item->props.exists(DAMNATION_BOLT_KEY))
+            item->props.erase(DAMNATION_BOLT_KEY);
         copy_item_to_grid(*item, pos(), 1);
     }
     else
@@ -2561,8 +2561,11 @@ void bolt::drop_object(bool allow_mulch)
 // for monsters without see invis firing tracers at the player.
 bool bolt::found_player() const
 {
-    const bool needs_fuzz = (is_tracer && !can_see_invis
-                             && you.invisible() && !YOU_KILL(thrower));
+    const bool needs_fuzz = is_tracer
+            && !can_see_invis && you.invisible()
+            && !YOU_KILL(thrower)
+            // No point in fuzzing to a position that could never be hit.
+            && you.see_cell_no_trans(pos());
     const int dist = needs_fuzz? 2 : 0;
 
     return grid_distance(pos(), you.pos()) <= dist;
@@ -2768,8 +2771,7 @@ void bolt::internal_ouch(int dam)
         dam *= 4;
 
     // The order of this is important.
-    if (monst && monst->type == MONS_PLAYER_SHADOW
-        && !monst->mname.empty())
+    if (monst && mons_is_wrath_avatar(*monst))
     {
         ouch(dam, KILLED_BY_DIVINE_WRATH, MID_NOBODY,
              aux_source.empty() ? nullptr : aux_source.c_str(), true,
@@ -2794,16 +2796,18 @@ void bolt::internal_ouch(int dam)
             ouch(dam, KILLED_BY_BOUNCE, MID_PLAYER, name.c_str());
         else
         {
-            if (aimed_at_feet && effect_known)
+            if (self_targeted() && effect_known)
                 ouch(dam, KILLED_BY_SELF_AIMED, MID_PLAYER, name.c_str());
             else
                 ouch(dam, KILLED_BY_TARGETING, MID_PLAYER, name.c_str());
         }
     }
     else if (MON_KILL(thrower))
+    {
         ouch(dam, KILLED_BY_BEAM, source_id,
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
+    }
     else // KILL_MISC || (YOU_KILL && aux_source)
         ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
 }
@@ -2951,9 +2955,6 @@ bool bolt::harmless_to_player() const
         // kill themselves without a warning.
         return player_res_poison(false) > 0
                || you.clarity(false) && you.hp > 2;
-
-    case BEAM_ELECTRICITY:
-        return player_res_electricity(false);
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
@@ -3180,7 +3181,7 @@ bool bolt::misses_player()
     if (is_enchantment())
         return false;
 
-    if (!aimed_at_feet)
+    if (!self_targeted())
         practise_being_shot_at();
 
     defer_rand r;
@@ -3530,11 +3531,6 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_SAP_MAGIC:
-        if (!SAP_MAGIC_CHANCE())
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            break;
-        }
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
@@ -3588,7 +3584,7 @@ void bolt::affect_player_enchantment(bool resistible)
             if (source_id == MID_PLAYER)
             {
                 // Beam from player rebounded and hit player.
-                if (!aimed_at_feet)
+                if (!self_targeted())
                     xom_is_stimulated(200);
             }
             else
@@ -4011,7 +4007,7 @@ void bolt::affect_player()
             // elsewhere.
             if (source_id == MID_PLAYER)
             {
-                if (!aimed_at_feet)
+                if (!self_targeted())
                     xom_is_stimulated(200);
             }
             else if (was_affected)
@@ -4025,7 +4021,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        you.splash_with_acid(agent(), 5, true);
+        you.acid_corrode(5);
 
     extra_range_used += range_used_on_hit();
 
@@ -4240,13 +4236,12 @@ void bolt::handle_stop_attack_prompt(monster* mon)
         beam_cancelled = true;
         finish_beam();
     }
-    // Handle enslaving monsters when OTR is up: give a prompt for attempting
-    // to enslave monsters that don't have rPois with Toxic status.
-    else if (flavour == BEAM_CHARM && you.duration[DUR_TOXIC_RADIANCE]
-             && mon->res_poison() <= 0)
+    // Handle enslaving monsters when a nasty dur is up: give a prompt for
+    // attempting to enslave monsters that might be affected.
+    else if (flavour == BEAM_CHARM)
     {
         string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
-        if (otr_stop_summoning_prompt(verb))
+        if (rude_stop_summoning_prompt(verb))
         {
             beam_cancelled = true;
             finish_beam();
@@ -4781,7 +4776,7 @@ bool bolt::bush_immune(const monster &mons) const
 
 void bolt::affect_monster(monster* mon)
 {
-    // Don't hit dead monsters.
+    // Don't hit dead or fake monsters.
     if (!mon->alive() || mon->type == MONS_PLAYER_SHADOW)
         return;
 
@@ -5116,8 +5111,23 @@ bool bolt::ignores_monster(const monster* mon) const
     return false;
 }
 
+bool bolt::self_targeted() const
+{
+    // aimed_at_feet isn't enough to determine this. Examples: wrath uses a
+    // fake monster at the player's position, xom's chesspiece fakes smite
+    // targeting by setting the monster as the source position.
+    const actor* a = agent(true);
+    // TODO: are there cases that should count as self-targeted without an
+    // agent?
+    return aimed_at_feet && a && a->pos() == source
+        && (!a->is_monster() || !mons_is_wrath_avatar(*a->as_monster()));
+}
+
 bool bolt::has_saving_throw() const
 {
+    if (self_targeted())
+        return false;
+
     switch (flavour)
     {
     case BEAM_HASTE:
@@ -5142,8 +5152,6 @@ bool bolt::has_saving_throw() const
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
         return false;
-    case BEAM_POLYMORPH:
-        return !aimed_at_feet; // Self-poly doesn't check will
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
     case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
@@ -5738,12 +5746,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_SAP_MAGIC:
-        if (!SAP_MAGIC_CHANCE())
-        {
-            if (you.can_see(*mon))
-                canned_msg(MSG_NOTHING_HAPPENS);
-            break;
-        }
         if (!mon->has_ench(ENCH_SAP_MAGIC)
             && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, 0, agent())))
         {
@@ -6259,10 +6261,6 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         if (new_delta.rdist() > centre.rdist())
             continue;
 
-        // Is that cell already covered?
-        if (m(new_delta + centre) <= count)
-            continue;
-
         // If we were at a wall, only move to visible squares.
         coord_def caster_pos = actor_by_mid(source_id) ?
                                    actor_by_mid(source_id)->pos() :
@@ -6278,6 +6276,10 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         // Otherwise changing direction (e.g. looking around a wall) costs more.
         else if (delta.x * Compass[i].x < 0 || delta.y * Compass[i].y < 0)
             cadd = 17;
+
+        // Is that cell already covered?
+        if (m(new_delta + centre) <= count + cadd)
+            continue;
 
         determine_affected_cells(m, new_delta, count + cadd, r,
                                  stop_at_statues, stop_at_walls);
@@ -6466,7 +6468,7 @@ actor* bolt::agent(bool ignore_reflection) const
         nominal_source = reflector;
     }
 
-    // Check for whether this is actually a dith shadow, not you
+    // Check for whether this is actually a dith shadow or wrath avatar, not you
     if (monster* shadow = monster_at(you.pos()))
         if (shadow->type == MONS_PLAYER_SHADOW && nominal_source == MID_PLAYER)
             return shadow;

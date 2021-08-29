@@ -591,8 +591,6 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
     if (gift_skills.count(skill))
         skill = SK_NONE;
 
-    skill = SK_SPELLCASTING;
-
     switch (skill)
     {
     case SK_MACES_FLAILS:

@@ -54,7 +54,7 @@ Bai Suzhen
 
 A weary draconian with foreign and watery scales. She has come to the Dungeon
 in hopes of resurrecting her mortal husband; a noble cause, for a being once
-known for quarreling with saints and flooding unfortunate temples. If pressed
+known for quarrelling with saints and flooding unfortunate temples. If pressed
 to her limits, she will reveal her true form, the mere sight of which struck
 her husband dead. Adventurers may wish they were so lucky!
 %%%%
@@ -334,6 +334,16 @@ when Mennas remained silent they cut out his tongue.
 
 Whether or not this angel is that same Mennas is something of a mystery, as he
 seems to have difficulty speaking.
+%%%%
+Mlioglotl
+
+A demon prince once betrayed his realm through a dark ritual to Lugonu.
+Becoming the twisted mass of corruption known as Mlioglotl was his
+reward.
+
+Seeing such a powerful acolyte of Lugonu within the mortal plane is a
+rare sight indeed, and one should fear the denizens and horrors of the
+Abyss that are never far behind.
 %%%%
 Mnoleg
 
@@ -627,8 +637,8 @@ skilled with both conjurations and melee combat.
 battlesphere
 
 A small globe of magical energy that follows a spellcaster. It cannot operate
-on its own, yet it will provide fire support, assaulting whatever its conjurer
-casts at with magical missiles that never miss.
+on its own, but will assault the conjurer's foes with magical missiles that
+never miss each time the conjurer casts a spell.
 %%%%
 bennu
 
@@ -704,6 +714,9 @@ briar patch
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and
 armour. Though the gaps in the copse are plentiful enough to fire missiles
 through, walking through it looks like a painful prospect.
+
+Missiles both magical and mundane will pass through this plant unaffected, but
+enchantments and explosions will not.
 %%%%
 Brimstone Fiend
 
@@ -720,6 +733,9 @@ bush
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is
 not very dense, permitting missiles to pass through it. However, it is firmly
 rooted, and requires significant effort to destroy.
+
+Missiles both magical and mundane will pass through this plant unaffected, but
+enchantments and explosions will not.
 %%%%
 bullfrog
 
@@ -1932,10 +1948,6 @@ polar bear
 A bear covered in glistening white fur, habituated to cold conditions. Like all
 ursines, it will become enraged if badly hurt or frightened.
 %%%%
-porcupine
-
-A vicious rodent with a coat of sharp quills and a painful bite.
-%%%%
 profane servitor
 
 A blasphemous being that was once an angel of the Shining One. It now stands as
@@ -2280,8 +2292,8 @@ and its prowess with advanced weaponry.
 spriggan druid
 
 A spriggan whose connection with the birds and the beasts is exceptionally
-strong. It will call forth nature's wrath against anyone who so much as snaps a
-twig.
+strong. If it dies, its sacrifice will heal and temporarily strengthen nearby
+animals.
 %%%%
 spriggan rider
 
@@ -2908,6 +2920,10 @@ A huge black bat.
 microbat
 
 A bat that, despite its name, is not any smaller than a megabat.
+%%%%
+spectator
+
+A follower of Okawaru, granted the honour of spectating a duel to the death.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator

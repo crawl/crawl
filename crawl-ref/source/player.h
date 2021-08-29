@@ -36,6 +36,7 @@
 #include "timed-effect-type.h"
 #include "transformation.h"
 #include "uncancellable-type.h"
+#include "unique-creature-list-type.h"
 #include "unique-item-status-type.h"
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
@@ -46,7 +47,6 @@
 #define WEREBLOOD_KEY "wereblood_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
-#define SAP_MAGIC_KEY "sap_magic_amount"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
 #define PARALYSED_BY_KEY "paralysed_by"
@@ -240,7 +240,7 @@ public:
 
     FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
     FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
-    FixedBitVector<NUM_MONSTERS> unique_creatures;
+    unique_creature_list unique_creatures;
 
     KillMaster kills;
 
@@ -728,9 +728,8 @@ public:
     void weaken(actor *attacker, int pow) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(const actor* evildoer, int acid_strength,
-                          bool allow_corrosion = true,
-                          const char* hurt_msg = nullptr) override;
+    void splash_with_acid(actor *evildoer, int acid_strength) override;
+    void acid_corrode(int acid_strength) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
     void sentinel_mark(bool trap = false);
@@ -778,14 +777,13 @@ public:
     bool no_tele_print_reason(bool calc_unid = true, bool blink = false) const;
     bool antimagic_susceptible() const override;
 
-    bool gourmand(bool calc_unid = true, bool items = true) const override;
-    bool res_corr(bool calc_unid = true, bool items = true) const override;
+    bool res_corr(bool calc_unid = true, bool temp = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
-    bool permanent_flight(bool include_equip=true) const;
+    bool permanent_flight(bool include_equip = true) const;
     bool racial_permanent_flight() const;
     int get_noise_perception(bool adjusted = true) const;
     bool is_dragonkind() const override;
@@ -854,6 +852,7 @@ public:
                bool temp = true) const override;
 
     bool do_shaft() override;
+    bool shaftable() const;
 
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
@@ -866,6 +865,8 @@ public:
                                 int killernum = -1) override;
 
     void be_agile(int pow);
+
+    bool allies_forbidden();
 
     ////////////////////////////////////////////////////////////////
 

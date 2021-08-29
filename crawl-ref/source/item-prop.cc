@@ -487,47 +487,47 @@ static const weapon_def Weapon_prop[] =
 
 
     // Long Blades
-    { WPN_FALCHION,              "falchion",               7,  2, 13,
+    { WPN_FALCHION,              "falchion",               8,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 7, 10, 30, LBL_BRANDS }, // DAMV_CHOPPING...?
-    { WPN_LONG_SWORD,            "long sword",            9,  1, 14,
+    { WPN_LONG_SWORD,            "long sword",            10,  1, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 7, 10, 35, LBL_BRANDS },
-    { WPN_SCIMITAR,              "scimitar",              11, 0, 14,
+    { WPN_SCIMITAR,              "scimitar",              12, 0, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 6, 10, 40, LBL_BRANDS },
-    { WPN_DEMON_BLADE,           "demon blade",           12, -1, 13,
+    { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 2, 150, DEMON_BRANDS },
-    { WPN_EUDEMON_BLADE,         "eudemon blade",         13, -2, 12,
+    { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 200, HOLY_BRANDS },
-    { WPN_DOUBLE_SWORD,          "double sword",          14, -1, 15,
+    { WPN_DOUBLE_SWORD,          "double sword",          15, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 2, 150, LBL_BRANDS },
-    { WPN_GREAT_SWORD,           "great sword",           15, -3, 17,
+    { WPN_GREAT_SWORD,           "great sword",           17, -3, 17,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 6, 10, 65, LBL_BRANDS },
-    { WPN_TRIPLE_SWORD,          "triple sword",          17, -4, 19,
+    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 0, 2, 100, LBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_BLESSED_FALCHION,      "old falchion",         7,  2, 13,
+    { WPN_BLESSED_FALCHION,      "old falchion",         8,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_LONG_SWORD,    "old long sword",      9,  1, 14,
+    { WPN_BLESSED_LONG_SWORD,    "old long sword",      10,  1, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_SCIMITAR,      "old scimitar",        11, -2, 14,
+    { WPN_BLESSED_SCIMITAR,      "old scimitar",        12, -2, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_DOUBLE_SWORD, "old double sword",     14, -1, 15,
+    { WPN_BLESSED_DOUBLE_SWORD, "old double sword",     15, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_GREAT_SWORD,   "old great sword",     14, -3, 16,
+    { WPN_BLESSED_GREAT_SWORD,   "old great sword",     17, -3, 16,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 17, -4, 19,
+    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 19, -4, 19,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
 #endif
@@ -1756,8 +1756,13 @@ skill_type item_attack_skill(const item_def &item)
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_STAVES)
         return SK_STAVES;
-    else if (item.base_type == OBJ_MISSILES && !has_launcher(item))
+    else if (item.base_type == OBJ_MISSILES && (!has_launcher(item)
+                || item.is_type(OBJ_MISSILES, MI_STONE)))
+    {
         return SK_THROWING;
+    }
+    // don't return skills for non-throwable ammo: without the launcher they're
+    // just chaff. (Or at least, I think this is the motivation.)
 
     // This is used to mark that only fighting applies.
     return SK_FIGHTING;
@@ -1793,6 +1798,29 @@ bool staff_uses_evocations(const item_def &item)
     }
 
     return item.base_type == OBJ_STAVES;
+}
+
+skill_type staff_skill(stave_type s)
+{
+    switch (s)
+    {
+    case STAFF_AIR:
+        return SK_AIR_MAGIC;
+    case STAFF_COLD:
+        return SK_ICE_MAGIC;
+    case STAFF_EARTH:
+        return SK_EARTH_MAGIC;
+    case STAFF_FIRE:
+        return SK_FIRE_MAGIC;
+    case STAFF_POISON:
+        return SK_POISON_MAGIC;
+    case STAFF_DEATH:
+        return SK_NECROMANCY;
+    case STAFF_CONJURATION:
+        return SK_CONJURATIONS;
+    default:
+        return SK_NONE;
+    }
 }
 
 bool item_skills(const item_def &item, set<skill_type> &skills)
@@ -1833,6 +1861,14 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
+    }
+
+    if (item.base_type == OBJ_STAVES)
+    {
+        const skill_type staff_sk
+                    = staff_skill(static_cast<stave_type>(item.sub_type));
+        if (staff_sk != SK_NONE)
+            skills.insert(staff_sk);
     }
 
     if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_PAIN)
@@ -2522,10 +2558,6 @@ bool gives_ability(const item_def &item)
         return true;
     }
 
-    // Unrands that grant an evokable ability.
-    if (is_unrandom_artefact(item, UNRAND_RCLOUDS))
-        return true;
-
     return false;
 }
 
@@ -2550,7 +2582,8 @@ bool gives_resistance(const item_def &item)
                 || item.sub_type == RING_LIFE_PROTECTION
                 || item.sub_type == RING_WILLPOWER
                 || item.sub_type == RING_FIRE
-                || item.sub_type == RING_ICE)
+                || item.sub_type == RING_ICE
+                || item.sub_type == RING_FLIGHT)
             {
                 return true;
             }

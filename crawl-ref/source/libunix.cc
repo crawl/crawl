@@ -625,10 +625,13 @@ static void unixcurses_defkeys()
     check_define_key("\033OR", 1013); // *
     check_define_key("\033OS", 1014); // -
 #undef check_define_key
+
+    // TODO: there may be codes missing here, I don't get special keycodes for
+    // *,/,= on mac console.
     define_key("\033Oj", 1015); // *
-    define_key("\033Ok", 1016); // +
+    define_key("\033Ok", 1016); // + // XX why don't these collapse??
     define_key("\033Ol", 1017); // +
-    define_key("\033Om", 1018); // .
+    define_key("\033Om", 1018); // . // XX this is - on mac console? Also confirmed on linux as -
     define_key("\033On", 1019); // .
     define_key("\033Oo", 1020); // -
 

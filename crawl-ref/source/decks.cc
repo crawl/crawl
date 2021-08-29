@@ -154,7 +154,6 @@ const char* card_name(card_type card)
     case CARD_VELOCITY:        return "Velocity";
     case CARD_EXILE:           return "Exile";
     case CARD_ELIXIR:          return "the Elixir";
-    case CARD_STAIRS:          return "the Stairs";
     case CARD_TOMB:            return "the Tomb";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_ELEMENTS:        return "the Elements";
@@ -177,10 +176,26 @@ const char* card_name(card_type card)
 #if TAG_MAJOR_VERSION == 34
     case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
+    case CARD_STAIRS_REMOVED:
 #endif
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
+}
+
+bool card_is_removed(card_type card)
+{
+    switch (card)
+    {
+#if TAG_MAJOR_VERSION == 34
+case CARD_FAMINE_REMOVED:
+case CARD_SHAFT_REMOVED:
+case CARD_STAIRS_REMOVED:
+        return true;
+#endif
+    default:
+        return false;
+    }
 }
 
 card_type name_to_card(string name)
@@ -626,6 +641,7 @@ bool deck_stack()
     if (deck_cards(DECK_STACK) && !yesno("Replace your current stack?",
                                           false, 0))
     {
+        canned_msg(MSG_OK);
         return false;
     }
 
@@ -1040,46 +1056,6 @@ static void _exile_card(int power)
     }
 }
 
-static int stair_draw_count = 0;
-
-// This does not describe an actual card. Instead, it only exists to test
-// the stair movement effect in wizard mode ("&c stairs").
-static void _stairs_card(int /*power*/)
-{
-    you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
-    you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
-
-    if (feat_stair_direction(env.grid(you.pos())) == CMD_NO_CMD)
-        you.duration[DUR_REPEL_STAIRS_MOVE]  = 1000;
-    else
-        you.duration[DUR_REPEL_STAIRS_CLIMB] =  500; // more annoying
-
-    vector<coord_def> stairs_avail;
-
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT, true); ri; ++ri)
-    {
-        dungeon_feature_type feat = env.grid(*ri);
-        if (feat_stair_direction(feat) != CMD_NO_CMD
-            && feat != DNGN_ENTER_SHOP)
-        {
-            stairs_avail.push_back(*ri);
-        }
-    }
-
-    if (stairs_avail.empty())
-    {
-        mpr("No stairs available to move.");
-        return;
-    }
-
-    shuffle_array(stairs_avail);
-
-    for (coord_def stair : stairs_avail)
-        move_stair(stair, stair_draw_count % 2, false);
-
-    stair_draw_count++;
-}
-
 static monster* _friendly(monster_type mt, int dur)
 {
     return create_monster(mgen_data(mt, BEH_FRIENDLY, you.pos(), MHITYOU,
@@ -1417,7 +1393,7 @@ static void _storm_card(int power)
 
     // 1-3, 4-6, 7-9
     const int max_explosions = random_range((power_level * 3) + 1, (power_level + 1) * 3);
-    // Select targets based on simultaneously running max_explosions resivoir
+    // Select targets based on simultaneously running max_explosions reservoir
     // samples from the radius iterator over valid targets.
     //
     // Once the possible targets are drawn, the result is deduplicated into a
@@ -1636,7 +1612,6 @@ void card_effect(card_type which_card,
     case CARD_VELOCITY:         _velocity_card(power); break;
     case CARD_EXILE:            _exile_card(power); break;
     case CARD_ELIXIR:           _elixir_card(power); break;
-    case CARD_STAIRS:           _stairs_card(power); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false, true); break;
     case CARD_WRATH:            _godly_wrath(); break;
@@ -1668,6 +1643,7 @@ void card_effect(card_type which_card,
 #if TAG_MAJOR_VERSION == 34
     case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
+    case CARD_STAIRS_REMOVED:
 #endif
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.

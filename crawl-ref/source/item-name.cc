@@ -2543,11 +2543,6 @@ bool is_emergency_item(const item_def &item)
 
         switch (item.sub_type)
         {
-        case MI_DART:
-            return get_ammo_brand(item) == SPMSL_CURARE
-                   || get_ammo_brand(item) == SPMSL_BLINDING;
-        case MI_BOOMERANG:
-            return get_ammo_brand(item) == SPMSL_DISPERSAL;
         case MI_THROWING_NET:
             return true;
         default:
@@ -2717,7 +2712,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         return item.sub_type == MISC_TIN_OF_TREMORSTONES;
 
     case OBJ_ARMOUR:
-        if (you.get_mutation_level(MUT_NO_LOVE)
+        if (you.allies_forbidden()
             && is_unrandom_artefact(item, UNRAND_RATSKIN_CLOAK))
         {
             // some people don't like being randomly attacked by rats.
@@ -2826,6 +2821,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case MI_JAVELIN:
             return you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM
                    && !you.can_throw_large_rocks();
+        case MI_ARROW:
+            return you.has_mutation(MUT_MISSING_HAND)
+                   && !you.has_mutation(MUT_QUADRUMANOUS);
         }
 
         return false;
@@ -2888,7 +2886,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_BRAND_WEAPON:
             return you.has_mutation(MUT_NO_GRASPING);
         case SCR_SUMMONING:
-            return you.get_mutation_level(MUT_NO_LOVE) > 0;
+            return you.allies_forbidden();
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
@@ -2909,7 +2907,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return false;
 
         if (item.sub_type == WAND_CHARMING)
-            return you.get_mutation_level(MUT_NO_LOVE);
+            return you.allies_forbidden();
 
         return false;
 
@@ -2943,7 +2941,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
-            return you_worship(GOD_TROG);
+            return you_worship(GOD_TROG)
+                   || temp && player_equip_unrand(UNRAND_FOLLY);
         case POT_MAGIC:
             return you.has_mutation(MUT_HP_CASTING);
         CASE_REMOVED_POTIONS(item.sub_type)
@@ -3066,7 +3065,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case MISC_BOX_OF_BEASTS:
         case MISC_HORN_OF_GERYON:
         case MISC_PHANTOM_MIRROR:
-            return you.get_mutation_level(MUT_NO_LOVE)
+            return you.allies_forbidden()
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
 
         case MISC_CONDENSER_VANE:

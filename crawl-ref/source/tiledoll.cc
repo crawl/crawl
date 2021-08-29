@@ -634,7 +634,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     if (Options.tile_use_monster != MONS_0)
     {
         monster_info minfo(MONS_PLAYER, MONS_PLAYER);
-        minfo.props["monster_tile"] = short(doll.parts[TILEP_PART_BASE]);
+        minfo.props[MONSTER_TILE_KEY] = short(doll.parts[TILEP_PART_BASE]);
         item_def *item;
         if (you.slot_item(EQ_WEAPON))
         {

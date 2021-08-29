@@ -553,6 +553,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
     { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
+    { GOD_IGNIS, DNGN_ALTAR_IGNIS },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
@@ -883,24 +884,24 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
+    // Consider pulling out damage from splash_with_acid() into
+    // its own function and calling that.
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
-
+    const int base_dam = act->is_player() ? roll_dice(4, strength) : roll_dice(2, 4);
+    const int dam = resist_adjust_damage(act, BEAM_ACID, base_dam);
     if (act->is_player())
-        you.splash_with_acid(nullptr, strength, false);
-    else
     {
-        monster* mon = act->as_monster();
-
-        const int dam = resist_adjust_damage(mon, BEAM_ACID,
-                                             roll_dice(2, strength));
-        if (dam > 0 && you.can_see(*mon))
-        {
-            const char *verb = act->is_icy() ? "melt" : "burn";
-            mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
-                  verb, mon->name(DESC_THE).c_str());
-        }
-        mon->hurt(nullptr, dam, BEAM_ACID);
+        mprf("You are splashed with acid%s%s",
+             dam > 0 ? "" : " but take no damage",
+             attack_strength_punctuation(dam).c_str());
     }
+    else if (dam > 0 && you.can_see(*act))
+    {
+        const char *verb = act->is_icy() ? "melt" : "burn";
+        mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
+              verb, act->name(DESC_THE).c_str());
+    }
+    act->hurt(nullptr, dam, BEAM_ACID);
 }
 
 int count_adjacent_icy_walls(const coord_def &pos)
@@ -1108,12 +1109,12 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
             mon->moveto(dst);
             if (mon->type == MONS_ELDRITCH_TENTACLE)
             {
-                if (mon->props.exists("base_position"))
+                if (mon->props.exists(BASE_POSITION_KEY))
                 {
                     coord_def delta = dst - src;
-                    coord_def base_pos = mon->props["base_position"].get_coord();
+                    coord_def base_pos = mon->props[BASE_POSITION_KEY].get_coord();
                     base_pos += delta;
-                    mon->props["base_position"].get_coord() = base_pos;
+                    mon->props[BASE_POSITION_KEY].get_coord() = base_pos;
                 }
 
             }

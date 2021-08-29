@@ -63,7 +63,6 @@ enum command_type
     CMD_FULL_VIEW,
     CMD_EVOKE,
     CMD_EVOKE_WIELDED,
-    CMD_FORCE_EVOKE_WIELDED,
     CMD_WIELD_WEAPON,
     CMD_WEAPON_SWAP,
     CMD_FIRE,
@@ -107,6 +106,7 @@ enum command_type
     CMD_REPLAY_MESSAGES,
     CMD_REDRAW_SCREEN,
     CMD_MACRO_ADD,
+    CMD_MACRO_MENU,
     CMD_SAVE_GAME,
     CMD_SAVE_GAME_NOW,
     CMD_SUSPEND_GAME,
@@ -155,6 +155,8 @@ enum command_type
     // Repeat next command a given number of times
     CMD_REPEAT_CMD,
 
+    CMD_SHOW_CHARACTER_DUMP,
+    CMD_GAME_MENU,
     CMD_LUA_CONSOLE,
 
     CMD_MAX_NORMAL = CMD_LUA_CONSOLE,

@@ -396,7 +396,7 @@ D.}.O.{.D
 ENDMAP
 
 NAME:  nicolae_take_the_stairs
-TAGS:  allow_dup extra shop
+TAGS:  shop extra
 DEPTH: D:4-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Snake, !Snake:$, \
        Elf, !Elf:$
 KFEAT: O = any shop

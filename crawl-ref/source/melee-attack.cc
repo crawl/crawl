@@ -359,14 +359,10 @@ bool melee_attack::handle_phase_dodged()
 
         if (defender->is_player())
         {
-            const bool using_lbl = defender->weapon()
-                && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
             const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
                 && (!defender->weapon()
                     || is_melee_weapon(*defender->weapon()));
-            const int chance = using_lbl + using_fencers;
-
-            if (x_chance_in_y(chance, 3) && !is_riposte) // no ping-pong!
+            if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
                 riposte();
 
             // Retaliations can kill!
@@ -836,7 +832,7 @@ void melee_attack::check_autoberserk()
 
             if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
             {
-                attacker->go_berserk(false);
+                attacker->go_berserk(true);
                 return;
             }
         }
@@ -855,7 +851,7 @@ void melee_attack::check_autoberserk()
 
             if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
             {
-                attacker->go_berserk(false);
+                attacker->go_berserk(true);
                 return;
             }
         }
@@ -2015,13 +2011,13 @@ bool melee_attack::apply_staff_damage()
     if (weapon->base_type != OBJ_STAVES)
         return false;
 
+    skill_type sk = staff_skill(static_cast<stave_type>(weapon->sub_type));
+
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_ELECTRICITY,
-                                 staff_damage(SK_AIR_MAGIC));
+            resist_adjust_damage(defender, BEAM_ELECTRICITY, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2038,9 +2034,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_COLD:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_COLD,
-                                 staff_damage(SK_ICE_MAGIC));
+            resist_adjust_damage(defender, BEAM_COLD, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2056,7 +2050,7 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_EARTH:
-        special_damage = staff_damage(SK_EARTH_MAGIC) * 4 / 3;
+        special_damage = staff_damage(sk) * 4 / 3;
         special_damage = apply_defender_ac(special_damage, 0, ac_type::triple);
 
         if (special_damage > 0)
@@ -2073,9 +2067,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_FIRE:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_FIRE,
-                                 staff_damage(SK_FIRE_MAGIC));
+            resist_adjust_damage(defender, BEAM_FIRE, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2095,9 +2087,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_POISON:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_POISON,
-                                 staff_damage(SK_POISON_MAGIC));
+            resist_adjust_damage(defender, BEAM_POISON, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2114,9 +2104,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_DEATH:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_NEG,
-                                 staff_damage(SK_NECROMANCY));
+            resist_adjust_damage(defender, BEAM_NEG, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2132,7 +2120,7 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_CONJURATION:
-        special_damage = staff_damage(SK_CONJURATIONS);
+        special_damage = staff_damage(sk);
         special_damage = apply_defender_ac(special_damage);
 
         if (special_damage > 0)
@@ -2812,8 +2800,8 @@ void melee_attack::mons_apply_attack_flavour()
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD])
             {
                 you.duration[DUR_WATER_HOLD] = 10;
-                you.props["water_holder"].get_int() = attacker->as_monster()->mid;
-                you.props["water_hold_substance"].get_string() = watery ? "water" : "ooze";
+                you.props[WATER_HOLDER_KEY].get_int() = attacker->as_monster()->mid;
+                you.props[WATER_HOLD_SUBSTANCE_KEY].get_string() = watery ? "water" : "ooze";
             }
             else if (defender->is_monster()
                      && !defender->as_monster()->has_ench(ENCH_WATER_HOLD))

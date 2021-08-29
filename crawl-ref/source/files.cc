@@ -76,6 +76,7 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h" // cell_vetoes_teleport
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1199,12 +1200,12 @@ static void _grab_followers()
     }
     else if (dowan && !duvessa)
     {
-        if (!dowan->props.exists("can_climb"))
+        if (!dowan->props.exists(CAN_CLIMB_KEY))
             dowan->flags &= ~MF_TAKING_STAIRS;
     }
     else if (!dowan && duvessa)
     {
-        if (!duvessa->props.exists("can_climb"))
+        if (!duvessa->props.exists(CAN_CLIMB_KEY))
             duvessa->flags &= ~MF_TAKING_STAIRS;
     }
 
@@ -1343,6 +1344,28 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
+static void _place_player_randomly()
+{
+    // This copies the logic in the core of you_teleport_now().
+    coord_def newpos;
+    int tries = 500;
+    do
+    {
+        newpos = random_in_bounds();
+    }
+    while (--tries > 0
+           && (cell_vetoes_teleport(newpos, false)
+               || testbits(env.pgrid(newpos), FPROP_NO_TELE_INTO)));
+    if (tries == 0) // yikes!
+        die("couldn't find a rising flame destination");
+
+    // outta the way!
+    monster* const mons = monster_at(newpos);
+    if (mons)
+        mons->teleport(true);
+    you.moveto(newpos);
+}
+
 /**
  * Move the player to the appropriate entrance location in a level.
  *
@@ -1358,6 +1381,8 @@ static void _place_player(dungeon_feature_type stair_taken,
         you.moveto(ABYSS_CENTRE);
     else if (!return_pos.origin())
         you.moveto(return_pos);
+    else if (stair_taken == DNGN_ALTAR_IGNIS) // hack: we're rocketeers!
+        _place_player_randomly();
     else
         _place_player_on_stair(stair_taken, dest_pos, hatch_name);
 
@@ -2031,18 +2056,18 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
             // ensure these props can't be saved, otherwise the save is likely
             // to become unloadable
-            if (you.props.exists("force_map")
-                || you.props.exists("force_minivault"))
+            if (you.props.exists(FORCE_MAP_KEY)
+                || you.props.exists(FORCE_MINIVAULT_KEY))
             {
                 // TODO: is there a good way of doing this without the crash?
                 mprf(MSGCH_ERROR, "&P with '%s' failed; clearing force props and trying with random generation next.",
-                    you.props.exists("force_map")
-                    ? you.props["force_map"].get_string().c_str()
-                    : you.props["force_minivault"].get_string().c_str());
+                    you.props.exists(FORCE_MAP_KEY)
+                    ? you.props[FORCE_MAP_KEY].get_string().c_str()
+                    : you.props[FORCE_MINIVAULT_KEY].get_string().c_str());
                 // without a flush this mprf doesn't get saved
                 flush_prev_message();
-                you.props.erase("force_minivault");
-                you.props.erase("force_map");
+                you.props.erase(FORCE_MINIVAULT_KEY);
+                you.props.erase(FORCE_MAP_KEY);
             }
 
             if (crawl_state.need_save)

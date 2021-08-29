@@ -27,6 +27,7 @@
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "item-prop.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -227,8 +228,8 @@ static monster* _do_split(monster* thing, const coord_def & target)
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
     new_slime->summoner = thing->summoner;
-    if (thing->props.exists("blame"))
-        new_slime->props["blame"] = thing->props["blame"].get_vector();
+    if (thing->props.exists(BLAME_KEY))
+        new_slime->props[BLAME_KEY] = thing->props[BLAME_KEY].get_vector();
 
     int split_off = thing->blob_size / 2;
     float max_per_blob = thing->max_hit_points / float(thing->blob_size);
@@ -278,6 +279,9 @@ static void _lose_turn(monster* mons, bool has_gone)
 // initial_slime is the one that gets killed off by this process.
 static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
+    const string old_name = merge_to->name(DESC_A);
+    const bool merge_to_was_visible = you.can_see(*merge_to);
+
     // Combine enchantment durations.
     merge_ench_durations(*initial_slime, *merge_to);
 
@@ -289,6 +293,14 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // passed on if the merged slime subsequently splits. Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_slime->flags;
+
+    // Transfer duel status over to the merge target.
+    if (initial_slime->props.exists(OKAWARU_DUEL_CURRENT_KEY))
+    {
+        initial_slime->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+        merge_to->props[OKAWARU_DUEL_TARGET_KEY] = true;
+        merge_to->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    }
 
     // Merging costs the combined slime some energy. The idea is that if 2
     // slimes merge you can gain a space by moving away the turn after (maybe
@@ -305,24 +317,36 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 
     behaviour_event(merge_to, ME_EVAL);
 
-    // Messaging.
-    if (you.can_see(*merge_to))
+    // Messaging cases:
+    // 1. MT & I were both visible & still are
+    // 2. MT was visible, I wasn't but now both are
+    // 3. MT was visible, I wasn't and now both aren't
+    // 4. MT wasn't visible, I was and now both are
+    // 5. MT and I weren't visible & still aren't
+    if (merge_to_was_visible)
     {
-        if (you.can_see(*initial_slime))
+        if (you.can_see(*merge_to))
         {
+            // cases 1 and 2
             mprf("Two slime creatures merge to form %s.",
                  merge_to->name(DESC_A).c_str());
         }
         else
         {
-            mprf("A slime creature suddenly becomes %s.",
-                 merge_to->name(DESC_A).c_str());
+            // case 3
+            mprf("Something merges into %s, and it vanishes!",
+                 old_name.c_str());
         }
 
         flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
     }
     else if (you.can_see(*initial_slime))
-        mpr("A slime creature suddenly disappears!");
+    {
+        // case 4
+        mprf("%s merges with something you can't see.",
+             initial_slime->name(DESC_A).c_str());
+    }
+    // case 5 (no-op)
 
     // Have to 'kill' the slime doing the merging.
     monster_die(*initial_slime, KILL_DISMISSED, NON_MONSTER, true);
@@ -770,7 +794,7 @@ void treant_release_fauna(monster& mons)
 
         if (fauna)
         {
-            fauna->props["band_leader"].get_int() = mons.mid;
+            fauna->props[BAND_LEADER_KEY].get_int() = mons.mid;
 
             // Give released fauna the same summon duration as their 'parent'
             if (abj.ench != ENCH_NONE)
@@ -788,6 +812,14 @@ void treant_release_fauna(monster& mons)
     }
 }
 
+static bool _adj_to_tree(coord_def p)
+{
+    for (adjacent_iterator ai(p); ai; ++ai)
+        if (feat_is_tree(env.grid(*ai)))
+            return true;
+    return false;
+}
+
 static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
 {
     coord_def p = {0, 0};
@@ -801,15 +833,14 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
         if (dist > closest)
             break;
 
-        if (!cell_see_cell(target, *di, LOS_NO_TRANS))
-            continue; // there might be a better iterator for this
-
-        if (is_temp_terrain(*di))
-            continue; // no treeporting into summoned forests
-
-        const dungeon_feature_type grid = env.grid(*di);
-        if (!feat_is_tree(grid))
+        if (!cell_see_cell(target, *di, LOS_NO_TRANS) // there might be a better iterator
+            || !_adj_to_tree(*di)
+            || !monster_habitable_grid(MONS_ELEIONOMA, env.grid(*di)))
+        {
             continue;
+        }
+        // XXX: also check for dangerous clouds?
+
         closest = dist;
 
         seen++;
@@ -957,8 +988,8 @@ bool mon_special_ability(monster* mons)
     {
         // If we would try to move into a briar (that we might have just created
         // defensively), let's see if we can shoot our foe through it instead
-        if (actor_at(mons->pos() + mons->props["mmov"].get_coord())
-            && actor_at(mons->pos() + mons->props["mmov"].get_coord())->type == MONS_BRIAR_PATCH
+        if (actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())
+            && actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())->type == MONS_BRIAR_PATCH
             && !one_chance_in(3))
         {
             actor *foe = mons->get_foe();
@@ -980,7 +1011,7 @@ bool mon_special_ability(monster* mons)
         // Otherwise, if our foe is approaching us, we might want to raise a
         // defensive wall of brambles (use the number of brambles in the area
         // as some indication if we've already done this, and shouldn't repeat)
-        else if (mons->props["foe_approaching"].get_bool() == true
+        else if (mons->props[FOE_APPROACHING_KEY].get_bool() == true
                  && !mons_is_confused(*mons)
                  && coinflip())
         {
@@ -1043,9 +1074,7 @@ bool mon_special_ability(monster* mons)
         if (target.origin() || !mons->move_to_pos(target))
             break;
 
-        env.grid(target) = DNGN_FLOOR;
-        set_terrain_changed(target);
-        simple_monster_message(*mons, " melds with the trees.");
+        simple_monster_message(*mons, " flows through the trees.");
         used = true;
     }
     break;
