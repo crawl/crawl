@@ -1606,8 +1606,6 @@ namespace quiver
             if (!item_action::is_valid())
                 return false;
             const item_def& c = you.inv[item_slot];
-            if (!item_type_known(c))
-                return false;
             return c.base_type == OBJ_POTIONS || c.base_type == OBJ_SCROLLS;
         }
 
@@ -1616,7 +1614,9 @@ namespace quiver
             if (!is_valid())
                 return false;
             const item_def& c = you.inv[item_slot];
-            if (c.base_type == OBJ_POTIONS)
+            if (!item_type_known(c))
+                return false;
+            else if (c.base_type == OBJ_POTIONS)
             {
                 ASSERT(get_potion_effect(static_cast<potion_type>(c.sub_type)));
                 return you.can_drink(true) && !you.berserk()

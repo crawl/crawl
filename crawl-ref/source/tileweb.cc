@@ -488,7 +488,10 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         slot.check(JSON_NUMBER);
         int inv_slot = (int) slot->number_;
         if (inv_slot >=0 && inv_slot < ENDOFPACK)
-            c = describe_item_popup(you.inv[inv_slot], nullptr, true);
+        {
+            describe_item(you.inv[inv_slot]);
+            c = CK_MOUSE_CMD;
+        }
     }
     else if (msgtype == "inv_item_action"
         && mouse_control::current_mode() == MOUSE_MODE_COMMAND)

@@ -4,7 +4,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     "use strict";
 
     var filtered_inv;
-    var renderer, $canvas, $settings;
+    var renderer, $canvas, $settings, $tooltip;
     var borders_width;
     var minimized;
     var settings_visible;
@@ -60,29 +60,38 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     {
         if (tooltip_timeout)
             clearTimeout(tooltip_timeout);
-        $("#consumables-tooltip").hide();
+        $tooltip.hide();
     }
 
     function show_tooltip(x, y, slot)
     {
-        if (selected == -1 || slot < 0 || slot >= filtered_inv.length)
+        if (slot >= filtered_inv.length)
         {
             hide_tooltip();
             return;
         }
-        tooltip = $("#consumables-tooltip");
-        tooltip.css({top: y + 10 + "px",
-                    left: x + 10 + "px"});
-        var item = filtered_inv[slot];
-        tooltip.empty().text(player.index_to_letter(item.slot) + " - ");
-        tooltip.append(player.inventory_item_desc(item.slot));
-        if (game.get_input_mode() == enums.mouse_mode.COMMAND)
+        $tooltip.css({top: y + 10 + "px",
+                     left: x + 10 + "px"});
+        if (slot == -1)
         {
-            if (item.action_verb)
-                tooltip.append("<br /><span>Left click: " + item.action_verb + "</span>");
-            tooltip.append("<br /><span>Right click: describe</span>");
+            $tooltip.html("<span>Left click: minimize</span><br />"
+                          + "<span>Right click: open settings</span>");
         }
-        tooltip.show();
+        else
+        {
+            var item = filtered_inv[slot];
+            $tooltip.empty().text(player.index_to_letter(item.slot) + " - ");
+            $tooltip.append(player.inventory_item_desc(item.slot));
+            if (game.get_input_mode() == enums.mouse_mode.COMMAND)
+            {
+                if (item.action_verb)
+                    $tooltip.append("<br /><span>Left click: "
+                                    + item.action_verb.toLowerCase()
+                                    + "</span>");
+                $tooltip.append("<br /><span>Right click: describe</span>");
+            }
+        }
+        $tooltip.show();
     }
 
     // Initial setup for the panel and its settings menu.
@@ -90,6 +99,9 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     // the options and inventory data from the server.
     $(document).bind("game_init", function () {
         $canvas = $("#consumables");
+        $settings = $("#consumables-settings");
+        $tooltip = $("#consumables-tooltip");
+
         renderer = new cr.DungeonCellRenderer();
         borders_width = (parseInt($canvas.css("border-left-width"), 10) || 0) * 2;
         minimized = false;
@@ -99,14 +111,11 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
 
         $canvas.on("update", update);
 
-        $settings = $("#consumables-settings");
-
         $canvas.on("mousemove mouseleave mousedown mouseenter", function (ev) {
                 handle_mouse(ev);
             });
 
         $canvas.contextmenu(function() { return false; });
-        // $canvas.contextmenu(show_settings);
 
         // We don't need a context menu for the context menu
         $settings.contextmenu(function () {
@@ -189,27 +198,24 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
                 var oldselected = selected;
                 selected = _horizontal() ? loc.x : loc.y;
                 update();
-                if (selected <= 0)
-                    hide_tooltip();
-                else if (oldselected != selected)
+                if (oldselected != selected)
                 {
                     hide_tooltip();
                     tooltip_timeout = setTimeout(function()
                     {
-                        show_tooltip(ev.pageX, ev.pageY, selected - 1)
+                        show_tooltip(ev.pageX, ev.pageY, selected - 1);
                     }, 500);
                 }
             }
             else if (ev.type === "mousedown" && ev.which == 1)
             {
-                console.log("click on " + selected);
                 if (selected == 0)
                     hide_consumables();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                     && selected > 0 && selected < filtered_inv.length + 1)
                 {
                     comm.send_message("inv_item_action",
-                                        {slot: filtered_inv[selected - 1].slot});
+                                      {slot: filtered_inv[selected - 1].slot});
                 }
             }
             else if (ev.type === "mousedown" && ev.which == 3)
@@ -223,7 +229,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
                     && selected > 0 && selected < filtered_inv.length + 1)
                 {
                     comm.send_message("inv_item_describe",
-                                        {slot: filtered_inv[selected - 1].slot});
+                                      {slot: filtered_inv[selected - 1].slot});
                 }
             }
         }
@@ -261,7 +267,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         var cell_height = renderer.cell_height * scale;
         var cell_length = _horizontal() ? cell_width
                                         : cell_height;
-        var required_length = cell_length * filtered_inv.length + 1;
+        var required_length = cell_length * (filtered_inv.length + 1);
         var available_length = _horizontal() ? $("#dungeon").width()
                                              : $("#dungeon").height();
         available_length -= borders_width;
@@ -278,13 +284,11 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
                               _horizontal() ? panel_length : cell_width,
                               _horizontal() ? cell_height : panel_length);
 
-        // trying to draw this with draw_main produces extremely cryptic errors.
-        // I copied this pattern from ui-layouts.js:version. This should
-        // probably be a different icon anyways, not sure the X looks that good.
-        renderer.draw_from_texture(gui.PROMPT_NO, 0, 0,
-                                    enums.texture.GUI, 0, 0, 0, false, scale);
+        // XX This should definitely be a different/custom icon
+        renderer.draw_gui(gui.PROMPT_NO, 0, 0, scale);
         if (selected == 0)
-            renderer.draw_icon(icons.CURSOR3, 0, 0);
+            renderer.draw_icon(icons.CURSOR3, 0, 0, undefined, undefined, scale);
+
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
             var offset = cell_length * (idx + 1);
             item.tile.forEach(function (tile) { // Draw item and brand tiles
@@ -295,9 +299,10 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
                 if (selected == idx + 1)
                 {
                     renderer.draw_icon(icons.CURSOR3,
-                                    _horizontal() ? offset : 0,
-                                    _horizontal() ? 0 : offset,
-                                    scale)
+                                       _horizontal() ? offset : 0,
+                                       _horizontal() ? 0 : offset,
+                                       undefined, undefined,
+                                       scale);
                 }
             });
 
