@@ -2593,14 +2593,21 @@ bool bolt::is_fiery() const
 bool bolt::can_burn_trees() const
 {
     // XXX: rethink this
-    return origin_spell == SPELL_LIGHTNING_BOLT
-           || origin_spell == SPELL_BOLT_OF_FIRE
-           || origin_spell == SPELL_BOLT_OF_MAGMA
-           || origin_spell == SPELL_FIREBALL
-           || origin_spell == SPELL_FIRE_STORM
-           || origin_spell == SPELL_IGNITION
-           || origin_spell == SPELL_INNER_FLAME
-           || origin_spell == SPELL_STARBURST;
+    switch (origin_spell)
+    {
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_BOLT_OF_FIRE:
+    case SPELL_BOLT_OF_MAGMA:
+    case SPELL_FIREBALL:
+    case SPELL_FIRE_STORM:
+    case SPELL_IGNITION:
+    case SPELL_INNER_FLAME:
+    case SPELL_STARBURST:
+    case SPELL_FLAME_WAVE:
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
@@ -4048,7 +4055,6 @@ void bolt::affect_player()
 
 bool bolt::ignores_player() const
 {
-
     // Digging -- don't care.
     if (flavour == BEAM_DIGGING)
         return true;
@@ -5917,6 +5923,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The ghostly flame explodes!",
         "the shriek of haunting fire",
     } },
+    { SPELL_FLAME_WAVE, {
+        "A wave of flame ripples out!",
+        "the roar of flame",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -6074,6 +6084,10 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             || origin_spell == SPELL_DAZZLING_FLASH)
         {
             loudness = spell_effect_noise(origin_spell);
+        } else if (origin_spell == SPELL_FLAME_WAVE)
+        {
+            loudness = spell_effect_noise(origin_spell)
+                     + (r - 1) * 2; // at radius 1, base noise
         }
 
         // Make bloated husks quieter, both for balance (they're waking up
@@ -6081,6 +6095,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         // gas leak).
         if (name == "blast of putrescent gases")
             loudness = loudness * 2 / 3;
+        // TODO: flame wave
 
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.

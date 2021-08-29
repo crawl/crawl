@@ -48,7 +48,8 @@ enum status_type
     STATUS_DUEL,
     STATUS_NO_SCROLL,
     STATUS_RF_ZERO,
-    STATUS_LAST_STATUS = STATUS_RF_ZERO
+    STATUS_FLAME_WAVE,
+    STATUS_LAST_STATUS = STATUS_FLAME_WAVE
 };
 
 struct status_info

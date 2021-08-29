@@ -555,6 +555,14 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_FLAME_WAVE:
+        if (you.props.exists(FLAME_WAVE_KEY))
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Wave";
+        }
+        break;
+
     case STATUS_DIG:
         if (you.digging)
         {

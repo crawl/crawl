@@ -53,6 +53,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_FOXFIRE,
     SPELL_CONJURE_FLAME,
     SPELL_INNER_FLAME,
+    SPELL_FLAME_WAVE, // XXX TODO
 },
 
 {   // Book of Frost
@@ -485,6 +486,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Scorching
     SPELL_SCORCH,
+    SPELL_FLAME_WAVE, // XXX TODO
     SPELL_FIREBALL,
     SPELL_SUMMON_CACTUS,
 },

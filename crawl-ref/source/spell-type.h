@@ -517,5 +517,6 @@ enum spell_type : int
     SPELL_CORRUPT_LOCALE,
     SPELL_SUMMON_CACTUS,
     SPELL_SCORCH,
+    SPELL_FLAME_WAVE,
     NUM_SPELLS
 };

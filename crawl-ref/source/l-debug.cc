@@ -516,6 +516,7 @@ LUAFN(debug_check_moncasts)
         SPELL_STORM_FORM,
         SPELL_SUMMON_CACTUS,
         SPELL_SCORCH,
+        SPELL_FLAME_WAVE,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)
