@@ -76,18 +76,6 @@ void job_stat_init(job_type job)
     you.base_stats[STAT_STR] += _job_def(job).s;
     you.base_stats[STAT_INT] += _job_def(job).i;
     you.base_stats[STAT_DEX] += _job_def(job).d;
-
-    if (job == JOB_WANDERER)
-    {
-        for (int i = 0; i < 12; i++)
-        {
-            const auto stat = random_choose_weighted(
-                    you.base_stats[STAT_STR] > 17 ? 1 : 2, STAT_STR,
-                    you.base_stats[STAT_INT] > 17 ? 1 : 2, STAT_INT,
-                    you.base_stats[STAT_DEX] > 17 ? 1 : 2, STAT_DEX);
-            you.base_stats[stat]++;
-        }
-    }
 }
 
 bool job_has_weapon_choice(job_type job)

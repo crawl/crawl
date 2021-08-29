@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "item-prop-enum.h"
 #include "job-type.h"
 #include "species-type.h"
 
@@ -22,6 +23,9 @@ void choose_tutorial_character(newgame_def& ng_choice);
 
 bool choose_game(newgame_def& ng, newgame_def& choice,
                  const newgame_def& defaults);
+
+weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
+                                            species_type species);
 
 string newgame_random_name();
 
