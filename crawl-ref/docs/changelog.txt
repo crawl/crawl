@@ -1,3 +1,84 @@
+Stone Soup 0.28-a0 (through 0.28-a0-306-g2a6f7409)
+--------------------------------------------------
+
+Branches, Environment
+---------------------
+* Ziggurats no longer require a rune of zot to enter.
+
+Character
+---------
+* New background: Cinder Acolyte, an Ignis zealot. Starts worshipping Ignis,
+  along with Foxfire and a -1 flame branded weapon of choice.
+* The Enchanter background no longer starts with the Corona spell, and instead
+  starts with a potion of invisibility.
+* The evolution mutation is revised. Once per XL's worth of experience it
+  activates, providing a good mutation. Every two activations it reduces its
+  level by one.
+* New bad mutation: devolution. Mechanically similar to evolution but dispenses
+  bad mutations and activates once every 1/4th of an XL.
+* Strength 0's regeneration reduction is replaced with -Regen in monster LOS.
+* Intelligence 0's 4/5 chance to fail scroll reading is replaced with -Scroll.
+* Kills by all allies except Beogh and Yredelemnul gifts now give full
+  experience.
+
+
+Gods
+----
+* Okawaru becomes the god of single combat.
+  - A new ability: Duel, granted at 5*. The Duel ability smite-targets a single
+    non-summoned enemy in LOS (which must be threat level "tough" or higher),
+    and transports them and the player to an Arena portal vault. Winning the
+    duel opens a gate to return from the portal vault, and the player will be
+    forcibly teleported back after a short duration.
+  - Finesse is moved to 4*
+  - All allies are forbidden.
+* New (non-temple) God: Ignis, the Dying Flame
+  - Ignis worshippers start at 5* piety (6* if a monk joining from an
+    faded altar).
+  - Ignis altars do not generate normally, Ignis can only be worshipped from a
+    faded altar or from the new Cinder Acolyte zealot start.
+  - Ignis has no piety gain and no piety decay.
+  - Once abandoned and mollified, Ignis dies.
+  - Ignis grants the following abilities:
+    - 0*: Passive rF+
+    - 1*: Active 'Sea of Flames' ability. Creates smoldering embers (like
+          conjure flame) on every empty square in LOS. They ignite after the
+          next player turn unless snuffed out by the player.
+    - 1*: Active 'Foxfire Swarm' ability. Conjures foxfire on every open square
+          in radus 2 around the player.
+    - 2*: Active 'Rising Flame' ability. Gives the player the "Rise" status,
+          after 2-4 turns the player rockets through the ceiling and up one
+          floor.
+
+
+Items
+-----
+* The staff of Battle now triggers the battlesphere on melee hit (in addition
+  to the usual spell trigger).
+* All shields now only use Dex for stat scaling.
+* The robe of Clouds' thunder cloud ability is now passive, placing storm
+  clouds on enemies within range 2 each turn.
+* Riposte is removed from long blades and base damage is increased.
+
+Monsters
+--------
+* New unique: Mlioglotl. A unique horror with the power to corrupt the level,
+  changing terrain and summoning other abyssal horrors, as well as cause fear.
+  Appears in the S-branches and rarely in the abyssal lair end.
+* Demonspawn warmongers' Sap Magic effect now causes a short term -Cast after
+  casting a spell.
+
+Spells
+------
+* Summon capped monsters now have a uniform time out.
+* Lesser Beckoning's power cap is reduced to 100 and range reduced to 5.
+* Spell summon caps are reduced:
+  - Summon Small Mammal, Summon Hydra, and Monstrous Menagerie are capped at 2.
+  - Haunt is capped at 8.
+  - All other summon spells except Summon Horrible Things and Dragon's Call are
+    capped at 1.
+* Shadow Creatures is now monster only.
+
 Stone Soup 0.27.1 (20210820)
 ----------------------------
 
