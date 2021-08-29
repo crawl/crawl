@@ -2121,6 +2121,8 @@ static bool _ignis_champion()
                                  " and attacking fiercely!");
     // Then we alert it last. It's just reacting, after all.
     behaviour_event(mon, ME_ALERT, &you);
+    // Assign blame (so we can look up funny deaths)
+    mons_add_blame(mon, "anointed by " + god_name(GOD_IGNIS));
     return true;
 }
 
