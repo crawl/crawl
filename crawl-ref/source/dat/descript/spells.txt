@@ -1184,6 +1184,11 @@ Scattershot spell
 Blasts a cone-shaped area in front of the caster with metallic fragments. Its
 damage is strongly reduced by armour.
 %%%%
+Scorch spell
+
+Scorches a random foe. Those injured by this have their resistance to fire
+burned away for a short time.
+%%%%
 Seal Doors spell
 
 Imparts seals on nearby doors and stairs, preventing those not allied with

@@ -484,7 +484,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Scorching
-    SPELL_FOXFIRE,
+    SPELL_SCORCH,
     SPELL_FIREBALL,
     SPELL_SUMMON_CACTUS,
 },

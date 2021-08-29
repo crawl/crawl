@@ -518,5 +518,6 @@ enum spell_type : int
     SPELL_SUMMON_CACTUS,
     SPELL_STOKE_FLAMES,
     SPELL_SERACFALL,
+    SPELL_SCORCH,
     NUM_SPELLS
 };
