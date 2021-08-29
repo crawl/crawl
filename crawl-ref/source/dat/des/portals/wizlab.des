@@ -2174,9 +2174,9 @@ kmons("5 = patrolling Head dbname:Head Instructor name:"
       .. string.gsub(wizname, " ", "_") .. " ; triple sword ego:antimagic \
             . triple sword ego:antimagic . plate armour ego:willpower")
 }}
-NSUBST: * = 3:d / 3:$ / *=**$..., 5 = 1:5 / *:1, D = 1:2 / *=G1
+NSUBST: * = 3:d / 3:$ / *=*., 5 = 1:5 / *:1, D = 1:2 / *=G1
 NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A
-SUBST:  P : Pt", F = 211111, 1 = 1..., x = xxxx., - = x
+SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
 FTILE:  125.*d$G+ = floor_limestone
 FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
 TILE:   x = wall_brick
@@ -2191,45 +2191,45 @@ epilogue {{
             wizlab_milestone(_G, "Yara's Duelist Academy")
 }}
 MAP
-        cccccccccccccccccccc
-        c***cGF.1..1.FGc***c
-        c***c..........c***c
-        cFFFc..1....1..cFFFc
-        c...c..cc55cc..c...c
-        c...+5........5+...ctt
-     tttccccc...1..1...ccccc3tt
-  tttt""""""cc........cc""""""tt
- tt"""..1..11ccc....ccc"""""3""tt
-tt""..xxxx.....cc++cc111"""T"""3t
-t".11xx...11....1..1....""""3""tt
-t".1xx.11.xx...........1xx"""ttt
-t".xx..1.xx.1.xxt""txx..1xxttt
-t".xx..1xx.1.xx"3""3"xx...cccccccccccc
-t"1x...xx...xx"3""""3"xx...11......11c
-t".x...x...xx"""c""c"""xx............c
-t".x11.x...x""c""33""c""x..cc"cc"cc..c
-t".t...t...t""""PWWP""""t..cD"D""Dc..c
-t"........"""c"PWWWWP"c""..""""""""..c
-t"1....11."""c"WWWWWW"c""..c""cc"Dc.1c
-cccc++cccc"""""WWWWWW""""..cD"cc""c.1c
-c*.c..c.*c"""c"PWWWWP"c""..""""""""..c
-cE.+..+.Ec""""c"PWWP"c"""..cD""D"Dc..c
-ccccE.cccc""""""""""""""t..cc"cc"cc..c
-cE.+..+.Ec""""""c33c""""x............c
-c*.c..cE*cx"""""t""t""""x..11......11c
-ccccE.cccc--"""tt""tt"""--cccccccccccc
-c*.c..cE*c --"""t""t"""--
-cEE+..+.Ec  --""""""""--
-cccc.Ecccc   --""""""--
-cE.+..+.Ec    --""""--
-c*.c.EcE*c     -G""G-
-cccccccccc    --""""--
-             --""""""--
-             t""A""A""t
-             t""""""""t
-             --""""""--
-              --T""T--
-               ------
+          cccccccccccccccccccc
+          c***cGF.1..1.FGc***c
+          c***c..........c***c
+          cFFFc..1....1..cFFFc
+          c...c..cc55cc..c...c
+          c...+5........5+...ctt
+     ttt  ccccc...1..1...ccccc3tt
+  tttt""""""""cc........cc""""""tt
+ tt"""..1....11ccc....ccc"""""3""tt
+tt""..xxxx.......cc++cc111"""T"""3t
+t".11xx.....11....1..1....""""3""tt
+t".1xx.11.xx.............1xx"""ttt
+t".xx..1.xx...1.xxt""txx..1xxttt
+t".xx..1xx...1.xx"3""3"xx...xxcccccccccccc
+t"1x...xx.....xx"3""""3"xx.....11......11c
+t".x...x.....xx"""c""c"""xx..............c
+t".x11.x..t..x""c""33""c""xx...cc"cc"cc..c
+t".t...t..t..t""""PWWP""""txx..cD"D""Dc..c
+t".........."""c"PWWWWP"c"".x..""""""""..c
+t"1....11.t."""c"WWWWWW"c""....c""cc"Dc.1c
+cccc++cccct."""""WWWWWW""""t...cD"cc""c.1c
+c*.c..c.*cxt"""c"PWWWWP"c""x...""""""""..c
+cE.+..+.Ecxt""""c"PWWP"c"""x...cD""D"Dc..c
+ccccE.ccccxt""""""""""""""txt..cc"cc"cc..c
+cE.+..+.Ecxt""""""c33c""""xxx............c
+c*.c..cE*cxxx"""""t""t""""xxx..11......11c
+ccccE.cccc  --"""tt""tt"""--cccccccccccccc
+c*.c..cE*c   --"""t""t"""--
+cEE+..+.Ec    --""""""""--
+cccc.Ecccc     --""""""--
+cE.+..+.Ec      --""""--
+c*.c.EcE*c       -G""G-
+cccccccccc      --""""--
+               --""""""--
+               t""A""A""t
+               t""""""""t
+               --""""""--
+                --T""T--
+                 ------
 ENDMAP
 
 ###############################################################################
