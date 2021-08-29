@@ -80,6 +80,9 @@ dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 
+spret cast_scorch(int pow, bool fail);
+dice_def scorch_damage(int pow, bool random);
+
 vector<coord_def> get_ignition_blast_sources(const actor *agent,
                                              bool tracer = false);
 spret cast_ignition(const actor *caster, int pow, bool fail);
@@ -112,3 +115,5 @@ void end_maxwells_coupling(bool quiet = false);
 
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);
+
+vector<coord_def> find_near_hostiles(int range);

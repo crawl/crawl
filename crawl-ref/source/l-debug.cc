@@ -515,6 +515,7 @@ LUAFN(debug_check_moncasts)
         SPELL_MANIFOLD_ASSAULT,
         SPELL_STORM_FORM,
         SPELL_SUMMON_CACTUS,
+        SPELL_SCORCH,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)
