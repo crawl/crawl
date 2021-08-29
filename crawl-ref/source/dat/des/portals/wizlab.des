@@ -1996,7 +1996,7 @@ KFEAT:      - = stone_arch
 KFEAT:      _ = altar_fedhas
 SHUFFLE:    pq/rs
 SUBST:      q : y., r : y., p = ., s = .
-NSUBST:     1 = 3:1 / *=1...., 2 = 3:2 / *=2...., 3 = 1:4 / 1:3 / *=34.....
+NSUBST:     1 = 3:1 / *=1...., 2 = 2:2 / *=2..., 3 = 1:4 / 1:3 / *=34....
 NSUBST:     5 = 2:5 / *=5., 7 = 1:P / 4:7 / *=P7777ttV........
 NSUBST:     ; = 2:d / 2:e / 1:g / *:deff, A = 1:< /*:A
 SUBST:      y = ct
@@ -2335,8 +2335,8 @@ ENDMAP
 NAME:   wizlab_tukima
 TAGS:   no_rotate
 ITEM:   hat good_item / pair of boots good_item / scarf good_item /\
-        cloak good_item pair of gloves good_item / randbook disc:hexes /\
-        any book w:30 / book of maledictions
+        cloak good_item / pair of gloves good_item / randbook disc:hexes /\
+        any book w:35 / any armour good_item w:5
 ITEM:   phantom mirror
 MONS:   rakshasa, dancing weapon
 MONS:   dancing weapon; fustibalus ego:flaming w:15 /\
@@ -2358,6 +2358,7 @@ MONS:   dancing weapon; fustibalus ego:flaming w:15 /\
 MONS:   walking frostbound tome / walking earthen tome / walking crystal tome /\
         walking divine tome
 MONS:   strange machine
+KFEAT:   ~ = closed_clear_door
 SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 22...
 NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 2:4 / *= 42., A = 1:< / *:A
 TILE:       c = wall_stone_dark
@@ -2375,18 +2376,20 @@ MAP
        ccm...c...c...mcc
        cc.............cc
       cc..ccm.....mcc..cc
-      c2.ccccm...mcccc.2c
-      cc.."""cm.mc"""..cc
-     cc..1c"""..."""c1..cc
+      c~~ccccm...mcccc~~c
+      c2.."""cm~mc"""..2c
+     ccc.1c"""..."""c1.ccc
+     cmm..mcm.....mcm..mmc
      cm...mcm.....mcm...mc
      cm...mcm..2..mcm...mc
-     cm2..mcm1.V.1mcm..2mc
-     cm1..mcm..1..mcm..1mc
-     cm..2mcm2.2.2mcm2..mc
+     cm...mcm..V..mcm...mc
+     cm2..mcm1...1mcm..2mc
+     cm...mcm..1..mcm...mc
+     cm1.2mcm2.2.2mcm2.1mc
      cc1..c'''...'''c..1cc
      ccc..'''cm2mc'''..ccc
-      cc.1cccm...mccc1.cc
-     ccm..mcm1...1mcm..mcc
+      cc~~cccm...mccc~~cc
+     ccm1.mcm1...1mcm.1mcc
      cm.3.mcm3.V.3mcm.3.mc
     ccm..mccm2...2mccm..mcc
   cccm...mcccm.5.mcccm...mcc
@@ -2395,8 +2398,8 @@ MAP
 ccm..mm...mmm.....mmm...mm..mcc
 cm4..cm......2.5.2......mc..4mc
 ccm.....mm.3...4...3.mm.....mcc
- ccmd4.mccmmm$$$$$mmmccm.4dmcc
-  ccmmmcccccc$ddd$ccccccmmmcc
+ ccmd4.mccmmm.....mmmccm.4dmcc
+  ccmmmccccccdddddccccccmmmcc
    ccccc    ccmmmcc    ccccc
              ccccc
 ENDMAP
