@@ -2549,6 +2549,8 @@ void bolt::drop_object(bool allow_mulch)
             }
         }
 
+        if (item->props.exists(DAMNATION_BOLT_KEY))
+            item->props.erase(DAMNATION_BOLT_KEY);
         copy_item_to_grid(*item, pos(), 1);
     }
     else
