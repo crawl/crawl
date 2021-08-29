@@ -817,9 +817,10 @@ bool noisy(int original_loudness, const coord_def& where,
 
     // Add +1 to scaled_loudness so that all squares adjacent to a
     // sound of loudness 1 will hear the sound.
-    const string noise_msg(msg? msg : "");
+    const string noise_msg(msg ? msg : "");
     _noise_grid.register_noise(
-        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who));
+        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who,
+                fake_noise));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means
@@ -986,8 +987,7 @@ void noise_grid::propagate_noise()
                             {
                                 const coord_def next_position(p.x + xi,
                                                               p.y + yi);
-                                if (in_bounds(next_position)
-                                    && !silenced(next_position))
+                                if (in_bounds(next_position))
                                 {
                                     if (propagate_noise_to_neighbour(
                                             attenuation,
@@ -1057,6 +1057,10 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
                                      int noise_intensity_millis,
                                      const noise_t &noise)
 {
+    // Real noises don't have any effect in silenced squares.
+    if (silenced(pos) && !noise.fake_noise)
+        return;
+
     if (you.pos() == pos)
     {
         // The bizarre arrangement of those code into two functions that each
