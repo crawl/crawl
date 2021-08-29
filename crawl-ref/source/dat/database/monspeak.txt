@@ -2608,8 +2608,6 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 @The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
 
 @The_monster@ says, "I hate complainers so much."
-
-@The_monster says, "My @_fruit_name_@ was very bland! I hate that."
 %%%%
 Elf Donald
 
@@ -7482,9 +7480,6 @@ _spectator_speech_
 @The_monster@ @_mutters_@ to another spectator.
 
 VISUAL:@The_monster@ waves excitedly.
-
-w:5
-VISUAL:@The_monster@ bites into a ripe @_fruit_name_@.
 
 w:5
 VISUAL:@The_monster@ waves a pennant with your name on it.
