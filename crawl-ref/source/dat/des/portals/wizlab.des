@@ -2245,6 +2245,7 @@ ITEM:   randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
         macabre finger necklace w:1 / sceptre of torment w:1
 ITEM:   any book / scroll of torment ident:all q:3 /\
         any weapon good_item ego:pain / any weapon good_item ego:vampirism
+ITEM:   any ring / any amulet w:5
 MONS:   spectral spriggan berserker / spectral titan / spectral spark wasp /\
         spectral harpy / spectral quicksilver dragon / spectral wolf spider /\
         spectral caustic shrike / phantasmal warrior w:60
@@ -2293,9 +2294,9 @@ MAP
        cc5.cc5.7.5cc.5cc
        c...c5.555.5c...c
        c2.2cY57575Yc4.4c
-       c.5.c$76$67$c.5.c
-      ccc..cc$$$$$cc..ccc
-     cc1c...cc$$$cc...c3cc
+       c.5.c.76.67.c.5.c
+      ccc..cc.$$$.cc..ccc
+     cc1c...ccfffcc...c3cc
     cc11FF...cc+cc...FF33cc
    cc2111FF.11cec33.FF3334cc
   cc......FF..cec..FF......cc
