@@ -2012,8 +2012,8 @@ TILE:       G = dngn_statue_centaur
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
 :           set_random_mon_list(
-:               "deep elf archer/ faun / satyr / " ..
-:               " naga sharpshooter / shambling mangrove / " ..
+:               "deep elf archer / faun / centaur warrior / yaktaur / " ..
+:               " satyr / naga sharpshooter / shambling mangrove / " ..
 :               "thorn hunter w:5 / eleionoma w:5 / deep elf master archer w:2")
 :           wizlab_setup(_G)
 epilogue {{
