@@ -2084,22 +2084,26 @@ ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
             any weapon randart / any armour randart / any jewellery randart w:5
 ITEM:       potion of attraction ident:all / any scroll w:20 /\
             scroll of vulnerability ident:all / any potion w:20
-MONS:       gargoyle / iron golem, molten gargoyle / peacekeeper, war gargoyle
-MONS:       crystal guardian, ettin / ironbound preserver ; great mace /\
+MONS:       peacekeeper / gargoyle / earth elemental w:5
+MONS:       molten gargoyle / salamander / fire elemental w:5
+MONS:       salamander tyrant / fire giant ; great mace ego:flaming
+MONS:       war gargoyle / crystal guardian
+MONS:       ettin / ironbound preserver ; great mace /\
             fire giant ; great mace ego:flaming /\
             frost giant ; great mace ego:freezing /\
-            angel ; great mace ego:holy_wrath
-MONS:       ironbound thunderhulk ; great mace ego:electrocution, electric golem
+            angel ; great mace ego:holy_wrath w:5
+MONS:       ironbound thunderhulk ; great mace ego:electrocution
+MONS:       patrolling electric golem
 KMONS:      P = lightning spire
-SHUFFLE:    DE/JK, pqrs
+SHUFFLE:    DE/JK, pqrs, ;~
 SUBST:      D : b+, E:., J:., K: b+, F:.+, p:v, q:b., r: v.., s:b...
-SUBST:      1=1.., 2=22..., ;:v+..
-NSUBST:     3 = 2:3 / 2:4 / *:3., 5 = 4:5 / *=5532.., 6 = 4:6 /*=65GGG
-NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:3 / 4:2 / *=11bG
+SUBST:      ;:v+., -:v+.., ~:., 1 = 1..., 2 = 2..
+NSUBST:     3 = 1:3 / *=3.., 4 = 1:4 / *=4.., 5 = 1:5 / *=5.., 6 = 2:6 / *=6..
+NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
 NSUBST:     e = 3:e / *=dff
 TILE:       v = dngn_metal_wall_cyan
 :           set_random_mon_list(
-:               "gargoyle / iron golem / molten gargoyle / " ..
+:               "gargoyle / earth elemental / molten gargoyle / " ..
 :               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
 :               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)
@@ -2107,54 +2111,60 @@ epilogue {{
             wizlab_milestone(_G, "Maxwell's Workshop")
 }}
 MAP
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvv.qqqqqq.vvvvvvvvvvv312.6vvvvvvvvvvvvvvvv
-vvvvv3...qqqq...6vvvvvvvv112....+...213vvvvvvvv
-vvvvs...r.qq.r...svvvvvv..2.....+....211vvvvvvv
-vvvv.s.r...q..r.s.vvvvv...vvvv..nn..nn..2vvvvvv
-vvv6..p..pq.p..p...vvv...vvvv..nnllllnn...vvvvv
-vvverssprp7qprpssr.vv..6vvvv..nnllllllnn...vvvv
-vvverssrppqepprssr.+..2vvvv..nnllllllllnn...vvv
-vvvrrpppppeeppppprr+32vvvv..nnllllllllllnn...vv
-vvverssrppeqpprssr.+.vvvv...nllllllllllllnn...v
-vvverssprpq7prpssr.vvvvvv++nnlllllllllllllnn++v
-vvv6..p..p.qp..p...vvvvvv..nllllllllllllllln..v
-vvvv.s.r..q...r.s.vvvvvvv..nnlllllllllllllnn..v
-vvvvs...r.qq.r...svvvvvvv...nnnnlllllllnnnn...v
-vvvvv3...qqqq...6vvvvvvvv.....2nnnnlnnnn2.....v
-vvvvvvv.qqqqqq.vvvvvvvvvv1.......2nln2.......1v
-vvvvvvvvvvvvvvvvvvvvvvvvvvG31.....nln.....13Gvv
-vvvvvvvvvvvvvvvvvvvvvvvvv1...3....nln....3...1v
-vvvvvvvvvvvvvvvvvvvvvvvvv....vvv..nln..vvv....v
-vvvvvvH.V.Hvvvvvvvvvvvvvv....v....nln....v....v
-vvvvvv.....vvvvvvvvvvvvvv....v..nnnlnnn..v....v
-vvH.....4.....Hvvvvvvvvvv....v..nllllln..v....v
-vv....v111v....vvvvvvvvvv....v..nllllln..v....v
-vv....vfffv....vvvvvvvvvv....v5.nllllln.5v....v
-vvH...vvvvv...Hvvvvvvvvvv2..6v2.nllllln.2v6..2v
-vvvvD..bbb..Dvvvvvvvvvvvv....v..nllllln..v....v
-vH..DD..H..DD..Hvvvvvvvvv....v..nnn5nnn..v....v
-v....v..P..v....v2.....2v....v21...4...12v....v
-v....v.....v....+...3...+....v622ddddd226v....v
-v....vH...Hv....v2.....2v;;;;vvvvvvvvvvvvv;;;;v
-vH..EvvFFFvvE..Hvvvvvvvvv2...................2v
-vvvvEH.....HEvvvvvvvvvvvv...vvv...vvv...vvv...v
-vvvv....v....vvvvvvvvvvvv....5.....5.....5....v
-vvvv....v....vvvvvvvvvvvv.....................v
-vvvvH.......Hvvvvvvvvvvvv...vvv...vvv...vvv...v
-vvvvvvvv+vvvvvvvvvvvvvvvv....5.....5.....5....v
-vvvvvv..G..vvvvvvvvvvvvvv.....................v
-vvvvvG.....Gvvvvvvvvvvvvv...vvv...vvv...vvv...v
-vvvv....G....vvvvvvvvvvvv....5.....5.....5....v
-vvvv.........v......2vvvv1...................1v
-vvv+G.A.G.A.G+.......vvvvvvv+vvvvvvvvvvvvvvvvvv
-vvvv.........v....2..vvvvvv2.2vvvvvvvvvvvvvvvvv
-vvvv....G....vvvvv...vvvvvv.3.vvvvvvvvvvvvvvvvv
-vvvvvG.....Gvvvvvv1..vvvvvv...vvvvvvvvvvvvvvvvv
-vvvvvv..G..vvvvvvv1..2.11.2...vvvvvvvvvvvvvvvvv
-vvvvvvvv+vvvvvvvvv............vvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvvv2.....11...2vvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                        vvvvvvvvvvv
+                      vvv..eeree..vvv
+                      v6s..rrrrr..s6v
+                      v..s.sspss.s..v
+                     vv...psspssp...vv
+                     v...r.prprp.r...v
+                     vq.r..rpppr..r.qv
+                     vqq..ppppppp..qqv
+                     vqqqq6qeeq7q6qqqv
+                     vqqq.q7qeeq.qqqqv
+                     vqq..ppppppp..qqv
+        vvvvvvvvvvvvvvq.r..rpppr..r.qv
+        vlllllvvvvvvvv...r.prprp.r...v
+        vlllllvvvvvvvvv...psspssp...vv
+        vlllllvvvvvvvvv6.s.sspss.s.6v
+        vlllllvvvvvvvvvvs..rrrrr..svv
+       vvnnlnnvvvvvvvvvvvv...r...vvv
+      vv.3nln3.vvvvvvvvvvvvv+++vvv
+     vv..2nln2..vvvvvvvvvvvH6.6Hvvvvv
+    vv...2nln2...vvvvvvvvvv.....vvvvvv
+    v2.2nnnlnnn2.2vvvvvH...4...4...Hvv
+    v...nllllln...vvvvv....v111v....vv
+    v...nllllln...vvvvv....veeev....vv
+    v2..nllllln..2vvvvvH...vvvvv...Hvv
+    v...nllllln...vvvvvvvD..bbb..Dvvvv
+    v..2nllllln2..vvvvH..DD..H..DD..Hv
+    vG..nnnnnnn..Gv..v....v..P..v....v
+    v...3..3..3...+.4+....v.....v....v
+    v...v..2..v...v..v....vH...Hv....v
+    v...v2.3.2v...vvvvH..EvvFFFvvE..Hv
+    v2vvvvdddvvvv2vvvvvvvEH.....HEvvvv
+    v...vvvdvvv...vvvvvvv....v....v
+    v...vvvvvvv...vvvvvvv....v....v
+    vv..vv222vv..vvvvvvvvH.......Hv
+     vv.........vvvvvvvvvvvvv+vvvvvv
+      vv.......vvvvvvvvv1.~.5...5.1v
+       vv.....vvvvvvvvvv..~..1.....v
+        vvv+vvvvvvvvvvvv..v--v--v..v
+       vv.....vvvvvvvvvv..v1.v..v..v
+ vvvvvvvG1...1Gvvvvvvvvv..;..5..~.fv
+vv...vv.1..G..1.vvvvvvvv..;.....~5fv
+v..G..v.........v1....1v..vvvvvvv;;v
+v1.4..+.G1.G.1G.+...4..+..;.....~5fv
+v..G..v.........v1....1v..;..5..~.fv
+vv...vv....G....vvvvvvvv..v1.v..v..v
+ vvvvvvG1....1Gvvvvvvvvv..v--v--v..v
+       vv.....vvvvvvvvvv..~..1.....v
+        vvv+vvvvvvvvvvvv1.~.....5.1v
+        vv...vvvvvvvvvvvvvvvvvvvvvvv
+        v.....v
+        v.AGA.v
+        v.....v
+        vv...vv
+         vvvvv
 ENDMAP
 
 ###############################################################################
