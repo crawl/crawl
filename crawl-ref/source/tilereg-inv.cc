@@ -388,14 +388,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                 tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
-            case OBJ_MISCELLANY + EQUIP_OFFSET:
-#if TAG_MAJOR_VERSION == 34
-            case OBJ_RODS + EQUIP_OFFSET:
-                tmp += "Evoke (%)";
-                cmd.push_back(CMD_EVOKE_WIELDED);
-                _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                break;
-#endif
             case OBJ_ARMOUR:
                 if (!you.has_mutation(MUT_NO_ARMOUR))
                 {

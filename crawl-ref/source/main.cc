@@ -2102,11 +2102,6 @@ void process_command(command_type cmd, command_type prev_cmd)
             flush_input_buffer(FLUSH_ON_FAILURE);
         break;
 
-    case CMD_EVOKE_WIELDED:
-        if (!evoke_item(you.equip[EQ_WEAPON]))
-            flush_input_buffer(FLUSH_ON_FAILURE);
-        break;
-
     case CMD_MEMORISE_SPELL:
         if (!learn_spell())
             flush_input_buffer(FLUSH_ON_FAILURE);
