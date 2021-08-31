@@ -1036,7 +1036,7 @@ STR:      -1
 INT:      -1
 DEX:      1
 LIFE:     1
-BOOL:     poison, evil
+BOOL:     poison
 DESCRIP:  When the wearer is hurt, rats may emerge from it to assist them.
 
 NAME:     shield of the Gong

@@ -538,7 +538,10 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
     if (!x_chance_in_y(capped_dam, you.hp_max))
         return;
 
-    monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
+    monster_type mon;
+    mon = is_good_god(you.religion)
+          ? MONS_RIVER_RAT
+          : coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
 
     mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
     mg.flags |= MG_FORCE_BEH; // don't mention how much it hates you before it appears
