@@ -1208,7 +1208,7 @@ trap_type random_trap_for_place(bool dispersal_ok)
     if (random2(1 + env.absdepth0) > 14 && one_chance_in(3))
         return TRAP_ZOT;
 
-    const bool shaft_ok = is_valid_shaft_level();
+    const bool shaft_ok = is_valid_shaft_level() && !player_in_hell();
     const bool tele_ok = !crawl_state.game_is_sprint();
     const bool alarm_ok = env.absdepth0 > 3;
 
