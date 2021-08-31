@@ -538,10 +538,20 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
     if (!x_chance_in_y(capped_dam, you.hp_max))
         return;
 
-    monster_type mon;
-    mon = is_good_god(you.religion)
-          ? MONS_RIVER_RAT
-          : coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
+    auto rats = { MONS_HELL_RAT, MONS_RIVER_RAT };
+    // Choose random in rats where the rat isn't hated by the player's god.
+    int seen = 0;
+    monster_type mon = MONS_NO_MONSTER;
+    for (auto rat : rats)
+        if (!god_hates_monster(rat) && one_chance_in(++seen))
+            mon = rat;
+
+    if (!seen)
+    {
+        // No valid creatures to pull from (e.g., follower of Oka), bail out.
+        mpr("Your cloak shudders, but is subdued by a divine force.");
+        return;
+    }
 
     mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
     mg.flags |= MG_FORCE_BEH; // don't mention how much it hates you before it appears
@@ -549,6 +559,7 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
     {
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         mprf("%s scurries out from under your cloak.", m->name(DESC_A).c_str());
+        // We should return early in the case of no_love or no_allies, so this is more a sanity check.
         check_lovelessness(*m);
     }
 }
