@@ -5745,12 +5745,9 @@ static dungeon_feature_type _pick_an_altar()
                 god = GOD_MAKHLEB;
             break;
 
-        default: // Any god (with exceptions).
-            do
-            {
-                god = random_god();
-            }
-            while (god == GOD_LUGONU || god == GOD_BEOGH || god == GOD_JIYVA);
+        default: // Any temple-valid god
+            auto temple_gods = temple_god_list();
+            god = *random_iterator(temple_gods);
             break;
         }
     }
