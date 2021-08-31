@@ -1417,6 +1417,7 @@ namespace quiver
         case ABIL_BEOGH_SMITING:
         case ABIL_QAZLAL_UPHEAVAL:
         case ABIL_EVOKE_DISPATER:
+        case ABIL_EVOKE_OLGREB:
             return true;
         default:
             return false;
@@ -1491,6 +1492,7 @@ namespace quiver
             case ABIL_USKAYAW_GRAND_FINALE:
             case ABIL_WU_JIAN_WALLJUMP:
             case ABIL_EVOKE_DISPATER:
+            case ABIL_EVOKE_OLGREB:
 #ifdef WIZARD
             case ABIL_WIZ_BUILD_TERRAIN:
             case ABIL_WIZ_CLEAR_TERRAIN:

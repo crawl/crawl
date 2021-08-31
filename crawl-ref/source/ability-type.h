@@ -80,6 +80,7 @@ enum ability_type
 #endif
     ABIL_EVOKE_ASMODEUS,
     ABIL_EVOKE_DISPATER,
+    ABIL_EVOKE_OLGREB,
     ABIL_MAX_EVOKE = ABIL_EVOKE_ASMODEUS,
 
     // Divine abilities

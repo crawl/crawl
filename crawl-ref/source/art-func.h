@@ -171,54 +171,6 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
 }
 
-// this isn't targeted, but using the targeted version lets the olgreb static
-// targeter work
-static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    const int cost = 4;
-
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        if (!enough_hp(cost, true))
-        {
-            mpr("You're too close to death to use this item.");
-            *unevokable = true;
-            return true;
-        }
-    }
-    else if (!enough_mp(cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
-        return false;
-
-    *did_work = true;
-    pay_mp(cost);
-
-    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
-
-    // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr,
-        target) == spret::abort)
-    {
-        *unevokable = true;
-        refund_mp(cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    finalize_mp_cost();
-    practise_evoking(1);
-    did_god_conduct(DID_WIZARDLY_ITEM, 10);
-
-    return false;
-}
-
 // Based on melee_attack::staff_damage(), but using only evocations skill.
 static int _calc_olgreb_damage(actor* attacker, actor* defender)
 {

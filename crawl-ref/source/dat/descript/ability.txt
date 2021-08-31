@@ -841,3 +841,8 @@ dealing electric damage to everything in their path and depositing the user
 at the bolt's end. After using this ability, you will be unable to use it
 again for a short time.
 %%%%
+Evoke the Staff of Olgreb ability
+
+Causes the caster to radiate toxic energy, continuously inflicting poison on
+everything in line of sight for as long as the aura lasts. The power of this
+ability scales with evocations skill.
