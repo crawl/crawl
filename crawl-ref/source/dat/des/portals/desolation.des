@@ -1009,17 +1009,17 @@ KPROP:  3456%!' = no_tele_into
 KITEM:  3 = % / * w:5
 KITEM:  45 = |
 KITEM:  6 = %
-KITEM:  P = wand of digging charges:2
+KITEM:  d = wand of digging charges:2 no_pickup
 KMONS:  3 = ushabti
 KMONS:  4 = halazid warlock
 KMONS:  5 = crystal guardian
 KMONS:  6 = ragged hierophant
-KMONS:  Pp = withered plant perm_ench:petrified
+KMONS:  p = withered plant perm_ench:petrified
 KFEAT:  ! = iron_grate
-NSUBST: p = P / p
+NSUBST: - = d / .pp
 : desolation_ruins_setup(_G)
 MAP
-............
+...pcG----Gc
 .1ppcccccccc
 .ppGc3'''%3c
 ccccc'''''%c
@@ -1030,7 +1030,7 @@ c'6'c''cc'%c
 ccccc'''''%c
 .ppGc3'''%3c
 .1ppcccccccc
-............
+...pcG----Gc
 ENDMAP
 
 NAME:  desolation_ruin_nicolae_tomb_wrecked
@@ -1039,7 +1039,7 @@ KFEAT: ! = iron_grate
 SUBST: - = x., c = c:90 x, 1 = 1.
 : desolation_ruins_setup(_G)
 MAP
-.....----...
+.....G---..c
 .1.-.1..xccc
 ..-xx..--.%c
 ccccc......c
@@ -1050,7 +1050,7 @@ c.%.-..ccx%c
 ccccc.--%xxc
 .--Gc..-..%c
 .1..ccx.1xcc
-....-......-
+....--....Gc
 ENDMAP
 
 # This library is intact enough to have preserved some scrolls from the salt.
