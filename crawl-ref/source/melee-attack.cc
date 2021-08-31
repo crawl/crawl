@@ -3024,7 +3024,9 @@ void melee_attack::do_spines()
         if (defender->type == MONS_BRIAR_PATCH
             && attacker->type == MONS_THORN_HUNTER
             // Dithmenos' shadow can't take damage, don't spam.
-            || attacker->type == MONS_PLAYER_SHADOW)
+            || attacker->type == MONS_PLAYER_SHADOW
+            // Don't let spines kill things out of LOS.
+            || !summon_can_attack(defender->as_monster(), attacker))
         {
             return;
         }
