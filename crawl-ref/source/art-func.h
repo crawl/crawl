@@ -81,56 +81,6 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
  * Unrand functions.
  *******************/
 
-static bool _evoke_sceptre_of_asmodeus()
-{
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-        return false;
-
-    const monster_type mon = random_choose_weighted(
-                                   3, MONS_BALRUG,
-                                   2, MONS_HELLION,
-                                   1, MONS_BRIMSTONE_FIEND);
-
-    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, you.religion);
-    mg.set_summoned(&you, 0, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    monster *m = create_monster(mg);
-
-    if (m)
-    {
-        mpr("The sceptre summons one of its servants.");
-        did_god_conduct(DID_EVIL, 3);
-
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        mpr("You don't feel so good about this...");
-    }
-    else
-        mpr("The air shimmers briefly.");
-
-    return true;
-}
-
-static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
-                            bool* unevokable)
-{
-    if (you.allies_forbidden())
-    {
-        mpr("Nothing will answer your call!");
-        *unevokable = true;
-        return true;
-    }
-    if (_evoke_sceptre_of_asmodeus())
-    {
-        *did_work = true;
-        practise_evoking(1);
-    }
-
-    return false;
-}
-
 ////////////////////////////////////////////////////
 static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
                                    actor* defender, bool mondied, int dam)

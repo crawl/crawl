@@ -1951,7 +1951,7 @@ namespace quiver
             case UNRAND_OLGREB:
                 return enough_mp(4, quiet); // TODO: code duplication...
             default:
-                return true; // UNRAND_ASMODEUS has no up-front cost
+                return true;
             }
         }
 
@@ -1974,7 +1974,6 @@ namespace quiver
             switch (you.inv[item_slot].unrand_idx)
             {
             case UNRAND_OLGREB: // only indirect damage
-            case UNRAND_ASMODEUS:
                 return false;
             default:
                 return true;
