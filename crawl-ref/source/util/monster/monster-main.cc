@@ -8,6 +8,7 @@
 #include "fake-main.hpp"
 
 #include "coordit.h"
+#include "fight.h" // spines_damage
 #include "item-name.h"
 #include "item-prop.h"
 #include "los.h"
@@ -877,8 +878,12 @@ int main(int argc, char* argv[])
         printf(" | AC/EV: %i/%i", mac, mev);
 
         string defenses;
-        if (mon.is_spiny() > 0)
-            defenses += colour(YELLOW, "(spiny 5d4)");
+        if (mon.is_spiny())
+        {
+            string dmg = dice_def_string(spines_damage(mon.type));
+            defenses += colour(YELLOW, make_stringf("(spiny %s)",
+                                                    dmg.c_str()));
+        }
         if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
             defenses += colour(LIGHTRED, "(headbutt: d20-1)");
         if (!defenses.empty())

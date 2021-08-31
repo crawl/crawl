@@ -1283,3 +1283,10 @@ bool can_reach_attack_between(coord_def source, coord_def target)
         // The foe should be on the map (not stepped from time).
         && in_bounds(target);
 }
+
+dice_def spines_damage(monster_type mon)
+{
+    if (mon == MONS_CACTUS_GIANT)
+        return dice_def(5, 8);
+    return dice_def(5, 4);
+}
