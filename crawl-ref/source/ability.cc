@@ -353,6 +353,8 @@ static vector<ability_def> &_get_ability_list()
         // TODO: any way to automatically derive these from the artefact name?
         { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
             0, 0, 0, {fail_basis::evo, 80, 3}, abflag::none },
+        { ABIL_EVOKE_DISPATER, "Evoke the Staff of Dispater",
+            4, 100, 0, {}, abflag::none },
 
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, {}, abflag::none },
@@ -1726,6 +1728,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_EVOKE_DISPATER:
+        return true;
+
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_setup_potion_petition(quiet);
 
@@ -2027,6 +2032,19 @@ static void _evoke_sceptre_of_asmodeus()
         mpr("The air shimmers briefly.");
 }
 
+static bool _evoke_staff_of_dispater(dist *target)
+{
+    int power = you.skill(SK_EVOCATIONS, 8);
+
+    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target)
+        == spret::abort)
+    {
+        return false;
+    }
+    mpr("You feel the staff feeding on your energy!");
+    return true;
+}
+
 /*
  * Use an ability.
  *
@@ -2289,6 +2307,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_EVOKE_ASMODEUS:
         fail_check();
         _evoke_sceptre_of_asmodeus();
+        break;
+
+    case ABIL_EVOKE_DISPATER:
+        if (!_evoke_staff_of_dispater(target))
+            return spret::abort;
         break;
 
     // DEMONIC POWERS:
@@ -3590,6 +3613,9 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_ASMODEUS:
         return you.weapon()
                && is_unrandom_artefact(*you.weapon(), UNRAND_ASMODEUS);
+    case ABIL_EVOKE_DISPATER:
+        return you.weapon()
+               && is_unrandom_artefact(*you.weapon(), UNRAND_DISPATER);
     default:
         // removed abilities handled here
         return false;
@@ -3640,6 +3666,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_EVOKE_BERSERK,
             ABIL_EVOKE_TURN_INVISIBLE,
             ABIL_EVOKE_ASMODEUS,
+            ABIL_EVOKE_DISPATER,
 #ifdef WIZARD
             ABIL_WIZ_BUILD_TERRAIN,
             ABIL_WIZ_SET_TERRAIN,

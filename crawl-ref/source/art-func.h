@@ -128,56 +128,6 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 
-/////////////////////////////////////////////////////
-
-static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    int hp_cost = 14;
-    int mp_cost = 4;
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        hp_cost += mp_cost;
-        mp_cost = 0;
-    }
-
-    if (!enough_hp(hp_cost, true))
-    {
-        mpr("You're too close to death to use this item.");
-        *unevokable = true;
-        return true;
-    }
-
-    if (!enough_mp(mp_cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    *did_work = true;
-    pay_hp(hp_cost);
-    pay_mp(mp_cost);
-
-    int power = you.skill(SK_EVOCATIONS, 8);
-
-    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target)
-        == spret::abort)
-    {
-        *unevokable = true;
-        refund_hp(hp_cost);
-        refund_mp(mp_cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    mpr("You feel the staff feeding on your energy!");
-    finalize_mp_cost(hp_cost);
-    practise_evoking(random_range(1, 2));
-
-    return false;
-}
-
 ////////////////////////////////////////////////////
 
 static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,

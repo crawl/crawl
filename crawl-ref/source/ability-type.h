@@ -79,6 +79,7 @@ enum ability_type
     ABIL_EVOKE_THUNDER,
 #endif
     ABIL_EVOKE_ASMODEUS,
+    ABIL_EVOKE_DISPATER,
     ABIL_MAX_EVOKE = ABIL_EVOKE_ASMODEUS,
 
     // Divine abilities

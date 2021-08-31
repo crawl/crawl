@@ -1376,6 +1376,14 @@ namespace quiver
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
             return palentonga_charge_possible(quiet, false);
+        case ABIL_EVOKE_DISPATER:
+            // assumes constant range with power
+            if (!spell_no_hostile_in_range(SPELL_HURL_DAMNATION))
+                return true;
+            // TODO: code duplication
+            if (!quiet)
+                mpr("You can't see any hostile targets that would be affected.");
+            return false;
         case ABIL_BLINKBOLT:
             if (!spell_no_hostile_in_range(SPELL_BLINKBOLT))
                 return true;
@@ -1408,6 +1416,7 @@ namespace quiver
         case ABIL_LUGONU_BANISH:
         case ABIL_BEOGH_SMITING:
         case ABIL_QAZLAL_UPHEAVAL:
+        case ABIL_EVOKE_DISPATER:
             return true;
         default:
             return false;
@@ -1481,6 +1490,7 @@ namespace quiver
             case ABIL_USKAYAW_LINE_PASS:
             case ABIL_USKAYAW_GRAND_FINALE:
             case ABIL_WU_JIAN_WALLJUMP:
+            case ABIL_EVOKE_DISPATER:
 #ifdef WIZARD
             case ABIL_WIZ_BUILD_TERRAIN:
             case ABIL_WIZ_CLEAR_TERRAIN:
@@ -1943,11 +1953,6 @@ namespace quiver
 
             switch (you.inv[item_slot].unrand_idx)
             {
-            case UNRAND_DISPATER:
-                // TODO: code duplication...
-                if (you.has_mutation(MUT_HP_CASTING))
-                    return enough_hp(18, quiet);
-                return enough_hp(14, quiet) && enough_mp(4, quiet);
             case UNRAND_OLGREB:
                 return enough_mp(4, quiet); // TODO: code duplication...
             default:
