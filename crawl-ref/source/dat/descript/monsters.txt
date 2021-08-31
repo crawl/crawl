@@ -810,7 +810,7 @@ creeping inferno
 
 A formless mass of ancient fire, bound by heat and malevolence. The slightest
 disturbance will destroy the bonds holding it together and unleash a fire
-storm. It longs for that release yet it seems somehow reluctant to move while
+storm. It longs for that release, yet seems reluctant to move while
 being observed.
 %%%%
 crimson imp
@@ -1981,9 +1981,8 @@ DevTeam.
 %%%%
 putrid mouth
 
-A starved spirit whose mouth is a pit of rot and emits vile fumes. Its putrid
+A starved spirit whose mouth is a pit of rot, emitting vile fumes. Its putrid
 maw cannot eat the food it finds, so it moans with rage and desparate hunger.
-The filth on its claws is withering.
 %%%%
 purple draconian
 
@@ -2007,7 +2006,7 @@ and it moves with terrifying swiftness.
 %%%%
 quicksilver elemental
 
-A mercurial spirit drawn from the elemental plane of earth, which exists in
+A mercurial spirit drawn from the elemental plane of earth. It exists in
 this world by inhabiting a shimmering body of liquid metal.
 %%%%
 quicksilver ooze
@@ -2137,7 +2136,7 @@ potent venomous bite.
 %%%%
 searing wretch
 
-An animated corpse alight with terrible fire. The flames are fueld by its
+An animated corpse alight with terrible fire. The flames are fueled by its
 regenerating flesh, which bubbles and melts as it grows. Its bite leaves
 its victims covered in flaming gore.
 %%%%
@@ -2368,7 +2367,7 @@ pouring from its mouth.
 %%%%
 stoker
 
-A blacksmith who made an unholy pact in life, now chained to tend the fires of
+A mortal who made an unholy pact in life, now chained to tend the fires of
 hell in undeath as payment. It seems to want to keep its distance.
 %%%%
 stone giant
@@ -2629,7 +2628,7 @@ whim.
 wendigo
 
 A gaunt spirit of frozen hunger, so ravenous it will consume friend and foe
-alike. According to legend if one cuts off its legs it will feast upon its own
+alike. According to legend, if one cuts off its legs, it will feast upon its own
 marrow. It stalks those lost wandering in the cold and hunts with the force of
 blizzards.
 %%%%
