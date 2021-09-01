@@ -3148,9 +3148,7 @@ void handle_flame_wave()
         return;
     }
 
-    const int CHANNEL_COST = you.duration[DUR_BRILLIANCE] ? 1 : 2;
-
-    if (!enough_mp(CHANNEL_COST, true))
+    if (!enough_mp(1, true))
     {
         mpr("Without enough magic to sustain them, the waves of flame dissipate.");
         end_flame_wave();
@@ -3172,7 +3170,7 @@ void handle_flame_wave()
     beam.explode(true, true);
     trigger_battlesphere(&you);
 
-    pay_mp(CHANNEL_COST);
+    pay_mp(1);
     finalize_mp_cost();
 
     if (lvl >= spell_range(SPELL_FLAME_WAVE, pow))
