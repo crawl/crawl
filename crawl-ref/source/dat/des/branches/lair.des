@@ -495,7 +495,7 @@ ENDMAP
 # Combined vault with four size settings, each with
 # one more oklob and more items.
 NAME:   minmay_lair_oklob_chamber
-TAGS:   luniq_oklob no_monster_gen extra
+TAGS:   luniq_oklob no_monster_gen
 DEPTH:  Lair
 ORIENT: north
 KMONS:  p = plant
