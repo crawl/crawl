@@ -3814,7 +3814,9 @@ bool wait_spell_active(spell_type spell)
     return spell == SPELL_SEARING_RAY
                 && you.attribute[ATTR_SEARING_RAY] != 0
             || spell == SPELL_MAXWELLS_COUPLING
-                && you.props.exists(COUPLING_TIME_KEY);
+                && you.props.exists(COUPLING_TIME_KEY)
+            || spell == SPELL_FLAME_WAVE
+                && you.props.exists(FLAME_WAVE_KEY);
 }
 
 // returns the closest target to the player, choosing randomly if there are more
