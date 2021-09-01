@@ -2508,3 +2508,30 @@ tt.........tt
  tt.......tt
   ttt@@@ttt
 ENDMAP
+
+NAME:   mainiacjoe_arrival_cupid_arrowhead
+TAGS:   arrival no_monster_gen transparent
+ORIENT: float
+SUBST:  x : xcvb
+MAP
+            ........
+        ............
+    ..........xxx+..
+  ........xxxxx..x..
+ .....xxxxx......x..
+...xxxx.........xx..
+..xx............x...
+..x.........{...x...
+..+.............x.. 
+..x............xx.. 
+..xx..xxx+.....x... 
+...xxxx..x.....x..  
+ ........x.....x..  
+  ......xx....xx..  
+      ..x.....x...  
+      ..x.....x..   
+      ..xx...xx..   
+      ...xx+xx...   
+       .........    
+        .......     
+ENDMAP
