@@ -303,7 +303,7 @@ static const cloud_data clouds[] = {
     },
     // CLOUD_DEGENERATION,
     { "degeneration",  nullptr,                   // terse, verbose name
-      ETC_MAGIC,                                  // colour
+      ETC_DARK,                                   // colour
       { TILE_CLOUD_DEGENERATION, CTVARY_NONE },   // tile
       BEAM_NONE, {},                              // beam & damage
       false,                                      // opacity
