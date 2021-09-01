@@ -2425,18 +2425,20 @@ NAME:       wizlab_alistair
 TAGS:       no_rotate
 ITEM:       potion of degeneration ident:all
 :item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-ITEM:   condenser vane 
-ITEM:   any book / randbook disc:poison disc2:transmutation w:5
+ITEM:   scroll of acquirement ident:all q:1
+ITEM:   any book w:30 / randbook disc:poison disc2:transmutation /\
+        condenser vane w:1
 KITEM:  " = gold q:1 no_pickup
-KITEM:  H = any magical staff
+KITEM:  H = any magical staff no_pickup
+KITEM:  Q = star_item
 KITEM:  JKL = potion of degeneration ident:all
 MONS:   wizard / boggart w:2 / deep elf zephyrmancer w:3 /\
-        deep elf pyromancer w:3 
+        deep elf pyromancer w:3 / worldbinder w:1
 MONS:   great orb of eyes / glowing orange brain / sphinx / cacodemon w:2 /\
         very ugly thing / glowing shapeshifter / entropy weaver /\
-        green death w:2 / tentacled starspawn / golden eye band w:4 /\
-        worldbinder
-MONS:   nagaraja / deep elf high priest / sphinx w:5 / deep elf sorcerer /\ 
+        green death w:2 / tentacled starspawn / golden eye band w:6 /\
+        worldbinder / floating eye w:4
+MONS:   nagaraja / deep elf high priest / sphinx w:5 / deep elf sorcerer /\
         worldbinder
 MONS:   wizard / necromancer w:2 / hell knight w:2 / worldbinder w:6
 MONS:   corrupter
@@ -2449,24 +2451,24 @@ KMONS:  E = water nymph / merfolk aquamancer / merfolk javelineer /\
 KMONS:  D = stone giant / ettin
 KFEAT:  E = shallow_water
 KFEAT:  N = granite_statue
-NSUBST: A = 1:< / *:A, D = 1:D/*:-, W = 1:E / * = E:1 W:14, F = 1:F / * = F----
-NSUBST: H = 1:H / *:", e = 4:e / 1:g / *=eeddg, 5 = 3:5 / *=5..
-NSUBST: 3 = 3:3 / *= 3...., ? = 3:? / *=?., 4 = 2:4 / *= 4...., J=1:J / *:-
+NSUBST: A = 1:< / *:A, D = 1:D/*:-, W = 1:E / * = E:1 W:16, F = 1:F / * = F----
+NSUBST: H = 1:H / *:", e = 4:e / 1:g / *=eedg, 5 = 3:5 / *=5..
+NSUBST: 3 = 3:3 / *= 3...., ? = 2:? / *=?..., 4 = 2:4 / *= 4...., J=1:J / *:-
 SUBST:  N = N'', ' = 1:15 2:25 K:15 ':825, . = d:1 .:15, - = L:1 -:70
 MARKER:     ? = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 50, \
-                size = 3, size_buildup_amnt = 3, \
+                size = 2, size_buildup_amnt = 3, \
                 size_buildup_time = 25, cloud_type = "degeneration" \
             }
 MARKER:     H = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 50, \
-                size = 4, size_buildup_amnt = 3, \
+                size = 3, size_buildup_amnt = 3, \
                 size_buildup_time = 25, cloud_type = "degeneration" \
             }
 TILE:   c = wall_stone_gray
 FTILE:  H" = floor_mosaic
 FTILE:  N'12K = floor_w_marble
-FTILE:  -FTtAJLD< = floor_grass
+FTILE:  -FTtAJLDQ< = floor_grass
 :           set_random_mon_list(
 :               "wizard w:40 / necromancer / boggart / " ..
 :               "glowing orange brain / worldbinder / sphinx / " ..
@@ -2481,30 +2483,30 @@ MAP
                   ceeec
                   ceeec
     ccccccccccccccccc+c
-    c3.3+3?3c3..3+..?5c
+    c3.3+3?3c3..3+...5c
 ccccc...c...c.3..c.3.5c
 ce5.c.3.c3..c...3c...5c
-ce.?+...cc+cc+cccc+cccc
-ce..c...+.....?....c
+ce..+...cc+cc+cccc+cccc
+ce..c...+?....?....c
 ce5.c3..c..33..33..c
 ccccccccc+cccccccc+c
     cee3c'''NNNN'''cccccccccc
-    c444c''''''''''+...?4..4c
-    ccc+c''N''''N''+..WWWW..c
-    c44?c''''''''''n.WWWWWW4c
+    c444c''''''''''+....4..4c
+    ccc+c''N''''N''+..WWWW?.c
+    c44.c''''''''''n.WWWWWW4c
     c3..+''''NN''''n.WWWWWW.c
-    c...cN''""""'''n..WWWW..c
+    c...cN''""""'''n.?WWWW..c
     c+ccc'''"HH"'''n4......4c
-    c..3c'N'"HH"'N'cccccnn+nct
-    c4..+'''""""'''c4eecF----t
-    c4..c'''''''''Nc..3c-F-Ftt
-    ccc+c''''NN''''c3?.ct---tt
-    c44.c''N''''N''c...cF-T-Ft
-    c...+''''''''''c..4ct---tt
-    c...cNN'''''NN'+...cttFttt
-    c+ccccccc++ccccccccctt--tt
-    c..4.4.G....G.4.4..ct--Ftt
-    c.3..............3.ct--tttt
+    c..3c'N'"HH"'N'cccccnn+nctttttt
+    c4..+'''""""'''c4eecF----ttt-?tttttttttt
+    c4.?c'''''''''Nc..3c-F-Fttt-----F----ttt
+    ccc+c''''NN''''c3..ct---t-------WWW---tt
+    c44.c''N''''N''c...cF-T-F---T-?WWWWWF-Qt
+    c...+''''''''''c..4ct---tt------WWW---tt
+    c...cNN'''''NN'+...cttFtttt-----F----ttt
+    c+ccccccc++ccccccccctt--tttt-?tt--tttt
+    c..4.4.G.?..G.4.4..ct--Fttttttttttttt
+    c.3..............3.ct--tttttttttttttt
     c..4G..........G4..ctt-tttt
   ttc+ccccccc++ccccccc+ctF-tttt
  tttc.....4cG..Gc4.....ct-J-ttt
