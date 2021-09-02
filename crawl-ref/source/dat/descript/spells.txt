@@ -916,10 +916,10 @@ cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
 Manifold Assault spell
 
-Launches melee attacks against multiple visible enemies, warping space into
-paradoxical configurations to allow one swing to be in many places. The effect
-is too imprecise to allow stabbing unsuspecting foes. At high power, it can be
-used to strike more enemies at once.
+Warps space into paradoxical configurations in order to strike many visible
+targets with one melee attack. The effect is too imprecise to allow stabbing
+unsuspecting foes. At high power, it can be used to strike more enemies at
+once.
 %%%%
 Mara Summon spell
 
@@ -1183,6 +1183,11 @@ Scattershot spell
 
 Blasts a cone-shaped area in front of the caster with metallic fragments. Its
 damage is strongly reduced by armour.
+%%%%
+Scorch spell
+
+Scorches a random foe. Those injured by this have their resistance to fire
+burned away for a short time.
 %%%%
 Seal Doors spell
 

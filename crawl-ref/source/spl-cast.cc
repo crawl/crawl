@@ -1299,8 +1299,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
-    case SPELL_DAZZLING_FLASH:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1309,6 +1307,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_ramparts>(&you);
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
+    case SPELL_DAZZLING_FLASH:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
@@ -1389,6 +1388,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, _find_blink_targets(&you));
     case SPELL_MANIFOLD_ASSAULT:
         return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles(&you));
+    case SPELL_SCORCH:
+        return make_unique<targeter_multiposition>(&you, find_near_hostiles(range));
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles(&you));
     case SPELL_NOXIOUS_BOG:
@@ -2154,6 +2155,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SHATTER:
         return cast_shatter(powc, fail);
 
+    case SPELL_SCORCH:
+        return cast_scorch(powc, fail);
+
     case SPELL_IRRADIATE:
         return cast_irradiate(powc, &you, fail);
 
@@ -2684,6 +2688,8 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
             return irradiate_damage(power, false);
         case SPELL_SHATTER:
             return shatter_damage(power);
+        case SPELL_SCORCH:
+            return scorch_damage(power, false);
         case SPELL_BATTLESPHERE:
             return battlesphere_damage(power);
         case SPELL_FROZEN_RAMPARTS:

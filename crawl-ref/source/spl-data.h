@@ -3496,6 +3496,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SCORCH, "Scorch",
+    spschool::fire,
+    spflag::no_ghost,
+    2,
+    50,
+    3, 3,
+    4, 8,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

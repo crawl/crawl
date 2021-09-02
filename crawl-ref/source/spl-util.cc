@@ -1637,6 +1637,9 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return true;
 
+    case SPELL_SCORCH:
+        return find_near_hostiles(range).empty();
+
     default:
         break;
     }
