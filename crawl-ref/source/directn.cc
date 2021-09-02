@@ -2223,7 +2223,7 @@ public:
         if (ev.type() == ui::Event::Type::KeyDown)
         {
             auto key = static_cast<const ui::KeyEvent&>(ev).key();
-            key = unmangle_direction_keys(key, KMC_TARGETING, false);
+            key = unmangle_direction_keys(key, KMC_TARGETING);
 
             const auto command = m_dc.behaviour->get_command(key);
             // XX a bit ugly to do this here..
