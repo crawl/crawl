@@ -18,7 +18,7 @@ struct job_def
 {
     const char* abbrev; ///< Two-letter abbreviation
     const char* name; ///< Long name
-    int s, i, d; ///< Starting Str, Dex, and Int
+    int s, i, d; ///< Starting Str, Int, and Dex
     /// Which species are good at it
     /// No recommended species = job is disabled
     vector<species_type> recommended_species;
