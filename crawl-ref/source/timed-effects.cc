@@ -95,10 +95,10 @@ static void _hell_effects(int /*time_delta*/)
             contaminate_player(4000 + random2(4000));
             break;
         case 1:
-            drain_player(70, true);
+            drain_player(100, true, true);
             break;
         case 2:
-            lose_stat(STAT_RANDOM, 1 + random2(3));
+            lose_stat(STAT_RANDOM, 2 + random2(6));
             break;
     }
 }
