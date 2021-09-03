@@ -2205,6 +2205,16 @@ namespace quiver
         you.wield_change = true;
     }
 
+    string launcher_action_cycler::fire_key_hints() const
+    {
+        return "";
+    }
+
+    bool launcher_action_cycler::targeter_handles_key(command_type) const
+    {
+        return false;
+    }
+
     /**
      * Set the action for this object based on another action_cycler. Guarantees
      * not null.
