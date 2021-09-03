@@ -179,6 +179,8 @@ namespace quiver
         bool set(const shared_ptr<action> n, bool _autoswitched=false) override;
         bool is_empty() const override;
         void set_needs_redraw() override;
+        string fire_key_hints() const override;
+        virtual bool targeter_handles_key(command_type c) const override;
     };
 
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
