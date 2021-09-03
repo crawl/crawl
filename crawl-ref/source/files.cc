@@ -2226,6 +2226,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
              curr_PlaceInfo.num_visits, curr_PlaceInfo.levels_seen);
 #endif
 #if TAG_MAJOR_VERSION == 34
+        // TODO: place_info crashes are extremely brittle and unrecoverable,
+        // it might be good to generalize this fixup.
+        // TODO: this fixup triggers on &ctrl-r for a depth 1 branch (e.g.
+        // the vestibule of hell), would be nice to avoid. (Currently,
+        // `wizard_recreate_level` has a workaround.) But this check can't be
+        // skipped for that case, because otherwise the ASSERT is tripped.
+        //
         // this fixup is for a bug where turns_on_level==0 was used to set
         // just_created_level, and there were some obscure ways to have 0
         // turns on a level that you had entered previously. It only applies
