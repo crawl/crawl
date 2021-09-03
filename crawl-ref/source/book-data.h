@@ -137,7 +137,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
     SPELL_CORPSE_ROT,
-    SPELL_FREEZING_CLOUD,
 },
 
 {   // Book of Necromancy
@@ -203,16 +202,15 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Geomancy
     SPELL_SANDBLAST,
     SPELL_PASSWALL,
-    SPELL_LRD,
-},
-
-{   // Book of Stone
-    SPELL_LEDAS_LIQUEFACTION,
-    SPELL_BOLT_OF_MAGMA,
-    SPELL_STATUE_FORM,
+    SPELL_STONE_ARROW,
 },
 
 #if TAG_MAJOR_VERSION == 34
+{   // Book of Stone
+    SPELL_LEDAS_LIQUEFACTION,
+    SPELL_STATUE_FORM,
+},
+
 {   // Book of Wizardry
     SPELL_AGONY,
     SPELL_INVISIBILITY,
@@ -285,6 +283,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Annihilations
     SPELL_CHAIN_LIGHTNING,
     SPELL_FIRE_STORM,
+    SPELL_SHATTER,
 },
 
 {   // Grand Grimoire
@@ -360,9 +359,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Earth
-    SPELL_STONE_ARROW,
-    SPELL_BOLT_OF_MAGMA,
-    SPELL_SHATTER,
+    SPELL_LEDAS_LIQUEFACTION,
+    SPELL_LRD,
+    SPELL_STATUE_FORM,
 },
 
 { // Ozocubu's Autobio
@@ -475,7 +474,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Trismegistus Codex
     SPELL_IGNITE_POISON,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_BOLT_OF_MAGMA,
+    SPELL_FREEZING_CLOUD,
 },
 
 { // Book of the Hunter

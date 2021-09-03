@@ -39,8 +39,8 @@ enum book_type
     BOOK_BATTLE, // was BOOK_MUTATIONS
 #endif
     BOOK_GEOMANCY,
-    BOOK_STONE,
 #if TAG_MAJOR_VERSION == 34
+    BOOK_STONE,
     BOOK_WIZARDRY,
 #endif
     BOOK_POWER,

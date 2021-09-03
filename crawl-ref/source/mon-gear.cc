@@ -110,7 +110,7 @@ static void _give_book(monster* mon, int level)
     {
         // Statue form books, heh.
         const int which_book = (one_chance_in(3) ? BOOK_SLOTH
-                                                 : BOOK_STONE);
+                                                 : BOOK_EARTH);
 
         const int thing_created = items(false, OBJ_BOOKS, which_book, level);
 

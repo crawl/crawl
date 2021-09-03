@@ -299,12 +299,6 @@ A book containing a comprehensive, well-rounded collection of sphere-related
 spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
 but sadly, the remainder of the book has been completely vaporised.
 %%%%
-book of stone
-
-A textbook of advanced Earth magic. Its cover and spine are inlaid with an
-impressive variety of precious stones, which may contain immense arcane power.
-Then again, the creator may have just liked the way they twinkle.
-%%%%
 book of storms
 
 A book written by the magician Lan Shi, who was preoccupied with the study and
