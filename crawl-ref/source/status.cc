@@ -565,9 +565,12 @@ bool fill_status_info(int status, status_info& inf)
     case STATUS_FLAME_WAVE:
         if (you.props.exists(FLAME_WAVE_KEY))
         {
-            const int lvl = you.props[FLAME_WAVE_KEY].get_int();
+            // It's only possible to hit the prop = 0 case if we reprint the
+            // screen after the spell was cast but before the end of the
+            // player's turn, which mostly happens in webtiles. Great!
+            const int lvl = max(you.props[FLAME_WAVE_KEY].get_int() - 1, 0);
             inf.light_colour = WHITE;
-            inf.light_text   = "Wave" + string(lvl - 1, '+');
+            inf.light_text   = "Wave" + string(lvl, '+');
         }
         break;
 
