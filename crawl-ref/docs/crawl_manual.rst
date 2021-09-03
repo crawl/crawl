@@ -2050,7 +2050,7 @@ Cinder Acolytes
   Cinder Acolytes serve Ignis, the Dying Flame, who grants them incredible
   power over fire... but there is only so much fire left to draw on, and once
   it burns out, acolytes may need to abandon Ignis. They start with a robe,
-  a choice of flaming weapons, and the spell Foxfire.
+  a choice of flaming weapons, and the spell Scorch.
 
 Warrior-mage backgrounds
 ========================
