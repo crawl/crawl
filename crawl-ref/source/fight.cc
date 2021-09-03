@@ -200,8 +200,12 @@ static bool _autoswitch_to_melee()
     else
         return false;
 
-    if (!is_melee_weapon(you.inv[item_slot]))
+    if (!you.inv[item_slot].defined()
+        || !is_melee_weapon(you.inv[item_slot])
+        || needs_handle_warning(you.inv[item_slot], OPER_ATTACK, penance))
+    {
         return false;
+    }
 
     return wield_weapon(true, item_slot);
 }
