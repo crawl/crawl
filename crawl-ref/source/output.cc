@@ -1005,10 +1005,13 @@ static void _print_stat(stat_type stat, int x, int y)
     textcolour(_get_stat_colour(stat));
     CPRINTF("%d", you.stat(stat, false));
 
-    if (you.stat_loss[stat] > 0)
-        CPRINTF(" (%d)  ", you.max_stat(stat));
-    else
-        CPRINTF("       ");
+    if (!_is_using_small_layout())
+    {
+        if (you.stat_loss[stat] > 0)
+            CPRINTF(" (%d)  ", you.max_stat(stat));
+        else
+            CPRINTF("       ");
+    }
 }
 
 static void _print_stats_ac(int x, int y)
