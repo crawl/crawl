@@ -613,7 +613,7 @@ Creates a short burst of flame.
 %%%%
 Flame Wave spell
 
-Blasts the caster's surroundings with a wave of fire. If the caster maintains
+Blasts the caster's surroundings with a wave of fire. If the caster maintains
 focus and supplies the spell with magical power (by waiting in place and not
 taking any other actions), more and larger flame waves will radiate outward.
 %%%%
