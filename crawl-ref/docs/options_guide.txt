@@ -996,7 +996,9 @@ travel_open_doors = (avoid | approach | open)
 auto_switch = false
         This option will allow you to automatically switch to an appropriate
         weapon when attacking in melee, as long as the one you are wielding
-        and the one you switch to are both in slot 'a' or 'b'.
+        and the one you switch to are both in slot 'a' or 'b'. An "appropriate"
+        weapon is one that is intended for melee, not inscribed with a
+        non-attack inscription (`!a`), and not hated by the player's god.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
