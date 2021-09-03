@@ -3276,7 +3276,7 @@ DEPTH:  D:12-, Depths:1-2, Elf
 ORIENT: float
 MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
-ITEM:   book of geomancy / book of the earth / book of stones / book of iron \
+ITEM:   book of geomancy / book of the earth / book of iron / \
         manual of earth magic / staff of earth ident:type / \
         ring of protection ident:type / tin of tremorstones / \
         crystal plate armour w:5

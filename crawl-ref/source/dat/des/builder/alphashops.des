@@ -160,7 +160,7 @@
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
        "manual of short blades", "manual of slings", "manual of shields",
        "manual of spellcasting", "manual of summonings", "stone",
-       "book of storms", "book of sloth", "book of stone", "book of the senses",
+       "book of storms", "book of sloth", "book of the senses",
        "book of spectacle", "book of the spheres", "book of scorching" }
 
       elseif s == "T" then i = { "scroll of torment",
