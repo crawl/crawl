@@ -2646,6 +2646,40 @@ void melee_attack::mons_apply_attack_flavour()
             drain_defender();
         break;
 
+    case AF_BARBS:
+        if (defender->is_player())
+        {
+            mpr("Barbed spikes become lodged in your body.");
+            // same duration as manticore barbs
+            if (!you.duration[DUR_BARBS])
+                you.set_duration(DUR_BARBS, random_range(4, 8));
+            else
+                you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
+
+            if (you.attribute[ATTR_BARBS_POW])
+            {
+                you.attribute[ATTR_BARBS_POW] =
+                    min(6, you.attribute[ATTR_BARBS_POW]++);
+            }
+            else
+                you.attribute[ATTR_BARBS_POW] = 4;
+        }
+        // Insubstantial and jellies are immune
+        else if (!(defender->is_insubstantial() &&
+                    mons_genus(defender->type) != MONS_JELLY))
+        {
+            if (defender_visible)
+            {
+                mprf("%s %s skewered by barbed spikes.",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str());
+            }
+            defender->as_monster()->add_ench(mon_enchant(ENCH_BARBS, 1,
+                                        attacker,
+                                        random_range(5, 7) * BASELINE_DELAY));
+        }
+        break;
+
     case AF_POISON_PARALYSE:
     {
         // Doesn't affect the poison-immune.

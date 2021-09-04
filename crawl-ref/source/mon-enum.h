@@ -136,6 +136,7 @@ enum attack_flavour
     AF_REACH_TONGUE,
     AF_BLINK_WITH,
     AF_SEAR,
+    AF_BARBS,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
