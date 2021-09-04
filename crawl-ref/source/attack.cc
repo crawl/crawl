@@ -1735,7 +1735,7 @@ int attack::player_stab(int damage)
 void attack::player_stab_check()
 {
     // XXX: move into find_stab_type?
-    if (you.duration[DUR_CLUMSY] || you.confused())
+    if (you.duration[DUR_CLUMSY] || you.confused() || you.berserk())
     {
         stab_attempt = false;
         stab_bonus = 0;
