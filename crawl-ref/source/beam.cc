@@ -6251,7 +6251,9 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     // those and simplify feat_is_wall() to return true for trees. -gammafunk
     if (feat_is_wall(dngn_feat)
         || feat_is_tree(dngn_feat)
-           && (!feat_is_flammable(dngn_feat) || !can_burn_trees())
+           && (!feat_is_flammable(dngn_feat)
+               || !can_burn_trees()
+               || env.markers.property_at(loc, MAT_ANY, "veto_destroy") == "veto")
         || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue
