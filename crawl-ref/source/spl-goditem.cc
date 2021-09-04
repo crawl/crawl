@@ -470,24 +470,17 @@ string describe_player_cancellation()
     for (auto status : dispellable_statuses)
     {
         status_info inf;
-        if (fill_status_info(status, inf) && !inf.short_text.empty())
+        if (!fill_status_info(status, inf) || inf.short_text.empty())
+            continue;
+        if (status != STATUS_AIRBORNE)
         {
-            if (status == STATUS_AIRBORNE)
-            {
-                if (!you.attribute[ATTR_PERM_FLIGHT]
-                    && !you.racial_permanent_flight())
-                {
-                    effects.push_back("flying");
-                }
-                else
-                    effects.push_back("buoyant");
-            }
-            else
-            {
-                strip_suffix(inf.short_text, " (expiring)");
-                effects.push_back(inf.short_text);
-            }
+            strip_suffix(inf.short_text, " (expiring)");
+            effects.push_back(inf.short_text);
+            continue;
         }
+        if (you.attribute[ATTR_PERM_FLIGHT] || you.racial_permanent_flight())
+            continue;
+        effects.push_back("flying");
     }
 
     return comma_separated_line(begin(effects), end(effects), " or ");
