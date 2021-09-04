@@ -936,6 +936,7 @@ dowan2
 duvessa MONS_DUVESSA
 duvessa2
 fannar MONS_FANNAR
+head_instructor MONS_HEADMASTER
 %rim 1
 %sdir mon/humanoids/elves
 elf MONS_ELF

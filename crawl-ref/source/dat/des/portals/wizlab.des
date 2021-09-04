@@ -2188,7 +2188,7 @@ kmons("5 = patrolling Head dbname:Head Instructor name:"
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / *=G1
 NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A
 SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
-FTILE:  125.*d$G+ = floor_limestone
+FTILE:  125.*de$G+ = floor_limestone
 FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
 TILE:   x = wall_brick
 TILE:   c = wall_church
