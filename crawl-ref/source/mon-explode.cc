@@ -55,7 +55,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
     beam.attitude = origin.attitude;
 }
 
-void _setup_inferno_explosion(bolt & beam, const monster& origin)
+static void _setup_inferno_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     setup_fire_storm(&origin, 100, beam);
