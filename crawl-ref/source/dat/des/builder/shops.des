@@ -933,7 +933,7 @@ DEPTH:  D:4-, Depths, Orc, Elf, Snake, Shoals, Vaults, Zot
 {{
 local greed = crawl.roll_dice(9, 2) - 9
 local count = crawl.roll_dice(6, 2) - 5
-kfeat("S = general shop type:CLEARANCE_SALE! suffix:EVERYTHING_MUST_GO! \
+kfeat("S = general shop type:CLEARANCE_SALE! \
            greed:" .. greed .. " count:" .. count)
 }}
 KFEAT:  D = abandoned_shop
