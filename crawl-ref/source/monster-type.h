@@ -47,6 +47,7 @@ enum monster_type                      // env.mons[].type
     MONS_PORCUPINE,
 #endif
 #if TAG_MAJOR_VERSION > 34
+    MONS_CRYSTAL_ECHIDNA,
     MONS_PALENTONGA,
 #endif
     MONS_JACKAL,
@@ -314,6 +315,7 @@ enum monster_type                      // env.mons[].type
     MONS_GUARDIAN_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
     MONS_USHABTI,
+    MONS_NARGUN,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -324,6 +326,7 @@ enum monster_type                      // env.mons[].type
     MONS_AIR_ELEMENTAL,
 #if TAG_MAJOR_VERSION > 34
     MONS_IRON_ELEMENTAL,
+    MONS_QUICKSILVER_ELEMENTAL,
     MONS_ELEMENTAL_WELLSPRING,
 #endif
     MONS_TWISTER,        // air miscasts
@@ -503,6 +506,8 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_JUGGERNAUT,
     MONS_IRON_GIANT,
+    MONS_CACTUS_GIANT,
+    MONS_TAINTED_LEVIATHAN,
 #endif
     MONS_HUMAN,
 #if TAG_MAJOR_VERSION == 34
@@ -663,6 +668,7 @@ enum monster_type                      // env.mons[].type
 #else
     MONS_DRYAD,
     MONS_ELEIONOMA,
+    MONS_WENDIGO,
     MONS_SNAPLASHER_VINE,
     MONS_SNAPLASHER_VINE_SEGMENT,
 #endif
@@ -683,6 +689,7 @@ enum monster_type                      // env.mons[].type
     MONS_WORLDBINDER,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
     MONS_BUNYIP,
+    MONS_CREEPING_INFERNO,
 #endif
     MONS_ELDRITCH_TENTACLE,
     MONS_ELDRITCH_TENTACLE_SEGMENT,
@@ -748,6 +755,9 @@ enum monster_type                      // env.mons[].type
     MONS_REVENANT,
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
+    MONS_SEARING_WRETCH,
+    MONS_STOKER,
+    MONS_PUTRID_MOUTH,
 #endif
     MONS_SKELETON_SMALL,   // recolouring only
     MONS_SKELETON_LARGE,   // recolouring only
@@ -1127,6 +1137,16 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_BEASTMASTER,
     MONS_SALAMANDER_TYRANT,
     MONS_MLIOGLOTL,
+    MONS_CACTUS_GIANT,
+    MONS_CREEPING_INFERNO,
+    MONS_SEARING_WRETCH,
+    MONS_STOKER,
+    MONS_QUICKSILVER_ELEMENTAL,
+    MONS_CRYSTAL_ECHIDNA,
+    MONS_PUTRID_MOUTH,
+    MONS_TAINTED_LEVIATHAN,
+    MONS_WENDIGO,
+    MONS_NARGUN,
     MONS_HEADMASTER,
     MONS_LIVING_SPELL,
     MONS_WALKING_TOME,

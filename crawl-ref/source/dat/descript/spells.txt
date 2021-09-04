@@ -616,6 +616,12 @@ Flame Tongue spell
 
 Creates a short burst of flame.
 %%%%
+Flame Wave spell
+
+Blasts the caster's surroundings with a wave of fire. If the caster maintains
+focus and supplies the spell with magical power (by waiting in place and not
+taking any other actions), more and larger flame waves will radiate outward.
+%%%%
 Flaming Cloud spell
 
 Conjures up a large cloud of roaring flames.
@@ -921,10 +927,10 @@ cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
 Manifold Assault spell
 
-Launches melee attacks against multiple visible enemies, warping space into
-paradoxical configurations to allow one swing to be in many places. The effect
-is too imprecise to allow stabbing unsuspecting foes. At high power, it can be
-used to strike more enemies at once.
+Warps space into paradoxical configurations in order to strike many visible
+targets with one melee attack. The effect is too imprecise to allow stabbing
+unsuspecting foes. At high power, it can be used to strike more enemies at
+once.
 %%%%
 Mara Summon spell
 
@@ -1189,6 +1195,11 @@ Scattershot spell
 Blasts a cone-shaped area in front of the caster with metallic fragments. Its
 damage is strongly reduced by armour.
 %%%%
+Scorch spell
+
+Scorches a random foe. Those injured by this have their resistance to fire
+burned away for a short time.
+%%%%
 Seal Doors spell
 
 Imparts seals on nearby doors and stairs, preventing those not allied with
@@ -1210,6 +1221,12 @@ Sentinel's Mark spell
 
 Bestows a strong beacon upon a targeted creature. It announces the presence
 and location of the marked creature to everyone on the same level.
+%%%%
+Seracfall spell
+
+Violently collapses a nearby simulacrum into a large mass of ice, which
+explodes on impact. The ice affects even cold-resistant creatures somewhat, due
+to the strong impact and cutting edges.
 %%%%
 Shadow Bolt spell
 
@@ -1379,6 +1396,10 @@ which lashes out at the target. The stinger's impact will always poison a
 susceptible target. Even resistant targets have a chance to be poisoned and
 immune monsters will be damaged by the physical impact of the stinger.
 %%%%
+Stoke Flames spell
+
+Adds malice to hellish fires, binding it with flame into a creeping inferno.
+%%%%
 Stone Arrow spell
 
 Fires a sharp spine of rock.
@@ -1414,6 +1435,12 @@ spell's power.
 Summon Air Elementals spell
 
 Summons one or more air elementals.
+%%%%
+Summon Cactus Giant spell
+
+Summons a warrior from a particularly prickly tribe. Foes that strike these
+giants in melee are in for a painful surprise! When cast at a higher power,
+older, more robust warriors will answer the call.
 %%%%
 Summon Demon spell
 

@@ -124,6 +124,7 @@ gastronok MONS_GASTRONOK
 rat MONS_RAT
 green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
+crystal_echidna MONS_CRYSTAL_ECHIDNA
 %rim 1
 quokka MONS_QUOKKA
 %sdir mon/animals
@@ -245,6 +246,7 @@ fire_elemental MONS_FIRE_ELEMENTAL
 water_elemental MONS_WATER_ELEMENTAL
 air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
+quicksilver_elemental MONS_QUICKSILVER_ELEMENTAL
 wellspring MONS_ELEMENTAL_WELLSPRING
 %rim 0
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
@@ -276,6 +278,7 @@ foxfire MONS_FOXFIRE
 living_spell MONS_LIVING_SPELL
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
+creeping_inferno MONS_CREEPING_INFERNO
 %sdir mon/undead
 death_cob MONS_DEATH_COB /*'%'*/
 
@@ -385,8 +388,9 @@ rakshasa MONS_RAKSHASA
 azrael MONS_AZRAEL
 %sdir mon/demons
 efreet MONS_EFREET
-%sdir mon/nonliving
 %rim 0
+wendigo MONS_WENDIGO
+%sdir mon/nonliving
 ancestor MONS_ANCESTOR
 ancestor_knight MONS_ANCESTOR_KNIGHT
 ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
@@ -497,6 +501,7 @@ spellforged_servitor MONS_SPELLFORGED_SERVITOR
 gargoyle MONS_GARGOYLE
 war_gargoyle MONS_WAR_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
+nargun MONS_NARGUN
 
 ## Weaponry ('(')
 spectral_sbl MONS_SPECTRAL_SBL
@@ -625,6 +630,8 @@ stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
 juggernaut MONS_JUGGERNAUT
 iron_giant MONS_IRON_GIANT
+cactus_giant MONS_CACTUS_GIANT
+tainted_leviathan MONS_TAINTED_LEVIATHAN
 %rim 1
 
 ## Drakes (also 'l')
@@ -788,6 +795,7 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
+stoker MONS_STOKER
 %rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
@@ -1039,6 +1047,7 @@ bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 %rim 0
 bloated_husk MONS_BLOATED_HUSK
+searing_wretch SEARING_WRETCH
 %rim 1
 ghoul MONS_GHOUL
 
@@ -1074,7 +1083,10 @@ silent_spectre MONS_SILENT_SPECTRE
 lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
+%rim 1
+hungry_ghost MONS_PUTRID_MOUTH
 %sdir mon/nonliving
+%rim 0
 will_o_the_wisp MONS_WILL_O_THE_WISP
 %rim 1
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP

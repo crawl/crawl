@@ -55,7 +55,7 @@ end
 function grunt_megastairs_setup(e)
   e.orient("float")
   e.tags("extra luniq_grunt_megastairs transparent ruin_lair")
-  e.depth("Lair, Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
+  e.depth("Lair, Depths, Crypt, Elf, Snake, Zot")
   e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
   if you.depth() == 1 then
@@ -71,9 +71,7 @@ function grunt_megastairs_setup(e)
     e.subst("( = (<")
     e.subst(") = )>")
   end
-  if you.in_branch("Dis") then
-    e.subst("x = v")
-  elseif you.in_branch("Depths") then
+  if you.in_branch("Depths") then
     e.subst("x : cccccvvvb")
   elseif not you.in_branch("Lair") then
     e.subst("x = c")
@@ -2706,9 +2704,9 @@ ENDMAP
 NAME:    grunt_bruiser_brothers
 ORIENT:  centre
 TAGS:    transparent no_monster_gen no_item_gen
-DEPTH:   Depths, Geh, !Geh:$
+DEPTH:   Depths
 PLACE:   Depths:$
-WEIGHT:  5 (Depths:$, Geh), 10
+WEIGHT:  5 (Depths:$), 10
 MONS:    hell knight
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    yellow draconian, black draconian, ettin
@@ -2722,9 +2720,6 @@ MONS:    lorocyproca
 : end
 ITEM:    arbalest, bolt, potion of curing ident:type , potion of heal wounds ident:type
 ITEM:    potion of invisibility ident:type
-: if you.in_branch("Geh") then
-SUBST: defgh = .
-: end
 KFEAT:   - = open_door
 SHUFFLE: })]>
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
@@ -3281,7 +3276,7 @@ DEPTH:  D:12-, Depths:1-2, Elf
 ORIENT: float
 MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
-ITEM:   book of geomancy / book of the earth / book of stones / book of iron \
+ITEM:   book of geomancy / book of the earth / book of iron / \
         manual of earth magic / staff of earth ident:type / \
         ring of protection ident:type / tin of tremorstones / \
         crystal plate armour w:5
@@ -4919,8 +4914,7 @@ ENDMAP
 # Elevator
 NAME:    lemuel_elevator
 TAGS:    allow_dup extra luniq_staircase
-DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$, \
-         Tar:2-, !Tar:$, Dis:2-, !Dis:$, Geh:2-, !Geh:$, Coc:2-, !Coc:$
+DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$
 ORIENT:  float
 WEIGHT:  10 (D), 5
 SUBST:   m:mn
@@ -6159,37 +6153,18 @@ ENDMAP
 
 NAME: grunt_deathspiral_small
 TAGS: patrolling uniq_deathspiral transparent
-DEPTH: Depths, !Depths:$, Crypt, !Crypt:$, \
-       Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
-       Zot, !Zot:$
+DEPTH: Depths, !Depths:$, Crypt, !Crypt:$, Zot, !Zot:$
 ORIENT: centre
 SHUFFLE: )]}>
 SUBST:  } = }>
 SUBST:  ] = ]>
 # Like the door vault, pick interesting monsters for the 8s in branches,
 # but use normal OOD for D.
-# Also remove the bits of loot for Hell branches and Zot.
+# Also remove the bits of loot for Zot.
 : if you.in_branch("Crypt") then
 KMONS:  8 = bone dragon / lich / ancient lich / dread lich / w:5 death cob / \
             w:5 curse toe / w:5 zombie / w:5 skeleton / eidolon / \
             w:20 reaper / soul eater / w:30 place:Crypt
-: elseif you.in_branch("Dis") then
-KMONS:  8 = w:5 tzitzimitl / w:5 ice fiend / w:5 brimstone fiend / \
-            w:5 hell sentinel / iron dragon / tormentor / iron golem / \
-            place:Dis
-SUBST:  *% = .
-: elseif you.in_branch("Geh") then
-KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
-            fire giant / place:Geh
-SUBST:  *% = .
-: elseif you.in_branch("Tar") then
-KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / \
-            lich / ancient lich / dread lich / w:15 place:Tar
-SUBST:  *% = .
-: elseif you.in_branch("Coc") then
-KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
-            w:5 simulacrum / place:Coc
-SUBST:  *% = .
 : elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
             killer klown / death cob / w:5 curse toe / w:5 ancient lich / \

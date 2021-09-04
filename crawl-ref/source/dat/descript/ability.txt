@@ -841,3 +841,26 @@ dealing electric damage to everything in their path and depositing the user
 at the bolt's end. After using this ability, you will be unable to use it
 again for a short time.
 %%%%
+Evoke the Sceptre of Asmodeus ability
+
+Calls on the power of Asmodeus to summon fiery demons of Hell. The demons
+summoned will remain friendly only for a limited time, eventually becoming
+hostile before vanishing. The success of the ability scales with the Evocations
+skill, and this ability is available only while wielding the Sceptre of
+Asmodeus.
+%%%%
+Evoke the Staff of Dispater ability
+
+Blasts a targeted enemy with damnation. These unholy forces harm the victim and
+anyone adjacent, and are not affected by any means of protection, such as armour
+or resistances. However, certain creatures, usually those able to invoke
+damnation themselves, are entirely unscathed by damnation. The power of this
+ability scales with the Evocations skill, and this ability is available only
+while wielding the Staff of Dispater.
+%%%%
+Evoke the Staff of Olgreb ability
+
+Causes the caster to radiate toxic energy, continuously inflicting poison on
+everything in line of sight for as long as the aura lasts. The power of this
+ability scales with the Evocations skill, and this ability is available only
+while wielding the Staff of Olgreb.

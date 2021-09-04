@@ -75,6 +75,21 @@ function omnigrid.paint(grid,options,paint)
 
 end
 
+function omnigrid.padded_bounds(minpad,maxpad,bounds)
+    local x1,y1,x2,y2
+    if bounds ~= nil then
+      x1,y1,x2,y2 = bounds.x1,bounds.y1,bounds.x2,bounds.y2
+    else
+      local gxm,gym = dgn.max_bounds()
+      x1,y1,x2,y2 = 1,1,gxm-2,gym-2
+    end
+    return { x1 = x1 + crawl.random_range(minpad,maxpad),
+             y1 = y1 + crawl.random_range(minpad,maxpad),
+             x2 = x2 - crawl.random_range(minpad,maxpad),
+             y2 = y2 - crawl.random_range(minpad,maxpad) }
+  end
+
+
 -- TODO: Consolidate the structure this produces with the zonifier zonemap
 -- TODO: Refactor grid/cell into proper metaclasses that track their borders, edges
 -- etc as they get split up instead of the slightly strange way it happens during

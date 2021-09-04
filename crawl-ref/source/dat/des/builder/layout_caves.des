@@ -429,7 +429,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return end
 
-  local gxm,gym = dgn.max_bounds()
+  local gxm,gym = dgn.builder_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
   -- Set a scale to produce some nice-sized chunks
@@ -439,7 +439,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
   local wall_break = 0.8  - crawl.random_real() * (0.6 - path_break)
 
   -- between outmost paths and outmost water
-  local padding = 8 + crawl.random_real() * 6 + depth_fraction * 6
+  local padding = 4 + crawl.random_real() * 6 + depth_fraction * 6
 
   -- Setup a worley function
   local worley1 = procedural.worley_diff { scale = scale/4 }
@@ -491,13 +491,13 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
   if is_validating() then return end
 
-  local gxm,gym = dgn.max_bounds()
+  local gxm,gym = dgn.builder_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
   -- choose some parameters based on depth
   local depth_fraction = you.depth_fraction()
   local scale      = 1.6 - crawl.random_real() * 0.3 - depth_fraction * 0.4
-  local padding    = crawl.random_range(6, 10)
+  local padding    = crawl.random_range(2, 6)
   local wall_break = 0.05 + crawl.random_real() * 0.05 + depth_fraction * 0.1
   local lava_break = 0.15 + crawl.random_real() * 0.1  + depth_fraction * 0.15
   local open_break = 0.55 + crawl.random_real() * 0.05 + depth_fraction * 0.15
@@ -514,7 +514,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
   end
 
   -- set up the edges for the map
-  local boundary = 8
+  local boundary = 4
   local min_hard     = boundary
   local min_padded   = boundary + padding
   local max_padded_x = gxm - 1 - boundary - padding
@@ -560,7 +560,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
-  local gxm,gym = dgn.max_bounds()
+  local gxm,gym = dgn.builder_bounds()
 
   -- There is precedent for requiring flight in Coc, so could have
   -- a chance that not all bergs will get connected up

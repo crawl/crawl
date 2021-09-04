@@ -1265,6 +1265,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mons_class_flag(mon->type, M_THUNDER_RING))
         mon->add_ench(ENCH_RING_OF_THUNDER);
 
+    if (mons_class_flag(mon->type, M_MIASMA_RING))
+        mon->add_ench(ENCH_RING_OF_MIASMA);
+
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.
@@ -1634,7 +1637,8 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     zombie_picker picker = zombie_picker(pos, cs);
 
-    place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
+    place.depth = min(place.depth, branch_zombie_cap(place.branch));
+    place.depth = max(1, place.depth);
 
     const bool need_veto = really_in_d && !for_corpse;
     mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;
@@ -1846,7 +1850,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
-    { MONS_BALRUG,          { {}, {{ BAND_BALRUG, {2, 5}, true }}}},
+    { MONS_BALRUG,          { {0, 0, []() { return !player_in_hell(); }},
+                                   {{ BAND_BALRUG, {2, 5}, true }}}},
     { MONS_CACODEMON,       { {}, {{ BAND_CACODEMON, {1, 4}, true }}}},
     { MONS_EXECUTIONER,     { {2}, {{ BAND_EXECUTIONER, {1, 4}, true }}}},
     { MONS_PANDEMONIUM_LORD, { {}, {{ BAND_PANDEMONIUM_LORD, {1, 4}, true }}}},
@@ -1876,7 +1881,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_PRINCE_RIBBIT,   { {}, {{ BAND_BLINK_FROGS, {2, 5}, true }}}},
     { MONS_BLINK_FROG,      { {}, {{ BAND_BLINK_FROGS, {2, 5} }}}},
     { MONS_WIGHT,           { {}, {{ BAND_WIGHTS, {2, 5} }}}},
-    { MONS_ANCIENT_CHAMPION, { {2}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
+    { MONS_ANCIENT_CHAMPION, { {2, 0, []() {
+        return !player_in_hell(); }},
+                                  {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
     { MONS_SKELETAL_WARRIOR, { {}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true }}}},
     { MONS_CYCLOPS,         { { 0, 0, []() {
         return player_in_branch(BRANCH_SHOALS); }},
@@ -1937,7 +1944,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_VAMPIRE_KNIGHT,  { {4}, {{ BAND_PHANTASMAL_WARRIORS, {2, 3} }}}},
     { MONS_RAIJU,           { {}, {{ BAND_RAIJU, {2, 4} }}}},
     { MONS_SALAMANDER_MYSTIC, { {}, {{ BAND_SALAMANDERS, {2, 4} }}}},
-    { MONS_SALAMANDER_TYRANT, { {}, {{ BAND_SALAMANDER_ELITES, {2, 5} }}}},
+    { MONS_SALAMANDER_TYRANT, { {0, 0, [](){ return !player_in_branch(BRANCH_GEHENNA); }}, {{ BAND_SALAMANDER_ELITES, {2, 5} }}}},
     { MONS_MONSTROUS_DEMONSPAWN, { {2, 0, []() {
         return !player_in_branch(BRANCH_WIZLAB); // hack for wizlab_wucad_mu
     }},                             {{ BAND_MONSTROUS_DEMONSPAWN, {1, 3}}}}},
@@ -1960,7 +1967,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_LOM_LOBON,       { {}, {{ BAND_LOM_LOBON, {5, 8}, true }}}},
     { MONS_DEATH_SCARAB,    { {}, {{ BAND_DEATH_SCARABS, {3, 6} }}}},
     { MONS_SERAPH,          { {}, {{ BAND_HOLIES, {1, 4}, true }}}},
-    { MONS_IRON_GIANT,      { {}, {{ BAND_ANCIENT_CHAMPIONS, {2, 3}, true }}}},
+    { MONS_IRON_GIANT,      { {}, {{ BAND_IRON_GOLEMS, {2, 3}, true }}}},
     { MONS_SPARK_WASP,      { {0, 0, []() {
         return you.where_are_you == BRANCH_DEPTHS;
     }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
@@ -1981,7 +1988,11 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_WIZARD,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
-
+    { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
+    { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
+                                   {{ BAND_BONE_DRAGONS, {1, 2}} }}},
+    { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
+                                   {{ BAND_SPECTRALS, {2, 6}} }}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2178,11 +2189,13 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
     { BAND_VAMPIRE_MOSQUITOES,  {{{MONS_VAMPIRE_MOSQUITO, 1}}}},
-    { BAND_ANCIENT_CHAMPIONS,   {{{MONS_ANCIENT_CHAMPION, 1}}}},
+    { BAND_IRON_GOLEMS,         {{{MONS_IRON_GOLEM, 1}}}},
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
     { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 1}}}},
+    { BAND_BONE_DRAGONS,        {{{MONS_BONE_DRAGON, 1}}}},
+    { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
@@ -2199,8 +2212,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                    {MONS_DEEP_ELF_ANNIHILATOR, 1},
                                    {MONS_DEEP_ELF_SORCERER, 1},
                                    {MONS_DEEP_ELF_DEATH_MAGE, 1}}}},
-    { BAND_BALRUG,              {{{MONS_SUN_DEMON, 1},
-                                  {MONS_RED_DEVIL, 1}}}},
+    { BAND_BALRUG,              {{{MONS_SUN_DEMON, 1}}}},
     { BAND_HELLWING,            {{{MONS_HELLWING, 1},
                                   {MONS_SMOKE_DEMON, 1}}}},
     { BAND_CACODEMON,           {{{MONS_SIXFIRHY, 1},
@@ -2395,6 +2407,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_IRONBOUND_CONVOKER, 2},
                                   {MONS_GUARDIAN_SERPENT, 2},
                                   {MONS_IMPERIAL_MYRMIDON, 2}}}},
+    // for wendigo ammo, mostly
+    { BAND_SIMULACRA,         {{{MONS_SIMULACRUM, 1}}}},
 };
 
 /**

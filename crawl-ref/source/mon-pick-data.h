@@ -606,141 +606,109 @@ POP_DEPTHS,
   {  1,  1,   52, FLAT, MONS_CACODEMON },
 },
 
+// Hell branches: OOD Cap 14
+// "cross-hell" threats (good for regular rolls, fall off and
+// let branch flavour take over as depth goes 8-12)
+#define CROSS_HELL_POP \
+  {  1,  7,  100, FLAT, MONS_HELLION },\
+  {  8, 12,  100, FALL, MONS_HELLION },\
+  {  1,  7,  100, FLAT, MONS_TORMENTOR },\
+  {  8, 12,  100, FALL, MONS_TORMENTOR },\
+  {  1, 12,   10, FLAT, MONS_ANCIENT_LICH },\
+  {  1, 12,   10, FLAT, MONS_DREAD_LICH }
+
 { // Dis
-  {  1,  7, 2000, FLAT, MONS_ZOMBIE },
-  {  1, 12,  270, FALL, MONS_SKELETON },
-  {  1,  7,  136, FALL, MONS_NECROPHAGE },
-  {  1,  7,  420, FALL, MONS_MUMMY },
-  {  1,  7,   66, FALL, MONS_PHANTOM },
-  {  1,  6,  420, FALL, MONS_WIGHT },
-  {  1,  7,  475, SEMI, MONS_WRAITH },
-  {  1,  5,  625, FALL, MONS_SHADOW },
-  {  1,  7,  260, FALL, MONS_FLYING_SKULL },
-  {  1,  7,  192, SEMI, MONS_FREEZING_WRAITH },
-  {  1, 12,  515, FALL, MONS_SKELETAL_WARRIOR },
-  {  1,  7,  160, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7,  136, SEMI, MONS_FLAYED_GHOST },
-  {  1,  9,   89, PEAK, MONS_BONE_DRAGON },
-  {  1,  7,   25, PEAK, MONS_LICH },
-//{  4,  6,    4, SEMI, MONS_ANCIENT_LICH },
-  {  1,  7,   25, FLAT, MONS_EFREET },
-  {  1, 12,  440, FALL, MONS_HELL_HOUND },
-  {  1,  7,   89, FALL, MONS_HELL_HOG },
-  {  1,  7,   25, FALL, MONS_HELL_KNIGHT },
-  {  1,  7, 1000, FLAT, MONS_IRON_IMP },
-  {  1,  2,    8, FALL, MONS_CRIMSON_IMP },
-  {  1,  7, 1000, FLAT, MONS_RUST_DEVIL },
-  {  1,  7,  540, FALL, MONS_RED_DEVIL },
-  {  1,  7,  335, FLAT, MONS_ICE_DEVIL },
-  {  1,  7,   25, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  900, FLAT, MONS_REAPER },
-  {  1,  7,  775, FLAT, MONS_TORMENTOR },
-  {  1,  7,  300, FLAT, MONS_HELLION },
-  {  4,  7,    4, FLAT, MONS_BRIMSTONE_FIEND },
-  {  2,  8,   25, PEAK, MONS_IRON_DRAGON },
-  {  1, 12,   60, FALL, MONS_IRON_GOLEM },
-  {  1,  7,   25, PEAK, MONS_DANCING_WEAPON },
-  {  1,  7,  270, RISE, MONS_IRON_GIANT },
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  500, FALL, MONS_ANCIENT_CHAMPION },
+  {  1,  7,  125, FLAT, MONS_ANCIENT_CHAMPION },
+  {  1,  5,  400, FALL, MONS_WAR_GARGOYLE },
+  {  1,  7,  100, FLAT, MONS_WAR_GARGOYLE },
+  {  1,  5,  100, FALL, MONS_IRON_DRAGON },
+  {  1,  7,   25, FLAT, MONS_IRON_DRAGON },
+  // "branch flavour" threats
+  {  1,  7,  300, SEMI, MONS_IRON_GOLEM },
+  {  7, 14,  300, FALL, MONS_IRON_GOLEM },
+  {  1,  7,  200, SEMI, MONS_CAUSTIC_SHRIKE },
+  {  7, 14,  200, FALL, MONS_CAUSTIC_SHRIKE },
+  {  1,  7,  300, SEMI, MONS_QUICKSILVER_ELEMENTAL },
+  {  7, 14,  300, FALL, MONS_QUICKSILVER_ELEMENTAL },
+  {  1,  7,  200, SEMI, MONS_CRYSTAL_ECHIDNA },
+  {  7, 14,  200, FALL, MONS_CRYSTAL_ECHIDNA },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_IRON_GIANT },
+  {  8, 14,  400, FLAT, MONS_IRON_GIANT },
+  {  1, 14,  400, RISE, MONS_HELL_SENTINEL },
 },
 
 { // Gehenna
-  {  1,  7, 1950, FLAT, MONS_SKELETON },
-  {  1,  7, 1950, FLAT, MONS_ZOMBIE },
-  {  1,  7,  215, FALL, MONS_PHANTOM },
-  {  1,  7,  515, FALL, MONS_NECROPHAGE },
-  {  1,  7,  690, FALL, MONS_WIGHT },
-  {  0,  7,  570, FLAT, MONS_WRAITH },
-  {  1,  7,  705, FALL, MONS_SHADOW },
-  {  1,  7,  385, FLAT, MONS_FLYING_SKULL },
-  {  1,  9,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7,  215, FLAT, MONS_FLAYED_GHOST },
-  {  2,  8,   25, PEAK, MONS_BONE_DRAGON },
-  {  1,  9,  136, SEMI, MONS_LICH },
-  {  4,  7,    2, FLAT, MONS_ANCIENT_LICH },
-  {  2,  6,  215, FLAT, MONS_EFREET },
-  { -1,  7,  515, PEAK, MONS_HELL_KNIGHT },
-  {  1,  7,  350, FLAT, MONS_HELL_HOUND },
-  {  1,  7,  300, FLAT, MONS_HELL_HOG },
-  {  1,  7,  192, FALL, MONS_CRIMSON_IMP },
-  {  1, 12,  690, FALL, MONS_RED_DEVIL },
-  { -1,  7,   89, PEAK, MONS_RUST_DEVIL },
-  {  3,  7,    8, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  590, FLAT, MONS_HELLION },
-  {  1,  7,  365, FLAT, MONS_TORMENTOR },
-  {  1,  7,  192, FLAT, MONS_BALRUG },
-  {  1,  9,  385, SEMI, MONS_REAPER },
-  {  3,  7,   14, SEMI, MONS_HELL_SENTINEL },
-  {  3,  7,    8, PEAK, MONS_BRIMSTONE_FIEND },
-  {  1,  7,   46, FALL, MONS_FIRE_BAT },
-  {  2,  6,    8, PEAK, MONS_FIRE_CRAB },
-  {  1,  7,   30, FLAT, MONS_IRON_GOLEM },
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  400, FALL, MONS_HELL_HOG },
+  {  1,  7,  100, FLAT, MONS_HELL_HOG },
+  {  1,  5,  400, FALL, MONS_FIRE_GIANT },
+  {  1,  7,  100, FLAT, MONS_FIRE_GIANT },
+  {  1,  5,  200, FALL, MONS_SALAMANDER_TYRANT },
+  {  1,  7,   50, FLAT, MONS_SALAMANDER_TYRANT },
+  // "branch flavour" threats
+  {  1,  7,  450, SEMI, MONS_BALRUG },
+  {  7, 14,  450, FALL, MONS_BALRUG },
+  {  1,  7,  450, SEMI, MONS_SEARING_WRETCH },
+  {  7, 14,  450, FALL, MONS_SEARING_WRETCH },
+  // cut these off for deep super-ood
+  {  1, 12,   70, FLAT, MONS_STOKER },
+  {  1, 12,   30, FLAT, MONS_CREEPING_INFERNO },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_HELLEPHANT },
+  {  8, 14,  400, FLAT, MONS_HELLEPHANT },
+  {  1, 14,  400, RISE, MONS_BRIMSTONE_FIEND },
 },
 
 { // Cocytus
-  {  1,  7, 1915, FLAT, MONS_SKELETON },
-  {  1,  7, 1915, FLAT, MONS_ZOMBIE },
-  {  1,  7,   70, FALL, MONS_SIMULACRUM },
-  {  1,  5,  136, FALL, MONS_PHANTOM },
-  { -1,  7,  260, SEMI, MONS_MUMMY },
-  {  1,  7,  136, FALL, MONS_NECROPHAGE },
-  {  1,  7,  420, FALL, MONS_WIGHT },
-  { -1,  7,  560, SEMI, MONS_WRAITH },
-  {  1,  6,  625, FALL, MONS_SHADOW },
-  {  1,  7,  970, FLAT, MONS_FREEZING_WRAITH },
-  {  1,  7,  640, SEMI, MONS_FLYING_SKULL },
-  {  1,  7,  515, FLAT, MONS_SKELETAL_WARRIOR },
-  {  1,  7,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  2,  7,   35, FLAT, MONS_BONE_DRAGON },
-  {  2,  8,   35, PEAK, MONS_LICH },
-  {  3,  7,    8, PEAK, MONS_ANCIENT_LICH },
-  {  1,  7,  890, FLAT, MONS_WHITE_IMP },
-  {  1,  7,  890, FLAT, MONS_ICE_DEVIL },
-  {  1,  7,   81, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  285, FLAT, MONS_TORMENTOR },
-  {  1,  7,  192, FLAT, MONS_BLIZZARD_DEMON },
-  {  1,  7,  455, RISE, MONS_REAPER },
-  {  1,  7,  955, FALL, MONS_ICE_BEAST },
-  {  1,  7,  305, FLAT, MONS_ICE_DRAGON },
-  {  1,  7,  270, RISE, MONS_SHARD_SHRIKE },
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  800, FALL, MONS_SIMULACRUM },
+  {  1,  7,  200, FLAT, MONS_SIMULACRUM },
+  {  1,  7,  100, FALL, MONS_FREEZING_WRAITH },
+  {  1,  7,   25, FLAT, MONS_FREEZING_WRAITH },
+  {  1,  7,  100, FALL, MONS_FROST_GIANT },
+  {  1,  7,   25, FLAT, MONS_FROST_GIANT },
+  // "branch flavour" threats
+  {  1,  7,  200, PEAK, MONS_TITAN }, // Antaeus brought pals
+  {  1,  7,   50, FLAT, MONS_AZURE_JELLY },
+  // don't include our guests in ood rolls
+  {  1,  7,  375, SEMI, MONS_WENDIGO },
+  {  7, 14,  500, FALL, MONS_WENDIGO },
+  {  1,  7,  375, SEMI, MONS_NARGUN },
+  {  7, 14,  500, FALL, MONS_NARGUN },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_SHARD_SHRIKE },
+  {  8, 14,  400, FLAT, MONS_SHARD_SHRIKE },
+  {  1, 14,  400, RISE, MONS_ICE_FIEND },
 },
 
 { // Tartarus
-  {  1,  7, 2000, FLAT, MONS_SKELETON },
-  {  1,  7, 2000, FLAT, MONS_ZOMBIE },
-  {  1,  7,   70, PEAK, MONS_SIMULACRUM },
-  {  1,  7,  850, SEMI, MONS_NECROPHAGE },
-  {  1,  7,  935, FLAT, MONS_NECROPHAGE },
-  {  1,  7,  990, FLAT, MONS_SHADOW },
-  {  1,  7,  550, SEMI, MONS_WRAITH },
-  {  1,  7,  550, FALL, MONS_PHANTOM },
-  {  1,  7,  835, FALL, MONS_WIGHT },
-  {  1,  7,  200, FLAT, MONS_VAMPIRE_MAGE },
-  {  1,  7,  200, FLAT, MONS_VAMPIRE_KNIGHT },
-  {  1,  7,  570, FLAT, MONS_FLYING_SKULL },
-  {  1,  7,  690, SEMI, MONS_FREEZING_WRAITH },
-  {  1,  7,  420, FLAT, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7, 1000, FLAT, MONS_SKELETAL_WARRIOR },
-  {  1,  7,  192, FLAT, MONS_FLAYED_GHOST },
-  {  1,  7,  260, FLAT, MONS_SILENT_SPECTRE },
-  {  1,  7,  334, FLAT, MONS_BONE_DRAGON },
-  {  1,  9,  125, PEAK, MONS_LICH },
-  {  3,  7,   11, PEAK, MONS_ANCIENT_LICH },
-  {  1,  7,  550, FALL, MONS_HELL_HOUND },
-  {  1,  7,  729, FLAT, MONS_DOOM_HOUND },
-  {  1,  7,   46, FALL, MONS_HELL_KNIGHT },
-  {  1,  7,   35, PEAK, MONS_NECROMANCER },
-  {  1,  7,   89, FALL, MONS_CRIMSON_IMP },
-  {  1,  7, 1000, FLAT, MONS_SHADOW_IMP },
-  {  1,  7,   40, PEAK, MONS_RED_DEVIL },
-  {  1,  7,  245, SEMI, MONS_ICE_DEVIL },
-  {  1,  9,  260, SEMI, MONS_SOUL_EATER },
-  {  1,  7,  860, FLAT, MONS_REAPER },
-  {  1,  7,  365, FLAT, MONS_TORMENTOR },
-  {  1,  7,  365, FLAT, MONS_HELLION },
-  {  1,  7,  365, FLAT, MONS_SHADOW_DEMON },
-  {  1,  7,  230, SEMI, MONS_GHOST_CRAB },
-  {  1,  7,   89, FLAT, MONS_DEATH_DRAKE },
-  {  1,  7,   89, SEMI, MONS_SHADOW_DRAGON },
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  800, FALL, MONS_SPECTRAL_THING },
+  {  1,  7,  200, FLAT, MONS_SPECTRAL_THING },
+  {  1,  5,  100, FALL, MONS_SHADOW_WRAITH },
+  {  1,  7,   25, FLAT, MONS_SHADOW_WRAITH },
+  {  1,  5,  100, FALL, MONS_EIDOLON },
+  {  1,  7,   25, FLAT, MONS_EIDOLON },
+  // "branch flavour" threats
+  {  1,  7,  200, SEMI, MONS_PROFANE_SERVITOR },
+  {  1,  7,  150, SEMI, MONS_BONE_DRAGON },
+  {  7, 14,  400, FALL, MONS_BONE_DRAGON },
+  {  1,  7,  300, SEMI, MONS_DOOM_HOUND },
+  {  7, 14,  300, FALL, MONS_DOOM_HOUND },
+  {  1,  7,  300, SEMI, MONS_PUTRID_MOUTH },
+  {  7, 14,  300, FALL, MONS_PUTRID_MOUTH },
+  {  1, 12,   50, FLAT, MONS_SILENT_SPECTRE },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_TAINTED_LEVIATHAN },
+  {  8, 14,  400, FLAT, MONS_TAINTED_LEVIATHAN },
+  {  1, 14,  400, RISE, MONS_TZITZIMITL },
 },
 
 { // Zot
@@ -1076,56 +1044,57 @@ POP_DEPTHS,
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
 
 static const vector<pop_entry> pop_generic_late_zombie =
-{ // Extended generic zombie bases
-  {  1,  27,  110, FLAT, MONS_ETTIN },
-  {  1,  27,  105, FLAT, MONS_FIRE_GIANT },
-  {  1,  27,  105, FLAT, MONS_FROST_GIANT },
-  {  1,  27,  105, FLAT, MONS_STONE_GIANT },
-  {  1,  27,  100, FLAT, MONS_TITAN },
-  {  1,  27,   80, FLAT, MONS_FIRE_DRAGON },
-  {  1,  27,   80, FLAT, MONS_ICE_DRAGON },
-  {  1,  27,   80, FLAT, MONS_STORM_DRAGON },
-  {  1,  27,   80, FLAT, MONS_SHADOW_DRAGON },
-  {  1,  27,   80, FLAT, MONS_IRON_DRAGON },
-  {  1,  27,   80, FLAT, MONS_QUICKSILVER_DRAGON },
-  {  1,  27,   65, FLAT, MONS_GOLDEN_DRAGON },
-  {  1,  27,   80, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,  27,   45, FLAT, MONS_CANE_TOAD },
-  {  1,  27,   25, FLAT, MONS_CATOBLEPAS },
-  {  1,  27,   90, FLAT, MONS_HYDRA },
-  {  1,  27,   30, FLAT, MONS_SWAMP_DRAGON },
-  {  1,  27,   30, FLAT, MONS_ALLIGATOR },
-  {  1,  27,   85, FLAT, MONS_ANACONDA },
-  {  1,  27,   35, FLAT, MONS_BLACK_MAMBA },
-  {  1,  27,   30, FLAT, MONS_SHOCK_SERPENT },
-  {  1,  27,   75, FLAT, MONS_SNAPPING_TURTLE },
-  {  1,  27,   45, FLAT, MONS_HARPY },
-  {  1,  27,   30, FLAT, MONS_MANTICORE },
-  {  1,  27,   80, FLAT, MONS_WOLF_SPIDER },
-  {  1,  27,   35, FLAT, MONS_EMPEROR_SCORPION },
-  {  1,  27,   35, FLAT, MONS_GHOST_MOTH },
-  {  1,  27,   10, FLAT, MONS_CENTAUR },
-  {  1,  27,   12, FLAT, MONS_ELF },
-  {  1,  27,   27, FLAT, MONS_HUMAN },
-  {  1,  27,   10, FLAT, MONS_KOBOLD },
-  {  1,  27,   10, FLAT, MONS_MERFOLK },
-  {  1,  27,   10, FLAT, MONS_NAGA },
-  {  1,  27,   10, FLAT, MONS_OGRE },
-  {  1,  27,   12, FLAT, MONS_ORC },
-  {  1,  27,   10, FLAT, MONS_SPRIGGAN },
-  {  1,  27,   10, FLAT, MONS_TENGU },
-  {  1,  27,   10, FLAT, MONS_TROLL },
-  {  1,  27,    1, FLAT, MONS_BLACK_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_YELLOW_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_GREEN_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_PURPLE_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_RED_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_WHITE_DRACONIAN },
-  {  1,  27,    5, FLAT, MONS_MINOTAUR },
-  {  1,  27,    1, FLAT, MONS_MONSTROUS_DEMONSPAWN },
-  {  1,  27,    1, FLAT, MONS_INFERNAL_DEMONSPAWN },
-  {  1,  27,    1, FLAT, MONS_GELID_DEMONSPAWN },
-  {  1,  27,    1, FLAT, MONS_TORTUROUS_DEMONSPAWN },
+{ // Extended generic zombie bases. Pop range caps at 15 (for the deepest hell)
+  // Due to how zombie picking works, this starts with Crypt:1 monsters
+  // being picked from depth 5. Hells start picking from depth 7, though
+  // usually depth 8.
+  // Constrictors
+  {  5,  15,  500, FLAT, MONS_ANACONDA },
+  {  5,  15,  500, FLAT, MONS_NAGA_WARRIOR },
+  {  5,  15,  500, FLAT, MONS_NAGARAJA },
+  // Tramplers
+  {  5,   8,  222, FALL, MONS_FIRE_DRAGON },
+  {  5,   8,  222, FALL, MONS_ICE_DRAGON },
+  {  5,   8,  222, FALL, MONS_SWAMP_DRAGON },
+  {  5,   8,  222, FLAT, MONS_SHADOW_DRAGON },
+  {  5,   8,  222, FLAT, MONS_STORM_DRAGON },
+  {  5,  15,  222, FLAT, MONS_IRON_DRAGON },
+  {  5,  15,  222, RISE, MONS_GOLDEN_DRAGON },
+  {  5,  15,  222, RISE, MONS_PEARL_DRAGON },
+  {  5,  15,  666, FLAT, MONS_DIRE_ELEPHANT },
+  {  5,  15,  666, FLAT, MONS_HELLEPHANT },
+  // Hard hitters
+  {  7,  15,  500, RISE, MONS_IRON_GIANT },
+  {  5,  15,  500, FLAT, MONS_TITAN },
+  {  5,  15,  500, FLAT, MONS_ETTIN },
+  {  5,  15,  500, FALL, MONS_STONE_GIANT },
+  {  5,  15,  250, FLAT, MONS_HYDRA },
+  {  5,   8,  100, FALL, MONS_EMPEROR_SCORPION },
+  {  5,   8,  100, FALL, MONS_CATOBLEPAS },
+  {  5,  10,  250, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
+  // Mostly enemy variety for Crypt (rough player parallels for some species
+  // not represented elsewhere in this list; classed monsters for hard hits)
+  {  5,   9,   72, FALL, MONS_DRACONIAN_MONK },
+  {  5,   9,   72, FALL, MONS_ORC_WARLORD },
+  {  5,   9,   72, FALL, MONS_TENGU_REAVER },
+  {  5,   9,   72, FALL, MONS_MINOTAUR },
+  {  5,   9,   72, FALL, MONS_MONSTROUS_DEMONSPAWN },
+  {  5,   9,   72, FALL, MONS_DEEP_ELF_BLADEMASTER },
+  {  5,   9,   72, FALL, MONS_MERFOLK_IMPALER },
+  {  5,   9,   72, FALL, MONS_VAULT_WARDEN },
+  {  5,   9,   72, FALL, MONS_DEEP_TROLL },
+  {  5,   9,   72, FALL, MONS_TWO_HEADED_OGRE },
+  // Fast mons, base move speed >=13 (more weight here)
+  {  5,  15,  722, RISE, MONS_QUICKSILVER_DRAGON },
+  {  5,  15, 1000, RISE, MONS_JUGGERNAUT },
+  {  5,   9,  500, FALL, MONS_FENSTRIDER_WITCH },
+  {  5,   9,  500, FALL, MONS_BLACK_MAMBA },
+  {  5,  15, 1500, RISE, MONS_CAUSTIC_SHRIKE },
+  {  8,  15, 1500, RISE, MONS_SHARD_SHRIKE },
+  {  5,   9, 1000, FLAT, MONS_CENTAUR_WARRIOR },
+  {  5,  15, 1500, FLAT, MONS_SPRIGGAN_DEFENDER },
+  {  5,  15, 1500, FLAT, MONS_HARPY },
+  {  5,   9,  500, FLAT, MONS_BUNYIP },
 };
 
 #define GENERIC_WATER_POP { \
@@ -1133,13 +1102,9 @@ static const vector<pop_entry> pop_generic_late_zombie =
   {  1,  27,  500, FLAT, MONS_NO_MONSTER }, \
 }
 #define HELL_WATER_POP {\
-  {  1,  7,   150, FLAT, MONS_CANE_TOAD },\
-  {  1,  7,   120, FLAT, MONS_ALLIGATOR },\
-  {  1,  7,   130, FLAT, MONS_ANACONDA },\
-  {  1,  7,   230, FLAT, MONS_HYDRA },\
-  {  1,  7,    37, FLAT, MONS_KRAKEN },\
-  {  1,  7,   115, FLAT, MONS_WATER_ELEMENTAL },\
-  {  0,  8,    74, RISE, MONS_ELEMENTAL_WELLSPRING },\
+  {  0,  8,   100, FLAT, MONS_SIMULACRUM },\
+  {  0,  8,   100, RISE, MONS_ELEMENTAL_WELLSPRING },\
+  {  0,  6,   200, FALL, MONS_NO_MONSTER },\
 }
 // This is done to avoid duplicating the Depths list and can be
 // changed once TAG_MAJOR_VERSION > 35
@@ -1238,9 +1203,9 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 }
 
 #define HELL_LAVA_POP {\
-  {  1,  8,   300, FALL, MONS_FIRE_ELEMENTAL },\
-  {  1,  6,    25, FALL, MONS_MOLTEN_GARGOYLE },\
-  {  1,  7,    25, FLAT, MONS_SMOKE_DEMON },\
+  {  1,  8,   300, FALL, MONS_FIRE_VORTEX },\
+  {  1,  7,    50, RISE, MONS_STOKER },\
+  {  1,  7,    50, FLAT, MONS_CREEPING_INFERNO },\
   {  1,  7,   100, FLAT, MONS_NO_MONSTER },\
 }
 

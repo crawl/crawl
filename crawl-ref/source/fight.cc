@@ -200,8 +200,12 @@ static bool _autoswitch_to_melee()
     else
         return false;
 
-    if (!is_melee_weapon(you.inv[item_slot]))
+    if (!you.inv[item_slot].defined()
+        || !is_melee_weapon(you.inv[item_slot])
+        || needs_handle_warning(you.inv[item_slot], OPER_ATTACK, penance))
+    {
         return false;
+    }
 
     return wield_weapon(true, item_slot);
 }
@@ -1282,4 +1286,11 @@ bool can_reach_attack_between(coord_def source, coord_def target)
             || feat_is_reachable_past(env.grid(second_middle)))
         // The foe should be on the map (not stepped from time).
         && in_bounds(target);
+}
+
+dice_def spines_damage(monster_type mon)
+{
+    if (mon == MONS_CACTUS_GIANT)
+        return dice_def(5, 8);
+    return dice_def(5, 4);
 }

@@ -974,7 +974,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
-    case BOOK_DRYADS:                 return "the Dryads";
+    case BOOK_WILDERNESS:             return "the Wilderness";
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
     case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
@@ -1024,7 +1024,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_DECAY:                  return "Decay";
     case BOOK_DISPLACEMENT:           return "Displacement";
     case BOOK_RIME:                   return "Rime";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_STONE:                  return "Stone";
+#endif
     case BOOK_SENSES:                 return "the Senses";
     case BOOK_BLASTING:               return "Blasting";
     case BOOK_IRON:                   return "Iron";
@@ -1038,6 +1040,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_TOUCH:                  return "Touch";
     case BOOK_CHAOS:                  return "Chaos";
     case BOOK_HUNTER:                 return "the Hunter";
+    case BOOK_SCORCHING:              return "Scorching";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";

@@ -132,6 +132,21 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+spret cast_summon_cactus(int pow, god_type god, bool fail)
+{
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
+    fail_check();
+
+    mgen_data mg = _pal_data(MONS_CACTUS_GIANT, 3, god, SPELL_SUMMON_CACTUS);
+    mg.hp = hit_points(pow + 27, 1);
+    if (!create_monster(mg))
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
 spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 {
     if (rude_stop_summoning_prompt())
@@ -411,8 +426,8 @@ void doom_howl(int time)
     for (int i = 0; i < howlcalled_count; ++i)
     {
         const monster_type howlcalled = random_choose(
-                MONS_BONE_DRAGON, MONS_SHADOW_DRAGON, MONS_SHADOW_DEMON,
-                MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL
+                MONS_BONE_DRAGON, MONS_REAPER, MONS_TORMENTOR, MONS_TZITZIMITL,
+                MONS_PUTRID_MOUTH
         );
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
@@ -2589,6 +2604,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },
+    { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },

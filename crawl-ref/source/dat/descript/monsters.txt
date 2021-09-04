@@ -754,6 +754,11 @@ butterfly
 A large, brightly coloured butterfly with beautifully patterned wings,
 fluttering incongruously through the darkness of the cave.
 %%%%
+cactus giant
+
+A green-skinned, spiny colossus, with a hearty barrel chest and a thirst for
+battle. Any foe that strikes it in melee will be lucky to live to regret it.
+%%%%
 cacodemon
 
 A hideously ugly demon of rage and legendary power, it disables its foes before
@@ -801,10 +806,23 @@ corrupter
 
 <demonspawn>
 %%%%
+creeping inferno
+
+A formless mass of ancient fire, bound by heat and malevolence. The slightest
+disturbance will destroy the bonds holding it together and unleash a fire
+storm. It longs for that release, yet seems reluctant to move while
+being observed.
+%%%%
 crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
+%%%%
+crystal echidna
+
+A spiny, long snouted rodent grown out of pure living crystal. It is
+immune to most forms of magic and hurls both crystalline bolts and painful
+barbs.
 %%%%
 crystal guardian
 
@@ -1769,6 +1787,13 @@ A malign force from the space between planes. It is hostile to the magic forces
 that removed it from its home. These horrors are often the result of mistaken
 summoning spells and have slain many aspiring wizards.
 %%%%
+nargun
+
+An ancient stone creature that has lived among these frozen caves since before
+Antaeus rent Cocytus into being. It tolerates its new neighbors begrudgingly,
+preferring the company of its petrified enemies. Veins of ice permeate its
+frozen stone flesh.
+%%%%
 necromancer
 
 An evil wizard who is devoted to the practice of death magic, the mastery of
@@ -1959,6 +1984,11 @@ program bug
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
 %%%%
+putrid mouth
+
+A starved spirit whose mouth is a pit of rot, emitting vile fumes. Its putrid
+maw cannot eat the food it finds, so it moans with rage and desparate hunger.
+%%%%
 purple draconian
 
 A muscular purple-scaled humanoid with a reptilian tail and small wings.
@@ -1978,6 +2008,11 @@ quicksilver dragon
 A long and sinuous dragon, seemingly more neck and tail than anything else. Its
 skin shines like molten mercury, magical energies arc from its pointed snout,
 and it moves with terrifying swiftness.
+%%%%
+quicksilver elemental
+
+A mercurial spirit drawn from the elemental plane of earth. It exists in
+this world by inhabiting a shimmering body of liquid metal.
 %%%%
 quicksilver ooze
 
@@ -2103,6 +2138,12 @@ sea snake
 
 A brightly coloured snake, very comfortable in the water. It has a highly
 potent venomous bite.
+%%%%
+searing wretch
+
+An animated corpse alight with terrible fire. The flames are fueled by its
+regenerating flesh, which bubbles and melts as it grows. Its bite leaves
+its victims covered in flaming gore.
 %%%%
 seraph
 
@@ -2329,6 +2370,11 @@ steam dragon
 A relatively small grey dragon, with a resilient-looking scaly hide and steam
 pouring from its mouth.
 %%%%
+stoker
+
+A mortal who made an unholy pact in life, now chained to tend the fires of
+hell in undeath as payment. It seems to want to keep its distance.
+%%%%
 stone giant
 
 A gigantic humanoid with grey skin almost as hard as rock. It carries several
@@ -2366,6 +2412,13 @@ tarantella
 
 A small but greatly-feared spider whose enchanted bite causes victims to break
 into a frenzied dance.
+%%%%
+tainted leviathan
+
+Before even the oldest of ancient liches mastered life and death, a group of
+titans attempted to pull themselves free of mortality through brute strength.
+They almost succeeded before rot dragged them to Ereshkigal. A glimmer of their
+former beauty remains, alluring despite the stench.
 %%%%
 tengu
 
@@ -2619,6 +2672,13 @@ water nymph
 A capricious nature spirit, deeply bonded with the waters in which she lives.
 Wherever they flow, so may she, and ponds and rivers surge and leap at her
 whim.
+%%%%
+wendigo
+
+A gaunt spirit of frozen hunger, so ravenous it will consume friend and foe
+alike. According to legend, if one cuts off its legs, it will feast upon its own
+marrow. It stalks those lost wandering in the cold and hunts with the force of
+blizzards.
 %%%%
 white draconian
 

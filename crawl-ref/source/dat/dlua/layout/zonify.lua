@@ -147,12 +147,14 @@ function zonify.map_map(e)
   -- local floor = ".W+({[)}]<>_"
   local wall = "wlxcvbtg"
 
-  -- TODO: Can we check size of current map after extend_map?
-  local gxm,gym = dgn.max_bounds()
+  local gxm,gym = e.width(), e.height()
   return zonify.map(
     { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 },
     function(x,y)
-      return dgn.in_bounds(x,y) and { glyph = e.mapgrd[x][y] } or nil
+      -- we might be using this on a constrained map
+      return dgn.in_bounds(x,y) and 1 <= x and x <= gxm - 2
+             and 1 <= y and y <= gym - 2
+             and { glyph = e.mapgrd[x][y] } or nil
     end,
     function(val)
       return string.find(wall,val.glyph,1,true) and "wall" or "floor"
@@ -178,12 +180,14 @@ function zonify.map_fill_lava_zones(e, num_to_keep, glyph, min_zone_size)
 
   local wall = "wxcvbtg"
 
-  -- TODO: Can we check size of current map after extend_map?
-  local gxm,gym = dgn.max_bounds()
+  local gxm,gym = e.width(), e.height()
   local zonemap = zonify.map(
     { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 },
     function(x,y)
-      return dgn.in_bounds(x,y) and { glyph = e.mapgrd[x][y] } or nil
+      -- we might be using this on a constrained map
+      return dgn.in_bounds(x,y) and 1 <= x and x <= gxm - 2
+             and 1 <= y and y <= gym - 2
+             and { glyph = e.mapgrd[x][y] } or nil
     end,
     function(val)
       return string.find(wall,val.glyph,1,true) and "wall" or "floor"

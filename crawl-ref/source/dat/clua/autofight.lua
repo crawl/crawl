@@ -331,12 +331,12 @@ local function attack_fire(x,y)
     crawl.do_targeted_command("CMD_FIRE", x, y, AUTOFIGHT_FIRE_STOP)
   else
     -- fire a wielded launcher
-    crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, AUTOFIGHT_FIRE_STOP)
+    crawl.do_targeted_command("CMD_PRIMARY_ATTACK", x, y, AUTOFIGHT_FIRE_STOP)
   end
 end
 
 local function attack_reach(x,y)
-  crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, true)
+  crawl.do_targeted_command("CMD_PRIMARY_ATTACK", x, y, true)
 end
 
 local function attack_melee(x,y)

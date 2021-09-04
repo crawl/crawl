@@ -2102,11 +2102,6 @@ void process_command(command_type cmd, command_type prev_cmd)
             flush_input_buffer(FLUSH_ON_FAILURE);
         break;
 
-    case CMD_EVOKE_WIELDED:
-        if (!evoke_item(you.equip[EQ_WEAPON]))
-            flush_input_buffer(FLUSH_ON_FAILURE);
-        break;
-
     case CMD_MEMORISE_SPELL:
         if (!learn_spell())
             flush_input_buffer(FLUSH_ON_FAILURE);
@@ -2702,15 +2697,16 @@ static void _do_berserk_no_combat_penalty()
     return;
 }
 
-// Update damaging spells that are channeled by waiting
-// These only update when the player actively waits with CMD_WAIT,
-// so should not be moved to world_reacts()
-//
-// Currently this handles Searing Ray and Maxwell's Coupling
+/**
+ * Update damaging spells that are channeled by waiting.
+ * These only update when the player actively waits with CMD_WAIT,
+ * so should not be moved to world_reacts().
+ */
 static void _do_wait_spells()
 {
     handle_searing_ray();
     handle_maxwells_coupling();
+    handle_flame_wave();
 }
 
 // palentongas uncurl at the start of the turn

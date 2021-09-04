@@ -442,20 +442,6 @@ static bool _has_temp_unwearable_armour()
     return false;
 }
 
-static bool _has_hand_evokable()
-{
-    for (const auto &item : you.inv)
-    {
-        if (item.defined()
-            && item_is_evokable(item, true, false, false)
-            && !item_is_evokable(item, true, false, true))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 /**
  * What message should the player be given when they look for items matching
  * the given selector and don't find any?
@@ -503,10 +489,7 @@ string no_selectables_message(int item_selector)
     case OSEL_THROWABLE:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
-        if (_has_hand_evokable())
-            return "You aren't carrying any items that you can evoke without wielding.";
-        else
-            return "You aren't carrying any items that you can evoke.";
+        return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
 #if TAG_MAJOR_VERSION == 34
@@ -717,7 +700,7 @@ bool sort_item_identified(const InvEntry *a)
 bool sort_item_charged(const InvEntry *a)
 {
     return a->item->base_type != OBJ_WANDS
-           || !item_is_evokable(*(a->item), false);
+           || !item_is_evokable(*(a->item));
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -1112,7 +1095,7 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_EVOKABLE:
         // assumes valid link...would break with evoking from floor?
-        return item_is_evokable(i, true) && item_is_evokable(i, true, false);//evoke_check(i.link, true);
+        return item_is_evokable(i);//evoke_check(i.link, true);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
@@ -2090,14 +2073,11 @@ static bool _item_ally_only(const item_def &item)
  * Return whether an item can be evoked.
  *
  * @param item      The item to check
- * @param unskilled Do items that don't use Evocations skill (weapons of
- *                  reaching and tremorstones) count?
  * @param msg       Whether we need to print a message.
- * @param equip     When false, ignore wield and meld requirements.
  */
-bool item_is_evokable(const item_def &item, bool unskilled,
-                      bool msg, bool equip)
+bool item_is_evokable(const item_def &item, bool msg)
 {
+    // XX unify with evoke_check?
     const string error = item_is_melded(item)
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
             : "That item can only be evoked when wielded.";
@@ -2105,33 +2085,7 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     const bool no_evocables = you.get_mutation_level(MUT_NO_ARTIFICE);
     const char* const no_evocable_error = "You cannot evoke magical items.";
 
-    if (is_unrandom_artefact(item))
-    {
-        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
-
-        if ((entry->evoke_func || entry->targeted_evoke_func)
-            && item_type_known(item))
-        {
-            if (no_evocables)
-            {
-                if (msg)
-                    mpr(no_evocable_error);
-                return false;
-            }
-
-            if (item_is_equipped(item) && !item_is_melded(item) || !equip)
-                return true;
-
-            if (msg)
-                mpr(error);
-
-            return false;
-        }
-        // Unrandart might still be evokable (e.g., reaching)
-    }
-
     if (no_evocables
-        && item.base_type != OBJ_WEAPONS // reaching is ok.
         && !(item.base_type == OBJ_MISCELLANY
              && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
     {
@@ -2149,46 +2103,20 @@ bool item_is_evokable(const item_def &item, bool unskilled,
         return false;
     }
 
-    const bool wielded = !equip || you.equip[EQ_WEAPON] == item.link
-                                   && !item_is_melded(item);
-
     switch (item.base_type)
     {
     case OBJ_WANDS:
         return true;
 
-    // TODO: move these out of evoke
-    case OBJ_WEAPONS:
-        if ((!wielded || !unskilled) && !msg)
-            return false;
-
-        // XX code duplication with evoke_check
-        if (unskilled
-            && (weapon_reach(item) > REACH_NONE && item_type_known(item)
-                || you.weapon() && is_range_weapon(*you.weapon())))
-        {
-            if (!wielded)
-            {
-                if (msg)
-                    mpr(error);
-                return false;
-            }
-            return true;
-        }
-
-        if (msg)
-            mpr("That item cannot be evoked!");
-        return false;
-
-#if TAG_MAJOR_VERSION == 34
     case OBJ_MISCELLANY:
+#if TAG_MAJOR_VERSION == 34
         if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_BUGGY_EBONY_CASKET)
+#endif
         {
             return true;
         }
         // removed items fallthrough to failure
-#endif
 
     default:
         if (msg)

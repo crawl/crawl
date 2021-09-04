@@ -2108,7 +2108,7 @@ ENDMAP
 
 NAME:    regret_index_dithmenos_brocken_genspenst
 TAGS:    no_monster_gen no_item_gen no_rotate patrolling
-DEPTH:   Depths, !Depths:$, Tar, !Tar:$
+DEPTH:   Depths, !Depths:$
 ORIENT:  south
 MONS:    shadow wraith / nothing, vampire mage / nothing, rakshasa, shadow wraith
 MONS:    vampire knight, shadow demon, shadow dragon

@@ -1037,52 +1037,6 @@ bool evoke_check(int slot, bool quiet)
         return false;
     }
 
-    // TODO: are these reaching checks necessary any more?
-    // is slot a wielded reaching weapon, or if no slot, is the player wielding
-    // a reaching weapon?
-    const bool wielded = you.weapon()
-                         && (slot != -1 && slot == you.equip[EQ_WEAPON]
-                                || slot == -1 && you.equip[EQ_WEAPON] >= 0);
-    const bool reaching = wielded
-                          && weapon_reach(*you.weapon()) > REACH_NONE;
-
-    // ammo checks are done below, this is the precondition for messaging
-    // about ranged failures
-    const bool ranged = wielded && is_range_weapon(*you.weapon());
-
-    if ((reaching || ranged) && you.melded[EQ_WEAPON])
-    {
-        if (!quiet)
-            canned_msg(MSG_PRESENT_FORM);
-        return false;
-    }
-
-    if (you.berserk() && !reaching)
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-    if (you.confused() && !ranged) // attack is ok under confusion, but not reaching
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-    if (ranged && i && (you.launcher_action.is_empty()
-                    || !you.launcher_action.get()->is_valid()))
-    {
-        if (!quiet)
-        {
-            // XX messaging should be unified with actual launching code
-            mprf("You do not have any ammo quivered for %s.",
-                                    you.weapon()->name(DESC_YOUR).c_str());
-        }
-        return false;
-    }
-    if (reaching || ranged)
-        return true;
-
     // is this supposed to be allowed under confusion?
     if (i && i->base_type == OBJ_MISCELLANY && i->sub_type == MISC_ZIGGURAT)
         return true;
@@ -1163,36 +1117,13 @@ bool evoke_item(int slot, dist *preselect)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, true, false, true) || !evoke_check(slot))
+    if (!item_is_evokable(item, true) || !evoke_check(slot))
         return false;
 
     bool did_work   = false;  // "Nothing happens" message
     bool unevokable = false;
 
-    const unrandart_entry *entry = is_unrandom_artefact(item)
-        ? get_unrand_entry(item.unrand_idx) : nullptr;
-
-    if (entry && (entry->evoke_func || entry->targeted_evoke_func))
-    {
-        ASSERT(item_is_equipped(item));
-
-        bool qret;
-        // only use one of these, prioritizing the targeted version. In
-        // principle we could call them both?
-        ASSERT(!(entry->evoke_func && entry->targeted_evoke_func)); // probably should be in art-data.pl
-        if (entry->targeted_evoke_func)
-            qret = entry->targeted_evoke_func(&item, &did_work, &unevokable, preselect);
-        else
-            qret = entry->evoke_func(&item, &did_work, &unevokable);
-
-        if (!unevokable)
-            count_action(CACT_EVOKE, item.unrand_idx);
-
-        // what even _is_ this return value?
-        if (qret)
-            return did_work;
-    }
-    else switch (item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WANDS:
         zap_wand(slot, preselect);

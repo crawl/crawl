@@ -1401,7 +1401,8 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_FROZEN_RAMPARTS
         || spell == SPELL_MAXWELLS_COUPLING
         || spell == SPELL_NOXIOUS_BOG
-        || spell == SPELL_POISONOUS_VAPOURS)
+        || spell == SPELL_POISONOUS_VAPOURS
+        || spell == SPELL_SCORCH)
     {
         return true;
     }

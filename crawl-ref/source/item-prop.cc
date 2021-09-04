@@ -788,6 +788,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_ENVENOMATIONS },
     { OBJ_BOOKS,     BOOK_AKASHIC_RECORD },
     { OBJ_BOOKS,     BOOK_BATTLE },
+    { OBJ_BOOKS,     BOOK_STONE },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
@@ -1792,6 +1793,8 @@ bool staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
         || is_unrandom_artefact(item, UNRAND_OLGREB)
+        || is_unrandom_artefact(item, UNRAND_ASMODEUS)
+        || is_unrandom_artefact(item, UNRAND_DISPATER)
         || is_unrandom_artefact(item, UNRAND_WUCAD_MU))
     {
         return true;
@@ -1834,9 +1837,11 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     // Jewellery with evokable abilities, wands and similar unwielded
     // evokers allow training.
-    if (item_is_evokable(item, false, false, true)
-        || item.base_type == OBJ_JEWELLERY
-           && gives_ability(item))
+    // XX why are gives_ability cases broken up like this
+    if (item_is_evokable(item)
+        || item.base_type == OBJ_JEWELLERY && gives_ability(item)
+        || staff_uses_evocations(item)
+        || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
@@ -1855,13 +1860,6 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     // Weapons and staves allow training as long as your species can wield them.
     if (!you.could_wield(item, true, true))
         return !skills.empty();
-
-    if (item_is_evokable(item, false, false, false)
-        || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item))
-    {
-        skills.insert(SK_EVOCATIONS);
-    }
 
     if (item.base_type == OBJ_STAVES)
     {
@@ -2553,10 +2551,14 @@ bool gives_ability(const item_def &item)
     // Check for evokable randart properties.
     if (artefact_property(item, ARTP_INVISIBLE)
         || artefact_property(item, ARTP_BLINK)
-        || artefact_property(item, ARTP_BERSERK))
+        || artefact_property(item, ARTP_BERSERK)
+        || is_unrandom_artefact(item, UNRAND_ASMODEUS)
+        || is_unrandom_artefact(item, UNRAND_DISPATER)
+        || is_unrandom_artefact(item, UNRAND_OLGREB))
     {
         return true;
     }
+
 
     return false;
 }

@@ -52,6 +52,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+ #include "tilepick.h"
 #include "transform.h"
 #include "unicode.h"
 #include "viewchar.h"
@@ -1099,6 +1100,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
     { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY,
                                 frag_damage_type::crystal } },
+    { MONS_CRYSTAL_ECHIDNA,   { "crystal", LIGHTGREEN,
+                                frag_damage_type::crystal } },
     { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED,
                                 frag_damage_type::crystal } },
     { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN,
@@ -1687,6 +1690,111 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 
     if ((you.pos() - wielder->pos()).rdist() <= 1 && in_bounds(you.pos()))
         _shatter_player(pow, wielder, true);
+}
+
+dice_def scorch_damage(int pow, bool random)
+{
+    const int max_dam = 10 + (random ? div_rand_round(pow, 5) : pow / 5);
+    return calc_dice(2, max_dam);
+}
+
+static void _animate_scorch(coord_def p)
+{
+    if (!(Options.use_animations & UA_BEAM))
+        return;
+
+#ifdef USE_TILE
+        view_add_tile_overlay(p, tileidx_zap(RED));
+#endif
+#ifndef USE_TILE_LOCAL
+        view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
+                                   static_cast<unsigned short>(RED)});
+#endif
+
+    viewwindow(false);
+    update_screen();
+    scaled_delay(50);
+}
+
+spret cast_scorch(int pow, bool fail)
+{
+    fail_check();
+
+    const int range = spell_range(SPELL_SCORCH, pow);
+    monster *targ = nullptr;
+    int seen = 0;
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        monster *mons = monster_at(*ri);
+        if (!mons
+            || mons->wont_attack()
+            || !_act_worth_targeting(you, *mons))
+        {
+            continue;
+        }
+        ++seen;
+        if (one_chance_in(seen))
+            targ = mons;
+    }
+    if (!targ)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    const int base_dam = scorch_damage(pow, true).roll();
+    const int post_ac_dam = max(0, targ->apply_ac(base_dam));
+
+    mprf("Flames lash %s%s.", targ->name(DESC_THE).c_str(),
+         post_ac_dam ? "" : " but do no damage");
+    const coord_def p = targ->pos();
+    noisy(spell_effect_noise(SPELL_SCORCH), p);
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+    const int damage = mons_adjust_flavoured(targ, beam, post_ac_dam);
+    _player_hurt_monster(*targ, damage, beam.flavour);
+
+    if (!targ->alive())
+    {
+        _animate_scorch(p);
+        return spret::success;
+    }
+
+    you.pet_target = targ->mindex();
+
+    if (damage > 0 && !targ->has_ench(ENCH_FIRE_VULN))
+    {
+        if (you.can_see(*targ))
+        {
+            mprf("%s fire resistance burns away.",
+                 targ->name(DESC_ITS).c_str());
+        }
+        const int dur = 3 + div_rand_round(damage, 3);
+        targ->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, &you,
+                                   dur * BASELINE_DELAY));
+
+    }
+    _animate_scorch(targ->pos());
+    return spret::success;
+}
+
+/// Mimics Scorch's target selection.
+vector<coord_def> find_near_hostiles(int range)
+{
+    vector<coord_def> hostiles;
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        monster *mons = monster_at(*ri);
+        if (mons
+            && !mons->wont_attack()
+            && _act_worth_targeting(you, *mons)
+            && you.can_see(*mons))
+        {
+            hostiles.push_back(*ri);
+        }
+    }
+    return hostiles;
 }
 
 dice_def irradiate_damage(int pow, bool random)
@@ -2989,6 +3097,96 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     return spret::success;
 }
 
+static bool _prep_flame_wave(bolt &beam, int pow, int lvl)
+{
+    zappy(ZAP_FLAME_WAVE, pow, false, beam);
+    beam.set_agent(&you);
+    beam.origin_spell = SPELL_FLAME_WAVE;
+    beam.ex_size       = lvl;
+    beam.source = beam.target = you.pos();
+
+    bolt tracer_beam = beam;
+    tracer_beam.is_tracer = true;
+    tracer_beam.explode(false, true);
+    return !tracer_beam.beam_cancelled;
+}
+
+spret cast_flame_wave(int pow, bool fail)
+{
+    bolt beam;
+    if (!_prep_flame_wave(beam, pow, 1))
+        return spret::abort;
+
+    fail_check();
+
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode(true, true);
+
+    you.props[FLAME_WAVE_KEY] = 0;
+
+    string msg = "(Press <w>%</w> to intensify the flame waves.)";
+    insert_commands(msg, { CMD_WAIT });
+    mpr(msg);
+
+    return spret::success;
+}
+
+void handle_flame_wave()
+{
+    if (!you.props.exists(FLAME_WAVE_KEY))
+        return;
+
+    int &lvl = you.props[FLAME_WAVE_KEY].get_int();
+    ++lvl;
+    if (lvl == 1) // just cast it this turn
+        return;
+
+    if (crawl_state.prev_cmd != CMD_WAIT
+        || you.confused()
+        || you.berserk())
+    {
+        end_flame_wave();
+        return;
+    }
+
+    if (!enough_mp(1, true))
+    {
+        mpr("Without enough magic to sustain them, the waves of flame dissipate.");
+        end_flame_wave();
+        return;
+    }
+
+    const int pow = calc_spell_power(SPELL_FLAME_WAVE, true);
+    bolt beam;
+    if (!_prep_flame_wave(beam, pow, lvl))
+    {
+        mpr("You stop channeling waves of flame.");
+        end_flame_wave();
+        return;
+    }
+
+    aim_battlesphere(&you, SPELL_FLAME_WAVE);
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode(true, true);
+    trigger_battlesphere(&you);
+
+    pay_mp(1);
+    finalize_mp_cost();
+
+    if (lvl >= spell_range(SPELL_FLAME_WAVE, pow))
+    {
+        mpr("You finish channelling waves of flame.");
+        end_flame_wave();
+    }
+}
+
+void end_flame_wave()
+{
+    you.props.erase(FLAME_WAVE_KEY);
+}
+
 spret cast_searing_ray(int pow, bolt &beam, bool fail)
 {
     const spret ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr,
@@ -3616,7 +3814,9 @@ bool wait_spell_active(spell_type spell)
     return spell == SPELL_SEARING_RAY
                 && you.attribute[ATTR_SEARING_RAY] != 0
             || spell == SPELL_MAXWELLS_COUPLING
-                && you.props.exists(COUPLING_TIME_KEY);
+                && you.props.exists(COUPLING_TIME_KEY)
+            || spell == SPELL_FLAME_WAVE
+                && you.props.exists(FLAME_WAVE_KEY);
 }
 
 // returns the closest target to the player, choosing randomly if there are more

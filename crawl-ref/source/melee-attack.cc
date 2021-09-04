@@ -2912,6 +2912,35 @@ void melee_attack::mons_apply_attack_flavour()
         if (coinflip())
             defender->weaken(attacker, 12);
         break;
+
+    case AF_SEAR:
+    {
+        if (!one_chance_in(3))
+            break;
+
+        bool visible_effect = false;
+        if (defender->is_player())
+        {
+            if (defender->res_fire() <= 3 && !you.duration[DUR_FIRE_VULN])
+                visible_effect = true;
+            you.increase_duration(DUR_FIRE_VULN, 3 + random2(attk_damage), 50);
+        }
+        else
+        {
+            if (!defender->as_monster()->has_ench(ENCH_FIRE_VULN))
+                visible_effect = true;
+            defender->as_monster()->add_ench(
+                mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+                            (3 + random2(attk_damage)) * BASELINE_DELAY));
+        }
+
+        if (needs_message && visible_effect)
+        {
+            mprf("%s fire resistance is stripped away!",
+                 def_name(DESC_ITS).c_str());
+        }
+        break;
+    }
     }
 }
 
@@ -3024,14 +3053,17 @@ void melee_attack::do_spines()
         if (defender->type == MONS_BRIAR_PATCH
             && attacker->type == MONS_THORN_HUNTER
             // Dithmenos' shadow can't take damage, don't spam.
-            || attacker->type == MONS_PLAYER_SHADOW)
+            || attacker->type == MONS_PLAYER_SHADOW
+            // Don't let spines kill things out of LOS.
+            || !summon_can_attack(defender->as_monster(), attacker))
         {
             return;
         }
 
-        if (attacker->alive() && one_chance_in(3))
+        const bool cactus = defender->type == MONS_CACTUS_GIANT;
+        if (attacker->alive() && (cactus || one_chance_in(3)))
         {
-            int dmg = roll_dice(5, 4);
+            const int dmg = spines_damage(defender->type).roll();
             int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 

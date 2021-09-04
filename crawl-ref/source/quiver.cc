@@ -1071,8 +1071,9 @@ namespace quiver
 
         switch (s)
         {
-        case SPELL_SEARING_RAY:          // for autofight to work, these need
-        case SPELL_MAXWELLS_COUPLING:    // to skip autofight targeting
+        case SPELL_SEARING_RAY:          // for autofight to work
+        case SPELL_FLAME_WAVE:           // these need to
+        case SPELL_MAXWELLS_COUPLING:    // skip autofight targeting
         case SPELL_LRD: // skip initial autotarget for LRD so that it doesn't
                         // fix on a close monster that can't be targeted. I'm
                         // not quite sure what the right thing to do is?
@@ -1376,6 +1377,14 @@ namespace quiver
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
             return palentonga_charge_possible(quiet, false);
+        case ABIL_EVOKE_DISPATER:
+            // assumes constant range with power
+            if (!spell_no_hostile_in_range(SPELL_HURL_DAMNATION))
+                return true;
+            // TODO: code duplication
+            if (!quiet)
+                mpr("You can't see any hostile targets that would be affected.");
+            return false;
         case ABIL_BLINKBOLT:
             if (!spell_no_hostile_in_range(SPELL_BLINKBOLT))
                 return true;
@@ -1408,6 +1417,8 @@ namespace quiver
         case ABIL_LUGONU_BANISH:
         case ABIL_BEOGH_SMITING:
         case ABIL_QAZLAL_UPHEAVAL:
+        case ABIL_EVOKE_DISPATER:
+        case ABIL_EVOKE_OLGREB:
             return true;
         default:
             return false;
@@ -1481,6 +1492,8 @@ namespace quiver
             case ABIL_USKAYAW_LINE_PASS:
             case ABIL_USKAYAW_GRAND_FINALE:
             case ABIL_WU_JIAN_WALLJUMP:
+            case ABIL_EVOKE_DISPATER:
+            case ABIL_EVOKE_OLGREB:
 #ifdef WIZARD
             case ABIL_WIZ_BUILD_TERRAIN:
             case ABIL_WIZ_CLEAR_TERRAIN:
@@ -1908,133 +1921,6 @@ namespace quiver
         }
     };
 
-    struct artefact_evoke_action : public wand_action
-    {
-        artefact_evoke_action(int slot=-1)
-                        : wand_action(slot, "artefact_evoke_action")
-        {
-        }
-
-        bool is_valid() const override
-        {
-            if (!item_action::is_valid())
-                return false;
-
-            const item_def& item = you.inv[item_slot];
-            if (!is_unrandom_artefact(item) || !item_is_equipped(item))
-                return false;
-
-            const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
-
-            if (!entry || !(entry->evoke_func || entry->targeted_evoke_func))
-                return false;
-
-            return true;
-        }
-
-        // TODO: there's no generic API for this, and it would be a pain to
-        // add one...and there's only three of these. So we do a bit of dumb
-        // code duplication. Maybe this could eventually be moved into
-        // evoke_check?
-        bool artefact_evoke_check(bool quiet) const
-        {
-            if (!is_valid())
-                return false;
-
-            switch (you.inv[item_slot].unrand_idx)
-            {
-            case UNRAND_DISPATER:
-                // TODO: code duplication...
-                if (you.has_mutation(MUT_HP_CASTING))
-                    return enough_hp(18, quiet);
-                return enough_hp(14, quiet) && enough_mp(4, quiet);
-            case UNRAND_OLGREB:
-                return enough_mp(4, quiet); // TODO: code duplication...
-            default:
-                return true; // UNRAND_ASMODEUS has no up-front cost
-            }
-        }
-
-        bool is_enabled() const override
-        {
-            return artefact_evoke_check(true);
-        }
-
-        bool use_autofight_targeting() const override
-        {
-            // all of these use the spell direction chooser
-            return false;
-        }
-
-        bool allow_autofight() const override
-        {
-            if (!is_valid() || !is_enabled()) // need to check item validity
-                return false;
-
-            switch (you.inv[item_slot].unrand_idx)
-            {
-            case UNRAND_OLGREB: // only indirect damage
-            case UNRAND_ASMODEUS:
-                return false;
-            default:
-                return true;
-            }
-        }
-
-        bool is_targeted() const override
-        {
-            if (!is_valid())
-                return false;
-            // is_valid checks the preconditions for this:
-            return get_unrand_entry(you.inv[item_slot].unrand_idx)->targeted_evoke_func;
-        }
-
-        string quiver_verb() const override
-        {
-            return "Evoke";
-        }
-
-        void trigger(dist &t) override
-        {
-            set_target(t);
-            if (!is_valid())
-                return;
-
-            if (!artefact_evoke_check(false))
-                return;
-
-            target.find_target = true;
-            if (autofight_check() || !do_inscription_check())
-                return;
-
-            evoke_item(item_slot, &target);
-
-            t = target; // copy back, in case they are different
-        }
-
-
-        vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool menu=false) const override
-        {
-            // go by pack order
-            const int inv_start = (menu ? 0 : Options.fire_items_start);
-            vector<shared_ptr<action>> result;
-            for (int slot = inv_start; slot < ENDOFPACK; slot++)
-            {
-                auto w = make_shared<artefact_evoke_action>(slot);
-                if (w->is_valid()
-                    && (allow_disabled || w->is_enabled())
-                    && (menu
-                        || _fireorder_inscription_ok(slot, true) != MB_FALSE))
-                {
-                    result.push_back(move(w));
-                }
-            }
-            return result;
-        }
-    };
-
-
     void action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "action";
@@ -2089,8 +1975,6 @@ namespace quiver
             return make_shared<wand_action>(param);
         else if (type == "misc_action")
             return make_shared<misc_action>(param);
-        else if (type == "artefact_evoke_action")
-            return make_shared<artefact_evoke_action>(param);
         else if (type == "fumble_action")
             return make_shared<fumble_action>(param);
         else if (type == "melee_action")
@@ -2321,6 +2205,16 @@ namespace quiver
         you.wield_change = true;
     }
 
+    string launcher_action_cycler::fire_key_hints() const
+    {
+        return "";
+    }
+
+    bool launcher_action_cycler::targeter_handles_key(command_type) const
+    {
+        return false;
+    }
+
     /**
      * Set the action for this object based on another action_cycler. Guarantees
      * not null.
@@ -2384,7 +2278,6 @@ namespace quiver
         {
             action_types.push_back(make_shared<wand_action>(-1));
             action_types.push_back(make_shared<misc_action>(-1));
-            action_types.push_back(make_shared<artefact_evoke_action>(-1));
         }
         if (flag & FIRE_ABILITY)
             action_types.push_back(make_shared<ability_action>(ABIL_NON_ABILITY));
@@ -2582,13 +2475,6 @@ namespace quiver
             return make_shared<wand_action>(slot);
         else if (you.inv[slot].base_type == OBJ_MISCELLANY)
             return make_shared<misc_action>(slot);
-        else if (is_unrandom_artefact(you.inv[slot]))
-        {
-            auto a = make_shared<artefact_evoke_action>(slot);
-            if (a->is_valid() || !force)
-                return a;
-            // otherwise, fall back on ammo
-        }
         else if (you.inv[slot].base_type == OBJ_SCROLLS
             || you.inv[slot].base_type == OBJ_POTIONS)
         {
@@ -2937,8 +2823,6 @@ namespace quiver
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = artefact_evoke_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
@@ -3138,15 +3022,6 @@ namespace quiver
         // is set, quiver that ammo in the main quiver
         if (!you.launcher_action.is_empty() && Options.launcher_autoquiver)
             you.quiver_action.set(you.launcher_action.get());
-        else if (weapon && is_unrandom_artefact(*weapon)
-                                            && Options.launcher_autoquiver)
-        {
-            // apply similar logic to the (few) evokable weapons
-            auto a = make_shared<artefact_evoke_action>(weapon->link);
-            if (a->is_valid())
-                you.quiver_action.set(a);
-        }
-
 
         // If that failed, see if there's anything valid in the quiver history.
         // This is aimed at using the quiver history when switching away from

@@ -415,7 +415,7 @@ static bool _check_can_do_command(lua_State *ls)
 
 /****
  * Handle any command that takes a target and no other parameters. This includes
- * CMD_PRIMARY_ATTACK, CMD_EVOKE_WIELDED, and CMD_FIRE. If the target
+ * CMD_PRIMARY_ATTACK, and CMD_FIRE. If the target
  * coordinates are out of bounds (the default), this enters interactive
  * targeting.
  *
@@ -449,9 +449,6 @@ static int crawl_do_targeted_command(lua_State *ls)
     {
     case CMD_PRIMARY_ATTACK:
         quiver::get_primary_action()->trigger(target);
-        break;
-    case CMD_EVOKE_WIELDED:
-        evoke_item(you.equip[EQ_WEAPON], &target);
         break;
     case CMD_FIRE:
         quiver::get_secondary_action()->trigger(target);

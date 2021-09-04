@@ -54,13 +54,12 @@ function desolation_ruins_setup(e)
   e.nsubst("% = 4:% / 3:| / *:.")
   e.kitem("% = any weapon good_item / any armour good_item /\
                any jewellery randart w:5 / randbook w:5")
-  e.subst(".=,")
+  e.tile("G = DNGN_CRUMBLED_COLUMN")
 end
 }}
 
 ##############################################################################
 # Desolation entrance vaults
-
 ##############################################################################
 NAME:       portal_desolation_entry_ruin
 TAGS:       transparent
@@ -213,13 +212,86 @@ MAP
 .......
 ENDMAP
 
+# "It is a massive effort to deny use. [...] It is an ordered place, but crude
+# in form, forbidding, and uncomfortable."
+NAME:   portal_desolation_entry_nicolae_forbidding_blocks
+TAGS:   transparent no_monster_gen
+WEIGHT: 3
+: desolation_portal(_G)
+SUBST:  - = ..;
+FTILE:  ;Oxc = FLOOR_SALT
+MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                              pow_min=6, pow_max=20, \
+                              delay=5, size=5, spread_rate=5, }
+MAP
+-------------------
+-ccccc;ccccc;ccccc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-;;;;;;;;;;;;;;;;;-
+-cxxxx;cc;cc;xxxxc-
+-cxxxx;cx;xc;xxxxc-
+-cxxxx;;;O;;;xxxxc-
+-cxxxx;cx;xc;xxxxc-
+-cxxxx;cc;cc;xxxxc-
+-;;;;;;;;;;;;;;;;;-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-cxxxx;xxxxx;xxxxc-
+-ccccc;ccccc;ccccc-
+-------------------
+ENDMAP
+
+# "Walking through it, at ground level, the massive earthworks crowd in on
+# you, [...] a loss of connection to any sense of place."
+NAME:   portal_desolation_entry_nicolae_menacing_earthworks
+TAGS:   transparent no_monster_gen
+WEIGHT: 3
+: desolation_portal(_G)
+SUBST:  - = ...;
+FTILE:  ;Oc = FLOOR_SALT
+MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                              pow_min=6, pow_max=20, \
+                              delay=5, size=5, spread_rate=5, }
+MAP
+         c
+        -cc
+       c;;c-
+      -cc;;cc
+     c;;c;cc;-
+    -cc;;;;;;cc
+   c;;c;;;;;cc;-
+  -cc;;;;;;;;;;cc
+ cc;c;;;;;;;;;cc;-
+cc;;;;;;;O;;;;;;;cc
+ -;cc;;;;;;;;;c;cc
+  cc;;;;;;;;;;cc-
+   -;cc;;;;;c;;c
+    cc;;;;;;cc-
+     -;cc;c;;c
+      cc;;cc-
+       -c;;c
+        cc-
+         c
+ENDMAP
+
 ##############################################################################
 # Desolation mini-ruins entries
 #
+# The original layout for the Desolation featured a number of subvaults which
+# depicted the same building or feature in two subvaults, one of them with the
+# building still intact and the other depicting it as a wrecked ruin. Many of
+# the followup vaults followed a similar pattern. I've put those paired vaults
+# at the front of the list, and the unpaired ones at the end. - nicolae
+#
 ##############################################################################
+# Paired mini-ruins
+
 NAME:       desolation_ruin_diamond_intact
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SHUFFLE:    ABC
 SUBST:      A=c
 SUBST:      BC=%
@@ -241,7 +313,6 @@ ENDMAP
 
 NAME:       desolation_ruin_diamond_wrecked
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SUBST:      A=c.
 SUBST:      B=x.
 : desolation_ruins_setup(_G)
@@ -260,34 +331,8 @@ MAP
 ............
 ENDMAP
 
-NAME:       desolation_ruin_lobes
-TAGS:       desolation_ruin transparent
-ORIENT:     float
-WEIGHT:     20
-SHUFFLE:    AB
-SUBST:      A=c
-SUBST:      B=.
-SHUFFLE:    C;/c%
-SUBST:      C=c:50 .
-: desolation_ruins_setup(_G)
-MAP
-............
-.cccc..cccc.
-.c%%cBBc%%c.
-.c%;AAAA;%c.
-.ccA;;;;cccG
-..BA1BB2..1.
-..BA1BB.2...
-.ccA;;;;cccG
-.c%;AAAA;%c.
-.c%%cBBc%%c.
-.cccc..cccc.
-............
-ENDMAP
-
 NAME:       desolation_ruin_twins_intact
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SHUFFLE:    AB
 SUBST:      A=c
 SUBST:      B=%
@@ -309,7 +354,6 @@ ENDMAP
 
 NAME:       desolation_ruin_twins_wrecked
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SUBST:      A=c.
 SUBST:      B=x.
 SUBST:      C=cx
@@ -329,104 +373,8 @@ MAP
 ...G....G...
 ENDMAP
 
-NAME:       desolation_ruin_cross_small
-TAGS:       desolation_ruin transparent
-ORIENT:     float
-WEIGHT:     5
-SHUFFLE:    AB
-SUBST:      A=c
-SUBST:      B=.
-: desolation_ruins_setup(_G)
-MAP
-............
-....cccc....
-....c%%c.G..
-...Bc%%cB...
-.cccA..Accc.
-.c%%.2...1..
-.c%%..2.....
-.cccA..Accc.
-...Bc%%cB...
-....c%%c.G..
-....cccc....
-............
-ENDMAP
-
-NAME:       desolation_ruin_cross_large
-TAGS:       desolation_ruin transparent
-ORIENT:     float
-WEIGHT:     5
-SHUFFLE:    AB/CD/EF
-SUBST:      ABCF=c
-SUBST:      DE=.
-: desolation_ruins_setup(_G)
-MAP
-............
-...cccccc...
-...c....c...
-.ccc%AA.ccc.
-.c%%%...2Gc.
-.c%A%BB.A.1.
-.c%A%BB.A...
-.c%%%...2Gc.
-.ccc%AA.ccc.
-...c....c...
-...cccccc...
-............
-ENDMAP
-
-NAME:       desolation_ruin_cross_wrecked
-ORIENT:     float
-TAGS:       desolation_ruin transparent
-SUBST:      A=c.
-SUBST:      B=x.
-SUBST:      C=cx
-: desolation_ruins_setup(_G)
-MAP
-............
-....Accc....
-..1.A..c.G..
-....c2.c...B
-.AAc..%cccCB
-.A.2.%%BBxxB
-.c...%%%BxxB
-.ccAA%%cccCB
-....c%%c...B
-....A%%c.G..
-....Accc....
-............
-ENDMAP
-
-NAME:       desolation_ruin_round
-TAGS:       desolation_ruin transparent
-ORIENT:     float
-WEIGHT:     20
-SHUFFLE:    AD
-SHUFFLE:    BE
-SHUFFLE:    CF
-SUBST:      ABC=c
-SUBST:      DEF=.
-SHUFFLE:    Cc
-SUBST:      C=c:50 .
-: desolation_ruins_setup(_G)
-MAP
-............
-...cccccc.G.
-..cc%CC.cc..
-.cc%%....cc.
-.c%%.cc.2.B.
-.cC%cAAc..1.
-.cC%cAAc2...
-.c%%.cc...B.
-.cc%%....cc.
-..cc%CC.cc..
-...cccccc.G.
-............
-ENDMAP
-
 NAME:       desolation_ruin_pillars_intact
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SHUFFLE:    AC
 SHUFFLE:    BD
 SUBST:      AB=c
@@ -449,7 +397,6 @@ ENDMAP
 
 NAME:       desolation_ruin_pillars_wrecked
 TAGS:       desolation_ruin transparent
-ORIENT:     float
 SUBST:      A = c.
 SUBST:      B = x.
 NSUBST:     C = 7:G / *:.
@@ -469,11 +416,51 @@ MAP
 ............
 ENDMAP
 
+NAME:       desolation_ruin_cross_small
+TAGS:       desolation_ruin transparent
+WEIGHT:     5
+SHUFFLE:    AB
+SUBST:      A=c
+SUBST:      B=.
+: desolation_ruins_setup(_G)
+MAP
+............
+....cccc....
+....c%%c.G..
+...Bc%%cB...
+.cccA..Accc.
+.c%%.2...1..
+.c%%..2.....
+.cccA..Accc.
+...Bc%%cB...
+....c%%c.G..
+....cccc....
+............
+ENDMAP
 
+NAME:       desolation_ruin_cross_wrecked
+TAGS:       desolation_ruin transparent
+SUBST:      A=c.
+SUBST:      B=x.
+SUBST:      C=cx
+: desolation_ruins_setup(_G)
+MAP
+............
+....Accc....
+..1.A..c.G..
+....c2.c...B
+.AAc..%cccCB
+.A.2.%%BBxxB
+.c...%%%BxxB
+.ccAA%%cccCB
+....c%%c...B
+....A%%c.G..
+....Accc....
+............
+ENDMAP
 
 NAME: desolation_ruin_nicolae_gallery_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: q = 1:1 / 2:2 / 1:112 / *:.
 : desolation_ruins_setup(_G)
 MAP
@@ -491,10 +478,8 @@ MAP
 ............
 ENDMAP
 
-
 NAME: desolation_ruin_nicolae_gallery_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C = c., X = x.
 : desolation_ruins_setup(_G)
 MAP
@@ -512,12 +497,8 @@ XxxX%.......
 ..........xX
 ENDMAP
 
-
-###
-
 NAME: desolation_ruin_nicolae_legs_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: C = 1:% / 1:c / 2=c% / *:%, D = 1:% / 1:c / 2=c% / *:%, \
         q = 2:1 / 1:2 / 1:12.. / *:.
 SUBST: G = GG.
@@ -537,10 +518,8 @@ cc%C....D%cc
 ............
 ENDMAP
 
-
 NAME: desolation_ruin_nicolae_legs_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: D = 2:% / 1:C / 1:C% / *:%, E = 2:% / 1:C / 1:C% / *:%, \
         q = 2:1 / 1:2 / 1:12.. / *:.
 SUBST: G = xGG.., C = ccccx., X = x...
@@ -560,12 +539,8 @@ XCCCG..GCCCX
 X......X....
 ENDMAP
 
-
-###
-
 NAME: desolation_ruin_nicolae_fork_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB/CD, HIJ/KLM
 SUBST: AJK = G, CBHLM = c, I = ., D = %
  : desolation_ruins_setup(_G)
@@ -584,10 +559,8 @@ MAP
 ............
 ENDMAP
 
-
 NAME: desolation_ruin_nicolae_fork_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: X = x.., C = ccx.
  : desolation_ruins_setup(_G)
 MAP
@@ -605,12 +578,8 @@ Xc%%Cxxc%XXX
 ...XX.......
 ENDMAP
 
-
-###
-
 NAME: desolation_ruin_nicolae_tower_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C : c.
 NSUBST: B = 2:2 / 1:1 / 1:1.
  : desolation_ruins_setup(_G)
@@ -629,10 +598,8 @@ ccc......ccc
 .....cc.....
 ENDMAP
 
-
 NAME: desolation_ruin_nicolae_tower_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: H = c / ., I = c / ., J = x / X
 SUBST: C = c., G = G., X = x., c = c:100 x
  : desolation_ruins_setup(_G)
@@ -651,12 +618,8 @@ X....cC%%%c.
 .....Cc.....
 ENDMAP
 
-
-###
-
 NAME: desolation_ruin_nicolae_dome_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
  : desolation_ruins_setup(_G)
 MAP
 ............
@@ -676,7 +639,6 @@ ENDMAP
 
 NAME: desolation_ruin_nicolae_dome_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C = c., G = GG., X = x., c = c:60 x, k = c
  : desolation_ruins_setup(_G)
 MAP
@@ -694,12 +656,8 @@ MAP
 ...X.XX..X..
 ENDMAP
 
-
-###
-
 NAME: desolation_ruin_nicolae_enclosure_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB
 SUBST: A = c, B = .
  : desolation_ruins_setup(_G)
@@ -718,10 +676,8 @@ BAABBAABBAAB
 ABBAABBAABBA
 ENDMAP
 
-
 NAME: desolation_ruin_nicolae_enclosure_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB
 SUBST: A = c, B = .:50 X, c = c:35 X, X = x.
  : desolation_ruins_setup(_G)
@@ -740,12 +696,8 @@ BAABBAABBAAB
 ABXX.BBAABB.
 ENDMAP
 
-
-###
-
 NAME: desolation_ruin_nicolae_arena_intact
 TAGS: desolation_ruin transparent
-ORIENT: float
  : desolation_ruins_setup(_G)
 MAP
 ...cccccc...
@@ -762,10 +714,8 @@ c...G..G...c
 ...cccccc...
 ENDMAP
 
-
 NAME: desolation_ruin_nicolae_arena_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: C = c., G = G., X = x., c = c:90 x
  : desolation_ruins_setup(_G)
 MAP
@@ -783,14 +733,91 @@ c...G..G...C
 ...cccCcc.X.
 ENDMAP
 
+NAME: desolation_ruin_nicolae_hilbert_intact
+TAGS: desolation_ruin transparent
+NSUBST: q = 2:1 / 2:2 / *:.
+: desolation_ruins_setup(_G)
+MAP
+............
+.cccc..cccc.
+.c%%c.qc%%c.
+.c..c%%c..c.
+.c.qccccq.c.
+.c........c.
+.c........c.
+.cccc..cccc.
+..q%c..c%q..
+...%c..c%...
+.cccc..cccc.
+............
+ENDMAP
 
-###
+NAME: desolation_ruin_nicolae_hilbert_wrecked
+TAGS: desolation_ruin transparent
+SUBST: X = x...., c = c:70 x
+: desolation_ruins_setup(_G)
+MAP
+..X.....X...
+.ccccx.cccc.
+Xc%%c2.cxX..
+.c%%c%%cX.c.
+.c%%Xccc.1.X
+Xc%%..X...cX
+.c%%.2..X%cx
+.cccc..c.cc.
+.X.1.X.c..xX
+...%cxXc....
+..cccxxcccc.
+.........X..
+ENDMAP
+
+NAME: desolation_ruin_nicolae_blocks_intact
+TAGS: desolation_ruin transparent
+NSUBST: 2 = 2:2 / *:., - = 3:% / *:.
+: desolation_ruins_setup(_G)
+MAP
+........cccc
+........c-%c
+..cccc..c2-c
+..c%-c...ccc
+..c-2c.1....
+..ccc.......
+.......ccc..
+....1.c2-c..
+ccc...c-%c..
+c-2c..cccc..
+c%-c........
+cccc........
+ENDMAP
+
+NAME: desolation_ruin_nicolae_blocks_wrecked
+TAGS: desolation_ruin transparent
+NSUBST: D = . / 1:C / c, 1 = 3:1 / *:.
+SUBST: C = c., X = x., c = c:100 x
+: desolation_ruins_setup(_G)
+MAP
+....X...cccc
+.X1.....C%%c
+..DDDD..C1%c
+..D%%D...CCc
+X.D%1D.1....
+..DDDx...x.X
+...xx...cx..
+x.....c1..X.
+Xcc.1.C%%C..
+c%1c...c%cX.
+C%%Cx..xxx..
+ccCc..X.....
+ENDMAP
+
+################################################################################
+# A few of the paired subvaults have an intact subvault that is rarer and has
+# better loot. These pairs are below:
 
 # The rarer intact version of this armoury has all randart weapons and armour.
 # (Though sometimes it still makes branded non-randarts, for some reason.)
 NAME: desolation_ruin_nicolae_armoury_intact
 TAGS: desolation_ruin transparent uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: i = 8:i / *:s
 KITEM: i = any weapon good_item randart / any armour good_item randart
@@ -811,11 +838,9 @@ MAP
 ............
 ENDMAP
 
-
 # The more common wrecked armoury just has regular loot.
 NAME: desolation_ruin_nicolae_armoury_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SUBST: D = c:100 ., C = cccc., c = c:90 x, X = x., G = G.
  : desolation_ruins_setup(_G)
 MAP
@@ -833,14 +858,10 @@ XcD..2...Dc.
 .X...XXX.X..
 ENDMAP
 
-
-###
-
 # A temple to the twin divinities. The much rarer intact version has been
 # maintained by the faithful and contains more monsters but more treasures.
 NAME: desolation_ruin_nicolae_temple_intact
 TAGS: desolation_ruin transparent uniq_salt_temple uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: % = 5:% / 5:| / *:s
 KMONS: Q = patrolling halazid warlock / patrolling servant of whispers
@@ -865,11 +886,9 @@ c..........c
 cccc....cccc
 ENDMAP
 
-
 # The wrecked version of the temple is nothing special.
 NAME: desolation_ruin_nicolae_temple_wrecked
 TAGS: desolation_ruin transparent uniq_salt_temple
-ORIENT: float
 SUBST: V = V%., G = G., C = cc., X = x., c = c:50 x
  : desolation_ruins_setup(_G)
 MAP
@@ -887,308 +906,10 @@ C........%Xc
 ccccc..ccccc
 ENDMAP
 
-
-###
-
-# The following vaults have only one version; they're already pretty wrecked.
-
-NAME: desolation_ruin_nicolae_crumbling_obelisks
-TAGS: desolation_ruin transparent
-ORIENT: float
-SHUFFLE: HIJK/LMNO, MO
-NSUBST: q = 2:2 / *:1
-SUBST: HMN = c, IJKLO = ., c = c:50 x .:5, C = c:70 .
- : desolation_ruins_setup(_G)
-MAP
-KK.HHJJHH.KK
-KJIHHJJHHIJK
-.II......II.
-HH.q%%%%q.HH
-HH.%CCCC%.HH
-JJ.%CxxC%.JJ
-JJ.%CxxC%.JJ
-HH.%CCCC%.HH
-HH.q%%%%q.HH
-.II......II.
-KJIHHJJHHIJK
-KK.HHJJHH.KK
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_outcropping
-TAGS: desolation_ruin transparent
-ORIENT: float
-SUBST: X = x., C = c.
- : desolation_ruins_setup(_G)
-MAP
-....XxxXX...
-..XxxxxxxX1.
-.Xxxxxxx%%..
-XxxccccccxX.
-Xxxcxx%xcxX.
-..xc%%%%cxxX
-...C...%%%xx
-.....2.%CxxX
-.Xx....CCxX.
-Xxc%xX......
-Xxcxx..1....
-..xX........
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_collapsed_rooms
-TAGS: desolation_ruin transparent
-ORIENT: float
-SHUFFLE: AB, EF, PQ, RS, VW
-NSUBST: h = X / -, i = X / -, j = X / i, k = X / -, l = X / -, m = X / -, \
-        n = X / -, o = X / -
-SUBST: X = x--, AEPRV = c, BFQSW = ., U = Ccc, C = ccx-, c = c:45 x
-NSUBST: - = 7:% / 2:2 / 2:1 / *:.
- : desolation_ruins_setup(_G)
-MAP
-............
-...Gccccccc.
-....PhhQiic.
-.G..QhhPiic.
-.cABUCCURSc.
-.cjjCkkCllc.
-.cjjCkkWllc.
-.cBAUCVUSRc.
-.cmmEnnFooc.
-.cmmFnnEooc.
-.cccccccccc.
-............
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_salt_wastes
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: - = 2:c / 2:x / 2=c. / 2=x. / 4:% / 1:G. / 2:1 / 2:2 / 1:S / *:.
-SUBST: C = c.., c = ccccx
-MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-                                  pow_min=6, pow_max=20, \
-                                  delay=5, size=5, spread_rate=5, }
- : desolation_ruins_setup(_G)
-MAP
-C.........C.
-...cc.c.c..C
-..--.--%c--.
-.c--.-.ccc-.
-..----.%%c..
-C.--------..
-C--c%-----.c
-..-cc...--.c
-.c%%c-.---..
-.-%%.-c--G..
-..cc..c.....
-...c.....CC.
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_rundown_chambers
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: A = . / B, B = 1:. / 1:cc. / *:c, H = 1:2 / *:%, \
-        I = 1:2 / 1:x / 1:x. / *:%
-SUBST: C = c., X = x., c = c:80 x
- : desolation_ruins_setup(_G)
-MAP
-cccccXXCCcCc
-cHHHc..CX.%c
-cHHHA.....Xc
-cHHHB..CX%..
-ccABB..ccc.C
-X...........
-.....1..X...
-.Cc....CC.Cc
-c...c..CIIIc
-CX.....CIIIC
-....c.XcIIIC
-.ccC.X.ccCCc
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_small_ruin
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: c = 4:- / *=cccx-, - = 7:% / 2:x / 2:2 / 2:1 / *:., . = S / .
-MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-                                  pow_min=6, pow_max=20, \
-                                  delay=5, size=5, spread_rate=5, }
- : desolation_ruins_setup(_G)
-MAP
-............
-............
-............
-...cccccc...
-...c----c...
-...c----c...
-...c----c...
-...c----c...
-...cccccc...
-............
-............
-............
-ENDMAP
-
-NAME: desolation_ruin_nicolae_dungeon
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: F = M / .
-SUBST: M = m., X = x..., G = G., c = c:80 x
-KFEAT: m = iron_grate
-: desolation_ruins_setup(_G)
-MAP
-...XG..GXX..
-xccccFFccccX
-xM%%...cxxm.
-xc%%m..Mxxc.
-Xcccc2Xcc%cX
-..1%c..c%%m.
-Xc.%m..m%%cx
-.cccc2.ccc.x
-Xm%%c..c..mx
-Xc%%...m.1.X
-Xccccccc...X
-.X.X.X...XXX
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_bits
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: % = 7:% / 2:1 / 2:2 / 2=x. / 2=G. / *:., X = 3:x / 3:. / *:X
-SUBST: X = x..., c = c:50 x .:5
-: desolation_ruins_setup(_G)
-MAP
-............
-.ccXcc.ccXcc
-.c%.%c.c%X%c
-.XX...X....X
-.c%.ccXcc.%c
-.cc.c%.%cXcc
-.XXX..X..X..
-.cc.c%.%c.cc
-.c%Xcc.cc.%c
-..XX..X.XX.X
-.c%.%c.c%.%c
-.cc.cc.cc.cc
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_hall_ruin
-TAGS: desolation_ruin transparent
-ORIENT: float
-SUBST: C = ccx, B = ccx.., D = cx..., X = x., G = G%, c = c:50 x
-NSUBST: % = 2:2
-: desolation_ruins_setup(_G)
-MAP
-XDBCccccCBDX
-............
-............
-.XDBC11CBDX.
-....C..C....
-....C..C....
-....C..C....
-..ccc..ccc..
-..cG%%%%Gc..
-..c%%%%%%c..
-..cG%%%%Gc..
-..cccccccc..
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_hilbert_intact
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: q = 2:1 / 2:2 / *:.
-: desolation_ruins_setup(_G)
-MAP
-............
-.cccc..cccc.
-.c%%c.qc%%c.
-.c..c%%c..c.
-.c.qccccq.c.
-.c........c.
-.c........c.
-.cccc..cccc.
-..q%c..c%q..
-...%c..c%...
-.cccc..cccc.
-............
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_hilbert_wrecked
-TAGS: desolation_ruin transparent
-ORIENT: float
-SUBST: X = x...., c = c:70 x
-: desolation_ruins_setup(_G)
-MAP
-..X.....X...
-.ccccx.cccc.
-Xc%%c2.cxX..
-.c%%c%%cX.c.
-.c%%Xccc.1.X
-Xc%%..X...cX
-.c%%.2..X%cx
-.cccc..c.cc.
-.X.1.X.c..xX
-...%cxXc....
-..cccxxcccc.
-.........X..
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_blocks_intact
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: 2 = 2:2 / *:., - = 3:% / *:.
-: desolation_ruins_setup(_G)
-MAP
-........cccc
-........c-%c
-..cccc..c2-c
-..c%-c...ccc
-..c-2c.1....
-..ccc.......
-.......ccc..
-....1.c2-c..
-ccc...c-%c..
-c-2c..cccc..
-c%-c........
-cccc........
-ENDMAP
-
-
-NAME: desolation_ruin_nicolae_blocks_wrecked
-TAGS: desolation_ruin transparent
-ORIENT: float
-NSUBST: D = . / 1:C / c, 1 = 3:1 / *:.
-SUBST: C = c., X = x., c = c:100 x
-: desolation_ruins_setup(_G)
-MAP
-....X...cccc
-.X1.....C%%c
-..DDDD..C1%c
-..D%%D...CCc
-X.D%1D.1....
-..DDDx...x.X
-...xx...cx..
-x.....c1..X.
-Xcc.1.C%%C..
-c%1c...c%cX.
-C%%Cx..xxx..
-ccCc..X.....
-ENDMAP
-
-
 # A tower for learning forbidden, blasphemous magicks. (The added k means extra
 # blasphemy.) The loot is magical books, jewellery, and staves.
 NAME: desolation_ruin_nicolae_wiztower_intact
 TAGS: desolation_ruin transparent uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: - = 1:1 / 1=1. / 1:2 / 3:3 / 2=23.. / *:.
 KITEM: % = randbook w:50 / any jewellery randart / any magical staff
@@ -1208,10 +929,8 @@ cc-------cc.
 ..ccccccc...
 ENDMAP
 
-
 NAME: desolation_ruin_nicolae_wiztower_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 SHUFFLE: AB
 SUBST: G = G., C = c., X = x., c = c:60 x
 : desolation_ruins_setup(_G)
@@ -1230,11 +949,9 @@ cc%..x.X..X.
 ..ccccCC.X..
 ENDMAP
 
-
 # Ancient vault of heretical loot, full of treasure and fat stacks of gold.
 NAME: desolation_ruin_nicolae_vault_intact
 TAGS: desolation_ruin transparent uniq_salt_special
-ORIENT: float
 WEIGHT: 1
 NSUBST: % = 4:% / 4:| / 1:%| / 4:$ / 2:b / 2:g / *:s
 KMONS: 1b = saltling band
@@ -1261,11 +978,9 @@ c%%%..C.%%%c
 cccccccccccc
 ENDMAP
 
-
 # The wrecked version of the vault has a few scattered coins remaining.
 NAME: desolation_ruin_nicolae_vault_wrecked
 TAGS: desolation_ruin transparent
-ORIENT: float
 NSUBST: s% = 5:$, Q = 2:1 / 2:2 / *:.
 SUBST: C = c., s = ., M = m., g = G., c = c:50 x
 KFEAT: m = iron_grate
@@ -1286,10 +1001,374 @@ c%%..s...s.c
 cccccCCcs.CC
 ENDMAP
 
+# Featuring some tomb-appropriate constructs.
+NAME:   desolation_ruin_nicolae_tomb_intact
+TAGS:   desolation_ruin uniq_salt_tomb uniq_salt_special
+WEIGHT: 1
+KPROP:  3456%!' = no_tele_into
+KITEM:  3 = % / * w:5
+KITEM:  45 = |
+KITEM:  6 = %
+KITEM:  d = wand of digging charges:2 no_pickup
+KMONS:  3 = ushabti
+KMONS:  4 = halazid warlock
+KMONS:  5 = crystal guardian
+KMONS:  6 = ragged hierophant
+KMONS:  p = withered plant perm_ench:petrified
+KFEAT:  ! = iron_grate
+NSUBST: - = d / .pp
+: desolation_ruins_setup(_G)
+MAP
+...pcG----Gc
+.1ppcccccccc
+.ppGc3'''%3c
+ccccc'''''%c
+c'6'c''cc'%c
+!'c'!''c4'|c
+!'c'!''c5'|c
+c'6'c''cc'%c
+ccccc'''''%c
+.ppGc3'''%3c
+.1ppcccccccc
+...pcG----Gc
+ENDMAP
+
+NAME:  desolation_ruin_nicolae_tomb_wrecked
+TAGS:  desolation_ruin uniq_salt_tomb
+KFEAT: ! = iron_grate
+SUBST: - = x., c = c:90 x, 1 = 1.
+: desolation_ruins_setup(_G)
+MAP
+.....G---..c
+.1.-.1..xccc
+..-xx..--.%c
+ccccc......c
+c-%%c..cc.%c
+.-c.!%.c%..c
+-2c.!.1c%2.c
+c.%.-..ccx%c
+ccccc.--%xxc
+.--Gc..-..%c
+.1..ccx.1xcc
+....--....Gc
+ENDMAP
+
+# This library is intact enough to have preserved some scrolls from the salt.
+# It's also intact enough for the librarians to still be wandering around.
+NAME:   desolation_ruin_nicolae_library_intact
+TAGS:   desolation_ruin uniq_salt_special
+WEIGHT: 1
+KITEM:  Q = any scroll
+KITEM:  R = randbook
+: kitem("S = " .. dgn.good_scrolls)
+KMONS:  1 = saltling band
+KMONS:  2 = crystal guardian
+KMONS:  QRS- = saltling / nothing
+SUBST:  ` = QQRS-
+MAP
+cccccccccccc
+c`.2`cc`2.`c
+cc..cccc..cc
+c`..`cc`..`c
+cc..cccc..cc
+c`........`c
+cc........cc
+c..cccccc..c
+c.cc....cc.c
+c....1.....c
+cccc....cccc
+..Gcc..ccG..
+ENDMAP
+
+NAME:   desolation_ruin_nicolae_library_wrecked
+TAGS:   desolation_ruin
+KITEM:  R = randbook
+NSUBST: ` = 2=R / %, % = 5=% / ., 1 = 1=2 / 1
+SUBST:  - = x., c = c:50 x
+: desolation_ruins_setup(_G)
+MAP
+cccccccccccc
+c`..`x-%..%c
+c-..c-xc..cc
+c`1.`xc%...-
+cc..cccc..1-
+c%...-x--..-
+cc...%-xx-.-
+c..c-cccc..-
+c.cxx-.%cc.c
+-....1.....c
+--cc....xxxc
+..xcc..ccx..
+ENDMAP
+
+################################################################################
+# Unpaired mini-ruins
+
+NAME:       desolation_ruin_lobes
+TAGS:       desolation_ruin transparent
+WEIGHT:     20
+SHUFFLE:    AB
+SUBST:      A=c
+SUBST:      B=.
+SHUFFLE:    C;/c%
+SUBST:      C=c:50 .
+: desolation_ruins_setup(_G)
+MAP
+............
+.cccc..cccc.
+.c%%cBBc%%c.
+.c%;AAAA;%c.
+.ccA;;;;cccG
+..BA1BB2..1.
+..BA1BB.2...
+.ccA;;;;cccG
+.c%;AAAA;%c.
+.c%%cBBc%%c.
+.cccc..cccc.
+............
+ENDMAP
+
+NAME:       desolation_ruin_cross_large
+TAGS:       desolation_ruin transparent
+WEIGHT:     5
+SHUFFLE:    AB/CD/EF
+SUBST:      ABCF=c
+SUBST:      DE=.
+: desolation_ruins_setup(_G)
+MAP
+............
+...cccccc...
+...c....c...
+.ccc%AA.ccc.
+.c%%%...2Gc.
+.c%A%BB.A.1.
+.c%A%BB.A...
+.c%%%...2Gc.
+.ccc%AA.ccc.
+...c....c...
+...cccccc...
+............
+ENDMAP
+
+NAME:       desolation_ruin_round
+TAGS:       desolation_ruin transparent
+WEIGHT:     20
+SHUFFLE:    AD
+SHUFFLE:    BE
+SHUFFLE:    CF
+SUBST:      ABC=c
+SUBST:      DEF=.
+SHUFFLE:    Cc
+SUBST:      C=c:50 .
+: desolation_ruins_setup(_G)
+MAP
+............
+...cccccc.G.
+..cc%CC.cc..
+.cc%%....cc.
+.c%%.cc.2.B.
+.cC%cAAc..1.
+.cC%cAAc2...
+.c%%.cc...B.
+.cc%%....cc.
+..cc%CC.cc..
+...cccccc.G.
+............
+ENDMAP
+
+NAME: desolation_ruin_nicolae_crumbling_obelisks
+TAGS: desolation_ruin transparent
+SHUFFLE: HIJK/LMNO, MO
+NSUBST: q = 2:2 / *:1
+SUBST: HMN = c, IJKLO = ., c = c:50 x .:5, C = c:70 .
+ : desolation_ruins_setup(_G)
+MAP
+KK.HHJJHH.KK
+KJIHHJJHHIJK
+.II......II.
+HH.q%%%%q.HH
+HH.%CCCC%.HH
+JJ.%CxxC%.JJ
+JJ.%CxxC%.JJ
+HH.%CCCC%.HH
+HH.q%%%%q.HH
+.II......II.
+KJIHHJJHHIJK
+KK.HHJJHH.KK
+ENDMAP
+
+NAME: desolation_ruin_nicolae_outcropping
+TAGS: desolation_ruin transparent
+SUBST: X = x., C = c.
+ : desolation_ruins_setup(_G)
+MAP
+....XxxXX...
+..XxxxxxxX1.
+.Xxxxxxx%%..
+XxxccccccxX.
+Xxxcxx%xcxX.
+..xc%%%%cxxX
+...C...%%%xx
+.....2.%CxxX
+.Xx....CCxX.
+Xxc%xX......
+Xxcxx..1....
+..xX........
+ENDMAP
+
+NAME: desolation_ruin_nicolae_collapsed_rooms
+TAGS: desolation_ruin transparent
+SHUFFLE: AB, EF, PQ, RS, VW
+NSUBST: h = X / -, i = X / -, j = X / i, k = X / -, l = X / -, m = X / -, \
+        n = X / -, o = X / -
+SUBST: X = x--, AEPRV = c, BFQSW = ., U = Ccc, C = ccx-, c = c:45 x
+NSUBST: - = 7:% / 2:2 / 2:1 / *:.
+ : desolation_ruins_setup(_G)
+MAP
+............
+...Gccccccc.
+....PhhQiic.
+.G..QhhPiic.
+.cABUCCURSc.
+.cjjCkkCllc.
+.cjjCkkWllc.
+.cBAUCVUSRc.
+.cmmEnnFooc.
+.cmmFnnEooc.
+.cccccccccc.
+............
+ENDMAP
+
+NAME: desolation_ruin_nicolae_salt_wastes
+TAGS: desolation_ruin transparent
+NSUBST: - = 2:c / 2:x / 2=c. / 2=x. / 4:% / 1:G. / 2:1 / 2:2 / 1:S / *:.
+SUBST: C = c.., c = ccccx
+MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
+ : desolation_ruins_setup(_G)
+MAP
+C.........C.
+...cc.c.c..C
+..--.--%c--.
+.c--.-.ccc-.
+..----.%%c..
+C.--------..
+C--c%-----.c
+..-cc...--.c
+.c%%c-.---..
+.-%%.-c--G..
+..cc..c.....
+...c.....CC.
+ENDMAP
+
+NAME: desolation_ruin_nicolae_rundown_chambers
+TAGS: desolation_ruin transparent
+NSUBST: A = . / B, B = 1:. / 1:cc. / *:c, H = 1:2 / *:%, \
+        I = 1:2 / 1:x / 1:x. / *:%
+SUBST: C = c., X = x., c = c:80 x
+ : desolation_ruins_setup(_G)
+MAP
+cccccXXCCcCc
+cHHHc..CX.%c
+cHHHA.....Xc
+cHHHB..CX%..
+ccABB..ccc.C
+X...........
+.....1..X...
+.Cc....CC.Cc
+c...c..CIIIc
+CX.....CIIIC
+....c.XcIIIC
+.ccC.X.ccCCc
+ENDMAP
+
+NAME: desolation_ruin_nicolae_small_ruin
+TAGS: desolation_ruin transparent
+NSUBST: c = 4:- / *=cccx-, - = 7:% / 2:x / 2:2 / 2:1 / *:., . = S / .
+MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
+ : desolation_ruins_setup(_G)
+MAP
+............
+............
+............
+...cccccc...
+...c----c...
+...c----c...
+...c----c...
+...c----c...
+...cccccc...
+............
+............
+............
+ENDMAP
+
+NAME: desolation_ruin_nicolae_dungeon
+TAGS: desolation_ruin transparent
+NSUBST: F = M / .
+SUBST: M = m., X = x..., G = G., c = c:80 x
+KFEAT: m = iron_grate
+: desolation_ruins_setup(_G)
+MAP
+...XG..GXX..
+xccccFFccccX
+xM%%...cxxm.
+xc%%m..Mxxc.
+Xcccc2Xcc%cX
+..1%c..c%%m.
+Xc.%m..m%%cx
+.cccc2.ccc.x
+Xm%%c..c..mx
+Xc%%...m.1.X
+Xccccccc...X
+.X.X.X...XXX
+ENDMAP
+
+NAME: desolation_ruin_nicolae_bits
+TAGS: desolation_ruin transparent
+NSUBST: % = 7:% / 2:1 / 2:2 / 2=x. / 2=G. / *:., X = 3:x / 3:. / *:X
+SUBST: X = x..., c = c:50 x .:5
+: desolation_ruins_setup(_G)
+MAP
+............
+.ccXcc.ccXcc
+.c%.%c.c%X%c
+.XX...X....X
+.c%.ccXcc.%c
+.cc.c%.%cXcc
+.XXX..X..X..
+.cc.c%.%c.cc
+.c%Xcc.cc.%c
+..XX..X.XX.X
+.c%.%c.c%.%c
+.cc.cc.cc.cc
+ENDMAP
+
+NAME: desolation_ruin_nicolae_hall_ruin
+TAGS: desolation_ruin transparent
+SUBST: C = ccx, B = ccx.., D = cx..., X = x., G = G%, c = c:50 x
+NSUBST: % = 2:2
+: desolation_ruins_setup(_G)
+MAP
+XDBCccccCBDX
+............
+............
+.XDBC11CBDX.
+....C..C....
+....C..C....
+....C..C....
+..ccc..ccc..
+..cG%%%%Gc..
+..c%%%%%%c..
+..cG%%%%Gc..
+..cccccccc..
+ENDMAP
+
 # The petrified remnants of a forest within the realm.
 NAME:   desolation_ruin_ebering_petrified_1
 TAGS:   desolation_ruin transparent
-ORIENT: float
 KFEAT:  t = petrified_tree
 KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
 NSUBST: p = 1:S / *:p
@@ -1317,7 +1396,6 @@ ENDMAP
 
 NAME:   desolation_ruin_ebering_petrified_2
 TAGS:   desolation_ruin transparent
-ORIENT: float
 KFEAT:  t = petrified_tree
 KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
 SUBST:  X = tp.
@@ -1345,7 +1423,6 @@ ENDMAP
 # Some vague duality in the twin gods
 NAME:   desolation_ruin_ebering_petrified_temple
 TAGS:   desolation_ruin transparent
-ORIENT: float
 KFEAT:  t = petrified_tree
 KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
 SUBST:  c = ccx...
@@ -1367,8 +1444,29 @@ ttpptc2...cc
 ....ttcc....
 ENDMAP
 
-
-
+NAME:   desolation_ruin_nicolae_gargoyle_perch
+TAGS:   desolation_ruin patrolling
+KITEM:  L = |
+KMONS:  3L = molten gargoyle
+KMONS:  4 = war gargoyle
+KMONS:  5 = gargoyle
+: desolation_ruins_setup(_G)
+NSUBST: 3 = 1=4 / 3., 3 = 3=L / 3, - = 4=. / .cc
+SUBST:  ` = c., c = c:50 x, G = GGG5
+MAP
+............
+...cc--cc...
+..Gc3..3cG..
+.ccc....ccc.
+.c3..``..3c.
+.-..`%%`..-.
+.-..`%%`..-.
+.c3..``..3c.
+.ccc....ccc.
+..Gc3..3cG..
+...cc--cc...
+............
+ENDMAP
 
 ##############################################################################
 # The level itself
@@ -1377,29 +1475,29 @@ ENDMAP
 
 default-depth: Desolation
 
-NAME:       desolation_of_salt
-TAGS:       no_dump no_monster_gen
-ORIENT:     encompass
-SHUFFLE:    ABCDEF
-SUBVAULT:   A : desolation_ruin
-SUBVAULT:   B : desolation_ruin
-SUBVAULT:   C : desolation_ruin
-SUBST:      DEF = .:1000 x:2 G:2 t:2 S:1
-SUBST:      . = .:1000 1:8
-SUBST:      X = x.
-KFEAT:      t = petrified_tree
-KFEAT:      < = exit_desolation
-KFEAT:      H = stone_arch
-KFEAT:      O = permarock_wall
-KFEAT:      P = endless_salt
-COLOUR:     P = white
-MONS:       saltling band
-:           set_border_fill_type('endless_salt')
-:           set_feature_name("granite_statue", "ruined idol")
-MARKER:     S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
-                                  pow_min=6, pow_max=20, \
-                                  delay=5, size=15, spread_rate=10, }
-
+NAME:     desolation_of_salt
+TAGS:     no_dump no_monster_gen
+ORIENT:   encompass
+SHUFFLE:  ABCDEF
+SUBVAULT: A : desolation_ruin
+SUBVAULT: B : desolation_ruin
+SUBVAULT: C : desolation_ruin
+SUBST:    DEF = .:1000 x:2 G:2 t:2 S:1
+SUBST:    . = .:1000 1:8
+SUBST:    X = x.
+KFEAT:    t = petrified_tree
+KFEAT:    < = exit_desolation
+KFEAT:    H = stone_arch
+KFEAT:    O = permarock_wall
+KFEAT:    P = endless_salt
+COLOUR:   P = white
+MONS:     saltling band
+:         set_border_fill_type('endless_salt')
+:         set_feature_name("granite_statue", "ruined idol")
+MARKER:   S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                                pow_min=6, pow_max=20, \
+                                delay=5, size=15, spread_rate=10, }
+TILE:     G = DNGN_CRUMBLED_COLUMN
 MAP
 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 P...........................................................P
@@ -1459,4 +1557,151 @@ P...........XX.........BBBBBBBBBBBB....XX...................P
 P......................BBBBBBBBBBBB.....X...................P
 P...........................................................P
 PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ENDMAP
+
+NAME:     nicolae_desolation_pilgrimage
+TAGS:     no_dump no_monster_gen
+ORIENT:   encompass
+MONS:     saltling band
+KFEAT:    t = petrified_tree
+KFEAT:    < = exit_desolation
+KFEAT:    H = stone_arch
+KFEAT:    P = endless_salt
+SUBVAULT: D : desolation_ruin
+SUBVAULT: E : desolation_ruin
+SUBVAULT: F : desolation_ruin
+NSUBST:   < = 1=< / S / -
+SUBST:    ` = x.., DEF = .:1000 x:2 G:2 t:2 S:1, . = .:1000 1:8
+COLOUR:   P = white
+: set_border_fill_type('endless_salt')
+: set_feature_name("granite_statue", "ruined idol")
+TILE:     G = DNGN_CRUMBLED_COLUMN
+MARKER:   S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+              pow_min=6, pow_max=20, delay=5, size=15, spread_rate=10, }
+MAP
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+P.............................................................................P
+P..``......`..................................................................P
+P............`.....DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE..`...FFFFFFFFFFFFFFF..P
+P.............`....DDDDDDDDDDDDDDD..`...EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P....``.......`....DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...`..............DDDDDDDDDDDDDDD..S...EEEEEEEEEEEEEEE...S`.FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P............``....DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..``......``...S..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE.`....FFFFFFFFFFFFFFF..P
+P...``.............DDDDDDDDDDDDDDD..`...EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------..`...DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE...`..FFFFFFFFFFFFFFF..P
+P...---------..`...DDDDDDDDDDDDDDD...`..EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...----<----......DDDDDDDDDDDDDDD....`.EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------...`..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE..`...FFFFFFFFFFFFFFF..P
+P...--<-H-<--......DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------......DDDDDDDDDDDDDDD.`....EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...----<----...`..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE...`..FFFFFFFFFFFFFFF..P
+P...---------......DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P...---------......DDDDDDDDDDDDDDD..`...EEEEEEEEEEEEEEE..`...FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE....`.FFFFFFFFFFFFFFF..P
+P....````......`S..DDDDDDDDDDDDDDD...`..EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P.............``...DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P.........`........DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE.`....FFFFFFFFFFFFFFF..P
+P..``.....`........DDDDDDDDDDDDDDD..S...EEEEEEEEEEEEEEE...S..FFFFFFFFFFFFFFF..P
+P.`........`....`..DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P..................DDDDDDDDDDDDDDD......EEEEEEEEEEEEEEE...`..FFFFFFFFFFFFFFF..P
+P....`.`......`....DDDDDDDDDDDDDDD.`....EEEEEEEEEEEEEEE......FFFFFFFFFFFFFFF..P
+P........`............................`.......................................P
+P.............................................................................P
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ENDMAP
+
+NAME:    nicolae_desolation_temple
+TAGS:    no_dump no_monster_gen patrolling
+WEIGHT:  5
+ORIENT:  encompass
+KITEM:   %O = any weapon good_item / any armour good_item / randbook w:5 / \
+              any jewellery randart w:5 / gold good_item w:1
+KMONS:   1 = saltling band
+KMONS:   O2 = imperial myrmidon / halazid warlock / crystal guardian
+KMONS:   p = withered plant perm_ench:petrified
+KFEAT:   ! = iron_grate
+KFEAT:   < = exit_desolation
+KFEAT:   H = stone_arch
+KFEAT:   P = endless_salt
+KFEAT:   t = petrified_tree
+: if crawl.coinflip() then
+SHUFFLE: LMN
+: end
+NSUBST:  < = 1=< / S / -, % = 15=% / 10=| / .
+SUBST:   . = .:1000 1:6, ~ = P., t = tt., p = p.., V = VV., G = GG., ! = !..
+SUBST:   L = c:1 x:3 .:12, M = c:4 x:4 .:8, N = c:9 x:3 .:4, J = 1:9 2:1 .
+SUBST:   ` = x..
+COLOUR:  P = white
+: set_border_fill_type('endless_salt')
+: set_feature_name("granite_statue", "ruined idol")
+TILE:    G = DNGN_CRUMBLED_COLUMN
+MARKER:  S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+             pow_min=6, pow_max=20, delay=5, size=15, spread_rate=10, }
+MAP
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+PPPPPPPPPPP~..................................................~PPPPPPPPPPP
+PPPPPPP~..........`...........NN..........NN......................~PPPPPPP
+PPPP~........................NNNN....J...NNNN.......................~PPPPP
+PPP~....`....................NNNN........NNNN...............tt.......~PPPP
+PP~..........`......`.........NN..........NN.............ttt..tt......~PPP
+P~...`.......`..........................................t..ppp.t.......PPP
+P.......---------......................................t.pp...p.t......~PP
+P.......---------....`........MM..........MM..........ttp..1.O.p.t......PP
+P..`....----<----...`.........MM..........MM..........t..p..S...p.t.....PP
+P...`...---------...`..................................t.p..%..p.t......PP
+P...`...--<-H-<--....................S................t.t.pp..p.t.......~P
+P....`..---------.............LL..........LL.............t..pp.t.........P
+P.......----<----.....`.......LL..........LL..............t..t...........P
+P..`....---------........................................................P
+P.......---------...`....................................................P
+P....``......................MMMM........LLLL............................P
+P~..`........``....`........MM..MM......LL..LL...........................P
+PP......`..................MM....MM....LL....LL.........................~P
+PP~........................M......M....L......L.........................~P
+PPP~.......................M..J...M....L...J..L.........................~P
+PPPP.......................M......M....L......L.........................~P
+PPP~..........S............M......M....L......L............S............~P
+PP~........................M......M....L......L.........................~P
+PP.....MMMM........NNNN....NNN!!NNN!!!!MMM!!MMM....MMMM........LLLL......P
+PP....MM..MM......NN..NN...N..................M...MM..MM......LL..LL.....P
+P~...MM%..%MM....NN%..%NN..N.G......J.......G.M..MM%..%MM....LL%..%LL....P
+P....M......MMMNNN......NNNN..................MMMM......MMMLLL......L....P
+P....M...J..M....N..J...N..N..................M..M...J..M....L..J...L....P
+P....MM%..%!M....N!%..%NN..N....MM.M..M.MM....M..MM%..%!M....L!%..%LL....P
+P.....MM..!!......!!..NN...N....MM......MM....M...MM..!!......!!..LL....~P
+P......MMMM........NNNN....!..................!....MMMM........NNNN.....PP
+P.......M..................!....M..V..V..M....!..................N.....~PP
+P~...S..M.....J............!........S.......J.!............J.....N.....PPP
+P~......L..................!.J................!..................N..S..PPP
+P~......L..................!....M..V..V..M....!..................N.....PPP
+P~.....LLLL........MMMM....!..................!....NNNN........NNNN....PPP
+P~....LL..!!......!!..MM...L....MM......MM....N...NN..!!......!!..LL...~PP
+P....LL%..%!L....M!%..%MM..L....MM.M..M.MM....N..NN%..%!M....L!%..%LL...~P
+P....L...J..L....M..J...M..L..................N..N...J..M....L..J...L....P
+P....L......LLLMMM......MLLL..................NNNN......MMMMLL......L....P
+P....LL%..%LL.N..MM%..%MM..L.G.......J......G.N..NN%..%MM..M.LL%..%LL....P
+P.....LL..LL..N...MM..MM...L..................N...MM..MM...M..LL..LL.....P
+P......LLLL...N....MMMM....LLLMMMLL....NNNNNNNN....MMMM....L...LLLL.....~P
+P.............N..............%McM........LcL%..............L............PP
+P............NNNN...J.........MMM.G....G.LLL.........J...LLLL...........PP
+P.......S..NNN..NNN..........%M............L%..........LLL..LLL..S.....~PP
+P~.........N%....%NMMMM....MMMM.G.G....G.G.LLLL....LLLLL%....%L........PPP
+PP........NN..J...NN..................................LL...J..LL.......PPP
+PP~.......N...%%...!.....J..........MM..........J.....!...%%...L......~PPP
+PPP~......N...%%...!................MM................!...%%...L......PPPP
+PPPP......NN..2...NN..................................LL...2..LL.....~PPPP
+PPPP~......N%....%NMMMMMMLLLLLL.G.G....G.G.MMMMMMMMMMMML%....%L.....~PPPPP
+PPPPP~.....NNN..NNN...........L............M...........LLL..LLL....~PPPPPP
+PPPPPP~......NNNN........S....LLL.G.J..G.MMM....S........LLLL.....~PPPPPPP
+PPPPPPP~......................LcL........McM.....................~PPPPPPPP
+PPPPPPPP~.....................LLLLLLLMMMMMMM....................~PPPPPPPPP
+PPPPPPPPP~.....................................................~PPPPPPPPPP
+PPPPPPPPPPPP~.................................................~PPPPPPPPPPP
+PPPPPPPPPPPPPP~....................~~~~......................~PPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPP~~~............~PPPP~...................~PPPPPPPPPPPPPP
+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 ENDMAP

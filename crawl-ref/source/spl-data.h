@@ -152,7 +152,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BOLT_OF_MAGMA, "Bolt of Magma",
     spschool::conjuration | spschool::fire | spschool::earth,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
     4, 4,
@@ -3471,6 +3471,61 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     6, 0,
     TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_SUMMON_CACTUS, "Summon Cactus Giant",
+    spschool::summoning,
+    spflag::none,
+    6,
+    200,
+    -1, -1,
+    4, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_STOKE_FLAMES, "Stoke Flames",
+    spschool::fire | spschool::conjuration,
+    spflag::monster,
+    8,
+    0,
+    -1, -1,
+    6, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_SERACFALL, "Seracfall",
+    spschool::conjuration | spschool::ice,
+    spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ICEBLAST,
+},
+
+{
+    SPELL_SCORCH, "Scorch",
+    spschool::fire,
+    spflag::no_ghost,
+    2,
+    50,
+    3, 3,
+    4, 8,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_FLAME_WAVE, "Flame Wave",
+    spschool::conjuration | spschool::fire,
+    spflag::area,
+    4,
+    100,
+    3, 3, // sort of...
+    0, 12, // increases as it's channeled
+    TILEG_ERROR,
 },
 
 {

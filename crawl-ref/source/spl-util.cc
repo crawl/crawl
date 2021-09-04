@@ -1637,6 +1637,9 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return true;
 
+    case SPELL_SCORCH:
+        return find_near_hostiles(range).empty();
+
     default:
         break;
     }
@@ -1927,4 +1930,5 @@ void end_wait_spells(bool quiet)
 {
     end_searing_ray();
     end_maxwells_coupling(quiet);
+    end_flame_wave();
 }

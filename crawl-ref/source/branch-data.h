@@ -161,7 +161,7 @@ const Branch branches[NUM_BRANCHES] =
       brflag::no_items | brflag::dangerous_end,
       DNGN_ENTER_DIS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
       "Dis", "the Iron City of Dis", "Dis",
-      nullptr,
+      "An ancient malice corrodes your equipment.",
       CYAN, BROWN,
       'I', { RUNE_DIS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
@@ -169,7 +169,7 @@ const Branch branches[NUM_BRANCHES] =
       brflag::no_items | brflag::dangerous_end,
       DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
       "Gehenna", "Gehenna", "Geh",
-      nullptr,
+      "Your scrolls appear blurry in the acrid smoke.",
       BROWN, RED,
       'G', { RUNE_GEHENNA }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
@@ -177,7 +177,7 @@ const Branch branches[NUM_BRANCHES] =
       brflag::no_items | brflag::dangerous_end,
       DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
       "Cocytus", "Cocytus", "Coc",
-      nullptr,
+      "Your potions freeze solid in the terrible cold.",
       LIGHTBLUE, LIGHTCYAN,
       'X', { RUNE_COCYTUS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
@@ -185,7 +185,7 @@ const Branch branches[NUM_BRANCHES] =
       brflag::no_items | brflag::dangerous_end,
       DNGN_ENTER_TARTARUS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
       "Tartarus", "Tartarus", "Tar",
-      nullptr,
+      "This decaying realm drains your will.",
       MAGENTA, MAGENTA,
       'Y', { RUNE_TARTARUS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 

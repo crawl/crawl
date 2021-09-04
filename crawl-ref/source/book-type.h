@@ -8,7 +8,7 @@ enum book_type
     BOOK_CONJURATIONS,
     BOOK_FLAMES,
     BOOK_FROST,
-    BOOK_DRYADS,
+    BOOK_WILDERNESS,
     BOOK_FIRE,
     BOOK_ICE,
     BOOK_SPATIAL_TRANSLOCATIONS,
@@ -39,8 +39,8 @@ enum book_type
     BOOK_BATTLE, // was BOOK_MUTATIONS
 #endif
     BOOK_GEOMANCY,
-    BOOK_STONE,
 #if TAG_MAJOR_VERSION == 34
+    BOOK_STONE,
     BOOK_WIZARDRY,
 #endif
     BOOK_POWER,
@@ -100,6 +100,7 @@ enum book_type
     BOOK_BIOGRAPHIES_VII,
     BOOK_TRISMEGISTUS,
     BOOK_HUNTER,
+    BOOK_SCORCHING,
     NUM_BOOKS
 };
 

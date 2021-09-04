@@ -81,56 +81,6 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
  * Unrand functions.
  *******************/
 
-static bool _evoke_sceptre_of_asmodeus()
-{
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-        return false;
-
-    const monster_type mon = random_choose_weighted(
-                                   3, MONS_BALRUG,
-                                   2, MONS_HELLION,
-                                   1, MONS_BRIMSTONE_FIEND);
-
-    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, you.religion);
-    mg.set_summoned(&you, 0, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    monster *m = create_monster(mg);
-
-    if (m)
-    {
-        mpr("The sceptre summons one of its servants.");
-        did_god_conduct(DID_EVIL, 3);
-
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        mpr("You don't feel so good about this...");
-    }
-    else
-        mpr("The air shimmers briefly.");
-
-    return true;
-}
-
-static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
-                            bool* unevokable)
-{
-    if (you.allies_forbidden())
-    {
-        mpr("Nothing will answer your call!");
-        *unevokable = true;
-        return true;
-    }
-    if (_evoke_sceptre_of_asmodeus())
-    {
-        *did_work = true;
-        practise_evoking(1);
-    }
-
-    return false;
-}
-
 ////////////////////////////////////////////////////
 static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
                                    actor* defender, bool mondied, int dam)
@@ -178,56 +128,6 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 
-/////////////////////////////////////////////////////
-
-static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    int hp_cost = 14;
-    int mp_cost = 4;
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        hp_cost += mp_cost;
-        mp_cost = 0;
-    }
-
-    if (!enough_hp(hp_cost, true))
-    {
-        mpr("You're too close to death to use this item.");
-        *unevokable = true;
-        return true;
-    }
-
-    if (!enough_mp(mp_cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    *did_work = true;
-    pay_hp(hp_cost);
-    pay_mp(mp_cost);
-
-    int power = you.skill(SK_EVOCATIONS, 8);
-
-    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target)
-        == spret::abort)
-    {
-        *unevokable = true;
-        refund_hp(hp_cost);
-        refund_mp(mp_cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    mpr("You feel the staff feeding on your energy!");
-    finalize_mp_cost(hp_cost);
-    practise_evoking(random_range(1, 2));
-
-    return false;
-}
-
 ////////////////////////////////////////////////////
 
 static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
@@ -269,54 +169,6 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
     else
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
-}
-
-// this isn't targeted, but using the targeted version lets the olgreb static
-// targeter work
-static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    const int cost = 4;
-
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        if (!enough_hp(cost, true))
-        {
-            mpr("You're too close to death to use this item.");
-            *unevokable = true;
-            return true;
-        }
-    }
-    else if (!enough_mp(cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
-        return false;
-
-    *did_work = true;
-    pay_mp(cost);
-
-    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
-
-    // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr,
-        target) == spret::abort)
-    {
-        *unevokable = true;
-        refund_mp(cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    finalize_mp_cost();
-    practise_evoking(1);
-    did_god_conduct(DID_WIZARDLY_ITEM, 10);
-
-    return false;
 }
 
 // Based on melee_attack::staff_damage(), but using only evocations skill.

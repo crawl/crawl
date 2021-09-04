@@ -110,7 +110,7 @@ static void _give_book(monster* mon, int level)
     {
         // Statue form books, heh.
         const int which_book = (one_chance_in(3) ? BOOK_SLOTH
-                                                 : BOOK_STONE);
+                                                 : BOOK_EARTH);
 
         const int thing_created = items(false, OBJ_BOOKS, which_book, level);
 
@@ -787,6 +787,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { WPN_BATTLEAXE,          1 } }, {},
             { { SPWPN_FREEZING, 1 } },
         } },
+        { MONS_CACTUS_GIANT,    { { { WPN_GIANT_SPIKED_CLUB, 1 } } } },
         { MONS_ORC_WIZARD,      { { { WPN_DAGGER, 1 } } } },
         { MONS_ORC_SORCERER,    { { { WPN_DAGGER, 1 } } } },
         { MONS_NERGALLE,        { { { WPN_DAGGER, 1 } } } },
@@ -1078,6 +1079,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 
     case MONS_CYCLOPS:
     case MONS_STONE_GIANT:
+    case MONS_TAINTED_LEVIATHAN:
         item.base_type = OBJ_MISSILES;
         item.sub_type  = MI_LARGE_ROCK;
         break;

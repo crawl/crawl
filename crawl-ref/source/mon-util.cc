@@ -901,7 +901,8 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_BALLISTOMYCETE_SPORE
            || mc == MONS_LURKING_HORROR
            || mc == MONS_DANCING_WEAPON
-           || mc == MONS_LIGHTNING_SPIRE;
+           || mc == MONS_LIGHTNING_SPIRE
+           || mc == MONS_CREEPING_INFERNO;
 }
 
 bool mons_has_blood(monster_type mc)
@@ -1855,9 +1856,16 @@ static int _downscale_zombie_damage(int damage)
     return max(1, 4 * damage / 5);
 }
 
+// Do not include AF_PLAIN, we want that to be overwritten for spectrals
+// and simulacra
+static const set<attack_flavour> allowed_zombie_af = {
+    AF_REACH,
+    AF_CRUSH,
+    AF_TRAMPLE,
+};
+
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
-                                               mon_attack_def attk,
-                                               bool random)
+                                               mon_attack_def attk)
 {
     switch (attk.type)
     {
@@ -1869,14 +1877,17 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
         break;
     }
 
+    attk.damage = _downscale_zombie_damage(attk.damage);
+    if (allowed_zombie_af.count(attk.flavour))
+        return attk;
+
+    // overwrite all other AFs
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
-    else if (mons.type == MONS_SPECTRAL_THING && (!random || coinflip()))
+    else if (mons.type == MONS_SPECTRAL_THING)
         attk.flavour = AF_DRAIN;
-    else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
+    else
         attk.flavour = AF_PLAIN;
-
-    attk.damage = _downscale_zombie_damage(attk.damage);
 
     return attk;
 }
@@ -2084,7 +2095,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         attk.damage *= mon.blob_size;
 
-    return zombified ? _downscale_zombie_attack(mon, attk, !base_flavour) : attk;
+    return zombified ? _downscale_zombie_attack(mon, attk) : attk;
 }
 
 static int _mons_damage(monster_type mc, int rt)

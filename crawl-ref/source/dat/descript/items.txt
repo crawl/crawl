@@ -273,6 +273,12 @@ A frost-gripped tome describing icy spells, somewhat abridged. The Vaults are
 said to hold the full text, but the guardians of that place guard their
 treasures jealously.
 %%%%
+book of scorching
+
+A magical book, blasted and scoured by long exposure to the desert sun. Upon
+its badly-weathered pages lie the secrets to inflicting the desert's dangers
+upon the caster's foes.
+%%%%
 book of sloth
 
 A lazily written book.
@@ -293,12 +299,6 @@ A book containing a comprehensive, well-rounded collection of sphere-related
 spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
 but sadly, the remainder of the book has been completely vaporised.
 %%%%
-book of stone
-
-A textbook of advanced Earth magic. Its cover and spine are inlaid with an
-impressive variety of precious stones, which may contain immense arcane power.
-Then again, the creator may have just liked the way they twinkle.
-%%%%
 book of storms
 
 A book written by the magician Lan Shi, who was preoccupied with the study and
@@ -311,10 +311,10 @@ book of the dragon
 A magical book of spells which allow some command over dragons and their
 aspects.
 %%%%
-book of the dryads
+book of the wilderness
 
-A book holding lore ripped from the deep forest, allowing its denizens to be
-called forth to serve the reader.
+A book holding lore ripped from distant and untamed lands, allowing their
+denizens to be called forth to serve the reader.
 {{
     if you.can_smell() then
         return "It smells distressingly musty."

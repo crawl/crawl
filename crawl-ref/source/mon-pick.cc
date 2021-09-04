@@ -26,6 +26,10 @@ int branch_ood_cap(branch_type branch)
     case BRANCH_DUNGEON:
         return 27;
     case BRANCH_DEPTHS:
+    case BRANCH_COCYTUS:
+    case BRANCH_GEHENNA:
+    case BRANCH_TARTARUS:
+    case BRANCH_DIS:
         return 14;
     case BRANCH_VAULTS:
     case BRANCH_LAIR:
@@ -184,6 +188,15 @@ static bool _branch_uses_generic_late_zombies(branch_type br)
     ASSERT_RANGE(br, 0, NUM_BRANCHES);
     return is_hell_branch(br) || br == BRANCH_CRYPT || br == BRANCH_TOMB
         || br == BRANCH_ABYSS || br == BRANCH_PANDEMONIUM;
+}
+
+int branch_zombie_cap(branch_type br)
+{
+    ASSERT_RANGE(br, 0, NUM_BRANCHES);
+    if (_branch_uses_generic_late_zombies(br))
+        return 15;
+    else
+        return branch_ood_cap(br);
 }
 
 const vector<pop_entry>& zombie_population(branch_type br)

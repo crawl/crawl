@@ -495,7 +495,7 @@ ENDMAP
 # Combined vault with four size settings, each with
 # one more oklob and more items.
 NAME:   minmay_lair_oklob_chamber
-TAGS:   luniq_oklob no_monster_gen extra
+TAGS:   luniq_oklob no_monster_gen
 DEPTH:  Lair
 ORIENT: north
 KMONS:  p = plant
@@ -2751,6 +2751,7 @@ MONS:    dire elephant, patrolling necromancer, obsidian statue
 # The anaconda's name is Kaa.
 KMONS:   R = spectral anaconda
 KFEAT:   R = deep_water
+KFEAT:   s = closed_clear_door
 # Thin out elephant/dire elephant bands of central necromancers a bit.
 SUBST:   2 = 22., 5 = 55.
 # DE/FH/JK will always have a monster set, with one a guaranteed necromancer
@@ -2779,18 +2780,18 @@ TILE:    G = dngn_statue_elephant
 : set_feature_name("tree", "dead tree")
 MAP
    xxxcccccccc
-  xxtttrrLrrrcc
- xxttrqqMMM.qrcc
-xxxttq...MM..qrcc                           ccccc
-xxtt..rrqr..r..rcccccccccccccccccccccccccccccaaGttq.
-xtt7ttcccc++c++ccccccccccccccccccccccccccccaaaKKJttqq.
-xtdttccccG--c..OOGcc.WWccGqqqGccqqqccQQ.....qqGKKGttt.
-xtttcccccp-pcq.OON+..WwW+.55%|cG.2..+QQQqqc.cq.Kaaatq.
-xxxcccccc-c-ccccOGcqWwwR+.56**c|$22.cPqcccc---caaccc..
-xxccccccc+cp--pccccqwwwwcG5qqGc*%22.cccc---pc+ccccccc.
-xxccGEEqq.cccc---pcWWWWqccnnnccG62qqcp--pcccc.qqHHGcc.
-xxcc*DE..qccccccc-cccWqcccGpGcccqqccc-cccccccq..HF*cc.
-xxccGEEqqqccttaccp-pcccccGpYpGccnncp-pccattccqqqHHGcc.
+  xxttrrrLrrrcc
+ xxttqqqMMM.qrcc
+xxqtq....MM..qrcc                           ccccc
+xx...qrrqr..r..rcccccccccccccccccccccccccccccaaGttq.
+xq.qttcccc++c++ccccccccccccccccccccccccccccaaaKKJttqq.
+xt7ttccccG--c..OOGcc.WWccGqqqGccqqqccQQ.....qqGKKGttt.
+cnsncccccp-pcq.OON+..WwW+.55%|cG.2..+QQQqqc.cq.Kaaatq.
+cndnccccc-c-ccccOGcqWwwR+.56**c|$22.cPqcccc---caaccc..
+cnnnccccc+cp--pccccqwwwwcG5qqGc*%22.cccc---pc+ccccccc.
+ccccGEEqq.cccc---pcWWWWqccnnnccG62qqcp--pcccc.qqHHGcc.
+xxxc*DE..qccccccc-cccWqcccGpGcccqqccc-cccccccq..HF*cc.
+xxxcGEEqqqccttaccp-pcccccGpYpGccnncp-pccattccqqqHHGcc.
  xxcccccccctq..qccc-----------------cccq..qtcccccccc..
  .axacccatq..  .qtcccccccc+++cccccccctq.  .qqtcccatq.
  ..........     ..........@@@....a.....     ........

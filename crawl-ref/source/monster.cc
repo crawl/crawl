@@ -679,7 +679,8 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 bool monster::can_throw_large_rocks() const
 {
     monster_type species = mons_species(false); // zombies can't
-    return species == MONS_STONE_GIANT
+    return species == MONS_TAINTED_LEVIATHAN
+           || species == MONS_STONE_GIANT
            || species == MONS_CYCLOPS
            || species == MONS_OGRE;
 }
@@ -5283,7 +5284,8 @@ static bool _mons_is_icy(int mc)
     return mc == MONS_ICE_BEAST
            || mc == MONS_SIMULACRUM
            || mc == MONS_ICE_STATUE
-           || mc == MONS_BLOCK_OF_ICE;
+           || mc == MONS_BLOCK_OF_ICE
+           || mc == MONS_NARGUN;
 }
 
 bool monster::is_icy() const
