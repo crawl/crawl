@@ -1042,6 +1042,10 @@ static void _infestation_create_scarab(monster* mons)
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
+    // Don't bother placing a cloud for living spells.
+    if (mons->type == MONS_LIVING_SPELL)
+        return;
+
     // Chaos spawn always leave behind a cloud of chaos.
     if (mons->type == MONS_CHAOS_SPAWN)
     {
@@ -2747,6 +2751,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
             msg = "shimmer%s and vanish" + string(plural ? "" : "es"); // Ugh
+
+        if (mons->type == MONS_LIVING_SPELL)
+            msg = "disperses";
     }
 
     // Conjugate.

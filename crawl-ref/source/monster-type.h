@@ -180,6 +180,13 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
     MONS_ANIMATED_ARMOUR,
+    MONS_LIVING_SPELL,
+    MONS_WALKING_TOME,
+    MONS_EARTHEN_TOME,
+    MONS_CRYSTAL_TOME,
+    MONS_DIVINE_TOME,
+    MONS_FROSTBOUND_TOME,
+    MONS_STRANGE_MACHINE,
 #endif
     MONS_HARPY,
 #if TAG_MAJOR_VERSION == 34
@@ -881,6 +888,7 @@ enum monster_type                      // env.mons[].type
     MONS_BAI_SUZHEN_DRAGON,
     MONS_MAGGIE,
     MONS_MLIOGLOTL,
+    MONS_HEADMASTER,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1139,6 +1147,14 @@ enum monster_type                      // env.mons[].type
     MONS_TAINTED_LEVIATHAN,
     MONS_WENDIGO,
     MONS_NARGUN,
+    MONS_HEADMASTER,
+    MONS_LIVING_SPELL,
+    MONS_WALKING_TOME,
+    MONS_EARTHEN_TOME,
+    MONS_CRYSTAL_TOME,
+    MONS_DIVINE_TOME,
+    MONS_FROSTBOUND_TOME,
+    MONS_STRANGE_MACHINE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

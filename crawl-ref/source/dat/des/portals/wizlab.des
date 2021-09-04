@@ -33,6 +33,26 @@
 #          |                        |earth/transmutations,   |
 #          |                        |earth/translocations, or|
 #          |                        |earth/conjurations
+#--------------------------------------------------------------------
+#Eringya   |plant monsters, archers |books, staves, potions  |
+#          |and fenstrider witches  |spectral ego weapons    |
+#--------------------------------------------------------------------
+#Maxwell   |constructs and meaty    |gear with dangerous ego,|
+#          |mace wielders           |weapon/armour artifacts |
+#--------------------------------------------------------------------
+#Yara      |Warrior-mages with      |antimagic weapons, books|
+#          |antimagic weapons       |                        |
+#--------------------------------------------------------------------
+#Borgnjnor |Corporeal and ghostly   |necromancy loot, gold   |
+#          |undead, warlocks        |                        |
+#--------------------------------------------------------------------
+#Tukima    |Dancing weapons,walking |aux armour, books,      |
+#          |tomes, rakshashas       |phantom mirror          |
+#--------------------------------------------------------------------
+#Alistair  |Lots of wizards, invited|consumables, books,     |
+#          |guests, ds corrupters   |condenser vane          |
+##
+
 
 #---------------------------------------------------------------------
 #Full Name                |Layout               |Colours
@@ -62,6 +82,19 @@
 #---------------------------------------------------------------
 #Lehudib's Moon Base      |Circular and alien   |blue/lightblue/magenta
 #                         |base-like structure  |colour-shifting crystal
+#---------------------------------------------------------------
+#Eringya's Formal Garden  |Gently curving open  |green with a chance for
+#                         |paths hedged by trees|red/yellow autumn variant
+#---------------------------------------------------------------
+#Maxwell's Workshop       |big rooms with forge |metal
+#---------------------------------------------------------------
+#Yara's Duelist Academy   |campus               |stone and trees
+#---------------------------------------------------------------
+#Borgnjor's Mausoleum     |split path           |tarlike
+#---------------------------------------------------------------
+#Tukima's Studio          |mirrored hall        |lightgray/white
+#---------------------------------------------------------------
+#Alistair's Party Mansion |rooms                |gray/green/white
 ##
 
 # TO-DO:
@@ -342,6 +375,74 @@ function callback.wizlab_wucad_wucad_died(data, triggerable,
                                            triggerer, marker, ev)
   dgn.persist.wucad_mu_died = true
   crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
+end
+
+function yara_students(e)
+    local anti = "ego:antimagic ident:all"
+    local will = "ego:willpower ident:all"
+    local goodgear = "halberd " .. anti .. " | scimitar " .. anti
+                     .. " | morningstar " .. anti .. " | dire flail " .. anti
+                     .. " . ring mail " .. will
+                     .. " w:3 | scale mail | chain mail "
+    local greatweap = "double sword " .. anti .. " | demon blade " .. anti
+                      .. " | great sword " .. anti .. " | glaive " .. anti
+                      .. " | demon trident " .. anti .. " | bardiche " .. anti
+                      .. " | eveningstar " .. anti .. " | demon whip " .. anti
+                      .. " | great mace " .. anti .. " | quick blade " .. anti
+    local greatarm = "chain mail " .. will .. " | plate armour " .. will
+                      .. " | plate armour w:20 | crystal plate armour w:3"
+    e.mons("tengu conjurer ; " .. goodgear .. " / ogre mage ; " .. goodgear ..
+           " / deep elf knight ; " .. goodgear ..
+           " / naga mage ; " .. goodgear ..
+           " / salamander mystic ; " .. goodgear ..
+           " / wizard ; " .. goodgear ..
+           " / hell knight ; " .. goodgear ..
+           " / necromancer ; " .. goodgear ..
+           " / vampire mage ; " .. goodgear ..
+           " / spriggan air mage ; rapier ego:antimagic . acid dragon scales")
+    e.mons("tengu reaver ; " .. greatweap .. " . " .. greatarm ..
+           " / draconian knight ; " .. greatweap ..
+           " / vampire knight ; " .. greatweap .. " . " .. greatarm)
+end
+
+
+function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "monster_dies" then
+    return
+  end
+
+  if you.pos() == 0 then
+    return
+  end
+
+  local mons = dgn.mons_from_mid(ev:arg1())
+  if mons.has_prop("borgnjor") then
+      return
+  end
+
+  if not crawl.one_chance_in(5) then
+    return
+  end
+
+  local msp = "lost soul seen sum:call_lost_soul dur:1 generate_awake"
+
+  local count = 0
+  for point in iter.circle_iterator(6) do
+    if crawl.one_chance_in(8) and count < 1 then
+      if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
+      else
+       local mon = dgn.create_monster(point.x, point.y, msp)
+       mon.set_prop("borgnjor", 1)
+       count = count + 1
+      end
+    end
+  end
+
+  crawl.redraw_view()
+
+  if count == 1 then
+    crawl.mpr("A lost soul coalesces out of thin air!", "warning")
+  end
 end
 }}
 
@@ -707,16 +808,8 @@ SUBST:      opqrstu = *
 #           Monsters
 #            0 Tomb set: zombies, mummies (weight *2)
 #            1 Demons (if demons are added or reclassified, please change!)
-#            2 Golems
-#            TODO: 3 Holy set (for later)
-:           local mrnd = crawl.random2(4)
+:           local mrnd = crawl.random2(3)
 :           if mrnd == 0 then
-KMONS:      0% = gargoyle / earth elemental / toenail golem w:1
-KMONS:      * = war gargoyle / crystal guardian / iron golem
-KMONS:      | = electric golem
-:           set_random_mon_list("earth elemental / toenail golem w:1 / " ..
-:                               "gargoyle / crystal guardian / iron golem")
-:           elseif mrnd == 1 then
 KMONS:      0% = smoke demon / ynoxinul / neqoxec w:6 / ice devil /\
                  chaos spawn / soul eater / sun demon
 KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion /\
@@ -991,12 +1084,14 @@ KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
                 randbook disc:conjuration owner:Iskenderun
 KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian
+KMONS:      H = purple draconian scorcher / purple draconian annihilator /\
+                purple draconian knight / purple draconian stormcaller
 COLOUR:     v = magenta
 TILE:       v = dngn_metal_wall_magenta
 MARKER:     " = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" }
-NSUBST:     1 = 4 = 1:1 3:19 / 6 = 1:2 3:3 / * = 1:15 .
+NSUBST:     1 = 4 = 1:1 3:19 / 6 = 1:2 3:3 / * = 1:15 ., H = 1:H / 1:H. / *:.
 SHUFFLE:    '=F- / '=F- / '=F- / F-'= / F-'=, DEF
 SUBST:      - = v, ' = ., = = +
 LROCKTILE:  wall_zot_magenta
@@ -1023,13 +1118,13 @@ vxx............vvv11.11vvv............xxv
 vx.x..........v.v1vvvvv1v.v..........x.xv
 vxx..........v.v1vvvEvvv1v.v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv
-vxx..........v1vvv.....vvv1v..........xxv
-vx.x.......vv1vvv.......vvv1vv.......x.xv
+vxx..........v1vvvH...Hvvv1v..........xxv
+vx.x.......vv1vvvH......vvv1vv.......x.xv
 vxxx........v1vvv.......vvv1v........xxxv
-vx".x...2.....vD+...2...+'=.....2...x."xv
+vx".x...2.....vD+.H.2...+'=.....2...x."xv
 vxxx........v1vvv.......vvv1v........xxxv
-vx.x.......vv1vvv.......vvv1vv.......x.xv
-vxx..........v1vvv.....vvv1v..........xxv
+vx.x.......vv1vvvH......vvv1vv.......x.xv
+vxx..........v1vvvH...Hvvv1v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv
 vxx..........v.v1vvvFvvv1v.v..........xxv
 vx.x..........v.v1vv-vv1v.v..........x.xv
@@ -1876,4 +1971,562 @@ ccccccccccc.....cccccc....c*...*c....ccccc''...........''ccc
 ccccccccccccc.scccccccccccccbNbcccccccccccc'''''''''''''cccc
 ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Eringya's Formal Garden
+# Redesigned by Hellmonk, loosely based on the old layout but reshaped to work
+# better with the monster set. No lua gimmick, just a set of plant and archery
+# themed monsters, plus some fenstrider witches.
+# Loot: staves, books, spectral branded weapons
+# Could use a slightly different grass tile for better color contrast
+NAME:       wizlab_eringya
+TAGS:       no_rotate
+ITEM:       any book, any magical staff
+:item(dgn.loot_potions)
+ITEM:       any weapon good_item ego:spectral no_pickup / \
+            lajatang ego:spectral no_pickup w:4 / \
+            quarterstaff randart plus:12 ego:spectral no_pickup w:1
+MONS:       deep elf archer w:5 / faun / centaur warrior
+MONS:       yaktaur / satyr / naga sharpshooter
+MONS:       shambling mangrove, thorn hunter / eleionoma, deep elf master archer
+MONS:       fenstrider witch, bush
+KMONS:      P = oklob plant
+KFEAT:      - = stone_arch
+KFEAT:      _ = altar_fedhas
+SHUFFLE:    pq/rs
+SUBST:      q : y., r : y., p = ., s = .
+NSUBST:     1 = 3:1 / *=1...., 2 = 2:2 / *=2..., 3 = 1:4 / 1:3 / *=34....
+NSUBST:     5 = 2:5 / *=5., 7 = 1:P / 4:7 / *=P7777ttV........
+NSUBST:     ; = 2:d / 2:e / 1:g / *:deff, A = 1:< /*:A
+SUBST:      y = ct
+MARKER:     A = feat:stone_arch
+COLOUR:     G = lightgrey
+TILE:       c = wall_brick_vines
+: if crawl.one_chance_in(4) then
+COLOUR:     t = lightred / red w:3 / green w:3 / lightgreen w:1
+TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+: end
+#should use statue_archer, but currently that doesn't work
+TILE:       G = dngn_statue_centaur
+LROCKTILE:  wall_brick_vines
+LFLOORTILE: floor_grass
+:           set_random_mon_list(
+:               "deep elf archer / faun / centaur warrior / yaktaur / " ..
+:               " satyr / naga sharpshooter / shambling mangrove / " ..
+:               "thorn hunter w:5 / eleionoma w:5 / deep elf master archer w:2")
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Eringya's Formal Garden")
+}}
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccc
+ctttttttttttttttttttttttttttttttttttttttttttc
+cttttttttttt1....1....t....1....1tttttttttttc
+cttttttt.............................tttttttc
+ctttt1....tttttttttttt.tttttttttttt....1ttttc
+cttt.....tttttttttt.......tttttttttt.....tttc
+ctt...tt...ttt......G...G......ttt...tt...ttc
+cty1.ttt2............A.A............2ttt.1ytc
+ctt...tt......ttt...G...G...ttt......tt...ttc
+cttt.....tttttttttt.......tttttttttt.....tttc
+ctttt1....tttttttttttt.tttttttttttt....1ttttc
+cttttttt.......1.............1.......tttttttc
+cttttttttttt1.....1.......1.....1tttttttttttc
+cttttttttttttttttttttT.Tttttttttttttttttttttc
+cttttttttt.2.ttttttt.....ttttttt.2.tttttttttc
+ctttttttt.....t...t...T...t...t.....ttttttttc
+cttttttt...t....7.....7.....7....t...tttttttc
+ctttttt....1......tc.....ct......1....ttttttc
+cttttt..t......tttttcc-ccttttt......t..tttttc
+ctttt...tt.7..tttttt.....tttttt..7.tt...ttttc
+cttt...tttt..tttttt...3...tttttt..tttt...tttc
+cttt.2.tttt...tttttt2.2.2tttttt...tttt.2.tttc
+ctttt...tttt.2.tttttt;t;tttttt.2.tttt...ttttc
+ctttttp.pttttq.qtttttttttttttq.qttttp.ptttttc
+cttttttpppttttqqqttttyyyttttqqqttttpppttttttc
+cttttp..-..pttq...tt..2..tt...qttp..-..pttttc
+ctty.........ytt....1...1....tty.........yttc
+ctt;1..tTt..1;ytt.3...T...3.tty;1..tTt..1;ttc
+ctty....3...2ytt....1...1....tty2...3....yttc
+ctttt2..-...tt....tt;.3.;tt....tt...-..2ttttc
+ctttttt...tttt...ttttytytttt...tttt...ttttttc
+cttttt...tttt2..ttttttgtttttt..2tttt...tttttc
+ctttt11.tttt...tttt5G;_;G5tttt...tttt.11ttttc
+cttt..2tttt1.2tttt....3....tttt2.1tttt2..tttc
+cttt7..ttt...tttt2....6....2tttt...ttt..7tttc
+ctttt...t.7..tttG;.........;Gttt..7.t...ttttc
+cttttt........tttttcc5.5ccttttt........tttttc
+ctttttt.-.6.-..tttcc..7..ccttt..-.6.-.ttttttc
+cttttttt........t.7-..T..-7.t........tttttttc
+cttttttttt3...11.............11...3tttttttttc
+cttttttttttt..12...7..4..7...21..tttttttttttc
+cttttttttttttttt.............tttttttttttttttc
+cttttttttttttttttttt2...2tttttttttttttttttttc
+ctttttttttttttttttttttttttttttttttttttttttttc
+ccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Maxwell's Workshop
+# Designed by Hellmonk. Features a lot of constructs in a layout of
+# interconnected rooms. Boss is an electric golem (formerly used in tomb of
+# Doroklohe as part of a construct set there). Loot includes items with
+# "dangerous" properties, such as rampaging or harm.
+NAME:       wizlab_maxwell
+TAGS:       no_rotate no_pool_fixup
+ITEM:       scarf ego:harm w:25 / boots ego:rampaging w:25 /\
+            boots ego:rampaging randart / ring of fire randart /\
+            any armour good_item ego:ponderous randart / ring of ice randart /\
+            plate armour good_item ego:ponderousness / any weapon ego:chaos /\
+            maxwell's patent armour w:2 / maxwell's thermic engine w:2
+ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
+            any weapon randart / any armour randart / any jewellery randart w:5
+ITEM:       potion of attraction ident:all / any scroll w:20 /\
+            scroll of vulnerability ident:all / any potion w:20
+MONS:       peacekeeper / gargoyle / earth elemental w:5
+MONS:       molten gargoyle / salamander / fire elemental w:5
+MONS:       salamander tyrant / fire giant ; great mace ego:flaming
+MONS:       war gargoyle / crystal guardian
+MONS:       ettin / ironbound preserver ; great mace /\
+            fire giant ; great mace ego:flaming /\
+            frost giant ; great mace ego:freezing /\
+            angel ; great mace ego:holy_wrath w:5
+MONS:       ironbound thunderhulk ; great mace ego:electrocution
+MONS:       patrolling electric golem
+KMONS:      P = lightning spire
+SHUFFLE:    DE/JK, pqrs, ;~
+SUBST:      D : b+, E:., J:., K: b+, F:.+, p:v, q:b., r: v.., s:b...
+SUBST:      ;:v+., -:v+.., ~:., 1 = 1..., 2 = 2..
+NSUBST:     3 = 1:3 / *=3.., 4 = 1:4 / *=4.., 5 = 1:5 / *=5.., 6 = 2:6 / *=6..
+NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
+NSUBST:     e = 3:e / *=dff
+TILE:       v = dngn_metal_wall_cyan
+:           set_random_mon_list(
+:               "gargoyle / earth elemental / molten gargoyle / " ..
+:               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
+:               "ironbound thunderhulk / electric golem w:1")
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Maxwell's Workshop")
+}}
+MAP
+                        vvvvvvvvvvv
+                      vvv..eeree..vvv
+                      v6s..rrrrr..s6v
+                      v..s.sspss.s..v
+                     vv...psspssp...vv
+                     v...r.prprp.r...v
+                     vq.r..rpppr..r.qv
+                     vqq..ppppppp..qqv
+                     vqqqq6qeeq7q6qqqv
+                     vqqq.q7qeeq.qqqqv
+                     vqq..ppppppp..qqv
+        vvvvvvvvvvvvvvq.r..rpppr..r.qv
+        vlllllvvvvvvvv...r.prprp.r...v
+        vlllllvvvvvvvvv...psspssp...vv
+        vlllllvvvvvvvvv6.s.sspss.s.6v
+        vlllllvvvvvvvvvvs..rrrrr..svv
+       vvnnlnnvvvvvvvvvvvv...r...vvv
+      vv.3nln3.vvvvvvvvvvvvv+++vvv
+     vv..2nln2..vvvvvvvvvvvH6.6Hvvvvv
+    vv...2nln2...vvvvvvvvvv.....vvvvvv
+    v2.2nnnlnnn2.2vvvvvH...4...4...Hvv
+    v...nllllln...vvvvv....v111v....vv
+    v...nllllln...vvvvv....veeev....vv
+    v2..nllllln..2vvvvvH...vvvvv...Hvv
+    v...nllllln...vvvvvvvD..bbb..Dvvvv
+    v..2nllllln2..vvvvH..DD..H..DD..Hv
+    vG..nnnnnnn..Gv..v....v..P..v....v
+    v...3..3..3...+.4+....v.....v....v
+    v...v..2..v...v..v....vH...Hv....v
+    v...v2.3.2v...vvvvH..EvvFFFvvE..Hv
+    v2vvvvdddvvvv2vvvvvvvEH.....HEvvvv
+    v...vvvdvvv...vvvvvvv....v....v
+    v...vvvvvvv...vvvvvvv....v....v
+    vv..vv222vv..vvvvvvvvH.......Hv
+     vv.........vvvvvvvvvvvvv+vvvvvv
+      vv.......vvvvvvvvv1.~.5...5.1v
+       vv.....vvvvvvvvvv..~..1.....v
+        vvv+vvvvvvvvvvvv..v--v--v..v
+       vv.....vvvvvvvvvv..v1.v..v..v
+ vvvvvvvG1...1Gvvvvvvvvv..;..5..~.fv
+vv...vv.1..G..1.vvvvvvvv..;.....~5fv
+v..G..v.........v1....1v..vvvvvvv;;v
+v1.4..+.G1.G.1G.+...4..+..;.....~5fv
+v..G..v.........v1....1v..;..5..~.fv
+vv...vv....G....vvvvvvvv..v1.v..v..v
+ vvvvvvG1....1Gvvvvvvvvv..v--v--v..v
+       vv.....vvvvvvvvvv..~..1.....v
+        vvv+vvvvvvvvvvvv1.~.....5.1v
+        vv...vvvvvvvvvvvvvvvvvvvvvvv
+        v.....v
+        v.AGA.v
+        v.....v
+        vv...vv
+         vvvvv
+ENDMAP
+
+###############################################################################
+# Yara's Duelist Academy
+# Designed by Hellmonk. Features warrior-mages with antimagic weaponry.
+# Said weaponry makes up part of the loot here. The remainder of the loot is
+# books, random good items, and gold.
+NAME:   wizlab_yara
+TAGS:   no_rotate
+ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
+ITEM:   scroll of enchant armour ident:all / scroll of enchant weapon ident:all
+:       yara_students(_G)
+MONS:   mana viper, quicksilver dragon
+KMONS:  P = bush
+{{
+wizname = crawl.make_name()
+kmons("5 = patrolling Head dbname:Head Instructor name:"
+      .. string.gsub(wizname, " ", "_") .. " ; triple sword ego:antimagic \
+            . triple sword ego:antimagic . plate armour ego:willpower")
+}}
+NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / *=G1
+NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A
+SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
+FTILE:  125.*de$G+ = floor_limestone
+FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
+TILE:   x = wall_brick
+TILE:   c = wall_church
+:           set_random_mon_list(
+:               "mana viper / tengu conjurer / ogre mage / " ..
+:               "deep elf knight / wizard / naga mage / " ..
+:               "salamander mystic / necromancer / vampire mage / " ..
+:               "tengu reaver w:1 / quicksilver dragon w:1")
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Yara's Duelist Academy")
+}}
+MAP
+          cccccccccccccccccccc
+          c***cGF.1..1.FGc***c
+          c***c..........c***c
+          cFFFc..1....1..cFFFc
+          c...c..cc55cc..c...c
+          c...+5........5+...ctt
+     ttt  ccccc...1..1...ccccc3tt
+  tttt""""""""cc........cc""""""tt
+ tt"""..1....11ccc....ccc"""""3""tt
+tt""..xxxx.......cc++cc111"""T"""3t
+t".11xx.....11....1..1....""""3""tt
+t".1xx.11.xx.............1xx"""ttt
+t".xx..1.xx...1.xxt""txx..1xxttt
+t".xx..1xx...1.xx"3""3"xx...xxcccccccccccc
+t"1x...xx.....xx"3""""3"xx.....11......11c
+t".x...x.....xx"""c""c"""xx..............c
+t".x11.x..t..x""c""33""c""xx...cc"cc"cc..c
+t".t...t..t..t""""PWWP""""txx..cD"D""Dc..c
+t".........."""c"PWWWWP"c"".x..""""""""..c
+t"1....11.t."""c"WWWWWW"c""....c""cc"Dc.1c
+cccc++cccct."""""WWWWWW""""t...cD"cc""c.1c
+c*.c..c.*ctt"""c"PWWWWP"c""x...""""""""..c
+cE.+..+.Ec-t""""c"PWWP"c"""x...cD""D"Dc..c
+ccccE.cccc-t""""""""""""""txt..cc"cc"cc..c
+cE.+..+.Ec-t""""""c33c""""---............c
+c*.c..cE*c---"""""t""t""""---..11......11c
+ccccE.cccc  --"""tt""tt"""--cccccccccccccc
+c*.c..cE*c   --"""t""t"""--
+cEE+..+.Ec    --""""""""--
+cccc.Ecccc     --""""""--
+cE.+..+.Ec      --""""--
+c*.c.EcE*c       -G""G-
+cccccccccc      --""""--
+               --""""""--
+               t""A""A""t
+               t""""""""t
+               --""""""--
+                --T""T--
+                 ------
+ENDMAP
+
+###############################################################################
+# Borgnjor's Mausoleum
+# Designed by Hellmonk. Split map layout with corporeal undead on one side and
+# incorporeal undead on the other. Lost souls spawn continuously, and the ending
+# includes some halazid warlocks and their servants. Loot is necromancy
+# themed, as you'd expect.
+NAME:   wizlab_borgnjor
+TAGS:   no_rotate
+ITEM:   randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
+        necronomicon / randbook disc:necromancy / staff of death /\
+        macabre finger necklace w:1 / sceptre of torment w:1
+ITEM:   any book / scroll of torment ident:all q:3 /\
+        any weapon good_item ego:pain / any weapon good_item ego:vampirism
+ITEM:   any ring / any amulet w:5
+MONS:   spectral spriggan berserker / spectral titan / spectral spark wasp /\
+        spectral harpy / spectral quicksilver dragon / spectral wolf spider /\
+        spectral caustic shrike / phantasmal warrior w:60
+MONS:   flayed ghost / shadow wraith / eidolon
+MONS:   spriggan berserker zombie / titan zombie / spark wasp zombie /\
+        harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
+        caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
+MONS:   ancient champion / revenant, flying skull
+MONS:   deep elf death mage / vampire mage / necromancer, halazid warlock
+:if crawl.one_chance_in(4) then
+SUBST:   F = c..., E = cccc., D = c
+:else
+SUBST:   D = c., E = c.., F = c
+:end
+SHUFFLE: 12/34
+NSUBST:  7 = 3:7 / *=775., 6 = 2:6 / *=6., 2 = 2:2 / *=2.., 4 = 2:4 / *=4..
+NSUBST:  A = 1:< / *:A
+SUBST:   1 = 1.., 3 = 3.., 5 = 5.., V = VVVY
+TILE:    c = wall_cobalt_stone
+LFLOORTILE: floor_black_cobalt
+{{
+local summon_marker = TriggerableFunction:new ({
+    func="wizlab_borgnjor_call_souls",
+    repeated=true })
+
+summon_marker:add_triggerer(DgnTriggerer:new {type="monster_dies",
+    target = "any"})
+
+lua_marker('A', summon_marker)
+}}
+:           set_random_mon_list(
+:               "skeletal warrior / flayed ghost / phantasmal warrior / " ..
+:               "necromancer / vampire mage / shadow wraith / " ..
+:               "revenant w:2 / ancient champion w:2")
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Borgnjor's Mausoleum")
+}}
+MAP
+             ccccc
+           ccc565ccc
+          cc55.5.55cc
+         cc..55755..cc
+        cc5.5c+++c5.5cc
+        c6.5cc.5.cc5.6c
+       cc5.cc5.7.5cc.5cc
+       c...c5.555.5c...c
+       c2.2cY57575Yc4.4c
+       c.5.c.76.67.c.5.c
+      ccc..cc.$$$.cc..ccc
+     cc1c...ccfffcc...c3cc
+    cc11FF...cc+cc...FF33cc
+   cc2111FF.11cec33.FF3334cc
+  cc......FF..cec..FF......cc
+ cc...EE...cc2cec4cc...EE...cc
+ c1..EE...cc..cdc..cc...EE..3c
+ c..EE..2cc..1cdc3..cc4..EE..c
+ c..EE11cc12.2ccc4.43cc33EE..c
+ c..E..1c11EE..D..EE33c3..E..c
+ c..D..cc2.EE.264.EE.4cc..D..c
+ c..D..c..EEEE1D3EEEE..c..D..c
+cc.2D2.c.EEcE.1D3.EcEE.c.4D4.cc
+c1..D..c..EcEE1D3EEcE..c..D..3c
+c1..D..cc.EEE..c..EEE.cc..D..3c
+c1..D..2c..E..ccc..E..c4..D..3c
+c1..D...c...11cVc33...c...D..3c
+c...c..1...1.cc.cc.3...3..c...c
+cc..FF..1..ccc...ccc..3..FF..cc
+ c...FF....cV.....Vc....FF...c
+ c....FF..2c...A...c4..FF....c
+ c.....ccccc.......ccccc.....c
+ c..c1.......cc.cc.......3c..c
+ c1.EE.......cc.cc.......EE.3c
+ cc1...ccccc.......ccccc...3cc
+  cc1.cc   c...A...c   cc.3cc
+   cccc    cV.....Vc    cccc
+           ccc...ccc
+             cc.cc
+              cVc
+              ccc
+ENDMAP
+
+###############################################################################
+# Tukima's Studio
+# Reimplemented by Hellmonk. Features dancing weapons and walking tomes, plus
+# some strange machines that mirror the player. Loot always contains a phantom
+# mirror in addition to some book and aux armour items (plus the weapons).
+NAME:   wizlab_tukima
+TAGS:   no_rotate
+ITEM:   hat good_item / pair of boots good_item / scarf good_item /\
+        cloak good_item / pair of gloves good_item / randbook disc:hexes /\
+        any book w:35 / any armour good_item w:5
+ITEM:   phantom mirror
+MONS:   rakshasa, dancing weapon
+MONS:   dancing weapon; fustibalus ego:flaming w:15 /\
+        dancing weapon; fustibalus ego:freezing w:15 /\
+        dancing weapon; fustibalus ego:venom /\
+        dancing weapon; fustibalus ego:electrocution w:2 /\
+        dancing weapon; fustibalus randart ego:speed w:1 /\
+        dancing weapon; longbow ego:flaming w:15 /\
+        dancing weapon; longbow ego:freezing w:15 /\
+        dancing weapon; longbow ego:venom /\
+        dancing weapon; longbow ego:electrocution w:2 /\
+        dancing weapon; longbow randart ego:speed w:1 /\
+        dancing weapon; triple crossbow ego:flaming w:15 /\
+        dancing weapon; triple crossbow ego:freezing w:15 /\
+        dancing weapon; triple crossbow ego:venom w:5 /\
+        dancing weapon; triple crossbow ego:electrocution w:5 /\
+        dancing weapon; triple crossbow randart ego:speed w:1 /\
+        dancing weapon; triple crossbow ego:penetration w:1
+MONS:   walking frostbound tome / walking earthen tome / walking crystal tome /\
+        walking divine tome
+MONS:   strange machine
+KFEAT:   ~ = closed_clear_door
+SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 22...
+NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 2:4 / *= 42., A = 1:< / *:A
+TILE:       c = wall_stone_dark
+TILE:       V = dngn_dry_fountain_white
+LFLOORTILE: floor_w_marble
+:           set_random_mon_list("dancing weapon / rakshasa")
+:           wizlab_setup(_G)
+epilogue{{
+            wizlab_milestone(_G, "Tukima's Studio")
+}}
+MAP
+            ccccccc
+            ccmmmcc
+        ccccccA.Acccccc
+       ccm...c...c...mcc
+       cc.............cc
+      cc..ccm.....mcc..cc
+      c~~ccccm...mcccc~~c
+      c2.."""cm~mc"""..2c
+     ccc.1c"""..."""c1.ccc
+     cmm..mcm.....mcm..mmc
+     cm...mcm.....mcm...mc
+     cm...mcm..2..mcm...mc
+     cm...mcm..V..mcm...mc
+     cm2..mcm1...1mcm..2mc
+     cm...mcm..1..mcm...mc
+     cm1.2mcm2.2.2mcm2.1mc
+     cc1..c'''...'''c..1cc
+     ccc..'''cm2mc'''..ccc
+      cc~~cccm...mccc~~cc
+     ccm1.mcm1...1mcm.1mcc
+     cm.3.mcm3.V.3mcm.3.mc
+    ccm..mccm2...2mccm..mcc
+  cccm...mcccm.5.mcccm...mcc
+  ccm2.-.1mcccm.mcccm1.-.2mcc
+ ccm2....mcccm121mcccm....2mcc
+ccm..mm...mmm.....mmm...mm..mcc
+cm4..cm......2.5.2......mc..4mc
+ccm.....mm.3...4...3.mm.....mcc
+ ccmd4.mccmmm.....mmmccm.4dmcc
+  ccmmmccccccdddddccccccmmmcc
+   ccccc    ccmmmcc    ccccc
+             ccccc
+ENDMAP
+
+###############################################################################
+# Alistair's Party Mansion
+# Designed by Hellmonk. Features degeneration clouds that statrot the player.
+# Monster set pulls from associated weird wizard creatures and branch invitation
+# monsters for forceful invitation/planerend. Bosses are demonspawn corrupters
+NAME:       wizlab_alistair
+TAGS:       no_rotate
+ITEM:       potion of degeneration ident:all
+:item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+ITEM:   scroll of acquirement ident:all q:1
+ITEM:   any book w:30 / randbook disc:poison disc2:transmutation /\
+        condenser vane w:1
+KITEM:  " = gold q:1 no_pickup
+KITEM:  H = any magical staff no_pickup
+KITEM:  Q = star_item
+KITEM:  JKL = potion of degeneration ident:all
+MONS:   wizard / boggart w:2 / deep elf zephyrmancer w:3 /\
+        deep elf pyromancer w:3 / worldbinder w:1
+MONS:   great orb of eyes / glowing orange brain / sphinx / cacodemon w:2 /\
+        very ugly thing / glowing shapeshifter / entropy weaver /\
+        green death w:2 / tentacled starspawn / golden eye band w:6 /\
+        worldbinder / floating eye w:4
+MONS:   nagaraja / deep elf high priest / sphinx w:5 / deep elf sorcerer /\
+        worldbinder
+MONS:   wizard / necromancer w:2 / hell knight w:2 / worldbinder w:6
+MONS:   corrupter
+KMONS:  J = wizard generate_awake perm_ench:confusion ; nothing
+KMONS:  H = torpor snail / ghost moth / guardian serpent / water nymph /\
+            acid blob / anaconda / swamp dragon
+KMONS:  F = spriggan druid / deep elf pyromancer / wizard
+KMONS:  E = water nymph / merfolk aquamancer / merfolk javelineer /\
+            merfolk aquamancer / wizard ; nothing
+KMONS:  D = stone giant / ettin
+KFEAT:  E = shallow_water
+KFEAT:  N = granite_statue
+NSUBST: A = 1:< / *:A, D = 1:D/*:-, W = 1:E / * = E:1 W:16, F = 1:F / * = F----
+NSUBST: H = 1:H / *:", e = 4:e / 1:g / *=eedg, 5 = 3:5 / *=5..
+NSUBST: 3 = 3:3 / *= 3...., ? = 2:? / *=?..., 4 = 2:4 / *= 4...., J=1:J / *:-
+SUBST:  N = N'', ' = 1:15 2:25 K:15 ':825, . = d:1 .:15, - = L:1 -:70
+MARKER:     ? = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 50, \
+                size = 2, size_buildup_amnt = 3, \
+                size_buildup_time = 25, cloud_type = "degeneration" \
+            }
+MARKER:     H = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 50, \
+                size = 3, size_buildup_amnt = 3, \
+                size_buildup_time = 25, cloud_type = "degeneration" \
+            }
+TILE:   c = wall_stone_gray
+FTILE:  H" = floor_mosaic
+FTILE:  N'12K = floor_w_marble
+FTILE:  -FTtAJLDQ< = floor_grass
+:           set_random_mon_list(
+:               "wizard w:40 / necromancer / boggart / " ..
+:               "glowing orange brain / worldbinder / sphinx / " ..
+:               "corrupter w:1")
+:           wizlab_setup(_G)
+epilogue{{
+            wizlab_milestone(_G, "Alistair's Party Mansion")
+}}
+MAP
+                  ccccc
+                  cefec
+                  ceeec
+                  ceeec
+    ccccccccccccccccc+c
+    c3.3+3?3c3..3+...5c
+ccccc...c...c.3..c.3.5c
+ce5.c.3.c3..c...3c...5c
+ce..+...cc+cc+cccc+cccc
+ce..c...+?....?....c
+ce5.c3..c..33..33..c
+ccccccccc+cccccccc+c
+    cee3c'''NNNN'''cccccccccc
+    c444c''''''''''+....4..4c
+    ccc+c''N''''N''+..WWWW?.c
+    c44.c''''''''''n.WWWWWW4c
+    c3..+''''NN''''n.WWWWWW.c
+    c...cN''""""'''n.?WWWW..c
+    c+ccc'''"HH"'''n4......4c
+    c..3c'N'"HH"'N'cccccnn+nctttttt
+    c4..+'''""""'''c4eecF----ttt-?tttttttttt
+    c4.?c'''''''''Nc..3c-F-Fttt-----F----ttt
+    ccc+c''''NN''''c3..ct---t-------WWW---tt
+    c44.c''N''''N''c...cF-T-F---T-?WWWWWF-Qt
+    c...+''''''''''c..4ct---tt------WWW---tt
+    c...cNN'''''NN'+...cttFtttt-----F----ttt
+    c+ccccccc++ccccccccctt--tttt-?tt--tttt
+    c..4.4.G.?..G.4.4..ct--Fttttttttttttt
+    c.3..............3.ct--tttttttttttttt
+    c..4G..........G4..ctt-tttt
+  ttc+ccccccc++ccccccc+ctF-tttt
+ tttc.....4cG..Gc4.....ct-J-ttt
+ttttc..3...c....c...3..ct--ttt
+ttttc......+.??.+......ct-tttt
+ttttc4...3.c....c.3...4ct--ttt
+ttttccccccccc++ccccccccc---tt
+ttttt--------DD----------Fttt
+tttttF--J------------------tt
+tttttt-----ttttttt---J-tttttt
+ ttttttt--tt--J--tt---tttttttt
+  ttttt---t--T-T--t--ttttttttt
+  tttttt-------------ttttttttt
+    ttttt-----A------ttttttttt
+      tttt--T---T--tttttttttt
+       tttt---A----tttttttttt
+        ttt------ttttttttttt
+        ttt--T-T-ttttttttt
+         ttt----ttttttttt
+         ttttttttttttt
+         tttttttttttt
+          tttt  tttt
 ENDMAP

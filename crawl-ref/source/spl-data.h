@@ -3463,6 +3463,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CONJURE_LIVING_SPELLS, "Conjure Living Spells",
+    spschool::conjuration,
+    spflag::selfench | spflag::monster,
+    6,
+    200,
+    -1, -1,
+    6, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_SUMMON_CACTUS, "Summon Cactus Giant",
     spschool::summoning,
     spflag::none,

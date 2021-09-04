@@ -275,6 +275,7 @@ fulminant_prism2
 fulminant_prism3
 fulminant_prism4
 foxfire MONS_FOXFIRE
+living_spell MONS_LIVING_SPELL
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno MONS_CREEPING_INFERNO
@@ -467,6 +468,7 @@ ice_statue MONS_ICE_STATUE
 obsidian_statue MONS_OBSIDIAN_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
+machine_tukima MONS_STRANGE_MACHINE
 %sdir mon/vault
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
@@ -509,6 +511,14 @@ spectral_axe MONS_SPECTRAL_AXE
 spectral_mace MONS_SPECTRAL_MACE
 spectral_whip MONS_SPECTRAL_WHIP
 spectral_spear MONS_SPECTRAL_SPEAR
+
+## Walking Tomes (';')
+%rim 0
+earthen_tome MONS_EARTHEN_TOME
+crystal_tome MONS_CRYSTAL_TOME
+divine_tome MONS_DIVINE_TOME
+frostbound_tome MONS_FROSTBOUND_TOME
+%rim 1
 
 ## Humans ('@')
 %sdir mon/unique
@@ -934,6 +944,7 @@ dowan2
 duvessa MONS_DUVESSA
 duvessa2
 fannar MONS_FANNAR
+head_instructor MONS_HEADMASTER
 %rim 1
 %sdir mon/humanoids/elves
 elf MONS_ELF

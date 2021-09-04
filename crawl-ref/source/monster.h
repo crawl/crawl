@@ -25,6 +25,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 #define MON_SPEED_KEY "speed"
 #define CUSTOM_SPELLS_KEY "custom_spells"
+#define CUSTOM_SPELL_LIST_KEY "custom_spell_list"
 #define SEEN_SPELLS_KEY "seen_spells"
 #define KNOWN_MAX_HP_KEY "known_max_hp"
 #define VAULT_HD_KEY "vault_hd"

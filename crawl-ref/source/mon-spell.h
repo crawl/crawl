@@ -1535,6 +1535,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_STRANGE_MACHINE,
+      {
+       { SPELL_SUMMON_ILLUSION, 50, MON_SPELL_MAGICAL },
+       { SPELL_SHADOW_CREATURES, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('9') Gargoyles.
     {  MST_GARGOYLE,
       {
@@ -1567,6 +1574,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 32, MON_SPELL_MAGICAL },
        { SPELL_FIREBALL, 32, MON_SPELL_MAGICAL },
        { SPELL_MALMUTATE, 16, MON_SPELL_MAGICAL },
+      }
+    },
+
+    // (';') Walking Tomes.
+    { MST_WALKING_TOME,
+      {
+       { SPELL_CONJURE_LIVING_SPELLS, 60, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2054,6 +2068,15 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_AIRSTRIKE, 25, MON_SPELL_WIZARD },
        { SPELL_POLAR_VORTEX, 40, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_HEADMASTER,
+      {
+       { SPELL_SUMMON_MANA_VIPER, 15, MON_SPELL_WIZARD },
+       { SPELL_DIMENSION_ANCHOR, 15, MON_SPELL_WIZARD },
+       { SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD },
+       { SPELL_ENERGY_BOLT, 15, MON_SPELL_WIZARD },
       }
     },
 

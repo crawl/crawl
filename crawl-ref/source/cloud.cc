@@ -30,6 +30,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h" // Compass (for random_walk, CloudGenerator)
+#include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -296,9 +297,16 @@ static const cloud_data clouds[] = {
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
     // CLOUD_FLAME,
-    { "wisps of flame", nullptr,          // terse, verbose name
-      ETC_FIRE,                                // colour
-      { TILE_CLOUD_FLAME, CTVARY_RANDOM },   // tile
+    { "wisps of flame", nullptr,                  // terse, verbose name
+      ETC_FIRE,                                   // colour
+      { TILE_CLOUD_FLAME, CTVARY_RANDOM },        // tile
+    },
+    // CLOUD_DEGENERATION,
+    { "degeneration",  nullptr,                   // terse, verbose name
+      ETC_DARK,                                   // colour
+      { TILE_CLOUD_DEGENERATION, CTVARY_NONE },   // tile
+      BEAM_NONE, {},                              // beam & damage
+      false,                                      // opacity
     },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -879,6 +887,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_MEPHITIC:
     case CLOUD_MIASMA:
     case CLOUD_MUTAGENIC:
+    case CLOUD_DEGENERATION:
     case CLOUD_CHAOS:
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
@@ -1179,6 +1188,15 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         {
             if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
                 did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
+            return true;
+        }
+        return false;
+
+    case CLOUD_DEGENERATION:
+        if (player && one_chance_in(4))
+        {
+            mpr("You feel yourself deteriorate.");
+            lose_stat(STAT_RANDOM, 1 + random2avg(4,2));
             return true;
         }
         return false;

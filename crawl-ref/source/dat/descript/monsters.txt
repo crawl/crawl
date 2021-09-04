@@ -1646,6 +1646,11 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie red glow.
 %%%%
+living spell
+
+A semi-sentient construct of floating magic. It casts itself at the first foe
+it sees, expending itself in the process.
+%%%%
 lorocyproca
 
 A tall and gaunt figure, draped in long robes which flow as if alive. It
@@ -2380,6 +2385,11 @@ storm dragon
 A powerful dragon with a hide of thick matte scales almost like blue rubber,
 and enormous scaly wings crackling with sparks.
 %%%%
+strange machine
+
+A strange mechanical contraption, all hisses and pops. Shadows seem to dance
+across its reflective surface.
+%%%%
 sun demon
 
 A demonic figure shining with the heat and fury of a fallen star.
@@ -2589,6 +2599,44 @@ vine stalker
 A bizarre symbiotic creature, made up of a carnivorous vine magically combined
 with a humanoid.
 %%%%
+walking earthen tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+It is coated with impossibly ancient dust.
+%%%%
+walking crystal tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+It is encrusted with long, sharp, deadly-looking crystals.
+%%%%
+walking divine tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+Its cover bears the icon of a long-forgotten god, still fully possessed of wrath.
+%%%%
+walking frostbound tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+It glistens with a thick layer of unmelting ice.
+%%%%
+walking tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+%%%%
 wandering mushroom
 
 A large, fleshy mushroom that wanders slowly around the dungeon. It is both
@@ -2782,6 +2830,11 @@ Cloud Mage
 
 A strange wizard who has attained mastery over clouds, making deft and
 foreboding mystic gestures.
+%%%%
+Head Instructor
+
+A powerful warrior-mage who instructs aspiring students in physical, magical,
+and anti-magical combat.
 %%%%
 Hellbinder
 

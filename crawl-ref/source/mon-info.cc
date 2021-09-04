@@ -970,6 +970,28 @@ string monster_info::_core_name() const
         case MONS_PANDEMONIUM_LORD:
             s = mname;
             break;
+        case MONS_LIVING_SPELL:
+            if (has_spells())
+            {
+                switch (spells[0].spell)
+                {
+                case SPELL_BANISHMENT:
+                    s = "living banishment spell";
+                    break;
+                case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+                    s = "living crystal spell";
+                    break;
+                case SPELL_SMITING:
+                    s = "living smiting commandment";
+                    break;
+                case SPELL_PARALYSE:
+                    s = "living paralysis spell";
+                    break;
+                default:
+                    break;
+                }
+            }
+            break;
         default:
             break;
         }

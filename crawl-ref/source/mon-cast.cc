@@ -1727,6 +1727,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_CONJURE_BALL_LIGHTNING:
+    case SPELL_CONJURE_LIVING_SPELLS:
     case SPELL_SUMMON_DRAKES:
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_MALIGN_GATEWAY:
@@ -4199,6 +4200,13 @@ bool handle_mon_spell(monster* mons)
     if (!mons->alive())
         return true;
 
+    // Living spells die once they are cast.
+    if (mons->type == MONS_LIVING_SPELL)
+    {
+        monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
+        return true;
+    }
+
     if (!(flags & MON_SPELL_INSTANT))
     {
         mons->lose_energy(EUT_SPELL);
@@ -5938,6 +5946,26 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_CONJURE_LIVING_SPELLS:
+    {
+        const int hd = mons->spell_hd(spell_cast);
+        const int n = living_spells_for(mons->type);
+        const spell_type spell = living_spell_type_for(mons->type);
+        // XXX: will crash if wizmode player tries to cast?
+        ASSERT(spell != SPELL_NO_SPELL);
+        for (int i = 0; i < n; ++i)
+        {
+            mgen_data mg = mgen_data(MONS_LIVING_SPELL, SAME_ATTITUDE(mons),
+                                     mons->pos(), mons->foe)
+                            .set_summoned(mons, 1, spell_cast, god);
+            mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(spell);
+            mg.hd = hd;
+            create_monster(mg);
+        }
+        return;
+    }
+
+
     case SPELL_SUMMON_UNDEAD:
         _do_high_level_summon(mons, spell_cast, _pick_undead_summon,
                               2 + random2(mons->spell_hd(spell_cast) / 5 + 1),
@@ -6592,6 +6620,28 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_direct_explosion(*mons, slot, pbolt);
     else
         _fire_simple_beam(*mons, slot, pbolt);
+}
+
+int living_spells_for(monster_type mtyp)
+{
+    return mtyp == MONS_DIVINE_TOME ? 3 + random2(3) : 2 + random2(2);
+}
+
+spell_type living_spell_type_for(monster_type mtyp)
+{
+    switch (mtyp)
+    {
+    case MONS_EARTHEN_TOME:
+        return SPELL_PETRIFY;
+    case MONS_CRYSTAL_TOME:
+        return SPELL_LEHUDIBS_CRYSTAL_SPEAR;
+    case MONS_DIVINE_TOME:
+        return SPELL_SMITING;
+    case MONS_FROSTBOUND_TOME:
+        return SPELL_ICEBLAST;
+    default:
+        return SPELL_NO_SPELL;
+    }
 }
 
 static int _noise_level(const monster* mons, spell_type spell,
