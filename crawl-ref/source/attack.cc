@@ -1566,11 +1566,17 @@ bool attack::apply_damage_brand(const char *what)
         {
             beam_temp.ench_power = you.props[CONFUSING_TOUCH_KEY].get_int();
             int margin;
-            if (beam_temp.try_enchant_monster(defender->as_monster(), margin)
-                    == MON_AFFECTED)
+            monster* mon = defender->as_monster();
+            if (beam_temp.try_enchant_monster(mon, margin) == MON_AFFECTED)
             {
                 you.duration[DUR_CONFUSING_TOUCH] = 0;
                 obvious_effect = false;
+            } else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
+                       || mons_invuln_will(*mon))
+            {
+                mprf("%s is completely immune to your confusing touch!",
+                     mon->name(DESC_THE).c_str());
+                you.duration[DUR_CONFUSING_TOUCH] = 1;
             }
         }
         else if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()),
