@@ -152,7 +152,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Maledictions
-    SPELL_CORONA,
     SPELL_HIBERNATION,
     SPELL_TUKIMAS_DANCE,
 },
@@ -225,7 +224,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_CORONA,
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
@@ -318,6 +316,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Spheres
     SPELL_BATTLESPHERE,
+    SPELL_FIREBALL,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_IOOD,
 },
@@ -486,7 +485,6 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Scorching
     SPELL_SCORCH,
     SPELL_FLAME_WAVE,
-    SPELL_FIREBALL,
     SPELL_SUMMON_CACTUS,
 },
 

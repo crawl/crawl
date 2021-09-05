@@ -70,7 +70,6 @@ static const map<job_type, job_def> job_data =
     2, 5, 5,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_TROLL, },
     {
-        SPELL_CORONA,
         SPELL_SLOW,
         SPELL_INNER_FLAME,
         SPELL_PORTAL_PROJECTILE,
