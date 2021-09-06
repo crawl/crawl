@@ -4667,13 +4667,15 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 
         spschool disc1 = (spschool)props[RANDBK_DISC1_KEY].get_short();
         spschool disc2 = (spschool)props[RANDBK_DISC2_KEY].get_short();
+        bool disc1_rerollable = false;
+        bool disc2_rerollable = false;
         if (disc1 == spschool::none && disc2 == spschool::none)
         {
             if (spells.size())
                 disc1 = matching_book_theme(spells);
             else
-                disc1 = random_book_theme();
-            disc2 = random_book_theme();
+                disc1_rerollable = true;
+            disc2_rerollable = true;
         }
         else if (disc2 == spschool::none)
             disc2 = disc1;
@@ -4686,11 +4688,29 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         const int max_levels = props[RANDBK_SLVLS_KEY].get_short();
 
         vector<spell_type> chosen_spells;
-        theme_book_spells(disc1, disc2,
+        int retries = 0;
+        // TODO: retry if the spell list is smaller than requested?
+        while (chosen_spells.size() == 0 && retries < 10)
+        {
+            // allow rerolling these in case the spell schools are too sparse
+            // for the vault spec. Most likely to come up in corner cases such
+            // as a 1-spell book with 1 spell level, if the same school is
+            // rolled twice and it lacks a lvl 1 spll
+            if (disc1_rerollable)
+                disc1 = random_book_theme();
+            if (disc2_rerollable)
+                disc2 = random_book_theme();
+            theme_book_spells(disc1, disc2,
                           forced_spell_filter(spells,
                                                capped_spell_filter(max_levels)),
                           origin_as_god_gift(item), num_spells, chosen_spells);
+            if (!disc1_rerollable && !disc2_rerollable)
+                break;
+            retries++;
+        }
         fixup_randbook_disciplines(disc1, disc2, chosen_spells);
+        // if a size 0 spell list gets through here it'll crash in the following
+        // call:
         init_book_theme_randart(item, chosen_spells);
         name_book_theme_randart(item, disc1, disc2, owner, title);
         // XXX: changing the signature of build_themed_book()'s get_discipline
