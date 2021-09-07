@@ -6,8 +6,8 @@
 # Number of monsters (and amount of ood) depends on depth and randomness. Ranges
 # from 8 to 24 monsters. Very random, middle part is all subvaults.
 #
-# Currently set to never appear earlier than D:14, meaning this is always
-# post-lair.
+# There is a lair variant that is (mostly) a joke vault; all other variants
+# appear no earlier than D:14.
 {{
 function ambush_stairs(e)
     if you.in_branch("Dis") or you.in_branch("Coc") or you.in_branch("Tar")
@@ -20,15 +20,18 @@ end
 }}
 
 NAME:     evilmike_ambush
-DEPTH:    Depths, !Depths:$, Elf, !Elf:$, Snake, !Snake:$, \
+DEPTH:    Lair, Depths, !Depths:$, Elf, !Elf:$, Snake, !Snake:$, \
           Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
           Zot, !Zot:$, Crypt, !Crypt:$
 TAGS:     allow_dup transparent
+KMONS:    P = bush / burning bush w:1
 SUBVAULT: = : evilmike_ambush_outer
 SUBVAULT: - : evilmike_ambush_inner
 SUBST:    =- : .
 : local x = you.absdepth() - 14 + crawl.random2(12)
-: if x > 17 then
+: if you.in_branch("Lair") then
+SUBST:    0 = PP., 1 = PP., 2 = PP0,  9 = PP0
+: elseif x > 17 then
 SUBST:    1 = 0, 2 = 8
 : elseif x > 11 then
 SUBST:    1 = 00., 2 = 89
