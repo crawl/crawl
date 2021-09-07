@@ -10,11 +10,20 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
 
 ## Setup VSCode/python dev environment
 
+* Install crawl build deps
+
+    ```sh
+    sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
+    libsqlite3-dev libz-dev pkg-config python3-yaml binutils-gold python-is-python3 \
+    libsdl2-image-dev libsdl2-mixer-dev libsdl2-dev \
+    libfreetype6-dev libpng-dev fonts-dejavu-core advancecomp pngcrush
+    ```
+
 * Compile crawl with webtiles and dgamelaunch
 
     ```sh
     cd ./crawl-ref/source
-    make WEBTILES=y DGAMELAUNCH=y
+    make -j4 WEBTILES=y DGAMELAUNCH=y
     ```
 
 * Create a folder for crawldata.
@@ -35,7 +44,6 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
     . ./webserver/venv/bin/activate
     pip install -r webserver/requirements/dev.py3.txt
     ```
+* **Optional** Adjust ./.vscode/launch.json as needed.
 
-* Adjust ./.vscode/launch.json as needed.
-
-* Select venv python binary with Ctrl-Shift-P -> Python: Select interpreter
+* **Optional** Select venv python binary with Ctrl-Shift-P -> Python: Select interpreter
