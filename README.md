@@ -17,7 +17,9 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
     make WEBTILES=y DGAMELAUNCH=y
     ```
 
-* Edit config.py with appropriate values.
+* Create a folder for crawldata.
+
+* Edit config.py to point to your crawldata folder.
 
 * Set environment variables for AAD_B2C client id and secret.
 
