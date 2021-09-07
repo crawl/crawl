@@ -27,6 +27,7 @@ flake8==3.7.9             # via -r requirements.in/dev.txt, flake8-bugbear, flak
 isort[pyproject]==4.3.21  # via -r requirements.in/dev.txt, flake8-isort
 mccabe==0.6.1             # via flake8
 more-itertools==8.2.0     # via pytest
+msal==1.14.0              # via pypi
 mypy-extensions==0.4.3    # via mypy
 mypy==0.770               # via flake8-mypy
 packaging==20.3           # via pytest, tox
