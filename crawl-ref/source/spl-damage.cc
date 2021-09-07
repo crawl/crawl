@@ -1755,6 +1755,11 @@ spret cast_scorch(int pow, bool fail)
     const int damage = mons_adjust_flavoured(targ, beam, post_ac_dam);
     _player_hurt_monster(*targ, damage, beam.flavour);
 
+    // XXX: interact with clouds of cold?
+    // XXX: dedup with beam::affect_place_clouds()?
+    if (feat_is_watery(env.grid(p)) && !cloud_at(p))
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), &you, 11);
+
     if (!targ->alive())
     {
         _animate_scorch(p);
