@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <title>WebTiles - Dungeon Crawl Stone Soup</title>
+    <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
+    <script type="text/javascript">
+        var socket_server = "{{ socket_server }}";
+    </script>
+    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <script type="text/javascript">
+        /**
+         * call parent window function and close
+         */
+        function callback() {
+            //window.opener.functionName(querystring('token'));
+            //window.close();
+            client.login();
+            window.location.replace("/");
+        }
+    </script>
+</head>
+
+<body onload="callback()">
+    <p>Logging into ckzcrawl...</p>
+</body>
+
+</html>

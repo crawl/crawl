@@ -77,13 +77,13 @@ games = OrderedDict([
     ("dcss-web-trunk", dict(
         name = "Play trunk",
         crawl_binary = "./crawl",
-        rcfile_path = "./rcs/",
-        macro_path = "./rcs/",
-        morgue_path = "./rcs/%n",
-        inprogress_path = "./rcs/running",
-        ttyrec_path = "./rcs/ttyrecs/%n",
-        socket_path = "./rcs",
-        client_path = "./webserver/game_data/",
+        rcfile_path = "/home/saitcho/dev/crawl/crawldata/rcs/",
+        macro_path = "/home/saitcho/dev/crawl/crawldata/rcs/",
+        morgue_path = "/home/saitcho/dev/crawl/crawldata/rcs/%n",
+        inprogress_path = "/home/saitcho/dev/crawl/crawldata/rcs/running",
+        ttyrec_path = "/home/saitcho/dev/crawl/crawldata/rcs/ttyrecs/%n",
+        socket_path = "/home/saitcho/dev/crawl/crawldata/rcs",
+        client_path = "/home/saitcho/dev/crawl/crawl-ref/source/webserver/game_data/",
         # dir_path = ".",
         # cwd = ".",
         morgue_url = None,
@@ -95,7 +95,7 @@ games = OrderedDict([
 ])
 
 
-dgl_status_file = "./rcs/status"
+dgl_status_file = "/home/saitcho/dev/crawl/crawldata/rcs/status"
 
 # Extra paths to tail for milestone updates. This is a legacy setting, you
 # should use `milestone_path` or `dir_path` for each game in the games dict.
@@ -191,8 +191,8 @@ crypt_salt_length = 16
 
 login_token_lifetime = 7 # Days
 
-uid = None  # If this is not None, the server will setuid to that (numeric) id
-gid = None  # after binding its sockets.
+uid = 1000  # If this is not None, the server will setuid to that (numeric) id
+gid = 1000  # after binding its sockets.
 
 umask = None # e.g. 0077
 
@@ -209,7 +209,7 @@ player_url = None
 
 # Only for development:
 # This is insecure; do not set development_mode = True in production!
-development_mode = False
+development_mode = True
 
 # Disable caching of static files which are not part of game data.
 no_cache = development_mode
