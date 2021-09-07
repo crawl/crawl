@@ -3263,10 +3263,10 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
         return nullptr;
 
     // Unentangle the real monster.
-    if (mons->is_constricted())
-        mons->stop_being_constricted();
+    if (targ->is_constricted())
+        targ->stop_being_constricted();
 
-    mons_clear_trapping_net(mons);
+    mons_clear_trapping_net(targ);
 
     // Don't leak the real one with the targeting interface.
     if (you.prev_targ == mons->mindex())
