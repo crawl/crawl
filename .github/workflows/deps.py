@@ -15,12 +15,17 @@ def run(cmd: List[str], max_retries: int = 1) -> None:
     while True:
         print("%s: Running '%s'..." % (sys.argv[0], " ".join(cmd)))
         try:
-            subprocess.check_call(cmd)
-        except Exception as e:
+            subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
             print(
                 "%s: Command failed (%s) (attempt %s of %s)"
                 % (sys.argv[0], e, attempt, max_retries),
             )
+            if e.output is not None:
+                print(
+                    "%s: Above command failed with the following output:\n%s"
+                    % (sys.argv[0], e.output)
+                )
             attempt += 1
             if attempt > max_retries:
                 raise
