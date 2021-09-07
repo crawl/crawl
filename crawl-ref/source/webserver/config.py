@@ -77,13 +77,13 @@ games = OrderedDict([
     ("dcss-web-trunk", dict(
         name = "Play trunk",
         crawl_binary = "./crawl",
-        rcfile_path = "/home/saitcho/dev/crawl/crawldata/rcs/",
-        macro_path = "/home/saitcho/dev/crawl/crawldata/rcs/",
-        morgue_path = "/home/saitcho/dev/crawl/crawldata/rcs/%n",
-        inprogress_path = "/home/saitcho/dev/crawl/crawldata/rcs/running",
-        ttyrec_path = "/home/saitcho/dev/crawl/crawldata/rcs/ttyrecs/%n",
-        socket_path = "/home/saitcho/dev/crawl/crawldata/rcs",
-        client_path = "/home/saitcho/dev/crawl/crawl-ref/source/webserver/game_data/",
+        rcfile_path = "../../crawldata/rcs/",
+        macro_path = "../../crawldata/rcs/",
+        morgue_path = "../../crawldata/rcs/%n",
+        inprogress_path = "../../crawldata/rcs/running",
+        ttyrec_path = "../../crawldata/rcs/ttyrecs/%n",
+        socket_path = "../../crawldata/rcs",
+        client_path = "./webserver/game_data/",
         # dir_path = ".",
         # cwd = ".",
         morgue_url = None,
@@ -95,7 +95,7 @@ games = OrderedDict([
 ])
 
 
-dgl_status_file = "/home/saitcho/dev/crawl/crawldata/rcs/status"
+dgl_status_file = "../../crawldata/rcs/status"
 
 # Extra paths to tail for milestone updates. This is a legacy setting, you
 # should use `milestone_path` or `dir_path` for each game in the games dict.

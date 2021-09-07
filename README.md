@@ -10,6 +10,22 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
 
 ## Setup VSCode/python dev environment
 
+* Compile crawl with webtiles and dgamelaunch
+
+    ```sh
+    cd ./crawl-ref/source
+    make WEBTILES=y DGAMELAUNCH=y
+    ```
+
+* Edit config.py with appropriate values.
+
+* Set environment variables for AAD_B2C client id and secret.
+
+    ```sh
+    export CLIENT_ID="client id value"
+    export CLIENT_SECRET="client secret value"
+    ```
+
 * Set up a Python virtualenv. From ./crawl-ref/source/
 
     ```sh
