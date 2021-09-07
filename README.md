@@ -1,7 +1,14 @@
 # dk-crawl
+
 A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility of adding Azure Active Directory B2C support for user authorization.
 
-## Setup dev environment
+## Setup Azure Active Directory B2C environment
+
+* step 1
+
+* step 2
+
+## Setup VSCode/python dev environment
 
 * Set up a Python virtualenv. From ./crawl-ref/source/
 
