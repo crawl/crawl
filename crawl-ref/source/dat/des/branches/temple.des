@@ -2301,6 +2301,52 @@ ccc............c...nml...c............ccc      ccc............ccc
                 ccccccccc
 ENDMAP
 
+# 18 gods
+NAME:    mainiacjoe_temple_coin_purse
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  10
+SUBST:   c : cvb
+MAP
+                  ccc              
+                 cc.cc             
+                 c...cc            
+               ccc....cc           
+           ccccc.c.....cc          
+       ccccc.....c......cc         
+   ccccc........c...B....cc        
+  cc............c.........cc       
+  c.........B...c..........cc      
+  cc....B.......c......B....cc     
+   cc..........c...B.........cccccc
+   ccc.........c............cccc..c
+   c..c....B...c........cccc......c
+   c...c.......c....cccc.........cc
+   c....c.....c.cccc.............c 
+  cc.....c....c....c.........B...c 
+  c.......c...c.....c....B.......c 
+  c...B....c.c.......c..........cc 
+  c.........c....{....c.........c  
+ cc..........c.......c.c....B...c  
+ c.......B....c.....c...c.......c  
+ c...B.........c....c....c.....cc  
+ c.............cccc.c.....c....c   
+cc.........cccc....c.......c...c   
+c......cccc........c...B....c..c   
+c..cccc............c.........ccc   
+cccccc.........B...c..........cc   
+     cc....B......c.......B....cc  
+      cc..........c...B.........c  
+       cc.........c............cc  
+        cc....B...c........ccccc   
+         cc......c.....ccccc       
+          cc.....c.ccccc           
+           cc....ccc               
+            cc...c                 
+             cc.cc                 
+              ccc                  
+ENDMAP
+
 ##############################################################################
 # <<4>> Twenty-one gods.
 
