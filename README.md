@@ -35,3 +35,7 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
     . ./webserver/venv/bin/activate
     pip install -r webserver/requirements/dev.py3.txt
     ```
+
+* Adjust ./.vscode/launch.json as needed.
+
+* Select venv python binary with Ctrl-Shift-P -> Python: Select interpreter
