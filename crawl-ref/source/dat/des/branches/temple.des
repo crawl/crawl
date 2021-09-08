@@ -2794,6 +2794,64 @@ llllllClllllllllllllllllllEllllllllDlllllllllllllll
 llllllClllllllllllllllllllEllllllllDlllllllllllllll
 ENDMAP
 
+NAME:    mainiacjoe_temple_archimedes_tessellation
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  10
+SUBST:   c : cvb
+SHUFFLE: lw
+MAP
+                                      ccccc                      
+                                      c...c                      
+                                  ccccc.B.ccccc                  
+                           cccccccc...........cccccccc           
+                           c.......wwwwww.llll.......c           
+                           c.B.wwwwwwwwww.llllllll.B.c           
+                          cc...wwwwwwwwww.llllllll...cc          
+                         cc.ll.wwwwwwwwww.lllllll.www.cc         
+                        cc.lll.wwwwwwwwwww.lllll.wwwww.cc        
+                       cc.llll.wwwwwwwwwww.llll.wwwwwww.cc       
+                      cc.lllll.wwwwwwwwwww.lll.wwwwwwwww.cc      
+                   cccc.lllllll.wwwwwwwwww.ll.wwwwwwwwwww.cccc   
+                   c...llllllll.wwwwwwwwww...wwwwwwwwwwwww...c   
+               ccccc.B.llllllll.wwwwwwwwww.B.wwwwwwwwwwwww.B.c   
+        cccccccc...........llll.wwwwww.......wwwwwwwwwwwww...c   
+        c.......wwwwww.llll...........llll.ll.wwwwwwwwwww.ll.c   
+        c.B.wwwwwwwwww.llllllll.B.llllllll.lll.wwwwwwwww.lll.c   
+       cc...wwwwwwwwww.llllllll...llllllll.llll.wwwwwww.llll.c   
+      cc.ll.wwwwwwwwww.lllllll.www.lllllll.lllll.wwwww.lllll.cc  
+     cc.lll.wwwwwwwwwww.lllll.wwwww.lllll.lllllll.www.lllllll.c  
+    cc.llll.wwwwwwwwwww.llll.wwwwwww.llll.llllllll...llllllll.c  
+   cc.lllll.wwwwwwwwwww.lll.wwwwwwwww.lll.llllllll.B.llllllll.c  
+cccc.lllllll.wwwwwwwwww.ll.wwwwwwwwwww.ll.llll...........llll.ccc
+c...llllllll.wwwwwwwwww...wwwwwwwwwwwww.......wwwwww.llll.......c
+c.B.llllllll.wwwwwwwwww.B.wwwwwwwwwwwww.B.wwwwwwwwww.llllllll.B.c
+c.......llll.wwwwww.......wwwwwwwwwwwww...wwwwwwwwww.llllllll...c
+ccc.llll...........llll.ll.wwwwwwwwwww.ll.wwwwwwwwww.lllllll.cccc
+  c.llllllll.B.llllllll.lll.wwwwwwwww.lll.wwwwwwwwwww.lllll.cc   
+  c.llllllll...llllllll.llll.wwwwwww.llll.wwwwwwwwwww.llll.cc    
+  c.lllllll.www.lllllll.lllll.wwwww.lllll.wwwwwwwwwww.lll.cc     
+  cc.lllll.wwwww.lllll.lllllll.www.lllllll.wwwwwwwwww.ll.cc      
+   c.llll.wwwwwww.llll.llllllll...llllllll.wwwwwwwwww...cc       
+   c.lll.wwwwwwwww.lll.llllllll.B.llllllll.wwwwwwwwww.B.c        
+   c.ll.wwwwwwwwwww.ll.llll...........llll.wwwwww.......c        
+   c...wwwwwwwwwwwww.......wwwwww.llll...........cccccccc        
+   c.B.wwwwwwwwwwwww.B.wwwwwwwwww.llllllll.B.ccccc               
+   c...wwwwwwwwwwwww...wwwwwwwwww.llllllll...c                   
+   cccc.wwwwwwwwwww.ll.wwwwwwwwww.lllllll.cccc                   
+      cc.wwwwwwwww.lll.wwwwwwwwwww.lllll.cc                      
+       cc.wwwwwww.llll.wwwwwwwwwww.llll.cc                       
+        cc.wwwww.lllll.wwwwwwwwwww.lll.cc                        
+         cc.www.lllllll.wwwwwwwwww.ll.cc                         
+          cc...llllllll.wwwwwwwwww...cc                          
+           c.B.llllllll.wwwwwwwwww.B.c                           
+           c.......llll.wwwwww.......c                           
+           cccccccc...........cccccccc                           
+                  ccccc.B.ccccc                                  
+                      c...c                                      
+                      ccccc                                      
+ENDMAP
+
 ##############################################################################
 # <<5>> Variable altars, generic layouts
 
