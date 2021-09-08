@@ -3481,7 +3481,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_ERROR,
+    TILEG_SUMMON_CACTUS_GIANT,
 },
 
 {
