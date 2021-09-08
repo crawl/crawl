@@ -2405,6 +2405,58 @@ cc..B...cc..B...cc..B...cc..B...cc..B...cc
                     ccccc                        
 ENDMAP
 
+# 20 gods
+NAME:    mainiacjoe_temple_big_plus
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  10
+SUBST:   c : cvb
+MAP
+       ccccccccccccccccccccccccccccc       
+       c...........................c       
+       c...........................c       
+       c...........................c       
+       c...c+++c+++c+++c+++c+++c...c       
+       c...c...c...c...c...c...c...c       
+       c...c.B.c...c...c...c.B.c...c       
+cccccccc...c...c...c...c...c...c...cccccccc
+c..........cc..c...c...c...c..cc..........c
+c...........cc.c...c...c...c.cc...........c
+c............ccc.B.c...c.B.ccc............c
+c...ccccc.....cc...c...c...cc.....ccccc...c
+c...+...cc.....cc..c...c..cc.....cc...+...c
+c...+.B..cc.....cc.c...c.cc.....cc..B.+...c
+c...+.....cc.....ccc.B.ccc.....cc.....+...c
+c...ccccccccc.....cc...cc.....ccccccccc...c
+c...+.......cc.....cc.cc.....cc.......+...c
+c...+.....B..cc.....ccc.....cc..B.....+...c
+c...+.........cc.....c.....cc.........+...c
+c...ccccccccccccc.........ccccccccccccc...c
+c...+...........cc.......cc...........+...c
+c...+.........B..cc..{..cc..B.........+...c
+c...+...........cc.......cc...........+...c
+c...ccccccccccccc.........ccccccccccccc...c
+c...+.........cc.....c.....cc.........+...c
+c...+.....B..cc.....ccc.....cc..B.....+...c
+c...+.......cc.....cc.cc.....cc.......+...c
+c...ccccccccc.....cc...cc.....ccccccccc...c
+c...+.....cc.....ccc.B.ccc.....cc.....+...c
+c...+.B..cc.....cc.c...c.cc.....cc..B.+...c
+c...+...cc.....cc..c...c..cc.....cc...+...c
+c...ccccc.....cc...c...c...cc.....ccccc...c
+c............ccc.B.c...c.B.ccc............c
+c...........cc.c...c...c...c.cc...........c
+c..........cc..c...c...c...c..cc..........c
+cccccccc...c...c...c...c...c...c...cccccccc
+       c...c.B.c...c...c...c.B.c...c       
+       c...c...c...c...c...c...c...c       
+       c...c+++c+++c+++c+++c+++c...c       
+       c...........................c       
+       c...........................c       
+       c...........................c       
+       ccccccccccccccccccccccccccccc       
+ENDMAP
+
 ##############################################################################
 # <<4>> Twenty-one gods.
 
