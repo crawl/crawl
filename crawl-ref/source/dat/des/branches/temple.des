@@ -2852,7 +2852,6 @@ ccc.llll...........llll.ll.wwwwwwwwwww.ll.wwwwwwwwww.lllllll.cccc
                       ccccc                                      
 ENDMAP
 
-# 21 gods
 NAME:    mainiacjoe_temple_circle_huts
 PLACE:   Temple
 ORIENT:  encompass
@@ -2924,6 +2923,66 @@ cc......x.....x.......xxx............x.....x......x...x......cc
                    ccccccc...........ccccccc                   
                       ccccccccccccccccccc                      
                           ccccccccccc                          
+ENDMAP
+
+NAME:    mainiacjoe_temple_hex_bubbles
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  10
+NSUBST:  B = 1:{ / *:B
+SUBST:   c : cvb
+MAP
+                      ccccc                          
+                     cc...cc                         
+                    cc.....cc                        
+                    c.......c                        
+                    c...B...c       ccccc            
+                    c.......c      cc...cc           
+                    cc.....cccccc cc.....cc          
+                     cc...c+c...ccc.......c          
+                    ccc+cccc.....cc...B...c          
+                   cc...ccc.......+.......c          
+            ccccc cc.....cc...B...cc.....cc          
+           cc...ccc.......c.......ccc...cc           
+          cc.....cc...B...cc.....cccc+ccc            
+          c.......+.......ccc...c+c...cc             
+          c...B...cc.....ccccccccc.....cc            
+          c.......ccc...ccccccccc.......c            
+          cc.....cccc+ccccccccccc...B...c            
+           cc...ccc...ccccccccccc.......c            
+          ccc+cccc.....ccccccccccc.....cccccc        
+         cc...ccc.......ccccccccccc...c+c...cc       
+  ccccc cc.....cc...B...ccccccccccc+cccc.....cc      
+ cc...ccc.......+.......ccccccccc...ccc.......c      
+cc.....cc...B...cc.....ccccccccc.....cc...B...c      
+c.......+.......ccc...c+c...ccc.......+.......c      
+c...B...cc.....ccccccccc.....cc...B...cc.....cc      
+c.......ccc...ccccccccc.......+.......ccc...cc       
+cc.....cccc+ccccccccccc...B...cc.....cccc+ccc        
+ cc...c+c...ccccccccccc.......ccc...c+c...cc         
+  cccccc.....ccccccccccc.....ccccccccc.....cc        
+      c.......ccccccccccc...ccccccccc.......c        
+      c...B...ccccccccccc+ccccccccccc...B...c        
+      c.......ccccccccc...ccccccccccc.......c        
+      cc.....ccccccccc.....ccccccccccc.....cccccc    
+       cc...c+c...ccc.......ccccccccccc...c+c...cc   
+      ccc+cccc.....cc...B...ccccccccccc+cccc.....cc  
+     cc...ccc.......+.......ccccccccc...ccc.......c  
+    cc.....cc...B...cc.....ccccccccc.....cc...B...c  
+    c.......+.......ccc...c+c...ccc.......+.......c  
+    c...B...cc.....cccc+cccc.....cc...B...cc.....cc  
+    c.......ccc...c+c...ccc.......+.......ccc...cc   
+    cc.....cc cccccc.....cc...B...cc.....cc ccccc    
+     cc...cc      c.......+.......ccc...cc           
+      ccccc       c...B...cc.....cccc+ccc            
+                  c.......ccc...c+c...cc             
+                  cc.....cc cccccc.....cc            
+                   cc...cc      c.......c            
+                    ccccc       c...B...c            
+                                c.......c            
+                                cc.....cc            
+                                 cc...cc             
+                                  ccccc              
 ENDMAP
 
 ##############################################################################
