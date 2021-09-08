@@ -740,6 +740,14 @@ Lightning Bolt electric golem cast
 
 @The_monster@ hurls @beam@ @at@ @target@.
 %%%%
+unseen Warning Cry demonic crawler cast
+
+You hear terrible shrieking!
+%%%%
+Warning Cry demonic crawler cast
+
+@The_monster@ shrieks in warning!
+%%%%
 unseen Warning Cry howler monkey cast
 
 You hear a tremendous hooting and howling!
