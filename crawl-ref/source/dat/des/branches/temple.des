@@ -3064,6 +3064,72 @@ tt''''''''''ccc...........vvvvv...B...vvvvv...........ccc''''''''''tt
                                ttttttt                               
 ENDMAP
 
+NAME:    mainiacjoe_temple_trianglar_array
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  10
+SUBST:   t : tGT
+SUBST:   c : cvbt
+SUBST:   x : xcvb
+FTILE:   '{tGT = floor_grass
+MAP
+              ccccccc                                  
+            ccc'''''ccc                                
+           cc'''''''''cc                               
+           c'''''''''''cc                              
+           c''''''''''''cc                             
+          cc'''xxxx+'''''cc                            
+          c''''x...x''''''cc          ccccccc          
+          c''''x.B.x'''''''cc       ccc'''''ccc        
+         cc''''x...x''''''''cc     cc'''''''''cc       
+         c'''''xxxxx'''''''''cc    c'''''t'''''c       
+         c''''''''''''''''''''cc  cc''t'''''t''cc      
+        cc'''''''''''xxxx+'''''cc c'''''''''''''c      
+        c''''''''''''x...x''''''ccc'''''''''''''c      
+        c''''xxxx+'''x.B.x'''''''cc''t'''{'''t''c      
+        c''''x...x'''x...x''''''''''''''''''''''c      
+       cc''''x.B.x'''xxxxx''''''''''''''''''''''c      
+       c'''''x...x''''''''''''''''''''t'''''t''cc      
+       c'''''xxxxx'''''''''xxxx+'''''''''t'''''c       
+       c'''''''''''''''''''x...x''''''''''''''cc       
+      cc'''''''''''xxxx+'''x.B.x''''''''''''ccc        
+      c''''''''''''x...x'''x...x'''''''''cccc          
+      c''''xxxx+'''x.B.x'''xxxxx'''''''''cc            
+      c''''x...x'''x...x''''''''''''''''''cc           
+     cc''''x.B.x'''xxxxx'''''''''xxxx+'''''cc          
+     c'''''x...x'''''''''''''''''x...x''''''cc         
+     c'''''xxxxx'''''''''xxxx+'''x.B.x'''''''cc        
+     c'''''''''''''''''''x...x'''x...x''''''''cc       
+    cc'''''''''''xxxx+'''x.B.x'''xxxxx'''''''''cc      
+    c''''''''''''x...x'''x...x''''''''''''''''''cc     
+    c''''xxxx+'''x.B.x'''xxxxx'''''''''xxxx+'''''cc    
+    c''''x...x'''x...x'''''''''''''''''x...x''''''cc   
+   cc''''x.B.x'''xxxxx'''''''''xxxx+'''x.B.x'''''''cc  
+   c'''''x...x'''''''''''''''''x...x'''x...x''''''''cc 
+   c'''''xxxxx'''''''''xxxx+'''x.B.x'''xxxxx'''''''''c 
+   c'''''''''''''''''''x...x'''x...x'''''''''''''''''cc
+  cc'''''''''''xxxx+'''x.B.x'''xxxxx'''''''''xxxx+''''c
+  c''''''''''''x...x'''x...x'''''''''''''''''x...x''''c
+  c''''xxxx+'''x.B.x'''xxxxx'''''''''xxxx+'''x.B.x''''c
+  c''''x...x'''x...x'''''''''''''''''x...x'''x...x''''c
+ cc''''x.B.x'''xxxxx'''''''''xxxx+'''x.B.x'''xxxxx''''c
+ c'''''x...x'''''''''''''''''x...x'''x...x'''''''''''cc
+ c'''''xxxxx'''''''''xxxx+'''x.B.x'''xxxxx'''''''''''c 
+ c'''''''''''''''''''x...x'''x...x''''''''''''''''''cc 
+ c'''''''''''xxxx+'''x.B.x'''xxxxx'''''''''''''''cccc  
+cc'''''''''''x...x'''x...x''''''''''''''''''''cccc     
+c''''xxxx+'''x.B.x'''xxxxx'''''''''''''''''cccc        
+c''''x...x'''x...x'''''''''''''''''''''ccccc           
+c''''x.B.x'''xxxxx'''''''''''''''''ccccc               
+c''''x...x'''''''''''''''''''''ccccc                   
+c''''xxxxx'''''''''''''''''ccccc                       
+cc'''''''''''''''''''''ccccc                           
+ c'''''''''''''''''ccccc                               
+ cc''''''''''''ccccc                                   
+  ccc'''''cccccc                                       
+    ccccccc                                            
+ENDMAP
+
 ##############################################################################
 # <<5>> Variable altars, generic layouts
 
