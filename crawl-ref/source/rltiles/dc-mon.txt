@@ -149,6 +149,7 @@ demonic_crawler MONS_DEMONIC_CRAWLER
 %sdir mon/undead
 %rim 0
 death_scarab MONS_DEATH_SCARAB
+pharaoh_ant  MONS_PHARAOH_ANT
 
 ## Turtles and crabs ('t')
 %sdir mon/animals

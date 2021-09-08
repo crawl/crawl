@@ -104,7 +104,6 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static void _corrupt_locale(monster &mon);
 static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot);
 static string _god_name(god_type god);
-static bool _mons_can_bind_soul(monster* binder, monster* bound);
 static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
                                                 bolt tracer);
 static function<void(bolt&, const monster&, int)>
@@ -1778,8 +1777,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     return true;
 }
 
-/// Can 'binder' bind 'bound's soul with BIND_SOUL?
-static bool _mons_can_bind_soul(monster* binder, monster* bound)
+// Can 'binder' bind 'bound's soul with BIND_SOUL?
+bool mons_can_bind_soul(monster* binder, monster* bound)
 {
     return bound->holiness() & MH_NATURAL
             && mons_can_be_zombified(*bound)
@@ -6415,7 +6414,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             if (*mi == mons)
                 continue;
-            if (_mons_can_bind_soul(mons, *mi))
+            if (mons_can_bind_soul(mons, *mi))
             {
                 mi->add_ench(
                     mon_enchant(ENCH_BOUND_SOUL, 0, mons,
@@ -7739,7 +7738,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_BIND_SOULS:
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-            if (_mons_can_bind_soul(mon, *mi))
+            if (mons_can_bind_soul(mon, *mi))
                 return ai_action::good();
         return ai_action::bad();
 

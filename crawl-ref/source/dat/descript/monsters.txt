@@ -1945,6 +1945,12 @@ A nearly-transparent undead spirit, suspected by some sages to be a degenerate
 form of ghost, with no memories of its former life. It rarely stays in one
 place for long.
 %%%%
+pharaoh ant
+
+A royal ant returned to unlife through strange, probably horrifying means. It
+binds the souls of its allies when slain, allowing them to fight on after death
+as simulacra.
+%%%%
 pillar of salt
 
 A pillar of salt shaped like a statue, but worked by no living hands.
