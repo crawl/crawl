@@ -2084,6 +2084,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         {
             mpr("Your magical essence is drained by the effort!");
             rot_mp(1);
+            take_note(Note(NOTE_MESSAGE, 0, 0,
+                    "Lost one MP permanently [self-heal ability]"));
         }
         potionlike_effect(POT_HEAL_WOUNDS, 40);
         break;
