@@ -5,3 +5,4 @@
 *.sublime-workspace
 *.sublime-project
 .secretsIgnore
+crawldata/
