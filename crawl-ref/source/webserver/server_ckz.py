@@ -72,7 +72,6 @@ class AuthorizeHandler(tornado.web.RequestHandler):
             #     return render_template("auth_error.html", result=result)
             session["user"] = result.get("id_token_claims")
             aad_b2c._save_cache(cache)
-            # self.redirect(aad_b2c.URLBASE)
             self.render("logincallback.html", socket_server = protocol + host + "/socket")
         except ValueError:  # Usually caused by CSRF
             pass  # Simply ignore them

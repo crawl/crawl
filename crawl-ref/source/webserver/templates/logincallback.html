@@ -12,9 +12,9 @@
         crossorigin="anonymous"></script>
 
     <!-- To help ensure reliability, Microsoft provides a second CDN -->
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         if (typeof Msal === 'undefined') document.write(unescape("%3Cscript src='https://alcdn.msftauth.net/browser/2.15.0/js/msal-browser.js' type='text/javascript' crossorigin='anonymous' %3E%3C/script%3E"));
-    </script>
+    </script> -->
     <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
     <script>
         require.config({
@@ -41,10 +41,11 @@
                 var username = $("#username").val();
                 var password = $("#password").val();
                 comm.send_message("login", {
-                    username: username,
-                    password: password
+                    username: 'testuser',
+                    password: 'xwingx'
                 });
             });
+            
         });
     </script>
 </head>
