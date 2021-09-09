@@ -710,6 +710,7 @@ manticore MONS_MANTICORE
 harpy MONS_HARPY
 sphinx MONS_SPHINX
 minotaur MONS_MINOTAUR
+jorogumo MONS_JOROGUMO
 %rim 0
 fenstrider_witch MONS_FENSTRIDER_WITCH
 %rim 1
