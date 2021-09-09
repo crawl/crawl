@@ -6,7 +6,29 @@
     <script type="text/javascript">
         var socket_server = "{{ socket_server }}";
     </script>
+    <!-- msal.min.js can be used in the place of msal.js; included msal.js to make debug easy -->
+    <script id="load-msal" src="https://alcdn.msauth.net/browser/2.15.0/js/msal-browser.js"
+        integrity="sha384-dFzMiVGB5HpWZ+5w5VSif6jhWfNeplSw9ACYmQKZcY2azuT9kCxVWVI9HyfGdkHV"
+        crossorigin="anonymous"></script>
+
+    <!-- To help ensure reliability, Microsoft provides a second CDN -->
+    <script type="text/javascript">
+        if (typeof Msal === 'undefined') document.write(unescape("%3Cscript src='https://alcdn.msftauth.net/browser/2.15.0/js/msal-browser.js' type='text/javascript' crossorigin='anonymous' %3E%3C/script%3E"));
+    </script>
     <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
+    <script>
+        require.config({
+            baseUrl: '/static/scripts',
+            shim: {
+                'client': ['jquery']
+            },
+            paths: {
+                'jquery': '/static/scripts/contrib/jquery'
+            }
+        });
+
+        require(['jquery', 'comm']);
+    </script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,16 +36,20 @@
         /**
          * call parent window function and close
          */
-        function callback() {
-            //window.opener.functionName(querystring('token'));
-            //window.close();
-            client.login();
-            window.location.replace("/");
-        }
+        require(['jquery', 'comm'], function ($, comm) {
+            $('body').on('load', function () {
+                var username = $("#username").val();
+                var password = $("#password").val();
+                comm.send_message("login", {
+                    username: username,
+                    password: password
+                });
+            });
+        });
     </script>
 </head>
 
-<body onload="callback()">
+<body>
     <p>Logging into ckzcrawl...</p>
 </body>
 
