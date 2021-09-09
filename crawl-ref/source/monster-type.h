@@ -188,6 +188,7 @@ enum monster_type                      // env.mons[].type
     MONS_FROSTBOUND_TOME,
     MONS_STRANGE_MACHINE,
     MONS_PHARAOH_ANT,
+    MONS_STEELBARB_WORM,
 #endif
     MONS_HARPY,
 #if TAG_MAJOR_VERSION == 34
@@ -1147,6 +1148,7 @@ enum monster_type                      // env.mons[].type
     MONS_SPECTATOR,
     MONS_BOUND_SOUL,
     MONS_PHARAOH_ANT,
+    MONS_STEELBARB_WORM,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

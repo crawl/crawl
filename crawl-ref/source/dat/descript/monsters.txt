@@ -2369,6 +2369,11 @@ steam dragon
 A relatively small grey dragon, with a resilient-looking scaly hide and steam
 pouring from its mouth.
 %%%%
+steelbarb worm
+
+A large worm covered with hard, spiky metal plates. Despite the apparent
+heaviness of its outer armour, it is rather fast.
+%%%%
 stoker
 
 A mortal who made an unholy pact in life, now chained to tend the fires of
