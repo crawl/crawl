@@ -17,4 +17,4 @@ note_monsters += orb of fire, ancient lich, dread lich, Sigmund
 
 monster_item_view_features += stair, trap
 
-tile_show_threat_levels = tough,nasty
+tile_show_threat_levels = nasty
