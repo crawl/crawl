@@ -1224,15 +1224,6 @@ trap_type random_trap_for_place(bool dispersal_ok)
     return trap ? *trap : NUM_TRAPS;
 }
 
-int count_traps(trap_type ttyp)
-{
-    int num = 0;
-    for (const auto& entry : env.trap)
-        if (entry.second.type == ttyp)
-            num++;
-    return num;
-}
-
 void place_webs(int num)
 {
     trap_def ts;

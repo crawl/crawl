@@ -2824,12 +2824,6 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
     return result;
 }
 
-// Count how many neighbours of env.grid[x][y] are the feature feat.
-int count_neighbours(int x, int y, dungeon_feature_type feat)
-{
-    return count_feature_in_box(x-1, y-1, x+2, y+2, feat);
-}
-
 // Gives water which is next to ground/shallow water a chance of being
 // shallow. Checks each water space.
 static void _prepare_water()

@@ -691,9 +691,6 @@ static const food_def Food_prop[] =
 {
     { FOOD_RATION,       "buggy ration", 3400,  1900,  1900 },
     { FOOD_CHUNK,        "buggy chunk",        1000,  1300,     0 },
-
-    // is_real_food assumes we list FOOD_ROYAL_JELLY as the first removed
-    // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy pizza",     0,     0,     0 },
     { FOOD_ROYAL_JELLY,  "buggy jelly",  2000,  2000,  2000 },
     { FOOD_BREAD_RATION, "buggy ration", 4400,     0,  5900 },
@@ -1060,11 +1057,6 @@ void set_equip_desc(item_def &item, iflags_t flags)
 
     item.flags &= ~ISFLAG_COSMETIC_MASK; // delete previous
     item.flags |= flags;
-}
-
-bool is_helmet(const item_def& item)
-{
-    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
 }
 
 bool is_hard_helmet(const item_def &item)
@@ -2137,16 +2129,6 @@ bool ring_has_stackable_effect(const item_def &item)
 
     return false;
 }
-#if TAG_MAJOR_VERSION == 34
-
-//
-// Food functions:
-//
-bool is_real_food(food_type /*food*/)
-{
-    return false;
-}
-#endif
 
 //
 // Generic item functions:
@@ -2284,20 +2266,6 @@ int get_armour_res_corr(const item_def &arm)
     // intrinsic armour abilities
     return get_armour_ego_type(arm) == SPARM_PRESERVATION
            || armour_type_prop(arm.sub_type, ARMF_RES_CORR);
-}
-
-int get_armour_repel_missiles(const item_def &arm, bool check_artp)
-{
-    ASSERT(arm.base_type == OBJ_ARMOUR);
-
-    // check for ego resistance
-    if (get_armour_ego_type(arm) == SPARM_REPULSION)
-        return true;
-
-    if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_RMSL);
-
-    return false;
 }
 
 bool get_armour_rampaging(const item_def &arm, bool check_artp)

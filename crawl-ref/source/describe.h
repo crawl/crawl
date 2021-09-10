@@ -104,8 +104,6 @@ string trap_name(trap_type trap);
 string full_trap_name(trap_type trap);
 int str_to_trap(const string &s);
 
-int count_desc_lines(const string& _desc, const int width);
-
 string extra_cloud_info(cloud_type cloud_type);
 
 /* Public for testing purposes only: do not use elsewhere. */

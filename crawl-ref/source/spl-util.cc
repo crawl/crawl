@@ -1098,29 +1098,6 @@ int spell_effect_noise(spell_type spell)
 }
 
 /**
- * Does the given spell map to a player transformation?
- *
- * @param spell     The spell in question.
- * @return          Whether the spell, when cast, puts the player in a form.
- */
-bool spell_is_form(spell_type spell)
-{
-    switch (spell)
-    {
-        case SPELL_BEASTLY_APPENDAGE:
-        case SPELL_BLADE_HANDS:
-        case SPELL_DRAGON_FORM:
-        case SPELL_ICE_FORM:
-        case SPELL_SPIDER_FORM:
-        case SPELL_STATUE_FORM:
-        case SPELL_NECROMUTATION:
-            return true;
-        default:
-            return false;
-    }
-}
-
-/**
  * Casting-specific checks that are involved when casting any spell. Includes
  * MP (which does use the spell level if provided), confusion state, banned
  * schools.
