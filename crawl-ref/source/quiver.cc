@@ -1340,10 +1340,6 @@ namespace quiver
         case ABIL_CONVERT_TO_BEOGH:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:
-        case ABIL_REVIVIFY:
-        case ABIL_IGNIS_SEA_OF_FIRE:
-        case ABIL_IGNIS_FOXFIRE:
-        case ABIL_IGNIS_RISING_FLAME:
         // not entirely pseudo, but doesn't make a lot of sense to quiver:
         case ABIL_TRAN_BAT:
             return true;
