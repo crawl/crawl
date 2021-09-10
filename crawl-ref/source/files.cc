@@ -3764,6 +3764,7 @@ off_t file_size(FILE *handle)
 #endif
 }
 
+#ifdef USE_TILE_LOCAL
 vector<string> get_title_files()
 {
     vector<string> titles;
@@ -3773,3 +3774,4 @@ vector<string> get_title_files()
                 titles.push_back(file);
     return titles;
 }
+#endif

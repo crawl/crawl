@@ -2419,6 +2419,7 @@ bool direction_chooser::choose_direction()
     return moves.isValid;
 }
 
+#ifdef USE_TILE
 string get_terse_square_desc(const coord_def &gc)
 {
     string desc = "";
@@ -2450,6 +2451,7 @@ string get_terse_square_desc(const coord_def &gc)
 
     return desc;
 }
+#endif
 
 void terse_describe_square(const coord_def &c, bool in_range)
 {
@@ -2459,6 +2461,7 @@ void terse_describe_square(const coord_def &c, bool in_range)
         _describe_cell(c, in_range);
 }
 
+#ifdef USE_TILE_LOCAL
 // Get description of the "top" thing in a square; for mouseover text.
 void get_square_desc(const coord_def &c, describe_info &inf)
 {
@@ -2497,6 +2500,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
     else // Fourth priority: clouds.
         inf.body << get_cloud_desc(cloud);
 }
+#endif
 
 // Show a description of the only thing on a square, or a selection menu with
 // visible things on the square if there are many. For x-v and similar contexts.

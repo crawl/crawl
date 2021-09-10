@@ -418,12 +418,14 @@ bool library_add_spells(vector<spell_type> spells)
     return false;
 }
 
+#ifdef USE_TILE_LOCAL
 bool has_spells_to_memorise(bool silent)
 {
     // TODO: this is a bit dumb
     spell_list mem_spells(_get_spell_list(silent, true));
     return !mem_spells.empty();
 }
+#endif
 
 static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
 {

@@ -3417,12 +3417,14 @@ static void _get_spell_description(const spell_type spell,
  * @param inf[out]  The spell's description is concatenated onto the end of
  *                  inf.body.
  */
+#ifdef USE_TILE_LOCAL
 void get_spell_desc(const spell_type spell, describe_info &inf)
 {
     string desc;
     _get_spell_description(spell, nullptr, desc);
     inf.body << desc;
 }
+#endif
 
 /**
  * Examine a given spell. List its description and details, and handle
@@ -5246,7 +5248,7 @@ void describe_skill(skill_type skill)
     show_description(inf, &tile);
 }
 
-// only used in tiles
+#ifdef USE_TILE_LOCAL // only used in tiles
 string get_command_description(const command_type cmd, bool terse)
 {
     string lookup = command_to_name(cmd);
@@ -5269,6 +5271,7 @@ string get_command_description(const command_type cmd, bool terse)
 
     return result.substr(0, result.length() - 1);
 }
+#endif
 
 /**
  * Provide auto-generated information about the given cloud type. Describe

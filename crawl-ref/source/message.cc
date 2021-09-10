@@ -959,7 +959,6 @@ void webtiles_send_more_text(string txt)
 }
 
 #else
-void webtiles_send_messages() { }
 void webtiles_send_more_text(string) { }
 #endif
 
