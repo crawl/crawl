@@ -61,6 +61,7 @@ jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
 redback CORPSE_REDBACK
 orb_spider CORPSE_ORB_SPIDER
+broodmother CORPSE_BROODMOTHER
 %sdir mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 

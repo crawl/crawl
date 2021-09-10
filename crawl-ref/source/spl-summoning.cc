@@ -2603,6 +2603,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
+    { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
     { SPELL_SUMMON_HELL_BEAST,        { 0, 8 } },
     { SPELL_SUMMON_UNDEAD,            { 0, 8 } },
@@ -3081,4 +3082,51 @@ spret foxfire_swarm()
     }
     canned_msg(MSG_NOTHING_HAPPENS);
     return spret::fail; // don't spend piety, do spend a turn
+}
+
+bool summon_spider(const actor &agent, coord_def pos, god_type god,
+                        spell_type spell, int pow)
+{
+    monster_type mon = random_choose_weighted(100, MONS_REDBACK,
+                                              100, MONS_JUMPING_SPIDER,
+                                               75, MONS_TARANTELLA,
+                                               50, MONS_CULICIVORA,
+                                               50, MONS_ORB_SPIDER,
+                                               pow / 2, MONS_WOLF_SPIDER);
+
+    monster *mons = create_monster(
+            mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_AUTOFOE)
+                      .set_summoned(&agent, 3, spell, god));
+    if (mons)
+        return true;
+
+    return false;
+}
+
+spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
+{
+    if (agent.is_player() && rude_stop_summoning_prompt())
+        return spret::abort;
+
+    fail_check();
+
+    int created = 0;
+
+    for (int i = 0; i < 1 + div_rand_round(random2(pow), 80); i++)
+    {
+        if (summon_spider(agent, agent.pos(), god, SPELL_SUMMON_SPIDERS, pow))
+            created++;
+    }
+
+    if (created && you.see_cell(agent.pos()))
+    {
+        mprf("%s summon%s %s",
+             agent.name(DESC_THE).c_str(),
+             agent.is_monster() ? "s" : "",
+             created > 1 ? "spiders" : "a spider");
+    }
+    else if (agent.is_player())
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
 }

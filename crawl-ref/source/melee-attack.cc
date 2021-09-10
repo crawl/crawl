@@ -36,6 +36,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-summoning.h" //AF_SPIDER
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
@@ -3018,6 +3019,21 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
     }
+
+    case AF_SPIDER:
+    {
+        if (!one_chance_in(3))
+            break;
+
+        if (summon_spider(*attacker, defender->pos(),
+                          attacker->as_monster()->god, SPELL_NO_SPELL,
+                          attacker->get_hit_dice() * 12))
+        {
+            mpr("A spider bursts forth from the wound!");
+        }
+        break;
+    }
+
     }
 }
 

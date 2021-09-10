@@ -718,6 +718,11 @@ Brimstone Fiend
 A huge and powerful demon wreathed in damnation, with great scaly wings. It is
 one of the most fearsome denizens of any of the Hells.
 %%%%
+broodmother
+
+A massive spider swollen with eggs. Its innumerable offspring are always at its
+call.
+%%%%
 burning bush
 
 A mass of blackened twigs wreathed in orange flames, with scorch marks scarring
