@@ -803,28 +803,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     return did_map;
 }
 
-void fully_map_level()
-{
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        bool ok = false;
-        for (adjacent_iterator ai(*ri, false); ai; ++ai)
-            if (!feat_is_opaque(env.grid(*ai)))
-                ok = true;
-        if (!ok)
-            continue;
-        env.map_knowledge(*ri).set_feature(env.grid(*ri), 0,
-            feat_is_trap(env.grid(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
-        set_terrain_seen(*ri);
-#ifdef USE_TILE
-        tile_wizmap_terrain(*ri);
-#endif
-        if (env.igrid(*ri) != NON_ITEM)
-            env.map_knowledge(*ri).set_detected_item();
-        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
-    }
-}
-
 bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.

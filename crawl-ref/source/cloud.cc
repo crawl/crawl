@@ -870,13 +870,6 @@ cloud_type random_smoke_type()
     return random_choose(CLOUD_GREY_SMOKE, CLOUD_BLUE_SMOKE,
                          CLOUD_BLACK_SMOKE, CLOUD_PURPLE_SMOKE);
 }
-int max_cloud_damage(cloud_type cl_type, int power)
-{
-    cloud_struct cloud;
-    cloud.type = cl_type;
-    cloud.decay = power * 10;
-    return _actor_cloud_damage(&you, cloud, true);
-}
 
 // Returns true if the cloud type has negative side effects beyond
 // plain damage and inventory destruction effects.

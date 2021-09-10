@@ -72,17 +72,6 @@ vector<string> stringify(const Coll &c, S stringify)
     return result;
 }
 
-vector<string> playable_job_names()
-{
-    return stringify(playable_jobs(), get_job_name);
-}
-
-vector<string> playable_species_names()
-{
-    return stringify(playable_species(),
-                     [](species_type sp) { return species::name(sp); });
-}
-
 vector<string> playable_combo_names()
 {
     return stringify(playable_combos(),

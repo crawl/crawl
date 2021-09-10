@@ -59,7 +59,6 @@ void macro_userfn(const char *keys, const char *registryname);
 
 // Add macro-expanded keys to the end or start of the keyboard buffer.
 void macro_sendkeys_end_add_expanded(int key);
-void macro_sendkeys_end_add_cmd(command_type cmd);
 
 // [ds] Unless you know what you're doing, prefer macro_sendkeys_add_expanded
 // to direct calls to macro_buf_add for pre-expanded key sequences.

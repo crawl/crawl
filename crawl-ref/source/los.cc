@@ -693,62 +693,6 @@ void fallback_ray(const coord_def& source, const coord_def& target,
     ray.on_corner = false;
 }
 
-// Count the number of matching features between two points along
-// a beam-like path; the path will pass through solid features.
-// By default, it excludes end points from the count.
-// If just_check is true, the function will return early once one
-// such feature is encountered.
-int num_feats_between(const coord_def& source, const coord_def& target,
-                      dungeon_feature_type min_feat,
-                      dungeon_feature_type max_feat,
-                      bool exclude_endpoints, bool just_check)
-{
-    ray_def ray;
-    int     count    = 0;
-    int     max_dist = grid_distance(source, target);
-
-    ASSERT(map_bounds(source));
-    ASSERT(map_bounds(target));
-
-    if (source == target)
-        return 0; // XXX: might want to count the cell.
-
-    // We don't need to find the shortest beam, any beam will suffice.
-    fallback_ray(source, target, ray);
-
-    if (exclude_endpoints && ray.pos() == source)
-    {
-        ray.advance();
-        max_dist--;
-    }
-
-    int dist = 0;
-    bool reached_target = false;
-    while (dist++ <= max_dist)
-    {
-        const dungeon_feature_type feat = env.grid(ray.pos());
-
-        if (ray.pos() == target)
-            reached_target = true;
-
-        if (feat >= min_feat && feat <= max_feat
-            && (!exclude_endpoints || !reached_target))
-        {
-            count++;
-
-            if (just_check) // Only needs to be > 0.
-                return count;
-        }
-
-        if (reached_target)
-            break;
-
-        ray.advance();
-    }
-
-    return count;
-}
-
 // Is p2 visible from p1, disregarding half-opaque objects?
 bool cell_see_cell_nocache(const coord_def& p1, const coord_def& p2)
 {

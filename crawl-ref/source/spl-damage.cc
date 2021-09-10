@@ -2190,20 +2190,6 @@ static bool maybe_abort_ignite()
 }
 
 /**
- * Does Ignite Poison affect the given creature?
- *
- * @param act       The creature in question.
- * @return          Whether Ignite Poison can directly damage the given
- *                  creature (not counting clouds).
- */
-bool ignite_poison_affects(const actor* act)
-{
-    if (act->is_player())
-        return you.duration[DUR_POISONING];
-    return act->as_monster()->has_ench(ENCH_POISON);
-}
-
-/**
  * Does Ignite Poison do something to this cell?
  *
  * @param where       Where to look

@@ -3666,26 +3666,6 @@ void inc_hp(int hp_gain, bool silent)
     }
 }
 
-void drain_hp(int hp_loss)
-{
-    if (!player_drained() && hp_loss > 0)
-        you.redraw_magic_points = true;
-
-    const int initial_loss = you.hp_max_adj_temp;
-    you.hp_max_adj_temp -= hp_loss;
-    // don't allow more drain than you have normal mhp
-    you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
-                              you.hp_max_adj_temp);
-    if (initial_loss == you.hp_max_adj_temp)
-        return;
-
-    calc_hp();
-
-    xom_is_stimulated(hp_loss * 25);
-
-    you.redraw_hit_points = true;
-}
-
 int undrain_hp(int hp_recovered)
 {
     int hp_balance = 0;
@@ -3715,16 +3695,6 @@ void rot_mp(int mp_loss)
     calc_mp();
 
     you.redraw_magic_points = true;
-}
-
-void inc_max_hp(int hp_gain)
-{
-    you.hp += hp_gain;
-    you.hp_max_adj_perm += hp_gain;
-    calc_hp();
-
-    take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
-    you.redraw_hit_points = true;
 }
 
 void dec_max_hp(int hp_loss)

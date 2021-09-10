@@ -1237,29 +1237,6 @@ void zin_remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-bool zin_remove_all_mutations()
-{
-    ASSERT(you.how_mutated());
-    ASSERT(can_do_capstone_ability(you.religion));
-
-    if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    flash_view(UA_PLAYER, WHITE);
-#ifndef USE_TILE_LOCAL
-    // Allow extra time for the flash to linger.
-    scaled_delay(1000);
-#endif
-
-    you.one_time_ability_used.set(GOD_ZIN);
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
-    simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations("Zin's power");
-    return true;
-}
-
 void zin_sanctuary()
 {
     ASSERT(!env.sanctuary_time);

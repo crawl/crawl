@@ -47,7 +47,6 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 void tile_draw_map_cells();
 void tile_draw_floor();
 void tile_reset_fg(const coord_def &gc);
-void tile_reset_feat(const coord_def &gc);
 void tile_draw_map_cell(const coord_def &gc, bool foreground_only = false);
 void tile_wizmap_terrain(const coord_def &gc);
 
@@ -56,5 +55,4 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell);
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                       const coord_def &gc);
 
-void tile_clear_map(const coord_def &gc);
 void tile_forget_map(const coord_def &gc);

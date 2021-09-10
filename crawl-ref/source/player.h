@@ -1091,13 +1091,11 @@ void flush_mp();
 void flush_hp();
 void finalize_mp_cost(bool addl_hp_cost = false);
 
-void drain_hp(int hp_loss);
 // Undrain the player's HP and return excess HP if any.
 int undrain_hp(int hp_recovered);
 int player_drained();
 void rot_mp(int mp_loss);
 
-void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
 
 void set_hp(int new_amount);

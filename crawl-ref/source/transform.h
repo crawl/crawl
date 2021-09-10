@@ -300,7 +300,6 @@ void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);
-void set_hydra_form_heads(int heads);
 void set_airform_power(int pow);
 const char* transform_name(transformation form = you.form);
 

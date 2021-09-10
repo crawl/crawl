@@ -21,8 +21,6 @@ struct combo_type
 vector<job_type> playable_jobs();
 vector<species_type> playable_species();
 vector<combo_type> playable_combos();
-vector<string> playable_job_names();
-vector<string> playable_species_names();
 vector<string> playable_combo_names();
 
 string playable_metadata_json();

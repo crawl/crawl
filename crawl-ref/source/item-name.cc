@@ -2000,13 +2000,6 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify)
     return true;
 }
 
-void pack_item_identify_message(int base_type, int sub_type)
-{
-    for (const auto &item : you.inv)
-        if (item.defined() && item.is_type(base_type, sub_type))
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-}
-
 bool get_ident_type(const item_def &item)
 {
     if (is_artefact(item))

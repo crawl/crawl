@@ -38,6 +38,3 @@ string apply_description(description_level_type desc, const string &name,
 
 string thing_do_grammar(description_level_type dtype, string desc,
                         bool ignore_case = false);
-
-string get_desc_quantity(const int quant, const int total,
-                         const string &whose = "your");

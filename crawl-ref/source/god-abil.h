@@ -90,7 +90,6 @@ bool zin_recite_to_single_monster(const coord_def& where);
 int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
-bool zin_remove_all_mutations();
 void zin_sanctuary();
 
 void tso_divine_shield();

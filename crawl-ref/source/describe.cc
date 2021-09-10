@@ -97,12 +97,6 @@ static void _print_bar(int value, int scale, string name,
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
 
-int count_desc_lines(const string &_desc, const int width)
-{
-    string desc = get_linebreak_string(_desc, width);
-    return count(begin(desc), end(desc), '\n');
-}
-
 int show_description(const string &body, const tile_def *tile)
 {
     describe_info inf;

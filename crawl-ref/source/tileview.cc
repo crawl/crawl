@@ -902,13 +902,6 @@ void tile_draw_floor()
         }
 }
 
-void tile_clear_map(const coord_def& gc)
-{
-    tile_env.bk_fg(gc) = 0;
-    tile_env.bk_cloud(gc) = 0;
-    tiles.update_minimap(gc);
-}
-
 void tile_forget_map(const coord_def &gc)
 {
     tile_env.bk_fg(gc) = 0;
@@ -1059,11 +1052,6 @@ void tile_reset_fg(const coord_def &gc)
     tile_env.bk_bg(gc) &= ~TILE_FLAG_CURSOR3;
     tile_draw_map_cell(gc, true);
     tiles.update_minimap(gc);
-}
-
-void tile_reset_feat(const coord_def &gc)
-{
-    tile_env.bk_bg(gc) = tileidx_feature(gc);
 }
 
 static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)

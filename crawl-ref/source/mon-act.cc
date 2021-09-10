@@ -505,28 +505,6 @@ static void _fill_good_move(const monster* mons, move_array* good_move)
         }
 }
 
-// This only tracks movement, not whether hitting an
-// adjacent monster is a possible move.
-bool mons_can_move_towards_target(const monster* mon)
-{
-    coord_def mov, delta;
-    _set_mons_move_dir(mon, &mov, &delta);
-
-    move_array good_move;
-    _fill_good_move(mon, &good_move);
-
-    int dir = _compass_idx(mov);
-    for (int i = -1; i <= 1; ++i)
-    {
-        const int altdir = (dir + i + 8) % 8;
-        const coord_def p = mon_compass[altdir] + coord_def(1, 1);
-        if (good_move(p))
-            return true;
-    }
-
-    return false;
-}
-
 static const string BATTY_TURNS_KEY = "BATTY_TURNS";
 
 static void _be_batty(monster &mons)

@@ -804,26 +804,6 @@ int ash_skill_boost(skill_type sk, int scale)
     return min(level, MAX_SKILL_LEVEL * scale);
 }
 
-int gozag_gold_in_los(actor *whom)
-{
-    if (!have_passive(passive_t::gold_aura))
-        return 0;
-
-    int gold_count = 0;
-
-    for (radius_iterator ri(whom->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
-         ri; ++ri)
-    {
-        for (stack_iterator j(*ri); j; ++j)
-        {
-            if (j->base_type == OBJ_GOLD)
-                ++gold_count;
-        }
-    }
-
-    return gold_count;
-}
-
 void gozag_detect_level_gold(bool count)
 {
     ASSERT(you.on_current_level);

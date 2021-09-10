@@ -100,7 +100,6 @@ bool feat_suppress_blood(dungeon_feature_type feat);
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
 
 void find_connected_identical(const coord_def& d, set<coord_def>& out, bool known_only = false);
-coord_def get_random_stair();
 
 bool slime_wall_neighbour(const coord_def& c);
 int count_adjacent_slime_walls(const coord_def &pos);

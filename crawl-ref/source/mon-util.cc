@@ -846,23 +846,6 @@ bool mons_has_body(const monster& mon)
     return true;
 }
 
-bool mons_has_flesh(const monster& mon)
-{
-    if (mon.is_skeletal() || mon.is_insubstantial())
-        return false;
-
-    // Dictionary says:
-    // 1. (12) flesh -- (the soft tissue of the body of a vertebrate:
-    //    mainly muscle tissue and fat)
-    // 3. pulp, flesh -- (a soft moist part of a fruit)
-    // yet I exclude sense 3 anyway but include arthropods and molluscs.
-    return !(mon.holiness() & (MH_PLANT | MH_NONLIVING))
-           && mons_genus(mon.type) != MONS_FLOATING_EYE
-           && mons_genus(mon.type) != MONS_GLOWING_ORANGE_BRAIN
-           && mons_genus(mon.type) != MONS_JELLY
-           && mon.type != MONS_DEATH_COB; // plant!
-}
-
 // Difference in speed between monster and the player for Cheibriados'
 // purposes. This is the speed difference disregarding the player's
 // slow status.
@@ -2282,11 +2265,6 @@ bool mons_flattens_trees(const monster& mon)
     return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
-bool mons_class_res_polar_vortex(monster_type mc)
-{
-    return get_resist(get_mons_class_resists(mc), MR_RES_VORTEX);
-}
-
 /**
  * Given an average max HP value for a given monster type, what should a given
  * monster have?
@@ -2788,27 +2766,6 @@ colour_t random_monster_colour()
         col = random_colour();
 
     return col;
-}
-
-bool init_abomination(monster& mon, int hd)
-{
-    if (mon.type != MONS_ABOMINATION_LARGE
-        && mon.type != MONS_ABOMINATION_SMALL)
-    {
-        return false;
-    }
-
-    const int max_hd = mon.type == MONS_ABOMINATION_LARGE ? 30 : 15;
-
-    mon.set_hit_dice(min(max_hd, hd));
-
-    const monsterentry *m = get_monster_data(mon.type);
-    const int hp = hit_points(div_rand_round(hd * m->avg_hp_10x, m->HD));
-
-    mon.max_hit_points = hp;
-    mon.hit_points     = hp;
-
-    return true;
 }
 
 // Generate a shiny, new and unscarred monster.
@@ -3402,11 +3359,6 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
     return ht;
 }
 
-habitat_type mons_secondary_habitat(const monster& mon)
-{
-    return mons_class_secondary_habitat(mons_base_type(mon));
-}
-
 int mons_power(monster_type mc)
 {
     // For now, just return monster hit dice.
@@ -3822,47 +3774,6 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
     return false;
 }
 
-// Returns whether the monster has a spell which is theoretically capable of
-// causing an incapacitation state in the target foe (ie: it can cast sleep
-// and the foe is not immune to being put to sleep)
-//
-// Note that this only current checks for inherent obvious immunity (ie: sleep
-// immunity from being undead) and not immunity that might be granted by gear
-// (such as clarity or stasis)
-bool mons_has_incapacitating_spell(const monster& mon, const actor& foe)
-{
-    for (const mon_spell_slot &slot : mon.spells)
-    {
-        switch (slot.spell)
-        {
-        case SPELL_SLEEP:
-            if (foe.can_sleep())
-                return true;
-            break;
-
-        case SPELL_HIBERNATION:
-            if (foe.can_hibernate(false, true))
-                return true;
-            break;
-
-        case SPELL_CONFUSE:
-        case SPELL_MASS_CONFUSION:
-        case SPELL_PARALYSE:
-            return true;
-
-        case SPELL_PETRIFY:
-            if (foe.res_petrify())
-                return true;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
-}
-
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
     // Ugh.
@@ -3894,41 +3805,6 @@ bool mons_has_ranged_attack(const monster& mon)
            || _mons_has_usable_ranged_weapon(&mon)
            || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
-}
-
-bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
-{
-    if (!_mons_has_usable_ranged_weapon(&mon))
-        return false;
-
-    const item_def *missile = mon.missiles();
-
-    if (missile && missile->sub_type == MI_THROWING_NET)
-        return true;
-    else if (missile && missile->sub_type == MI_DART)
-    {
-        switch (get_ammo_brand(*missile))
-        {
-        // Not actually incapacitating, but marked as such so that
-        // assassins will prefer using it while ammo remains
-        case SPMSL_CURARE:
-            if (foe.res_poison() <= 0)
-                return true;
-            break;
-
-        case SPMSL_BLINDING:
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_CONFUSION:
-        case SPMSL_PARALYSIS:
-#endif
-            return true;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
 }
 
 bool mons_can_attack(const monster& mon)
@@ -5208,28 +5084,6 @@ vector<monster* > get_on_level_followers()
     return mon_list;
 }
 
-// Return the number of monsters of the specified type.
-// If friendly_only is true, only count friendly
-// monsters, otherwise all of them
-int count_monsters(monster_type mtyp, bool friendly_only)
-{
-    return count_if(begin(env.mons), end(env.mons),
-                    [=] (const monster &mons) -> bool
-                    {
-                        return mons.alive() && mons.type == mtyp
-                            && (!friendly_only || mons.friendly());
-                    });
-}
-
-int count_allies()
-{
-    return count_if(begin(env.mons), end(env.mons),
-                    [] (const monster &mons) -> bool
-                    {
-                        return mons.alive() && mons.friendly();
-                    });
-}
-
 bool mons_stores_tracking_data(const monster& mons)
 {
     return mons.type == MONS_THORN_HUNTER
@@ -5348,16 +5202,6 @@ monster* choose_random_monster_on_level(int weight,
     }
 
     return chosen;
-}
-
-void update_monster_symbol(monster_type mtype, cglyph_t md)
-{
-    ASSERT(mtype != MONS_0);
-
-    if (md.ch)
-        monster_symbols[mtype].glyph = get_glyph_override(md.ch);
-    if (md.col)
-        monster_symbols[mtype].colour = md.col;
 }
 
 int spell_freq_for_hd(int hd)
