@@ -360,7 +360,7 @@ static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 
     if (victim->body_size(PSIZE_BODY) < SIZE_MEDIUM)
         dist++;
-    else if (victim->body_size(PSIZE_BODY) > SIZE_BIG)
+    else if (victim->body_size(PSIZE_BODY) > SIZE_LARGE)
         dist /= 2;
     else if (victim->body_size(PSIZE_BODY) > SIZE_MEDIUM)
         dist -= 1;

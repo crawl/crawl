@@ -2460,20 +2460,7 @@ static tileidx_t _tileidx_bone(const item_def &item)
 {
     const monster_type mc = item.mon_type;
     const size_type st = get_monster_data(mc)->size;
-    int cs = 0;
-
-    switch (st)
-    {
-    default:
-        cs = 0; break;
-    case SIZE_MEDIUM:
-        cs = 1; break;
-    case SIZE_LARGE:
-    case SIZE_BIG:
-        cs = 2; break;
-    case SIZE_GIANT:
-        cs = 3; break;
-    }
+    const int cs = max(0, st - SIZE_MEDIUM + 1);
 
     switch (get_mon_shape(item.mon_type))
     {

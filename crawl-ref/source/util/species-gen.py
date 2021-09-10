@@ -183,7 +183,7 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'evocations')
 UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
-    'SIZE_BIG', 'SIZE_GIANT')
+    'SIZE_GIANT')
 ALL_STATS = ('str', 'int', 'dex')
 ALL_WEAPON_SKILLS = ('SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
     'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_SLINGS', 'SK_BOWS',

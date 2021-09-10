@@ -1286,8 +1286,6 @@ int max_corpse_chunks(monster_type mc)
         return 4;
     case SIZE_LARGE:
         return 9;
-    case SIZE_BIG:
-        return 10;
     case SIZE_GIANT:
         return 12;
     default:

@@ -8,8 +8,7 @@ enum size_type
     SIZE_SMALL,             // halflings/kobolds
     SIZE_MEDIUM,            // humans/elves/dwarves
     SIZE_LARGE,             // trolls/ogres/centaurs/nagas
-    SIZE_BIG,               // large quadrupeds
-    SIZE_GIANT,             // giants
+    SIZE_GIANT,             // giants and such
     NUM_SIZE_LEVELS,
     SIZE_CHARACTER,         // transformations that don't change size
 };

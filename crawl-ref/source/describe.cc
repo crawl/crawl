@@ -4256,7 +4256,6 @@ const char* const size_adj[] =
     "small",
     "medium",
     "large",
-    "very large",
     "giant",
 };
 COMPILE_CHECK(ARRAYSZ(size_adj) == NUM_SIZE_LEVELS);

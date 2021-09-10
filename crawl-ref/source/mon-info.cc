@@ -1592,9 +1592,7 @@ size_type monster_info::body_size() const
             return SIZE_MEDIUM;
         else if (slime_size == 3)
             return SIZE_LARGE;
-        else if (slime_size == 4)
-            return SIZE_BIG;
-        else if (slime_size == 5)
+        else if (slime_size >= 4) // sizes 4 & 5
             return SIZE_GIANT;
     }
 
