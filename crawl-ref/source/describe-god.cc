@@ -160,7 +160,7 @@ static const char *divine_title[][8] =
 
     // Okawaru -- battle theme.
     {"Coward",             "Struggler",             "Combatant",                "Warrior",
-        "Knight",             "Myrmidon",             "Warmonger",                "Victor of a Thousand Battles"},,
+        "Knight",             "Myrmidon",             "Warmonger",                "Victor of a Thousand Battles"},
 
     // Makhleb -- chaos theme.
     {"Orderly",            "Spawn of Chaos",        "Disciple of Destruction",  "Fanfare of Bloodshed",
