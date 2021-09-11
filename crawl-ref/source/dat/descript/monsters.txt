@@ -823,6 +823,11 @@ An intricate animated statue made of heavily ensorcelled, tough crystal. It is
 immune to most forms of magic, and is magically charged to toss great bolts of
 fire and cold that are reflected by any surface.
 %%%%
+culicivora
+
+A small spider with rudimentary healing abilities. Though not undead, it packs
+a nasty vampiric bite.
+%%%%
 curse skull
 
 A charred skull floating in the air and rotating slowly. Mystic symbols are
