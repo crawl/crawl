@@ -3944,7 +3944,7 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
 
     if (!ignore_silence && silenced(you.pos()))
     {
-        if (you_worship(GOD_WU_JIAN) && piety_rank() >= 2)
+        if (have_passive(passive_t::wu_jian_wall_jump))
             abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
         return abilities;
     }
