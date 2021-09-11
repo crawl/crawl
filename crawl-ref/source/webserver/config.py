@@ -43,6 +43,10 @@ logging_config = {
     "format": "%(asctime)s %(levelname)s: %(message)s"
 }
 
+# AAD B2C support
+use_oauth = True # True = enables AAD_B2C login and disables legacy login;
+# 
+
 password_db = "./webserver/passwd.db3"
 # Uncomment and change if you want this db somewhere separate from the
 # password_db location.

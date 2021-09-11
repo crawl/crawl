@@ -48,13 +48,22 @@ class MainHandler(tornado.web.RequestHandler):
             recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
             if recovery_token_error:
                 logging.warning("Recovery token error from %s", self.request.remote_ip)
-
+        
         # AAD_B2C addition and edits
-        session["flow"] = aad_b2c._build_auth_code_flow(scopes=aad_b2c.SCOPE)
-        self.render("client.html", socket_server = protocol + host + "/socket",
-                    username = None, config = config,
-                    reset_token = recovery_token, reset_token_error = recovery_token_error,
-                    auth_url = session["flow"]["auth_uri"], version=msal.__version__)
+        if config.use_oauth:
+            if "user" in session:
+                idtoken = session["user"]
+                registerOrSigninOauthUser(self, idtoken)
+                username = idtoken["extension_Crawlhandle"]
+            session["flow"] = aad_b2c._build_auth_code_flow(scopes=aad_b2c.SCOPE)
+            self.render("client.html", socket_server = protocol + host + "/socket",
+                username = None, config = config,
+                reset_token = recovery_token, reset_token_error = recovery_token_error,
+                auth_url = session["flow"]["auth_uri"], version=msal.__version__)
+        else:
+            self.render("client.html", socket_server = protocol + host + "/socket",
+                username = None, config = config,
+                reset_token = recovery_token, reset_token_error = recovery_token_error)
 
 # AAD_B2C addition
 class AuthorizeHandler(tornado.web.RequestHandler):
@@ -72,7 +81,7 @@ class AuthorizeHandler(tornado.web.RequestHandler):
             #     return render_template("auth_error.html", result=result)
             session["user"] = result.get("id_token_claims")
             aad_b2c._save_cache(cache)
-            self.render("logincallback.html", socket_server = protocol + host + "/socket")
+            self.redirect("/")
         except ValueError:  # Usually caused by CSRF
             pass  # Simply ignore them
 
@@ -82,6 +91,17 @@ def convert(data):
     if isinstance(data, tuple): return map(convert, data)
     if isinstance(data, list): return convert(data[0]) # ignores everything but first list item
     return data
+
+def registerOrSigninOauthUser(request, idtoken):
+    if userdb.get_user_info(idtoken["extension_Crawlhandle"]) is not None:
+        # sign in user
+        logging.info("Signing in existing OAuth user")
+    else:
+        logging.info("Registering new OAuth user")
+        userdb.register_user(idtoken["extension_Crawlhandle"], "password", idtoken["emails"][0])
+    cookie =  auth.log_in_as_user(request, idtoken["extension_Crawlhandle"])
+    send_message("login_cookie", cookie = cookie,
+                          expires = config.login_token_lifetime)
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
@@ -197,7 +217,7 @@ def bind_server():
             (r"/authorize", AuthorizeHandler), # AAD_B2C addition
             (r"/socket", CrawlWebSocket),
             (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
-            ], cookie_secret="TORNADO_COOKIE_SECRET_NEED_TO_MAKE_SECURE", gzip=getattr(config,"use_gzip",True), **settings)
+            ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
     if getattr(config, 'http_connection_timeout', None) is not None:

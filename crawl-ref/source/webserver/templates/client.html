@@ -7,9 +7,6 @@
       var socket_server = "{{ socket_server }}";
     </script>
     <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
-    <script src="/static/scripts/auth.js" data-main="/static/scripts/app"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/bluebird@3.7.2/js/browser/bluebird.min.js"></script>
-    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.17.0/js/msal-browser.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,7 +18,6 @@
       <div class="login_placeholder">
         <div id="login">
           <span id="login_message"></span>
-          <button class="dropdown-item" id="loginPopup" onclick="signIn(this.id)">Sign in using Popup</button>
           <a href='{{ auth_url }}'>Sign In with AADB2C</a>
           <form action="#" id="login_form">
             <label for="username">User:</label>
