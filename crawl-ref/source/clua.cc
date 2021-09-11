@@ -1122,6 +1122,9 @@ static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {
     UNUSED(dbg);
 
+    if (crawl_state.seen_hups)
+        luaL_error(ls, "Aborting clua code on SIGHUP");
+
     CLua *lua = lua_call_throttle::find_clua(ls);
 
     // Co-routines can create a new Lua state; in such cases, we must
