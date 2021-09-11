@@ -85,13 +85,6 @@ class AuthorizeHandler(tornado.web.RequestHandler):
         except ValueError:  # Usually caused by CSRF
             pass  # Simply ignore them
 
-def convert(data):
-    if isinstance(data, bytes): return data.decode('ascii')
-    if isinstance(data, dict): return dict(map(convert, data.items()))
-    if isinstance(data, tuple): return map(convert, data)
-    if isinstance(data, list): return convert(data[0]) # ignores everything but first list item
-    return data
-
 def registerOrSigninOauthUser(request, idtoken):
     if userdb.get_user_info(idtoken["extension_Crawlhandle"]) is not None:
         # sign in user
@@ -99,9 +92,18 @@ def registerOrSigninOauthUser(request, idtoken):
     else:
         logging.info("Registering new OAuth user")
         userdb.register_user(idtoken["extension_Crawlhandle"], "password", idtoken["emails"][0])
-    cookie =  auth.log_in_as_user(request, idtoken["extension_Crawlhandle"])
-    send_message("login_cookie", cookie = cookie,
-                          expires = config.login_token_lifetime)
+    cookie = auth.log_in_as_user(request, idtoken["extension_Crawlhandle"])
+    # need a way to call send_message("login_cookie") but this method sits in the CrawlWebSocket handler class
+    # not sure how to approach this. Legacy method is to initiate login from client side script, but in our case we are initiating login from server side after a successful oauth authn
+    #request.redirect("/socket")
+    #sockethandler.send_message("login_cookie", cookie = cookie, expires = config.login_token_lifetime)
+
+def convert(data):
+    if isinstance(data, bytes): return data.decode('ascii')
+    if isinstance(data, dict): return dict(map(convert, data.items()))
+    if isinstance(data, tuple): return map(convert, data)
+    if isinstance(data, list): return convert(data[0]) # ignores everything but first list item
+    return data
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
