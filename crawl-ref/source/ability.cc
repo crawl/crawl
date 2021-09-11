@@ -36,6 +36,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
