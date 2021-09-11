@@ -62,6 +62,8 @@ inner_flame INNER_FLAME
 ignition IGNITION
 starburst STARBURST
 foxfire FOXFIRE
+scorch SCORCH
+flame_wave FLAME_WAVE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
