@@ -25,6 +25,13 @@ from game_data_handler import GameDataHandler
 from util import *
 from ws_handler import *
 
+# AAD_B2C support
+import msal
+import aad_b2c
+import json
+import urllib.parse
+
+session = dict()
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -42,10 +49,71 @@ class MainHandler(tornado.web.RequestHandler):
             recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
             if recovery_token_error:
                 logging.warning("Recovery token error from %s", self.request.remote_ip)
+        
+        # AAD_B2C addition and edits
+        if config.use_oauth:
+            if "user" in session:
+                idtoken = session["user"]
+                registerOrSigninOauthUser(self, idtoken)
+                username = idtoken["extension_Crawlhandle"]
+            session["flow"] = aad_b2c._build_auth_code_flow(scopes=aad_b2c.SCOPE)
+            self.render("client.html", socket_server = protocol + host + "/socket",
+                username = None, config = config,
+                reset_token = recovery_token, reset_token_error = recovery_token_error,
+                auth_url = session["flow"]["auth_uri"], version=msal.__version__)
+        else:
+            self.render("client.html", socket_server = protocol + host + "/socket",
+                username = None, config = config,
+                reset_token = recovery_token, reset_token_error = recovery_token_error)
 
-        self.render("client.html", socket_server = protocol + host + "/socket",
-                    username = None, config = config,
-                    reset_token = recovery_token, reset_token_error = recovery_token_error)
+# AAD_B2C addition
+class AuthorizeHandler(tornado.web.RequestHandler):
+    def get(self):
+        host = self.request.host
+        if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
+            protocol = "wss://"
+        else:
+            protocol = "ws://"
+        try:
+            cache = aad_b2c._load_cache()
+            result = aad_b2c._build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
+                session["flow"], convert(self.request.arguments))
+            # if "error" in result:
+            #     return render_template("auth_error.html", result=result)
+            session["user"] = result.get("id_token_claims")
+            aad_b2c._save_cache(cache)
+            self.redirect("/")
+        except ValueError:  # Usually caused by CSRF
+            pass  # Simply ignore them
+
+class LogoutHandler(tornado.web.RequestHandler):
+    def get(self):
+        host = self.request.host
+        if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
+            protocol = "wss://"
+        else:
+            protocol = "ws://"
+        session.clear()
+        self.redirect("/")
+
+def registerOrSigninOauthUser(request, idtoken):
+    if userdb.get_user_info(idtoken["extension_Crawlhandle"]) is not None:
+        # sign in user
+        logging.info("Signing in existing OAuth user")
+    else:
+        logging.info("Registering new OAuth user")
+        userdb.register_user(idtoken["extension_Crawlhandle"], "password", idtoken["emails"][0]) # DK - need to solve for passwords
+    cookie = auth.log_in_as_user(request, idtoken["extension_Crawlhandle"])
+    usersocket = find_user_sockets(idtoken["extension_Crawlhandle"])
+    for socket in usersocket:
+        socket.send_message("login_cookie", cookie = cookie, expires = config.login_token_lifetime)
+
+def convert(data):
+    if isinstance(data, bytes): return data.decode('ascii')
+    if isinstance(data, dict): return dict(map(convert, data.items()))
+    if isinstance(data, tuple): return map(convert, data)
+    if isinstance(data, list): return convert(data[0]) # ignores everything but first list item
+    return data
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
@@ -156,11 +224,20 @@ def bind_server():
     if hasattr(config, "no_cache") and config.no_cache:
         settings["static_handler_class"] = NoCacheHandler
 
-    application = tornado.web.Application([
-            (r"/", MainHandler),
-            (r"/socket", CrawlWebSocket),
-            (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
-            ], gzip=getattr(config,"use_gzip",True), **settings)
+    if config.use_oauth:
+        application = tornado.web.Application([
+                (r"/", MainHandler),
+                (r"/authorize", AuthorizeHandler), # Oauth support
+                (r"/logout", LogoutHandler), # Oauth support
+                (r"/socket", CrawlWebSocket),
+                (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
+                ], gzip=getattr(config,"use_gzip",True), **settings)
+    else:
+        application = tornado.web.Application([
+                (r"/", MainHandler),
+                (r"/socket", CrawlWebSocket),
+                (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
+                ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
     if getattr(config, 'http_connection_timeout', None) is not None:
