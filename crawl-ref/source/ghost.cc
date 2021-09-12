@@ -288,7 +288,7 @@ void ghost_demon::set_pan_lord_cloud_ring()
     dprf("This pan lord has a cloud ring ench of %d", cloud_ring_ench);
 }
 
-void ghost_demon::init_pandemonium_lord()
+void ghost_demon::init_pandemonium_lord(bool friendly)
 {
     do
     {
@@ -341,8 +341,9 @@ void ghost_demon::init_pandemonium_lord()
     if (one_chance_in(3) || !spellcaster)
         set_pan_lord_special_attack();
 
-    // Spellcasters get a (smaller) chance of a cloud ring below
-    if (!spellcaster && one_chance_in(7))
+    // Spellcasters get a (smaller) chance of a cloud ring below. Friendly pan
+    // lords don't get cloud rings so they won't harm the player.
+    if (!friendly && !spellcaster && one_chance_in(7))
         set_pan_lord_cloud_ring();
 
     // Non-casters are fast, casters may get haste.
@@ -380,7 +381,7 @@ void ghost_demon::init_pandemonium_lord()
             else
             {
                 ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
-                if (one_chance_in(7))
+                if (!friendly && one_chance_in(7))
                     set_pan_lord_cloud_ring();
             }
         }
