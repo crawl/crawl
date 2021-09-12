@@ -320,7 +320,6 @@ static vector<string> _randart_propnames(const item_def& item,
 
         // Evokable abilities come second
         { ARTP_BLINK,                 prop_note::plain },
-        { ARTP_BERSERK,               prop_note::plain },
         { ARTP_INVISIBLE,             prop_note::plain },
         { ARTP_FLY,                   prop_note::plain },
 
@@ -573,7 +572,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It grants you flight.", false},
         { ARTP_BLINK, "It lets you blink.", false},
-        { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISE, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
         { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},

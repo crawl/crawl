@@ -300,11 +300,6 @@ bool actor::rmut_from_item(bool calc_unid) const
     return scan_artefacts(ARTP_RMUT, calc_unid);
 }
 
-bool actor::evokable_berserk(bool calc_unid) const
-{
-    return scan_artefacts(ARTP_BERSERK, calc_unid);
-}
-
 bool actor::evokable_invis(bool calc_unid) const
 {
     return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)

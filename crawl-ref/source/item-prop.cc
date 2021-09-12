@@ -2551,7 +2551,6 @@ bool gives_ability(const item_def &item)
     // Check for evokable randart properties.
     if (artefact_property(item, ARTP_INVISIBLE)
         || artefact_property(item, ARTP_BLINK)
-        || artefact_property(item, ARTP_BERSERK)
         || is_unrandom_artefact(item, UNRAND_ASMODEUS)
         || is_unrandom_artefact(item, UNRAND_DISPATER)
         || is_unrandom_artefact(item, UNRAND_OLGREB))

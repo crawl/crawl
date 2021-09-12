@@ -327,7 +327,6 @@ public:
     virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
-    virtual bool evokable_berserk(bool calc_unid = true) const;
     virtual bool evokable_invis(bool calc_unid = true) const;
 
     // Return an int so we know whether an item is the sole source.
