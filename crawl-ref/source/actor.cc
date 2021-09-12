@@ -2,6 +2,7 @@
 
 #include "actor.h"
 
+#include <cmath>
 #include <sstream>
 
 #include "act-iter.h"
