@@ -687,13 +687,6 @@ void player::attacking(actor *other, bool ranged)
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
-
-    if (ranged || mons_is_firewood(*(monster*) other))
-        return;
-
-    const int chance = pow(3, get_mutation_level(MUT_BERSERK) - 1);
-    if (has_mutation(MUT_BERSERK) && x_chance_in_y(chance, 100))
-        go_berserk(false);
 }
 
 /**
@@ -731,18 +724,18 @@ static bool _god_prevents_berserk_haste(bool intentional)
 
 /**
  * Make the player go berserk!
- * @param intentional If true, this was initiated by the player, and additional
- *                    messages can be printed if we can't berserk.
+ * @param intentional If true, this was initiated by the player, so god conduts
+ *                    about anger apply.
  * @param potion      If true, this was caused by the player quaffing !berserk;
- *                    and we get the same additional messages as when
- *                    intentional is true.
+ *                    and we get additional messages if goingn berserk isn't
+ *                    possible.
  * @return            True if we went berserk, false otherwise.
  */
 bool player::go_berserk(bool intentional, bool potion)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!you.can_go_berserk(intentional, potion))
+    if (!you.can_go_berserk(intentional, potion, !potion))
         return false;
 
     if (crawl_state.game_is_hints())
