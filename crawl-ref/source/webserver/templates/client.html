@@ -1,347 +1,333 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
-    <title>WebTiles - Dungeon Crawl Stone Soup</title>
-    <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
-    <script type="text/javascript">
-      var socket_server = "{{ socket_server }}";
-    </script>
-    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  </head>
-  <body>
-    <noscript>Please enable javascript!</noscript>
 
-    <div id="lobby" style="display: none;">
-      <div class="login_placeholder">
-        <div id="login">
-          <span id="login_message"></span>
-          <a href='{{ auth_url }}'>Sign In with AADB2C</a>
-          <form action="#" id="login_form">
-            <label for="username">User:</label>
-            <input class="text" type="text" name="username" id="username">
-            <label for="password">Pass:</label>
-            <input class="text" type="password" name="password" id="password">
-            <input class="button" type="submit" name="submit" id="submit" value="Login">
-          </form>
-          <span class="extra_links">|
-          <a id="reg_link" href="javascript:">Register</a>
-{% if getattr(config, "allow_password_reset", False) %}
-          <a id="forgot_link" href="javascript:">Forgot Password</a>
-{% end %}
-          <a id="chem_link" href="javascript:" style="display: none;">Change Email</a>
-          <a id="chpw_link" href="javascript:" style="display: none;">Change Password</a>
-          <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
-        </div>
+<head>
+  <title>WebTiles - Dungeon Crawl Stone Soup</title>
+  <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
+  <script type="text/javascript">
+    var socket_server = "{{ socket_server }}";
+  </script>
+  <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
+  <link rel="stylesheet" type="text/css" href="/static/style.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+  <noscript>Please enable javascript!</noscript>
+
+  <div id="lobby" style="display: none;">
+    <div class="login_placeholder">
+      <div id="login">
+        <span id="login_message"></span>
+        <a href='{{ auth_url }}'>Sign In</a>
+        <span class="extra_links">|
+          <a id="logout_link" href="javascript:" style="display: none;">Logout</a>
+        </span>
       </div>
+    </div>
 
-      <div id="register" class="floating_dialog" style="display: none;">
-        <span id="register_message"></span>
-        <form action="#" id="register_form">
-          <label for="username">Username:</label>
-          <input class="text" type="text" name="username" id="reg_username">
-          <br>
-          <label for="reg_password">Password:</label>
-          <input class="text" type="password" name="reg_password" id="reg_password">
-          <br>
-          <label for="reg_repeat_password">Repeat password:</label>
-          <input class="text" type="password" name="reg_repeat_password" id="reg_repeat_password">
-          <br>
-          <label for="reg_email">Email address:</label>
-          <input class="text" type="text" name="reg_email" id="reg_email">
-          <br>
-          <p>If you do not enter an email, you can't recover your password.</p>
-          <input class="button" type="button" name="cancel" id="reg_cancel"
-                 value="Cancel">
-          <input class="button" type="submit" name="submit" id="reg_submit" value="Submit">
-        </form>
-      </div>
-
-      <div id="change_password" class="floating_dialog" style="display: none;">
-        <span id="chpw_message"></span>
-        <form action="#" id="chpw_form">
-          <label for="change_cur_password">Current password:</label>
-          <input class="text" type="password" name="change_cur_password" id="change_cur_password">
-          <br>
-          <label for="change_password">New password:</label>
-          <input class="text" type="password" name="change_new_password" id="change_new_password">
-          <br>
-          <label for="change_repeat_password">Repeat password:</label>
-          <input class="text" type="password" name="change_repeat_password" id="change_repeat_password">
-          <br><br>
-          <input class="button" type="button" name="cancel" id="chpw_cancel"
-                 value="Cancel">
-          <input class="button" type="submit" name="submit" id="chpw_submit" value="Submit">
-        </form>
-      </div>
-
-      <div id="change_email" class="floating_dialog" style="display: none;">
-        <p>Your current email address is: <span id="chem_current"></span></p>
-        <span id="chem_message"></span>
-        <form action="#" id="chem_form">
-          <label for="chem_email">Email:</label>
-          <input class="text" type="text" name="chem_email" id="chem_email">
-          <br />
-          <p>If you do not enter an email, you can't recover your password.</p>
-          <input class="button" type="button" name="cancel" id="chem_cancel" value="Cancel">
-          <input class="button" type="submit" name="submit" id="chem_submit" value="Submit">
-        </form>
-      </div>
-
-      <div id="floating_ok_message" class="floating_dialog" style="display: none;">
-        <span id="ok_message_content"></span>
-        <input class="button" type="submit" name="submit" value="OK">
-      </div>
-
-{% if getattr(config, "allow_password_reset", False) %}
-      <div id="forgot" class="floating_dialog" style="display: none;">
-        <span id="forgot_message"></span>
-        <form action="#" id="forgot_form">
-          <label for="forgot_email">Email address:</label>
-          <input class="text" type="text" name="forgot_email" id="forgot_email">
-          <br>
-          <input class="button" type="button" name="cancel" id="forgot_cancel"
-                 value="Cancel">
-          <input class="button" type="submit" name="submit" id="forgot_submit" value="Submit">
-        </form>
-      </div>
-
-      <div id="forgot_2" class="floating_dialog" style="display: none;">
-        <span>If a matching account was found, then an email was sent to reset your password.</span>
-        <input class="button" type="submit" name="submit" value="OK">
-      </div>
-{% end %}
-
-{% if reset_token %}
-      <div id="reset_pw" class="floating_dialog" style="display: none;">
-  {% if reset_token_error %}
-        <form action="#" id="reset_pw_form">
-          <span>{{ reset_token_error }}</span>
-          <br><br>
-          <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
-        </form>
-  {% else %}
-        <span>Please choose a new password.</span>
+    <div id="register" class="floating_dialog" style="display: none;">
+      <span id="register_message"></span>
+      <form action="#" id="register_form">
+        <label for="username">Username:</label>
+        <input class="text" type="text" name="username" id="reg_username">
         <br>
-        <span id="reset_pw_message"></span>
-        <form action="#" id="reset_pw_form">
-          <input class="text" type="hidden" readonly="readonly" name="reset_pw_token" id="reset_pw_token" value="{{ reset_token }}">
-          <br>
-          <label for="reset_pw_password">Password:</label>
-          <input class="text" type="password" name="reset_pw_password" id="reset_pw_password">
-          <br>
-          <label for="reset_pw_repeat_password">Repeat password:</label>
-          <input class="text" type="password" name="reset_pw_repeat_password" id="reset_pw_repeat_password">
-          <br>
-          <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
-          <input class="button" type="submit" name="submit" id="reset_pw_submit" value="Submit">
-        </form>
-  {% end %}
-      </div>
-{% end %}
+        <label for="reg_password">Password:</label>
+        <input class="text" type="password" name="reg_password" id="reg_password">
+        <br>
+        <label for="reg_repeat_password">Repeat password:</label>
+        <input class="text" type="password" name="reg_repeat_password" id="reg_repeat_password">
+        <br>
+        <label for="reg_email">Email address:</label>
+        <input class="text" type="text" name="reg_email" id="reg_email">
+        <br>
+        <p>If you do not enter an email, you can't recover your password.</p>
+        <input class="button" type="button" name="cancel" id="reg_cancel" value="Cancel">
+        <input class="button" type="submit" name="submit" id="reg_submit" value="Submit">
+      </form>
+    </div>
 
-      <div id="rc_edit" class="floating_dialog" style="display: none;">
-        <form action="#" id="rc_edit_form">
-          <textarea class="text" name="rc_file_contents" id="rc_file_contents"
-                    cols="80" rows="25">
+    <div id="change_password" class="floating_dialog" style="display: none;">
+      <span id="chpw_message"></span>
+      <form action="#" id="chpw_form">
+        <label for="change_cur_password">Current password:</label>
+        <input class="text" type="password" name="change_cur_password" id="change_cur_password">
+        <br>
+        <label for="change_password">New password:</label>
+        <input class="text" type="password" name="change_new_password" id="change_new_password">
+        <br>
+        <label for="change_repeat_password">Repeat password:</label>
+        <input class="text" type="password" name="change_repeat_password" id="change_repeat_password">
+        <br><br>
+        <input class="button" type="button" name="cancel" id="chpw_cancel" value="Cancel">
+        <input class="button" type="submit" name="submit" id="chpw_submit" value="Submit">
+      </form>
+    </div>
+
+    <div id="change_email" class="floating_dialog" style="display: none;">
+      <p>Your current email address is: <span id="chem_current"></span></p>
+      <span id="chem_message"></span>
+      <form action="#" id="chem_form">
+        <label for="chem_email">Email:</label>
+        <input class="text" type="text" name="chem_email" id="chem_email">
+        <br />
+        <p>If you do not enter an email, you can't recover your password.</p>
+        <input class="button" type="button" name="cancel" id="chem_cancel" value="Cancel">
+        <input class="button" type="submit" name="submit" id="chem_submit" value="Submit">
+      </form>
+    </div>
+
+    <div id="floating_ok_message" class="floating_dialog" style="display: none;">
+      <span id="ok_message_content"></span>
+      <input class="button" type="submit" name="submit" value="OK">
+    </div>
+
+    {% if getattr(config, "allow_password_reset", False) %}
+    <div id="forgot" class="floating_dialog" style="display: none;">
+      <span id="forgot_message"></span>
+      <form action="#" id="forgot_form">
+        <label for="forgot_email">Email address:</label>
+        <input class="text" type="text" name="forgot_email" id="forgot_email">
+        <br>
+        <input class="button" type="button" name="cancel" id="forgot_cancel" value="Cancel">
+        <input class="button" type="submit" name="submit" id="forgot_submit" value="Submit">
+      </form>
+    </div>
+
+    <div id="forgot_2" class="floating_dialog" style="display: none;">
+      <span>If a matching account was found, then an email was sent to reset your password.</span>
+      <input class="button" type="submit" name="submit" value="OK">
+    </div>
+    {% end %}
+
+    {% if reset_token %}
+    <div id="reset_pw" class="floating_dialog" style="display: none;">
+      {% if reset_token_error %}
+      <form action="#" id="reset_pw_form">
+        <span>{{ reset_token_error }}</span>
+        <br><br>
+        <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
+      </form>
+      {% else %}
+      <span>Please choose a new password.</span>
+      <br>
+      <span id="reset_pw_message"></span>
+      <form action="#" id="reset_pw_form">
+        <input class="text" type="hidden" readonly="readonly" name="reset_pw_token" id="reset_pw_token"
+          value="{{ reset_token }}">
+        <br>
+        <label for="reset_pw_password">Password:</label>
+        <input class="text" type="password" name="reset_pw_password" id="reset_pw_password">
+        <br>
+        <label for="reset_pw_repeat_password">Repeat password:</label>
+        <input class="text" type="password" name="reset_pw_repeat_password" id="reset_pw_repeat_password">
+        <br>
+        <input class="button" type="button" name="cancel" id="reset_pw_cancel" value="Cancel">
+        <input class="button" type="submit" name="submit" id="reset_pw_submit" value="Submit">
+      </form>
+      {% end %}
+    </div>
+    {% end %}
+
+    <div id="rc_edit" class="floating_dialog" style="display: none;">
+      <form action="#" id="rc_edit_form">
+        <textarea class="text" name="rc_file_contents" id="rc_file_contents" cols="80" rows="25">
           </textarea>
-          <br>
-          <input class="button" type="submit" name="submit" id="rc_submit" value="Save"
-                 style="float: right;">
-        </form>
+        <br>
+        <input class="button" type="submit" name="submit" id="rc_submit" value="Save" style="float: right;">
+      </form>
+    </div>
+
+    <div id="exit_game" class="floating_dialog" style="display: none;">
+      <p id="exit_game_reason"></p>
+      <pre id="exit_game_message"></pre>
+      <p id="exit_game_dump"></p>
+      <a class="hide_dialog" href="javascript:">Close</a>
+    </div>
+
+    <div id="banner">{% include banner.html %}</div>
+
+    <div>
+      <div id="admin_panel_button" style="display:none;">
+        <span><a href="javascript:">Toggle admin panel</a></span>
       </div>
-
-      <div id="exit_game" class="floating_dialog" style="display: none;">
-          <p id="exit_game_reason"></p>
-          <pre id="exit_game_message"></pre>
-          <p id="exit_game_dump"></p>
-          <a class="hide_dialog" href="javascript:">Close</a>
-      </div>
-
-      <div id="banner">{% include banner.html %}</div>
-
-      <div>
-        <div id="admin_panel_button" style="display:none;">
-          <span><a href="javascript:">Toggle admin panel</a></span>
+      <div id="admin_panel" style="display: none;">
+        <div><span><b>Admin panel</b></span></div>
+        <hr />
+        <div id="admin_announcements">
+          <span>Enter text to broadcast to all players. Please do not use this frivolously!</span>
+          <form>
+            <label for="announcement_text">Announcement: </label>
+            <input class="text" type="text" name="announcement_text" id="announcement_text" />
+            <span><a href="javascript:" id="announcement_submit">send announcement</a></span>
+          </form>
         </div>
-        <div id="admin_panel" style="display: none;">
-          <div><span><b>Admin panel</b></span></div>
-          <hr />
-          <div id="admin_announcements">
-            <span>Enter text to broadcast to all players. Please do not use this frivolously!</span>
-            <form>
-              <label for="announcement_text">Announcement: </label>
-              <input class="text" type="text" name="announcement_text" id="announcement_text" />
-              <span><a href="javascript:" id="announcement_submit">send announcement</a></span>
-            </form>
-          </div>
-          <hr />
-{% if getattr(config, "admin_password_reset", False) %}
-          <div id="user_control">
-            <form action="#" id="admin_user_control">
+        <hr />
+        {% if getattr(config, "admin_password_reset", False) %}
+        <div id="user_control">
+          <form action="#" id="admin_user_control">
             <label for="admin_username">User:</label>
             <input class="text" type="text" name="admin_username" id="admin_username">
-            <input class="button" type="button" name="admin_pw_reset" id="admin_pw_reset" value="Generate password token">
-            <input class="button" type="button" name="admin_pw_reset_clear" id="admin_pw_reset_clear" value="Clear password token">
-            </form>
-          </div>
-          <hr />
-{% end %}
-          <div id="admin_panel_log"></div>
+            <input class="button" type="button" name="admin_pw_reset" id="admin_pw_reset"
+              value="Generate password token">
+            <input class="button" type="button" name="admin_pw_reset_clear" id="admin_pw_reset_clear"
+              value="Clear password token">
+          </form>
         </div>
+        <hr />
+        {% end %}
+        <div id="admin_panel_log"></div>
       </div>
+    </div>
 
-      <div id="play_now"></div>
+    <div id="play_now"></div>
 
-      <br>
+    <br>
 
-      <div id="lobby_body">
-        <span>
-          Games currently running:
-        </span>
-        <table id="player_list" class="no_game_times">
-          <thead>
-            <tr>
-              <th class="username">User</th>
-              <th class="game_id">Game</th>
-              <th class="xl">XL</th>
-              <th class="char">Char</th>
-              <th class="place">Place</th>
-              <th class="turn">Turn</th>
-              <th class="dur">Time</th>
-              <th class="god">God</th>
-              <th class="idle_time">Idle</th>
-              <th class="spectator_count">Specs</th>
-              <th class="milestone_col">Milestone</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
+    <div id="lobby_body">
+      <span>
+        Games currently running:
+      </span>
+      <table id="player_list" class="no_game_times">
+        <thead>
+          <tr>
+            <th class="username">User</th>
+            <th class="game_id">Game</th>
+            <th class="xl">XL</th>
+            <th class="char">Char</th>
+            <th class="place">Place</th>
+            <th class="turn">Turn</th>
+            <th class="dur">Time</th>
+            <th class="god">God</th>
+            <th class="idle_time">Idle</th>
+            <th class="spectator_count">Specs</th>
+            <th class="milestone_col">Milestone</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <div style="display: none">
+        <table>
+          <tr id="game_entry_template">
+            <td class="username"></td>
+            <td class="game_id"></td>
+            <td class="xl"></td>
+            <td class="char"></td>
+            <td class="place"></td>
+            <td class="turn"></td>
+            <td class="dur"></td>
+            <td class="god"></td>
+            <td class="idle_time"></td>
+            <td class="spectator_count"></td>
+            <td class="milestone_col">
+              <div class="milestone_container">
+                <div class="milestone">&nbsp;</div>
+                <div class="new_milestone"></div>
+              </div>
+            </td>
+          </tr>
         </table>
-        <div style="display: none">
-          <table>
-            <tr id="game_entry_template">
-              <td class="username"></td>
-              <td class="game_id"></td>
-              <td class="xl"></td>
-              <td class="char"></td>
-              <td class="place"></td>
-              <td class="turn"></td>
-              <td class="dur"></td>
-              <td class="god"></td>
-              <td class="idle_time"></td>
-              <td class="spectator_count"></td>
-              <td class="milestone_col">
-                <div class="milestone_container">
-                  <div class="milestone">&nbsp;</div>
-                  <div class="new_milestone"></div>
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div id="footer">{% include footer.html %}</div>
-    </div>
-
-    <div id="game">
-      <div id="crt" style="display: none;"></div>
-    </div>
-
-    <div id="loader">
-      <div id="loader_center">
-        <span id="loader_text">Loading...</span><br>
-
-        <img style="display:none;" alt="" src="{{ static_url("title_anon_octopus_wizard.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_arbituhhh_tesu.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_baconkid_duvessa_dowan.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_baconkid_gastronok.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_baconkid_mnoleg.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_Cws_Minotauros.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_dragon.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_evil_mage.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_invasion.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_kitchen_duty.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_summoner.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_undead_warrior.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_e_m_fields.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_firemage.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_froggy_goodgod_tengu_gold.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_froggy_jiyva_felid.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_froggy_natasha_and_boris.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_froggy_rune_and_run_failed_on_dis.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_froggy_thunder_fist_nikola.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_nibiki_octopode.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_omndra_zot_demon.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_peileppe_bloax_eye.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_ploomutoo_ijyb.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_pooryurik_knight.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_psiweapon_kiku.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_psiweapon_roxanne.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_sastrei_chei.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_shadyamish_octm.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_white_noise_entering_the_dungeon.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_white_noise_grabbing_the_orb.png") }}">
-      </div>
-
-      <div id="stale_processes_message" class="floating_dialog"
-           style="display: none;" tabindex="1000">
-        There are some stale <span class="game_name"></span> processes.
-        They'll be stopped in <span class="recover_timeout"></span> seconds.
-        Press a key now if you don't want this to happen!
-      </div>
-
-      <div id="force_terminate" class="floating_dialog"
-           style="display: none;" tabindex="1001">
-        Couldn't stop one of your stale <span class="game_name"></span> processes
-        gracefully. Force its termination? [yn]
-        <br>
-        <input class="button" type="button" name="force_terminate_no"
-               id="force_terminate_no" value="No" style="float: right;">
-        <input class="button" type="button" name="force_terminate_yes"
-               id="force_terminate_yes" value="Yes" style="float: right;">
       </div>
     </div>
 
-    <div id="overlay"></div>
+    <div id="footer">{% include footer.html %}</div>
+  </div>
 
-    <div id="chat_hidden" style="display: none;"><span><a href="javascript:">+</a></span></div>
+  <div id="game">
+    <div id="crt" style="display: none;"></div>
+  </div>
 
-    <div id="chat" style="display: none;">
-      <a href="javascript:" id="chat_hide_button">
-        <span id="chat_hide_button_span">(-)</span>
-      </a>
-      <a href="javascript:" id="chat_caption">
-        <span id="spectator_count">0 spectators</span>
-        <span id="message_count">0 new messages</span>
-      </a>
+  <div id="loader">
+    <div id="loader_center">
+      <span id="loader_text">Loading...</span><br>
 
-      <div id="chat_body" style="display: none;">
-        <span id="spectator_list">&nbsp;</span>
+      <img style="display:none;" alt="" src="{{ static_url(" title_anon_octopus_wizard.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_arbituhhh_tesu.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_baconkid_duvessa_dowan.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_baconkid_gastronok.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_baconkid_mnoleg.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_Cws_Minotauros.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_denzi_dragon.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_denzi_evil_mage.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_denzi_invasion.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_denzi_kitchen_duty.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_denzi_summoner.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_denzi_undead_warrior.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_e_m_fields.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_firemage.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_froggy_goodgod_tengu_gold.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_froggy_jiyva_felid.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_froggy_natasha_and_boris.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_froggy_rune_and_run_failed_on_dis.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_froggy_thunder_fist_nikola.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_nibiki_octopode.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_omndra_zot_demon.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_peileppe_bloax_eye.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_ploomutoo_ijyb.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_pooryurik_knight.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_psiweapon_kiku.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_psiweapon_roxanne.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_sastrei_chei.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_shadyamish_octm.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_white_noise_entering_the_dungeon.png") }}">
+      <img style="display:none;" alt="" src="{{ static_url(" title_white_noise_grabbing_the_orb.png") }}">
+    </div>
 
-        <div id="chat_history_container">
-          <span id="chat_history"></span>
-        </div>
+    <div id="stale_processes_message" class="floating_dialog" style="display: none;" tabindex="1000">
+      There are some stale <span class="game_name"></span> processes.
+      They'll be stopped in <span class="recover_timeout"></span> seconds.
+      Press a key now if you don't want this to happen!
+    </div>
 
-        <input class="text" type="text" name="chat_input"
-               id="chat_input" style="display: none">
-        <div id="chat_login_text">
-          <a id="chat_login_link" href="javascript:">Login</a> to chat
-        </div>
+    <div id="force_terminate" class="floating_dialog" style="display: none;" tabindex="1001">
+      Couldn't stop one of your stale <span class="game_name"></span> processes
+      gracefully. Force its termination? [yn]
+      <br>
+      <input class="button" type="button" name="force_terminate_no" id="force_terminate_no" value="No"
+        style="float: right;">
+      <input class="button" type="button" name="force_terminate_yes" id="force_terminate_yes" value="Yes"
+        style="float: right;">
+    </div>
+  </div>
+
+  <div id="overlay"></div>
+
+  <div id="chat_hidden" style="display: none;"><span><a href="javascript:">+</a></span></div>
+
+  <div id="chat" style="display: none;">
+    <a href="javascript:" id="chat_hide_button">
+      <span id="chat_hide_button_span">(-)</span>
+    </a>
+    <a href="javascript:" id="chat_caption">
+      <span id="spectator_count">0 spectators</span>
+      <span id="message_count">0 new messages</span>
+    </a>
+
+    <div id="chat_body" style="display: none;">
+      <span id="spectator_list">&nbsp;</span>
+
+      <div id="chat_history_container">
+        <span id="chat_history"></span>
+      </div>
+
+      <input class="text" type="text" name="chat_input" id="chat_input" style="display: none">
+      <div id="chat_login_text">
+        <a id="chat_login_link" href="javascript:">Login</a> to chat
       </div>
     </div>
+  </div>
 
-    <div id="prompt" style="display: none;">
-      <div>
-          <div id="prompt_title"></div>
+  <div id="prompt" style="display: none;">
+    <div>
+      <div id="prompt_title"></div>
 
-          <div class="login_placeholder"></div>
+      <div class="login_placeholder"></div>
 
-          <div id="prompt_footer"></div>
-       </div>
+      <div id="prompt_footer"></div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

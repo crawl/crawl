@@ -92,7 +92,7 @@ def registerOrSigninOauthUser(request, idtoken):
         logging.info("Signing in existing OAuth user")
     else:
         logging.info("Registering new OAuth user")
-        userdb.register_user(idtoken["extension_Crawlhandle"], "password", idtoken["emails"][0])
+        userdb.register_user(idtoken["extension_Crawlhandle"], "password", idtoken["emails"][0]) # DK - need to solve for user auth
     cookie = auth.log_in_as_user(request, idtoken["extension_Crawlhandle"])
     usersocket = find_user_sockets(idtoken["extension_Crawlhandle"])
     for socket in usersocket:
