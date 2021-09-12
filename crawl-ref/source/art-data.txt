@@ -609,7 +609,6 @@ TILE:     urand_elemental
 TILE_EQ:  elemental_staff
 FIRE:     2
 COLD:     2
-WILL:     2
 AC:       5
 BOOL:     elec
 DBRAND:   If the wielder is skilled in Evocations, they can discharge powerful
