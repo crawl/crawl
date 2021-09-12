@@ -483,7 +483,7 @@ function (exports, $, key_conversion, chat, comm) {
         $('#chem_link').show();
         $('#chpw_link').show();
         $("#logout_link").show();
-
+        $("#oauth_login_link").hide(); // Oauth support addition
         chat.reset_visibility(true);
         $("#chat_input").show();
         $("#chat_login_text").hide();
@@ -527,7 +527,8 @@ function (exports, $, key_conversion, chat, comm) {
         admin_user = false;
         $("#admin_panel_button").hide();
         $("#admin_panel").hide();
-        location.reload();
+        // location.reload(); commented out for Oauth support
+        location.replace('https://ckzcrawl.b2clogin.com/ckzcrawl.onmicrosoft.com/B2C_1_signupsignin/oauth2/v2.0/logout?post_logout_redirect_uri=http://localhost:8080/logout')
     }
 
     function toggle_admin_panel()

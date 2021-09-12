@@ -31,7 +31,7 @@ import aad_b2c
 import json
 import urllib.parse
 
-session = dict() # this is bad
+session = dict()
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -85,6 +85,16 @@ class AuthorizeHandler(tornado.web.RequestHandler):
             self.redirect("/")
         except ValueError:  # Usually caused by CSRF
             pass  # Simply ignore them
+
+class LogoutHandler(tornado.web.RequestHandler):
+    def get(self):
+        host = self.request.host
+        if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
+            protocol = "wss://"
+        else:
+            protocol = "ws://"
+        session.clear()
+        self.redirect("/")
 
 def registerOrSigninOauthUser(request, idtoken):
     if userdb.get_user_info(idtoken["extension_Crawlhandle"]) is not None:
@@ -214,12 +224,20 @@ def bind_server():
     if hasattr(config, "no_cache") and config.no_cache:
         settings["static_handler_class"] = NoCacheHandler
 
-    application = tornado.web.Application([
-            (r"/", MainHandler),
-            (r"/authorize", AuthorizeHandler), # AAD_B2C addition
-            (r"/socket", CrawlWebSocket),
-            (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
-            ], gzip=getattr(config,"use_gzip",True), **settings)
+    if config.use_oauth:
+        application = tornado.web.Application([
+                (r"/", MainHandler),
+                (r"/authorize", AuthorizeHandler), # Oauth support
+                (r"/logout", LogoutHandler), # Oauth support
+                (r"/socket", CrawlWebSocket),
+                (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
+                ], gzip=getattr(config,"use_gzip",True), **settings)
+    else:
+        application = tornado.web.Application([
+                (r"/", MainHandler),
+                (r"/socket", CrawlWebSocket),
+                (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
+                ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
     if getattr(config, 'http_connection_timeout', None) is not None:
