@@ -345,8 +345,6 @@ static vector<ability_def> &_get_ability_list()
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-        { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-            0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
             2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
 
@@ -997,7 +995,6 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_STOP_RECALL;
         return ability;
 
-    case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         if (you.is_lifeless_undead() || you.stasis())
             return ABIL_NON_ABILITY;
@@ -1202,12 +1199,6 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     if (testbits(get_ability_def(ability).flags, abflag::sacrifice))
         lookup += _sacrifice_desc(ability);
-
-    if (god_hates_ability(ability, you.religion))
-    {
-        lookup += uppercase_first(god_name(you.religion))
-                  + " frowns upon the use of this ability.\n";
-    }
 
     ostringstream res;
     if (need_title)
@@ -1465,8 +1456,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
     }
 
-    if ((abil.ability == ABIL_EVOKE_BERSERK
-         || abil.ability == ABIL_TROG_BERSERK)
+    if (abil.ability == ABIL_TROG_BERSERK
         && !you.can_go_berserk(true, false, quiet))
     {
         return false;
@@ -1707,7 +1697,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         return you.can_go_berserk(true, false, true)
                && (quiet || berserk_check_wielded_weapon());
@@ -2310,11 +2299,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(fail);
-
-    case ABIL_EVOKE_BERSERK:    // randarts
-        fail_check();
-        you.go_berserk(true);
-        break;
 
     case ABIL_EVOKE_ASMODEUS:
         fail_check();
@@ -3449,9 +3433,6 @@ int choose_ability_menu(const vector<talent>& talents)
             }
             else if (_check_ability_dangerous(talents[i].which, true))
                 me->colour = COL_DANGEROUS;
-            // Only check this here, since your god can't hate its own abilities
-            else if (god_hates_ability(talents[i].which, you.religion))
-                me->colour = COL_FORBIDDEN;
             abil_menu.add_entry(me);
         }
     }
@@ -3621,9 +3602,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_BERSERK:
-        return you.evokable_berserk()
-               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
@@ -3683,7 +3661,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
-            ABIL_EVOKE_BERSERK,
             ABIL_EVOKE_TURN_INVISIBLE,
             ABIL_EVOKE_ASMODEUS,
             ABIL_EVOKE_DISPATER,

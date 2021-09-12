@@ -110,7 +110,6 @@ bool god_hates_spellcasting(god_type god);
 bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 string god_spell_warn_string(spell_type spell, god_type god);
-bool god_hates_ability(ability_type ability, god_type god);
 
 void initialize_ashenzari_props();
 lifesaving_chance elyvilon_lifesaving();

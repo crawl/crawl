@@ -4252,18 +4252,6 @@ string god_spell_warn_string(spell_type spell, god_type god)
         return "";
 }
 
-bool god_hates_ability(ability_type ability, god_type god)
-{
-    switch (ability)
-    {
-        case ABIL_EVOKE_BERSERK:
-            return god == GOD_CHEIBRIADOS;
-        default:
-            break;
-    }
-    return false;
-}
-
 lifesaving_chance elyvilon_lifesaving()
 {
     if (!you_worship(GOD_ELYVILON))
