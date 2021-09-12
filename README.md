@@ -47,6 +47,18 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
     pip install -r webserver/requirements/dev.py3.txt
     ```
 
-* **Optional** Adjust ./.vscode/launch.json as needed.
+## Debugging
 
-* **Optional** Select venv python binary with Ctrl-Shift-P -> Python: Select interpreter
+    * Adjust ./.vscode/launch.json as needed.
+
+    * Select venv python binary with Ctrl-Shift-P -> Python: Select interpreter
+
+## Problems to solve
+
+    * "password" for user registration
+
+    * oauth attack vectors
+
+    * comparison to crawl origin and feasibility of PR
+
+    * add additional IDPs (goog, fb)
