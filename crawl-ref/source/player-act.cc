@@ -674,7 +674,7 @@ bool player::fumbles_attack()
     return did_fumble;
 }
 
-void player::attacking(actor *other, bool ranged)
+void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 

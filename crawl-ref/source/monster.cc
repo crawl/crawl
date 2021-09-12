@@ -2748,7 +2748,7 @@ bool monster::fumbles_attack()
     return false;
 }
 
-void monster::attacking(actor * /* other */, bool /* ranged */)
+void monster::attacking(actor * /* other */)
 {
 }
 
