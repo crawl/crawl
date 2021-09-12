@@ -425,8 +425,7 @@ TILE:    urand_leech
 TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRISM
 LIFE:    1
-ANGRY:   20
-BOOL:    skip_ego
+BOOL:    drain, harm, skip_ego
 DBRAND:  It heals its wielder for a portion of the damage dealt every time it
  strikes a living foe.
 
