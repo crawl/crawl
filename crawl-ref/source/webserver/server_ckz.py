@@ -31,7 +31,7 @@ import aad_b2c
 import json
 import urllib.parse
 
-session = dict()
+session = dict() # this is bad
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
