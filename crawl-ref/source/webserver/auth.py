@@ -28,15 +28,6 @@ def purge_login_tokens_timeout():
     IOLoop.current().add_timeout(time.time() + 60 * 60 * 1000,
                                  purge_login_tokens_timeout)
 
-# def log_in_as_user(request, username):
-#     token = rand.getrandbits(128)
-#     expires = datetime.datetime.now() + datetime.timedelta(config.login_token_lifetime)
-#     login_tokens[(token, username)] = expires
-#     cookie = username + "%20" + str(token)
-#     if not isinstance(request, tornado.websocket.WebSocketHandler):
-#         request.set_cookie("login", cookie)
-#     return cookie
-
 def log_in_as_user(request, username):
     token = rand.getrandbits(128)
     expires = datetime.datetime.now() + datetime.timedelta(config.login_token_lifetime)

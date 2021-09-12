@@ -7,6 +7,7 @@ import signal
 import subprocess
 import time
 import zlib
+import urllib.parse
 
 import tornado.ioloop
 import tornado.template
@@ -627,6 +628,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("login_fail")
 
     def token_login(self, cookie):
+        # not sure about this one
+        if config.use_oauth:
+            cookie = urllib.parse.quote(cookie)
         username, ok = auth.check_login_cookie(cookie)
         if ok:
             auth.forget_login_cookie(cookie)
