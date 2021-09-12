@@ -29,6 +29,7 @@ from ws_handler import *
 import msal
 import aad_b2c
 import json
+import urllib.parse
 
 session = dict()
 
@@ -93,10 +94,9 @@ def registerOrSigninOauthUser(request, idtoken):
         logging.info("Registering new OAuth user")
         userdb.register_user(idtoken["extension_Crawlhandle"], "password", idtoken["emails"][0])
     cookie = auth.log_in_as_user(request, idtoken["extension_Crawlhandle"])
-    # need a way to call send_message("login_cookie") but this method sits in the CrawlWebSocket handler class
-    # not sure how to approach this. Legacy method is to initiate login from client side script, but in our case we are initiating login from server side after a successful oauth authn
-    #request.redirect("/socket")
-    #sockethandler.send_message("login_cookie", cookie = cookie, expires = config.login_token_lifetime)
+    usersocket = find_user_sockets(idtoken["extension_Crawlhandle"])
+    for socket in usersocket:
+        socket.send_message("login_cookie", cookie = cookie, expires = config.login_token_lifetime)
 
 def convert(data):
     if isinstance(data, bytes): return data.decode('ascii')
