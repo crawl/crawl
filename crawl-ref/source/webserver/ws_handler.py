@@ -628,7 +628,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("login_fail")
 
     def token_login(self, cookie):
-        # not sure about this one
+        # AAD B2C support - cookie is coming in without URL encoding so we are re-adding it. 
         if config.use_oauth:
             cookie = urllib.parse.quote(cookie)
         username, ok = auth.check_login_cookie(cookie)
