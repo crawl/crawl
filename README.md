@@ -49,13 +49,15 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
 
 ## Debugging
 
-    * Adjust ./.vscode/launch.json as needed.
+    * Adjust ./.vscode/launch.json as needed
 
     * Select venv python binary with Ctrl-Shift-P -> Python: Select interpreter
 
 ## Problems to solve
 
     * "password" for user registration
+
+    * enforce unique crawl handles through B2C graph calls at registration time
 
     * oauth attack vectors
 
