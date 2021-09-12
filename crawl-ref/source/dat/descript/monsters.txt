@@ -638,7 +638,7 @@ battlesphere
 
 A small globe of magical energy that follows a spellcaster. It cannot operate
 on its own, but will assault the conjurer's foes with magical missiles that
-never miss each time the conjurer casts a spell.
+never miss each time the conjurer casts a destructive conjurations school spell.
 %%%%
 bennu
 
