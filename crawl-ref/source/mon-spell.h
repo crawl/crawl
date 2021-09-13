@@ -741,6 +741,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_RADROACH,
+      {
+       { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL},
+      }
+    },
+
     // ('C') Giants.
     {  MST_FIRE_GIANT,
       {

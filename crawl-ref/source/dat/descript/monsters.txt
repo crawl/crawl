@@ -2037,6 +2037,11 @@ quokka
 
 A pesky little marsupial that is a bit like a rat, but not quite.
 %%%%
+radroach
+
+A giant cockroach that has been exposed to high amounts of mutagenic energy. It
+is horrifyingly mutated, but this has only made it stronger.
+%%%%
 ragged hierophant
 
 A bedraggled priest, once-fine robes now lined with salt and dust. Forsaken by

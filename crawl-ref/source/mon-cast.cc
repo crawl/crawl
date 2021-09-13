@@ -157,6 +157,7 @@ static bool _torment_vulnerable(const actor* victim);
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
 static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
+static bool _maybe_irradiate(monster *mons);
 
 enum spell_logic_flag
 {
@@ -1104,6 +1105,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
         case SPELL_FREEZE:
+        case SPELL_IRRADIATE:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -1729,6 +1731,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_TZITZIMITL:
     case SPELL_SUMMON_HELL_SENTINEL:
     case SPELL_STOKE_FLAMES:
+    case SPELL_IRRADIATE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -4468,6 +4471,36 @@ static int _mons_mesmerise(monster* mons, bool actual)
     return 1;
 }
 
+// Determine whether irradiating is likely to be profitable
+static bool _maybe_irradiate(monster *mons)
+{
+    if (mons->wont_attack() && adjacent(you.pos(), mons->pos()))
+        return false;
+
+    int val = 0;
+    int adjacent = 0;
+    int hd = mons->spell_hd(SPELL_IRRADIATE);
+
+    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+    {
+        if (actor * act = actor_at(*ai))
+        {
+            adjacent++;
+            if (act->is_player())
+                val += hd;
+            else if (mons->temp_attitude() == act->as_monster()->temp_attitude())
+                val -= 2 * act->get_hit_dice(); // hesitate to kill allies
+            else
+                val += act->get_hit_dice();
+        }
+    }
+
+    // randomize slightly
+    val += random2(3*adjacent + 1) - random2(3*adjacent + 1);
+
+    return val > 0;
+}
+
 // Check whether targets might be scared.
 // Returns 0, if targets can be scared but the attempt failed or wasn't made.
 // Returns 1, if targets are scared.
@@ -5875,6 +5908,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SHATTER:
         mons_shatter(mons);
+        return;
+
+    case SPELL_IRRADIATE:
+        cast_irradiate(splpow, mons, false);
         return;
 
     case SPELL_CORPSE_ROT:
@@ -7513,6 +7550,10 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_FREEZE:
         ASSERT(foe);
         return ai_action::good_or_impossible(adjacent(mon->pos(), foe->pos()));
+
+    case SPELL_IRRADIATE:
+        ASSERT(foe);
+        return ai_action::good_or_bad(_maybe_irradiate(mon));
 
     case SPELL_DRUIDS_CALL:
         // Don't cast unless there's at least one valid target

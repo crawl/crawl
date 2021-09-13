@@ -55,6 +55,7 @@ unspeakable MONS_UNSPEAKABLE
 
 ## Insects ('a')
 giant_cockroach MONS_GIANT_COCKROACH
+radroach MONS_RADROACH
 
 ## Batty monsters ('b')
 %rim 1
