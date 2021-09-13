@@ -697,28 +697,14 @@ void player::attacking(actor *other)
  */
 static bool _god_prevents_berserk_haste(bool intentional)
 {
-    const god_type old_religion = you.religion;
-
     if (!have_passive(passive_t::no_haste))
         return false;
 
-    // Chei makes berserk not speed you up.
-    // Unintentional would be forgiven "just this once" every time.
-    // Intentional could work as normal, but that would require storing
-    // whether you transgressed to start it -- so we just consider this
-    // a part of your penance.
-    if (!intentional)
-    {
+    if (intentional)
+        simple_god_message(" forces you to slow down.");
+    else
         simple_god_message(" protects you from inadvertent hurry.");
-        return true;
-    }
 
-    did_god_conduct(DID_HASTY, 8);
-    // Let's see if you've lost your religion...
-    if (!you_worship(old_religion))
-        return false;
-
-    simple_god_message(" forces you to slow down.");
     return true;
 }
 
