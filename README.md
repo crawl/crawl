@@ -33,8 +33,12 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
 * Set environment variables for AAD_B2C client id and secret.
 
     ```sh
-    export CLIENT_ID="client id value"
-    export CLIENT_SECRET="client secret value"
+    export B2C_CLIENT_ID="<replace with client id of B2C application>"
+    export B2C_CLIENT_SECRET="<replace with client secret of B2C application"
+    export KV_CLIENT_ID="<replace with client id of SPN used for Keyvault authentication>"
+    export KV_CLIENT_SECRET="<replace with client secret of SPN used for Keyvault authentication>"
+    export KV_TENANT_ID="<replace with tenant id of SPN used for Keyvault authentication>"
+    export KV_NAME="<replace with name of keyvault>"
     ```
 
 * Set up a Python virtualenv. From ./crawl-ref/source/
@@ -45,6 +49,7 @@ A fork of [crawl](https://github.com/crawl/crawl.git) to explore the feasibility
     python3 -m virtualenv -p python3 webserver/venv
     . ./webserver/venv/bin/activate
     pip install -r webserver/requirements/dev.py3.txt
+    pip install azure-identity azure-keyvault-secrets msal
     ```
 
 ## Debugging

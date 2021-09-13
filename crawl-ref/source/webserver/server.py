@@ -30,6 +30,9 @@ import msal
 import aad_b2c
 import json
 import urllib.parse
+import cmd
+from azure.keyvault.secrets import SecretClient
+from azure.identity import ClientSecretCredential
 
 session = dict()
 
@@ -102,11 +105,19 @@ def registerOrSigninOauthUser(request, idtoken):
         logging.info("Signing in existing OAuth user")
     else:
         logging.info("Registering new OAuth user")
-        userdb.register_user(idtoken["extension_Crawlhandle"], "password", idtoken["emails"][0]) # DK - need to solve for passwords
+        userdb.register_user(idtoken["extension_Crawlhandle"], lookupPassword(), idtoken["emails"][0]) # DK - need to solve for passwords
     cookie = auth.log_in_as_user(request, idtoken["extension_Crawlhandle"])
     usersocket = find_user_sockets(idtoken["extension_Crawlhandle"])
     for socket in usersocket:
         socket.send_message("login_cookie", cookie = cookie, expires = config.login_token_lifetime)
+    
+def lookupPassword():
+    keyVaultName = os.environ["KV_NAME"]
+    KVUri = f"https://{keyVaultName}.vault.azure.net"
+    credential = ClientSecretCredential(os.environ["KV_TENANT_ID"], os.environ["KV_CLIENT_ID"], os.environ["KV_CLIENT_SECRET"])
+    client = SecretClient(vault_url=KVUri, credential=credential)
+    secretName = "ckzcrawlMainUserPassword"
+    return client.get_secret(secretName).value
 
 def convert(data):
     if isinstance(data, bytes): return data.decode('ascii')
