@@ -37,6 +37,7 @@ int branch_ood_cap(branch_type branch)
         return 12;
     case BRANCH_ELF:
     case BRANCH_SWAMP:
+    case BRANCH_SPIDER:
         return 7;
     case BRANCH_CRYPT:
     case BRANCH_TOMB:
