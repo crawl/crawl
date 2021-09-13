@@ -136,8 +136,6 @@ the Scorned
 %%%%
 _battle_or_war_
 
-Battle
-
 Crusades
 
 Eternal War
@@ -1003,7 +1001,7 @@ Embarrassment
 
 Flawed Execution
 
-Foul Odors
+Foul Odours
 
 Frustration
 
