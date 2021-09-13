@@ -675,6 +675,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SUN_MOTH,
+      {
+       { SPELL_STICKY_FLAME_RANGE, 20, MON_SPELL_NATURAL },
+       { SPELL_ENERGY_BOLT, 20, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('z') Corporeal semi-humanoid undead.
     {  MST_ANCIENT_CHAMPION,
       {

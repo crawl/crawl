@@ -2413,6 +2413,10 @@ sun demon
 
 A demonic figure shining with the heat and fury of a fallen star.
 %%%%
+sun moth
+
+A moth of celestial beauty and grace, crackling with power.
+%%%%
 swamp dragon
 
 A slimy dragon, its gnarly hide covered in swamp muck. Noxious gases dribble
