@@ -92,13 +92,13 @@ static void _hell_effects(int /*time_delta*/)
     switch (random2(3))
     {
         case 0:
-            contaminate_player(4000 + random2(4000));
+            contaminate_player(3000 + random2(3000));
             break;
         case 1:
             drain_player(100, true, true);
             break;
         case 2:
-            lose_stat(STAT_RANDOM, 2 + random2(6));
+            lose_stat(STAT_RANDOM, roll_dice(1, 5));
             break;
     }
 }

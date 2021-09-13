@@ -10,7 +10,6 @@ zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE
 zombie_beetle MONS_ZOMBIE_BEETLE
 zombie_bug MONS_ZOMBIE_BUG
-zombie_hound MONS_ZOMBIE_HOUND
 zombie_fish MONS_ZOMBIE_FISH
 zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
@@ -19,15 +18,16 @@ zombie_worm MONS_ZOMBIE_WORM
 zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider_large MONS_ZOMBIE_SPIDER_LARGE
 %rim 0
+zombie_hound MONS_ZOMBIE_HOUND
 zombie_dragon MONS_ZOMBIE_DRAGON
-%rim 1
-zombie_kraken_head MONS_ZOMBIE_KRAKEN
-zombie_drake MONS_ZOMBIE_DRAKE
 zombie_hydra1 MONS_ZOMBIE_HYDRA
 zombie_hydra2
 zombie_hydra3
 zombie_hydra4
 zombie_hydra5
+%rim 1
+zombie_kraken_head MONS_ZOMBIE_KRAKEN
+zombie_drake MONS_ZOMBIE_DRAKE
 zombie_troll MONS_ZOMBIE_TROLL
 zombie_draconian MONS_ZOMBIE_DRACONIAN
 zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED

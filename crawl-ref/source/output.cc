@@ -2384,7 +2384,7 @@ static vector<formatted_string> _get_overview_stats()
 //      value : actual value of the resistance (can be negative)
 //      max : maximum value of the resistance (for colour AND representation),
 //          default is the most common case (1)
-//      pos_resist : false for "bad" resistances (no tele, random tele, *Rage),
+//      pos_resist : false for "bad" resistances (no tele, random tele),
 //          inverts the value for the colour choice
 //      immune : overwrites normal pip display for full immunity
 static string _resist_composer(const char * name, int spacing, int value,
@@ -2484,19 +2484,13 @@ static vector<formatted_string> _get_overview_resistances(
     if (archmagi)
         out += _resist_composer("Archmagi", cwidth, archmagi) + "\n";
 
+    const int anger_rate = you.angry(calc_unid);
+    if (anger_rate && !you.stasis())
+        out += make_stringf("Rage     %d%%\n", anger_rate);
+
     const int rclar = you.clarity(calc_unid);
-    const int stasis = you.stasis();
-    // TODO: what about different levels of anger/berserkitis?
-    const bool show_angry = (you.angry(calc_unid)
-                             || you.get_mutation_level(MUT_BERSERK))
-                            && !rclar && !stasis
-                            && !you.is_lifeless_undead();
-    if (show_angry || rclar)
-    {
-        out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false)
-                            + "\n"
-                          : _resist_composer("Clarity", cwidth, rclar) + "\n";
-    }
+    if (rclar)
+        out += _resist_composer("Clarity", cwidth, rclar) + "\n";
 
     // Fo don't need a reminder that they can't teleport
     if (!you.stasis())

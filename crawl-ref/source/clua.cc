@@ -241,6 +241,7 @@ void CLua::init_throttle()
                     LUA_MASKCOUNT, throttle_unit_lines);
         throttle_sleep_ms = 0;
         n_throttle_sleeps = 0;
+        crawl_state.lua_script_killed = false;
     }
 }
 
@@ -670,6 +671,7 @@ bool CLua::callfn(const char *fn, const char *params, ...)
     va_list args;
     va_list fnret;
     va_start(args, params);
+
     bool ret = calltopfn(ls, params, args, -1, &fnret);
     if (ret)
     {
@@ -1120,6 +1122,9 @@ static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {
     UNUSED(dbg);
 
+    if (crawl_state.seen_hups)
+        luaL_error(ls, "Aborting clua code on SIGHUP");
+
     CLua *lua = lua_call_throttle::find_clua(ls);
 
     // Co-routines can create a new Lua state; in such cases, we must
@@ -1142,6 +1147,7 @@ static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
         if (lua->n_throttle_sleeps > CLua::MAX_THROTTLE_SLEEPS)
         {
             lua->n_throttle_sleeps = CLua::MAX_THROTTLE_SLEEPS;
+            crawl_state.lua_script_killed = true;
             luaL_error(ls, BUGGY_SCRIPT_ERROR);
         }
     }

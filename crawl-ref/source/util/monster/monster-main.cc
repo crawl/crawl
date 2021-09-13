@@ -149,8 +149,6 @@ static string monster_size(const monster& mon)
         return "Medium";
     case SIZE_LARGE:
         return "Large";
-    case SIZE_BIG:
-        return "Big";
     case SIZE_GIANT:
         return "Giant";
     default:

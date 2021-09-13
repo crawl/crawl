@@ -345,7 +345,7 @@ monster_type random_demonspawn_monster_species();
 monster_type random_demonspawn_job();
 
 bool init_abomination(monster& mon, int hd);
-void define_monster(monster& mons);
+void define_monster(monster& mons, bool friendly = false);
 
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);

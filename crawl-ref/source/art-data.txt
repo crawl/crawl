@@ -68,7 +68,6 @@
 # BOOL: Turn certain boolean properties of the artefact on, with the list
 # of properties separated by commas. The list includes:
 #
-# * berserk:  Lets wearer evoke berserking ability.
 # * blink:    Lets wearer evoke the blink ability.
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
@@ -384,7 +383,7 @@ TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
 ANGRY:   5
-BOOL:    berserk, nogen
+BOOL:    nogen
 STEALTH: -1
 # end TAG_MAJOR_VERSION
 
@@ -426,8 +425,7 @@ TILE:    urand_leech
 TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRISM
 LIFE:    1
-ANGRY:   5
-BOOL:    berserk, skip_ego
+BOOL:    drain, harm, skip_ego
 DBRAND:  It heals its wielder for a portion of the damage dealt every time it
  strikes a living foe.
 
@@ -520,7 +518,7 @@ TILE_EQ:  zealot_sword
 # fallback places a randart eudemon blade!
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
-ANGRY:    5
+ANGRY:    20
 LIFE:     1
 DESCRIP:  Whenever the wielder enters a berserk rage, their allies are
  berserked alongside them.
@@ -610,7 +608,6 @@ TILE:     urand_elemental
 TILE_EQ:  elemental_staff
 FIRE:     2
 COLD:     2
-WILL:     2
 AC:       5
 BOOL:     elec
 DBRAND:   If the wielder is skilled in Evocations, they can discharge powerful
@@ -834,7 +831,7 @@ TILE:     urand_bear
 TILE_EQ:  bear
 # TODO: why isn't this brand working on the fallback?
 BRAND:    SPARM_SPIRIT_SHIELD
-BOOL:     berserk
+ANGRY:    20
 WILL:     2
 LIFE:     1
 
@@ -1036,7 +1033,7 @@ STR:      -1
 INT:      -1
 DEX:      1
 LIFE:     1
-BOOL:     poison, evil
+BOOL:     poison
 DESCRIP:  When the wearer is hurt, rats may emerge from it to assist them.
 
 NAME:     shield of the Gong
@@ -1096,9 +1093,8 @@ COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
 INT:     -3
 WILL:    2
-ANGRY:   5
+ANGRY:   50
 SLAY:    6
-BOOL:    berserk
 DESCRIP: It extends the wearer's berserk rage when killing foes.
 
 NAME:    ring of the Hare

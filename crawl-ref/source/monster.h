@@ -348,7 +348,7 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
-    void attacking(actor *other, bool ranged) override;
+    void attacking(actor *other) override;
     bool can_go_frenzy(bool check_sleep = true) const;
     bool can_go_berserk() const override;
     bool go_berserk(bool intentional, bool potion = false) override;

@@ -48,7 +48,7 @@ public:
     ghost_demon();
     bool has_spells() const;
     void reset();
-    void init_pandemonium_lord();
+    void init_pandemonium_lord(bool friendly = false);
     void init_player_ghost();
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          colour_t force_colour = BLACK);

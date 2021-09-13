@@ -1475,7 +1475,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_INVISIBLE",
         "ARTP_FLY",
         "ARTP_BLINK",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_BERSERK",
+#endif
         "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
         "ARTP_CAUSE_TELEPORTATION",

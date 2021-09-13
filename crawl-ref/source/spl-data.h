@@ -3481,7 +3481,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_ERROR,
+    TILEG_SUMMON_CACTUS_GIANT,
 },
 
 {
@@ -3514,7 +3514,7 @@ static const struct spell_desc spelldata[] =
     50,
     3, 3,
     4, 8,
-    TILEG_ERROR,
+    TILEG_SCORCH,
 },
 
 {
@@ -3525,7 +3525,7 @@ static const struct spell_desc spelldata[] =
     100,
     3, 3, // sort of...
     0, 12, // increases as it's channeled
-    TILEG_ERROR,
+    TILEG_FLAME_WAVE,
 },
 
 {

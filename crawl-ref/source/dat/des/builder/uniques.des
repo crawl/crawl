@@ -337,11 +337,6 @@ MAP
 1
 ENDMAP
 
-NAME:   uniq_mlioglotl
-DEPTH:  Swamp, Snake, Shoals, Spider
-: place_unique(_G, "Mlioglotl")
-
-
 NAME:   uniq_nikola
 DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
@@ -367,6 +362,10 @@ NAME:   uniq_donald
 DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults, !Vaults:$
 DEPTH:  Crypt, !Crypt:$, Elf, Orc:$
 : place_unique(_G, "Donald")
+
+NAME:   uniq_mlioglotl
+DEPTH:  Swamp, Snake, Shoals, Spider
+: place_unique(_G, "Mlioglotl")
 
 NAME:   uniq_vashnia
 DEPTH:  Snake:2-

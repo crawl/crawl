@@ -989,7 +989,7 @@ public:
         int power = 0;
         if (you.props.exists(AIRFORM_POWER_KEY))
             power = you.props[AIRFORM_POWER_KEY].get_int();
-        return 2 + div_rand_round(power * 2, 5);
+        return 2 + div_rand_round(power, 3);
     }
 
     bool can_offhand_punch() const override { return true; }

@@ -142,7 +142,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
 
         if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK)
             || artefact_property(item, ARTP_RAMPAGING))
         {
             return false;
@@ -569,7 +568,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_PREVENT_TELEPORTATION:
             return !extant_props[ARTP_BLINK] && non_swappable;
         // only on melee weapons
-        case ARTP_BERSERK:
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
@@ -664,8 +662,10 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
         []() { return 1; }, nullptr, 0, 0 },
+#if TAG_MAJOR_VERSION == 34
     { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
         []() { return 1; }, nullptr, 0, 0 },
+#endif
     { "*Noise", ARTP_VAL_POS, 25,    // ARTP_NOISE,
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
@@ -674,8 +674,8 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Rage", ARTP_VAL_POS, 25,    // ARTP_ANGRY,
-        nullptr, []() { return 5; }, 0, 0 },
+    { "*Rage", ARTP_VAL_POS, 40,    // ARTP_ANGRY,
+       []() { return 20; }, nullptr, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif

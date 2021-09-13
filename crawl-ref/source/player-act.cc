@@ -674,7 +674,7 @@ bool player::fumbles_attack()
     return did_fumble;
 }
 
-void player::attacking(actor *other, bool ranged)
+void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -687,13 +687,6 @@ void player::attacking(actor *other, bool ranged)
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
-
-    if (ranged || mons_is_firewood(*(monster*) other))
-        return;
-
-    const int chance = pow(3, get_mutation_level(MUT_BERSERK) - 1);
-    if (has_mutation(MUT_BERSERK) && x_chance_in_y(chance, 100))
-        go_berserk(false);
 }
 
 /**
@@ -704,45 +697,31 @@ void player::attacking(actor *other, bool ranged)
  */
 static bool _god_prevents_berserk_haste(bool intentional)
 {
-    const god_type old_religion = you.religion;
-
     if (!have_passive(passive_t::no_haste))
         return false;
 
-    // Chei makes berserk not speed you up.
-    // Unintentional would be forgiven "just this once" every time.
-    // Intentional could work as normal, but that would require storing
-    // whether you transgressed to start it -- so we just consider this
-    // a part of your penance.
-    if (!intentional)
-    {
+    if (intentional)
+        simple_god_message(" forces you to slow down.");
+    else
         simple_god_message(" protects you from inadvertent hurry.");
-        return true;
-    }
 
-    did_god_conduct(DID_HASTY, 8);
-    // Let's see if you've lost your religion...
-    if (!you_worship(old_religion))
-        return false;
-
-    simple_god_message(" forces you to slow down.");
     return true;
 }
 
 /**
  * Make the player go berserk!
- * @param intentional If true, this was initiated by the player, and additional
- *                    messages can be printed if we can't berserk.
+ * @param intentional If true, this was initiated by the player, so god conduts
+ *                    about anger apply.
  * @param potion      If true, this was caused by the player quaffing !berserk;
- *                    and we get the same additional messages as when
- *                    intentional is true.
+ *                    and we get additional messages if goingn berserk isn't
+ *                    possible.
  * @return            True if we went berserk, false otherwise.
  */
 bool player::go_berserk(bool intentional, bool potion)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!you.can_go_berserk(intentional, potion))
+    if (!you.can_go_berserk(intentional, potion, !potion))
         return false;
 
     if (crawl_state.game_is_hints())

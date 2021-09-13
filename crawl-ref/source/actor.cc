@@ -2,6 +2,7 @@
 
 #include "actor.h"
 
+#include <cmath>
 #include <sstream>
 
 #include "act-iter.h"
@@ -235,9 +236,16 @@ bool actor::has_notele_item(bool calc_unid, vector<const item_def *> *matches) c
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
 }
 
-bool actor::angry(bool calc_unid, bool items) const
+int actor::angry(bool calc_unid, bool items) const
 {
-    return items && scan_artefacts(ARTP_ANGRY, calc_unid);
+    int anger = 0;
+    if (is_player())
+        anger += pow(3, you.get_mutation_level(MUT_BERSERK) - 1);
+
+    if (!items)
+        return anger;
+
+    return anger + scan_artefacts(ARTP_ANGRY, calc_unid);
 }
 
 bool actor::clarity(bool calc_unid, bool items) const
@@ -290,11 +298,6 @@ bool actor::extra_harm(bool calc_unid, bool items) const
 bool actor::rmut_from_item(bool calc_unid) const
 {
     return scan_artefacts(ARTP_RMUT, calc_unid);
-}
-
-bool actor::evokable_berserk(bool calc_unid) const
-{
-    return scan_artefacts(ARTP_BERSERK, calc_unid);
 }
 
 bool actor::evokable_invis(bool calc_unid) const

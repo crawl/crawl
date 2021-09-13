@@ -160,7 +160,7 @@ static const char *divine_title[][8] =
 
     // Okawaru -- battle theme.
     {"Coward",             "Struggler",             "Combatant",                "Warrior",
-        "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
+        "Knight",             "Myrmidon",             "Warmonger",                "Victor of a Thousand Battles"},
 
     // Makhleb -- chaos theme.
     {"Orderly",            "Spawn of Chaos",        "Disciple of Destruction",  "Fanfare of Bloodshed",
@@ -725,6 +725,8 @@ static string _raw_penance_message(god_type which_god)
         return "%s well remembers your sins.";
     if (penance > initial_penance / 4)
         return "%s's wrath is beginning to fade.";
+    if (which_god == GOD_IGNIS)
+        return "%s' wrath will not burn much longer.";
     if (penance > 0)
         return "%s is almost ready to forgive your sins.";
     return "%s is neutral towards you.";

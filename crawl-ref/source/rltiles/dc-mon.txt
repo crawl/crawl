@@ -501,7 +501,9 @@ spellforged_servitor MONS_SPELLFORGED_SERVITOR
 gargoyle MONS_GARGOYLE
 war_gargoyle MONS_WAR_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
+%rim 0
 nargun MONS_NARGUN
+%rim 1
 
 ## Weaponry ('(')
 spectral_sbl MONS_SPECTRAL_SBL

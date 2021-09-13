@@ -692,7 +692,7 @@ public:
     bool fumbles_attack() override;
     bool fights_well_unarmed(int heavy_armour_penalty) override;
 
-    void attacking(actor *other, bool ranged = false) override;
+    void attacking(actor *other) override;
     bool can_go_berserk() const override;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false, string *reason = nullptr,

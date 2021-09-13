@@ -1286,8 +1286,6 @@ int max_corpse_chunks(monster_type mc)
         return 4;
     case SIZE_LARGE:
         return 9;
-    case SIZE_BIG:
-        return 10;
     case SIZE_GIANT:
         return 12;
     default:
@@ -2814,7 +2812,7 @@ bool init_abomination(monster& mon, int hd)
 }
 
 // Generate a shiny, new and unscarred monster.
-void define_monster(monster& mons)
+void define_monster(monster& mons, bool friendly)
 {
     monster_type mcls         = mons.type;
     ASSERT(!mons_class_is_zombified(mcls)); // should have called define_zombie
@@ -2955,7 +2953,7 @@ void define_monster(monster& mons)
     case MONS_PANDEMONIUM_LORD:
     {
         ghost_demon ghost;
-        ghost.init_pandemonium_lord();
+        ghost.init_pandemonium_lord(friendly);
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
         mons.bind_melee_flags();
