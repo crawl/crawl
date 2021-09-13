@@ -286,10 +286,10 @@ validate {{
 # Intended as a series of interconnected roughly geometrically-shaped rooms
 # for e.g. Dis/Zot, came out much more organic like a burrow of caves.
 #
-# TODO: Wider the paths, then add to Spider at weight 10.
+# TODO: Widen the paths for Spider.
 #
 NAME:   layout_cave_pods
-DEPTH:  D:4-, Lair, Snake
+DEPTH:  D:4-, Lair, Snake, Spider
 WEIGHT: 5, 15 (Lair)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
@@ -303,7 +303,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
   local frooms = procedural.worley_diff{ scale = 0.15 }
   local fcorridors = procedural.worley_diff{ scale = 0.1 }
 
-  if you.in_branch("Snake") then
+  if you.in_branch("Snake") or you.in_branch("Spider") then
     frooms = procedural.transform.damped_distortion(frooms)
     fcorridors = procedural.transform.damped_distortion(fcorridors)
   end
