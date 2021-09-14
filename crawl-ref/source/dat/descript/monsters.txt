@@ -3059,6 +3059,11 @@ pristine statue
 An immaculately sculpted porphyry statue of an archer poised to release a bolt,
 with a full quiver at the hip.
 %%%%
+red sash
+
+A powerful martial monk following the sword path of the Wu Jian Council.
+They have been honoured with the title of "Red Sash".
+%%%%
 rotten bat
 
 A bat that is well past its sell-by date.
