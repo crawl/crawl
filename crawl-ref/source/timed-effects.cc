@@ -92,7 +92,7 @@ static void _hell_effects(int /*time_delta*/)
     switch (random2(4))
     {
         case 0:
-            contaminate_player(3000 + random2(3000));
+            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
             break;
         case 1:
             drain_player(100, true, true);
