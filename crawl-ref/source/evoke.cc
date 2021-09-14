@@ -142,12 +142,6 @@ static void _spray_lightning(int range, int power)
  */
 static bool _lightning_rod(dist *preselect)
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     const int power =
         player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
 
@@ -616,23 +610,10 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
 static bool _phial_of_floods(dist *target)
 {
-    // TODO: code duplication with your_spells
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     dist target_local;
     if (!target)
         target = &target_local;
     bolt beam;
-
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
 
     const int base_pow = 10 + you.skill(SK_EVOCATIONS, 4); // placeholder?
     zappy(ZAP_PRIMAL_WAVE, base_pow, false, beam);
@@ -824,12 +805,6 @@ static int _tremorstone_count(int pow)
  */
 static spret _tremorstone()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return spret::abort;
-    }
-
     bool see_target;
     bolt beam;
 
@@ -886,12 +861,6 @@ static const vector<random_pick_entry<cloud_type>> condenser_clouds =
 
 static spret _condenser()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return spret::abort;
-    }
-
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         mpr("The air is too still to form clouds.");
@@ -956,12 +925,6 @@ static spret _condenser()
 
 static bool _xoms_chessboard()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     vector<monster *> targets;
     bool see_target = false;
 
@@ -1069,6 +1032,20 @@ bool evoke_check(int slot, bool quiet)
     {
         if (!quiet)
             mpr("You cannot evoke magical items.");
+        return false;
+    }
+
+    if (you.confused())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    if (you.berserk())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
         return false;
     }
 
