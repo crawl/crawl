@@ -3592,3 +3592,29 @@ xxxxxxxppprrrrrr.._-x
            x--xxx--xx
            xxxxxxxxxx
 ENDMAP
+
+##############################################################
+NAME:    dreamdust_arrival_beginning_and_end
+TAGS:    arrival no_monster_gen transparent
+TAGS:    no_rotate no_vmirror
+ORIENT:  float
+WEIGHT:  5
+COLOUR:  x = lightmagenta
+TILE:    x = wall_zot_lightmagenta
+FTILE:   .xgz{ = floor_rough_magenta
+KFEAT:   z = granite_statue
+TILE:    z = dngn_statue_orb
+KFEAT:   g = granite_statue
+TILE:    g = dngn_statue_orb_guardian
+MAP
+ xxxxxxxxxxx
+xxx.......xxx
+xx.........xx
+x.....g.....x
+@..g..z..g..@
+x...........x
+xx....{....xx
+xxx.......xxx
+ xxxxxxxxxxx
+ENDMAP
+
