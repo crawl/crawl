@@ -2868,6 +2868,94 @@ xxxxxxxxxxxxxxxxxxx
        ..x..
 ENDMAP
 
+NAME:    dreamdust_mushroom_princess
+TAGS:    extra decor transparent
+DEPTH:   D, Lair, Elf
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+SUBST:   p = ppp..
+KMONS:   p = fungus
+MAP
+  .....
+ ..ppp..
+..ppppp..
+.pp...pp.
+.pp.G.pp.
+.pp...pp.
+..ppppp..
+ ..ppp..
+  .....
+ENDMAP
+
+NAME:    dreamdust_princess_bridge
+TAGS:    extra decor transparent no_pool_fixup
+DEPTH:   D, Elf
+FTILE:   -G = floor_rough_white
+FTILE:   .bt = floor_grass
+COLOUR:  . = green
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+KMONS:   b = bush
+MAP
+ xxxxxxxxx
+ x.......x
+ x.t.-.t.x
+ x..-G-..x
+ x.t.-.t.x
+ xx.....xx
+ xxxb-bxxx
+  xxw-wxx
+xxxww-wwxxx
+xbwww-wwwbx
+@---------@
+xbwww-wwwbx
+xxxww-wwxxx
+  xxw-wxx
+   xb-bx
+   xx@xx
+ENDMAP
+
+NAME:    dreamdust_princess_corridor
+TAGS:    extra decor transparent
+DEPTH:   D, Elf
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+# Three variations
+: if crawl.one_chance_in(3) then
+FTILE:   .Gtp = floor_grass
+COLOUR:  .Gtp = green
+KMONS:   p = bush
+: elseif crawl.one_chance_in(2) then
+FTILE:   .Gtp = floor_dirt
+SUBST:   p = t
+COLOUR:  t = lightred / red / yellow
+TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow 
+: else
+KFEAT:   t = demonic_tree
+FTILE:   .Gtp = floor_nerves_magenta
+COLOUR:  .Gtp = magenta
+KMONS:   p = demonic plant
+: end
+MAP
+xx@xx
+xx.xx
+xt.tx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xp.px
+xG.Gx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xx.xx
+xx@xx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -3528,9 +3616,9 @@ DEPTH:  D:8-, Lair, Orc, Elf
 WEIGHT: 5
 SUBST:  ? : V Y t
 TILE:   G = dngn_statue_imp
-: set_feature_name("granite_statue", "a statue of a beguiling devil")
+: set_feature_name("granite_statue", "a statue of an imp")
 TILE:   t = dngn_tree_dead
-: set_feature_name("tree", "a withered tree")
+: set_feature_name("tree", "a dead tree")
 FTILE:  .Gd = floor_demonic_red
 # Alluring items with drawbacks that might kill you
 ITEM:   scarf ego:harm w:30 / any armour good_item ego:ponderousness w:20 / \
@@ -3540,6 +3628,20 @@ MAP
 .G.
 .d.
  .
+ENDMAP
+
+NAME:    dreamdust_wishing_well
+TAGS:    extra decor transparent no_pool_fixup
+DEPTH:   D, Depths, Elf
+SUBST:   $ = $.
+KITEM:   U = nothing / gold / scroll of acquirement w:1
+KFEAT:   U = fountain_sparkling
+MAP
+.....
+.$$$.
+.$U$.
+.$$$.
+.....
 ENDMAP
 
 ##########################################################################
