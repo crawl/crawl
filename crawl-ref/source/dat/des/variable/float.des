@@ -4901,6 +4901,49 @@ MAP
 .cccccccccc
 ENDMAP
 
+###############################################################################
+# The dwarves delved too greedily and too deep...
+NAME:    dreamdust_dug_too_deep
+TAGS:    no_monster_gen no_pool_fixup
+ORIENT:  float
+DEPTH:   D:11-, !D:$, Orc, !Orc:$
+WEIGHT:  3
+TILE:    c = wall_stone_smooth
+COLOUR:  c = lightgrey
+SUBST:   - = ---..
+SUBST:   . = ......!
+FTILE:   .G!> = floor_vault
+FTILE:   -V?A = floor_volcanic
+TILE:    G = dngn_statue_axe
+: set_feature_name("granite_statue", "a statue of a dwarven hero")
+KFEAT:   A = stone_arch
+KMONS:   A = balrug
+: dgn.delayed_decay_extra(_G, "?", "deep dwarf corpse", "helmet / \
+: cloak, plate armour, war axe good_item / broad axe / \
+: battleaxe / executioner's axe / arga w:1")
+: dgn.delayed_decay(_G, "!", "deep dwarf corpse")
+MAP
+     wwwww
+wwwwwwcccwwwwww
+wGccccc>cccccGw
+wc.....G.....cw
+wc..-------..cw
+wcc+cV---Vc+ccw
+wwc.ccc+ccc.cww
+ wc.cc---cc.cw
+wwc.cc-?-cc.cww
+wcc+cc-A-cc+ccw
+wc...ccccc...cw
+wc...........cw
+wc...........cw
+wGccccc+cccccGw
+wwwwwwG.Gwwwwww
+     ww.ww
+      w.w
+      G.G
+       @
+ENDMAP
+
 
 ###############################################################################
 #
