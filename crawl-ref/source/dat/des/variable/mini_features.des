@@ -3372,6 +3372,26 @@ cwHwwwwwwwwwc
 ccFcccccccccc
 ENDMAP
 
+NAME:    dreamdust_wishing_well
+TAGS:    extra decor transparent no_pool_fixup
+DEPTH:   D, Depths, Elf
+TILE:    c = wall_stone_smooth
+COLOUR:  c = lightgrey
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of \
+: a woman with hands clasped in prayer")
+: set_feature_name("deep_water", "a wishing well")
+KITEM:  $ = nothing / gold 
+KITEM:  ! = nothing / gold / scroll of acquirement w:1
+MAP
+.....
+..G..
+.$c!.
+.cwc.
+.$c$.
+.....
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.
