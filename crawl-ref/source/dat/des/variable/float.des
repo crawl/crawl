@@ -4944,6 +4944,98 @@ wwwwwwG.Gwwwwww
        @
 ENDMAP
 
+###############################################################################
+NAME:    dreamdust_wu_jian_sword_trials
+TAGS:    no_monster_gen no_item_gen
+ORIENT:  float
+DEPTH:   D:14-
+WEIGHT:  2
+COLOUR:  c = lightgrey
+TILE:    c = wall_stone_smooth
+COLOUR:  t = lightred / red w:3
+TILE:    t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+: set_feature_name("tree", "autumnal tree")
+FTILE:   -QRSTUVOt$123 = floor_pebble_white
+KPROP:   -QRSTUVOt$123 = no_tele_into
+KITEM:   $ = gold / any potion / any scroll
+KFEAT:   Oo = altar_wu_jian
+TILE:    G = dngn_statue_sword
+: set_feature_name("granite_statue", "a sculpture of a profound sword")
+MARKER: P = lua:transp_loc("sword_trial_1_entry")
+MARKER: Q = lua:transp_dest_loc("sword_trial_1_entry")
+MARKER: R = lua:transp_loc("sword_trial_2_entry")
+MARKER: S = lua:transp_dest_loc("sword_trial_2_entry")
+MARKER: T = lua:transp_loc("sword_trial_3_entry")
+MARKER: U = lua:transp_dest_loc("sword_trial_3_entry")
+MARKER: V = lua:transp_loc("sword_trial_exit")
+MARKER: W = lua:transp_dest_loc("sword_trial_exit")
+# Three possible monster sets
+: if crawl.one_chance_in(3) then
+KMONS:   1 = human god:wu_jian ; ring mail . \
+             falchion good_item | long sword good_item
+KMONS:   2 = vault guard god:wu_jian ; chain mail . \
+             scimitar good_item | great sword good_item
+KMONS:   3 = vault warden name:Red_Sash n_rpl n_des \
+             god:wu_jian spells:none ; plate armour . \
+             autumn katana | demon blade good_item | \
+             double sword good_item | great sword good_item | \
+             triple sword good_item | great sword ego:spectral
+: elseif crawl.one_chance_in(2) then
+KMONS:   1 = orc warrior god:wu_jian ; ring mail . \
+             falchion good_item | long sword good_item
+KMONS:   2 = orc knight god:wu_jian ; chain mail . \
+             scimitar good_item | great sword good_item
+KMONS:   3 = orc warlord name:Red_Sash n_rpl n_des \
+             god:wu_jian spells:none ; plate armour . \
+             autumn katana | demon blade good_item | \
+             double sword good_item | great sword good_item | \
+             triple sword good_item | great sword ego:spectral
+: else
+KMONS:   1 = elf god:wu_jian ; ring mail . \
+             falchion good_item | long sword good_item
+KMONS:   2 = deep elf knight god:wu_jian ; leather armour . \
+             scimitar good_item | great sword good_item
+KMONS:   3 = deep elf blademaster name:Red_Sash n_rpl n_des \
+             god:wu_jian spells:none ; leather armour . \
+             autumn katana | demon blade good_item | \
+             double sword good_item | great sword good_item | \
+             triple sword good_item | great sword ego:spectral
+: end
+MAP
+   .....
+  ..GWG..
+...ccncc...
+.ccc$V$ccc.
+.ct$$$$$tc.
+.ct$$$$$tc.
+.ct-----tc.
+.ct-----tc.
+.ct-O-t-tc.
+.ct--3--tc.
+.ct-----tc.
+.ct-----tc.
+.ct-----tc.
+.ct-----tc.
+.ccc-U-ccc.
+..GcccccG..
+ .GccTccG.
+ .cc-2-cc.
+ .c-----c.
+ .c-----c.
+ .c-----c.
+ .cc-S-cc.
+ .GcccccG.
+ .GccRccG.
+ .cc-1-cc.
+ .c-----c.
+ .c-----c.
+ .cc-Q-cc.
+ .ccccccc.
+ ..ccPcc..
+  ..GoG..
+   ..@..
+ENDMAP
+
 
 ###############################################################################
 #
