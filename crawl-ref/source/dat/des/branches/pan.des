@@ -2379,9 +2379,8 @@ KMONS:  p = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
             ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
             mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
             octopode; nothing / vampire spells:. / formicid; nothing / \
-            gargoyle; nothing / vine stalker; nothing / djinni / \
-            merfolk; nothing / palentonga / gnoll; nothing / barachi / \
-            demonspawn / demigod / tengu; nothing
+            gargoyle; nothing / vine stalker; nothing / merfolk; nothing / \
+            gnoll; nothing / demonspawn / demigod / tengu; nothing
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)

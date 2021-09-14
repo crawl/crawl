@@ -82,20 +82,18 @@ ENDMAP
 NAME:    kb_arrival_jail
 TAGS:    arrival no_monster_gen no_trap_gen
 ORIENT:  north
-SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ
-KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = floor
-KPROP:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = no_tele_into
-KMASK:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = no_item_gen
+SHUFFLE: ABCDEGHIKLMNOPQRSTUVWXY
+KFEAT:   ABCDEGHIKLMNOPQRSTUVWXY = floor
+KPROP:   ABCDEGHIKLMNOPQRSTUVWXY = no_tele_into
+KMASK:   ABCDEGHIKLMNOPQRSTUVWXY = no_item_gen
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
 KMONS:   D = orc ; nothing
 KMONS:   E = merfolk ; nothing
-KMONS:   F = barachi ; nothing
 KMONS:   G = kobold ; nothing
 KMONS:   H = spriggan ; nothing
 KMONS:   I = naga ; nothing
-KMONS:   J = djinni
 KMONS:   K = ogre ; nothing
 KMONS:   L = troll
 KMONS:   M = minotaur ; nothing
@@ -111,7 +109,6 @@ KMONS:   V = octopode ; nothing
 KMONS:   W = formicid ; nothing
 KMONS:   X = gargoyle ; nothing
 KMONS:   Y = vine stalker ; nothing
-KMONS:   Z = palentonga ; nothing
 MAP
  ccccc
  c.{.c
@@ -164,8 +161,8 @@ KMONS: M = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
            ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
            mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
            octopode; nothing / vampire spells:. / formicid; nothing / \
-           gargoyle; nothing / vine stalker; nothing / djinni / \
-           merfolk; nothing / palentonga / gnoll; nothing / barachi / \
+           gargoyle; nothing / vine stalker; nothing / \
+           merfolk; nothing / gnoll; nothing / barachi / \
            demonspawn / demigod / tengu; nothing
 # Player monsters, zombie versions (undead, vine stalkers, gargoyles and djinni
 # don't leave corpses):
@@ -173,16 +170,16 @@ KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / \
            draconian zombie / ogre zombie / minotaur zombie / troll zombie / \
            kobold zombie / spriggan zombie / dwarf zombie / felid zombie / \
            octopode zombie / formicid zombie / merfolk zombie / \
-           palentonga zombie / gnoll zombie / barachi zombie / \
-           demonspawn zombie / demigod zombie / tengu zombie
+           gnoll zombie / barachi zombie / demonspawn zombie / \
+           demigod zombie / tengu zombie
 # Player monsters, skeleton versions (octopodes and formicids drop out because
 # they have no skeletons):
 KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
            draconian skeleton / ogre skeleton / minotaur skeleton / \
            troll skeleton / kobold skeleton / spriggan skeleton / \
            dwarf skeleton / felid skeleton / merfolk skeleton / \
-           palentonga skeleton / gnoll skeleton / barachi skeleton / \
-           demonspawn skeleton / demigod skeleton / tengu skeleton
+           gnoll skeleton / barachi skeleton / demonspawn skeleton / \
+           demigod skeleton / tengu skeleton
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
@@ -727,8 +724,8 @@ KMONS: ! = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
            ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
            mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
            octopode; nothing / vampire spells:. / formicid; nothing / \
-           gargoyle; nothing / vine stalker; nothing / djinni / \
-           merfolk; nothing / palentonga / gnoll; nothing / barachi / \
+           gargoyle; nothing / vine stalker; nothing / \
+           merfolk; nothing / gnoll; nothing / \
            demonspawn / demigod / tengu; nothing
 KPROP: Kw'! = no_tele_into
 KMASK: '! = no_item_gen
@@ -760,8 +757,8 @@ KMONS: ! = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
            ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
            mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
            octopode; nothing / vampire spells:. / formicid; nothing / \
-           gargoyle; nothing / vine stalker; nothing / djinni / \
-           merfolk; nothing / palentonga / gnoll; nothing / barachi / \
+           gargoyle; nothing / vine stalker; nothing / \
+           merfolk; nothing / gnoll; nothing / \
            demonspawn / demigod / tengu; nothing
 KPROP: Kw'! = no_tele_into
 KMASK: '! = no_item_gen
