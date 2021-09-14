@@ -3660,6 +3660,8 @@ static void _setup_seracfall_beam(bolt& beam, const monster& caster,
 {
     zappy(spell_to_zap(SPELL_SERACFALL), power, true, beam);
     beam.source = _mons_seracfall_source(caster);
+    beam.name = "seracfall";
+    beam.hit_verb = "batters";
 }
 
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell)
