@@ -356,6 +356,7 @@ spret cast_healing(int pow, bool fail)
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
