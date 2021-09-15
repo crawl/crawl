@@ -5189,7 +5189,7 @@ TAGS:   no_monster_gen transparent
 ORIENT: float
 DEPTH:  D:4-7
 WEIGHT: 2
-COLOUR: x = lightgrey 
+COLOUR: x = lightgrey
 TILE:   x = wall_vines
 FTILE:  -+1GT? = floor_hall
 FTILE:  'm = floor_w_marble
