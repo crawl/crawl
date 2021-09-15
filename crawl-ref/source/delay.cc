@@ -1002,7 +1002,11 @@ static inline bool _monster_warning(activity_interrupt ai,
         // seen_monster
         view_monster_equipment(mon);
 
-        string text = getMiscString(mon->name(DESC_DBNAME) + " title");
+        string text;
+        if (mon->has_base_name())
+            text = getMiscString(mon->mname + " title");
+        else
+            text = getMiscString(mon->name(DESC_DBNAME) + " title");
         if (text.empty())
             text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
