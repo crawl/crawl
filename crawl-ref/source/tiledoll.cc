@@ -307,6 +307,26 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_HAIR]    = 0;
         result.parts[TILEP_PART_LEG]     = 0;
         break;
+    case transformation::storm:
+        switch (you.species)
+        {
+        case SP_FELID:    ch = TILEP_TRAN_STORM_FELID;       break;
+        case SP_OCTOPODE: ch = TILEP_TRAN_STORM_OCTOPODE;    break;
+        default:          ch = TILEP_TRAN_STORM_HUMANOID;    break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+        result.parts[TILEP_PART_HELM]    = 0;
+        result.parts[TILEP_PART_DRCHEAD] = 0;
+        result.parts[TILEP_PART_DRCWING] = 0;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        result.parts[TILEP_PART_BEARD]   = 0;
+        result.parts[TILEP_PART_LEG]     = 0;
+        result.parts[TILEP_PART_BOOTS]   = 0;
+        result.parts[TILEP_PART_BODY]    = 0;
+        result.parts[TILEP_PART_ARM]     = 0;
+        result.parts[TILEP_PART_CLOAK]   = 0;
+        result.parts[TILEP_PART_SHADOW]  = 0;
+        break;
     case transformation::lich:
         switch (you.species)
         {
