@@ -1090,7 +1090,7 @@ TILE:    a = dngn_statue_angel
 KFEAT:   c = v
 TILE:    c = dngn_metal_wall_white
 COLOUR:  c = white
-FTILE:   -azetG = floor_w_marble 
+FTILE:   -azetG = floor_w_marble
 : else
 # Gold theme
 TILE:    c = wall_church
