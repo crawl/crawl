@@ -3618,3 +3618,30 @@ xxx.......xxx
  xxxxxxxxxxx
 ENDMAP
 
+NAME:    dreamdust_arrival_sigmund_warning
+TAGS:    arrival no_monster_gen transparent
+ORIENT:  float
+WEIGHT:  5
+TILE:    G = dngn_statue_sigmund
+: set_feature_name("granite_statue", "a statue of a dreadful foe")
+# Bunch of player species
+KITEM:   ? = deep dwarf skeleton / deep elf skeleton / demigod skeleton / \
+             demonspawn skeleton / draconian skeleton / felid skeleton / \
+             formicid skeleton / ghoul skeleton / gnoll skeleton / \
+             orc skeleton / human skeleton / kobold skeleton / \
+             merfolk skeleton / minotaur skeleton / naga skeleton / \
+             octopode skeleton / ogre skeleton / spriggan skeleton / \
+             tengu skeleton / troll skeleton
+MAP
+vvvvvvvvv
+vY.???.Yv
+v..?G?..v
+v..???..v
+v.l...l.v
+v.l.{.l.v
+v.l...l.v
+v.l...l.v
+v.l...l.v
+v.......v
+vvv...vvv
+ENDMAP
