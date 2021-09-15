@@ -2737,6 +2737,34 @@ MAP
   .....
 ENDMAP
 
+NAME:    dreamdust_princess_bridge
+TAGS:    extra decor transparent no_pool_fixup
+DEPTH:   D, Elf
+FTILE:   -G = floor_rough_white
+FTILE:   .bt = floor_grass
+COLOUR:  . = green
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+KMONS:   b = bush
+MAP
+ xxxxxxxxx
+ x.......x
+ x.t.-.t.x
+ x..-G-..x
+ x.t.-.t.x
+ xx.....xx
+ xxxb-bxxx
+  xxw-wxx
+xxxww-wwxxx
+xbwww-wwwbx
+@---------@
+xbwww-wwwbx
+xxxww-wwxxx
+  xxw-wxx
+   xb-bx
+   xx@xx
+ENDMAP
+
 
 #####################################################################
 #
