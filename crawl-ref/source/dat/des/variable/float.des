@@ -5114,6 +5114,34 @@ wwwwwwbbbbbbbbbbbwwwwww
   wwwwwwwwwwwwwwwwwww
 ENDMAP
 
+NAME:    dreamdust_hydra_shepherd
+TAGS:    no_monster_gen transparent
+ORIENT:  float
+DEPTH:   Depths, !Depths:$
+WEIGHT:  5
+KFEAT:   .! = floor / shallow_water
+TILE:    x = wall_undead
+TILE:    G = dngn_statue_hydra
+: set_feature_name("granite_statue", "a statue of a terrifying hydra")
+# Woe to whoever gets an iron giant as the shepherd
+# Throwing hydras seems strong :)
+KMONS:   S = cyclops / iron giant w:2
+KMONS:   ! = nothing / nine-headed hydra / ten-headed hydra / \
+             eleven-headed hydra / twelve-headed hydra
+: dgn.delayed_decay(_G, "!", "deep troll corpse")
+KMONS:   . = nothing w:200 / four-headed hydra
+MAP
+.............
+.............
+..Gxxx.xxxG..
+..x!.....!x..
+..x!..S..!x..
+..x!.....!x..
+..Gxxx.xxxG..
+.............
+.............
+ENDMAP
+
 
 ###############################################################################
 #
