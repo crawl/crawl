@@ -5036,6 +5036,47 @@ MAP
    ..@..
 ENDMAP
 
+NAME:    dreamdust_merry_men
+TAGS:    no_mon_gen transparent no_tele_into
+DEPTH:   Depths, !Depths:$
+ORIENT:  float
+WEIGHT:  2
+TILE:    x = wall_brick_vines
+TILE:    G = dngn_statue_archer
+: set_feature_name("granite_statue", "a statue of a merry archer")
+KITEM:   ? = nothing / shortbow good_item / longbow good_item / \
+             zephyr w:1 / storm bow w:1
+KMONS:   ? = deep elf master archer
+SUBST:   - = --t
+SUBST:   . = ..ttt
+KFEAT:   ~ = .
+KMONS:   . = nothing w:200 / centaur warrior / \
+             deep elf archer / deep elf master archer w:5
+MAP
+-----------------------
+-----------------------
+-----------------------
+---.................---
+---.................---
+---.................---
+---.................---
+---.................---
+---.................---
+---.......xxx.......---
+---.......x?x.......---
+---.......x+x.......---
+---......G.~.G......---
+---.......~.........---
+---.......~.........---
+---........~........---
+---.........~~......---
+---...........~.....---
+---..........~......---
+-----------~~----------
+----------~------------
+-----------~-----------
+ENDMAP
+
 
 ###############################################################################
 #
