@@ -888,6 +888,7 @@ static void _jiyva_died()
         return;
 
     add_daction(DACT_REMOVE_JIYVA_ALTARS);
+    add_daction(DACT_JIYVA_WORSHIPERS);
 
     if (!player_in_branch(BRANCH_SLIME))
         return;

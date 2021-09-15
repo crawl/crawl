@@ -1034,6 +1034,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         init_mutant_beast(*mon, mg.hd, gen_facets);
     }
 
+    // Dissolution returns to their original form when Jiyva dies.
+    if (mon->type == MONS_DISSOLUTION && jiyva_is_dead())
+        mon->type = MONS_HUMAN;
+
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
         mons_make_god_gift(*mon, mg.god);

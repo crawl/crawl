@@ -23,10 +23,12 @@
 #include "mon-transit.h"
 #include "religion.h"
 #include "state.h"
+#include "stringutil.h"
 #include "tag-version.h"
 #include "view.h"
 
 static void _daction_hog_to_human(monster *mon, bool in_transit);
+static void _daction_dissolution_reform(monster *mon);
 
 #ifdef DEBUG_DIAGNOSTICS
 static const char *daction_names[] =
@@ -76,6 +78,7 @@ static const char *daction_names[] =
     "ancestor vanishes",
     "upgrade ancestor",
     "remove Ignis altars",
+    "return Dissolution to their original form",
 };
 #endif
 
@@ -106,6 +109,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mon->type == MONS_LEMURE
                && testbits(mon->flags, MF_BAND_MEMBER)
                && mon->props.exists(PIKEL_BAND_KEY);
+
+    case DACT_JIYVA_WORSHIPERS:
+        return mon->type == MONS_DISSOLUTION;
 
     case DACT_OLD_CHARMD_SOULS_POOF:
         return mons_enslaved_soul(*mon);
@@ -233,6 +239,19 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
         }
+
+        case DACT_JIYVA_WORSHIPERS:
+        {
+            string msg = make_stringf(", the false priest of %s, recalls %s form.",
+                             god_name_jiyva(false).c_str(), mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+            simple_monster_message(*mon, msg.c_str());
+            mon->attitude = ATT_NEUTRAL;
+            mon->flags   |= MF_WAS_NEUTRAL;
+            mons_att_changed(mon);
+            _daction_dissolution_reform(mon);
+            break;
+        }
+
         case DACT_KIRKE_HOGS:
             _daction_hog_to_human(mon, in_transit);
             break;
@@ -274,6 +293,7 @@ static void _apply_daction(daction_type act)
     case DACT_OLD_CHARMD_SOULS_POOF:
     case DACT_SLIME_NEW_ATTEMPT:
     case DACT_PIKEL_MINIONS:
+    case DACT_JIYVA_WORSHIPERS:
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:
@@ -362,6 +382,21 @@ void catchup_dactions()
 unsigned int query_daction_counter(daction_type c)
 {
     return travel_cache.query_daction_counter(c) + count_daction_in_transit(c);
+}
+
+static void _daction_dissolution_reform(monster *mon)
+{
+    ASSERT(mon);
+    monster orig;
+
+    orig.type     = MONS_HUMAN;
+    orig.attitude = mon->attitude;
+    orig.mid = mon->mid;
+    define_monster(orig);
+
+    const coord_def pos = mon->pos();
+    *mon = orig;
+    mon->move_to_pos(pos);
 }
 
 static void _daction_hog_to_human(monster *mon, bool in_transit)
