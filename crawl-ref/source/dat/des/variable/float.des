@@ -5037,7 +5037,7 @@ MAP
 ENDMAP
 
 NAME:    dreamdust_merry_men
-TAGS:    no_mon_gen transparent no_tele_into
+TAGS:    no_monster_gen transparent no_tele_into
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
 WEIGHT:  2
@@ -5075,6 +5075,43 @@ MAP
 -----------~~----------
 ----------~------------
 -----------~-----------
+ENDMAP
+
+NAME:    dreamdust_tengu_aerie
+TAGS:    no_monster_gen no_item_gen no_pool_fixup
+DEPTH:   Depths, !Depths:$
+ORIENT:  float
+WEIGHT:  2
+COLOUR:  bcx = brown
+TILE:    G = dngn_statue_tengu
+: set_feature_name("granite_statue", "a statue of a proud and fierce tengu")
+SUBST:   b = b:70 .
+SUBST:   c = c:80 .
+KFEAT:   > = escape_hatch_down
+KITEM:   $> = gold w:30 / nothing / star_item / superb_item
+KMONS:   $ = nothing w:30 / tengu ; nothing
+KMONS:   . = nothing w:120 / tengu warrior / \
+             tengu conjurer / tengu reaver w:5
+MAP
+  wwwwwwwwwwwwwwwwwww@@
+ wwwwwwwwwwwwwwwwwwwww@
+wwwwwwbbbbbbbbbbbwwwwww
+wwwbbbb.........bbbbwww
+wwbb....ccccccc....bbww
+wwb..cccc.....cccc..bww
+wwb.cc...xx.xx...cc.bww
+wwb.cG.xxx$$$xxx.Gc.bww
+wwb.c..x$$$$$$$x..c.bww
+ww..c..x$$$>$$$x..c.bww
+wwb.c..x$$$$$$$x..c.bww
+wwb.cG.xxx$G$xxx.Gc.bww
+wwb.cc...xxxxx...cc.bww
+wwb..cccc.....cccc..bww
+wwbb....ccc.ccc....bbww
+wwwbbbb.........bbbbwww
+wwwwwwbbbbbbbbbbbwwwwww
+ wwwwwwwwwwwwwwwwwwwww
+  wwwwwwwwwwwwwwwwwww
 ENDMAP
 
 
