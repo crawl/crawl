@@ -1072,6 +1072,47 @@ WWWwwwwwWWWWWwwwwww--WWW                WWWwwW
                   .@@.
 ENDMAP
 
+NAME:    dreamdust_divine_triumvirate
+TAGS:    no_monster_gen no_item_gen transparent
+TAGS:    no_rotate no_vmirror
+WEIGHT:  2
+ORIENT:  float
+DEPTH:   D, !D:$
+KFEAT:   z = altar_zin
+KFEAT:   e = altar_elyvilon
+KFEAT:   t = altar_the_shining_one
+NSUBST:  ? = 1:z / 1:e / 1:t
+TILE:    G = dngn_statue_triangle
+KFEAT:   a = granite_statue
+TILE:    a = dngn_statue_angel
+: if crawl.one_chance_in(2) then
+# Silver theme
+KFEAT:   c = v
+TILE:    c = dngn_metal_wall_white
+COLOUR:  c = white
+FTILE:   -azetG = floor_w_marble 
+: else
+# Gold theme
+TILE:    c = wall_church
+COLOUR:  c = yellow
+FTILE:   -azetG = floor_limestone
+: end
+MAP
+.....................
+.cccccccca-acccccccc.
+..ccccccca-accccccc..
+ ..cca---------acc..
+  ..cc---?-?---cc..
+   ..cc---G---cc..
+    ..cc--?--cc..
+     ..cc---cc..
+      ..ccacc..
+       ..ccc..
+        ..c..
+         ...
+ENDMAP
+
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
