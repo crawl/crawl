@@ -2765,6 +2765,47 @@ xxxww-wwxxx
    xx@xx
 ENDMAP
 
+NAME:    dreamdust_princess_corridor
+TAGS:    extra decor transparent
+DEPTH:   D, Elf
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+# Three variations
+: if crawl.one_chance_in(3) then
+FTILE:   .Gtp = floor_grass
+COLOUR:  .Gtp = green
+KMONS:   p = bush
+: elseif crawl.one_chance_in(2) then
+FTILE:   .Gtp = floor_dirt
+SUBST:   p = t
+COLOUR:  t = lightred / red / yellow
+TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow 
+: else
+KFEAT:   t = demonic_tree
+FTILE:   .Gtp = floor_nerves_magenta
+COLOUR:  .Gtp = magenta
+KMONS:   p = demonic plant
+: end
+MAP
+xx@xx
+xx.xx
+xt.tx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xp.px
+xG.Gx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xx.xx
+xx@xx
+ENDMAP
+
 
 #####################################################################
 #
