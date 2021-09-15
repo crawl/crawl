@@ -2718,6 +2718,26 @@ xp.px
 xx@xx
 ENDMAP
 
+NAME:    dreamdust_mushroom_princess
+TAGS:    extra decor transparent
+DEPTH:   D, Lair, Elf
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+SUBST:   p = ppp..
+KMONS:   p = fungus
+MAP
+  .....
+ ..ppp..
+..ppppp..
+.pp...pp.
+.pp.G.pp.
+.pp...pp.
+..ppppp..
+ ..ppp..
+  .....
+ENDMAP
+
+
 #####################################################################
 #
 # <<2>> Inaccessible items
