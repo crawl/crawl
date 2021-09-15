@@ -383,8 +383,7 @@ public:
         return cannot_move()
             || asleep()
             || confused()
-            || caught()
-            || petrifying();
+            || caught();
     }
 
     virtual bool wont_attack() const = 0;
