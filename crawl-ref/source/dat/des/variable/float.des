@@ -5142,6 +5142,35 @@ MAP
 .............
 ENDMAP
 
+# Home of Duvessa and Dowan
+NAME:   dreamdust_elfheim
+TAGS:   no_monster_gen transparent
+ORIENT: float
+DEPTH:  D:4-7
+WEIGHT: 2
+COLOUR: x = lightgrey 
+TILE:   x = wall_vines
+FTILE:  -+1GT? = floor_hall
+FTILE:  'm = floor_w_marble
+TILE:   G = dngn_statue_twins
+: set_feature_name("granite_statue", "a statue of elven twins, \
+: probably commissioned by a vain person")
+: set_feature_name("clear_rock_wall", "a polished mirror")
+KMONS:  1 = training dummy
+# They're usually off killing adventurers...
+KMONS:  ? = duvessa band w:3 / nothing
+MAP
+..........
+.xxxxxxxx.
+.xTGTx'mx.
+.x---+''x.
+.x-?-xxxx.
+.x---+--x.
+.x---x11x.
+.xx+xxxxx.
+..........
+ENDMAP
+
 
 ###############################################################################
 #
