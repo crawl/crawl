@@ -2779,7 +2779,7 @@ KMONS:   p = bush
 FTILE:   .Gtp = floor_dirt
 SUBST:   p = t
 COLOUR:  t = lightred / red / yellow
-TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow 
+TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow
 : else
 KFEAT:   t = demonic_tree
 FTILE:   .Gtp = floor_nerves_magenta
@@ -3470,7 +3470,7 @@ TILE:    G = dngn_statue_princess
 : set_feature_name("granite_statue", "a statue of \
 : a woman with hands clasped in prayer")
 : set_feature_name("deep_water", "a wishing well")
-KITEM:  $ = nothing / gold 
+KITEM:  $ = nothing / gold
 KITEM:  ! = nothing / gold / scroll of acquirement w:1
 MAP
 .....
