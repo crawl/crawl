@@ -490,7 +490,7 @@ static const mutation_def mut_data[] =
 
   {"You feel your surroundings grow quieter.", "", ""},
 
-  {"You feel your surroundings grow louder", "", ""},
+  {"You feel your surroundings grow louder.", "", ""},
 },
 
 { MUT_CLARITY, 6, 1, mutflag::good, false,
