@@ -6238,19 +6238,13 @@ item_def* monster::disarm()
 /**
  * Checks if the monster can pass through webs freely.
  *
- * Currently: spiders (including Arachne), moths, demonic crawlers,
- * ghosts & other incorporeal monsters, and jelly monsters.
- *
  * @return Whether the monster is immune to webs.
  */
 bool monster::is_web_immune() const
 {
-    return mons_genus(type) == MONS_SPIDER
-            || type == MONS_ARACHNE
-            || mons_genus(type) == MONS_MOTH
-            || mons_genus(type) == MONS_DEMONIC_CRAWLER
-            || is_insubstantial()
-            || mons_genus(type) == MONS_JELLY;
+    return mons_class_flag(type, M_WEB_IMMUNE)
+            || mons_class_flag(mons_genus(type), M_WEB_IMMUNE)
+            || is_insubstantial();
 }
 
 // Monsters with an innate umbra don't have their accuracy reduced by it, and
