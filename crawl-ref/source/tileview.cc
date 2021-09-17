@@ -1300,6 +1300,10 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_VAULT;
+    } else if (player_in_branch(BRANCH_SPIDER))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SPIDER;
     }
 
     if (orig == TILE_FLOOR_NORMAL)
