@@ -931,7 +931,8 @@ static bool _cloudable(coord_def loc, bool avoid_clouds)
     return in_bounds(loc)
            && !cell_is_solid(loc)
            && !(avoid_clouds && cloud_at(loc)
-           && !is_sanctuary(loc));
+           && !is_sanctuary(loc))
+           && cell_see_cell(you.pos(), loc, LOS_NO_TRANS);
 }
 
 bool targeter_cloud::valid_aim(coord_def a)
