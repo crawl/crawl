@@ -3147,9 +3147,7 @@ void handle_flame_wave()
     if (lvl == 1) // just cast it this turn
         return;
 
-    if (crawl_state.prev_cmd != CMD_WAIT
-        || you.confused()
-        || you.berserk())
+    if (crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
     {
         end_flame_wave();
         return;
@@ -3238,8 +3236,7 @@ void handle_searing_ray()
 
     ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
 
-    // All of these effects interrupt a channeled ray
-    if (you.confused() || you.berserk())
+    if (!can_cast_spells(true))
     {
         end_searing_ray();
         return;
@@ -3929,8 +3926,7 @@ void handle_maxwells_coupling()
     if (!you.props.exists(COUPLING_TIME_KEY))
         return;
 
-    // All of these effects interrupt charging
-    if (you.confused() || you.berserk())
+    if (!can_cast_spells(true))
     {
         end_maxwells_coupling();
         return;
