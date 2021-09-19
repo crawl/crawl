@@ -276,17 +276,17 @@ DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
 ################################################################################
 
 NAME:   uniq_aizul
-DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults, !Vaults:$
+DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults, !Vaults:$
 DEPTH:  Crypt:1
 WEIGHT: 50(Snake), 10
 : place_unique(_G, "Aizul")
 
 NAME:   uniq_asterion
-DEPTH:  Depths:1-3, Elf, Snake, Spider, Vaults:1-3
+DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
 : place_unique(_G, "Asterion")
 
 NAME:   uniq_bai_suzhen
-DEPTH:  Depths:1-3, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
+DEPTH:  Depths:1-2, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
 DEPTH:  Crypt
 : place_unique(_G, "Bai Suzhen")
 
@@ -338,7 +338,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nikola
-DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
+DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
 
 NAME:   uniq_saint_roka
