@@ -3396,17 +3396,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_GOAD_BEASTS, "Goad Beasts",
-    spschool::hexes,
-    spflag::area | spflag::monster | spflag::selfench,
-    6,
-    0,
-    -1, -1,
-    5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_CONCENTRATE_VENOM, "Concentrate Venom",
     spschool::poison,
     spflag::dir_or_target | spflag::not_self | spflag::helpful
@@ -3626,6 +3615,7 @@ AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
 AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
 AXED_SPELL(SPELL_VORTEX, "Vortex")
+AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
 #endif
 
 };

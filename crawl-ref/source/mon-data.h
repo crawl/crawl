@@ -289,6 +289,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_WORKER_ANT, "worker ant")
     AXED_MON(MONS_QUEEN_ANT, "queen ant")
     AXED_MON(MONS_SOLDIER_ANT, "soldier ant")
+    AXED_MON(MONS_IRONBOUND_BEASTMASTER, "ironbound beastmaster")
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -1896,19 +1897,6 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_IGUANA)
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
     {TILEP_MONS_IRONBOUND_PRESERVER}, TILE_ERROR
-},
-
-{
-    MONS_IRONBOUND_BEASTMASTER, 'p', BROWN, "ironbound beastmaster",
-    M_WARM_BLOOD | M_SPEAKS | M_REQUIRE_BAND,
-    MR_NO_FLAGS,
-    10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, 40,
-    { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    12, 550,
-    0, 14, MST_IRONBOUND_BEASTMASTER, true, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
-    {TILEP_MONS_IRONBOUND_BEASTMASTER}, TILE_ERROR
 },
 
 {

@@ -149,8 +149,7 @@ enum monclass_flag_type : uint64_t
     /// derived undead can't be randomly generated
     M_NO_GEN_DERIVED    = BIT(47),
 
-    /// only generate when bands are permitted
-    M_REQUIRE_BAND      = BIT(48),
+                        //BIT(48), // was M_REQUIRE_BAND
 
                         //BIT(49), // was M_HYBRID
 
