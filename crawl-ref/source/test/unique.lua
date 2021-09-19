@@ -40,7 +40,7 @@ end
 
 local function run_unique_tests()
   test_uniques_branch("D", 15)
-  test_uniques_branch("Depths", 5)
+  test_uniques_branch("Depths", 4)
   test_uniques_branch("Dis", 7)
 
   for depth = 1, 15 do
