@@ -1,0 +1,163 @@
+##############################################################################
+# Nikola's Laboratory (by DreamDust)
+
+{{
+function lab_drop_grates(data, triggerable, triggerer, marker, ev)
+    if data.trig == true then
+        return
+    else
+        data.trig = true
+    end
+
+    local did_change = false
+    for slave in iter.slave_iterator("wall_phase", 1) do
+        if dgn.feature_name(dgn.grid(slave.x, slave.y)) == "iron_grate" then
+          if you.see_cell(slave.x, slave.y) then
+            did_change = true
+          end
+          dgn.terrain_changed(slave.x, slave.y, "floor", false)
+        end
+    end
+    if did_change then
+      crawl.mpr("There is a click. Suddenly, the grates are dropped!", "warning")
+    else
+      crawl.mpr("There is a click. Nothing appears to happen.", "warning")
+    end
+end
+
+function callback.drop_trap_stepped(data, triggerable, triggerer, marker, ev)
+  if data.triggered == true then
+    return
+  end
+  local x, y = marker:pos()
+  if not you.see_cell(x, y) then
+    return
+  end
+  data.triggered = true
+  dgn.grid(x, y, "floor")
+  local spawns = 0
+  for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
+    if (dgn.mons_at(p.x, p.y) == nil
+        and p ~= dgn.point(you.pos)
+        and dgn.is_passable(p.x, p.y)
+        and spawns < data.max) then
+      if (dgn.create_monster(p.x, p.y, data.mons)) then
+        spawns = spawns + 1
+      end
+    end
+  end
+ if (spawns > 0) then
+   crawl.mpr(data.msg)
+ end
+end
+
+function callback.lab_deadmans_switch(data, triggerable, triggerer, marker, ev)
+  for slave in iter.slave_iterator("floor", 1) do
+      if not dgn.is_passable(slave.x,slave.y) then
+        dgn.terrain_changed(slave.x, slave.y, "floor", false)
+dgn.place_cloud(slave.x, slave.y, "flame", crawl.random2(15) + 5)
+      else
+        crawl.mpr("You have an ominous feeling.")
+        return
+      end
+  end
+  crawl.mpr("A dead man's switch activates! Something explodes!", "warning")
+end
+}}
+
+##############################################################################
+NAME:    nikola_laboratory
+TAGS:    no_monster_gen no_item_gen no_tele_into
+ORIENT:  southwest
+DEPTH:   Depths, !Depths:$
+WEIGHT:  2
+COLOUR:  o = cyan
+COLOUR:  cbX = white
+TILE:    c = wall_brick_white
+FTILE:   -G+!#^~oPQRS = floor_rough_white
+FTILE:   defg1234567 = floor_rough_white
+NSUBST:  ^ = 1:^ / *:-
+SUBST:   ? = GGG1
+TILE:    G = dngn_crumbled_column
+: set_feature_name("granite_statue", "a suspicious pillar")
+: set_feature_name("clear_permarock_wall", "a containment chamber")
+MARKER:  P = lua:transp_loc("lab_entry")
+MARKER:  Q = lua:transp_dest_loc("lab_entry")
+MARKER:  R = lua:transp_loc("lab_exit")
+MARKER:  S = lua:transp_dest_loc("lab_exit")
+MARKER:  7 = lua:MonPropsMarker:new{yslave="yslave"}
+MARKER:  # = lua:portal_desc {wall_phase = 1}
+KFEAT:   # = iron_grate
+KFEAT:   ~ = dispersal trap
+KFEAT:   ^ = pressure plate trap
+KITEM:   d = manual of spellcasting / \
+             manual of air magic / manual of evocations
+KITEM:   e = randbook owner:Nikola disc:air disc2:translocation
+KITEM:   f = lightning rod
+KITEM:   g = scroll of acquirement
+KMONS:   1 = lightning spire
+KMONS:   2 = guardian golem
+KMONS:   3 = spellforged servitor spells:lightning_bolt.50.wizard;\
+                                         airstrike.50.wizard
+KMONS:   4 = strange machine
+KMONS:   5 = crystal guardian
+KMONS:   6 = raiju band
+KMONS:   7 = nikola, \
+             wizard ; robe good_item . staff of air \
+                      spells:lightning_bolt.30.wizard;\
+                             conjure_ball_lightning.30.wizard;\
+                             blink.30.wizard
+KMONS:   8 = electric golem
+{{
+local tm = TriggerableFunction:new{
+  func="callback.lab_deadmans_switch", repeated=false}
+tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="yslave"})
+lua_marker('7', tm)
+lua_marker('o', props_marker { floor=1 })
+
+local trigger_data
+   trigger_data={triggered=false,
+                 mons="generate_awake guardian golem",
+                 msg="A ceiling panel slides open! Reinforcements arrive!",
+                 max=4}
+local tm = TriggerableFunction:new{func="callback.drop_trap_stepped",
+              repeated=true,
+              data=trigger_data}
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+lua_marker('^', tm)
+
+lua_marker("!",
+           Triggerable.synchronized_markers(
+             function_at_spot("lab_drop_grates", { trig = false },
+                              true, { only_at_slave = true,
+                                      listen_to_slaves = true })))
+}}
+MAP
+xx
+xx............................
+xxbbbbbbbb...........cccccccc.
+xxb1-----bcccccccccccc!---#3c.
+xxb--~---+--^-----^--+!---#2c.
+xxb2-6~--bc?c?c?c?c?cc!---#3c.
+xxb--~---bcccccccccccc----#2c.
+xxb1-----bXXXXXXXXXXXc----#3c.
+xxbbb+bbbbX--------dXccc+cccc.
+xxxcc-cXXXX--------eXccc-c....
+xxxc?-cX2-------oXoXXc---c....
+xxxcc^cXXX------X8XXcc-ccc1...
+xxxc?-cccX------oXoXG----=...@
+xxxcc--PnQ-----7--RXS-32-=...@
+xxxc?-cccX------oXoXG----=...@
+xxxcc^cXXX------X8XXcc-ccc1...
+xxxc?-cX2-------oXoXXc---c....
+xxxcc-cXXXX--------fXccc-c....
+xxbbb+bbbbX--------gXccc+cccc.
+xxb------bXXXXXXXXXXXc------c.
+xxb------bcccccccccccc------c.
+xxb2-5---bc?c?c?c?c?cc------c.
+xxb2-5---+--^-----^--+----4-c.
+xxb------bcccccccccccc------c.
+xxbbbbbbbbxxxxxxxxxxxcccccccc.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
