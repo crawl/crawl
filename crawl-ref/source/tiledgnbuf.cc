@@ -185,9 +185,9 @@ void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y)
 }
 
 void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y,
-                                       int ox, int oy)
+                                       int ox, int oy, int tile_ratio_px)
 {
-    m_buf_icons.add(tileidx, x, y, ox, oy, false);
+    m_buf_icons.add(tileidx, x, y, ox, oy, false, tile_ratio_px, tile_ratio_px, tile_ratio_px);
 }
 
 void DungeonCellBuffer::clear()

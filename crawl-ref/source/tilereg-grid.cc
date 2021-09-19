@@ -2,6 +2,7 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "options.h"
 #include "tilereg-grid.h"
 
 #include "format.h"
@@ -126,7 +127,7 @@ int GridRegion::add_quad_char(char c, int x, int y,
     ASSERT_RANGE(num, 0, 9 + 1);
     tileidx_t idx = TILEI_NUM0 + num;
 
-    m_buf.add_icons_tile(idx, x, y, ofs_x, ofs_y);
+    m_buf.add_icons_tile(idx, x, y, ofs_x, ofs_y, Options.tile_number_ratio_pixels);
     return tile_icons_info(idx).width;
 }
 

@@ -543,6 +543,7 @@ public:
     string      tile_font_lbl_file;
     string      tile_font_tip_file;
     bool        tile_single_column_menus;
+    int         tile_number_ratio_pixels;
 #endif
 #ifdef USE_TILE_WEB
     string      tile_font_crt_family;

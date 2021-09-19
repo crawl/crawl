@@ -30,7 +30,7 @@ public:
     void add_skill_tile(int tileidx, int x, int y);
     void add_command_tile(int tileidx, int x, int y);
     void add_icons_tile(int tileidx, int x, int y);
-    void add_icons_tile(int tileidx, int x, int y, int ox, int oy);
+    void add_icons_tile(int tileidx, int x, int y, int ox, int oy, int tile_ratio_px = 32);
 
     void clear();
     void draw();
