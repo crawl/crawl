@@ -1397,6 +1397,9 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.origin_spell = real_spell;
     beam.source_id = mons->mid;
     beam.source_name = mons->name(DESC_A, true);
+    // Avoid overshooting and potentially hitting the player.
+    if (mons->temp_attitude() == ATT_FRIENDLY)
+        beam.aimed_at_spot = true;
 
     if (!mons_spell_is_spell(real_spell))
         power = mons_power_for_hd(real_spell, mons->get_hit_dice());

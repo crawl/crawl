@@ -2147,6 +2147,7 @@ void bolt_parent_init(const bolt &parent, bolt &child)
     child.attitude       = parent.attitude;
 
     child.pierce         = parent.pierce ;
+    child.aimed_at_spot  = parent.aimed_at_spot;
     child.is_explosion   = parent.is_explosion;
     child.ex_size        = parent.ex_size;
     child.foe_ratio      = parent.foe_ratio;
