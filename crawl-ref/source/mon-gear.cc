@@ -1797,7 +1797,6 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_GRUM:
     case MONS_SPRIGGAN_BERSERKER:
-    case MONS_IRONBOUND_BEASTMASTER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
