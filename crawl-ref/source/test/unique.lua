@@ -47,7 +47,7 @@ local function run_unique_tests()
     test_uniques_blank("D", depth, 1)
     test_uniques_random("D", depth, 1)
   end
-  for depth = 1, 5 do
+  for depth = 1, 4 do
     test_uniques_blank("Depths", depth, 1)
     test_uniques_random("Depths", depth, 1)
   end
