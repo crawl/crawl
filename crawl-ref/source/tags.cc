@@ -4426,6 +4426,13 @@ static void _tag_read_you_dungeon(reader &th)
 #endif
         brentry[j]    = unmarshall_level_id(th);
 #if TAG_MAJOR_VERSION == 34
+        // Have to check this in case of old saves with 6-floor Depths.
+        if (th.getMinorVersion() < TAG_MINOR_ZOT_ENTRY_FIXUP
+            && j == BRANCH_ZOT
+            && brentry[j] == level_id(BRANCH_DEPTHS, 5))
+        {
+            brentry[j].depth = branches[j].mindepth;
+        }
         if (th.getMinorVersion() < TAG_MINOR_BRIBE_BRANCH)
             branch_bribe[j] = 0;
         else
