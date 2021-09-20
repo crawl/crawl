@@ -3066,7 +3066,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
     case GREEN:
         if (bolt.name == "sting")
-            return TILE_BOLT_STING + dir;
+            return TILE_BOLT_STING;
         break;
 
     case LIGHTGREEN:
@@ -3109,7 +3109,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_MAGIC_DART:
     case TILE_BOLT_SANDBLAST:
     case TILE_BOLT_STING:
-        return tile + dist % tile_main_count(tile);
+        return tile + (dist - 1) % tile_main_count(tile);
     case TILE_BOLT_FLAME:
     case TILE_BOLT_IRRADIATE:
         return tile + ui_random(tile_main_count(tile));
