@@ -427,6 +427,14 @@ wall_stone_spider2
 wall_stone_spider3
 %weight 10
 
+%weight 10
+swamp_stone_wall0 STONE_WALL_SWAMP
+swamp_stone_wall1
+%weight 4
+swamp_stone_wall2
+swamp_stone_wall3
+%weight 10
+
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
 zot_blue2
