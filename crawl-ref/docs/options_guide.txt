@@ -109,7 +109,7 @@ The contents of this text are:
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
                 tile_cell_pixels, tile_filter_scaling, tile_force_overlay,
                 tile_overlay_col, tile_overlay_alpha_percent, tile_full_screen,
-                tile_single_column_menus, tile_font_crt_file,
+                tile_single_column_menus, tile_grid_pixels, tile_font_crt_file,
                 tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
                 tile_font_lbl_file, tile_font_crt_family,
                 tile_font_stat_family, tile_font_msg_family,
@@ -2129,6 +2129,11 @@ tile_single_column_menus = true
         insufficient space to show all items in a single column. This option
         is only available on local tiles; all menus on console and on WebTiles
         always list items in a single column, as if this option were enabled.
+
+tile_grid_pixels = 32
+        The width and height of tiles in the status view, in
+        (logical) pixels.
+        
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf
