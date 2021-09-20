@@ -1362,7 +1362,7 @@ VISUAL:@The_monster@ waves a bulging coin purse at you.
 @The_monster@ says, "You're as good as gold."
 
 @The_monster@ says, "I guess you can't buy your way into a good afterlife."
-%%%
+%%%%
 Ignis player ghost
 
 @The_monster@ says, "I burned twice as bright, and look where it got me..."
