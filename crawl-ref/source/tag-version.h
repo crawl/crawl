@@ -262,6 +262,7 @@ enum tag_minor_version
     TAG_MINOR_DISEASE,             // Turn disease into a normal duration
     TAG_MINOR_BOOK_UNID,           // Remove book ID.
     TAG_MINOR_EVOLUTION_XP,        // Invert the meaning of ATTR_EVOL_XP.
+    TAG_MINOR_ZOT_ENTRY_FIXUP,     // Fixup Zot branch entry for shorter Depths
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
