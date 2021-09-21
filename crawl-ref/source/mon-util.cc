@@ -2598,7 +2598,7 @@ int exper_value(const monster& mon, bool real)
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
     if (x_val > 750)
-        x_val = 750 + (x_val - 750) / 3;
+        x_val = 750 + (x_val - 750) / 6;
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
