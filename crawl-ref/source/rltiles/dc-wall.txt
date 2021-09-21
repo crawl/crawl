@@ -773,6 +773,13 @@ stone_dark1
 stone_dark2
 stone_dark3
 
+stone_mossy0 WALL_STONE_MOSSY
+stone_mossy1
+%weight 3
+stone_mossy2
+stone_mossy3
+%weight 10
+
 # For the Doroklohe WizLab
 stone_black_marked0 WALL_STONE_BLACK_MARKED
 stone_black_marked1
