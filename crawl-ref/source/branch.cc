@@ -108,14 +108,6 @@ static const branch_type danger_branch_order[] = {
 };
 COMPILE_CHECK(ARRAYSZ(danger_branch_order) == NUM_BRANCHES);
 
-static const int number_of_branch_swap_pairs = 2;
-
-static const branch_type swap_branches[number_of_branch_swap_pairs][2] =
-{
-    {BRANCH_SHOALS, BRANCH_SWAMP},
-    {BRANCH_SPIDER, BRANCH_SNAKE}
-};
-
 branch_iterator::branch_iterator(branch_iterator_type type) :
     iter_type(type), i(0)
 {
@@ -162,13 +154,18 @@ branch_iterator branch_iterator::operator++(int)
 
 vector<branch_type> random_choose_disabled_branches()
 {
-    // You will get one of Shoals/Swamp and one of Spider/Snake.
-    // This way you get one "water" branch and one "poison" branch.
+    // always enable Spider for testing
+    vector<branch_type> lair_branches = {
+        BRANCH_SHOALS,
+        BRANCH_SWAMP,
+        BRANCH_SNAKE,
+    };
+    const size_t enabled = random2(lair_branches.size());
+
     vector<branch_type> disabled_branch;
-
-    for (int i=0; i < number_of_branch_swap_pairs; i++)
-        disabled_branch.push_back(swap_branches[i][random_choose(0,1)]);
-
+    for (size_t i = 0; i < lair_branches.size(); i++)
+        if (i != enabled)
+            disabled_branch.push_back(lair_branches[i]);
     return disabled_branch;
 }
 
@@ -205,16 +202,16 @@ bool is_hell_branch(branch_type branch)
 
 bool is_random_subbranch(branch_type branch)
 {
-    for (int i=0; i < number_of_branch_swap_pairs; i++)
+    switch (branch)
     {
-        for (int j=0; j < 2; j++)
-        {
-            if (branch == swap_branches[i][j])
-                return true;
-        }
+        case BRANCH_SHOALS:
+        case BRANCH_SPIDER:
+        case BRANCH_SWAMP:
+        case BRANCH_SNAKE:
+            return true;
+        default:
+            return false;
     }
-
-    return false;
 }
 
 bool is_connected_branch(const Branch *branch)
