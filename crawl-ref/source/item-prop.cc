@@ -508,7 +508,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GREAT_SWORD,           "great sword",           17, -3, 17,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 6, 10, 65, LBL_BRANDS },
-    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19,
+    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 18,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 0, 2, 100, LBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
@@ -527,7 +527,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_BLESSED_GREAT_SWORD,   "old great sword",     17, -3, 16,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 19, -4, 19,
+    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 19, -4, 18,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
 #endif
@@ -545,7 +545,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 6, 10, 65, AXE_BRANDS },
-    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 20,
+    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 19,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 0, 2, 100, AXE_BRANDS },
 
@@ -581,7 +581,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GLAIVE,            "glaive",             15, -3, 17,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 5, 10, 65, POLEARM_BRANDS },
-    { WPN_BARDICHE,          "bardiche",           18, -6, 20,
+    { WPN_BARDICHE,          "bardiche",           18, -6, 19,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 1, 2, 90, POLEARM_BRANDS },
 
