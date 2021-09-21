@@ -293,6 +293,8 @@ class CrawlProcessHandlerBase(object):
 
         self.idle_checker.stop()
 
+        # send game_ended message to watchers. The player is handled in cleanup
+        # code in ws_handler.py.
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
                 watcher.send_message("game_ended", reason = self.exit_reason,
@@ -795,6 +797,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.check_where()
         except Exception:
             self.logger.warning("Error while starting the Crawl process!", exc_info=True)
+            self.exit_reason = "error"
+            self.exit_message = "Error while starting the Crawl process!\nSomething has gone very wrong; please let a server admin know."
+            self.exit_dump_url = None
+
             if self.process:
                 self.stop()
             else:
@@ -841,7 +847,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                  clrscr)
 
     def _on_process_end(self):
-        self.logger.debug("Crawl PID %s terminated.", self.process.pid)
+        if self.process:
+            self.logger.debug("Crawl PID %s terminated.", self.process.pid)
+        else:
+            self.logger.error("Crawl process failed to start, cleaning up.")
 
         self.remove_inprogress_lock()
 
