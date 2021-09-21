@@ -256,7 +256,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_SEWER:
-        flv.wall  = TILE_WALL_PEBBLE_GREEN;
+        flv.wall  = TILE_WALL_OOZING;
         flv.floor = TILE_FLOOR_SLIME;
         return;
 
