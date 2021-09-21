@@ -52,6 +52,9 @@
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
+#include "spl-transloc.h"  // For dreamshard tloc-like handling
+#include "stairs.h"        // For dreamshard step through portal 
+#include "stash.h"         // For dreamshard tloc-like handling
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
 #include "view.h"          // For arc blade's discharge effect
@@ -1624,24 +1627,42 @@ static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
 }
 
 ////////////////////////////////////////////////////
+static void _dreamshard_summon_ally()
+{
+    //TODO: consider overriding mon name based on appearance
+    const monster_type mon = MONS_DREAM_SPECTRE;
+    mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU,
+                 MG_FORCE_BEH, GOD_NO_GOD);
+    mg.set_summoned(&you, 4, GOD_NO_GOD);
+    monster* m = create_monster(mg);
+    auto smoke = random_smoke_type();
+    surround_actor_with_cloud(m, smoke);
+}
 
 static bool _evoke_dreamshard_necklace()
 {
-    if (feat_is_critical(env.grid(you.pos())))
-    {
-        mpr("You can't place a gateway to the dream realms here.");
-        return false;
-    }
+    //TODO: any checks for situations where the item shouldn't work
+    //      e.g. death's door?
+    //      e.g. warn the player if they are already at full hp?
+    mpr("You tear open the necklace, unleashing a healing torrent of colour.");
+    mpr("A troupe from your wildest dreams charges to your aid!");
 
-    dungeon_terrain_changed(you.pos(), DNGN_ENTER_DREAMS);
-    mpr("You tear open the necklace, unleashing a furnace of colour.");
+    //STEP ONE: heal the player hp
+    you.heal(random_range(you.hp_max*0.5, you.hp_max));
+
+    //STEP TWO: summon the dream team
+    int sumcount2 = 2 + random2(4);
+    for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
+    {
+        _dreamshard_summon_ally();
+    }
     return true;
 }
 
 static void _DREAMSHARD_NECKLACE_equip(item_def */*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "You feel the potential for a whimsical journey.");
+    _equip_mpr(show_msgs, "You feel the healing potential of whimsical energy.");
 }
 
 static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs)

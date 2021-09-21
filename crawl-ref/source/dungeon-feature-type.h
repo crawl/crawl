@@ -267,7 +267,6 @@ enum dungeon_feature_type
     DNGN_ENTER_DESOLATION,
 #if TAG_MAJOR_VERSION > 34
     DNGN_ENTER_ARENA,
-    DNGN_ENTER_DREAMS,
 #endif
 
     DNGN_EXIT_ZIGGURAT,
@@ -288,7 +287,6 @@ enum dungeon_feature_type
     DNGN_EXIT_DESOLATION,
 #if TAG_MAJOR_VERSION > 34
     DNGN_EXIT_ARENA,
-    DNGN_EXIT_DREAMS,
 #endif
 #if TAG_MAJOR_VERSION == 34
 
@@ -332,8 +330,6 @@ enum dungeon_feature_type
     DNGN_DEMONIC_TREE,
     DNGN_ENTER_ARENA,
     DNGN_EXIT_ARENA,
-    DNGN_ENTER_DREAMS,
-    DNGN_EXIT_DREAMS,
 #endif
 
     NUM_FEATURES

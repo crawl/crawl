@@ -1029,7 +1029,8 @@ bool evoke_check(int slot, bool quiet)
     if (slot >= 0 && slot < ENDOFPACK && you.inv[slot].defined())
         i = &you.inv[slot];
 
-    if (i && item_type_removed(i->base_type, i->sub_type))
+    if (i && item_type_removed(i->base_type, i->sub_type)
+            && !(i->sub_type==AMU_NOTHING)) // allow evocation of dream amulet
     {
         if (!quiet)
             mpr("Sorry, this item was removed!");

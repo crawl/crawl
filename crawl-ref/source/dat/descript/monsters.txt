@@ -1020,6 +1020,15 @@ A drowsy, fluffy ovine whose coat sparkles with motes of dream dust. It gathers
 in herds and fills the air with dream dust, overwhelming its victims and
 putting them to sleep.
 %%%%
+dream spectre
+
+For every nightmare and beautiful lullaby, there is a dream spectre desperate
+to escape from their ever-changing realm. To them, the gift of a physical and 
+consistent existence is so great, they will fight the enemies of those who
+set them free.
+
+Unfortunately, even strong magic cannot maintain their absurd presence forever.
+%%%%
 drowned soul
 
 A cold and hollow apparition of the drowned dead, chained by some lingering
@@ -1784,11 +1793,6 @@ ogre
 
 A large, ugly, and fat creature, distantly related to orcs and goblins. It is
 tremendously strong.
-%%%%
-ogre catcher
-
-A large, ugly, and fat creature. You can see an unrelenting passion for
-squashing butterflies gleaming in it's tiny, stupid eyes.
 %%%%
 ogre mage
 

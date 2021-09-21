@@ -471,7 +471,6 @@ enum monster_type                      // env.mons[].type
     MONS_SATYR,
 #endif
     MONS_OGRE,
-    MONS_OGRE_CATCHER,
     MONS_TWO_HEADED_OGRE,
     MONS_OGRE_MAGE,
     MONS_TROLL,
@@ -649,6 +648,7 @@ enum monster_type                      // env.mons[].type
     // Spiritual beings ('R')
 #if TAG_MAJOR_VERSION > 34
     MONS_DJINNI,
+    MONS_DREAM_SPECTRE,
 #endif
     MONS_EFREET,
     MONS_RAKSHASA,
@@ -1118,6 +1118,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_THUNDERHULK,
     MONS_IRONBOUND_BEASTMASTER,
     MONS_SALAMANDER_TYRANT,
+    MONS_DREAM_SPECTRE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

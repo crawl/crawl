@@ -1970,8 +1970,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
         base = DNGN_STONE_STAIRS_UP_I;
         // Pan abuses stair placement for transits, as we want connectivity
         // checks.
-        needed_stairs = (you.depth == 1 || player_in_branch(BRANCH_DREAMS))
-                        && !player_in_branch(BRANCH_PANDEMONIUM)
+        needed_stairs = you.depth == 1 && !player_in_branch(BRANCH_PANDEMONIUM)
                         ? 1 : 3;
     }
     else
@@ -1981,16 +1980,13 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
 
         if (at_branch_bottom())
             needed_stairs = 0;
-        // no need for extra stairs in realm of dreams - very simple floors
-        else if (player_in_branch(BRANCH_DREAMS))
-            needed_stairs = 1;
         else
             needed_stairs = 3;
     }
 
     // In Zot, don't create extra escape hatches, in order to force
     // the player through vaults that use all three down stone stairs.
-    if (player_in_branch(BRANCH_ZOT) || player_in_branch(BRANCH_DREAMS))
+    if (player_in_branch(BRANCH_ZOT))
     {
         replace = random_choose(DNGN_FOUNTAIN_BLUE,
                                 DNGN_FOUNTAIN_SPARKLING,
@@ -2053,7 +2049,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     // If we only need one stone stair, make sure it's _I.
     if (needed_stairs != 3)
     {
-        ASSERT(checking_up_stairs || player_in_branch(BRANCH_DREAMS));
+        ASSERT(checking_up_stairs);
         ASSERT(needed_stairs == 1);
         ASSERT(stairs.size() == 1 || player_in_branch(root_branch));
         if (stairs.size() == 1)
@@ -3589,9 +3585,6 @@ void dgn_place_stone_stairs(bool maybe_place_hatches)
 
     for (int i = 0; i < pair_count; ++i)
     {
-        if (player_in_branch(BRANCH_DREAMS) && i > 0 && i <= 3)
-            continue;
-
         if (!existing[i])
         {
             _dgn_place_feature_at_random_floor_square(
@@ -6829,7 +6822,7 @@ static bool _fixup_interlevel_connectivity()
         }
     }
 
-    const int up_region_max = (you.depth == 1 || player_in_branch(BRANCH_DREAMS)) ? 1 : 3;
+    const int up_region_max = (you.depth == 1) ? 1 : 3;
 
     // Ensure all up stairs were found.
     for (int i = 0; i < up_region_max; i++)

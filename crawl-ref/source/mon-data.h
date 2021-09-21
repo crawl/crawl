@@ -3828,21 +3828,6 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     {TILEP_MONS_OGRE}, TILE_CORPSE_OGRE
 },
 
-// only used in the butterfly dream vault, has more consistent damage output
-// to avoid surprising the player (we don't really want them to die in dreams)
-{
-    MONS_OGRE_CATCHER, 'O', BLUE, "ogre catcher",
-    M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    9, MONS_OGRE, MONS_OGRE, MH_NATURAL, 20,
-    { {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10} },
-    5, 275,
-    1, 6, MST_NO_SPELLS, true, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, ATTACK_ENERGY(13),
-    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID,
-    {TILEP_MONS_OGRE_CATCHER}, TILE_CORPSE_OGRE
-},
-
 // These guys get understated because the experience code can't see
 // that they wield two weapons... I'm raising their xp modifier. - bwr
 {
@@ -4151,6 +4136,19 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
     {TILEP_MONS_ELEIONOMA}, TILE_CORPSE_ELEIONOMA
+},
+
+{
+    MONS_DREAM_SPECTRE, 'R', BLUE, "dream spectre",
+    M_SPEAKS | M_NO_POLY_TO,
+    mrd(MR_RES_NEG, 3),
+    12, MONS_DREAM_SPECTRE, MONS_DREAM_SPECTRE, MH_NONLIVING, 120,
+    { {AT_HIT, AF_PLAIN, 45}, {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK },
+    16, 1200,
+    12, 12, MST_NO_SPELLS, true, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC,
+    {TILEP_MONS_DREAM_SPECTRE, TVARY_MOD}, TILE_ERROR
 },
 
 {

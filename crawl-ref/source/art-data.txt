@@ -1581,13 +1581,11 @@ NAME:     dreamshard necklace
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   ETC_SILVER
 TILE:     urand_dreamshard
-INSCRIP:  +Portal
+INSCRIP:  +Dream
 BOOL:     drain, special
-REGEN:    1
-DESCRIP:  It can be shattered once to create a portal to the realm of dreams.
- This will destroy the necklace. A suitably adventurous individual might
- visit the realm of dreams to escape one's foes, or in search of great
- treasure, though it is not entirely without danger there.
+DESCRIP:  It can be shattered once to unleash the energy of a dream.
+ This will destroy the necklace, powerfully heal the user, and call
+ the inhabitants of the realm of dreams to their aid.
 
 # This entry must always be last.
 ENUM:   DUMMY2
