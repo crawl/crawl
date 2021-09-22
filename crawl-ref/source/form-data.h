@@ -311,6 +311,7 @@ static const form_entry formdata[] =
     { { "cleaving", "Your stormy fists strike out in all directions at once." },
       { "", "You are incredibly evasive." }
     }
-},
+}
+
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);
