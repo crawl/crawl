@@ -44,7 +44,7 @@ function bailey_portal(e, ptype)
         feat_tile = "dngn_portal_bailey_gone",
         msg = messager })
   e.tags("uniq_bailey chance_bailey")
-  e.chance(500)
+  e.chance(1000)
 
   e.kfeat("O = enter_bailey")
   e.tile("c = wall_stone_smooth")
@@ -124,7 +124,7 @@ end
 }}
 
 # Basic bailey entries ##########################################
-default-depth: D:7-14, Orc, !Orc:$
+default-depth: D:7-10
 
 NAME: enter_bailey_1
 TAGS: transparent
