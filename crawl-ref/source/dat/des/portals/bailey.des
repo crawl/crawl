@@ -450,16 +450,17 @@ ENDMAP
 #
 # Apart from weapons and armours left by the monsters, there are about 10
 # potions useful in battle. If those monsters drink them first, of course...
-# Plus, there is always one stack of very good potions.
 NAME:   bailey_axe_2
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate
 : axe_returning(_G)
-MONS:   gnoll ; mundane halberd | halberd ego:electrocution ident:type
-MONS:   orc warrior / orc knight
-NSUBST: e = 1:e / *:d
+MONS:   gnoll ; halberd ego:draining | halberd ego:electrocution ident:type
+MONS:   orc warrior ; halberd ego:electrocution ident:type . plate armour /\
+        orc knight
+NSUBST: d = 1:ddde / *:d, 1 = 5:1 / *=1., 2 = 5:2 / *=2.
 : item(dgn.loot_potions)
-ITEM:   potion of experience ident:type q:1 / scroll of acquirement ident:type q:1
+ITEM:   potion of experience ident:type q:1 /\
+        scroll of acquirement ident:type q:1
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
@@ -475,11 +476,11 @@ c1ccc1ccc2c2ccc1ccc2c
 ccc ccc ccncc ccc c+c
 c1ccc1ccc2c2ccc1ccc2c
 cc+cc+cc+ccc+cc+cc+cc
- cce.e.ecc ccd....cc
-ccc.e2e.ccccc.....ccc
-c1+e2U3e+1c1+..Y..+1c
-ccc.e2e.ccccc.....ccc
- cce.e.ecc cc.....cc
+ ccd.d.dcc ccd....cc
+ccc.d2d.ccccc.....ccc
+c1+d2U3d+1c1+..Y..+1c
+ccc.d2d.ccccc.....ccc
+ ccd.d.dcc cc.....cc
 cc+cc+cc+ccc+cc+cc+cc
 c<ccc1ccc2+2ccc1ccc1c
 ccc ccc ccccc ccc ccc
