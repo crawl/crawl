@@ -144,7 +144,7 @@ static const struct spell_desc spelldata[] =
         | spflag::needs_tracer,
     5,
     200,
-    4, 11,
+    LOS_RADIUS, LOS_RADIUS,
     3, 0,
     TILEG_GENERIC_MONSTER_SPELL,
 },
