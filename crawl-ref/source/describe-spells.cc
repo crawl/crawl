@@ -452,7 +452,7 @@ static string _colourize(string base, colour_t col)
 
 static string _describe_living_spells(const monster_info &mon_owner)
 {
-    const int n = living_spells_for(mon_owner.type);
+    const int n = living_spell_count(false);
     const spell_type spell = living_spell_type_for(mon_owner.type);
     const string base_desc = _effect_string(spell, &mon_owner);
     const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)",

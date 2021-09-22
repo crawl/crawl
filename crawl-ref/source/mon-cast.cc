@@ -5937,7 +5937,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONJURE_LIVING_SPELLS:
     {
         const int hd = mons->spell_hd(spell_cast);
-        const int n = living_spells_for(mons->type);
+        const int n = living_spell_count(true);
         const spell_type spell = living_spell_type_for(mons->type);
         // XXX: will crash if wizmode player tries to cast?
         ASSERT(spell != SPELL_NO_SPELL);
@@ -6606,9 +6606,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_simple_beam(*mons, slot, pbolt);
 }
 
-int living_spells_for(monster_type mtyp)
+int living_spell_count(bool random)
 {
-    return mtyp == MONS_DIVINE_TOME ? 3 + random2(3) : 2 + random2(2);
+    return random ? random_range(2, 3) : 3;
 }
 
 spell_type living_spell_type_for(monster_type mtyp)

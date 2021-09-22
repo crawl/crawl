@@ -46,7 +46,7 @@ bool mons_word_of_recall(monster* mons, int recall_target);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
 
-int living_spells_for(monster_type mtyp);
+int living_spell_count(bool random);
 spell_type living_spell_type_for(monster_type mtyp);
 
 monster* cast_phantom_mirror(monster* mons, monster* targ,
