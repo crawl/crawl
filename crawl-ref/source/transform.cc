@@ -995,74 +995,6 @@ public:
     bool can_offhand_punch() const override { return true; }
 };
 
-class FormButterfly : public Form
-{
-private:
-    FormButterfly() : Form(transformation::butterfly) { }
-    DISALLOW_COPY_AND_ASSIGN(FormButterfly);
-public:
-    static const FormButterfly &instance() { static FormButterfly inst; return inst; }
-
-    /**
-     * Get a message for untransforming from this form.
-     */
-    string get_untransform_message() const override
-    {
-        return "You feel less beautiful.";
-    }
-};
-
-class FormWeapon : public Form
-{
-private:
-    FormWeapon() : Form(transformation::weapon) { }
-    DISALLOW_COPY_AND_ASSIGN(FormWeapon);
-public:
-    static const FormWeapon &instance() { static FormWeapon inst; return inst; }
-
-    /**
-     * Get a message for untransforming from this form.
-     */
-    string get_untransform_message() const override
-    {
-        return "You feel less metal.";
-    }
-};
-
-class FormBrainWorm : public Form
-{
-private:
-    FormBrainWorm() : Form(transformation::brain_worm) { }
-    DISALLOW_COPY_AND_ASSIGN(FormBrainWorm);
-public:
-    static const FormBrainWorm &instance() { static FormBrainWorm inst; return inst; }
-
-    /**
-     * Get a message for untransforming from this form.
-     */
-    string get_untransform_message() const override
-    {
-        return "You feel a little more normal.";
-    }
-};
-
-class FormOrbOfFire : public Form
-{
-private:
-    FormOrbOfFire() : Form(transformation::orb_of_fire) { }
-    DISALLOW_COPY_AND_ASSIGN(FormOrbOfFire);
-public:
-    static const FormOrbOfFire &instance() { static FormOrbOfFire inst; return inst; }
-
-    /**
-     * Get a message for untransforming from this form.
-     */
-    string get_untransform_message() const override
-    {
-        return "You feel a little more normal.";
-    }
-};
-
 #if TAG_MAJOR_VERSION == 34
 
 /**
@@ -1161,10 +1093,6 @@ static const Form* forms[] =
     &FormHydra::instance(),
 #endif
     &FormStorm::instance(),
-    &FormButterfly::instance(),
-    &FormWeapon::instance(),
-    &FormBrainWorm::instance(),
-    &FormOrbOfFire::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -2286,8 +2214,6 @@ int form_base_movespeed(transformation tran)
     if (tran == transformation::bat)
         return 5; // but allowed minimum is six
     else if (tran == transformation::pig)
-        return 7;
-    else if (tran == transformation::butterfly)
         return 7;
     else
         return 10;

@@ -30,7 +30,6 @@
 #include "coordit.h"       // For distance_iterator()
 #include "death-curse.h"   // For the Scythe of Curses
 #include "english.h"       // For apostrophise
-#include "env.h"           // For placing dreamshard portal
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "god-conduct.h"   // did_god_conduct
@@ -52,9 +51,6 @@
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
-#include "spl-transloc.h"  // For dreamshard tloc-like handling
-#include "stairs.h"        // For dreamshard step through portal 
-#include "stash.h"         // For dreamshard tloc-like handling
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
 #include "view.h"          // For arc blade's discharge effect
@@ -1653,9 +1649,7 @@ static bool _evoke_dreamshard_necklace()
     //STEP TWO: summon the dream team
     int sumcount2 = 2 + random2(4);
     for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
-    {
         _dreamshard_summon_ally();
-    }
     return true;
 }
 

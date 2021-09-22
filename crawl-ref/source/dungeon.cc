@@ -6822,7 +6822,7 @@ static bool _fixup_interlevel_connectivity()
         }
     }
 
-    const int up_region_max = (you.depth == 1) ? 1 : 3;
+    const int up_region_max = you.depth == 1 ? 1 : 3;
 
     // Ensure all up stairs were found.
     for (int i = 0; i < up_region_max; i++)

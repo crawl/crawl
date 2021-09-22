@@ -35,7 +35,6 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
-#include "shout.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -48,7 +47,6 @@
 #endif
 #include "tiles-build-specific.h"
 #include "timed-effects.h" // bezotted
-#include "transform.h" // stepping into dream realm
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
