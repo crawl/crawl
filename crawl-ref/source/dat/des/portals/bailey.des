@@ -626,40 +626,42 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # I believe that loot is a bit much, but other baileys suffer from that as
 # well... added the warlord in an attempt to make it more even.  --dpeg
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-ITEM:   potion of experience ident:type q:1 / scroll of acquirement ident:type q:1
+ITEM:   potion of experience ident:type q:1 /\
+        scroll of acquirement ident:type q:1
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 MONS:   orc warlord
 : bailey_setup(_G)
-SUBST:  I = t.
+SUBST:  I = t., 1 = 11.
+NSUBST: 2 = 5:2 / *=2.
 MAP
 ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
 tttttttttttttttcccccccttttttttttttttt
 ttttttttttttttccdd<ddcctttttttttttttt
-ttttttttttttttcdd...ddctttttttttttttt
+ttttttttttttttcdd2.2ddctttttttttttttt
 tttttttttttttcc.......ccttttttttttttt
 tttttttttttttc.........cttttttttttttt
 ttttttttttttcc.1.....1.cctttttttttttt
 ttttttccccccc2...1T1...2ccccccctttttt
-tttttcc1...1cc.1.....1.cc1...1ccttttt
+tttttcc1.2.1cc.1.....1.cc1.2.1ccttttt
 tttttc.......+....2....+.......cttttt
 ttttcc.......cc.1...1.cc.......cctttt
 ttttc.........c.......c.........ctttt
 tttcc...1.1...ccGG.GGcc...1.1...ccttt
-tttc1....T....1ccc+ccc1....T....1cttt
+tttc2....T....1ccc+ccc1....T....2cttt
 tttcc...1.1...ccc...ccc...1.1...ccttt
 ttttc.........c1.....1c.........ctttt
 ttttcc.......cc..1.1..cc.......cctttt
 tttttc.......c2.......2c.......cttttt
 tttttcc1...1cc..1...1..cc1...1ccttttt
-ttttttcc+cccc2....3....2cccc+cctttttt
+ttttttcc+cccc.....3.....cccc+cctttttt
 tttttcc.....cc..1...1..cc.....ccttttt
 tttttc1.....1c2.......2c1.....1cttttt
 ttttcc.......cc.......cc.......cctttt
 ttttc1.......1c|$$$$$|c1.......1ctttt
-tttcc.........cc$e$e$cc.........ccttt
-tttc1....T....1ccccccc1....T....1cttt
+tttcc.........cc$$e$$cc.........ccttt
+tttc2....T....1ccccccc1....T....2cttt
 tttcc.........cc1.1.1cc.........ccttt
 ttttc1.......1c.......c1.......1ctttt
 ttttcc.......cc1.....1cc.......cctttt
