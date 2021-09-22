@@ -544,8 +544,7 @@ ENDMAP
 ############################################################################
 # River.
 #
-# There will be either a ring of flight or three potions.
-# Loots consists of six good items.
+# Loots consists of six good items and some flight gear.
 #
 NAME:    bailey_axe_4
 ORIENT:  encompass
@@ -554,8 +553,9 @@ TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 ITEM:    any good_item
 ITEM:    potion of flight ident:type
 ITEM:    ring of flight ident:type
-SUBST:   e : eeef
-NSUBST:  f = 1:f / *:.
+ITEM:    pair of boots ego:flying ident:type
+SUBST:   e : eeef, g:eg
+NSUBST:  f = 1:f / *:e
 SHUFFLE: EB / XY / XY / XY
 SUBST:   X = c, Y = +
 NSUBST:  E = 1:+ / *:c
@@ -570,6 +570,7 @@ SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
 SUBST:   H = W.
+SUBST:   ~ = W
 # the following KMONS duplicates monster 1 from kobold_axe_returning
 KFEAT:   ( = exit_bailey
 KMONS:   ( = generate_awake kobold ; boomerang ident:type q:4 | \
@@ -578,30 +579,31 @@ KMONS:   ( = generate_awake kobold ; boomerang ident:type q:4 | \
 : kobold_axe_returning(_G)
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
-SUBST:   2 = 223
+SUBST:   1 = 1., ^ = ^^.
+NSUBST:  2 = 1:3 / *=223.
 #
 : bailey_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccc..??.d.??d<cccccccccccccc
-ccccccccccccccccccccccccc.??..???..?ccccccccccccccc
-ccccccccccccccccccccccccc.ccccccccccccccccccccccccc
-ccccccccccccc.......................ccccccccccccccc
-cccccccccc...........ccccccccc.......cccccccccccccc
-ccccccccc....2....c+cc...3...ccccCc..cccccccccccccc
-cccccccc....2T2...c..c.2.d.2.c.1CdC...ccccccccccccc
-ccccccccc....2..cEc..c.2...2.c..cDc...1cwwwwcccwwwc
+ccccccccccccccccccccccccc.??..???.e?ccccccccccccccc
+ccccccccccccccccccccccccc2ccccccccccccccccccccccccc
+ccccccccccccc1.....................1ccccccccccccccc
+cccccccccc1.........1ccccccccc1......cccccccccccccc
+ccccccccc....2....c+cc..e3e..ccccCc..cccccccccccccc
+cccccccc1...2T2...c..c.2.d.2.c21CdC...ccccccccccccc
+ccccccccc1...2..cEc..c.2...2.c.2cDc...1cwwwwcccwwwc
 ccccccccccc.....EdB..cccc+cccc..+dc..Wwwwwwwwwwwwwx
 cccwwwwwwc1.1...cEc...^.....^...ccc1Wwwwwwwwwwwwxxx
 cwwwwwwwwwwwW1.1..c1.cccc+cccc.1c1Hwwwwwwwxxxxxxxxx
-xwwwxxxwwwwwwwwwW1cncc..2.2..ccncwwwwwwxxxxxxxxxxxx
-xxxxxxxxx....Wwwwwww(c.2.2.2.c(wwwwwxxxxxxxxxxxxxxx
+xwwwxxxwwwwwww~wW1cncc2.2.2.2ccncwwwwwwxxxxxxxxxxxx
+xxxxxxxxx....~wwwwww(c.2.g.2.c(wwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxx......Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.......Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx........WwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx...e.........xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx...e..<..xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx....e..xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx......<..xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxx
