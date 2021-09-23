@@ -2418,7 +2418,17 @@ int mons_max_hp(monster_type mc, monster_type mbase_type)
     return me->avg_hp_10x * 133 / 1000;
 }
 
-int exper_value(const monster& mon, bool real)
+/**
+ * How much XP will the given monster give out by dying?
+ *
+ * @param mon        The monster in question.
+ * @param real      If false, calculate XP for the given monster's type instead of
+ *               this monster's specific stats.
+ * @param legacy  If set, use higher XP values for high-XP monsters to emulate
+ *               historical (pre-2eadbcd) behaviour.
+ * @return How much XP this monster is worth.
+ */
+int exper_value(const monster& mon, bool real, bool legacy)
 {
     int x_val = 0;
 
@@ -2598,7 +2608,7 @@ int exper_value(const monster& mon, bool real)
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
     if (x_val > 750)
-        x_val = 750 + (x_val - 750) / 6;
+        x_val = 750 + (x_val - 750) / (legacy ? 3 : 6);
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
@@ -4917,7 +4927,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
     const monster& threat = get_tentacle_head(mon);
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(threat, real) / (1 + factor);
+    const int tension = exper_value(threat, real, true) / (1 + factor);
 
     if (tension <= 0)
     {
