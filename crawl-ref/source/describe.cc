@@ -3370,6 +3370,18 @@ static void _get_spell_description(const spell_type spell,
             description += make_stringf("\n%s creates living %s spells.\n",
                                         uppercase_first(mon_owner->full_name(DESC_A)).c_str(),
                                         spell_title(living_spell));
+        } else if (spell == SPELL_QUICKSILVER_BOLT)
+        {
+            if (player_is_cancellable())
+            {
+                description += make_stringf("\nIf you are struck by this,"
+                                            " you will no longer be %s.\n",
+                                            describe_player_cancellation(true).c_str());
+            }
+            else
+                description += "\nYou currently have no enchantments that could be"
+                               " removed by this.\n";
+
         }
 
         const int hd = mon_owner->spell_hd();
