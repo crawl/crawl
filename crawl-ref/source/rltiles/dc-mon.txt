@@ -454,7 +454,9 @@ animated_armour MONS_ANIMATED_ARMOUR
 %rim 1
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
+%rim 0
 flesh_golem MONS_FLESH_GOLEM
+%rim 1
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique
