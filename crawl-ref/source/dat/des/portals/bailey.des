@@ -1160,38 +1160,38 @@ NSUBST: d = 2:$ / 4:d / * = e|
 NSUBST: 2 = 3:2 / * = 2..., 3 = 1:3 / * = 2....
 FTILE:  -t = floor_grass
 MAP
-  cccc        cccc                                          
-  c$3cccccccccc3$c                                          
-  c32..11...11.23c                                          
-  cc.11G2332G11.cc                                          
-   c.1ccn==ncc1.c                                           
-   c..cc....cc..c                                           
-   c11c..4...c11c                                           
-   c21n..cc..n12c                                           
-   c21n..cc..n12c                                           
-   c..cddddddc..c                                           
-   c..ccddddcc..c                                           
-xxxc..cccccccc..c                                           
-xxcc...G1..1G...cc                                          
-xxc11..........11c  tt                                      
-x-c$2cccc++cccc2$ctttt                                      
---cccc--.22.--cccc--ww                                      
---------....-------www                                      
-t----t--....------wwww                                      
-tttt---c2..2c---wwwwww                                      
-ttwwwwwc....cwwwwwwwww                                      
-wwwwwwwc....cwwwwwwwtt                                      
-wwwwwwwc....cwwwwww-t                                       
-wwwwwwwc....cwwww---t                                       
-www----c....c------tt                                       
-ww------....------tt                                        
-t--t-t--....-tt-                                            
-tt------....--t-                                            
-    ----....----                                            
-     --......--                                             
-     -........-                                             
-     t..A..<..t                                             
-     t........t                                             
-     tt......tt                                             
-      tttttttt            
+  cccc        cccc
+  c$3cccccccccc3$c
+  c32..11...11.23c
+  cc.11G2332G11.cc
+   c.1ccn==ncc1.c
+   c..cc....cc..c
+   c11c..4...c11c
+   c21n..cc..n12c
+   c21n..cc..n12c
+   c..cddddddc..c
+   c..ccddddcc..c
+xxxc..cccccccc..c
+xxcc...G1..1G...cc
+xxc11..........11c  tt
+x-c$2cccc++cccc2$ctttt
+--cccc--.22.--cccc--ww
+--------....-------www
+t----t--....------wwww
+tttt---c2..2c---wwwwww
+ttwwwwwc....cwwwwwwwww
+wwwwwwwc....cwwwwwwwtt
+wwwwwwwc....cwwwwww-t
+wwwwwwwc....cwwww---t
+www----c....c------tt
+ww------....------tt
+t--t-t--....-tt-
+tt------....--t-
+    ----....----
+     --......--
+     -........-
+     t..A..<..t
+     t........t
+     tt......tt
+      tttttttt
 ENDMAP
