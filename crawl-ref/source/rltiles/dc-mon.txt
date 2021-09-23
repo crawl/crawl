@@ -31,6 +31,12 @@ serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
 serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
 serpent_of_hell-dis MONS_SERPENT_OF_HELL_DIS
 serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
+tiamat_red MONS_TIAMAT
+tiamat_white
+tiamat_black
+tiamat_green
+tiamat_purple
+tiamat_yellow
 %sdir mon/holy
 seraph MONS_SERAPH
 %sdir mon/sprint
@@ -1130,15 +1136,6 @@ orb_of_electricity MONS_ORB_OF_ELECTRICITY
 
 ## Draconians ('d')
 %sdir mon/unique
-tiamat_black MONS_TIAMAT
-tiamat_yellow
-tiamat_green
-tiamat_grey
-tiamat_mottled
-tiamat_pale
-tiamat_purple
-tiamat_red
-tiamat_white
 bai_suizhen MONS_BAI_SUZHEN
 bai_suizhen_dragon MONS_BAI_SUZHEN_DRAGON
 %sdir mon/draco
