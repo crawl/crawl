@@ -946,7 +946,7 @@ ccwwwwwwww;3;.;3.wwwwwwwwccc_____________.......$c
    ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
-#6 good items and two gold piles for murdering a bunch of gnolls
+#6 items and two gold piles for murdering a bunch of gnolls
 NAME:   bailey_polearm_gnolls_kennysheep
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
@@ -957,11 +957,14 @@ MONS:   gnoll sergeant ; halberd | glaive | bardiche w:1 . \
             chain mail w:20 | plate armour | crystal plate armour w:1
 MONS:   gnoll shaman ; spear | trident | halberd . \
             ring mail | scale mail
-MONS:   hound
+MONS:   hound, wolf
+KMONS:  R = grum, gnoll sergeant ; scythe ego:speed . plate armour
 ITEM:   any good_item
 FTILE:  4't = floor_grass
 KFEAT:  ' = floor
-NSUBST: _ = 12:1 / *:.
+NSUBST: _ = 40 = 1... / *:., 2 = 4:2 / * = 2., 3 = 4:3 / * = 3.
+NSUBST: R = 1:R22 / *:2, 5 = 2:5 / * = 5..
+SUBST:  d = dd|
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -973,16 +976,16 @@ xtttw''ccccc_3_ccccc''wtttx
 xtttw'cc___c___c___cc'wtttx
 xtttwcc____+___+____ccwtttx
 xtttwc_____c___c_____cwtttx
-xtttwcG____cc+cc____Gcwtttx
-xtttwc____cc_3_cc____cwtttx
+xtttwcG____cc+cc3___Gcwtttx
+xtttwc2___cc_3_cc___2cwtttx
 xtttwc___cc2___2cc___cwtttx
-xtttwc___c_______c___cwtttx
+xtttwc3__c_______c___cwtttx
 xtttwccc+c__$G$__c___cwtttx
 xtttwc___c_______c___cwtttx
 xtttwc___cc_____cc___cwtttx
-xtttwc____cc___cc____cwtttx
-xtttwcG_2__cc+cc__2_Gcwtttx
-xtttwc23_32c___c23_32cwtttx
+xtttwc__55cc___cc55__cwtttx
+xtttwcG5255cc+cc5525Gcwtttx
+xtttwc2353Rc___cR3532cwtttx
 xtttwccccc+c___c+cccccwtttx
 xtttw'cddd.c___c.dddc'wtttx
 xtttw'cccccc+++cccccc'wtttx
