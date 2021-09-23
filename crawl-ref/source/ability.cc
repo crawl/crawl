@@ -507,13 +507,13 @@ static vector<ability_def> &_get_ability_list()
 
         // Fedhas
         { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
-            3, 0, 2, {fail_basis::invo, 30, 6, 20}, abflag::none},
+            4, 0, 1, {fail_basis::invo, 30, 6, 20}, abflag::none},
         { ABIL_FEDHAS_GROW_BALLISTOMYCETE, "Grow Ballistomycete",
-            4, 0, 4, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            6, 0, 3, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_FEDHAS_OVERGROW, "Overgrow",
-            8, 0, 12, {fail_basis::invo, 70, 5, 20}, abflag::none},
+            12, 0, 10, {fail_basis::invo, 70, 5, 20}, abflag::none},
         { ABIL_FEDHAS_GROW_OKLOB, "Grow Oklob",
-            6, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            8, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Cheibriados
         { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time",
