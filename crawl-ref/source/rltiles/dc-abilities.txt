@@ -24,3 +24,7 @@ shaft_self ABILITY_SHAFT_SELF
 spit_poison ABILITY_SPIT_POISON
 stop_recall ABILITY_STOP_RECALL
 wordofchaos ABILITY_WORD_OF_CHAOS
+
+wiz_build_terrain ABILITY_WIZ_BUILD_TERRAIN
+wiz_set_terrain ABILITY_WIZ_SET_TERRAIN
+wiz_clear_terrain ABILITY_WIZ_CLEAR_TERRAIN
