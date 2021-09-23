@@ -1033,13 +1033,15 @@ KITEM:  $ = gold
 NSUBST: | = 1:| / *:$
 KFEAT:  ^ = zot trap
 KFEAT:  B = altar_okawaru
-NSUBST: ^ = 1:^ / *:.
-NSUBST: w = 5:4 / *:w
-NSUBST: 1 = 4:2 / *:1
+NSUBST: w = 10 = 4w / *:w
+NSUBST: 2 = 2:2 / * = 2..
+NSUBST: 1 = 6 = 2. / * = 11.
+NSUBST: 3 = 2:3 / * = 2
 SHUFFLE: defg
 NSUBST: d = 1:D
 NSUBST: e = 1:E
 NSUBST: f = 1:F
+SUBST:  g = .
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1049,27 +1051,27 @@ xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xwwwwwwwwccccccWWWWWWWWWWWccccccwwwwwwwwx
-xwwwwwwwwc|+1.c.....<.....c.1+|cwwwwwwwwx
-xwwwwwwwwccc2.ccnnccnccnncc.2cccwwwwwwwwx
-xwwwwwwwwc....cdd..+.+..eec....cwwwwwwwwx
-xwwwwwwwwc....cdd..c.c..eec....cwwwwwwwwx
-xwwwwwwwwc+ccccccccc.ccccccccc+cwwwwwwwwx
-xwwwwwwwwW.c11+^^^^^<^^^^^+11c.Wwwwwwwwwx
-xwwwwwwwwW.c11cccccc.cccccc11c.Wwwwwwwwwx
-xwwwwwwwwW.c11cff..c.c....c11c.Wwwwwwwwwx
-xwwwwwwwwW.c11cff..+.+....c11c.Wwwwwwwwwx
-xwwwwwwwwW.c11ccnncccccnncc11c.Wwwwwwwwwx
-xwwwwwwwwW.cc+c...1.3.1...c+cc.Wwwwwwwwwx
-xwwwwwwwwW.+........B........+.Wwwwwwwwwx
-xwwwwwwwwW.c.G......3......G.c.Wwwwwwwwwx
-xwwwwwwwwW.c.......1.1.......c.Wwwwwwwwwx
-xwwwwwwwwW.c.G.ccccccccccc.G.c.Wwwwwwwwwx
-xwwwwwwwwW.c.....ccccccc.....c.Wwwwwwwwwx
+xwwwwwwwwc|+1.......<.......1+|cwwwwwwwwx
+xwwwwwwwwccc2.ccnncc3ccnncc.2cccwwwwwwwwx
+xwwwwwwwwc2...cdd.c...c.eec...2cwwwwwwwwx
+xwwwwwwwwc....cdd.c...c.eec....cwwwwwwwwx
+xwwwwwwwwc+c+cc+cccG.Gccc+cc+c+cwwwwwwwwx
+xwwwwwwwwW.c11c...c.2.c...c11c.Wwwwwwwwwx
+xwwwwwwwwW.c11ccc+cG.Gc+ccc11c.Wwwwwwwwwx
+xwwwwwwwwW.c11cff.c...c.ggc11c.Wwwwwwwwwx
+xwwwwwwwwW.c11cff.c...c.ggc11c.Wwwwwwwwwx
+xwwwwwwwwW.c11c+nncc+ccnn+c11c.Wwwwwwwwwx
+xwwwwwwwwW.cc+c...1.1.1...c+cc.Wwwwwwwwwx
+xwwwwwwwwW.c..c.....B.....c..c.Wwwwwwwwwx
+xwwwwwwwwW.c2Gc.....1.....cG2c.Wwwwwwwwwx
+xwwwwwwwwW.c1.c....3.3....c.1c.Wwwwwwwwwx
+xwwwwwwwwW.c1GcccccccccccccG1c.Wwwwwwwwwx
+xwwwwwwwwW.c.1...ccccccc...1.c.Wwwwwwwwwx
 xwwwwwwwwW.c.G...c..1..c...G.c.Wwwwwwwwwx
 xwwwwwwwwW.c.....c.1.1.c.....c.Wwwwwwwwwx
 xwwwwwwwwc+cccc..c..T..c..cccc+cwwwwwwwwx
 xwwwwwwwwc....c..+.1.1.+..c....cwwwwwwwwx
-xwwwwwwwwc....c..+.....+..c....cwwwwwwwwx
+xwwwwwwwwc2...c..+.....+..c...2cwwwwwwwwx
 xwwwwwwwwccc2.ccccc+++ccccc.2cccwwwwwwwwx
 xwwwwwwwwc|+1.c...........c.1+|cwwwwwwwwx
 xwwwwwwwwccccccWWWW...WWWWccccccwwwwwwwwx
