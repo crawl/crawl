@@ -1103,29 +1103,32 @@ ITEM:   potion of experience ident:type q:1 / \
 MONS:   orc warlord ; war axe | broad axe w:2 | battleaxe w:1 . \
             ring mail | scale mail | chain mail | plate armour
 : bailey_setup(_G)
+SUBST:  1 = 1.., 2 = 22.
+NSUBST: 3 = 2:3 / * = 3.
+NSUBST: e = 1:e / *:d
 MAP
       ccccc         ccccc
-     ccd$.cc       cc.$dcc
-    ccd....cc     cc....dcc
+     ccd$1cc       cc1$dcc
+    ccd...1cc     cc1...dcc
    cc.......ccccccc.......cc
-  ccd.G21G...........G12G.dcc
+  ccd.G21G...31.13...G12G.dcc
   cd..23...............32..dc
   c$..1.................1..$c
   c...G......c===c......G...c
 ttcc......cnncWWWcnnc......cctt
-tttcc.....cWWWWWWWWWc.....ccttt
-ttt2cc....cW.G...G.Wc....cc2ttt
-ttt..ccc+ccc.......ccc+ccc..ttt
-tt...www.cWW.G...G.WWc.www...tt
-tt...www.cW.........Wc.www...tt
-t<.2.www.cW....<....Wc.www.2.<t
-tt...www.cc..1...1..cc.www...tt
-tt...www.cW..G...G..Wc.www...tt
+tttcc1....cWWWWWWWWWc....1ccttt
+ttt2cc1...cW.G...G.Wc...1cc2ttt
+ttt.1ccc+ccc.......ccc+ccc1.ttt
+tt1..WWW.cWW.G...G.WWc.WWW..1tt
+tt...WWW.cW.........Wc.WWW...tt
+t<.2.WWW.cW....<....Wc.WWW.2.<t
+tt...WWW.cc..1...1..cc.WWW...tt
+tt1..WWW.cW..G...G..Wc.WWW..1tt
 ttt..ccc+cW.........Wc+ccc..ttt
-ttt2cc...cW|eGn4nGe|Wc...cc2ttt
+ttt2cc1..cW|eG.4.Ge|Wc..1cc2ttt
 tttcc....ccWWnnnnnWWcc....ccttt
 ttcc......cccn...nccc......cctt
-ttc21.....................12ctt
+ttc21......1.......1......12ctt
 ttc..G..G.............G..G..ctt
 ttc21.....................12ctt
 ttcc.......................cctt
