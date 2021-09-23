@@ -3372,7 +3372,7 @@ static void _get_spell_description(const spell_type spell,
                                         spell_title(living_spell));
         } else if (spell == SPELL_QUICKSILVER_BOLT)
         {
-            if (player_is_cancellable())
+            if (player_is_debuffable())
             {
                 description += make_stringf("\nIf you are struck by this,"
                                             " you will no longer be %s.\n",
