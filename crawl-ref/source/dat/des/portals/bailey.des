@@ -902,33 +902,35 @@ TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup patrolling
 MONS:   centaur ; javelin ident:type q:2 | \
             javelin ident:type q:3 . spear | trident | halberd . \
             ring mail | scale mail | chain mail
-NSUBST: _ = 4:2 / 5:1 / *:.
-NSUBST: ; = 6:2 / 6:1 / *:.
-NSUBST: ! = 8:1 / *:.
+NSUBST: _ = 8 = 2. / 10 = 1. / *:.
+NSUBST: ; = 9 = 22. / 9 = 11. / *:.
+NSUBST: ! = 12=11. / *:.
+NSUBST: 3 = 8:3 / * = 3..
 SUBST:  / = 12
 KITEM:  d = manual of armour / manual of fighting / manual of shields /\
-            good_item bardiche / good_item executioner's axe
+            good_item bardiche / good_item executioner's axe /\
+            good_item triple sword
 KITEM:  e = potion of experience ident:type q:1 / \
             scroll of acquirement ident:type q:1 / \
-            scroll of enchant armour ident:type q:2 / \
-            scroll of enchant weapon ident:type q:3
-NSUBST: d = 1:e / *:d|
+            scroll of enchant armour ident:type q:3 w:20 / \
+            scroll of enchant weapon ident:type q:3 w:20
+NSUBST: d = 1:e / * = d|
 : bailey_setup(_G)
 MAP
    ccccccccccccccccccccccccccccccccccccccccccccc
   ccwwwwwwwwwwwwwwwwwwwcccccccwwwwwwwwwwwwwwwwwcc
- ccwwwwwwwwwwwwwwwwwwwwwccccc____________.......cc
-ccwwwwwwww;.;.;3.wwwwwwwwccc_____________........c
+ ccwwwwwwwwwwwwwwwwwwwwwccccc____________3......cc
+ccwwwwwwww;3;.;3.wwwwwwwwccc_____________.......$c
 cwwwwwww..wwwwwww..wwwwwwwc_______Tcccccccccc+cccc
 cwwwww..www;.;.;www..wwwwwc____ccccc!!!!!.......wc
 cwwww.www.........www.wwwwc___cc!!!!wwwwwwwww...wc
 cwwww.w.............w.wwwwc___c!T!www!!!....ww..wcc
 cwww.ww.T.........T.ww.wwwc___c!!ww!!wwwwwww....wwcc
-cwww.w...;.;.;.;.;...w.wwwc__Tc!ww!www.....www!!.wwcc
+cwww3w...;.;.;.;.;...w.wwwc__Tc!ww!www.....www!!.wwcc
 cww.ww;.;.wwwwwww.;..ww3wwc__cc!w!ww!!wwwww..ww!!Twwc
 cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www...www.ww!$wwc
 cww3w.;wwWWwwwwwWwww......+__c!w1ww!w..T.T..ww.w!.$wc
-cww....WWwwwdddWWwww......+__c!w!3!!w..<A<.....w3$$wc
+cww....WWwwwdddWWwww......+__c3w!!!!w..<A<.....w..3wc
 cww3w.;wwWWwwwwwWwww......+__c!w1ww!w..T.T..ww.w!.$wc
 cww.w;..wwwWWWWWwww...ccccc__c!ww!w!www...www.ww!$wwc
 cww.ww;.;.wwwwwww.;..ww3wwc__cc!w!ww!!wwwww..ww!!Twwc
@@ -936,10 +938,10 @@ cwww.w...;.;.;.;.;...w.wwwc__Tc!ww!www.....www!!.wwcc
 cwww.ww.T.........T.ww.wwwc___c!!ww!!wwwwwww....wwcc
 cwwww.w.............w.wwwwc___c!T!www!!!....ww..wcc
 cwwww.www.........www.wwwwc___cc!!!!wwwwwwwww...wc
-cwwwww..www;.;.;www..wwwwwc____ccccc!!!!!.......wc
+cwwwww3.www;.;.;www..wwwwwc____ccccc!!!!!.......wc
 cwwwwwww..wwwwwww..wwwwwwwc_______Tcccccccccc+cccc
-ccwwwwwwww;.;.;3.wwwwwwwwccc_____________........c
- ccwwwwwwwwwwwwwwwwwwwwwccccc____________.......cc
+ccwwwwwwww;3;.;3.wwwwwwwwccc_____________.......$c
+ ccwwwwwwwwwwwwwwwwwwwwwccccc____________3......cc
   ccwwwwwwwwwwwwwwwwwwwcccccccwwwwwwwwwwwwwwwwwcc
    ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
