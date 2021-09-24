@@ -2062,8 +2062,8 @@ mandibles drip with lethal poison.
 %%%%
 revenant
 
-A skeletal form wreathed in cold blue fire, standing astride this life and the
-next. Echoes of the lingering dead flicker within its ghostly flames.
+An animated skeleton wreathed in cold blue fire, standing astride this life and
+the next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
 rime drake
 
