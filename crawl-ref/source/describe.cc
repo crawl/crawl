@@ -2483,8 +2483,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     }
 
     // mention that permanent trees are usually flammable
-    // (expect for autumnal trees in Wucad Mu's Monastery)
-    if (feat_is_flammable(feat) && !is_temp_terrain(pos)
+    // (except for autumnal trees in Wucad Mu's Monastery)
+    if (feat_is_flammable(feat) && !is_temp_terrain(pos) && in_bounds(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         if (feat == DNGN_TREE)
@@ -2496,7 +2496,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     }
 
     // mention that diggable walls are
-    if (feat_is_diggable(feat)
+    if (feat_is_diggable(feat) && in_bounds(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         long_desc += "\nIt can be dug through.";
