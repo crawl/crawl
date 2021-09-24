@@ -884,7 +884,7 @@ static void _print_stats_ac(int x, int y)
     auto text_col = HUD_VALUE_COLOUR;
     if (_boosted_ac())
         text_col = LIGHTBLUE;
-    else if (you.duration[DUR_CORROSION])
+    else if (you.corrosion_amount())
         text_col = RED;
 
     string ac = make_stringf("%2d ", you.armour_class());
@@ -931,7 +931,7 @@ static void _print_stats_ev(int x, int y)
  */
 static int _wpn_name_colour()
 {
-    if (you.duration[DUR_CORROSION])
+    if (you.corrosion_amount())
         return RED;
 
     if (you.weapon())
@@ -968,7 +968,7 @@ static void _print_stats_wp(int y)
     {
         item_def wpn = *you.weapon(); // copy
 
-        if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
+        if (you.corrosion_amount() && wpn.base_type == OBJ_WEAPONS)
             wpn.plus -= 4 * you.corrosion_amount();
 
         text = wpn.name(DESC_PLAIN, true, false, true);

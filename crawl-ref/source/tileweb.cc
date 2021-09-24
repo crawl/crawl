@@ -1079,7 +1079,7 @@ void TilesFramework::_send_player(bool force_full)
     {
         json_open_object(to_string(i));
         item_def item = get_item_known_info(you.inv[i]);
-        if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.duration[DUR_CORROSION])
+        if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.corrosion_amount())
             item.plus -= 4 * you.corrosion_amount();
         _send_item(c.inv[i], item, force_full);
         json_close_object(true);
