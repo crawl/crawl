@@ -1565,7 +1565,7 @@ bool monster_info::can_regenerate() const
     return !is(MB_NO_REGEN);
 }
 
-reach_type monster_info::reach_range() const
+reach_type monster_info::reach_range(bool items) const
 {
     const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
                                              ? base_type : type);
@@ -1574,9 +1574,12 @@ reach_type monster_info::reach_range() const
     const attack_flavour fl = e->attack[0].flavour;
     reach_type range = flavour_has_reach(fl) ? REACH_TWO : REACH_NONE;
 
-    const item_def *weapon = inv[MSLOT_WEAPON].get();
-    if (weapon)
-        range = max(range, weapon_reach(*weapon));
+    if (items)
+    {
+        const item_def *weapon = inv[MSLOT_WEAPON].get();
+        if (weapon)
+            range = max(range, weapon_reach(*weapon));
+    }
 
     return range;
 }
@@ -1772,6 +1775,17 @@ static bool _has_wand(const monster_info& mi)
      return false;
 }
 
+static bool _has_attack_flavour(const monster_info& mi, attack_flavour af)
+{
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        const mon_attack_def &attack = mi.attack[i];
+        if (attack.flavour == af)
+            return true;
+    }
+    return false;
+}
+
 static string _condition_string(int num, int count,
                                 const monster_info_flag_name& name)
 {
@@ -1794,6 +1808,9 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         int polearm_count = 0;
         int launcher_count = 0;
         int missile_count = 0;
+        int reach_count = 0;
+        int constrict_count = 0;
+        int trample_count = 0;
 
         for (int j = start; j < start + count; ++j)
         {
@@ -1805,13 +1822,19 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 launcher_count++;
             else if (_has_missile(mi[j]))
                 missile_count++;
+            if (mi[j].reach_range(false) > REACH_NONE)
+                reach_count++;
+            if (_has_attack_flavour(mi[j], AF_CRUSH))
+                constrict_count++;
+            if (_has_attack_flavour(mi[j], AF_TRAMPLE))
+                trample_count++;
         }
 
         if (wand_count)
         {
             conditions.push_back(_condition_string(wand_count, count,
                                                    {MB_UNSAFE, "wand",
-                                                    "wand", "with wands"}));
+                                                    "wand", "wands"}));
         }
 
         if (polearm_count)
@@ -1833,6 +1856,28 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
             conditions.push_back(_condition_string(missile_count, count,
                                                    {MB_UNSAFE, "missile",
                                                     "missile", "missiles"}));
+        }
+
+        if (reach_count)
+        {
+            conditions.push_back(_condition_string(reach_count, count,
+                                                   {MB_UNSAFE, "reaching",
+                                                    "reaching", "reaching"}));
+        }
+
+        if (constrict_count)
+        {
+            conditions.push_back(_condition_string(constrict_count, count,
+                                                   {MB_UNSAFE, "constriction",
+                                                    "constriction",
+                                                    "constriction"}));
+        }
+
+        if (trample_count)
+        {
+            conditions.push_back(_condition_string(trample_count, count,
+                                                   {MB_UNSAFE, "trample",
+                                                    "trample", "trample"}));
         }
     }
 
