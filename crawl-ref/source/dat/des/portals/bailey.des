@@ -1143,7 +1143,7 @@ TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 ITEM:   any armour good_item
 MONS:   wolf zombie, vampire bat
 : orc_with_polearm(_G)
-:orc_warrior_with_polearm(_G)
+: orc_warrior_with_polearm(_G)
 MONS:   gargoyle
 MONS:   vampire ; halberd ego:vampirism w:15 | glaive |\
             glaive ego:vampirism w:3 | bardiche ego:vampirism w:1 .\
@@ -1200,4 +1200,60 @@ ccc+cc.;;;;;;;;.cccc+c.---.t
     x..A..<..x
     xx......xx
      xxxxxxxx
+ENDMAP
+
+# Prince Ribbit's fortress
+# If Prince Ribbit has already generated, his attendants have recovered the
+# wrong frog by mistake. Whoops!
+# Nine items, mostly consumables. Guaranteed broad axes from the vault guards.
+NAME:   bailey_axe_froggy_fort_hellmonk
+ORIENT: encompass
+TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+: easy_axe_fighter(_G)
+MONS:   human ; hand axe ego:vorpal | war axe ego:vorpal . scale mail
+MONS:   vault guard ; broad axe . chain mail | plate armour
+KMONS:  4 = bullfrog
+KMONS:  5 = prince ribbit, blink frog / cane toad w:1
+KFEAT:  4 = shallow_water
+SHUFFLE: AB
+SUBST:  ; = W:3 ., B = <
+NSUBST: ! = 24 = 1... / 24 = 2... / *:.
+NSUBST: W = 28 = 4WWW / *:W
+NSUBST: d = 4:d / *=dd*$
+: bailey_setup(_G)
+MAP 
+           ccccc                                    
+          ccdddcc                                   
+          cdd3ddc                                   
+          c..5..c                                   
+          c.....c                                   
+          c..<..c                                   
+        ccc.....ccc                                 
+       ccwcc...ccWcc                                
+      ccwWWcc+ccWWWcc                               
+      cwWW;;!!!!!WWWc                               
+     ccwWW;;!;;;!!!!cc                              
+     cwWWW;;;;;;Wwww!c                              
+     cwWWW;;;;;Wwccc+c                              
+     cwWWW;;.;WwccW..c                              
+   cccwWWW;;.;WwcW..Wc                              
+  cc!cwWWW;;.Wwcc..Wcc                              
+ cc!!ccwWWW;.Wwcd..Wc                               
+cc!!!!cwWwwW.Wwcd3Wcc                               
+c!!!!!ccwccw.Wwccccc                                
+c!!!!!!ccccw..Wwc                                   
+c!!!!!!+!!cw..Wwc                                   
+ccc+cccc!!ccc+ccc                                   
+ccWWWcc!!!c!!!!!c                                   
+cWWWWWc!!!c!!!!!c                                   
+cWWWWWc!!!cccc!!c                                   
+cWWWWWc!!!!c!!!!c                                   
+ccWWc+c+c!!!!!!cc                                   
+ cccc...cc!!!!cc                                    
+   c.....cccccc                                     
+   c.A.B.c                                          
+   c.....c                                          
+   cc...cc                                          
+    ccccc                                           
 ENDMAP
