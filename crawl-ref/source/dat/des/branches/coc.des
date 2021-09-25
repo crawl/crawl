@@ -257,6 +257,7 @@ NAME:   nicolae_coc_caroushell
 TAGS:   transparent no_pool_fixup no_monster_gen
 DEPTH:  Coc
 ORIENT: centre
+WEIGHT: 2
 KMONS:  1 = diamond obelisk
 SUBST:  ~ = w., M = w_, ` = ._
 CLEAR:  _
@@ -498,7 +499,7 @@ ENDMAP
 NAME:   nicolae_coc_kraken_the_ice
 TAGS:   transparent no_pool_fixup
 DEPTH:  Coc, !Coc:$
-KMONS:  1 = kraken zombie / spectral kraken / kraken simulacrum
+KMONS:  1 = kraken simulacrum
 KFEAT:  1 = w
 SUBST:  ` = w., ' = w-
 NSUBST: - = 1=} / ., w = 3=1 / 3=1w
@@ -583,6 +584,7 @@ TAGS:    transparent no_pool_fixup
 DEPTH:   Coc, !Coc:$
 ORIENT:  encompass
 KFEAT:   E = open_sea
+KFEAT:   ! = W
 : set_border_fill_type('open_sea')
 SHUFFLE: Qq, Or
 NSUBST:  S = { / } / !
@@ -714,21 +716,21 @@ wwxxxxxww           wwxxxxxww
  wwwwwww             wwwwwww
 ENDMAP
 
-NAME:  nicolae_coc_wendigon
-TAGS:  transparent no_pool_fixup
-DEPTH: Coc
-KMONS: 1 = simulacrum
-KMONS: 2 = wendigo
-SUBST: ~ = Ww, M = W., x = xxxwww.., . = 1:6 2:2 .:50
+NAME:   nicolae_coc_wendigon
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc
+KMONS:  1 = simulacrum
+KMONS:  2 = wendigo
+SUBST:  ~ = Ww, M = W., S = 1., ` = wwwxx..., . = 1:6 2:2 .:50
 MAP
   ww~WW~ww
  ww~M..M~ww
 ww~M....M~ww
 w~M......M~w
-~M...xx...M~
-W...xxxx...W
-W...xxxx...W
-~M...xx...M~
+~M..S``S..M~
+W...`{M`...W
+W...`MM`...W
+~M..S``S..M~
 w~M......M~w
 ww~M....M~ww
  ww~M..M~ww

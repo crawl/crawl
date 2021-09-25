@@ -761,28 +761,25 @@ ORIENT:  centre
 KPROP:   JKLM = no_tele_into
 # Animal-ish hell enemies that can't escape and have ranged attacks:
 KMONS:   J = hell hog
-KMONS:   K = hell hound
-KMONS:   L = hellion
-KMONS:   M = crystal echidna
-KMONS:   N = nargun
-KMONS:   O = iron dragon
-KMONS:   P = doom hound
+KMONS:   K = hellion
+KMONS:   L = crystal echidna
+KMONS:   M = iron dragon
+KMONS:   N = doom hound
 # Only one type of crab in the menagerie
-KMONS:   Q = ghost crab
-KMONS:   R = apocalypse crab
-KMONS:   S = fire crab
+KMONS:   O = ghost crab
+KMONS:   P = apocalypse crab
+KMONS:   Q = fire crab
 # The hellephants kept blinking out of their enclosure, they get to roam around
 KMONS:   1} = balrug w:8 / fire giant w:8 / hellephant w:4 / nothing w:5
 KMONS:   2 = salamander tyrant
 KMONS:   3 = hell beast / nothing w:5
 KFEAT:   } = }
-KMASK:   JKLMNOPQRS- = opaque
-KMASK:   JKLMNOPQRS- = no_monster_gen
-SHUFFLE: JKLMNOPQ, QRS
+KMASK:   JKLMNOPQ- = opaque
+KMASK:   JKLMNOPQ- = no_monster_gen
+SHUFFLE: JKLMNO, OPQ
 NSUBST:  J = 2=J / 2=J- / -, K = 2=K / 2=K- / -, L = 2=L / 2=L- / -, \
          M = 2=M / 2=M- / -, N = 2=N / 2=N- / -, O = 2=O / 2=O- / -, \
-         P = 2=P / 2=P- / -, Q = 2=Q / 2=Q- / -, R = 2=R / 2=R- / -, \
-         S = 2=S / 2=S- / -, } = } / 1
+         P = 2=P / 2=P- / -, Q = 2=Q / 2=Q- / -, } = } / 1
 MAP
 ccccc.@.ccccccccc
 cJJJl...lKKKcl.lc

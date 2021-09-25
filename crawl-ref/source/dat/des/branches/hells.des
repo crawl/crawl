@@ -1,10 +1,10 @@
 ################################################################################
 # hells.des: Maps that can be placed in multiple Hells.
-# 
+#
 # For hell entry vaults and vaults related to the Vestibule of Hell, you'll want
 # hell.des instead. This includes a few vaults that had been previously been in
 # dis.des and geh.des.
-# 
+#
 ################################################################################
 
 : crawl_require('dlua/vault.lua')
@@ -189,15 +189,19 @@ DEPTH:  Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 ORIENT: centre
 : if you.in_branch("Dis") then
 KMONS:  1 = hell sentinel
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / cacodemon
 : elseif you.in_branch("Geh") then
 KMONS:  1 = brimstone fiend
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / balrug
 : elseif you.in_branch("Coc") then
 KMONS:  1 = ice fiend
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
+            blizzard demon
 : else
 KMONS:  1 = tzitzimitl
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
+            green death / lorocyproca
 : end
-KMONS:  2 = shadow demon / green death / blizzard demon / balrug / cacodemon / \
-            hell beast / hellion / reaper / lorocyproca / tormentor / nothing
 SUBST:  D = c.
 MAP
   ...ccDD....
@@ -240,6 +244,32 @@ MAP
   ..w.3.w..
    .wwwww.
     .....
+ENDMAP
+
+NAME:    nicolae_hells_giants_party
+TAGS:    transparent no_pool_fixup no_monster_gen
+DEPTH:   Geh:2-, Coc:2-
+ORIENT:  centre
+KMONS:   1 = fire giant
+KMONS:   2 = frost giant
+NSUBST:  F = 4=1 / 4=2
+SHUFFLE: lw
+MAP
+.....xxxxx.....
+.lll..xxx..www.
+.lll.F.x.F.www.
+.lll.......www.
+.......l.......
+x.F..w...w..F.x
+xx...........xx
+xxx.l..{..l.xxx
+xx...........xx
+x.F..w...w..F.x
+.......l.......
+.www.......lll.
+.www.F.x.F.lll.
+.www..xxx..lll.
+.....xxxxx.....
 ENDMAP
 
 NAME:  nicolae_hells_hurtin_island
@@ -293,19 +323,18 @@ ccc.........ccc
   ccccccccccc
 ENDMAP
 
-# It's possible that the seeping gasses will end up harming the monsters on the
-# level, if they don't have the right resistances, but it's probably not worth
-# it to spend too much time luring monsters into the cloud zone, especially
-# since they might fall through the shaft and collapse it before you can use it.
 NAME:  nicolae_hells_seeping_fissure
 TAGS:  transparent luniq allow_dup no_monster_gen
 DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 KFEAT: ^ = shaft trap
 {{
-  local cloudtypes = {"calcifying dust", "foul pestilence", "negative energy",
-    "acidic fog", "thunder", "mutagenic fog", "degeneration", "flame",
-    "freezing vapour"}
-  local hellcloud = util.random_from( cloudtypes )
+  if is_validating() then return end
+  local cloudtypes =
+    { Dis={ "mutagenic fog", "calcifying dust", "acidic fog"   },
+      Geh={ "mutagenic fog", "flame",           "flame"        },
+      Coc={ "mutagenic fog", "freezing vapour", "thunder"      },
+      Tar={ "mutagenic fog", "foul pestilence", "degeneration" } }
+  local hellcloud = util.random_from( cloudtypes[ you.branch() ] )
   lua_marker( '^', fog_machine{ cloud_type = hellcloud, pow_min = 5,
     pow_max = 40, delay = 15, size = 1, walk_dist = 1, spread_rate = 5 } )
 }}
@@ -315,38 +344,6 @@ MAP
 ..^..
 .....
 .....
-ENDMAP
-
-# This one is a bit silly, up until you get murdered by eight giants.
-NAME:    nicolae_hells_slight_mixup
-TAGS:    transparent no_pool_fixup no_monster_gen
-DEPTH:   Geh:2-, Coc:2-
-KMONS:   J = fire giant ; great sword ego:freezing
-KMONS:   K = fire giant ; great sword ego:flaming
-KMONS:   L = fire giant ; battleaxe ego:freezing
-KMONS:   M = fire giant ; battleaxe ego:flaming
-KMONS:   N = frost giant ; great sword ego:freezing
-KMONS:   O = frost giant ; great sword ego:flaming
-KMONS:   P = frost giant ; battleaxe ego:freezing
-KMONS:   Q = frost giant ; battleaxe ego:flaming
-NSUBST:  F = J / K / L / M / N / O / P / Q
-SHUFFLE: lw
-MAP
-.....xxxxx.....
-.lll..xxx..www.
-.lll.F.x.F.www.
-.lll.......www.
-.......l.......
-x.F..w...w..F.x
-xx...........xx
-xxx.l..{..l.xxx
-xx...........xx
-x.F..w...w..F.x
-.......l.......
-.www.......lll.
-.www.F.x.F.lll.
-.www..xxx..lll.
-.....xxxxx.....
 ENDMAP
 
 # The titans are leading their fellow giants on a charge, maybe to overthrow the
