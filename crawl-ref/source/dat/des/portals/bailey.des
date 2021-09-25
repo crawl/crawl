@@ -1222,38 +1222,38 @@ NSUBST: ! = 24 = 1... / 24 = 2... / *:.
 NSUBST: W = 28 = 4WWW / *:W
 NSUBST: d = 4:d / *=dd*$
 : bailey_setup(_G)
-MAP 
-           ccccc                                    
-          ccdddcc                                   
-          cdd3ddc                                   
-          c..5..c                                   
-          c.....c                                   
-          c..<..c                                   
-        ccc.....ccc                                 
-       ccwcc...ccWcc                                
-      ccwWWcc+ccWWWcc                               
-      cwWW;;!!!!!WWWc                               
-     ccwWW;;!;;;!!!!cc                              
-     cwWWW;;;;;;Wwww!c                              
-     cwWWW;;;;;Wwccc+c                              
-     cwWWW;;.;WwccW..c                              
-   cccwWWW;;.;WwcW..Wc                              
-  cc!cwWWW;;.Wwcc..Wcc                              
- cc!!ccwWWW;.Wwcd..Wc                               
-cc!!!!cwWwwW.Wwcd3Wcc                               
-c!!!!!ccwccw.Wwccccc                                
-c!!!!!!ccccw..Wwc                                   
-c!!!!!!+!!cw..Wwc                                   
-ccc+cccc!!ccc+ccc                                   
-ccWWWcc!!!c!!!!!c                                   
-cWWWWWc!!!c!!!!!c                                   
-cWWWWWc!!!cccc!!c                                   
-cWWWWWc!!!!c!!!!c                                   
-ccWWc+c+c!!!!!!cc                                   
- cccc...cc!!!!cc                                    
-   c.....cccccc                                     
-   c.A.B.c                                          
-   c.....c                                          
-   cc...cc                                          
-    ccccc                                           
+MAP
+           ccccc
+          ccdddcc
+          cdd3ddc
+          c..5..c
+          c.....c
+          c..<..c
+        ccc.....ccc
+       ccwcc...ccWcc
+      ccwWWcc+ccWWWcc
+      cwWW;;!!!!!WWWc
+     ccwWW;;!;;;!!!!cc
+     cwWWW;;;;;;Wwww!c
+     cwWWW;;;;;Wwccc+c
+     cwWWW;;.;WwccW..c
+   cccwWWW;;.;WwcW..Wc
+  cc!cwWWW;;.Wwcc..Wcc
+ cc!!ccwWWW;.Wwcd..Wc
+cc!!!!cwWwwW.Wwcd3Wcc
+c!!!!!ccwccw.Wwccccc
+c!!!!!!ccccw..Wwc
+c!!!!!!+!!cw..Wwc
+ccc+cccc!!ccc+ccc
+ccWWWcc!!!c!!!!!c
+cWWWWWc!!!c!!!!!c
+cWWWWWc!!!cccc!!c
+cWWWWWc!!!!c!!!!c
+ccWWc+c+c!!!!!!cc
+ cccc...cc!!!!cc
+   c.....cccccc
+   c.A.B.c
+   c.....c
+   cc...cc
+    ccccc
 ENDMAP
