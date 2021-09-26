@@ -77,6 +77,33 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
+    if (crawl_state.game_is_zotdef() && player_in_branch(root_branch)
+        && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
+    {
+        if (you.wizard)
+        {
+            // You might have used a wizard power to teleport into a wall or
+            // a loot chamber.
+            mprf(MSGCH_ERROR, "Monster %s failed to pathfind to (%d,%d) (%s)",
+                mon->name(DESC_PLAIN, true).c_str(),
+                env.orb_pos.x, env.orb_pos.y,
+                orb_position().origin() ? "you" : "the Orb");
+        }
+        else
+        {
+            // None of the maps allows the goal to ever become unreachable,
+            // and when that happens, let's crash rather than a give an
+            // effortless win with all the opposition doing nothing.
+
+            // This is only appropriate in the zotdef map itself, though,
+            // which is why we check for BRANCH_DUNGEON above.
+            // (This kind of thing is totally normal in, say, a Bazaar.)
+            die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
+                mon->name(DESC_PLAIN, true).c_str(),
+                env.orb_pos.x, env.orb_pos.y,
+                orb_position().origin() ? "you" : "the Orb");
+        }
+    }
 
     mon->travel_target = MTRAV_UNREACHABLE;
     // Pass information on to nearby monsters.
@@ -127,7 +154,7 @@ bool try_pathfind(monster* mon)
     // Also don't use pathfinding if the monster can shoot
     // across the blocking terrain, and is smart enough to
     // realise that.
-    if (need_pathfind
+    if ((!crawl_state.game_is_zotdef()) && need_pathfind
         && !mon->friendly()
         && mons_has_ranged_attack(*mon)
         && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
@@ -194,7 +221,8 @@ bool try_pathfind(monster* mon)
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
-    const int range = mon->friendly() ? 1000 : mons_tracking_range(mon);
+    // All monsters can find the Orb in Zotdef
+    const int range = (crawl_state.game_is_zotdef() || mon->friendly() ? 1000 : mons_tracking_range(mon));
 
     if (dist > range)
     {

@@ -369,6 +369,12 @@ static void _post_init(bool newc)
         // For a new game, wipe out monsters in LOS, and
         // for new hints mode games also the items.
         _zap_los_monsters();
+
+
+		
+        if (crawl_state.game_is_zotdef())
+            fully_map_level();
+
     }
 
     // This just puts the view up for the first turn.
@@ -413,6 +419,8 @@ static const game_modes_menu_item entries[] =
         "than the tutorial."},
     {GAME_TYPE_SPRINT, "Dungeon Sprint",
         "Hard, fixed single level game mode." },
+    {GAME_TYPE_ZOTDEF, "Zot Defence",
+        "Defend the Orb of Zot against waves of critters." },
     {GAME_TYPE_INSTRUCTIONS, "Instructions", "Help menu." },
     {GAME_TYPE_ARENA, "The Arena",
         "Pit computer controlled teams versus each other!" },
@@ -716,6 +724,7 @@ private:
         case GAME_TYPE_CUSTOM_SEED:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
+		case GAME_TYPE_ZOTDEF:
         case GAME_TYPE_HINTS:
             // If a game type is chosen, the user expects to start a new game.
             // Just blanking the name it it clashes for now.
@@ -895,6 +904,7 @@ void UIStartupMenu::menu_item_activated(int id)
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
+    case GAME_TYPE_ZOTDEF:
     case GAME_TYPE_HINTS:
         trim_string(input_string);
         // XXX: is it ever not a good name?

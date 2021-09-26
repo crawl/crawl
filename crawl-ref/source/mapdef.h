@@ -1116,7 +1116,7 @@ public:
     string          name;
     // Description for the map that can be shown to players.
     string          description;
-    // Order among related maps; used only for tutorial/sprint.
+    // Order among related maps; used only for tutorial/sprint/zotdef.
     int             order;
     depth_ranges    place;
 

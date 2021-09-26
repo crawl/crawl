@@ -687,6 +687,8 @@ string gametype_to_str(game_type type)
         return "sprint";
     case GAME_TYPE_HINTS:
         return "hints";
+    case GAME_TYPE_ZOTDEF:
+        return "zotdef";
     default:
         return "none";
     }
@@ -2994,6 +2996,9 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.type = Options.game.type;
 #else
         game.type = _str_to_gametype(field);
+        // Zot Defence is disabled.
+        if (game.type == GAME_TYPE_ZOTDEF)
+            game.type = NUM_GAME_TYPE;
 #endif
     }
     else if (key == "combo")

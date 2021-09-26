@@ -550,6 +550,10 @@ void update_turn_count()
         return;
     }
 
+    const int yhack = crawl_state.game_is_zotdef()
+
+
+
     const int turncount_start_x = 19 + 6;
     int ypos = 9;
     // TODO: unify this with the calculation in print_stats
@@ -558,6 +562,7 @@ void update_turn_count()
 #ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
         ypos--;
+ 
 #endif
     CGOTOXY(turncount_start_x, ypos, GOTO_STAT);
 
@@ -1387,8 +1392,29 @@ void print_stats()
             textcolour(HUD_VALUE_COLOUR);
             CPRINTF("%2d%% ", get_exp_progress());
         }
+        if (crawl_state.game_is_zotdef())
+        {
+#if TAG_MAJOR_VERSION == 34
+            CGOTOXY(1, 9 + temp, GOTO_STAT);
+#else
+            CGOTOXY(1, 9, GOTO_STAT);
+#endif
+            textcolour(Options.status_caption_colour);
+            CPRINTF("ZP: ");
+            textcolour(HUD_VALUE_COLOUR);
+            CPRINTF("%d     ", you.zot_points);
+        }
         you.redraw_experience = false;
     }
+
+
+#if TAG_MAJOR_VERSION == 34
+    int yhack = crawl_state.game_is_zotdef() + temp;
+#else
+    int yhack = crawl_state.game_is_zotdef();
+#endif
+
+
 
     // Line 9 is Noise and Turns
 #ifdef USE_TILE_LOCAL

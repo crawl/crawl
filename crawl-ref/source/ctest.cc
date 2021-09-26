@@ -40,6 +40,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "xom.h"
+#include "zotdef.h"
 
 static const string test_dir = "test";
 static const string script_dir = "scripts";

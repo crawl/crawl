@@ -1174,6 +1174,15 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     // with something at our position.
     if (item_is_orb(item))
     {
+		
+		// Can't apport the Orb in zotdef
+		if ((crawl_state.game_is_zotdef())
+		{
+			mpr("You cannot apport the Orb!");
+			return spret::abort;
+		} 
+		
+		
         fake_noisy(30, where);
 
         // There's also a 1-in-3 flat chance of apport failing.

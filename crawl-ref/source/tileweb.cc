@@ -1011,6 +1011,8 @@ void TilesFramework::_send_player(bool force_full)
                 (you.wizard ? you.get_noise_perception(false) : -1), "noise");
     _update_int(force_full, c.adjusted_noise, you.get_noise_perception(true), "adjusted_noise");
 
+    if (crawl_state.game_is_zotdef())
+        _update_int(force_full, c.zot_points, you.zot_points, "zp");
     if (you.running == 0) // Don't update during running/resting
     {
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");

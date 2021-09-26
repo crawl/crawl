@@ -36,7 +36,8 @@
 #include "travel.h"
 #include "version.h"
 #include "view.h"
-#
+#include "zotdef.h"
+
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
@@ -715,6 +716,9 @@ void do_crash_dump()
     fprintf(file, "\nVersion history:\n%s\n", Version::history().c_str());
     crawl_state.dump();
     _dump_player(file);
+
+    if (crawl_state.game_is_zotdef())
+        fprintf(file, "ZotDef wave data: %s\n", zotdef_debug_wave_desc().c_str());
 
     // Next item and monster scans. Any messages will be sent straight to
     // the file because of set_msg_dump_file()

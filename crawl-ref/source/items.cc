@@ -1751,6 +1751,13 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
         return true;
     }
 
+    if (it.base_type == OBJ_ORBS && crawl_state.game_is_zotdef()
+        && runes_in_pack() < 15)
+    {
+        mpr("You must possess at least fifteen runes to touch the sacred Orb which you defend.");
+        return true;
+    }
+
     // sanity
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
@@ -1902,6 +1909,7 @@ static void _get_rune(const item_def& it, bool quiet)
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");
         else if (nrunes == ZOT_ENTRY_RUNES)
+                 && !crawl_state.game_is_zotdef())
         {
             // might be inappropriate in new Sprints, please change it then
             mprf("%d runes! That's enough to enter the realm of Zot.",

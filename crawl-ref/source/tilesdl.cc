@@ -1246,6 +1246,11 @@ void TilesFramework::layout_statcol()
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
         m_region_stat->resize(m_region_stat->mx, min_stat_height);
+
+        if (crawl_state.game_is_zotdef())
+            ++crawl_view.hudsz.y;
+
+
         m_statcol_top += m_region_stat->dy;
         bool resized_inventory = false;
 

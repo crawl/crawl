@@ -1,0 +1,328 @@
+###############################################################################
+# zotdef.des - the zotdef (and only) vault for D:1.
+###############################################################################
+
+{{
+  function zotdef_setup(e)
+
+    e.orient("encompass")
+    e.lfloorcol("magenta")
+    e.lrockcol("lightmagenta")
+    e.lfloortile("floor_rough_magenta")
+    e.lrocktile("wall_zot_lightmagenta")
+
+    e.colour("c = magenta")
+    e.tile("c = wall_zot_magenta")
+
+    e.marker("Y = feat:stone_stairs_up_i")
+    e.kfeat("Y = .")
+    e.kitem("Z = Orb of Zot")
+    e.kitem("* = star_item")
+    e.kitem("| = superb_item")
+
+    e.kmask("*| = no_monster_gen")
+    e.kprop("*| = no_rtele_into")
+
+    e.lua_marker("F", fog_machine {
+        cloud_type = "purple smoke",
+        pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
+        size = 2, walk_dist = 2, spread_rate= 35
+    })
+    e.lua_marker("E", fog_machine {
+        cloud_type = "purple smoke",
+        pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
+        size = 2, walk_dist = 2, spread_rate= 35
+    })
+
+  end
+}}
+
+##############################################################################
+# hall_of_Zot_5
+
+NAME:    zotvault
+TAGS:    zotdef
+DESC:    Scenario I: Hall of Zot
+ORDER:   1
+: zotdef_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXXXXxxxxxxxxxxxxXXXXxxxxxxxxxxxxxxxxxXXXXxxxxxxxxxxxxXXXXXxxxxxxxxxx
+xxxxxxxxxxxX|||XxxxxxxxxxxxxX||XxxxxxxxxxxxxxxxxxX||XxxxxxxxxxxxxX|||Xxxxxxxxxxx
+xxxxxxxxxxxX|||XxxxxxxxxxxxxX||XxxxxxxxxxxxxxxxxxX||XxxxxxxxxxxxxX|||Xxxxxxxxxxx
+xxxxxxxxxxxXXXoXXXXXXXXXXXXXoXXXxxxxxxxxxxxxxxxxxXXXoXXXXXXXXXXXXXoXXXxxxxxxxxxx
+xxxxxxxxxxxXXXX.............XXXXxxxxxxxxxxxxxxxxxXXXX.............XXXXxxxxxxxxxx
+xxxxxxxxxxXX...................XXXxxxxxxxxxxxxxXXX...................XXxxxxxxxxx
+xxxxxxxxxXX......................XXxxxxxxxxxxxXX......................XXxxxxxxxx
+xxxxxxxxxX........................XXXXXXXXXXXXX........................Xxxxxxxxx
+xxxxxxxxxX........................XXX.......XXX........................Xxxxxxxxx
+xxxxxxxxxXX.......................XX.........XX.......................XXxxxxxxxx
+xxxxxxxxxxXX......................X.....Y.....X......................XXxxxxxxxxx
+xxxxxxxxxxxXX...........................Z...........................XXxxxxxxxxxx
+xxxxxxxxxxXX......................X...........X......................XXxxxxxxxxx
+xxxxxxxxxXX.......................XX.........XX.......................XXxxxxxxxx
+xxxxxxxxxX........................XXX.......XXX........................Xxxxxxxxx
+xxxxxxxxxX........................cXXXXXXXXXXXc........................Xxxxxxxxx
+xxxxxxxxxXX......................ccccccccccccccc......................XXxxxxxxxx
+xxxxxxxxxxXX...................ccccccccccccccccccc...................XXxxxxxxxxx
+xxxxxxxxxxxXX...............ccccccccccccccccccccccccc...............XXxxxxxxxxxx
+xxxxxxxxxxxxXX.....ccccccccccccccccccccccccccccccccccccccccccc.....XXxxxxxxxxxxx
+xxxxxxxxxxxcc...................ccccccccccccccccc...................ccxxxxxxxxxx
+xxxxxxxxxxcc................cc....ccccccccccccc....cc................ccxxxxxxxxx
+xxxxxxxxxcc..................ccc...ccccccccccc...ccc..................ccxxxxxxxx
+xxxxxxxxxc....................ccc...............ccc....................cxxxxxxxx
+xxxxxxxxxc....................cxcc.............ccxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxc.............cxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxcc...........ccxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxxc...........cxxxc....................cxxxxxxxx
+xxxxxxxxxc....................cxxcc...........ccxxc....................cxxxxxxxx
+xxxxxxxxxcc..................ccxxc.............cxxcc..................ccxxxxxxxx
+xxxxxxxxxxcc................ccxxcc.............ccxxcc................ccxxxxxxxxx
+xxxxxxxxxxxcc..............ccxxxc......(.{......cxxxcc..............ccxxxxxxxxxx
+xxxxxxxxxxXXoccccccccccccccoXXxxcccccccc[ccccccccxxXXoccccccccccccccoXXxxxxxxxxx
+xxxxxxxxxXX|XXxxxxxxxxxxxxXX*XXxxxxxxxxxxxxxxxxxxxXX*XXxxxxxxxxxxxxXX|XXxxxxxxxx
+xxxxxxxxxX|||XxxxxxxxxxxxxX*|*XxxxxxxxxxxxxxxxxxxxX*|*XxxxxxxxxxxxxX|||Xxxxxxxxx
+xxxxxxxxxXX|XXxxxxxxxxxxxxXX*XXxxxxxxxxxxxxxxxxxxxXX*XXxxxxxxxxxxxxXX|XXxxxxxxxx
+xxxxxxxxxxXXXxxxxxxxxxxxxxxXXXxxxxxxxxxxxxxxxxxxxxxXXXxxxxxxxxxxxxxxXXXxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    zotvault2
+TAGS:    zotdef
+DESC:    Scenario II: Battle Heart
+ORDER:   2
+FTILE:   "E[ = floor_rough_red
+COLOUR:  "E = red
+: zotdef_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXxxxxxxxxxx
+xxxxxxxxXXX.........XXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXX.........XXXxxxxxxxx
+xxxxxxxXX..............XXXxxxxxxxxxxxxXXXxxxxxxxxxxxxXXX..............XXxxxxxxx
+xxxxxxXX.................XXxxxxxxxxxxXX.XXxxxxxxxxxxXX.................XXxxxxxx
+xxxxxXX...................XXxxxxxxxxXX...XXxxxxxxxxXX...................XXxxxxx
+xxxxxX.....................XXXxxxxxXX.....XXxxxxxXXX.....................Xxxxxx
+xxxxxX.......................XXXXXXX.......XXXXXXX.......................Xxxxxx
+xxxxxX.......................X.........Y.........X.......................Xxxxxx
+xxxxxXX................................Z................................XXxxxxx
+xxxxxxXX...............XXXXXXX...................XXXXXXX...............XXxxxxxx
+xxxxxxxXXx...........XXXxxxxxXXXXXXX.......XXXXXXXxxxxxXXX...........XXXxxxxxxx
+xxxxxxxxxXXX.......XXXxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxXXX.......XXXxxxxxxxxx
+xxxxxxxxxxxXX.....XXxxxxxxxxxxxxxxxxXX...XXxxxxxxxxxxxxxxxxXX.....XXxxxxxxxxxxx
+xxxxxxxxxxxxX.....XXxxxxxxxxxxxxxxxxxXX.XXxxxxxxxxxxxxxxxxxXX.....Xxxxxxxxxxxxx
+xxxxxxxxxxXXX......XXXXXXXXXxxxxXXXXXXXXXXXXXXXxxxxXXXXXXXXX......XXXxxxxxxxxxx
+xxxxxxxxxXX................XXxxxX*|||*XXX*|||*XxxxXX................XXxxxxxxxxx
+xxxxxxxxxX..................XxxxX|X|X|XXX|X|X|XxxxX..................Xxxxxxxxxx
+xxxxxxxxxX..................XxxxX||X||ooo||X||XxxxX..................Xxxxxxxxxx
+xxxxxxxxXX..................XXxxX|X|X|XXX|X|X|XxxXX..................XXxxxxxxxx
+xxxxxxxxX....................XxxX*|||*XXX*|||*XxxX....................Xxxxxxxxx
+xxxxxxxxX....................ooooXXXXXXXXXXXXXoooo....................Xxxxxxxxx
+xxxxxxxxXX..................XXxxxxxxxxxxxxxxxxxxxXX..................XXxxxxxxxx
+xxxxxxxxxXXX..............XXXxxxxxxxxxxxxxxxxxxxxxXXX..............XXXxxxxxxxxx
+xxxxxxxxxxxXXX..........XXXxxxxxxxxxxxxxxxxxxxxxxxxxXXX..........XXXxxxxxxxxxxx
+xxxxxxxxxxxxxXX.......XXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXX.......XXxxxxxxxxxxxxx
+xxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxXX...XXcccccccccxxxxxxxxxxxxxxxxxcccccccccXX...XXxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc.............cccccccxxxxxccccccc.............cxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxccccccc.........."""cccxccc"""..........cccccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccccccc""""""ccc""""""ccccccccccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcc""""""""c""""""""ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxc"""""""""""""""""""cxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccxxxxxxxc"""""""""""""""""""cxxxxxxxccccccccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc......cccccxxxc"""""""""""""""""""cxxxccccc......ccxxxxxxxxxxxxx
+xxxxxxxxxxxccc...........ccxcc"""""""""""""""""""ccxcc...........cccxxxxxxxxxxx
+xxxxxxxxxxcc..............ccc.."""""""""""""""""..ccc..............ccxxxxxxxxxx
+xxxxxcccccc....................c"""""""""""""""cc...................ccccccxxxxx
+xxxxxc......................ccccc"""""""""""""ccccc......................cxxxxx
+xxxxxc.........ccc........cccxxxccc"""""""""cccxxxccc........ccc.........cxxxxx
+xxxxxcF{.......cxcc.....cccxxxxxxxccc""[""cccxxxxxxxccc.....ccxc.......(Fcxxxxx
+xxxxxc........ccxxcc..cccxxxxxxxxxxxcc"E"ccxxxxxxxxxxxccc..ccxxcc........cxxxxx
+xxxxxc........cxxxxccccxxxxxxxxxxxxxxcc"ccxxxxxxxxxxxxxxccccxxxxc........cxxxxx
+xxxxxccccccccccxxxxxxxxxxxxxxxxxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# This one is very sensitive to the pathfinding algorithm, and currently
+# doesn't work (all critters enter the Orb chamber from the south).
+#
+# Okay, this is still a bit odd, but now critters only *rarely* enter
+# from the south, and rarely is better than always.
+NAME:    zotvault3
+TAGS:    zotdef no_rotate
+DESC:    Scenario III: Two or Three?
+ORDER:   3
+: zotdef_setup(_G)
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....Y.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.........Z.........XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXX..................XX...XX...........XX...XX..................XXXXXXXX
+XXXXXXX....................X..XXXXX.......XXXXX..X....................XXXXXXX
+XXXXXXX....................X..XXXXXX.....XXXXXX..X....................XXXXXXX
+XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
+XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
+XXXXXXX..............XX....X..XXXXXXXX.XXXXXXXX..X....XX..............XXXXXXX
+XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
+XXXXXXXX..............XX...X..XXXXXXXX.XXXXXXXX..X...XX..............XXXXXXXX
+XXXXXXXXXXXXXXX.......XX...XX...................XX...XX.......XXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.....XX.....X.................X.....XX.....XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX...XXX....X.................X....XXX...XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX....XXXXX....XXXXXXX.......XXXXXXX....XXXXX....XXXXXXXXXXXXXXX
+XXXXXXXXXXXXX....XXXXXXXXX....XXXX.........XXXX....XXXXXXXXX....XXXXXXXXXXXXX
+XXXXXXXXXXX....XXXXX|||XXXXX....X...........X....XXXXX|||XXXXX....XXXXXXXXXXX
+XX...........XXXXXXX|||XXXXXXX.................XXXXXXX|||XXXXXXX...........XX
+X..........XXXXXXXXXX|XXXXXXXXXX.............XXXXXXXXXX|XXXXXXXXXX..........X
+X........XXXXXXXXXXXX|XXXXXXXXXXXX.........XXXXXXXXXXXX|XXXXXXXXXXXX........X
+X.......Xooooooo*****|*****oooooooX.......Xooooooo*****|*****oooooooX.......X
+X........XXXXXXXXXXXX|XXXXXXXXXXXX.........XXXXXXXXXXXX|XXXXXXXXXXXX........X
+X..........XXXXXXXXXX|XXXXXXXXXX.............XXXXXXXXXX|XXXXXXXXXX..........X
+XX...........XXXXXXX|||XXXXXXX.................XXXXXXX|||XXXXXXX...........XX
+XXXXXXXXXXX....XXXXX|||XXXXX.....................XXXXX|||XXXXX....XXXXXXXXXXX
+XXXXXXXXXXXX.....XXXXXXXXX.........................XXXXXXXXX.....XXXXXXXXXXXX
+XXXXXXXXXXXXX......XXXXX.............................XXXXX......XXXXXXXXXXXXX
+XXXXXXXXXXXXXX...............XXXXXXXXXXXXXXXXXXX...............XXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX.............XXXXXXXXXXXXXXXXXXXXX.............XXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXx.xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx.xXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX....XXX....XXXXXXXXXXXXXXXXXXXXXXX....XXX....XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXX....XXXXXXX....XXXXXXXXXXXXXXXXXXX....XXXXXXX....XXXXXXXXXXXXXX
+XXXXXXXXXXXX....XXXXXXXXXXX....XXXXXXXXXXXXXXX....XXXXXXXXXXX....XXXXXXXXXXXX
+XXXXXXXXX.....XXXXXXXXXXXXXXX....XXXXXXXXXXX....XXXXXXXXXXXXXXX.....XXXXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXX.....XXXXX.....XXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXXXX....XXX....XXXXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXXXXX....X....XXXXXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXX...X...XXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXX
+XXXXXX.......XXXXXXXXXXXXXXXXXXXXXX...X...XXXXXXXXXXXXXXXXXXXXXX.......XXXXXX
+XXXXX.........XXXXXXXXXXXXXXXXXXXXXXX.[.XXXXXXXXXXXXXXXXXXXXXXX.........XXXXX
+XXXX.....{.....XXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXX.....(.....XXXX
+XXX.............XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.............XXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:    zotvault4
+TAGS:    zotdef no_rotate
+DESC:    Scenario IV: Columnade
+ORDER:   4
+: zotdef_setup(_G)
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......X
+X...F...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...F...X
+X...(...XXXXXXXX**|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|**XXXXXXXX...{...X
+X.......XXXXXXXX*|*XXXXXXXXXXXX...............XXXXXXXXXXXX*|*XXXXXXXX.......X
+X.......XXXXXXXX|**XXXXXXXXXXXX...............XXXXXXXXXXXX**|XXXXXXXX.......X
+XXXX....XXXXXXXoXXXXXX.................................XXXXXXoXXXXXXX....XXXX
+XXXX...........XXXXXXX.................................XXXXXXX...........XXXX
+XXXX...........XXXXXXX......XXXXX...X...X...XXXXX......XXXXXXX...........XXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXX...........XXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXX...X...X...XXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXX............XXX...XXXXXXXX...........XXXXXXXX...XXX............XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXX...X...X...XXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX............XXX...XXXXXXXX...........XXXXXXXX...XXX............XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXX...X...X...XXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX.....XX.....XXX...XXXXXXXX...........XXXXXXXX...XXX.....XX.....XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXX...X...X...XXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX............XXX...XXXXXXXX...........XXXXXXXX...XXX............XXXXXXX
+XXXXXXX..X......X..XXX...XXXXXXXXXXXX...XXXXXXXXXXXX...XXX..X......X..XXXXXXX
+XXXXXXX............XXX...XXXXXXXXXXX.....XXXXXXXXXXX...XXX............XXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX....XXXXXXX...XXXXXXXXXXX..X..XXXXXXXXXXX...XXXXXXX....XXXXXXXXXXX
+XXXXXXXXXXX..............XXXXXXXXXXX..X..XXXXXXXXXXX..............XXXXXXXXXXX
+XXXXXXXXXX................XXXXXXXXXX..X..XXXXXXXXXX................XXXXXXXXXX
+XXXXXXXXX..................XXXXXXXXX..X..XXXXXXXXX..................XXXXXXXXX
+XXXXXXXXX....XXXXoXXXXX....XXXXXXXXX..X..XXXXXXXXX....XXXXXoXXXX....XXXXXXXXX
+XXXXXXXXX...XXXXXoXXXXXX...XXXXXXXX...X...XXXXXXXX...XXXXXXoXXXXX...XXXXXXXXX
+XXXXXXXXXXXXXXXXXoXXXXXXXXXXXXXXXX...XXX...XXXXXXXXXXXXXXXXoXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXoXXXXXXXXXXXXXXX...XXXXX...XXXXXXXXXXXXXXXoXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX|||XXXXXXXXXXXXX...XXXXXXX...XXXXXXXXXXXXX|||XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX|||XXXXXXXXXXXX...XXXXXXXXX...XXXXXXXXXXXX|||XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXX...XXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXX.....XXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXX.......XXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX.....................XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX.....................XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXoXXXXX.....Z.....XXXXXoXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXX.....Y.....XXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXX|||XXXXXXX.........XXXXXXX|||XXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:    zotvault5
+TAGS:    zotdef no_rotate
+DESC:    Scenario V: Glassed Sandwich
+ORDER:   5
+: zotdef_setup(_G)
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX..(.............................................................{..XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...............................XX.XX...............................XXXXX
+XXXXX..............................Xo...oX..............................XXXXX
+XXXXX.............................Xo.....oX.............................XXXXX
+XXXXX............................Xo.......oX............................XXXXX
+XXXXX...........................Xo.........oX...........................XXXXX
+XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX.....Y.....XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
+XXXXXX..XX|||||||||||||||***ooooooooo.Z.oooooooo***|||||||||||||||XXX..XXXXXX
+XXXXX....XXXXXXXXXXXXXXXXXXXXXXXX...........XXXXXXXXXXXXXXXXXXXXXXX.....XXXXX
+XXXXX...........................Xo.........oX...........................XXXXX
+XXXXX............................Xo.......oX............................XXXXX
+XXXXX.............................Xo.....oX.............................XXXXX
+XXXXX..............................Xo...oX..............................XXXXX
+XXXXX...............................XX.XX...............................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...........XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXX..(.............................................................[..XXXXX
+XXXXX...................................................................XXXXX
+XXXXX...................................................................XXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP

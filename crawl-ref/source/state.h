@@ -214,6 +214,7 @@ public:
     bool game_is_tutorial() const;
     bool game_is_arena() const;
     bool game_is_sprint() const;
+    bool game_is_zotdef() const;
     bool game_is_hints() const;
     bool game_is_hints_tutorial() const;
 

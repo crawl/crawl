@@ -66,6 +66,16 @@ opacity_type opacity_fully_no_trans::operator()(const coord_def& p) const
 opacity_type opacity_immob::operator()(const coord_def& p) const
 {
     const monster* mons = monster_at(p);
+	
+
+    // In Zotdef, plants don't block movement as critters
+    // will attack them
+    //if (mons && crawl_state.game_is_zotdef())
+    //    return opc_no_trans(p);
+	//fixhere
+	
+	
+	
     return (mons && mons->is_stationary()) ? OPC_OPAQUE : opc_no_trans(p);
 }
 

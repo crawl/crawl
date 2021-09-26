@@ -40,7 +40,7 @@ bool god_has_name(god_type god);
 // orthogonal to whether the player can worship the god in question.
 bool is_unavailable_god(god_type god);
 
-god_type random_god();
+god_type random_god(bool available = true);
 
 int piety_breakpoint(int i);
 string god_name(god_type which_god, bool long_name = false);

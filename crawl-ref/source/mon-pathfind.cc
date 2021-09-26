@@ -96,6 +96,7 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
     traverse_in_sight = (!crawl_state.game_is_arena()
+                         && !crawl_state.game_is_zotdef()
                          && mon->friendly() &&  mon->is_summoned()
                          && you.see_cell_no_trans(mon->pos()));
 

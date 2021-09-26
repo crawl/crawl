@@ -387,6 +387,22 @@ void bring_to_safety()
     if (player_in_branch(BRANCH_ABYSS))
         return abyss_teleport();
 
+
+
+
+    if (crawl_state.game_is_zotdef() && !orb_position().origin())
+    {
+        // In ZotDef, it's not the safety of your sorry butt that matters.
+        for (distance_iterator di(env.orb_pos, true, false); di; ++di)
+            if (!monster_at(*di)
+                && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
+            {
+                you.moveto(*di);
+                return;
+            }
+    }
+	
+	
     coord_def best_pos, pos;
     double min_threat = DBL_MAX;
     int tries = 0;

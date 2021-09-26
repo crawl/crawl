@@ -1034,6 +1034,20 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
+static monster_type _zotdef_shadow()
+{
+    for (int tries = 0; tries < 100; tries++)
+    {
+        monster_type mc = env.mons_alloc[random2(MAX_MONS_ALLOC)];
+        if (!invalid_monster_type(mc) && !mons_is_unique(mc))
+            return mc;
+    }
+
+    return RANDOM_COMPATIBLE_MONSTER;
+}
+
+
+
 spret cast_shadow_creatures(int st, god_type god, bool fail)
 {
     if (rude_stop_summoning_prompt("summon"))
@@ -1043,13 +1057,19 @@ spret cast_shadow_creatures(int st, god_type god, bool fail)
     const bool scroll = (st == MON_SUMM_SCROLL);
     mpr("Wisps of shadow whirl around you...");
 
+    monster_type critter = RANDOM_COMPATIBLE_MONSTER;
+	
+	//zotdefence shadow code?
+    if (crawl_state.game_is_zotdef())
+        critter = _zotdef_shadow();
+
     int num = (scroll ? roll_dice(2, 2) : 1);
     int num_created = 0;
 
     for (int i = 0; i < num; ++i)
     {
         if (monster *mons = create_monster(
-            mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
+            mgen_data(critter, BEH_FRIENDLY, you.pos(),
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
                       .set_summoned(&you, scroll ? 2 : 1, st, god)

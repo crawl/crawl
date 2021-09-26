@@ -584,6 +584,12 @@ bool game_state::game_is_sprint() const
     return type == GAME_TYPE_SPRINT;
 }
 
+bool game_state::game_is_zotdef() const
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_ZOTDEF;
+}
+
 bool game_state::game_is_hints() const
 {
     ASSERT(game_is_valid_type());
@@ -620,6 +626,8 @@ string game_state::game_type_name_for(game_type _type)
         return "Dungeon Sprint";
     case NUM_GAME_TYPE:
         return "Unknown";
+    case GAME_TYPE_ZOTDEF:
+        return "Zot Defence";
     }
 }
 
@@ -627,7 +635,8 @@ string game_state::game_savedir_path() const
 {
     if (!game_is_valid_type())
         return ""; // a game from the future -- avoid the ASSERT below
-    return game_is_sprint()? "sprint/" : "";
+    return game_is_sprint()? "sprint/" :
+           game_is_zotdef()? "zotdef/" : "";
 }
 
 string game_state::game_type_qualifier() const
@@ -636,6 +645,8 @@ string game_state::game_type_qualifier() const
         return "-seeded";
     if (crawl_state.game_is_sprint())
         return "-sprint";
+    if (crawl_state.game_is_zotdef())
+        return "-zotdef";
     if (crawl_state.game_is_tutorial())
         return "-tutorial";
     if (crawl_state.game_is_hints())

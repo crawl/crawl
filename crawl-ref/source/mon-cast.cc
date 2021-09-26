@@ -5883,6 +5883,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_ICE_BEAST:
         _summon(*mons, MONS_ICE_BEAST, 5, slot);
+		
+        // Zotdef: reduce ice beast frequency, and reduce duration to 3
+        /*if (!crawl_state.game_is_zotdef() || !one_chance_in(3))
+        {
+            int dur = crawl_state.game_is_zotdef() ? 3 : 5;
+            create_monster(
+                mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(mons), mons,
+                          dur, spell_cast, mons->pos(), mons->foe, 0, god));
+        }
+		*/
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon a ring of icky crawling fungi.

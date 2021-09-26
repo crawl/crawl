@@ -153,6 +153,13 @@
 #include "wiz-you.h" // FREEZE_TIME_KEY
 #include "wizard.h" // handle_wizard_command() and enter_explore_mode()
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
+/*
+#include "wiz-dgn.h"
+#include "wiz-dump.h"
+#include "wiz-fsim.h"
+#include "wiz-item.h"
+#include "wiz-mon.h" */
+#include "zotdef.h"
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -2536,6 +2543,34 @@ void world_reacts()
         _update_golubria_traps(you.time_taken);
     if (env.level_state & LSTATE_STILL_WINDS)
         _update_still_winds();
+
+    if (crawl_state.game_is_zotdef() && you.num_turns == 100)
+        zotdef_set_wave();
+	
+	
+	//This chunk of code is zotdef specific.
+    // Zotdef spawns only in the main dungeon
+    if (crawl_state.game_is_zotdef()
+        && player_in_branch(root_branch)
+        && you.num_turns > 100)
+    {
+        zotdef_bosses_check();
+        for (int i = 0; i < ZOTDEF_SPAWN_SIZE; i++)
+        {
+            // Reduce critter frequency for first wave
+            if (you.num_turns<ZOTDEF_CYCLE_LENGTH && one_chance_in(3))
+                continue;
+
+            if (you.num_turns % ZOTDEF_CYCLE_LENGTH > ZOTDEF_CYCLE_INTERVAL
+                && x_chance_in_y(you.num_turns % ZOTDEF_CYCLE_LENGTH, ZOTDEF_CYCLE_LENGTH*3))
+            {
+                zotdef_spawn(false);
+            }
+        }
+    }
+	//END OF ZOTDEF CODE CHUNK
+	
+	
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 
@@ -2557,8 +2592,12 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        if (you.num_turns < INT_MAX)
+        // Zotdef: Time only passes in the hall of zot
+        if ((!crawl_state.game_is_zotdef() || player_in_branch(root_branch))
+            && you.num_turns < INT_MAX)
+        {
             you.num_turns++;
+        }
 
         _update_place_stats();
 

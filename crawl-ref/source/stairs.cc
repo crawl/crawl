@@ -961,6 +961,14 @@ void floor_transition(dungeon_feature_type how,
 
     autotoggle_autopickup(false);
     request_autopickup();
+#if TAG_MAJOR_VERSION == 34
+
+    // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
+    // place for 5 moves. Nasty, but punishes players for using portals as
+    // quick-healing stopovers.
+    if (!going_up && crawl_state.game_is_zotdef())
+        start_delay(DELAY_UNINTERRUPTIBLE, 5);
+#endif
 }
 
 /**

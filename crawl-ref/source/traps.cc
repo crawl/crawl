@@ -86,12 +86,18 @@ void trap_def::prepare_ammo(int charges)
                                                : 30 + random2(20));
         break;
     case TRAP_TELEPORT:
-        ammo_qty = 1;
+        if (crawl_state.game_is_zotdef())
+            ammo_qty = 2 + random2(2);
+        else
+            ammo_qty = 1;
         break;
     default:
         ammo_qty = 0;
         break;
     }
+    // Zot def: traps have 10x as much ammo
+    if (crawl_state.game_is_zotdef() && type != TRAP_GOLUBRIA)
+        ammo_qty *= 10;
 }
 
 void trap_def::reveal()
@@ -152,7 +158,7 @@ bool trap_def::is_safe(actor* act) const
         return true;
     }
 
-    if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
+    if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT || crawl_state.game_is_zotdef())
         return true;
 
     // Let players specify traps as safe via lua.
@@ -462,6 +468,15 @@ void trap_def::trigger(actor& triggerer)
     if (!you.see_cell_no_trans(pos))
         return;
 
+
+
+    // Zot def - player never sets off known traps
+    if (crawl_state.game_is_zotdef() && you_trigger && you_know)
+    {
+        mpr("You step safely past the trap.");
+        return;
+    }
+
     // If set, the trap will be removed at the end of the
     // triggering process.
     bool trap_destroyed = false, know_trap_destroyed = false;
@@ -484,9 +499,20 @@ void trap_def::trigger(actor& triggerer)
         return;
     }
 
+
     // Tentacles aren't real monsters, and shouldn't invoke traps.
     if (m && mons_is_tentacle_or_tentacle_segment(m->type))
         return;
+
+
+    // Zot def - friendly monsters never set off known traps
+    if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
+    {
+        simple_monster_message(m," carefully avoids a trap.");
+        return;
+    }
+
+
 
     // Store the position now in case it gets cleared in between.
     const coord_def p(pos);
@@ -560,14 +586,25 @@ void trap_def::trigger(actor& triggerer)
         // Alarms always mark the player, but not through glass
         // The trap gets destroyed to prevent the player from abusing an alarm
         // trap found in favourable terrain.
-        if (!you.see_cell_no_trans(pos))
+		
+		//But if you are in ZotDef, the alarm trap should still trigger out of your line of sight.
+		//This is to alert you of incoming monsters I suppose
+        if (!you.see_cell_no_trans(pos) && !crawl_state.game_is_zotdef())
             break;
-        trap_destroyed = true;
+       
+	   // In ZotDef, alarm traps don't go away after use.
+        if (!crawl_state.game_is_zotdef())
+            trap_destroyed = true;
+		
+		
         if (you_trigger)
             mprf("You set off the alarm!");
+		else if(crawl_state.game_is_zotdef())
+			mprf("%s sets off the alarm!", triggerer.name(DESC_THE).c_str());
         else
             mprf("%s %s the alarm!", triggerer.name(DESC_THE).c_str(),
                  mons_intel(*m) >= I_HUMAN ? "pulls" : "sets off");
+ 
 
         if (silenced(pos))
         {
@@ -581,7 +618,12 @@ void trap_def::trigger(actor& triggerer)
             noisy(40, pos, msg.c_str(), triggerer.mid);
         }
 
-        you.sentinel_mark(true);
+
+		//alarm traps didn't always apply sentinel_marks to players
+		//since they are supposed to be usefull to playres in ZOT defence, we dont want this to happen
+		if (!crawl_state.game_is_zotdef())
+			you.sentinel_mark(true);
+
         break;
 
     case TRAP_NET:
@@ -1034,7 +1076,8 @@ bool is_valid_shaft_level()
     // or generated, so should not depend on properties of the level itself,
     // but only on its level_id.
     const level_id place = level_id::current();
-    if (crawl_state.game_is_sprint())
+
+    if (crawl_state.game_is_sprint()  || crawl_state.game_is_zotdef())
         return false;
 
     if (!is_connected_branch(place))

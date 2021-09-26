@@ -246,6 +246,15 @@ public:
 
     branch_type where_are_you;
     int depth;
+	
+	
+	
+	int  zot_points; // ZotDef currency
+	bool enough_zp(int minimum, bool suppress_msg);
+	bool player_control_teleport(bool temp = true);
+	// The type of a zotdef wave, if any.
+	string zotdef_wave_name;
+
 
     god_type religion;
     string jiyva_second_name;       // Random second name of Jiyva
@@ -273,6 +282,7 @@ public:
         int           level_gained;
         mutation_type mutation;
     };
+
 
     vector<demon_trait> demonic_traits;
 
@@ -1020,6 +1030,8 @@ int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
 int player_willpower(bool calc_unid = true, bool temp = true);
 
+bool player_control_teleport(bool temp = true);
+
 int player_shield_class();
 int player_displayed_shield_class();
 bool player_omnireflects();
@@ -1074,6 +1086,7 @@ bool player_has_feet(bool temp = true, bool include_mutations = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
+bool enough_zp(int minimum, bool suppress_msg);
 
 void calc_hp(bool scale = false, bool set = false);
 void calc_mp(bool scale = false);

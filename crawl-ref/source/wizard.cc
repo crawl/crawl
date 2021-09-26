@@ -174,7 +174,16 @@ static void _do_wizard_command(int wiz_command)
     case 'z': wizard_cast_spec_spell(); break;
     // case 'Z': break;
     // case CONTROL('Z'): break;
-
+    case CONTROL('Z'):
+        if (crawl_state.game_is_zotdef())
+        {
+            you.zot_points = 1000000;
+            you.redraw_experience = true;
+        }
+        else
+            mpr("But you're not in Zot Defence!");
+        break;
+		
     case '!': wizard_memorise_spec_spell(); break;
     case '@': wizard_set_stats(); break;
     case '#': wizard_load_dump_file(); break;
@@ -419,6 +428,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>^</w>      set piety to a value\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
+					   "<w>Ctrl-Z</w> gain lots of Zot Points\n"
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
                        "<w>n</w>      set Zot clock to a value\n"

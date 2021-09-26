@@ -3383,6 +3383,8 @@ tileidx_t tileidx_gametype(const game_type gtype)
         return TILEG_STARTUP_HINTS;
     case GAME_TYPE_SPRINT:
         return TILEG_STARTUP_SPRINT;
+    case GAME_TYPE_ZOTDEF:
+        return TILEG_STARTUP_ZOTDEF;
     case GAME_TYPE_INSTRUCTIONS:
         return TILEG_STARTUP_INSTRUCTIONS;
     case GAME_TYPE_ARENA:
@@ -3721,6 +3723,62 @@ tileidx_t tileidx_ability(const ability_type ability)
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
         return TILEG_ABILITY_RENOUNCE_RELIGION;
+
+    // Zot Defence abilities
+    case ABIL_MAKE_FUNGUS:
+        return TILEG_ABILITY_ZOTDEF_FUNGUS;
+    case ABIL_MAKE_PLANT:
+        return TILEG_ABILITY_ZOTDEF_PLANT;
+    case ABIL_MAKE_OKLOB_SAPLING:
+        return TILEG_ABILITY_ZOTDEF_OKLOB_SAPLING;
+    case ABIL_MAKE_ICE_STATUE:
+        return TILEG_ABILITY_ZOTDEF_ICE_STATUE;
+    case ABIL_MAKE_OCS:
+        return TILEG_ABILITY_ZOTDEF_OCS;
+    case ABIL_MAKE_OBSIDIAN_STATUE:
+        return TILEG_ABILITY_ZOTDEF_OBSIDIAN_STATUE;
+    case ABIL_MAKE_CURSE_SKULL:
+        return TILEG_ABILITY_ZOTDEF_CURSE_SKULL;
+    case ABIL_MAKE_TELEPORT:
+        return TILEG_ABILITY_ZOTDEF_TELEPORT;
+    case ABIL_MAKE_ARROW_TRAP:
+        return TILEG_ABILITY_ZOTDEF_ARROW_TRAP;
+    case ABIL_MAKE_BOLT_TRAP:
+        return TILEG_ABILITY_ZOTDEF_BOLT_TRAP;
+    case ABIL_MAKE_SPEAR_TRAP:
+        return TILEG_ABILITY_ZOTDEF_SPEAR_TRAP;
+    case ABIL_MAKE_NEEDLE_TRAP:
+        return TILEG_ABILITY_ZOTDEF_NEEDLE_TRAP;
+    case ABIL_MAKE_NET_TRAP:
+        return TILEG_ABILITY_ZOTDEF_NET_TRAP;
+    case ABIL_MAKE_ALARM_TRAP:
+        return TILEG_ABILITY_ZOTDEF_ALARM_TRAP;
+    case ABIL_MAKE_BLADE_TRAP:
+        return TILEG_ABILITY_ZOTDEF_BLADE_TRAP;
+    case ABIL_MAKE_OKLOB_CIRCLE:
+        return TILEG_ABILITY_ZOTDEF_OKLOB_CIRCLE;
+    case ABIL_MAKE_ACQUIRE_GOLD:
+        return TILEG_ABILITY_ZOTDEF_GOLD;
+    case ABIL_MAKE_ACQUIREMENT:
+        return TILEG_ABILITY_ZOTDEF_ACQUIREMENT;
+    case ABIL_MAKE_WATER:
+        return TILEG_ABILITY_ZOTDEF_WATER;
+    case ABIL_MAKE_LIGHTNING_SPIRE:
+        return TILEG_ABILITY_ZOTDEF_LIGHTNING_SPIRE;
+    case ABIL_MAKE_BAZAAR:
+        return TILEG_ABILITY_ZOTDEF_BAZAAR;
+    case ABIL_MAKE_ALTAR:
+        return TILEG_ABILITY_ZOTDEF_ALTAR;
+    case ABIL_MAKE_GRENADES:
+        return TILEG_ABILITY_ZOTDEF_SPORE;
+    case ABIL_MAKE_SAGE:
+        return TILEG_ABILITY_ZOTDEF_SAGE;
+    case ABIL_MAKE_OKLOB_PLANT:
+        return TILEG_ABILITY_ZOTDEF_OKLOB_PLANT;
+    case ABIL_MAKE_BURNING_BUSH:
+        return TILEG_ABILITY_ZOTDEF_BURNING_BUSH;
+    case ABIL_REMOVE_CURSE:
+        return TILEG_ABILITY_ZOTDEF_REMOVE_CURSE;
 
     default:
         return TILEG_ERROR;

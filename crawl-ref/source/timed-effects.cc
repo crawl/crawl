@@ -350,8 +350,10 @@ void handle_time()
     // The checks below assume the function is called at least
     // once every 50 elapsed time units.
 
-    // Every 5 turns, spawn random monsters
-    if (_div(base_time, 50) > _div(old_time, 50))
+    // Every 5 turns, spawn random monsters.
+	//But not in Zotdef.
+    if (_div(base_time, 50) > _div(old_time, 50)
+        && !crawl_state.game_is_zotdef())
     {
         spawn_random_monsters();
         if (player_in_branch(BRANCH_ABYSS))
@@ -718,6 +720,10 @@ void monster::timeout_enchantments(int levels)
 void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    // In ZotDef, no time passes while off-level.
+    if (crawl_state.game_is_zotdef())
+        return;
 
     const int turns = elapsedTime / 10;
 

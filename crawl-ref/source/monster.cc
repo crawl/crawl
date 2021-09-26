@@ -4661,10 +4661,16 @@ bool monster::is_trap_safe(const coord_def& where) const
         return false;
     }
 
+
+    // In Zotdef critters will risk death to get to the Orb
+    if (crawl_state.game_is_zotdef() && mechanical)
+        return true;
+
     // Hostile monsters are not afraid of traps.
     // But, in the arena Zot traps affect all monsters.
     return !crawl_state.game_is_arena() || trap.type != TRAP_ZOT;
 }
+
 
 bool monster::is_cloud_safe(const coord_def &place) const
 {

@@ -216,7 +216,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
         {
             do
             {
-                which_god = random_god();
+                which_god = random_god(false); // Fedhas in ZotDef only
             }
             while (!_god_fits_artefact(which_god, item, true));
         }

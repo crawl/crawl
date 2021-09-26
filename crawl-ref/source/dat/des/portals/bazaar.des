@@ -125,7 +125,7 @@ default-depth: D:11-, Depths, Orc:$, Elf, Snake, Shoals, Vaults:1-4
 # and resides in des/builder/shops.des.
 
 NAME:   bzr_entry_dummy
-TAGS:   transparent allow_dup
+TAGS:   transparent zotdef_bazaar allow_dup
 veto {{ return you.is_level_on_stack("Bazaar") }}
 : place_bazaar_portal(_G)
 MAP

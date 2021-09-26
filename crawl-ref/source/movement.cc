@@ -1039,6 +1039,37 @@ void move_player_action(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
+		
+		
+		//this is a codechunk for ZOTDEF.
+		if (crawl_state.game_is_zotdef() && you.pos() == env.orb_pos)
+        {
+            // Are you standing on the Orb? If so, are the critters near?
+            bool danger = false;
+            for (int i = 0; i < MAX_MONSTERS; ++i)
+            {
+                monster& mon = menv[i];
+                if (you.can_see(&mon) && !mon.friendly() &&
+                    !mons_is_firewood(&mon) &&
+                    (grid_distance(you.pos(), mon.pos()) < 4))
+                {
+                    danger = true;
+                }
+            }
+
+            if (danger && !player_has_orb())
+            {
+                string prompt = "Are you sure you want to leave the Orb unguarded?";
+                if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return;
+                }
+            }
+        }
+		//end of a zotdef code chunk
+		
+		
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
             mprf("You nearly stumble into %s!",

@@ -2735,7 +2735,9 @@ static void _build_dungeon_level()
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
 
-        _builder_monsters();
+        // Place monsters.
+        if (!crawl_state.game_is_zotdef())
+            _builder_monsters();
 
         // Place items.
         _builder_items();
@@ -3036,6 +3038,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         vault = find_map_by_name(you.props[FORCE_MAP_KEY].get_string());
     else if (lid.branch == root_branch && lid.depth == 1
         && (crawl_state.game_is_sprint()
+            || crawl_state.game_is_zotdef()
             || crawl_state.game_is_tutorial()))
     {
         vault = find_map_by_name(crawl_state.map);

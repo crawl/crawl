@@ -12,12 +12,14 @@
 #include "enum.h"
 #include "player.h"
 
+
 struct talent
 {
     ability_type which;
     int hotkey;
     int fail;
     bool is_invocation;
+    bool is_zotdef;
 };
 
 class dist;

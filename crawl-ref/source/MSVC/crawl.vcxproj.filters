@@ -145,6 +145,9 @@
     <ClCompile Include="..\xom.cc">
       <Filter>cc</Filter>
     </ClCompile>
+	<ClCompile Include="..\zotdef.cc">
+	      <Filter>cc</Filter>
+    </ClCompile>
     <ClCompile Include="..\worley.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -2222,6 +2225,9 @@
     </ClInclude>
     <ClInclude Include="..\zap-type.h">
       <Filter>h</Filter>
+    </ClInclude>
+	<ClInclude Include="..\zotdef.h">
+	  <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\domino.h">
       <Filter>h</Filter>

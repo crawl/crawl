@@ -354,7 +354,7 @@ void tile_init_flavour()
 //   222222444444   6666666666
 static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
-    if (crawl_state.game_is_sprint() || crawl_state.game_is_arena())
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
     {
         t.push_back(TILE_WALL_CATACOMBS);
         return;

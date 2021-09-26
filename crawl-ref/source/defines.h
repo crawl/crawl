@@ -37,6 +37,30 @@
     #endif
 #endif
 
+
+
+//obsolete:
+//typedef uint32_t ucs_t;
+//see this commit: https://github.com/crawl/crawl/commit/f9e0913e8384f3fab64a0458b7b680e877b95e80
+//"Replace our ucs_t typedef with C++11 char32_t."
+
+
+// length of a single zot defence cycle
+#define ZOTDEF_CYCLE_LENGTH 100
+
+// Waiting time before monsters arrive
+#define ZOTDEF_CYCLE_INTERVAL 50
+
+// peak size of a random spawn
+#define ZOTDEF_SPAWN_SIZE 1
+
+// Extra power to assign to a boss monster
+#define ZOTDEF_BOSS_EXTRA_POWER 5
+
+// number of waves to pass between bosses generated with a rune
+#define ZOTDEF_RUNE_FREQ 7
+
+
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
 
@@ -57,7 +81,7 @@ enum extra_monster_index_type
 // number of monster attack specs
 #define MAX_NUM_ATTACKS 4
 
-// size of Pan monster sets
+// size of Pan monster sets. Also used for wave data in ZotDef.
 #define PAN_MONS_ALLOC 10
 #define MAX_MONS_ALLOC 20
 

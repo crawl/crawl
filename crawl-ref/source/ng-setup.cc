@@ -60,7 +60,7 @@ static void _unfocus_stats()
     }
 }
 
-// Some consumables to make the starts of Sprint a little easier.
+// Some consumables to make the starts of Sprint and Zotdef a little easier.
 static void _give_bonus_items()
 {
     newgame_make_item(OBJ_POTIONS, POT_CURING);
@@ -310,8 +310,10 @@ void give_items_skills(const newgame_def& ng)
     }
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
-        if (!crawl_state.game_is_sprint())
+
+        if (!crawl_state.game_is_sprint() && !crawl_state.game_is_zotdef())
             you.chapter = CHAPTER_POCKET_ABYSS;
+		
         you.piety = 38;
 
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
@@ -345,8 +347,16 @@ void give_items_skills(const newgame_def& ng)
     give_job_skills(you.char_class);
     _give_job_spells(you.char_class);
 
+
+
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
+
+    // Zotdef: everyone gets bonus two potions of curing.
+    if (crawl_state.game_is_zotdef())
+        newgame_make_item(OBJ_POTIONS, POT_CURING, 2);
+
+
 
     if (you.has_mutation(MUT_NO_GRASPING))
         you.skills[SK_THROWING] = 0;
@@ -398,6 +408,8 @@ static void _give_basic_knowledge()
 static void _setup_generic(const newgame_def& ng,
                           bool normal_dungeon_setup /*for catch2-tests*/);
 
+static void _setup_zotdef(const newgame_def& ng);
+
 // Initialise a game based on the choice stored in ng.
 void setup_game(const newgame_def& ng,
                 bool normal_dungeon_setup /*for catch2-tests */)
@@ -429,6 +441,9 @@ void setup_game(const newgame_def& ng,
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
+        break;
+    case GAME_TYPE_ZOTDEF:
+        _setup_zotdef(ng);
         break;
     case GAME_TYPE_HINTS:
         init_hints();
@@ -476,6 +491,16 @@ static bool _spell_has_trigger(spell_type to_trigger,
             return true;
     return _spell_triggered_by(to_trigger, SPELL_NO_SPELL);
 }
+
+
+/**
+ * Special steps that zotdef needs;
+ */
+static void _setup_zotdef(const newgame_def& ng)
+{
+    // nothing currently
+}
+
 
 static void _setup_innate_spells()
 {
@@ -578,7 +603,7 @@ static void _setup_generic(const newgame_def& ng,
 
     roll_demonspawn_mutations();
 
-    if (crawl_state.game_is_sprint())
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef())
         _give_bonus_items();
 
     // Leave the a/b slots open so if the first thing you pick up is a weapon,
@@ -634,6 +659,14 @@ static void _setup_generic(const newgame_def& ng,
     if (you.religion == GOD_TROG)
         join_trog_skills();
     init_training();
+
+    if (crawl_state.game_is_zotdef())
+    {
+        you.zot_points = 80;
+
+        // There's little sense in training these skills in ZotDef
+        you.train[SK_STEALTH] = 0;
+    }
 
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();

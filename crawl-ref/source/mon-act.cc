@@ -2491,7 +2491,8 @@ static bool _monster_eat_item(monster* mons)
         return false;
 
     int hps_changed = 0;
-    int max_eat = roll_dice(1, 10);
+    // Zotdef jellies are toned down slightly
+    int max_eat = roll_dice(1, (crawl_state.game_is_zotdef() ? 8 : 10));
     int eaten = 0;
     bool shown_msg = false;
 
@@ -2969,7 +2970,18 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             && !mons->has_ench(ENCH_INSANE)
             && !_mons_can_displace(mons, targmonster))
         {
-            return false;
+            // In Zotdef hostiles will whack other hostiles if immobile
+            // - prevents plugging gaps with hostile oklobs
+            if (crawl_state.game_is_zotdef())
+            {
+                if (!targmonster->is_stationary()
+                    || targmonster->attitude != ATT_HOSTILE)
+                {
+                    return false;
+                }
+            }
+            else
+                return false;
         }
         // Prefer to move past enemies instead of hit them, if we're retreating
         else if ((!mons_aligned(mons, targmonster)
@@ -3013,6 +3025,9 @@ static bool _may_cutdown(monster* mons, monster* targ)
     {
         return false;
     }
+	
+ 
+	
     // Outside of that case, can always cut mundane plants
     // (but don't try to attack briars unless their damage will be insignificant)
     return mons_is_firewood(*targ)
@@ -3304,6 +3319,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     return true;
 }
 
+ 
 static bool _monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -3612,7 +3628,15 @@ static bool _monster_move(monster* mons)
         // Don't let boulder beetles roll in place.
         if (mons->has_ench(ENCH_ROLLING))
             mons->del_ench(ENCH_ROLLING);
-
+ 
+        // zotdef: sometimes seem to get gridlock. Reset travel path
+        // if we can't move, occasionally
+        if (crawl_state.game_is_zotdef() && one_chance_in(20))
+        {
+             mons->travel_path.clear();
+             mons->travel_target = MTRAV_NONE;
+        }
+ 
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.
         make_mons_stop_fleeing(mons);

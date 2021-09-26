@@ -793,9 +793,15 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     // Now, forget about banding if the first placement failed, or there are
-    // too many monsters already.
-    if (mon->mindex() >= MAX_MONSTERS - 30)
+    // too many monsters already, or we successfully placed by stairs.
+    // Zotdef change - banding allowed on stairs for extra challenge!
+    // Frequency reduced, though, and only after 2K turns.
+    if (mon->mindex() >= MAX_MONSTERS - 30
+        || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
+        || (crawl_state.game_is_zotdef() && you.num_turns < 2000))
+    {
         return mon;
+	}
 
     if (band_size > 1)
         mon->flags |= MF_BAND_MEMBER;
@@ -1623,7 +1629,12 @@ monster_type pick_local_zombifiable_monster(level_id place,
 {
     const bool really_in_d = place.branch == BRANCH_DUNGEON;
 
-    if (place.branch == BRANCH_ZIGGURAT)
+    if (crawl_state.game_is_zotdef())
+    {
+        place = level_id(BRANCH_DUNGEON,
+                         you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH) + 6);
+    }
+    else if (place.branch == BRANCH_ZIGGURAT)
     {
         // Get Zigs something reasonable to work with, if there's no place
         // explicitly defined.
@@ -2681,6 +2692,9 @@ monster* mons_place(mgen_data mg)
     }
     else if (_is_random_monster(mg.cls))
         mg.flags |= MG_PERMIT_BANDS;
+
+    if (crawl_state.game_is_zotdef()) // check if emulation of old mg.power is there
+        ASSERT(mg.place.is_valid());
 
     if (mg.behaviour == BEH_COPY)
     {

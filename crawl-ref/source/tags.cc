@@ -1483,6 +1483,7 @@ static void _tag_construct_you(writer &th)
     marshallInt(th, you.gold);
 
     marshallInt(th, you.exp_available);
+    marshallInt(th, you.zot_points);
 
     marshallInt(th, you.zigs_completed);
     marshallByte(th, you.zig_max);
@@ -1672,6 +1673,8 @@ static void _tag_construct_you(writer &th)
     you.m_quiver_history.save(th);
     you.quiver_action.save(QUIVER_MAIN_SAVE_KEY);
     you.launcher_action.save(QUIVER_LAUNCHER_SAVE_KEY);
+
+    marshallString(th, you.zotdef_wave_name);
 
     CANARY;
 
@@ -2749,9 +2752,12 @@ static void _tag_read_you(reader &th)
         you.total_experience *= 10;
         you.exp_available *= 10;
     }
-    if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
+    /*
+	if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
         unmarshallInt(th);
+	*/
 #endif
+    you.zot_points                = unmarshallInt(th);
     you.zigs_completed            = unmarshallInt(th);
     you.zig_max                   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
@@ -3721,9 +3727,9 @@ static void _tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)
         unmarshallByte(th);
-    if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
-        unmarshallString(th);
 #endif
+
+    you.zotdef_wave_name = unmarshallString(th);
 
     EAT_CANARY;
 

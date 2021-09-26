@@ -864,3 +864,116 @@ Causes the caster to radiate toxic energy, continuously inflicting poison on
 everything in line of sight for as long as the aura lasts. The power of this
 ability scales with the Evocations skill, and this ability is available only
 while wielding the Staff of Olgreb.
+%%%%
+# Zotdef
+Make oklob sapling ability
+
+Plant an oklob sapling with the ability to spit acid at the targeted location.
+%%%%
+Make arrow trap ability
+
+Create an arrow trap at the targeted location.
+%%%%
+Make plant ability
+
+Cause a plant to grow at the targeted location.
+%%%%
+Remove Curse ability
+
+Uncurse all of your equipment.
+%%%%
+Make burning bush ability
+
+Plant a burning bush with the ability to throw fire and see invisible monsters
+at the targeted location.
+%%%%
+Make altar ability
+
+Create an altar to a chosen god at your location.
+%%%%
+Make grenades ability
+
+Spawn a number of explosive giant spores around you.
+%%%%
+Make oklob plant ability
+
+Plant a fully grown oklob plant with the ability to spit acid at the targeted
+location.
+%%%%
+Make net trap ability
+
+Create a net trap at the targeted location.
+%%%%
+Make ice statue ability
+
+Construct a statue with various icy abilities at the targeted location.
+%%%%
+Make spear trap ability
+
+Create a spear trap at the targeted location.
+%%%%
+Make alarm trap ability
+
+Create an alarm trap to alert you to the presence of monsters at the targeted
+location.
+%%%%
+Make mushroom circle ability
+
+Grow a circle of fungi centred at the targeted location.
+%%%%
+Make bolt trap ability
+
+Create a bolt trap at the targeted location.
+%%%%
+Make crystal statue ability
+
+Construct a statue with the ability to confuse monsters at the targeted
+location.
+%%%%
+Make needle trap ability
+
+Create a poisonous needle trap at the targeted location.
+%%%%
+Zot-teleport ability
+
+Perform a controlled teleport.
+%%%%
+Make water ability
+
+Create a pool of shallow water at your location.
+%%%%
+Make lightning spire ability
+
+Construct a lightning spire with the ability to throw electricity at the
+targeted location.
+%%%%
+Make obsidian statue ability
+
+Construct a statue with the ability to summon friendly demons at the targeted
+location.
+%%%%
+Make bazaar ability
+
+Create a portal to a bazaar at your location.
+%%%%
+Acquire gold ability
+
+Acquire a large quantity of gold.
+%%%%
+Make oklob circle ability
+
+Grow a circle of oklob plants centred at the targeted location.
+%%%%
+Acquirement ability
+
+Acquire a chosen type of item.
+%%%%
+Make blade trap ability
+
+Create a blade trap at the targeted location.
+%%%%
+Make curse skull ability
+
+Construct a curse skull with the ability to summon the undead at the targeted
+location, at the cost of a necromantic backlash to yourself.
+%%%%

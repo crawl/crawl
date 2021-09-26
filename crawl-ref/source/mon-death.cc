@@ -306,6 +306,10 @@ static int _calc_player_experience(const monster* mons)
                   + 1) / 2;
     ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
 
+    // All deaths of hostiles grant at least 50% XP in ZotDef.
+    if (crawl_state.game_is_zotdef() && experience < half_xp)
+        experience = half_xp;
+
     // Note: This doesn't happen currently since monsters with
     //       MF_PACIFIED have always gone through pacification,
     //       hence also have MF_WAS_NEUTRAL. [rob]
@@ -549,6 +553,13 @@ item_def* place_monster_corpse(const monster& mons, bool force)
         return nullptr;
 
     int o = get_mitm_slot();
+
+    // Zotdef corpse creation forces cleanup, otherwise starvation
+    // kicks in. The magic number 9 is less than the magic number of
+    // 10 in get_mitm_slot which indicates that a cull will be initiated
+    // if a free slot can't be found.
+    if (o == NON_ITEM && crawl_state.game_is_zotdef())
+        o = get_mitm_slot(9);
 
     if (o == NON_ITEM)
         return nullptr;

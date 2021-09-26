@@ -11,6 +11,9 @@
 
 typedef random_pick_entry<monster_type> pop_entry;
 
+#define DEPTH_NOWHERE 999
+
+
 typedef bool (*mon_pick_vetoer)(monster_type);
 typedef bool (*mon_pick_pos_vetoer)(monster_type, coord_def);
 

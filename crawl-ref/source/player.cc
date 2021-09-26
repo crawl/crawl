@@ -1465,6 +1465,14 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     return re;
 }
 
+
+//Only used by zotdefence now, I believe.
+bool player_control_teleport(bool temp)
+{
+    return (temp && you.duration[DUR_CONTROL_TELEPORT])
+           || crawl_state.game_is_zotdef();
+}
+
 // Kiku protects you from torment to a degree.
 bool player_kiku_res_torment()
 {
@@ -2406,6 +2414,16 @@ unsigned int gain_exp(unsigned int exp_gained)
     if (crawl_state.game_is_arena())
         return 0;
 
+    if (crawl_state.game_is_zotdef())
+    {
+        you.zot_points += exp_gained;
+        // All XP, for some reason Sprint speeds up only skill training,
+        // but not levelling, Ash skill transfer, etc.
+        exp_gained *= 2;
+    }
+
+
+
     you.experience_pool += exp_gained;
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
@@ -2867,8 +2885,66 @@ void level_change(bool skip_attribute_increase)
         if (!updated_maxhp)
             _gain_and_note_hp_mp();
 
-        if (you.has_mutation(MUT_INNATE_CASTER))
+         if (you.has_mutation(MUT_INNATE_CASTER))
             _gain_innate_spells();
+ 
+
+
+		// zot defence abilities; must also be updated in ability.cc when these levels are changed
+        if (crawl_state.game_is_zotdef())
+        {
+            if (you.experience_level == 2)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob saplings.");
+            if (you.experience_level == 3)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of arrow traps.");
+            if (you.experience_level == 4)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of plants.");
+            if (you.experience_level == 4)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through removing curses.");
+            if (you.experience_level == 5)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of burning bushes.");
+            if (you.experience_level == 6)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of altars and grenades.");
+            if (you.experience_level == 7)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob plants.");
+            if (you.experience_level == 8)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of net traps.");
+            if (you.experience_level == 9)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of ice statues.");
+            if (you.experience_level == 10)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of spear traps.");
+            if (you.experience_level == 11)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of alarm traps.");
+            if (you.experience_level == 12)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of mushroom circles.");
+            if (you.experience_level == 13)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of bolt traps.");
+            if (you.experience_level == 14)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of orange crystal statues.");
+            if (you.experience_level == 15)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of needle traps.");
+            if (you.experience_level == 16)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through self-teleportation.");
+            if (you.experience_level == 17)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through making water.");
+            if (you.experience_level == 19)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of lightning spires.");
+            if (you.experience_level == 20)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of obsidian statues.");
+            // gold and bazaars gained together
+            if (you.experience_level == 21)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of bazaars.");
+            if (you.experience_level == 21)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through acquiring gold.");
+            if (you.experience_level == 22)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob circles.");
+            if (you.experience_level == 24)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through acquirement.");
+            if (you.experience_level == 25)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of blade traps.");
+            if (you.experience_level == 26)
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of curse skulls.");
+        }
 
         xom_is_stimulated(12);
         if (in_good_standing(GOD_HEPLIAKLQANA))
@@ -3611,6 +3687,26 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
 
     return true;
 }
+
+
+
+bool enough_zp(int minimum, bool suppress_msg)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (you.zot_points < minimum)
+    {
+        if (!suppress_msg)
+            mpr("You don't have enough Zot Points.");
+
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+    return true;
+}
+
+
 
 static int _rest_trigger_level(int max)
 {
@@ -4961,6 +5057,7 @@ player::player()
 
     skill_cost_level = 1;
     exp_available = 0;
+    zot_points = 0;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
@@ -5042,6 +5139,7 @@ player::player()
     banished_by.clear();
     banished_power = 0;
 
+    zotdef_wave_name.clear();
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
 
@@ -6322,6 +6420,11 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
 
     if (form == transformation::tree)
         problems.emplace_back("held in place by your roots");
+
+
+    if (crawl_state.game_is_zotdef() && orb_haloed(pos()))
+        problems.emplace_back("in the halo of the Orb");
+
 
     vector<const item_def *> notele_items;
     if (has_notele_item(calc_unid, &notele_items))
