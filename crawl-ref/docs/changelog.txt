@@ -30,7 +30,7 @@ Character
 * The Fighter background now starts with a buckler instead of a kite shield.
 * Fire Elementalist's starting spells are revised, and are now: Foxfire,
   Scorch, Conjure Flame, Inner Flame, and Flame Wave
-* The Abyssal Knight background now gives stats of 5/2/5.
+* The Abyssal Knight background now gives stats of 5/2/5 (was: 4/4/4)
 * The evolution mutation is revised. Once per XL's worth of experience it
   activates, providing a good mutation. Every two activations it reduces its
   level by one.
@@ -119,7 +119,7 @@ Monsters
 
 Spells
 ------
-* Summon capped monsters now have a uniform time out.
+* Summon-capped monsters now have a uniform time out.
 * Lesser Beckoning's power cap is reduced to 100 and range reduced to 5.
 * Spell summon caps are reduced:
   - Summon Small Mammal, Summon Hydra, and Monstrous Menagerie are capped at 2.
@@ -135,7 +135,7 @@ Spells
   flame.
 * Searing Ray and Storm Form have reduced power scaling.
 * Storm Form's blinkbolt ability is now always LOS range.
-* Bolt of Magma, Corona, Shadow Creatures is now monster only.
+* Bolt of Magma, Corona, Shadow Creatures are now monster only.
 
 Stone Soup 0.27.1 (20210820)
 ----------------------------
