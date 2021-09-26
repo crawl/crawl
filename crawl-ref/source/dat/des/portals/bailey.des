@@ -1257,3 +1257,57 @@ ccWWc+c+c!!!!!!cc
    cc...cc
     ccccc
 ENDMAP
+
+# A short but intense spriggan/ogre bailey
+# Nine items, with a chance for some delicious dragon scales
+NAME:   bailey_polearm_enchanted_keep_hellmonk
+ORIENT: encompass
+TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+ITEM:   any weapon good_item w:40 / good_item ice dragon scales w:3 /\
+        good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
+        good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\
+        good_item quicksilver dragon scales w:3
+MONS:   spriggan ; spear | trident
+MONS:   ogre ; halberd | glaive w:3
+MONS:   two-headed ogre ; halberd | glaive w:3 | bardiche w:1 . \
+                          halberd | glaive w:3 | bardiche w:1
+KMONS:  D = steam dragon / acid dragon
+KFEAT:  D = deep_water
+SUBST:  ! = t:20 x c:3, - = t c:30 x
+NSUBST: ' = 16 = 1... / 12 = 2... / *:.
+NSUBST: " = 1:2 / 1:3 / 8 = 12.. / *:.
+NSUBST:  d = 1:e / * = ddddddde
+FTILE:  ;t = floor_grass
+: bailey_setup(_G)
+MAP
+      ccccccccc
+     ccccccccccc
+    ccc'''''''ccc
+   ccc'''''''''ccc
+  ccc''''WWW''''ccc
+ ccc''----W----''ccc
+ccc''--"""""""--''ccc
+cc''--""ttttt""--''cc
+cc''-""ttdddtt""-''cc
+cc''-""!ddwdd!""-''cc
+cc''-""!dwDwd!""-''cc
+cc''-""!..w..!""-''cc
+cc''-""tt...tt""-''cc
+cc''--""t!W!t""--''cc
+ccc''--"""""""--''cc
+  cc''--"""""--''cc
+   cc''-------''cc
+    cc.........cc
+     cc.......cc
+      ccWWWWWcc
+       xWWWWWx
+     xxxWWWWWxxx
+    xx;;;;;;;;;xx
+   xx;;;;;;;;;;;xx
+   x;;;;A;;;<;;;;x
+   xx;;;;;;;;;;;xx
+    xx;;;;;;;;;xx
+     xxx;;;;;xxx
+       xxxxxxx
+ENDMAP
