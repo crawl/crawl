@@ -4252,6 +4252,8 @@ string _monster_habitat_description(const monster_info& mi)
     const monster_type type = mons_is_job(mi.type)
                               ? mi.draco_or_demonspawn_subspecies()
                               : mi.type;
+    if (mons_class_is_stationary(type))
+        return "";
 
     switch (mons_habitat_type(type, mi.base_type))
     {
