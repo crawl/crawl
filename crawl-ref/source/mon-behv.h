@@ -72,6 +72,4 @@ bool is_ally_target(const actor &a);
 // For Zotdef: the target position of MHITYOU monsters is
 // the orb.
 #define PLAYER_POS (crawl_state.game_is_zotdef() ? env.orb_pos : you.pos())
-
-#endif
 //If we change how zotdef works, you will want to change this.

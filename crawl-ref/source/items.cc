@@ -1908,7 +1908,7 @@ static void _get_rune(const item_def& it, bool quiet)
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");
-        else if (nrunes == ZOT_ENTRY_RUNES)
+        else if (nrunes == ZOT_ENTRY_RUNES
                  && !crawl_state.game_is_zotdef())
         {
             // might be inappropriate in new Sprints, please change it then
