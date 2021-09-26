@@ -474,15 +474,15 @@ static const char * const book_of_zin[][3] =
 
 static const char * const sinner_text[] =
 {
+    "unbelievers",
+    "heretics",
+    "guilty",
     "hordes of the Abyss",
     "bastard children of Xom",
     "amorphous wretches",
     "fetid masses",
     "agents of filth",
     "squalid dregs",
-    "unbelievers",
-    "heretics",
-    "guilty",
     "legions of the damned",
     "servants of Hell",
     "forces of darkness",
@@ -491,15 +491,15 @@ static const char * const sinner_text[] =
 // First column is adjective, then noun.
 static const char * const sin_text[][2] =
 {
+    { "unfaithful",   "unfaithfulness" },
+    { "disloyal",     "disloyalty" },
+    { "doubting",     "doubt" },
     { "chaotic",      "chaos" },
     { "discordant",   "discord" },
     { "anarchic",     "anarchy" },
     { "unclean",      "uncleanliness" },
     { "impure",       "impurity" },
     { "contaminated", "contamination" },
-    { "unfaithful",   "unfaithfulness" },
-    { "disloyal",     "disloyalty" },
-    { "doubting",     "doubt" },
     { "profane",      "profanity" },
     { "blasphemous",  "blasphemy" },
     { "sacrilegious", "sacrilege" },
@@ -508,15 +508,15 @@ static const char * const sin_text[][2] =
 // First column is adjective, then noun.
 static const char * const virtue_text[][2] =
 {
+    { "faithful",  "faithfulness" },
+    { "loyal",     "loyalty" },
+    { "believing", "belief" },
     { "ordered",   "order" },
     { "harmonic",  "harmony" },
     { "lawful",    "lawfulness" },
     { "clean",     "cleanliness" },
     { "pure",      "purity" },
     { "hygienic",  "hygiene" },
-    { "faithful",  "faithfulness" },
-    { "loyal",     "loyalty" },
-    { "believing", "belief" },
     { "reverent",  "reverence" },
     { "pious",     "piety" },
     { "obedient",  "obedience" },
