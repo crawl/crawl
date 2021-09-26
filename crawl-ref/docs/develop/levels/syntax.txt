@@ -122,13 +122,13 @@ DESC:     readable name
           A map may optionally have a description. If provided, and if
           the character dies in the vault, the map description will be
           shown along with the place at end of game. This is normally used
-          only for the Sprint game type.
+          only for special game types (Sprint, Zot Defence).
 
           Map descriptions are also written to scores and logfile
           entries.
 
 ORDER:    <integer>
-          Used only for special game types (Sprint, Tutorial).
+          Used only for special game types (Sprint, Zot Defence, Tutorial).
           When the user is prompted to select a map, the available maps are
           sorted by the integer value (ascending). Maps without an ORDER:
           line follow those that have one. Maps with the same value of
