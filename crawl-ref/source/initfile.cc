@@ -2996,9 +2996,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.type = Options.game.type;
 #else
         game.type = _str_to_gametype(field);
-        // Zot Defence is disabled.
-        if (game.type == GAME_TYPE_ZOTDEF)
-            game.type = NUM_GAME_TYPE;
 #endif
     }
     else if (key == "combo")
@@ -4107,6 +4104,7 @@ enum commandline_option_type
     CLO_SPRINT_MAP,
     CLO_EDIT_SAVE,
     CLO_PRINT_CHARSET,
+    CLO_ZOTDEF,
     CLO_TUTORIAL,
     CLO_WIZARD,
     CLO_EXPLORE,
@@ -4136,7 +4134,7 @@ static const char *cmd_ops[] =
     "objstat", "iters", "force-map", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "pregen", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
+    "print-charset", "zotdef", "tutorial", "wizard", "explore", "no-save", "gdb",
     "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
     "branches-json", "save-json", "gametypes-json", "bones",
 #ifdef USE_TILE_WEB
@@ -5300,6 +5298,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed               = true;
             crawl_state.sprint_map = next_arg;
             Options.game.map       = next_arg;
+            break;
+
+        case CLO_ZOTDEF:
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_ZOTDEF;
             break;
 
         case CLO_TUTORIAL:
