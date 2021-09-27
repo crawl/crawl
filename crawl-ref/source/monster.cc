@@ -2938,7 +2938,7 @@ bool monster::has_chaotic_spell() const
 
 bool monster::has_attack_flavour(int flavour) const
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const int attk_flavour = mons_attack_spec(*this, i).flavour;
         if (attk_flavour == flavour)
@@ -2950,7 +2950,7 @@ bool monster::has_attack_flavour(int flavour) const
 
 bool monster::has_damage_type(int dam_type)
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const int dmg_type = damage_type(i);
         if (dmg_type == dam_type)
@@ -2964,7 +2964,7 @@ int monster::constriction_damage(bool direct) const
 {
     if (direct)
     {
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         {
             const mon_attack_def attack = mons_attack_spec(*this, i);
             if (attack.type == AT_CONSTRICT)
