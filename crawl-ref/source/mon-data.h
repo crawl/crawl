@@ -4299,7 +4299,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
 },
 
 {
-    MONS_SEA_SNAKE, 'S', LIGHTCYAN, "sea snake",
+    MONS_SEA_SNAKE, 'S', LIGHTRED, "sea snake",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     10, MONS_SNAKE, MONS_SEA_SNAKE, MH_NATURAL, 40,
@@ -5063,7 +5063,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
 
 // water monsters
 {
-    MONS_ELECTRIC_EEL, ';', LIGHTBLUE, "electric eel",
+    MONS_ELECTRIC_EEL, 'S', LIGHTCYAN, "electric eel",
     M_NO_GEN_DERIVED | M_COLD_BLOOD,
     mrd(MR_RES_ELEC, 3),
     19, MONS_ELECTRIC_EEL, MONS_ELECTRIC_EEL, MH_NATURAL, 10,
@@ -5133,7 +5133,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
 
 // lava monsters
 {
-    MONS_LAVA_SNAKE, 'S', LIGHTRED, "lava snake",
+    MONS_LAVA_SNAKE, 'S', YELLOW, "lava snake",
     M_WARM_BLOOD,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     17, MONS_SNAKE, MONS_LAVA_SNAKE, MH_NATURAL, 10,
