@@ -5201,7 +5201,8 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
 
     return targ.alive()
            && !mons_class_is_stationary(targ.type)
-           && !mons_is_conjured(targ.type);
+           && !mons_is_conjured(targ.type)
+           && mons_class_is_threatening(targ.type);
 }
 
 vector<monster* > get_on_level_followers()
