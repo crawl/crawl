@@ -529,8 +529,9 @@ bool mons_can_move_towards_target(const monster* mon)
 
 static const string BATTY_TURNS_KEY = "BATTY_TURNS";
 
-static void _be_batty(monster &mons)
+static void _handle_battiness(monster &mons)
 {
+    if (!mons_is_batty(mons)) return;
     mons.behaviour = BEH_WANDER;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;
@@ -1540,6 +1541,7 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         if (coinflip() ? mon_special_ability(&mons) || _do_mon_spell(&mons)
                        : _do_mon_spell(&mons) || mon_special_ability(&mons))
         {
+            _handle_battiness(mons);
             DEBUG_ENERGY_USE_REF("spell or special");
             mmov.reset();
             return true;
@@ -1930,8 +1932,7 @@ void handle_monster_move(monster* mons)
                 else
                     fight_melee(mons, &you);
 
-                if (mons_is_batty(*mons))
-                    _be_batty(*mons);
+                _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
                 mmov.reset();
                 return;
@@ -1972,8 +1973,7 @@ void handle_monster_move(monster* mons)
                       || mons->is_child_tentacle())
                           && fight_melee(mons, targ))
             {
-                if (mons_is_batty(*mons))
-                    _be_batty(*mons);
+                _handle_battiness(*mons);
 
                 mmov.reset();
                 DEBUG_ENERGY_USE("fight_melee()");
