@@ -1294,3 +1294,8 @@ dice_def spines_damage(monster_type mon)
         return dice_def(5, 8);
     return dice_def(5, 4);
 }
+
+int archer_bonus_damage(int hd)
+{
+    return hd * 4 / 3;
+}

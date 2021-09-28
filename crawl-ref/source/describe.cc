@@ -3919,13 +3919,20 @@ static string _monster_attacks_description(const monster_info& mi)
             continue;
         }
 
+        int dam = attack.damage;
+        if (mons_class_flag(mi.type, M_ARCHER)
+            && info.weapon && is_range_weapon(*info.weapon))
+        {
+            dam += archer_bonus_damage(mi.hd);
+        }
+
         // Damage is listed in parentheses for attacks with a flavour
         // description, but not for plain attacks.
         bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
         const string damage_desc =
             make_stringf("%sfor up to %d damage%s%s%s",
                          has_flavour ? "(" : "",
-                         attack.damage,
+                         dam,
                          attack_count.second > 1 ? " each" : "",
                          weapon_note.c_str(),
                          has_flavour ? ")" : "");
