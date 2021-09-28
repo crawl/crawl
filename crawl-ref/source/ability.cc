@@ -2046,6 +2046,23 @@ static bool _evoke_staff_of_olgreb(dist *target)
     return true;
 }
 
+// Small class made for displaying to hit % with breath weapons
+class beam_ability_target_behaviour : public targeting_behaviour
+{
+    public:
+    int hit;
+    bool is_piercing;
+    virtual vector<string> get_monster_desc(const monster_info& mi) override;
+};
+
+vector<string> beam_ability_target_behaviour::get_monster_desc(const monster_info& mi)
+{
+    vector<string> descs;
+    const int hit_pct = beam_to_hit_pct(mi, hit, true);
+    descs.emplace_back(make_stringf("%d%% to hit", hit_pct));
+    return descs;
+}
+
 /*
  * Use an ability.
  *
@@ -2140,16 +2157,21 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     {
         int power = 10 + you.experience_level;
         beam.range = _calc_breath_ability_range(abil.ability);
-
-        if (!spell_direction(*target, beam)
-            || !player_tracer(ZAP_SPIT_POISON, power, beam))
+        direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_SPIT_POISON, power, false);
+        beh.is_piercing = false;
+        args.mode = TARG_HOSTILE;
+        args.behaviour = &beh;
+        if (!spell_direction(*target, beam, &args))
         {
             return spret::abort;
         }
         else
         {
             fail_check();
-            zapping(ZAP_SPIT_POISON, power, beam);
+            if(zapping(ZAP_SPIT_POISON, power, beam, true, "You spit poison.") == spret::abort)
+                return spret::abort;
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
@@ -2158,144 +2180,196 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_BREATHE_ACID:       // Draconian acid splash
     {
         beam.range = _calc_breath_ability_range(abil.ability);
+        int power = (you.form == transformation::dragon) ?
+                2 * you.experience_level : you.experience_level;
         targeter_splash hitfunc(&you, beam.range);
         direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_BREATHE_ACID, power, false);
+        beh.is_piercing = false; // TODO: get if the beam pierces from zap-data.h
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
+        args.behaviour = &beh;
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
-
         if (stop_attack_prompt(hitfunc, "spit at", _acid_breath_can_hit))
             return spret::abort;
-
         fail_check();
-        zapping(ZAP_BREATHE_ACID, (you.form == transformation::dragon) ?
-                2 * you.experience_level : you.experience_level,
+        zapping(ZAP_BREATHE_ACID, power,
                 beam, false, "You spit a glob of acid.");
-
         you.increase_duration(DUR_BREATH_WEAPON,
                           3 + random2(10) + random2(30 - you.experience_level));
         break;
     }
 
     case ABIL_BREATHE_FIRE:
-    case ABIL_BREATHE_FROST:
-    case ABIL_BREATHE_POISON:
-    case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_STEAM:
-    case ABIL_BREATHE_MEPHITIC:
+    {
         beam.range = _calc_breath_ability_range(abil.ability);
-        if (!spell_direction(*target, beam))
+        int power = you.experience_level;
+        if (you.form == transformation::dragon)
+            power += 12;
+        direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_BREATHE_FIRE, power, false);
+        beh.is_piercing = true; // TODO: get if the beam pierces from zap-data.h
+        args.mode = TARG_HOSTILE;
+        args.behaviour = &beh;
+        if (!spell_direction(*target, beam, &args))
             return spret::abort;
-
-        // fallthrough to ABIL_BREATHE_LIGHTNING
-
-    case ABIL_BREATHE_LIGHTNING: // not targeted
         fail_check();
-
-        // TODO: refactor this to use only one call to zapping(), don't
-        // duplicate its fail_check(), split out breathe_lightning, etc
-
-        switch (abil.ability)
-        {
-        case ABIL_BREATHE_FIRE:
-        {
-            int power = you.experience_level;
-
-            if (you.form == transformation::dragon)
-                power += 12;
-
-            string msg = "You breathe a blast of fire";
-            msg += (power < 15) ? '.' : '!';
-
-            if (zapping(ZAP_BREATHE_FIRE, power, beam, true, msg.c_str())
+        string msg = "You breathe a blast of fire";
+        msg += (power < 15) ? '.' : '!';
+        if (zapping(ZAP_BREATHE_FIRE, power, beam, true, msg.c_str())
                 == spret::abort)
-            {
-                return spret::abort;
-            }
-            break;
-        }
+            return spret::abort;
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
+        break;
+    }
 
-        case ABIL_BREATHE_FROST:
-            if (zapping(ZAP_BREATHE_FROST,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
+    case ABIL_BREATHE_FROST:
+    {
+        beam.range = _calc_breath_ability_range(abil.ability);
+        int power = (you.form == transformation::dragon) ?
+                2 * you.experience_level : you.experience_level;
+        direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_BREATHE_FROST, power, false);
+        beh.is_piercing = true; // TODO: get if the beam pierces from zap-data.h
+        args.mode = TARG_HOSTILE;
+        args.behaviour = &beh;
+        if (!spell_direction(*target, beam, &args))
+            return spret::abort;
+        fail_check();
+        if (zapping(ZAP_BREATHE_FROST,
+                        power,
                         beam, true, "You exhale a wave of freezing cold.")
                 == spret::abort)
             {
                 return spret::abort;
             }
-            break;
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
+        break;
+        
+    }
 
-        case ABIL_BREATHE_POISON:
-            if (zapping(ZAP_BREATHE_POISON, you.experience_level, beam, true,
-                        "You exhale a blast of poison gas.")
+    case ABIL_BREATHE_POISON:
+    {
+        beam.range = _calc_breath_ability_range(abil.ability);
+        int power = you.experience_level;
+        direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_BREATHE_POISON, power, false);
+        beh.is_piercing = true; // TODO: get if the beam pierces from zap-data.h
+        args.mode = TARG_HOSTILE;
+        args.behaviour = &beh;
+        if (!spell_direction(*target, beam, &args))
+            return spret::abort;
+        fail_check();
+        if (zapping(ZAP_BREATHE_FROST,
+                        power,
+                        beam, true, "You exhale a blast of poison gas.")
                 == spret::abort)
             {
                 return spret::abort;
             }
-            break;
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
+        break;
+        
+    }
 
-        case ABIL_BREATHE_LIGHTNING:
-            mpr("You breathe a wild blast of lightning!");
-            black_drac_breath();
-            break;
-
-        case ABIL_BREATHE_ACID:
-            if (zapping(ZAP_BREATHE_ACID,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You spit a glob of acid.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
-            break;
-
-        case ABIL_BREATHE_POWER:
-            if (zapping(ZAP_BREATHE_POWER,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
+    case ABIL_BREATHE_POWER:
+    {
+        beam.range = _calc_breath_ability_range(abil.ability);
+        int power = (you.form == transformation::dragon) ?
+                2 * you.experience_level : you.experience_level;
+        direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_BREATHE_POWER, power, false);
+        beh.is_piercing = true; // TODO: get if the beam pierces from zap-data.h
+        args.mode = TARG_HOSTILE;
+        args.behaviour = &beh;
+        if (!spell_direction(*target, beam, &args))
+            return spret::abort;
+        fail_check();
+        if (zapping(ZAP_BREATHE_POWER,
+                        power,
                         beam, true, "You breathe a bolt of dispelling energy.")
                 == spret::abort)
             {
                 return spret::abort;
             }
-            break;
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
+        break;
+        
+    }
 
-        case ABIL_BREATHE_STEAM:
-            if (zapping(ZAP_BREATHE_STEAM,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
+    case ABIL_BREATHE_STEAM:
+    {
+        beam.range = _calc_breath_ability_range(abil.ability);
+        int power = (you.form == transformation::dragon) ?
+                2 * you.experience_level : you.experience_level;
+        direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_BREATHE_STEAM, power, false);
+        beh.is_piercing = true; // TODO: get if the beam pierces from zap-data.h
+        args.mode = TARG_HOSTILE;
+        args.behaviour = &beh;
+        if (!spell_direction(*target, beam, &args))
+            return spret::abort;
+        fail_check();
+        if (zapping(ZAP_BREATHE_STEAM,
+                        power,
                         beam, true, "You exhale a blast of scalding steam.")
                 == spret::abort)
             {
                 return spret::abort;
             }
-            break;
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      (3 + random2(10) + random2(30 - you.experience_level)) / 2);
+        break;
+        
+    }
 
-        case ABIL_BREATHE_MEPHITIC:
-            if (zapping(ZAP_BREATHE_MEPHITIC,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
+    case ABIL_BREATHE_MEPHITIC:
+        {
+        beam.range = _calc_breath_ability_range(abil.ability);
+        int power = (you.form == transformation::dragon) ?
+                2 * you.experience_level : you.experience_level;
+        direction_chooser_args args;
+        beam_ability_target_behaviour beh{};
+        beh.hit = zap_to_hit(ZAP_BREATHE_MEPHITIC, power, false);
+        beh.is_piercing = true; // TODO: get if the beam pierces from zap-data.h
+        args.mode = TARG_HOSTILE;
+        args.behaviour = &beh;
+        if (!spell_direction(*target, beam, &args))
+            return spret::abort;
+        fail_check();
+        if (zapping(ZAP_BREATHE_MEPHITIC,
+                        power,
                         beam, true, "You exhale a blast of noxious fumes.")
                 == spret::abort)
             {
                 return spret::abort;
             }
-            break;
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      (3 + random2(10) + random2(30 - you.experience_level)) / 2);
+        break;
+        
+    }
 
-        default:
-            break;
-        }
-
+    case ABIL_BREATHE_LIGHTNING: // not targeted
+    {
+        fail_check();
+        mpr("You breathe a wild blast of lightning!");
+        black_drac_breath();
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
-
-        if (abil.ability == ABIL_BREATHE_STEAM)
-            you.duration[DUR_BREATH_WEAPON] /= 2;
-
         break;
+    }
 
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(fail);

@@ -147,3 +147,5 @@ const vector<spell_type> *soh_breath_spells(spell_type spell);
 bool spell_removed(spell_type spell);
 
 void end_wait_spells(bool quiet = false);
+
+int beam_to_hit_pct(const monster_info& mi, int acc, bool pierce);

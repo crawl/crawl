@@ -1933,3 +1933,51 @@ void end_wait_spells(bool quiet)
     end_maxwells_coupling(quiet);
     end_flame_wave();
 }
+
+// approximates _test_beam_hit in a deterministic fashion.
+int beam_to_hit_pct(const monster_info& mi, int acc, bool pierce)
+{
+    if (acc == AUTOMATIC_HIT)
+        return 100;
+
+    acc += mi.lighting_modifiers();
+    if (acc <= 1)
+        return mi.ev <= 2 ? 100 : 0;
+
+    int hits = 0;
+    int iters = 0;
+    const bool rmsl = mi.is(MB_REPEL_MSL);
+    for (int outer_ev_roll = 0; outer_ev_roll < mi.ev; outer_ev_roll++)
+    {
+        for (int inner_ev_roll_a = 0; inner_ev_roll_a < outer_ev_roll; inner_ev_roll_a++)
+        {
+            for (int inner_ev_roll_b = 0; inner_ev_roll_b < outer_ev_roll; inner_ev_roll_b++)
+            {
+                const int ev = (inner_ev_roll_a + inner_ev_roll_b) / 2; // not right but close
+                for (int rolled_mhit = 0; rolled_mhit < acc; rolled_mhit++)
+                {
+                    int adjusted_mhit = rolled_mhit;
+                    if (rmsl)
+                    {
+                        // this is wrong - we should be re-rolling here.
+                        if (pierce)
+                            adjusted_mhit = adjusted_mhit * 3 /4;
+                        else
+                            adjusted_mhit /= 2;
+                    }
+
+                    iters++;
+                    if (iters >= 1000000)
+                        return -1; // sanity breakout to not kill servers
+                    if (adjusted_mhit >= ev)
+                        hits++;
+                }
+            }
+        }
+    }
+
+    if (iters <= 0) // probably low monster ev?
+        return 100;
+
+    return hits * 100 / iters;
+}
