@@ -349,11 +349,6 @@ int ranged_attack::calc_mon_to_hit_base()
 int ranged_attack::apply_damage_modifiers(int damage)
 {
     ASSERT(attacker->is_monster());
-    if (attacker->as_monster()->is_archer())
-    {
-        const int bonus = attacker->get_hit_dice() * 4 / 3;
-        damage += random2avg(bonus, 2);
-    }
     return damage;
 }
 
