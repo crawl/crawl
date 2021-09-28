@@ -616,7 +616,8 @@ void dec_penance(god_type god, int val)
             simple_god_message(", with one final cry of rage, "
                                "burns out of existence.", god);
             add_daction(DACT_REMOVE_IGNIS_ALTARS);
-        } else
+        }
+        else
         {
             const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
             simple_god_message(

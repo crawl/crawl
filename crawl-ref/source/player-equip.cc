@@ -1079,13 +1079,13 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
+    {
         if (you.has_mutation(MUT_FORLORN))
         {
             mpr("You feel a surge of self-confidence.");
             break;
         }
 
-        {
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
             simple_god_message(ignore_reason.c_str());
@@ -1094,7 +1094,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
                             you_worship(GOD_NO_GOD) ? "strange " : "");
         }
-        }
+    }
 
         break;
 
