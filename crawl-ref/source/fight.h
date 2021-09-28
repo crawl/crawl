@@ -58,7 +58,7 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
-int mon_to_hit_base(int hd, bool skilled, bool ranged);
+int mon_to_hit_base(int hd, bool skilled);
 int mon_to_hit_pct(int to_land, int ev);
 int mon_shield_bypass(int hd);
 int mon_beat_sh_pct(int shield_bypass, int shield_class);
