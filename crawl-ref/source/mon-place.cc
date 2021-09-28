@@ -1302,7 +1302,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             {
                 swap(mon->inv[MSLOT_WEAPON], mon->inv[MSLOT_ALT_WEAPON]);
                 wpn = alt_wpn;
-            } else {
+            }
+            else
+            {
                 mon->destroy_inventory();
                 env.mid_cache.erase(mon->mid);
                 mon->reset();

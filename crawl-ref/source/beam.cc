@@ -6089,7 +6089,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             || origin_spell == SPELL_DAZZLING_FLASH)
         {
             loudness = spell_effect_noise(origin_spell);
-        } else if (origin_spell == SPELL_FLAME_WAVE)
+        }
+        else if (origin_spell == SPELL_FLAME_WAVE)
         {
             loudness = spell_effect_noise(origin_spell)
                      + (r - 1) * 2; // at radius 1, base noise
