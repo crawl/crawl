@@ -383,12 +383,8 @@ static vector<ability_def> &_get_ability_list()
         // Yredelemnul
         { ABIL_YRED_INJURY_MIRROR, "Injury Mirror",
             0, 0, 0, -1, {fail_basis::invo, 40, 4, 20}, abflag::piety },
-        { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains",
-            2, 0, 0, -1, {fail_basis::invo, 40, 4, 20}, abflag::none },
         { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
             2, 0, 0, -1, {fail_basis::invo, 50, 4, 20}, abflag::none },
-        { ABIL_YRED_ANIMATE_DEAD, "Animate Dead",
-            2, 0, 0, -1, {fail_basis::invo, 40, 4, 20}, abflag::none },
         { ABIL_YRED_DRAIN_LIFE, "Drain Life",
             6, 0, 2, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul",
@@ -1014,12 +1010,6 @@ ability_type fixup_ability(ability_type ability)
 {
     switch (ability)
     {
-    case ABIL_YRED_ANIMATE_REMAINS:
-        // suppress animate remains once animate dead is unlocked (ugh)
-        if (in_good_standing(GOD_YREDELEMNUL, 2))
-            return ABIL_NON_ABILITY;
-        return ability;
-
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         if (!you.recall_list.empty())
@@ -1621,6 +1611,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+<<<<<<< HEAD
     case ABIL_YRED_ANIMATE_REMAINS:
         if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY, 1,
                             MHITYOU, &you, "", GOD_YREDELEMNUL, false,
@@ -1651,6 +1642,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+=======
+>>>>>>> 3cd2fafe56 (feat: black torch: remove yred animation actives)
     case ABIL_ELYVILON_HEAL_SELF:
         if (you.hp == you.hp_max)
         {
@@ -2075,8 +2068,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_chaos_targets(true));
     case ABIL_ZIN_RECITE:
         return make_unique<targeter_multiposition>(&you, find_recite_targets());
-    case ABIL_YRED_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, simple_find_corpses(), AFF_YES);
     case ABIL_LUGONU_BEND_SPACE:
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case ABIL_FEDHAS_WALL_OF_BRIARS:
@@ -2121,7 +2112,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_YRED_INJURY_MIRROR:
-    case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_OKAWARU_FINESSE:
@@ -2775,29 +2765,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         }
         you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
                      + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
-        break;
-
-    case ABIL_YRED_ANIMATE_REMAINS:
-        fail_check();
-        canned_msg(MSG_ANIMATE_REMAINS);
-        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY, 0,
-                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
-        {
-            mpr("There are no remains here to animate!");
-            return spret::abort;
-        }
-        break;
-
-    case ABIL_YRED_ANIMATE_DEAD:
-        fail_check();
-        canned_msg(MSG_CALL_DEAD);
-        if (!animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1,
-                         BEH_FRIENDLY, MHITYOU, &you, "", GOD_YREDELEMNUL))
-        {
-            mpr("There are no remains here to animate!");
-            return spret::abort;
-        }
-
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:

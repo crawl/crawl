@@ -224,11 +224,6 @@ You must choose between this gift or that of branding a weapon with pain, and
 either gift may only be received once.
 %%%%
 # Yredelemnul
-Animate Remains ability
-
-Reanimates a single corpse or skeleton as a follower. Zombies and skeletons
-cannot leave the level they were created on.
-%%%%
 Recall Undead Slaves ability
 
 Recalls your undead followers from anywhere in the dungeon to your immediate
@@ -238,11 +233,6 @@ Injury Mirror ability
 
 Reflects damage taken for a short duration, hurting attackers whenever any
 damage is taken and reducing piety depending on the amount of damage dealt.
-%%%%
-Animate Dead ability
-
-Reanimates all corpses and skeletons in the vicinity as followers. Zombies and
-skeletons cannot leave the level they were created on.
 %%%%
 Drain Life ability
 

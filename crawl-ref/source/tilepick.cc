@@ -3505,12 +3505,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Yredelemnul
     case ABIL_YRED_INJURY_MIRROR:
         return TILEG_ABILITY_YRED_INJURY_MIRROR;
-    case ABIL_YRED_ANIMATE_REMAINS:
-        return TILEG_ABILITY_YRED_ANIMATE_REMAINS;
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
         return TILEG_ABILITY_YRED_RECALL;
-    case ABIL_YRED_ANIMATE_DEAD:
-        return TILEG_ABILITY_YRED_ANIMATE_DEAD;
     case ABIL_YRED_DRAIN_LIFE:
         return TILEG_ABILITY_YRED_DRAIN_LIFE;
     case ABIL_YRED_ENSLAVE_SOUL:

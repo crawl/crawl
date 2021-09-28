@@ -172,20 +172,10 @@ Torment ability
 키쿠바쿠드하는 이 고통으로부터 당신을 보호해줄 때도 있다. ...안 해줄 때도
 있지만.
 %%%%
-Animate Remains ability
-
-주변의 시체나 해골 하나를 일으켜 당신의 언데드 수하로 만든다. 이 권능으로
-되살아난 좀비와 해골은 다른 층으로 이동할 수 없다.
-%%%%
 Recall Undead Slaves ability
 
 당신의 오크 추종자들을 주변으로 불러온다. 추종자가 어디에 있어도 (즉, 같은 층에
 있지 않아도)  불러오는 것이 가능하다.
-%%%%
-Animate Dead ability
-
-주변의 모든 시체와 해골들을 일으켜 당신의 언데드 수하로 만든다. 이 권능으로
-되살아난 좀비와 해골은 다른 층으로 이동할 수 없다.
 %%%%
 Drain Life ability
 
@@ -202,10 +192,6 @@ Enslave Soul ability
 순간만을 기다린다.
 
 지배당한 영혼은 당신을 따르기 위해 그들이 만들어진 층을 벗어날 수 있다.
-%%%%
-Animate Remains or Dead ability
-
-버그를 발견하셨습니다! 친구들에게 이 사실을 자랑하세요.
 %%%%
 Heroism ability
 
