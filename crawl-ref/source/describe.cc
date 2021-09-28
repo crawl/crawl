@@ -4075,7 +4075,7 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
     const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
     const bool skilled = mons_class_flag(mi.type, melee ? M_FIGHTER : M_ARCHER);
-    const int base_to_hit = mon_to_hit_base(mi.hd, skilled, !melee);
+    const int base_to_hit = mon_to_hit_base(mi.hd, skilled);
     const int weapon_to_hit = weapon ? weapon->plus + property(*weapon, PWPN_HIT) : 0;
     const int total_base_hit = base_to_hit + weapon_to_hit;
 

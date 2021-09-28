@@ -105,19 +105,13 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
  * Return the base to-hit bonus that a monster with the given HD gets.
  * @param hd               The hit dice (level) of the monster.
  * @param skilled    Does the monster have bonus to-hit from the fighter or archer flag?
- * @param ranged      Is this attack ranged or melee?
  *
  * @return         A base to-hit value, before equipment, statuses, etc.
  */
-int mon_to_hit_base(int hd, bool skilled, bool ranged)
+int mon_to_hit_base(int hd, bool skilled)
 {
-    if (ranged)
-    {
-        const int hd_mult = skilled ? 15 : 9;
-        return 18 + hd * hd_mult / 6;
-    }
-    const int hd_mult = skilled ? 25 : 15;
-    return 18 + hd * hd_mult / 10;
+    const int hd_mult = skilled ? 5 : 3;
+        return 18 + hd * hd_mult / 2;
 }
 
 int mon_shield_bypass(int hd)

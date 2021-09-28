@@ -343,7 +343,7 @@ int ranged_attack::calc_base_unarmed_damage()
 int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
-    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer(), true);
+    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer());
 }
 
 int ranged_attack::apply_damage_modifiers(int damage)
