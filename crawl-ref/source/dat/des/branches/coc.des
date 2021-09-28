@@ -193,6 +193,550 @@ xxxxxxxxxxxxxxxxxxxxxxxxx.<xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   nicolae_coc_bergin
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc:2-
+ORIENT: centre
+KFEAT:  0 = W
+KMONS:  0 = 0 w:12 / 9 w:3 / 8 w:1
+NSUBST: { = 1={ / .
+SUBST:  M = Wwww x:5 .:1, w = w:20 x:1, W = W 0:1
+MAP
+   wwM..@..Mw  wwM.@M
+  wwwwM...MwwwwwwM..ww
+ wwwwwwMWWwwwwwwwMWMww
+wwwwwwwwMWwwwwwwwMWwww
+wwwwwwwwMWwwwwwwMWMww
+MMwMMwwwwWWMwwwMWMww
+@.WWWWMMwwWwwwMWMwww
+MMwwwMWWWWWwwwWMwwwww
+wwwwMWWwwwWWwWWMwwwMww
+ wwwMWMwwM..WWwwMMMW..
+ wwwWMwwM.{{.wwwMWWW.@
+ wwWWWwwM.{{.WWWWMwMMM
+wwMWMwMwMM..WWMMMwwwww
+MMWWwwwMwWWMMWWwwwwww
+..WMwwwwWWMwwwWMwwww
+@.MwwwwwMWwwwwMWMwww
+MMwwwwwMWWwwwwwMWWww
+wwwwwwwMWMwwwwwwMWMww
+wwwwwMMWMwwwwwwwwWWMMM
+ wwwwMWWMwwwwwwwwMWW.M
+  wwwM...MwwwwwwwwWM..
+   wM..@.Mww     wM..@
+ENDMAP
+
+# Inspired by the bit from the Inferno where the sinners in the Caina region
+# of Cocytus are trapped in ice with only their heads sticking out. Granted,
+# these heads are a little more mobile than those ones.
+NAME:   nicolae_coc_caina
+TAGS:   transparent
+DEPTH:  Coc, !Coc:$
+ORIENT: centre
+KMONS:  1 = curse skull
+SUBST:  x = 1:5 xx.
+MAP
+     ..x.x
+   .x.......
+  ....x...x..x
+ ..x....x.....
+ x...x......x.
+.......x.x....
+x.x..x.........
+........}..x.x.
+.x...x.........
+..........x..x
+..x....x......
+x...x.....x..
+  x....x....x
+  ..x.....x.
+    ..x..
+ENDMAP
+
+NAME:   nicolae_coc_caroushell
+TAGS:   transparent no_pool_fixup no_monster_gen
+DEPTH:  Coc
+ORIENT: centre
+WEIGHT: 2
+KMONS:  1 = diamond obelisk
+SUBST:  ~ = w., M = w_, ` = ._
+CLEAR:  _
+MAP
+          @
+   MMM   `.`   MMM
+  MwwwM `...` MwwwM
+ Mwwwww~.....~wwwwwM
+ Mwwwwww~...~wwwwwwM
+ Mwwwwwww~.~wwwwwwwM
+  MwwwwwwwWwwwwwwwM
+   ~wwwwwwWwwwwww~
+  `.~wwwwwWwwwww~.`
+ `...~wwwwWwwww~...`
+@.....WWWW1WWWW.....@
+ `...~wwwwWwwww~...`
+  `.~wwwwwWwwwww~.`
+   ~wwwwwwWwwwwww~
+  MwwwwwwwWwwwwwwwM
+ Mwwwwwww~.~wwwwwwwM
+ Mwwwwww~...~wwwwwwM
+ Mwwwww~.....~wwwwwM
+  MwwwM `...` MwwwM
+   MMM   `.`   MMM
+          @
+ENDMAP
+
+NAME:   nicolae_coc_city_of_iceburg
+TAGS:   no_pool_fixup patrolling
+DEPTH:  Coc:2-, !Coc:$
+ORIENT: encompass
+KMONS:  1 = ice statue
+KFEAT:  ~ = open_sea
+KFEAT:  } = }
+: set_border_fill_type('open_sea')
+NSUBST: D = + / nccc / c, E = + / nccc / c, F = + / nccc / c, H = + / nccc /c, \
+        J = + / nccc / c, K = + / nccc / c, L = + / nccc / c, M = + / nccc /c, \
+        N = + / nccc / c, O = + / nccc / c, a = 2=n / c, p = 2=n / c, \
+        q = 2=n / c, r = 2=n / c, s = 3=n / c, y = 2=n / c, } = } / 0
+SUBST:  Q = 009.., 0 = 009, 9 = 998
+MAP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwcppppppcwwwwwwwwwwwww~
+~wwwwwwwwwwcccccc......cwwwwwwwwwwwww~
+~wwwwww....M....a.}.Q..+......Qwwwwww~
+~wwwwww.cLLc..}.a......cqqqqqc.wwwwww~
+~wwwww..c..L....caaaaaac.....r.wwwwww~
+~wwww...L.}cMMMMc......c...}.r.wwwwww~
+~wwww...L..L....c..Q.}.c.....r.wwwwww~
+~wwwx...c..L.Q..c......c.Q...r.wwwwww~
+~wwwx...cLLc....cKKKKKKc.....r..Qwwww~
+~wwxx..Q....!..........c++cccccc.wwww~
+~wwxxw....................J....s.wwww~
+~wxxww...cNNNc...VWWWV....J..}.s.wwww~
+~wxxww...N...N...W.1.W..Q.J....s.wwww~
+~wxxww...N.}.N...W1G1W....J....s.wwww~
+~wxxww...N...N...W.1.W...ccccccc.wwww~
+~wxxxww..cNNNc...VWWWV...H....s..wwww~
+~wxxxxx..................H..}.sQwwwww~
+~wwxxxw.Q..cDDDDDc.......H....s..wwww~
+~wwxxwwccncc.....D...Q...cHHcFcc+cwww~
+~wwxxwwc...c.Q.}.D..........F....swww~
+~wwxxwwc...D.....D..........F..}.swww~
+~wwxxwwn.}.D.....D...ccEcc..cFFsscwww~
+~wwxxxwc...cDDDDDc...c...c......wwwww~
+~wxxxxxc+ccc.........E...E.Q.xx.wwwww~
+~wx...xx............xc...cxxxxx.wwwww~
+~wx.{.xxxx....G....Gxc...cccccxxwwwww~
+~wx....xxxwwwwxx..xxxc.}.c.}.cxwwwwww~
+~wxx.....xxxxxx...xxwc...c...ywwwwwww~
+~wwxx............xxxwc+ccc...ywwwwwww~
+~wwxxxx.........xxxwww...+...ywwwwwww~
+~wwwxxxxxx...xxxxxxwwwwwwcyyycwwwwwww~
+~wwwwxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwxxxxxwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ENDMAP
+
+NAME:   nicolae_coc_cocytus_crossing
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc
+ORIENT: centre
+NSUBST: D = 2=W / w, E = 2=W / w, F = 2=W / w, H = 2=W / w, J = 2=W / w, \
+        K = 2=W / w, L = 2=W / w, M = 2=W / w, N = 2=W / w, O = 2=W / w, \
+        P = 2=W / w, Q = 2=W / w
+SUBST:  p : x., q : x., r : wx, s : wx, y : x.
+MAP
+    wwww@@wwww
+  wwwww....wwwww
+ wwwwN..xx..Owwww
+ www.NN....OO.www
+www.y.NFFFFO.y.www
+wwNN.sNHHHHOs.OOww
+ww.NNNr....rOOO.ww
+w...DE.q..q.KJ...w
+@.x.DE..pp..KJ.x.@
+@.x.DE..pp..KJ.x.@
+w...DE.q..q.KJ...w
+ww.QQQr....rPPP.ww
+wwQQ.sQMMMMPs.PPww
+www.y.QLLLLP.y.www
+ www.QQ....PP.www
+ wwwwQ..xx..Pwwww
+  wwwww.@@.wwwww
+    wwww@@wwww
+ENDMAP
+
+NAME:  nicolae_coc_downstairs_cove
+TAGS:  transparent no_pool_fixup
+DEPTH: Coc, !Coc:$
+KFEAT: @ = W
+SUBST: - = xx., ~ = ww., ! = wx., 0 = 0009, 9 = 998
+MAP
+ xxxxx@Www
+xx-....Wwww
+x-.0.~wwwww
+x..!!xwwwww
+x0xxxx~.~ww
+x..-xx.}.ww
+xx.-xx-..ww
+x-..-xx8~ww
+x-9...x.~ww
+xx--x...~ww
+ xxxxxxxxw
+ENDMAP
+
+NAME:    nicolae_coc_hellspring
+TAGS:    transparent no_pool_fixup
+DEPTH:   Coc, !Coc:$
+ORIENT:  centre
+KMONS:   1 = elemental wellspring w:70 / nothing
+KFEAT:   1 = w
+SHUFFLE: DEFH, Pq/Qq/Rr/Ss, JKLMNOZa
+SUBST:   D = w, EFH = ., PQR = w, pqr = Ww, S = ., s = W., JKL = ., M : w., \
+         N : w., Za = w
+MAP
+  wwwJJwKKwww
+ wwwwJJwKKwwww
+ww1D.......E1ww
+wwDDD.....EEEww
+ww.DDwPPPwEE.ww
+aa..w1ppp1w..LL
+aa..SsWWWqQ..LL
+ww..SsW}WqQ..ww
+ZZ..SsWWWqQ..MM
+ZZ..w1rrr1w..MM
+ww.HHwRRRwFF.ww
+wwHHH.....FFFww
+ww1H.......F1ww
+ wwwwOOwNNwwww
+  wwwOOwNNwww
+ENDMAP
+
+NAME:     nicolae_coc_icebean_singular
+TAGS:     transparent no_pool_fixup allow_dup
+DEPTH:    Coc
+SUBVAULT: D : nico_icebean
+MAP
+  ......
+ ..DDDD..
+..DDDDDD.
+.DDDDDDD.
+.DDDDDDD.
+.DDDDDD..
+.DDDDD...
+..DDD..
+ .....
+ENDMAP
+
+NAME:     nicolae_coc_icebeans_plural
+TAGS:     transparent no_pool_fixup
+DEPTH:    Coc
+ORIENT:   centre
+SUBVAULT: D : nico_icebean
+SUBVAULT: E : nico_icebean
+SUBVAULT: F : nico_icebean
+SUBVAULT: H : nico_icebean
+SHUFFLE:  JK/xw/xw/xW/xW/ww/wW/wW/WW/-W/-W
+SUBST:    JK = x, - = .
+MAP
+  .............
+ ..DDDD...EEEE..
+..DDDDDD.EEEEEE..
+.DDDDDDD.EEEEEEE.
+.DDDDDDD.EEEEEEE.
+.DDDDDD...EEEEEE.
+.DDDDD.....EEEEE.
+..DDD..KKK..EEE..
+.......KJK.......
+..HHH..KKK..FFF..
+.HHHHH.....FFFFF.
+.HHHHHH...FFFFFF.
+.HHHHHHH.FFFFFFF.
+.HHHHHHH.FFFFFFF.
+..HHHHHH.FFFFFF..
+ ..HHHH...FFFF..
+  .............
+ENDMAP
+
+NAME:    nicolae_sub_coc_subbean
+TAGS:    unrand nico_icebean no_pool_fixup allow_dup
+SHUFFLE: DE/xw/xw/xW/xW/ww/wW/wW/WW/.W/.W
+SUBST:   DE = x
+MAP
+  EEEE
+ EEDDEE
+EEDDDDE
+EDDDDEE
+EDDDEE
+EEDEE
+ EEE
+ENDMAP
+
+NAME:    nicolae_coc_icecubes
+TAGS:    transparent no_pool_fixup
+DEPTH:   Coc
+SHUFFLE: DEJ, FHM, NRS, QZa
+SUBST:   D : .W, F : .W, N : .W, Q : .W, E : .xmwW, H : .xmwW, J : .xmwW, \
+         K : .xmwW, L : .xmwW, M : .xmwW, O : .xmwW, P : .xmwW, R : .xmwW, \
+         S : .xwmW, Z : .xmwW, a : .xmwW
+MAP
+DDDEEEFFFHHH
+DDDEEEFFFHHH
+DDDEEEFFFHHH
+JJJKKKLLLMMM
+JJJKKKLLLMMM
+JJJKKKLLLMMM
+NNNOOOPPPQQQ
+NNNOOOPPPQQQ
+NNNOOOPPPQQQ
+RRRSSSZZZaaa
+RRRSSSZZZaaa
+RRRSSSZZZaaa
+ENDMAP
+
+NAME:   nicolae_coc_kraken_the_ice
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc, !Coc:$
+KMONS:  1 = kraken simulacrum
+KFEAT:  1 = w
+SUBST:  ` = w., ' = w-
+NSUBST: - = 1=} / ., w = 3=1 / 3=1w
+MAP
+`...`.`...`
+.'w--'-w-'.
+.www-'www'.
+`--w'-'w--`
+.-wwwwwwww.
+.ww'w1w''w.
+.w--www---`
+`--ww'w'ww.
+.-'w'-www'.
+.www--w-''.
+`...`..`..`
+ENDMAP
+
+NAME:   nicolae_coc_liches_on_tour
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc:2-
+KMONS:  1 = ice fiend
+KMONS:  2 = hellion / tormentor
+KMONS:  3 = ancient lich / dread lich
+NSUBST: M = 2=1 / 3=2 / 3=3 / 123..
+SUBST:  ~ = w., - = x.
+MAP
+ .........
+...~www~...
+..~wwwww~..
+.M~wwwww~M.
+..M~www~M..
+.M..~~~..M.
+x.M.....M.x
+xM.......Mx
+xxM..{..Mxx
+xxxx~~~xxxx
+ xxxxxxxxx
+ENDMAP
+
+NAME:  nicolae_coc_melting_block
+TAGS:  transparent allow_dup
+DEPTH: Coc
+SUBST: M = mxx, N = Wmm, O = .WW
+MAP
+..........
+.OOOOOOOO.
+.ONNNNNNO.
+.ONMMMMNO.
+.ONMxxMNO.
+.ONMxxMNO.
+.ONMMMMNO.
+.ONNNNNNO.
+.OOOOOOOO.
+..........
+ENDMAP
+
+NAME:    nicolae_coc_naught_crossing
+TAGS:    transparent no_pool_fixup
+DEPTH:   Coc
+ORIENT:  centre
+SHUFFLE: w.
+MAP
+..xxxwwwwwxxx..
+...wwwwwwwww...
+x.WWwwwwwwwWW.x
+xwWWWxxxxxWWWwx
+xwwW..xxx..Wwwx
+wwwx...x...xwww
+wwwxx.....xxwww
+wwwxxx...xxxwww
+wwwxx.....xxwww
+wwwx...x...xwww
+xwwW..xxx..Wwwx
+xwWWWxxxxxWWWwx
+x.WWwwwwwwwWW.x
+...wwwwwwwww...
+..xxxwwwwwxxx..
+ENDMAP
+
+NAME:    nicolae_coc_on_the_berg
+TAGS:    transparent no_pool_fixup
+DEPTH:   Coc, !Coc:$
+ORIENT:  encompass
+KFEAT:   E = open_sea
+KFEAT:   ! = W
+: set_border_fill_type('open_sea')
+SHUFFLE: Qq, Or
+NSUBST:  S = { / } / !
+SUBST:   ~ = w., D : w-, F : w-, H : w-, J : w-, K : w-, L : w-, \
+         M : xxw--, N : xxw--, O : xxw--, P : xxw--, Q : xxw--, \
+         R : xxw--, p : xxw--, qr : -, - = .:40 !:1 8:1
+MARKER:  ! = lua:fog_machine { pow_max = 20, cloud_type = "freezing vapour", \
+             delay_min = 50, delay_max = 250, size = 16, start_clouds = 1, \
+             excl_rad = -1 }
+MAP
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+EwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwE
+EwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwE
+Ewwwww~...DDDwwwwwwww~....~wwwwwwwE
+Ewww~......DDDDwwww~...MM.....~wwwE
+Ewww..S.....DDDDDDD...MMMM.....~wwE
+Eww~.........DDDDD...MMMMM...S..wwE
+Eww..........DDDDDD..MMMMM......wwE
+Eww..pppp...DDDDDDD...MMM......~wwE
+EwwLppppp....DDDDD...RRR......~wwwE
+EwwLLppppp....DDD...RRRRR.....wwwwE
+EwwLLLppp...........RRRRR...FFFwwwE
+EwwwLLLLL.........qqRRRRRFFFFFFFwwE
+EwwwwLLLLL....xxxqqqqRRRFFFFFFFFwwE
+EwwwLLLLLL...xxxxxxqq...FFFFFFFFwwE
+EwwLLLL....QQxxxxxxq....FFFFFFFFwwE
+EwwL.....QQQQQxxxx......NNFFFFFFwwE
+Eww......QQQQQQ.........NNNNNFFwwwE
+EwwK..KKKKKQQxx.!.rrxxx..NNNNNFwwwE
+EwwKKKKKKKKKxxxxrrrxxxxx..NNNHwwwwE
+EwwwKKKKKKKKxxxxrrxxxxx...HHHHwwwwE
+EwwwwKKKKKKxxxxxrrxxxxx..HHHHHHwwwE
+EwwwwKKKKK..xxx..rrrxxx..HHHHHHHwwE
+EwwwwKK..............xxxOOHHHHHHwwE
+EwwwK....PP...JJJJJJ..xxOOO.HHHHwwE
+Ewww....PPPP.JJJJJJJJ.OOOOO...HwwwE
+Eww~...PPPPPJJJJJJJJJ..OOO.....~wwE
+Eww.....PPPPJJJJJJJJ...OO.......wwE
+Eww......PP..JJJJJ..........S..~wwE
+Eww..S.........JJ.............~wwwE
+Eww~....~ww~...JJJ..~www~....~wwwwE
+Ewww~..~wwww~.JJJJJwwwwwwwwwwwwwwwE
+EwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwE
+EwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwE
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+ENDMAP
+
+NAME:    nicolae_coc_statues_of_limitations
+TAGS:    transparent allow_dup luniq
+DEPTH:   Coc, !Coc:$
+KMONS:   1 = ice statue
+KFEAT:   1 = W
+KFEAT:   ^ = shaft trap
+SHUFFLE: DE
+SUBST:   D : 1, E : GG1, } = }}^
+MAP
+WWWWW
+WDEDW
+WE}EW
+WDEDW
+WWWWW
+ENDMAP
+
+NAME:   nicolae_coc_three_more_mouths
+TAGS:   transparent patrolling no_pool_fixup
+DEPTH:  Coc, !Coc:$
+ORIENT: centre
+KMONS:  1 = ice fiend
+MAP
+        wwwww
+    x  ..xxxww
+   xxx..xx.xxww
+    x..xx...xxw
+  .....x..1..xw
+ w.xxx......xx.
+wwxx.......xx..
+wxx........x..x
+wx..1...}....xxx
+wxx........x..x
+wwxx.......xx..
+ w.xxx......xx.
+  .....x..1..xw
+    x..xx...xxw
+   xxx..xx.xxww
+    x  ..xxxww
+        wwwww
+ENDMAP
+
+NAME:   nicolae_coc_through_the_icewall
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc
+ORIENT: centre
+KMONS:  1 = 0 w:120 / 9 w:30 / 8
+KFEAT:  1 = W
+SUBST:  M = wx, ~ = .w, - = Wwxxx, W = W:15 1:1
+MAP
+  .......................
+ ..wW~..............~w~...
+ ~wWWw~..~wwww~.....~ww~..
+ xwWWwxMwwwwwwwMxMwwwwwwMx
+xxMWWMxxMwwwwMxxxxMwwwMxxxx
+xxxWWxxxxMwMxxx--xxxxxxxxxx
+xx-WW--xxxxxx-WWWWWWWWWW-xx
+xx-WWWW------WWWWWWWWWWW-xx
+xx-WWWWWWWWWWWWWxxxxx-WWW-x
+xxx--WWWWWWWWWWxxMwMx-WWW-x
+xxxxxxxxxxxxx--xMwwMxx-WW-x
+xxxxxMMwwwwMxxxxMwwwMxwWWxx
+ xxxwwwwwwwwMxxMwwwwMxwWWx
+ ...~ww~.~ww~~~~~ww~.ww~..
+ .........~w~........~w...
+  .......................
+ENDMAP
+
+NAME:   nicolae_coc_two_mouths
+TAGS:   patrolling transparent no_pool_fixup
+DEPTH:  Coc:2-, !Coc:$
+ORIENT: centre
+SUBST:  0 = .009, 9 = 998
+MAP
+ wwwwwww             wwwwwww
+wwxxxxxww           wwxxxxxww
+wxx.0.xxww         wwxx.9.xxw
+..0....xxw         wxx....9..
+@.9..{..xw         wx..}..8.@
+..0....xxw         wxx....9..
+wxx.0.xxww         wwxx.9.xxw
+wwxxxxxww           wwxxxxxww
+ wwwwwww             wwwwwww
+ENDMAP
+
+NAME:   nicolae_coc_wendigon
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc
+KMONS:  1 = simulacrum
+KMONS:  2 = wendigo
+SUBST:  ~ = Ww, M = W., S = 1., ` = wwwxx..., . = 1:6 2:2 .:50
+MAP
+  ww~WW~ww
+ ww~M..M~ww
+ww~M....M~ww
+w~M......M~w
+~M..S``S..M~
+W...`{M`...W
+W...`MM`...W
+~M..S``S..M~
+w~M......M~w
+ww~M....M~ww
+ ww~M..M~ww
+  ww~WW~ww
+ENDMAP
+
 ##############################################################################
 # Antaeus; bottom of Cocytus.
 ##############################################################################

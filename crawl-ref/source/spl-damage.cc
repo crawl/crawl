@@ -1098,13 +1098,13 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
     { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY,
+    { MONS_CRYSTAL_GUARDIAN,  { "crystal", GREEN,
                                 frag_damage_type::crystal } },
-    { MONS_CRYSTAL_ECHIDNA,   { "crystal", LIGHTGREEN,
+    { MONS_CRYSTAL_ECHIDNA,   { "crystal", GREEN,
                                 frag_damage_type::crystal } },
     { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED,
                                 frag_damage_type::crystal } },
-    { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN,
+    { MONS_OBSIDIAN_STATUE,   { "obsidian", MAGENTA,
                                 frag_damage_type::crystal } },
     { MONS_ROXANNE,           { "sapphire", BLUE, frag_damage_type::crystal } },
 };
@@ -3147,9 +3147,7 @@ void handle_flame_wave()
     if (lvl == 1) // just cast it this turn
         return;
 
-    if (crawl_state.prev_cmd != CMD_WAIT
-        || you.confused()
-        || you.berserk())
+    if (crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
     {
         end_flame_wave();
         return;
@@ -3238,8 +3236,7 @@ void handle_searing_ray()
 
     ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
 
-    // All of these effects interrupt a channeled ray
-    if (you.confused() || you.berserk())
+    if (!can_cast_spells(true))
     {
         end_searing_ray();
         return;
@@ -3929,8 +3926,7 @@ void handle_maxwells_coupling()
     if (!you.props.exists(COUPLING_TIME_KEY))
         return;
 
-    // All of these effects interrupt charging
-    if (you.confused() || you.berserk())
+    if (!can_cast_spells(true))
     {
         end_maxwells_coupling();
         return;

@@ -501,7 +501,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.go_lobby()
         else:
             if self.process is None: # Can happen if the process creation fails
-                self.go_lobby()
+                # lobby should be handled in exit callback
                 return
 
             self.send_message("game_started")

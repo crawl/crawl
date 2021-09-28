@@ -56,6 +56,12 @@ An altar to Hepliaklqana the Forgotten, shrouded in mist and difficult to make
 out clearly. Something about it seems terribly familiar, but it's impossible to
 say exactly why.
 %%%%
+A candlelit altar of Ignis
+
+An altar to Ignis, the Dying Flame. It's completely covered in candles of all
+shapes and sizes, but only one remains alight, its slender flame wavering in the
+slightest breeze.
+%%%%
 A viscous altar of Jiyva
 
 A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and
@@ -118,6 +124,11 @@ A radiant altar of Vehumet
 An altar, ablaze in the lights of Iskenderun and promising great destructive
 powers to those who would follow Vehumet.
 %%%%
+An ornate altar of the Wu Jian Council
+
+A red and gold altar to the Wu Jian Council. Sharp slivers of steel drift
+through the quiet air surrounding it.
+%%%%
 A shimmering altar of Xom
 
 An altar constantly shimmering in all visible colours, and probably some
@@ -131,11 +142,6 @@ A glowing silver altar of Zin
 
 An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers
 are expected to be, and glowing gently.
-%%%%
-An ornate altar of the Wu Jian Council
-
-A red and gold altar to the Wu Jian Council. Sharp slivers of steel drift
-through the quiet air surrounding it.
 %%%%
 ########################################################################
 ### Terrain

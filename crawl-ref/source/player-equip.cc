@@ -961,13 +961,9 @@ static void _remove_amulet_of_faith(item_def &item)
 
     const int piety_loss = div_rand_round(you.piety, 3);
     // Piety penalty for removing the Amulet of Faith.
-    if (you.piety - piety_loss > 10)
-    {
-        mprf(MSGCH_GOD, "You feel less pious.");
-        dprf("%s: piety drain: %d",
-             item.name(DESC_PLAIN).c_str(), piety_loss);
-        lose_piety(piety_loss);
-    }
+    mprf(MSGCH_GOD, "You feel less pious.");
+    dprf("%s: piety drain: %d", item.name(DESC_PLAIN).c_str(), piety_loss);
+    lose_piety(piety_loss);
 }
 
 static void _equip_regeneration_item(const item_def &item)
@@ -1083,13 +1079,13 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
+    {
         if (you.has_mutation(MUT_FORLORN))
         {
             mpr("You feel a surge of self-confidence.");
             break;
         }
 
-        {
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
             simple_god_message(ignore_reason.c_str());
@@ -1098,7 +1094,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
                             you_worship(GOD_NO_GOD) ? "strange " : "");
         }
-        }
+    }
 
         break;
 

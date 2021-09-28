@@ -643,11 +643,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_TWO_HEADED_OGRE,         { DOUBLE_OGRE_WEAPONS } },
         { MONS_IRON_GIANT,              { DOUBLE_OGRE_WEAPONS } },
-        { MONS_IRONBOUND_BEASTMASTER,
-            { { { WPN_WHIP,             5 },
-                { WPN_QUARTERSTAFF,     4 },
-                { WPN_DEMON_WHIP,       1 },
-        } } },
         { MONS_IRONBOUND_THUNDERHULK,
             { { { WPN_DIRE_FLAIL,       9 },
                 { WPN_GREAT_MACE,       1 },
@@ -1415,7 +1410,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                     player_in_branch(BRANCH_ORC)? 9 : 20))
             {
                 weap_type = MI_BOOMERANG;
-                qty       = random_range(4, 8);
+                qty       = random_range(1, 3);
             }
             break;
 
@@ -1423,7 +1418,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             if (one_chance_in(20))
             {
                 weap_type = MI_BOOMERANG;
-                qty       = random_range(2, 5);
+                qty       = random_range(1, 3);
             }
             break;
 
@@ -1447,7 +1442,9 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         case MONS_MERFOLK_JAVELINEER:
         case MONS_MINOTAUR:
             weap_type  = MI_JAVELIN;
-            qty        = random_range(5, 12);
+            qty        = random_range(1, 3);
+            if (mon->type == MONS_MINOTAUR)
+                qty += random_range(1, 5);
             if (one_chance_in(3))
                 level = ISPEC_GOOD_ITEM;
             break;
@@ -1457,7 +1454,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 || active_monster_band == BAND_MERFOLK_JAVELINEER)
             {
                 weap_type  = MI_BOOMERANG;
-                qty        = random_range(4, 8);
+                qty        = random_range(1, 3);
                 if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                     break;
             }
@@ -1472,11 +1469,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
         case MONS_DRACONIAN_KNIGHT:
         case MONS_GNOLL:
-            if (!level || coinflip())
-                break;
-            // deliberate fall-through
-        case MONS_IRONBOUND_BEASTMASTER:
-            if (!one_chance_in(10))
+            if (!level || !one_chance_in(20))
                 break;
             // deliberate fall-through to harold
 
@@ -1806,7 +1799,6 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_GRUM:
     case MONS_SPRIGGAN_BERSERKER:
-    case MONS_IRONBOUND_BEASTMASTER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;

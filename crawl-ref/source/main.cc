@@ -1149,10 +1149,25 @@ static void _input()
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
-            else
+            else if (!crawl_state.lua_ready_throttled)
             {
                 if (!clua.callfn("ready", 0, 0) && !clua.error.empty())
+                {
+                    // if ready() has been killed once, it is considered
+                    // buggy and should not run again. Note: the sequencing is
+                    // important here, because mprs trigger the c_message hook,
+                    // so this state variable needs to be checked immediately.
+                    if (crawl_state.lua_script_killed)
+                        crawl_state.lua_ready_throttled = true;
+
                     mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                    if (crawl_state.lua_ready_throttled)
+                    {
+                        mprf(MSGCH_ERROR, "Banning ready() after %d throttles",
+                            CLua::MAX_THROTTLE_SLEEPS);
+                    }
+
+                }
             }
         }
 

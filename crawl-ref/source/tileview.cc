@@ -256,7 +256,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_SEWER:
-        flv.wall  = TILE_WALL_PEBBLE_GREEN;
+        flv.wall  = TILE_WALL_OOZING;
         flv.floor = TILE_FLOOR_SLIME;
         return;
 
@@ -1300,6 +1300,15 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_VAULT;
+    } else if (player_in_branch(BRANCH_SPIDER))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SPIDER;
+    } else if (player_in_branch(BRANCH_SWAMP)
+               || player_in_branch(BRANCH_SEWER))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_WALL_STONE_MOSSY;
     }
 
     if (orig == TILE_FLOOR_NORMAL)

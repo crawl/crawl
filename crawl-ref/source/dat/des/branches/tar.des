@@ -627,6 +627,528 @@ MAP
      xx  xx  xx  xx  xx  xx
 ENDMAP
 
+NAME:    nicolae_tar_checkpoint_tarlie
+TAGS:    transparent
+DEPTH:   Tar
+ORIENT:  centre
+NSUBST:  D = 1=+, E = 1=+
+SHUFFLE: DE
+SUBST:   D = m, E = x, 0 = ..000998
+MAP
+ x........................
+xxx.....x.x.x.......x.x.x.
+ x..0..xxDxDxx..0..xxDxDxx
+xxx...xxx.x.xxx...xxx.x.xxx
+ x.....E.....E.....E.....x
+xxx.0.xxx.0.xxx.0.xxx.0.xxx
+ x.....E.....E.....E.....x
+xxx.x.xxx...xxx.x.xxx...xxx
+ xxDxDxx..0..xxDxDxx..0..x
+ .x.x.x.......x.x.x.....xxx
+ ........................x
+ENDMAP
+
+NAME:    nicolae_tar_combbox
+TAGS:    transparent
+DEPTH:   Tar
+: if you.depth() == 1 then
+SUBST:   { = }
+: elseif you.depth_fraction() < 1 then
+SUBST:   { = {}
+: end
+SHUFFLE: DEFHJ
+SUBST:   DE : x, F : m, H : xm, J : xm, 0 = .009, 9 = 998
+MAP
+  x x x x x x
+ xxxxxxxxxxxxx
+xxx.x.x.x.x.xxx
+ x.0...0...0.x
+xxx..D...D..xxx
+ x..DEx.xED..x
+xxx..F...F..xxx
+ x.0HJ.{.JH0.x
+xxx..F...F..xxx
+ x..DEFJFED..x
+xxx..D.H.D..xxx
+ x.0...0...0.x
+xxx.x.....x.xxx
+ xxxxx...xxxxx
+  x x  @  x x
+ENDMAP
+
+NAME:    nicolae_tar_combstack
+TAGS:    transparent
+DEPTH:   Tar
+SHUFFLE: DE, FH
+NSUBST:  D = + / x, F = + / x
+SUBST:   EH = m
+MAP
+ x x x x x x x x
+xxxxxxxxxxxxxxxxx
+.x.x.x.x.x.x.x.x.
+....0...9...0....
+.x.x.x.x.x.x.x.x.
+xxDxExDxExDxExDxx
+ x.x.x.x.x.x.x.x
+xx..9...8...9..xx
+ x.x.x.x.x.x.x.x
+xxFxHxFxHxFxHxFxx
+.x.x.x.x.x.x.x.x.
+....0...9...0....
+.x.x.x.x.x.x.x.x.
+xxxxxxxxxxxxxxxxx
+ x x x x x x x x
+ENDMAP
+
+# Sometimes putting all the right spells and objects in the tomb isn't enough
+# to get the pharaoh into the good afterlife. RIP
+NAME:    nicolae_tar_entombed_in_hell
+TAGS:    transparent patrolling
+DEPTH:   Tar, !Tar:$
+ORIENT:  centre
+KFEAT:   } = }
+KMONS:   } = royal mummy
+KMONS:   1 = mummy priest
+KMONS:   2 = guardian mummy / ushabti / death scarab band / ancient champion / \
+             emperor scorpion / sphinx
+SHUFFLE: DE/FH/JK
+SUBST:   M = 12, DH = +, EFJK = x
+MAP
+            xxxx
+          xxx..x
+        xxx..2.E
+      xxx..M...x
+    xxx.D2...x+x
+  xxx...x..xxx.x
+xxx...M.xxxx.2.x
+x...1...xx.....x
+x.}.1.M.F.M....H
+x...1...xx.....x
+xxx...M.xxxx.2.x
+  xxx...x..xxx.x
+    xxx.J2...x+x
+      xxx..M...x
+        xxx..2.K
+          xxx..x
+            xxxx
+ENDMAP
+
+NAME:    nicolae_tar_entranced
+TAGS:    transparent patrolling
+DEPTH:   Tar:2-
+ORIENT:  centre
+KMONS:   1 = eidolon
+KMONS:   2 = tainted leviathan
+SHUFFLE: 12
+SUBST:   1 = 111., 2 = 2.
+MAP
+     x@@@x
+    xx...xx
+  xxx..1..xxx
+ xx2.......2xx
+ x...........x
+xx...........xx
+@.............@
+@.1....{....1.@
+@.............@
+xx...........xx
+ x...........x
+ xx2.......2xx
+  xxx..1..xxx
+    xx...xx
+     x@@@x
+ENDMAP
+
+# In the Fifth Circle of Dante's Inferno, the wrathful are punished in the foul,
+# stinking waters of the river Styx. The actively wrathful fight on the surface,
+# while the sullen lie below, sulking eternally. With no Phlegyas to help them,
+# players will have to ford the noxious river themselves. It'll be fine.
+# At ebering's suggestion, the ford has a 1/4 chance of being toxic bog instead.
+NAME:    nicolae_tar_fifth_circle
+TAGS:    transparent no_pool_fixup
+DEPTH:   Tar
+ORIENT:  centre
+KMONS:   ! = shadow wraith / putrid mouth
+KMONS:   1 = tainted leviathan
+KMONS:   23 = ancient champion
+KFEAT:   ! = w
+KFEAT:   2M : W w:30 / toxic_bog
+SHUFFLE: DEFH
+SUBST:   D = M, EFH = w
+NSUBST:  M = 2MMMM, J = 1=1 / 3, K = 1=1 / 3
+MARKER:  ! = lua:fog_machine { pow_max = 30, cloud_type = "foul pestilence", \
+             delay_min = 10, delay_max = 50, size = 2, start_clouds = 1, \
+             walk_dist = 5, excl_rad = -1 }
+MAP
+   ....J................
+  ..wDD......J........J.
+ wwwDDwwEEww.....J......w
+wwwDDww!wEEwwwww....wwHHww
+w!wwDDwwwwEEw!wwFFwwwHHw!w
+wwwDDwwwwwEEEwwFFw!wHHwwww
+ wwD..K..wwwEEwwFFwwwHHww
+  ........K....FFwww.K..
+    ...........K.......
+ENDMAP
+
+NAME:    nicolae_tar_four_comb_rooms
+TAGS:    transparent
+DEPTH:   Tar
+SHUFFLE: DEF, HJ
+SUBST:   DH : m, EJ : x, F : xm, 0 = 000998
+MAP
+xxxxx.....xxxxx
+xJ.H...E...J.Hx
+x.0...FDF...0.x
+xH.....E.....Jx
+x.....FDF.....x
+.....0.E.0.....
+..F.F.FDF.F.F..
+.EDEDEDEDEDEDE.
+..F.F.FDF.F.F..
+.....0.E.0.....
+x.....FDF.....x
+xJ.....E.....Hx
+x.0...FDF...0.x
+xH.J...E...H.Jx
+xxxxx.....xxxxx
+ENDMAP
+
+NAME:   nicolae_tar_funeral_procession
+TAGS:   transparent
+DEPTH:  Tar
+ORIENT: centre
+SUBST:  0 = .009, 9 = 998
+MAP
+ x....@....x
+xxxmmmmmmmxxx
+.x.........x.
+..0.x.9.x.0..
+.............
+@.x.0.x.0.x.@
+.............
+..0.x.9.x.0..
+.x.........x.
+xxxmmmmmmmxxx
+ x....@....x
+ENDMAP
+
+NAME:    nicolae_tar_grid_combs
+TAGS:    transparent
+DEPTH:   Tar
+SHUFFLE: DE
+SUBST:   D : mx, E = x, 0 = .:15 009, 9 = 998
+MAP
+...............
+.x.x.x.x...x.x.
+DxExDxExD.ExDxE
+.x.x.x.x...x.x.
+.....0...0.....
+.0..x.x.x.x..0.
+...ExDxExDxE...
+.0..x.x.x.x..0.
+.....0...0.....
+.x.x...x.x.x.x.
+ExDxE.DxExDxExD
+.x.x...x.x.x.x.
+...............
+ENDMAP
+
+# The "tar_honey" vaults are so named because they place a lot of doors, which
+# one version of layout_honeycomb does.
+NAME:   nicolae_tar_honey_chapel
+TAGS:   transparent
+DEPTH:  Tar
+NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, J = + / x, K = + / x, \
+        L = + / x, M = + / x, N = + / x, O = + / x, P = + / x, Q = + / x, \
+        R = +x / +x / x
+SUBST:  G : GGVVY
+: if crawl.coinflip() then
+TILE:  G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: end
+MAP
+.....xRRRx.....
+.....+...+.....
+..xEEx...xFFx..
+..D..N.G.O..H..
+..D..N...O..H..
+x+xNNx...xOOx+x
+R.............R
+R..G...G...G..R
+R.............R
+x+xQQx...xPPx+x
+..M..Q...P..J..
+..M..Q.G.P..J..
+..xLLx...xKKx..
+.....+...+.....
+.....xRRRx.....
+ENDMAP
+
+NAME:   nicolae_tar_honey_rotating
+TAGS:   transparent
+DEPTH:  Tar
+NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, J = + / x, K = + / x, \
+        L = + / x, M = + / x, N = + / x, O = + / x, P = + / x, Q = + / x
+SUBST:  0 = .009, 9 = 998
+MAP
+..x..xxxxx..x..
+.0+..+...+..+0.
+x+xEEx.0.xFFx+x
+..D......+..H..
+..D....x+x..H..
+x+x+x..N....x+x
+x...+..N......x
+x.0.xQQxOOx.0.x
+x......P..+...x
+x+x....P..x+x+x
+..M..x+x....J..
+..M..+......J..
+x+xLLx.0.xKKx+x
+.0+..+...+..+0.
+..x..xxxxx..x..
+ENDMAP
+
+NAME:   nicolae_tar_honey_stairs
+TAGS:   transparent
+DEPTH:  Tar
+ORIENT: centre
+NSUBST: D = 3=+ / x, E = 3=+ / x, F = 3=+ / x, H = 3=+ / x, J = + / x, \
+        K = + / x, L = + / x, M = + / x, N = + / x, O = + / x, P = + / x, \
+        Q = + / x
+: if you.depth() == 1 then
+SUBST:  { = }
+: elseif you.depth_fraction() < 1 then
+SUBST:  { = {}
+: end
+SUBST:  0 = 0009, 9 = 9998
+MAP
+..xNNNNNxNNNNNx..
+..+.....J.....+..
+x+x.....J.....x+x
+Q..0.xDDxEEx.0..O
+Q....D.....E....O
+Q..xDx..9..xEx..O
+Q..D.........E..O
+Q..D.........E..O
+xMMx.9..{..9.xKKx
+Q..H.........F..O
+Q..H.........F..O
+Q..xHx..9..xFx..O
+Q....H.....F....O
+Q..0.xHHxFFx.0..O
+x+x.....L.....x+x
+..+.....L.....+..
+..xPPPPPxPPPPPx..
+ENDMAP
+
+NAME:   nicolae_tar_intersect_combbox
+TAGS:   transparent
+DEPTH:  Tar
+ORIENT: centre
+SUBST:  0 = .0009, 9 = 998
+MAP
+  .........
+   x.x.x.x
+. xxmx+xmxx .
+.xxx.x.x.xxx.
+..m.0...0.m..
+.xxx.....xxx.
+..+...0...+..
+.xxx.....xxx.
+..m.0...0.m..
+.xxx.x.x.xxx.
+  xxmx+xmxx .
+   x.x.x.x
+  .........
+ENDMAP
+
+NAME:   nicolae_tar_just_some_guys
+TAGS:   transparent
+DEPTH:  Tar, !Tar:$
+KMONS:  1 = halazid warlock
+KMONS:  2 = revenant
+KMONS:  3 = spectral thing / nothing w:5
+SUBST:  S = 12
+TILE:  G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+MAP
+    xxxxxxx
+  xxx.x.x.xxx
+ xxxx..}..xxxx
+ xxxx.....xxxx
+xxxxx.1.1.xxxxx
+x.x.x.....x.x.x
+x.....3.3.....x
+x.2.G..S..G.2.x
+x.....3.3.....x
+x.S.G.....G.S.x
+xx....3.3....xx
+xx..G.....G..xx
+xxx...3.3...xxx
+xxxxx.....xxxxx
+xxxxxx.@.xxxxxx
+ENDMAP
+
+NAME:   nicolae_tar_liches_on_tour
+TAGS:   transparent
+DEPTH:  Tar:2-
+KMONS:  1 = tzitzimitl
+KMONS:  2 = hellion / tormentor
+KMONS:  3 = ancient lich / dread lich
+NSUBST: M = 1=1 / 2=3 / 13
+SUBST:  N = 122223
+MAP
+   ..x   x..
+ ....xx xx....
+ ..N.xxxxx.N..
+..N...xxx...N..
+....M.xxx.M....
+xxx....x....xxx
+ xxxx.....xxxx
+  xxxx.{.xxxx
+ xxxx.....xxxx
+xxx....x....xxx
+....M.xxx.M....
+..N...xxx...N..
+ ..N.xxxxx.N..
+ ....xx xx....
+   ..x   x..
+ENDMAP
+
+NAME:  nicolae_tar_spectre_spectrum
+TAGS:  transparent
+DEPTH: Tar
+KMONS: 1 = silent spectre
+KMONS: 2 = spectral thing
+SUBST: 2 = 22.
+MAP
+ x x x x x x...
+xxxxxxxxxxxxx2.
+.x.x.x.x.x.x...
+.2.2.2.2..xxx2.
+...x.......x...
+.2xxx..2..xxx2.
+...x.......x...
+.2xxx..1..xxx2.
+...x.......x...
+.2xxx..2..xxx2.
+...x.......x...
+.2xxx..2.2.2.2.
+...x.x.x.x.x.x.
+.2xxxxxxxxxxxxx
+...x x x x x x
+ENDMAP
+
+NAME:   nicolae_tar_ssshhh
+TAGS:   no_monster_gen
+DEPTH:  Tar, !Tar:$
+ORIENT: encompass
+KMONS:  1 = silent spectre
+KMONS:  2 = tormentor / hellion
+KMONS:  3 = eidolon / profane servitor / bone dragon / shadow wraith / \
+            putrid mouth / spectral thing
+KMONS:  } = tzitzimitl / tainted leviathan
+KFEAT:  } = }
+KMASK:  1 = no_trap_gen
+MAP
+         ccccc
+        cc.c.cc
+       cc..2..cc
+      cc...c...cc
+     cccc3ccc3cccc
+    cc.c...c...c.cc
+   cc.....ccc.....cc
+  cccc.{...c...2.cccc
+ cc.c.....ccc.....c.cc
+cc..3......c......3..cc
+c...c.c.c.ncn.c.c.c...c
+cc2cccccccc1cccccccc2cc
+c...c.c.c.ncn.c.c.c...c
+cc..3......c......3..cc
+ cc.c.....ccc.....c.cc
+  cccc.2...c...}.cccc
+   cc.....ccc.....cc
+    cc.c...c...c.cc
+     cccc3ccc3cccc
+      cc...c...cc
+       cc..2..cc
+        cc.c.cc
+         ccccc
+ENDMAP
+
+NAME:   nicolae_tar_stay_or_leave
+TAGS:   transparent
+DEPTH:  Tar, !Tar:$
+KMONS:  }1 = patrolling eidolon
+KMONS:  2 = tainted leviathan
+KFEAT:  } = }
+NSUBST: } = } / 1, 2 = 2=2 / .
+SUBST:  0 = .....0, 0 = 009, 9 = 998
+MAP
+ccccccccccccccccc
+ccccccc0c0ccccccc
+cccccc0...0cccccc
+ccccccc.}.ccccccc
+cccccc0...0cccccc
+ccccccc.c.ccccccc
+cc0c0c0...0c0c0cc
+c0.....222.......
+cc.}.c.2c2.c.1.c@
+c0.....222.......
+cc0c0c0...0c0c0cc
+ccccccc.c.ccccccc
+cccccc0...0cccccc
+ccccccc.}.ccccccc
+cccccc0...0cccccc
+ccccccc0c0ccccccc
+ccccccccccccccccc
+ENDMAP
+
+NAME:   nicolae_tar_tart_auras
+TAGS:   transparent no_monster_gen
+DEPTH:  Tar, !Tar:$
+ORIENT: centre
+KMONS:  1} = eidolon w:15 / profane servitor / tainted leviathan / \
+             silent spectre w:5
+KFEAT:  } = }
+MAP
+       xxxxxxxxx
+ .....xx.x.x.x.xx.....
+ ....xx.........xx....
+ ...+x.x...1...x.x+...
+ ..xx...x.....x...xx..
+ .xx.....xx.xx.....xx.
+ xx.....xx...xx.....xx
+xx..1..xx..}..xx..1..xx
+ xx.....xx...xx.....xx
+ .xx.....xx.xx.....xx.
+ ..xx...x.....x...xx..
+ ...+x.x...1...x.x+...
+ ....xx.........xx....
+ .....xx.x.x.x.xx.....
+       xxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_tar_windowcombs
+TAGS:    transparent
+DEPTH:   Tar
+SHUFFLE: DEFH
+SUBST:   DE : x, FH : m
+MAP
+           ..........
+           ..E.D.E.D.
+           .FHFHFHFHF
+     ........D.E.D.E.
+     ..E.D.E.D.......
+     .FHFHFHFHF.
+.......D.E.D.E..
+.E.D.E.D........
+FHFHFHFHF.
+.D.E.D.E..
+..........
+ENDMAP
+
 ##############################################################################
 # Ereshkigal (Tartarus)
 ##############################################################################

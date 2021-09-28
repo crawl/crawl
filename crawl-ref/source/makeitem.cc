@@ -696,7 +696,7 @@ static void _generate_missile_item(item_def& item, int force_type,
 #endif
         )
     {
-        item.quantity = random_range(2, 8);
+        item.quantity = random_range(2, 6);
     }
     else
     {

@@ -356,6 +356,7 @@ spret cast_healing(int pow, bool fail)
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
@@ -432,13 +433,15 @@ bool player_is_cancellable()
 
 /**
  * Lists out the effects that will be removed by cancellation.
+ *
+ * @param debuffs_only   If true, contamination levels are unaffected.
  */
-string describe_player_cancellation()
+string describe_player_cancellation(bool debuffs_only)
 {
     vector<string> effects;
 
     // Try to clarify it doesn't remove all contam?
-    if (get_contamination_level())
+    if (!debuffs_only && get_contamination_level())
         effects.push_back("as magically contaminated");
 
     player_debuff_effects buffs;

@@ -106,7 +106,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SLOWED, "slow", "slow", "slow"},
     { MB_BREATH_WEAPON, "catching breath", "catching @possessive@ breath", "catching breath"},
     { MB_LOWERED_WL, "weak-willed", "weak-willed", "weak-willed"},
-    { MB_FIRE_VULN, "inflammable", "more vulnerable to fire", "inflammable"},
+    { MB_FIRE_VULN, "combustible", "more vulnerable to fire", "combustible"},
     { MB_POISON_VULN, "easily poisoned", "more vulnerable to poison", "easily poisoned"},
     { MB_WRETCHED, "misshapen", "misshapen and mutated", "misshapen"},
     { MB_CORROSION, "corroded", "covered in acid", "corroded"},

@@ -31,6 +31,12 @@ serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
 serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
 serpent_of_hell-dis MONS_SERPENT_OF_HELL_DIS
 serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
+tiamat_red MONS_TIAMAT
+tiamat_white
+tiamat_black
+tiamat_green
+tiamat_purple
+tiamat_yellow
 %sdir mon/holy
 seraph MONS_SERAPH
 %sdir mon/sprint
@@ -454,7 +460,9 @@ animated_armour MONS_ANIMATED_ARMOUR
 %rim 1
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
+%rim 0
 flesh_golem MONS_FLESH_GOLEM
+%rim 1
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique
@@ -501,7 +509,9 @@ spellforged_servitor MONS_SPELLFORGED_SERVITOR
 gargoyle MONS_GARGOYLE
 war_gargoyle MONS_WAR_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
+%rim 0
 nargun MONS_NARGUN
+%rim 1
 
 ## Weaponry ('(')
 spectral_sbl MONS_SPECTRAL_SBL
@@ -574,7 +584,6 @@ vault_sentinel MONS_VAULT_SENTINEL
 ironbound_convoker MONS_IRONBOUND_CONVOKER
 ironbound_preserver MONS_IRONBOUND_PRESERVER
 ironbound_frostheart MONS_IRONBOUND_FROSTHEART
-ironbound_beastmaster MONS_IRONBOUND_BEASTMASTER
 servant_of_whispers MONS_SERVANT_OF_WHISPERS
 ragged_hierophant MONS_RAGGED_HIEROPHANT
 imperial_myrmidon MONS_IMPERIAL_MYRMIDON
@@ -1127,15 +1136,6 @@ orb_of_electricity MONS_ORB_OF_ELECTRICITY
 
 ## Draconians ('d')
 %sdir mon/unique
-tiamat_black MONS_TIAMAT
-tiamat_yellow
-tiamat_green
-tiamat_grey
-tiamat_mottled
-tiamat_pale
-tiamat_purple
-tiamat_red
-tiamat_white
 bai_suizhen MONS_BAI_SUZHEN
 bai_suizhen_dragon MONS_BAI_SUZHEN_DRAGON
 %sdir mon/draco
@@ -1200,7 +1200,9 @@ tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM
 shadow_form TRAN_SHADOW
-storm_form TRAN_STORM
+storm_form TRAN_STORM_HUMANOID
+storm_form_felid TRAN_STORM_FELID
+storm_form_octopode TRAN_STORM_OCTOPODE
 %rim 1
 
 %sdir misc

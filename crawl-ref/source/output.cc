@@ -884,7 +884,7 @@ static void _print_stats_ac(int x, int y)
     auto text_col = HUD_VALUE_COLOUR;
     if (_boosted_ac())
         text_col = LIGHTBLUE;
-    else if (you.duration[DUR_CORROSION])
+    else if (you.corrosion_amount())
         text_col = RED;
 
     string ac = make_stringf("%2d ", you.armour_class());
@@ -931,7 +931,7 @@ static void _print_stats_ev(int x, int y)
  */
 static int _wpn_name_colour()
 {
-    if (you.duration[DUR_CORROSION])
+    if (you.corrosion_amount())
         return RED;
 
     if (you.weapon())
@@ -968,7 +968,7 @@ static void _print_stats_wp(int y)
     {
         item_def wpn = *you.weapon(); // copy
 
-        if (you.duration[DUR_CORROSION] && wpn.base_type == OBJ_WEAPONS)
+        if (you.corrosion_amount() && wpn.base_type == OBJ_WEAPONS)
             wpn.plus -= 4 * you.corrosion_amount();
 
         text = wpn.name(DESC_PLAIN, true, false, true);
@@ -2384,7 +2384,7 @@ static vector<formatted_string> _get_overview_stats()
 //      value : actual value of the resistance (can be negative)
 //      max : maximum value of the resistance (for colour AND representation),
 //          default is the most common case (1)
-//      pos_resist : false for "bad" resistances (no tele, random tele, *Rage),
+//      pos_resist : false for "bad" resistances (no tele, random tele),
 //          inverts the value for the colour choice
 //      immune : overwrites normal pip display for full immunity
 static string _resist_composer(const char * name, int spacing, int value,
@@ -2484,19 +2484,13 @@ static vector<formatted_string> _get_overview_resistances(
     if (archmagi)
         out += _resist_composer("Archmagi", cwidth, archmagi) + "\n";
 
+    const int anger_rate = you.angry(calc_unid);
+    if (anger_rate && !you.stasis())
+        out += make_stringf("Rage     %d%%\n", anger_rate);
+
     const int rclar = you.clarity(calc_unid);
-    const int stasis = you.stasis();
-    // TODO: what about different levels of anger/berserkitis?
-    const bool show_angry = (you.angry(calc_unid)
-                             || you.get_mutation_level(MUT_BERSERK))
-                            && !rclar && !stasis
-                            && !you.is_lifeless_undead();
-    if (show_angry || rclar)
-    {
-        out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false)
-                            + "\n"
-                          : _resist_composer("Clarity", cwidth, rclar) + "\n";
-    }
+    if (rclar)
+        out += _resist_composer("Clarity", cwidth, rclar) + "\n";
 
     // Fo don't need a reminder that they can't teleport
     if (!you.stasis())

@@ -16,3 +16,5 @@ note_messages += You (fall|are sucked) into a shaft
 note_monsters += orb of fire, ancient lich, dread lich, Sigmund
 
 monster_item_view_features += stair, trap
+
+tile_show_threat_levels = nasty

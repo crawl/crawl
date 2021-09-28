@@ -636,9 +636,8 @@ skilled with both conjurations and melee combat.
 %%%%
 battlesphere
 
-A small globe of magical energy that follows a spellcaster. It cannot operate
-on its own, but will assault the conjurer's foes with magical missiles that
-never miss each time the conjurer casts a spell.
+A small globe of magical energy. Each time its creator casts a destructive
+Conjuration, it will launch a magical missile at a random foe.
 %%%%
 bennu
 
@@ -1542,11 +1541,6 @@ ironbound preserver
 A towering, muscular figure, capable of safeguarding its allies by selflessly
 accepting a portion of the injuries inflicted upon them.
 %%%%
-ironbound beastmaster
-
-A cruel and wild brute who growls in the language of the untamed. It conditions
-beasts for combat with nets and malice, and spurs them to fight its foes.
-%%%%
 jackal
 
 A small canine scavenger. Packs of jackals roam the underworld, searching for
@@ -2068,8 +2062,8 @@ mandibles drip with lethal poison.
 %%%%
 revenant
 
-A skeletal form wreathed in cold blue fire, standing astride this life and the
-next. Echoes of the lingering dead flicker within its ghostly flames.
+An animated skeleton wreathed in cold blue fire, standing astride this life and
+the next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
 rime drake
 
@@ -2410,8 +2404,8 @@ A large slimy worm, adept at traversing swamps and marshes.
 %%%%
 tarantella
 
-A small but greatly-feared spider whose enchanted bite causes victims to break
-into a frenzied dance.
+A small but greatly-feared spider. Its touch alone causes victims to break into
+a frenzied dance.
 %%%%
 tainted leviathan
 

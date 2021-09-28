@@ -1,16 +1,36 @@
-Stone Soup 0.28-a0 (through 0.28-a0-306-g2a6f7409)
+Stone Soup 0.28-a0 (through 0.28-a0-524-g197395d7)
 --------------------------------------------------
 
 Branches, Environment
 ---------------------
 * Ziggurats no longer require a rune of zot to enter.
+* Hell effects are reorganized into timed effects and per-branch persistent
+  effects.
+* The timed effects are the same for all hells, and consist of temporary
+  mutation, stat drain, hp drain, and noise.
+- The branch-wide persistent effects are:
+  - In Dis there is a baseline -8 Corrosion.
+  - In Cocytus potions cannot be used.
+  - In Gehenna scrolls cannot be used.
+  - In Tartarus willpower is halved.
+* Floors 1-6 of each hell sub-branch are considerably smaller, and place only
+  one pair of stairs.
+* Each hell subbranch's spawn tables are adjusted to produce more depth
+  appropriate monsters and less chaff.
+* Six new Wizard's Laboratories are added: Eringya's Formal Garden, Tukima's
+  Studio, Yara's Duelist Academy, Borgnjor's Mausoleum, Maxwell's Workshop, and
+  Alistair's Party Mansion.
 
 Character
 ---------
 * New background: Cinder Acolyte, an Ignis zealot. Starts worshipping Ignis,
-  along with Foxfire and a -1 flame branded weapon of choice.
+  along with Scorch and a -1 flame branded weapon of choice.
 * The Enchanter background no longer starts with the Corona spell, and instead
   starts with a potion of invisibility.
+* The Fighter background now starts with a buckler instead of a kite shield.
+* Fire Elementalist's starting spells are revised, and are now: Foxfire,
+  Scorch, Conjure Flame, Inner Flame, and Flame Wave
+* The Abyssal Knight background now gives stats of 5/2/5 (was: 4/4/4)
 * The evolution mutation is revised. Once per XL's worth of experience it
   activates, providing a good mutation. Every two activations it reduces its
   level by one.
@@ -20,7 +40,9 @@ Character
 * Intelligence 0's 4/5 chance to fail scroll reading is replaced with -Scroll.
 * Kills by all allies except Beogh and Yredelemnul gifts now give full
   experience.
-
+* Clarity from any source no longer blocks berserk from random rage.
+* Late game XP gains are reduced.
+* The experience cost of high-level skills is reduced.
 
 Gods
 ----
@@ -49,35 +71,71 @@ Gods
     - 2*: Active 'Rising Flame' ability. Gives the player the "Rise" status,
           after 2-4 turns the player rockets through the ceiling and up one
           floor.
-
+* Cheibriados permits berserk while suppressing the extra speed.
 
 Items
 -----
-* The staff of Battle now triggers the battlesphere on melee hit (in addition
-  to the usual spell trigger).
 * All shields now only use Dex for stat scaling.
-* The robe of Clouds' thunder cloud ability is now passive, placing storm
-  clouds on enemies within range 2 each turn.
 * Riposte is removed from long blades and base damage is increased.
+* The skill requirements for minimum delay for executioner's axes and bardiches
+  are reduced to 24; for triple swords the requirement is reduced to 22.
+* *Rage now causes berserk on 20% of hits. This chance stacks linearly among
+  items and with the berserkitis mutation. Certain unrands grant a higher
+  chance.
+* Evokable berserk is removed as an artefact property.
+* The generation of throwing ammunition is reduced.
+* Unrandart tweaks:
+  - The staff of Battle now triggers the battlesphere on melee hit (in addition
+    to the usual spell trigger).
+  - The robe of Clouds' thunder cloud ability is now passive, placing storm
+    clouds on enemies within range 2 each turn.
+  - Leech no longer has *Rage, and now has Harm and Drain.
+  - The necklace of bloodlust now gives a 50% chance to go berserk on hit.
+  - The Zealot's sword now gives a 20% chance to go berserk on hit (up from
+    5%).
 
 Monsters
 --------
 * New unique: Mlioglotl. A unique horror with the power to corrupt the level,
   changing terrain and summoning other abyssal horrors, as well as cause fear.
   Appears in the S-branches and rarely in the abyssal lair end.
+* New Hell monsters (with subbranch):
+  - Wendigo, collapses simulacra into painful iceblasts (Coc)
+  - Nargun, hits hard and petrify (Coc)
+  - Quicksilver elemental, with antimagic and quicksilver bolts (Dis)
+  - Crystal echidna, throws barbs and crystal bolts (Dis)
+  - Creeping inferno, which explodes into a Fire Storm (Geh)
+  - Stoker, keeps at range and calls creeping infernos (Geh)
+  - Searing wretch, a hard hitting fighter that strips fire resistance (Geh)
+  - Tainted leviathan, a giant with a ring of miasma and mesmerise (Tar)
+  - Putrid mouth, a ghost with poisonous melee and miasma breath (Tar)
+* New monsters: walking tomes, which summon living spells that cast themselves
+  at the player. Appearing in Tukima's Studio and Depths.
 * Demonspawn warmongers' Sap Magic effect now causes a short term -Cast after
   casting a spell.
+* All derived undead retain their reach, constriction, and trample attacks.
+* Red Devils now apply barbs on hit, instead of hopping back.
+* Ironbound Beastmasters are removed.
 
 Spells
 ------
-* Summon capped monsters now have a uniform time out.
+* Summon-capped monsters now have a uniform time out.
 * Lesser Beckoning's power cap is reduced to 100 and range reduced to 5.
 * Spell summon caps are reduced:
   - Summon Small Mammal, Summon Hydra, and Monstrous Menagerie are capped at 2.
   - Haunt is capped at 8.
   - All other summon spells except Summon Horrible Things and Dragon's Call are
     capped at 1.
-* Shadow Creatures is now monster only.
+* New spell: Summon Cactus Giant (L6 Summonings). Summons a large, spiny,
+  normal move speed but very slow attacking giant.
+* New spell: Scorch (L2 Fire). Hits a random enemy within 3 tiles, dealing fire
+  damage and if damage is delt applying short term rF- to the foe.
+* New spell: Flame Wave (L4 Conjuration/Fire). Flame Wave is a channeled spell
+  like Searing ray that hits all surrounding tiles in ever wider waves of
+  flame.
+* Searing Ray and Storm Form have reduced power scaling.
+* Storm Form's blinkbolt ability is now always LOS range.
+* Bolt of Magma, Corona, Shadow Creatures are now monster only.
 
 Stone Soup 0.27.1 (20210820)
 ----------------------------

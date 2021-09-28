@@ -151,6 +151,7 @@ public:
         override;
     bool is_perm_summoned() const override;
     bool has_action_energy() const;
+    void drain_action_energy();
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
@@ -348,7 +349,7 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
-    void attacking(actor *other, bool ranged) override;
+    void attacking(actor *other) override;
     bool can_go_frenzy(bool check_sleep = true) const;
     bool can_go_berserk() const override;
     bool go_berserk(bool intentional, bool potion = false) override;

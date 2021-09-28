@@ -660,7 +660,8 @@ void rise_through_ceiling()
     const level_id whither = level_above();
     if (!whither.is_valid())
     {
-        mpr("In a burst of heat and light, you rocket briefly upward... but you can't rise from here.");
+        mpr("In a burst of heat and light, you rocket briefly upward... "
+            "but you can't rise from here.");
         return;
     }
 
@@ -670,8 +671,12 @@ void rise_through_ceiling()
                      whither, true, true, false, false);
 
     // flavour! blow a hole through the floor
-    if (env.grid(you.pos()) == DNGN_FLOOR && !trap_at(you.pos()) /*needed?*/)
+    if (env.grid(you.pos()) == DNGN_FLOOR
+        && !trap_at(you.pos()) /*needed?*/
+        && is_valid_shaft_level())
+    {
         place_specific_trap(you.pos(), TRAP_SHAFT);
+    }
 }
 
 /**

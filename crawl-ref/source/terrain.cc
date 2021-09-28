@@ -894,14 +894,15 @@ void slime_wall_damage(actor* act, int delay)
         mprf("You are splashed with acid%s%s",
              dam > 0 ? "" : " but take no damage",
              attack_strength_punctuation(dam).c_str());
+        ouch(dam, KILLED_BY_ACID, MID_NOBODY);
     }
     else if (dam > 0 && you.can_see(*act))
     {
         const char *verb = act->is_icy() ? "melt" : "burn";
         mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
               verb, act->name(DESC_THE).c_str());
+        act->hurt(nullptr, dam, BEAM_ACID);
     }
-    act->hurt(nullptr, dam, BEAM_ACID);
 }
 
 int count_adjacent_icy_walls(const coord_def &pos)

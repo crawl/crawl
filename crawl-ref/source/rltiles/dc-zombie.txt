@@ -1,7 +1,9 @@
 ## Zombies
 %sdir mon/undead/zombies
+%rim 0
 zombie_small MONS_ZOMBIE_SMALL
 zombie_large MONS_ZOMBIE_LARGE
+%rim 1
 zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
 zombie_quadruped_large MONS_ZOMBIE_QUADRUPED_LARGE
 zombie_ogre MONS_ZOMBIE_OGRE
@@ -13,11 +15,11 @@ zombie_bug MONS_ZOMBIE_BUG
 zombie_fish MONS_ZOMBIE_FISH
 zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
-zombie_snake MONS_ZOMBIE_SNAKE
 zombie_worm MONS_ZOMBIE_WORM
-zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider_large MONS_ZOMBIE_SPIDER_LARGE
+zombie_snake MONS_ZOMBIE_SNAKE
 %rim 0
+zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_hound MONS_ZOMBIE_HOUND
 zombie_dragon MONS_ZOMBIE_DRAGON
 zombie_hydra1 MONS_ZOMBIE_HYDRA

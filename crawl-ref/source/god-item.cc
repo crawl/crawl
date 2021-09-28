@@ -272,11 +272,8 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     {
         if ((calc_unid || item_ident(item, ISFLAG_KNOW_PROPERTIES)))
         {
-            if (artefact_property(item, ARTP_RAMPAGING)
-                || artefact_property(item, ARTP_ANGRY))
-            {
+            if (artefact_property(item, ARTP_RAMPAGING))
                 return true;
-            }
             // intentionally continue to other hasty checks
         }
     }
@@ -296,8 +293,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
         return get_armour_rampaging(item, true)
                || is_unrandom_artefact(item, UNRAND_LIGHTNING_SCALES);
     case OBJ_POTIONS:
-        return item.sub_type == POT_HASTE
-               || item.sub_type == POT_BERSERK_RAGE;
+        return item.sub_type == POT_HASTE;
     case OBJ_BOOKS:
         return _is_book_type(item, is_hasty_spell);
     default:

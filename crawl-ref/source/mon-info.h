@@ -372,7 +372,7 @@ struct monster_info : public monster_info_base
 
     bool wields_two_weapons() const;
     bool can_regenerate() const;
-    reach_type reach_range() const;
+    reach_type reach_range(bool items = true) const;
 
     size_type body_size() const;
 

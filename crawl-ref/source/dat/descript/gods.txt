@@ -486,6 +486,8 @@ directly intervene to save a follower's life.
 %%%%
 Ashenzari wrath
 
+Those who abandon Ashenzari will immediately have their curses shattered,
+destroying whichever items they imbued with divine wisdom. Thereafter,
 Ashenzari's wrath is constant and unrelenting for its duration. Victims will
 find their skills impaired, and their enemies divinely guided – never losing
 track of them, never ending the hunt.

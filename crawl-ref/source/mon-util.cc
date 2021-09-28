@@ -1037,11 +1037,6 @@ bool herd_monster(const monster& mon)
     return mons_class_flag(mon.type, M_HERD);
 }
 
-bool mons_class_requires_band(monster_type mc)
-{
-    return mons_class_flag(mc, M_REQUIRE_BAND);
-}
-
 // Plant or fungus or really anything with
 // permanent plant holiness
 bool mons_class_is_plant(monster_type mc)
@@ -1286,8 +1281,6 @@ int max_corpse_chunks(monster_type mc)
         return 4;
     case SIZE_LARGE:
         return 9;
-    case SIZE_BIG:
-        return 10;
     case SIZE_GIANT:
         return 12;
     default:
@@ -2425,7 +2418,17 @@ int mons_max_hp(monster_type mc, monster_type mbase_type)
     return me->avg_hp_10x * 133 / 1000;
 }
 
-int exper_value(const monster& mon, bool real)
+/**
+ * How much XP will the given monster give out by dying?
+ *
+ * @param mon        The monster in question.
+ * @param real      If false, calculate XP for the given monster's type instead of
+ *               this monster's specific stats.
+ * @param legacy  If set, use higher XP values for high-XP monsters to emulate
+ *               historical (pre-2eadbcd) behaviour.
+ * @return How much XP this monster is worth.
+ */
+int exper_value(const monster& mon, bool real, bool legacy)
 {
     int x_val = 0;
 
@@ -2502,6 +2505,7 @@ int exper_value(const monster& mon, bool real)
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
             case SPELL_SPELLFORGED_SERVITOR:
+            case SPELL_CONJURE_LIVING_SPELLS:
                 diff += 25;
                 break;
 
@@ -2605,7 +2609,7 @@ int exper_value(const monster& mon, bool real)
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
     if (x_val > 750)
-        x_val = 750 + (x_val - 750) / 3;
+        x_val = 750 + (x_val - 750) / (legacy ? 3 : 6);
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
@@ -2814,7 +2818,7 @@ bool init_abomination(monster& mon, int hd)
 }
 
 // Generate a shiny, new and unscarred monster.
-void define_monster(monster& mons)
+void define_monster(monster& mons, bool friendly)
 {
     monster_type mcls         = mons.type;
     ASSERT(!mons_class_is_zombified(mcls)); // should have called define_zombie
@@ -2955,7 +2959,7 @@ void define_monster(monster& mons)
     case MONS_PANDEMONIUM_LORD:
     {
         ghost_demon ghost;
-        ghost.init_pandemonium_lord();
+        ghost.init_pandemonium_lord(friendly);
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
         mons.bind_melee_flags();
@@ -4924,7 +4928,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
     const monster& threat = get_tentacle_head(mon);
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(threat, real) / (1 + factor);
+    const int tension = exper_value(threat, real, true) / (1 + factor);
 
     if (tension <= 0)
     {
@@ -5197,7 +5201,8 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
 
     return targ.alive()
            && !mons_class_is_stationary(targ.type)
-           && !mons_is_conjured(targ.type);
+           && !mons_is_conjured(targ.type)
+           && mons_class_is_threatening(targ.type);
 }
 
 vector<monster* > get_on_level_followers()

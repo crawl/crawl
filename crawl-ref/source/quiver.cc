@@ -1326,8 +1326,6 @@ namespace quiver
         {
         case ABIL_END_TRANSFORMATION:
         case ABIL_EXSANGUINATE:
-        case ABIL_REVIVIFY:
-        case ABIL_ZIN_DONATE_GOLD:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
         case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
@@ -1340,6 +1338,8 @@ namespace quiver
         case ABIL_STOP_RECALL:
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
+        // high price zone
+        case ABIL_ZIN_DONATE_GOLD:
         // not entirely pseudo, but doesn't make a lot of sense to quiver:
         case ABIL_TRAN_BAT:
             return true;

@@ -555,7 +555,7 @@ bool fill_status_info(int status, status_info& inf)
 
     }
     case STATUS_RAY:
-        if (you.attribute[ATTR_SEARING_RAY])
+        if (you.attribute[ATTR_SEARING_RAY] && can_cast_spells(true))
         {
             inf.light_colour = WHITE;
             inf.light_text   = _ray_text().c_str();
@@ -563,7 +563,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_FLAME_WAVE:
-        if (you.props.exists(FLAME_WAVE_KEY))
+        if (you.props.exists(FLAME_WAVE_KEY) && can_cast_spells(true))
         {
             // It's only possible to hit the prop = 0 case if we reprint the
             // screen after the spell was cast but before the end of the
@@ -701,7 +701,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_MAXWELLS:
-        if (you.props.exists(COUPLING_TIME_KEY))
+        if (you.props.exists(COUPLING_TIME_KEY) && can_cast_spells(true))
         {
             inf.light_colour = LIGHTCYAN;
             inf.light_text   = _charge_text().c_str();

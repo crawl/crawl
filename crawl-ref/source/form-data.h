@@ -288,7 +288,7 @@ static const form_entry formdata[] =
     transformation::hydra, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
     "",
     EQF_PHYSICAL, MR_RES_POISON,
-    DEFAULT_DURATION, 0, 0, SIZE_BIG, 13,
+    DEFAULT_DURATION, 0, 0, SIZE_GIANT, 13,
     6, 5, 0, true, 0, true, -1,
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, false,

@@ -89,16 +89,18 @@ static void _hell_effects(int /*time_delta*/)
 
     _hell_effect_noise();
 
-    switch (random2(3))
+    switch (random2(4))
     {
         case 0:
-            contaminate_player(4000 + random2(4000));
+            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
             break;
         case 1:
             drain_player(100, true, true);
             break;
         case 2:
-            lose_stat(STAT_RANDOM, 2 + random2(6));
+            lose_stat(STAT_RANDOM, roll_dice(1, 5));
+            break;
+        default:
             break;
     }
 }
@@ -314,7 +316,7 @@ struct timed_effect
 static struct timed_effect timed_effects[] =
 {
     { rot_corpses,               200,   200, true  },
-    { _hell_effects,                 300,  800, false },
+    { _hell_effects,                 500,  1500, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif

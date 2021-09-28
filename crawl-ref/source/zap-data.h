@@ -567,23 +567,7 @@ _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
 },
 
 _mon_hex_zap(ZAP_CONFUSE, BEAM_CONFUSION),
-
-{
-    ZAP_TUKIMAS_DANCE,
-    "",
-    100,
-    nullptr,
-    new tohit_calculator<0, 3, 2>,
-    nullptr,
-    nullptr,
-    BLACK,
-    true,
-    BEAM_TUKIMAS_DANCE,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
 
 {
     ZAP_INVISIBILITY,

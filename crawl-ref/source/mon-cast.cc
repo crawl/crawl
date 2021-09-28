@@ -1397,6 +1397,9 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.origin_spell = real_spell;
     beam.source_id = mons->mid;
     beam.source_name = mons->name(DESC_A, true);
+    // Avoid overshooting and potentially hitting the player.
+    if (mons->temp_attitude() == ATT_FRIENDLY)
+        beam.aimed_at_spot = true;
 
     if (!mons_spell_is_spell(real_spell))
         power = mons_power_for_hd(real_spell, mons->get_hit_dice());
@@ -1815,7 +1818,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_SUMMON_TZITZIMITL:
     case SPELL_SUMMON_HELL_SENTINEL:
-    case SPELL_GOAD_BEASTS:
     case SPELL_STOKE_FLAMES:
         pbolt.range = 0;
         pbolt.glyph = 0;
@@ -1930,13 +1932,6 @@ static bool _valid_druids_call_target(const monster* caller, const monster* call
            && mons_habitat(*callee) != HT_WATER
            && mons_habitat(*callee) != HT_LAVA
            && !callee->is_travelling();
-}
-
-static bool _valid_goad_beasts_target(const monster* goader, const monster* beast)
-{
-    return mons_aligned(goader, beast) && mons_is_beast(beast->type)
-           && !beast->is_shapeshifter()
-           && beast->see_cell(goader->pos());
 }
 
 static bool _mirrorable(const monster* agent, const monster* mon)
@@ -3088,14 +3083,6 @@ static void _cast_druids_call(const monster* mon)
         _place_druids_call_beast(mon, mon_list[i], target);
 }
 
-static void _cast_goad_beasts(const monster* mon)
-{
-    // Gain moves from the goad.
-    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-        if (_valid_goad_beasts_target(mon, *mi))
-            mi->gain_energy(EUT_MOVE);
-}
-
 static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
 {
     double ang0 = atan2(p1.x - origin.x, p1.y - origin.y);
@@ -3660,6 +3647,8 @@ static void _setup_seracfall_beam(bolt& beam, const monster& caster,
 {
     zappy(spell_to_zap(SPELL_SERACFALL), power, true, beam);
     beam.source = _mons_seracfall_source(caster);
+    beam.name = "seracfall";
+    beam.hit_verb = "batters";
 }
 
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell)
@@ -4799,23 +4788,22 @@ static void _blink_allies_encircle(const monster* mon)
     for (monster *ally : allies)
     {
         coord_def empty;
-        if (find_habitable_spot_near(foepos, mons_base_type(*ally), 1, false, empty))
+        if (!find_habitable_spot_near(foepos, mons_base_type(*ally), 1, false, empty))
+            continue;
+        if (!ally->blink_to(empty))
+            continue;
+        // XXX: This seems an awkward way to give a message for something
+        // blinking from out of sight into sight. Probably could use a
+        // more general solution.
+        if (!(ally->flags & MF_WAS_IN_VIEW)
+            && ally->flags & MF_SEEN)
         {
-            if (ally->blink_to(empty))
-            {
-                // XXX: This seems an awkward way to give a message for something
-                // blinking from out of sight into sight. Probably could use a
-                // more general solution.
-                if (!(ally->flags & MF_WAS_IN_VIEW)
-                    && ally->flags & MF_SEEN)
-                {
-                    simple_monster_message(*ally, " blinks into view!");
-                }
-                ally->behaviour = BEH_SEEK;
-                ally->foe = mon->foe;
-                count--;
-            }
+            simple_monster_message(*ally, " blinks into view!");
         }
+        ally->behaviour = BEH_SEEK;
+        ally->foe = mon->foe;
+        ally->drain_action_energy();
+        count--;
     }
 }
 
@@ -5949,7 +5937,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONJURE_LIVING_SPELLS:
     {
         const int hd = mons->spell_hd(spell_cast);
-        const int n = living_spells_for(mons->type);
+        const int n = living_spell_count(true);
         const spell_type spell = living_spell_type_for(mons->type);
         // XXX: will crash if wizmode player tries to cast?
         ASSERT(spell != SPELL_NO_SPELL);
@@ -6606,10 +6594,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 " curls into a ball and begins rolling!");
         return;
 
-    case SPELL_GOAD_BEASTS:
-        _cast_goad_beasts(mons);
-        return;
-
     case SPELL_STOKE_FLAMES:
         _summon(*mons, MONS_CREEPING_INFERNO, 1, slot);
         return;
@@ -6622,9 +6606,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_simple_beam(*mons, slot, pbolt);
 }
 
-int living_spells_for(monster_type mtyp)
+int living_spell_count(bool random)
 {
-    return mtyp == MONS_DIVINE_TOME ? 3 + random2(3) : 2 + random2(2);
+    return random ? random_range(2, 3) : 3;
 }
 
 spell_type living_spell_type_for(monster_type mtyp)
@@ -7908,12 +7892,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
                 && !delta.origin()
                 && mon_can_move_to_pos(mon, delta));
     }
-
-    case SPELL_GOAD_BEASTS:
-        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-            if (_valid_goad_beasts_target(mon, *mi))
-                return ai_action::good();
-        return ai_action::impossible();
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:

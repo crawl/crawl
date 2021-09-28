@@ -5,54 +5,52 @@
 // This is done to avoid duplicating the Depths list and can be
 // changed once TAG_MAJOR_VERSION > 35
 #define POP_DEPTHS \
-{ /* Depths (OOD cap: 14)*/ \
-  { -2,  4,  250, SEMI, MONS_RAKSHASA },\
-  { -2,  4,  100, SEMI, MONS_WIZARD },\
-  { -2,  4,  100, SEMI, MONS_NECROMANCER },\
-  { -2, 10,  250, PEAK, MONS_FIRE_GIANT },\
-  { -2, 10,  260, PEAK, MONS_FROST_GIANT },\
-  { -2, 10,   70, PEAK, MONS_HELL_KNIGHT },\
-  { -2, 10,  100, PEAK, MONS_VAMPIRE_KNIGHT },\
-  {  1,  3,  300, FALL, MONS_UGLY_THING },\
-  {  1,  6,  180, FLAT, MONS_DEEP_TROLL_SHAMAN },\
-  {  1,  6,  180, FLAT, MONS_DEEP_TROLL_EARTH_MAGE },\
-  {  1,  6,  295, FLAT, MONS_FIRE_DRAGON },\
-  {  1,  6,  295, FLAT, MONS_ICE_DRAGON },\
-  {  1,  6,  250, FLAT, MONS_VERY_UGLY_THING },\
-  {  1,  6,  225, FLAT, MONS_GREAT_ORB_OF_EYES },\
-  {  1,  6,  100, FLAT, MONS_GLOWING_ORANGE_BRAIN },\
-  {  1,  7,  100, FALL, MONS_VAMPIRE_MAGE },\
-  {  1,  7,  200, FALL, MONS_TENGU_WARRIOR },\
-  {  1,  7,  100, FALL, MONS_TENGU_CONJURER },\
-  {  1,  8,  600, FALL, MONS_STONE_GIANT },\
-  {  1,  8,  370, FALL, MONS_ETTIN },\
-  {  1, 10,  100, SEMI, MONS_SPARK_WASP },\
-  {  1, 12,   60, FLAT, MONS_LICH },\
-  {  1, 12,   40, FLAT, MONS_FLAYED_GHOST },\
-  {  1, 14,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },\
-  {  1, 14,   80, SEMI, MONS_TENGU_REAVER },\
-  {  1, 14,   60, SEMI, MONS_SPHINX },\
-  {  2,  8,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },\
-  {  2,  8,  185, SEMI, MONS_SPRIGGAN_BERSERKER },\
-  {  2, 10,   25, FLAT, MONS_FLOATING_EYE },\
-  {  3, 14,   45, FLAT, MONS_SPRIGGAN_DEFENDER },\
-  {  4, 14,   80, SEMI, MONS_TENTACLED_MONSTROSITY },\
-  {  4, 14,   40, FLAT, MONS_STORM_DRAGON },\
-  {  4, 14,   40, FLAT, MONS_SHADOW_DRAGON },\
-  {  4, 14,   20, FLAT, MONS_QUICKSILVER_DRAGON },\
-  {  4, 14,   40, FLAT, MONS_IRON_DRAGON },\
-  {  4, 14,   80, SEMI, MONS_GOLDEN_DRAGON },\
-  {  4, 14,   50, RISE, MONS_DEEP_ELF_HIGH_PRIEST },\
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_DEMONOLOGIST },\
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_ANNIHILATOR },\
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_SORCERER },\
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_DEATH_MAGE },\
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_ELEMENTALIST },\
-  {  5, 14,   50, FLAT, MONS_JUGGERNAUT },\
-  {  5, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },\
-  {  6, 14,   50, FLAT, MONS_TITAN },\
-  { 10, 14,   10, FLAT, MONS_ANCIENT_LICH },\
-  { 10, 14,   10, FLAT, MONS_DREAD_LICH },\
+{ /* Depths (OOD cap: 13)*/ \
+  { -3,  3,  250, SEMI, MONS_RAKSHASA },\
+  { -3,  3,  100, SEMI, MONS_WIZARD },\
+  { -3,  3,  100, SEMI, MONS_NECROMANCER },\
+  { -3,  9,  250, PEAK, MONS_FIRE_GIANT },\
+  { -3,  9,  260, PEAK, MONS_FROST_GIANT },\
+  { -3,  9,   70, PEAK, MONS_HELL_KNIGHT },\
+  { -3,  9,  100, PEAK, MONS_VAMPIRE_KNIGHT },\
+  {  0,  2,  300, FALL, MONS_UGLY_THING },\
+  {  0,  5,  180, FLAT, MONS_DEEP_TROLL_SHAMAN },\
+  {  0,  5,  180, FLAT, MONS_DEEP_TROLL_EARTH_MAGE },\
+  {  0,  5,  295, FLAT, MONS_FIRE_DRAGON },\
+  {  0,  5,  295, FLAT, MONS_ICE_DRAGON },\
+  {  0,  5,  250, FLAT, MONS_VERY_UGLY_THING },\
+  {  0,  5,  225, FLAT, MONS_GREAT_ORB_OF_EYES },\
+  {  0,  5,  100, FLAT, MONS_GLOWING_ORANGE_BRAIN },\
+  {  0,  6,  100, FALL, MONS_VAMPIRE_MAGE },\
+  {  0,  6,  200, FALL, MONS_TENGU_WARRIOR },\
+  {  0,  6,  100, FALL, MONS_TENGU_CONJURER },\
+  {  0,  7,  600, FALL, MONS_STONE_GIANT },\
+  {  0,  7,  370, FALL, MONS_ETTIN },\
+  {  0,  9,  100, SEMI, MONS_SPARK_WASP },\
+  {  0, 11,   60, FLAT, MONS_LICH },\
+  {  0, 11,   40, FLAT, MONS_FLAYED_GHOST },\
+  {  0, 13,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },\
+  {  0, 13,   80, SEMI, MONS_TENGU_REAVER },\
+  {  0, 13,   60, SEMI, MONS_SPHINX },\
+  {  1,  7,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },\
+  {  1,  7,  185, SEMI, MONS_SPRIGGAN_BERSERKER },\
+  {  1,  9,   25, FLAT, MONS_FLOATING_EYE },\
+  {  2, 13,   45, FLAT, MONS_SPRIGGAN_DEFENDER },\
+  {  3, 13,   80, SEMI, MONS_TENTACLED_MONSTROSITY },\
+  {  3, 13,   40, FLAT, MONS_STORM_DRAGON },\
+  {  3, 13,   40, FLAT, MONS_SHADOW_DRAGON },\
+  {  3, 13,   20, FLAT, MONS_QUICKSILVER_DRAGON },\
+  {  3, 13,   40, FLAT, MONS_IRON_DRAGON },\
+  {  3, 13,   80, SEMI, MONS_GOLDEN_DRAGON },\
+  {  3, 13,   50, RISE, MONS_FROSTBOUND_TOME },\
+  {  3, 13,   50, RISE, MONS_EARTHEN_TOME },\
+  {  3, 13,   50, RISE, MONS_CRYSTAL_TOME },\
+  {  3, 13,   50, RISE, MONS_DIVINE_TOME },\
+  {  4, 13,   50, FLAT, MONS_JUGGERNAUT },\
+  {  4, 13,   50, FLAT, MONS_CAUSTIC_SHRIKE },\
+  {  5, 13,   50, FLAT, MONS_TITAN },\
+  {  9, 13,   10, FLAT, MONS_ANCIENT_LICH },\
+  {  9, 13,   10, FLAT, MONS_DREAD_LICH },\
 }
 
 // This list must be in the same order as the branch-type enum values.
@@ -437,13 +435,14 @@ static const vector<pop_entry> population[] =
   {  1,  4,  200, FALL, MONS_BOULDER_BEETLE },
   {  1,  4,  175, FALL, MONS_HARPY },
   {  1,  4,  100, FALL, MONS_BOGGART },
+  {  1,  4,  600, FALL, MONS_LINDWURM },
 
-  {  1,  4,  200, FLAT, MONS_IRONBOUND_BEASTMASTER },
-  {  1,  4,  800, FALL, MONS_IRONBOUND_BEASTMASTER },
+  {  1,  4,  200, FLAT, MONS_DIRE_ELEPHANT },
+  {  1,  4,  200, FALL, MONS_DIRE_ELEPHANT },
   {  1,  4,  400, FLAT, MONS_SLIME_CREATURE },
   {  1,  4,  400, FALL, MONS_SLIME_CREATURE },
-  {  1,  4, 1250, FLAT, MONS_VAULT_SENTINEL },
   // Harder enemies:
+  {  1,  4, 1250, FLAT, MONS_VAULT_SENTINEL },
   {  1,  4,  150, FLAT, MONS_ENTROPY_WEAVER },
   {  1,  4, 1200, FLAT, MONS_IRONBOUND_CONVOKER },
   {  1,  4, 1200, FLAT, MONS_IRONBOUND_PRESERVER },

@@ -89,3 +89,4 @@ bool rude_stop_summoning_prompt(string verb = "summon");
 
 bool can_reach_attack_between(coord_def source, coord_def target);
 dice_def spines_damage(monster_type mon);
+int archer_bonus_damage(int hd);

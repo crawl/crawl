@@ -130,12 +130,12 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
     _setup_base_explosion(beam, origin);
     const int size   = origin.body_size(PSIZE_BODY);
     beam.flavour     = BEAM_FIRE;
-    beam.damage      = (size > SIZE_BIG)  ? dice_def(3, 25) :
-                       (size > SIZE_TINY) ? dice_def(3, 20) :
-                                            dice_def(3, 15);
+    beam.damage      = (size > SIZE_LARGE) ? dice_def(3, 25) :
+                       (size > SIZE_TINY)  ? dice_def(3, 20) :
+                                             dice_def(3, 15);
     beam.name        = "fiery explosion";
     beam.colour      = RED;
-    beam.ex_size     = (size > SIZE_BIG) ? 2 : 1;
+    beam.ex_size     = (size > SIZE_LARGE) ? 2 : 1;
     beam.source_name = origin.name(DESC_PLAIN, true);
     beam.origin_spell = SPELL_INNER_FLAME;
     beam.thrower     = (agent && agent->is_player()) ? KILL_YOU_MISSILE

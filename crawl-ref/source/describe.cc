@@ -320,7 +320,6 @@ static vector<string> _randart_propnames(const item_def& item,
 
         // Evokable abilities come second
         { ARTP_BLINK,                 prop_note::plain },
-        { ARTP_BERSERK,               prop_note::plain },
         { ARTP_INVISIBLE,             prop_note::plain },
         { ARTP_FLY,                   prop_note::plain },
 
@@ -573,13 +572,12 @@ static string _randart_descrip(const item_def &item)
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It grants you flight.", false},
         { ARTP_BLINK, "It lets you blink.", false},
-        { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISE, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
         { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
-        { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
+        { ARTP_ANGRY,  "It berserks you when you make melee attacks (%d% chance).", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
@@ -3366,6 +3364,26 @@ static void _get_spell_description(const spell_type spell,
 
     if (mon_owner)
     {
+        if (spell == SPELL_CONJURE_LIVING_SPELLS)
+        {
+            const spell_type living_spell = living_spell_type_for(mon_owner->type);
+            description += make_stringf("\n%s creates living %s spells.\n",
+                                        uppercase_first(mon_owner->full_name(DESC_A)).c_str(),
+                                        spell_title(living_spell));
+        } else if (spell == SPELL_QUICKSILVER_BOLT)
+        {
+            if (player_is_debuffable())
+            {
+                description += make_stringf("\nIf you are struck by this,"
+                                            " you will no longer be %s.\n",
+                                            describe_player_cancellation(true).c_str());
+            }
+            else
+                description += "\nYou currently have no enchantments that could be"
+                               " removed by this.\n";
+
+        }
+
         const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range_for_hd(spell, hd);
         description += "\nRange : ";
@@ -3901,13 +3919,15 @@ static string _monster_attacks_description(const monster_info& mi)
             continue;
         }
 
+        int dam = attack.damage;
+
         // Damage is listed in parentheses for attacks with a flavour
         // description, but not for plain attacks.
         bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
         const string damage_desc =
             make_stringf("%sfor up to %d damage%s%s%s",
                          has_flavour ? "(" : "",
-                         attack.damage,
+                         dam,
                          attack_count.second > 1 ? " each" : "",
                          weapon_note.c_str(),
                          has_flavour ? ")" : "");
@@ -3930,6 +3950,12 @@ static string _monster_attacks_description(const monster_info& mi)
                                                   "; and ", "; ");
         _describe_mons_to_hit(mi, result);
         result << ".\n";
+    }
+
+    if (mons_class_flag(mi.type, M_ARCHER))
+    {
+        result << make_stringf("It can deal up to %d extra damage when attacking with ranged weaponry.\n",
+                                archer_bonus_damage(mi.hd));
     }
 
     if (mi.type == MONS_ROYAL_JELLY)
@@ -4234,6 +4260,8 @@ string _monster_habitat_description(const monster_info& mi)
     const monster_type type = mons_is_job(mi.type)
                               ? mi.draco_or_demonspawn_subspecies()
                               : mi.type;
+    if (mons_class_is_stationary(type))
+        return "";
 
     switch (mons_habitat_type(type, mi.base_type))
     {
@@ -4256,7 +4284,6 @@ const char* const size_adj[] =
     "small",
     "medium",
     "large",
-    "very large",
     "giant",
 };
 COMPILE_CHECK(ARRAYSZ(size_adj) == NUM_SIZE_LEVELS);

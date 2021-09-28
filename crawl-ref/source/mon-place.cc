@@ -671,9 +671,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
 
-    if (mons_class_requires_band(mg.cls) && ! mg.flags & MG_PERMIT_BANDS)
-        return 0;
-
     if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
         return 0;
 
@@ -1002,7 +999,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         define_zombie(mon, ztype, mg.cls);
     }
     else
-        define_monster(*mon);
+        define_monster(*mon, mg.behaviour == BEH_FRIENDLY
+                || mg.behaviour == BEH_GOOD_NEUTRAL);
 
     if (mons_genus(mg.cls) == MONS_HYDRA)
     {
@@ -1983,8 +1981,12 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_MOLTEN_GARGOYLE,  { {0, 0, []() {
         return you.where_are_you == BRANCH_DESOLATION;
     }},                            {{ BAND_MOLTEN_GARGOYLES, {2, 3} }}}},
-    { MONS_IRONBOUND_BEASTMASTER, { {}, {{ BAND_DIRE_ELEPHANTS, {1, 3}, true },
-                                        { BAND_LINDWURMS, {1, 4}, true}}}},
+    { MONS_LINDWURM,         { {0, 0, []() {
+        return you.where_are_you == BRANCH_VAULTS;
+    }},                            {{ BAND_LINDWURMS, {1, 3} }}}},
+    { MONS_DIRE_ELEPHANT,    { {0, 0, []() {
+        return you.where_are_you == BRANCH_VAULTS;
+    }},                            {{ BAND_DIRE_ELEPHANTS, {2, 4} }}}},
     { MONS_WIZARD,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},

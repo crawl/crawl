@@ -1918,6 +1918,7 @@ const set<spell_type> removed_spells =
     SPELL_RANDOM_EFFECTS,
     SPELL_HYDRA_FORM,
     SPELL_VORTEX,
+    SPELL_GOAD_BEASTS,
 #endif
 };
 

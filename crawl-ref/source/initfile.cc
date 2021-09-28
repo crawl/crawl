@@ -1118,7 +1118,18 @@ void game_options::reset_options()
                    false, false);
     set_fire_order_spell("all", false, false);
     set_fire_order_ability("all", false, false);
+
     fire_order_ability.erase(ABIL_TROG_BERSERK);
+    fire_order_ability.erase(ABIL_REVIVIFY);
+    fire_order_ability.erase(ABIL_IGNIS_SEA_OF_FIRE);
+    fire_order_ability.erase(ABIL_IGNIS_FOXFIRE);
+    fire_order_ability.erase(ABIL_IGNIS_RISING_FLAME);
+#ifdef WIZARD
+    // makes testing quiver stuff impossible
+    fire_order_ability.erase(ABIL_WIZ_BUILD_TERRAIN);
+    fire_order_ability.erase(ABIL_WIZ_SET_TERRAIN);
+    fire_order_ability.erase(ABIL_WIZ_CLEAR_TERRAIN);
+#endif
 
     force_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,

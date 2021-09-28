@@ -616,7 +616,8 @@ void dec_penance(god_type god, int val)
             simple_god_message(", with one final cry of rage, "
                                "burns out of existence.", god);
             add_daction(DACT_REMOVE_IGNIS_ALTARS);
-        } else
+        }
+        else
         {
             const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
             simple_god_message(
@@ -3285,6 +3286,11 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_IGNIS:
         simple_god_message(" burns away your resistance to fire.", old_god);
+        if (you.duration[DUR_RISING_FLAME])
+        {
+            you.duration[DUR_RISING_FLAME] = 0;
+            mpr("Your rising flame fizzles out.");
+        }
         break;
 
     default:
@@ -4250,18 +4256,6 @@ string god_spell_warn_string(spell_type spell, god_type god)
         return "Your god hates this spell!";
     else
         return "";
-}
-
-bool god_hates_ability(ability_type ability, god_type god)
-{
-    switch (ability)
-    {
-        case ABIL_EVOKE_BERSERK:
-            return god == GOD_CHEIBRIADOS;
-        default:
-            break;
-    }
-    return false;
 }
 
 lifesaving_chance elyvilon_lifesaving()

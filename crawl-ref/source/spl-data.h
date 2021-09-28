@@ -144,7 +144,7 @@ static const struct spell_desc spelldata[] =
         | spflag::needs_tracer,
     5,
     200,
-    4, 11,
+    LOS_RADIUS, LOS_RADIUS,
     3, 0,
     TILEG_GENERIC_MONSTER_SPELL,
 },
@@ -3396,17 +3396,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_GOAD_BEASTS, "Goad Beasts",
-    spschool::hexes,
-    spflag::area | spflag::monster | spflag::selfench,
-    6,
-    0,
-    -1, -1,
-    5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_CONCENTRATE_VENOM, "Concentrate Venom",
     spschool::poison,
     spflag::dir_or_target | spflag::not_self | spflag::helpful
@@ -3481,7 +3470,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     4, 0,
-    TILEG_ERROR,
+    TILEG_SUMMON_CACTUS_GIANT,
 },
 
 {
@@ -3514,7 +3503,7 @@ static const struct spell_desc spelldata[] =
     50,
     3, 3,
     4, 8,
-    TILEG_ERROR,
+    TILEG_SCORCH,
 },
 
 {
@@ -3525,7 +3514,7 @@ static const struct spell_desc spelldata[] =
     100,
     3, 3, // sort of...
     0, 12, // increases as it's channeled
-    TILEG_ERROR,
+    TILEG_FLAME_WAVE,
 },
 
 {
@@ -3626,6 +3615,7 @@ AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
 AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
 AXED_SPELL(SPELL_VORTEX, "Vortex")
+AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
 #endif
 
 };

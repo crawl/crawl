@@ -355,14 +355,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_ROBIN:
     case TILEP_MONS_GNOLL_SERGEANT:
-    case TILEP_MONS_TIAMAT:
-    case TILEP_MONS_TIAMAT_1:
-    case TILEP_MONS_TIAMAT_2:
-    case TILEP_MONS_TIAMAT_3:
-    case TILEP_MONS_TIAMAT_4:
-    case TILEP_MONS_TIAMAT_5:
-    case TILEP_MONS_TIAMAT_6:
-    case TILEP_MONS_TIAMAT_7:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
@@ -512,7 +504,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_2:
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_3:
     case TILEP_MONS_FORMICID:
-    case TILEP_MONS_IRONBOUND_BEASTMASTER:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
@@ -620,8 +611,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = 4;
         break;
-    case TILEP_MONS_ORC:
-    case TILEP_MONS_ORC_WARRIOR:
     case TILEP_MONS_URUG:
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_HIGH_PRIEST:
@@ -794,6 +783,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -3;
         break;
     case TILEP_MONS_CHAOS_SPAWN_3:
+    case TILEP_MONS_ORC:
+    case TILEP_MONS_ORC_WARRIOR:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
@@ -888,7 +879,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_IRONBOUND_CONVOKER:
     case TILEP_MONS_IRONBOUND_PRESERVER:
-    case TILEP_MONS_IRONBOUND_BEASTMASTER:
     case TILEP_MONS_IRONBOUND_FROSTHEART:
     case TILEP_MONS_VAULT_WARDEN:
         *ofs_x = -2;
