@@ -225,11 +225,6 @@ Recall Undead Slaves ability
 Rappelle autour de vous vos serviteurs morts-vivants, où qu'ils soient
 actuellement dans le donjon.
 %%%%
-Injury Mirror ability
-
-Blesse les monstres attaquants en leur réfléchissant les dégâts qu'ils vous
-infligent. Le cout en piété est proportionnel aux domages réfléchis.
-%%%%
 Drain Life ability
 
 Restaure des points de vie en drainant la force vitale des monstres à

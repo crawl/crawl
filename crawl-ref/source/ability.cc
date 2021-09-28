@@ -381,8 +381,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::pain },
 
         // Yredelemnul
-        { ABIL_YRED_INJURY_MIRROR, "Injury Mirror",
-            0, 0, 0, -1, {fail_basis::invo, 40, 4, 20}, abflag::piety },
         { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
             2, 0, 0, -1, {fail_basis::invo, 50, 4, 20}, abflag::none },
         { ABIL_YRED_DRAIN_LIFE, "Drain Life",
@@ -2111,7 +2109,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_END_TRANSFORMATION:
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
-    case ABIL_YRED_INJURY_MIRROR:
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_OKAWARU_FINESSE:
@@ -2752,19 +2749,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         if (!kiku_gift_capstone_spells())
             return spret::abort;
-        break;
-
-    case ABIL_YRED_INJURY_MIRROR:
-        fail_check();
-        if (yred_injury_mirror())
-            mpr("Another wave of unholy energy enters you.");
-        else
-        {
-            mprf("You offer yourself to %s, and are filled with unholy energy.",
-                 god_name(you.religion).c_str());
-        }
-        you.duration[DUR_MIRROR_DAMAGE] = 9 * BASELINE_DELAY
-                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:

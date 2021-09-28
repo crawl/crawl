@@ -136,7 +136,6 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Yredelemnul
         {   { 2, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
-            { 2, ABIL_YRED_INJURY_MIRROR, "mirror injuries on your foes" },
             { 3, "Yredelemnul will now gift you servants as you gain piety.",
                  "Yredelemnul will no longer gift you servants.",
                  "Yredelemnul will gift you servants as you gain piety." },
@@ -3113,7 +3112,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
-        you.duration[DUR_MIRROR_DAMAGE] = 0;
         if (query_daction_counter(DACT_ALLY_YRED_SLAVE))
         {
             simple_god_message(" reclaims all of your granted undead slaves!",

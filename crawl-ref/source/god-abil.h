@@ -114,7 +114,6 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 bool beogh_resurrect();
 
-bool yred_injury_mirror();
 bool yred_can_enslave_soul(monster* mon);
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 

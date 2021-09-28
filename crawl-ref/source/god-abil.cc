@@ -1688,13 +1688,6 @@ bool beogh_resurrect()
     return true;
 }
 
-bool yred_injury_mirror()
-{
-    return in_good_standing(GOD_YREDELEMNUL, 1)
-           && you.duration[DUR_MIRROR_DAMAGE]
-           && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
-}
-
 bool yred_can_enslave_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon)

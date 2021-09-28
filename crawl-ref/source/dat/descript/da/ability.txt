@@ -215,12 +215,6 @@ Recall Undead Slaves ability
 Kalder dine udøde følgesvende tilbage fra hvor som helst i de underjordiske
 gange til din umiddelbare nærhed.
 %%%%
-Injury Mirror ability
-
-Beskadiger angribende uhyrer ved at reflektere den skade de forvolder dig,
-tilbage på dem. Din fromhed reduceres afhængigt af hvor meget skade der
-reflekteres.
-%%%%
 Drain Life ability
 
 Helbred dig selv ved at dræne livskraft fra uhyrerne omkring dig.

@@ -490,23 +490,6 @@ static void _xom_checks_damage(kill_method_type death_type,
     }
 }
 
-static void _yred_mirrors_injury(int dam, mid_t death_source)
-{
-    if (yred_injury_mirror())
-    {
-        // Cap damage to what was enough to kill you. Can matter if
-        // Yred saves your life or you have an extra kitty.
-        if (you.hp < 0)
-            dam += you.hp;
-
-        monster* mons = monster_by_mid(death_source);
-        if (dam <= 0 || !mons || death_source == MID_YOU_FAULTLESS)
-            return;
-
-        mirror_damage_fineff::schedule(mons, &you, dam);
-    }
-}
-
 static void _maybe_ru_retribution(int dam, mid_t death_source)
 {
     if (will_ru_retaliate())
@@ -1024,7 +1007,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                            damage_desc.c_str()));
 
             _deteriorate(dam);
-            _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);
             _maybe_spawn_rats(dam, death_type);

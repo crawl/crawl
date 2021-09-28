@@ -229,11 +229,6 @@ Recall Undead Slaves ability
 Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Injury Mirror ability
-
-Reflects damage taken for a short duration, hurting attackers whenever any
-damage is taken and reducing piety depending on the amount of damage dealt.
-%%%%
 Drain Life ability
 
 [[Drain Life spell]] The amount of life force drained is increased by

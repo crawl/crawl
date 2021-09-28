@@ -325,11 +325,6 @@ static const duration_def duration_data[] =
       "You are terrified.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your fear fades away.", []() { you.clear_fearmongers(); }},
         {}, true }},
-    { DUR_MIRROR_DAMAGE,
-      WHITE, "Mirror",
-      "mirroring injuries", "mirror damage",
-      "You mirror injuries.", D_NO_FLAGS,
-      {{ "Your dark mirror aura disappears." }}},
     { DUR_VORTEX,
       LIGHTGREY, "Vortex",
       "in a vortex", "vortex",
@@ -686,5 +681,6 @@ static const duration_def duration_data[] =
     { DUR_ANTIMAGIC, 0, "", "", "old antimagic", "", D_NO_FLAGS},
     { DUR_DEVICE_SURGE, 0, "", "", "old device surge", "", D_NO_FLAGS},
     { DUR_LIFESAVING, 0, "", "", "old lifesaving", "", D_NO_FLAGS},
+    { DUR_MIRROR_DAMAGE, 0, "", "", "old injury mirror", "", D_NO_FLAGS},
 #endif
 };
