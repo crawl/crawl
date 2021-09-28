@@ -663,7 +663,7 @@ static const artefact_prop_data artp_data[] =
     { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
         []() { return 1; }, nullptr, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
-    { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
+    { "+Rage", ARTP_VAL_BOOL, 0,   // ARTP_BERSERK,
         []() { return 1; }, nullptr, 0, 0 },
 #endif
     { "*Noise", ARTP_VAL_POS, 30,    // ARTP_NOISE,
