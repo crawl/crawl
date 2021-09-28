@@ -821,7 +821,7 @@ void melee_attack::check_autoberserk()
 
     if (x_chance_in_y(attacker->angry(), 100))
     {
-        attacker->go_berserk(true);
+        attacker->go_berserk(false);
         return;
     }
 }
