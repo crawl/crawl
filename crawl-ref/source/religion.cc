@@ -3285,6 +3285,11 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_IGNIS:
         simple_god_message(" burns away your resistance to fire.", old_god);
+        if (you.duration[DUR_RISING_FLAME])
+        {
+            you.duration[DUR_RISING_FLAME] = 0;
+            mpr("Your rising flame fizzles out.");
+        }
         break;
 
     default:
