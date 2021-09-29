@@ -4662,8 +4662,14 @@ bool monster::is_trap_safe(const coord_def& where) const
     }
 
 
+
+	// only used Zotdef code
+	// prune & simplify  this later 
+	//const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
+	//disabled for now, too see how things work w/o it.
+
     // In Zotdef critters will risk death to get to the Orb
-    if (crawl_state.game_is_zotdef() && mechanical)
+    if (crawl_state.game_is_zotdef() /*&& mechanical*/)
         return true;
 
     // Hostile monsters are not afraid of traps.

@@ -665,7 +665,8 @@ static void _setup_generic(const newgame_def& ng,
         you.zot_points = 80;
 
         // There's little sense in training these skills in ZotDef
-        you.train[SK_STEALTH] = 0;
+        // you.train[SK_STEALTH] = 0;
+		//fix this later
     }
 
     // Apply autoinscribe rules to inventory.

@@ -794,10 +794,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     // Now, forget about banding if the first placement failed, or there are
     // too many monsters already, or we successfully placed by stairs.
-    // Zotdef change - banding allowed on stairs for extra challenge!
+    // Zotdef change - banding allowed on stairs for extra challenge???
     // Frequency reduced, though, and only after 2K turns.
     if (mon->mindex() >= MAX_MONSTERS - 30
-        || (mg.proximity == PROX_NEAR_STAIRS && !crawl_state.game_is_zotdef())
         || (crawl_state.game_is_zotdef() && you.num_turns < 2000))
     {
         return mon;

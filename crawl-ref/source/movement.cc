@@ -36,6 +36,8 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "nearby-danger.h"
+#include "orb.h"
+#include "orb-type.h"
 #include "player.h"
 #include "player-reacts.h"
 #include "prompt.h"
@@ -1048,10 +1050,10 @@ void move_player_action(coord_def move)
             bool danger = false;
             for (int i = 0; i < MAX_MONSTERS; ++i)
             {
-                monster& mon = menv[i];
-                if (you.can_see(&mon) && !mon.friendly() &&
-                    !mons_is_firewood(&mon) &&
-                    (grid_distance(you.pos(), mon.pos()) < 4))
+                monster* mon = &env.mons[i];
+                if (you.can_see(*mon) && !mon->friendly() &&
+                    !mons_is_firewood(*mon) &&
+                    (grid_distance(you.pos(), mon->pos()) < 4))
                 {
                     danger = true;
                 }

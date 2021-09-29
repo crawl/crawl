@@ -49,14 +49,14 @@ int branch_ood_cap(branch_type branch)
 int mons_depth(monster_type mcls, branch_type branch)
 {
     // legacy function, until ZotDef is ported
-    for (const pop_entry *pe = population[branch].pop; pe->value; pe++)
-        if (pe->value == mcls)
+    for (const pop_entry &pe : population[branch])
+        if (pe.value == mcls)
         {
-            if (pe->distrib == RISE)
-                return pe->maxr;
-            else if (pe->distrib == FALL)
-                return pe->minr;
-            return (pe->minr + pe->maxr) / 2;
+            if (pe.distrib == RISE)
+                return pe.maxr;
+            else if (pe.distrib == FALL)
+                return pe.minr;
+            return (pe.minr + pe.maxr) / 2;
         }
 
     return DEPTH_NOWHERE;
@@ -67,8 +67,8 @@ int mons_depth(monster_type mcls, branch_type branch)
 // To be axed once ZotDef is ported.
 int mons_rarity(monster_type mcls, branch_type branch)
 {
-    for (const pop_entry *pe = population[branch].pop; pe->value; pe++)
-        if (pe->value == mcls)
+    for (const pop_entry &pe : population[branch])
+        if (pe.value == mcls)
         {
             // A rough and wrong conversion of new-style linear rarities to
             // old quadratic ones, with some compensation for distribution
@@ -77,12 +77,12 @@ int mons_rarity(monster_type mcls, branch_type branch)
             // The new data pretty accurately represents old state, but only
             // if depth is known, and mons_rarity() doesn't receive it.
             static int fudge[5] = { 25, 12, 0, 0, 0 };
-            int rare = pe->rarity;
+            int rare = pe.rarity;
             if (rare < 500)
                 rare = isqrt_ceil(rare * 10);
             else
                 rare = 100 - isqrt_ceil(10000 - rare * 10);
-            return rare + fudge[pe->distrib];
+            return rare + fudge[pe.distrib];
         }
 
     return 0;

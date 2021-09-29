@@ -3,6 +3,7 @@
 #include "mon-movetarget.h"
 
 #include "act-iter.h"
+#include "branch.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
@@ -15,9 +16,18 @@
 #include "mon-behv.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
+
+//trying to make this zotdef debug stuff work.
+#include "mpr.h"
+#include "orb.h"
+#include "orb-type.h"
+//Zotdef
+
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
+
+
 
 // If a monster can see but not directly reach the target, and then fails to
 // find a path to get there, mark all surrounding (in a radius of 2) monsters
@@ -72,13 +82,22 @@ static void _mark_neighbours_target_unreachable(monster* mon)
     }
 }
 
+
+// ONLY used by this zotdefence chunk
+// its possible that it should be removed or inlined eventually?
+coord_def orb_position()
+{
+    item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT);
+    return orb ? orb->pos: coord_def();
+}
+
 static void _set_no_path_found(monster* mon)
 {
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
     if (crawl_state.game_is_zotdef() && player_in_branch(root_branch)
-        && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
+        && !testbits(env.pgrid(mon->pos()), FPROP_NO_TELE_INTO))
     {
         if (you.wizard)
         {

@@ -283,15 +283,17 @@ void handle_behaviour(monster* mon)
         {
             const int loss = div_rand_round(10, mon->speed);
             if (loss)
-            {
+            {	
+				//should the flavor be changed since rot was changed?
                 mprf(MSGCH_DANGER, "Your flesh rots away as the Orb of Zot is desecrated.");
 
                 // If the rot would reduce us to <= 0 max HP, attribute the
                 // kill to the monster.
                 if (loss >= you.hp_max)
                     ouch(loss, KILLED_BY_ROTTING, mon->mid);
-
-                rot_hp(loss);
+			
+                //rot_hp(loss);
+				drain_hp(loss);
             }
         }
     }
@@ -341,7 +343,7 @@ void handle_behaviour(monster* mon)
     {
         if (isFriendly && mon->is_stationary()
             && (mon->foe != MHITNOT && mon->foe != MHITYOU)
-            && !mon->can_see(&menv[mon->foe]))
+            && !mon->can_see(env.mons[mon->foe]))
         {
             mon->foe = MHITYOU;
             //mprf("%s resetting target (cantSee)",

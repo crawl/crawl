@@ -382,6 +382,7 @@ bool player_in_a_dangerous_place(bool *invis)
     return gen_threat > logexp * 1.3 || hi_threat > logexp / 2;
 }
 
+ 
 void bring_to_safety()
 {
     if (player_in_branch(BRANCH_ABYSS))
@@ -389,8 +390,10 @@ void bring_to_safety()
 
 
 
+	// this may need to be rewritten.
+	//    if (crawl_state.game_is_zotdef() && env.orb_pos() != you.pos())
 
-    if (crawl_state.game_is_zotdef() && !orb_position().origin())
+    if (crawl_state.game_is_zotdef() && !env.orb_pos.origin())
     {
         // In ZotDef, it's not the safety of your sorry butt that matters.
         for (distance_iterator di(env.orb_pos, true, false); di; ++di)
