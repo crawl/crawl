@@ -56,7 +56,7 @@ job-data.h. This struct in this file is reasonably well-explained:
         vector<pair<skill_type, int>> skills; ///< starting skills
     };
 
-The best thing to do is to copy an existing class and edit it's entries, just
+The best thing to do is to copy an existing class and edit its entries, just
 to make sure you get the structure right. Also note that this file sorts the
 entries alphabetically, so we'll follow suit here. Let's fill in our typical
 herd-watcher:
@@ -85,7 +85,7 @@ herd-watcher:
 
         // and just a couple skill points in stuff you might do around a field.
         { { SK_FIGHTING, 6 }, { SK_SUMMONING, 8 }, { SK_SPELLCASTING, 3 },
-          { SK_DODGING, 3 }, {SK_ARMOR, 4} { SK_STEALTH, 1 }, },
+          { SK_DODGING, 3 }, { SK_ARMOR, 4 } { SK_STEALTH, 1 }, },
     } },
 
 That looks like what I expect a shepherd to look like: lightly armed, lightly
