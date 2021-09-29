@@ -2164,9 +2164,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         args.mode = TARG_HOSTILE;
         args.behaviour = &beh;
         if (!spell_direction(*target, beam, &args))
-        {
             return spret::abort;
-        }
         else
         {
             fail_check();
@@ -2221,7 +2219,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         msg += (power < 15) ? '.' : '!';
         if (zapping(ZAP_BREATHE_FIRE, power, beam, true, msg.c_str())
                 == spret::abort)
+        {
             return spret::abort;
+        }
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
         break;
