@@ -2170,7 +2170,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         else
         {
             fail_check();
-            if(zapping(ZAP_SPIT_POISON, power, beam, true, "You spit poison.") == spret::abort)
+            if (zapping(ZAP_SPIT_POISON, power, beam, true, "You spit poison.") == spret::abort)
                 return spret::abort;
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
@@ -2251,7 +2251,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
         break;
-        
+
     }
 
     case ABIL_BREATHE_POISON:
@@ -2277,7 +2277,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
         break;
-        
+
     }
 
     case ABIL_BREATHE_POWER:
@@ -2304,7 +2304,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
         break;
-        
+
     }
 
     case ABIL_BREATHE_STEAM:
@@ -2331,7 +2331,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.increase_duration(DUR_BREATH_WEAPON,
                       (3 + random2(10) + random2(30 - you.experience_level)) / 2);
         break;
-        
+
     }
 
     case ABIL_BREATHE_MEPHITIC:
@@ -2358,7 +2358,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.increase_duration(DUR_BREATH_WEAPON,
                       (3 + random2(10) + random2(30 - you.experience_level)) / 2);
         break;
-        
+
     }
 
     case ABIL_BREATHE_LIGHTNING: // not targeted
