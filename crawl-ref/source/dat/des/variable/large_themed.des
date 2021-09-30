@@ -2316,3 +2316,110 @@ xxxx-xx..xx....xx-xxx-x
 xxxxxxxxx-x.....xxxxxxx
 xxxxxxxxxxx.@@@..xxxxxx
 ENDMAP
+
+NAME:   dreamdust_isle_of_ice
+TAGS:   no_monster_gen
+ORIENT: south
+DEPTH:  D:11-, Lair, Depths
+SUBST:  - = .....wwwW
+SUBST:  ~ = wwwwwW
+COLOUR: .A1G = white
+FTILE:  .A1Gx = floor_ice
+RTILE:  x = wall_ice_block
+COLOUR: x = blue
+: set_feature_name("shallow_water", "Some ice crusted shallow water")
+: set_feature_name("deep_water", "Some ice crusted deep water")
+: set_feature_name("rock_wall", "ice covered rock wall")
+# Monster Placement
+NSUBST: . = 1=2 / 1=2. / 1=3 / 1=3. / 1=4 / 2=4. / 4=5. / 4=6. / .
+: if you.in_branch("D") then
+:    if you.depth() < 14 then
+MONS:   ice statue, ice devil, rime drake, polar bear, white imp, ice beast
+:    else
+SUBST:  G = 7
+MONS:   ice dragon, simulacrum, simulacrum, ice devil, \
+        rime drake, polar bear, ice statue
+:    end
+: elseif you.in_branch("Lair") then
+:    if you.depth() < 4 then
+MONS:   ice statue, ice devil, rime drake, polar bear, white imp, ice beast
+:    else
+SUBST:  G = 7
+MONS:   ice dragon, simulacrum, simulacrum, ice devil, \
+        rime drake, polar bear, ice statue
+:    end
+: else
+# Depths
+SUBST:  G = 7
+MONS:   ice dragon, simulacrum, simulacrum, simulacrum, \
+        blizzard demon, frost giant, ice statue
+: end
+MAP
+              WWWWWWWWWWWWW
+           WWWWWWWWWWWWWWWWWWW
+       WWWWWW~~~~~~~~~~~~~~~WWWWW
+    WWWWWW~~~~----.....----~~~~WWWWWW
+  WWWW~~~~~---.............---~~~~~WWWW
+ WWW~~~----.........1.........----~~~WWW
+WW~~~----.......G...A...G.......----~~~WW
+~~~xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx~~~
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   dreamdust_labyrinth
+TAGS:   no_monster_gen no_trap_gen
+ORIENT: northeast
+DEPTH:  D:11-, !D:$, Lair, !Lair:$
+WEIGHT: 5
+# Make a path through the walls
+NSUBST: a = - / a
+NSUBST: p = - / p
+NSUBST: q = - / q
+NSUBST: v = - / v
+NSUBST: b = - / b
+# Place a few dead-ends
+NSUBST: . = p / .
+NSUBST: ` = q / `
+NSUBST: " = v / "
+# Everything else
+: if you.in_branch("Lair") then
+# The minotaur carved it all out of simple rock
+KFEAT:  apqvb = rock_wall
+: else
+# Fancy labyrinth - nouveau riche minotaur?
+KFEAT:  a = rock_wall
+KFEAT:  pq = stone_wall
+TILE:   pq = wall_lab_stone
+TILE:   v = wall_lab_metal
+: end
+NSUBST: ? = < / G
+FTILE:  -.`"apqvbT<G = floor_gauntlet
+KFEAT:  < = escape_hatch_up
+KMONS:  < = patrolling minotaur
+KITEM:  < = %, %, %, %, %, *, *, *
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ a-..................-xx
+ a.pppppppppppppppppp.xx
+ a.p-``````````````-p.xx
+ a.p`qqqqqqqqqqqqqq`p.xx
+ a.p`q-""""""""""-q`p.xx
+ a.p`q"vvvvvvvvvv"q`p.xx
+ a.p`q"v--------v"q`p.xx
+ a.p`q"v-TbbbbT-v"q`p.xx
+ a.p`q"v-bb--bb-v"q`p.xx
+ a.p`q"v-b-??-b-v"q`p.xx
+ a.p`q"v-b-??-b-v"q`p.xx
+ a.p`q"v-bb--bb-v"q`p.xx
+ a.p`q"v-TbbbbT-v"q`p.xx
+ a.p`q"v--------v"q`p.xx
+ a.p`q"vvvvvvvvvv"q`p.xx
+ a.p`q-""""""""""-q`p.xx
+ a.p`qqqqqqqqqqqqqq`p.xx
+ a.p-``````````````-p.xx
+ a.pppppppppppppppppp.xx
+ a-..................-xx
+ aaaaaaaaaaaaaaaaaaaaaxx
+                      xx
+ENDMAP
