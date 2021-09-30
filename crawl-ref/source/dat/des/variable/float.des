@@ -4901,6 +4901,80 @@ MAP
 .cccccccccc
 ENDMAP
 
+NAME:   dreamdust_black_sun_cult
+TAGS:   transparent no_monster_gen
+ORIENT: float
+DEPTH:  D:13-, Zot, !Zot:$
+COLOUR: bm = red
+TILE:   m = dngn_transparent_wall_red
+FTILE:  -mA1 = floor_volcanic
+MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
+                              delay = 10, size = 1, excl_rad = 0 }
+NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
+: if you.in_branch("D") then
+KMONS:  1 = black sun
+KMONS:  2 = sun demon
+KMONS:  3 = small abomination / large abomination
+KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
+            randbook disc:fire disc2:necromancy spells:scorch \
+            slevels:8 numspells:4 title:The_Black_Sun, \
+            staff of fire / staff of death / scroll of immolation q:3 / \
+            scroll of torment q:3 / any weapon ego:flaming / \
+            any weapon ego:draining
+: else
+KMONS:  1 = orb of fire
+KMONS:  2 = black sun
+KMONS:  3 = draconian scorcher / draconian monk
+KITEM:  1 = manual of fire magic / manual of necromancy, \
+            randbook disc:fire disc2:necromancy spells:starburst \
+            slevels:25 numspells:4 title:The_Black_Sun, \
+            any weapon ego:flaming randart / any weapon ego:draining randart
+: end
+MAP
+ .........
+..!bbbbb!..
+.!bb---bb!.
+.bb-----bb.
+.b--mAm--b.
+.b--m1m--b.
+.b--mmm--b.
+.bb-----bb.
+.!bb---bb!.
+..!bb+bb!..
+ .........
+ENDMAP
+
+NAME:   dreamdust_cat_pyramid
+TAGS:   no_monster_gen transparent
+DEPTH:  Crypt, !Crypt:$, Depths, !Depths:$
+ORIENT: float
+TILE:   c = wall_tomb
+COLOUR: c = yellow
+FTILE:  -S*1+ = floor_sandstone
+KFEAT:  S = granite_statue
+TILE:   S = dngn_sarcophagus_pedestal_left
+TILE:   G = dngn_statue_cat
+MONS:   sphinx
+# Offerings
+KITEM:  $ = gold, any potion / nothing
+# Grave goods
+KITEM:  * = gold, star_item
+MAP
+        .
+       .c.
+      .ccc.
+     .cc*cc.
+    .cc*S*cc.
+   .cc1---1cc.
+  .cc-------cc.
+ .ccccc+++ccccc.
+.ccccccG.Gcccccc.
+ ......$.$......
+      .G.G.
+      .$.$.
+      .....
+ENDMAP
+
 
 ###############################################################################
 #
@@ -10245,4 +10319,55 @@ xxx.xx.xxx0...........0xxx.xx.xxx
 x..x..x11xx...........xx11x..x..x
 x1.x.1x11*xxx...{...xxx*11x1.x.1x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    dreamdust_experimentation
+TAGS:    no_monster_gen no_item_gen
+ORIENT:  float
+DEPTH:   D:13-, Depths
+KPROP:   23 = no_tele_into
+COLOUR:  c = white
+TILE:    c = wall_brick_white
+FTILE:   -+G23d = floor_rough_white
+TILE:    G = dngn_statue_demonic_bust
+KFEAT:   t = demonic_tree
+ITEM:    potion of ambrosia / potion of berserk rage / \
+         potion of degeneration / potion of haste / \
+         potion of invisibility / potion of lignification / \
+         potion of might / potion of mutation w:30
+KMONS:   1 = wizard
+: if you.in_branch("D") then
+NSUBST:  - = 2:1 / -
+: else
+NSUBST:  - = 2=1 / 8=1- / -
+: end
+SHUFFLE: 23
+: if crawl.coinflip() then
+# Human Experimentation
+KMONS:   2 = glowing shapeshifter / small abomination
+KMONS:   3 = human perm_ench:berserk perm_ench:wretched / \
+             human perm_ench:confusion perm_ench:wretched
+: else
+# Animal Experimentation
+KMONS:   2 = ugly thing / very ugly thing
+KMONS:   3 = glowing shapeshifter / large abomination
+: end
+MAP
+cccccccc
+cddddddc
+ccc++ccc
+cG----Gc
+ccc--ccc
+c2n--n2c
+ccc--ccc
+c2n--n3c
+ccc--ccc
+c3n--n3c
+ccc--ccc
+ccc++ccc
+cG----Gc
+cG----Gc
+ccc++ccc
+..t..t..
+ ..@@..
 ENDMAP
