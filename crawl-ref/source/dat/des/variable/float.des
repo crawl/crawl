@@ -4943,6 +4943,35 @@ MAP
  .........
 ENDMAP
 
+NAME:    dreamdust_cat_pyramid
+TAGS:    no_monster_gen transparent no_rotate
+DEPTH:   Crypt, !Crypt:$, Depths, !Depths:$
+ORIENT:  float
+WEIGHT:  3
+TILE:    c = wall_tomb
+COLOUR:  c = yellow
+FTILE:   -S1+ = floor_sandstone
+KFEAT:   S = granite_statue
+TILE:    S = dngn_sarcophagus_pedestal_left
+TILE:    G = dngn_statue_cat
+KITEM:   $ = gold q:100
+KMONS:   1 = sphinx
+KMONS:   . = nothing w:100 / felid zombie
+MAP
+       ...
+      ..c..
+     ..ccc..
+    ..cc$cc..
+   ..cc$S$cc..
+  ..cc1---1cc..
+ ..cc-------cc..
+..ccccc+++ccccc..
+.ccccccG.Gcccccc.
+.................
+ ......G.G......
+     .......
+ENDMAP
+
 
 ###############################################################################
 #
