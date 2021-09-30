@@ -26,7 +26,7 @@ meteorological fury. It does more damage to targets surrounded by empty space.
 Alistair's Intoxication spell
 
 Converts a small portion of the brain matter of those around you into alcohol,
-attempting to confuse all intelligent living creatures within view (although
+attempting to confuse all intelligent creatures within view (although
 poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.

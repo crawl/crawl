@@ -2046,6 +2046,5 @@ targeter_intoxicate::targeter_intoxicate()
 bool targeter_intoxicate::affects_monster(const monster_info& mon)
 {
     return !(mon.mintel < I_HUMAN
-             || !(mon.holi & MH_NATURAL)
              || get_resist(mon.resists(), MR_RES_POISON) >= 3);
 }

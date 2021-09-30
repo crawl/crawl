@@ -4882,7 +4882,6 @@ void bolt::affect_monster(monster* mon)
     }
 
     if (engulfs && flavour == BEAM_SPORE // XXX: engulfs is redundant?
-        && mon->holiness() & MH_NATURAL
         && !mon->is_unbreathing())
     {
         apply_enchantment_to_monster(mon);
