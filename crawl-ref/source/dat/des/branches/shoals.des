@@ -2171,6 +2171,52 @@ WWccccnnnccccWW
  WWssssPssssWW
 ENDMAP
 
+NAME:   dreamdust_from_the_deep
+TAGS:   no_monster_gen no_item_gen no_tide
+DEPTH:  Shoals, !Shoals:$
+ORIENT: northwest
+KFEAT:  s = open_sea
+SUBST:  y = xxx~
+NSUBST: ~ = 1 / w
+KFEAT:  w1 = deep_water
+NSUBST: - = 3=2 / 3=2- / 2=3 / 1=3- / -
+KFEAT:  -23 = shallow_water
+TILE:   -23 = dngn_shallow_water_murky
+COLOUR: -23 = lightgreen
+FTILE:  .4>xG = floor_slime
+KFEAT:  > = escape_hatch_down
+TILE:   x = wall_oozing
+TILE:   G = dngn_gravestone
+: set_feature_name("granite_statue", "a stone stele inscribed with bizarre and terrifying symbols")
+KMONS:  1 = kraken
+KMONS:  2 = merfolk impaler ; trident ego:chaos
+KMONS:  3 = apocalypse crab / great orb of eyes
+KMONS:  4 = tentacled monstrosity
+KITEM:  > = any ring randart, \
+            randbook title:Mad_Ravings spells:malign_gateway&summon_horrible_things numspells:2
+MAP
+sssssssssssssssssssss
+s~~~~~~~~~~~~~~~~~~
+s~~~~~~yyyy~~~~~~~~
+s~~~~~-xxxxx~~~~~~~
+s~~~~xx----xx~~~~~~
+s~~~xx------xx--~~~
+s~~xx--xxxx------~~
+s~yx--xx..xx--xy~~~
+s~yx---..4Gx--xy~~~
+s~yx-----.>x--xy~~~
+s~yx--xx--xx--xy~~~
+s~~xx--xxxx------~~
+s~~~xx------xx--~~~
+s~~--------xx~-~~~~
+s~~~--xxxxxx~~~~~~~
+s~~~~~~yyyy~~~~~~~~
+s~~~~~~~~~~~~~~~~~
+s~~~~~~~~~~~~~~~~
+s~~~~~~~~~~~~~~
+s
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Shoals ending vaults
