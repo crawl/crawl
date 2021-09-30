@@ -3694,6 +3694,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "damnation";
     case MR_RES_VORTEX:
         return "polar vortices";
+    case MR_RES_TORMENT:
+        return "torment";
     default:
         return "buggy resistance";
     }
@@ -4364,7 +4366,7 @@ static string _monster_stat_description(const monster_info& mi)
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
         MR_RES_MIASMA,  MR_RES_NEG,    MR_RES_DAMNATION,
-        MR_RES_VORTEX,
+        MR_RES_VORTEX,  MR_RES_TORMENT,
     };
 
     vector<string> extreme_resists;
@@ -4379,8 +4381,12 @@ static string _monster_stat_description(const monster_info& mi)
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
-            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_VORTEX)
+            if (rflags == MR_RES_DAMNATION
+                || rflags == MR_RES_VORTEX
+                || rflags == MR_RES_TORMENT)
+            {
                 level = 3; // one level is immunity
+            }
             level = max(level, -1);
             level = min(level,  3);
             switch (level)
