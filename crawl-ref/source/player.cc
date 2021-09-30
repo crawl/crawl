@@ -6054,9 +6054,6 @@ mon_holy_type player::holiness(bool temp) const
         holi = MH_NONLIVING;
     }
 
-    if (is_good_god(religion))
-        holi |= MH_HOLY;
-
     if (is_evil_god(religion)
         || species == SP_DEMONSPAWN || you.has_mutation(MUT_VAMPIRISM))
     {
@@ -6077,7 +6074,7 @@ bool player::undead_or_demonic(bool temp) const
 
 bool player::is_holy() const
 {
-    return bool(holiness() & MH_HOLY);
+    return bool(holiness() & MH_HOLY) || is_good_god(religion);
 }
 
 bool player::is_nonliving(bool temp) const

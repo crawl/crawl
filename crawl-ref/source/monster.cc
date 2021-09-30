@@ -3523,10 +3523,6 @@ mon_holy_type monster::holiness(bool /*temp*/) const
 
     mon_holy_type holi = mons_class_holiness(type);
 
-    // Assume that all unknown gods are not holy.
-    if (is_priest() && is_good_god(god))
-        holi |= MH_HOLY;
-
     // Assume that all unknown gods are evil.
     if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
         holi |= MH_EVIL;
@@ -3550,9 +3546,14 @@ bool monster::undead_or_demonic(bool /*temp*/) const
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
+/**
+ * Is the monster innately holy, or a priest of a good god?
+ *
+ * @return Whether the monster is considered holy.
+ **/
 bool monster::is_holy() const
 {
-    return bool(holiness() & MH_HOLY);
+    return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
 bool monster::is_nonliving(bool /*temp*/) const
