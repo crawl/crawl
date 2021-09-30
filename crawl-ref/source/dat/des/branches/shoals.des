@@ -2110,6 +2110,53 @@ cww......L
 ccccJJKKLL
 ENDMAP
 
+NAME:   dreamdust_from_the_deep
+TAGS:   no_monster_gen no_item_gen no_tide
+DEPTH:  Shoals, !Shoals:$
+ORIENT: northwest
+WEIGHT: 3
+KFEAT:  X = open_sea
+SUBST:  # = xxx~
+NSUBST: ~ = 8:z / 2:Z / *:w
+KFEAT:  wzZ = deep_water
+NSUBST: - = 6:1 / 2:2 / *:-
+KFEAT:  -12 = shallow_water
+TILE:   -12 = dngn_shallow_water_murky
+: set_feature_name("shallow_water", "some foul and slimy water")
+FTILE:  .3G?x = floor_slime
+TILE:   x = wall_oozing
+TILE:   G = dngn_gravestone
+: set_feature_name("granite_statue", "a stone stele inscribed with bizarre and terrifying symbols")
+KMONS:  z = octopode zombie
+KMONS:  Z = kraken zombie
+KMONS:  1 = octopode ; trident ego:chaos | dagger ego:chaos
+KMONS:  2 = apocalypse crab / great orb of eyes
+KMONS:  3 = tentacled monstrosity
+KITEM:  ? = ring of the octopus king, \
+            randbook title:Mad_Ravings spells:malign_gateway&summon_horrible_things numspells:2
+MAP
+XXXXXXXXXXXXXXXXXXXXX
+X~~~~~~~~~~~~~~~~~
+X~~~~~~~~~~~~~~~~~~
+X~~~~~~~####~~~~~~~~
+X~~~~~~-xxxxx~~~~~~~
+X~~~~~xx----xx~~~~~~
+X~~~~xx------xx--~~~
+X~~~xx--xxxx------~~
+X~~#x--xx..xx--x#~~~
+X~~#x---..3Gx--x#~~~
+X~~#x-----.?x--x#~~~
+X~~#x--xx--xx--x#~~~
+X~~~xx--xxxx------~~
+X~~~~xx------xx--~~~
+X~~~--------xx~-~~~~
+X~~~~--xxxxxx~~~~~~~
+X~~~~~~~####~~~~~~~~
+X~~~~~~~~~~~~~~~~~~
+X~~~~~~~~~~~~~~~~~
+X
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Shoals ending vaults
