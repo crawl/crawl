@@ -81,24 +81,21 @@ string unpacifiable_reason(const monster& mon)
  */
 string unpacifiable_reason(const monster_info& mi)
 {
-    // XXX: be more specific?
-    const string generic_reason = "You cannot pacify this monster!";
-
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mi.intel() <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mi.type)) // body part
     {
-        return generic_reason;
+        return "You cannot pacify mindless monsters!";
     }
 
     const mon_holy_type holiness = mi.holi;
 
     if (holiness & MH_NONLIVING)
-        return generic_reason;
+        return "You cannot pacify nonliving monsters!";
 
     if (mons_class_is_stationary(mi.type)) // not able to leave the level
-        return generic_reason;
+        return "You cannot pacify stationary monsters!";
 
     if (mi.is(MB_SLEEPING)) // not aware of what is happening
     {
