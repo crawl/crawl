@@ -685,7 +685,7 @@ int exp_rate(int killer)
 }
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
-// your holy or natural allies.
+// your holy or living allies.
 static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -695,7 +695,7 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     if (!MON_KILL(killer) && !YOU_KILL(killer))
         return false;
 
-    if (mons->holiness() & ~(MH_HOLY | MH_NATURAL)
+    if (mons->holiness() & ~(MH_HOLY | MH_NATURAL | MH_PLANT)
         || !mons->friendly()
         || !you.can_see(*mons) // for simplicity
         || !one_chance_in(20))

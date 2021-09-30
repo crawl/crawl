@@ -94,7 +94,7 @@ string unpacifiable_reason(const monster_info& mi)
 
     const mon_holy_type holiness = mi.holi;
 
-    if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
+    if (holiness & MH_NONLIVING)
         return generic_reason;
 
     if (mons_class_is_stationary(mi.type)) // not able to leave the level
