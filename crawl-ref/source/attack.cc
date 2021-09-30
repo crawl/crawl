@@ -798,10 +798,12 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_CHAOTIC,   SPWPN_CHAOS,         10,
       nullptr },
     { AF_DRAIN,  SPWPN_DRAINING,      5,
-      [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
+      [](const actor &d) {
+          return bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
-          return !d.is_summoned() && bool(d.holiness() & MH_NATURAL); } },
+          return !d.is_summoned()
+                 && bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
@@ -866,7 +868,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (!(defender->holiness() & MH_NATURAL))
+    if (!(defender->holiness() & (MH_NATURAL | MH_PLANT)))
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,

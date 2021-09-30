@@ -333,10 +333,10 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
     if (mh & (MH_UNDEAD | MH_NONLIVING))
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
-    // Everything but natural creatures have full rNeg. Set here for the
-    // benefit of the monster_info constructor. If you change this, also
+    // Everything but natural creatures and plants have full rNeg. Set here for
+    // the benefit of the monster_info constructor. If you change this, also
     // change monster::res_negative_energy.
-    if (!(mh & MH_NATURAL))
+    if (!(mh & (MH_NATURAL | MH_PLANT)))
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
     if (mh & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING))
@@ -1063,18 +1063,18 @@ bool mons_eats_items(const monster& mon)
  */
 bool actor_is_susceptible_to_vampirism(const actor& act)
 {
-    if (!(act.holiness() & MH_NATURAL) || act.is_summoned())
+    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)) || act.is_summoned())
         return false;
 
     if (act.is_player())
         return true;
 
     const monster *mon = act.as_monster();
-    // Don't allow HP draining from temporary monsters such as those created by
-    // Sticks to Snakes.
+    // Don't allow HP draining from temporary monsters, spectralised monsters,
+    // or firewood.
     return !mon->has_ench(ENCH_FAKE_ABJURATION)
-           // Nor from now-ghostly monsters.
-           && !testbits(mon->flags, MF_SPECTRALISED);
+           && !testbits(mon->flags, MF_SPECTRALISED)
+           && !mons_is_firewood(*mon);
 }
 
 bool invalid_monster(const monster* mon)

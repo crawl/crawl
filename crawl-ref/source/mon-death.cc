@@ -1883,7 +1883,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                             + random2(mons.get_experience_level() / 2);
                 }
                 if (you.species == SP_GHOUL
-                    && mons.holiness() & MH_NATURAL
+                    && mons.holiness() & (MH_NATURAL | MH_PLANT)
                     && coinflip())
                 {
                     hp_heal += 1 + random2avg(1 + you.experience_level, 3);

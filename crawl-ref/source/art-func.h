@@ -124,7 +124,7 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 {
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
-    if (!mondied && defender->holiness() == MH_NATURAL)
+    if (!mondied && defender->holiness() & (MH_NATURAL | MH_PLANT))
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 
