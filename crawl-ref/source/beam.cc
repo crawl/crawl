@@ -1678,8 +1678,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                                               int pow,
                                               bool* did_msg)
 {
-    // Assuming that the only mass charm is control undead.
-    if (wh_enchant == ENCH_FEAR)
+    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
+    // of "is unaffected" messages. --Eino
+    if (mons_is_firewood(*mons))
+        return true;
+    else if (wh_enchant == ENCH_FEAR)
     {
         if (mons->friendly())
             return true;
@@ -1690,47 +1693,23 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
-
-        int res_margin = mons->check_willpower(pow);
-        if (res_margin > 0)
-        {
-            if (simple_monster_message(*mons,
-                    mons->resist_margin_phrase(res_margin).c_str()))
-            {
-                *did_msg = true;
-            }
-            return true;
-        }
     }
     else if (wh_enchant == ENCH_INSANE
-             || mons->holiness() & MH_NATURAL)
-    {
-
-        if (wh_enchant == ENCH_INSANE
-            && !mons->can_go_frenzy())
-        {
-            return true;
-        }
-
-        int res_margin = mons->check_willpower(pow);
-        if (res_margin > 0)
-        {
-            if (simple_monster_message(*mons,
-                    mons->resist_margin_phrase(res_margin).c_str()))
-            {
-                *did_msg = true;
-            }
-            return true;
-        }
-    }
-    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
-    // of "is unaffected" messages. --Eino
-    else if (mons_is_firewood(*mons))
-        return true;
-    else  // trying to enchant an unnatural creature doesn't work
+             && !mons->can_go_frenzy())
     {
         if (simple_monster_message(*mons, " is unaffected."))
             *did_msg = true;
+        return true;
+    }
+
+    int res_margin = mons->check_willpower(pow);
+    if (res_margin > 0)
+    {
+        if (simple_monster_message(*mons,
+                mons->resist_margin_phrase(res_margin).c_str()))
+        {
+            *did_msg = true;
+        }
         return true;
     }
 
@@ -1769,24 +1748,16 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             continue;
 
         if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
-            || (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
             || (wh_enchant != ENCH_INSANE
                 && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
             // Do messaging.
-            const char* msg;
-            switch (wh_enchant)
-            {
-            case ENCH_FEAR:      msg = " looks frightened!";      break;
-            case ENCH_CHARM:     msg = " submits to your will.";  break;
-            default:             msg = nullptr;                   break;
-            }
+            const char* msg = nullptr;
+            if (wh_enchant == ENCH_FEAR)
+                msg = " looks frightened!";
+
             if (msg && simple_monster_message(**mi, msg))
                 did_msg = true;
-
-            // Reassert control over hexed undead.
-            if (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
-                mi->del_ench(ENCH_HEXED);
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
