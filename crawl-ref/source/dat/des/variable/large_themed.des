@@ -2316,3 +2316,32 @@ xxxx-xx..xx....xx-xxx-x
 xxxxxxxxx-x.....xxxxxxx
 xxxxxxxxxxx.@@@..xxxxxx
 ENDMAP
+
+NAME:    dreamdust_isle_of_ice
+TAGS:    no_monster_gen
+ORIENT:  south
+DEPTH:   D:11-, Lair
+WEIGHT:  3
+SUBST:   - = .....wwwW
+SUBST:   ~ = wwwwwW
+COLOUR:  . = white
+FTILE:   .x = floor_ice
+RTILE:   x = wall_ice_block
+COLOUR:  x = blue
+: set_feature_name("shallow_water", "Some ice crusted shallow water")
+: set_feature_name("deep_water", "Some ice crusted deep water")
+: set_feature_name("rock_wall", "ice covered rock wall")
+KMONS:   . = nothing w:200 / ice beast / polar bear / \
+             wolf w:5 / white imp w:5 / rime drake w:3 / \
+             ice devil w:3 / ice statue w:2
+MAP
+              WWWWWWWWWWWWW
+           WWWWWWWWWWWWWWWWWWW
+       WWWWWW~~~~~~~~~~~~~~~WWWWW
+    WWWWWW~~~~----.....----~~~~WWWWWW
+  WWWW~~~~~---.............---~~~~~WWWW
+ WWW~~~----...................----~~~WWW
+WW~~~----.......................----~~~WW
+~~~xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx~~~
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
