@@ -2771,11 +2771,9 @@ bool monster::go_frenzy(actor *source)
     const int duration = 16 + random2avg(13, 2);
 
     add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
-    if (holiness() & MH_NATURAL)
-    {
-        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
-        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
-    }
+    add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
+
     mons_att_changed(this);
 
     if (simple_monster_message(*this, " flies into a frenzy!"))
