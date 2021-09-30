@@ -2345,3 +2345,71 @@ WW~~~----.......................----~~~WW
 ~~~xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx~~~
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME:   dreamdust_labyrinth
+TAGS:   no_monster_gen no_trap_gen
+ORIENT: northeast
+DEPTH:  D:11-, !D:$, Lair, !Lair:$
+WEIGHT: 1
+: if crawl.coinflip() then
+# Start in the middle
+NSUBST: ? = 1:( / *:G
+NSUBST: - = 1:< / *:-
+: else
+# Start on the outside
+NSUBST: - = 1:( / *:-
+NSUBST: ? = 1:< / *:G
+: end
+# Place a few dead-ends
+NSUBST: - = 1:x / *:-
+NSUBST: . = 1:x / *:.
+NSUBST: ` = 1:x / *:`
+NSUBST: " = 1:X / *:"
+# Make a path
+NSUBST: f = 1:' / *:f
+NSUBST: e = 1:' / *:e
+NSUBST: d = 1:' / *:d
+NSUBST: c = 1:' / *:c
+NSUBST: b = 1:' / *:b
+# Everything else
+KFEAT:  abcx = stone_wall
+KFEAT:  deX = metal_wall
+KFEAT:  f = crystal_wall
+TILE:   zabcdx = wall_lab_stone
+TILE:   deX = wall_lab_metal
+FTILE:  -.`"'T<G = floor_gauntlet
+KFEAT:  < = escape_hatch_up
+KMONS:  < = patrolling minotaur ; any armour . \
+                                  any weapon good_item
+KITEM:  < = %, %, %, %, %, *, *, *
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ aaaaaaaaaaaaaaaaaaaaaaaaaaxx
+ a'----------------------'axx
+ a-bbbbbbbbbbbbbbbbbbbbbb-axx
+ a-b'..................'b-axx
+ a-b.cccccccccccccccccc.b-axx
+ a-b.c'``````````````'c.b-axx
+ a-b.c`dddddddddddddd`c.b-axx
+ a-b.c`d'""""""""""'d`c.b-axx
+ a-b.c`d"eeeeeeeeee"d`c.b-axx
+ a-b.c`d"e''''''''e"d`c.b-axx
+ a-b.c`d"e'TffffT'e"d`c.b-axx
+ a-b.c`d"e'ff''ff'e"d`c.b-axx
+ a-b.c`d"e'f'??'f'e"d`c.b-axx
+ a-b.c`d"e'f'??'f'e"d`c.b-axx
+ a-b.c`d"e'ff''ff'e"d`c.b-axx
+ a-b.c`d"e'TffffT'e"d`c.b-axx
+ a-b.c`d"e''''''''e"d`c.b-axx
+ a-b.c`d"eeeeeeeeee"d`c.b-axx
+ a-b.c`d'""""""""""'d`c.b-axx
+ a-b.c`dddddddddddddd`c.b-axx
+ a-b.c'``````````````'c.b-axx
+ a-b.cccccccccccccccccc.b-axx
+ a-b'..................'b-axx
+ a-bbbbbbbbbbbbbbbbbbbbbb-axx
+ a'----------------------'axx
+ aaaaaaaaaaaaaaaaaaaaaaaaaaxx
+                           xx
+ENDMAP
