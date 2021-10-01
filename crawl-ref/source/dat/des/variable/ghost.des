@@ -1136,19 +1136,18 @@ SUBST:  - = pt., S : GV A:1
 COLOUR: .pO012345689de|*$ = green
 FTILE:  tGVA.pO012345689de|*$ = floor_moss
 : end
-# Don't burn down or polar vortex down these sacred trees
-MARKER: t = lua:props_marker { veto_destroy="veto" }
 : ghost_setup(_G)
 MAP
-  ttttttt
- tt'''--tt
- t'-t-..-t
- tt-'O--.t
-tt-..t--.tt
-t-'-.---t't
-t'tnn=nnt't
-ttnS...Sntt
- ....@....
+  ccccccccc
+ cctttttttcc
+ ctt'''--ttc
+ ct'-t-..-tc
+cctt-'O--.tcc
+ctt-..t--.ttc
+ct-'-.---t'tc
+ct'cnn=nnc'tc
+cccnS...Snccc
+   ...@...
 ENDMAP
 
 NAME:   biasface_ghost_orc_armoury
