@@ -6199,6 +6199,11 @@ bool player::res_torment() const
     return get_form()->res_neg() == 3
            || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
            || you.petrified()
+    // This should probably be (you.holiness & MH_PLANT), but treeform
+    // doesn't currently make you a plant, and I suspect changing that
+    // would cause other bugs. (For example, being able to wield holy
+    // weapons as a demonspawn & keep them while untransformed?)
+           || you.form == transformation::tree
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
 #endif
