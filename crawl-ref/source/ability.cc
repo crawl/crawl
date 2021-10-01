@@ -1584,6 +1584,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_ELYVILON_LESSER_HEALING:
+    case ABIL_ELYVILON_GREATER_HEALING:
+        if (you.hp == you.hp_max)
+        {
+            if (!quiet)
+                canned_msg(MSG_FULL_HEALTH);
+            return false;
+        }
+        return true;
+
     case ABIL_ELYVILON_PURIFICATION:
         if (!you.duration[DUR_SICKNESS]
             && !you.duration[DUR_POISONING]
