@@ -2112,7 +2112,7 @@ kmons("u = ogre ; " .. wrathful_weapon("ogre",
 kmons("y = two-headed ogre ; " .. wrathful_weapon("ogre",
                crawl.one_chance_in(3) and "randart" or "good_item") ..
       "    . " .. wrathful_weapon("ogre", "good_item"))
-kmons("z = tengu warrior ; " .. wrathful_weapon("warrior", "randart") ..
+kmons("z = tengu warrior ; " .. wrathful_weapon("warrior-1h", "randart") ..
       "    . leather armour good_item | ring mail good_item" ..
       "    . buckler good_item | kite shield good_item")
 }}
@@ -2437,7 +2437,7 @@ NSUBST: - = Fq / 3=1 / 3=1. / 2=2 / 2=2. / 3 / 4 / 4. / .
 FTILE:  'PSntcbv = floor_nerves_cyan
 : elseif you.in_branch("Crypt") then
 {{
-kmons("q = ancient champion ; " .. disto_weapon("warrior", "randart") ..
+kmons("q = ancient champion ; " .. disto_weapon("warrior-2h", "randart") ..
       "    . chain mail good_item | plate armour good_item")
 }}
 MONS:   thrashing horror / rakshasa / very ugly thing / great orb of eyes \
@@ -2452,7 +2452,7 @@ NSUBST: - = q / 3=1 / 4=1. / 2=2 / 2=2. / 3 / 3. / 4 / 4. / .
 {{
 kmons("q = spriggan defender; " .. disto_weapon("defender", "randart") ..
       "    . robe good_item  . buckler good_item")
-kmons("r = tengu reaver; " .. disto_weapon("knight", "randart") ..
+kmons("r = tengu reaver; " .. disto_weapon("knight-1h", "randart") ..
       "    . scale mail good_item  . buckler good_item")
 }}
 MONS:   rakshasa / very ugly thing / great orb of eyes / glowing orange brain \
