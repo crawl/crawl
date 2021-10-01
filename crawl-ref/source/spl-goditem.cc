@@ -97,13 +97,13 @@ string unpacifiable_reason(const monster_info& mi)
     if (mons_class_is_stationary(mi.type)) // not able to leave the level
         return "You cannot pacify stationary monsters!";
 
-    if (mi.is(MB_SLEEPING)) // not aware of what is happening
+    if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)) // unaware of what's happening
     {
-        return make_stringf("You cannot pacify this monster while %s %s "
-                            "sleeping!",
+        return make_stringf("You cannot pacify this monster while %s %s %s!",
                             mi.pronoun(PRONOUN_SUBJECTIVE),
                             conjugate_verb("are",
-                                           mi.pronoun_plurality()).c_str());
+                                           mi.pronoun_plurality()).c_str(),
+                            mi.is(MB_SLEEPING) ? "asleep" : "dormant");
     }
 
     // pacifiable, maybe!
