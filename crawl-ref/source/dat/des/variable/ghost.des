@@ -1,21 +1,17 @@
 ###############################################################################
 # ghost.des
 #
-# Vaults that place player ghosts. For now, all such vaults that don't place in
-# the Vaults branch should appear in this file, even if they're
-# branch-specific. For Vaults ghost vaults, we currently use
-# branches/vaults_rooms_ghost.des. See the ghost vault guidelines in
-# docs/develop/levels/guidelines.md. All vaults here should call the function
-# ghost_setup().
+# Vaults that place player ghosts and place in multiple branches. See the ghost
+# vault guidelines in docs/develop/levels/guidelines.md. All vaults here should
+# call the function ghost_setup().
 #
 # Organization:
 
-# <<1>>      General/Abstract ghost vaults
-# <<2>>      Themed ghost vaults
+# <<1>>          General/Abstract ghost vaults
+#     <<1.1>>        Vaults with allow_dup
+#     <<1.2>>        Vaults without allow_dup
+# <<2>>          Themed ghost vaults
 #
-# General ghost vaults in <<1>> use 098 monsters and any specified monsters
-# would be generic things like statue monsters or branch-representative
-# monsters. For more thematic vaults, put them in <<2>>.
 ###############################################################################
 
 : crawl_require("dlua/ghost.lua")
@@ -64,23 +60,34 @@ function disto_weapon(class, quality)
 end
 }}
 
-# Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
-# vault may only be appropriate for a subset of these levels, in which case
-# they should set their own DEPTH. Note that if this default depth is changed,
-# vaults below with branch-specific item/monster placement may need to be
-# updated.
+# Only the below levels place ghost vaults. A specific ghost vault may only be
+# appropriate for a subset of these levels, in which case they should set their
+# own DEPTH. Note that if this default depth is changed, vaults below with
+# branch-specific item/monster placement may need to be updated.
 default-depth: D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, \
-               Crypt, Zot
+               Vaults, !Vaults:$, Crypt, Zot
 
 ###############################################################################
 #
-# <<1>> General/Abstract ghost vaults.
+# <<1>> General/Abstract ghost vaults
 #
+# General ghost vaults in <<1>> use 098 monsters and any specified monsters
+# would be generic things like statue monsters or branch-representative
+# monsters. Any thematic aspect should be decorative and not involve specific
+# monster types.
+###############################################################################
+
+###############################################################################
 #
+# <<1.1>> General/Abstract vaults with allow_dup
+#
+# All vaults here have allow_dup so they can be used potentially multiple times
+# in the same game. It's necessary to have a set of these so we always have
+# ghost vaults available. Vaults in this section
 ###############################################################################
 
 NAME:   gammafunk_ghost_grave
-TAGS:   allow_dup
+TAGS:   transparent allow_dup vaults_orient_w
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "-")
@@ -93,17 +100,17 @@ COLOUR: t = brown
 : set_feature_name("granite_statue", "a gravestone")
 : set_feature_name("tree", "dead tree")
 FTILE:  -|*%$OGt = floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
- cccc
-.ndtc
-@=OGc
-.netc
- cccc
+  cccc
+..ndtc
+@.=OGc
+..netc
+  cccc
 ENDMAP
 
 NAME:   gammafunk_ghost_split
-TAGS:   transparent allow_dup
+TAGS:   transparent allow_dup vaults_orient_w
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -136,94 +143,97 @@ SUBST:  fgh = |*
 NSUBST: D = 0 / 2=0. / 2=9 / 2=9. / 8 / 2=8. / .
 : end
 SUBST:  p : x., q : x., x : xc
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
-...........
-.cccnnnccc.
-.nD..D..Dc.
-.n..qpqg.c.
-.=.Dpqpe.n.
-@=...O.dDn.
-.=.Dpqpf.n.
-.n..qpqh.c.
-.nD..D..Dc.
-.cccnnnccc.
-...........
+.............
+.............
+..cccnnnccc..
+..nD..D..Dc..
+..n..qpqg.c..
+..=.Dpqpe.n..
+.@=...O.dDn..
+..=.Dpqpf.n..
+..n..qpqh.c..
+..nD..D..Dc..
+..cccnnnccc..
+.............
+.............
 ENDMAP
 
 NAME:   gammafunk_ghost_arena
-TAGS:   allow_dup
+TAGS:   transparent passable allow_dup vaults_orient_w
 ORIENT: float
-KMONS: O = player ghost
+KMASK:  -OQR089de|*%$ = opaque
+KMONS:  O = player ghost
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 6 then
-SUBST:  d = *%, e = %$, f = %$.., ghij = .
-NSUBST: D = 2=0 / 2=0. / 9. / .
-:     elseif you.depth() < 9 then
-SUBST:  d = *, e = *%, f = %$,  ghi = .
-NSUBST: D = 2=0 / 2=0. / 098. / 9. / .
-:     elseif you.depth() < 12 then
-SUBST:  e = *, f = *%,  g = %$.., hi = .
-NSUBST: D = 2=0 / 3=0. / 2=9. / 8. / .
-:     elseif you.depth() < 14 then
-SUBST:  f = |*, g = *, h = %$, ij = .
-NSUBST: D = 2=0 / 4=0. / 098. / 9 / 9. / 2=8. / .
+SUBST:  d = *%, e = %$, f = %$--, ghij = -
+NSUBST: D = 2=0 / 2=0- / 9- / -
+:     elseif you-depth() < 9 then
+SUBST:  d = *, e = *%, f = %$,  ghij = -
+NSUBST: D = 2=0 / 2=0- / 098- / 9- / -
+:     elseif you-depth() < 12 then
+SUBST:  e = *, f = *%,  g = %$--, hij = -
+NSUBST: D = 2=0 / 3=0- / 2=9- / 8- / -
+:     elseif you-depth() < 14 then
+SUBST:  f = |*, g = *, h = %$, ij = -
+NSUBST: D = 2=0 / 4=0- / 098- / 9 / 9- / 2=8- / -
 :     else
-SUBST:  f = |*, g = *, h = %$, ij = .
-NSUBST: D = 3=0 / 3=0. / 9 / 2=9. / 8 / 8. / .
+SUBST:  f = |*, g = *, h = %$, ij = -
+NSUBST: D = 3=0 / 3=0- / 9 / 2=9- / 8 / 8- / -
 :     end
 : elseif you.in_branch("Lair") then
-SUBST:  f = *, g = %$, hij = .
-NSUBST: D = 2=0 / 3=0. / 098. / 2=9. / 8. / .
+SUBST:  f = *, g = %$, hij = -
+NSUBST: D = 2=0 / 3=0- / 098- / 2=9- / 8- / -
 : elseif you.in_branch("Orc") then
-SUBST:  f = |*, g = *%, h = %$.., ij = .
-NSUBST: D = 2=0 / 4=0. / 9 / 9. / 2=8. / .
-: elseif you.in_branch("Elf") then
-SUBST:  fg = |*, h = *, i = %$, j = .
-NSUBST: D = 3=0 / 4=0. / 9 / 3=9. / 8 / 2=8. / .
+SUBST:  f = |*, g = *%, h = %$--, ij = -
+NSUBST: D = 2=0 / 4=0- / 9 / 9- / 2=8- / -
+: elseif you.in_branch("Vaults") or you.in_branch("Elf") then
+SUBST:  fg = |*, h = *, i = %$, j = -
+NSUBST: D = 3=0 / 4=0- / 9 / 3=9- / 8 / 2=8- / -
 : elseif you.in_branch("Crypt") then
-SUBST:  fgh = |*, i = *%, j = %$..
-NSUBST: D = 3=0 / 4=0. / 098. / 9 / 3=9. / 8 / 2=8. / .
+SUBST:  fgh = |*, i = *%, j = %$--
+NSUBST: D = 3=0 / 4=0- / 098- / 9 / 3=9- / 8 / 2=8- / -
 : elseif you.in_branch("Depths") then
 SUBST:  fgh = |*, i = *, j = %$
-NSUBST: D = 3=0 / 5=0. / 2=9 / 2=9. / 8 / 3=8. / .
+NSUBST: D = 3=0 / 5=0- / 2=9 / 2=9- / 8 / 3=8- / -
 : elseif you.in_branch("Zot") then
 SUBST:  fghij = |*
-NSUBST: D = 3=0 / 5=0. / 2=9 / 3=9. / 2=8 / 2=8. / .
+NSUBST: D = 3=0 / 5=0- / 2=9 / 3=9- / 2=8 / 2=8- / -
 # Lair branches
 : else
-SUBST:  fg = |*, h = *%, i = %$.., j = .
-NSUBST: D = 3=0 / 3=0. / 098. / 9 / 2=9. / 8 / 8. / .
+SUBST:  fg = |*, h = *%, i = %$--, j = -
+NSUBST: D = 3=0 / 3=0- / 098- / 9 / 2=9- / 8 / 8- / -
 : end
-SUBST:  r : x., s : x., x : cx
-NSUBST: R = R / .
+SUBST:  r : x-, s : x-, x : cx
+NSUBST: R = R / -
 MARKER: P = lua:transp_loc("ghost_arena_entry")
 MARKER: Q = lua:transp_dest_loc("ghost_arena_entry")
 MARKER: R = lua:transp_loc("ghost_arena_exit")
 MARKER: S = lua:transp_dest_loc("ghost_arena_exit")
-KMASK: - = !opaque
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
-  -----------
- --nnnnnnnnn--
- -nnRD...DRnn-
- -nG.rsDsrDGn-
- -nD.sr.rsqgn-
---n.D..D.Djen--
-@Pn.O.DQD.idnS@
---n.D..D.Dkfn--
- -nD.sr.rsphn-
- -nG.rsDsrDGn-
- -nnRD...DRnn-
- --nnnnnnnnn--
-  -----------
+ .............
+...............
+...nnnnnnnnn...
+..nnRD---DRnn..
+..nG-rsDsrDGn..
+..nD-sr-rs-gn..
+..n-D--D-Dien..
+@Pn-O-DQD-DdnS@
+..n-D--D-Djfn..
+..nD-sr-rs-hn..
+..nG-rsDsrDGn..
+..nnRD---DRnn..
+...nnnnnnnnn...
+...............
+ .............
 ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
-TAGS:    allow_dup
+TAGS:    transparent allow_dup vaults_orient_s
 ORIENT:  float
-KMASK:   . = !opaque
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
 # 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.
@@ -256,7 +266,7 @@ COLOUR:  t = brown
 FTILE:   -de|*%$DFHpGt = floor_pebble_brown / floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
 : set_feature_name("tree", "dead tree")
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
   ccccccc
  ccdfrfecc
@@ -266,10 +276,82 @@ ch-------hc
 csH-----Hsc
 ch-------hc
 ccnn===nncc
+  .......
   ...@...
 ENDMAP
 
+NAME:   ebering_ghost_rock_garden
+TAGS:   allow_dup vaults_orient_s
+ORIENT: float
+KMONS:  O = player_ghost
+: local large_rocks = crawl.random_range(3,7)
+: kitem("O = large rock q:" .. large_rocks)
+KITEM:  ' = stone q:1 / large rock w:1
+NSUBST: r = O / d / e / tG / t'' / '
+: lone_ghost_extra_loot(_G, "'")
+COLOUR: '-O|*%$tG = yellow, c = white
+FTILE:  '-O|*%$tG = floor_dirt
+: ghost_setup(_G, true)
+MAP
+ccccccccc
+c---r-r-c
+crr-----c
+c----r--c
+c--r----c
+cr----r-c
+cnn===nnc
+ .......
+ ...@...
+ENDMAP
+
+NAME:   ebering_ghost_reflecting_pool
+TAGS:   allow_dup vaults_orient_s
+ORIENT: float
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+KMONS:  O = player_ghost
+KFEAT:  O = shallow_water
+FTILE:  -|*%$O : floor_pebble_brown / floor_pebble_darkgray
+: ghost_setup(_G, true)
+MAP
+ccccc
+cdOec
+c-w-c
+c-w-c
+c-w-c
+c-W-c
+cn=nc
+ ...
+ .@.
+ENDMAP
+
+NAME:   ebering_ghost_disaster_area
+TAGS:   allow_dup vaults_orient_s
+ORIENT: float
+KMONS:  O = player ghost
+NSUBST: ' = d / e / 8=wWl / -
+: lone_ghost_guarded_loot(_G, "O")
+: lone_ghost_extra_loot(_G, "-")
+SUBST:  P = GTV
+: ghost_setup(_G, true)
+MAP
+cccccccccc
+cccc'c'ccc
+cc''O''c'c
+c'c'''''cc
+c''P'c''cc
+cc'''''''c
+ccnn==nncc
+  ......
+  ..@@..
+ENDMAP
+
+###############################################################################
+# <<1.2>> General/Abstract vaults without allow_dup
+###############################################################################
+
 NAME:   ebering_ghost_inner_flame
+TAGS:   transparent vaults_orient_w
 WEIGHT: 5 (D:3-7)
 KPROP:  cn'O = w:5 bloody / nothing
 KMONS:  O = player_ghost
@@ -278,17 +360,18 @@ NSUBST: ' = |* / |*$ / 998 / 2=F. / .
 MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
             pow_min = 10000, pow_max = 10000, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
- ccccc
-.n'''c
-@='O'c
-.n'''c
- ccccc
+  ccccc
+..n'''c
+@.='O'c
+..n'''c
+  ccccc
 ENDMAP
 
 NAME:   ebering_ghost_gozag
-DEPTH:  D:3-, Orc, Shoals, Snake, Elf, Crypt, Depths, Zot
+TAGS:   transparent vaults_orient_s
+DEPTH:  D:3-, Orc, Shoals, Snake, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot
 WEIGHT: 5 (D:3-7)
 ORIENT: float
 : kitem("DE = " .. dgn.loot_potions)
@@ -302,15 +385,15 @@ MONS:   obsidian statue
 :     if you.depth() < 6 then
 NSUBST: M = 0 / 2=0' / 9 / 8-JJ / J
 SUBST:  1 = G
-:     elseif you.absdepth() < 9 then
+:     elseif you.depth() < 9 then
 NSUBST: M = 0 / 2=09 / 8J / J
 SUBST:  1 = G, D = DF, E = EH
-:     elseif you.absdepth() < 12 then
+:     elseif you.depth() < 12 then
 # The 4th term gives a 50% chance of placing a potion/shop and an independent
 # %50 chance of placing an 8.
 NSUBST: M = 0 / 2=09 / 9J / DE8J / J
 SUBST:  1 = 1GGGG, D = DF, E = EH
-:     elseif you.absdepth() < 14 then
+:     elseif you.depth() < 14 then
 # The 5th term gives a 33% chance of placing a second potion/shop and an
 # independent 50% chance of placing an 8.
 NSUBST: M = 0 / 2=09 / 9 / DE / DE88JJ / J
@@ -323,6 +406,7 @@ SUBST:  1 = 1G, D = DF, E = EH
 : elseif you.in_branch("Orc") then
 NSUBST: M = 0 / 2=09 / 9 / DE / DE88JJ / J
 SUBST:  1 = 1GG, D = DF, E = EH
+# Elf, Vaults, Crypt, Depths, and Zot
 : else
 NSUBST: M = 0 / 2=09 / 9 / 2=D / J
 SUBST:  D = DF
@@ -337,7 +421,7 @@ FTILE:  -_DEFHJ$0189OG = floor_limestone
 COLOUR: G = yellow
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("stone_wall", "golden wall")
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
  ccccccc
 ccMGOGMcc
@@ -346,50 +430,8 @@ cG''1''Gc
 cM''_''Mc
 cc'''''cc
  nn===nn
+ .......
  ...@...
-ENDMAP
-
-NAME:   ebering_ghost_rock_garden
-TAGS:   allow_dup
-ORIENT: float
-KMONS:  O = player_ghost
-: local large_rocks = crawl.random_range(3,7)
-: kitem("O = large rock q:" .. large_rocks)
-KITEM:  ' = stone q:1 / large rock w:1
-NSUBST: r = O / d / e / tG / t'' / '
-: lone_ghost_extra_loot(_G, "'")
-COLOUR: '-O|*%$tG = yellow, c = white
-FTILE:  '-O|*%$tG = floor_dirt
-: ghost_setup(_G)
-MAP
-ccccccccc
-c---r-r-c
-crr-----c
-c----r--c
-c--r----c
-cr----r-c
-cnn===nnc
- ...@...
-ENDMAP
-
-NAME:   ebering_ghost_reflecting_pool
-TAGS:   allow_dup
-ORIENT: float
-KMONS:  O = player_ghost
-KFEAT:  O = shallow_water
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, "-")
-FTILE:  -|*%$O : floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
-MAP
-ccccc
-cdOec
-c-w-c
-c-w-c
-c-w-c
-c-W-c
-cn=nc
- .@.
 ENDMAP
 
 NAME:   hellmonk_ghost_happy_afterlife
@@ -411,43 +453,26 @@ SUBST:  eg = f
 : end
 COLOUR: -1deOf = green
 FTILE:  -1defOTt = floor_grass
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
-   .....
-  ..nnn..
- ..nnTnn..
-..nn---nn..
-.nn--g--nn.
-.nT-dte-Tn.
-.nn--O--nn.
-..nn---nn..
- ..nn-nn..
-  ..n=n..
-   .....
-ENDMAP
-
-NAME:   ebering_ghost_disaster_area
-TAGS:   allow_dup
-ORIENT: float
-KMONS:  O = player ghost
-NSUBST: ' = d / e / 8=wWl / -
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, "-")
-SUBST: P = GTV
-: ghost_setup(_G)
-MAP
-cccccccccc
-cccc'c'ccc
-cc''O''c'c
-c'c'''''cc
-c''P'c''cc
-cc'''''''c
-ccnn==nncc
-  ..@@..
+    .....
+   .......
+  ...nnn...
+ ...nnTnn...
+...nn---nn...
+..nn--h--nn..
+..nT-dtf-Tn..
+..nn--O--nn..
+...nn---nn...
+ ...nn-nn...
+  ...n=n...
+   .......
+    .....
 ENDMAP
 
 NAME:   gammafunk_ghost_door_vault
-DEPTH:  D:13-, Depths, Elf, Crypt, Zot
+TAGS:   transparent
+DEPTH:  D:13-, Depths, Elf, Vaults, !Vaults:$, Crypt, Zot
 WEIGHT: 2
 ORIENT: float
 : ghost_good_loot(_G, "45")
@@ -457,18 +482,22 @@ KMONS:  345 = player_ghost
 # Ghosts on 4 and 5 will get upgraded loot.
 NSUBST: 3 = 4 / 5 / 3, 1 = 5=23 / 3 / 1
 : door_vault_setup(_G)
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
-aaaaaaaaaa
-a++++++++a
-a++++++++a
-a++1111++a
-a++1331++a
-a++1331++a
-a++1111++a
-a++++++++a
-a++++++++a
-aaaaaaaaaa
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+..a++1331++a..
+..a++1331++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
 ENDMAP
 
 NAME:    nzn_ghost_randoct
@@ -536,15 +565,17 @@ MAP
        .@S@.
         .@.
 ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
 #
-#
+# Vaults in this section choose specific types of monsters according to some
+# theme and often have thematic loot as well.
 ###############################################################################
 
 NAME:   gammafunk_ghost_necromancy
-TAGS:   allow_dup
+TAGS:   transparent vaults_orient_w
 # Omit Elf since that branch has few good monsters for derived undead.
 WEIGHT: 0 (Elf)
 ORIENT: float
@@ -589,6 +620,10 @@ NSUBST: 1 = 4=1 / 1-, - = 2=1- / -
 :     elseif you.in_branch("Orc") then
 SUBST:  f = *, g = %$, hij = -
 NSUBST: 1 = 5=1 / 1-, - = 3=1- / -
+:     elseif you.in_branch("Vaults") then
+MONS:   lich
+SUBST:  fg = |*, h = *%, i = %$--, j = -
+NSUBST: 1 = 12 / 1, - = 3=1 / 4=1- / .
 :     elseif you.in_branch("Crypt") then
 MONS: revenant / curse skull
 SUBST:  fg = |*, h = *, i = %$, j = -
@@ -608,21 +643,22 @@ NSUBST: - = 2=1 / 4=1- / -
 :     end
 : end
 FTILE:  -de|*%$O12G = floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
- ccccccc
-.n1c1c1c
-.n---igc
-.=---ecc
-@=---dOc
-.=---fcc
-.n---jhc
-.n1c1c1c
- ccccccc
+  ccccccc
+  n1c1c1c
+..n---igc
+..=---ecc
+@.=---dOc
+..=---fcc
+..n---jhc
+  n1c1c1c
+  ccccccc
 ENDMAP
 
 NAME:   gammafunk_ghost_spectres
-DEPTH:  D:8-, Crypt
+TAGS:   vaults_orient_w
+DEPTH:  D:8-, Vaults, !Vaults:$, Crypt
 ORIENT: float
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
@@ -646,6 +682,11 @@ MONS:   shadow wraith / flayed ghost / phantasmal warrior
 SUBST:  f = |*, g = *%, h = %$--, i = -
 NSUBST: D = 2=2 / 2=2- / 2=3-, - = 2=1 / 2=1- / -
 :    end
+: elseif you.in_branch("Vaults") then
+MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
+MONS:   eidolon, revenant
+SUBST:  fg = |*, h = *%, i = %$--
+NSUBST: D = 2223--, - = -----1
 # Crypt
 : else
 MONS:   wraith / shadow
@@ -655,17 +696,17 @@ SUBST:  fg = |*, h = *, i = %$
 NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1- / 2=2 / 2=2- / -
 : end
 FTILE:  -de|*%$O1234G = floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
- ccccccc
-.nDcDcDc
-.n----gc
-.=---eGc
-@=--idOc
-.=---fGc
-.n----hc
-.nDcDcDc
- ccccccc
+  ccccccc
+  nDcDcDc
+..n----gc
+..=---eGc
+@.=--idOc
+..=---fGc
+..n----hc
+  nDcDcDc
+  ccccccc
 ENDMAP
 
 NAME:   gammafunk_ghost_ooze
@@ -866,7 +907,8 @@ cct'''-n.
 ENDMAP
 
 NAME:   gammafunk_ghost_fury_of_okawaru
-DEPTH:  D:12-, Orc, Elf, Crypt
+TAGS:   transparent vaults_orient_s
+DEPTH:  D:12-, Orc, Elf, Vaults, !Vaults:$, Crypt
 ORIENT: float
 KFEAT:  OP = altar_okawaru
 KMONS:  OP = player ghost
@@ -914,7 +956,7 @@ MONS:   naga warrior / merfolk impaler / merfolk javelineer / \
 MONS:   minotaur / stone giant / orc warlord
 SUBST:  e = |*e, f = |*, g = *, h = %$--, ij = -
 NSUBST: - = 2=1 / 4=1- / 12-- / 2 / 2=2- / 3- / -
-: elseif you.in_branch("Elf") then
+: elseif you.in_branch("Vaults") or you.in_branch("Elf") then
 MONS:   centaur warrior / tengu warrior / orc knight / naga warrior / \
         merfolk impaler / merfolk javelineer / deep elf knight / \
         deep elf archer
@@ -933,7 +975,7 @@ MONS:   titan
 SUBST:  fgh = |*, i = *%, j = %$..
 NSUBST: - = 3=1 / 4=1- / 12-- / 2=2 / 2=2- / 3 / 3- / -
 : end
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
 ccccccccccc
 cGvvvvvvvGc
@@ -944,6 +986,7 @@ c---------c
 c-vG---Gv-c
 c---------c
 cnnn===nnnc
+ .........
  ....@....
 ENDMAP
 
@@ -1151,7 +1194,8 @@ cccnS...Snccc
 ENDMAP
 
 NAME:   biasface_ghost_orc_armoury
-DEPTH:  D:3-, Orc
+TAGS:   transparent vaults_orient_s
+DEPTH:  D:3-, Orc, Vaults, !Vaults:$
 :item(dgn.aux_armour)
 :item(dgn.good_aux_armour)
 ITEM:   any armour, any armour good_item, any weapon, any weapon good_item
@@ -1162,6 +1206,8 @@ MONS:   orc, orc ; any weapon good_item | any weapon randart . \
             ring mail good_item | ring mail randart | scale mail good_item | \
             scale mail randart | chain mail good_item | chain mail randart
 MONS:   orc priest, warg, orc warrior, orc knight, orc high priest
+KMONS:  H = stone giant
+KMONS:  J = orc warlord
 : setup_armoury_orcs(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 4 then
@@ -1183,13 +1229,16 @@ NSUBST: - = 3=1 / 4=1. / 3 / 2=3. / 4. / DDDE / 2=5 / 4=5. / .
 SUBST:  d = e, f = g, h = i, j = k
 NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / EEEF / 2=6 / 2=6. / .7 / .
 :    end
-# Orc
-: else
+: elseif you.in_branch("Orc") then
 SUBST:  d = e, f = g, h = i, j = k
 NSUBST: - = 3=1 / 4=1. / 3 / 3. / 4. / 2=5 / 2=5. / EEEF / 2=6 / 2=6. / .7 / .
+# Vaults
+: else
+SUBST:  d = e, f = g, h = i, j = k
+NSUBST: - = 3=6 / 4=6. / 7 / 2=7. / F / H / 2=H. / 2=7J..
 : end
 KFEAT:  _ = altar_beogh
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
 ccccccccccccccc
 cI---hd_fj---Ic
@@ -1199,7 +1248,8 @@ c-cnc--O--cnc-c
 c----ccncc----c
 c.............c
 cnnnnn===nnnnnc
-I......@......I
+I.............I
+.......@.......
 ENDMAP
 
 NAME:   gammafunk_ghost_icy
@@ -1317,7 +1367,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_xom
-TAGS:   transparent allow_dup
+TAGS:   transparent allow_dup vaults_orient_s
 WEIGHT: 0 (D:3-5), 5 (D:6-7)
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
@@ -1326,12 +1376,13 @@ ORIENT: float
 KMONS:  O = player_ghost
 KFEAT:  O = altar_xom
 FTILE:  -|*%$O1 : floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
  ccc
 cc1cc
 cdOec
 cn=nc
+.....
 ..@..
 ENDMAP
 
@@ -1396,7 +1447,8 @@ MAP
 ENDMAP
 
 NAME:   ploomutoo_gammafunk_ghost_potion_laboratory
-DEPTH:  D:8-, Elf, Depths
+TAGS:   transparent allow_dup vaults_orient_s
+DEPTH:  D:8-, Elf, Vaults, !Vaults:$, Depths
 ORIENT: float
 ITEM:   potion of mutation ident:type q:1
 : item(dgn.loot_potions)
@@ -1407,10 +1459,9 @@ ITEM:   hat randart / robe randart / pair of gloves randart \
         / pair of boots randart / cloak randart
 KITEM:  O = potion of cancellation q:2 ident:type
 KMONS:  O = player ghost
-MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain
-MONS:   large abomination, very ugly thing, glowing shapeshifter
-KMONS:  D = cacodemon
-KMONS:  E = tentacled monstrosity
+MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain, very ugly thing
+MONS:   glowing shapeshifter, cacodemon
+KMONS:  D = tentacled monstrosity
 NSUBST: - = 2=P / 2=P; / ;, ' = 2=P` / `
 : if you.in_branch("D") then
 :     if you.depth() < 9 then
@@ -1426,13 +1477,13 @@ NSUBST: " = 2=d / d. / e. / fg / ", ` = 3=3 / 3=3. / 2 / 3=2. / 7. / D... / .
 NSUBST: ; = d / 3=e / e. / 3=1 / 4=1. / 4 / 4. / 6 / 2=6. / .
 NSUBST: " = 3=d / e. / ggh / ", ` = 3=3 / 3=3. / 2 / 3=2. / 7 / D. / .
 :     end
-: elseif you.in_branch("Elf") then
-NSUBST: ; = d / d. / 4=e / 5=5 / 5=5. / 2=E / 2=E. / .
-NSUBST: " = 3=d / d. / e / h / ", ` = 4=3 / 4=3. / 7 / 3=7. / D / 2=D. / .
+: elseif you.in_branch("Elf") or you.in_branch("Vaults") then
+NSUBST: ; = d / d. / 4=e / 4=5 / 4=5. / 4 / 4. / 2=D / 2=D. / .
+NSUBST: " = 3=d / d. / e / h / ", ` = 4=3 / 4=3. / 6 / 3=6. / 7 / 2=7. / .
 # Depths
 : else
-NSUBST: ; = d / d. / 5=e / 4=6 / 5=6. / 4 / 4. / 3=E / 3=E. / .
-NSUBST: " = 4=d / d. / e / h / ", ` = 4=3 / 4=3. / 2=7 / 3=7. / 2=D / 2=D. / .
+NSUBST: ; = d / d. / 5=e / 4=5 / 5=5. / 4 / 4. / 3=D / 3=D. / .
+NSUBST: " = 4=d / d. / e / h / ", ` = 4=3 / 4=3. / 2=6 / 3=6. / 2=7 / 2=7. / .
 : end
 MARKER: P = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
                 pow_max = 5, delay = 5, start_clouds = 3, size = 1, \
@@ -1440,7 +1491,7 @@ MARKER: P = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
 MARKER: U = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
                 pow_max = 5, delay = 5, start_clouds = 3, size = 2, \
                 spread_rate = 0, excl_rad = 0 }
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
 bbbbbbbbb
 bbU"P"Ubb
@@ -1804,7 +1855,8 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_tricky_traps
-DEPTH:  D:15, Shoals, Spider, Elf, Depths, Zot
+TAGS:   transparent vaults_orient_s
+DEPTH:  D:$, Shoals, Spider, Vaults, Elf, !Vaults:$, Depths, Zot
 KFEAT:  ^ = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:16
 KFEAT:  ' = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:8
 : kitem("O = " .. dgn.randart_aux_armour)
@@ -1822,6 +1874,10 @@ NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / .
 MONS:   jumping spider
 SUBST:  f = |*, g = *%, h = %$--, i = -
 NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / .
+: elseif you.in_branch("Vaults") then
+MONS:   boggart, rakshasa
+SUBST:  f = |*, g = *, h = %$, i = -
+NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / 2 / .
 : elseif you.in_branch("Elf") then
 MONS:   deep elf archer
 SUBST:  f = |*, g = *, h = %$, i = -
@@ -1836,7 +1892,7 @@ SUBST:  fghi = |*
 NSUBST: - = 1 / 2=1. / 7=0 / 8=0. / 2 / 2.. / .
 : end
 SUBST:  G : GGtU
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
 ccccccccccccc
 cG-hfdOegi-Gc
@@ -1852,7 +1908,8 @@ cccnn===nnccc
 ENDMAP
 
 NAME:    gammafunk_ghost_crypt
-DEPTH:   D:13-, Crypt, Depths, Zot
+TAGS:    vaults_orient_s
+DEPTH:   D:13-, Vaults, !Vaults:$, Crypt, Depths, Zot
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 # Always place one randart aux, one randart jewel, and one nice book, each
 # using the possible ghost locations.
@@ -1869,7 +1926,10 @@ KMONS:   KL2 =  ancient lich / dread lich
 SHUFFLE: EF / EJ / EJ / HJ / HJ / HJ / HJ
 # For later branches, guarantee at least one ancient or dread lich and
 # upgrade ordinary liches by depth.
-: if you.in_branch("Crypt") then
+: if you.in_branch("Vaults") then
+SUBST:   H = HHHK, J = JJJL
+NSUBST:  1 = 2 / 1112
+: elseif you.in_branch("Crypt") then
 SUBST:   H = HHK, J = JJL
 NSUBST:  1 = 2 / 112
 : elseif you.in_branch("Depths") then
@@ -1882,7 +1942,7 @@ SUBST:   H = K, J = L, 1 = 2
 SUBST:  d = dd|*----, V = VY
 KFEAT:  _ = altar_kikubaaqudgha
 FTILE:  -d|*%$ODEFHJKL12VY_ = floor_pebble_brown / floor_pebble_darkgray
-: ghost_setup(_G)
+: ghost_setup(_G, true)
 MAP
     ccc
   cccDccc
@@ -1890,7 +1950,8 @@ cccEcdcFccc
 c1ddV_Vdd1c
 cc-------cc
  cnn===nnc
- ....@....
+  .......
+  ...@...
 ENDMAP
 
 NAME:   gammafunk_ghost_berserking_beasts

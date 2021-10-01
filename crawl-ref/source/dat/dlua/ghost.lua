@@ -1,3 +1,8 @@
+------------------------------------------------------------------------------
+-- ghost.lua
+-- Functions for ghost vaults.
+------------------------------------------------------------------------------
+
 crawl_require("dlua/dungeon.lua")
 
 -- Integer value from 0 to 100 giving the chance that a ghost-allowing level
@@ -16,22 +21,31 @@ function set_ghost_chance(e)
     e.chance(math.floor(_GHOST_CHANCE_PERCENT / 100 * 10000))
 end
 
--- This function should be called in every ghost vault that doesn't place in
--- the Vaults branch. It sets the minimal tags we want as well as the common
--- ghost chance. If you want your vault to be less common, use a WEIGHT
--- statement; don't set a difference CHANCE from the one here.
-function ghost_setup(e)
+--[[
+This function should be called by every ghost vault. It sets the common tags
+needed for ghost vaults and sets the common ghost chance for vaults not placing
+in Vaults branch. Vaults placing in the Vaults branch need to have the tag
+`vaults_ghost`, which is not set by this function. See the ghost vault
+guidelines in docs/develop/levels/guidelines.md.
+
+@bool vaults_setup If true, this vault will place in the Vaults branch, so add
+                   the vaults_ghost tag and replace all `c` glyphs with `x`.
+]]
+
+function ghost_setup(e, vaults_setup)
     ghost_setup_common(e)
 
-    set_ghost_chance(e)
-end
-
--- Every Vaults room that places a ghost should call this function.
-function vaults_ghost_setup(e)
-    ghost_setup_common(e)
-
-    -- Vaults branch layout expects vaults_ghost as a tag selector.
-    e.tags("vaults_ghost")
+    -- We must set the tag unconditionally so that the vault places as a room,
+    -- but the `c` substitution is only done if we're actually placing the
+    -- vault in the Vaults branch.
+    if vaults_setup then
+        e.tags("vaults_ghost")
+        if you.in_branch("Vaults") then
+            e.subst("c = x")
+        end
+    else
+        set_ghost_chance(e)
+    end
 end
 
 -- Basic loot scale for extra loot for lone ghosts. Takes none_glyph to use
