@@ -1170,7 +1170,7 @@ static monsterentry mondata[] =
 {
     MONS_HELL_HOUND, 'h', CYAN, "hell hound",
     M_SEE_INVIS | M_UNBLINDABLE,
-    MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
+    mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     10, MONS_HOUND, MONS_HELL_HOUND, MH_DEMONIC, 20,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     5, 275,
@@ -1209,7 +1209,7 @@ static monsterentry mondata[] =
 {
     MONS_HELL_HOG, 'h', LIGHTRED, "hell hog",
     M_NO_FLAGS,
-    mrd(MR_RES_FIRE, 2),
+    mrd(MR_RES_FIRE, 3),
     10, MONS_HOG, MONS_HELL_HOG, MH_DEMONIC, 40,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     11, 595,
