@@ -95,7 +95,7 @@ string unpacifiable_reason(const monster_info& mi)
         return "You cannot pacify nonliving monsters!";
 
     if (mons_class_is_stationary(mi.type)) // not able to leave the level
-        return "You cannot pacify stationary monsters!";
+        return "You cannot pacify immobile monsters!";
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)) // unaware of what's happening
     {
