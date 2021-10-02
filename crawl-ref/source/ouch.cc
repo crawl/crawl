@@ -887,11 +887,18 @@ static void _maybe_dream_heal()
     mpr("Your necklace is shattered open, unleashing a healing torrent of colour.");
     _dreamshard_do_visual_all();
 
-    // STEP TWO: summon the dream team
-    int sumcount2 = 2 + random2(4);
-    for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
-        _dreamshard_summon_ally();
-    mpr("A troupe from your wildest dreams charges to your aid!");
+    // STEP TWO: summon the dream team (if allowed)
+    if (you.allies_forbidden())
+    {
+        mpr("The dream creatures couldn't care less about helping you.");
+    }
+    else
+    {
+        int sumcount2 = 2 + random2(4);
+        for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
+            _dreamshard_summon_ally();
+        mpr("A troupe from your wildest dreams charges to your aid!");
+    }
 
     // STEP THREE: destroy the necklace
     ASSERT(you.wearing(EQ_AMULET, AMU_NOTHING));
