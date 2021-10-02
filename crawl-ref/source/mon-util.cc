@@ -333,10 +333,10 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
     if (mh & (MH_UNDEAD | MH_NONLIVING))
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
-    // Everything but natural creatures have full rNeg. Set here for the
-    // benefit of the monster_info constructor. If you change this, also
+    // Everything but natural creatures and plants have full rNeg. Set here for
+    // the benefit of the monster_info constructor. If you change this, also
     // change monster::res_negative_energy.
-    if (!(mh & MH_NATURAL))
+    if (!(mh & (MH_NATURAL | MH_PLANT)))
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
     if (mh & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING))
@@ -901,7 +901,8 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_BALLISTOMYCETE_SPORE
            || mc == MONS_LURKING_HORROR
            || mc == MONS_DANCING_WEAPON
-           || mc == MONS_LIGHTNING_SPIRE;
+           || mc == MONS_LIGHTNING_SPIRE
+           || mc == MONS_CREEPING_INFERNO;
 }
 
 bool mons_has_blood(monster_type mc)
@@ -1036,11 +1037,6 @@ bool herd_monster(const monster& mon)
     return mons_class_flag(mon.type, M_HERD);
 }
 
-bool mons_class_requires_band(monster_type mc)
-{
-    return mons_class_flag(mc, M_REQUIRE_BAND);
-}
-
 // Plant or fungus or really anything with
 // permanent plant holiness
 bool mons_class_is_plant(monster_type mc)
@@ -1067,18 +1063,18 @@ bool mons_eats_items(const monster& mon)
  */
 bool actor_is_susceptible_to_vampirism(const actor& act)
 {
-    if (!(act.holiness() & MH_NATURAL) || act.is_summoned())
+    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)) || act.is_summoned())
         return false;
 
     if (act.is_player())
         return true;
 
     const monster *mon = act.as_monster();
-    // Don't allow HP draining from temporary monsters such as those created by
-    // Sticks to Snakes.
+    // Don't allow HP draining from temporary monsters, spectralised monsters,
+    // or firewood.
     return !mon->has_ench(ENCH_FAKE_ABJURATION)
-           // Nor from now-ghostly monsters.
-           && !testbits(mon->flags, MF_SPECTRALISED);
+           && !testbits(mon->flags, MF_SPECTRALISED)
+           && !mons_is_firewood(*mon);
 }
 
 bool invalid_monster(const monster* mon)
@@ -1285,8 +1281,6 @@ int max_corpse_chunks(monster_type mc)
         return 4;
     case SIZE_LARGE:
         return 9;
-    case SIZE_BIG:
-        return 10;
     case SIZE_GIANT:
         return 12;
     default:
@@ -1427,10 +1421,11 @@ static bool _shout_fits_monster(monster_type mc, int shout)
 
     switch (shout)
     {
-    // Bees, cherubs and two-headed ogres never fit.
+    // Bees, books, cherubs and two-headed ogres never fit.
     case S_SHOUT2:
     case S_BUZZ:
     case S_CHERUB:
+    case S_RUSTLE:
     // The beast cannot speak.
     case S_DEMON_TAUNT:
         return false;
@@ -1854,9 +1849,16 @@ static int _downscale_zombie_damage(int damage)
     return max(1, 4 * damage / 5);
 }
 
+// Do not include AF_PLAIN, we want that to be overwritten for spectrals
+// and simulacra
+static const set<attack_flavour> allowed_zombie_af = {
+    AF_REACH,
+    AF_CRUSH,
+    AF_TRAMPLE,
+};
+
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
-                                               mon_attack_def attk,
-                                               bool random)
+                                               mon_attack_def attk)
 {
     switch (attk.type)
     {
@@ -1868,14 +1870,17 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
         break;
     }
 
+    attk.damage = _downscale_zombie_damage(attk.damage);
+    if (allowed_zombie_af.count(attk.flavour))
+        return attk;
+
+    // overwrite all other AFs
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
-    else if (mons.type == MONS_SPECTRAL_THING && (!random || coinflip()))
+    else if (mons.type == MONS_SPECTRAL_THING)
         attk.flavour = AF_DRAIN;
-    else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
+    else
         attk.flavour = AF_PLAIN;
-
-    attk.damage = _downscale_zombie_damage(attk.damage);
 
     return attk;
 }
@@ -2010,7 +2015,9 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     if (attk_number == 0)
     {
-        if (mons_is_demonspawn(mon.type))
+        if (m.has_ench(ENCH_FIRE_CHAMPION))
+            attk.flavour = AF_FIRE;
+        else if (mons_is_demonspawn(mon.type))
         {
             const monsterentry* mbase =
                 get_monster_data (draco_or_demonspawn_subspecies(mon));
@@ -2081,7 +2088,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         attk.damage *= mon.blob_size;
 
-    return zombified ? _downscale_zombie_attack(mon, attk, !base_flavour) : attk;
+    return zombified ? _downscale_zombie_attack(mon, attk) : attk;
 }
 
 static int _mons_damage(monster_type mc, int rt)
@@ -2411,7 +2418,17 @@ int mons_max_hp(monster_type mc, monster_type mbase_type)
     return me->avg_hp_10x * 133 / 1000;
 }
 
-int exper_value(const monster& mon, bool real)
+/**
+ * How much XP will the given monster give out by dying?
+ *
+ * @param mon        The monster in question.
+ * @param real      If false, calculate XP for the given monster's type instead of
+ *               this monster's specific stats.
+ * @param legacy  If set, use higher XP values for high-XP monsters to emulate
+ *               historical (pre-2eadbcd) behaviour.
+ * @return How much XP this monster is worth.
+ */
+int exper_value(const monster& mon, bool real, bool legacy)
 {
     int x_val = 0;
 
@@ -2488,6 +2505,7 @@ int exper_value(const monster& mon, bool real)
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
             case SPELL_SPELLFORGED_SERVITOR:
+            case SPELL_CONJURE_LIVING_SPELLS:
                 diff += 25;
                 break;
 
@@ -2591,7 +2609,7 @@ int exper_value(const monster& mon, bool real)
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
     if (x_val > 750)
-        x_val = 750 + (x_val - 750) / 3;
+        x_val = 750 + (x_val - 750) / (legacy ? 3 : 6);
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
@@ -2800,7 +2818,7 @@ bool init_abomination(monster& mon, int hd)
 }
 
 // Generate a shiny, new and unscarred monster.
-void define_monster(monster& mons)
+void define_monster(monster& mons, bool friendly)
 {
     monster_type mcls         = mons.type;
     ASSERT(!mons_class_is_zombified(mcls)); // should have called define_zombie
@@ -2941,7 +2959,7 @@ void define_monster(monster& mons)
     case MONS_PANDEMONIUM_LORD:
     {
         ghost_demon ghost;
-        ghost.init_pandemonium_lord();
+        ghost.init_pandemonium_lord(friendly);
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
         mons.bind_melee_flags();
@@ -3279,6 +3297,8 @@ mon_energy_usage mons_energy(const monster& mon)
     mon_energy_usage meu = mons_class_energy(mons_base_type(mon));
     if (mon.ghost)
         meu.move = meu.swim = mon.ghost->move_energy;
+    if (mon.has_ench(ENCH_FIRE_CHAMPION))
+        meu.move = meu.move * 2 / 3;
     return meu;
 }
 
@@ -4663,6 +4683,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "says",         // S_CHERUB -- they just speak normally.
         "squeals",
         "roars",
+        "rustles",      // dubious
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT
@@ -4907,7 +4928,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
     const monster& threat = get_tentacle_head(mon);
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(threat, real) / (1 + factor);
+    const int tension = exper_value(threat, real, true) / (1 + factor);
 
     if (tension <= 0)
     {
@@ -5180,7 +5201,8 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
 
     return targ.alive()
            && !mons_class_is_stationary(targ.type)
-           && !mons_is_conjured(targ.type);
+           && !mons_is_conjured(targ.type)
+           && mons_class_is_threatening(targ.type);
 }
 
 vector<monster* > get_on_level_followers()

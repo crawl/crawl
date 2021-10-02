@@ -529,6 +529,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         _moveto_maybe_repel_stairs();
 
     update_monsters_in_view();
+    maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
         stop_running();
 }
@@ -1282,8 +1283,13 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += get_form()->res_fire();
     }
 
+    if (have_passive(passive_t::resist_fire))
+        ++rf;
+
     if (rf > 3)
         rf = 3;
+    if (rf > 0 && you.penance[GOD_IGNIS])
+        rf = 0;
     if (temp && you.duration[DUR_FIRE_VULN])
         rf--;
     if (rf < -3)
@@ -1615,11 +1621,11 @@ int player_spec_air()
     // Staves
     sa += you.wearing(EQ_STAFF, STAFF_AIR);
 
-    if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF)
-        || player_equip_unrand(UNRAND_AIR))
-    {
+    if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
         sa++;
-    }
+
+    if (player_equip_unrand(UNRAND_AIR))
+        sa++;
 
     return sa;
 }
@@ -2424,7 +2430,8 @@ void apply_exp()
     _handle_god_wrath(exp_gained);
 
     // evolution mutation timer
-    you.attribute[ATTR_EVOL_XP] += exp_gained;
+    if (you.attribute[ATTR_EVOL_XP] > 0)
+        you.attribute[ATTR_EVOL_XP] -= exp_gained;
 
     // modified experience due to sprint inflation
     unsigned int skill_xp = exp_gained;
@@ -5208,6 +5215,7 @@ bool player::airborne() const
 
     return you.duration[DUR_FLIGHT]   // potions, polar vortex
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
+        || you.duration[DUR_RISING_FLAME] // flavour
         || permanent_flight(true);
 }
 
@@ -5924,6 +5932,19 @@ int player::armour_class_with_one_removal(item_def removed) const
                             get_armour_items_one_removal(removed));
 }
 
+int player::corrosion_amount() const
+{
+    int corrosion = 0;
+
+    if (duration[DUR_CORROSION])
+        corrosion += you.props[CORROSION_KEY].get_int();
+
+    if (player_in_branch(BRANCH_DIS))
+        corrosion += 2;
+
+    return corrosion;
+}
+
 int player::armour_class_with_specific_items(vector<const item_def *> items) const
 {
     const int scale = 100;
@@ -5944,8 +5965,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     if (duration[DUR_SPWPN_PROTECTION])
         AC += 700;
 
-    if (duration[DUR_CORROSION])
-        AC -= 400 * you.props[CORROSION_KEY].get_int();
+    AC -= 400 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
 
@@ -6034,9 +6054,6 @@ mon_holy_type player::holiness(bool temp) const
         holi = MH_NONLIVING;
     }
 
-    if (is_good_god(religion))
-        holi |= MH_HOLY;
-
     if (is_evil_god(religion)
         || species == SP_DEMONSPAWN || you.has_mutation(MUT_VAMPIRISM))
     {
@@ -6057,7 +6074,7 @@ bool player::undead_or_demonic(bool temp) const
 
 bool player::is_holy() const
 {
-    return bool(holiness() & MH_HOLY);
+    return bool(holiness() & MH_HOLY) || is_good_god(religion);
 }
 
 bool player::is_nonliving(bool temp) const
@@ -6182,6 +6199,11 @@ bool player::res_torment() const
     return get_form()->res_neg() == 3
            || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
            || you.petrified()
+    // This should probably be (you.holiness & MH_PLANT), but treeform
+    // doesn't currently make you a plant, and I suspect changing that
+    // would cause other bugs. (For example, being able to wield holy
+    // weapons as a demonspawn & keep them while untransformed?)
+           || you.form == transformation::tree
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
 #endif
@@ -6254,9 +6276,12 @@ int player_willpower(bool calc_unid, bool temp)
     if (you.duration[DUR_TROGS_HAND] && temp)
         rm += WL_PIP * 2;
 
-    // Enchantment effect
-    if (you.duration[DUR_LOWERED_WL] && temp)
+    // Enchantment/environment effect
+    if ((you.duration[DUR_LOWERED_WL]
+         || player_in_branch(BRANCH_TARTARUS)) && temp)
+    {
         rm /= 2;
+    }
 
     if (rm < 0)
         rm = 0;
@@ -6532,6 +6557,7 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
+    // Static environmental corrosion doesn't factor in
     int prev_corr = props[CORROSION_KEY].get_int();
     bool did_corrode = false;
     for (int i = 0; i < degree; i++)
@@ -6555,14 +6581,10 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
  *
  * @param evildoer the cause of this acid splash.
  * @param acid_strength The strength of the acid.
- * @param allow_corrosion Whether to try and apply the corrosion debuff.
- * @param hurt_msg A message to display when dealing damage.
  */
-void player::splash_with_acid(const actor* evildoer, int acid_strength,
-                              bool allow_corrosion, const char* /*hurt_msg*/)
+void player::splash_with_acid(actor* evildoer, int acid_strength)
 {
-    if (allow_corrosion && binomial(3, acid_strength + 1, 30))
-        corrode_equipment();
+    acid_corrode(acid_strength);
 
     const int dam = roll_dice(4, acid_strength);
     const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
@@ -6578,6 +6600,12 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
         ouch(post_res_dam, KILLED_BY_ACID,
              evildoer ? evildoer->mid : MID_NOBODY);
     }
+}
+
+void player::acid_corrode(int acid_strength)
+{
+    if (binomial(3, acid_strength + 1, 30))
+        corrode_equipment();
 }
 
 bool player::drain(const actor */*who*/, bool quiet, int pow)
@@ -7133,7 +7161,8 @@ bool player::can_feel_fear(bool include_unknown) const
 {
     // XXX: monsters are immune to fear when berserking.
     // should players also be?
-    return you.holiness() & MH_NATURAL && (!include_unknown || !you.clarity());
+    return you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+           && (!include_unknown || !you.clarity());
 }
 
 bool player::can_throw_large_rocks() const
@@ -7221,16 +7250,19 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
     return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
+bool player::shaftable() const
+{
+    return is_valid_shaft_level()
+        && feat_is_shaftable(env.grid(pos()))
+        && !duration[DUR_SHAFT_IMMUNITY];
+}
+
 // Used for falling into traps and other bad effects, but is a slightly
 // different effect from the player invokable ability.
 bool player::do_shaft()
 {
-    if (!is_valid_shaft_level()
-        || !feat_is_shaftable(env.grid(pos()))
-        || duration[DUR_SHAFT_IMMUNITY])
-    {
+    if (!shaftable())
         return false;
-    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.

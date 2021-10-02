@@ -199,6 +199,7 @@ enum monster_info_flags
     MB_ALLY_TARGET,
     MB_CANT_DRAIN,
     MB_CONCENTRATE_VENOM,
+    MB_FIRE_CHAMPION,
     NUM_MB_FLAGS
 };
 
@@ -371,7 +372,7 @@ struct monster_info : public monster_info_base
 
     bool wields_two_weapons() const;
     bool can_regenerate() const;
-    reach_type reach_range() const;
+    reach_type reach_range(bool items = true) const;
 
     size_type body_size() const;
 

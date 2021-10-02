@@ -95,7 +95,7 @@ Dig ability
 
 Allows making tunnels through soft rock and rusted grates. Activating the
 ability has no cost and simply prepares you to start digging; once active,
-moving into a wall will start tunneling. Doing so makes some noise and is a
+moving into a wall will start tunnelling. Doing so makes some noise and is a
 little slower than walking.
 
 Once active, activating the ability again or making any non-digging movement
@@ -356,17 +356,18 @@ Heal Other ability
 
 Heals a creature other than yourself by a moderate amount, depending on
 Invocations skill. Using this ability on hostile monsters will try to turn them
-neutral. This works best on animals, and is less effective on humanoids and
-other intelligent creatures. Undead and demons are harder still to pacify.
-Plants do not respond to the healing arts and cannot be pacified.
+neutral. This works best on living creatures, with the undead and demons being
+progressively harder to pacify. Intelligent creatures are also more difficult
+to pacify.
+
 Ghosts of dead adventurers and demon lords are too wrathful to be pacified,
 mindless creatures are too unintelligent to be pacified, and no monster can be
 pacified while it is asleep.
 
-Whether the pacification succeeds or not, the invested piety and magic
-points are lost. If it does succeed, the monster is healed and you gain half
-the monster's experience value. Otherwise, the monster is unaffected and you
-gain nothing.
+Whether the pacification succeeds or not, the invested piety and magic points
+are lost. If it does succeed, the monster is healed and you gain half the
+monster's experience value. Otherwise, the monster is unaffected and you gain
+nothing.
 %%%%
 Greater Healing ability
 
@@ -812,6 +813,22 @@ with martial attacks increases this bonus. The storm weakens over time and
 fades away once the bonus reaches zero. The heavenly clouds prevent
 invisibility, and obscure the vision of those outside the storm.
 %%%%
+Foxfire Swarm ability
+
+Conjures a swarm of animate flames all around you. These rapidly seek the
+nearest monsters, burning them. They will dissipate harmlessly if unable to
+reach a target or if you swap places with them.
+%%%%
+Sea of Fire ability
+
+Fills your surroundings with burning coals which, if not immediately stamped
+out, burst into raging flames.
+%%%%
+Rising Flame ability
+
+Sends you floating upward and, after a short delay for Ignis to gather enough
+power, blasts you through the ceiling and into the level above.
+%%%%
 Hop ability
 
 Hops toward a chosen destination, landing somewhere nearby. After using this
@@ -825,3 +842,26 @@ dealing electric damage to everything in their path and depositing the user
 at the bolt's end. After using this ability, you will be unable to use it
 again for a short time.
 %%%%
+Evoke the Sceptre of Asmodeus ability
+
+Calls on the power of Asmodeus to summon fiery demons of Hell. The demons
+summoned will remain friendly only for a limited time, eventually becoming
+hostile before vanishing. The success of the ability scales with the Evocations
+skill, and this ability is available only while wielding the Sceptre of
+Asmodeus.
+%%%%
+Evoke the Staff of Dispater ability
+
+Blasts a targeted enemy with damnation. These unholy forces harm the victim and
+anyone adjacent, and are not affected by any means of protection, such as armour
+or resistances. However, certain creatures, usually those able to invoke
+damnation themselves, are entirely unscathed by damnation. The power of this
+ability scales with the Evocations skill, and this ability is available only
+while wielding the Staff of Dispater.
+%%%%
+Evoke the Staff of Olgreb ability
+
+Causes the caster to radiate toxic energy, continuously inflicting poison on
+everything in line of sight for as long as the aura lasts. The power of this
+ability scales with the Evocations skill, and this ability is available only
+while wielding the Staff of Olgreb.

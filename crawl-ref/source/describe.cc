@@ -320,7 +320,6 @@ static vector<string> _randart_propnames(const item_def& item,
 
         // Evokable abilities come second
         { ARTP_BLINK,                 prop_note::plain },
-        { ARTP_BERSERK,               prop_note::plain },
         { ARTP_INVISIBLE,             prop_note::plain },
         { ARTP_FLY,                   prop_note::plain },
 
@@ -573,13 +572,12 @@ static string _randart_descrip(const item_def &item)
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
         { ARTP_FLY, "It grants you flight.", false},
         { ARTP_BLINK, "It lets you blink.", false},
-        { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISE, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
         { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
-        { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
+        { ARTP_ANGRY,  "It berserks you when you make melee attacks (%d% chance).", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
@@ -1064,18 +1062,17 @@ static skill_type _item_training_skill(const item_def &item)
 }
 
 /**
- * Whether it would make sense to set a training target for an item.
+ * Return whether the character is below a plausible training target for an
+ * item.
  *
  * @param item the item to check.
- * @param ignore_current whether to ignore any current training targets (e.g. if there is a higher target, it might not make sense to set a lower one).
+ * @param ignore_current if false, return false if there already is a higher
+ *        target set for this skill.
  */
-static bool _could_set_training_target(const item_def &item, bool ignore_current)
+static bool _is_below_training_target(const item_def &item, bool ignore_current)
 {
-    if (!crawl_state.need_save || is_useless_item(item)
-        || you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-    {
+    if (!crawl_state.need_save || is_useless_item(item))
         return false;
-    }
 
     const skill_type skill = _item_training_skill(item);
     if (skill == SK_NONE)
@@ -1087,6 +1084,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
        && you.skill(skill, 10, false, false) < target
        && (ignore_current || you.get_training_target(skill) < target);
 }
+
 
 /**
  * Produce the "Your skill:" line for item descriptions where specific skill targets
@@ -1192,7 +1190,9 @@ static void _append_weapon_stats(string &description, const item_def &item)
     const skill_type skill = _item_training_skill(item);
     const int mindelay_skill = _item_training_target(item);
 
-    const bool could_set_target = _could_set_training_target(item, true);
+    const bool below_target = _is_below_training_target(item, true);
+    const bool can_set_target = below_target
+        && in_inventory(item) && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
     if (skill == SK_SLINGS)
     {
@@ -1202,6 +1202,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
     }
 
     if (item.base_type == OBJ_STAVES
+        && item_type_known(item)
+        && staff_skill(static_cast<stave_type>(item.sub_type)) != SK_NONE
         && is_useless_skill(staff_skill(static_cast<stave_type>(item.sub_type))))
     {
         description += make_stringf(
@@ -1221,11 +1223,11 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (!is_useless_item(item))
     {
-        description += "\n    " + _your_skill_desc(skill,
-                    could_set_target && in_inventory(item), mindelay_skill);
+        description += "\n    "
+            + _your_skill_desc(skill, can_set_target, mindelay_skill);
     }
 
-    if (could_set_target)
+    if (below_target)
         _append_skill_target_desc(description, skill, mindelay_skill);
 }
 
@@ -1288,10 +1290,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SK_AXES:
             description += "\n\nIt hits all enemies adjacent to the wielder, "
                            "dealing less damage to those not targeted.";
-            break;
-        case SK_LONG_BLADES:
-            description += "\n\nIt can be used to riposte, swiftly "
-                           "retaliating against a missed attack.";
             break;
         case SK_SHORT_BLADES:
             {
@@ -1606,7 +1604,10 @@ static string _describe_ammo(const item_def &item)
     {
         const int throw_delay = (10 + dam / 2);
         const int target_skill = _item_training_target(item);
-        const bool could_set_target = _could_set_training_target(item, true);
+
+        const bool below_target = _is_below_training_target(item, true);
+        const bool can_set_target = below_target && in_inventory(item)
+            && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
         description += make_stringf(
             "\nBase damage: %d  Base attack delay: %.1f"
@@ -1621,10 +1622,9 @@ static string _describe_ammo(const item_def &item)
         if (!is_useless_item(item))
         {
             description += "\n    " +
-                    _your_skill_desc(SK_THROWING,
-                        could_set_target && in_inventory(item), target_skill);
+                    _your_skill_desc(SK_THROWING, can_set_target, target_skill);
         }
-        if (could_set_target)
+        if (below_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
@@ -1809,23 +1809,22 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "\n";
             description += "\nBase shield rating: "
                         + to_string(property(item, PARM_AC));
-            const bool could_set_target = _could_set_training_target(item, true);
+            const bool below_target = _is_below_training_target(item, true);
+            const bool can_set_target = below_target && in_inventory(item)
+                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
             if (!is_useless_item(item))
             {
                 description += "       Skill to remove penalty: "
                             + make_stringf("%d.%d", target_skill / 10,
-                                                target_skill % 10);
+                                                target_skill % 10) + "\n";
 
                 if (crawl_state.need_save)
                 {
-                    description += "\n                            "
-                        + _your_skill_desc(SK_SHIELDS,
-                          could_set_target && in_inventory(item), target_skill);
+                    description += _your_skill_desc(SK_SHIELDS, can_set_target,
+                                                    target_skill);
                 }
-                else
-                    description += "\n";
-                if (could_set_target)
+                if (below_target)
                 {
                     _append_skill_target_desc(description, SK_SHIELDS,
                                                                 target_skill);
@@ -2669,12 +2668,15 @@ static vector<command_type> _allowed_actions(const item_def& item)
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (item_equip_slot(item) == EQ_WEAPON)
         actions.push_back(CMD_UNWIELD_WEAPON);
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+        && _is_below_training_target(item, false))
+    {
+        actions.push_back(CMD_SET_SKILL_TARGET);
+    }
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (!item_is_equipped(item))
         {
             if (item_is_wieldable(item))
@@ -2682,14 +2684,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
         }
         break;
     case OBJ_MISSILES:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (!you.has_mutation(MUT_NO_GRASPING))
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
-        if (_could_set_training_target(item, false))
-            actions.push_back(CMD_SET_SKILL_TARGET);
         if (item_is_equipped(item))
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
@@ -3272,7 +3270,7 @@ static string _player_spell_desc(spell_type spell)
     }
 
     // Report summon cap
-    const int limit = summons_limit(spell);
+    const int limit = summons_limit(spell, true);
     if (limit)
     {
         description << "You can sustain at most " + number_in_words(limit)
@@ -3366,6 +3364,27 @@ static void _get_spell_description(const spell_type spell,
 
     if (mon_owner)
     {
+        if (spell == SPELL_CONJURE_LIVING_SPELLS)
+        {
+            const spell_type living_spell = living_spell_type_for(mon_owner->type);
+            description += make_stringf("\n%s creates living %s spells.\n",
+                                        uppercase_first(mon_owner->full_name(DESC_A)).c_str(),
+                                        spell_title(living_spell));
+        }
+        else if (spell == SPELL_QUICKSILVER_BOLT)
+        {
+            if (player_is_debuffable())
+            {
+                description += make_stringf("\nIf you are struck by this,"
+                                            " you will no longer be %s.\n",
+                                            describe_player_cancellation(true).c_str());
+            }
+            else
+                description += "\nYou currently have no enchantments that could be"
+                               " removed by this.\n";
+
+        }
+
         const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range_for_hd(spell, hd);
         description += "\nRange : ";
@@ -3374,6 +3393,17 @@ static void _get_spell_description(const spell_type spell,
         else
             description += range_string(range, range, mons_char(mon_owner->type));
         description += "\n";
+
+        // Report summon cap
+        const int limit = summons_limit(spell, false);
+        if (limit)
+        {
+            description += make_stringf("%s can sustain at most %s creature%s "
+                               "summoned by this spell.\n",
+                               mon_owner->full_name(DESC_PLAIN).c_str(),
+                               number_in_words(limit).c_str(),
+                               limit > 1 ? "s" : "");
+        }
 
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & spflag::WL_check)
@@ -3664,6 +3694,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "damnation";
     case MR_RES_VORTEX:
         return "polar vortices";
+    case MR_RES_TORMENT:
+        return "torment";
     default:
         return "buggy resistance";
     }
@@ -3732,6 +3764,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_DRAIN,             "drain life" },
         { AF_ELEC,              "deal up to %d extra electric damage" },
         { AF_FIRE,              "deal up to %d extra fire damage" },
+        { AF_SEAR,              "remove fire resistance" },
         { AF_MUTATE,            "cause mutations" },
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
         { AF_POISON,            "cause poisoning" },
@@ -3760,6 +3793,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_REACH_STING,       "cause poisoning" },
         { AF_REACH_TONGUE,      "deal extra acid damage" },
         { AF_WEAKNESS,          "cause weakness" },
+        { AF_BARBS,             "embed barbs" },
         { AF_KITE,              "" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
@@ -3888,13 +3922,15 @@ static string _monster_attacks_description(const monster_info& mi)
             continue;
         }
 
+        int dam = attack.damage;
+
         // Damage is listed in parentheses for attacks with a flavour
         // description, but not for plain attacks.
         bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
         const string damage_desc =
             make_stringf("%sfor up to %d damage%s%s%s",
                          has_flavour ? "(" : "",
-                         attack.damage,
+                         dam,
                          attack_count.second > 1 ? " each" : "",
                          weapon_note.c_str(),
                          has_flavour ? ")" : "");
@@ -3917,6 +3953,12 @@ static string _monster_attacks_description(const monster_info& mi)
                                                   "; and ", "; ");
         _describe_mons_to_hit(mi, result);
         result << ".\n";
+    }
+
+    if (mons_class_flag(mi.type, M_ARCHER))
+    {
+        result << make_stringf("It can deal up to %d extra damage when attacking with ranged weaponry.\n",
+                                archer_bonus_damage(mi.hd));
     }
 
     if (mi.type == MONS_ROYAL_JELLY)
@@ -3968,7 +4010,6 @@ static string _monster_spells_description(const monster_info& mi)
 static const char *_speed_description(int speed)
 {
     // These thresholds correspond to the player mutations for fast and slow.
-    ASSERT(speed != 10);
     if (speed < 7)
         return "extremely slowly";
     else if (speed < 8)
@@ -3982,7 +4023,7 @@ static const char *_speed_description(int speed)
     else if (speed > 10)
         return "quickly";
 
-    return "buggily";
+    return "normally";
 }
 
 static void _add_energy_to_string(int speed, int energy, string what,
@@ -3992,9 +4033,9 @@ static void _add_energy_to_string(int speed, int energy, string what,
         return;
 
     const int act_speed = (speed * 10) / energy;
-    if (act_speed > 10)
+    if (act_speed > 10 || (act_speed == 10 && speed < 10))
         fast.push_back(what + " " + _speed_description(act_speed));
-    if (act_speed < 10)
+    if (act_speed < 10 || (act_speed == 10 && speed > 10))
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
@@ -4222,6 +4263,8 @@ string _monster_habitat_description(const monster_info& mi)
     const monster_type type = mons_is_job(mi.type)
                               ? mi.draco_or_demonspawn_subspecies()
                               : mi.type;
+    if (mons_class_is_stationary(type))
+        return "";
 
     switch (mons_habitat_type(type, mi.base_type))
     {
@@ -4244,7 +4287,6 @@ const char* const size_adj[] =
     "small",
     "medium",
     "large",
-    "very large",
     "giant",
 };
 COMPILE_CHECK(ARRAYSZ(size_adj) == NUM_SIZE_LEVELS);
@@ -4324,7 +4366,7 @@ static string _monster_stat_description(const monster_info& mi)
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
         MR_RES_MIASMA,  MR_RES_NEG,    MR_RES_DAMNATION,
-        MR_RES_VORTEX,
+        MR_RES_VORTEX,  MR_RES_TORMENT,
     };
 
     vector<string> extreme_resists;
@@ -4339,8 +4381,12 @@ static string _monster_stat_description(const monster_info& mi)
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
-            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_VORTEX)
+            if (rflags == MR_RES_DAMNATION
+                || rflags == MR_RES_VORTEX
+                || rflags == MR_RES_TORMENT)
+            {
                 level = 3; // one level is immunity
+            }
             level = max(level, -1);
             level = min(level,  3);
             switch (level)

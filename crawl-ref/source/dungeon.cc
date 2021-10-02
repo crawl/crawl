@@ -249,6 +249,23 @@ set<string> &get_uniq_map_names()
         return you.uniq_map_names;
 }
 
+// TODO: datify into branch data
+int dgn_builder_x()
+{
+    if (is_hell_subbranch(you.where_are_you) && !at_branch_bottom())
+        return GXM / 2;
+    else
+        return GXM;
+}
+
+int dgn_builder_y()
+{
+    if (is_hell_subbranch(you.where_are_you) && !at_branch_bottom())
+        return GYM / 2;
+    else
+        return GYM;
+}
+
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
@@ -1970,7 +1987,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
         base = DNGN_STONE_STAIRS_UP_I;
         // Pan abuses stair placement for transits, as we want connectivity
         // checks.
-        needed_stairs = you.depth == 1
+        needed_stairs = (you.depth == 1 || player_in_hell())
                         && !player_in_branch(BRANCH_PANDEMONIUM)
                         ? 1 : 3;
     }
@@ -1981,13 +1998,16 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
 
         if (at_branch_bottom())
             needed_stairs = 0;
+        else if (player_in_hell())
+            needed_stairs = 1;
         else
             needed_stairs = 3;
     }
 
     // In Zot, don't create extra escape hatches, in order to force
     // the player through vaults that use all three down stone stairs.
-    if (player_in_branch(BRANCH_ZOT))
+    // In Hell, don't create extra hatches, the levels are small already.
+    if (player_in_branch(BRANCH_ZOT) || player_in_hell())
     {
         replace = random_choose(DNGN_FOUNTAIN_BLUE,
                                 DNGN_FOUNTAIN_SPARKLING,
@@ -2050,11 +2070,15 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     // If we only need one stone stair, make sure it's _I.
     if (needed_stairs != 3)
     {
-        ASSERT(checking_up_stairs);
+        ASSERT(checking_up_stairs || player_in_hell());
         ASSERT(needed_stairs == 1);
         ASSERT(stairs.size() == 1 || player_in_branch(root_branch));
         if (stairs.size() == 1)
-            env.grid(stairs.front()) = DNGN_STONE_STAIRS_UP_I;
+        {
+            env.grid(stairs.front()) =
+                checking_up_stairs ? DNGN_STONE_STAIRS_UP_I
+                                   : DNGN_STONE_STAIRS_DOWN_I;
+        }
 
         return true;
     }
@@ -3582,6 +3606,10 @@ void dgn_place_stone_stairs(bool maybe_place_hatches)
 
     for (int i = 0; i < pair_count; ++i)
     {
+        // only place the first stair and hatches in hell
+        if (player_in_hell() && i > 0 && i <= 3)
+            continue;
+
         if (!existing[i])
         {
             _dgn_place_feature_at_random_floor_square(
@@ -4639,13 +4667,15 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 
         spschool disc1 = (spschool)props[RANDBK_DISC1_KEY].get_short();
         spschool disc2 = (spschool)props[RANDBK_DISC2_KEY].get_short();
+        bool disc1_rerollable = false;
+        bool disc2_rerollable = false;
         if (disc1 == spschool::none && disc2 == spschool::none)
         {
             if (spells.size())
                 disc1 = matching_book_theme(spells);
             else
-                disc1 = random_book_theme();
-            disc2 = random_book_theme();
+                disc1_rerollable = true;
+            disc2_rerollable = true;
         }
         else if (disc2 == spschool::none)
             disc2 = disc1;
@@ -4658,11 +4688,29 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         const int max_levels = props[RANDBK_SLVLS_KEY].get_short();
 
         vector<spell_type> chosen_spells;
-        theme_book_spells(disc1, disc2,
+        int retries = 0;
+        // TODO: retry if the spell list is smaller than requested?
+        while (chosen_spells.size() == 0 && retries < 10)
+        {
+            // allow rerolling these in case the spell schools are too sparse
+            // for the vault spec. Most likely to come up in corner cases such
+            // as a 1-spell book with 1 spell level, if the same school is
+            // rolled twice and it lacks a lvl 1 spll
+            if (disc1_rerollable)
+                disc1 = random_book_theme();
+            if (disc2_rerollable)
+                disc2 = random_book_theme();
+            theme_book_spells(disc1, disc2,
                           forced_spell_filter(spells,
                                                capped_spell_filter(max_levels)),
                           origin_as_god_gift(item), num_spells, chosen_spells);
+            if (!disc1_rerollable && !disc2_rerollable)
+                break;
+            retries++;
+        }
         fixup_randbook_disciplines(disc1, disc2, chosen_spells);
+        // if a size 0 spell list gets through here it'll crash in the following
+        // call:
         init_book_theme_randart(item, chosen_spells);
         name_book_theme_randart(item, disc1, disc2, owner, title);
         // XXX: changing the signature of build_themed_book()'s get_discipline
@@ -5745,12 +5793,9 @@ static dungeon_feature_type _pick_an_altar()
                 god = GOD_MAKHLEB;
             break;
 
-        default: // Any god (with exceptions).
-            do
-            {
-                god = random_god();
-            }
-            while (god == GOD_LUGONU || god == GOD_BEOGH || god == GOD_JIYVA);
+        default: // Any temple-valid god
+            auto temple_gods = temple_god_list();
+            god = *random_iterator(temple_gods);
             break;
         }
     }
@@ -6819,7 +6864,7 @@ static bool _fixup_interlevel_connectivity()
         }
     }
 
-    const int up_region_max = you.depth == 1 ? 1 : 3;
+    const int up_region_max = (you.depth == 1 || player_in_hell()) ? 1 : 3;
 
     // Ensure all up stairs were found.
     for (int i = 0; i < up_region_max; i++)

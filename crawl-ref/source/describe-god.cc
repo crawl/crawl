@@ -160,7 +160,7 @@ static const char *divine_title[][8] =
 
     // Okawaru -- battle theme.
     {"Coward",             "Struggler",             "Combatant",                "Warrior",
-        "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
+        "Knight",             "Myrmidon",             "Warmonger",                "Victor of a Thousand Battles"},
 
     // Makhleb -- chaos theme.
     {"Orderly",            "Spawn of Chaos",        "Disciple of Destruction",  "Fanfare of Bloodshed",
@@ -239,6 +239,10 @@ static const char *divine_title[][8] =
     // Wu Jian -- animal/chinese martial arts monk theme
     {"Wooden Rat",          "Young Dog",             "Young Crane",              "Young Tiger",
         "Young Dragon",     "Red Sash",               "Golden Sash",              "Sifu"},
+
+    // Ignis -- fire/candles theme
+    {"Extinguished",          "Last Ember",             "Glowing Coal",              "Thurifer",
+        "Hearthfire",     "Furnace",               "Raging Flame",              "Inferno"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
@@ -721,6 +725,8 @@ static string _raw_penance_message(god_type which_god)
         return "%s well remembers your sins.";
     if (penance > initial_penance / 4)
         return "%s's wrath is beginning to fade.";
+    if (which_god == GOD_IGNIS)
+        return "%s' wrath will not burn much longer.";
     if (penance > 0)
         return "%s is almost ready to forgive your sins.";
     return "%s is neutral towards you.";
@@ -993,6 +999,11 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("%s requires that you fight alone, and prevents you from "
                      "gaining allies.\n",
                 uppercase_first(god_name(which_god)).c_str());
+        break;
+
+    case GOD_IGNIS:
+        have_any = true;
+        desc.cprintf("You are resistant to fire.\n");
         break;
 
     default:

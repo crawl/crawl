@@ -25,6 +25,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 #define MON_SPEED_KEY "speed"
 #define CUSTOM_SPELLS_KEY "custom_spells"
+#define CUSTOM_SPELL_LIST_KEY "custom_spell_list"
 #define SEEN_SPELLS_KEY "seen_spells"
 #define KNOWN_MAX_HP_KEY "known_max_hp"
 #define VAULT_HD_KEY "vault_hd"
@@ -150,6 +151,7 @@ public:
         override;
     bool is_perm_summoned() const override;
     bool has_action_energy() const;
+    void drain_action_energy();
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
@@ -347,7 +349,7 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
-    void attacking(actor *other, bool ranged) override;
+    void attacking(actor *other) override;
     bool can_go_frenzy(bool check_sleep = true) const;
     bool can_go_berserk() const override;
     bool go_berserk(bool intentional, bool potion = false) override;
@@ -476,9 +478,8 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
-                          bool /*allow_corrosion*/ = true,
-                          const char* /*hurt_msg*/ = nullptr) override;
+    void splash_with_acid(actor *evildoer, int /*acid_strength*/) override;
+    void acid_corrode(int /*acid_strength*/) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
     int hurt(const actor *attacker, int amount,

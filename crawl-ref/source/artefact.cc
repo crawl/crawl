@@ -142,7 +142,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
 
         if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK)
             || artefact_property(item, ARTP_RAMPAGING))
         {
             return false;
@@ -569,7 +568,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_PREVENT_TELEPORTATION:
             return !extant_props[ARTP_BLINK] && non_swappable;
         // only on melee weapons
-        case ARTP_BERSERK:
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
@@ -664,9 +662,11 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
         []() { return 1; }, nullptr, 0, 0 },
-    { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
+#if TAG_MAJOR_VERSION == 34
+    { "+Rage", ARTP_VAL_BOOL, 0,   // ARTP_BERSERK,
         []() { return 1; }, nullptr, 0, 0 },
-    { "*Noise", ARTP_VAL_POS, 25,    // ARTP_NOISE,
+#endif
+    { "*Noise", ARTP_VAL_POS, 30,    // ARTP_NOISE,
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
@@ -674,8 +674,8 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Rage", ARTP_VAL_POS, 25,    // ARTP_ANGRY,
-        nullptr, []() { return 5; }, 0, 0 },
+    { "*Rage", ARTP_VAL_POS, 30,    // ARTP_ANGRY,
+        nullptr, []() { return 20; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
@@ -723,7 +723,7 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "*Slow", ARTP_VAL_BOOL, 25, // ARTP_SLOW,
         nullptr, []() { return 1; }, 0, 0 },
-    { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
+    { "Fragile", ARTP_VAL_BOOL, 30, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
     { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
     { "Harm", ARTP_VAL_BOOL, 25, // ARTP_HARM,

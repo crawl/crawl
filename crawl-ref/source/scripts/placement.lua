@@ -122,6 +122,7 @@ local output_to_base = "placement-"
 local force = args["-force"] ~= nil
 
 local tele_zones = args["-tele-zones"] ~= nil
+local opacity = args["-opacity"] ~= nil
 
 -- fill_level will fail all minivaults, because their connectivity check fails.
 -- In principle, this could be changed in maps.cc:_find_minivault_place, by only
@@ -172,6 +173,10 @@ local force_connectivity_ok = util.set{
 local function generate_map(map)
     map_to_test = dgn.name(map)
 
+    if opacity and dgn.has_tag(map, "transparent") then
+        return
+    end
+
     if not force then
         if dgn.has_tag(map, "removed") then
             crawl.stderr("Skipping removed map '" .. map_to_test .. "'")
@@ -204,9 +209,12 @@ local function generate_map(map)
         end
     end
 
-    crawl.stderr("Testing vault '" .. map_to_test .."'")
+    if not opacity then
+        crawl.stderr("Testing vault '" .. map_to_test .."'")
+    end
 
     debug.builder_ignore_depth(true)
+    local max_zones = 0
     for iter_i = 1, checks do
         output_to = output_to_base .. map_to_test .. "." .. iter_i .. ".txt"
         debug.flush_map_memory()
@@ -219,6 +227,9 @@ local function generate_map(map)
         -- TODO: are there any issues that using these tags will hide? I'm
         -- pretty sure the rotate/mirror ones are ok, not sure about water
         dgn.tags(map, "no_rotate no_vmirror no_hmirror no_pool_fixup")
+        if (opacity) then
+            dgn.tags(map, "transparent")
+        end
         if not dgn.place_map(map, false, true) then
             local e = "Failed to place '" .. map_to_test .. "'"
             local last_error = dgn.last_builder_error()
@@ -232,47 +243,54 @@ local function generate_map(map)
             assert(false, e)
         end
         local z = dgn.count_disconnected_zones()
+        max_zones = math.max(z, max_zones)
         if dump then
             debug.dump_map(output_to, builder_log)
             crawl.message("   Placed " .. map_to_test .. ":" .. iter_i .. ", dumping to " .. output_to)
         end
-        if z ~= 1 then
-            local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
-            if dump then
-                crawl.stderr("    Failing vault output to: " .. output_to)
-            end
-            if force_connectivity_ok[map_to_test] then
-                crawl.stderr("(Force skipped) " .. connectivity_err)
-            else
-                assert(z == 1, connectivity_err)
-            end
-        end
-        if tele_zones then
-            -- we need some kind of stairs so that vaults that place no stairs
-            -- don't count as a closet. We can't assume a baseline of 1 because
-            -- some vaults *do* place stairs, in which case an additional
-            -- closet will count as 1. Unclear if this position works for all
-            -- vaults...
-            dgn.fill_grd_area(1, 1, 1, 1, 'stone_stairs_up_i')
-            z = dgn.count_tele_zones()
-            if dump then
-                -- just rewrite it
-                debug.dump_map(output_to, builder_log)
-            end
-            if z >= 1 then
-                local connectivity_err = "Teleport closet in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
+
+        if not opacity then
+            if z ~= 1 then
+                local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
                 if dump then
                     crawl.stderr("    Failing vault output to: " .. output_to)
                 end
-                -- anything that has connectivity problems will have tele
-                -- closets, skip the same list
                 if force_connectivity_ok[map_to_test] then
                     crawl.stderr("(Force skipped) " .. connectivity_err)
                 else
-                    assert(z == 0, connectivity_err)
+                    assert(z == 1, connectivity_err)
+                end
+            end
+            if tele_zones then
+                -- we need some kind of stairs so that vaults that place no stairs
+                -- don't count as a closet. We can't assume a baseline of 1 because
+                -- some vaults *do* place stairs, in which case an additional
+                -- closet will count as 1. Unclear if this position works for all
+                -- vaults...
+                dgn.fill_grd_area(1, 1, 1, 1, 'stone_stairs_up_i')
+                z = dgn.count_tele_zones()
+                if dump then
+                    -- just rewrite it
+                    debug.dump_map(output_to, builder_log)
+                end
+                if z >= 1 then
+                    local connectivity_err = "Teleport closet in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
+                    if dump then
+                        crawl.stderr("    Failing vault output to: " .. output_to)
+                    end
+                    -- anything that has connectivity problems will have tele
+                    -- closets, skip the same list
+                    if force_connectivity_ok[map_to_test] then
+                        crawl.stderr("(Force skipped) " .. connectivity_err)
+                    else
+                        assert(z == 0, connectivity_err)
+                    end
                 end
             end
         end
+    end
+    if opacity and max_zones == 1 then
+        crawl.stderr("1-zone opaque map " .. map_to_test .. " from file " .. dgn.filename(map))
     end
     debug.builder_ignore_depth(false)
 end
@@ -315,13 +333,19 @@ local function generate_maps()
         nmaps = math.min(nmaps, dgn.map_count() - start)
 
         crawl.stderr("Testing " .. nmaps .. " maps")
+        local last_map = ""
         for i = start, start + nmaps - 1 do
             local map = dgn.map_by_index(i)
             if not map then
                 assert(false, "invalid map at index " .. i)
             end
+            last_map = dgn.name(map)
             --crawl.stderr(i)
             generate_map(map)
+        end
+        -- to make resuming easier
+        if opacity and (start > 0 or nmaps < dgn.map_count() - start) then
+            crawl.stderr("Last map: " .. last_map)
         end
     end
 end

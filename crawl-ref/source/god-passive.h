@@ -262,6 +262,9 @@ enum class passive_t
 
     /// Okawaru prevents gaining any allies
     no_allies,
+
+    // rF+
+    resist_fire,
 };
 
 enum ru_interference

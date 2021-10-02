@@ -798,10 +798,12 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_CHAOTIC,   SPWPN_CHAOS,         10,
       nullptr },
     { AF_DRAIN,  SPWPN_DRAINING,      5,
-      [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
+      [](const actor &d) {
+          return bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
-          return !d.is_summoned() && bool(d.holiness() & MH_NATURAL); } },
+          return !d.is_summoned()
+                 && bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
@@ -866,7 +868,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (!(defender->holiness() & MH_NATURAL))
+    if (!(defender->holiness() & (MH_NATURAL | MH_PLANT)))
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
@@ -1137,8 +1139,8 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     int damage_plus = 0;
     if (!aux && using_weapon())
         damage_plus = get_weapon_plus();
-    if (you.duration[DUR_CORROSION])
-        damage_plus -= 4 * you.props[CORROSION_KEY].get_int();
+
+    damage_plus -= 4 * you.corrosion_amount();
     damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
                                  || (weapon && is_range_weapon(*weapon)
                                             && using_weapon()));
@@ -1566,11 +1568,18 @@ bool attack::apply_damage_brand(const char *what)
         {
             beam_temp.ench_power = you.props[CONFUSING_TOUCH_KEY].get_int();
             int margin;
-            if (beam_temp.try_enchant_monster(defender->as_monster(), margin)
-                    == MON_AFFECTED)
+            monster* mon = defender->as_monster();
+            if (beam_temp.try_enchant_monster(mon, margin) == MON_AFFECTED)
             {
                 you.duration[DUR_CONFUSING_TOUCH] = 0;
                 obvious_effect = false;
+            }
+            else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
+                     || mons_invuln_will(*mon))
+            {
+                mprf("%s is completely immune to your confusing touch!",
+                     mon->name(DESC_THE).c_str());
+                you.duration[DUR_CONFUSING_TOUCH] = 1;
             }
         }
         else if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()),

@@ -150,6 +150,9 @@ static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
 static void _setup_ghostly_beam(bolt &beam, int power, int dice);
 static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
                                           int power);
+static ai_action::goodness _seracfall_goodness(const monster &caster);
+static bool _prepare_seracfall(monster &caster, bolt &beam);
+static void _setup_seracfall_beam(bolt& beam, const monster& caster, int power);
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell);
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(const actor* victim);
@@ -552,6 +555,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             _corrupt_locale(caster);
         },
     }, },
+    { SPELL_SERACFALL, {
+        _seracfall_goodness,
+        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
+            if (_prepare_seracfall(caster, pbolt))
+                _fire_simple_beam(caster, slot, pbolt);
+            else if (you.can_see(caster))
+                canned_msg(MSG_NOTHING_HAPPENS);
+        },
+        _setup_seracfall_beam,
+        MSPELL_LOGIC_NONE,
+        30, // 2.5x iceblast
+    } },
 };
 
 /// Create the appropriate casting logic for a simple conjuration.
@@ -1664,6 +1679,11 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.name = "";
     }
 
+    // Avoid overshooting and potentially hitting the player.
+    // Piercing beams' tracers already account for this.
+    if (mons->temp_attitude() == ATT_FRIENDLY && !beam.pierce)
+        beam.aimed_at_spot = true;
+
     return beam;
 }
 
@@ -1712,6 +1732,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_CONJURE_BALL_LIGHTNING:
+    case SPELL_CONJURE_LIVING_SPELLS:
     case SPELL_SUMMON_DRAKES:
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_MALIGN_GATEWAY:
@@ -1799,7 +1820,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_SUMMON_TZITZIMITL:
     case SPELL_SUMMON_HELL_SENTINEL:
-    case SPELL_GOAD_BEASTS:
+    case SPELL_STOKE_FLAMES:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -1913,13 +1934,6 @@ static bool _valid_druids_call_target(const monster* caller, const monster* call
            && mons_habitat(*callee) != HT_WATER
            && mons_habitat(*callee) != HT_LAVA
            && !callee->is_travelling();
-}
-
-static bool _valid_goad_beasts_target(const monster* goader, const monster* beast)
-{
-    return mons_aligned(goader, beast) && mons_is_beast(beast->type)
-           && !beast->is_shapeshifter()
-           && beast->see_cell(goader->pos());
 }
 
 static bool _mirrorable(const monster* agent, const monster* mon)
@@ -3071,14 +3085,6 @@ static void _cast_druids_call(const monster* mon)
         _place_druids_call_beast(mon, mon_list[i], target);
 }
 
-static void _cast_goad_beasts(const monster* mon)
-{
-    // Gain moves from the goad.
-    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-        if (_valid_goad_beasts_target(mon, *mi))
-            mi->gain_energy(EUT_MOVE);
-}
-
 static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
 {
     double ang0 = atan2(p1.x - origin.x, p1.y - origin.y);
@@ -3505,6 +3511,9 @@ static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
         if (!mons_aligned(&caster, *mi))
             continue; // can only blow up allies ;)
 
+        if (mons_is_projectile(mi->type))
+            continue;
+
         tracer.target = mi->pos();
         fire_tracer(&caster, tracer, true, true);
         if (mons_is_threatening(**mi)) // only care about sacrificing real mons
@@ -3566,6 +3575,82 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
 
     beam.target = _mons_ghostly_sacrifice_target(caster, beam);
     beam.aimed_at_spot = true;  // to get noise to work properly
+}
+
+/**
+ * Pick a simulacrum for seracfall
+ *
+ *  @param  caster       The monster casting the spell.
+ *  @return The target square, or an out of bounds coord if none was found.
+ */
+static coord_def _mons_seracfall_source(const monster &caster)
+{
+    bolt tracer;
+    setup_mons_cast(&caster, tracer, SPELL_ICEBLAST);
+    const int dam_scale = 1000;
+    int best_dam_fraction = dam_scale / 2;
+    coord_def best_source = coord_def(GXM+1, GYM+1); // initially out of bounds
+    tracer.target  = caster.target;
+    tracer.ex_size = 1;
+
+    for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->type != MONS_SIMULACRUM)
+            continue; // only hurl simulacra
+
+        if (!mons_aligned(&caster, *mi))
+            continue; // can only blow up allies ;)
+
+        if (!you.see_cell(mi->pos()))
+            continue; // don't hurl simulacra from out of player los
+
+        // beam is shot as if the simulac is falling onto the player
+        // so we treat the simulacrum as the "caster"
+        fire_tracer(*mi, tracer);
+
+        const int dam_fraction = _get_dam_fraction(tracer, dam_scale);
+        dprf("if seracfalling %s (aim %d,%d): ratio %d/%d",
+             mi->name(DESC_A, true).c_str(),
+             tracer.target.x, tracer.target.y, dam_fraction, dam_scale);
+        if (dam_fraction > best_dam_fraction)
+        {
+            best_source = mi->pos();
+            best_dam_fraction = dam_fraction;
+            dprf("setting best source (%d, %d)", best_source.x, best_source.y);
+        }
+    }
+
+    return best_source;
+}
+
+static ai_action::goodness _seracfall_goodness(const monster &caster)
+{
+    return ai_action::good_or_impossible(in_bounds(_mons_seracfall_source(caster)));
+}
+
+/// Everything short of the actual explosion. Returns whether to fire.
+static bool _prepare_seracfall(monster &caster, bolt &beam)
+{
+    beam.source = _mons_seracfall_source(caster);
+    monster* victim = monster_at(beam.source);
+    if (!victim || victim->mid == caster.mid)
+        return false; // assert?
+
+    // Beam origin message handled here
+    beam.seen = true;
+    mprf("%s collapses into a mass of ice!", victim->name(DESC_THE).c_str());
+    monster_die(*victim, &caster, true);
+    return true;
+}
+
+/// Setup and target a seracfall.
+static void _setup_seracfall_beam(bolt& beam, const monster& caster,
+                                          int power)
+{
+    zappy(spell_to_zap(SPELL_SERACFALL), power, true, beam);
+    beam.source = _mons_seracfall_source(caster);
+    beam.name = "seracfall";
+    beam.hit_verb = "batters";
 }
 
 static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type spell)
@@ -4105,6 +4190,13 @@ bool handle_mon_spell(monster* mons)
     // Reflection, fireballs, etc.
     if (!mons->alive())
         return true;
+
+    // Living spells die once they are cast.
+    if (mons->type == MONS_LIVING_SPELL)
+    {
+        monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
+        return true;
+    }
 
     if (!(flags & MON_SPELL_INSTANT))
     {
@@ -4698,23 +4790,22 @@ static void _blink_allies_encircle(const monster* mon)
     for (monster *ally : allies)
     {
         coord_def empty;
-        if (find_habitable_spot_near(foepos, mons_base_type(*ally), 1, false, empty))
+        if (!find_habitable_spot_near(foepos, mons_base_type(*ally), 1, false, empty))
+            continue;
+        if (!ally->blink_to(empty))
+            continue;
+        // XXX: This seems an awkward way to give a message for something
+        // blinking from out of sight into sight. Probably could use a
+        // more general solution.
+        if (!(ally->flags & MF_WAS_IN_VIEW)
+            && ally->flags & MF_SEEN)
         {
-            if (ally->blink_to(empty))
-            {
-                // XXX: This seems an awkward way to give a message for something
-                // blinking from out of sight into sight. Probably could use a
-                // more general solution.
-                if (!(ally->flags & MF_WAS_IN_VIEW)
-                    && ally->flags & MF_SEEN)
-                {
-                    simple_monster_message(*ally, " blinks into view!");
-                }
-                ally->behaviour = BEH_SEEK;
-                ally->foe = mon->foe;
-                count--;
-            }
+            simple_monster_message(*ally, " blinks into view!");
         }
+        ally->behaviour = BEH_SEEK;
+        ally->foe = mon->foe;
+        ally->drain_action_energy();
+        count--;
     }
 }
 
@@ -5845,6 +5936,26 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_CONJURE_LIVING_SPELLS:
+    {
+        const int hd = mons->spell_hd(spell_cast);
+        const int n = living_spell_count(true);
+        const spell_type spell = living_spell_type_for(mons->type);
+        // XXX: will crash if wizmode player tries to cast?
+        ASSERT(spell != SPELL_NO_SPELL);
+        for (int i = 0; i < n; ++i)
+        {
+            mgen_data mg = mgen_data(MONS_LIVING_SPELL, SAME_ATTITUDE(mons),
+                                     mons->pos(), mons->foe)
+                            .set_summoned(mons, 1, spell_cast, god);
+            mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(spell);
+            mg.hd = hd;
+            create_monster(mg);
+        }
+        return;
+    }
+
+
     case SPELL_SUMMON_UNDEAD:
         _do_high_level_summon(mons, spell_cast, _pick_undead_summon,
                               2 + random2(mons->spell_hd(spell_cast) / 5 + 1),
@@ -5999,10 +6110,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (!hp_lost)
             sumcount++;
 
+        // This code is so dubious...
         static const set<dungeon_feature_type> safe_tiles =
         {
             DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-            DNGN_OPEN_CLEAR_DOOR
+            DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR, DNGN_BROKEN_CLEAR_DOOR,
         };
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
@@ -6485,8 +6597,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 " curls into a ball and begins rolling!");
         return;
 
-    case SPELL_GOAD_BEASTS:
-        _cast_goad_beasts(mons);
+    case SPELL_STOKE_FLAMES:
+        _summon(*mons, MONS_CREEPING_INFERNO, 1, slot);
         return;
 
     }
@@ -6495,6 +6607,28 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_direct_explosion(*mons, slot, pbolt);
     else
         _fire_simple_beam(*mons, slot, pbolt);
+}
+
+int living_spell_count(bool random)
+{
+    return random ? random_range(2, 3) : 3;
+}
+
+spell_type living_spell_type_for(monster_type mtyp)
+{
+    switch (mtyp)
+    {
+    case MONS_EARTHEN_TOME:
+        return SPELL_PETRIFY;
+    case MONS_CRYSTAL_TOME:
+        return SPELL_LEHUDIBS_CRYSTAL_SPEAR;
+    case MONS_DIVINE_TOME:
+        return SPELL_SMITING;
+    case MONS_FROSTBOUND_TOME:
+        return SPELL_ICEBLAST;
+    default:
+        return SPELL_NO_SPELL;
+    }
 }
 
 static int _noise_level(const monster* mons, spell_type spell,
@@ -7336,7 +7470,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     // Don't bother casting a summon spell if we're already at its cap
     if (summons_are_capped(monspell)
-        && count_summons(mon, monspell) >= summons_limit(monspell))
+        && count_summons(mon, monspell) >= summons_limit(monspell, false))
     {
         return ai_action::impossible();
     }
@@ -7761,12 +7895,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
                 && !delta.origin()
                 && mon_can_move_to_pos(mon, delta));
     }
-
-    case SPELL_GOAD_BEASTS:
-        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-            if (_valid_goad_beasts_target(mon, *mi))
-                return ai_action::good();
-        return ai_action::impossible();
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:

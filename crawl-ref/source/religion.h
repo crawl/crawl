@@ -110,18 +110,21 @@ bool god_hates_spellcasting(god_type god);
 bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 string god_spell_warn_string(spell_type spell, god_type god);
-bool god_hates_ability(ability_type ability, god_type god);
 
 void initialize_ashenzari_props();
 lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
+bool ignis_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster* target);
 bool god_protects(const actor *agent, const monster *target, bool quiet=true);
 bool god_protects(const monster *target, bool quiet=true);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
+
+string ignore_faith_reason();
+bool faith_has_penalty();
 
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);

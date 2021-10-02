@@ -63,7 +63,7 @@ const enchant_type dispellable_enchantments[] =
 
 bool player_is_debuffable();
 bool player_is_cancellable();
-string describe_player_cancellation();
+string describe_player_cancellation(bool debuffs_only = false);
 void debuff_player();
 bool monster_is_debuffable(const monster &mon);
 void debuff_monster(monster &mon);

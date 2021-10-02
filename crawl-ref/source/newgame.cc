@@ -1084,13 +1084,14 @@ static job_group jobs_order[] =
     },
     {
         "Adventurer",
-        coord_def(0, 7), 20,
+        coord_def(0, 6), 20,
         { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, }
     },
     {
         "Zealot",
         coord_def(1, 0), 25,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT }
+        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CINDER_ACOLYTE,
+          JOB_CHAOS_KNIGHT }
     },
     {
         "Warrior-mage",

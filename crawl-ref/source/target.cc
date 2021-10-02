@@ -931,7 +931,8 @@ static bool _cloudable(coord_def loc, bool avoid_clouds)
     return in_bounds(loc)
            && !cell_is_solid(loc)
            && !(avoid_clouds && cloud_at(loc)
-           && !is_sanctuary(loc));
+           && !is_sanctuary(loc))
+           && cell_see_cell(you.pos(), loc, LOS_NO_TRANS);
 }
 
 bool targeter_cloud::valid_aim(coord_def a)
@@ -1092,6 +1093,28 @@ aff_type targeter_radius::is_affected(coord_def loc)
         return AFF_NO;
 
     return AFF_YES;
+}
+
+targeter_flame_wave::targeter_flame_wave(int _range)
+    : targeter_radius(&you, LOS_NO_TRANS, _range)
+{ }
+
+aff_type targeter_flame_wave::is_affected(coord_def loc)
+{
+    const aff_type base_aff = targeter_radius::is_affected(loc);
+    if (base_aff == AFF_NO)
+        return AFF_NO;
+    const int dist = (loc - origin).rdist();
+    if (dist == 0)
+        return AFF_NO;
+    if (dist == 1)
+        return AFF_YES;
+    if (you.props.exists(FLAME_WAVE_KEY)
+        && dist <= you.props[FLAME_WAVE_KEY].get_int() + 1)
+    {
+        return AFF_YES;
+    }
+    return AFF_MAYBE;
 }
 
 aff_type targeter_shatter::is_affected(coord_def loc)
@@ -2023,6 +2046,5 @@ targeter_intoxicate::targeter_intoxicate()
 bool targeter_intoxicate::affects_monster(const monster_info& mon)
 {
     return !(mon.mintel < I_HUMAN
-             || !(mon.holi & MH_NATURAL)
              || get_resist(mon.resists(), MR_RES_POISON) >= 3);
 }

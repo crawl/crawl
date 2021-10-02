@@ -76,6 +76,7 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h" // cell_vetoes_teleport
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1343,6 +1344,28 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
+static void _place_player_randomly()
+{
+    // This copies the logic in the core of you_teleport_now().
+    coord_def newpos;
+    int tries = 500;
+    do
+    {
+        newpos = random_in_bounds();
+    }
+    while (--tries > 0
+           && (cell_vetoes_teleport(newpos, false)
+               || testbits(env.pgrid(newpos), FPROP_NO_TELE_INTO)));
+    if (tries == 0) // yikes!
+        die("couldn't find a rising flame destination");
+
+    // outta the way!
+    monster* const mons = monster_at(newpos);
+    if (mons)
+        mons->teleport(true);
+    you.moveto(newpos);
+}
+
 /**
  * Move the player to the appropriate entrance location in a level.
  *
@@ -1358,6 +1381,8 @@ static void _place_player(dungeon_feature_type stair_taken,
         you.moveto(ABYSS_CENTRE);
     else if (!return_pos.origin())
         you.moveto(return_pos);
+    else if (stair_taken == DNGN_ALTAR_IGNIS) // hack: we're rocketeers!
+        _place_player_randomly();
     else
         _place_player_on_stair(stair_taken, dest_pos, hatch_name);
 
@@ -2201,6 +2226,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
              curr_PlaceInfo.num_visits, curr_PlaceInfo.levels_seen);
 #endif
 #if TAG_MAJOR_VERSION == 34
+        // TODO: place_info crashes are extremely brittle and unrecoverable,
+        // it might be good to generalize this fixup.
+        // TODO: this fixup triggers on &ctrl-r for a depth 1 branch (e.g.
+        // the vestibule of hell), would be nice to avoid. (Currently,
+        // `wizard_recreate_level` has a workaround.) But this check can't be
+        // skipped for that case, because otherwise the ASSERT is tripped.
+        //
         // this fixup is for a bug where turns_on_level==0 was used to set
         // just_created_level, and there were some obscure ways to have 0
         // turns on a level that you had entered previously. It only applies

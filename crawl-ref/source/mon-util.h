@@ -238,7 +238,7 @@ int mutant_beast_tier(int xl);
 
 int mons_avg_hp(monster_type mc);
 int mons_max_hp(monster_type mc, monster_type mbase_typeg = MONS_NO_MONSTER);
-int exper_value(const monster& mon, bool real = true);
+int exper_value(const monster& mon, bool real = true, bool legacy = false);
 
 int hit_points(int avg_hp, int scale = 10);
 
@@ -345,7 +345,7 @@ monster_type random_demonspawn_monster_species();
 monster_type random_demonspawn_job();
 
 bool init_abomination(monster& mon, int hd);
-void define_monster(monster& mons);
+void define_monster(monster& mons, bool friendly = false);
 
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);
@@ -421,8 +421,6 @@ bool mons_is_abyssal_only(monster_type mc);
 bool mons_is_unbreathing(monster_type mc);
 
 bool herd_monster(const monster& mon);
-
-bool mons_class_requires_band(monster_type mc);
 
 int cheibriados_monster_player_speed_delta(const monster& mon);
 bool cheibriados_thinks_mons_is_fast(const monster& mon);

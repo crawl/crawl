@@ -1477,7 +1477,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 simple_monster_message(*mons, " completely resists.");
         }
         else if (mons->res_acid() <= 0 && doFlavouredEffects)
-            mons->splash_with_acid(pbolt.agent());
+            mons->acid_corrode(5);
         break;
     }
 
@@ -1678,8 +1678,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                                               int pow,
                                               bool* did_msg)
 {
-    // Assuming that the only mass charm is control undead.
-    if (wh_enchant == ENCH_FEAR)
+    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
+    // of "is unaffected" messages. --Eino
+    if (mons_is_firewood(*mons))
+        return true;
+    else if (wh_enchant == ENCH_FEAR)
     {
         if (mons->friendly())
             return true;
@@ -1690,47 +1693,23 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
-
-        int res_margin = mons->check_willpower(pow);
-        if (res_margin > 0)
-        {
-            if (simple_monster_message(*mons,
-                    mons->resist_margin_phrase(res_margin).c_str()))
-            {
-                *did_msg = true;
-            }
-            return true;
-        }
     }
     else if (wh_enchant == ENCH_INSANE
-             || mons->holiness() & MH_NATURAL)
-    {
-
-        if (wh_enchant == ENCH_INSANE
-            && !mons->can_go_frenzy())
-        {
-            return true;
-        }
-
-        int res_margin = mons->check_willpower(pow);
-        if (res_margin > 0)
-        {
-            if (simple_monster_message(*mons,
-                    mons->resist_margin_phrase(res_margin).c_str()))
-            {
-                *did_msg = true;
-            }
-            return true;
-        }
-    }
-    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
-    // of "is unaffected" messages. --Eino
-    else if (mons_is_firewood(*mons))
-        return true;
-    else  // trying to enchant an unnatural creature doesn't work
+             && !mons->can_go_frenzy())
     {
         if (simple_monster_message(*mons, " is unaffected."))
             *did_msg = true;
+        return true;
+    }
+
+    int res_margin = mons->check_willpower(pow);
+    if (res_margin > 0)
+    {
+        if (simple_monster_message(*mons,
+                mons->resist_margin_phrase(res_margin).c_str()))
+        {
+            *did_msg = true;
+        }
         return true;
     }
 
@@ -1769,24 +1748,16 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             continue;
 
         if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
-            || (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
             || (wh_enchant != ENCH_INSANE
                 && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
             // Do messaging.
-            const char* msg;
-            switch (wh_enchant)
-            {
-            case ENCH_FEAR:      msg = " looks frightened!";      break;
-            case ENCH_CHARM:     msg = " submits to your will.";  break;
-            default:             msg = nullptr;                   break;
-            }
+            const char* msg = nullptr;
+            if (wh_enchant == ENCH_FEAR)
+                msg = " looks frightened!";
+
             if (msg && simple_monster_message(**mi, msg))
                 did_msg = true;
-
-            // Reassert control over hexed undead.
-            if (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
-                mi->del_ench(ENCH_HEXED);
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
@@ -2147,6 +2118,7 @@ void bolt_parent_init(const bolt &parent, bolt &child)
     child.attitude       = parent.attitude;
 
     child.pierce         = parent.pierce ;
+    child.aimed_at_spot  = parent.aimed_at_spot;
     child.is_explosion   = parent.is_explosion;
     child.ex_size        = parent.ex_size;
     child.foe_ratio      = parent.foe_ratio;
@@ -2549,6 +2521,8 @@ void bolt::drop_object(bool allow_mulch)
             }
         }
 
+        if (item->props.exists(DAMNATION_BOLT_KEY))
+            item->props.erase(DAMNATION_BOLT_KEY);
         copy_item_to_grid(*item, pos(), 1);
     }
     else
@@ -2591,14 +2565,21 @@ bool bolt::is_fiery() const
 bool bolt::can_burn_trees() const
 {
     // XXX: rethink this
-    return origin_spell == SPELL_LIGHTNING_BOLT
-           || origin_spell == SPELL_BOLT_OF_FIRE
-           || origin_spell == SPELL_BOLT_OF_MAGMA
-           || origin_spell == SPELL_FIREBALL
-           || origin_spell == SPELL_FIRE_STORM
-           || origin_spell == SPELL_IGNITION
-           || origin_spell == SPELL_INNER_FLAME
-           || origin_spell == SPELL_STARBURST;
+    switch (origin_spell)
+    {
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_BOLT_OF_FIRE:
+    case SPELL_BOLT_OF_MAGMA:
+    case SPELL_FIREBALL:
+    case SPELL_FIRE_STORM:
+    case SPELL_IGNITION:
+    case SPELL_INNER_FLAME:
+    case SPELL_STARBURST:
+    case SPELL_FLAME_WAVE:
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
@@ -4019,7 +4000,7 @@ void bolt::affect_player()
 
     // Acid. (Apply this afterward, to avoid bad message ordering.)
     if (flavour == BEAM_ACID)
-        you.splash_with_acid(agent(), 5, true);
+        you.acid_corrode(5);
 
     extra_range_used += range_used_on_hit();
 
@@ -4046,7 +4027,6 @@ void bolt::affect_player()
 
 bool bolt::ignores_player() const
 {
-
     // Digging -- don't care.
     if (flavour == BEAM_DIGGING)
         return true;
@@ -4902,7 +4882,6 @@ void bolt::affect_monster(monster* mon)
     }
 
     if (engulfs && flavour == BEAM_SPORE // XXX: engulfs is redundant?
-        && mon->holiness() & MH_NATURAL
         && !mon->is_unbreathing())
     {
         apply_enchantment_to_monster(mon);
@@ -5671,7 +5650,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             && mon->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, agent())))
         {
             if (simple_monster_message(*mon,
-                                       (mon->body_size(PSIZE_BODY) > SIZE_BIG)
+                                       (mon->body_size(PSIZE_BODY) > SIZE_LARGE)
                                         ? " is filled with an intense inner flame!"
                                         : " is filled with an inner flame."))
             {
@@ -5915,6 +5894,14 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The ghostly flame explodes!",
         "the shriek of haunting fire",
     } },
+    { SPELL_SERACFALL, {
+        "The mass of ice explodes!",
+        "an explosion",
+    } },
+    { SPELL_FLAME_WAVE, {
+        "A wave of flame ripples out!",
+        "the roar of flame",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -6073,12 +6060,18 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         {
             loudness = spell_effect_noise(origin_spell);
         }
+        else if (origin_spell == SPELL_FLAME_WAVE)
+        {
+            loudness = spell_effect_noise(origin_spell)
+                     + (r - 1) * 2; // at radius 1, base noise
+        }
 
         // Make bloated husks quieter, both for balance (they're waking up
         // whole levels!) and for theme (it's not a huge fireball, it's a big
         // gas leak).
         if (name == "blast of putrescent gases")
             loudness = loudness * 2 / 3;
+        // TODO: flame wave
 
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.
@@ -6230,7 +6223,9 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     // those and simplify feat_is_wall() to return true for trees. -gammafunk
     if (feat_is_wall(dngn_feat)
         || feat_is_tree(dngn_feat)
-           && (!feat_is_flammable(dngn_feat) || !can_burn_trees())
+           && (!feat_is_flammable(dngn_feat)
+               || !can_burn_trees()
+               || env.markers.property_at(loc, MAT_ANY, "veto_destroy") == "veto")
         || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue

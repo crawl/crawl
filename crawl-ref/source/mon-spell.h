@@ -557,6 +557,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('r') rodents
+    {  MST_CRYSTAL_ECHIDNA,
+      {
+       { SPELL_CRYSTAL_BOLT, 33, MON_SPELL_NATURAL },
+       { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('s') Spiders and insects.
     {  MST_JUMPING_SPIDER,
       {
@@ -743,6 +751,12 @@ static const mon_spellbook mspell_list[] =
        { SPELL_IRON_SHOT, 24, MON_SPELL_WIZARD },
        { SPELL_HARPOON_SHOT, 36, MON_SPELL_WIZARD },
        { SPELL_THROW_ALLY, 36, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_TAINTED_LEVIATHAN,
+      {
+       { SPELL_MESMERISE, 33, MON_SPELL_NATURAL },
       }
     },
 
@@ -960,6 +974,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_STOKER,
+      {
+       {
+        { SPELL_WIND_BLAST, 20, MON_SPELL_WIZARD },
+        { SPELL_STOKE_FLAMES, 10, MON_SPELL_WIZARD },
+       }
+      }
+    },
+
     // ('M') Mummies.
     {  MST_MUMMY_PRIEST,
       {
@@ -1059,12 +1082,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_IRONBOUND_BEASTMASTER,
-      {
-       { SPELL_GOAD_BEASTS, 40, MON_SPELL_NATURAL },
-      }
-    },
-
     // ('P') Immobile plants.
     {  MST_BURNING_BUSH,
       {
@@ -1132,6 +1149,13 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SPLINTERSPRAY, 50, MON_SPELL_MAGICAL },
        { SPELL_WOODWEAL, 150, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
+      }
+    },
+
+    {  MST_WENDIGO,
+      {
+       { SPELL_SERACFALL, 50, MON_SPELL_MAGICAL },
+       { SPELL_STUNNING_BURST, 30, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1223,6 +1247,13 @@ static const mon_spellbook mspell_list[] =
     {  MST_FLAYED_GHOST,
       {
        { SPELL_FLAY, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_PUTRID_MOUTH,
+      {
+       { SPELL_MIASMA_BREATH, 50, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_WARNING_CRY, 20, MON_SPELL_VOCAL | MON_SPELL_BREATH },
       }
     },
 
@@ -1498,6 +1529,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_STRANGE_MACHINE,
+      {
+       { SPELL_SUMMON_ILLUSION, 50, MON_SPELL_MAGICAL },
+       { SPELL_SHADOW_CREATURES, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('9') Gargoyles.
     {  MST_GARGOYLE,
       {
@@ -1508,6 +1546,12 @@ static const mon_spellbook mspell_list[] =
     {  MST_MOLTEN_GARGOYLE,
       {
        { SPELL_BOLT_OF_MAGMA, 57, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_NARGUN,
+      {
+       { SPELL_PETRIFY, 66, MON_SPELL_NATURAL },
       }
     },
 
@@ -1524,6 +1568,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_FIRE, 32, MON_SPELL_MAGICAL },
        { SPELL_FIREBALL, 32, MON_SPELL_MAGICAL },
        { SPELL_MALMUTATE, 16, MON_SPELL_MAGICAL },
+      }
+    },
+
+    // (';') Walking Tomes.
+    { MST_WALKING_TOME,
+      {
+       { SPELL_CONJURE_LIVING_SPELLS, 60, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2011,6 +2062,15 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_AIRSTRIKE, 25, MON_SPELL_WIZARD },
        { SPELL_POLAR_VORTEX, 40, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_HEADMASTER,
+      {
+       { SPELL_SUMMON_MANA_VIPER, 15, MON_SPELL_WIZARD },
+       { SPELL_DIMENSION_ANCHOR, 15, MON_SPELL_WIZARD },
+       { SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD },
+       { SPELL_ENERGY_BOLT, 15, MON_SPELL_WIZARD },
       }
     },
 

@@ -571,6 +571,8 @@ public:
 
     int base_ac_from(const item_def &armour, int scale = 1) const;
 
+    int corrosion_amount() const;
+
     int inaccuracy() const override;
 
     // actor
@@ -690,7 +692,7 @@ public:
     bool fumbles_attack() override;
     bool fights_well_unarmed(int heavy_armour_penalty) override;
 
-    void attacking(actor *other, bool ranged = false) override;
+    void attacking(actor *other) override;
     bool can_go_berserk() const override;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false, string *reason = nullptr,
@@ -728,9 +730,8 @@ public:
     void weaken(actor *attacker, int pow) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(const actor* evildoer, int acid_strength,
-                          bool allow_corrosion = true,
-                          const char* hurt_msg = nullptr) override;
+    void splash_with_acid(actor *evildoer, int acid_strength) override;
+    void acid_corrode(int acid_strength) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
     void sentinel_mark(bool trap = false);
@@ -853,6 +854,7 @@ public:
                bool temp = true) const override;
 
     bool do_shaft() override;
+    bool shaftable() const;
 
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();

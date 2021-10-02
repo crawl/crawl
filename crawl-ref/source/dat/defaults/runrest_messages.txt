@@ -47,6 +47,8 @@ stop += oppressive heat about you
 stop += crackle of arcane power
 stop += hear a distant wind
 
+stop += You now have enough gold to
+
 # Enchantments
 #
 ignore += Your skin is crawling a little less now.

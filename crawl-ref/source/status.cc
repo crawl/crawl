@@ -23,6 +23,7 @@
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
+#include "stairs.h" // rise_through_ceiling
 #include "stringutil.h"
 #include "throw.h"
 #include "timed-effects.h" // bezotting_level
@@ -113,16 +114,8 @@ static void _mark_expiring(status_info& inf, bool expiring)
 
 static string _ray_text()
 {
-    // i feel like we could do this with math instead...
-    switch (you.attribute[ATTR_SEARING_RAY])
-    {
-        case 2:
-            return "Ray+";
-        case 3:
-            return "Ray++";
-        default:
-            return "Ray";
-    }
+    const int n_plusses = max(you.attribute[ATTR_SEARING_RAY] - 1, 0);
+    return "Ray" + string(n_plusses, '+');
 }
 
 static vector<string> _charge_strings = { "Charge-", "Charge/",
@@ -197,9 +190,15 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_CORROSION:
+        // No blank or double lights
+        if (you.corrosion_amount() == 0 || you.duration[DUR_CORROSION])
+            break;
+        _fill_inf_from_ddef(DUR_CORROSION, inf);
+        // Intentional fallthrough
     case DUR_CORROSION:
         inf.light_text = make_stringf("Corr (%d)",
-                          (-4 * you.props[CORROSION_KEY].get_int()));
+                          (-4 * you.corrosion_amount()));
         break;
 
     case DUR_FLAYED:
@@ -207,6 +206,15 @@ bool fill_status_info(int status, status_info& inf)
                           (-1 * you.props[FLAY_DAMAGE_KEY].get_int()));
         break;
 
+    case STATUS_NO_POTIONS:
+        // Don't double the light if under a duration
+        if (!player_in_branch(BRANCH_COCYTUS) || you.duration[DUR_NO_POTIONS])
+            break;
+        // use -Potion as a base
+        _fill_inf_from_ddef(DUR_NO_POTIONS, inf);
+        inf.short_text = "frozen potions";
+        inf.long_text  = "Your potions are frozen solid.";
+        // intentional fallthrough
     case DUR_NO_POTIONS:
         if (!you.can_drink(false))
             inf.light_colour = DARKGREY;
@@ -547,10 +555,22 @@ bool fill_status_info(int status, status_info& inf)
 
     }
     case STATUS_RAY:
-        if (you.attribute[ATTR_SEARING_RAY])
+        if (you.attribute[ATTR_SEARING_RAY] && can_cast_spells(true))
         {
             inf.light_colour = WHITE;
             inf.light_text   = _ray_text().c_str();
+        }
+        break;
+
+    case STATUS_FLAME_WAVE:
+        if (you.props.exists(FLAME_WAVE_KEY) && can_cast_spells(true))
+        {
+            // It's only possible to hit the prop = 0 case if we reprint the
+            // screen after the spell was cast but before the end of the
+            // player's turn, which mostly happens in webtiles. Great!
+            const int lvl = max(you.props[FLAME_WAVE_KEY].get_int() - 1, 0);
+            inf.light_colour = WHITE;
+            inf.light_text   = "Wave" + string(lvl, '+');
         }
         break;
 
@@ -681,7 +701,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_MAXWELLS:
-        if (you.props.exists(COUPLING_TIME_KEY))
+        if (you.props.exists(COUPLING_TIME_KEY) && can_cast_spells(true))
         {
             inf.light_colour = LIGHTCYAN;
             inf.light_text   = _charge_text().c_str();
@@ -693,19 +713,43 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text   = "Duel";
-            inf.short_text   = "dueling";
+            inf.short_text   = "duelling";
             inf.long_text    = "You are engaged in single combat.";
         }
         break;
 
     case STATUS_NO_SCROLL:
-        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
+            || player_in_branch(BRANCH_GEHENNA))
         {
             inf.light_colour = RED;
             inf.light_text   = "-Scroll";
             inf.short_text   = "unable to read";
             inf.long_text    = "You cannot read scrolls.";
         }
+        break;
+
+    case STATUS_RF_ZERO:
+        if (!you.penance[GOD_IGNIS]
+            || player_res_fire(false, true, true) < 0)
+        {
+            // XXX: would it be better to only show this
+            // if you would otherwise have rF+ & to warn
+            // on using a potion of resistance..?
+            break;
+        }
+        inf.light_colour = RED;
+        inf.light_text   = "rF0";
+        inf.short_text   = "fire susceptible";
+        inf.long_text    = "You cannot resist fire.";
+        break;
+
+    case STATUS_LOWERED_WL:
+        // Don't double the light if under a duration
+        if (!player_in_branch(BRANCH_TARTARUS) || you.duration[DUR_LOWERED_WL])
+            break;
+        if (player_in_branch(BRANCH_TARTARUS))
+            _fill_inf_from_ddef(DUR_LOWERED_WL, inf);
         break;
 
     default:

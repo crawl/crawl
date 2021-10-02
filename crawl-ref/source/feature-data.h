@@ -275,6 +275,20 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_BROKEN_DOOR, "broken door", "broken_door",
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY), // ?
+    FFT_NONE, MF_DOOR,
+},
+
+{
+    DNGN_BROKEN_CLEAR_DOOR, "broken translucent door", "broken_clear_door",
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY), // ?
+    FFT_NONE, MF_DOOR,
+},
+
+{
     DNGN_OPEN_DOOR, "open door", "open_door",
     DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
     COLOUR_IS(LIGHTGREY),
@@ -593,6 +607,7 @@ ALTAR(DNGN_ALTAR_PAKELLAS, "oddly glowing altar of Pakellas", "altar_pakellas", 
 ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
 ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana", LIGHTGREEN),
 ALTAR(DNGN_ALTAR_WU_JIAN, "ornate altar of the Wu Jian Council", "altar_wu_jian", ETC_WU_JIAN),
+ALTAR(DNGN_ALTAR_IGNIS, "candlelit altar of Ignis", "altar_ignis", ETC_CANDLES),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\

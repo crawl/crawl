@@ -147,7 +147,7 @@ bool ranged_attack::attack()
 // XXX: Are there any cases where this might fail?
 bool ranged_attack::handle_phase_attempted()
 {
-    attacker->attacking(defender, true);
+    attacker->attacking(defender);
     attack_occurred = true;
 
     return true;
@@ -351,7 +351,7 @@ int ranged_attack::apply_damage_modifiers(int damage)
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
     {
-        const int bonus = attacker->get_hit_dice() * 4 / 3;
+        const int bonus = archer_bonus_damage(attacker->get_hit_dice());
         damage += random2avg(bonus, 2);
     }
     return damage;

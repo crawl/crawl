@@ -30,6 +30,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h" // Compass (for random_walk, CloudGenerator)
+#include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -247,7 +248,7 @@ static const cloud_data clouds[] = {
       YELLOW,                                   // colour
       { TILE_CLOUD_ACID, CTVARY_DUR },          // dur
       BEAM_ACID,                                // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      { 8, 22, true },                          // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
@@ -296,9 +297,16 @@ static const cloud_data clouds[] = {
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
     // CLOUD_FLAME,
-    { "wisps of flame", nullptr,          // terse, verbose name
-      ETC_FIRE,                                // colour
-      { TILE_CLOUD_FLAME, CTVARY_RANDOM },   // tile
+    { "wisps of flame", nullptr,                  // terse, verbose name
+      ETC_FIRE,                                   // colour
+      { TILE_CLOUD_FLAME, CTVARY_RANDOM },        // tile
+    },
+    // CLOUD_DEGENERATION,
+    { "degeneration",  nullptr,                   // terse, verbose name
+      ETC_DARK,                                   // colour
+      { TILE_CLOUD_DEGENERATION, CTVARY_NONE },   // tile
+      BEAM_NONE, {},                              // beam & damage
+      false,                                      // opacity
     },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -510,18 +518,24 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
         mpr("You smother the flame.");
         return false;
     }
-    else if (monster_at(cloud.pos))
+    const monster *mons = monster_at(cloud.pos);
+    if (mons && !mons_is_conjured(mons->type))
     {
         mprf("%s smothers the flame.",
              monster_at(cloud.pos)->name(DESC_THE).c_str());
         return false;
     }
-    else
+
+    mpr("The fire ignites!");
+    int dur = 5 + random2avg(20, 2);      // ignis sea of flames duration
+    if (you.props.exists(CFLAME_DUR_KEY)) // this ember was created by cflame
     {
-        mpr("The fire ignites!");
-        place_cloud(CLOUD_FIRE, cloud.pos, you.props[CFLAME_DUR_KEY], &you);
-        return true;
+        dur = you.props[CFLAME_DUR_KEY].get_int();
+        you.props.erase(CFLAME_DUR_KEY);
     }
+    place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
+    you.props.erase(CFLAME_DUR_KEY);
+    return true;
 }
 
 /**
@@ -873,6 +887,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_MEPHITIC:
     case CLOUD_MIASMA:
     case CLOUD_MUTAGENIC:
+    case CLOUD_DEGENERATION:
     case CLOUD_CHAOS:
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
@@ -913,7 +928,9 @@ static int _cloud_base_damage(const actor *act,
 {
     const cloud_damage &dam = clouds[flavour].damage;
     const bool vs_player = act->is_player();
-    const int random_dam = _rand_dam(dam, vs_player);
+    const int random_dam = _rand_dam(dam, vs_player)
+    // Replicate the old acid_splash damage. Boy we hate players, huh?
+                         + (flavour == CLOUD_ACID && vs_player ? 12 : 0);
     const int base_dam = _base_dam(dam, vs_player);
     const int trials = dam.random/15 + 1;
 
@@ -1175,6 +1192,15 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         }
         return false;
 
+    case CLOUD_DEGENERATION:
+        if (player && one_chance_in(4))
+        {
+            mpr("You feel yourself deteriorate.");
+            lose_stat(STAT_RANDOM, 1 + random2avg(4,2));
+            return true;
+        }
+        return false;
+
     case CLOUD_CHAOS:
         if (coinflip())
         {
@@ -1185,11 +1211,8 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_ACID:
-    {
-        const actor* agent = cloud.agent();
-        act->splash_with_acid(agent, 5, true);
+        act->acid_corrode(5);
         return true;
-    }
 
     case CLOUD_NEGATIVE_ENERGY:
     {

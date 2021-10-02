@@ -81,7 +81,7 @@
        "potion of curing", "condenser vane", "wand of charming" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
-       "book of dreams", "book of the dragon", "book of the dryads", "dagger",
+       "book of dreams", "book of the dragon", "dagger",
        "demon blade", "demon trident", "demon whip", "dire flail",
        "double sword", "ring of dexterity", "manual of dodging",
        "staff of death", "wand of digging", "dart", "book of dangerous friends",
@@ -160,8 +160,8 @@
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
        "manual of short blades", "manual of slings", "manual of shields",
        "manual of spellcasting", "manual of summonings", "stone",
-       "book of storms", "book of sloth", "book of stone", "book of the senses",
-       "book of spectacle", "book of the spheres" }
+       "book of storms", "book of sloth", "book of the senses",
+       "book of spectacle", "book of the spheres", "book of scorching" }
 
       elseif s == "T" then i = { "scroll of torment",
        "book of transfigurations", "scroll of teleportation", "triple sword",
@@ -177,7 +177,8 @@
       elseif s == "V" then i = { "scroll of vulnerability", "book of vapours" }
 
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
-       "war axe", "ring of willpower", "book of winter", "book of weapons" }
+       "war axe", "ring of willpower", "book of winter", "book of weapons",
+       "book of the wilderness" }
 
       elseif s == "X" then i = { "piece from xom's chessboard" }
 

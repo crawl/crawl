@@ -1030,59 +1030,55 @@ Zealous
 %%%%
 _fruit_name_
 
-orange
+Orange
 
-banana
+Banana
 
-pear
+Pear
 
-apple
+Apple
 
-apricot
+Apricot
 
-tomato
+Tomato
 
-peach
+Peach
 
-plum
+Plum
 
-rambutan
+Rambutan
 
-lychee
+Lychee
 
-mango
+Mango
 
-watermelon
+Watermelon
 
-coconut
+Coconut
 
-breadfruit
+Breadfruit
 
-eggfruit
+Eggfruit
 
-dragonfruit
+Dragonfruit
 
-guava
+Guava
 
-mangosteen
+Mangosteen
 
-tangerine
+Tangerine
 
-cherry
+Cherry
 
-grape
+Grape
 
-sultana
+Sultana
 
-fig
+Fig
 
-date
+Date
 
-orange
+Lemon
 
-banana
-
-lemon
-
-lime
+Lime
 %%%%

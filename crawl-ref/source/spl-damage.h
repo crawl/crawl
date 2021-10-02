@@ -14,6 +14,7 @@ class dist;
 
 const int DEFAULT_SHATTER_DICE = 3;
 #define COUPLING_TIME_KEY "maxwells_charge_time"
+#define FLAME_WAVE_KEY "flame_waves"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -80,6 +81,9 @@ dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 
+spret cast_scorch(int pow, bool fail);
+dice_def scorch_damage(int pow, bool random);
+
 vector<coord_def> get_ignition_blast_sources(const actor *agent,
                                              bool tracer = false);
 spret cast_ignition(const actor *caster, int pow, bool fail);
@@ -89,6 +93,10 @@ spret cast_starburst(int pow, bool fail, bool tracer=false);
 void foxfire_attack(const monster *foxfire, const actor *target);
 
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
+
+spret cast_flame_wave(int pow, bool fail);
+void handle_flame_wave();
+void end_flame_wave();
 
 spret cast_imb(int pow, bool fail);
 
@@ -112,3 +120,5 @@ void end_maxwells_coupling(bool quiet = false);
 
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);
+
+vector<coord_def> find_near_hostiles(int range);

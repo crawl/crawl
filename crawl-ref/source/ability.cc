@@ -17,6 +17,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
 #include "chardump.h"
@@ -102,6 +103,7 @@ enum class abflag
     hostile             = 0x00001000, // failure summons a hostile (Makhleb)
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
+    quiet_fail          = 0x00008000, // no message on failure
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -186,6 +188,7 @@ skill_type invo_skill(god_type god)
         case GOD_WU_JIAN:
         case GOD_VEHUMET:
         case GOD_XOM:
+        case GOD_IGNIS:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
@@ -342,10 +345,16 @@ static vector<ability_def> &_get_ability_list()
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-        { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-            0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
             2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
+
+        // TODO: any way to automatically derive these from the artefact name?
+        { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
+            0, 0, 0, {fail_basis::evo, 80, 3}, abflag::none },
+        { ABIL_EVOKE_DISPATER, "Evoke the Staff of Dispater",
+            4, 100, 0, {}, abflag::none },
+        { ABIL_EVOKE_OLGREB, "Evoke the Staff of Olgreb",
+            4, 0, 0, {}, abflag::none },
 
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, {}, abflag::none },
@@ -629,6 +638,15 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_WU_JIAN_WHIRLWIND, "Whirlwind", 0, 0, 0, {}, abflag::berserk_ok },
         { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
             0, 0, 0, {}, abflag::berserk_ok },
+
+        // Ignis
+        { ABIL_IGNIS_SEA_OF_FIRE, "Sea of Fire",
+            0, 0, 6, /*avg 15 uses from 150 to <30 piety*/
+            {fail_basis::invo}, abflag::quiet_fail },
+        { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
+            0, 0, 9, {fail_basis::invo}, abflag::quiet_fail },
+        { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
+            0, 0, 24, {fail_basis::invo}, abflag::none },
 
         { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -977,7 +995,6 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_STOP_RECALL;
         return ability;
 
-    case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         if (you.is_lifeless_undead() || you.stasis())
             return ABIL_NON_ABILITY;
@@ -992,6 +1009,12 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_LUGONU_ABYSS_ENTER:
         if (brdepth[BRANCH_ABYSS] == -1)
+            return ABIL_NON_ABILITY;
+        else
+            return ability;
+
+    case ABIL_OKAWARU_DUEL:
+        if (brdepth[BRANCH_ARENA] == -1)
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -1176,12 +1199,6 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     if (testbits(get_ability_def(ability).flags, abflag::sacrifice))
         lookup += _sacrifice_desc(ability);
-
-    if (god_hates_ability(ability, you.religion))
-    {
-        lookup += uppercase_first(god_name(you.religion))
-                  + " frowns upon the use of this ability.\n";
-    }
 
     ostringstream res;
     if (need_title)
@@ -1372,6 +1389,23 @@ static bool _can_blinkbolt(bool quiet)
     return true;
 }
 
+static bool _can_rising_flame(bool quiet)
+{
+    if (you.duration[DUR_RISING_FLAME])
+    {
+        if (!quiet)
+            mpr("You're already rising!");
+        return false;
+    }
+    if (!level_above().is_valid())
+    {
+        if (!quiet)
+            mpr("You can't rise from this level!");
+        return false;
+    }
+    return true;
+}
+
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
@@ -1422,8 +1456,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
     }
 
-    if ((abil.ability == ABIL_EVOKE_BERSERK
-         || abil.ability == ABIL_TROG_BERSERK)
+    if (abil.ability == ABIL_TROG_BERSERK
         && !you.can_go_berserk(true, false, quiet))
     {
         return false;
@@ -1664,7 +1697,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         return you.can_go_berserk(true, false, true)
                && (quiet || berserk_check_wielded_weapon());
@@ -1674,6 +1706,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 mpr("You are already invisible!");
+            return false;
+        }
+        return true;
+
+    case ABIL_EVOKE_ASMODEUS:
+        if (you.allies_forbidden())
+        {
+            if (!quiet)
+                mpr("Nothing will answer your call!");
             return false;
         }
         return true;
@@ -1747,6 +1788,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+    case ABIL_IGNIS_RISING_FLAME:
+        return _can_rising_flame(quiet);
+
     default:
         return true;
     }
@@ -1794,7 +1838,8 @@ bool activate_talent(const talent& tal, dist *target)
             count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
             return true;
         case spret::fail:
-            mpr("You fail to use your ability.");
+            if (!testbits(abil.flags, abflag::quiet_fail))
+                mpr("You fail to use your ability.");
             you.turn_is_over = true;
             return false;
         case spret::abort:
@@ -1947,6 +1992,58 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_STR, VAMPIRE_BAT_FORM_STAT_DRAIN);
     lose_stat(STAT_INT, VAMPIRE_BAT_FORM_STAT_DRAIN);
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
+}
+
+static void _evoke_sceptre_of_asmodeus()
+{
+    const monster_type mon = random_choose_weighted(
+                                   3, MONS_BALRUG,
+                                   2, MONS_HELLION,
+                                   1, MONS_BRIMSTONE_FIEND);
+
+    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
+                 MG_FORCE_BEH, you.religion);
+    mg.set_summoned(&you, 0, 0);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+    monster *m = create_monster(mg);
+
+    if (m)
+    {
+        mpr("The sceptre summons one of its terrible servants. It is charmed, for now...");
+
+        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+        did_god_conduct(DID_EVIL, 3);
+    }
+    else
+        mpr("The air shimmers briefly.");
+}
+
+static bool _evoke_staff_of_dispater(dist *target)
+{
+    int power = you.skill(SK_EVOCATIONS, 8);
+
+    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target)
+        == spret::abort)
+    {
+        return false;
+    }
+    mpr("You feel the staff feeding on your energy!");
+    return true;
+}
+
+static bool _evoke_staff_of_olgreb(dist *target)
+{
+    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
+
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr, target)
+        == spret::abort)
+    {
+        return false;
+    }
+    did_god_conduct(DID_WIZARDLY_ITEM, 10);
+    return true;
 }
 
 /*
@@ -2203,9 +2300,19 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(fail);
 
-    case ABIL_EVOKE_BERSERK:    // randarts
+    case ABIL_EVOKE_ASMODEUS:
         fail_check();
-        you.go_berserk(true);
+        _evoke_sceptre_of_asmodeus();
+        break;
+
+    case ABIL_EVOKE_DISPATER:
+        if (!_evoke_staff_of_dispater(target))
+            return spret::abort;
+        break;
+
+    case ABIL_EVOKE_OLGREB:
+        if (!_evoke_staff_of_olgreb(target))
+            return spret::abort;
         break;
 
     // DEMONIC POWERS:
@@ -2424,10 +2531,18 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_YRED_DRAIN_LIFE:
     {
         int damage = 0;
-        const spret result =
-            fire_los_attack_spell(SPELL_DRAIN_LIFE,
-                                  you.skill_rdiv(SK_INVOCATIONS),
-                                  &you, fail, &damage);
+        const int pow = you.skill_rdiv(SK_INVOCATIONS);
+
+        if (trace_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you) == spret::abort
+            && !yesno("There are no drainable targets visible. Drain Life "
+                      "anyway?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+
+        const spret result = fire_los_attack_spell(SPELL_DRAIN_LIFE, pow,
+                                                   &you, fail, &damage);
         if (result != spret::success)
             return result;
 
@@ -3133,6 +3248,20 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         fail_check();
         return wu_jian_wall_jump_ability();
 
+    case ABIL_IGNIS_FOXFIRE:
+        return foxfire_swarm();
+
+    case ABIL_IGNIS_SEA_OF_FIRE:
+        return sea_of_fire();
+
+    case ABIL_IGNIS_RISING_FLAME:
+        if (!_can_rising_flame(false))
+            return spret::abort;
+        mpr("You begin to rise into the air.");
+        // slightly faster than teleport
+        you.set_duration(DUR_RISING_FLAME, 2 + random2(3));
+        return spret::success;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3312,9 +3441,6 @@ int choose_ability_menu(const vector<talent>& talents)
             }
             else if (_check_ability_dangerous(talents[i].which, true))
                 me->colour = COL_DANGEROUS;
-            // Only check this here, since your god can't hate its own abilities
-            else if (god_hates_ability(talents[i].which, you.religion))
-                me->colour = COL_FORBIDDEN;
             abil_menu.add_entry(me);
         }
     }
@@ -3484,12 +3610,18 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_BERSERK:
-        return you.evokable_berserk()
-               && !you.get_mutation_level(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+    case ABIL_EVOKE_ASMODEUS:
+        return you.weapon()
+               && is_unrandom_artefact(*you.weapon(), UNRAND_ASMODEUS);
+    case ABIL_EVOKE_DISPATER:
+        return you.weapon()
+               && is_unrandom_artefact(*you.weapon(), UNRAND_DISPATER);
+    case ABIL_EVOKE_OLGREB:
+        return you.weapon()
+               && is_unrandom_artefact(*you.weapon(), UNRAND_OLGREB);
     default:
         // removed abilities handled here
         return false;
@@ -3537,8 +3669,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
-            ABIL_EVOKE_BERSERK,
             ABIL_EVOKE_TURN_INVISIBLE,
+            ABIL_EVOKE_ASMODEUS,
+            ABIL_EVOKE_DISPATER,
+            ABIL_EVOKE_OLGREB,
 #ifdef WIZARD
             ABIL_WIZ_BUILD_TERRAIN,
             ABIL_WIZ_SET_TERRAIN,

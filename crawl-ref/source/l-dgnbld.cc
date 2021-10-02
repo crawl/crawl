@@ -864,6 +864,19 @@ LUAFN(dgn_make_diamond)
     if (!_valid_coord(ls, lines, x, y))
         return 0;
 
+    if (radius > x || radius > y)
+    {
+        luaL_error(ls, "make_diamond arguments too large: (%d, %d, %d)",
+                       x, y, radius);
+    }
+
+    if (x + radius > lines.width() || y + radius > lines.height())
+    {
+        luaL_error(ls, "make_diamond arguments too large: (%d, %d, %d)"
+                       " on map size (%d, %d)",
+                       x, y, radius, lines.width(), lines.height());
+    }
+
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
             if (abs(rx) + abs(ry) <= radius)
@@ -919,6 +932,13 @@ LUAFN(dgn_make_box)
     if (!_coords(ls, lines, x1, y1, x2, y2))
         return 0;
 
+    if (x2 >= lines.width() || y2 >= lines.height())
+    {
+        luaL_error(ls, "make_box arguments too large: (%d, %d)"
+                       " on map size (%d, %d)",
+                       x2, y2, lines.width(), lines.height());
+    }
+
     TABLE_CHAR(ls, floor, '.');
     TABLE_CHAR(ls, wall, 'x');
     TABLE_INT(ls, thickness, 1);
@@ -937,6 +957,13 @@ LUAFN(dgn_make_box_doors)
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
         return 0;
+
+    if (x2 > lines.width() || y2 > lines.height())
+    {
+        luaL_error(ls, "make_box_doors arguments too large: (%d, %d)"
+                       " on map size (%d, %d)",
+                       x2, y2, lines.width(), lines.height());
+    }
 
     TABLE_INT(ls, number, 1);
     TABLE_INT(ls, thickness, 1);

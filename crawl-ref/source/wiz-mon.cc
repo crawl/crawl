@@ -118,13 +118,6 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures.set(type, false);
 
-    if (mons_class_requires_band(type) && !mspec.band)
-    {
-        mprf(MSGCH_DIAGNOSTICS,
-             "That monster can only be created with a band.");
-        return;
-    }
-
     if (!dgn_place_monster(mspec, place, true, false))
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");

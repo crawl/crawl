@@ -47,6 +47,7 @@ enum monster_type                      // env.mons[].type
     MONS_PORCUPINE,
 #endif
 #if TAG_MAJOR_VERSION > 34
+    MONS_CRYSTAL_ECHIDNA,
     MONS_PALENTONGA,
 #endif
     MONS_JACKAL,
@@ -179,6 +180,13 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
     MONS_ANIMATED_ARMOUR,
+    MONS_LIVING_SPELL,
+    MONS_WALKING_TOME,
+    MONS_EARTHEN_TOME,
+    MONS_CRYSTAL_TOME,
+    MONS_DIVINE_TOME,
+    MONS_FROSTBOUND_TOME,
+    MONS_STRANGE_MACHINE,
 #endif
     MONS_HARPY,
 #if TAG_MAJOR_VERSION == 34
@@ -307,6 +315,7 @@ enum monster_type                      // env.mons[].type
     MONS_GUARDIAN_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
     MONS_USHABTI,
+    MONS_NARGUN,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -317,6 +326,7 @@ enum monster_type                      // env.mons[].type
     MONS_AIR_ELEMENTAL,
 #if TAG_MAJOR_VERSION > 34
     MONS_IRON_ELEMENTAL,
+    MONS_QUICKSILVER_ELEMENTAL,
     MONS_ELEMENTAL_WELLSPRING,
 #endif
     MONS_TWISTER,        // air miscasts
@@ -496,6 +506,8 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_JUGGERNAUT,
     MONS_IRON_GIANT,
+    MONS_CACTUS_GIANT,
+    MONS_TAINTED_LEVIATHAN,
 #endif
     MONS_HUMAN,
 #if TAG_MAJOR_VERSION == 34
@@ -515,11 +527,11 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_PRESERVER,
     MONS_IRONBOUND_FROSTHEART,
     MONS_IRONBOUND_THUNDERHULK,
-    MONS_IRONBOUND_BEASTMASTER,
     MONS_IMPERIAL_MYRMIDON,
     MONS_SERVANT_OF_WHISPERS,
     MONS_RAGGED_HIEROPHANT,
     MONS_HALAZID_WARLOCK,
+    MONS_SPECTATOR,
 #endif
     MONS_KILLER_KLOWN,
     MONS_SHAPESHIFTER,
@@ -656,6 +668,7 @@ enum monster_type                      // env.mons[].type
 #else
     MONS_DRYAD,
     MONS_ELEIONOMA,
+    MONS_WENDIGO,
     MONS_SNAPLASHER_VINE,
     MONS_SNAPLASHER_VINE_SEGMENT,
 #endif
@@ -676,6 +689,7 @@ enum monster_type                      // env.mons[].type
     MONS_WORLDBINDER,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
     MONS_BUNYIP,
+    MONS_CREEPING_INFERNO,
 #endif
     MONS_ELDRITCH_TENTACLE,
     MONS_ELDRITCH_TENTACLE_SEGMENT,
@@ -741,6 +755,9 @@ enum monster_type                      // env.mons[].type
     MONS_REVENANT,
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
+    MONS_SEARING_WRETCH,
+    MONS_STOKER,
+    MONS_PUTRID_MOUTH,
 #endif
     MONS_SKELETON_SMALL,   // recolouring only
     MONS_SKELETON_LARGE,   // recolouring only
@@ -871,6 +888,7 @@ enum monster_type                      // env.mons[].type
     MONS_BAI_SUZHEN_DRAGON,
     MONS_MAGGIE,
     MONS_MLIOGLOTL,
+    MONS_HEADMASTER,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1119,6 +1137,25 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_BEASTMASTER,
     MONS_SALAMANDER_TYRANT,
     MONS_MLIOGLOTL,
+    MONS_CACTUS_GIANT,
+    MONS_CREEPING_INFERNO,
+    MONS_SEARING_WRETCH,
+    MONS_STOKER,
+    MONS_QUICKSILVER_ELEMENTAL,
+    MONS_CRYSTAL_ECHIDNA,
+    MONS_PUTRID_MOUTH,
+    MONS_TAINTED_LEVIATHAN,
+    MONS_WENDIGO,
+    MONS_NARGUN,
+    MONS_HEADMASTER,
+    MONS_LIVING_SPELL,
+    MONS_WALKING_TOME,
+    MONS_EARTHEN_TOME,
+    MONS_CRYSTAL_TOME,
+    MONS_DIVINE_TOME,
+    MONS_FROSTBOUND_TOME,
+    MONS_STRANGE_MACHINE,
+    MONS_SPECTATOR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

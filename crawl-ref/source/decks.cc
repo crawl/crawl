@@ -1326,13 +1326,9 @@ static void _summon_bee(int power)
 static void _summon_rangers(int power)
 {
     const int power_level = _get_power_level(power);
-    const monster_type dctr  = random_choose(MONS_CENTAUR, MONS_YAKTAUR),
-                       dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN),
-                       dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN,
-                                             MONS_NAGA_SHARPSHOOTER),
-                       dctr4 = random_choose(MONS_SATYR,
-                                             MONS_MERFOLK_JAVELINEER,
-                                             MONS_DEEP_ELF_MASTER_ARCHER);
+    const monster_type dctr = MONS_CENTAUR_WARRIOR,
+                       dctr2 = MONS_NAGA_SHARPSHOOTER,
+                       dctr3 = MONS_DEEP_ELF_MASTER_ARCHER;
 
     const monster_type base_choice = power_level == 2 ? dctr2 :
                                                         dctr;
@@ -1342,7 +1338,7 @@ static void _summon_rangers(int power)
     const bool extra_monster = coinflip();
 
     if (!extra_monster && power_level > 0)
-        placed_choice = power_level == 2 ? dctr4 : dctr3;
+        placed_choice = power_level == 2 ? dctr3 : dctr2;
 
     for (int i = 0; i < 1 + extra_monster; ++i)
         _friendly(base_choice, 5 - power_level);

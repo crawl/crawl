@@ -452,6 +452,15 @@ static bool _map_safe_vault_place(const map_def &map,
     const bool vault_can_replace_portals =
         map.has_tag("replace_portal");
 
+    // respect smaller builder levels
+    if (c.x < (GXM - dgn_builder_x()) / 2
+        || c.x + size.x - 1 > (GXM + dgn_builder_x()) / 2
+        || c.y < (GYM - dgn_builder_y()) / 2
+        || c.y + size.y - 1 > (GYM + dgn_builder_y()) / 2)
+    {
+        return false;
+    }
+
     const vector<string> &lines = map.map.get_lines();
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
     {

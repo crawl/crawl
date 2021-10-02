@@ -75,6 +75,7 @@ static const char *daction_names[] =
 #endif
     "ancestor vanishes",
     "upgrade ancestor",
+    "remove Ignis altars",
 };
 #endif
 
@@ -297,6 +298,11 @@ static void _apply_daction(daction_type act)
             if (env.grid(*ri) == DNGN_ALTAR_JIYVA)
                 env.grid(*ri) = DNGN_FLOOR;
         }
+        break;
+    case DACT_REMOVE_IGNIS_ALTARS:
+        for (rectangle_iterator ri(1); ri; ++ri)
+            if (env.grid(*ri) == DNGN_ALTAR_IGNIS)
+                env.grid(*ri) = DNGN_FLOOR;
         break;
     case DACT_ROT_CORPSES:
         for (auto &item : env.item)

@@ -544,7 +544,7 @@ ENDMAP
 NAME:     d_20
 TAGS:     d_20
 KMONS:    1 = place:Depths:2
-KMONS:    2 = place:Depths:4
+KMONS:    2 = place:Depths:3
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {

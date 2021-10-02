@@ -928,6 +928,10 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         return false;
 
     beam.aimed_at_spot |= returning;
+    // Avoid overshooting and potentially hitting the player.
+    // Piercing beams' tracers already account for this.
+    beam.aimed_at_spot |= mons->temp_attitude() == ATT_FRIENDLY
+                          && !beam.pierce;
 
     const launch_retval projected =
         is_launched(mons, mons->mslot_item(MSLOT_WEAPON),

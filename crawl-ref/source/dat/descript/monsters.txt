@@ -54,7 +54,7 @@ Bai Suzhen
 
 A weary draconian with foreign and watery scales. She has come to the Dungeon
 in hopes of resurrecting her mortal husband; a noble cause, for a being once
-known for quarreling with saints and flooding unfortunate temples. If pressed
+known for quarrelling with saints and flooding unfortunate temples. If pressed
 to her limits, she will reveal her true form, the mere sight of which struck
 her husband dead. Adventurers may wish they were so lucky!
 %%%%
@@ -636,9 +636,8 @@ skilled with both conjurations and melee combat.
 %%%%
 battlesphere
 
-A small globe of magical energy that follows a spellcaster. It cannot operate
-on its own, but will assault the conjurer's foes with magical missiles that
-never miss each time the conjurer casts a spell.
+A small globe of magical energy. Each time its creator casts a destructive
+Conjuration, it will launch a magical missile at a random foe.
 %%%%
 bennu
 
@@ -754,6 +753,11 @@ butterfly
 A large, brightly coloured butterfly with beautifully patterned wings,
 fluttering incongruously through the darkness of the cave.
 %%%%
+cactus giant
+
+A green-skinned, spiny colossus, with a hearty barrel chest and a thirst for
+battle. Any foe that strikes it in melee will be lucky to live to regret it.
+%%%%
 cacodemon
 
 A hideously ugly demon of rage and legendary power, it disables its foes before
@@ -801,10 +805,23 @@ corrupter
 
 <demonspawn>
 %%%%
+creeping inferno
+
+A formless mass of ancient fire, bound by heat and malevolence. The slightest
+disturbance will destroy the bonds holding it together and unleash a fire
+storm. It longs for that release, yet seems reluctant to move while
+being observed.
+%%%%
 crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
+%%%%
+crystal echidna
+
+A spiny, long snouted rodent grown out of pure living crystal. It is
+immune to most forms of magic and hurls both crystalline bolts and painful
+barbs.
 %%%%
 crystal guardian
 
@@ -1524,11 +1541,6 @@ ironbound preserver
 A towering, muscular figure, capable of safeguarding its allies by selflessly
 accepting a portion of the injuries inflicted upon them.
 %%%%
-ironbound beastmaster
-
-A cruel and wild brute who growls in the language of the untamed. It conditions
-beasts for combat with nets and malice, and spurs them to fight its foes.
-%%%%
 jackal
 
 A small canine scavenger. Packs of jackals roam the underworld, searching for
@@ -1627,6 +1639,11 @@ lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie red glow.
+%%%%
+living spell
+
+A semi-sentient construct of floating magic. It casts itself at the first foe
+it sees, expending itself in the process.
 %%%%
 lorocyproca
 
@@ -1763,6 +1780,13 @@ nameless horror
 A malign force from the space between planes. It is hostile to the magic forces
 that removed it from its home. These horrors are often the result of mistaken
 summoning spells and have slain many aspiring wizards.
+%%%%
+nargun
+
+An ancient stone creature that has lived among these frozen caves since before
+Antaeus rent Cocytus into being. It tolerates its new neighbors begrudgingly,
+preferring the company of its petrified enemies. Veins of ice permeate its
+frozen stone flesh.
 %%%%
 necromancer
 
@@ -1954,6 +1978,11 @@ program bug
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
 %%%%
+putrid mouth
+
+A starved spirit whose mouth is a pit of rot, emitting vile fumes. Its putrid
+maw cannot eat the food it finds, so it moans with rage and desparate hunger.
+%%%%
 purple draconian
 
 A muscular purple-scaled humanoid with a reptilian tail and small wings.
@@ -1973,6 +2002,11 @@ quicksilver dragon
 A long and sinuous dragon, seemingly more neck and tail than anything else. Its
 skin shines like molten mercury, magical energies arc from its pointed snout,
 and it moves with terrifying swiftness.
+%%%%
+quicksilver elemental
+
+A mercurial spirit drawn from the elemental plane of earth. It exists in
+this world by inhabiting a shimmering body of liquid metal.
 %%%%
 quicksilver ooze
 
@@ -2010,8 +2044,8 @@ the living.
 red devil
 
 A larger cousin of the common imp, with a fiendish grin and two short wings
-sprouting from its shoulders. It favours barbed tridents, and taunts its
-victims from afar.
+sprouting from its shoulders. It favours tridents and loves to skewer its
+victims with painful barbs.
 %%%%
 red draconian
 
@@ -2028,8 +2062,8 @@ mandibles drip with lethal poison.
 %%%%
 revenant
 
-A skeletal form wreathed in cold blue fire, standing astride this life and the
-next. Echoes of the lingering dead flicker within its ghostly flames.
+An animated skeleton wreathed in cold blue fire, standing astride this life and
+the next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
 rime drake
 
@@ -2098,6 +2132,12 @@ sea snake
 
 A brightly coloured snake, very comfortable in the water. It has a highly
 potent venomous bite.
+%%%%
+searing wretch
+
+An animated corpse alight with terrible fire. The flames are fueled by its
+regenerating flesh, which bubbles and melts as it grows. Its bite leaves
+its victims covered in flaming gore.
 %%%%
 seraph
 
@@ -2287,8 +2327,8 @@ and its prowess with advanced weaponry.
 spriggan druid
 
 A spriggan whose connection with the birds and the beasts is exceptionally
-strong. It will call forth nature's wrath against anyone who so much as snaps a
-twig.
+strong. If it dies, its sacrifice will heal and temporarily strengthen nearby
+animals.
 %%%%
 spriggan rider
 
@@ -2324,6 +2364,11 @@ steam dragon
 A relatively small grey dragon, with a resilient-looking scaly hide and steam
 pouring from its mouth.
 %%%%
+stoker
+
+A mortal who made an unholy pact in life, now chained to tend the fires of
+hell in undeath as payment. It seems to want to keep its distance.
+%%%%
 stone giant
 
 A gigantic humanoid with grey skin almost as hard as rock. It carries several
@@ -2333,6 +2378,11 @@ storm dragon
 
 A powerful dragon with a hide of thick matte scales almost like blue rubber,
 and enormous scaly wings crackling with sparks.
+%%%%
+strange machine
+
+A strange mechanical contraption, all hisses and pops. Shadows seem to dance
+across its reflective surface.
 %%%%
 sun demon
 
@@ -2354,8 +2404,15 @@ A large slimy worm, adept at traversing swamps and marshes.
 %%%%
 tarantella
 
-A small but greatly-feared spider whose enchanted bite causes victims to break
-into a frenzied dance.
+A small but greatly-feared spider. Its touch alone causes victims to break into
+a frenzied dance.
+%%%%
+tainted leviathan
+
+Before even the oldest of ancient liches mastered life and death, a group of
+titans attempted to pull themselves free of mortality through brute strength.
+They almost succeeded before rot dragged them to Ereshkigal. A glimmer of their
+former beauty remains, alluring despite the stench.
 %%%%
 tengu
 
@@ -2536,6 +2593,44 @@ vine stalker
 A bizarre symbiotic creature, made up of a carnivorous vine magically combined
 with a humanoid.
 %%%%
+walking earthen tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+It is coated with impossibly ancient dust.
+%%%%
+walking crystal tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+It is encrusted with long, sharp, deadly-looking crystals.
+%%%%
+walking divine tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+Its cover bears the icon of a long-forgotten god, still fully possessed of wrath.
+%%%%
+walking frostbound tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+
+It glistens with a thick layer of unmelting ice.
+%%%%
+walking tome
+
+A spellbook that has gone too long without being read. It overflows with magic,
+forming thick armour from its binding, legs from its pages, and periodically
+erupting in flurries of free-floating, self-casting spells.
+%%%%
 wandering mushroom
 
 A large, fleshy mushroom that wanders slowly around the dungeon. It is both
@@ -2571,6 +2666,13 @@ water nymph
 A capricious nature spirit, deeply bonded with the waters in which she lives.
 Wherever they flow, so may she, and ponds and rivers surge and leap at her
 whim.
+%%%%
+wendigo
+
+A gaunt spirit of frozen hunger, so ravenous it will consume friend and foe
+alike. According to legend, if one cuts off its legs, it will feast upon its own
+marrow. It stalks those lost wandering in the cold and hunts with the force of
+blizzards.
 %%%%
 white draconian
 
@@ -2722,6 +2824,11 @@ Cloud Mage
 
 A strange wizard who has attained mastery over clouds, making deft and
 foreboding mystic gestures.
+%%%%
+Head Instructor
+
+A powerful warrior-mage who instructs aspiring students in physical, magical,
+and anti-magical combat.
 %%%%
 Hellbinder
 

@@ -167,7 +167,7 @@ zealot's sword
 
 A sword made of one huge piece of crystal. Legend says it was the Shining One's
 gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
-both the wielder and all of their mortal followers.
+both the wielder and all of their followers.
 %%%%
 arbalest "Damnation"
 

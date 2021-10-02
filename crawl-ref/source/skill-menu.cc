@@ -1230,6 +1230,10 @@ void SkillMenu::init_button_row()
         m_clear_targets_button = new FormattedTextItem();
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
+#ifndef USE_TILE_LOCAL
+        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT);
+        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT2);
+#endif
         m_clear_targets_button->set_highlight_colour(YELLOW);
         add_item(m_clear_targets_button, 25, m_pos);
         refresh_button_row();
@@ -1243,6 +1247,9 @@ void SkillMenu::init_switches()
     {
         sw = new SkillMenuSwitch("mode", '/');
         m_switches[SKM_MODE] = sw;
+#ifndef USE_TILE_LOCAL
+        sw->add_hotkey(CK_NUMPAD_DIVIDE);
+#endif
         sw->add(SKM_MODE_AUTO);
         if (!is_set(SKMF_SPECIAL) && !is_set(SKMF_SIMPLE))
             sw->add(SKM_MODE_MANUAL);
@@ -1269,6 +1276,9 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
 
         sw = new SkillMenuSwitch("skills", '*');
+#ifndef USE_TILE_LOCAL
+        sw->add_hotkey(CK_NUMPAD_MULTIPLY);
+#endif
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
         if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))

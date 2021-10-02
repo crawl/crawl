@@ -26,7 +26,7 @@ meteorological fury. It does more damage to targets surrounded by empty space.
 Alistair's Intoxication spell
 
 Converts a small portion of the brain matter of those around you into alcohol,
-attempting to confuse all intelligent living creatures within view (although
+attempting to confuse all intelligent creatures within view (although
 poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
@@ -357,6 +357,11 @@ a moment to begin burning with vigor and in its fragile initial state is easily
 smothered by either the caster or a wandering monster. Re-casting the spell
 will bring the fire fully to life, but will burn the caster.
 %%%%
+Conjure Living Spells spell
+
+Creates several living, autonomous spells. These will attempt to cast themselves
+at the nearest foe, expending themselves in the process.
+%%%%
 Corona spell
 
 Causes a halo of glowing light to surround and effectively outline a creature.
@@ -373,7 +378,7 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
-Corrupt Locale spell
+Corrupt spell
 
 Unleashes Abyssal energies in the immediate vicinity. This changes the
 appearance of the affected area and temporarily summons creatures from the
@@ -611,6 +616,12 @@ Flame Tongue spell
 
 Creates a short burst of flame.
 %%%%
+Flame Wave spell
+
+Blasts the caster's surroundings with a wave of fire. If the caster maintains
+focus and supplies the spell with magical power (by waiting in place and not
+taking any other actions), more and larger flame waves will radiate outward.
+%%%%
 Flaming Cloud spell
 
 Conjures up a large cloud of roaring flames.
@@ -702,11 +713,6 @@ out of view.
 Greater Servant of Makhleb spell
 
 Summons a major demon.
-%%%%
-Goad Beasts spell
-
-Provokes nearby beasts to act faster. The effect is fleeting, but repeated use
-can move even the most stubborn mule.
 %%%%
 Hailstorm spell
 
@@ -835,10 +841,9 @@ dangerously contaminated after a few castings.
 Iskenderun's Battlesphere spell
 
 Conjures a small globe of magical energy linked to the caster's own magical
-reserves. While the battlesphere cannot take independent action, it will fire
-volleys of energy at the caster's enemies in sync with its creator's own
-destructive conjurations. With increasing power, the battlesphere lasts longer
-and deals more damage per volley.
+reserves. Each time its creator casts a destructive Conjuration, the battlesphere
+will launch its own volley of energy at a random foe. With increasing power, the
+battlesphere lasts longer and deals more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -916,10 +921,10 @@ cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
 Manifold Assault spell
 
-Launches melee attacks against multiple visible enemies, warping space into
-paradoxical configurations to allow one swing to be in many places. The effect
-is too imprecise to allow stabbing unsuspecting foes. At high power, it can be
-used to strike more enemies at once.
+Warps space into paradoxical configurations in order to strike many visible
+targets with one melee attack. The effect is too imprecise to allow stabbing
+unsuspecting foes. At high power, it can be used to strike more enemies at
+once.
 %%%%
 Mara Summon spell
 
@@ -1184,6 +1189,11 @@ Scattershot spell
 Blasts a cone-shaped area in front of the caster with metallic fragments. Its
 damage is strongly reduced by armour.
 %%%%
+Scorch spell
+
+Scorches a random foe. Those injured by this have their resistance to fire
+burned away for a short time.
+%%%%
 Seal Doors spell
 
 Imparts seals on nearby doors and stairs, preventing those not allied with
@@ -1205,6 +1215,12 @@ Sentinel's Mark spell
 
 Bestows a strong beacon upon a targeted creature. It announces the presence
 and location of the marked creature to everyone on the same level.
+%%%%
+Seracfall spell
+
+Violently collapses a nearby simulacrum into a large mass of ice, which
+explodes on impact. The ice affects even cold-resistant creatures somewhat, due
+to the strong impact and cutting edges.
 %%%%
 Shadow Bolt spell
 
@@ -1374,6 +1390,10 @@ which lashes out at the target. The stinger's impact will always poison a
 susceptible target. Even resistant targets have a chance to be poisoned and
 immune monsters will be damaged by the physical impact of the stinger.
 %%%%
+Stoke Flames spell
+
+Adds malice to hellish fires, binding it with flame into a creeping inferno.
+%%%%
 Stone Arrow spell
 
 Fires a sharp spine of rock.
@@ -1409,6 +1429,12 @@ spell's power.
 Summon Air Elementals spell
 
 Summons one or more air elementals.
+%%%%
+Summon Cactus Giant spell
+
+Summons a warrior from a particularly prickly tribe. Foes that strike these
+giants in melee are in for a painful surprise! When cast at a higher power,
+older, more robust warriors will answer the call.
 %%%%
 Summon Demon spell
 

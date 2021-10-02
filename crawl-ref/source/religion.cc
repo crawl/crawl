@@ -80,6 +80,8 @@
 
 #define PIETY_HYSTERESIS_LIMIT 1
 
+#define MIN_IGNIS_PIETY_KEY "min_ignis_piety"
+
 static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD);
 static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
 static armour_type _hepliaklqana_shield_type(monster_type mc, int HD);
@@ -387,6 +389,13 @@ const vector<god_power> god_powers[NUM_GODS] =
              "summon a storm of heavenly clouds to empower your attacks",
              "summon a storm of heavenly clouds" },
     },
+
+    // Ignis
+    {
+        { 1, ABIL_IGNIS_SEA_OF_FIRE, "fill your surroundings with clouds of flame" },
+        { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
+        { 2, ABIL_IGNIS_RISING_FLAME, "rocket upward and away" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -490,6 +499,9 @@ bool is_unavailable_god(god_type god)
         return true;
 
     if (god == GOD_JIYVA && jiyva_is_dead())
+        return true;
+
+    if (god == GOD_IGNIS && ignis_is_dead())
         return true;
 
     return false;
@@ -599,15 +611,24 @@ void dec_penance(god_type god, int val)
         mark_milestone("god.mollify",
                        "mollified " + god_name(god) + ".");
 
-        const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
+        if (god == GOD_IGNIS)
+        {
+            simple_god_message(", with one final cry of rage, "
+                               "burns out of existence.", god);
+            add_daction(DACT_REMOVE_IGNIS_ALTARS);
+        }
+        else
+        {
+            const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
+            simple_god_message(
+                make_stringf(" seems mollified%s.",
+                             dead_jiyva ? ", and vanishes" : "").c_str(),
+                god);
 
-        simple_god_message(
-            make_stringf(" seems mollified%s.",
-                         dead_jiyva ? ", and vanishes" : "").c_str(),
-            god);
+            if (dead_jiyva)
+                add_daction(DACT_REMOVE_JIYVA_ALTARS);
+        }
 
-        if (dead_jiyva)
-            add_daction(DACT_REMOVE_JIYVA_ALTARS);
 
         take_note(Note(NOTE_MOLLIFY_GOD, god));
 
@@ -723,6 +744,47 @@ bool jiyva_is_dead()
 {
     return you.royal_jelly_dead
            && !you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA];
+}
+
+bool ignis_is_dead()
+{
+    return you.worshipped[GOD_IGNIS]
+        && !you_worship(GOD_IGNIS)
+        && !you.penance[GOD_IGNIS];
+}
+
+/// Is there any penalty from your god for removing an amulet of faith?
+bool faith_has_penalty()
+{
+    return ignore_faith_reason().empty()
+        && !you_worship(GOD_XOM)
+        && !you_worship(GOD_NO_GOD);
+}
+
+/// Is an amulet of faith irrelevant to you while you worship your current god?
+/// If so, what how would that god explain why?
+string ignore_faith_reason()
+{
+    switch (you.religion)
+    {
+    case GOD_GOZAG:
+        return " cares for nothing but gold!";
+    case GOD_ASHENZARI:
+        return " cares nothing for such trivial demonstrations of your faith.";
+    case GOD_IGNIS:
+        // XXX: would it be better to offer a discount..?
+        return " already offers you all the fire that remains!";
+    case GOD_RU:
+        if (you.piety >= piety_breakpoint(5))
+        {
+            return " says: An ascetic of your devotion"
+                   " has no use for such trinkets.";
+        }
+        break;
+    default:
+        break;
+    }
+    return "";
 }
 
 void set_penance_xp_timeout()
@@ -2241,7 +2303,8 @@ string god_name(god_type which_god, bool long_name)
 #endif
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
-    case GOD_WU_JIAN:     return "Wu Jian";
+    case GOD_WU_JIAN:       return "Wu Jian";
+    case GOD_IGNIS:         return "Ignis";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2625,7 +2688,9 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
     pgn = div_rand_round(pgn, denominator);
     while (pgn-- > 0)
         _gain_piety_point();
-    if (you.piety > you.piety_max[you.religion])
+    // Note down the first time you hit 6* piety with a given god,
+    // excepting Ignis, since it's not really meaningful there.
+    if (you.piety > you.piety_max[you.religion] && !you_worship(GOD_IGNIS))
     {
         if (you.piety >= piety_breakpoint(5)
             && you.piety_max[you.religion] < piety_breakpoint(5))
@@ -2749,6 +2814,8 @@ void lose_piety(int pgn)
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
     }
+
+    you.props[MIN_IGNIS_PIETY_KEY] = you.piety;
 }
 
 // Fedhas worshipers are on the hook for most plants and fungi
@@ -2899,6 +2966,8 @@ int initial_wrath_penance_for(god_type god)
         case GOD_ZIN:
         default:
             return 25;
+        case GOD_IGNIS:
+            return 15; // baby wrath!
         case GOD_RU:
             return 0;
     }
@@ -2987,7 +3056,9 @@ void excommunication(bool voluntary, god_type new_god)
     whereis_record();
 #endif
 
-    if (god_hates_your_god(old_god, new_god))
+    if (old_god == GOD_IGNIS)
+        simple_god_message(" blazes with a vengeful fury!", old_god);
+    else if (god_hates_your_god(old_god, new_god))
     {
         simple_god_message(
             make_stringf(" does not appreciate desertion%s!",
@@ -3211,6 +3282,15 @@ void excommunication(bool voluntary, god_type new_god)
             okawaru_remove_finesse();
         if (player_in_branch(BRANCH_ARENA))
             okawaru_end_duel();
+        break;
+
+    case GOD_IGNIS:
+        simple_god_message(" burns away your resistance to fire.", old_god);
+        if (you.duration[DUR_RISING_FLAME])
+        {
+            you.duration[DUR_RISING_FLAME] = 0;
+            mpr("Your rising flame fizzles out.");
+        }
         break;
 
     default:
@@ -3643,6 +3723,17 @@ static void _set_initial_god_piety()
             you.props[RU_SACRIFICE_DELAY_KEY] = delay;
         }
         you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
+        break;
+
+    case GOD_IGNIS:
+        // Don't allow leaving & rejoining to reset piety
+        // XXX: maybe this logic should all be in on_join?
+        if (you.props.exists(MIN_IGNIS_PIETY_KEY))
+            you.piety = you.props[MIN_IGNIS_PIETY_KEY].get_int();
+        else
+            you.piety = 130; // matches zealot with ecu bonus
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
         break;
 
     default:
@@ -4167,18 +4258,6 @@ string god_spell_warn_string(spell_type spell, god_type god)
         return "";
 }
 
-bool god_hates_ability(ability_type ability, god_type god)
-{
-    switch (ability)
-    {
-        case ABIL_EVOKE_BERSERK:
-            return god == GOD_CHEIBRIADOS;
-        default:
-            break;
-    }
-    return false;
-}
-
 lifesaving_chance elyvilon_lifesaving()
 {
     if (!you_worship(GOD_ELYVILON))
@@ -4306,6 +4385,9 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
+        case GOD_IGNIS:
+            // Losing piety over time would be extremely annoying for people
+            // trying to get polytheist with Ignis. Almost impossible.
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
         case GOD_GOZAG:
@@ -4352,6 +4434,7 @@ int god_colour(god_type god) // mv - added
 
     case GOD_GOZAG:
     case GOD_XOM:
+    case GOD_IGNIS:
         return YELLOW;
 
     case GOD_NEMELEX_XOBEH:
@@ -4475,6 +4558,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_HEPLIAKLQANA:
         return random_choose(LIGHTGREEN, LIGHTBLUE);
+
+    case GOD_IGNIS:
+        return random_choose(WHITE, YELLOW);
 
     default:
         return YELLOW;
@@ -4813,6 +4899,7 @@ static bool _is_temple_god(god_type god)
     case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
+    case GOD_IGNIS:
         return false;
 
     default:

@@ -679,7 +679,8 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 bool monster::can_throw_large_rocks() const
 {
     monster_type species = mons_species(false); // zombies can't
-    return species == MONS_STONE_GIANT
+    return species == MONS_TAINTED_LEVIATHAN
+           || species == MONS_STONE_GIANT
            || species == MONS_CYCLOPS
            || species == MONS_OGRE;
 }
@@ -2694,7 +2695,7 @@ void monster::set_hit_dice(int new_hit_dice)
     if (type == MONS_OKLOB_PLANT && !spells.empty()
         && spells[0].spell == SPELL_SPIT_ACID)
     {
-        spells[0].freq = 200 * hit_dice / 30;
+        spells[0].freq = 200 * hit_dice / 40;
     }
 }
 
@@ -2747,7 +2748,7 @@ bool monster::fumbles_attack()
     return false;
 }
 
-void monster::attacking(actor * /* other */, bool /* ranged */)
+void monster::attacking(actor * /* other */)
 {
 }
 
@@ -2770,11 +2771,9 @@ bool monster::go_frenzy(actor *source)
     const int duration = 16 + random2avg(13, 2);
 
     add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
-    if (holiness() & MH_NATURAL)
-    {
-        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
-        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
-    }
+    add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
+
     mons_att_changed(this);
 
     if (simple_monster_message(*this, " flies into a frenzy!"))
@@ -2937,7 +2936,7 @@ bool monster::has_chaotic_spell() const
 
 bool monster::has_attack_flavour(int flavour) const
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const int attk_flavour = mons_attack_spec(*this, i).flavour;
         if (attk_flavour == flavour)
@@ -2949,7 +2948,7 @@ bool monster::has_attack_flavour(int flavour) const
 
 bool monster::has_damage_type(int dam_type)
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const int dmg_type = damage_type(i);
         if (dmg_type == dam_type)
@@ -2963,7 +2962,7 @@ int monster::constriction_damage(bool direct) const
 {
     if (direct)
     {
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         {
             const mon_attack_def attack = mons_attack_spec(*this, i);
             if (attack.type == AT_CONSTRICT)
@@ -3121,7 +3120,8 @@ bool monster::pacified() const
 
 bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
-    return (holiness() & MH_NATURAL) && !berserk_or_insane();
+    return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+           && !berserk_or_insane();
 }
 
 /**
@@ -3523,10 +3523,6 @@ mon_holy_type monster::holiness(bool /*temp*/) const
 
     mon_holy_type holi = mons_class_holiness(type);
 
-    // Assume that all unknown gods are not holy.
-    if (is_priest() && is_good_god(god))
-        holi |= MH_HOLY;
-
     // Assume that all unknown gods are evil.
     if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
         holi |= MH_EVIL;
@@ -3550,9 +3546,14 @@ bool monster::undead_or_demonic(bool /*temp*/) const
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
+/**
+ * Is the monster innately holy, or a priest of a good god?
+ *
+ * @return Whether the monster is considered holy.
+ **/
 bool monster::is_holy() const
 {
-    return bool(holiness() & MH_HOLY);
+    return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
 bool monster::is_nonliving(bool /*temp*/) const
@@ -3930,7 +3931,7 @@ int monster::res_holy_energy() const
 int monster::res_negative_energy(bool intrinsic_only) const
 {
     // If you change this, also change get_mons_resists.
-    if (!(holiness() & MH_NATURAL))
+    if (!(holiness() & (MH_NATURAL | MH_PLANT)))
         return 3;
 
     int u = get_mons_resist(*this, MR_RES_NEG);
@@ -4313,8 +4314,7 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 /**
  * Attempts to apply corrosion to a monster.
  */
-void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
-                               bool /*allow_corrosion*/, const char* /*hurt_msg*/)
+void monster::splash_with_acid(actor* evildoer, int acid_strength)
 {
     // Splashing with acid shouldn't do anything to immune targets
     if (res_acid() == 3)
@@ -4329,11 +4329,16 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
              attack_strength_punctuation(post_res_dam).c_str());
     }
 
-    if (!one_chance_in(3))
-        corrode_equipment();
+    acid_corrode(acid_strength);
 
     if (post_res_dam > 0)
         hurt(evildoer, post_res_dam, BEAM_ACID, KILLED_BY_ACID);
+}
+
+void monster::acid_corrode(int /*acid_strength*/)
+{
+    if (res_acid() < 3 && !one_chance_in(3))
+        corrode_equipment();
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
@@ -5032,7 +5037,8 @@ bool monster::can_go_frenzy(bool check_sleep) const
 
 bool monster::can_go_berserk() const
 {
-    return bool(holiness() & MH_NATURAL) && can_go_frenzy();
+    return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+           && can_go_frenzy();
 }
 
 bool monster::berserk() const
@@ -5105,7 +5111,7 @@ bool monster::can_see_invisible(bool calc_unid) const
 
 bool monster::invisible() const
 {
-    return has_ench(ENCH_INVIS) && !backlit();
+    return has_ench(ENCH_INVIS) && !backlit() && !has_ench(ENCH_FIRE_CHAMPION);
 }
 
 bool monster::visible_to(const actor *looker) const
@@ -5279,7 +5285,8 @@ static bool _mons_is_icy(int mc)
     return mc == MONS_ICE_BEAST
            || mc == MONS_SIMULACRUM
            || mc == MONS_ICE_STATUE
-           || mc == MONS_BLOCK_OF_ICE;
+           || mc == MONS_BLOCK_OF_ICE
+           || mc == MONS_NARGUN;
 }
 
 bool monster::is_icy() const
@@ -5335,9 +5342,18 @@ bool monster::is_spiny() const
                            M_SPINY);
 }
 
+static const int ENERGY_THRESHOLD = 80; // why?
+
 bool monster::has_action_energy() const
 {
-    return speed_increment >= 80;
+    return speed_increment >= ENERGY_THRESHOLD;
+}
+
+/// If a monster had enough energy to act this turn, change it so it doesn't.
+void monster::drain_action_energy()
+{
+    if (has_action_energy())
+        speed_increment = ENERGY_THRESHOLD - roll_dice(1, 10);
 }
 
 void monster::check_redraw(const coord_def &old, bool clear_tiles) const
@@ -5655,12 +5671,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
-
-    // Randomize movement cost slightly, to make it less predictable,
-    // and make pillar-dancing not entirely safe.
-    // No randomization for allies following you to avoid traffic jam
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        energy_loss += random2(3) - 1;
 
     speed_increment -= energy_loss;
 }

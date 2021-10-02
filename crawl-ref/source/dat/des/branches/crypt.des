@@ -644,8 +644,7 @@ MONS:    shadow, soul eater, tzitzimitl
 ITEM:    any misc
 SUBST:   A : x., B : x., C : x., E : x., F : x.
 : if you.in_branch("Tar") then
-NSUBST:  d = 1:} / 1:)
-SHUFFLE: })]
+NSUBST:  d = 1:} / 1:.
 : else
 SUBST:   x = c, 3 = .
 : end

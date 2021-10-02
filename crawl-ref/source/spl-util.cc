@@ -1285,7 +1285,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             if (you.duration[DUR_SWIFTNESS])
                 return "this spell is already in effect.";
             if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
-                return "you're already traveling as fast as you can.";
+                return "you're already travelling as fast as you can.";
             if (you.is_stationary())
                 return "you can't move.";
         }
@@ -1637,6 +1637,9 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return true;
 
+    case SPELL_SCORCH:
+        return find_near_hostiles(range).empty();
+
     default:
         break;
     }
@@ -1915,6 +1918,7 @@ const set<spell_type> removed_spells =
     SPELL_RANDOM_EFFECTS,
     SPELL_HYDRA_FORM,
     SPELL_VORTEX,
+    SPELL_GOAD_BEASTS,
 #endif
 };
 
@@ -1927,4 +1931,5 @@ void end_wait_spells(bool quiet)
 {
     end_searing_ray();
     end_maxwells_coupling(quiet);
+    end_flame_wave();
 }

@@ -52,6 +52,8 @@ function sewer_portal(e)
   e.kfeat("1 = W")
   e.colour("1W = lightgreen / cyan w:5")
   e.colour("w = green")
+  e.tile("x = wall_oozing")
+  e.tile("c = wall_stone_mossy")
 end
 
 function sewer_setup(e)
@@ -102,18 +104,19 @@ ENDMAP
 NAME:   portal_sewer_entry_c
 WEIGHT: 4
 : sewer_portal(_G)
-NSUBST: c = 1:+ / 2:n / *:c
 NSUBST: W = 8 = 111W / *:W
+NSUBST: n = 1:+ / 2:n / *:c
+TILE:   c = wall_stone_mossy
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
             giant cockroach / worm w:3
 MAP
 .........
-.ccccccc.
-.cWWWWWc.
-.cWWOWWc.
-.cWWWWWc.
-.cWWWWWc.
-.ccccccc.
+.nnnnnnn.
+.nWWWWWn.
+.nWWOWWn.
+.nWWWWWn.
+.nWWWWWn.
+.nnnnnnn.
 .........
 ENDMAP
 

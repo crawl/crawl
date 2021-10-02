@@ -1299,8 +1299,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
-    case SPELL_DAZZLING_FLASH:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1309,6 +1307,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_ramparts>(&you);
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
+    case SPELL_DAZZLING_FLASH:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
@@ -1355,6 +1354,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ANIMATE_ARMOUR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_MONSTROUS_MENAGERIE:
+    case SPELL_SUMMON_CACTUS:
     case SPELL_SUMMON_HYDRA:
     case SPELL_SUMMON_MANA_VIPER:
     case SPELL_CONJURE_BALL_LIGHTNING:
@@ -1388,10 +1388,14 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, _find_blink_targets(&you));
     case SPELL_MANIFOLD_ASSAULT:
         return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles(&you));
+    case SPELL_SCORCH:
+        return make_unique<targeter_multiposition>(&you, find_near_hostiles(range));
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles(&you));
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
+    case SPELL_FLAME_WAVE:
+        return make_unique<targeter_flame_wave>(range);
 
     default:
         break;
@@ -1763,13 +1767,16 @@ string target_desc(const monster_info& mi, spell_type spell)
 {
     int powc = calc_spell_power(spell, true);
     const int range = calc_spell_range(spell, powc, false);
-    unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
 
+    unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
     if (!hitfunc)
         return "";
 
     desc_filter addl_desc = targeter_addl_desc(spell, powc,
                                 get_spell_flags(spell), hitfunc.get());
+    if (!addl_desc)
+        return "";
+
     vector<string> d = addl_desc(mi);
     return comma_separated_line(d.begin(), d.end());
 }
@@ -2150,6 +2157,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SHATTER:
         return cast_shatter(powc, fail);
 
+    case SPELL_SCORCH:
+        return cast_scorch(powc, fail);
+
     case SPELL_IRRADIATE:
         return cast_irradiate(powc, &you, fail);
 
@@ -2198,6 +2208,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SUMMON_ICE_BEAST:
         return cast_summon_ice_beast(powc, god, fail);
 
+    case SPELL_SUMMON_CACTUS:
+        return cast_summon_cactus(powc, god, fail);
+
     case SPELL_MONSTROUS_MENAGERIE:
         return cast_monstrous_menagerie(&you, powc, god, fail);
 
@@ -2226,7 +2239,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_call_imp(powc, god, fail);
 
     case SPELL_SHADOW_CREATURES:
-        return cast_shadow_creatures(spell, god, level_id::current(), fail);
+        return cast_shadow_creatures(spell, god, fail);
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return cast_summon_horrible_things(powc, god, fail);
@@ -2369,6 +2382,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
+
+    case SPELL_FLAME_WAVE:
+        return cast_flame_wave(powc, fail);
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
@@ -2677,6 +2693,8 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
             return irradiate_damage(power, false);
         case SPELL_SHATTER:
             return shatter_damage(power);
+        case SPELL_SCORCH:
+            return scorch_damage(power, false);
         case SPELL_BATTLESPHERE:
             return battlesphere_damage(power);
         case SPELL_FROZEN_RAMPARTS:

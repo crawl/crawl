@@ -769,7 +769,7 @@ NSUBST: D = 4=1 / 5=1- / 2 / 2=2- / 2--- / -
 SUBST:  fgh = |*, i = *%, j = %$..
 NSUBST: D = 5=0 / 5=0- / 98 / 3=98-- / 98------ / -
 : elseif you.in_branch("Depths") then
-MONS:   spectre place:Depths:5 / simulacrum place:Depths:5 / \
+MONS:   spectre place:Depths:4 / simulacrum place:Depths:4 / \
         necromancer / vampire knight / vampire mage / sphinx / flayed ghost w:5
 MONS:   lich / deep elf death mage / juggernaut simulacrum / \
         juggernaut spectre / caustic shrike simulacrum / caustic shrike spectre
@@ -1356,6 +1356,7 @@ NSUBST: 1 = 1 / 2 / 12WW / W
 : end
 COLOUR: 12*%$W = lightgreen / cyan w:5
 FTILE:  O = dngn_portal_sewer_rusted
+TILE:   c = wall_stone_mossy
 : ghost_setup(_G)
 MAP
        ..
@@ -1385,6 +1386,7 @@ NSUBST: W = 1 / 2=1223WW / 2 / 3 / 3W / W
 : end
 COLOUR: 123*%$W = lightgreen / cyan w:5
 FTILE:  O = dngn_portal_sewer_rusted
+TILE:   c = wall_stone_mossy
 : ghost_setup(_G)
 MAP
  ccccccccccc

@@ -90,7 +90,7 @@ static const armour_def Armour_prop[] =
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,     3,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, ARMF_NO_FLAGS, 333 },
     { ARM_ROBE,                 "robe",                   2,   0,     7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true, ARMF_NO_FLAGS, 1000 },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, ARMF_NO_FLAGS, 1000 },
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
 
@@ -113,9 +113,9 @@ static const armour_def Armour_prop[] =
        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, ARMF_REGENERATION, 50 },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
-        EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true },
     { ARM_SCARF,                "scarf",                  0,   0,   50,
-        EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true },
 
     { ARM_GLOVES,               "gloves",                 1,   0,   45,
         EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true },
@@ -150,7 +150,7 @@ static const armour_def Armour_prop[] =
     { ARM_BUCKLER,              "buckler",                3,  -8,   45,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
     { ARM_KITE_SHIELD,               "kite shield",                 8,  -30,  45,
-        EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG, true    },
+        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true    },
     { ARM_TOWER_SHIELD,         "tower shield",          13,  -50,  45,
         EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true  },
 
@@ -487,47 +487,47 @@ static const weapon_def Weapon_prop[] =
 
 
     // Long Blades
-    { WPN_FALCHION,              "falchion",               7,  2, 13,
+    { WPN_FALCHION,              "falchion",               8,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 7, 10, 30, LBL_BRANDS }, // DAMV_CHOPPING...?
-    { WPN_LONG_SWORD,            "long sword",            9,  1, 14,
+    { WPN_LONG_SWORD,            "long sword",            10,  1, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 7, 10, 35, LBL_BRANDS },
-    { WPN_SCIMITAR,              "scimitar",              11, 0, 14,
+    { WPN_SCIMITAR,              "scimitar",              12, 0, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 6, 10, 40, LBL_BRANDS },
-    { WPN_DEMON_BLADE,           "demon blade",           12, -1, 13,
+    { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 2, 150, DEMON_BRANDS },
-    { WPN_EUDEMON_BLADE,         "eudemon blade",         13, -2, 12,
+    { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 200, HOLY_BRANDS },
-    { WPN_DOUBLE_SWORD,          "double sword",          14, -1, 15,
+    { WPN_DOUBLE_SWORD,          "double sword",          15, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 2, 150, LBL_BRANDS },
-    { WPN_GREAT_SWORD,           "great sword",           15, -3, 17,
+    { WPN_GREAT_SWORD,           "great sword",           17, -3, 17,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 6, 10, 65, LBL_BRANDS },
-    { WPN_TRIPLE_SWORD,          "triple sword",          17, -4, 19,
+    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 18,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 0, 2, 100, LBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_BLESSED_FALCHION,      "old falchion",         7,  2, 13,
+    { WPN_BLESSED_FALCHION,      "old falchion",         8,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_LONG_SWORD,    "old long sword",      9,  1, 14,
+    { WPN_BLESSED_LONG_SWORD,    "old long sword",      10,  1, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_SCIMITAR,      "old scimitar",        11, -2, 14,
+    { WPN_BLESSED_SCIMITAR,      "old scimitar",        12, -2, 14,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_DOUBLE_SWORD, "old double sword",     14, -1, 15,
+    { WPN_BLESSED_DOUBLE_SWORD, "old double sword",     15, -1, 15,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_GREAT_SWORD,   "old great sword",     14, -3, 16,
+    { WPN_BLESSED_GREAT_SWORD,   "old great sword",     17, -3, 16,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 17, -4, 19,
+    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 19, -4, 18,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
 #endif
@@ -545,7 +545,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 6, 10, 65, AXE_BRANDS },
-    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 20,
+    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 19,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 0, 2, 100, AXE_BRANDS },
 
@@ -581,7 +581,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GLAIVE,            "glaive",             15, -3, 17,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 5, 10, 65, POLEARM_BRANDS },
-    { WPN_BARDICHE,          "bardiche",           18, -6, 20,
+    { WPN_BARDICHE,          "bardiche",           18, -6, 19,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 1, 2, 90, POLEARM_BRANDS },
 
@@ -788,6 +788,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_ENVENOMATIONS },
     { OBJ_BOOKS,     BOOK_AKASHIC_RECORD },
     { OBJ_BOOKS,     BOOK_BATTLE },
+    { OBJ_BOOKS,     BOOK_STONE },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
@@ -1792,6 +1793,8 @@ bool staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
         || is_unrandom_artefact(item, UNRAND_OLGREB)
+        || is_unrandom_artefact(item, UNRAND_ASMODEUS)
+        || is_unrandom_artefact(item, UNRAND_DISPATER)
         || is_unrandom_artefact(item, UNRAND_WUCAD_MU))
     {
         return true;
@@ -1834,9 +1837,11 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     // Jewellery with evokable abilities, wands and similar unwielded
     // evokers allow training.
-    if (item_is_evokable(item, false, false, true)
-        || item.base_type == OBJ_JEWELLERY
-           && gives_ability(item))
+    // XX why are gives_ability cases broken up like this
+    if (item_is_evokable(item)
+        || item.base_type == OBJ_JEWELLERY && gives_ability(item)
+        || staff_uses_evocations(item)
+        || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
@@ -1855,13 +1860,6 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     // Weapons and staves allow training as long as your species can wield them.
     if (!you.could_wield(item, true, true))
         return !skills.empty();
-
-    if (item_is_evokable(item, false, false, false)
-        || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item))
-    {
-        skills.insert(SK_EVOCATIONS);
-    }
 
     if (item.base_type == OBJ_STAVES)
     {
@@ -2553,10 +2551,13 @@ bool gives_ability(const item_def &item)
     // Check for evokable randart properties.
     if (artefact_property(item, ARTP_INVISIBLE)
         || artefact_property(item, ARTP_BLINK)
-        || artefact_property(item, ARTP_BERSERK))
+        || is_unrandom_artefact(item, UNRAND_ASMODEUS)
+        || is_unrandom_artefact(item, UNRAND_DISPATER)
+        || is_unrandom_artefact(item, UNRAND_OLGREB))
     {
         return true;
     }
+
 
     return false;
 }

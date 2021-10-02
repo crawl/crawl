@@ -62,6 +62,8 @@ inner_flame INNER_FLAME
 ignition IGNITION
 starburst STARBURST
 foxfire FOXFIRE
+scorch SCORCH
+flame_wave FLAME_WAVE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -133,6 +135,7 @@ summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
 spellforged_servitor SPELLFORGED_SERVITOR
+summon_cactus_giant SUMMON_CACTUS_GIANT
 
 %sdir gui/spells/translocation
 apportation APPORTATION

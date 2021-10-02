@@ -6225,7 +6225,7 @@ function plan_new_travel()
       travel_destination = "L"
     end
   end
-  if where == "Depths:5" then
+  if where == "Depths:4" then
     if game_status == "zot" then
       travel_destination = "Z"
     elseif game_status == "hells" then
@@ -6970,7 +6970,7 @@ function plan_dig_grate()
   local grate_count_needed = 3
   if where:find("Zot") then
     grate_mon_list = {"draconian stormcaller", "draconian scorcher"}
-  elseif where == "Depths:5" then
+  elseif where == "Depths:4" then
     grate_mon_list = {"draconian stormcaller", "draconian scorcher",
                       "angel", "daeva", "lich", "eye"}
   elseif where:find("Depths") then

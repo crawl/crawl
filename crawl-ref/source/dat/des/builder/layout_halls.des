@@ -283,7 +283,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
-  local gxm,gym = dgn.max_bounds()
+  local gxm,gym = dgn.builder_bounds()
 
   -- Make the rings
   local num_rings = crawl.random2avg(4,2)+4

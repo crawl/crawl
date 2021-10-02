@@ -22,7 +22,7 @@ function arena_setup(e)
     e.kfeat("< = exit_arena")
     e.kprop("1'< = no_tele_into")
     e.kmask("1'< = no_monster_gen")
-    e.mons("generate_awake human name:spectator n_rpl n_des")
+    e.mons("generate_awake spectator")
     e.lua_marker("v", props_marker { veto_destroy="veto" })
 end
 }}

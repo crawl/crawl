@@ -50,7 +50,7 @@ enum element_type
     ETC_WAVES,          // cyan, with regularly occurring lightcyan waves
     ETC_TREE,           // colour of trees on land
     ETC_RANDOM,         // any colour (except BLACK)
-    ETC_VORTEX,        // twisting swirls of grey
+    ETC_VORTEX,         // twisting swirls of grey
     ETC_LIQUEFIED,      // ripples of yellow and brown.
     ETC_MANGROVE,       // colour of trees on water
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
@@ -64,6 +64,7 @@ enum element_type
 #endif
     ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.
+    ETC_CANDLES,        // Ignis flickering candles
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 

@@ -2735,6 +2735,56 @@ xxAAAAAxxxxl..BBBBB..lxxxxCCCCCxx
 ENDMAP
 
 ##############################################################################
+NAME:    hangedman_player_shredder
+TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
+DEPTH:   Zot:1-4
+SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
+SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
+NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
+SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
+NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
+NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
+SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
+KMONS:   01 = ghost moth
+KMONS:   23 = golden dragon
+KMONS:   4567 = nonbase draconian
+KMONS:   89 = killer klown
+KMONS:   AB = curse toe
+KMONS:   CD = electric golem
+KMONS:   E = orb of fire
+KMONS:   F = ancient lich / dread lich
+KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
+             battleaxe good_item | bardiche good_item | great mace good_item / \
+             fire dragon / ice dragon / storm dragon / bone dragon w:5
+KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
+KITEM:   % = % / * w:2
+KMONS:   H = iron dragon
+MAP
+.........................
+.vv...vv+vv...vv+vv...vv.
+.vvv+vv.!.vv+vv.!.vv+vvv.
+.vv.!.vvbvv.!.vvdvv.!.vv.
+.vvvavv%g%vvcvv%i%vvevvv.
+.vv%f%vv+vv%h%vv+vv%j%vv.
+.vvv+vv.2.vv+vv.6.vv+vvv.
+.vv.0.v...v.4.v...v.'.vv.
+.vv...vv+vv...vv+vv...vv.
+.vvv+vv...vv+vv...vv+vvv.
+.vv...................vv.
+?vv..~`^I~`^.~`^.~`^H.vv?
+.vv.H^`~.^`~.^`~I^`~..vv.
+.vv...................vv.
+.vvv+vv...vv+vv...vv+vvv.
+.vv...vv+vv...vv+vv...vv.
+.vv.1.v...v.5.v...v.".vv.
+.vvv+vv.3.vv+vv.7.vv+vvv.
+.vv%}%vv+vv%}%vv+vv%}%vv.
+.vvvvvv%}%vvvvv%}%vvvvvv.
+.vv.G.vvvvv.G.vvvvv.G.vv.
+............?............
+ENDMAP
+
+##############################################################################
 ##############################################################################
 #
 # hall_of_Zot_5

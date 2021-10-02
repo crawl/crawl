@@ -17,9 +17,9 @@ dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
   - JOB_BERSERKER
+  - JOB_CINDER_ACOLYTE
   - JOB_CONJURER
   - JOB_NECROMANCER
-  - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
 # start TAG_MAJOR_VERSION == 34
 create_enum: false

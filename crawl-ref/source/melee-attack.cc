@@ -359,14 +359,10 @@ bool melee_attack::handle_phase_dodged()
 
         if (defender->is_player())
         {
-            const bool using_lbl = defender->weapon()
-                && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
             const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
                 && (!defender->weapon()
                     || is_melee_weapon(*defender->weapon()));
-            const int chance = using_lbl + using_fencers;
-
-            if (x_chance_in_y(chance, 3) && !is_riposte) // no ping-pong!
+            if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
                 riposte();
 
             // Retaliations can kill!
@@ -823,42 +819,10 @@ void melee_attack::check_autoberserk()
     if (defender->is_monster() && mons_is_firewood(*defender->as_monster()))
         return;
 
-    if (attacker->is_player())
+    if (x_chance_in_y(attacker->angry(), 100))
     {
-        for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        {
-            const item_def *item = you.slot_item(static_cast<equipment_type>(i));
-            if (!item)
-                continue;
-
-            if (!is_artefact(*item))
-                continue;
-
-            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
-            {
-                attacker->go_berserk(true);
-                return;
-            }
-        }
-    }
-    else
-    {
-        for (int i = MSLOT_WEAPON; i <= MSLOT_JEWELLERY; ++i)
-        {
-            const item_def *item =
-                attacker->as_monster()->mslot_item(static_cast<mon_inv_type>(i));
-            if (!item)
-                continue;
-
-            if (!is_artefact(*item))
-                continue;
-
-            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
-            {
-                attacker->go_berserk(true);
-                return;
-            }
-        }
+        attacker->go_berserk(false);
+        return;
     }
 }
 
@@ -2650,6 +2614,40 @@ void melee_attack::mons_apply_attack_flavour()
             drain_defender();
         break;
 
+    case AF_BARBS:
+        if (defender->is_player())
+        {
+            mpr("Barbed spikes become lodged in your body.");
+            // same duration as manticore barbs
+            if (!you.duration[DUR_BARBS])
+                you.set_duration(DUR_BARBS, random_range(4, 8));
+            else
+                you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
+
+            if (you.attribute[ATTR_BARBS_POW])
+            {
+                you.attribute[ATTR_BARBS_POW] =
+                    min(6, you.attribute[ATTR_BARBS_POW]++);
+            }
+            else
+                you.attribute[ATTR_BARBS_POW] = 4;
+        }
+        // Insubstantial and jellies are immune
+        else if (!(defender->is_insubstantial() &&
+                    mons_genus(defender->type) != MONS_JELLY))
+        {
+            if (defender_visible)
+            {
+                mprf("%s %s skewered by barbed spikes.",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str());
+            }
+            defender->as_monster()->add_ench(mon_enchant(ENCH_BARBS, 1,
+                                        attacker,
+                                        random_range(5, 7) * BASELINE_DELAY));
+        }
+        break;
+
     case AF_POISON_PARALYSE:
     {
         // Doesn't affect the poison-immune.
@@ -2916,6 +2914,35 @@ void melee_attack::mons_apply_attack_flavour()
         if (coinflip())
             defender->weaken(attacker, 12);
         break;
+
+    case AF_SEAR:
+    {
+        if (!one_chance_in(3))
+            break;
+
+        bool visible_effect = false;
+        if (defender->is_player())
+        {
+            if (defender->res_fire() <= 3 && !you.duration[DUR_FIRE_VULN])
+                visible_effect = true;
+            you.increase_duration(DUR_FIRE_VULN, 3 + random2(attk_damage), 50);
+        }
+        else
+        {
+            if (!defender->as_monster()->has_ench(ENCH_FIRE_VULN))
+                visible_effect = true;
+            defender->as_monster()->add_ench(
+                mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+                            (3 + random2(attk_damage)) * BASELINE_DELAY));
+        }
+
+        if (needs_message && visible_effect)
+        {
+            mprf("%s fire resistance is stripped away!",
+                 def_name(DESC_ITS).c_str());
+        }
+        break;
+    }
     }
 }
 
@@ -3028,14 +3055,17 @@ void melee_attack::do_spines()
         if (defender->type == MONS_BRIAR_PATCH
             && attacker->type == MONS_THORN_HUNTER
             // Dithmenos' shadow can't take damage, don't spam.
-            || attacker->type == MONS_PLAYER_SHADOW)
+            || attacker->type == MONS_PLAYER_SHADOW
+            // Don't let spines kill things out of LOS.
+            || !summon_can_attack(defender->as_monster(), attacker))
         {
             return;
         }
 
-        if (attacker->alive() && one_chance_in(3))
+        const bool cactus = defender->type == MONS_CACTUS_GIANT;
+        if (attacker->alive() && (cactus || one_chance_in(3)))
         {
-            int dmg = roll_dice(5, 4);
+            const int dmg = spines_damage(defender->type).roll();
             int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 

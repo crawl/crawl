@@ -1150,11 +1150,13 @@ static void _add_missing_branches()
         _ensure_entry(BRANCH_VAULTS);
     if (brentry[BRANCH_ZOT] == lc)
         _ensure_entry(BRANCH_ZOT);
-    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 21))
+    // TODO: centralize these numbers
+    // crosscheck with check_map_validity when changing
+    if (lc == level_id(BRANCH_DEPTHS, 1) || lc == level_id(BRANCH_DUNGEON, 21))
         _ensure_entry(BRANCH_VESTIBULE);
-    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 24))
+    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 24))
         _ensure_entry(BRANCH_PANDEMONIUM);
-    if (lc == level_id(BRANCH_DEPTHS, 4) || lc == level_id(BRANCH_DUNGEON, 25))
+    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 25))
         _ensure_entry(BRANCH_ABYSS);
     if (player_in_branch(BRANCH_VESTIBULE))
     {
@@ -3013,7 +3015,6 @@ static void _tag_read_you(reader &th)
             }
         }
     }
-
 #endif
 
 #if TAG_MAJOR_VERSION == 34
@@ -3377,6 +3378,9 @@ static void _tag_read_you(reader &th)
     const int xl_remaining = you.get_max_xl() - you.experience_level;
     if (xl_remaining < 0)
         adjust_level(xl_remaining);
+
+    if (th.getMinorVersion() < TAG_MINOR_EVOLUTION_XP)
+        set_evolution_mut_xp(you.has_mutation(MUT_DEVOLUTION));
 #endif
 
     count = unmarshallUByte(th);
@@ -4422,6 +4426,13 @@ static void _tag_read_you_dungeon(reader &th)
 #endif
         brentry[j]    = unmarshall_level_id(th);
 #if TAG_MAJOR_VERSION == 34
+        // Have to check this in case of old saves with 6-floor Depths.
+        if (th.getMinorVersion() < TAG_MINOR_ZOT_ENTRY_FIXUP
+            && j == BRANCH_ZOT
+            && brentry[j] == level_id(BRANCH_DEPTHS, 5))
+        {
+            brentry[j].depth = branches[j].mindepth;
+        }
         if (th.getMinorVersion() < TAG_MINOR_BRIBE_BRANCH)
             branch_bribe[j] = 0;
         else

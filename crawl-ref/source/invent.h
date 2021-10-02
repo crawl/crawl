@@ -263,8 +263,7 @@ bool prompt_failed(int retval);
 void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers);
 
 bool item_is_wieldable(const item_def &item);
-bool item_is_evokable(const item_def &item, bool reach = true,
-                      bool msg = false, bool equip = true);
+bool item_is_evokable(const item_def &item, bool msg = false);
 bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);

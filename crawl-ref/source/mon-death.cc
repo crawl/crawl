@@ -665,28 +665,27 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
-    // Damage by the spectral weapon is considered to be the player's damage ---
-    // so the player does not lose any exp from dealing damage with a spectral weapon summon
-    // ditto hep ancestors (sigh)
+    // Damage by permanent divine allies (Beogh orcs and Yredelemnul gifts)
+    // counts for half experience. Hepliaklqana ancestors and all other allies
+    // grant full experience.
     if (!invalid_monster_index(killer)
-        && (env.mons[killer].type == MONS_SPECTRAL_WEAPON
-            || mons_is_hepliaklqana_ancestor(env.mons[killer].type))
-        && env.mons[killer].summoner == MID_PLAYER)
+        && env.mons[killer].is_divine_companion()
+        && !mons_is_hepliaklqana_ancestor(env.mons[killer].type))
     {
-        return 2;
+        return 1;
     }
 
     if (killer == MHITYOU || killer == YOU_FAULTLESS)
         return 2;
 
     if (_is_pet_kill(KILL_MON, killer))
-        return 1;
+        return 2;
 
     return 0;
 }
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
-// your holy or natural allies.
+// your holy or living allies.
 static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -696,7 +695,7 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     if (!MON_KILL(killer) && !YOU_KILL(killer))
         return false;
 
-    if ( mons->holiness() & ~(MH_HOLY | MH_NATURAL)
+    if (mons->holiness() & ~(MH_HOLY | MH_NATURAL | MH_PLANT)
         || !mons->friendly()
         || !you.can_see(*mons) // for simplicity
         || !one_chance_in(20))
@@ -1043,6 +1042,10 @@ static void _infestation_create_scarab(monster* mons)
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
+    // Don't bother placing a cloud for living spells.
+    if (mons->type == MONS_LIVING_SPELL)
+        return;
+
     // Chaos spawn always leave behind a cloud of chaos.
     if (mons->type == MONS_CHAOS_SPAWN)
     {
@@ -1057,13 +1060,8 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         return;
 
     string prefix = " ";
-    if (corpse)
-    {
-        if (!mons_class_can_leave_corpse(mons_species(mons->type)))
-            return;
-
+    if (corpse && mons_class_can_leave_corpse(mons_species(mons->type)))
         prefix = "'s corpse ";
-    }
 
     string msg = summoned_poof_msg(mons) + "!";
 
@@ -1713,32 +1711,28 @@ item_def* monster_die(monster& mons, killer_type killer,
         int w_idx = mons.inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);
 
-        // XXX: This can probably become mons.is_summoned(): there's no
-        // feasible way for a dancing weapon to "drop" it's weapon and somehow
-        // gain a summoned one, or vice versa.
-        bool summoned_it = env.item[w_idx].flags & ISFLAG_SUMMONED;
+        bool summoned_it = mons.is_summoned();
 
-        if (!silent && !hard_reset && !was_banished)
+        // Let summoned dancing weapons be handled like normal summoned creatures.
+        if (!was_banished && !summoned_it && !silent && !hard_reset)
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
-            if (!summoned_it
-                && (!have_passive(passive_t::goldify_corpses)
-                    || mons.has_ench(ENCH_ABJ)))
+            if (have_passive(passive_t::goldify_corpses))
+            {
+                simple_monster_message(mons,
+                                       " turns to gold and falls from the air.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                killer = KILL_RESET;
+            }
+            else
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 silent = true;
             }
-            else
-            {
-                simple_monster_message(mons, " turns to gold and falls from the air.",
-                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-                killer = KILL_RESET;
-            }
         }
 
-        if (was_banished && !summoned_it && !hard_reset
-            && mons.has_ench(ENCH_ABJ))
+        if (was_banished && !summoned_it && !hard_reset)
         {
             if (is_unrandom_artefact(env.item[w_idx]))
                 set_unique_item_status(env.item[w_idx], UNIQ_LOST_IN_ABYSS);
@@ -1889,7 +1883,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                             + random2(mons.get_experience_level() / 2);
                 }
                 if (you.species == SP_GHOUL
-                    && mons.holiness() & MH_NATURAL
+                    && mons.holiness() & (MH_NATURAL | MH_PLANT)
                     && coinflip())
                 {
                     hp_heal += 1 + random2avg(1 + you.experience_level, 3);
@@ -2757,6 +2751,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
             msg = "shimmer%s and vanish" + string(plural ? "" : "es"); // Ugh
+
+        if (mons->type == MONS_LIVING_SPELL)
+            msg = "disperses";
     }
 
     // Conjugate.

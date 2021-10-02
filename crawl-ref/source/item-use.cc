@@ -2313,6 +2313,11 @@ void drink(item_def* potion)
         mpr("You cannot drink potions in your current state!");
         return;
     }
+    else if (player_in_branch(BRANCH_COCYTUS))
+    {
+        mpr("It's too cold; everything's frozen solid!");
+        return;
+    }
 
     if (you.berserk())
     {
@@ -2814,6 +2819,9 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
 string cannot_read_item_reason(const item_def *item)
 {
     // general checks
+    if (player_in_branch(BRANCH_GEHENNA))
+        return "You cannot see clearly; the smoke and ash is too thick!";
+
     if (you.berserk())
         return "You are too berserk!";
 

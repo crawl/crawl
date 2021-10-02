@@ -166,7 +166,7 @@ public:
     {
         return true;
     }
-    virtual void attacking(actor *other, bool ranged = false) = 0;
+    virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
@@ -228,9 +228,8 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
-    virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
-                                  bool allow_corrosion = true,
-                                  const char* hurt_msg = nullptr) = 0;
+    virtual void splash_with_acid(actor *evildoer, int acid_strength) = 0;
+    virtual void acid_corrode(int acid_strength) = 0;
     virtual bool corrode_equipment(const char* corrosion_source = "the acid",
                                    int degree = 1) = 0;
 
@@ -318,7 +317,7 @@ public:
                          vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;
     virtual bool cloud_immune(bool calc_unid = true, bool items = true) const;
-    virtual bool angry(bool calc_unid = true, bool items = true) const;
+    virtual int  angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
@@ -328,7 +327,6 @@ public:
     virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
-    virtual bool evokable_berserk(bool calc_unid = true) const;
     virtual bool evokable_invis(bool calc_unid = true) const;
 
     // Return an int so we know whether an item is the sole source.
@@ -385,8 +383,7 @@ public:
         return cannot_move()
             || asleep()
             || confused()
-            || caught()
-            || petrifying();
+            || caught();
     }
 
     virtual bool wont_attack() const = 0;

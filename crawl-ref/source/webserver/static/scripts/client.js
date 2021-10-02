@@ -1099,6 +1099,13 @@ function (exports, $, key_conversion, chat, comm) {
         set("xl", data.xl);
         set("char", data.char);
         set("place", data.place);
+        if (data.turn && data.dur)
+        {
+            set("turn", data.turn);
+            set("dur", format_duration(parseInt(data.dur)));
+
+            new_list.removeClass("no_game_times");
+        }
         set("god", data.god || "");
         set("title", data.title);
         set("idle_time", format_idle_time(data.idle_time));
@@ -1179,6 +1186,29 @@ function (exports, $, key_conversion, chat, comm) {
         return "<a href='#watch-" + data.username + "'></a>";
     }
 
+    function format_duration(seconds)
+    {
+        var elem = $("<span></span>");
+        if (seconds == 0)
+        {
+            elem.text("");
+        }
+        else if (seconds < 60)
+        {
+            elem.text(seconds + "s");
+        }
+        else if (seconds < (60 * 60))
+        {
+            elem.text(Math.floor(seconds / 60) + "m");
+        }
+        else
+        {
+            elem.text(Math.floor(seconds / (60 * 60)) + "h " +
+                (Math.floor(seconds / 60) % 60) + "m");
+        }
+        return elem;
+    }
+
     function format_idle_time(seconds)
     {
         var elem = $("<span></span>");
@@ -1188,15 +1218,15 @@ function (exports, $, key_conversion, chat, comm) {
         }
         else if (seconds < 120)
         {
-            elem.text(seconds + " s");
+            elem.text(seconds + "s");
         }
         else if (seconds < (60 * 60))
         {
-            elem.text(Math.round(seconds / 60) + " min");
+            elem.text(Math.round(seconds / 60) + "m");
         }
         else
         {
-            elem.text(Math.round(seconds / (60 * 60)) + " h");
+            elem.text(Math.round(seconds / (60 * 60)) + "h");
         }
         return elem;
     }

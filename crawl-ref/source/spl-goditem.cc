@@ -81,32 +81,29 @@ string unpacifiable_reason(const monster& mon)
  */
 string unpacifiable_reason(const monster_info& mi)
 {
-    // XXX: be more specific?
-    const string generic_reason = "You cannot pacify this monster!";
-
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mi.intel() <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mi.type)) // body part
     {
-        return generic_reason;
+        return "You cannot pacify mindless monsters!";
     }
 
     const mon_holy_type holiness = mi.holi;
 
-    if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
-        return generic_reason;
+    if (holiness & MH_NONLIVING)
+        return "You cannot pacify nonliving monsters!";
 
     if (mons_class_is_stationary(mi.type)) // not able to leave the level
-        return generic_reason;
+        return "You cannot pacify immobile monsters!";
 
-    if (mi.is(MB_SLEEPING)) // not aware of what is happening
+    if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)) // unaware of what's happening
     {
-        return make_stringf("You cannot pacify this monster while %s %s "
-                            "sleeping!",
+        return make_stringf("You cannot pacify this monster while %s %s %s!",
                             mi.pronoun(PRONOUN_SUBJECTIVE),
                             conjugate_verb("are",
-                                           mi.pronoun_plurality()).c_str());
+                                           mi.pronoun_plurality()).c_str(),
+                            mi.is(MB_SLEEPING) ? "asleep" : "dormant");
     }
 
     // pacifiable, maybe!
@@ -356,6 +353,7 @@ spret cast_healing(int pow, bool fail)
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
@@ -432,13 +430,15 @@ bool player_is_cancellable()
 
 /**
  * Lists out the effects that will be removed by cancellation.
+ *
+ * @param debuffs_only   If true, contamination levels are unaffected.
  */
-string describe_player_cancellation()
+string describe_player_cancellation(bool debuffs_only)
 {
     vector<string> effects;
 
     // Try to clarify it doesn't remove all contam?
-    if (get_contamination_level())
+    if (!debuffs_only && get_contamination_level())
         effects.push_back("as magically contaminated");
 
     player_debuff_effects buffs;
@@ -470,24 +470,17 @@ string describe_player_cancellation()
     for (auto status : dispellable_statuses)
     {
         status_info inf;
-        if (fill_status_info(status, inf) && !inf.short_text.empty())
+        if (!fill_status_info(status, inf) || inf.short_text.empty())
+            continue;
+        if (status != STATUS_AIRBORNE)
         {
-            if (status == STATUS_AIRBORNE)
-            {
-                if (!you.attribute[ATTR_PERM_FLIGHT]
-                    && !you.racial_permanent_flight())
-                {
-                    effects.push_back("flying");
-                }
-                else
-                    effects.push_back("buoyant");
-            }
-            else
-            {
-                strip_suffix(inf.short_text, " (expiring)");
-                effects.push_back(inf.short_text);
-            }
+            strip_suffix(inf.short_text, " (expiring)");
+            effects.push_back(inf.short_text);
+            continue;
         }
+        if (you.attribute[ATTR_PERM_FLIGHT] || you.racial_permanent_flight())
+            continue;
+        effects.push_back("flying");
     }
 
     return comma_separated_line(begin(effects), end(effects), " or ");
@@ -742,10 +735,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
+    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-        DNGN_OPEN_CLEAR_DOOR
+        DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR
     };
 
     bool proceed;

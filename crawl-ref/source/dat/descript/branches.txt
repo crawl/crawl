@@ -102,21 +102,29 @@ Dis
 The Iron City of Dis is home to many of the most resilient guardians of hell.
 Those who do not belong in the halls of Dis will find the very earth itself
 opposing them.
+
+The malice of this metal realm corrodes equipment.
 %%%%
 Gehenna
 
 Gehenna is a realm of lava, flames and damnation. Those who linger will have
 fire and brimstone rained down upon them.
+
+The acrid smoke renders scrolls unreadable.
 %%%%
 Cocytus
 
 Cocytus is a grim and frost-bitten wasteland. Intruders will find the biting
 winds and icy inhabitants of the wastes impeding their progress.
+
+The frigid cold congeals potions.
 %%%%
 Tartarus
 
 Tartarus is a decaying netherworld. Over time, the undead, demons and devils of
 this place drain the life from any who dare to enter.
+
+The all-pervading rot saps visitors' willpower.
 %%%%
 Zot
 

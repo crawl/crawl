@@ -1149,10 +1149,25 @@ static void _input()
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
-            else
+            else if (!crawl_state.lua_ready_throttled)
             {
                 if (!clua.callfn("ready", 0, 0) && !clua.error.empty())
+                {
+                    // if ready() has been killed once, it is considered
+                    // buggy and should not run again. Note: the sequencing is
+                    // important here, because mprs trigger the c_message hook,
+                    // so this state variable needs to be checked immediately.
+                    if (crawl_state.lua_script_killed)
+                        crawl_state.lua_ready_throttled = true;
+
                     mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                    if (crawl_state.lua_ready_throttled)
+                    {
+                        mprf(MSGCH_ERROR, "Banning ready() after %d throttles",
+                            CLua::MAX_THROTTLE_SLEEPS);
+                    }
+
+                }
             }
         }
 
@@ -2102,11 +2117,6 @@ void process_command(command_type cmd, command_type prev_cmd)
             flush_input_buffer(FLUSH_ON_FAILURE);
         break;
 
-    case CMD_EVOKE_WIELDED:
-        if (!evoke_item(you.equip[EQ_WEAPON]))
-            flush_input_buffer(FLUSH_ON_FAILURE);
-        break;
-
     case CMD_MEMORISE_SPELL:
         if (!learn_spell())
             flush_input_buffer(FLUSH_ON_FAILURE);
@@ -2702,15 +2712,16 @@ static void _do_berserk_no_combat_penalty()
     return;
 }
 
-// Update damaging spells that are channeled by waiting
-// These only update when the player actively waits with CMD_WAIT,
-// so should not be moved to world_reacts()
-//
-// Currently this handles Searing Ray and Maxwell's Coupling
+/**
+ * Update damaging spells that are channeled by waiting.
+ * These only update when the player actively waits with CMD_WAIT,
+ * so should not be moved to world_reacts().
+ */
 static void _do_wait_spells()
 {
     handle_searing_ray();
     handle_maxwells_coupling();
+    handle_flame_wave();
 }
 
 // palentongas uncurl at the start of the turn

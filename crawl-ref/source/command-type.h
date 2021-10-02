@@ -62,7 +62,6 @@ enum command_type
     CMD_SHOW_TERRAIN,
     CMD_FULL_VIEW,
     CMD_EVOKE,
-    CMD_EVOKE_WIELDED,
     CMD_WIELD_WEAPON,
     CMD_WEAPON_SWAP,
     CMD_FIRE,

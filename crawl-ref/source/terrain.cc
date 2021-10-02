@@ -426,7 +426,10 @@ bool feat_is_closed_door(dungeon_feature_type feat)
  */
 bool feat_is_open_door(dungeon_feature_type feat)
 {
-    return feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR;
+    return feat == DNGN_OPEN_DOOR
+        || feat == DNGN_OPEN_CLEAR_DOOR
+        || feat == DNGN_BROKEN_DOOR
+        || feat == DNGN_BROKEN_CLEAR_DOOR;
 }
 
 /** Has this feature been sealed by a vault warden?
@@ -553,6 +556,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
     { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
+    { GOD_IGNIS, DNGN_ALTAR_IGNIS },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
@@ -883,23 +887,24 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
+    // Consider pulling out damage from splash_with_acid() into
+    // its own function and calling that.
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
-
+    const int base_dam = act->is_player() ? roll_dice(4, strength) : roll_dice(2, 4);
+    const int dam = resist_adjust_damage(act, BEAM_ACID, base_dam);
     if (act->is_player())
-        you.splash_with_acid(nullptr, strength, false);
-    else
     {
-        monster* mon = act->as_monster();
-
-        const int dam = resist_adjust_damage(mon, BEAM_ACID,
-                                             roll_dice(2, strength));
-        if (dam > 0 && you.can_see(*mon))
-        {
-            const char *verb = act->is_icy() ? "melt" : "burn";
-            mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
-                  verb, mon->name(DESC_THE).c_str());
-        }
-        mon->hurt(nullptr, dam, BEAM_ACID);
+        mprf("You are splashed with acid%s%s",
+             dam > 0 ? "" : " but take no damage",
+             attack_strength_punctuation(dam).c_str());
+        ouch(dam, KILLED_BY_ACID, MID_NOBODY);
+    }
+    else if (dam > 0 && you.can_see(*act))
+    {
+        const char *verb = act->is_icy() ? "melt" : "burn";
+        mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
+              verb, act->name(DESC_THE).c_str());
+        act->hurt(nullptr, dam, BEAM_ACID);
     }
 }
 
@@ -2362,7 +2367,9 @@ void dgn_close_door(const coord_def &dest)
     if (!feat_is_open_door(env.grid(dest)))
         return;
 
-    if (env.grid(dest) == DNGN_OPEN_CLEAR_DOOR)
+    // Yes, this fixes broken doors.
+    const auto feat = env.grid(dest);
+    if (feat == DNGN_OPEN_CLEAR_DOOR || feat == DNGN_BROKEN_CLEAR_DOOR)
         env.grid(dest) = DNGN_CLOSED_CLEAR_DOOR;
     else
         env.grid(dest) = DNGN_CLOSED_DOOR;
@@ -2386,6 +2393,26 @@ void dgn_open_door(const coord_def &dest)
     else
         env.grid(dest) = DNGN_OPEN_DOOR;
 }
+
+/** Breaks any door at the given position. Handles the grid change, but does not
+ * mark terrain or do any event handling.
+ *
+ * @param dest The location of the door.
+ */
+void dgn_break_door(const coord_def &dest)
+{
+    if (!feat_is_closed_door(env.grid(dest)))
+        return;
+
+    if (env.grid(dest) == DNGN_CLOSED_CLEAR_DOOR
+        || env.grid(dest) == DNGN_RUNED_CLEAR_DOOR)
+    {
+        env.grid(dest) = DNGN_BROKEN_CLEAR_DOOR;
+    }
+    else
+        env.grid(dest) = DNGN_BROKEN_DOOR;
+}
+
 
 void ice_wall_damage(monster &mons, int delay)
 {

@@ -529,8 +529,9 @@ bool mons_can_move_towards_target(const monster* mon)
 
 static const string BATTY_TURNS_KEY = "BATTY_TURNS";
 
-static void _be_batty(monster &mons)
+static void _handle_battiness(monster &mons)
 {
+    if (!mons_is_batty(mons)) return;
     mons.behaviour = BEH_WANDER;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;
@@ -541,7 +542,8 @@ static bool _fungal_move_check(monster &mon)
     // These monsters have restrictions on moving while you are looking.
     if ((mon.type == MONS_WANDERING_MUSHROOM || mon.type == MONS_DEATHCAP)
             && mon.foe_distance() > 1 // can attack if adjacent
-        || (mon.type == MONS_LURKING_HORROR
+        || ((mon.type == MONS_LURKING_HORROR
+             || mon.type == MONS_CREEPING_INFERNO)
             // 1 in los chance at max los
             && mon.foe_distance() > random2(you.current_vision + 1)))
     {
@@ -1539,6 +1541,7 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         if (coinflip() ? mon_special_ability(&mons) || _do_mon_spell(&mons)
                        : _do_mon_spell(&mons) || mon_special_ability(&mons))
         {
+            _handle_battiness(mons);
             DEBUG_ENERGY_USE_REF("spell or special");
             mmov.reset();
             return true;
@@ -1929,8 +1932,7 @@ void handle_monster_move(monster* mons)
                 else
                     fight_melee(mons, &you);
 
-                if (mons_is_batty(*mons))
-                    _be_batty(*mons);
+                _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
                 mmov.reset();
                 return;
@@ -1971,8 +1973,7 @@ void handle_monster_move(monster* mons)
                       || mons->is_child_tentacle())
                           && fight_melee(mons, targ))
             {
-                if (mons_is_batty(*mons))
-                    _be_batty(*mons);
+                _handle_battiness(*mons);
 
                 mmov.reset();
                 DEBUG_ENERGY_USE("fight_melee()");
@@ -2644,12 +2645,16 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
+    const bool broken = one_chance_in(3);
     for (const auto &dc : all_door)
     {
         if (you.see_cell(dc))
             was_seen = true;
 
-        dgn_open_door(dc);
+        if (broken)
+            dgn_break_door(dc);
+        else
+            dgn_open_door(dc);
         set_terrain_changed(dc);
     }
 
@@ -2658,7 +2663,8 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         viewwindow();
         update_screen();
 
-        string open_str = "opens the ";
+        // XXX: should use custom verbs
+        string open_str = broken ? "breaks down the " : "opens the ";
         open_str += adj;
         open_str += noun;
         open_str += ".";

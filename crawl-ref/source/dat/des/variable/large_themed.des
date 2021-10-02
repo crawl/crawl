@@ -1254,7 +1254,7 @@ MONS:   necromancer w:20 / soul eater
 MONS:   freezing wraith / shadow wraith / flayed ghost
 MONS:   tormentor / reaper, deep elf death mage
 : else
-MONS:   zombie place:Depths:5 / skeleton place:Depths:5 / simulacrum \
+MONS:   zombie place:Depths:4 / skeleton place:Depths:4 / simulacrum \
         / spectral thing
 MONS:   necromancer / deep elf death mage / vampire mage
 MONS:   flayed ghost / tormentor
@@ -2108,7 +2108,7 @@ ENDMAP
 
 NAME:    regret_index_dithmenos_brocken_genspenst
 TAGS:    no_monster_gen no_item_gen no_rotate patrolling
-DEPTH:   Depths, !Depths:$, Tar, !Tar:$
+DEPTH:   Depths, !Depths:$
 ORIENT:  south
 MONS:    shadow wraith / nothing, vampire mage / nothing, rakshasa, shadow wraith
 MONS:    vampire knight, shadow demon, shadow dragon

@@ -66,6 +66,13 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
+Ignis
+
+Ignis the Dying Flame offers followers power over fire in many forms. All of
+Ignis' power is offered unconditionally to any who would deign to worship, but
+once used, it can never be replenished. Ignis' other worshippers deserted long
+ago; the divine fire burns low, and soon it will go out.
+%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -294,6 +301,14 @@ Hepliaklqana's service allows worshippers to restore and strengthen their
 ancestor, to swap them with other creatures, and to choose how to remember
 their life's talents.
 %%%%
+Ignis powers
+
+Followers can fill their surroundings with a sea of fire, can call a swarm of
+foxfires against their foes, or let Ignis' heat lift them to another level of
+the dungeon. However, the guttering flames of Ignis' power will only sustain a
+limited number of invocations before only flickering embers remain. No matter
+how depleted, Ignis will always grant followers resistance to fire.
+%%%%
 Jiyva powers
 
 Jiyva's followers can request jellies, which will consume nearby items and
@@ -471,6 +486,8 @@ directly intervene to save a follower's life.
 %%%%
 Ashenzari wrath
 
+Those who abandon Ashenzari will immediately have their curses shattered,
+destroying whichever items they imbued with divine wisdom. Thereafter,
 Ashenzari's wrath is constant and unrelenting for its duration. Victims will
 find their skills impaired, and their enemies divinely guided – never losing
 track of them, never ending the hunt.
@@ -528,6 +545,14 @@ finish their shopping before they launch their betrayal. For as long as Gozag
 remains angered, potions will have a chance to fail when quaffed, and any
 foes that are encountered may be granted potions of their own to assist them
 against the ex-worshipper.
+%%%%
+Ignis wrath
+
+The wrath of Ignis is now weaker than that of most other gods. Apostates will
+find their resistance to fire stripped away completely, and will be periodically
+assaulted by fire elementals, find their enemies strengthened by fire, or even
+have the floor burned out from beneath them. Experienced and cautious adventurers
+will likely overmaster these assaults.
 %%%%
 Jiyva wrath
 
