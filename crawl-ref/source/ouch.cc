@@ -889,9 +889,7 @@ static void _maybe_dream_heal()
 
     // STEP TWO: summon the dream team (if allowed)
     if (you.allies_forbidden())
-    {
         mpr("The dream creatures couldn't care less about helping you.");
-    }
     else
     {
         int sumcount2 = 2 + random2(4);
