@@ -2531,10 +2531,18 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_YRED_DRAIN_LIFE:
     {
         int damage = 0;
-        const spret result =
-            fire_los_attack_spell(SPELL_DRAIN_LIFE,
-                                  you.skill_rdiv(SK_INVOCATIONS),
-                                  &you, fail, &damage);
+        const int pow = you.skill_rdiv(SK_INVOCATIONS);
+
+        if (trace_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you) == spret::abort
+            && !yesno("There are no drainable targets visible. Drain Life "
+                      "anyway?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+
+        const spret result = fire_los_attack_spell(SPELL_DRAIN_LIFE, pow,
+                                                   &you, fail, &damage);
         if (result != spret::success)
             return result;
 
