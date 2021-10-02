@@ -25,6 +25,7 @@
 #include "beam.h"
 #include "chardump.h"
 #include "colour.h"
+#include "coordit.h"
 #include "delay.h"
 #include "dgn-event.h"
 #include "end.h"
@@ -38,6 +39,7 @@
 #include "hiscores.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -55,6 +57,7 @@
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
+#include "rltiles/tiledef-dngn.h"
 #include "shopping.h"
 #include "shout.h"
 #include "spl-clouds.h"
@@ -62,6 +65,8 @@
 #include "state.h"
 #include "stringutil.h"
 #include "teleport.h"
+#include "terrain.h"
+#include "tile-env.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
@@ -725,6 +730,175 @@ static void _maybe_slow()
         slow_player(10 + random2(5));
 }
 
+/**
+ * Component function of _maybe_dream_heal() below
+ **/
+static void _dreamshard_summon_ally()
+{
+    // consider overriding mon name based on appearance
+    const monster_type mon = MONS_DREAM_SPECTRE;
+    mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU,
+                 MG_FORCE_BEH, GOD_NO_GOD);
+    mg.set_summoned(&you, 4, GOD_NO_GOD);
+    monster* m = create_monster(mg);
+    auto smoke = random_smoke_type();
+    surround_actor_with_cloud(m, smoke);
+}
+
+/**
+ * Component function of _maybe_dream_heal() below
+ **/
+static bool _dreamshard_can_colour_square(const coord_def &c)
+{
+    const dungeon_feature_type feat = env.grid(c);
+
+    // Stairs and portals cannot be recoloured.
+    if (feat_stair_direction(feat) != CMD_NO_CMD)
+        return false;
+
+    switch (feat)
+    {
+    case DNGN_PERMAROCK_WALL:
+    case DNGN_CLEAR_PERMAROCK_WALL:
+    case DNGN_OPEN_SEA:
+    case DNGN_LAVA_SEA:
+    case DNGN_TRANSPORTER_LANDING: // entry already taken care of as stairs
+        return false;
+
+    case DNGN_METAL_WALL:
+    case DNGN_CRYSTAL_WALL:
+        return one_chance_in(4);
+
+    case DNGN_STONE_WALL:
+    case DNGN_CLEAR_STONE_WALL:
+        return one_chance_in(3);
+
+    case DNGN_ROCK_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
+        return !one_chance_in(3);
+
+    default:
+        return true;
+    }
+}
+
+/**
+ * Component function of _maybe_dream_heal() below
+ **/
+static void _dreamshard_do_visual_square(const coord_def &c, colour_t colour)
+{
+    int distance_from_player = (c - you.pos()).rdist();
+    const int ground_zero_radius = 2;
+    const int roll = random2(1000);
+
+    // Recolour odds are 100% within 2 squares, decaying to 30%
+    // at LOS range (radius 7). Even if the recolour roll is made,
+    // the feature still gets a chance to resist if it's a wall.
+    // Code heavily borrowed from lugonu corruption.
+    const int recolour_perc_chance =
+        (distance_from_player <= ground_zero_radius) ? 1000 :
+        max(0, 1000 - (sqr(distance_from_player) - sqr(ground_zero_radius)) * 700 / 45);
+
+    if (roll < recolour_perc_chance && _dreamshard_can_colour_square(c))
+        {
+                mpr("doing tile recolour");
+                dungeon_feature_type feat = env.grid(c);
+                env.grid_colours(c) = colour;
+
+                if (feat == DNGN_ROCK_WALL)
+                {
+                    tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
+                                                    colour);
+                    tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+                }
+                else if (feat == DNGN_FLOOR)
+                {
+                    tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
+                                                    colour);
+                    tile_env.flv(c).floor = idx + random2(tile_dngn_count(idx));
+                }
+                else if (feat == DNGN_STONE_WALL)
+                {
+                    // recoloring stone and metal is also impacted heavily by the rolls
+                    // in _dreamshard_can_colour_square
+                    tileidx_t idx = tile_dngn_coloured(TILE_DNGN_STONE_WALL,
+                                                    colour);
+                    tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+                }
+                else if (feat == DNGN_METAL_WALL)
+                {
+                    tileidx_t idx = tile_dngn_coloured(TILE_DNGN_METAL_WALL,
+                                                    colour);
+                    tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+                }
+        }
+}
+
+/**
+ * Component function of _maybe_dream_heal() below
+ **/
+static void _dreamshard_do_visual_all()
+{
+    int chunksize = 13;
+    int chunkiterator = 0;
+    colour_t colour = BLACK;
+    colour = random_uncommon_colour();
+
+    // Potential improvement: 'spiral iterator' for visual appeal
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, LOS_NO_TRANS, true);
+         ri; ++ri)
+    {
+        if (!in_bounds(*ri) || cell_is_solid(*ri))
+            continue;
+        _dreamshard_do_visual_square(*ri, colour);
+
+        // occasionally reset colour and size of colour blocks
+        ++chunkiterator;
+        if (chunkiterator > chunksize)
+        {
+            chunkiterator = 0;
+            colour = random_uncommon_colour();
+            chunksize = 4 + random2(16);
+        }
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        colour = random_uncommon_colour();
+        flash_view(UA_PLAYER, colour);
+        // Allow extra time for the flash to linger.
+        scaled_delay(150);
+    }
+}
+
+/**
+ * Maybe heal the player after taking damage if they're wearing *Dream
+ * (dreamshard necklace) - triggers allies and colour change too.
+ **/
+static void _maybe_dream_heal()
+{
+    if(you.duration[DUR_DEATHS_DOOR])
+    {
+        mpr("Your magic blocks the powers of the realm of dreams.");
+        return;
+    }
+
+    // STEP ONE: heal the player, between 50% and 100% of max, and recolour
+    you.heal(random_range(you.hp_max*0.5, you.hp_max));
+    mpr("Your necklace is shattered open, unleashing a healing torrent of colour.");
+    _dreamshard_do_visual_all();
+
+    // STEP TWO: summon the dream team
+    int sumcount2 = 2 + random2(4);
+    for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
+        _dreamshard_summon_ally();
+    mpr("A troupe from your wildest dreams charges to your aid!");
+    
+    // STEP THREE: destroy the necklace
+    ASSERT(you.wearing(EQ_AMULET, AMU_NOTHING));
+    dec_inv_item_quantity(you.slot_item(EQ_AMULET,1)->link, 1);
+    mpr("The necklace is destroyed.");
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -908,6 +1082,32 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
         && death_type != KILLED_BY_ZOT && you.hp_max > 0)
     {
+        return;
+    }
+
+    // dreamshard trigger type 1: a guaranteed trigger upon fatal damage.
+    // dreamshard blocks the damage and heals.
+    // There are arguments for tweaking this such that the deamshard heal
+    // is calculated and then subtracted from the incoming damage, potentially
+    // allowing the player to still die through the effect, but I'm not a fan
+    // of how that death would feel after the investment in wearing the
+    // necklace for presumably quite a while - amcnicky
+    if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE) && dam >= you.hp
+        && !env_death && !non_death && death_type != KILLED_BY_ZOT 
+        && you.hp_max > 0)
+    {
+        _maybe_dream_heal();
+        return;
+    }
+
+    // dreamshard trigger type 2: a potential trigger upon near-fatal damage.
+    // if damage > 80% of remaining health, toss a coin to activate.
+    if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE) 
+        && ((dam * 100) / you.hp) > 80 && coinflip()
+        && !env_death && !non_death && death_type != KILLED_BY_ZOT 
+        && you.hp_max > 0)
+    {
+        _maybe_dream_heal();
         return;
     }
 

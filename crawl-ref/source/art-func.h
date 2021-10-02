@@ -1623,35 +1623,6 @@ static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
 }
 
 ////////////////////////////////////////////////////
-static void _dreamshard_summon_ally()
-{
-    //TODO: consider overriding mon name based on appearance
-    const monster_type mon = MONS_DREAM_SPECTRE;
-    mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, GOD_NO_GOD);
-    mg.set_summoned(&you, 4, GOD_NO_GOD);
-    monster* m = create_monster(mg);
-    auto smoke = random_smoke_type();
-    surround_actor_with_cloud(m, smoke);
-}
-
-static bool _evoke_dreamshard_necklace()
-{
-    //TODO: any checks for situations where the item shouldn't work
-    //      e.g. death's door?
-    //      e.g. warn the player if they are already at full hp?
-    mpr("You tear open the necklace, unleashing a healing torrent of colour.");
-    mpr("A troupe from your wildest dreams charges to your aid!");
-
-    //STEP ONE: heal the player hp
-    you.heal(random_range(you.hp_max*0.5, you.hp_max));
-
-    //STEP TWO: summon the dream team
-    int sumcount2 = 2 + random2(4);
-    for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
-        _dreamshard_summon_ally();
-    return true;
-}
 
 static void _DREAMSHARD_NECKLACE_equip(item_def */*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
@@ -1662,22 +1633,4 @@ static void _DREAMSHARD_NECKLACE_equip(item_def */*item*/, bool *show_msgs,
 static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs)
 {
     _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
-}
-
-static bool _DREAMSHARD_NECKLACE_evoke(item_def *item, bool* did_work,
-                            bool* unevokable)
-{
-    if (_evoke_dreamshard_necklace())
-    {
-        ASSERT(in_inventory(*item));
-        dec_inv_item_quantity(item->link, 1);
-        mpr("The necklace is destroyed.");
-        *did_work = true;
-        practise_evoking(1);
-        return true;
-    } else
-    {
-        *unevokable = true;
-        return true;
-    }
 }
