@@ -2645,12 +2645,16 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
+    const bool broken = one_chance_in(3);
     for (const auto &dc : all_door)
     {
         if (you.see_cell(dc))
             was_seen = true;
 
-        dgn_open_door(dc);
+        if (broken)
+            dgn_break_door(dc);
+        else
+            dgn_open_door(dc);
         set_terrain_changed(dc);
     }
 
@@ -2659,7 +2663,8 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         viewwindow();
         update_screen();
 
-        string open_str = "opens the ";
+        // XXX: should use custom verbs
+        string open_str = broken ? "breaks down the " : "opens the ";
         open_str += adj;
         open_str += noun;
         open_str += ".";

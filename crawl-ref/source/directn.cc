@@ -3282,6 +3282,10 @@ string feature_description_at(const coord_def& where, bool covering,
                 desc += "sealed ";
             else if (grid == DNGN_SEALED_CLEAR_DOOR)
                 desc += "sealed translucent ";
+            else if (grid == DNGN_BROKEN_DOOR)
+                desc += "broken ";
+            else if (grid == DNGN_BROKEN_CLEAR_DOOR)
+                desc += "broken translucent ";
             else
                 desc += "closed ";
         }

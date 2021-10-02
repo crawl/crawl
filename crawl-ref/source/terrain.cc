@@ -426,7 +426,10 @@ bool feat_is_closed_door(dungeon_feature_type feat)
  */
 bool feat_is_open_door(dungeon_feature_type feat)
 {
-    return feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR;
+    return feat == DNGN_OPEN_DOOR
+        || feat == DNGN_OPEN_CLEAR_DOOR
+        || feat == DNGN_BROKEN_DOOR
+        || feat == DNGN_BROKEN_CLEAR_DOOR;
 }
 
 /** Has this feature been sealed by a vault warden?
@@ -2364,7 +2367,9 @@ void dgn_close_door(const coord_def &dest)
     if (!feat_is_open_door(env.grid(dest)))
         return;
 
-    if (env.grid(dest) == DNGN_OPEN_CLEAR_DOOR)
+    // Yes, this fixes broken doors.
+    const auto feat = env.grid(dest);
+    if (feat == DNGN_OPEN_CLEAR_DOOR || feat == DNGN_BROKEN_CLEAR_DOOR)
         env.grid(dest) = DNGN_CLOSED_CLEAR_DOOR;
     else
         env.grid(dest) = DNGN_CLOSED_DOOR;
@@ -2388,6 +2393,26 @@ void dgn_open_door(const coord_def &dest)
     else
         env.grid(dest) = DNGN_OPEN_DOOR;
 }
+
+/** Breaks any door at the given position. Handles the grid change, but does not
+ * mark terrain or do any event handling.
+ *
+ * @param dest The location of the door.
+ */
+void dgn_break_door(const coord_def &dest)
+{
+    if (!feat_is_closed_door(env.grid(dest)))
+        return;
+
+    if (env.grid(dest) == DNGN_CLOSED_CLEAR_DOOR
+        || env.grid(dest) == DNGN_RUNED_CLEAR_DOOR)
+    {
+        env.grid(dest) = DNGN_BROKEN_CLEAR_DOOR;
+    }
+    else
+        env.grid(dest) = DNGN_BROKEN_DOOR;
+}
+
 
 void ice_wall_damage(monster &mons, int delay)
 {

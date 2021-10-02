@@ -735,10 +735,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
+    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-        DNGN_OPEN_CLEAR_DOOR
+        DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR
     };
 
     bool proceed;

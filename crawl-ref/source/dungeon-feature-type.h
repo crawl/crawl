@@ -16,7 +16,9 @@ enum dungeon_feature_type
     DNGN_UNSEEN = 0,                   // must be zero
     DNGN_CLOSED_DOOR,
 #if TAG_MAJOR_VERSION > 34
+    DNGN_BROKEN_DOOR,
     DNGN_CLOSED_CLEAR_DOOR,
+    DNGN_BROKEN_CLEAR_DOOR,
 #endif
     DNGN_RUNED_DOOR,
 #if TAG_MAJOR_VERSION > 34
@@ -331,6 +333,8 @@ enum dungeon_feature_type
     DNGN_ENTER_ARENA,
     DNGN_EXIT_ARENA,
     DNGN_ALTAR_IGNIS,
+    DNGN_BROKEN_DOOR,
+    DNGN_BROKEN_CLEAR_DOOR,
 #endif
 
     NUM_FEATURES

@@ -4924,18 +4924,15 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
             continue;
 
         int cmd = cmd_array[i];
-        if (force)
+        if (!force)
+            return cmd;
+        const dungeon_feature_type feat = env.grid(gc);
+        if ((feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR)
+            && !env.map_knowledge(gc).monsterinfo())
         {
-            if (feat_is_open_door(env.grid(gc))
-                && !env.map_knowledge(gc).monsterinfo())
-            {
-                cmd += CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
-            }
-            else
-                cmd += CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
+            return CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
         }
-
-        return cmd;
+        return cmd + CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
     }
 
     return CK_MOUSE_CMD;

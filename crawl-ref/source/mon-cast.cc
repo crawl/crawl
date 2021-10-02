@@ -6110,10 +6110,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (!hp_lost)
             sumcount++;
 
+        // This code is so dubious...
         static const set<dungeon_feature_type> safe_tiles =
         {
             DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-            DNGN_OPEN_CLEAR_DOOR
+            DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR, DNGN_BROKEN_CLEAR_DOOR,
         };
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)

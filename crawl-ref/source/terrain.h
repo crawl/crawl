@@ -168,5 +168,6 @@ coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* exclude
 
 void dgn_close_door(const coord_def &dest);
 void dgn_open_door(const coord_def &dest);
+void dgn_break_door(const coord_def &dest);
 
 void ice_wall_damage(monster &victim, int delay);

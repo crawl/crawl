@@ -1181,6 +1181,8 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_RUNED_CLEAR_DOOR, { "rock", "stone door frame" } },
     { DNGN_SEALED_DOOR, { "rock", "stone door frame" } },
     { DNGN_SEALED_CLEAR_DOOR, { "rock", "stone door frame" } },
+    { DNGN_BROKEN_DOOR, { "rock", "stone door frame" } },
+    { DNGN_BROKEN_CLEAR_DOOR, { "rock", "stone door frame" } },
     { DNGN_STONE_ARCH, { "rock", "stone arch" } },
     // Metal -- small but nasty explosion
     { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
