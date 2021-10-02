@@ -564,7 +564,7 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
-    if (act->res_negative_energy() >= 3)
+    if (!actor_is_susceptible_to_vampirism(*act))
         return false;
 
     if (!agent)
