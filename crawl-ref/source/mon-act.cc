@@ -276,13 +276,17 @@ static bool _do_mon_spell(monster* mons)
     return false;
 }
 
-static void _swim_or_move_energy(monster& mon)
+static energy_use_type _get_swim_or_move(monster& mon)
 {
     const dungeon_feature_type feat = env.grid(mon.pos());
-
     // FIXME: Replace check with mons_is_swimming()?
-    mon.lose_energy(((feat_is_lava(feat) || feat_is_water(feat))
-                     && mon.ground_level()) ? EUT_SWIM : EUT_MOVE);
+    return (feat_is_lava(feat) || feat_is_water(feat))
+            && mon.ground_level() ? EUT_SWIM : EUT_MOVE;
+}
+
+static void _swim_or_move_energy(monster& mon)
+{
+    mon.lose_energy(_get_swim_or_move(mon));
 }
 
 static bool _unfriendly_or_impaired(const monster& mon)
@@ -3275,9 +3279,6 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // The seen context no longer applies if the monster is moving normally.
     mons.seen_context = SC_NONE;
 
-    // This appears to be the real one, ie where the movement occurs:
-    _swim_or_move_energy(mons);
-
     if (mons.type == MONS_FOXFIRE)
         --mons.steps_remaining;
 
@@ -3305,6 +3306,9 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     }
 
     _handle_manticore_barbs(mons);
+
+    // This appears to be the real one, ie where the movement occurs:
+    _swim_or_move_energy(mons);
 
     return true;
 }

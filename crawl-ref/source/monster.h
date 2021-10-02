@@ -204,8 +204,8 @@ public:
     bool del_ench(enchant_type ench, bool quiet = false, bool effect = true);
     bool lose_ench_duration(const mon_enchant &e, int levels);
     bool lose_ench_levels(const mon_enchant &e, int lev, bool infinite = false);
-    void lose_energy(energy_use_type et, int div = 1, int mult = 1) override;
-    void gain_energy(energy_use_type et, int div = 1, int mult = 1) override;
+    void lose_energy(energy_use_type et, int div = 1, int mult = 1);
+    int energy_cost(energy_use_type et, int div = 1, int mult = 1);
 
     void scale_hp(int num, int den);
     bool gain_exp(int exp, int max_levels_to_gain = 2);

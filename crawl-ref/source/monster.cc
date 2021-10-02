@@ -5660,7 +5660,7 @@ int monster::action_energy(energy_use_type et) const
     return max(move_cost, 1);
 }
 
-void monster::lose_energy(energy_use_type et, int div, int mult)
+int monster::energy_cost(energy_use_type et, int div, int mult)
 {
     int energy_loss  = div_round_up(mult * action_energy(et), div);
     if (has_ench(ENCH_PETRIFYING))
@@ -5671,20 +5671,12 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
-
-    speed_increment -= energy_loss;
+    return energy_loss;
 }
 
-void monster::gain_energy(energy_use_type et, int div, int mult)
+void monster::lose_energy(energy_use_type et, int div, int mult)
 {
-    int energy_gain  = div_round_up(mult * action_energy(et), div);
-    if (has_ench(ENCH_PETRIFYING))
-    {
-        energy_gain *= 2;
-        energy_gain /= 3;
-    }
-
-    speed_increment += energy_gain;
+    speed_increment -= energy_cost(et, div, mult);
 }
 
 /**
