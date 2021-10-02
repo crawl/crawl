@@ -876,7 +876,7 @@ static void _dreamshard_do_visual_all()
  **/
 static void _maybe_dream_heal()
 {
-    if(you.duration[DUR_DEATHS_DOOR])
+    if (you.duration[DUR_DEATHS_DOOR])
     {
         mpr("Your magic blocks the powers of the realm of dreams.");
         return;
@@ -892,7 +892,7 @@ static void _maybe_dream_heal()
     for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
         _dreamshard_summon_ally();
     mpr("A troupe from your wildest dreams charges to your aid!");
-    
+
     // STEP THREE: destroy the necklace
     ASSERT(you.wearing(EQ_AMULET, AMU_NOTHING));
     dec_inv_item_quantity(you.slot_item(EQ_AMULET,1)->link, 1);
@@ -1093,7 +1093,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     // of how that death would feel after the investment in wearing the
     // necklace for presumably quite a while - amcnicky
     if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE) && dam >= you.hp
-        && !env_death && !non_death && death_type != KILLED_BY_ZOT 
+        && !env_death && !non_death && death_type != KILLED_BY_ZOT
         && you.hp_max > 0)
     {
         _maybe_dream_heal();
@@ -1102,9 +1102,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     // dreamshard trigger type 2: a potential trigger upon near-fatal damage.
     // if damage > 80% of remaining health, toss a coin to activate.
-    if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE) 
+    if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
         && ((dam * 100) / you.hp) > 80 && coinflip()
-        && !env_death && !non_death && death_type != KILLED_BY_ZOT 
+        && !env_death && !non_death && death_type != KILLED_BY_ZOT
         && you.hp_max > 0)
     {
         _maybe_dream_heal();
