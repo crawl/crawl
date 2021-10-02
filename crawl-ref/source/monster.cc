@@ -5672,12 +5672,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
 
-    // Randomize movement cost slightly, to make it less predictable,
-    // and make pillar-dancing not entirely safe.
-    // No randomization for allies following you to avoid traffic jam
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        energy_loss += random2(3) - 1;
-
     speed_increment -= energy_loss;
 }
 
