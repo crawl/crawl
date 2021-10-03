@@ -840,10 +840,10 @@ dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
-Conjures a small globe of magical energy linked to the caster's own magical
-reserves. Each time its creator casts a destructive Conjuration, the battlesphere
-will launch its own volley of energy at a random foe. With increasing power, the
-battlesphere lasts longer and deals more damage per volley.
+Conjures a small globe of magical energy. Each time its creator casts a
+destructive Conjuration, the battlesphere will launch its own volley of energy
+at a random foe. With increasing power, the battlesphere lasts longer and deals
+more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
