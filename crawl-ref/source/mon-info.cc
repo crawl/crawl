@@ -92,7 +92,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_POLAR_VORTEX_COOLDOWN, MB_VORTEX_COOLDOWN },
     { ENCH_BARBS,           MB_BARBS },
     { ENCH_POISON_VULN,     MB_POISON_VULN },
-    { ENCH_ICEMAIL,         MB_ICEMAIL },
     { ENCH_AGILE,           MB_AGILE },
     { ENCH_FROZEN,          MB_FROZEN },
     { ENCH_BLACK_MARK,      MB_BLACK_MARK },

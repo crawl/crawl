@@ -899,14 +899,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer more vulnerable to poison.");
         break;
 
-    case ENCH_ICEMAIL:
-        if (!quiet && you.can_see(*this))
-        {
-            mprf("%s icy envelope dissipates!",
-                 apostrophise(name(DESC_THE)).c_str());
-        }
-        break;
-
     case ENCH_AGILE:
         if (!quiet)
             simple_monster_message(*this, " is no longer unusually agile.");
@@ -2038,7 +2030,11 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "building_charge",
 #endif
-    "poison_vuln", "icemail", "agile",
+    "poison_vuln",
+#if TAG_MAJOR_VERSION == 34
+    "icemail",
+#endif
+    "agile",
     "frozen",
 #if TAG_MAJOR_VERSION == 34
     "ephemeral_infusion",

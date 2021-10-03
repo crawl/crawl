@@ -143,7 +143,6 @@ enum monster_info_flags
     MB_VORTEX_COOLDOWN,
     MB_BARBS,
     MB_POISON_VULN,
-    MB_ICEMAIL,
     MB_AGILE,
     MB_FROZEN,
     MB_BLACK_MARK,

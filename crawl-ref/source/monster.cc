@@ -2832,13 +2832,6 @@ void monster::expose_to_element(beam_type flavour, int strength,
     case BEAM_WATER:
         del_ench(ENCH_STICKY_FLAME);
         break;
-    case BEAM_FIRE:
-    case BEAM_LAVA:
-    case BEAM_STICKY_FLAME:
-    case BEAM_STEAM:
-        if (has_ench(ENCH_ICEMAIL))
-            del_ench(ENCH_ICEMAIL);
-        break;
     default:
         break;
     }
@@ -3334,8 +3327,6 @@ int monster::armour_class(bool calc_unid) const
     }
 
     // various enchantments
-    if (has_ench(ENCH_ICEMAIL))
-        ac += ICEMAIL_MAX;
     if (has_ench(ENCH_IDEALISED))
         ac += 4 + get_hit_dice() / 3;
 
