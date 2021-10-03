@@ -4021,7 +4021,7 @@ bool handle_mon_spell(monster* mons)
     bolt beem = setup_targetting_beam(*mons);
 
     bool ignore_good_idea = false;
-    if (does_ru_wanna_redirect(mons))
+    if (does_ru_wanna_redirect(*mons))
     {
         ru_interference interference = get_ru_attack_interference_level();
         if (interference == DO_BLOCK_ATTACK)

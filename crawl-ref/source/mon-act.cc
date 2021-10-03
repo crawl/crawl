@@ -196,6 +196,44 @@ static void _handle_manticore_barbs(monster& mons)
     }
 }
 
+// Returns true iff the monster does nothing.
+static bool _handle_ru_redirection(monster &mons, monster **new_target)
+{
+    // Check to see if your religion redirects the attack
+    if (!does_ru_wanna_redirect(mons))
+        return false;
+
+    const ru_interference interference =
+            get_ru_attack_interference_level();
+    if (interference == DO_BLOCK_ATTACK)
+    {
+        simple_monster_message(mons,
+            " is stunned by your conviction and fails to attack.",
+            MSGCH_GOD);
+        return true;
+    }
+    if (interference == DO_REDIRECT_ATTACK)
+    {
+        // get a target
+        int pfound = 0;
+        for (adjacent_iterator ai(mons.pos(), false); ai; ++ai)
+        {
+            monster* candidate = monster_at(*ai);
+            if (candidate == nullptr
+                || mons_is_projectile(candidate->type)
+                || mons_is_firewood(*candidate)
+                || candidate->friendly())
+            {
+                continue;
+            }
+            ASSERT(candidate);
+            if (one_chance_in(++pfound))
+                *new_target = candidate;
+        }
+    }
+    return false;
+}
+
 static bool _swap_monsters(monster& mover, monster& moved)
 {
     // Can't swap with a stationary monster.
@@ -1174,7 +1212,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
     ru_interference interference = DO_NOTHING;
     // See if Ru worshippers block or redirect the attack.
-    if (does_ru_wanna_redirect(mons))
+    if (does_ru_wanna_redirect(*mons))
     {
         interference = get_ru_attack_interference_level();
         if (interference == DO_BLOCK_ATTACK)
@@ -1808,45 +1846,19 @@ void handle_monster_move(monster* mons)
                 && !mons->has_ench(ENCH_CHARM)
                 && !mons->has_ench(ENCH_HEXED))
             {
-                monster* new_target = 0;
+                monster* new_target = nullptr;
+                // XXX: why does this check exist?
                 if (!mons->wont_attack())
                 {
                     // Otherwise, if it steps into you, cancel other targets.
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
 
-                    // Check to see if your religion redirects the attack
-                    if (does_ru_wanna_redirect(mons))
+                    if (_handle_ru_redirection(*mons, &new_target))
                     {
-                        ru_interference interference =
-                                get_ru_attack_interference_level();
-                        if (interference == DO_BLOCK_ATTACK)
-                        {
-                            simple_monster_message(*mons,
-                                " is stunned by your conviction and fails to attack.",
-                                MSGCH_GOD);
-                            mons->speed_increment -= non_move_energy;
-                            return;
-                        }
-                        else if (interference == DO_REDIRECT_ATTACK)
-                        {
-                            // get a target
-                            int pfound = 0;
-                            for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-                            {
-                                monster* candidate = monster_at(*ai);
-                                if (candidate == nullptr
-                                    || mons_is_projectile(candidate->type)
-                                    || mons_is_firewood(*candidate)
-                                    || candidate->friendly())
-                                {
-                                    continue;
-                                }
-                                ASSERT(candidate);
-                                if (one_chance_in(++pfound))
-                                    new_target = candidate;
-                            }
-                        }
+                        mons->speed_increment -= non_move_energy;
+                        DEBUG_ENERGY_USE("_handle_ru_redirection()");
+                        return;
                     }
                 }
 

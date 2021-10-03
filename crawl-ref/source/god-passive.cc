@@ -1019,14 +1019,14 @@ void qazlal_element_adapt(beam_type flavour, int strength)
  *
  * @return bool Whether or not whether the worshipper will attempt to interfere.
  */
-bool does_ru_wanna_redirect(monster* mon)
+bool does_ru_wanna_redirect(const monster &mon)
 {
     return have_passive(passive_t::aura_of_power)
-            && !mon->friendly()
-            && you.see_cell_no_trans(mon->pos())
-            && !mons_is_firewood(*mon)
-            && !mon->submerged()
-            && !mons_is_projectile(mon->type);
+            && !mon.friendly()
+            && you.see_cell_no_trans(mon.pos())
+            && !mons_is_firewood(mon)
+            && !mon.submerged()
+            && !mons_is_projectile(mon.type);
 }
 
 /**
