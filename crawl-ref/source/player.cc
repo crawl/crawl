@@ -1737,7 +1737,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 int player_movement_speed()
 {
     int mv = you.form == transformation::none
-        ? 10
+        ? 11
         : form_base_movespeed(you.form);
 
     if (feat_is_water(env.grid(you.pos())))

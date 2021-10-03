@@ -2216,5 +2216,5 @@ int form_base_movespeed(transformation tran)
     else if (tran == transformation::pig)
         return 7;
     else
-        return 10;
+        return 11;
 }
