@@ -229,6 +229,59 @@ static void _clear_constriction_data()
         you.stop_being_constricted();
 }
 
+static void _trigger_opportunity_attacks(coord_def new_pos)
+{
+    if (you.attribute[ATTR_SERPENTS_LASH]          // too fast!
+        || wu_jian_move_triggers_attacks(new_pos)) // too cool!
+    {
+        return;
+    }
+
+    const coord_def orig_pos = you.pos();
+    for (adjacent_iterator ai(orig_pos); ai; ++ai)
+    {
+        if (adjacent(*ai, new_pos))
+            continue;
+        monster* mon = monster_at(*ai);
+        // No, there is no logic to this ordering (pf):
+        if (!mon
+            || mon->wont_attack()
+            || !mons_has_attacks(*mon)
+            || mon->confused()
+            || mon->incapacitated()
+            || !mon->can_see(you)
+            // no attacks from monsters that just did a slow action
+            || mon->speed_increment - mon->energy_cost(EUT_ATTACK) < 60 /*?*/
+            || !one_chance_in(5))
+        {
+            continue;
+        }
+        actor* foe = mon->get_foe();
+        if (!foe || !foe->is_player())
+            continue;
+
+        simple_monster_message(*mon, " attacks as you move away!");
+        const int old_energy = mon->speed_increment;
+        mon_maybe_attack_you(*mon);
+        // Refund up to 10 energy (1 turn) from the attack.
+        // Thus, only slow attacking monsters use energy for these.
+        // EXCEPTION: phantoms stay adjacent after a hit, so they need to use
+        // up energy, or you ping-pong everywhere and it looks ridiculous.
+        if (you.pos() == orig_pos)
+            mon->speed_increment = min(mon->speed_increment + 10, old_energy);
+
+        if (you.pending_revival)
+            return;
+    }
+}
+
+static void _apply_pre_move_effects(coord_def new_pos)
+{
+    remove_water_hold();
+    _clear_constriction_data();
+    _trigger_opportunity_attacks(new_pos);
+}
+
 bool apply_cloud_trail(const coord_def old_pos)
 {
     if (you.duration[DUR_CLOUD_TRAIL])
@@ -687,10 +740,6 @@ static spret _rampage_forward(coord_def move)
     }
 
     // We've passed the validity checks, go ahead and rampage.
-
-    // First, apply any necessary pre-move effects:
-    remove_water_hold();
-    _clear_constriction_data();
     const coord_def old_pos = you.pos();
 
     clear_messages();
@@ -708,6 +757,11 @@ static spret _rampage_forward(coord_def move)
              enhanced ? "stride" : "rampage",
              valid_target->name(DESC_THE, true).c_str());
     }
+
+    // First, apply any necessary pre-move effects:
+    remove_water_hold();
+    _clear_constriction_data();
+    // (But not opportunity attacks - messy codewise, and no design benefit.)
 
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(beam.target, true);
@@ -1074,12 +1128,15 @@ void move_player_action(coord_def move)
         // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
         {
-            remove_water_hold();
-            _clear_constriction_data();
-            move_player_to_grid(targ, true);
-            apply_barbs_damage();
-            remove_ice_movement();
-            apply_cloud_trail(old_pos);
+            _apply_pre_move_effects(targ);
+            // Check nothing weird happened during opportunity attacks.
+            if (!you.pending_revival && you.pos() == old_pos)
+            {
+                move_player_to_grid(targ, true);
+                apply_barbs_damage();
+                remove_ice_movement();
+                apply_cloud_trail(old_pos);
+            }
         }
 
         // Now it is safe to apply the swappee's location effects and add

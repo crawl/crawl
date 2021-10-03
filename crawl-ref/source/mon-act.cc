@@ -197,7 +197,7 @@ static void _handle_manticore_barbs(monster& mons)
 }
 
 // Returns true iff the monster does nothing.
-static bool _handle_ru_redirection(monster &mons, monster **new_target)
+static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
 {
     // Check to see if your religion redirects the attack
     if (!does_ru_wanna_redirect(mons))
@@ -232,6 +232,21 @@ static bool _handle_ru_redirection(monster &mons, monster **new_target)
         }
     }
     return false;
+}
+
+static void _melee_attack_player(monster &mons, monster* ru_target)
+{
+    if (ru_target)
+    {
+        // attack that target
+        mons.target = ru_target->pos();
+        mons.foe = ru_target->mindex();
+        mprf(MSGCH_GOD, "You redirect %s's attack!",
+             mons.name(DESC_THE).c_str());
+        fight_melee(&mons, ru_target);
+    }
+    else
+        fight_melee(&mons, &you);
 }
 
 static bool _swap_monsters(monster& mover, monster& moved)
@@ -1854,7 +1869,7 @@ void handle_monster_move(monster* mons)
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
 
-                    if (_handle_ru_redirection(*mons, &new_target))
+                    if (_handle_ru_melee_redirection(*mons, &new_target))
                     {
                         mons->speed_increment -= non_move_energy;
                         DEBUG_ENERGY_USE("_handle_ru_redirection()");
@@ -1862,23 +1877,12 @@ void handle_monster_move(monster* mons)
                     }
                 }
 
-                if (new_target)
-                {
-                    // attack that target
-                    mons->target = new_target->pos();
-                    mons->foe = new_target->mindex();
-                    mprf(MSGCH_GOD, "You redirect %s's attack!",
-                         mons->name(DESC_THE).c_str());
-                    fight_melee(mons, new_target);
-                }
-                else
-                    fight_melee(mons, &you);
+                _melee_attack_player(*mons, new_target);
 
                 // chance to confusedly whack itself at the same time. Handled
                 // separately for monsters in _monster_move.
                 if (!new_target && mons->confused() && one_chance_in(6))
                     _do_move_monster(*mons, coord_def(0,0));
-
                 _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
                 mmov.reset();
@@ -3125,6 +3129,14 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     return false;
 }
 
+void mon_maybe_attack_you(monster& mons)
+{
+    monster *ru_target = nullptr;
+    if (_handle_ru_melee_redirection(mons, &ru_target))
+        return;
+    _melee_attack_player(mons, ru_target);
+}
+
 static bool _do_move_monster(monster& mons, const coord_def& delta)
 {
     const coord_def f = mons.pos() + delta;
@@ -3208,6 +3220,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
             }
         } // done door-eating jellies
     }
+    // This appears to be the real one, ie where the movement occurs:
 
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
@@ -3249,7 +3262,6 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     _handle_manticore_barbs(mons);
 
-    // This appears to be the real one, ie where the movement occurs:
     _swim_or_move_energy(mons);
 
     return true;
