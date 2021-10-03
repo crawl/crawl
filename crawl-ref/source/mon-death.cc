@@ -1287,9 +1287,11 @@ static bool _reaping(monster &mons)
         return false;
 
     actor *killer = actor_by_mid(mons.props[REAPER_KEY].get_int());
-    if (killer)
-        return _mons_reaped(*killer, mons);
-    return false;
+    if (!killer)
+        return false;
+    if (killer->is_player() && have_passive(passive_t::no_allies))
+        return false;
+    return _mons_reaped(*killer, mons);
 }
 
 static bool _god_will_bless_follower(monster* victim)
