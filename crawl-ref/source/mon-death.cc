@@ -1289,7 +1289,7 @@ static bool _reaping(monster &mons)
     actor *killer = actor_by_mid(mons.props[REAPER_KEY].get_int());
     if (!killer)
         return false;
-    if (killer->is_player() && have_passive(passive_t::no_allies))
+    if (killer->is_player() && you.allies_forbidden())
         return false;
     return _mons_reaped(*killer, mons);
 }

@@ -449,8 +449,8 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
                           SAME_ATTITUDE(mons), mons->pos(), mons->foe)
                 .set_summoned(mons, 6, SPELL_SUMMON_DEMON));
         }
-        else
-            cast_summon_demon(50+random2(100));
+        else if (!you.allies_forbidden())
+            cast_summon_demon(50 + random2(100));
     }
 }
 
