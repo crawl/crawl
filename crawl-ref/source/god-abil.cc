@@ -210,8 +210,13 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
         holy_word(100, HOLY_WORD_TSO, you.pos(), true);
         // Un-bloodify surrounding squares.
         for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_SOLID); ri; ++ri)
+        {
             if (is_bloodcovered(*ri))
                 env.pgrid(*ri) &= ~FPROP_BLOODY;
+
+            if (env.grid(*ri) == DNGN_FOUNTAIN_BLOOD)
+                dungeon_terrain_changed(*ri, DNGN_FOUNTAIN_BLUE);
+        }
     }
     else if (god == GOD_KIKUBAAQUDGHA)
     {
