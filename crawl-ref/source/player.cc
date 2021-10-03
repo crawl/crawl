@@ -3775,7 +3775,7 @@ int get_real_hp(bool trans, bool drained)
 {
     int hitp;
 
-    hitp  = you.experience_level * 11 / 2 + 8;
+    hitp  = you.experience_level * 13 / 2 + 10;
     hitp += you.hp_max_adj_perm;
     // Important: we shouldn't add Heroism boosts here.
     // ^ The above is a 2011 comment from 1kb, in 2021 this isn't
