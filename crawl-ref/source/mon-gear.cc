@@ -413,25 +413,13 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { WPN_RAPIER,           1 },
         { WPN_DEMON_WHIP,       1 },
         { WPN_FLAIL,            1 } };
-    // Demonspawn probably want to use weapons close to the "natural"
-    // demon weapons - demon blades, demon whips, and demon tridents.
-    // So pick from a selection of good weapons from those classes
-    // with a 2/5 chance in each category of having the demon weapon.
-    // XXX: this is so ridiculously overengineered
     static const weapon_list DS_WEAPONS =
-    {   { WPN_LONG_SWORD,       10 },
-        { WPN_SCIMITAR,         10 },
-        { WPN_GREAT_SWORD,      10 },
-        { WPN_DEMON_BLADE,      20 },
-        { WPN_MACE,             10 },
-        { WPN_MORNINGSTAR,      8 },
-        { WPN_EVENINGSTAR,      2 },
-        { WPN_DIRE_FLAIL,       10 },
-        { WPN_DEMON_WHIP,       20 },
-        { WPN_TRIDENT,          10 },
-        { WPN_HALBERD,          10 },
-        { WPN_GLAIVE,           10 },
-        { WPN_DEMON_TRIDENT,    20 } };
+    {   { WPN_GREAT_SWORD,      3 },
+        { WPN_DEMON_BLADE,      2 },
+        { WPN_DIRE_FLAIL,       3 },
+        { WPN_DEMON_WHIP,       2 },
+        { WPN_GLAIVE,           3 },
+        { WPN_DEMON_TRIDENT,    2 } };
     static const weapon_list GARGOYLE_WEAPONS =
     {   { WPN_MACE,             15 },
         { WPN_FLAIL,            10 },
