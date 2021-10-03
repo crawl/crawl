@@ -1767,14 +1767,14 @@ int player_movement_speed()
 
     // Tengu can move slightly faster when flying.
     if (you.tengu_flight())
-        mv--;
+        mv -= 2;
 
     if (you.duration[DUR_FROZEN])
         mv += 3;
 
-    // Mutations: -2, -3, -4, unless innate and shapechanged.
+    // Mutations: -3, -4, -5, unless innate and shapechanged.
     if (int fast = you.get_mutation_level(MUT_FAST))
-        mv -= fast + 1;
+        mv -= fast + 2;
 
     if (int slow = you.get_mutation_level(MUT_SLOW))
     {
