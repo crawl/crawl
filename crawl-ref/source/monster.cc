@@ -5162,6 +5162,12 @@ bool monster::has_action_energy() const
     return speed_increment >= ENERGY_THRESHOLD;
 }
 
+bool monster::may_have_action_energy() const
+{
+    const int max_gain = (speed * you.time_taken + 9) / 10;
+    return speed_increment + max_gain >= ENERGY_THRESHOLD;
+}
+
 /// If a monster had enough energy to act this turn, change it so it doesn't.
 void monster::drain_action_energy()
 {

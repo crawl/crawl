@@ -2474,7 +2474,8 @@ bool melee_attack::mons_attack_effects()
         return false;
     }
 
-    if (attacker != defender && attk_flavour == AF_TRAMPLE)
+    // Don't trample while player is moving - either mean or nonsensical
+    if (attacker != defender && attk_flavour == AF_TRAMPLE && !crawl_state.player_moving)
         do_knockback();
 
     special_damage = 0;
@@ -2643,7 +2644,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_BLINK_WITH:
-        if (coinflip())
+        if (coinflip() && !crawl_state.player_moving)
             blink_fineff::schedule(attacker, defender);
         break;
 
@@ -2840,11 +2841,13 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENSNARE:
-        if (one_chance_in(3))
+        if (!crawl_state.player_moving && one_chance_in(3))
             ensnare(defender);
         break;
 
     case AF_CRUSH:
+        if (crawl_state.player_moving)
+            break; // Won't work while player is moving
         if (needs_message)
         {
             mprf("%s %s %s.",
@@ -2859,7 +2862,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENGULF:
-        if (x_chance_in_y(2, 3)
+        if (!crawl_state.player_moving  // Won't work while player is moving
+            && x_chance_in_y(2, 3)
             && attacker->can_constrict(defender, true, true))
         {
             const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;

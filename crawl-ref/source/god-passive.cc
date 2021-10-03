@@ -1383,14 +1383,17 @@ static int _wu_jian_number_of_attacks(bool wall_jump)
                           attack_delay * BASELINE_DELAY);
 }
 
-static bool _wu_jian_lunge(const coord_def& old_pos)
+static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
+                           bool check_only)
 {
-    coord_def lunge_direction = (you.pos() - old_pos).sgn();
-    coord_def potential_target = you.pos() + lunge_direction;
+    coord_def lunge_direction = (new_pos - old_pos).sgn();
+    coord_def potential_target = new_pos + lunge_direction;
     monster* mons = monster_at(potential_target);
 
     if (!mons || !_can_attack_martial(mons) || !mons->alive())
         return false;
+    if (check_only)
+        return true;
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         _wu_jian_increment_heavenly_storm();
@@ -1439,13 +1442,12 @@ static vector<monster*> _get_whirlwind_targets(coord_def pos)
     return targets;
 }
 
-static bool _wu_jian_whirlwind(const coord_def& old_pos)
+static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
+                               bool check_only)
 {
-    bool did_at_least_one_attack = false;
-
-    const vector<monster*> targets = _get_whirlwind_targets(you.pos());
+    const vector<monster*> targets = _get_whirlwind_targets(new_pos);
     if (targets.empty())
-        return did_at_least_one_attack;
+        return false;
 
     const vector<monster*> old_targets = _get_whirlwind_targets(old_pos);
     vector<monster*> common_targets;
@@ -1453,6 +1455,10 @@ static bool _wu_jian_whirlwind(const coord_def& old_pos)
                      old_targets.begin(), old_targets.end(),
                      back_inserter(common_targets));
 
+    if (check_only)
+        return !common_targets.empty();
+
+    bool did_at_least_one_attack = false;
     for (auto mons : common_targets)
     {
         if (!mons->alive())
@@ -1489,32 +1495,33 @@ static bool _wu_jian_whirlwind(const coord_def& old_pos)
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
             whirlwind.attack();
-            if (!did_at_least_one_attack)
-              did_at_least_one_attack = true;
+            did_at_least_one_attack = true;
         }
     }
 
     return did_at_least_one_attack;
 }
 
-static bool _wu_jian_trigger_martial_arts(const coord_def& old_pos)
+static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
+                                          coord_def new_pos,
+                                          bool check_only = false)
 {
-    bool did_wu_jian_attacks = false;
-
-    if (you.pos() == old_pos
+    if (new_pos == old_pos
         || you.duration[DUR_CONF]
         || you.weapon() && !is_melee_weapon(*you.weapon()))
     {
-        return did_wu_jian_attacks;
+        return false;
     }
 
+    bool attacked = false;
+
     if (have_passive(passive_t::wu_jian_lunge))
-        did_wu_jian_attacks = _wu_jian_lunge(old_pos);
+        attacked = _wu_jian_lunge(old_pos, new_pos, check_only);
 
     if (have_passive(passive_t::wu_jian_whirlwind))
-        did_wu_jian_attacks |= _wu_jian_whirlwind(old_pos);
+        attacked |= _wu_jian_whirlwind(old_pos, new_pos, check_only);
 
-    return did_wu_jian_attacks;
+    return attacked;
 }
 
 void wu_jian_wall_jump_effects()
@@ -1571,17 +1578,21 @@ void wu_jian_wall_jump_effects()
 }
 
 bool wu_jian_post_move_effects(bool did_wall_jump,
-                               const coord_def& initial_position)
+                               const coord_def& old_pos)
 {
-    bool did_wu_jian_attacks = false;
-
+    bool attacked = false;
     if (!did_wall_jump)
-        did_wu_jian_attacks = _wu_jian_trigger_martial_arts(initial_position);
+        attacked = _wu_jian_trigger_martial_arts(old_pos, you.pos());
 
     if (you.turn_is_over)
-        _wu_jian_trigger_serpents_lash(initial_position, did_wall_jump);
+        _wu_jian_trigger_serpents_lash(old_pos, did_wall_jump);
 
-    return did_wu_jian_attacks;
+    return attacked;
+}
+
+bool wu_jian_move_triggers_attacks(coord_def new_pos)
+{
+    return _wu_jian_trigger_martial_arts(you.pos(), new_pos, true);
 }
 
 /**

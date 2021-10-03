@@ -1035,6 +1035,7 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_CHOOSE_STAT:
     case HINT_AUTO_EXCLUSION:
     case HINT_MALEVOLENCE:
+    case HINT_OPPORTUNITY_ATTACK:
         return true;
     default:
         return false;
@@ -1058,6 +1059,7 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_CLOUD_WARNING:
     case HINT_ANIMATE_CORPSE_SKELETON:
     case HINT_SKILL_RAISE:
+    case HINT_OPPORTUNITY_ATTACK:
         return true;
     default:
         return false;
@@ -1653,6 +1655,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "will sometimes randomly happen to you. When this happens, "
                 "pause, think carefully, and be ready to use consumables or "
                 "abilities. Fight to survive!";
+        break;
+
+    case HINT_OPPORTUNITY_ATTACK:
+        text << "When you move away from an enemy, they have a small (1/3) "
+                "chance of taking advantage and launching a free attack. "
+                "Repositioning and retreating is often still good, but keep "
+                "an eye out for those extra attacks.";
         break;
 
     case HINT_YOU_ENCHANTED:

@@ -51,6 +51,7 @@
 #include "travel.h"
 #include "travel-open-doors-type.h"
 #include "transform.h"
+#include "unwind.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
 static void _apply_move_time_taken();
@@ -227,6 +228,58 @@ static void _clear_constriction_data()
     you.stop_directly_constricting_all(true);
     if (you.is_directly_constricted())
         you.stop_being_constricted();
+}
+
+static void _trigger_opportunity_attacks(coord_def new_pos)
+{
+    if (you.attribute[ATTR_SERPENTS_LASH]          // too fast!
+        || wu_jian_move_triggers_attacks(new_pos)) // too cool!
+    {
+        return;
+    }
+
+    unwind_bool moving(crawl_state.player_moving, true);
+
+    const coord_def orig_pos = you.pos();
+    for (adjacent_iterator ai(orig_pos); ai; ++ai)
+    {
+        if (adjacent(*ai, new_pos))
+            continue;
+        monster* mon = monster_at(*ai);
+        // No, there is no logic to this ordering (pf):
+        if (!mon
+            || mon->wont_attack()
+            || !mons_has_attacks(*mon)
+            || mon->confused()
+            || mon->incapacitated()
+            || !mon->can_see(you)
+            // only let monsters attack if they might follow you
+            || !mon->may_have_action_energy() || mon->is_stationary()
+            /*|| !one_chance_in(3)*/)
+        {
+            continue;
+        }
+        actor* foe = mon->get_foe();
+        if (!foe || !foe->is_player())
+            continue;
+
+        simple_monster_message(*mon, " attacks as you move away!");
+        const int old_energy = mon->speed_increment;
+        launch_opportunity_attack(*mon);
+        // Refund up to 10 energy (1 turn) from the attack.
+        // Thus, only slow attacking monsters use energy for these.
+        mon->speed_increment = min(mon->speed_increment + 10, old_energy);
+
+        if (you.pending_revival || you.pos() != orig_pos)
+            return;
+    }
+}
+
+static void _apply_pre_move_effects(coord_def new_pos)
+{
+    remove_water_hold();
+    _clear_constriction_data();
+    _trigger_opportunity_attacks(new_pos);
 }
 
 bool apply_cloud_trail(const coord_def old_pos)
@@ -687,10 +740,6 @@ static spret _rampage_forward(coord_def move)
     }
 
     // We've passed the validity checks, go ahead and rampage.
-
-    // First, apply any necessary pre-move effects:
-    remove_water_hold();
-    _clear_constriction_data();
     const coord_def old_pos = you.pos();
 
     clear_messages();
@@ -708,6 +757,11 @@ static spret _rampage_forward(coord_def move)
              enhanced ? "stride" : "rampage",
              valid_target->name(DESC_THE, true).c_str());
     }
+
+    // First, apply any necessary pre-move effects:
+    remove_water_hold();
+    _clear_constriction_data();
+    // (But not opportunity attacks - messy codewise, and no design benefit.)
 
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(beam.target, true);
@@ -1069,17 +1123,25 @@ void move_player_action(coord_def move)
         else if (!running)
             clear_travel_trail();
 
+        // Calculate time_taken before checking opportunity attacks so that
+        // we can guess whether monsters will be able to follow you (& hence
+        // trigger opp attacks).
+        _apply_move_time_taken();
+
         coord_def old_pos = you.pos();
         // Don't trigger things that require movement
         // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
         {
-            remove_water_hold();
-            _clear_constriction_data();
-            move_player_to_grid(targ, true);
-            apply_barbs_damage();
-            remove_ice_movement();
-            apply_cloud_trail(old_pos);
+            _apply_pre_move_effects(targ);
+            // Check nothing weird happened during opportunity attacks.
+            if (!you.pending_revival)
+            {
+                move_player_to_grid(targ, true);
+                apply_barbs_damage();
+                remove_ice_movement();
+                apply_cloud_trail(old_pos);
+            }
         }
 
         // Now it is safe to apply the swappee's location effects and add
@@ -1090,8 +1152,6 @@ void move_player_action(coord_def move)
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
-
-        _apply_move_time_taken();
 
         move.reset();
         you.turn_is_over = true;
