@@ -230,14 +230,12 @@ bool mons_is_unique(monster_type mc);
 bool mons_is_or_was_unique(const monster& mon);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
-bool mons_is_demonspawn_job(monster_type mc);
-bool mons_is_job(monster_type mc);
 bool mons_is_hepliaklqana_ancestor(monster_type mc);
 
 int mutant_beast_tier(int xl);
 
 int mons_avg_hp(monster_type mc);
-int mons_max_hp(monster_type mc, monster_type mbase_typeg = MONS_NO_MONSTER);
+int mons_max_hp(monster_type mc);
 int exper_value(const monster& mon, bool real = true, bool legacy = false);
 
 int hit_points(int avg_hp, int scale = 10);
@@ -269,7 +267,6 @@ bool mons_is_statue(monster_type mc);
 bool mons_is_demon(monster_type mc);
 bool mons_is_draconian(monster_type mc);
 bool mons_is_base_draconian(monster_type mc);
-bool mons_is_demonspawn(monster_type mc);
 bool mons_is_conjured(monster_type mc);
 bool mons_is_beast(monster_type mc);
 bool mons_is_avatar(monster_type mc);
@@ -341,8 +338,6 @@ int mons_class_colour(monster_type mc);
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 monster_type random_draconian_job();
-monster_type random_demonspawn_monster_species();
-monster_type random_demonspawn_job();
 
 bool init_abomination(monster& mon, int hd);
 void define_monster(monster& mons, bool friendly = false);
@@ -395,8 +390,8 @@ bool mons_eats_items(const monster& mon);
 bool actor_is_susceptible_to_vampirism(const actor& act);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
-monster_type draco_or_demonspawn_subspecies(const monster& mon);
-monster_type draco_or_demonspawn_subspecies(monster_type type,
+monster_type draconian_subspecies(const monster& mon);
+monster_type draconian_subspecies(monster_type type,
                                             monster_type base);
 monster_type mons_detected_base(monster_type mt);
 bool mons_is_siren_beholder(monster_type mc);
@@ -468,8 +463,6 @@ void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
 
 string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const string &colour);
-string  demonspawn_base_name(monster_type mon_type);
-monster_type demonspawn_base_by_name(const string &colour);
 mon_spell_slot drac_breath(monster_type drac_type);
 
 monster_type random_monster_at_grid(const coord_def& p, bool species = false);

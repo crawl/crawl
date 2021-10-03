@@ -3561,7 +3561,7 @@ void describe_deck(deck_type deck)
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
-    const int subsp = mi.draco_or_demonspawn_subspecies();
+    const int subsp = mi.draconian_subspecies();
 
     if (subsp != mi.type)
     {
@@ -3612,59 +3612,6 @@ static string _describe_draconian(const monster_info& mi)
         break;
     default:
         break;
-    }
-
-    return description;
-}
-
-static string _describe_demonspawn_role(monster_type type)
-{
-    switch (type)
-    {
-    case MONS_BLOOD_SAINT:
-        return "It weaves powerful and unpredictable spells of devastation.";
-    case MONS_WARMONGER:
-        return "It is devoted to combat, disrupting the magic of its foes as "
-               "it battles endlessly.";
-    case MONS_CORRUPTER:
-        return "It corrupts space around itself, and can twist even the very "
-               "flesh of its opponents.";
-    case MONS_BLACK_SUN:
-        return "It shines with an unholy radiance, and wields powers of "
-               "darkness from its devotion to the deities of death.";
-    default:
-        return "";
-    }
-}
-
-static string _describe_demonspawn_base(int species)
-{
-    switch (species)
-    {
-    case MONS_MONSTROUS_DEMONSPAWN:
-        return "It is more beast now than whatever species it is descended from.";
-    case MONS_GELID_DEMONSPAWN:
-        return "It is covered in icy armour.";
-    case MONS_INFERNAL_DEMONSPAWN:
-        return "It gives off an intense heat.";
-    case MONS_TORTUROUS_DEMONSPAWN:
-        return "It oozes dark energies.";
-    }
-    return "";
-}
-
-static string _describe_demonspawn(const monster_info& mi)
-{
-    string description;
-    const int subsp = mi.draco_or_demonspawn_subspecies();
-
-    description += _describe_demonspawn_base(subsp);
-
-    if (subsp != mi.type)
-    {
-        const string demonspawn_role = _describe_demonspawn_role(mi.type);
-        if (!demonspawn_role.empty())
-            description += " " + demonspawn_role;
     }
 
     return description;
@@ -4260,8 +4207,8 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
  */
 string _monster_habitat_description(const monster_info& mi)
 {
-    const monster_type type = mons_is_job(mi.type)
-                              ? mi.draco_or_demonspawn_subspecies()
+    const monster_type type = mons_is_draconian_job(mi.type)
+                              ? mi.draconian_subspecies()
                               : mi.type;
     if (mons_class_is_stationary(type))
         return "";
@@ -4769,19 +4716,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_DRACONIAN_KNIGHT:
     {
         inf.body << "\n" << _describe_draconian(mi) << "\n";
-        break;
-    }
-
-    case MONS_MONSTROUS_DEMONSPAWN:
-    case MONS_GELID_DEMONSPAWN:
-    case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_BLOOD_SAINT:
-    case MONS_WARMONGER:
-    case MONS_CORRUPTER:
-    case MONS_BLACK_SUN:
-    {
-        inf.body << "\n" << _describe_demonspawn(mi) << "\n";
         break;
     }
 

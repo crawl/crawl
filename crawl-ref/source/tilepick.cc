@@ -2119,24 +2119,12 @@ static tileidx_t tileidx_draco_base(monster_type draco)
 
 tileidx_t tileidx_draco_base(const monster_info& mon)
 {
-    return tileidx_draco_base(mon.draco_or_demonspawn_subspecies());
+    return tileidx_draco_base(mon.draconian_subspecies());
 }
 
 tileidx_t tileidx_draco_job(const monster_info& mon)
 {
     if (mons_is_draconian_job(mon.type))
-        return get_mon_base_tile(mon.type);
-    return 0;
-}
-
-tileidx_t tileidx_demonspawn_base(const monster_info& mon)
-{
-    return get_mon_base_tile(mon.draco_or_demonspawn_subspecies());
-}
-
-tileidx_t tileidx_demonspawn_job(const monster_info& mon)
-{
-    if (mons_is_demonspawn_job(mon.type))
         return get_mon_base_tile(mon.type);
     return 0;
 }

@@ -372,14 +372,10 @@ white_imp MONS_WHITE_IMP
 %sdir mon/humanoids/demonspawn
 %rim 0
 demonspawn MONS_DEMONSPAWN
-monstrous MONS_MONSTROUS_DEMONSPAWN
-gelid MONS_GELID_DEMONSPAWN
-infernal MONS_INFERNAL_DEMONSPAWN
-torturous MONS_TORTUROUS_DEMONSPAWN
-blood_saint MONS_BLOOD_SAINT
-warmonger MONS_WARMONGER
-corrupter MONS_CORRUPTER
-black_sun MONS_BLACK_SUN
+blood_saint MONS_DEMONSPAWN_BLOOD_SAINT
+warmonger MONS_DEMONSPAWN_WARMONGER
+corrupter MONS_DEMONSPAWN_CORRUPTER
+black_sun MONS_DEMONSPAWN_BLACK_SUN
 ## From the Wucad Mu wizard laboratory
 %sdir mon/vault
 demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK

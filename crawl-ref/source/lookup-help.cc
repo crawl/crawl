@@ -953,8 +953,6 @@ static int _describe_monster(const string &key, const string &suffix,
     // one at random as this does?
     if (mons_is_draconian_job(mon_num))
         base_type = random_draconian_monster_species();
-    else if (mons_is_demonspawn_job(mon_num))
-        base_type = random_demonspawn_monster_species();
     monster_info mi(mon_num, base_type);
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)

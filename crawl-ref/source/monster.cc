@@ -1441,14 +1441,8 @@ static int _ego_damage_bonus(item_def &item)
 bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
     // Draconian monks are masters of unarmed combat.
-    // Monstrous demonspawn prefer to RIP AND TEAR with their claws.
-    // XXX: this could probably be a monster flag
-    if (type == MONS_DRACONIAN_MONK
-        || mons_is_demonspawn(type)
-           && draco_or_demonspawn_subspecies(*this) == MONS_MONSTROUS_DEMONSPAWN)
-    {
+    if (type == MONS_DRACONIAN_MONK)
         return false;
-    }
 
     const bool dual_wielding = mons_wields_two_weapons(*this);
     if (dual_wielding)
@@ -3241,8 +3235,8 @@ static int _zombie_ac_modifier(monster_type type)
 /**
  * What's the base armour class of this monster?
  *
- * Usually based on type; ghost demons can override this, and draconians/
- * demonspawn are... complicated.
+ * Usually based on type; ghost demons can override this, and draconians
+ * are... complicated.
  *
  * @return The base armour class of this monster, before applying item &
  *          status effects.
@@ -3294,8 +3288,8 @@ int monster::base_armour_class() const
 
     const int base_ac = get_monster_data(type)->AC;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
     {
         ASSERT(!invalid_monster_type(base_monster));
         return base_ac + get_monster_data(base_monster)->AC;
@@ -3412,8 +3406,8 @@ int monster::base_evasion() const
 
     const int base_ev = get_monster_data(type)->ev;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
         return base_ev + get_monster_data(base_monster)->ev;
 
     return base_ev;
@@ -3632,7 +3626,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_TIAMAT            // For her colour-changing.
         || type == MONS_BAI_SUZHEN
         || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
-        || mons_is_demonspawn(type))      // Like player demonspawn.
+        || mons_genus(type) == MONS_DEMONSPAWN) // Like player demonspawn.
     {
         chaotic++;
     }
@@ -5338,7 +5332,7 @@ bool monster::is_skeletal() const
  */
 bool monster::is_spiny() const
 {
-    return mons_class_flag(mons_is_job(type) ? base_monster : type,
+    return mons_class_flag(mons_is_draconian_job(type) ? base_monster : type,
                            M_SPINY);
 }
 
