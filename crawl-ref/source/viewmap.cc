@@ -874,7 +874,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     cursor_control cc(!Options.use_fake_cursor);
 #endif
 
-    ui::push_layout(map_view);
+    ui::push_layout(map_view, KMC_LEVELMAP);
     while (map_view->is_alive() && !crawl_state.seen_hups)
         ui::pump_events();
     ui::pop_layout();
