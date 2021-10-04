@@ -981,8 +981,9 @@ powerful and unpredictable spells of devastation.
 %%%%
 demonspawn corrupter
 
-A half-mortal, half-demonic creature, oozing with dark energies. It corrupts
-space around itself, and can twist even the very flesh of its opponents.
+A half-mortal, half-demonic creature, oozing with dark energies. It twists
+space around itself, and can corrupt weapons, armour and even the very flesh of
+its opponents.
 %%%%
 demonspawn warmonger
 
