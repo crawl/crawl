@@ -1073,6 +1073,7 @@ static const vector<pop_entry> pop_generic_late_zombie =
   {  5,   9,   72, FALL, MONS_ORC_WARLORD },
   {  5,   9,   72, FALL, MONS_TENGU_REAVER },
   {  5,   9,   72, FALL, MONS_MINOTAUR },
+  {  5,   9,   72, FALL, MONS_DEMONSPAWN },
   {  5,   9,   72, FALL, MONS_DEEP_ELF_BLADEMASTER },
   {  5,   9,   72, FALL, MONS_MERFOLK_IMPALER },
   {  5,   9,   72, FALL, MONS_VAULT_WARDEN },
