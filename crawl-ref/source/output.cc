@@ -550,7 +550,7 @@ void update_turn_count()
         return;
     }
 
-    const int yhack = crawl_state.game_is_zotdef()
+    const int yhack = crawl_state.game_is_zotdef();
 
 
 
@@ -1394,11 +1394,12 @@ void print_stats()
         }
         if (crawl_state.game_is_zotdef())
         {
+			/*
 #if TAG_MAJOR_VERSION == 34
             CGOTOXY(1, 9 + temp, GOTO_STAT);
-#else
+#else*/
             CGOTOXY(1, 9, GOTO_STAT);
-#endif
+//#endif
             textcolour(Options.status_caption_colour);
             CPRINTF("ZP: ");
             textcolour(HUD_VALUE_COLOUR);
@@ -1409,9 +1410,9 @@ void print_stats()
 
 
 #if TAG_MAJOR_VERSION == 34
-    int yhack = crawl_state.game_is_zotdef() + temp;
+    //int yhack = crawl_state.game_is_zotdef() + temp;
 #else
-    int yhack = crawl_state.game_is_zotdef();
+   // int yhack = crawl_state.game_is_zotdef();
 #endif
 
 

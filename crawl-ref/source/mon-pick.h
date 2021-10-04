@@ -88,3 +88,8 @@ monster_type pick_monster(level_id place, monster_picker &picker,
                           mon_pick_vetoer veto = nullptr);
 monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
                                        mon_pick_vetoer veto = nullptr);
+
+
+// Only really used in zotdef:
+int mons_rarity(monster_type mcls, branch_type branch);
+int mons_depth(monster_type mcls, branch_type branch);

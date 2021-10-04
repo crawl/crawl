@@ -966,8 +966,10 @@ void floor_transition(dungeon_feature_type how,
     // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
     // place for 5 moves. Nasty, but punishes players for using portals as
     // quick-healing stopovers.
-    if (!going_up && crawl_state.game_is_zotdef())
-        start_delay(DELAY_UNINTERRUPTIBLE, 5);
+    //if (!going_up && crawl_state.game_is_zotdef())
+     //   start_delay(DELAY_UNINTERRUPTIBLE, 5);
+	// I feel this isn't necessary. and it is a surprise mechanic.
+	// if we readd this there should be a warning given.
 #endif
 }
 

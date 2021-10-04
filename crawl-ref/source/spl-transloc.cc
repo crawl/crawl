@@ -1176,8 +1176,10 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     {
 		
 		// Can't apport the Orb in zotdef
-		if ((crawl_state.game_is_zotdef())
+		if (  crawl_state.game_is_zotdef())
 		{
+			
+			//should we make it clear this is a restriction in zot defence specifically?
 			mpr("You cannot apport the Orb!");
 			return spret::abort;
 		} 

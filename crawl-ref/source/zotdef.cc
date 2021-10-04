@@ -15,8 +15,8 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "message.h"
 #include "mon-pick.h"
@@ -113,7 +113,7 @@ static int _mon_strength(monster_type mon_type)
     const monsterentry *mentry = get_monster_data(mon_type);
     if (!mentry)
         return 0; // sanity
-    int strength = (mentry->hpdice[0] * mentry->exp_mod) / 10;
+    int strength = (mentry->HD * mentry->exp_mod) / 10;
     // Fix for skeletons and zombies
     switch (mon_type)
     {
@@ -211,11 +211,15 @@ static void _hydra_wave(int power)
 static void _fire_wave(int power)
 {
     wave_name("FIRE WAVE");
-    monster_type firemons[] = {MONS_FIRE_ELEMENTAL, MONS_FIRE_DRAKE, MONS_CRIMSON_IMP,
+	// MONS_FIRE_DRAKE. Fire drakes have been removed and were replaced with rime dakres
+	// but since this is a fire themed wave I dont think I'll add them here.
+	// MONS_MOTTLED_DRACONIAN and  MONS_MOTTLED_DRAGON were both removed as well.
+	// all 3 of these monsters were in the mook section.
+    monster_type firemons[] = {MONS_FIRE_ELEMENTAL, MONS_CRIMSON_IMP,
         MONS_FIRE_DRAGON, MONS_FIRE_VORTEX, MONS_FIRE_GIANT, MONS_HELLION,
         MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER, MONS_SUN_DEMON,
-        MONS_RED_DRACONIAN, MONS_MOTTLED_DRACONIAN, MONS_DRACONIAN_SCORCHER,
-        MONS_MOTTLED_DRAGON, MONS_EFREET,
+        MONS_RED_DRACONIAN,   MONS_DRACONIAN_SCORCHER,
+         MONS_EFREET,
         MONS_HELL_KNIGHT, MONS_BRIMSTONE_FIEND, MONS_BALRUG, MONS_HELL_HOUND,
         MONS_HELL_HOG, END};
     monster_type boss[] = {MONS_AZRAEL, MONS_XTAHUA, MONS_SERPENT_OF_HELL,
@@ -350,8 +354,13 @@ static void _hell_beast_wave(int power)
 static void _frog_wave(int power)
 {
     wave_name("FROG WAVE");
-    monster_type frogs[] = {MONS_GIANT_FROG, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
-    monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
+    monster_type frogs[] = {MONS_BULLFROG, MONS_CANE_TOAD, MONS_BLINK_FROG, END};
+    monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_CANE_TOAD, MONS_BLINK_FROG, END};
+	// spiny frogs have been renamed/reflavoured to cane toads
+	// MONS_SPINY_FROG ====> MONS_CANE_TOAD
+	// and giant frogs were renamed to bullfrogs
+	// MONS_GIANT_FROG ====> MONS_BULLFROG
+	
     _zotdef_fill_from_list(frogs, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Croaking noises echo off the walls!");
@@ -728,6 +737,8 @@ string zotdef_debug_wave_desc()
     return list + "]";
 }
 
+
+
 monster* zotdef_spawn(bool boss)
 {
     monster_type mt = env.mons_alloc[random2(NSLOTS)];
@@ -742,8 +753,14 @@ monster* zotdef_spawn(bool boss)
         return 0;
 
     // Generate a monster of the appropriate branch and strength
-    mgen_data mg(mt, BEH_SEEK, nullptr, 0, 0, coord_def(), MHITYOU);
-    mg.proximity = PROX_NEAR_STAIRS;
+    // mgen_data mg(mt, BEH_SEEK, nullptr, 0, 0, coord_def(), MHITYOU);
+    mgen_data mg(mt, BEH_SEEK, coord_def(), MHITYOU);
+
+	
+	
+	// seems to be currnetly unused
+	//mg.proximity = PROX_NEAR_STAIRS;
+	
     mg.flags |= MG_PERMIT_BANDS;
 
     // Hack: emulate old mg.power
@@ -760,8 +777,8 @@ monster* zotdef_spawn(bool boss)
         // to the randart name generator
         if (!mon->is_named())        // Don't rename uniques!
         {
-            if (!give_monster_proper_name(mon, false))
-                mon->mname = make_name(random_int());
+            if (!give_monster_proper_name(*mon, false))
+                mon->mname = make_name();
 
             mon->props["dbname"].get_string() = mons_class_name(mt);
         }
@@ -777,8 +794,8 @@ static rune_type _get_rune()
 {
     FixedBitVector<NUM_RUNE_TYPES> runes = you.runes;
     for (int i = 0; i < MAX_ITEMS; i++)
-        if (item_is_rune(mitm[i]))
-            runes.set(mitm[i].plus);
+        if (env.item[i].base_type ==  OBJ_RUNES)
+            runes.set(env.item[i].plus);
     int already = 0;
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
         if (runes[i])
@@ -858,6 +875,9 @@ static monster_type _pick_unique(int level)
                            _choose_unique_by_depth(6);
 }
 
+
+
+
 // Ask for a location and place a trap there. Returns true
 // for success.
 bool create_trap(trap_type spec_type)
@@ -866,7 +886,7 @@ bool create_trap(trap_type spec_type)
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
-    args.may_target_monster = false;
+    //args.may_target_monster = false;
     args.top_prompt = "Make ";
     args.top_prompt += trap_name(spec_type);
     args.top_prompt += " trap where?";
@@ -878,20 +898,27 @@ bool create_trap(trap_type spec_type)
         return false;
     }
     // only try to create on floor squares or other traps.
-    if (trap_def* tr = find_trap(abild.target))
+    if (trap_def* tr = trap_at(abild.target))
         tr->destroy();
-    else if (grd(abild.target) != DNGN_FLOOR)
+    else if (env.grid(abild.target) != DNGN_FLOOR)
     {
         mpr("You can't create a trap there!");
         return false;
     }
 
-    bool result = place_specific_trap(abild.target, spec_type);
 
+	// place_specific_trap no longer returns bool
+    /* bool result = */ place_specific_trap(abild.target, spec_type);
+
+
+	// What is this trying to do exactly?
+	/*
     if (result)
-        grd(abild.target) = env.trap[env.tgrid(abild.target)].category();
-
-    return result;
+        env.grid(abild.target) = env.trap[env.grid(abild.target)].category();
+	*/
+	
+    //return result;
+	return true;
 }
 
 static bool _can_make_altar(god_type g)
@@ -904,7 +931,7 @@ static bool _can_make_altar(god_type g)
  */
 bool zotdef_create_altar()
 {
-    if (grd(you.pos()) != DNGN_FLOOR)
+    if (env.grid(you.pos()) != DNGN_FLOOR)
         return false;
 
     god_type god = choose_god();
@@ -946,7 +973,7 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
-    args.may_target_monster = false;
+   // args.may_target_monster = false;
     args.top_prompt = msg;
     direction(abild, args);
 
@@ -956,7 +983,8 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
             canned_msg(MSG_OK);
         return false;
     }
-    if (!mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
+	// mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,you.pet_target)
+    if (!mons_place(mgen_data(mtyp, BEH_FRIENDLY, abild.target,
                    you.pet_target)))
     {
         mpr("You can't create it there!");
@@ -973,7 +1001,7 @@ void zotdef_create_pond(const coord_def& center, int radius)
         const coord_def p = *ri;
         if (p != you.pos() && coinflip())
         {
-            if (grd(p) == DNGN_FLOOR)
+            if (env.grid(p) == DNGN_FLOOR)
                 dungeon_terrain_changed(p, DNGN_SHALLOW_WATER);
         }
     }
@@ -992,7 +1020,7 @@ void zotdef_bosses_check()
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
-                    mitm[ip].plus = _get_rune();
+                    env.item[ip].plus = _get_rune();
                     move_item_to_grid(item_made, mon->pos());
                     msg = "You feel a sense of great excitement!";
                 }

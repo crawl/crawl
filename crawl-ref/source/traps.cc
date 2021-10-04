@@ -456,9 +456,15 @@ static void _zot_trap()
     (*random_choose_weighted(zot_effects))();
 }
 
+ 
+
 void trap_def::trigger(actor& triggerer)
 {
     const bool you_trigger = triggerer.is_player();
+	
+	
+   // const bool you_know = is_known();
+   // const bool trig_knows = !flat_footed && is_known(&triggerer);
 
     // Traps require line of sight without blocking translocation effects.
     // Requiring LOS prevents monsters from dispersing out of vaults that have
@@ -471,7 +477,9 @@ void trap_def::trigger(actor& triggerer)
 
 
     // Zot def - player never sets off known traps
-    if (crawl_state.game_is_zotdef() && you_trigger && you_know)
+	
+	// Since it's tower defence all traps should probably be known by the player anyways.
+    if (crawl_state.game_is_zotdef() && you_trigger /* && you_know */)
     {
         mpr("You step safely past the trap.");
         return;
@@ -506,11 +514,12 @@ void trap_def::trigger(actor& triggerer)
 
 
     // Zot def - friendly monsters never set off known traps
-    if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
+    if (crawl_state.game_is_zotdef() && m && m->friendly() /* && trig_knows */)
     {
-        simple_monster_message(m," carefully avoids a trap.");
+        simple_monster_message(*m," carefully avoids a trap.");
         return;
     }
+	// Since it's tower defence all traps should probably be known by the player anyways.
 
 
 
