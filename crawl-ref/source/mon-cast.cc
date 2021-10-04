@@ -2119,21 +2119,13 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
         beam_type flavour = random_choose_weighted(150, BEAM_HASTE,
                                                    150, BEAM_MIGHT,
                                                    150, BEAM_BERSERK,
-                                                   150, BEAM_AGILITY,
                                                    150, BEAM_RESISTANCE,
-                                                   150, BEAM_BLINK_CLOSE,
-                                                    15, BEAM_BLINK,
-                                                    15, BEAM_SLOW,
                                                     15, BEAM_VULNERABILITY,
                                                     15, BEAM_MALMUTATE,
                                                     15, BEAM_POLYMORPH,
                                                     15, BEAM_INNER_FLAME);
 
-        enchant_actor_with_flavour(*mi,
-                                   flavour == BEAM_BLINK_CLOSE
-                                   ? foe
-                                   : &mon,
-                                   flavour);
+        enchant_actor_with_flavour(*mi, &mon, flavour);
 
         affected++;
         if (you.can_see(**mi))

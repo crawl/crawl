@@ -266,8 +266,10 @@ creatures into spectral versions of themselves.
 %%%%
 Call of Chaos spell
 
-Calls upon the powers of Chaos to empower nearby allies. The effects vary
-wildly and are usually, but not always, positive.
+Calls upon the powers of chaos to empower nearby allies, sending them berserk
+or granting them haste, might, or improved resistances. The chaotic magic may
+occasionally backfire and cause allies to instead lose their willpower or be
+malmutated, polymorphed, or filled with inner flame.
 %%%%
 Call Tide spell
 
