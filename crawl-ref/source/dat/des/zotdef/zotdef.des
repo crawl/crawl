@@ -21,7 +21,7 @@
     e.kitem("| = superb_item")
 
     e.kmask("*| = no_monster_gen")
-    e.kprop("*| = no_rtele_into")
+    e.kprop("*| = no_tele_into")
 
     e.lua_marker("F", fog_machine {
         cloud_type = "purple smoke",

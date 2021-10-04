@@ -70,10 +70,12 @@ void initialise_branch_depths()
 
     if (crawl_state.game_is_zotdef())
     {
-        root_branch = BRANCH_ZOT;
+        //root_branch = BRANCH_ZOT;
         brdepth.init(-1);
-        brdepth[BRANCH_ZOT] = 1;
+        //brdepth[BRANCH_ZOT] = 1;
         brdepth[BRANCH_BAZAAR] = 1;
+		brdepth[BRANCH_DUNGEON] = 1;
+
         return;
     }
 
