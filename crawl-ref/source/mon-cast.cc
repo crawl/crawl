@@ -2118,10 +2118,10 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 
         beam_type flavour = random_choose_weighted(150, BEAM_HASTE,
                                                    150, BEAM_MIGHT,
-                                                   150, BEAM_BERSERK,
+                                                   150, BEAM_AGILITY,
                                                    150, BEAM_RESISTANCE,
                                                     15, BEAM_VULNERABILITY,
-                                                    15, BEAM_MALMUTATE,
+                                                    15, BEAM_BERSERK,
                                                     15, BEAM_POLYMORPH,
                                                     15, BEAM_INNER_FLAME);
 
