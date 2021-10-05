@@ -3400,7 +3400,7 @@ static void _get_spell_description(const spell_type spell,
         {
             description += make_stringf("%s can sustain at most %s creature%s "
                                "summoned by this spell.\n",
-                               mon_owner->full_name(DESC_PLAIN).c_str(),
+                               uppercase_first(mon_owner->full_name(DESC_THE)).c_str(),
                                number_in_words(limit).c_str(),
                                limit > 1 ? "s" : "");
         }
