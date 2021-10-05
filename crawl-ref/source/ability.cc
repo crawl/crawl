@@ -3700,25 +3700,29 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_MAKE_GRENADES:
         fail_check();
-        /*
+        
+		//mgen_data(MONS_BALLISTOMYCETE_SPORE, BEH_FRIENDLY, &you, 6, 0, you.pos(), you.pet_target,0)
+		
+		// This is an incredibly double edge ability, you are probably going to end up confusing yourself  
 		
 		if (create_monster(
-               mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
-                         you.pos(), you.pet_target,
-                         0)))
+               mgen_data(MONS_BALLISTOMYCETE_SPORE, BEH_FRIENDLY,  
+                         you.pos(), you.pet_target )))
         {
             mpr("You create a living grenade.");
         }
         if (create_monster(
-               mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
-                         you.pos(), you.pet_target,
-                         0)))
+               mgen_data(MONS_BALLISTOMYCETE_SPORE, BEH_FRIENDLY,
+                         you.pos(), you.pet_target )))
         {
             mpr("You create a living grenade.");
         }
-		*/
+		
+		// MON_GIANT_SPORE was renamed to MONS_BALLISTOMYCETE_SPORE
+		// probably since they were created by ballistomycetes
+
 		//FIX THIS UP BRO
-		mpr("Sorry, this is still buggy");
+		//mpr("Sorry, this is still buggy");
 		
         break;
 
@@ -4132,8 +4136,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             _add_talent(talents, ABIL_MAKE_ARROW_TRAP, check_confused);
         if (you.experience_level >= 4)
             _add_talent(talents, ABIL_MAKE_PLANT, check_confused);
-        if (you.experience_level >= 4)
-            _add_talent(talents, ABIL_REMOVE_CURSE, check_confused);
+		// curses were basically remvoed from the game, this ability doesnt help now.
+        //if (you.experience_level >= 4)
+        //    _add_talent(talents, ABIL_REMOVE_CURSE, check_confused);
         if (you.experience_level >= 5)
             _add_talent(talents, ABIL_MAKE_BURNING_BUSH, check_confused);
         if (you.experience_level >= 6)

@@ -2899,8 +2899,9 @@ void level_change(bool skip_attribute_increase)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of arrow traps.");
             if (you.experience_level == 4)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of plants.");
-            if (you.experience_level == 4)
-                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through removing curses.");
+            //if (you.experience_level == 4)
+            //    mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through removing curses.");
+			// curse removal doesnt nothing now lol
             if (you.experience_level == 5)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of burning bushes.");
             if (you.experience_level == 6)
@@ -2926,7 +2927,7 @@ void level_change(bool skip_attribute_increase)
             if (you.experience_level == 16)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through self-teleportation.");
             if (you.experience_level == 17)
-                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through making water.");
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through making shallow water."); //it's shallow water not deep
             if (you.experience_level == 19)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of lightning spires.");
             if (you.experience_level == 20)

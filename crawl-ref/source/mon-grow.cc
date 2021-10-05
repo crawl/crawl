@@ -33,6 +33,11 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_ORC_KNIGHT, MONS_ORC_WARLORD),
     monster_level_up(MONS_ORC_PRIEST, MONS_ORC_HIGH_PRIEST),
     monster_level_up(MONS_ORC_WIZARD, MONS_ORC_SORCERER),
+	
+	
+	//for zotdefence
+	monster_level_up(MONS_OKLOB_SAPLING, MONS_OKLOB_PLANT),
+
 };
 
 mons_experience_levels::mons_experience_levels()

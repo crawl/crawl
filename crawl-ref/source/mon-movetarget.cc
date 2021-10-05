@@ -119,11 +119,13 @@ static void _set_no_path_found(monster* mon)
             // (This kind of thing is totally normal in, say, a Bazaar.)
 			
 			// ERROR in 'mon-movetarget.cc' at line 120: ZotDef: monster ice statue failed to pathfind to (40,43) (the Orb)
-
+			// Statues can fail to pathfind to the orb, so we are preventing crashes for now.
+			// I may enable a check for statues. or something
+			/*
             die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
                 mon->name(DESC_PLAIN, true).c_str(),
                 env.orb_pos.x, env.orb_pos.y,
-                orb_position().origin() ? "you" : "the Orb");
+                orb_position().origin() ? "you" : "the Orb");*/
         }
     }
 
