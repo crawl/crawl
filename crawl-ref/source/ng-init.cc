@@ -70,9 +70,12 @@ void initialise_branch_depths()
 
     if (crawl_state.game_is_zotdef())
     {
+		
+		// commenting this out for now, since its breaking stuff
+		// but zot def should probably claim that you are in zot, for "flavor".
         //root_branch = BRANCH_ZOT;
         brdepth.init(-1);
-        //brdepth[BRANCH_ZOT] = 1;
+        brdepth[BRANCH_ZOT] = 1;
         brdepth[BRANCH_BAZAAR] = 1;
 		brdepth[BRANCH_DUNGEON] = 1;
 

@@ -399,7 +399,12 @@ void crawl_view_geometry::init_geometry()
         termsz.y = max(termsz.y, MIN_LINES);
     }
 #endif
-    hudsz  = coord_def(HUD_WIDTH, HUD_HEIGHT + crawl_state.game_is_zotdef());
+	if (!crawl_state.game_is_zotdef() ){
+		hudsz  = coord_def(HUD_WIDTH, HUD_HEIGHT  );
+	}
+	else {
+		hudsz  = coord_def(HUD_WIDTH, HUD_HEIGHT + 1);
+	}
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);

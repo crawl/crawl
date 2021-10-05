@@ -1398,7 +1398,7 @@ void print_stats()
 #if TAG_MAJOR_VERSION == 34
             CGOTOXY(1, 9 + temp, GOTO_STAT);
 #else*/
-            CGOTOXY(1, 9, GOTO_STAT);
+            CGOTOXY(1, 9 - rows_hidden, GOTO_STAT);
 //#endif
             textcolour(Options.status_caption_colour);
             CPRINTF("ZP: ");
@@ -1408,12 +1408,7 @@ void print_stats()
         you.redraw_experience = false;
     }
 
-
-#if TAG_MAJOR_VERSION == 34
-    //int yhack = crawl_state.game_is_zotdef() + temp;
-#else
-   // int yhack = crawl_state.game_is_zotdef();
-#endif
+   int yhack = crawl_state.game_is_zotdef();
 
 
 
@@ -1427,20 +1422,20 @@ void print_stats()
         if (Options.equip_bar)
         {
              if (you.gear_change || you.wield_change)
-                _print_stats_equip(1, 9 - rows_hidden);
+                _print_stats_equip(1, 9 - rows_hidden + yhack);
         }
         else if (you.redraw_noise)
-            _print_stats_noise(1, 9 - rows_hidden);
+            _print_stats_noise(1, 9 - rows_hidden + yhack);
     }
 
     if (you.wield_change)
-        _print_stats_wp(10 - rows_hidden);
+        _print_stats_wp(10 - rows_hidden + yhack);
 
     if (you.redraw_quiver)
-        _print_stats_qv(11 - rows_hidden);
+        _print_stats_qv(11 - rows_hidden + yhack);
 
     if (you.redraw_status_lights)
-        _print_status_lights(12 - rows_hidden);
+        _print_status_lights(12 - rows_hidden + yhack);
 
 #ifndef USE_TILE_LOCAL
     assert_valid_cursor_pos();
