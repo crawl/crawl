@@ -46,6 +46,7 @@ level_id generic_shaft_dest(level_id place);
 
 int       trap_rate_for_place();
 trap_type random_trap_for_place(bool dispersal_ok = true);
+trap_type random_vault_trap();
 
 int count_traps(trap_type ttyp);
 void place_webs(int num);
@@ -55,6 +56,3 @@ void monster_web_cleanup(const monster &mons, bool quiet = false);
 void stop_being_held();
 
 bool is_regular_trap(trap_type trap);
-#if TAG_MAJOR_VERSION == 34
-bool is_removed_trap(trap_type trap);
-#endif

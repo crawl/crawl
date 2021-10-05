@@ -716,29 +716,22 @@ static string _artefact_descrip(const item_def &item)
 
 static const char *trap_names[] =
 {
-#if TAG_MAJOR_VERSION == 34
-    "dart", "arrow", "spear",
-#endif
+    "dart",
+    "arrow", "spear",
 #if TAG_MAJOR_VERSION > 34
     "dispersal",
     "teleport",
 #endif
     "permanent teleport",
-    "alarm",
-#if TAG_MAJOR_VERSION == 34
-    "blade", "bolt",
-#endif
-    "net",
-    "Zot",
+    "alarm", "blade",
+    "bolt", "net", "Zot",
 #if TAG_MAJOR_VERSION == 34
     "needle",
 #endif
-    "shaft",
-    "passage",
-    "pressure plate",
-    "web",
+    "shaft", "passage", "pressure plate", "web",
 #if TAG_MAJOR_VERSION == 34
-    "gas", "teleport", "shadow", "dormant shadow", "dispersal"
+    "gas", "teleport",
+    "shadow", "dormant shadow", "dispersal"
 #endif
 };
 

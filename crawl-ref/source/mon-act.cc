@@ -3002,8 +3002,9 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
     }
 
-    // Wandering through a trap sometimes isn't allowed for friendlies.
-    if (!mons->is_trap_safe(targ))
+    // Wandering through a trap is OK if we're pretty healthy,
+    // really stupid, or immune to the trap.
+    if (!mons->is_trap_safe(targ, just_check))
         return false;
 
     // If we end up here the monster can safely move.
