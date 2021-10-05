@@ -425,7 +425,14 @@ wall_stone_spider1
 %weight 1
 wall_stone_spider2
 wall_stone_spider3
+
+# sss (more snakeishly)
 %weight 10
+wall_stone_snake0 STONE_WALL_SNAKE
+%weight 3
+wall_stone_snake1
+wall_stone_snake2
+wall_stone_snake3
 
 %weight 10
 wall_oozing0 WALL_OOZING
