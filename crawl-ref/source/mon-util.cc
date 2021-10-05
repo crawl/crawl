@@ -3449,8 +3449,8 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         && !mon.is_summoned()
         && !testbits(mon.flags, MF_NO_REWARD))
     {
-        // Give the player half of the monster's XP.
-        gain_exp((exper_value(mon) + 1) / 2);
+        // Give the player full XP.
+        gain_exp(exper_value(mon));
     }
     mon.flags |= MF_PACIFIED;
 
