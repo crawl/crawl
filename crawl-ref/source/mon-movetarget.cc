@@ -117,6 +117,9 @@ static void _set_no_path_found(monster* mon)
             // This is only appropriate in the zotdef map itself, though,
             // which is why we check for BRANCH_DUNGEON above.
             // (This kind of thing is totally normal in, say, a Bazaar.)
+			
+			// ERROR in 'mon-movetarget.cc' at line 120: ZotDef: monster ice statue failed to pathfind to (40,43) (the Orb)
+
             die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
                 mon->name(DESC_PLAIN, true).c_str(),
                 env.orb_pos.x, env.orb_pos.y,

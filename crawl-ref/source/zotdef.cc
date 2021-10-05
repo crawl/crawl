@@ -406,9 +406,11 @@ static void _giant_wave(int power)
 static void _yak_wave(int power)
 {
     wave_name("YAK WAVE");
-    monster_type yaks[] = {MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
-                MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
-                MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
+	//dream sheep are more dangerous than regular sheep because of their sleep magic
+	// sheep were removed, so i changed MONS_SHEEP to MONS_DREAM_SHEEP
+    monster_type yaks[] = {MONS_DREAM_SHEEP, MONS_YAK, MONS_DEATH_YAK,
+                MONS_DREAM_SHEEP, MONS_YAK, MONS_DEATH_YAK,
+                MONS_DREAM_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_CYCLOPS, END};
     monster_type boss[] = {MONS_POLYPHEMUS, MONS_CYCLOPS, END};
     _zotdef_fill_from_list(yaks, 0, power); // full
@@ -419,10 +421,10 @@ static void _yak_wave(int power)
 static void _insect_wave(int power)
 {
     wave_name("INSECT WAVE");
-    monster_type insects[] = {MONS_WORKER_ANT, MONS_KILLER_BEE, MONS_WASP,
+    monster_type insects[] = {/*MONS_WORKER_ANT,*/ MONS_KILLER_BEE, MONS_WASP,
                 MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
                 MONS_BOULDER_BEETLE, MONS_REDBACK,
-                MONS_VAMPIRE_MOSQUITO, MONS_HORNET, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
+                MONS_VAMPIRE_MOSQUITO, MONS_HORNET, /* MONS_SOLDIER_ANT, MONS_QUEEN_ANT,*/
                 MONS_GIANT_COCKROACH, MONS_TRAPDOOR_SPIDER,
                 MONS_SCORPION, END};
     monster_type boss[] = {MONS_HORNET, MONS_BOULDER_BEETLE,
