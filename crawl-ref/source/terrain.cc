@@ -707,9 +707,6 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
     if (feat == DNGN_ENTER_ZIGGURAT)
         return false;
 
-    if (feat_is_portal_entrance(feat))
-        return true;
-
     if (feat == DNGN_ENTER_SHOP)
         return true;
 
