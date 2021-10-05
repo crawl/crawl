@@ -938,11 +938,15 @@ public:
     int get_damage() const override
     {
         return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
-                      + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4;
+                      + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4
+                      + you.get_mutation_level(MUT_WEAKNESS_STINGER);
     }
 
     int get_brand() const override
     {
+        if (you.get_mutation_level(MUT_WEAKNESS_STINGER) == 3)
+            return SPWPN_WEAKNESS;
+
         return you.get_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
     }
 };
@@ -1242,6 +1246,12 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
             if (damage_brand == SPWPN_VENOM && coinflip())
                 poison_monster(defender->as_monster(), &you);
+
+            if (damage_brand == SPWPN_WEAKNESS
+                && !(defender->holiness() & (MH_UNDEAD | MH_NONLIVING)))
+            {
+                defender->weaken(&you, 6);
+            }
 
             // Normal vampiric biting attack, not if already got stabbing special.
             if (damage_brand == SPWPN_VAMPIRISM
@@ -3393,9 +3403,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 
     case UNAT_TAILSLAP:
         return you.has_tail()
-            // constricting tails are too slow to slap
-            && !you.has_mutation(MUT_CONSTRICTING_TAIL)
-            && coinflip();
+               // constricting tails are too slow to slap
+               && !you.has_mutation(MUT_CONSTRICTING_TAIL)
+               && coinflip();
 
     case UNAT_PSEUDOPODS:
         return you.has_usable_pseudopods() && !one_chance_in(3);

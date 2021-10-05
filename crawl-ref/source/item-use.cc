@@ -1138,6 +1138,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
+    if (slot == EQ_CLOAK)
+    {
+        if (you.get_mutation_level(MUT_WEAKNESS_STINGER) == 3)
+        {
+            if (verbose)
+                mpr("You can't wear that with your sharp stinger!");
+            return false;
+        }
+    }
+
     // Can't just use Form::slot_available because of shroom caps.
     if (!ignore_temporary && !get_form()->can_wear_item(item))
     {

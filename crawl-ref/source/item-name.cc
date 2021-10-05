@@ -421,6 +421,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
+    "weak",
     "debug",
 };
 
@@ -446,6 +447,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
+    "weakness",
     "debug",
 };
 
@@ -471,6 +473,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
+    "weakening",
     "debug",
 };
 

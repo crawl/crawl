@@ -6815,7 +6815,8 @@ bool player::has_tail(bool allow_tran) const
         || has_mutation(MUT_CONSTRICTING_TAIL, allow_tran)
         || fishtail // XX respect allow_tran
         || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
-        || get_mutation_level(MUT_STINGER, allow_tran))
+        || get_mutation_level(MUT_STINGER, allow_tran)
+        || get_mutation_level(MUT_WEAKNESS_STINGER, allow_tran))
     {
         return 1;
     }

@@ -89,13 +89,12 @@ COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 static const body_facet_def _body_facets[] =
 {
-    //{ EQ_NONE, MUT_FANGS },
     { EQ_HELMET, MUT_HORNS },
     { EQ_HELMET, MUT_ANTENNAE },
-    //{ EQ_HELMET, MUT_BEAK },
     { EQ_GLOVES, MUT_CLAWS },
     { EQ_BOOTS, MUT_HOOVES },
-    { EQ_BOOTS, MUT_TALONS }
+    { EQ_BOOTS, MUT_TALONS },
+    { EQ_CLOAK, MUT_WEAKNESS_STINGER }
 };
 
 static vector<mutation_type> removed_mutations =
@@ -1988,6 +1987,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             ash_check_bondage();
             break;
 
+        case MUT_WEAKNESS_STINGER:
+            // DS stinger forces cloaks off at 3.
+            if (cur_base_level >= 3 && !you.melded[EQ_CLOAK])
+                remove_one_equip(EQ_CLOAK, false, true);
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
+            break;
+
         case MUT_ACUTE_VISION:
             // We might have to turn autopickup back on again.
             autotoggle_autopickup(false);
@@ -2620,6 +2627,8 @@ static const facet_def _demon_facets[] =
     { 0, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
       { -33, -33, -33 } },
     { 0, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
+      { -33, -33, -33 } },
+    { 0, { MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER },
       { -33, -33, -33 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
