@@ -2649,7 +2649,8 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
-    const bool broken = one_chance_in(3) && mons.behaviour == BEH_SEEK;
+    const bool broken = mons.behaviour == BEH_SEEK
+                        && (mons.berserk() || one_chance_in(3));
     for (const auto &dc : all_door)
     {
         if (you.see_cell(dc))
