@@ -6054,12 +6054,6 @@ mon_holy_type player::holiness(bool temp) const
         holi = MH_NONLIVING;
     }
 
-    if (is_evil_god(religion)
-        || species == SP_DEMONSPAWN || you.has_mutation(MUT_VAMPIRISM))
-    {
-        holi |= MH_EVIL;
-    }
-
     // possible XXX: Monsters get evil/unholy bits set on spell selection
     //  should players?
     return holi;
@@ -6070,6 +6064,14 @@ bool player::undead_or_demonic(bool temp) const
 {
     // This is only for TSO-related stuff, so demonspawn are included.
     return undead_state(temp) || species == SP_DEMONSPAWN;
+}
+
+bool player::evil() const
+{
+    return is_evil_god(religion)
+        || species == SP_DEMONSPAWN
+        || you.has_mutation(MUT_VAMPIRISM)
+        || actor::evil();
 }
 
 bool player::is_holy() const

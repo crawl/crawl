@@ -374,6 +374,7 @@ public:
 
     mon_holy_type holiness(bool /*temp*/ = true) const override;
     bool undead_or_demonic(bool /*temp*/ = true) const override;
+    bool evil() const override;
     bool is_holy() const override;
     bool is_nonliving(bool /*temp*/ = true) const override;
     int how_unclean(bool check_god = true) const;

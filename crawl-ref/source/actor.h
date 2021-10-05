@@ -278,7 +278,7 @@ public:
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
-    bool evil() const;
+    virtual bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;

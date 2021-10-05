@@ -3506,22 +3506,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     if (testbits(flags, MF_FAKE_UNDEAD))
         return MH_UNDEAD;
 
-    mon_holy_type holi = mons_class_holiness(type);
-
-    // Assume that all unknown gods are evil.
-    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
-        holi |= MH_EVIL;
-
-    if (has_attack_flavour(AF_DRAIN)
-        || has_attack_flavour(AF_VAMPIRIC))
-    {
-        holi |= MH_EVIL;
-    }
-
-    if (testbits(flags, MF_SPECTRALISED))
-        holi |= MH_EVIL;
-
-    return holi;
+    return mons_class_holiness(type);
 }
 
 bool monster::undead_or_demonic(bool /*temp*/) const
@@ -3529,6 +3514,21 @@ bool monster::undead_or_demonic(bool /*temp*/) const
     const mon_holy_type holi = holiness();
 
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
+}
+
+bool monster::evil() const
+{
+    // Assume that all unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
+        return true;
+    if (has_attack_flavour(AF_DRAIN) || has_attack_flavour(AF_VAMPIRIC))
+        return true;
+    if (testbits(flags, MF_SPECTRALISED))
+        return true;
+    for (auto slot : spells)
+        if (is_evil_spell(slot.spell))
+            return true;
+    return actor::evil();
 }
 
 /**
