@@ -1195,7 +1195,7 @@ static int& _zot_clock()
 
 static bool _zot_clock_active_in(branch_type br)
 {
-    return br != BRANCH_ABYSS && !zot_immune() && !crawl_state.game_is_sprint();
+    return br != BRANCH_ABYSS && !zot_immune() && !crawl_state.game_is_sprint() && !crawl_state.game_is_zotdef();
 }
 
 // Is the zot clock running, or is it paused or stopped altogether?

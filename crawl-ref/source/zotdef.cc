@@ -319,7 +319,7 @@ static void _human_wave(int power)
             MONS_HAROLD, MONS_AGNES,
             MONS_MAUD, MONS_LOUISE,  MONS_FRANCES,
             MONS_RUPERT, MONS_KIRKE,
-            MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY, MONS_EUSTACHIO,
+           /* MONS_NORRIS,*/ MONS_FREDERICK, MONS_MARGERY, MONS_EUSTACHIO,
             MONS_MAURICE, END};
     _zotdef_fill_from_list(humans, 4, power); // reduced size due to banding
 
@@ -850,15 +850,16 @@ static monster_type _choose_unique_by_depth(int step)
         break;
     case 5: // depth <= 19
         ret = random_choose(MONS_SNORG, MONS_LOUISE, MONS_FRANCES, MONS_KHUFU,
-                            MONS_RUPERT, MONS_NORRIS, MONS_AGNES,
+                            MONS_RUPERT, /* MONS_NORRIS, */ MONS_AGNES,
                             MONS_AZRAEL, MONS_NESSOS, MONS_NERGALLE,
-                            MONS_ROXANNE, MONS_SAINT_ROKA, MONS_KIRKE,
-                            MONS_WIGLAF);
+                            MONS_ROXANNE, MONS_SAINT_ROKA, MONS_KIRKE   
+                            /* ,  MONS_WIGLAF */);
+							//norris and wiglaf was removed after zotdef
         break;
     case 6: // depth > 19
     default:
-        ret = random_choose(MONS_FRANCES, MONS_MARA, MONS_WIGLAF, MONS_MENNAS,
-                            MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK, MONS_TIAMAT,
+        ret = random_choose(MONS_FRANCES, MONS_MARA /* , MONS_WIGLAF */, MONS_MENNAS,
+                            MONS_XTAHUA, /* MONS_NORRIS, */ MONS_FREDERICK, MONS_TIAMAT,
                             MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA);
     }
 
