@@ -1119,6 +1119,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "confuse",
 #endif
             "weak",
+            "vuln",
             "debug randart",
         };
         COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_WEAPONS);

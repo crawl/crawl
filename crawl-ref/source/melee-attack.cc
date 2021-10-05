@@ -1037,11 +1037,34 @@ public:
     : AuxAttackType(12, "squeeze") { };
 };
 
+
+class AuxTouch: public AuxAttackType
+{
+public:
+    AuxTouch()
+    : AuxAttackType(3, "touch") { };
+
+    int get_damage() const override
+    {
+        return damage
+               + random2(1 + you.get_mutation_level(MUT_DEMONIC_TOUCH) * 2);
+    }
+
+    int get_brand() const override
+    {
+        if (you.get_mutation_level(MUT_DEMONIC_TOUCH) == 3)
+            return SPWPN_VULNERABILITY;
+
+        return SPWPN_NORMAL;
+    }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
 static const AuxHeadbutt    AUX_HEADBUTT = AuxHeadbutt();
 static const AuxTailslap    AUX_TAILSLAP = AuxTailslap();
+static const AuxTouch       AUX_TOUCH = AuxTouch();
 static const AuxPunch       AUX_PUNCH = AuxPunch();
 static const AuxBite        AUX_BITE = AuxBite();
 static const AuxPseudopods  AUX_PSEUDOPODS = AuxPseudopods();
@@ -1054,6 +1077,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_HEADBUTT,
     &AUX_PECK,
     &AUX_TAILSLAP,
+    &AUX_TOUCH,
     &AUX_PUNCH,
     &AUX_BITE,
     &AUX_PSEUDOPODS,
@@ -1212,22 +1236,25 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     count_action(CACT_MELEE, -1, atk); // aux_attack subtype/auxtype
 
-    aux_damage  = player_stat_modify_damage(aux_damage);
+    if (atk != UNAT_TOUCH)
+    {
+        aux_damage  = player_stat_modify_damage(aux_damage);
 
-    aux_damage  = random2(aux_damage);
+        aux_damage  = random2(aux_damage);
 
-    aux_damage  = player_apply_fighting_skill(aux_damage, true);
+        aux_damage  = player_apply_fighting_skill(aux_damage, true);
 
-    aux_damage  = player_apply_misc_modifiers(aux_damage);
+        aux_damage  = player_apply_misc_modifiers(aux_damage);
 
-    aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
+        aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
 
-    aux_damage  = player_apply_final_multipliers(aux_damage);
+        aux_damage  = player_apply_final_multipliers(aux_damage);
 
-    if (atk == UNAT_CONSTRICT)
-        aux_damage = 0;
-    else
-        aux_damage = apply_defender_ac(aux_damage);
+        if (atk == UNAT_CONSTRICT)
+            aux_damage = 0;
+        else
+            aux_damage = apply_defender_ac(aux_damage);
+    }
 
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
@@ -1251,6 +1278,16 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 && !(defender->holiness() & (MH_UNDEAD | MH_NONLIVING)))
             {
                 defender->weaken(&you, 6);
+            }
+
+            if (damage_brand == SPWPN_VULNERABILITY
+                && defender->as_monster()->willpower() != WILL_INVULN)
+            {
+                defender->as_monster()->add_ench(
+                    mon_enchant(ENCH_LOWERED_WL, 1, &you,
+                                random_range(4, 8) * BASELINE_DELAY));
+                mprf("You sap %s willpower!",
+                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
             }
 
             // Normal vampiric biting attack, not if already got stabbing special.
@@ -3421,6 +3458,11 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 
     case UNAT_PUNCH:
         return player_gets_aux_punch();
+
+    case UNAT_TOUCH:
+        return you.get_mutation_level(MUT_DEMONIC_TOUCH)
+               && you.has_usable_offhand()
+               && coinflip();
 
     default:
         return false;

@@ -177,6 +177,7 @@ enum brand_type // item_def.special
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif
     SPWPN_WEAKNESS,
+    SPWPN_VULNERABILITY,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };

@@ -422,6 +422,7 @@ static const char *weapon_brands_terse[] =
     "confuse",
 #endif
     "weak",
+    "vuln",
     "debug",
 };
 
@@ -448,6 +449,7 @@ static const char *weapon_brands_verbose[] =
     "confusion",
 #endif
     "weakness",
+    "vulnerability",
     "debug",
 };
 
@@ -474,6 +476,7 @@ static const char *weapon_brands_adj[] =
     "confusing",
 #endif
     "weakening",
+    "will-reducing"
     "debug",
 };
 
