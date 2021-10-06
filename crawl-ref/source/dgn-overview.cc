@@ -105,8 +105,11 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
     const god_type god = feat_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         _seen_altar(god, pos);
-    else if (feat_is_branch_entrance(which_thing))
+    else if (which_thing != DNGN_ENTER_HELL
+             && feat_is_branch_entrance(which_thing))
+    {
         _seen_staircase(pos);
+    }
     else if (which_thing == DNGN_ENTER_SHOP)
         _seen_shop(pos);
     else if (feat_is_gate(which_thing)) // overinclusive
@@ -610,7 +613,7 @@ static bool _unnotice_shop(const level_pos &pos)
 static bool _unnotice_stair(const level_pos &pos)
 {
     const dungeon_feature_type feat = env.grid(pos.pos);
-    if (!feat_is_branch_entrance(feat))
+    if (feat == DNGN_ENTER_HELL || !feat_is_branch_entrance(feat))
         return false;
 
     for (branch_iterator it; it; ++it)
