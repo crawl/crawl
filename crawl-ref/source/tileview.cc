@@ -874,8 +874,7 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
 
         if (is_unknown_stair(gc)
             && env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT
-            && !(player_in_hell()
-                 && env.map_knowledge(gc).feat() == DNGN_ENTER_HELL))
+            && !feat_is_hell_subbranch_exit(env.map_knowledge(gc).feat()))
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }

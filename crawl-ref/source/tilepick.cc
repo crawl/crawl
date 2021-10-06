@@ -230,9 +230,12 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENDLESS_SALT:
         return TILE_DNGN_ENDLESS_SALT;
     case DNGN_ENTER_HELL:
-        if (player_in_hell())
-            return TILE_DNGN_RETURN_VESTIBULE;
         return TILE_DNGN_ENTER_HELL;
+    case DNGN_EXIT_DIS:
+    case DNGN_EXIT_GEHENNA:
+    case DNGN_EXIT_COCYTUS:
+    case DNGN_EXIT_TARTARUS:
+        return TILE_DNGN_RETURN_VESTIBULE;
     case DNGN_OPEN_DOOR:
         return TILE_DNGN_OPEN_DOOR;
     case DNGN_BROKEN_DOOR:

@@ -159,7 +159,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_DIS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_DIS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_DIS, DNGN_EXIT_DIS, DNGN_EXIT_DIS,
       "Dis", "the Iron City of Dis", "Dis",
       "An ancient malice corrodes your equipment.",
       CYAN, BROWN,
@@ -167,7 +167,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_GEHENNA, DNGN_EXIT_GEHENNA, DNGN_EXIT_GEHENNA,
       "Gehenna", "Gehenna", "Geh",
       "Your scrolls appear blurry in the acrid smoke.",
       BROWN, RED,
@@ -175,7 +175,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_COCYTUS, DNGN_EXIT_COCYTUS, DNGN_EXIT_COCYTUS,
       "Cocytus", "Cocytus", "Coc",
       "Your potions freeze solid in the terrible cold.",
       LIGHTBLUE, LIGHTCYAN,
@@ -183,7 +183,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_TARTARUS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_TARTARUS, DNGN_EXIT_TARTARUS, DNGN_EXIT_TARTARUS,
       "Tartarus", "Tartarus", "Tar",
       "This decaying realm drains your will.",
       MAGENTA, MAGENTA,

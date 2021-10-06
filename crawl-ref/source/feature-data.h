@@ -440,9 +440,16 @@ STONE_STAIRS_UP(III, iii),
 }
 
 PORTAL_ENTRANCE(DNGN_ENTER_DIS, "gateway to the Iron City of Dis", "enter_dis", CYAN),
+PORTAL_EXIT(DNGN_EXIT_DIS, "gateway leading out of Dis", "exit_dis", CYAN),
 PORTAL_ENTRANCE(DNGN_ENTER_GEHENNA, "gateway to the ashen valley of Gehenna", "enter_gehenna", RED),
+PORTAL_EXIT(DNGN_EXIT_GEHENNA, "gateway leading out of Gehenna",
+                "exit_gehenna", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_COCYTUS, "gateway to the freezing wastes of Cocytus", "enter_cocytus", LIGHTCYAN),
+PORTAL_EXIT(DNGN_EXIT_COCYTUS, "gateway leading out of Cocytus",
+                "exit_cocytus", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_TARTARUS, "gateway to the decaying netherworld of Tartarus", "enter_tartarus", MAGENTA),
+PORTAL_EXIT(DNGN_EXIT_TARTARUS, "gateway leading out of Tartarus",
+            "exit_tartarus", MAGENTA),
 PORTAL_ENTRANCE(DNGN_ENTER_HELL, "gateway to Hell", "enter_hell", RED),
 PORTAL_EXIT(DNGN_EXIT_HELL, "gateway back to the Dungeon", "exit_hell", LIGHTRED),
 
