@@ -94,7 +94,6 @@ static const body_facet_def _body_facets[] =
     { EQ_GLOVES, MUT_CLAWS },
     { EQ_GLOVES, MUT_DEMONIC_TOUCH },
     { EQ_BOOTS, MUT_HOOVES },
-    { EQ_BOOTS, MUT_TALONS },
     { EQ_CLOAK, MUT_WEAKNESS_STINGER }
 };
 
@@ -188,7 +187,7 @@ static const int conflict[][3] =
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
     { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
-    { MUT_HOOVES,              MUT_TALONS,                 -1}, // currently overridden by physiology_mutation_conflict
+    { MUT_HOOVES,              MUT_TALONS,                 -1},
     { MUT_CLAWS,               MUT_DEMONIC_TOUCH,          -1},
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
     { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
@@ -2628,8 +2627,6 @@ static const facet_def _demon_facets[] =
     { 0, { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
       { -33, -33, -33 } },
     { 0, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
-      { -33, -33, -33 } },
-    { 0, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
       { -33, -33, -33 } },
     { 0, { MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER },
       { -33, -33, -33 } },
