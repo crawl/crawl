@@ -1013,12 +1013,11 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     // Is this a valid upwards or exit stair out of a branch? In general,
     // ensure that each region has a stone stair up.
 
-    if (feature_mimic_at(c))
+    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
         return false;
 
     if (feat_is_stone_stair_up(env.grid(c))
-        || feat_is_branch_exit(env.grid(c))
-        || feat_is_hell_subbranch_exit(env.grid(c)))
+        || feat_is_branch_exit(env.grid(c)))
     {
         return true;
     }
@@ -1036,7 +1035,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
 
 static bool _is_exit_stair(const coord_def &c)
 {
-    if (feature_mimic_at(c))
+    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
         return false;
 
     // Branch entries, portals, and abyss entries are not considered exit
@@ -1044,8 +1043,7 @@ static bool _is_exit_stair(const coord_def &c)
     // the current level.
     if (feat_is_stone_stair(env.grid(c))
         || feat_is_escape_hatch(env.grid(c))
-        || feat_is_branch_exit(env.grid(c))
-        || feat_is_hell_subbranch_exit(env.grid(c)))
+        || feat_is_branch_exit(env.grid(c)))
     {
         return true;
     }

@@ -184,8 +184,7 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
     if (glyph == '<')
     {
         return env.grid(where) == DNGN_EXIT_ABYSS
-               || env.grid(where) == DNGN_EXIT_PANDEMONIUM
-               || feat_is_hell_subbranch_exit(env.grid(where));
+               || env.grid(where) == DNGN_EXIT_PANDEMONIUM;
     }
     else if (glyph == '>')
     {
