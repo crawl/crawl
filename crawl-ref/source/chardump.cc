@@ -1265,6 +1265,7 @@ static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
     "Headbutt",
     "Peck",
     "Tailslap",
+    "Touch",
     "Punch",
     "Bite",
     "Pseudopods",
