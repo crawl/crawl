@@ -2241,6 +2241,8 @@ static bool _branch_entrances_are_connected()
     // stone stairs.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
+        if (env.grid(*ri) == DNGN_ENTER_HELL)
+            continue;
         if (!feat_is_branch_entrance(env.grid(*ri)))
             continue;
         if (!_has_connected_stone_stairs_from(*ri))
@@ -3771,6 +3773,8 @@ static void _place_branch_entrances(bool use_vaults)
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
+        if (env.grid(*ri) == DNGN_ENTER_HELL)
+            continue;
         if (!feat_is_branch_entrance(env.grid(*ri)))
             continue;
 

@@ -111,9 +111,10 @@ bool feat_is_staircase(dungeon_feature_type feat)
     if (feat_is_stone_stair(feat))
         return true;
 
-    // All branch entries/exits are staircases, except for Zot and Vaults entry.
+    // All branch entries/exits are staircases, except for Zot, Hell & Vaults.
     if (feat == DNGN_ENTER_VAULTS
         || feat == DNGN_EXIT_VAULTS
+        || feat == DNGN_ENTER_HELL
         || feat == DNGN_ENTER_ZOT
         || feat == DNGN_EXIT_ZOT)
     {
@@ -165,9 +166,6 @@ bool feat_is_hell_subbranch_exit(dungeon_feature_type feat)
  */
 FEATFN_MEMOIZED(feat_is_branch_entrance, feat)
 {
-    if (feat == DNGN_ENTER_HELL || feat_is_hell_subbranch_exit(feat))
-        return false;
-
     for (branch_iterator it; it; ++it)
     {
         if (it->entry_stairs == feat
@@ -276,7 +274,6 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
            || feat_is_branch_entrance(feat)
            || feat_is_branch_exit(feat)
            || feat_is_hell_subbranch_exit(feat)
-           || feat == DNGN_ENTER_HELL
            || feat == DNGN_EXIT_HELL;
 }
 
@@ -357,7 +354,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_EXIT_HELL:
         return CMD_GO_UPSTAIRS;
 
-    case DNGN_ENTER_HELL:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
