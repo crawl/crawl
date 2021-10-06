@@ -114,7 +114,8 @@ bool feat_is_staircase(dungeon_feature_type feat)
     // All branch entries/exits are staircases, except for Zot, Hell & Vaults.
     if (feat == DNGN_ENTER_VAULTS
         || feat == DNGN_EXIT_VAULTS
-        || feat == DNGN_ENTER_HELL
+        || feat == DNGN_ENTER_HELL || feat == DNGN_EXIT_HELL
+        || feat_is_hell_subbranch_exit(feat)
         || feat == DNGN_ENTER_ZOT
         || feat == DNGN_EXIT_ZOT)
     {
@@ -182,12 +183,6 @@ FEATFN_MEMOIZED(feat_is_branch_entrance, feat)
  */
 FEATFN_MEMOIZED(feat_is_branch_exit, feat)
 {
-    if (feat == DNGN_ENTER_HELL  || feat_is_hell_subbranch_exit(feat)
-        || feat == DNGN_EXIT_HELL)
-    {
-        return false;
-    }
-
     for (branch_iterator it; it; ++it)
     {
         if (it->exit_stairs == feat
@@ -272,9 +267,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     return feat_is_stone_stair(feat)
            || feat_is_escape_hatch(feat)
            || feat_is_branch_entrance(feat)
-           || feat_is_branch_exit(feat)
-           || feat_is_hell_subbranch_exit(feat)
-           || feat == DNGN_EXIT_HELL;
+           || feat_is_branch_exit(feat);
 }
 
 /** Is this feature an escape hatch?
@@ -336,8 +329,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
         return CMD_GO_DOWNSTAIRS;
     }
     if (feat_is_portal_exit(feat)
-        || feat_is_branch_exit(feat)
-        || feat_is_hell_subbranch_exit(feat))
+        || feat_is_branch_exit(feat))
     {
         return CMD_GO_UPSTAIRS;
     }

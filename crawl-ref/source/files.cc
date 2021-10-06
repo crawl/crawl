@@ -1065,9 +1065,6 @@ static int _get_dest_stair_type(dungeon_feature_type stair_taken,
         return DNGN_EXIT_DUNGEON;
     }
 
-    if (stair_taken == DNGN_EXIT_HELL)
-        return DNGN_ENTER_HELL;
-
     if (feat_is_hell_subbranch_exit(stair_taken))
         return DNGN_EXIT_HELL;
 
