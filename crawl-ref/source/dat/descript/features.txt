@@ -418,6 +418,11 @@ A gateway to the ashen valley of Gehenna
 
 A gateway leading to Gehenna.
 %%%%
+A gateway leading out of Gehenna
+
+A gateway leading back to the Vestibule of Hell, and whatever horrors you left
+behind there.
+%%%%
 A gateway to Hell
 
 A gateway leading to the Vestibule of Hell. Few would go there voluntarily.
@@ -426,13 +431,28 @@ A gateway to the Iron City of Dis
 
 A gateway leading to the Iron City of Dis.
 %%%%
+A gateway leading out of Dis
+
+A gateway leading back to the Vestibule of Hell, and whatever horrors you left
+behind there.
+%%%%
 A gateway to the decaying netherworld of Tartarus
 
 A gateway leading to Tartarus.
 %%%%
+A gateway leading out of Tartarus
+
+A gateway leading back to the Vestibule of Hell, and whatever horrors you left
+behind there.
+%%%%
 A gateway to the freezing wastes of Cocytus
 
 A gateway leading to Cocytus.
+%%%%
+A gateway leading out of Cocytus
+
+A gateway leading back to the Vestibule of Hell, and whatever horrors you left
+behind there.
 %%%%
 
 A hole to the Spider Nest

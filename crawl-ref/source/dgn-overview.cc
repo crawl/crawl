@@ -729,7 +729,7 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
     if (feat_is_portal_entrance(which_thing)
         || which_thing == DNGN_ENTER_ABYSS
         || which_thing == DNGN_ENTER_PANDEMONIUM
-        || which_thing == DNGN_ENTER_HELL && !player_in_hell())
+        || which_thing == DNGN_ENTER_HELL)
     {
         level_pos where(level_id::current(), pos);
         portals_present[where] = stair_destination(pos).branch;

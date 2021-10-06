@@ -125,6 +125,23 @@ bool feat_is_staircase(dungeon_feature_type feat)
            || feat == DNGN_ABYSSAL_STAIR;
 }
 
+/** Is this the exit from a sub-branch of Hell?
+ */
+bool feat_is_hell_subbranch_exit(dungeon_feature_type feat)
+{
+    static bool init, cached[NUM_FEATURES+1];
+    if (!init)
+    {
+        for (branch_iterator it; it; ++it)
+        {
+            if (is_hell_subbranch(it->id))
+                cached[it->exit_stairs] = true;
+        }
+        init = true;
+    }
+    return cached[feat];
+}
+
 /**
  * Define a memoized function from dungeon_feature_type to bool.
  * This macro should be followed by the non-memoized version of the
@@ -148,7 +165,7 @@ bool feat_is_staircase(dungeon_feature_type feat)
  */
 FEATFN_MEMOIZED(feat_is_branch_entrance, feat)
 {
-    if (feat == DNGN_ENTER_HELL)
+    if (feat == DNGN_ENTER_HELL || feat_is_hell_subbranch_exit(feat))
         return false;
 
     for (branch_iterator it; it; ++it)
@@ -167,8 +184,11 @@ FEATFN_MEMOIZED(feat_is_branch_entrance, feat)
  */
 FEATFN_MEMOIZED(feat_is_branch_exit, feat)
 {
-    if (feat == DNGN_ENTER_HELL || feat == DNGN_EXIT_HELL)
+    if (feat == DNGN_ENTER_HELL  || feat_is_hell_subbranch_exit(feat)
+        || feat == DNGN_EXIT_HELL)
+    {
         return false;
+    }
 
     for (branch_iterator it; it; ++it)
     {
@@ -255,6 +275,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
            || feat_is_escape_hatch(feat)
            || feat_is_branch_entrance(feat)
            || feat_is_branch_exit(feat)
+           || feat_is_hell_subbranch_exit(feat)
            || feat == DNGN_ENTER_HELL
            || feat == DNGN_EXIT_HELL;
 }
@@ -273,7 +294,8 @@ bool feat_is_escape_hatch(dungeon_feature_type feat)
 bool feat_is_gate(dungeon_feature_type feat)
 {
     if (feat_is_portal_entrance(feat)
-        || feat_is_portal_exit(feat))
+        || feat_is_portal_exit(feat)
+        || feat_is_hell_subbranch_exit(feat))
     {
         return true;
     }
@@ -317,7 +339,8 @@ command_type feat_stair_direction(dungeon_feature_type feat)
         return CMD_GO_DOWNSTAIRS;
     }
     if (feat_is_portal_exit(feat)
-        || feat_is_branch_exit(feat))
+        || feat_is_branch_exit(feat)
+        || feat_is_hell_subbranch_exit(feat))
     {
         return CMD_GO_UPSTAIRS;
     }
@@ -327,9 +350,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
 
     switch (feat)
     {
-    case DNGN_ENTER_HELL:
-        return player_in_hell() ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS;
-
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
@@ -338,6 +358,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_EXIT_HELL:
         return CMD_GO_UPSTAIRS;
 
+    case DNGN_ENTER_HELL:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
@@ -637,6 +658,7 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 {
     return get_feature_dchar(feat) == DCHAR_ARCH
            && feat_stair_direction(feat) != CMD_NO_CMD
+           && !feat_is_hell_subbranch_exit(feat)
            && feat != DNGN_ENTER_ZOT
            && feat != DNGN_EXIT_ZOT
            && feat != DNGN_ENTER_VAULTS
@@ -1988,6 +2010,10 @@ bool is_boring_terrain(dungeon_feature_type feat)
     {
         return true;
     }
+
+    // These were DNGN_ENTER_HELL, but would never be the first you see.
+    if (feat_is_hell_subbranch_exit(feat))
+        return true;
 
     // Only note the first entrance to the Abyss/Pan/Hell
     // which is found.

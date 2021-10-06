@@ -4589,6 +4589,7 @@ bool explore_discoveries::merge_feature(
 static bool _feat_is_branchlike(dungeon_feature_type feat)
 {
     return feat_is_branch_entrance(feat)
+        || feat_is_hell_subbranch_exit(feat)
         || feat == DNGN_ENTER_HELL
         || feat == DNGN_ENTER_ABYSS
         || feat == DNGN_EXIT_THROUGH_ABYSS

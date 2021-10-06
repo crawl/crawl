@@ -542,7 +542,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
     // going up; everything else is going down. This mostly affects which way you
     // fall if confused.
     if (feat_is_bidirectional_portal(how))
-        going_up = (how == DNGN_ENTER_HELL && player_in_hell(false));
+        going_up = feat_is_hell_subbranch_exit(how);
 
     if (_stair_moves_pre(how))
         return dest;
@@ -1124,8 +1124,14 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 #endif
 
     case DNGN_ENTER_HELL:
-        if (for_real && !player_in_hell())
+        if (for_real)
             brentry[BRANCH_VESTIBULE] = level_id::current();
+        return level_id(BRANCH_VESTIBULE);
+
+    case DNGN_EXIT_DIS:
+    case DNGN_EXIT_GEHENNA:
+    case DNGN_EXIT_COCYTUS:
+    case DNGN_EXIT_TARTARUS:
         return level_id(BRANCH_VESTIBULE);
 
     case DNGN_EXIT_ABYSS:

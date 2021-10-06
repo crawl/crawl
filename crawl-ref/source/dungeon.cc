@@ -1017,7 +1017,8 @@ static bool _is_upwards_exit_stair(const coord_def &c)
         return false;
 
     if (feat_is_stone_stair_up(env.grid(c))
-        || feat_is_branch_exit(env.grid(c)))
+        || feat_is_branch_exit(env.grid(c))
+        || feat_is_hell_subbranch_exit(env.grid(c)))
     {
         return true;
     }
@@ -1028,8 +1029,6 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
-    case DNGN_ENTER_HELL:
-        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -1045,7 +1044,8 @@ static bool _is_exit_stair(const coord_def &c)
     // the current level.
     if (feat_is_stone_stair(env.grid(c))
         || feat_is_escape_hatch(env.grid(c))
-        || feat_is_branch_exit(env.grid(c)))
+        || feat_is_branch_exit(env.grid(c))
+        || feat_is_hell_subbranch_exit(env.grid(c)))
     {
         return true;
     }
@@ -1056,8 +1056,6 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
-    case DNGN_ENTER_HELL:
-        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -1228,7 +1226,7 @@ static void _fixup_hell_stairs()
         if (feat_is_stone_stair_up(env.grid(*ri))
             || env.grid(*ri) == DNGN_ESCAPE_HATCH_UP)
         {
-            _set_grd(*ri, DNGN_ENTER_HELL);
+            _set_grd(*ri, branches[you.where_are_you].escape_feature);
         }
     }
 }

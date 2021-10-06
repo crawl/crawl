@@ -1044,6 +1044,11 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
             x = DNGN_DEMONIC_TREE;
         }
     }
+    if (minor_version < TAG_MINOR_SPLIT_HELL_GATE && x == DNGN_ENTER_HELL
+        && player_in_hell())
+    {
+        x = branches[you.where_are_you].exit_stairs;
+    }
 #else
     UNUSED(minor_version);
 #endif
