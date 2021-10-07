@@ -1776,8 +1776,7 @@ fail_severity_to_quiver = 2
 launcher_autoquiver = true
         If set to true, change the main quiver to launcher ammo on wielding
         that launcher; if set to false, the main quiver is unaffected by
-        wielding a launcher. (Firing via tab or `v` still work.). This also
-        affects rare artefacts that may be evoked.
+        wielding a launcher. (Firing via tab or `v` still work.).
 
 (See also pickup_thrown in 3-a, and the various autofight settings in 3-g.)
 
