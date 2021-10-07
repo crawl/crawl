@@ -338,6 +338,8 @@ int mons_class_colour(monster_type mc);
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 monster_type random_draconian_job();
+monster_type draconian_colour_for_job(monster_type job);
+monster_type draconian_job_for_colour(monster_type colour);
 
 bool init_abomination(monster& mon, int hd);
 void define_monster(monster& mons, bool friendly = false);

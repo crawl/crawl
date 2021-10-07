@@ -788,7 +788,7 @@ NAME:   lemuel_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
+MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -814,7 +814,7 @@ NAME:   lemuel_draconian_sentries_small
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
+MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -1717,19 +1717,19 @@ TAGS:    no_monster_gen
 DEPTH:   Zot, !Zot:$
 KMONS:   A = red very ugly thing
 KMONS:   B = red draconian
-KMONS:   C = balrug / nonbase red draconian w:6
+KMONS:   C = balrug / red draconian scorcher w:6
 KMONS:   D = cyan very ugly thing
 KMONS:   E = black draconian
-KMONS:   F = electric golem / nonbase black draconian w:6
+KMONS:   F = electric golem / black draconian knight w:6
 KMONS:   G = green very ugly thing
 KMONS:   H = green draconian
-KMONS:   I = green death / nonbase green draconian w:6
+KMONS:   I = green death / green draconian monk w:6
 KMONS:   J = white very ugly thing
 KMONS:   K = white draconian
-KMONS:   L = shard shrike / nonbase white draconian w:6
+KMONS:   L = shard shrike / white draconian stormcaller w:6
 KMONS:   M = brown very ugly thing
 KMONS:   N = yellow draconian
-KMONS:   O = acid blob / nonbase yellow draconian w:6
+KMONS:   O = acid blob / yellow draconian annihilator w:6
 KMONS:   Z = golden dragon / killer klown / Tiamat, golden dragon / killer klown
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
@@ -2252,8 +2252,8 @@ TAGS: transparent no_pool_fixup patrolling
 SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
 SUBST: GP = x, g = r, p = c, HQ = @, hq = .
 COLOUR: r = red, c = blue
-KMONS: R = nonbase red draconian
-KMONS: C = nonbase white draconian
+KMONS: R = red draconian scorcher
+KMONS: C = white draconian stormcaller
 KMONS: D = fire dragon
 KMONS: I = ice dragon
 KFEAT: r = c
@@ -2691,7 +2691,7 @@ NSUBST:  A = 3 = 112 / 9 = 2. / *:.
 NSUBST:  B = 3 / 8 = 4. / *:.
 # The Magic act: An Ancient Lich and elec golems
 NSUBST:  C = 5 / 6 / 2 = 6. / *:.
-# The Acrobats: pale draconians, with some monks, and nets
+# The Acrobats: grey draconians, with some monks, and nets
 NSUBST:  D = 3 = qqp / 9 = p. / 9 = - / *:.
 KMONS:   p = grey draconian
 KMONS:   q = grey draconian monk

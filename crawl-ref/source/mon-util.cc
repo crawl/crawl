@@ -2563,6 +2563,45 @@ monster_type random_draconian_job()
                                 MONS_LAST_NONBASE_DRACONIAN);
 }
 
+static const pair<monster_type, monster_type> _draconian_combos[] =
+{
+    { MONS_DRACONIAN_STORMCALLER, MONS_WHITE_DRACONIAN },
+    { MONS_DRACONIAN_MONK, MONS_GREEN_DRACONIAN },
+    { MONS_DRACONIAN_SHIFTER, MONS_PURPLE_DRACONIAN },
+    { MONS_DRACONIAN_ANNIHILATOR, MONS_YELLOW_DRACONIAN },
+    { MONS_DRACONIAN_KNIGHT, MONS_BLACK_DRACONIAN },
+    { MONS_DRACONIAN_SCORCHER, MONS_RED_DRACONIAN },
+};
+
+// Should have exactly one job per randomly-spawning draconian colour.
+COMPILE_CHECK(ARRAYSZ(_draconian_combos) == MONS_LAST_SPAWNED_DRACONIAN
+                                            - MONS_FIRST_BASE_DRACONIAN);
+
+monster_type draconian_colour_for_job(monster_type job)
+{
+    for (auto &drac : _draconian_combos)
+        if (drac.first == job)
+            return drac.second;
+
+    return MONS_PROGRAM_BUG;
+}
+
+monster_type draconian_job_for_colour(monster_type colour)
+{
+    for (auto &drac : _draconian_combos)
+        if (drac.second == colour)
+            return drac.first;
+
+    // Doesn't normally spawn, but should still return a random job.
+    if (colour > MONS_LAST_SPAWNED_DRACONIAN
+        && colour <= MONS_LAST_BASE_DRACONIAN)
+    {
+        return random_draconian_job();
+    }
+
+    return MONS_PROGRAM_BUG;
+}
+
 static mon_spellbook_type _get_mc_spellbook(const monster_type mon_type)
 {
     return static_cast<mon_spellbook_type>(get_monster_data(mon_type)->sec);
@@ -2795,16 +2834,7 @@ void define_monster(monster& mons, bool friendly)
     }
 
     if (mons_is_draconian_job(mcls))
-    {
-        // Professional draconians still have a base draconian type.
-        // White draconians will never be draconian scorchers, but
-        // apart from that, anything goes.
-        do
-        {
-            monbase = random_draconian_monster_species();
-        }
-        while (drac_colour_incompatible(mcls, monbase));
-    }
+        monbase = draconian_colour_for_job(mcls);
 
     if (col == COLOUR_UNDEF) // but never give out darkgrey to monsters
         col = random_monster_colour();

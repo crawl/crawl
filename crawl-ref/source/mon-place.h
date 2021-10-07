@@ -102,8 +102,6 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
-bool drac_colour_incompatible(int drac, int colour);
-
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid);
 bool monster_habitable_grid(monster_type mt, dungeon_feature_type actual_grid,

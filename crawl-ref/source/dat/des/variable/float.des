@@ -2400,7 +2400,7 @@ MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          deep troll earth mage w:4 / deep elf death mage w:2
 MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
          sphinx w:5 / nagaraja w:5 / mummy priest w:1 / \
-         white draconian knight w:1
+         draconian knight w:1
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
 SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
 SUBST:   IKO = 1, LPS = 2, T = 3, JMNQRUV = %

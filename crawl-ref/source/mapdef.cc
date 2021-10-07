@@ -4483,6 +4483,11 @@ mons_spec mons_list::get_salt_spec(const string &name) const
     return spec;
 }
 
+// Randomly-generated draconians have fixed colour/job combos - see
+// _draconian_combos in mon-util.cc. Vaults can override this, but shouldn't do
+// so without good reason (for example an elemental-flavoured vault might use
+// classed draconians all of a single colour).
+//
 // Handle draconians specified as:
 // Exactly as in mon-data.h:
 //    yellow draconian or draconian knight - the monster specified.
@@ -4492,7 +4497,9 @@ mons_spec mons_list::get_salt_spec(const string &name) const
 //    any base draconian => any unspecialised coloured draconian.
 //    any nonbase draconian => any specialised coloured draconian.
 //    any <colour> draconian => any draconian of the colour.
-//    any nonbase <colour> draconian => any specialised drac of the colour.
+//    any nonbase <colour> draconian => any specialised drac of the colour,
+//                                      ignoring the standard colour/job
+//                                      restrictions.
 //
 mons_spec mons_list::drac_monspec(string name) const
 {

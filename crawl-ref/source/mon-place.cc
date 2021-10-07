@@ -419,11 +419,6 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place);
 }
 
-bool drac_colour_incompatible(int drac, int colour)
-{
-    return drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN;
-}
-
 bool needs_resolution(monster_type mon_type)
 {
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
@@ -446,18 +441,22 @@ monster_type resolve_monster_type(monster_type mon_type,
 
     if (mon_type == RANDOM_DRACONIAN)
     {
-        // Pick any random drac, constrained by colour if requested.
-        do
+        if (base_type != MONS_NO_MONSTER)
         {
+            // Pick the requested colour, if applicable.
+            if (coinflip())
+                mon_type = base_type;
+            else
+                mon_type = draconian_job_for_colour(base_type);
+        }
+        else
+        {
+            // Pick any random drac.
             if (coinflip())
                 mon_type = random_draconian_monster_species();
             else
                 mon_type = random_draconian_job();
         }
-        while (base_type != MONS_PROGRAM_BUG
-               && mon_type != base_type
-               && (mons_species(mon_type) == mon_type
-                   || drac_colour_incompatible(mon_type, base_type)));
     }
     else if (mon_type == RANDOM_BASE_DRACONIAN)
         mon_type = random_draconian_monster_species();
