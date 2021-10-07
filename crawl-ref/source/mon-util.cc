@@ -2571,11 +2571,14 @@ static const pair<monster_type, monster_type> _draconian_combos[] =
     { MONS_DRACONIAN_ANNIHILATOR, MONS_YELLOW_DRACONIAN },
     { MONS_DRACONIAN_KNIGHT, MONS_BLACK_DRACONIAN },
     { MONS_DRACONIAN_SCORCHER, MONS_RED_DRACONIAN },
+#if TAG_MAJOR_VERSION == 34
+    { MONS_PROGRAM_BUG, MONS_PROGRAM_BUG }, // MONS_MOTTLED_DRACONIAN
+#endif
 };
 
 // Should have exactly one job per randomly-spawning draconian colour.
 COMPILE_CHECK(ARRAYSZ(_draconian_combos) == MONS_LAST_SPAWNED_DRACONIAN
-                                            - MONS_FIRST_BASE_DRACONIAN);
+                                            - MONS_FIRST_BASE_DRACONIAN + 1);
 
 monster_type draconian_colour_for_job(monster_type job)
 {
