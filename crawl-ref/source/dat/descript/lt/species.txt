@@ -57,11 +57,6 @@ Tengu
 Paukščiažmogiai, mylintys kautynes, tiek ginklais, tiek magija. Jie yra gana
 gležni, bet ilgainiui išmoksta skraidyti.
 %%%%
-Kobold
-
-Maži, išdykę ir šiek tiek silpni, bet daug ką sugebantys. Jie gali valgyti ir
-valgys bet kokią mėsą.
-%%%%
 Merfolk
 
 Pusiau žuvys, pusiau žmonės, vandeniai yra ir vandens ir žemės gyventojai.

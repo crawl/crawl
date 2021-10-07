@@ -1,7 +1,7 @@
 #! /usr/bin/env perl
 
-# Generates aptitude table from skills.cc and the aptitude template file.
-# All species names are discovered from skills.cc and all skill abbreviations
+# Generates aptitude table from species-data.h and the aptitude template file.
+# All species names are discovered from species-data.h and all skill abbreviations
 # are discovered from the apt template file, so this script should be
 # reasonably insulated from skill and species changes.
 #
@@ -127,8 +127,9 @@ sub aptitude_table
         next if $sp eq 'Mottled Draconian';
         next if $sp eq 'High Elf';
         next if $sp eq 'Sludge Elf';
-        next if $sp eq 'Djinni';
         next if $sp eq 'Lava Orc';
+        next if $sp eq 'Centaur';
+        next if $sp eq 'Halfling';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);
@@ -139,7 +140,7 @@ sub aptitude_table
 
             my $pos = index($headers, " $abbr");
             die "Could not find $abbr in $headers?\n" if $pos == -1;
-            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'MR';
+            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'WL';
             $pos-- if $abbr eq 'HP';
             if ($pos > length($line))
             {
@@ -226,7 +227,7 @@ sub load_aptitudes
         }
         else
         {
-            if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*\)/)
+            if (/{\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*}/)
             {
                 $species = propercase_string(fix_underscores($1));
                 if (!$SEEN_SPECIES{$species})
@@ -240,6 +241,7 @@ sub load_aptitudes
                 my $skill = skill_name($2);
                 next if $skill eq "Stabbing";
                 next if $skill eq "Traps";
+                next if $skill eq "Charms";
                 die "$skillfile:$.: Unknown skill: $skill\n"
                     unless $SKILL_ABBR{$skill};
                 die "$skillfile:$.: Repeated skill def $1 for $species.\n"
@@ -262,16 +264,16 @@ sub load_mods
     {
         my $sp = $_;
         $sp =~ s/Base //;
-        my ($xp, $hp, $mp, $mr) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d), (\d),/;
+        my ($xp, $hp, $mp, $wl) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d), (\d),/;
 
         $SPECIES_SKILLS{$_}{"Experience"} = $xp;
         $SPECIES_SKILLS{$_}{"Hit Points"} = $hp;
         $SPECIES_SKILLS{$_}{"Magic Points"} = $mp;
-        $SPECIES_SKILLS{$_}{"Magic Resistance"} = $mr;
+        $SPECIES_SKILLS{$_}{"Willpower"} = $wl;
         die "couldn't parse mods for $_" unless defined $xp
                                                 && defined $hp
                                                 && defined $mp
-                                                && defined $mr;
+                                                && defined $wl;
     }
     close $inf;
 }

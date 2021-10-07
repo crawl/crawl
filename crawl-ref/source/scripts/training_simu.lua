@@ -39,27 +39,8 @@ elseif (job == "FE") then
 
                Spellcasting      = {  2, 1, 27 },
                Conjurations      = {  1, 1, 27 },
-               Charms            = {  1, 10, 12},
                ["Fire Magic"]    = {  1, 1, 27 },
                ["Air Magic"]     = {  1, 13, 6 },
-               Evocations        = {  5, 5,  5 },
-              }
-elseif (job == "Sk") then
-    skills = { Fighting          = {  2, 1, 27 },
-               [weapon_skill]    = {  1, 1, 18 },
-               Armour            = {  3, 1, 27 },
-               Dodging           = {  3, 1, 27 },
-               Stealth           = {  4, 1,  6 },
-               Shields           = {  5, 8, 10 },
-               Traps             = { 10, 1,  8 },
-
-               Spellcasting      = {  2, 2, 27 },
-               Charms            = {  1, 2, 12 },
-               Necromancy        = {  5, 5,  8 },
-               ["Fire Magic"]    = {  5, 3,  1 },
-               ["Ice Magic"]     = {  3, 2,  6 },
-               ["Air Magic"]     = {  3, 10, 6 },
-               ["Poison Magic"]  = {  4, 4,  3 },
                Evocations        = {  5, 5,  5 },
               }
 else

@@ -1,37 +1,8 @@
 %%%%
-amulet of conservation
-
-Este amuleto protege de la destrucción algunas de las pertenencias de su
-portador, aunque no de forma infalible.
-%%%%
 amulet of inaccuracy
 
 Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
 cuerpo, y cuando ataque monstruos mediante ataques a distancia o hechizos.
-%%%%
-amulet of rage
-
-Este amuleto permite a su portador entrar en un estado de furia.
-%%%%
-amulet of resist mutation
-
-Este amuleto previene que su portador adquiera mutaciones, aunque no es
-infalible.
-%%%%
-amulet of stasis
-
-Un amuleto que ha sido elaborado meticulosamente para bloquear los efectos
-mágicos o físicos que podrían tele-transportar, ralentizar, acelerar, o
-paralizar a su portador.
-
-Aunque el amuleto es efectivo contra la mayoría de las magias de translocación,
-los cambios de plano como el destierro están fuera de su alcance.
-%%%%
-amulet of warding
-
-Este amuleto repele los ataques de criaturas que hayan sido convocadas mediante
-magia, y también hace a su portador más resistente a los ataques basados en
-energías negativas.
 %%%%
 animal skin
 
@@ -101,15 +72,15 @@ book of dreams
 Un libro transparente. La luz se refleja de una forma extraña sobre su
 superficie.
 %%%%
-book of enchantments
-
-Un libro con hechizos mágicos.
-%%%%
 book of fixed level
 
 Un libro con hechizos mágicos.
 %%%%
 book of fixed theme
+
+Un libro con hechizos mágicos.
+%%%%
+book of hexes
 
 Un libro con hechizos mágicos.
 %%%%
@@ -178,10 +149,6 @@ Un trozo de queso.
 choko
 
 Una fruta verde e insípida que crece en una parra.
-%%%%
-chunk of flesh
-
-Un trozo de carne encontrado en el calabozo.
 %%%%
 cloak
 

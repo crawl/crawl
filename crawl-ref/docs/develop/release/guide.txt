@@ -90,60 +90,35 @@ for those the list begins with step 3.
    version.
 
 
-7. Tag the release
+7. Tag and create the release
 
    In the branch you're about to tag:
+
    git tag -a 0.X.y
+   git push --tags
 
-   Don't push the tag yet so you can make final amendments.
+   Then, visit the GitHub releases page:
+
+   https://github.com/crawl/crawl/releases
+
+   You should have the ability to create a release from this tag. Once you
+   create the release, GitHub Actions will automatically upload macOS and
+   Windows builds as release assets.
 
 
-8. Package the source tarball, produce final builds and Debian packages
+8. Package the source tarball, and produce Debian packages
 
-   "make package-source" will create three source tar/zipballs.
-
-   For binary builds, you need to ensure at least the dat/ subdir contains no
-   foreign files (such as editor backup files, uncommitted stuff, random junk,
-   etc). Thus, "git clean -dfx". This is a potentially destructive operation so
-   if you have files lying around, you may want to do this from a separate
-   clone instead.
-
-   You can use enable optimizations in the builds, but these can make
-   cross-compilation difficult. Adding the make option LTO=y will enable
-   long-term optimization, but this can fail under cross-compilation.
-
-   The Makefile targets are "package-windows" and "package-windows-zips" for
-   the installer and stand-alone zips respectively. Unless you're on msys, you
-   need to specify CROSSHOST as well:
-
-   make CROSSHOST=i686-w64-mingw32 package-windows
-
-   It's ideal to test the windows packages (both Tiles and console) under wine
-   at the very least, assuming you've cross-compiled, and testing under a
-   recent version of windows is preferable. Follow the sanity test steps in
-   step 4.
+   "make package-source" will create three source tar/zipballs. You can add
+   these to the GitHub release as additional assets.
 
    For building the Debian packages and installing them into the CDO
    repository, see the debian.txt guide in this directory.
 
 
-9. Push the tag
+9. Update download links on CDO
 
-   Until the moment you push it to the official repository, you can delete it
-   and re-tag:
-
-   git push --tags
-
-   The tags are some sort of frozen state of the source for all releases, so
-   this is the last step you take before the actual release. All further
-   changes make it into the next minor version.
-
-
-10. Upload the files to CDO
-
-    Use the crawl login on CDO to upload the binaries to ~/website/release/
-    over scp or sftp. The links on the download page currently at
-    ~/website/download.htm must then be updated.
+    Use the crawl login on CDO to update the links on the download page
+    currently at ~/website/download.htm.
 
     Presently there's a repository that manages the web files for non-wordpress
     pages on CDO like the splash and download pages. This repo is cloned to
@@ -160,7 +135,7 @@ for those the list begins with step 3.
     guide in this directory.
 
 
-11. Update Sourceforge
+10. Update Sourceforge
 
     We currently use Sourceforge only for the CRD mailing list. Until CRD is
     moved somewhere else, we want to keep the Sourceforge release binaries
@@ -172,12 +147,12 @@ for those the list begins with step 3.
     most, .exe installer for Windows).
 
 
-12. Announce the release
+11. Announce the release
 
     Post a release announcement to the CDO blog and send an email over
     crawl-ref-discuss. If you want you can also write a news item on
     Sourceforge.
 
 
-13. Lean back and enjoy the excitement
+12. Lean back and enjoy the excitement
     ...until the first bug reports roll in. ;)

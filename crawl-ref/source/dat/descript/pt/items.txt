@@ -1,21 +1,8 @@
 %%%%
-amulet of conservation
-
-Este amuleto protege algumas das posses do usuário de serem destruídas,  mas
-não é infalível.
-%%%%
 amulet of inaccuracy
 
 Este amuleto faz com que o usuário seja menos preciso em combate mano a mano e
 ao lançar ataques a distância e magias em monstros.
-%%%%
-amulet of rage
-
-Este amuleto permite que o usuário tente iniciar um estado de fúria berserk.
-%%%%
-amulet of resist mutation
-
-Este amuleto protege o usuário contra mutações, mas não é infalível.
 %%%%
 animal skin
 
@@ -62,10 +49,6 @@ book of dreams
 
 Um livro translúcido; a luz reflete de forma estranha na sua superfície.
 %%%%
-book of enchantments
-
-Um livro de magia.
-%%%%
 book of fixed level
 
 Um livro de magias.
@@ -73,6 +56,10 @@ Um livro de magias.
 book of fixed theme
 
 Um livro de magias.
+%%%%
+book of hexes
+
+Um livro de magia.
 %%%%
 book of maledictions
 
@@ -125,10 +112,6 @@ Um naco de queijo.
 choko
 
 Um vegetal verde e quase sem gosto que cresce em uma vinha.
-%%%%
-chunk of flesh
-
-Um pedaço de carne encontrado no calabouço.
 %%%%
 cloak
 

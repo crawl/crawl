@@ -6,7 +6,6 @@ import argparse
 import os
 import subprocess
 import sys
-import shutil
 import time
 from typing import Dict, List, Set
 
@@ -19,7 +18,7 @@ def run(cmd: List[str], max_retries: int = 1) -> None:
             subprocess.check_call(cmd)
         except Exception as e:
             print(
-                "%s: Command failed (%e) (attempt %s of %s)"
+                "%s: Command failed (%s) (attempt %s of %s)"
                 % (sys.argv[0], e, attempt, max_retries),
             )
             attempt += 1
@@ -31,7 +30,7 @@ def run(cmd: List[str], max_retries: int = 1) -> None:
             return
 
 
-def build_opts(string: str) -> Dict[str, str]:
+def make_opts(string: str) -> Dict[str, str]:
     """Parse Make opts, eg "DEBUG=1 TILES=1" => {"DEBUG": "1", "TILES": "1"}."""
     if string:
         return {arg: val for arg, val in (opt.split("=") for opt in string.split(" "))}
@@ -53,8 +52,8 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
         "libsqlite3-dev",
         "libz-dev",
         "pkg-config",
-        "python-yaml",
         "ccache",
+        "advancecomp",  # used to compress release zips and png sprite sheets
     }
     if "TILES" in args.build_opts or "WEBTILES" in args.build_opts:
         packages.update(
@@ -67,10 +66,13 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
                 "ttf-dejavu-core",
             ]
         )
+    if "FULLDEBUG" in args.debug_opts:
+        packages.add("gdb")
     if args.coverage:
         packages.add("lcov")
     if args.crosscompile:
         packages.add("mingw-w64")
+        packages.add("nsis")  # makensis used to build Windows installer
     if args.compiler == "clang":
         # dependencies for llvm.sh
         packages.update(["lsb-release", "wget", "software-properties-common"])
@@ -87,15 +89,16 @@ def install_llvm() -> None:
     run(["sudo", "bash", "/tmp/llvm.sh"])
     for binary in os.scandir("/usr/bin"):
         if binary.name.startswith("clang-") or binary.name.startswith("clang++-"):
-            run(
-                [
-                    "sudo",
-                    "ln",
-                    "-s",
-                    "/usr/bin/ccache",
-                    os.path.join("/usr/lib/ccache/", binary.name),
-                ],
-            )
+            if not os.path.exists(os.path.join("/usr/lib/ccache/", binary.name)):
+                run(
+                    [
+                        "sudo",
+                        "ln",
+                        "-s",
+                        "/usr/bin/ccache",
+                        os.path.join("/usr/lib/ccache/", binary.name),
+                    ],
+                )
 
 
 def setup_msys_ccache_symlinks() -> None:
@@ -124,7 +127,8 @@ if __name__ == "__main__":
         description="Install packages required to build DCSS"
     )
     parser.add_argument("--compiler", choices=("gcc", "clang"))
-    parser.add_argument("--build-opts", default={}, type=build_opts)
+    parser.add_argument("--build-opts", default={}, type=make_opts)
+    parser.add_argument("--debug-opts", default={}, type=make_opts)
     parser.add_argument("--coverage", action="store_true")
     parser.add_argument("--crosscompile", action="store_true")
 

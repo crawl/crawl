@@ -18,7 +18,9 @@
 #include "libutil.h"
 #include "l-libs.h"
 #include "map-marker-type.h"
+#include "mpr.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unwind.h"
 
@@ -1188,9 +1190,13 @@ string map_markers::property_at(const coord_def &c, map_marker_type type,
 {
     UNUSED(type);
     auto els = markers.equal_range(c);
-    for (auto i = els.first; i != els.second; ++i)
+    for (auto i = els.first; i != els.second;)
     {
-        const string &prop = i->second->property(key);
+        // this ugly sequencing is necessary in case the call to property
+        // removes the marker, invalidating i.
+        auto marker = i->second;
+        i++;
+        const string &prop = marker->property(key);
         if (!prop.empty())
             return prop;
     }
@@ -1365,7 +1371,7 @@ map_position_marker *get_position_marker_at(const coord_def &pos,
  **/
 coord_def get_transporter_dest(const coord_def &pos)
 {
-    ASSERT(grd(pos) == DNGN_TRANSPORTER);
+    ASSERT(env.grid(pos) == DNGN_TRANSPORTER);
 
     map_position_marker *marker
         = get_position_marker_at(pos, DNGN_TRANSPORTER);

@@ -18,31 +18,15 @@ amulet of guardian spirit
 An amulet containing a protective spirit which will cause any damage taken to
 be divided between the wearer's reserves of health and magic.
 %%%%
-amulet of harm
-
-An amulet created to amplify all damage dealt by the wearer. As an unfortunate
-side effect, it also amplifies all damage dealt to the wearer, albeit to a
-lesser degree. When the effects of the amulet are severed by removing it, the
-magical backlash significantly drains the wearer.
-%%%%
-amulet of inaccuracy
-
-An amulet that makes its wearer less accurate in melee combat and when
-targeting monsters via ranged attacks or spells.
-%%%%
 amulet of magic regeneration
 
-An amulet that substantially increases the wearer's normal rate of magic
-regeneration. In order to function, it must first attune itself to the wearer's
-body with full reserves of magic.
+An amulet that increases the wearer's rate of magic regeneration. In order to
+function, it must first attune itself to the wearer's body with full reserves
+of magic.
 %%%%
 amulet of nothing
 
 An amulet with no special properties.
-%%%%
-amulet of rage
-
-An amulet that enables its wearer to attempt to enter a state of berserk rage.
 %%%%
 amulet of reflection
 
@@ -51,20 +35,14 @@ reflect any blocked ranged attacks back towards the attacker.
 %%%%
 amulet of regeneration
 
-An amulet that increases the wearer's natural regeneration rate. In order to
+An amulet that increases the wearer's rate of health regeneration. In order to
 function, it must first attune itself to the wearer's body at full health.
-%%%%
-amulet of the gourmand
-
-An amulet that allows its wearer to eat fresh raw meat when not hungry, and
-drastically increases nutrition gained from them. These effects on the wearer's
-digestion are cumulative over time and are initially small.
 %%%%
 amulet of the acrobat
 
 An amulet that allows the user to tumble and roll to evade the blows of their
-enemies, but only while moving and waiting. While taking other actions the
-amulet conveys no benefits. In order to function, it must first attune itself to the wearer's body at full health.
+enemies, but only while moving and waiting. While taking other actions
+(including climbing stairs) the amulet conveys no benefits.
 %%%%
 animal skin
 
@@ -85,6 +63,10 @@ fletched with feathers at one end and a point at the other.
 bardiche
 
 A long pole with an enormous, cleaving blade on one end.
+%%%%
+barding
+
+Armour for the scaly midsections of nagas and palentongas.
 %%%%
 battleaxe
 
@@ -109,14 +91,30 @@ book of annihilations
 A tome of arcane fury, greatly sought after by sorcerers. It allows the gifted
 and resourceful to conjure destruction with ease.
 %%%%
-book of battle
+book of armaments
 
-A book of battle songs, containing spells to assist in combat.
+A book describing various magical arms and armours. It was written in the midst
+of a particularly bloody civil war, and the text is made substantially less
+helpful by its author's frequent digressions describing the crimes committed by
+the other side.
 %%%%
 book of beasts
 
 A book of spells focused on the summoning of beasts. Its pages nip at careless
 readers' fingers.
+%%%%
+book of blasting
+
+A book of spells used to set off powerful explosions. This edition's binder
+was careful to pad the cover, so that if its reader lacked sufficient caution,
+the book, at least, would survive.
+%%%%
+book of blood
+
+A book of works dedicated to the manipulation of blood, both that of the caster
+and of creatures with particularly unusual ichor flowing through their veins.
+Some claim it to have been composed by the vampire lord Jory, but it's unclear
+why he would deign to share his secrets with others.
 %%%%
 book of burglary
 
@@ -141,16 +139,20 @@ illustrations of spellcasting mistakes: half-wizard-half-spiders, blade noses,
 beaked tentacles where legs belong. The text is full of reassurances that these
 almost never happen.
 %%%%
-book of clouds
+book of chaos
 
-A book of magic spells for creating an assortment of clouds. It is difficult to
-read, as the text is frequently interrupted by descriptions of unusually-shaped
-clouds the author spotted while writing.
+A book of spells that leave the caster's surroundings in a state of complete
+disarray. It's not clear why anyone would write such a thing, but it's here.
 %%%%
 book of conjurations
 
 A book containing an introduction to the destructive magical arts of
 Conjurations.
+%%%%
+book of dangerous friends
+
+A book describing the creation and use of magical entities best kept at arm's
+reach. Or, preferably, even farther.
 %%%%
 book of death
 
@@ -159,18 +161,26 @@ grotesque art depicting scenes of disgusting decay.
 %%%%
 book of debilitation
 
-A spellbook containing Hexes that obstruct and impede, compiled by rebels
-fighting an empire long-since passed.
+A spellbook containing spells known for having a particularly unpleasant
+effect on their victims. It's considered something of a faux pas in the
+wizarding community to be seen with this book in one's collection.
+%%%%
+book of decay
+
+A book of necromancy, dictated by the god Kikubaaqudgha to an unfortunate
+apostle across the course of a nine-day fugue. The necromancer is said to have
+finished the dread work with their own life's blood... but of course this is
+just a copy, written in almost entirely normal ink.
+%%%%
+book of displacement
+
+A book of spells to bring others closer, or sometimes farther, depending on the
+user's whim.
 %%%%
 book of dreams
 
 The somniloquent utterings of a famed mystic, using uniquely bizarre imagery
 and cryptic digressions to describe spells drawn from the mystic's visions.
-%%%%
-book of enchantments
-
-A spellbook containing an assortment of powerful Hexes and Charms, which
-sparkles and shimmers as the pages are flipped.
 %%%%
 book of fire
 
@@ -188,24 +198,40 @@ A book of magic spells.
 book of flames
 
 The standard text used in arcane academies by students of the elemental magic
-of Fire.
+of Fire. Readers are recommended to wear a pair of insulated gloves.
 %%%%
 book of frost
 
 A book of magic spells, often used as an introduction to the elemental magics
-of Ice.
+of Ice. Its pages feel unusually brittle, as if they'd crumble at a touch.
 %%%%
 book of geomancy
 
-A book containing basic spells involving the element of Earth.
+A book containing basic spells involving the element of Earth. Readers are
+recommended to wear a pair of gardening gloves.
+%%%%
+book of hexes
+
+A spellbook containing an assortment of powerful Hexes, which sparkles and
+shimmers as the pages are flipped.
 %%%%
 book of ice
 
-A book of advanced magical spells using the element of Ice.
+A book of advanced magical spells using the element of Ice. Readers are
+recommended to wear a pair of warm gloves.
+%%%%
+book of iron
+
+An ancient, metal-bound spellbook, covered in dark red blotches. Are they
+rust stains, or..?
+%%%%
+book of lightning
+
+A book that fairly crackles with arcane power.
 %%%%
 book of maledictions
 
-A book of Hexes, describing spells to confound and weaken.
+A book of Hexes, describing spells to confound and befuddle.
 %%%%
 book of minor magic
 
@@ -216,62 +242,168 @@ book of misfortune
 
 A spellbook dedicated to the art of inflicting creative calamities on one's
 foes. Superstitious wizards claim that the book itself actually absorbs ill
-fortune, and carry it around as a talisman, but the effects of this seem
+fortune and carry it around as a talisman, but the effects of this seem
 subtle at best.
 %%%%
 book of necromancy
 
-A macabre book containing basic Necromancy spells.
+A macabre book containing basic Necromancy spells. Readers are recommended to
+wear a pair of gloves they don't mind disposing of afterward.
 %%%%
 book of party tricks
 
 A book containing a variety of fun spells guaranteed to liven up any wizarding
 party, as well as a number of toasts, jokes, and party games.
 %%%%
+book of pain
+
+A magical book said to have written by the demon-queen Ereshkigal, who delights
+in the painful death of mortals. Some would say that it would be best to consider
+the book's origin before putting it to use, but wizards are rarely deterred by
+such concerns.
+%%%%
 book of power
 
-A book of powerful magic spells, crackling and shuddering with barely-contained
-energies.
+A book of powerful and destructive magic spells, rumbling and shuddering with
+barely-contained energies.
+%%%%
+book of rime
+
+A frost-gripped tome describing icy spells, somewhat abridged. The Vaults are
+said to hold the full text, but the guardians of that place guard their
+treasures jealously.
+%%%%
+book of scorching
+
+A magical book, blasted and scoured by long exposure to the desert sun. Upon
+its badly-weathered pages lie the secrets to inflicting the desert's dangers
+upon the caster's foes.
+%%%%
+book of sloth
+
+A lazily written book.
 %%%%
 book of spatial translocations
 
-A basic spellbook on the magical field of Translocations.
+A basic spellbook on the magical field of Translocations. Many would-be mages
+have seen it disappear just as they needed it most.
 %%%%
-book of summonings
+book of spectacle
 
-An advanced treatise on Summoning magics, detailing ways of summoning and
-binding creatures from all manners of realms.
+A book covered in glittering sequins. An impromptu lightshow bursts from every
+page, clearly reserving this book for only the tackiest of wizards.
+%%%%
+book of the spheres
+
+A book containing a comprehensive, well-rounded collection of sphere-related
+spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
+but sadly, the remainder of the book has been completely vaporised.
+%%%%
+book of storms
+
+A book written by the magician Lan Shi, who was preoccupied with the study and
+control of natural phenomena. Most of Shi's works have been lost, but those
+still remaining are treasured by wizards lucky (or unscrupulous) enough to get
+their hands on a copy.
 %%%%
 book of the dragon
 
 A magical book of spells which allow some command over dragons and their
 aspects.
 %%%%
+book of the wilderness
+
+A book holding lore ripped from distant and untamed lands, allowing their
+denizens to be called forth to serve the reader.
+{{
+    if you.can_smell() then
+        return "It smells distressingly musty."
+    end
+}}
+%%%%
 book of the earth
 
-A textbook of advanced Earth magic.
+A guide to drawing immense power from the depths of the earth. The original was
+written as a collaboration between the hill dwarves and the mountain dwarves, but
+its compilation was cut short when a massive wave of earthquakes plunged their
+civilizations into ruin.
+%%%%
+book of the hunter
+
+A mundane book on hunting. Someone has gone through and covered the book in
+corrections and scathing criticisms, crossing out entire sections in favor of
+spells that accomplish the same task.
+%%%%
+book of the moon
+
+A book written by a mad wizard, who had become convinced that the moon far above
+was composed, not of shining light, but of rock as solid as that beneath one's feet.
+Many of the pages have been mangled beyond recognition, seemingly shredded by a
+pair of powerful claws... but what would a troll be doing with a spellbook?
+%%%%
+book of the senses
+
+A scholarly work, describing the senses used by living creatures to perceive the
+world around them. A handful of spells are included to demonstrate the principles
+being described.
 %%%%
 book of the sky
 
-A magical book containing powerful elemental spells of Air.
+A magical book containing powerful elemental spells of Air. The great minotaur
+hero Vuxhurn, given a copy of this book while trapped atop the tower of a
+wizard with a particularly perverse sense of humor, used its pages to construct
+a rudimentary glider and soared to freedom.
 %%%%
-book of the tempests
+book of the tundra
 
-A book containing magic spells which command some of the most destructive
-forces of nature.
+A book written by peoples of a cold and inhospitable realm. It's exceptionally
+large, but that's because many thick furs hang from its spine. Most of the
+remaining pages are devoted to long, proud descriptions of how those furs were
+taken. Some of these stories include relevant spells, generally as an aside.
 %%%%
 book of the warp
 
-A book of advanced Translocations spells.
+A book of advanced Translocations spells, written by a particularly
+misanthropic mage. After its completion, they were never seen again, which may
+or may not have been the point.
+%%%%
+book of touch
+
+A book describing spells requiring very close proximity to their target. The
+author seems to have had a low opinion of their wizardly peers, and spends much
+of the text describing the hygiene and social etiquette needed to enter close
+proximity to other sentient beings.
 %%%%
 book of transfigurations
 
-An advanced book of Transmutations spells.
+An advanced book of Transmutations spells. Contrary to common wisdom, the book
+has no ability to move, but it does have a nasty habit of disguising itself as
+other nearby objects.
 %%%%
 book of unlife
 
 An unholy book describing a variety of magical methods for the creation and
 command of undead servants.
+%%%%
+book of vapours
+
+A book of magic spells for creating an assortment of clouds, vapours and mists.
+It is difficult to read, as the text is frequently interrupted by descriptions
+of unusually-shaped clouds the author spotted while writing.
+%%%%
+book of weapons
+
+A book of spells used by rebels against an ancient and evil empire. The rebels
+were crushed, but this book was rediscovered years later, found by paladins of
+the crusade that finally destroyed the empire and slew its immortal twin
+sovereigns.
+%%%%
+book of winter
+
+A book of spells written by the sorceress Ellawe, who sought to use her time
+productively while trapped inside by particularly harsh weather for over six
+months. A postscript details the bloody vengeance she took after discovering
+the weather mage responsible.
 %%%%
 boomerang
 
@@ -282,8 +414,7 @@ box of beasts
 A box filled with the bizarre leftovers of a depraved wizard's magical
 experimentations. Opening it might set loose a friendly mutant beast: bizarre
 creatures, each with their own combination of traits. Increased skill with
-Evocations will allow stronger beasts to be released. There is a one in three
-chance of accidentally destroying the box when using it.
+Evocations will allow stronger beasts to be released.
 
 There are six known traits:
  * Bat beasts fly and move very quickly, but erratically.
@@ -305,17 +436,9 @@ A small piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
 speed of an unskilled wearer.
 %%%%
-centaur barding
-
-An armour made for centaurs, to wear over their equine half.
-%%%%
 chain mail
 
 A suit of armour made entirely out of tiny metal rings.
-%%%%
-chunk of flesh
-
-A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
 cloak
 
@@ -327,17 +450,18 @@ A heavy piece of wood. While clubs are rather primitive weapons, bashing
 someone's skull in with one remains a very popular and effective means of
 dispute resolution.
 %%%%
+condenser vane
+
+A magical device that condenses ambient energy into various destructive clouds.
+When evoked these clouds form around hostile monsters near the user. The
+lethality of these clouds increases with Evocations skill. At low power it will
+create noxious fumes, and as power increases this gives way to roaring flames,
+freezing vapours, and poisonous gas. At the highest tiers of power storm
+clouds, acidic fog and clouds of negative energy become available.
+%%%%
 corpse
 
-A corpse. You can butcher it to produce chunks of meat.
-%%%%
-crystal ball of energy
-
-A magical device which can be used to restore magical energy, with its
-effectiveness increasing with Evocations skill. However, it may fail and drain
-all of those energies completely, or cause other negative mental effects. When
-used with low reserves of magic it becomes increasingly likely to deplete those
-reserves.
+A corpse. Useful only to practitioners of necromancy.
 %%%%
 crystal plate armour
 
@@ -349,10 +473,8 @@ A double-edged fighting knife with a sharp point.
 %%%%
 dart
 
-A thin piece of metal, typically coated in some harmful substance. When
-thrown with skill it can deliver its toxins into the bloodstream of a
-living or demonic being. In addition to throwing skill, stealth skill improves
-the chance for a dart to affect its target.
+A thin piece of metal, typically coated in some harmful substance. When thrown
+it can deliver its toxins into the bloodstream of a living or demonic being.
 %%%%
 decaying skeleton
 
@@ -393,7 +515,7 @@ A flail with long spikes and a heavy head.
 %%%%
 double sword
 
-A magical weapon with two razor-sharp blades.
+A fearsome weapon with a forked, razor-sharp blade.
 %%%%
 eggplant
 
@@ -408,7 +530,14 @@ forces of evil.
 %%%%
 eveningstar
 
-The opposite of a morningstar.
+The opposite of a morningstar. A balanced mace with a long shaft and a metal
+head covered in lethal spikes.
+%%%%
+everburning encyclopedia
+
+A book of magical spells, meticulously organized, dense, and almost entirely
+burnt black. Only a few pages are still legible, but the power within still
+blasts the reader with a furnace-like heat.
 %%%%
 executioner's axe
 
@@ -418,11 +547,6 @@ death, bearing an enormous axehead.
 falchion
 
 A long single-edged sword with a slightly curved blade.
-%%%%
-fan of gales
-
-An enchanted fan. Swinging the fan unleashes a powerful blast of wind around
-the bearer.
 %%%%
 fen folio
 
@@ -485,6 +609,18 @@ great sword
 
 A sword with a very long, heavy blade and a long handle.
 %%%%
+great wizards, vol. ii
+
+A collection of spells from great wizards throughout history. The author seems
+to have been extremely enthusiastic, and each wizard is described in voluminous,
+comprehensive detail.
+%%%%
+great wizards, vol. vii
+
+A collection of spells from great wizards throughout history. The author seems
+to have been quite tired of their project - the wizards' descriptions are terse
+and minimal, meeting the lowest requirement for completeness.
+%%%%
 halberd
 
 A polearm consisting of an axe blade topped with a spike, mounted on a long
@@ -524,9 +660,12 @@ ice dragon scales
 The scales of a cold-breathing dragon. It provides great protection from cold,
 while rendering its wearer more susceptible to fire.
 %%%%
-inedible chunk of flesh
+inescapable atlas
 
-<chunk of flesh>
+A collection of maps, with accompanying descriptions of spells that can bring
+the user to each place. Most copies are locked up, chained down, or otherwise
+restrained, as the book has a habit of otherwise following its owner wherever
+they go.
 %%%%
 javelin
 
@@ -534,13 +673,8 @@ A lightweight spear, designed for throwing. It will pass through the targets it
 hits, potentially hitting all targets in its path until it reaches maximum
 range.
 {{
-    if you.race() == "Halfling"
-        or you.race() == "Kobold"
-        or you.race() == "Spriggan"
-    then
+    if you.race() == "Kobold" or you.race() == "Spriggan" then
         return "Unfortunately, it is too long and awkward for you to use."
-    else
-        return ""
     end
 }}
 %%%%
@@ -554,11 +688,6 @@ lajatang
 
 A very rare and extremely effective weapon, featuring a pole with half-moon
 blades at both ends.
-%%%%
-lamp of fire
-
-A magical lamp which can be aimed at a creature to unleash trails of searing
-flame around the target.
 %%%%
 large rock
 
@@ -598,16 +727,11 @@ A short club with a metal head.
 %%%%
 manual
 
-A valuable book which allows one to practise a certain skill more efficiently
-when carried.
+A valuable book which allows one to learn a certain skill faster.
 %%%%
 morningstar
 
 A mace with a head covered in short spikes.
-%%%%
-naga barding
-
-A special armour made for nagas, to wear over their tails.
 %%%%
 necronomicon
 
@@ -619,6 +743,13 @@ orb of zot
 
 An invaluable artefact. Once you have escaped to the surface with it, your
 quest is complete.
+%%%%
+ozocubu's autobiography
+
+An astonishingly vain and self-aggrandizing work. The author claims credit
+for a wide swathe of magical inventions, but seems to have misunderstood or
+misrepresented most of them. Only a few of the spells described in the book
+actually work.
 %%%%
 pair of boots
 
@@ -637,16 +768,27 @@ negative energies.
 %%%%
 phantom mirror
 
-A hand mirror which can create a reflection of a nearby creature, shattering
+A hand mirror which can create a reflection of a nearby creature, clouding
 in the process. The reflection's duration increases with Evocations skill and
-decreases with the magic resistance of the target. It is, invariably, slightly
-weaker than the creature it mirrors.
+decreases with the willpower of the target. It is, invariably, slightly weaker
+than the creature it mirrors.
 %%%%
 phial of floods
 
 An enchanted vessel brimming over with elemental water. Removing the stopper
-unleashes a torrent of water from the phial and sets free the water elementals
-that dwell within it.
+unleashes a torrent of water from the phial, dealing damage to the target and
+flooding the nearby area. Any creatures hit by the wave are also engulfed in
+water, silencing them temporarily. The strength of the torrent and the duration
+of the flooding are increased with Evocations skill.
+%%%%
+piece from Xom's chessboard
+
+A shimmering multi-coloured chesspiece belonging to Xom, god of chaos. When
+moved a glimmer of chaos from some cosmic game is imposed upon the battlefield.
+This glimmer afflicts a random foe with one of the following: haste,
+invisibility, might, corona, slow, paralyse, confuse, malmutate, petrify, or
+sleep. The strength of the effect (positive or negative) is increased with
+Evocations skill.
 %%%%
 plate armour
 
@@ -670,8 +812,8 @@ A potion containing the essence of life.
 %%%%
 potion of brilliance
 
-A potion which increases the power of the drinker's spells and removes their
-metabolic cost.
+A potion which increases the power of the drinker's spells and halves their
+magic cost (rounding up).
 %%%%
 potion of cancellation
 
@@ -680,8 +822,8 @@ it. It also reduces magical contamination.
 %%%%
 potion of curing
 
-A potion which heals some wounds, clears the mind and cures poison and disease.
-It can also slightly repair rotting.
+A potion which restores a small amount of health, and cures poison and
+confusion.
 %%%%
 potion of degeneration
 
@@ -702,7 +844,7 @@ An enchanted beverage which speeds the actions of anyone who drinks it.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
-instantly. It can also repair rotting.
+instantly.
 %%%%
 potion of invisibility
 
@@ -712,9 +854,9 @@ potion of lignification
 
 A potion which transforms the imbiber into an animated tree with branches
 capable of holding weapons. Such a tree has minimal evasion but increased
-health and natural armour, and is resistant to poison and immune to negative
-energy. However, it is rooted in place while the transformation lasts, and
-cannot teleport.
+health and natural armour, and is resistant to poison and immune to torment.
+However, it is rooted in place while the transformation lasts, and cannot
+teleport.
 %%%%
 potion of magic
 
@@ -727,18 +869,19 @@ A potion which greatly increases the power of the drinker's melee attacks.
 potion of mutation
 
 A potion which mutates the drinker, removing several mutations then
-granting a few mutations, at least one beneficial.
+granting a few random mutations, which are likely (but not guaranteed) to be
+beneficial.
 %%%%
 potion of resistance
 
 A potion which grants temporary resistance to a variety of harmful effects:
 fire, cold, electricity, poison, and acid.
 %%%%
-potion of stabbing
+potion of attraction
 
-A potion which makes the drinker better at attacking unaware enemies, giving
-attacks against distracted, confused or otherwise unaware creatures a chance to
-deal increased damage as if the target were completely helpless.
+A potion which makes the drinker attract enemies, translocating them quickly closer
+for the duration of the effect. The effect is surprisingly subtle, and unwary
+victims may sleep through it entirely.
 %%%%
 quad damage
 
@@ -754,8 +897,8 @@ quicksilver dragon scales
 
 The scales of a quicksilver dragon. Although it does not provide its wearer
 with as much protection as the scales of some heavier dragons, it is somewhat
-lighter and less encumbering. It is excellent at repelling hostile enchantments
-– and also cannot be enchanted beyond its current form as a result.
+lighter and less encumbering. The armour repels both attacks on the wearer's
+willpower and magical modification of itself - it cannot be enchanted.
 %%%%
 quick blade
 
@@ -766,11 +909,6 @@ rapier
 
 A slender, sharply pointed sword, with an uncommonly elegant design.
 %%%%
-ration
-
-Something for everyone: A filling meal of preserved meats, fruits, cheese,
-and stale, but hearty, bread.
-%%%%
 ring mail
 
 A light leather suit reinforced with a covering of metal rings. It is
@@ -778,13 +916,11 @@ protective in combat, but slightly uncomfortable due to the added weight.
 %%%%
 ring of dexterity
 
-A ring that increases or decreases the dexterity of its wearer, depending on
-its degree of enchantment.
+A ring that increases the dexterity of its wearer.
 %%%%
 ring of evasion
 
-A ring that makes its wearer either more or less capable of avoiding attacks,
-depending on its degree of enchantment.
+A ring that makes its wearer more capable of avoiding attacks.
 %%%%
 ring of fire
 
@@ -794,8 +930,7 @@ cold.
 %%%%
 ring of flight
 
-A ring that allows its wearer to fly. Its power cannot be evoked while already
-airborne, making it ill-suited for longer trips above deadly liquid.
+A ring that grants its wearer flight.
 %%%%
 ring of ice
 
@@ -804,16 +939,11 @@ resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
 ring of intelligence
 
-A ring that increases or decreases the mental ability of its wearer, depending
-on its degree of enchantment.
+A ring that increases the intelligence of its wearer.
 %%%%
 ring of resist corrosion
 
-A ring that provides partial protection from all sources of acid and corrosion.
-%%%%
-ring of attention
-
-A ring that makes the player less stealthy.
+A ring that protects its wearer from the effects of acid and corrosion.
 %%%%
 ring of magical power
 
@@ -821,56 +951,45 @@ A ring that increases its wearer's reserves of magical power.
 %%%%
 ring of poison resistance
 
-A ring that provides protection from the effects of poisons and venom.
+A ring that protects its wearer from poison.
 %%%%
 ring of positive energy
 
-A ring that protects the life-force of its wearer from negative energy, making
-them partially immune to the draining effects of undead and necromantic magic.
+A ring that protects its wearer from the effects of negative energy.
 %%%%
 ring of protection
 
-A ring that either protects its wearer from harm or makes them more vulnerable
-to injury, depending on its degree of enchantment.
+A ring that protects its wearer from most sources of damage.
 %%%%
 ring of protection from cold
 
-A ring that provides protection from cold.
+A ring that protects its wearer from cold.
 %%%%
 ring of protection from fire
 
-A ring that provides protection from fire.
+A ring that protects its wearer from fire.
 %%%%
-ring of protection from magic
+ring of willpower
 
-A ring that increases its wearer's resistance to hostile enchantments.
+A ring that increases its wearer's willpower, protecting against certain
+magical effects.
 %%%%
 ring of see invisible
 
-A ring that allows its wearer to see those things hidden from view by magic.
+A ring that allows its wearer to see invisible things.
 %%%%
 ring of slaying
 
-A ring that increases or decreases the wearer's effectiveness with ranged
-weapons and melee attacks, depending on its degree of enchantment.
-%%%%
-ring of stealth
-
-A ring that allows its wearer to move quietly, making them more stealthy.
+A ring that increases the wearer's accuracy and damage with ranged weapons and
+melee attacks.
 %%%%
 ring of strength
 
-A ring that increases or decreases the physical strength of its wearer,
-depending on its degree of enchantment.
-%%%%
-ring of teleportation
-
-A ring that occasionally exerts its power to teleport its wearer next to
-monsters.
+A ring that increases the strength of its wearer.
 %%%%
 ring of wizardry
 
-A ring that increases the ability of its wearer to use magical spells.
+A ring that increases the success rate of its wearer's magical spells.
 %%%%
 robe
 
@@ -881,13 +1000,6 @@ spellcasting.
 rune of zot
 
 A talisman which allows entry into the Realm of Zot.
-%%%%
-sack of spiders
-
-A woven silk bag. Opening it will release a number of spiders and other
-insects, as well as creating webs nearby. Evocations skill increases its
-effectiveness. There is a one in three chance of accidentally destroying the
-sack when using it.
 %%%%
 sacred scourge
 
@@ -924,8 +1036,7 @@ recapture the magical energy bound up with it.
 scroll of blinking
 
 A scroll that allows its reader to teleport a short distance, with precise
-control. Be wary that controlled teleports will cause the subject to become
-contaminated with magical energy.
+control.
 %%%%
 scroll of brand weapon
 
@@ -937,9 +1048,9 @@ scroll of enchant armour
 
 A scroll that places an enchantment on a piece of armour chosen by the reader.
 Body armour and bardings can be enchanted up to the same value as their base
-AC. Bucklers, kite shields and tower shields can be enchanted up to +3, +5 or +8
-respectively, and other armour can be enchanted up to +2. Magical artefacts
-cannot be enchanted at all.
+armour rating. Bucklers, kite shields and tower shields can be enchanted up to
++3, +5 or +8 respectively, and other armour can be enchanted up to +2. Magical
+artefacts cannot be enchanted at all.
 %%%%
 scroll of enchant weapon
 
@@ -981,14 +1092,6 @@ scroll of noise
 
 A prank scroll that creates a loud noise when read.
 %%%%
-scroll of random uselessness
-
-A scroll with no apparent practical use.
-%%%%
-scroll of remove curse
-
-A scroll that removes any curses from the reader's equipped items.
-%%%%
 scroll of silence
 
 A scroll that eliminates all sound near the reader. This makes reading scrolls,
@@ -1020,9 +1123,9 @@ living creatures, although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
-A scroll that briefly halves the resistance to hostile enchantments of the
-reader and any nearby beings. The scroll cannot affect those fully immune to
-magic.
+A scroll that briefly halves the willpower of the reader and any nearby beings,
+rendering them vulnerable to many magical effects. The scroll cannot affect
+those fully immune to such effects.
 %%%%
 scythe
 
@@ -1056,54 +1159,42 @@ staff of cold
 
 A staff that increases the power of ice spells cast by its wielder, and
 protects them from the effects of cold. If the wielder is skilled in Evocations
-and Ice Magic, they can freeze those struck by it.
+and Ice Magic, they can freeze those struck by it, dealing cold damage which
+bypasses armour.
 %%%%
 staff of conjuration
 
-A staff that increases the power of conjurations cast by its wielder.
+A staff that increases the power of conjurations cast by its wielder. If the
+wielder is skilled in Evocations and Conjurations, they can blast those they
+strike with pure energy, dealing irresistible damage.
 %%%%
 staff of death
 
 A staff that increases the power of necromantic spells cast by its wielder, and
 protects them from negative energy. If the wielder is skilled in Evocations and
-Necromancy, they can inflict great pain on those living souls they strike.
+Necromancy, they can inflict great pain on those living souls they strike,
+dealing negative energy damage which bypasses armour.
 %%%%
 staff of earth
 
 A staff that increases the power of earth spells cast by its wielder. If the
-wielder is skilled in Evocations and Earth magic, they can crush those struck
-by it.
-%%%%
-staff of energy
-
-A staff that allows its wielder to control magical energy. It allows the
-wielder to cast spells without gaining hunger, and to channel ambient magical
-energy to restore their reserves of magic.
+wielder is skilled in Evocations and Earth magic, they can shatter those struck
+by it, dealing substantial irresistible damage which is strongly reduced by
+armour.
 %%%%
 staff of fire
 
 A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
-and Fire Magic, they can burn those struck by it.
+and Fire Magic, they can burn those struck by it, dealing fire damage which
+bypasses armour.
 %%%%
 staff of poison
 
 A staff that increases the power of poisoning spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
-Evocations and Poison Magic, they can poison creatures struck by it — even if
-the victims are normally resistant.
-%%%%
-staff of power
-
-A staff that provides an increased reservoir of magical power to its wielder.
-%%%%
-staff of summoning
-
-A staff that increases the power of summonings cast by its wielder.
-%%%%
-staff of wizardry
-
-A staff that increases the ability of its wielder to use magical spells.
+Evocations and Poison Magic, they can envenom those struck by it, dealing
+poison damage which bypasses armour.
 %%%%
 steam dragon scales
 
@@ -1131,6 +1222,13 @@ swamp dragon scales
 
 The scales of a swamp dragon. It confers resistance to poison on its wearer.
 %%%%
+there-and-back book
+
+A compilation of children's stories about great adventures, always ending with
+the traveller returning to the place they started. The love infused into its
+pages by countless generations has granted it power, allowing a skilled mage to
+transport others by reciting specific passages.
+%%%%
 throwing net
 
 A mesh of ropes knotted together with weights around the edge, used to entangle
@@ -1145,17 +1243,30 @@ speed of an unskilled wearer.
 %%%%
 tin of tremorstones
 
-A set of dormant earth elementals in the form of tiny, very heavy pebbles. When
-thrown, the elementals literally explode with rage at their rest being disturbed.
-Tremorstones usually land slightly off-target, and the user is always at risk of
-being hit. However, armour is extremely effective at repelling the lightweight
-fragments of rock from a tremorstone's explosion, so a well-armoured wielder has
-little to fear. Evocations skill has no effect on tremorstones, and there is a
-one in three chance of accidentally destroying the case when using it.
+A set of dormant, magnetic earth elementals in the form of tiny, very heavy
+pebbles. When released, the elementals are drawn magnetically to the center of
+nearby monsters, where they literally explode with rage at their rest being
+disturbed. Tremorstones usually land slightly off-target, and the user is
+always at risk of being hit. However, armour is extremely effective at
+repelling the lightweight fragments of rock from a tremorstone's explosion, so
+a well-armoured wielder has little to fear. Evocations skill increases the
+number of explosions.
 %%%%
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
+%%%%
+trismegistus codex
+
+A magical book
+written by a
+numerologically obsessed wizard.
+Everything from sentence
+length to overall
+organization is structured.
+It's unclear whether
+the author thought
+this was helpful.
 %%%%
 triple crossbow
 
@@ -1165,7 +1276,8 @@ considerable amount of time to load and fire.
 %%%%
 triple sword
 
-A magical weapon with three great razor-sharp blades.
+A formidable weapon created by a master craftsman. The blade of the sword forks
+into three great razor-sharp edges.
 %%%%
 trishula
 
@@ -1178,31 +1290,24 @@ troll leather armour
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
 flesh.
 %%%%
+the unrestrained analects
+
+A collection of spells that assault everything in sight of the caster,
+unrestrained by petty limitations like 'needing a clear shot' or 'concern about
+collateral damage'.
+%%%%
 wand of acid
 
 A magical device which throws bolts of corrosive acid.
 %%%%
-wand of clouds
+wand of charming
 
-A magical device that allows its wielder to blast a cone-shaped area in front
-of them with various destructive clouds, their lethality increasing with
-Evocations skill. At low power it will create noxious fumes, and as power
-increases this gives way to roaring flames, freezing vapours, and poisonous
-gas. At the highest tiers of power storm clouds, acidic fog and clouds of
-negative energy become available.
+A magical device which causes a creature to become fiercely, but briefly,
+loyal to the user.
 %%%%
 wand of digging
 
 A magical device which drills tunnels through unworked rock.
-%%%%
-wand of disintegration
-
-A magical device which disrupts the physical structure of a target creature,
-dealing heavy damage and bypassing armour.
-%%%%
-wand of enslavement
-
-A magical device which causes slavish obedience in a creature.
 %%%%
 wand of flame
 
@@ -1213,6 +1318,13 @@ wand of iceblast
 A magical device which creates a loud explosion of ice shards, partially
 harming even creatures resistant to cold.
 %%%%
+wand of mindburst
+
+A magical device which launches a psychic attack on a target creature. If it
+overcomes their willpower, it 'blows their mind' in a violently literal fashion,
+dealing damage that bypasses their armour entirely. It is useless against
+mindless creatures.
+%%%%
 wand of paralysis
 
 A magical device which can render a creature immobile, incapable of moving any
@@ -1222,15 +1334,6 @@ wand of polymorph
 
 A magical device which causes a creature to be transmogrified into another
 form. It is especially effective against shape-changing creatures.
-%%%%
-wand of random effects
-
-A magical device which can produce a variety of effects.
-%%%%
-wand of scattershot
-
-A magical device which fires powerful blasts of metallic shrapnel. Its damage
-is strongly reduced by armour.
 %%%%
 war axe
 
@@ -1244,5 +1347,6 @@ between all sorts of creatures.
 %%%%
 young poisoner's handbook
 
-An introductory book for the magic arts of poison.
+An introductory book for the magic arts of poison. Readers are recommended to
+wear a pair of very thick, non-absorbent gloves.
 %%%%

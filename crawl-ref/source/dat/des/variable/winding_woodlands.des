@@ -1,0 +1,963 @@
+###############################################################################
+#
+#   Winding Woodlands
+#
+#   The following are a set of maps which feature heavy use of subvaults
+#   and fill with trees instead of normal wall pieces. One consideration
+#   is very important due to the nature of trees as wall pieces. Connections
+#   between subvaults should be as small as possible and throughout maps
+#   stone walls should be used to prevent fire from destroying the entire
+#   vault. Otherwise the use of fire is considered a tactical element
+#   the player can use to handle the vault. Reward subvaults should generally
+#   include stone around loot piles or strong monsters in order to make this
+#   harder to achieve.
+#
+#   In order to ensure connectivity, subvaults much each be traversable from
+#   the center of any one edge to the center of any other edge, i.e.:
+#
+#      @                           @
+#    .....                  ...............
+#    .....                  ...............
+#   @.....@                 ...............
+#    .....                  ...............
+#    .....                  ...............
+#      @                    ...............
+#                           ...............
+#           @              @...............@
+#    ...............        ...............
+#    ...............        ...............
+#   @...............@       ...............
+#    ...............        ...............
+#    ...............        ...............
+#           @               ...............
+#                           ...............
+#                                  @
+#
+###############################################################################
+
+default-depth: D:7-, Depths, Lair:2-
+
+NAME:     nzn_winding_woodlands_small
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+SUBVAULT: A : winding_woodlands_5x15
+SUBVAULT: B : winding_woodlands_center
+SUBVAULT: C : winding_woodlands_5x15
+SUBST:    ABC = t
+: if you.in_branch("Swamp") then
+SUBST:    c = ttc
+SUBST:    . = WWW.
+: end
+MAP
+...................
+.ccccccc@@@ccccccc.
+.cAAAAAAAAAAAAAAAc.
+.cAAAAAAAAAAAAAAAc.
+.cAAAAAAAAAAAAAAAc.
+.cAAAAAAAAAAAAAAAc.
+.cAAAAAAAAAAAAAAAc.
+.cccccccc.cccccccc.
+.cBBBBBBBBBBBBBBBc.
+.cBBBBBBBBBBBBBBBc.
+.cBBBBBBBBBBBBBBBc.
+.cBBBBBBBBBBBBBBBc.
+.cBBBBBBBBBBBBBBBc.
+.cccccccc.cccccccc.
+.cCCCCCCCCCCCCCCCc.
+.cCCCCCCCCCCCCCCCc.
+.cCCCCCCCCCCCCCCCc.
+.cCCCCCCCCCCCCCCCc.
+.cCCCCCCCCCCCCCCCc.
+.ccccccc@@@ccccccc.
+...................
+ENDMAP
+
+NAME:     nzn_winding_woodlands_medium
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+SUBVAULT: A : winding_woodlands_5x5
+SUBVAULT: B : winding_woodlands_5x15
+SUBVAULT: C : winding_woodlands_5x5
+SUBVAULT: D : winding_woodlands_5x5
+SUBVAULT: E : winding_woodlands_center
+SUBVAULT: F : winding_woodlands_5x5
+SUBVAULT: G : winding_woodlands_5x5
+SUBVAULT: H : winding_woodlands_5x15
+SUBVAULT: I : winding_woodlands_5x5
+SUBST:    ABCDEFGHI = t
+: if you.in_branch("Swamp") then
+SUBST:    c = ttc
+SUBST:    . = WWW.
+: end
+MAP
+...............................
+.ccccccccccccc...ccccccccccccc.
+.cAAAAAtBBBBBBBBBBBBBBBtCCCCCc.
+.cAAAAAtBBBBBBBBBBBBBBBtCCCCCc.
+.cAAAAA.BBBBBBBBBBBBBBB.CCCCCc.
+.cAAAAAtBBBBBBBBBBBBBBBtCCCCCc.
+.cAAAAAtBBBBBBBBBBBBBBBtCCCCCc.
+.ccc.ccccccccccccccccccccc.ccc.
+.cDDDDDcEEEEEEEEEEEEEEEcFFFFFc.
+.cDDDDDcEEEEEEEEEEEEEEEcFFFFFc.
+.cDDDDD.EEEEEEEEEEEEEEE.FFFFFc.
+.cDDDDDcEEEEEEEEEEEEEEEcFFFFFc.
+.cDDDDDcEEEEEEEEEEEEEEEcFFFFFc.
+.ccc.ccccccccccccccccccccc.ccc.
+.cGGGGGtHHHHHHHHHHHHHHHcIIIIIc.
+.cGGGGGtHHHHHHHHHHHHHHHcIIIIIc.
+.cGGGGG.HHHHHHHHHHHHHHH.IIIIIc.
+.cGGGGGtHHHHHHHHHHHHHHHtIIIIIc.
+.cGGGGGtHHHHHHHHHHHHHHHtIIIIIc.
+.ccccccccccccc...ccccccccccccc.
+...............................
+ENDMAP
+
+NAME:     nzn_winding_woodlands_large
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+SUBVAULT: A : winding_woodlands_5x5
+SUBVAULT: B : winding_woodlands_5x15
+SUBVAULT: C : winding_woodlands_5x5
+SUBVAULT: D : winding_woodlands_center
+SUBVAULT: E : winding_woodlands_15x15
+SUBVAULT: F : winding_woodlands_center
+SUBVAULT: G : winding_woodlands_5x5
+SUBVAULT: H : winding_woodlands_5x15
+SUBVAULT: I : winding_woodlands_5x5
+SUBST:    ABCDEFGHIJ = t
+MAP
+.ccccccccccccccccccccccccccccc.
+.cAAAAAcBBBBBBBBBBBBBBBcCCCCCc.
+.cAAAAAtBBBBBBBBBBBBBBBtCCCCCc.
+@.AAAAA.BBBBBBBBBBBBBBB.CCCCC.@
+.cAAAAAtBBBBBBBBBBBBBBBtCCCCCc.
+.cAAAAAcBBBBBBBBBBBBBBBcCCCCCc.
+.ccccccccccccct.tccccccccccccc.
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDD.EEEEEEEEEEEEEEE.FFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+ cDDDDDcEEEEEEEEEEEEEEEcFFFFFc
+.ccccccccccccct.tccccccccccccc.
+.cGGGGGcHHHHHHHHHHHHHHHcIIIIIc.
+.cGGGGGtHHHHHHHHHHHHHHHtIIIIIc.
+@.GGGGG.HHHHHHHHHHHHHHH.IIIII.@
+.cGGGGGtHHHHHHHHHHHHHHHtIIIIIc.
+.cGGGGGcHHHHHHHHHHHHHHHcIIIIIc.
+.ccccccccccccccccccccccccccccc.
+ENDMAP
+
+NAME:     nzn_winding_woodlands_huge
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+DEPTH:    D:11-, Depths, Lair:2-
+SUBVAULT: A : winding_woodlands_5x15
+SUBVAULT: B : winding_woodlands_5x15
+SUBVAULT: C : winding_woodlands_5x15
+SUBVAULT: D : winding_woodlands_5x15
+SUBVAULT: E : winding_woodlands_5x15
+SUBVAULT: F : winding_woodlands_5x15
+SUBVAULT: G : winding_woodlands_5x15
+SUBVAULT: H : winding_woodlands_5x15
+SUBVAULT: I : winding_woodlands_5x15
+SUBVAULT: J : winding_woodlands_5x15
+SUBVAULT: K : winding_woodlands_center
+SUBVAULT: L : winding_woodlands_center
+SUBVAULT: M : winding_woodlands_15x15
+SUBST:    ABCDEFGHIJKLM = t
+MAP
+@ccccccccccccccccccccccccccccccccccccccccccccccccc
+.cAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBcCCCCCCCCCCCCCCCc
+.cAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBcCCCCCCCCCCCCCCCc
+@.AAAAAAAAAAAAAAA.BBBBBBBBBBBBBBB.CCCCCCCCCCCCCCCc
+.cAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBcCCCCCCCCCCCCCCCc
+.cAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBcCCCCCCCCCCCCCCCc
+@cccccccccccccccccccccccc{ccccccccccccccc.cccccccc
+ cLLLLLLLLLLLLLLLcccccccccccccccccDDDDDDDDDDDDDDDc
+ cLLLLLLLLLLLLLLLcMMMMMMMMMMMMMMMcDDDDDDDDDDDDDDDc
+ cLLLLLLLLLLLLLLLcMMMMMMMMMMMMMMMcDDDDDDDDDDDDDDDc
+ cLLLLLLLLLLLLLLLcMMMMMMMMMMMMMMMcDDDDDDDDDDDDDDDc
+ cLLLLLLLLLLLLLLLcMMMMMMMMMMMMMMMcDDDDDDDDDDDDDDDc
+ cccccccc.ccccccccMMMMMMMMMMMMMMMcccccctt.ttcccccc
+ cKKKKKKKKKKKKKKKcMMMMMMMMMMMMMMMcEEEEEEEEEEEEEEEc
+ cKKKKKKKKKKKKKKKcMMMMMMMMMMMMMMMcEEEEEEEEEEEEEEEc
+ cKKKKKKKKKKKKKKK.MMMMMMMMMMMMMMMcEEEEEEEEEEEEEEEc
+ cKKKKKKKKKKKKKKKcMMMMMMMMMMMMMMMcEEEEEEEEEEEEEEEc
+ cKKKKKKKKKKKKKKKcMMMMMMMMMMMMMMMcEEEEEEEEEEEEEEEc
+ cccccctt.ttccccccMMMMMMMMMMMMMMMcccccctt.ttcccccc
+ cJJJJJJJJJJJJJJJcMMMMMMMMMMMMMMMcFFFFFFFFFFFFFFFc
+ cJJJJJJJJJJJJJJJcMMMMMMMMMMMMMMMcFFFFFFFFFFFFFFFc
+ cJJJJJJJJJJJJJJJcMMMMMMMMMMMMMMMcFFFFFFFFFFFFFFFc
+ cJJJJJJJJJJJJJJJcMMMMMMMMMMMMMMMcFFFFFFFFFFFFFFFc
+ cJJJJJJJJJJJJJJJcccccccccccccccccFFFFFFFFFFFFFFFc
+ cccccccc.ccccccccccccccc}ccccccccccccccc.cccccccc
+ cIIIIIIIIIIIIIIIcHHHHHHHHHHHHHHHcGGGGGGGGGGGGGGGc
+ cIIIIIIIIIIIIIIIcHHHHHHHHHHHHHHHcGGGGGGGGGGGGGGGc
+ cIIIIIIIIIIIIIII.HHHHHHHHHHHHHHH.GGGGGGGGGGGGGGGc
+ cIIIIIIIIIIIIIIIcHHHHHHHHHHHHHHHcGGGGGGGGGGGGGGGc
+ cIIIIIIIIIIIIIIIcHHHHHHHHHHHHHHHcGGGGGGGGGGGGGGGc
+ ccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:     nzn_winding_woodlands_cross
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+SUBVAULT: A : winding_woodlands_5x15
+SUBVAULT: B : winding_woodlands_5x15
+SUBVAULT: C : winding_woodlands_5x15
+SUBVAULT: D : winding_woodlands_5x15
+SUBVAULT: E : winding_woodlands_15x15
+SUBST:    ABCDE = t
+: if you.in_branch("Swamp") then
+SUBST:    c = ttc
+SUBST:    . = WWW.
+: end
+MAP
+       .................
+       cccccccc.cccccccc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+.cccccccccccccc.cccccccccccccc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+..BBBBB.EEEEEEEEEEEEEEE.CCCCC..
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cBBBBBcEEEEEEEEEEEEEEEcCCCCCc.
+.cccccccccccccc.cccccccccccccc.
+       cDDDDDDDDDDDDDDDc
+       cDDDDDDDDDDDDDDDc
+       cDDDDDDDDDDDDDDDc
+       cDDDDDDDDDDDDDDDc
+       cDDDDDDDDDDDDDDDc
+       cccccccc.cccccccc
+       .................
+ENDMAP
+
+NAME:     nzn_winding_woodlands_three_and_one
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+SUBVAULT: A : winding_woodlands_5x15
+SUBVAULT: B : winding_woodlands_5x15
+SUBVAULT: C : winding_woodlands_5x15
+SUBVAULT: D : winding_woodlands_center
+SUBST:    ABCD = t
+: if you.in_branch("Swamp") then
+SUBST:    c = ttc
+SUBST:    . = WWW.
+: end
+MAP
+@...............@
+cccccccc.cccccccc
+cAAAAAAAAAAAAAAAccccccc
+cAAAAAAAAAAAAAAAcDDDDDc
+cAAAAAAAAAAAAAAAcDDDDDc
+cAAAAAAAAAAAAAAAcDDDDDc
+cAAAAAAAAAAAAAAAcDDDDDc
+ccccccct.tcccccccDDDDDc
+cBBBBBBBBBBBBBBBcDDDDDc
+cBBBBBBBBBBBBBBBcDDDDDc
+cBBBBBBBBBBBBBBB.DDDDDc
+cBBBBBBBBBBBBBBBcDDDDDc
+cBBBBBBBBBBBBBBBcDDDDDc
+ccccccct.tcccccccDDDDDc
+cCCCCCCCCCCCCCCCcDDDDDc
+cCCCCCCCCCCCCCCCcDDDDDc
+cCCCCCCCCCCCCCCCcDDDDDc
+cCCCCCCCCCCCCCCCcDDDDDc
+cCCCCCCCCCCCCCCCccccccc
+cccccccc.cccccccc
+@...............@
+ENDMAP
+
+NAME:     nzn_winding_woodlands_stair_cross
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+SUBVAULT: A : winding_woodlands_5x15
+SUBVAULT: B : winding_woodlands_center
+SUBVAULT: C : winding_woodlands_5x15
+SUBVAULT: D : winding_woodlands_5x5
+SUBVAULT: E : winding_woodlands_5x5
+SUBVAULT: F : winding_woodlands_5x15
+SUBVAULT: G : winding_woodlands_center
+SUBVAULT: H : winding_woodlands_5x15
+SUBST:    ABCDEFGH = t, I = G
+MAP
+       @.......@.......@
+       cccccccc.cccccccc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+       cAAAAAAAAAAAAAAAc
+cccccccccccccct.tcccccccccccccc
+cBBBBBcCCCCCcDDDDDcFFFFFcGGGGGc
+cBBBBBcCCCCCcDDDDDcFFFFFcGGGGGc
+cBBBBBcCCCCCcDDDDDcFFFFFcGGGGGc
+cBBBBBcCCCCCcDDDDDcFFFFFcGGGGGc
+cBBBBBcCCCCCcDDDDDcFFFFFcGGGGGc
+cBBBBBcCCCCCcct+tccFFFFFcGGGGGc
+cBBBBBcCCCCCc..{..cFFFFFcGGGGGc
+cBBBBB.CCCCC+..I..+FFFFF.GGGGGc
+cBBBBBcCCCCCc..}..cFFFFFcGGGGGc
+cBBBBBcCCCCCcct+tccFFFFFcGGGGGc
+cBBBBBcCCCCCcEEEEEcFFFFFcGGGGGc
+cBBBBBcCCCCCcEEEEEcFFFFFcGGGGGc
+cBBBBBcCCCCCcEEEEEcFFFFFcGGGGGc
+cBBBBBcCCCCCcEEEEEcFFFFFcGGGGGc
+cBBBBBcCCCCCcEEEEEcFFFFFcGGGGGc
+cccccccccccccct.tcccccccccccccc
+       cHHHHHHHHHHHHHHHc
+       cHHHHHHHHHHHHHHHc
+       cHHHHHHHHHHHHHHHc
+       cHHHHHHHHHHHHHHHc
+       cHHHHHHHHHHHHHHHc
+       cccccccc.cccccccc
+       @.......@.......@
+ENDMAP
+
+NAME:     nzn_winding_woodlands_stair_trap
+ORIENT:   float
+TAGS:     uniq_winding_woodlands transparent
+DEPTH:    D:11-, Depths, Lair:2-
+SUBVAULT: A : winding_woodlands_5x15
+SUBVAULT: B : winding_woodlands_5x15
+SUBVAULT: C : winding_woodlands_5x15
+SUBVAULT: D : winding_woodlands_15x15
+SUBVAULT: E : winding_woodlands_5x15
+SUBVAULT: F : winding_woodlands_5x15
+SUBVAULT: G : winding_woodlands_5x15
+SUBST:    ABCDEFGH = t, I = A
+MAP
+@ccccccccccccccccccccccccccccccccccccccc@
+.cAAAAAAAAAAAAAAAcc{.(ccBBBBBBBBBBBBBBBc.
+.cAAAAAAAAAAAAAAAc.....cBBBBBBBBBBBBBBBc.
+@.AAAAAAAAAAAAAAAI.....IBBBBBBBBBBBBBBB.@
+.cAAAAAAAAAAAAAAAc.....cBBBBBBBBBBBBBBBc.
+.cAAAAAAAAAAAAAAAcc.>.ccBBBBBBBBBBBBBBBc.
+@ccccccct.tccccccccccccccccccct.tccccccc@
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCC.DDDDDDDDDDDDDDD.EEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+      cCCCCCcDDDDDDDDDDDDDDDcEEEEEc
+ ccccccct.tccccccccccccccccccct.tccccccc
+ cFFFFFFFFFFFFFFFcc.}.ccGGGGGGGGGGGGGGGc
+ cFFFFFFFFFFFFFFFc.....cGGGGGGGGGGGGGGGc
+ cFFFFFFFFFFFFFFFI.....IGGGGGGGGGGGGGGGc
+ cFFFFFFFFFFFFFFFc.....cGGGGGGGGGGGGGGGc
+ cFFFFFFFFFFFFFFFcc].)ccGGGGGGGGGGGGGGGc
+ ccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+# Necessary to allow these vaults to place anywhere the parent vault requires,
+# otherwise they will be restricted to the prior default depth.
+default-depth:
+
+###############################################################################
+#
+#   _5x5
+#
+#   These are small connector rooms. Average of one and a half 0s.
+#
+###############################################################################
+
+NAME:   nzn_winding_woodlands_5x5_default
+TAGS:   winding_woodlands_5x5 unrand allow_dup
+MAP
+  .
+ ...
+.....
+ ...
+  .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_crossed_zero
+TAGS:   winding_woodlands unrand
+SUBST:  0 = 00...
+MAP
+ ...
+0   0
+.....
+0   0
+ ...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_gyre
+TAGS:   winding_woodlands unrand
+SUBST:  0 = 00...
+MAP
+  .
+ .
+.. 0.
+ 000
+  .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_cross
+TAGS:   winding_woodlands_5x5 unrand
+SUBST:  0 = 00...
+MAP
+  .
+  0
+.0 0.
+  0
+  .
+ENDMAP
+
+
+NAME:   nzn_winding_woodlands_5x5_checkerboard
+TAGS:   winding_woodlands_5x5 unrand
+SUBST:  0 = 00...
+MAP
+. . .
+ 0 0
+. . .
+ 0 0
+. . .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_open_star
+TAGS:   winding_woodlands_5x5 unrand
+SUBST:  0 = 00...
+MAP
+  .
+ 0.0
+.....
+ 0.0
+  .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_closed_star
+TAGS:   winding_woodlands_5x5 unrand
+SUBST:  0 = 00...
+MAP
+  .
+ 0 0
+.   .
+ 0 0
+  .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_perimeter
+TAGS:   winding_woodlands_5x5 unrand
+SUBST:  0 = 00...
+MAP
+0...0
+.   .
+.   .
+.   .
+0...0
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_three
+TAGS:   winding_woodlands_5x5 unrand
+SUBST:  0 = 00...
+MAP
+00...
+    .
+  ...
+    .
+00...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_hourglass
+TAGS:   winding_woodlands_5x5 unrand
+SUBST:  0 = 00...
+MAP
+.....
+ 0.0
+. . .
+ 0.0
+.....
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x5_garden
+TAGS:   nzn_winding_woodlands_5x5 unrand
+MONS:   plant
+MAP
+ ...
+.111.
+.1w1.
+.111.
+ ...
+ENDMAP
+
+###############################################################################
+#
+#   _5x15
+#
+#   These are medium-sized connector rooms. Be light with rewards. Average of
+#   three 0 per chamber.
+#
+###############################################################################
+
+NAME:   nzn_winding_woodlands_5x15_default
+TAGS:   winding_woodlands_5x15 unrand allow_dup
+MAP
+       .
+   .........
+...............
+   .........
+       .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_twine
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 0...
+SUBST:  A = .:90 TUV9%*:10
+MAP
+  .0. ... .0.
+ .0 0..c..0 0.
+.     cAc     .
+ .0 0..c..0 0.
+  .0. ... .0.
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_cabin
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 00...
+SUBST:  A = .:90 TUV9%*:10
+MAP
+     .....
+ .  0ccccc0  .
+. . 0c0A0c0 . .
+   .0cc+cc0.
+     .....
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_jagged
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 0.
+SUBST:  A = .:90 TUV9%*:10
+MAP
+  ... ..
+  .  . 0  ..
+.  0    A 0 . .
+ . 0    0 0  .
+  ..    ...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_pool
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 0.
+MAP
+      ...
+ . . 0WWW0 . .
+.....0WWW0.....
+ . . 0WWW0 . .
+      ...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_crooked
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 000..
+SUBST:  A = .:90 TUV9%*:10
+MAP
+     ...
+ .  .    .
+. ..  A00 .   .
+   .  00   . .
+    ..0.    .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_split_checker
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 0.
+SUBST:  A = .:90 cTUV9%*:10
+MAP
+. . .  .  . . .
+ . . 0 . 0 . .
+. . . 0A0 . . .
+ . . 0 . 0 . .
+. . .  .  . . .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_concentric
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 00...
+MAP
+...............
+.     000     .
+.     0 0     .
+.     000     .
+...............
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_garden
+TAGS:   winding_woodlands_5x15 unrand
+MONS:   plant
+MAP
+     .....
+    ..111..
+......1w1......
+    ..111..
+     .....
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_sawtooth
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 00.
+SUBST:  A = .:90 TUV9%*:10
+MAP
+  .    .    .
+ . 0   .   0 .
+.   0  A  0   .
+     0 . 0
+      ...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_pockets
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 000.
+MAP
+  .............
+ .  .. .    ..
+.  ..  .   .. .
+  ..   .  ..
+ 00    . 00
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_sidewinder
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 000.
+MAP
+  ... ... ...
+  . . 0 0 . .
+. . . . . . . .
+. . . 0 0 . . .
+... ....... ...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_eye
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 00.
+MAP
+   .........
+ ..    .    ..
+.   000w000   .
+ ..    .    ..
+   .........
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_parted
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 00.
+MAP
+  .... . ....
+ ...0 . . 0...
+....0     0....
+ ...0 . . 0...
+  .... . ....
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_zeroes
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 000.
+MAP
+ ...  ...  ...
+.   ..   ..   .
+.   00   00   .
+.   ..   ..   .
+ ...  ...  ...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_longhouse
+TAGS:   winding_woodlands_5x15 unrand
+SUBST:  0 = 00.
+SUBST:  A = .:90 cTUV9%*:10
+MAP
+  ...........
+ .ccccccccccc.
+..+000.A.000+..
+ .ccccccccccc.
+  ...........
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_pathside_ponds
+TAGS:   winding_woodlands_5x15 unrand no_pool_fixup
+SUBST:  0 = 000.
+SUBST:  A = .:90 TUV9%*:10
+MONS:   plant
+MAP
+       .
+  A0 0 ......1
+.WW. . . 1wWw..
+.www...0  10 .
+ ....  .   ...
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_river_crossing
+TAGS:   winding_woodlands_5x15 unrand no_pool_fixup
+SUBST:  0 = 00...
+MAP
+  .00. . .00.
+ .wwwwWwWwwww.
+.wwwwWwWwWwwww.
+ .wwwwWwWwwww.
+  .00. . .00.
+ENDMAP
+
+NAME:   nzn_winding_woodlands_5x15_lazy_stream
+TAGS:   winding_woodlands_5x15 unrand no_pool_fixup
+MONS:   plant
+MAP
+ w    W.     w
+ w   WwWW    w
+.W1   W1 W1 1W.
+ 1W   1W 1W W1
+   WWWW.   W
+ENDMAP
+
+###############################################################################
+#
+#   5x15 _center maps
+#
+#   These are small reward maps. No more than one | or 8.
+#
+###############################################################################
+
+NAME:   nzn_winding_woodlands_center_pierced_h
+TAGS:   winding_woodlands_center unrand
+SUBST:  0 = 0 9:3 8:1
+NSUBST: A = * / 2=% / 3=$ / .
+SUBST:  B = WwbGTU
+SUBST:  * = * |:1, % = % *:1, $ = $ %:5
+MAP
+ .0.0ccAcc0.0.
+   .c0AAA0c.
+....c0ABA0c....
+   .c0AAA0c.
+ .0.0ccAcc0.0.
+ENDMAP
+
+NAME:   nzn_winding_woodlands_center_triple_pond
+TAGS:   winding_woodlands_center unrand
+SUBST:  9 = 9 8:1, * = * |:2
+MAP
+  .   *.*   .
+ .W. 9WWW9 .W.
+.WWW.cWWWc.WWW.
+ .W. 9WWW9 .W.
+  .   *.*   .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_center_lodge
+TAGS:   winding_woodlands_center unrand
+SUBST:  0 = 0 9:4 8:2, * = * |:1
+MAP
+........cccc...
+. .cccccc00+. .
+. .c00*+*00c. .
+. .+00cccccc. .
+...cccc........
+ENDMAP
+
+NAME:   nzn_winding_woodlands_center_diamonds
+TAGS:   winding_woodlands_center unrand
+NSUBST: A = 8 / 9 / | / * / .
+MAP
+  .   c.c   .
+ . . cAcAc . .
+.   .AcGcA.   .
+ . . cAcAc . .
+  .   c.c   .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_center_garden
+TAGS:   winding_woodlands_center unrand
+MONS:   plant
+SUBST:  0 = 00 9:3 8:1
+NSUBST: A = * / 2=% / 3=$ / .
+SUBST:  * = * |:1, % = % *:1, $ = $ %:5
+MAP
+  ccc.....ccc
+  c000111000c
+...AAA1w1AAA...
+  c000111000c
+  ccc.....ccc
+ENDMAP
+
+###############################################################################
+#
+#   _15x15 submaps
+#
+#   These are large and dangerous reward rooms. No more than 2 | and 2 8.
+#
+###############################################################################
+
+NAME:   nzn_winding_woodlands_15x15_thick_spiral
+TAGS:   winding_woodlands_15x15 unrand
+MAP
+      ..
+     ..
+    ..  ..
+   ..  ....
+  ..  .   ..
+ ..  9c9   ..
+..  98G89   ..
+..  c*|*c   ...
+ .. cc|cc  ..
+  .. ccc  ..
+   ..    ..
+    ..  ..
+     ....
+      ..
+       .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_15x15_boxy_spiral
+TAGS:   winding_woodlands_15x15 unrand
+SUBST:  0 = 0009
+MAP
+       .
+ .......
+ .
+ . 0..........
+ . .         .
+ . . c.....0 .
+ . . c.cccc. .
+.. . c.+8|c. ..
+ . . c.+8|c. .
+ . . cccccc. .
+ . .       . .
+ . 0.......0 .
+ .           .
+ .............
+       .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_15x15_five_gardens
+TAGS:   winding_woodlands_15x15 unrand
+MONS:   plant
+SUBST:  0 = 00.
+NSUBST: 9 = 1:8 / *:9
+NSUBST: | = 2:| / *:*
+MAP
+       .
+ 111... ...111
+ 1w1..ccc..1w1
+ 111..c|c..111
+ ...00c9c00...
+ ...0.....0...
+ .ccc.111.ccc.
+. c|9.1w1.9|c .
+ .ccc.111.ccc.
+ ...0.....0...
+ ...00c9c00...
+ 111..c|c..111
+ 1w1..ccc..1w1
+ 111... ...111
+       .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_15x15_killbox
+TAGS:   winding_woodlands_15x15 unrand
+SUBST:  0 = 00.. 9:5 8:2
+MAP
+       .
+       .
+  ...........
+  ...........
+  ..+ccccc+..
+  ..c00000c..
+  ..c00000c..
+....c00000c....
+  ..c00000c..
+  ..c00000c..
+  ..+ccccc+..
+  ...........
+  ...........
+       .
+       .
+ENDMAP
+
+NAME:   nzn_winding_woodlands_15x15_eel_pit
+TAGS:   winding_woodlands_15x15 unrand no_pool_fixup
+DEPTH:  D:7-12, Lair
+MONS:   plant
+KMONS:  2 = electric eel
+SUBST:  2 = 22w
+NSUBST: 2 = 4=2 / w
+SUBST:  2 = w
+MAP
+ wwwWW . WWwww
+ww2WWW . WWW2ww
+w2WWW.....WWW2w
+wwWW...W...WWww
+WWW...WwW...WWW
+WW...WwWwW...WW
+  ...1ccc1...
+.....c|8|c.....
+  ...1ccc1...
+WW...WwWwW...WW
+WWW...WwW...WWW
+wwWW...W...WWww
+w2WWW.....WWW2w
+ww2WWW . WWW2ww
+ wwwWW . WWwww
+ENDMAP
+
+NAME:   nzn_winding_woodlands_15x15_witchcraft
+TAGS:   winding_woodlands_15x15 unrand no_pool_fixup
+DEPTH:  Swamp:2-
+WEIGHT: 20
+KMONS:  1 = fenstrider witch
+KMONS:  2 = spriggan druid
+KMONS:  3 = hydra
+NSUBST: A = 2=2 / 4=3 / W, B = 2=1 / W
+KFEAT:  321 = shallow_water
+MAP
+      wWw
+    WwWwWwW
+   WwWwWwWwW
+  WwW     WwW
+ WwW ..A.. WwW
+ wW .ccAcc. Ww
+wWw .c*B|c. wWw
+WwW AABtBAA WwW
+wWw .c|B*c. wWw
+ wW .ccAcc. Ww
+ WwW ..A.. WwW
+  WwW     WwW
+   WwWwWwWwW
+    WwWwWwW
+      wWw
+ENDMAP

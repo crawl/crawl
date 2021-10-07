@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "activity-interrupt-type.h"
 #include "command-type.h"
 #include "enum.h"
@@ -12,6 +14,8 @@
 #include "mpr.h"
 #include "operation-types.h"
 #include "seen-context-type.h"
+
+using std::vector;
 
 class interrupt_block
 {
@@ -146,14 +150,6 @@ public:
     }
 
     /**
-     * @return whether this is a butcher delay (including blood bottling).
-     */
-    virtual bool is_butcher() const
-    {
-        return false;
-    }
-
-    /**
      * @return whether this is a stair travel delay, which are generally
      * uninterruptible but are interrupted by teleport. Note that no stairs
      * are necessarily involved.
@@ -218,10 +214,9 @@ public:
 
     /**
      *@return true if the delay involves using the item in this way (and
-     * therefore the item should not be messed with). If item is nullptr,
-     * returns whether the delay type ever uses items in this way.
+     * therefore the item should not be messed with).
      */
-    virtual bool is_being_used(const item_def* /*item*/, operation_types /*oper*/) const
+    virtual bool is_being_used(const item_def& /*item*/) const
     {
         return false;
     }
@@ -232,9 +227,9 @@ public:
     virtual const char* name() const = 0;
 };
 
-class ArmourOnDelay : public Delay
+class EquipOnDelay : public Delay
 {
-    item_def& armour;
+    item_def& equip;
     bool was_prompted = false;
 
     void start() override;
@@ -242,13 +237,13 @@ class ArmourOnDelay : public Delay
     void tick() override
     {
         mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
-             armour.name(DESC_YOUR).c_str());
+             equip.name(DESC_YOUR).c_str());
     }
 
     void finish() override;
 public:
-    ArmourOnDelay(int dur, item_def& item) :
-                  Delay(dur), armour(item)
+    EquipOnDelay(int dur, item_def& item) :
+                 Delay(dur), equip(item)
     { }
 
     bool try_interrupt() override;
@@ -257,11 +252,16 @@ public:
     {
         return "armour_on";
     }
+
+    bool is_being_used(const item_def& item) const override
+    {
+        return &item == &equip;
+    }
 };
 
-class ArmourOffDelay : public Delay
+class EquipOffDelay : public Delay
 {
-    item_def& armour;
+    const item_def& equip;
     bool was_prompted = false;
 
     void start() override;
@@ -269,40 +269,50 @@ class ArmourOffDelay : public Delay
     void tick() override
     {
         mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
-             armour.name(DESC_YOUR).c_str());
+             equip.name(DESC_YOUR).c_str());
     }
 
     bool invalidated() override;
 
     void finish() override;
 public:
-    ArmourOffDelay(int dur, item_def& item) :
-                   Delay(dur), armour(item)
+    EquipOffDelay(int dur, const item_def& item) :
+                   Delay(dur), equip(item)
     { }
 
     bool try_interrupt() override;
 
     const char* name() const override
     {
-        return "armour_on";
+        return "armour_off";
+    }
+
+    bool is_being_used(const item_def& item) const override
+    {
+        return &item == &equip;
     }
 };
 
 class JewelleryOnDelay : public Delay
 {
-    const item_def& jewellery;
+    item_def& jewellery;
 
     void tick() override;
 
     void finish() override;
 public:
-    JewelleryOnDelay(int dur, const item_def& item) :
+    JewelleryOnDelay(int dur, item_def& item) :
                      Delay(dur), jewellery(item)
     { }
 
     const char* name() const override
     {
         return "jewellery_on";
+    }
+
+    bool is_being_used(const item_def& item) const override
+    {
+        return &item == &jewellery;
     }
 };
 
@@ -328,36 +338,6 @@ public:
     const char* name() const override
     {
         return "memorise";
-    }
-};
-
-class ButcherDelay : public Delay
-{
-    item_def& corpse;
-
-    bool invalidated() override;
-
-    void finish() override;
-public:
-    ButcherDelay(int dur, item_def& item) :
-                 Delay(dur), corpse(item)
-    { }
-
-    bool try_interrupt() override;
-
-    bool is_butcher() const override
-    {
-        return true;
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_BUTCHER && (!item || &corpse == item);
-    }
-
-    const char* name() const override
-    {
-        return "butcher";
     }
 };
 
@@ -400,6 +380,11 @@ public:
     const char* name() const override
     {
         return "drop_item";
+    }
+
+    bool is_being_used(const item_def& item_) const override
+    {
+        return &item_ == &item;
     }
 };
 
@@ -478,6 +463,9 @@ class BaseRunDelay : public Delay
     virtual bool want_move() const = 0;
     virtual bool want_clear_messages() const = 0;
     virtual command_type move_cmd() const = 0;
+
+protected:
+    bool unsafe_once = false;
 
 public:
     bool is_run() const override
@@ -573,8 +561,10 @@ class TravelDelay : public BaseRunDelay
 
     command_type move_cmd() const override;
 public:
-    TravelDelay() : BaseRunDelay()
-    { }
+    TravelDelay(bool unsafe) : BaseRunDelay()
+    {
+        unsafe_once = unsafe;
+    }
 
     const char* name() const override
     {
@@ -656,33 +646,6 @@ public:
     }
 };
 
-class BlurryScrollDelay : public Delay
-{
-    item_def& scroll;
-    bool was_prompted = false;
-
-    void start() override;
-    bool invalidated() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue reading the scroll.");
-    }
-
-    void finish() override;
-public:
-    BlurryScrollDelay(int dur, item_def& item) :
-                      Delay(dur), scroll(item)
-    { }
-
-    bool try_interrupt() override;
-
-    const char* name() const override
-    {
-        return "blurry_vision";
-    }
-};
-
 class ExsanguinateDelay : public Delay
 {
     bool was_prompted = false;
@@ -746,9 +709,6 @@ bool you_are_delayed();
 shared_ptr<Delay> current_delay();
 void handle_delay();
 
-bool is_being_drained(const item_def &item);
-bool is_being_butchered(const item_def &item, bool just_first = true);
-bool is_vampire_feeding();
 bool player_stair_delay();
 bool already_learning_spell(int spell = -1);
 

@@ -6,12 +6,5 @@
 
 #include "enum.h"
 
-static inline species_skill_aptitude APT(species_type sp,
-                                         skill_type sk,
-                                         int aptitude)
-{
-    return species_skill_aptitude(sp, sk, aptitude);
-}
-
 static const species_skill_aptitude species_skill_aptitudes[] =
 {

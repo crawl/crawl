@@ -26,16 +26,4 @@ public:
     virtual void on_resize() override;
 };
 
-/**
- * Enhanced Mouse handling for CRTRegion
- * The behaviour is CRT_SINGESELECT
- */
-class CRTSingleSelect : public CRTRegion
-{
-public:
-    CRTSingleSelect(FontWrapper* font);
-
-    virtual int handle_mouse(wm_mouse_event& event) override;
-};
-
 #endif

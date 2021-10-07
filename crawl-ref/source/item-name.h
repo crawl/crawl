@@ -5,9 +5,14 @@
 
 #pragma once
 
+#include <vector>
+
 #include "item-prop-enum.h"
 #include "mon-flags.h"
 #include "random.h"
+#include "tag-version.h"
+
+using std::vector;
 
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
@@ -103,7 +108,6 @@ enum makename_type
     MNAME_JIYVA, /// No spaces, starts with J, Plog -> Jiyva
 };
 
-void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 
 string quant_name(const item_def &item, int quant,
@@ -117,9 +121,10 @@ bool item_type_known(const object_class_type base_type, const int sub_type);
 bool is_interesting_item(const item_def& item);
 bool is_emergency_item(const item_def& item);
 bool is_good_item(const item_def &item);
-bool is_bad_item(const item_def &item, bool temp = false);
+bool is_bad_item(const item_def &item);
 bool is_dangerous_item(const item_def& item, bool temp = false);
-bool is_useless_item(const item_def &item, bool temp = false);
+bool is_useless_item(const item_def &item, bool temp = false,
+                     bool ident = false);
 
 string make_name(uint32_t seed = rng::get_uint32(),
                  makename_type name_type = MNAME_DEFAULT);

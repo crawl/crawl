@@ -152,6 +152,10 @@ Ce sort libère une massive décharge électrique qui passe d'une cible à l'aut
 jusqu'à ce qu'elle touche le sol. Elle peut se mettre à la terre de façon
 inoffensive s'il n'y a pas de cibles suffisamment  proche au sorcier.
 %%%%
+Charm spell
+
+Ce sort force une créature hostile à se battre à vos côtés pour un moment.
+%%%%
 Cold Breath spell
 
 Cette créature peut cracher un souffle concentré d'air glacial. Il peut
@@ -178,12 +182,6 @@ Conjure Flame spell
 
 Ce sort crée une colonne de flammes ronflantes.
 %%%%
-Controlled Blink spell
-
-Ce sort permet une translocation à courte distance, avec un contrôle précis.
-Soyez conscient que la téléportation contrôlée entrainera une contamination du
-sorcier par de l'énergie magique.
-%%%%
 Corona spell
 
 Ce sort provoque un halo lumineux qui entoure et surligne une créature. Cette
@@ -199,12 +197,6 @@ vitale de toute créature qu'elle recouvre.
 Cure Poison spell
 
 Ce sort supprime le poison du métabolisme du sorcier.
-%%%%
-Darkness spell
-
-Ce sort éclipse la lumière du donjon, réduisant la distance de visibilité. La
-zone touchée et assez large et n'a pas de contours précis. L'effet a donc peu
-de chance d'alerter quiconque n'est pas très proche du sorcier.
 %%%%
 Dazzling Spray spell
 
@@ -232,13 +224,6 @@ morts-vivants ne peuvent pas utiliser ce sortilège.
 Debugging Ray spell
 
 Un rayon provoquant des dégâts massif (1500 pv) et qui touche toujours.
-%%%%
-Deflect Missiles spell
-
-Ce sort protège le sorcier de toutes attaques par projectiles, en les rendant
-plus facile à esquiver. Ce sort est extrêmement efficace contre les attaques
-mono-cible et pénétrantes. Chaque fois qu'un projectile est dévié, le sort
-risque d'expirer avec des chances plus faibles à haute puissance.
 %%%%
 Dig spell
 
@@ -279,10 +264,6 @@ Dragon Form spell
 Ce sort transforme temporairement le sorcier en un grand dragon cracheur de
 feu. Les sorciers draconiens conserveront leur couleur et leur souffle initial
 une fois transformés.
-%%%%
-Enslavement spell
-
-Ce sort force une créature hostile à se battre à vos côtés pour un moment.
 %%%%
 Ensnare spell
 
@@ -423,13 +404,6 @@ Ce sort tente de transformer tous les poisons à proximité en flammes liquides,
 brûlant les créatures empoisonnées de l'intérieur. C'est particulièrement
 efficace contre les créatures naturellement toxiques. Le sorcier n'est pas
 affecté.
-%%%%
-Infusion spell
-
-Ce sort insuffle la magie aux attaques de mêlée du lanceur en puisant dans ses
-réserves d'énergie magique, et ce, afin d'infliger des dégâts supplémentaires à
-chaque fois qu'un ennemi est touché. Il n'a aucun effet si la magie du lanceur
-est épuisée.
 %%%%
 Injury Bond spell
 
@@ -701,14 +675,6 @@ Shock spell
 
 Ce sort projette un projectile d'électricité rebondissant.
 %%%%
-Shroud of Golubria spell
-
-Ce sort courbe l'espace formant un voile autour du corps du sorcier, le
-protégeant en redirigeant la force des coups dans l'air environnant. Les
-attaques à distance frappent trop rapidement pour être affectées de cette
-manière. Le voile est très instable et peut s'effondrer de lui-même sous les
-coups.
-%%%%
 Simulacrum spell
 
 Ce sort utilise un morceau de chair tenu en main pour créer une réplique de
@@ -727,33 +693,11 @@ Slow spell
 
 Ce sort ralentit les actions d'une créature.
 %%%%
-Song of Slaying spell
-
-Ce sort conjure des versets antiques de batailles dans votre esprit et vous les
-fait récitez — en beuglant ! Chaque ennemi non invoquée que vous tuez dans le
-combat pendant cette récitation améliore temporairement vos compétences de
-mêlée. Votre efficacité ne sera renforcée que pendant la durée de la chanson.
-Lancer ce sort alors que vous la chanter deja débutera une nouvelle chanson, et
-non étendre l'existante.
-%%%%
 Spawn Tentacles spell
 
 Les créatures monstrueuses possédant de grandes tentacules peuvent les étendre
 loin de leur corps, à des fins impliquant presque toujours de frapper un peu
 les casse-croûtes arrogant comme vous avec celles-ci.
-%%%%
-Spectral Weapon spell
-
-Ce sort fait sortir l'esprit résidant à l'intérieur de l'arme brandie pour
-qu'elle se batte a vos cotés, son habilité étant dépendante de la votre avec
-ladite arme. Elle n'attaque pas d'elle même, mais le fait en même temps que
-vous. Vous ne pouvez jamais avoir plus d'une arme spectrale à la fois.
-
-Un ennemie tué par votre arme spectrale compte pour vous si vous chantez une
-chanson du tueur.
-
-Certains artefacts possèdent un esprit trop fort pour que vous soyez en mesure
-de les faire sortir avec ce sort.
 %%%%
 Spider Form spell
 
@@ -780,11 +724,6 @@ Steam Ball spell
 
 Cette créature peut dégager une boule de vapeur chaude et la lancer vers un
 ennemi.
-%%%%
-Sticks to Snakes spell
-
-Ce sort utilise des projectiles en bois (flèches ou javelots) tenus en main
-comme matière première pour une puissant transmutation.
 %%%%
 Sticky Flame spell
 
@@ -815,10 +754,6 @@ qui le rend plus vulnérable aux malédictions et sortilèges similaires.
 Summon Air Elementals spell
 
 Ce sort invoque un ou plusieurs élémentaires d'air.
-%%%%
-Summon Butterflies spell
-
-Ce sort créé une pluie de papillons. Comme c'est joli !
 %%%%
 Summon Earth Elementals spell
 

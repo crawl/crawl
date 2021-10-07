@@ -90,7 +90,7 @@ enum class lua_persist
 {
     none,
     number,
-    string,
+    text,
     // [ds] No longer supported for save portability:
     function,
     nil,
@@ -110,7 +110,7 @@ static int file_marshall_meta(lua_State *ls)
     else if (lua_isboolean(ls, 2))
         ptype = lua_persist::boolean;
     else if (lua_isstring(ls, 2))
-        ptype = lua_persist::string;
+        ptype = lua_persist::text;
     else if (lua_isnil(ls, 2))
         ptype = lua_persist::nil;
     else
@@ -133,7 +133,7 @@ static int file_unmarshall_meta(lua_State *ls)
             return file_unmarshall_boolean(ls);
         case lua_persist::number:
             return file_unmarshall_number(ls);
-        case lua_persist::string:
+        case lua_persist::text:
             return file_unmarshall_string(ls);
         case lua_persist::nil:
             lua_pushnil(ls);

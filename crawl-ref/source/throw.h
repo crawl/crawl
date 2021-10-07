@@ -8,7 +8,9 @@
 #include <string>
 
 #include "enum.h"
+#include "quiver.h"
 
+// TODO: this whole thing is a mess
 enum fire_type
 {
     FIRE_NONE      = 0x0000,
@@ -17,9 +19,15 @@ enum fire_type
     FIRE_STONE     = 0x0004,
     FIRE_JAVELIN   = 0x0010,
     FIRE_ROCK      = 0x0100,
-    FIRE_NET       = 0x0200,
+    FIRE_NET       = 0x0200, // why is 0x0400 skipped?
     FIRE_BOOMERANG = 0x0800,
+    FIRE_THROWING  = FIRE_DART | FIRE_STONE | FIRE_JAVELIN | FIRE_ROCK
+                               | FIRE_NET | FIRE_BOOMERANG,
+    FIRE_AMMO      = FIRE_LAUNCHER | FIRE_THROWING,
     FIRE_INSCRIBED = 0x1000,   // Only used for _get_fire_order
+    FIRE_SPELL     = 0x2000, // TODO: more fine-grained
+    FIRE_EVOKABLE  = 0x4000,
+    FIRE_ABILITY   = 0x8000
 };
 
 struct bolt;
@@ -27,15 +35,13 @@ class dist;
 
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile);
-bool item_is_quivered(const item_def &item);
-bool fire_warn_if_impossible(bool silent = false);
-int get_next_fire_item(int current, int offset);
-int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
+bool fire_warn_if_impossible(bool silent, item_def *weapon);
+shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 bool is_pproj_active();
-void fire_thing(int item = -1);
-void throw_item_no_quiver();
+void untargeted_fire(quiver::action &a);
+void throw_item_no_quiver(dist *target=nullptr);
 
-bool throw_it(bolt &pbolt, int throw_2, dist *target = nullptr);
+void throw_it(quiver::action &a);
 
 bool thrown_object_destroyed(item_def *item);
 

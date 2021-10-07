@@ -8,6 +8,7 @@
 
 #include "AppHdr.h"
 
+#include "mpr.h"
 #include "ng-init.h"
 
 #include "branch.h"
@@ -22,6 +23,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unicode.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -75,14 +77,13 @@ void initialise_branch_depths()
     initialise_brentry();
 }
 
-#define MAX_OVERFLOW_LEVEL 9
-
 static void _use_overflow_temple(vector<god_type> temple_gods)
 {
     CrawlVector &overflow_temples
         = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
 
-    const unsigned int level = random_range(2, MAX_OVERFLOW_LEVEL);
+    const unsigned int level = random_range(MIN_OVERFLOW_LEVEL,
+                                            MAX_OVERFLOW_LEVEL);
 
     // List of overflow temples on this level.
     CrawlVector &level_temples = overflow_temples[level - 1].get_vector();
@@ -372,64 +373,10 @@ void initialise_temples()
     }
 }
 
-#if TAG_MAJOR_VERSION == 34
-static int _get_random_porridge_desc()
-{
-    return PDESCQ(PDQ_GLUGGY, one_chance_in(3) ? PDC_BROWN
-                                               : PDC_WHITE);
-}
-
-static int _get_random_coagulated_blood_desc()
-{
-    potion_description_qualifier_type qualifier = PDQ_NONE;
-    while (true)
-    {
-        switch (random2(4))
-        {
-        case 0:
-            qualifier = PDQ_GLUGGY;
-            break;
-        case 1:
-            qualifier = PDQ_LUMPY;
-            break;
-        case 2:
-            qualifier = PDQ_SEDIMENTED;
-            break;
-        case 3:
-            qualifier = PDQ_VISCOUS;
-            break;
-        }
-        potion_description_colour_type colour = (coinflip() ? PDC_RED
-                                                            : PDC_BROWN);
-
-        uint32_t desc = PDESCQ(qualifier, colour);
-
-        if (you.item_description[IDESC_POTIONS][POT_BLOOD] != desc)
-            return desc;
-    }
-}
-
-static int _get_random_blood_desc()
-{
-    return PDESCQ(random_choose_weighted(2, PDQ_NONE,
-                                         1, PDQ_VISCOUS,
-                                         1, PDQ_SEDIMENTED), PDC_RED);
-}
-#endif
-
 void initialise_item_descriptions()
 {
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
-
-#if TAG_MAJOR_VERSION == 34
-    you.item_description[IDESC_POTIONS][POT_BLOOD]
-        = _get_random_blood_desc();
-    you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
-        = _get_random_coagulated_blood_desc();
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
-        = _get_random_porridge_desc();
-#endif
 
     // The order here must match that of IDESC in describe.h
     const int max_item_number[6] = { NUM_WANDS,

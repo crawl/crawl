@@ -66,10 +66,6 @@ tutorial2 exit
   <input>$cmd[CMD_WAIT]</input>  een beurt wachten en rusten
   <input>$cmd[CMD_REST]</input>  tot maximaal 100 beurten wachten en rusten
 
-<yellow>Lijken<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  lijk in stukken vlees hakken
-  <input>$cmd[CMD_EAT]</input>  stuk vlees eten
-
                          <cyan>Druk op een <input>toets</input> om dit scherm leeg te maken...</cyan>
 %%%%
 tutorial3 start
@@ -131,11 +127,6 @@ tutorial4 start
 
 In deze les leer je hoe spreuken te leren en gebruiken.
 %%%%
-tutorial4 spell_hunger
-
-Tovenarij kan jou erg hongerig maken. Je krijgt meer honger van lastigere
-spreuken, maar hoge Intelligentie en Tovenarij vaardigheid helpt daartegen.
-%%%%
 tutorial4 tutorial_end
 
 Super, je bent een echte tovenaar nu! Om deze uitleg te sluiten ga je de trap
@@ -149,12 +140,6 @@ tutorial5 piety_on_kill
 
 Sommige goden appreciëren het als je in hun naam monsters verslaat. Maak er een
 slachtpartij van!
-%%%%
-tutorial5 hunger
-
-Je kan berserk niet gebruiken als je te veel honger hebt, dus draag altijd wat
-eten bij je. Dit betekent dat je soms zal moeten kiezen of je een lijk wil
-slachten of offeren aan Trog.
 %%%%
 tutorial5 berserk2
 

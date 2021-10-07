@@ -165,19 +165,6 @@ tutorial2 resting
 <input>$cmd[CMD_REST]</input>. Вы отдохнете, а также сможете провести поиск в
 течении 100 ходов. Отдых и поиск могут прервать множество важных событий.
 %%%%
-tutorial2 chop_corpses
-
-Вы можете разделывать трупы на куски мяса, которые можно съесть, по клавише
-<input>$cmd[CMD_BUTCHER]</input> <localtiles>или же по <input>Shift +
-mouseclick</input>, </localtiles>Затем вы можете съесть это мясо, используя
-<input>$cmd[CMD_EAT]</input><localtiles> или же <input>mouseclick</input>
-</localtiles>.
-%%%%
-tutorial2 rest_and_chop_reminder
-
-Не забывайте разделывать трупы (<input>$cmd[CMD_BUTCHER]</input>) и отдыхать
-(<input>$cmd[CMD_REST]</input>)!
-%%%%
 tutorial2 wait
 
 Вместо того, чтобы бросаться в комнату и быть окруженным монстрами, вы можете
@@ -187,13 +174,6 @@ tutorial2 wait
 tutorial2 resting_reminder
 
 Помните, вы можете отдохнуть с помощью <input>$cmd[CMD_REST]</input>.
-%%%%
-tutorial2 eat_reminder
-
-Помните, вы можете рубить существ с помощью <input>$cmd[CMD_BUTCHER]</input>
-<localtiles>или <input>Shift + mouseclick</input>и потом поедать оставшиеся
-куски с помощью <input>$cmd[CMD_EAT]</input><localtiles> или
-<input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
@@ -265,10 +245,6 @@ tutorial2 exit
 <yellow>Отдых</yellow>
   <input>$cmd[CMD_WAIT]</input>  ждать и отдохнуть 1 ход
   <input>$cmd[CMD_REST]</input>  ждать и отдыхать до 100 ходов
-
-<yellow>Трупы<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  рубить трупы на куски мяса
-  <input>$cmd[CMD_EAT]</input>  поедать куски мяса
 
                                  <cyan>Нажмите <input>any key</input>, чтобы очистить этот экран...</cyan>
 %%%%
@@ -435,12 +411,6 @@ tutorial5 exhaustion
 использовать силу снова, а также замедлены. В это время лучше всего отдохнуть
 при помощи <input>$cmd[CMD_REST]</input><localtiles> (либо <w>command
 panel</w>)</localtiles> до тех пор, пока вы не будете в порядке.
-%%%%
-tutorial5 hunger
-
-Вы не можете войти в берсерк, когда очень голодны, в таких случаях всегда
-носите с собой немного еды. Это означает, что иногда вам придется выбрать,
-разрубить труп или пожертвовать его Трогу.
 %%%%
 tutorial5 berserk2
 

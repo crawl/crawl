@@ -1,35 +1,8 @@
 %%%%
-amulet of conservation
-
-Denne amulet beskytter bærerens ejendele mod ødelæggelse, men er ikke
-ufejlbarlig.
-%%%%
 amulet of inaccuracy
 
 Denne amulet gør bæreren mindre præcis, hvad end det gælder nærkamp eller om at
 ramme uhyrer på afstand eller med besværgelser.
-%%%%
-amulet of rage
-
-Denne amulet lader bæreren forsøge at gå bersærk.
-%%%%
-amulet of resist mutation
-
-Denne amulet beskytter bæreren mod mutationer, men den er ikke ufejlbarlig.
-%%%%
-amulet of stasis
-
-En amulet, som er omhyggeligt konstrueret med magiske værn, som blokerer
-magiske og fysiologiske effekter, der ellers ville have teleporteret, sænket,
-forhastet eller lammet bæreren.
-
-Amuletten virker mod de fleste former for translokativ magi, men planskift som
-forvisning formår den ikke at blokere.
-%%%%
-amulet of warding
-
-Denne amulet afværger angreb fra væsener, der er magisk fremmanet, og gør
-bæreren mere modstandsdygtig over for drænende angreb.
 %%%%
 animal skin
 
@@ -94,11 +67,6 @@ sølle troldkarle risikerer en krank skæbne, hvis de læser dette værk.
 ADVARSEL: Hvis det mislykkes at lære en besværgelse fra denne bog, vil den
 angribe dig.
 %%%%
-book of battle
-
-Denne bog med besværgelser bruges af skjalde, som får magisk hjælp af dens
-kampsange.
-%%%%
 book of cantrips
 
 En bog som indeholder et lille udvalg af de mest grundlæggende besværgelser,
@@ -128,13 +96,6 @@ række besværgelser, der afspejler mystikerens drømmetilstand. Værkets kritik
 mener, at besværgelserne ikke funktionelt adskiller sig fra allerede kendte
 udgaver, men bogen er fortsat populær for sit bizarre billedsprog og sine
 kryptiske sidebemærkninger.
-%%%%
-book of enchantments
-
-En grimoire, der indeholder et sortiment af magiske forbandelser og
-fortryllelser, som glimter og glitrer, når man bladrer i den. Den bedårende
-anakronistiske titel afspejler en tidligere, mere ufuldstændig forståelse af
-disse to magiske skoler.
 %%%%
 book of fixed level
 
@@ -244,10 +205,6 @@ choko
 
 En næsten smagløs, grøn grøntsag, som vokser på en vinranke.
 %%%%
-chunk of flesh
-
-En klump kød, du har fundet i de underjordiske gange.
-%%%%
 cloak
 
 En stofkappe.
@@ -304,12 +261,6 @@ eveningstar
 
 Piggene på denne morgenstjerne er exceptionelt lange, hvilket lader den
 forårsage odiøse sår.
-%%%%
-fan of gales
-
-En fortryllet vifte som er beboet af venligtsindede luftånder. Hvis man svinger
-viften slipper man et voldsomt vindstød og ånderne fri til at feje bærerens
-fjender bort.
 %%%%
 fire dragon scales
 
@@ -390,11 +341,6 @@ lajatang
 
 Et meget sjældent og ekstremt effektivt eksotisk våben, bestående af en stav
 med halvmåneformede klinger i begge ender.
-%%%%
-lamp of fire
-
-En magisk lampe, som er beboet af venligtsindede ildånder. Åbner du dens hægte,
-sætter du ånderne fri til at danse på dine fjender i et flammehav.
 %%%%
 large rock
 
@@ -736,11 +682,6 @@ scroll of noise
 Denne drilske skriftrulle som ofte sniges ned i en troldmands rygsæk af en
 lusket lærling, laver et værre spektakel.
 %%%%
-scroll of random uselessness
-
-Det er let at glemme denne skriftrulles essentielle ubrugelighed, når det
-lykkes overhovedet at få den til at virke.
-%%%%
 scroll of remove curse
 
 Denne skriftrulle fjerner forbandelserne fra de ting, du bruger, når du læser
@@ -844,12 +785,6 @@ Den stav øger brugerens jordbesværgelsers kraft, men mindsker den for
 luftbesværgelser. Hvis brugeren er kyndig i vækkelser og jordmagi kan den knuse
 dem, den rammer.
 %%%%
-staff of energy
-
-Denne stav lader sin bærer kontrollere magisk energi: Man bliver ikke længere
-sulten af at kaste besværgelser, og naturlig baggrundsmagi kan kanaliseres til
-bærerens formål.
-%%%%
 staff of fire
 
 Denne stav øger brugerens ildbesværgelsers kraft, men nedsætter den for
@@ -862,20 +797,6 @@ Denne stav øger brugerens giftige besværgelsers kraft og beskytter ham eller
 hende mod konsekvenserne af gift. Hvis brugeren er kyndig i både vækkelser og
 giftmagi, vil staven også forgifte dem, den rammer – selv hvis ofrene
 sædvanligvis er modstandsdygtige.
-%%%%
-staff of power
-
-Denne stav øger brugerens reservoir af magisk energi.
-%%%%
-staff of summoning
-
-Denne stav øger brugerens hidkaldelsers kraft og beskytter mod hidkaldte
-væseners angreb. Hvis du er kyndig i vækkelser, kan du forsøge at bortvise
-hidkaldte væsener, når du slår dem.
-%%%%
-staff of wizardry
-
-Denne stav øger brugerens evne til at bruge magiske besværgelser.
 %%%%
 steam dragon scales
 
@@ -958,15 +879,6 @@ wand of digging
 
 En magisk anordning, som graver tunneller gennem uforarbejdet klippe.
 %%%%
-wand of disintegration
-
-En magisk anordning, som kan sprænge alt andet end de hårdeste mures fysiske
-struktur – selv stenhårde statuer, for slet ikke at tale om kød.
-%%%%
-wand of enslavement
-
-En magisk anordning, som forårsager slavisk lydighed i et væsen.
-%%%%
 wand of fire
 
 En magisk anordning, som kaster kolossale ildkiler.
@@ -988,10 +900,6 @@ wand of polymorph
 
 En magisk anordning som omskaber et væsen til en anden form. Den er særligt
 effektiv mod formskiftende væsener.
-%%%%
-wand of random effects
-
-En magisk anordning, som kan producere en lang række effekter.
 %%%%
 whip
 

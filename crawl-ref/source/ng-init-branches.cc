@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 
+#include "mpr.h"
 #include "ng-init-branches.h"
 
 #include "branch.h"

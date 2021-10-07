@@ -47,8 +47,7 @@ end
 
 NAME:   kb_xom_exploding_sheep
 TAGS:   transparent no_monster_gen no_item_gen temple_overflow_1
-TAGS:   temple_overflow_xom uniq_altar_xom
-DEPTH:  D:3-, Lair
+TAGS:   temple_overflow_xom
 WEIGHT: 2
 KFEAT:  _ = altar_xom
 {{
@@ -62,14 +61,6 @@ lua_marker('H', props_marker {sheep_place = 1})
 lua_marker('c', props_marker {feat_remove = 1})
 lua_marker('+', props_marker {feat_remove = 1})
 lua_marker('+', restrict_door())
-
-if you.in_branch("D") then
-  if you.absdepth() > 9 then
-    tags('extra')
-  end
-else
-  tags('extra')
-end
 }}
 KPROP: H'_ = no_tele_into
 SUBST: ' = .

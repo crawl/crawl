@@ -1,35 +1,8 @@
 %%%%
-amulet of conservation
-
-Tämä amuletti suojaa joitakin käyttäjän omistamia tavaroita tuhoutumiselta,
-mutta ei pettämättömästi.
-%%%%
 amulet of inaccuracy
 
 Tämä amuletti laskee kantajansa tarkkuutta lähi- ja kaukotaistelussa sekä
 loitsiessa.
-%%%%
-amulet of rage
-
-Tämä amuletti antaa haltijalleen kyvyn siirtyä berserkkiraivon tilaan.
-%%%%
-amulet of resist mutation
-
-Tämä amuletti suojaa käyttäjäänsä muodonmuutoksilta, mutta ei pettämättömästi.
-%%%%
-amulet of stasis
-
-Huolellisesti taikasuojauksilla varusteltu amuletti, luotu torjumaan fyysisiä
-efektejä, jotka muuten teleporttaisivat, hidastaisivat, nopeuttaisivat tai
-halvaannuttaisivat sen käyttäjän.
-
-Vaikka amuletti on tehokas useimpia teleportaatiotaikoja vastaan, se ei pysty
-torjumaan ulottuvuudenvaihdoksia, kuten karkoitusta.
-%%%%
-amulet of warding
-
-Tämä amuletti torjuu taikuudella kutsuttujen olentojen hyökkäyksiä, ja tekee
-käyttäjästään myös puolustuskykyisemmän elinvoimaa imeville hyökkäyksille.
 %%%%
 animal skin
 
@@ -115,13 +88,6 @@ käytännössä eroa mitenkään jo aiemmin tunnetuista loitsuista, mutta kirja 
 edelleen suosiossa sen ainutlaatuisen eriskummallisen kuvaston ja kryptisten
 poikkeamien takia.
 %%%%
-book of enchantments
-
-Tämä kirja sisältää valikoiman Manipulaatioita ja Lumouksia, ja sen sivut
-kimaltelevat ja hohtavat käännettäessä. Epätavallisen aikaan sopimaton otsikko
-kuvastaa aikaisempaa, epätäydellisempää ymmärrystä näistä kahdesta magian
-koulukunnasta.
-%%%%
 book of fixed level
 
 Taikoja sisältävä kirja.
@@ -179,12 +145,6 @@ Tämä epäpyhä kirja kertoo maagisista keinoista epäkuolleiden palvelijoiden
 luomiseen ja käskemiseen. Kauheassa kirjassa säteilee pahansuopa aura, ja sen
 pergamenttisivut joskus sätkivät ja värisevät itsestään.
 %%%%
-book of war chants
-
-Soturille hyödyllisiä loitsuja sisältävä kirja. Kirjan loitsuilla on
-musikaalinen muoto, seuraten skaldien perinteitä. Niillä on kuitenkin sama
-vaikutus kuin puhutuilla taioilla.
-%%%%
 book of wizardry
 
 Tämän kirjan loitsut sopivat kenelle tahansa pätevälle loitsijalle. Oppineet
@@ -220,10 +180,6 @@ Juustomöhkäle.
 choko
 
 Köynnöksessä kasvava, lähes mauton vihreä kasvis.
-%%%%
-chunk of flesh
-
-Luolastosta löydetty lihanpalanen.
 %%%%
 cloak
 

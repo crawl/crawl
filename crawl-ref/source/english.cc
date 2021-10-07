@@ -16,7 +16,7 @@
 
 const char * const standard_plural_qualifiers[] =
 {
-    " of ", " labeled ", nullptr
+    " of ", " labelled ", " from ", nullptr
 };
 
 bool is_vowel(const char32_t chr)
@@ -63,7 +63,7 @@ string pluralise(const string &name, const char * const qualifiers[],
             return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(name, "larva") || ends_with(name, "antenna")
-             || ends_with(name, "hypha"))
+             || ends_with(name, "hypha") || ends_with(name, "noma"))
     {
         return name + "e";
     }
@@ -280,6 +280,22 @@ const char *decline_pronoun(gender_type gender, pronoun_type variant)
     return _pronoun_declension[gender][variant];
 }
 
+// Takes a lowercase verb stem like "walk", "glid" or "wriggl"
+// (as could be used for "walking", "gliding", or "wriggler")
+// and turn it into the present tense form.
+// TODO: make this more general. (Does english have rules?)
+string walk_verb_to_present(string verb)
+{
+    if (verb == "wriggl")
+        return "wriggle";
+    if (verb == "glid")
+    {
+        return "walk"; // it's a lie! tengu only get this
+                       // verb when they can't fly!
+    }
+    return verb;
+}
+
 static string _tens_in_words(unsigned num)
 {
     static const char *numbers[] =
@@ -396,15 +412,9 @@ string apply_description(description_level_type desc, const string &name,
     }
 }
 
-string thing_do_grammar(description_level_type dtype, bool add_stop,
-                        bool force_article, string desc)
+string thing_do_grammar(description_level_type dtype, string desc,
+                        bool ignore_case)
 {
-    if (add_stop && !ends_with(desc, ".") && !ends_with(desc, "!")
-        && !ends_with(desc, "?"))
-    {
-        desc += ".";
-    }
-
     // Avoid double articles.
     if (starts_with(desc, "the ") || starts_with(desc, "The ")
         || starts_with(desc, "a ") || starts_with(desc, "A ")
@@ -415,7 +425,7 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
             dtype = DESC_PLAIN;
     }
 
-    if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
+    if (dtype == DESC_PLAIN || !ignore_case && isupper(desc[0]))
         return desc;
 
     switch (dtype)
@@ -431,7 +441,7 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
     }
 }
 
-string get_desc_quantity(const int quant, const int total, string whose)
+string get_desc_quantity(const int quant, const int total, const string &whose)
 {
     if (total == quant)
         return uppercase_first(whose);

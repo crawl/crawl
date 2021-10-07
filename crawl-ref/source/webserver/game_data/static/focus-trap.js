@@ -121,7 +121,7 @@ function focusTrap(element, userOptions) {
 
     var returnFocus =
       deactivateOptions && deactivateOptions.returnFocus !== undefined
-        ? deactivateOptions.returnFocus
+        ? config.returnFocusOnDeactivate && deactivateOptions.returnFocus
         : config.returnFocusOnDeactivate;
     if (returnFocus) {
       delay(function() {

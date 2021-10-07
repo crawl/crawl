@@ -7,11 +7,19 @@
 
 #include <cctype>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 #include <unordered_set>
 
+#include "defines.h"
+#include "coord-def.h"
+#include "description-level-type.h"
 #include "enum.h"
+
+using std::string;
+using std::unique_ptr;
+using std::vector;
 
 bool key_is_escape(int key);
 

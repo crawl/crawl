@@ -155,14 +155,6 @@ CMD_CAST_SPELL verbose
 
 呪文を唱える。
 %%%%
-CMD_BUTCHER
-
-死体を捌く
-%%%%
-CMD_BUTCHER verbose
-
-死体を厚切れに捌く。
-%%%%
 CMD_MEMORISE_SPELL
 
 呪文の記憶

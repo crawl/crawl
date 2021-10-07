@@ -623,6 +623,14 @@ function TroveMarker:check_veto(marker, pname)
   if toll.item then
     return self:check_item_veto(marker, pname)
   elseif toll.nopiety then
+    -- Piety troves don't generate under Ashenzari due to piety being fixed
+    -- based on the number of cursed items, but they can exist if the player
+    -- swaps gods after finding one. If this somehow happens, sorry, bad luck.
+    if you.god() == "Ashenzari" then
+      crawl.mpr("The portal is unable to unshackle you from Ashenzari's "
+                .. "curse; you must abandon your deity entirely to enter!")
+      return "veto"
+    end
     local yesno_message = (
       "This portal proclaims the superiority of the material over the divine; "
       .. "those who enter it will find they have lost all favour with their "

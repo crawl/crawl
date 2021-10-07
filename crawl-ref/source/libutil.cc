@@ -374,23 +374,60 @@ coord_def cgetpos(GotoRegion region)
     return where - _cgettopleft(region) + coord_def(1, 1);
 }
 
+bool valid_cursor_pos(int x, int y, GotoRegion region)
+{
+    const coord_def sz = cgetsize(region);
+    return x >= 1 && y >= 1 && x <= sz.x && y <= sz.y;
+}
+
+#ifndef TARGET_OS_WINDOWS
+static GotoRegion _find_correct_region()
+{
+    for (int r = GOTO_MSG; r < GOTO_MLIST; r++)
+    {
+        GotoRegion region(static_cast<GotoRegion>(r));
+        coord_def pos(cgetpos(region));
+        if (valid_cursor_pos(pos.x, pos.y, region))
+            return region;
+    }
+    // everything on screen is valid in GOTO_CRT; though in principle this
+    // should probably fail for entirely invalid coords somehow
+    return GOTO_CRT;
+}
+#endif
+
+void assert_valid_cursor_pos()
+{
+#ifndef TARGET_OS_WINDOWS
+    GotoRegion region(get_cursor_region());
+    coord_def pos(cgetpos(region));
+    ASSERTM(valid_cursor_pos(pos.x, pos.y, region),
+        "invalid cursor position %d,%d in region %d, should be %d,%d in region %d",
+        pos.x, pos.y, region, cgetpos(_find_correct_region()).x,
+        cgetpos(_find_correct_region()).y, _find_correct_region());
+#endif
+}
+
 static GotoRegion _current_region = GOTO_CRT;
 
 void cgotoxy(int x, int y, GotoRegion region)
 {
-    _current_region = region;
-    const coord_def tl = _cgettopleft(region);
-    const coord_def sz = cgetsize(region);
-
-#ifdef ASSERTS
-    if (x < 1 || y < 1 || x > sz.x || y > sz.y)
+#if defined(ASSERTS) && !defined(TARGET_OS_WINDOWS)
+    if (!valid_cursor_pos(x, y, region))
     {
-        save_game(false); // should be safe
-        die("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
-            sz.x, sz.y);
+        const coord_def sz = cgetsize(region);
+        // dprf in case it's not safe
+        dprf("screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
+             (int) region, (int) _current_region, x, y, sz.x, sz.y);
+        if (you.on_current_level)
+            save_game(false); // should be safe (lol)
+        die( "screen write out of bounds in region %d (old: %d): (%d,%d) into (%d,%d)",
+             (int) region, (int) _current_region, x, y, sz.x, sz.y);
     }
 #endif
 
+    const coord_def tl = _cgettopleft(region);
+    _current_region = region;
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
 
 #ifdef USE_TILE_WEB
@@ -407,6 +444,18 @@ void set_cursor_region(GotoRegion region)
 {
     _current_region = region;
 }
+
+void clrscr()
+{
+    save_cursor_pos save; // is this generally correct? alternative, set region
+                          // to GOTO_CRT.
+    clrscr_sys();
+
+#ifdef USE_TILE_WEB
+    tiles.clrscr();
+#endif
+}
+
 #endif // !USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)
@@ -438,20 +487,19 @@ mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;
 
 mouse_control::mouse_control(mouse_mode mode)
 {
+#ifdef USE_TILE_WEB
+    // relies on being called before ms_current_mode is updated
+    tiles.update_input_mode(mode);
+#endif
+
     m_previous_mode = ms_current_mode;
     ms_current_mode = mode;
-
-#ifdef USE_TILE_WEB
-    if (m_previous_mode != ms_current_mode)
-        tiles.update_input_mode(mode);
-#endif
 }
 
 mouse_control::~mouse_control()
 {
 #ifdef USE_TILE_WEB
-    if (m_previous_mode != ms_current_mode)
-        tiles.update_input_mode(m_previous_mode);
+    tiles.update_input_mode(m_previous_mode);
 #endif
     ms_current_mode = m_previous_mode;
 }

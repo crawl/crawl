@@ -14,13 +14,13 @@
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
-#include "butcher.h"
 #include "cleansing-flame-source-type.h"
 #include "coordit.h"
+#include "corpse.h"
 #include "database.h"
+#include "death-curse.h"
 #include "decks.h"
 #include "env.h"
-#include "food.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
@@ -35,6 +35,7 @@
 #include "mon-cast.h"
 #include "mon-pick.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "notes.h"
 #include "player-stats.h"
@@ -44,14 +45,15 @@
 #include "shout.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
-#include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
+#include "traps.h" // is_valid_shaft_level
 #include "transform.h"
 #include "view.h"
 #include "xom.h"
@@ -77,8 +79,8 @@ static const char *_god_wrath_adjectives[] =
     "displeasure",      // Elyvilon
     "touch",            // Lugonu
     "wrath",            // Beogh
-    "vengeance",        // Jiyva
-    "enmity",           // Fedhas Madhash
+    "all-consuming vengeance",  // Jiyva
+    "enmity",           // Fedhas Madash
     "meddling",         // Cheibriados
     "doom",             // Ashenzari (unused)
     "darkness",         // Dithmenos
@@ -91,6 +93,7 @@ static const char *_god_wrath_adjectives[] =
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
     "rancor",           // Wu Jian
+    "fiery vengeance",  // Ignis
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -146,7 +149,7 @@ static bool _yred_random_zombified_hostile()
     return create_monster(temp, false);
 }
 
-static const pop_entry _okawaru_servants[] =
+static const vector<pop_entry> _okawaru_servants =
 { // warriors
   {  1,  3,   3, FALL, MONS_ORC },
   {  1,  3,   3, FALL, MONS_GNOLL },
@@ -172,7 +175,6 @@ static const pop_entry _okawaru_servants[] =
   { 13, 27,   1, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
   { 13, 27,   1, FLAT, RANDOM_BASE_DRACONIAN },
   { 15, 27,   2, FLAT, MONS_TITAN },
-  { 0,0,0,FLAT,MONS_0 }
 };
 
 static bool _okawaru_random_servant()
@@ -306,11 +308,8 @@ static bool _zin_retribution()
     // preaching/creeping doom theme
     const god_type god = GOD_ZIN;
 
-    int punishment = random2(8);
-
     // If not mutated, do something else instead.
-    if (punishment > 7 && !you.how_mutated())
-        punishment = random2(6);
+    const int punishment = you.how_mutated() ? random2(6) : random2(4);
 
     switch (punishment)
     {
@@ -331,17 +330,12 @@ static bool _zin_retribution()
             return false;
         }
         break;
-    case 3:
-    case 4: // famine
-        simple_god_message(" sends a famine down upon you!", god);
-        make_hungry(you.hunger / 2, false);
-        break;
-    case 5: // noisiness
+    case 3: // noisiness
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
-    case 6:
-    case 7: // remove good mutations
+    case 4:
+    case 5: // remove good mutations
         _zin_remove_good_mutations();
         break;
     }
@@ -360,33 +354,34 @@ static bool _cheibriados_retribution()
 
     // Determine the level of wrath
     int wrath_type = 0;
-    if (wrath_value < 2)       { wrath_type = 0; }
-    else if (wrath_value < 4)  { wrath_type = 1; }
-    else if (wrath_value < 8)  { wrath_type = 2; }
-    else if (wrath_value < 16) { wrath_type = 3; }
-    else                       { wrath_type = 4; }
+    if (wrath_value < 2)
+        wrath_type = 0;
+    else if (wrath_value < 4)
+        wrath_type = 1;
+    else if (wrath_value < 8)
+        wrath_type = 2;
+    else if (wrath_value < 16)
+        wrath_type = 3;
+    else
+        wrath_type = 4;
 
     // Strip away extra speed
     dec_haste_player(10000);
 
     switch (wrath_type)
     {
-    // Very high tension wrath
+    // Very high tension wrath.
+    // Add noise then start sleeping and slow the player with 2/3 chance.
     case 4:
-        simple_god_message(" adjusts the clock.", god);
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::random,
-                      5 + div_rand_round(you.experience_level, 9),
-                      random2avg(88, 3), _god_wrath_name(god));
-        if (one_chance_in(3))
-            break;
-        else
-            dec_penance(god, 1); // and fall-through.
+        simple_god_message(" strikes the hour.", god);
+        noisy(40, you.pos());
+        dec_penance(god, 1); // and fall-through.
     // High tension wrath
+    // Sleep the player and slow the player with 50% chance.
     case 3:
         mpr("You lose track of time.");
         you.put_to_sleep(nullptr, 30 + random2(20));
-        if (coinflip())
+        if (one_chance_in(wrath_type - 1))
             break;
         else
             dec_penance(god, 1); // and fall-through.
@@ -398,14 +393,11 @@ static bool _cheibriados_retribution()
             slow_player(100);
         }
         break;
-    // Low/no tension
+    // Low/no tension; lose stats.
     case 1:
     case 0:
         mpr("Time shudders.");
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::random,
-                      5 + div_rand_round(you.experience_level, 9),
-                      random2avg(88, 3), _god_wrath_name(god));
+        lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
         break;
 
     default:
@@ -415,9 +407,11 @@ static bool _cheibriados_retribution()
     return true;
 }
 
-static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
+static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
+                               const char* message = nullptr)
 {
-    simple_god_message(" rains destruction down upon you!", god);
+    simple_god_message(message ? message : " rains destruction down upon you!",
+                       god);
     bolt beam;
     beam.source = you.pos();
     beam.target = you.pos();
@@ -475,6 +469,10 @@ static spell_type _makhleb_destruction_type()
  */
 static monster* get_avatar(god_type god)
 {
+    // TODO: it would be better to abstract the fake monster code from both
+    // this and shadow monster and possibly use different monster types --
+    // doing it this way makes it easier for bugs where the two are conflated
+    // to creep in
     monster* avatar = shadow_monster(false);
     if (!avatar)
         return nullptr;
@@ -655,30 +653,26 @@ static bool _kikubaaqudgha_retribution()
 
     if (x_chance_in_y(you.experience_level, 27))
     {
-        // torment, or 3 necromancy miscasts
-        if (!player_res_torment(false))
+        // torment, or 3 death curses of maximum power
+        if (!you.res_torment())
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
             {
-                MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                              spschool::necromancy,
-                              2 + div_rand_round(you.experience_level, 9),
-                              random2avg(88, 3), _god_wrath_name(god));
+                death_curse(you, nullptr,
+                            _god_wrath_name(god), you.experience_level);
             }
         }
     }
     else if (random2(you.experience_level) >= 4)
     {
-        // necromancy miscast, 25% chance of additional miscast
-        const int num_miscasts = one_chance_in(4) ? 2 : 1;
-        for (int i = 0; i < num_miscasts; i++)
+        // death curse, 25% chance of additional curse
+        const int num_curses = one_chance_in(4) ? 2 : 1;
+        for (int i = 0; i < num_curses; i++)
         {
-            MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                          spschool::necromancy,
-                          2 + div_rand_round(you.experience_level, 9),
-                          random2avg(88, 3), _god_wrath_name(god));
+                death_curse(you, nullptr,
+                            _god_wrath_name(god), you.experience_level);
         }
     }
 
@@ -728,11 +722,18 @@ static bool _yredelemnul_retribution()
     }
     else
     {
-        simple_god_message("'s anger turns toward you for a moment.", god);
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::necromancy,
-                      2 + div_rand_round(you.experience_level, 9),
-                      random2avg(88, 3), _god_wrath_name(god));
+        monster* avatar = get_avatar(god);
+        // can't be const because mons_cast() doesn't accept const monster*
+
+        if (avatar == nullptr)
+        {
+            simple_god_message(" has no time to deal with you just now.", god);
+            return false;
+        }
+
+        _spell_retribution(avatar, SPELL_BOLT_OF_DRAINING, god,
+                           "'s anger turns toward you for a moment.");
+        _reset_avatar(*avatar);
     }
 
     return true;
@@ -749,7 +750,7 @@ static bool _trog_retribution()
         int points = 3 + you.experience_level * 3;
 
         {
-            no_messages msg;
+            msg::suppress msg;
 
             while (points > 0)
             {
@@ -788,9 +789,6 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
-            you.rot(nullptr, 3 + random2(3));
-            break;
-
         case 1:
         case 2:
             lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
@@ -818,14 +816,21 @@ static bool _trog_retribution()
     }
     else
     {
-        //jmf: returned Trog's old Fire damage
-        // -- actually, this function partially exists to remove that,
-        //    we'll leave this effect in, but we'll remove the wild
-        //    fire magic. -- bwr
-        mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
-        MiscastEffect(&you, nullptr, {miscast_source::god, god}, spschool::fire,
-                      8 + you.experience_level, random2avg(98, 3),
-                      _god_wrath_name(god));
+        // A fireball is magic when used by a mortal but just a manifestation
+        // of pure rage when used by a god. --ebering
+
+        monster* avatar = get_avatar(god);
+        // can't be const because mons_cast() doesn't accept const monster*
+
+        if (avatar == nullptr)
+        {
+            simple_god_message(" has no time to deal with you just now.", god);
+            return false; // not a very dazzling divine experience...
+        }
+
+        _spell_retribution(avatar, SPELL_FIREBALL,
+                           god, " hurls fiery rage upon you!");
+        _reset_avatar(*avatar);
     }
 
     return true;
@@ -978,7 +983,7 @@ static bool _sif_muna_retribution()
     case 8:
         if (you.magic_points > 0)
         {
-            dec_mp(you.magic_points);
+            drain_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;
@@ -997,7 +1002,7 @@ static bool _sif_muna_retribution()
 /**
  * Perform translocation-flavored Lugonu retribution.
  *
- * 50% chance of tloc miscasts; failing that, 50% chance of teleports/blinks.
+ * 25% banishment; 50% teleport near monsters.
  */
 static void _lugonu_transloc_retribution()
 {
@@ -1005,19 +1010,14 @@ static void _lugonu_transloc_retribution()
 
     if (coinflip())
     {
-        simple_god_message("'s wrath finds you!", god);
-        MiscastEffect(&you, nullptr, {miscast_source::god, god},
-                      spschool::translocation, 9, 90, "Lugonu's touch");
+        // Give extra opportunities for embarrassing teleports.
+        simple_god_message("'s wrath scatters you!", god);
+        you_teleport_now(false, true, "Space warps around you!");
     }
     else if (coinflip())
     {
-        // Give extra opportunities for embarrassing teleports.
-        simple_god_message("'s wrath finds you!", god);
-        mpr("Space warps around you!");
-        if (!one_chance_in(3))
-            you_teleport_now();
-        else
-            uncontrolled_blink();
+        simple_god_message(" draws you home!", god);
+        you.banish(nullptr, "Lugonu's touch", you.get_experience_level(), true);
     }
 }
 
@@ -1259,15 +1259,15 @@ static void _jiyva_summon_slimes()
     const monster_type slimes[] =
     {
         MONS_FLOATING_EYE,
-        MONS_EYE_OF_DRAINING,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
         MONS_GLOWING_ORANGE_BRAIN,
         MONS_JELLY,
+        MONS_ROCKSLIME,
+        MONS_QUICKSILVER_OOZE,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
-        MONS_DEATH_OOZE,
         MONS_SLIME_CREATURE,
     };
 
@@ -1314,17 +1314,28 @@ static bool _jiyva_retribution()
 
 /**
  * Let Fedhas call down the enmity of nature upon the player!
+ * Equal chance corrosive bolt, primal wave (a throwback to rain),
+ * or thorn volley
  */
-static void _fedhas_elemental_miscast()
+static void _fedhas_nature_retribution()
 {
     const god_type god = GOD_FEDHAS;
-    simple_god_message(" invokes the elements against you.", god);
 
-    const spschool stype = random_choose(spschool::ice, spschool::fire,
-                                         spschool::earth, spschool::air);
-    MiscastEffect(&you, nullptr, {miscast_source::god, god}, stype,
-                  5 + you.experience_level, random2avg(88, 3),
-                  _god_wrath_name(god));
+    monster* avatar = get_avatar(god);
+    // can't be const because mons_cast() doesn't accept const monster*
+
+    if (avatar == nullptr)
+    {
+        simple_god_message(" has no time to deal with you just now.", god);
+        return;
+    }
+
+    spell_type spell = random_choose(SPELL_CORROSIVE_BOLT,
+                                     SPELL_PRIMAL_WAVE,
+                                     SPELL_THORN_VOLLEY);
+
+    _spell_retribution(avatar, spell, god, " invokes nature against you.");
+    _reset_avatar(*avatar);
 }
 
 // Collect lists of points that are within LOS (under the given env map),
@@ -1727,6 +1738,7 @@ static int _fedhas_corpse_spores(beh_type attitude)
     }
 
     viewwindow(false);
+    update_screen();
 
     return count;
 }
@@ -1734,7 +1746,7 @@ static int _fedhas_corpse_spores(beh_type attitude)
 /**
  * Call down the wrath of Fedhas upon the player!
  *
- * Plants and elemental miscasts.
+ * Plants and plant/nature themed attacks.
  *
  * @return Whether to take further divine wrath actions afterward.
  */
@@ -1759,7 +1771,7 @@ static bool _fedhas_retribution()
 
     case 1:
     default:
-        _fedhas_elemental_miscast();
+        _fedhas_nature_retribution();
         return true;
 
     case 2:
@@ -1830,7 +1842,7 @@ static bool _dithmenos_retribution()
     return true;
 }
 
-static const pop_entry pop_qazlal_wrath[] =
+static const vector<pop_entry> pop_qazlal_wrath =
 {
   {  0, 12, 25, SEMI, MONS_AIR_ELEMENTAL },
   {  4, 12, 50, FLAT, MONS_WIND_DRAKE },
@@ -1849,10 +1861,8 @@ static const pop_entry pop_qazlal_wrath[] =
 
   {  0, 12, 25, SEMI, MONS_EARTH_ELEMENTAL },
   {  2, 10, 50, FLAT, MONS_BASILISK },
-  {  4, 14, 30, FLAT, MONS_CATOBLEPAS },
+  {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
   { 18, 27, 50, RISE, MONS_IRON_DRAGON },
-
-  { 0,0,0,FLAT,MONS_0 }
 };
 
 /**
@@ -2005,6 +2015,127 @@ static bool _wu_jian_retribution()
     return true;
 }
 
+static void _summon_ignis_elementals()
+{
+    const god_type god = GOD_IGNIS;
+    const int how_many = random_range(2, 3);
+    bool success = false;
+    for (int i = 0; i < how_many; i++)
+        if (create_monster(_wrath_mon_data(MONS_FIRE_ELEMENTAL, god), false))
+            success = true;
+
+    if (success)
+    {
+        const string msg = getSpeakString("Ignis elemental wrath");
+        god_speaks(god, msg.c_str());
+    }
+    else
+        simple_god_message("' divine wrath fails to arrive.", god);
+}
+
+static bool _ignis_shaft()
+{
+    // Would it be interesting if ignis could shaft you into other branches,
+    // e.g. d -> orc, orc -> elf..?
+    if (!you.shaftable())
+        return false;
+    simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
+    ASSERT(you.do_shaft());
+    return true;
+}
+
+/**
+ *  Finds the highest HD monster in sight that would make a suitable vessel
+ *  for Ignis's vengeance.
+*/
+static monster* _ignis_champion_target()
+{
+    monster* best_mon = nullptr;
+    // Never pick monsters that are incredibly weak. That's just sad.
+    int min_xl = you.get_experience_level() / 2;
+    int seen = 0;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+        // Some of these cases are redundant. TODO: cleanup
+        if (!mon
+            || mons_is_firewood(*mon)
+            || !mons_can_use_stairs(*mon, DNGN_STONE_STAIRS_DOWN_I)
+            || mons_is_tentacle_or_tentacle_segment(mon->type)
+            || mon->is_stationary()
+            || mons_is_conjured(mon->type)
+            || mon->is_perm_summoned()
+            || mon->wont_attack()
+            // no stealing another god's pals :P
+            || mon->is_priest())
+        {
+            continue;
+        }
+
+        // Don't anoint monsters with no melee attacks or with an
+        // existing attack flavour.
+        const mon_attack_def atk = mons_attack_spec(*mon, 0, true);
+        if (atk.type == AT_NONE || atk.flavour != AF_PLAIN)
+            continue;
+
+        // Don't pick something weaker than a different mon we've already seen.
+        const int hd = mon->get_experience_level();
+        if (hd < min_xl)
+            continue;
+
+        // Is this the new strongest thing we've seen? If so, reset the
+        // HD floor & the seen count.
+        if (hd > min_xl)
+        {
+            min_xl = hd;
+            seen = 0;
+        }
+
+        // Reservoir sampling among monsters of this HD.
+        ++seen;
+        if (one_chance_in(seen))
+            best_mon = mon;
+    }
+
+    return best_mon;
+}
+
+static bool _ignis_champion()
+{
+    monster *mon = _ignis_champion_target();
+    if (!mon)
+        return false;
+    // Message ordering is a bit touchy here.
+    // First, we say what we're doing. TODO: more fun messages
+    simple_god_message(make_stringf(" anoints %s as an instrument of vengeance!",
+                                    mon->name(DESC_THE).c_str()).c_str(), GOD_IGNIS);
+    // Then, we add the ench. This makes it visible if it wasn't, since it's both
+    // confusing and unfun for players otherwise.
+    mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION, 1));
+    // Then we fire off update_monsters_in_view() to make the next messages make more
+    // sense. This triggers 'comes into view' if needed.
+    update_monsters_in_view();
+    // Then we explain what 'fire champion' does, for those who don't go through xv
+    // with a fine-toothed comb afterward.
+    simple_monster_message(*mon, " is coated in flames, covering ground quickly"
+                                 " and attacking fiercely!");
+    // Then we alert it last. It's just reacting, after all.
+    behaviour_event(mon, ME_ALERT, &you);
+    // Assign blame (so we can look up funny deaths)
+    mons_add_blame(mon, "anointed by " + god_name(GOD_IGNIS));
+    return true;
+}
+
+static bool _ignis_retribution()
+{
+    if (one_chance_in(3) && _ignis_shaft())
+        return true;
+    if (coinflip() && _ignis_champion())
+        return true;
+    _summon_ignis_elementals();
+    return true;
+}
+
 static bool _uskayaw_retribution()
 {
     const god_type god = GOD_USKAYAW;
@@ -2091,6 +2222,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
     case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
+    case GOD_IGNIS:         do_more = _ignis_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:

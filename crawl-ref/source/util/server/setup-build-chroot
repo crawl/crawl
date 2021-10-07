@@ -1,0 +1,152 @@
+#!/bin/bash
+#---help---
+# Usage: setup-build-chroot
+#
+# This script sets up a DCSS server build chroot, and alters the dgamelaunch
+# configuration to use it for compilation.
+#
+# The source and chroot directories are hard-coded:
+# - Config is assumed to be at: /home/crawl-dev/
+# - A new build chroot is assumed to be at: /home/crawl-dev/build-chroot/
+#
+# It will run these steps, in order:
+# - bind-mount the existing crawl-build directory into the chroot
+# - add a fstab entry to do that automatically
+# - patch `dgamelaunch-config/crawl-git.conf` to build via the chroot
+# - install required packages
+#---help---
+
+set -euo pipefail
+
+die() {
+    printf '\033[1;31mERROR:\033[0m %s\n' "$@" >&2  # bold red
+    exit 1
+}
+
+einfo() {
+    printf '\n\033[1;36m> %s\033[0m\n' "$@" >&2  # bold cyan
+}
+
+usage() {
+    sed -En '/^#---help---/,/^#---help---/p' "$0" | sed -E 's/^# ?//; 1d;$d;'
+}
+
+################################################################################
+
+while getopts 'h' OPTION; do
+    case "$OPTION" in
+        h) usage; exit 0;;
+        *) exit 1;;
+    esac
+done
+
+if [ "$(id -u)" -ne 0 ]; then
+    die "This script must be run as root!"
+fi
+
+################################################################################
+
+CRAWL_DEV="/home/crawl-dev"
+BUILD_CHROOT="$CRAWL_DEV/build-chroot"
+
+einfo "Sanity-testing the existing /home/crawl-dev/ directory"
+
+[ -d "$CRAWL_DEV/dgamelaunch-config/crawl-build" ] \
+    || die "Existing $CRAWL_DEV does not look correct";
+[ -f "$BUILD_CHROOT/enter-chroot" ] \
+    || die "Build chroot $BUILD_CHROOT does not look correct"
+
+einfo "Binding the crawl-build directory into the chroot"
+
+mkdir -p "$BUILD_CHROOT/crawl-build"
+
+cat >> /etc/fstab <<-EOF
+$CRAWL_DEV/dgamelaunch-config/crawl-build    $BUILD_CHROOT/crawl-build    none    bind    0    0
+EOF
+
+mount -v "$BUILD_CHROOT/crawl-build"
+
+einfo "Patching crawl-git.conf"
+
+(
+    cd $CRAWL_DEV/dgamelaunch-config/
+
+    git apply --verbose <<-'EOF'
+diff --git a/crawl-git.conf b/crawl-git.conf
+index 81489fd..3b2709c 100644
+--- a/crawl-git.conf
++++ b/crawl-git.conf
+@@ -49,7 +49,10 @@ crawl-repo-do() {
+ }
+
+ crawl-do() {
+-    ( cd \$CRAWL_REPO/crawl-ref && "\$@" )
++    sudo $BUILD_CHROOT/enter-chroot <<-EOF
++        cd /crawl-build/crawl-git-repository/crawl-ref
++        \$@
++EOF
+ }
+
+ git-do() {
+EOF
+
+    patch --verbose utils/webtiles <<-'EOF'
+--- utils/webtiles	2020-03-21 15:41:02.200482716 +0000
++++ utils/webtiles	2020-03-21 15:40:55.136478475 +0000
+@@ -35,7 +35,7 @@
+ 	log_daemon_msg "Starting webtiles server" "webtiles"
+ 	ulimit -n 4096
+ 
+-	PYTHONPATH=/home/crawl-dev/tornado/ python ./server.py
++	chroot %%DGL_CHROOT%% python3 crawl-master/webserver/server.py
+ 	local result=$?
+ 	log_end_msg $result
+ 	return $result
+EOF
+
+    git apply --verbose <<-'EOF'
+diff --git a/config.py b/config.py
+index 3bbfd89..48476ff 100644
+--- a/config.py
++++ b/config.py
+@@ -559,7 +559,7 @@ gid = "%%DGL_GID%%"  # after binding its sockets.
+ 
+ umask = None # e.g. 0077
+ 
+-chroot = "%%DGL_CHROOT%%"
++chroot = "/"
+ 
+ pidfile = "%%CHROOT_WEBDIR%%/run/webtiles.pid"
+ daemon = True # If true, the server will detach from the session after startup
+EOF
+)
+
+einfo "Cleaning build directory"
+
+(
+    cd "$CRAWL_DEV/dgamelaunch-config/crawl-build/crawl-git-repository/"
+    git clean -fdx
+)
+
+einfo "Mounting /proc and /dev/pts"
+
+mount -v --bind /dev/pts "$BUILD_CHROOT/dev/pts"
+mount -v --bind /proc "$BUILD_CHROOT/proc"
+
+einfo "Installing required packages"
+
+"$BUILD_CHROOT/enter-chroot" <<-EOF
+    apt -y install make git libpcre3-dev libncursesw5-dev python python-yaml \
+        pkg-config libpng++-dev libpng-dev
+EOF
+
+einfo "Unmounting /proc and /dev/pts"
+
+umount -v "$BUILD_CHROOT/dev/pts"
+umount -v "$BUILD_CHROOT/proc"
+
+einfo "Publishing DGL config..."
+
+/home/crawl-dev/dgamelaunch-config/bin/dgl publish --confirm
+
+einfo 'Done! Remember to commit the changes to dgamelaunch-config!'

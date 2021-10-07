@@ -99,6 +99,15 @@ body {
 #player_list th.place {
     width: 3em;
 }
+#player_list th.turn {
+    width: 3em;
+}
+#player_list th.dur {
+    width: 4em;
+}
+#player_list.no_game_times .turn, #player_list.no_game_times .dur {
+    display: none;
+}
 
 #player_list th.idle_time {
     width: 3em;
@@ -124,6 +133,10 @@ body {
 }
 #player_list .new_milestone {
     position: relative;
+}
+
+#play_now {
+    padding-top: 10px;
 }
 
 #admin_panel {
@@ -193,6 +206,14 @@ body {
 
 #reset_pw_submit {
     float: right;
+}
+
+#change_cur_password,#change_new_password,#change_repeat_password {
+    float: right;
+}
+
+#chpw_form label {
+    float: left;
 }
 
 .text {

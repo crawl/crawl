@@ -1,19 +1,51 @@
 Play now:
-{% set rcs = set() %}
-{% for id in games %}
-{% if games[id]["rcfile_path"] not in rcs %}
-{% if "separator" in games[id] %}
-{% raw games[id]["separator"] %}
-{% else %}<br>{% end %}
-<a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
-{% set rcs.add(games[id]["rcfile_path"]) %}
-<a href="javascript:"
-   class="edit_rc_link"
-   data-game_id="{{ id }}">(edit rc)</a>
-{% else %}
-{% if "separator" in games[id] %}
-{% raw games[id]["separator"] %}
-{% else %} | {% end %}
-<a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
-{% end %}
+{% try %}
+    {% set rcs = set() %}
+    {% for id in games %}
+        {% if disabled(save_info[id]) %}<span class="fg7">{% else %}<span>{% end %}
+        {% if games[id]["rcfile_path"] not in rcs %}
+            {% if "separator" in games[id] %}
+                {% raw games[id]["separator"] %}
+            {% else %}<br>{% end %}
+            {% if not save_info[id] %}<a href="#play-{{ id }}">{% end %}
+                {{ games[id]["name"] }}{% if not save_info[id] %}</a>{% end %}
+            {% if save_info[id] %}
+                <span>{% if not disabled(save_info[id]) %}<a href="#play-{{ id }}">{% end %}{{ save_info[id] }}{% if not disabled(save_info[id]) %}</a>{% end %}</span>
+            {% end %}
+            {% set rcs.add(games[id]["rcfile_path"]) %}
+            <a href="javascript:"
+               class="edit_rc_link"
+               data-game_id="{{ id }}">(edit rc)</a>
+        {% else %}
+            {% if "separator" in games[id] %}
+              {% raw games[id]["separator"] %}
+            {% else %} | {% end %}
+            {% if not save_info[id] %}<a href="#play-{{ id }}">{% end %}
+                {{ games[id]["name"] }}{% if not save_info[id] %}</a>{% end %}
+            {% if save_info[id] %}
+                <span>{% if not disabled(save_info[id]) %}<a href="#play-{{ id }}">{% end %}{{ save_info[id] }}{% if not disabled(save_info[id]) %}</a>{% end %}</span>
+            {% end %}
+        {% end %}
+        </span>
+    {% end %}
+{% except %}
+{% comment this is a simpler fallback so that the file can be replaced while a server is running. %}
+    {% set rcs = set() %}
+    {% for id in games %}
+    {% if games[id]["rcfile_path"] not in rcs %}
+    {% if "separator" in games[id] %}
+    {% raw games[id]["separator"] %}
+    {% else %}<br>{% end %}
+    <a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
+    {% set rcs.add(games[id]["rcfile_path"]) %}
+    <a href="javascript:"
+       class="edit_rc_link"
+       data-game_id="{{ id }}">(edit rc)</a>
+    {% else %}
+    {% if "separator" in games[id] %}
+    {% raw games[id]["separator"] %}
+    {% else %} | {% end %}
+    <a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
+    {% end %}
+    {% end %}
 {% end %}

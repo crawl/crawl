@@ -183,7 +183,8 @@ function FogMachine:do_trigger(triggerer, marker, ev)
     if (self.buildup_turns > self.size_buildup_time) then
       self.buildup_turns = self.size_buildup_time
     end
-  elseif triggerer.type == "entered_level" then
+  -- arg1 is true iff we're loading a save, meaning we shouldn't reset countdowns.
+  elseif triggerer.type == "entered_level" and ev:arg1() ~= 1 then
     local et = dgn.dgn_event_type("turn")
     for _, trig_idx in ipairs(self.dgn_trigs_by_type[et]) do
       local trig = self.triggerers[trig_idx]
@@ -206,7 +207,8 @@ end
 function FogMachine:on_trigger(triggerer, marker, ev)
   if triggerer.type == 'turn' then
     self:do_fog(dgn.point(marker:pos()))
-  elseif triggerer.type == 'entered_level' then
+  -- arg1 is true iff we're loading a save, meaning we shouldn't generate fog.
+  elseif triggerer.type == "entered_level" and ev:arg1() ~= 1 then
     for i = 1, self.start_clouds do
       self:do_fog(dgn.point(marker:pos()))
     end

@@ -1,21 +1,33 @@
-import os, os.path, errno, fcntl
-import subprocess
-import datetime, time
+import datetime
+import errno
+import fcntl
 import hashlib
 import logging
+import os
+import os.path
 import re
+import subprocess
+import time
+
+from tornado.escape import json_decode
+from tornado.escape import json_encode
+from tornado.escape import to_unicode
+from tornado.escape import utf8
+from tornado.escape import xhtml_escape
+from tornado.ioloop import IOLoop
+from tornado.ioloop import PeriodicCallback
 
 import config
-
-from tornado.escape import json_decode, json_encode, xhtml_escape, utf8, to_unicode
-from tornado.ioloop import PeriodicCallback, IOLoop
-
-from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
-from util import DynamicTemplateLoader, dgl_format_str, parse_where_data
 from game_data_handler import GameDataHandler
-from ws_handler import update_all_lobbys, remove_in_lobbys, CrawlWebSocket
 from inotify import DirectoryWatcher
+from terminal import TerminalRecorder
+from util import DynamicTemplateLoader
+from util import dgl_format_str
+from util import parse_where_data
+from ws_handler import CrawlWebSocket
+from ws_handler import remove_in_lobbys
+from ws_handler import update_all_lobbys
 
 try:
     from typing import Dict, Set, Tuple, Any
@@ -58,7 +70,15 @@ def handle_new_socket(path, event):
         process = CrawlProcessHandler(game_info, username,
                                       unowned_process_logger)
         processes[abspath] = process
-        process.connect(abspath)
+
+        try:
+            process.connect(abspath)
+        except ConnectionRefusedError:
+            self.logger.error("Crawl process socket connection refused for %s, socketpath '%s'.",
+                game_info["id"], abspath, exc_info=True)
+            del processes[abspath]
+            return
+
         process.logger.info("Found a %s game.", game_info["id"])
 
         # Notify lobbys
@@ -135,8 +155,18 @@ class CrawlProcessHandlerBase(object):
         return dgl_format_str(path, self.username, self.game_params)
 
     def config_path(self, key):
-        if key not in self.game_params: return None
-        return self.format_path(self.game_params[key])
+        if key not in self.game_params:
+            return None
+        base_path = self.format_path(self.game_params[key])
+        if key == "socket_path" and getattr(config, "live_debug", False):
+            # TODO: this is kind of brute-force given that regular paths aren't
+            # validated at all...
+            debug_path = os.path.join(base_path, 'live-debug')
+            if not os.path.isdir(debug_path):
+                os.makedirs(debug_path)
+            return debug_path
+        else:
+            return base_path
 
     def idle_time(self):
         return int(time.time() - self.last_activity_time)
@@ -250,7 +280,7 @@ class CrawlProcessHandlerBase(object):
     def handle_notification_raw(self, username, text):
         # type: (str, str) -> None
         msg = ("<span class='chat_msg'>%s</span>" % text)
-        self.send_to_user(username, "chat", content=msg)
+        self.send_to_user(username, "chat", content=msg, meta=True)
 
     def handle_notification(self, username, text):
         # type: (str, str) -> None
@@ -263,6 +293,8 @@ class CrawlProcessHandlerBase(object):
 
         self.idle_checker.stop()
 
+        # send game_ended message to watchers. The player is handled in cleanup
+        # code in ws_handler.py.
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
                 watcher.send_message("game_ended", reason = self.exit_reason,
@@ -455,7 +487,7 @@ class CrawlProcessHandlerBase(object):
     def _send_client(self, watcher):
         h = hashlib.sha1(utf8(os.path.abspath(self.client_path)))
         if self.crawl_version:
-            h.update(self.crawl_version)
+            h.update(utf8(self.crawl_version))
         v = h.hexdigest()
         GameDataHandler.add_version(v,
                                     os.path.join(self.client_path, "static"))
@@ -475,10 +507,10 @@ class CrawlProcessHandlerBase(object):
     def kill(self):
         if self.process:
             self.logger.info("Killing crawl process after SIGHUP did nothing.")
-            self.process.send_signal(subprocess.signal.SIGTERM)
+            self.process.send_signal(subprocess.signal.SIGABRT)
             self.kill_timeout = None
 
-    interesting_info = ("xl", "char", "place", "god", "title")
+    interesting_info = ("xl", "char", "place", "turn", "dur", "god", "title")
     def set_where_info(self, newwhere):
         interesting = False
         for key in CrawlProcessHandlerBase.interesting_info:
@@ -558,6 +590,9 @@ class CrawlProcessHandlerBase(object):
         if "options" in game:
             call += game["options"]
 
+        if "dir_path" in game:
+            call += ["-dir", self.config_path("dir_path")]
+
         return call
 
     def note_activity(self):
@@ -600,7 +635,16 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             try:
                 with open(lockfile) as f:
                     pid = f.readline()
-                pid = int(pid)
+
+                try:
+                    pid = int(pid)
+                except ValueError:
+                    # pidfile is empty or corrupted, can happen if the server
+                    # crashed. Just clear it...
+                    self.logger.error("Invalid PID from lockfile %s, clearing", lockfile)
+                    self._purge_stale_lock()
+                    return
+
                 self._stale_pid = pid
                 self._stale_lockfile = lockfile
                 if firsttime:
@@ -648,7 +692,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         if signal == subprocess.signal.SIGHUP:
             self.logger.info("Purging stale lock at %s, pid %s.",
                              self._stale_lockfile, self._stale_pid)
-        elif signal == subprocess.signal.SIGTERM:
+        elif signal == subprocess.signal.SIGABRT:
             self.logger.warning("Terminating pid %s forcefully!",
                                 self._stale_pid)
         try:
@@ -668,7 +712,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.handle_process_end()
                 return
         else:
-            if signal == subprocess.signal.SIGTERM:
+            if signal == subprocess.signal.SIGABRT:
                 self._purge_stale_lock()
             else:
                 if signal == subprocess.signal.SIGHUP:
@@ -691,7 +735,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _do_force_terminate(self, answer):
         if answer:
-            self._kill_stale_process(subprocess.signal.SIGTERM)
+            self._kill_stale_process(subprocess.signal.SIGABRT)
         else:
             self.handle_process_end()
 
@@ -732,7 +776,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.process = TerminalRecorder(call, self.ttyrec_filename,
                                             self._ttyrec_id_header(),
                                             self.logger,
-                                            config.recording_term_size)
+                                            config.recording_term_size,
+                                            env_vars = game.get("env", {}),
+                                            game_cwd = game.get("cwd", None),)
             self.process.end_callback = self._on_process_end
             self.process.output_callback = self._on_process_output
             self.process.activity_callback = self.note_activity
@@ -742,7 +788,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
             self.connect(self.socketpath, True)
 
-            self.logger.info("Crawl FDs: fd%s, fd%s.",
+            self.logger.debug("Crawl FDs: fd%s, fd%s.",
                              self.process.child_fd,
                              self.process.errpipe_read)
 
@@ -751,6 +797,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.check_where()
         except Exception:
             self.logger.warning("Error while starting the Crawl process!", exc_info=True)
+            self.exit_reason = "error"
+            self.exit_message = "Error while starting the Crawl process!\nSomething has gone very wrong; please let a server admin know."
+            self.exit_dump_url = None
+
             if self.process:
                 self.stop()
             else:
@@ -797,7 +847,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                  clrscr)
 
     def _on_process_end(self):
-        self.logger.info("Crawl terminated.")
+        if self.process:
+            self.logger.debug("Crawl PID %s terminated.", self.process.pid)
+        else:
+            self.logger.error("Crawl process failed to start, cleaning up.")
 
         self.remove_inprogress_lock()
 

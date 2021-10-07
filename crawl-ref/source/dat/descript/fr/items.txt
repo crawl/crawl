@@ -1,14 +1,4 @@
 %%%%
-amulet of clarity
-
-Cette amulette protège son porteur contre certaines formes de confusion
-mentale, dont celle d'être enragé contre sa volonté.
-%%%%
-amulet of conservation
-
-Cette amulette protège de la destruction certaines possessions, mais pas de
-manière infaillible.
-%%%%
 amulet of guardian spirit
 
 Cette amulette héberge un esprit protecteur qui divise les dégâts subits par le
@@ -18,44 +8,6 @@ amulet of inaccuracy
 
 Cette amulette rend le porteur moins précis dans ses attaques de mêlée et
 lorsqu'il vise ses ennemis en tirant ou en lançant des sorts.
-%%%%
-amulet of rage
-
-Cette amulette permet au porteur de tenter d'entrer dans un état de folie
-furieuse.
-%%%%
-amulet of resist corrosion
-
-Cette amulette protège le porteur et son équipement des effets de la corrosion
-causée par des acides, mais pas de manière infaillible.
-%%%%
-amulet of resist mutation
-
-Cette amulette protège son porteur des mutations, mais pas de manière
-infaillible.
-%%%%
-amulet of stasis
-
-Une amulette fabriquée méticuleusement avec des charmes pour bloquer les effets
-magiques et physiologiques qui pourraient autrement téléporter, ralentir,
-accélérer ou paralyser son porteur.
-
-Bien que l'amulette soit efficace contre la plupart des magies translocatives,
-les changements de plan tels que le bannissement sont au delà des ses capacités
-bloquantes.
-%%%%
-amulet of the gourmand
-
-Cette amulette permet à son porteur de digérer la viande fraîche crue même s'il
-n'a pas faim et en augmente significativement l'apport nutritionnel. Ces effets
-sur la digestion du porteur s'accumulent avec le temps et sont initialement
-faibles.
-%%%%
-amulet of warding
-
-Cette amulette repousse une partie des attaques des créatures qui ont été
-convoquées par magie, et rend également le porteur plus résistant aux attaques
-qui drainent la force vitale.
 %%%%
 animal skin
 
@@ -144,17 +96,6 @@ sorciers, car il permet aux plus doués de répandre la destruction avec la
 facilité d'un claquement de doigt. Cependant, les médiocres courent à leur
 perte s'ils essaient de le lire.
 %%%%
-book of battle
-
-Un livre de sorts utilisés par les skalds, dont les chants de batailles leur
-accorde une aide magique.
-%%%%
-book of beasts
-
-Un livre de sorts aux pages faites de peaux d'animaux et à la couverture
-couverte de morsure dont le contenu est principalement concentré sur la
-production magiques de bêtes.
-%%%%
 book of burglary
 
 Un livre contenant de nombreux sorts utiles pour voler, entrer par effraction,
@@ -211,13 +152,6 @@ nombre de sorts reflétant l'état de ses rêve. Les détracteurs de l'œuvre fo
 valoir que les sorts ne sont fonctionnellement pas différents de ceux déjà
 connus, mais le livre reste populaire pour l'extraordinaire bizarrerie de son
 imagerie et pour ses digressions cryptiques.
-%%%%
-book of enchantments
-
-Un livre contenant un assortiment de Malédictions et de Charmes magiques qui
-crépitent et chatoient lorsque les pages sont tournées; Le titre quelque peu
-anachronique reflète une plus ancienne et incomplète compréhension de ces deux
-écoles de magie.
 %%%%
 book of envenomations
 
@@ -326,12 +260,6 @@ commandement de serviteurs morts-vivants. Ce livre terrible irradie une aura
 malfaisante, et ses pages de parchemin tremblent et frémissent parfois toutes
 seules.
 %%%%
-book of war chants
-
-Un livre de sorts utile pour un guerrier. Les versions présentées ici ont une
-forme musicale, suivant les traditions des skalds guerriers. Fonctionnellement,
-cependant, ils sont identiques aux sorts dont les mots sont simplement parlés.
-%%%%
 book of wizardry
 
 Un livre contenant divers sorts utiles aux laceurs de sorts suffisamment
@@ -375,11 +303,6 @@ Un morceau de fromage.
 choko
 
 Un légume vert presque insipide, qui pousse sur des vignes.
-%%%%
-chunk of flesh
-
-Un morceau de viande crue trouvé dans le donjon. Il ne va pas rester frais bien
-longtemps.
 %%%%
 cloak
 
@@ -437,12 +360,6 @@ et elle ne peut être manipulée par les forces du mal.
 eveningstar
 
 L'opposé d'une étoile du matin.
-%%%%
-fan of gales
-
-Un éventail enchanté habité par des esprits de l'air bienveillants. Agiter
-l'éventail déclenche un violent coup de vent autour du porteur et libère les
-esprits pour balayer ses ennemies.
 %%%%
 fire dragon scales
 
@@ -538,11 +455,6 @@ lajatang
 
 Une arme exotique très rare et extremement efficace, ce baton présente une lame
 en croissant de lune à chaque extrémité.
-%%%%
-lamp of fire
-
-Une lampe magique habitée par des esprits du feu bienveillants. Ouvrir la porte
-libère les esprits et fait danser les flammes sur les ennemies du porteur.
 %%%%
 large rock
 
@@ -891,11 +803,6 @@ scroll of magic mapping
 
 Ce parchemin révèle les environs de celui qui le lit.
 %%%%
-scroll of random uselessness
-
-Il est facile d'être aveuglé par le sentiment d'accomplissement que l'on a à
-faire marcher ce parchemin, au vu de sa particulière inutilité.
-%%%%
 scroll of remove curse
 
 Lire ce parchemin permet de libérer les objets que vous portez ou tenez en main
@@ -945,16 +852,6 @@ pointue fixée au bout.
 staff of conjuration
 
 Ce bâton accroit la puissance des conjurations de son porteur.
-%%%%
-staff of energy
-
-Ce bâton permet à son porteur de contrôler l'énergie magique : jeter des sorts
-ne donne plus faim et il peut canaliser la magie ambiante.
-%%%%
-staff of wizardry
-
-Ce bâton accroit significativement l'aptitude de son porteur à lancer des
-sorts.
 %%%%
 steam dragon hide
 
@@ -1025,49 +922,14 @@ Une armure magique confectionnée à partir de la peau raide et bosselée d'un
 troll. Elle est capable de régénérer les tissus de son porteur à un rythme lent
 (sauf si le porteur est déjà un troll).
 %%%%
-wand of cold
-
-Un instrument magique permettant de tirer de puissants missiles de froid.
-%%%%
 wand of digging
 
 Un instrument magique qui creuse des tunnels a travers la roche brute.
-%%%%
-wand of disintegration
-
-Un instrument magique qui désagrège la structure physique de n'importe quoi, à
-l’exception notable des murs les plus durs – cela inclue les statues rigides,
-bref tout ce qui n'est pas de chair.
-%%%%
-wand of enslavement
-
-Un instrument magique qui provoque une servitude aveugle chez une créature.
-%%%%
-wand of fire
-
-Un instrument magique qui tire de puissants missiles de feu.
-%%%%
-wand of fireball
-
-Un instrument magique qui tire des salves de flammes explosives.
-%%%%
-wand of invisibility
-
-Un instrument magique qui cache une créature à la vue des autres.
-%%%%
-wand of magic darts
-
-Un instrument magique qui tire de petits missiles d'énergie destructrice. Ils
-ne ratent jamais.
 %%%%
 wand of polymorph
 
 Un instrument magique qui métamorphose la créature ciblée en une autre
 créature. Ceci est particulièrement efficace contre les changeurs de forme.
-%%%%
-wand of random effects
-
-Un instrument magique qui peut produire une grande variété d'effets.
 %%%%
 whip
 

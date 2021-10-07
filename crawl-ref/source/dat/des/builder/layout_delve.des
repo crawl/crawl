@@ -474,7 +474,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if is_validating() then return; end
 
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     extend_map{width = gxm, height = gym}
 
     local map_border = 5
@@ -500,7 +500,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     --    1. Add some circles of floor
     --    2. Expand the floor circles using spotty_map
     --    3. Convert the floor to unbreakable wall (later water)
-    for i = 1, crawl.random_range(40, 60) do
+    for i = 1, crawl.random_range((20 * gym) / dgn.GYM, (30 * gym) / dgn.GYM) do
         local x = crawl.random_range(map_x_min, map_x_max)
         local y = crawl.random_range(map_y_min, map_y_max)
         local radius = crawl.random_range(0, 1)
@@ -510,16 +510,16 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
         make_circle ({ x = x, y = y, radius = radius, fill = '.'})
     end
-    local iterations = crawl.random_range(150, 350)
+    local iterations = (crawl.random_range(100, 300) * gym) / dgn.GYM
     spotty_map { boxy = false, iterations = iterations }
-    subst('. = X')
+    subst('. = R')
 
     -- Delve the paths
     local ngb_min = 2
-    local ngb_max = 5
+    local ngb_max = 4
     -- chance of connecting to an adjacent passage
     local connchance = 0
-    local total_count = crawl.random_range(200, 500)
+    local total_count = crawl.random_range(100, 300)
     local top = 10
 
     -- Delve the main path and add two sets of stairs.  This
@@ -534,22 +534,12 @@ TAGS:   no_rotate no_vmirror no_hmirror
     subst('. = >')
 
     -- Delve some smaller paths
-    for i = 1, crawl.random_range(1, 3) do
-        ngb_min = util.random_choose_weighted { {1, 3}, {2, 1} }
-        ngb_max = crawl.random_range(2, 5)
-        connchance = util.random_choose_weighted
-            { {0, 1}, {2, 2}, {5, 1}, {20, 1} }
-        total_count = crawl.random_range(50, 150)
-        top = util.random_choose_weighted
-            { {1, 1}, {20, 1}, {125, 1}, {500, 1}, {999999, 1} }
-
-        delve(2, 3, 3, 150, 100)
+    for i = 1, (gym / 20) do
+        delve(2, 3, 3, 50, 100)
     end
     subst('. = <')
 
     -- Fix up the map after delving.
-    --    1. The edges become walls
-    --    2. The remaining unbreakable walls become water
     fill_area { x1 = 0,         y1 = 0,
                 x2 = map_x_min, y2 = gym-1,     fill = 'x' }
     fill_area { x1 = map_x_max, y1 = 0,
@@ -558,17 +548,17 @@ TAGS:   no_rotate no_vmirror no_hmirror
                 x2 = map_x_max, y2 = map_y_min, fill = 'x' }
     fill_area { x1 = map_x_min, y1 = map_y_max,
                 x2 = map_x_max, y2 = gym-1,     fill = 'x' }
-    subst('X = w')
+    subst('R = w')
 
     -- Add some rooms
-    for i = 1, crawl.random_range(15, 25) do
+    for i = 1, crawl.random_range(1,5) do
         local x = crawl.random_range(8, gxm-9)
         local y = crawl.random_range(8, gym-9)
         local radius = util.random_choose_weighted
             { {1, 30}, {2, 50}, {3, 15}, {4, 4}, {5, 1} }
 
-        octa_room { x1 = x - radius, y1 = y - radius,
-                    x2 = x + radius, y2 = y + radius,
+         octa_room { x1 = x - radius, y1 = y - radius,
+                   x2 = x + radius, y2 = y + radius,
                     oblique = radius, replace = 'x', inside = '<'}
     end
 

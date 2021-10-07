@@ -1,5 +1,6 @@
 #pragma once
 
+#include "spell-type.h"
 #include "zap-type.h"
 
 zap_type spell_to_zap(spell_type spell);

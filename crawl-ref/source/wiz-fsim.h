@@ -5,6 +5,10 @@
 
 #pragma once
 
+#include <string>
+
+using std::string;
+
 struct fight_damage_stats
 {
     fight_damage_stats(string att) : cumulative_damage(0), time_taken(0), hits(0),

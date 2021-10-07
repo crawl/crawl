@@ -95,20 +95,6 @@ perdido descansando con <input>$cmd[CMD_REST]</input>. Este descanso puede
 durar hasta 100 turnos por cada pulsación, pero algunos eventos importantes
 podrían interrumpirlo.
 %%%%
-tutorial2 chop_corpses
-
-Para descuartizar cadáveres y obtener de ellos trozos de carne comestible,
-pulsa <input>$cmd[CMD_BUTCHER]</input><localtiles>, o haz <input>Shift +
-clic</input></localtiles>. Una vez hecho esto, podrás comerte los trozos de
-carne que hayas conseguido mediante <input>$cmd[CMD_EAT]</input><localtiles>,
-o haciendo <input>clic</input> con el ratón</localtiles>.
-%%%%
-tutorial2 rest_and_chop_reminder
-
-¡No te olvides de descuartizar cadáveres para conseguir comida (con
-<input>$cmd[CMD_BUTCHER]</input>), o de descansar (con
-<input>$cmd[CMD_REST]</input>)!
-%%%%
 tutorial2 wait
 
 En lugar de entrar de lleno en la sala, donde podrías verte rodeado de
@@ -331,12 +317,6 @@ tutorial5 berserk
 Contra enemigos particularmente difíciles, te puede interesar usar el poder de
 Trog Furia mediante <input>$cmd[CMD_USE_ABILITY]</input><localtiles> o a
 través del <w>panel de comandos</w></localtiles>.
-%%%%
-tutorial5 hunger
-
-No puedes enfurecerte cuando esta muy hambriento, así que siempre deberías
-llevar algo de comida contigo. Esto significa que a veces tendrás que elegir
-entre descuartizar un cadáver u ofrecérselo a Trog.
 %%%%
 tutorial5 berserk2
 

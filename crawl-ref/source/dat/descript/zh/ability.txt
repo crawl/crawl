@@ -374,19 +374,6 @@ Cure Bad Mutation ability
 
 随机移除你身体中的一个有害突变。
 %%%%
-Scrying ability
-
-赐予你星界的视觉，让你能看透墙壁。该异能不足以让你对墙壁另一端使用法术或异能—
-—即使是能隔着玻璃使用的那些也不行。
-%%%%
-Transfer Knowledge ability
-
-牺牲你在一项技能中的部分经验来学习另一项技能。
-%%%%
-End Transfer Knowledge ability
-
-中断正在进行的技能转换。
-%%%%
 Renounce Religion ability
 
 与你信仰的神祗断绝关系。这会导致你的角色不再信仰该神祗；通常来说，

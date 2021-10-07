@@ -8,14 +8,9 @@
 
 #pragma once
 
-#define HERD_COMFORT_RANGE 6
+#include "tag-version.h"
 
-enum corpse_effect_type
-{
-    CE_NOCORPSE,
-    CE_CLEAN,
-    CE_NOXIOUS,
-};
+#define HERD_COMFORT_RANGE 6
 
 // TODO: Unify this and a player_equivalent (if applicable)
 // and move into attack.h
@@ -77,10 +72,12 @@ enum attack_flavour
     AF_DRAIN_INT,
     AF_DRAIN_DEX,
     AF_DRAIN_STAT,
-    AF_DRAIN_XP,
+    AF_DRAIN,
     AF_ELEC,
     AF_FIRE,
+#if TAG_MAJOR_VERSION == 34
     AF_HUNGER,
+#endif
     AF_MUTATE,
     AF_POISON_PARALYSE,
     AF_POISON,
@@ -94,8 +91,8 @@ enum attack_flavour
     AF_POISON_INT,
     AF_POISON_DEX,
     AF_POISON_STAT,
-#endif
     AF_ROT,
+#endif
     AF_VAMPIRIC,
 #if TAG_MAJOR_VERSION == 34
     AF_KLOWN,
@@ -136,6 +133,10 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
 #endif
+    AF_REACH_TONGUE,
+    AF_BLINK_WITH,
+    AF_SEAR,
+    AF_BARBS,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -205,7 +206,7 @@ enum mon_resist_flags
     MR_RES_FIRE          = 1 << 6,
     MR_RES_COLD          = 1 << 9,
     MR_RES_NEG           = 1 << 12,
-    MR_RES_ROTTING       = 1 << 15,
+    MR_RES_MIASMA        = 1 << 15,
     MR_RES_ACID          = 1 << 18,
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
@@ -219,7 +220,7 @@ enum mon_resist_flags
     // unused 1 << 25,
 #endif
     MR_RES_STICKY_FLAME  = 1 << 26,
-    MR_RES_TORNADO       = 1 << 27,
+    MR_RES_VORTEX       = 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
@@ -253,6 +254,7 @@ enum shout_type
     S_CHERUB,               // for cherubs
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
+    S_RUSTLE,               // books
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+#include "debug.h"
+#include "fixedvector.h"
 #include "hash.h"
 #include "rng-type.h"
 #include "pcg.h"
@@ -85,7 +87,6 @@ double random_real();
 
 int random2avg(int max, int rolls);
 int biased_random2(int max, int n);
-int random2limit(int max, int limit);
 int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);
 bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
@@ -220,7 +221,7 @@ struct dice_def
 
 constexpr dice_def CONVENIENT_NONZERO_DAMAGE{42, 1};
 
-dice_def calc_dice(int num_dice, int max_damage);
+dice_def calc_dice(int num_dice, int max_damage, bool random = true);
 
 // I must be a random-access iterator.
 template <typename I>

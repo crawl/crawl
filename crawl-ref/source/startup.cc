@@ -20,7 +20,6 @@
 #include "end.h"
 #include "exclude.h"
 #include "files.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -112,8 +111,8 @@ static void _initialize()
     reset_all_monsters();
     init_anon();
 
-    igrd.init(NON_ITEM);
-    mgrd.init(NON_MONSTER);
+    env.igrid.init(NON_ITEM);
+    env.mgrid.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
     env.pgrid.init(terrain_property_t{});
 
@@ -138,7 +137,9 @@ static void _initialize()
     _loading_message("Loading spells and features...");
     init_feat_desc_cache();
     init_spell_name_cache();
-    init_spell_rarities();
+#ifdef DEBUG
+    validate_spellbooks();
+#endif
 
     // Read special levels and vaults.
     _loading_message("Loading maps...");
@@ -206,30 +207,38 @@ static void _initialize()
 *
 *  Doesn't affect monsters behind glass, only those that would
 *  immediately have line-of-fire.
-*
-*  @param items_also whether to zap items as well as monsters.
 */
-static void _zap_los_monsters(bool items_also)
+static void _zap_los_monsters()
 {
+    const bool items_also = Hints.hints_events[HINT_SEEN_FIRST_OBJECT];
     for (radius_iterator ri(you.pos(), LOS_SOLID); ri; ++ri)
     {
         if (items_also)
         {
-            int item = igrd(*ri);
+            int item = env.igrid(*ri);
 
-            if (item != NON_ITEM && mitm[item].defined())
+            if (item != NON_ITEM && env.item[item].defined())
                 destroy_item(item);
         }
 
-        // If we ever allow starting with a friendly monster,
-        // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == nullptr || !mons_is_threatening(*mon))
+        if (mon == nullptr || !mons_is_threatening(*mon) || mon->friendly())
             continue;
 
         dprf("Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str());
 
+        if (mons_is_or_was_unique(*mon))
+        {
+            if (mons_is_elven_twin(mon))
+            {
+                if (monster* sibling = mons_find_elven_twin_of(mon))
+                {
+                    sibling->flags |=MF_HARD_RESET;
+                    monster_die(*sibling, KILL_DISMISSED, NON_MONSTER, true, true);
+                }
+            }
+        }
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
@@ -262,8 +271,6 @@ static void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
-    if (you.form != transformation::lich)
-        food_change(true);
     shopping_list.refresh();
 
     run_map_local_preludes();
@@ -275,7 +282,7 @@ static void _post_init(bool newc)
 
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;
-        you.depth = 1;
+        you.depth = starting_absdepth() + 1;
         // Abyssal Knights start out in the Abyss.
         if (you.chapter == CHAPTER_POCKET_ABYSS)
             you.where_are_you = BRANCH_ABYSS;
@@ -287,13 +294,17 @@ static void _post_init(bool newc)
     level_id old_level;
     old_level.branch = NUM_BRANCHES;
 
-    load_level(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
+    load_level(you.entering_level ? you.transit_stair :
+               you.char_class == JOB_DELVER ? DNGN_STONE_STAIRS_UP_I : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :
                newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
                old_level);
 
     if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
+    {
         generate_abyss();
+        save_level(level_id::current());
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
@@ -313,13 +324,17 @@ static void _post_init(bool newc)
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
     you.redraw_experience   = true;
-    you.redraw_quiver       = true;
+    you.redraw_noise        = true;
     you.wield_change        = true;
+    you.gear_change         = true;
+    quiver::set_needs_redraw();
+
 
     // Start timer on session.
     you.last_keypress_time = chrono::system_clock::now();
 
-#ifdef CLUA_BINDINGS
+    // in principle everything here might be skippable if CLUA_BINDINGS is not
+    // defined, but do it anyways for consistency with normal builds.
     clua.runhook("chk_startgame", "b", newc);
 
     read_init_file(true);
@@ -329,7 +344,6 @@ static void _post_init(bool newc)
     init_char_table(Options.char_set);
     init_show_table();
     init_monster_symbols();
-#endif
 
 #ifdef USE_TILE
     init_player_doll();
@@ -338,13 +352,15 @@ static void _post_init(bool newc)
 #endif
     update_player_symbol();
 
+    if (newc)
+        quiver::on_newchar(); // needs to happen after init file is read
+
     draw_border();
     new_level(!newc);
     update_turn_count();
     update_vision_range();
-    you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
-    ash_check_bondage(false);
+    ash_check_bondage();
 
     trackers_init_new_level();
 
@@ -352,14 +368,16 @@ static void _post_init(bool newc)
     {
         // For a new game, wipe out monsters in LOS, and
         // for new hints mode games also the items.
-        _zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
+        _zap_los_monsters();
     }
 
     // This just puts the view up for the first turn.
     you.redraw_title = true;
     you.redraw_status_lights = true;
     print_stats();
+    update_screen();
     viewwindow();
+    update_screen();
 
     activate_notes(true);
 
@@ -413,7 +431,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->set_cross_alignment(Widget::Align::CENTER);
         auto tile = make_shared<Image>();
-        tile->set_tile(tile_def(tileidx_gametype(entry.id), TEX_GUI));
+        tile->set_tile(tile_def(tileidx_gametype(entry.id)));
         tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(move(tile));
         hbox->add_child(label);
@@ -527,14 +545,14 @@ static bool _game_defined(const newgame_def& ng)
            && ng.job != JOB_UNKNOWN;
 }
 
-// TODO: should be game_type. Also, does this really need to be static?
-// maybe part of crawl_state?
-static int startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
-
 class UIStartupMenu : public Widget
 {
 public:
-    UIStartupMenu(newgame_def& _ng_choice, const newgame_def &_defaults) : done(false), end_game(false), ng_choice(_ng_choice), defaults(_defaults) {
+    UIStartupMenu(newgame_def& _ng_choice, const newgame_def &_defaults)
+                : done(false), end_game(false), ng_choice(_ng_choice),
+                  defaults(_defaults),
+                  selected_game_type(crawl_state.last_type)
+    {
         chars = find_all_saved_characters();
         num_saves = chars.size();
         input_string = crawl_state.default_startup_name;
@@ -691,8 +709,8 @@ private:
 
     bool on_button_focusin(const MenuButton& btn)
     {
-        startup_menu_game_type = btn.id;
-        switch (startup_menu_game_type)
+        selected_game_type = btn.id;
+        switch (selected_game_type)
         {
         case GAME_TYPE_NORMAL:
         case GAME_TYPE_CUSTOM_SEED:
@@ -711,7 +729,7 @@ private:
             break;
 
         default:
-            int save_number = startup_menu_game_type - NUM_GAME_TYPE;
+            int save_number = selected_game_type - NUM_GAME_TYPE;
             if (save_number < num_saves)
                 input_string = chars.at(save_number).name;
             else // new game
@@ -730,6 +748,8 @@ private:
     shared_ptr<Switcher> descriptions;
     shared_ptr<OuterMenu> game_modes_menu;
     shared_ptr<OuterMenu> save_games_menu;
+    // not a `game_type` because it is used for save #s as well
+    int selected_game_type;
 };
 
 SizeReq UIStartupMenu::_get_preferred_size(Direction dim, int prosp_width)
@@ -758,12 +778,12 @@ void UIStartupMenu::on_show()
     int save = _find_save(chars, input_string);
     // don't use non-enum game_type values across restarts, as the list of
     // saves may have changed on restart.
-    if (startup_menu_game_type >= NUM_GAME_TYPE)
-        startup_menu_game_type = GAME_TYPE_UNSPECIFIED;
+    if (selected_game_type >= NUM_GAME_TYPE)
+        selected_game_type = GAME_TYPE_UNSPECIFIED;
 
     int id;
-    if (startup_menu_game_type != GAME_TYPE_UNSPECIFIED)
-        id = startup_menu_game_type;
+    if (selected_game_type != GAME_TYPE_UNSPECIFIED)
+        id = selected_game_type;
     else if (save != -1)
     {
         // save game id is offset by NUM_GAME_TYPE

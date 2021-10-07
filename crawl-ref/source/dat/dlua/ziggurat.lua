@@ -213,7 +213,8 @@ mset(spec_fn(function ()
   local d = math.max(6, you.depth() * 2 + you.zigs_completed() - 2)
   local e = math.max(1, you.depth() + you.zigs_completed() - 18)
   return "place:Snake:$ w:125 / naga sharpshooter w:5 / guardian serpent w:5 / " ..
-         "nagaraja w:" .. d .. " / quicksilver dragon w:" .. e
+         "salamander tyrant w:" .. d .. " / nagaraja w:" .. d .. " / " ..
+         "quicksilver dragon w:" .. e
 end))
 
 mset(spec_fn(function ()
@@ -248,7 +249,8 @@ end))
 mset(spec_fn(function ()
   local d = 5 + 5 * you.zigs_completed()
   return "place:Slime:$ w:1500 / floating eye w:" .. d .. " / " ..
-         "azure jelly w:" .. d * 5 .. " / acid blob w:" .. d * 14
+         "azure jelly w:" .. d .. " / quicksilver ooze w:" .. d .. " / " ..
+         "rockslime w:" .. d * 3 .. " / acid blob w:" .. d * 14
 end))
 
 mset(spec_fn(function ()
@@ -275,7 +277,7 @@ mset(spec_fn(function ()
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ w:" .. d .. " / " ..
          "glowing shapeshifter / sphinx w:5 / " ..
          "titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
-         "ancient lich w:" .. e
+         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
 end))
 
 mset(spec_fn(function ()
@@ -284,19 +286,19 @@ mset(spec_fn(function ()
   return "place:Crypt:$ 9 w:255 / ancient champion w:" .. d - 5 .. " / " ..
          "curse skull w:" .. d - 5 .. " / profane servitor w:" .. d - 5 .. " / " ..
          "bone dragon w:" .. d .. " / revenant w:" .. d .. " / " ..
-         "ancient lich w:" .. e
+         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
 end))
 
 mset(spec_fn(function ()
   local d = you.zigs_completed()
   local e = 20 + you.depth() * 4 + you.zigs_completed() * 2
   return "place:Tomb:$ 9 w:760 / bennu w:" .. d + 10 .. " / " ..
-         "mummy priest w:" .. d .. " / greater mummy w:" .. e
+         "mummy priest w:" .. d .. " / royal mummy w:" .. e
 end))
 
 mset(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 10
-  return "place:Abyss:$ w:1920 / corrupter w:" .. d * 2 .. " / " ..
+  return "place:Abyss:$ w:1920 / demonspawn corrupter w:" .. d * 2 .. " / " ..
          "starcursed mass w:" .. d * 2 .. " / wretched star w:" .. d * 2 .. " / " ..
          "bone dragon w:" .. d .. " / lich w:" .. d
 end))
@@ -358,7 +360,7 @@ end), { weight = 2 }))
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
   local e = 10 + you.zigs_completed() * 3
-  return "insubstantial wisp / raiju / air elemental / " ..
+  return "raiju / air elemental / " ..
          "shock serpent w:" .. d .. " / spark wasp w:" .. d .. " / " ..
          "spriggan air mage w:" .. e .. " / storm dragon w:" .. e .. " / " ..
          "titan w:" .. e .. " / electric golem w:" .. e
@@ -368,7 +370,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
   local f = 20 + you.zigs_completed() * 4
-  return "gargoyle w:30 / earth elemental w:30 / " ..
+  return "gargoyle w:20 / earth elemental w:20 / boulder beetle w:20 / " ..
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
          "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..
@@ -400,8 +402,9 @@ mset(with_props(spec_fn(function ()
   local f = math.max(1, you.depth() + you.zigs_completed() - 5)
   return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
          "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
-         "eidolon w:" .. e .. " / revenant w:" .. e .. " / black sun w:4 / " ..
-         "curse skull w:4 / curse toe w:2 / player ghost w:" .. f
+         "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
+         "demonspawn black sun w:4 / curse skull w:4 / curse toe w:2 / " ..
+         "player ghost w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -450,17 +453,22 @@ mset(with_props(spec_fn(function ()
          "deep elf annihilator w:" .. d .. " / deep elf sorcerer w:" .. d .. " / " ..
          "tengu reaver w:" .. d .. " / draconian knight w:" .. d - 5 .. " / " ..
          "draconian scorcher w:" .. d - 5 .. " / lich w:" .. d - 5 .. " / " ..
-         "ancient lich w:" .. d - 5 .. " / blood saint w:" .. d .. " / " ..
+         "ancient lich w:" .. d - 5 .. " / demonspawn blood saint w:" .. d .. " / " ..
          "draconian annihilator w:" .. e
 end), { weight = 2 }))
 
 local pan_lord_fn = zig_monster_fn("pandemonium lord")
-local pan_critter_fn = zig_monster_fn("place:Pan w:" .. math.max(10, 100 - you.zigs_completed() * 4) ..
-                                      " / greater demon w:100 / nonbase demonspawn w:40")
+local pan_critter_fn = zig_monster_fn(
+         "place:Pan w:" .. math.max(10, 100 - you.zigs_completed() * 4) .. " / " ..
+         "greater demon w:100 / demonspawn black sun / " ..
+         "demonspawn blood saint / demonspawn corrupter / " ..
+         "demonspawn warmonger")
 
 local function mons_panlord_gen(x, y, nth)
   if nth == 1 then
-    dgn.set_random_mon_list("place:Pan / greater demon / nonbase demonspawn w:4")
+    dgn.set_random_mon_list("place:Pan / greater demon / " ..
+         "demonspawn black sun w:1 / demonspawn blood saint w:1 / " ..
+         "demonspawn corrupter w:1 / demonspawn warmonger w:1")
     return pan_lord_fn(x, y)
   else
     return pan_critter_fn(x, y)
@@ -585,10 +593,10 @@ local function ziggurat_create_loot_at(c)
                                   dgn.good_scrolls)
   local super_loot = dgn.item_spec("| no_pickup w:7000 /" ..
                                    "potion of experience no_pickup w:190 q:1 /" ..
-                                   "potion of mutation no_pickup w:220 /" ..
-                                   "ration no_pickup w:80 /" ..
+                                   "potion of mutation no_pickup w:290 /" ..
                                    "potion of cancellation q:5 no_pickup / " ..
                                    "potion of heal wounds q:5 no_pickup / " ..
+                                   "potion of magic q:5 no_pickup / " ..
                                    "potion of haste q:5 no_pickup / " ..
                                    dgn.good_scrolls)
 

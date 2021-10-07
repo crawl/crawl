@@ -37,17 +37,14 @@ mutations:
     MUT_FANGS: 2
     MUT_MANA_SHIELD: 1
     MUT_ANTIMAGIC_BITE: 1
-    MUT_NO_POTION_HEAL: 3
-    MUT_ROT_IMMUNITY: 1
+    MUT_NO_POTION_HEAL: 2
   4:
     MUT_REGENERATION: 1
   8:
     MUT_FANGS: 1
-  12:
-    MUT_REGENERATION: 1
 recommended_jobs:
   - JOB_FIGHTER
-  - JOB_ASSASSIN
+  - JOB_BRIGAND
   - JOB_BERSERKER
   - JOB_ENCHANTER
   - JOB_CONJURER
@@ -61,5 +58,8 @@ recommended_weapons:
   - SK_STAVES
   - SK_BOWS
   - SK_CROSSBOWS
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION
+
 walking_verb: Stalk

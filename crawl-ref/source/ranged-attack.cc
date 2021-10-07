@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "fprop.h"
 #include "god-conduct.h"
 #include "item-prop.h"
@@ -64,32 +65,24 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         wpn_skill = SK_THROWING;
 }
 
-int ranged_attack::calc_to_hit(bool random)
+int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 {
-    orig_to_hit = attack::calc_to_hit(random);
-
-    if (orig_to_hit == AUTOMATIC_HIT)
-        return AUTOMATIC_HIT;
+    int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 
     if (teleport)
     {
-        orig_to_hit +=
+        modifiers +=
             (attacker->is_player())
-            ? maybe_random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4, random)
-            : 3 * attacker->as_monster()->get_hit_dice();
+            ? maybe_random_div(you.attribute[ATTR_PORTAL_PROJECTILE],
+                               PPROJ_TO_HIT_DIV, random)
+            : attacker->as_monster()->get_hit_dice() * 3 / 2;
     }
 
-    int hit = orig_to_hit;
-    const int defl = defender->missile_deflection();
-    if (defl)
-    {
-        if (random)
-            hit = random2(hit / defl);
-        else
-            hit = (hit - 1) / (2 * defl);
-    }
+    // Duplicates describe.cc::_to_hit_pct().
+    if (defender && defender->missile_repulsion())
+        modifiers -= (mhit + 1) / 2;
 
-    return hit;
+    return modifiers;
 }
 
 bool ranged_attack::attack()
@@ -154,7 +147,7 @@ bool ranged_attack::attack()
 // XXX: Are there any cases where this might fail?
 bool ranged_attack::handle_phase_attempted()
 {
-    attacker->attacking(defender, true);
+    attacker->attacking(defender);
     attack_occurred = true;
 
     return true;
@@ -219,25 +212,13 @@ bool ranged_attack::handle_phase_dodged()
     const int orig_ev_margin =
         test_hit(orig_to_hit, ev, !attacker->is_player());
 
-    if (defender->missile_deflection() && orig_ev_margin >= 0)
+    if (defender->missile_repulsion() && orig_ev_margin >= 0)
     {
         if (needs_message && defender_visible)
-        {
-            if (defender->missile_deflection() >= 2)
-            {
-                mprf("%s %s %s!",
-                     defender->name(DESC_THE).c_str(),
-                     defender->conj_verb("deflect").c_str(),
-                     projectile->name(DESC_THE).c_str());
-            }
-            else
-                mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-
-            defender->ablate_deflection();
-        }
+            mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
 
         if (defender->is_player())
-            count_action(CACT_DODGE, DODGE_DEFLECT);
+            count_action(CACT_DODGE, DODGE_REPEL);
 
         return true;
     }
@@ -295,15 +276,19 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if (using_weapon() || launch_type == launch_retval::THROWN)
+    if ((using_weapon() || launch_type == launch_retval::THROWN)
+        && (!defender->is_player() || !you.pending_revival))
     {
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
         {
             return false;
         }
-        if (apply_missile_brand())
+        if ((!defender->is_player() || !you.pending_revival)
+            && apply_missile_brand())
+        {
             return false;
+        }
     }
 
     // XXX: unify this with melee_attack's code
@@ -358,8 +343,7 @@ int ranged_attack::calc_base_unarmed_damage()
 int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
-    const int hd_mult = attacker->as_monster()->is_archer() ? 15 : 9;
-    return 18 + attacker->get_hit_dice() * hd_mult / 6;
+    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer(), true);
 }
 
 int ranged_attack::apply_damage_modifiers(int damage)
@@ -367,7 +351,7 @@ int ranged_attack::apply_damage_modifiers(int damage)
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
     {
-        const int bonus = attacker->get_hit_dice() * 4 / 3;
+        const int bonus = archer_bonus_damage(attacker->get_hit_dice());
         damage += random2avg(bonus, 2);
     }
     return damage;
@@ -643,7 +627,7 @@ bool ranged_attack::apply_missile_brand()
         obvious_effect = curare_actor(attacker, defender,
                                       damage_done,
                                       projectile->name(DESC_PLAIN),
-                                      atk_name(DESC_PLAIN));
+                                      atk_name(DESC_A));
         break;
     case SPMSL_CHAOS:
         chaos_affects_defender();
@@ -717,10 +701,6 @@ bool ranged_attack::apply_missile_brand()
         mpr(special_damage_message);
 
         special_damage_message.clear();
-        // Don't do message-only miscasts along with a special
-        // damage message.
-        if (miscast_level == 0)
-            miscast_level = -1;
     }
 
     if (special_damage > 0)

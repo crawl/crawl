@@ -1,3 +1,7 @@
+#pragma once
+
+#include "tag-version.h"
+
 // In the default case, these translations hold:
 // unseen_colour -> seen_colour
 // seen_colour -> seen_em_colour
@@ -28,6 +32,14 @@ static feature_def feat_defs[] =
     COLOUR_IS(BLACK),
     FFT_NONE, MF_UNSEEN,
 },
+
+{
+    DNGN_TRAVEL_TRAIL, "travel trail", "travel_trail",
+    NUM_DCHAR_TYPES, NUM_DCHAR_TYPES,
+    COLOUR_IS(BLACK),
+    FFT_NONE, MF_UNSEEN,
+},
+
 
 {
     DNGN_CLOSED_DOOR, "closed door", "closed_door",
@@ -75,6 +87,27 @@ static feature_def feat_defs[] =
     DNGN_TREE, "tree", "tree",
     DCHAR_TREE, DCHAR_WALL_MAGIC,
     COLOUR_IS(ETC_TREE),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_MANGROVE, "mangrove", "mangrove",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(ETC_MANGROVE),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_DEMONIC_TREE, "demonic tree", "demonic_tree",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(ETC_RANDOM),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_PETRIFIED_TREE, "petrified tree", "petrified_tree",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(DARKGREY),
     FFT_OPAQUE | FFT_SOLID, MF_WALL,
 },
 
@@ -242,6 +275,20 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_BROKEN_DOOR, "broken door", "broken_door",
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY), // ?
+    FFT_NONE, MF_DOOR,
+},
+
+{
+    DNGN_BROKEN_CLEAR_DOOR, "broken translucent door", "broken_clear_door",
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY), // ?
+    FFT_NONE, MF_DOOR,
+},
+
+{
     DNGN_OPEN_DOOR, "open door", "open_door",
     DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
     COLOUR_IS(LIGHTGREY),
@@ -263,9 +310,19 @@ static feature_def feat_defs[] =
     FFT_TRAP, MF_TRAP,\
 }
 
+#if TAG_MAJOR_VERSION == 34
 TRAP(DNGN_TRAP_MECHANICAL, "mechanical trap", "trap_mechanical", LIGHTCYAN),
+TRAP(DNGN_TRAP_ARROW, "arrow trap", "trap_mechanical", LIGHTCYAN),
+TRAP(DNGN_TRAP_SPEAR, "spear trap", "trap_mechanical", LIGHTCYAN),
+TRAP(DNGN_TRAP_BLADE, "blade trap", "trap_mechanical", LIGHTCYAN),
+TRAP(DNGN_TRAP_DART, "dart trap", "trap_mechanical", LIGHTCYAN),
+TRAP(DNGN_TRAP_BOLT, "bolt trap", "trap_mechanical", LIGHTCYAN),
+#endif
+TRAP(DNGN_TRAP_NET, "net trap", "trap_mechanical", LIGHTCYAN),
+TRAP(DNGN_TRAP_PLATE, "pressure plate", "trap_mechanical", LIGHTCYAN),
 TRAP(DNGN_TRAP_DISPERSAL, "dispersal trap", "trap_dispersal", MAGENTA),
 TRAP(DNGN_TRAP_TELEPORT, "teleport trap", "trap_teleport", LIGHTBLUE),
+TRAP(DNGN_TRAP_TELEPORT_PERMANENT, "permanent teleport trap", "trap_teleport_permanent", LIGHTBLUE),
 #if TAG_MAJOR_VERSION == 34
 TRAP(DNGN_TRAP_SHADOW, "shadow trap", "trap_shadow", BLUE),
 TRAP(DNGN_TRAP_SHADOW_DORMANT, "dormant shadow trap", "trap_shadow_dormant", BLUE),
@@ -416,7 +473,8 @@ PORTAL_ENTRANCE(DNGN_ENTER_GAUNTLET, "gate leading to a gauntlet", "enter_gauntl
 PORTAL_ENTRANCE(DNGN_ENTER_ICE_CAVE, "frozen archway", "enter_ice_cave", WHITE),
 PORTAL_ENTRANCE(DNGN_ENTER_VOLCANO, "dark tunnel", "enter_volcano", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_WIZLAB, "magical portal", "enter_wizlab", ETC_SHIMMER_BLUE),
-PORTAL_ENTRANCE(DNGN_ENTER_DESOLATION, "ruined gateway", "enter_desolation", WHITE),
+PORTAL_ENTRANCE(DNGN_ENTER_DESOLATION, "crumbling gateway", "enter_desolation", WHITE),
+PORTAL_ENTRANCE(DNGN_ENTER_ARENA, "gate leading to Okawaru's Arena", "enter_arena", WHITE),
 #if TAG_MAJOR_VERSION == 34
 PORTAL_EXIT(DNGN_EXIT_PORTAL_VAULT, "gate leading back out of this place", "exit_portal_vault", ETC_SHIMMER_BLUE),
 #endif
@@ -431,6 +489,7 @@ PORTAL_EXIT(DNGN_EXIT_ICE_CAVE, "ice covered gate leading back out of this place
 PORTAL_EXIT(DNGN_EXIT_VOLCANO, "rocky tunnel leading out of this place", "exit_volcano", RED),
 PORTAL_EXIT(DNGN_EXIT_WIZLAB, "portal leading out of this place", "exit_wizlab", ETC_SHIMMER_BLUE),
 PORTAL_EXIT(DNGN_EXIT_DESOLATION, "gate leading back out of this place", "exit_desolation", WHITE),
+PORTAL_EXIT(DNGN_EXIT_ARENA, "gate leading back out of this place", "exit_arena", WHITE),
 
 #define BRANCH_ENTRANCE(enum, name, vaultname)\
 {\
@@ -536,7 +595,7 @@ ALTAR(DNGN_ALTAR_BEOGH, "roughly hewn altar of Beogh", "altar_beogh", ETC_BEOGH)
 ALTAR(DNGN_ALTAR_JIYVA, "viscous altar of Jiyva", "altar_jiyva", ETC_SLIME),
 ALTAR(DNGN_ALTAR_FEDHAS, "blossoming altar of Fedhas", "altar_fedhas", GREEN),
 ALTAR(DNGN_ALTAR_CHEIBRIADOS, "snail-covered altar of Cheibriados", "altar_cheibriados", LIGHTCYAN),
-ALTAR(DNGN_ALTAR_ASHENZARI, "shattered altar of Ashenzari", "altar_ashenzari", LIGHTRED),
+ALTAR(DNGN_ALTAR_ASHENZARI, "broken altar of Ashenzari", "altar_ashenzari", LIGHTRED),
 ALTAR(DNGN_ALTAR_DITHMENOS, "shadowy altar of Dithmenos", "altar_dithmenos", ETC_DITHMENOS),
 ALTAR(DNGN_ALTAR_GOZAG, "opulent altar of Gozag", "altar_gozag", ETC_GOLD), // for the Gold God!
 ALTAR(DNGN_ALTAR_QAZLAL, "stormy altar of Qazlal", "altar_qazlal", ETC_ELEMENTAL),
@@ -548,6 +607,7 @@ ALTAR(DNGN_ALTAR_PAKELLAS, "oddly glowing altar of Pakellas", "altar_pakellas", 
 ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
 ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana", LIGHTGREEN),
 ALTAR(DNGN_ALTAR_WU_JIAN, "ornate altar of the Wu Jian Council", "altar_wu_jian", ETC_WU_JIAN),
+ALTAR(DNGN_ALTAR_IGNIS, "candlelit altar of Ignis", "altar_ignis", ETC_CANDLES),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\

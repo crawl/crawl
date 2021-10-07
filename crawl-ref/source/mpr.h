@@ -19,7 +19,6 @@ enum msg_channel_type
     MSGCH_DURATION,         // effect down/warnings
     MSGCH_DANGER,           // serious life threats (ie very large HP attacks)
     MSGCH_WARN,             // much less serious threats
-    MSGCH_FOOD,             // hunger notices
     MSGCH_RECOVERY,         // recovery from disease/stat/poison condition
     MSGCH_SOUND,            // messages about things the player hears
     MSGCH_TALK,             // monster talk (param is monster type)
@@ -33,7 +32,6 @@ enum msg_channel_type
     MSGCH_MONSTER_DAMAGE,   // monster damage reports (param is level)
     MSGCH_MONSTER_TARGET,   // message marking the monster as a target
     MSGCH_BANISHMENT,       // Abyss-related messages
-    MSGCH_ROTTEN_MEAT,      // messages about chunks/corpses becoming rotten
     MSGCH_EQUIPMENT,        // equipment listing messages
     MSGCH_FLOOR_ITEMS,      // like equipment, but lists of floor items
     MSGCH_MULTITURN_ACTION, // delayed action messages

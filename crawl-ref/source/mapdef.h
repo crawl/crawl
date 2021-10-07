@@ -735,7 +735,6 @@ private:
 private:
     mons_spec mons_by_name(string name) const;
     mons_spec drac_monspec(string name) const;
-    mons_spec demonspawn_monspec(string name) const;
     mons_spec soh_monspec(string name) const;
     void get_zombie_type(string s, mons_spec &spec) const;
     mons_spec get_hydra_spec(const string &name) const;
@@ -1154,13 +1153,13 @@ public:
 
     ::map<dungeon_feature_type, string> feat_renames;
     vector<subvault_place> subvault_places;
+    string          file;
 
 private:
     unordered_set<string>     tags;
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
     mutable long    cache_offset;
-    string          file;
     string          cache_name;
 
     typedef Matrix<bool> subvault_mask;
@@ -1186,6 +1185,7 @@ public:
     string describe() const;
     void init();
     void reinit();
+    void reload_epilogue();
 
     void load();
     void strip();

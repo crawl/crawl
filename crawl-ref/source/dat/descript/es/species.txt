@@ -57,11 +57,6 @@ Tengu
 Gente-pájaro con gusto por el combate, tanto con armas como con hechizos.
 Inicialmente son algo frágiles, pero más tarde aprenden a volar.
 %%%%
-Kobold
-
-Pequeños, traviesos y algo delicados, pero polifacéticos. Pueden comer, y de
-hecho lo harán, todo tipo de carne.
-%%%%
 Merfolk
 
 Medio pez, medio humanos, los tritones y sirenas son ciudadanos tanto del agua

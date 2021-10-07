@@ -9,7 +9,7 @@ function debug_wrath()
   debug.disable("death", true)
 
   while crawl.kbhit() == 0 do
-    -- Remove non-near monsters if menv[] full.
+    -- Remove non-near monsters if env.mons[] full.
     debug.cull_monsters()
 
     -- Dismiss adjacent monsters to make room for wrath sending in

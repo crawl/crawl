@@ -10,6 +10,7 @@
 #include <cstdio>
 
 #include "player.h"
+#include "tag-version.h"
 
 #define MAX_NOTE_PLACE_LEN 8
 
@@ -60,6 +61,7 @@ enum NOTE_TYPES
     NOTE_ANCESTOR_SPECIALIZATION, /* needs: ancestor specialization (string) */
 #endif
     NOTE_FOUND_UNRAND,          /* needs: item name (string) */
+    NOTE_ACQUIRE_ITEM,
     NOTE_NUM_TYPES
 };
 
@@ -67,8 +69,9 @@ struct Note
 {
     Note() {}
     Note(NOTE_TYPES t, int f = 0, int s = 0, const string& n = "",
-                                             const string& d = "") :
-        type(t), first(f), second(s), name(n), desc(d) {}
+                                             const string& d = "",
+                                             const string& sc = "") :
+        type(t), first(f), second(s), name(n), desc(d), screen(sc) {}
     void save(writer& outf) const;
     void load(reader& inf);
     string describe(bool when = true, bool where = true, bool what = true) const;
@@ -82,6 +85,7 @@ struct Note
 
     string name;
     string desc;
+    string screen;
 };
 
 extern vector<Note> note_list;

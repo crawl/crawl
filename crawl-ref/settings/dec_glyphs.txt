@@ -21,7 +21,6 @@ display_char = item_rune:}
 display_char = item_weapon:)
 display_char = item_armour:[
 display_char = item_wand:/
-display_char = item_food:%
 display_char = item_scroll:?
 display_char = item_ring:=
 display_char = item_potion:!

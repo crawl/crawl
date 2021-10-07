@@ -6,6 +6,9 @@
 #pragma once
 
 #include <list>
+#include <vector>
+
+using std::vector;
 
 #ifdef DB_NDBM
 extern "C" {

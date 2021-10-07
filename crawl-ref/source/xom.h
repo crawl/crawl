@@ -5,7 +5,13 @@
 
 #pragma once
 
-#include "ouch.h"
+#include <string>
+
+#include "kill-method-type.h"
+#include "maybe-bool.h"
+#include "monster.h"
+
+using std::string;
 
 #define XOM_CLOUD_TRAIL_TYPE_KEY "xom_cloud_trail_type"
 
@@ -50,10 +56,6 @@ enum xom_event_type
 
     // bad acts
     XOM_BAD_MISCAST_PSEUDO,
-    XOM_BAD_MISCAST_HARMLESS,
-    XOM_BAD_MISCAST_MINOR,
-    XOM_BAD_MISCAST_MAJOR,
-    XOM_BAD_MISCAST_CRITICAL,
     XOM_BAD_STATLOSS,
     XOM_BAD_TELEPORT,
     XOM_BAD_CHAOS_UPGRADE,

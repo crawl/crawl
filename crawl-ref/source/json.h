@@ -98,6 +98,7 @@ JsonNode   *json_first_child    (const JsonNode *node);
 JsonNode *json_mknull();
 JsonNode *json_mkbool(bool b);
 JsonNode *json_mkstring(const char *s);
+JsonNode *json_mkstring(string s);
 JsonNode *json_mknumber(double n);
 JsonNode *json_mkarray();
 JsonNode *json_mkobject();

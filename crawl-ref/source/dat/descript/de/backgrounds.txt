@@ -92,11 +92,6 @@ Necromancer
 Nekromanten sind Zauberer, die sich auf Todesmagie spezialisieren. Sie beginnen
 mit dem Schmerzfluch.
 %%%%
-Skald
-
-Skalden sind Nahkämpfer, die sich im Kampf mit Zaubern aus dem Buch des
-Gefechts stärken können.
-%%%%
 Summoner
 
 Boten fangen mit dem Buch von Callings an und sind im Stande sich zu werfen

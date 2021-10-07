@@ -5,9 +5,9 @@
  * To set options with the same processing as `.crawlrc` or `init.txt`, use
  * @{crawl.setopt}.
  *
- * This table provides access to the following crawl options: `autoswitch,
- * travel_open_doors, easy_armour, easy_unequip, note_skill_max,
- * clear_messages, blink_brightens_background, bold_brightens_foreground,
+ * This table provides access to the following crawl options:
+ * `autoswitch, easy_armour, easy_unequip, note_skill_max, clear_messages,
+ * blink_brightens_background, bold_brightens_foreground,
  * best_effort_brighten_background, best_effort_brighten_foreground,
  * allow_extended_colours, pickup_thrown, easy_exit_menu,
  * dos_use_background_intensity, autopickup_on`; documented in
@@ -59,7 +59,6 @@ static option_handler handlers[] =
 {
     // Boolean options come first
     { "autoswitch",    &Options.auto_switch, option_hboolean },
-    { "travel_open_doors",    &Options.travel_open_doors, option_hboolean },
     { "easy_armour",   &Options.easy_unequip, option_hboolean },
     { "easy_unequip",  &Options.easy_unequip, option_hboolean },
     { "note_skill_max",       &Options.note_skill_max, option_hboolean },

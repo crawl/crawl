@@ -24,7 +24,6 @@ unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_ON
 spellcasting SPELLCASTING_ON
 conjurations CONJURATIONS_ON
 hexes HEXES_ON
-charms CHARMS_ON
 summonings SUMMONINGS_ON
 necromancy NECROMANCY_ON
 translocations TRANSLOCATIONS_ON
@@ -80,7 +79,6 @@ unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_FOCUS
 spellcasting SPELLCASTING_FOCUS
 conjurations CONJURATIONS_FOCUS
 hexes HEXES_FOCUS
-charms CHARMS_FOCUS
 summonings SUMMONINGS_FOCUS
 necromancy NECROMANCY_FOCUS
 translocations TRANSLOCATIONS_FOCUS
@@ -136,7 +134,6 @@ unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_OFF
 spellcasting SPELLCASTING_OFF
 conjurations CONJURATIONS_OFF
 hexes HEXES_OFF
-charms CHARMS_OFF
 summonings SUMMONINGS_OFF
 necromancy NECROMANCY_OFF
 translocations TRANSLOCATIONS_OFF
@@ -192,7 +189,6 @@ unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_INACTIVE
 spellcasting SPELLCASTING_INACTIVE
 conjurations CONJURATIONS_INACTIVE
 hexes HEXES_INACTIVE
-charms CHARMS_INACTIVE
 summonings SUMMONINGS_INACTIVE
 necromancy NECROMANCY_INACTIVE
 translocations TRANSLOCATIONS_INACTIVE
@@ -248,7 +244,6 @@ unarmed_combat_tentacle UNARMED_COMBAT_TENTACLE_MAX
 spellcasting SPELLCASTING_MAX
 conjurations CONJURATIONS_MAX
 hexes HEXES_MAX
-charms CHARMS_MAX
 summonings SUMMONINGS_MAX
 necromancy NECROMANCY_MAX
 translocations TRANSLOCATIONS_MAX

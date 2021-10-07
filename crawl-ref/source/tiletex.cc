@@ -6,11 +6,11 @@
 
 #include "files.h"
 #include "glwrapper.h"
-#include "tiledef-dngn.h"
-#include "tiledef-gui.h"
-#include "tiledef-icons.h"
-#include "tiledef-main.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-gui.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-main.h"
+#include "rltiles/tiledef-player.h"
 #include "windowmanager.h"
 
 GenericTexture::GenericTexture() :

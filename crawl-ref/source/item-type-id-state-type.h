@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 #if TAG_MAJOR_VERSION == 34
 enum item_type_id_state_type
 {

@@ -60,11 +60,6 @@ tutorial2 start
 Ta lekcja nauczy cię o potworach oraz walce. Po pierwsze, potrzebujemy broni!
 Idź i podnieś tą broń.
 %%%%
-tutorial2 rest_and_chop_reminder
-
-Nie zapomnij o cięciu ciał na jedzenie (with <input>$cmd[CMD_BUTCHER]</input>),
-lub odpoczywaniu (with <input>$cmd[CMD_REST]</input>)!
-%%%%
 tutorial2 wait
 
 Zamiast wchodzić w pomieszczenie pełne potworów, które po chwili cię otoczą
@@ -151,12 +146,6 @@ Szał bojowy jest bardzo wyczerpujący. Będąc zmęczony, nie możesz ponownie 
 niego wpaść, a twe ruchy są spowolnione. Najlepiej wówczas trochę odpocząć
 (klawisz <input>$cmd[CMD_REST]</input><localtiles> lub przycisk
 <w>odpoczynku</w></localtiles>) aż ci wrócą siły.
-%%%%
-tutorial5 hunger
-
-Nie możesz wpaść w szał będąc bardzo głodny, toteż zawsze powinieneś mieć ze
-sobą jakieś jedzenie. Z tego powodu czasem będziesz musiał wybrać pomiędzy
-pocięciem padliny na jedzenie, a złożeniem Trogowi w ofierze.
 %%%%
 tutorial5 berserk2
 

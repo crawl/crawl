@@ -9,6 +9,7 @@
 #include <map>
 
 #include "monster.h"
+#include "tag-version.h"
 
 struct follower
 {

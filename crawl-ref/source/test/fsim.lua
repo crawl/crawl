@@ -6,7 +6,7 @@ local function fsim_test()
 end
 
 local function fsim_setup()
-        you.init("mifi", "morningstar")
+        you.init("migl", "morningstar")
         you.set_xl(20)
         debug.flush_map_memory()
         debug.goto_place("D:1")
@@ -20,11 +20,12 @@ local function fsim_cleanup()
         you.set_xl(1)
 end
 
+
 if you.wizard then
         fsim_setup()
         for i = 1,10 do
                 result = fsim_test()
-                crawl.stderr("AvEffDam is " .. result .. eol)
+                crawl.stderr("    AvEffDam is " .. result .. eol)
         end
         fsim_cleanup()
 end

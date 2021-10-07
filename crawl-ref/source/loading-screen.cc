@@ -78,7 +78,7 @@ void loading_screen_open()
 
 void loading_screen_close()
 {
-    bool done = Options.tile_skip_title;
+    bool done = Options.tile_skip_title || crawl_state.test;
     popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
     if (!done)
         loading_screen_update_msg(load_complete_msg);

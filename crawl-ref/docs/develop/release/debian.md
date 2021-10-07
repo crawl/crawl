@@ -63,28 +63,26 @@ This should get you the necessary packages:
 
 You'll need a cowbuilder chroot directory for each architecture you want to
 build. If you're using the example pbuilderrc, we use the scheme
-`DIST-ARCH.cow`. For example, when building based on debian stable, we'd use:
+`DIST-ARCH.cow`. For example, when building based on debian oldstable, we'd use:
 
-    /var/cache/pbuilder/stable-amd64.cow
-    /var/cache/pbuilder/stable-i386.cow
+    /var/cache/pbuilder/oldstable-amd64.cow
+    /var/cache/pbuilder/oldstable-i386.cow
 
 To create these, run the following:
 
-    sudo OS=debian DIST=stable ARCH=amd64 cowbuilder --create \
-      --basepath /var/cache/pbuilder/stable-amd64.cow
-    sudo OS=debian DIST=stable ARCH=i386 cowbuilder --create \
-      --basepath /var/cache/pbuilder/stable-i386.cow
+    sudo OS=debian DIST=oldstable ARCH=amd64 cowbuilder --create \
+      --basepath /var/cache/pbuilder/oldstable-amd64.cow
+    sudo OS=debian DIST=oldstable ARCH=i386 cowbuilder --create \
+      --basepath /var/cache/pbuilder/oldstable-i386.cow
 
 In principle you can leave some of these environment variables out where they
 match your current system, but it is safest not to simplify. In order for
 these to run succesfully in docker, you will need to be running the docker
 image with `--privileged`.
 
-We build the debs against either debian stable, or debian oldstable. Debian
-stable is preferred, except for scenarios where that might break compatibility
-with currently common Ubuntu LTS versions, in which case you should use
-oldstable. (This might happen, for example, if the value for `stable` has
-recently changed in debian, but Ubuntu is lagging.)
+We build the debs against either debian stable, or debian oldstable. Basically,
+choose the oldest version that still works, in order to preserve compatibility
+with Ubuntu.
 
 This chroot directory needs to be created only once for each OS/ARCH/DIST
 combination on which you what to build the package. If It doesn't need to be
@@ -124,13 +122,13 @@ included in the release version tag.
 ### 2.2 Updating the cow chroots
 
 It's good to update your cow chroot directory with the latest security/bugfix
-updates to its packages. For the above example of using debian stable, this
+updates to its packages. For the above example of using debian oldstable, this
 would involve:
 
-    sudo OS=debian DIST=stable ARCH=amd64 cowbuilder --update \
-      --basepath /var/cache/pbuilder/stable-amd64.cow
-    sudo OS=debian DIST=stable ARCH=amd64  cowbuilder --update \
-      --basepath /var/cache/pbuilder/stable-i386.cow
+    sudo OS=debian DIST=oldstable ARCH=amd64 cowbuilder --update \
+      --basepath /var/cache/pbuilder/oldstable-amd64.cow
+    sudo OS=debian DIST=oldstable ARCH=i386  cowbuilder --update \
+      --basepath /var/cache/pbuilder/oldstable-i386.cow
 
 ## 3. Making the Debian packages
 
@@ -184,8 +182,8 @@ building the cows, the safest option is to explicitly specify the `OS`, `DIST`,
 and `ARCH` for each build, though in principle you can leave off options
 matching your current system.
 
-    sudo OS=debian DIST=stable ARCH=amd64 pdebuild
-    sudo OS=debian DIST=stable ARCH=i386 pdebuild
+    sudo OS=debian DIST=oldstable ARCH=amd64 pdebuild
+    sudo OS=debian DIST=oldstable ARCH=i386 pdebuild
 
 Once the package building is finished, the results will be in
 `/var/cache/pbuilder/result/`, if you're using the example pbuilderrc.

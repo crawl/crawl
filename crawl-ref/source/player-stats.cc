@@ -19,14 +19,16 @@
 #include "monster.h"
 #include "notes.h"
 #include "ouch.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "stat-type.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #ifdef TOUCH_UI
-#include "tiledef-gui.h"
+#include "rltiles/tiledef-gui.h"
 #include "tilepick.h"
 #endif
 #include "transform.h"
@@ -101,21 +103,28 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
+    const bool need_caps = Options.easy_confirm != easy_confirm_type::all;
+
+    const int statgain = species::get_stat_gain_multiplier(you.species);
+
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
-                                                  you.species == SP_DEMIGOD ?
+                                                  (statgain > 1) ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
     learned_something_new(HINT_CHOOSE_STAT);
     Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE);
     MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
-    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 1, 'S');
-    s_me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
-    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 1, 'I');
-    i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
-    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 1, 'D');
-    d_me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
+    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 1,
+                                                        need_caps ? 'S' : 's');
+    s_me->add_tile(tile_def(TILEG_FIGHTING_ON));
+    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 1,
+                                                        need_caps ? 'I' : 'i');
+    i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON));
+    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 1,
+                                                        need_caps ? 'D' : 'd');
+    d_me->add_tile(tile_def(TILEG_DODGING_ON));
 
     pop.set_title(new MenuEntry("Increase Attributes", MEL_TITLE));
     pop.add_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
@@ -135,11 +144,11 @@ bool attribute_increase()
              innate_stat(STAT_INT),
              innate_stat(STAT_DEX));
     }
-    mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
+    mprf(MSGCH_PROMPT, need_caps
+        ? "Increase (S)trength, (I)ntelligence, or (D)exterity? "
+        : "Increase (s)trength, (i)ntelligence, or (d)exterity? ");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
-
-    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
 
     bool tried_lua = false;
     int keyin;
@@ -161,10 +170,16 @@ bool attribute_increase()
             keyin = pop.getkey();
 #else
             while ((keyin = getchm()) == CK_REDRAW)
+            {
                 redraw_screen();
+                update_screen();
+            }
 #endif
         }
         tried_lua = true;
+
+        if (!need_caps)
+            keyin = toupper_safe(keyin);
 
         switch (keyin)
         {
@@ -434,6 +449,7 @@ static int _int_modifier(bool innate_only)
     // mutations
     result += 2 * (_mut_level(MUT_CLEVER, innate_only)
                    - _mut_level(MUT_DOPEY, innate_only));
+    result += 2 * _mut_level(MUT_BIG_BRAIN, innate_only);
 
     return result;
 }

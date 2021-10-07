@@ -5,14 +5,20 @@
 
 #pragma once
 
+#include "killer-type.h"
 #include "mon-poly.h"
 
+#define BORIS_ORB_KEY "boris orb key"
+
+class actor;
 class monster;
 struct bolt;
 
 bool mon_special_ability(monster* mons);
 
 void draconian_change_colour(monster* drac);
+
+void boris_covet_orb(monster* boris);
 
 bool ugly_thing_mutate(monster& ugly, bool force = true);
 bool slime_creature_polymorph(monster& slime, poly_power_type power = PPT_SAME);

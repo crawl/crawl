@@ -16,26 +16,36 @@ vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers start with a few magical devices and are competent at using such
-tools.
-%%%%
-Assassin
-
-Assassins carry poisoned darts and a small number of nasty curare darts.
+Artificers start with two wands, a magic chesspiece, and a club. They'll need
+to find better weapons and armour before their wands run out.
 %%%%
 Berserker
 
 Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a
 raging berserker early on, apart from hubris.
 %%%%
+Brigand
+
+Brigands carry poisoned darts and a small number of nasty curare darts.
+%%%%
 Chaos Knight
 
 Chaos Knights are playthings of the unpredictable Xom, and are subject to the
 god's constantly changing moods.
 %%%%
+Cinder Acolyte
+
+Cinder Acolytes worship Ignis, drawing upon the flame of a dying god until
+there is nothing left.
+%%%%
 Conjurer
 
 Conjurers confront problems with damaging spells.
+%%%%
+Delver
+
+Delvers start their quest five levels below the surface. A set of powerful magic
+items helps them survive the dangerous journey upward.
 %%%%
 Earth Elementalist
 
@@ -44,8 +54,8 @@ spell. More earthen spells are in their set of starting spells.
 %%%%
 Enchanter
 
-Enchanters use spells from the book of Maledictions to incapacitate their foes,
-and are equipped with an enchanted dagger.
+Enchanters know a variety of Hexes that can incapacitate their foes, and are
+equipped with an enchanted dagger and a potion of invisibility.
 %%%%
 Fighter
 
@@ -54,13 +64,18 @@ choice and a potion of might.
 %%%%
 Fire Elementalist
 
-Fire Elementalists start with the book of Flames and know the Foxfire
-spell. Their other starting spells focus on destruction as well.
+Fire Elementalists have learned the Foxfire spell. Their other starting spells
+are likewise focused on fiery destruction.
 %%%%
 Gladiator
 
 Gladiators are ready for the arena with light armour, nets, and a weapon of
 their choice.
+%%%%
+Hedge Wizard
+
+Hedge Wizards learn many minor magics, letting them backstab or escape their
+bewildered foes.
 %%%%
 Hunter
 
@@ -82,11 +97,6 @@ Necromancer
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Pain spell.
 %%%%
-Skald
-
-Skalds are melee fighters who can boost themselves in battle with spells from
-the Charms school.
-%%%%
 Summoner
 
 Summoners are able to cast Summon Small Mammal from the start, and begin with
@@ -94,8 +104,8 @@ other Summonings spells in their library.
 %%%%
 Transmuter
 
-Transmuters learn spells to shift their form, as well as to turn sticks into
-snakes.
+Transmuters learn spells to shift their form, making them powerful unarmed
+fighters.
 %%%%
 Venom Mage
 
@@ -110,9 +120,4 @@ Warper
 
 Warpers start with a weapon of their choice and a scroll of blinking. They
 begin with a number of Translocations spells in their library.
-%%%%
-Wizard
-
-Wizards start with the wide range of spells present in a book of Minor Magic in
-their spell library.
 %%%%

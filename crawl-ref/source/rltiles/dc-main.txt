@@ -1,8 +1,6 @@
 %back none
 %name main
-
-# idx == 0 must be invalid.
-dngn/unseen
+%startvalue TILE_FEAT_MAX feat
 
 ## Set black rim
 ## Items

@@ -9,10 +9,10 @@
 
 # Main layout
 NAME:    hall_of_blades
-TAGS:    no_dump no_monster_gen
+TAGS:    no_dump no_monster_gen removed
 PLACE:   Blade
 ORIENT:  encompass
-: halls_of_blades_weapon(_G)
+: hall_of_blades_weapon(_G)
 SHUFFLE: C{D[ / C{D[ / D{C[ / D[C{ / D{D[
 SUBST:   C = c, D[ = ., E : c.., F : c.., c : cv
 NSUBST:  { : 1:{ / *:., . : 6:0 / 6 = 0. / 6 = 0... / *:.

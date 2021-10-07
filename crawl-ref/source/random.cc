@@ -4,7 +4,7 @@
 
 #include <cinttypes>
 #include <cmath>
-#ifndef TARGET_COMPILER_VC
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 # include <unistd.h>
 #else
 # include <process.h>
@@ -286,7 +286,7 @@ int dice_def::roll() const
     return roll_dice(num, size);
 }
 
-dice_def calc_dice(int num_dice, int max_damage)
+dice_def calc_dice(int num_dice, int max_damage, bool random)
 {
     dice_def ret(num_dice, 0);
 
@@ -300,8 +300,10 @@ dice_def calc_dice(int num_dice, int max_damage)
         ret.num  = max_damage;
         ret.size = 1;
     }
-    else
+    else if (random)
         ret.size = div_rand_round(max_damage, num_dice);
+    else
+        ret.size = max_damage / num_dice; // round down
 
     return ret;
 }
@@ -354,24 +356,6 @@ int biased_random2(int max, int n)
         if (x_chance_in_y(n, n + max - 1 - i))
             return i;
     return 0;
-}
-
-// originally designed to randomise evasion -
-// values are slightly lowered near (max) and
-// approach an upper limit somewhere near (limit/2)
-// [0, max]
-int random2limit(int max, int limit)
-{
-    int sum = 0;
-
-    if (max < 1)
-        return 0;
-
-    for (int i = 0; i < max; i++)
-        if (random2(limit) >= i)
-            sum++;
-
-    return sum;
 }
 
 /** Sample from a binomial distribution.

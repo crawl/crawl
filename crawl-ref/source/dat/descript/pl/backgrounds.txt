@@ -57,11 +57,6 @@ Necromancer
 Nekromanci są czarodziejami specjalizującymi się w czarnej magii. Zaczynają
 znając czar „Ból”.
 %%%%
-Skald
-
-Skaldowie są wojownikami którzy dodają sobie sił magicznymi przyśpiewkami z
-księgi Pieśni Wojennych.
-%%%%
 Venom Mage
 
 Magowie Jadu zaczynają z Poradnikiem Małego Truciciela w zanadrzu. Jest to

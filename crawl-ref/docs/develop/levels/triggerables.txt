@@ -526,5 +526,4 @@ MARKER:  o = lua:props_marker { \
 -----------------------------
 
 If you have any comments, questions, or issues with Triggerables, your best bet
-would be to contact the crawl-ref-discuss mailing list on SourceForge, or to try
-##crawl-dev on irc.freenode.org.
+would be #crawl-dev on Libera IRC.

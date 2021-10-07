@@ -59,6 +59,16 @@ Xom grants you some temporary aid.
 
 Xom momentarily opens a gate.
 %%%%
+Xom animate monster weapon
+
+"Time to have some fun!"
+
+You hear Xom's maniacal laughter.
+
+Xom grants you a minor favour.
+
+Xom smiles on you.
+%%%%
 # changing the scenery
 Xom scenery
 
@@ -77,50 +87,6 @@ Xom alters the dungeon around you.
 ##################
 # Xom nastiness
 ##################
-# miscast strength 0, mostly harmless
-Xom zero miscast effect
-
-Xom almost notices you.
-
-Xom's attention almost turns to you for a moment.
-
-Xom's power almost touches on you for a moment.
-
-You almost hear Xom's maniacal laughter.
-%%%%
-# miscast strength random2(2), harmless/annoying
-Xom minor miscast effect
-
-Xom notices you.
-
-Xom's attention turns to you for a moment.
-
-Xom's power touches on you for a moment.
-
-You hear Xom's maniacal laughter.
-%%%%
-# miscast strength random2(3), mostly annoying
-Xom medium miscast effect
-
-@Xom minor miscast effect@
-%%%%
-# miscast strength random2(4), up to really nasty
-Xom major miscast effect
-
-"Try this."
-
-Xom's attention turns to you.
-
-Xom's power touches on you.
-
-Xom giggles.
-
-w:1
-"This scratches an itch."
-
-w:1
-"Running a series of toy crash tests now."
-%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
@@ -174,10 +140,6 @@ Xom hostile monster
 "Let's see if it's strong enough to survive yet."
 
 You hear Xom's maniacal laughter.
-%%%%
-Xom animate monster weapon
-
-@Xom hostile monster@
 %%%%
 Xom banishment
 
@@ -494,6 +456,9 @@ else
     return "plaything"
 end
 }}
+######################################
+# Miscellaneous god messages.
+######################################
 %%%%
 recite_closure
 
@@ -516,6 +481,26 @@ w:5
 
 w:3
 "In fire! In pain!"
+%%%%
+Ignis elemental wrath
+
+"Attack, my last stalwart servants!"
+
+Ignis wails with rage, and rains down burning fury!
+
+Ignis calls forth spirits of fire to unmake you!
+
+"Burn! Burn until nothing is left!"
+
+"These will know how to inflict the punishment due to you!"
+
+"Betrayer! Apostate! Perish!"
+
+w:5
+"With a thousand fires I burned cities, but these will suffice for you!"
+
+w:5
+"My hands, my teeth, my burning tears: these will never betray me!"
 %%%%
 ######################################
 # Welcome messages on game restoration
@@ -572,9 +557,16 @@ Hepliaklqana welcome
 
 Hepliaklqana says: Your past becomes your present!
 %%%%
+Ignis welcome
+
+The flames of Ignis gently warm you.
+%%%%
 Jiyva welcome
 
 Slime for the Slime God!
+
+w:1
+Long live the new flesh!
 %%%%
 Kikubaaqudgha welcome
 

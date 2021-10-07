@@ -156,14 +156,6 @@ CMD_CAST_SPELL verbose
 
 Lancia un incantesimo.
 %%%%
-CMD_BUTCHER
-
-Macella un cadavere
-%%%%
-CMD_BUTCHER verbose
-
-Macella un cadavere in cosciotti.
-%%%%
 CMD_MEMORISE_SPELL
 
 Memorizza un incantesimo

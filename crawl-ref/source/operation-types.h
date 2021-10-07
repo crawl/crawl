@@ -5,7 +5,6 @@ enum operation_types
     OPER_WIELD    = 'w',
     OPER_QUAFF    = 'q',
     OPER_DROP     = 'd',
-    OPER_EAT      = 'e',
     OPER_TAKEOFF  = 'T',
     OPER_WEAR     = 'W',
     OPER_PUTON    = 'P',

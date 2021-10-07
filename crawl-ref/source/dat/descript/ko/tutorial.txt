@@ -178,20 +178,6 @@ tutorial2 resting
 시행합니다. 휴식을 멈춰야 할 정도의 일이 발생하면 100턴이 지나지 않았더라도
 도중에 휴식을 멈춥니다.
 %%%%
-tutorial2 chop_corpses
-
-<input>$cmd[CMD_BUTCHER]</input> 키 혹은 <localtiles><input>시프트 + 왼쪽
-마우스버튼</input>, </localtiles>을 이용하면 다양한 적들의 시체에서 먹을 수
-있는 고깃덩어리들을 얻을 수 있습니다. 이 고깃덩어리들을 먹으려면
-<input>$cmd[CMD_EAT]</input> 키 혹은 <localtiles><input>왼쪽
-마우스버튼</input></localtiles>을 이용하면 됩니다.
-%%%%
-tutorial2 rest_and_chop_reminder
-
-<input>$cmd[CMD_BUTCHER]</input> 키로 시체에서 먹을만한 음식을 만들어낼 수
-있으며, <input>$cmd[CMD_REST]</input> 키로 휴식을 취할 수 있습니다. 중요하니까
-잊지 마세요!
-%%%%
 tutorial2 wait
 
 적진 한가운데로 무모하게 돌진하는 것은 자살행위입니다! 여기서는 뒤로 물러나서
@@ -203,15 +189,6 @@ tutorial2 resting_reminder
 
 <input>$cmd[CMD_REST]</input> 키를 이용해서 휴식을 취할 수 있습니다. 정말정말
 중요한 기능이니까 절대 잊지 마세요!
-%%%%
-tutorial2 eat_reminder
-
-<input>$cmd[CMD_BUTCHER]</input> 키 혹은 <localtiles><input>시프트 + 왼쪽
-마우스버튼</input>, </localtiles>을 이용하면 다양한 적들의 시체에서 먹을 수
-있는 고깃덩어리들을 얻을 수 있습니다. 이 고깃덩어리들을 먹으려면
-<input>$cmd[CMD_EAT]</input> 키 혹은 <localtiles><input>왼쪽
-마우스버튼</input></localtiles>을 이용하면 됩니다. 중요한 내용이니까 또 나오는
-거겠죠? 잊지 마세요!
 %%%%
 tutorial2 compare_monster_desc
 
@@ -292,10 +269,6 @@ tutorial2 exit
 <yellow>휴식</yellow>
   <input>$cmd[CMD_WAIT]</input>  1턴동안 휴식하면서 주변을 살핍니다.
   <input>$cmd[CMD_REST]</input>  100턴동안 휴식하면서 주변을 살핍니다.
-
-<yellow>시체<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  시체에서 먹을만한 고기조각을 썰어냅니다.
-  <input>$cmd[CMD_EAT]</input>  썰어낸 고기조각 또는 다른 음식을 먹습니다
 
                                  <cyan><input>아무 버튼</input>이나 누르세요...</cyan>
 %%%%
@@ -534,12 +507,6 @@ tutorial4 aiming_clouds
 지정한 곳에 영향을 미치는 것을 볼 수 있을것입니다.  당신의 마법을 좀 더
 효율적으로 사용하기 위하여 하나의 구름에 여러적이 걸려들게 해 보십시오.
 %%%%
-tutorial4 spell_hunger
-
-주문영창은 당신을 엄청 배고프게 만듭니다.  어려운 주문을 쓸때 주문 영창으로
-인한 배고픔은 더 커지고,  주문영창 기술을 연마하거나 높은 지능으로 줄일 수
-있습니다.
-%%%%
 tutorial4 forget_spell
 
 캐릭터의 레벨이 오르거나, 혹은 ‘주문 시전술’ 스킬이 오를때마다, 사용 가능한
@@ -672,13 +639,6 @@ tutorial5 exhaustion
 ‘감속’ 상태, 잠시 동안 광폭화를 다시 사용할 수 없는 ‘탈진’ 상태가
 걸렸습니다. <input>$cmd[CMD_REST]</input> 키<localtiles> (혹은 <w>명령어
 모음</w>)</localtiles>을 이용해서 후유증에서 벗어나는 것이 좋습니다.
-%%%%
-tutorial5 hunger
-
-캐릭터가 ‘매우 배고픔’ 혹은 그보다 더 배고픈 상태가 되면 광폭화 권능을 사용할
-수 없습니다. 이는 캐릭터가 언제나 먹을거리를 어느 정도 가지고 다니는 것이
-좋다는 것을 의미하며, 또한 시체를 해체해서 먹는 것과 트로그에게 바치는 것의
-균형을 잘 유지해야 한다는 것을 의미합니다.
 %%%%
 tutorial5 berserk2
 

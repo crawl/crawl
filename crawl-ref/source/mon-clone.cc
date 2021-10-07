@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "coordit.h"
 #include "env.h"
+#include "god-abil.h"
 #include "items.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -237,7 +238,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
         {
             if (in_bounds(*ai)
                 && !actor_at(*ai)
-                && monster_habitable_grid(mon, grd(*ai)))
+                && monster_habitable_grid(mon, env.grid(*ai)))
             {
                 square_found = true;
                 break;
@@ -277,7 +278,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
                     mon_attitude_type mon_att)
 {
-    // Is there an open slot in menv?
+    // Is there an open slot in env.mons?
     monster* mons = get_free_monster();
     coord_def pos(0, 0);
 
@@ -288,7 +289,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     {
         if (in_bounds(*ai)
             && !actor_at(*ai)
-            && monster_habitable_grid(orig, grd(*ai)))
+            && monster_habitable_grid(orig, env.grid(*ai)))
         {
             pos = *ai;
         }
@@ -312,6 +313,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (mons->props.exists(MONSTER_DIES_LUA_KEY))
         mons->props.erase(MONSTER_DIES_LUA_KEY);
 
+    // Clear all duel-related keys from clones.
+    if (mons->props.exists(OKAWARU_DUEL_TARGET_KEY))
+    {
+        mons->props.erase(OKAWARU_DUEL_TARGET_KEY);
+        mons->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+        mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
+    }
+
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
@@ -320,14 +329,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
-            mons->unequip(mitm[old_index], false, true);
+            mons->unequip(env.item[old_index], false, true);
             mons->inv[ii.slot()] = NON_ITEM;
             continue;
         }
 
         mons->inv[ii.slot()] = new_index;
-        mitm[new_index] = mitm[old_index];
-        mitm[new_index].set_holding_monster(*mons);
+        env.item[new_index] = env.item[old_index];
+        env.item[new_index].set_holding_monster(*mons);
     }
 
     bool _obvious;
@@ -346,6 +355,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     {
         handle_seen_interrupt(mons);
         viewwindow();
+        update_screen();
     }
 
     if (crawl_state.game_is_arena())

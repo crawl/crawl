@@ -67,10 +67,11 @@ end
 #
 # This is like random_wall_material function, except that it
 #  returns the material type instead of changing the map.
+# Note this originally applied to Lair as well as D.
 #
 {{
 function getRandomWallMaterial ()
-  if (you.in_branch("D") or you.in_branch("Lair"))
+  if you.in_branch("D")
      and you.absdepth() >= 4 and crawl.one_chance_in(20) then
     if crawl.one_chance_in(3) then
       return 'v'

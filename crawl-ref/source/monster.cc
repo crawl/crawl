@@ -20,7 +20,9 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "corpse.h"
 #include "database.h"
+#include "delay.h"
 #include "dgn-event.h"
 #include "dgn-overview.h"
 #include "directn.h"
@@ -53,12 +55,12 @@
 #include "mon-tentacle.h"
 #include "mon-transit.h"
 #include "religion.h"
-#include "rot.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -228,6 +230,9 @@ void monster::ensure_has_client_id()
 
 mon_attitude_type monster::temp_attitude() const
 {
+    if (has_ench(ENCH_INSANE))
+        return ATT_NEUTRAL;
+
     if (has_ench(ENCH_HEXED))
     {
         actor *agent = monster_by_mid(get_ench(ENCH_HEXED).source);
@@ -248,7 +253,7 @@ mon_attitude_type monster::temp_attitude() const
 
 bool monster::swimming() const
 {
-    const dungeon_feature_type grid = grd(pos());
+    const dungeon_feature_type grid = env.grid(pos());
     return feat_is_watery(grid) && mons_primary_habitat(*this) == HT_WATER;
 }
 
@@ -262,13 +267,11 @@ bool monster::submerged() const
 
 bool monster::extra_balanced_at(const coord_def p) const
 {
-    const dungeon_feature_type grid = grd(p);
-    return (mons_genus(type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(*this) == MONS_GREY_DRACONIAN)
-                || grid == DNGN_SHALLOW_WATER
-                   && (mons_genus(type) == MONS_NAGA // tails, not feet
-                       || mons_genus(type) == MONS_SALAMANDER
-                       || body_size(PSIZE_BODY) >= SIZE_LARGE);
+    const dungeon_feature_type grid = env.grid(p);
+    return grid == DNGN_SHALLOW_WATER
+           && (mons_genus(type) == MONS_NAGA // tails, not feet
+               || mons_genus(type) == MONS_SALAMANDER
+               || body_size(PSIZE_BODY) >= SIZE_LARGE);
 }
 
 bool monster::extra_balanced() const
@@ -287,7 +290,7 @@ bool monster::extra_balanced() const
  */
 bool monster::floundering_at(const coord_def p) const
 {
-    const dungeon_feature_type grid = grd(p);
+    const dungeon_feature_type grid = env.grid(p);
     return (liquefied(p)
             || (feat_is_water(grid)
                 // Can't use monster_habitable_grid() because that'll return
@@ -406,10 +409,10 @@ random_var monster::attack_delay(const item_def *projectile,
     if (use_unarmed || !weap)
         return random_var(10);
 
-    random_var delay(property(*weap, PWPN_SPEED));
+    random_var delay(10);
     if (get_weapon_brand(*weap) == SPWPN_SPEED)
         delay = div_rand_round(delay * 2, 3);
-    return (random_var(10) + delay) / 2;
+    return delay;
 }
 
 int monster::has_claws(bool /*allow_tran*/) const
@@ -431,7 +434,7 @@ int monster::has_claws(bool /*allow_tran*/) const
 
 item_def *monster::missiles() const
 {
-    return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : nullptr;
+    return inv[MSLOT_MISSILE] != NON_ITEM ? &env.item[inv[MSLOT_MISSILE]] : nullptr;
 }
 
 item_def *monster::launcher() const
@@ -476,7 +479,7 @@ item_def *monster::weapon(int which_attack) const
         }
     }
 
-    return weap == NON_ITEM ? nullptr : &mitm[weap];
+    return weap == NON_ITEM ? nullptr : &env.item[weap];
 }
 
 /**
@@ -504,6 +507,22 @@ item_def *monster::melee_weapon() const
     return nullptr;
 }
 
+/**
+ * If this is an animated object with some properties determined by an item,
+ * return that item.
+ */
+item_def *monster::get_defining_object() const
+{
+    // could ASSERT on the inventory checks, but wizmode placement doesn't
+    // really guarantee these items
+    if (mons_class_is_animated_weapon(type) && inv[MSLOT_WEAPON] != NON_ITEM)
+        return &env.item[inv[MSLOT_WEAPON]];
+    else if (type == MONS_ANIMATED_ARMOUR && inv[MSLOT_ARMOUR] != NON_ITEM)
+        return &env.item[inv[MSLOT_ARMOUR]];
+
+    return nullptr;
+}
+
 // Give hands required to wield weapon.
 hands_reqd_type monster::hands_reqd(const item_def &item, bool base) const
 {
@@ -523,7 +542,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
     // These *are* weapons, so they can't wield another weapon or
     // unwield themselves.
-    if (mons_class_is_animated_weapon(type))
+    if (mons_class_is_animated_object(type))
         return false;
 
     // MF_HARD_RESET means that all items the monster is carrying will
@@ -538,7 +557,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
     item_def* weap1 = nullptr;
     if (inv[MSLOT_WEAPON] != NON_ITEM)
-        weap1 = &mitm[inv[MSLOT_WEAPON]];
+        weap1 = &env.item[inv[MSLOT_WEAPON]];
 
     int       avail_slots = 1;
     item_def* weap2       = nullptr;
@@ -549,7 +568,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
         const int offhand = _mons_offhand_weapon_index(this);
         if (offhand != NON_ITEM)
-            weap2 = &mitm[offhand];
+            weap2 = &env.item[offhand];
     }
 
     // If we're already wielding it, then of course we can wield it.
@@ -568,7 +587,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
         if (two_handed && !ignore_shield)
             return false;
 
-        _shield = &mitm[inv[MSLOT_SHIELD]];
+        _shield = &env.item[inv[MSLOT_SHIELD]];
     }
 
     if (!ignore_curse)
@@ -603,7 +622,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
     ASSERT(item.defined());
 
     // These *are* weapons, so they can't wield another weapon.
-    if (mons_class_is_animated_weapon(type))
+    if (mons_class_is_animated_object(type))
         return false;
 
     // Monsters can't use unrandarts with special effects.
@@ -660,7 +679,8 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 bool monster::can_throw_large_rocks() const
 {
     monster_type species = mons_species(false); // zombies can't
-    return species == MONS_STONE_GIANT
+    return species == MONS_TAINTED_LEVIATHAN
+           || species == MONS_STONE_GIANT
            || species == MONS_CYCLOPS
            || species == MONS_OGRE;
 }
@@ -686,8 +706,9 @@ bool monster::is_silenced() const
 {
     return silenced(pos())
             || has_ench(ENCH_MUTE)
-            || has_ench(ENCH_WATER_HOLD)
-               && !res_water_drowning();
+            || (has_ench(ENCH_WATER_HOLD)
+                || has_ench(ENCH_WATERLOGGED))
+               && res_water_drowning() <= 0;
 }
 
 bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
@@ -1024,16 +1045,17 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     if (!force && item.cursed())
         return false;
 
-    if (!force && you.can_see(*this))
-        set_ident_flags(item, ISFLAG_KNOW_CURSE);
-
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        if (!force && mons_class_is_animated_object(type))
+            return false;
         unequip_weapon(item, msg);
         break;
 
     case OBJ_ARMOUR:
+        if (!force && mons_class_is_animated_object(type))
+            return false;
         unequip_armour(item, msg);
         break;
 
@@ -1140,7 +1162,7 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
 
     if (inv[slot] != NON_ITEM)
     {
-        item_def &dest(mitm[inv[slot]]);
+        item_def &dest(env.item[inv[slot]]);
         if (items_stack(item, dest))
         {
             dungeon_events.fire_position_event(
@@ -1150,7 +1172,6 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
 
             if (msg)
                 pickup_message(item);
-            merge_item_stacks(item, dest);
             inc_mitm_item_quantity(inv[slot], item.quantity);
             destroy_item(item.index());
             if (msg)
@@ -1192,7 +1213,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     if (item_index == NON_ITEM)
         return true;
 
-    item_def& pitem = mitm[item_index];
+    item_def& pitem = env.item[item_index];
 
     // Unequip equipped items before dropping them; unequip() prevents
     // cursed items from being removed.
@@ -1420,14 +1441,8 @@ static int _ego_damage_bonus(item_def &item)
 bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
     // Draconian monks are masters of unarmed combat.
-    // Monstrous demonspawn prefer to RIP AND TEAR with their claws.
-    // XXX: this could probably be a monster flag
-    if (type == MONS_DRACONIAN_MONK
-        || mons_is_demonspawn(type)
-           && draco_or_demonspawn_subspecies(*this) == MONS_MONSTROUS_DEMONSPAWN)
-    {
+    if (type == MONS_DRACONIAN_MONK)
         return false;
-    }
 
     const bool dual_wielding = mons_wields_two_weapons(*this);
     if (dual_wielding)
@@ -1614,9 +1629,6 @@ bool monster::wants_jewellery(const item_def &item) const
         return false;
     }
 
-    if (item.sub_type == AMU_INACCURACY)
-        return false;
-
     // TODO: figure out what monsters actually want rings or amulets
     return true;
 }
@@ -1633,8 +1645,8 @@ static int _get_monster_armour_value(const monster *mon,
               + get_armour_res_elec(item, true)
               + get_armour_res_corr(item);
 
-    // Give a simple bonus, no matter the size of the MR bonus.
-    if (get_armour_res_magic(item, true) > 0)
+    // Give a simple bonus, no matter the size of the WL bonus.
+    if (get_armour_willpower(item, true) > 0)
         value++;
 
     // Poison becomes much less valuable if the monster is
@@ -1654,8 +1666,8 @@ static int _get_monster_armour_value(const monster *mon,
     if (get_armour_ego_type(item) == SPARM_REFLECTION)
         value += 3;
 
-    // And an even more sizable bonus for boots/bardings of running.
-    if (get_armour_ego_type(item) == SPARM_RUNNING)
+    // Another sizable bonus for rampaging.
+    if (get_armour_rampaging(item, true))
         value += 5;
 
     return value;
@@ -1680,16 +1692,15 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
                                                             : type;
     equipment_type eq = EQ_NONE;
 
-    // HACK to allow nagas/centaurs to wear bardings. (jpeg)
+    // HACK to allow nagas to wear bardings. (jpeg)
     switch (item.sub_type)
     {
-    case ARM_NAGA_BARDING:
-        if (genus == MONS_NAGA || genus == MONS_SALAMANDER)
+    case ARM_BARDING:
+        if (genus == MONS_NAGA || genus == MONS_SALAMANDER
+            || genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
+        {
             eq = EQ_BODY_ARMOUR;
-        break;
-    case ARM_CENTAUR_BARDING:
-        if (genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
-            eq = EQ_BODY_ARMOUR;
+        }
         break;
     // And another hack or two...
     case ARM_HAT:
@@ -1785,21 +1796,17 @@ static int _get_monster_jewellery_value(const monster *mon,
 
     if (item.sub_type == RING_PROTECTION
         || item.sub_type == RING_EVASION
-        || item.sub_type == RING_SLAYING
-        || item.sub_type == AMU_REFLECTION)
+        || item.sub_type == RING_SLAYING)
     {
         value += item.plus;
     }
-
-    if (item.sub_type == AMU_INACCURACY)
-        value -= 5;
 
     value += get_jewellery_res_fire(item, true);
     value += get_jewellery_res_cold(item, true);
     value += get_jewellery_res_elec(item, true);
 
-    // Give a simple bonus, no matter the size of the MR bonus.
-    if (get_jewellery_res_magic(item, true) > 0)
+    // Give a simple bonus, no matter the size of the WL bonus.
+    if (get_jewellery_willpower(item, true) > 0)
         value++;
 
     // Poison becomes much less valuable if the monster is
@@ -1914,8 +1921,7 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
         else // None of these exceptions hold for throwing nets.
         {
             // Spellcasters should not waste time with ammunition.
-            // Neither summons nor hostile enchantments are counted for
-            // this purpose.
+            // Neither summons nor debuffs are counted for this purpose.
             if (!force && mons_has_ranged_spell(*this, true, false))
                 return false;
 
@@ -2128,10 +2134,6 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     if (weap && !unequip(*weap, msg))
     {
         // Item was cursed.
-        // A centaur may randomly decide to not shoot you, but bashing
-        // people with a ranged weapon is a dead giveaway.
-        if (weap->cursed() && you.can_see(*this) && is_range_weapon(*weap))
-            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
     }
 
@@ -2173,7 +2175,7 @@ item_def *monster::slot_item(equipment_type eq, bool /*include_melded*/) const
 item_def *monster::mslot_item(mon_inv_type mslot) const
 {
     const int mi = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
-    return mi == NON_ITEM ? nullptr : &mitm[mi];
+    return mi == NON_ITEM ? nullptr : &env.item[mi];
 }
 
 item_def *monster::shield() const
@@ -2369,7 +2371,9 @@ string monster::hand_name(bool plural, bool *can_plural) const
     *can_plural = true;
 
     string str;
-    char        ch = mons_base_char(type);
+    char ch = mons_base_char(mons_is_pghost(type)
+                             ? species::to_mons_species(ghost->species)
+                             : type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
@@ -2383,7 +2387,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_HUMANOID_WINGED:
     case MON_SHAPE_HUMANOID_TAILED:
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
-        if (ch == 'T' || ch == 'd' || ch == 'n' || mons_is_demon(type))
+        if (ch == 'T' || ch == 'n' || mons_is_demon(type))
             str = "claw";
         break;
 
@@ -2444,7 +2448,6 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 break;
 
             case MONS_FLOATING_EYE:
-            case MONS_EYE_OF_DRAINING:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
             case MONS_GOLDEN_EYE:
@@ -2495,7 +2498,10 @@ string monster::foot_name(bool plural, bool *can_plural) const
     *can_plural = true;
 
     string str;
-    char        ch = mons_base_char(type);
+
+    char ch = mons_base_char(mons_is_pghost(type)
+                             ? species::to_mons_species(ghost->species)
+                             : type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
@@ -2624,6 +2630,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
+    // TODO: shared code with species::skin_name for player species
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -2643,6 +2650,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
         str = "tentacle";
         break;
 
+    // TODO: this looks extremely non-general
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
     case MONS_ANCIENT_CHAMPION:
@@ -2665,7 +2673,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
 
 int monster::mindex() const
 {
-    return this - menv.buffer();
+    return this - env.mons.buffer();
 }
 
 /**
@@ -2681,7 +2689,7 @@ void monster::set_hit_dice(int new_hit_dice)
     if (type == MONS_OKLOB_PLANT && !spells.empty()
         && spells[0].spell == SPELL_SPIT_ACID)
     {
-        spells[0].freq = 200 * hit_dice / 30;
+        spells[0].freq = 200 * hit_dice / 40;
     }
 }
 
@@ -2707,6 +2715,7 @@ void monster::moveto(const coord_def& c, bool clear_net)
     // Do constriction invalidation after to the move, so that all LOS checking
     // is available.
     clear_invalid_constrictions(true);
+    clear_far_engulf();
 }
 
 bool monster::fumbles_attack()
@@ -2717,7 +2726,7 @@ bool monster::fumbles_attack()
         {
             mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
                  ? "becomes momentarily stuck in the liquid earth."
-                 : grd(pos()) == DNGN_TOXIC_BOG
+                 : env.grid(pos()) == DNGN_TOXIC_BOG
                  ? "becomes momentarily stuck in the toxic bog."
                  : "splashes around in the water.");
         }
@@ -2733,7 +2742,7 @@ bool monster::fumbles_attack()
     return false;
 }
 
-void monster::attacking(actor * /* other */, bool /* ranged */)
+void monster::attacking(actor * /* other */)
 {
 }
 
@@ -2755,16 +2764,10 @@ bool monster::go_frenzy(actor *source)
 
     const int duration = 16 + random2avg(13, 2);
 
-    // store the attitude for later retrieval
-    props["old_attitude"] = short(attitude);
-
-    attitude = ATT_NEUTRAL;
     add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
-    if (holiness() & MH_NATURAL)
-    {
-        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
-        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
-    }
+    add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
+
     mons_att_changed(this);
 
     if (simple_monster_message(*this, " flies into a frenzy!"))
@@ -2829,36 +2832,25 @@ void monster::expose_to_element(beam_type flavour, int strength,
     case BEAM_WATER:
         del_ench(ENCH_STICKY_FLAME);
         break;
-    case BEAM_FIRE:
-    case BEAM_LAVA:
-    case BEAM_STICKY_FLAME:
-    case BEAM_STEAM:
-        if (has_ench(ENCH_OZOCUBUS_ARMOUR))
-        {
-            // The 10 here is from expose_player_to_element.
-            const int amount = strength ? strength : 10;
-            if (!lose_ench_levels(get_ench(ENCH_OZOCUBUS_ARMOUR),
-                                  amount * BASELINE_DELAY, true)
-                && you.can_see(*this))
-            {
-                mprf("The heat melts %s icy armour.",
-                     apostrophise(name(DESC_THE)).c_str());
-            }
-        }
-        if (has_ench(ENCH_ICEMAIL))
-            del_ench(ENCH_ICEMAIL);
-        break;
     default:
         break;
     }
 }
 
-void monster::banish(actor *agent, const string &, const int, bool force)
+void monster::banish(const actor *agent, const string &, const int, bool force)
 {
     coord_def old_pos = pos();
 
     if (mons_is_projectile(type))
         return;
+
+    if (player_in_branch(BRANCH_ARENA))
+    {
+        string msg = make_stringf(" prevents %s banishment from the Arena!",
+                                  name(DESC_ITS).c_str());
+        simple_god_message(msg.c_str(), GOD_OKAWARU);
+        return;
+    }
 
     if (!force && player_in_branch(BRANCH_ABYSS)
         && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
@@ -2879,21 +2871,16 @@ void monster::banish(actor *agent, const string &, const int, bool force)
 
     simple_monster_message(*this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    if (agent && mons_gives_xp(*this, *agent))
+    if (agent && mons_gives_xp(*this, *agent)
+        && (agent->is_player() || agent->mid == MID_YOU_FAULTLESS))
     {
-        // Double the existing damage blame counts, so the unassigned xp for
-        // remaining hp is effectively halved. No need to pass flags this way.
-        damage_total *= 2;
-        damage_friendly *= 2;
-        blame_damage(agent, hit_points);
+        // Count all remaining HP as damage done by you - no need to
+        // pass flags this way.
+        damage_friendly += hit_points * 2;
         // Note: we do not set MF_PACIFIED, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
-
-        if (agent->is_player())
-        {
-            did_god_conduct(DID_BANISH, get_experience_level(),
-                            true /*possibly wrong*/, this);
-        }
+        did_god_conduct(DID_BANISH, get_experience_level(),
+                        true /*possibly wrong*/, this);
     }
     monster_die(*this, KILL_BANISHED, NON_MONSTER);
 
@@ -2936,7 +2923,7 @@ bool monster::has_chaotic_spell() const
 
 bool monster::has_attack_flavour(int flavour) const
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const int attk_flavour = mons_attack_spec(*this, i).flavour;
         if (attk_flavour == flavour)
@@ -2948,7 +2935,7 @@ bool monster::has_attack_flavour(int flavour) const
 
 bool monster::has_damage_type(int dam_type)
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const int dmg_type = damage_type(i);
         if (dmg_type == dam_type)
@@ -2962,7 +2949,7 @@ int monster::constriction_damage(bool direct) const
 {
     if (direct)
     {
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         {
             const mon_attack_def attack = mons_attack_spec(*this, i);
             if (attack.type == AT_CONSTRICT)
@@ -3019,7 +3006,7 @@ bool monster::cannot_act() const
 
 bool monster::cannot_move() const
 {
-    return cannot_act() || has_ench(ENCH_WHIRLWIND_PINNED);
+    return cannot_act();
 }
 
 bool monster::asleep() const
@@ -3118,13 +3105,18 @@ bool monster::pacified() const
     return attitude == ATT_NEUTRAL && testbits(flags, MF_PACIFIED);
 }
 
+bool monster::can_feel_fear(bool /*include_unknown*/) const
+{
+    return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+           && !berserk_or_insane();
+}
+
 /**
  * Returns whether the monster currently has any kind of shield.
  */
 bool monster::shielded() const
 {
-    return shield()
-           || wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0;
+    return shield() || wearing(EQ_AMULET, AMU_REFLECTION);
 }
 
 int monster::shield_bonus() const
@@ -3132,7 +3124,7 @@ int monster::shield_bonus() const
     if (incapacitated())
         return -100;
 
-    int sh = -100;
+    int sh = 0;
     const item_def *shld = shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
@@ -3145,13 +3137,9 @@ int monster::shield_bonus() const
     // shielding from jewellery
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
     if (amulet && amulet->sub_type == AMU_REFLECTION)
-    {
-        const int jewellery_plus = amulet->plus;
-        ASSERT(abs(jewellery_plus) < 30); // sanity check
-        sh += jewellery_plus * 2;
-    }
+        sh += AMU_REFLECT_SH;
 
-    return sh;
+    return sh ? sh : -100;
 }
 
 int monster::shield_block_penalty() const
@@ -3159,41 +3147,21 @@ int monster::shield_block_penalty() const
     return 4 * shield_blocks * shield_blocks;
 }
 
-void monster::shield_block_succeeded(actor *attacker)
+void monster::shield_block_succeeded()
 {
-    actor::shield_block_succeeded(attacker);
+    actor::shield_block_succeeded();
 
     ++shield_blocks;
 }
 
 int monster::shield_bypass_ability(int) const
 {
-    return 15 + get_hit_dice() * 2 / 3;
+    return mon_shield_bypass(get_hit_dice());
 }
 
-int monster::missile_deflection() const
+bool monster::missile_repulsion() const
 {
-    if (has_ench(ENCH_DEFLECT_MISSILES))
-        return 2;
-    else if (has_ench(ENCH_REPEL_MISSILES) || scan_artefacts(ARTP_RMSL))
-        return 1;
-    else
-        return 0;
-}
-
-void monster::ablate_deflection()
-{
-    // TODO: deduplicate this code
-    if (has_ench(ENCH_DEFLECT_MISSILES))
-    {
-        if (one_chance_in(2 + spell_hd()))
-            del_ench(ENCH_DEFLECT_MISSILES);
-    }
-    else if (has_ench(ENCH_REPEL_MISSILES))
-    {
-        if (one_chance_in(2 + spell_hd()))
-            del_ench(ENCH_REPEL_MISSILES);
-    }
+    return has_ench(ENCH_REPEL_MISSILES) || scan_artefacts(ARTP_RMSL);
 }
 
 /**
@@ -3260,8 +3228,8 @@ static int _zombie_ac_modifier(monster_type type)
 /**
  * What's the base armour class of this monster?
  *
- * Usually based on type; ghost demons can override this, and draconians/
- * demonspawn are... complicated.
+ * Usually based on type; ghost demons can override this, and draconians
+ * are... complicated.
  *
  * @return The base armour class of this monster, before applying item &
  *          status effects.
@@ -3300,10 +3268,21 @@ int monster::base_armour_class() const
         return get_experience_level() / 2;
     }
 
+    if (type == MONS_ANIMATED_ARMOUR)
+    {
+        // Armour spirits get double AC from their armour.
+        const int armour_slot = inv[MSLOT_ARMOUR];
+        if (armour_slot != NON_ITEM)
+        {
+            const int typ = env.item[armour_slot].sub_type;
+            return armour_prop(typ, PARM_AC);
+        }
+    }
+
     const int base_ac = get_monster_data(type)->AC;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
     {
         ASSERT(!invalid_monster_type(base_monster));
         return base_ac + get_monster_data(base_monster)->AC;
@@ -3348,10 +3327,6 @@ int monster::armour_class(bool calc_unid) const
     }
 
     // various enchantments
-    if (has_ench(ENCH_OZOCUBUS_ARMOUR))
-        ac += 4 + get_hit_dice() / 3;
-    if (has_ench(ENCH_ICEMAIL))
-        ac += ICEMAIL_MAX;
     if (has_ench(ENCH_IDEALISED))
         ac += 4 + get_hit_dice() / 3;
 
@@ -3422,8 +3397,8 @@ int monster::base_evasion() const
 
     const int base_ev = get_monster_data(type)->ev;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
         return base_ev + get_monster_data(base_monster)->ev;
 
     return base_ev;
@@ -3482,9 +3457,6 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 
 bool monster::heal(int amount)
 {
-    if (mons_is_statue(type))
-        return false;
-
     if (amount < 1)
         return false;
     else if (hit_points == max_hit_points)
@@ -3502,7 +3474,7 @@ bool monster::heal(int amount)
         // Clear the damage blame if it goes away completely.
         damage_friendly = 0;
         damage_total = 0;
-        props.erase("reaping_damage");
+        props.erase(REAPING_DAMAGE_KEY);
     }
 
     return success;
@@ -3534,38 +3506,39 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     if (testbits(flags, MF_FAKE_UNDEAD))
         return MH_UNDEAD;
 
-    mon_holy_type holi = mons_class_holiness(type);
-
-    // Assume that all unknown gods are not holy.
-    if (is_priest() && is_good_god(god))
-        holi |= MH_HOLY;
-
-    // Assume that all unknown gods are evil.
-    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
-        holi |= MH_EVIL;
-
-    if (has_attack_flavour(AF_DRAIN_XP)
-        || has_attack_flavour(AF_VAMPIRIC))
-    {
-        holi |= MH_EVIL;
-    }
-
-    if (testbits(flags, MF_SPECTRALISED))
-        holi |= MH_EVIL;
-
-    return holi;
+    return mons_class_holiness(type);
 }
 
-bool monster::undead_or_demonic() const
+bool monster::undead_or_demonic(bool /*temp*/) const
 {
     const mon_holy_type holi = holiness();
 
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
-bool monster::is_holy(bool /*check_spells*/) const
+bool monster::evil() const
 {
-    return bool(holiness() & MH_HOLY);
+    // Assume that all unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
+        return true;
+    if (has_attack_flavour(AF_DRAIN) || has_attack_flavour(AF_VAMPIRIC))
+        return true;
+    if (testbits(flags, MF_SPECTRALISED))
+        return true;
+    for (auto slot : spells)
+        if (is_evil_spell(slot.spell))
+            return true;
+    return actor::evil();
+}
+
+/**
+ * Is the monster innately holy, or a priest of a good god?
+ *
+ * @return Whether the monster is considered holy.
+ **/
+bool monster::is_holy() const
+{
+    return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
 bool monster::is_nonliving(bool /*temp*/) const
@@ -3584,9 +3557,7 @@ int monster::how_unclean(bool check_god) const
 {
     int uncleanliness = 0;
 
-    if (has_attack_flavour(AF_HUNGER))
-        uncleanliness++;
-    if (has_attack_flavour(AF_ROT))
+    if (has_attack_flavour(AF_DRAIN))
         uncleanliness++;
     if (has_attack_flavour(AF_STEAL))
         uncleanliness++;
@@ -3646,7 +3617,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_TIAMAT            // For her colour-changing.
         || type == MONS_BAI_SUZHEN
         || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
-        || mons_is_demonspawn(type))      // Like player demonspawn.
+        || mons_genus(type) == MONS_DEMONSPAWN) // Like player demonspawn.
     {
         chaotic++;
     }
@@ -3723,14 +3694,14 @@ int monster::res_fire() const
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-            u += get_armour_res_fire(mitm[armour], false);
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
+            u += get_armour_res_fire(env.item[armour], false);
 
-        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-            u += get_armour_res_fire(mitm[shld], false);
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
+            u += get_armour_res_fire(env.item[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_fire(mitm[jewellery], false);
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_fire(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_FIRE))
@@ -3777,14 +3748,14 @@ int monster::res_cold() const
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-            u += get_armour_res_cold(mitm[armour], false);
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
+            u += get_armour_res_cold(env.item[armour], false);
 
-        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-            u += get_armour_res_cold(mitm[shld], false);
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
+            u += get_armour_res_cold(env.item[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_cold(mitm[jewellery], false);
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_cold(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_COLD))
@@ -3820,11 +3791,11 @@ int monster::res_elec() const
         const int armour    = inv[MSLOT_ARMOUR];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-            u += get_armour_res_elec(mitm[armour], false);
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
+            u += get_armour_res_elec(env.item[armour], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_elec(mitm[jewellery], false);
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_elec(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_AIR))
@@ -3846,7 +3817,7 @@ int monster::res_water_drowning() const
     if (is_unbreathing())
         rw++;
 
-    habitat_type hab = mons_habitat(*this);
+    habitat_type hab = mons_habitat(*this, true);
     if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
         rw++;
 
@@ -3880,14 +3851,14 @@ int monster::res_poison(bool temp) const
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-            u += get_armour_res_poison(mitm[armour], false);
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
+            u += get_armour_res_poison(env.item[armour], false);
 
-        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-            u += get_armour_res_poison(mitm[shld], false);
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
+            u += get_armour_res_poison(env.item[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_poison(mitm[jewellery], false);
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_poison(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_POISON))
@@ -3909,42 +3880,19 @@ bool monster::res_sticky_flame() const
     return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
 }
 
-static rot_resistance _base_rot_resistance(const monster &mons)
+bool monster::res_miasma(bool /*temp*/) const
 {
-    const mon_holy_type holi = mons.holiness();
-
-    // handle undead first so that multi-holiness undead get their due
-    if (holi & MH_UNDEAD)
+    if ((holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
+        || get_mons_resist(*this, MR_RES_MIASMA))
     {
-        if (mons_genus(mons.type) == MONS_GHOUL || mons.type == MONS_ZOMBIE)
-            return ROT_RESIST_MUNDANE;
-        return ROT_RESIST_FULL;
+        return true;
     }
-    if (holi & (MH_NATURAL | MH_PLANT))
-        return ROT_RESIST_NONE; // was 1 for plants before. Gardening shows it should be -1
-    if (holi & (MH_HOLY | MH_DEMONIC))
-        return ROT_RESIST_MUNDANE;
-    if (mons.is_nonliving())
-        return ROT_RESIST_FULL;
-    if (mons.is_insubstantial())
-        return ROT_RESIST_FULL;
-    return ROT_RESIST_NONE;
-}
-
-rot_resistance monster::res_rotting(bool /*temp*/) const
-{
-    const rot_resistance res = _base_rot_resistance(*this);
-    if (res != ROT_RESIST_NONE)
-        return res;
-
-    if (get_mons_resist(*this, MR_RES_ROTTING))
-        return ROT_RESIST_MUNDANE;
 
     const item_def *armour = mslot_item(MSLOT_ARMOUR);
     if (armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE))
-        return ROT_RESIST_MUNDANE;
+        return true;
 
-    return res;
+    return false;
 }
 
 int monster::res_holy_energy() const
@@ -3968,7 +3916,7 @@ int monster::res_holy_energy() const
 int monster::res_negative_energy(bool intrinsic_only) const
 {
     // If you change this, also change get_mons_resists.
-    if (!(holiness() & MH_NATURAL))
+    if (!(holiness() & (MH_NATURAL | MH_PLANT)))
         return 3;
 
     int u = get_mons_resist(*this, MR_RES_NEG);
@@ -3981,14 +3929,14 @@ int monster::res_negative_energy(bool intrinsic_only) const
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-            u += get_armour_life_protection(mitm[armour], false);
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
+            u += get_armour_life_protection(env.item[armour], false);
 
-        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
-            u += get_armour_life_protection(mitm[shld], false);
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
+            u += get_armour_life_protection(env.item[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_life_protection(mitm[jewellery], false);
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_life_protection(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_DEATH))
@@ -4003,16 +3951,13 @@ int monster::res_negative_energy(bool intrinsic_only) const
 
 bool monster::res_torment() const
 {
-    const mon_holy_type holy = holiness();
-    return holy & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING)
-           || get_mons_resist(*this, MR_RES_TORMENT) > 0;
+    return get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
-bool monster::res_tornado() const
+bool monster::res_polar_vortex() const
 {
-    return has_ench(ENCH_TORNADO)
-           || has_ench(ENCH_VORTEX)
-           || get_mons_resist(*this, MR_RES_TORNADO) > 0;
+    return has_ench(ENCH_POLAR_VORTEX)
+           || get_mons_resist(*this, MR_RES_VORTEX) > 0;
 }
 
 bool monster::res_petrify(bool /*temp*/) const
@@ -4033,12 +3978,12 @@ int monster::res_constrict() const
     return 0;
 }
 
-bool monster::res_corr(bool calc_unid, bool items) const
+bool monster::res_corr(bool calc_unid, bool temp) const
 {
     if (get_mons_resist(*this, MR_RES_ACID) > 0)
         return true;
 
-    return actor::res_corr(calc_unid, items);
+    return actor::res_corr(calc_unid, temp);
 }
 
 int monster::res_acid(bool calc_unid) const
@@ -4052,34 +3997,38 @@ int monster::res_acid(bool calc_unid) const
 }
 
 /**
- * What MR (resistance to hexes, etc) does this monster have?
+ * What WL (resistance to hexes, etc) does this monster have?
  *
  * @param calc_unid     Whether to include items & effects the player may not
  *                      know about.
- * @return              The monster's magic resistance value.
+ * @return              The monster's willpower value.
  */
-int monster::res_magic(bool calc_unid) const
+int monster::willpower(bool calc_unid) const
 {
-    if (mons_immune_magic(*this))
-        return MAG_IMMUNE;
+    if (mons_invuln_will(*this))
+        return WILL_INVULN;
 
-    const int type_mr = (get_monster_data(type))->resist_magic;
+    const item_def *arm = mslot_item(MSLOT_ARMOUR);
+    if (arm && is_unrandom_artefact(*arm, UNRAND_FOLLY))
+        return 0;
+
+    const int type_wl = (get_monster_data(type))->willpower;
     // Negative values get multiplied with monster hit dice.
-    int u = type_mr < 0 ?
-                get_hit_dice() * -type_mr * 4 / 3 :
-                mons_class_res_magic(type, base_monster);
+    int u = type_wl < 0 ?
+                get_hit_dice() * -type_wl * 4 / 3 :
+                mons_class_willpower(type, base_monster);
 
     // Hepliaklqana ancestors scale with xl.
     if (mons_is_hepliaklqana_ancestor(type))
         u = get_experience_level() * get_experience_level() / 2; // 0-160ish
 
-    // Draining/malmutation reduce monster base MR proportionately.
+    // Draining/malmutation reduce monster base WL proportionately.
     const int HD = get_hit_dice();
     if (HD < get_experience_level())
         u = u * HD / get_experience_level();
 
     // Resistance from artefact properties.
-    u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
+    u += WL_PIP * scan_artefacts(ARTP_WILLPOWER);
 
     // Ego equipment resistance.
     const int armour    = inv[MSLOT_ARMOUR];
@@ -4089,28 +4038,28 @@ int monster::res_magic(bool calc_unid) const
     // XXX: should also include artefacts mr props
     // (remove ", false" and add appropriate flag checks for calc_unid)
 
-    if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-        && (calc_unid || (mitm[armour].flags & ISFLAG_KNOW_TYPE)))
+    if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR
+        && (calc_unid || (env.item[armour].flags & ISFLAG_KNOW_TYPE)))
     {
-        u += get_armour_res_magic(mitm[armour], false);
+        u += get_armour_willpower(env.item[armour], false);
     }
 
-    if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
-        && (calc_unid || (mitm[shld].flags & ISFLAG_KNOW_TYPE)))
+    if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR
+        && (calc_unid || (env.item[shld].flags & ISFLAG_KNOW_TYPE)))
     {
-        u += get_armour_res_magic(mitm[shld], false);
+        u += get_armour_willpower(env.item[shld], false);
     }
 
-    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
+    if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY
         && calc_unid) // XXX: can you ever see monster jewellery?
     {
-        u += get_jewellery_res_magic(mitm[jewellery], false);
+        u += get_jewellery_willpower(env.item[jewellery], false);
     }
 
-    if (has_ench(ENCH_RAISED_MR)) //trog's hand
+    if (has_ench(ENCH_STRONG_WILLED)) //trog's hand
         u += 80;
 
-    if (has_ench(ENCH_LOWERED_MR))
+    if (has_ench(ENCH_LOWERED_WL))
         u /= 2;
 
     if (u < 0)
@@ -4156,11 +4105,7 @@ bool monster::airborne() const
 {
     // For dancing weapons, this function can get called before their
     // ghost_demon is created, so check for a nullptr ghost. -cao
-    return mons_is_ghost_demon(type) && ghost && ghost->flies
-           // check both so spectral humans and zombified dragons both fly
-           || mons_class_flag(mons_base_type(*this), M_FLIES)
-           || mons_class_flag(type, M_FLIES)
-           || has_facet(BF_BAT)
+    return monster_inherently_flies(*this)
            || scan_artefacts(ARTP_FLY) > 0
            || mslot_item(MSLOT_ARMOUR)
               && mslot_item(MSLOT_ARMOUR)->base_type == OBJ_ARMOUR
@@ -4193,7 +4138,7 @@ bool monster::poison(actor *agent, int amount, bool force)
     return poison_monster(this, agent, amount, force);
 }
 
-int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*drained*/, bool /*temp*/) const
+int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
     if (mons_intel(*this) < I_HUMAN && !mons_is_avatar(type))
@@ -4257,7 +4202,7 @@ bool monster::shift(coord_def p)
     for (adjacent_iterator ai(p); ai; ++ai)
     {
         // Don't drop on anything but vanilla floor right now.
-        if (grd(*ai) != DNGN_FLOOR)
+        if (env.grid(*ai) != DNGN_FLOOR)
             continue;
 
         if (actor_at(*ai))
@@ -4292,7 +4237,7 @@ god_type monster::deity() const
     return god;
 }
 
-bool monster::drain_exp(actor *agent, bool quiet, int /*pow*/)
+bool monster::drain(const actor *agent, bool quiet, int /*pow*/)
 {
     if (res_negative_energy() >= 3)
         return false;
@@ -4314,30 +4259,6 @@ bool monster::drain_exp(actor *agent, bool quiet, int /*pow*/)
         const mon_enchant drain_ench = mon_enchant(ENCH_DRAINED, 1, agent,
                                                    dur);
         add_ench(drain_ench);
-    }
-
-    return true;
-}
-
-bool monster::rot(actor *agent, int amount, bool quiet, bool no_cleanup)
-{
-    if (res_rotting() || amount <= 0)
-        return false;
-
-    if (!quiet && you.can_see(*this))
-        mprf("%s looks less resilient!", name(DESC_THE).c_str());
-
-    // If requested, don't clean up the monster in order to credit properly.
-    hurt(agent, amount, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !no_cleanup);
-
-    if (alive())
-    {
-        max_hit_points -= amount * 2;
-        hit_points = min(max_hit_points, hit_points);
-
-        // Clean up the monster if that killed it (unless we shouldn't).
-        if (!no_cleanup && max_hit_points <= 0)
-            hurt(agent, 0, BEAM_MISSILE, KILLED_BY_BEAM);
     }
 
     return true;
@@ -4378,8 +4299,7 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 /**
  * Attempts to apply corrosion to a monster.
  */
-void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
-                               bool /*allow_corrosion*/, const char* /*hurt_msg*/)
+void monster::splash_with_acid(actor* evildoer, int acid_strength)
 {
     // Splashing with acid shouldn't do anything to immune targets
     if (res_acid() == 3)
@@ -4394,11 +4314,16 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
              attack_strength_punctuation(post_res_dam).c_str());
     }
 
-    if (!one_chance_in(3))
-        corrode_equipment();
+    acid_corrode(acid_strength);
 
     if (post_res_dam > 0)
         hurt(evildoer, post_res_dam, BEAM_ACID, KILLED_BY_ACID);
+}
+
+void monster::acid_corrode(int /*acid_strength*/)
+{
+    if (res_acid() < 3 && !one_chance_in(3))
+        corrode_equipment();
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
@@ -4455,7 +4380,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        // Apply damage multipliers for amulet of harm
+        // Apply damage multipliers for scarf of harm
         if (amount != INSTANT_DEATH)
         {
             // +30% damage when the opponent has harm
@@ -4485,7 +4410,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             hit_points = max_hit_points;
         }
 
-        if (flavour == BEAM_DEVASTATION || flavour == BEAM_DISINTEGRATION)
+        if (flavour == BEAM_DEVASTATION || flavour == BEAM_MINDBURST)
         {
             if (can_bleed())
                 blood_spray(pos(), type, amount / 5);
@@ -4530,7 +4455,34 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
+        // Trigger corrupting presence
+        if (agent && agent->is_player() && alive()
+            && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
+        {
+            if (one_chance_in(12))
+                this->corrode_equipment("Your corrupting presence");
+            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
+                        && one_chance_in(12))
+            {
+                this->malmutate("Your corrupting presence");
+            }
+        }
+
         blame_damage(agent, amount);
+
+        if (mons_is_fragile(*this) && !has_ench(ENCH_SLOWLY_DYING))
+        {
+            // Die in 3-5 turns.
+            this->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
+                                       30 + random2(20)));
+            if (you.can_see(*this))
+            {
+                if (type == MONS_WITHERED_PLANT)
+                    mprf("%s begins to crumble.", this->name(DESC_THE).c_str());
+                else
+                    mprf("%s begins to die.", this->name(DESC_THE).c_str());
+            }
+        }
     }
 
     if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
@@ -4549,21 +4501,21 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
 void monster::confuse(actor *atk, int strength)
 {
-    if (!check_clarity())
+    if (!clarity())
         enchant_actor_with_flavour(this, atk, BEAM_CONFUSION, strength);
 }
 
-void monster::paralyse(actor *atk, int strength, string /*cause*/)
+void monster::paralyse(const actor *atk, int strength, string /*cause*/)
 {
     enchant_actor_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
 
-void monster::petrify(actor *atk, bool /*force*/)
+void monster::petrify(const actor *atk, bool /*force*/)
 {
     enchant_actor_with_flavour(this, atk, BEAM_PETRIFY);
 }
 
-bool monster::fully_petrify(actor */*atk*/, bool quiet)
+bool monster::fully_petrify(bool quiet)
 {
     bool msg = !quiet && simple_monster_message(*this, mons_is_immotile(*this) ?
                          " turns to stone!" : " stops moving altogether!");
@@ -4652,6 +4604,8 @@ void monster::ghost_demon_init()
     speed_increment = 70;
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
+    if (ghost->cloud_ring_ench != ENCH_NONE)
+        add_ench(ghost->cloud_ring_ench);
 
     load_ghost_spells();
 }
@@ -4662,32 +4616,15 @@ void monster::uglything_mutate(colour_t force_colour)
     uglything_init(true);
 }
 
-// Randomise potential damage.
-static int _estimated_trap_damage(trap_type trap)
-{
-    switch (trap)
-    {
-        case TRAP_BLADE: return 10 + random2(30);
-        case TRAP_ARROW: return random2(7);
-        case TRAP_SPEAR: return random2(10);
-        case TRAP_BOLT:  return random2(13);
-        default:         return 0;
-    }
-}
-
 /**
  * Check whether a given trap (described by trap position) can be
- * regarded as safe. Takes into account monster intelligence and
- * allegiance.
+ * regarded as safe. Takes into account monster allegiance.
  *
  * @param where       The square to be checked for dangerous traps.
- * @param just_check  Used for intelligent monsters trying to avoid traps.
  * @return            Whether the monster will willingly enter the square.
  */
-bool monster::is_trap_safe(const coord_def& where, bool just_check) const
+bool monster::is_trap_safe(const coord_def& where) const
 {
-    const mon_intel_type intel = mons_intel(*this);
-
     const trap_def *ptrap = trap_at(where);
     if (!ptrap)
         return true;
@@ -4697,87 +4634,21 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (trap.type == TRAP_SHAFT)
         return true;
 
-#if TAG_MAJOR_VERSION == 34
-    if (trap.type == TRAP_SHADOW_DORMANT || trap.type == TRAP_SHADOW)
-        return true;
-#endif
-
     // No friendly or good neutral monsters will ever enter a trap that harms
     // the player when triggered.
     if (wont_attack() && trap.is_bad_for_player())
         return false;
 
-    // Dumb monsters don't care at all.
-    if (intel == I_BRAINLESS)
-        return true;
-
-    // Ditto, berserkers & frenzied creatures.
-    if (berserk_or_insane())
-        return true;
-
     // Friendlies will try not to be parted from you.
-    if (intelligent_ally(*this) && (trap.type == TRAP_TELEPORT
-                                   || trap.type == TRAP_TELEPORT_PERMANENT)
-        && can_see(you))
+    if (friendly() && can_see(you)
+        && (trap.type == TRAP_TELEPORT || trap.type == TRAP_TELEPORT_PERMANENT))
     {
         return false;
     }
 
-    // Hostile monsters are not afraid of non-mechanical traps.
+    // Hostile monsters are not afraid of traps.
     // But, in the arena Zot traps affect all monsters.
-    if (trap.category() != DNGN_TRAP_MECHANICAL)
-        return !crawl_state.game_is_arena() || trap.type != TRAP_ZOT;
-
-    // Net traps always target the player, let's use them!
-    if (trap.type == TRAP_NET)
-        return true;
-
-    // If just checking a mechanical trap is dangerous
-    if (just_check)
-        return false;
-
-    // Mechanical trap calculations
-    // Test for corridor-like environment.
-    const int x = where.x - pos().x;
-    const int y = where.y - pos().y;
-
-    // The question is whether the monster (m) can easily reach its
-    // presumable destination (x) without stepping on the trap. Traps
-    // in corridors do not allow this. See e.g
-    //  #x#        ##
-    //  #^#   or  m^x
-    //   m         ##
-    //
-    // The same problem occurs if paths are blocked by monsters,
-    // hostile terrain or other traps rather than walls.
-    // What we do is check whether the squares with the relative
-    // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
-    // (relative to the _trap_ position rather than the monster one).
-    // If they don't, the trap square is marked as "unsafe" (because
-    // there's a good alternative move for the monster to take),
-    // otherwise the decision will be made according to later tests
-    // (monster hp, trap type, ...)
-    // If a monster still gets stuck in a corridor it will usually be
-    // because it has less than half its maximum hp.
-
-    if ((mon_can_move_to_pos(this, coord_def(x-1, y), true)
-         || mon_can_move_to_pos(this, coord_def(x+1,y), true))
-        && (mon_can_move_to_pos(this, coord_def(x,y-1), true)
-            || mon_can_move_to_pos(this, coord_def(x,y+1), true)))
-    {
-        return false;
-    }
-
-    // Healthy monsters don't mind a little pain.
-    if (hit_points >= max_hit_points / 2
-        && (intel < I_HUMAN
-            || hit_points > _estimated_trap_damage(trap.type)))
-    {
-        return true;
-    }
-
-    // we don't think we have enough hp (per above), so avoid mech traps
-    return false;
+    return !crawl_state.game_is_arena() || trap.type != TRAP_ZOT;
 }
 
 bool monster::is_cloud_safe(const coord_def &place) const
@@ -4795,10 +4666,10 @@ bool monster::check_set_valid_home(const coord_def &place,
     if (actor_at(place))
         return false;
 
-    if (!monster_habitable_grid(this, grd(place)))
+    if (!monster_habitable_grid(this, env.grid(place)))
         return false;
 
-    if (!is_trap_safe(place, true))
+    if (!is_trap_safe(place))
         return false;
 
     if (one_chance_in(++nvalid))
@@ -4810,10 +4681,10 @@ bool monster::check_set_valid_home(const coord_def &place,
 
 bool monster::is_location_safe(const coord_def &place)
 {
-    if (!monster_habitable_grid(this, grd(place)))
+    if (!monster_habitable_grid(this, env.grid(place)))
         return false;
 
-    if (!is_trap_safe(place, true))
+    if (!is_trap_safe(place))
         return false;
 
     if (!is_cloud_safe(place))
@@ -4873,7 +4744,7 @@ bool monster::find_home_near_place(const coord_def &c)
                 continue;
             dist(*ai - c) = last_dist = dist(p - c) + 1;
 
-            if (!monster_habitable_grid(this, grd(*ai)))
+            if (!monster_habitable_grid(this, env.grid(*ai)))
                 continue;
 
             q.push(*ai);
@@ -5039,7 +4910,7 @@ kill_category monster::kill_alignment() const
 
 bool monster::sicken(int amount)
 {
-    if (res_rotting() || (amount /= 2) < 1)
+    if (res_miasma() || (amount /= 2) < 1)
         return false;
 
     if (!has_ench(ENCH_SICK) && you.can_see(*this))
@@ -5103,7 +4974,7 @@ actor *monster::get_foe() const
         return friendly() ? nullptr : &you;
 
     // Must be a monster!
-    monster* my_foe = &menv[foe];
+    monster* my_foe = &env.mons[foe];
     return my_foe->alive()? my_foe : nullptr;
 }
 
@@ -5114,7 +4985,12 @@ int monster::foe_distance() const
                 : INFINITE_DISTANCE;
 }
 
-bool monster::can_go_frenzy() const
+/**
+ * Can the monster suffer ENCH_FRENZY?
+ *
+ * @param check_sleep  Consider sleeping monsters as immune.
+ */
+bool monster::can_go_frenzy(bool check_sleep) const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -5124,7 +5000,7 @@ bool monster::can_go_frenzy() const
     if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
-    if (paralysed() || petrified() || petrifying() || asleep())
+    if (paralysed() || petrified() || petrifying() || check_sleep && asleep())
         return false;
 
     if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
@@ -5134,12 +5010,20 @@ bool monster::can_go_frenzy() const
     if (!mons_has_attacks(*this))
         return false;
 
+    // These allies have a special loyalty
+    if (god_protects(this)
+        || testbits(flags, MF_DEMONIC_GUARDIAN))
+    {
+        return false;
+    }
+
     return true;
 }
 
 bool monster::can_go_berserk() const
 {
-    return bool(holiness() & MH_NATURAL) && can_go_frenzy();
+    return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+           && can_go_frenzy();
 }
 
 bool monster::berserk() const
@@ -5212,17 +5096,18 @@ bool monster::can_see_invisible(bool calc_unid) const
 
 bool monster::invisible() const
 {
-    return has_ench(ENCH_INVIS) && !backlit();
+    return has_ench(ENCH_INVIS) && !backlit() && !has_ench(ENCH_FIRE_CHAMPION);
 }
 
 bool monster::visible_to(const actor *looker) const
 {
-    bool blind = looker->is_monster()
-                 && looker->as_monster()->has_ench(ENCH_BLIND);
+    const bool blind = looker->is_monster()
+                       && looker->as_monster()->has_ench(ENCH_BLIND);
+    const bool physically_vis = !blind && (!invisible()
+                                           || looker->can_see_invisible());
+    const bool seen_by_att = looker->is_player() && (friendly() || pacified());
 
-    bool vis = looker->is_player() && friendly()
-               || (!blind && (!invisible() || looker->can_see_invisible()));
-
+    const bool vis = seen_by_att || physically_vis;
     return vis && (this == looker || !submerged());
 }
 
@@ -5279,7 +5164,7 @@ bool monster::can_polymorph() const
     return can_mutate();
 }
 
-bool monster::can_bleed(bool /*allow_tran*/) const
+bool monster::can_bleed(bool /*temp*/) const
 {
     return mons_has_blood(type);
 }
@@ -5287,6 +5172,11 @@ bool monster::can_bleed(bool /*allow_tran*/) const
 bool monster::is_stationary() const
 {
     return mons_class_is_stationary(type);
+}
+
+bool monster::can_burrow() const
+{
+    return mons_class_flag(type, M_BURROWS);
 }
 
 /**
@@ -5372,7 +5262,7 @@ bool monster::polymorph(poly_power_type power)
         return true;
     }
 
-    return monster_polymorph(this, RANDOM_MONSTER, power);
+    return monster_polymorph(this, RANDOM_POLYMORPH_MONSTER, power);
 }
 
 static bool _mons_is_icy(int mc)
@@ -5380,7 +5270,8 @@ static bool _mons_is_icy(int mc)
     return mc == MONS_ICE_BEAST
            || mc == MONS_SIMULACRUM
            || mc == MONS_ICE_STATUE
-           || mc == MONS_BLOCK_OF_ICE;
+           || mc == MONS_BLOCK_OF_ICE
+           || mc == MONS_NARGUN;
 }
 
 bool monster::is_icy() const
@@ -5432,13 +5323,22 @@ bool monster::is_skeletal() const
  */
 bool monster::is_spiny() const
 {
-    return mons_class_flag(mons_is_job(type) ? base_monster : type,
+    return mons_class_flag(mons_is_draconian_job(type) ? base_monster : type,
                            M_SPINY);
 }
 
+static const int ENERGY_THRESHOLD = 80; // why?
+
 bool monster::has_action_energy() const
 {
-    return speed_increment >= 80;
+    return speed_increment >= ENERGY_THRESHOLD;
+}
+
+/// If a monster had enough energy to act this turn, change it so it doesn't.
+void monster::drain_action_energy()
+{
+    if (has_action_energy())
+        speed_increment = ENERGY_THRESHOLD - roll_dice(1, 10);
 }
 
 void monster::check_redraw(const coord_def &old, bool clear_tiles) const
@@ -5477,34 +5377,27 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive()
         && (mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA)
-        && !monster_habitable_grid(this, grd(pos()))
+        && !monster_habitable_grid(this, env.grid(pos()))
         && !has_ench(ENCH_AQUATIC_LAND))
     {
-        // Elemental wellsprings always have water beneath them
-        if (type == MONS_ELEMENTAL_WELLSPRING)
-        {
-            temp_change_terrain(pos(), DNGN_SHALLOW_WATER, 100,
-                                TERRAIN_CHANGE_FLOOD, this);
-        }
-        else
-            add_ench(ENCH_AQUATIC_LAND);
+        add_ench(ENCH_AQUATIC_LAND);
     }
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
-        if (!monster_habitable_grid(this, grd(pos())))
+        if (!monster_habitable_grid(this, env.grid(pos())))
             simple_monster_message(*this, " flops around on dry land!");
-        else if (!monster_habitable_grid(this, grd(oldpos)))
+        else if (!monster_habitable_grid(this, env.grid(oldpos)))
         {
             if (you.can_see(*this))
             {
                 mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
-                                                   feat_type_name(grd(pos())));
+                                                   feat_type_name(env.grid(pos())));
             }
             del_ench(ENCH_AQUATIC_LAND);
         }
         // This may have been called via dungeon_terrain_changed instead
-        // of by the monster moving move, in that case grd(oldpos) will
+        // of by the monster moving move, in that case env.grid(oldpos) will
         // be the current position that became watery.
         else
             del_ench(ENCH_AQUATIC_LAND);
@@ -5520,7 +5413,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive()
         && has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(this, grd(pos())))
+        && !monster_can_submerge(this, env.grid(pos())))
     {
         del_ench(ENCH_SUBMERGED);
     }
@@ -5537,7 +5430,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
             if (you.see_cell(pos()) && !visible_to(&you))
             {
                 string desc =
-                    feature_description_at(pos(), false, DESC_THE, false);
+                    feature_description_at(pos(), false, DESC_THE);
                 mprf("The bloodstain on %s disappears!", desc.c_str());
             }
         }
@@ -5566,14 +5459,14 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
     const int index = mindex();
 
     // Clear old cell pointer.
-    if (in_bounds(pos()) && mgrd(pos()) == index)
-        mgrd(pos()) = NON_MONSTER;
+    if (in_bounds(pos()) && env.mgrid(pos()) == index)
+        env.mgrid(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
     moveto(newpos, clear_net);
 
     // Set new monster grid pointer to this monster.
-    mgrd(newpos) = index;
+    env.mgrid(newpos) = index;
 
     return true;
 }
@@ -5586,7 +5479,7 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
  *
  *  We also cannot use moveto, since that calls clear_invalid_constrictions,
  *  which may cause a more(), causing a render. While monsters are being
- *  swapped, their positions and the mgrd mismatch, so rendering would crash.
+ *  swapped, their positions and the env.mgrid mismatch, so rendering would crash.
  *
  *  @param other the monster to swap with
  *  @returns whether they ended up moving.
@@ -5602,8 +5495,8 @@ bool monster::swap_with(monster* other)
         return false;
     }
 
-    if (!monster_habitable_grid(this, grd(new_pos))
-        || !monster_habitable_grid(other, grd(old_pos)))
+    if (!monster_habitable_grid(this, env.grid(new_pos))
+        || !monster_habitable_grid(other, env.grid(old_pos)))
     {
         return false;
     }
@@ -5611,10 +5504,10 @@ bool monster::swap_with(monster* other)
     mons_clear_trapping_net(this);
     mons_clear_trapping_net(other);
 
-    // Swap monster positions. Cannot render inside here, since mgrd and monster
+    // Swap monster positions. Cannot render inside here, since env.mgrid and monster
     // positions would mismatch.
-    mgrd(old_pos) = other->mindex();
-    mgrd(new_pos) = mindex();
+    env.mgrid(old_pos) = other->mindex();
+    env.mgrid(new_pos) = mindex();
     set_position(new_pos);
     other->set_position(old_pos);
 
@@ -5638,7 +5531,7 @@ bool monster::do_shaft()
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
     if (get_trap_type(pos()) != TRAP_SHAFT
-        && !feat_is_shaftable(grd(pos())))
+        && !feat_is_shaftable(env.grid(pos())))
     {
         return false;
     }
@@ -5731,11 +5624,11 @@ int monster::action_energy(energy_use_type et) const
     if (has_ench(ENCH_SWIFT))
         move_cost -= 3;
 
+    if (has_ench(ENCH_ROLLING))
+        move_cost -= 5;
+
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         move_cost += 1;
-
-    if (run())
-        move_cost -= 1;
 
     // Shadows move more quickly when blended with the darkness.
     // Change _monster_stat_description in describe.cc if you change this.
@@ -5745,14 +5638,14 @@ int monster::action_energy(energy_use_type et) const
     // Floundering monsters get the same penalty as the player, except that
     // players get the penalty on entering water, while monsters get the
     // penalty when leaving it.
-    if (floundering())
+    if (floundering() || has_ench(ENCH_LIQUEFYING))
         move_cost += 6;
 
     // Never reduce the cost to zero
     return max(move_cost, 1);
 }
 
-void monster::lose_energy(energy_use_type et, int div, int mult)
+int monster::energy_cost(energy_use_type et, int div, int mult)
 {
     int energy_loss  = div_round_up(mult * action_energy(et), div);
     if (has_ench(ENCH_PETRIFYING))
@@ -5763,31 +5656,15 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
-
-    // Randomize interval between servitor spellcasts
-    // TODO: is there a more transparent way to implement this than energy?
-    if ((et == EUT_SPELL && type == MONS_SPELLFORGED_SERVITOR))
-        energy_loss += random2(16);
-
-    // Randomize movement cost slightly, to make it less predictable,
-    // and make pillar-dancing not entirely safe.
-    // No randomization for allies following you to avoid traffic jam
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        energy_loss += random2(3) - 1;
-
-    speed_increment -= energy_loss;
+    return energy_loss;
 }
 
-void monster::gain_energy(energy_use_type et, int div, int mult)
+void monster::lose_energy(energy_use_type et, int div, int mult)
 {
-    int energy_gain  = div_round_up(mult * action_energy(et), div);
-    if (has_ench(ENCH_PETRIFYING))
-    {
-        energy_gain *= 2;
-        energy_gain /= 3;
-    }
-
-    speed_increment += energy_gain;
+    speed_increment -= energy_cost(et, div, mult);
+    // Awful old random energy logic. TODO: REMOVEME
+    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
+        speed_increment -= random2(3) - 1;
 }
 
 /**
@@ -5824,11 +5701,6 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_CURING:
         case POT_HEAL_WOUNDS:
             return !(holiness() & (MH_NONLIVING | MH_PLANT));
-#if TAG_MAJOR_VERSION == 34
-        case POT_BLOOD:
-        case POT_BLOOD_COAGULATED:
-            return mons_species() == MONS_VAMPIRE;
-#endif
         case POT_BERSERK_RAGE:
             return can_go_berserk();
         case POT_HASTE:
@@ -5840,6 +5712,7 @@ bool monster::can_drink_potion(potion_type ptype) const
             return true;
         default:
             break;
+        CASE_REMOVED_POTIONS(ptype)
     }
 
     return false;
@@ -5852,15 +5725,9 @@ bool monster::should_drink_potion(potion_type ptype) const
     case POT_CURING:
         return hit_points <= max_hit_points / 2
                || has_ench(ENCH_POISON)
-               || has_ench(ENCH_SICK)
                || has_ench(ENCH_CONFUSION);
     case POT_HEAL_WOUNDS:
         return hit_points <= max_hit_points / 2;
-#if TAG_MAJOR_VERSION == 34
-    case POT_BLOOD:
-    case POT_BLOOD_COAGULATED:
-        return hit_points <= max_hit_points / 2;
-#endif
     case POT_BERSERK_RAGE:
         // this implies !berserk()
         return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
@@ -5878,6 +5745,7 @@ bool monster::should_drink_potion(potion_type ptype) const
                && (you.can_see_invisible(false) || !friendly());
     default:
         break;
+    CASE_REMOVED_POTIONS(ptype)
     }
 
     return false;
@@ -5898,7 +5766,7 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
         static const enchant_type cured_enchants[] =
         {
-            ENCH_POISON, ENCH_SICK, ENCH_CONFUSION
+            ENCH_POISON, ENCH_CONFUSION
         };
 
         for (enchant_type cured : cured_enchants)
@@ -5910,17 +5778,6 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
         if (heal(10 + random2avg(28, 3)))
             simple_monster_message(*this, " is healed!");
         break;
-
-#if TAG_MAJOR_VERSION == 34
-    case POT_BLOOD:
-    case POT_BLOOD_COAGULATED:
-        if (mons_species() == MONS_VAMPIRE)
-        {
-            heal(10 + random2avg(28, 3));
-            simple_monster_message(*this, " is healed!");
-        }
-        break;
-#endif
 
     case POT_BERSERK_RAGE:
         enchant_actor_with_flavour(this, this, BEAM_BERSERK);
@@ -5944,68 +5801,26 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
     default:
         return false;
+    CASE_REMOVED_POTIONS(pot_eff)
     }
 
     return !card;
 }
 
-bool monster::can_evoke_jewellery(jewellery_type jtype) const
+bool monster::can_evoke_jewellery(jewellery_type /*jtype*/) const
 {
-    if (mons_class_is_stationary(type))
-        return false;
-
-    if (mons_itemuse(*this) < MONUSE_STARTING_EQUIPMENT)
-        return false;
-
-    switch (jtype)
-    {
-        case AMU_RAGE:
-            return can_go_berserk();
-        default:
-            break;
-    }
-
     return false;
 }
 
-bool monster::should_evoke_jewellery(jewellery_type jtype) const
+bool monster::should_evoke_jewellery(jewellery_type /*jtype*/) const
 {
-    switch (jtype)
-    {
-    case AMU_RAGE:
-        // this implies !berserk()
-        return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
-               && needs_berserk();
-    default:
-        break;
-    }
-
     return false;
 }
 
 // Return true if the jewellery should be identified.
-bool monster::evoke_jewellery_effect(jewellery_type jtype)
+bool monster::evoke_jewellery_effect(jewellery_type /*jtype*/)
 {
-    // XXX: this is mostly to prevent a funny message order:
-    // "$foo evokes its amulet. $foo wields a great mace. $foo goes berserk!"
-    if (jtype == AMU_RAGE)
-        wield_melee_weapon();
-
-    mprf("%s evokes %s %s.", name(DESC_THE).c_str(),
-         pronoun(PRONOUN_POSSESSIVE).c_str(),
-         jewellery_is_amulet(jtype) ? "amulet" : "ring");
-
-    switch (jtype)
-    {
-    case AMU_RAGE:
-        enchant_actor_with_flavour(this, this, BEAM_BERSERK);
-        break;
-
-    default:
-        return false;
-    }
-
-    return true;
+    return false;
 }
 
 void monster::react_to_damage(const actor *oppressor, int damage,
@@ -6143,7 +5958,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                     mprf("As %s mount dies, %s plunges down into %s!",
                          pronoun(PRONOUN_POSSESSIVE).c_str(),
                          name(DESC_THE).c_str(),
-                         grd(pos()) == DNGN_LAVA ?
+                         env.grid(pos()) == DNGN_LAVA ?
                              "lava and is incinerated" :
                              "deep water and drowns");
                 }
@@ -6162,10 +5977,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
              && hit_points < max_hit_points / 2
              && hit_points - damage > 0)
     {
-        if (!props.exists("emergency_clone"))
+        if (!props.exists(EMERGENCY_CLONE_KEY))
         {
             rakshasa_clone_fineff::schedule(this, pos());
-            props["emergency_clone"].get_bool() = true;
+            props[EMERGENCY_CLONE_KEY].get_bool() = true;
         }
     }
 
@@ -6207,11 +6022,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 reach_type monster::reach_range() const
 {
     const mon_attack_def attk(mons_attack_spec(*this, 0));
-    if ((attk.flavour == AF_REACH || attk.flavour == AF_REACH_STING)
-        && attk.damage)
-    {
+    if (flavour_has_reach(attk.flavour) && attk.damage)
         return REACH_TWO;
-    }
 
     const item_def *wpn = primary_weapon();
     if (wpn)
@@ -6252,6 +6064,12 @@ void monster::steal_item_from_player()
         //      a wand from your pocket.
         if (item_is_equipped(you.inv[m]))
             continue;
+
+        // Maurice isn't skilled enough to steal stuff you're in the middle of
+        // using.
+        for (const /*shared_ptr<Delay>*/auto& delay : you.delay_queue)
+            if (delay->is_being_used(you.inv[m]))
+                continue;
 
         mon_inv_type monslot = item_to_mslot(you.inv[m]);
         if (monslot == NUM_MONSTER_SLOTS)
@@ -6321,9 +6139,9 @@ void monster::steal_item_from_player()
         if (inv[MSLOT_GOLD] != NON_ITEM)
         {
             // If Maurice already's got some gold, simply increase the amount.
-            mitm[inv[MSLOT_GOLD]].quantity += stolen_amount;
+            env.item[inv[MSLOT_GOLD]].quantity += stolen_amount;
             // Don't re-tithe stolen gold under Zin.
-            mitm[inv[MSLOT_GOLD]].tithe_state = (you_worship(GOD_ZIN))
+            env.item[inv[MSLOT_GOLD]].tithe_state = (you_worship(GOD_ZIN))
                                                 ? TS_NO_TITHE : TS_NO_PIETY;
         }
         else
@@ -6333,7 +6151,7 @@ void monster::steal_item_from_player()
             if (idx == NON_ITEM)
                 return;
 
-            item_def &new_item = mitm[idx];
+            item_def &new_item = env.item[idx];
             new_item.base_type = OBJ_GOLD;
             new_item.sub_type  = 0;
             // Don't re-tithe stolen gold under Zin.
@@ -6377,19 +6195,6 @@ void monster::steal_item_from_player()
 
     // You'll want to autopickup it after killing Maurice.
     new_item.flags |= ISFLAG_THROWN;
-
-    // Fix up blood/chunk timers.
-    const int orig_qty = you.inv[steal_what].quantity;
-    if (is_perishable_stack(new_item))
-    {
-        // Somehow they always steal the freshest blood.
-        for (int i = new_item.quantity; i < orig_qty; ++i)
-            remove_oldest_perishable_item(new_item);
-
-        // If the whole stack is gone, it doesn't need to be cleaned up.
-        if (you.inv[steal_what].defined())
-            remove_newest_perishable_item(you.inv[steal_what]);
-    }
 }
 
 /**
@@ -6408,7 +6213,7 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
     if (index == NON_ITEM)
         return nullptr;
 
-    item_def &new_item = mitm[index];
+    item_def &new_item = env.item[index];
 
     // Copy item.
     new_item = you.inv[steal_what];
@@ -6471,17 +6276,17 @@ item_def* monster::disarm()
     item_def *mons_wpn = mslot_item(MSLOT_WEAPON);
 
     // is it ok to move the weapon into your tile (w/o destroying it?)
-    const bool your_tile_ok = !feat_eliminates_items(grd(you.pos()));
+    const bool your_tile_ok = !feat_eliminates_items(env.grid(you.pos()));
 
     // It's ok to drop the weapon into deep water if it comes out right away,
     // but if the monster is on lava we just have to abort.
-    const bool mon_tile_ok = !feat_destroys_items(grd(pos()))
+    const bool mon_tile_ok = !feat_destroys_items(env.grid(pos()))
                              && (your_tile_ok
-                                 || !feat_eliminates_items(grd(pos())));
+                                 || !feat_eliminates_items(env.grid(pos())));
 
     if (!mons_wpn
         || mons_wpn->cursed()
-        || mons_class_is_animated_weapon(type)
+        || mons_class_is_animated_object(type)
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)
         || !mon_tile_ok
@@ -6608,11 +6413,6 @@ void monster::id_if_worn(mon_inv_type mslot, object_class_type base_type,
         set_ident_type(*item, true);
 }
 
-bool monster::check_clarity() const
-{
-    return clarity();
-}
-
 bool monster::stasis() const
 {
     return mons_genus(type) == MONS_FORMICID
@@ -6643,9 +6443,31 @@ bool monster::is_divine_companion() const
            && mons_can_use_stairs(*this);
 }
 
+bool monster::is_dragonkind() const
+{
+    if (actor::is_dragonkind())
+        return true;
+
+    if (mons_is_zombified(*this) && mons_class_is_draconic(base_monster))
+        return true;
+
+    if (mons_is_ghost_demon(type) && species::is_draconian(ghost->species))
+        return true;
+
+    return false;
+}
+
+int monster::dragon_level() const
+{
+    if (is_summoned() || testbits(flags, MF_NO_REWARD))
+        return 0;
+    return actor::dragon_level();
+}
+
+/// Is this monster's Blink ability themed as a 'jump'?
 bool monster::is_jumpy() const
 {
-    return type == MONS_JUMPING_SPIDER;
+    return type == MONS_JUMPING_SPIDER || type == MONS_BOULDER_BEETLE;
 }
 
 // HD for spellcasting purposes.
@@ -6661,27 +6483,6 @@ int monster::spell_hd(spell_type spell) const
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
     return hd;
-}
-
-/**
- * For monsters with random spellbooks, track which spells
- * the player has seen this monster cast.
- *
- * @param spell     The spell the player just saw the monster cast.
- */
-void monster::note_spell_cast(spell_type spell)
-{
-    const monster_info mi(this);
-    if (get_spellbooks(mi).size() <= 1)
-        return;
-
-    for (int old_spell : props[SEEN_SPELLS_KEY].get_vector())
-        if (old_spell == spell)
-            return;
-
-    dprf("tracking seen spell %s for %s",
-         spell_title(spell), name(DESC_A, true).c_str());
-    props[SEEN_SPELLS_KEY].get_vector().push_back(spell);
 }
 
 /**
@@ -6741,5 +6542,6 @@ bool monster::angered_by_attacks() const
             && type != MONS_SPELLFORGED_SERVITOR
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
-            && !mons_is_hepliaklqana_ancestor(type);
+            // allied fed plants, hep ancestor:
+            && !god_protects(this);
 }

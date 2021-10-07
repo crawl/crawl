@@ -17,7 +17,7 @@ A glowing golden altar of the Shining One
 An altar to the Shining One, made from the purest gold and almost blinding in
 its radiance.
 %%%%
-A shattered altar of Ashenzari
+A broken altar of Ashenzari
 
 A crystal altar which shattered to pieces when Ashenzari was cursed. There is
 still a great power remaining within it: a dark aura holds the shards in
@@ -55,6 +55,12 @@ A hazy altar of Hepliaklqana
 An altar to Hepliaklqana the Forgotten, shrouded in mist and difficult to make
 out clearly. Something about it seems terribly familiar, but it's impossible to
 say exactly why.
+%%%%
+A candlelit altar of Ignis
+
+An altar to Ignis, the Dying Flame. It's completely covered in candles of all
+shapes and sizes, but only one remains alight, its slender flame wavering in the
+slightest breeze.
 %%%%
 A viscous altar of Jiyva
 
@@ -109,7 +115,7 @@ giants and covered with bloodstains.
 %%%%
 A hide-covered altar of Uskayaw
 
-An altar to Uskayaw the Reveler. It appears to be hollow and covered in a hide,
+An altar to Uskayaw the Reveller. It appears to be hollow and covered in a hide,
 giving it a resonant surface. Carvings on the side depict grouped figures that
 could be dancing or loving or fighting.
 %%%%
@@ -117,6 +123,11 @@ A radiant altar of Vehumet
 
 An altar, ablaze in the lights of Iskenderun and promising great destructive
 powers to those who would follow Vehumet.
+%%%%
+An ornate altar of the Wu Jian Council
+
+A red and gold altar to the Wu Jian Council. Sharp slivers of steel drift
+through the quiet air surrounding it.
 %%%%
 A shimmering altar of Xom
 
@@ -131,11 +142,6 @@ A glowing silver altar of Zin
 
 An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers
 are expected to be, and glowing gently.
-%%%%
-An ornate altar of the Wu Jian Council
-
-An red and gold altar to the Wu Jian Council. Sharp slivers of steel drift
-through the quiet air surrounding it.
 %%%%
 ########################################################################
 ### Terrain
@@ -253,19 +259,15 @@ A large tree. While in most places the dim light of the dungeon is not bright
 enough to sustain large plants, there are spots where, with the grace of
 Fedhas, trees as big as those on the surface can grow underground.
 %%%%
-An awoken tree
+A mangrove
 
-A large tree that has been enchanted to grant it some limited motility,
-allowing it to lash out out at any adjacent enemies of the creature who awoke
-it.
+This tree is specially adapted for growing in swampy conditions. Its vines are
+too thick to see through.
 %%%%
-An awoken autumnal tree
+A demonic tree
 
-<An awoken tree>
-%%%%
-An awoken dead tree
-
-<An awoken tree>
+A tree hideously warped by the demonic forces of chaos. Despite its bizarre
+appearance and occasional, unsettling movement, it seems harmless.
 %%%%
 An abandoned shop
 
@@ -541,6 +543,23 @@ A closed door
 
 A wooden door.
 %%%%
+A broken door
+
+A disappointingly poorly maintained wooden door. It'd take nothing short of magic
+to get this properly closed again.
+%%%%
+An open translucent door
+
+A door made from magically translucent wood.
+%%%%
+A closed translucent door
+
+A door made from magically translucent wood.
+%%%%
+A broken translucent door
+
+<A broken door>
+%%%%
 A sealed door
 
 A door sealed tightly by arcane runes. It refuses to open for any creature not
@@ -600,6 +619,54 @@ A huge sealed gate
 
 <A sealed door>
 %%%%
+A large broken door
+
+<A broken door>
+%%%%
+A broken gate
+
+<A broken door>
+%%%%
+A huge broken gate
+
+<A broken door>
+%%%%
+A large translucent open door
+
+<An open translucent door>
+%%%%
+An open translucent gate
+
+<An open translucent door>
+%%%%
+A huge open translucent gate
+
+<An open translucent door>
+%%%%
+A large translucent closed door
+
+<A closed translucent door>
+%%%%
+A closed translucent gate
+
+<A closed translucent door>
+%%%%
+A huge closed translucent gate
+
+<A closed translucent door>
+%%%%
+A large translucent broken door
+
+<A broken translucent door>
+%%%%
+A broken translucent gate
+
+<A broken translucent door>
+%%%%
+A huge broken translucent gate
+
+<A broken translucent door>
+%%%%
 ########################################################################
 ### Traps
 ########################################################################
@@ -610,48 +677,22 @@ noise it creates, it will apply an enchantment making monsters all over the
 level aware of your location. Hostile monsters may trigger this trap themselves
 to invoke its effects against you, but your allies will avoid stepping on it.
 %%%%
-An arrow trap
-
-A mechanical trap that will fire an arrow when triggered.
-%%%%
-A blade trap
-
-A massive scythe-like blade hidden in a slit, with a counterweight that acts as
-a pendulum.
-%%%%
-A bolt trap
-
-A well-concealed hole containing a crossbow-like contraption with a
-self-loading mechanism.
-%%%%
 A dispersal trap
 
 Anyone stepping on this trap will translocate themself and anyone else in view
 to a new location nearby. Hostile monsters may trigger this trap, but your
 allies will avoid stepping on it.
 %%%%
-A mechanical trap
-
-A mechanical contraption designed to harm trespassers.
-%%%%
-A needle trap
-
-A mechanical contraption that shoots poisoned needles.
-%%%%
 A net trap
 
-A large concealed net hanging from the dungeon's ceiling, enchanted by the
-powers of Zot to land only on intruders.
+A large concealed net launcher hanging from the dungeon's ceiling, enchanted
+by the powers of Zot to land only on intruders.
 %%%%
 A pressure plate
 
 A trigger of some sort. You cannot tell what kind of trap it is attached to.
 Its complicated detection system will trigger the trap even when someone flies
 over it.
-%%%%
-A spear trap
-
-A mechanical contraption that shoots long sharp poles to skewer tresspassers.
 %%%%
 A teleport trap
 
@@ -667,9 +708,6 @@ A web
 
 A spider's web. The spider who left it must have been huge, as it seems to be
 made for trapping {{ return you.genus(true) }} rather than flies.
-
-Any creature caught in it will send out telltale vibrations, alerting and
-attracting spiders nearby.
 %%%%
 A Zot trap
 
@@ -727,7 +765,7 @@ A dark tunnel
 A portal leading to the heart of a volcano. Rocks are falling from the roof and
 sides of the tunnel, filling the entry.
 %%%%
-A ruined gateway
+A crumbling gateway
 
 A salt-encrusted arch, covered with carved entreaties to the good gods to
 contain the evils sealed therein. Whatever protections this arch once offered
@@ -853,10 +891,13 @@ A carved rock wall
 
 A wall decorated with images of death and destruction.
 %%%%
-# evilmike_haunted_forest (Crypt:5)
 A dead tree
 
-A tree, as dead as everything else here.
+The dry remains of a long-dead tree.
+%%%%
+A dead mangrove
+
+The dry remains of a long-dead mangrove.
 %%%%
 # Dis:7
 An iron statue
@@ -967,7 +1008,12 @@ A glass window
 
 A pockmarked, ultra-hard glass window.
 %%%%
-# due_jungle_book (Lair:8)
+A petrified tree
+
+An ancient tree, long ago passed from biology into geology. While no longer
+wooden in a material sense, it retains the spiritual qualities of a tree.
+%%%%
+# due_jungle_book (Lair:6)
 An elephant-shaped statue
 
 A worn granite statue depicting an elephant standing guard.
@@ -994,6 +1040,10 @@ A ruined idol
 A monument to the glory of a dead god. The statue has been methodically
 defaced; not a single distinguishing feature remains.
 %%%%
+# Cigotuvi's wizlab
+A broken fleshy orifice
+
+It seems to be oozing quietly. Best not to touch it.
 ########################################################################
 ### Sprint
 ########################################################################
@@ -1047,9 +1097,34 @@ to the caster.
 ########################################################################
 ### Other effects
 ########################################################################
-icicle covered
+ice covered
 
-This wall bristles with sharp icicles that will release explosively when a foe
-wanders nearby. The shards damage and encase the victim in a frozen shroud that
-impedes movement.
+This wall is covered in magical ice that freezes victims who wander nearby.
+This damage bypasses any armour the target may have, and will slow cold-blooded
+creatures. Each victim is only ever affected by one icy wall at a time.
+
+The creator of this icy covering and any of their allies can walk safely past
+this wall.
 %%%%
+awoken
+
+This tree has been temporarily enchanted to grant it some limited motility,
+allowing it to lash out out at any adjacent enemies of the creature who awoke
+it.
+%%%%
+tree burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. The resulting blaze can flare up, spreading to areas nearby and igniting
+other trees.
+%%%%
+mangrove burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. Mangroves do not burn as vigorously as normal trees, due to growing on
+swampy terrain, and leave behind shallow water after they smoulder.
+%%%%
+demonic tree burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. Burning this tree releases a cloud of pure chaos instead of flames.

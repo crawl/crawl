@@ -7,7 +7,7 @@
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
-#include "food.h"
+#include "tile-env.h"
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -23,10 +23,11 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "tile-inventory-flags.h"
-#include "tiledef-dngn.h"
-#include "tiledef-icons.h"
-#include "tiledef-icons.h"
-#include "tiledef-main.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-main.h"
+#include "tag-version.h"
 #include "tilepick.h"
 #include "unicode.h"
 
@@ -51,8 +52,8 @@ void InventoryRegion::pack_buffers()
                 if (i > (unsigned int) mx * my * (m_grid_page+1) && item.tile)
                     break;
 
-                int num_floor = tile_dngn_count(env.tile_default.floor);
-                tileidx_t t = env.tile_default.floor + i % num_floor;
+                int num_floor = tile_dngn_count(tile_env.default_flavour.floor);
+                tileidx_t t = tile_env.default_flavour.floor + i % num_floor;
                 m_buf.add_dngn_tile(t, x, y);
             }
             else
@@ -162,12 +163,7 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (on_floor)
-        {
-            if (event.mod & TILES_MOD_SHIFT)
-                tile_item_use_floor(idx);
-            else
-                tile_item_pickup(idx, (event.mod & TILES_MOD_CTRL));
-        }
+            tile_item_pickup(idx, (event.mod & TILES_MOD_CTRL));
         else
         {
             if (event.mod & TILES_MOD_SHIFT)
@@ -184,22 +180,15 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
     {
         if (on_floor)
         {
-            if (event.mod & TILES_MOD_SHIFT)
-            {
-                m_last_clicked_item = item_idx;
-                tiles.set_need_redraw();
-                tile_item_eat_floor(idx);
-            }
-            else
-            {
-                describe_item(mitm[idx]);
-                redraw_screen();
-            }
+            describe_item(env.item[idx]);
+            redraw_screen();
+            update_screen();
         }
         else // in inventory
         {
             describe_item(you.inv[idx]);
             redraw_screen();
+            update_screen();
         }
         return CK_MOUSE_CMD;
     }
@@ -239,9 +228,8 @@ static bool _can_use_item(const item_def &item, bool equipped)
         return !_is_true_equipped_item(item);
     }
 
-    // Mummies can't do anything with food or potions.
-    if (you.species == SP_MUMMY)
-        return item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD;
+    if (!you.can_drink())
+        return item.base_type != OBJ_POTIONS;
 
     // In all other cases you can use the item in some way.
     return true;
@@ -302,7 +290,7 @@ bool InventoryRegion::update_tip_text(string& tip)
     vector<command_type> cmd;
     if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)
     {
-        const item_def &item = mitm[idx];
+        const item_def &item = env.item[idx];
 
         if (!item.defined())
             return false;
@@ -336,18 +324,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                 tip += "\n[Ctrl + L-Click] Partial pick up (%)";
                 cmd.push_back(CMD_PICKUP_QUANTITY);
             }
-        }
-        if (item.base_type == OBJ_CORPSES
-            && item.sub_type != CORPSE_SKELETON)
-        {
-            tip += "\n[Shift + L-Click] Chop up (%)";
-            cmd.push_back(CMD_BUTCHER);
-        }
-        else if (item.base_type == OBJ_FOOD
-                 && !you_foodless())
-        {
-            tip += "\n[Shift + R-Click] Eat (e)";
-            cmd.push_back(CMD_EAT);
         }
     }
     else
@@ -390,7 +366,7 @@ bool InventoryRegion::update_tip_text(string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-                if (you.species != SP_FELID)
+                if (!you.has_mutation(MUT_NO_GRASPING))
                 {
                     _handle_wield_tip(tmp, cmd);
                     if (is_throwable(&you, item))
@@ -412,14 +388,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
-            case OBJ_MISCELLANY + EQUIP_OFFSET:
-            case OBJ_RODS + EQUIP_OFFSET:
-                tmp += "Evoke (%)";
-                cmd.push_back(CMD_EVOKE_WIELDED);
-                _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                break;
             case OBJ_ARMOUR:
-                if (you.species != SP_FELID)
+                if (!you.has_mutation(MUT_NO_ARMOUR))
                 {
                     tmp += "Wear (%)";
                     cmd.push_back(CMD_WEAR_ARMOUR);
@@ -438,7 +408,7 @@ bool InventoryRegion::update_tip_text(string& tip)
                 cmd.push_back(CMD_REMOVE_JEWELLERY);
                 break;
             case OBJ_MISSILES:
-                if (you.species != SP_FELID)
+                if (!you.has_mutation(MUT_NO_GRASPING))
                 {
                     tmp += "Fire (%)";
                     cmd.push_back(CMD_FIRE);
@@ -448,13 +418,10 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_WANDS:
-                if (you.species != SP_FELID)
-                {
-                    tmp += "Evoke (%)";
-                    cmd.push_back(CMD_EVOKE);
-                    if (wielded)
-                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                }
+                tmp += "Evoke (%)";
+                cmd.push_back(CMD_EVOKE);
+                if (wielded)
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item) && item_is_spellbook(item)
@@ -478,12 +445,6 @@ bool InventoryRegion::update_tip_text(string& tip)
             case OBJ_POTIONS:
                 tmp += "Quaff (%)";
                 cmd.push_back(CMD_QUAFF);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                break;
-            case OBJ_FOOD:
-                tmp += "Eat (%)";
-                cmd.push_back(CMD_EAT);
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
@@ -537,7 +498,7 @@ bool InventoryRegion::update_alt_text(string &alt)
     const item_def *item;
 
     if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)
-        item = &mitm[idx];
+        item = &env.item[idx];
     else
         item = &you.inv[idx];
 
@@ -579,8 +540,8 @@ void InventoryRegion::draw_tag()
         draw_desc("Next page");
     else if (_is_prev_button(curs_index))
         draw_desc("Previous page");
-    else if (floor && mitm[idx].defined())
-        draw_desc(mitm[idx].name(DESC_PLAIN).c_str());
+    else if (floor && env.item[idx].defined())
+        draw_desc(env.item[idx].name(DESC_PLAIN).c_str());
     else if (!floor && you.inv[idx].defined())
         draw_desc(you.inv[idx].name(DESC_INVENTORY_EQUIP).c_str());
 }
@@ -597,7 +558,7 @@ void InventoryRegion::activate()
     m_grid_page = 0;
 }
 
-static void _fill_item_info(InventoryTile &desc, const item_info &item)
+static void _fill_item_info(InventoryTile &desc, const item_def &item)
 {
     desc.tile = tileidx_item(item);
 
@@ -645,7 +606,7 @@ void InventoryRegion::update()
     memset(inv_shown, 0, sizeof(inv_shown));
 
     int num_ground = 0;
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = env.item[i].link)
         num_ground++;
 
     char32_t c;
@@ -676,7 +637,7 @@ void InventoryRegion::update()
             }
 
             InventoryTile desc;
-            _fill_item_info(desc, get_item_info(you.inv[i]));
+            _fill_item_info(desc, get_item_known_info(you.inv[i]));
             desc.idx = i;
 
             for (int eq = EQ_FIRST_EQUIP; eq < NUM_EQUIP; ++eq)
@@ -765,16 +726,16 @@ void InventoryRegion::update()
         object_class_type type = item_class_by_sym(c);
 
         for (int i = you.visible_igrd(you.pos()); i != NON_ITEM;
-             i = mitm[i].link)
+             i = env.item[i].link)
         {
             if ((int)m_items.size() >= mx * my * (m_grid_page+1))
                 break;
 
-            if (ground_shown[i] || !show_any && mitm[i].base_type != type)
+            if (ground_shown[i] || !show_any && env.item[i].base_type != type)
                 continue;
 
             InventoryTile desc;
-            _fill_item_info(desc, get_item_info(mitm[i]));
+            _fill_item_info(desc, get_item_known_info(env.item[i]));
             desc.idx = i;
             ground_shown[i] = true;
 

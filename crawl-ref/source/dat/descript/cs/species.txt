@@ -63,11 +63,6 @@ Tengu
 Ptačí lidé, milující jak boj se zbraní, tak s kouzly. Jsou velmi křehcí, ale
 později se naučí svižnému letu.
 %%%%
-Kobold
-
-Malí, darební a trošku slabší tělem, ale velmi schopní. Mohou jíst maso v
-jakémkoliv stavu.
-%%%%
 Lava Orc
 
 Tito mistrové zemské a ohnivé magie pocházejí z hlubin žaláře. Jejich

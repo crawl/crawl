@@ -1,18 +1,26 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum trap_type
 {
+#if TAG_MAJOR_VERSION == 34
     TRAP_DART,
+    TRAP_FIRST_TRAP = TRAP_DART,
     TRAP_ARROW,
     TRAP_SPEAR,
+#endif
 #if TAG_MAJOR_VERSION > 34
     TRAP_DISPERSAL,
+    TRAP_FIRST_TRAP = TRAP_DISPERSAL,
     TRAP_TELEPORT,
 #endif
     TRAP_TELEPORT_PERMANENT,
     TRAP_ALARM,
+#if TAG_MAJOR_VERSION == 34
     TRAP_BLADE,
     TRAP_BOLT,
+#endif
     TRAP_NET,
     TRAP_ZOT,
 #if TAG_MAJOR_VERSION == 34

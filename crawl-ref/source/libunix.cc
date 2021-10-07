@@ -38,6 +38,7 @@
 #include "tiles-build-specific.h"
 #include "unicode.h"
 #include "view.h"
+#include "ui.h"
 
 static struct termios def_term;
 static struct termios game_term;
@@ -612,14 +613,25 @@ static void unixcurses_defkeys()
 
     // non-arrow keypad keys (for macros)
     define_key("\033OM", 1010); // Enter
-    define_key("\033OP", 1011); // NumLock
-    define_key("\033OQ", 1012); // /
-    define_key("\033OR", 1013); // *
-    define_key("\033OS", 1014); // -
+
+    // TODO: I don't know under what context these are mapped to numpad keys,
+    // but they are *much* more commonly used for F1-F4. So don't
+    // unconditionally define these. I don't trust anything else in this
+    // function either, but most of it is a bit hard to test. Possibly the
+    // conditional define here should at least be generalized?
+#define check_define_key(s, n) if (!key_defined(s)) define_key(s, n)
+    check_define_key("\033OP", 1011); // NumLock
+    check_define_key("\033OQ", 1012); // /
+    check_define_key("\033OR", 1013); // *
+    check_define_key("\033OS", 1014); // -
+#undef check_define_key
+
+    // TODO: there may be codes missing here, I don't get special keycodes for
+    // *,/,= on mac console.
     define_key("\033Oj", 1015); // *
-    define_key("\033Ok", 1016); // +
+    define_key("\033Ok", 1016); // + // XX why don't these collapse??
     define_key("\033Ol", 1017); // +
-    define_key("\033Om", 1018); // .
+    define_key("\033Om", 1018); // . // XX this is - on mac console? Also confirmed on linux as -
     define_key("\033On", 1019); // .
     define_key("\033Oo", 1020); // -
 
@@ -732,6 +744,9 @@ void console_startup()
 
     set_mouse_enabled(false);
 
+    // TODO: how does this relate to what tiles.resize does?
+    ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
+
 #ifdef USE_TILE_WEB
     tiles.resize();
 #endif
@@ -803,7 +818,6 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
-    update_screen();
 }
 
 // These next four are front functions so that we can reduce
@@ -852,19 +866,37 @@ int num_to_lines(int num)
     return num;
 }
 
-void clrscr()
+#ifdef DGAMELAUNCH
+static bool _suppress_dgl_clrscr = false;
+
+// TODO: this is not an ideal way to solve this problem. An alternative might
+// be to queue dgl clrscr and only send them at the same time as an actual
+// refresh?
+suppress_dgl_clrscr::suppress_dgl_clrscr()
+    : prev(_suppress_dgl_clrscr)
+{
+    _suppress_dgl_clrscr = true;
+}
+
+suppress_dgl_clrscr::~suppress_dgl_clrscr()
+{
+    _suppress_dgl_clrscr = prev;
+}
+#endif
+
+void clrscr_sys()
 {
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
 #ifdef DGAMELAUNCH
-    printf("%s", DGL_CLEAR_SCREEN);
-    fflush(stdout);
+    if (!_suppress_dgl_clrscr)
+    {
+        printf("%s", DGL_CLEAR_SCREEN);
+        fflush(stdout);
+    }
 #endif
 
-#ifdef USE_TILE_WEB
-    tiles.clrscr();
-#endif
 }
 
 void set_cursor_enabled(bool enabled)
@@ -1512,6 +1544,10 @@ void fakecursorxy(int x, int y)
     cchar_t c = character_at(y_curses, x_curses);
     flip_colour(c);
     write_char_at(y_curses, x_curses, c);
+    // the above still results in changes to the return values for wherex and
+    // wherey, so set the cursor region to ensure that the cursor position is
+    // valid after this call. (This also matches the behavior of real cursorxy.)
+    set_cursor_region(GOTO_CRT);
 }
 
 int wherex()

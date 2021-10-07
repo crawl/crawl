@@ -166,20 +166,6 @@ Parfait ! Vous pouvez regagner vos points de vie perdus en vous reposant avec
 <input>$cmd[CMD_REST]</input>. Cela vous fera vous reposer jusqu'à 100 tours,
 mais ce repos sera interrompu par n'importe quel événement important.
 %%%%
-tutorial2 chop_corpses
-
-Vous pouvez découper des corps en morceaux de viande comestibles avec
-<input>$cmd[CMD_BUTCHER]</input><localtiles> ou <input>Shift + clic de
-souris</input>, </localtiles>. Ces morceaux peuvent être consommés avec
-<input>$cmd[CMD_EAT]</input><localtiles> ou avec un <input>clic de
-souris</input></localtiles>.
-%%%%
-tutorial2 rest_and_chop_reminder
-
-N'oubliez pas de découper les corps pour maintenir votre stock de nourriture
-(avec <input>$cmd[CMD_BUTCHER]</input>), ou de vous reposer (avec
-<input>$cmd[CMD_REST]</input>) !
-%%%%
 tutorial2 wait
 
 Plutôt que de foncer tête baissée dans une pièce et vous retrouver encerclé par
@@ -189,14 +175,6 @@ des monstres, vous pouvez aussi reculer et les laisser venir vers vous (avec
 tutorial2 resting_reminder
 
 N'oubliez-pas, vous pouvez vous reposer avec <input>$cmd[CMD_REST]</input>.
-%%%%
-tutorial2 eat_reminder
-
-N'oubliez-pas, vous pouvez découper les créatures avec
-<input>$cmd[CMD_BUTCHER]</input><localtiles> ou <input>Shift + clic de
-souris</input></localtiles>, et ensuite manger ces morceaux de viande avec
-<input>$cmd[CMD_EAT]</input><localtiles> ou <input>clic de souris</input>
-</localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
@@ -277,10 +255,6 @@ tutorial2 exit
 <yellow>Repos</yellow>
   <input>$cmd[CMD_WAIT]</input>  attendre et se reposer un seul tour
   <input>$cmd[CMD_REST]</input>  attendre et se reposer jusqu'à 100 tours
-
-<yellow>Corps<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  découper un corps en morceaux de viande
-  <input>$cmd[CMD_EAT]</input>  manger un morceau de viande
 
                   <cyan>Pressez <input>n'importe quelle touche</input> pour quitter cet écran...</cyan>
 %%%%
@@ -521,12 +495,6 @@ et vous pourrez voir la zone affectée pendant la visée. Essayez de prendre
 plusieurs ennemis dans un seul nuage pour optimiser l'utilisation de votre
 magie.
 %%%%
-tutorial4 spell_hunger
-
-Jeter des sorts peut vous affamer sérieusement. La faim liée aux sorts est plus
-importante pour les sorts difficiles mais elle peut être atténuée grâce à une
-Intelligence élevée et l'entraînement de la compétence de Magie.
-%%%%
 tutorial4 forget_spell
 
 Gagner un niveau d'expérience et augmenter votre compétence de Magie vous
@@ -665,12 +633,6 @@ Une rage berserk est vraiment épuisante. Pendant que vous êtes exténué, vous
 pouvez redevenir berserk et êtes aussi ralenti. Il est préférable de se reposer
 avec <input>$cmd[CMD_REST]</input><localtiles> (ou via le <w>panneau de
 commandes</w>)</localtiles> jusqu'à ce que vous soyez en forme.
-%%%%
-tutorial5 hunger
-
-Vous ne pouvez pas devenir berserk quand vous êtes affamé, vous devriez donc
-toujours avoir de la nourriture sur vous. Cela implique que vous devrez parfois
-choisir entre découper un corps ou le sacrifier à Trog.
 %%%%
 tutorial5 berserk2
 

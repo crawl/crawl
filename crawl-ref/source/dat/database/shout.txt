@@ -190,6 +190,14 @@ __LOUD_ROAR seen
 
 SOUND:@The_monster@ roars deafeningly!
 %%%%
+__RUSTLE unseen
+
+SOUND:You hear a loud rustle.
+%%%%
+__RUSTLE seen
+
+SOUND:@The_monster@'s pages rustle loudly.
+%%%%
 ############################################
 # End of default shouts
 ############################################
@@ -259,10 +267,6 @@ Earth Elementalist player ghost
 
 @player ghost@
 %%%%
-Skald player ghost
-
-@player ghost@
-%%%%
 Venom Mage player ghost
 
 @player ghost@
@@ -293,10 +297,6 @@ Wanderer player ghost
 '&'
 
 @__DEMON_TAUNT@
-%%%%
-'a'
-
-VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
 'cap-G'
 

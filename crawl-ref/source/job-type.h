@@ -1,5 +1,8 @@
 #pragma once
 
+#include "macros.h"
+#include "tag-version.h"
+
 enum job_type
 {
     JOB_FIGHTER,
@@ -9,7 +12,7 @@ enum job_type
 #endif
     JOB_GLADIATOR,
     JOB_NECROMANCER,
-    JOB_ASSASSIN,
+    JOB_BRIGAND,
     JOB_BERSERKER,
     JOB_HUNTER,
     JOB_CONJURER,
@@ -19,7 +22,9 @@ enum job_type
     JOB_SUMMONER,
     JOB_AIR_ELEMENTALIST,
     JOB_EARTH_ELEMENTALIST,
+#if TAG_MAJOR_VERSION == 34
     JOB_SKALD,
+#endif
     JOB_VENOM_MAGE,
     JOB_CHAOS_KNIGHT,
     JOB_TRANSMUTER,
@@ -39,10 +44,12 @@ enum job_type
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
+    JOB_DELVER,
+    JOB_CINDER_ACOLYTE,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,
     JOB_RANDOM,
     JOB_VIABLE,
 };
-COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN);
+COMPILE_CHECK((NUM_JOBS < JOB_UNKNOWN));

@@ -44,10 +44,6 @@ public:
 
     const coord_def &get_cursor() const { return m_cursor[CURSOR_MOUSE]; }
 
-    void add_overlay(const coord_def &gc, int idx);
-    void clear_overlays();
-    void zoom(bool in);
-
     int tile_iw, tile_ih;
 
 protected:
@@ -68,13 +64,6 @@ protected:
 
     DungeonCellBuffer m_buf_dngn;
     ShapeBuffer m_buf_flash;
-
-    struct tile_overlay
-    {
-        coord_def gc;
-        tileidx_t idx;
-    };
-    vector<tile_overlay> m_overlays;
 };
 
 #endif

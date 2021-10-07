@@ -1,4 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""
+Generate species-data.h, aptitudes.h, species-groups.h, and species-type.h
+
+Works with both Python 2 & 3. If that changes, update how the Makefile calls
+this.
+"""
 
 from __future__ import print_function
 
@@ -6,8 +13,12 @@ import argparse
 import os
 import sys
 import traceback
-import collections
 import re
+import collections
+if sys.version_info.major == 2:
+    from collections import MutableMapping
+else:
+    from collections.abc import MutableMapping
 
 import yaml  # pip install pyyaml
 
@@ -17,7 +28,7 @@ def quote_or_nullptr(key, d):
     else:
         return 'nullptr'
 
-class Species(collections.MutableMapping):
+class Species(MutableMapping):
     """Parser for YAML definition files.
 
     If any YAML content is invalid, the relevant parser function below should
@@ -151,11 +162,10 @@ SpeciesGroup = collections.namedtuple('SpeciesGroup',
                                             ['position', 'width', 'species'])
 SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry',
                                             ['priority', 'enum'])
-SPECIES_GROUPS_TEMPLATE = {
-    'Simple': SpeciesGroup('coord_def(0, 0)', '50', []),
-    'Intermediate': SpeciesGroup('coord_def(1, 0)', '20', []),
-    'Advanced': SpeciesGroup('coord_def(2, 0)', '20', []),
-}
+SPECIES_GROUPS_TEMPLATE = collections.OrderedDict()
+SPECIES_GROUPS_TEMPLATE['Simple'] = SpeciesGroup('coord_def(0, 0)', '50', [])
+SPECIES_GROUPS_TEMPLATE['Intermediate'] = SpeciesGroup('coord_def(1, 0)', '20', [])
+SPECIES_GROUPS_TEMPLATE['Advanced'] = SpeciesGroup('coord_def(2, 0)', '20', [])
 SPECIES_GROUP_TEMPLATE = """
     {{
         "{name}",
@@ -167,17 +177,20 @@ SPECIES_GROUP_TEMPLATE = """
 ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'maces_and_flails', 'polearms', 'staves', 'slings', 'bows', 'crossbows',
     'throwing', 'armour', 'dodging', 'stealth', 'shields', 'unarmed_combat',
-    'spellcasting', 'conjurations', 'hexes', 'charms', 'summoning',
+    'spellcasting', 'conjurations', 'hexes', 'summoning',
     'necromancy', 'transmutations', 'translocations', 'fire_magic',
     'ice_magic', 'air_magic', 'earth_magic', 'poison_magic', 'invocations',
     'evocations')
-UNDEAD_TYPES = ('US_ALIVE', 'US_HUNGRY_DEAD', 'US_UNDEAD', 'US_SEMI_UNDEAD')
+UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
-    'SIZE_BIG', 'SIZE_GIANT')
+    'SIZE_GIANT')
 ALL_STATS = ('str', 'int', 'dex')
 ALL_WEAPON_SKILLS = ('SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
     'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_SLINGS', 'SK_BOWS',
     'SK_CROSSBOWS', 'SK_UNARMED_COMBAT')
+
+ALL_SPECIES_FLAGS = {'SPF_NO_HAIR', 'SPF_DRACONIAN', 'SPF_SMALL_TORSO',
+    'SPF_NO_BONES', 'SPF_BARDING'}
 
 def recommended_jobs(jobs):
     return ', '.join(validate_string(job, 'Job', 'JOB_[A-Z_]+') for job in jobs)
@@ -231,22 +244,13 @@ def quote(s):
         raise ValueError('Expected a string but got %s' % repr(s))
     return '"%s"' % s
 
-
 def species_flags(flags):
+    global ALL_SPECIES_FLAGS
     out = set()
     for f in flags:
-        if f == 'elven':
-            out.add('SPF_ELVEN')
-        elif f == 'draconian':
-            out.add('SPF_DRACONIAN')
-        elif f == 'orcish':
-            out.add('SPF_ORCISH')
-        elif f == 'hairless':
-            out.add('SPF_NO_HAIR')
-        elif f == 'small_torso':
-            out.add('SPF_SMALL_TORSO')
-        else:
+        if f not in ALL_SPECIES_FLAGS:
             raise ValueError("Unknown species flag %s" % f)
+        out.add(f)
     if not out:
         out.add('SPF_NONE')
     return ' | '.join(out)

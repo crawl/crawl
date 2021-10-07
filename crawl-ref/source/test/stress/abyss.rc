@@ -28,7 +28,6 @@ function ready()
                    "debug.disable('save_checkpoints')" .. eol ..
                    "debug.disable('confirmations')" .. eol ..
                    "debug.disable('death')" .. eol ..
-                   "debug.disable('hunger')" .. eol ..
                    "debug.disable('afflictions')" .. eol ..
                    --# don't let them stop us gearing up
                    "debug.disable('mon_act')" .. eol .. esc)
@@ -68,7 +67,6 @@ function ready()
                    "debug.disable('save_checkpoints')" .. eol ..
                    "debug.disable('confirmations')" .. eol ..
                    "debug.disable('death')" .. eol ..
-                   "debug.disable('hunger')" .. eol ..
                    "debug.disable('afflictions')" .. eol .. esc)
     crawl.call_dlua("dgn.set_random_mon_list('place:Abyss:$ /" ..
                        "place:D:$ / place:Depths:$ /" ..

@@ -9,6 +9,7 @@
 #include "item-prop-enum.h"
 #include "invent.h"
 #include "player-equip.h"
+#include "potion-type.h"
 
 #include "test_player_fixture.h"
 
@@ -185,4 +186,31 @@ TEST_CASE_METHOD( MockPlayerYouTestsFixture,
 
 TEST_CASE("armour_prop_test", "[single-file]"){
     REQUIRE(armour_prop(ARM_SCALE_MAIL, PARM_AC) == 6);
+}
+
+TEST_CASE("Test all_item_subtypes() does not include removed items",
+          "[single-file]") {
+    const auto items = all_item_subtypes(OBJ_POTIONS);
+
+    const auto has_removed_item = find(items.begin(), items.end(), POT_POISON) != items.end();
+
+    REQUIRE(has_removed_item == false);
+}
+
+TEST_CASE("Test all_item_subtypes() does include items for each category",
+          "[single-file]") {
+    // Note: CORPSES and RODS do not have any sub-items, so are excluded.
+    REQUIRE(all_item_subtypes(OBJ_WEAPONS).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_MISSILES).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_ARMOUR).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_WANDS).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_SCROLLS).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_JEWELLERY).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_POTIONS).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_BOOKS).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_STAVES).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_ORBS).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_MISCELLANY).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_GOLD).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_RUNES).size() > 0);
 }

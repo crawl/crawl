@@ -210,7 +210,7 @@ Using git for Stone Soup development
 
 6. Patching (for regular contributors, not core devs):
 
-   Once you have commited and tested a change, you can create a patch for it.
+   Once you have committed and tested a change, you can create a patch for it.
    You can then send this patch to the devs or upload it to a mantis issue for
    review and potential addition to the game.
 

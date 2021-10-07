@@ -183,10 +183,6 @@ Margery title
 
 Margery the Dragonslayer
 %%%%
-Maud title
-
-Maud the Forgotten
-%%%%
 Maurice title
 
 Maurice the Thief
@@ -198,6 +194,10 @@ Menkaure, Prince of Dust
 Mennas title
 
 Mennas, the Voice of Zin
+%%%%
+Mlioglotl title
+
+Mlioglotl, the Unformed Horror
 %%%%
 Mnoleg title
 

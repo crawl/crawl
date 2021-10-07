@@ -16,6 +16,8 @@ enum skill_menu_state
     SKM_VIEW_PROGRESS,
     SKM_VIEW_TARGETS,
     SKM_VIEW_TRAINING,
+#if TAG_MAJOR_VERSION == 34
     SKM_VIEW_TRANSFER,
+#endif
     SKM_VIEW_COST,
 };

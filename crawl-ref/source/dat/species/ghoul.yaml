@@ -5,7 +5,7 @@ adjective: Ghoulish
 difficulty: Simple
 difficulty_priority: 30
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
 aptitudes:
   xp: 0
   hp: 1
@@ -30,7 +30,6 @@ aptitudes:
   spellcasting: -2
   conjurations: -2
   hexes: -2
-  charms: -1
   summoning: -1
   translocations: -1
   transmutations: -1
@@ -40,7 +39,7 @@ aptitudes:
   earth_magic: 1
   invocations: 1
   evocations: -1
-undead_type: US_HUNGRY_DEAD
+undead_type: US_UNDEAD
 str: 11
 int: 3
 dex: 4
@@ -49,17 +48,13 @@ levelup_stats:
   - str
 mutations:
   1:
-    MUT_CARNIVOROUS: 1
     MUT_NEGATIVE_ENERGY_RESISTANCE: 3
-    MUT_TORMENT_RESISTANCE: 1
+    MUT_TORMENT_RESISTANCE: 2
     MUT_INHIBITED_REGENERATION: 1
     MUT_COLD_RESISTANCE: 1
     MUT_CLAWS: 1
-    MUT_UNBREATHING: 1
 fake_mutations:
-  - long: Your body is rotting away.
-    short: rotting body
-  - long: You thrive on raw meat.
+  - long: You thrive by killing the living.
 recommended_jobs:
   - JOB_WARPER
   - JOB_GLADIATOR
@@ -72,4 +67,6 @@ recommended_weapons:
   - SK_BOWS
   - SK_CROSSBOWS
   - SK_SLINGS
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION

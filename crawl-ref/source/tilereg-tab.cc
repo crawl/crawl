@@ -11,7 +11,7 @@
 #include "macro.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tiledef-gui.h"
+#include "rltiles/tiledef-gui.h"
 #include "tiles-build-specific.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :

@@ -9,6 +9,8 @@
 
 #include <bitset>
 #include <map>
+#include <vector>
+
 #include <sys/un.h>
 
 #include "cursor-type.h"
@@ -21,6 +23,8 @@
 #include "tilemcache.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
+
+using std::vector;
 
 class Menu;
 
@@ -35,6 +39,7 @@ enum WebtilesUIState
 struct player_info
 {
     player_info();
+    bool _state_ever_synced;
 
     string name;
     string job_title;
@@ -74,9 +79,11 @@ struct player_info
 
     vector<status_info> status;
 
-    FixedVector<item_info, ENDOFPACK> inv;
+    FixedVector<item_def, ENDOFPACK> inv;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
+    int8_t launcher_item;
+    string quiver_desc;
     string unarmed_attack;
     uint8_t unarmed_attack_colour;
     bool quiver_available;
@@ -116,9 +123,6 @@ public:
     void add_text_tag(text_tag_type type, const monster_info& mon);
 
     const coord_def &get_cursor() const;
-
-    void add_overlay(const coord_def &gc, tileidx_t idx);
-    void clear_overlays();
 
     void draw_doll_edit();
 
@@ -202,7 +206,7 @@ public:
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
     void dump();
-    void update_input_mode(mouse_mode mode);
+    void update_input_mode(mouse_mode mode, bool force=false);
 
     void send_mcache(mcache_entry *entry, bool submerged,
                      bool send = true);
@@ -322,7 +326,7 @@ protected:
                        map<uint32_t, coord_def>& new_monster_locs,
                        bool force_full);
     void _send_player(bool force_full = false);
-    void _send_item(item_info& current, const item_info& next,
+    void _send_item(item_def& current, const item_def& next,
                     bool force_full);
     void _send_messages();
 };
