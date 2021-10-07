@@ -754,8 +754,6 @@ _common_speaking_no_tension_
 
 @The_weapon@ sneers, "I've heard your voice, @player_name@. Let's just keep this a solo act."
 
-@The_weapon@ laments, "Ugh, being used to hack up chunks of meat... it's undignified!"
-
 %%%%
 _rare_speaking_no_tension_
 

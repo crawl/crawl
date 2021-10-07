@@ -110,16 +110,12 @@ draconian_red_m
 draconian_white_f DRACONIAN_WHITE
 draconian_white_m DRACONIAN_LAST
 
-centaur_lightgrey_f CENTAUR
-centaur_lightgrey_m
-centaur_darkgrey_f
-centaur_darkgrey_m
-centaur_darkbrown_f
-centaur_darkbrown_m
-centaur_brown_f
-centaur_brown_m
-centaur_lightbrown_f
-centaur_lightbrown_m
+palentonga_red_f PALENTONGA
+palentonga_red_m
+palentonga_f
+palentonga_m
+palentonga_green_f
+palentonga_green_m
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
@@ -241,6 +237,7 @@ mesh_black MESH_BLACK
 mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
+seven_league_boots SEVEN_LEAGUE_BOOTS
 
 ## Mutations
 hooves HOOVES
@@ -560,11 +557,12 @@ sniper SNIPER
 crossbow_fire FIERY_DEVIL
 zephyr ZEPHYR
 sceptre_of_torment SCEPTRE_OF_TORMENT
-## Remove these unrand entries when TAG_MAJOR_VERSION > 34
+# start TAG_MAJOR_VERSION == 34
 botono BOTONO
 chilly_death CHILLY_DEATH
 crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
+# end TAG_MAJOR_VERSION
 
 %sdir player/hand1
 # blades
@@ -711,8 +709,8 @@ staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
+# start TAG_MAJOR_VERSION == 34
 ## rods
-# Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
 rod_brown
@@ -724,6 +722,7 @@ rod_moon
 rod_magenta
 rod_forked
 rod_aries
+# end TAG_MAJOR_VERSION
 
 ## axes
 axe_small AXE_SMALL
@@ -1146,6 +1145,7 @@ hood_white2 HOOD_WHITE2
 hood_ybrown HOOD_YBROWN
 hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
+hood_purple HOOD_PURPLE
 %end_ctg
 
 # draconian wings and heads, need same order as draconians

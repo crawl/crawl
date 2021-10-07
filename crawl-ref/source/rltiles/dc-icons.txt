@@ -1,11 +1,8 @@
 %prefix TILEI
 %name icons
-%startvalue 0
+%startvalue TILEG_GUI_MAX gui
 
 %back none
-
-# idx == 0 must be invalid
-dngn/unseen
 
 %sdir misc
 effect/net_trap TRAP_NET
@@ -20,6 +17,7 @@ cursor CURSOR
 cursor_red CURSOR2
 cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
+travel_exclusion DISABLED
 %sdir dngn/traps
 %alpha 128
 cobweb_none_0 TRAP_WEB
@@ -50,7 +48,6 @@ fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND
 sleeping STAB_BRAND
 pain_mirror PAIN_MIRROR
-deaths_door DEATHS_DOOR
 recall RECALL
 drain DRAIN
 idealised IDEALISED
@@ -58,9 +55,10 @@ bound_soul BOUND_SOUL
 infested INFESTED
 corroded CORRODED
 swift SWIFT
-pinned PINNED
 vile_clutch VILE_CLUTCH
 possessable POSSESSABLE
+slowly_dying SLOWLY_DYING
+fire_champ FIRE_CHAMP
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

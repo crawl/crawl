@@ -1,0 +1,392 @@
+################################################################################
+# hells.des: Maps that can be placed in multiple Hells.
+#
+# For hell entry vaults and vaults related to the Vestibule of Hell, you'll want
+# hell.des instead. This includes a few vaults that had been previously been in
+# dis.des and geh.des.
+#
+################################################################################
+
+: crawl_require('dlua/vault.lua')
+
+# Following the order at the top, the extra special special_room for hell
+#
+# Of course, since there are special_rooms already,
+# a real dedication here has to step it up a little.
+NAME:    hangedman_mysterious_dungeon_monster_house
+TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup allow_dup luniq
+DEPTH:   Geh:2-, !Geh:$, Coc:2-, !Coc:$, Tar:2-, !Tar:$, Dis:2-, !Dis:$
+ORIENT:  encompass
+WEIGHT:  1
+# Specific allotment of monsters, terrain, and items for this small box.
+# Monsters are in three tiers: generic undead (1), specific fodder (09),
+# bosses (2).
+# Terrain includes zot traps, and per-hell clouds, liquid, statues.
+NSUBST:  . = 2:1 / 1:0 / 2:9 / 4 = 0:3 1:1 / 1 = 9:6 / 2:1 / *:.
+NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:{ / 1:} / *:.
+KFEAT:   ^ = zot trap
+: if you.in_branch("Geh") then
+MONS:    zombie / skeleton
+MONS:    brimstone fiend / hellephant
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 8, pow_max = 10, delay = 100, \
+             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
+SUBST:   ~ = l
+FTILE:   F = floor_volcanic
+COLOUR:  F = lightred
+: elseif you.in_branch("Coc") then
+MONS:    simulacrum
+MONS:    ice fiend / shard shrike
+MARKER:  F = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 8, pow_max = 10, delay = 100, \
+             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
+SUBST:   ~ = w
+FTILE:   F = floor_nerves_blue
+COLOUR:  F = lightblue
+: elseif you.in_branch("Tar") then
+MONS:    spectral thing
+MONS:    tzitzimitl / tainted leviathan
+MARKER:  F = lua:fog_machine {cloud_type = "foul pestilence", \
+             pow_min = 8, pow_max = 10, delay = 100, \
+             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
+SUBST:   ~ = G
+FTILE:   F = floor_crystal_squares
+COLOUR:  F = lightmagenta
+: elseif you.in_branch("Dis") then
+MONS:    zombie / skeleton
+MONS:    hell sentinel / iron giant
+SUBST:   xc = v, F~ = G
+COLOUR:  G = cyan
+TILE:    G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+: end
+KPROP:   lw = no_tele_into
+MAP
+cccccccccc
+c........c
+c........c
+c........c
+c........c
+c........c
+c........c
+c........c
+cccccccccc
+ENDMAP
+
+NAME:    hangedman_elemental_grid_stream
+TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
+DEPTH:   Geh, Coc, Zot:1-4
+:  if you.in_branch("Geh") then
+KMONS:   1 = brimstone fiend
+KMONS:   2 = searing wretch / balrug
+KMONS:   34 = fire giant / hellephant w:5
+KMONS:   56 = ancient champion ; broad axe ego:flaming ident:type | \
+         halberd ego:flaming ident:type w:7 | morningstar ego:flaming ident:type
+KMONS:   7 = hell hog
+SUBST:   w = l, W = .
+KPROP:   l = no_cloud_gen
+:  elseif you.in_branch("Coc") then
+KMONS:   1 = ice fiend
+KMONS:   2 = wendigo band / nargun
+KMONS:   34 = frost giant / shard shrike w:5
+KMONS:   56 = reaper ; scythe ego:freezing ident:type
+KMONS:   7 = simulacrum
+SUBST:   l = w, W = .
+:  else
+KMONS:   1 = shard shrike
+KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
+KMONS:   3 = orb of fire / hellephant w:5
+KMONS:   4 = draconian scorcher
+KMONS:   5 = red draconian ; cloak . mace ego:freezing ident:type
+KMONS:   6 = white draconian ; cloak . mace ego:flaming ident:type
+KFEAT:   1 = w
+KFEAT:   3 = l
+NSUBST:  0 = 1:5 / 1:6
+SUBST:   x : x:9 b:1, 7 = .
+:  end
+SHUFFLE: {` / `}
+SUBST:   { : .:4 A:3 B:3, } : .:2 C:3, ` = .
+NSUBST:  A = 1:{ / 1:} / *:., B = 1:{ / 1:< / *:., C = 1:} / 1:> / *:.
+MAP
+xxxx@@....
+xllxxx......
+x47llxxx........xxxx
+xll0.ll..ll...xxxwwx
+x1`ww..ww..ww..ww72x
+xww5.ww{WwwW{ww.6wwx
+x47ww..ww..ww..ll`3x
+xwwxxx...ll..ll.0llx
+xxxx........xxxll72x
+        ......xxxllx
+          ....@@xxxx
+ENDMAP
+
+NAME:    hangedman_elemental_corridor
+TAGS:    no_monster_gen no_pool_fixup allow_dup
+DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
+SHUFFLE: 123456, }{ / **
+:  if you.in_branch("Geh") then
+MONS:    brimstone fiend / hellephant
+MONS:    searing wretch / balrug / stoker w:5
+SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
+:  elseif you.in_branch("Coc") then
+MONS:    ice fiend / shard shrike
+MONS:    wendigo band / simulacrum w:20
+SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
+:  elseif you.in_branch("Abyss") then
+MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
+MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
+         white very ugly thing w:15 / ice devil w:8
+MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
+MONS:    hell hound w:8 / red draconian / fire elemental w:5 / \
+         red very ugly thing w:15 / efreet w:12
+SUBST:   * = *||, {} = ***|, xc = xxxccb, 5 = 2, 6 = 4
+:  else
+KMONS:   123 = fire dragon
+KMONS:   456 = ice dragon
+KMONS:   789 = red draconian ; cloak . long sword ego:freezing ident:type
+KMONS:   ABC = white draconian ; cloak . long sword ego:flaming ident:type
+KMONS:   D = golden dragon
+SUBST:   c : c:5 b:2 n:1
+SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'
+:  end
+KFEAT:   f = deep_water
+KFEAT:   F = lava
+KPROP:   lF = no_cloud_gen
+SUBST:   % = $:2 %:5 *:2, G : G:6 c:2 b:1 .:1
+# Clearly, they commissioned the deep dwarves.
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 3, pow_max = 3, delay = 75, size_min = 2, size_max = 2, \
+             walk_dist = 1, start_clouds = 1, excl_rad = 0 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 3, pow_max = 3, delay = 100, size_min = 2, size_max = 2, \
+             walk_dist = 1, start_clouds = 1, excl_rad = 0 }
+MAP
+  xx+++xxx
+  xc...ccxx
+ xxc...wccxxx
+ xcc...cfcccxx
+xxcc...ccwwccxxxxxx
+xccc...ccccfccccccxx
+xccl..1cccccwcccwccxx
+xcFc...2%{%...6..wccx
+xcFc.....G.G.....cfcx
+xccl..3...%}%5...cfcx
+xxcclccclccccc4..wccx
+ xxccccccFcccc...cccx
+  xxxxxxccllcc...ccxx
+       xxcccFc...cxx
+        xxxccl...cx
+          xxcc...cx
+           xxx+++xx
+ENDMAP
+
+# I know that Hell has been reducing its dependence on demons lately, but you
+# gotta have a few demons here and there.
+NAME:   nicolae_hells_demon_pit
+TAGS:   transparent
+DEPTH:  Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
+ORIENT: centre
+: if you.in_branch("Dis") then
+KMONS:  1 = hell sentinel
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / cacodemon
+: elseif you.in_branch("Geh") then
+KMONS:  1 = brimstone fiend
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / balrug
+: elseif you.in_branch("Coc") then
+KMONS:  1 = ice fiend
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
+            blizzard demon
+: else
+KMONS:  1 = tzitzimitl
+KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
+            green death / lorocyproca
+: end
+SUBST:  D = c.
+MAP
+  ...ccDD....
+ ..cc...cc.c..
+..Dc.cD2..DcD..
+.Dc2c...cc.2c..
+.c.c..D...c.cc.
+c.D..cDcDD.c.c.
+D.c.c....c..c.D
+c.2.Dc1}.2c.D2c
+.c..c....cD.c.c
+Dc....cD.c..c.D
+.cD.c...c..c.c.
+.Dc2.DccD...2c.
+..ccD..2..cDc..
+ ..D.cccDcDc..
+  ......cc...
+ENDMAP
+
+NAME:    nicolae_hells_fiendish_ambush
+TAGS:    transparent no_pool_fixup
+DEPTH:   Dis:2-, Geh:2-, Coc:2-, Tar:2-
+KMONS:   1 = hell sentinel
+KMONS:   2 = brimstone fiend
+KMONS:   3 = ice fiend
+KMONS:   4 = tzitzimitl
+KFEAT:   ! = iron_grate
+SHUFFLE: 1!/2l/3w/4m
+MAP
+    .....
+   .!!!!!.
+  ..!.1.!..
+ ...........
+.mm.......ll.
+.m.........l.
+.m4...{...2l.
+.m.........l.
+.mm.......ll.
+ ...........
+  ..w.3.w..
+   .wwwww.
+    .....
+ENDMAP
+
+NAME:    nicolae_hells_giants_party
+TAGS:    transparent no_pool_fixup no_monster_gen
+DEPTH:   Geh:2-, Coc:2-
+ORIENT:  centre
+KMONS:   1 = fire giant
+KMONS:   2 = frost giant
+NSUBST:  F = 4=1 / 4=2
+SHUFFLE: lw
+MAP
+.....xxxxx.....
+.lll..xxx..www.
+.lll.F.x.F.www.
+.lll.......www.
+.......l.......
+x.F..w...w..F.x
+xx...........xx
+xxx.l..{..l.xxx
+xx...........xx
+x.F..w...w..F.x
+.......l.......
+.www.......lll.
+.www.F.x.F.lll.
+.www..xxx..lll.
+.....xxxxx.....
+ENDMAP
+
+NAME:  nicolae_hells_hurtin_island
+TAGS:  transparent no_pool_fixup
+DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
+KMONS: 1> = tormentor / hellion / nothing
+KFEAT: ! = iron_grate
+KFEAT: > = >
+KMASK: 1> = opaque
+KMASK: 1> = no_monster_gen
+SUBST: l : lw!
+MAP
+.......
+.clllc.
+.l111l.
+.l1>1l.
+.l111l.
+.clllc.
+.......
+ENDMAP
+
+# Liches getting together in Hell to share news, tips, and the latest gossip
+NAME:  nicolae_hells_leichenhalle
+TAGS:  transparent no_pool_fixup
+DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
+KMONS: 1 = ancient lich / dread lich / nothing
+KFEAT: ! = iron_grate
+: if you.in_branch("Dis") then
+SUBST: D : !c, E : Gvb, F : G., c : v
+TILE:  G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+: elseif you.in_branch("Geh") then
+SUBST: D : xc., E : Glcx., F : ..Gl
+: elseif you.in_branch("Coc") then
+KFEAT: 1 = W
+SUBST: D : wc, E : xw, F : .cw
+: elseif you.in_branch("Tar") then
+SUBST: D : cE, EF = ..G
+TILE:  G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: end
+MAP
+  ccccccccccc
+  c1D1D1D1D1c
+ccc.........ccc
+cF...E...E...Fc
+c}.E...E...E..+
+cF...E...E...Fc
+ccc.........ccc
+  c1D1D1D1D1c
+  ccccccccccc
+ENDMAP
+
+NAME:  nicolae_hells_seeping_fissure
+TAGS:  transparent luniq allow_dup no_monster_gen
+DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
+KFEAT: ^ = shaft trap
+{{
+  if is_validating() then return end
+  local cloudtypes =
+    { Dis={ "mutagenic fog", "calcifying dust", "acidic fog"   },
+      Geh={ "mutagenic fog", "flame",           "flame"        },
+      Coc={ "mutagenic fog", "freezing vapour", "thunder"      },
+      Tar={ "mutagenic fog", "foul pestilence", "degeneration" } }
+  local hellcloud = util.random_from( cloudtypes[ you.branch() ] )
+  lua_marker( '^', fog_machine{ cloud_type = hellcloud, pow_min = 5,
+    pow_max = 40, delay = 15, size = 1, walk_dist = 1, spread_rate = 5 } )
+}}
+MAP
+.....
+.....
+..^..
+.....
+.....
+ENDMAP
+
+# The titans are leading their fellow giants on a charge, maybe to overthrow the
+# rulers of the Hells, or maybe to escape from them. Whatever they're up to,
+# their efforts have cracked the very earth beneath them.
+NAME:   nicolae_hells_titanomachy
+TAGS:   no_monster_gen no_pool_fixup patrolling
+DEPTH:  Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
+ORIENT: encompass
+KMONS:  }1 = titan
+KMONS:  2 = tainted leviathan / iron giant / juggernaut
+KMONS:  3 = fire giant / frost giant / stone giant
+KFEAT:  } = }
+SUBST:  ` = L., - = Lx, S = 12, Z = 23, 1 = 11., 2 = 22., 3 = 33.
+: if you.in_branch("Dis") or you.in_branch("Geh") then
+SUBST:  L = l
+: elseif you.in_branch("Coc") or you.in_branch("Tar") then
+SUBST:  L = w
+: end
+MAP
+                  xxxx
+                 xx--xx               xxx
+                xx-LL-xx             xx-xx
+               xx-L``L-xx           xx-L-x
+              xx-L`ZZ`L-xx        xxx-L`Lxx
+             xx-L`3..3`L-xx      xx--L`.`-xx
+            xx-L`..`...`L-xx    xx-LL`...L-xx
+            x-L`...1`...`L-xx  xx-L``..1.`L-x
+   xxxx    xxL`..S.`.S...`L-xxxx-L`......S`Lxx
+  xx--xx  xx-`....`.......`L-xx-L`......3..`-xx
+ xx-LL-xxxx-L...Z.2`2.Z..`.`Lx-L`...Z..`2...L-xx
+xx-L``L--x-L`3.....``...`3`.`-L`.3....`L``..`L-xx
+x-L`{.`LL-L`..3...`L...`3`...L`...3..`L-LL`.}`L-x
+xx-L`..``L`....3.`L-`.`3`...``.....3`L-x--L``L-xx
+ xx-L...2`..Z...`L-xL`.`..Z.2`2.Z...L-xxxx-LL-xx
+  xx-`.3.......`L-xx-L`.......`....`-xx  xx--xx
+   xxL`S......`L-xxxx-L`...S.`.S..`Lxx    xxxx
+    x-L`.1..``L-xx  xx-L`...`1...`L-xx
+    xx-L...`LL-xx    xx-L`...`..`L-xx
+     xx-`.`L--xx      xx-L`3..3`L-xx
+      xxL`L-xxx        xx-L`ZZ`L-xx
+       x-L-xx           xx-L``L-xx
+       xx-xx             xx-LL-xx
+        xxx               xx--xx
+                           xxxx
+ENDMAP

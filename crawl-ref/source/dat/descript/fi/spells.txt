@@ -32,6 +32,10 @@ Cause Fear spell
 
 Tämä taika saa loitsijan lähellä olevat pelkäämään.
 %%%%
+Charm spell
+
+Tämä taika saa vaarallisen olennon taistelemaan puolellasi hetkeksi aikaa.
+%%%%
 Confuse spell
 
 Tämä taika aiheuttaa olennon mieleen hämmennystä ja sekaannusta.
@@ -48,10 +52,6 @@ aavemaisina olentoina.
 Debugging Ray spell
 
 Säde joka tekee massiivista vahinkoa (1500 hp) ja osuu aina.
-%%%%
-Enslavement spell
-
-Tämä taika saa vaarallisen olennon taistelemaan puolellasi hetkeksi aikaa.
 %%%%
 Fire Brand spell
 

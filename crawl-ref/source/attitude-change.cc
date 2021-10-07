@@ -68,31 +68,34 @@ void mons_att_changed(monster* mon)
 static void _jiyva_convert_slime(monster* slime);
 static void _fedhas_neutralise_plant(monster* plant);
 
+/// For followers of Beogh, decide whether orcs will join you.
 void beogh_follower_convert(monster* mons, bool orc_hit)
 {
-    if (!species_is_orcish(you.species) || crawl_state.game_is_arena())
+    if (!species::is_orcish(you.species) || crawl_state.game_is_arena())
         return;
 
-    // For followers of Beogh, decide whether orcs will join you.
-    if (will_have_passive(passive_t::convert_orcs)
-        && mons_genus(mons->type) == MONS_ORC
-        && !mons->is_summoned()
-        && !mons->is_shapeshifter()
-        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons->friendly())
+    if (!will_have_passive(passive_t::convert_orcs)
+        || mons_genus(mons->type) != MONS_ORC
+        || mons->is_summoned()
+        || mons->is_shapeshifter()
+        || testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
+        || mons->friendly()
+        || mons->has_ench(ENCH_FIRE_CHAMPION))
     {
-        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
+        return;
+    }
 
-        const int hd = mons->get_experience_level();
+    mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        if (have_passive(passive_t::convert_orcs)
-            && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
-                 > random2(hd) + hd + random2(5))
-        {
-            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
-                                                              : conv_t::sight);
-            stop_running();
-        }
+    const int hd = mons->get_experience_level();
+
+    if (have_passive(passive_t::convert_orcs)
+        && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
+             > random2(hd) + hd + random2(5))
+    {
+        beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
+                                                          : conv_t::sight);
+        stop_running();
     }
 }
 
@@ -385,8 +388,8 @@ void gozag_set_bribe(monster* traitor)
         return;
 
     const monster* leader =
-        traitor->props.exists("band_leader")
-        ? monster_by_mid(traitor->props["band_leader"].get_int())
+        traitor->props.exists(BAND_LEADER_KEY)
+        ? monster_by_mid(traitor->props[BAND_LEADER_KEY].get_int())
         : nullptr;
 
     if (leader)
@@ -466,9 +469,7 @@ void gozag_break_bribe(monster* victim)
     ASSERT(victim); // XXX: change to monster &victim
 
     if (!victim->has_ench(ENCH_NEUTRAL_BRIBED)
-        && !victim->has_ench(ENCH_FRIENDLY_BRIBED)
-        && !victim->props.exists(NEUTRAL_BRIBE_KEY)
-        && !victim->props.exists(FRIENDLY_BRIBE_KEY))
+        && !victim->has_ench(ENCH_FRIENDLY_BRIBED))
     {
         return;
     }
@@ -476,8 +477,6 @@ void gozag_break_bribe(monster* victim)
     // Un-bribe the victim.
     victim->del_ench(ENCH_NEUTRAL_BRIBED);
     victim->del_ench(ENCH_FRIENDLY_BRIBED);
-    victim->props.erase(NEUTRAL_BRIBE_KEY);
-    victim->props.erase(FRIENDLY_BRIBE_KEY);
 
     // Make other nearby bribed monsters un-bribed, too.
     for (monster_iterator mi; mi; ++mi)

@@ -12,7 +12,7 @@
 #include "skills.h"
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
-#include "tiledef-icons.h"
+#include "rltiles/tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
 #ifdef WIZARD
@@ -73,8 +73,8 @@ int SkillRegion::handle_mouse(wm_mouse_event &event)
         m_last_clicked_item = item_idx;
         if (!you.can_currently_train[skill])
             mpr("You cannot train this skill.");
-        else if (you.species == SP_GNOLL)
-            mpr("Gnolls can't change their training allocations!");
+        else if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            mpr("You can't change your training allocations!");
         else if (you.skills[skill] >= 27)
             mpr("There's no point to toggling this skill anymore.");
         else
@@ -95,6 +95,7 @@ int SkillRegion::handle_mouse(wm_mouse_event &event)
     {
         describe_skill(skill);
         redraw_screen();
+        update_screen();
         return CK_MOUSE_CMD;
     }
     return 0;
@@ -121,7 +122,7 @@ bool SkillRegion::update_tip_text(string& tip)
     const int flag = m_items[item_idx].flag;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot train this skill now.";
-    else if (you.species != SP_GNOLL)
+    else if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         const skill_type skill = (skill_type) m_items[item_idx].idx;
 
@@ -233,8 +234,6 @@ void SkillRegion::update()
     {
         const skill_type skill = (skill_type) idx;
 
-        if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
-            continue;
         if (is_useless_skill(skill))
             continue;
         InventoryTile desc;

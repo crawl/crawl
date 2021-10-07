@@ -22,8 +22,8 @@ class Stash
 {
 public:
     Stash(coord_def pos_ = coord_def());
-    Stash(const Stash &other) = default;
-    Stash& operator=(const Stash& other) = default;
+    Stash(const Stash &) = default;
+    Stash& operator=(const Stash &) = default;
 
     static bool is_boring_feature(dungeon_feature_type feat);
 
@@ -45,9 +45,8 @@ public:
     // auto_sacrifce
     bool needs_stop() const;
 
-    // Returns true if this Stash is unverified (a visit by the character will
-    // verify the stash).
-    bool unverified() const;
+    // Returns true if this Stash is unvisited since the last update.
+    bool unvisited() const;
 
     vector<stash_search_result> matches_search(
         const string &prefix, const base_pattern &search) const;
@@ -60,7 +59,7 @@ public:
         return items.empty() && feat == DNGN_FLOOR;
     }
 
-    bool is_verified() const {  return verified; }
+    bool is_visited() const {  return visited; }
 
 private:
     void _update_corpses(int rot_time);
@@ -68,7 +67,7 @@ private:
     void add_item(const item_def &item, bool add_to_front = false);
 
 private:
-    bool verified;      // Is this correct to the best of our knowledge?
+    bool visited;      // Is this correct to the best of our knowledge?
     coord_def pos;
     dungeon_feature_type feat;
     string feat_desc; // Only for interesting features.

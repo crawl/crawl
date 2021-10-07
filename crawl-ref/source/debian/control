@@ -6,7 +6,7 @@ Uploaders: the DCSS Development Team <crawl-ref-discuss@lists.sourceforge.net>
 Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 7), libncursesw5-dev, bison, flex, liblua5.1-0-dev,
 	pkg-config, libsdl2-image-dev, libsdl2-dev, libsqlite3-dev,
-	libfreetype6-dev, advancecomp, libpng-dev, python-yaml
+	libfreetype6-dev, advancecomp, libpng-dev, python3-yaml
 Homepage: http://crawl.develz.org/
 
 Package: crawl-common

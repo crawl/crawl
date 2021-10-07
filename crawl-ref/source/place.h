@@ -5,7 +5,11 @@
 
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
+
+using std::vector;
 
 //////////////////////////////////////////////////////////////////////
 // Places and names

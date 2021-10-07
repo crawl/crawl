@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // Volatile state and cache.
 enum level_state_type
 {

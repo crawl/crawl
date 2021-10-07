@@ -9,7 +9,9 @@
 
 #include <cstring>
 #include <fcntl.h>
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
+#endif
 
 #include "end.h"
 #include "syscalls.h"
@@ -102,16 +104,11 @@ From SQLite's documentation:
 
 ... which saves us a lot of trouble.
 */
-#ifdef ANCIENT_SQLITE
-    if (ec(sqlite3_open(
-                dbfile.c_str(), &db
-#else
     if (ec(sqlite3_open_v2(
                 dbfile.c_str(), &db,
                 readonly ? SQLITE_OPEN_READONLY :
                 (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
                 nullptr
-#endif
               )) != SQLITE_OK)
     {
         const string saveerr = error;

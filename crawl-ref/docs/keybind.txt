@@ -37,33 +37,41 @@ Attacking in a given direction without moving:
 ^Y        CMD_ATTACK_UP_LEFT
 
 Autofight commands:
-Tab       CMD_AUTOFIGHT
-Shift+Tab CMD_AUTOFIGHT_NOMOVE
+Tab       CMD_AUTOFIGHT        (attack with/fire primary weapon)
+Shift+Tab CMD_AUTOFIRE         (fire from quiver)
+p         CMD_AUTOFIRE
+<unbound> CMD_AUTOFIGHT_NOMOVE (fire from quiver at range, attack with primary
+                                weapon in melee range)
+
+Quivers
+-------
+f         CMD_FIRE
+Q         CMD_QUIVER_ITEM
+(         CMD_CYCLE_QUIVER_FORWARD
+)         CMD_CYCLE_QUIVER_BACKWARD
+]         CMD_SWAP_QUIVER_RECENT
 
 Inventory management
 --------------------
 d         CMD_DROP
 e         CMD_EAT
-f         CMD_FIRE
 g, ,      CMD_PICKUP
 i         CMD_DISPLAY_INVENTORY
 q         CMD_QUAFF
 r         CMD_READ
 V         CMD_EVOKE
-v         CMD_EVOKE_WIELDED
+v         CMD_PRIMARY_ATTACK
+<unbound> CMD_EVOKE_WIELDED
 <unbound> CMD_FORCE_EVOKE_WIELDED
 w         CMD_WIELD_WEAPON
 F         CMD_THROW_ITEM_NO_QUIVER
 M         CMD_MEMORISE_SPELL
 P         CMD_WEAR_JEWELLERY
-Q         CMD_QUIVER_ITEM
 R         CMD_REMOVE_JEWELLERY
 T         CMD_REMOVE_ARMOUR
 W         CMD_WEAR_ARMOUR
 =         CMD_ADJUST_INVENTORY
 {         CMD_INSCRIBE_ITEM
-(         CMD_CYCLE_QUIVER_FORWARD
-)         CMD_CYCLE_QUIVER_BACKWARD
 '         CMD_WEAPON_SWAP
 
 Dungeon interaction
@@ -168,6 +176,9 @@ f, t           CMD_TARGET_MAYBE_PREV_TARGET
 +, =           CMD_TARGET_CYCLE_FORWARD
 /              CMD_TARGET_OBJ_CYCLE_BACK
 *, '           CMD_TARGET_OBJ_CYCLE_FORWARD
+)              CMD_TARGET_CYCLE_QUIVER_FORWARD  (fire interface only)
+(              CMD_TARGET_CYCLE_QUIVER_BACKWARD (fire interface only)
+Q              CMD_TARGET_SELECT_ACTION         (fire interface only)
 
 Level-map commands
 ------------------

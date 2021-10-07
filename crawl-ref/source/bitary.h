@@ -9,8 +9,13 @@
 #pragma once
 
 #include <bitset>
+#include <vector>
 
+#include "debug.h"
 #include "defines.h"
+
+using std::bitset;
+using std::vector;
 
 class bit_vector
 {
@@ -68,7 +73,7 @@ public:
         return get(i);
     }
 
-    inline void set(unsigned int i, bool value = true)
+    inline virtual void set(unsigned int i, bool value = true)
     {
 #ifdef ASSERTS
         if (i >= SIZE)

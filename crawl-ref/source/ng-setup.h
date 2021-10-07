@@ -7,6 +7,10 @@
 
 #include "item-prop-enum.h"
 
+// Djinn need to be prevented from hitting MAX_KNOWN_SPELLS as they level up.
+// Should only be possible on rare Wanderer rolls.
+#define MAX_DJINN_SPELLS 8
+
 struct item_def;
 item_def* newgame_make_item(object_class_type base,
                             int sub_type,

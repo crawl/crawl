@@ -66,7 +66,9 @@ const struct luaL_reg los_dlib[] =
 };
 
 #define RAY(ls, n, var) \
-    ray_def *var = *(ray_def **) luaL_checkudata(ls, n, RAY_METATABLE)
+    ray_def *var = *(ray_def **) luaL_checkudata(ls, n, RAY_METATABLE); \
+    if (!var) \
+        return 0;
 
 LUAFN(ray_start)
 {

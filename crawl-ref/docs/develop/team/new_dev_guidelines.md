@@ -12,7 +12,7 @@ the options about rebasing so you avoid making unnecessary merge commits.
 
 ## Team Discussion and Coordination
 
-Most development discussion happens on IRC in the \#\#crawl-dev on Freenode, so
+Most development discussion happens on IRC in the \#crawl-dev on Libera, so
 it's good to join and participate in that channel. Use the !tell command
 through Sequell to leave IRC messages to other team or community members you’re
 working with. The channel is also [*logged*](http://s-z.org/crawl-dev/#), if
@@ -43,7 +43,7 @@ service like github gist, dpaste, sprunge, or pastebin to share code snippets.
 
 ## Documentation and Formatting
 
-The [*coding conventions*](crawl-ref/docs/develop/coding_conventions.txt)
+The [*coding conventions*](crawl-ref/docs/develop/coding_conventions.md)
 document describes how Crawl’s C++ source code should be formatted. For
 documenting C++ code, we use
 [*Doxygen*](http://www.stack.nl/~dimitri/doxygen/index.html) comments and the

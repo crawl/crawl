@@ -7,7 +7,9 @@
 #include <cerrno>
 #include <sys/stat.h>
 #include <sys/types.h>
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
+#endif
 
 #include "files.h"
 #include "initfile.h"

@@ -25,7 +25,6 @@ aptitudes:
   shields: -1
   unarmed_combat: -1
   spellcasting: -1
-  charms: -1
   necromancy: 1
   translocations: -1
   transmutations: -1
@@ -47,4 +46,6 @@ recommended_jobs:
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
   - JOB_VENOM_MAGE
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION

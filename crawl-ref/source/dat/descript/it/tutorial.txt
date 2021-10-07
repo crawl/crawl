@@ -57,10 +57,6 @@ tutorial2 exit
   <input>$cmd[CMD_WAIT]</input>  aspetta e riposati per un singolo turno
   <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
-<yellow>Cadaveri<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  macella una cadavere in cosciotti
-  <input>$cmd[CMD_EAT]</input>  mangia un cosciotto di carne
-
                   <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%
 tutorial3 start
@@ -138,12 +134,6 @@ Nube Pestilenziale ricopre un'area di fumi tossici quando lanciata, e potrai
 vedere l'area soggetta all'effetto mirando. Prova a prendere più nemici con una
 singola nube per essere più efficiente con la tua magia.
 %%%%
-tutorial4 spell_hunger
-
-Lanciare incantesimi può farti venire molta fame. La Fame da Incantesimi è più
-alta per gli incantesimi per incantesimi più difficili e più essere ridotta da
-un'intelligenza molto alta o allenandosi in Lanciare Incantesimi.
-%%%%
 tutorial5 start
 
 In questa lezione apprenderai il funzionamento degli dei e come usare i loro
@@ -153,12 +143,6 @@ tutorial5 piety_on_kill
 
 Qualche divinità ama davvero l'uccidere mostri nel suo nome. Lascia che il
 massacro inizi!
-%%%%
-tutorial5 hunger
-
-Non puoi infuriarti quando sei affamato, perciò dovresti sempre portare un po'
-di cibo con te. Questo significa che dovrai decidere fra il macellare un
-cadavere o sacrificarlo a Trog.
 %%%%
 tutorial5 berserk2
 

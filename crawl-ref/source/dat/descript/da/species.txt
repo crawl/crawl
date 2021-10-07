@@ -62,11 +62,6 @@ Tengu
 Fuglefolk som elsker at slås, både med våben og besværgelser. De er ganske
 skrøbelige, men lærer på et tidspunkt at flyve.
 %%%%
-Kobold
-
-Små, drilske og lidt skrøbelige, men med mange talenter. De kan og vil spise
-enhver form for kød.
-%%%%
 Lava Orc
 
 Disse mestre over jord- og ildmagi kommer fra jorden dybt under de

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "macros.h"
+
 #include <iterator>
 #include <type_traits> // underlying_type<>, enable_if<>
 
@@ -25,7 +27,7 @@ template<class E, int LastExponent = -1>
 class enum_bitfield : public _enum_bitfield_exponent_base<LastExponent>
 {
 public:
-    typedef typename underlying_type<E>::type underlying_type;
+    typedef typename std::underlying_type<E>::type underlying_type;
     typedef enum_bitfield<E, LastExponent> field_type;
     underlying_type flags;
 private:
@@ -96,7 +98,7 @@ public:
 
     struct range
     {
-        class iterator : public std::iterator<forward_iterator_tag, const E>
+        class iterator : public std::iterator<std::forward_iterator_tag, const E>
         {
         private:
             int exp_;
@@ -127,7 +129,7 @@ public:
 
         // Only create the default constructor if we got a nonnegative
         // LastExponent template parameter.
-        template<typename enable_if<LastExponent >= 0, int>::type = 0>
+        template<typename std::enable_if<LastExponent >= 0, int>::type = 0>
         constexpr range() : final(LastExponent) {}
 
         constexpr iterator begin() const { return iterator(); }

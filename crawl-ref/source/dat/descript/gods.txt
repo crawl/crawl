@@ -30,7 +30,7 @@ time and its needless disturbances.
 Dithmenos
 
 Dithmenos the Shadowed desires all to be darkness. Followers of Dithmenos gain
-a strange and otherwordly affinity to the shadows of their environment. This
+a strange and otherworldly affinity to the shadows of their environment. This
 god despises the physical world and constantly seeks to encroach on it.
 Dithmenos therefore rewards those who wield death and destruction while
 gradually consuming them with darkness.
@@ -66,13 +66,12 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
-Wu Jian
+Ignis
 
-The Wu Jian Council is a congregation of martial monks, ascended to divinity
-after battling their way out of the afterlife. Disciples of the Council are
-able to execute acrobatic martial maneuvers, such as wall jumps, spinning
-attacks and punishing lunges. They will eventually become able to request
-help in the form of a storm of heavenly clouds.
+Ignis the Dying Flame offers followers power over fire in many forms. All of
+Ignis' power is offered unconditionally to any who would deign to worship, but
+once used, it can never be replenished. Ignis' other worshippers deserted long
+ago; the divine fire burns low, and soon it will go out.
 %%%%
 Jiyva
 
@@ -87,9 +86,9 @@ Kikubaaqudgha
 Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
 the powers of death. An evil god, Kikubaaqudgha requires worshippers to cause
 the death and destruction of as many creatures as possible. In exchange,
-Kikubaaqudgha offers great assistance to the aspiring necromancer: spellbooks
-filled with dark magic, protection against necromantic backlash, and an endless
-supply of bodies taken from Kikubaaqudgha's vast mausoleum.
+Kikubaaqudgha offers great assistance to the aspiring necromancer: knowledge
+of dark magic, protection against necromantic backlash, and an endless supply of
+bodies taken from Kikubaaqudgha's vast mausoleum.
 %%%%
 Lugonu
 
@@ -119,8 +118,10 @@ Okawaru
 
 Okawaru is a dangerous and powerful god of battle. Followers are expected to
 constantly prove themselves in combat, and may channel Okawaru's might to
-enhance their prowess. Okawaru pays little heed to easy victories, but will
-reward worshippers for heroic feats against mighty foes.
+enhance their prowess. Okawaru demands that followers prove themselves by their
+own strength alone, and so worshippers are forbidden from gaining allies by any
+means. Okawaru pays little heed to easy victories, but will reward worshippers
+for heroic feats against mighty foes.
 %%%%
 Pakellas
 
@@ -175,12 +176,11 @@ absolutely forbidden the use of spell magic.
 %%%%
 Uskayaw
 
-Uskayaw the Reveler is a god of ecstatic dance. On the surface, Uskayaw
-appreciates many forms of worship, but in the dungeon most worshippers stick to
-the dance of combat. Uskayaw appreciates the passion and rhythm of combat,
-rewarding followers for each strike they deliver and for the damage they deal
-their foes. The longer the dance continues, the greater powers Uskayaw offers.
-When the dance ends, Uskayaw quickly loses interest.
+Uskayaw the Reveller is a god of ecstatic dance. In the dungeon, Uskayaw
+appreciates the passion and rhythm of combat, rewarding followers for each
+strike they deliver and for the damage they deal their foes. The longer the
+dance continues, the greater powers Uskayaw offers. When the dance ends,
+Uskayaw quickly loses interest.
 %%%%
 Vehumet
 
@@ -189,6 +189,14 @@ assistance in commanding the hermetic arts, and the most favoured stand to gain
 access to some of the fearsome spells in Vehumet's library. One's devotion to
 Vehumet can be proven by the causing of as much carnage and destruction as
 possible.
+%%%%
+Wu Jian
+
+The Wu Jian Council is a congregation of martial monks, ascended to divinity
+after battling their way out of the afterlife. Disciples of the Council are
+able to execute acrobatic martial maneuvers, such as wall jumps, spinning
+attacks and punishing lunges. They will eventually become able to request
+help in the form of a storm of heavenly clouds.
 %%%%
 Xom
 
@@ -203,27 +211,25 @@ Yredelemnul the Dark is a god worshipped by those who seek powers over death
 and the undead. Followers can raise legions of servile undead, and gain a
 number of other useful powers with which to make better use of the souls of
 the living. Yredelemnul especially favours those who would destroy holy
-creatures, which oppose the realm of undeath, and the nonliving, which exist
-outside of it.
+creatures, which oppose the realm of undeath.
 %%%%
 Zin
 
 Zin is a god of discipline. Followers must remain pure of body and soul,
-refraining from dark magic and chaotic acts, and never consuming the flesh of
-intelligent beings. They must also tithe a fraction of all gold gained,
-preferably followed by donations of more. In exchange, worshippers may invoke
-Zin's wrath upon sinners, and eventually gain various divine protections. Zin's
-followers can convert to Elyvilon or the Shining One while keeping some piety.
+refraining from dark magic and chaotic acts. They must also tithe a fraction of
+all gold gained, preferably followed by donations of more. In exchange,
+worshippers may invoke Zin's wrath upon sinners, and eventually gain various
+divine protections. Zin's followers can convert to Elyvilon or the Shining One
+while keeping some piety.
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts followers to garb themselves with curses, and appreciates
-exploration while using cursed armour, jewellery or weapons. Followers will
-soon be granted the ability to scry through walls. Ashenzari will passively
-grant followers increased skills depending on how cursed they are by equipment
-associated with those skills, and will reveal the invisible and grant clarity
-of mind. The truly devout will gain the ability to transfer a portion of their
-knowledge from one skill to another.
+Ashenzari exhorts followers to curse their possessions, periodically offering
+these curses to worshippers as they explore. Cursed equipment cannot be enchanted
+and only be removed by shattering it forever. However, these curses do improve
+specific skills. They also please Ashenzari, who will reveal the invisible and
+grant clarity of mind. The truly devout will gain a fragment of Ashenzari's
+astral sight, letting them see through walls.
 %%%%
 Beogh powers
 
@@ -275,7 +281,7 @@ cluster of plant allies or even summon a mighty oklob plant.
 %%%%
 Gozag powers
 
-For Gozag, both flesh and food are inferior to wealth, and therefore all
+For Gozag, both flesh and spirit are inferior to wealth, and therefore all
 monsters are turned to gold upon death. Other monsters may then be briefly
 distracted by imaginings of great wealth. Stalwarts can purchase immediate help
 in the form of potions, and may also pay to attract shopkeepers into the
@@ -295,31 +301,33 @@ Hepliaklqana's service allows worshippers to restore and strengthen their
 ancestor, to swap them with other creatures, and to choose how to remember
 their life's talents.
 %%%%
+Ignis powers
+
+Followers can fill their surroundings with a sea of fire, can call a swarm of
+foxfires against their foes, or let Ignis' heat lift them to another level of
+the dungeon. However, the guttering flames of Ignis' power will only sustain a
+limited number of invocations before only flickering embers remain. No matter
+how depleted, Ignis will always grant followers resistance to fire.
+%%%%
 Jiyva powers
 
 Jiyva's followers can request jellies, which will consume nearby items and
-provide sustenance to the follower in doing so. Jiyva will also consume items
-left elsewhere in the dungeon. Followers will later become able to turn
+provide provide health and magic points when doing so. Jiyva will also consume
+items left elsewhere in the dungeon. Followers will later become able to turn
 monsters to slime, and eventually to reshape themselves to remove harmful
 mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
-Wu Jian powers
-
-Disciples of the Council learn to perform three martial techniques while moving
-around in combat. They will also be taught to move at unfathomable speeds for
-short distances, and become able to summon a storm of golden clouds to increase
-their precision and damage for as long as they keep using martial attacks.
-%%%%
 Kikubaaqudgha powers
 
 Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
-prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
-effects of necromantic miscasts, and may even shield them from unholy torment.
-Especially fervent followers may invoke torment themselves by sacrificing a
-cadaver, and Kikubaaqudgha will eventually allow followers to either receive
-the Necronomicon, or to have their weapon imbued with pain.
+prowess with gifts of Necromancy spells. Kikubaaqudgha will protect followers
+from the effects of necromantic miscasts, death curses, and may even shield them
+from unholy torment. Especially fervent followers may invoke torment themselves
+by sacrificing a cadaver, and Kikubaaqudgha will eventually allow followers to
+either receive knowledge of the most powerful and forbidden necromantic magic,
+or to have their weapon imbued with pain.
 %%%%
 Lugonu powers
 
@@ -353,7 +361,8 @@ Okawaru powers
 
 Followers of Okawaru will gain the ability to temporarily increase their skills
 in combat, and, much later, to deal much faster blows. Okawaru will eventually
-gift followers with ammunition, weapons and armour.
+gift followers with ammunition, weapons and armour. The most favoured of
+Okawaru may challenge their foes to honourable single combat.
 %%%%
 Pakellas powers
 
@@ -413,11 +422,11 @@ intervene to save a follower's life.
 Trog powers
 
 Trog offers various powers to help followers in battle. Followers will gain the
-ability to go berserk at will, and to rapidly heal their wounds while
-increasing resistance to hostile enchantments. Later, followers may call in
-powerful raging allies. Eventually, Trog will gift followers with weapons
-focused on damage.
-%%%%
+ability to go berserk at will, and Trog will extend the duration of their
+berserk rage on killing foes. Trog will grant followers the ability to rapidly
+heal their wounds while fortifying their willpower, and later the ability to
+call in powerful raging allies. Eventually, Trog will gift followers with
+weapons, often with antimagic effects.
 %%%%
 Uskayaw powers
 
@@ -438,6 +447,15 @@ upon killing beings. As they gain favour, they will also gain enhancements to
 their destructive spells — first assistance in casting such spells and then
 increased range for conjurations. Vehumet will offer followers the knowledge of
 increasingly powerful destructive spells as they gain piety.
+%%%%
+Wu Jian powers
+
+Disciples of the Council learn to perform three martial techniques while moving
+around in combat. Martial techniques are incompatible with more elaborate
+methods of moving, and do not combine with charging, digging, hopping, or
+rampaging. They will also be taught to move at unfathomable speeds for short
+distances, and become able to summon a storm of golden clouds to increase their
+precision and damage for as long as they keep using martial attacks.
 %%%%
 Xom powers
 
@@ -468,6 +486,8 @@ directly intervene to save a follower's life.
 %%%%
 Ashenzari wrath
 
+Those who abandon Ashenzari will immediately have their curses shattered,
+destroying whichever items they imbued with divine wisdom. Thereafter,
 Ashenzari's wrath is constant and unrelenting for its duration. Victims will
 find their skills impaired, and their enemies divinely guided – never losing
 track of them, never ending the hunt.
@@ -526,6 +546,14 @@ remains angered, potions will have a chance to fail when quaffed, and any
 foes that are encountered may be granted potions of their own to assist them
 against the ex-worshipper.
 %%%%
+Ignis wrath
+
+The wrath of Ignis is now weaker than that of most other gods. Apostates will
+find their resistance to fire stripped away completely, and will be periodically
+assaulted by fire elementals, find their enemies strengthened by fire, or even
+have the floor burned out from beneath them. Experienced and cautious adventurers
+will likely overmaster these assaults.
+%%%%
 Jiyva wrath
 
 Jiyva's vengeance is swift and gurgling. All slimes turn against those who
@@ -533,13 +561,6 @@ offend Jiyva, and Jiyva ensures a plentiful supply of further slimes. Victims,
 too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
-%%%%
-Wu Jian wrath
-
-Those who turn against the Council must be prepared to endure death by a
-thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
-the sudden spring of traps, the flying daggers and the armies of animated
-weapons that will ambush the betrayer.
 %%%%
 Kikubaaqudgha wrath
 
@@ -570,8 +591,8 @@ Nemelex Xobeh wrath
 Those who abandon Nemelex Xobeh have all of their gifted decks revoked
 immediately. They are also regularly forced to draw from the deck of
 Punishment, inflicting a range of unpleasant effects including draining,
-hunger, torment and polymorphing, as well as calling upon other gods to assist
-in inflicting wrath.
+torment and polymorphing, as well as calling upon other gods to assist in
+inflicting wrath.
 %%%%
 Okawaru wrath
 
@@ -631,6 +652,13 @@ Those that anger Vehumet find destruction amply heaped upon them. Novices are
 struck by flame and frost; archmages by crystal spears and firestorms. Their
 own conjurations, too, are wont to misfire at the worst possible moments.
 %%%%
+Wu Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a
+thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
+the sudden spring of traps, the flying daggers and the armies of animated
+weapons that will ambush the betrayer.
+%%%%
 Xom wrath
 
 Unfaithful ex-followers will find themselves suffering through Xom's bad moods
@@ -648,7 +676,7 @@ also afflict those stricken by Yredremnul's wrath.
 Zin wrath
 
 Those under Zin's wrath will find their beneficial mutations stripped away,
-their bellies emptied, their enemies alerted, and their senses confounded by the
+their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
 %%%%
 Wu Jian extra
@@ -658,8 +686,8 @@ Wu Jian extra
   .......       .......
 
   .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. The dizzying
-  .......       ....... motion pins monsters in place for one action.
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. Multiple adjacent
+  .......       ....... foes can be attacked simultaneously this way.
 
   ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
   ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting

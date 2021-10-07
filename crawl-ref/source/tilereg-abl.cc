@@ -13,7 +13,7 @@
 #include "output.h"
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
-#include "tiledef-icons.h"
+#include "rltiles/tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
 
@@ -77,6 +77,7 @@ int AbilityRegion::handle_mouse(wm_mouse_event &event)
     {
         describe_ability(ability);
         redraw_screen();
+        update_screen();
         return CK_MOUSE_CMD;
     }
     return 0;

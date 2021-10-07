@@ -1,21 +1,30 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
-import os, os.path, errno, sys
+
+import argparse
+import errno
+import logging
+import logging.handlers
+import os
+import os.path
+import sys
 
 import tornado.httpserver
 import tornado.ioloop
-from tornado.ioloop import IOLoop
-import tornado.web
 import tornado.template
+import tornado.web
+from tornado.ioloop import IOLoop
 
-import logging, logging.handlers
-
-from config import *
-from util import *
-from ws_handler import *
-from game_data_handler import GameDataHandler
+import auth
+import load_games
 import process_handler
 import userdb
+import config
+from config import *  # TODO: remove
+from game_data_handler import GameDataHandler
+from util import *
+from ws_handler import *
+
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -28,10 +37,11 @@ class MainHandler(tornado.web.RequestHandler):
         recovery_token = None
         recovery_token_error = None
 
-        if getattr(config, "allow_password_reset", False):
-            recovery_token = self.get_argument("ResetToken",None)
-            if recovery_token:
-                recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
+        recovery_token = self.get_argument("ResetToken",None)
+        if recovery_token:
+            recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
+            if recovery_token_error:
+                logging.warning("Recovery token error from %s", self.request.remote_ip)
 
         self.render("client.html", socket_server = protocol + host + "/socket",
                     username = None, config = config,
@@ -64,41 +74,42 @@ def daemonize():
     except OSError as e:
         err_exit("Fork #2 failed! (%s)" % e.strerror)
 
-    with open("/dev/null", "rw") as f:
+    with open("/dev/null", "r") as f:
         os.dup2(f.fileno(), sys.stdin.fileno())
+    with open("/dev/null", "w") as f:
         os.dup2(f.fileno(), sys.stdout.fileno())
         os.dup2(f.fileno(), sys.stderr.fileno())
 
 def write_pidfile():
-    if not pidfile:
+    if not getattr(config, 'pidfile', None):
         return
-    if os.path.exists(pidfile):
+    if os.path.exists(config.pidfile):
         try:
-            with open(pidfile) as f:
+            with open(config.pidfile) as f:
                 pid = int(f.read())
         except ValueError:
-            err_exit("PIDfile %s contains non-numeric value" % pidfile)
+            err_exit("PIDfile %s contains non-numeric value" % config.pidfile)
         try:
             os.kill(pid, 0)
         except OSError as why:
-            if why[0] == errno.ESRCH:
+            if why.errno == errno.ESRCH:
                 # The pid doesn't exist.
-                logging.warn("Removing stale pidfile %s" % pidfile)
-                os.remove(pidfile)
+                logging.warn("Removing stale pidfile %s" % config.pidfile)
+                os.remove(config.pidfile)
             else:
                 err_exit("Can't check status of PID %s from pidfile %s: %s" %
-                         (pid, pidfile, why[1]))
+                         (pid, config.pidfile, why.strerror))
         else:
             err_exit("Another Webtiles server is running, PID %s\n" % pid)
 
-    with open(pidfile, "w") as f:
+    with open(config.pidfile, "w") as f:
         f.write(str(os.getpid()))
 
 def remove_pidfile():
-    if not pidfile:
+    if not getattr(config, 'pidfile', None):
         return
     try:
-        os.remove(pidfile)
+        os.remove(config.pidfile)
     except OSError as e:
         if e.errno == errno.EACCES or e.errno == errno.EPERM:
             logging.warn("No permission to delete pidfile!")
@@ -108,10 +119,10 @@ def remove_pidfile():
         logging.error("Failed to delete pidfile!")
 
 def shed_privileges():
-    if gid is not None:
-        os.setgid(gid)
-    if uid is not None:
-        os.setuid(uid)
+    if getattr(config, 'gid', None) is not None:
+        os.setgid(config.gid)
+    if getattr(config, 'uid', None) is not None:
+        os.setuid(config.uid)
 
 def stop_everything():
     for server in servers:
@@ -137,8 +148,8 @@ def signal_handler(signum, frame):
 
 def bind_server():
     settings = {
-        "static_path": static_path,
-        "template_loader": DynamicTemplateLoader.get(template_path),
+        "static_path": config.static_path,
+        "template_loader": DynamicTemplateLoader.get(config.template_path),
         "debug": bool(getattr(config, 'development_mode', False)),
         }
 
@@ -152,11 +163,14 @@ def bind_server():
             ], gzip=getattr(config,"use_gzip",True), **settings)
 
     kwargs = {}
-    if http_connection_timeout is not None:
-        kwargs["idle_connection_timeout"] = http_connection_timeout
+    if getattr(config, 'http_connection_timeout', None) is not None:
+        kwargs["idle_connection_timeout"] = config.http_connection_timeout
 
+    # TODO: the logic looks odd here, as it is set to None in the default
+    # config.py. But I'm not really sure how this is used so I don't want to
+    # mess with it...
     if getattr(config, "http_xheaders", False):
-        kwargs["xheaders"] = http_xheaders
+        kwargs["xheaders"] = config.http_xheaders
 
     servers = []
 
@@ -175,31 +189,33 @@ def bind_server():
                     "this to work.""")
             return server
 
-    if bind_nonsecure:
+    if config.bind_nonsecure:
         server = server_wrap(**kwargs)
 
         try:
-            listens = bind_pairs
-        except NameError:
-            listens = ( (bind_address, bind_port), )
+            listens = config.bind_pairs
+        except AttributeError:
+            listens = ( (config.bind_address, config.bind_port), )
         for (addr, port) in listens:
             logging.info("Listening on %s:%d" % (addr, port))
             server.listen(port, addr)
         servers.append(server)
-    if ssl_options:
+
+    if config.ssl_options:
         # TODO: allow different ssl_options per bind pair
-        server = server_wrap(ssl_options=ssl_options, **kwargs)
+        server = server_wrap(ssl_options=config.ssl_options, **kwargs)
 
         try:
-            listens = ssl_bind_pairs
+            listens = config.ssl_bind_pairs
         except NameError:
-            listens = ( (ssl_address, ssl_port), )
+            listens = ( (config.ssl_address, config.ssl_port), )
         for (addr, port) in listens:
             logging.info("Listening on %s:%d" % (addr, port))
             server.listen(port, addr)
         servers.append(server)
 
     return servers
+
 
 def init_logging(logging_config):
     filename = logging_config.get("filename")
@@ -234,9 +250,10 @@ def init_logging(logging_config):
 
 def check_config():
     success = True
-    for (game_id, game_data) in games.items():
+    for (game_id, game_data) in config.games.items():
         if not os.path.exists(game_data["crawl_binary"]):
-            logging.warning("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
+            logging.warning("Crawl executable for %s (%s) doesn't exist!",
+                            game_id, game_data["crawl_binary"])
             success = False
 
         if ("client_path" in game_data and
@@ -244,15 +261,19 @@ def check_config():
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
 
-    if getattr(config, "allow_password_reset", False) and not config.lobby_url:
+    load_games.collect_game_modes()
+
+    if (getattr(config, "allow_password_reset", False) or getattr(config, "admin_password_reset", False)) and not config.lobby_url:
         logging.warning("Lobby URL needs to be defined!")
         success = False
     return success
+
 
 def monkeypatch_tornado24():
     # extremely ugly compatibility hack, to ease transition for servers running
     # the ancient patched tornado 2.4.
     IOLoop.current = staticmethod(IOLoop.instance)
+
 
 def ensure_tornado_current():
     try:
@@ -264,36 +285,184 @@ def ensure_tornado_current():
             "You are running a deprecated version of tornado; please update"
             " to at least version 4.")
 
-if __name__ == "__main__":
-    if chroot:
-        os.chroot(chroot)
 
-    init_logging(logging_config)
+def _do_load_games():
+    if getattr(config, "use_game_yaml", False):
+        config.games = load_games.load_games(config.games)
+
+
+def usr1_handler(signum, frame):
+    assert signum == signal.SIGUSR1
+    logging.info("Received USR1, reloading config.")
+    try:
+        IOLoop.current().add_callback_from_signal(_do_load_games)
+    except AttributeError:
+        # This is for compatibility with ancient versions < Tornado 3.
+        try:
+            _do_load_games()
+        except Exception:
+            logging.exception("Failed to update games after USR1 signal.")
+    except Exception:
+        logging.exception("Failed to update games after USR1 signal.")
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='Dungeon Crawl webtiles server',
+        epilog='Command line options will override config settings.')
+    parser.add_argument('-p', '--port', type=int, help='A port to bind; disables SSL.')
+    # TODO: --ssl-port or something?
+    parser.add_argument('--logfile',
+                        help='A logfile to write to; use "-" for stdout.')
+    parser.add_argument('--daemon', action='store_true', default=None,
+                        help='Daemonize after start.')
+    parser.add_argument('-n', '--no-daemon', action='store_false', default=None,
+                        dest='daemon',
+                        help='Do not daemonize after start.')
+    parser.add_argument('--no-pidfile', dest='pidfile', action='store_false',
+                        default=None, help='Do not use a PID-file.')
+
+    # live debug mode is intended to be able to run (more or less) safely with
+    # a concurrent real webtiles server. However, still be careful with this...
+    parser.add_argument('--live-debug', action='store_true',
+        help=('Debug mode for server admins. Will use a separate directory for sockets. '
+              'Entails --no-pidfile, --no-daemon, --logfile -, watch_socket_dirs=False. '
+              '(Further command line options can override these.)'))
+    parser.add_argument('--reset-password', type=str, help='A username to generate a password reset token for. Does not start the server.')
+    parser.add_argument('--clear-reset-password', type=str, help='A username to clear password reset tokens for. Does not start the server.')
+    result = parser.parse_args()
+    if result.live_debug or result.reset_password or result.clear_reset_password:
+        if not result.logfile:
+            result.logfile = '-'
+        if result.daemon is None:
+            result.daemon = False
+        result.pidfile = False
+        config.live_debug = True
+    return result
+
+
+# override config with any arguments supplied on the command line
+def export_args_to_config(args):
+    if args.port:
+        config.bind_nonsecure = True
+        config.bind_address = ""  # TODO: ??
+        config.bind_port = args.port
+        if getattr(config, 'bind_pairs', None) is not None:
+            del config.bind_pairs
+        logging.info("Using command-line supplied port: %d", args.port)
+        if getattr(config, 'ssl_options', None):
+            logging.info("    (Overrides config-specified SSL settings.)")
+            config.ssl_options = None
+    if args.daemon is not None:
+        logging.info("Command line override for daemonize: %r", args.daemon)
+        config.daemon = args.daemon
+    if args.pidfile is not None:
+        if not args.pidfile:
+            if getattr(config, 'pidfile', None):
+                logging.info("Command line overrides config-specified PID file!")
+            config.pidfile = None
+
+def reset_token_commands(args):
+    if args.clear_reset_password:
+        username = args.clear_reset_password
+    else:
+        username = args.reset_password
+
+    # duplicate some minimal setup needed for this to work
+    config.logging_config.pop('filename', None)
+    args.logfile = "<stdout>"  # make the log message easier to read
+
+    init_logging(config.logging_config)
+
+    if not check_config():
+        err_exit("Errors in config. Exiting.")
+    if config.dgl_mode:
+        userdb.ensure_user_db_exists()
+        userdb.upgrade_user_db()
+    userdb.ensure_settings_db_exists()
+    user_info = userdb.get_user_info(username)
+    if not user_info:
+        err_exit("Reset/clear password failed; invalid user: %s" % username)
+
+    # don't crash on the default config
+    if config.lobby_url is None:
+        config.lobby_url = "[insert lobby url here]"
+
+    if args.clear_reset_password:
+        ok, msg = userdb.clear_password_token(username)
+        if not ok:
+            err_exit("Error clearing password reset token for %s: %s" % (username, msg))
+        else:
+            print("Password reset token cleared for account '%s'." % username)
+    else:
+        ok, msg = userdb.generate_forgot_password(username)
+        if not ok:
+            err_exit("Error generating password reset token for %s: %s" % (username, msg))
+        else:
+            if not user_info[1]:
+                logging.warning("No email set for account '%s', use caution!" % username)
+            print("Setting a password reset token on account '%s'." % username)
+            print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
+
+
+def server_main():
+    args = parse_args()
+    if config.chroot:
+        os.chroot(config.chroot)
+
+    if args.reset_password or args.clear_reset_password:
+        reset_token_commands(args)
+        return
+
+    if getattr(config, 'live_debug', False):
+        logging.info("Starting in live-debug mode.")
+        config.watch_socket_dirs = False
+
+    # do this here so it can happen before logging init
+    if args.logfile:
+        if args.logfile == "-":
+            config.logging_config.pop('filename', None)
+            args.logfile = "<stdout>"  # make the log message easier to read
+        else:
+            config.logging_config['filename'] = args.logfile
+
+    init_logging(config.logging_config)
+
+    if args.logfile:
+        logging.info("Using command-line supplied logfile: '%s'", args.logfile)
+
+    _do_load_games()
+
+    export_args_to_config(args)
 
     if not check_config():
         err_exit("Errors in config. Exiting.")
 
-    if daemon:
+    if config.daemon:
         daemonize()
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
-    if umask is not None:
-        os.umask(umask)
+    if getattr(config, 'umask', None) is not None:
+        os.umask(config.umask)
 
     write_pidfile()
 
+    global servers
     servers = bind_server()
     ensure_tornado_current()
 
     shed_privileges()
 
-    if dgl_mode:
+    if config.dgl_mode:
         userdb.ensure_user_db_exists()
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
+
+    signal.signal(signal.SIGUSR1, usr1_handler)
+
     try:
         IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
         logging.info("Blocking call timeout: 500ms.")
@@ -301,12 +470,12 @@ if __name__ == "__main__":
         # this is the new normal; still not sure of a way to deal with this.
         logging.info("Webserver running without a blocking call timeout.")
 
-    if dgl_mode:
+    if config.dgl_mode:
         status_file_timeout()
-        purge_login_tokens_timeout()
+        auth.purge_login_tokens_timeout()
         start_reading_milestones()
 
-        if watch_socket_dirs:
+        if config.watch_socket_dirs:
             process_handler.watch_socket_dirs()
 
     logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
@@ -316,3 +485,7 @@ if __name__ == "__main__":
 
     logging.info("Bye!")
     remove_pidfile()
+
+
+if __name__ == "__main__":
+    server_main()

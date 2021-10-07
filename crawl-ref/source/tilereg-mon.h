@@ -1,7 +1,11 @@
 #ifdef USE_TILE_LOCAL
 #pragma once
 
+#include <vector>
+
 #include "tilereg-grid.h"
+
+using std::vector;
 
 struct monster_info;
 class MonsterRegion : public GridRegion

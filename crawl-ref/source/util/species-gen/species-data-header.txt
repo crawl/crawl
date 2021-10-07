@@ -7,7 +7,7 @@
  *   row  1: two-letter abbreviation
  *   row  2: name noun, name adjective, genus (null to use name)
  *   row  3: flags (SPF_*)
- *   row  4: XP "aptitude", HP mod (in tenths), MP mod, MR per XL
+ *   row  4: XP "aptitude", HP mod (in tenths), MP mod, WL per XL
  *   row  5: corresponding monster
  *   row  6: habitat, undead state, size
  *   row  7: starting strength, intelligence, dexterity  // sum

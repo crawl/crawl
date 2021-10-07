@@ -7,7 +7,7 @@
 
 #include "state.h"
 
-#ifndef TARGET_OS_WINDOWS
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
 #endif
 
@@ -32,6 +32,9 @@ game_state::game_state()
       io_inited(false),
       need_save(false), game_started(false), saving_game(false),
       updating_scores(false),
+#ifndef USE_TILE_LOCAL
+      smallterm(false),
+#endif
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
       obj_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
@@ -48,7 +51,9 @@ game_state::game_state()
       show_more_prompt(true), terminal_resize_handler(nullptr),
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
-      cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
+      cmd_repeat_started_unsafe(false),
+      lua_calls_no_turn(0), lua_script_killed(false),
+      lua_ready_throttled(false),
       stat_gain_prompt(false), simulating_xp_gain(false),
       level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
@@ -58,11 +63,12 @@ game_state::game_state()
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
+      last_builder_error_fatal(false),
       mon_act(nullptr)
 {
     reset_cmd_repeat();
     reset_cmd_again();
-#ifdef TARGET_OS_WINDOWS
+#ifndef UNIX
     no_gdb = "Non-UNIX Platform -> not running gdb.";
 #else
     no_gdb = access(GDB_PATH, 1) ? "gdb not executable." : 0;
@@ -201,7 +207,6 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
 
     switch (ai)
     {
-    case activity_interrupt::hungry:
     case activity_interrupt::teleport:
     case activity_interrupt::force:
     case activity_interrupt::hp_loss:

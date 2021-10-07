@@ -1,8 +1,8 @@
+TAG_MAJOR_VERSION: 34
 enum: SP_HALFLING
 monster: MONS_HALFLING
 name: Halfling
-difficulty: Simple
-difficulty_priority: 50
+difficulty: False
 aptitudes:
   xp: 1
   hp: -1
@@ -24,7 +24,6 @@ aptitudes:
   spellcasting: -3
   conjurations: -2
   hexes: -2
-  charms: 1
   summoning: -2
   necromancy: -2
   translocations: 1
@@ -40,15 +39,11 @@ levelup_stats:
 mutations:
   1:
     MUT_MUTATION_RESISTANCE: 1
-recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_HUNTER
-  - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
-  - JOB_SKALD
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_LONG_BLADES
   - SK_AXES
   - SK_SLINGS
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION

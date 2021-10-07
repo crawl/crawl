@@ -26,9 +26,9 @@ ORDER:  2
 TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 ORIENT: encompass
 SHUFFLE: 12
-SUBST:  ' = '......
-KFEAT:  ' = net trap / dart trap / bolt trap / spear trap / arrow trap
-MONS:   Menkaure, crocodile, kraken, flying skull
+SUBST:  ' = '..........
+KFEAT:  ' = net trap
+MONS:   Menkaure, water moccasin, kraken, flying skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -39,7 +39,7 @@ MARKER: d = lua:fog_machine { \
              size = 2, walk_dist = 16, spread_rate= -1, \
              cloud_type= "grey smoke" }
 KFEAT:  dV = shallow_water
-KMONS:  V = crocodile
+KMONS:  V = water moccasin
 KMONS:  b = hell rat / scorpion / vampire mosquito / blink frog
 KITEM:  b = star_item
 SUBVAULT: A : sprint2_stairs_cluster
@@ -178,7 +178,7 @@ ENDMAP
 
 NAME:   sprint2_early_7
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   tyrant leech
+MONS:   boulder beetle
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -189,7 +189,7 @@ ENDMAP
 
 NAME:   sprint2_early_8
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   hippogriff
+MONS:   wyvern
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -200,7 +200,7 @@ ENDMAP
 
 NAME:   sprint2_early_9
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   worker ant
+MONS:   scorpion
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -248,14 +248,12 @@ ENDMAP
 
 NAME:   sprint2_shoproom
 TAGS:   sprint2_shoproom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-NSUBST: a = 1:b / 1:c / 2:d / 2:e / 1:f / 1:g / 2:h / 1:i / *:a
+NSUBST: a = 1:b / 1:c / 2:d / 2:e / 1:f / 2:h / 1:i / *:a
 KFEAT:  a = any shop
 KFEAT:  b = book shop
 KFEAT:  c = antique weapon shop
 KFEAT:  d = antique armour shop
 KFEAT:  e = distillery shop
-KFEAT:  f = food shop
-KFEAT:  g = gadget shop
 KFEAT:  h = jewellery shop
 KFEAT:  i = scroll shop
 MAP
@@ -434,7 +432,7 @@ KMONS:  d = patrolling electric golem
 KITEM:  d = gold q:243
 KMONS:  p = earth elemental
 SHUFFLE: fgiAC
-KMONS:  f = greater mummy
+KMONS:  f = royal mummy
 KMONS:  g = golden eye
 KMONS:  i = curse toe
 KMONS:  A = vampire knight
@@ -545,7 +543,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_1
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   soldier ant
+MONS:   water moccasin
 KITEM:  $ = gold q:81
 MAP
 11
@@ -618,7 +616,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_9
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   spiny frog
+MONS:   cane toad
 KITEM:  $ = gold q:81
 MAP
 %1
@@ -645,7 +643,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_12
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   hippogriff
+MONS:   wyvern
 KITEM:  $ = gold q:81
 MAP
 11
@@ -721,8 +719,8 @@ NAME:   sprint2_transparent_cluster_1
 TAGS:   sprint2_transparent_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
 MONS:   oklob plant, orc warlord / Nikola / draconian knight, toenail golem, the Lernaean hydra
-SUBST:  ' = '.
-KFEAT:  ' = net trap / dart trap / bolt trap / spear trap / arrow trap
+SUBST:  ' = '.....
+KFEAT:  ' = net trap
 KFEAT:  , = book shop
 KFEAT:  f = any shop
 NSUBST: | = 1:a / 2:b / 1:d / 6:$ / *:|
@@ -764,8 +762,8 @@ KITEM:  $ = gold q:81
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 KITEM:  h = potion of flight q:3
 MONS:   Nessos, jelly, sixfirhy, Gastronok, orc sorcerer, dire elephant
-SUBST:  . = '.....
-KFEAT:  ' = net trap / dart trap / bolt trap / spear trap / arrow trap
+SUBST:  . = '.........
+KFEAT:  ' = net trap
 KFEAT:  q = book shop
 KFEAT:  i = any shop
 MAP
@@ -842,8 +840,8 @@ SUBST:  A = .
 SUBST:  e = .
 KITEM:  Z = Orb of Zot
 NSUBST: a = 3:1 / 3:2 / 27:$ / *:'
-SUBST:  ' = '........
-KFEAT:  ' = net trap / dart trap / bolt trap / spear trap / arrow trap
+SUBST:  ' = '............
+KFEAT:  ' = net trap
 KITEM:  $ = gold q:27
 MONS:   quicksilver dragon, Lorocyproca, ballistomycete spore
 COLOUR: X = magenta

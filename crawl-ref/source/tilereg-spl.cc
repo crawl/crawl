@@ -15,8 +15,8 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
-#include "tiledef-icons.h"
-#include "tiledef-main.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-main.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
 
@@ -75,6 +75,7 @@ int SpellRegion::handle_mouse(wm_mouse_event &event)
     {
         describe_spell(spell);
         redraw_screen();
+        update_screen();
         return CK_MOUSE_CMD;
     }
     return 0;
@@ -207,13 +208,8 @@ void SpellRegion::update()
         desc.idx      = (int) spell;
         desc.quantity = spell_mana(spell);
 
-        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK)
-             && you.no_tele(false, false, true)
-            || spell_is_useless(spell, true, true)
-            || spell_mana(spell) > you.magic_points)
-        {
+        if (spell_is_useless(spell, true, true))
             desc.flag |= TILEI_FLAG_INVALID;
-        }
 
         m_items.push_back(desc);
 

@@ -148,7 +148,7 @@ void writeChar(char32_t c)
         bFlush();
 
         // reposition
-        cgotoxy(1, cy+2);
+        gotoxy_sys(1, cy+2);
 
         return;
     }
@@ -469,7 +469,7 @@ void set_cursor_enabled(bool curstype)
     // now, if we just changed from NOCURSOR to CURSOR,
     // actually move screen cursor
     if (cursor_is_enabled)
-        cgotoxy(cx+1, cy+1);
+        gotoxy_sys(cx+1, cy+1);
 }
 
 // This will force the cursor down to the next line.
@@ -481,7 +481,7 @@ void clear_to_end_of_line()
         cprintf("%*s", cols - pos + 1, "");
 }
 
-void clrscr()
+void clrscr_sys()
 {
     int x,y;
     COORD source;
@@ -505,9 +505,6 @@ void clrscr()
     target.Bottom = screensize.Y - 1;
 
     WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
-
-    // reset cursor to 1,1 for convenience
-    cgotoxy(1,1);
 }
 
 void gotoxy_sys(int x, int y)
@@ -936,7 +933,6 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
-    update_screen();
     textcolour(WHITE);
 }
 

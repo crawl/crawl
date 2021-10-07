@@ -144,7 +144,7 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon)
         if (!in_bounds(target))
             continue;
 
-        if (!monster_habitable_grid(&mon, grd(target)))
+        if (!monster_habitable_grid(&mon, env.grid(target)))
             continue;
 
         if (respect_sanctuary && is_sanctuary(target))
@@ -188,7 +188,7 @@ bool monster_space_valid(const monster* mons, coord_def target,
     if (testbits(env.pgrid(target), FPROP_NO_TELE_INTO))
         return false;
 
-    return monster_habitable_grid(mons, grd(target));
+    return monster_habitable_grid(mons, env.grid(target));
 }
 
 static bool _monster_random_space(const monster* mons, coord_def& target,
@@ -428,7 +428,7 @@ bool valid_blink_destination(const actor* moved, const coord_def& target,
     {
         if (!moved->is_habitable(target))
             return false;
-        if (moved->is_player() && is_feat_dangerous(grd(target), true))
+        if (moved->is_player() && is_feat_dangerous(env.grid(target), true))
             return false;
     }
     if (forbid_sanctuary && is_sanctuary(target))

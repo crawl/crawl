@@ -2,23 +2,34 @@
 
 #include "spl-cast.h"
 
+class actor;
+class dist;
+
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
 spret cast_blink(bool fail = false);
-spret cast_controlled_blink(bool fail = false, bool safe = true);
 void uncontrolled_blink(bool override_stasis = false);
-spret controlled_blink(bool fail, bool safe_cancel = true);
-spret frog_hop(bool fail);
+spret controlled_blink(bool safe_cancel = true, dist *target=nullptr);
 void wizard_blink();
+
+spret frog_hop(bool fail, dist *target=nullptr);
+bool palentonga_charge_possible(bool quiet, bool ignore_safe_monsters);
+spret palentonga_charge(bool fail, dist *target=nullptr);
+int palentonga_charge_range();
 
 void you_teleport();
 void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,
                       string reason = "");
 bool you_teleport_to(const coord_def where,
                      bool move_monsters = false);
+bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,
+                          bool wizard_tele = false);
 
 spret cast_portal_projectile(int pow, bool fail);
+
+spret cast_manifold_assault(int pow, bool fail, bool real = true);
+string weapon_unprojectability_reason();
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
@@ -31,3 +42,6 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow);
 spret cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
+void attract_monsters();
+spret word_of_chaos(int pow, bool fail);
+spret blinkbolt(int power, bolt &beam, bool fail);

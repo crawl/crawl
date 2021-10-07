@@ -18,10 +18,16 @@ local rand_seeds = 1      -- how many random seeds to run
 
 local max_depth = #explorer.generation_order
 
+-- test-specific messaging -- currently false because this test is kind of slow
+-- and this lets the user know that something is happening
+local quiet = false
+-- change this for a lot more detail
+explorer.quiet = true
+
 function catalog_dungeon_vaults(silent)
     -- TODO: this doesn't do any pan levels, but the previous version did
     local old_quiet = explorer.quiet
-    explorer.quiet = silent
+    explorer.quiet = silent or old_quiet
     local catalog = explorer.catalog_dungeon(max_depth,
                                              { "vaults_raw" })
     explorer.quiet = old_quiet
@@ -39,11 +45,11 @@ function compare_catalogs(run1, run2, seed)
     -- is likely to be a mess with very little signal.
     for i,lvl in ipairs(explorer.generation_order) do
         if run1[lvl] == nil and run2[lvl] ~= nil then
-            crawl.stderr("Run 1 is missing " .. lvl .. "!")
+            crawl.stderr("Error: run 1 (seed " .. seed .. ") is missing " .. lvl .. "!")
         elseif run2[lvl] == nil and run1[lvl] ~= nil then
-            crawl.stderr("Run 2 is missing " .. lvl .. "!")
+            crawl.stderr("Error: run 2 (seed " .. seed .. ") is missing " .. lvl .. "!")
         elseif run1[lvl] ~= run2[lvl] then
-            crawl.stderr("Runs diverge for seed " .. seed .. " on level " .. lvl .. "!")
+            crawl.stderr("Error: runs diverge for seed " .. seed .. " on level " .. lvl .. "!")
             crawl.stderr("Run 1: " .. run1[lvl])
             crawl.stderr("Run 2: " .. run2[lvl])
         end
@@ -53,19 +59,21 @@ end
 
 function test_seed(seed, iters,  quiet)
     seed_used = debug.reset_rng(seed)
-    if quiet then
+    if (quiet or explorer.quiet) then
         crawl.stderr(".")
     else
         crawl.stderr("Vault catalog for seed " .. seed .. ":")
     end
     local run1 = catalog_dungeon_vaults(quiet)
 
-    if not quiet then
+    if not (quiet or explorer.quiet) then
         crawl.stderr("....now testing vault generation stability for seed " ..seed.. ".")
     end
 
     for i = 1,iters do
-        crawl.stderr(".")
+        if not (quiet and explorer.quiet) then
+            crawl.stderr(".")
+        end
         debug.reset_rng(seed)
         local run2 = catalog_dungeon_vaults(true)
         compare_catalogs(run1, run2, seed)
@@ -74,7 +82,9 @@ end
 
 function test_seed_sequence(seq, iters, quiet, quiet_first_only)
     for _,s in ipairs(seq) do
-        crawl.stderr("Testing seed " .. s .. ".")
+        if not (quiet and explorer.quiet) then
+            crawl.stderr("Testing seed " .. s .. ".")
+        end
         test_seed(s, iters, quiet or quiet_first_only and s ~= seq[1])
     end
 end
@@ -93,7 +103,9 @@ end
 max_depth = explorer.zot_depth
 
 if rand_seeds > 0 then
-    crawl.stderr("Testing " .. rand_seeds .. " random seed(s).")
+    if not (quiet and explorer.quiet) then
+        crawl.stderr("Testing " .. rand_seeds .. " random seed(s).")
+    end
     local seeds_to_test = { }
     for i=1,rand_seeds do
         -- intentional use of non-crawl random(). random doesn't seem to accept
@@ -102,7 +114,7 @@ if rand_seeds > 0 then
         rand_seed = math.random(0x7FFFFFFF)
         seeds_to_test[#seeds_to_test + 1] = rand_seed
     end
-    test_seed_sequence(seeds_to_test, per_seed_iters, true)
+    test_seed_sequence(seeds_to_test, per_seed_iters, quiet)
 end
 
 debug.reset_rng(1)

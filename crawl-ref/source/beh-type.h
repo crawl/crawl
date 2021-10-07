@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum beh_type
 {
     BEH_SLEEP,

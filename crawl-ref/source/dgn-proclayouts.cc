@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "files.h"
 #include "perlin.h"
+#include "tag-version.h"
 #include "terrain.h"
 
 static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
@@ -190,40 +191,37 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
         || feature == DNGN_TRANSPORTER
         || feature == DNGN_TRANSPORTER_LANDING)
     {
-        feature = DNGN_STONE_ARCH;
+        return DNGN_STONE_ARCH;
     }
-    if (feature == DNGN_SEALED_DOOR)
-        feature = DNGN_CLOSED_DOOR;
-    if (feature == DNGN_SEALED_CLEAR_DOOR)
-        feature = DNGN_CLOSED_CLEAR_DOOR;
     if (feat_is_stair(feature) || feat_is_sealed(feature))
-        feature = strict ? DNGN_FLOOR : DNGN_STONE_ARCH;
-    if (feat_is_altar(feature))
-        feature = DNGN_FLOOR;
-    if (feature == DNGN_ENTER_SHOP)
-        feature = DNGN_ABANDONED_SHOP;
-    if (feat_is_trap(feature))
-        feature = DNGN_FLOOR;
+        return strict ? DNGN_FLOOR : DNGN_STONE_ARCH;
+    if (feat_is_altar(feature) || feat_is_trap(feature))
+        return DNGN_FLOOR;
+
     switch (feature)
     {
-        // demote permarock
+        case DNGN_SEALED_DOOR:
+            return DNGN_CLOSED_DOOR;
+        case DNGN_SEALED_CLEAR_DOOR:
+            return DNGN_CLOSED_CLEAR_DOOR;
         case DNGN_PERMAROCK_WALL:
-            feature = DNGN_ROCK_WALL;
-            break;
+            return DNGN_ROCK_WALL;
         case DNGN_CLEAR_PERMAROCK_WALL:
-            feature = DNGN_CLEAR_ROCK_WALL;
-            break;
+            return DNGN_CLEAR_ROCK_WALL;
         case DNGN_SLIMY_WALL:
-            feature = DNGN_CRYSTAL_WALL;
-            break;
+            return DNGN_CRYSTAL_WALL; // !?
         case DNGN_UNSEEN:
-            feature = DNGN_FLOOR;
-            break;
+        case DNGN_ENDLESS_SALT:
+            return DNGN_FLOOR;
+        case DNGN_OPEN_SEA:
+            return DNGN_DEEP_WATER;
+        case DNGN_LAVA_SEA:
+            return DNGN_LAVA;
+        case DNGN_ENTER_SHOP:
+            return DNGN_ABANDONED_SHOP;
         default:
-            // handle more terrain types.
-            break;
+            return feature;
     }
-    return feature;
 }
 
 LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_layout) : seed(_seed), layout(_layout)
@@ -236,7 +234,7 @@ LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_l
     }
     level_excursion le;
     le.go_to(id);
-    grid = feature_grid(grd);
+    grid = feature_grid(env.grid);
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         grid(*ri) = sanitize_feature(grid(*ri), true);
@@ -456,15 +454,7 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 
         // Forest should now be 1.0 in the center of the range, 0.0 at the end
         if (jitter < (forest * 0.5))
-        {
-            if (is_river)
-            {
-                if (forest > 0.5 && wet > 0.5)
-                    feat = DNGN_TREE;
-            }
-            else
-                feat = DNGN_TREE;
-        }
+            feat = DNGN_DEMONIC_TREE;
     }
 
     // City

@@ -398,19 +398,6 @@ Cure Bad Mutation ability
 
 나쁜 돌연변이를 치료한다. 어떤 돌연변이가 선택될지는 알 수 없다.
 %%%%
-Scrying ability
-
-벽 너머를 볼 수 있는 초자연적인 시력을 얻는다. 하지만 벽 너머의 적을 볼 수
-있다고 해서, 벽 너머의 적에게 마법이나 원거리 공격을 사용할 수는 없다.
-%%%%
-Transfer Knowledge ability
-
-하나의 기술을 희생하여, 다른 기술을 향상시킨다.
-%%%%
-End Transfer Knowledge ability
-
-진행 중인 기술 이전을 중단한다.
-%%%%
 Shadow Step ability
 
 만약 당신의 음영 안에 있는 대상이 움직이지 않아 당신이 대상의 그림자에 집중할

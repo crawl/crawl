@@ -424,31 +424,6 @@ Blows and Bruises
 w:1
 Damage Dealing
 %%%%
-Charms
-
-Enhancements
-
-Talismans
-
-Good Luck
-
-Protection
-
-w:3
-Self-Knowledge
-
-w:3
-Self-Improvement
-
-Aid
-
-Augmentations
-
-w:1
-Benedictions
-
-Boosts
-%%%%
 Fire
 
 Fire

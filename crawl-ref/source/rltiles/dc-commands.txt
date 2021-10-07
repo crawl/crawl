@@ -21,7 +21,6 @@ lookup_help CMD_LOOKUP_HELP
 chardump CMD_CHARACTER_DUMP
 inventory CMD_DISPLAY_INVENTORY
 cast_spell CMD_CAST_SPELL
-butcher CMD_BUTCHER
 memorise CMD_MEMORISE_SPELL
 drop CMD_DROP
 display_map CMD_DISPLAY_MAP

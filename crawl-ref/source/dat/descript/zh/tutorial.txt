@@ -147,18 +147,6 @@ tutorial2 resting
 非常好！你可以通过按<input>$cmd[CMD_REST]</input>来休息以恢复损失的生命值。
 这将会使你休息并同时搜索周围，最多持续100回合，但会被一些特定的重要事件打断。
 %%%%
-tutorial2 chop_corpses
-
-你可以按<input>$cmd[CMD_BUTCHER]</input><localtiles>或者<input>Shift +
-鼠标点击</input></localtiles>把尸体切成可以食用的肉块，然后按
-<input>$cmd[CMD_EAT]</input><localtiles>或者<input>鼠标点击</input>
-</localtiles>来食用。
-%%%%
-tutorial2 rest_and_chop_reminder
-
-别忘了从尸体上切下肉块(按<input>$cmd[CMD_BUTCHER]</input>)，还有休息(按
-<input>$cmd[CMD_REST]</input>)！
-%%%%
 tutorial2 wait
 
 与其冲进房间然后被一群怪物围攻，你不如退后几步，等待它们自己走过来。（按
@@ -167,12 +155,6 @@ tutorial2 wait
 tutorial2 resting_reminder
 
 记住，你可以按<input>$cmd[CMD_REST]</input>来休息以回复到满状态。
-%%%%
-tutorial2 eat_reminder
-
-记住，你可以按<input>$cmd[CMD_BUTCHER]</input><localtiles>或者><input>Shift +
-鼠标点击</input>来切下尸体上的肉块，然后按<input>$cmd[CMD_EAT]</input>
-<localtiles>或者<input>鼠标点击</input></localtiles>食用。
 %%%%
 tutorial2 compare_monster_desc
 
@@ -245,10 +227,6 @@ tutorial2 exit
 <yellow>休息</yellow>
   <input>$cmd[CMD_WAIT]</input>  等待、休息并搜索一个回合
   <input>$cmd[CMD_REST]</input>  等待、休息并搜索最多100回合
-
-<yellow>尸体<console><brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  将尸体切成肉块
-  <input>$cmd[CMD_EAT]</input>  吃一块肉
 
                                  <cyan>按<input>任意键</input>退出
 %%%%
@@ -469,11 +447,6 @@ tutorial5 exhaustion
 狂暴之后，你会感到筋疲力尽。在疲劳状态下，你无法再次狂暴，而且行动速度也会减慢。
 最好是按<input>$cmd[CMD_REST]</input><localtiles>（或通过<w>命令栏 </w>）
 </localtiles>来休息一会，等到精力恢复了再出发。
-%%%%
-tutorial5 hunger
-
-你无法在非常饥饿的时候狂暴，因此你应该随时携带一些食物。这意味着有的时候，
-你必须得选择是要把一具尸体吃掉还是将它献给塔洛格。
 %%%%
 tutorial5 berserk2
 

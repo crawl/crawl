@@ -8,7 +8,6 @@
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
-#include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
@@ -20,11 +19,14 @@
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
+#include "spl-damage.h" // COUPLING_TIME_KEY
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
+#include "stairs.h" // rise_through_ceiling
 #include "stringutil.h"
 #include "throw.h"
+#include "timed-effects.h" // bezotting_level
 #include "transform.h"
 #include "traps.h"
 
@@ -112,16 +114,18 @@ static void _mark_expiring(status_info& inf, bool expiring)
 
 static string _ray_text()
 {
-    // i feel like we could do this with math instead...
-    switch (you.attribute[ATTR_SEARING_RAY])
-    {
-        case 2:
-            return "Ray+";
-        case 3:
-            return "Ray++";
-        default:
-            return "Ray";
-    }
+    const int n_plusses = max(you.attribute[ATTR_SEARING_RAY] - 1, 0);
+    return "Ray" + string(n_plusses, '+');
+}
+
+static vector<string> _charge_strings = { "Charge-", "Charge/",
+                                          "Charge|", "Charge\\"};
+
+static string _charge_text()
+{
+    static int charge_index = 0;
+    charge_index = (charge_index + 1) % 4;
+    return _charge_strings[charge_index];
 }
 
 /**
@@ -153,9 +157,7 @@ static bool _fill_inf_from_ddef(duration_type dur, status_info& inf)
 
 static void _describe_airborne(status_info& inf);
 static void _describe_glow(status_info& inf);
-static void _describe_hunger(status_info& inf);
 static void _describe_regen(status_info& inf);
-static void _describe_rotting(status_info& inf);
 static void _describe_sickness(status_info& inf);
 static void _describe_speed(status_info& inf);
 static void _describe_poison(status_info& inf);
@@ -164,6 +166,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
 static void _describe_missiles(status_info& inf);
 static void _describe_invisible(status_info& inf);
+static void _describe_zot(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -187,18 +190,33 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_CORROSION:
+        // No blank or double lights
+        if (you.corrosion_amount() == 0 || you.duration[DUR_CORROSION])
+            break;
+        _fill_inf_from_ddef(DUR_CORROSION, inf);
+        // Intentional fallthrough
     case DUR_CORROSION:
         inf.light_text = make_stringf("Corr (%d)",
-                          (-4 * you.props["corrosion_amount"].get_int()));
+                          (-4 * you.corrosion_amount()));
         break;
 
     case DUR_FLAYED:
         inf.light_text = make_stringf("Flay (%d)",
-                          (-1 * you.props["flay_damage"].get_int()));
+                          (-1 * you.props[FLAY_DAMAGE_KEY].get_int()));
         break;
 
+    case STATUS_NO_POTIONS:
+        // Don't double the light if under a duration
+        if (!player_in_branch(BRANCH_COCYTUS) || you.duration[DUR_NO_POTIONS])
+            break;
+        // use -Potion as a base
+        _fill_inf_from_ddef(DUR_NO_POTIONS, inf);
+        inf.short_text = "frozen potions";
+        inf.long_text  = "Your potions are frozen solid.";
+        // intentional fallthrough
     case DUR_NO_POTIONS:
-        if (you_foodless())
+        if (!you.can_drink(false))
             inf.light_colour = DARKGREY;
         break;
 
@@ -212,6 +230,20 @@ bool fill_status_info(int status, status_info& inf)
         }
         if (you.in_liquid())
             inf.light_colour = DARKGREY;
+        break;
+
+    case STATUS_ZOT:
+        _describe_zot(inf);
+        break;
+
+    case STATUS_CURL:
+        if (you.props[PALENTONGA_CURL_KEY].get_bool())
+        {
+            inf.light_text = "Curl";
+            inf.light_colour = BLUE;
+            inf.short_text = "curled up";
+            inf.long_text = "You are defensively curled.";
+        }
         break;
 
     case STATUS_AIRBORNE:
@@ -258,17 +290,26 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_HUNGER:
-        _describe_hunger(inf);
+    case STATUS_ALIVE_STATE:
+        if (you.has_mutation(MUT_VAMPIRISM))
+        {
+            if (!you.vampire_alive)
+            {
+                inf.light_colour = LIGHTRED;
+                inf.light_text = "Bloodless";
+                inf.short_text = "bloodless";
+            }
+            else
+            {
+                inf.light_colour = GREEN;
+                inf.light_text = "Alive";
+            }
+        }
         break;
 
     case STATUS_REGENERATION:
         // DUR_TROGS_HAND + some vampire and non-healing stuff
         _describe_regen(inf);
-        break;
-
-    case STATUS_ROT:
-        _describe_rotting(inf);
         break;
 
     case STATUS_SICK:
@@ -281,7 +322,7 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_LIQUEFIED:
     {
-        if (you.liquefied_ground() && you.duration[DUR_LIQUEFYING] == 0)
+        if (you.liquefied_ground() || you.duration[DUR_LIQUEFYING])
         {
             inf.light_colour = BROWN;
             inf.light_text   = "SlowM";
@@ -312,16 +353,9 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_FIRE_SHIELD:
+    case DUR_SLIMIFY:
     {
-        // Might be better to handle this with an extra virtual status.
-        const bool exp = dur_expiring(DUR_FIRE_SHIELD);
-        if (exp)
-            inf.long_text += "Expiring: ";
-        inf.long_text += "You are surrounded by a ring of flames.\n";
-        if (exp)
-            inf.long_text += "Expiring: ";
-        inf.long_text += "You are immune to clouds of flame.";
+        inf.long_text = you.hands_act("are", "covered in slime.");
         break;
     }
 
@@ -429,22 +463,19 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_HEAVENLY_STORM:
-        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         {
             inf.light_colour = WHITE;
             inf.light_text
-               = make_stringf("Storm (%u)",
-                              you.attribute[ATTR_HEAVENLY_STORM]);
-            inf.short_text = "heavenly storm";
-            inf.long_text = "Heavenly clouds are increasing your damage and "
-                             "accuracy.";
+                = make_stringf("Storm (%d)",
+                               you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
         }
         break;
 
-    case DUR_SONG_OF_SLAYING:
+    case DUR_WEREBLOOD:
         inf.light_text
             = make_stringf("Slay (%u)",
-                           you.props[SONG_OF_SLAYING_KEY].get_int());
+                           you.props[WEREBLOOD_KEY].get_int());
         break;
 
     case STATUS_BEOGH:
@@ -470,48 +501,50 @@ bool fill_status_info(int status, status_info& inf)
         if (you.res_water_drowning())
         {
             inf.short_text   = "engulfed";
-            inf.long_text    = "You are engulfed in water.";
+            inf.long_text    = "You are engulfed.";
             inf.light_colour = DARKGREY;
         }
         else
         {
             inf.short_text   = "engulfed (cannot breathe)";
-            inf.long_text    = "You are engulfed in water and unable to "
-                                "breathe.";
+            inf.long_text    = "You are engulfed and unable to breathe.";
             inf.light_colour = RED;
         }
         break;
 
     case STATUS_DRAINED:
-        if (you.attribute[ATTR_XP_DRAIN] > 450)
+    {
+        const int drain_perc = 100 * -you.hp_max_adj_temp / get_real_hp(false, false);
+
+        if (drain_perc >= 50)
         {
             inf.light_colour = MAGENTA;
             inf.light_text   = "Drain";
             inf.short_text   = "extremely drained";
             inf.long_text    = "Your life force is extremely drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN] > 250)
+        else if (drain_perc >= 25)
         {
             inf.light_colour = RED;
             inf.light_text   = "Drain";
             inf.short_text   = "very heavily drained";
             inf.long_text    = "Your life force is very heavily drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN] > 100)
+        else if (drain_perc >= 10)
         {
             inf.light_colour = LIGHTRED;
             inf.light_text   = "Drain";
             inf.short_text   = "heavily drained";
             inf.long_text    = "Your life force is heavily drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN] > 50)
+        else if (drain_perc >= 5)
         {
             inf.light_colour = YELLOW;
             inf.light_text   = "Drain";
             inf.short_text   = "drained";
             inf.long_text    = "Your life force is drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN])
+        else if (you.hp_max_adj_temp)
         {
             inf.light_colour = LIGHTGREY;
             inf.light_text   = "Drain";
@@ -520,11 +553,24 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    }
     case STATUS_RAY:
-        if (you.attribute[ATTR_SEARING_RAY])
+        if (you.attribute[ATTR_SEARING_RAY] && can_cast_spells(true))
         {
             inf.light_colour = WHITE;
             inf.light_text   = _ray_text().c_str();
+        }
+        break;
+
+    case STATUS_FLAME_WAVE:
+        if (you.props.exists(FLAME_WAVE_KEY) && can_cast_spells(true))
+        {
+            // It's only possible to hit the prop = 0 case if we reprint the
+            // screen after the spell was cast but before the end of the
+            // player's turn, which mostly happens in webtiles. Great!
+            const int lvl = max(you.props[FLAME_WAVE_KEY].get_int() - 1, 0);
+            inf.light_colour = WHITE;
+            inf.light_text   = "Wave" + string(lvl, '+');
         }
         break;
 
@@ -533,46 +579,6 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text   = "Dig";
-        }
-        break;
-
-    case STATUS_ELIXIR:
-        if (you.duration[DUR_ELIXIR_HEALTH] || you.duration[DUR_ELIXIR_MAGIC])
-        {
-            if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
-                inf.light_colour = WHITE;
-            else if (you.duration[DUR_ELIXIR_HEALTH])
-                inf.light_colour = LIGHTGREEN;
-            else
-                inf.light_colour = LIGHTBLUE;
-            inf.light_text   = "Elixir";
-        }
-        break;
-
-    case STATUS_MAGIC_SAPPED:
-        if (you.props[SAP_MAGIC_KEY].get_int() >= 3)
-        {
-            inf.light_colour = RED;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "extremely magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been greatly sapped.";
-        }
-        else if (you.props[SAP_MAGIC_KEY].get_int() == 2)
-        {
-            inf.light_colour = LIGHTRED;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "very magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been significantly sapped.";
-        }
-        else if (you.props[SAP_MAGIC_KEY].get_int() == 1)
-        {
-            inf.light_colour = YELLOW;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been sapped.";
         }
         break;
 
@@ -670,13 +676,6 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_INFUSION:
-    {
-        if (!enough_mp(1, true, false))
-            inf.light_colour = DARKGREY;
-        break;
-    }
-
     case STATUS_ORB:
     {
         if (player_has_orb())
@@ -701,6 +700,58 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_MAXWELLS:
+        if (you.props.exists(COUPLING_TIME_KEY) && can_cast_spells(true))
+        {
+            inf.light_colour = LIGHTCYAN;
+            inf.light_text   = _charge_text().c_str();
+        }
+        break;
+
+    case STATUS_DUEL:
+        if (okawaru_duel_active())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Duel";
+            inf.short_text   = "duelling";
+            inf.long_text    = "You are engaged in single combat.";
+        }
+        break;
+
+    case STATUS_NO_SCROLL:
+        if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
+            || player_in_branch(BRANCH_GEHENNA))
+        {
+            inf.light_colour = RED;
+            inf.light_text   = "-Scroll";
+            inf.short_text   = "unable to read";
+            inf.long_text    = "You cannot read scrolls.";
+        }
+        break;
+
+    case STATUS_RF_ZERO:
+        if (!you.penance[GOD_IGNIS]
+            || player_res_fire(false, true, true) < 0)
+        {
+            // XXX: would it be better to only show this
+            // if you would otherwise have rF+ & to warn
+            // on using a potion of resistance..?
+            break;
+        }
+        inf.light_colour = RED;
+        inf.light_text   = "rF0";
+        inf.short_text   = "fire susceptible";
+        inf.long_text    = "You cannot resist fire.";
+        break;
+
+    case STATUS_LOWERED_WL:
+        // Don't double the light if under a duration
+        if (!player_in_branch(BRANCH_TARTARUS) || you.duration[DUR_LOWERED_WL])
+            break;
+        if (player_in_branch(BRANCH_TARTARUS))
+            _fill_inf_from_ddef(DUR_LOWERED_WL, inf);
+        break;
+
     default:
         if (!found)
         {
@@ -716,64 +767,33 @@ bool fill_status_info(int status, status_info& inf)
     return true;
 }
 
-static void _describe_hunger(status_info& inf)
+static void _describe_zot(status_info& inf)
 {
-
-    if (you.species == SP_VAMPIRE)
+    const int lvl = bezotting_level();
+    if (lvl > 0)
     {
-        if (!you.vampire_alive)
-        {
-            inf.light_colour = LIGHTRED;
-            inf.light_text = "Bloodless";
-            inf.short_text = "bloodless";
-        }
-        else
-        {
-            inf.light_colour = GREEN;
-            inf.light_text = "Alive";
-        }
-        return;
+        inf.short_text = "bezotted";
+        inf.long_text = "Zot is approaching!";
     }
+    else if (!Options.always_show_zot || !zot_clock_active())
+        return;
 
-    switch (you.hunger_state)
+    inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
+    switch (lvl)
     {
-    case HS_ENGORGED:
-        inf.light_colour = LIGHTGREEN;
-        inf.light_text   = "Engorged";
-        break;
-    case HS_VERY_FULL:
-        inf.light_colour = GREEN;
-        inf.light_text   = "Very Full";
-        break;
-    case HS_FULL:
-        inf.light_colour = GREEN;
-        inf.light_text   = "Full";
-        break;
-    case HS_HUNGRY:
-        inf.light_colour = YELLOW;
-        inf.light_text   = "Hungry";
-        break;
-    case HS_VERY_HUNGRY:
-        inf.light_colour = YELLOW;
-        inf.light_text   = "Very Hungry";
-        break;
-    case HS_NEAR_STARVING:
-        inf.light_colour = YELLOW;
-        inf.light_text   = "Near Starving";
-        break;
-    case HS_STARVING:
-        inf.light_colour = LIGHTRED;
-        inf.light_text   = "Starving";
-        inf.short_text   = "starving";
-        break;
-    case HS_FAINTING:
-        inf.light_colour = RED;
-        inf.light_text   = "Fainting";
-        inf.short_text   = "fainting";
-        break;
-    case HS_SATIATED: // no status light
-    default:
-        break;
+        case 0:
+            inf.light_colour = WHITE;
+            break;
+        case 1:
+            inf.light_colour = YELLOW;
+            break;
+        case 2:
+            inf.light_colour = RED;
+            break;
+        case 3:
+        default:
+            inf.light_colour = MAGENTA;
+            break;
     }
 }
 
@@ -816,36 +836,26 @@ static void _describe_glow(status_info& inf)
 
 static void _describe_regen(status_info& inf)
 {
-    const bool trogs_hand = you.duration[DUR_TROGS_HAND] > 0;
-    const bool no_heal = !player_regenerates_hp();
-
-    if (trogs_hand)
+    if (you.duration[DUR_TROGS_HAND])
     {
         inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_TROGS_HAND));
-        inf.light_text   = "Regen";
-        inf.light_text += " MR++";
-    }
-
-    if (no_heal || (you.disease && !trogs_hand))
-       inf.short_text = "non-regenerating";
-    else if (trogs_hand)
-    {
-        if (you.disease)
-        {
-            inf.short_text = "recuperating";
-            inf.long_text  = "You are recuperating from your illness.";
-        }
-        else
-        {
-            inf.short_text = "regenerating";
-            inf.long_text  = "You are regenerating.";
-        }
+        inf.light_text = "Regen Will++";
+        inf.short_text = "regenerating";
+        inf.long_text  = "You are regenerating.";
         _mark_expiring(inf, dur_expiring(DUR_TROGS_HAND));
     }
-    else if (you.species == SP_VAMPIRE && you.vampire_alive)
+    else if (you.has_mutation(MUT_VAMPIRISM)
+             && you.vampire_alive
+             && !you.duration[DUR_SICKNESS])
     {
-        inf.short_text = you.disease ? "recuperating" : "regenerating";
-        inf.short_text += " quickly";
+        inf.short_text = "healing quickly";
+    }
+    else if (regeneration_is_inhibited())
+    {
+        inf.light_colour = RED;
+        inf.light_text = "-Regen";
+        inf.short_text = "inhibited regen";
+        inf.long_text = "Your regeneration is inhibited by nearby monsters.";
     }
 }
 
@@ -913,40 +923,20 @@ static void _describe_airborne(status_info& inf)
     _mark_expiring(inf, expiring);
 }
 
-static void _describe_rotting(status_info& inf)
-{
-    if (you.species == SP_GHOUL)
-    {
-        inf.short_text = "rotting";
-        inf.long_text = "Your flesh is rotting";
-        int rot = 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
-        if (rot > 15)
-            inf.long_text += " before your eyes";
-        else if (rot > 8)
-            inf.long_text += " away quickly";
-        else if (rot > 4)
-            inf.long_text += " badly";
-        else if (rot > 2)
-            inf.long_text += " faster than usual";
-        else
-            inf.long_text += " at the usual pace";
-        inf.long_text += ".";
-    }
-}
-
 static void _describe_sickness(status_info& inf)
 {
-    if (you.disease)
+    if (you.duration[DUR_SICKNESS])
     {
         const int high = 120 * BASELINE_DELAY;
         const int low  =  40 * BASELINE_DELAY;
 
-        inf.light_colour   = _bad_ench_colour(you.disease, low, high);
+        inf.light_colour   = _bad_ench_colour(you.duration[DUR_SICKNESS],
+                                              low, high);
         inf.light_text     = "Sick";
 
-        string mod = (you.disease > high) ? "badly "  :
-                     (you.disease >  low) ? ""
-                                          : "mildly ";
+        string mod = (you.duration[DUR_SICKNESS] > high) ? "badly "  :
+                     (you.duration[DUR_SICKNESS] >  low) ? ""
+                                                         : "mildly ";
 
         inf.short_text = mod + "diseased";
         inf.long_text  = "You are " + mod + "diseased.";
@@ -969,7 +959,7 @@ static void _describe_transform(status_info& inf)
     inf.short_text = form->get_long_name();
     inf.long_text = form->get_description();
 
-    const bool vampbat = (you.species == SP_VAMPIRE
+    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
                           && you.form == transformation::bat);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
@@ -994,7 +984,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st)
 
 static void _describe_terrain(status_info& inf)
 {
-    switch (grd(you.pos()))
+    switch (env.grid(you.pos()))
     {
     case DNGN_SHALLOW_WATER:
         inf.light_colour = LIGHTBLUE;
@@ -1015,25 +1005,9 @@ static void _describe_terrain(status_info& inf)
 
 static void _describe_missiles(status_info& inf)
 {
-    const int level = you.missile_deflection();
-    if (!level)
-        return;
-
-    if (level > 1)
+    if (you.missile_repulsion())
     {
-        bool perm = false;
-        inf.light_colour = perm ? WHITE : LIGHTMAGENTA;
-        inf.light_text   = "DMsl";
-        inf.short_text   = "deflect missiles";
-        inf.long_text    = "You deflect missiles.";
-    }
-    else
-    {
-        bool perm = you.get_mutation_level(MUT_DISTORTION_FIELD) == 3
-                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
-                    || you.scan_artefacts(ARTP_RMSL)
-                    || have_passive(passive_t::upgraded_storm_shield);
-        inf.light_colour = perm ? WHITE : LIGHTBLUE;
+        inf.light_colour = WHITE;
         inf.light_text   = "RMsl";
         inf.short_text   = "repel missiles";
         inf.long_text    = "You repel missiles.";
@@ -1050,10 +1024,8 @@ static void _describe_invisible(status_info& inf)
         inf.light_colour = _dur_colour(WHITE,
                                         dur_expiring(DUR_TRANSFORMATION));
     }
-    else if (you.attribute[ATTR_INVIS_UNCANCELLABLE])
-        inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
     else
-        inf.light_colour = _dur_colour(MAGENTA, dur_expiring(DUR_INVIS));
+        inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
     inf.light_text   = "Invis";
     inf.short_text   = "invisible";
     if (you.backlit())

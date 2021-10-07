@@ -2,9 +2,9 @@ enum: SP_BASE_DRACONIAN
 monster: MONS_DRACONIAN
 name: "Draconian"
 difficulty: Simple
-difficulty_priority: 60
+difficulty_priority: 50
 species_flags:
-  - draconian
+  - SPF_DRACONIAN
 aptitudes:
   xp: -1
   hp: 1
@@ -19,7 +19,6 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
-  charms: -1
   invocations: 1
 str: 10
 int: 8
@@ -37,4 +36,6 @@ recommended_jobs:
   - JOB_AIR_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
   - JOB_VENOM_MAGE
+# start TAG_MAJOR_VERSION == 34
 create_enum: false
+# end TAG_MAJOR_VERSION

@@ -1,14 +1,20 @@
-import socket
 import fcntl
-import os, os.path, tempfile
+import os
+import os.path
+import socket
+import tempfile
 import time
 import warnings
+from datetime import datetime
+from datetime import timedelta
 
-from datetime import datetime, timedelta
-from tornado.escape import json_encode, utf8, to_unicode
+from tornado.escape import json_encode
+from tornado.escape import to_unicode
+from tornado.escape import utf8
 from tornado.ioloop import IOLoop
 
 from config import server_socket_path
+
 
 class WebtilesSocketConnection(object):
     def __init__(self, socketpath, logger):

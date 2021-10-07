@@ -38,6 +38,7 @@
 #include "tiles-build-specific.h"
 #include "unicode.h"
 #include "view.h"
+#include "ui.h"
 
 static struct termios def_term;
 static struct termios game_term;
@@ -60,7 +61,7 @@ static struct termios game_term;
 #endif
 
 // Globals holding current text/backg. colours
-// Note that these are internal colours, *not* curses colors.
+// Note that these are internal colours, *not* curses colours.
 /** @brief The current foreground @em colour. */
 static COLOURS FG_COL = LIGHTGREY;
 
@@ -80,14 +81,14 @@ struct curses_style
 };
 
 /**
- * @brief Get curses attributes for the current internal color combination.
+ * @brief Get curses attributes for the current internal colour combination.
  *
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
  *  The internal colour for the background.
  * @param adjust_background
- *  Determines which color in the pair is adjusted if adjustment is necessary.
+ *  Determines which colour in the pair is adjusted if adjustment is necessary.
  *  True chooses the background, while false chooses the foreground.
  *
  *  @return
@@ -99,7 +100,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background = f
  * @brief Change the foreground colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal colour with attached brand.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -110,7 +111,7 @@ static curses_style curs_attr_bg(int col);
  * @brief Change the background colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal colour with attached brand.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -118,9 +119,9 @@ static curses_style curs_attr_bg(int col);
 static curses_style curs_attr_fg(int col);
 
 /**
- * @brief Get curses attributes for the passed internal color combination.
+ * @brief Get curses attributes for the passed internal colour combination.
  *
- * Performs colour mapping for both default colours as well as the color map.
+ * Performs colour mapping for both default colours as well as the colour map.
  * Additionally, this function takes into consideration a passed brand.
  *
  * @param fg
@@ -128,7 +129,7 @@ static curses_style curs_attr_fg(int col);
  * @param bg
  *  The internal colour for the background.
  * @param brand
- *  Internal color branding information.
+ *  Internal colour branding information.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -136,16 +137,16 @@ static curses_style curs_attr_fg(int col);
 static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand);
 
 /**
- * @brief Returns a curses color pair index for the passed fg/bg combo.
+ * @brief Returns a curses colour pair index for the passed fg/bg combo.
  *
  * Strips brightening flags from the passed colors according to the game
  * options. The current FG_COL_DEFAULT and BG_COL_DEFAULT values are used for
  * determining the default pair.
  *
  * @param fg
- *  The flagged curses color index for the foreground.
+ *  The flagged curses colour index for the foreground.
  * @param bg
- *  The flagged curses color index for the background.
+ *  The flagged curses colour index for the background.
  *
  * @return
  *  Returns the pair index associated with the combination, or the default
@@ -154,19 +155,19 @@ static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand);
 static short curs_calc_pair_safe(short fg, short bg);
 
 /**
- * @brief Returns a curses color pair index for the passed fg/bg combo.
+ * @brief Returns a curses colour pair index for the passed fg/bg combo.
  *
  * Unlike curs_calc_pair_safe(short, short), the passed colors are treated
  * as-is and default colors are passed explicitly.
  *
  * @param fg
- *  The curses color index for the foreground.
+ *  The curses colour index for the foreground.
  * @param bg
- *  The curses color index for the background.
+ *  The curses colour index for the background.
  * @param fg_default
- *  The explicit curses color to consider the default foreground.
+ *  The explicit curses colour to consider the default foreground.
  * @param bg_default
- *  The explicit curses color to consider the default background.
+ *  The explicit curses colour to consider the default background.
  *
  * @return
  *  Returns the pair index associated with the combination, or the default
@@ -176,28 +177,28 @@ static short curs_calc_pair_safe(short fg, short bg, short fg_default,
     short bg_default);
 
 /**
- * @brief Can extended colors be used directly instead of character attributes?
+ * @brief Can extended colours be used directly instead of character attributes?
  *
  * @return
- *  True if extended colors can be used in lieu of attributes, false otherwise.
+ *  True if extended colours can be used in lieu of attributes, false otherwise.
  */
 static bool curs_can_use_extended_colors();
 
 /**
- * @brief Is there a curses pair for the passed color combination?
+ * @brief Is there a curses pair for the passed colour combination?
  *
  * @param fg
- *  The raw curses foreground color.
+ *  The raw curses foreground colour.
  * @param bg
- *  The raw curses background color.
+ *  The raw curses background colour.
  *
  * @return
- *  True if there is a valid curses color pair for the combo, false otherwise.
+ *  True if there is a valid curses colour pair for the combo, false otherwise.
  */
 static bool curs_color_combo_has_pair(short fg, short bg);
 
 /**
- * @brief Adjust a curses color pair to not be visually identical.
+ * @brief Adjust a curses colour pair to not be visually identical.
  *
  * Colors which are not equal in value may still be considered identical
  * in appearance depending on the current rendering assumption options.
@@ -205,11 +206,11 @@ static bool curs_color_combo_has_pair(short fg, short bg);
  * If the pair is not considered visually identical, no change is performed.
  *
  * @param fg
- *  The pair's brightness-flagged foreground color.
+ *  The pair's brightness-flagged foreground colour.
  * @param bg
- *  The pair's brightness-flagged background color.
+ *  The pair's brightness-flagged background colour.
  * @param adjust_background
- *  Determines which color in the pair is adjusted if adjustment is necessary.
+ *  Determines which colour in the pair is adjusted if adjustment is necessary.
  *  True chooses the background, while false chooses the foreground.
  */
 static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
@@ -218,8 +219,8 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
 /**
  * @brief Get the @em maximum palette size currently supported by the program.
  *
- * This value is limited by both the internal color palette and reported
- * terminal color capabilities.
+ * This value is limited by both the internal colour palette and reported
+ * terminal colour capabilities.
  *
  * This value is @em not affected by the rendering assumption options.
  *
@@ -228,19 +229,19 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
 static short curs_palette_size();
 
 /**
- * @brief Sets the default colors for the terminal.
+ * @brief Sets the default colours for the terminal.
  *
  * Attempt to set the default colors for the terminal based on the current
- * game options. If a default color cannot be set, the curses default will be
+ * game options. If a default colour cannot be set, the curses default will be
  * used (COLOR_WHITE for foreground, COLOR_BLACK for background).
  */
 static void curs_set_default_colors();
 
 /**
- * @brief Translates a flagged curses color to an internal COLOUR.
+ * @brief Translates a flagged curses colour to an internal COLOUR.
  *
  * @param col
- *  The flagged curses color to convert.
+ *  The flagged curses colour to convert.
  *
  * @return
  *  The equivalent internal colour.
@@ -248,7 +249,7 @@ static void curs_set_default_colors();
 static COLOURS curses_color_to_internal_colour(short col);
 
 /**
- * @brief Flip the foreground and background color of the @p ch.
+ * @brief Flip the foreground and background colour of the @p ch.
  *
  * @see flip_colour(short &, attr_t &, short, attr_t)
  *
@@ -258,16 +259,16 @@ static COLOURS curses_color_to_internal_colour(short col);
 static void flip_colour(cchar_t &ch);
 
 /**
- * @brief Flip the foreground and background color of the @p ch.
+ * @brief Flip the foreground and background colour of the @p ch.
  *
  * This flip respects the current rendering assumptions. Therefore, the
- * resulting color combination may not be a strict color swap, but one that
+ * resulting colour combination may not be a strict colour swap, but one that
  * is guaranteed to be visible.
  *
  * @param attr
  *  The character attributes to flip.
  * @param color
- *  The color pair to flip.
+ *  The colour pair to flip.
  *
  *  @return
  *   Returns the flipped character attributes and colour pair index.
@@ -360,7 +361,7 @@ static short translate_colour(COLOURS col)
 
 /**
  * @internal
- * Attempt to exhaustively allocate color pairs, relying on
+ * Attempt to exhaustively allocate colour pairs, relying on
  * curs_calc_pair_safe() to order pairs.
  *
  * 256-color considerations:
@@ -378,7 +379,7 @@ static short translate_colour(COLOURS col)
  *
  * @todo
  *  If having access to all possible 256-color pairs (non-simultaneously) is
- *  important for the project, implement paging for color-pairs.
+ *  important for the project, implement paging for colour-pairs.
  */
 static void setup_colour_pairs()
 {
@@ -612,14 +613,25 @@ static void unixcurses_defkeys()
 
     // non-arrow keypad keys (for macros)
     define_key("\033OM", 1010); // Enter
-    define_key("\033OP", 1011); // NumLock
-    define_key("\033OQ", 1012); // /
-    define_key("\033OR", 1013); // *
-    define_key("\033OS", 1014); // -
+
+    // TODO: I don't know under what context these are mapped to numpad keys,
+    // but they are *much* more commonly used for F1-F4. So don't
+    // unconditionally define these. I don't trust anything else in this
+    // function either, but most of it is a bit hard to test. Possibly the
+    // conditional define here should at least be generalized?
+#define check_define_key(s, n) if (!key_defined(s)) define_key(s, n)
+    check_define_key("\033OP", 1011); // NumLock
+    check_define_key("\033OQ", 1012); // /
+    check_define_key("\033OR", 1013); // *
+    check_define_key("\033OS", 1014); // -
+#undef check_define_key
+
+    // TODO: there may be codes missing here, I don't get special keycodes for
+    // *,/,= on mac console.
     define_key("\033Oj", 1015); // *
-    define_key("\033Ok", 1016); // +
+    define_key("\033Ok", 1016); // + // XX why don't these collapse??
     define_key("\033Ol", 1017); // +
-    define_key("\033Om", 1018); // .
+    define_key("\033Om", 1018); // . // XX this is - on mac console? Also confirmed on linux as -
     define_key("\033On", 1019); // .
     define_key("\033Oo", 1020); // -
 
@@ -721,7 +733,7 @@ void console_startup()
     start_color();
 
     setup_colour_pairs();
-    // Since it may swap pairs, set default colors *after* setting up all pairs.
+    // Since it may swap pairs, set default colours *after* setting up all pairs.
     curs_set_default_colors();
 
     scrollok(stdscr, FALSE);
@@ -731,6 +743,9 @@ void console_startup()
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
+
+    // TODO: how does this relate to what tiles.resize does?
+    ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
 
 #ifdef USE_TILE_WEB
     tiles.resize();
@@ -803,7 +818,6 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
-    update_screen();
 }
 
 // These next four are front functions so that we can reduce
@@ -816,7 +830,7 @@ void update_screen()
     // In objstat and similar modes, there might not be a screen to update.
     if (stdscr)
     {
-        // Refreshing the default colors helps keep colors synced in ttyrecs.
+        // Refreshing the default colours helps keep colours synced in ttyrecs.
         curs_set_default_colors();
         refresh();
     }
@@ -852,19 +866,37 @@ int num_to_lines(int num)
     return num;
 }
 
-void clrscr()
+#ifdef DGAMELAUNCH
+static bool _suppress_dgl_clrscr = false;
+
+// TODO: this is not an ideal way to solve this problem. An alternative might
+// be to queue dgl clrscr and only send them at the same time as an actual
+// refresh?
+suppress_dgl_clrscr::suppress_dgl_clrscr()
+    : prev(_suppress_dgl_clrscr)
+{
+    _suppress_dgl_clrscr = true;
+}
+
+suppress_dgl_clrscr::~suppress_dgl_clrscr()
+{
+    _suppress_dgl_clrscr = prev;
+}
+#endif
+
+void clrscr_sys()
 {
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
 #ifdef DGAMELAUNCH
-    printf("%s", DGL_CLEAR_SCREEN);
-    fflush(stdout);
+    if (!_suppress_dgl_clrscr)
+    {
+        printf("%s", DGL_CLEAR_SCREEN);
+        fflush(stdout);
+    }
 #endif
 
-#ifdef USE_TILE_WEB
-    tiles.clrscr();
-#endif
 }
 
 void set_cursor_enabled(bool enabled)
@@ -1115,11 +1147,11 @@ static bool curs_color_combo_has_pair(short fg, short bg)
 static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     bool adjust_background)
 {
-    // The default colors.
+    // The default colours.
     short fg_default = translate_colour(FG_COL_DEFAULT);
     short bg_default = translate_colour(BG_COL_DEFAULT);
 
-    // The expected output colors.
+    // The expected output colours.
     short fg_to_compare = fg;
     short bg_to_compare = bg;
     short fg_default_to_compare = fg_default;
@@ -1144,7 +1176,7 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     if (fg_to_compare != bg_to_compare)
         return;  // colours look different; no need to adjust
 
-    // Choose terminal's current default colors as the default failsafe.
+    // Choose terminal's current default colours as the default failsafe.
     short failsafe_col = adjust_background ? fg_default : bg_default;
 
     if (!adjust_background && fg_to_compare == bg_default_to_compare)
@@ -1268,7 +1300,7 @@ static void curs_set_default_colors()
         default_bg = failsafe_bg;
     }
 
-    // Assume new default colors.
+    // Assume new default colours.
     if (curs_palette_size() == 0)
         default_colors_loaded = use_default_colors();
     else
@@ -1285,7 +1317,7 @@ static void curs_set_default_colors()
         default_bg = failsafe_bg;
     }
 
-    // Store the validated default colors.
+    // Store the validated default colours.
     // The new default color pair is now in pair 0.
     FG_COL_DEFAULT = default_fg;
     BG_COL_DEFAULT = default_bg;
@@ -1450,7 +1482,7 @@ static curses_style flip_colour(curses_style style)
         pair_content(style.color_pair, &fg, &bg);
     else
     {
-        // Default pair; use the current default colors.
+        // Default pair; use the current default colours.
         fg = translate_colour(FG_COL_DEFAULT);
         bg = translate_colour(BG_COL_DEFAULT);
     }
@@ -1512,6 +1544,10 @@ void fakecursorxy(int x, int y)
     cchar_t c = character_at(y_curses, x_curses);
     flip_colour(c);
     write_char_at(y_curses, x_curses, c);
+    // the above still results in changes to the return values for wherex and
+    // wherey, so set the cursor region to ensure that the cursor position is
+    // valid after this call. (This also matches the behavior of real cursorxy.)
+    set_cursor_region(GOTO_CRT);
 }
 
 int wherex()

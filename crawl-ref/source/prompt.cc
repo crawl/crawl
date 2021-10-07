@@ -17,7 +17,7 @@
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE
-#include "tiledef-gui.h"
+#include "rltiles/tiledef-gui.h"
 #endif
 #include "viewchar.h"
 #include "ui.h"
@@ -48,7 +48,7 @@ bool yes_or_no(const char* fmt, ...)
 //      -- idea borrowed from Nethack
 bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
            bool interrupt_delays, bool noprompt,
-           const explicit_keymap *map)
+           const explicit_keymap *map, bool allow_popup)
 {
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(activity_interrupt::force);
@@ -66,10 +66,13 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     bool use_popup = true;
 #else
     bool use_popup = !crawl_state.need_save || ui::has_layout();
-    use_popup = use_popup && str;
+    use_popup = use_popup && str && allow_popup;
 #endif
 
-    Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE, "", KMC_CONFIRM);
+    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE;
+    if (allow_lowercase && use_popup)
+        flags |= MF_ARROWS_SELECT;
+    Menu pop(flags, "", KMC_CONFIRM);
     MenuEntry *status = nullptr;
 
     if (use_popup)
@@ -77,15 +80,23 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         status = new MenuEntry("", MEL_SUBTITLE);
         MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
         MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
-#ifdef USE_TILE
-        y_me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
-        n_me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
-#endif
+        y_me->add_tile(tile_def(TILEG_PROMPT_YES));
+        n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 
         pop.set_title(new MenuEntry(prompt, MEL_TITLE));
         pop.add_entry(status);
         pop.add_entry(y_me);
         pop.add_entry(n_me);
+        if (allow_lowercase && default_answer == 'y')
+            pop.set_hovered(1);
+        else if (allow_lowercase && default_answer == 'n')
+            pop.set_hovered(2);
+        pop.on_single_selection = [&pop](const MenuEntry& item)
+            {
+                if (item.hotkeys.size())
+                    return pop.process_key(item.hotkeys[0]);
+                return false;
+            };
     }
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
@@ -149,7 +160,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
             else
-                mpr(pr);
+                mprf(MSGCH_PROMPT, "%s", pr.c_str());
         }
     }
 }

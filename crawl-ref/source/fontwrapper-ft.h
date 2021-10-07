@@ -4,10 +4,14 @@
 #ifdef USE_FT
 
 #include <map>
+#include <vector>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 #include "tilefont.h"
+
+using std::vector;
 
 struct HiDPIState;
 extern HiDPIState display_density;

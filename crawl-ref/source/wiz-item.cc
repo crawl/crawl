@@ -42,6 +42,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unicode.h"
 #include "view.h"
@@ -49,9 +50,9 @@
 #ifdef WIZARD
 static void _make_all_books()
 {
-    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    for (int i = 0; i < NUM_BOOKS; ++i)
     {
-        if (item_type_removed(OBJ_BOOKS, i))
+        if (!book_exists((book_type)i))
             continue;
         int thing = items(false, OBJ_BOOKS, i, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
@@ -62,7 +63,7 @@ static void _make_all_books()
         if (thing == NON_ITEM)
             continue;
 
-        item_def book(mitm[thing]);
+        item_def book(env.item[thing]);
 
         set_ident_flags(book, ISFLAG_KNOW_TYPE);
         set_ident_flags(book, ISFLAG_IDENT_MASK);
@@ -100,7 +101,7 @@ void wizard_create_spec_object()
     {
         mprf(MSGCH_PROMPT, ") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls");
         mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   }  - miscellany");
-        mprf(MSGCH_PROMPT, "X - corpses     %% - food      $ - gold    0  - the Orb");
+        mprf(MSGCH_PROMPT, "X - corpses     $ - gold    0  - the Orb");
         mprf(MSGCH_PROMPT, "ESC - exit");
 
         msgwin_prompt("What class of item? ");
@@ -127,7 +128,7 @@ void wizard_create_spec_object()
         mpr("Could not allocate item.");
         return;
     }
-    item_def& item(mitm[thing_created]);
+    item_def& item(env.item[thing_created]);
 
     // turn item into appropriate kind:
     if (class_wanted == OBJ_ORBS)
@@ -183,7 +184,7 @@ void wizard_create_spec_object()
                 =  max(1, min(27, prompt_for_int("How many heads? ", false)));
         }
 
-        if (!place_monster_corpse(dummy, false, true))
+        if (!place_monster_corpse(dummy, true))
         {
             mpr("Failed to create corpse.");
             return;
@@ -232,7 +233,7 @@ void wizard_create_spec_object()
         // orig_monnum is used in corpses for things like the Animate
         // Dead spell, so leave it alone.
         if (class_wanted != OBJ_CORPSES)
-            origin_acquired(mitm[thing_created], AQ_WIZMODE);
+            origin_acquired(env.item[thing_created], AQ_WIZMODE);
         canned_msg(MSG_SOMETHING_APPEARS);
 
         // Tell the stash tracker.
@@ -567,7 +568,7 @@ void wizard_create_all_artefacts(bool override_unique)
             if (islot == NON_ITEM)
                 break;
 
-            item_def &tmp_item = mitm[islot];
+            item_def &tmp_item = env.item[islot];
             make_item_unrandart(tmp_item, index);
             tmp_item.quantity = 1;
         }
@@ -585,7 +586,7 @@ void wizard_create_all_artefacts(bool override_unique)
                 continue;
             }
         }
-        item_def &item = mitm[islot];
+        item_def &item = env.item[islot];
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         if (!is_artefact(item))
@@ -612,7 +613,7 @@ void wizard_create_all_artefacts(bool override_unique)
     int islot = get_mitm_slot();
     if (islot != NON_ITEM)
     {
-        item_def& item = mitm[islot];
+        item_def& item = env.item[islot];
         item.clear();
         item.base_type = OBJ_MISCELLANY;
         item.sub_type  = MISC_HORN_OF_GERYON;
@@ -698,12 +699,6 @@ void wizard_make_object_randart()
         return;
     }
 
-    // Remove curse flag from item, unless worshipping Ashenzari.
-    if (have_passive(passive_t::want_curses))
-        do_curse_item(item, true);
-    else
-        do_uncurse_item(item);
-
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)
         equip_item(eq, invslot);
@@ -711,43 +706,12 @@ void wizard_make_object_randart()
     mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-// Returns whether an item of this type can be cursed.
-static bool _item_type_can_be_cursed(int type)
-{
-    return type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-           || type == OBJ_STAVES;
-}
-
-void wizard_uncurse_item()
-{
-    const int i = prompt_invent_item("(Un)curse which item?",
-                                     menu_type::invlist, OSEL_ANY);
-
-    if (!prompt_failed(i))
-    {
-        item_def& item(you.inv[i]);
-
-        if (item.cursed())
-            do_uncurse_item(item);
-        else
-        {
-            if (!_item_type_can_be_cursed(item.base_type))
-            {
-                mpr("That type of item cannot be cursed.");
-                return;
-            }
-            do_curse_item(item);
-        }
-        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-    }
-}
-
 void wizard_identify_pack()
 {
     mpr("You feel a rush of knowledge.");
     identify_inventory();
     you.wield_change  = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 }
 
 static void _forget_item(item_def &item)
@@ -774,7 +738,7 @@ void wizard_unidentify_pack()
             _forget_item(item);
 
     you.wield_change  = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 
     // Forget things that nearby monsters are carrying, as well.
     // (For use with the "give monster an item" wizard targeting
@@ -787,7 +751,7 @@ void wizard_unidentify_pack()
 void wizard_list_items()
 {
     mpr("Item stacks (by location and top item):");
-    for (const auto &item : mitm)
+    for (const auto &item : env.item)
     {
         if (item.defined() && !item.held_by_monster() && item.link != NON_ITEM)
         {
@@ -803,12 +767,12 @@ void wizard_list_items()
     const coord_def start(1,1), end(GXM-1, GYM-1);
     for (rectangle_iterator ri(start, end); ri; ++ri)
     {
-        int item = igrd(*ri);
+        int item = env.igrid(*ri);
         if (item != NON_ITEM)
         {
             mprf("%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,
-                 mitm[item].name(DESC_PLAIN, false, false, false).c_str(),
-                 mitm[item].flags & ISFLAG_MIMIC ? " mimic" : "");
+                 env.item[item].name(DESC_PLAIN, false, false, false).c_str(),
+                 env.item[item].flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 }
@@ -872,11 +836,11 @@ static void _debug_acquirement_stats(FILE *ostat)
         mpr("Too many items on level.");
         return;
     }
-    mitm[p].base_type = OBJ_UNASSIGNED;
+    env.item[p].base_type = OBJ_UNASSIGNED;
 
     clear_messages();
     mpr("[a] Weapons [b] Armours   [c] Jewellery [d] Books");
-    mpr("[e] Staves  [f] Evocables [g] Food");
+    mpr("[e] Staves  [f] Evocables");
     mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
 
     object_class_type type;
@@ -889,7 +853,6 @@ static void _debug_acquirement_stats(FILE *ostat)
     case 'd': type = OBJ_BOOKS;      break;
     case 'e': type = OBJ_STAVES;     break;
     case 'f': type = OBJ_MISCELLANY; break;
-    case 'g': type = OBJ_FOOD;       break;
     default:
         canned_msg(MSG_OK);
         return;
@@ -929,13 +892,13 @@ static void _debug_acquirement_stats(FILE *ostat)
         const int item_index = acquirement_create_item(type, AQ_WIZMODE, true,
                 you.pos());
 
-        if (item_index == NON_ITEM || !mitm[item_index].defined())
+        if (item_index == NON_ITEM || !env.item[item_index].defined())
         {
             mpr("Acquirement failed, stopping early.");
             break;
         }
 
-        item_def &item(mitm[item_index]);
+        item_def &item(env.item[item_index]);
 
         acq_calls++;
         total_quant += item.quantity;
@@ -1004,8 +967,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             type == OBJ_BOOKS      ? "books" :
             type == OBJ_STAVES     ? "staves" :
             type == OBJ_WANDS      ? "wands" :
-            type == OBJ_MISCELLANY ? "misc. items" :
-            type == OBJ_FOOD       ? "food"
+            type == OBJ_MISCELLANY ? "misc. items"
                                    : "buggy items");
 
     // Print player species/profession.
@@ -1016,7 +978,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     fprintf(ostat, "%s %s, Level %d %s %s%s\n\n",
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
-            species_name(you.species).c_str(),
+            species::name(you.species).c_str(),
             get_job_name(you.char_class), godname.c_str());
 
     // Print player equipment.
@@ -1072,9 +1034,8 @@ static void _debug_acquirement_stats(FILE *ostat)
             if (!you_can_memorise(spell))
                 continue;
 
-            // Only use spells available in books you might find lying about
-            // the dungeon.
-            if (spell_rarity(spell) == -1)
+            // Only use actual player spells.
+            if (!is_player_book_spell(spell))
                 continue;
 
             const bool seen = you.spell_library[spell];
@@ -1151,11 +1112,14 @@ static void _debug_acquirement_stats(FILE *ostat)
 #endif
             "penetration",
             "reaping",
+            "spectral",
             "INVALID",
             "acid",
 #if TAG_MAJOR_VERSION > 34
             "confuse",
 #endif
+            "weak",
+            "vuln",
             "debug randart",
         };
         COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_WEAPONS);
@@ -1191,15 +1155,13 @@ static void _debug_acquirement_stats(FILE *ostat)
             "intelligence",
             "ponderous",
             "flight",
-            "magic resistance",
+            "willpower",
             "protection",
             "stealth",
             "resistance",
             "positive energy",
             "archmagi",
-#if TAG_MAJOR_VERSION == 34
             "preservation",
-#endif
             "reflection",
             "spirit shield",
             "archery",
@@ -1207,7 +1169,11 @@ static void _debug_acquirement_stats(FILE *ostat)
             "jumping",
 #endif
             "repulsion",
+#if TAG_MAJOR_VERSION == 34
             "cloud immunity",
+#endif
+            "harm",
+            "rampaging",
         };
 
         const int non_art = acq_calls - num_arts;
@@ -1233,7 +1199,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             {
                 "none",
                 "conjuration",
-                "enchantment",
+                "hexes",
                 "fire magic",
                 "ice magic",
                 "transmutation",
@@ -1244,7 +1210,8 @@ static void _debug_acquirement_stats(FILE *ostat)
                 "earth magic",
                 "air magic",
             };
-            COMPILE_CHECK(ARRAYSZ(names) == SPSCHOOL_LAST_EXPONENT + 1);
+            // + 2 because we have the exponent bits plus "none"
+            COMPILE_CHECK(ARRAYSZ(names) == SPSCHOOL_LAST_EXPONENT + 2);
 
             for (int i = 0; i <= SPSCHOOL_LAST_EXPONENT; ++i)
             {
@@ -1461,6 +1428,7 @@ static void _debug_rap_stats(FILE *ostat)
                 / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);
             viewwindow();
+            update_screen();
         }
 
     }
@@ -1504,15 +1472,14 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_ELECTRICITY",
         "ARTP_POISON",
         "ARTP_NEGATIVE_ENERGY",
-        "ARTP_MAGIC_RESISTANCE",
+        "ARTP_WILLPOWER",
         "ARTP_SEE_INVISIBLE",
         "ARTP_INVISIBLE",
         "ARTP_FLY",
-#if TAG_MAJOR_VERSION > 34
-        "ARTP_FOG",
-#endif
         "ARTP_BLINK",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_BERSERK",
+#endif
         "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
         "ARTP_CAUSE_TELEPORTATION",
@@ -1526,7 +1493,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_ACCURACY",
 #endif
         "ARTP_SLAYING",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_CURSE",
+#endif
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
         "ARTP_BASE_DELAY",
@@ -1554,6 +1523,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FRAGILE",
         "ARTP_SHIELDING",
         "ARTP_HARM",
+        "ARTP_RAMPAGING",
+        "ARTP_ARCHMAGI",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
@@ -1647,7 +1618,7 @@ void wizard_draw_card()
 void wizard_identify_all_items()
 {
     wizard_identify_pack();
-    for (auto &item : mitm)
+    for (auto &item : env.item)
         if (item.defined())
             set_ident_flags(item, ISFLAG_IDENT_MASK);
     for (auto& entry : env.shop)
@@ -1658,7 +1629,7 @@ void wizard_identify_all_items()
         object_class_type i = (object_class_type)ii;
         if (!item_type_has_ids(i))
             continue;
-        for (int j = 0; j < get_max_subtype(i); j++)
+        for (const auto j : all_item_subtypes(i))
             set_ident_type(i, j, true);
     }
 }
@@ -1666,7 +1637,7 @@ void wizard_identify_all_items()
 void wizard_unidentify_all_items()
 {
     wizard_unidentify_pack();
-    for (auto &item : mitm)
+    for (auto &item : env.item)
         if (item.defined())
             _forget_item(item);
     for (auto& entry : env.shop)
@@ -1677,7 +1648,7 @@ void wizard_unidentify_all_items()
         object_class_type i = (object_class_type)ii;
         if (!item_type_has_ids(i))
             continue;
-        for (int j = 0; j < get_max_subtype(i); j++)
+        for (const auto j : all_item_subtypes(i))
             set_ident_type(i, j, false);
     }
 }

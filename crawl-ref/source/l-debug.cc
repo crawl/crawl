@@ -15,8 +15,10 @@
 #include "files.h"
 #include "god-wrath.h"
 #include "los.h"
+#include "maps.h"
 #include "message.h"
 #include "mon-act.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-poly.h"
 #include "ng-setup.h"
@@ -25,6 +27,8 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tileview.h"
+#include "unique-creature-list-type.h"
+#include "unwind.h"
 #include "view.h"
 #include "wiz-dgn.h"
 
@@ -97,7 +101,7 @@ LUAFN(debug_flush_map_memory)
 
 LUAFN(debug_generate_level)
 {
-    no_messages mx;
+    msg::suppress mx;
     env.map_knowledge.init(map_cell());
     los_changed();
     tile_init_default_flavour();
@@ -119,11 +123,19 @@ LUAFN(debug_reveal_mimics)
 
 LUAWRAP(debug_los_changed, los_changed())
 
+LUAFN(debug_builder_ignore_depth)
+{
+    const bool b = lua_toboolean(ls, 1);
+    dgn_ignore_depth(b);
+    return 0;
+}
+
 LUAFN(debug_dump_map)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
+    const bool builder_output = lua_toboolean(ls, pos + 1);
     if (lua_isstring(ls, pos))
-        dump_map(lua_tostring(ls, pos), true);
+        dump_map(lua_tostring(ls, pos), true, false, builder_output);
     return 0;
 }
 
@@ -181,19 +193,19 @@ LUAFN(debug_bouncy_beam)
     return 0;
 }
 
-// If menv[] is full, dismiss all monsters not near the player.
+// If env.mons[] is full, dismiss all monsters not near the player.
 LUAFN(debug_cull_monsters)
 {
     UNUSED(ls);
 
-    // At least one empty space in menv
+    // At least one empty space in env.mons
     for (const auto &mons : menv_real)
         if (mons.type == MONS_NO_MONSTER)
             return 0;
 
-    mprf(MSGCH_DIAGNOSTICS, "menv[] is full, dismissing non-near monsters");
+    mprf(MSGCH_DIAGNOSTICS, "env.mons[] is full, dismissing non-near monsters");
 
-    // menv[] is full
+    // env.mons[] is full
     for (monster_iterator mi; mi; ++mi)
     {
         if (you.see_cell(mi->pos()))
@@ -272,7 +284,7 @@ LUAFN(debug_handle_monster_move)
     return 0;
 }
 
-static FixedBitVector<NUM_MONSTERS> saved_uniques;
+static unique_creature_list saved_uniques;
 
 LUAFN(debug_save_uniques)
 {
@@ -307,7 +319,7 @@ static bool _check_uniques()
 {
     bool ret = true;
 
-    FixedBitVector<NUM_MONSTERS> uniques_on_level;
+    unique_creature_list uniques_on_level;
     for (monster_iterator mi; mi; ++mi)
         if (mons_is_unique(mi->type))
             uniques_on_level.set(mi->type);
@@ -343,6 +355,7 @@ LUAFN(debug_check_uniques)
 LUAFN(debug_viewwindow)
 {
     viewwindow(lua_toboolean(ls, 1));
+    update_screen();
     return 0;
 }
 
@@ -354,7 +367,6 @@ static const char* disablements[] =
     "mon_act",
     "mon_regen",
     "player_regen",
-    "hunger",
     "death",
     "delay",
     "confirmations",
@@ -433,6 +445,100 @@ LUAFN(debug_get_rng_state)
     return 1;
 }
 
+LUAFN(debug_check_moncasts)
+{
+    COORDS(c1, 1, 2);
+    COORDS(c2, 3, 4);
+
+    monster *m1 = monster_at(c1);
+    monster *m2 = monster_at(c2);
+    ASSERT(m1);
+
+    // it would be nice if this followed from the casting code or at least
+    // could be validated in some way?
+    const unordered_set<int> no_monster_impl =
+    {
+        SPELL_APPORTATION,
+        SPELL_CONJURE_FLAME,
+        SPELL_INNER_FLAME,
+        SPELL_FULMINANT_PRISM,
+        SPELL_DAZZLING_FLASH,
+        SPELL_ISKENDERUNS_MYSTIC_BLAST,
+        SPELL_ANIMATE_SKELETON,
+        SPELL_BORGNJORS_REVIVIFICATION,
+        SPELL_SUBLIMATION_OF_BLOOD,
+        SPELL_SPIDER_FORM,
+        SPELL_BLADE_HANDS,
+        SPELL_STATUE_FORM,
+        SPELL_ICE_FORM,
+        SPELL_DRAGON_FORM,
+        SPELL_NECROMUTATION,
+        SPELL_DEATH_CHANNEL,
+        SPELL_CONFUSING_TOUCH,
+        SPELL_CALL_CANINE_FAMILIAR,
+        SPELL_DISPERSAL,
+        SPELL_INTOXICATE,
+        SPELL_EXCRUCIATING_WOUNDS,
+        SPELL_BEASTLY_APPENDAGE,
+        SPELL_DISJUNCTION,
+        SPELL_WEREBLOOD,
+        SPELL_DISCORD,
+        SPELL_CHAIN_OF_CHAOS,
+        SPELL_SUMMON_FOREST,
+        SPELL_SUMMON_LIGHTNING_SPIRE,
+        SPELL_SUMMON_GUARDIAN_GOLEM,
+        SPELL_DRAGON_CALL,
+        SPELL_IRRADIATE,
+        SPELL_IGNITION,
+        SPELL_SONIC_WAVE,
+        SPELL_STARBURST,
+        SPELL_FOXFIRE,
+        SPELL_HAILSTORM,
+        SPELL_NOXIOUS_BOG,
+        SPELL_FROZEN_RAMPARTS,
+        SPELL_MAXWELLS_COUPLING,
+        SPELL_DISPEL_UNDEAD,
+        SPELL_TUKIMAS_DANCE,
+        SPELL_AGONY,
+        SPELL_PASSWALL,
+        SPELL_GOLUBRIAS_PASSAGE,
+        SPELL_THUNDERBOLT,
+        SPELL_SEARING_RAY,
+        SPELL_DEBUGGING_RAY,
+        SPELL_VIOLENT_UNRAVELLING,
+        SPELL_INFESTATION,
+        SPELL_BECKONING,
+        SPELL_RANDOM_EFFECTS,
+        SPELL_POISONOUS_VAPOURS,
+        SPELL_BORGNJORS_VILE_CLUTCH,
+        SPELL_ANIMATE_ARMOUR,
+        SPELL_MANIFOLD_ASSAULT,
+        SPELL_STORM_FORM,
+        SPELL_SUMMON_CACTUS,
+        SPELL_SCORCH,
+        SPELL_FLAME_WAVE,
+    };
+
+    for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)
+    {
+        spell_type spell = static_cast<spell_type>(s);
+        if (no_monster_impl.count(s) || spell_removed(spell))
+            continue;
+        // we need to reset the foe each time: some spells (e.g. lesser
+        // and greater healing) could change it.
+        if (m2)
+            m1->foe = m2->mindex();
+        else
+            m1->foe = MHITNOT;
+        const mon_spell_slot slot(spell, 255, MON_SPELL_NO_FLAGS);
+        unwind_var<monster_spells> override(m1->spells, { slot });
+        dprf("Forcing %s to cast %s", m1->name(DESC_THE, true).c_str(),
+                                                spell_title(spell));
+        handle_mon_spell(m1);
+    }
+    return 1;
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -441,6 +547,7 @@ const struct luaL_reg debug_dlib[] =
 { "down_stairs", debug_down_stairs },
 { "up_stairs", debug_up_stairs },
 { "flush_map_memory", debug_flush_map_memory },
+{ "builder_ignore_depth", debug_builder_ignore_depth },
 { "generate_level", debug_generate_level },
 { "reveal_mimics", debug_reveal_mimics },
 { "los_changed", debug_los_changed },
@@ -463,5 +570,6 @@ const struct luaL_reg debug_dlib[] =
 { "cpp_assert", debug_cpp_assert },
 { "reset_rng", debug_reset_rng },
 { "get_rng_state", debug_get_rng_state },
+{ "check_moncasts", debug_check_moncasts },
 { nullptr, nullptr }
 };

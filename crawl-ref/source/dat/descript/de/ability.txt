@@ -414,20 +414,6 @@ Cure Bad Mutation ability
 
 Entferne eine zufällig gewählte schlechte Mutation.
 %%%%
-Scrying ability
-
-Erlange Astral-Sicht um durch Wände zu sehen. Das ist allerdings nicht genug um
-mit Sprüche und Fähigkeiten hindurch zu zielen, auch die welche durch Glas
-wirken.
-%%%%
-Transfer Knowledge ability
-
-Opfere einen Teil deiner Fähigkeiten um eine Andere zu verbessern.
-%%%%
-End Transfer Knowledge ability
-
-Brich einen laufenden Fähigkeitenwechsel ab.
-%%%%
 Renounce Religion ability
 
 Gebe deinen Glauben auf. Damit verlässt dein Charakter seinen Gott (und

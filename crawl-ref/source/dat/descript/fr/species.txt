@@ -71,11 +71,6 @@ Tengu
 Homme-oiseaux aimant combattre, autant avec des armes qu'avec des sorts. Ils
 sont assez fragiles mais finissent par apprendre à voler.
 %%%%
-Kobold
-
-Petits, malicieux et un peu fragiles, mais aux multiples talents. Ils peuvent
-manger n'importe quelle viande et ne s'en privent pas.
-%%%%
 Lava Orc
 
 Ces maîtres de la magie du feu et de la terre viennent de profondeurs bien en

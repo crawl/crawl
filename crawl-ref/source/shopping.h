@@ -6,6 +6,13 @@
 #pragma once
 
 #include <unordered_set>
+#include <vector>
+
+#include "tag-version.h"
+
+using std::vector;
+
+struct shop_struct;
 
 int artefact_value(const item_def &item);
 
@@ -43,6 +50,29 @@ void list_shop_types();
 
 struct level_pos;
 class  Menu;
+
+struct shop_struct
+{
+    coord_def           pos;
+    uint8_t             greed;
+    shop_type           type;
+    uint8_t             level;
+    string              shop_name;
+    string              shop_type_name;
+    string              shop_suffix_name;
+
+    FixedVector<uint8_t, 3> keeper_name;
+
+    vector<item_def> stock;
+#if TAG_MAJOR_VERSION == 34
+    uint8_t num; // used in a save compat hack
+#endif
+
+    shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
+                     shop_name(""), shop_type_name(""), shop_suffix_name("") { }
+
+    bool defined() const { return type != SHOP_UNASSIGNED; }
+};
 
 typedef pair<string, int> shoplist_entry;
 class ShoppingList

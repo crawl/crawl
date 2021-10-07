@@ -4,8 +4,6 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
           dungeon_renderer) {
     "use strict";
 
-    var overlaid_locs = [];
-
     function invalidate(minimap_too)
     {
         var b = map_knowledge.bounds();
@@ -106,28 +104,13 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         display();
     }
 
-    function handle_overlay_message(data)
-    {
-        dungeon_renderer.draw_overlay(data.idx, data.x, data.y);
-        overlaid_locs.push(data);
-    }
-
-    function clear_overlays()
-    {
-        $("#dungeon").trigger("update_cells", [overlaid_locs]);
-        overlaid_locs = [];
-    }
-
     function handle_vgrdc(data)
     {
     }
 
     comm.register_handlers({
         "map": handle_map_message,
-        "overlay": handle_overlay_message,
-        "clear_overlays": clear_overlays,
     });
-
 
     return {
         invalidate: invalidate,

@@ -22,6 +22,8 @@
 #
 ################################################################################
 
+: crawl_require('dlua/vault.lua')
+
 NAME:     vaults_room_door_ring
 TAGS:     vaults_empty allow_dup
 SHUFFLE:  abcdefghijklm
@@ -931,7 +933,7 @@ ENDMAP
 NAME:  vaults_dpeg_emergency_exit
 TAGS:  vaults_empty no_tele_into
 DEPTH: Vaults:1-3
-KFEAT: ^ = known shaft trap
+KFEAT: ^ = shaft trap
 MAP
 .....
 .mmm.
@@ -1607,4 +1609,27 @@ x..           ..x
 ..A..+..B..+..A..
 .....x.....x.....
  ...xxx...xxx...
+ENDMAP
+
+# Not Minivault 9 (by Mu.)
+NAME:   vaults_not_door_vault_mu
+TAGS:   vaults_empty
+WEIGHT: 1
+KMONS:  12 = butterfly
+: door_vault_setup(_G)
+MAP
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+ .a++1221++a..
+..a++1221++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
 ENDMAP

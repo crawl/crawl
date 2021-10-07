@@ -127,7 +127,7 @@ install: build
 	dh_link -pcrawl-tiles usr/share/crawl/dat/tiles/stone_soup_icon-32x32.png \
 		usr/share/icons/hicolor/32x32/apps/crawl.png
 	mkdir -p debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps
-	cp -p source/util/dcss.svg \
+	cp -p source/dat/tiles/stone_soup_icon.svg \
 		debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps/crawl.svg
 
 # Build architecture-independent files here.

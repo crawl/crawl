@@ -6,7 +6,10 @@
 #pragma once
 
 #include "enum.h"
+#include "externs.h"
+#include "spell-type.h"
 
+class actor;
 class monster;
 struct bolt;
 struct dice_def;
@@ -17,16 +20,14 @@ bool is_valid_mon_spell(spell_type spell);
 void aura_of_brilliance(monster* agent);
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
-bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 
-dice_def waterstrike_damage(const monster &caster);
+dice_def waterstrike_damage(int spell_hd);
 dice_def resonance_strike_base_damage(const monster &caster);
-
-void flay(const monster &caster, actor &defender, int damage);
 
 bool handle_mon_spell(monster* mons);
 
 static const int ENCH_POW_FACTOR = 3;
+bool mons_spell_is_spell(spell_type spell);
 int mons_power_for_hd(spell_type spell, int hd);
 int mons_spellpower(const monster &mons, spell_type spell);
 int mons_spell_range_for_hd(spell_type spell, int hd);
@@ -44,6 +45,9 @@ void mons_cast_haunt(monster* mons);
 bool mons_word_of_recall(monster* mons, int recall_target);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
+
+int living_spell_count(bool random);
+spell_type living_spell_type_for(monster_type mtyp);
 
 monster* cast_phantom_mirror(monster* mons, monster* targ,
                              int hp_perc = 35,

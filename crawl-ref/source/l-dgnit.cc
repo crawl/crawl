@@ -31,7 +31,7 @@ static item_list _lua_get_ilist(lua_State *ls, int ndx)
     {
         item_list **ilist =
             clua_get_userdata<item_list*>(ls, ITEMLIST_METATABLE, ndx);
-        if (ilist)
+        if (ilist && *ilist)
             return **ilist;
 
         luaL_argerror(ls, ndx, "Expected item list object or string");
@@ -49,7 +49,7 @@ static int dgn_item_from_index(lua_State *ls)
 {
     const int index = luaL_safe_checkint(ls, 1);
 
-    item_def *item = &mitm[index];
+    item_def *item = &env.item[index];
 
     if (item->defined())
         clua_push_item(ls, item);

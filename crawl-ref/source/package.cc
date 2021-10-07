@@ -29,7 +29,9 @@ Notes:
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
+#endif
 
 #include "end.h"
 #include "endianness.h"

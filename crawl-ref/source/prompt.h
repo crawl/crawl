@@ -10,7 +10,8 @@ typedef map<int, int> explicit_keymap;
 bool yesno(const char * str, bool allow_lowercase, int default_answer,
            bool clear_after = true, bool interrupt_delays = true,
            bool noprompt = false,
-           const explicit_keymap *map = nullptr);
+           const explicit_keymap *map = nullptr,
+           bool allow_popup = true);
 
 int yesnoquit(const char* str, bool safe = true, int default_answer = 0,
               bool allow_all = false, bool clear_after = true,

@@ -12,3 +12,4 @@ bool mons_speaks(monster* mons);
 bool mons_speaks_msg(monster* mons, const string &msg,
                      const msg_channel_type def_chan = MSGCH_TALK,
                      const bool silence = false);
+bool invalid_msg(const monster &mon, string msg);

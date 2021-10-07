@@ -1,13 +1,18 @@
 #pragma once
 
 #include "tilecell.h"
+#include "coord-def.h"
 
 struct screen_cell_t
 {
+    // Console output part.
+#ifndef USE_TILE_LOCAL
     char32_t glyph;
     unsigned short colour; // TODO: check if this is real colour (8 bit)
-    unsigned short flash_colour;
+#endif
+    // Tiles output part.
 #ifdef USE_TILE
+    unsigned short flash_colour;
     packed_cell tile;
 #endif
 };
@@ -17,15 +22,15 @@ class crawl_view_buffer
 public:
     crawl_view_buffer();
     crawl_view_buffer(const coord_def &sz);
+    crawl_view_buffer(const crawl_view_buffer &rhs);
     ~crawl_view_buffer();
 
     coord_def size() const { return m_size; }
-    void resize(const coord_def &sz);
     bool empty() const;
 
     operator screen_cell_t * () { return m_buffer; }
     operator const screen_cell_t * () const { return m_buffer; }
-    const crawl_view_buffer & operator = (const crawl_view_buffer &rhs);
+    const crawl_view_buffer & operator =(crawl_view_buffer rhs);
 
     template<class Indexer>
     screen_cell_t& operator () (const Indexer &i)
@@ -38,6 +43,7 @@ public:
     void clear();
     void draw();
 private:
+    void resize(const coord_def &sz);
     coord_def m_size;
     screen_cell_t *m_buffer;
 };
@@ -55,8 +61,6 @@ public:
     coord_def msgsz;               // Size of the message pane.
     coord_def mlistp;              // Left-top pos of the monster list.
     coord_def mlistsz;             // Size of the monster list.
-
-    crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
     coord_def vgrdc;               // What grid pos is at the centre of the view
                                    // usually you.pos().

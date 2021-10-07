@@ -24,9 +24,12 @@
 #include "dgn-height.h"
 #include "dungeon.h"
 #include "end.h"
+#include "mpr.h"
+#include "tile-env.h"
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
+#include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "invent.h"
 #include "libutil.h"
@@ -42,9 +45,10 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
-#include "tiledef-dngn.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-player.h"
 
 #ifdef DEBUG_TAG_PROFILING
 static map<string,int> _tag_profile;
@@ -189,15 +193,15 @@ int store_tilename_get_index(const string& tilename)
 
     // Increase index by 1 to distinguish between first entry and none.
     unsigned int i;
-    for (i = 0; i < env.tile_names.size(); ++i)
-        if (tilename == env.tile_names[i])
+    for (i = 0; i < tile_env.names.size(); ++i)
+        if (tilename == tile_env.names[i])
             return i+1;
 
 #ifdef DEBUG_TILE_NAMES
     mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
 #endif
     // If not found, add tile name to vector.
-    env.tile_names.push_back(tilename);
+    tile_env.names.push_back(tilename);
     return i+1;
 }
 
@@ -631,7 +635,7 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
             string name = (*overlay)(x, y).floortile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).floor_idx =
+                tile_env.flv(gc).floor_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t floor;
@@ -639,14 +643,14 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 if (colour)
                     floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
-                env.tile_flv(gc).floor = floor + offset;
+                tile_env.flv(gc).floor = floor + offset;
                 has_floor = true;
             }
 
             name = (*overlay)(x, y).rocktile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).wall_idx =
+                tile_env.flv(gc).wall_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t rock;
@@ -654,14 +658,14 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 if (colour)
                     rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
-                env.tile_flv(gc).wall = rock + offset;
+                tile_env.flv(gc).wall = rock + offset;
                 has_rock = true;
             }
 
             name = (*overlay)(x, y).tile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).feat_idx =
+                tile_env.flv(gc).feat_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t feat;
@@ -676,15 +680,15 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 else
                     offset = random2(tile_dngn_count(feat));
 
-                if (!has_floor && grd(gc) == DNGN_FLOOR)
-                    env.tile_flv(gc).floor = feat + offset;
-                else if (!has_rock && grd(gc) == DNGN_ROCK_WALL)
-                    env.tile_flv(gc).wall = feat + offset;
+                if (!has_floor && env.grid(gc) == DNGN_FLOOR)
+                    tile_env.flv(gc).floor = feat + offset;
+                else if (!has_rock && env.grid(gc) == DNGN_ROCK_WALL)
+                    tile_env.flv(gc).wall = feat + offset;
                 else
                 {
                     if ((*overlay)(x, y).no_random)
                         offset = 0;
-                    env.tile_flv(gc).feat = feat + offset;
+                    tile_env.flv(gc).feat = feat + offset;
                 }
             }
         }
@@ -2264,6 +2268,31 @@ void map_def::reinit()
     update_cached_tags();
 }
 
+void map_def::reload_epilogue()
+{
+    if (!epilogue.empty())
+        return;
+    // reload the epilogue from the current .des cache; this is because it
+    // isn't serialized but with pregen orderings could need to be run after
+    // vaults have been generated, saved, and reloaded. This can be a tricky
+    // situation in save-compat terms, but is exactly the same as how lua code
+    // triggered by markers is currently handled.
+    const map_def *cache_version = find_map_by_name(name);
+    if (cache_version)
+    {
+        map_def tmp = *cache_version;
+        // TODO: I couldn't reliably get the epilogue to be in vdefs, is there
+        // a way to cache it and not do a full load here? The original idea
+        // was to not clear it out in strip(), but this fails under some
+        // circumstances.
+        tmp.load();
+        epilogue = tmp.epilogue;
+    }
+    // for save compat reasons, fail silently if the map is no longer around.
+    // Probably shouldn't do anything really crucial in the epilogue that you
+    // aren't prepared to deal with save compat for somehow...
+}
+
 bool map_def::map_already_used() const
 {
     return get_uniq_map_names().count(name)
@@ -2340,8 +2369,7 @@ string map_def::desc_or_name() const
 void map_def::write_full(writer& outf) const
 {
     cache_offset = outf.tell();
-    marshallUByte(outf, TAG_MAJOR_VERSION);
-    marshallUByte(outf, TAG_MINOR_VERSION);
+    write_save_version(outf, save_version::current());
     marshallString4(outf, name);
     prelude.write(outf);
     mapchunk.write(outf);
@@ -2361,8 +2389,8 @@ void map_def::read_full(reader& inf)
     // reloading the index), but it's easier to save the game at this
     // point and let the player reload.
 
-    const uint8_t major = unmarshallUByte(inf);
-    const uint8_t minor = unmarshallUByte(inf);
+    const auto version = get_save_version(inf);
+    const auto major = version.major, minor = version.minor;
 
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
     {
@@ -3501,7 +3529,12 @@ string map_def::apply_subvault(string_spec &spec)
         vault.svmask = &flags;
 
         if (!resolve_subvault(vault))
-            continue;
+        {
+            if (crawl_state.last_builder_error_fatal)
+                break;
+            else
+                continue;
+        }
 
         ASSERT(vault.map.width() <= vwidth);
         ASSERT(vault.map.height() <= vheight);
@@ -3523,6 +3556,12 @@ string map_def::apply_subvault(string_spec &spec)
     // Failure, drop subvault registrations.
     _reset_subvault_stack(reg_stack);
 
+    if (crawl_state.last_builder_error_fatal)
+    {
+        // I think the error should get printed elsewhere?
+        return make_stringf("Fatal lua error while resolving subvault '%s'",
+            tag.c_str());
+    }
     return make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                         tag.c_str(), tl.x, tl.y, br.x, br.y);
 }
@@ -3744,10 +3783,10 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")
                         cur_spells[i].flags |= MON_SPELL_PRIEST;
+                    if (slot_vals[j] == "vocal")
+                        cur_spells[i].flags |= MON_SPELL_VOCAL;
                     if (slot_vals[j] == "breath")
                         cur_spells[i].flags |= MON_SPELL_BREATH;
-                    if (slot_vals[j] == "no silent")
-                        cur_spells[i].flags |= MON_SPELL_NO_SILENT;
                     if (slot_vals[j] == "instant")
                         cur_spells[i].flags |= MON_SPELL_INSTANT;
                     if (slot_vals[j] == "noisy")
@@ -3894,8 +3933,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         if (strip_tag(mon_str, "seen"))
             mspec.extra_monster_flags |= MF_SEEN;
 
-        if (strip_tag(mon_str, "always_corpse"))
-            mspec.props["always_corpse"] = true;
+        if (strip_tag(mon_str, ALWAYS_CORPSE_KEY))
+            mspec.props[ALWAYS_CORPSE_KEY] = true;
 
         if (strip_tag(mon_str, NEVER_CORPSE_KEY))
             mspec.props[NEVER_CORPSE_KEY] = true;
@@ -4035,15 +4074,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
             // Store name along with the tile.
-            mspec.props["monster_tile_name"].get_string() = tile;
-            mspec.props["monster_tile"] = short(index);
+            mspec.props[MONSTER_TILE_NAME_KEY].get_string() = tile;
+            mspec.props[MONSTER_TILE_KEY] = short(index);
         }
 
         string dbname = strip_tag_prefix(mon_str, "dbname:");
         if (!dbname.empty())
         {
             dbname = replace_all_of(dbname, "_", " ");
-            mspec.props["dbname"].get_string() = dbname;
+            mspec.props[DBNAME_KEY].get_string() = dbname;
         }
 
         string name = strip_tag_prefix(mon_str, "name:");
@@ -4198,15 +4237,36 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
-                     && (!mons_class_is_animated_weapon(type)
+                     && (!mons_class_is_animated_object(type)
                          || mspec.items.size() > 1)
                      && (type != MONS_ZOMBIE && type != MONS_SKELETON
                          || invalid_monster_type(mspec.monbase)
                          || mons_class_itemuse(mspec.monbase)
                             < MONUSE_STARTING_EQUIPMENT))
             {
+                // TODO: skip this error if the monspec is `nothing`
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
+            }
+            else if (mons_class_is_animated_object(type))
+            {
+                auto item = mspec.items.get_item(0);
+                const auto *unrand = item.ego < SP_FORBID_EGO
+                    ? get_unrand_entry(-item.ego) : nullptr;
+                const auto base = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->base_type : item.base_type;
+                const auto sub = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->sub_type : item.sub_type;
+
+                const auto def_slot = mons_class_is_animated_weapon(type)
+                    ? EQ_WEAPON
+                    : EQ_BODY_ARMOUR;
+
+                if (get_item_slot(base, sub) != def_slot)
+                {
+                    error = make_stringf("Monster '%s' needs a defining item.",
+                                         mon_str.c_str());
+                }
             }
         }
 
@@ -4498,73 +4558,6 @@ mons_spec mons_list::drac_monspec(string name) const
     return spec;
 }
 
-// As with draconians, so with demonspawn.
-mons_spec mons_list::demonspawn_monspec(string name) const
-{
-    mons_spec spec;
-
-    spec.type = get_monster_by_name(name);
-
-    // Check if it's a simple demonspawn name, we're done.
-    if (spec.type != MONS_PROGRAM_BUG)
-        return spec;
-
-    spec.type = RANDOM_DEMONSPAWN;
-
-    // Request for any demonspawn?
-    if (starts_with(name, "any "))
-        name = name.substr(4); // Strip "any "
-
-    if (starts_with(name, "base "))
-    {
-        // Base demonspawn need no further work.
-        return RANDOM_BASE_DEMONSPAWN;
-    }
-    else if (starts_with(name, "nonbase "))
-    {
-        spec.type = RANDOM_NONBASE_DEMONSPAWN;
-        name = name.substr(8);
-    }
-
-    trim_string(name);
-
-    // Match "any demonspawn"
-    if (name == "demonspawn")
-        return spec;
-
-    // Check for recognition again to match any (nonbase) <base> demonspawn.
-    const monster_type base = get_monster_by_name(name);
-    if (base != MONS_PROGRAM_BUG)
-    {
-        spec.monbase = base;
-        return spec;
-    }
-
-    // Only legal possibility left is <base> boss demonspawn.
-    string::size_type wordend = name.find(' ');
-    if (wordend == string::npos)
-        return MONS_PROGRAM_BUG;
-
-    string sbase = name.substr(0, wordend);
-    if ((spec.monbase = demonspawn_base_by_name(sbase)) == MONS_PROGRAM_BUG)
-        return MONS_PROGRAM_BUG;
-
-    name = trimmed_string(name.substr(wordend + 1));
-    spec.type = get_monster_by_name(name);
-
-    // We should have a non-base demonspawn here.
-    if (spec.type == MONS_PROGRAM_BUG
-        || mons_genus(static_cast<monster_type>(spec.type)) != MONS_DEMONSPAWN
-        || spec.type == MONS_DEMONSPAWN
-        || (spec.type >= MONS_FIRST_BASE_DEMONSPAWN
-            && spec.type <= MONS_LAST_BASE_DEMONSPAWN))
-    {
-        return MONS_PROGRAM_BUG;
-    }
-
-    return spec;
-}
-
 mons_spec mons_list::soh_monspec(string name) const
 {
     // "serpent of hell " is 16 characters
@@ -4718,16 +4711,6 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name.find("draconian") != string::npos)
         return drac_monspec(name);
 
-    // FIXME: cleaner way to do this?
-    if (name.find("demonspawn") != string::npos
-        || name.find("black sun") != string::npos
-        || name.find("blood saint") != string::npos
-        || name.find("corrupter") != string::npos
-        || name.find("warmonger") != string::npos)
-    {
-        return demonspawn_monspec(name);
-    }
-
     // The space is important - it indicates a flavour is being specified.
     if (name.find("serpent of hell ") != string::npos)
         return soh_monspec(name);
@@ -4786,9 +4769,7 @@ void item_spec::release_corpse_monster_spec()
 
 bool item_spec::corpselike() const
 {
-    return base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
-                                        || sub_type == CORPSE_SKELETON)
-           || base_type == OBJ_FOOD && sub_type == FOOD_CHUNK;
+    return base_type == OBJ_CORPSES;
 }
 
 const mons_spec &item_spec::corpse_monster_spec() const
@@ -4932,7 +4913,9 @@ int str_to_ego(object_class_type item_type, string ego_str)
 {
     const char* armour_egos[] =
     {
+#if TAG_MAJOR_VERSION == 34
         "running",
+#endif
         "fire_resistance",
         "cold_resistance",
         "poison_resistance",
@@ -4943,15 +4926,13 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "intelligence",
         "ponderousness",
         "flying",
-        "magic_resistance",
+        "willpower",
         "protection",
         "stealth",
         "resistance",
         "positive_energy",
         "archmagi",
-#if TAG_MAJOR_VERSION == 34
         "preservation",
-#endif
         "reflection",
         "spirit_shield",
         "archery",
@@ -4959,7 +4940,12 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "jumping",
 #endif
         "repulsion",
+#if TAG_MAJOR_VERSION == 34
         "cloud_immunity",
+#endif
+        "harm",
+        "shadows",
+        "rampaging",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
@@ -4998,6 +4984,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
 #endif
         "penetration",
         "reaping",
+        "spectral",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);
@@ -5016,8 +5003,8 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "penetration",
 #endif
         "dispersal",
-#if TAG_MAJOR_VERSION == 34
         "exploding",
+#if TAG_MAJOR_VERSION == 34
         "steel",
 #endif
         "silver",
@@ -5102,7 +5089,7 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
                                         const string &name,
                                         bool skeleton)
 {
-    if (*mons == RANDOM_NONBASE_DRACONIAN || *mons == RANDOM_NONBASE_DEMONSPAWN)
+    if (*mons == RANDOM_NONBASE_DRACONIAN)
     {
         error = "Can't use non-base monster for corpse/chunk items";
         return false;
@@ -5140,12 +5127,10 @@ bool item_list::parse_corpse_spec(item_spec &result, string s)
 
     const bool corpse = strip_suffix(s, "corpse");
     const bool skeleton = !corpse && strip_suffix(s, "skeleton");
-    const bool chunk = !corpse && !skeleton && strip_suffix(s, "chunk");
 
-    result.base_type = chunk ? OBJ_FOOD : OBJ_CORPSES;
-    result.sub_type  = (chunk ? static_cast<int>(FOOD_CHUNK) :
-                        static_cast<int>(corpse ? CORPSE_BODY :
-                                         CORPSE_SKELETON));
+    result.base_type = OBJ_CORPSES;
+    result.sub_type  = static_cast<int>(corpse ? CORPSE_BODY :
+                                         CORPSE_SKELETON);
 
     // The caller wants a specific monster, no doubt with the best of
     // motives. Let's indulge them:
@@ -5214,13 +5199,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         }
     }
 
-    // Damaged + cursed, but allow other specs to override the former.
-    if (strip_tag(s, "cursed"))
-    {
-        result.level = ISPEC_BAD;
-        result.props["cursed"] = bool(true);
-    }
-
     const string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
@@ -5243,16 +5221,14 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     string id_str = strip_tag_prefix(s, "ident:");
     if (id_str == "all")
-        result.props["ident"].get_int() = ISFLAG_IDENT_MASK;
+        result.props[IDENT_KEY].get_int() = ISFLAG_IDENT_MASK;
     else if (!id_str.empty())
     {
         vector<string> ids = split_string("|", id_str);
         int id = 0;
         for (const auto &is : ids)
         {
-            if (is == "curse")
-                id |= ISFLAG_KNOW_CURSE;
-            else if (is == "type")
+            if (is == "type")
                 id |= ISFLAG_KNOW_TYPE;
             else if (is == "pluses")
                 id |= ISFLAG_KNOW_PLUSES;
@@ -5264,7 +5240,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
                 return false;
             }
         }
-        result.props["ident"].get_int() = id;
+        result.props[IDENT_KEY].get_int() = id;
     }
 
     if (strip_tag(s, "good_item"))
@@ -5294,32 +5270,27 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
-    if (strip_tag(s, "not_cursed"))
-        result.props["uncursed"] = bool(true);
     if (strip_tag(s, "useful"))
-        result.props["useful"] = bool(true);
+        result.props[USEFUL_KEY] = bool(true);
     if (strip_tag(s, "unobtainable"))
-        result.props["unobtainable"] = true;
+        result.props[UNOBTAINABLE_KEY] = true;
 
     const int mimic = strip_number_tag(s, "mimic:");
     if (mimic != TAG_UNFOUND)
-        result.props["mimic"] = mimic;
+        result.props[MIMIC_KEY] = mimic;
     if (strip_tag(s, "mimic"))
-        result.props["mimic"] = 1;
+        result.props[MIMIC_KEY] = 1;
 
     if (strip_tag(s, "no_pickup"))
-        result.props["no_pickup"] = true;
+        result.props[NO_PICKUP_KEY] = true;
 
     const short charges = strip_number_tag(s, "charges:");
     if (charges >= 0)
-        result.props["charges"].get_int() = charges;
+        result.props[CHARGES_KEY].get_int() = charges;
 
     const int plus = strip_number_tag(s, "plus:");
     if (plus != TAG_UNFOUND)
-        result.props["plus"].get_int() = plus;
-    const int plus2 = strip_number_tag(s, "plus2:");
-    if (plus2 != TAG_UNFOUND)
-        result.props["plus2"].get_int() = plus2;
+        result.props[PLUS_KEY].get_int() = plus;
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
@@ -5342,7 +5313,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     // XXX: This is nice-ish now, but could probably do with being improved.
     if (strip_tag(s, "randbook"))
     {
-        result.props["build_themed_book"] = true;
+        result.props[THEME_BOOK_KEY] = true;
         // build_themed_book requires the following properties:
         // disc: <first discipline>, disc2: <optional second discipline>
         // numspells: <total number of spells>, slevels: <maximum levels>
@@ -5453,7 +5424,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             error = make_stringf("bad tile name: \"%s\".", tile.c_str());
             return false;
         }
-        result.props["item_tile_name"].get_string() = tile;
+        result.props[ITEM_TILE_NAME_KEY].get_string() = tile;
     }
 
     tile = strip_tag_prefix(s, "wtile:");
@@ -5465,7 +5436,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             error = make_stringf("bad tile name: \"%s\".", tile.c_str());
             return false;
         }
-        result.props["worn_tile_name"].get_string() = tile;
+        result.props[WORN_TILE_NAME_KEY].get_string() = tile;
     }
 
     // Clean up after any tag brain damage.
@@ -5510,12 +5481,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     error.clear();
 
-    // Look for corpses, chunks, skeletons:
-    if (ends_with(s, "corpse") || ends_with(s, "chunk")
-        || ends_with(s, "skeleton"))
-    {
+    // Look for corpses, skeletons:
+    if (ends_with(s, "corpse") || ends_with(s, "skeleton"))
         return parse_corpse_spec(result, s);
-    }
 
     const int unrand_id = get_unrandart_num(s.c_str());
     if (unrand_id)
@@ -5946,8 +5914,6 @@ void keyed_mapspec::parse_features(const string &s)
 feature_spec keyed_mapspec::parse_trap(string s, int weight)
 {
     strip_tag(s, "trap");
-    // All traps are known, strip this tag for compatibility
-    strip_tag(s, "known");
 
     trim_string(s);
     lowercase(s);
@@ -6039,7 +6005,7 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
         weight = 10;
 
     int mimic = strip_number_tag(s, "mimic:");
-    if (mimic == TAG_UNFOUND && strip_tag(s, "mimic"))
+    if (mimic == TAG_UNFOUND && strip_tag(s, MIMIC_KEY))
         mimic = 1;
     const bool no_mimic = strip_tag(s, "no_mimic");
 

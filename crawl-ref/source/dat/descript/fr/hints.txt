@@ -48,13 +48,6 @@ death berserker unberserked
 N'oubliez pas de passer berserk quand vous combattez des ennemis
 particulièrement coriaces. C'est risqué mais, vous rend plus rapide et
 endurant.
-{{
-    if you.hunger() < 3 then
-        return "Passer berserk est impossible quand vous êtes affamé ou " ..
-               "pire, assurez-vous de vous restaurer régulièrement, juste " ..
-               "au cas où vous avez besoin de devenir berserk."
-    end
-}}
 %%%%
 death ranger melee
 
@@ -163,8 +156,8 @@ ses fichiers.
 finished random 3
 
 Vous pouvez demander à d'autres joueurs de Crawl des conseils et de l'aide sur
-le canal IRC (Internet Relay Chat) <w>##crawl</w> sur freenode
-(<w>irc.freenode.net</w>).
+le canal IRC (Internet Relay Chat) <w>#crawl</w> sur Libera
+(<w>irc.libera.chat</w>).
 %%%%
 dissection reminder
 

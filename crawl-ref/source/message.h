@@ -9,16 +9,18 @@
 #include <streambuf>
 #include <string>
 #include <sstream>
+#include <vector>
 
+#include "mpr.h"
 #include "canned-message-type.h"
 #include "enum.h"
 #include "player.h"
 
+using std::vector;
+
 // Write the message window contents out.
 void display_message_window();
 void clear_message_window();
-
-void set_log_emergency_stderr(bool b);
 
 void scroll_message_window(int n);
 
@@ -34,6 +36,8 @@ bool simple_monster_message(const monster& mons, const char *event,
                             msg_channel_type channel = MSGCH_PLAIN,
                             int param = 0,
                             description_level_type descrip = DESC_THE);
+
+string god_speaker(god_type which_deity = you.religion);
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 void wu_jian_sifu_message(const char *event);
 
@@ -57,6 +61,15 @@ void mpr_comma_separated_list(const string &prefix,
 void msgwin_set_temporary(bool temp);
 // Clear the last set of temporary messages from both
 // message window and history.
+class msgwin_temporary_mode
+{
+public:
+    msgwin_temporary_mode();
+    ~msgwin_temporary_mode();
+private:
+    bool previous;
+};
+
 void msgwin_clear_temporary();
 
 void msgwin_prompt(string prompt);
@@ -94,34 +107,51 @@ void msgwin_new_cmd();
 // Tell the message window that a new turn has started.
 void msgwin_new_turn();
 
-bool msgwin_errors_to_stderr();
-
-class message_tee
+namespace msg
 {
-public:
-    message_tee();
-    message_tee(string &_target);
-    virtual ~message_tee();
-    virtual void append(const string &s, msg_channel_type ch = MSGCH_PLAIN);
-    virtual void append_line(const string &s, msg_channel_type ch = MSGCH_PLAIN);
-    virtual string get_store() const;
+    bool uses_stderr(msg_channel_type channel);
 
-private:
-    stringstream store;
-    string *target;
-};
+    class tee
+    {
+    public:
+        tee();
+        tee(string &_target);
+        void force_update();
+        virtual ~tee();
+        virtual void append(const string &s, msg_channel_type ch = MSGCH_PLAIN);
+        virtual void append_line(const string &s, msg_channel_type ch = MSGCH_PLAIN);
+        virtual string get_store() const;
 
-class no_messages
-{
-public:
-    no_messages();
-    no_messages(bool really_suppress);
-    ~no_messages();
-private:
-    bool msuppressed;
-};
+    private:
+        stringstream store;
+        string *target;
+    };
+
+    class force_stderr
+    {
+    public:
+        force_stderr(maybe_bool f);
+        ~force_stderr();
+    private:
+        maybe_bool prev_state;
+    };
+
+    class suppress
+    {
+    public:
+        suppress();
+        suppress(bool really_suppress);
+        suppress(msg_channel_type _channel);
+        ~suppress();
+    private:
+        bool msuppressed;
+        msg_channel_type channel;
+        msg_colour_type prev_colour;
+    };
+}
 
 void webtiles_send_messages(); // does nothing unless USE_TILE_WEB is defined
+void webtiles_send_more_text(string);
 
 void save_messages(writer& outf);
 void load_messages(reader& inf);

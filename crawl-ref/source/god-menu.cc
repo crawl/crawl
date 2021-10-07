@@ -11,11 +11,9 @@
 #include "colour.h"
 #include "libutil.h"
 #include "religion.h"
-#ifdef USE_TILE
 #include "terrain.h"
 #include "tilepick.h"
 #include "tileview.h"
-#endif
 
 GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     MenuEntry(god_name(god_, long_name), MEL_ITEM, 1, 0, false),
@@ -32,15 +30,12 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     colour_text = colour_to_str(c);
     data = &text;
 
-#ifdef USE_TILE
     const dungeon_feature_type feat = altar_for_god(god_);
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
-        add_tile(tile_def(pick_dngn_tile(idx, ui_random(INT_MAX)),
-                                         get_dngn_tex(idx)));
+        add_tile(tile_def(pick_dngn_tile(idx, ui_random(INT_MAX))));
     }
-#endif
 }
 
 string GodMenuEntry::get_text(const bool) const

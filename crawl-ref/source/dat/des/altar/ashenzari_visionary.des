@@ -26,10 +26,8 @@ function callback.grunt_ashenzari_visionary_reveal(data,triggerable,triggerer,ma
 end
 }}
 
-default-depth: D:2-12
-
 NAME: grunt_ashenzari_visionary
-TAGS: temple_overflow_ashenzari uniq_altar_ashenzari no_trap_gen no_monster_gen
+TAGS: temple_overflow_1 temple_overflow_ashenzari no_trap_gen no_monster_gen
 WEIGHT: 5
 SHUFFLE: ef
 # The branches should be in reverse order here so we don't select the
@@ -127,8 +125,8 @@ MARKER: H = lua:fog_machine { cloud_type = "thin mist", pow_min = 3, \
                               pow_max = 10, delay = 10, start_clouds = 1, \
                               size_min = 1, size_max = 3, walk_dist = 2 }
 # Monsters specified here to omit aquatic placements.
-MONS: plant w:150 / fungus w:99 / hornet w:20 / bullfrog w:30 / \
-      swamp drake w:80 / alligator band w:150 / water moccasin w:75
+MONS: plant w:150 / fungus w:99 / vampire mosquito band w:75 / will-o-the-wisp w:50 / \
+      swamp drake w:80 / alligator w:75 / goliath frog w:75
 KPROP: w = no_tele_into
 SUBST: w = wwwWWt1
 FTILE: 1 = floor_swamp
@@ -233,7 +231,7 @@ ENDMAP
 NAME: grunt_ashenzari_visionary_shoals
 TAGS: grunt_ashenzari_visionary_shoals no_trap_gen no_monster_gen unrand
 # Monsters specified here to omit aquatic placements.
-MONS: bat w:35 / merfolk w:90 / merfolk siren w:40 / hippogriff w:35 / \
+MONS: bat w:35 / merfolk w:90 / merfolk siren w:40 / wind drake w:35 / \
       centaur w:20 / sea snake w:40
 SUBST:  w = wwww.1
 COLOUR: 1. = brown

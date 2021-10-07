@@ -116,7 +116,7 @@ function ($, comm, client, options, focus_trap) {
                     return $(ev.target).closest("#game").length !== 1;
                 },
             }).activate();
-        });
+        }).css("display","");
         if (client.is_watching())
             wrapper.find("input, button").attr("disabled", true);
         if (elem.find(".paneset").length > 0)
@@ -146,7 +146,7 @@ function ($, comm, client, options, focus_trap) {
             elem = unwrap_popup(wrapper);
             wrapper.stop(true, true).fadeIn(100, function () {
                 elem.focus();
-            });
+            }).css("display","");
         }
     }
 
@@ -279,7 +279,9 @@ function ($, comm, client, options, focus_trap) {
 
         var $chat = $("#chat");
         $chat[0].focus_trap = focus_trap($chat[0], {
-            escapeDeactivates: true,
+            escapeDeactivates: true, // n.b. this apparently isn't doing
+                                     // anything, over and above escape simply
+                                     // hiding the chat div
             onActivate: function () {
                 $chat.addClass("focus-trap");
                 /* detect chat.js calling hide() via style attribute */
@@ -292,6 +294,9 @@ function ($, comm, client, options, focus_trap) {
                 $chat.removeClass("focus-trap");
             },
             returnFocusOnDeactivate: false,
+            clickOutsideDeactivates: true, // warning: this only seems to work
+                                           // with some slightly weird changes
+                                           // to focus-trap.js...
         }).activate();
     }
 
@@ -363,7 +368,9 @@ function ($, comm, client, options, focus_trap) {
     {
         if (receiving_ui_state)
             return;
-        if (client.is_watching())
+        // TODO: remove the existence check once enough time has passed for
+        // browser caches to expire
+        if (client.in_game && !client.in_game() || client.is_watching())
             return;
         var $target_popup = $(elem).closest("[data-generation-id]");
         if ($target_popup[0] != top_popup().closest("[data-generation-id]")[0])

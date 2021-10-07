@@ -1,9 +1,10 @@
 # Guidelines for specific types of vaults
 
 1. [Guidelines for D:1 arrival vaults](#guidelines-for-d1-arrival-vaults)
-2. [Guidelines for creating serial vaults](#guidelines-for-creating-serial-vaults)
-3. [Guidelines for creating ghost vaults](#guidelines-for-creating-ghost-vaults)
-4. [Guidelines for no_tele_into](#guidelines-for-no_tele_into)
+2. [Guidelines for faded altar and overflow temples](guidelines-for-faded-altar and-overflow-temples)
+3. [Guidelines for creating serial vaults](#guidelines-for-creating-serial-vaults)
+4. [Guidelines for creating ghost vaults](#guidelines-for-creating-ghost-vaults)
+5. [Guidelines for no_tele_into](#guidelines-for-no_tele_into)
 
 ## Guidelines for D:1 arrival vaults
 
@@ -61,6 +62,43 @@ The actual maps can be found in the following files:
 
 If a map is both big and complex, file under twisted.des.
 If a map is both plain and small, file under simple.des.
+
+## Guidelines for faded altar and overflow temples
+
+A faded altar vault is placed with very high probability on D:1-3.
+Overflow temples are specific vaults used by the dungeon builder to guarantee
+altars to temple gods that did not get an altar in the Ecumenical Temple. In
+general these should avoid placing significant challenges and leave the altar
+accessible without need for flight or blinks, as the purpose is to provide the
+player with a guaranteed altar. Both classes of vaults are seen often in the
+game and we need a lot of them! These maps are good candidates for a starting
+vaultmaker who wants to try something other than an arrival vault.
+
+For overflow temples, see the comments at the start of
+[crawl-ref/source/dat/des/altar/overflow.des](https://github.com/crawl/crawl/tree/master/crawl-ref/source/dat/des/altar/overflow.des) for the specific tagging scheme to use for overflow temples, either generic or devoted to particular gods.
+
+Ecumenical altars are faded, so the player can't tell which god the altar is
+devoted to until they worship. Good lore ideas revolve around ruins and decay,
+but there are plenty of other creative possibilities. The vaults are in
+[crawl-ref/source/dat/des/altar/ecumenical.des](https://github.com/crawl/crawl/tree/master/crawl-ref/source/dat/des/altar/ecumenical.des)
+
+### General style guidelines for faded altar and overflow temples
+
+* Try to come up with small maps.
+* Avoid placing guaranteed items.
+* Don't use out-of-depth monsters or a large number of in-depth monsters.
+* Avoid ASCII art. It probably won't work in Tiles anyway.
+
+### General style guidelines for overflow temples
+
+* If your vault places a single specific altar and is a plausible mini vault
+  tag it `uniq_altar_GODNAME` as well as the overflow temple tags
+* Whenever possible, don't add a depth specification to such a vault.
+* If a specific monster is necessary for theme, then constrain the vault to
+  that monster's depth.
+* If your vault is decor (even if it does not have the decor tag, if there
+  are no depth-scaling monsters to fight, and no serious loot),
+  include `: interest_check(_G)` to ensure the vault is tagged appropriately.
 
 ## Guidelines for creating serial vaults
 

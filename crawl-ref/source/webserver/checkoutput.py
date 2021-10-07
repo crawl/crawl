@@ -1,8 +1,10 @@
-import os
-import subprocess
 import errno
 import fcntl
-import tornado, tornado.ioloop
+import os
+import subprocess
+
+import tornado
+import tornado.ioloop
 from tornado.ioloop import IOLoop
 
 BUFSIZ = 1024
@@ -42,9 +44,9 @@ def check_output(call, callback):
             try:
                 buf = os.read(out_r, BUFSIZ)
             except (IOError, OSError) as e:
-                if e.args[0] == errno.EBADF:
+                if e.args.errno == errno.EBADF:
                     _poll()
-                elif e.args[0] not in (errno.EWOULDBLOCK, errno.EAGAIN):
+                elif e.args.errno not in (errno.EWOULDBLOCK, errno.EAGAIN):
                     raise
 
             if not buf:

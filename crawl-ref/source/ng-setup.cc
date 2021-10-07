@@ -6,7 +6,6 @@
 #include "dungeon.h"
 #include "end.h"
 #include "files.h"
-#include "food.h"
 #include "god-companions.h"
 #include "hints.h"
 #include "invent.h"
@@ -15,6 +14,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "message.h"
 #include "mutation.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
@@ -24,8 +24,12 @@
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"
+#include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
+#include "tag-version.h"
+#include "throw.h"
 
 #define MIN_START_STAT       3
 
@@ -105,9 +109,6 @@ item_def* newgame_make_item(object_class_type base,
     int slot;
     for (slot = 0; slot < ENDOFPACK; ++slot)
     {
-        if (base == OBJ_FOOD && slot == letter_to_index('e'))
-            continue;
-
         item_def& item = you.inv[slot];
         if (!item.defined())
             break;
@@ -126,6 +127,11 @@ item_def* newgame_make_item(object_class_type base,
     item.quantity  = qty;
     item.plus      = plus;
     item.brand     = force_ego;
+
+    // To mitigate higher shield penalties for smaller races, give small
+    // races bucklers instead of shields.
+    if (item.is_type(OBJ_ARMOUR, ARM_KITE_SHIELD) && you.body_size() < SIZE_MEDIUM)
+        item.sub_type = ARM_BUCKLER;
 
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
@@ -146,7 +152,9 @@ item_def* newgame_make_item(object_class_type base,
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
     // If that didn't help, nothing will.
-    if (is_useless_item(item))
+    // However, wanderer randbooks aren't yet initialized and all other
+    // starting books are guaranteed to be useful at game start.
+    if (item.base_type != OBJ_BOOKS && is_useless_item(item, false, true))
     {
         item = item_def();
         return nullptr;
@@ -164,26 +172,11 @@ item_def* newgame_make_item(object_class_type base,
     // You can get the books without the corresponding items as a wanderer.
     else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_GEOMANCY)
         _autopickup_ammo(MI_STONE);
-    else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_CHANGES)
-        _autopickup_ammo(MI_ARROW);
     // You probably want to pick up both.
     if (item.is_type(OBJ_MISSILES, MI_SLING_BULLET))
         _autopickup_ammo(MI_STONE);
 
     origin_set_startequip(item);
-
-    // Wanderers may or may not already have a spell. - bwr
-    // Also, when this function gets called their possible randbook
-    // has not been initialised and will trigger an ASSERT.
-    if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
-    {
-        spell_type which_spell = spells_in_book(item)[0];
-        if (!spell_is_useless(which_spell, false, true)
-            && spell_difficulty(which_spell) <= 1)
-        {
-            add_spell_to_memory(which_spell);
-        }
-    }
 
     return &item;
 }
@@ -211,7 +204,7 @@ static void _give_ammo(weapon_type weapon, int plus)
     switch (weapon)
     {
     case WPN_THROWN:
-        if (species_can_throw_large_rocks(you.species))
+        if (species::can_throw_large_rocks(you.species))
             newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
         else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
             newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 8 + 2 * plus);
@@ -231,6 +224,46 @@ static void _give_ammo(weapon_type weapon, int plus)
     default:
         break;
     }
+}
+
+static void _give_job_spells(job_type job)
+{
+    vector<spell_type> spells = get_job_spells(job);
+    if (spells.empty())
+        return;
+
+    if (you.has_mutation(MUT_INNATE_CASTER))
+    {
+        for (spell_type s : spells)
+        {
+            if (you.spell_no < MAX_DJINN_SPELLS)
+                add_spell_to_memory(s);
+        }
+        return;
+    }
+
+    library_add_spells(spells);
+
+    const spell_type first_spell = spells[0];
+    if (!spell_is_useless(first_spell, false, true)
+        && spell_difficulty(first_spell) <= 1)
+    {
+        add_spell_to_memory(first_spell);
+    }
+}
+
+static void _cleanup_innate_magic_skills()
+{
+    // could use a reference here, but seems surprising to the reader
+    int spcasting = you.skills[SK_SPELLCASTING];
+    for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; sk++)
+    {
+        const int lvl = you.skills[sk];
+        if (lvl > spcasting)
+            spcasting = lvl;
+        you.skills[sk] = 0;
+    }
+    you.skills[SK_SPELLCASTING] = spcasting;
 }
 
 void give_items_skills(const newgame_def& ng)
@@ -253,6 +286,14 @@ void give_items_skills(const newgame_def& ng)
         }
         break;
 
+    case JOB_ARTIFICER:
+    {
+        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
+            you.skills[SK_DODGING]++;
+        else
+            you.skills[SK_ARMOUR]++;
+        break;
+    }
     case JOB_CHAOS_KNIGHT:
     {
         you.religion = GOD_XOM;
@@ -280,6 +321,11 @@ void give_items_skills(const newgame_def& ng)
 
         break;
 
+    case JOB_CINDER_ACOLYTE:
+        you.religion = GOD_IGNIS;
+        you.piety = 150;
+        break;
+
     default:
         break;
     }
@@ -288,6 +334,8 @@ void give_items_skills(const newgame_def& ng)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
     else if (you.char_class == JOB_CHAOS_KNIGHT)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
+    else if (you.char_class == JOB_CINDER_ACOLYTE)
+        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, -1, SPWPN_FLAMING);
     else if (job_gets_ranged_weapons(you.char_class))
         _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
     else if (job_has_weapon_choice(you.char_class))
@@ -295,15 +343,19 @@ void give_items_skills(const newgame_def& ng)
 
     give_job_equipment(you.char_class);
     give_job_skills(you.char_class);
+    _give_job_spells(you.char_class);
 
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
-    if (you.species == SP_FELID)
-    {
+    if (you.has_mutation(MUT_NO_GRASPING))
         you.skills[SK_THROWING] = 0;
+
+    if (you.has_mutation(MUT_NO_ARMOUR))
         you.skills[SK_SHIELDS] = 0;
-    }
+
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        _cleanup_innate_magic_skills();
 
     if (!you_worship(GOD_NO_GOD))
     {
@@ -312,23 +364,6 @@ void give_items_skills(const newgame_def& ng)
         if (!you_worship(GOD_XOM))
             you.piety_max[you.religion] = you.piety;
     }
-}
-
-static void _give_starting_food()
-{
-    // No food for those who don't need it.
-    if (you_foodless())
-        return;
-
-    object_class_type base_type = OBJ_FOOD;
-    int sub_type = FOOD_RATION;
-    int quantity = 1;
-
-    // Give another one for hungry species.
-    if (you.get_mutation_level(MUT_FAST_METABOLISM))
-        quantity = 2;
-
-    newgame_make_item(base_type, sub_type, quantity);
 }
 
 static void _setup_tutorial_miscs()
@@ -420,6 +455,72 @@ static void _free_up_slot(char letter)
     }
 }
 
+static bool _spell_triggered_by(spell_type to_trigger, spell_type trigger)
+{
+    switch (to_trigger)
+    {
+        case SPELL_BATTLESPHERE:
+            return battlesphere_can_mirror(trigger);
+        case SPELL_SPELLFORGED_SERVITOR:
+            return spell_servitorable(trigger);
+        default:
+            return true;
+    }
+}
+
+static bool _spell_has_trigger(spell_type to_trigger,
+                               const set<spell_type> &triggers)
+{
+    for (spell_type trigger : triggers)
+        if (_spell_triggered_by(to_trigger, trigger))
+            return true;
+    return _spell_triggered_by(to_trigger, SPELL_NO_SPELL);
+}
+
+static void _setup_innate_spells()
+{
+    set<spell_type> spellset;
+    // Start with all spells from your job.
+    for (spell_type sp : you.spells)
+        if (sp != SPELL_NO_SPELL)
+            spellset.insert(sp);
+
+    // Get spells at XL 3 and every odd level thereafter.
+    vector<spell_type> chosen_spells;
+    int const min_lev[] = {1,2, 2,3,4, 5,6,6, 6,7,7, 8,9};
+    int const max_lev[] = {1,2, 3,4,5, 5,6,7, 7,8,8, 9,9};
+    for (int i = 0; i < 27 / 2; i++)
+    {
+        spell_type next_spell = SPELL_NO_SPELL;
+        int seen = 0;
+        for (int s = 0; s < NUM_SPELLS; ++s)
+        {
+            const spell_type spell = static_cast<spell_type>(s);
+
+            if (!is_player_book_spell(spell)
+                || spellset.find(spell) != spellset.end()
+                || spell_is_useless(spell, false)
+                || !_spell_has_trigger(spell, spellset))
+            {
+                continue;
+            }
+
+            const int lev = spell_difficulty(spell);
+            if (lev >= min_lev[i] && lev <= max_lev[i]
+                && one_chance_in(++seen))
+            {
+                next_spell = spell;
+            }
+        }
+        ASSERT(next_spell != SPELL_NO_SPELL);
+        spellset.insert(next_spell);
+        chosen_spells.push_back(next_spell);
+    }
+
+    for (spell_type s : chosen_spells)
+        you.props[INNATE_SPELLS_KEY].get_vector().push_back(s);
+}
+
 void initial_dungeon_setup()
 {
     rng::generator levelgen_rng(BRANCH_DUNGEON);
@@ -433,6 +534,12 @@ void initial_dungeon_setup()
 static void _setup_generic(const newgame_def& ng,
                            bool normal_dungeon_setup /*for catch2-tests*/)
 {
+    // this seems non-ideal, but messages are not being displayed at this point
+    // so if a force_more_message triggers, the more will just show on a blank
+    // screen. TODO: it's not clear to me why the more can show up without
+    // the message that triggered it.
+    unwind_bool no_more(crawl_state.show_more_prompt, false);
+
     rng::reset(); // initialize rng from Options.seed
     _init_player();
     you.game_seed = crawl_state.seed;
@@ -464,15 +571,12 @@ static void _setup_generic(const newgame_def& ng,
 
     _unfocus_stats();
 
-    // Needs to be done before handing out food.
     give_basic_mutations(you.species);
 
     // This function depends on stats and mutations being finalised.
     give_items_skills(ng);
 
     roll_demonspawn_mutations();
-
-    _give_starting_food();
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();
@@ -490,11 +594,11 @@ static void _setup_generic(const newgame_def& ng,
 
     _give_basic_knowledge();
 
-    // Must be after _give_basic_knowledge
-    add_held_books_to_library();
-
-    if (you.char_class == JOB_WANDERER)
-        memorise_wanderer_spell();
+    // intentionally create the subgenerator either way, so that this has the
+    // same impact on the current main rng for all chars.
+    rng::subgenerator dj_rng;
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        _setup_innate_spells();
 
     // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
@@ -527,6 +631,8 @@ static void _setup_generic(const newgame_def& ng,
     init_skill_order();
     init_can_currently_train();
     init_train();
+    if (you.religion == GOD_TROG)
+        join_trog_skills();
     init_training();
 
     // Apply autoinscribe rules to inventory.
@@ -557,4 +663,9 @@ static void _setup_generic(const newgame_def& ng,
     else
         you.save = new package(get_savedir_filename(you.your_name).c_str(),
                                true, true);
+
+    // pregen temple -- it's quick and easy, and this prevents a popup from
+    // happening. This needs to happen after you.save is created.
+    if (normal_dungeon_setup && !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
+        die("Builder failure while trying to generate temple!");
 }

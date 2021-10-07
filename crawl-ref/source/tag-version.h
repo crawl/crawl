@@ -2,6 +2,8 @@
 
 #include <set>
 
+#include "macros.h"
+
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
 // DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING. This would break
@@ -240,13 +242,31 @@ enum tag_minor_version
     TAG_MINOR_GHOST_MAGIC,         // Ghost update for positional magic
     TAG_MINOR_MORE_GHOST_MAGIC,    // Update already placed ghosts for positional magic
     TAG_MINOR_DUMMY_AGILITY,       // Convert garbage "agility" potions into stab
+    TAG_MINOR_TRACK_REGEN_ITEMS,   // Regen items take effect only after maxhp is reached
+    TAG_MINOR_MORGUE_SCREENSHOTS,  // Screenshots morgue section
+    TAG_MINOR_UNSTACK_TREMORSTONES, // Unstack tins of tremorstones
+    TAG_MINOR_MONSTER_TYPE_SIZE,   // Consistently marshall monster_type enums
+    TAG_MINOR_SHAFT_CARD,          // Remove the Shaft card
+    TAG_MINOR_LOAF_BUST,           // Remove rations, eating, and hunger mechanics
+    TAG_MINOR_REVEALED_TRAPS,      // No skill check to spot traps
+    TAG_MINOR_BARDING_MERGE,       // Merge naga and centaur bardings.
+    TAG_MINOR_MERGE_VETOES,        // Merge veto tags in vaults
+    TAG_MINOR_APPENDAGE,           // Change beastly appendage
+    TAG_MINOR_REALLY_UNSTACK_EVOKERS, // Unstack all evokers
+    TAG_MINOR_SETPOLY,             // Despoiler polymorph wands
+    TAG_MINOR_GOLDIFY_MANUALS,     // Move manuals out of the inventory
+    TAG_MINOR_UNCURSE,             // Remove curses from items
+    TAG_MINOR_NEW_ASHENZARI,       // New Ashenzari
+    TAG_MINOR_COMPRESS_BADMUTS,    // Reduce some mutations to 2 levels
+    TAG_MINOR_NEW_TREES,           // New tree types
+    TAG_MINOR_DISEASE,             // Turn disease into a normal duration
+    TAG_MINOR_BOOK_UNID,           // Remove book ID.
+    TAG_MINOR_EVOLUTION_XP,        // Invert the meaning of ATTR_EVOL_XP.
+    TAG_MINOR_ZOT_ENTRY_FIXUP,     // Fixup Zot branch entry for shorter Depths
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
-
-// Marshalled as a byte in several places.
-COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
 
 // tags that affect loading bones files. If you do save compat that affects
 // ghosts, these must be updated in addition to the enum above.
@@ -280,6 +300,15 @@ struct save_version
     static save_version current_bones()
     {
         return save_version(TAG_MAJOR_VERSION, *bones_minor_tags.crbegin());
+    }
+
+    static save_version minimum_supported()
+    {
+#if TAG_MAJOR_VERSION == 34
+        return save_version(33, 17);
+#else
+        return save_version(TAG_MAJOR_VERSION, 0);
+#endif
     }
 
     bool valid() const
@@ -334,12 +363,7 @@ struct save_version
 
     bool is_ancient() const
     {
-        return valid() &&
-#if TAG_MAJOR_VERSION == 34
-            (major < 33 && minor < 17);
-#else
-            major < TAG_MAJOR_VERSION;
-#endif
+        return valid() && *this < minimum_supported();
     }
 
     bool is_compatible() const

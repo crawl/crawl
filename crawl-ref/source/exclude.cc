@@ -35,7 +35,7 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
     // These include the base monster's name in their name, but we don't
     // want things in the auto_exclude option to match them.
     if (mon->type == MONS_PILLAR_OF_SALT || mon->type == MONS_BLOCK_OF_ICE
-        || mon->type == MONS_TEST_STATUE)
+        || mons_class_is_test(mon->type)) // don't autoexclude test statues/spawners
     {
         return false;
     }
@@ -59,8 +59,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
     {
         if (pat.matches(name)
             && _mon_needs_auto_exclude(mon, sleepy)
-            && (mon->attitude == ATT_HOSTILE
-                || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
+            && (mon->attitude == ATT_HOSTILE))
         {
             return true;
         }
@@ -92,7 +91,7 @@ void add_auto_excludes()
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster *mon = monster_at(*ri);
-        if (!mon)
+        if (!mon || mon->is_summoned())
             continue;
         // Something of a speed hack, but some vaults have a TON of plants.
         if (mon->type == MONS_PLANT)
@@ -100,9 +99,6 @@ void add_auto_excludes()
         if (_need_auto_exclude(mon) && !is_exclude_root(*ri))
         {
             int radius = _get_full_exclusion_radius();
-            if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
-                radius = 2;
-
             set_exclude(*ri, radius, true);
             mons.emplace_back(mon);
         }
@@ -122,7 +118,8 @@ travel_exclude::travel_exclude(const coord_def &p, int r,
       uptodate(false), autoex(autoexcl), desc(dsc), vault(vaultexcl)
 {
     const monster* m = monster_at(p);
-    if (m) {
+    if (m)
+    {
         // Don't exclude past glass for stationary monsters.
         if (m->is_stationary())
             los = los_def(p, opc_fully_no_trans, circle_def(r, C_SQUARE));
@@ -448,7 +445,7 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (feat_is_door(grd(p)) && env.map_knowledge(p).known())
+        if (feat_is_door(env.grid(p)) && env.map_knowledge(p).known())
         {
             _exclude_gate(p, exc->radius == 0);
             return;

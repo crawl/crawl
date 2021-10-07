@@ -550,6 +550,11 @@ JsonNode *json_mkstring(const char *s)
     return mkstring(json_strdup(s));
 }
 
+JsonNode *json_mkstring(string s)
+{
+    return json_mkstring(s.c_str());
+}
+
 JsonNode *json_mknumber(double n)
 {
     JsonNode *node = mknode(JSON_NUMBER);

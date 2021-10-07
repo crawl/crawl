@@ -296,4 +296,23 @@ function callback.spider_trap_stepped(data, triggerable, triggerer, marker, ev)
   data.max=8
   callback.drop_trap_stepped(data, triggerable, triggerer, marker, ev)
 end
+
+-- Save compat for gammafunk_pakellas_* vaults, formerly in
+-- pakellas_experiments.des.
+function make_dummy_trigger_func()
+  return function (data, triggerable, triggerer, marker, ev)
+    -- do nothing.
+   end
+end
+
+callback.pakellas_cloud_experiment_begin = make_dummy_trigger_func()
+callback.pakellas_cloud_experiment_end = make_dummy_trigger_func()
+callback.pakellas_cloud_cloud_cycle = make_dummy_trigger_func()
+cycle_cloud_type = callback.pakellas_cloud_cycle
+callback.pakellas_statue_experiment_begin = make_dummy_trigger_func()
+callback.pakellas_statue_experiment_end = make_dummy_trigger_func()
+callback.pakellas_its_alive_clouds = make_dummy_trigger_func()
+callback.pakellas_its_alive_begin = make_dummy_trigger_func()
+callback.pakellas_its_alive_end = make_dummy_trigger_func()
+
 }}

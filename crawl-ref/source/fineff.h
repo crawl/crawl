@@ -10,6 +10,8 @@
 #include "mon-util.h"
 #include "mgen-data.h"
 
+struct bolt;
+
 class final_effect
 {
 public:
@@ -99,13 +101,13 @@ public:
     bool mergeable(const final_effect &a) const override;
     void fire() override;
 
-    static void schedule(const actor *blinker)
+    static void schedule(const actor *blinker, const actor *other = nullptr)
     {
-        final_effect::schedule(new blink_fineff(blinker));
+        final_effect::schedule(new blink_fineff(blinker, other));
     }
 protected:
-    blink_fineff(const actor *blinker)
-        : final_effect(0, blinker, coord_def())
+    blink_fineff(const actor *blinker, const actor *o)
+        : final_effect(o, blinker, coord_def())
     {
     }
 };
@@ -240,6 +242,34 @@ protected:
     mon_attitude_type attitude;
 };
 
+class explosion_fineff : public final_effect
+{
+public:
+    // One explosion at a time, please.
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(bolt &beam, string boom, string sanct,
+                         bool inner_flame, const actor* flame_agent)
+    {
+        final_effect::schedule(new explosion_fineff(beam, boom, sanct,
+                                                    inner_flame, flame_agent));
+    }
+protected:
+    explosion_fineff(const bolt &beem, string boom, string sanct,
+                     bool flame, const actor* agent)
+        : final_effect(0, 0, coord_def()), beam(beem),
+          boom_message(boom), sanctuary_message(sanct),
+          inner_flame(flame), flame_agent(agent)
+    {
+    }
+    bolt beam;
+    string boom_message;
+    string sanctuary_message;
+    bool inner_flame;
+    const actor* flame_agent;
+};
+
 // A fineff that triggers a daction; otherwise the daction
 // occurs immediately (and then later) -- this might actually
 // be too soon in some cases.
@@ -305,19 +335,21 @@ public:
     void fire() override;
 
     static void schedule(coord_def pos, int revives, beh_type attitude,
-                         unsigned short foe)
+                         unsigned short foe, bool duel)
     {
-        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe));
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe, duel));
     }
 protected:
     bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
-                        unsigned short _foe)
-        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe)
+                        unsigned short _foe, bool _duel)
+        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe),
+          duel(_duel)
     {
     }
     int revives;
     beh_type attitude;
     unsigned short foe;
+    bool duel;
 };
 
 class infestation_death_fineff : public final_effect
@@ -392,13 +424,30 @@ public:
     void merge(const final_effect &) override;
     void fire() override;
 
-    static void schedule(const actor * defender)
+    static void schedule(const actor * _defender)
     {
-        final_effect::schedule(new summon_dismissal_fineff(defender));
+        final_effect::schedule(new summon_dismissal_fineff(_defender));
     }
 protected:
-    summon_dismissal_fineff(const actor * defender)
-        : final_effect(0, defender, coord_def())
+    summon_dismissal_fineff(const actor * _defender)
+        : final_effect(0, _defender, coord_def())
+    {
+    }
+};
+
+class spectral_weapon_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; };
+    void fire() override;
+
+    static void schedule(const actor &attack, const actor &defend)
+    {
+        final_effect::schedule(new spectral_weapon_fineff(attack, defend));
+    }
+protected:
+    spectral_weapon_fineff(const actor &attack, const actor &defend)
+        : final_effect(&attack, &defend, coord_def())
     {
     }
 };

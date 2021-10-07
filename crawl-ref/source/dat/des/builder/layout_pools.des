@@ -160,7 +160,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
 
     make_circle { x = gxm/2, y = gym/2, radius = 10 }
@@ -234,7 +234,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
     local STAIRS_X_UP   = STAIRS_FROM_MAP_EDGE
@@ -281,8 +281,8 @@ TAGS:   no_rotate no_vmirror no_hmirror
     -- maybe add an open are in the middle
     if crawl.one_chance_in(3) then
         local big_room_x = gxm / 2 + crawl.random_range(-2, 2)
-        local big_room_y = gym / 2 + crawl.random_range(-5, 5)
-        local big_room_radius = crawl.random_range(15, 20)
+        local big_room_y = gym / 2 + crawl.random_range(-2, 2)
+        local big_room_radius = crawl.random_range(gym / 2 - 10, gym / 2 - 4)
 
         make_diamond { x = big_room_x, y = big_room_y,
                        radius = big_room_radius, fill = '.' }
@@ -350,7 +350,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
     local CORNER_X1 = STAIRS_FROM_MAP_EDGE
@@ -421,11 +421,11 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
     local DIVISION_SPACING = 15
-    local PATH_SPACING = 22
+    local PATH_SPACING = (gym * 2) / 7
 
     local STAIRS_X_UP   = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X

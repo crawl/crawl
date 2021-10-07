@@ -8,4 +8,13 @@ $script =~ /(.*)\/MacOS\/(\w+)/;
 $scriptdir = $1;
 $resdir = $scriptdir . "/Resources/";
 $executable = $resdir . "crawl";
-system "/usr/bin/open -a /Applications/Utilities/Terminal.app '$executable'";
+if (-e "/Applications/Utilities/Terminal.app")
+{
+	system "/usr/bin/open -a /Applications/Utilities/Terminal.app '$executable'";
+}
+else
+{
+	# moved in catalina, and it's connected using a "firmlink" that isn't visible in
+	# the file system.
+	system "/usr/bin/open -a /System/Applications/Utilities/Terminal.app '$executable'";
+}

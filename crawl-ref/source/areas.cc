@@ -15,18 +15,21 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h" // passive_t::umbra
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mutation.h"
 #include "religion.h"
 #include "stepdown.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
 
+/// Bitmasks for area properties
 enum class areaprop
 {
     sanctuary_1   = (1 << 0),
@@ -35,14 +38,16 @@ enum class areaprop
     halo          = (1 << 3),
     liquid        = (1 << 4),
     actual_liquid = (1 << 5),
-    orb           = (1 << 6),
+    orb           = (1 << 6), ///< The glow of the Orb of Zot
     umbra         = (1 << 7),
     quad          = (1 << 8),
     disjunction   = (1 << 9),
     soul_aura     = (1 << 10),
 };
+/// Bit field for the area properties
 DEF_BITFIELD(areaprops, areaprop);
 
+/// Center of an area effect
 struct area_centre
 {
     area_centre_type type;
@@ -54,10 +59,15 @@ struct area_centre
 
 typedef FixedArray<areaprops, GXM, GYM> propgrid_t;
 
+/// The area center cache. Contains centers of all area effects.
 static vector<area_centre> _agrid_centres;
 
-static propgrid_t _agrid;
+static propgrid_t _agrid; ///< The area grid cache
+/// \brief Is the area grid cache up-to-date?
+/// \details If false, each check for area effects that affect a coordinate
+/// would trigger an update of the area grid cache.
 static bool _agrid_valid = false;
+/// \brief If true, the level has no area effect
 static bool no_areas = false;
 
 static void _set_agrid_flag(const coord_def& p, areaprop f)
@@ -70,6 +80,11 @@ static bool _check_agrid_flag(const coord_def& p, areaprop f)
     return bool(_agrid(p) & f);
 }
 
+/// \brief Invalidates the area effect cache
+/// \details Invalidates the area effect cache, causing the next request for
+/// area effects to re-calculate which locations are covered by halos, etc.
+/// If \p recheck_new is false, the cache will only be invalidated if the level
+/// had existing area effects.
 void invalidate_agrid(bool recheck_new)
 {
     _agrid_valid = false;
@@ -83,13 +98,19 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius() > -1 || act->silence_radius() > -1
-         || act->liquefying_radius() > -1 || act->umbra_radius() > -1))
+         || act->liquefying_radius() > -1 || act->umbra_radius() > -1
+         || act->demon_silence_radius() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
     }
 }
 
+/// \brief Add some of the actor's area effects to the grid and center caches
+/// \param actor The actor
+/// \details Adds some but not all of an actor's area effects (e.g. silence)
+/// to the area grid (\ref _agrid) and center (\ref _agrid_centres) caches.
+/// Sets \ref no_areas to false if the actor generates those area effects.
 static void _actor_areas(actor *a)
 {
     int r;
@@ -99,6 +120,15 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(area_centre_type::silence, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE); ri; ++ri)
+            _set_agrid_flag(*ri, areaprop::silence);
+        no_areas = false;
+    }
+
+    if ((r = a->demon_silence_radius()) >= 0)
+    {
+        _agrid_centres.emplace_back(area_centre_type::silence, a->pos(), r);
+
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT, true); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::silence);
         no_areas = false;
     }
@@ -118,7 +148,7 @@ static void _actor_areas(actor *a)
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_SOLID); ri; ++ri)
         {
-            dungeon_feature_type f = grd(*ri);
+            dungeon_feature_type f = env.grid(*ri);
 
             _set_agrid_flag(*ri, areaprop::liquid);
 
@@ -416,6 +446,14 @@ void create_sanctuary(const coord_def& center, int time)
 
         env.pgrid(pos) &= ~(FPROP_BLOODY);
 
+        if (env.grid(pos) == DNGN_FOUNTAIN_BLOOD)
+        {
+            if (you.see_cell(pos))
+                blood_count++;
+
+            dungeon_terrain_changed(pos, DNGN_FOUNTAIN_BLUE);
+        }
+
         // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
@@ -491,6 +529,13 @@ int player::silence_radius() const
     return _shrinking_aoe_range(duration[DUR_SILENCE]);
 }
 
+int player::demon_silence_radius() const
+{
+    if (you.get_mutation_level(MUT_SILENCE_AURA))
+        return 1;
+    return -1;
+}
+
 int monster::silence_radius() const
 {
     if (type == MONS_SILENT_SPECTRE)
@@ -506,6 +551,12 @@ int monster::silence_radius() const
     return _shrinking_aoe_range(moddur);
 }
 
+int monster::demon_silence_radius() const
+{
+    return -1;
+}
+
+/// Check if a coordinate is silenced
 bool silenced(const coord_def& p)
 {
     if (!map_bounds(p))
@@ -545,8 +596,8 @@ int player::halo_radius() const
 
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
-    else if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
-        size = max(size, 1);
+    else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+        size = max(size, 2);
 
     return size;
 }
@@ -619,7 +670,7 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (!_agrid_valid)
         _update_agrid();
 
-    if (feat_is_water(grd(p)))
+    if (feat_is_water(env.grid(p)) || feat_is_lava(env.grid(p)))
         return false;
 
     // "actually" liquefied (ie, check for movement)

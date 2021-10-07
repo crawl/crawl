@@ -5,11 +5,21 @@
 
 #pragma once
 
+#include <vector>
+
 #include "conduct-type.h"
+#include "coord-def.h"
 #include "dungeon-char-type.h"
+#include "dungeon-feature-type.h"
+#include "level-id.h"
 #include "mgen-enum.h"
+#include "monster-type.h"
+#include "tag-version.h"
 #include "trap-type.h"
 
+using std::vector;
+
+class monster;
 class mons_spec;
 struct mgen_data;
 
@@ -80,9 +90,10 @@ monster_type pick_random_monster(level_id place,
                                  level_id *final_place = nullptr,
                                  bool allow_ood = true);
 
-conduct_type player_will_anger_monster(monster_type type);
-conduct_type player_will_anger_monster(const monster &mon);
-bool player_angers_monster(monster* mon, bool real = true);
+conduct_type god_hates_monster(monster_type type);
+conduct_type god_hates_monster(const monster &mon);
+bool mons_can_hate(monster_type type);
+void check_lovelessness(monster &mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, bool allow_centre, coord_def& empty,
@@ -113,7 +124,6 @@ void setup_vault_mon_list();
 
 monster* get_free_monster();
 
-bool can_place_on_trap(monster_type mon_type);
 void mons_add_blame(monster* mon, const string &blame_string);
 
 void debug_bands();

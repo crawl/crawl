@@ -8,6 +8,7 @@
 #include <numeric>
 #include <stack>
 #include <chrono>
+#include <cwctype>
 
 #include "ui.h"
 #include "cio.h"
@@ -17,6 +18,7 @@
 #include "unicode.h"
 #include "libutil.h"
 #include "windowmanager.h"
+#include "ui-scissor.h"
 
 #ifdef USE_TILE_LOCAL
 # include "glwrapper.h"
@@ -24,7 +26,9 @@
 # include "tilepick-p.h"
 # include "tile-player-flag-cut.h"
 #else
-# include <unistd.h>
+# if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
+#  include <unistd.h>
+# endif
 # include "output.h"
 # include "stringutil.h"
 # include "view.h"
@@ -35,20 +39,6 @@
 #endif
 
 namespace ui {
-
-static Region aabb_intersect(Region a, Region b)
-{
-    Region i = { max(a.x, b.x), max(a.y, b.y), min(a.ex(), b.ex()), min(a.ey(), b.ey()) };
-    i.width -= i.x; i.height -= i.y;
-    return i;
-}
-
-static Region aabb_union(Region a, Region b)
-{
-    Region i = { min(a.x, b.x), min(a.y, b.y), max(a.ex(), b.ex()), max(a.ey(), b.ey()) };
-    i.width -= i.x; i.height -= i.y;
-    return i;
-}
 
 #ifndef USE_TILE_LOCAL
 static void clear_text_region(Region region, COLOURS bg);
@@ -82,6 +72,7 @@ public:
     void resize(int w, int h);
     void layout();
     void render();
+    void swap_buffers();
 
     bool on_event(wm_event& event);
     bool deliver_event(Event& event);
@@ -98,11 +89,12 @@ public:
         if (m_dirty_region.empty())
             m_dirty_region = r;
         else
-            m_dirty_region = aabb_union(m_dirty_region, r);
+            m_dirty_region = m_dirty_region.aabb_union(r);
         needs_paint = true;
     }
 
     bool needs_paint;
+    bool needs_swap;
 
 #ifdef DEBUG
     bool debug_draw = false;
@@ -161,27 +153,27 @@ protected:
     vector<LayoutInfo> saved_layout_info;
 } ui_root;
 
-static stack<Region> scissor_stack;
+static ScissorStack scissor_stack;
 
 struct Widget::slots Widget::slots = {};
 
-Event::Event(Event::Type type) : m_type(type)
+Event::Event(Event::Type _type) : m_type(_type)
 {
 }
 
-KeyEvent::KeyEvent(Event::Type type, const wm_keyboard_event& wm_ev) : Event(type)
+KeyEvent::KeyEvent(Event::Type _type, const wm_keyboard_event& wm_ev) : Event(_type)
 {
     m_key = wm_ev.keysym.sym;
 }
 
 #ifdef USE_TILE_LOCAL
-MouseEvent::MouseEvent(Event::Type type, const wm_mouse_event& wm_ev) : Event(type)
+MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev) : Event(_type)
 {
     m_button = static_cast<MouseEvent::Button>(wm_ev.button);
     // XXX: is it possible that the cursor has moved since the SDL event fired?
     wm->get_mouse_state(&m_x, &m_y);
-    m_wheel_dx = type == MouseWheel ? wm_ev.px : 0;
-    m_wheel_dy = type == MouseWheel ? wm_ev.py : 0;
+    m_wheel_dx = _type == MouseWheel ? wm_ev.px : 0;
+    m_wheel_dy = _type == MouseWheel ? wm_ev.py : 0;
 }
 #endif
 
@@ -216,6 +208,21 @@ void Widget::_emit_layout_pop()
 bool Widget::on_event(const Event& event)
 {
     return Widget::slots.event.emit(this, event);
+}
+
+void OverlayWidget::allocate_region(Region)
+{
+    // Occupies 0 space, and therefore will never clear the screen.
+    m_region = {0, 0, 0, 0};
+    _allocate_region();
+}
+
+void OverlayWidget::_expose()
+{
+    // forcibly ensure that renders will be called. This sidesteps the region
+    // based code for deciding whether anything should be rendered, and leaves
+    // it up to the OverlayWidget.
+    ui_root.needs_paint = true;
 }
 
 shared_ptr<Widget> ContainerVec::get_child_at_offset(int x, int y)
@@ -271,12 +278,12 @@ SizeReq Widget::get_preferred_size(Direction dim, int prosp_width)
     else if (shrink)
         ret.nat = ret.min;
 
-    int& min_size = dim ? m_min_size.height : m_min_size.width;
-    int& max_size = dim ? m_max_size.height : m_max_size.width;
+    int& _min_size = dim ? m_min_size.height : m_min_size.width;
+    int& _max_size = dim ? m_max_size.height : m_max_size.width;
 
-    ASSERT(min_size <= max_size);
-    ret.min = max(ret.min, min_size);
-    ret.nat = min(ret.nat, max(max_size, ret.min));
+    ASSERT(_min_size <= _max_size);
+    ret.min = max(ret.min, _min_size);
+    ret.nat = min(ret.nat, max(_max_size, ret.min));
     ret.nat = max(ret.nat, ret.min);
     ASSERT(ret.min <= ret.nat);
 
@@ -320,7 +327,7 @@ void Widget::allocate_region(Region region)
 
 SizeReq Widget::_get_preferred_size(Direction, int)
 {
-    return { 0, 0 };
+    return { 0, 0xffffff };
 }
 
 void Widget::_allocate_region()
@@ -630,10 +637,24 @@ void Text::set_highlight_pattern(string pattern, bool line)
 
 void Text::wrap_text_to_size(int width, int height)
 {
-    Size wrapped_size = { width, height };
-    if (m_wrapped_size == wrapped_size)
-        return;
-    m_wrapped_size = wrapped_size;
+    // don't recalculate if the previous calculation imposed no constraints
+    // on the text, and the new calculation would be the same or greater in
+    // size. This can happen through a sequence of _get_preferred_size calls
+    // for example.
+    if (m_wrapped_size.is_valid())
+    {
+        const bool cached_width_max = m_wrapped_sizereq.width <= 0
+                        || m_wrapped_sizereq.width > m_wrapped_size.width;
+        const bool cached_height_max = m_wrapped_sizereq.height <= 0
+                        || m_wrapped_sizereq.height > m_wrapped_size.height;
+        if ((width == m_wrapped_size.width || cached_width_max && (width <= 0 || width >= m_wrapped_size.width))
+            && (height == m_wrapped_size.height || cached_height_max && (height <= 0 || height >= m_wrapped_size.height)))
+        {
+            return;
+        }
+    }
+
+    m_wrapped_sizereq = Size(width, height);
 
     height = height ? height : 0xfffffff;
 
@@ -660,6 +681,10 @@ void Text::wrap_text_to_size(int width, int height)
         acc += n;
         tally += n;
     }
+
+    // if the request was to figure out the height, record the height found
+    m_wrapped_size.height = m_font->string_height(m_text_wrapped);
+    m_wrapped_size.width = m_font->string_width(m_text_wrapped);
 #else
     m_wrapped_lines.clear();
     formatted_string::parse_string_to_multiple(m_text.to_colour_string(), m_wrapped_lines, width);
@@ -675,6 +700,19 @@ void Text::wrap_text_to_size(int width, int height)
     }
     if (m_wrapped_lines.empty())
         m_wrapped_lines.emplace_back("");
+
+    m_wrapped_size.height = m_wrapped_lines.size();
+    if (width <= 0)
+    {
+        // only bother recalculating if there was no requested width --
+        // parse_string_to_multiple will exactly obey any explicit width value
+        int max_width = 0;
+        for (auto &fs : m_wrapped_lines)
+            max_width = max(max_width, fs.width());
+        m_wrapped_size.width = max_width;
+    }
+    else
+        m_wrapped_size.width = width;
 #endif
 }
 
@@ -693,8 +731,7 @@ static vector<size_t> _find_highlights(const string& haystack, const string& nee
 void Text::_render()
 {
     Region region = m_region;
-    if (scissor_stack.size() > 0)
-        region = aabb_intersect(region, scissor_stack.top());
+    region = region.aabb_intersect(scissor_stack.top());
     if (region.width <= 0 || region.height <= 0)
         return;
 
@@ -1017,9 +1054,9 @@ void Image::set_tile(tile_def tile)
 void Image::_render()
 {
 #ifdef USE_TILE_LOCAL
-    push_scissor(m_region);
+    scissor_stack.push(m_region);
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[m_tile.tex]);
+    tb.set_tex(&tiles.get_image_manager()->m_textures[get_tile_texture(m_tile.tile)]);
 
     for (int y = m_region.y; y < m_region.y+m_region.height; y+=m_th)
         for (int x = m_region.x; x < m_region.x+m_region.width; x+=m_tw)
@@ -1027,7 +1064,7 @@ void Image::_render()
 
     tb.draw();
     tb.clear();
-    pop_scissor();
+    scissor_stack.pop();
 #endif
 }
 
@@ -1263,7 +1300,7 @@ void Grid::init_track_info()
 void Grid::_render()
 {
     // Find the visible rows
-    const auto scissor = get_scissor();
+    const auto scissor = scissor_stack.top();
     int row_min = 0, row_max = m_row_info.size()-1, i = 0;
     for (; i < (int)m_row_info.size(); i++)
         if (m_row_info[i].offset+m_row_info[i].size+m_region.y >= scissor.y)
@@ -1443,12 +1480,12 @@ void Scroller::_render()
 {
     if (m_child)
     {
-        push_scissor(m_region);
+        scissor_stack.push(m_region);
         m_child->render();
 #ifdef USE_TILE_LOCAL
         m_shade_buf.draw();
 #endif
-        pop_scissor();
+        scissor_stack.pop();
 #ifdef USE_TILE_LOCAL
         m_scrollbar_buf.draw();
 #endif
@@ -1473,7 +1510,7 @@ void Scroller::_allocate_region()
     m_child->allocate_region(ch_reg);
 
 #ifdef USE_TILE_LOCAL
-    int shade_height = 12, ds = 4;
+    int shade_height = UI_SCROLLER_SHADE_SIZE, ds = 4;
     int shade_top = min({m_scroll/ds, shade_height, m_region.height/2});
     int shade_bot = min({(sr.nat-m_region.height-m_scroll)/ds, shade_height, m_region.height/2});
     const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 200);
@@ -1492,7 +1529,8 @@ void Scroller::_allocate_region()
         rect.set_col(col_a, col_b);
         m_shade_buf.add_primitive(rect);
     }
-    if (ch_reg.height > m_region.height && m_scrolbar_visible) {
+    if (ch_reg.height > m_region.height && m_scrolbar_visible)
+    {
         const int x = m_region.x+m_region.width;
         const float h_percent = m_region.height / (float)ch_reg.height;
         const int h = m_region.height*min(max(0.05f, h_percent), 1.0f);
@@ -1524,10 +1562,16 @@ bool Scroller::on_event(const Event& event)
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
+#endif
                 delta = m_region.height;
                 break;
 
             case '-': case CK_PGUP: case '<': case ';':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_SUBTRACT: case CK_NUMPAD_SUBTRACT2:
+#endif
                 delta = -m_region.height;
                 break;
 
@@ -1789,9 +1833,9 @@ void Checkbox::sync_save_state()
 
 void Checkbox::sync_load_state(const JsonNode *json)
 {
-    if (auto checked = json_find_member(json, "checked"))
-        if (checked->tag == JSON_BOOL)
-            set_checked(checked->bool_);
+    if (auto c = json_find_member(json, "checked"))
+        if (c->tag == JSON_BOOL)
+            set_checked(c->bool_);
 }
 #endif
 
@@ -1857,7 +1901,7 @@ void TextEntry::_render()
         m_region.y - static_cast<int>(translate.y),
         m_region.width, m_region.height,
     };
-    push_scissor(scissor_region);
+    scissor_stack.push(scissor_region);
 
     const int text_x = m_region.x - m_hscroll + x_pad;
 
@@ -1865,7 +1909,7 @@ void TextEntry::_render()
     m_font_buf.add(formatted_string(m_text), text_x, text_y);
     m_font_buf.draw();
 
-    pop_scissor();
+    scissor_stack.pop();
 
     if (has_focus)
     {
@@ -2365,12 +2409,12 @@ void PlayerDoll::_pack_doll()
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_cent = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
     if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
@@ -2390,7 +2434,7 @@ void PlayerDoll::_pack_doll()
             ymax = 18;
         }
 
-        m_tiles.emplace_back(idx, TEX_PLAYER, ymax);
+        m_tiles.emplace_back(idx, ymax);
     }
 }
 
@@ -2412,7 +2456,7 @@ void PlayerDoll::_allocate_region()
     for (const tile_def &tdef : m_tiles)
     {
         int tile      = tdef.tile;
-        TextureID tex = tdef.tex;
+        TextureID tex = get_tile_texture(tile);
         m_tile_buf[tex].add_unscaled(tile, m_region.x, m_region.y, tdef.ymax);
     }
 }
@@ -2516,6 +2560,10 @@ void UIRoot::layout()
     }
 }
 
+#ifdef USE_TILE_LOCAL
+bool should_render_current_regions = true;
+#endif
+
 void UIRoot::render()
 {
     if (!needs_paint)
@@ -2523,17 +2571,19 @@ void UIRoot::render()
 
 #ifdef USE_TILE_LOCAL
     glmanager->reset_view_for_redraw();
-    tiles.render_current_regions();
+    tiles.maybe_redraw_screen();
+    if (should_render_current_regions)
+        tiles.render_current_regions();
     glmanager->reset_transform();
 #else
     // On console, clear and redraw only the dirty region of the screen
-    m_dirty_region = aabb_intersect(m_dirty_region, m_region);
+    m_dirty_region = m_dirty_region.aabb_intersect(m_region);
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear_text_region(m_dirty_region, BLACK);
 #endif
 
-    push_scissor(m_region);
+    scissor_stack.push(m_region);
 #ifdef USE_TILE_LOCAL
     int cutoff = cutoff_stack.empty() ? 0 : cutoff_stack.back();
     ASSERT(cutoff <= static_cast<int>(m_root.num_children()));
@@ -2547,24 +2597,34 @@ void UIRoot::render()
     if (m_root.num_children() > 0)
         m_root.get_child(m_root.num_children()-1)->render();
     else
-        redraw_screen(false);
-
-    if (is_cursor_enabled() && !cursor_pos.origin())
     {
-        cgotoxy(cursor_pos.x, cursor_pos.y, GOTO_CRT);
+        redraw_screen(false);
+        update_screen();
+    }
+
+    if (!cursor_pos.origin())
+    {
+        cursorxy(cursor_pos.x, cursor_pos.y);
         cursor_pos.reset();
     }
 #endif
-    pop_scissor();
+    scissor_stack.pop();
 
+    needs_paint = false;
+    needs_swap = true;
+    m_dirty_region = {0, 0, 0, 0};
+}
+
+void UIRoot::swap_buffers()
+{
+    if (!needs_swap)
+        return;
+    needs_swap = false;
 #ifdef USE_TILE_LOCAL
     wm->swap_buffers();
 #else
     update_screen();
 #endif
-
-    needs_paint = false;
-    m_dirty_region = {0, 0, 0, 0};
 }
 
 #ifdef DEBUG
@@ -2597,7 +2657,8 @@ void UIRoot::debug_render()
             sb.add(r.x, r.ey(), r.ex(), r.ey()+m.bottom, lc);
             sb.add(r.x-m.left, r.y, r.x, r.ey(), lc);
         }
-        if (auto w = get_focused_widget()) {
+        if (auto w = get_focused_widget())
+        {
             Region r = w->get_region();
             lb.add_square(r.x+1, r.y+1, r.ex(), r.ey(), VColour(128, 31, 239));
         }
@@ -2818,8 +2879,17 @@ bool UIRoot::on_event(wm_event& event)
             auto key_event = KeyEvent(convert_event_type(event), event.key);
             return deliver_event(key_event);
         }
-        // TODO: maybe stop windowmanager-sdl from returning these?
         case WME_CUSTOMEVENT:
+#ifdef USE_TILE_LOCAL
+        {
+            auto callback = reinterpret_cast<wm_timer_callback>(event.custom.data1);
+            callback(0, nullptr);
+            break;
+        }
+#else
+            break;
+#endif
+        // TODO: maybe stop windowmanager-sdl from returning these?
         case WME_NOEVENT:
             break;
         default:
@@ -3023,43 +3093,10 @@ void UIRoot::recv_ui_state_change(const JsonNode *json)
 }
 #endif
 
-void push_scissor(Region scissor)
-{
-    if (scissor_stack.size() > 0)
-        scissor = aabb_intersect(scissor, scissor_stack.top());
-    scissor_stack.push(scissor);
-#ifdef USE_TILE_LOCAL
-    glmanager->set_scissor(scissor.x, scissor.y, scissor.width, scissor.height);
-#endif
-}
-
-void pop_scissor()
-{
-    ASSERT(scissor_stack.size() > 0);
-    scissor_stack.pop();
-#ifdef USE_TILE_LOCAL
-    if (scissor_stack.size() > 0)
-    {
-        Region scissor = scissor_stack.top();
-        glmanager->set_scissor(scissor.x, scissor.y, scissor.width, scissor.height);
-    }
-    else
-        glmanager->reset_scissor();
-#endif
-}
-
-Region get_scissor()
-{
-    if (scissor_stack.size() > 0)
-        return scissor_stack.top();
-    return {0, 0, INT_MAX, INT_MAX};
-}
-
 #ifndef USE_TILE_LOCAL
 static void clear_text_region(Region region, COLOURS bg)
 {
-    if (scissor_stack.size() > 0)
-        region = aabb_intersect(region, scissor_stack.top());
+    region = region.aabb_intersect(scissor_stack.top());
     if (region.width <= 0 || region.height <= 0)
         return;
     textcolour(LIGHTGREY);
@@ -3133,12 +3170,14 @@ void force_render()
     ui_root.layout();
     ui_root.needs_paint = true;
     ui_root.render();
+    ui_root.swap_buffers();
 }
 
 void render()
 {
     ui_root.layout();
     ui_root.render();
+    ui_root.swap_buffers();
 }
 
 void pump_events(int wait_event_timeout)
@@ -3154,16 +3193,28 @@ void pump_events(int wait_event_timeout)
 #endif
     {
         ui_root.layout();
-#ifndef USE_TILE_WEB
+#ifdef USE_TILE_WEB
         // On webtiles, we can't skip rendering while there are macro keys: a
         // crt screen may be opened and without a render() call, its text won't
         // won't be sent to the client(s). E.g: macro => iai
+        ui_root.render();
         if (macro_key == -1)
-#endif
+            ui_root.swap_buffers();
+#else
+        if (macro_key == -1)
+        {
             ui_root.render();
+            ui_root.swap_buffers();
+        }
+#endif
     }
 
 #ifdef USE_TILE_LOCAL
+    // These WME_* events are also handled, at different times, by a
+    // similar bit of code in tilesdl.cc. Roughly, that handling is used
+    // during the main game display, and the this loop is used in the
+    // main menu and when there are ui elements on top.
+    // TODO: consolidate as much as possible
     wm_event event = {0};
     while (true)
     {
@@ -3213,7 +3264,7 @@ void pump_events(int wait_event_timeout)
 
         case WME_RESIZE:
         {
-            ui_root.resize(event.resize.w, event.resize.h);
+            // triggers ui::resize:
             tiles.resize_event(event.resize.w, event.resize.h);
             break;
         }
@@ -3570,5 +3621,22 @@ bool raise_event(Event& event)
 {
     return ui_root.deliver_event(event);
 }
+
+#ifdef USE_TILE_LOCAL
+wm_mouse_event to_wm_event(const MouseEvent &ev)
+{
+    wm_mouse_event mev;
+    mev.event = ev.type() == Event::Type::MouseMove ? wm_mouse_event::MOVE :
+                ev.type() == Event::Type::MouseDown ? wm_mouse_event::PRESS :
+                wm_mouse_event::WHEEL;
+    mev.button = static_cast<wm_mouse_event::mouse_event_button>(ev.button());
+    mev.mod = wm->get_mod_state();
+    int x, y;
+    mev.held = wm->get_mouse_state(&x, &y);
+    mev.px = x;
+    mev.py = y;
+    return mev;
+}
+#endif
 
 }

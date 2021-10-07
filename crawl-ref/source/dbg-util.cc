@@ -121,13 +121,13 @@ void debug_dump_levgen()
 
 void debug_show_builder_logs()
 {
-    if (!you.props.exists("debug_builder_logs"))
+    if (!you.props.exists(DEBUG_BUILDER_LOGS_KEY))
     {
         mprf("This save was not generated on a build that stores logs.");
         return;
     }
     const string cur_level = level_id::current().describe();
-    CrawlHashTable &log_table = you.props["debug_builder_logs"].get_table();
+    CrawlHashTable &log_table = you.props[DEBUG_BUILDER_LOGS_KEY].get_table();
     if (!log_table.exists(cur_level)
         || log_table[cur_level].get_string().size() == 0)
     {
@@ -233,7 +233,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     else if (mon->foe == midx)
         fprintf(stderr, "self");
     else
-        fprintf(stderr, "%s", debug_mon_str(&menv[mon->foe]).c_str());
+        fprintf(stderr, "%s", debug_mon_str(&env.mons[mon->foe]).c_str());
 
     fprintf(stderr, "\n");
 
@@ -259,7 +259,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
     else if (in_bounds(mon->target))
     {
-        target = mgrd(mon->target);
+        target = env.mgrid(mon->target);
 
         if (target == NON_MONSTER)
             fprintf(stderr, "nothing");
@@ -270,7 +270,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         else if (invalid_monster_index(target))
             fprintf(stderr, "invalid monster index %d", target);
         else
-            fprintf(stderr, "%s", debug_mon_str(&menv[target]).c_str());
+            fprintf(stderr, "%s", debug_mon_str(&env.mons[target]).c_str());
     }
     else
         fprintf(stderr, "<OoB>");
@@ -316,7 +316,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
             fprintf(stderr, "invalid item index %d\n", idx);
             continue;
         }
-        const item_def &item(mitm[idx]);
+        const item_def &item(env.item[idx]);
 
         if (!item.defined())
         {
@@ -377,18 +377,18 @@ void debug_dump_mon(const monster* mon, bool recurse)
         return;
 
     if (!invalid_monster_index(mon->foe) && mon->foe != midx
-        && !invalid_monster_type(menv[mon->foe].type))
+        && !invalid_monster_type(env.mons[mon->foe].type))
     {
         fprintf(stderr, "Foe:\n");
-        debug_dump_mon(&menv[mon->foe], false);
+        debug_dump_mon(&env.mons[mon->foe], false);
     }
 
     if (!invalid_monster_index(target) && target != midx
         && target != mon->foe
-        && !invalid_monster_type(menv[target].type))
+        && !invalid_monster_type(env.mons[target].type))
     {
         fprintf(stderr, "Target:\n");
-        debug_dump_mon(&menv[target], false);
+        debug_dump_mon(&env.mons[target], false);
     }
 }
 

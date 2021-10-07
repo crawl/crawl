@@ -1,5 +1,7 @@
-import tornado, tornado.web
 import os.path
+
+import tornado
+import tornado.web
 
 import config
 

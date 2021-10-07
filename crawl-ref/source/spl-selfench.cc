@@ -70,15 +70,6 @@ spret ice_armour(int pow, bool fail)
     return spret::success;
 }
 
-spret deflection(int /*pow*/, bool fail)
-{
-    fail_check();
-    you.attribute[ATTR_DEFLECT_MISSILES] = 1;
-    mpr("You feel very safe from missiles.");
-
-    return spret::success;
-}
-
 spret cast_revivification(int pow, bool fail)
 {
     fail_check();
@@ -131,12 +122,14 @@ int cast_selective_amnesia(const string &pre_msg)
     // Pick a spell to forget.
     keyin = list_spells(false, false, false, "Forget which spell?");
     redraw_screen();
+    update_screen();
 
     if (isaalpha(keyin))
     {
         spell = get_spell_by_letter(keyin);
         slot = get_spell_slot_by_letter(keyin);
 
+        const bool in_library = you.spell_library[spell];
         if (spell != SPELL_NO_SPELL)
         {
             const string prompt = make_stringf(
@@ -144,10 +137,9 @@ int cast_selective_amnesia(const string &pre_msg)
                     spell_title(spell), spell_levels_required(spell),
                     spell_levels_required(spell) != 1 ? "s" : "",
                     player_spell_levels() + spell_levels_required(spell),
-                    you.spell_library[spell] ? "" :
-                    " This spell is not in your library!");
+                    in_library ? "" : " This spell is not in your library!");
 
-            if (yesno(prompt.c_str(), true, 'n', false))
+            if (yesno(prompt.c_str(), in_library, 'n', false))
             {
                 if (!pre_msg.empty())
                     mpr(pre_msg);
@@ -160,32 +152,18 @@ int cast_selective_amnesia(const string &pre_msg)
     return -1;
 }
 
-spret cast_infusion(int pow, bool fail)
-{
-    fail_check();
-    if (!you.duration[DUR_INFUSION])
-        mpr("You begin infusing your attacks with magical energy.");
-    else
-        mpr("You extend your infusion's duration.");
-
-    you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
-    you.props["infusion_power"] = pow;
-
-    return spret::success;
-}
-
-spret cast_song_of_slaying(int pow, bool fail)
+spret cast_wereblood(int pow, bool fail)
 {
     fail_check();
 
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        mpr("You start a new song!");
+    if (you.duration[DUR_WEREBLOOD])
+        mpr("Your blood is freshly infused with primal strength!");
     else
-        mpr("You start singing a song of slaying.");
+        mpr("Your blood is infused with primal strength.");
 
-    you.set_duration(DUR_SONG_OF_SLAYING, 20 + random2avg(pow, 2));
+    you.set_duration(DUR_WEREBLOOD, 20 + random2avg(pow, 2));
 
-    you.props[SONG_OF_SLAYING_KEY] = 0;
+    you.props[WEREBLOOD_KEY] = 0;
     return spret::success;
 }
 
@@ -218,18 +196,6 @@ spret cast_liquefaction(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_shroud_of_golubria(int pow, bool fail)
-{
-    fail_check();
-    if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
-        mpr("You renew your shroud.");
-    else
-        mpr("Space distorts slightly along a thin shroud covering your body.");
-
-    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50);
-    return spret::success;
-}
-
 spret cast_transform(int pow, transformation which_trans, bool fail)
 {
     if (!transform(pow, which_trans, false, true)
@@ -241,30 +207,4 @@ spret cast_transform(int pow, transformation which_trans, bool fail)
     fail_check();
     transform(pow, which_trans);
     return spret::success;
-}
-
-spret cast_noxious_bog(int pow, bool fail)
-{
-    fail_check();
-    flash_view_delay(UA_PLAYER, LIGHTGREEN, 100);
-
-    if (!you.duration[DUR_NOXIOUS_BOG])
-        mpr("You begin spewing toxic sludge!");
-    else
-        mpr("Your toxic spew intensifies!");
-
-    you.props[NOXIOUS_BOG_KEY] = pow;
-    you.increase_duration(DUR_NOXIOUS_BOG, 5 + random2(pow / 10), 24);
-    return spret::success;
-}
-
-void noxious_bog_cell(coord_def p)
-{
-    if (grd(p) == DNGN_DEEP_WATER || grd(p) == DNGN_LAVA)
-        return;
-
-    const int turns = 10
-                    + random2avg(you.props[NOXIOUS_BOG_KEY].get_int() / 20, 2);
-    temp_change_terrain(p, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
-            TERRAIN_CHANGE_BOG, you.as_monster());
 }

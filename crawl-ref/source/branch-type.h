@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum branch_type                // you.where_are_you
 {
     BRANCH_DUNGEON,
@@ -60,6 +62,7 @@ enum branch_type                // you.where_are_you
 #if TAG_MAJOR_VERSION == 34
     BRANCH_GAUNTLET,
 #endif
+    BRANCH_ARENA,
     NUM_BRANCHES,
 
     GLOBAL_BRANCH_INFO = 127,

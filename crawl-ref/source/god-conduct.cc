@@ -13,6 +13,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h" // uppercase_first
+#include "tag-version.h"
 
 #include <functional>
 
@@ -74,11 +75,11 @@ static const char *conducts[] =
     "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
-    "Spell Practise", "Cannibalism", "Eat Souled Being", "Deliberate Mutation",
+    "Spell Practise", "Cannibalism", "Deliberate Mutation",
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
-    "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Sacrificed Love", "Channel", "Hurt Foe",
+    "Kill Artificial", "Exploration", "Seen Monster",
+    "Sacrificed Love", "Channel", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -220,18 +221,6 @@ struct dislike_response
     }
 };
 
-/// Good gods', and Beogh's, response to cannibalism.
-static const dislike_response RUDE_CANNIBALISM_RESPONSE = {
-    "you perform cannibalism", true,
-    5, 3, nullptr, " expects more respect for your departed relatives."
-};
-
-/// Zin and Ely's responses to desecrating holy remains.
-static const dislike_response GOOD_DESECRATE_HOLY_RESPONSE = {
-    "you desecrate holy remains", true,
-    1, 1, nullptr, " expects more respect for holy creatures!"
-};
-
 /// Zin and Ely's responses to evil actions. TODO: parameterize & merge w/TSO
 static const dislike_response GOOD_EVIL_RESPONSE = {
     "you use evil magic or items", true,
@@ -279,10 +268,8 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_ZIN,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
         { DID_ATTACK_NEUTRAL, {
@@ -306,24 +293,15 @@ static peeve_map divine_peeves[] =
             "you deliberately mutate or transform yourself", true,
             1, 0, " forgives your inadvertent chaotic act, just this once."
         } },
-        { DID_DESECRATE_SOULED_BEING, {
-            "you butcher sentient beings", true,
-            5, 3
-        } },
         { DID_CAUSE_GLOWING, { nullptr, false, 1 } },
     },
     // GOD_SHINING_ONE,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, {
             "you attack non-hostile holy beings", true,
             1, 2, nullptr, nullptr, _attacking_holy_matters
         } },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_DESECRATE_HOLY_REMAINS, {
-            "you desecrate holy remains", true,
-            1, 2, nullptr, " expects more respect for holy creatures!"
-        } },
         { DID_EVIL, {
             "you use evil magic or items", true,
             1, 2, " forgives your inadvertent evil act, just this once."
@@ -345,9 +323,7 @@ static peeve_map divine_peeves[] =
     // GOD_VEHUMET,
     peeve_map(),
     // GOD_OKAWARU,
-    {
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
-    },
+    peeve_map(),
     // GOD_MAKHLEB,
     peeve_map(),
     // GOD_SIF_MUNA,
@@ -364,17 +340,19 @@ static peeve_map divine_peeves[] =
         } },
         { DID_SPELL_PRACTISE, {
             "you train magic skills", true,
-            1, 0, nullptr, " doesn't appreciate your training magic!"
+            1, 0, nullptr, " does not appreciate your training of magic skills!"
+        } },
+        { DID_WIZARDLY_ITEM, {
+            "you use magical staves or pain-branded weapons", true,
+            1, 0, nullptr, " does not appreciate your use of wizardly items!"
         } },
     },
     // GOD_NEMELEX_XOBEH,
     peeve_map(),
     // GOD_ELYVILON,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_DESECRATE_HOLY_REMAINS, GOOD_DESECRATE_HOLY_RESPONSE },
         { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
@@ -393,7 +371,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_BEOGH,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_DESECRATE_ORCISH_REMAINS, { "you desecrate orcish remains", true, 1 } },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allied orcs") },
     },
@@ -455,6 +432,8 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_WU_JIAN,
     peeve_map(),
+    // GOD_IGNIS,
+    peeve_map(),
 };
 
 string get_god_dislikes(god_type which_god)
@@ -472,7 +451,7 @@ string get_god_dislikes(god_type which_god)
         // Trog forgives Gnolls practising spellcasting since they do it
         // without choice. XXX: Rework the peeve_map to allow checking this.
         if (which_god == GOD_TROG
-            && you.species == SP_GNOLL
+            && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
             && entry.first == DID_SPELL_PRACTISE)
         {
             continue;
@@ -668,6 +647,22 @@ static like_response okawaru_kill(const char* desc)
     };
 }
 
+static const like_response _fedhas_kill_living_response()
+{
+    return
+    {
+        "you kill living beings", false,
+        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        nullptr, [] (int &, int &, const monster* victim)
+        {
+            if (victim && mons_class_can_leave_corpse(mons_species(victim->type)))
+                simple_god_message(" appreciates your contribution to the ecosystem.");
+            else
+                simple_god_message(" accepts your kill.");
+        }
+    };
+}
+
 static const like_response EXPLORE_RESPONSE = {
     "you explore the world", false,
     0, 0, 0, nullptr,
@@ -826,7 +821,7 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_FEDHAS,
     {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_LIVING, _fedhas_kill_living_response() },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
@@ -858,15 +853,16 @@ static like_map divine_likes[] =
     // GOD_ASHENZARI,
     {
         { DID_EXPLORATION, {
-            "you explore the world (preferably while bound by curses)", false,
-            0, 0, 0, nullptr,
+            nullptr, false, 0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
-                const int level = denom; // also = piety
-                const int base_gain = 8; // base gain per dungeon level
-                // levels: x1, x1.25, x1.5, x1.75, x2
-                piety = base_gain + base_gain * you.bondage_level / 4;
-                denom = level;
+                piety = 0;
+                denom = 1;
+
+                ASSERT(you.props.exists(ASHENZARI_CURSE_PROGRESS_KEY));
+
+                if (one_chance_in(100))
+                    you.props[ASHENZARI_CURSE_PROGRESS_KEY].get_int()++;
             }
         } },
     },
@@ -944,6 +940,8 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
+    // GOD_IGNIS,
+    like_map(),
 };
 
 /**
@@ -969,7 +967,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     // Trog forgives Gnolls practising spellcasting since they do it without
     // choice. XXX: Rework the peeve_map to allow checking this.
     if (you_worship(GOD_TROG)
-        && you.species == SP_GNOLL
+        && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
         && thing_done == DID_SPELL_PRACTISE)
     {
         return;
@@ -1052,8 +1050,15 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
 
 string get_god_likes(god_type which_god)
 {
-    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
+    switch (which_god)
+    {
+    case GOD_NO_GOD:
+    case GOD_XOM:
+    case GOD_IGNIS:
         return "";
+    default:
+        break;
+    }
 
     string text = uppercase_first(god_name(which_god));
     vector<string> likes;
@@ -1074,6 +1079,9 @@ string get_god_likes(god_type which_god)
         break;
     case GOD_ZIN:
         likes.emplace_back("you donate money");
+        break;
+    case GOD_ASHENZARI:
+        likes.emplace_back("you bind yourself with curses");
         break;
     default:
         break;
@@ -1117,11 +1125,6 @@ string get_god_likes(god_type which_god)
     }
 
     return text;
-}
-
-bool god_hates_cannibalism(god_type god)
-{
-    return divine_peeves[god].count(DID_CANNIBALISM);
 }
 
 conduct_type god_hates_item_handling(const item_def& item)

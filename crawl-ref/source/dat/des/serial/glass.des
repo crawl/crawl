@@ -9,13 +9,15 @@
 
 NAME:   serial_glass
 TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
-DEPTH:  D, Depths, Elf, Vaults, Crypt
+DEPTH:  D, Depths, Elf, Vaults, Crypt, Dis
 CHANCE: 1%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
   local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
   hook("post_place", function()
     dgn.place_maps{tag="serial_glass", count=c}
-    dgn.place_maps{tag="serial_glass_rare", count=d}
+    if not you.in_branch("Dis") then
+      dgn.place_maps{tag="serial_glass_rare", count=d}
+    end
   end)
 }}

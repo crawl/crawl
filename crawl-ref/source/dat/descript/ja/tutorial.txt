@@ -160,18 +160,6 @@ tutorial2 resting
 <input>$cmd[CMD_REST]</input>で休息をとることでHPの減少を回復することができます。
 これは100ターンの間休息を取りますが、様々な重大な出来事が起きると中断されます。
 %%%%
-tutorial2 chop_corpses
-
-あなたは<input>$cmd[CMD_BUTCHER]</input>
-<localtiles>または<input>Shift+クリック</input>で死体をさばいて食肉にすることができ、
-</localtiles><input>$cmd[CMD_EAT]</input>
-<localtiles>または<input>クリック</input>でそれを食べることができます</localtiles>。
-%%%%
-tutorial2 rest_and_chop_reminder
-
-肉を捌くことと(<input>$cmd[CMD_BUTCHER]</input>)、
-休息を取ることを(<input>$cmd[CMD_REST]</input>)忘れないように!
-%%%%
 tutorial2 wait
 
 突撃してモンスターに囲まれるのではなく、
@@ -181,13 +169,6 @@ tutorial2 wait
 tutorial2 resting_reminder
 
 <input>$cmd[CMD_REST]</input>で休息を取ることを忘れずに。
-%%%%
-tutorial2 eat_reminder
-
-<input>$cmd[CMD_BUTCHER]</input><localtiles>、
-または<input>Shift+クリック</input></localtiles>でモンスターを解体でき、
-<input>$cmd[CMD_EAT]</input><localtiles>、または<input>クリック</input>
-</localtiles>でその肉を食べることを忘れずに。
 %%%%
 tutorial2 compare_monster_desc
 
@@ -267,10 +248,6 @@ tutorial2 exit
 <yellow>休息</yellow>
   <input>$cmd[CMD_WAIT]</input>  1ターン待機して休息する
   <input>$cmd[CMD_REST]</input>  100ターン待機して休息する
-
-<yellow>死体<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  死体を肉に解体する
-  <input>$cmd[CMD_EAT]</input>  死肉を食べる
 
                                  <cyan>この画面は <input>任意のキー</input> を押すと終了します...</cyan>
 %%%%
@@ -503,12 +480,6 @@ tutorial4 aiming_clouds
 その範囲は狙いをつける際に知ることができます。魔法を効率よく使うために、
 一発の雲で多くの敵を巻き込んでみましょう。
 %%%%
-tutorial4 spell_hunger
-
-呪文の詠唱はあなたをとても空腹にします。
-呪文詠唱に伴う栄養消費は難しい呪文になるほど多くなり、
-これは高い知力と呪文詠唱スキルを鍛えることによって緩和することができます。
-%%%%
 tutorial4 forget_spell
 
 経験レベルと呪文詠唱スキルが上昇することで呪文を記憶するための記憶容量を得ることができます。
@@ -641,12 +612,6 @@ tutorial5 exhaustion
 疲労している間は狂戦士化することができず、減速もします。
 <input>$cmd[CMD_REST]</input><localtiles>
 (または<w>コマンドパネル</w>から)</localtiles>で体調がもとに戻るまで休息をとるのが最善でしょう。
-%%%%
-tutorial5 hunger
-
-非常に空腹な状態ではあなたは狂戦士化することができないので、
-常に何らかの食料を持ち歩く必要がある。これは死体を解体して食肉にするか、
-トログへ供物として捧げるかの選択を時に迫られるということだ。
 %%%%
 tutorial5 berserk2
 

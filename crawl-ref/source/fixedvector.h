@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <cstdarg>
 #include <cstring>
+#include <vector>
+
+using std::vector;
 
 template <class TYPE, int SIZE> class FixedVector
 {

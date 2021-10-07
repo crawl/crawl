@@ -25,7 +25,6 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "evoke.h"
-#include "food.h"
 #include "ghost.h"
 #include "god-passive.h" // passive_t::no_haste
 #include "god-wrath.h"
@@ -55,6 +54,7 @@
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
@@ -72,11 +72,10 @@ typedef map<card_type, int> deck_archetype;
 deck_archetype deck_of_escape =
 {
     { CARD_TOMB,       5 },
-    { CARD_EXILE,      1 },
+    { CARD_EXILE,      3 },
     { CARD_ELIXIR,     5 },
     { CARD_CLOUD,      5 },
     { CARD_VELOCITY,   5 },
-    { CARD_SHAFT,      5 },
 };
 
 deck_archetype deck_of_destruction =
@@ -94,7 +93,7 @@ deck_archetype deck_of_summoning =
     { CARD_ELEMENTS,        5 },
     { CARD_SUMMON_DEMON,    5 },
     { CARD_SUMMON_WEAPON,   5 },
-    { CARD_SUMMON_FLYING,   5 },
+    { CARD_SUMMON_BEE,      5 },
     { CARD_RANGERS,         5 },
     { CARD_ILLUSION,        5 },
 };
@@ -103,7 +102,6 @@ deck_archetype deck_of_punishment =
 {
     { CARD_WRAITH,     5 },
     { CARD_WRATH,      5 },
-    { CARD_FAMINE,     5 },
     { CARD_SWINE,      5 },
     { CARD_TORMENT,    5 },
 };
@@ -156,15 +154,13 @@ const char* card_name(card_type card)
     case CARD_VELOCITY:        return "Velocity";
     case CARD_EXILE:           return "Exile";
     case CARD_ELIXIR:          return "the Elixir";
-    case CARD_STAIRS:          return "the Stairs";
     case CARD_TOMB:            return "the Tomb";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
     case CARD_SUMMON_WEAPON:   return "the Dance";
-    case CARD_SUMMON_FLYING:   return "Foxfire";
+    case CARD_SUMMON_BEE:      return "the Swarm";
     case CARD_RANGERS:         return "the Rangers";
-    case CARD_SHAFT:           return "the Shaft";
     case CARD_VITRIOL:         return "Vitriol";
     case CARD_CLOUD:           return "the Cloud";
     case CARD_STORM:           return "the Storm";
@@ -176,11 +172,30 @@ const char* card_name(card_type card)
     case CARD_ORB:             return "the Orb";
     case CARD_ILLUSION:        return "the Illusion";
     case CARD_DEGEN:           return "Degeneration";
-    case CARD_FAMINE:          return "Famine";
 
+#if TAG_MAJOR_VERSION == 34
+    case CARD_FAMINE_REMOVED:
+    case CARD_SHAFT_REMOVED:
+    case CARD_STAIRS_REMOVED:
+#endif
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
+}
+
+bool card_is_removed(card_type card)
+{
+    switch (card)
+    {
+#if TAG_MAJOR_VERSION == 34
+case CARD_FAMINE_REMOVED:
+case CARD_SHAFT_REMOVED:
+case CARD_STAIRS_REMOVED:
+        return true;
+#endif
+    default:
+        return false;
+    }
 }
 
 card_type name_to_card(string name)
@@ -390,7 +405,7 @@ static void _describe_cards(CrawlVector& cards)
     auto title_hbox = make_shared<Box>(Widget::HORZ);
 #ifdef USE_TILE
         auto icon = make_shared<Image>();
-        icon->set_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
+        icon->set_tile(tile_def(TILEG_NEMELEX_CARD));
         title_hbox->add_child(move(icon));
 #endif
         auto title = make_shared<Text>(formatted_string(name, WHITE));
@@ -535,9 +550,7 @@ static deck_type _choose_deck(const string title = "Draw")
         if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
-#ifdef USE_TILE
-        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
-#endif
+        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));
         deck_menu.add_entry(me);
     }
 
@@ -555,7 +568,10 @@ static deck_type _choose_deck(const string title = "Draw")
     };
     deck_menu.show(false);
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
     return (deck_type) ret;
 }
 
@@ -611,6 +627,12 @@ bool deck_draw(deck_type deck)
 
 bool deck_stack()
 {
+    if (crawl_state.is_replaying_keys())
+    {
+        crawl_state.cancel_cmd_all("You can't repeat Stack Five.");
+        return false;
+    }
+
     int total_cards = 0;
 
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; ++i)
@@ -619,6 +641,7 @@ bool deck_stack()
     if (deck_cards(DECK_STACK) && !yesno("Replace your current stack?",
                                           false, 0))
     {
+        canned_msg(MSG_OK);
         return false;
     }
 
@@ -728,12 +751,11 @@ static void _draw_stack(int to_stack)
                     MEL_ITEM, 1, _deck_hotkey((deck_type)i));
         numbers[i] = i;
         me->data = &numbers[i];
+        // TODO: update this if a deck is emptied while in this menu
         if (!deck_cards((deck_type)i))
             me->colour = COL_USELESS;
 
-#ifdef USE_TILE
-        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1, TEX_GUI));
-#endif
+        me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));
         deck_menu.add_entry(me);
     }
     deck_menu.on_single_selection = [&deck_menu, &stack, to_stack](const MenuEntry& sel)
@@ -748,13 +770,21 @@ static void _draw_stack(int to_stack)
             describe_deck(selected);
         else
         {
-            you.props[deck_name(selected)]--;
-            me->text = deck_status(selected);
-            me->alt_text = deck_status(selected);
+            string status;
+            if (deck_cards(selected))
+            {
+                you.props[deck_name(selected)]--;
+                me->text = deck_status(selected);
+                me->alt_text = deck_status(selected);
 
-            card_type draw = _random_card(selected);
-            stack.push_back(draw);
-            string status = "Drawn so far: " + stack_contents();
+                card_type draw = _random_card(selected);
+                stack.push_back(draw);
+            }
+            else
+                status = "<lightred>That deck is empty!</lightred> ";
+
+            if (stack.size() > 0)
+                status += "Drawn so far: " + stack_contents();
             deck_menu.set_more(formatted_string::parse_string(
                        status + "\n" +
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "
@@ -786,9 +816,7 @@ bool stack_five(int to_stack)
         MenuEntry * const entry =
             new MenuEntry(card_name((card_type)stack[i].get_int()),
                           MEL_ITEM, 1, '1'+i);
-#ifdef USE_TILE
-        entry->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
-#endif
+        entry->add_tile(tile_def(TILEG_NEMELEX_CARD));
         menu.add_entry(entry);
     }
     menu.set_more(formatted_string::parse_string(
@@ -833,6 +861,12 @@ bool deck_deal()
 // Draw the next three cards, discard two and pick one.
 bool deck_triple_draw()
 {
+    if (crawl_state.is_replaying_keys())
+    {
+        crawl_state.cancel_cmd_all("You can't repeat Triple Draw.");
+        return false;
+    }
+
     deck_type choice = _choose_deck();
 
     if (choice == NUM_DECKS)
@@ -903,6 +937,7 @@ bool draw_three()
         {
             _describe_cards(draws);
             redraw_screen();
+            update_screen();
             need_prompt_redraw = true;
         }
         else if (keyin >= 'a' && keyin < 'a' + draws.size())
@@ -935,6 +970,7 @@ static int _get_power_level(int power)
 
     // other functions in this file will break if this assertion is violated
     ASSERT(power_level >= 0 && power_level <= 2);
+    dprf("power level: %d", power_level);
     return power_level;
 }
 
@@ -955,7 +991,7 @@ static void _velocity_card(int power)
     if (!apply_visible_monsters([=](monster& mon)
           {
               bool affected = false;
-              if (!mons_immune_magic(mon))
+              if (!mons_invuln_will(mon))
               {
                   const bool hostile = !mon.wont_attack();
                   const bool haste_immune = (mon.stasis()
@@ -1006,89 +1042,18 @@ static void _exile_card(int power)
 
     for (int i = 0; i < 1 + extra_targets; ++i)
     {
-        // Pick a random monster nearby to banish (or yourself).
+        // Pick a random monster nearby to banish.
         monster* mon_to_banish = choose_random_nearby_monster(1);
 
         // Bonus banishments only banish monsters.
         if (i != 0 && !mon_to_banish)
             continue;
 
-        if (!mon_to_banish) // Banish yourself!
-        {
-            banished("drawing a card");
+        if (!mon_to_banish)
             break;              // Don't banish anything else.
-        }
         else
             mon_to_banish->banish(&you);
     }
-}
-
-static void _shaft_card(int power)
-{
-    const int power_level = _get_power_level(power);
-    bool did_something = false;
-
-    if (is_valid_shaft_level())
-    {
-        if (grd(you.pos()) == DNGN_FLOOR)
-        {
-            place_specific_trap(you.pos(), TRAP_SHAFT);
-            trap_at(you.pos())->reveal();
-            mpr("A shaft materialises beneath you!");
-            did_something = true;
-        }
-
-        did_something = apply_visible_monsters([=](monster& mons)
-        {
-            return !mons.wont_attack()
-                   && mons_is_threatening(mons)
-                   && x_chance_in_y(power_level, 3)
-                   && mons.do_shaft();
-        }) || did_something;
-    }
-
-    if (!did_something)
-        canned_msg(MSG_NOTHING_HAPPENS);
-}
-
-static int stair_draw_count = 0;
-
-// This does not describe an actual card. Instead, it only exists to test
-// the stair movement effect in wizard mode ("&c stairs").
-static void _stairs_card(int /*power*/)
-{
-    you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
-    you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
-
-    if (feat_stair_direction(grd(you.pos())) == CMD_NO_CMD)
-        you.duration[DUR_REPEL_STAIRS_MOVE]  = 1000;
-    else
-        you.duration[DUR_REPEL_STAIRS_CLIMB] =  500; // more annoying
-
-    vector<coord_def> stairs_avail;
-
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT, true); ri; ++ri)
-    {
-        dungeon_feature_type feat = grd(*ri);
-        if (feat_stair_direction(feat) != CMD_NO_CMD
-            && feat != DNGN_ENTER_SHOP)
-        {
-            stairs_avail.push_back(*ri);
-        }
-    }
-
-    if (stairs_avail.empty())
-    {
-        mpr("No stairs available to move.");
-        return;
-    }
-
-    shuffle_array(stairs_avail);
-
-    for (coord_def stair : stairs_avail)
-        move_stair(stair, stair_draw_count % 2, false);
-
-    stair_draw_count++;
 }
 
 static monster* _friendly(monster_type mt, int dur)
@@ -1140,27 +1105,8 @@ static void _damaging_card(card_type card, int power,
     case CARD_PAIN:
         if (power_level == 2)
         {
-            mpr(prompt);
-
-            if (monster *ghost = _friendly(MONS_FLAYED_GHOST, 3))
-            {
-                apply_visible_monsters([&, ghost](monster& mons)
-                {
-                    if (mons.wont_attack()
-                        || !(mons.holiness() & MH_NATURAL))
-                    {
-                        return false;
-                    }
-
-
-                    flay(*ghost, mons, mons.hit_points * 2 / 5);
-                    return true;
-                }, ghost->pos());
-
-                ghost->foe = MHITYOU; // follow you around (XXX: rethink)
-                return;
-            }
-            // else, fallback to level 1
+            mpr("You reveal a symbol of torment!");
+            torment(&you, TORMENT_CARD_PAIN, you.pos());
         }
 
         ztype = painzaps[min(power_level, (int)ARRAYSZ(painzaps)-1)];
@@ -1197,7 +1143,7 @@ static void _damaging_card(card_type card, int power,
         if (power_level == 1)
         {
             cast_iood(&you, power/6, &beam, 0, 0,
-                      mgrd(beam.target), false, false);
+                      env.mgrid(beam.target), false, false);
         }
         else
             cast_iood_burst(power/6, beam.target);
@@ -1210,45 +1156,8 @@ static void _elixir_card(int power)
 {
     int power_level = _get_power_level(power);
 
-    you.duration[DUR_ELIXIR_HEALTH] = 0;
-    you.duration[DUR_ELIXIR_MAGIC] = 0;
-
-    switch (power_level)
-    {
-    case 0:
-        if (coinflip())
-            you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 3 + random2(5));
-        break;
-    case 1:
-        if (you.hp * 2 < you.hp_max)
-            you.set_duration(DUR_ELIXIR_HEALTH, 3 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 10);
-        break;
-    default:
-        you.set_duration(DUR_ELIXIR_HEALTH, 10);
-        you.set_duration(DUR_ELIXIR_MAGIC, 10);
-    }
-
-    if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
-        mpr("You begin rapidly regenerating health and magic.");
-    else if (you.duration[DUR_ELIXIR_HEALTH])
-        mpr("You begin rapidly regenerating.");
-    else
-        mpr("You begin rapidly regenerating magic.");
-
-    apply_visible_monsters([=](monster& mon)
-    {
-        if (mon.wont_attack())
-        {
-            const int hp = mon.max_hit_points / (4 - power_level);
-            if (mon.heal(hp + random2avg(hp, 2)))
-               simple_monster_message(mon, " is healed.");
-        }
-        return true;
-    });
+    you.set_duration(DUR_ELIXIR, 1 + 3 * power_level + random2(3));
+    mpr("You begin rapidly regenerating health and magic.");
 }
 
 // Special case for *your* god, maybe?
@@ -1405,55 +1314,21 @@ static void _summon_dancing_weapon(int power)
     mon->ghost_demon_init();
 }
 
-static void _summon_flying(int power)
+static void _summon_bee(int power)
 {
     const int power_level = _get_power_level(power);
-
-    const monster_type flytypes[] =
-    {
-        MONS_INSUBSTANTIAL_WISP, MONS_WYVERN, MONS_KILLER_BEE,
-        MONS_VAMPIRE_MOSQUITO, MONS_HORNET
-    };
-    const int num_flytypes = ARRAYSZ(flytypes);
-
-    // Choose what kind of monster.
-    monster_type result;
-    const int how_many = 2 + random2(3) + power_level * 3;
-    bool hostile_invis = false;
-
-    do
-    {
-        result = flytypes[random2(num_flytypes - 2) + power_level];
-    }
-    while (is_good_god(you.religion) && result == MONS_VAMPIRE_MOSQUITO);
+    const int how_many = 1 + random2((power_level + 1) * 3);
 
     for (int i = 0; i < how_many; ++i)
-    {
-        const bool hostile = one_chance_in(power_level + 4);
-
-        create_monster(
-            mgen_data(result,
-                      hostile ? BEH_HOSTILE : BEH_FRIENDLY, you.pos(), MHITYOU,
-                      MG_AUTOFOE).set_summoned(&you, 3, 0));
-
-        if (hostile && mons_class_flag(result, M_INVIS) && !you.can_see_invisible())
-            hostile_invis = true;
-    }
-
-    if (hostile_invis)
-        mpr("You sense the presence of something unfriendly.");
+        _friendly(MONS_KILLER_BEE, 3);
 }
 
 static void _summon_rangers(int power)
 {
     const int power_level = _get_power_level(power);
-    const monster_type dctr  = random_choose(MONS_CENTAUR, MONS_YAKTAUR),
-                       dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN),
-                       dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN,
-                                             MONS_NAGA_SHARPSHOOTER),
-                       dctr4 = random_choose(MONS_SATYR,
-                                             MONS_MERFOLK_JAVELINEER,
-                                             MONS_DEEP_ELF_MASTER_ARCHER);
+    const monster_type dctr = MONS_CENTAUR_WARRIOR,
+                       dctr2 = MONS_NAGA_SHARPSHOOTER,
+                       dctr3 = MONS_DEEP_ELF_MASTER_ARCHER;
 
     const monster_type base_choice = power_level == 2 ? dctr2 :
                                                         dctr;
@@ -1463,7 +1338,7 @@ static void _summon_rangers(int power)
     const bool extra_monster = coinflip();
 
     if (!extra_monster && power_level > 0)
-        placed_choice = power_level == 2 ? dctr4 : dctr3;
+        placed_choice = power_level == 2 ? dctr3 : dctr2;
 
     for (int i = 0; i < 1 + extra_monster; ++i)
         _friendly(base_choice, 5 - power_level);
@@ -1480,33 +1355,16 @@ static void _cloud_card(int power)
     {
         monster *mons = monster_at(*di);
         cloud_type cloudy;
-
-        switch (power_level)
-        {
-            case 0: cloudy = !one_chance_in(5) ? CLOUD_MEPHITIC : CLOUD_POISON;
-                    break;
-
-            case 1: cloudy = coinflip() ? CLOUD_COLD : CLOUD_FIRE;
-                    break;
-
-            case 2: cloudy = coinflip() ? CLOUD_ACID: CLOUD_MIASMA;
-                    break;
-
-            default: cloudy = CLOUD_DEBUGGING;
-        }
+        cloudy = CLOUD_BLACK_SMOKE;
 
         if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+        for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         {
-            // don't place clouds on the player or monsters
-            if (*ai == you.pos() || monster_at(*ai))
-                continue;
-
-            if (grd(*ai) == DNGN_FLOOR && !cloud_at(*ai))
+            if (env.grid(*ai) == DNGN_FLOOR && !cloud_at(*ai))
             {
-                const int cloud_power = 5 + random2((power_level + 1) * 3);
+                const int cloud_power = 5 + random2avg(power_level * 6, 2);
                 place_cloud(cloudy, *ai, cloud_power, &you);
 
                 if (you.see_cell(*ai))
@@ -1527,10 +1385,11 @@ static void _storm_card(int power)
 
     wind_blast(&you, (power_level + 1) * 66, coord_def(), true);
     redraw_screen(); // Update monster positions
+    update_screen();
 
     // 1-3, 4-6, 7-9
     const int max_explosions = random_range((power_level * 3) + 1, (power_level + 1) * 3);
-    // Select targets based on simultaneously running max_explosions resivoir
+    // Select targets based on simultaneously running max_explosions reservoir
     // samples from the radius iterator over valid targets.
     //
     // Once the possible targets are drawn, the result is deduplicated into a
@@ -1557,6 +1416,7 @@ static void _storm_card(int power)
     for (auto p : targets)
     {
         bolt beam;
+        beam.flavour           = BEAM_ELECTRICITY;
         beam.is_tracer         = false;
         beam.is_explosion      = true;
         beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
@@ -1603,7 +1463,7 @@ static void _illusion_card(int power)
     mon->attitude = ATT_FRIENDLY;
     mon->set_position(you.pos());
     mon->mid = MID_PLAYER;
-    mgrd(you.pos()) = mon->mindex();
+    env.mgrid(you.pos()) = mon->mindex();
 
     mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
     mon->reset();
@@ -1658,17 +1518,21 @@ static void _wild_magic_card(int power)
         if (x_chance_in_y((power_level + 1) * 5 + random2(5),
                            mons->get_hit_dice()))
         {
+            // skip summoning and tlocs, only destructive forces
             spschool type = random_choose(spschool::conjuration,
                                           spschool::fire,
                                           spschool::ice,
                                           spschool::earth,
                                           spschool::air,
-                                          spschool::poison);
+                                          spschool::poison,
+                                          spschool::transmutation,
+                                          spschool::hexes,
+                                          spschool::necromancy);
 
-            MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
-                          {miscast_source::deck}, type,
-                          random2(power/15) + 5, random2(power),
-                          "a card of wild magic");
+            miscast_effect(*mons, &you,
+                           {miscast_source::deck}, type,
+                           3 * (power_level + 1), random2(70),
+                           "a card of wild magic");
 
             num_affected++;
         }
@@ -1744,8 +1608,6 @@ void card_effect(card_type which_card,
     case CARD_VELOCITY:         _velocity_card(power); break;
     case CARD_EXILE:            _exile_card(power); break;
     case CARD_ELIXIR:           _elixir_card(power); break;
-    case CARD_STAIRS:           _stairs_card(power); break;
-    case CARD_SHAFT:            _shaft_card(power); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false, true); break;
     case CARD_WRATH:            _godly_wrath(); break;
@@ -1753,7 +1615,7 @@ void card_effect(card_type which_card,
     case CARD_ELEMENTS:         _elements_card(power); break;
     case CARD_RANGERS:          _summon_rangers(power); break;
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power); break;
-    case CARD_SUMMON_FLYING:    _summon_flying(power); break;
+    case CARD_SUMMON_BEE:       _summon_bee(power); break;
     case CARD_TORMENT:          _torment_card(); break;
     case CARD_CLOUD:            _cloud_card(power); break;
     case CARD_STORM:            _storm_card(power); break;
@@ -1767,13 +1629,6 @@ void card_effect(card_type which_card,
         _damaging_card(which_card, power, dealt);
         break;
 
-    case CARD_FAMINE:
-        if (you_foodless())
-            mpr("You feel rather smug.");
-        else
-            set_hunger(min(you.hunger, HUNGER_STARVING / 2), true);
-        break;
-
     case CARD_SWINE:
         if (transform(5 + power/10 + random2(power/10), transformation::pig, true))
             you.transform_uncancellable = true;
@@ -1781,6 +1636,11 @@ void card_effect(card_type which_card,
             mpr("You feel a momentary urge to oink.");
         break;
 
+#if TAG_MAJOR_VERSION == 34
+    case CARD_FAMINE_REMOVED:
+    case CARD_SHAFT_REMOVED:
+    case CARD_STAIRS_REMOVED:
+#endif
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
         mprf("You have %s a buggy card!", participle);
@@ -1820,7 +1680,7 @@ bool is_deck(const item_def &item)
 
 void reclaim_decks_on_level()
 {
-    for (auto &item : mitm)
+    for (auto &item : env.item)
         if (item.defined() && is_deck(item))
             destroy_item(item.index());
 }

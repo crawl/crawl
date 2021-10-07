@@ -102,21 +102,29 @@ Dis
 The Iron City of Dis is home to many of the most resilient guardians of hell.
 Those who do not belong in the halls of Dis will find the very earth itself
 opposing them.
+
+The malice of this metal realm corrodes equipment.
 %%%%
 Gehenna
 
 Gehenna is a realm of lava, flames and damnation. Those who linger will have
 fire and brimstone rained down upon them.
+
+The acrid smoke renders scrolls unreadable.
 %%%%
 Cocytus
 
 Cocytus is a grim and frost-bitten wasteland. Intruders will find the biting
 winds and icy inhabitants of the wastes impeding their progress.
+
+The frigid cold congeals potions.
 %%%%
 Tartarus
 
 Tartarus is a decaying netherworld. Over time, the undead, demons and devils of
 this place drain the life from any who dare to enter.
+
+The all-pervading rot saps visitors' willpower.
 %%%%
 Zot
 
@@ -193,7 +201,7 @@ worse, some of these complexes offer only one exit...in the minotaur's lair.
 Bazaar
 
 While some merchants set up shop in the dungeon, others travel in caravans from
-place to place. The bazaars of these intinerant traders feature a number of
+place to place. The bazaars of these itinerant traders feature a number of
 different shops and often have better stock than the sedentary ones, sometimes
 even at a bargain.
 %%%%
@@ -268,4 +276,9 @@ cultists of the dead gods, their heretical constructs, and the guardians
 of the cult's legendary treasure yet remain.
 
 # important note: the Twins were religion '2', as TSO is '1'. Not 'S'.
+%%%%
+Arena
+
+Okawaru's most favoured followers are granted access to the Arena to duel
+against their foes.
 %%%%

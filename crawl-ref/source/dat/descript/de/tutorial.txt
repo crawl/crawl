@@ -168,19 +168,6 @@ Sehr gut! Du hast beim Ausruhen mit <input>$cmd[CMD_REST]</input> jeden
 verlorenen Lebenspunkt wiedererlangt. Damit kannst du Rasten und für 100 Züge
 suchen, aber auch durch unzählige Ereignisse unterbrochen werden.
 %%%%
-tutorial2 chop_corpses
-
-Du kannst Leichen in essbare Stücke mit <input>$cmd[CMD_BUTCHER]</input>
-<localtiles> oder mit <input>Shift-Klick</input></localtiles> zerhacken und
-die so erhaltenen Fleischbrocken mit <input>$cmd[CMD_EAT]</input><localtiles>
-oder mit einem <input>Mausklick</input></localtiles> verspeisen.
-%%%%
-tutorial2 rest_and_chop_reminder
-
-Vergiss nicht das du die Leichen, um Nahrung zu bekommen, (mit
-<input>$cmd[CMD_BUTCHER]</input>) zerstückeln kannst, oder zu Rasten (mit
-<input>$cmd[CMD_REST]</input>)!
-%%%%
 tutorial2 wait
 
 Besser als einen Raum zu stürmen und von Monstern überrannt zu werden kannst du
@@ -190,13 +177,6 @@ sie zu dir vordringen.
 tutorial2 resting_reminder
 
 Danke daran, du kannst dich mit <input>$cmd[CMD_REST]</input> ausruhen.
-%%%%
-tutorial2 eat_reminder
-
-Denke daran, du kannst Kreaturen mit <input>$cmd[CMD_BUTCHER]</input>
-<localtiles> oder mir <input>Shift-Klick</input></localtiles> zerhacken und
-dann die übrig gebliebenen Stücke mit <input>$cmd[CMD_EAT]</input><localtiles>
-oder <input>Maus-Klick</input></localtiles> verspeisen.
 %%%%
 tutorial2 compare_monster_desc
 
@@ -278,10 +258,6 @@ tutorial2 exit
 <yellow>Rasten</yellow>
   <input>$cmd[CMD_WAIT]</input>  warte und raste eine einzige Runde
   <input>$cmd[CMD_REST]</input>  warte und raste bis zu 100 Runden
-
-<yellow>Leichen<console> <brown>%</brown></console></yellow>
-  <input>$cmd[CMD_BUTCHER]</input>  zerhacke eine Leiche zu einem Fleischklumpen
-  <input>$cmd[CMD_EAT]</input>  iss einen Klumpen Fleisch
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
@@ -519,12 +495,6 @@ Dämpfen und während du zielst wirst du in der Lage sein zu sehen welchen
 Bereich sie betrifft. Versuche mehrere Feinde in einer einzigen Wolke zu
 fangen, um mit deiner Magie effizienter zu sein.
 %%%%
-tutorial4 spell_hunger
-
-Zaubern kann dich wirklich hungrig hungrig machen. Der Zauberhunger ist höher
-für schwierigere Zauber und kann durch hohe Intelligenz und Ausbildung der
-Fertigkeit Zaubern reduziert werden.
-%%%%
 tutorial4 forget_spell
 
 Eine Stufe aufsteigen und das Erhöhen der Zaubern Fertigkeit geben weitere
@@ -662,13 +632,6 @@ nicht wieder in Raserei verfallen und wirst langsamer. Am besten ist es dann
 mit <input>$cmd[CMD_REST]</input><localtiles> (oder über das
 <w>Befehls-Feld</w>) zu rasten</localtiles> bis du dich wieder fit genug
 fühlst.
-%%%%
-tutorial5 hunger
-
-Du kannst nicht in Raserei verfallen wenn du sehr hungrig bist, deswegen
-solltest du immer etwas zu essen dabei haben. Das bedeutet, das du dich
-manchmal entscheiden musst, ob du eine Leiche zerhackst oder diese an Trog
-opferst.
 %%%%
 tutorial5 berserk2
 

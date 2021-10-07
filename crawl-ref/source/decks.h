@@ -12,6 +12,7 @@
 #include "deck-type.h"
 #include "ability-type.h"
 #include "enum.h"
+#include "tag-version.h"
 
 #define NEMELEX_TRIPLE_DRAW_KEY "nemelex_triple_draw"
 #define NEMELEX_STACK_KEY       deck_name(DECK_STACK)
@@ -26,7 +27,9 @@ enum card_type
     CARD_VELOCITY,            // remove slow, alter others' speeds
     CARD_TOMB,                // a ring of rock walls
     CARD_EXILE,               // banish others, maybe self
-    CARD_SHAFT,               // under the user, maybe others
+#if TAG_MAJOR_VERSION == 34
+    CARD_SHAFT_REMOVED,       // removed
+#endif
     CARD_VITRIOL,             // acid damage
     CARD_CLOUD,               // encage enemies in rings of clouds
     CARD_STORM,               // wind and rain
@@ -36,12 +39,16 @@ enum card_type
     CARD_ELIXIR,              // restoration of hp and mp
     CARD_SUMMON_DEMON,        // dual demons
     CARD_SUMMON_WEAPON,       // a dance partner
-    CARD_SUMMON_FLYING,       // swarms from the swamp
+    CARD_SUMMON_BEE,          // swarm of bees
     CARD_WILD_MAGIC,          // miscasts for everybody
-    CARD_STAIRS,              // moves stairs around
+#if TAG_MAJOR_VERSION == 34
+    CARD_STAIRS_REMOVED,      // moved stairs around
+#endif
     CARD_WRATH,               // random godly wrath
     CARD_WRAITH,              // drain XP
-    CARD_FAMINE,              // starving
+#if TAG_MAJOR_VERSION == 34
+    CARD_FAMINE_REMOVED,      // starving
+#endif
     CARD_SWINE,               // *oink*
     CARD_ILLUSION,            // a copy of the player
     CARD_DEGEN,               // polymorph hostiles down hd, malmutate
@@ -80,6 +87,7 @@ string deck_name(deck_type deck);
 string deck_description(deck_type deck);
 const string stack_top();
 const string stack_contents();
+bool card_is_removed(card_type card);
 
 #if TAG_MAJOR_VERSION == 34
 bool is_deck_type(uint8_t type);

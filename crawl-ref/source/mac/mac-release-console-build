@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec ./mac/mac-app-universal-build "$@" mac-app-console

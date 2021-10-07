@@ -57,7 +57,7 @@ Wishful Thinking
 # FIXME: should appear on amulets only
 Yendor
 %%%%
-_suspicion_name_
+_suspicion_no_conflict_name_
 
 Doubts
 
@@ -66,6 +66,8 @@ Incredulity
 Jealousy
 
 Mistrust
+
+Paranoia
 
 Scepticism
 
@@ -76,8 +78,12 @@ Suspected Treachery
 Suspicion
 
 Trepidation
+%%%%
+_suspicion_name_
 
-w:20
+@_suspicion_no_conflict_name_@
+
+w:2
 @_conflict_name_@
 %%%%
 ######################################################
@@ -97,13 +103,23 @@ Esteem
 
 Favour
 
+w:5
+Felicitations
+
 Generosity
 
+Grace
+
 Hope
+
+Inspiration
 
 Pride
 
 Regard
+
+w:5
+Respect
 
 Supremacy
 
@@ -536,12 +552,25 @@ the Well-Known
 _thing_names_
 Allies
 
+Artisans
+
+Artists
+
+Beasts
+
 Beds
 
 Beggars
 
 Blessings
 
+Bones
+
+Bounties
+
+Brambles
+
+w:5
 Cities
 
 Coins
@@ -554,9 +583,13 @@ Dances
 
 Deaths
 
+Defenders
+
 Demons
 
 Dreams
+
+Ears
 
 Emperors
 
@@ -564,11 +597,30 @@ Eyes
 
 Friends
 
+Friars
+
+Geomancers
+
 Ghosts
 
 Gods
 
+Heavens
+
 Hells
+
+Hosts
+
+Interlopers
+
+Invaders
+
+Knaves
+
+w:25
+Knives
+
+Leylines
 
 Lies
 
@@ -580,21 +632,42 @@ Mice
 
 Moons
 
+Mouths
+
+Mystics
+
+w:5
+Nightcaps
+
+Nightingales
+
 Nightmares
 
 Nights
+
+Olives
 
 Orbs
 
 People
 
+Persimmons
+
 Places
 
 Planets
 
+Portals
+
+Priests
+
 Princes
 
+Prophets
+
 Queens
+
+Quests
 
 Realms
 
@@ -604,6 +677,10 @@ Scars
 
 Seas
 
+Seers
+
+Servitors
+
 Ships
 
 Shrikes
@@ -611,6 +688,8 @@ Shrikes
 Songs
 
 Souls
+
+Spines
 
 Spirits
 
@@ -627,11 +706,379 @@ Tables
 
 Tales
 
+Teeth
+
+Thickets
+
+w:5
+Things
+
+w:5
+Towns
+
+Tusks
+
+Ultimatums
+
+Underlurkers
+
+w:5
+Villages
+
+Violins
+
+Visionaries
+
+Visions
+
 Wars
 
 Wishes
 
 Wonders
 
+Xalams
+
+Xenops
+
+Xeniums
+
+w:5
+Xenophobes
+
 Yaks
+
+Youths
+
+Ziggurats
+%%%%
+_verbing_
+Glowing
+
+Smoking
+
+Scorching
+
+Twisting
+
+Shimmering
+
+Freezing
+
+Dripping
+
+Jumping
+
+Leaping
+
+Dancing
+
+Singing
+
+Shouting
+
+Screaming
+
+Muttering
+
+Howling
+
+Glimmering
+
+w:5
+Ageing
+
+w:5
+Baking
+
+Hungering
+
+Devouring
+
+Destroying
+
+Lusting
+
+Saving
+
+Thieving
+
+Witching
+
+Wizarding
+
+Bespelling
+
+Protecting
+
+w:5
+Slicing
+
+w:5
+Chopping
+
+w:5
+Crushing
+
+w:5
+Slashing
+
+w:5
+Piercing
+%%%%
+_adjective_
+Blue
+
+Green
+
+Red
+
+w:5
+Amorous
+
+Antique
+
+Arcadian
+
+w:5
+Avant Garde
+
+Baleful
+
+Barnacled
+
+Beastly
+
+Bedazzling
+
+Bellicose
+
+Bespelled
+
+Bright
+
+Burning
+
+Burnt
+
+Carved
+
+Caustic
+
+Cleverly Designed
+
+Contumacious
+
+Damp
+
+Decaying
+
+Deeply Unsettling
+
+Delicate
+
+Delightful
+
+Demonic
+
+Divine
+
+Doomed
+
+Dowdy
+
+Dull
+
+Durable
+
+Enormous
+
+Ethereal
+
+Exceptional
+
+Extremely Toothy
+
+Eye-covered
+
+Fabulous
+
+Feral
+
+Ferocious
+
+Festooned
+
+Filigreed
+
+Floral
+
+Freezing
+
+w:5
+Futuristic
+
+Fuzzy
+
+Ghostly
+
+Glamorous
+
+Golden
+
+Grand
+
+Grim
+
+Hairy
+
+Haunted
+
+Histrionic
+
+Indestructible
+
+Intense
+
+Irksome
+
+Jocular
+
+Lachrymose
+
+Living
+
+Majestic
+
+Meager
+
+w:5
+Modern
+
+Mordant
+
+Narrow
+
+Nice
+
+Noxious
+
+Oily
+
+Ornamental
+
+Painted
+
+Parsimonious
+
+Powerful
+
+Puckish
+
+Quiescent
+
+Reasonable
+
+Resonant
+
+Rotten
+
+Sandy
+
+Sharp
+
+Shrieking
+
+w:5
+Silly
+
+Slimy
+
+Solemn
+
+Soft
+
+Squeaky
+
+Stained
+
+Sufficient
+
+Tentacled
+
+Toothy
+
+Tortured
+
+Transparent
+
+Ubiquitous
+
+Verdant
+
+Viny
+
+Voracious
+
+Weak
+
+Wicked
+
+Wonderful
+
+Zealous
+%%%%
+_fruit_name_
+
+Orange
+
+Banana
+
+Pear
+
+Apple
+
+Apricot
+
+Tomato
+
+Peach
+
+Plum
+
+Rambutan
+
+Lychee
+
+Mango
+
+Watermelon
+
+Coconut
+
+Breadfruit
+
+Eggfruit
+
+Dragonfruit
+
+Guava
+
+Mangosteen
+
+Tangerine
+
+Cherry
+
+Grape
+
+Sultana
+
+Fig
+
+Date
+
+Lemon
+
+Lime
 %%%%

@@ -3,10 +3,11 @@
 #include "tiledgnbuf.h"
 
 #include "tile-flags.h"
-#include "tiledef-dngn.h"
-#include "tiledef-icons.h"
-#include "tiledef-main.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-main.h"
+#include "rltiles/tiledef-player.h"
+#include "tag-version.h"
 #include "tiledoll.h"
 #include "tilemcache.h"
 #include "tilepick.h"
@@ -54,14 +55,16 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     }
     else if (fg_idx == TILEP_PLAYER)
         pack_player(x, y, in_water);
-    else if (fg_idx >= TILE_MAIN_MAX)
+    else if (get_tile_texture(fg_idx) == TEX_PLAYER)
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
 
     pack_foreground(x, y, cell);
 
     // Draw cloud layer(s)
-    if (cloud_idx && cloud_idx < TILE_FEAT_MAX)
+    if (cloud_idx)
     {
+        ASSERT(get_tile_texture(cloud_idx) == TEX_DEFAULT);
+
         // If there's a foreground, sandwich it between two semi-transparent
         // clouds at different z-indices. This uses the same alpha fading as
         // a swimming characters but applied to the cloud (instead of as normal
@@ -74,6 +77,14 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
         else
             // Otherwise render it normally with full transparency
              m_buf_main.add(cloud_idx, x, y);
+    }
+
+    // Render any 'main' overlays (zaps) on top of clouds and items.
+    for (int i = 0; i < cell.num_dngn_overlay; ++i)
+    {
+        const auto tile = cell.dngn_overlay[i];
+        if (TILE_DNGN_MAX <= tile && tile < TILE_MAIN_MAX)
+            add_main_tile(tile, x, y);
     }
 }
 
@@ -100,9 +111,9 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
         else
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, false, false);
     }
-    else if (t0 >= TILE_MAIN_MAX)
+    else if (get_tile_texture(t0) == TEX_PLAYER)
         m_buf_doll.add(t0, x, y, TILEP_PART_MAX, false, false);
-    else if (t0 && t0 <= TILE_MAIN_MAX)
+    else if (get_tile_texture(t0) == TEX_DEFAULT)
     {
         const tileidx_t base_idx = tileidx_known_base_item(t0);
         if (base_idx)
@@ -253,7 +264,11 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             add_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
 
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
-            add_dngn_tile(cell.dngn_overlay[i], x, y);
+        {
+            const auto tile = cell.dngn_overlay[i];
+            if (tile < TILE_DNGN_MAX)
+                add_dngn_tile(tile, x, y);
+        }
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {
@@ -404,7 +419,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
-    if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+    if (get_tile_texture(fg_idx) == TEX_DEFAULT)
     {
         const tileidx_t base_idx = tileidx_known_base_item(fg_idx);
 
@@ -555,11 +570,6 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_BLIND, x, y, -status_shift, 0);
         status_shift += 10;
     }
-    if (fg & TILE_FLAG_DEATHS_DOOR)
-    {
-        m_buf_icons.add(TILEI_DEATHS_DOOR, x, y, -status_shift, 0);
-        status_shift += 10;
-    }
     if (fg & TILE_FLAG_BOUND_SOUL)
     {
         m_buf_icons.add(TILEI_BOUND_SOUL, x, y, -status_shift, 0);
@@ -580,11 +590,6 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SWIFT, x, y, -status_shift, 0);
         status_shift += 6;
     }
-    if (fg & TILE_FLAG_PINNED)
-    {
-        m_buf_icons.add(TILEI_PINNED, x, y, -status_shift, 0);
-        status_shift += 6;
-    }
     if (fg & TILE_FLAG_RECALL)
     {
         m_buf_icons.add(TILEI_RECALL, x, y, -status_shift, 0);
@@ -600,10 +605,20 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_POSSESSABLE, x, y, -status_shift, 0);
         status_shift += 6;
     }
+    if (fg & TILE_FLAG_SLOWLY_DYING)
+    {
+        m_buf_icons.add(TILEI_SLOWLY_DYING, x, y, -status_shift, 0);
+        status_shift += 10;
+    }
+    if (fg & TILE_FLAG_FIRE_CHAMP)
+    {
+        m_buf_icons.add(TILEI_FIRE_CHAMP, x, y, -status_shift, 0);
+        status_shift += 7;
+    }
 
     // Summoned and anim. weap. icons will overlap if you have a
     // summoned dancing weapon, but that's rare and still looks okay.
-    if (fg & TILE_FLAG_ANIM_WEP)
+    if (fg & TILE_FLAG_ANIM_OBJ)
         m_buf_icons.add(TILEI_ANIMATED_WEAPON, x, y);
     if (fg & TILE_FLAG_SUMMONED)
         m_buf_icons.add(TILEI_SUMMONED, x, y);

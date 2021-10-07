@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum duration_type
 {
     DUR_INVIS,
@@ -21,9 +23,9 @@ enum duration_type
 #endif
     DUR_CORONA,
     DUR_DEATHS_DOOR,
-    DUR_FIRE_SHIELD,
 
 #if TAG_MAJOR_VERSION == 34
+    DUR_FIRE_SHIELD,
     DUR_BUILDING_RAGE,
 #endif
     DUR_EXHAUSTED,              // fatigue counter for berserk
@@ -64,9 +66,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_CONDENSATION_SHIELD,
     DUR_MAGIC_ARMOUR,
-#endif
     DUR_GOURMAND,
-#if TAG_MAJOR_VERSION == 34
     DUR_BARGAIN,
     DUR_INSULATION,
 #endif
@@ -83,7 +83,7 @@ enum duration_type
     DUR_TELEPATHY,
 #endif
     DUR_PETRIFIED,
-    DUR_LOWERED_MR,
+    DUR_LOWERED_WL,
     DUR_REPEL_STAIRS_MOVE,
     DUR_REPEL_STAIRS_CLIMB,
     DUR_CLOUD_TRAIL,
@@ -96,17 +96,23 @@ enum duration_type
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
+#if TAG_MAJOR_VERSION == 34
     DUR_SCRYING,
-    DUR_TORNADO,
+#endif
+    DUR_VORTEX,
     DUR_LIQUEFYING,
     DUR_HEROISM,
     DUR_FINESSE,
     DUR_LIFESAVING,
     DUR_PARALYSIS_IMMUNITY,
+#if TAG_MAJOR_VERSION == 34
     DUR_DARKNESS,
+#endif
     DUR_PETRIFYING,
+#if TAG_MAJOR_VERSION == 34
     DUR_SHROUD_OF_GOLUBRIA,
-    DUR_TORNADO_COOLDOWN,
+#endif
+    DUR_VORTEX_COOLDOWN,
 #if TAG_MAJOR_VERSION == 34
     DUR_NAUSEA,
 #endif
@@ -134,9 +140,9 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_ANTIMAGIC,
     DUR_SPIRIT_HOWL,
-#endif
     DUR_INFUSION,
-    DUR_SONG_OF_SLAYING,
+#endif
+    DUR_WEREBLOOD,
 #if TAG_MAJOR_VERSION == 34
     DUR_SONG_OF_SHIELDING,
 #endif
@@ -145,9 +151,9 @@ enum duration_type
     DUR_GRASPING_ROOTS,
     DUR_SLEEP_IMMUNITY,
     DUR_FIRE_VULN,
-    DUR_ELIXIR_HEALTH,
-    DUR_ELIXIR_MAGIC,
+    DUR_ELIXIR,
 #if TAG_MAJOR_VERSION == 34
+    DUR_ELIXIR_MAGIC,
     DUR_ANTENNAE_EXTEND,
 #endif
     DUR_TROGS_HAND,
@@ -162,7 +168,9 @@ enum duration_type
     DUR_FORESTED,
     DUR_DRAGON_CALL,
     DUR_DRAGON_CALL_COOLDOWN,
+#if TAG_MAJOR_VERSION == 34
     DUR_ABJURATION_AURA,
+#endif
     DUR_MESMERISE_IMMUNE,
     DUR_NO_POTIONS,
     DUR_QAZLAL_FIRE_RES,
@@ -183,7 +191,9 @@ enum duration_type
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
+#if TAG_MAJOR_VERSION == 34
     DUR_DEVICE_SURGE,
+#endif
     DUR_DOOM_HOWL,
 #if TAG_MAJOR_VERSION == 34
     DUR_DOOM_HOWL_IMMUNITY,
@@ -191,9 +201,7 @@ enum duration_type
     DUR_VERTIGO,
     DUR_ANCESTOR_DELAY,
     DUR_SANGUINE_ARMOUR,
-#if TAG_MAJOR_VERSION == 34
     DUR_NO_CAST,
-#endif
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
     DUR_NO_HOP,
@@ -205,6 +213,15 @@ enum duration_type
     DUR_SHAFT_IMMUNITY,
     DUR_NOXIOUS_BOG,
     DUR_FROZEN_RAMPARTS,
+#if TAG_MAJOR_VERSION == 34
     DUR_STABBING,
+#endif
+    DUR_ATTRACTIVE,
+    DUR_LOCKED_DOWN,
+    DUR_WORD_OF_CHAOS_COOLDOWN,
+    DUR_SICKNESS,
+    DUR_BLINKBOLT_COOLDOWN,
+    DUR_DUEL_COMPLETE,
+    DUR_RISING_FLAME,
     NUM_DURATIONS
 };

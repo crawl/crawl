@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "options.h"
 #include "spl-book.h"
 #include "book-data.h"
 
@@ -29,14 +30,13 @@
 #include "message.h"
 #include "output.h"
 #include "prompt.h"
+#include "random-pick.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#ifdef USE_TILE
- #include "tilepick.h"
-#endif
+#include "tilepick.h"
 #include "transform.h"
 #include "unicode.h"
 
@@ -93,12 +93,9 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_DIGGING, SPELL_DIG },
     { WAND_ICEBLAST, SPELL_ICEBLAST },
     { WAND_POLYMORPH, SPELL_POLYMORPH },
-    { WAND_ENSLAVEMENT, SPELL_ENSLAVEMENT },
+    { WAND_CHARMING, SPELL_CHARMING },
     { WAND_ACID, SPELL_CORROSIVE_BOLT },
-    { WAND_DISINTEGRATION, SPELL_DISINTEGRATE },
-    { WAND_CLOUDS, SPELL_CLOUD_CONE },
-    { WAND_SCATTERSHOT, SPELL_SCATTERSHOT },
-    { WAND_RANDOM_EFFECTS, SPELL_RANDOM_EFFECTS },
+    { WAND_MINDBURST, SPELL_MINDBURST },
 };
 
 
@@ -111,6 +108,14 @@ spell_type spell_in_wand(wand_type wand)
         return *spl;
 
     die("Unknown wand: %d", wand);
+}
+
+bool is_wand_spell(spell_type spell)
+{
+    for (auto p : _wand_spells)
+        if (spell == p.second)
+            return true;
+    return false;
 }
 
 vector<spell_type> spells_in_book(const item_def &book)
@@ -141,115 +146,32 @@ vector<spell_type> spellbook_template(book_type book)
     return spellbook_templates[book];
 }
 
-// Rarity 100 is reserved for unused books.
-int book_rarity(book_type which_book)
+bool book_exists(book_type bt)
 {
-    if (item_type_removed(OBJ_BOOKS, which_book))
-        return 100;
-
-    switch (which_book)
+    switch (bt)
     {
-    case BOOK_MINOR_MAGIC:
-    case BOOK_MISFORTUNE:
-    case BOOK_CANTRIPS:
-        return 1;
-
-    case BOOK_CHANGES:
-    case BOOK_MALEDICT:
-        return 2;
-
-    case BOOK_CONJURATIONS:
-    case BOOK_NECROMANCY:
-    case BOOK_CALLINGS:
-        return 3;
-
-    case BOOK_FLAMES:
-    case BOOK_FROST:
-    case BOOK_AIR:
-    case BOOK_GEOMANCY:
-        return 4;
-
-    case BOOK_YOUNG_POISONERS:
-    case BOOK_BATTLE:
-    case BOOK_DEBILITATION:
-        return 5;
-
-    case BOOK_CLOUDS:
-    case BOOK_POWER:
-        return 6;
-
-    case BOOK_ENCHANTMENTS:
-    case BOOK_PARTY_TRICKS:
-        return 7;
-
-    case BOOK_TRANSFIGURATIONS:
-    case BOOK_BEASTS:
-        return 8;
-
-    case BOOK_FIRE:
-    case BOOK_ICE:
-    case BOOK_SKY:
-    case BOOK_EARTH:
-    case BOOK_UNLIFE:
-    case BOOK_SPATIAL_TRANSLOCATIONS:
-        return 10;
-
-    case BOOK_TEMPESTS:
-    case BOOK_DEATH:
-    case BOOK_SUMMONINGS:
-        return 11;
-
-    case BOOK_BURGLARY:
-    case BOOK_ALCHEMY:
-    case BOOK_DREAMS:
-    case BOOK_FEN:
-        return 12;
-
-    case BOOK_WARP:
-    case BOOK_DRAGON:
-        return 15;
-
-    case BOOK_ANNIHILATIONS:
-    case BOOK_GRAND_GRIMOIRE:
-    case BOOK_NECRONOMICON:  // Kikubaaqudgha special
+    case BOOK_RANDART_LEVEL:
+    case BOOK_RANDART_THEME:
     case BOOK_MANUAL:
-        return 20;
-
+    case NUM_BOOKS:
+        return false;
     default:
-        return 1;
+        return !item_type_removed(OBJ_BOOKS, bt);
     }
 }
 
-static uint8_t _lowest_rarity[NUM_SPELLS];
-
-static const set<book_type> rare_books =
+#ifdef DEBUG
+void validate_spellbooks()
 {
-    BOOK_ANNIHILATIONS, BOOK_GRAND_GRIMOIRE, BOOK_NECRONOMICON,
-};
-
-bool is_rare_book(book_type type)
-{
-    return rare_books.find(type) != rare_books.end();
-}
-
-void init_spell_rarities()
-{
-    for (int i = 0; i < NUM_SPELLS; ++i)
-        _lowest_rarity[i] = 255;
-
-    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    for (int i = 0; i < NUM_BOOKS; ++i)
     {
         const book_type book = static_cast<book_type>(i);
-        // Manuals and books of destruction are not even part of this loop.
-        if (is_rare_book(book))
+        if (!book_exists(book))
             continue;
 
-#ifdef DEBUG
         spell_type last = SPELL_NO_SPELL;
-#endif
         for (spell_type spell : spellbook_template(book))
         {
-#ifdef DEBUG
             ASSERT(spell != SPELL_NO_SPELL);
             if (last != SPELL_NO_SPELL
                 && spell_difficulty(last) > spell_difficulty(spell))
@@ -279,37 +201,47 @@ void init_spell_rarities()
                     item.name(DESC_PLAIN, false, true).c_str(),
                     spell_title(spell));
             }
-#endif
-
-            const int rarity = book_rarity(book);
-            if (rarity < _lowest_rarity[spell])
-                _lowest_rarity[spell] = rarity;
         }
     }
 }
+#endif
 
-bool is_player_spell(spell_type which_spell)
+bool is_player_book_spell(spell_type which_spell)
 {
-    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (spell_type spell : spellbook_template(static_cast<book_type>(i)))
+    for (int i = 0; i < NUM_BOOKS; ++i)
+    {
+        auto bt = static_cast<book_type>(i);
+        if (!book_exists(bt))
+            continue;
+        for (spell_type spell : spellbook_template(bt))
             if (spell == which_spell)
                 return true;
+    }
     return false;
 }
 
-int spell_rarity(spell_type which_spell)
+// Needs to be castable by the player somehow, but via idiosyncratic means.
+// Religion reusing a spell enum, or something weirder like sonic wave.
+// A spell doesn't need to be here if it just the beam type that is used.
+static unordered_set<int> _player_nonbook_spells =
 {
-    const int rarity = _lowest_rarity[which_spell];
+    // items
+    SPELL_THUNDERBOLT,
+    SPELL_PHANTOM_MIRROR, // this isn't cast directly, but the player code at
+                          // least uses the enum value
+    SPELL_SONIC_WAVE,
+    // religion
+    SPELL_SMITING,
+    // Ds powers
+    SPELL_HURL_DAMNATION,
+};
 
-    if (rarity == 255)
-        return -1;
-
-    return rarity;
-}
-
-void read_book(item_def &book)
+bool is_player_spell(spell_type which_spell)
 {
-    describe_item(book);
+    return !spell_removed(which_spell)
+        && (is_player_book_spell(which_spell)
+            || is_wand_spell(which_spell)
+            || _player_nonbook_spells.count(which_spell) > 0);
 }
 
 /**
@@ -393,7 +325,12 @@ static spell_list _get_spell_list(bool just_check = false,
     if (available_spells.empty())
     {
         if (!just_check)
-            mprf(MSGCH_PROMPT, "Your library has no spells.");
+        {
+            if (you.has_mutation(MUT_INNATE_CASTER))
+                mprf(MSGCH_PROMPT, "You need no library to learn spells.");
+            else
+                mprf(MSGCH_PROMPT, "Your library has no spells.");
+        }
         return mem_spells;
     }
 
@@ -471,6 +408,34 @@ static spell_list _get_spell_list(bool just_check = false,
     if (!just_check && *unavail_reason)
         mprf(MSGCH_PROMPT, "%s", unavail_reason);
     return mem_spells;
+}
+
+bool library_add_spells(vector<spell_type> spells)
+{
+    vector<spell_type> new_spells;
+    for (spell_type st : spells)
+    {
+        if (!you.spell_library[st])
+        {
+            you.spell_library.set(st, true);
+            bool memorise = you_can_memorise(st);
+            if (memorise)
+                new_spells.push_back(st);
+            if (!memorise || Options.auto_hide_spells)
+                you.hidden_spells.set(st, true);
+        }
+    }
+    if (!new_spells.empty())
+    {
+        vector<string> spellnames(new_spells.size());
+        transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
+        mprf("You add the spell%s %s to your library.",
+             spellnames.size() > 1 ? "s" : "",
+             comma_separated_line(spellnames.begin(),
+                                  spellnames.end()).c_str());
+        return true;
+    }
+    return false;
 }
 
 bool has_spells_to_memorise(bool silent)
@@ -554,11 +519,11 @@ protected:
     {
         return formatted_string::parse_string(
                     make_stringf("<w>Spells %s                 Type                          %sLevel",
-                        current_action == action::cast ? "(Cast)" :
-                        current_action == action::memorise ? "(Memorise)" :
-                        current_action == action::describe ? "(Describe)" :
-                        current_action == action::hide ? "(Hide)    " :
-                            "(Show)    ",
+                        current_action == action::cast ? "(Cast)    "
+                        : current_action == action::memorise ? "(Memorise)"
+                        : current_action == action::describe ? "(Describe)"
+                        : current_action == action::hide ? "(Hide)    "
+                        : "(Show)    ",
                         you.divine_exegesis ? "" : "Failure  "));
     }
 
@@ -724,7 +689,18 @@ private:
             if (spell_hidden != show_hidden)
                 continue;
 
-            const int colour = entry_colour(spell);
+            // TODO: it might be cleaner to reorder and put unavailable spells
+            // under a different category
+            // n.b. this memorise code only checks spell-specific constraints,
+            // so it adds hotkeys e.g. if you lack the spell levels. Not sure
+            // if this is intentional.
+            const bool unavailable = current_action == action::memorise &&
+                                        !you_can_memorise(spell.spell)
+                                || current_action == action::cast &&
+                                    spell_is_useless(spell.spell, true, true);
+
+            const colour_t colour = unavailable ? (colour_t) DARKGRAY
+                                                : entry_colour(spell);
 
             ostringstream desc;
             desc << "<" << colour_to_str(colour) << ">";
@@ -748,19 +724,14 @@ private:
             desc << spell.difficulty;
 
             MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
-            // don't add a hotkey if you can't memorise/cast it
-                    (current_action == action::memorise &&
-                        !you_can_memorise(spell.spell))
-                     || current_action == action::cast &&
-                        spell_is_useless(spell.spell, true, true)
-                     ? ' ' : char(hotkey));
+                    // don't add a hotkey if you can't memorise/cast it
+                    unavailable ? 0 : char(hotkey));
             // But do increment hotkeys anyway, to keep the hotkeys consistent.
             ++hotkey;
 
+            me->indent_no_hotkeys = true;
             me->colour = colour;
-#ifdef USE_TILE
-            me->add_tile(tile_def(tileidx_spell(spell.spell), TEX_GUI));
-#endif
+            me->add_tile(tile_def(tileidx_spell(spell.spell)));
 
             me->data = &(spell.spell);
             add_entry(me);
@@ -782,7 +753,13 @@ public:
         // Actual text handled by calc_title
         set_title(new MenuEntry(""), true, true);
 
-        if (!you.divine_exegesis)
+        if (you.divine_exegesis)
+        {
+            spell_levels_str = make_stringf(
+                "<lightgreen>Select a spell to cast with Divine Exegesis: %d MP available</lightgreen>",
+                you.magic_points);
+        }
+        else
         {
             spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
                         "</lightgreen>", player_spell_levels(),
@@ -790,9 +767,8 @@ public:
                                                     ? "s left" : " left ");
             if (player_spell_levels() < 9)
                 spell_levels_str += " ";
-
-            set_more(formatted_string::parse_string(spell_levels_str + "\n"));
         }
+        set_more(formatted_string::parse_string(spell_levels_str + "\n"));
 
 #ifdef USE_TILE_LOCAL
         FontWrapper *font = tiles.get_crt_font();
@@ -838,7 +814,10 @@ static spell_type _choose_mem_spell(spell_list &spells)
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
     if (sel.empty())
         return SPELL_NO_SPELL;
     const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
@@ -964,10 +943,11 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
  * @param   specspell  The spell to be learned.
  * @param   wizard     Whether to memorise instantly and skip some checks for
  *                     wizmode memorisation.
+ * @param   interactive whether to do the interactive prompt
  * @return             true if the player learned the spell, false
  *                     otherwise.
 */
-bool learn_spell(spell_type specspell, bool wizard)
+bool learn_spell(spell_type specspell, bool wizard, bool interactive)
 {
     if (!_learn_spell_checks(specspell, wizard))
         return false;
@@ -979,13 +959,6 @@ bool learn_spell(spell_type specspell, bool wizard)
 
     if (!wizard)
     {
-        if (specspell == SPELL_OZOCUBUS_ARMOUR
-            && !player_effectively_in_light_armour())
-        {
-            mprf(MSGCH_WARN,
-                 "Your armour is too heavy for you to cast this spell!");
-        }
-
         const int severity = fail_severity(specspell);
 
         if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
@@ -998,16 +971,19 @@ bool learn_spell(spell_type specspell, bool wizard)
         }
     }
 
-    const string prompt = make_stringf(
-             "Memorise %s, consuming %d spell level%s and leaving %d?",
-             spell_title(specspell), spell_levels_required(specspell),
-             spell_levels_required(specspell) != 1 ? "s" : "",
-             player_spell_levels() - spell_levels_required(specspell));
-
-    if (!yesno(prompt.c_str(), true, 'n', false))
+    if (interactive)
     {
-        canned_msg(MSG_OK);
-        return false;
+        const string prompt = make_stringf(
+                 "Memorise %s, consuming %d spell level%s and leaving %d?",
+                 spell_title(specspell), spell_levels_required(specspell),
+                 spell_levels_required(specspell) != 1 ? "s" : "",
+                 player_spell_levels() - spell_levels_required(specspell));
+
+        if (!yesno(prompt.c_str(), true, 'n', false))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
     }
 
     if (wizard)
@@ -1021,12 +997,23 @@ bool learn_spell(spell_type specspell, bool wizard)
         did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
     }
 
+    quiver::on_actions_changed();
+
     return true;
 }
 
 bool book_has_title(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
+
+    // No "A Great Wizards, Vol. II"
+    if (book.sub_type == BOOK_BIOGRAPHIES_II
+        || book.sub_type == BOOK_BIOGRAPHIES_VII
+        || book.sub_type == BOOK_OZOCUBU
+        || book.sub_type == BOOK_UNRESTRAINED)
+    {
+        return true;
+    }
 
     if (!is_artefact(book))
         return false;
@@ -1053,7 +1040,10 @@ spret divine_exegesis(bool fail)
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
+    {
         redraw_screen();
+        update_screen();
+    }
 
     if (sel.empty())
         return spret::abort;
@@ -1071,4 +1061,66 @@ spret divine_exegesis(bool fail)
         return spret::success;
 
     return spret::abort;
+}
+
+/// For a given dungeon depth (or item level), how much weight should we give
+/// to a spellbook for having a spell of the given level in it?
+/// We add a flat 10 to all these weights later.
+static const vector<random_pick_entry<int>> spell_level_weights = {
+    {  0, 35, 100, FLAT, 1 },
+
+    {  0, 35, 100, FLAT, 2 },
+
+    {  0, 35, 100, FLAT, 3 },
+
+    {  4,  8, 100, RISE, 4 },
+    {  9, 35, 100, FLAT, 4 },
+
+    {  6, 10, 100, RISE, 5 },
+    { 11, 35,  80, FLAT, 5 },
+
+    { 10, 14, 100, RISE, 6 },
+    { 15, 35, 100, FLAT, 6 },
+
+    { 14, 22, 100, RISE, 7 },
+    { 23, 35, 100, FLAT, 7 },
+
+    { 18, 26, 100, RISE, 8 },
+    { 27, 35, 100, FLAT, 8 },
+
+    { 22, 30, 100, RISE, 9 },
+    { 31, 35, 100, FLAT, 9 },
+};
+
+/// Cap item_level at this for generation. This is roughly the bottom of the hells.
+static const int MAX_BOOK_LEVEL = 35;
+
+static int _book_weight(book_type book, int item_level, int scale)
+{
+    item_level = min(item_level, MAX_BOOK_LEVEL);
+    random_picker<int, 9> spell_weighter;
+    int n_spells = 0;
+    int weight = 0;
+    for (spell_type spell : spellbook_template(book))
+    {
+        const int lvl = spell_difficulty(spell);
+        const int spell_weight =
+            spell_weighter.probability_at(lvl, spell_level_weights,
+                                          item_level, scale);
+        weight += spell_weight + scale/20; // Every spell gets a flat weight.
+        ++n_spells;
+    }
+    return weight / n_spells;
+}
+
+book_type choose_book_type(int item_level)
+{
+    map<book_type, int> book_weights;
+    for (int i = 0; i < NUM_BOOKS; i++)
+    {
+        const book_type bt = (book_type)i;
+        if (book_exists(bt))
+            book_weights[bt] = _book_weight(bt, item_level, 1000);
+    }
+    return *random_choose_weighted(book_weights);
 }

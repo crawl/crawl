@@ -881,7 +881,7 @@ ENDMAP
 # Adapted from the labyrinth_watery minotaur exit vault.
 NAME:    gauntlet_exit_watery
 TAGS:    gauntlet_exit no_pool_fixup
-MONS:    patrolling generate_awake minotaur
+MONS:    patrolling minotaur
 KFEAT:   < = exit_gauntlet
 SHUFFLE: def, ghi
 SUBST:   dg = ., efhi = v
@@ -905,7 +905,7 @@ ENDMAP
 # Adapted from labyrinth_green.
 NAME:   gauntlet_exit_green
 TAGS:   gauntlet_exit
-MONS:   patrolling generate_awake minotaur
+MONS:   patrolling minotaur
 KFEAT:  < = exit_gauntlet
 : gauntlet_exit_loot(_G)
 MAP
@@ -927,7 +927,7 @@ ENDMAP
 # Adapted from labyrinth_spiral.
 NAME:   gauntlet_exit_spiral
 TAGS:   gauntlet_exit
-MONS:   patrolling generate_awake minotaur
+MONS:   patrolling minotaur
 SUBST:  b : bvz, z = vb
 KFEAT:  < = exit_gauntlet
 : gauntlet_exit_loot(_G)
@@ -950,7 +950,7 @@ ENDMAP
 # Adapted from labyrinth_hidden_loot.
 NAME:   gauntlet_exit_hidden_loot
 TAGS:   gauntlet_exit
-MONS:   patrolling generate_awake minotaur, minotaur zombie
+MONS:   patrolling minotaur, minotaur zombie
 SUBST:  d = 2%*
 SUBST:  b : bvv
 KFEAT:  < = exit_gauntlet
@@ -978,7 +978,7 @@ SHUFFLE: def, ghi, klm
 SUBST:   d : b, e : ., f : b
 SUBST:   g : b, h : ., i : b
 SUBST:   k = <, l = ., m = .
-KMONS:   < = patrolling generate_awake minotaur
+KMONS:   < = patrolling minotaur
 KFEAT:   < = exit_gauntlet
 SUBST:   b : vvb
 : gauntlet_exit_loot(_G)
@@ -1005,7 +1005,7 @@ ENDMAP
 # particular archetypical species/background. Each set of loot has 2-4 items.
 NAME:    nicolae_gauntlet_exit_dead_adventurers
 TAGS:    gauntlet_exit
-KMONS:   1 = patrolling generate_awake minotaur
+KMONS:   1 = patrolling minotaur
 KPROP:   DELM'1 = bloody
 KFEAT:   ' = floor
 SHUFFLE: bvc, DELM, DEFHJK, LMNOPQ
@@ -1013,7 +1013,7 @@ SHUFFLE: bvc, DELM, DEFHJK, LMNOPQ
 -- These adventurers always place a weapon.
 
 local light_scales = "troll leather armour good_item" ..
-    " / stream dragon scales good_item / acid dragon scales good_item"
+    " / steam dragon scales good_item / acid dragon scales good_item"
 local medium_scales = "swamp dragon scales good_item" ..
     " / quicksilver dragon scales / fire dragon scales good_item" ..
     " / ice dragon scales good_item / quicksilver dragon scales" ..
@@ -1027,7 +1027,7 @@ local heavy_armour = "scale mail good_item w:50 / chain mail good_item w:50" ..
 dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
     "flail randart / morningstar good_item / eveningstar w:2" ..
     "    / demon whip w:2 / dire flail good_item / great mace good_item" ..
-    "    / war axe randart / broad axe good_item / battle axe good_item" ..
+    "    / war axe randart / broad axe good_item / battleaxe good_item" ..
     "    / executioner's axe w:2 " ..
     ", ring mail randart w:50 / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
@@ -1036,15 +1036,15 @@ dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
- -- Centaur hunter.
-dgn.delayed_decay_extra(_G, "E", "centaur skeleton",
+ -- Minotaur hunter.
+dgn.delayed_decay_extra(_G, "E", "minotaur skeleton",
     "shortbow good_item / longbow w:5 / arbalest good_item" ..
     "    / triple crossbow w:5 / javelin good_item" ..
     ", leather armour good_item w:50 / ring mail good_item w:50" ..
     "    / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
-    ", centaur barding good_item / " .. dgn.good_aux_armour ..
-    "    / nothing w:70" ..
+    ",   / " .. dgn.good_aux_armour ..
+    "    / nothing w:40" ..
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
@@ -1053,16 +1053,15 @@ dgn.delayed_decay_extra(_G, "F", "spriggan skeleton",
     "dagger good_item / short sword good_item / rapier good_item" ..
     "    / quick blade w:5" ..
     ", robe good_item w:120 / " .. light_scales .. " / shadow dragon scales" ..
-    ", randbook disc:hexes / book of maledictions / nothing w:20" ..
+    ", randbook disc:hexes / book of misfortune / nothing w:20" ..
     ", buckler good_item / hat good_item / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:80")
 
- -- Merfolk skald. 3 guaranteed items, 3.25 on-average.
+ -- Merfolk gladiator. 3 guaranteed items, 3.25 on-average.
 dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
     "trident good_item / demon trident / glaive good_item / bardiche" ..
     ", leather armour good_item w:100 / ring mail good_item w:100" ..
     "    / " .. light_scales .. " / " .. medium_scales ..
-    ", randbook disc:charms / book of battle" ..
     -- Give this a 1/4 in chance of placing since we guarantee 3 items above.
     ", buckler good_item / kite shield good_item / tower shield good_item" ..
     "    / " .. dgn.good_aux_armour .. " / any wand w:20 / any misc / gold" ..
@@ -1084,7 +1083,7 @@ dgn.delayed_decay_extra(_G, "J", "orc skeleton",
  -- Ogre, maybe an ogre mage of some kind.
 dgn.delayed_decay_extra(_G, "K", "ogre skeleton",
     "trident good_item / demon trident / glaive good_item / bardiche" ..
-    "    / war axe randart / broad axe good_item / battle axe good_item" ..
+    "    / war axe randart / broad axe good_item / battleaxe good_item" ..
     "    / executioner's axe w:2 / giant club good_item" ..
     "    / giant spiked club good_item / quarterstaff good_item / lajatang" ..
     "    / any magical staff w:20" ..
@@ -1109,16 +1108,16 @@ dgn.delayed_decay_extra(_G, "L", "human skeleton",
 -- Deep Elf caster.
 dgn.delayed_decay_extra(_G, "M", "elf skeleton",
     "randbook, any magical staff" ..
-    ", robe good_item w:50 / leather armour good_item w:50 " .. light_scales ..
-    "    / buckler good_item / " .. dgn.good_aux_armour ..
-    "    / nothing" ..
+    ", robe good_item w:50 / leather armour good_item w:50" ..
+    "    / " .. light_scales .. " / buckler good_item" ..
+    "    / " .. dgn.good_aux_armour .. " / nothing" ..
     ", any jewellery w:20 / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:80")
 
 -- Deep Dwarf artificer.
 dgn.delayed_decay_extra(_G, "N", "dwarf skeleton",
     "any wand, any misc, any wand / any misc / nothing w:20" ..
-    ", any weapon good_item / any amour good_item / gold / any scroll" ..
+    ", any weapon good_item / any armour good_item / gold / any scroll" ..
     "    / any potion / nothing w:50")
 
 -- Octopode. Two guaranteed rings and up to two more.
@@ -1141,8 +1140,8 @@ dgn.delayed_decay_extra(_G, "P", "felid skeleton",
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
--- Halfling warper.
-dgn.delayed_decay_extra(_G, "Q", "halfling skeleton",
+-- Kobold warper.
+dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
     "randbook disc:translocation / book of spatial translocations" ..
     "    / book of the warp" ..
     ", scroll of blinking / scroll of teleportation q:2" ..
@@ -1225,6 +1224,8 @@ SUBVAULT: h : gauntlet_arena_second
 SUBVAULT: i : gauntlet_arena_second
 SUBVAULT: j : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
+# Just in case we ever add lava felids, prevent their revival in closets.
+KPROP:    lG = no_tele_into
 : gauntlet_appearance(_G)
 MAP
                ccc ccc ccccccccccccc ccc ccc
@@ -1247,15 +1248,15 @@ MAP
 cccl.....nnnnnnn.nnnnnnn....lGl....nnnnnnn.nnnnnnn.....lccc
 cGn......nJ...........Ln.....l.....nN...........Pn......nGc
 ccc..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..ccc
-  c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
-cGn..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..nGc
-ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
-  c..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..c
-ccc..eeeeeeeeeee.fffffffffff...ggggggggggg.hhhhhhhhhhh..ccc
-cGn..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..nGc
-ccc..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..ccc
-  c..neeeeeeeeen.nfffffffffn...ngggggggggn.nhhhhhhhhhn..c
+  c..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..c
+ccc..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..ccc
+cGn..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..nGc
+ccc..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..ccc
+  c..eeeeeeeeeeeGfffffffffff...gggggggggggGhhhhhhhhhhh..c
+ccc..eeeeeeeeeeelfffffffffff...ggggggggggglhhhhhhhhhhh..ccc
+cGn..neeeeeeeeenlnfffffffffn...ngggggggggnlnhhhhhhhhhn..nGc
+ccc..neeeeeeeeenlnfffffffffn...ngggggggggnlnhhhhhhhhhn..ccc
+  c..neeeeeeeeenlnfffffffffn...ngggggggggnlnhhhhhhhhhn..c
 ccc..nnnnnnnnnnnnnnnnnnnnnnn...nnnnnnnnnnnnnnnnnnnnnnn..ccc
 cGn......nK...........Mn.....l.....nO...........Qn......nGc
 cccl.....nnnnnnn.nnnnnnn....lGl....nnnnnnn.nnnnnnn.....lccc
@@ -1467,6 +1468,8 @@ SUBVAULT: i : gauntlet_arena_second
 SUBVAULT: j : gauntlet_arena_second
 SUBVAULT: k : gauntlet_arena_second
 SUBVAULT: y : gauntlet_exit
+# Just in case we ever add lava felids, prevent their revival in closets.
+KPROP:    lG = no_tele_into
 : gauntlet_appearance(_G)
 MAP
                                      ccccc
@@ -1685,6 +1688,74 @@ ccwcccwcccwcccwccc...........cccwcccwcccwcccwcc
                vvvvvvvvvvvvvvvvv
 ENDMAP
 
+NAME:   gammafunk_gauntlet_77_escape_option
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+: gauntlet_setup(_G, "DFJLN", "EHKMO")
+# 1.5 items on-average for tier 1 difficulty
+: gauntlet_arena_custom_extra_items("fg**||...... / .")
+SUBVAULT: a : gauntlet_arena_77_first
+SUBVAULT: p : gauntlet_arena_77_first
+# 50% chance for middle arena to be tier 2 difficulty.
+ : if crawl.coinflip() then
+SUBVAULT: q : gauntlet_arena_77_first
+: gauntlet_arena_set_tier(2)
+# 2 items for tier 2 difficulty
+: gauntlet_arena_custom_extra_items("fg|* / .")
+: else
+: gauntlet_arena_set_tier(2)
+: gauntlet_arena_custom_extra_items("fg|* / .")
+SUBVAULT: q : gauntlet_arena_77_second
+: end
+SUBVAULT: r : gauntlet_arena_77_second
+SUBVAULT: s : gauntlet_arena_77_second
+SUBVAULT: y : gauntlet_exit
+MARKER:   P = lua:transp_loc("escape_option_1")
+MARKER:   Q = lua:transp_dest_loc("escape_option_1")
+MARKER:   R = lua:transp_loc("escape_option_2")
+MARKER:   S = lua:transp_dest_loc("escape_option_2")
+MARKER:   Z = lua:transp_loc("escape_option_3")
+MARKER:   - = lua:transp_dest_loc("escape_option_3")
+MARKER:   u = lua:transp_loc("escape_option_4")
+MARKER:   z = lua:transp_dest_loc("escape_option_4")
+: gauntlet_appearance(_G)
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcccwcc
+cwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwcwwwc
+ccw...............................................................wcc
+ccc...naaaaannn...npppppnnn...nqqqqqnnn...nrrrrrnnn...nsssssnnn...ccc
+ccw...naaaaaaan.G.npppppppn.G.nqqqqqqqn.G.nrrrrrrrn.G.nsssssssn...wcc
+cwwA..naaaaaaan...npppppppn...nqqqqqqqn...nrrrrrrrn...nsssssssn...wwc
+ccw...naaaaaaannnnnpppppppnnnnnqqqqqqqnnnnnrrrrrrrnnnnnsssssssn...wcc
+ccc..DnaaaaaaanE.FnpppppppnH.JnqqqqqqqnK.LnrrrrrrrnM.Nnsssssssn...ccc
+ccw...naaaaaaan...npppppppn...nqqqqqqqn...nrrrrrrrn...nsssssssn...wcc
+cww<..naaaaaaan...npppppppn...nqqqqqqqn...nrrrrrrrn...nsssssssn...wwc
+ccw...naaaaaaanGPGnpppppppnGRGnqqqqqqqnGZGnrrrrrrrnGuGnsssssssn...wcc
+ccc...naaaaannnnnnnpppppnnnnnnnqqqqqnnnnnnnrrrrrnnnnnnnsssssnnn...ccc
+ccw...............................................................wcc
+cwwwcwwwcwwwcwwwcwwwcwwwc...GUG..G<G..GUG...cwwwcwwwcwwwcwwwcwwwcwwwc
+ccwcccwcccwcccwcccwcccwccc.................cccwcccwcccwcccwcccwcccwcc
+cccccccccccccccccccccccccvvnnnnnnnnnnnnnnnvvccccccccccccccccccccccccc
+                        vvw...............wvv
+                       vvww..GQGSG-GzGOG..wwvv
+                        vvw...............wvv
+                        vvvyyyyyyyyyyyyyyyvvv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vyyyyyyyyyyyyyyyv
+                          vvyyyyyyyyyyyyyvv
+                          vvyyyyyyyyyyyyyvv
+                          vvyyyyyyyyyyyyyvv
+                          vvvvvvvvvvvvvvvvv
+ENDMAP
+
 ################################################################################
 # Main vaults with multiple arena shapes. Denoted by a lava pattern along the
 # walls, and no fountains.
@@ -1831,4 +1902,84 @@ cc...............clcnnnnnnnclc...............cc
                vvyyyyyyyyyyyyyvv
                vvyyyyyyyyyyyyyvv
                vvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   gammafunk_gauntlet_mixed_choke_point
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+: gauntlet_setup(_G, "DFJLNPR", "EHKMOQS")
+SUBVAULT: a : gauntlet_arena_77_first
+SUBVAULT: p : gauntlet_arena_77_first
+SUBVAULT: q : gauntlet_arena_77_first
+: if crawl.coinflip() then
+:   gauntlet_arena_set_tier(2)
+SUBVAULT: r : gauntlet_arena_second
+: else
+SUBVAULT: r : gauntlet_arena_first
+:   gauntlet_arena_set_tier(2)
+: end
+SUBVAULT: s : gauntlet_arena_77_second
+SUBVAULT: u : gauntlet_arena_77_second
+SUBVAULT: z : gauntlet_arena_77_second
+SUBVAULT: y : gauntlet_exit
+: gauntlet_appearance(_G)
+MAP
+            ccccccccccccc
+  ccccccccccclclclclclclccccccccccc
+ccclclclclclc...........clclclclclccc
+cl.............A..G..<.............lc
+cc......D.........F.........J......cc
+cl..nnnnnnnnn.nnnnnnnnn.nnnnnnnnn..lc
+cc..aaaaaaaaa.ppppppppp.qqqqqqqqq..cc
+cl..aaaaaaaaa.ppppppppp.qqqqqqqqq..lc
+cc..aaaaaaaaa.ppppppppp.qqqqqqqqq..cc
+cl..aaaaaaaaa.ppppppppp.qqqqqqqqq..lc
+cc..aaaaaaaaa.ppppppppp.qqqqqqqqq..cc
+cl..naaaaaaan.npppppppn.nqqqqqqqn..lc
+cc..naaaaaaan.npppppppn.nqqqqqqqn..cc
+cl..nnnnnnnnnnnnnnnnnnnnnnnnnnnnn..lc
+ccc...n.E.........H.........K.n...ccc
+ cl...n...........L...........n...lc
+ ccc..nnnnnnnnnnnnnnnnnnnnnnnnn..ccc
+  cl.........rrrrrrrrrrr.........lc
+  ccc........rrrrrrrrrrr........ccc
+    clclclc..rrrrrrrrrrr..clclclc
+    ccccccc..rrrrrrrrrrr..ccccccc
+         cl..rrrrrrrrrrr..lc
+    ccccccc..rrrrrrrrrrr..ccccccc
+    clclclc..nrrrrrrrrrn..clclclc
+  ccc........nrrrrrrrrrn........ccc
+  cl.........nrrrrrrrrrn.........lc
+ ccc..nnnnnnnnnnnnnnnnnnnnnnnnn..ccc
+ cl...n...........M...........n...lc.
+ccc...n.N.........P.........R.n...ccc
+cl..nnnnnnnnnnnnnnnnnnnnnnnnnnnnn..lc
+cc..sssssssss.uuuuuuuuu.zzzzzzzzz..cc
+cl..sssssssss.uuuuuuuuu.zzzzzzzzz..lc
+cc..sssssssss.uuuuuuuuu.zzzzzzzzz..cc
+cl..sssssssss.uuuuuuuuu.zzzzzzzzz..lc
+cc..sssssssss.uuuuuuuuu.zzzzzzzzz..cc
+cl..nsssssssn.nuuuuuuun.nzzzzzzzn..lc
+cc..nsssssssn.nuuuuuuun.nzzzzzzzn..cc
+cl..nnnnnnnnn.nnnnnnnnn.nnnnnnnnn..lc
+cc.................................cc
+cl..............G.<.G..............lc
+ccclclclclclccnnnnnnnnncclclclclclccc
+ cccccccccccvv.........vvcccccccccc
+           vv...O.Q.S...vv
+          vv.............vv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vyyyyyyyyyyyyyyyv
+          vvyyyyyyyyyyyyyvv
+          vvyyyyyyyyyyyyyvv
+          vvyyyyyyyyyyyyyvv
+          vvvvvvvvvvvvvvvvv
 ENDMAP

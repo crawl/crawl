@@ -2,6 +2,7 @@
 
 #include "enum.h"
 #include "dungeon-feature-type.h"
+#include "tag-version.h"
 
 // same order as DCHAR_*
 enum show_item_type
@@ -13,7 +14,9 @@ enum show_item_type
     SHOW_ITEM_WEAPON,
     SHOW_ITEM_ARMOUR,
     SHOW_ITEM_WAND,
+#if TAG_MAJOR_VERSION == 34
     SHOW_ITEM_FOOD,
+#endif
     SHOW_ITEM_SCROLL,
     SHOW_ITEM_RING,
     SHOW_ITEM_POTION,
@@ -86,6 +89,6 @@ constexpr layers_type LAYERS_ALL = LAYER_MONSTERS | LAYER_PLAYER
                                  | LAYER_ITEMS | LAYER_CLOUDS;
 
 void show_init(layers_type layers = LAYERS_ALL);
-void update_item_at(const coord_def &gp, bool detected = false, bool wizard = false);
+void update_item_at(const coord_def &gp, bool wizard = false);
 void show_update_at(const coord_def &gp, layers_type layers = LAYERS_ALL);
 void show_update_emphasis();

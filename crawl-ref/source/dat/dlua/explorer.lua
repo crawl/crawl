@@ -7,10 +7,10 @@ util.namespace('explorer')
 
 -- matches pregeneration order
 explorer.generation_order = {
+                "Temple",
                 "D:1",
                 "D:2", "D:3", "D:4", "D:5", "D:6", "D:7", "D:8", "D:9",
                 "D:10", "D:11", "D:12", "D:13", "D:14", "D:15",
-                "Temple",
                 "Lair:1", "Lair:2", "Lair:3", "Lair:4", "Lair:5", "Lair:6",
                 "Orc:1", "Orc:2",
                 "Spider:1", "Spider:2", "Spider:3", "Spider:4",
@@ -19,7 +19,7 @@ explorer.generation_order = {
                 "Swamp:1", "Swamp:2", "Swamp:3", "Swamp:4",
                 "Vaults:1", "Vaults:2", "Vaults:3", "Vaults:4", "Vaults:5",
                 "Crypt:1", "Crypt:2", "Crypt:3",
-                "Depths:1", "Depths:2", "Depths:3", "Depths:4", "Depths:5",
+                "Depths:1", "Depths:2", "Depths:3", "Depths:4",
                 "Hell",
                 "Elf:1", "Elf:2", "Elf:3",
                 "Zot:1", "Zot:2", "Zot:3", "Zot:4", "Zot:5",
@@ -166,8 +166,7 @@ function explorer.item_ignore_boring(item)
     if item.is_useless then
         return false
     elseif item.base_type == "gold"
-            or item.base_type == "missile"
-            or item.base_type == "food" then
+            or item.base_type == "missile" then
         return false
     elseif (item.base_type == "weapon" or item.base_type == "armour")
             and item.pluses() <= 0 and not item.branded then
@@ -388,8 +387,9 @@ explorer.catalog_names =    {vaults    = "   Vaults: ",
 -- fairly subjective, some of these should probably be relative to depth
 explorer.dangerous_monsters = {
         "ancient lich",
+        "dread lich",
         "orb of fire",
-        "greater mummy",
+        "royal mummy",
         "Hell Sentinel",
         "Ice Fiend",
         "Brimstone Fiend",
@@ -498,9 +498,13 @@ end
 
 function explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
     local result = { }
+    current_where = you.where()
     for j,port in ipairs(explorer.portal_order) do
         if you.where() == dgn.level_name(dgn.br_entrance(port)) then
             result[port] = explorer.catalog_place(-j, port, cats_to_show, show_level_fun)
+            -- restore the level, in case there are multiple portals from a
+            -- single level
+            debug.goto_place(current_where)
         end
     end
     return result
@@ -515,20 +519,13 @@ function explorer.catalog_dungeon(max_depth, cats_to_show, show_level_fun)
     for i,lvl in ipairs(explorer.generation_order) do
         if i > max_depth then break end
         result[lvl] = explorer.catalog_place(i, lvl, cats_to_show, show_level_fun)
-        local portals = explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
-        for port, cat in pairs(portals) do
-            result[port] = cat
+        if result[lvl] ~= nil then
+            -- only check portals if the place was built
+            local portals = explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
+            for port, cat in pairs(portals) do
+                result[port] = cat
+            end
         end
-        -- if (dgn.br_exists(string.match(lvl, "[^:]+"))) then
-        --     debug.goto_place(lvl)
-        --     debug.generate_level()
-        --     local old_quiet = explorer.quiet
-        --     if show_level_fun ~= nil and not show_level_fun(i) then
-        --         explorer.quiet = true
-        --     end
-        --     result[lvl] = explorer.catalog_current_place(lvl, cats_to_show, true)
-        --     explorer.quiet = old_quiet
-        -- end
     end
     return result
 end

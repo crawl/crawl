@@ -45,7 +45,7 @@ end
 
 -- initialize everything
 function damage_tally()
-  util.foreach({"spawns","mon_act","mon_regen","player_regen","hunger","death"},
+  util.foreach({"spawns","mon_act","mon_regen","player_regen","death"},
                function(d)
                  crawl.call_dlua("debug.disable('" .. d .. "')")
                end)

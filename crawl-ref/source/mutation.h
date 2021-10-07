@@ -6,11 +6,16 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "equipment-type.h"
 #include "mutation-type.h"
 
+using std::vector;
+
 class formatted_string;
+
+#define EVOLUTION_MUTS_KEY "evolution_muts"
 
 enum class mutation_activity_type
 {
@@ -29,6 +34,8 @@ enum mutation_permanence_class
     MUTCLASS_INNATE
 };
 
+vector<mutation_type> get_removed_mutations();
+
 void init_mut_index();
 
 bool is_body_facet(mutation_type mut);
@@ -41,10 +48,13 @@ bool mutate(mutation_type which_mutation, const string &reason,
             bool beneficial = false,
             mutation_permanence_class mutclass = MUTCLASS_NORMAL);
 
-void display_mutations();
 int mut_check_conflict(mutation_type mut, bool innate_only = false);
 mutation_activity_type mutation_activity_level(mutation_type mut);
+
+void display_mutations();
 string describe_mutations(bool center_title);
+string terse_mutation_list();
+
 int get_mutation_cap(mutation_type mut);
 void validate_mutations(bool debug_msg=false);
 
@@ -73,10 +83,11 @@ bool temp_mutation_wanes();
 
 void check_demonic_guardian();
 void check_monster_detect();
-equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
 void reset_powered_by_death_duration();
 
 bool delete_all_temp_mutations(const string &reason);
 bool delete_temp_mutation();
+
+void set_evolution_mut_xp(bool malignant);

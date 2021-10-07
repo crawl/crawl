@@ -1,38 +1,8 @@
 %%%%
-amulet of conservation
-
-Dieses Amulett bewahrt manche Besitztümer seines Trägers vor vollständiger
-Zerstörung, ist aber nicht unfehlbar.
-%%%%
 amulet of inaccuracy
 
 Dieses Amulett macht seinen Träger weniger Zielgenau im Nahkampf und wenn
 dieser Ungeheuer mit Fernkampf oder Zaubern angreift.
-%%%%
-amulet of rage
-
-Dieses Amulett ermöglicht es dem Träger in einen Zustand der Raserei zu
-verfallen.
-%%%%
-amulet of resist mutation
-
-Dieses Amulett schützt den Träger vor Mutationen, allerdings nicht
-unweigerlich.
-%%%%
-amulet of stasis
-
-Ein Amulett mit magischen Stationen sorgfältig konstruiert, um magische und
-physiologische Effekte, die sonst zu teleportieren, verlangsamen, Eile oder
-lähmen seines Trägers blockieren würde.
-
-Während das Amulett gegen die meiste verlagerte Magie wirksam ist, verschiebt
-es Ebene wie Verbannung sind über ihre Fähigkeit zu blockieren.
-%%%%
-amulet of warding
-
-Dieses Amulett wehrt einige Angriffe von Kreaturen, die auf magische Weise
-beschwört wurden, ab und macht den Träger resistenter gegenüber Angriffen mit
-negativer Energie.
 %%%%
 animal skin
 
@@ -91,11 +61,6 @@ Erfinderischen die Kontrolle über Zerstörung mit der Leichtigkeit eines
 Augenzwinkerns. Schwache Zauberer werden allerdings ihrem Tod entgegensehen,
 wenn sie versuchen, dieses Werk zu lesen.
 %%%%
-book of battle
-
-Ein Buch mit Zaubersprüchen die von Skalden genutzt wurden, dessen Kampflieder
-gewährten ihnen magische Hilfe.
-%%%%
 book of cantrips
 
 Ein Buch, das eine kleine Auswahl sehr grundlegender Zaubersprüche enthält,
@@ -129,13 +94,6 @@ Mystikers reflektieren. Kritiker von der Arbeit behaupten, dass die
 Zaubersprüche funktionell nicht anders als Einsen sind, die schon bekannt sind,
 aber das Buch bleibt für seine einzig bizarre Bilder und kryptische
 Abschweifungen interessant.
-%%%%
-book of enchantments
-
-Ein Zauberbuch, das ein Sortiment von magischen Flüchen und Zaubern enthält,
-die Funkeln und Schimmer als die Seiten zugeworfen wird. Der wunderlich
-unzeitgemäße Titel reflektiert ein früheres, unvollständigeres geheimnisvolles
-Verständnis dieser zwei Schulen von Zauberei.
 %%%%
 book of fixed level
 
@@ -200,13 +158,6 @@ Entwicklung und den Befehl von untoten Dienern. Das schreckliche Buch strahlt
 eine bösartige Aura aus, und seine Pergament-Seiten zucken manchmal und
 schaudern selbstständig.
 %%%%
-book of war chants
-
-Ein Buch der Zaubersprüche nützlich für einen Krieger. Die Versionen haben hier
-eine musikalische Form enthalten, nach den Traditionen des Kampfes skald.
-Funktionell, obwohl sie genau wie Zauber funktionieren, sind die magischen
-Worte gesprochen.
-%%%%
 book of wizardry
 
 Ein Buch von verschiedenen Zaubern, die für jeden genug talentierten Hexern
@@ -245,11 +196,6 @@ Ein Stück Käse.
 choko
 
 Eine fast geschmackslose grüne Frucht, die an einer Kletterpflanze wächst.
-%%%%
-chunk of flesh
-
-Ein Stück rohen Fleisches, gefunden im Verlies. Es wird nicht lange frisch
-bleiben.
 %%%%
 cloak
 
@@ -290,12 +236,6 @@ eveningstar
 
 Die Stacheln dieser Art von Morgenstern sind besonders lang und ermöglichen
 ihm, gemeine Wunden zu verursachen.
-%%%%
-fan of gales
-
-Ein verzauberter Fächer von wohlwollenden Luftgeistern bewohnt. Schwingen
-dieses Fächers entfesselt einen starken Windstoß um den Träger und setzt
-Geister frei die des Inhabers Feinde hinwegfegen.
 %%%%
 fire dragon scales
 
@@ -373,12 +313,6 @@ lajatang
 
 Eine sehr seltene und extrem effektive importierte Waffe aus einem Stab mit
 halbmondförmigen Klingen an beiden Enden.
-%%%%
-lamp of fire
-
-Eine magische Lampe von wohlwollenden Feuergeistern bewohnt. Entriegeln des
-Gehäuses setzt die Geister frei, diese tanzen in Form eines Brandes auf den
-Feinden des Inhabers.
 %%%%
 leather armour
 
@@ -645,11 +579,6 @@ scroll of magic mapping
 
 Diese Schriftrolle offenbart die Umgebungen von demjenigen, der es liest.
 %%%%
-scroll of random uselessness
-
-Man wird leicht durch den Umstand geblendet das diese Schriftrolle überhaupt
-funktioniert, jedoch ist diese im wesentlichen nutzlos.
-%%%%
 scroll of remove curse
 
 Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.
@@ -690,12 +619,6 @@ staff of conjuration
 
 Dieser Personal vergrößert die Macht von durch seinen Besitzer geworfenen
 Beschwörungsformeln.
-%%%%
-staff of energy
-
-Dieser Stab erlaubt seinem Ausüber magische Energie zu steuern: Zaubern führt
-nicht mehr zu Hunger und atmosphärische Magie kann zu des Ausübers Zwecken
-kanalisiert werden.
 %%%%
 steam dragon hide
 
@@ -755,44 +678,10 @@ Rüstung von der steifen und knubbeligen Haut eines allgemeinen Trolls gemacht.
 Es regeneriert magisch das Fleisch seines Trägers an einer ziemlich langsamen
 Rate (wenn bereits ein Troll).
 %%%%
-wand of cold
-
-Ein magisches Gerät welches großartige Bolzen aus Kälte wirft.
-%%%%
-wand of disintegration
-
-Ein magisches Gerät, das die physische Struktur von irgendetwas außer den
-härtesten Wänden — sogar starre Bildsäulen ganz zu schweigen vom Fleisch stört.
-%%%%
-wand of enslavement
-
-Ein magisches Gerät welches in einer Kreatur sklavischen Gehorsam verursacht.
-%%%%
-wand of fire
-
-Ein magisches Gerät welches großartige Bolzen aus Flammen wirft.
-%%%%
-wand of fireball
-
-Ein magisches Gerät welches explodierende Feuerstöße wirft.
-%%%%
-wand of invisibility
-
-Ein magisches Gerät welches eine Kreatur vor den Blicken Anderer versteckt.
-%%%%
-wand of magic darts
-
-Ein magisches Gerät, das kleine Bolzen der zerstörenden Energie wirft. Sie
-verfehlen nie.
-%%%%
 wand of polymorph
 
 Ein magisches Gerät, das ein Wesen veranlasst, in eine andere Form umgemodelt
 zu werden. Es ist gegen Gestalt ändernde Wesen besonders wirksam.
-%%%%
-wand of random effects
-
-Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
 %%%%
 whip
 

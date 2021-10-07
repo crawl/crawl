@@ -90,10 +90,8 @@ function crypt_loot_plus(e)
   e.kitem("i = necronomicon / " .. book .. "necromutation / " ..
           book .. "death's_door / " .. book .. "haunt / " ..
           book .. "borgnjor's_revivification / " .. book .. "infestation")
-  e.kitem("j = lamp of fire w:15 / phial of floods w:15 / " ..
-          "fan of gales w:15 / crystal ball of energy / " ..
-          "staff of energy ident:type, staff of death / staff of power / " ..
-          "staff of wizardry / any magical staff w:5")
+  e.kitem("j = phial of floods w:20 / tin of tremorstones / box of beasts, " ..
+          "staff of death / any magical staff")
   e.subst("d = d:20 ef g:20")
   e.subst("h = h:5 ij")
 end
@@ -348,7 +346,7 @@ ENDMAP
 # It's been undisturbed for so long, cobwebs are starting to form.
 NAME:   grunt_crypt_arrival_webbed
 TAGS:   extra uniq_crypt_arrival no_monster_gen no_trap_gen no_item_gen
-KFEAT:  ^ = known web trap / w:20 floor
+KFEAT:  ^ = web trap / w:20 floor
 DEPTH:  Crypt:1
 WEIGHT: 30
 ORIENT: south
@@ -416,8 +414,7 @@ SUBST:  HI = G
       type="player_los"})
   lua_marker('J', trap_marker)
   lua_marker('G', props_marker {trap_sarcophagus=1,
-                                veto_dig="veto",
-                                veto_shatter="veto"})
+                                veto_destroy="veto"})
   set_feature_name("granite_statue", "sarcophagus")
 }}
 KFEAT:  G = granite_statue
@@ -518,37 +515,13 @@ cccc+c+cccc
 ENDMAP
 
 ##############################################################################
-# death oozes - they're sort of like garden slugs
-NAME:   minigarden_bobbens
-TAGS:   transparent
-DEPTH:  Crypt
-MONS:   death ooze
-KFEAT:  f = .
-KMONS:  f = withered plant
-NSUBST: p = 2:f / * = f:2 .:1
-NSUBST: 1 = 1:3 / * = 1:3 .:1
-MAP
-..........
-..p1pp.p..
-.pp.pp..p.
-.ppp.1.p..
-..p1pp.p..
-...pppp1..
-.p.pfffp..
-..ppfffp..
-..p.1p1p..
-.1.p..pp..
-..........
-ENDMAP
-
-##############################################################################
 # Lich vault
 NAME:  weyrava_lich_vault
 DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen
 ITEM:  gold
 KFEAT: Z = w:5 alarm trap / w:8 zot trap / w:50 floor
-KMONS: Y = Boris / ancient lich, ancient lich
+KMONS: Y = Boris / ancient lich, ancient lich / dread lich
 MONS:  w:3 zombie / lich / w:3 skeleton / w:3 bone dragon
 MONS:  skeleton / zombie
 KFEAT: v = .
@@ -671,8 +644,7 @@ MONS:    shadow, soul eater, tzitzimitl
 ITEM:    any misc
 SUBST:   A : x., B : x., C : x., E : x., F : x.
 : if you.in_branch("Tar") then
-NSUBST:  d = 1:} / 1:)
-SHUFFLE: })]
+NSUBST:  d = 1:} / 1:.
 : else
 SUBST:   x = c, 3 = .
 : end
@@ -707,7 +679,7 @@ NAME:   st_shrine_of_skulls
 DEPTH:  Crypt
 MONS:   flying skull band, lich
 KMONS:  3 = curse skull
-KMONS:  4 = lich / ancient lich
+KMONS:  4 = lich w:20 / ancient lich / dread lich
 KMONS:  P = withered plant
 KFEAT:  4 = |
 SUBST:  p = Pp, p = PP., o = P..
@@ -735,7 +707,7 @@ DEPTH:  Crypt
 MONS:   mummy, guardian mummy, ushabti
 KMONS:  4 = guardian mummy
 KMONS:  5 = mummy priest
-KMONS:  6 = greater mummy
+KMONS:  6 = royal mummy
 SUBST:  1 = 2231
 KITEM:  345 = |
 MAP
@@ -1017,6 +989,7 @@ SUBST:   HIJKL = t, M = ., F = 1:30 0
 NSUBST:  2 = 3:2 / *:3
 FTILE:   _567$*|+ = floor_tomb
 TILE:    t = dngn_tree_dead
+COLOUR:  t = brown
 MONS:    flayed ghost / phantasmal warrior
 MONS:    vampire mage / vampire knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
@@ -1314,7 +1287,7 @@ TAGS: no_item_gen no_monster_gen
 DEPTH: Crypt
 ORIENT: east
 MONS: freezing wraith, shadow wraith
-KMONS: | = ancient lich
+KMONS: | = ancient lich / dread lich
 KITEM: | = plate armour good_item ego:cold_resistance \
            / ice dragon scales good_item \
            / crystal plate armour good_item ego:cold_resistance w:5 \
@@ -1413,7 +1386,7 @@ PLACE:  Crypt:$
 # skeletal monsters
 : local brnd = crawl.random2(13)
 : if brnd > 8 then
-MONS:   ancient lich
+MONS:   ancient lich / dread lich
 MONS:   bone dragon
 MONS:   lich
 MONS:   ancient champion
@@ -1439,10 +1412,10 @@ MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
 MONS:   flying skull
 MONS:   wraith / freezing wraith / shadow wraith / spectral thing / \
-        hungry ghost / w:15 shadow / w:5 nothing
+        w:20 shadow / nothing
 # mummy layout - rare
 : else
-MONS:   greater mummy
+MONS:   royal mummy
 MONS:   sphinx
 MONS:   mummy priest
 MONS:   mummy priest
@@ -1512,7 +1485,7 @@ TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
 PLACE:  Crypt:$
 KFEAT:  A = w
 KMONS:  A = flying skull
-KMONS:  B = ancient lich
+KMONS:  B = ancient lich / dread lich
 KMONS:  D = bone dragon
 KMONS:  V = vampire knight
 KMONS:  X = dancing weapon
@@ -1624,7 +1597,7 @@ PLACE:  Crypt:$
 MARKER: m = lua:portal_desc {wall_phase = 1}
 KFEAT:  m = iron_grate
 KMASK:  1 = opaque
-MONS:   patrolling lich / patrolling ancient lich
+MONS:   patrolling lich w:20 / patrolling ancient lich / patrolling dread lich
 MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / skeleton
 MONS:   ancient champion
@@ -1683,10 +1656,10 @@ KITEM:  b = any book
 SUBST:  u = U Y
 KMONS:  8 = gargoyle
 ####### NW monsters (chapel).
-KMONS:  A = ancient lich / w:2 mummy priest
-KMONS:  DL = lich / w:5 ancient lich
+KMONS:  A = ancient lich / dread lich / w:4 mummy priest
+KMONS:  DL = lich w:40 / ancient lich / dread lich
 KMONS:  E = war gargoyle
-KMONS:  G = shadow / hungry ghost / wraith
+KMONS:  G = shadow / wraith
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
 : if crawl.coinflip() then
 KMONS:  H = vampire knight
@@ -1817,16 +1790,18 @@ ORIENT: encompass
 PLACE:  Crypt:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
 SUBST:  T = t.
+SUBST:  t = ttttu
 SUBST:  v = cccc.-
-COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+COLOUR: t = w:5 lightgrey / brown
 COLOUR: x'D = white
 COLOUR: G = lightgrey
 COLOUR: "2 = brown
 NSUBST: . = 68:p / *:.
 KMONS:  p = withered plant
-FTILE:  .tT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
+FTILE:  .tuT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
 FTILE:  '_D = FLOOR_SANDSTONE
 TILE:   x = WALL_STONE_GRAY, t = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE
+KFEAT:  u = petrified_tree
 SUBST:  x: c, -'": ., ?: |
 SUBST:  D = +, d = cc+
 NSUBST: * = 12:* / 12:% / *:$
@@ -1838,7 +1813,7 @@ MONS:   jumping spider / wolf spider / redback / w:19 nothing
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
 MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
-MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
+MONS:   w:5 patrolling mummy priest / w:1 patrolling royal mummy
 KMONS:  z = patrolling curse skull
 SHUFFLE: 9H
 : if crawl.coinflip() then
@@ -1856,8 +1831,9 @@ KMONS:  F = patrolling bone dragon
 # Temple of kiku - more necromancers, more demonic (kiku's description refers to
 # him/her/it being demonic). Not as much undead in this set.
 KFEAT:  _ = altar_kikubaaqudgha
-KMONS:  9 = patrolling ancient lich
-KMONS:  H = w:20 patrolling lich / patrolling ancient lich
+KMONS:  9 = patrolling ancient lich / patrolling dread lich
+KMONS:  H = w:40 patrolling lich / patrolling ancient lich / \
+            patrolling dread lich
 KMONS:  0 = patrolling reaper w:5 / patrolling soul eater
 KMONS:  A = patrolling deep elf death mage
 KMONS:  B = necromancer
@@ -1955,7 +1931,7 @@ ENDMAP
 #  skeletal ([ancient] liches, bone dragons, ancient champions)
 #  vampire (Jory, vampire [knight / mage], dancing weapons)
 #  ghostly (revenant, eidola, shadow dragon)
-#  mummy (greater mummy, mummy priests, sphinx)
+#  mummy (royal mummy, mummy priests, sphinx)
 #
 # Loot:
 #  roughly similar loot to evilmike's haunted forest
@@ -1974,7 +1950,7 @@ COLOUR: YsDdE = darkgrey
 : local brnd = crawl.random2(15)
 : if brnd > 10 then
 MONS:   patrolling skeletal warrior w:8 / patrolling wight
-MONS:   ancient lich
+MONS:   ancient lich / dread lich
 MONS:   bone dragon w:1 / ancient champion / lich w:1
 MONS:   caustic shrike skeleton / titan skeleton
 MONS:   w:50 skeleton / wight
@@ -1999,7 +1975,7 @@ MONS:   generate_awake shadow dragon / generate_awake ghost moth
 SUBST:  2 = ., ' = 2, " = 4
 : else
 MONS:   patrolling guardian mummy w:7 / patrolling ushabti w:3
-MONS:   greater mummy
+MONS:   royal mummy
 MONS:   mummy priest / ushabti w:6
 MONS:   guardian mummy ; long sword | great sword | \
         battleaxe | war axe | broad axe . chain mail w:15 | plate armour w:1
@@ -2095,7 +2071,7 @@ KMONS:   Q = flayed ghost / shadow w:20
 
 # Boss tier monsters.
 : if crawl.one_chance_in(4) then
-KMONS:   R = Khufu, greater mummy
+KMONS:   R = Khufu, royal mummy
 KMONS:   S = mummy priest
 KMONS:   T = guardian mummy
 : elseif crawl.one_chance_in(3) then
@@ -2103,7 +2079,7 @@ KMONS:   R = Jory, vampire knight
 KMONS:   S = vampire knight / vampire mage
 KMONS:   T = vampire knight / jiangshi
 : elseif crawl.coinflip() then
-KMONS:   R = ancient lich
+KMONS:   R = ancient lich / dread lich
 KMONS:   S = flayed ghost
 KMONS:   T = phantasmal warrior
 : else
@@ -2186,7 +2162,7 @@ PLACE:   Crypt:$
 ORIENT:  north
 MONS:    ancient champion, lich / revenant, jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / curse toe / \
-         greater mummy w:2 / ancient lich w:2
+         royal mummy w:2 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; halberd | glaive | bardiche w:5
 MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
 MONS:    zombie w:20 / skeleton w:20 / simulacrum / nothing w:25

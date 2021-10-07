@@ -35,6 +35,7 @@ function c_macro(fn)
       return false
    end
    if _G[fn] == nil or type(_G[fn]) ~= 'function' then
+      error("Unknown function in macro: '" .. fn .. "'")
       return false
    end
    c_macro_name = fn

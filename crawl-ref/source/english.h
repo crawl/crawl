@@ -24,6 +24,7 @@ string pluralise_monster(const string &name);
 string apostrophise(const string &name);
 string conjugate_verb(const string &verb, bool plural);
 const char *decline_pronoun(gender_type gender, pronoun_type variant);
+string walk_verb_to_present(string verb);
 
 string number_in_words(unsigned number);
 
@@ -35,8 +36,8 @@ string article_a(const string &name, bool lowercase = true);
 string apply_description(description_level_type desc, const string &name,
                          int quantity = 1, bool num_in_words = false);
 
-string thing_do_grammar(description_level_type dtype, bool add_stop,
-                        bool force_article, string desc);
+string thing_do_grammar(description_level_type dtype, string desc,
+                        bool ignore_case = false);
 
 string get_desc_quantity(const int quant, const int total,
-                         string whose = "your");
+                         const string &whose = "your");

@@ -1,0 +1,123 @@
+#!/bin/bash
+#---help---
+# Usage: port-dgl-chroot -o old-chroot -d new-chroot
+#
+# This script ports all data from an old /home/crawl/DGL chroot to an empty
+# chroot created with install-ubuntu-chroot.
+#
+# It will run these steps, in order:
+# - set up crawl and crawl-dev users
+# - install required packages
+# - generate an en_US.UTF-8 locale
+# - copy game data over
+# - set required permissions on game data
+# - swap the old chroot to DGL.bak, and move the new one into place
+# - unmount/remount /proc and /dev/pts as required
+# - run `dgl publish --confirm` to sync remaining configuration into place
+#---help---
+
+set -euo pipefail
+
+die() {
+    printf '\033[1;31mERROR:\033[0m %s\n' "$@" >&2  # bold red
+    exit 1
+}
+
+einfo() {
+    printf '\n\033[1;36m> %s\033[0m\n' "$@" >&2  # bold cyan
+}
+
+usage() {
+    sed -En '/^#---help---/,/^#---help---/p' "$0" | sed -E 's/^# ?//; 1d;$d;'
+}
+
+################################################################################
+
+while getopts 'o:n:h' OPTION; do
+    case "$OPTION" in
+        o) OLD="$(realpath "$OPTARG")";;
+        n) NEW="$(realpath "$OPTARG")";;
+        h) usage; exit 0;;
+        *) exit 1;;
+    esac
+done
+
+if [ "$(id -u)" -ne 0 ]; then
+    die "This script must be run as root!"
+fi
+
+[ -z "${OLD:-""}" ] && die "You must specify the old chroot with -o";
+[ -z "${NEW:-""}" ] && die "You must specify the new chroot with -n";
+[ -f "$OLD/crawl-versions.db3" ] || die "Existing chroot $OLD does not look correct"
+[ -f "$NEW/enter-chroot" ] || die "New chroot $NEW does not look correct"
+
+################################################################################
+
+einfo "Mounting /proc and /dev/pts"
+
+mount -v --bind /dev/pts "$NEW/dev/pts"
+mount -v --bind /proc "$NEW/proc"
+
+einfo "Creating crawl / crawl-dev users"
+
+"$NEW/enter-chroot" <<-EOF
+    groupadd -g $(id -g crawl) crawl
+    groupadd -g $(id -g crawl-dev) crawl-dev
+    useradd --uid $(id -u crawl) --gid crawl -s /sbin/nologin crawl
+    useradd --uid $(id -u crawl-dev) --gid crawl-dev -s /sbin/nologin crawl-dev
+    id crawl
+    id crawl-dev
+EOF
+
+einfo "Installing required packages"
+
+"$NEW/enter-chroot" <<-EOF
+    apt -y install --no-install-recommends sqlite3 libncursesw5 python3 locales locales-all python3-pip
+    apt -y autoremove
+    pip3 install setuptools wheel
+    pip3 install tornado==4.0
+EOF
+
+einfo "Generating en_US.UTF-8 locale"
+
+"$NEW/enter-chroot" <<-EOF
+    locale-gen en_US.UTF-8
+EOF
+
+einfo "Moving game data between chroots"
+
+mv --no-clobber -v "$OLD/bin/ee" "$OLD/bin/virus" "$NEW/bin/"
+mv --no-clobber -v "$OLD/dgamelaunch" "$NEW"
+mv --no-clobber -v "$OLD/dgldebug.log" "$NEW"
+mv --no-clobber -v "$OLD/crawl-versions.db3" "$NEW"
+mv --no-clobber -v "$OLD/cores" "$NEW"
+mv --no-clobber -v "$OLD/dgldir/" "$NEW"
+mv --no-clobber -v "$OLD/crawl-master/" "$NEW/"
+mv --no-clobber -v "$OLD"/usr/games/crawl-* "$NEW/usr/games/"
+
+einfo "Fixing permissions"
+
+chown -R crawl:crawl "$NEW/crawl-master"
+chown -R crawl:crawl "$NEW/dgldir"
+chmod 666 "$NEW/dev/ptmx"
+
+einfo "Unmounting /proc and /dev/pts"
+
+umount -v "$NEW/proc"
+umount -v "$NEW/dev/pts"
+
+einfo "Swapping chroots"
+
+mv --no-clobber -v "$OLD" "$OLD.bak"
+mv --no-clobber -v "$NEW" "$OLD"
+
+einfo "Remounting /proc and /dev"
+
+mount -v "$OLD/proc"
+mount -v "$OLD/dev/pts"
+
+einfo "Publishing DGL config into new chroot..."
+
+/home/crawl-dev/dgamelaunch-config/bin/dgl publish --confirm
+
+einfo "Done!"

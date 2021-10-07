@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include <vector>
+
 #include "job-type.h"
 #include "species-type.h"
+
+using std::vector;
 
 class UINewGameMenu;
 struct menu_letter;

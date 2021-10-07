@@ -6,25 +6,31 @@
 
 #include <cerrno>
 #include <cstdarg>
+
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/un.h>
+#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
+#endif
 
 #include "artefact.h"
 #include "branch.h"
 #include "command.h"
 #include "coord.h"
+#include "database.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "files.h"
 #include "item-name.h"
+#include "item-prop.h" // is_weapon()
 #include "json.h"
 #include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
+#include "macro.h"
 #include "map-knowledge.h"
 #include "menu.h"
 #include "outer-menu.h"
@@ -42,11 +48,11 @@
 #include "throw.h"
 #include "tile-flags.h"
 #include "tile-player-flag-cut.h"
-#include "tiledef-dngn.h"
-#include "tiledef-gui.h"
-#include "tiledef-icons.h"
-#include "tiledef-main.h"
-#include "tiledef-player.h"
+#include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-gui.h"
+#include "rltiles/tiledef-icons.h"
+#include "rltiles/tiledef-main.h"
+#include "rltiles/tiledef-player.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "tileview.h"
@@ -265,6 +271,10 @@ void TilesFramework::finish_message()
     m_msg_buf.clear();
     m_need_flush = true;
 #ifdef DEBUG_WEBSOCKETS
+    // should the game actually crash in this case?
+    if (m_controlled_from_web && m_dest_addrs.size() == 0)
+        fprintf(stderr, "No open websockets after finish_message!!\n");
+
     fprintf(stderr, "websocket: Sent %d bytes in %d fragments.\n",
                                                 initial_buf_size, fragments);
 #endif
@@ -322,6 +332,7 @@ wint_t TilesFramework::_receive_control_message()
     char buf[4096]; // Should be enough for client->server messages
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
+    memset(&srcaddr, 0, sizeof(struct sockaddr_un));
 
     srcaddr_len = sizeof(srcaddr);
 
@@ -371,6 +382,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         JsonWrapper keycode = json_find_member(obj.node, "keycode");
         keycode.check(JSON_NUMBER);
 
+        // TODO: remove this fixup call
         c = (int) keycode->number_;
     }
     else if (msgtype == "spectator_joined")
@@ -379,14 +391,25 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         _send_everything();
         flush_messages();
     }
+    else if (msgtype == "menu_hover")
+    {
+        JsonWrapper hover = json_find_member(obj.node, "hover");
+        hover.check(JSON_NUMBER);
+
+        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
+            m_menu_stack.back().menu->set_hovered((int) hover->number_);
+
+    }
     else if (msgtype == "menu_scroll")
     {
         JsonWrapper first = json_find_member(obj.node, "first");
         first.check(JSON_NUMBER);
+        JsonWrapper hover = json_find_member(obj.node, "hover");
+        hover.check(JSON_NUMBER);
         // last visible item is sent too, but currently unused
 
         if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
-            m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
+            m_menu_stack.back().menu->webtiles_scroll((int) first->number_, (int) hover->number_);
     }
     else if (msgtype == "*request_menu_range")
     {
@@ -769,9 +792,20 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     m_ui_state = state;
 }
 
-void TilesFramework::update_input_mode(mouse_mode mode)
+void TilesFramework::update_input_mode(mouse_mode mode, bool force)
 {
-    redraw();
+    auto prev_mode = mouse_control::current_mode();
+    if (prev_mode == mode && !force)
+        return;
+
+    // we skip redrawing in this case because it happens on every key input,
+    // and is very heavy on held down keys
+    if (force
+        || !(prev_mode == MOUSE_MODE_COMMAND && mode == MOUSE_MODE_NORMAL
+             || prev_mode == MOUSE_MODE_NORMAL && mode == MOUSE_MODE_COMMAND))
+    {
+        redraw();
+    }
 
     json_open_object();
     json_write_string("msg", "input_mode");
@@ -823,7 +857,7 @@ static bool _update_statuses(player_info& c)
             inf = status_info();
             if (!you.duration[status])
                 continue;
-            inf.short_text = "divine shield";
+            inf.short_text = "divinely shielded";
         }
         else if (status == DUR_ICEMAIL_DEPLETED)
         {
@@ -837,7 +871,7 @@ static bool _update_statuses(player_info& c)
             inf = status_info();
             if (!acrobat_boost_active())
                 continue;
-            inf.short_text = "acrobat";
+            inf.short_text = "acrobatic";
         }
         else if (!fill_status_info(status, inf)) // this will reset inf itself
             continue;
@@ -881,6 +915,7 @@ static bool _update_statuses(player_info& c)
 
 player_info::player_info()
 {
+    _state_ever_synced = false;
     for (auto &eq : equip)
         eq = -1;
     position = coord_def(-1, -1);
@@ -897,6 +932,16 @@ player_info::player_info()
 void TilesFramework::_send_player(bool force_full)
 {
     player_info& c = m_current_player_info;
+    if (!c._state_ever_synced)
+    {
+        // force the initial sync to be full: otherwise the _update_blah
+        // functions will incorrectly detect initial values to be ones that
+        // have previously been sent to the client, when they will not have
+        // been. (This is made ever worse by the fact that player_info does
+        // not initialize most of its values...)
+        c._state_ever_synced = true;
+        force_full = true;
+    }
 
     json_open_object();
     json_write_string("msg", "player");
@@ -906,7 +951,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.job_title, filtered_lang(player_title()),
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
-    _update_string(force_full, c.species, species_name(you.species),
+    _update_string(force_full, c.species, species::name(you.species),
                    "species");
     string god = "";
     if (you_worship(GOD_JIYVA))
@@ -918,7 +963,7 @@ void TilesFramework::_send_player(bool force_full)
     uint8_t prank = 0;
     if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank());
-    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+    else if (you.char_class == JOB_MONK && !you.has_mutation(MUT_FORLORN)
              && !had_gods())
     {
         prank = 2;
@@ -953,7 +998,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
     _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         _update_int(force_full, c.lives, you.lives, "lives");
         _update_int(force_full, c.deaths, you.deaths, "deaths");
@@ -1009,7 +1054,17 @@ void TilesFramework::_send_player(bool force_full)
         {
             json_open_object();
             if (!status.light_text.empty())
+            {
                 json_write_string("light", status.light_text);
+                // split off any extra info, e.g. counts for things like Zot
+                // and Flay. (Status db descriptions never have spaces.)
+                string dbname = split_string(" ", status.light_text, true, true, 1)[0];
+                // Don't claim Zot is impending when it's not near.
+                if (dbname == "Zot" && status.light_colour == WHITE)
+                    dbname = "Zot count";
+                const string dbdesc = getLongDescription(dbname + " status");
+                json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
+            }
             if (!status.short_text.empty())
                 json_write_string("text", status.short_text);
             if (status.light_colour)
@@ -1023,7 +1078,10 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        _send_item(c.inv[i], get_item_info(you.inv[i]), force_full);
+        item_def item = get_item_known_info(you.inv[i]);
+        if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.corrosion_amount())
+            item.plus -= 4 * you.corrosion_amount();
+        _send_item(c.inv[i], item, force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1036,14 +1094,24 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
+    _update_int(force_full, c.launcher_item,
+                you.launcher_action.is_empty()
+                ? (int8_t) -1
+                : (int8_t) you.launcher_action.get()->get_item(), "launcher_item");
     _update_int(force_full, c.quiver_item,
-                (int8_t) you.m_quiver.get_fire_item(), "quiver_item");
+                (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
+
+    _update_string(force_full, c.quiver_desc,
+                you.quiver_action.get()->quiver_description().to_colour_string(),
+                "quiver_desc");
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
     _update_int(force_full, c.unarmed_attack_colour,
                 (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
-    _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
+    _update_int(force_full, c.quiver_available,
+                    you.quiver_action.get()->is_valid()
+                                && you.quiver_action.get()->is_enabled(),
                 "quiver_available");
 
     json_close_object(true);
@@ -1051,7 +1119,7 @@ void TilesFramework::_send_player(bool force_full)
     finish_message();
 }
 
-void TilesFramework::_send_item(item_info& current, const item_info& next,
+void TilesFramework::_send_item(item_def& current, const item_def& next,
                                 bool force_full)
 {
     bool changed = false;
@@ -1077,7 +1145,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
     changed |= _update_int(force_full, current.sub_type, next.sub_type,
                            "sub_type", false);
     changed |= _update_int(force_full, current.plus, next.plus,
-                           "plus", false);
+                           PLUS_KEY, false);
     changed |= _update_int(force_full, current.plus2, next.plus2,
                            "plus2", false);
     changed |= _update_int(force_full, current.flags, next.flags,
@@ -1182,14 +1250,14 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_CENTAUR);
+    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_PALENTONGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     tiles.json_open_array("doll");
@@ -1341,7 +1409,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
             json_write_name("fg");
             write_tileidx(next_pc.fg);
-            if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+            if (get_tile_texture(fg_idx) == TEX_DEFAULT)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
         }
 
@@ -1447,17 +1515,19 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 if (Options.tile_use_monster != MONS_0)
                 {
                     monster_info minfo(MONS_PLAYER, MONS_PLAYER);
-                    minfo.props["monster_tile"] =
+                    minfo.props[MONSTER_TILE_KEY] =
                         short(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
                     if (you.slot_item(EQ_WEAPON))
                     {
-                        item = new item_def(get_item_info(*you.slot_item(EQ_WEAPON)));
+                        item = new item_def(
+                            get_item_known_info(*you.slot_item(EQ_WEAPON)));
                         minfo.inv[MSLOT_WEAPON].reset(item);
                     }
                     if (you.slot_item(EQ_SHIELD))
                     {
-                        item = new item_def(get_item_info(*you.slot_item(EQ_SHIELD)));
+                        item = new item_def(
+                            get_item_known_info(*you.slot_item(EQ_SHIELD)));
                         minfo.inv[MSLOT_SHIELD].reset(item);
                     }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);
@@ -1471,7 +1541,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     json_write_null("mcache");
             }
         }
-        else if (fg_idx >= TILE_MAIN_MAX)
+        else if (get_tile_texture(fg_idx) == TEX_PLAYER)
         {
             if (fg_changed)
             {
@@ -1613,7 +1683,6 @@ void TilesFramework::_send_map(bool force_full)
                 screen_cell_t *cell = &m_next_view(gc);
 
                 draw_cell(cell, gc, false, m_current_flash_colour);
-                cell->tile.flv = env.tile_flv(gc);
                 pack_cell_overlays(gc, m_next_view);
             }
 
@@ -1788,7 +1857,6 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             screen_cell_t *cell = &m_next_view(grid);
 
             *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
-            cell->tile.flv = env.tile_flv(grid);
             pack_cell_overlays(grid, m_next_view);
 
             mark_clean(grid); // Remove redraw flag
@@ -1888,7 +1956,7 @@ void TilesFramework::_send_everything()
 
     _send_messages();
 
-    update_input_mode(mouse_control::current_mode());
+    update_input_mode(mouse_control::current_mode(), true);
 
     m_text_menu.send(true);
 
@@ -2053,25 +2121,6 @@ const coord_def &TilesFramework::get_cursor() const
     return m_cursor[CURSOR_MOUSE];
 }
 
-void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
-{
-    if (idx >= TILE_MAIN_MAX)
-        return;
-
-    m_has_overlays = true;
-
-    send_message("{\"msg\":\"overlay\",\"idx\":%u,\"x\":%d,\"y\":%d}",
-                 (unsigned int) idx, gc.x - m_origin.x, gc.y - m_origin.y);
-}
-
-void TilesFramework::clear_overlays()
-{
-    if (m_has_overlays)
-        send_message("{\"msg\":\"clear_overlays\"}");
-
-    m_has_overlays = false;
-}
-
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
     unsigned int ticks = (get_milliseconds() - m_last_tick_redraw);
@@ -2172,8 +2221,6 @@ bool TilesFramework::cell_needs_redraw(const coord_def& gc)
 
 void TilesFramework::write_message_escaped(const string& s)
 {
-    m_msg_buf.reserve(m_msg_buf.size() + s.size());
-
     for (unsigned char c : s)
     {
         if (c == '"')
@@ -2187,7 +2234,7 @@ void TilesFramework::write_message_escaped(const string& s)
             m_msg_buf.append(buf);
         }
         else
-            m_msg_buf.append(1, c);
+            m_msg_buf.push_back(c);
     }
 }
 

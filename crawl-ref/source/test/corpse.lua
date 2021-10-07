@@ -32,11 +32,10 @@ end
 
 -- All set up!
 ok("hydra corpse")
-ok("hippogriff skeleton")
+ok("wyvern skeleton")
 for i = 1,100 do
   ok("any corpse", "corpse")
 end
-ok("rat chunk", "chunk of flesh")
 fail("zombie chunk")
 fail("floating eye corpse")
 ok("orc warrior corpse", "orc corpse")

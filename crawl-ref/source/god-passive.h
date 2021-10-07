@@ -19,8 +19,8 @@ enum class passive_t
     none = 0,
 
     /// The god prefers that items be cursed: acquirement grants cursed items,
-    /// enchant scrolls and miscasts preserve curse status, and remove curse
-    /// allows selecting a subset of items.
+    /// enchant scrolls and miscasts preserve curse status, and identify
+    /// allows selecting a subset of items to uncurse.
     want_curses,
 
     /// You detect the presence of portals.
@@ -46,6 +46,9 @@ enum class passive_t
 
     /// You have innate clarity.
     clarity,
+
+    /// You have astral sight.
+    xray_vision,
 
     /// You get a boost to skills from cursed slots.
     bondage_skill_boost,
@@ -77,11 +80,14 @@ enum class passive_t
     /// Fewer creatures spawn in the Abyss, and it morphs less quickly.
     slow_abyss,
 
+    /// The Zot clock runs more slowly.
+    slow_zot,
+
     /// Your attributes are boosted.
     stat_boost,
 
-    /// Hunger, poison, and disease affect you more slowly.
-    slow_metabolism,
+    /// Poison affects you more slowly.
+    slow_poison,
 
     /// You have an umbra.
     umbra,
@@ -253,6 +259,12 @@ enum class passive_t
     wu_jian_lunge,
     wu_jian_whirlwind,
     wu_jian_wall_jump,
+
+    /// Okawaru prevents gaining any allies
+    no_allies,
+
+    // rF+
+    resist_fire,
 };
 
 enum ru_interference
@@ -262,21 +274,20 @@ enum ru_interference
     DO_REDIRECT_ATTACK
 };
 
+bool god_gives_passive(god_type god, passive_t passive);
 bool have_passive(passive_t passive);
 bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
-void ash_init_bondage(player *y);
-void ash_check_bondage(bool msg = true);
-string ash_describe_bondage(int flags, bool level);
+int ash_scry_radius();
+void ash_check_bondage();
 bool god_id_item(item_def& item, bool silent = true);
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
-map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
 int gozag_gold_in_los(actor* whom);
 void gozag_detect_level_gold(bool count);
 int qazlal_sh_boost(int piety = you.piety);
@@ -293,10 +304,12 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
+void wu_jian_heaven_tick();
+void wu_jian_decrement_heavenly_storm();
+void wu_jian_end_heavenly_storm();
 void wu_jian_wall_jump_effects();
 bool wu_jian_has_momentum(wu_jian_attack_type);
-void wu_jian_heaven_tick();
 bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position);
-void wu_jian_end_of_turn_effects();
-void end_heavenly_storm();
+
+void okawaru_handle_duel();

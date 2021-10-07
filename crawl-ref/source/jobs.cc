@@ -9,6 +9,7 @@
 #include "ng-setup.h"
 #include "playable.h"
 #include "player.h"
+#include "spl-book.h"
 #include "stringutil.h"
 
 #include "job-data.h"
@@ -113,10 +114,10 @@ void give_job_equipment(job_type job)
     {
         const item_spec spec = items.get_item(i);
         int plus = 0;
-        if (spec.props.exists("charges"))
-            plus = spec.props["charges"];
-        if (spec.props.exists("plus"))
-            plus = spec.props["plus"];
+        if (spec.props.exists(CHARGES_KEY))
+            plus = spec.props[CHARGES_KEY];
+        if (spec.props.exists(PLUS_KEY))
+            plus = spec.props[PLUS_KEY];
         newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
                           plus, spec.ego);
     }
@@ -134,7 +135,7 @@ void give_job_skills(job_type job)
             const item_def *weap = you.weapon();
             skill = weap ? item_attack_skill(*weap) : SK_UNARMED_COMBAT;
             //XXX: WTF?
-            if (you.species == SP_FELID && job == JOB_FIGHTER)
+            if (you.has_mutation(MUT_NO_GRASPING) && job == JOB_FIGHTER)
                 amount += 2;
             // Don't give throwing hunters Short Blades skill.
             if (job_gets_ranged_weapons(job) && !(weap && is_range_weapon(*weap)))
@@ -142,6 +143,11 @@ void give_job_skills(job_type job)
         }
         you.skills[skill] += amount;
     }
+}
+
+vector<spell_type> get_job_spells(job_type job)
+{
+    return _job_def(job).library;
 }
 
 void debug_jobdata()
@@ -187,4 +193,9 @@ bool is_starting_job(job_type job)
 bool job_is_removed(job_type job)
 {
     return _job_def(job).recommended_species.empty();
+}
+
+vector<species_type> job_recommended_species(job_type job)
+{
+    return _job_def(job).recommended_species;
 }

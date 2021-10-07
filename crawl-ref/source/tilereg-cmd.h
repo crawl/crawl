@@ -15,7 +15,7 @@ static const command_type ct_system_commands[] =
     CMD_DISPLAY_CHARACTER_STATUS, CMD_DISPLAY_KNOWN_OBJECTS,
 
     // meta commands
-    CMD_SAVE_GAME_NOW, CMD_EDIT_PLAYER_TILE, CMD_DISPLAY_COMMANDS,
+    CMD_SAVE_GAME_NOW, CMD_DISPLAY_COMMANDS, CMD_GAME_MENU,
 };
 
 static const command_type ct_map_commands[] =
@@ -49,7 +49,6 @@ static const command_type ct_action_commands[] =
 {
     CMD_EXPLORE,
     CMD_REST, CMD_WAIT,
-    CMD_BUTCHER,
     CMD_DISPLAY_INVENTORY, CMD_DROP,
     CMD_CAST_SPELL, CMD_USE_ABILITY,
     CMD_DISPLAY_SKILLS, CMD_MEMORISE_SPELL,

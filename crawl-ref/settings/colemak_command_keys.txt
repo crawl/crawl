@@ -55,7 +55,6 @@ bindkey = [B] CMD_MAP_JUMP_DOWN_LEFT
 bindkey = [K] CMD_MAP_JUMP_DOWN_RIGHT
 
 # replace (e) with (u)
-bindkey = [u] CMD_EAT
 bindkey = [u] CMD_TARGET_EXCLUDE
 bindkey = [u] CMD_MAP_EXCLUDE_AREA
 bindkey = [U] CMD_EXPERIENCE_CHECK

@@ -5,6 +5,11 @@
 
 #pragma once
 
+#include "item-def.h"
+#include "monster-type.h"
+
+class monster;
+
 void give_specific_item(monster* mon, const item_def& tpl);
 void give_specific_item(monster* mon, int thing);
 void give_item(monster *mon, int level_number, bool mons_summoned);

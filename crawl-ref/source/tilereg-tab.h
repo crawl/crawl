@@ -1,8 +1,12 @@
 #ifdef USE_TILE_LOCAL
 #pragma once
 
+#include <vector>
+
 #include "command-type.h"
 #include "tilereg-grid.h"
+
+using std::vector;
 
 // A region that contains multiple region, selectable by tabs.
 class TabbedRegion : public GridRegion
