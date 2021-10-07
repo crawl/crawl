@@ -1513,7 +1513,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     rng::generator rng(rng::UI);
 
     if (_msg_dump_file != nullptr)
-        fprintf(_msg_dump_file, "%s\n", text.c_str()); // should this strip color tags?
+        fprintf(_msg_dump_file, "%s\n", text.c_str()); // should this strip colour tags?
 
     if (crawl_state.game_crashed)
         return;
@@ -1546,7 +1546,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         cap = false;
 
     // if the message would be muted, handle any tees before bailing. The
-    // actual color for MSGCOL_MUTED ends up as darkgrey in any tees.
+    // actual colour for MSGCOL_MUTED ends up as darkgrey in any tees.
     msg_colour_type colour = prepare_message(text, channel, param);
 
     string col = colour_to_str(colour_msg(colour));

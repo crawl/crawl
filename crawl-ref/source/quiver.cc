@@ -1127,7 +1127,7 @@ namespace quiver
             // time.
             enabled_cache = can_cast_spells(true)
                                     && !spell_is_useless(spell, true, false);
-            // this imposes excommunication colors
+            // this imposes excommunication colours
             if (!enabled_cache)
                 col_cache = COL_USELESS;
             else

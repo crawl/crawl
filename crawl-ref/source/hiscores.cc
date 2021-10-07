@@ -321,7 +321,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
             ret += string(s);
         });
 
-        // return to normal color for next entry
+        // return to normal colour for next entry
         if (i == newest_entry)
             ret += "<lightgrey>";
     }

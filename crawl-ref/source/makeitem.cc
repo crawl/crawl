@@ -75,7 +75,7 @@ static map<object_class_type, item_description_type> _type_to_idesc = {
 /**
  * Initialize the randomized appearance of a given item.
  *
- * For e.g. wand names, potions colors, helmet tiles...
+ * For e.g. wand names, potions colours, helmet tiles...
  *
  * XXX: could this be moved into a constructor or reset method...?
  *
