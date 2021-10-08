@@ -3070,7 +3070,9 @@ spret cast_inner_flame(const dist &beam, bool fail)
     if (!mons
         || !you.can_see(*mons)
         || stop_attack_prompt(mons, false, you.pos()))
+    {
         return spret::abort;
+    }
 
     if (mons->has_ench(ENCH_INNER_FLAME))
     {
