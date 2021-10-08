@@ -433,8 +433,7 @@ A gateway leading to the Iron City of Dis.
 %%%%
 A gateway leading out of Dis
 
-A gateway leading back to the Vestibule of Hell, and whatever horrors you left
-behind there.
+<A gateway leading out of Gehenna>
 %%%%
 A gateway to the decaying netherworld of Tartarus
 
@@ -442,8 +441,7 @@ A gateway leading to Tartarus.
 %%%%
 A gateway leading out of Tartarus
 
-A gateway leading back to the Vestibule of Hell, and whatever horrors you left
-behind there.
+<A gateway leading out of Gehenna>
 %%%%
 A gateway to the freezing wastes of Cocytus
 
@@ -451,8 +449,7 @@ A gateway leading to Cocytus.
 %%%%
 A gateway leading out of Cocytus
 
-A gateway leading back to the Vestibule of Hell, and whatever horrors you left
-behind there.
+<A gateway leading out of Gehenna>
 %%%%
 
 A hole to the Spider Nest
