@@ -1697,7 +1697,12 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     else if (wh_enchant == ENCH_INSANE
              && !mons->can_go_frenzy())
     {
-        if (simple_monster_message(*mons, " is unaffected."))
+        const monster_info mi(mons);
+        string sleep_msg = mi.is(MB_DORMANT) ? " dormant, and thus" :
+                           mi.is(MB_SLEEPING) ? " sleeping, and thus" : "";
+        string msg = make_stringf(" is%s unaffected.",
+                                  sleep_msg.c_str());
+        if (simple_monster_message(*mons, msg.c_str()))
             *did_msg = true;
         return true;
     }
