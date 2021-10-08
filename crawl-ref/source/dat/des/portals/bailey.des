@@ -653,11 +653,11 @@ ITEM:   good_item cloak / good_item pair of gloves /\
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xAxxxxxxxxxxx.........xxxxxxxxxxxxx
-xx<..xxxxxxx..WWWWWWW..xxxxxxxxxxxx
-xx..xxxxxxx..WW.1.1.WW..xxxxxxxxxxx
-xxx..xxxxx..WW..ccc..WW..xxxxxxxxxx
-x.........xWW.1cc.cc1.WW..........x
+xA<xxxxxxxxxx.........xxxxxxxxxxxxx
+xx..xxxxxxxx..WWWWWWW..xxxxxxxxxxxx
+x..xxxxxxxx..WW.1.1.WW..xxxxxxxxxxx
+xx..xxxxxx..WW..ccc..WW..xxxxxxxxxx
+x..........WW.1cc.cc1.WW..........x
 x.WWWWWWWWWW..ccd|ecc..WWWWWWWWWW.x
 x.W1..1..1..1cc.....cc1..1..1..1W.x
 x.W.ccncccccccccc+ccccccccccncc.W.x
@@ -695,14 +695,14 @@ MONS:   orc warrior w:5 ; arbalest . bolt . ring mail | scale mail / \
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
 MONS:   orc knight
-SUBST:  2 = 23
-NSUBST: 4 = 4 / 3
+SUBST:  1 = 111., 2 = 233.
+NSUBST: 4 = 1:4 / *=4332.
 SUBST:  W : W..
-KFEAT:  ^ = permanent teleport trap
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
-        good_item bardiche / good_item executioner's axe
+        good_item bardiche / good_item executioner's axe /\
+        good_item triple sword / good_item arbalest / good_item triple crossbow
 ITEM:   potion of experience ident:type q:1 / \
         scroll of acquirement ident:type q:1 /\
         scroll of enchant armour ident:type q:2 / \
@@ -710,45 +710,41 @@ ITEM:   potion of experience ident:type q:1 / \
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x<.......................................<x
-x.A.......................................x
-x.........................................x
-x.........................................x
-x.........................................x
-x.........................................x
-x......WwwwwwWWWWWWWWWWWWWWWWWwwwwwW......x
-x......wwc1cwwWWWWWWWWWWWWWWWwwc1cww......x
-x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
-x......w1.^.1wWWWWWWWWWWWWWWWw1.^.1w......x
-x......wcc.<cwWWWWWWWWWWWWWWWwc<.ccw......x
-x......wwc1cWwWWWWWWcccWWWWWWwWc1cww......x
-x......WwwwwwWWWWcccccccccWWWWwwwwwW......x
-x......WWWWWWWWWccWWWWWWWccWWWWWWWWW......x
-x......WWWWWWWWccWWc+c+cWWccWWWWWWWW......x
-x......WWWWWWWWcWWcc2c2ccWWcWWWWWWWW......x
-x......WWWWWWWccWccvvvvvccWccWWWWWWW......x
-x......WWWWWWWccW+2vd4dv2+WccWWWWWWW......x
-x......WWWWWWWccWccv4X4vccWccWWWWWWW......x
-x......WWWWWWWccW+2v.4.v2+WccWWWWWWW......x
-x......WWWWWWWccWccvv+vvccWccWWWWWWW......x
-x......WWWWWWWccWWcc<d<ccWWcWWWWWWWW......x
-x......WWWWWWWWWWWcc+++cWWccWWWWWWWW......x
-x......WWWWWWWWWWWccWWWWWccWWWWWWWWW......x
-x......WwwwwwWWWWWccWWWWccWWWWwwwwwW......x
-x......wwc1cWwWWWWcccccccWWWWwWc1cww......x
-x......wcc.<cwWWWWWWWWWWWWWWWwc<.ccw......x
-x......w1.^.1wWWWWWWWWWWWWWWWw1.^.1w......x
-x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
-x......wwc1cwwWWWWWWWWWWWWWWWwwc1cww......x
-x......WwwwwwWWWWWWWWWWWWWWWWWwwwwwW......x
-x.........................................x
-x.........................................x
-x.........................................x
-x.........................................x
-x.........................................x
-x<.......................................<x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x<.....................................<x
+x.A.....................................x
+x.......................................x
+x.......................................x
+x.....WwwwwwWWWWWWWWWWWWWWWWWwwwwwW.....x
+x.....wwcncwwWWWWWWWWWWWWWWWwwcncww.....x
+x.....wcc1ccwWWWWWWWWWWWWWWWwcc1ccw.....x
+x.....wn111.WWWWWWWWWWWWWWWWW.111nw.....x
+x.....wcc1<cwWWWWWWWWWWWWWWWwc<1ccw.....x
+x.....wwc.ccwWWWWWWcccWWWWWWwcc.cww.....x
+x.....WwwWwwwWWWcccccccccWWWwwwWwwW.....x
+x.....WWWWWWWWWccWWWWWWWccWWWWWWWWW.....x
+x.....WWWWWWWWccWWc+c+cWWccWWWWWWWW.....x
+x.....WWWWWWWWcWWcc2c2ccWWcWWWWWWWW.....x
+x.....WWWWWWWccWccvvvvvccWccWWWWWWW.....x
+x.....WWWWWWWccW+2vd4dv2+WccWWWWWWW.....x
+x.....WWWWWWWccWccv4X4vccWccWWWWWWW.....x
+x.....WWWWWWWccW+2v.4.v2+WccWWWWWWW.....x
+x.....WWWWWWWccWccvv+vvccWccWWWWWWW.....x
+x.....WWWWWWWccWWcc<d<ccWWcWWWWWWWW.....x
+x.....WWWWWWWWWWWcc+++cWWccWWWWWWWW.....x
+x.....WWWWWWWWWWWccWWWWWccWWWWWWWWW.....x
+x.....WwwWwwwWWWWccWWWWccWWWwwwWwwW.....x
+x.....wwc.ccwWWWWcccccccWWWWwcc.cww.....x
+x.....wcc1<cwWWWWWWWWWWWWWWWwc<1ccw.....x
+x.....wn111.WWWWWWWWWWWWWWWWW.111nw.....x
+x.....wcc1ccwWWWWWWWWWWWWWWWwcc1ccw.....x
+x.....wwcncwwWWWWWWWWWWWWWWWwwcncww.....x
+x.....WwwwwwWWWWWWWWWWWWWWWWWwwwwwW.....x
+x.......................................x
+x.......................................x
+x.......................................x
+x<.....................................<x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################################
