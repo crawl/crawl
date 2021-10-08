@@ -643,9 +643,10 @@ NSUBST: E = 1:+ / *:c
 : orc_knight_with_polearm(_G)
 SUBST:  2 = 223.
 SUBST:  1 = 1 2:1 .
-ITEM:   good_item crystal plate armour / good_item plate armour /\
-        good_item gold dragon scales w:5 / good_item ice dragon scales w:5 /\
-        good_item fire dragon scales w:5 / good_item steam dragon scales w:5
+ITEM:   good_item crystal plate armour / good_item plate armour w:20 /\
+        good_item gold dragon scales w:3 / good_item ice dragon scales w:3 /\
+        good_item fire dragon scales w:3 / good_item storm dragon scales w:3 /\
+        good_item shadow dragon scales w:3
 ITEM:   good_item cloak / good_item pair of gloves /\
         good_item helmet / good_item pair of boots /\
         good_item tower shield / good_item kite shield
@@ -653,28 +654,28 @@ ITEM:   good_item cloak / good_item pair of gloves /\
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xAxxxxxxxxxxx.........xxxxxxxxxxxxx
-xx<..xxxxxxx..wwwwwww..xxxxxxxxxxxx
-xxxxx...xx...ww.....ww..xxxxxxxxxxx
-xxxxxxxx.xx..w..ccc..ww..xxxxxxxxxx
-x.........xx...cc.cc..ww..........x
-x.wwwwwwwxxxxxccd|ecc..wwwwwwwwww.x
-x.w..xxxxxxxxcc.....cc1..1..1..1w.x
-x.w.ccncccccccccc+ccccccccccncc.w.x
-x.w1cc.$$$.cc.........cE....2cc1w.x
-x.w..nc.$.cc..lllllll..EE...cn..w.x
-x.ww1.cc.cc..ll..2..ll..Ec.cc.1ww.x
-x<.ww..c+c..ll2..T..2ll..c+c..ww.xx
-xx.ww..c+c..ll..T<T..ll..c+c..ww.<x
-x.ww1.cc.cD..ll2...2ll..cc.cc.1ww.x
-x.w..cc...DD..lllllll..cc.$.cc..w.x
-x.w1cc2....Dc.........cc.$$$.cc1w.x
-x.w.ccccccccccccc+ccc+ccccccccc.w.x
-x.w1..1..1..1cc.....cc1..1..1..1w.x
-x.wwwwwwwwww..cc.<.cc..wwwwwwwwww.x
-x..........ww.1nc.cn1.ww..........x
-xxxxxxxxxx..ww..ccc..ww..xxxxxxxxxx
-xxxxxxxxxxx..ww.1.1.ww..xxxxxxxxxxx
-xxxxxxxxxxxx..wwwwwww..xxxxxxxxxxxx
+xx<..xxxxxxx..WWWWWWW..xxxxxxxxxxxx
+xx..xxxxxxx..WW.1.1.WW..xxxxxxxxxxx
+xxx..xxxxx..WW..ccc..WW..xxxxxxxxxx
+x.........xWW.1cc.cc1.WW..........x
+x.WWWWWWWWWW..ccd|ecc..WWWWWWWWWW.x
+x.W1..1..1..1cc.....cc1..1..1..1W.x
+x.W.ccncccccccccc+ccccccccccncc.W.x
+x.W1cc.$$$.cc.........cE....2cc1W.x
+x.W..nc.$.cc..lll.lll..EE...cn..W.x
+x.WW1.cc.cc..ll..2..ll..Ec.cc.1WW.x
+x<.WW..c+c..ll2..T..2ll..c+c..WW.xx
+xx.WW..c+c......T<T......c+c..WW.<x
+x.WW1.cc.cD..ll2...2ll..cc.cc.1WW.x
+x.W..cc...DD..lllllll..cc.$.cc..W.x
+x.W1cc2....Dc.........cc.$$$.cc1W.x
+x.W.ccccccccccccc+ccc+ccccccccc.W.x
+x.W1..1..1..1cc.....cc1..1..1..1W.x
+x.WWWWWWWWWW..cc.<.cc..WWWWWWWWWW.x
+x..........WW.1nc.cn1.WW..........x
+xxxxxxxxxx..WW..ccc..WW..xxxxxxxxxx
+xxxxxxxxxxx..WW.1.1.WW..xxxxxxxxxxx
+xxxxxxxxxxxx..WWWWWWW..xxxxxxxxxxxx
 xxxxxxxxxxxxx.........xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
