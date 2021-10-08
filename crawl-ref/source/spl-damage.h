@@ -98,6 +98,8 @@ spret cast_flame_wave(int pow, bool fail);
 void handle_flame_wave();
 void end_flame_wave();
 
+spret cast_inner_flame(const dist &beam, bool fail);
+
 spret cast_imb(int pow, bool fail);
 
 void actor_apply_toxic_bog(actor *act);

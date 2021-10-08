@@ -394,9 +394,7 @@ bool targeter_beam::affects_monster(const monster_info& mon)
     if (beam.flavour == BEAM_BECKONING)
         return grid_distance(mon.pos, you.pos()) > 1;
 
-    return !beam.is_harmless(m) || beam.nice_to(mon)
-    // Inner flame affects allies without harming or helping them.
-           || beam.flavour == BEAM_INNER_FLAME;
+    return !beam.is_harmless(m) || beam.nice_to(mon);
 }
 
 targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)

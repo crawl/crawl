@@ -1316,23 +1316,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_INNER_FLAME,
-    "",
-    100,
-    nullptr,
-    new tohit_calculator<0, 3, 1>,
-    nullptr,
-    nullptr,
-    BLACK,
-    true,
-    BEAM_INNER_FLAME,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    0
-},
-
-{
     ZAP_FORCE_LANCE,
     "lance of force",
     100,

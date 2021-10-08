@@ -5201,10 +5201,6 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = mon->antimagic_susceptible();
         break;
 
-    case BEAM_INNER_FLAME:
-        rc = !mon->has_ench(ENCH_INNER_FLAME);
-        break;
-
     case BEAM_PETRIFY:
         rc = !mon->res_petrify();
         break;
@@ -5644,20 +5640,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         return MON_AFFECTED;
     }
-
-    case BEAM_INNER_FLAME:
-        if (!mon->has_ench(ENCH_INNER_FLAME)
-            && mon->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, agent())))
-        {
-            if (simple_monster_message(*mon,
-                                       (mon->body_size(PSIZE_BODY) > SIZE_LARGE)
-                                        ? " is filled with an intense inner flame!"
-                                        : " is filled with an inner flame."))
-            {
-                obvious_effect = true;
-            }
-        }
-        return MON_AFFECTED;
 
     case BEAM_DIMENSION_ANCHOR:
         if (!mon->has_ench(ENCH_DIMENSION_ANCHOR)
@@ -6311,9 +6293,6 @@ bool bolt::nasty_to(const monster* mon) const
     {
         case BEAM_DIGGING:
             return false;
-        case BEAM_INNER_FLAME:
-            // Co-aligned inner flame is fine.
-            return !mons_aligned(mon, agent());
         case BEAM_TELEPORT:
         case BEAM_BECKONING:
         case BEAM_INFESTATION:
@@ -6579,7 +6558,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
     case BEAM_AIR:                   return "air";
-    case BEAM_INNER_FLAME:           return "inner flame";
     case BEAM_PETRIFYING_CLOUD:      return "calcifying dust";
     case BEAM_ENSNARE:               return "magic web";
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";

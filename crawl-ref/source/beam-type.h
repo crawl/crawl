@@ -60,7 +60,6 @@ enum beam_type                  // bolt::flavour
     BEAM_HIBERNATION,
     BEAM_BERSERK,
     BEAM_SLEEP,
-    BEAM_INNER_FLAME,
     BEAM_SENTINEL_MARK,
     BEAM_DIMENSION_ANCHOR,
     BEAM_VULNERABILITY,

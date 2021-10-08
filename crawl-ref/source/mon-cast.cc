@@ -2122,8 +2122,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
                                                    150, BEAM_RESISTANCE,
                                                     15, BEAM_VULNERABILITY,
                                                     15, BEAM_BERSERK,
-                                                    15, BEAM_POLYMORPH,
-                                                    15, BEAM_INNER_FLAME);
+                                                    15, BEAM_POLYMORPH);
 
         enchant_actor_with_flavour(*mi, &mon, flavour);
 

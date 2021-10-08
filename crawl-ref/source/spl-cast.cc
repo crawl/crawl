@@ -2386,6 +2386,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_FLAME_WAVE:
         return cast_flame_wave(powc, fail);
 
+    case SPELL_INNER_FLAME:
+        return cast_inner_flame(spd, fail);
+
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
 

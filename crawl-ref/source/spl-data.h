@@ -2021,7 +2021,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INNER_FLAME, "Inner Flame",
     spschool::hexes | spschool::fire,
-    spflag::dir_or_target | spflag::not_self | spflag::neutral
+    spflag::target | spflag::not_self | spflag::neutral
         | spflag::WL_check,
     3,
     200,
