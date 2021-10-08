@@ -748,39 +748,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################################
-# Surrounded.
-# This one uses both missiles and polearms, with more emphasis on the
-# latter.  Loot is approximately seven good items.
-#
-NAME:   bailey_polearm_4
-ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen no_pool_fixup
-ITEM:   any good_item
-MONS:   orc warrior ; arbalest . bolt . ring mail | scale mail | chain mail / \
-        orc warrior ; halberd . ring mail | scale mail | chain mail
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
-NSUBST: d = 4:d / 2:. / * = d., D = 2:1 / *:.1
-SUBST:  1 = 112, 2 = 23, 3 = 34
-: bailey_setup(_G)
-MAP
-ccccccccccccccccccccccccccccccc
-ccxxxcccccccccxxxcccccccccxxxcc
-cxx1xxcccccccxx<xxcccccccxx1xxc
-cxd..xc..D..cx.A.xc..D..cx..dxc
-cxd..x..www..x...x..www..x..dxc
-cxd..c.ww1ww.......ww1ww.c..dxc
-cx2..+.w2<2w.......w2<2w.+..2xc
-cxd..c.ww1ww.......ww1ww.c..dxc
-cxd..x..www..x...x..www..x..dxc
-cxd..xc..D..cx...xc..D..cx..dxc
-cxx1xxcccccccxx<xxcccccccxx1xxc
-ccxxxcccccccccxxxcccccccccxxxcc
-ccccccccccccccccccccccccccccccc
-ENDMAP
-
-############################################################################
 # Infantry
 #
 # You will have to battle some battalions where the monsters in the back
