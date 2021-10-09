@@ -1406,6 +1406,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
                 "magic, it inflicts extra damage on living creatures.";
+            if (is_useless_skill(SK_NECROMANCY))
+            {
+                description += " Your inability to study Necromancy prevents "
+                               "you from drawing on the full power of this "
+                               "weapon.";
+            }
             break;
         case SPWPN_DISTORTION:
             description += "It warps and distorts space around it, and may "
