@@ -1453,7 +1453,7 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_ELECTROCUTION:
         if (defender->res_elec() > 0)
             break;
-        else if (one_chance_in(3))
+        else if (one_chance_in(4))
         {
             special_damage = 8 + random2(13);
             const string punctuation =
