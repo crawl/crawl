@@ -3406,7 +3406,7 @@ void melee_attack::chaos_affect_actor(actor *victim)
  */
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
-    if (atk != UNAT_CONSTRICT
+    if (atk != UNAT_CONSTRICT && atk != UNAT_TOUCH
         && you.strength() + you.dex() <= random2(50))
     {
         return false;
@@ -3462,7 +3462,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_TOUCH:
         return you.get_mutation_level(MUT_DEMONIC_TOUCH)
                && you.has_usable_offhand()
-               && coinflip();
+               && x_chance_in_y(2, 5);
 
     default:
         return false;
