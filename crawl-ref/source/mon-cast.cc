@@ -3251,12 +3251,12 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     mons_clear_trapping_net(targ);
 
     // Don't leak the real one with the targeting interface.
-    if (you.prev_targ == mons->mindex())
+    if (you.prev_targ == targ->mindex())
     {
         you.prev_targ = MHITNOT;
         crawl_state.cancel_cmd_repeat();
     }
-    mons->reset_client_id();
+    targ->reset_client_id();
 
     mirror->mark_summoned(5, true, summ_type);
     mirror->add_ench(ENCH_PHANTOM_MIRROR);
