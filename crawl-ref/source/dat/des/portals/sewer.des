@@ -406,7 +406,6 @@ ENDMAP
 #
 NAME:   sewer_minmay_treatment
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
-WEIGHT: 15
 ORIENT: encompass
 MONS:   rat / river rat w:3
 MONS:   kobold / kobold brigand w:1
@@ -417,6 +416,8 @@ SUBST:   y = W., Y = Ww
 : sewer_setup(_G)
 : set_feature_name("clear_stone_wall", "large window")
 KFEAT:  C = deep_water
+SUBST:  1 = 1., 2 = 2.
+NSUBST: - = 64 = 1... / 32 = 3... / *:., d = 4:d / *=d.
 MAP
 vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
@@ -427,13 +428,13 @@ vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
 vwwvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvCCv
-vwwnddv..vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v..vddnCCv
-vwwnd2.2.v..3.xxxxxxx11111xxxxxxx11xxxxxx...3...v.2.2dnCCv
-vwwvv.2..+......xxxx..11....xxxx11111xxx........+..2.vvCCv
-vwwnd2.2.v......3.....xxx.........11...........3v.2.2dnCCv
-vwwnddv..vyyy..........xxx...3...xx......3....yyv..vddnCCv
-vwwvvvvvvvYYyy..xx.....xx.......3xxxx......xxyyYvvvvvvvCCv
-vwwwwwwwwwwYYyyxxxx.....3.........xx....yyxxYYYYwcwcCcCCCv
+vwwnddv..vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--v.2vddnCCv
+vwwnd222.v----xxxxxxx-----xxxxxxx--xxxxxx-------v.222dnCCv
+vwwvv222.+------xxxx--------xxxx-----xxx--------+.222vvCCv
+vwwnd222.v------------xxx-----------------------v.222dnCCv
+vwwnddv2.vyyy----------xxx-------xx-----------yyv..vddnCCv
+vwwvvvvvvvYYyy--xx-----xx--------xxxx------xxyyYvvvvvvvCCv
+vwwwwwwwwwwYYyyxxxx...............xx....yyxxYYYYwcwcCcCCCv
 vwwwwwwwwwwwYYYYYYxxyyyyyy.........yyyyyyYYYYwwwcwcwcCCCCv
 vwwwwwwwwwwwwwwwwYYYYYYYYyyyyyyyyyyyYYYYYYwwwwwwwcwcCcCCCv
 vwwwwwwwwwwwwwwwwwwwwwwwYYYYYYWYYYYYYwwwwwwwwwwwcwcwcCCCCv
@@ -441,11 +442,11 @@ vwwwwwwwwwwwwwwwwwwwwwwwwwYYYWYYYYYwwwwwwwwwwwwwwcwcCcCCCv
 vwwwwwwwwwwwwwwwwwwwwwwwwYYyyyyyyyYYYYwwwwwwwwwwcwcwcCCCCv
 vwwvvvvvvvwwwwwYYYYYYYYYYYyy.....yyyyYYYYwwwwwwwvvvvvvvCCv
 vwwnd.v..vYYYYYYyyyyyyyyyyy........yyyyyYYYYYYYYv..v.dnCCv
-vwwn.....vyyyyyyy......................yyyyyyyyyv.....nCCv
+vwwn.22..vyyyyyyy......................yyyyyyyyyv...22nCCv
 vwwvv222.+......................................+.222vvCCv
-vwwn.....v...........xx.........................v.....nCCv
-vwwnd.v..vx....1...xxxxx.......xx...............v..v.dnCCv
-vwwvvvvvvvxxxx111xxxxxx...xx..xxxxx...1..xxx..xxvvvvvvvCCv
+vwwn..2..v...........xx.........................v..2..nCCv
+vwwnd.v..vx..11111.xxxxx.......xx...............v..v.dnCCv
+vwwvvvvvvvxxxx111xxxxxx...xx..xxxxx.11111xxx..xxvvvvvvvCCv
 vwwvxxxxxxxxxxxxxxxxx<..xxxxx..xxxxxx111xxxxxxxxxxxxxxvCCv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxx..AxxxxxxxxxxxxxxxxxxxxxvCCv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
