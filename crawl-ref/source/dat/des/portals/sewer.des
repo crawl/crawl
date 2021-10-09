@@ -468,11 +468,11 @@ KMONS:   p = plant
 SUBST:   p = ppW
 : item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
 SHUFFLE: DEFH
-NSUBST:  D = 5:1 / 4:d / *:!
-NSUBST:  F = 5:1 / 4:d / *:!
-NSUBST:  E = 2:1 / 3:d / *:!
-NSUBST:  H = 2:1 / 3:d / *:!
-NSUBST:  . = 10:2 / *:.
+NSUBST:  D = 10 = 1! / 3:d / 1:d! / *:!
+NSUBST:  F = 10 = 1! / 3:d / 1:d! / *:!
+NSUBST:  E = 4 = 1! / 3 = d! / *:!
+NSUBST:  H = 4 = 1! / 3 = d! / *:!
+NSUBST:  . = 40 = 2... / *:.
 KFEAT:   p = shallow_water
 COLOUR:  p = lightgreen
 KFEAT:   ! = floor
