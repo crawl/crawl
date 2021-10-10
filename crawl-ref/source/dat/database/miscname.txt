@@ -116,15 +116,15 @@ Will you be the one to retrieve the @_great_adj_@ Orb of Zot from the depths?
 
 It is said that the Orb of Zot exists deep within this dungeon.
 
-Are you destined to find the @_great_adj_@ Orb of Zot, or destined to die trying?
+Are you destined to find the @_great_adj_@ Orb of Zot, or to die trying?
 
 Everyone else who sought the Orb of Zot has failed. Will you be different?
 
-They say the Orb of Zot is somewhere in this dungeon, but they say a lot of things.
+They say the Orb of Zot lies within this dungeon, but they say a lot of things.
 
 You feel drawn to the Orb of Zot, downwards into the unfathomable depths...
 
-The @_great_adj_@ Orb of Zot lies far below, as if waiting for someone like you to find it.
+The @_great_adj_@ Orb of Zot lies far below, as if waiting for you to find it.
 
 %%%%
 # things that surround us on Halloween
