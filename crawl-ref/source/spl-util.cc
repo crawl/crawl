@@ -1919,6 +1919,7 @@ const set<spell_type> removed_spells =
     SPELL_HYDRA_FORM,
     SPELL_VORTEX,
     SPELL_GOAD_BEASTS,
+    SPELL_TELEPORT_SELF,
 #endif
 };
 

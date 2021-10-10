@@ -6114,24 +6114,6 @@ void monster::steal_item_from_player()
                 mprf(MSGCH_TALK, "%s", complaint.c_str());
             }
 
-            bolt beem;
-            beem.source    = pos();
-            beem.target    = pos();
-            beem.source_id = mid;
-
-            // Try to teleport away.
-            if (no_tele())
-                return;
-
-            if (has_ench(ENCH_TP))
-            {
-                mons_cast_noise(this, beem, SPELL_BLINK, MON_SPELL_WIZARD);
-                // this can kill us, delay the call
-                blink_fineff::schedule(this);
-            }
-            else
-                mons_cast(this, beem, SPELL_TELEPORT_SELF, MON_SPELL_WIZARD);
-
             return;
         }
 

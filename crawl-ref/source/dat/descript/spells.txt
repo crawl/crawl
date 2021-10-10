@@ -1584,10 +1584,6 @@ Teleport Other spell
 
 Randomly translocates a targeted creature.
 %%%%
-Teleport Self spell
-
-Teleports the caster to a random location.
-%%%%
 Throw Barbs spell
 
 Fires a volley of barbs at the target, skewering them and making movement

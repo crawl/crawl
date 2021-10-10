@@ -1777,14 +1777,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('F') Frogs.
-    {  MST_PRINCE_RIBBIT,
-      {
-       { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
-       { SPELL_TELEPORT_SELF, 66, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-      }
-    },
-
     // ('H') Hybrids.
     {  MST_ARACHNE,
       {
@@ -1820,7 +1812,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_SONJA,
       {
        { SPELL_BLINK, 28, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 28, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1987,7 +1978,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SPRINT, 14, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
        { SPELL_BLINK, 14, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 14, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
