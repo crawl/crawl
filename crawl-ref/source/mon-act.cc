@@ -986,48 +986,21 @@ static bool _handle_scroll(monster& mons)
 
     bool read        = false;
     bool was_visible = you.can_see(mons);
-
-    // Notice how few cases are actually accounted for here {dlb}:
     const int scroll_type = scroll->sub_type;
-    switch (scroll_type)
+
+    if (scroll_type == SCR_SUMMONING && mons.can_see(you))
     {
-    case SCR_TELEPORTATION:
-        if (!mons.has_ench(ENCH_TP) && !mons.no_tele(true, false) && mons.pacified())
+        simple_monster_message(mons, " reads a scroll.");
+        mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
+        read = true;
+        int count = roll_dice(2, 2);
+        for (int i = 0; i < count; ++i)
         {
-            simple_monster_message(mons, " reads a scroll.");
-            read = true;
-            monster_teleport(&mons, false);
+            create_monster(
+                mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)),
+                          mons.pos(), mons.foe)
+                .set_summoned(&mons, 3, MON_SUMM_SCROLL));
         }
-        break;
-
-    case SCR_BLINKING:
-        if (mons.pacified() && mons.can_see(you) && !mons.no_tele(true, false))
-        {
-            simple_monster_message(mons, " reads a scroll.");
-            read = true;
-            if (mons.caught())
-                monster_blink(&mons);
-            else
-                blink_away(&mons);
-        }
-        break;
-
-    case SCR_SUMMONING:
-        if (mons.can_see(you))
-        {
-            simple_monster_message(mons, " reads a scroll.");
-            mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
-            read = true;
-            int count = roll_dice(2, 2);
-            for (int i = 0; i < count; ++i)
-            {
-                create_monster(
-                    mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)),
-                              mons.pos(), mons.foe)
-                    .set_summoned(&mons, 3, MON_SUMM_SCROLL));
-            }
-        }
-        break;
     }
 
     if (read)
