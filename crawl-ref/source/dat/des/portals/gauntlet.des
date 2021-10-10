@@ -1000,6 +1000,32 @@ vb.........b.bv
  bbbbbbbbbbbbb
 ENDMAP
 
+NAME:   dreamdust_gauntlet_exit_labyrinth
+TAGS:   gauntlet_exit
+NSUBST: . = c / .
+NSUBST: ` = v / `
+NSUBST: v = - / v
+NSUBST: b = - / b
+SUBST:  ? : T U G
+KFEAT:  < = exit_gauntlet
+KMONS:  < = patrolling minotaur
+: gauntlet_exit_loot(_G)
+MAP
+ccccccc-ccccccc
+c-.....-.....-c
+c.vvvvvvvvvvv.c
+c.v-```````-v.c
+c.v`bbbbbbb`v.c
+c.v`b-?-?-b`v.c
+c.v`bb-<-bb`v.c
+c.vv`b?-?b`vv.c
+c--v`bbbbb`v--c
+cc.v-`````-v.cc
+ c.vvvvvvvvv.c
+ c-.........-c
+ ccccccccccccc
+ENDMAP
+
 #############################################################################
 # Chooses four corpses, each with their own set of loot, themed around some
 # particular archetypical species/background. Each set of loot has 2-4 items.
