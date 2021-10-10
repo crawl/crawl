@@ -3058,7 +3058,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     }
 }
 
-spret cast_inner_flame(const dist &beam, bool fail)
+spret cast_inner_flame(const dist &beam, int pow, bool fail)
 {
     if (cell_is_solid(beam.target))
     {
@@ -3083,6 +3083,18 @@ spret cast_inner_flame(const dist &beam, bool fail)
 
     fail_check();
 
+    behaviour_event(mons, ME_WHACK, &you);
+    if (mons->alive())
+        you.pet_target = mons->mindex();
+
+    int res_margin = mons->check_willpower(pow * 3);
+    if (res_margin > 0)
+    {
+        simple_monster_message(*mons,
+                               mons->resist_margin_phrase(res_margin).c_str());
+        return spret::success;
+    }
+
     if (mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
     {
         simple_monster_message(*mons,
@@ -3090,10 +3102,6 @@ spret cast_inner_flame(const dist &beam, bool fail)
                                ? " is filled with an intense inner flame!"
                                : " is filled with an inner flame.");
     }
-
-    behaviour_event(mons, ME_WHACK, &you);
-    if (mons->alive())
-        you.pet_target = mons->mindex();
 
     return spret::success;
 }
