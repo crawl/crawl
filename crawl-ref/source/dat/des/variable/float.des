@@ -4904,30 +4904,31 @@ ENDMAP
 NAME:   dreamdust_black_sun_cult
 TAGS:   transparent no_monster_gen
 ORIENT: float
-DEPTH:  D:6-10, Zot, !Zot:$
-WEIGHT: 3
+DEPTH:  D:13-, Zot, !Zot:$
 COLOUR: bm = red
 TILE:   m = dngn_transparent_wall_red
-FTILE:  -mA? = floor_volcanic
-KFEAT:  ! = .
+FTILE:  -mA1 = floor_volcanic
 MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
+NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
 : if you.in_branch("D") then
-KMONS:  ? = sun demon
-KMONS:  - = nothing w:50 / demonspawn
-KITEM:  ? = manual of fire magic w:5 / \
+KMONS:  1 = black sun
+KMONS:  2 = sun demon
+KMONS:  3 = small abomination / large abomination
+KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
             randbook disc:fire disc2:necromancy spells:scorch \
             slevels:8 numspells:4 title:The_Black_Sun, \
-            ring of protection from fire / ring of fire / \
-            staff of fire / scroll of immolation q:3
+            staff of fire / staff of death / scroll of immolation q:3 / \
+            scroll of torment q:3 / any weapon ego:flaming / \
+            any weapon ego:draining
 : else
-KMONS:  ? = orb of fire
-KMONS:  - = nothing w:50 / black sun / \
-            draconian monk w:5 / draconian scorcher
-KITEM:  ? = manual of fire magic w:5 / \
-            randbook disc:fire disc2:necromancy spells:irradiate \
+KMONS:  1 = orb of fire
+KMONS:  2 = black sun
+KMONS:  3 = draconian scorcher / draconian monk
+KITEM:  1 = manual of fire magic / manual of necromancy, \
+            randbook disc:fire disc2:necromancy spells:starburst \
             slevels:25 numspells:4 title:The_Black_Sun, \
-            ring of protection from fire randart / ring of fire randart
+            any weapon ego:flaming randart / any weapon ego:draining randart
 : end
 MAP
  .........
@@ -4935,7 +4936,7 @@ MAP
 .!bb---bb!.
 .bb-----bb.
 .b--mAm--b.
-.b--m?m--b.
+.b--m1m--b.
 .b--mmm--b.
 .bb-----bb.
 .!bb---bb!.
