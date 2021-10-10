@@ -72,7 +72,9 @@ function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
   local targets = dgn.find_marker_positions_by_prop("oklobify", 1)
   for _, pos in ipairs(targets) do
     local mons = dgn.mons_at(pos.x, pos.y)
-    if mons ~= nil and mons.name ~= "oklob plant" then
+    if mons ~= nil and
+       (mons.name == "plant" or mons.name == "fungus"
+        or mons.name == "bush") then
       possible[#possible + 1] = pos
     end
   end
