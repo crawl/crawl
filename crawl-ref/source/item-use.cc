@@ -1031,9 +1031,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                mprf("You can't wear a glove with your huge claw%s!",
+                mprf("You can't wear gloves with your huge claw%s!",
                      you.arm_count() == 1 ? "" : "s");
             }
+            return false;
+        }
+
+        if (you.get_mutation_level(MUT_DEMONIC_TOUCH) == 3)
+        {
+            if (verbose)
+                mpr("Your demonic touch would destroy the gloves!");
             return false;
         }
     }
@@ -1135,6 +1142,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     mpr("You can't wear that!");
                 return false;
             }
+        }
+    }
+
+    if (slot == EQ_CLOAK)
+    {
+        if (you.get_mutation_level(MUT_WEAKNESS_STINGER) == 3)
+        {
+            if (verbose)
+                mpr("You can't wear that with your sharp stinger!");
+            return false;
         }
     }
 

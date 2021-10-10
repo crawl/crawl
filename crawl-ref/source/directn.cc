@@ -1573,7 +1573,8 @@ string direction_chooser::target_description() const
 void direction_chooser::print_target_monster_description(bool &did_cloud) const
 {
     string text = target_description();
-    if ( text > "" ) {
+    if (text > "")
+    {
         mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
             target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
             text.c_str());
@@ -3281,6 +3282,10 @@ string feature_description_at(const coord_def& where, bool covering,
                 desc += "sealed ";
             else if (grid == DNGN_SEALED_CLEAR_DOOR)
                 desc += "sealed translucent ";
+            else if (grid == DNGN_BROKEN_DOOR)
+                desc += "broken ";
+            else if (grid == DNGN_BROKEN_CLEAR_DOOR)
+                desc += "broken translucent ";
             else
                 desc += "closed ";
         }

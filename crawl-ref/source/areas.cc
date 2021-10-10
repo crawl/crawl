@@ -446,6 +446,14 @@ void create_sanctuary(const coord_def& center, int time)
 
         env.pgrid(pos) &= ~(FPROP_BLOODY);
 
+        if (env.grid(pos) == DNGN_FOUNTAIN_BLOOD)
+        {
+            if (you.see_cell(pos))
+                blood_count++;
+
+            dungeon_terrain_changed(pos, DNGN_FOUNTAIN_BLUE);
+        }
+
         // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.

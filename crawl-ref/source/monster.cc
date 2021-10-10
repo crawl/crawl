@@ -1441,14 +1441,8 @@ static int _ego_damage_bonus(item_def &item)
 bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
     // Draconian monks are masters of unarmed combat.
-    // Monstrous demonspawn prefer to RIP AND TEAR with their claws.
-    // XXX: this could probably be a monster flag
-    if (type == MONS_DRACONIAN_MONK
-        || mons_is_demonspawn(type)
-           && draco_or_demonspawn_subspecies(*this) == MONS_MONSTROUS_DEMONSPAWN)
-    {
+    if (type == MONS_DRACONIAN_MONK)
         return false;
-    }
 
     const bool dual_wielding = mons_wields_two_weapons(*this);
     if (dual_wielding)
@@ -2771,11 +2765,9 @@ bool monster::go_frenzy(actor *source)
     const int duration = 16 + random2avg(13, 2);
 
     add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
-    if (holiness() & MH_NATURAL)
-    {
-        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
-        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
-    }
+    add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
+
     mons_att_changed(this);
 
     if (simple_monster_message(*this, " flies into a frenzy!"))
@@ -2839,13 +2831,6 @@ void monster::expose_to_element(beam_type flavour, int strength,
         break;
     case BEAM_WATER:
         del_ench(ENCH_STICKY_FLAME);
-        break;
-    case BEAM_FIRE:
-    case BEAM_LAVA:
-    case BEAM_STICKY_FLAME:
-    case BEAM_STEAM:
-        if (has_ench(ENCH_ICEMAIL))
-            del_ench(ENCH_ICEMAIL);
         break;
     default:
         break;
@@ -3122,7 +3107,8 @@ bool monster::pacified() const
 
 bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
-    return (holiness() & MH_NATURAL) && !berserk_or_insane();
+    return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+           && !berserk_or_insane();
 }
 
 /**
@@ -3242,8 +3228,8 @@ static int _zombie_ac_modifier(monster_type type)
 /**
  * What's the base armour class of this monster?
  *
- * Usually based on type; ghost demons can override this, and draconians/
- * demonspawn are... complicated.
+ * Usually based on type; ghost demons can override this, and draconians
+ * are... complicated.
  *
  * @return The base armour class of this monster, before applying item &
  *          status effects.
@@ -3295,8 +3281,8 @@ int monster::base_armour_class() const
 
     const int base_ac = get_monster_data(type)->AC;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
     {
         ASSERT(!invalid_monster_type(base_monster));
         return base_ac + get_monster_data(base_monster)->AC;
@@ -3341,8 +3327,6 @@ int monster::armour_class(bool calc_unid) const
     }
 
     // various enchantments
-    if (has_ench(ENCH_ICEMAIL))
-        ac += ICEMAIL_MAX;
     if (has_ench(ENCH_IDEALISED))
         ac += 4 + get_hit_dice() / 3;
 
@@ -3413,8 +3397,8 @@ int monster::base_evasion() const
 
     const int base_ev = get_monster_data(type)->ev;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
         return base_ev + get_monster_data(base_monster)->ev;
 
     return base_ev;
@@ -3522,26 +3506,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     if (testbits(flags, MF_FAKE_UNDEAD))
         return MH_UNDEAD;
 
-    mon_holy_type holi = mons_class_holiness(type);
-
-    // Assume that all unknown gods are not holy.
-    if (is_priest() && is_good_god(god))
-        holi |= MH_HOLY;
-
-    // Assume that all unknown gods are evil.
-    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
-        holi |= MH_EVIL;
-
-    if (has_attack_flavour(AF_DRAIN)
-        || has_attack_flavour(AF_VAMPIRIC))
-    {
-        holi |= MH_EVIL;
-    }
-
-    if (testbits(flags, MF_SPECTRALISED))
-        holi |= MH_EVIL;
-
-    return holi;
+    return mons_class_holiness(type);
 }
 
 bool monster::undead_or_demonic(bool /*temp*/) const
@@ -3551,9 +3516,29 @@ bool monster::undead_or_demonic(bool /*temp*/) const
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
+bool monster::evil() const
+{
+    // Assume that all unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
+        return true;
+    if (has_attack_flavour(AF_DRAIN) || has_attack_flavour(AF_VAMPIRIC))
+        return true;
+    if (testbits(flags, MF_SPECTRALISED))
+        return true;
+    for (auto slot : spells)
+        if (is_evil_spell(slot.spell))
+            return true;
+    return actor::evil();
+}
+
+/**
+ * Is the monster innately holy, or a priest of a good god?
+ *
+ * @return Whether the monster is considered holy.
+ **/
 bool monster::is_holy() const
 {
-    return bool(holiness() & MH_HOLY);
+    return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
 bool monster::is_nonliving(bool /*temp*/) const
@@ -3632,7 +3617,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_TIAMAT            // For her colour-changing.
         || type == MONS_BAI_SUZHEN
         || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
-        || mons_is_demonspawn(type))      // Like player demonspawn.
+        || mons_genus(type) == MONS_DEMONSPAWN) // Like player demonspawn.
     {
         chaotic++;
     }
@@ -3931,7 +3916,7 @@ int monster::res_holy_energy() const
 int monster::res_negative_energy(bool intrinsic_only) const
 {
     // If you change this, also change get_mons_resists.
-    if (!(holiness() & MH_NATURAL))
+    if (!(holiness() & (MH_NATURAL | MH_PLANT)))
         return 3;
 
     int u = get_mons_resist(*this, MR_RES_NEG);
@@ -5037,7 +5022,8 @@ bool monster::can_go_frenzy(bool check_sleep) const
 
 bool monster::can_go_berserk() const
 {
-    return bool(holiness() & MH_NATURAL) && can_go_frenzy();
+    return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+           && can_go_frenzy();
 }
 
 bool monster::berserk() const
@@ -5337,7 +5323,7 @@ bool monster::is_skeletal() const
  */
 bool monster::is_spiny() const
 {
-    return mons_class_flag(mons_is_job(type) ? base_monster : type,
+    return mons_class_flag(mons_is_draconian_job(type) ? base_monster : type,
                            M_SPINY);
 }
 
@@ -5659,7 +5645,7 @@ int monster::action_energy(energy_use_type et) const
     return max(move_cost, 1);
 }
 
-void monster::lose_energy(energy_use_type et, int div, int mult)
+int monster::energy_cost(energy_use_type et, int div, int mult)
 {
     int energy_loss  = div_round_up(mult * action_energy(et), div);
     if (has_ench(ENCH_PETRIFYING))
@@ -5670,26 +5656,15 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
-
-    // Randomize movement cost slightly, to make it less predictable,
-    // and make pillar-dancing not entirely safe.
-    // No randomization for allies following you to avoid traffic jam
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        energy_loss += random2(3) - 1;
-
-    speed_increment -= energy_loss;
+    return energy_loss;
 }
 
-void monster::gain_energy(energy_use_type et, int div, int mult)
+void monster::lose_energy(energy_use_type et, int div, int mult)
 {
-    int energy_gain  = div_round_up(mult * action_energy(et), div);
-    if (has_ench(ENCH_PETRIFYING))
-    {
-        energy_gain *= 2;
-        energy_gain /= 3;
-    }
-
-    speed_increment += energy_gain;
+    speed_increment -= energy_cost(et, div, mult);
+    // Awful old random energy logic. TODO: REMOVEME
+    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
+        speed_increment -= random2(3) - 1;
 }
 
 /**

@@ -432,6 +432,7 @@ The Dungeon Crawl Stone Soup development team is:
     Aaron Pixton
     David Ploog
     Sage
+    Sastreii
     Marc H. Thoben
     Chris West
     Samuel Wilson

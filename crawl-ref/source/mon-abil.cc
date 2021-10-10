@@ -76,7 +76,7 @@ void draconian_change_colour(monster* drac)
         if (!(slot.flags & MON_SPELL_BREATH))
             drac->spells.push_back(slot);
 
-    drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(*drac)));
+    drac->spells.push_back(drac_breath(draconian_subspecies(*drac)));
 }
 
 void boris_covet_orb(monster* boris)
@@ -861,7 +861,7 @@ bool mon_special_ability(monster* mons)
     bool used = false;
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
-                                  ? draco_or_demonspawn_subspecies(*mons)
+                                  ? draconian_subspecies(*mons)
                                   : mons->type;
 
     // Slime creatures can split while out of sight.

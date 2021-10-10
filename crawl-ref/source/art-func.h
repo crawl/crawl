@@ -124,7 +124,7 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 {
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
-    if (!mondied && defender->holiness() == MH_NATURAL)
+    if (!mondied && defender->holiness() & (MH_NATURAL | MH_PLANT))
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 
@@ -449,8 +449,8 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
                           SAME_ATTITUDE(mons), mons->pos(), mons->foe)
                 .set_summoned(mons, 6, SPELL_SUMMON_DEMON));
         }
-        else
-            cast_summon_demon(50+random2(100));
+        else if (!you.allies_forbidden())
+            cast_summon_demon(50 + random2(100));
     }
 }
 
@@ -1448,7 +1448,7 @@ static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
     monster *spectral_weapon = find_spectral_weapon(&you);
     if (spectral_weapon)
     {
-        _equip_mpr(show_msgs, "Your spectral weapon disappears as you unwield.");
+        _equip_mpr(show_msgs, "Your spectral weapon disappears.");
         end_spectral_weapon(spectral_weapon, false, true);
     }
 }

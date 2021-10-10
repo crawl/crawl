@@ -564,8 +564,11 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
-    if (act->res_negative_energy() >= 3)
+    if (!actor_is_susceptible_to_vampirism(*act)
+        || act->res_negative_energy() >= 3)
+    {
         return false;
+    }
 
     if (!agent)
         return true;
@@ -966,7 +969,8 @@ int airstrike_space_around(coord_def target, bool count_unseen)
         {
             if (!actor_at(*ai))
                 ++empty_space;
-        } else if (you.pos() != *ai && !env.map_knowledge(*ai).monsterinfo())
+        }
+        else if (you.pos() != *ai && !env.map_knowledge(*ai).monsterinfo())
             ++empty_space;
     }
 
@@ -1163,8 +1167,10 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_ROCK_WALL, { "rock", "wall" } },
     { DNGN_SLIMY_WALL, { "rock", "wall" } },
     { DNGN_STONE_WALL, { "rock", "wall" } },
+    { DNGN_PERMAROCK_WALL, { "rock", "wall" } },
     { DNGN_CLEAR_ROCK_WALL, { "rock", "wall" } },
     { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
+    { DNGN_CLEAR_PERMAROCK_WALL, { "rock", "wall" } },
     { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
     { DNGN_GRANITE_STATUE, { "rock", "statue" } },
     { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
@@ -1177,6 +1183,8 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_RUNED_CLEAR_DOOR, { "rock", "stone door frame" } },
     { DNGN_SEALED_DOOR, { "rock", "stone door frame" } },
     { DNGN_SEALED_CLEAR_DOOR, { "rock", "stone door frame" } },
+    { DNGN_BROKEN_DOOR, { "rock", "stone door frame" } },
+    { DNGN_BROKEN_CLEAR_DOOR, { "rock", "stone door frame" } },
     { DNGN_STONE_ARCH, { "rock", "stone arch" } },
     // Metal -- small but nasty explosion
     { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },

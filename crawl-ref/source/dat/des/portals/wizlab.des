@@ -343,7 +343,7 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local msp = "monstrous demonspawn seen sum:shadow_creatures dur:2 " ..
+  local msp = "demonspawn seen sum:shadow_creatures dur:2 " ..
               "nas:old_memories generate_awake " ..
               "tile:mons_faint_demonspawn_monk / deep troll seen " ..
               "sum:shadow_creatures dur:2 nas:old_memories generate_awake " ..
@@ -1341,7 +1341,7 @@ MARKER:     t = lua:props_marker { veto_destroy="veto" }
 :           wizlab_setup(_G)
 :           set_border_fill_type("tree")
 :           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / wraith w:2 / ]]
-:                            .. [[monstrous demonspawn / deep troll / ]]
+:                            .. [[demonspawn / deep troll / ]]
 :                            .. [[grey draconian monk w:6 / ]])
 :           set_feature_name("tree", "autumnal tree")
 :           set_feature_name("stone_wall", "crumbled stone wall")
@@ -1752,7 +1752,7 @@ MARKER:     h = lua:fog_machine { \
 KMONS:      1 = any common demon
 KMONS:      2 = balrug / blizzard demon / cacodemon / green death \
             / hell beast / hellion / lorocyproca / shadow demon / tormentor
-KMONS:      3 = blood saint / black sun
+KMONS:      3 = demonspawn blood saint / demonspawn black sun
 {{
 wizname = crawl.make_name()
 kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
@@ -1774,7 +1774,7 @@ NSUBST:     3 = 1:3 / 1, ~ = 2:1 / 3:2 / 4 / 9=12.... / ., f = 1:g / f
 set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
                      cacodemon / green death / hell beast / hellion / \
                      lorocyproca / shadow demon / tormentor \
-                     / blood saint w:5 / black sun w:5")
+                     / demonspawn blood saint w:5 / demonspawn black sun w:5")
 wizlab_setup(_G)
 set_feature_name("stone_wall", "black wall")
 set_feature_name("rock_wall", "carved rock wall")
@@ -2442,7 +2442,7 @@ MONS:   great orb of eyes / glowing orange brain / sphinx / cacodemon w:2 /\
 MONS:   nagaraja / deep elf high priest / sphinx w:5 / deep elf sorcerer /\
         worldbinder
 MONS:   wizard / necromancer w:2 / hell knight w:2 / worldbinder w:6
-MONS:   corrupter
+MONS:   demonspawn corrupter
 KMONS:  J = wizard generate_awake perm_ench:confusion ; nothing
 KMONS:  H = torpor snail / ghost moth / guardian serpent / water nymph /\
             acid blob / anaconda / swamp dragon
@@ -2473,7 +2473,7 @@ FTILE:  -FTtAJLDQ< = floor_grass
 :           set_random_mon_list(
 :               "wizard w:40 / necromancer / boggart / " ..
 :               "glowing orange brain / worldbinder / sphinx / " ..
-:               "corrupter w:1")
+:               "demonspawn corrupter w:1")
 :           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Alistair's Party Mansion")

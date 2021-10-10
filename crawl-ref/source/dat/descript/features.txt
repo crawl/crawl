@@ -543,6 +543,23 @@ A closed door
 
 A wooden door.
 %%%%
+A broken door
+
+A disappointingly poorly maintained wooden door. It'd take nothing short of magic
+to get this properly closed again.
+%%%%
+An open translucent door
+
+A door made from magically translucent wood.
+%%%%
+A closed translucent door
+
+A door made from magically translucent wood.
+%%%%
+A broken translucent door
+
+<A broken door>
+%%%%
 A sealed door
 
 A door sealed tightly by arcane runes. It refuses to open for any creature not
@@ -601,6 +618,54 @@ A sealed gate
 A huge sealed gate
 
 <A sealed door>
+%%%%
+A large broken door
+
+<A broken door>
+%%%%
+A broken gate
+
+<A broken door>
+%%%%
+A huge broken gate
+
+<A broken door>
+%%%%
+A large translucent open door
+
+<An open translucent door>
+%%%%
+An open translucent gate
+
+<An open translucent door>
+%%%%
+A huge open translucent gate
+
+<An open translucent door>
+%%%%
+A large translucent closed door
+
+<A closed translucent door>
+%%%%
+A closed translucent gate
+
+<A closed translucent door>
+%%%%
+A huge closed translucent gate
+
+<A closed translucent door>
+%%%%
+A large translucent broken door
+
+<A broken translucent door>
+%%%%
+A broken translucent gate
+
+<A broken translucent door>
+%%%%
+A huge broken translucent gate
+
+<A broken translucent door>
 %%%%
 ########################################################################
 ### Traps
@@ -975,6 +1040,10 @@ A ruined idol
 A monument to the glory of a dead god. The statue has been methodically
 defaced; not a single distinguishing feature remains.
 %%%%
+# Cigotuvi's wizlab
+A broken fleshy orifice
+
+It seems to be oozing quietly. Best not to touch it.
 ########################################################################
 ### Sprint
 ########################################################################

@@ -1678,8 +1678,11 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                                               int pow,
                                               bool* did_msg)
 {
-    // Assuming that the only mass charm is control undead.
-    if (wh_enchant == ENCH_FEAR)
+    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
+    // of "is unaffected" messages. --Eino
+    if (mons_is_firewood(*mons))
+        return true;
+    else if (wh_enchant == ENCH_FEAR)
     {
         if (mons->friendly())
             return true;
@@ -1690,47 +1693,28 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
-
-        int res_margin = mons->check_willpower(pow);
-        if (res_margin > 0)
-        {
-            if (simple_monster_message(*mons,
-                    mons->resist_margin_phrase(res_margin).c_str()))
-            {
-                *did_msg = true;
-            }
-            return true;
-        }
     }
     else if (wh_enchant == ENCH_INSANE
-             || mons->holiness() & MH_NATURAL)
+             && !mons->can_go_frenzy())
     {
-
-        if (wh_enchant == ENCH_INSANE
-            && !mons->can_go_frenzy())
-        {
-            return true;
-        }
-
-        int res_margin = mons->check_willpower(pow);
-        if (res_margin > 0)
-        {
-            if (simple_monster_message(*mons,
-                    mons->resist_margin_phrase(res_margin).c_str()))
-            {
-                *did_msg = true;
-            }
-            return true;
-        }
-    }
-    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
-    // of "is unaffected" messages. --Eino
-    else if (mons_is_firewood(*mons))
-        return true;
-    else  // trying to enchant an unnatural creature doesn't work
-    {
-        if (simple_monster_message(*mons, " is unaffected."))
+        const monster_info mi(mons);
+        string sleep_msg = mi.is(MB_DORMANT) ? " dormant, and thus" :
+                           mi.is(MB_SLEEPING) ? " sleeping, and thus" : "";
+        string msg = make_stringf(" is%s unaffected.",
+                                  sleep_msg.c_str());
+        if (simple_monster_message(*mons, msg.c_str()))
             *did_msg = true;
+        return true;
+    }
+
+    int res_margin = mons->check_willpower(pow);
+    if (res_margin > 0)
+    {
+        if (simple_monster_message(*mons,
+                mons->resist_margin_phrase(res_margin).c_str()))
+        {
+            *did_msg = true;
+        }
         return true;
     }
 
@@ -1769,24 +1753,16 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             continue;
 
         if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
-            || (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
             || (wh_enchant != ENCH_INSANE
                 && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
             // Do messaging.
-            const char* msg;
-            switch (wh_enchant)
-            {
-            case ENCH_FEAR:      msg = " looks frightened!";      break;
-            case ENCH_CHARM:     msg = " submits to your will.";  break;
-            default:             msg = nullptr;                   break;
-            }
+            const char* msg = nullptr;
+            if (wh_enchant == ENCH_FEAR)
+                msg = " looks frightened!";
+
             if (msg && simple_monster_message(**mi, msg))
                 did_msg = true;
-
-            // Reassert control over hexed undead.
-            if (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
-                mi->del_ench(ENCH_HEXED);
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
@@ -4911,7 +4887,6 @@ void bolt::affect_monster(monster* mon)
     }
 
     if (engulfs && flavour == BEAM_SPORE // XXX: engulfs is redundant?
-        && mon->holiness() & MH_NATURAL
         && !mon->is_unbreathing())
     {
         apply_enchantment_to_monster(mon);
@@ -6089,7 +6064,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             || origin_spell == SPELL_DAZZLING_FLASH)
         {
             loudness = spell_effect_noise(origin_spell);
-        } else if (origin_spell == SPELL_FLAME_WAVE)
+        }
+        else if (origin_spell == SPELL_FLAME_WAVE)
         {
             loudness = spell_effect_noise(origin_spell)
                      + (r - 1) * 2; // at radius 1, base noise

@@ -1406,6 +1406,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
                 "magic, it inflicts extra damage on living creatures.";
+            if (is_useless_skill(SK_NECROMANCY))
+            {
+                description += " Your inability to study Necromancy prevents "
+                               "you from drawing on the full power of this "
+                               "weapon.";
+            }
             break;
         case SPWPN_DISTORTION:
             description += "It warps and distorts space around it, and may "
@@ -3370,7 +3376,8 @@ static void _get_spell_description(const spell_type spell,
             description += make_stringf("\n%s creates living %s spells.\n",
                                         uppercase_first(mon_owner->full_name(DESC_A)).c_str(),
                                         spell_title(living_spell));
-        } else if (spell == SPELL_QUICKSILVER_BOLT)
+        }
+        else if (spell == SPELL_QUICKSILVER_BOLT)
         {
             if (player_is_debuffable())
             {
@@ -3399,7 +3406,7 @@ static void _get_spell_description(const spell_type spell,
         {
             description += make_stringf("%s can sustain at most %s creature%s "
                                "summoned by this spell.\n",
-                               mon_owner->full_name(DESC_PLAIN).c_str(),
+                               uppercase_first(mon_owner->full_name(DESC_THE)).c_str(),
                                number_in_words(limit).c_str(),
                                limit > 1 ? "s" : "");
         }
@@ -3560,7 +3567,7 @@ void describe_deck(deck_type deck)
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
-    const int subsp = mi.draco_or_demonspawn_subspecies();
+    const int subsp = mi.draconian_subspecies();
 
     if (subsp != mi.type)
     {
@@ -3616,59 +3623,6 @@ static string _describe_draconian(const monster_info& mi)
     return description;
 }
 
-static string _describe_demonspawn_role(monster_type type)
-{
-    switch (type)
-    {
-    case MONS_BLOOD_SAINT:
-        return "It weaves powerful and unpredictable spells of devastation.";
-    case MONS_WARMONGER:
-        return "It is devoted to combat, disrupting the magic of its foes as "
-               "it battles endlessly.";
-    case MONS_CORRUPTER:
-        return "It corrupts space around itself, and can twist even the very "
-               "flesh of its opponents.";
-    case MONS_BLACK_SUN:
-        return "It shines with an unholy radiance, and wields powers of "
-               "darkness from its devotion to the deities of death.";
-    default:
-        return "";
-    }
-}
-
-static string _describe_demonspawn_base(int species)
-{
-    switch (species)
-    {
-    case MONS_MONSTROUS_DEMONSPAWN:
-        return "It is more beast now than whatever species it is descended from.";
-    case MONS_GELID_DEMONSPAWN:
-        return "It is covered in icy armour.";
-    case MONS_INFERNAL_DEMONSPAWN:
-        return "It gives off an intense heat.";
-    case MONS_TORTUROUS_DEMONSPAWN:
-        return "It oozes dark energies.";
-    }
-    return "";
-}
-
-static string _describe_demonspawn(const monster_info& mi)
-{
-    string description;
-    const int subsp = mi.draco_or_demonspawn_subspecies();
-
-    description += _describe_demonspawn_base(subsp);
-
-    if (subsp != mi.type)
-    {
-        const string demonspawn_role = _describe_demonspawn_role(mi.type);
-        if (!demonspawn_role.empty())
-            description += " " + demonspawn_role;
-    }
-
-    return description;
-}
-
 static const char* _get_resist_name(mon_resist_flags res_type)
 {
     switch (res_type)
@@ -3693,6 +3647,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "damnation";
     case MR_RES_VORTEX:
         return "polar vortices";
+    case MR_RES_TORMENT:
+        return "torment";
     default:
         return "buggy resistance";
     }
@@ -4257,8 +4213,8 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
  */
 string _monster_habitat_description(const monster_info& mi)
 {
-    const monster_type type = mons_is_job(mi.type)
-                              ? mi.draco_or_demonspawn_subspecies()
+    const monster_type type = mons_is_draconian_job(mi.type)
+                              ? mi.draconian_subspecies()
                               : mi.type;
     if (mons_class_is_stationary(type))
         return "";
@@ -4363,7 +4319,7 @@ static string _monster_stat_description(const monster_info& mi)
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
         MR_RES_MIASMA,  MR_RES_NEG,    MR_RES_DAMNATION,
-        MR_RES_VORTEX,
+        MR_RES_VORTEX,  MR_RES_TORMENT,
     };
 
     vector<string> extreme_resists;
@@ -4378,8 +4334,12 @@ static string _monster_stat_description(const monster_info& mi)
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
-            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_VORTEX)
+            if (rflags == MR_RES_DAMNATION
+                || rflags == MR_RES_VORTEX
+                || rflags == MR_RES_TORMENT)
+            {
                 level = 3; // one level is immunity
+            }
             level = max(level, -1);
             level = min(level,  3);
             switch (level)
@@ -4762,19 +4722,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_DRACONIAN_KNIGHT:
     {
         inf.body << "\n" << _describe_draconian(mi) << "\n";
-        break;
-    }
-
-    case MONS_MONSTROUS_DEMONSPAWN:
-    case MONS_GELID_DEMONSPAWN:
-    case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_BLOOD_SAINT:
-    case MONS_WARMONGER:
-    case MONS_CORRUPTER:
-    case MONS_BLACK_SUN:
-    {
-        inf.body << "\n" << _describe_demonspawn(mi) << "\n";
         break;
     }
 

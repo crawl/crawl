@@ -1,37 +1,51 @@
+------------------------------------------------------------------------------
+-- ghost.lua
+-- Functions for ghost vaults.
+------------------------------------------------------------------------------
+
 crawl_require("dlua/dungeon.lua")
 
 -- Integer value from 0 to 100 giving the chance that a ghost-allowing level
 -- will attempt to place a ghost vault.
 _GHOST_CHANCE_PERCENT = 10
 
--- Common setup we want regardless of the branch of the ghost vault.
-function ghost_setup_common(e)
-     e.tags("luniq_player_ghost no_tele_into no_trap_gen no_monster_gen")
-end
+--[[
+This function should be called by every ghost vault. It sets the common tags
+needed for ghost vaults and sets the common ghost chance for vaults not placing
+in Vaults branch. Vaults placing in the Vaults branch need to have the tag
+`vaults_ghost`, which is not set by this function. See the ghost vault
+guidelines in docs/develop/levels/guidelines.md.
 
--- For vaults that want more control over their tags, use this function to
--- properly set the common chance value and tag.
-function set_ghost_chance(e)
-    e.tags("chance_player_ghost")
-    e.chance(math.floor(_GHOST_CHANCE_PERCENT / 100 * 10000))
-end
+@bool[opt=false] vaults_setup If true, this vault will place in the Vaults
+    branch, so add the `vaults_ghost` tag and replace all `c` glyphs with `x`.
+@bool[opt=true] set_chance If true, set the ghost vault chance. Only vaults
+    that place exclusively in the Vaults branch should set this to false, as
+    they should not set a CHANCE and only use the `vaults_ghost` tag.
+]]
+function ghost_setup(e, vaults_setup, set_chance)
+    if set_chance == nil then
+        set_chance = true
+    end
 
--- This function should be called in every ghost vault that doesn't place in
--- the Vaults branch. It sets the minimal tags we want as well as the common
--- ghost chance. If you want your vault to be less common, use a WEIGHT
--- statement; don't set a difference CHANCE from the one here.
-function ghost_setup(e)
-    ghost_setup_common(e)
+    -- Tags common to all ghost vaults.
+    e.tags("luniq_player_ghost no_tele_into no_trap_gen no_monster_gen")
 
-    set_ghost_chance(e)
-end
+    -- We must set the `vaults_ghost` tag unconditionally so that the vault is
+    -- available for selection by that tag. The `c` substitution is only done
+    -- if we're actually placing the vault in the Vaults branch.
+    if vaults_setup then
+        e.tags("vaults_ghost")
+        if you.in_branch("Vaults") then
+            e.subst("c = x")
+        end
+    end
 
--- Every Vaults room that places a ghost should call this function.
-function vaults_ghost_setup(e)
-    ghost_setup_common(e)
-
-    -- Vaults branch layout expects vaults_ghost as a tag selector.
-    e.tags("vaults_ghost")
+    if set_chance then
+        e.tags("chance_player_ghost")
+        -- Ensure we don't use CHANCE in Vaults.
+        e.depth_chance("Vaults", 0)
+        e.chance(math.floor(_GHOST_CHANCE_PERCENT / 100 * 10000))
+    end
 end
 
 -- Basic loot scale for extra loot for lone ghosts. Takes none_glyph to use

@@ -89,13 +89,12 @@ COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 static const body_facet_def _body_facets[] =
 {
-    //{ EQ_NONE, MUT_FANGS },
     { EQ_HELMET, MUT_HORNS },
     { EQ_HELMET, MUT_ANTENNAE },
-    //{ EQ_HELMET, MUT_BEAK },
     { EQ_GLOVES, MUT_CLAWS },
+    { EQ_GLOVES, MUT_DEMONIC_TOUCH },
     { EQ_BOOTS, MUT_HOOVES },
-    { EQ_BOOTS, MUT_TALONS }
+    { EQ_CLOAK, MUT_WEAKNESS_STINGER }
 };
 
 static vector<mutation_type> removed_mutations =
@@ -188,7 +187,8 @@ static const int conflict[][3] =
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
     { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
-    { MUT_HOOVES,              MUT_TALONS,                 -1}, // currently overridden by physiology_mutation_conflict
+    { MUT_HOOVES,              MUT_TALONS,                 -1},
+    { MUT_CLAWS,               MUT_DEMONIC_TOUCH,          -1},
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
     { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
@@ -1961,7 +1961,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
 
         case MUT_CLAWS:
-            // Claws force gloves off at 3.
+        case MUT_DEMONIC_TOUCH:
+            // Claws and demonic touch force gloves off at 3.
             if (cur_base_level >= 3 && !you.melded[EQ_GLOVES])
                 remove_one_equip(EQ_GLOVES, false, true);
             // Recheck Ashenzari bondage in case our available slots changed.
@@ -1984,6 +1985,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             {
                 remove_one_equip(EQ_HELMET, false, true);
             }
+            // Recheck Ashenzari bondage in case our available slots changed.
+            ash_check_bondage();
+            break;
+
+        case MUT_WEAKNESS_STINGER:
+            // DS stinger forces cloaks off at 3.
+            if (cur_base_level >= 3 && !you.melded[EQ_CLOAK])
+                remove_one_equip(EQ_CLOAK, false, true);
             // Recheck Ashenzari bondage in case our available slots changed.
             ash_check_bondage();
             break;
@@ -2619,7 +2628,9 @@ static const facet_def _demon_facets[] =
       { -33, -33, -33 } },
     { 0, { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
       { -33, -33, -33 } },
-    { 0, { MUT_TALONS, MUT_TALONS, MUT_TALONS },
+    { 0, { MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER },
+      { -33, -33, -33 } },
+    { 0, { MUT_DEMONIC_TOUCH, MUT_DEMONIC_TOUCH, MUT_DEMONIC_TOUCH },
       { -33, -33, -33 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },

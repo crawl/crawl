@@ -275,6 +275,20 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_BROKEN_DOOR, "broken door", "broken_door",
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY), // ?
+    FFT_NONE, MF_DOOR,
+},
+
+{
+    DNGN_BROKEN_CLEAR_DOOR, "broken translucent door", "broken_clear_door",
+    DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY), // ?
+    FFT_NONE, MF_DOOR,
+},
+
+{
     DNGN_OPEN_DOOR, "open door", "open_door",
     DCHAR_DOOR_OPEN, NUM_DCHAR_TYPES,
     COLOUR_IS(LIGHTGREY),

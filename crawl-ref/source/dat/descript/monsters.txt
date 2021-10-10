@@ -658,10 +658,6 @@ black mamba
 
 An astonishingly fast tropical snake whose bite bears a deadly venom.
 %%%%
-black sun
-
-<demonspawn>
-%%%%
 blink frog
 
 A species of frog that possesses the ability to blink at will. It can blink
@@ -681,10 +677,6 @@ concussive blast.
 block of ice
 
 A block of ice shaped like a statue, but worked by no living hands.
-%%%%
-blood saint
-
-<demonspawn>
 %%%%
 bog body
 
@@ -800,10 +792,6 @@ A throne-bearer of the gods, whose head is beset by four faces: one of a man,
 one of an ox, one of a lion, one of an eagle. It is one of the angelic beings
 who stand before the good gods, singing eternal hymns of praise to their glory
 and greatness.
-%%%%
-corrupter
-
-<demonspawn>
 %%%%
 creeping inferno
 
@@ -980,6 +968,28 @@ demonspawn
 
 A half-mortal, half-demonic creature, with its hellish heritage asserting
 itself through a certain devilish cast to its features.
+%%%%
+demonspawn black sun
+
+A half-mortal, half-demonic creature, covered in icy blue scales. It wields
+powers of darkness from its devotion to the deities of death.
+%%%%
+demonspawn blood saint
+
+A half-mortal, half-demonic creature, radiating an intense heat. It weaves
+powerful and unpredictable spells of devastation.
+%%%%
+demonspawn corrupter
+
+A half-mortal, half-demonic creature, oozing with dark energies. It twists
+space around itself, and can corrupt weapons, armour and even the very flesh of
+its opponents.
+%%%%
+demonspawn warmonger
+
+A half-mortal, half-demonic creature, now more beast than whatever species it
+is descended from. It is devoted to combat, disrupting the magic of its foes as
+it battles endlessly.
 %%%%
 diamond obelisk
 
@@ -1262,10 +1272,6 @@ A decayed cadaver, reanimated and accursed with a terrible hunger. It desires
 nothing but to feed on the flesh of the living, and will fell its victims with
 its vicious claws.
 %%%%
-gelid demonspawn
-
-<demonspawn>
-%%%%
 giant cockroach
 
 A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
@@ -1491,10 +1497,6 @@ A warrior initiated in the mysteries of a dying cult, dedicated to serve
 thrones long-fallen. Its blows strip away magical defenses, leaving its foes
 vulnerable to even the simplest hexes.
 %%%%
-infernal demonspawn
-
-<demonspawn>
-%%%%
 iron dragon
 
 A very heavy, slow and apparently flightless dragon. It is named for its
@@ -1719,10 +1721,6 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with flames licking across its
 body.
-%%%%
-monstrous demonspawn
-
-<demonspawn>
 %%%%
 moth of wrath
 
@@ -2489,10 +2487,6 @@ connected with the god Cheibriados; its very presence slows the movements of
 unwary adventurers, leaving them easy prey for its terrifying, ever-gnashing
 radulae.
 %%%%
-torturous demonspawn
-
-<demonspawn>
-%%%%
 training dummy
 
 A mannequin used for battle practice.
@@ -2645,10 +2639,6 @@ war gargoyle
 
 A rare type of gargoyle, constructed from a solid steel statue and imbued with
 vicious strength, speed, and weaponized breath.
-%%%%
-warmonger
-
-<demonspawn>
 %%%%
 water elemental
 

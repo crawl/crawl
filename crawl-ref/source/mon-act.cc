@@ -276,13 +276,17 @@ static bool _do_mon_spell(monster* mons)
     return false;
 }
 
-static void _swim_or_move_energy(monster& mon)
+static energy_use_type _get_swim_or_move(monster& mon)
 {
     const dungeon_feature_type feat = env.grid(mon.pos());
-
     // FIXME: Replace check with mons_is_swimming()?
-    mon.lose_energy(((feat_is_lava(feat) || feat_is_water(feat))
-                     && mon.ground_level()) ? EUT_SWIM : EUT_MOVE);
+    return (feat_is_lava(feat) || feat_is_water(feat))
+            && mon.ground_level() ? EUT_SWIM : EUT_MOVE;
+}
+
+static void _swim_or_move_energy(monster& mon)
+{
+    mon.lose_energy(_get_swim_or_move(mon));
 }
 
 static bool _unfriendly_or_impaired(const monster& mon)
@@ -2645,12 +2649,17 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
+    const bool broken = mons.behaviour == BEH_SEEK
+                        && (mons.berserk() || one_chance_in(3));
     for (const auto &dc : all_door)
     {
         if (you.see_cell(dc))
             was_seen = true;
 
-        dgn_open_door(dc);
+        if (broken)
+            dgn_break_door(dc);
+        else
+            dgn_open_door(dc);
         set_terrain_changed(dc);
     }
 
@@ -2659,7 +2668,8 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         viewwindow();
         update_screen();
 
-        string open_str = "opens the ";
+        // XXX: should use custom verbs
+        string open_str = broken ? "breaks down the " : "opens the ";
         open_str += adj;
         open_str += noun;
         open_str += ".";
@@ -3270,9 +3280,6 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // The seen context no longer applies if the monster is moving normally.
     mons.seen_context = SC_NONE;
 
-    // This appears to be the real one, ie where the movement occurs:
-    _swim_or_move_energy(mons);
-
     if (mons.type == MONS_FOXFIRE)
         --mons.steps_remaining;
 
@@ -3300,6 +3307,9 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     }
 
     _handle_manticore_barbs(mons);
+
+    // This appears to be the real one, ie where the movement occurs:
+    _swim_or_move_energy(mons);
 
     return true;
 }

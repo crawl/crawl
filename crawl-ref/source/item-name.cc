@@ -421,6 +421,8 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
+    "weak",
+    "vuln",
     "debug",
 };
 
@@ -446,6 +448,8 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
+    "weakness",
+    "vulnerability",
     "debug",
 };
 
@@ -471,8 +475,14 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
+    "weakening",
+    "will-reducing",
     "debug",
 };
+
+COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
+COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
+COMPILE_CHECK(ARRAYSZ(weapon_brands_adj) == NUM_SPECIAL_WEAPONS);
 
 static const set<brand_type> brand_prefers_adj =
             { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
@@ -486,9 +496,6 @@ static const set<brand_type> brand_prefers_adj =
  */
 const char* brand_type_name(brand_type brand, bool terse)
 {
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
-
     if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
         return terse ? "buggy" : "bugginess";
 
@@ -497,9 +504,6 @@ const char* brand_type_name(brand_type brand, bool terse)
 
 const char* brand_type_adj(brand_type brand)
 {
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
-
     if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
         return "buggy";
 

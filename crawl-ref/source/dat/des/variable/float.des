@@ -2400,7 +2400,7 @@ MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          deep troll earth mage w:4 / deep elf death mage w:2
 MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
          sphinx w:5 / nagaraja w:5 / mummy priest w:1 / \
-         white draconian knight w:1
+         draconian knight w:1
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
 SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
 SUBST:   IKO = 1, LPS = 2, T = 3, JMNQRUV = %
@@ -9369,7 +9369,9 @@ SUBST:   F = -, JK = ", ' = ^-, " = ^^-, d = dd$
 KMONS:   1 = ancient lich / dread lich
 NSUBST:  8 = 1 / 8
 : elseif you.in_branch("Pandemonium") then
-KMONS:   1 = greater demon / nonbase demonspawn
+KMONS:   1 = greater demon w:20 / demonspawn black sun w:5 / \
+             demonspawn blood saint w:5 / demonspawn corrupter w:5 / \
+             demonspawn warmonger w:5
 KMONS:   2 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:   8 = 29, 9 = 01
@@ -9446,7 +9448,9 @@ KMONS:  2 = ancient lich / dread lich
 NSUBST: 8 = 2 / 8
 :   elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
-KMONS:  2 = greater demon / nonbase demonspawn
+KMONS:  2 = greater demon w:20 / demonspawn black sun w:5 / \
+            demonspawn blood saint w:5 / demonspawn corrupter w:5 / \
+            demonspawn warmonger w:5
 KMONS:  3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:  8 = 39, 9 = 02, H = K

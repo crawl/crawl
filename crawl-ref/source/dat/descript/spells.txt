@@ -26,7 +26,7 @@ meteorological fury. It does more damage to targets surrounded by empty space.
 Alistair's Intoxication spell
 
 Converts a small portion of the brain matter of those around you into alcohol,
-attempting to confuse all intelligent living creatures within view (although
+attempting to confuse all intelligent creatures within view (although
 poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
@@ -266,8 +266,10 @@ creatures into spectral versions of themselves.
 %%%%
 Call of Chaos spell
 
-Calls upon the powers of Chaos to empower nearby allies. The effects vary
-wildly and are usually, but not always, positive.
+Calls upon the powers of chaos to empower nearby allies, granting them haste,
+might, agility, or improved resistances. The chaotic magic may occasionally
+backfire and cause allies to instead lose their willpower or be berserked,
+polymorphed, or filled with inner flame.
 %%%%
 Call Tide spell
 
@@ -638,9 +640,9 @@ target back.
 %%%%
 Forceful Invitation spell
 
-Summons some of the lesser threats from one of the Lair of Beasts, the Snake
-Pit, the Spider Nest, the Swamp, the Shoals, the Orcish Mines, the Elven Halls,
-the Vaults, or the Crypt; the specific branch varies with the caster.
+Summons some creatures from one of the Snake Pit, the Spider Nest, the Swamp,
+the Shoals, the Elven Halls, the Vaults, or the Crypt; the specific branch
+varies with the caster.
 %%%%
 Foxfire spell
 
@@ -840,10 +842,10 @@ dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
-Conjures a small globe of magical energy linked to the caster's own magical
-reserves. Each time its creator casts a destructive Conjuration, the battlesphere
-will launch its own volley of energy at a random foe. With increasing power, the
-battlesphere lasts longer and deals more damage per volley.
+Conjures a small globe of magical energy. Each time its creator casts a
+destructive Conjuration, the battlesphere will launch its own volley of energy
+at a random foe. With increasing power, the battlesphere lasts longer and deals
+more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -1095,10 +1097,9 @@ otherwise almost indistinguishable from the original.
 %%%%
 Plane Rend spell
 
-Summons some of the greater threats from one of the Snake Pit, the Spider Nest,
-the Swamp, the Shoals, the Pits of Slime, the Elven Halls, the Vaults, the
-Crypt, the Tomb of Ancients, or the Realm of Zot; the specific branch varies
-with each cast of the spell.
+Summons some of the greater threats from one of the Pits of Slime, the Elven
+Halls, the Vaults, the Crypt, the Tomb of Ancients, or the Realm of Zot; the
+specific branch varies with each cast of the spell.
 %%%%
 Poison Arrow spell
 

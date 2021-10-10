@@ -1169,12 +1169,13 @@ static bool _suppress_blood(tileidx_t bg_idx)
 // Specifically for vault-overwritten doors. We have three "sets" of tiles that
 // can be dealt with. The tile sets should have size 2, 3, 8, or 9. They are:
 //  2. Closed, open.
-//  3. Runed, closed, open.
+//  3. Closed, open, broken.
 //  8. Closed, open, gate left closed, gate middle closed, gate right closed,
 //     gate left open, gate middle open, gate right open.
 //  9. Runed, closed, open, gate left closed, gate middle closed, gate right
 //     closed, gate left open, gate middle open, gate right open.
-static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
+static int _get_door_offset(tileidx_t base_tile,
+                            bool opened, bool runed, bool broken,
                             int gateway_type)
 {
     int count = tile_dngn_count(base_tile);
@@ -1190,12 +1191,11 @@ static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
         ASSERT(!runed);
         return opened ? 1: 0;
     case 3:
-        if (opened)
+        if (broken)
             return 2;
-        else if (runed)
-            return 0;
-        else
+        if (opened)
             return 1;
+        return 0;
     case 8:
         ASSERT(!runed);
         // The closed door is at BASE_TILE for sets without runed doors
@@ -1247,6 +1247,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_DNGN_OPEN_DOOR_CRYPT;
         else if (orig == TILE_DNGN_CLOSED_DOOR)
             orig = TILE_DNGN_CLOSED_DOOR_CRYPT;
+        else if (orig == TILE_DNGN_BROKEN_DOOR)
+            orig = TILE_DNGN_BROKEN_DOOR_CRYPT;
     }
     else if (player_in_branch(BRANCH_TOMB))
     {
@@ -1300,12 +1302,19 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_VAULT;
-    } else if (player_in_branch(BRANCH_SPIDER))
+    }
+    else if (player_in_branch(BRANCH_SPIDER))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_SPIDER;
-    } else if (player_in_branch(BRANCH_SWAMP)
-               || player_in_branch(BRANCH_SEWER))
+    }
+    else if (player_in_branch(BRANCH_SNAKE))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SNAKE;
+    }
+    else if (player_in_branch(BRANCH_SWAMP)
+             || player_in_branch(BRANCH_SEWER))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_STONE_MOSSY;
@@ -1334,7 +1343,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         {
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
             bool runed = (orig == TILE_DNGN_RUNED_DOOR);
-            int offset = _get_door_offset(override, opened, runed, flv.special);
+            bool broken = (orig == TILE_DNGN_BROKEN_DOOR);
+            int offset = _get_door_offset(override, opened, runed, broken,
+                                          flv.special);
             *bg = override + offset;
         }
         else

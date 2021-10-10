@@ -798,10 +798,12 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_CHAOTIC,   SPWPN_CHAOS,         10,
       nullptr },
     { AF_DRAIN,  SPWPN_DRAINING,      5,
-      [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
+      [](const actor &d) {
+          return bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
-          return !d.is_summoned() && bool(d.holiness() & MH_NATURAL); } },
+          return !d.is_summoned()
+                 && bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
@@ -866,7 +868,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (!(defender->holiness() & MH_NATURAL))
+    if (!(defender->holiness() & (MH_NATURAL | MH_PLANT)))
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
@@ -1451,7 +1453,7 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_ELECTROCUTION:
         if (defender->res_elec() > 0)
             break;
-        else if (one_chance_in(3))
+        else if (one_chance_in(4))
         {
             special_damage = 8 + random2(13);
             const string punctuation =
@@ -1571,8 +1573,9 @@ bool attack::apply_damage_brand(const char *what)
             {
                 you.duration[DUR_CONFUSING_TOUCH] = 0;
                 obvious_effect = false;
-            } else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
-                       || mons_invuln_will(*mon))
+            }
+            else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
+                     || mons_invuln_will(*mon))
             {
                 mprf("%s is completely immune to your confusing touch!",
                      mon->name(DESC_THE).c_str());

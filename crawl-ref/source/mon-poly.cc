@@ -299,8 +299,8 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        const monster_type type = mons_is_job(mons->type)
-                                ? draco_or_demonspawn_subspecies(*mons)
+        const monster_type type = mons_is_draconian_job(mons->type)
+                                ? draconian_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)

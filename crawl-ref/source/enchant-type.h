@@ -139,7 +139,9 @@ enum enchant_type
     ENCH_BUILDING_CHARGE,
 #endif
     ENCH_POISON_VULN,
+#if TAG_MAJOR_VERSION == 34
     ENCH_ICEMAIL,
+#endif
     ENCH_AGILE,
     ENCH_FROZEN,
 #if TAG_MAJOR_VERSION == 34

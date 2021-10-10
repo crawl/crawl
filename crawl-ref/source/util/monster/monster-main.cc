@@ -566,11 +566,7 @@ static void rebind_mspec(string* requested_name,
                          const string& actual_name, mons_spec* mspec)
 {
     if (*requested_name != actual_name
-        && (requested_name->find("draconian") == 0
-            || requested_name->find("blood saint") == 0
-            || requested_name->find("corrupter") == 0
-            || requested_name->find("warmonger") == 0
-            || requested_name->find("black sun") == 0))
+        && requested_name->find("draconian") == 0)
     {
         // If the user requested a drac, the game might generate a
         // coloured drac in response. Try to reuse that colour for further
@@ -828,16 +824,14 @@ int main(int argc, char* argv[])
                               || spec_type == MONS_GLOWING_SHAPESHIFTER;
 
     const bool nonbase =
-        mons_species(mon.type) == MONS_DRACONIAN && mon.type != MONS_DRACONIAN
-        || mons_species(mon.type) == MONS_DEMONSPAWN
-               && mon.type != MONS_DEMONSPAWN;
+        mons_species(mon.type) == MONS_DRACONIAN && mon.type != MONS_DRACONIAN;
 
     const monsterentry* me =
         shapeshifter ? get_monster_data(spec_type) : mon.find_monsterentry();
 
     const monsterentry* mbase =
-        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(mon)) :
-                  (monsterentry*)0;
+        nonbase ? get_monster_data(draconian_subspecies(mon))
+                : (monsterentry*)0;
 
     if (me)
     {
