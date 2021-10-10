@@ -36,6 +36,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -3936,11 +3937,14 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
             abilities.push_back(static_cast<ability_type>(anc_type));
         }
     }
-    if (silenced(you.pos()) && you_worship(GOD_WU_JIAN) && piety_rank() >= 2)
-        abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
 
     if (!ignore_silence && silenced(you.pos()))
+    {
+        if (have_passive(passive_t::wu_jian_wall_jump))
+            abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
         return abilities;
+    }
+
     // Remaining abilities are unusable if silenced.
     if (you_worship(GOD_NEMELEX_XOBEH))
     {
