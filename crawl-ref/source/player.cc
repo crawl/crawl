@@ -2793,7 +2793,9 @@ void level_change(bool skip_attribute_increase)
                     // when we redraw the screen
                     _gain_and_note_hp_mp();
                     updated_maxhp = true;
-
+#ifdef USE_TILE_LOCAL
+                    tiles.layout_statcol();
+#endif
                     redraw_screen();
                     update_screen();
                 }
