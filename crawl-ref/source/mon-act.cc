@@ -978,7 +978,7 @@ static bool _handle_scroll(monster& mons)
         || mons.has_ench(ENCH_BLIND)
         || !one_chance_in(3)
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
-        || silenced(mons.pos())
+        || mons.is_silenced()
         || scroll->base_type != OBJ_SCROLLS)
     {
         return false;
