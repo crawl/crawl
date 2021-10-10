@@ -5703,6 +5703,8 @@ bool monster::can_drink_potion(potion_type ptype) const
             return !(holiness() & (MH_NONLIVING | MH_PLANT));
         case POT_BERSERK_RAGE:
             return can_go_berserk();
+        case POT_BRILLIANCE:
+            return is_actual_spellcaster();
         case POT_HASTE:
         case POT_MIGHT:
         case POT_INVISIBILITY:
@@ -5736,6 +5738,8 @@ bool monster::should_drink_potion(potion_type ptype) const
         return !has_ench(ENCH_HASTE);
     case POT_MIGHT:
         return !has_ench(ENCH_MIGHT) && foe_distance() <= 2;
+    case POT_BRILLIANCE:
+        return !has_ench(ENCH_EMPOWERED_SPELLS) && !is_silenced();
     case POT_RESISTANCE:
         return !has_ench(ENCH_RESISTANCE);
     case POT_INVISIBILITY:
@@ -5789,6 +5793,11 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
     case POT_MIGHT:
         enchant_actor_with_flavour(this, this, BEAM_MIGHT);
+        break;
+
+    case POT_BRILLIANCE:
+        simple_monster_message(*this, "'s spells are empowered!");
+        add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1));
         break;
 
     case POT_INVISIBILITY:
