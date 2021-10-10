@@ -3381,14 +3381,14 @@ TILE:   G = dngn_statue_imp
 : set_feature_name("granite_statue", "a statue of a beguiling devil")
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "a withered tree")
-FTILE:  .G! = floor_demonic_red
+FTILE:  .Gd = floor_demonic_red
 # Alluring items with drawbacks that might kill you
-KITEM:  ! = scarf ego:harm w:30 / any armour good_item ego:ponderousness w:20 / \
-            leech / obsidian axe / robe of folly / maxwell's patent armour
+ITEM:   scarf ego:harm w:30 / any armour good_item ego:ponderousness w:20 / \
+        leech / obsidian axe / robe of folly / maxwell's patent armour
 MAP
 ?.?
 .G.
-.!.
+.d.
  .
 ENDMAP
 
