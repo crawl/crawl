@@ -169,22 +169,26 @@ ENDMAP
 
 # Not Minivault 9 (by Mu.)
 NAME:   not_door_vault_mu
-TAGS:   extra allow_dup luniq
-DEPTH:  D:13-, Elf, Crypt, Depths, Zot, Dis, Geh, Tar, Coc
+TAGS:   extra allow_dup luniq vaults_empty
+DEPTH:  D:13-, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot, Dis, Geh, Tar, Coc
 WEIGHT: 1
 KMONS:  12 = butterfly
 : door_vault_setup(_G)
 MAP
-aaaaaaaaaa
-a++++++++a
-a++++++++a
-a++1111++a
-a++1221++a
-a++1221++a
-a++1111++a
-a++++++++a
-a++++++++a
-aaaaaaaaaa
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+..a++1221++a..
+..a++1221++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
 ENDMAP
 
 # I've revamped this vault to always place reasonably challenging monsters,
@@ -603,8 +607,8 @@ ENDMAP
 
 # Not Minivault 9 (or, hellephant zoo)
 NAME:    not_door_vault_due
-TAGS:    allow_dup luniq
-DEPTH:   D:13-, Elf, Crypt, Depths, Zot, Dis, Geh
+TAGS:    allow_dup luniq vaults_hard
+DEPTH:   D:13-, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot, Dis, Geh
 WEIGHT:  4
 # Hellish beasts for Dungeon
 : if you.in_branch("D") then
@@ -616,8 +620,13 @@ NSUBST:  2 = 2=2 / 2223 / 3
 KMONS:   1 = very ugly thing / apocalypse crab w:3 / shapeshifter hd:12 / \
              glowing shapeshifter
 NSUBST:  2 = 2=1 / 13 / 3
-# Remaining non-Zot branches hell knights, balrugs and hellions, and multiple
+# Remaining non-Zot branches: hell knights, balrugs and hellions, and multiple
 # hellephants.
+: elseif you.in_branch("Vaults") then
+KMONS:   1 = hell knight
+KMONS:   2 = hellion / balrug
+KMONS:   3 = hellephant
+NSUBST:  2 = 2=1 / 23 / 3
 : elseif you.in_branch("Crypt") then
 KMONS:   1 = hell knight
 KMONS:   2 = hellion / balrug
@@ -638,16 +647,20 @@ SUBST:   2 = 3
 KMONS:   3 = hellephant
 : door_vault_setup(_G)
 MAP
-aaaaaaaaaa
-a++++++++a
-a++++++++a
-a++1111++a
-a++1221++a
-a++1221++a
-a++1111++a
-a++++++++a
-a++++++++a
-aaaaaaaaaa
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+..a++1221++a..
+..a++1221++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
 ENDMAP
 
 # A plain guardian serpent vault. (nrook)
@@ -8212,8 +8225,8 @@ ENDMAP
 
 # Evil zoo
 NAME:   door_vault
-TAGS:   allow_dup luniq
-DEPTH:  D:13-, Elf, Crypt, Depths, Zot, Dis, Geh, Tar, Coc
+TAGS:   allow_dup luniq vaults_hard
+DEPTH:  D:13-, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot, Dis, Geh, Tar, Coc
 # Pick interesting monsters for dungeon branches.
 : if you.in_branch("Elf") then
 KMONS:  1 = dancing weapon / deep elf annihilator / deep elf blademaster / \
@@ -8242,23 +8255,27 @@ KMONS:  1 = shard shrike w:15 / titan / blizzard demon / tormentor / \
 KMONS:  1 = nonbase draconian / orb of fire / electric golem / \
             killer klown /  ancient lich / dread lich / curse toe / \
             place:Zot:$ w:20
-# Dungeon and Depths get 8 spawns.
+# Dungeon, Vaults, and Depths get 8 spawns.
 : else
 KMONS:  1 = 8
 : end
 KMONS:  2 = 9
 : door_vault_setup(_G)
 MAP
-aaaaaaaaaa
-a++++++++a
-a++++++++a
-a++1111++a
-a++1221++a
-a++1221++a
-a++1111++a
-a++++++++a
-a++++++++a
-aaaaaaaaaa
+..............
+..............
+..aaaaaaaaaa..
+..a++++++++a..
+..a++++++++a..
+..a++1111++a..
+..a++1221++a..
+..a++1221++a..
+..a++1111++a..
+..a++++++++a..
+..a++++++++a..
+..aaaaaaaaaa..
+..............
+..............
 ENDMAP
 
 # No, John. You are the door vault
