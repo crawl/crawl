@@ -2370,66 +2370,56 @@ NAME:   dreamdust_labyrinth
 TAGS:   no_monster_gen no_trap_gen
 ORIENT: northeast
 DEPTH:  D:11-, !D:$, Lair, !Lair:$
-WEIGHT: 1
-: if crawl.coinflip() then
-# Start in the middle
-NSUBST: ? = 1:( / *:G
-NSUBST: - = 1:< / *:-
-: else
-# Start on the outside
-NSUBST: - = 1:( / *:-
-NSUBST: ? = 1:< / *:G
-: end
+WEIGHT: 5
+# Make a path through the walls
+NSUBST: a = - / a
+NSUBST: p = - / p
+NSUBST: q = - / q
+NSUBST: v = - / v
+NSUBST: b = - / b
 # Place a few dead-ends
-NSUBST: - = 1:x / *:-
-NSUBST: . = 1:x / *:.
-NSUBST: ` = 1:x / *:`
-NSUBST: " = 1:X / *:"
-# Make a path
-NSUBST: f = 1:' / *:f
-NSUBST: e = 1:' / *:e
-NSUBST: d = 1:' / *:d
-NSUBST: c = 1:' / *:c
-NSUBST: b = 1:' / *:b
+NSUBST: . = p / .
+NSUBST: ` = q / `
+NSUBST: " = v / "
 # Everything else
-KFEAT:  abcx = stone_wall
-KFEAT:  deX = metal_wall
-KFEAT:  f = crystal_wall
-TILE:   zabcdx = wall_lab_stone
-TILE:   deX = wall_lab_metal
-FTILE:  -.`"'T<G = floor_gauntlet
+: if you.in_branch("Lair") then
+# The minotaur carved it all out of simple rock
+KFEAT:  apqvb = rock_wall
+: else
+# Fancy labyrinth - nouveau riche minotaur?
+KFEAT:  a = rock_wall
+KFEAT:  pq = stone_wall
+TILE:   pq = wall_lab_stone
+TILE:   v = wall_lab_metal
+: end
+NSUBST: ? = < / G
+FTILE:  -.`"apqvbT<G = floor_gauntlet
 KFEAT:  < = escape_hatch_up
-KMONS:  < = patrolling minotaur ; any armour . \
-                                  any weapon good_item
+KMONS:  < = patrolling minotaur
 KITEM:  < = %, %, %, %, %, *, *, *
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- aaaaaaaaaaaaaaaaaaaaaaaaaaxx
- a'----------------------'axx
- a-bbbbbbbbbbbbbbbbbbbbbb-axx
- a-b'..................'b-axx
- a-b.cccccccccccccccccc.b-axx
- a-b.c'``````````````'c.b-axx
- a-b.c`dddddddddddddd`c.b-axx
- a-b.c`d'""""""""""'d`c.b-axx
- a-b.c`d"eeeeeeeeee"d`c.b-axx
- a-b.c`d"e''''''''e"d`c.b-axx
- a-b.c`d"e'TffffT'e"d`c.b-axx
- a-b.c`d"e'ff''ff'e"d`c.b-axx
- a-b.c`d"e'f'??'f'e"d`c.b-axx
- a-b.c`d"e'f'??'f'e"d`c.b-axx
- a-b.c`d"e'ff''ff'e"d`c.b-axx
- a-b.c`d"e'TffffT'e"d`c.b-axx
- a-b.c`d"e''''''''e"d`c.b-axx
- a-b.c`d"eeeeeeeeee"d`c.b-axx
- a-b.c`d'""""""""""'d`c.b-axx
- a-b.c`dddddddddddddd`c.b-axx
- a-b.c'``````````````'c.b-axx
- a-b.cccccccccccccccccc.b-axx
- a-b'..................'b-axx
- a-bbbbbbbbbbbbbbbbbbbbbb-axx
- a'----------------------'axx
- aaaaaaaaaaaaaaaaaaaaaaaaaaxx
-                           xx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ a-..................-xx
+ a.pppppppppppppppppp.xx
+ a.p-``````````````-p.xx
+ a.p`qqqqqqqqqqqqqq`p.xx
+ a.p`q-""""""""""-q`p.xx
+ a.p`q"vvvvvvvvvv"q`p.xx
+ a.p`q"v--------v"q`p.xx
+ a.p`q"v-TbbbbT-v"q`p.xx
+ a.p`q"v-bb--bb-v"q`p.xx
+ a.p`q"v-b-??-b-v"q`p.xx
+ a.p`q"v-b-??-b-v"q`p.xx
+ a.p`q"v-bb--bb-v"q`p.xx
+ a.p`q"v-TbbbbT-v"q`p.xx
+ a.p`q"v--------v"q`p.xx
+ a.p`q"vvvvvvvvvv"q`p.xx
+ a.p`q-""""""""""-q`p.xx
+ a.p`qqqqqqqqqqqqqq`p.xx
+ a.p-``````````````-p.xx
+ a.pppppppppppppppppp.xx
+ a-..................-xx
+ aaaaaaaaaaaaaaaaaaaaaxx
+                      xx
 ENDMAP
