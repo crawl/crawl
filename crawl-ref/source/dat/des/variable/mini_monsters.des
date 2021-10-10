@@ -8576,10 +8576,10 @@ KFEAT:  X = slimy_wall
 MAP
 ENDMAP
 
-NAME: special_room_vaults
-TAGS: allow_dup luniq unrand no_item_gen vaults_hard
+NAME:   special_room_vaults
+TAGS:   allow_dup luniq unrand no_item_gen vaults_hard
 CHANCE: 1%
-DEPTH: Vaults:1-4
+DEPTH:  Vaults, !Vaults:$
 {{
     local width = 6 + crawl.random2avg(3, 2)
     local height = 5 + crawl.random2avg(5, 1)
