@@ -10325,11 +10325,10 @@ NAME:    dreamdust_experimentation
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  float
 DEPTH:   D:13-, Depths
-WEIGHT:  5
-KPROP:   ? = no_tele_into
+KPROP:   23 = no_tele_into
 COLOUR:  c = white
 TILE:    c = wall_brick_white
-FTILE:   -+G?d = floor_rough_white
+FTILE:   -+G23d = floor_rough_white
 TILE:    G = dngn_statue_demonic_bust
 KFEAT:   t = demonic_tree
 ITEM:    potion of ambrosia / potion of berserk rage / \
@@ -10338,43 +10337,37 @@ ITEM:    potion of ambrosia / potion of berserk rage / \
          potion of might / potion of mutation w:30
 KMONS:   1 = wizard
 : if you.in_branch("D") then
-NSUBST:  - = 2:1 / *:-
+NSUBST:  - = 2:1 / -
 : else
-NSUBST:  - = 6:1 / *:-
+NSUBST:  - = 2=1 / 8=1- / -
 : end
-SUBST:   ? = 2344
-: if crawl.one_chance_in(2) then
+SHUFFLE: 23
+: if crawl.coinflip() then
 # Human Experimentation
 KMONS:   2 = glowing shapeshifter / small abomination
-KMONS:   3 = human name:deformed n_adj n_spe tile:mons_deformed_human
-KMONS:   4 = human perm_ench:berserk perm_ench:wretched / \
+KMONS:   3 = human perm_ench:berserk perm_ench:wretched / \
              human perm_ench:confusion perm_ench:wretched
 : else
 # Animal Experimentation
 KMONS:   2 = ugly thing / very ugly thing
 KMONS:   3 = glowing shapeshifter / large abomination
-# Mutant beasts of varying maturities
-KMONS:   4 = mutant beast hd:3 / mutant beast hd:9 / \
-             mutant beast hd:15 / mutant beast hd:21 / \
-             mutant beast hd:27
 : end
 MAP
-..........
-.cccccccc.
-.cddddddc.
-.ccc++ccc.
-.cG----Gc.
-.ccc--ccc.
-.c?n--n?c.
-.ccc--ccc.
-.c?n--n?c.
-.ccc--ccc.
-.c?n--n?c.
-.ccc--ccc.
-.ccc++ccc.
-.cG----Gc.
-.cG----Gc.
-.ccc++ccc.
-...t..t...
- ...@@...
+cccccccc
+cddddddc
+ccc++ccc
+cG----Gc
+ccc--ccc
+c2n--n2c
+ccc--ccc
+c2n--n3c
+ccc--ccc
+c3n--n3c
+ccc--ccc
+ccc++ccc
+cG----Gc
+cG----Gc
+ccc++ccc
+..t..t..
+ ..@@..
 ENDMAP
