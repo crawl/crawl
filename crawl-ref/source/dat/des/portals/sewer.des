@@ -678,6 +678,7 @@ KMONS:    2 = water moccasin
 KMONS:    3 = Purgy, water moccasin
 ITEM:     potion of berserk rage ident:type / potion of haste ident:type w:5
 MONS:     bat
+SUBST:    - = 1....
 MAP
  ccccccc
 cc$***$cc
@@ -688,20 +689,17 @@ c.......c
 c.......c
 cc.....cc
  ccc.ccc     ccccccc
-   c.c      cc1.1..cc
-   c.c     cc1..w...cc
-   c.ccccccc...www...cc
-   c..........wwwww.A.c
-   c.ccccccc1..www...cc
-   c.c     cc...w...cc
-   c.c      cc1....cc
-   c.c       ccccccc
-   c.c
-   c.c
-   c.c
+   cdc      cc---..cc
+   c.c     cc---w...cc
+   c.ccccccc---www...cc
+   c.......---wwwww.A<c
+   c.ccccccc---www...cc
+   c.c     cc---w...cc
+   c-c      cc---..cc
+   c-c       ccccccc
+   c-c
+   c-c
    c<c
-   c.c
-   cdc
    ccc
 ENDMAP
 
