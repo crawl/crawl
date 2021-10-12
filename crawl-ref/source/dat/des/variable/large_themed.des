@@ -2338,3 +2338,63 @@ xxx^.xx
 xxx@xx
 x
 ENDMAP
+
+NAME:   dreamdust_under_siege
+TAGS:   transparent no_monster_gen no_pool_fixup
+ORIENT: south
+DEPTH:  D:12-, Orc:1, Depths, !Depths:1
+WEIGHT: 5
+TILE:   c = wall_stone_smooth
+FTILE:  +'{([>-O = floor_cobble_blood
+# Monster Placement
+NSUBST: ' = 6=1 / 6=1' / '
+NSUBST: . = 10=2 / 10=2. / 10=3 / 10=3. / 2=4 / 3=4. / .
+# Theme variations
+: if you.in_branch("D") then
+TILE:   G : dngn_statue_angel
+KFEAT:  O = altar_zin / altar_elyvilon / altar_the_shining_one
+FTILE:  -O : floor_limestone / floor_w_marble
+MONS:   vault guard, human zombie / ogre zombie, \
+        human skeleton / ogre skeleton, necromancer
+: elseif you.in_branch("Orc") then
+SUBST:  ( = {, [ = >, G = I
+KFEAT:  > = escape_hatch_down
+KFEAT:  O = altar_beogh
+KPROP:  -O = bloody
+MONS:   orc / orc warrior, orc zombie / ogre zombie, \
+        orc skeleton / ogre skeleton, necromancer
+: else
+# Depths
+:    if crawl.coinflip() then
+# Holy defenders
+TILE:   G : dngn_statue_angel
+KFEAT:  O = altar_zin / altar_elyvilon / altar_the_shining_one
+FTILE:  -O : floor_limestone / floor_w_marble
+MONS:   angel / vault guard, zombie, simulacrum, lich / ancient lich w:3
+:    else
+# Unholy defenders
+TILE:   G : dngn_statue_imp / dngn_statue_demonic_bust
+KFEAT:  O = altar_yredelemnul / altar_kikubaaqudgha
+KPROP:  -O = bloody
+MONS:   ancient champion / vampire knight / lich, \
+        angel / nothing, vault guard, daeva / angel
+:    end
+: end
+MAP
+  ...........................
+ .............................
+...............................
+...............................
+...............................
+....wwwww.............wwwww....
+...wwcncww..wG...Gw..wwcncww...
+...wcc'ccwwwwc+++cwwwwcc'ccw...
+...wn'('cccncc'''ccnccc'['nw...
+...wcc''c'''''''''''''c''ccw...
+...wwccc+'''''''''''''+cccww...
+....wwc'''''''''''''''''cww....
+....wwc'''''''---'''''''cww....
+....wwcccccccccOcccccccccww....
+xxxxxxxxxxxxxxcccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
