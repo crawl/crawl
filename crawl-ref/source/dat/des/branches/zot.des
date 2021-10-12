@@ -2797,9 +2797,9 @@ KFEAT:  _ = altar_zin
 TILE:   G = dngn_statue_angel
 MONS:   angel god:zin dbname:zin_angel, \
         killer klown-shaped pillar of salt, \
-        killer klown, \ 
+        killer klown, \
         butterfly, \
-        chaos spawn, \ 
+        chaos spawn, \
         glowing shapeshifter
 KFEAT:  O = altar_xom
 KFEAT:  ^ = dispersal trap
