@@ -2338,6 +2338,19 @@ MAP
 ..............
 ENDMAP
 
+NAME:   dreamdust_gnoll_shepherd
+TAGS:   no_monster_gen no_item_gen transparent
+DEPTH:  D:7-11, Lair
+KMONS:  1 = gnoll shaman name:gnoll_shepherd \
+            n_rpl n_des n_spe spells:none ; quarterstaff
+KMONS:  2 : yak / dream sheep
+NSUBST: . = 5=2 / .
+MAP
+.....
+..1..
+.....
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
