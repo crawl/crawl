@@ -939,12 +939,12 @@ NAME:   sewer_sea
 TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 WEIGHT: 5
-MONS:   rat w:4 / nothing w:1, rat / river rat w:5
+MONS:   rat, rat / river rat w:5
 KMONS:  G = merfolk siren hd:3 name:sickly name_adjective name_species
 KMONS:  H = merfolk avatar hd:3 name:malarious name_adjective name_species
-KMONS:  hJ = frilled lizard / ball python / adder / nothing w:2
-KMONS:  g = frilled lizard / ball python / giant cockroach / \
-            quokka / nothing w:7
+KMONS:  hJ = frilled lizard / ball python / adder
+KMONS:  g = frilled lizard / ball python / giant cockroach / quokka
+SUBST:  1 = 1., 2 = 2., J = Jn, h = hW, g = gggW
 KFEAT:  gsh = W
 KFEAT:  O = open_sea
 COLOUR: gh = lightgreen
@@ -963,23 +963,23 @@ OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO                        cccc       cccccccc
-OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO                       ccW.cc      cWW1..1c
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO                       ccW.cc      cWW1.21c
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccWWW.ccccccccW..c..c
-OOOnnnnnnnnnnnnnJnnnnnOOOOOOOOOOOOOO                     c<AWWWW...1.2...1.cc.c
+OOOnnnnnnnnnJnnnJnnnnnOOOOOOOOOOOOOO                     c<AWWWW...12....1.cc.c
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccccccccccccccccccc.c
-OOOnnnnnnnnnJnnnscccccccccccccc  cccccccccccccccc ccccccccccwhwwwwwwwWwwwww2..c
-OOOnnnnnnnnnnnns.+.....+...%Wwc  c1.....cc$$$.1McccwwWWWgWWWWWWWW..W..WW.Www..c
-OOOnnnnnnnnHnnsW.ccccccc...%*Wc  c.ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
-OOOnnnnnnnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.ccccWcccwwwc.c           cccc  cc..WWwc
-OOOnnnnnnnnnJnsW.ccc..cc...*WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwwc
-OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1....c            cccccccccccwc
-OOOnnnnnnnnsssWWWWWc.1ccccccccwwwWW.1cwWWcWWW..2ccccccc            cGwwwwwwwwwwc
-OOOnnnnnnnsssWWWWWWWWsswwswwwhcWW..1ccccWWWW1..cc                  ccccccccccccc
-OOOnnnnnnnnssshWWWWc..cccccccccW.1.cc  ccW1..ccc
-OOOnnnnnnnnnnssWgccc.2c  cwg2....ccc    cccccc
+OOOnnnJnnnnnJnnnscccccccccccccc  cccccccccccccccc ccccccccccwhwwwwwwwWwwwww2.1c
+OOOnnnnnnnnnnnns.+.....+...%Wwc  c1....1cc$$$.1McccwwWWWgWWhWWWWW..W..WW.Www2.c
+OOOnnnnnnnnHnnsW.ccccccc...%*Wc  c2ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
+OOOnnnnnJnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.ccccWcccwwwc.c           cccc  cc1.WWwc
+OOOnnnnnnnnnJnsW.ccc.1cc...*WWc ccwWgcwc.cGwwWWWWWWcc1c                  ccccccc
+OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1...1c            
+OOOnnnnnnnnsssWWhWWc.1ccccccccwwwhW.1cwWWcWWW..2ccccccc            
+OOOnnnnnnnsssWWWWWWWWsswwwwwwwcWh..1ccccWWgW1.2cc                  
+OOOnnnnnnnnssshWWWWc.2cccccccccW.1.cc  cch11.ccc
+OOOnnnnnnnnnnssWgccc12c  cwg22.11ccc    cccccc
 OOOnnnnnnnnnnnssWcccc1cc cgWcccccc
-OOOnnnnnnnnnnnnsccccc..ccc.1c
-OOOnnnnnnnnnnnnnsccccc1.1..cc
+OOOnnnnnnnnnnnnsccccc.1ccc.1c
+OOOnnnnnnnnnnnnnsccccc1.11.cc
 OOOnnnnnnnnnnnnnnnnnnccccccc
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
