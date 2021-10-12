@@ -2931,6 +2931,10 @@ giga bat
 
 An enormous, bloated bat.
 %%%%
+gnoll shepherd
+
+A particularly pastoral gnoll.
+%%%%
 greater air elemental
 
 A mighty spirit drawn from the elemental plane of air, surrounded by a
