@@ -714,7 +714,8 @@ MONS:   kobold, jackal
 SUBST:  3 = 334
 KMONS:  3 = water moccasin
 KMONS:  4 = Purgy, water moccasin
-: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / nothing w:400")
+NSUBST: ! = 8 = 2..., 9 = 1..
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / nothing w:300")
 : sewer_setup(_G)
 MAP
    ccccccccc
@@ -743,12 +744,12 @@ MAP
    cccc-cccc
 cccc..---..ccccc
 cWWWWWWWWWWWWWWc
-cccc.......ccccc
-  ccc..c..cccxxxx
-  c....c.21.cdddx
-  c.A<.c2....dddx
-  c....c1.1.cxxxx
-  ccccccccccc
+cccc...c...ccccc
+  ccc..c....cccxxxx
+  c....c!!!!!!cdddx
+  c.A<.c!!!!!!!dddx
+  c....c!!!!!!cxxxx
+  ccccccccccccc
 ENDMAP
 
 ############################################################################
