@@ -2786,6 +2786,42 @@ MAP
 ............?............
 ENDMAP
 
+NAME:   dreamdust_zin_vs_xom
+TAGS:   no_monster_gen
+ORIENT: float
+DEPTH:  Zot
+COLOUR: v = white
+TILE:   v = dngn_metal_wall_white
+FTILE:  _`1 = floor_w_marble
+KFEAT:  _ = altar_zin
+TILE:   G = dngn_statue_angel
+KMONS:  s = killer klown-shaped pillar of salt
+KMONS:  f = butterfly
+MONS:   angel god:zin dbname:zin_angel
+MONS:   killer klown
+MONS:   chaos spawn
+MONS:   glowing shapeshifter
+KFEAT:  O = altar_xom
+KFEAT:  ^ = dispersal trap
+NSUBST: - = 4=s / 4=s- / -
+NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2=t / ?
+SUBST:  ? = ":400 n:30 x:40 v b ^
+SUBST:  " = ":200 W:100 O:30 f 3 4 T U V Y
+COLOUR: " = random
+MAP
+xxxxxxxxx@xxxxxxxxx
+x........."?"?"?"?x
+x.......---"?"?"?"x
+xvvvvnG.---?"?"?"?x
+xv`1`vv.---"?"?"?"x
+xv_`1`1.---?"?"?"?x
+xv`1`vv.---"?"?"?"x
+xvvvvnG.---?"?"?"?x
+x.......---"?"?"?"x
+x........."?"?"?"?x
+xxxxxxxxx@xxxxxxxxx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
