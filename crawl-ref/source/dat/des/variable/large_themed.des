@@ -2316,3 +2316,25 @@ xxxx-xx..xx....xx-xxx-x
 xxxxxxxxx-x.....xxxxxxx
 xxxxxxxxxxx.@@@..xxxxxx
 ENDMAP
+
+NAME:   dreamdust_cave_troll
+TAGS:   no_monster_gen
+ORIENT: northwest
+DEPTH:  D:10-, Lair
+NSUBST: - = 1 / 2=? / .
+KFEAT:  ^ = web
+MONS:   deep troll
+: dgn.delayed_decay(_G, "?", "yak corpse")
+MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
+                              delay = 10, size = 1, excl_rad = 0 }
+MAP
+xxxxxxxxxx
+x--xxxx
+x-!-xxxx
+xx-.xxxxx
+xxxx.^xxx
+xxxxx.xx
+xxx^.xx
+xxx@xx
+x
+ENDMAP
