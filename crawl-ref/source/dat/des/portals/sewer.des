@@ -757,8 +757,7 @@ ENDMAP
 # Purgy lives on this island, he appears in one of three places, if he is
 # outside the loot room, you can get the loot without fighting him
 # (if you are sneaky enough). Not much to walk on here, if you manage to
-# confuse Purge he will probably drown. Some stone walls from the secret room
-# can be seen from the island.
+# confuse Purge he will probably drown.
 #
 NAME:    sewer_co_purgy_island
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
@@ -770,11 +769,10 @@ KMONS:   P = Purgy, water moccasin
 SUBST:   Q = .
 SUBST:   R = .
 #      lesser monsters.
+SUBST:   1 = 1w
 KFEAT:   1 = w
 COLOUR:  1 = green
-KMONS:   1 = frilled lizard / ball python w:5 / \
-         generate_awake frilled lizard / generate_awake ball python w:5 / \
-         adder w:4 / nothing w:6
+KMONS:   1 = frilled lizard / ball python w:5 / adder w:2
 #      loot
 SUBST:   e = !!!!????%
 : kitem("? = " .. dgn.loot_potions)
@@ -787,40 +785,40 @@ SUBST:   Y = xw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccxxxx
-xxxxxxxxxxxxxxYYxxxYYYxxxxYYYxxxxxxcc.ccxxx
-xxxxxxxxxxxxxYwwYYwwwwwYYwwwwccccccc.e.ccxx
-xxxxxxxxxxYwwwwwwwwwwwwwwwwwwwwwww..*<*.cxx
-xxxxxxxxxxYwwwwwwwwwwwwwwwwwwccccccc.e.ccxx
-xxxxxxxxYYwwwwwwwwwwwwwwwwwwwwYxxxxcc.ccxxx
-xxxxxxxYwwwwwwwwwwwwwwwwwww1wwwYxxxxcccxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxYYxxxYYYxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxYwwYYwwwwwYYwwxxxxxxxxxxxxxxxx
+xxxxxxxxxxYwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxx
+xxxxxxxxxxYwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxx
+xxxxxxxxYYwwwwwwwww1wwwwwwwwwwYxxxxxxxxxxxx
+xxxxxxxYwwwwwwwwwwwwwwwwwww1wwwYxxxxxxxxxxx
 xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxx
 xxxxxxwwwww1wwwww....wwwwwwwwwwwwYxxxxxxxxx
 xxxxxYwwwwwwwww..XXXX..wwwwwwwwwwwYxxxxxxxx
 xxxxxwww1wwwww.XXxxxxXXQ.wwwwwww1wwwYxxxxxx
 xxxxYwwwwwww...XxxxxxxxxX..wwwwwwwwwwxxxxxx
 xxxxYwwwwww.XXXxxxxxxxxxxxX..wwwwwwwwYxxxxx
-xxxYwwwwww.XxxxxxxxxxxxxxxxxX.wwwwwwwwYxxxx
+xxxYwwwwww.XxxxxxxxxxxxxxxxxX.www1wwwwYxxxx
 xxxYwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
 xxxxYwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
 xxxxYwwwww.XxxxxxxxcccccxxxxxX.wwwwwwwYxxxx
 xxxYwwwwww.Xxxxxxxxceeeccccccc.wwwwwwwYxxxx
 xxxYwwwwwww.Xxxxxxxce<....P...wwwwwwwwYxxxx
-xxYwwwwwwwwwAXxxxxxceeeccccccc.wwwwwwwYxxxx
+xxYwwwwwwwwwAXxxxxxceeeccccccc.wwww1wwYxxxx
 xxYwwww1wwww<XxxxxxcccccxxxxxX.wwwwwwwYxxxx
 xxxYwwwwwww.XxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
 xxxxwwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
 xxxxYwwwwww.XXxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
 xxxYwwwwwwww..XXxxxxxxxxxxxxX.wwwwwwwwYxxxx
 xxxYwwwwwwww..XXxxxxxxxxxxXXX.wwwwwwwwYxxxx
-xxxxwwwwwwwwww..XxxxxxxxxX...wwwwwwwwwwYxxx
+xxxxwwwwwwwwww..XxxxxxxxxX...wwwww1wwwwYxxx
 xxxxYwwww1wwwwww.XxxxxxXX.wwwwwwwwwwwwwYxxx
 xxxxxwwwwwwwwwww.XxxxxXR.wwwwwwwwwwwwwYxxxx
 xxxxYwwwwwwwwwwww.XXXX.wwwwwww1wwwwwYYxxxxx
 xxxxxYwwwwwwwwwwww....wwwwwwwwwwwwwYxxxxxxx
-xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwwwwYxxxxxxxx
+xxxxxxYwwwww1wwwwwwwwwwwwwwwwwwwwwYxxxxxxxx
 xxxxxxYwwwwwwwwwwwwwwwwww1wwwwwwwYxxxxxxxxx
-xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwYYxxxxxxxxxx
+xxxxxxYwwwwwwwwww1wwwwwwwwwwwwwYYxxxxxxxxxx
 xxxxxxxYwwwwwwwwwwwwwwwwwwwwwwYxxxxxxxxxxxx
 xxxxxxxYwwwwwwwwwwwwwwwwwwwwwYxxxxxxxxxxxxx
 xxxxxxxxYxYwwwwwwYYwwwwwwwYYwYxxxxxxxxxxxxx
