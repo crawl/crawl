@@ -445,7 +445,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def check_connection(self):
         self.timeout = None
 
-        if True: #not self.received_pong:
+        if not self.received_pong:
             self.logger.info("Connection timed out.")
             self.close()
         else:
