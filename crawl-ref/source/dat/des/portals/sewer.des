@@ -612,7 +612,7 @@ ENDMAP
 # Sewer in the shape of the letter W. Sort of. Frogs at the end.
 #
 # Harder than the two other frog maps. Frogs are guaranteed, and neither
-# exit nor chokepoints aren't reachable when one sees them.
+# exit nor chokepoints are reachable when one sees them.
 #
 # XXX: An outlier in size, openness, and minimal land as a map.
 NAME:    sewer_minmay_w
@@ -622,20 +622,24 @@ SHUFFLE: de
 MONS:    rat / river rat w:2
 MONS:    ball python / adder w:5 / frilled lizard w:2 / endoplasm w:1
 MONS:    bullfrog
+NSUBST:  - = 108 = 1... / *:.
+SUBST:   2 = 2.
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
+ITEM:    any scroll / any potion
 SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
 SUBST:   y = W., Y = Ww
 SUBST:   c = c x:1
+NSUBST:  d = 2:d / *=d..., e = 2:e / *=e...
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcccccc2.2ccccccxxxxxxxxxxxxxxxx
-xccccccxxxxxxxxcc....2...2....ccxxxcccccccccccx
-cc....ccxxxxxxcc...............ccxxcdedcc3..3cc
-c......cxxxxxxc.1.1.1.c.........cxxce<e+2..2.2c
-c..<A..cxxxxxcc1.1.1.cc+cc......ccxcdedc.2..2.c
-c......cxxxxxc1.1.1.cccddcc......cxccccc2.2..2c
+xxxxxxxxxxxxxxxxcccccc2-2ccccccxxxxxxxxxxxxxxxx
+xccccccxxxxxxxxcc2--22---22--2ccxxxcccccccccccx
+cc....ccxxxxxxcc---------------ccxxcdedcc32.3cc
+c......cxxxxxxc-------c---------cxxce<e+22.222c
+c..<A..cxxxxxcc------cc+cc------ccxcdedc22..22c
+c......cxxxxxc------cccffcc------cxccccc222..2c
 czyyyyzcxxxxxczyyyyzcxcddcczyyyyzcxxxxxczyyyyzc
 cYYWYYYcxxxxxcYYWYYYcxcccccYYYYWYcxxxxxcYYZWYYc
 cwYWYYwcxxxxxcwYWYwwcxxxxxcwwwYWYcxxxxxcYYWYwYc
@@ -653,12 +657,12 @@ cwwYWYwcxxxxxcwwYWZYcxxxxxcwYYWWYcxxxxxcwYWYYwc
 cwwYWYwcxxxxxcwYYWYwcxxxxxcwYWYYwcxxxxxcwYWYwYc
 cYYYWYYcxxxxxcwYWYwwcxxxxxcYYWYYYcxcccccYYWYYYc
 czyyyyzcxxxxxczyyyyzcxxxxxczyyyyzcxceecczyyyyzc
-c1.1.1.ccxxxcc......cxxxxxc1.1.1.ccceecc......c
-cc1.1.1.ccxcc......ccxxxxxcc1.1.1.cc+cc2.....cc
-xc.......ccc.......cxxxxxxxc.1.1.1.c.........cx
-xcc...............ccxxxxxxxcc.1.1.1.........ccx
-xxcccc.........ccccxxxxxxxxxcccc.2......2ccccxx
-xxxxxcccc2.2ccccxxxxxxxxxxxxxxxcccc2.2ccccxxxxx
+c------ccxxxcc------cxxxxxc2-----cccffcc-----2c
+cc------ccxcc------ccxxxxxcc------cc+cc2-----cc
+xc-------ccc-------cxxxxxxxc2------c2-------2cx
+xcc------2-2------ccxxxxxxxcc2-------------2ccx
+xxcccc---------ccccxxxxxxxxxcccc-2------2ccccxx
+xxxxxcccc2-2ccccxxxxxxxxxxxxxxxcccc2-2ccccxxxxx
 xxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxx
 ENDMAP
 
