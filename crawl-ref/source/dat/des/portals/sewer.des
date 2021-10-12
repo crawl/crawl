@@ -833,9 +833,9 @@ ORIENT: encompass
 MONS:   kobold w:40 / bat / frilled lizard / giant cockroach / \
         adder w:5 / kobold brigand w:1
 KMONS:  2 = purgy, water moccasin
-: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / nothing w:400")
-NSUBST: e = 3:* / 9:d / *:.
-NSUBST: 0 = 5:1 / 1:2 / *:.
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / any armour")
+NSUBST: e = 4:* / 6=d.. / *:.
+NSUBST: 0 = 10=1. / 1:2 / *:.
 KFEAT:  ' = deep_water
 COLOUR: ' = green
 KFEAT:  " = shallow_water
