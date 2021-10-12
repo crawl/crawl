@@ -2317,6 +2317,27 @@ cccc....cccc
 cccccccccccc
 ENDMAP
 
+NAME:   dreamdust_gnoll_farm
+TAGS:   no_monster_gen transparent
+DEPTH:  D:4-7
+COLOUR: fc = brown
+FTILE:  f = floor_mud
+KMONS:  f = fungus / nothing
+MONS:   gnoll ; scythe, hound
+NSUBST: . = 2=1 / 3=1. / 2 / 1=2. / .
+ITEM:   any potion no_pickup
+MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
+                              delay = 10, size = 1, excl_rad = 0 }
+MAP
+..............
+.ffffff.ccccc.
+.fWWWWf.c.!dc.
+.ffffff.c...c.
+.fWWWWf.cc+cc.
+.ffffff.......
+..............
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
