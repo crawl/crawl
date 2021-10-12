@@ -522,7 +522,7 @@ SHUFFLE:  |de
 ITEM:     scroll of blinking ident:all
 MONS:     frilled lizard w:20 / ball python / giant cockroach w:20 / \
           quokka / adder w:8
-NSUBST:   . = 72 = 1... / *:.
+NSUBST:   . = 72 = 1.. / *:.
 NSUBST:   ! = 1:! / 1:!!!!. / *:w
 KFEAT:    ! = w
 COLOUR:   ! = green
@@ -565,20 +565,19 @@ ENDMAP
 NAME:     sewer_frog_island_02
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
-NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
-KMONS:    W = frilled lizard / ball python / giant cockroach / \
-              quokka / endoplasm / adder w:4 / \
-              nothing w:270
+KMONS:    1 = frilled lizard / ball python / giant cockroach / \
+              quokka / endoplasm / adder w:4
+NSUBST:   W = 160 = 1WWW / *:W
+KFEAT:    1 = W
 KFEAT:    W = W
+NSUBST:   ! = 1:! / 1:!!!!. / *:w
 KFEAT:    ! = w
-COLOUR:   ! = green
-KMONS:    ! = bullfrog / nothing w:2
-SHUFFLE:  edfgh$*
-ITEM:     nothing, nothing
+COLOUR:   1! = green
+KMONS:    ! = bullfrog
+SHUFFLE:  ed|
 : item(dgn.loot_scrolls)
-ITEM:     nothing, nothing
-KITEM:    de = *
+ITEM:     scroll of blinking ident:all
 : sewer_setup(_G)
 MAP
            ccccccccccccc
@@ -591,8 +590,8 @@ MAP
  cc---cc----ccc!!!!!ccc----cc---cc
  c----c----cc!w---ww!!cc----c----c
 cc---cc---ccw--..---ww!cc---cc---c
-c.---c----cw--.gh*.---w!c----c---c
-c<.--c----c--.edf.-----!c----c---c
+c.---c----cw--.***.---w!c----c---c
+c<.--c----c--.e*d.-----!c----c---c
 c.---c----c----$------w!c----c---c
 cc---cc---c---.------w!cc---cc---c
  c----c---c--.------w!cc----c----c
