@@ -511,36 +511,37 @@ ENDMAP
 
 ############################################################################
 # Two fairly watery vaults with (usually) two bullfrogs in the end.
-# Loot are good items, and often a scroll of blinking.
+# Loot are good items, and often good scrolls or a scroll of blinking.
 #
 NAME:     sewer_frog_island_01
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SUBST:    - = WWW.
-SHUFFLE:  |d
+SHUFFLE:  |de
 : item(dgn.loot_scrolls)
-MONS:     frilled lizard / ball python w:5 / giant cockroach / \
-          generate_awake frilled lizard / generate_awake ball python w:5 / \
-          generate_awake giant cockroach / generate_awake \
-          quokka / adder w:8 / nothing w:8
-NSUBST:   ! = 2:! / *:w
+ITEM:     scroll of blinking ident:all
+MONS:     frilled lizard w:20 / ball python / giant cockroach w:20 / \
+          quokka / adder w:8
+NSUBST:   . = 72 = 1... / *:.
+NSUBST:   ! = 1:! / 1:!!!!. / *:w
 KFEAT:    ! = w
 COLOUR:   ! = green
-KMONS:    ! = bullfrog / nothing w:2
+KMONS:    ! = bullfrog
+SUBST:    ~ = .
 : sewer_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccc
-c.11---------.................1111c
-c1WWW-ccccccccccccccccccccccc1WWW1c
-c1WwWWccccccccccccccccccccccc1WwW.c
-c1WwwWccccccccccccccccccccccc.WwW.c
-c.WwW1ccccccccccccccccccccccc.WwW-c
+c...---------.....................c
+c.WWW-ccccccccccccccccccccccc.WWW.c
+c.WwWWccccccccccccccccccccccc.WwW.c
+c.WwwWccccccccccccccccccccccc.WwW.c
+c.WwW.ccccccccccccccccccccccc.WwW-c
 c.WwwWccccccc!!!!!!cccccccccc-WwW-c
 c.Wwwwccccwwwwwwwww!!!ccccccc-WwW-c
 c-WwwwccwwwWwwwwwwwwww!cccccc-WwW-c
 c-WwwwcwwWW<-wwwwwwwwww!ccccc-WwW-c
 c-Wwwwwwww-..-ww.--wwwww!cccc-WwW-c
-c-WwWwwWww---.-.*.--wwwwwcccc-WwW-c
+c-WwWwwWww---.-e*.--wwwwwcccc-WwW-c
 c-WwWWWwWww-.--***.wwwwwwcccc-WwW.c
 c-WwWWwwwWww.---d-wwwwwwwcccc-WwW.c
 c-WwWWWwwwW------wwwwwwwwcccc.WwW.c
@@ -554,10 +555,10 @@ c..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW-c
 cc........................----WwW-c
  cccccccccccccccccccccccccccc-WwW-c
                      cccccccc-WwW-c
-              cccccccc.----WWWWwW.ccccxxx
-              c.<.A..--W-WWWWWWwwwwwwwwwx
-              cccccccc.-..WW-.WWW1cccccxx
-                     cccccccc11111c
+              cccccccc~----WWWWwW.ccccxxx
+              c~<~A~~--W-WWWWWWwwwwwwwwwx
+              cccccccc~-~~WW-.WWW.cccccxx
+                     cccccccc.....c
                             ccccccc
 ENDMAP
 
