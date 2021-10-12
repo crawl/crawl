@@ -4901,6 +4901,33 @@ MAP
 .cccccccccc
 ENDMAP
 
+NAME:   dreamdust_wasp_nest
+TAGS:   no_monster_gen
+ORIENT: float
+DEPTH:  D:12-, Lair, Spider, Swamp, Depths
+WEIGHT: 5
+NSUBST: . = 6=1 / 6=1. / .
+: if you.in_branch("Depths") then
+SUBST:  x = b
+COLOUR: b = cyan
+MONS:   spark wasp
+: else
+TILE:   x = wall_desolation
+COLOUR: x = lightgray
+MONS:   hornet
+: end
+MAP
+     xxxx
+   xxx..xxx
+ xxx..xx..xxx
+xx..xx..xx..xx
+@.xx..xx..xx.@
+xx..xx..xx..xx
+ xxx..xx..xxx
+   xxx..xxx
+     xxxx
+ENDMAP
+
 
 ###############################################################################
 #
