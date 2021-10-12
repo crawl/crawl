@@ -1151,9 +1151,8 @@ NAME:    sewer_co_cracked_pipes
 TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 #      water creatures
-MONS:    frilled lizard / ball python w:5 / \
-         generate_awake frilled lizard / generate_awake ball python w:5 / \
-         adder w:2 / nothing w:4
+MONS:    frilled lizard / ball python w:5 / adder w:5
+SUBST:   1 = 1.
 KMONS:   2 = adder
 KFEAT:   2 = W
 COLOUR:  2 = lightgreen
@@ -1178,14 +1177,14 @@ KMONS:   " = nothing w:50 / rat w:15 / river rat w:7
 KPROP:   w = no_tele_into
 #      loot
 SUBST:   e = !!!!!?????%
-: kitem("? = " .. dgn.loot_potions)
-: kitem("! =  " .. dgn.loot_scrolls)
+KITEM:   ? = any potion
+KITEM:   ! = any scroll
 : sewer_setup(_G)
 MAP
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  xcccccccccccccccccccccccccccccccccccccccccccccccx
- xwwwwwwwwmwWe.....1......VVVVVVVVV......1.....<cx
- xwwwwwwwwmwWe.........1..VVVVVVVVV.1..........ecx
+ xwwwwwwwwmwWe.....1.....1VVVVVVVVV......1.....<cx
+ xwwwwwwwwmwWe..1......1..VVVVVVVVV.1......1...ecx
  xccccccccccccIIIIIIccccccccccKccccccMMMcccccMMMcx
  xxxxxxxxxxxxxx"xx"xxxxxxxxxxcVcxxxxxx"xxxxxxx"xxx
              xxx""xxxxxxxxxxxcVcxxxxxxx"xXxxx"xx
@@ -1196,8 +1195,8 @@ MAP
              xXxxxx"x"x"xxxxxcVcxxxxxxxxxx"xxx"x
  xxxxxxxxxxxxxxxxx"xxxxx"xxxxcVcxxxxxxxxxxx"Xx"xxxxxxxxxxxxx
  xcccccccccccccccHHHcccHHHccccJcccccccccccLLLLLLcccccccccccx
- xwwwwwwwwmwWe....1.......VVVVVVVVV........1...eWwmwwwwwwwwx
- xwwwwwwwwmwWe.........1..VVVVVVVVV..1.........eWwmwwwwwwwwx
+ xwwwwwwwwmwWe....1..1....VVVVVVVVV....1...1...eWwmwwwwwwwwx
+ xwwwwwwwwmwWe.1.......1..VVVVVVVVV..1.......1.eWwmwwwwwwwwx
  xccccccccccCCCccCCCccccccccccEccccccccccGGGcGGGcccccccccccx
  xxxxxxxxxxxx"xxxx"xxxxxxxxxxcVcxxxxxxxxxx"xxx"xxxxxxxxxxxxx
           xxxx"xx"xxxxxxxxxxxcVcxxxxxxxxxxx"x"xx
@@ -1208,7 +1207,7 @@ MAP
            xxXxx"""xxxxxxxxxxcVcxxxxxxxxx"xxxXxx
            xxxx"xxx"xxxxxxxxxcVcxxxxxxxx"x"xxxxxxxxxxxxxxxxx
            xccBBBcBBBcccccccccDccccccccFFFFFcccccccccccccccx
-           xc<............VVVVVVVVV.........1..eWwmwwwwwwwwx
+           xc<...........1VVVVVVVVV.1.......1..eWwmwwwwwwwwx
            xcA........1...VVVVVVVVV.....1......eWwmwwwwwwwwx
            xcccccccccccccccccccccccccccccccccccccccccccccccx
            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
