@@ -445,7 +445,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def check_connection(self):
         self.timeout = None
 
-        if not self.received_pong:
+        if True: #not self.received_pong:
             self.logger.info("Connection timed out.")
             self.close()
         else:
@@ -937,6 +937,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.uncompressed_bytes_sent += len(binmsg)
                 f = self.write_message(binmsg)
 
+            import traceback
+            cur_stack = traceback.format_stack()
+
             # handle any exceptions lingering in the Future
             # TODO: this whole call chain should be converted to use coroutines
             def after_write_callback(f):
@@ -947,7 +950,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     if self.ws_connection is not None:
                         self.ws_connection._abort()
                 except Exception as e:
-                    self.logger.warning("Exception during async write_message")
+                    self.logger.warning("Exception during async write_message, stack at call:")
+                    self.logger.warning("".join(cur_stack))
                     self.logger.warning(e, exc_info=True)
                     if self.ws_connection is not None:
                         self.ws_connection._abort()
