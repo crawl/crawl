@@ -185,9 +185,20 @@ local function pick_room(e, options)
     end
     options.did_wizlab_chance = true
   end
+  -- Roll the chance to pick a Desolation vault room if we haven't done so.
+  if not options.did_desolation_chance then
+    if crawl.x_chance_in_y(dgn.desolation_chance_percent, 100) then
+      for i, r in ipairs(options.room_type_weights) do
+        if r.generator == "tagged" and r.tag == "vaults_desolation" then
+          chosen = r
+        end
+      end
+    end
+    options.did_desolation_chance = true
+  end
 
-  -- We aren't choosing a ghost vault or a vault for the wizlab portals, so
-  -- pick a generator from the weighted table.
+  -- We aren't choosing a ghost vault or a vault for wizlab or desolation
+  -- portals, so pick a generator from the weighted table.
   if chosen == nil then
     chosen = util.random_weighted_from(weight_callback,
                                        options.room_type_weights)
