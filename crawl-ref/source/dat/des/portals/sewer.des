@@ -1344,7 +1344,8 @@ MONS:    kobold w:35 / shadow imp / ufetubus w:15 / nothing w:5
 MONS:    kobold w:50 / kobold zombie / endoplasm / giant cockroach / \
          giant cockroach zombie w:3 / ball python / adder zombie w:3 / \
          bat / bat zombie w:3
-NSUBST:   . = 10:2 / *:.
+SUBST:   1 = 1.
+NSUBST:  . = 20 = 2. / *:.
 # Bosses and features for the temple
 :if crawl.random2(2) == 0 then
 KMONS:   3 = kobold brigand / quasit
@@ -1376,29 +1377,29 @@ MAP
                                           c<c
                                          ccdcc
                                         ccd4dcc
-                                        c-1.1-c
-               xxxxxxxxxxxxxxxxxxxxxxxxxc-...-c
+                                        c-111-c
+               xxxxxxxxxxxxxxxxxxxxxxxxxc-.1.-c
                x---wwwwwwwwwwwww-W.+1W-xc-...-c
                x---wwwwwwwwwwwww-W.x1W-xc-...-c
                x----wwwwwwwwwwww-W.x1W-xc-...-c
-               xWWW-wwwwwwwwwww--W.x.W-xc-...-c
-               xWWW-wwwwwwwwww--W..x.W-xcc+++cc
+               xWWW-wwwwwwwwwww--W.x1W-xc-...-c
+               xWWW-wwwwwwwwww--W..x1W-xcc+++cc
                xWWW------------W...x.W-xc.....ccccccccc
-               xxWxxxx-xx-xx-xxx.xxxx.xcc..F...c------cc
+               xxWxxxx-xx-xx-xxx1xxxx.xcc..F...c------cc
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.............1www-...+.F.B3..+......5d<c
+               x-W.............1www-...+.F.B3..+....115d<c
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.xxxx-x--xxx-x.xxxx.xcc..F...c------cc
+               x-W.xxxx-x--xxx-x1xxxx.xcc..F...c------cc
                x-W.x-----------W...x.W-xc.....ccccccccc
-               x-W.xwwwwwwwwww--W..x.W-xcc+++cc
-               x-W.xwwwwwwwwwww--W.x.W-xc-...-c
+               x-W.xwwwwwwwwww--W..x1W-xcc+++cc
+               x-W.xwwwwwwwwwww--W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
-               x-W.xwwwwwwwwwwww-W.+1W-xc-...-c
-xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-...-c
-x----------------W1x-------------WWWWW-xc-1.1-c
+               x-W1xwwwwwwwwwwww-W.+1W-xc-...-c
+xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-.1.-c
+x----------------W1x-------------WWWWW-xc-111-c
 xWWWWWWWWWWWWWWWWW.W---wwwwwww---WWWWW-xccd6dcc
-x...............1..x---wwwwwww---------x ccdcc
+x...............1.1x---wwwwwww---------x ccdcc
 xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  c<c
 xx...xx                                   ccc
 x.....x
