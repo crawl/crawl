@@ -1265,21 +1265,21 @@ KMONS:   P = plant / nothing
 #      pipe monsters.
 KFEAT:   1 = W
 COLOUR:  1 = lightgreen
-KMONS:   1 = frilled lizard / ball python w:5 / generate_awake ball python w:5 / \
-         adder w:7
+KMONS:   1 = kobold brigand w:5 / river rat / adder
 SUBST:   1 = 1111W
 #      other monsters
-KMONS:   2 = jackal / kobold, w:5 kobold brigand / w:5 river rat, rat
-SUBST:   2 = 222222W.
+KMONS:   2 = jackal / kobold / frilled lizard / ball python / rat
 #      loot
-SUBST:   e = !!!?????%WWW
+SUBST:   e = !!!???%%%WWW
 KFEAT:   !?% = W
 COLOUR:  !?% = lightgreen
 : kitem("? = " .. dgn.loot_potions)
 : kitem("! =  " .. dgn.loot_scrolls)
+NSUBST:   . = 60 = 2... / *:.
 SUBST:   . = .W
 SUBST:   X = x.
 SUBST:   Y = xxw
+SUBST:   - = .
 #
 NSUBST:  B = 1:< / *:.
 : sewer_setup(_G)
@@ -1290,41 +1290,41 @@ xxxxxxxxYxcccxxcccYYYxxxxxYYYxxxxxxxxxxxxxxx
 xxxxxxYYwwcecwwcccwwwwYYYwwwwwYYYYwYxxxxxxxx
 xxxxxYwwwwcWcwwcccwwwwwwwwwwwwwwwwwwwYxxxxxx
 xxxxYwwwwwcWcwwcccwwwwwwwwwwwwwwwwwwwwYxxxxx
-xxxxwwwww.cWcPPcccwwwwwwwwwwwwwwwwwwwwwYxxxx
-xxxxww....cWcPPcecwwwwwwwwwwwwwwwwwwwwwYxxxx
-xxxX...A<.PPPPxcWcccccccc.wwwwwwwwwwwwwwYxxx
-xxx........PxxxcWceW1WWWW..wwwwwwwwwwwwwYxxx
-xxx..Pcccccccccc1cccccccc..wwwwwww...wwwwYxx
+xxxxwwwww-cWcPPcccwwwwwwwwwwwwwwwwwwwwwYxxxx
+xxxxww----cWcPPcecwwwwwwwwwwwwwwwwwwwwwYxxxx
+xxxX---A<-PPPPxcWcccccccc.wwwwwwwwwwwwwwYxxx
+xxx--------PxxxcWceW1WWWW..wwwwwwwwwwwwwYxxx
+xxx--Pcccccccccc1cccccccc..wwwwwww...wwwwYxx
 xxxPPPWWWWW1WWecWPxxexxxX..wwwwww..e..wwwYxx
-xxxPPPccccccccccWcPx2xxx...wwwwww.2B2.wwwYxx
+xxxPPPccccccccccWcPx.xxx...wwwwww..B..wwwYxx
 xxx.....XxxxxxxcWc..xxxX...wwwwww..P..wwwYxx
 xxxX.....XxxxxxcWcxxxxX....wwwwww.PPP.wwwYxx
 xxxxX.....XxxxxcWcxxxX....wwwwwww.cWc.wwwYxx
-xxxxX..2.....XxcWcxxX.....wwwwwwwwcWcwwwwYxx
+xxxxX........XxcWcxxX.....wwwwwwwwcWcwwwwYxx
 xxxx....cWc....cWcX.......wwwwwwwwcWcwwwwYxx
-xxxP.2..cWc..........2..Pccccccccwc1cwwwYxxx
-xxxPP...c1c...P..2.....P.PwwwwwwwwcWcwwwYxxx
+xxxP....cWc.............Pccccccccwc1cwwwYxxx
+xxxPP...c1c...P........P.PwwwwwwwwcWcwwwYxxx
 xxxPPP..cWc..PPP.......PPccccccccwcWcwwwwYxx
-xxxXPPP.cec2.cWc.......P.wwwwwwwwwcWcwwwYxxx
+xxxXPPP.cec..cWc.......P.wwwwwwwwwcWcwwwYxxx
 xxxX.cccccccccWc.......P.wwwwwwwwwcWcwwwwYxx
 xxxX.WWWW1WWecWc......P..wwwwwwwwwcWcwwwwxxx
-xxxX.cccccccccWc.2...P..wwwwwwwwwPcWc.wwwYxx
-xxxXXxxX.2.xPP1c....P...wwwwwwwwPPPPPP..wYxx
+xxxX.cccccccccWc.....P..wwwwwwwwwPcWc.wwwYxx
+xxxXXxxX...xPP1c....P...wwwwwwwwPPPPPP..wYxx
 xxxxxxx.e.xPxcWc...PPPccccccccccccPPP...Xxxx
-xxxxxxxxXXxxxcWc....PPWWWWW1WWW1WWPP..2.Xxxx
-xxxxxxxxxxxxxcWc..2..PccccccccccccP..e..Xxxx
+xxxxxxxxXXxxxcWc....PPWWWWW1WWW1WWPP....Xxxx
+xxxxxxxxxxxxxcWc.....PccccccccccccP..e..Xxxx
 xxxX...XxxxxxcWc........wwwwwwww........Xxxx
-xxX.2...Xxxx............wwwwwwww....PP..Xxxx
-xxX...PcccccccccccPP....wwwwwwww.2.PPP.Xxxxx
-xxX2ePPWWWWW1WWWWWP...wwwwwwwww....cWcXxxxxx
+xxX.....Xxxx............wwwwwwww....PP..Xxxx
+xxX...PcccccccccccPP....wwwwwwww...PPP.Xxxxx
+xxX.ePPWWWWW1WWWWWP...wwwwwwwww....cWcXxxxxx
 xxX..P.ccccccccccc.Pwwwwwwwwwww..XXcWcxxxxxx
 xxxX....wwwwwwwwwwwwwwwwwwwwwww.XxxcWcxxxxxx
 xxxYwwwwwwwwwwwwwwwwwwwwwwwwwwYxxxxc1cxxxxxx
 xxxYwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxcWcxxxxxx
 xxxYwwwwwwwwwwwwwwwwwwwwwwwwwYxxxX.cWc.Xxxxx
 xxxxYwwwwwwwwwwwwwwwwwwwwwwwYxxxX..PPP..Xxxx
-xxxxxwwwwwwwwwwwwwwwwwwwwwwxxxxxX..PB.2.Xxxx
-xxxxxYwwwwwwwwwwwwwwwwwwwwYxxxxxX.2..e..Xxxx
+xxxxxwwwwwwwwwwwwwwwwwwwwwwxxxxxX..PB...Xxxx
+xxxxxYwwwwwwwwwwwwwwwwwwwwYxxxxxX....e..Xxxx
 xxxxxxYwwwwwwYYYYwwwYYYwwYxxxxxxxX.....Xxxxx
 xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
 ENDMAP
