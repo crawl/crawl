@@ -858,6 +858,47 @@ ccccccccc...................ccccccccc
         ccccccccccccccccccccc
 ENDMAP
 
+###############################################################################
+# This one places a hell rat. It also gives the player a door with which to
+# avoid the hell rat. Seven items, many of which are random potion/scroll.
+#
+
+NAME:   sewer_hellmonk_bad_rat
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+ITEM:   any potion / any scroll
+: item(dgn.loot_potions)
+: item(dgn.loot_scrolls)
+MONS:   rat, river rat
+KMONS:  3 = hell rat
+NSUBST: - = 20 = 1... / 8 = 2... / *:.
+SUBST:  . = WWW..
+SUBST:  d = ddddef*
+KFEAT:  3 = shallow_water
+COLOUR: 3 = lightgreen
+: sewer_setup(_G)
+MAP
+    xxxxxxx
+  xxxx---xxxx
+  xx-------xx
+ xxx-------xxx
+ xx---ccc---xx
+xxx..cc.cc--xxx
+xx...c...c---xx
+xx..ccd.Wcc--xx
+xx..cddWW.c--xx
+xxA<c<d3WW+--xx
+xx..cddWW.c--xx
+xx..ccd.Wcc--xx
+xx...c...c---xx
+xxx..cc.cc--xxx
+ xx---ccc---xx
+ xxx-------xxx
+  xx-------xx
+  xxxx---xxxx
+    xxxxxxx
+ENDMAP
+
 ### OTHER #####################################################################
 # Other sorts of Sewer maps, most weighted 10. (Total 68).
 
