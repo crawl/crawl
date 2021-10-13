@@ -218,12 +218,11 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Elyvilon
-    {   { 1, ABIL_ELYVILON_LESSER_HEALING, "provide lesser healing for yourself" },
+    {   { 1, "You are now with the guardian spirit.",
+             "You are no longer with the guardian spirit.",
+             "You are with the guardian spirit." },
         { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
-        { 3, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
-        { 4, ABIL_ELYVILON_GREATER_HEALING, "provide greater healing for yourself" },
-        { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
-        { 1, ABIL_ELYVILON_LIFESAVING, "call on Elyvilon to save your life" },
+        { 4, ABIL_ELYVILON_LIFESAVING, "call on Elyvilon to save your life" },
     },
 
     // Lugonu
@@ -861,11 +860,6 @@ static void _inc_penance(god_type god, int val)
                 tso_remove_divine_shield();
 
             make_god_gifts_disappear();
-        }
-        else if (god == GOD_ELYVILON)
-        {
-            if (you.duration[DUR_DIVINE_VIGOUR])
-                elyvilon_remove_divine_vigour();
         }
         else if (god == GOD_JIYVA)
         {
@@ -3164,8 +3158,6 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_ELYVILON:
         you.duration[DUR_LIFESAVING] = 0;
-        if (you.duration[DUR_DIVINE_VIGOUR])
-            elyvilon_remove_divine_vigour();
         you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;

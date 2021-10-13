@@ -208,11 +208,6 @@ static const duration_def duration_data[] =
       "vitalised", "divine stamina",
       "You are divinely vitalised.", D_EXPIRES,
       {{ "", zin_remove_divine_stamina }}},
-    { DUR_DIVINE_VIGOUR,
-      0, "",
-      "divinely vigorous", "divine vigour",
-      "You are imbued with divine vigour.", D_NO_FLAGS,
-      {{ "", elyvilon_remove_divine_vigour }}},
     { DUR_EXHAUSTED,
       YELLOW, "Exh",
       "exhausted", "",
@@ -670,5 +665,6 @@ static const duration_def duration_data[] =
     { DUR_ELIXIR_MAGIC, 0, "", "", "old elixir magic", "", D_NO_FLAGS},
     { DUR_ANTIMAGIC, 0, "", "", "old antimagic", "", D_NO_FLAGS},
     { DUR_DEVICE_SURGE, 0, "", "", "old device surge", "", D_NO_FLAGS},
+    { DUR_DIVINE_VIGOUR, 0, "", "", "", "", D_NO_FLAGS, {{""}} },
 #endif
 };

@@ -247,6 +247,10 @@ static const vector<god_passive> god_passives[] =
               "GOD can protect the life of your allies",
               "GOD NOW protects the life of your allies"
         },
+        { 1, passive_t::ely_guardian_spirit,
+              "GOD has sent you a guardian spirit",
+              "GOD no longer sent you a guardian spirit"
+        },
     },
 
     // Lugonu

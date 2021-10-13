@@ -97,8 +97,6 @@ void tso_divine_shield();
 void tso_remove_divine_shield();
 
 void elyvilon_purification();
-bool elyvilon_divine_vigour();
-void elyvilon_remove_divine_vigour();
 
 bool vehumet_supports_spell(spell_type spell);
 

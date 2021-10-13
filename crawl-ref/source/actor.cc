@@ -330,6 +330,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
 
     if (is_player())
         ss += you.get_mutation_level(MUT_MANA_SHIELD);
+        ss += have_passive(passive_t::ely_guardian_spirit);
 
     return ss;
 }

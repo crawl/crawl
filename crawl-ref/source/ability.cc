@@ -445,18 +445,10 @@ static vector<ability_def> &_get_ability_list()
             {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
 
         // Elyvilon
-        { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
-            0, 0, 0, {fail_basis::invo}, abflag::piety },
-        { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0,
-            generic_cost::range(0, 1), {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
-            2, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
-        { ABIL_ELYVILON_PURIFICATION, "Purification",
-            3, 0, 3, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
-        { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
-            2, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
-        { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
-            0, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            0, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
+            0, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::conf_ok },
 
         // Lugonu
         { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
@@ -1581,33 +1573,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 mpr("You have nothing to donate!");
-            return false;
-        }
-        return true;
-
-    case ABIL_ELYVILON_LESSER_HEALING:
-    case ABIL_ELYVILON_GREATER_HEALING:
-        if (you.hp == you.hp_max)
-        {
-            if (!quiet)
-                canned_msg(MSG_FULL_HEALTH);
-            return false;
-        }
-        return true;
-
-    case ABIL_ELYVILON_PURIFICATION:
-        if (!you.duration[DUR_SICKNESS]
-            && !you.duration[DUR_POISONING]
-            && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
-            && !you.petrifying()
-            && you.strength(false) == you.max_strength()
-            && you.intel(false) == you.max_intel()
-            && you.dex(false) == you.max_dex()
-            && !player_drained()
-            && !you.duration[DUR_WEAK])
-        {
-            if (!quiet)
-                mpr("Nothing ails you!");
             return false;
         }
         return true;
@@ -2767,6 +2732,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_ELYVILON_LIFESAVING:
         fail_check();
+        elyvilon_purification();
         if (you.duration[DUR_LIFESAVING])
             mpr("You renew your call for help.");
         else
@@ -2774,30 +2740,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             mprf("You beseech %s to protect your life.",
                  god_name(you.religion).c_str());
         }
+
         // Might be a decrease, this is intentional (like Yred).
-        you.duration[DUR_LIFESAVING] = 9 * BASELINE_DELAY
-                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
-        break;
-
-    case ABIL_ELYVILON_LESSER_HEALING:
-    case ABIL_ELYVILON_GREATER_HEALING:
-    {
-        fail_check();
-        int pow = 0;
-        if (abil.ability == ABIL_ELYVILON_LESSER_HEALING)
-            pow = 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6);
-        else
-            pow = 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        pow = min(50, pow);
-        const int healed = pow + roll_dice(2, pow) - 2;
-        mpr("You are healed.");
-        inc_hp(healed);
-        break;
-    }
-
-    case ABIL_ELYVILON_PURIFICATION:
-        fail_check();
-        elyvilon_purification();
+        you.duration[DUR_LIFESAVING] = 
+            100 + (you.skill_rdiv(SK_INVOCATIONS, 3, 2)) * 10;
         break;
 
     case ABIL_ELYVILON_HEAL_OTHER:
@@ -2805,12 +2751,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         int pow = 30 + you.skill(SK_INVOCATIONS, 1);
         return cast_healing(pow, fail);
     }
-
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
-        fail_check();
-        if (!elyvilon_divine_vigour())
-            return spret::abort;
-        break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
         if (cancel_harmful_move(false))

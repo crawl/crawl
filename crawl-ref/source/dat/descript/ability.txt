@@ -336,50 +336,34 @@ Summons huge angry allies to wreak havoc.
 # Elyvilon
 Divine Protection ability
 
-Beseeches Elyvilon to save your life. If you are mortally wounded, the Healer
-may undo the killing blow. Especially pious individuals may be certain of this
-help, but in that case, any intervention costs piety (as opposed to merely
-asking for intervention, which is always free). Killing others while asking
-for divine protection will cause penance.
-%%%%
-Lesser Healing ability
-
-Heals a small amount of health, depending on Invocations skill.
-%%%%
-Purification ability
-
 Purges your body of poison, confusion, slowness, petrification, weakness, and
 sickness. Any drained strength, dexterity or intelligence will also be fully
 restored, along with any drained maximum health.
+
+Every time you suffer damage, Elyvilon will restore your health and mana as much
+as part of the damage.
+
+And beseeches Elyvilon to save your life. If you are mortally wounded, the Healer
+may undo the killing blow. Especially pious individuals may be certain of this
+help, but in that case, any intervention costs piety.
+
+It is increases the duration in proportion to Invocation.
 %%%%
 Heal Other ability
 
 Heals a creature other than yourself by a moderate amount, depending on
 Invocations skill. Using this ability on hostile monsters will try to turn them
-neutral. This works best on living creatures, with the undead and demons being
-progressively harder to pacify. Intelligent creatures are also more difficult
+strict neutral. This works best on living creatures, with the undead and demons
+being progressively harder to pacify. Intelligent creatures are also more difficult
 to pacify.
 
 Ghosts of dead adventurers and demon lords are too wrathful to be pacified,
 mindless creatures are too unintelligent to be pacified, and no monster can be
 pacified while it is asleep.
 
-Whether the pacification succeeds or not, the invested piety and magic points
-are lost. If it does succeed, the monster is healed and you gain half the
-monster's experience value. Otherwise, the monster is unaffected and you gain
-nothing.
-%%%%
-Greater Healing ability
-
-Heals a moderate amount of health, depending on Invocations skill. Greater
-Healing will heal approximately three times as much as Lesser Healing, but at a
-slightly higher total piety cost.
-%%%%
-Divine Vigour ability
-
-Greatly increases your maximum health and magic points, depending on
-Invocations skill. Your current health and magic points will also be increased
-proportionally.
+Whether the pacification succeeds or not, the invested piety are lost.
+If it does succeed, the monster is healed and you gain half the monster's
+experience value. Otherwise, the monster is unaffected and you gain nothing.
 %%%%
 # Lugonu
 Depart the Abyss ability

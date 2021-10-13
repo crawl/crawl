@@ -445,7 +445,6 @@ void revive()
     restore_stat(STAT_ALL, 0, true);
 
     clear_trapping_net();
-    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     if (you.form != transformation::none)

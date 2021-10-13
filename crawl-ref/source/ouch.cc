@@ -758,6 +758,36 @@ static void _place_player_corpse(bool explode)
     place_monster_corpse(dummy, false);
 }
 
+static void _sacred_healing(int dam)
+{
+    int hp_heal = 0, mp_heal = 0;
+    if (you.duration[DUR_LIFESAVING]
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR]
+        && dam >= 4)
+    {
+        mpr("You felt the touch of Elyvilon.");
+        hp_heal = dam * 1 / 2; // 50%;
+        mp_heal = max(2, dam * 1 / 5); // 20%;
+
+            if (hp_heal && you.hp < you.hp_max)
+            {
+                canned_msg(MSG_GAIN_HEALTH);
+                inc_hp(hp_heal);
+            }
+
+            if (mp_heal && you.magic_points < you.max_magic_points)
+            {
+                int tmp = min(you.max_magic_points - you.magic_points,
+                    mp_heal);
+                canned_msg(MSG_GAIN_MAGIC);
+                inc_mp(mp_heal);
+                mp_heal -= tmp;
+            }
+        return;
+    }
+}
+
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
@@ -1031,6 +1061,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_summon_demonic_guardian(dam, death_type);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            _sacred_healing(dam);
+
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             if (death_type != KILLED_BY_POISON)

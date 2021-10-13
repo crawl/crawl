@@ -1339,49 +1339,6 @@ void elyvilon_purification()
     you.redraw_evasion = true;
 }
 
-bool elyvilon_divine_vigour()
-{
-    bool success = false;
-
-    if (!you.duration[DUR_DIVINE_VIGOUR])
-    {
-        mprf("%s grants you divine vigour.",
-             god_name(GOD_ELYVILON).c_str());
-
-        const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        const int old_hp_max = you.hp_max;
-        const int old_mp_max = you.max_magic_points;
-        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
-        you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
-
-        calc_hp();
-        inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
-        calc_mp();
-        if (old_mp_max > 0)
-        {
-            inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
-                     / old_mp_max
-                   - you.magic_points);
-        }
-
-        success = true;
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return success;
-}
-
-void elyvilon_remove_divine_vigour()
-{
-    mprf(MSGCH_DURATION, "Your divine vigour fades away.");
-    you.duration[DUR_DIVINE_VIGOUR] = 0;
-    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
-    calc_hp();
-    calc_mp();
-}
-
 bool vehumet_supports_spell(spell_type spell)
 {
     if (spell_typematch(spell, spschool::conjuration))

@@ -13,11 +13,11 @@ enum attribute_type
     ATTR_BANISHMENT_IMMUNITY,   // banishment immunity until
 #if TAG_MAJOR_VERSION == 34
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
+    ATTR_DIVINE_VIGOUR,         // strength of Ely's Divine Vigour
 #endif
     ATTR_HELD,                  // caught in a net or web
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
                                 // sight of the player while in the Abyss.
-    ATTR_DIVINE_VIGOUR,         // strength of Ely's Divine Vigour
     ATTR_DIVINE_STAMINA,        // strength of Zin's Divine Stamina
     ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
 #if TAG_MAJOR_VERSION == 34

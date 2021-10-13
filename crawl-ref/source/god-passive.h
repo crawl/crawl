@@ -265,6 +265,9 @@ enum class passive_t
 
     // rF+
     resist_fire,
+
+    // Ely's guardian spirit
+    ely_guardian_spirit,
 };
 
 enum ru_interference
