@@ -1407,3 +1407,65 @@ x..<..x
 xx...xx
  xxxxx
 ENDMAP
+
+#############################################################
+# Jelly sewer
+# Up to 5 jellies (avg 3), plus typical small sewer mobs and endoplasms
+# There is usually a jiyva altar in addition to ~8 loot items.
+# Unfortunately, sewer is too early to mess around with slime walls.
+#
+NAME:   sewer_hellmonk_slimy_pipes
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+: item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
+MONS:   endoplasm w:25 / rat / ball python / giant cockroach / adder w:5 /\
+        river rat w:5 / frilled lizard / worm w:2
+KMONS:  2 = jelly
+SUBST:  . = W..
+NSUBST: - = 32 = 1W.. / * = W..
+NSUBST: ! = 60 = 1WW. / * = W.
+NSUBST: 2 = 1:2 / *= 2W
+NSUBST: d = 4:d / *= d..
+KFEAT:  B = altar_jiyva / altar_xom w:1
+: sewer_setup(_G)
+MAP
+              ccccc                                         
+             ccdddcc                                        
+           ccc!!2!!ccc                                      
+          cc!!!!!!!!!cc                                     
+         cc!!!!!c!!!!!ccc                                   
+  ccccc  c!!!ccccccc!!!!c                                   
+ cc!!!cc c!!ccccccccc!!!c                                   
+cc!!!!!cc!!!c!!!!ccccc!!ccccc                               
+c!!!c!!!c!!!!!!!!<cccc!!!2ddc                               
+c!!!cc!!!!!!!!cc!!!ccc!!!!dBc                               
+cc!!!cc!!!!!!!!cc!!ccc!!!2ddc                               
+ccc!!dc!!!!cc!ddc!!cc!!!!!ccc                               
+ccd!2cc!!!!!ccdcc!!!!!!cccc                                 
+ccd!cc!!!!!!!ccc!!!!!!cc                                    
+ccccc!!!!cc!!!!!!!!cccc                                     
+ccc!!!!!cccc!!!!!!cc                                        
+cc!!!!!ccddcc!!cccc                                         
+cc!!!cccc2!!c!!c                                            
+cc--cccccc!!!!!c                                            
+c---ccccccc!!!cc                                            
+c--cccccccccccc                                             
+c--ccccccccccccccc                                          
+c--cccccc--------c                                          
+c--cccccc--------c                                          
+c--cccccc--cccc--c                                          
+c--cccccc--cccc..c                                          
+c--cccccc--cccc..c                                          
+c--cccccc--cccc..c                                          
+c--cccccc--cccc..c                                          
+c---ccccc--cccc..c                                          
+cc--ccccc--cccc..c                                          
+ c---cccc--cccc..c                                          
+ c---------cccc..ccc                                        
+ cc--------ccww..wwc                                        
+  cccccccccccw....wc                                        
+            cwA..<wc                                        
+            cw....wc                                        
+            cwwwwwwc                                        
+            cccccccc                                      
+ENDMAP
