@@ -625,6 +625,7 @@ endif
 ifdef LINUXDEPLOY
   prefix=usr
   DESTDIR=appimage/
+  SAVEDIR=~/.crawl
 ifdef TILES
   export OUTPUT = ../../dcss-$(SRC_VERSION)-linux-tiles.$(uname_M).AppImage
 else
@@ -1963,8 +1964,8 @@ ifeq ($(LINUXDEPLOY),)
 	@exit 1
 endif
 	$(LINUXDEPLOY) --appdir appimage\
-                       --desktop-file appimage/usr/share/applications/$(xdg_name).desktop \
-                       --icon-file appimage/usr/share/icons/hicolor/scalable/apps/$(xdg_name).svg \
+                       --desktop-file appimage/usr/share/applications/$(GAME).desktop \
+                       --icon-file appimage/usr/share/icons/hicolor/scalable/apps/$(GAME).svg \
                        --output appimage
 
 clean-appimage:
