@@ -2752,6 +2752,10 @@ bool monster::go_frenzy(actor *source)
     if (!can_go_frenzy())
         return false;
 
+    // Wake sleeping monsters.
+    if (asleep())
+        behaviour_event(this, ME_ALERT, source, source->pos());
+
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
@@ -4987,10 +4991,8 @@ int monster::foe_distance() const
 
 /**
  * Can the monster suffer ENCH_FRENZY?
- *
- * @param check_sleep  Consider sleeping monsters as immune.
  */
-bool monster::can_go_frenzy(bool check_sleep) const
+bool monster::can_go_frenzy() const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -5000,7 +5002,7 @@ bool monster::can_go_frenzy(bool check_sleep) const
     if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
-    if (paralysed() || petrified() || petrifying() || check_sleep && asleep())
+    if (paralysed() || petrified() || petrifying())
         return false;
 
     if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
