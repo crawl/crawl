@@ -341,6 +341,7 @@ MAP
 ENDMAP
 
 # The actual portal vaults #####################################
+# Currently, the total weight is 180
 default-depth: Sewer
 
 ### KOBOLDS ################################################################
@@ -507,7 +508,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ### FROGS ##################################################################
-# Giant frogs, specifically. Combined weight 40.
+# Giant frogs, specifically.
 
 ############################################################################
 # Two fairly watery vaults with (usually) two bullfrogs in the end.
@@ -667,7 +668,7 @@ xxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxx
 ENDMAP
 
 ## BIG BADDIE (Purgy) ######################################################
-# Threat is mostly a single larger creature, often Purgy. Combined weight 40.
+# Threat is mostly a single larger creature, often Purgy.
 
 NAME:     sewer_big_baddie
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
@@ -900,7 +901,7 @@ xxx..cc.cc--xxx
 ENDMAP
 
 ### OTHER #####################################################################
-# Other sorts of Sewer maps, most weighted 10. (Total 68).
+# Other sorts of Sewer maps
 
 ###############################################################################
 # No longer requires crossing deep water to reach the center, but still provides
@@ -1007,9 +1008,9 @@ OOOnnnnnnnnnnnns.+.....+...%Wwc  c1....1cc$$$.1McccwwWWWgWWhWWWWW..W..WW.Www2.c
 OOOnnnnnnnnHnnsW.ccccccc...%*Wc  c2ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
 OOOnnnnnJnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.ccccWcccwwwc.c           cccc  cc1.WWwc
 OOOnnnnnnnnnJnsW.ccc.1cc...*WWc ccwWgcwc.cGwwWWWWWWcc1c                  ccccccc
-OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1...1c            
-OOOnnnnnnnnsssWWhWWc.1ccccccccwwwhW.1cwWWcWWW..2ccccccc            
-OOOnnnnnnnsssWWWWWWWWsswwwwwwwcWh..1ccccWWgW1.2cc                  
+OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1...1c
+OOOnnnnnnnnsssWWhWWc.1ccccccccwwwhW.1cwWWcWWW..2ccccccc
+OOOnnnnnnnsssWWWWWWWWsswwwwwwwcWh..1ccccWWgW1.2cc
 OOOnnnnnnnnssshWWWWc.2cccccccccW.1.cc  cch11.ccc
 OOOnnnnnnnnnnssWgccc12c  cwg22.11ccc    cccccc
 OOOnnnnnnnnnnnssWcccc1cc cgWcccccc
@@ -1333,7 +1334,7 @@ ENDMAP
 NAME:    kennysheep_sewer_church
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
-WEIGHT:  3
+WEIGHT:  5
 # Placed monsters.
 MONS:    kobold w:35 / shadow imp / ufetubus w:15 / nothing w:5
 # Randomly generated monsters.
@@ -1426,43 +1427,43 @@ NSUBST: d = 4:d / *= d..
 KFEAT:  B = altar_jiyva / altar_xom w:1
 : sewer_setup(_G)
 MAP
-              ccccc                                         
-             ccdddcc                                        
-           ccc!!2!!ccc                                      
-          cc!!!!!!!!!cc                                     
-         cc!!!!!c!!!!!ccc                                   
-  ccccc  c!!!ccccccc!!!!c                                   
- cc!!!cc c!!ccccccccc!!!c                                   
-cc!!!!!cc!!!c!!!!ccccc!!ccccc                               
-c!!!c!!!c!!!!!!!!<cccc!!!2ddc                               
-c!!!cc!!!!!!!!cc!!!ccc!!!!dBc                               
-cc!!!cc!!!!!!!!cc!!ccc!!!2ddc                               
-ccc!!dc!!!!cc!ddc!!cc!!!!!ccc                               
-ccd!2cc!!!!!ccdcc!!!!!!cccc                                 
-ccd!cc!!!!!!!ccc!!!!!!cc                                    
-ccccc!!!!cc!!!!!!!!cccc                                     
-ccc!!!!!cccc!!!!!!cc                                        
-cc!!!!!ccddcc!!cccc                                         
-cc!!!cccc2!!c!!c                                            
-cc--cccccc!!!!!c                                            
-c---ccccccc!!!cc                                            
-c--cccccccccccc                                             
-c--ccccccccccccccc                                          
-c--cccccc--------c                                          
-c--cccccc--------c                                          
-c--cccccc--cccc--c                                          
-c--cccccc--cccc..c                                          
-c--cccccc--cccc..c                                          
-c--cccccc--cccc..c                                          
-c--cccccc--cccc..c                                          
-c---ccccc--cccc..c                                          
-cc--ccccc--cccc..c                                          
- c---cccc--cccc..c                                          
- c---------cccc..ccc                                        
- cc--------ccww..wwc                                        
-  cccccccccccw....wc                                        
-            cwA..<wc                                        
-            cw....wc                                        
-            cwwwwwwc                                        
-            cccccccc                                      
+              ccccc
+             ccdddcc
+           ccc!!2!!ccc
+          cc!!!!!!!!!cc
+         cc!!!!!c!!!!!ccc
+  ccccc  c!!!ccccccc!!!!c
+ cc!!!cc c!!ccccccccc!!!c
+cc!!!!!cc!!!c!!!!ccccc!!ccccc
+c!!!c!!!c!!!!!!!!<cccc!!!2ddc
+c!!!cc!!!!!!!!cc!!!ccc!!!!dBc
+cc!!!cc!!!!!!!!cc!!ccc!!!2ddc
+ccc!!dc!!!!cc!ddc!!cc!!!!!ccc
+ccd!2cc!!!!!ccdcc!!!!!!cccc
+ccd!cc!!!!!!!ccc!!!!!!cc
+ccccc!!!!cc!!!!!!!!cccc
+ccc!!!!!cccc!!!!!!cc
+cc!!!!!ccddcc!!cccc
+cc!!!cccc2!!c!!c
+cc--cccccc!!!!!c
+c---ccccccc!!!cc
+c--cccccccccccc
+c--ccccccccccccccc
+c--cccccc--------c
+c--cccccc--------c
+c--cccccc--cccc--c
+c--cccccc--cccc..c
+c--cccccc--cccc..c
+c--cccccc--cccc..c
+c--cccccc--cccc..c
+c---ccccc--cccc..c
+cc--ccccc--cccc..c
+ c---cccc--cccc..c
+ c---------cccc..ccc
+ cc--------ccww..wwc
+  cccccccccccw....wc
+            cwA..<wc
+            cw....wc
+            cwwwwwwc
+            cccccccc
 ENDMAP
