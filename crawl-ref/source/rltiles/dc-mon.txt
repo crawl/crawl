@@ -612,14 +612,16 @@ halfling MONS_HALFLING
 demigod MONS_DEMIGOD
 
 ## Angels ('A')
-%rim 1
 %sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA
+%rim 1
 cherub MONS_CHERUB
 %sdir mon/undead
+%rim 0
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
+%rim 1
 mennas MONS_MENNAS
 
 ## Giants ('C')
@@ -788,6 +790,7 @@ acid_blob MONS_ACID_BLOB
 ## Kobolds ('K')
 %sdir mon/unique
 sonja MONS_SONJA
+%rim 0
 pikel MONS_PIKEL
 %sdir mon/humanoids
 kobold MONS_KOBOLD
@@ -796,7 +799,6 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')
 %sdir mon/unique
-%rim 0
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
@@ -1000,11 +1002,15 @@ robin MONS_ROBIN
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
 %sdir mon/humanoids
+%rim 0
 goblin MONS_GOBLIN
+%rim 1
 hobgoblin MONS_HOBGOBLIN
+%rim 0
 gnoll MONS_GNOLL
 gnoll_shaman MONS_GNOLL_SHAMAN
 gnoll_sergeant MONS_GNOLL_SERGEANT
+%rim 1
 boggart MONS_BOGGART
 
 ## Spriggans ('i')
