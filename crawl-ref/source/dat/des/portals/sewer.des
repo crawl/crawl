@@ -1042,6 +1042,7 @@ MONS:    kobold / adder / ball python / w:7 worm / w:7 endoplasm / \
          rat / river rat w:5
 SUBST:   . = W..
 SUBST:   X = xx.
+SUBST:   1 = 1.
 SUBST:   2 = 222..
 #      generate path to center
 SHUFFLE: BC/DE/GF/IH
@@ -1060,15 +1061,16 @@ SHUFFLE: yZzSsUuTgY
 SUBST:   y = w
 SUBST:   hVZzSsUuTgY = W
 #      loot
-SUBST:   e = !!!!?????
+SUBST:   e = !!???-----
+KITEM:  - = any potion / any scroll
 : kitem("? = " .. dgn.loot_potions)
 : kitem("! =  " .. dgn.loot_scrolls)
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
 xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
-xxxxxxxxxxcc...ccxxxcc...ccxxxxXXXxxx
-xxxxxxxxxxc.2...ccccc...2.cxxxx.1.Xxx
+xxxxxxxxxxcc.1.ccxxxcc...ccxxxxXXXxxx
+xxxxxxxxxxc.2...ccccc...2.cxxxx.11Xxx
 xxxxxxxxxxc..2..yyyyy..2..NPPP.e.1Xxx
 xxxxxxxxxxc...2.ccccc.2...cxxxX.e.Xxx
 xxxxxxxxxxcc...ccxxxcc...ccxxxxX.xxxx
@@ -1082,9 +1084,9 @@ cc..2..SSSS..<.WwwwwwW....ssss..2..cc
 cc...2.cccc.....ccBcc...e.cccc.2...cc
 xcc...ccxxcc.W.ccxCxcc.W.ccxxcc...ccx
 xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
-xxxcUcxxxxxxcwcxx1e.xxcwcxxxxxxcucxxx
+xxxcUcxxxxxxcwcxx1e1xxcwcxxxxxxcucxxx
 xxxcUcxxxxxxcwDE.e<e.FGwcxxxxxxcucxxx
-xxxcUcxxxxxxcwcxx.e1xxcwcxxxxxxcucxxx
+xxxcUcxxxxxxcwcxx1e1xxcwcxxxxxxcucxxx
 xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
 xcc...ccxxcc.W.ccxHxcc.W.ccxxcc...ccx
 cc...2.cccc.e...ccIcc.....cccc.2...cc
@@ -1098,8 +1100,8 @@ xxxxKxxxxxxccVccxxxxxcchccxxxxxxxxxxx
 xxxx.Xxxxxcc...ccxxxcc...ccxxxxxxxxxx
 xxX.e.Xxxxc...2.ccccc.2...cxxxxxxxxxx
 xxX1.e.MMML..2..YYYYY..2..cxxxxxxxxxx
-xxX.1.xxxxc.2...ccccc...2.cxxxxxxxxxx
-xxxXXXxxxxcc...ccxxxcc...ccxxxxxxxxxx
+xxX11.xxxxc.2...ccccc...2.cxxxxxxxxxx
+xxxXXXxxxxcc...ccxxxcc.1.ccxxxxxxxxxx
 xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
 xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
 ENDMAP
