@@ -903,24 +903,24 @@ ENDMAP
 # Other sorts of Sewer maps, most weighted 10. (Total 68).
 
 ###############################################################################
-# If you can get to the middle, there are four doors to try; two will give you
-# monsters, two will yield you treasure.
+# No longer requires crossing deep water to reach the center, but still provides
+# flight potions for later use.
 #
 NAME:     sewer_fruit_machine
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SHUFFLE:  QEDS
-SUBST:    Q = 4, E = 5, D : fgh, S = $
+SUBST:    Q = 222., E = 333., D : fgh, S = $
 NSUBST:   f = 1:f / *:'
 NSUBST:   g = 2:g / *:'
-NSUBST:   h = 3:h / *:'
-#       some random monsters I: bat or nothing
-NSUBST:   w = 4:" / *:w
+NSUBST:   h = 2:h / *:'
+#       some random monsters I: bat
+NSUBST:   w = 10 = "w / *:w
 KFEAT:    " = w
-KMONS:    " = bat / nothing
+KMONS:    " = bat
 COLOUR:   " = green
 #       some random monsters II: standard Sewers set
-NSUBST:   W = 4:? / *:W
+NSUBST:   W = 48 = ?WWW / *:W
 KFEAT:    ? = W
 KMONS:    ? = bat / frilled lizard / ball python / giant cockroach / \
               quokka / endoplasm w:4 / worm w:4 / adder w:2
@@ -928,18 +928,12 @@ COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
-MONS:     bat / frilled lizard / ball python / giant cockroach / \
-          quokka / endoplasm w:4 / worm w:4 / adder w:2
-SHUFFLE:  23
-MONS:     bat / nothing w:2
-MONS:     patrolling jackal
-MONS:     worm / nothing w:3
-MONS:     endoplasm / nothing w:2
-#       chances are good you'll find something to cross the deep water
+MONS:     worm w:2 / ball python / jackal / adder w:5 / river rat w:5
+MONS:     adder, river rat
+NSUBST:   ! = 36 = 1... / *:.
 SHUFFLE:  de
-: item(dgn.loot_scrolls)
+ITEM:    any scroll
 ITEM:    potion of flight ident:type
-#       possibly rather generous loot, if you get to the center
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
@@ -952,20 +946,20 @@ xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx
 xwwwwwwwwwww-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww-wwwwwwwwwwwx
 xwwwwwwwwwwwWwWW----WWWWWWWW-W-WWW-W-WW-WW-W-WWwWwwwwwwwwwwwx
 xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxx
-           xWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxx.1.xx
-           x-wWxxxxQQQQxxxDDDDxxxxxxxxWwWxxxxx-wWxxxx1xx....1xx
-           xWwWxxxxx++xxxxx++xxxxxxxxx-wWxxxxxWwW--W-.........x
-           x-wWW-W..............<xxxxxWw-xxxxxWwWWW-1....A...1x
-           x-wWWW--.............<xxxxxWwWxxxxxWwWW-.xxxx......x
+           xWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxx!!.xx
+           x-wWxxxxQQQQxxxDDDDxxxxxxxxWwWxxxxx-wWxxxx!xx!!...xx
+           xWwWxxxxx++xxxxx++xxxxxxxxx-wWxxxxxWwW--W-!!.......x
+           x-WWW-W..............<xxxxxWw-xxxxxWwWWW-!!........x
+           x-WWWW--.............<xxxxxWwWxxxxxWwWW-!xxxx.....Ax
            xWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxx-wWxxxxxxxxx.<xxx
            x-wWxxxxEEEExxxSSSSxxxxxxxx-w-xxxxxWw--xxxxxxxxxxx
    xxxxxxx x-wWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWw-xxxxxxxxxxxx
- xxx.d..dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWxxxxxxxxx.exx
-xx.3...d.dxxWwWWWWWW---WW-W-WW-W-WWWW--wWxxxxxWwWxxxxxxxx-22ex
-x.3....dxxxx-w-wwwwwwwwwwwwwwwwwwwwwww-w-xxxxxWwWWWWWWWW---2.ex
-xx3...xxxxxxWwWW-W-WWW-W-W-WWWWW-WWWWWWw-xxxxxWw-wwwwwwww---2.x
- x3-...-xxxx-w-xxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWWWWWWW-----..x
- xxx------xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx-.exx
+ xxx!d!!dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWxxxxxxxxx!exx
+xx!!!!!d!dxxWwWWWWWW---WW-W-WW-W-WWWW--wWxxxxxWwWxxxxxxxx-!!ex
+x!!!!!!dxxxx-w-wwwwwwwwwwwwwwwwwwwwwww-w-xxxxxWwWWWWWWWW---!!ex
+xx!!!!xxxxxxWwWW-W-WWW-W-W-WWWWW-WWWWWWw-xxxxxWw-wwwwwwww---!!x
+ x!-!!!-xxxx-w-xxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWWWWWWW-----!!x
+ xxx------xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx-!exx
 xxxxxx------WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxx
 xwwwwww--WWwwwWWWW-W-W-W-W-WWWW-W-W-W-W-WW---WWwwwwwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
