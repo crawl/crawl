@@ -1112,11 +1112,11 @@ bool targeter_radius::valid_aim(coord_def a)
 
 aff_type targeter_radius::is_affected(coord_def loc)
 {
-    if (loc == aim)
-        return AFF_YES;
-
-    if ((loc - origin).rdist() > range_max || (loc - origin).rdist() < range_min)
+    if ((loc - origin).rdist() > range_max
+        || (loc - origin).rdist() < range_min)
+    {
         return AFF_NO;
+    }
 
     if (!cell_see_cell(loc, origin, los))
         return AFF_NO;
@@ -1125,7 +1125,7 @@ aff_type targeter_radius::is_affected(coord_def loc)
 }
 
 targeter_flame_wave::targeter_flame_wave(int _range)
-    : targeter_radius(&you, LOS_NO_TRANS, _range)
+    : targeter_radius(&you, LOS_NO_TRANS, _range, 0, 1)
 { }
 
 aff_type targeter_flame_wave::is_affected(coord_def loc)
@@ -1134,8 +1134,6 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     if (base_aff == AFF_NO)
         return AFF_NO;
     const int dist = (loc - origin).rdist();
-    if (dist == 0)
-        return AFF_NO;
     if (dist == 1)
         return AFF_YES;
     if (you.props.exists(FLAME_WAVE_KEY)

@@ -1291,15 +1291,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_HAILSTORM:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range, 0, 2);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range);
+        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range, 0, 1);
     case SPELL_STARBURST:
         return make_unique<targeter_starburst>(&you, range, pow);
     case SPELL_CORPSE_ROT:
         return make_unique<targeter_corpse_rot>();
     case SPELL_IRRADIATE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?
-        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1309,7 +1310,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
     case SPELL_DAZZLING_FLASH:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
+                                                  0, 1);
 
     // at player's position only but not a selfench; most transmut spells go here:
     case SPELL_SPIDER_FORM:
@@ -1329,9 +1331,10 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     // LOS radius:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 0, 1);
     case SPELL_POLAR_VORTEX:
-        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS,
+                                            POLAR_VORTEX_RADIUS, 0, 1);
     case SPELL_SHATTER:
         return make_unique<targeter_shatter>(&you); // special version that affects walls
     case SPELL_IGNITE_POISON: // many cases
@@ -1365,11 +1368,10 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2);
-    case SPELL_FOXFIRE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1);
     case SPELL_BATTLESPHERE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 3);
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2, 0, 1);
+    case SPELL_FOXFIRE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
     // directions, so this targeter is not entirely accurate.
     case SPELL_MALIGN_GATEWAY:
