@@ -1294,7 +1294,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range);
     case SPELL_STARBURST:
         return make_unique<targeter_starburst>(&you, range, pow);
-    case SPELL_CORPSE_ROT: // maybe should also highlight affected corpses? # of clouds depends on them
+    case SPELL_CORPSE_ROT:
+        return make_unique<targeter_corpse_rot>();
     case SPELL_IRRADIATE:
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?

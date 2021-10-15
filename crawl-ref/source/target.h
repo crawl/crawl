@@ -224,6 +224,14 @@ public:
     aff_type is_affected(coord_def loc) override;
 };
 
+
+class targeter_corpse_rot : public targeter_radius
+{
+public:
+    targeter_corpse_rot();
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_thunderbolt : public targeter
 {
 public:

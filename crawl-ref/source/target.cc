@@ -13,6 +13,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "items.h"
 #include "libutil.h"
 #include "los-def.h"
 #include "losglobal.h"
@@ -1115,6 +1116,36 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
         return AFF_YES;
     }
     return AFF_MAYBE;
+}
+
+targeter_corpse_rot::targeter_corpse_rot()
+    : targeter_radius(&you, LOS_NO_TRANS, 2, 0, 1)
+{ }
+
+aff_type targeter_corpse_rot::is_affected(coord_def loc)
+{
+    const int dist = (loc - origin).rdist();
+    int num_corpses = 0;
+    for (radius_iterator ri(origin, LOS_NO_TRANS); ri; ++ri)
+        for (stack_iterator si(*ri); si; ++si)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+                num_corpses++;
+
+    if (targeter_radius::is_affected(loc) == AFF_NO
+        || !num_corpses
+        || cloud_at(loc))
+    {
+        return AFF_NO;
+    }
+
+    if (dist > 1)
+    {
+        return num_corpses >= 24 ? AFF_YES :
+               num_corpses > 4   ? AFF_MAYBE
+                                 : AFF_NO;
+    }
+    else
+        return num_corpses >= 8 ? AFF_YES : AFF_MAYBE;
 }
 
 aff_type targeter_shatter::is_affected(coord_def loc)
