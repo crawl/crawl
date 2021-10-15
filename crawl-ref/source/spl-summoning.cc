@@ -1144,13 +1144,16 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
                      "and a portal to some otherworldly place is opened!");
 }
 
-spret cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
+spret cast_malign_gateway(actor * caster, int pow, god_type god,
+                          bool fail, bool test)
 {
     if (caster->is_player() && rude_stop_summoning_prompt())
         return spret::abort;
 
     coord_def point = find_gateway_location(caster);
     bool success = point != coord_def(0, 0);
+    if (test)
+        return success ? spret::success : spret::abort;
 
     bool is_player = caster->is_player();
 
@@ -1171,10 +1174,6 @@ spret cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 
         return spret::success;
     }
-
-    // We don't care if monsters fail to cast it.
-    if (is_player)
-        mpr("A gateway cannot be opened in this cramped space!");
 
     return spret::abort;
 }

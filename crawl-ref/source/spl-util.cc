@@ -1359,6 +1359,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the dungeon can only cope with one malign gateway"
                     " at a time.";
         }
+        if (temp && cast_malign_gateway(&you, 0, GOD_NO_GOD, false, true)
+                    == spret::abort)
+        {
+            return "you need more open space to create a gateway.";
+        }
         break;
 
     case SPELL_SUMMON_FOREST:
