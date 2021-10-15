@@ -2372,7 +2372,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_manifold_assault(powc, fail);
 
     case SPELL_CORPSE_ROT:
-        return cast_corpse_rot(fail);
+        return cast_corpse_rot(powc, fail);
 
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(beam.target, fail);

@@ -1416,7 +1416,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_CORPSE_ROT:
-        if (temp && corpse_rot(&you, false) == spret::abort)
+        if (temp && corpse_rot(&you, 0, false) == spret::abort)
             return "there is nothing fresh enough to decay nearby.";
         // fallthrough
     case SPELL_POISONOUS_VAPOURS:
