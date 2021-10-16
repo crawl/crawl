@@ -1257,7 +1257,12 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     return spret::success;
 }
 
-spret cast_golubrias_passage(const coord_def& where, bool fail)
+int golubria_fuzz_range()
+{
+    return orb_limits_translocation() ? 4 : 2;
+}
+
+spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
 {
     if (player_in_branch(BRANCH_GAUNTLET))
     {
@@ -1266,12 +1271,25 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         return spret::abort;
     }
 
+    if (grid_distance(where, you.pos())
+        > spell_range(SPELL_GOLUBRIAS_PASSAGE, pow))
+    {
+        mpr("That's out of range!");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(where))
+    {
+        mpr("You can't create a passage there!");
+        return spret::abort;
+    }
+
     // randomize position a bit to make it not as useful to use on monsters
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
     int tries2 = 0;
     // Less accurate when the orb is interfering.
-    const int range = orb_limits_translocation() ? 4 : 2;
+    const int range = golubria_fuzz_range();
     coord_def randomized_where = where;
     coord_def randomized_here = you.pos();
     do
