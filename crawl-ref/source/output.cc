@@ -2482,13 +2482,13 @@ static vector<formatted_string> _get_overview_resistances(
     if (archmagi)
         out += _resist_composer("Archmagi", cwidth, archmagi) + "\n";
 
-    const int anger_rate = you.angry(calc_unid);
-    if (anger_rate && !you.stasis())
-        out += make_stringf("Rage     %d%%\n", anger_rate);
+    const int rclarity = you.clarity(calc_unid);
+    if (rclarity)
+        out += _resist_composer("Clarity", cwidth, rclarity) + "\n";
 
-    const int rclar = you.clarity(calc_unid);
-    if (rclar)
-        out += _resist_composer("Clarity", cwidth, rclar) + "\n";
+    const int anger_rate = you.angry(calc_unid);
+    if (anger_rate && !you.stasis() && !rclarity && !you.is_lifeless_undead())
+        out += make_stringf("Rage     %d%%\n", anger_rate);
 
     // Fo don't need a reminder that they can't teleport
     if (!you.stasis())
