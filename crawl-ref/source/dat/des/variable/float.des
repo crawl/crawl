@@ -4904,7 +4904,7 @@ ENDMAP
 NAME:   dreamdust_black_sun_cult
 TAGS:   transparent no_monster_gen
 ORIENT: float
-DEPTH:  D:13-, Zot, !Zot:$
+DEPTH:  D:13-, Zot
 COLOUR: bm = red
 TILE:   m = dngn_transparent_wall_red
 FTILE:  -mA1 = floor_volcanic
@@ -4912,7 +4912,7 @@ MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
 NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
 : if you.in_branch("D") then
-KMONS:  1 = black sun
+KMONS:  1 = demonspawn black sun
 KMONS:  2 = sun demon
 KMONS:  3 = small abomination / large abomination
 KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
@@ -4923,7 +4923,7 @@ KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
             any weapon ego:draining
 : else
 KMONS:  1 = orb of fire
-KMONS:  2 = black sun
+KMONS:  2 = demonspawn black sun
 KMONS:  3 = draconian scorcher / draconian monk
 KITEM:  1 = manual of fire magic / manual of necromancy, \
             randbook disc:fire disc2:necromancy spells:starburst \
@@ -4945,34 +4945,33 @@ MAP
 ENDMAP
 
 NAME:   dreamdust_cat_pyramid
-TAGS:   no_monster_gen transparent
-DEPTH:  Crypt, !Crypt:$, Depths, !Depths:$
+TAGS:   no_monster_gen transparent no_rotate
+DEPTH:  Crypt, Depths
 ORIENT: float
+# Offerings of gold, valuable items, or good potions to the Cat God.
+: kitem("d = star_item w:100 / " .. dgn.loot_potions)
+MONS:   sphinx
+KFEAT:  ap = granite_statue
+NSUBST: 1 = 2=1 / 1--
 TILE:   c = wall_tomb
 COLOUR: c = yellow
-FTILE:  -S*1+ = floor_sandstone
-KFEAT:  S = granite_statue
-TILE:   S = dngn_sarcophagus_pedestal_left
-TILE:   G = dngn_statue_cat
-MONS:   sphinx
-# Offerings
-KITEM:  $ = gold, any potion / nothing
-# Grave goods
-KITEM:  * = gold, star_item
+TILE:   p = dngn_sarcophagus_pedestal_left
+TILE:   aG = dngn_statue_cat
+FTILE:  -d$1+ap = floor_sandstone
 MAP
-        .
-       .c.
-      .ccc.
-     .cc*cc.
-    .cc*S*cc.
-   .cc1---1cc.
-  .cc-------cc.
- .ccccc+++ccccc.
-.ccccccG.Gcccccc.
- ......$.$......
-      .G.G.
-      .$.$.
-      .....
+       ...
+      ..c..
+     ..ccc..
+    ..ccdcc..
+   ..ccdpdcc..
+  ..cc1$$$1cc..
+ ..cc--111--cc..
+..cccca---acccc..
+.cccccc+++cccccc.
+......G...G......
+     .......
+     .G...G.
+     ...@...
 ENDMAP
 
 
@@ -10323,46 +10322,47 @@ ENDMAP
 
 NAME:    dreamdust_experimentation
 TAGS:    no_monster_gen no_item_gen
-ORIENT:  float
 DEPTH:   D:13-, Depths
+ORIENT:  float
 KPROP:   23 = no_tele_into
+KMONS:   1 = wizard
+KFEAT:   t = demonic_tree
+: item(dgn.loot_potions .. " / potion of mutation w:40")
+KMONS:   p = human perm_ench:berserk generate_awake \
+             / human perm_ench:wretched generate_awake \
+             / human perm_ench:confusion generate_awake \
+             / human perm_ench:blind generate_awake
+KMONS:   q = felid perm_ench:berserk generate_awake \
+             / octopode perm_ench:wretched generate_awake \
+             / spriggan perm_ench:confusion generate_awake ; nothing \
+             / minotaur perm_ench:blind generate_awake ; nothing
+: if you.in_branch("D") then
+KMONS:   2 = shapeshifter / large abomination
+KMONS:   3 = ugly thing
+NSUBST:  - = 1 / 2=1- / 2=2 / 2=2- / -, d = 2=d / 4=d-
+: else
+KMONS:   2 = large abomination / glowing shapeshifter w:20
+KMONS:   3 = very ugly thing
+NSUBST:  - = 2=1 / 4=1- / 3=2 / 6=2- / -
+: end
+# Human (shapeshifters and large abominations) or animal (ugly things)
+# experimentation.
+SHUFFLE: 2p / 3q
 COLOUR:  c = white
 TILE:    c = wall_brick_white
-FTILE:   -+G23d = floor_rough_white
+FTILE:   -+G123pqd = floor_rough_white
 TILE:    G = dngn_statue_demonic_bust
-KFEAT:   t = demonic_tree
-ITEM:    potion of ambrosia / potion of berserk rage / \
-         potion of degeneration / potion of haste / \
-         potion of invisibility / potion of lignification / \
-         potion of might / potion of mutation w:30
-KMONS:   1 = wizard
-: if you.in_branch("D") then
-NSUBST:  - = 2:1 / -
-: else
-NSUBST:  - = 2=1 / 8=1- / -
-: end
-SHUFFLE: 23
-: if crawl.coinflip() then
-# Human Experimentation
-KMONS:   2 = glowing shapeshifter / small abomination
-KMONS:   3 = human perm_ench:berserk perm_ench:wretched / \
-             human perm_ench:confusion perm_ench:wretched
-: else
-# Animal Experimentation
-KMONS:   2 = ugly thing / very ugly thing
-KMONS:   3 = glowing shapeshifter / large abomination
-: end
 MAP
 cccccccc
 cddddddc
 ccc++ccc
 cG----Gc
 ccc--ccc
-c2n--n2c
+cpn--npc
 ccc--ccc
-c2n--n3c
+cpn--npc
 ccc--ccc
-c3n--n3c
+cpn--npc
 ccc--ccc
 ccc++ccc
 cG----Gc
