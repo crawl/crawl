@@ -140,6 +140,16 @@ public:
     bool can_affect_unseen() override { return true; }; // show empty space outside LOS
 };
 
+class targeter_passage : public targeter_smite
+{
+public:
+    targeter_passage(int _range, int _fuzzrange);
+    aff_type is_affected(coord_def loc) override;
+private:
+    int fuzzrange;
+};
+
+
 class targeter_reach : public targeter
 {
 public:

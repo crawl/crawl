@@ -1397,6 +1397,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_bog>(&you, pow);
     case SPELL_FLAME_WAVE:
         return make_unique<targeter_flame_wave>(range);
+    case SPELL_GOLUBRIAS_PASSAGE:
+        return make_unique<targeter_passage>(range, golubria_fuzz_range());
 
     default:
         break;

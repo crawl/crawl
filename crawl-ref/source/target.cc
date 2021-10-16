@@ -787,6 +787,34 @@ bool targeter_airstrike::valid_aim(coord_def a)
     return true;
 }
 
+static bool _passage_valid(coord_def p)
+{
+    return in_bounds(p)
+           && env.grid(p) == DNGN_FLOOR
+           && !monster_at(p)
+           && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
+}
+
+targeter_passage::targeter_passage(int _range, int _fuzzrange)
+    : targeter_smite(&you, _range),
+      fuzzrange(_fuzzrange)
+{ }
+
+aff_type targeter_passage::is_affected(coord_def loc)
+{
+    if (!valid_aim(aim))
+        return AFF_NO;
+
+    if (_passage_valid(loc)
+        && (grid_distance(loc, origin) <= fuzzrange
+            || grid_distance(loc, aim) <= fuzzrange))
+    {
+        return AFF_MAYBE;
+    }
+
+    return AFF_NO;
+}
+
 targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
     targeter_smite(act, ran, 1, 1, true, nullptr),
     pow(power)
