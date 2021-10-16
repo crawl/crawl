@@ -472,6 +472,11 @@ static bool _status_filter(string key, string /*body*/)
     return !strip_suffix(lowercase(key), " status");
 }
 
+static bool _mutation_filter(string key, string /*body*/)
+{
+    return !strip_suffix(lowercase(key), " mutation");
+}
+
 
 static void _recap_mon_keys(vector<string> &keys)
 {
@@ -1267,6 +1272,9 @@ static const vector<LookupType> lookup_types = {
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud, lookup_type::db_suffix),
     LookupType('T', "status", nullptr, _status_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_generic, lookup_type::db_suffix),
+    LookupType('U', "mutation", nullptr, _mutation_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_generic, lookup_type::db_suffix),
 };
