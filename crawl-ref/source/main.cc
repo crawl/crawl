@@ -89,7 +89,6 @@
 #include "libutil.h"
 #include "lookup-help.h"
 #include "luaterp.h"
-#include "lookup-help.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "map-knowledge.h"
