@@ -235,8 +235,14 @@ statue_ancient_hero
 statue_ancient_evil
 %syn DNGN_STATUE_ANCIENT_EVIL
 statue_triangle
+%weight 3
+%syn DNGN_STATUE_MAW
+statue_maw
+%syn DNGN_STATUE_TENTACLES
+statue_tentacles
 
 # damaged statues
+%weight 1
 crumbled_column_1 DNGN_CRUMBLED_COLUMN
 crumbled_column_2
 crumbled_column_3
