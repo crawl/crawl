@@ -23,6 +23,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
 #include "spl-other.h"
+#include "spl-transloc.h"
 #include "stringutil.h"
 #include "terrain.h"
 
@@ -787,17 +788,8 @@ bool targeter_airstrike::valid_aim(coord_def a)
     return true;
 }
 
-static bool _passage_valid(coord_def p)
-{
-    return in_bounds(p)
-           && env.grid(p) == DNGN_FLOOR
-           && !monster_at(p)
-           && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
-}
-
-targeter_passage::targeter_passage(int _range, int _fuzzrange)
-    : targeter_smite(&you, _range),
-      fuzzrange(_fuzzrange)
+targeter_passage::targeter_passage(int _range)
+    : targeter_smite(&you, _range)
 { }
 
 aff_type targeter_passage::is_affected(coord_def loc)
@@ -805,10 +797,11 @@ aff_type targeter_passage::is_affected(coord_def loc)
     if (!valid_aim(aim))
         return AFF_NO;
 
-    if (_passage_valid(loc))
+    if (golubria_valid_cell(loc))
     {
-        bool p1 = grid_distance(loc, origin) <= fuzzrange;
-        bool p2 = grid_distance(loc, aim) <= fuzzrange && loc != you.pos();
+        bool p1 = grid_distance(loc, origin) <= golubria_fuzz_range();
+        bool p2 = grid_distance(loc, aim) <= golubria_fuzz_range()
+                  && loc != you.pos();
 
         if (p1 && p2)
             return AFF_MULTIPLE;

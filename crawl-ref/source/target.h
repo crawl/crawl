@@ -143,12 +143,9 @@ public:
 class targeter_passage : public targeter_smite
 {
 public:
-    targeter_passage(int _range, int _fuzzrange);
+    targeter_passage(int _range);
     aff_type is_affected(coord_def loc) override;
-private:
-    int fuzzrange;
 };
-
 
 class targeter_reach : public targeter
 {

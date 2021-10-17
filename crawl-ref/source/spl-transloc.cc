@@ -1262,6 +1262,14 @@ int golubria_fuzz_range()
     return orb_limits_translocation() ? 4 : 2;
 }
 
+bool golubria_valid_cell(coord_def p)
+{
+    return in_bounds(p)
+           && env.grid(p) == DNGN_FLOOR
+           && !monster_at(p)
+           && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
+}
+
 spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
 {
     if (player_in_branch(BRANCH_GAUNTLET))
@@ -1299,11 +1307,7 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         randomized_where.x += random_range(-range, range);
         randomized_where.y += random_range(-range, range);
     }
-    while ((!in_bounds(randomized_where)
-            || env.grid(randomized_where) != DNGN_FLOOR
-            || monster_at(randomized_where)
-            || !you.see_cell(randomized_where)
-            || you.trans_wall_blocking(randomized_where)
+    while ((!golubria_valid_cell(randomized_where)
             || randomized_where == you.pos())
            && tries < 100);
 
@@ -1314,11 +1318,7 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         randomized_here.x += random_range(-range, range);
         randomized_here.y += random_range(-range, range);
     }
-    while ((!in_bounds(randomized_here)
-            || env.grid(randomized_here) != DNGN_FLOOR
-            || monster_at(randomized_here)
-            || !you.see_cell(randomized_here)
-            || you.trans_wall_blocking(randomized_here)
+    while ((!golubria_valid_cell(randomized_here)
             || randomized_here == randomized_where)
            && tries2 < 100);
 
