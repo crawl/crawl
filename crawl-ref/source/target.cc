@@ -805,11 +805,15 @@ aff_type targeter_passage::is_affected(coord_def loc)
     if (!valid_aim(aim))
         return AFF_NO;
 
-    if (_passage_valid(loc)
-        && (grid_distance(loc, origin) <= fuzzrange
-            || grid_distance(loc, aim) <= fuzzrange))
+    if (_passage_valid(loc))
     {
-        return AFF_MAYBE;
+        bool p1 = grid_distance(loc, origin) <= fuzzrange;
+        bool p2 = grid_distance(loc, aim) <= fuzzrange && loc != you.pos();
+
+        if (p1 && p2)
+            return AFF_MULTIPLE;
+        else if (p1 || p2)
+            return AFF_MAYBE;
     }
 
     return AFF_NO;
@@ -1144,6 +1148,16 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     return AFF_MAYBE;
 }
 
+static int _corpse_rot_cells(coord_def p, int radius = 1)
+{
+    int valid_cells = 0;
+    for (radius_iterator ri(p, radius, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        if (!cell_is_solid(*ri) && !cloud_at(*ri))
+            valid_cells++;
+
+    return valid_cells;
+}
+
 targeter_corpse_rot::targeter_corpse_rot()
     : targeter_radius(&you, LOS_NO_TRANS, 2, 0, 1)
 { }
@@ -1166,12 +1180,12 @@ aff_type targeter_corpse_rot::is_affected(coord_def loc)
 
     if (dist > 1)
     {
-        return num_corpses >= 24 ? AFF_YES :
-               num_corpses > 4   ? AFF_MAYBE
-                                 : AFF_NO;
+        return num_corpses >= _corpse_rot_cells(origin, dist) ? AFF_YES :
+               2 * num_corpses > _corpse_rot_cells(origin)    ? AFF_MAYBE
+                                                              : AFF_NO;
     }
     else
-        return num_corpses >= 8 ? AFF_YES : AFF_MAYBE;
+        return num_corpses >= _corpse_rot_cells(origin) ? AFF_YES : AFF_MAYBE;
 }
 
 aff_type targeter_shatter::is_affected(coord_def loc)
