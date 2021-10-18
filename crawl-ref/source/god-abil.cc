@@ -1991,14 +1991,20 @@ static void _lugonu_warp_area(int pow)
 void lugonu_bend_space()
 {
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
-    const bool area_warp = random2(pow) > 9;
+    const bool pre_warp = random2(pow) > 9;
+    const bool post_warp = random2(pow) > 9;
 
-    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
+    mprf("Space bends %saround you!", pre_warp && post_warp ? "violently " :
+                                      pre_warp || post_warp ? "sharply "
+                                                            : "");
 
-    if (area_warp)
+    if (pre_warp)
         _lugonu_warp_area(pow);
 
     uncontrolled_blink(true);
+
+    if (post_warp)
+        _lugonu_warp_area(pow);
 }
 
 void cheibriados_time_bend(int pow)
