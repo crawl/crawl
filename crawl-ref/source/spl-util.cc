@@ -1272,6 +1272,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.stasis())
             return "your stasis prevents you from teleporting.";
 
+        // Distinct from no_tele - can still be forcibly blinked.
+        if (temp && you.duration[DUR_BLINK_COOLDOWN])
+            return "you are still too unstable to blink.";
+
         if (temp && you.no_tele(false, false, true))
             return lowercase_first(you.no_tele_reason(false, true));
         break;

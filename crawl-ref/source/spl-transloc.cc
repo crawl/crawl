@@ -705,7 +705,7 @@ spret controlled_blink(bool safe_cancel, dist *target)
  * @return                  Whether the spell was successfully cast, aborted,
  *                          or miscast.
  */
-spret cast_blink(bool fail)
+spret cast_blink(int pow, bool fail)
 {
     // effects that cast the spell through the player, I guess (e.g. xom)
     if (you.no_tele(false, false, true))
@@ -716,6 +716,11 @@ spret cast_blink(bool fail)
 
     fail_check();
     uncontrolled_blink();
+
+    int cooldown = div_rand_round(50 - pow, 10);
+    if (cooldown)
+        you.increase_duration(DUR_BLINK_COOLDOWN, 1 + random2(2) + cooldown);
+
     return spret::success;
 }
 

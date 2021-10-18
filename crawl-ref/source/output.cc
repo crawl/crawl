@@ -1097,6 +1097,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SLOW,
         STATUS_SPEED,
         DUR_DEATHS_DOOR,
+        DUR_BLINK_COOLDOWN,
         DUR_BERSERK_COOLDOWN,
         DUR_EXHAUSTED,
         DUR_WORD_OF_CHAOS_COOLDOWN,

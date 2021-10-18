@@ -116,7 +116,9 @@ destination.
 %%%%
 Evoke Blink ability
 
-Randomly translocates the user a short distance.
+Randomly translocates the user a short distance. Translocating in this way
+destabilises the user temporarily, preventing consecutive blinks for a
+short period of time depending on Evocations skill.
 %%%%
 Evoke Berserk Rage ability
 

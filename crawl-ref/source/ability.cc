@@ -1697,6 +1697,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_EVOKE_BLINK:
+        if (you.duration[DUR_BLINK_COOLDOWN])
+        {
+            if (!quiet)
+                mpr("You are still too unstable to blink.");
+            return false;
+        }
+        // fallthrough
     case ABIL_BLINKBOLT:
     {
         const string no_tele_reason = you.no_tele_reason(false, true);
@@ -2309,7 +2316,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
-        return cast_blink(fail);
+        return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
 
     case ABIL_EVOKE_ASMODEUS:
         fail_check();

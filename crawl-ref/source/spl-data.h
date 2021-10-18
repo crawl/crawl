@@ -451,7 +451,7 @@ static const struct spell_desc spelldata[] =
     spschool::translocation,
     spflag::escape | spflag::selfench | spflag::utility,
     2,
-    0,
+    50,
     -1, -1,
     2, 0,
     TILEG_BLINK,
