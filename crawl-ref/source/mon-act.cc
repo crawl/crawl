@@ -245,8 +245,6 @@ static bool _swap_monsters(monster& mover, monster& moved)
              moved.name(DESC_THE).c_str());
     }
 
-    _escape_water_hold(mover);
-
     _handle_manticore_barbs(mover);
     _handle_manticore_barbs(moved);
 

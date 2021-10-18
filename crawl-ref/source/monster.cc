@@ -5517,6 +5517,9 @@ bool monster::swap_with(monster* other)
     clear_invalid_constrictions(true);
     other->clear_invalid_constrictions(true);
 
+    clear_far_engulf();
+    other->clear_far_engulf();
+
     return true;
 }
 
