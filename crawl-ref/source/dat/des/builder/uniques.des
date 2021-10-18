@@ -224,10 +224,10 @@ NAME:   uniq_psyche
 DEPTH:  D:8-12
 : place_unique(_G, "Psyche")
 
-NAME:   uniq_purgy
+NAME:   uniq_pargi
 DEPTH:  D:3-4
 WEIGHT: 1
-: place_unique(_G, "Purgy")
+: place_unique(_G, "Pargi")
 
 NAME:   uniq_robin
 DEPTH:  D:2-4

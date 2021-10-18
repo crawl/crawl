@@ -222,7 +222,7 @@ function arena_sprint_get_monster_set(round, boss)
             mon_set = {
                 "place:D:3 / place:D:5 / w:4 sigmund / w:2 jessica / w:2 terence",
                 "goblin / hobgoblin / kobold / kobold brigand / ijyb w:6 / pikel w:4",
-                "rat / quokka / river rat / w:2 hell rat / w:6 purgy",
+                "rat / quokka / river rat / w:2 hell rat / w:6 pargi",
                 "ball python / adder w:15 / water moccasin w:5",
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",

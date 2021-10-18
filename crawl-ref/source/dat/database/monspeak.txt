@@ -5749,15 +5749,15 @@ VISUAL:@The_monster@ sucks @possessive@ thumb.
 @The_monster@ whispers @to_foe@, "Hold me, thrill me, kiss me, kill me."
 ## END Psyche ##
 %%%%
-############ PURGY ### A teased troll
-Purgy
+############ PARGI ### A teased troll
+Pargi
 
-@_Purgy_common_@
+@_Pargi_common_@
 
 w:5
-@_Purgy_rare_@
+@_Pargi_rare_@
 %%%%
-_Purgy_common_
+_Pargi_common_
 
 @The_monster@ snarls @at_foe@, "Go! Away!"
 
@@ -5767,7 +5767,7 @@ VISUAL:@The_monster@ looks around nervously.
 
 @The_monster@ snarls @at_foe@, "My home! Leave!"
 %%%%
-_Purgy_rare_
+_Pargi_rare_
 
 VISUAL:@The_monster@ clenches @possessive@ teeth.
 

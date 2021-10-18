@@ -843,7 +843,7 @@ enum monster_type                      // env.mons[].type
     MONS_DISSOLUTION,
     MONS_KIRKE,
     MONS_GRUM,
-    MONS_PURGY,
+    MONS_PARGI,
     MONS_MENKAURE,
     MONS_DUVESSA,
     MONS_DOWAN,
