@@ -146,6 +146,7 @@ static const form_entry formdata[] =
     { { "draining attack", "Your unarmed attacks are suffused with negative energy."},
       { "torment immunity", "You are immune to unholy pain and torment."},
       { "", "Your necromantic spells are more powerful." },
+      { "no potions", "<lightred>You cannot drink.</lightred>" },
     }
 },
 

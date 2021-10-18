@@ -797,10 +797,6 @@ static vector<string> _get_mutations(bool terse)
 
     }
 
-    // This gets DUR_NO_POTIONS as well as necromutation, is that good?
-    if (!you.can_drink(true) && you.can_drink(false))
-        result.push_back(terse ? "no potions" : _badmut("You cannot drink.")); // same as MUT_NO_DRINK
-
     //pseudo-forms that come from species
 
     if (you.has_mutation(MUT_VAMPIRISM))
