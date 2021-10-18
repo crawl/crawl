@@ -5,7 +5,11 @@
 
 #pragma once
 
+#include <string>
+
 #include "lookup-help-type.h"
+
+using std::string;
 
 void keyhelp_query_descriptions();
 
