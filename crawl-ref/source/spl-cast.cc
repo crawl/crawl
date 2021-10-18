@@ -1365,7 +1365,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_CONJURE_BALL_LIGHTNING:
     case SPELL_SUMMON_GUARDIAN_GOLEM:
     case SPELL_CALL_IMP:
-    case SPELL_SHADOW_CREATURES: // TODO: dbl check packs
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
