@@ -465,7 +465,7 @@ bool spell_is_direct_attack(spell_type spell)
     if (spell_harms_target(spell))
     {
         // spell school exceptions
-        if (   spell == SPELL_VIOLENT_UNRAVELLING  // hex
+        if (spell == SPELL_VIOLENT_UNRAVELLING  // hex
             || spell == SPELL_FORCE_LANCE // transloc
             || spell == SPELL_GRAVITAS
             || spell == SPELL_BLINKBOLT
@@ -492,7 +492,7 @@ bool spell_is_direct_attack(spell_type spell)
     }
 
     // The area harm check has too many false positives to bother with here
-    if (   spell == SPELL_ISKENDERUNS_MYSTIC_BLAST
+    if (spell == SPELL_ISKENDERUNS_MYSTIC_BLAST
         || spell == SPELL_OZOCUBUS_REFRIGERATION
         || spell == SPELL_SYMBOL_OF_TORMENT
         || spell == SPELL_SHATTER
@@ -1436,7 +1436,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case  SPELL_DRAGON_CALL:
+    case SPELL_DRAGON_CALL:
         if (temp && (you.duration[DUR_DRAGON_CALL]
                      || you.duration[DUR_DRAGON_CALL_COOLDOWN]))
         {
