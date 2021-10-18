@@ -413,7 +413,7 @@ targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)
  * @return      Whether, to the player's knowledge, there's a valid target for
  *              Violent Unravelling at the given coordinate.
  */
-static bool unravelling_explodes_at(const coord_def c)
+static bool _unravelling_explodes_at(const coord_def c)
 {
     if (you.pos() == c && player_is_debuffable())
         return true;
@@ -436,12 +436,27 @@ bool targeter_unravelling::set_aim(coord_def a)
 
     bolt explosion_beam = beam;
     set_explosion_target(beam);
-    if (unravelling_explodes_at(beam.target))
+    if (_unravelling_explodes_at(beam.target))
         min_expl_rad = 1;
     else
         min_expl_rad = 0;
 
     set_explosion_aim(beam);
+
+    return true;
+}
+
+bool targeter_unravelling::valid_aim(coord_def a)
+{
+    if (!targeter_beam::valid_aim(a))
+        return false;
+
+    const monster* mons = monster_at(a);
+    if (mons && you.can_see(*mons) && !_unravelling_explodes_at(a))
+    {
+        return notify_fail(mons->name(DESC_THE) + " has no enchantments to "
+                           "unravel.");
+    }
 
     return true;
 }

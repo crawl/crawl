@@ -73,6 +73,7 @@ class targeter_unravelling : public targeter_beam
 public:
     targeter_unravelling(const actor *act, int range, int pow);
     bool set_aim(coord_def a) override;
+    bool valid_aim(coord_def a) override;
 };
 
 class targeter_view : public targeter
