@@ -845,10 +845,18 @@ static void _print_stats_noise(int x, int y)
 
 static void _print_stats_gold(int x, int y)
 {
-    CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF("Gold:");
-    CGOTOXY(x+6, y, GOTO_STAT);
+    if (!_is_using_small_layout())
+    {
+        CGOTOXY(x, y, GOTO_STAT);
+        CPRINTF("Gold:");
+        CGOTOXY(x+6, y, GOTO_STAT);
+    }
+    else
+    {
+        CGOTOXY(3, 2, GOTO_STAT);
+        CPRINTF("Gd ");
+    }
     if (you.duration[DUR_GOZAG_GOLD_AURA])
         textcolour(LIGHTBLUE);
     else
@@ -1462,7 +1470,7 @@ static void _redraw_title()
             NOWRAP_EOL_CPRINTF("%s", piety.c_str());
         }
         clear_to_end_of_line();
-        if (!small_layout && you_worship(GOD_GOZAG))
+        if (you_worship(GOD_GOZAG))
         {
             // "Mottled Draconian of Gozag  Gold: 99999" just fits
             _print_stats_gold(textwidth + 2, 2);
