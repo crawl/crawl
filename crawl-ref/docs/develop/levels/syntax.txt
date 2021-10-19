@@ -142,7 +142,7 @@ ORIENT:   (float | encompass | north | northwest | ... | southeast | centre)
 
           * "float": The dungeon builder puts your vault wherever it wants to.
           * "encompass": The dungeon builder uses your vault as the entire map.
-          * "centre": The vault is placed in the centre of the map. 
+          * "centre": The vault is placed in the centre of the map.
           * "some_direction": The vault lies along that side of the map:
               xxxxxxxxxx       xxxxxxxxxxxxx
               xORIENT:Nx       xORIENT:NW|..
