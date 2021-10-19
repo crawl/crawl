@@ -803,6 +803,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #else
     UNUSED(old_pos);
 #endif
+
+    you.clear_far_engulf();
 }
 
 static bool _teleport_player(bool wizard_tele, bool teleportitis,
