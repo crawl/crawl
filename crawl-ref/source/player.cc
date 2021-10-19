@@ -249,7 +249,8 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
 
     if (!_check_moveto_dangerous(p, msg))
         return false;
-    if (!you.airborne() && env.grid(you.pos()) != DNGN_TOXIC_BOG
+    if (!you.airborne() && !you.duration[DUR_NOXIOUS_BOG]
+        && env.grid(you.pos()) != DNGN_TOXIC_BOG
         && env.grid(p) == DNGN_TOXIC_BOG)
     {
         string prompt;

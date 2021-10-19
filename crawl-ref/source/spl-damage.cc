@@ -3673,6 +3673,9 @@ void actor_apply_toxic_bog(actor * act)
     if (mons && mons->type == MONS_FENSTRIDER_WITCH)
         return; // stilting above the muck!
 
+    if (player && you.duration[DUR_NOXIOUS_BOG])
+        return;
+
     actor *oppressor = nullptr;
 
     for (map_marker *marker : env.markers.get_markers_at(act->pos()))
