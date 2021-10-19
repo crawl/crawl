@@ -241,6 +241,13 @@ from within the MSYS2 Shell.
     give an error like `'yaml' is a package and cannot be directly imported`
     (rather than `No module named yaml`).
 
+    If this doesn't work, you may need to set the path for python modules. Run
+    the following line (replace [version] with the one you have):
+
+    ```sh
+    export PYTHONPATH=$PATH:/mingw64/lib/python[version]/site-packages
+    ```
+
 5. To get the DCSS source, follow the steps in the [Getting The
    Source](#getting-the-source) section above to clone DCSS into your MSYS2
    home directory. We recommend using the MSYS2-installed version of git for
