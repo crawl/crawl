@@ -361,6 +361,8 @@ void wizard_exercise_skill()
 
     if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
+    else if (is_removed_skill(skill))
+        mpr("That skill was removed.");
     else
     {
         mpr("Exercising...");
@@ -372,6 +374,11 @@ void wizard_set_skill_level(skill_type skill)
 {
     if (skill == SK_NONE)
         skill = debug_prompt_for_skill("Which skill (by name)? ");
+
+    if (is_removed_skill(skill)){
+        mpr("That skill was removed.");
+        return;
+    }
 
     if (skill == SK_NONE)
     {
