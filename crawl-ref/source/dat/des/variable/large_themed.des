@@ -2318,50 +2318,80 @@ xxxxxxxxxxx.@@@..xxxxxx
 ENDMAP
 
 NAME:   dreamdust_isle_of_ice
-TAGS:   no_monster_gen
-ORIENT: south
+TAGS:   no_monster_gen patrolling
 DEPTH:  D:11-, Lair, Depths
-SUBST:  - = .....wwwW
-SUBST:  ~ = wwwwwW
-COLOUR: .A1G = white
-FTILE:  .A1Gx = floor_ice
+ORIENT: south
+# A thematic loot item similar to one of the thematic items one might find in
+# an Ice Cave. Any thematic type info is pre-identified, since this item always
+# places and always at the same location.
+{{
+local coldres = " ego:cold_resistance ident:type"
+local ego = " ego:freezing ident:type"
+item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
+     " / scarf ego:resistance ident:type / buckler" .. coldres ..
+     " / kite shield" .. coldres .. " / tower shield" .. coldres ..
+     " / ice dragon scales / chain mail good_item" .. coldres ..
+     " / plate armour" .. coldres .. " / crystal plate armour" .. coldres ..
+     " / book of ice / book of the tundra / ozocubu's autobiography" ..
+     " / randbook disc:ice / manual of ice magic / staff of cold ident:type" ..
+     " / ring of ice ident:type / ring of protection from cold ident:type" ..
+     " / wand of iceblast ident:type / phial of floods / condenser vane")
+}}
+: if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") then
+MONS:   two-headed ogre simulacrum / troll simulacrum / naga simulacrum \
+        / spriggan simulacrum / white imp / wolf w:25 / yak w:25
+MONS:   wolf simulacrum / elephant simulacrum  / polar bear simulacrum \
+        / cane toad simulacrum / death yak simulacrum / polar bear w:50
+MONS:   ice statue
+MONS:   rime drake / ice devil
+MONS:   death yak w:40 / freezing wraith / dire elephant simulacrum \
+        / harpy simulacrum / anaconda simulacrum / entropy weaver simulacrum
+MONS:   bog body / ice dragon w:5 / nothing w:5
+NSUBST: 3 = 3G / G
+# D:14-
+: elseif you.in_branch("D") then
+MONS:   polar bear w:25 / rime drake w:25 / deep troll simulacrum \
+        / minotaur simulacrum / entropy weaver simulacrum \
+        / spriggan defender simulacrum / ice devil
+MONS:   white ugly thing w:60 / lindwurm simulacrum / dire elephant simulacrum \
+        / alligator simulacrum / harpy simulacrum / anaconda simulacrum \
+        / freezing wraith
+MONS:   ice statue
+MONS:   freezing wraith / death yak
+MONS:   ettin simulacrum / hydra simulacrum / golden dragon simulacrum \
+        / caustic shrike simulacrum
+MONS:   bog body / ice dragon / white very ugly thing / frost giant \
+        / reaper ; scythe ego:freezing / blizzard demon
+SUBST:  3 = 3G
+# Depths
+: else
+MONS:   ice dragon / white very ugly thing / freezing wraith / simulacrum
+MONS:   ettin simulacrum / spriggan defender simulacrum \
+        / golden dragon simulacrum / caustic shrike simulacrum
+MONS:   orange crystal statue
+MONS:   frost giant / reaper ; scythe ego:freezing / blizzard demon
+MONS:   titan / wendigo / nargun
+MONS:   ice fiend / shard shrike band
+: end
+# Monster, loot, and terrain handling common to all depths.
+NSUBST: . = 3=1 / 6=1. / 2=2 / 4=2. / 2=4 / 2=4. / 5 / 2=5. / .
+SUBST:  * = *|, % = %%*, - = .....wwwW, ~ = wwwwwW
+COLOUR: .123456$%*|d = blue
+COLOUR: AGx = white
+FTILE:  .123456$%*|AGxd = floor_ice
 RTILE:  x = wall_ice_block
-COLOUR: x = blue
 : set_feature_name("shallow_water", "Some ice crusted shallow water")
 : set_feature_name("deep_water", "Some ice crusted deep water")
 : set_feature_name("rock_wall", "ice covered rock wall")
-# Monster Placement
-NSUBST: . = 1=2 / 1=2. / 1=3 / 1=3. / 1=4 / 2=4. / 4=5. / 4=6. / .
-: if you.in_branch("D") then
-:    if you.depth() < 14 then
-MONS:   ice statue, ice devil, rime drake, polar bear, white imp, ice beast
-:    else
-SUBST:  G = 7
-MONS:   ice dragon, simulacrum, simulacrum, ice devil, \
-        rime drake, polar bear, ice statue
-:    end
-: elseif you.in_branch("Lair") then
-:    if you.depth() < 4 then
-MONS:   ice statue, ice devil, rime drake, polar bear, white imp, ice beast
-:    else
-SUBST:  G = 7
-MONS:   ice dragon, simulacrum, simulacrum, ice devil, \
-        rime drake, polar bear, ice statue
-:    end
-: else
-# Depths
-SUBST:  G = 7
-MONS:   ice dragon, simulacrum, simulacrum, simulacrum, \
-        blizzard demon, frost giant, ice statue
-: end
 MAP
+                  @@@@@
               WWWWWWWWWWWWW
            WWWWWWWWWWWWWWWWWWW
        WWWWWW~~~~~~~~~~~~~~~WWWWW
     WWWWWW~~~~----.....----~~~~WWWWWW
-  WWWW~~~~~---.............---~~~~~WWWW
- WWW~~~----.........1.........----~~~WWW
-WW~~~----.......G...A...G.......----~~~WW
+  WWWW~~~~~---......6......---~~~~~WWWW
+ WWW~~~----.........A.........----~~~WWW
+WW~~~----.......3$%*d*%$3.......----~~~WW
 ~~~xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx~~~
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2369,57 +2399,43 @@ ENDMAP
 NAME:   dreamdust_labyrinth
 TAGS:   no_monster_gen no_trap_gen
 ORIENT: northeast
-DEPTH:  D:11-, !D:$, Lair, !Lair:$
+DEPTH:  D:11-, Lair
 WEIGHT: 5
-# Make a path through the walls
-NSUBST: a = - / a
-NSUBST: p = - / p
-NSUBST: q = - / q
-NSUBST: v = - / v
-NSUBST: b = - / b
-# Place a few dead-ends
-NSUBST: . = p / .
-NSUBST: ` = q / `
-NSUBST: " = v / "
-# Everything else
-: if you.in_branch("Lair") then
-# The minotaur carved it all out of simple rock
-KFEAT:  apqvb = rock_wall
-: else
-# Fancy labyrinth - nouveau riche minotaur?
-KFEAT:  a = rock_wall
-KFEAT:  pq = stone_wall
-TILE:   pq = wall_lab_stone
-TILE:   v = wall_lab_metal
-: end
-NSUBST: ? = < / G
-FTILE:  -.`"apqvbT<G = floor_gauntlet
-KFEAT:  < = escape_hatch_up
-KMONS:  < = patrolling minotaur
 KITEM:  < = %, %, %, %, %, *, *, *
+KMONS:  < = patrolling minotaur
+KFEAT:  a = x
+KFEAT:  < = escape_hatch_up
+# Make a path through the walls
+NSUBST: a = 1:= / a
+NSUBST: p = . / c
+NSUBST: q = . / v
+NSUBST: r = . / b
+# Place a few dead-ends
+NSUBST: ' = c / .
+NSUBST: " = v / .
+# Everything else
+NSUBST: ? = < / G
+TILE:   c = wall_lab_stone
+TILE:   v = wall_lab_metal
+FTILE:  -.`"apqvcbT<G = floor_gauntlet
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx
- a-..................-xx
- a.pppppppppppppppppp.xx
- a.p-``````````````-p.xx
- a.p`qqqqqqqqqqqqqq`p.xx
- a.p`q-""""""""""-q`p.xx
- a.p`q"vvvvvvvvvv"q`p.xx
- a.p`q"v--------v"q`p.xx
- a.p`q"v-TbbbbT-v"q`p.xx
- a.p`q"v-bb--bb-v"q`p.xx
- a.p`q"v-b-??-b-v"q`p.xx
- a.p`q"v-b-??-b-v"q`p.xx
- a.p`q"v-bb--bb-v"q`p.xx
- a.p`q"v-TbbbbT-v"q`p.xx
- a.p`q"v--------v"q`p.xx
- a.p`q"vvvvvvvvvv"q`p.xx
- a.p`q-""""""""""-q`p.xx
- a.p`qqqqqqqqqqqqqq`p.xx
- a.p-``````````````-p.xx
- a.pppppppppppppppppp.xx
- a-..................-xx
- aaaaaaaaaaaaaaaaaaaaaxx
-                      xx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+ a..'.'.'.'.'.'.'.xx
+ a'ccpcpcpcpcpcpc.xx
+ a.p..".".".".".c'xx
+ a'c"vvqvqvqvqv.p.xx
+ a.p.q........v"c'xx
+ a'c"v.TbrrbT.q.p.xx
+ a.p.q.bb..bb.v"c'xx
+ a'c"v.r.??.r.q.p.xx
+ a.p.q.r.??.r.v"c'xx
+ a'c"v.bb..bb.q.p.xx
+ a.p.q.TbrrbT.v"c'xx
+ a'c"v........q.p.xx
+ a.p.vqvqvqvqvv"c'xx
+ a'c."."."."."..p.xx
+ a.cpcpcpcpcpcpcc'xx
+ a.'.'.'.'.'.'.'..xx
+ aaaaaaaaaaaaaaaaaxx
 ENDMAP
