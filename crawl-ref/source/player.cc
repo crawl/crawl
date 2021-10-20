@@ -5220,7 +5220,8 @@ bool player::airborne() const
     return you.duration[DUR_FLIGHT]   // potions, polar vortex
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || you.duration[DUR_RISING_FLAME] // flavour
-        || permanent_flight(true);
+        || permanent_flight(true)
+        || get_form()->enables_flight();
 }
 
 bool player::is_banished() const
@@ -6420,7 +6421,7 @@ bool player::racial_permanent_flight() const
 }
 
 /**
- * Check for sources of flight from species, forms, and (optionally) equipment.
+ * Check for sources of flight from species and (optionally) equipment.
  */
 bool player::permanent_flight(bool include_equip) const
 {
@@ -6428,8 +6429,7 @@ bool player::permanent_flight(bool include_equip) const
         return false;
 
     return include_equip && attribute[ATTR_PERM_FLIGHT] // equipment
-        || racial_permanent_flight()                    // species muts
-        || get_form()->enables_flight();
+        || racial_permanent_flight();                   // species muts
 }
 
 /**
