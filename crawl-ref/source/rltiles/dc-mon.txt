@@ -1226,3 +1226,5 @@ old-serpent-tar MONS_OLD_SERPENT_TAR
 wiglaf MONS_WIGLAF
 orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 polymoth MONS_POLYMOTH
+%rim 0
+jack_o_lantern MONS_JACK_O_LANTERN
