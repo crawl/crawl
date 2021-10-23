@@ -924,29 +924,6 @@ v.vv.vb1bv.vv.v
  vv.vv.vv.vv.v
 ENDMAP
 
-# Adapted from labyrinth_spiral.
-NAME:   gauntlet_exit_spiral
-TAGS:   gauntlet_exit
-MONS:   patrolling minotaur
-SUBST:  b : bvz, z = vb
-KFEAT:  < = exit_gauntlet
-: gauntlet_exit_loot(_G)
-MAP
-vvvvvvv.vvvvvvv
-vvvvvvv.vvvvvvv
-vvv.....vvvvvvv
-vvb.bbbbbbbvvvv
-vvb.b.....bvvvv
-vvb.b.bbb.bvvvv
-vvb.b.b<b.bvvvv
-vvb.b.b1b.bvvvv
-vvb.b.b.b.bvvvv
-vvb.b...b.bvvvv
- vb.bbbbb.bvvv
- vb.......bvvv
- vbbbbbbbbbvvv
-ENDMAP
-
 # Adapted from labyrinth_hidden_loot.
 NAME:   gauntlet_exit_hidden_loot
 TAGS:   gauntlet_exit
