@@ -3060,6 +3060,39 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     }
 }
 
+spret cast_inner_flame(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const monster* mons = monster_at(target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You can't see anything there.");
+        return spret::abort;
+    }
+
+    if (mons->has_ench(ENCH_INNER_FLAME))
+    {
+        mprf("%s is already burning with an inner flame!",
+             mons->name(DESC_THE).c_str());
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return spret::abort;
+
+    bolt beam;
+    beam.source = mons->pos();
+    beam.target = mons->pos();
+    beam.set_agent(&you);
+
+    return zapping(ZAP_INNER_FLAME, pow, beam, false, nullptr, fail);
+}
+
 spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
 {
     if (cell_is_solid(beam.target))

@@ -1312,6 +1312,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DAZZLING_FLASH:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
                                                   0, 1);
+    case SPELL_INNER_FLAME:
+        return make_unique<targeter_smite>(&you, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
     case SPELL_SPIDER_FORM:
@@ -2390,6 +2392,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_FLAME_WAVE:
         return cast_flame_wave(powc, fail);
+
+    case SPELL_INNER_FLAME:
+        return cast_inner_flame(spd.target, powc, fail);
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
