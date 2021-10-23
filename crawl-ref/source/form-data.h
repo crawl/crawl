@@ -231,7 +231,7 @@ static const form_entry formdata[] =
     FC_ENABLE, FC_FORBID, FC_FORBID, false,
     "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour",
     {
-        {"insubstial", "Your tiny insubstantial body is highly resistant to most damage types." },
+        {"insubstantial", "Your tiny insubstantial body is highly resistant to most damage types." },
     }
 },
 
