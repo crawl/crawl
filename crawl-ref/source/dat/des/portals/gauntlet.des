@@ -1000,32 +1000,6 @@ vb.........b.bv
  bbbbbbbbbbbbb
 ENDMAP
 
-NAME:   dreamdust_gauntlet_exit_labyrinth
-TAGS:   gauntlet_exit
-NSUBST: . = c / .
-NSUBST: ` = v / `
-NSUBST: v = - / v
-NSUBST: b = - / b
-SUBST:  ? : T U G
-KFEAT:  < = exit_gauntlet
-KMONS:  < = patrolling minotaur
-: gauntlet_exit_loot(_G)
-MAP
-ccccccc-ccccccc
-c-.....-.....-c
-c.vvvvvvvvvvv.c
-c.v-```````-v.c
-c.v`bbbbbbb`v.c
-c.v`b-?-?-b`v.c
-c.v-bb-<-bb-v.c
-c.vv`b?-?b`vv.c
-c--v`bbbbb`v--c
-cc.v-`````-v.cc
- c.vvvvvvvvv.c
- c-.........-c
- ccccccccccccc
-ENDMAP
-
 #############################################################################
 # Chooses four corpses, each with their own set of loot, themed around some
 # particular archetypical species/background. Each set of loot has 2-4 items.
@@ -1197,6 +1171,36 @@ vvvvvbG'Gbvvvvv
  vvvvbG<Gbvvvv
  vvvvbbbbbvvvv
 ENDMAP
+
+NAME:   dreamdust_gauntlet_exit_labyrinth
+TAGS:   gauntlet_exit
+KMONS:  < = patrolling minotaur
+KFEAT:  a = b
+KFEAT:  < = exit_gauntlet
+# Set up openings in the inner and outer walls.
+NSUBST: a = . / v
+NSUBST: p = . / b
+# Set up dead ends in the inner and outer sections.
+NSUBST: - = c / .
+NSUBST: ` = v / `
+SUBST:  T : T U G
+: gauntlet_exit_loot(_G)
+MAP
+ccccccc.ccccccc
+c.-.-.-.-.-.-.c
+c-vavavavavav-c
+c-a.`.`.`.`.a.c
+c-v`bbbpbbb`v-c
+c-a.bbT.Tbb.a.c
+c-v..p.<.p..v-c
+c-vv`bT.Tb`vv-c
+c..a.bbpbb.a..c
+cc-v..`.`..v-cc
+ c.avavavava.c
+ c..-.-.-.-..c
+ ccccccccccccc
+ENDMAP
+
 
 #############################################################################
 # <<3>> Gauntlet main maps.
