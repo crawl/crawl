@@ -1065,7 +1065,7 @@ static const mutation_def mut_data[] =
 
 #if TAG_MAJOR_VERSION == 34
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
-  "torment resistance",
+  "removed torment resistance",
 
   {"You are somewhat able to resist unholy torments.","",""},
   {"You feel a strange anaesthesia.", "", ""},
