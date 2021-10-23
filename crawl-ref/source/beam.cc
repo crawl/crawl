@@ -4334,6 +4334,8 @@ void bolt::enchantment_affect_monster(monster* mon)
             {
                 hit_woke_orc = true;
             }
+            if (flavour != BEAM_HIBERNATION)
+                you.pet_target = mon->mindex();
         }
         behaviour_event(mon, ME_ANNOY, agent());
     }
