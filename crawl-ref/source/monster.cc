@@ -4827,7 +4827,9 @@ void monster::load_ghost_spells()
         return;
     }
 
-    spells = ghost->spells;
+    for (unsigned int i = 0; i < ghost->spells.size(); i++)
+        if (is_valid_spell(ghost->spells[i].spell))
+            spells.push_back(ghost->spells[i]);
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf(DIAG_MONPLACE, "Ghost spells:");
