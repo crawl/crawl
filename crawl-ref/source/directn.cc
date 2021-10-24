@@ -3220,7 +3220,11 @@ string feature_description_at(const coord_def& where, bool covering,
     if (covering && you.see_cell(where))
     {
         if (feat_is_tree(grid) && env.forest_awoken_until)
+        {
             covering_description += ", awoken";
+            covering_description += env.forest_is_hostile ? " (hostile)" :
+                                                            " (friendly)";
+        }
 
         if (is_icecovered(where))
             covering_description = ", covered with ice";
