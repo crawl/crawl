@@ -1111,13 +1111,22 @@ static void _input()
         end_wait_spells();
         handle_delay();
 
+        // Some delays set you.turn_is_over.
+
+#ifdef WIZARD
+        if (you.props.exists(FREEZE_TIME_KEY))
+            you.turn_is_over = false;
+#endif
+
         // Some delays reset you.time_taken.
         if (you.time_taken || you.turn_is_over)
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
             _uncurl();
-            world_reacts();
+
+            if (you.turn_is_over)
+                world_reacts();
         }
 
         if (!you_are_delayed())
