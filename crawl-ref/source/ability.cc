@@ -2259,17 +2259,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             black_drac_breath();
             break;
 
-        case ABIL_BREATHE_ACID:
-            if (zapping(ZAP_BREATHE_ACID,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You spit a glob of acid.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
-            break;
-
         case ABIL_BREATHE_POWER:
             if (zapping(ZAP_BREATHE_POWER,
                         you.form == transformation::dragon
