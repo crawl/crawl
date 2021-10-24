@@ -2245,9 +2245,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);
 
-    case SPELL_SHADOW_CREATURES:
-        return cast_shadow_creatures(spell, god, fail);
-
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return cast_summon_horrible_things(powc, god, fail);
 

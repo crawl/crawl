@@ -3340,9 +3340,8 @@ void read(item_def* scroll, dist *target)
         break;
 
     case SCR_SUMMONING:
-        cancel_scroll =
-                    cast_shadow_creatures(MON_SUMM_SCROLL) == spret::abort
-                    && alreadyknown;
+        cancel_scroll = summon_shadow_creatures() == spret::abort
+                        && alreadyknown;
         break;
 
     case SCR_FOG:
