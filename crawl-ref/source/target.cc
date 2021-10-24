@@ -1056,45 +1056,50 @@ aff_type targeter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_splash::targeter_splash(const actor* act, int ran)
-    : range(ran)
-{
-    ASSERT(act);
-    agent = act;
-    origin = aim = act->pos();
-}
 
-bool targeter_splash::valid_aim(coord_def a)
+targeter_splash::targeter_splash(const actor *act, int r, int pow)
+    : targeter_beam(act, r, ZAP_BREATHE_ACID, pow, 0, 0)
 {
-    if (agent && grid_distance(origin, a) > range)
-        return notify_fail("Out of range.");
-    return true;
 }
 
 aff_type targeter_splash::is_affected(coord_def loc)
 {
-    if (!valid_aim(aim) || !valid_aim(loc))
-        return AFF_NO;
+    bool on_path = false;
+    coord_def c;
+    for (auto pc : path_taken)
+    {
+        if (cell_is_solid(pc))
+            break;
 
-    if (loc == aim)
+        c = pc;
+        if (pc == loc)
+            on_path = true;
+
+        if (anyone_there(pc) && !beam.ignores_monster(monster_at(pc)))
+            break;
+    }
+
+    if (loc == c)
         return AFF_YES;
 
-    // self-spit currently doesn't splash
+    // self-spit doesn't splash
     if (aim == origin)
         return AFF_NO;
 
     // it splashes around only upon hitting someone
-    if (!anyone_there(aim))
-        return AFF_NO;
+    if (anyone_there(c))
+    {
+        if (grid_distance(loc, c) > 1)
+            return on_path ? AFF_YES : AFF_NO;
 
-    if (grid_distance(loc, aim) > 1)
-        return AFF_NO;
+        // you're safe from being splashed by own spit
+        if (loc == origin)
+            return AFF_NO;
 
-    // you're safe from being splashed by own spit
-    if (loc == origin)
-        return AFF_NO;
+        return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
+    }
 
-    return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
+    return on_path ? AFF_YES : AFF_NO;
 }
 
 targeter_radius::targeter_radius(const actor *act, los_type _los,

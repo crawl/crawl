@@ -2175,8 +2175,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_BREATHE_ACID:       // Draconian acid splash
     {
+        int pow = (you.form == transformation::dragon) ?
+            2 * you.experience_level : you.experience_level;
         beam.range = _calc_breath_ability_range(abil.ability);
-        targeter_splash hitfunc(&you, beam.range);
+        targeter_splash hitfunc(&you, beam.range, pow);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
@@ -2187,9 +2189,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
 
         fail_check();
-        zapping(ZAP_BREATHE_ACID, (you.form == transformation::dragon) ?
-                2 * you.experience_level : you.experience_level,
-                beam, false, "You spit a glob of acid.");
+        zapping(ZAP_BREATHE_ACID, pow, beam, false, "You spit a glob of acid.");
 
         you.increase_duration(DUR_BREATH_WEAPON,
                           3 + random2(10) + random2(30 - you.experience_level));

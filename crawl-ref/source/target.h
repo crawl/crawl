@@ -184,15 +184,11 @@ public:
     bool avoid_clouds;
 };
 
-// TODO: this should be based on targeter_beam instead
-class targeter_splash : public targeter
+class targeter_splash : public targeter_beam
 {
 public:
-    targeter_splash(const actor *act, int ran);
-    bool valid_aim(coord_def a) override;
+    targeter_splash(const actor *act, int ran, int pow);
     aff_type is_affected(coord_def loc) override;
-private:
-    int range;
 };
 
 class targeter_radius : public targeter
