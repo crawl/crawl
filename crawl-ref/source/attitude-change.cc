@@ -62,6 +62,9 @@ void mons_att_changed(monster* mon)
         remove_companion(mon);
     }
 
+    if (mon->has_ench(ENCH_AWAKEN_FOREST))
+        mon->del_ench(ENCH_AWAKEN_FOREST);
+
     mon->remove_summons(true);
 }
 

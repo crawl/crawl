@@ -6184,6 +6184,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         // Actually, it's a boolean marker... save for a sanity check.
         env.forest_awoken_until = you.elapsed_time + duration;
 
+        env.forest_is_hostile = !mons->friendly();
+
         // You may be unable to see the monster, but notice an affected tree.
         forest_message(mons->pos(), "The forest starts to sway and rumble!");
         return;
