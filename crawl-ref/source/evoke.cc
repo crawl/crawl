@@ -111,7 +111,7 @@ static bool _evoke_horn_of_geryon()
 }
 
 /**
- * Spray lightning in all directions. (Randomly: shock, lightning bolt, OoE.)
+ * Spray lightning in all directions. (Randomly lightning bolt or OoE.)
  *
  * @param range         The range of the beams. (As with all beams, eventually
  *                      capped at LOS.)
@@ -119,9 +119,8 @@ static bool _evoke_horn_of_geryon()
  */
 static void _spray_lightning(int range, int power)
 {
-    const zap_type which_zap = random_choose(ZAP_SHOCK,
-                                             ZAP_LIGHTNING_BOLT,
-                                             ZAP_ORB_OF_ELECTRICITY);
+    const zap_type zap = random_choose_weighted(3, ZAP_LIGHTNING_BOLT,
+                                                2, ZAP_ORB_OF_ELECTRICITY);
 
     bolt beam;
     // range has no tracer, so randomness is ok
@@ -131,7 +130,7 @@ static void _spray_lightning(int range, int power)
     beam.target.x += random2(13) - 6;
     beam.target.y += random2(13) - 6;
     // Non-controlleable, so no player tracer.
-    zapping(which_zap, power, beam);
+    zapping(zap, power, beam);
 }
 
 /**
