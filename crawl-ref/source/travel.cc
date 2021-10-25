@@ -60,6 +60,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
+#include "wiz-you.h"
 
 enum IntertravelDestination
 {
@@ -1031,6 +1032,8 @@ static command_type _get_non_move_command()
 // Don't call travel() if you.running >= 0.
 command_type travel()
 {
+    mprf("travel");
+
     int holdx, holdy;
     int *move_x = &holdx;
     int *move_y = &holdy;
@@ -1064,8 +1067,21 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        if (Options.explore_auto_rest && !you.is_sufficiently_rested())
+        mprf("you.running.is_explore()");
+
+        bool time_is_frozen = false;
+
+#ifdef WIZARD
+        if (you.props.exists(FREEZE_TIME_KEY))
+            time_is_frozen = true;
+#endif
+
+        if (Options.explore_auto_rest
+            && !you.is_sufficiently_rested()
+            && !time_is_frozen){
+            mprf("rest");
             return CMD_WAIT;
+        }
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP
