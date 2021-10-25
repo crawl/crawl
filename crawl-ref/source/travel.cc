@@ -1032,8 +1032,6 @@ static command_type _get_non_move_command()
 // Don't call travel() if you.running >= 0.
 command_type travel()
 {
-    mprf("travel");
-
     int holdx, holdy;
     int *move_x = &holdx;
     int *move_y = &holdy;
@@ -1067,8 +1065,6 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        mprf("you.running.is_explore()");
-
         bool time_is_frozen = false;
 
 #ifdef WIZARD
@@ -1078,10 +1074,8 @@ command_type travel()
 
         if (Options.explore_auto_rest
             && !you.is_sufficiently_rested()
-            && !time_is_frozen){
-            mprf("rest");
+            && !time_is_frozen)
             return CMD_WAIT;
-        }
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP
