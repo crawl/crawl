@@ -1416,7 +1416,15 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
+        decay_enchantment(en);
+        break;
+
     case ENCH_ROLLING:
+        if (cannot_act() || asleep())
+        {
+            del_ench(en, true, false);
+            break;
+        }
         decay_enchantment(en);
         break;
 
