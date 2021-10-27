@@ -36,7 +36,7 @@
 #include "travel.h"
 #include "version.h"
 #include "view.h"
-#
+
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
