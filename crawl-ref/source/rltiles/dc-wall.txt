@@ -434,7 +434,16 @@ wall_stone_snake1
 wall_stone_snake2
 wall_stone_snake3
 
+# sss (like the tide rolling over sand)
+%weight 2
+wall_stone_shoals0 STONE_WALL_SHOALS
+wall_stone_shoals1
+%weight 4
+wall_stone_shoals2
+wall_stone_shoals3
 %weight 10
+wall_stone_shoals4
+
 wall_oozing0 WALL_OOZING
 wall_oozing1
 %weight 4
