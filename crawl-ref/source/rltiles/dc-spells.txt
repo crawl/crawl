@@ -232,7 +232,7 @@ hurl_damnation HURL_DAMNATION
 beogh_smite SMITING
 elyvilon_heal_other HEAL_OTHER
 elyvilon_lesser_healing MINOR_HEALING
-elyvilon_greater_healing MAJOR_HEALING
+elyvilon_heal_self MAJOR_HEALING
 makhleb_major_destruction MAJOR_DESTRUCTION
 lugonu_banish BANISHMENT
 trog_hand TROGS_HAND

@@ -119,6 +119,9 @@ enum class passive_t
     /// Chance to nullify a deadly blow, dependent on piety.
     protect_from_harm,
 
+    /// Strong chance to nullify a deadly blow, with a timeout.
+    lifesaving,
+
     /// Divine halo around the player, size increases with piety.
     halo,
 

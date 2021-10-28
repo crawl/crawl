@@ -261,12 +261,12 @@ assume the form of a shadow themself.
 %%%%
 Elyvilon powers
 
-The Healer offers followers a number of increasingly powerful means to heal
-themselves from damage and other ill effects. Followers may also attempt to
-pacify hostile monsters and turn them neutral. Elyvilon may directly intervene
-to save a follower's life, and may also occasionally protect the follower's
-allies from death. Especially pious followers can be sure of aid when calling
-upon Elyvilon for protection.
+The Healer offers followers a number of means to heal themselves from damage
+and other ill effects. Followers may also attempt to pacify hostile monsters
+and turn them neutral. Elyvilon may directly intervene to save a follower's
+life, and if there has been no such intervention recently, is sure to prevent
+a killing blow against especially pious followers. Elyvilon may also
+occasionally protect the follower's allies from death.
 %%%%
 Fedhas powers
 
