@@ -180,9 +180,6 @@ enum class passive_t
     /// Slimes and eye monsters are neutral towards you
     neutral_slimes,
 
-    /// Items consumed by your fellow slimes feed you
-    slime_feed,
-
     /// You are immune to slime covered walls
     slime_wall_immune,
 

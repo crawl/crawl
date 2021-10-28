@@ -282,8 +282,6 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW adjusts your attributes periodically" },
         {  0, passive_t::slime_wall_immune,
               "are NOW immune to slime covered walls" },
-        {  2, passive_t::slime_feed,
-              "Your fellow slimes NOW consume items" },
         {  3, passive_t::resist_corrosion,
               "GOD NOW protects you from corrosion" },
         {  4, passive_t::slime_mp,
