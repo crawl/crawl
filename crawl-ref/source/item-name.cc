@@ -2889,7 +2889,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
-            return you_worship(GOD_ASHENZARI);
+            return have_passive(passive_t::identify_items);
         default:
             return false;
         }
