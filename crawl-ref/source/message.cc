@@ -15,9 +15,7 @@
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
-#ifdef WIZARD
- #include "luaterp.h"
-#endif
+#include "luaterp.h"
 #include "menu.h"
 #include "monster.h"
 #include "mon-util.h"

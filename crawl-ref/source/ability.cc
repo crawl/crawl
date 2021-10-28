@@ -3868,10 +3868,12 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
+#ifdef WIZARD
     case ABIL_WIZ_BUILD_TERRAIN:
     case ABIL_WIZ_SET_TERRAIN:
     case ABIL_WIZ_CLEAR_TERRAIN:
         first_slot = letter_to_index('O'); // somewhat arbitrary, late in the alphabet
+#endif
     default:
         break;
     }
