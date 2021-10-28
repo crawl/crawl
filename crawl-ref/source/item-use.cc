@@ -2454,27 +2454,25 @@ static void _rebrand_weapon(item_def& wpn)
     {
         if (is_range_weapon(wpn))
         {
-            new_brand = random_choose_weighted(
-                                    33, SPWPN_FLAMING,
-                                    33, SPWPN_FREEZING,
-                                    23, SPWPN_VENOM,
-                                    23, SPWPN_VORPAL,
-                                    5, SPWPN_ELECTROCUTION,
-                                    3, SPWPN_CHAOS);
+            new_brand = random_choose_weighted(3, SPWPN_FLAMING,
+                                               3, SPWPN_FREEZING,
+                                               3, SPWPN_VENOM,
+                                               3, SPWPN_VORPAL,
+                                               1, SPWPN_ELECTROCUTION,
+                                               1, SPWPN_CHAOS);
         }
         else
         {
-            new_brand = random_choose_weighted(
-                                    28, SPWPN_FLAMING,
-                                    28, SPWPN_FREEZING,
-                                    23, SPWPN_VORPAL,
-                                    18, SPWPN_VENOM,
-                                    14, SPWPN_DRAINING,
-                                    14, SPWPN_ELECTROCUTION,
-                                    11, SPWPN_PROTECTION,
-                                    11, SPWPN_SPECTRAL,
-                                    8, SPWPN_VAMPIRISM,
-                                    3, SPWPN_CHAOS);
+            new_brand = random_choose_weighted(2, SPWPN_FLAMING,
+                                               2, SPWPN_FREEZING,
+                                               2, SPWPN_VORPAL,
+                                               2, SPWPN_VENOM,
+                                               2, SPWPN_PROTECTION,
+                                               1, SPWPN_DRAINING,
+                                               1, SPWPN_ELECTROCUTION,
+                                               1, SPWPN_SPECTRAL,
+                                               1, SPWPN_VAMPIRISM,
+                                               1, SPWPN_CHAOS);
         }
     }
 
