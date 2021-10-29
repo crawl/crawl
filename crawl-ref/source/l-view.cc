@@ -261,6 +261,12 @@ LUAFN(view_get_map)
         }
         else
         {
+            for (adjacent_iterator ai(p); ai; ++ai)
+                if (!env.map_knowledge(*ai).known())
+                {
+                LUA_PUSHBOOL("frontier", true);
+                break;
+                }
             if (is_excluded(p))
                 LUA_PUSHBOOL("excluded", true);
             if (cell.item() && cell.item()->defined())
