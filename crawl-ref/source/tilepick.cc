@@ -1547,7 +1547,6 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
         die("Unknown tile variation type %d for mon %d!", vary_type, mtype);
     }
 }
-#endif
 
 enum class main_dir
 {
@@ -2115,6 +2114,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 
     return ch;
 }
+#endif
 
 static tileidx_t tileidx_draco_base(monster_type draco)
 {
