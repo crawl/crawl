@@ -387,7 +387,7 @@ NAME:   dpeg_arrival_tiny_a
 TAGS:   arrival transparent
 ORIENT: float
 MAP
-{
+{>
 ENDMAP
 
 NAME:   dpeg_arrival_tiny_b
