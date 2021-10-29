@@ -1016,10 +1016,9 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
         {
         case SKM_MODE:  return SKM_MODE_MANUAL;
         case SKM_DO:    return SKM_DO_FOCUS;
-        case SKM_SHOW:  return SKM_SHOW_DEFAULT;
-        case SKM_LEVEL: return SKM_LEVEL_NORMAL;
         case SKM_VIEW:  return SKM_VIEW_NEW_LEVEL;
-        default:        return SKM_NONE;
+        default:        return !m_switches[sw] ? SKM_NONE
+                                               : m_switches[sw]->get_state();
         }
     }
     else if (!m_switches[sw])
@@ -1281,7 +1280,7 @@ void SkillMenu::init_switches()
 #endif
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
-        if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
+        if (!is_set(SKMF_SIMPLE))
         {
             sw->add(SKM_SHOW_ALL);
             if (Options.default_show_all_skills)
@@ -1313,10 +1312,10 @@ void SkillMenu::init_switches()
 
         if (!you.auto_training)
             sw->set_state(SKM_VIEW_COST);
-    }
 
-    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        sw->add(SKM_VIEW_TARGETS);
+        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            sw->add(SKM_VIEW_TARGETS);
+    }
 
     if (you.wizard)
     {

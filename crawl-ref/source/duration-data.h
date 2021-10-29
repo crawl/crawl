@@ -566,6 +566,16 @@ static const duration_def duration_data[] =
       "rising", "rise",
       "You are rising toward the ceiling.", D_NO_FLAGS,
       {{ "", rise_through_ceiling }}},
+    { DUR_SICKNESS,
+      RED, "Sick",
+      "sick", "sickness",
+      "Your sickness prevents you from regenerating health.", D_DISPELLABLE,
+      {{ "You feel your health improve." }}},
+    { DUR_BLINK_COOLDOWN,
+      YELLOW, "-Blink",
+      "on blink cooldown", "blink cooldown",
+      "You are unable to blink.", D_NO_FLAGS,
+      {{ "You feel stable enough to blink again."}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -622,8 +632,6 @@ static const duration_def duration_data[] =
     { DUR_HEAVENLY_STORM, 0, "", "in a heavenly storm", "heavenly storm",
       "Heavenly clouds are increasing your accuracy and damage.", D_NO_FLAGS,
       {{ "", wu_jian_decrement_heavenly_storm }}},
-    { DUR_SICKNESS, 0, "", "", "sickness", "", D_DISPELLABLE,
-      {{ "You feel your health improve." }}},
     { DUR_NO_SCROLLS, 0, "", "", "", "", D_NO_FLAGS,
       {{ "You can read scrolls again." }, {}, true }},
 

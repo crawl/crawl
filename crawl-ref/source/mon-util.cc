@@ -388,13 +388,10 @@ resists_t get_mons_resists(const monster& m)
     if (mons_is_ghost_demon(mon.type))
         resists |= mon.ghost->resists;
 
-    if (mons_genus(mon.type) == MONS_DRACONIAN
-            && mon.type != MONS_DRACONIAN
-        || mon.type == MONS_TIAMAT
-        || mons_genus(mon.type) == MONS_DEMONSPAWN
-            && mon.type != MONS_DEMONSPAWN)
+    if (mons_genus(mon.type) == MONS_DRACONIAN && mon.type != MONS_DRACONIAN
+        || mon.type == MONS_TIAMAT)
     {
-        monster_type subspecies = draco_or_demonspawn_subspecies(mon);
+        monster_type subspecies = draconian_subspecies(mon);
         if (subspecies != mon.type)
             resists |= get_mons_class_resists(subspecies);
     }
@@ -662,8 +659,6 @@ const char * holiness_name(mon_holy_type_flags which_holiness)
         return "nonliving";
     case MH_PLANT:
         return "plant";
-    case MH_EVIL:
-        return "evil";
     default:
         return "bug";
     }
@@ -844,23 +839,6 @@ bool mons_has_body(const monster& mon)
     }
 
     return true;
-}
-
-bool mons_has_flesh(const monster& mon)
-{
-    if (mon.is_skeletal() || mon.is_insubstantial())
-        return false;
-
-    // Dictionary says:
-    // 1. (12) flesh -- (the soft tissue of the body of a vertebrate:
-    //    mainly muscle tissue and fat)
-    // 3. pulp, flesh -- (a soft moist part of a fruit)
-    // yet I exclude sense 3 anyway but include arthropods and molluscs.
-    return !(mon.holiness() & (MH_PLANT | MH_NONLIVING))
-           && mons_genus(mon.type) != MONS_FLOATING_EYE
-           && mons_genus(mon.type) != MONS_GLOWING_ORANGE_BRAIN
-           && mons_genus(mon.type) != MONS_JELLY
-           && mon.type != MONS_DEATH_COB; // plant!
 }
 
 // Difference in speed between monster and the player for Cheibriados'
@@ -1239,15 +1217,6 @@ bool mons_is_base_draconian(monster_type mc)
     return mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_BASE_DRACONIAN;
 }
 
-bool mons_is_demonspawn(monster_type mc)
-{
-    return
-#if TAG_MAJOR_VERSION == 34
-        mc == MONS_DEMONSPAWN ||
-#endif
-        mc >= MONS_FIRST_DEMONSPAWN && mc <= MONS_LAST_DEMONSPAWN;
-}
-
 // Conjured (as opposed to summoned) monsters are actually here, even
 // though they're typically volatile (like, made of real fire). As such,
 // they should be immune to Abjuration or Recall. Also, they count as
@@ -1312,12 +1281,6 @@ monster_type mons_genus(monster_type mc)
         return MONS_DRACONIAN;
     }
 
-    if (mc == RANDOM_DEMONSPAWN || mc == RANDOM_BASE_DEMONSPAWN
-        || mc == RANDOM_NONBASE_DEMONSPAWN)
-    {
-        return MONS_DEMONSPAWN;
-    }
-
     if (mc == MONS_NO_MONSTER)
         return MONS_NO_MONSTER;
 
@@ -1331,24 +1294,19 @@ monster_type mons_species(monster_type mc)
     return me ? me->species : MONS_PROGRAM_BUG;
 }
 
-monster_type draco_or_demonspawn_subspecies(monster_type type,
-                                            monster_type base)
+monster_type draconian_subspecies(monster_type type, monster_type base)
 {
     const monster_type species = mons_species(type);
 
-    if ((species == MONS_DRACONIAN || species == MONS_DEMONSPAWN)
-        && type != species)
-    {
+    if (species == MONS_DRACONIAN && type != species)
         return base;
-    }
 
     return species;
 }
 
-monster_type draco_or_demonspawn_subspecies(const monster& mon)
+monster_type draconian_subspecies(const monster& mon)
 {
-    ASSERT(mons_genus(mon.type) == MONS_DRACONIAN
-           || mons_genus(mon.type) == MONS_DEMONSPAWN);
+    ASSERT(mons_genus(mon.type) == MONS_DRACONIAN);
 
     if (mon.type == MONS_PLAYER_ILLUSION
         && mons_genus(mon.type) == MONS_DRACONIAN)
@@ -1356,7 +1314,7 @@ monster_type draco_or_demonspawn_subspecies(const monster& mon)
         return species::to_mons_species(mon.ghost->species);
     }
 
-    return draco_or_demonspawn_subspecies(mon.type, mon.base_monster);
+    return draconian_subspecies(mon.type, mon.base_monster);
 }
 
 monster_type mons_detected_base(monster_type mc)
@@ -1490,20 +1448,6 @@ int mutant_beast_tier(int xl)
 }
 
 /**
- * Is the provided monster_type a demonspawn job type? (Not just any
- * demonspawn, but specifically one with a job! Or the job itself, depending
- * how you think about it.)
- *
- * @param mc    The monster type in question.
- * @return      Whether that monster type is a demonspawn job.
- **/
-bool mons_is_demonspawn_job(monster_type mc)
-{
-    return mc >= MONS_FIRST_NONBASE_DEMONSPAWN
-           && mc <= MONS_LAST_NONBASE_DEMONSPAWN;
-}
-
-/**
  * Is the provided monster_type a draconian job type? (Not just any draconian,
  * but specifically one with a job! Or the job itself, depending how you think
  * about it.)
@@ -1515,17 +1459,6 @@ bool mons_is_draconian_job(monster_type mc)
 {
     return mc >= MONS_FIRST_NONBASE_DRACONIAN
            && mc <= MONS_LAST_NONBASE_DRACONIAN;
-}
-
-/**
- * Is the provided monster_type a job? (E.g. black sun, draconian knight)
- *
- * @param mc    The monster type in question.
- * @return      Whether that monster type is a job.
- **/
-bool mons_is_job(monster_type mc)
-{
-    return mons_is_draconian_job(mc) || mons_is_demonspawn_job(mc);
 }
 
 bool mons_is_unique(monster_type mc)
@@ -2004,8 +1937,6 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         return _mutant_beast_attack(mon, attk_number);
     else if (mons_is_hepliaklqana_ancestor(mc))
         return _hepliaklqana_ancestor_attack(mon, attk_number);
-    else if (mons_is_demonspawn(mc) && attk_number != 0)
-        mc = draco_or_demonspawn_subspecies(mon);
 
     if (zombified && mc != MONS_KRAKEN_TENTACLE)
         mc = mons_zombie_base(mon);
@@ -2017,14 +1948,6 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     {
         if (m.has_ench(ENCH_FIRE_CHAMPION))
             attk.flavour = AF_FIRE;
-        else if (mons_is_demonspawn(mon.type))
-        {
-            const monsterentry* mbase =
-                get_monster_data (draco_or_demonspawn_subspecies(mon));
-            ASSERT(mbase);
-            attk.flavour = mbase->attack[0].flavour;
-            return attk;
-        }
 
         if (mons_is_player_shadow(mon))
         {
@@ -2053,7 +1976,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         // attack, and it's in their second attack slot.
         // If that changes this code will need to be changed.
         const monsterentry* mbase =
-            get_monster_data (draco_or_demonspawn_subspecies(mon));
+            get_monster_data (draconian_subspecies(mon));
         ASSERT(mbase);
         return mbase->attack[1];
     }
@@ -2277,11 +2200,6 @@ bool mons_flattens_trees(const monster& mon)
     return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
-bool mons_class_res_polar_vortex(monster_type mc)
-{
-    return get_resist(get_mons_class_resists(mc), MR_RES_VORTEX);
-}
-
 /**
  * Given an average max HP value for a given monster type, what should a given
  * monster have?
@@ -2324,9 +2242,8 @@ int mons_class_hit_dice(monster_type mc)
 int mons_class_willpower(monster_type type, monster_type base)
 {
     const monster_type base_type =
-        base != MONS_NO_MONSTER &&
-        (mons_is_draconian(type) || mons_is_demonspawn(type))
-            ? draco_or_demonspawn_subspecies(type, base)
+        base != MONS_NO_MONSTER && mons_is_draconian(type)
+            ? draconian_subspecies(type, base)
             : type;
 
     const int type_wl = (get_monster_data(base_type))->willpower;
@@ -2350,9 +2267,8 @@ bool mons_class_sees_invis(monster_type type, monster_type base)
     if (mons_class_flag(type, M_SEE_INVIS))
         return true;
 
-    if (base != MONS_NO_MONSTER && mons_is_demonspawn(type) // XXX: add dracs here? latent bug otherwise
-        && mons_class_flag(draco_or_demonspawn_subspecies(type, base),
-                           M_SEE_INVIS))
+    if (base != MONS_NO_MONSTER && mons_is_draconian(type)
+        && mons_class_flag(draconian_subspecies(type, base), M_SEE_INVIS))
     {
         return true;
     }
@@ -2373,16 +2289,6 @@ int mons_avg_hp(monster_type mc)
     if (!me)
         return 0;
 
-    // Hack for nonbase demonspawn: pretend it's a basic demonspawn with
-    // a job.
-    if (mons_is_demonspawn(mc)
-        && mc != MONS_DEMONSPAWN
-        && mons_species(mc) == MONS_DEMONSPAWN)
-    {
-        const monsterentry* mbase = get_monster_data(MONS_DEMONSPAWN);
-        return (mbase->avg_hp_10x + me->avg_hp_10x) / 10;
-    }
-
     return me->avg_hp_10x / 10;
 }
 
@@ -2390,11 +2296,9 @@ int mons_avg_hp(monster_type mc)
  * What's the maximum hp for a given type of monster?
  *
  * @param mc        The type of monster in question.
- * @param mbase     The type of the base monster, if applicable (for classed
- *                  monsters).
  * @return          The maximum hp for that monster; rounds down.
  */
-int mons_max_hp(monster_type mc, monster_type mbase_type)
+int mons_max_hp(monster_type mc)
 {
     const monsterentry* me = get_monster_data(mc);
 
@@ -2402,19 +2306,6 @@ int mons_max_hp(monster_type mc, monster_type mbase_type)
         return 0;
 
     // TODO: merge the 133% with their use in hit_points()
-
-    // Hack for nonbase demonspawn: pretend it's a basic demonspawn with
-    // a job.
-    if (mons_is_demonspawn(mc)
-        && mc != MONS_DEMONSPAWN
-        && mons_species(mc) == MONS_DEMONSPAWN)
-    {
-        const monsterentry* mbase =
-            get_monster_data(mbase_type != MONS_NO_MONSTER ? mbase_type
-                                                           : MONS_DEMONSPAWN);
-        return (mbase->avg_hp_10x + me->avg_hp_10x) * 133 / 1000;
-    }
-
     return me->avg_hp_10x * 133 / 1000;
 }
 
@@ -2650,16 +2541,46 @@ monster_type random_draconian_job()
                                 MONS_LAST_NONBASE_DRACONIAN);
 }
 
-monster_type random_demonspawn_monster_species()
+static const pair<monster_type, monster_type> _draconian_combos[] =
 {
-    return _random_mons_between(MONS_FIRST_BASE_DEMONSPAWN,
-                                MONS_LAST_BASE_DEMONSPAWN);
+    { MONS_DRACONIAN_STORMCALLER, MONS_WHITE_DRACONIAN },
+    { MONS_DRACONIAN_MONK, MONS_GREEN_DRACONIAN },
+    { MONS_DRACONIAN_SHIFTER, MONS_PURPLE_DRACONIAN },
+    { MONS_DRACONIAN_ANNIHILATOR, MONS_YELLOW_DRACONIAN },
+    { MONS_DRACONIAN_KNIGHT, MONS_BLACK_DRACONIAN },
+    { MONS_DRACONIAN_SCORCHER, MONS_RED_DRACONIAN },
+#if TAG_MAJOR_VERSION == 34
+    { MONS_PROGRAM_BUG, MONS_PROGRAM_BUG }, // MONS_MOTTLED_DRACONIAN
+#endif
+};
+
+// Should have exactly one job per randomly-spawning draconian colour.
+COMPILE_CHECK(ARRAYSZ(_draconian_combos) == MONS_LAST_SPAWNED_DRACONIAN
+                                            - MONS_FIRST_BASE_DRACONIAN + 1);
+
+monster_type draconian_colour_for_job(monster_type job)
+{
+    for (auto &drac : _draconian_combos)
+        if (drac.first == job)
+            return drac.second;
+
+    return MONS_PROGRAM_BUG;
 }
 
-monster_type random_demonspawn_job()
+monster_type draconian_job_for_colour(monster_type colour)
 {
-    return _random_mons_between(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                MONS_LAST_NONBASE_DEMONSPAWN);
+    for (auto &drac : _draconian_combos)
+        if (drac.second == colour)
+            return drac.first;
+
+    // Doesn't normally spawn, but should still return a random job.
+    if (colour > MONS_LAST_SPAWNED_DRACONIAN
+        && colour <= MONS_LAST_BASE_DRACONIAN)
+    {
+        return random_draconian_job();
+    }
+
+    return MONS_PROGRAM_BUG;
 }
 
 static mon_spellbook_type _get_mc_spellbook(const monster_type mon_type)
@@ -2699,7 +2620,7 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
     if (mons_genus(mi.type) == MONS_DRACONIAN)
     {
         const mon_spell_slot breath =
-            drac_breath(mi.draco_or_demonspawn_subspecies());
+            drac_breath(mi.draconian_subspecies());
         if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
             slots.push_back(breath);
         // No other spells; quit right away.
@@ -2765,7 +2686,7 @@ void mons_load_spells(monster& mon)
     mon.spells.clear();
     if (mons_genus(mon.type) == MONS_DRACONIAN)
     {
-        mon_spell_slot breath = drac_breath(draco_or_demonspawn_subspecies(mon));
+        mon_spell_slot breath = drac_breath(draconian_subspecies(mon));
         if (breath.spell != SPELL_NO_SPELL)
             mon.spells.push_back(breath);
     }
@@ -2794,27 +2715,6 @@ colour_t random_monster_colour()
         col = random_colour();
 
     return col;
-}
-
-bool init_abomination(monster& mon, int hd)
-{
-    if (mon.type != MONS_ABOMINATION_LARGE
-        && mon.type != MONS_ABOMINATION_SMALL)
-    {
-        return false;
-    }
-
-    const int max_hd = mon.type == MONS_ABOMINATION_LARGE ? 30 : 15;
-
-    mon.set_hit_dice(min(max_hd, hd));
-
-    const monsterentry *m = get_monster_data(mon.type);
-    const int hp = hit_points(div_rand_round(hd * m->avg_hp_10x, m->HD));
-
-    mon.max_hit_points = hp;
-    mon.hit_points     = hp;
-
-    return true;
 }
 
 // Generate a shiny, new and unscarred monster.
@@ -2894,31 +2794,7 @@ void define_monster(monster& mons, bool friendly)
     }
 
     if (mons_is_draconian_job(mcls))
-    {
-        // Professional draconians still have a base draconian type.
-        // White draconians will never be draconian scorchers, but
-        // apart from that, anything goes.
-        do
-        {
-            monbase = random_draconian_monster_species();
-        }
-        while (drac_colour_incompatible(mcls, monbase));
-    }
-
-    if (mons_is_demonspawn_job(mcls))
-    {
-        // Some base demonspawn have more or less HP, AC, EV than their
-        // brethren; those should be based on the base monster,
-        // with modifiers taken from the job.
-
-        monbase = (mons.base_monster == MONS_NO_MONSTER
-                   || mons.base_monster == MONS_PROGRAM_BUG) // zombie gen
-                  ? random_demonspawn_monster_species()
-                  : mons.base_monster;
-
-        const monsterentry* mbase = get_monster_data(monbase);
-        hp = hit_points(mbase->avg_hp_10x + m->avg_hp_10x);
-    }
+        monbase = draconian_colour_for_job(mcls);
 
     if (col == COLOUR_UNDEF) // but never give out darkgrey to monsters
         col = random_monster_colour();
@@ -3119,44 +2995,6 @@ monster_type draconian_colour_by_name(const string &name)
     return MONS_PROGRAM_BUG;
 }
 
-// TODO: Remove "putrid" when TAG_MAJOR_VERSION > 34
-static const char *demonspawn_base_names[] =
-{
-    "monstrous", "gelid", "infernal",
-#if TAG_MAJOR_VERSION == 34
-    "putrid",
-#endif
-    "torturous",
-};
-
-string demonspawn_base_name(monster_type mon_type)
-{
-    COMPILE_CHECK(ARRAYSZ(demonspawn_base_names) ==
-                  MONS_LAST_BASE_DEMONSPAWN - MONS_FIRST_BASE_DEMONSPAWN + 1);
-
-    if (mon_type < MONS_FIRST_BASE_DEMONSPAWN
-        || mon_type > MONS_LAST_BASE_DEMONSPAWN)
-    {
-        return "buggy";
-    }
-
-    return demonspawn_base_names[mon_type - MONS_FIRST_BASE_DEMONSPAWN];
-}
-
-monster_type demonspawn_base_by_name(const string &name)
-{
-    COMPILE_CHECK(ARRAYSZ(demonspawn_base_names) ==
-                  MONS_LAST_BASE_DEMONSPAWN - MONS_FIRST_BASE_DEMONSPAWN + 1);
-
-    for (unsigned i = 0; i < ARRAYSZ(demonspawn_base_names); ++i)
-    {
-        if (name == demonspawn_base_names[i])
-            return static_cast<monster_type>(i + MONS_FIRST_BASE_DEMONSPAWN);
-    }
-
-    return MONS_PROGRAM_BUG;
-}
-
 string mons_type_name(monster_type mc, description_level_type desc)
 {
     string result;
@@ -3184,15 +3022,6 @@ string mons_type_name(monster_type mc, description_level_type desc)
         return result;
     case RANDOM_NONBASE_DRACONIAN:
         result += "random nonbase draconian";
-        return result;
-    case RANDOM_DEMONSPAWN:
-        result += "random demonspawn";
-        return result;
-    case RANDOM_BASE_DEMONSPAWN:
-        result += "random base demonspawn";
-        return result;
-    case RANDOM_NONBASE_DEMONSPAWN:
-        result += "random nonbase demonspawn";
         return result;
     case WANDERING_MONSTER:
         result += "wandering monster";
@@ -3376,8 +3205,8 @@ habitat_type mons_habitat_type(monster_type t, monster_type base_t,
 
 habitat_type mons_habitat(const monster& mon, bool real_amphibious)
 {
-    const monster_type type = mons_is_job(mon.type)
-        ? draco_or_demonspawn_subspecies(mon) : mon.type;
+    const monster_type type = mons_is_draconian_job(mon.type)
+        ? draconian_subspecies(mon) : mon.type;
 
     return mons_habitat_type(type, mons_base_type(mon), real_amphibious);
 }
@@ -3392,8 +3221,8 @@ habitat_type mons_class_primary_habitat(monster_type mc)
 
 habitat_type mons_primary_habitat(const monster& mon)
 {
-    const monster_type type = mons_is_job(mon.type)
-        ? draco_or_demonspawn_subspecies(mon) : mons_base_type(mon);
+    const monster_type type = mons_is_draconian_job(mon.type)
+        ? draconian_subspecies(mon) : mons_base_type(mon);
 
     return mons_class_primary_habitat(type);
 }
@@ -3406,11 +3235,6 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
     if (ht == HT_AMPHIBIOUS_LAVA)
         ht = HT_LAVA;
     return ht;
-}
-
-habitat_type mons_secondary_habitat(const monster& mon)
-{
-    return mons_class_secondary_habitat(mons_base_type(mon));
 }
 
 int mons_power(monster_type mc)
@@ -3610,8 +3434,8 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         && !mon.is_summoned()
         && !testbits(mon.flags, MF_NO_REWARD))
     {
-        // Give the player half of the monster's XP.
-        gain_exp((exper_value(mon) + 1) / 2);
+        // Give the player full XP.
+        gain_exp(exper_value(mon));
     }
     mon.flags |= MF_PACIFIED;
 
@@ -3828,47 +3652,6 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
     return false;
 }
 
-// Returns whether the monster has a spell which is theoretically capable of
-// causing an incapacitation state in the target foe (ie: it can cast sleep
-// and the foe is not immune to being put to sleep)
-//
-// Note that this only current checks for inherent obvious immunity (ie: sleep
-// immunity from being undead) and not immunity that might be granted by gear
-// (such as clarity or stasis)
-bool mons_has_incapacitating_spell(const monster& mon, const actor& foe)
-{
-    for (const mon_spell_slot &slot : mon.spells)
-    {
-        switch (slot.spell)
-        {
-        case SPELL_SLEEP:
-            if (foe.can_sleep())
-                return true;
-            break;
-
-        case SPELL_HIBERNATION:
-            if (foe.can_hibernate(false, true))
-                return true;
-            break;
-
-        case SPELL_CONFUSE:
-        case SPELL_MASS_CONFUSION:
-        case SPELL_PARALYSE:
-            return true;
-
-        case SPELL_PETRIFY:
-            if (foe.res_petrify())
-                return true;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
-}
-
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
     // Ugh.
@@ -3900,41 +3683,6 @@ bool mons_has_ranged_attack(const monster& mon)
            || _mons_has_usable_ranged_weapon(&mon)
            || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
-}
-
-bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
-{
-    if (!_mons_has_usable_ranged_weapon(&mon))
-        return false;
-
-    const item_def *missile = mon.missiles();
-
-    if (missile && missile->sub_type == MI_THROWING_NET)
-        return true;
-    else if (missile && missile->sub_type == MI_DART)
-    {
-        switch (get_ammo_brand(*missile))
-        {
-        // Not actually incapacitating, but marked as such so that
-        // assassins will prefer using it while ammo remains
-        case SPMSL_CURARE:
-            if (foe.res_poison() <= 0)
-                return true;
-            break;
-
-        case SPMSL_BLINDING:
-#if TAG_MAJOR_VERSION == 34
-        case SPMSL_CONFUSION:
-        case SPMSL_PARALYSIS:
-#endif
-            return true;
-
-        default:
-            break;
-        }
-    }
-
-    return false;
 }
 
 bool mons_can_attack(const monster& mon)
@@ -4761,11 +4509,13 @@ tileidx_t get_mon_base_tile(monster_type mc)
  *              (by individual monster instance, or whether they're in water,
  *              etc)
  */
+#ifdef USE_TILE
 mon_type_tile_variation get_mon_tile_variation(monster_type mc)
 {
     ASSERT_smc();
     return smc->tile.variation;
 }
+#endif
 
 /**
  * What's the normal tile for corpses of a given monster type?
@@ -4999,9 +4749,9 @@ void debug_mondata()
         if (md->basechar == ' ')
             fails += make_stringf("%s has an empty glyph\n", name);
 
-        if (md->AC < 0 && !mons_is_job(mc))
+        if (md->AC < 0 && !mons_is_draconian_job(mc))
             fails += make_stringf("%s has negative AC\n", name);
-        if (md->ev < 0 && !mons_is_job(mc))
+        if (md->ev < 0 && !mons_is_draconian_job(mc))
             fails += make_stringf("%s has negative EV\n", name);
         if (md->exp_mod < 0)
             fails += make_stringf("%s has negative xp mod\n", name);
@@ -5215,28 +4965,6 @@ vector<monster* > get_on_level_followers()
     return mon_list;
 }
 
-// Return the number of monsters of the specified type.
-// If friendly_only is true, only count friendly
-// monsters, otherwise all of them
-int count_monsters(monster_type mtyp, bool friendly_only)
-{
-    return count_if(begin(env.mons), end(env.mons),
-                    [=] (const monster &mons) -> bool
-                    {
-                        return mons.alive() && mons.type == mtyp
-                            && (!friendly_only || mons.friendly());
-                    });
-}
-
-int count_allies()
-{
-    return count_if(begin(env.mons), end(env.mons),
-                    [] (const monster &mons) -> bool
-                    {
-                        return mons.alive() && mons.friendly();
-                    });
-}
-
 bool mons_stores_tracking_data(const monster& mons)
 {
     return mons.type == MONS_THORN_HUNTER
@@ -5355,16 +5083,6 @@ monster* choose_random_monster_on_level(int weight,
     }
 
     return chosen;
-}
-
-void update_monster_symbol(monster_type mtype, cglyph_t md)
-{
-    ASSERT(mtype != MONS_0);
-
-    if (md.ch)
-        monster_symbols[mtype].glyph = get_glyph_override(md.ch);
-    if (md.col)
-        monster_symbols[mtype].colour = md.col;
 }
 
 int spell_freq_for_hd(int hd)

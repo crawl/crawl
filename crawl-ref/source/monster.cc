@@ -1441,14 +1441,8 @@ static int _ego_damage_bonus(item_def &item)
 bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
     // Draconian monks are masters of unarmed combat.
-    // Monstrous demonspawn prefer to RIP AND TEAR with their claws.
-    // XXX: this could probably be a monster flag
-    if (type == MONS_DRACONIAN_MONK
-        || mons_is_demonspawn(type)
-           && draco_or_demonspawn_subspecies(*this) == MONS_MONSTROUS_DEMONSPAWN)
-    {
+    if (type == MONS_DRACONIAN_MONK)
         return false;
-    }
 
     const bool dual_wielding = mons_wields_two_weapons(*this);
     if (dual_wielding)
@@ -2758,6 +2752,10 @@ bool monster::go_frenzy(actor *source)
     if (!can_go_frenzy())
         return false;
 
+    // Wake sleeping monsters.
+    if (asleep())
+        behaviour_event(this, ME_ALERT, source, source->pos());
+
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
@@ -2837,13 +2835,6 @@ void monster::expose_to_element(beam_type flavour, int strength,
         break;
     case BEAM_WATER:
         del_ench(ENCH_STICKY_FLAME);
-        break;
-    case BEAM_FIRE:
-    case BEAM_LAVA:
-    case BEAM_STICKY_FLAME:
-    case BEAM_STEAM:
-        if (has_ench(ENCH_ICEMAIL))
-            del_ench(ENCH_ICEMAIL);
         break;
     default:
         break;
@@ -3241,8 +3232,8 @@ static int _zombie_ac_modifier(monster_type type)
 /**
  * What's the base armour class of this monster?
  *
- * Usually based on type; ghost demons can override this, and draconians/
- * demonspawn are... complicated.
+ * Usually based on type; ghost demons can override this, and draconians
+ * are... complicated.
  *
  * @return The base armour class of this monster, before applying item &
  *          status effects.
@@ -3294,8 +3285,8 @@ int monster::base_armour_class() const
 
     const int base_ac = get_monster_data(type)->AC;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
     {
         ASSERT(!invalid_monster_type(base_monster));
         return base_ac + get_monster_data(base_monster)->AC;
@@ -3340,8 +3331,6 @@ int monster::armour_class(bool calc_unid) const
     }
 
     // various enchantments
-    if (has_ench(ENCH_ICEMAIL))
-        ac += ICEMAIL_MAX;
     if (has_ench(ENCH_IDEALISED))
         ac += 4 + get_hit_dice() / 3;
 
@@ -3412,8 +3401,8 @@ int monster::base_evasion() const
 
     const int base_ev = get_monster_data(type)->ev;
 
-    // demonspawn & draconians combine base & class ac values.
-    if (mons_is_job(type))
+    // draconians combine base & class ac values.
+    if (mons_is_draconian_job(type))
         return base_ev + get_monster_data(base_monster)->ev;
 
     return base_ev;
@@ -3521,22 +3510,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     if (testbits(flags, MF_FAKE_UNDEAD))
         return MH_UNDEAD;
 
-    mon_holy_type holi = mons_class_holiness(type);
-
-    // Assume that all unknown gods are evil.
-    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
-        holi |= MH_EVIL;
-
-    if (has_attack_flavour(AF_DRAIN)
-        || has_attack_flavour(AF_VAMPIRIC))
-    {
-        holi |= MH_EVIL;
-    }
-
-    if (testbits(flags, MF_SPECTRALISED))
-        holi |= MH_EVIL;
-
-    return holi;
+    return mons_class_holiness(type);
 }
 
 bool monster::undead_or_demonic(bool /*temp*/) const
@@ -3544,6 +3518,21 @@ bool monster::undead_or_demonic(bool /*temp*/) const
     const mon_holy_type holi = holiness();
 
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
+}
+
+bool monster::evil() const
+{
+    // Assume that all unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
+        return true;
+    if (has_attack_flavour(AF_DRAIN) || has_attack_flavour(AF_VAMPIRIC))
+        return true;
+    if (testbits(flags, MF_SPECTRALISED))
+        return true;
+    for (auto slot : spells)
+        if (is_evil_spell(slot.spell))
+            return true;
+    return actor::evil();
 }
 
 /**
@@ -3632,7 +3621,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_TIAMAT            // For her colour-changing.
         || type == MONS_BAI_SUZHEN
         || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
-        || mons_is_demonspawn(type))      // Like player demonspawn.
+        || mons_genus(type) == MONS_DEMONSPAWN) // Like player demonspawn.
     {
         chaotic++;
     }
@@ -4838,7 +4827,9 @@ void monster::load_ghost_spells()
         return;
     }
 
-    spells = ghost->spells;
+    for (unsigned int i = 0; i < ghost->spells.size(); i++)
+        if (is_valid_spell(ghost->spells[i].spell))
+            spells.push_back(ghost->spells[i]);
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf(DIAG_MONPLACE, "Ghost spells:");
@@ -5002,10 +4993,8 @@ int monster::foe_distance() const
 
 /**
  * Can the monster suffer ENCH_FRENZY?
- *
- * @param check_sleep  Consider sleeping monsters as immune.
  */
-bool monster::can_go_frenzy(bool check_sleep) const
+bool monster::can_go_frenzy() const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -5015,7 +5004,7 @@ bool monster::can_go_frenzy(bool check_sleep) const
     if (mons_intel(*this) == I_BRAINLESS && !(holiness() & MH_NATURAL))
         return false;
 
-    if (paralysed() || petrified() || petrifying() || check_sleep && asleep())
+    if (paralysed() || petrified() || petrifying())
         return false;
 
     if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
@@ -5338,7 +5327,7 @@ bool monster::is_skeletal() const
  */
 bool monster::is_spiny() const
 {
-    return mons_class_flag(mons_is_job(type) ? base_monster : type,
+    return mons_class_flag(mons_is_draconian_job(type) ? base_monster : type,
                            M_SPINY);
 }
 
@@ -5530,6 +5519,9 @@ bool monster::swap_with(monster* other)
     clear_invalid_constrictions(true);
     other->clear_invalid_constrictions(true);
 
+    clear_far_engulf();
+    other->clear_far_engulf();
+
     return true;
 }
 
@@ -5660,7 +5652,7 @@ int monster::action_energy(energy_use_type et) const
     return max(move_cost, 1);
 }
 
-void monster::lose_energy(energy_use_type et, int div, int mult)
+int monster::energy_cost(energy_use_type et, int div, int mult)
 {
     int energy_loss  = div_round_up(mult * action_energy(et), div);
     if (has_ench(ENCH_PETRIFYING))
@@ -5671,20 +5663,15 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
-
-    speed_increment -= energy_loss;
+    return energy_loss;
 }
 
-void monster::gain_energy(energy_use_type et, int div, int mult)
+void monster::lose_energy(energy_use_type et, int div, int mult)
 {
-    int energy_gain  = div_round_up(mult * action_energy(et), div);
-    if (has_ench(ENCH_PETRIFYING))
-    {
-        energy_gain *= 2;
-        energy_gain /= 3;
-    }
-
-    speed_increment += energy_gain;
+    speed_increment -= energy_cost(et, div, mult);
+    // Awful old random energy logic. TODO: REMOVEME
+    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
+        speed_increment -= random2(3) - 1;
 }
 
 /**
@@ -5723,6 +5710,8 @@ bool monster::can_drink_potion(potion_type ptype) const
             return !(holiness() & (MH_NONLIVING | MH_PLANT));
         case POT_BERSERK_RAGE:
             return can_go_berserk();
+        case POT_BRILLIANCE:
+            return is_actual_spellcaster();
         case POT_HASTE:
         case POT_MIGHT:
         case POT_INVISIBILITY:
@@ -5756,6 +5745,8 @@ bool monster::should_drink_potion(potion_type ptype) const
         return !has_ench(ENCH_HASTE);
     case POT_MIGHT:
         return !has_ench(ENCH_MIGHT) && foe_distance() <= 2;
+    case POT_BRILLIANCE:
+        return !has_ench(ENCH_EMPOWERED_SPELLS) && !is_silenced();
     case POT_RESISTANCE:
         return !has_ench(ENCH_RESISTANCE);
     case POT_INVISIBILITY:
@@ -5809,6 +5800,11 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
     case POT_MIGHT:
         enchant_actor_with_flavour(this, this, BEAM_MIGHT);
+        break;
+
+    case POT_BRILLIANCE:
+        simple_monster_message(*this, "'s spells are empowered!");
+        add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1));
         break;
 
     case POT_INVISIBILITY:
@@ -6133,24 +6129,6 @@ void monster::steal_item_from_player()
                                         name(DESC_THE));
                 mprf(MSGCH_TALK, "%s", complaint.c_str());
             }
-
-            bolt beem;
-            beem.source    = pos();
-            beem.target    = pos();
-            beem.source_id = mid;
-
-            // Try to teleport away.
-            if (no_tele())
-                return;
-
-            if (has_ench(ENCH_TP))
-            {
-                mons_cast_noise(this, beem, SPELL_BLINK, MON_SPELL_WIZARD);
-                // this can kill us, delay the call
-                blink_fineff::schedule(this);
-            }
-            else
-                mons_cast(this, beem, SPELL_TELEPORT_SELF, MON_SPELL_WIZARD);
 
             return;
         }

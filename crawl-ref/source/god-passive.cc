@@ -282,8 +282,6 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW adjusts your attributes periodically" },
         {  0, passive_t::slime_wall_immune,
               "are NOW immune to slime covered walls" },
-        {  2, passive_t::slime_feed,
-              "Your fellow slimes NOW consume items" },
         {  3, passive_t::resist_corrosion,
               "GOD NOW protects you from corrosion" },
         {  4, passive_t::slime_mp,
@@ -336,15 +334,14 @@ static const vector<god_passive> god_passives[] =
     // Ashenzari
     {
         { -1, passive_t::want_curses, "prefer cursed items" },
-        { -1, passive_t::detect_portals, "sense portals" },
-        { -1, passive_t::identify_items, "sense the properties of items" },
+        {  0, passive_t::detect_portals, "sense portals" },
         {  0, passive_t::auto_map, "have improved mapping abilities" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
-        {  0, passive_t::avoid_traps,
-              "avoid traps" },
         {  0, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
+        {  1, passive_t::identify_items, "sense the properties of items" },
+        {  1, passive_t::avoid_traps, "avoid traps" },
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
         {  4, passive_t::xray_vision, "GOD NOW grants you astral sight" },
@@ -802,26 +799,6 @@ int ash_skill_boost(skill_type sk, int scale)
     level = level * scale + get_skill_progress(sk, level, skill_points, scale);
 
     return min(level, MAX_SKILL_LEVEL * scale);
-}
-
-int gozag_gold_in_los(actor *whom)
-{
-    if (!have_passive(passive_t::gold_aura))
-        return 0;
-
-    int gold_count = 0;
-
-    for (radius_iterator ri(whom->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
-         ri; ++ri)
-    {
-        for (stack_iterator j(*ri); j; ++j)
-        {
-            if (j->base_type == OBJ_GOLD)
-                ++gold_count;
-        }
-    }
-
-    return gold_count;
 }
 
 void gozag_detect_level_gold(bool count)

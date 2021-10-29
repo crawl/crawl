@@ -36,6 +36,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -1584,6 +1585,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_ELYVILON_LESSER_HEALING:
+    case ABIL_ELYVILON_GREATER_HEALING:
+        if (you.hp == you.hp_max)
+        {
+            if (!quiet)
+                canned_msg(MSG_FULL_HEALTH);
+            return false;
+        }
+        return true;
+
     case ABIL_ELYVILON_PURIFICATION:
         if (!you.duration[DUR_SICKNESS]
             && !you.duration[DUR_POISONING]
@@ -1686,6 +1697,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_EVOKE_BLINK:
+        if (you.duration[DUR_BLINK_COOLDOWN])
+        {
+            if (!quiet)
+                mpr("You are still too unstable to blink.");
+            return false;
+        }
+        // fallthrough
     case ABIL_BLINKBOLT:
     {
         const string no_tele_reason = you.no_tele_reason(false, true);
@@ -2157,8 +2175,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_BREATHE_ACID:       // Draconian acid splash
     {
+        int pow = (you.form == transformation::dragon) ?
+            2 * you.experience_level : you.experience_level;
         beam.range = _calc_breath_ability_range(abil.ability);
-        targeter_splash hitfunc(&you, beam.range);
+        targeter_splash hitfunc(&you, beam.range, pow);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
@@ -2169,9 +2189,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
 
         fail_check();
-        zapping(ZAP_BREATHE_ACID, (you.form == transformation::dragon) ?
-                2 * you.experience_level : you.experience_level,
-                beam, false, "You spit a glob of acid.");
+        zapping(ZAP_BREATHE_ACID, pow, beam, false, "You spit a glob of acid.");
 
         you.increase_duration(DUR_BREATH_WEAPON,
                           3 + random2(10) + random2(30 - you.experience_level));
@@ -2241,17 +2259,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             black_drac_breath();
             break;
 
-        case ABIL_BREATHE_ACID:
-            if (zapping(ZAP_BREATHE_ACID,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You spit a glob of acid.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
-            break;
-
         case ABIL_BREATHE_POWER:
             if (zapping(ZAP_BREATHE_POWER,
                         you.form == transformation::dragon
@@ -2298,7 +2305,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
-        return cast_blink(fail);
+        return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
 
     case ABIL_EVOKE_ASMODEUS:
         fail_check();
@@ -3861,10 +3868,12 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
+#ifdef WIZARD
     case ABIL_WIZ_BUILD_TERRAIN:
     case ABIL_WIZ_SET_TERRAIN:
     case ABIL_WIZ_CLEAR_TERRAIN:
         first_slot = letter_to_index('O'); // somewhat arbitrary, late in the alphabet
+#endif
     default:
         break;
     }
@@ -3926,11 +3935,14 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
             abilities.push_back(static_cast<ability_type>(anc_type));
         }
     }
-    if (silenced(you.pos()) && you_worship(GOD_WU_JIAN) && piety_rank() >= 2)
-        abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
 
     if (!ignore_silence && silenced(you.pos()))
+    {
+        if (have_passive(passive_t::wu_jian_wall_jump))
+            abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
         return abilities;
+    }
+
     // Remaining abilities are unusable if silenced.
     if (you_worship(GOD_NEMELEX_XOBEH))
     {

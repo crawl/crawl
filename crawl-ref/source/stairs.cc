@@ -669,6 +669,7 @@ void rise_through_ceiling()
     untag_followers(); // XXX: is this needed?
     floor_transition(DNGN_ALTAR_IGNIS /*hack*/, DNGN_ALTAR_IGNIS,
                      whither, true, true, false, false);
+    you.clear_far_engulf();
 
     // flavour! blow a hole through the floor
     if (env.grid(you.pos()) == DNGN_FLOOR

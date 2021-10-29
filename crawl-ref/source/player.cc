@@ -249,7 +249,8 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
 
     if (!_check_moveto_dangerous(p, msg))
         return false;
-    if (!you.airborne() && env.grid(you.pos()) != DNGN_TOXIC_BOG
+    if (!you.airborne() && !you.duration[DUR_NOXIOUS_BOG]
+        && env.grid(you.pos()) != DNGN_TOXIC_BOG
         && env.grid(p) == DNGN_TOXIC_BOG)
     {
         string prompt;
@@ -2793,7 +2794,9 @@ void level_change(bool skip_attribute_increase)
                     // when we redraw the screen
                     _gain_and_note_hp_mp();
                     updated_maxhp = true;
-
+#ifdef USE_TILE_LOCAL
+                    tiles.layout_statcol();
+#endif
                     redraw_screen();
                     update_screen();
                 }
@@ -2818,6 +2821,8 @@ void level_change(bool skip_attribute_increase)
                                      "your demonic heritage exerts itself.");
                                 mark_milestone("monstrous", "discovered their "
                                                "monstrous ancestry!");
+                                take_note(Note(NOTE_MESSAGE, 0, 0,
+                                     "Discovered your monstrous ancestry."));
                             }
                             break;
                         }
@@ -3666,26 +3671,6 @@ void inc_hp(int hp_gain, bool silent)
     }
 }
 
-void drain_hp(int hp_loss)
-{
-    if (!player_drained() && hp_loss > 0)
-        you.redraw_magic_points = true;
-
-    const int initial_loss = you.hp_max_adj_temp;
-    you.hp_max_adj_temp -= hp_loss;
-    // don't allow more drain than you have normal mhp
-    you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
-                              you.hp_max_adj_temp);
-    if (initial_loss == you.hp_max_adj_temp)
-        return;
-
-    calc_hp();
-
-    xom_is_stimulated(hp_loss * 25);
-
-    you.redraw_hit_points = true;
-}
-
 int undrain_hp(int hp_recovered)
 {
     int hp_balance = 0;
@@ -3715,16 +3700,6 @@ void rot_mp(int mp_loss)
     calc_mp();
 
     you.redraw_magic_points = true;
-}
-
-void inc_max_hp(int hp_gain)
-{
-    you.hp += hp_gain;
-    you.hp_max_adj_perm += hp_gain;
-    calc_hp();
-
-    take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
-    you.redraw_hit_points = true;
 }
 
 void dec_max_hp(int hp_loss)
@@ -6054,12 +6029,6 @@ mon_holy_type player::holiness(bool temp) const
         holi = MH_NONLIVING;
     }
 
-    if (is_evil_god(religion)
-        || species == SP_DEMONSPAWN || you.has_mutation(MUT_VAMPIRISM))
-    {
-        holi |= MH_EVIL;
-    }
-
     // possible XXX: Monsters get evil/unholy bits set on spell selection
     //  should players?
     return holi;
@@ -6070,6 +6039,14 @@ bool player::undead_or_demonic(bool temp) const
 {
     // This is only for TSO-related stuff, so demonspawn are included.
     return undead_state(temp) || species == SP_DEMONSPAWN;
+}
+
+bool player::evil() const
+{
+    return is_evil_god(religion)
+        || species == SP_DEMONSPAWN
+        || you.has_mutation(MUT_VAMPIRISM)
+        || actor::evil();
 }
 
 bool player::is_holy() const
@@ -6813,7 +6790,8 @@ bool player::has_tail(bool allow_tran) const
         || has_mutation(MUT_CONSTRICTING_TAIL, allow_tran)
         || fishtail // XX respect allow_tran
         || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
-        || get_mutation_level(MUT_STINGER, allow_tran))
+        || get_mutation_level(MUT_STINGER, allow_tran)
+        || get_mutation_level(MUT_WEAKNESS_STINGER, allow_tran))
     {
         return 1;
     }

@@ -285,8 +285,12 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Ashenzari
     {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
              "Ashenzari reveals the structure of the dungeon to you.\n"
-             "Ashenzari shows you where magical portals lie.\n"
-             "Ashenzari prevents you from stumbling into unseen traps.\n"
+             "Ashenzari shows you where magical portals lie." },
+        { 1, "Ashenzari will now prevent you from stumbling into unseen traps.",
+             "Ashenzari no longer prevents you from stumbling into unseen traps.",
+             "Ashenzari prevents you from stumbling into unseen traps." },
+        { 1, "Ashenzari will now identify your possessions.",
+             "Ashenzari will no longer identify your possesions.",
              "Ashenzari identifies your possessions." },
         { 2, "Ashenzari will now reveal the unseen.",
              "Ashenzari will no longer reveal the unseen.",

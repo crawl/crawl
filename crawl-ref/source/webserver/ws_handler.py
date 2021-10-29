@@ -176,6 +176,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
         self.message_queue = []  # type: List[str]
+        self.failed_messages = 0
 
         self.subprotocol = None
 
@@ -937,18 +938,33 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.uncompressed_bytes_sent += len(binmsg)
                 f = self.write_message(binmsg)
 
+            import traceback
+            cur_stack = traceback.format_stack()
+
             # handle any exceptions lingering in the Future
             # TODO: this whole call chain should be converted to use coroutines
             def after_write_callback(f):
                 try:
                     f.result()
+                except tornado.websocket.StreamClosedError as e:
+                    # not supposed to be raised here in current versions of
+                    # tornado, but in some older versions it is.
+                    if self.failed_messages == 0:
+                        self.logger.warning("Connection closed during async write_message")
+                    self.failed_messages += 1
+                    if self.ws_connection is not None:
+                        self.ws_connection._abort()
                 except tornado.websocket.WebSocketClosedError as e:
-                    self.logger.warning("Connection closed during async write_message")
+                    if self.failed_messages == 0:
+                        self.logger.warning("Connection closed during async write_message")
+                    self.failed_messages += 1
                     if self.ws_connection is not None:
                         self.ws_connection._abort()
                 except Exception as e:
-                    self.logger.warning("Exception during async write_message")
+                    self.logger.warning("Exception during async write_message, stack at call:")
+                    self.logger.warning("".join(cur_stack))
                     self.logger.warning(e, exc_info=True)
+                    self.failed_messages += 1
                     if self.ws_connection is not None:
                         self.ws_connection._abort()
 
@@ -963,6 +979,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return True
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
+            self.failed_messages += 1
             if self.ws_connection is not None:
                 self.ws_connection._abort()
             return False
@@ -1014,5 +1031,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
             comp_ratio = round(comp_ratio, 2)
 
-        self.logger.info("Socket closed. (%s sent, compression ratio %s%%)",
-                         util.humanise_bytes(self.total_message_bytes), comp_ratio)
+        if self.failed_messages > 0:
+            failed_msg = ", %d failed messages" % self.failed_messages
+        else:
+            failed_msg = ""
+
+        self.logger.info("Socket closed. (%s sent, compression ratio %s%%%s)",
+                         util.humanise_bytes(self.total_message_bytes),
+                         comp_ratio,
+                         failed_msg)

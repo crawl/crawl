@@ -13,6 +13,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "items.h"
 #include "libutil.h"
 #include "los-def.h"
 #include "losglobal.h"
@@ -22,6 +23,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
 #include "spl-other.h"
+#include "spl-transloc.h"
 #include "stringutil.h"
 #include "terrain.h"
 
@@ -411,7 +413,7 @@ targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)
  * @return      Whether, to the player's knowledge, there's a valid target for
  *              Violent Unravelling at the given coordinate.
  */
-static bool unravelling_explodes_at(const coord_def c)
+static bool _unravelling_explodes_at(const coord_def c)
 {
     if (you.pos() == c && player_is_debuffable())
         return true;
@@ -434,12 +436,27 @@ bool targeter_unravelling::set_aim(coord_def a)
 
     bolt explosion_beam = beam;
     set_explosion_target(beam);
-    if (unravelling_explodes_at(beam.target))
+    if (_unravelling_explodes_at(beam.target))
         min_expl_rad = 1;
     else
         min_expl_rad = 0;
 
     set_explosion_aim(beam);
+
+    return true;
+}
+
+bool targeter_unravelling::valid_aim(coord_def a)
+{
+    if (!targeter_beam::valid_aim(a))
+        return false;
+
+    const monster* mons = monster_at(a);
+    if (mons && you.can_see(*mons) && !_unravelling_explodes_at(a))
+    {
+        return notify_fail(mons->name(DESC_THE) + " has no enchantments to "
+                           "unravel.");
+    }
 
     return true;
 }
@@ -786,6 +803,30 @@ bool targeter_airstrike::valid_aim(coord_def a)
     return true;
 }
 
+targeter_passage::targeter_passage(int _range)
+    : targeter_smite(&you, _range)
+{ }
+
+aff_type targeter_passage::is_affected(coord_def loc)
+{
+    if (!valid_aim(aim))
+        return AFF_NO;
+
+    if (golubria_valid_cell(loc))
+    {
+        bool p1 = grid_distance(loc, origin) <= golubria_fuzz_range();
+        bool p2 = grid_distance(loc, aim) <= golubria_fuzz_range()
+                  && loc != you.pos();
+
+        if (p1 && p2)
+            return AFF_MULTIPLE;
+        else if (p1 || p2)
+            return AFF_MAYBE;
+    }
+
+    return AFF_NO;
+}
+
 targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
     targeter_smite(act, ran, 1, 1, true, nullptr),
     pow(power)
@@ -1015,45 +1056,50 @@ aff_type targeter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_splash::targeter_splash(const actor* act, int ran)
-    : range(ran)
-{
-    ASSERT(act);
-    agent = act;
-    origin = aim = act->pos();
-}
 
-bool targeter_splash::valid_aim(coord_def a)
+targeter_splash::targeter_splash(const actor *act, int r, int pow)
+    : targeter_beam(act, r, ZAP_BREATHE_ACID, pow, 0, 0)
 {
-    if (agent && grid_distance(origin, a) > range)
-        return notify_fail("Out of range.");
-    return true;
 }
 
 aff_type targeter_splash::is_affected(coord_def loc)
 {
-    if (!valid_aim(aim) || !valid_aim(loc))
-        return AFF_NO;
+    bool on_path = false;
+    coord_def c;
+    for (auto pc : path_taken)
+    {
+        if (cell_is_solid(pc))
+            break;
 
-    if (loc == aim)
+        c = pc;
+        if (pc == loc)
+            on_path = true;
+
+        if (anyone_there(pc) && !beam.ignores_monster(monster_at(pc)))
+            break;
+    }
+
+    if (loc == c)
         return AFF_YES;
 
-    // self-spit currently doesn't splash
+    // self-spit doesn't splash
     if (aim == origin)
         return AFF_NO;
 
     // it splashes around only upon hitting someone
-    if (!anyone_there(aim))
-        return AFF_NO;
+    if (anyone_there(c))
+    {
+        if (grid_distance(loc, c) > 1)
+            return on_path ? AFF_YES : AFF_NO;
 
-    if (grid_distance(loc, aim) > 1)
-        return AFF_NO;
+        // you're safe from being splashed by own spit
+        if (loc == origin)
+            return AFF_NO;
 
-    // you're safe from being splashed by own spit
-    if (loc == origin)
-        return AFF_NO;
+        return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
+    }
 
-    return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
+    return on_path ? AFF_YES : AFF_NO;
 }
 
 targeter_radius::targeter_radius(const actor *act, los_type _los,
@@ -1083,11 +1129,11 @@ bool targeter_radius::valid_aim(coord_def a)
 
 aff_type targeter_radius::is_affected(coord_def loc)
 {
-    if (loc == aim)
-        return AFF_YES;
-
-    if ((loc - origin).rdist() > range_max || (loc - origin).rdist() < range_min)
+    if ((loc - origin).rdist() > range_max
+        || (loc - origin).rdist() < range_min)
+    {
         return AFF_NO;
+    }
 
     if (!cell_see_cell(loc, origin, los))
         return AFF_NO;
@@ -1096,7 +1142,7 @@ aff_type targeter_radius::is_affected(coord_def loc)
 }
 
 targeter_flame_wave::targeter_flame_wave(int _range)
-    : targeter_radius(&you, LOS_NO_TRANS, _range)
+    : targeter_radius(&you, LOS_NO_TRANS, _range, 0, 1)
 { }
 
 aff_type targeter_flame_wave::is_affected(coord_def loc)
@@ -1105,8 +1151,6 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     if (base_aff == AFF_NO)
         return AFF_NO;
     const int dist = (loc - origin).rdist();
-    if (dist == 0)
-        return AFF_NO;
     if (dist == 1)
         return AFF_YES;
     if (you.props.exists(FLAME_WAVE_KEY)
@@ -1115,6 +1159,46 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
         return AFF_YES;
     }
     return AFF_MAYBE;
+}
+
+static int _corpse_rot_cells(coord_def p, int radius = 1)
+{
+    int valid_cells = 0;
+    for (radius_iterator ri(p, radius, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        if (!cell_is_solid(*ri) && !cloud_at(*ri))
+            valid_cells++;
+
+    return valid_cells;
+}
+
+targeter_corpse_rot::targeter_corpse_rot()
+    : targeter_radius(&you, LOS_NO_TRANS, 2, 0, 1)
+{ }
+
+aff_type targeter_corpse_rot::is_affected(coord_def loc)
+{
+    const int dist = (loc - origin).rdist();
+    int num_corpses = 0;
+    for (radius_iterator ri(origin, LOS_NO_TRANS); ri; ++ri)
+        for (stack_iterator si(*ri); si; ++si)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+                num_corpses++;
+
+    if (targeter_radius::is_affected(loc) == AFF_NO
+        || !num_corpses
+        || cloud_at(loc))
+    {
+        return AFF_NO;
+    }
+
+    if (dist > 1)
+    {
+        return num_corpses >= _corpse_rot_cells(origin, dist) ? AFF_YES :
+               2 * num_corpses > _corpse_rot_cells(origin)    ? AFF_MAYBE
+                                                              : AFF_NO;
+    }
+    else
+        return num_corpses >= _corpse_rot_cells(origin) ? AFF_YES : AFF_MAYBE;
 }
 
 aff_type targeter_shatter::is_affected(coord_def loc)

@@ -65,6 +65,7 @@ COMPILE_CHECK(NUM_RODS == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
 COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
 COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
+#ifdef USE_TILE
 TextureID get_tile_texture(tileidx_t idx)
 {
     if (idx < TILE_FLOOR_MAX)
@@ -84,6 +85,7 @@ TextureID get_tile_texture(tileidx_t idx)
     else
         die("Cannot get texture for bad tileidx %" PRIu64, idx);
 }
+#endif
 
 tileidx_t tileidx_trap(trap_type type)
 {
@@ -530,11 +532,13 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     }
 }
 
+#ifdef USE_TILE
 bool is_door_tile(tileidx_t tile)
 {
     return tile >= TILE_DNGN_CLOSED_DOOR &&
         tile < TILE_DNGN_STONE_ARCH;
 }
+#endif
 
 tileidx_t tileidx_feature(const coord_def &gc)
 {
@@ -938,6 +942,7 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
     return TILEP_MONS_PROGRAM_BUG;
 }
 
+#ifdef USE_TILE
 tileidx_t tileidx_out_of_bounds(int branch)
 {
     if (branch == BRANCH_SHOALS)
@@ -946,7 +951,6 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN;
 }
 
-#ifdef USE_TILE
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc)
 {
     // Player memory.
@@ -1436,13 +1440,13 @@ static bool _bow_offset(const monster_info& mon)
         return true;
     }
 }
-#endif
 
 static tileidx_t _mon_mod(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
     return tile + offset % count;
 }
+#endif // USE_TILE
 
 tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset)
 {
@@ -1460,19 +1464,20 @@ static tileidx_t _mon_sinus(tileidx_t tile)
     int n = you.frame_no % (2 * count - 2);
     return (n < count) ? (tile + n) : (tile + 2 * count - 2 - n);
 }
-#endif
 
 static tileidx_t _mon_cycle(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
     return tile + ((offset + you.frame_no) % count);
 }
+#endif
 
 static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 {
     return first + mod % (last - first + 1);
 }
 
+#ifdef USE_TILE
 // This function allows for getting a monster from "just" the type.
 // To avoid needless duplication of a cases in tileidx_monster, some
 // extra parameters that have reasonable defaults for monsters where
@@ -1562,7 +1567,6 @@ enum class tentacle_type
     spectral_kraken = 6,
 };
 
-#ifdef USE_TILE
 static void _add_tentacle_overlay(const coord_def pos,
                                   const main_dir dir,
                                   tentacle_type type)
@@ -2119,24 +2123,12 @@ static tileidx_t tileidx_draco_base(monster_type draco)
 
 tileidx_t tileidx_draco_base(const monster_info& mon)
 {
-    return tileidx_draco_base(mon.draco_or_demonspawn_subspecies());
+    return tileidx_draco_base(mon.draconian_subspecies());
 }
 
 tileidx_t tileidx_draco_job(const monster_info& mon)
 {
     if (mons_is_draconian_job(mon.type))
-        return get_mon_base_tile(mon.type);
-    return 0;
-}
-
-tileidx_t tileidx_demonspawn_base(const monster_info& mon)
-{
-    return get_mon_base_tile(mon.draco_or_demonspawn_subspecies());
-}
-
-tileidx_t tileidx_demonspawn_job(const monster_info& mon)
-{
-    if (mons_is_demonspawn_job(mon.type))
         return get_mon_base_tile(mon.type);
     return 0;
 }
@@ -2176,7 +2168,7 @@ tileidx_t tileidx_player_mons()
     default:                   return tileidx_monster_base(mons, 0);
     }
 }
-#endif
+#endif // USE_TILE
 
 static tileidx_t _tileidx_unrand_artefact(int idx)
 {
@@ -2795,6 +2787,7 @@ tileidx_t tileidx_item(const item_def &item)
     }
 }
 
+#ifdef USE_TILE
 //  Determine Octant of missile direction
 //   .---> X+
 //   |
@@ -2889,6 +2882,7 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
     // If not a special case, just return the default tile.
     return tileidx_item(item);
 }
+#endif // USE_TILE
 
 // For items with randomized descriptions, only the overlay label is
 // placed in the tile page. This function looks up what the base item
@@ -3017,6 +3011,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
     return ch;
 }
 
+#ifdef USE_TILE
 tileidx_t tileidx_bolt(const bolt &bolt)
 {
     const int col = bolt.colour;
@@ -3140,6 +3135,7 @@ tileidx_t tileidx_zap(int colour)
 
     return TILE_SYM_BOLT_OFS - 1 + colour;
 }
+#endif // USE_TILE
 
 tileidx_t tileidx_spell(spell_type spell)
 {
@@ -3314,6 +3310,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_COMMANDS;
     case CMD_LOOKUP_HELP:
         return TILEG_CMD_LOOKUP_HELP;
+    case CMD_LOOKUP_HELP_MENU:
+        return TILEG_CMD_LOOKUP_HELP_MENU;
     case CMD_CHARACTER_DUMP:
         return TILEG_CMD_CHARACTER_DUMP;
     case CMD_DISPLAY_INVENTORY:
@@ -3371,6 +3369,7 @@ tileidx_t tileidx_command(const command_type cmd)
     }
 }
 
+#ifdef USE_TILE_LOCAL
 tileidx_t tileidx_gametype(const game_type gtype)
 {
     switch (gtype)
@@ -3394,6 +3393,7 @@ tileidx_t tileidx_gametype(const game_type gtype)
         return TILEG_ERROR;
     }
 }
+#endif
 
 tileidx_t tileidx_ability(const ability_type ability)
 {
@@ -3458,8 +3458,14 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SHAFT_SELF;
 
     // Evoking items.
+    case ABIL_EVOKE_ASMODEUS:
+        return TILEG_ABILITY_EVOKE_ASMODEUS;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_BLINK;
+    case ABIL_EVOKE_DISPATER:
+        return TILEG_ABILITY_EVOKE_DISPATER;
+    case ABIL_EVOKE_OLGREB:
+        return TILEG_ABILITY_EVOKE_OLGREB;
     case ABIL_EVOKE_TURN_INVISIBLE:
         return TILEG_ABILITY_EVOKE_INVISIBILITY;
 
@@ -4030,6 +4036,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     return 0;
 }
 
+#ifdef USE_TILE
 tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
@@ -4045,6 +4052,7 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
     else
         return TILE_FLAG_UNSEEN;
 }
+# endif
 
 int enchant_to_int(const item_def &item)
 {
@@ -4204,7 +4212,7 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
 
     return tile_string;
 }
-#endif
+#endif // USE_TILE
 
 void bind_item_tile(item_def &item)
 {

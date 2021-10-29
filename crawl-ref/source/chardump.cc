@@ -1257,7 +1257,7 @@ static const char* _stab_names[] =
     "Betrayed ally",
 };
 
-static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
+static const char* _aux_attack_names[] =
 {
     "No attack",
     "Constrict",
@@ -1265,11 +1265,13 @@ static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
     "Headbutt",
     "Peck",
     "Tailslap",
+    "Touch",
     "Punch",
     "Bite",
     "Pseudopods",
     "Tentacles",
 };
+COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 
 static string _describe_action_subtype(caction_type type, int compound_subtype)
 {

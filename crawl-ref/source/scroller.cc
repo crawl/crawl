@@ -13,6 +13,7 @@ using namespace ui;
 static vector<formatted_scroller*> open_scrollers;
 static bool from_webtiles;
 
+#ifdef USE_TILE
 static int _line_height()
 {
 #ifdef USE_TILE_LOCAL
@@ -21,6 +22,7 @@ static int _line_height()
     return 1;
 #endif
 }
+#endif
 
 void formatted_scroller::add_formatted_string(const formatted_string& fs, bool new_line)
 {
@@ -196,6 +198,7 @@ void formatted_scroller::set_scroll(int y)
     }
 }
 
+#ifdef USE_TILE_WEB
 void recv_formatted_scroller_scroll(int line)
 {
     if (open_scrollers.size() == 0)
@@ -209,3 +212,4 @@ void recv_formatted_scroller_scroll(int line)
     // any changes for console spectators, so we need to force a redraw here.
     ui::force_render();
 }
+#endif

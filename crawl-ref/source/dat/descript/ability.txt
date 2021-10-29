@@ -116,7 +116,9 @@ destination.
 %%%%
 Evoke Blink ability
 
-Randomly translocates the user a short distance.
+Randomly translocates the user a short distance. Translocating in this way
+destabilises the user temporarily, preventing consecutive blinks for a
+short period of time depending on Evocations skill.
 %%%%
 Evoke Berserk Rage ability
 
@@ -365,8 +367,8 @@ mindless creatures are too unintelligent to be pacified, and no monster can be
 pacified while it is asleep.
 
 Whether the pacification succeeds or not, the invested piety and magic points
-are lost. If it does succeed, the monster is healed and you gain half the
-monster's experience value. Otherwise, the monster is unaffected and you gain
+are lost. If it does succeed, the monster is healed and you gain the monster's
+full experience value. Otherwise, the monster is unaffected and you gain
 nothing.
 %%%%
 Greater Healing ability
@@ -390,10 +392,11 @@ entered it.
 Bend Space ability
 
 Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating and damaging other adjacent creatures. In
-warping the fabric of space, this ability ignores effects that would usually
-prevent translocations. Invocations skill increases the chance of affecting
-nearby creatures and the damage dealt to those affected.
+and possibly also translocating and damaging creatures adjacent to the initial
+location or the destination. In warping the fabric of space, this ability
+ignores effects that would usually prevent translocations. Invocations skill
+increases the chance of affecting nearby creatures and the damage dealt to
+those affected.
 %%%%
 Banish ability
 

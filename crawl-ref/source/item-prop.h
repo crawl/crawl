@@ -75,7 +75,6 @@ bool fully_identified(const item_def &item) PURE;
 void     set_equip_desc(item_def &item, iflags_t flags);
 iflags_t get_equip_desc(const item_def &item) PURE;
 
-bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:
@@ -190,11 +189,6 @@ int evoker_max_charges(int evoker_type);
 bool jewellery_type_has_plusses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
-#if TAG_MAJOR_VERSION == 34
-
-// food functions:
-bool is_real_food(food_type food) PURE;
-#endif
 
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
@@ -206,7 +200,6 @@ int get_armour_res_elec(const item_def &arm, bool check_artp) PURE;
 int get_armour_life_protection(const item_def &arm, bool check_artp) PURE;
 int get_armour_willpower(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_corr(const item_def &arm) PURE;
-int get_armour_repel_missiles(const item_def &arm, bool check_artp) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
 bool get_armour_rampaging(const item_def &arm, bool check_artp) PURE;
 

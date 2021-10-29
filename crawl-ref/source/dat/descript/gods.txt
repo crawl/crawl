@@ -312,8 +312,8 @@ how depleted, Ignis will always grant followers resistance to fire.
 Jiyva powers
 
 Jiyva's followers can request jellies, which will consume nearby items and
-provide provide health and magic points when doing so. Jiyva will also consume
-items left elsewhere in the dungeon. Followers will later become able to turn
+provide health and magic points when doing so. Jiyva will also consume items
+left elsewhere in the dungeon. Followers will later become able to turn
 monsters to slime, and eventually to reshape themselves to remove harmful
 mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills

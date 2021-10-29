@@ -256,26 +256,6 @@ bool you_can_memorise(spell_type spell)
     return !spell_is_useless(spell, false, true);
 }
 
-bool player_can_memorise(const item_def &book)
-{
-    if (!item_is_spellbook(book) || !player_spell_levels())
-        return false;
-
-    for (spell_type stype : spells_in_book(book))
-    {
-        // Easiest spell already too difficult?
-        if (spell_difficulty(stype) > you.experience_level
-            || player_spell_levels() < spell_levels_required(stype))
-        {
-            return false;
-        }
-
-        if (!you.has_spell(stype))
-            return true;
-    }
-    return false;
-}
-
 /**
  * Populate the given list with all spells the player can currently memorise,
  * from library or Vehumet. Does not filter by currently known spells, spell
@@ -438,12 +418,14 @@ bool library_add_spells(vector<spell_type> spells)
     return false;
 }
 
+#ifdef USE_TILE_LOCAL
 bool has_spells_to_memorise(bool silent)
 {
     // TODO: this is a bit dumb
     spell_list mem_spells(_get_spell_list(silent, true));
     return !mem_spells.empty();
 }
+#endif
 
 static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
 {

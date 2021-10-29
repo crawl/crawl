@@ -180,9 +180,6 @@ enum class passive_t
     /// Slimes and eye monsters are neutral towards you
     neutral_slimes,
 
-    /// Items consumed by your fellow slimes feed you
-    slime_feed,
-
     /// You are immune to slime covered walls
     slime_wall_immune,
 
@@ -288,7 +285,6 @@ monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
-int gozag_gold_in_los(actor* whom);
 void gozag_detect_level_gold(bool count);
 int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();

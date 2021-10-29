@@ -92,7 +92,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_POLAR_VORTEX_COOLDOWN, MB_VORTEX_COOLDOWN },
     { ENCH_BARBS,           MB_BARBS },
     { ENCH_POISON_VULN,     MB_POISON_VULN },
-    { ENCH_ICEMAIL,         MB_ICEMAIL },
     { ENCH_AGILE,           MB_AGILE },
     { ENCH_FROZEN,          MB_FROZEN },
     { ENCH_BLACK_MARK,      MB_BLACK_MARK },
@@ -332,7 +331,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     const bool classy_drac = mons_is_draconian_job(type) || type == MONS_TIAMAT;
     base_type = p_base_type != MONS_NO_MONSTER ? p_base_type
                 : classy_drac ? MONS_DRACONIAN
-                : mons_is_demonspawn_job(type) ? MONS_DEMONSPAWN
                 : type;
 
     if (_is_hydra(*this))
@@ -392,7 +390,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         i_ghost.damage = 5;
     }
 
-    if (mons_is_job(type))
+    if (mons_is_draconian_job(type))
     {
         ac += get_mons_class_ac(base_type);
         ev += get_mons_class_ev(base_type);
@@ -587,7 +585,7 @@ monster_info::monster_info(const monster* m, int milev)
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
-    can_go_frenzy = m->can_go_frenzy(false);
+    can_go_frenzy = m->can_go_frenzy();
     can_feel_fear = m->can_feel_fear(false);
 
     // Not an MB_ because it's rare.
@@ -930,8 +928,6 @@ string monster_info::_core_name() const
 
         if (mons_is_draconian_job(type) && base_type != MONS_NO_MONSTER)
             s = draconian_colour_name(base_type) + " " + s;
-        else if (mons_is_demonspawn_job(type) && base_type != MONS_NO_MONSTER)
-            s = demonspawn_base_name(base_type) + " " + s;
 
         switch (type)
         {
@@ -1209,15 +1205,6 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return false;
     }
 
-    // Treat base demonspawn identically, as with draconians.
-    if (!zombified && m1.type >= MONS_FIRST_BASE_DEMONSPAWN
-        && m1.type <= MONS_LAST_BASE_DEMONSPAWN
-        && m2.type >= MONS_FIRST_BASE_DEMONSPAWN
-        && m2.type <= MONS_LAST_BASE_DEMONSPAWN)
-    {
-        return false;
-    }
-
     int diff_delta = mons_avg_hp(m1.type) - mons_avg_hp(m2.type);
 
     // By descending difficulty
@@ -1293,14 +1280,12 @@ string monster_info::pluralised_name(bool fullname) const
 {
     // Don't pluralise uniques, ever. Multiple copies of the same unique
     // are unlikely in the dungeon currently, but quite common in the
-    // arena. This prevens "4 Gra", etc. {due}
+    // arena. This prevents "4 Gra", etc. {due}
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
     else if (mons_genus(type) == MONS_DRACONIAN)
         return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-    else if (mons_genus(type) == MONS_DEMONSPAWN)
-        return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
              || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
@@ -1626,9 +1611,9 @@ bool monster_info::has_spells() const
         return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
 
     // Almost all draconians have breath spells.
-    if (mons_genus(draco_or_demonspawn_subspecies()) == MONS_DRACONIAN
-        && draco_or_demonspawn_subspecies() != MONS_GREY_DRACONIAN
-        && draco_or_demonspawn_subspecies() != MONS_DRACONIAN)
+    if (mons_genus(draconian_subspecies()) == MONS_DRACONIAN
+        && draconian_subspecies() != MONS_GREY_DRACONIAN
+        && draconian_subspecies() != MONS_DRACONIAN)
     {
         return true;
     }
@@ -1901,11 +1886,11 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
          + join_strings(conditions.begin(), conditions.end(), ", ") + ")";
 }
 
-monster_type monster_info::draco_or_demonspawn_subspecies() const
+monster_type monster_info::draconian_subspecies() const
 {
     if (type == MONS_PLAYER_ILLUSION && mons_genus(type) == MONS_DRACONIAN)
         return species::to_mons_species(i_ghost.species);
-    return ::draco_or_demonspawn_subspecies(type, base_type);
+    return ::draconian_subspecies(type, base_type);
 }
 
 const char *monster_info::pronoun(pronoun_type variant) const

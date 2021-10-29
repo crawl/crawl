@@ -705,7 +705,7 @@ spret controlled_blink(bool safe_cancel, dist *target)
  * @return                  Whether the spell was successfully cast, aborted,
  *                          or miscast.
  */
-spret cast_blink(bool fail)
+spret cast_blink(int pow, bool fail)
 {
     // effects that cast the spell through the player, I guess (e.g. xom)
     if (you.no_tele(false, false, true))
@@ -716,6 +716,11 @@ spret cast_blink(bool fail)
 
     fail_check();
     uncontrolled_blink();
+
+    int cooldown = div_rand_round(50 - pow, 10);
+    if (cooldown)
+        you.increase_duration(DUR_BLINK_COOLDOWN, 1 + random2(2) + cooldown);
+
     return spret::success;
 }
 
@@ -803,6 +808,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #else
     UNUSED(old_pos);
 #endif
+
+    you.clear_far_engulf();
 }
 
 static bool _teleport_player(bool wizard_tele, bool teleportitis,
@@ -1257,7 +1264,20 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     return spret::success;
 }
 
-spret cast_golubrias_passage(const coord_def& where, bool fail)
+int golubria_fuzz_range()
+{
+    return orb_limits_translocation() ? 4 : 2;
+}
+
+bool golubria_valid_cell(coord_def p)
+{
+    return in_bounds(p)
+           && env.grid(p) == DNGN_FLOOR
+           && !monster_at(p)
+           && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
+}
+
+spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
 {
     if (player_in_branch(BRANCH_GAUNTLET))
     {
@@ -1266,12 +1286,25 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         return spret::abort;
     }
 
+    if (grid_distance(where, you.pos())
+        > spell_range(SPELL_GOLUBRIAS_PASSAGE, pow))
+    {
+        mpr("That's out of range!");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(where))
+    {
+        mpr("You can't create a passage there!");
+        return spret::abort;
+    }
+
     // randomize position a bit to make it not as useful to use on monsters
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
     int tries2 = 0;
     // Less accurate when the orb is interfering.
-    const int range = orb_limits_translocation() ? 4 : 2;
+    const int range = golubria_fuzz_range();
     coord_def randomized_where = where;
     coord_def randomized_here = you.pos();
     do
@@ -1281,11 +1314,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_where.x += random_range(-range, range);
         randomized_where.y += random_range(-range, range);
     }
-    while ((!in_bounds(randomized_where)
-            || env.grid(randomized_where) != DNGN_FLOOR
-            || monster_at(randomized_where)
-            || !you.see_cell(randomized_where)
-            || you.trans_wall_blocking(randomized_where)
+    while ((!golubria_valid_cell(randomized_where)
             || randomized_where == you.pos())
            && tries < 100);
 
@@ -1296,11 +1325,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_here.x += random_range(-range, range);
         randomized_here.y += random_range(-range, range);
     }
-    while ((!in_bounds(randomized_here)
-            || env.grid(randomized_here) != DNGN_FLOOR
-            || monster_at(randomized_here)
-            || !you.see_cell(randomized_here)
-            || you.trans_wall_blocking(randomized_here)
+    while ((!golubria_valid_cell(randomized_here)
             || randomized_here == randomized_where)
            && tries2 < 100);
 

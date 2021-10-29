@@ -1034,16 +1034,14 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
-spret cast_shadow_creatures(int st, god_type god, bool fail)
+spret summon_shadow_creatures()
 {
     if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
 
-    fail_check();
-    const bool scroll = (st == MON_SUMM_SCROLL);
     mpr("Wisps of shadow whirl around you...");
 
-    int num = (scroll ? roll_dice(2, 2) : 1);
+    int num = roll_dice(2, 2);
     int num_created = 0;
 
     for (int i = 0; i < num; ++i)
@@ -1052,19 +1050,13 @@ spret cast_shadow_creatures(int st, god_type god, bool fail)
             mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
-                      .set_summoned(&you, scroll ? 2 : 1, st, god)
+                      .set_summoned(&you, 2, MON_SUMM_SCROLL)
                       .set_place(level_id::current()),
             false))
         {
             // Choose a new duration based on HD.
             int x = max(mons->get_experience_level() - 3, 1);
-            int d = div_rand_round(17, x);
-            if (scroll)
-                d++;
-            if (d < 1)
-                d = 1;
-            if (d > 4)
-                d = 4;
+            int d = min(4, 1 + div_rand_round(17, x));
             mon_enchant me = mon_enchant(ENCH_ABJ, d);
             me.set_duration(mons, &me);
             mons->update_ench(me);
@@ -2071,7 +2063,8 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         if (!you.can_see(*battlesphere))
         {
             coord_def empty;
-            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 3, false, empty)
+            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 2,
+                                         false, empty)
                 && battlesphere->move_to_pos(empty))
             {
                 recalled = true;

@@ -4334,6 +4334,8 @@ void bolt::enchantment_affect_monster(monster* mon)
             {
                 hit_woke_orc = true;
             }
+            if (flavour != BEAM_HIBERNATION)
+                you.pet_target = mon->mindex();
         }
         behaviour_event(mon, ME_ANNOY, agent());
     }
@@ -4427,6 +4429,26 @@ void glaciate_freeze(monster* mon, killer_type englaciator,
     }
 }
 
+static void _acid_splash_monsters(monster* mon, actor* agent)
+{
+    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
+    {
+        if (actor *victim = actor_at(*ai))
+        {
+            if (victim == agent)
+                continue;
+
+            if (you.see_cell(*ai))
+            {
+                mprf("The acid splashes onto %s!",
+                     victim->name(DESC_THE).c_str());
+            }
+
+            victim->splash_with_acid(agent, 3);
+        }
+    }
+}
+
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
     // Suppress the message for tremorstones.
@@ -4463,28 +4485,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     {
         const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
-    }
-
-    // Acid splash from yellow draconians / acid dragons
-    if (origin_spell == SPELL_ACID_SPLASH)
-    {
-        // the acid can splash onto adjacent targets
-        for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-        {
-            if (actor *victim = actor_at(*ai))
-            {
-                if (victim == agent())
-                    continue;
-
-                if (you.see_cell(*ai))
-                {
-                    mprf("The acid splashes onto %s!",
-                         victim->name(DESC_THE).c_str());
-                }
-
-                victim->splash_with_acid(agent(), 3);
-            }
-        }
     }
 
     // Handle missile effects.
@@ -4999,6 +4999,9 @@ void bolt::affect_monster(monster* mon)
             const int blood = min(postac/2, mon->hit_points);
             bleed_onto_floor(mon->pos(), mon->type, blood, true);
         }
+        // Acid splash from yellow draconians.
+        if (origin_spell == SPELL_ACID_SPLASH)
+            _acid_splash_monsters(mon, agent());
         // Now hurt monster.
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
     }

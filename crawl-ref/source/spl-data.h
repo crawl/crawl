@@ -27,17 +27,6 @@ static const struct spell_desc spelldata[] =
 {
 
 {
-    SPELL_TELEPORT_SELF, "Teleport Self",
-    spschool::translocation,
-    spflag::escape | spflag::utility | spflag::monster,
-    5,
-    0,
-    -1, -1,
-    4, 0,
-    TILEG_TELEPORT,
-},
-
-{
     SPELL_CAUSE_FEAR, "Cause Fear",
     spschool::hexes,
     spflag::area | spflag::WL_check,
@@ -176,8 +165,8 @@ static const struct spell_desc spelldata[] =
     SPELL_SLOW, "Slow",
     spschool::hexes,
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
-    2,
-    200,
+    1,
+    25,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
     TILEG_SLOW,
@@ -462,7 +451,7 @@ static const struct spell_desc spelldata[] =
     spschool::translocation,
     spflag::escape | spflag::selfench | spflag::utility,
     2,
-    0,
+    50,
     -1, -1,
     2, 0,
     TILEG_BLINK,
@@ -800,7 +789,7 @@ static const struct spell_desc spelldata[] =
     spschool::necromancy | spschool::air,
     spflag::area | spflag::neutral | spflag::unclean,
     2,
-    0,
+    50,
     -1, -1,
     2, 0,
     TILEG_CORPSE_ROT,
@@ -1268,8 +1257,8 @@ static const struct spell_desc spelldata[] =
     spschool::translocation,
     spflag::target | spflag::neutral | spflag::escape | spflag::selfench,
     4,
-    0,
-    LOS_RADIUS, LOS_RADIUS,
+    100,
+    2, LOS_RADIUS,
     3, 8, // when it closes
     TILEG_PASSAGE_OF_GOLUBRIA,
 },
@@ -2021,8 +2010,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INNER_FLAME, "Inner Flame",
     spschool::hexes | spschool::fire,
-    spflag::dir_or_target | spflag::not_self | spflag::neutral
-        | spflag::WL_check,
+    spflag::target | spflag::not_self | spflag::neutral | spflag::WL_check,
     3,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3616,6 +3604,7 @@ AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
 AXED_SPELL(SPELL_VORTEX, "Vortex")
 AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
+AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
 #endif
 
 };
