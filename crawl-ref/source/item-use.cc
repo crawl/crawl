@@ -2887,8 +2887,6 @@ string cannot_read_item_reason(const item_def *item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
-            if (have_passive(passive_t::want_curses))
-                return _no_items_reason(OSEL_CURSED_WORN);
             return _no_items_reason(OSEL_UNIDENT, true);
 
 #if TAG_MAJOR_VERSION == 34
