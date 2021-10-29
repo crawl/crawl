@@ -207,6 +207,8 @@ LUAFN(view_cell_see_cell)
  * optional cloud (name); and optional flags [visible, mapped, 
  * traversable, solid, excluded, item, unsafe, 
  * invisible_monster, detected_item, detected_monster].
+ * The key for each cell is 40000*(100+x) + (100+y), which is
+ * a reversible composition of the x,y coordinates.
  * @treturn table[cell]
  * @function get_map
  */
@@ -248,6 +250,12 @@ LUAFN(view_get_map)
         } 
         else 
         {
+            for (adjacent_iterator ai(p); ai; ++ai)
+                if (!env.map_knowledge(*ai).known())
+                {
+                LUA_PUSHBOOL("frontier", true);
+                break;
+                }
             if (is_excluded(p))
                 LUA_PUSHBOOL("excluded", true);
             if (cell.item() && cell.item()->defined()) 
