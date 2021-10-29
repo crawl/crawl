@@ -57,6 +57,52 @@
  *
  */
 
+#ifdef __APPLE__
+// OS X provides handy headers for most of the stuff here that have
+// unfortunate collisions with this file as of XCode 13.1 / Monterey. The
+// problem is that they use #define X 0 to indicate that X is false, but we
+// leave X undefined for that case. There's not really a great solution to
+// this beyond either selective #undefs, or just renaming the prefix of the
+// ones we control. For now I have chosen the simpler of those two.
+// As of XCode 13.1 we have 10 direct collisions. (There's also many confusing
+// ones where e.g. Apple uses TARGET_OS_OSX and we use TARGET_OS_MACOSX, leave
+// those alone for now.)
+//
+// Another option might be to not include this at all. However, it can get
+// indirectly included by SDL headers, so it's better to handle it up front.
+#include <TargetConditionals.h>
+#if defined(TARGET_OS_WINDOWS) && !TARGET_OS_WINDOWS
+#  undef TARGET_OS_WINDOWS
+#endif
+#if defined(TARGET_OS_LINUX) && !TARGET_OS_LINUX
+#  undef TARGET_OS_LINUX
+#endif
+#if defined(TARGET_CPU_ARM) && !TARGET_CPU_ARM
+#  undef TARGET_CPU_ARM
+#endif
+#if defined(TARGET_CPU_X86) && !TARGET_CPU_X86
+#  undef TARGET_CPU_X86
+#endif
+#if defined(TARGET_CPU_X86) && !TARGET_CPU_X86_64
+#  undef TARGET_CPU_X86_64
+#endif
+#if defined(TARGET_CPU_PPC) && !TARGET_CPU_PPC
+#  undef TARGET_CPU_PPC
+#endif
+#if defined(TARGET_CPU_PPC64) && !TARGET_CPU_PPC64
+#  undef TARGET_CPU_PPC64
+#endif
+#if defined(TARGET_CPU_MIPS) && !TARGET_CPU_MIPS
+#  undef TARGET_CPU_MIPS
+#endif
+#if defined(TARGET_CPU_SPARC) && !TARGET_CPU_SPARC
+#  undef TARGET_CPU_SPARC
+#endif
+#if defined(TARGET_CPU_ALPHA) && !TARGET_CPU_ALPHA
+#  undef TARGET_CPU_ALPHA
+#endif
+#endif
+
 #ifndef __included_cc_platform_detect_h
 #define __included_cc_platform_detect_h
 
@@ -73,14 +119,14 @@
 // proper, but this might be the culprit if you're getting weird
 // platform.h errors when trying to compile catch2-tests
 
-/* Carbon defines this for us on Mac, apparently... */
-#if defined (TARGET_CPU_PPC)
+// from TargetConditionals.h, no further modification needed
+#if defined(TARGET_CPU_MIPS) || defined(TARGET_CPU_SPARC) || defined(TARGET_CPU_ALPHA)
 #define PROCESSOR_DETECTED
 #endif
 
 /* ARM */
 #if !defined (PROCESSOR_DETECTED)
-#if defined (__arm__)
+#if defined (__arm__) || defined(TARGET_CPU_ARM) || defined(TARGET_CPU_ARM64)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_ARM
 #endif
@@ -104,10 +150,7 @@
 
 /* MIPS */
 #if !defined (PROCESSOR_DETECTED)
-#if defined (__MIPSEL__)
-#define PROCESSOR_DETECTED
-#define TARGET_CPU_MIPS
-#elif defined (__mips__)
+#if defined (__MIPSEL__) || defined (__mips__)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_MIPS
 #endif
@@ -115,15 +158,16 @@
 
 /* PowerPC */
 #if !defined (PROCESSOR_DETECTED)
-#if defined (_ARCH_PPC) || defined (__ppc__) || defined (__ppc64__) || defined (__PPC) || defined (powerpc) || defined (__PPC__) || defined (__powerpc64__) || defined (__powerpc64)
+#if defined(TARGET_CPU_PPC) || defined(TARGET_CPU_PPC64) || defined (_ARCH_PPC) || defined (__ppc__) || defined (__ppc64__) || defined (__PPC) || defined (powerpc) || defined (__PPC__) || defined (__powerpc64__) || defined (__powerpc64)
 #define PROCESSOR_DETECTED
+#define TARGET_CPU_PPC
 #define TARGET_BIG_ENDIAN
 #endif
 #endif
 
 /* x86_64 or AMD64 or x64 */
 #if !defined (PROCESSOR_DETECTED)
-#if defined (__x86_64__) || defined (__x86_64) || defined (__amd64) || defined (__amd64__) || defined (_AMD64_) || defined (_M_X64)
+#if defined(TARGET_CPU_X86_64) || defined (__x86_64__) || defined (__x86_64) || defined (__amd64) || defined (__amd64__) || defined (_AMD64_) || defined (_M_X64)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_X64
 #define TARGET_CPU_X86_64
@@ -132,7 +176,7 @@
 
 /* Intel x86 */
 #if !defined (PROCESSOR_DETECTED)
-#if defined (__i386__) || defined (__i386) || defined (i386) || defined (_X86_) || defined (_M_IX86)
+#if defined(TARGET_CPU_X86) || defined (__i386__) || defined (__i386) || defined (i386) || defined (_X86_) || defined (_M_IX86)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_X86
 #endif
@@ -252,7 +296,8 @@
 #endif
 
 #if !defined (OS_DETECTED)
-#if defined (__APPLE__)
+// possible TODO: instead use os x TARGET_ defines to set this
+#if defined(__APPLE__)
 #define OS_DETECTED
 #define TARGET_OS_MACOSX
 #endif
