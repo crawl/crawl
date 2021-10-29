@@ -408,7 +408,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
         corpse.quantity *= SPRINT_MULTIPLIER;
 
     const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-    if (!x_chance_in_y(chance, chance + 9))
+    if (!x_chance_in_y(chance, GOZAG_GOLD_AURA_MAX))
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
     you.redraw_title = true;
 }
