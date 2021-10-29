@@ -388,6 +388,15 @@ slime_stone1
 slime_stone2
 slime_stone3
 
+rock_wall_crypt0 ROCK_WALL_CRYPT
+%weight 2
+rock_wall_crypt1
+%weight 3
+rock_wall_crypt2
+%weight 2
+rock_wall_crypt3
+
+%weight 10
 tomb0 WALL_TOMB
 tomb1
 tomb2
