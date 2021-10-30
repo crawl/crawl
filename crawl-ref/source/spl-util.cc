@@ -1388,7 +1388,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_SKELETON:
-        if (temp && !in_bounds(find_animatable_skeleton(you.pos())))
+        if (temp && find_animatable_skeletons(you.pos()).empty())
             return "there is nothing nearby to animate!";
         break;
     case SPELL_SIMULACRUM:

@@ -1194,16 +1194,6 @@ static vector<coord_def> _simple_find_all_hostiles(actor *a)
     return result;
 }
 
-// a light wrapper on the code used for casting animate skeleton
-static vector<coord_def> _find_animatable_skeletons(actor *a)
-{
-    vector<coord_def> result;
-    coord_def s = find_animatable_skeleton(a->pos());
-    if (in_bounds(s))
-        result.push_back(s);
-    return result;
-}
-
 static bool _simple_corpse_check(const coord_def &c)
 {
     int motions; // ???
@@ -1381,10 +1371,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS, 0, 2);
 
     case SPELL_ANIMATE_SKELETON:
-        // this spell seems (?) to pick the first corpse by radius_iterator, so
-        // just show that one. If this spell were to do something better, e.g.
-        // randomization, this would need to take a different approach
-        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), AFF_YES);
+        return make_unique<targeter_multiposition>(&you, find_animatable_skeletons(you.pos()), AFF_MAYBE);
     case SPELL_ANIMATE_DEAD:
         return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:
