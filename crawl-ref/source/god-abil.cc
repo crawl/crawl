@@ -1862,21 +1862,22 @@ bool kiku_receive_corpses(int pow)
 }
 
 /**
- * Destroy a corpse at the player's location
+ * Destroy a corpse at or adjacent to the player's location
  *
  * @return  True if a corpse was destroyed, false otherwise.
 */
 bool kiku_take_corpse()
 {
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = env.item[i].link)
+    for (fair_adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
-        item_def &item(env.item[i]);
-
-        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-            continue;
-        item_was_destroyed(item);
-        destroy_item(i);
-        return true;
+        for (stack_iterator si(*ai, true); si; ++si)
+        {
+            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+                continue;
+            item_was_destroyed(*si);
+            destroy_item(si->index());
+            return true;
+        }
     }
 
     return false;

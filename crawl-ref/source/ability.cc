@@ -2468,12 +2468,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_KIKU_TORMENT:
-        fail_check();
         if (!kiku_take_corpse())
         {
-            mpr("There are no corpses to sacrifice!");
+            mpr("There are no nearby corpses to sacrifice!");
             return spret::abort;
         }
+        fail_check();
         simple_god_message(" torments the living!");
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
         break;

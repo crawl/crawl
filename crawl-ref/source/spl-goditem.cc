@@ -1105,7 +1105,9 @@ void torment_player(const actor *attacker, torment_source_type taux)
                 hploss = 0;
                 simple_god_message(" shields you from torment!");
             }
-            else if (random2(250) < you.piety) // 24% to 80% chance
+            // Always give at least partial protection for invoked torment.
+            // 24% to 80% chance for other sources.
+            else if (random2(250) < you.piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
                 hploss -= random2(hploss - 1);
                 simple_god_message(" partially shields you from torment!");
@@ -1120,7 +1122,6 @@ void torment_player(const actor *attacker, torment_source_type taux)
     }
 
     mpr("Your body is wracked with pain!");
-
 
     kill_method_type type = KILLED_BY_BEAM;
     if (crawl_state.is_god_acting())
