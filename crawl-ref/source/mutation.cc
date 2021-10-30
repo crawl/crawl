@@ -689,11 +689,113 @@ static bool _is_appendage_mutation(mutation_type mut)
     return false;
 }
 
+class MutationMenu : public Menu
+{
+private:
+    vector<string> fakemuts;
+
+};
+
+static vector<string> _get_form_fakemuts(bool terse)
+{
+    vector<string> result;
+    const auto *form = get_form(you.form);
+    ASSERT(form);
+    // we could add form->get_long_name() here for `terse`, but the line in
+    // % is shown right below a line which includes the form name.
+    if (!terse)
+        result.push_back(_formmut(form->get_description()));
+    else if (you.form == transformation::appendage)
+    {
+        // terse mode: these mutations are skipped later, so add the short
+        // forms here. The appendage description covers the long form case.
+        for (auto app : you.props[APPENDAGE_KEY].get_vector())
+        {
+            result.push_back(_terse_mut_name(
+                            static_cast<mutation_type>(app.get_int())));
+        }
+    }
+
+    for (const auto &p : form->get_fakemuts(terse))
+        if (!p.empty())
+            result.push_back(_formmut(p, terse));
+
+    if (you.form == transformation::dragon)
+    {
+        if (!species::is_draconian(you.species)
+            || you.species == SP_BASE_DRACONIAN) // ugh
+        {
+            result.push_back(terse
+                ? "breathe fire" : _formmut("You can breathe fire."));
+        }
+        else if (!terse
+            && species::draconian_breath(you.species) != ABIL_NON_ABILITY)
+        {
+            result.push_back(
+                _formmut("Your breath weapon is enhanced in this form."));
+        }
+    }
+
+    if (form_base_movespeed(you.form) < 10)
+        result.push_back(terse ? "fast" : _formmut("You move quickly."));
+
+    // form-based flying can't be stopped, so don't print amphibiousness
+    if (form->player_can_fly())
+        result.push_back(terse ? "flying" : _formmut("You are flying."));
+    else if (form->player_can_swim() && !you.can_swim(true)) // n.b. this could cause issues for non-dragon giant forms if they exist
+        result.push_back(terse ? "amphibious" : _formmut("You are amphibious."));
+
+    if (form->hp_mod > 10)
+    {
+        result.push_back(terse ? "boosted hp"
+            : _formmut(make_stringf("Your maximum health is %sincreased.",
+                form->hp_mod < 13 ? "" : "greatly ")));
+    }
+    else if (form->hp_mod < 10)
+        result.push_back(terse ? "reduced hp" : _badmut("Your maximum health is decreased."));
+
+    // immunity comes from form
+    if (!terse && player_res_poison(false, true, false) == 3
+                && !player_res_poison(false, false, false))
+    {
+        // wispform has a fakemut that prints something more general
+        if (you.form != transformation::wisp)
+            result.push_back(_formmut("You are immune to poison."));
+    }
+
+    // bad stuff
+    if (!terse
+        && (form->spellcasting_penalty > 0
+            || you.form == transformation::shadow)) // hard-coded effect
+    {
+        result.push_back(_badmut("Your spellcasting is less reliable in this form."));
+    }
+
+    // XX say something about AC? Best would be to compare it to AC without
+    // the form, but I'm not sure if that's possible
+
+    // XX better synchronizing with various base armour/eq possibilities
+    if (!terse && !you.has_mutation(MUT_NO_ARMOUR))
+    {
+        const string melding_desc = form->melding_description();
+        if (!melding_desc.empty())
+            result.push_back(_badmut(melding_desc));
+    }
+    if (!terse && !form->can_wield() && !you.has_mutation(MUT_NO_GRASPING))
+    {
+        // same as MUT_NO_GRASPING
+        result.push_back(_badmut(
+            "You are incapable of wielding weapons or throwing items."));
+    }
+
+    if (!form->can_cast)
+        result.push_back(terse ? "no casting" : _badmut("You cannot cast spells."));
+    return result;
+}
+
 static vector<string> _get_mutations(bool terse)
 {
     vector<string> result;
-
-    bool pois_printed = false;
 
     // XX sort good and bad non-permanent mutations better? Comes up mostly for
     // vampires
@@ -702,127 +804,11 @@ static vector<string> _get_mutations(bool terse)
 
     if (you.form != transformation::none)
     {
-        const auto *form = get_form(you.form);
-        ASSERT(form);
-        // we could add form->get_long_name() here for `terse`, but the line in
-        // % is shown right below a line which includes the form name.
-        if (!terse)
-            result.push_back(_formmut(form->get_description()));
-        else if (you.form == transformation::appendage)
-        {
-            // terse mode: these mutations are skipped later, so add the short
-            // forms here. The appendage description covers the long form case.
-            for (auto app : you.props[APPENDAGE_KEY].get_vector())
-            {
-                result.push_back(_terse_mut_name(
-                                static_cast<mutation_type>(app.get_int())));
-            }
-        }
-
-        for (const auto &p : form->get_fakemuts(terse))
-            if (!p.empty())
-                result.push_back(_formmut(p, terse));
-
-        if (you.form == transformation::dragon)
-        {
-            if (!species::is_draconian(you.species)
-                || you.species == SP_BASE_DRACONIAN) // ugh
-            {
-                result.push_back(terse
-                    ? "breathe fire" : _formmut("You can breathe fire."));
-            }
-            else if (!terse
-                && species::draconian_breath(you.species) != ABIL_NON_ABILITY)
-            {
-                result.push_back(
-                    _formmut("Your breath weapon is enhanced in this form."));
-            }
-        }
-
-        if (form_base_movespeed(you.form) < 10)
-            result.push_back(terse ? "fast" : _formmut("You move quickly."));
-
-        // form-based flying can't be stopped, so don't print amphibiousness
-        if (form->player_can_fly())
-            result.push_back(terse ? "flying" : _formmut("You are flying."));
-        else if (form->player_can_swim() && !you.can_swim(true)) // n.b. this could cause issues for non-dragon giant forms if they exist
-            result.push_back(terse ? "amphibious" : _formmut("You are amphibious."));
-
-        if (form->hp_mod > 10)
-        {
-            result.push_back(terse ? "boosted hp"
-                : _formmut(make_stringf("Your maximum health is %sincreased.",
-                    form->hp_mod < 13 ? "" : "greatly ")));
-        }
-        else if (form->hp_mod < 10)
-            result.push_back(terse ? "reduced hp" : _badmut("Your maximum health is decreased."));
-
-        // immunity comes from form
-        if (!terse && player_res_poison(false, true, false) == 3
-                    && !player_res_poison(false, false, false))
-        {
-            pois_printed = true;
-            // wispform has a fakemut that prints something more general
-            if (you.form != transformation::wisp)
-                result.push_back(_formmut("You are immune to poison."));
-        }
-
-        // bad stuff
-        if (!terse
-            && (form->spellcasting_penalty > 0
-                || you.form == transformation::shadow)) // hard-coded effect
-        {
-            result.push_back(_badmut("Your spellcasting is less reliable in this form."));
-        }
-
-        // XX say something about AC? Best would be to compare it to AC without
-        // the form, but I'm not sure if that's possible
-
-        // XX better synchronizing with various base armour/eq possibilities
-        if (!terse && !you.has_mutation(MUT_NO_ARMOUR))
-        {
-            const string melding_desc = form->melding_description();
-            if (!melding_desc.empty())
-                result.push_back(_badmut(melding_desc));
-        }
-        if (!terse && !form->can_wield() && !you.has_mutation(MUT_NO_GRASPING))
-        {
-            // same as MUT_NO_GRASPING
-            result.push_back(_badmut(
-                "You are incapable of wielding weapons or throwing items."));
-        }
-
-        if (!form->can_cast)
-            result.push_back(terse ? "no casting" : _badmut("You cannot cast spells."));
-
+        vector<string> form_fakemuts = _get_form_fakemuts(terse);
+        result.insert(result.end(), form_fakemuts.begin(), form_fakemuts.end());
     }
 
-    //pseudo-forms that come from species
-
-    if (you.has_mutation(MUT_VAMPIRISM))
-    {
-        if (you.vampire_alive)
-        {
-            result.push_back(terse ? "alive" :
-                _formmut("Your natural rate of healing is accelerated."));
-        }
-        else if (terse)
-            result.push_back("bloodless");
-        else
-        {
-            result.push_back(
-                _formmut("You do not regenerate when monsters are visible."));
-            result.push_back(
-                _formmut("You are frail without blood (-20% HP)."));
-            result.push_back(
-                _formmut("You can heal yourself when you bite living creatures."));
-            // XX automatically color this green somehow? Handled below more
-            // generally for non-vampires
-            if (!pois_printed)
-                result.push_back(_formmut("You are immune to poison."));
-            pois_printed = true;
-        }
-    }
+    // divine effects
 
     if (you.can_water_walk())
     {
@@ -959,9 +945,31 @@ static vector<string> _get_mutations(bool terse)
     if (!terse && species::get_stat_gain_multiplier(you.species) > 1)
         result.push_back(_innatemut("Your attributes grow dramatically as you level up."));
 
-    // vampire, form cases handled above
-    if (!terse && player_res_poison(false, false, false) == 3 && !pois_printed)
+    if (you.has_mutation(MUT_VAMPIRISM))
+    {
+        if (you.vampire_alive)
+        {
+            result.push_back(terse ? "alive" :
+                _formmut("Your natural rate of healing is accelerated."));
+        }
+        else if (terse)
+            result.push_back("bloodless");
+        else
+        {
+            result.push_back(
+                _formmut("You do not regenerate when monsters are visible."));
+            result.push_back(
+                _formmut("You are frail without blood (-20% HP)."));
+            result.push_back(
+                _formmut("You can heal yourself when you bite living creatures."));
+            // XX automatically color this green somehow? Handled below more
+            // generally for non-vampires
+            result.push_back(_formmut("You are immune to poison."));
+        }
+    } else if (!terse && player_res_poison(false, false, false) == 3)
+    {
         result.push_back(_innatemut("You are immune to poison."));
+    }
 
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
