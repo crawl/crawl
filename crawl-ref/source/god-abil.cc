@@ -1864,9 +1864,11 @@ bool kiku_receive_corpses(int pow)
 /**
  * Destroy a corpse at or adjacent to the player's location
  *
- * @return  True if a corpse was destroyed, false otherwise.
+ * @param just_check True if just checking whether the ability is possible,
+ *                   false if we should go ahead and destroy a corpse.
+ * @return           True if a corpse was available, false otherwise.
 */
-bool kiku_take_corpse()
+bool kiku_take_corpse(bool just_check)
 {
     for (fair_adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
@@ -1874,6 +1876,10 @@ bool kiku_take_corpse()
         {
             if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                 continue;
+
+            if (just_check)
+                return true;
+
             item_was_destroyed(*si);
             destroy_item(si->index());
             return true;

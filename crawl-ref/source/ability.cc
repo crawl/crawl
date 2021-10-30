@@ -1608,6 +1608,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_KIKU_TORMENT:
+        if (!kiku_take_corpse(true))
+        {
+            if (!quiet)
+                mpr("There are no nearby corpses to sacrifice!");
+            return false;
+        }
+        return true;
+
     case ABIL_LUGONU_ABYSS_EXIT:
         if (!player_in_branch(BRANCH_ABYSS))
         {
@@ -2464,12 +2473,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_KIKU_TORMENT:
-        if (!kiku_take_corpse())
+        fail_check();
+        if (!kiku_take_corpse()) // Should always succeed.
         {
             mpr("There are no nearby corpses to sacrifice!");
-            return spret::abort;
+            return spret::success;
         }
-        fail_check();
         simple_god_message(" torments the living!");
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
         break;
