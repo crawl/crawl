@@ -5723,8 +5723,11 @@ static dungeon_feature_type _pick_temple_altar()
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
-            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen)
+            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen
+                || you.props.exists(FORCE_MAP_KEY))
+            {
                 return DNGN_ALTAR_XOM;
+            }
 
             mprf(MSGCH_ERROR, "Ran out of altars for temple!");
             return DNGN_FLOOR;
