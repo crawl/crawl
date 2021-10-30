@@ -647,7 +647,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
             0, 0, 9, {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
-            0, 0, 24, {fail_basis::invo}, abflag::none },
+            0, 0, 96, {fail_basis::invo}, abflag::none },
 
         { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
