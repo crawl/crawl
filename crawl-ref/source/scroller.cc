@@ -13,17 +13,6 @@ using namespace ui;
 static vector<formatted_scroller*> open_scrollers;
 static bool from_webtiles;
 
-#ifdef USE_TILE
-static int _line_height()
-{
-#ifdef USE_TILE_LOCAL
-    return tiles.get_crt_font()->char_height();
-#else
-    return 1;
-#endif
-}
-#endif
-
 void formatted_scroller::add_formatted_string(const formatted_string& fs, bool new_line)
 {
     contents += fs;
@@ -53,7 +42,7 @@ public:
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
         tiles.json_write_bool("from_webtiles", from_webtiles);
-        tiles.json_write_int("scroll", y / _line_height());
+        tiles.json_write_int("scroll", y);
         tiles.ui_state_change("formatted-scroller", 1);
 #endif
         Scroller::set_scroll(y);
@@ -205,7 +194,7 @@ void recv_formatted_scroller_scroll(int line)
         return;
     formatted_scroller *scroller = open_scrollers.back();
     from_webtiles = true;
-    scroller->set_scroll(line*_line_height());
+    scroller->set_scroll(line);
     from_webtiles = false;
     // XXX: since the scroll event from webtiles is not delivered by the event
     // pumping loop in ui::pump_events, the UI system won't automatically draw
