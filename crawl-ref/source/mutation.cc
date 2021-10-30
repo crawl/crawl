@@ -793,7 +793,7 @@ static vector<string> _get_form_fakemuts(bool terse)
     return result;
 }
 
-static vector<string> _get_mutations(bool terse)
+static vector<string> _get_fakemuts(bool terse)
 {
     vector<string> result;
 
@@ -970,6 +970,14 @@ static vector<string> _get_mutations(bool terse)
     {
         result.push_back(_innatemut("You are immune to poison."));
     }
+
+    return result;
+}
+
+
+static vector<string> _get_mutations(bool terse)
+{
+    vector<string> result = _get_fakemuts(terse);
 
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
