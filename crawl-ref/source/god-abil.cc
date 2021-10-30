@@ -105,7 +105,9 @@ static bool _player_sacrificed_arcana();
  */
 bool can_do_capstone_ability(god_type god)
 {
-   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
+    // Worshippers of Ignis can use their capstone with any amount of piety
+    int pbreak = (god == GOD_IGNIS) ? -1 : 5;
+    return in_good_standing(god, pbreak) && !you.one_time_ability_used[god];
 }
 
 static const char *_god_blessing_description(god_type god)
