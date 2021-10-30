@@ -631,6 +631,7 @@ static void debug_load_map_by_name(string name, bool primary)
     {
         if (toplace->orient == MAP_ENCOMPASS
             && !toplace->is_usable_in(level_id::current())
+            && !toplace->place.is_usable_in(level_id::current())
             && !yesno("Warning: this is an encompass vault not designed "
                        "for this location; placing it with &P may result in "
                        "crashes and save corruption. Continue?", true, 'y'))
