@@ -1874,6 +1874,9 @@ ITEM:   ring of evasion randart / ring of protection randart \
 ITEM:   staff of fire / staff of cold / staff of earth / staff of air
 : master_elementalist_setup(_G, "D")
 KFEAT:  a = iron_grate
+# Place fire cloud machines over lava and freezing vapour and storm clouds over
+# deep water to prevent the relevant (not-fully-resistant or at least
+# non-flying and non-giant) monsters from getting harmed by clouds.
 KFEAT:  p = l
 KFEAT:  rs = w
 : if you.in_branch("Elf") then
@@ -1910,10 +1913,6 @@ MARKER: q = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
 MARKER: r = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
                 delay_max = 40, size = 1, cloud_type = "freezing vapour", \
                 excl_rad = -1 }
-# Within the rooms where these machines place, placing them only on deep water
-# protects the monsters not immune to electricity from stepping there, since
-# those monsters are neither giant nor fly. Outside of these rooms, the runed
-# door keeps out monsters not immune to electricity are giant or fly.
 MARKER: s = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
                 delay_max = 40, size = 1, cloud_type = "thunder", excl_rad = 0 }
 TILE:   x = wall_pebble_lightgray
@@ -1926,13 +1925,13 @@ MAP
   cc3x3x3c'''cw5ww5cc
  cc3xxx3xcaaWc5ww5wwcc
 cc3xx3xxxcqaW+5w5wwwwcc
-cxx33x33xcccccwww55555c
+cxx33x33xccnccwww55555c
 ccccccc+ccdddcccccccc+c
 c-----..cd...dcra"""WWc
 c--...--cd.D.dcaa"""aac
 c-.-----cd...dc.."""arc
 c+cccccccc...cc=ccccccc
-c111lll1lc+++c`77`77``c
+c111lll1lc...c`77`77``c
 ccll1l1l1c;.;c```7``7cc
  ccl1l1l1c;;.c`7```7cc
   ccl1ll1c;.;c7`7`7cc
