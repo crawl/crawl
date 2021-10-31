@@ -147,7 +147,7 @@ bool trap_def::is_safe(actor* act) const
 
     // No prompt (teleport traps are ineffective if wearing a -Tele item)
     if ((type == TRAP_TELEPORT || type == TRAP_TELEPORT_PERMANENT)
-        && you.no_tele(false))
+        && you.no_tele())
     {
         return true;
     }
@@ -552,7 +552,7 @@ void trap_def::trigger(actor& triggerer)
             mprf("%s disappears.", name(DESC_THE).c_str());
             destroy();
         }
-        if (!triggerer.no_tele(true, you_trigger))
+        if (!triggerer.no_tele())
             triggerer.teleport(true);
         break;
 

@@ -1685,7 +1685,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TP:
-        if (decay_enchantment(en, true) && !no_tele(true, false))
+        if (decay_enchantment(en, true) && !no_tele())
             monster_teleport(this, true);
         break;
 

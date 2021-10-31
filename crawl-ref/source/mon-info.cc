@@ -574,11 +574,11 @@ monster_info::monster_info(const monster* m, int milev)
 
     mintel = mons_intel(*m);
     hd = m->get_hit_dice();
-    ac = m->armour_class(false);
-    ev = m->evasion(ev_ignore::unided);
+    ac = m->armour_class();
+    ev = m->evasion();
     base_ev = m->base_evasion();
-    mr = m->willpower(false);
-    can_see_invis = m->can_see_invisible(false);
+    mr = m->willpower();
+    can_see_invis = m->can_see_invisible();
     if (m->nightvision())
         props[NIGHTVISION_KEY] = true;
     mresists = get_mons_resists(*m);
@@ -589,7 +589,7 @@ monster_info::monster_info(const monster* m, int milev)
     can_feel_fear = m->can_feel_fear(false);
 
     // Not an MB_ because it's rare.
-    if (m->cloud_immune(false))
+    if (m->cloud_immune())
         props[CLOUD_IMMUNE_MB_KEY] = true;
 
     if (m->airborne())

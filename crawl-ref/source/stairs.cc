@@ -455,7 +455,7 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (player_teleport(false))
+    if (player_teleport())
         mpr("You feel stable on this floor.");
 }
 

@@ -740,7 +740,7 @@ static vector<string> _get_form_fakemuts(bool terse)
 
     // immunity comes from form
     if (!terse && player_res_poison(false, true, false) == 3
-                && !player_res_poison(false, false, false))
+        && !player_res_poison(false, false, false))
     {
         // wispform has a fakemut that prints something more general
         if (you.form != transformation::wisp)
@@ -950,10 +950,9 @@ static vector<string> _get_fakemuts(bool terse)
             // generally for non-vampires
             result.push_back(_formmut("You are immune to poison."));
         }
-    } else if (!terse && player_res_poison(false, false, false) == 3)
-    {
-        result.push_back(_innatemut("You are immune to poison."));
     }
+    else if (!terse && player_res_poison(false, false, false) == 3)
+        result.push_back(_innatemut("You are immune to poison."));
 
     return result;
 }
@@ -2636,8 +2635,11 @@ string mutation_desc(mutation_type mut, int level, bool colour,
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
             const bool extra = you.get_base_mutation_level(mut, false, true, true) > 0;
 
-            if (fully_inactive || (mut == MUT_COLD_BLOODED && player_res_cold(false) > 0))
+            if (fully_inactive
+                || (mut == MUT_COLD_BLOODED && player_res_cold(false) > 0))
+            {
                 colourname = "darkgrey";
+            }
             else if (is_sacrifice)
                 colourname = "lightred";
             else if (partially_active)

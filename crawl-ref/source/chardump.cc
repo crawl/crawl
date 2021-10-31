@@ -230,7 +230,7 @@ static void _sdump_header(dump_params &par)
 
 static void _sdump_stats(dump_params &par)
 {
-    par.text += dump_overview_screen(par.full_id);
+    par.text += dump_overview_screen();
     par.text += "\n\n";
 }
 

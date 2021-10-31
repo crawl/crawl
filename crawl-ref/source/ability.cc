@@ -1711,7 +1711,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         // fallthrough
     case ABIL_BLINKBOLT:
     {
-        const string no_tele_reason = you.no_tele_reason(false, true);
+        const string no_tele_reason = you.no_tele_reason(true);
         if (no_tele_reason.empty())
             return true;
 

@@ -257,12 +257,12 @@ void trample_follow_fineff::fire()
 void blink_fineff::fire()
 {
     actor *defend = defender();
-    if (!defend || !defend->alive() || defend->no_tele(true, false))
+    if (!defend || !defend->alive() || defend->no_tele())
         return;
 
     // if we're doing 'blink with', only blink if we have a partner
     actor *pal = attacker();
-    if (pal && (!pal->alive() || pal->no_tele(true, false)))
+    if (pal && (!pal->alive() || pal->no_tele()))
         return;
 
     defend->blink();
@@ -270,7 +270,7 @@ void blink_fineff::fire()
         return;
 
     // Is something else also getting blinked?
-    if (!pal || !pal->alive() || pal->no_tele(true, false))
+    if (!pal || !pal->alive() || pal->no_tele())
         return;
 
     int cells_seen = 0;
@@ -293,7 +293,7 @@ void blink_fineff::fire()
 void teleport_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive() && !defend->no_tele(true, false))
+    if (defend && defend->alive() && !defend->no_tele())
         defend->teleport(true);
 }
 

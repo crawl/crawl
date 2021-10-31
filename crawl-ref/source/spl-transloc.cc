@@ -124,7 +124,7 @@ void disjunction_spell()
  */
 void uncontrolled_blink(bool override_stasis)
 {
-    if (you.no_tele(true, true, true) && !override_stasis)
+    if (you.no_tele(true) && !override_stasis)
     {
         canned_msg(MSG_STRANGE_STASIS);
         return;
@@ -708,7 +708,7 @@ spret controlled_blink(bool safe_cancel, dist *target)
 spret cast_blink(int pow, bool fail)
 {
     // effects that cast the spell through the player, I guess (e.g. xom)
-    if (you.no_tele(false, false, true))
+    if (you.no_tele(true))
         return fail ? spret::fail : spret::success; // probably always SUCCESS
 
     if (cancel_harmful_move(false))
@@ -728,7 +728,7 @@ void you_teleport()
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
-    if (you.no_tele(true, true))
+    if (you.no_tele())
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {

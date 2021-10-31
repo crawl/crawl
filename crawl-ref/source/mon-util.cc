@@ -441,7 +441,7 @@ bool mons_class_flag(monster_type mc, monclass_flags_t bits)
     return me && (me->bitfields & bits);
 }
 
-int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
+int monster::wearing(equipment_type slot, int sub_type) const
 {
     int ret = 0;
     const item_def *item = 0;
@@ -462,10 +462,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
                 item = mslot_item((mon_inv_type) i);
                 if (item && item->base_type == (slot == EQ_WEAPON ? OBJ_WEAPONS
                                                                   : OBJ_STAVES)
-                    && item->sub_type == sub_type
-                    // Weapon subtypes are always known, staves not.
-                    && (slot == EQ_WEAPON || calc_unid
-                        || item_type_known(*item)))
+                    && item->sub_type == sub_type)
                 {
                     ret++;
                 }
@@ -496,8 +493,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
         item = mslot_item(MSLOT_JEWELLERY);
-        if (item && item->is_type(OBJ_JEWELLERY, sub_type)
-            && (calc_unid || item_type_known(*item)))
+        if (item && item->is_type(OBJ_JEWELLERY, sub_type))
         {
             if (slot == EQ_RINGS_PLUS)
                 ret += item->plus;
@@ -511,7 +507,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     return ret;
 }
 
-int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
+int monster::wearing_ego(equipment_type slot, int special) const
 {
     int ret = 0;
     const item_def *item = 0;
@@ -530,8 +526,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
             {
                 item = mslot_item((mon_inv_type) i);
                 if (item && item->base_type == OBJ_WEAPONS
-                    && get_weapon_brand(*item) == special
-                    && (calc_unid || item_type_known(*item)))
+                    && get_weapon_brand(*item) == special)
                 {
                     ret++;
                 }
@@ -547,8 +542,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_SHIELD:
         item = mslot_item(MSLOT_SHIELD);
         if (item && item->base_type == OBJ_ARMOUR
-            && get_armour_ego_type(*item) == special
-            && (calc_unid || item_type_known(*item)))
+            && get_armour_ego_type(*item) == special)
         {
             ret++;
         }
@@ -559,8 +553,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_BODY_ARMOUR:
         item = mslot_item(MSLOT_ARMOUR);
         if (item && item->base_type == OBJ_ARMOUR
-            && get_armour_ego_type(*item) == special
-            && (calc_unid || item_type_known(*item)))
+            && get_armour_ego_type(*item) == special)
         {
             ret++;
         }
@@ -579,7 +572,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     return ret;
 }
 
-int monster::scan_artefacts(artefact_prop_type ra_prop, bool /*calc_unid*/,
+int monster::scan_artefacts(artefact_prop_type ra_prop,
                             vector<const item_def *> *matches) const
 {
     UNUSED(matches); //TODO: implement this when it will be required somewhere

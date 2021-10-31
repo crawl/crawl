@@ -2399,7 +2399,7 @@ static string _resist_composer(const char * name, int spacing, int value,
 }
 
 static vector<formatted_string> _get_overview_resistances(
-    vector<char> &equip_chars, bool calc_unid, int sw)
+    vector<char> &equip_chars, int sw)
 {
     // 3 columns, splits at columns 20, 33
     column_composer cols(3, 20, 33);
@@ -2407,32 +2407,32 @@ static vector<formatted_string> _get_overview_resistances(
     int cwidth = 8;
     string out;
 
-    const int rfire = player_res_fire(calc_unid);
+    const int rfire = player_res_fire(false);
     out += _resist_composer("rFire", cwidth, rfire, 3) + "\n";
 
-    const int rcold = player_res_cold(calc_unid);
+    const int rcold = player_res_cold(false);
     out += _resist_composer("rCold", cwidth, rcold, 3) + "\n";
 
-    const int rlife = player_prot_life(calc_unid);
+    const int rlife = player_prot_life(false);
     out += _resist_composer("rNeg", cwidth, rlife, 3) + "\n";
 
-    const int rpois = player_res_poison(calc_unid);
+    const int rpois = player_res_poison(false);
     out += _resist_composer("rPois", cwidth, rpois, 1, true, rpois == 3) + "\n";
 
-    const int relec = player_res_electricity(calc_unid);
+    const int relec = player_res_electricity(false);
     out += _resist_composer("rElec", cwidth, relec) + "\n";
 
-    const int rcorr = you.res_corr(calc_unid);
+    const int rcorr = you.res_corr(false);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
 
-    const int rmuta = (you.rmut_from_item(calc_unid)
+    const int rmuta = (you.rmut_from_item()
                        || you.get_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
     if (rmuta)
         out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
-    const int rmagi = player_willpower(calc_unid) / WL_PIP;
+    const int rmagi = player_willpower() / WL_PIP;
     out += _resist_composer("Will", cwidth, rmagi, 5, true,
-                            player_willpower(calc_unid) == WILL_INVULN) + "\n";
+                            player_willpower() == WILL_INVULN) + "\n";
 
     out += _stealth_bar(cwidth, 20) + "\n";
 
@@ -2457,50 +2457,50 @@ static vector<formatted_string> _get_overview_resistances(
     // Second column, resist name is 9 chars
     out.clear();
     cwidth = 9;
-    const int rinvi = you.can_see_invisible(calc_unid);
+    const int rinvi = you.can_see_invisible();
     out += _resist_composer("SeeInvis", cwidth, rinvi) + "\n";
 
-    const int faith = you.faith(calc_unid);
+    const int faith = you.faith();
     out += _resist_composer("Faith", cwidth, faith) + "\n";
 
-    const int rspir = you.spirit_shield(calc_unid);
+    const int rspir = you.spirit_shield();
     out += _resist_composer("Spirit", cwidth, rspir) + "\n";
 
     const item_def *sh = you.shield();
-    const int reflect = you.reflection(calc_unid)
+    const int reflect = you.reflection()
                         || sh && shield_reflects(*sh);
     out += _resist_composer("Reflect", cwidth, reflect) + "\n";
 
-    const int harm = you.extra_harm(calc_unid);
+    const int harm = you.extra_harm();
     out += _resist_composer("Harm", cwidth, harm) + "\n";
 
-    const int rampage = you.rampaging(calc_unid);
+    const int rampage = you.rampaging();
     out += _resist_composer("Rampage", cwidth, rampage, 1, true,
                             player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
            + "\n";
 
-    const int archmagi = you.archmagi(calc_unid);
+    const int archmagi = you.archmagi();
     if (archmagi)
         out += _resist_composer("Archmagi", cwidth, archmagi) + "\n";
 
-    const int rclarity = you.clarity(calc_unid);
+    const int rclarity = you.clarity();
     if (rclarity)
         out += _resist_composer("Clarity", cwidth, rclarity) + "\n";
 
-    const int anger_rate = you.angry(calc_unid);
+    const int anger_rate = you.angry();
     if (anger_rate && !you.stasis() && !rclarity && !you.is_lifeless_undead())
         out += make_stringf("Rage     %d%%\n", anger_rate);
 
     // Fo don't need a reminder that they can't teleport
     if (!you.stasis())
     {
-        if (you.no_tele(calc_unid))
+        if (you.no_tele())
             out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
-        else if (player_teleport(calc_unid))
+        else if (player_teleport())
             out += _resist_composer("Rnd*Tele", cwidth, 1, 1, false) + "\n";
     }
 
-    const int no_cast = you.no_cast(calc_unid);
+    const int no_cast = you.no_cast();
     if (no_cast)
         out += _resist_composer("NoCast", cwidth, 1, 1, false);
 
@@ -2534,7 +2534,6 @@ void print_overview_screen()
 {
     // TODO: this should handle window resizes
     constexpr int num_cols = 80;
-    bool calc_unid = false;
     overview_popup overview;
 
     overview.set_more();
@@ -2548,7 +2547,7 @@ void print_overview_screen()
 
     {
         vector<formatted_string> blines =
-            _get_overview_resistances(overview.equip_chars, calc_unid, num_cols);
+            _get_overview_resistances(overview.equip_chars, num_cols);
 
         for (unsigned int i = 0; i < blines.size(); ++i)
             overview.add_text(blines[i].to_colour_string() + "\n");
@@ -2559,7 +2558,7 @@ void print_overview_screen()
     overview.show();
 }
 
-string dump_overview_screen(bool full_id)
+string dump_overview_screen()
 {
     string text = formatted_string::parse_string(_overview_screen_title(80));
     text += "\n";
@@ -2573,7 +2572,7 @@ string dump_overview_screen(bool full_id)
 
     vector<char> equip_chars;
     for (const formatted_string &bline
-            : _get_overview_resistances(equip_chars, full_id, 640))
+            : _get_overview_resistances(equip_chars, 640))
     {
         text += bline;
         text += "\n";

@@ -1959,7 +1959,7 @@ static bool _lugonu_warp_monster(monster& mon, int pow)
 
     mon.hurt(&you, 1 + random2(pow / 6));
 
-    if (mon.alive() && !mon.no_tele(true, false))
+    if (mon.alive() && !mon.no_tele())
         mon.blink();
 
     return true;

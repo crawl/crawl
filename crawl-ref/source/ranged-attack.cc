@@ -98,7 +98,7 @@ bool ranged_attack::attack()
         return true;
     }
 
-    const int ev = defender->evasion(ev_ignore::none, attacker);
+    const int ev = defender->evasion(false, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(false);
 
@@ -207,7 +207,7 @@ bool ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->evasion(ev_ignore::none, attacker);
+    const int ev = defender->evasion(false, attacker);
 
     const int orig_ev_margin =
         test_hit(orig_to_hit, ev, !attacker->is_player());
@@ -438,7 +438,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 susceptible = false;
             break;
         case SPMSL_DISPERSAL:
-            if (defender->no_tele(true, false, true))
+            if (defender->no_tele(true))
                 susceptible = false;
             break;
         case SPMSL_FRENZY:
@@ -635,7 +635,7 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_DISPERSAL:
         if (damage_done > 0)
         {
-            if (defender->no_tele(true, true))
+            if (defender->no_tele())
             {
                 if (defender->is_player())
                     canned_msg(MSG_STRANGE_STASIS);

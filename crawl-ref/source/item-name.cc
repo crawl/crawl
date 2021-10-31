@@ -2836,7 +2836,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             switch (ego)
             {
             case SPARM_SPIRIT_SHIELD:
-                return you.spirit_shield(false, false);
+                return you.spirit_shield(false);
             case SPARM_REPULSION:
                 return temp && have_passive(passive_t::upgraded_storm_shield)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
@@ -2963,7 +2963,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                     || !ignore_faith_reason().empty();
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.spirit_shield(false, false) || you.has_mutation(MUT_HP_CASTING);
+            return you.spirit_shield(false) || you.has_mutation(MUT_HP_CASTING);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
