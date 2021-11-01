@@ -478,6 +478,9 @@ def server_main():
         if config.watch_socket_dirs:
             process_handler.watch_socket_dirs()
 
+    # start the lobby update timeout loop
+    do_lobby_updates()
+
     logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
                                                 (tornado.version, os.getpid()))
 

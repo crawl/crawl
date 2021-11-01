@@ -44,18 +44,43 @@ def shutdown():
 def update_global_status():
     write_dgl_status_file()
 
+game_lobby_cache = dict()
+
+def do_lobby_updates(force=False):
+    global game_lobby_cache
+    for game in game_lobby_cache.keys():
+        if not game.process:
+            # XX handle lobby removal messages here too
+            # for now we just let remove_in_lobbys handle things; even a del
+            # here could lead to a race condition I think?
+            continue
+        if not force and game_lobby_cache[game] is not None:
+            continue
+        game_lobby_cache[game] = game.lobby_entry()
+        for socket in list(sockets):
+            if socket.is_in_lobby():
+                socket.send_message("lobby_entry", **game_lobby_cache[game])
+
+    if not force:
+        # TODO: in the Future, refactor as a simple async loop
+        rate = getattr(config, "lobby_update_rate", 2)
+        IOLoop.current().add_timeout(time.time() + rate, do_lobby_updates)
+
 def update_all_lobbys(game):
-    lobby_entry = game.lobby_entry()
+    global game_lobby_cache
+    # mark the game for display in the lobby
+    game_lobby_cache[game] = None
+
+def remove_in_lobbys(game):
+    global game_lobby_cache
+    if game in game_lobby_cache:
+        del game_lobby_cache[game]
     for socket in list(sockets):
         if socket.is_in_lobby():
-            socket.send_message("lobby_entry", **lobby_entry)
-def remove_in_lobbys(process):
-    for socket in list(sockets):
-        if socket.is_in_lobby():
-            socket.send_message("lobby_remove", id=process.id,
-                                reason=process.exit_reason,
-                                message=process.exit_message,
-                                dump=process.exit_dump_url)
+            socket.send_message("lobby_remove", id=game.id,
+                                reason=game.exit_reason,
+                                message=game.exit_message,
+                                dump=game.exit_dump_url)
 
 def global_announce(text):
     for socket in list(sockets):
