@@ -163,7 +163,7 @@ void uncontrolled_blink(bool override_stasis)
  * @return              True if a target was found; false if the player aborted.
  */
 static bool _find_cblink_target(dist &target, bool safe_cancel,
-                                string verb, targeter *hitfunc = nullptr)
+                                string verb, targeter *hitfunc = nullptr, bool physical = false)
 {
     while (true)
     {
@@ -244,7 +244,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
             continue;
         }
 
-        if (cancel_harmful_move(false))
+        if (cancel_harmful_move(physical))
         {
             clear_messages();
             continue;
@@ -340,12 +340,9 @@ spret frog_hop(bool fail, dist *target)
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     tgt.obeys_mesmerise = true;
 
-    if (cancel_harmful_move())
-        return spret::abort;
-
     while (true)
     {
-        if (!_find_cblink_target(*target, true, "hop", &tgt))
+        if (!_find_cblink_target(*target, true, "hop", &tgt, true))
             return spret::abort;
 
         if (grid_distance(you.pos(), target->target) > hop_range)
