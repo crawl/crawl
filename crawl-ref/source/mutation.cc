@@ -19,6 +19,7 @@
 #include "cio.h"
 #include "coordit.h"
 #include "dactions.h"
+#include "database.h" // getLongDescription
 #include "delay.h"
 #include "describe.h"
 #include "english.h"
@@ -424,12 +425,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     return mutation_activity_type::FULL;
 }
 
-// Counts of various statuses/types of mutations from the current/most
-// recent call to describe_mutations. TODO: eliminate
-static int _num_full_suppressed = 0;
-static int _num_part_suppressed = 0;
-static int _num_transient = 0;
-
 static string _suppressedmut(string desc, bool terse=false)
 {
     return terse ? "(" + desc + ")" : "<darkgrey>((" + desc + "))</darkgrey>";
@@ -453,12 +448,8 @@ static string _badmut(string desc, bool terse=false)
 static string _annotate_form_based(string desc, bool suppressed, bool terse=false)
 {
     if (suppressed)
-    {
         return _suppressedmut(desc, terse);
-        ++_num_full_suppressed;
-    }
-    else
-        return _innatemut(desc, terse);
+    return _innatemut(desc, terse);
 }
 
 static string _dragon_abil(string desc, bool terse=false)
@@ -688,13 +679,6 @@ static bool _is_appendage_mutation(mutation_type mut)
             return true;
     return false;
 }
-
-class MutationMenu : public Menu
-{
-private:
-    vector<string> fakemuts;
-
-};
 
 static vector<string> _get_form_fakemuts(bool terse)
 {
@@ -974,49 +958,51 @@ static vector<string> _get_fakemuts(bool terse)
     return result;
 }
 
-
-static vector<string> _get_mutations(bool terse)
+static vector<mutation_type> _get_ordered_mutations()
 {
-    vector<string> result = _get_fakemuts(terse);
+    vector<mutation_type> muts;
 
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        mutation_type mut_type = static_cast<mutation_type>(i);
-        if (_is_appendage_mutation(mut_type))
-            continue;
-        if (you.has_innate_mutation(mut_type))
-        {
-            result.push_back(terse ? _terse_mut_name(mut_type)
-                                   : mutation_desc(mut_type, -1, true,
-                                    ((you.sacrifices[i] != 0) ? true : false)));
-        }
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (!_is_appendage_mutation(mut) && you.has_innate_mutation(mut))
+            muts.push_back(mut);
     }
 
     // Now add removable mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        mutation_type mut_type = static_cast<mutation_type>(i);
-        if (_is_appendage_mutation(mut_type))
-            continue;
-        if (you.get_base_mutation_level(mut_type, false, false, true) > 0
-            && !you.has_innate_mutation(mut_type)
-            && !you.has_temporary_mutation(mut_type))
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (!_is_appendage_mutation(mut)
+            && you.get_base_mutation_level(mut, false, false, true) > 0
+            && !you.has_innate_mutation(mut)
+            && !you.has_temporary_mutation(mut))
         {
-            result.push_back(terse ? _terse_mut_name(mut_type)
-                                   : mutation_desc(mut_type, -1, true));
+            muts.push_back(mut);
         }
     }
 
     //Finally, temporary mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        mutation_type mut_type = static_cast<mutation_type>(i);
-        if (you.has_temporary_mutation(mut_type))
-        {
-            result.push_back(terse ? _terse_mut_name(mut_type)
-                                   : mutation_desc(mut_type, -1, true));
-        }
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (you.has_temporary_mutation(mut))
+            muts.push_back(mut);
+    }
+
+    return muts;
+}
+
+
+static vector<string> _get_mutations_descs(bool terse)
+{
+    vector<string> result = _get_fakemuts(terse);
+    for (mutation_type mut : _get_ordered_mutations())
+    {
+        result.push_back(terse ? _terse_mut_name(mut)
+                               : mutation_desc(mut, -1, true,
+                                               you.sacrifices[mut] != 0));
     }
 
     return result;
@@ -1024,7 +1010,7 @@ static vector<string> _get_mutations(bool terse)
 
 string terse_mutation_list()
 {
-    const vector<string> mutations = _get_mutations(true);
+    const vector<string> mutations = _get_mutations_descs(true);
 
     if (mutations.empty())
         return "no striking features";
@@ -1042,9 +1028,6 @@ string describe_mutations(bool drop_title)
 #endif
     string result;
 
-    _num_full_suppressed = _num_part_suppressed = 0;
-    _num_transient = 0;
-
     if (!drop_title)
     {
         result += "<white>";
@@ -1052,7 +1035,7 @@ string describe_mutations(bool drop_title)
         result += "</white>\n\n";
     }
 
-    const vector<string> mutations = _get_mutations(false);
+    const vector<string> mutations = _get_mutations_descs(false);
 
     if (mutations.empty())
         result += "You are rather mundane.\n";
@@ -1062,171 +1045,214 @@ string describe_mutations(bool drop_title)
     return result;
 }
 
-static formatted_string _vampire_Ascreen_footer(bool first_page)
+static string _vampire_Ascreen_footer(bool first_page)
 {
     const char *text = first_page ? "<w>Mutations</w>|Blood properties"
                                   : "Mutations|<w>Blood properties</w>";
-    const string fmt = make_stringf("[<w>!</w>/<w>^</w>"
+    return make_stringf("[<w>!</w>/<w>^</w>"
 #ifdef USE_TILE_LOCAL
             "|<w>Right-click</w>"
 #endif
             "]: %s", text);
-    return formatted_string::parse_string(fmt);
 }
 
-static string _display_vampire_attributes()
+static bool _has_partially_suppressed_muts()
 {
-    ASSERT(you.has_mutation(MUT_VAMPIRISM));
-
-    string result;
-
-    const int lines = 13;
-    string column[lines][3] =
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
-                                 //Full       Bloodless
-        {"Regeneration         ", "fast       ", "none with monsters in sight"},
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (!you.get_base_mutation_level(mut)) continue;
+        if (mutation_activity_level(mut) == mutation_activity_type::PARTIAL)
+            return true;
+    }
+    return false;
+}
 
-        {"HP modifier          ", "none       ", "-20%"},
-
-        {"Stealth boost        ", "none       ", "major "},
-
-        {"Heal on bite         ", "no         ", "yes "},
-
-        {"\n<w>Resistances</w>\n"
-         "Poison resistance    ", "           ", "immune"},
-
-        {"Cold resistance      ", "           ", "++    "},
-
-        {"Negative resistance  ", "           ", "+++   "},
-
-        {"Miasma resistance    ", "           ", "immune"},
-
-        {"Torment resistance   ", "           ", "immune"},
-
-        {"\n<w>Transformations</w>\n"
-         "Bat form (XL 3+)     ", "no         ", "yes   "},
-
-        {"Other forms          ", "yes        ", "no    "},
-
-        {"Berserk              ", "yes        ", "no    "}
-    };
-
-    const int highlight_col = you.vampire_alive ? 1 : 2;
-
-    for (int y = 0; y < lines; y++)  // lines   (properties)
+static bool _has_fully_suppressed_muts()
+{
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        for (int x = 0; x < 3; x++)  // columns (states)
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (!you.get_base_mutation_level(mut)) continue;
+        if (mutation_activity_level(mut) == mutation_activity_type::INACTIVE)
+            return true;
+    }
+    return false;
+}
+
+static bool _has_transient_muts()
+{
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+        if (you.has_temporary_mutation(static_cast<mutation_type>(i)))
+            return true;
+    return false;
+}
+
+class MutationMenu : public Menu
+{
+private:
+    vector<string> fakemuts;
+    vector<mutation_type> muts;
+    bool blood;
+public:
+    MutationMenu()
+        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
+               | MF_ALWAYS_SHOW_MORE),
+          fakemuts(_get_fakemuts(false)),
+          muts( _get_ordered_mutations()),
+          blood(false)
+    {
+        set_highlighter(nullptr);
+        set_title(new MenuEntry("Innate Abilities, Weirdness & Mutations",
+                                MEL_TITLE));
+        update_entries();
+        update_more();
+        on_single_selection = [](const MenuEntry& item)
         {
-            if (y > 0 && x == highlight_col)
-                result += "<w>";
-            result += column[y][x];
-            if (y > 0 && x == highlight_col)
-                result += "</w>";
-        }
-        result += "\n";
+            if (!item.data) return true;
+            const mutation_type mut = *((mutation_type*)(item.data));
+            describe_mutation(mut);
+            return true;
+        };
     }
 
-    trim_string_right(result);
-    return result;
-}
+private:
+    void update_entries()
+    {
+        clear();
+        if (blood) {
+            update_blood();
+        } else {
+            update_muts();
+        }
+    }
+
+    void update_blood()
+    {
+        ASSERT(you.has_mutation(MUT_VAMPIRISM));
+
+        string result;
+
+        const int lines = 17;
+        string columns[lines][3] =
+        {
+            {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
+                                     //Full       Bloodless
+            {"Regeneration         ", "fast       ", "none with monsters in sight"},
+
+            {"HP modifier          ", "none       ", "-20%"},
+
+            {"Stealth boost        ", "none       ", "major "},
+
+            {"Heal on bite         ", "no         ", "yes "},
+
+            {"", "", ""},
+            {"<w>Resistances</w>", "", ""},
+            {"Poison resistance    ", "           ", "immune"},
+
+            {"Cold resistance      ", "           ", "++    "},
+
+            {"Negative resistance  ", "           ", "+++   "},
+
+            {"Miasma resistance    ", "           ", "immune"},
+
+            {"Torment resistance   ", "           ", "immune"},
+
+            {"", "", ""},
+            {"<w>Transformations</w>", "", ""},
+            {"Bat form (XL 3+)     ", "no         ", "yes   "},
+
+            {"Other forms          ", "yes        ", "no    "},
+
+            {"Berserk              ", "yes        ", "no    "}
+        };
+
+        const int highlight_col = you.vampire_alive ? 1 : 2;
+
+        for (int y = 0; y < lines; y++)  // lines   (properties)
+        {
+            string label = "";
+            for (int x = 0; x < 3; x++)  // columns (states)
+            {
+                string col = columns[y][x];
+                if (x == highlight_col)
+                    col = make_stringf("<w>%s</w>", col.c_str());
+                label += col;
+            }
+            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+        }
+    }
+
+    void update_muts()
+    {
+        for (const auto &fakemut : fakemuts)
+        {
+            MenuEntry* me = new MenuEntry(fakemut, MEL_ITEM, 1, 0);
+            me->indent_no_hotkeys = !muts.empty();
+            add_entry(me);
+        }
+
+        menu_letter hotkey;
+        for (mutation_type &mut : muts)
+        {
+            const string desc = mutation_desc(mut, -1, true,
+                                              you.sacrifices[mut] != 0);
+            MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
+            ++hotkey;
+            me->data = &mut;
+            add_entry(me);
+        }
+
+        if (items.empty())
+        {
+            add_entry(new MenuEntry("You are rather mundane.",
+                                    MEL_ITEM, 1, 0));
+        }
+    }
+
+    void update_more()
+    {
+        string extra = "";
+        if (!blood)
+        {
+            if (_has_partially_suppressed_muts())
+                extra += "<brown>()</brown>  : Partially suppressed.\n";
+            // TODO: also handle suppressed fakemuts
+            if (_has_fully_suppressed_muts())
+                extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
+            if (_has_transient_muts())
+                extra += "<magenta>[]</magenta>   : Transient mutations.\n";
+        }
+        if (you.has_mutation(MUT_VAMPIRISM))
+            extra += _vampire_Ascreen_footer(!blood);
+        set_more(extra);
+    }
+
+    virtual bool process_key(int keyin) override
+    {
+        switch (keyin)
+        {
+        case '!':
+        case '^':
+        case CK_MOUSE_CMD:
+            if (you.has_mutation(MUT_VAMPIRISM))
+            {
+                blood = !blood;
+                update_entries();
+                update_more();
+                update_menu(true);
+            }
+            return true;
+        default:
+            return Menu::process_key(keyin);
+        }
+    }
+};
 
 void display_mutations()
 {
-    string mutation_s = describe_mutations(true);
-
-    string extra = "";
-    if (_num_part_suppressed)
-        extra += "<brown>()</brown>  : Partially suppressed.\n";
-    if (_num_full_suppressed)
-        extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
-    if (_num_transient)
-        extra += "<magenta>[]</magenta>   : Transient mutations.";
-
-    if (!extra.empty())
-    {
-        mutation_s += "\n\n\n\n";
-        mutation_s += extra;
-    }
-    trim_string_right(mutation_s);
-
-    auto vbox = make_shared<Box>(Widget::VERT);
-    vbox->set_cross_alignment(Widget::STRETCH);
-
-    const char *title_text = "Innate Abilities, Weirdness & Mutations";
-    auto title = make_shared<Text>(formatted_string(title_text, WHITE));
-    auto title_hbox = make_shared<Box>(Widget::HORZ);
-    title_hbox->add_child(move(title));
-    title_hbox->set_main_alignment(Widget::CENTER);
-    vbox->add_child(move(title_hbox));
-
-    auto switcher = make_shared<Switcher>();
-
-    const string vamp_s = you.has_mutation(MUT_VAMPIRISM)
-                                        ?_display_vampire_attributes()
-                                        : "N/A";
-    const string descs[3] =  { mutation_s, vamp_s };
-    for (int i = 0; i < 2; i++)
-    {
-        auto scroller = make_shared<Scroller>();
-        auto text = make_shared<Text>(formatted_string::parse_string(
-                descs[static_cast<int>(i)]));
-        text->set_wrap_text(true);
-        scroller->set_child(text);
-        switcher->add_child(move(scroller));
-    }
-
-    switcher->current() = 0;
-    switcher->set_margin_for_sdl(20, 0, 0, 0);
-    switcher->set_margin_for_crt(1, 0, 0, 0);
-    switcher->expand_h = false;
-    switcher->align_x = Widget::STRETCH;
-#ifdef USE_TILE_LOCAL
-    switcher->max_size().width = tiles.get_crt_font()->char_width()*80;
-#endif
-    vbox->add_child(switcher);
-
-    auto bottom = make_shared<Text>(_vampire_Ascreen_footer(true));
-    bottom->set_margin_for_sdl(20, 0, 0, 0);
-    bottom->set_margin_for_crt(1, 0, 0, 0);
-    if (you.has_mutation(MUT_VAMPIRISM))
-        vbox->add_child(bottom);
-
-    auto popup = make_shared<ui::Popup>(vbox);
-
-    bool done = false;
-    int lastch;
-    popup->on_keydown_event([&](const KeyEvent& ev) {
-        lastch = ev.key();
-        if (you.has_mutation(MUT_VAMPIRISM)
-            && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
-        {
-            int& c = switcher->current();
-
-            bottom->set_text(_vampire_Ascreen_footer(c));
-
-            c = 1 - c;
-#ifdef USE_TILE_WEB
-            tiles.json_open_object();
-            tiles.json_write_int("pane", c);
-            tiles.ui_state_change("mutations", 0);
-#endif
-        }
-        else
-            done = !switcher->current_widget()->on_event(ev);
-        return true;
-    });
-
-#ifdef USE_TILE_WEB
-    tiles.json_open_object();
-    tiles.json_write_string("mutations", mutation_s);
-    if (you.has_mutation(MUT_VAMPIRISM))
-        tiles.json_write_bool("vampire_alive", you.vampire_alive);
-    tiles.push_ui_layout("mutations", 1);
-    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
-#endif
-
-    ui::run_layout(move(popup), done);
+    MutationMenu mut_menu;
+    mut_menu.show();
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
@@ -2388,6 +2414,34 @@ bool delete_temp_mutation()
     return false;
 }
 
+/// Attempt to look up a description of this mutation in the database.
+/// Not to be confused with mutation_desc().
+string get_mutation_desc(mutation_type mut)
+{
+    const char* const name = mutation_name(mut);
+    const string key = make_stringf("%s mutation", name);
+    string lookup = getLongDescription(key);
+    hint_replace_cmds(lookup);
+
+    ostringstream desc;
+    desc << lookup;
+    if (lookup.empty()) // Nothing found?
+        desc << mutation_desc(mut, -1, false) << "\n";
+
+    // TODO: consider adding other fun facts here
+        // _get_mutation_def(mut).form_based
+        // current/max mutation level
+        // type of mutation (species, etc)
+        // if we tracked it: source (per level, I guess?)
+        // gain/loss messages (to clarify to players when they get a
+        //                     confusing message)
+
+    const string quote = getQuoteString(key);
+    if (!quote.empty())
+        desc << "\n\n" << quote;
+    return desc.str();
+}
+
 const char* mutation_name(mutation_type mut, bool allow_category)
 {
     if (allow_category && mut >= CATEGORY_MUTATIONS && mut < MUT_NON_MUTATION)
@@ -2493,8 +2547,9 @@ int mutation_max_levels(mutation_type mut)
     return _get_mutation_def(mut).levels;
 }
 
-// Return a string describing the mutation.
-// If colour is true, also add the colour annotation.
+/// Return a string describing the mutation.
+/// If colour is true, also add the colour annotation.
+/// Not to be confused with get_mutation_desc().
 string mutation_desc(mutation_type mut, int level, bool colour,
         bool is_sacrifice)
 {
@@ -2563,22 +2618,13 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     if (!ignore_player)
     {
         if (fully_inactive)
-        {
             result = "((" + result + "))";
-            ++_num_full_suppressed;
-        }
         else if (partially_active)
-        {
             result = "(" + result + ")";
-            ++_num_part_suppressed;
-        }
     }
 
     if (temporary)
-    {
         result = "[" + result + "]";
-        ++_num_transient;
-    }
 
     if (colour)
     {

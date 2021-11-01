@@ -55,6 +55,7 @@
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "mutation.h" // mutation_name, get_mutation_desc
 #include "output.h"
 #include "potion.h"
 #include "ranged-attack.h" // describe_to_hit
@@ -3557,6 +3558,17 @@ void describe_deck(deck_type deck)
 
     inf.body << deck_description(deck);
 
+    show_description(inf);
+}
+
+/**
+ * Describe a given mutation. List its description and details.
+ */
+void describe_mutation(mutation_type mut)
+{
+    describe_info inf;
+    inf.title = uppercase_first(mutation_name(mut)).c_str();
+    inf.body << get_mutation_desc(mut);
     show_description(inf);
 }
 

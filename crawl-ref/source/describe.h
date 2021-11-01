@@ -76,6 +76,7 @@ void describe_spell(spell_type spelled,
 
 void describe_ability(ability_type ability);
 void describe_deck(deck_type deck);
+void describe_mutation(mutation_type mut);
 
 string short_ghost_description(const monster *mon, bool abbrev = false);
 string get_ghost_description(const monster_info &mi, bool concise = false);
