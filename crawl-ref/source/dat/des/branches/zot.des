@@ -2684,7 +2684,7 @@ SUBST:   < = {[(
 KFEAT:   ^ = alarm trap / zot trap
 # The possible acts:
 MONS:    red draconian scorcher, red draconian, juggernaut
-MONS:    tentacled monstrosity, ancient lich / dread lich, electric golem
+MONS:    tentacled monstrosity, ancient lich, electric golem
 MONS:    purple draconian
 SHUFFLE: ABCDEFHI
 # Fire breathers: Red draconians, with some scorchers
