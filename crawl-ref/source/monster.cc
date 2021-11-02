@@ -687,6 +687,9 @@ bool monster::can_throw_large_rocks() const
 
 bool monster::can_speak()
 {
+    if (cannot_act())
+        return false;
+
     if (has_ench(ENCH_MUTE))
         return false;
 
