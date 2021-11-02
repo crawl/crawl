@@ -187,7 +187,7 @@ stronger.
 %%%%
 naga tail mutation
 
-You have a long, snake-like tail instead of a tail. The second level of this
+You have a long, snake-like tail in place of feet. The second level of this
 mutation allows you to constrict foes with your tail when attacking in melee.
 %%%%
 stinger mutation
