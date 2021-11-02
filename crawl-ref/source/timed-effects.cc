@@ -612,6 +612,9 @@ void monster::timeout_enchantments(int levels)
     const mon_enchant_list ec = enchantments;
     for (auto &entry : ec)
     {
+        if (entry.second.duration >= INFINITE_DURATION)
+            continue;
+
         switch (entry.first)
         {
         case ENCH_POISON: case ENCH_CORONA:
