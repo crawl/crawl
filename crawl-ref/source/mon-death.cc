@@ -3021,7 +3021,18 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 void elven_twin_energize(monster* mons)
 {
     if (mons_is_mons_class(mons, MONS_DUVESSA))
-        mons->go_berserk(true);
+    {
+        if (mons->go_berserk(true))
+        {
+            // only mark Duvessa energized once she's successfully gone berserk
+            mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
+            mon_enchant zerk = mons->get_ench(ENCH_BERSERK);
+            zerk.duration = INFINITE_DURATION;
+            mons->update_ench(zerk);
+        }
+        else
+            mons->props[ELVEN_ENERGIZE_KEY] = true;
+    }
     else
     {
         ASSERT(mons_is_mons_class(mons, MONS_DOWAN));
@@ -3029,9 +3040,8 @@ void elven_twin_energize(monster* mons)
             simple_monster_message(*mons, " seems to find hidden reserves of power!");
 
         mons->add_ench(ENCH_HASTE);
+        mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
     }
-
-    mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
 }
 
 /**
