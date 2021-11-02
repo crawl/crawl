@@ -2282,14 +2282,14 @@ bool mons_class_sees_invis(monster_type type, monster_type base)
  * @param mc        The type of monster in question.
  * @return          The average hp for that monster; rounds down.
  */
-int mons_avg_hp(monster_type mc)
+int mons_avg_hp(monster_type mc, int scale)
 {
     const monsterentry* me = get_monster_data(mc);
 
     if (!me)
         return 0;
 
-    return me->avg_hp_10x / 10;
+    return me->avg_hp_10x * scale / 10;
 }
 
 /**
