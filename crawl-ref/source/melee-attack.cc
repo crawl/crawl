@@ -1363,31 +1363,28 @@ void melee_attack::player_announce_aux_hit()
 string melee_attack::player_why_missed()
 {
     const int ev = defender->evasion(ev_ignore::none, attacker);
-    const int combined_penalty =
-        attacker_armour_tohit_penalty + attacker_shield_tohit_penalty;
-    if (to_hit < ev && to_hit + combined_penalty >= ev)
-    {
-        const bool armour_miss =
-            (attacker_armour_tohit_penalty
-             && to_hit + attacker_armour_tohit_penalty >= ev);
-        const bool shield_miss =
-            (attacker_shield_tohit_penalty
-             && to_hit + attacker_shield_tohit_penalty >= ev);
+    // We roll (random2) these penalties before comparing them to EV.
+    // Thus, on average, they're effectively half as large.
+    const int adj_armour_penalty = div_rand_round(attacker_armour_tohit_penalty, 2);
+    const int adj_shield_penalty = div_rand_round(attacker_shield_tohit_penalty, 2);
+    const int combined_penalty = adj_armour_penalty + adj_shield_penalty;
+    if (to_hit >= ev || to_hit + combined_penalty < ev)
+        return "You" + evasion_margin_adverb() + " miss ";
 
-        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        const string armour_name = armour ? armour->name(DESC_BASENAME)
-                                          : string("armour");
+    const bool armour_miss =
+        adj_armour_penalty && to_hit + adj_armour_penalty >= ev;
+    const bool shield_miss =
+        adj_shield_penalty && to_hit + adj_shield_penalty >= ev;
 
-        if (armour_miss && !shield_miss)
-            return "Your " + armour_name + " prevents you from hitting ";
-        else if (shield_miss && !armour_miss)
-            return "Your shield prevents you from hitting ";
-        else
-            return "Your shield and " + armour_name
-                   + " prevent you from hitting ";
-    }
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
+    const string armour_name = armour ? armour->name(DESC_BASENAME)
+                                      : string("armour");
 
-    return "You" + evasion_margin_adverb() + " miss ";
+    if (armour_miss && !shield_miss)
+        return "Your " + armour_name + " prevents you from hitting ";
+    if (shield_miss && !armour_miss)
+        return "Your shield prevents you from hitting ";
+    return "Your shield and " + armour_name + " prevent you from hitting ";
 }
 
 void melee_attack::player_warn_miss()
