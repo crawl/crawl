@@ -18,7 +18,3 @@ note_monsters += orb of fire, ancient lich, dread lich, Sigmund
 monster_item_view_features += stair, trap
 
 tile_show_threat_levels = nasty
-
-tile_player_tile = tile:mons_jack_o_lantern
-tile_weapon_offsets = -3,0
-tile_shield_offsets = -3,3
