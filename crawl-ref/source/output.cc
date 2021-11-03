@@ -915,8 +915,8 @@ static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
     textcolour(you.duration[DUR_PETRIFYING]
-               || you.cannot_move() ? RED
-                                    : _boosted_ev() ? LIGHTBLUE
+               || you.cannot_act() ? RED
+                                   : _boosted_ev() ? LIGHTBLUE
                                                     : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", you.evasion());
 

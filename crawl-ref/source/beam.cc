@@ -1843,7 +1843,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     if (mons->alive())
     {
-        if (!mons->cannot_move())
+        if (!mons->cannot_act())
         {
             simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
                                          ? " seems to be slow for longer."

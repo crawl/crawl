@@ -3262,7 +3262,7 @@ bool melee_attack::do_knockback(bool trample)
     if (defender->is_stationary())
         return false; // don't even print a message
 
-    if (attacker->cannot_move())
+    if (attacker->cannot_act())
         return false;
 
     const int size_diff =

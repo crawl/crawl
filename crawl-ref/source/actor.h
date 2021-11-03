@@ -336,7 +336,6 @@ public:
     virtual int  dragon_level() const;
 
     virtual bool paralysed() const = 0;
-    virtual bool cannot_move() const = 0;
     virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
@@ -373,8 +372,7 @@ public:
 
     virtual bool incapacitated() const
     {
-        return cannot_move()
-            || asleep()
+        return cannot_act()
             || confused()
             || caught();
     }

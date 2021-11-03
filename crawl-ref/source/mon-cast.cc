@@ -2022,7 +2022,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
         // no buffing confused/paralysed mons
         if (mons->berserk_or_insane()
             || mons->confused()
-            || mons->cannot_move())
+            || mons->cannot_act())
         {
             continue;
         }
