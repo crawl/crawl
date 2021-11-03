@@ -71,7 +71,7 @@ level of this mutation provides more SH.
 thin skeletal structure mutation
 
 Your bones are light and porous. Each level of this mutation provides +2
-Dexterity and +Stealth.
+Dexterity and Stealth+.
 %%%%
 strong mutation
 
@@ -86,7 +86,7 @@ Intelligence.
 agile mutation
 
 Your reflexes have become unnaturally fast. Each level of this mutation
-provides +2 Desterity.
+provides +2 Dexterity.
 %%%%
 weak mutation
 
@@ -101,7 +101,7 @@ Intelligence.
 clumsy mutation
 
 Your reflexes have become unnaturally clumsy. Each level of this mutation
-provides -2 Desterity.
+provides -2 Dexterity.
 %%%%
 high mp mutation
 
@@ -110,7 +110,7 @@ You have an increased reservoir of magic. Each level of this mutation provides
 %%%%
 low mp mutation
 
-You have an low magical capacity. Each level of this mutation provides -10% MP.
+You have a low magical capacity. Each level of this mutation provides -10% MP.
 %%%%
 camouflage mutation
 
@@ -128,12 +128,12 @@ mutation, the horns also prevent you from wearing hats.
 beak mutation
 
 You have a beak for a mouth, allowing you to peck foes when launching melee
-attacks but preventing you from wearing helmets
+attacks but preventing you from wearing helmets.
 %%%%
 fangs mutation
 
 You have sharp teeth, allowing you to bite foes when launching melee attacks.
-Each level of this mutation makes your teeth sharper, longer and stronger.
+Each level of this mutation makes your teeth sharper, longer, and stronger.
 %%%%
 acidic bite mutation
 
@@ -181,7 +181,7 @@ monsters.
 %%%%
 tentacle spike mutation
 
-You have a spiked tentacle, allowing you to stab foes when launching melee
+You have a spiked tentacle, allowing you to pierce foes when launching melee
 attacks. Each level of this mutation makes your spike sharper, longer, and
 stronger.
 %%%%
@@ -284,7 +284,8 @@ hidden from mundane sight. This has no effect on your accuracy otherwise.
 clarity mutation
 
 Your mind is exceptionally clear, preventing you from becoming confused,
-mesmerised, or supernaturally afraid.
+mesmerised, or supernaturally afraid. This mutation also prevents you from
+randomly losing temper.
 %%%%
 sense surroundings mutation
 
@@ -528,8 +529,8 @@ of this mutation intensifies the poison from a single glob into a large cloud.
 %%%%
 in touch with death mutation
 
-Your Necromancy spells are more powerful. The second level of this enhances
-your Necromany spellpower further.
+Your Necromancy spells are more powerful. The second level of this mutation
+enhances your Necromancy spellpower further.
 %%%%
 nimble flight mutation
 
@@ -644,7 +645,7 @@ accuracy further.
 tendrils mutation
 
 When struck in melee, the slimy tendrils covering your body may grab your
-attacker's weapon and yank it from their grasp. Greater strength or dexterity
+attacker's weapon and yank it from their grasp. Greater Strength or Dexterity
 makes this somewhat more likely.
 %%%%
 jelly sensing items mutation
