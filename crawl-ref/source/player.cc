@@ -400,7 +400,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons->is_stationary() || mons->asleep() || mons->cannot_move())
+    if (mons->is_stationary() || mons->asleep() || mons->cannot_act())
     {
         if (!quiet)
             simple_monster_message(*mons, " cannot move out of your way!");
@@ -2038,7 +2038,7 @@ static int _player_evasion(bool ignore_helpless)
 {
     const int size_factor = _player_evasion_size_factor();
     // Size is all that matters when paralysed or at 0 dex.
-    if ((you.cannot_move() || you.duration[DUR_CLUMSY]
+    if ((you.cannot_act() || you.duration[DUR_CLUMSY]
             || you.form == transformation::tree)
         && !ignore_helpless)
     {
@@ -5244,7 +5244,7 @@ bool player::cannot_speak() const
     if (silenced(pos()))
         return true;
 
-    if (cannot_move()) // we allow talking during sleep ;)
+    if (paralysed() || petrified()) // we allow talking during sleep ;)
         return true;
 
     // No transform that prevents the player from speaking yet.
@@ -5369,7 +5369,7 @@ bool player::paralysed() const
     return duration[DUR_PARALYSIS];
 }
 
-bool player::cannot_move() const
+bool player::cannot_act() const
 {
     return asleep() || paralysed() || petrified();
 }
@@ -7095,12 +7095,6 @@ bool player::asleep() const
 {
     return duration[DUR_SLEEP];
 }
-
-bool player::cannot_act() const
-{
-    return asleep() || cannot_move();
-}
-
 
 bool player::can_feel_fear(bool include_unknown) const
 {

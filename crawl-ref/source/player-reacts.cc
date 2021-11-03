@@ -777,9 +777,8 @@ static void _decrement_durations()
     dec_elixir_player(delay);
     dec_frozen_ramparts(delay);
 
-    if (!you.cannot_move()
-        && !you.confused()
-        && !you.asleep())
+    if (!you.cannot_act()
+        && !you.confused())
     {
         extract_manticore_spikes(
             make_stringf("You %s the barbed spikes from your body.",

@@ -3006,11 +3006,6 @@ bool monster::cannot_act() const
     return paralysed() || petrified();
 }
 
-bool monster::cannot_move() const
-{
-    return cannot_act();
-}
-
 bool monster::asleep() const
 {
     return behaviour == BEH_SLEEP;

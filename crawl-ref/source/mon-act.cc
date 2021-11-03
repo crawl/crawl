@@ -1949,7 +1949,7 @@ void handle_monster_move(monster* mons)
             return;
         }
 
-        if (mons->cannot_move() || !_monster_move(mons))
+        if (mons->cannot_act() || !_monster_move(mons))
             mons->speed_increment -= non_move_energy;
     }
     you.update_beholder(mons);
@@ -2690,10 +2690,10 @@ static bool _mons_can_displace(const monster* mpusher,
     // elbow past them, and the wake-up check happens downstream.
     // Monsters caught in a net also can't be pushed past.
     if (mons_is_confused(*mpusher) || mons_is_confused(*mpushee)
-        || mpusher->cannot_move() || mpusher->is_stationary()
+        || mpusher->cannot_act() || mpusher->is_stationary()
         || mpusher->is_constricted() || mpushee->is_constricted()
         || (!_same_tentacle_parts(mpusher, mpushee)
-           && (mpushee->cannot_move() || mpushee->is_stationary()))
+           && (mpushee->cannot_act() || mpushee->is_stationary()))
         || mpusher->asleep() || mpushee->caught())
     {
         return false;

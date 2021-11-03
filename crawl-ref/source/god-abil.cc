@@ -2041,7 +2041,7 @@ static int _slouch_damage(monster *mon)
 static bool _slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
+    if (mon == nullptr || mon->is_stationary() || mon->cannot_act()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(*mon))
     {
