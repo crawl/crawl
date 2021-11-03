@@ -5378,7 +5378,7 @@ bool player::paralysed() const
 
 bool player::cannot_move() const
 {
-    return paralysed() || petrified();
+    return asleep() || paralysed() || petrified();
 }
 
 bool player::confused() const
