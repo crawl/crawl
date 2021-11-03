@@ -3520,6 +3520,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_OKAWARU_HEROISM;
     case ABIL_OKAWARU_FINESSE:
         return TILEG_ABILITY_OKAWARU_FINESSE;
+    case ABIL_OKAWARU_DUEL:
+        return TILEG_ABILITY_OKAWARU_DUEL;
     // Makhleb
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
         return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;
