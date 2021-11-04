@@ -351,7 +351,11 @@ ENDMAP
 NAME:  slow_altar_1
 TAGS:  patrolling no_monster_gen no_item_gen transparent
 TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+: if you.in_branch("Depths") then
+KMONS: _ = iron golem
+:else
 KMONS: _ = worm / mummy / iron imp
+:end
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
 : interest_check(_G)
@@ -372,7 +376,11 @@ ENDMAP
 NAME:    slow_altar_2
 TAGS:    patrolling no_monster_gen no_item_gen transparent
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-KMONS:   _ = worm / mummy / iron imp
+: if you.in_branch("Depths") then
+KMONS: _ = iron golem
+:else
+KMONS: _ = worm / mummy / iron imp
+:end
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
 : interest_check(_G)
@@ -394,7 +402,11 @@ TAGS:   uniq_altar_cheibriados temple_overflow_1
 TAGS:   temple_overflow_cheibriados transparent no_monster_gen
 TAGS:   transparent
 WEIGHT: 5
-KMONS:  a = worm / mummy / iron imp
+: if you.in_branch("Depths") then
+KMONS: _ = iron golem
+:else
+KMONS: _ = worm / mummy / iron imp
+:end
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
 : interest_check(_G)
@@ -414,6 +426,7 @@ ENDMAP
 NAME:   cheibrodos_worm_habitat
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 transparent
 TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
+DEPTH:  D:3-
 WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
 MONS:   worm
@@ -435,8 +448,9 @@ MAP
 ENDMAP
 
 NAME:   kennysheep_slug_shrine
-TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:   no_pool_fixup no_monster_gen transparent
+TAGS:   temple_overflow_1 temple_overflow_cheibriados
+TAGS:   no_pool_fixup no_monster_gen transparent uniq_altar_cheibriados
+DEPTH:  D:3-
 MONS:   patrolling dart slug
 KMASK:  1 = opaque
 KFEAT:  _ = altar_cheibriados
@@ -1201,9 +1215,16 @@ NAME:    nicolae_hepliaklqana_monster_ancestors
 TAGS:    temple_overflow_hepliaklqana temple_overflow_1 transparent
 TAGS:    uniq_altar_hepliaklqana
 TAGS:    patrolling no_monster_gen no_trap_gen
+: if you.in_branch("Depths") then
+MONS:   deep troll earth mage, spectral deep troll earth mage, tengu reaver
+MONS:   spectral tengu reaver, spriggan defender, spectral spriggan defender
+MONS:   hell knight
+KMONS:  D = spectral hell knight
+:else
 MONS:    goblin, spectral goblin, kobold, spectral kobold, hobgoblin
 MONS:    spectral hobgoblin, orc
 KMONS:   D = spectral orc
+:end
 SHUFFLE: 12 / 34 / 56 / 7D
 KFEAT:   _ = altar_hepliaklqana
 : interest_check(_G)
@@ -1341,7 +1362,11 @@ TAGS:   no_pool_fixup no_monster_gen no_trap_gen transparent
 TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha uniq_zombie_altar
 KFEAT:  _ = altar_kikubaaqudgha
+: if you.in_branch("Depths") then
+MONS:   zombie w:20 / nothing w:90
+:else
 MONS:   rat zombie / bat zombie / nothing w:90
+:end
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxxxx
@@ -1360,7 +1385,11 @@ TAGS:   temple_overflow_kikubaaqudgha uniq_mausoleum_altar
 # zombies scale with depth so we'll let it place in Crypt, too, but with an
 # interest check
 DEPTH:  D:4-10, Crypt
+: if you.in_branch("Crypt") then
+MONS:   zombie, guardian mummy, skeletal warrior, ghoul
+:else
 MONS:   zombie, mummy, wight, necrophage
+:end
 NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:30 2 3 4
 KFEAT:  _ = altar_kikubaaqudgha
@@ -1433,7 +1462,11 @@ ENDMAP
 NAME:   kennysheep_vampire_church
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha transparent
+: if you.in_branch("Depths") then
+MONS:   vampire knight / nothing, vampire mage
+:else
 MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
+:end
 KFEAT:  A = altar_kikubaaqudgha
 NSUBST: . = 4:2 / 3 = 2. / *:.
 {{
@@ -1754,7 +1787,11 @@ NAME:   nemelex_lonely_heart_becter
 TAGS:   uniq_altar_nemelex_xobeh transparent decor
 TAGS:   temple_overflow_1 temple_overflow_nemelex
 TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
+: if you.in_branch("Depths") then
+MONS:   nothing w:4 / boris w:1
+:else
 MONS:   nothing w:4 / jessica w:1
+:end
 KFEAT:  _ = altar_nemelex_xobeh
 COLOUR: x = lightred
 TILE:   x = wall_pebble_red
@@ -1897,8 +1934,12 @@ NAME:  okawaru_altar_gauntlet_db
 TAGS:  uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 KFEAT: _ = altar_okawaru
 KPROP: 1 = no_tele_into
+: if you.in_branch("Depths") then
+MONS:  minotaur ; javelin q:5
+:else
 MONS:  goblin; stone q:5 / hobgoblin; stone q:5 / gnoll; stone q:5 /\
        orc; stone q:5 / kobold; stone q:5
+:end
 : interest_check(_G)
 MAP
   xxx
@@ -1953,7 +1994,11 @@ NAME:   kennysheep_okawaru_gauntlet
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   no_pool_fixup transparent
 KFEAT:  _ = altar_okawaru
+: if you.in_branch("Depths") then
+KMONS: 1 = minotaur ; glaive . chain mail . javelin q:3
+:else
 KMONS:  1 = goblin ; spear
+:end
 KPROP:  1 = no_tele_into
 KMASK:  1 = opaque
 : interest_check(_G)
@@ -2299,7 +2344,9 @@ KFEAT:      _ = altar_sif_muna
 MONS:       Jessica
 : elseif you.absdepth() <= 6 then
 MONS:       orc wizard w:15 / Blork the orc
-: else
+: elseif you.in_branch("Depths") then
+MONS:       deep elf annihilator
+:else
 MONS:       orc wizard
 : end
 : interest_check(_G)
@@ -2577,6 +2624,7 @@ ENDMAP
 NAME:   trog_hazing_becter
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 TAGS:   no_monster_gen no_item_gen no_pool_fixup transparent
+DEPTH:  D:3-
 MONS:   goblin ; stone q:5 . animal skin / \
         hobgoblin ; stone q:5 . animal skin / \
         kobold ; stone q:5 | throwing net q:1 . animal skin
@@ -2802,6 +2850,7 @@ ENDMAP
 NAME:    vehumet_statue
 TAGS:    temple_overflow_1 temple_overflow_vehumet transparent
 TAGS:    uniq_altar_vehumet
+DEPTH:   D:3-
 SHUFFLE: 12
 MONS:    statue name:charred name_adjective tile:mons_statue_mage \
              hp:12 hd:3 spells:throw_flame.53.magical
@@ -2839,6 +2888,7 @@ ENDMAP
 NAME:  vehumet_altar_wand_db
 TAGS:  uniq_altar_vehumet temple_overflow_1 temple_overflow_vehumet
 TAGS:  transparent patrolling
+DEPTH: D:3-
 KFEAT: _ = altar_vehumet
 MONS:  goblin; wand of flame /\
        hobgoblin; wand of flame /\
@@ -3331,7 +3381,11 @@ TAGS:   uniq_altar_yredelemnul temple_overflow_1 temple_overflow_yredelemnul
 TAGS:   uniq_mausoleum_altar transparent
 # see the kiku mausoleum altar for the depth
 DEPTH:  D:4-10, Crypt
+: if you.in_branch("Crypt") then
+MONS:   zombie, guardian mummy, skeletal warrior, ghoul
+:else
 MONS:   zombie, mummy, wight, necrophage
+:end
 NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:30 2 3 4
 KFEAT:  _ = altar_yredelemnul
@@ -3351,7 +3405,11 @@ TAGS:   temple_overflow_1 temple_overflow_yredelemnul no_monster_gen no_item_gen
 TAGS:   transparent uniq_altar_yredelemnul
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  . = web trap / .
+: if you.in_branch("Depths") then
+KMONS:  _ = spectral juggernaut
+:else
 KMONS:  _ = spectral orc
+:end
 : interest_check(_G)
 MAP
 xxxxxxxxx
