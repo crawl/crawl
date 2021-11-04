@@ -1044,6 +1044,29 @@ cc     cc
 cc     cc
 ENDMAP
 
+NAME:   hellmonk_scale_shop
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:8-, Snake, Depths
+KFEAT:  D = armour shop type:Superior suffix:Scales count:3 ; \
+        scale mail randart
+: if you.in_branch("Depths") then
+KMONS:  D = golden dragon / iron dragon / quicksilver dragon / storm dragon /\
+        shadow dragon / pearl dragon w:1
+: elseif you.in_branch("D") and you.absdepth() < 13 then
+KMONS:  D = steam dragon / acid dragon
+:else
+KMONS:  D = fire dragon / ice dragon / swamp dragon
+:end
+MAP
+ xxx
+xxll@
+xl..lx
+xlD.lx
+xxllxx
+ xxxx
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
