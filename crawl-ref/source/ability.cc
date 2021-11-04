@@ -647,7 +647,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
             0, 0, 9, {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
-            0, 0, 96, {fail_basis::invo}, abflag::none },
+            0, 0, 0, {fail_basis::invo}, abflag::none },
 
         { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1392,6 +1392,7 @@ static bool _can_blinkbolt(bool quiet)
 
 static bool _can_rising_flame(bool quiet)
 {
+    ASSERT(can_do_capstone_ability(GOD_IGNIS));
     if (you.duration[DUR_RISING_FLAME])
     {
         if (!quiet)
@@ -3267,6 +3268,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         mpr("You begin to rise into the air.");
         // slightly faster than teleport
         you.set_duration(DUR_RISING_FLAME, 2 + random2(3));
+        you.one_time_ability_used.set(GOD_IGNIS);
         return spret::success;
 
     case ABIL_RENOUNCE_RELIGION:
