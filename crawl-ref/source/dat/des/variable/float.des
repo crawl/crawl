@@ -1092,34 +1092,34 @@ SUBST:  ' = WW...
 :end
 MAP
            .......
-        ...xxx.xxx...                                      
-       .xxxxxx.xxxxxx.                                      
-      .xxx.........xxx.                                     
-     .xx.............xx.                                    
-    .xx.....xxxxx.....xx.                                   
-   .xx....xxxxxxxxx....xx.                                  
-  .xx....xxx'''''xxx....xx.                                 
- .xx....xx''.....''xx....xx.                                
- .xx...xx'..xx.xx..'xx...xx.                                
- .xx..xx'..xxx.xxx..'xx..xx.                                
-.xx...xx'.xx'...'xx.'xx...xx.                               
-.xx..xx'.xx'.....'xx.'xx..xx.                               
-.xx..xx'.xx'.vvv.'xx.'xx..xx.                               
-.xx..xx'.xx'.vvv.'xx.'xx..xx.                               
-.xx..xx'.xx'.vvv.'xx.'xx..xx.                               
-.xx..xx'.xx'.....'xx.'xx..xx.                              
-.xx...xx..xx'...'xx..xx...xx.                               
- .xx..xx...xxxxxxx...xx..xx.                                
- .xx...xx...xxxxx...xx...xx.                                
- .xx....xx.........xx....xx.                                
-  .xx....xxx.....xxx....xx.                                 
-   .xx....xxxx.xxxx....xx.                                  
-    .xx.....xx.xx.....xx.                                   
-     .xx.............xx.                                    
-      .xx...........xx.                                     
-       .xxxxxxxxxxxxx.                                      
+        ...xxx.xxx...
+       .xxxxxx.xxxxxx.
+      .xxx.........xxx.
+     .xx.............xx.
+    .xx.....xxxxx.....xx.
+   .xx....xxxxxxxxx....xx.
+  .xx....xxx'''''xxx....xx.
+ .xx....xx''.....''xx....xx.
+ .xx...xx'..xx.xx..'xx...xx.
+ .xx..xx'..xxx.xxx..'xx..xx.
+.xx...xx'.xx'...'xx.'xx...xx.
+.xx..xx'.xx'.....'xx.'xx..xx.
+.xx..xx'.xx'.vvv.'xx.'xx..xx.
+.xx..xx'.xx'.vvv.'xx.'xx..xx.
+.xx..xx'.xx'.vvv.'xx.'xx..xx.
+.xx..xx'.xx'.....'xx.'xx..xx.
+.xx...xx..xx'...'xx..xx...xx.
+ .xx..xx...xxxxxxx...xx..xx.
+ .xx...xx...xxxxx...xx...xx.
+ .xx....xx.........xx....xx.
+  .xx....xxx.....xxx....xx.
+   .xx....xxxx.xxxx....xx.
+    .xx.....xx.xx.....xx.
+     .xx.............xx.
+      .xx...........xx.
+       .xxxxxxxxxxxxx.
           .xxxxxxx.
-           .......          
+           .......
 ENDMAP
 
 NAME:   hellmonk_destroyed_diamonds
@@ -1179,41 +1179,41 @@ ORIENT: float
 TILE:   c = wall_stone_smooth
 TILE:   G = dngn_crumbled_column
 MAP
-                     ...                                    
-                    .ccc.                                   
-                   .ccccc.                                  
-                  .ccc.ccc.                                 
-                 .ccc...ccc.                                
-                 .cc..V..cc.                                
-                 .ccc...ccc.                                
-                  .ccc.ccc.                                 
-                  .ccc+ccc.                                 
-                  .ccG.Gcc.                                 
-     .............ccc...ccc.............                    
-    .ccccccccccccccc.....ccccccccccccccc.                   
-    .ccccccccccccccG.....Gcccccccccccccc.                   
-    .ccG........Gc.........cG........Gcc.                   
-    .cc..........+.........+..........cc.                   
-    .cc..........c.........c..........cc.                   
-    .cccc+ccccccccc.......ccccccccc+cccc.                   
-    .cccc...cccc.GccG...GccG.cccc...cc..                    
-     ..cc....cc....cc...cc....cc....cc.                     
-      .cc....c......cc+cc......c....cc.                     
-      .cc....c......cc.cc......c....cc.                     
-     ..cc....+......cc.cc......+....cc..                    
-    .cccc....c.......c.c.......c....cccc.                   
-   .ccccc...ccc......+.+......ccc...ccccc.                  
-  .cc...c+cccccc.....c.c.....cccccc+c...cc.                 
- .cc......ccccccc...cc.cc...ccccccc......cc.                
-.cc.......cccccccccGcc.ccGccccccccc.......cc.               
-.cc.......cccccccccccc+cccccccccccc.......cc.               
-.ccG......cc.....ccccc.ccccc.....cc......Gcc.               
- .cc.....cc.     .ccc...ccc.     .cc.....cc.                
- .cccG..cc.       ...   ...       .cc..Gccc.                
-  .cccccc.                         .cccccc.                 
-   ..ccc.                           .ccc..                  
+                     ...
+                    .ccc.
+                   .ccccc.
+                  .ccc.ccc.
+                 .ccc...ccc.
+                 .cc..V..cc.
+                 .ccc...ccc.
+                  .ccc.ccc.
+                  .ccc+ccc.
+                  .ccG.Gcc.
+     .............ccc...ccc.............
+    .ccccccccccccccc.....ccccccccccccccc.
+    .ccccccccccccccG.....Gcccccccccccccc.
+    .ccG........Gc.........cG........Gcc.
+    .cc..........+.........+..........cc.
+    .cc..........c.........c..........cc.
+    .cccc+ccccccccc.......ccccccccc+cccc.
+    .cccc...cccc.GccG...GccG.cccc...cc..
+     ..cc....cc....cc...cc....cc....cc.
+      .cc....c......cc+cc......c....cc.
+      .cc....c......cc.cc......c....cc.
+     ..cc....+......cc.cc......+....cc..
+    .cccc....c.......c.c.......c....cccc.
+   .ccccc...ccc......+.+......ccc...ccccc.
+  .cc...c+cccccc.....c.c.....cccccc+c...cc.
+ .cc......ccccccc...cc.cc...ccccccc......cc.
+.cc.......cccccccccGcc.ccGccccccccc.......cc.
+.cc.......cccccccccccc+cccccccccccc.......cc.
+.ccG......cc.....ccccc.ccccc.....cc......Gcc.
+ .cc.....cc.     .ccc...ccc.     .cc.....cc.
+ .cccG..cc.       ...   ...       .cc..Gccc.
+  .cccccc.                         .cccccc.
+   ..ccc.                           .ccc..
      ...                             ...
-ENDMAP     
+ENDMAP
 
 ###############################################################################
 #
