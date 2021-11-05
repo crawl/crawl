@@ -1072,6 +1072,149 @@ WWWwwwwwWWWWWwwwwww--WWW                WWWwwW
                   .@@.
 ENDMAP
 
+##############################################################################
+# A series of large floats that use the ruin tag and don't place monsters
+#
+
+NAME:   hellmonk_ruined_rings
+TAGS:   transparent ruin
+DEPTH:  D:6-, Lair, Depths
+WEIGHT: 5
+ORIENT: float
+:if crawl.one_chance_in(4) and you.in_branch("D") then
+TILE:   x = wall_brick_brown_vines
+:elseif crawl.one_chance_in(4) then
+SUBST:  x : c
+TILE:   c = wall_sandstone
+:end
+:if you.in_branch("Lair") then
+SUBST:  ' = WW...
+:end
+MAP
+           .......
+        ...xxx.xxx...                                      
+       .xxxxxx.xxxxxx.                                      
+      .xxx.........xxx.                                     
+     .xx.............xx.                                    
+    .xx.....xxxxx.....xx.                                   
+   .xx....xxxxxxxxx....xx.                                  
+  .xx....xxx'''''xxx....xx.                                 
+ .xx....xx''.....''xx....xx.                                
+ .xx...xx'..xx.xx..'xx...xx.                                
+ .xx..xx'..xxx.xxx..'xx..xx.                                
+.xx...xx'.xx'...'xx.'xx...xx.                               
+.xx..xx'.xx'.....'xx.'xx..xx.                               
+.xx..xx'.xx'.vvv.'xx.'xx..xx.                               
+.xx..xx'.xx'.vvv.'xx.'xx..xx.                               
+.xx..xx'.xx'.vvv.'xx.'xx..xx.                               
+.xx..xx'.xx'.....'xx.'xx..xx.                              
+.xx...xx..xx'...'xx..xx...xx.                               
+ .xx..xx...xxxxxxx...xx..xx.                                
+ .xx...xx...xxxxx...xx...xx.                                
+ .xx....xx.........xx....xx.                                
+  .xx....xxx.....xxx....xx.                                 
+   .xx....xxxx.xxxx....xx.                                  
+    .xx.....xx.xx.....xx.                                   
+     .xx.............xx.                                    
+      .xx...........xx.                                     
+       .xxxxxxxxxxxxx.                                      
+          .xxxxxxx.
+           .......          
+ENDMAP
+
+NAME:   hellmonk_destroyed_diamonds
+TAGS:   transparent ruin
+DEPTH:  D:6-, Lair, Depths
+WEIGHT: 5
+ORIENT: float
+SUBST:  x : ccx
+:if crawl.coinflip() then
+TILE:   c = stone_wall_shoals
+:else
+TILE:   c = wall_marble
+:end
+FTILE:  c. = floor_sand
+MAP
+   .       .       .       .
+  .x..   ..x..   ..x..   ..x.
+ .xxx.. ..xxx.. ..xxx.. ..xxx.
+.xxxxx...xxxxx...xxxxx...xxxxx..
+ .xxx..x..xxx..x..xxx..x..xxx..x.
+  .x..xxx..x..xxx..x..xxx..x..xxx.
+   ..xxxxx...xxxxx...xxxxx...xxxxx..
+     .xxx..x..xxx..x..xxx..x..xxx..x.
+      .x..xxx..x..xxx..x..xxx..x..xxx.
+       ..xxxxx...xxxxx...xxxxx...xxxxx..
+         .xxx..x..xxx..x..xxx..x..xxx..x.
+          .x..xxx..x..xxx..x..xxx..x..xxx.
+           ..xxxxx...xxxxx...xxxxx...xxxxx.
+             .xxx.. ..xxx.. ..xxx.. ..xxx.
+              .x..   ..x..   ..x..   ..x.
+               .       .       .       .
+ENDMAP
+
+NAME:   hellmonk_warped_wall
+TAGS:   transparent ruin
+DEPTH:  D:6-, Lair, Depths
+WEIGHT: 5
+ORIENT: float
+TILE:   c = wall_stone_smooth
+SUBST:  . : .......W
+MAP
+                                .........@
+........                      ..cccccccccc
+cccccccc....                ..ccccccc.....
+@....ccccccc..             .cccc.....
+     ....ccccc.............ccc..
+         ...cccccccccccccccc..
+            .....cccccc.....
+                 ......
+ENDMAP
+
+NAME:   hellmonk_crumbling_castle
+TAGS:   transparent ruin
+DEPTH:  D:6-, Depths
+WEIGHT: 5
+ORIENT: float
+TILE:   c = wall_stone_smooth
+TILE:   G = dngn_crumbled_column
+MAP
+                     ...                                    
+                    .ccc.                                   
+                   .ccccc.                                  
+                  .ccc.ccc.                                 
+                 .ccc...ccc.                                
+                 .cc..V..cc.                                
+                 .ccc...ccc.                                
+                  .ccc.ccc.                                 
+                  .ccc+ccc.                                 
+                  .ccG.Gcc.                                 
+     .............ccc...ccc.............                    
+    .ccccccccccccccc.....ccccccccccccccc.                   
+    .ccccccccccccccG.....Gcccccccccccccc.                   
+    .ccG........Gc.........cG........Gcc.                   
+    .cc..........+.........+..........cc.                   
+    .cc..........c.........c..........cc.                   
+    .cccc+ccccccccc.......ccccccccc+cccc.                   
+    .cccc...cccc.GccG...GccG.cccc...cc..                    
+     ..cc....cc....cc...cc....cc....cc.                     
+      .cc....c......cc+cc......c....cc.                     
+      .cc....c......cc.cc......c....cc.                     
+     ..cc....+......cc.cc......+....cc..                    
+    .cccc....c.......c.c.......c....cccc.                   
+   .ccccc...ccc......+.+......ccc...ccccc.                  
+  .cc...c+cccccc.....c.c.....cccccc+c...cc.                 
+ .cc......ccccccc...cc.cc...ccccccc......cc.                
+.cc.......cccccccccGcc.ccGccccccccc.......cc.               
+.cc.......cccccccccccc+cccccccccccc.......cc.               
+.ccG......cc.....ccccc.ccccc.....cc......Gcc.               
+ .cc.....cc.     .ccc...ccc.     .cc.....cc.                
+ .cccG..cc.       ...   ...       .cc..Gccc.                
+  .cccccc.                         .cccccc.                 
+   ..ccc.                           .ccc..                  
+     ...                             ...
+ENDMAP     
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
