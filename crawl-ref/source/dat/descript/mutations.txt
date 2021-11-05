@@ -284,8 +284,8 @@ hidden from mundane sight. This has no effect on your accuracy otherwise.
 clarity mutation
 
 Your mind is exceptionally clear, preventing you from becoming confused,
-mesmerised, or supernaturally afraid. This mutation also prevents you from
-randomly losing temper.
+mesmerised, or supernaturally afraid. You also cannot become involuntarily
+enraged.
 %%%%
 sense surroundings mutation
 
