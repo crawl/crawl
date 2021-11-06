@@ -5177,6 +5177,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = mon->can_hibernate(false, intrinsic_only);
         break;
 
+    case BEAM_SLEEP:
+        rc = mon->can_sleep();
+        break;
+
     case BEAM_PORKALATOR:
         rc = (mon->holiness() & MH_DEMONIC && mon->type != MONS_HELL_HOG)
               || (mon->holiness() & MH_NATURAL && mon->type != MONS_HOG)
