@@ -44,37 +44,44 @@ def shutdown():
 def update_global_status():
     write_dgl_status_file()
 
-game_lobby_cache = dict()
+# lobbies that need updating
+game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
 
-def do_lobby_updates(force=False):
+def do_lobby_updates():
     global game_lobby_cache
-    for game in game_lobby_cache.keys():
+    lobby_sockets = [s for s in list(sockets) if s.is_in_lobby()]
+    games_to_update = list(game_lobby_cache)
+    game_lobby_cache.clear()
+    for game in games_to_update:
         if not game.process:
-            # XX handle lobby removal messages here too
-            # for now we just let remove_in_lobbys handle things; even a del
-            # here could lead to a race condition I think?
+            # handled immediately in `remove_in_lobbys`, ignore here
             continue
-        if not force and game_lobby_cache[game] is not None:
-            continue
-        game_lobby_cache[game] = game.lobby_entry()
-        for socket in list(sockets):
-            if socket.is_in_lobby():
-                socket.send_message("lobby_entry", **game_lobby_cache[game])
 
-    if not force:
-        # TODO: in the Future, refactor as a simple async loop
-        rate = getattr(config, "lobby_update_rate", 2)
-        IOLoop.current().add_timeout(time.time() + rate, do_lobby_updates)
+        game_entry = game.lobby_entry()
+        # Queue up the collected lobby changes in each socket. This loop is
+        # synchronous.
+        for socket in lobby_sockets:
+            socket.queue_message("lobby_entry", **game_entry)
+
+    # ...and finally, flush all the updates. This loop may be asynchronous.
+    for socket in lobby_sockets:
+        socket.flush_messages()
+
+def do_periodic_lobby_updates():
+    # TODO: in the Future, refactor as a simple async loop
+    do_lobby_updates()
+    rate = getattr(config, "lobby_update_rate", 2)
+    IOLoop.current().add_timeout(time.time() + rate, do_periodic_lobby_updates)
 
 def update_all_lobbys(game):
     global game_lobby_cache
     # mark the game for display in the lobby
-    game_lobby_cache[game] = None
+    game_lobby_cache.add(game)
 
 def remove_in_lobbys(game):
     global game_lobby_cache
     if game in game_lobby_cache:
-        del game_lobby_cache[game]
+        game_lobby_cache.remove(game)
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.send_message("lobby_remove", id=game.id,
@@ -154,6 +161,8 @@ def _milestone_files():
 
 milestone_file_tailers = []
 def start_reading_milestones():
+    # TODO: collect this directly from crawl processes over the socket
+    # connection?
     milestone_files = _milestone_files()
     for f in milestone_files:
         milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
