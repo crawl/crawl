@@ -739,7 +739,7 @@ void spectral_weapon_fineff::fire()
         const reach_type sw_range = sw->reach_range();
         if (sw_range > REACH_NONE
             && can_reach_attack_between(sw->pos(), target, sw_range)
-               || adjacent(sw->pos(), target))
+            || adjacent(sw->pos(), target))
         {
             // Just attack.
             melee_attack melee_attk(sw, defend);
