@@ -173,16 +173,11 @@ bool ranged_attack::handle_phase_blocked()
                 punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
                               + " " + defender_shield->name(DESC_PLAIN).c_str()
                               + "!";
-                ident_reflector(defender_shield);
             }
             else
             {
                 punctuation = " off an invisible shield around "
                             + defender->pronoun(PRONOUN_OBJECTIVE) + "!";
-
-                item_def *amulet = defender->slot_item(EQ_AMULET, false);
-                if (amulet)
-                   ident_reflector(amulet);
             }
         }
         else

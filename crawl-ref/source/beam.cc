@@ -4708,17 +4708,12 @@ bool bolt::attempt_block(monster* mon)
                      name.c_str(),
                      mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                      shield->name(DESC_PLAIN).c_str());
-                ident_reflector(shield);
             }
             else
             {
                 mprf("The %s reflects off an invisible shield around %s!",
                      name.c_str(),
                      mon->name(DESC_THE).c_str());
-
-                item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
-                if (amulet)
-                    ident_reflector(amulet);
             }
         }
         else if (you.see_cell(pos()))

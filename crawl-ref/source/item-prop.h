@@ -117,7 +117,6 @@ bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
-void ident_reflector(item_def *item);
 
 // Only works for armour/weapons/missiles
 // weapon functions:
