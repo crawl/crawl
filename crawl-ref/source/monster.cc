@@ -6001,14 +6001,20 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
 reach_type monster::reach_range() const
 {
-    const mon_attack_def attk(mons_attack_spec(*this, 0));
-    if (flavour_has_reach(attk.flavour) && attk.damage)
-        return REACH_TWO;
+    reach_type range = REACH_NONE;
+
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        const mon_attack_def attk(mons_attack_spec(*this, i));
+        if (flavour_has_reach(attk.flavour) && attk.damage)
+            range = REACH_TWO;
+    }
 
     const item_def *wpn = primary_weapon();
     if (wpn)
-        return weapon_reach(*wpn);
-    return REACH_NONE;
+        range = max(range, weapon_reach(*wpn));
+
+    return range;
 }
 
 void monster::steal_item_from_player()

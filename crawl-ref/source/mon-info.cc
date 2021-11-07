@@ -1560,9 +1560,14 @@ reach_type monster_info::reach_range(bool items) const
     const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
                                              ? base_type : type);
     ASSERT(e);
+    reach_type range = REACH_NONE;
 
-    const attack_flavour fl = e->attack[0].flavour;
-    reach_type range = flavour_has_reach(fl) ? REACH_TWO : REACH_NONE;
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        const attack_flavour fl = e->attack[i].flavour;
+        if (flavour_has_reach(fl))
+            range = REACH_TWO;
+    }
 
     if (items)
     {
