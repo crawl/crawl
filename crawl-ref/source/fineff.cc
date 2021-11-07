@@ -737,8 +737,9 @@ void spectral_weapon_fineff::fire()
     {
         // Is it already in range?
         const reach_type sw_range = sw->reach_range();
-        if (sw_range > REACH_NONE && can_reach_attack_between(sw->pos(), target)
-            || adjacent(sw->pos(), target))
+        if (sw_range > REACH_NONE
+            && can_reach_attack_between(sw->pos(), target, sw_range)
+               || adjacent(sw->pos(), target))
         {
             // Just attack.
             melee_attack melee_attk(sw, defend);
@@ -760,9 +761,9 @@ void spectral_weapon_fineff::fire()
             continue;
         }
         // ... and only spaces the weapon could attack the defender from.
-        if (grid_distance(*ai, target) > 1 &&
-            (atk_range <= REACH_NONE ||
-             !can_reach_attack_between(*ai, target)))
+        if (grid_distance(*ai, target) > 1
+            && (atk_range <= REACH_NONE
+                || !can_reach_attack_between(*ai, target, atk_range)))
         {
             continue;
         }

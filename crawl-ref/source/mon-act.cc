@@ -928,7 +928,7 @@ static bool _handle_reaching(monster& mons)
     }
 
     const coord_def foepos(foe->pos());
-    if (can_reach_attack_between(mons.pos(), foepos)
+    if (can_reach_attack_between(mons.pos(), foepos, range)
         // The monster has to be attacking the correct position.
         && mons.target == foepos)
     {

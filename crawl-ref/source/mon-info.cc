@@ -1734,10 +1734,10 @@ static bool _has_polearm(const monster_info& mi)
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
         const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        return weapon && weapon_reach(*weapon) == REACH_TWO;
+        return weapon && weapon_reach(*weapon) >= REACH_TWO;
     }
     else
-        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() == REACH_TWO;
+        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= REACH_TWO;
 }
 
 static bool _has_launcher(const monster_info& mi)

@@ -26,6 +26,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "item-use.h"
+#include "losglobal.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
@@ -1210,20 +1211,30 @@ bool rude_stop_summoning_prompt(string verb)
     }
 }
 
-bool can_reach_attack_between(coord_def source, coord_def target)
+bool can_reach_attack_between(coord_def source, coord_def target,
+                              reach_type range)
 {
+    // The foe should be on the map (not stepped from time).
+    if (!in_bounds(target))
+        return false;
+
     const coord_def delta(target - source);
     const int grid_distance(delta.rdist());
+
+    // Unrand only - Rift is smite-targeted and up to 3 range.
+    if (range == REACH_THREE)
+    {
+        return cell_see_cell(source, target, LOS_NO_TRANS)
+               && grid_distance > 1 && grid_distance <= range;
+    }
+
     const coord_def first_middle(source + delta / 2);
     const coord_def second_middle(target - delta / 2);
 
-    return grid_distance == 2
-        // And with no dungeon furniture in the way of the reaching
-        // attack;
-        && (feat_is_reachable_past(env.grid(first_middle))
-            || feat_is_reachable_past(env.grid(second_middle)))
-        // The foe should be on the map (not stepped from time).
-        && in_bounds(target);
+    return grid_distance == range
+           // And with no dungeon furniture in the way of the reaching attack.
+           && (feat_is_reachable_past(env.grid(first_middle))
+               || feat_is_reachable_past(env.grid(second_middle)));
 }
 
 dice_def spines_damage(monster_type mon)
