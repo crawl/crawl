@@ -3846,13 +3846,18 @@ static string _monster_attacks_description(const monster_info& mi)
         const item_def* weapon = _weapon_for_attack(mi, i);
         mon_attack_info attack_info = { attack, weapon };
 
-        ++attack_counts[attack_info];
-    }
+        // Multi-headed monsters must always have their multi-attack in the
+        // first slot.
+        if ((mons_genus(mi.base_type) == MONS_HYDRA
+             || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL)
+            && i == 0)
+        {
+            attack_counts[attack_info] = mi.num_heads;
+        }
+        else
+            ++attack_counts[attack_info];
 
-    // Hydrae have only one explicit attack, which is repeated for each head.
-    if (mons_genus(mi.base_type) == MONS_HYDRA)
-        for (auto &attack_count : attack_counts)
-            attack_count.second = mi.num_heads;
+    }
 
     vector<string> attack_descs;
     for (const auto &attack_count : attack_counts)
