@@ -76,7 +76,6 @@ spret cast_disjunction(int pow, bool fail)
     you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
         max(you.duration[DUR_DISJUNCTION] + rand,
         30 + rand));
-    contaminate_player(750 + random2(500), true);
     disjunction_spell();
     return spret::success;
 }
