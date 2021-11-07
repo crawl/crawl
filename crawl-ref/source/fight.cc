@@ -358,55 +358,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 break;
         }
 
-        if (!simu && attacker->is_monster()
-            && mons_attack_spec(*attacker->as_monster(), attack_number, true)
-                   .flavour == AF_KITE
-            && attacker->as_monster()->foe_distance() == 1
-            && attacker->reach_range() == REACH_TWO
-            && x_chance_in_y(3, 5))
-        {
-            monster* mons = attacker->as_monster();
-            coord_def foepos = mons->get_foe()->pos();
-            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
-
-            bool found = false;
-            if (!monster_habitable_grid(mons, env.grid(hopspot)) ||
-                actor_at(hopspot))
-            {
-                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-                {
-                    if (ai->distance_from(foepos) != 2)
-                        continue;
-                    else
-                    {
-                        if (monster_habitable_grid(mons, env.grid(*ai))
-                            && !actor_at(*ai))
-                        {
-                            hopspot = *ai;
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-                found = true;
-
-            if (found)
-            {
-                const bool could_see = you.can_see(*mons);
-                if (mons->move_to_pos(hopspot))
-                {
-                    if (could_see || you.can_see(*mons))
-                    {
-                        mprf("%s hops backward while attacking.",
-                             mons->name(DESC_THE, true).c_str());
-                    }
-                    mons->speed_increment -= 2; // Add a small extra delay
-                }
-            }
-        }
-
         melee_attack melee_attk(attacker, defender, attack_number,
                                 effective_attack_number);
 

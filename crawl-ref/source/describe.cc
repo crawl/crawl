@@ -3685,15 +3685,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
  */
 static const char* _special_flavour_prefix(attack_flavour flavour)
 {
-    switch (flavour)
-    {
-        case AF_KITE:
-            return "retreat from adjacent foes and ";
-        case AF_SWOOP:
-            return "swoop behind its foe and ";
-        default:
-            return "";
-    }
+    return flavour == AF_SWOOP ? "swoop behind its foe and " : "";
 }
 
 /**
@@ -3755,7 +3747,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_REACH_TONGUE,      "deal extra acid damage" },
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
-        { AF_KITE,              "" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
     };
@@ -3783,11 +3774,8 @@ static string _flavour_effect(attack_flavour flavour, int HD)
     const int flavour_dam = flavour_damage(flavour, HD, false);
     const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
 
-    if (!flavour_triggers_damageless(flavour)
-        && flavour != AF_KITE && flavour != AF_SWOOP)
-    {
+    if (!flavour_triggers_damageless(flavour) && flavour != AF_SWOOP)
         return " to " + flavour_desc + " if any damage is dealt";
-    }
 
     return " to " + flavour_desc;
 }
