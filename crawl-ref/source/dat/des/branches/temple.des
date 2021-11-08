@@ -2991,7 +2991,6 @@ NAME:    mainiacjoe_temple_starburst
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  10
-SUBST:   c : c
 SUBST:   v : v b x:3 n:3
 FTILE:   '{t = floor_grass
 MAP
