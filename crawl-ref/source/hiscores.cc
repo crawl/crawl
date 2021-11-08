@@ -3120,6 +3120,7 @@ void update_whereis_chargen(string name)
     xl.add_field("lvl", "%d", 0);
     xl.add_field("time", "%s", make_date_string(time(nullptr)).c_str());
     xl.add_field("status", "chargen");
+    xl.add_field("milestone", "started generating a character.");
     tiles.send_milestone(xl);
 }
 #endif
