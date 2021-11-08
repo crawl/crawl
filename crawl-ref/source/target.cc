@@ -1103,8 +1103,8 @@ aff_type targeter_splash::is_affected(coord_def loc)
 }
 
 targeter_radius::targeter_radius(const actor *act, los_type _los,
-                             int ran, int ran_max, int ran_min):
-    range(ran), range_max(ran_max), range_min(ran_min)
+                             int ran, int ran_max, int ran_min, int ran_maybe):
+    range(ran), range_max(ran_max), range_min(ran_min), range_maybe(ran_maybe)
 {
     ASSERT(act);
     agent = act;
@@ -1112,6 +1112,8 @@ targeter_radius::targeter_radius(const actor *act, los_type _los,
     los = _los;
     if (!range_max)
         range_max = range;
+    if (!range_maybe)
+        range_maybe = range;
     ASSERT(range_max >= range);
 }
 
@@ -1137,6 +1139,9 @@ aff_type targeter_radius::is_affected(coord_def loc)
 
     if (!cell_see_cell(loc, origin, los))
         return AFF_NO;
+
+    if ((loc - origin).rdist() > range_maybe)
+        return AFF_MAYBE;
 
     return AFF_YES;
 }
