@@ -1737,7 +1737,7 @@ void display_char_dump()
 #ifdef DGL_WHEREIS
 ///////////////////////////////////////////////////////////////////////////
 // whereis player
-void whereis_record(const char *status)
+void whereis_record(const xlog_fields &xl)
 {
     const string file_name = morgue_directory()
                              + strip_filename_unsafe_chars(you.your_name)
@@ -1746,9 +1746,7 @@ void whereis_record(const char *status)
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
         // no need to bother with supporting ancient charsets for DGL
-        fprintf(handle, "%s:status=%s\n",
-                xlog_status_line().c_str(),
-                status? status : "");
+        fprintf(handle, "%s\n", xl.xlog_line().c_str());
         fclose(handle);
     }
 }

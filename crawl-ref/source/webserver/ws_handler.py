@@ -161,17 +161,17 @@ def _milestone_files():
 
 milestone_file_tailers = []
 def start_reading_milestones():
-    # TODO: collect this directly from crawl processes over the socket
-    # connection?
     milestone_files = _milestone_files()
     for f in milestone_files:
         milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):
     data = parse_where_data(line)
-    if "name" not in data: return
+    if "name" not in data:
+        return
     game = find_running_game(data.get("name"), data.get("start"))
-    if game: game.log_milestone(data)
+    if game and not game.receiving_direct_milestones:
+        game.set_where_info(data)
 
 # decorator for admin calls
 def admin_required(f):

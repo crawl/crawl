@@ -2890,9 +2890,7 @@ void level_change(bool skip_attribute_increase)
 
     you.redraw_title = true;
 
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     // Hints mode arbitrarily ends at xp 7.
     if (crawl_state.game_is_hints() && you.experience_level >= 7)

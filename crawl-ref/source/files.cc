@@ -2426,9 +2426,8 @@ static void _save_game_exit()
 
     clrscr();
 
-#ifdef DGL_WHEREIS
-    whereis_record("saved");
-#endif
+    update_whereis("saved");
+
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason("saved");
 #endif

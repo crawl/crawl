@@ -3056,9 +3056,7 @@ void excommunication(bool voluntary, god_type new_god)
     }
 
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     if (old_god == GOD_IGNIS)
         simple_god_message(" blazes with a vengeful fury!", old_god);
@@ -3944,9 +3942,7 @@ void join_religion(god_type which_god)
                                     you.worshipped[which_god] ? " back"
                                                               : "").c_str());
     // included in default force_more_message
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     _set_initial_god_piety();
 

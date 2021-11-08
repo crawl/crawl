@@ -1238,9 +1238,7 @@ static void _update_level_state()
 void new_level(bool restore)
 {
     print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     _update_level_state();
 
