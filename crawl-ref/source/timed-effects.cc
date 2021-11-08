@@ -109,11 +109,8 @@ static void _apply_contam_over_time()
 {
     int added_contamination = 0;
 
-    //Increase contamination each turn while invisible
-    if (you.duration[DUR_INVIS])
-        added_contamination += INVIS_CONTAM_PER_TURN;
     //If not invisible, normal dissipation
-    else
+    if (!you.duration[DUR_INVIS])
         added_contamination -= 75;
 
     // The Orb halves dissipation (well a bit more, I had to round it),
