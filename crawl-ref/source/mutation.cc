@@ -2429,7 +2429,6 @@ string get_mutation_desc(mutation_type mut)
 
     // TODO: consider adding other fun facts here
         // _get_mutation_def(mut).form_based
-        // current/max mutation level
         // type of mutation (species, etc)
         // if we tracked it: source (per level, I guess?)
         // gain/loss messages (to clarify to players when they get a
