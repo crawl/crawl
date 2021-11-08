@@ -78,8 +78,7 @@ Jiyva
 Jiyva is the ancient deity of the slimes. Followers are expected to
 support the spread and satiation of their fellow slimes by allowing them to
 consume items, and are forbidden from harming any slimes. Especially favoured
-followers will become as shapeless as their god, as their attributes and
-mutations shift around under Jiyva's influence.
+followers will become as shapeless as their god, mutating wildly.
 %%%%
 Kikubaaqudgha
 
@@ -316,8 +315,7 @@ provide health and magic points when doing so. Jiyva will also consume items
 left elsewhere in the dungeon. Followers will later become able to turn
 monsters to slime, and eventually to reshape themselves to remove harmful
 mutations. As their piety grows, Jiyva will, with increasing frequency, drop
-jellies into the dungeon; rearrange followers' attributes based on their skills
-and armour; and mutate followers to better reflect Jiyva's image.
+jellies into the dungeon, and mutate followers to better reflect Jiyva's image.
 %%%%
 Kikubaaqudgha powers
 

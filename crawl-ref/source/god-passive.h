@@ -201,9 +201,6 @@ enum class passive_t
     /// Jiyva allows jellies to eats off-level and seen items.
     jelly_eating,
 
-    /// Jiyva adjusts your stats as needed.
-    fluid_stats,
-
     // You have a chance to spawn slimes when hit hard
     spawn_slimes_on_hit,
 
