@@ -3568,6 +3568,12 @@ void describe_mutation(mutation_type mut)
 {
     describe_info inf;
     inf.title = uppercase_first(mutation_name(mut)).c_str();
+    if (you.has_mutation(mut))
+    {
+        inf.title += make_stringf(" (level %d/%d)",
+                                  you.get_mutation_level(mut),
+                                  mutation_max_levels(mut));
+    }
     inf.body << get_mutation_desc(mut);
     show_description(inf);
 }
