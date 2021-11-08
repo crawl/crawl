@@ -2798,6 +2798,7 @@ NAME:    mainiacjoe_temple_archimedes_tessellation
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  10
+TAGS:    no_pool_fixup
 SUBST:   c : cvb
 SHUFFLE: lw
 MAP
