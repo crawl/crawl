@@ -2800,6 +2800,7 @@ ORIENT:  encompass
 WEIGHT:  10
 TAGS:    no_pool_fixup
 SUBST:   c : cvb
+NSUBST:  B = 1:{ / *:B
 SHUFFLE: lw
 MAP
                                       ccccc
