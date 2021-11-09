@@ -8,6 +8,8 @@ import logging.handlers
 import os
 import os.path
 import sys
+import signal
+import time
 
 import tornado.httpserver
 import tornado.ioloop
@@ -20,10 +22,9 @@ import load_games
 import process_handler
 import userdb
 import config
-from config import *  # TODO: remove
 from game_data_handler import GameDataHandler
-from util import *
-from ws_handler import *
+import util
+import ws_handler
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -127,9 +128,9 @@ def shed_privileges():
 def stop_everything():
     for server in servers:
         server.stop()
-    shutdown()
+    ws_handler.shutdown()
     # TODO: shouldn't this actually wait for everything to close??
-    if len(sockets) == 0:
+    if len(ws_handler.sockets) == 0:
         IOLoop.current().stop()
     else:
         IOLoop.current().add_timeout(time.time() + 2, IOLoop.current().stop)
@@ -149,7 +150,7 @@ def signal_handler(signum, frame):
 def bind_server():
     settings = {
         "static_path": config.static_path,
-        "template_loader": DynamicTemplateLoader.get(config.template_path),
+        "template_loader": util.DynamicTemplateLoader.get(config.template_path),
         "debug": bool(getattr(config, 'development_mode', False)),
         }
 
@@ -158,7 +159,7 @@ def bind_server():
 
     application = tornado.web.Application([
             (r"/", MainHandler),
-            (r"/socket", CrawlWebSocket),
+            (r"/socket", ws_handler.CrawlWebSocket),
             (r"/gamedata/([0-9a-f]*\/.*)", GameDataHandler)
             ], gzip=getattr(config,"use_gzip",True), **settings)
 
@@ -243,7 +244,7 @@ def init_logging(logging_config):
         # the tornado version is ancient enough that it doesn't have its own
         # logging streams; this filter suppresses any logging done from the
         # `web` module at level INFO.
-        logging.getLogger().addFilter(TornadoFilter())
+        logging.getLogger().addFilter(util.TornadoFilter())
     logging.addLevelName(logging.DEBUG, "DEBG")
     logging.addLevelName(logging.WARNING, "WARN")
 
@@ -471,15 +472,15 @@ def server_main():
         logging.info("Webserver running without a blocking call timeout.")
 
     if config.dgl_mode:
-        status_file_timeout()
+        ws_handler.status_file_timeout()
         auth.purge_login_tokens_timeout()
-        start_reading_milestones()
+        ws_handler.start_reading_milestones()
 
         if config.watch_socket_dirs:
             process_handler.watch_socket_dirs()
 
     # start the lobby update timeout loop
-    do_periodic_lobby_updates()
+    ws_handler.do_periodic_lobby_updates()
 
     logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
                                                 (tornado.version, os.getpid()))

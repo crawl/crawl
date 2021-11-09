@@ -23,7 +23,6 @@ import config
 import userdb
 import util
 import load_games
-from util import *
 
 try:
     from typing import Dict, Set, Tuple, Any, Union, Optional
@@ -163,10 +162,10 @@ milestone_file_tailers = []
 def start_reading_milestones():
     milestone_files = _milestone_files()
     for f in milestone_files:
-        milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
+        milestone_file_tailers.append(util.FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):
-    data = parse_where_data(line)
+    data = util.parse_where_data(line)
     if "name" not in data:
         return
     game = find_running_game(data.get("name"), data.get("start"))
