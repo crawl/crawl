@@ -4131,3 +4131,52 @@ ccQ..gh.hg..Lcc
   ccP.O.N.Mcc
    ccccccccc
 ENDMAP
+
+# 12 gods
+# plus 7 Ignis altars
+NAME:   pdpol_scorched_temple
+TAGS:   no_cloud_gen temple_variable temple_altars_12
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 2
+KFEAT:  I = altar_ignis
+MARKER:  D = lua:fog_machine { cloud_type = "grey smoke", \
+             pow_max = 3, delay_min = 10, delay_max = 30, \
+             start_clouds = 0, size = 1, excl_rad = -1 }
+SUBST: A = AAAAG
+KPROP:  D = no_tele_into
+: set_feature_name("stone_arch", "broken pillar")
+SUBST: ^ = ^^.
+KFEAT: ^ = web
+SUBST: D = l
+SUBST:  " = -..
+SUBST:  ' =  LL--.
+SUBST:  L =  ll-
+COLOUR: - = brown
+TILE:   A = dngn_crumbled_column
+RTILE:  x = wall_volcanic
+FTILE:  GBIA^+. = floor_rough_red
+FTILE:  - = floor_rough_brown
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxBxxxxx
+xxxxxxxxxxxxxB...Bxxx
+xxxxxxxxxxxx.......xx
+xxxxx..^xxxG.......Gx
+xxxxA.I.Axxx.......xx
+xxx^."'"..xxxB...Bx+x
+xx.I"'L'"I.xxxxBxxx.x
+xA.""'L'"".Axxxxxx.xx
+x^.""'L'""..xxxxx.xxx
+x^I""LDL""I.+....{xxx
+x..""'L'""..xxxxx.xxx
+xA.""'L'"".Axxxxxx.xx
+xx.I""L""I.xxxxBxxx.x
+xxx.."'".^xxxB...Bx+x
+xxxxA.I.Axxx.......xx
+xxxxx^^.xxxG.......Gx
+xxxxxxxxxxxx.......xx
+xxxxxxxxxxxxxB...Bxxx
+xxxxxxxxxxxxxxxBxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
