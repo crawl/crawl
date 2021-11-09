@@ -27,7 +27,7 @@
           </form>
           <span class="extra_links">|
           <a id="reg_link" href="javascript:">Register</a>
-{% if getattr(config, "allow_password_reset", False) %}
+{% if config.get('allow_password_reset') %}
           <a id="forgot_link" href="javascript:">Forgot Password</a>
 {% end %}
           <a id="chem_link" href="javascript:" style="display: none;">Change Email</a>
@@ -94,7 +94,7 @@
         <input class="button" type="submit" name="submit" value="OK">
       </div>
 
-{% if getattr(config, "allow_password_reset", False) %}
+{% if config.get('allow_password_reset') %}
       <div id="forgot" class="floating_dialog" style="display: none;">
         <span id="forgot_message"></span>
         <form action="#" id="forgot_form">
@@ -177,7 +177,7 @@
             </form>
           </div>
           <hr />
-{% if getattr(config, "admin_password_reset", False) %}
+{% if config.get('allow_password_reset') %}
           <div id="user_control">
             <form action="#" id="admin_user_control">
             <label for="admin_username">User:</label>

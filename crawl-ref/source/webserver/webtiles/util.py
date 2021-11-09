@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 import tornado.ioloop
 import tornado.template
 
-import config
+from webtiles import config
 
 try:
     from typing import Any, Callable, Dict, Optional
@@ -126,21 +126,21 @@ def send_email(to_address, subject, body_plaintext, body_html):
     try:
         # establish connection
         # TODO: this should not be a blocking call at all...
-        if config.smtp_use_ssl:
+        if config.get('smtp_use_ssl'):
             email_server = smtplib.SMTP_SSL(
-                config.smtp_host, config.smtp_port)  # type: smtplib.SMTP
+                config.get('smtp_host'), config.get('smtp_port'))  # type: smtplib.SMTP
         else:
-            email_server = smtplib.SMTP(config.smtp_host, config.smtp_port)
+            email_server = smtplib.SMTP(config.get('smtp_host'), config.get('smtp_port'))
         connected = True
 
         # authenticate
-        if config.smtp_user:
-            email_server.login(config.smtp_user, config.smtp_password)
+        if config.get('smtp_user'):
+            email_server.login(config.get('smtp_user'), config.get('smtp_password'))
 
         # build multipart message
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
-        msg['From'] = config.smtp_from_addr
+        msg['From'] = config.get('smtp_from_addr')
         msg['To'] = to_address
 
         part1 = MIMEText(body_plaintext, 'plain')
@@ -150,7 +150,7 @@ def send_email(to_address, subject, body_plaintext, body_html):
         msg.attach(part2)
 
         # send
-        email_server.sendmail(config.smtp_from_addr, to_address, msg.as_string())
+        email_server.sendmail(config.get('smtp_from_addr'), to_address, msg.as_string())
     finally:
         # end connection
         if connected:
