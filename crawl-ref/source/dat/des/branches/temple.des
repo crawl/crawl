@@ -3835,17 +3835,17 @@ c...............c
 ccccccccccccccccc
 ENDMAP
 
-# 17, 18 gods
+# 16, 17 gods
 NAME:   minmay_temple_bridge_d
-TAGS:   no_cloud_gen temple_variable temple_altars_17 temple_altars_18
+TAGS:   no_cloud_gen temple_variable temple_altars_16 temple_altars_17
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 2
 SUBST:  A : TUV
-: local altar_count = get_altar_count(_G, 18)
-: if altar_count == "17" then
+: local altar_count = get_altar_count(_G, 17)
+: if altar_count == "16" then
 SUBST:  C = .
-: elseif altar_count == "18" then
+: elseif altar_count == "17" then
 SUBST:  C = B
 : end
 MAP
