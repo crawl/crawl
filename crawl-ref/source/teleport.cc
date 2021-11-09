@@ -32,7 +32,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (dest == pos())
         return false;
 
-    if (no_tele(true, true, true))
+    if (no_tele(true))
     {
         if (!quiet)
             canned_msg(MSG_STRANGE_STASIS);

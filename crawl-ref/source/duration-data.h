@@ -339,11 +339,6 @@ static const duration_def duration_data[] =
       "finesse-ful", "finesse",
       "Your blows are lightning fast.", D_NO_FLAGS,
       {{"", okawaru_remove_finesse}}},
-    { DUR_LIFESAVING,
-      LIGHTGREY, "Prot",
-      "divinely protected", "lifesaving",
-      "You are calling for your life to be saved.", D_EXPIRES,
-      {{ "Your divine protection fades away." }}},
     { DUR_VORTEX_COOLDOWN,
       YELLOW, "-Vortex",
       "on vortex cooldown", "vortex cooldown",
@@ -678,5 +673,6 @@ static const duration_def duration_data[] =
     { DUR_ELIXIR_MAGIC, 0, "", "", "old elixir magic", "", D_NO_FLAGS},
     { DUR_ANTIMAGIC, 0, "", "", "old antimagic", "", D_NO_FLAGS},
     { DUR_DEVICE_SURGE, 0, "", "", "old device surge", "", D_NO_FLAGS},
+    { DUR_LIFESAVING, 0, "", "", "old lifesaving", "", D_NO_FLAGS},
 #endif
 };

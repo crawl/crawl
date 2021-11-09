@@ -2873,7 +2873,7 @@ string cannot_read_item_reason(const item_def *item)
     {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            return you.no_tele_reason(false, item->sub_type == SCR_BLINKING);
+            return you.no_tele_reason(item->sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
             if (you.spell_no == 0)
@@ -2887,8 +2887,6 @@ string cannot_read_item_reason(const item_def *item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
-            if (have_passive(passive_t::want_curses))
-                return _no_items_reason(OSEL_CURSED_WORN);
             return _no_items_reason(OSEL_UNIDENT, true);
 
 #if TAG_MAJOR_VERSION == 34
@@ -3290,7 +3288,7 @@ void read(item_def* scroll, dist *target)
     {
     case SCR_BLINKING:
     {
-        const string reason = you.no_tele_reason(true, true);
+        const string reason = you.no_tele_reason(true);
         if (!reason.empty())
         {
             mpr(pre_succ_msg);

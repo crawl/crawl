@@ -55,6 +55,7 @@
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "mutation.h" // mutation_name, get_mutation_desc
 #include "output.h"
 #include "potion.h"
 #include "ranged-attack.h" // describe_to_hit
@@ -3560,6 +3561,23 @@ void describe_deck(deck_type deck)
     show_description(inf);
 }
 
+/**
+ * Describe a given mutation. List its description and details.
+ */
+void describe_mutation(mutation_type mut)
+{
+    describe_info inf;
+    inf.title = uppercase_first(mutation_name(mut)).c_str();
+    if (you.has_mutation(mut))
+    {
+        inf.title += make_stringf(" (level %d/%d)",
+                                  you.get_mutation_level(mut),
+                                  mutation_max_levels(mut));
+    }
+    inf.body << get_mutation_desc(mut);
+    show_description(inf);
+}
+
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
@@ -3673,15 +3691,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
  */
 static const char* _special_flavour_prefix(attack_flavour flavour)
 {
-    switch (flavour)
-    {
-        case AF_KITE:
-            return "retreat from adjacent foes and ";
-        case AF_SWOOP:
-            return "swoop behind its foe and ";
-        default:
-            return "";
-    }
+    return flavour == AF_SWOOP ? "swoop behind its foe and " : "";
 }
 
 /**
@@ -3743,7 +3753,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_REACH_TONGUE,      "deal extra acid damage" },
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
-        { AF_KITE,              "" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
     };
@@ -3771,11 +3780,8 @@ static string _flavour_effect(attack_flavour flavour, int HD)
     const int flavour_dam = flavour_damage(flavour, HD, false);
     const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
 
-    if (!flavour_triggers_damageless(flavour)
-        && flavour != AF_KITE && flavour != AF_SWOOP)
-    {
+    if (!flavour_triggers_damageless(flavour) && flavour != AF_SWOOP)
         return " to " + flavour_desc + " if any damage is dealt";
-    }
 
     return " to " + flavour_desc;
 }
@@ -3834,13 +3840,18 @@ static string _monster_attacks_description(const monster_info& mi)
         const item_def* weapon = _weapon_for_attack(mi, i);
         mon_attack_info attack_info = { attack, weapon };
 
-        ++attack_counts[attack_info];
-    }
+        // Multi-headed monsters must always have their multi-attack in the
+        // first slot.
+        if ((mons_genus(mi.base_type) == MONS_HYDRA
+             || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL)
+            && i == 0)
+        {
+            attack_counts[attack_info] = mi.num_heads;
+        }
+        else
+            ++attack_counts[attack_info];
 
-    // Hydrae have only one explicit attack, which is repeated for each head.
-    if (mons_genus(mi.base_type) == MONS_HYDRA)
-        for (auto &attack_count : attack_counts)
-            attack_count.second = mi.num_heads;
+    }
 
     vector<string> attack_descs;
     for (const auto &attack_count : attack_counts)

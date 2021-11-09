@@ -2932,8 +2932,7 @@ bool bolt::harmless_to_player() const
         // With clarity, meph still does a tiny amount of damage (1d3 - 1).
         // Normally we'd just ignore it, but we shouldn't let a player
         // kill themselves without a warning.
-        return player_res_poison(false) > 0
-               || you.clarity(false) && you.hp > 2;
+        return player_res_poison(false) > 0 || you.clarity() && you.hp > 2;
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
@@ -4709,17 +4708,12 @@ bool bolt::attempt_block(monster* mon)
                      name.c_str(),
                      mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                      shield->name(DESC_PLAIN).c_str());
-                ident_reflector(shield);
             }
             else
             {
                 mprf("The %s reflects off an invisible shield around %s!",
                      name.c_str(),
                      mon->name(DESC_THE).c_str());
-
-                item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
-                if (amulet)
-                    ident_reflector(amulet);
             }
         }
         else if (you.see_cell(pos()))
@@ -5176,6 +5170,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_HIBERNATION:
         rc = mon->can_hibernate(false, intrinsic_only);
+        break;
+
+    case BEAM_SLEEP:
+        rc = mon->can_sleep();
         break;
 
     case BEAM_PORKALATOR:

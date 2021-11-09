@@ -33,4 +33,4 @@ int stealth_pips();
 
 void print_overview_screen();
 
-string dump_overview_screen(bool full_id);
+string dump_overview_screen();

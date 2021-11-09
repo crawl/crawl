@@ -1253,8 +1253,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && you.duration[DUR_BLINK_COOLDOWN])
             return "you are still too unstable to blink.";
 
-        if (temp && you.no_tele(false, false, true))
-            return lowercase_first(you.no_tele_reason(false, true));
+        if (temp && you.no_tele(true))
+            return lowercase_first(you.no_tele_reason(true));
         break;
 
     case SPELL_SWIFTNESS:
@@ -1388,7 +1388,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_SKELETON:
-        if (temp && !in_bounds(find_animatable_skeleton(you.pos())))
+        if (temp && find_animatable_skeletons(you.pos()).empty())
             return "there is nothing nearby to animate!";
         break;
     case SPELL_SIMULACRUM:

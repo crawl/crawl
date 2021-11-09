@@ -1659,8 +1659,9 @@ int animate_dead(actor *caster, int pow, beh_type beha,
     return number_raised;
 }
 
-coord_def find_animatable_skeleton(coord_def c)
+vector<coord_def> find_animatable_skeletons(coord_def c)
 {
+    vector<coord_def> result;
     for (radius_iterator ri(c, LOS_NO_TRANS); ri; ++ri)
     {
         for (stack_iterator si(*ri, true); si; ++si)
@@ -1669,11 +1670,12 @@ coord_def find_animatable_skeleton(coord_def c)
                 && mons_class_can_be_zombified(si->mon_type)
                 && mons_skeleton(si->mon_type))
             {
-                return *ri;
+                result.push_back(*ri);
+                break;
             }
         }
     }
-    return coord_def(-1,-1);
+    return result;
 }
 
 spret cast_animate_skeleton(int pow, god_type god, bool fail)
@@ -1681,13 +1683,15 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
     if (rude_stop_summoning_prompt())
         return spret::abort;
 
-    coord_def skel_loc = find_animatable_skeleton(you.pos());
-    if (!in_bounds(skel_loc))
+    vector<coord_def> skeletons = find_animatable_skeletons(you.pos());
+    if (skeletons.empty())
         return spret::abort;
 
     fail_check();
 
     canned_msg(MSG_ANIMATE_REMAINS);
+
+    const coord_def skel_loc = skeletons[random2(skeletons.size())];
 
     for (stack_iterator si(skel_loc, true); si; ++si)
     {

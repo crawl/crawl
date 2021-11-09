@@ -2849,6 +2849,9 @@ static void _prepare_water()
 
 static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
 {
+    if (!layout)
+        return false;
+
     bool permissive = false;
     if (!vault->has_tag_prefix("layout_")
         && !(permissive = vault->has_tag_prefix("nolayout_")))
@@ -2899,7 +2902,7 @@ static const map_def *_pick_layout(const map_def *vault)
             }
             layout = random_map_for_tag("layout", true, true);
         }
-        while (layout->has_tag("no_primary_vault")
+        while (layout && layout->has_tag("no_primary_vault")
                || (tries > 10 && !_vault_can_use_layout(vault, layout)));
     }
 
@@ -2990,7 +2993,12 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     if (!minivault && player_in_branch(BRANCH_TEMPLE))
     {
         // Temple vault determined at new game time.
-        const string name = you.props[TEMPLE_MAP_KEY];
+        const string name = you.props.exists(FORCE_MAP_KEY)
+                ? you.props[FORCE_MAP_KEY]
+                : you.props[TEMPLE_MAP_KEY];
+
+        if (name != you.props[TEMPLE_MAP_KEY].get_string())
+            mprf(MSGCH_ERROR, "Overriding seed-determined temple map.");
 
         // Tolerate this for a little while, for old games.
         if (!name.empty())
@@ -5715,8 +5723,11 @@ static dungeon_feature_type _pick_temple_altar()
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
-            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen)
+            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen
+                || you.props.exists(FORCE_MAP_KEY))
+            {
                 return DNGN_ALTAR_XOM;
+            }
 
             mprf(MSGCH_ERROR, "Ran out of altars for temple!");
             return DNGN_FLOOR;

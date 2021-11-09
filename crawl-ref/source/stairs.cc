@@ -455,7 +455,7 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (player_teleport(false))
+    if (player_teleport())
         mpr("You feel stable on this floor.");
 }
 
@@ -1238,9 +1238,7 @@ static void _update_level_state()
 void new_level(bool restore)
 {
     print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     _update_level_state();
 

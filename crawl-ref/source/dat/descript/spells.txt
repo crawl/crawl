@@ -363,8 +363,8 @@ will bring the fire fully to life, but will burn the caster.
 %%%%
 Conjure Living Spells spell
 
-Creates several living, autonomous spells. These will attempt to cast themselves
-at the nearest foe, expending themselves in the process.
+Creates several living, autonomous spells, which cast themselves at the first foe
+to enter their range. Once cast, they dissipate.
 %%%%
 Corona spell
 

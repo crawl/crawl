@@ -107,8 +107,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     {   { 1, "You and your allies can now gain power from killing the unholy and evil.",
              "You and your allies can no longer gain power from killing the unholy and evil.",
              "You and your allies can gain power from killing the unholy and evil." },
-        { 2, ABIL_TSO_DIVINE_SHIELD, "call upon the Shining One for a divine shield" },
-        { 4, ABIL_TSO_CLEANSING_FLAME, "channel blasts of cleansing flame", },
+        { 1, ABIL_TSO_DIVINE_SHIELD, "call upon the Shining One for a divine shield" },
+        { 3, ABIL_TSO_CLEANSING_FLAME, "channel blasts of cleansing flame", },
         { 5, ABIL_TSO_SUMMON_DIVINE_WARRIOR, "summon a divine warrior" },
         { 7, ABIL_TSO_BLESS_WEAPON,
              "The Shining One will bless your weapon with holy wrath... once.",
@@ -218,12 +218,11 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Elyvilon
-    {   { 1, ABIL_ELYVILON_LESSER_HEALING, "provide lesser healing for yourself" },
+    {
+        { 1, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
         { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
-        { 3, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
-        { 4, ABIL_ELYVILON_GREATER_HEALING, "provide greater healing for yourself" },
+        { 3, ABIL_ELYVILON_HEAL_SELF, "provide healing for yourself" },
         { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
-        { 1, ABIL_ELYVILON_LIFESAVING, "call on Elyvilon to save your life" },
     },
 
     // Lugonu
@@ -398,7 +397,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     {
         { 1, ABIL_IGNIS_SEA_OF_FIRE, "fill your surroundings with clouds of flame" },
         { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
-        { 2, ABIL_IGNIS_RISING_FLAME, "rocket upward and away" },
+        { 7, ABIL_IGNIS_RISING_FLAME, "rocket upward and away" },
     },
 };
 
@@ -2513,7 +2512,8 @@ static void _gain_piety_point()
         // Jiyva is an exception because there's usually a time-out and
         // the gifts aren't that precious.
         if (!one_chance_in(4) && !you_worship(GOD_JIYVA)
-            && !you_worship(GOD_NEMELEX_XOBEH))
+            && !you_worship(GOD_NEMELEX_XOBEH)
+            && !you_worship(GOD_ELYVILON))
         {
 #ifdef DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
@@ -3056,9 +3056,7 @@ void excommunication(bool voluntary, god_type new_god)
     }
 
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     if (old_god == GOD_IGNIS)
         simple_god_message(" blazes with a vengeful fury!", old_god);
@@ -3167,7 +3165,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_ELYVILON:
-        you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
         you.exp_docked[old_god] = excom_xp_docked();
@@ -3945,9 +3942,7 @@ void join_religion(god_type which_god)
                                     you.worshipped[which_god] ? " back"
                                                               : "").c_str());
     // included in default force_more_message
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     _set_initial_god_piety();
 
@@ -4262,40 +4257,19 @@ string god_spell_warn_string(spell_type spell, god_type god)
         return "";
 }
 
-lifesaving_chance elyvilon_lifesaving()
-{
-    if (!you_worship(GOD_ELYVILON))
-        return lifesaving_chance::never;
-
-    if (you.piety < piety_breakpoint(0))
-        return lifesaving_chance::never;
-
-    return you.piety >= piety_breakpoint(4) ? lifesaving_chance::always
-                           : lifesaving_chance::sometimes;
-}
-
 bool god_protects_from_harm()
 {
-    if (you.duration[DUR_LIFESAVING])
-    {
-        switch (elyvilon_lifesaving())
-        {
-        case lifesaving_chance::sometimes:
-            if (random2(you.piety) >= piety_breakpoint(0))
-                return true;
-            break;
-        case lifesaving_chance::always:
-            // Reliable lifesaving is costly.
-            lose_piety(21 + random2(20));
-            return true;
-        default:
-            break;
-        }
-    }
-
-    if (have_passive(passive_t::protect_from_harm)
+    if ((have_passive(passive_t::protect_from_harm)
+         || have_passive(passive_t::lifesaving))
         && (one_chance_in(10) || x_chance_in_y(you.piety, 1000)))
     {
+        return true;
+    }
+
+    if (!you.gift_timeout && have_passive(passive_t::lifesaving)
+        && x_chance_in_y(you.piety, 160))
+    {
+        _inc_gift_timeout(20 + random2avg(10, 2));
         return true;
     }
 

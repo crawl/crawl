@@ -725,10 +725,12 @@ static string _raw_penance_message(god_type which_god)
         return "%s well remembers your sins.";
     if (penance > initial_penance / 4)
         return "%s's wrath is beginning to fade.";
-    if (which_god == GOD_IGNIS)
-        return "%s' wrath will not burn much longer.";
     if (penance > 0)
+    {
+        if (which_god == GOD_IGNIS)
+            return "%s' wrath will not burn much longer.";
         return "%s is almost ready to forgive your sins.";
+    }
     return "%s is neutral towards you.";
 }
 
@@ -745,39 +747,6 @@ static string _god_penance_message(god_type which_god)
     const string message = _raw_penance_message(which_god);
     return make_stringf(message.c_str(),
                         uppercase_first(god_name(which_god)).c_str());
-}
-
-static int _lifesaving_chance(god_type which_god)
-{
-    const int default_prot_chance = 10 + you.piety/10; // chance * 100
-    if (which_god != GOD_ELYVILON)
-        return default_prot_chance;
-
-    switch (elyvilon_lifesaving())
-    {
-        case lifesaving_chance::sometimes:
-            return default_prot_chance + 100 - 3000/you.piety;
-        case lifesaving_chance::always:
-            return 100;
-        default:
-            return default_prot_chance;
-    }
-}
-
-static string _lifesave_desc(god_type which_god)
-{
-    if (which_god != you.religion)
-        return "";
-
-    switch (elyvilon_lifesaving())
-    {
-        case lifesaving_chance::sometimes:
-            return ", especially when called upon";
-        case lifesaving_chance::always:
-            return ", and always does so when called upon";
-        default:
-            return "";
-    }
 }
 
 /**
@@ -812,26 +781,27 @@ static formatted_string _describe_god_powers(god_type which_god)
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
     // their life.
-    if (god_gives_passive(which_god, passive_t::protect_from_harm))
+    if (god_gives_passive(which_god, passive_t::protect_from_harm)
+        || god_gives_passive(which_god, passive_t::lifesaving))
     {
         have_any = true;
 
         const char *how = "";
-        const string when = _lifesave_desc(which_god).c_str();
 
-        if (which_god == you.religion)
+        if (god_gives_passive(which_god, passive_t::lifesaving))
         {
-            const int prot_chance = _lifesaving_chance(which_god);
-            how = (prot_chance >= 85) ? "carefully " :
-                  (prot_chance >= 55) ? "often " :
-                  (prot_chance >= 25) ? "sometimes "
-                                      : "occasionally ";
+            how = (piety >= piety_breakpoint(5)) ? "carefully " :
+                  (piety >= piety_breakpoint(3)) ? "often " :
+                  (piety >= piety_breakpoint(1)) ? "sometimes "
+                                                 : "occasionally ";
         }
+        else
+            how = (piety >= piety_breakpoint(5)) ? "sometimes "
+                                                 : "occasionally ";
 
-        desc.cprintf("%s %sguards your life%s.\n",
+        desc.cprintf("%s %sguards your life.\n",
                 uppercase_first(god_name(which_god)).c_str(),
-                how,
-                when.c_str());
+                how);
     }
 
     switch (which_god)

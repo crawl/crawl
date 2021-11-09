@@ -239,8 +239,8 @@ static const vector<god_passive> god_passives[] =
 
     // Elyvilon
     {
-        { -1, passive_t::protect_from_harm,
-              "GOD sometimes watches over you",
+        { -1, passive_t::lifesaving,
+              "GOD carefully watches over you",
               "GOD no longer watches over you"
         },
         { -1, passive_t::protect_ally,
@@ -278,8 +278,6 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW summons jellies to protect you" },
         { -1, passive_t::jelly_eating,
               "GOD NOW allows jellies to devour items" },
-        { -1, passive_t::fluid_stats,
-              "GOD NOW adjusts your attributes periodically" },
         {  0, passive_t::slime_wall_immune,
               "are NOW immune to slime covered walls" },
         {  3, passive_t::resist_corrosion,

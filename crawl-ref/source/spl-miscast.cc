@@ -634,6 +634,14 @@ void miscast_effect(actor& target, actor* source, miscast_source_info mc_info,
     if (school == spschool::random)
         school = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
 
+    // Don't summon friendly nameless horrors if they would always turn hostile.
+    if (source && source->is_player()
+        && school == spschool::summoning
+        && you.allies_forbidden())
+    {
+        return;
+    }
+
     miscast_datum effect =  miscast_effects.find(school)->second;
 
     int dam = div_rand_round(roll_dice(level, fail + level), MISCAST_DIVISOR);

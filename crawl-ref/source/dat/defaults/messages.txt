@@ -61,7 +61,8 @@ msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
 msc += $warning:This .* contains the .* runes? of Zot
-msc += $warning:They guard the .* runes? of Zot
+msc += $warning:guards? the .* runes? of Zot
+msc += $warning:rune of Zot may be found here
 msc += $warning:Beware\, you cannot shaft yourself on this level
 
 # Unimportant messages and combat clutter
@@ -98,8 +99,6 @@ force_more_message += breaks free of your control
 force_more_message += doesn't seem very happy
 force_more_message += You rejoin the land of the living
 force_more_message += You cannot cast spells when silenced
-force_more_message += You don't have the energy to cast that spell
-force_more_message += You don't have the energy to cast any spells
 force_more_message += This is a scroll of acquirement
 
 ## Zot is coming!

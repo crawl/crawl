@@ -1,7 +1,9 @@
 -- Script for automated / bulk vault generation tests
 
--- Use case:
+-- run with no arguments or --help to see all command line options:
+--     `util/fake_pty ./crawl -script placement.lua --help`
 
+-- Example use case:
 --     ```
 --     $ util/fake_pty ./crawl -script placement.lua minmay_nonomino_d4 -count 10 -dump
 --     Testing map 'minmay_nonomino_d4'
@@ -13,7 +15,7 @@
 --     to a file. In this case, it failed on try 10 (which aborts) and so it
 --     stops then and points out the specific failing file to you. This file
 --     shows the whole level, but here's an excerpt illustrating the vault
---     itself:
+--     itself, at one point in its history:
 --
 -- ```
 -- #..............................####.####.......................................#
@@ -27,12 +29,14 @@
 -- #..............................####.####.......................................#
 -- ```
 --
---    In this case the problem is pretty visible, though sometimes
---    connectivity issues do not pop out in the test output (e.g. ones
---    involving water, or CLEAR tiles, etc.) and need further debugging.
+--    In this case the problem is pretty visible (the closet in the middle),
+--    though under some conditions a connectivity issue may not be visible in
+--    the text output (when it involves shallow vs. deep water, CLEAR tiles,
+--    etc.) In these cases one strategy is to tweak the vault itself so that
+--    traversable tiles do show up as floor, and rerun placement.lua.
 
 local basic_usage = [=[
-Usage: util/fake_pty ./crawl -script placement.lua <maps_to_test> [-all] [-nmaps <n>] [-count <n>] [-des <des_file>] [-fill] [-dump] [-log] [-force]
+Usage: util/fake_pty ./crawl -script placement.lua <maps_to_test> [-all] [-nmaps <n>] [-count <n>] [-des <des_file>] [-fill] [-opacity] [-tele-zones] [-dump] [-log] [-force]
     Vault placement testing script. Places a vault in an empty level and test
     connectivity. A vault will fail if fails to place, or if it breaks
     connectivity. This script cannot handle all types of maps, e.g. encompass
@@ -51,6 +55,16 @@ Usage: util/fake_pty ./crawl -script placement.lua <maps_to_test> [-all] [-nmaps
     -des <des_file>: a des file to load, if not specified in dat/dlua/loadmaps.lua
     -fill:           use a filled level as the background. Useful for debugging
                      CLEAR issues. However, minivaults will always fail.
+    -opacity:        test opaque vaults, forcing them to have a `transparent`
+                     tag. The main use of this is to find vaults that should
+                     be marked transparent. In this mode, 1-zone opaque maps
+                     will produce a message (as opposed to multi-zone maps
+                     in other modes). Overrides all options that normally
+                     target multi-zone connectivity checking.
+    -tele-zones:     Search for zones that are identifiable as teleport closets,
+                     based on no_tele_into tags and masking. This is especially
+                     useful for cases where the regular connectivity checks
+                     will pass the vault, e.g. non-transparent vaults.
     -dump:           write placed maps out to a file, named with the vault name
     -log:            Append message log to dump output; requires a fulldebug
                      build to be most useful. Entails -dump.

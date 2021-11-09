@@ -452,9 +452,7 @@ NORETURN void end_game(scorefile_entry &se)
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
     const string reason = _exit_type_to_string(exit_reason);
 
-# ifdef DGL_WHEREIS
-    whereis_record(reason.c_str());
-# endif
+    update_whereis(reason.c_str());
 #else
     UNUSED(_exit_type_to_string);
 #endif

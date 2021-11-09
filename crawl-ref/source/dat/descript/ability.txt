@@ -206,9 +206,9 @@ freshness of these are dependent on Necromancy skill.
 %%%%
 Torment ability
 
-Sacrifices a cadaver to make all living creatures in sight experience all
-the pain that being suffered in its life. This damage is never directly lethal.
-Kikubaaqudgha may shield you from the effect, depending on your piety.
+Sacrifices an adjacent cadaver to make all living creatures in sight experience
+all the pain that being suffered in its life. This damage is never directly
+lethal. Kikubaaqudgha will always at least partially shield you from the effect.
 %%%%
 Brand Weapon With Pain ability
 
@@ -336,18 +336,6 @@ Brothers in Arms ability
 Summons huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
-Divine Protection ability
-
-Beseeches Elyvilon to save your life. If you are mortally wounded, the Healer
-may undo the killing blow. Especially pious individuals may be certain of this
-help, but in that case, any intervention costs piety (as opposed to merely
-asking for intervention, which is always free). Killing others while asking
-for divine protection will cause penance.
-%%%%
-Lesser Healing ability
-
-Heals a small amount of health, depending on Invocations skill.
-%%%%
 Purification ability
 
 Purges your body of poison, confusion, slowness, petrification, weakness, and
@@ -371,11 +359,9 @@ are lost. If it does succeed, the monster is healed and you gain the monster's
 full experience value. Otherwise, the monster is unaffected and you gain
 nothing.
 %%%%
-Greater Healing ability
+Heal Self ability
 
-Heals a moderate amount of health, depending on Invocations skill. Greater
-Healing will heal approximately three times as much as Lesser Healing, but at a
-slightly higher total piety cost.
+Heals a moderate amount of health, depending on Invocations skill.
 %%%%
 Divine Vigour ability
 
@@ -830,7 +816,8 @@ out, burst into raging flames.
 Rising Flame ability
 
 Sends you floating upward and, after a short delay for Ignis to gather enough
-power, blasts you through the ceiling and into the level above.
+power, blasts you through the ceiling and into the level above. This ability
+may only be used once.
 %%%%
 Hop ability
 

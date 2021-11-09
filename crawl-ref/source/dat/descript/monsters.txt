@@ -1644,8 +1644,8 @@ give off an eerie red glow.
 %%%%
 living spell
 
-A semi-sentient construct of floating magic. It casts itself at the first foe
-it sees, expending itself in the process.
+A spell, waiting to cast itself at the first foe that enters its range. Once
+it does, it'll dissipate into the ether.
 %%%%
 lorocyproca
 

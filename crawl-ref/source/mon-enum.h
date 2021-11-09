@@ -126,7 +126,9 @@ enum attack_flavour
 #endif
     AF_CORRODE,
     AF_SCARAB,
+#if TAG_MAJOR_VERSION == 34
     AF_KITE,  // Hops backwards if attacking with a polearm.
+#endif
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
     AF_WEAKNESS,

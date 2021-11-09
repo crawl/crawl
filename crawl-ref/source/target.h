@@ -195,12 +195,13 @@ class targeter_radius : public targeter
 {
 public:
     targeter_radius(const actor *act, los_type _los = LOS_DEFAULT,
-                  int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0);
+                    int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0,
+                    int ran_maybe = 0);
     bool valid_aim(coord_def a) override;
     virtual aff_type is_affected(coord_def loc) override;
 private:
     los_type los;
-    int range, range_max, range_min;
+    int range, range_max, range_min, range_maybe;
 };
 
 // like targeter_radius, but converts all AFF_YESes to AFF_MAYBE

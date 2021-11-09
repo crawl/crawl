@@ -167,6 +167,16 @@ spret cast_wereblood(int pow, bool fail)
     return spret::success;
 }
 
+int silence_min_range(int pow)
+{
+    return shrinking_aoe_range((10 + pow/4) * BASELINE_DELAY);
+}
+
+int silence_max_range(int pow)
+{
+    return shrinking_aoe_range((9 + pow/4 + pow/2) * BASELINE_DELAY);
+}
+
 spret cast_silence(int pow, bool fail)
 {
     fail_check();
@@ -180,6 +190,11 @@ spret cast_silence(int pow, bool fail)
 
     learned_something_new(HINT_YOU_SILENCE);
     return spret::success;
+}
+
+int liquefaction_max_range(int pow)
+{
+    return shrinking_aoe_range((9 + pow) * BASELINE_DELAY);
 }
 
 spret cast_liquefaction(int pow, bool fail)

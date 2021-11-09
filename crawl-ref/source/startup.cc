@@ -256,6 +256,11 @@ static void _post_init(bool newc)
     // case there are any early game warning messages to be logged.
 #ifdef USE_TILE
     tiles.resize();
+
+#ifdef USE_TILE_WEB
+    if (!newc)
+        sync_last_milestone();
+#endif
 #endif
 
     clua.load_persist();

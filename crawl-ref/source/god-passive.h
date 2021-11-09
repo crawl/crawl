@@ -119,6 +119,9 @@ enum class passive_t
     /// Chance to nullify a deadly blow, dependent on piety.
     protect_from_harm,
 
+    /// Strong chance to nullify a deadly blow, with a timeout.
+    lifesaving,
+
     /// Divine halo around the player, size increases with piety.
     halo,
 
@@ -197,9 +200,6 @@ enum class passive_t
 
     /// Jiyva allows jellies to eats off-level and seen items.
     jelly_eating,
-
-    /// Jiyva adjusts your stats as needed.
-    fluid_stats,
 
     // You have a chance to spawn slimes when hit hard
     spawn_slimes_on_hit,

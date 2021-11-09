@@ -445,15 +445,12 @@ static vector<ability_def> &_get_ability_list()
             {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
 
         // Elyvilon
-        { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
-            0, 0, 0, {fail_basis::invo}, abflag::piety },
-        { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0,
-            generic_cost::range(0, 1), {fail_basis::invo, 30, 6, 20}, abflag::none },
+        { ABIL_ELYVILON_PURIFICATION, "Purification",
+            2, 0, 2, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
         { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
             2, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
-        { ABIL_ELYVILON_PURIFICATION, "Purification",
-            3, 0, 3, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
-        { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
+
+        { ABIL_ELYVILON_HEAL_SELF, "Heal Self",
             2, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
             0, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
@@ -642,12 +639,12 @@ static vector<ability_def> &_get_ability_list()
 
         // Ignis
         { ABIL_IGNIS_SEA_OF_FIRE, "Sea of Fire",
-            0, 0, 6, /*avg 15 uses from 150 to <30 piety*/
+            0, 0, 8, /*avg 12 uses from 150 to <30 piety*/
             {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
-            0, 0, 9, {fail_basis::invo}, abflag::quiet_fail },
+            0, 0, 12, {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
-            0, 0, 24, {fail_basis::invo}, abflag::none },
+            0, 0, 0, {fail_basis::invo}, abflag::none },
 
         { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1392,6 +1389,7 @@ static bool _can_blinkbolt(bool quiet)
 
 static bool _can_rising_flame(bool quiet)
 {
+    ASSERT(can_do_capstone_ability(GOD_IGNIS));
     if (you.duration[DUR_RISING_FLAME])
     {
         if (!quiet)
@@ -1585,8 +1583,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_ELYVILON_LESSER_HEALING:
-    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_HEAL_SELF:
         if (you.hp == you.hp_max)
         {
             if (!quiet)
@@ -1608,6 +1605,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 mpr("Nothing ails you!");
+            return false;
+        }
+        return true;
+
+    case ABIL_KIKU_TORMENT:
+        if (!kiku_take_corpse(true))
+        {
+            if (!quiet)
+                mpr("There are no nearby corpses to sacrifice!");
             return false;
         }
         return true;
@@ -1706,7 +1712,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         // fallthrough
     case ABIL_BLINKBOLT:
     {
-        const string no_tele_reason = you.no_tele_reason(false, true);
+        const string no_tele_reason = you.no_tele_reason(true);
         if (no_tele_reason.empty())
             return true;
 
@@ -2469,10 +2475,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_KIKU_TORMENT:
         fail_check();
-        if (!kiku_take_corpse())
+        if (!kiku_take_corpse()) // Should always succeed.
         {
-            mpr("There are no corpses to sacrifice!");
-            return spret::abort;
+            mpr("There are no nearby corpses to sacrifice!");
+            return spret::success;
         }
         simple_god_message(" torments the living!");
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
@@ -2761,30 +2767,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return divine_exegesis(fail);
 
-    case ABIL_ELYVILON_LIFESAVING:
-        fail_check();
-        if (you.duration[DUR_LIFESAVING])
-            mpr("You renew your call for help.");
-        else
-        {
-            mprf("You beseech %s to protect your life.",
-                 god_name(you.religion).c_str());
-        }
-        // Might be a decrease, this is intentional (like Yred).
-        you.duration[DUR_LIFESAVING] = 9 * BASELINE_DELAY
-                     + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
-        break;
-
-    case ABIL_ELYVILON_LESSER_HEALING:
-    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_HEAL_SELF:
     {
         fail_check();
-        int pow = 0;
-        if (abil.ability == ABIL_ELYVILON_LESSER_HEALING)
-            pow = 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6);
-        else
-            pow = 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        pow = min(50, pow);
+        const int pow = min(50, 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3));
         const int healed = pow + roll_dice(2, pow) - 2;
         mpr("You are healed.");
         inc_hp(healed);
@@ -3267,6 +3253,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         mpr("You begin to rise into the air.");
         // slightly faster than teleport
         you.set_duration(DUR_RISING_FLAME, 2 + random2(3));
+        you.one_time_ability_used.set(GOD_IGNIS);
         return spret::success;
 
     case ABIL_RENOUNCE_RELIGION:
@@ -3828,9 +3815,6 @@ int find_ability_slot(const ability_type abil, char firstletter)
 
     switch (abil)
     {
-    case ABIL_ELYVILON_LIFESAVING:
-        first_slot = letter_to_index('p');
-        break;
     case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         first_slot = letter_to_index('N');
         break;

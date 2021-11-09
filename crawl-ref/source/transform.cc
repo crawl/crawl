@@ -1988,8 +1988,6 @@ void untransform(bool skip_move)
         you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
-    if (you.props.exists(HYDRA_FORM_HEADS_KEY))
-        you.props.erase(HYDRA_FORM_HEADS_KEY);
     if (you.props.exists(AIRFORM_POWER_KEY))
         you.props.erase(AIRFORM_POWER_KEY);
 

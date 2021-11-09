@@ -256,13 +256,6 @@ static void _jiyva_effects(int /*time_delta*/)
         }
     }
 
-    if (have_passive(passive_t::fluid_stats)
-        && x_chance_in_y(you.piety / 4, MAX_PIETY)
-        && !player_under_penance() && one_chance_in(4))
-    {
-        jiyva_stat_action();
-    }
-
     if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
         jiyva_eat_offlevel_items();
 }
@@ -612,6 +605,9 @@ void monster::timeout_enchantments(int levels)
     const mon_enchant_list ec = enchantments;
     for (auto &entry : ec)
     {
+        if (entry.second.duration >= INFINITE_DURATION)
+            continue;
+
         switch (entry.first)
         {
         case ENCH_POISON: case ENCH_CORONA:

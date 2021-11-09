@@ -54,6 +54,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut);
 void display_mutations();
 string describe_mutations(bool center_title);
 string terse_mutation_list();
+string get_mutation_desc(mutation_type mut);
 
 int get_mutation_cap(mutation_type mut);
 void validate_mutations(bool debug_msg=false);

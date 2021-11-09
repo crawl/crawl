@@ -859,7 +859,7 @@ static void _describe_poison(status_info& inf)
     int pois_perc = (you.hp <= 0) ? 100
                                   : ((you.hp - max(0, poison_survival())) * 100 / you.hp);
     inf.light_colour = (player_res_poison(false) >= 3
-                         ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
+                        ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
     inf.light_text   = "Pois";
     const string adj =
          (pois_perc >= 100) ? "lethally" :

@@ -105,7 +105,9 @@ static bool _player_sacrificed_arcana();
  */
 bool can_do_capstone_ability(god_type god)
 {
-   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
+    // Worshippers of Ignis can use their capstone with any amount of piety
+    int pbreak = (god == GOD_IGNIS) ? -1 : 5;
+    return in_good_standing(god, pbreak) && !you.one_time_ability_used[god];
 }
 
 static const char *_god_blessing_description(god_type god)
@@ -1862,21 +1864,28 @@ bool kiku_receive_corpses(int pow)
 }
 
 /**
- * Destroy a corpse at the player's location
+ * Destroy a corpse at or adjacent to the player's location
  *
- * @return  True if a corpse was destroyed, false otherwise.
+ * @param just_check True if just checking whether the ability is possible,
+ *                   false if we should go ahead and destroy a corpse.
+ * @return           True if a corpse was available, false otherwise.
 */
-bool kiku_take_corpse()
+bool kiku_take_corpse(bool just_check)
 {
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = env.item[i].link)
+    for (fair_adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
-        item_def &item(env.item[i]);
+        for (stack_iterator si(*ai, true); si; ++si)
+        {
+            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+                continue;
 
-        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-            continue;
-        item_was_destroyed(item);
-        destroy_item(i);
-        return true;
+            if (just_check)
+                return true;
+
+            item_was_destroyed(*si);
+            destroy_item(si->index());
+            return true;
+        }
     }
 
     return false;
@@ -1952,7 +1961,7 @@ static bool _lugonu_warp_monster(monster& mon, int pow)
 
     mon.hurt(&you, 1 + random2(pow / 6));
 
-    if (mon.alive() && !mon.no_tele(true, false))
+    if (mon.alive() && !mon.no_tele())
         mon.blink();
 
     return true;
@@ -4726,10 +4735,10 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 //Your chance of eligiblity scales with piety.
 bool will_ru_retaliate()
 {
-    // Scales up to a 25% chance of retribution
+    // Scales up to a 20% chance of retribution
     return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(640, you.piety));
+           && one_chance_in(div_rand_round(800, you.piety));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.

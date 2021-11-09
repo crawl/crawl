@@ -1897,7 +1897,7 @@ static ai_action::goodness _negative_energy_spell_goodness(const actor* foe)
 static bool _valid_blink_ally(const monster* caster, const monster* target)
 {
     return mons_aligned(caster, target) && caster != target
-           && !target->no_tele(true, false, true);
+           && !target->no_tele(true);
 }
 
 static bool _valid_encircle_ally(const monster* caster, const monster* target,
@@ -2568,7 +2568,7 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
 
 static ai_action::goodness _mons_likes_blinking(const monster &caster)
 {
-    if (caster.no_tele(true, false))
+    if (caster.no_tele())
         return ai_action::impossible();
     // Prefer to keep a polar vortex going rather than blink.
     return ai_action::good_or_bad(!caster.has_ench(ENCH_POLAR_VORTEX));
@@ -5876,7 +5876,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONJURE_LIVING_SPELLS:
     {
         const int hd = mons->spell_hd(spell_cast);
-        const int n = living_spell_count(true);
+        const int n = living_spell_count(spell_cast, true);
         const spell_type spell = living_spell_type_for(mons->type);
         // XXX: will crash if wizmode player tries to cast?
         ASSERT(spell != SPELL_NO_SPELL);
@@ -6546,8 +6546,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_simple_beam(*mons, slot, pbolt);
 }
 
-int living_spell_count(bool random)
+int living_spell_count(spell_type spell, bool random)
 {
+    if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR)
+        return random ? random_range(1, 2) : 2;
     return random ? random_range(2, 3) : 3;
 }
 

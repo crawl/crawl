@@ -928,7 +928,7 @@ static bool _handle_reaching(monster& mons)
     }
 
     const coord_def foepos(foe->pos());
-    if (can_reach_attack_between(mons.pos(), foepos)
+    if (can_reach_attack_between(mons.pos(), foepos, range)
         // The monster has to be attacking the correct position.
         && mons.target == foepos)
     {
@@ -2564,10 +2564,7 @@ static bool _handle_pickup(monster* mons)
                 // encourages killing Maurice, since there's just one of him.
                 // Usually.
                 || (testbits(si->flags, ISFLAG_SEEN)
-                    && !mons->has_attack_flavour(AF_STEAL)))
-            // ...but it's ok if it dropped the item itself.
-            && !(si->props.exists(DROPPER_MID_KEY)
-                 && si->props[DROPPER_MID_KEY].get_int() == (int)mons->mid))
+                    && !mons->has_attack_flavour(AF_STEAL))))
         {
             // don't pick up any items beneath one that the player's seen,
             // to prevent seemingly-buggy behavior (monsters picking up items

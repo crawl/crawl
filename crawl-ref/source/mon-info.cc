@@ -313,10 +313,11 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
 }
 
 /// is the given monster_info a hydra, zombie hydra, lerny, etc?
-static bool _is_hydra(const monster_info &mi)
+static bool _has_hydra_multi_attack(const monster_info &mi)
 {
     return mons_genus(mi.type) == MONS_HYDRA
-           || mons_genus(mi.base_type) == MONS_HYDRA;
+           || mons_genus(mi.base_type) == MONS_HYDRA
+           || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -333,7 +334,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
                 : classy_drac ? MONS_DRACONIAN
                 : type;
 
-    if (_is_hydra(*this))
+    if (_has_hydra_multi_attack(*this))
         num_heads = 1;
     else
         number = 0;
@@ -473,7 +474,7 @@ monster_info::monster_info(const monster* m, int milev)
         slime_size = m->blob_size;
     else if (type == MONS_BALLISTOMYCETE)
         is_active = !!m->ballisto_activity;
-    else if (_is_hydra(*this))
+    else if (_has_hydra_multi_attack(*this))
         num_heads = m->num_heads;
     // others use number for internal information
     else
@@ -574,11 +575,11 @@ monster_info::monster_info(const monster* m, int milev)
 
     mintel = mons_intel(*m);
     hd = m->get_hit_dice();
-    ac = m->armour_class(false);
-    ev = m->evasion(ev_ignore::unided);
+    ac = m->armour_class();
+    ev = m->evasion();
     base_ev = m->base_evasion();
-    mr = m->willpower(false);
-    can_see_invis = m->can_see_invisible(false);
+    mr = m->willpower();
+    can_see_invis = m->can_see_invisible();
     if (m->nightvision())
         props[NIGHTVISION_KEY] = true;
     mresists = get_mons_resists(*m);
@@ -589,7 +590,7 @@ monster_info::monster_info(const monster* m, int milev)
     can_feel_fear = m->can_feel_fear(false);
 
     // Not an MB_ because it's rare.
-    if (m->cloud_immune(false))
+    if (m->cloud_immune())
         props[CLOUD_IMMUNE_MB_KEY] = true;
 
     if (m->airborne())
@@ -718,7 +719,8 @@ monster_info::monster_info(const monster* m, int milev)
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         // hydras are a mess!
-        const int atk_index = m->has_hydra_multi_attack() ? 0 : i;
+        const int atk_index = m->has_hydra_multi_attack() ? i + m->heads() - 1
+                                                          : i;
         attack[i] = mons_attack_spec(*m, atk_index, true);
     }
 
@@ -811,9 +813,10 @@ string monster_info::get_max_hp_desc() const
     if (props.exists(KNOWN_MAX_HP_KEY))
         return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
 
+    const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
-                            derived_undead_avg_hp(type, hd, 1) :
-                            mons_avg_hp(type);
+                            derived_undead_avg_hp(type, hd, scale) :
+                            mons_avg_hp(type, scale);
     int mhp = base_avg_hp;
     if (props.exists(VAULT_HD_KEY))
     {
@@ -825,6 +828,7 @@ string monster_info::get_max_hp_desc() const
     if (type == MONS_SLIME_CREATURE)
         mhp *= slime_size;
 
+    mhp /= scale;
     return make_stringf("about %d", mhp);
 }
 
@@ -1045,10 +1049,11 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (is_active ? "active " : "");
 
-    if (_is_hydra(*this)
+    if (_has_hydra_multi_attack(*this)
         && type != MONS_SENSED
         && type != MONS_BLOCK_OF_ICE
-        && type != MONS_PILLAR_OF_SALT)
+        && type != MONS_PILLAR_OF_SALT
+        && mons_species(type) != MONS_SERPENT_OF_HELL)
     {
         ASSERT(num_heads > 0);
         if (num_heads < 11)
@@ -1252,7 +1257,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.
-        if (_is_hydra(m1))
+        if (_has_hydra_multi_attack(m1))
         {
             if (m1.num_heads > m2.num_heads)
                 return true;
@@ -1555,9 +1560,14 @@ reach_type monster_info::reach_range(bool items) const
     const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
                                              ? base_type : type);
     ASSERT(e);
+    reach_type range = REACH_NONE;
 
-    const attack_flavour fl = e->attack[0].flavour;
-    reach_type range = flavour_has_reach(fl) ? REACH_TWO : REACH_NONE;
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        const attack_flavour fl = e->attack[i].flavour;
+        if (flavour_has_reach(fl))
+            range = REACH_TWO;
+    }
 
     if (items)
     {
@@ -1724,10 +1734,10 @@ static bool _has_polearm(const monster_info& mi)
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
         const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        return weapon && weapon_reach(*weapon) == REACH_TWO;
+        return weapon && weapon_reach(*weapon) >= REACH_TWO;
     }
     else
-        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() == REACH_TWO;
+        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= REACH_TWO;
 }
 
 static bool _has_launcher(const monster_info& mi)
