@@ -105,8 +105,10 @@
 #
 ##
 
-: crawl_require("dlua/dungeon.lua")
 {{
+crawl_require("dlua/dungeon.lua")
+
+
 function wizlab_portal (e)
     local timeout_turns = crawl.random_range(600, 800)
 
@@ -132,8 +134,18 @@ function wizlab_portal (e)
         feat_tile = "dngn_portal_bazaar_gone",
         msg = messager })
     e.kfeat("O = enter_wizlab")
-    e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
-    e.chance("500")
+
+    e.tags("uniq_wizlab vaults_wizlab no_item_gen no_monster_gen chance_wizlab")
+
+    -- Replace stone walls with whatever wall type the Vaults level is using.
+    if you.in_branch("Vaults") then
+        e.subst("c = x")
+    end
+
+    e.chance(math.floor(dgn.wizlab_chance_percent / 100 * 10000))
+    -- Don't apply the chance in Vaults, since we use a Vaults room for that
+    -- branch.
+    e.depth_chance("Vaults", 0)
 end
 
 -- Destinations:
@@ -343,7 +355,7 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local msp = "monstrous demonspawn seen sum:shadow_creatures dur:2 " ..
+  local msp = "demonspawn seen sum:shadow_creatures dur:2 " ..
               "nas:old_memories generate_awake " ..
               "tile:mons_faint_demonspawn_monk / deep troll seen " ..
               "sum:shadow_creatures dur:2 nas:old_memories generate_awake " ..
@@ -446,16 +458,17 @@ function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
 end
 }}
 
-default-depth: Depths, Elf, Crypt, Vaults:1-4
+default-depth: Depths, Elf, Crypt, Vaults, !Vaults:$
 
 ###############################################################################
 # Portal entrances.
 #
 # Todo: more, and better.
-NAME:       mu_enter_wizlab_1
-TILE:       m = dngn_transparent_wall_green
-COLOUR:     m = lightgreen
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_1
+TAGS:   vaults_orient_s
+TILE:   m = dngn_transparent_wall_green
+COLOUR: m = lightgreen
+:       wizlab_portal(_G)
 MAP
     wwwww
    wwwwwww
@@ -468,12 +481,13 @@ wwbm..O..mbww
     w.@.w
 ENDMAP
 
-NAME:       mu_enter_wizlab_2
-SHUFFLE:    tU
-TILE:       m = dngn_transparent_wall_green
-COLOUR:     m = lightgreen
-TILE:       c = wall_stone_gray
-:           wizlab_portal(_G)
+NAME:    mu_enter_wizlab_2
+TAGS:    vaults_orient_s
+SHUFFLE: tU
+TILE:    m = dngn_transparent_wall_green
+COLOUR:  m = lightgreen
+TILE:    c = wall_stone_gray
+:        wizlab_portal(_G)
 MAP
 .................
 .bbbbbbbmbbbbbbb.
@@ -491,24 +505,25 @@ MAP
 .................
 ENDMAP
 
-NAME:       mu_enter_wizlab_3
-MARKER:     ! = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "flame" \
-             }
-MARKER:     ? = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "freezing vapour" \
-             }
-COLOUR:     .' = red / blue
-KPROP:      '?! = no_tele_into
-SUBST:      ' = .
-TILE:       n = dngn_transparent_stone_magenta
-COLOUR:     n = lightmagenta
-TILE:       c = wall_stone_gray
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_3
+TAGS:   vaults_orient_s
+MARKER: ! = lua:fog_machine { \
+             pow_max = 10, delay_min = 10, delay_max = 40, \
+             size = 2, size_buildup_amnt = 5, \
+             size_buildup_time = 25, cloud_type = "flame" \
+         }
+MARKER: ? = lua:fog_machine { \
+             pow_max = 10, delay_min = 10, delay_max = 40, \
+             size = 2, size_buildup_amnt = 5, \
+             size_buildup_time = 25, cloud_type = "freezing vapour" \
+         }
+COLOUR: .' = red / blue
+KPROP:  '?! = no_tele_into
+SUBST:  ' = .
+TILE:   n = dngn_transparent_stone_magenta
+COLOUR: n = lightmagenta
+TILE:   c = wall_stone_gray
+:       wizlab_portal(_G)
 MAP
  ccccccccc
 cc''!'?''cc
@@ -526,11 +541,12 @@ cc!n.n.n?cc
     c@c
 ENDMAP
 
-NAME:       mu_enter_wizlab_4
-KFEAT:      ! = floor
-COLOUR:     ! = magenta
-FTILE:      !O = floor_rough_magenta
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_4
+TAGS:   vaults_orient_s
+KFEAT:  ! = floor
+COLOUR: ! = magenta
+FTILE:  !O = floor_rough_magenta
+:       wizlab_portal(_G, false)
 MAP
     xxxxx
     w!!!x
@@ -544,13 +560,14 @@ w..www
 @www
 ENDMAP
 
-NAME:       mu_enter_wizlab_5
-COLOUR:     U = random
-COLOUR:     W = mutagenic
-KFEAT:      o = granite_statue
-FTILE:      WU.Oo = floor_rough_magenta
-TILE:       b = dngn_crystal_magenta
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_5
+TAGS:   vaults_orient_s
+COLOUR: U = random
+COLOUR: W = mutagenic
+KFEAT:  o = granite_statue
+FTILE:  WU.Oo = floor_rough_magenta
+TILE:   b = dngn_crystal_magenta
+:       wizlab_portal(_G)
 : set_feature_name("crystal_wall", "wall of crystal")
 MAP
 bbbbbbbbbbb
@@ -588,28 +605,41 @@ x.x.x.x.x..
 ENDMAP
 
 NAME:   mu_enter_wizlab_7
-KFEAT:  abcd : floor
-KFEAT:  ABCD : rock_wall
-TILE:   ABCD = floor_rough_white
-TILE:   ABCD = wall_zot_white
-COLOUR: Aa : yellow
-COLOUR: Bb : green
-COLOUR: Cc : blue
-COLOUR: Dd : magenta
+# This one doesn't work as well in Vaults, since one entrance tends to become a
+# dead end.
+WEIGHT: 0 (Vaults)
+KFEAT:  apqr = x
+# Mimic the rock/floor colors of Zot:1-4
+COLOUR: a = white
+COLOUR: - = lightgray
+COLOUR: p = blue
+COLOUR: ' = white
+COLOUR: q = lightblue
+COLOUR: " = blue
+COLOUR: r = magenta
+COLOUR: ` = lightblue
+TILE:   a = wall_zot_white
+TILE:   p = wall_zot_blue
+TILE:   q = wall_zot_lightblue
+TILE:   r = wall_zot_magenta
+FTILE:  - = floor_rough_lightgray
+FTILE:  ' = floor_rough_white
+FTILE:  " = floor_rough_blue
+FTILE:  ` = floor_rough_lightblue
 : wizlab_portal(_G)
 MAP
 xxxxxxxxxxxxx
 x...........@
 x.xxxxxxxxxxx
-xaAbbbbbbbbax
-xaAcBBBBBBAax
-xaAcCddddcAax
-xaAcCdDDCcAax
-xaAcCdOdCcAax
-xaAcCDDdCcAax
-xaAcddddCcAax
-xaABBBBBBcAax
-xabbbbbbbbAax
+x-a''''''''-x
+x-a"ppppppa-x
+x-a"q````"a-x
+x-a"q`rrq"a-x
+x-a"q`O`q"a-x
+x-a"qrr`q"a-x
+x-a"````q"a-x
+x-apppppp"a-x
+x-''''''''a-x
 xxxxxxxxxxx.x
 @...........x
 xxxxxxxxxxxxx
@@ -688,9 +718,10 @@ xG.bbbbbbbbb.Gx
 xx...........xx
 ENDMAP
 
-NAME: lightli_enter_wizlab_magi_temple
+NAME:   lightli_enter_wizlab_magi_temple
+TAGS:   vaults_orient_n
 COLOUR: . = magenta
-FTILE: . = floor_rough_magenta
+FTILE:  . = floor_rough_magenta
 : wizlab_portal(_G)
 MAP
 bmm.@.mmb
@@ -1341,7 +1372,7 @@ MARKER:     t = lua:props_marker { veto_destroy="veto" }
 :           wizlab_setup(_G)
 :           set_border_fill_type("tree")
 :           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / wraith w:2 / ]]
-:                            .. [[monstrous demonspawn / deep troll / ]]
+:                            .. [[demonspawn / deep troll / ]]
 :                            .. [[grey draconian monk w:6 / ]])
 :           set_feature_name("tree", "autumnal tree")
 :           set_feature_name("stone_wall", "crumbled stone wall")
@@ -1752,7 +1783,7 @@ MARKER:     h = lua:fog_machine { \
 KMONS:      1 = any common demon
 KMONS:      2 = balrug / blizzard demon / cacodemon / green death \
             / hell beast / hellion / lorocyproca / shadow demon / tormentor
-KMONS:      3 = blood saint / black sun
+KMONS:      3 = demonspawn blood saint / demonspawn black sun
 {{
 wizname = crawl.make_name()
 kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
@@ -1774,7 +1805,7 @@ NSUBST:     3 = 1:3 / 1, ~ = 2:1 / 3:2 / 4 / 9=12.... / ., f = 1:g / f
 set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
                      cacodemon / green death / hell beast / hellion / \
                      lorocyproca / shadow demon / tormentor \
-                     / blood saint w:5 / black sun w:5")
+                     / demonspawn blood saint w:5 / demonspawn black sun w:5")
 wizlab_setup(_G)
 set_feature_name("stone_wall", "black wall")
 set_feature_name("rock_wall", "carved rock wall")
@@ -2442,7 +2473,7 @@ MONS:   great orb of eyes / glowing orange brain / sphinx / cacodemon w:2 /\
 MONS:   nagaraja / deep elf high priest / sphinx w:5 / deep elf sorcerer /\
         worldbinder
 MONS:   wizard / necromancer w:2 / hell knight w:2 / worldbinder w:6
-MONS:   corrupter
+MONS:   demonspawn corrupter
 KMONS:  J = wizard generate_awake perm_ench:confusion ; nothing
 KMONS:  H = torpor snail / ghost moth / guardian serpent / water nymph /\
             acid blob / anaconda / swamp dragon
@@ -2473,7 +2504,7 @@ FTILE:  -FTtAJLDQ< = floor_grass
 :           set_random_mon_list(
 :               "wizard w:40 / necromancer / boggart / " ..
 :               "glowing orange brain / worldbinder / sphinx / " ..
-:               "corrupter w:1")
+:               "demonspawn corrupter w:1")
 :           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Alistair's Party Mansion")

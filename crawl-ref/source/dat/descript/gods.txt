@@ -78,8 +78,7 @@ Jiyva
 Jiyva is the ancient deity of the slimes. Followers are expected to
 support the spread and satiation of their fellow slimes by allowing them to
 consume items, and are forbidden from harming any slimes. Especially favoured
-followers will become as shapeless as their god, as their attributes and
-mutations shift around under Jiyva's influence.
+followers will become as shapeless as their god, mutating wildly.
 %%%%
 Kikubaaqudgha
 
@@ -261,12 +260,12 @@ assume the form of a shadow themself.
 %%%%
 Elyvilon powers
 
-The Healer offers followers a number of increasingly powerful means to heal
-themselves from damage and other ill effects. Followers may also attempt to
-pacify hostile monsters and turn them neutral. Elyvilon may directly intervene
-to save a follower's life, and may also occasionally protect the follower's
-allies from death. Especially pious followers can be sure of aid when calling
-upon Elyvilon for protection.
+The Healer offers followers a number of means to heal themselves from damage
+and other ill effects. Followers may also attempt to pacify hostile monsters
+and turn them neutral. Elyvilon may directly intervene to save a follower's
+life, and if there has been no such intervention recently, is sure to prevent
+a killing blow against especially pious followers. Elyvilon may also
+occasionally protect the follower's allies from death.
 %%%%
 Fedhas powers
 
@@ -312,12 +311,11 @@ how depleted, Ignis will always grant followers resistance to fire.
 Jiyva powers
 
 Jiyva's followers can request jellies, which will consume nearby items and
-provide provide health and magic points when doing so. Jiyva will also consume
-items left elsewhere in the dungeon. Followers will later become able to turn
+provide health and magic points when doing so. Jiyva will also consume items
+left elsewhere in the dungeon. Followers will later become able to turn
 monsters to slime, and eventually to reshape themselves to remove harmful
 mutations. As their piety grows, Jiyva will, with increasing frequency, drop
-jellies into the dungeon; rearrange followers' attributes based on their skills
-and armour; and mutate followers to better reflect Jiyva's image.
+jellies into the dungeon, and mutate followers to better reflect Jiyva's image.
 %%%%
 Kikubaaqudgha powers
 

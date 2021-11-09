@@ -213,7 +213,6 @@ bool give_monster_proper_name(monster& mon, bool orcs_only = true);
 
 bool mons_flattens_trees(const monster& mon);
 size_type mons_class_body_size(monster_type mc);
-bool mons_class_res_polar_vortex(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster& mon);
@@ -230,14 +229,12 @@ bool mons_is_unique(monster_type mc);
 bool mons_is_or_was_unique(const monster& mon);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
-bool mons_is_demonspawn_job(monster_type mc);
-bool mons_is_job(monster_type mc);
 bool mons_is_hepliaklqana_ancestor(monster_type mc);
 
 int mutant_beast_tier(int xl);
 
-int mons_avg_hp(monster_type mc);
-int mons_max_hp(monster_type mc, monster_type mbase_typeg = MONS_NO_MONSTER);
+int mons_avg_hp(monster_type mc, int scale = 1);
+int mons_max_hp(monster_type mc);
 int exper_value(const monster& mon, bool real = true, bool legacy = false);
 
 int hit_points(int avg_hp, int scale = 10);
@@ -269,7 +266,6 @@ bool mons_is_statue(monster_type mc);
 bool mons_is_demon(monster_type mc);
 bool mons_is_draconian(monster_type mc);
 bool mons_is_base_draconian(monster_type mc);
-bool mons_is_demonspawn(monster_type mc);
 bool mons_is_conjured(monster_type mc);
 bool mons_is_beast(monster_type mc);
 bool mons_is_avatar(monster_type mc);
@@ -293,7 +289,6 @@ habitat_type mons_habitat(const monster& mon, bool real_amphibious = false);
 habitat_type mons_class_primary_habitat(monster_type mc);
 habitat_type mons_primary_habitat(const monster& mon);
 habitat_type mons_class_secondary_habitat(monster_type mc);
-habitat_type mons_secondary_habitat(const monster& mon);
 
 bool mons_skeleton(monster_type mc);
 bool mons_zombifiable(monster_type mc);
@@ -341,10 +336,9 @@ int mons_class_colour(monster_type mc);
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 monster_type random_draconian_job();
-monster_type random_demonspawn_monster_species();
-monster_type random_demonspawn_job();
+monster_type draconian_colour_for_job(monster_type job);
+monster_type draconian_job_for_colour(monster_type colour);
 
-bool init_abomination(monster& mon, int hd);
 void define_monster(monster& mons, bool friendly = false);
 
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
@@ -357,8 +351,6 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only = false,
                            bool ench_too = true);
 bool mons_has_ranged_attack(const monster& mon);
 bool mons_can_attack(const monster& mon);
-bool mons_has_incapacitating_spell(const monster& mon, const actor& foe);
-bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe);
 
 gender_type mons_class_gender(monster_type mc);
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
@@ -395,9 +387,8 @@ bool mons_eats_items(const monster& mon);
 bool actor_is_susceptible_to_vampirism(const actor& act);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
-monster_type draco_or_demonspawn_subspecies(const monster& mon);
-monster_type draco_or_demonspawn_subspecies(monster_type type,
-                                            monster_type base);
+monster_type draconian_subspecies(const monster& mon);
+monster_type draconian_subspecies(monster_type type, monster_type base);
 monster_type mons_detected_base(monster_type mt);
 bool mons_is_siren_beholder(monster_type mc);
 bool mons_is_siren_beholder(const monster& mons);
@@ -416,7 +407,6 @@ bool mons_class_is_test(monster_type mc);
 bool mons_is_firewood(const monster& mon);
 bool mons_is_active_ballisto(const monster& mon);
 bool mons_has_body(const monster& mon);
-bool mons_has_flesh(const monster& mon);
 bool mons_is_abyssal_only(monster_type mc);
 bool mons_is_unbreathing(monster_type mc);
 
@@ -468,8 +458,6 @@ void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
 
 string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const string &colour);
-string  demonspawn_base_name(monster_type mon_type);
-monster_type demonspawn_base_by_name(const string &colour);
 mon_spell_slot drac_breath(monster_type drac_type);
 
 monster_type random_monster_at_grid(const coord_def& p, bool species = false);
@@ -513,8 +501,6 @@ actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
 mon_threat_level_type mons_threat_level(const monster &mon,
                                         bool real = false);
-int count_monsters(monster_type mtyp, bool friendly_only);
-int count_allies();
 
 bool mons_foe_is_marked(const monster& mons);
 vector<monster* > get_on_level_followers();
@@ -542,8 +528,6 @@ monster *choose_random_monster_on_level(
     bool (*suitable)(const monster& mon) =
         choose_any_monster,
     bool prefer_named_or_priest = false);
-
-void update_monster_symbol(monster_type mtype, cglyph_t md);
 
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);

@@ -45,7 +45,8 @@ string chardump_desc(const item_def& item);
 string seed_description();
 
 #ifdef DGL_WHEREIS
-void whereis_record(const char *status = "active");
+class xlog_fields;
+void whereis_record(const xlog_fields &xl);
 #endif
 
 void record_turn_timestamp();

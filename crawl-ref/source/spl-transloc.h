@@ -8,7 +8,7 @@ class dist;
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
-spret cast_blink(bool fail = false);
+spret cast_blink(int pow, bool fail = false);
 void uncontrolled_blink(bool override_stasis = false);
 spret controlled_blink(bool safe_cancel = true, dist *target=nullptr);
 void wizard_blink();
@@ -33,7 +33,9 @@ string weapon_unprojectability_reason();
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
-spret cast_golubrias_passage(const coord_def& where, bool fail);
+int golubria_fuzz_range();
+bool golubria_valid_cell(coord_def p);
+spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 
 spret cast_dispersal(int pow, bool fail);
 

@@ -46,6 +46,7 @@ const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define GOZAG_GOLD_AURA_KEY "gozag_gold_aura_amount"
+#define GOZAG_GOLD_AURA_MAX 20
 #define GOZAG_POTION_PETITION_AMOUNT 400
 #define GOZAG_SHOP_BASE_MULTIPLIER 100
 #define GOZAG_SHOP_MOD_MULTIPLIER 25
@@ -90,7 +91,6 @@ bool zin_recite_to_single_monster(const coord_def& where);
 int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
-bool zin_remove_all_mutations();
 void zin_sanctuary();
 
 void tso_divine_shield();
@@ -119,7 +119,7 @@ bool yred_can_enslave_soul(monster* mon);
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
-bool kiku_take_corpse();
+bool kiku_take_corpse(bool just_check = false);
 bool kiku_gift_capstone_spells();
 
 bool fedhas_passthrough_class(const monster_type mc);

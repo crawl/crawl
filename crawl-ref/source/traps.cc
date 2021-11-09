@@ -147,7 +147,7 @@ bool trap_def::is_safe(actor* act) const
 
     // No prompt (teleport traps are ineffective if wearing a -Tele item)
     if ((type == TRAP_TELEPORT || type == TRAP_TELEPORT_PERMANENT)
-        && you.no_tele(false))
+        && you.no_tele())
     {
         return true;
     }
@@ -552,7 +552,7 @@ void trap_def::trigger(actor& triggerer)
             mprf("%s disappears.", name(DESC_THE).c_str());
             destroy();
         }
-        if (!triggerer.no_tele(true, you_trigger))
+        if (!triggerer.no_tele())
             triggerer.teleport(true);
         break;
 
@@ -1222,15 +1222,6 @@ trap_type random_trap_for_place(bool dispersal_ok)
 
     const trap_type *trap = random_choose_weighted(trap_weights);
     return trap ? *trap : NUM_TRAPS;
-}
-
-int count_traps(trap_type ttyp)
-{
-    int num = 0;
-    for (const auto& entry : env.trap)
-        if (entry.second.type == ttyp)
-            num++;
-    return num;
 }
 
 void place_webs(int num)

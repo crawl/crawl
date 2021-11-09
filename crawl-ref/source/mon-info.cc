@@ -92,7 +92,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_POLAR_VORTEX_COOLDOWN, MB_VORTEX_COOLDOWN },
     { ENCH_BARBS,           MB_BARBS },
     { ENCH_POISON_VULN,     MB_POISON_VULN },
-    { ENCH_ICEMAIL,         MB_ICEMAIL },
     { ENCH_AGILE,           MB_AGILE },
     { ENCH_FROZEN,          MB_FROZEN },
     { ENCH_BLACK_MARK,      MB_BLACK_MARK },
@@ -314,10 +313,11 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
 }
 
 /// is the given monster_info a hydra, zombie hydra, lerny, etc?
-static bool _is_hydra(const monster_info &mi)
+static bool _has_hydra_multi_attack(const monster_info &mi)
 {
     return mons_genus(mi.type) == MONS_HYDRA
-           || mons_genus(mi.base_type) == MONS_HYDRA;
+           || mons_genus(mi.base_type) == MONS_HYDRA
+           || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -332,10 +332,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     const bool classy_drac = mons_is_draconian_job(type) || type == MONS_TIAMAT;
     base_type = p_base_type != MONS_NO_MONSTER ? p_base_type
                 : classy_drac ? MONS_DRACONIAN
-                : mons_is_demonspawn_job(type) ? MONS_DEMONSPAWN
                 : type;
 
-    if (_is_hydra(*this))
+    if (_has_hydra_multi_attack(*this))
         num_heads = 1;
     else
         number = 0;
@@ -392,7 +391,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         i_ghost.damage = 5;
     }
 
-    if (mons_is_job(type))
+    if (mons_is_draconian_job(type))
     {
         ac += get_mons_class_ac(base_type);
         ev += get_mons_class_ev(base_type);
@@ -475,7 +474,7 @@ monster_info::monster_info(const monster* m, int milev)
         slime_size = m->blob_size;
     else if (type == MONS_BALLISTOMYCETE)
         is_active = !!m->ballisto_activity;
-    else if (_is_hydra(*this))
+    else if (_has_hydra_multi_attack(*this))
         num_heads = m->num_heads;
     // others use number for internal information
     else
@@ -576,22 +575,22 @@ monster_info::monster_info(const monster* m, int milev)
 
     mintel = mons_intel(*m);
     hd = m->get_hit_dice();
-    ac = m->armour_class(false);
-    ev = m->evasion(ev_ignore::unided);
+    ac = m->armour_class();
+    ev = m->evasion();
     base_ev = m->base_evasion();
-    mr = m->willpower(false);
-    can_see_invis = m->can_see_invisible(false);
+    mr = m->willpower();
+    can_see_invis = m->can_see_invisible();
     if (m->nightvision())
         props[NIGHTVISION_KEY] = true;
     mresists = get_mons_resists(*m);
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
-    can_go_frenzy = m->can_go_frenzy(false);
+    can_go_frenzy = m->can_go_frenzy();
     can_feel_fear = m->can_feel_fear(false);
 
     // Not an MB_ because it's rare.
-    if (m->cloud_immune(false))
+    if (m->cloud_immune())
         props[CLOUD_IMMUNE_MB_KEY] = true;
 
     if (m->airborne())
@@ -720,7 +719,8 @@ monster_info::monster_info(const monster* m, int milev)
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         // hydras are a mess!
-        const int atk_index = m->has_hydra_multi_attack() ? 0 : i;
+        const int atk_index = m->has_hydra_multi_attack() ? i + m->heads() - 1
+                                                          : i;
         attack[i] = mons_attack_spec(*m, atk_index, true);
     }
 
@@ -813,9 +813,10 @@ string monster_info::get_max_hp_desc() const
     if (props.exists(KNOWN_MAX_HP_KEY))
         return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
 
+    const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
-                            derived_undead_avg_hp(type, hd, 1) :
-                            mons_avg_hp(type);
+                            derived_undead_avg_hp(type, hd, scale) :
+                            mons_avg_hp(type, scale);
     int mhp = base_avg_hp;
     if (props.exists(VAULT_HD_KEY))
     {
@@ -827,6 +828,7 @@ string monster_info::get_max_hp_desc() const
     if (type == MONS_SLIME_CREATURE)
         mhp *= slime_size;
 
+    mhp /= scale;
     return make_stringf("about %d", mhp);
 }
 
@@ -930,8 +932,6 @@ string monster_info::_core_name() const
 
         if (mons_is_draconian_job(type) && base_type != MONS_NO_MONSTER)
             s = draconian_colour_name(base_type) + " " + s;
-        else if (mons_is_demonspawn_job(type) && base_type != MONS_NO_MONSTER)
-            s = demonspawn_base_name(base_type) + " " + s;
 
         switch (type)
         {
@@ -1049,10 +1049,11 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_BALLISTOMYCETE)
         ss << (is_active ? "active " : "");
 
-    if (_is_hydra(*this)
+    if (_has_hydra_multi_attack(*this)
         && type != MONS_SENSED
         && type != MONS_BLOCK_OF_ICE
-        && type != MONS_PILLAR_OF_SALT)
+        && type != MONS_PILLAR_OF_SALT
+        && mons_species(type) != MONS_SERPENT_OF_HELL)
     {
         ASSERT(num_heads > 0);
         if (num_heads < 11)
@@ -1209,15 +1210,6 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return false;
     }
 
-    // Treat base demonspawn identically, as with draconians.
-    if (!zombified && m1.type >= MONS_FIRST_BASE_DEMONSPAWN
-        && m1.type <= MONS_LAST_BASE_DEMONSPAWN
-        && m2.type >= MONS_FIRST_BASE_DEMONSPAWN
-        && m2.type <= MONS_LAST_BASE_DEMONSPAWN)
-    {
-        return false;
-    }
-
     int diff_delta = mons_avg_hp(m1.type) - mons_avg_hp(m2.type);
 
     // By descending difficulty
@@ -1265,7 +1257,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.
-        if (_is_hydra(m1))
+        if (_has_hydra_multi_attack(m1))
         {
             if (m1.num_heads > m2.num_heads)
                 return true;
@@ -1293,14 +1285,12 @@ string monster_info::pluralised_name(bool fullname) const
 {
     // Don't pluralise uniques, ever. Multiple copies of the same unique
     // are unlikely in the dungeon currently, but quite common in the
-    // arena. This prevens "4 Gra", etc. {due}
+    // arena. This prevents "4 Gra", etc. {due}
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
     else if (mons_genus(type) == MONS_DRACONIAN)
         return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-    else if (mons_genus(type) == MONS_DEMONSPAWN)
-        return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
              || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
@@ -1570,9 +1560,14 @@ reach_type monster_info::reach_range(bool items) const
     const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
                                              ? base_type : type);
     ASSERT(e);
+    reach_type range = REACH_NONE;
 
-    const attack_flavour fl = e->attack[0].flavour;
-    reach_type range = flavour_has_reach(fl) ? REACH_TWO : REACH_NONE;
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        const attack_flavour fl = e->attack[i].flavour;
+        if (flavour_has_reach(fl))
+            range = REACH_TWO;
+    }
 
     if (items)
     {
@@ -1626,9 +1621,9 @@ bool monster_info::has_spells() const
         return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
 
     // Almost all draconians have breath spells.
-    if (mons_genus(draco_or_demonspawn_subspecies()) == MONS_DRACONIAN
-        && draco_or_demonspawn_subspecies() != MONS_GREY_DRACONIAN
-        && draco_or_demonspawn_subspecies() != MONS_DRACONIAN)
+    if (mons_genus(draconian_subspecies()) == MONS_DRACONIAN
+        && draconian_subspecies() != MONS_GREY_DRACONIAN
+        && draconian_subspecies() != MONS_DRACONIAN)
     {
         return true;
     }
@@ -1739,10 +1734,10 @@ static bool _has_polearm(const monster_info& mi)
     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
         const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        return weapon && weapon_reach(*weapon) == REACH_TWO;
+        return weapon && weapon_reach(*weapon) >= REACH_TWO;
     }
     else
-        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() == REACH_TWO;
+        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() >= REACH_TWO;
 }
 
 static bool _has_launcher(const monster_info& mi)
@@ -1901,11 +1896,11 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
          + join_strings(conditions.begin(), conditions.end(), ", ") + ")";
 }
 
-monster_type monster_info::draco_or_demonspawn_subspecies() const
+monster_type monster_info::draconian_subspecies() const
 {
     if (type == MONS_PLAYER_ILLUSION && mons_genus(type) == MONS_DRACONIAN)
         return species::to_mons_species(i_ghost.species);
-    return ::draco_or_demonspawn_subspecies(type, base_type);
+    return ::draconian_subspecies(type, base_type);
 }
 
 const char *monster_info::pronoun(pronoun_type variant) const

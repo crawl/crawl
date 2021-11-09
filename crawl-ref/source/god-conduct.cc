@@ -356,16 +356,6 @@ static peeve_map divine_peeves[] =
         { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
-        { DID_KILL_LIVING, {
-            "you kill living things while asking for your life to be spared",
-            true,
-            1, 2, nullptr, " does not appreciate your shedding blood"
-                            " when asking for salvation!",
-            [] (const monster*) -> bool {
-                // Killing is only disapproved of during prayer.
-                return you.duration[DUR_LIFESAVING] != 0;
-            }
-        } },
     },
     // GOD_LUGONU,
     peeve_map(),

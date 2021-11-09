@@ -70,25 +70,62 @@ Lucidity slithers from your feeble grasp.
 # How great is the Orb of Zot?
 _great_adj_
 
+astounding
+
 awesome
+
+breathtaking
 
 fabled
 
 fabulous
 
+glorious
+
+incredible
+
 legendary
 
+magnificent
+
+majestic
+
+marvelous
+
+splendid
+
+sublime
+
+terrific
+
 transcendent
+
+wondrous
+
+w:1
+pretty good
+
 %%%%
 welcome_spam
 
 Will you prevail where others failed? Will you find the Orb of Zot?
 
-The bosom of this dungeon contains the @_great_adj_@ artefact, the Orb of Zot.
+The heart of this dungeon contains the @_great_adj_@ artefact, the Orb of Zot.
 
 Will you be the one to retrieve the @_great_adj_@ Orb of Zot from the depths?
 
 It is said that the Orb of Zot exists deep within this dungeon.
+
+Are you destined to find the @_great_adj_@ Orb of Zot, or to die trying?
+
+Everyone else who sought the Orb of Zot has failed. Will you be different?
+
+They say the Orb of Zot lies within this dungeon, but they say a lot of things.
+
+You feel drawn to the Orb of Zot, downwards into the unfathomable depths...
+
+The @_great_adj_@ Orb of Zot lies far below, as if waiting for you to find it.
+
 %%%%
 # things that surround us on Halloween
 _halloween_things_
@@ -99,9 +136,11 @@ disembodied spirits
 
 ghosts and spectres
 
-grim specetres
+grim spectres
 
 horrible apparitions
+
+phantasmagorical visions
 %%%%
 # things you don't want a witch to turn you into
 _lowly_
@@ -125,6 +164,15 @@ A terrible geas has sent you after the Orb of Zot. What a horrible night to have
 As you descend in search of the Orb, @_halloween_things_@ flock about you. This place is haunted!
 
 You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a @_lowly_@!
+
+If you want to find the Orb of Zot, you'll need a much better costume than that.
+
+You hope this place has the Orb of Zot, because it sure as hell doesn't have any candy.
+
+Countless adventurers have entered the dungeon seeking the Orb of Zot, but there's always room for one more...
+
+You sense the Orb of Zot calling to you... with horror, you realize the call is coming from inside the dungeon!
+
 %%%%
 hell_effect_quiet
 
@@ -136,39 +184,131 @@ else
 end
 }}
 
-You feel lost and a long, long way from home...
-
-You shiver with fear.
-
-You feel a terrible foreboding...
-
-Something frightening happens.
-
-You sense an ancient evil watching you...
-
-You suddenly feel all small and vulnerable.
-
-You sense a hostile presence.
-
-"You will not leave this place."
+"Abandon all hope!"
 
 "Die, mortal!"
 
-"We do not forgive those who trespass against us!"
+"Leave now, before it is too late!"
+
+"No one will save a wretch like you!"
+
+"Run while you still can, mortal!"
 
 "Trespassers are not welcome here!"
 
-"You do not belong in this place!"
+"We do not forgive those who trespass against us!"
 
-"Leave now, before it is too late!"
+"We have such sights to show you!"
 
 "We have you now!"
+
+"We will enjoy watching you die!"
+
+"Whatever you seek here, you will find only death!"
+
+"You are not welcome here!"
+
+"You do not belong in this place!"
+
+"You have come here to die, fool!"
+
+"You should have left when you had the chance!"
+
+"You should not have come here!"
+
+"You will never escape!"
+
+"You will not leave this place!"
+
+For a moment, everything goes dark.
+
+Something frightening happens.
+
+Something moves in the shadows at the edge of your vision.
+
+You catch a glimpse of your own reflection and are repulsed by what you see.
+
+You feel abandoned and deserted...
+
+You feel a strange tug, urging you deeper into the mouth of Hell...
+
+You feel a terrible foreboding...
+
+You feel like no one will even care if you die here...
+
+You feel like you've forgotten something very important...
+
+You feel lost and a long, long way from home...
+
+You feel so tired, so weak... it would be so nice to just lie down... forever...
+
+You feel totally surrounded, and yet so utterly alone...
+
+You have a premonition of your own gruesome death.
+
+You have a vision of yourself being tormented eternally.
+
+You regret coming to this forsaken place.
+
+You sense a hostile presence.
+
+You sense an ancient evil watching you...
+
+You sense something behind you... but there's nothing there.
+
+You shiver with fear.
+
+You shudder with dread.
+
+You suddenly feel all small and vulnerable.
+
+You taste blood in your mouth. It's definitely not yours.
+
 %%%%
 hell_effect_noisy
 
+"BEGONE, TRESPASSER!"
+
+"WE'VE GOT YOU NOW!"
+
+A chorus of shrieks echoes around you!
+
 A gut-wrenching scream fills the air!
+
+A hateful voice recites your deepest, darkest secrets!
+
+An anguished voice wails for what feels like eternity, then is suddenly cut off.
+
+You hear a dreadful howling, growing closer and closer...
+
+You hear a scream, and then it ends suddenly with a sickening wet crunch.
+
+You hear abhorrent words that no mortal tongue could ever pronounce...
+
+You hear an infernal cacophony!
+
+You hear diabolical laughter!
+
+You hear unearthly screeching!
+
+You hear the gnashing of teeth!
 
 You hear words spoken in a strange and terrible language...
 
-You hear diabolical laughter!
+You hear your loved ones begging you to come home...
+
+You hear your loved ones encouraging you to just give up and die...
+
+You hear your loved ones mocking you for coming here!
+
+You hear your loved ones mourning your tragic, senseless death...
+
+You hear your loved ones weeping in eternal, hopeless despair...
+
+You hear your own voice begging for death!
+
+You hear your own voice laughing maniacally!
+
+You hear your own voice screaming in agony!
+
 %%%%

@@ -2244,10 +2244,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             && static_cast<int>(curr_PlaceInfo.levels_seen)
                                         > brdepth[curr_PlaceInfo.branch])
         {
-            mprf(MSGCH_ERROR,
-                "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
-                branches[curr_PlaceInfo.branch].shortname,
-                curr_PlaceInfo.levels_seen);
+            if (crawl_state.prev_cmd != CMD_WIZARD)
+            {
+                mprf(MSGCH_ERROR,
+                    "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
+                    branches[curr_PlaceInfo.branch].shortname,
+                    curr_PlaceInfo.levels_seen);
+            }
             curr_PlaceInfo.levels_seen = brdepth[curr_PlaceInfo.branch];
         }
 #endif
@@ -2423,9 +2426,8 @@ static void _save_game_exit()
 
     clrscr();
 
-#ifdef DGL_WHEREIS
-    whereis_record("saved");
-#endif
+    update_whereis("saved");
+
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason("saved");
 #endif
@@ -3764,6 +3766,7 @@ off_t file_size(FILE *handle)
 #endif
 }
 
+#ifdef USE_TILE_LOCAL
 vector<string> get_title_files()
 {
     vector<string> titles;
@@ -3773,3 +3776,4 @@ vector<string> get_title_files()
                 titles.push_back(file);
     return titles;
 }
+#endif

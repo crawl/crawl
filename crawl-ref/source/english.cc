@@ -440,17 +440,3 @@ string thing_do_grammar(description_level_type dtype, string desc,
         return desc;
     }
 }
-
-string get_desc_quantity(const int quant, const int total, const string &whose)
-{
-    if (total == quant)
-        return uppercase_first(whose);
-    else if (quant == 1)
-        return "One of " + whose;
-    else if (quant == 2)
-        return "Two of " + whose;
-    else if (quant >= total * 3 / 4)
-        return "Most of " + whose;
-    else
-        return "Some of " + whose;
-}

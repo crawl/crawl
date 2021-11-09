@@ -90,13 +90,12 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     ASSERT(!invalid_monster_type(mtype));
     ASSERT(!invalid_monster_type(corpse_class));
 
-    if (mons_genus(mtype) == MONS_DRACONIAN
-        || mons_genus(mtype) == MONS_DEMONSPAWN)
+    if (mons_genus(mtype) == MONS_DRACONIAN)
     {
         if (mons.type == MONS_TIAMAT)
             corpse_class = MONS_DRACONIAN;
         else
-            corpse_class = draco_or_demonspawn_subspecies(mons);
+            corpse_class = draconian_subspecies(mons);
     }
 
     if (mons.props.exists(ORIGINAL_TYPE_KEY))
@@ -292,8 +291,9 @@ static int _calc_player_experience(const monster* mons)
     if (!experience)
         return 0;
 
-    const bool already_got_half_xp = testbits(mons->flags, MF_PACIFIED);
-    const int half_xp = (experience + 1) / 2;
+    // Already got the XP here.
+    if (testbits(mons->flags, MF_PACIFIED))
+        return 0;
 
     if (!mons->damage_total)
     {
@@ -305,16 +305,6 @@ static int _calc_player_experience(const monster* mons)
     experience = (experience * mons->damage_friendly / mons->damage_total
                   + 1) / 2;
     ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
-
-    // Note: This doesn't happen currently since monsters with
-    //       MF_PACIFIED have always gone through pacification,
-    //       hence also have MF_WAS_NEUTRAL. [rob]
-    if (already_got_half_xp)
-    {
-        experience -= half_xp;
-        if (experience < 0)
-            experience = 0;
-    }
 
     return experience;
 }
@@ -418,7 +408,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
         corpse.quantity *= SPRINT_MULTIPLIER;
 
     const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-    if (!x_chance_in_y(chance, chance + 9))
+    if (!x_chance_in_y(chance, GOZAG_GOLD_AURA_MAX))
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
     you.redraw_title = true;
 }
@@ -612,7 +602,7 @@ void record_monster_defeat(const monster* mons, killer_type killer)
     if (mons->is_named() && mons->friendly()
         && !mons_is_hepliaklqana_ancestor(mons->type))
     {
-        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname));
+        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->name(DESC_PLAIN, true)));
     }
     else if (mons_is_notable(*mons))
     {
@@ -1287,9 +1277,11 @@ static bool _reaping(monster &mons)
         return false;
 
     actor *killer = actor_by_mid(mons.props[REAPER_KEY].get_int());
-    if (killer)
-        return _mons_reaped(*killer, mons);
-    return false;
+    if (!killer)
+        return false;
+    if (killer->is_player() && you.allies_forbidden())
+        return false;
+    return _mons_reaped(*killer, mons);
 }
 
 static bool _god_will_bless_follower(monster* victim)
@@ -3029,7 +3021,18 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 void elven_twin_energize(monster* mons)
 {
     if (mons_is_mons_class(mons, MONS_DUVESSA))
-        mons->go_berserk(true);
+    {
+        if (mons->go_berserk(true))
+        {
+            // only mark Duvessa energized once she's successfully gone berserk
+            mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
+            mon_enchant zerk = mons->get_ench(ENCH_BERSERK);
+            zerk.duration = INFINITE_DURATION;
+            mons->update_ench(zerk);
+        }
+        else
+            mons->props[ELVEN_ENERGIZE_KEY] = true;
+    }
     else
     {
         ASSERT(mons_is_mons_class(mons, MONS_DOWAN));
@@ -3037,9 +3040,8 @@ void elven_twin_energize(monster* mons)
             simple_monster_message(*mons, " seems to find hidden reserves of power!");
 
         mons->add_ench(ENCH_HASTE);
+        mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
     }
-
-    mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
 }
 
 /**

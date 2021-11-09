@@ -242,7 +242,7 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  * @treturn int number of WL pips
  * @function willpower
  */
-LUARET1(you_willpower, number, player_willpower(false) / WL_PIP)
+LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 /*** Drowning resistance (rDrown).
  * @treturn int resistance level
  * @function res_drowning
@@ -252,18 +252,18 @@ LUARET1(you_res_drowning, boolean, you.res_water_drowning())
  * @treturn int resistance level
  * @function res_mutation
  */
-LUARET1(you_res_mutation, number, you.rmut_from_item(false) ? 1 : 0)
+LUARET1(you_res_mutation, number, you.rmut_from_item() ? 1 : 0)
 /*** See invisible (sInv).
  * @treturn boolean
  * @function see_invisible
  */
-LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
+LUARET1(you_see_invisible, boolean, you.can_see_invisible())
 /*** Guardian spirit.
  * Returns a number for backwards compatibility.
  * @treturn int
  * @function spirit_shield
  */
-LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
+LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
 /*** Corrosion resistance (rCorr).
  * @treturn int resistance level
  * @function res_corr
@@ -1594,7 +1594,9 @@ LUAFN(you_init)
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
+#ifdef WIZARD
 LUAWRAP(you_enter_wizard_mode, you.wizard = true)
+#endif
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
 LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))

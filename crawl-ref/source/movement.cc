@@ -524,6 +524,7 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     switch (ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_ENTER_ZIGGURAT:
     case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');

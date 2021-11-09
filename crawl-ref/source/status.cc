@@ -158,7 +158,6 @@ static bool _fill_inf_from_ddef(duration_type dur, status_info& inf)
 static void _describe_airborne(status_info& inf);
 static void _describe_glow(status_info& inf);
 static void _describe_regen(status_info& inf);
-static void _describe_sickness(status_info& inf);
 static void _describe_speed(status_info& inf);
 static void _describe_poison(status_info& inf);
 static void _describe_transform(status_info& inf);
@@ -310,10 +309,6 @@ bool fill_status_info(int status, status_info& inf)
     case STATUS_REGENERATION:
         // DUR_TROGS_HAND + some vampire and non-healing stuff
         _describe_regen(inf);
-        break;
-
-    case STATUS_SICK:
-        _describe_sickness(inf);
         break;
 
     case STATUS_SPEED:
@@ -864,7 +859,7 @@ static void _describe_poison(status_info& inf)
     int pois_perc = (you.hp <= 0) ? 100
                                   : ((you.hp - max(0, poison_survival())) * 100 / you.hp);
     inf.light_colour = (player_res_poison(false) >= 3
-                         ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
+                        ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
     inf.light_text   = "Pois";
     const string adj =
          (pois_perc >= 100) ? "lethally" :
@@ -921,26 +916,6 @@ static void _describe_airborne(status_info& inf)
     inf.long_text    = "You are flying" + desc + ".";
     inf.light_colour = _dur_colour(inf.light_colour, expiring);
     _mark_expiring(inf, expiring);
-}
-
-static void _describe_sickness(status_info& inf)
-{
-    if (you.duration[DUR_SICKNESS])
-    {
-        const int high = 120 * BASELINE_DELAY;
-        const int low  =  40 * BASELINE_DELAY;
-
-        inf.light_colour   = _bad_ench_colour(you.duration[DUR_SICKNESS],
-                                              low, high);
-        inf.light_text     = "Sick";
-
-        string mod = (you.duration[DUR_SICKNESS] > high) ? "badly "  :
-                     (you.duration[DUR_SICKNESS] >  low) ? ""
-                                                         : "mildly ";
-
-        inf.short_text = mod + "diseased";
-        inf.long_text  = "You are " + mod + "diseased.";
-    }
 }
 
 /**

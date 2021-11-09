@@ -218,17 +218,6 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _setup_minor_healing,
     } },
-    { SPELL_TELEPORT_SELF, {
-        [](const monster &caster)
-        {
-            // Monsters aren't smart enough to know when to cancel teleport.
-            // TODO: could work emergency logic in here?
-            return (caster.no_tele(true, false) || caster.has_ench(ENCH_TP))
-                            ? ai_action::impossible() : ai_action::neutral();
-        },
-        _fire_simple_beam,
-        _selfench_beam_setup(BEAM_TELEPORT),
-    } },
     { SPELL_SLUG_DART, _conjuration_logic(SPELL_SLUG_DART) },
     { SPELL_VAMPIRIC_DRAINING, {
         [](const monster &caster)
@@ -1908,7 +1897,7 @@ static ai_action::goodness _negative_energy_spell_goodness(const actor* foe)
 static bool _valid_blink_ally(const monster* caster, const monster* target)
 {
     return mons_aligned(caster, target) && caster != target
-           && !target->no_tele(true, false, true);
+           && !target->no_tele(true);
 }
 
 static bool _valid_encircle_ally(const monster* caster, const monster* target,
@@ -2118,22 +2107,14 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 
         beam_type flavour = random_choose_weighted(150, BEAM_HASTE,
                                                    150, BEAM_MIGHT,
-                                                   150, BEAM_BERSERK,
                                                    150, BEAM_AGILITY,
                                                    150, BEAM_RESISTANCE,
-                                                   150, BEAM_BLINK_CLOSE,
-                                                    15, BEAM_BLINK,
-                                                    15, BEAM_SLOW,
                                                     15, BEAM_VULNERABILITY,
-                                                    15, BEAM_MALMUTATE,
+                                                    15, BEAM_BERSERK,
                                                     15, BEAM_POLYMORPH,
                                                     15, BEAM_INNER_FLAME);
 
-        enchant_actor_with_flavour(*mi,
-                                   flavour == BEAM_BLINK_CLOSE
-                                   ? foe
-                                   : &mon,
-                                   flavour);
+        enchant_actor_with_flavour(*mi, &mon, flavour);
 
         affected++;
         if (you.can_see(**mi))
@@ -2587,7 +2568,7 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
 
 static ai_action::goodness _mons_likes_blinking(const monster &caster)
 {
-    if (caster.no_tele(true, false))
+    if (caster.no_tele())
         return ai_action::impossible();
     // Prefer to keep a polar vortex going rather than blink.
     return ai_action::good_or_bad(!caster.has_ench(ENCH_POLAR_VORTEX));
@@ -2797,14 +2778,7 @@ static bool _incite_monsters(const monster* mon, bool actual)
 // Currently only used to get out of a net.
 static bool _ms_quick_get_away(spell_type monspell)
 {
-    switch (monspell)
-    {
-    case SPELL_TELEPORT_SELF:
-    case SPELL_BLINK:
-        return true;
-    default:
-        return false;
-    }
+    return monspell == SPELL_BLINK;
 }
 
 // Is it worth bothering to invoke recall? (Currently defined by there being at
@@ -3253,18 +3227,18 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
         return nullptr;
 
     // Unentangle the real monster.
-    if (mons->is_constricted())
-        mons->stop_being_constricted();
+    if (targ->is_constricted())
+        targ->stop_being_constricted();
 
-    mons_clear_trapping_net(mons);
+    mons_clear_trapping_net(targ);
 
     // Don't leak the real one with the targeting interface.
-    if (you.prev_targ == mons->mindex())
+    if (you.prev_targ == targ->mindex())
     {
         you.prev_targ = MHITNOT;
         crawl_state.cancel_cmd_repeat();
     }
-    mons->reset_client_id();
+    targ->reset_client_id();
 
     mirror->mark_summoned(5, true, summ_type);
     mirror->add_ench(ENCH_PHANTOM_MIRROR);
@@ -4839,93 +4813,56 @@ struct branch_summon_pair
 
 static branch_summon_pair _invitation_summons[] =
 {
-  { BRANCH_LAIR,
-    { // Lair enemies
-      {  1,   1,   60, FLAT, MONS_BLINK_FROG },
-      {  1,   1,   40, FLAT, MONS_DREAM_SHEEP },
-      {  1,   1,   20, FLAT, MONS_CANE_TOAD },
-    }},
   { BRANCH_SNAKE,
     { // Snake enemies
-      {  1,   1,   80, FLAT, MONS_NAGA },
-      {  1,   1,   40, FLAT, MONS_BLACK_MAMBA },
+      {  1,   1,   80, FLAT, MONS_BLACK_MAMBA },
+      {  1,   1,   40, FLAT, MONS_NAGA_WARRIOR },
       {  1,   1,   20, FLAT, MONS_MANA_VIPER },
     }},
   { BRANCH_SPIDER,
     { // Spider enemies
       {  1,   1,   60, FLAT, MONS_TARANTELLA },
-      {  1,   1,   80, FLAT, MONS_JUMPING_SPIDER },
+      {  1,   1,   80, FLAT, MONS_WOLF_SPIDER },
       {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
     }},
   { BRANCH_SWAMP,
     { // Swamp enemies
-      {  1,   1,   80, FLAT, MONS_VAMPIRE_MOSQUITO },
-      {  1,   1,   60, FLAT, MONS_BOG_BODY },
-      {  1,   1,   40, FLAT, MONS_SWAMP_DRAKE },
+      {  1,   1,   80, FLAT, MONS_BOG_BODY },
+      {  1,   1,   60, FLAT, MONS_SWAMP_DRAKE },
+      {  1,   1,   40, FLAT, MONS_GOLIATH_FROG },
     }},
   { BRANCH_SHOALS,
     { // Shoals enemies
-      {  1,   1,   60, FLAT, MONS_MERFOLK_SIREN },
+      {  1,   1,   60, FLAT, MONS_SNAPPING_TURTLE },
       {  1,   1,   40, FLAT, MONS_MANTICORE },
-      {  1,   1,   20, FLAT, MONS_WIND_DRAKE },
-    }},
-  { BRANCH_ORC,
-    { // Orc enemies
-      {  1,   1,   80, FLAT, MONS_ORC_PRIEST },
-      {  1,   1,   40, FLAT, MONS_WARG },
-      {  1,   1,   20, FLAT, MONS_TROLL },
+      {  1,   1,   20, FLAT, MONS_MERFOLK_AQUAMANCER },
     }},
   { BRANCH_ELF,
     { // Elf enemies
       {  1,   1,   50, FLAT, MONS_DEEP_ELF_AIR_MAGE },
       {  1,   1,   50, FLAT, MONS_DEEP_ELF_FIRE_MAGE },
       {  1,   1,   40, FLAT, MONS_DEEP_ELF_KNIGHT },
-      {  1,   1,   40, FLAT, MONS_DEEP_ELF_ARCHER },
     }},
   { BRANCH_VAULTS,
     { // Vaults enemies
-      {  1,   1,   60, FLAT, MONS_YAKTAUR },
-      {  1,   1,   40, FLAT, MONS_IRONBOUND_PRESERVER },
+      {  1,   1,   60, FLAT, MONS_VERY_UGLY_THING },
+      {  1,   1,   40, FLAT, MONS_IRONBOUND_THUNDERHULK },
       {  1,   1,   20, FLAT, MONS_VAULT_SENTINEL },
     }},
   { BRANCH_CRYPT,
     { // Crypt enemies
-      {  1,   1,   80, FLAT, MONS_WRAITH },
-      {  1,   1,   60, FLAT, MONS_SHADOW },
-      {  1,   1,   20, FLAT, MONS_NECROMANCER },
+      {  1,   1,   80, FLAT, MONS_FREEZING_WRAITH },
+      {  1,   1,   40, FLAT, MONS_SKELETAL_WARRIOR },
+      {  1,   1,   40, FLAT, MONS_NECROMANCER },
     }},
 };
 
 static branch_summon_pair _planerend_summons[] =
 {
-  { BRANCH_SNAKE,
-    { // Snake enemies
-      {  1,   1,   40, FLAT, MONS_ANACONDA },
-      {  1,   1,  100, FLAT, MONS_GUARDIAN_SERPENT },
-      {  1,   1,  100, FLAT, MONS_NAGARAJA },
-    }},
-  { BRANCH_SPIDER,
-    { // Spider enemies
-      {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
-      {  1,   1,   80, FLAT, MONS_TORPOR_SNAIL },
-      {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
-    }},
-  { BRANCH_SWAMP,
-    { // Swamp enemies
-      {  1,   1,  100, FLAT, MONS_SWAMP_DRAGON },
-      {  1,   1,   80, FLAT, MONS_SHAMBLING_MANGROVE },
-      {  1,   1,   40, FLAT, MONS_THORN_HUNTER },
-    }},
-  { BRANCH_SHOALS,
-    { // Shoals enemies
-      {  1,   1,   80, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
-      {  1,   1,   40, FLAT, MONS_WATER_NYMPH },
-      {  1,   1,  100, FLAT, MONS_MERFOLK_JAVELINEER },
-    }},
   { BRANCH_SLIME,
     { // Slime enemies
       {  1,   1,   80, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
-      {  1,   1,  100, FLAT, MONS_AZURE_JELLY },
+      {  1,   1,  100, FLAT, MONS_ROCKSLIME },
       {  1,   1,  100, FLAT, MONS_ACID_BLOB },
     }},
   { BRANCH_ELF,
@@ -4956,7 +4893,7 @@ static branch_summon_pair _planerend_summons[] =
     { // Abyss enemies
       {  1,   1,   80, FLAT, MONS_APOCALYPSE_CRAB },
       {  1,   1,  100, FLAT, MONS_STARCURSED_MASS },
-      {  1,   1,   40, FLAT, MONS_WRETCHED_STAR },
+      {  1,   1,   40, FLAT, MONS_TENTACLED_STARSPAWN },
     }},
   { BRANCH_ZOT,
     { // Zot enemies
@@ -5939,7 +5876,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONJURE_LIVING_SPELLS:
     {
         const int hd = mons->spell_hd(spell_cast);
-        const int n = living_spell_count(true);
+        const int n = living_spell_count(spell_cast, true);
         const spell_type spell = living_spell_type_for(mons->type);
         // XXX: will crash if wizmode player tries to cast?
         ASSERT(spell != SPELL_NO_SPELL);
@@ -6609,8 +6546,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_simple_beam(*mons, slot, pbolt);
 }
 
-int living_spell_count(bool random)
+int living_spell_count(spell_type spell, bool random)
 {
+    if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR)
+        return random ? random_range(1, 2) : 2;
     return random ? random_range(2, 3) : 3;
 }
 
@@ -7905,6 +7844,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_FULMINANT_PRISM:
     case SPELL_DAZZLING_FLASH:
     case SPELL_OZOCUBUS_ARMOUR:
+    case SPELL_TELEPORT_SELF:
 #endif
     case SPELL_NO_SPELL:
         return ai_action::bad();

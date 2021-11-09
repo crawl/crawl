@@ -784,7 +784,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
 
             keyin = 0;
 #else
-            if (keyin == 0)
+            if (keyin == 0 && !Options.spell_menu)
             {
                 if (you.spell_no == 1)
                 {
@@ -828,7 +828,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
                 keyin = get_ch();
             }
 
-            if (keyin == '?' || keyin == '*')
+            if (keyin == '?' || keyin == '*' || Options.spell_menu)
             {
                 keyin = list_spells(true, false);
                 if (!keyin)
@@ -1194,16 +1194,6 @@ static vector<coord_def> _simple_find_all_hostiles(actor *a)
     return result;
 }
 
-// a light wrapper on the code used for casting animate skeleton
-static vector<coord_def> _find_animatable_skeletons(actor *a)
-{
-    vector<coord_def> result;
-    coord_def s = find_animatable_skeleton(a->pos());
-    if (in_bounds(s))
-        result.push_back(s);
-    return result;
-}
-
 static bool _simple_corpse_check(const coord_def &c)
 {
     int motions; // ???
@@ -1291,14 +1281,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_HAILSTORM:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range, 0, 2);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range);
+        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range, 0, 1);
     case SPELL_STARBURST:
         return make_unique<targeter_starburst>(&you, range, pow);
-    case SPELL_CORPSE_ROT: // maybe should also highlight affected corpses? # of clouds depends on them
+    case SPELL_CORPSE_ROT:
+        return make_unique<targeter_corpse_rot>();
     case SPELL_IRRADIATE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?
-        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1308,7 +1300,19 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
     case SPELL_DAZZLING_FLASH:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
+                                                  0, 1);
+    case SPELL_INNER_FLAME:
+        return make_unique<targeter_smite>(&you, range);
+    case SPELL_LEDAS_LIQUEFACTION:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS,
+                                            liquefaction_max_range(pow),
+                                            0, 0, 1);
+    case SPELL_SILENCE:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS,
+                                            silence_max_range(pow),
+                                            0, 0,
+                                            silence_min_range(pow));
 
     // at player's position only but not a selfench; most transmut spells go here:
     case SPELL_SPIDER_FORM:
@@ -1323,14 +1327,17 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_CONJURE_FLAME:
+    case SPELL_EXCRUCIATING_WOUNDS:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
     // LOS radius:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS,
+                                                  LOS_RADIUS, 0, 1);
     case SPELL_POLAR_VORTEX:
-        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS,
+                                            POLAR_VORTEX_RADIUS, 0, 1);
     case SPELL_SHATTER:
         return make_unique<targeter_shatter>(&you); // special version that affects walls
     case SPELL_IGNITE_POISON: // many cases
@@ -1360,15 +1367,13 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_CONJURE_BALL_LIGHTNING:
     case SPELL_SUMMON_GUARDIAN_GOLEM:
     case SPELL_CALL_IMP:
-    case SPELL_SHADOW_CREATURES: // TODO: dbl check packs
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2);
-    case SPELL_FOXFIRE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1);
     case SPELL_BATTLESPHERE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 3);
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2, 0, 1);
+    case SPELL_FOXFIRE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
     // directions, so this targeter is not entirely accurate.
     case SPELL_MALIGN_GATEWAY:
@@ -1376,10 +1381,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS, 0, 2);
 
     case SPELL_ANIMATE_SKELETON:
-        // this spell seems (?) to pick the first corpse by radius_iterator, so
-        // just show that one. If this spell were to do something better, e.g.
-        // randomization, this would need to take a different approach
-        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), AFF_YES);
+        return make_unique<targeter_multiposition>(&you, find_animatable_skeletons(you.pos()), AFF_MAYBE);
     case SPELL_ANIMATE_DEAD:
         return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:
@@ -1396,6 +1398,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_bog>(&you, pow);
     case SPELL_FLAME_WAVE:
         return make_unique<targeter_flame_wave>(range);
+    case SPELL_GOLUBRIAS_PASSAGE:
+        return make_unique<targeter_passage>(range);
 
     default:
         break;
@@ -2238,9 +2242,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);
 
-    case SPELL_SHADOW_CREATURES:
-        return cast_shadow_creatures(spell, god, fail);
-
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return cast_summon_horrible_things(powc, god, fail);
 
@@ -2354,7 +2355,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     // Escape spells.
     case SPELL_BLINK:
-        return cast_blink(fail);
+        return cast_blink(powc, fail);
 
     case SPELL_CONJURE_FLAME:
         return conjure_flame(powc, fail);
@@ -2372,10 +2373,10 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_manifold_assault(powc, fail);
 
     case SPELL_CORPSE_ROT:
-        return cast_corpse_rot(fail);
+        return cast_corpse_rot(powc, fail);
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        return cast_golubrias_passage(beam.target, fail);
+        return cast_golubrias_passage(powc, beam.target, fail);
 
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(&you, powc, beam.target, fail);
@@ -2385,6 +2386,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_FLAME_WAVE:
         return cast_flame_wave(powc, fail);
+
+    case SPELL_INNER_FLAME:
+        return cast_inner_flame(spd.target, powc, fail);
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);

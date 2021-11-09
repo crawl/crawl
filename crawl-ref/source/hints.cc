@@ -318,7 +318,9 @@ static job_type _get_hints_job(unsigned int type)
     }
 }
 
-static void _replace_static_tags(string &text)
+/// Substitute $cmd[CMD_FOO] with the corresponding key, and likewise
+/// transform <input>foo</input>.
+void hint_replace_cmds(string &text)
 {
     size_t p;
     while ((p = text.find("$cmd[")) != string::npos)
@@ -340,6 +342,28 @@ static void _replace_static_tags(string &text)
         text.replace(p, q - p + 1, command);
     }
 
+    // Brand user-input -related (tutorial) items with <w>[(text here)]</w>.
+    while ((p = text.find("<input>")) != string::npos)
+    {
+        size_t q = text.find("</input>", p + 7);
+        if (q == string::npos)
+        {
+            text += "<lightred>ERROR: unterminated <input></lightred>";
+            break;
+        }
+
+        string input = text.substr(p + 7, q - p - 7);
+        input = "<w>[" + input;
+        input += "]</w>";
+        text.replace(p, q - p + 8, input);
+    }
+}
+
+static void _replace_static_tags(string &text)
+{
+    hint_replace_cmds(text);
+
+    size_t p;
     while ((p = text.find("$item[")) != string::npos)
     {
         size_t q = text.find("]", p + 6);
@@ -366,22 +390,6 @@ static void _replace_static_tags(string &text)
             item += "<";
 
         text.replace(p, q - p + 1, item);
-    }
-
-    // Brand user-input -related (tutorial) items with <w>[(text here)]</w>.
-    while ((p = text.find("<input>")) != string::npos)
-    {
-        size_t q = text.find("</input>", p + 7);
-        if (q == string::npos)
-        {
-            text += "<lightred>ERROR: unterminated <input></lightred>";
-            break;
-        }
-
-        string input = text.substr(p + 7, q - p - 7);
-        input = "<w>[" + input;
-        input += "]</w>";
-        text.replace(p, q - p + 8, input);
     }
 }
 

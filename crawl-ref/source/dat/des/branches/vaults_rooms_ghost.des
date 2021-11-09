@@ -1,12 +1,15 @@
 ################################################################################
-# vaults_rooms_ghost.des: Ghost subvaults for the Vaults.
+# vaults_rooms_ghost.des
 #
-# Content: These are vault rooms that place a player ghost. All vaults here
-# should call the function vaults_ghost_setup(). In addition to setting other
-# standard tags for ghost vaults, this function will add the vaults_ghost tag
-# that these vaults must have so they'll follow the global chance for placing a
-# ghost vault on a level.
+# Vaults that place player ghosts and place in only in the Vaults branch. See
+# the ghost vault guidelines in docs/develop/levels/guidelines.md. All vaults
+# here should call the function ghost_setup() in the following way:
 #
+#     ghost_setup(_G, true, false)
+#
+# This will ensure the vault will place only as a ghost vault in the Vaults
+# branch and nowhere else.
+
 # Do not use other tag selectors like vaults_room and vaults_hard in these
 # vaults, however any of the other standard vault room tags for orientation
 # etc. are fine. Set a different WEIGHT to make a specific vault more or less
@@ -14,17 +17,17 @@
 ################################################################################
 
 : crawl_require("dlua/ghost.lua")
-: crawl_require("dlua/vault.lua")
 
-NAME:   advil_vaults_ghost_guards
-TAGS:   allow_dup
-KITEM:  12 = superb_item / star_item
-KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
-            vault warden
-KMONS:  2 = vault warden
-KMONS:  3 = player ghost
+NAME:    advil_vaults_ghost_guards
+TAGS:    allow_dup
+# Generates a third loot item if the shuffle produces a second ghost.
+: ghost_good_loot(_G, "23")
+KMONS:   1 = vault guard / ironbound convoker / ironbound preserver / \
+             vault warden
+KMONS:   2 = vault warden
+KMONS:   3 = player ghost
 SHUFFLE: 13
-: vaults_ghost_setup(_G)
+: ghost_setup(_G, true, false)
 MAP
 ........
 ........
@@ -37,16 +40,16 @@ MAP
 ENDMAP
 
 # based on st_lines
-NAME:   advil_vaults_ghost_lines
-TAGS:   allow_dup
-KITEM:  123 = superb_item / star_item
-KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
-            vault warden
-KMONS:  2 = vault warden
-KMONS:  3 = player ghost
+NAME:    advil_vaults_ghost_lines
+TAGS:    allow_dup
+: ghost_good_loot(_G, "23")
+KMONS:   1 = vault guard / ironbound convoker / ironbound preserver / \
+             vault warden
+KMONS:   2 = vault warden
+KMONS:   3 = player ghost
 SHUFFLE: 1239
-SUBST: 9 = 98
-: vaults_ghost_setup(_G)
+SUBST:   9 = 98
+: ghost_setup(_G, true, false)
 MAP
 ........
 nnn==nnn
@@ -54,429 +57,4 @@ nnn==nnn
 ..=31=..
 nnn==nnn
 ........
-ENDMAP
-
-NAME:   gammafunk_vaults_ghost_grave
-TAGS:   allow_dup
-TAGS:   vaults_orient_w
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, ".")
-KMONS:  p = withered plant
-KMONS:  O = player ghost
-SUBST:  t : tp
-TILE:   G = dngn_gravestone
-TILE:   t = dngn_tree_dead
-COLOUR: t = brown
-: set_feature_name("granite_statue", "a gravestone")
-: set_feature_name("tree", "dead tree")
-: vaults_ghost_setup(_G)
-MAP
-..x.....
-..x.....
-..n.dt..
-..=.OGt.
-..n.et..
-..x.....
-..x.....
-ENDMAP
-
-NAME:   gammafunk_vaults_ghost_split
-TAGS:   allow_dup
-KMONS:  O = player ghost
-: ghost_good_loot(_G)
-SUBST:  fg = |*, p : b., q : b., b : xbcv
-NSUBST: D = 0 / 2=0. / 2=9 / 2=9. / 8 / 2=8. / .
-: vaults_ghost_setup(_G)
-MAP
-.............
-.............
-..xxxnnnxxx..
-..nD..D..Dx..
-..n..qpq..x..
-..=.Dpqpe.n..
-..=...OgdDn..
-..=.Dpqpf.n..
-..n..qpq..x..
-..nD..D..Dx..
-..xxxnnnxxx..
-.............
-.............
-ENDMAP
-
-NAME:    gammafunk_vaults_ghost_cemetery
-TAGS:    vaults_orient_s allow_dup
-KMONS:   DFH = player ghost
-KMONS:   p = withered plant
-# 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.
-SHUFFLE: FfrHhs / ZyzHhs / ZyzHhs / FfrZyz / FfrZyz / FfrZyz / ZyzZyz / \
-         ZyzZyz / ZyzZyz / ZyzZyz / ZyzZyz / ZyzZyz
-: ghost_good_loot(_G)
-# 1.5 items per ghost. One 'd' glyph and one 'e' glyph are used by the good
-# loot items, so we don't replace those.
-NSUBST:  d = d / |*.., e = e / |*.., f = |* / |*.., h = 2=|* / |*..
-SUBST:   qrs = G, Z = ., y = p, z = V, t : tp
-TILE:    G = dngn_gravestone
-TILE:    t = dngn_tree_dead
-: set_feature_name("granite_statue", "a gravestone")
-: vaults_ghost_setup(_G)
-MAP
-qd-frf-eq
-dD--F--De
----------
-h-------h
-sH-----Hs
-h-------h
-xnn===nnx
-.........
-.........
-ENDMAP
-
-NAME:   gammafunk_vaults_ghost_necromancy
-TAGS:   vaults_orient_w allow_dup
-KMONS:  O = player ghost
-MONS:   simulacrum place:Vaults:5 / spectre place:Vaults:5, lich
-: ghost_good_loot(_G)
-SUBST:  fg = |*, h = *, i = %$, j = -
-NSUBST: 1 = 12 / 1, - = 3=1 / 6=1. / .
-: vaults_ghost_setup(_G)
-MAP
-..xxxxxxx
-..n1x1x1x
-..n---igx
-..=---exx
-..=---dOx
-..=---fxx
-..n---jhx
-..n1x1x1x
-..xxxxxxx
-ENDMAP
-
-NAME:   gammafunk_vaults_ghost_spectres
-TAGS:   vaults_orient_w
-KMONS:  O = player ghost
-MONS:   wraith / shadow
-MONS:   freezing wraith / shadow wraith / phantasmal warrior / flayed ghost w:5
-MONS:   eidolon, revenant / curse skull
-: ghost_good_loot(_G)
-SUBST:  fg = |*, h = *, i = %$--
-NSUBST: D = 2 / 3 / 2=3- / 4-, - = 2=1 / 2=1. / 2 / 3=2. / .
-: vaults_ghost_setup(_G)
-MAP
-..xxxxxxx
-..nDxDxDx
-..n----gx
-..=---exx
-..=--idOx
-..=---fxx
-..n----hx
-..nDxDxDx
-..xxxxxxx
-ENDMAP
-
-NAME:   gammafunk_vaults_ghost_fury_of_okawaru
-TAGS:   vaults_orient_s
-KFEAT:  O = altar_okawaru
-KMONS:  OP = player ghost
-# Bad Oka gift.
-KITEM:  O = hat damaged ident:all / cloak damaged ident:all / \
-        animal skin damaged ident:all / robe damaged ident:all / \
-        leather armour damaged ident:all / whip damaged ident:all / \
-        spear damaged ident:all / short sword damaged ident:all / \
-        dagger damaged ident:all / hand axe damaged ident:all / \
-        scythe damaged ident:all / club damaged ident:all / \
-        hunting sling damaged ident:all
-KITEM:  P = robe plus:-8 randart ident:all
-# An "Oka weapon gift" using the more useful types on 'd'
-ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
-        double sword good_item w:5 / demon blade good_item w:5 / \
-        triple sword good_item w:5 /  morningstar good_item / \
-        eveningstar good_item w:5 / demon whip good_item w:5 / \
-        dire flail good_item / great mace good_item / broad axe good_item / \
-        battleaxe good_item / executioner's axe good_item w:5 / \
-        demon trident good_item w:5 / glaive good_item / \
-        bardiche good_item w:5 / lajatang good_item w:5
-# An "Oka armour gift" on 'e'
-ITEM:   any armour good_item / any armour randart
-MONS:   centaur warrior / tengu warrior / orc knight / naga warrior / \
-        merfolk impaler / merfolk javelineer / deep elf knight / \
-        deep elf archer
-MONS:   minotaur / stone giant / orc warlord
-MONS:   fire giant / frost giant / deep elf blademaster / \
-        deep elf master archer / titan
-# Rarely place the robe of misfortune or a bad randart robe.
-SUBST:  O = O:49 P:1, fgh = |*, i = *%, j = %$..
-NSUBST: - = 3=1 / 4=1. / 2=2 / 2=2. / 2=3. / 3... / .
-: vaults_ghost_setup(_G)
-MAP
-GvvvvvvvG
--igvOvhj-
----edf---
--vG---Gv-
----------
--vG---Gv-
----------
-nnn===nnn
-.........
-.........
-ENDMAP
-
-NAME:   ebering_vaults_ghost_inner_flame
-TAGS:   vaults_orient_w
-KPROP:  xn'O = w:5 bloody / nothing
-KMONS:  O = player_ghost
-KITEM:  O = scroll of immolation ident:all
-NSUBST: ' = |* / |*$ / 998 / 2=F. / .
-MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
-            pow_min = 10000, pow_max = 10000, delay = 1, \
-            size = 1, walk_dist = 0, start_clouds = 1 }
-: vaults_ghost_setup(_G)
-MAP
-..x....
-..x''..
-..n'''.
-..='O'.
-..n'''.
-..x''..
-..x....
-ENDMAP
-
-NAME:   ebering_vaults_ghost_reflecting_pool
-TAGS:   vaults_orient_s no_pool_fixup allow_dup
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, ".")
-KMONS:  O = player_ghost
-KFEAT:  O = shallow_water
-: vaults_ghost_setup(_G)
-MAP
-.....
-.dOe.
-..w..
-..w..
-..w..
-..W..
-xn=nx
-.....
-.....
-ENDMAP
-
-NAME:   ebering_vaults_ghost_disaster_area
-TAGS:   vaults_orient_s allow_dup
-KMONS:  O = player ghost
-NSUBST: ' = d / e / 8=wWl / .
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, ".")
-SUBST:  P = GTV
-: vaults_ghost_setup(_G)
-MAP
-'xx'x'x'
-x''O''x'
-'x'''''x
-''P'x''x
-x'''''''
-xnn==nnx
-........
-........
-ENDMAP
-
-NAME:   ebering_vaults_ghost_gozag
-: kitem("D = " .. dgn.loot_potions)
-# If ghost selectors ever happen this should be a gozag ghost
-KMONS:  O = player_ghost
-# D and F place an 8 monster plus potion or shop, respectively. D and J place
-# an abandoned shop for decor.
-KMONS:  DF = 8
-MONS:   obsidian statue
-NSUBST: M = 0 / 2=09 / 9 / 2=D / J
-SUBST:  D = DF
-# The ' glyph is used to place gold.
-: setup_gozag_gold(_G)
-KFEAT:  ODJ = abandoned_shop
-KFEAT:  F = antiques shop
-KFEAT:  _ = altar_gozag
-TILE:   G = dngn_golden_statue
-FTILE:  -_DFJ$0189OG = floor_limestone
-COLOUR: G = yellow
-: set_feature_name("granite_statue", "golden statue")
-: set_feature_name("stone_wall", "golden wall")
-: vaults_ghost_setup(_G)
-MAP
-.............
-.............
-...ccccccc...
-..ccMGOGMcc..
-..cM'''''Mc..
-..cG''1''Gc..
-..cM''_''Mc..
-..cc'''''cc..
-...nn===nn...
-.............
-.............
-ENDMAP
-
-NAME:   ebering_vaults_ghost_xom
-TAGS:   vaults_orient_s
-: lone_ghost_guarded_loot(_G, "O")
-: lone_ghost_extra_loot(_G, ".")
-: setup_xom_dancing_weapon(_G)
-KMONS:  O = player_ghost
-KFEAT:  _ = altar_xom
-: vaults_ghost_setup(_G)
-MAP
-...1...
-..d_e..
-...O...
-xxn=nxx
-.......
-.......
-ENDMAP
-
-NAME:   biasface_vaults_ghost_orc_armoury
-TAGS:   vaults_orient_s
-:item(dgn.good_aux_armour)
-ITEM:   any armour good_item, any weapon good_item, any jewellery good_item
-: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-KMONS:  O = player ghost
-MONS:   orc, orc warrior, orc knight, orc high priest, stone giant, orc warlord
-: setup_armoury_orcs(_G)
-NSUBST: - = 2=1 / 2=1. / 2=2 / 2=2. / 3=3 / 3=3. / 4 / 2=4. / F / 5 / 2=5. \
-            / 2=6F..
-KFEAT:  _ = altar_beogh
-: vaults_ghost_setup(_G)
-MAP
-I---fd_eg---I
-------h------
--xIx--I--xIx-
--xnx--O--xnx-
-----xxnxx----
-.............
-nnnnn===nnnnn
-I...........I
-.............
-ENDMAP
-
-NAME:   ploomutoo_gammafunk_vaults_ghost_potion_laboratory
-TAGS:   vaults_orient_s
-WEIGHT: 5
-ITEM:   potion of mutation ident:type q:1
-: item(dgn.loot_potions)
-ITEM:   hat randart / robe randart / pair of gloves randart / \
-        pair of boots randart / cloak randart
-KITEM:  O = potion of cancellation q:2 ident:type
-KMONS:  O = player ghost
-MONS:   shapeshifter, glowing orange brain, very ugly thing
-MONS:   glowing shapeshifter, cacodemon, tentacled monstrosity
-NSUBST: - = 2=P / 2=P; / ;, ' = 2=P` / `
-NSUBST: ; = d / d. / 4=e / 4=3 / 4=3. / 2 / 2. / 2=6 / 2=6. / .
-NSUBST: " = 3=d / d. / e / f / ", ` = 4=1 / 4=1. / 4 / 3=4. / 5 / 2=5. / .
-MARKER: P = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
-                pow_max = 5, delay = 5, start_clouds = 3, size = 1, \
-                spread_rate = 0, excl_rad = 0 }
-MARKER: U = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
-                pow_max = 5, delay = 5, start_clouds = 3, size = 2, \
-                spread_rate = 0, excl_rad = 0 }
-: vaults_ghost_setup(_G)
-MAP
-bU"P"Ub
-"""O"""
-'''''''
-'b'''b'
-```````
-nn===nn
--------
--x---x-
-x-x-x-x
--x---x-
-;;;x;;;
-;x;;;x;
-;;;;;;;
-nn===nn
-.......
-.......
-ENDMAP
-
-NAME:   gammafunk_vaults_ghost_tricky_traps
-TAGS:   vaults_orient_s
-KFEAT:  ^ = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:16
-KFEAT:  ' = zot trap / dispersal trap w:5 / alarm trap w:1 / floor w:8
-: kitem("O = " .. dgn.randart_aux_armour)
-: ghost_good_loot(_G)
-KMONS:  O = player ghost
-MONS:   boggart, rakshasa
-SUBST:  f = |*, g = *, h = %$
-NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / 2 / .
-SUBST:  G : GGtU
-: vaults_ghost_setup(_G)
-MAP
-G-'fdOeg'-G
--n-n-h-n-n-
-'-'-'-'-'-'
--'-n-n-n-'-
-G-'-'-'-'-G
-xxnn===nnxx
-^.^.....^.^
-.^.^.^.^.^.
-^.^.^.^.^.^
-.^.^.^.^.^.
-ENDMAP
-
-NAME:    gammafunk_vaults_ghost_crypt
-TAGS:    vaults_orient_s
-: item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-# Always place one randart aux, one randart jewel, and one nice book, each
-# using the possible ghost locations.
-: kitem("D = " .. dgn.randart_aux_armour)
-KITEM:   EHK = any jewellery randart
-KITEM:   FJL = randbook owner:Kikubaaqudgha disc:necromancy numspells:6 \
-               / necronomicon / manual of necromancy
-KITEM:   12 = superb_item / star_item
-KMONS:   DEF = player ghost
-KMONS:   HJ1 =  lich
-KMONS:   KL2 =  ancient lich / dread lich
-# 1/7 chance for 3 ghosts, 2/7 chance for 2 ghosts, 4/7 chance for 1 ghost.
-# Any ghost that doesn't place will place a depth-appropriate lich instead.
-SHUFFLE: EF / EJ / EJ / HJ / HJ / HJ / HJ
-# For later branches, guarantee at least one ancient lich and upgrade ordinary
-# liches to ancient or dread liches.
-SUBST:   H = HHK, J = JJL
-NSUBST:  1 = 2 / 112
-# 1.5 loot items per ghost/lich total. Mix in good loot scrolls and potions.
-SUBST:   d = dd|*----, V = VY
-KFEAT:   _ = altar_kikubaaqudgha
-FTILE:   -d|*%$ODEFHJKL12VY_ = floor_pebble_brown / floor_pebble_darkgray
-: vaults_ghost_setup(_G)
-MAP
- xxxDxxx
-xxExdxFxx
-1ddV_Vdd1
-x-------x
-xnn===nnx
-.........
-.........
-ENDMAP
-
-NAME:   gammafunk_vaults_ghost_door_vault
-WEIGHT: 2
-: ghost_good_loot(_G, "45")
-KMONS:  1 = 9
-KMONS:  2 = 8
-KMONS:  345 = player_ghost
-# Ghosts on 4 and 5 will get upgraded loot.
-NSUBST: 3 = 4 / 5 / 3, 1 = 5=23 / 3 / 1
-: door_vault_setup(_G)
-: vaults_ghost_setup(_G)
-MAP
-..............
-..............
-..aaaaaaaaaa..
-..a++++++++a..
-..a++++++++a..
-..a++1111++a..
-..a++1331++a..
-..a++1331++a..
-..a++1111++a..
-..a++++++++a..
-..a++++++++a..
-..aaaaaaaaaa..
-..............
-..............
 ENDMAP

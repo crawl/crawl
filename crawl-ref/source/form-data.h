@@ -146,6 +146,7 @@ static const form_entry formdata[] =
     { { "draining attack", "Your unarmed attacks are suffused with negative energy."},
       { "torment immunity", "You are immune to unholy pain and torment."},
       { "", "Your necromantic spells are more powerful." },
+      { "no potions", "<lightred>You cannot drink.</lightred>" },
     }
 },
 
@@ -230,7 +231,7 @@ static const form_entry formdata[] =
     FC_ENABLE, FC_FORBID, FC_FORBID, false,
     "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour",
     {
-        {"insubstial", "Your tiny insubstantial body is highly resistant to most damage types." },
+        {"insubstantial", "Your tiny insubstantial body is highly resistant to most damage types." },
     }
 },
 

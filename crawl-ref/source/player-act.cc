@@ -847,19 +847,6 @@ int player::constriction_damage(bool direct) const
                 calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
 }
 
-/**
- * How many heads does the player have, in their current form?
- *
- * Currently only checks for hydra form.
- */
-int player::heads() const
-{
-    if (props.exists(HYDRA_FORM_HEADS_KEY))
-        return props[HYDRA_FORM_HEADS_KEY].get_int();
-    return 1; // not actually always true
-}
-
-
 bool player::is_dragonkind() const
 {
     if (actor::is_dragonkind())

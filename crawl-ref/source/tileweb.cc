@@ -591,6 +591,15 @@ void TilesFramework::_send_version()
     send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
 }
 
+void TilesFramework::send_milestone(const xlog_fields &xl)
+{
+    JsonWrapper j = xl.xlog_json();
+    json_append_member(j.node, "msg", json_mkstring("milestone"));
+    write_message("*");
+    write_message("%s", j.to_string().c_str());
+    finish_message();
+}
+
 void TilesFramework::_send_options()
 {
     json_open_object();

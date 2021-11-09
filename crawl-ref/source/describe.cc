@@ -55,6 +55,7 @@
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "mutation.h" // mutation_name, get_mutation_desc
 #include "output.h"
 #include "potion.h"
 #include "ranged-attack.h" // describe_to_hit
@@ -96,12 +97,6 @@ static void _print_bar(int value, int scale, string name,
                        ostringstream &result, int base_value = INT_MAX);
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
-
-int count_desc_lines(const string &_desc, const int width)
-{
-    string desc = get_linebreak_string(_desc, width);
-    return count(begin(desc), end(desc), '\n');
-}
 
 int show_description(const string &body, const tile_def *tile)
 {
@@ -1406,6 +1401,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
                 "magic, it inflicts extra damage on living creatures.";
+            if (is_useless_skill(SK_NECROMANCY))
+            {
+                description += " Your inability to study Necromancy prevents "
+                               "you from drawing on the full power of this "
+                               "weapon.";
+            }
             break;
         case SPWPN_DISTORTION:
             description += "It warps and distorts space around it, and may "
@@ -2477,8 +2478,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     }
 
     // mention that permanent trees are usually flammable
-    // (expect for autumnal trees in Wucad Mu's Monastery)
-    if (feat_is_flammable(feat) && !is_temp_terrain(pos)
+    // (except for autumnal trees in Wucad Mu's Monastery)
+    if (feat_is_flammable(feat) && !is_temp_terrain(pos) && in_bounds(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         if (feat == DNGN_TREE)
@@ -2490,7 +2491,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     }
 
     // mention that diggable walls are
-    if (feat_is_diggable(feat)
+    if (feat_is_diggable(feat) && in_bounds(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         long_desc += "\nIt can be dug through.";
@@ -3400,7 +3401,7 @@ static void _get_spell_description(const spell_type spell,
         {
             description += make_stringf("%s can sustain at most %s creature%s "
                                "summoned by this spell.\n",
-                               mon_owner->full_name(DESC_PLAIN).c_str(),
+                               uppercase_first(mon_owner->full_name(DESC_THE)).c_str(),
                                number_in_words(limit).c_str(),
                                limit > 1 ? "s" : "");
         }
@@ -3442,12 +3443,14 @@ static void _get_spell_description(const spell_type spell,
  * @param inf[out]  The spell's description is concatenated onto the end of
  *                  inf.body.
  */
+#ifdef USE_TILE_LOCAL
 void get_spell_desc(const spell_type spell, describe_info &inf)
 {
     string desc;
     _get_spell_description(spell, nullptr, desc);
     inf.body << desc;
 }
+#endif
 
 /**
  * Examine a given spell. List its description and details, and handle
@@ -3558,10 +3561,27 @@ void describe_deck(deck_type deck)
     show_description(inf);
 }
 
+/**
+ * Describe a given mutation. List its description and details.
+ */
+void describe_mutation(mutation_type mut)
+{
+    describe_info inf;
+    inf.title = uppercase_first(mutation_name(mut)).c_str();
+    if (you.has_mutation(mut))
+    {
+        inf.title += make_stringf(" (level %d/%d)",
+                                  you.get_mutation_level(mut),
+                                  mutation_max_levels(mut));
+    }
+    inf.body << get_mutation_desc(mut);
+    show_description(inf);
+}
+
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
-    const int subsp = mi.draco_or_demonspawn_subspecies();
+    const int subsp = mi.draconian_subspecies();
 
     if (subsp != mi.type)
     {
@@ -3612,59 +3632,6 @@ static string _describe_draconian(const monster_info& mi)
         break;
     default:
         break;
-    }
-
-    return description;
-}
-
-static string _describe_demonspawn_role(monster_type type)
-{
-    switch (type)
-    {
-    case MONS_BLOOD_SAINT:
-        return "It weaves powerful and unpredictable spells of devastation.";
-    case MONS_WARMONGER:
-        return "It is devoted to combat, disrupting the magic of its foes as "
-               "it battles endlessly.";
-    case MONS_CORRUPTER:
-        return "It corrupts space around itself, and can twist even the very "
-               "flesh of its opponents.";
-    case MONS_BLACK_SUN:
-        return "It shines with an unholy radiance, and wields powers of "
-               "darkness from its devotion to the deities of death.";
-    default:
-        return "";
-    }
-}
-
-static string _describe_demonspawn_base(int species)
-{
-    switch (species)
-    {
-    case MONS_MONSTROUS_DEMONSPAWN:
-        return "It is more beast now than whatever species it is descended from.";
-    case MONS_GELID_DEMONSPAWN:
-        return "It is covered in icy armour.";
-    case MONS_INFERNAL_DEMONSPAWN:
-        return "It gives off an intense heat.";
-    case MONS_TORTUROUS_DEMONSPAWN:
-        return "It oozes dark energies.";
-    }
-    return "";
-}
-
-static string _describe_demonspawn(const monster_info& mi)
-{
-    string description;
-    const int subsp = mi.draco_or_demonspawn_subspecies();
-
-    description += _describe_demonspawn_base(subsp);
-
-    if (subsp != mi.type)
-    {
-        const string demonspawn_role = _describe_demonspawn_role(mi.type);
-        if (!demonspawn_role.empty())
-            description += " " + demonspawn_role;
     }
 
     return description;
@@ -3724,15 +3691,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
  */
 static const char* _special_flavour_prefix(attack_flavour flavour)
 {
-    switch (flavour)
-    {
-        case AF_KITE:
-            return "retreat from adjacent foes and ";
-        case AF_SWOOP:
-            return "swoop behind its foe and ";
-        default:
-            return "";
-    }
+    return flavour == AF_SWOOP ? "swoop behind its foe and " : "";
 }
 
 /**
@@ -3794,7 +3753,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_REACH_TONGUE,      "deal extra acid damage" },
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
-        { AF_KITE,              "" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
     };
@@ -3822,11 +3780,8 @@ static string _flavour_effect(attack_flavour flavour, int HD)
     const int flavour_dam = flavour_damage(flavour, HD, false);
     const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
 
-    if (!flavour_triggers_damageless(flavour)
-        && flavour != AF_KITE && flavour != AF_SWOOP)
-    {
+    if (!flavour_triggers_damageless(flavour) && flavour != AF_SWOOP)
         return " to " + flavour_desc + " if any damage is dealt";
-    }
 
     return " to " + flavour_desc;
 }
@@ -3885,13 +3840,18 @@ static string _monster_attacks_description(const monster_info& mi)
         const item_def* weapon = _weapon_for_attack(mi, i);
         mon_attack_info attack_info = { attack, weapon };
 
-        ++attack_counts[attack_info];
-    }
+        // Multi-headed monsters must always have their multi-attack in the
+        // first slot.
+        if ((mons_genus(mi.base_type) == MONS_HYDRA
+             || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL)
+            && i == 0)
+        {
+            attack_counts[attack_info] = mi.num_heads;
+        }
+        else
+            ++attack_counts[attack_info];
 
-    // Hydrae have only one explicit attack, which is repeated for each head.
-    if (mons_genus(mi.base_type) == MONS_HYDRA)
-        for (auto &attack_count : attack_counts)
-            attack_count.second = mi.num_heads;
+    }
 
     vector<string> attack_descs;
     for (const auto &attack_count : attack_counts)
@@ -4104,7 +4064,7 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
     const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
     const bool skilled = mons_class_flag(mi.type, melee ? M_FIGHTER : M_ARCHER);
-    const int base_to_hit = mon_to_hit_base(mi.hd, skilled, !melee);
+    const int base_to_hit = mon_to_hit_base(mi.hd, skilled);
     const int weapon_to_hit = weapon ? weapon->plus + property(*weapon, PWPN_HIT) : 0;
     const int total_base_hit = base_to_hit + weapon_to_hit;
 
@@ -4260,8 +4220,8 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
  */
 string _monster_habitat_description(const monster_info& mi)
 {
-    const monster_type type = mons_is_job(mi.type)
-                              ? mi.draco_or_demonspawn_subspecies()
+    const monster_type type = mons_is_draconian_job(mi.type)
+                              ? mi.draconian_subspecies()
                               : mi.type;
     if (mons_class_is_stationary(type))
         return "";
@@ -4772,19 +4732,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
     }
 
-    case MONS_MONSTROUS_DEMONSPAWN:
-    case MONS_GELID_DEMONSPAWN:
-    case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_BLOOD_SAINT:
-    case MONS_WARMONGER:
-    case MONS_CORRUPTER:
-    case MONS_BLACK_SUN:
-    {
-        inf.body << "\n" << _describe_demonspawn(mi) << "\n";
-        break;
-    }
-
     case MONS_PLAYER_GHOST:
         inf.body << "The apparition of " << get_ghost_description(mi) << ".\n";
         if (mi.props.exists(MIRRORED_GHOST_KEY))
@@ -5287,7 +5234,7 @@ void describe_skill(skill_type skill)
     show_description(inf, &tile);
 }
 
-// only used in tiles
+#ifdef USE_TILE_LOCAL // only used in tiles
 string get_command_description(const command_type cmd, bool terse)
 {
     string lookup = command_to_name(cmd);
@@ -5310,6 +5257,7 @@ string get_command_description(const command_type cmd, bool terse)
 
     return result.substr(0, result.length() - 1);
 }
+#endif
 
 /**
  * Provide auto-generated information about the given cloud type. Describe

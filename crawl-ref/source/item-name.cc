@@ -421,6 +421,8 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
+    "weak",
+    "vuln",
     "debug",
 };
 
@@ -446,6 +448,8 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
+    "weakness",
+    "vulnerability",
     "debug",
 };
 
@@ -471,8 +475,14 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
+    "weakening",
+    "will-reducing",
     "debug",
 };
+
+COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
+COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
+COMPILE_CHECK(ARRAYSZ(weapon_brands_adj) == NUM_SPECIAL_WEAPONS);
 
 static const set<brand_type> brand_prefers_adj =
             { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
@@ -486,9 +496,6 @@ static const set<brand_type> brand_prefers_adj =
  */
 const char* brand_type_name(brand_type brand, bool terse)
 {
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
-
     if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
         return terse ? "buggy" : "bugginess";
 
@@ -497,9 +504,6 @@ const char* brand_type_name(brand_type brand, bool terse)
 
 const char* brand_type_adj(brand_type brand)
 {
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
-
     if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
         return "buggy";
 
@@ -2000,13 +2004,6 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify)
     return true;
 }
 
-void pack_item_identify_message(int base_type, int sub_type)
-{
-    for (const auto &item : you.inv)
-        if (item.defined() && item.is_type(base_type, sub_type))
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-}
-
 bool get_ident_type(const item_def &item)
 {
     if (is_artefact(item))
@@ -2839,7 +2836,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             switch (ego)
             {
             case SPARM_SPIRIT_SHIELD:
-                return you.spirit_shield(false, false);
+                return you.spirit_shield(false);
             case SPARM_REPULSION:
                 return temp && have_passive(passive_t::upgraded_storm_shield)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
@@ -2885,7 +2882,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
-            return you_worship(GOD_ASHENZARI);
+            return have_passive(passive_t::identify_items);
         default:
             return false;
         }
@@ -2966,7 +2963,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                     || !ignore_faith_reason().empty();
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.spirit_shield(false, false) || you.has_mutation(MUT_HP_CASTING);
+            return you.spirit_shield(false) || you.has_mutation(MUT_HP_CASTING);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;

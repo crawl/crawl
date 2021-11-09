@@ -47,9 +47,7 @@ spret cast_call_imp(int pow, god_type god, bool fail);
 bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
                        int spell = 0, bool friendly = true);
 spret cast_summon_demon(int pow);
-spret cast_shadow_creatures(int st = SPELL_SHADOW_CREATURES,
-                            god_type god = GOD_NO_GOD,
-                            bool fail = false);
+spret summon_shadow_creatures();
 spret cast_summon_horrible_things(int pow, god_type god, bool fail);
 bool can_cast_malign_gateway();
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
@@ -78,7 +76,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     bool quiet = false, bool apply_lovelessness = true,
                     monster** mon = nullptr, int* motions = nullptr);
 
-coord_def find_animatable_skeleton(coord_def c);
+vector<coord_def> find_animatable_skeletons(coord_def c);
 spret cast_animate_skeleton(int pow, god_type god, bool fail);
 spret cast_animate_dead(int pow, god_type god, bool fail);
 int animate_dead(actor *caster, int pow, beh_type beha,

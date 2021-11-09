@@ -1167,8 +1167,10 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_ROCK_WALL, { "rock", "wall" } },
     { DNGN_SLIMY_WALL, { "rock", "wall" } },
     { DNGN_STONE_WALL, { "rock", "wall" } },
+    { DNGN_PERMAROCK_WALL, { "rock", "wall" } },
     { DNGN_CLEAR_ROCK_WALL, { "rock", "wall" } },
     { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
+    { DNGN_CLEAR_PERMAROCK_WALL, { "rock", "wall" } },
     { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
     { DNGN_GRANITE_STATUE, { "rock", "statue" } },
     { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
@@ -2196,20 +2198,6 @@ static bool maybe_abort_ignite()
 }
 
 /**
- * Does Ignite Poison affect the given creature?
- *
- * @param act       The creature in question.
- * @return          Whether Ignite Poison can directly damage the given
- *                  creature (not counting clouds).
- */
-bool ignite_poison_affects(const actor* act)
-{
-    if (act->is_player())
-        return you.duration[DUR_POISONING];
-    return act->as_monster()->has_ench(ENCH_POISON);
-}
-
-/**
  * Does Ignite Poison do something to this cell?
  *
  * @param where       Where to look
@@ -2790,7 +2778,7 @@ void forest_damage(const actor *mon)
                 int dmg = 0;
                 string msg;
 
-                if (!apply_chunked_AC(1, foe->evasion(ev_ignore::none, mon)))
+                if (!apply_chunked_AC(1, foe->evasion(false, mon)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch",
@@ -3056,6 +3044,39 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             }
         }
     }
+}
+
+spret cast_inner_flame(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const monster* mons = monster_at(target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You can't see anything there.");
+        return spret::abort;
+    }
+
+    if (mons->has_ench(ENCH_INNER_FLAME))
+    {
+        mprf("%s is already burning with an inner flame!",
+             mons->name(DESC_THE).c_str());
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return spret::abort;
+
+    bolt beam;
+    beam.source = mons->pos();
+    beam.target = mons->pos();
+    beam.set_agent(&you);
+
+    return zapping(ZAP_INNER_FLAME, pow, beam, false, nullptr, fail);
 }
 
 spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
@@ -3670,6 +3691,9 @@ void actor_apply_toxic_bog(actor * act)
 
     if (mons && mons->type == MONS_FENSTRIDER_WITCH)
         return; // stilting above the muck!
+
+    if (player && you.duration[DUR_NOXIOUS_BOG])
+        return;
 
     actor *oppressor = nullptr;
 

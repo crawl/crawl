@@ -124,8 +124,8 @@ bool monster_habitable_grid(const monster* mon,
 {
     // Zombified monsters enjoy the same habitat as their original,
     // except lava-based monsters.
-    const monster_type mt = mons_is_job(mon->type)
-        ? draco_or_demonspawn_subspecies(*mon)
+    const monster_type mt = mons_is_draconian_job(mon->type)
+        ? draconian_subspecies(*mon)
         : fixup_zombie_type(mon->type, mons_base_type(*mon));
 
     bool type_safe = monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN);
@@ -419,19 +419,11 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place);
 }
 
-bool drac_colour_incompatible(int drac, int colour)
-{
-    return drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN;
-}
-
 bool needs_resolution(monster_type mon_type)
 {
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
            || mon_type == RANDOM_NONBASE_DRACONIAN
            || mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON
-           || mon_type == RANDOM_DEMONSPAWN
-           || mon_type == RANDOM_BASE_DEMONSPAWN
-           || mon_type == RANDOM_NONBASE_DEMONSPAWN
            || _is_random_monster(mon_type);
 }
 
@@ -449,18 +441,22 @@ monster_type resolve_monster_type(monster_type mon_type,
 
     if (mon_type == RANDOM_DRACONIAN)
     {
-        // Pick any random drac, constrained by colour if requested.
-        do
+        if (base_type != MONS_NO_MONSTER)
         {
+            // Pick the requested colour, if applicable.
+            if (coinflip())
+                mon_type = base_type;
+            else
+                mon_type = draconian_job_for_colour(base_type);
+        }
+        else
+        {
+            // Pick any random drac.
             if (coinflip())
                 mon_type = random_draconian_monster_species();
             else
                 mon_type = random_draconian_job();
         }
-        while (base_type != MONS_PROGRAM_BUG
-               && mon_type != base_type
-               && (mons_species(mon_type) == mon_type
-                   || drac_colour_incompatible(mon_type, base_type)));
     }
     else if (mon_type == RANDOM_BASE_DRACONIAN)
         mon_type = random_draconian_monster_species();
@@ -468,23 +464,6 @@ monster_type resolve_monster_type(monster_type mon_type,
         mon_type = random_draconian_job();
     else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
         mon_type = summon_any_demon(mon_type, true);
-    else if (mon_type == RANDOM_DEMONSPAWN)
-    {
-        do
-        {
-            mon_type =
-                static_cast<monster_type>(
-                    random_range(MONS_FIRST_DEMONSPAWN,
-                                 MONS_LAST_DEMONSPAWN));
-        }
-        while (base_type != MONS_PROGRAM_BUG
-               && mon_type != base_type
-               && mons_species(mon_type) == mon_type);
-    }
-    else if (mon_type == RANDOM_BASE_DEMONSPAWN)
-        mon_type = random_demonspawn_monster_species();
-    else if (mon_type == RANDOM_NONBASE_DEMONSPAWN)
-        mon_type = random_demonspawn_job();
 
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))
@@ -1053,11 +1032,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
             mon->god = GOD_QAZLAL;
         // Classed demonspawn.
-        else if (mg.cls == MONS_BLOOD_SAINT)
+        else if (mg.cls == MONS_DEMONSPAWN_BLOOD_SAINT)
             mon->god = GOD_MAKHLEB;
-        else if (mg.cls == MONS_BLACK_SUN)
+        else if (mg.cls == MONS_DEMONSPAWN_BLACK_SUN)
             mon->god = GOD_KIKUBAAQUDGHA;
-        else if (mg.cls == MONS_CORRUPTER)
+        else if (mg.cls == MONS_DEMONSPAWN_CORRUPTER)
             mon->god = GOD_LUGONU;
         else
         {
@@ -1142,15 +1121,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.hd != 0)
     {
         int bonus_hp = 0;
-        if (mons_is_demonspawn(mg.cls)
-            && mg.cls != MONS_DEMONSPAWN
-            && mons_species(mg.cls) == MONS_DEMONSPAWN)
-        {
-            // Nonbase demonspawn get bonuses from their base type.
-            const monsterentry *mbase =
-                get_monster_data(draco_or_demonspawn_subspecies(*mon));
-            bonus_hp = mbase->avg_hp_10x;
-        }
         mon->set_hit_dice(mg.hd);
         mon->props[VAULT_HD_KEY] = mg.hd;
         // Re-roll HP.
@@ -1214,11 +1184,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // from that, the value is slightly randomised to avoid
         // simultaneous die-offs of mushroom rings.
         mon->add_ench(ENCH_SLOWLY_DYING);
-    }
-    else if (mons_is_demonspawn(mon->type)
-             && draco_or_demonspawn_subspecies(*mon) == MONS_GELID_DEMONSPAWN)
-    {
-        mon->add_ench(ENCH_ICEMAIL);
     }
 
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
@@ -1699,7 +1664,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
     // handle zombies with jobs & ghostdemon zombies; they otherwise
     // wouldn't store enough information for us to recreate them right.
-    if (mons_is_job(ztype) || mons_is_ghost_demon(ztype))
+    if (mons_is_draconian_job(ztype) || mons_is_ghost_demon(ztype))
     {
         mon->props[ZOMBIE_BASE_AC_KEY] = mon->base_armour_class();
         mon->props[ZOMBIE_BASE_EV_KEY] = mon->base_evasion();
@@ -1723,25 +1688,6 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
         mon->flags   |= MF_NO_REGEN;
 
     roll_zombie_hp(mon);
-}
-
-bool downgrade_zombie_to_skeleton(monster* mon)
-{
-    if (mon->type != MONS_ZOMBIE || !mons_skeleton(mon->base_monster))
-        return false;
-
-    const int old_hp    = mon->hit_points;
-    const int old_maxhp = mon->max_hit_points;
-
-    mon->type           = MONS_SKELETON;
-    mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
-    roll_zombie_hp(mon);
-
-    // Scale the skeleton HP to the zombie HP.
-    mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
-    mon->hit_points     = max(mon->hit_points, 1);
-
-    return true;
 }
 
 /// Under what conditions should a band spawn with a monster?
@@ -1819,7 +1765,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
     { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_KNIGHT, {4, 8}, true }}}},
-    { MONS_KOBOLD_BRIGAND,      { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
+    { MONS_KOBOLD_BRIGAND,  { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
     { MONS_KILLER_BEE,      { {}, {{ BAND_KILLER_BEES, {2, 6} }}}},
     { MONS_CAUSTIC_SHRIKE,  { {}, {{ BAND_CAUSTIC_SHRIKE, {2, 5} }}}},
     { MONS_SHARD_SHRIKE,    { {}, {{ BAND_SHARD_SHRIKE, {1, 4} }}}},
@@ -1945,16 +1891,10 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_RAIJU,           { {}, {{ BAND_RAIJU, {2, 4} }}}},
     { MONS_SALAMANDER_MYSTIC, { {}, {{ BAND_SALAMANDERS, {2, 4} }}}},
     { MONS_SALAMANDER_TYRANT, { {0, 0, [](){ return !player_in_branch(BRANCH_GEHENNA); }}, {{ BAND_SALAMANDER_ELITES, {2, 5} }}}},
-    { MONS_MONSTROUS_DEMONSPAWN, { {2, 0, []() {
-        return !player_in_branch(BRANCH_WIZLAB); // hack for wizlab_wucad_mu
-    }},                             {{ BAND_MONSTROUS_DEMONSPAWN, {1, 3}}}}},
-    { MONS_GELID_DEMONSPAWN, { {2}, {{ BAND_GELID_DEMONSPAWN, {1, 3} }}}},
-    { MONS_INFERNAL_DEMONSPAWN, { {2}, {{ BAND_INFERNAL_DEMONSPAWN, {1, 3} }}}},
-    { MONS_TORTUROUS_DEMONSPAWN, {{2}, {{ BAND_TORTUROUS_DEMONSPAWN, {1, 3}}}}},
-    { MONS_BLOOD_SAINT,     { {}, {{ BAND_BLOOD_SAINT, {1, 4} }}}},
-    { MONS_WARMONGER,       { {}, {{ BAND_WARMONGER, {2, 4} }}}},
-    { MONS_CORRUPTER,       { {}, {{ BAND_CORRUPTER, {1, 4} }}}},
-    { MONS_BLACK_SUN,       { {}, {{ BAND_BLACK_SUN, {2, 4} }}}},
+    { MONS_DEMONSPAWN_BLOOD_SAINT, { {}, {{ BAND_BLOOD_SAINT, {1, 3} }}}},
+    { MONS_DEMONSPAWN_WARMONGER, { {}, {{ BAND_WARMONGER, {1, 3} }}}},
+    { MONS_DEMONSPAWN_CORRUPTER, { {}, {{ BAND_CORRUPTER, {1, 3} }}}},
+    { MONS_DEMONSPAWN_BLACK_SUN, { {}, {{ BAND_BLACK_SUN, {1, 3} }}}},
     { MONS_VASHNIA,         { {}, {{ BAND_VASHNIA, {3, 6}, true }}}},
     { MONS_ROBIN,           { {}, {{ BAND_ROBIN, {10, 13}, true }}}},
     { MONS_RAKSHASA,        { {2, 0, []() {
@@ -2412,7 +2352,40 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_GUARDIAN_SERPENT, 2},
                                   {MONS_IMPERIAL_MYRMIDON, 2}}}},
     // for wendigo ammo, mostly
-    { BAND_SIMULACRA,         {{{MONS_SIMULACRUM, 1}}}},
+    { BAND_SIMULACRA,           {{{MONS_SIMULACRUM, 1}}}},
+
+    { BAND_BLOOD_SAINT,         {{{MONS_BALRUG, 1},
+                                  {MONS_BLIZZARD_DEMON, 1}},
+
+                                 {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
+                                  {MONS_DEMONSPAWN_WARMONGER, 1},
+                                  {MONS_DEMONSPAWN_CORRUPTER, 1},
+                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+
+    { BAND_WARMONGER,           {{{MONS_EXECUTIONER, 1},
+                                  {MONS_REAPER, 3}},
+
+                                 {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
+                                  {MONS_DEMONSPAWN_WARMONGER, 1},
+                                  {MONS_DEMONSPAWN_CORRUPTER, 1},
+                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+
+    { BAND_CORRUPTER,           {{{MONS_CACODEMON, 1},
+                                  {MONS_SHADOW_DEMON, 3}},
+
+                                 {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
+                                  {MONS_DEMONSPAWN_WARMONGER, 1},
+                                  {MONS_DEMONSPAWN_CORRUPTER, 1},
+                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+
+    { BAND_BLACK_SUN,           {{{MONS_LOROCYPROCA, 1},
+                                  {MONS_SOUL_EATER, 1}},
+
+                                 {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
+                                  {MONS_DEMONSPAWN_WARMONGER, 1},
+                                  {MONS_DEMONSPAWN_CORRUPTER, 1},
+                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+
 };
 
 /**
@@ -2502,82 +2475,6 @@ static monster_type _band_member(band_type band, int which,
                                           6, MONS_FREEZING_WRAITH,
                                           3, MONS_PHANTASMAL_WARRIOR,
                                           3, MONS_SKELETAL_WARRIOR);
-
-    case BAND_MONSTROUS_DEMONSPAWN:
-        if (which == 1 || x_chance_in_y(2, 3))
-        {
-            return random_choose_weighted( 2, MONS_DEMONIC_CRAWLER,
-                                           2, MONS_SIXFIRHY,
-                                           3, MONS_MONSTROUS_DEMONSPAWN);
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_GELID_DEMONSPAWN:
-        if (which == 1 || x_chance_in_y(2, 3))
-        {
-            return random_choose_weighted( 4, MONS_ICE_DEVIL,
-                                           3, MONS_GELID_DEMONSPAWN);
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_INFERNAL_DEMONSPAWN:
-        if (which == 1 || x_chance_in_y(2, 3))
-        {
-            return random_choose_weighted( 2, MONS_RED_DEVIL,
-                                           2, MONS_SUN_DEMON,
-                                           3, MONS_INFERNAL_DEMONSPAWN);
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_TORTUROUS_DEMONSPAWN:
-        if (which == 1 || x_chance_in_y(2, 3))
-        {
-            return random_choose_weighted( 2, MONS_ORANGE_DEMON,
-                                           2, MONS_SIXFIRHY,
-                                           3, MONS_TORTUROUS_DEMONSPAWN);
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_BLOOD_SAINT:
-        if (which == 1 || which == 2 && one_chance_in(3))
-        {
-            if (x_chance_in_y(2, 3))
-                return random_choose(MONS_BALRUG, MONS_BLIZZARD_DEMON);
-            else
-                return random_demonspawn_job();
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_WARMONGER:
-        if (which == 1 || which == 2 && one_chance_in(3))
-        {
-            if (x_chance_in_y(2, 3))
-                return one_chance_in(4) ? MONS_EXECUTIONER : MONS_REAPER;
-            else
-                return random_demonspawn_job();
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_CORRUPTER:
-        if (which == 1 || which == 2 && one_chance_in(3))
-        {
-            if (x_chance_in_y(2, 3))
-                return one_chance_in(4) ? MONS_CACODEMON : MONS_SHADOW_DEMON;
-            else
-                return random_demonspawn_job();
-        }
-        return random_demonspawn_monster_species();
-
-    case BAND_BLACK_SUN:
-        if (which == 1 || which == 2 && one_chance_in(3))
-        {
-            if (x_chance_in_y(2, 3))
-                return one_chance_in(3) ? MONS_LOROCYPROCA : MONS_SOUL_EATER;
-            else
-                return random_demonspawn_job();
-        }
-        return random_demonspawn_monster_species();
-
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
@@ -2855,24 +2752,6 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
         pos = empty;
 
     return pos;
-}
-
-bool can_spawn_mushrooms(coord_def where)
-{
-    cloud_struct *cloud = cloud_at(where);
-    if (!cloud)
-        return true;
-    if (you_worship(GOD_FEDHAS)
-        && (cloud->whose == KC_YOU || cloud->whose == KC_FRIENDLY))
-    {
-        return true;
-    }
-
-    monster dummy;
-    dummy.type = MONS_TOADSTOOL;
-    define_monster(dummy);
-
-    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type god_hates_monster(monster_type type)

@@ -435,7 +435,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_STRONG_STIFF, 0, 3, mutflag::good, false,
-  "strong stiff",
+  "stiff muscles",
 
   {"Your muscles are strong, but stiff. (Str +1, Dex -1)",
    "Your muscles are very strong, but stiff. (Str +2, Dex -2)",
@@ -451,7 +451,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_FLEXIBLE_WEAK, 0, 3, mutflag::good, false,
-  "flexible weak",
+  "flexible muscles",
 
   {"Your muscles are flexible, but weak (Str -1, Dex +1).",
    "Your muscles are very flexible, but weak (Str -2, Dex +2).",
@@ -860,11 +860,11 @@ static const mutation_def mut_data[] =
 { MUT_STINGER, 8, 3, mutflag::good, true,
   "stinger",
 
-  {"Your tail ends in a poisonous barb.",
-   "Your tail ends in a sharp poisonous barb.",
-   "Your tail ends in a wickedly sharp and poisonous barb."},
+  {"Your tail ends in a venomous barb.",
+   "Your tail ends in a sharp venomous barb.",
+   "Your tail ends in a wickedly sharp and venomous barb."},
 
-  {"A poisonous barb forms on the end of your tail.",
+  {"A venomous barb forms on the end of your tail.",
    "The barb on your tail looks sharper.",
    "The barb on your tail looks very sharp."},
 
@@ -955,7 +955,7 @@ static const mutation_def mut_data[] =
 { MUT_CURL, 0, 1, mutflag::good, true,
   "reflexive curl",
 
-  {"You curl defensively after being hit.", "", ""},
+  {"You curl defensively after being hit. (AC +7*)", "", ""},
   {"You now curl defensively after being hit.", "", ""},
   {"", "", ""},
 },
@@ -1065,7 +1065,7 @@ static const mutation_def mut_data[] =
 
 #if TAG_MAJOR_VERSION == 34
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
-  "torment resistance",
+  "removed torment resistance",
 
   {"You are somewhat able to resist unholy torments.","",""},
   {"You feel a strange anaesthesia.", "", ""},
@@ -1664,7 +1664,7 @@ static const mutation_def mut_data[] =
 
   {"You are resistant to trampling.", "", ""},
   {"You feel steady.", "", ""},
-  {"You feel unsteady..", "", ""},
+  {"You feel unsteady.", "", ""},
 },
 
 { MUT_CLING, 0, 1, mutflag::good, true,
@@ -1746,6 +1746,34 @@ static const mutation_def mut_data[] =
 
   {"You punish those that try to bend your will. (Will+)", "", ""},
   {"You feel willful.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_WEAKNESS_STINGER, 0, 3, mutflag::good, true,
+  "weakness stinger",
+
+  {"You have a small tail.",
+   "You have a tail ending in a sharp stinger.",
+   "You have a sharp stinger which inflicts weakening toxins."},
+
+  {"You grow a small tail.",
+   "Your tail grows a sharp stinger.",
+   "Your stinger grows larger and begins to produce weakening toxins."},
+
+  {"", "", ""},
+},
+
+{ MUT_DEMONIC_TOUCH, 0, 3, mutflag::good, true,
+  "demonic touch",
+
+  {"Your touch may inflict minor irresistible damage on your foes.",
+   "Your touch may inflict irresistible damage on your foes.",
+   "Your touch may irresistibly damage your foes and sap their willpower."},
+
+  {"Your hands begin to faintly glow with unholy energy.",
+   "Your hands glow brighter with unholy energy.",
+   "Your hands twist and begin to emit a powerful aura of unholy energy."},
+
   {"", "", ""},
 },
 

@@ -512,7 +512,7 @@ public:
     bool is_web_immune() const override;
     bool cannot_speak() const;
     bool invisible() const override;
-    bool can_see_invisible(bool calc_unid = true) const override;
+    bool can_see_invisible() const override;
     bool innate_sinv() const;
     bool visible_to(const actor *looker) const override;
     bool can_see(const actor& a) const override;
@@ -529,7 +529,7 @@ public:
     bool is_skeletal() const override;
 
     bool tengu_flight() const;
-    int heads() const override;
+    int heads() const override { return 1; }
 
     bool spellcasting_unholy() const;
 
@@ -650,12 +650,11 @@ public:
 
     int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
 
-    int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const
+    int wearing(equipment_type slot, int sub_type) const
         override;
-    int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const
+    int wearing_ego(equipment_type slot, int type) const
         override;
     int scan_artefacts(artefact_prop_type which_property,
-                       bool calc_unid = true,
                        vector<const item_def *> *matches = nullptr) const override;
 
     item_def *weapon(int which_attack = -1) const override;
@@ -751,12 +750,13 @@ public:
 
     mon_holy_type holiness(bool temp = true) const override;
     bool undead_or_demonic(bool temp = true) const override;
+    bool evil() const override;
     bool is_holy() const override;
     bool is_nonliving(bool temp = true) const override;
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
-    int res_acid(bool calc_unid = true) const override;
+    int res_acid() const override;
     bool res_damnation() const override { return false; };
     int res_fire() const override;
     int res_steam() const override;
@@ -772,17 +772,15 @@ public:
     bool res_polar_vortex() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
-    int willpower(bool /*calc_unid*/ = true) const override;
-    bool no_tele(bool calc_unid = true, bool /*permit_id*/ = true,
-                 bool blink = false) const override;
-    string no_tele_reason(bool calc_unid = true, bool blink = false) const;
-    bool no_tele_print_reason(bool calc_unid = true, bool blink = false) const;
+    int willpower() const override;
+    bool no_tele(bool blink = false) const override;
+    string no_tele_reason(bool blink = false) const;
     bool antimagic_susceptible() const override;
 
-    bool res_corr(bool calc_unid = true, bool temp = true) const override;
-    bool clarity(bool calc_unid = true, bool items = true) const override;
+    bool res_corr(bool allow_random = true, bool temp = true) const override;
+    bool clarity(bool items = true) const override;
     bool stasis() const override;
-    bool cloud_immune(bool calc_unid = true, bool items = true) const override;
+    bool cloud_immune(bool items = true) const override;
 
     bool airborne() const override;
     bool permanent_flight(bool include_equip = true) const;
@@ -825,9 +823,9 @@ public:
 
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;
-    int armour_class(bool /*calc_unid*/ = true) const override;
+    int armour_class() const override;
     int gdr_perc() const override;
-    int evasion(ev_ignore_type evit = ev_ignore::none,
+    int evasion(bool ignore_helpless = false,
                 const actor *attacker = nullptr) const override;
 
     int stat_hp() const override     { return hp; }
@@ -992,33 +990,30 @@ int sanguine_armour_bonus();
 
 int player_wizardry(spell_type spell);
 
-int player_prot_life(bool calc_unid = true, bool temp = true,
+int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);
 
 bool regeneration_is_inhibited();
 int player_regen();
 int player_mp_regen();
 
-int player_res_cold(bool calc_unid = true, bool temp = true,
-                    bool items = true);
-int player_res_acid(bool calc_unid = true, bool items = true);
-
 bool player_kiku_res_torment();
 
 bool player_likes_water(bool permanently = false);
 
-int player_res_electricity(bool calc_unid = true, bool temp = true,
+int player_res_cold(bool allow_random = true, bool temp = true,
+                    bool items = true);
+int player_res_acid(bool items = true);
+int player_res_electricity(bool allow_random = true, bool temp = true,
                            bool items = true);
-
-int player_res_fire(bool calc_unid = true, bool temp = true,
+int player_res_fire(bool allow_random = true, bool temp = true,
                     bool items = true);
 int player_res_sticky_flame();
-int player_res_steam(bool calc_unid = true, bool temp = true,
+int player_res_steam(bool allow_random = true, bool temp = true,
                      bool items = true);
-
-int player_res_poison(bool calc_unid = true, bool temp = true,
+int player_res_poison(bool allow_random = true, bool temp = true,
                       bool items = true);
-int player_willpower(bool calc_unid = true, bool temp = true);
+int player_willpower(bool temp = true);
 
 int player_shield_class();
 int player_displayed_shield_class();
@@ -1041,7 +1036,7 @@ int player_speed();
 int player_spell_levels();
 int player_total_spell_levels();
 
-int player_teleport(bool calc_unid = true);
+int player_teleport();
 
 int player_monster_detect_radius();
 
@@ -1091,13 +1086,11 @@ void flush_mp();
 void flush_hp();
 void finalize_mp_cost(bool addl_hp_cost = false);
 
-void drain_hp(int hp_loss);
 // Undrain the player's HP and return excess HP if any.
 int undrain_hp(int hp_recovered);
 int player_drained();
 void rot_mp(int mp_loss);
 
-void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
 
 void set_hp(int new_amount);

@@ -368,6 +368,8 @@ void enter_explore_mode()
     else if (!you.explore)
     {
         mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
+        mpr("In explore mode, death is optional.");
+        mpr("Once you set a character to explore mode, you can't switch back.");
 
 #ifndef SCORE_WIZARD_CHARACTERS
         mprf(MSGCH_WARN, "If you continue, your game will not be scored!");

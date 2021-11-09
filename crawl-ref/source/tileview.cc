@@ -135,7 +135,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_CRYPT:
-        flv.wall  = TILE_WALL_BRICK_GRAY;
+        flv.wall  = TILE_ROCK_WALL_CRYPT;
         flv.floor = TILE_FLOOR_CRYPT;
         return;
 
@@ -902,13 +902,6 @@ void tile_draw_floor()
         }
 }
 
-void tile_clear_map(const coord_def& gc)
-{
-    tile_env.bk_fg(gc) = 0;
-    tile_env.bk_cloud(gc) = 0;
-    tiles.update_minimap(gc);
-}
-
 void tile_forget_map(const coord_def &gc)
 {
     tile_env.bk_fg(gc) = 0;
@@ -1059,11 +1052,6 @@ void tile_reset_fg(const coord_def &gc)
     tile_env.bk_bg(gc) &= ~TILE_FLAG_CURSOR3;
     tile_draw_map_cell(gc, true);
     tiles.update_minimap(gc);
-}
-
-void tile_reset_feat(const coord_def &gc)
-{
-    tile_env.bk_bg(gc) = tileidx_feature(gc);
 }
 
 static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
@@ -1308,11 +1296,21 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_SPIDER;
     }
+    else if (player_in_branch(BRANCH_SNAKE))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SNAKE;
+    }
     else if (player_in_branch(BRANCH_SWAMP)
              || player_in_branch(BRANCH_SEWER))
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_STONE_MOSSY;
+    }
+    else if (player_in_branch(BRANCH_SHOALS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SHOALS;
     }
 
     if (orig == TILE_FLOOR_NORMAL)

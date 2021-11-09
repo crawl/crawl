@@ -223,7 +223,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
     {
         // FIXME: does this cover all ATTR_HELD cases?
         return player.has_status("paralysed|petrified|sleeping")
-               || player.has_status("confused|petrifying")
+               || player.has_status("confused")
                || player.has_status("held", 4);
     }
 
