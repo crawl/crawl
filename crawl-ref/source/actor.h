@@ -360,6 +360,7 @@ public:
     virtual bool incapacitated() const
     {
         return cannot_act()
+            || asleep()
             || confused()
             || caught();
     }
