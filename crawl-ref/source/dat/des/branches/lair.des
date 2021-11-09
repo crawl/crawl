@@ -446,31 +446,22 @@ TAGS:    no_monster_gen no_item_gen
 ORIENT:  float
 SHUFFLE: NALPS
 NSUBST:  P = 1:P / *:`
-SUBST:   P = Pp
-KMONS:   P = anaconda
-KMONS:   p = shock serpent
+KMONS:   P = anaconda / shock serpent
 KFEAT:   ` = floor
 FTILE:   `Pp = floor_dirt
 NSUBST:  N = 1:N / *:'
-SUBST:   N = Nn
-KMONS:   N = emperor scorpion
-KMONS:   n = orb spider
+KMONS:   N = emperor scorpion / orb spider
 KFEAT:   ' = floor
 FTILE:   Nn' = floor_dirt
 NSUBST:  A = 1:A / *:W
-SUBST:   A = Aa
-KMONS:   A = kraken
-KMONS:   a = alligator snapping turtle
+KMONS:   A = kraken / alligator snapping turtle
 KFEAT:   Aa = shallow_water
 NSUBST:  S = 1:S / *:W
-SUBST:   S = Ss
-KMONS:   S = bunyip
-KMONS:   s = goliath frog
+KMONS:   S = bunyip / goliath frog
 KFEAT:   Ss = shallow_water
 NSUBST:  L = 1:L / *:~
 SUBST:   L = Ll
-KMONS:   L = catoblepas
-KMONS:   l = eight-headed hydra
+KMONS:   L = catoblepas / eight-headed hydra
 KFEAT:   ~ = floor
 FTILE:   Ll~ = floor_dirt
 SUBST:   T : TG
