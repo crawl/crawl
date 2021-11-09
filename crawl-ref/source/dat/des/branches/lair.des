@@ -448,22 +448,20 @@ SHUFFLE: NALPS
 NSUBST:  P = 1:P / *:`
 KMONS:   P = anaconda / shock serpent
 KFEAT:   ` = floor
-FTILE:   `Pp = floor_dirt
-NSUBST:  N = 1:N / *:'
+NSUBST:  N = 1:N / *:`
 KMONS:   N = emperor scorpion / orb spider
-KFEAT:   ' = floor
-FTILE:   Nn' = floor_dirt
+KFEAT:   ` = floor
 NSUBST:  A = 1:A / *:W
 KMONS:   A = kraken / alligator snapping turtle
 KFEAT:   Aa = shallow_water
 NSUBST:  S = 1:S / *:W
 KMONS:   S = bunyip / goliath frog
 KFEAT:   Ss = shallow_water
-NSUBST:  L = 1:L / *:~
+NSUBST:  L = 1:L / *:`
 SUBST:   L = Ll
 KMONS:   L = catoblepas / eight-headed hydra
-KFEAT:   ~ = floor
-FTILE:   Ll~ = floor_dirt
+KFEAT:   ` = floor
+FTILE:   `PNL = floor_dirt
 SUBST:   T : TG
 KFEAT:   # = iron_grate
 KFEAT:   O = enter_lair
