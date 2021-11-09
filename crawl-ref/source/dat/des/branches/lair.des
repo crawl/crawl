@@ -464,7 +464,7 @@ FTILE:   `PNL = floor_dirt
 SUBST:   T : TG
 KFEAT:   # = iron_grate
 KFEAT:   O = enter_lair
-KMONS:   z = gnoll name:zookeeper n_rpl n_des n_noc ; whip
+KMONS:   z = orc knight ; whip
 MAP
 .............
 .............
