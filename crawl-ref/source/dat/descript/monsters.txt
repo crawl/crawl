@@ -3256,7 +3256,3 @@ The Unspeakable
 You hear the echoes of planets behind the deafening roar of stars as it
 approaches. It is the jaws of the abyss. It brings forth crawling chaos from
 within. It is the last sight you will ever see.
-%%%%
-zookeeper
-
-A bored gnoll stuck in a stinky, dead-end job.
