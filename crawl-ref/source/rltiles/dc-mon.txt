@@ -917,6 +917,7 @@ shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
 %rim 0
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
+putrid_mouth MONS_PUTRID_MOUTH
 %rim 1
 eidolon MONS_EIDOLON
 
@@ -1094,8 +1095,6 @@ silent_spectre MONS_SILENT_SPECTRE
 lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
-%rim 1
-hungry_ghost MONS_PUTRID_MOUTH
 %sdir mon/nonliving
 %rim 0
 will_o_the_wisp MONS_WILL_O_THE_WISP
