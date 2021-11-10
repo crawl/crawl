@@ -113,12 +113,6 @@ static void _apply_contam_over_time()
     if (!you.duration[DUR_INVIS])
         added_contamination -= 75;
 
-    // The Orb halves dissipation (well a bit more, I had to round it),
-    // but won't cause glow on its own -- otherwise it'd spam the player
-    // with messages about contamination oscillating near zero.
-    if (you.magic_contamination && player_has_orb())
-        added_contamination += 38;
-
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
                                          BASELINE_DELAY);
