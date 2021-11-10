@@ -1,6 +1,6 @@
 import pytest
 
-import util
+from webtiles import util
 
 
 class Test_validate_email_address:

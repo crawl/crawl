@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-import auth
+from webtiles import auth
 
 try:
     import mock
