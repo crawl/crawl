@@ -35,9 +35,7 @@ int englaciate(coord_def where, int pow, actor *agent)
         return 0;
     }
 
-    int duration = (roll_dice(3, pow) / 6
-                    - victim->get_hit_dice() / 2)
-                    * BASELINE_DELAY;
+    int duration = roll_dice(3, pow) / 6 - victim->get_hit_dice() / 2;
 
     if (duration <= 0)
     {
@@ -60,7 +58,7 @@ int englaciate(coord_def where, int pow, actor *agent)
     if (!mons)
         return slow_player(duration);
 
-    return do_slow_monster(*mons, agent, duration);
+    return do_slow_monster(*mons, agent, duration * BASELINE_DELAY);
 }
 
 spret cast_englaciation(int pow, bool fail)
