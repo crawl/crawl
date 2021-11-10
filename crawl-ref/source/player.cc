@@ -1400,7 +1400,7 @@ bool player::res_corr(bool allow_random, bool temp) const
         return true;
     }
 
-    return actor::res_corr(temp);
+    return actor::res_corr(allow_random, temp);
 }
 
 int player_res_acid(bool items)
