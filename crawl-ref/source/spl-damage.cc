@@ -4005,8 +4005,7 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow)
     vector<coord_def> bog_locs;
     const int radius = spell_range(SPELL_NOXIOUS_BOG, pow, false);
 
-    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS, true); ri;
-            ri++)
+    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS); ri; ri++)
     {
         if (!feat_has_solid_floor(env.grid(*ri)))
             continue;
