@@ -326,7 +326,7 @@ def export_args_to_config(args):
         config.set('bind_address', "")  # TODO: ??
         config.set('bind_port', args.port)
         if config.get('bind_pairs') is not None:
-            config.clear('bind_pairs')
+            config.pop('bind_pairs')
         logging.info("Using command-line supplied port: %d", args.port)
         if config.get('ssl_options'):
             logging.info("    (Overrides config-specified SSL settings.)")
@@ -463,7 +463,7 @@ def server_main():
         auth.purge_login_tokens_timeout()
         ws_handler.start_reading_milestones()
 
-        if config.get('watch_socket_dirs', False):
+        if config.get('watch_socket_dirs'):
             process_handler.watch_socket_dirs()
 
     # start the lobby update timeout loop

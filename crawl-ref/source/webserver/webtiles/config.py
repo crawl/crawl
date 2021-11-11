@@ -7,11 +7,34 @@ import logging
 
 from webtiles import load_games
 
+server_config = {}
+
+# light wrapper class that maps get/set/etc to getattr/setattr/etc
+# doesn't bother to implement most of the dict interface...
+class ConfigModuleWrapper(object):
+    def __init__(self, module):
+        self.module = module
+
+    def get(self, key, default):
+        return getattr(self.module, key, default)
+
+    def __setitem__(self, key, val):
+        setattr(self.module, key, val)
+
+    def pop(self, key):
+        r = getattr(self.module, key)
+        delattr(self.module, key)
+        return r
+
+    def __contains__(self, key):
+        return hasattr(self.module, key)
+
+
 # classic config: everything is just done in a module
 # (TODO: add some alternative)
 def init_config_from_module(module):
     global server_config
-    server_config = module
+    server_config = ConfigModuleWrapper(module)
 
 
 server_path = None
@@ -53,19 +76,19 @@ defaults = {
 
 def get(key, default=None):
     global server_config
-    return getattr(server_config, key, defaults.get(key, default))
+    return server_config.get(key, defaults.get(key, default))
 
 def set(key, val):
     global server_config
-    setattr(server_config, key, val)
+    server_config[key] = val
 
-def clear(key):
+def pop(key):
     global server_config
-    delattr(server_config, key)
+    return server_config.pop(key)
 
 def has_key(key):
     global server_config
-    return hasattr(server_config, key)
+    return key in server_config
 
 def check_keys_all(required, raise_on_missing=False):
     # accept either a single str, or an iterable for `required`
