@@ -322,7 +322,7 @@ slowness mutation
 
 You cover ground slowly - moving to new positions takes you more time. This
 has no effect on other types of actions, like attacking or casting spells.
-Each level of this mutation makes you move faster.
+Each level of this mutation makes you move slower.
 %%%%
 robust mutation
 
