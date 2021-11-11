@@ -164,7 +164,7 @@ def bind_server():
             (r"/", MainHandler),
             (r"/socket", ws_handler.CrawlWebSocket),
             (r"/gamedata/([0-9a-f]*\/.*)", game_data_handler.GameDataHandler)
-            ], gzip=config.get('use_gzip',True), **settings)
+            ], gzip=config.get('use_gzip'), **settings)
 
     kwargs = {}
     if config.get('http_connection_timeout') is not None:
@@ -442,7 +442,7 @@ def server_main():
     shed_privileges()
 
     # is this ever set to False by anyone in practice?
-    dgl_mode = config.get('dgl_mode', True)
+    dgl_mode = config.get('dgl_mode')
 
     if dgl_mode:
         userdb.ensure_user_db_exists()

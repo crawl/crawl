@@ -155,7 +155,7 @@ class CrawlProcessHandlerBase(object):
         if key not in self.game_params:
             return None
         base_path = self.format_path(self.game_params[key])
-        if key == "socket_path" and config.get('live_debug', False):
+        if key == "socket_path" and config.get('live_debug'):
             # TODO: this is kind of brute-force given that regular paths aren't
             # validated at all...
             debug_path = os.path.join(base_path, 'live-debug')
