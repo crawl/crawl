@@ -64,7 +64,7 @@ def do_lobby_updates():
 def do_periodic_lobby_updates():
     # TODO: in the Future, refactor as a simple async loop
     do_lobby_updates()
-    rate = config.get('lobby_update_rate', 2)
+    rate = config.get('lobby_update_rate')
     IOLoop.current().add_timeout(time.time() + rate, do_periodic_lobby_updates)
 
 def update_all_lobbys(game):

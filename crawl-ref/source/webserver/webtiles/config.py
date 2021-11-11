@@ -3,6 +3,7 @@
 
 import collections
 import os.path
+import logging
 
 from webtiles import load_games
 
@@ -17,9 +18,42 @@ server_path = None
 games = collections.OrderedDict()
 game_modes = {}  # type: Dict[str, str]
 
+# for values not in this dict, the default is None
+defaults = {
+    'dgl_mode': True,
+    'logging_config': {
+        "level": logging.INFO,
+        "format": "%(asctime)s %(levelname)s: %(message)s"
+    },
+    'server_socket_path': None,
+    'watch_socket_dirs': False,
+    'use_game_yaml': True,
+    'milestone_file': [],
+    'status_file_update_rate': 5,
+    'lobby_update_rate': 2,
+    'recording_term_size': (80, 24),
+    'max_connections': 100,
+    'connection_timeout': 600,
+    'max_idle_time': 5 * 60 * 60,
+    'use_gzip': True,
+    'kill_timeout': 10,
+    'nick_regex': r"^[a-zA-Z0-9]{3,20}$",
+    'max_passwd_length': 20,
+    'allow_password_reset': False,
+    'admin_password_reset': False,
+    'crypt_algorithm': "broken", # should this be the default??
+    'crypt_salt_length': 16,
+    'login_token_lifetime': 7, # Days
+    'daemon': False,
+    'development_mode': False,
+    'no_cache': False,
+    'live_debug': False,
+    'lobby_update_rate': 2,
+}
+
 def get(key, default=None):
     global server_config
-    return getattr(server_config, key, default)
+    return getattr(server_config, key, defaults.get(key, default))
 
 def set(key, val):
     global server_config
@@ -91,13 +125,9 @@ def validate():
     if has_key('ssl_options'):
         check_keys_any(['ssl_bind_pairs', ['ssl_address', 'ssl_port']], True)
 
-    required = ['static_path', 'template_path', 'logging_config',
-        'kill_timeout', 'recording_term_size', 'server_id',
-        'crypt_algorithm', 'crypt_salt_length', 'max_passwd_length',
-        'nick_regex', 'dgl_status_file', 'status_file_update_rate',
-        'max_connections', 'connection_timeout', 'max_idle_time',
-        'init_player_program', 'login_token_lifetime']
-    if get('allow_password_reset', False) or get('admin_password_reset', False):
+    required = ['static_path', 'template_path', 'server_id',
+        'dgl_status_file', 'init_player_program',]
+    if get('allow_password_reset') or get('admin_password_reset'):
         required.add('lobby_url')
 
     check_keys_all(required, raise_on_missing=True)
