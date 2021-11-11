@@ -6613,6 +6613,8 @@ void player::paralyse(const actor *who, int str, string source)
 
     stop_directly_constricting_all(false);
     end_wait_spells();
+    redraw_armour_class = true;
+    redraw_evasion = true;
 }
 
 void player::petrify(const actor *who, bool force)
@@ -6658,6 +6660,7 @@ bool player::fully_petrify(bool /*quiet*/)
 {
     duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
                         + random2(4 * BASELINE_DELAY);
+    redraw_armour_class = true;
     redraw_evasion = true;
     mpr("You have turned to stone.");
 
@@ -7163,6 +7166,8 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     const int dur = hibernate ? 3 + random2avg(5, 2) :
                                 5 + random2avg(power/10, 5);
     set_duration(DUR_SLEEP, dur);
+    redraw_armour_class = true;
+    redraw_evasion = true;
 }
 
 void player::awaken()
@@ -7173,6 +7178,8 @@ void player::awaken()
     set_duration(DUR_SLEEP_IMMUNITY, random_range(3, 5));
     mpr("You wake up.");
     flash_view(UA_MONSTER, BLACK);
+    redraw_armour_class = true;
+    redraw_evasion = true;
 }
 
 void player::check_awaken(int disturbance)

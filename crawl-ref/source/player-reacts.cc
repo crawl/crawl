@@ -171,6 +171,7 @@ static void _decrement_petrification(int delay)
 {
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
+        you.redraw_armour_class = true;
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
         // flesh when not petrified. (Unfortunately, species::skin_name doesn't
@@ -226,6 +227,7 @@ static void _decrement_paralysis(int delay)
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
             mprf(MSGCH_DURATION, "You can move again.");
+            you.redraw_armour_class = true;
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
             * BASELINE_DELAY;
