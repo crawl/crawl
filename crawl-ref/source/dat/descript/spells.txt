@@ -321,7 +321,7 @@ Cleansing Flame spell
 %%%%
 Cold Breath spell
 
-Exhales a focused blast of icy-cold air. It may knock back airborne targets.
+Exhales a focused blast of icy-cold air.
 %%%%
 Concentrate Venom spell
 
