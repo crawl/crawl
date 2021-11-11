@@ -575,10 +575,10 @@ Eringya's Noxious Bog spell
 
 Causes the caster to release a torrent of sludge that transforms nearby areas
 into a toxic bog. The sludge damages and poisons all monsters, even those
-resistant to poison. The bog cannot form on areas adjacent to solid features,
-nor on areas that lack solid floor, like deep water or lava. The transformation
-is temporary and cannot be sustained out of the caster's sight. Spellpower will
-increase how long the bog lingers.
+resistant to poison. The bog cannot form on areas adjacent to multiple solid
+features, nor on areas that lack solid floor, like deep water or lava. The
+transformation is temporary and cannot be sustained out of the caster's sight.
+Spellpower will increase how long the bog lingers.
 %%%%
 Eruption spell
 
