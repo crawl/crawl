@@ -445,20 +445,16 @@ TAGS:    lair_entry transparent
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  float
 SHUFFLE: NALPS
-NSUBST:  P = 1:P / *:`
+NSUBST:  P = P /, N = N / , A = A / W, S = S / W, L = L /
 KMONS:   P = anaconda / shock serpent
-KFEAT:   ` = floor
-NSUBST:  N = 1:N / *:`
 KMONS:   N = emperor scorpion / orb spider
-KFEAT:   ` = floor
-NSUBST:  A = 1:A / *:W
 KMONS:   A = kraken / alligator snapping turtle
-KFEAT:   A = shallow_water
-NSUBST:  S = 1:S / *:W
 KMONS:   S = bunyip / goliath frog
-KFEAT:   S = shallow_water
-NSUBST:  L = 1:L / *:`
 KMONS:   L = catoblepas / eight-headed hydra
+KFEAT:   ` = floor
+KFEAT:   ` = floor
+KFEAT:   A = shallow_water
+KFEAT:   S = shallow_water
 KFEAT:   ` = floor
 FTILE:   `PNL = floor_dirt
 SUBST:   T : TG
