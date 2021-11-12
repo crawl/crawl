@@ -437,7 +437,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Trog
         { ABIL_TROG_BERSERK, "Berserk",
-            0, 0, 0, {fail_basis::invo, 45, 0, 2}, abflag::none },
+            0, 0, 1, {fail_basis::invo, 45, 0, 2}, abflag::none },
         { ABIL_TROG_HAND, "Trog's Hand",
             0, 0, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
         { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
