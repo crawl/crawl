@@ -1671,6 +1671,13 @@ bool mons_can_be_zombified(const monster& mon)
            && !mons_enslaved_body_and_soul(mon);
 }
 
+bool mons_can_be_spectralised(const monster& mon)
+{
+    return mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+           && !mon.is_summoned()
+           && mon.type != MONS_PANDEMONIUM_LORD;
+}
+
 bool mons_class_can_use_stairs(monster_type mc)
 {
     return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)

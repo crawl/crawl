@@ -413,9 +413,9 @@ nearby may be dazzled and left stumbling blindly.
 %%%%
 Death Channel spell
 
-Raises living creatures slain by the caster and their allies, reducing them to
-a state of spectral slavery. When the channel expires the spectres are released
-from bondage.
+Binds the souls of living, demonic and holy creatures slain by the caster and
+their allies, causing their spectres to remain and fight for the caster. When
+the channel expires the spectres will fade away.
 %%%%
 Death Rattle spell
 

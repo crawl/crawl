@@ -1119,7 +1119,11 @@ static string _killer_type_name(killer_type killer)
  */
 static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
 {
-    if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(*mons))
+    bool valid_mons = bound_soul ? mons->holiness() & MH_NATURAL
+                                   && mons_can_be_zombified(*mons)
+                                 : mons_can_be_spectralised(*mons);
+
+    if (valid_mons)
     {
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
