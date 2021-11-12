@@ -272,10 +272,10 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Cheibriados
-    {   { 0, ABIL_CHEIBRIADOS_TIME_BEND, "bend time to slow others" },
-        { 1, "Cheibriados is now slowing the effects of poison on you.",
+    {   { 0, "Cheibriados is now slowing the effects of poison on you.",
              "Cheibriados will no longer slow the effects of poison on you.",
              "Cheibriados slows the effects of poison on you." },
+        { 1, ABIL_CHEIBRIADOS_TIME_BEND, "bend time to slow others" },
         { 3, ABIL_CHEIBRIADOS_DISTORTION, "warp the flow of time around you" },
         { 4, ABIL_CHEIBRIADOS_SLOUCH, "inflict damage on those overly hasty" },
         { 5, ABIL_CHEIBRIADOS_TIME_STEP, "step out of the flow of time" },
