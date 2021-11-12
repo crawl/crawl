@@ -465,7 +465,7 @@ SUBST:   T : TG
 KFEAT:   # = iron_grate
 KFEAT:   O = enter_lair
 KMONS:   z = orc knight ; whip
-KMAXK:   \WANPLS = no_tele_into
+KPROP:   `WANPLS = no_tele_into
 MAP
 .............
 .............
