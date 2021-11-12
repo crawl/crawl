@@ -451,11 +451,7 @@ KMONS:   N = emperor scorpion / orb spider
 KMONS:   A = kraken / alligator snapping turtle
 KMONS:   S = bunyip / goliath frog
 KMONS:   L = catoblepas / eight-headed hydra
-KFEAT:   ` = floor
-KFEAT:   ` = floor
-KFEAT:   A = shallow_water
-KFEAT:   S = shallow_water
-KFEAT:   ` = floor
+KFEAT:   A, S = shallow_water
 FTILE:   `PNL = floor_dirt
 SUBST:   T : TG
 KFEAT:   # = iron_grate
