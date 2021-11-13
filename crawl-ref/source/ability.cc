@@ -487,7 +487,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Beogh
         { ABIL_BEOGH_SMITING, "Smiting",
-            3, 0, generic_cost::fixed(3), {fail_basis::invo, 40, 5, 20}, abflag::none },
+            3, 0, generic_cost::range(3, 4), {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
             2, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
