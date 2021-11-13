@@ -1133,21 +1133,21 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
-bool monster::clear_far_engulf(bool)
+bool monster::clear_far_engulf(bool force)
 {
     if (you.duration[DUR_WATER_HOLD]
         && (mid_t) you.props[WATER_HOLDER_KEY].get_int() == mid)
     {
-        you.clear_far_engulf();
+        you.clear_far_engulf(force);
     }
 
     const mon_enchant& me = get_ench(ENCH_WATER_HOLD);
     if (me.ench == ENCH_NONE)
         return false;
     const bool nonadj = !me.agent() || !adjacent(me.agent()->pos(), pos());
-    if (nonadj)
+    if (nonadj || force)
         del_ench(ENCH_WATER_HOLD);
-    return nonadj;
+    return nonadj || force;
 }
 
 // Returns true if you resist the merfolk avatar's call.
