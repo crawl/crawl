@@ -3008,7 +3008,6 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         mons->spells[0].spell = SPELL_STONE_ARROW;
         mons->spells[1].spell = SPELL_THROW_ICICLE;
         mons->spells[3].spell = SPELL_BLINK;
-        mons->spells[4].spell = SPELL_HASTE;
         // Nothing with 6.
 
         // Indicate that he has an updated spellbook.
@@ -3043,7 +3042,7 @@ void elven_twin_energize(monster* mons)
         if (mons->observable())
             simple_monster_message(*mons, " seems to find hidden reserves of power!");
 
-        mons->add_ench(ENCH_HASTE);
+        mons->add_ench(mon_enchant(ENCH_HASTE, 1, mons, INFINITE_DURATION));
         mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
     }
 }
