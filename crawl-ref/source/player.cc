@@ -3781,7 +3781,12 @@ int get_real_hp(bool trans, bool drained)
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
-        hitp = hitp * 3 / 2;
+    {
+        if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+            hitp *= 2;
+        else
+            hitp = hitp * 3 / 2;
+    }
 
     // Some transformations give you extra hp.
     if (trans)
@@ -8046,7 +8051,7 @@ void player_end_berserk()
 
     you.berserk_penalty = 0;
 
-    const int dur = 12 + roll_dice(2, 12);
+    int dur = 12 + roll_dice(2, 12);
     // Slow durations are multiplied by haste_mul (3/2), exhaustion lasts
     // slightly longer.
     you.increase_duration(DUR_BERSERK_COOLDOWN, dur * 2);
@@ -8055,6 +8060,8 @@ void player_end_berserk()
     const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
     Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
+    if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+        dur = div_rand_round(dur * 2, 3);
     slow_player(dur);
 
     //Un-apply Berserk's +50% Current/Max HP
