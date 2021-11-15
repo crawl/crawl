@@ -4805,6 +4805,42 @@ MAP
   .........
 ENDMAP
 
+# This overflow altar can only place on D:3, the bottom edge of where the early-
+# game ecumenical altars place. It's supposed to count as both an overflow and
+# an ecumenical altar vault, and this seemed the easiest way to implement that.
+# The player can choose the ecumenical altar, or risk going downstairs and then
+# coming back up for the known god.
+NAME:    nicolae_overflow_ecumenical_swirl
+TAGS:    temple_overflow_generic_1 transparent
+DEPTH:   D:3
+KFEAT:   _ = altar_ecumenical
+KFEAT:   ~! = T
+KFEAT:   HJ = G
+KMASK:   'B}])H~ = opaque
+KMASK:   'B}])H~ = no_monster_gen
+KMASK:   'B}])H~ = no_item_gen
+SHUFFLE: !GH/JT~
+SUBST:   } = }])
+FTILE:   '`_}])+~cnBGHT = floor_limestone
+COLOUR:  '` = yellow
+MAP
+...............
+.....cc+cc.....
+..!.cc```cc.!..
+...cc`````cc...
+..cc````ccccc..
+.cc````ncH'Hcc.
+.c`````n'''''c.
+.c``_``n''B''c.
+.c`````n'''''c.
+.ccG`Gcn''''cc.
+..ccccc''''cc..
+...cc'''''cc...
+..!.cc'}'cc.!..
+.....ccccc.....
+...............
+ENDMAP
+
 NAME:   amethyst_overflow_temple_binary
 TAGS:   temple_overflow_generic_2 transparent
 SUBST:  p : .:15 c:10 g:3 n:2
@@ -5041,6 +5077,27 @@ MAP
 .b...b.b...b.
 .b.bbb.bbb.b.
 .............
+ENDMAP
+
+NAME:  nicolae_overflow_squiral
+TAGS:  temple_overflow_generic_2 no_pool_fixup transparent
+MAP
+........wwwwwwww
+.wwwwwww.......w
+.w......cccccc.w
+.w.ccccc.....c.w
+.w.c....wwww.c.w
+.w.c.www...w.c.w
+.w.c.wB.cc.w.c.w
+.w.c.w...c.w.c.w
+c.w.c.w...c.w.c.
+c.w.c.ww.Bc.w.c.
+c.w.c...ccc.w.c.
+c.w.cccc....w.c.
+c.w.....wwwww.c.
+c.wwwwww......c.
+c.......ccccccc.
+cccccccc........
 ENDMAP
 
 NAME: minmay_overflow_temple_star_quad
@@ -5379,6 +5436,100 @@ MAP
  xxG...G...Gxx
  xxxxexxxdxxxx
  xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_overflows_in_rows
+TAGS:    temple_overflow_generic_15 temple_overflow_generic_14 \
+         temple_overflow_generic_13 temple_overflow_generic_12 \
+         temple_overflow_generic_11 temple_overflow_generic_10 \
+         temple_overflow_generic_9 transparent allow_dup
+# I don't think temple_overflow_generic_15 is ever actually used, but I figured
+# I might as well include it in the layout just in case it's used in the future.
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 15
+  else
+    altarcount = tonumber(get_overflow_altar_count(_G))
+  end
+  -- altar arrangements by row. rows of 3 have G or T at the ends.
+  -- 9: 3/3/3. 10: 3/4/3. 11: 4/3/4. 12: 4/4/4. 13: 4/5/4. 14: 5/4/5. 15: 5/5/5.
+  if altarcount >= 13 then
+    subst("T:F")
+  end
+  if altarcount % 2 == 0 then
+    subst("T:.")
+    shuffle("FH")
+  end
+  if altarcount >= 11 then
+    subst("G:D")
+  end
+  if altarcount >= 11 and altarcount <= 13 then
+    shuffle("DE")
+  end
+}}
+SUBST:   DF : B
+SHUFFLE: GT
+MAP
+ccccccccccccc
+c...........c
+c.GEDEDEDEG.c
+.............
+..THFHFHFHT..
+.............
+c.GEDEDEDEG.c
+c...........c
+ccccccccccccc
+ENDMAP
+
+NAME:    nicolae_overflow_hallway_of_the_gods
+TAGS:    temple_overflow_generic_11 temple_overflow_generic_10 \
+         temple_overflow_generic_9 temple_overflow_generic_8 \
+         temple_overflow_generic_7 temple_overflow_generic_6 \
+         temple_overflow_generic_5 transparent allow_dup
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 11
+  else
+    altarcount = tonumber(get_overflow_altar_count(_G))
+  end
+  if altarcount == 5 then
+    subst("DFJ : B")
+  elseif altarcount == 6 then
+    subst("EHK : B")
+  elseif altarcount == 7 then
+    shuffle("EFHJK")
+    subst("DEFH : B")
+  elseif altarcount == 8 then
+    shuffle("EFHJK")
+    subst("EFHJ : B")
+  elseif altarcount == 9 then
+    shuffle("FK")
+    subst("DEFHJ : B")
+  elseif altarcount == 10 then
+    subst("EFHJK : B")
+  else
+    subst("DEFHJK : B")
+  end
+}}
+SUBST:   D : GGTTUt, E : GGTTUt, F : GGTTUt, H : GGTTUt, J : GGTTUt, K : GGTTUt
+MAP
+ccccccccccc
+ccc.....ccc
+cc...H...cc
+c..J...F..c
+c....c....c
+c.K.ccc.E.c
+c...cc....c
+c@@@c..D..c@@@c
+    c....cc...c
+    c.E.ccc.K.c
+    c....c....c
+    c..F...J..c
+    cc...H...cc
+    ccc.....ccc
+    ccccccccccc
 ENDMAP
 
 NAME:   chequers_temple_overflow_statue_of_worship

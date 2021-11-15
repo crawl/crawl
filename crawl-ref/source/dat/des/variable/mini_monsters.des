@@ -369,6 +369,30 @@ xxxxxxxxx
 xxxxxxxxx
 ENDMAP
 
+NAME:    nicolae_wormholes
+TAGS:    transparent
+DEPTH:   D:1-5
+KMONS:   1 = worm
+KFEAT:   ^ = shaft trap
+NSUBST:  - = } / `
+SUBST:   D = x, E = x.
+SHUFFLE: }])
+: nsubst("` = " .. you.depth() .. "=1 / " .. ((you.depth() + 2) * 2) ..
+:        "=^ / " .. you.depth() .."=1^. / .")
+MAP
+xxxxE.Exxxx
+xxD`...`Dxx
+xD```````Dx
+x``-----``x
+E.`-----`.E
+..`-----`..
+E.`-----`.E
+x``-----``x
+xD```````Dx
+xxD`...`Dxx
+xxxxE.Exxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Vertebrae
@@ -2330,6 +2354,67 @@ cccc....cccc
 cccccccccccc
 ENDMAP
 
+NAME:   nicolae_grassy_gnolls
+TAGS:   transparent
+DEPTH:  D:1-8
+KMONS:  p = plant
+: if you.depth() == 1 then
+KMONS:  1 = gnoll
+: elseif you.depth() == 2 then
+KMONS:  1 = gnoll band
+: elseif you.depth() == 3 then
+KMONS:  1 = gnoll shaman band / gnoll band
+: elseif you.depth() == 4 then
+KMONS:  1 = gnoll sergeant band / gnoll shaman band / gnoll band
+: else
+KMONS:  1 = gnoll shaman band / gnoll sergeant band / gnoll band
+KMONS:  2 = gnoll shaman / gnoll sergeant
+NSUBST: - = 2 / -
+: end
+NSUBST: - = 1 / p```
+SUBST:  P = pp`, . = ...`
+FTILE:  `p12 = floor_grass
+MAP
+ .......
+..PPPPP..
+.PP---PP.
+.P-----P.
+.P-----P.
+.P-----P.
+.PP---PP.
+..PPPPP..
+ .......
+ENDMAP
+
+NAME:   nicolae_splish_splash
+TAGS:   transparent
+DEPTH:  D:12-, Shoals
+KMONS:  1 = water nymph / merfolk aquamancer
+KFEAT:  1 = w
+: if you.branch() == "D" then
+NSUBST: w = 3=1 / 2=1ww / w
+: else
+NSUBST: w = 4=1 / 4=1w / w
+: end
+SUBST:  M = w.
+MAP
+   ...   ...
+  ..... .....
+ ...M.....M...
+...MwM...MwM...
+..MwwwM.MwwwM..
+...MwwwMwwwM...
+ ...MwwwwwM...
+  ...MwwwM...
+ ...MwwwwwM...
+...MwwwMwwwM...
+..MwwwM.MwwwM..
+...MwM...MwM...
+ ...M.....M...
+  ..... .....
+   ...   ...
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -2817,6 +2902,27 @@ ccA..1ccc1..Acc
      cc.cc
       c+c
        @
+ENDMAP
+
+NAME:    nicolae_burly_brawl
+TAGS:    transparent no_monster_gen
+DEPTH:   D:13-, Depths:2-
+KMONS:   1 = rakshasa
+SHUFFLE: {[(
+NSUBST:  D = 2=1 / ., E = 2=1 / .
+: if you.in_branch("D") then
+SUBST:   1 = 1..
+: end
+MAP
+xxxxxxxxxxxxxxxxx
+xGD..D..1..E..EGx
+xx.............xx
+ x.............x
+ +1..D..{..E..1+
+ x.............x
+xx.............xx
+xGD..D..1..E..EGx
+xxxxxxxxxxxxxxxxx
 ENDMAP
 
 ################################################################################
@@ -3415,6 +3521,61 @@ xpddd.px xxp.@
 xp...pxx  xxxx
 xxpppxx
  xxxxx
+ENDMAP
+
+NAME:    nicolae_danse_macabre
+TAGS:    transparent patrolling no_monster_gen no_item_gen
+DEPTH:   D:11-, Elf:3, Depths, Crypt
+: local evilegos = util.random_subset({ "pain", "vampirism", "draining" }, 3)
+: kmons("1 = dancing weapon ; demon whip good_item ego:" .. evilegos[1] )
+: kmons("2 = dancing weapon ; demon blade good_item ego:" .. evilegos[2] )
+: kmons("3 = dancing weapon ; demon trident good_item ego:" .. evilegos[3] )
+: kmons("4 = dancing weapon ; demon whip ego:" .. evilegos[2] )
+: kmons("5 = dancing weapon ; demon blade ego:" .. evilegos[3] )
+: kmons("6 = dancing weapon ; demon trident ego:" .. evilegos[1] )
+KFEAT:   D = altar_uskayaw
+KFEAT:   E = altar_dithmenos / altar_kikubaaqudgha / altar_lugonu / \
+             altar_makhleb / altar_yredelemnul
+SHUFFLE: FH
+NSUBST:  F = 1 / 2 / 3 / 4 / 5 / 6
+SUBST:   H = ., Y = YYDE
+MAP
+xxxm+mxxx
+xx.....xx
+x..FHF..x
+x.H...H.x
+x.F.Y.F.x
+x.H...H.x
+x..FHF..x
+xx.....xx
+xxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_rock_paper_scissors
+TAGS:    transparent patrolling no_monster_gen
+DEPTH:   Depths, !Depths:$, Zot, !Zot:$
+KMONS:   r = nargun
+KMONS:   p = walking frostbound tome / walking earthen tome / \
+             walking divine tome / walking crystal tome
+KMONS:   s = dancing weapon ; double sword good_item | \
+                              double sword randart good_item w:5
+SHUFFLE: }])>
+NSUBST:  1 = r / p / s / rps...
+SUBST:   T = TTTTTTV
+MAP
+    cc+cc
+    c...c
+   cc.1.cc
+   cT...Tc
+  cc.1.1.cc
+  c}.....]c
+ cc.1.1.1.cc
+ cT...U...Tc
+cc.1.1.1.1.cc
+c...........c
++.1.1.1.1.1.+
+cc..T.).T..cc
+ ccccccccccc
 ENDMAP
 
 ###################################################################
@@ -6564,6 +6725,97 @@ x.qpppppq.x
 xx.qpppq.xx
  xx..p..xx
   xx...xx
+ENDMAP
+
+NAME:    nicolae_fountain_basement
+TAGS:    transparent allow_dup luniq
+DEPTH:   D:5-, Depths:2-, Snake:2-, Elf:2-, Crypt:2-
+KMASK:   -'cnTUVY0%{[( = opaque
+SHUFFLE: DE/TF
+SUBST:   D : ---T, T : T:30 UV Y:3, F : n, E : cccn, H : cccn, \
+         s = {[(, - = 0%----
+MAP
+    .....
+    .FFF.
+  ...HTH...
+  .EEH-HEE.
+...ED---DE...
+.FHH-'''-HHF.
+.FT--'s'--TF.
+.FHH-'''-HHF.
+...ED---DE...
+  .EEH-HEE.
+  ...HTH...
+    .FFF.
+    .....
+ENDMAP
+
+NAME:   nicolae_rejected_hall
+TAGS:   transparent
+DEPTH:  D:9-, Depths
+NSUBST: D = + / n+, E = + / n+, F = + / n+, H = + / n+, J = + / n+
+SUBST:  n : nccc, % = %%%*, * = ***|, 0 = 0..., 9 = 9..., 8 = 8...
+MAP
+    ccccccccc+ccccccccc
+    c%...D0.....0E...%c
+  ccc.89.c.......c.98.ccc
+  c*.998.c0.0.0.0c.899.*c
+ccc.899.%cc..T..cc%.998.ccc
+c%.998.cccc0.0.0cccc.899.%c
+c.899.*ccccc...ccccc*.998.c
+c.98.ccccccc0.0ccccccc.89.c
+c...%ccccccccJcccccccc%...c
+cDccccccccc0...0cccccccccEc
+c0.0cccccc%.0.0.%cccccc0.0c
+c....0ccc0.9.0.9.0ccc0....c
+c..0...0c.0.9.9.0.c0...0..c
++...T0..J..0.U.0..J..0T...+
+c..0...0c.0.9.9.0.c0...0..c
+c....0ccc0.9.0.9.0ccc0....c
+c0.0cccccc%.0.0.%cccccc0.0c
+cFccccccccc0...0cccccccccHc
+c...%ccccccccJcccccccc%...c
+c.98.ccccccc0.0ccccccc.89.c
+c.899.*ccccc...ccccc*.998.c
+c%.998.cccc0.0.0cccc.899.%c
+ccc.899.%cc..T..cc%.998.ccc
+  c*.998.c0.0.0.0c.899.*c
+  ccc.89.c.......c.98.ccc
+    c%...F0.....0H...%c
+    ccccccccc+ccccccccc
+ENDMAP
+
+# With shadow creatures, summons, word of recall, and phantom mirror, this
+# vault can get out of hand pretty quickly. You've got this, though.
+NAME:    nicolae_keep_em_comin
+TAGS:    transparent
+DEPTH:   Depths:2-
+KMONS:   1 = rakshasa / shadow demon / ironbound convoker / \
+             deep elf demonologist / boggart / vampire mage
+NSUBST:  D = + / c, E = + / c, F = + / c, H = + / c
+# 40% chance of all three upstairs, 60% of just two.
+SHUFFLE: {[(<<
+# Generates between 8 and 16 monsters
+NSUBST:  . = 8=1 / 8=1. / .
+MAP
+cccc   cccc   cccc
+cccccDccccccDccccc
+cccc'''cccc'''cccc
+ccc............ccc
+ c'............'c
+ H'..''''''''..'E
+ c'..''''''''..'c
+ccc..''G''G''..ccc
+ccc..'''{['''..ccc
+ccc..'''(<'''..ccc
+ccc..''G''G''..ccc
+ c'..''''''''..'c
+ H'..''''''''..'E
+ c'............'c
+ccc............ccc
+cccc'''cccc'''cccc
+cccccFccccccFccccc
+cccc   cccc   cccc
 ENDMAP
 
 ################################################################

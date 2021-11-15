@@ -1,10 +1,9 @@
 ################################################################################
-# hells.des: Maps that can be placed in multiple Hells.
+# hells.des: Maps that can be placed in multiple Hells. This includes a few
+# vaults that had been previously been in dis.des and geh.des.
 #
 # For hell entry vaults and vaults related to the Vestibule of Hell, you'll want
-# hell.des instead. This includes a few vaults that had been previously been in
-# dis.des and geh.des.
-#
+# hell.des instead.
 ################################################################################
 
 : crawl_require('dlua/vault.lua')
