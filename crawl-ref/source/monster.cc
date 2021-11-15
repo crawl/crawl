@@ -5225,7 +5225,9 @@ bool monster::polymorph(poly_power_type power)
         return true;
     }
 
-    return monster_polymorph(this, RANDOM_POLYMORPH_MONSTER, power);
+    const monster_type targ = power == PPT_SAME ? RANDOM_POLYMORPH_MONSTER
+                                                : RANDOM_MONSTER;
+    return monster_polymorph(this, targ, power);
 }
 
 static bool _mons_is_icy(int mc)
