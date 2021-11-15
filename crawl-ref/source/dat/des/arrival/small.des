@@ -2523,7 +2523,6 @@ ENDMAP
 NAME:    saegor_arrival_fortress
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
-MONS:    place:D:1 zombie
 KPROP:   W = no_tele_into
 NSUBST:  { = 1:{ / 1:> / *:.
 MAP
@@ -2534,13 +2533,13 @@ wc.....+.......+.....cw
 wcG...GccGc+cGccG...Gcw
 wccc+cccccc+cccccc+cccw
 wcWc.cctt.....ttcc.cWcw
-wttG.ctW...1...Wtc.Gttw
+wttG.ctW.......Wtc.Gttw
 wcWc.Gc.........cG.cWcw
 wccc.cc...WtW...cc.cccw
 @++..++...tGt...++..++@
 wccc.cc...WtW...cc.cccw
 wcWc.Gc.........cG.cWcw
-wttG.ctW...1...Wtc.Gttw
+wttG.ctW.......Wtc.Gttw
 wcWc.cctt.....ttcc.cWcw
 wccc+cccccc+cccccc+cccw
 wcG...GccGc+cGccG...Gcw

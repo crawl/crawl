@@ -361,6 +361,8 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
 #endif
 
     case SPWPN_CONFUSE:
+    case SPWPN_WEAKNESS:
+    case SPWPN_VULNERABILITY:
     case SPWPN_FORBID_BRAND:
     case SPWPN_DEBUG_RANDART:
     case NUM_SPECIAL_WEAPONS:

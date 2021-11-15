@@ -245,8 +245,6 @@ static bool _swap_monsters(monster& mover, monster& moved)
              moved.name(DESC_THE).c_str());
     }
 
-    _escape_water_hold(mover);
-
     _handle_manticore_barbs(mover);
     _handle_manticore_barbs(moved);
 
@@ -507,28 +505,6 @@ static void _fill_good_move(const monster* mons, move_array* good_move)
             (*good_move)[count_x][count_y] =
                 mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
         }
-}
-
-// This only tracks movement, not whether hitting an
-// adjacent monster is a possible move.
-bool mons_can_move_towards_target(const monster* mon)
-{
-    coord_def mov, delta;
-    _set_mons_move_dir(mon, &mov, &delta);
-
-    move_array good_move;
-    _fill_good_move(mon, &good_move);
-
-    int dir = _compass_idx(mov);
-    for (int i = -1; i <= 1; ++i)
-    {
-        const int altdir = (dir + i + 8) % 8;
-        const coord_def p = mon_compass[altdir] + coord_def(1, 1);
-        if (good_move(p))
-            return true;
-    }
-
-    return false;
 }
 
 static const string BATTY_TURNS_KEY = "BATTY_TURNS";
@@ -952,7 +928,7 @@ static bool _handle_reaching(monster& mons)
     }
 
     const coord_def foepos(foe->pos());
-    if (can_reach_attack_between(mons.pos(), foepos)
+    if (can_reach_attack_between(mons.pos(), foepos, range)
         // The monster has to be attacking the correct position.
         && mons.target == foepos)
     {
@@ -978,7 +954,7 @@ static bool _handle_scroll(monster& mons)
         || mons.has_ench(ENCH_BLIND)
         || !one_chance_in(3)
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
-        || silenced(mons.pos())
+        || mons.is_silenced()
         || scroll->base_type != OBJ_SCROLLS)
     {
         return false;
@@ -986,48 +962,21 @@ static bool _handle_scroll(monster& mons)
 
     bool read        = false;
     bool was_visible = you.can_see(mons);
-
-    // Notice how few cases are actually accounted for here {dlb}:
     const int scroll_type = scroll->sub_type;
-    switch (scroll_type)
+
+    if (scroll_type == SCR_SUMMONING && mons.can_see(you))
     {
-    case SCR_TELEPORTATION:
-        if (!mons.has_ench(ENCH_TP) && !mons.no_tele(true, false) && mons.pacified())
+        simple_monster_message(mons, " reads a scroll.");
+        mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
+        read = true;
+        int count = roll_dice(2, 2);
+        for (int i = 0; i < count; ++i)
         {
-            simple_monster_message(mons, " reads a scroll.");
-            read = true;
-            monster_teleport(&mons, false);
+            create_monster(
+                mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)),
+                          mons.pos(), mons.foe)
+                .set_summoned(&mons, 3, MON_SUMM_SCROLL));
         }
-        break;
-
-    case SCR_BLINKING:
-        if (mons.pacified() && mons.can_see(you) && !mons.no_tele(true, false))
-        {
-            simple_monster_message(mons, " reads a scroll.");
-            read = true;
-            if (mons.caught())
-                monster_blink(&mons);
-            else
-                blink_away(&mons);
-        }
-        break;
-
-    case SCR_SUMMONING:
-        if (mons.can_see(you))
-        {
-            simple_monster_message(mons, " reads a scroll.");
-            mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
-            read = true;
-            int count = roll_dice(2, 2);
-            for (int i = 0; i < count; ++i)
-            {
-                create_monster(
-                    mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)),
-                              mons.pos(), mons.foe)
-                    .set_summoned(&mons, 3, MON_SUMM_SCROLL));
-            }
-        }
-        break;
     }
 
     if (read)
@@ -2000,7 +1949,7 @@ void handle_monster_move(monster* mons)
             return;
         }
 
-        if (mons->cannot_move() || !_monster_move(mons))
+        if (mons->cannot_act() || !_monster_move(mons))
             mons->speed_increment -= non_move_energy;
     }
     you.update_beholder(mons);
@@ -2615,10 +2564,7 @@ static bool _handle_pickup(monster* mons)
                 // encourages killing Maurice, since there's just one of him.
                 // Usually.
                 || (testbits(si->flags, ISFLAG_SEEN)
-                    && !mons->has_attack_flavour(AF_STEAL)))
-            // ...but it's ok if it dropped the item itself.
-            && !(si->props.exists(DROPPER_MID_KEY)
-                 && si->props[DROPPER_MID_KEY].get_int() == (int)mons->mid))
+                    && !mons->has_attack_flavour(AF_STEAL))))
         {
             // don't pick up any items beneath one that the player's seen,
             // to prevent seemingly-buggy behavior (monsters picking up items
@@ -2649,7 +2595,8 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
-    const bool broken = one_chance_in(3) && mons.behaviour == BEH_SEEK;
+    const bool broken = mons.behaviour == BEH_SEEK
+                        && (mons.berserk() || one_chance_in(3));
     for (const auto &dc : all_door)
     {
         if (you.see_cell(dc))
@@ -2743,10 +2690,10 @@ static bool _mons_can_displace(const monster* mpusher,
     // elbow past them, and the wake-up check happens downstream.
     // Monsters caught in a net also can't be pushed past.
     if (mons_is_confused(*mpusher) || mons_is_confused(*mpushee)
-        || mpusher->cannot_move() || mpusher->is_stationary()
+        || mpusher->cannot_act() || mpusher->is_stationary()
         || mpusher->is_constricted() || mpushee->is_constricted()
         || (!_same_tentacle_parts(mpusher, mpushee)
-           && (mpushee->cannot_move() || mpushee->is_stationary()))
+           && (mpushee->cannot_act() || mpushee->is_stationary()))
         || mpusher->asleep() || mpushee->caught())
     {
         return false;

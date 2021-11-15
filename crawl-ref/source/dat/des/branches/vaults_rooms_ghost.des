@@ -3,7 +3,12 @@
 #
 # Vaults that place player ghosts and place in only in the Vaults branch. See
 # the ghost vault guidelines in docs/develop/levels/guidelines.md. All vaults
-# here should call the function ghost_setup().
+# here should call the function ghost_setup() in the following way:
+#
+#     ghost_setup(_G, true, false)
+#
+# This will ensure the vault will place only as a ghost vault in the Vaults
+# branch and nowhere else.
 
 # Do not use other tag selectors like vaults_room and vaults_hard in these
 # vaults, however any of the other standard vault room tags for orientation
@@ -22,7 +27,7 @@ KMONS:   1 = vault guard / ironbound convoker / ironbound preserver / \
 KMONS:   2 = vault warden
 KMONS:   3 = player ghost
 SHUFFLE: 13
-: ghost_setup(_G)
+: ghost_setup(_G, true, false)
 MAP
 ........
 ........
@@ -44,7 +49,7 @@ KMONS:   2 = vault warden
 KMONS:   3 = player ghost
 SHUFFLE: 1239
 SUBST:   9 = 98
-: ghost_setup(_G)
+: ghost_setup(_G, true, false)
 MAP
 ........
 nnn==nnn

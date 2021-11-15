@@ -10,6 +10,9 @@ crawl_require('dlua/util.lua')
 -- Namespace for callbacks (just an aid to recognising callbacks, no magic)
 util.namespace('callback')
 
+dgn.wizlab_chance_percent = 5
+dgn.desolation_chance_percent = 5
+
 dgn.GXM, dgn.GYM = dgn.max_bounds()
 dgn.MAX_MONSTERS = dgn.max_monsters()
 

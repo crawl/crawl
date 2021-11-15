@@ -1031,9 +1031,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                mprf("You can't wear a glove with your huge claw%s!",
+                mprf("You can't wear gloves with your huge claw%s!",
                      you.arm_count() == 1 ? "" : "s");
             }
+            return false;
+        }
+
+        if (you.get_mutation_level(MUT_DEMONIC_TOUCH) == 3)
+        {
+            if (verbose)
+                mpr("Your demonic touch would destroy the gloves!");
             return false;
         }
     }
@@ -1135,6 +1142,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     mpr("You can't wear that!");
                 return false;
             }
+        }
+    }
+
+    if (slot == EQ_CLOAK)
+    {
+        if (you.get_mutation_level(MUT_WEAKNESS_STINGER) == 3)
+        {
+            if (verbose)
+                mpr("You can't wear that with your sharp stinger!");
+            return false;
         }
     }
 
@@ -2437,27 +2454,25 @@ static void _rebrand_weapon(item_def& wpn)
     {
         if (is_range_weapon(wpn))
         {
-            new_brand = random_choose_weighted(
-                                    33, SPWPN_FLAMING,
-                                    33, SPWPN_FREEZING,
-                                    23, SPWPN_VENOM,
-                                    23, SPWPN_VORPAL,
-                                    5, SPWPN_ELECTROCUTION,
-                                    3, SPWPN_CHAOS);
+            new_brand = random_choose_weighted(3, SPWPN_FLAMING,
+                                               3, SPWPN_FREEZING,
+                                               3, SPWPN_VENOM,
+                                               3, SPWPN_VORPAL,
+                                               1, SPWPN_ELECTROCUTION,
+                                               1, SPWPN_CHAOS);
         }
         else
         {
-            new_brand = random_choose_weighted(
-                                    28, SPWPN_FLAMING,
-                                    28, SPWPN_FREEZING,
-                                    23, SPWPN_VORPAL,
-                                    18, SPWPN_VENOM,
-                                    14, SPWPN_DRAINING,
-                                    14, SPWPN_ELECTROCUTION,
-                                    11, SPWPN_PROTECTION,
-                                    11, SPWPN_SPECTRAL,
-                                    8, SPWPN_VAMPIRISM,
-                                    3, SPWPN_CHAOS);
+            new_brand = random_choose_weighted(2, SPWPN_FLAMING,
+                                               2, SPWPN_FREEZING,
+                                               2, SPWPN_VORPAL,
+                                               2, SPWPN_VENOM,
+                                               2, SPWPN_PROTECTION,
+                                               1, SPWPN_DRAINING,
+                                               1, SPWPN_ELECTROCUTION,
+                                               1, SPWPN_SPECTRAL,
+                                               1, SPWPN_VAMPIRISM,
+                                               1, SPWPN_CHAOS);
         }
     }
 
@@ -2858,7 +2873,7 @@ string cannot_read_item_reason(const item_def *item)
     {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            return you.no_tele_reason(false, item->sub_type == SCR_BLINKING);
+            return you.no_tele_reason(item->sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
             if (you.spell_no == 0)
@@ -2872,8 +2887,6 @@ string cannot_read_item_reason(const item_def *item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
-            if (have_passive(passive_t::want_curses))
-                return _no_items_reason(OSEL_CURSED_WORN);
             return _no_items_reason(OSEL_UNIDENT, true);
 
 #if TAG_MAJOR_VERSION == 34
@@ -3275,7 +3288,7 @@ void read(item_def* scroll, dist *target)
     {
     case SCR_BLINKING:
     {
-        const string reason = you.no_tele_reason(true, true);
+        const string reason = you.no_tele_reason(true);
         if (!reason.empty())
         {
             mpr(pre_succ_msg);
@@ -3323,9 +3336,8 @@ void read(item_def* scroll, dist *target)
         break;
 
     case SCR_SUMMONING:
-        cancel_scroll =
-                    cast_shadow_creatures(MON_SUMM_SCROLL) == spret::abort
-                    && alreadyknown;
+        cancel_scroll = summon_shadow_creatures() == spret::abort
+                        && alreadyknown;
         break;
 
     case SCR_FOG:

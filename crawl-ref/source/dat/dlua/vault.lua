@@ -159,7 +159,7 @@ resistance, so it has all of the elemental resistances.
 @string glyph The glyph on which to define the KMONS.
 ]]
 function master_elementalist_setup(e, glyph, ele_staff)
-    local equip_def = " ; elemental staff . robe good_item"
+    local equip_def = " ; elemental staff . robe ego:willpower good_item"
     -- Don't want to use the fallback here, so we can know to give resistance
     -- ego robe if the elemental staff isn't available.
     if you.unrands("elemental staff") then

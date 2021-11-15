@@ -26,6 +26,7 @@
 
 using std::vector;
 
+class xlog_fields;
 class Menu;
 
 enum WebtilesUIState
@@ -215,6 +216,7 @@ public:
     void zoom_dungeon(bool in);
 
     void send_doll(const dolls_data &doll, bool submerged, bool ghost);
+    void send_milestone(const xlog_fields &xl);
 
 protected:
     int m_sock;

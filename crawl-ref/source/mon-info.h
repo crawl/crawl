@@ -143,7 +143,6 @@ enum monster_info_flags
     MB_VORTEX_COOLDOWN,
     MB_BARBS,
     MB_POISON_VULN,
-    MB_ICEMAIL,
     MB_AGILE,
     MB_FROZEN,
     MB_BLACK_MARK,
@@ -340,7 +339,7 @@ struct monster_info : public monster_info_base
 
     string constriction_description() const;
 
-    monster_type draco_or_demonspawn_subspecies() const;
+    monster_type draconian_subspecies() const;
 
     mon_intel_type intel() const
     {
@@ -378,6 +377,7 @@ struct monster_info : public monster_info_base
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)
+    // Note: actor version is now actor::cannot_act.
     bool cannot_move() const;
     bool airborne() const;
     bool ground_level() const;

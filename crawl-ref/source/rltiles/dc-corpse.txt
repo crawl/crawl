@@ -357,9 +357,5 @@ bunyip CORPSE_BUNYIP
 # Demonspawn ('6')
 %sdir mon/humanoids/demonspawn
 demonspawn CORPSE_DEMONSPAWN
-monstrous CORPSE_MONSTROUS_DEMONSPAWN
-gelid CORPSE_GELID_DEMONSPAWN
-infernal CORPSE_INFERNAL_DEMONSPAWN
-torturous CORPSE_TORTUROUS_DEMONSPAWN
 
 %corpse 0

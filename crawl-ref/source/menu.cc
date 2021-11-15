@@ -1753,13 +1753,6 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         if (job)
             tileset.emplace_back(job);
     }
-    else if (mons_is_demonspawn(m->type))
-    {
-        tileset.emplace_back(tileidx_demonspawn_base(*m));
-        const tileidx_t job = tileidx_demonspawn_job(*m);
-        if (job)
-            tileset.emplace_back(job);
-    }
     else
     {
         tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;

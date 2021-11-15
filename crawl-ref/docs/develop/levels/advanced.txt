@@ -1003,29 +1003,30 @@ CFOPTIMIZE is also a good place for inserting -pg into.
 Q.   Map Generation
 ===================
 
-Full-debug Crawl builds (see above for more information) include a test for
-generating specific vaults and outputting a copy of the map to a text file for
-inspection (you can also define the macro DEBUG_TESTS on an ordinary debug
-build, like "make EXTERNAL_DEFINES=-DDEBUG_TESTS wizard"). This is most useful
-for portal and other encompass vaults which use randomisation heavily.
+Full-debug Crawl builds (see above for more information) include a script that
+can attempt to generate vaults either singly or in bulk, and test placement
+conditions. This can be useful for finding closets, among other things,
+especially in heavily randomized vaults. This script must be run under the
+fake_pty utility (`make util/fake_pty` to ensure it is built.)
 
-To use the test, you must edit source/test/vault_generation.lua. Fill in the
-following variables:
+To see all command line options, run:
 
- * map_to_test: The exact name of the vault you want to generate.
- * checks: How many times to generate the vault. Default value is 10.
- * output_to: The basic filename to output the results of generation to. This
-        will have ".<iteration>" appended. For example, "volcano.map" will
-        result in files named "volcano.map.1", "volcano.map.2", etc.
- * need_to_load_des: If the file is not included in one of the .des files that
-        are listed in source/dat/dlua/loadmaps.lua, this should be set to true,
-        and the following variable should be set.
- * des_file: The name of the file to load. The file should be located in the
-        source/dat folder.
+    util/fake_pty ./crawl -script placement.lua --help
 
-Once you have saved your changes, run crawl:
+An example use case is:
 
- crawl -test vault_generation
+    util/fake_pty ./crawl -script placement.lua minmay_nonomino_d4 -count 10 -dump
 
-Once all of the tests have been finished successfully you should find the
-relevant files in your working directory.
+This command tries to place the vault `minmay_nonomino_d4` 10 times, generating
+an ascii output file for each placement. If any of these times generate a
+placement issue, an error will be shown as part of the command output. For
+example (this bug is long fixed):
+
+    Testing map 'minmay_nonomino_d4'
+        Failing vault output to: placement-minmay_nonomino_d4.10.txt
+    script error: ./scripts/placement.lua:184: Isolated area in vault minmay_nonomino_d4 (2 zones)
+
+The indicated output file could then be expected to try to identify the
+placement error. This script supports a number of other modes, and can be run
+on large batches of vaults at once; see the `--help` output for more
+information. This script does not handle encompass vaults.

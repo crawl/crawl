@@ -8,6 +8,7 @@
 #include "spl-goditem.h"
 
 #include "art-enum.h"
+#include "attack.h"
 #include "cleansing-flame-source-type.h"
 #include "coordit.h"
 #include "database.h"
@@ -946,14 +947,21 @@ bool cast_smiting(int pow, monster* mons)
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
-    mprf("You smite %s!", mons->name(DESC_THE).c_str());
-    behaviour_event(mons, ME_ANNOY, &you);
-
     // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
-    int damage_increment = div_rand_round(pow, 8);
-    mons->hurt(&you, 6 + roll_dice(3, damage_increment));
+    int damage = 6 + roll_dice(3, div_rand_round(pow, 8));
+
+    mprf("You smite %s%s",
+         mons->name(DESC_THE).c_str(),
+         attack_strength_punctuation(damage).c_str());
+
+    behaviour_event(mons, ME_ANNOY, &you);
+    mons->hurt(&you, damage);
+
     if (mons->alive())
+    {
         print_wounds(*mons);
+        you.pet_target = mons->mindex();
+    }
 
     return true;
 }
@@ -1105,7 +1113,9 @@ void torment_player(const actor *attacker, torment_source_type taux)
                 hploss = 0;
                 simple_god_message(" shields you from torment!");
             }
-            else if (random2(250) < you.piety) // 24% to 80% chance
+            // Always give at least partial protection for invoked torment.
+            // 24% to 80% chance for other sources.
+            else if (random2(250) < you.piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
                 hploss -= random2(hploss - 1);
                 simple_god_message(" partially shields you from torment!");
@@ -1120,7 +1130,6 @@ void torment_player(const actor *attacker, torment_source_type taux)
     }
 
     mpr("Your body is wracked with pain!");
-
 
     kill_method_type type = KILLED_BY_BEAM;
     if (crawl_state.is_god_acting())

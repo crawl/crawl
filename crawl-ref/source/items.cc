@@ -84,41 +84,6 @@
 #include "view.h"
 #include "xom.h"
 
-/**
- * Return an item's location (floor or inventory) and the corresponding env.item
- * int or inv slot referring to it.
- *
- * @param item_def An item in either env.item (the floor or monster inventory)
- *                 or you.inv.
- *
- * @return A pair containing bool and int. The bool is true for items in
- *         inventory, false for others. The int is the item's index in either
- *         you.inv or env.item.
- */
-
-pair<bool, int> item_int(item_def &item)
-{
-    if (in_inventory(item))
-        return make_pair(true, item.link);
-    return make_pair(false, item.index());
-}
-
-
-/**
- * Return an item_def& requested by an item's inv slot or env.item index.
- *
- * @param inv Is the item in inventory?
- * @param number The index of the item, either in you.inv (if inv == true)
- *               or in env.item (if inv == false).
- *
- * @return The item.
- */
-
-item_def& item_from_int(bool inv, int number)
-{
-    return inv ? you.inv[number] : env.item[number];
-}
-
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
@@ -2496,16 +2461,6 @@ const item_def* top_item_at(const coord_def& where)
 {
     const int link = you.visible_igrd(where);
     return (link == NON_ITEM) ? nullptr : &env.item[link];
-}
-
-bool multiple_items_at(const coord_def& where)
-{
-    int found_count = 0;
-
-    for (stack_iterator si(where); si && found_count < 2; ++si)
-        ++found_count;
-
-    return found_count > 1;
 }
 
 /**

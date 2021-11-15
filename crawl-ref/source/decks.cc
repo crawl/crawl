@@ -1383,7 +1383,7 @@ static void _storm_card(int power)
 {
     const int power_level = _get_power_level(power);
 
-    wind_blast(&you, (power_level + 1) * 66, coord_def(), true);
+    wind_blast(&you, (power_level + 1) * 66, coord_def());
     redraw_screen(); // Update monster positions
     update_screen();
 

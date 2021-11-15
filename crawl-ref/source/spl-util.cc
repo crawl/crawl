@@ -465,7 +465,7 @@ bool spell_is_direct_attack(spell_type spell)
     if (spell_harms_target(spell))
     {
         // spell school exceptions
-        if (   spell == SPELL_VIOLENT_UNRAVELLING  // hex
+        if (spell == SPELL_VIOLENT_UNRAVELLING  // hex
             || spell == SPELL_FORCE_LANCE // transloc
             || spell == SPELL_GRAVITAS
             || spell == SPELL_BLINKBOLT
@@ -492,7 +492,7 @@ bool spell_is_direct_attack(spell_type spell)
     }
 
     // The area harm check has too many false positives to bother with here
-    if (   spell == SPELL_ISKENDERUNS_MYSTIC_BLAST
+    if (spell == SPELL_ISKENDERUNS_MYSTIC_BLAST
         || spell == SPELL_OZOCUBUS_REFRIGERATION
         || spell == SPELL_SYMBOL_OF_TORMENT
         || spell == SPELL_SHATTER
@@ -1098,29 +1098,6 @@ int spell_effect_noise(spell_type spell)
 }
 
 /**
- * Does the given spell map to a player transformation?
- *
- * @param spell     The spell in question.
- * @return          Whether the spell, when cast, puts the player in a form.
- */
-bool spell_is_form(spell_type spell)
-{
-    switch (spell)
-    {
-        case SPELL_BEASTLY_APPENDAGE:
-        case SPELL_BLADE_HANDS:
-        case SPELL_DRAGON_FORM:
-        case SPELL_ICE_FORM:
-        case SPELL_SPIDER_FORM:
-        case SPELL_STATUE_FORM:
-        case SPELL_NECROMUTATION:
-            return true;
-        default:
-            return false;
-    }
-}
-
-/**
  * Casting-specific checks that are involved when casting any spell. Includes
  * MP (which does use the spell level if provided), confusion state, banned
  * schools.
@@ -1272,8 +1249,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.stasis())
             return "your stasis prevents you from teleporting.";
 
-        if (temp && you.no_tele(false, false, true))
-            return lowercase_first(you.no_tele_reason(false, true));
+        // Distinct from no_tele - can still be forcibly blinked.
+        if (temp && you.duration[DUR_BLINK_COOLDOWN])
+            return "you are still too unstable to blink.";
+
+        if (temp && you.no_tele(true))
+            return lowercase_first(you.no_tele_reason(true));
         break;
 
     case SPELL_SWIFTNESS:
@@ -1289,11 +1270,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             if (you.is_stationary())
                 return "you can't move.";
         }
-        break;
-
-    case SPELL_INVISIBILITY:
-        if (!prevent && temp && you.backlit())
-            return "invisibility won't help you when you glow in the dark.";
         break;
 
     case SPELL_STATUE_FORM:
@@ -1407,7 +1383,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_SKELETON:
-        if (temp && !in_bounds(find_animatable_skeleton(you.pos())))
+        if (temp && find_animatable_skeletons(you.pos()).empty())
             return "there is nothing nearby to animate!";
         break;
     case SPELL_SIMULACRUM:
@@ -1416,7 +1392,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_CORPSE_ROT:
-        if (temp && corpse_rot(&you, false) == spret::abort)
+        if (temp && corpse_rot(&you, 0, false) == spret::abort)
             return "there is nothing fresh enough to decay nearby.";
         // fallthrough
     case SPELL_POISONOUS_VAPOURS:
@@ -1436,7 +1412,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case  SPELL_DRAGON_CALL:
+    case SPELL_DRAGON_CALL:
         if (temp && (you.duration[DUR_DRAGON_CALL]
                      || you.duration[DUR_DRAGON_CALL_COOLDOWN]))
         {
@@ -1919,6 +1895,7 @@ const set<spell_type> removed_spells =
     SPELL_HYDRA_FORM,
     SPELL_VORTEX,
     SPELL_GOAD_BEASTS,
+    SPELL_TELEPORT_SELF,
 #endif
 };
 

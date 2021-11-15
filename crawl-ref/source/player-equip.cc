@@ -551,7 +551,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_SPECTRAL:
-                    mprf("You feel a bond with your %s.", item_name.c_str());
+                    mprf("You feel a bond with %s.", item_name.c_str());
                     break;
 
                 default:

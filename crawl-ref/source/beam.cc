@@ -1843,7 +1843,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     if (mons->alive())
     {
-        if (!mons->cannot_move())
+        if (!mons->cannot_act())
         {
             simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
                                          ? " seems to be slow for longer."
@@ -2932,8 +2932,7 @@ bool bolt::harmless_to_player() const
         // With clarity, meph still does a tiny amount of damage (1d3 - 1).
         // Normally we'd just ignore it, but we shouldn't let a player
         // kill themselves without a warning.
-        return player_res_poison(false) > 0
-               || you.clarity(false) && you.hp > 2;
+        return player_res_poison(false) > 0 || you.clarity() && you.hp > 2;
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
@@ -3304,7 +3303,6 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_INVISIBILITY:
         potionlike_effect(POT_INVISIBILITY, ench_power);
-        contaminate_player(1000 + random2(1000), blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -4334,6 +4332,8 @@ void bolt::enchantment_affect_monster(monster* mon)
             {
                 hit_woke_orc = true;
             }
+            if (flavour != BEAM_HIBERNATION)
+                you.pet_target = mon->mindex();
         }
         behaviour_event(mon, ME_ANNOY, agent());
     }
@@ -4427,6 +4427,26 @@ void glaciate_freeze(monster* mon, killer_type englaciator,
     }
 }
 
+static void _acid_splash_monsters(monster* mon, actor* agent)
+{
+    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
+    {
+        if (actor *victim = actor_at(*ai))
+        {
+            if (victim == agent)
+                continue;
+
+            if (you.see_cell(*ai))
+            {
+                mprf("The acid splashes onto %s!",
+                     victim->name(DESC_THE).c_str());
+            }
+
+            victim->splash_with_acid(agent, 3);
+        }
+    }
+}
+
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
     // Suppress the message for tremorstones.
@@ -4463,28 +4483,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     {
         const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
-    }
-
-    // Acid splash from yellow draconians / acid dragons
-    if (origin_spell == SPELL_ACID_SPLASH)
-    {
-        // the acid can splash onto adjacent targets
-        for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-        {
-            if (actor *victim = actor_at(*ai))
-            {
-                if (victim == agent())
-                    continue;
-
-                if (you.see_cell(*ai))
-                {
-                    mprf("The acid splashes onto %s!",
-                         victim->name(DESC_THE).c_str());
-                }
-
-                victim->splash_with_acid(agent(), 3);
-            }
-        }
     }
 
     // Handle missile effects.
@@ -4709,17 +4707,12 @@ bool bolt::attempt_block(monster* mon)
                      name.c_str(),
                      mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                      shield->name(DESC_PLAIN).c_str());
-                ident_reflector(shield);
             }
             else
             {
                 mprf("The %s reflects off an invisible shield around %s!",
                      name.c_str(),
                      mon->name(DESC_THE).c_str());
-
-                item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
-                if (amulet)
-                    ident_reflector(amulet);
             }
         }
         else if (you.see_cell(pos()))
@@ -4999,6 +4992,9 @@ void bolt::affect_monster(monster* mon)
             const int blood = min(postac/2, mon->hit_points);
             bleed_onto_floor(mon->pos(), mon->type, blood, true);
         }
+        // Acid splash from yellow draconians.
+        if (origin_spell == SPELL_ACID_SPLASH)
+            _acid_splash_monsters(mon, agent());
         // Now hurt monster.
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
     }
@@ -5173,6 +5169,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_HIBERNATION:
         rc = mon->can_hibernate(false, intrinsic_only);
+        break;
+
+    case BEAM_SLEEP:
+        rc = mon->can_sleep();
         break;
 
     case BEAM_PORKALATOR:

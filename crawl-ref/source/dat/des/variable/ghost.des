@@ -170,13 +170,13 @@ KMONS:  O = player ghost
 :     if you.depth() < 6 then
 SUBST:  d = *%, e = %$, f = %$--, ghij = -
 NSUBST: D = 2=0 / 2=0- / 9- / -
-:     elseif you-depth() < 9 then
+:     elseif you.depth() < 9 then
 SUBST:  d = *, e = *%, f = %$,  ghij = -
 NSUBST: D = 2=0 / 2=0- / 098- / 9- / -
-:     elseif you-depth() < 12 then
+:     elseif you.depth() < 12 then
 SUBST:  e = *, f = *%,  g = %$--, hij = -
 NSUBST: D = 2=0 / 3=0- / 2=9- / 8- / -
-:     elseif you-depth() < 14 then
+:     elseif you.depth() < 14 then
 SUBST:  f = |*, g = *, h = %$, ij = -
 NSUBST: D = 2=0 / 4=0- / 098- / 9 / 9- / 2=8- / -
 :     else
@@ -535,7 +535,7 @@ NSUBST:  M = O / 9 / e / %
 SUBST:   L = ':60 9 0 %, % = %*, * = **e|
 SUBST:   y = G:70 1
 : elseif you.in_branch("Spider") then
-KMONS:   orange crystal statue / oklob plant
+MONS:    orange crystal statue / oklob plant
 KMONS:   2 = arachne / spark wasp, spark wasp
 NSUBST:  M = O / 2 / * = * O:5 8:5
 SUBST:   L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde

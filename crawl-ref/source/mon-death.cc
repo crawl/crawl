@@ -90,13 +90,12 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
     ASSERT(!invalid_monster_type(mtype));
     ASSERT(!invalid_monster_type(corpse_class));
 
-    if (mons_genus(mtype) == MONS_DRACONIAN
-        || mons_genus(mtype) == MONS_DEMONSPAWN)
+    if (mons_genus(mtype) == MONS_DRACONIAN)
     {
         if (mons.type == MONS_TIAMAT)
             corpse_class = MONS_DRACONIAN;
         else
-            corpse_class = draco_or_demonspawn_subspecies(mons);
+            corpse_class = draconian_subspecies(mons);
     }
 
     if (mons.props.exists(ORIGINAL_TYPE_KEY))
@@ -292,8 +291,9 @@ static int _calc_player_experience(const monster* mons)
     if (!experience)
         return 0;
 
-    const bool already_got_half_xp = testbits(mons->flags, MF_PACIFIED);
-    const int half_xp = (experience + 1) / 2;
+    // Already got the XP here.
+    if (testbits(mons->flags, MF_PACIFIED))
+        return 0;
 
     if (!mons->damage_total)
     {
@@ -305,16 +305,6 @@ static int _calc_player_experience(const monster* mons)
     experience = (experience * mons->damage_friendly / mons->damage_total
                   + 1) / 2;
     ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
-
-    // Note: This doesn't happen currently since monsters with
-    //       MF_PACIFIED have always gone through pacification,
-    //       hence also have MF_WAS_NEUTRAL. [rob]
-    if (already_got_half_xp)
-    {
-        experience -= half_xp;
-        if (experience < 0)
-            experience = 0;
-    }
 
     return experience;
 }
@@ -418,7 +408,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
         corpse.quantity *= SPRINT_MULTIPLIER;
 
     const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-    if (!x_chance_in_y(chance, chance + 9))
+    if (!x_chance_in_y(chance, GOZAG_GOLD_AURA_MAX))
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
     you.redraw_title = true;
 }
@@ -612,7 +602,7 @@ void record_monster_defeat(const monster* mons, killer_type killer)
     if (mons->is_named() && mons->friendly()
         && !mons_is_hepliaklqana_ancestor(mons->type))
     {
-        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname));
+        take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->name(DESC_PLAIN, true)));
     }
     else if (mons_is_notable(*mons))
     {
@@ -1129,7 +1119,11 @@ static string _killer_type_name(killer_type killer)
  */
 static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
 {
-    if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(*mons))
+    bool valid_mons = bound_soul ? mons->holiness() & MH_NATURAL
+                                   && mons_can_be_zombified(*mons)
+                                 : mons_can_be_spectralised(*mons);
+
+    if (valid_mons)
     {
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
@@ -1386,7 +1380,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
         did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.
-    if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_move())
+    if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_act())
         did_kill_conduct(DID_KILL_FAST, mons);
 }
 
@@ -3014,7 +3008,6 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         mons->spells[0].spell = SPELL_STONE_ARROW;
         mons->spells[1].spell = SPELL_THROW_ICICLE;
         mons->spells[3].spell = SPELL_BLINK;
-        mons->spells[4].spell = SPELL_HASTE;
         // Nothing with 6.
 
         // Indicate that he has an updated spellbook.
@@ -3031,17 +3024,27 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 void elven_twin_energize(monster* mons)
 {
     if (mons_is_mons_class(mons, MONS_DUVESSA))
-        mons->go_berserk(true);
+    {
+        if (mons->go_berserk(true))
+        {
+            // only mark Duvessa energized once she's successfully gone berserk
+            mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
+            mon_enchant zerk = mons->get_ench(ENCH_BERSERK);
+            zerk.duration = INFINITE_DURATION;
+            mons->update_ench(zerk);
+        }
+        else
+            mons->props[ELVEN_ENERGIZE_KEY] = true;
+    }
     else
     {
         ASSERT(mons_is_mons_class(mons, MONS_DOWAN));
         if (mons->observable())
             simple_monster_message(*mons, " seems to find hidden reserves of power!");
 
-        mons->add_ench(ENCH_HASTE);
+        mons->add_ench(mon_enchant(ENCH_HASTE, 1, mons, INFINITE_DURATION));
+        mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
     }
-
-    mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
 }
 
 /**

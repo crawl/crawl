@@ -40,10 +40,10 @@ dice_def shatter_damage(int pow, monster *mons = nullptr);
 int terrain_shatter_chance(coord_def where, const actor &agent);
 spret cast_irradiate(int powc, actor* who, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
-bool ignite_poison_affects(const actor* act);
 bool ignite_poison_affects_cell(const coord_def where, actor* agent);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);
+spret cast_inner_flame(coord_def target, int pow, bool fail);
 spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test=false);
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,

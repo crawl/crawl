@@ -222,13 +222,13 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                      cl_type, agent, spread_rate, -1);
 }
 
-spret cast_corpse_rot(bool fail)
+spret cast_corpse_rot(int pow, bool fail)
 {
     fail_check();
-    return corpse_rot(&you);
+    return corpse_rot(&you, pow);
 }
 
-spret corpse_rot(actor* caster, bool actual)
+spret corpse_rot(actor* caster, int pow, bool actual)
 {
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
@@ -256,8 +256,9 @@ spret corpse_rot(actor* caster, bool actual)
 
                 ++did_rot;
 
-                // Don't look for more corpses here.
-                break;
+                // Chance to get an extra cloud per corpse (50% at max power).
+                if (x_chance_in_y(pow, 100))
+                    ++did_rot;
             }
     }
     if (!actual)
@@ -268,11 +269,27 @@ spret corpse_rot(actor* caster, bool actual)
         if (did_rot == 0)
             break;
 
-        if (cell_is_solid(*ai))
+        if (cell_is_solid(*ai) || cloud_at(*ai))
             continue;
 
-        place_cloud(CLOUD_MIASMA, *ai, 2+random2avg(8, 2),caster);
+        place_cloud(CLOUD_MIASMA, *ai, 2 + random2avg(8, 2), caster);
         --did_rot;
+    }
+
+    // Continue out to radius 2 if there are still corpses available.
+    if (did_rot)
+    {
+        for (distance_iterator di(center, true, true, 2); di; ++di)
+        {
+            if (did_rot == 0)
+                break;
+
+            if (cell_is_solid(*di) || cloud_at(*di))
+                continue;
+
+            place_cloud(CLOUD_MIASMA, *di, 2 + random2avg(8, 2), caster);
+            --did_rot;
+        }
     }
 
     // Abort the spell for players; monsters and wrath fail silently

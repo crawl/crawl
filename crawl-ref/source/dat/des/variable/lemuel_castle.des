@@ -80,11 +80,10 @@ function castle_lemuel_setup(e)
        if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
            e.kmons("1 = red draconian / white draconian / green draconian"
                    .. " / black draconian / purple draconian")
-           e.kmons("2 = yellow draconian monk / purple draconian annihilator"
-                   .. " / green draconian monk / golden dragon w:5")
-           e.kmons("3 = red draconian scorcher / white draconian knight"
-                   .. " / purple draconian shifter"
-                   .. " / black draconian stormcaller")
+           e.kmons("2 = draconian monk w:20 / draconian annihilator"
+                   .. " / golden dragon w:5")
+           e.kmons("3 = draconian scorcher / draconian knight"
+                   .. " / draconian shifter / draconian stormcaller")
            e.kmons("4 = tentacled monstrosity / quicksilver dragon"
                    .. " / golden dragon")
            e.kmons("5 = red draconian / green draconian / white draconian"

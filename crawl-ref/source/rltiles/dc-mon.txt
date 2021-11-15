@@ -122,11 +122,11 @@ komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('w')
 %sdir mon/unique
+%rim 0
 gastronok MONS_GASTRONOK
 
 ## Rodents ('r')
 %sdir mon/animals
-%rim 0
 rat MONS_RAT
 green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
@@ -252,9 +252,9 @@ fire_elemental MONS_FIRE_ELEMENTAL
 water_elemental MONS_WATER_ELEMENTAL
 air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
-quicksilver_elemental MONS_QUICKSILVER_ELEMENTAL
 wellspring MONS_ELEMENTAL_WELLSPRING
 %rim 0
+quicksilver_elemental MONS_QUICKSILVER_ELEMENTAL
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
 fire_vortex3
@@ -372,14 +372,10 @@ white_imp MONS_WHITE_IMP
 %sdir mon/humanoids/demonspawn
 %rim 0
 demonspawn MONS_DEMONSPAWN
-monstrous MONS_MONSTROUS_DEMONSPAWN
-gelid MONS_GELID_DEMONSPAWN
-infernal MONS_INFERNAL_DEMONSPAWN
-torturous MONS_TORTUROUS_DEMONSPAWN
-blood_saint MONS_BLOOD_SAINT
-warmonger MONS_WARMONGER
-corrupter MONS_CORRUPTER
-black_sun MONS_BLACK_SUN
+blood_saint MONS_DEMONSPAWN_BLOOD_SAINT
+warmonger MONS_DEMONSPAWN_WARMONGER
+corrupter MONS_DEMONSPAWN_CORRUPTER
+black_sun MONS_DEMONSPAWN_BLACK_SUN
 ## From the Wucad Mu wizard laboratory
 %sdir mon/vault
 demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
@@ -616,14 +612,16 @@ halfling MONS_HALFLING
 demigod MONS_DEMIGOD
 
 ## Angels ('A')
-%rim 1
 %sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA
+%rim 1
 cherub MONS_CHERUB
 %sdir mon/undead
+%rim 0
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
+%rim 1
 mennas MONS_MENNAS
 
 ## Giants ('C')
@@ -792,6 +790,7 @@ acid_blob MONS_ACID_BLOB
 ## Kobolds ('K')
 %sdir mon/unique
 sonja MONS_SONJA
+%rim 0
 pikel MONS_PIKEL
 %sdir mon/humanoids
 kobold MONS_KOBOLD
@@ -800,7 +799,6 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')
 %sdir mon/unique
-%rim 0
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
@@ -887,7 +885,7 @@ vine_stalker MONS_VINE_STALKER
 
 ## Trolls ('T')
 %sdir mon/unique
-purgy MONS_PURGY
+pargi MONS_PARGI
 snorg MONS_SNORG
 %sdir mon/humanoids
 troll MONS_TROLL
@@ -919,6 +917,7 @@ shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
 %rim 0
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
+putrid_mouth MONS_PUTRID_MOUTH
 %rim 1
 eidolon MONS_EIDOLON
 
@@ -1004,11 +1003,15 @@ robin MONS_ROBIN
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
 %sdir mon/humanoids
+%rim 0
 goblin MONS_GOBLIN
+%rim 1
 hobgoblin MONS_HOBGOBLIN
+%rim 0
 gnoll MONS_GNOLL
 gnoll_shaman MONS_GNOLL_SHAMAN
 gnoll_sergeant MONS_GNOLL_SERGEANT
+%rim 1
 boggart MONS_BOGGART
 
 ## Spriggans ('i')
@@ -1092,8 +1095,6 @@ silent_spectre MONS_SILENT_SPECTRE
 lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
-%rim 1
-hungry_ghost MONS_PUTRID_MOUTH
 %sdir mon/nonliving
 %rim 0
 will_o_the_wisp MONS_WILL_O_THE_WISP
@@ -1224,3 +1225,12 @@ old-serpent-tar MONS_OLD_SERPENT_TAR
 wiglaf MONS_WIGLAF
 orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 polymoth MONS_POLYMOTH
+%rim 0
+jack_o_lantern MONS_JACK_O_LANTERN
+gastronaut MONS_GASTRONAUT
+gastronok1 MONS_GASTRONOK_MUSTACHE
+gastronok2 MONS_GASTRONOK_CLEANSHAVEN
+kit_karsonok MONS_GASTRONOK_HANDLEBAR
+shaolinok MONS_GASTRONOK_FU_MANCHU
+sideburnok MONS_GASTRONOK_SIDEBURNS
+anubis_guard MONS_ANUBIS_GUARD

@@ -455,7 +455,7 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (player_teleport(false))
+    if (player_teleport())
         mpr("You feel stable on this floor.");
 }
 
@@ -669,6 +669,7 @@ void rise_through_ceiling()
     untag_followers(); // XXX: is this needed?
     floor_transition(DNGN_ALTAR_IGNIS /*hack*/, DNGN_ALTAR_IGNIS,
                      whither, true, true, false, false);
+    you.clear_far_engulf();
 
     // flavour! blow a hole through the floor
     if (env.grid(you.pos()) == DNGN_FLOOR
@@ -710,6 +711,8 @@ void floor_transition(dungeon_feature_type how,
     you.clear_beholders();
     you.clear_fearmongers();
     dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
+    if (you.duration[DUR_NOXIOUS_BOG])
+        you.duration[DUR_NOXIOUS_BOG] = 0;
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -1237,9 +1240,7 @@ static void _update_level_state()
 void new_level(bool restore)
 {
     print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     _update_level_state();
 

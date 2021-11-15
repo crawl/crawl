@@ -110,7 +110,6 @@ public:
     virtual string get_text(bool need_cursor) const override
     {
         need_cursor = need_cursor && show_cursor;
-        int flags = item->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
 
         string name;
 
@@ -136,11 +135,15 @@ public:
             name = "unknown "
                    + lowercase_string(item_class_name(item->base_type));
         }
-        else if (item->base_type == OBJ_JEWELLERY)
+        else if (item->base_type == OBJ_JEWELLERY
+                 || item->base_type == OBJ_WANDS)
+        {
             name = pluralise(item->name(DESC_DBNAME));
+        }
         else
         {
-            name = item->name(DESC_PLAIN, false, true, false, false, flags);
+            name = item->name(DESC_PLAIN, false, true, false, false,
+                              ISFLAG_KNOW_PLUSES);
             name = pluralise(name);
         }
 
@@ -204,10 +207,11 @@ public:
 
     virtual string get_text(const bool = false) const override
     {
-        int flags = item->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
+        description_level_type desctype =
+            item->base_type == OBJ_WANDS ? DESC_DBNAME : DESC_PLAIN;
 
-        return string(" ") + item->name(DESC_PLAIN, false, true, false,
-                                        false, flags);
+        return string(" ") + item->name(desctype, false, true, false, false,
+                                        ISFLAG_KNOW_PLUSES);
     }
 };
 
@@ -228,12 +232,11 @@ static MenuEntry *unknown_item_mangle(MenuEntry *me)
 static bool _identified_item_names(const item_def *it1,
                                    const item_def *it2)
 {
-    int flags = it1->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
     description_level_type desc =
         it1->base_type == OBJ_JEWELLERY ? DESC_DBNAME : DESC_PLAIN;
 
-    return it1->name(desc, false, true, false, false, flags)
-         < it2->name(desc, false, true, false, false, flags);
+    return it1->name(desc, false, true, false, false, ISFLAG_KNOW_PLUSES)
+         < it2->name(desc, false, true, false, false, ISFLAG_KNOW_PLUSES);
 }
 
 // Allocate (with new) a new item_def with the given base and sub types,

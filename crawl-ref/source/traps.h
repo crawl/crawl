@@ -47,7 +47,6 @@ level_id generic_shaft_dest(level_id place);
 int       trap_rate_for_place();
 trap_type random_trap_for_place(bool dispersal_ok = true);
 
-int count_traps(trap_type ttyp);
 void place_webs(int num);
 bool ensnare(actor *fly);
 void leave_web(bool quiet = false);

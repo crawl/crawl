@@ -975,6 +975,8 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 {
 #ifdef USE_TILE_WEB
     tiles.set_ui_state(UI_CRT);
+    // send some minimal where info, in case there is a lingering .where file
+    update_whereis_chargen(choice.name);
 #endif
 
     clrscr();

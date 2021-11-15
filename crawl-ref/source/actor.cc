@@ -207,15 +207,15 @@ int actor::inaccuracy() const
     return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
 }
 
-bool actor::res_corr(bool calc_unid, bool temp) const
+bool actor::res_corr(bool /*allow_random*/, bool temp) const
 {
-    return temp && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
-                    || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
-                    || scan_artefacts(ARTP_RCORR, calc_unid)
-                    || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION, calc_unid));
+    return temp && (wearing(EQ_RINGS, RING_RESIST_CORROSION)
+                    || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR)
+                    || scan_artefacts(ARTP_RCORR)
+                    || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION));
 }
 
-bool actor::cloud_immune(bool /*calc_unid*/, bool items) const
+bool actor::cloud_immune(bool items) const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
     return items && body_armour
@@ -231,12 +231,12 @@ bool actor::holy_wrath_susceptible() const
 // not an actor is capable of teleporting, only whether they are specifically
 // under the influence of the "notele" effect. See actor::no_tele() for a
 // superset of this function.
-bool actor::has_notele_item(bool calc_unid, vector<const item_def *> *matches) const
+bool actor::has_notele_item(vector<const item_def *> *matches) const
 {
-    return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
+    return scan_artefacts(ARTP_PREVENT_TELEPORTATION, matches);
 }
 
-int actor::angry(bool calc_unid, bool items) const
+int actor::angry(bool items) const
 {
     int anger = 0;
     if (is_player())
@@ -245,87 +245,84 @@ int actor::angry(bool calc_unid, bool items) const
     if (!items)
         return anger;
 
-    return anger + scan_artefacts(ARTP_ANGRY, calc_unid);
+    return anger + scan_artefacts(ARTP_ANGRY);
 }
 
-bool actor::clarity(bool calc_unid, bool items) const
+bool actor::clarity(bool items) const
 {
-    return items && scan_artefacts(ARTP_CLARITY, calc_unid);
+    return items && scan_artefacts(ARTP_CLARITY);
 }
 
-bool actor::faith(bool calc_unid, bool items) const
+bool actor::faith(bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
+    return items && wearing(EQ_AMULET, AMU_FAITH);
 }
 
-int actor::archmagi(bool calc_unid, bool items) const
+int actor::archmagi(bool items) const
 {
-    return items && (wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid)
-                     || scan_artefacts(ARTP_ARCHMAGI, calc_unid));
+    return items && (wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI)
+                     || scan_artefacts(ARTP_ARCHMAGI));
 }
 
 /**
  * Indicates if the actor has an active evocations enhancer.
  *
- * @param calc_unid Whether to identify unknown items that enhance evocations.
  * @param items Whether to count item powers.
  * @return The number of levels of evocations enhancement this actor has.
  */
-int actor::spec_evoke(bool calc_unid, bool items) const
+int actor::spec_evoke(bool items) const
 {
-    UNUSED(calc_unid);
     UNUSED(items);
     return 0;
 }
 
-bool actor::no_cast(bool calc_unid, bool items) const
+bool actor::no_cast(bool items) const
 {
-    return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING, calc_unid);
+    return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING);
 }
 
-bool actor::reflection(bool calc_unid, bool items) const
+bool actor::reflection(bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_REFLECTION, calc_unid);
+    return items && wearing(EQ_AMULET, AMU_REFLECTION);
 }
 
-bool actor::extra_harm(bool calc_unid, bool items) const
+bool actor::extra_harm(bool items) const
 {
     return items &&
-           (wearing_ego(EQ_CLOAK, SPARM_HARM, calc_unid)
-            || scan_artefacts(ARTP_HARM, calc_unid));
+           (wearing_ego(EQ_CLOAK, SPARM_HARM) || scan_artefacts(ARTP_HARM));
 }
 
-bool actor::rmut_from_item(bool calc_unid) const
+bool actor::rmut_from_item() const
 {
-    return scan_artefacts(ARTP_RMUT, calc_unid);
+    return scan_artefacts(ARTP_RMUT);
 }
 
-bool actor::evokable_invis(bool calc_unid) const
+bool actor::evokable_invis() const
 {
-    return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
-           || scan_artefacts(ARTP_INVISIBLE, calc_unid);
+    return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY)
+           || scan_artefacts(ARTP_INVISIBLE);
 }
 
 // Return an int so we know whether an item is the sole source.
-int actor::equip_flight(bool calc_unid) const
+int actor::equip_flight() const
 {
     if (is_player() && get_form()->forbids_flight())
         return 0;
 
     // For the player, this is cached on ATTR_PERM_FLIGHT
-    return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
-           + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
-           + scan_artefacts(ARTP_FLY, calc_unid);
+    return wearing(EQ_RINGS, RING_FLIGHT)
+           + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
+           + scan_artefacts(ARTP_FLY);
 }
 
-int actor::spirit_shield(bool calc_unid, bool items) const
+int actor::spirit_shield(bool items) const
 {
     int ss = 0;
 
     if (items)
     {
-        ss += wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD, calc_unid);
-        ss += wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid);
+        ss += wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
+        ss += wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT);
     }
 
     if (is_player())
@@ -334,11 +331,11 @@ int actor::spirit_shield(bool calc_unid, bool items) const
     return ss;
 }
 
-bool actor::rampaging(bool calc_unid, bool items) const
+bool actor::rampaging(bool items) const
 {
     return items &&
-           (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING, calc_unid)
-            || scan_artefacts(ARTP_RAMPAGING, calc_unid)
+           (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
+            || scan_artefacts(ARTP_RAMPAGING)
             || is_player() && player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS));
 }
 
@@ -1015,7 +1012,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 /// Is this creature despised by the so-called 'good gods'?
 bool actor::evil() const
 {
-    return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
+    return bool(holiness() & (MH_UNDEAD | MH_DEMONIC));
 }
 
 /**

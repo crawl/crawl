@@ -257,12 +257,12 @@ void trample_follow_fineff::fire()
 void blink_fineff::fire()
 {
     actor *defend = defender();
-    if (!defend || !defend->alive() || defend->no_tele(true, false))
+    if (!defend || !defend->alive() || defend->no_tele())
         return;
 
     // if we're doing 'blink with', only blink if we have a partner
     actor *pal = attacker();
-    if (pal && (!pal->alive() || pal->no_tele(true, false)))
+    if (pal && (!pal->alive() || pal->no_tele()))
         return;
 
     defend->blink();
@@ -270,7 +270,7 @@ void blink_fineff::fire()
         return;
 
     // Is something else also getting blinked?
-    if (!pal || !pal->alive() || pal->no_tele(true, false))
+    if (!pal || !pal->alive() || pal->no_tele())
         return;
 
     int cells_seen = 0;
@@ -293,7 +293,7 @@ void blink_fineff::fire()
 void teleport_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive() && !defend->no_tele(true, false))
+    if (defend && defend->alive() && !defend->no_tele())
         defend->teleport(true);
 }
 
@@ -737,7 +737,8 @@ void spectral_weapon_fineff::fire()
     {
         // Is it already in range?
         const reach_type sw_range = sw->reach_range();
-        if (sw_range > REACH_NONE && can_reach_attack_between(sw->pos(), target)
+        if (sw_range > REACH_NONE
+            && can_reach_attack_between(sw->pos(), target, sw_range)
             || adjacent(sw->pos(), target))
         {
             // Just attack.
@@ -760,9 +761,9 @@ void spectral_weapon_fineff::fire()
             continue;
         }
         // ... and only spaces the weapon could attack the defender from.
-        if (grid_distance(*ai, target) > 1 &&
-            (atk_range <= REACH_NONE ||
-             !can_reach_attack_between(*ai, target)))
+        if (grid_distance(*ai, target) > 1
+            && (atk_range <= REACH_NONE
+                || !can_reach_attack_between(*ai, target, atk_range)))
         {
             continue;
         }

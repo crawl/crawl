@@ -105,7 +105,9 @@ static bool _player_sacrificed_arcana();
  */
 bool can_do_capstone_ability(god_type god)
 {
-   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
+    // Worshippers of Ignis can use their capstone with any amount of piety
+    int pbreak = (god == GOD_IGNIS) ? -1 : 5;
+    return in_good_standing(god, pbreak) && !you.one_time_ability_used[god];
 }
 
 static const char *_god_blessing_description(god_type god)
@@ -1242,29 +1244,6 @@ void zin_remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-bool zin_remove_all_mutations()
-{
-    ASSERT(you.how_mutated());
-    ASSERT(can_do_capstone_ability(you.religion));
-
-    if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    flash_view(UA_PLAYER, WHITE);
-#ifndef USE_TILE_LOCAL
-    // Allow extra time for the flash to linger.
-    scaled_delay(1000);
-#endif
-
-    you.one_time_ability_used.set(GOD_ZIN);
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
-    simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations("Zin's power");
-    return true;
-}
-
 void zin_sanctuary()
 {
     ASSERT(!env.sanctuary_time);
@@ -1699,14 +1678,10 @@ bool yred_injury_mirror()
 
 bool yred_can_enslave_soul(monster* mon)
 {
-    return (mon->holiness() & MH_NATURAL
-            || mon->holiness() & MH_DEMONIC
-            || mon->holiness() & MH_HOLY)
-           && !mon->is_summoned()
+    return mons_can_be_spectralised(*mon)
            && !mons_enslaved_body_and_soul(*mon)
            && mon->attitude != ATT_FRIENDLY
-           && mons_intel(*mon) >= I_HUMAN
-           && mon->type != MONS_PANDEMONIUM_LORD;
+           && mons_intel(*mon) >= I_HUMAN;
 }
 
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
@@ -1885,21 +1860,28 @@ bool kiku_receive_corpses(int pow)
 }
 
 /**
- * Destroy a corpse at the player's location
+ * Destroy a corpse at or adjacent to the player's location
  *
- * @return  True if a corpse was destroyed, false otherwise.
+ * @param just_check True if just checking whether the ability is possible,
+ *                   false if we should go ahead and destroy a corpse.
+ * @return           True if a corpse was available, false otherwise.
 */
-bool kiku_take_corpse()
+bool kiku_take_corpse(bool just_check)
 {
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = env.item[i].link)
+    for (fair_adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
-        item_def &item(env.item[i]);
+        for (stack_iterator si(*ai, true); si; ++si)
+        {
+            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+                continue;
 
-        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-            continue;
-        item_was_destroyed(item);
-        destroy_item(i);
-        return true;
+            if (just_check)
+                return true;
+
+            item_was_destroyed(*si);
+            destroy_item(si->index());
+            return true;
+        }
     }
 
     return false;
@@ -1975,7 +1957,7 @@ static bool _lugonu_warp_monster(monster& mon, int pow)
 
     mon.hurt(&you, 1 + random2(pow / 6));
 
-    if (mon.alive() && !mon.no_tele(true, false))
+    if (mon.alive() && !mon.no_tele())
         mon.blink();
 
     return true;
@@ -1991,14 +1973,20 @@ static void _lugonu_warp_area(int pow)
 void lugonu_bend_space()
 {
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
-    const bool area_warp = random2(pow) > 9;
+    const bool pre_warp = random2(pow) > 9;
+    const bool post_warp = random2(pow) > 9;
 
-    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
+    mprf("Space bends %saround you!", pre_warp && post_warp ? "violently " :
+                                      pre_warp || post_warp ? "sharply "
+                                                            : "");
 
-    if (area_warp)
+    if (pre_warp)
         _lugonu_warp_area(pow);
 
     uncontrolled_blink(true);
+
+    if (post_warp)
+        _lugonu_warp_area(pow);
 }
 
 void cheibriados_time_bend(int pow)
@@ -2049,7 +2037,7 @@ static int _slouch_damage(monster *mon)
 static bool _slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
+    if (mon == nullptr || mon->is_stationary() || mon->cannot_act()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(*mon))
     {
@@ -4743,10 +4731,10 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 //Your chance of eligiblity scales with piety.
 bool will_ru_retaliate()
 {
-    // Scales up to a 25% chance of retribution
+    // Scales up to a 20% chance of retribution
     return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(640, you.piety));
+           && one_chance_in(div_rand_round(800, you.piety));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.

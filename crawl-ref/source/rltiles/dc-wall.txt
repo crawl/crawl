@@ -388,6 +388,15 @@ slime_stone1
 slime_stone2
 slime_stone3
 
+rock_wall_crypt0 ROCK_WALL_CRYPT
+%weight 2
+rock_wall_crypt1
+%weight 3
+rock_wall_crypt2
+%weight 2
+rock_wall_crypt3
+
+%weight 10
 tomb0 WALL_TOMB
 tomb1
 tomb2
@@ -425,9 +434,25 @@ wall_stone_spider1
 %weight 1
 wall_stone_spider2
 wall_stone_spider3
-%weight 10
 
+# sss (more snakeishly)
 %weight 10
+wall_stone_snake0 STONE_WALL_SNAKE
+%weight 3
+wall_stone_snake1
+wall_stone_snake2
+wall_stone_snake3
+
+# sss (like the tide rolling over sand)
+%weight 2
+wall_stone_shoals0 STONE_WALL_SHOALS
+wall_stone_shoals1
+%weight 4
+wall_stone_shoals2
+wall_stone_shoals3
+%weight 10
+wall_stone_shoals4
+
 wall_oozing0 WALL_OOZING
 wall_oozing1
 %weight 4

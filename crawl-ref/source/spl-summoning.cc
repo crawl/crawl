@@ -1034,16 +1034,14 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
-spret cast_shadow_creatures(int st, god_type god, bool fail)
+spret summon_shadow_creatures()
 {
     if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
 
-    fail_check();
-    const bool scroll = (st == MON_SUMM_SCROLL);
     mpr("Wisps of shadow whirl around you...");
 
-    int num = (scroll ? roll_dice(2, 2) : 1);
+    int num = roll_dice(2, 2);
     int num_created = 0;
 
     for (int i = 0; i < num; ++i)
@@ -1052,19 +1050,13 @@ spret cast_shadow_creatures(int st, god_type god, bool fail)
             mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
-                      .set_summoned(&you, scroll ? 2 : 1, st, god)
+                      .set_summoned(&you, 2, MON_SUMM_SCROLL)
                       .set_place(level_id::current()),
             false))
         {
             // Choose a new duration based on HD.
             int x = max(mons->get_experience_level() - 3, 1);
-            int d = div_rand_round(17, x);
-            if (scroll)
-                d++;
-            if (d < 1)
-                d = 1;
-            if (d > 4)
-                d = 4;
+            int d = min(4, 1 + div_rand_round(17, x));
             mon_enchant me = mon_enchant(ENCH_ABJ, d);
             me.set_duration(mons, &me);
             mons->update_ench(me);
@@ -1667,8 +1659,9 @@ int animate_dead(actor *caster, int pow, beh_type beha,
     return number_raised;
 }
 
-coord_def find_animatable_skeleton(coord_def c)
+vector<coord_def> find_animatable_skeletons(coord_def c)
 {
+    vector<coord_def> result;
     for (radius_iterator ri(c, LOS_NO_TRANS); ri; ++ri)
     {
         for (stack_iterator si(*ri, true); si; ++si)
@@ -1677,11 +1670,12 @@ coord_def find_animatable_skeleton(coord_def c)
                 && mons_class_can_be_zombified(si->mon_type)
                 && mons_skeleton(si->mon_type))
             {
-                return *ri;
+                result.push_back(*ri);
+                break;
             }
         }
     }
-    return coord_def(-1,-1);
+    return result;
 }
 
 spret cast_animate_skeleton(int pow, god_type god, bool fail)
@@ -1689,13 +1683,15 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
     if (rude_stop_summoning_prompt())
         return spret::abort;
 
-    coord_def skel_loc = find_animatable_skeleton(you.pos());
-    if (!in_bounds(skel_loc))
+    vector<coord_def> skeletons = find_animatable_skeletons(you.pos());
+    if (skeletons.empty())
         return spret::abort;
 
     fail_check();
 
     canned_msg(MSG_ANIMATE_REMAINS);
+
+    const coord_def skel_loc = skeletons[random2(skeletons.size())];
 
     for (stack_iterator si(skel_loc, true); si; ++si)
     {
@@ -2071,7 +2067,8 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         if (!you.can_see(*battlesphere))
         {
             coord_def empty;
-            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 3, false, empty)
+            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 2,
+                                         false, empty)
                 && battlesphere->move_to_pos(empty))
             {
                 recalled = true;

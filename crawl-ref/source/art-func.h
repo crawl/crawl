@@ -33,7 +33,6 @@
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "god-conduct.h"   // did_god_conduct
-#include "god-passive.h"   // passive_t::want_curses
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "message.h"
 #include "monster.h"

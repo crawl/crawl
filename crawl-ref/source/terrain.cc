@@ -707,9 +707,6 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
     if (feat == DNGN_ENTER_ZIGGURAT)
         return false;
 
-    if (feat_is_portal_entrance(feat))
-        return true;
-
     if (feat == DNGN_ENTER_SHOP)
         return true;
 
@@ -794,24 +791,6 @@ void get_door_description(int door_size, const char** adjective, const char** no
 
     *adjective = descriptions[idx];
     *noun = descriptions[idx+1];
-}
-
-coord_def get_random_stair()
-{
-    vector<coord_def> st;
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        const dungeon_feature_type feat = env.grid(*ri);
-        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat)
-            && feat != DNGN_EXIT_DUNGEON
-            && feat != DNGN_EXIT_HELL)
-        {
-            st.push_back(*ri);
-        }
-    }
-    if (st.empty())
-        return coord_def();        // sanity check: shouldn't happen
-    return st[random2(st.size())];
 }
 
 static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;

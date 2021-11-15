@@ -3522,6 +3522,26 @@ cwHwwwwwwwwwc
 ccFcccccccccc
 ENDMAP
 
+NAME:   dreamdust_deal_with_the_devil
+TAGS:   extra transparent no_item_gen
+DEPTH:  D:8-, Lair, Orc, Elf
+WEIGHT: 5
+SUBST:  ? : V Y t
+TILE:   G = dngn_statue_imp
+: set_feature_name("granite_statue", "a statue of a beguiling devil")
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "a withered tree")
+FTILE:  .Gd = floor_demonic_red
+# Alluring items with drawbacks that might kill you
+ITEM:   scarf ego:harm w:30 / any armour good_item ego:ponderousness w:20 / \
+        leech / obsidian axe / robe of folly / maxwell's patent armour
+MAP
+?.?
+.G.
+.d.
+ .
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.

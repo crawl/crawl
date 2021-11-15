@@ -1,0 +1,714 @@
+%%%%
+# ------ Generic minor stat/AC muts -----
+tough skin mutation
+
+Your epidermis has hardened, providing a small amount of protection. Each level
+of this mutation provides +1 AC.
+%%%%
+shaggy fur mutation
+
+You are covered in fur, providing a small amount of protection. Each level of
+this mutation provides +1 AC. The third level of this mutation also provides
+resistance to cold.
+%%%%
+distortion field mutation
+
+You are surrounded by a repulsion field, providing a small amount of evasion.
+Each level of this mutation provides more EV. The third level of this mutation
+also halves the accuracy of ranged attacks launched at you.
+%%%%
+icy blue scales mutation
+
+You are covered in blue scales, providing a small amount of protection. Each
+level of this mutation provides more AC. The third level of this mutation also
+provides resistance to cold.
+%%%%
+molten scales mutation
+
+You are covered in molten scales, providing a small amount of protection. Each
+level of this mutation provides more AC. The third level of this mutation also
+provides resistance to fire.
+%%%%
+slimy green scales mutation
+
+You are covered in green scales, providing a small amount of protection. Each
+level of this mutation provides more AC. The third level of this mutation also
+provides resistance to poison.
+%%%%
+yellow scales mutation
+
+You are covered in yellow scales, providing a small amount of protection. Each
+level of this mutation provides more AC. The third level of this mutation also
+provides resistance to acid and corrosion.
+%%%%
+thin metallic scales mutation
+
+You are covered in metallic scales, providing a small amount of protection.
+Each level of this mutation provides more AC. The third level of this mutation
+also provides resistance to electricity.
+%%%%
+rugged brown scales mutation
+
+You are covered in brown scales, providing a small amount of protection. Each
+level of this mutation provides +1 AC and also increases your health slightly.
+%%%%
+sharp scales mutation
+
+You are covered in sharp scales, providing a small amount of protection. Each
+level of this mutation provides +1 AC and Slay +1, improving your accuracy and
+damage with melee and ranged attacks.
+%%%%
+iridescent scales mutation
+
+You are covered in iridescent scales, providing a small amount of protection.
+Each level of this mutation provides +2 AC.
+%%%%
+large bone plates mutation
+
+You are covered in bone plates, providing a small amount of shielding. Each
+level of this mutation provides more SH.
+%%%%
+thin skeletal structure mutation
+
+Your bones are light and porous. Each level of this mutation provides +2
+Dexterity and Stealth+.
+%%%%
+strong mutation
+
+Your muscles have grown unnaturally strong. Each level of this mutation
+provides +2 Strength.
+%%%%
+clever mutation
+
+Your mind has become unnaturally acute. Each level of this mutation provides +2
+Intelligence.
+%%%%
+agile mutation
+
+Your reflexes have become unnaturally fast. Each level of this mutation
+provides +2 Dexterity.
+%%%%
+weak mutation
+
+Your muscles have grown unnaturally weak. Each level of this mutation provides
+-2 Strength.
+%%%%
+dopey mutation
+
+Your mind has become unnaturally dopey. Each level of this mutation provides -2
+Intelligence.
+%%%%
+clumsy mutation
+
+Your reflexes have become unnaturally clumsy. Each level of this mutation
+provides -2 Dexterity.
+%%%%
+high mp mutation
+
+You have an increased reservoir of magic. Each level of this mutation provides
++10% MP.
+%%%%
+low mp mutation
+
+You have a low magical capacity. Each level of this mutation provides -10% MP.
+%%%%
+camouflage mutation
+
+Your skin changes colour to match your surroundings. Each level of this
+mutation provides Stealth+.
+%%%%
+# ------ Auxes -----
+horns mutation
+
+You have horns on your head, allowing you to gore foes when launching melee
+attacks but preventing you from wearing helmets. Each level of this mutation
+increases the strength of your gore attacks. The third level of this mutation
+prevents you from wearing any type of headgear.
+%%%%
+beak mutation
+
+You have a beak for a mouth, allowing you to peck foes when launching melee
+attacks but preventing you from wearing helmets.
+%%%%
+fangs mutation
+
+You have sharp teeth, allowing you to bite foes when launching melee attacks.
+Each level of this mutation makes your teeth sharper, longer, and stronger.
+%%%%
+acidic bite mutation
+
+You have acidic saliva, allowing you to bite foes and apply corrosion to them
+when launching melee attacks.
+%%%%
+antimagic bite mutation
+
+You have a thirst for magic, allowing you to bite foes when launching melee
+attacks. This restores your magical reserves and also disrupts magical foes,
+sometimes leaving them unable to act.
+%%%%
+claws mutation
+
+You have sharp nails, increasing the strength of your unarmed and off-hand
+attacks if you aren't wearing gloves. Each level of this mutation makes your
+nails sharper, longer, and stronger. The third level of this mutation prevents
+you from wearing gloves.
+%%%%
+demonic touch mutation
+
+Your hands glow with unholy energy, causing those struck by your off-hand
+attacks to take additional damage which ignores armour. Each level of this
+mutation inflicts more damage. The third level of this mutation prevents you
+from wearing gloves, and also causes your off-hand attacks to reduce your foes'
+willpower.
+%%%%
+hooves mutation
+
+You have hooves, allowing you to kick foes when launching melee attacks if you
+aren't wearing boots. Each level of this mutation makes your hooves harder and
+stronger. The third level of this mutation prevents you from wearing boots.
+%%%%
+talons mutation
+
+You have sharp toenails, allowing you to kick foes when launching melee attacks
+if you aren't wearing boots. Each level of this mutation makes your nails
+sharper, longer, and stronger. The third level of this mutation prevents you
+from wearing boots.
+%%%%
+antennae mutation
+
+You have antennae, allowing you to sense nearby monsters, but preventing you
+from wearing helmets. Each level of this mutation lets you sense monsters from
+further away. The third level of this mutation prevents you from wearing any
+type of headgear, and allows you to see invisible monsters.
+%%%%
+tentacle spike mutation
+
+You have a spiked tentacle, allowing you to pierce foes when launching melee
+attacks. Each level of this mutation makes your spike sharper, longer, and
+stronger.
+%%%%
+naga tail mutation
+
+You have a long, snake-like tail in place of feet. The second level of this
+mutation allows you to constrict foes with your tail when attacking in melee.
+%%%%
+stinger mutation
+
+You have a venomous barb on the end of your tail, allowing you to sting foes
+when launching melee attacks. Each level of this mutation makes your stinger
+sharper, longer, and stronger.
+%%%%
+weakness stinger mutation
+
+You have a thin, red tail, allowing you to tail-slap foes when launching melee
+attacks. Each level of this mutation increases your tail's strength as it turns
+into a sharp stinger. The third level of this mutation causes the stinger to
+inflict brief weakness on those unfortunate enough to be struck by it.
+%%%%
+armoured tail mutation
+
+You have a large armoured tail, allowing you to tail-slap foes when launching
+melee attacks.
+%%%%
+pseudopods mutation
+
+You are covered in pseudopods, allowing you to slap your foes when launching
+melee attacks, but somewhat reducing the amount of protection provided by body
+armour. This has no effect on protection provided by armour enchantments, nor
+on the defensive benefits of training the Armour skill. Each level of this
+mutation makes your pseudopods larger and stronger.
+%%%%
+# ------ Resistance mutations -----
+mutation resistance mutation
+
+Your genetic code is unusually stable, making it less likely that you will be
+mutated (or have existing mutations removed). Each level of this mutation makes
+you more resistant.
+%%%%
+torment resistance mutation
+
+You are less affected by unholy torment, which would otherwise cut your health
+in half. The second level of this mutation renders you entirely immune.
+%%%%
+poison resistance mutation
+
+You resist poisons, toxins and other contaminants. This does not confer
+full immunity, but reduces your chances of being affected to roughly
+one-third what it would be otherwise.
+%%%%
+fire resistance mutation
+
+You resist heat. Each level of this mutation reduces the amount of damage taken
+from fire.
+%%%%
+cold resistance mutation
+
+You resist cold. Each level of this mutation reduces the amount of damage taken
+from cold.
+%%%%
+electricity resistance mutation
+
+You resist electricity, taking less damage from it.
+%%%%
+negative energy resistance
+
+You resist negative energy. Each level of this mutation reduces the amount of
+damage taken from negative energy, along with the amount that it drains your
+health.
+%%%%
+heat vulnerability mutation
+
+You are vulnerable to fire and take more damage from it.
+%%%%
+cold vulnerability mutation
+
+You are vulnerable to cold and take more damage from it.
+%%%%
+electricity vulnerability mutation
+
+You are vulnerable to electricity and take more damage from it.
+%%%%
+strong-willed mutation
+
+You have an unnaturally strong will, improving your resistance to certain types
+of hostile magic. Each level of this mutation increases your willpower further.
+%%%%
+weak-willed mutation
+
+You have an unnaturally weak will, reducing your resistance to certain types
+of hostile magic. Each level of this mutation reduces your willpower further.
+%%%%
+see invisible mutation
+
+You have supernaturally acute eyesight, allowing you to see monsters that are
+hidden from mundane sight. This has no effect on your accuracy otherwise.
+%%%%
+clarity mutation
+
+Your mind is exceptionally clear, preventing you from becoming confused,
+mesmerised, or supernaturally afraid. You also cannot become involuntarily
+enraged.
+%%%%
+sense surroundings mutation
+
+You have a second sense for the dungeon, allowing you to sense terrain you
+haven't yet seen. Each level of this mutation allows you to sense more and
+more thoroughly.
+%%%%
+MP-powered wands mutation
+
+Your wands draw upon your magical reserves, becoming somewhat more powerful in
+the process. If you have no magic left to draw upon, your wands function as
+normal.
+%%%%
+# ------ Goodmut/badmut pairs -----
+regeneration mutation
+
+You heal quickly. Each level of this mutation increases the rate at which you
+heal.
+%%%%
+inhibited regeneration mutation
+
+You do not heal over time while foes are in sight. Other sources of healing,
+such as potions, are unaffected.
+%%%%
+speed mutation
+
+You cover ground quickly - moving to new positions takes you less time. This
+has no effect on other types of actions, like attacking or casting spells.
+Each level of this mutation makes you move faster.
+%%%%
+slowness mutation
+
+You cover ground slowly - moving to new positions takes you more time. This
+has no effect on other types of actions, like attacking or casting spells.
+Each level of this mutation makes you move slower.
+%%%%
+robust mutation
+
+You can take a beating. Each level of this mutation improves your health
+further (+10% HP).
+%%%%
+frail mutation
+
+Your health is poor. Each level of this mutation worsens your health further
+(-10% HP).
+%%%%
+evolution mutation
+
+As you gain experience, your body's hidden potential will express itself in the
+form of new beneficial mutations.
+%%%%
+devolution mutation
+
+As you gain experience, your body's hidden potential will express itself in the
+form of new detrimental mutations.
+%%%%
+wild magic mutation
+
+Your spells are slightly harder to cast (increased miscast chance and severity),
+but more powerful. Each level of this mutation increases both effects further.
+%%%%
+subdued magic mutation
+
+Your spells are slightly easier to cast (reduced miscast chance and severity),
+but less powerful. Each level of this mutation increases both effects further.
+%%%%
+# ------ Badmuts without matching goodmuts -----
+teleportitis mutation
+
+You occasionally teleport across the level to hostile monsters. Each level of
+this mutation increases the frequency with which this occurs.
+%%%%
+deformed body mutation
+
+Your body is shaped in an inhuman way, somewhat reducing the amount of
+protection provided by body armour. This has no effect on protection provided
+by armour enchantments, nor on the defensive benefits of training the Armour
+skill.
+%%%%
+screaming mutation
+
+You are sometimes seized by an uncontrollable urge to scream at foes when they
+first come into sight. All of your shouts are also louder than usual. The
+second level of this mutation makes this urge harder to resist and makes your
+shouts even louder.
+%%%%
+deterioration mutation
+
+When injured, your body sometimes deteriorates, temporarily reducing your
+attributes. The second level of this mutation makes this happen more often.
+%%%%
+berserk mutation
+
+When attacking foes in melee, you sometimes enter a berserk rage. Each level of
+this mutation makes it easier for you to lose your temper.
+%%%%
+no potion heal mutation
+
+Your system is resistant to potable panaceas, reducing the effectiveness of all
+kinds of healing potions. The second level of this mutation completely blocks
+potion-based healing. (Aid from the god Gozag is unaffected.)
+%%%%
+# ------ Demonspawn mutations -----
+demonic guardian mutation
+
+When you are harmed, there is a chance that a demonic guardian will rush to aid
+you. The greater the damage done and the closer you are to death, the greater
+the odds. Each level of this mutation increases the strength of your guardians.
+%%%%
+powered by pain mutation
+
+When you are harmed, you sometimes gain power, refilling your magical reservoir
+or granting you temporary agility or might. Each level of this mutation
+increases the magnitude of this effect.
+%%%%
+foul stench mutation
+
+Foes who strike you in melee sometimes cause you to emit a cloud of foul
+miasma, slowing and severely poisoning those caught within. Each level of
+this mutation increases the likelihood of this. This mutation also grants you
+immunity to miasma (from any source).
+%%%%
+passive freeze mutation
+
+Foes who strike you in melee will be frozen, taking damage.
+%%%%
+spiny mutation
+
+Foes who strike you in melee will be impaled on your spines, taking damage.
+Each level of this mutation increases the damage.
+%%%%
+augmentation mutation
+
+While in good health, you are more powerful, casting spells and slaying foes
+more effectively. Each level of this mutation increases this effect further.
+%%%%
+magic shield mutation
+
+When you are harmed, some damage is redirected to deplete your magic reserves
+instead.
+%%%%
+magic regeneration mutation
+
+Your magical reserves regenerate quickly.
+%%%%
+magic link mutation
+
+When low on magic, you restore magic in place of health.
+%%%%
+demonic magic mutation
+
+When you cast spells, there's a chance that adjacent monsters will be
+paralysed. This effect is more powerful when casting higher-level spells, but
+monsters with greater Willpower can resist it. Each level of this mutation
+allows more distant monsters to be affected. The third level of this mutation
+also allows you to paralyse monsters in the same way while zapping wands.
+%%%%
+noise dampening mutation
+
+Your surroundings are quieter, reducing the distance that noise will travel
+from any place you can see.
+%%%%
+icemail mutation
+
+You are coated in a protective layer of ice. Fiery attacks can temporarily melt
+the ice, removing the protection until the ice reforms. Each level of this
+mutation increases the protection imparted.
+%%%%
+condensation shield mutation
+
+A shield of frost guards you, blocking some incoming attacks. Fiery attacks can
+temporarily melt the shield.
+%%%%
+powered by death mutation
+
+Death fuels you, allowing you to heal somewhat for each life you take. Each
+level of this mutation increases the healing further.
+%%%%
+sturdy frame mutation
+
+Your movements are less encumbered by armour, mitigating penalties to spell
+success and accuracy. Each level of this mutation reduces armour ER by 2.
+%%%%
+sanguine armour mutation
+
+When seriously injured, your blood congeals around you, forming armour. Each
+level of this mutation increases the AC provided.
+%%%%
+big brain mutation
+
+What's up? You have a big brain. Each level of this mutation provides +2
+Intelligence. The third level of this mutation also makes you less likely to
+miscast spells.
+%%%%
+ignite blood mutation
+
+Whenever you see blood spilled (yours or others'), it may ignite, bursting into
+a cloud of flame. Each level of this mutation makes this more likely.
+# XXX: also mention that this makes people more likely to bleed?
+%%%%
+corrupting presence mutation
+
+When you injure a foe, your presence may intensify the damage, corroding their
+weapons and defenses. The second level of this mutation makes matters even
+worse, adding a chance that your wretched victims may become mutated and
+deformed.
+%%%%
+black mark mutation
+
+When you strike a foe in melee, the black mark on your body may debilitate
+them. This can weaken foes, drain their health, or disrupt their magic.
+%%%%
+aura of silence mutation
+
+You are surrounded by an aura of silence. Those adjacent to you cannot make any
+sound. This prevents most forms of spellcasting and prayer, though demonic
+magic, being noiseless, is unaffected.
+%%%%
+bedeviling mutation
+
+You cast Hex spells with increased power.
+%%%%
+demonic willpower mutation
+
+Your willpower has a will of its own, sometimes injuring those who attempt to
+hex you. This mutation also bolsters your Willpower.
+%%%%
+hurl damnation mutation
+
+You can hurl damnation with <input>$cmd[CMD_USE_ABILITY]</input>. Foes beware!
+%%%%
+word of chaos mutation
+
+You can speak a Word of Chaos with <input>$cmd[CMD_USE_ABILITY]</input>.
+%%%%
+# ------ Other species-specific mutations -----
+spit poison mutation
+
+You can spit poison with <input>$cmd[CMD_USE_ABILITY]</input>. The second level
+of this mutation intensifies the poison from a single glob into a large cloud.
+%%%%
+in touch with death mutation
+
+Your Necromancy spells are more powerful. The second level of this mutation
+enhances your Necromancy spellpower further.
+%%%%
+nimble flight mutation
+
+You fly quickly through the air, covering ground more quickly than you would on
+foot. Your evasion is also multiplied by this effect.
+%%%%
+big wings mutation
+
+You have big, strong wings, capable of bearing you through the air.
+%%%%
+strong legs mutation
+
+You have big, strong legs, allowing you to hop about with
+<input>$cmd[CMD_USE_ABILITY]</input>. The second level of this mutation allows
+you to hop farther.
+%%%%
+roll mutation
+
+You can roll at nearby foes to attack with <input>$cmd[CMD_USE_ABILITY]</input>.
+Each level of this mutation increases the distance you can roll, though not the
+damage dealt.
+%%%%
+reflexive curl mutation
+
+You curl up when struck, giving you protection against further attacks until
+your next action.
+%%%%
+forlorn mutation
+
+You cannot, will not, and will never worship any god.
+%%%%
+nightstalker mutation
+
+You are attuned to the shadows, reducing the distance that you can see or be
+seen from.
+%%%%
+daystalker mutation
+
+You are born to the light, increasing the distance that you can see and be seen
+from.
+%%%%
+petrification resistance mutation
+
+You are immune to petrification.
+%%%%
+cold-blooded mutation
+
+You are endothermic. When struck by a cold attack, you may be slowed until your
+blood warms again.
+%%%%
+stealthy paws mutation
+
+When launching attacks on unaware or incapacitated enemies, you inflict extra
+damage in the same way as a human with a short blade might.
+%%%%
+four strong arms mutation
+
+You have two pairs of two arms, allowing you to wield two-handed weapons with
+one pair and a shield with the other. The secondary arms in each pair are oddly
+shaped, preventing you from wearing an extra set of gloves or magical rings.
+%%%%
+retaliatory headbutt mutation
+
+When a foe misses you in melee, you may reflexively retaliate, attempting to
+gore your attacker with your horns. Strength and Dexterity both improve your
+chances of success.
+%%%%
+multi-lived mutation
+
+Every third experience level, you gain an extra life. If you are slain while
+you still have a life remaining, you will reappear on another part of the
+current floor, losing an experience level in the process. You can continue to
+gain extra lives even once you reach the maximum experience level, but you
+can't have more than two extra lives in reserve at any given time.
+%%%%
+distributed training mutation
+
+Whenever you gain experience, it is split between all of your skills. You
+cannot choose to focus. Effects that prevent you from training certain skills,
+such as divine restrictions, do not cause your other skills to rise faster.
+%%%%
+nimble swimmer mutation
+
+You can take advantage of the water while underwater or skimming the waves,
+gaining Stealth+. The second level of this mutation also provides you improved
+EV and movement speed through the water.
+%%%%
+vampiric mutation
+
+You are cursed with vampirism, torn between false life and a bloodless,
+dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to
+exsanguinate yourself or to fill once more with blood.
+%%%%
+# ------ Jiyva muts ------
+gelatinous body mutation
+
+Your body is rubbery, and your foes like glue. Each level of this mutation
+confers +1 AC and +1 EV.
+%%%%
+eyeballs mutation
+
+Golden eyeballs sprout from your flesh like mushrooms, confusing your foes.
+Each level of this mutation improves your accuracy with weapons and spells.
+The third level of this mutation also allows you to see invisible foes.
+%%%%
+translucent skin mutation
+
+Your skin is transparent, improving your stealth and reducing the accuracy of
+your foes' attacks against you. Each level of this mutation reduces your foes'
+accuracy further.
+%%%%
+tendrils mutation
+
+When struck in melee, the slimy tendrils covering your body may grab your
+attacker's weapon and yank it from their grasp. Greater Strength or Dexterity
+makes this somewhat more likely.
+%%%%
+jelly sensing items mutation
+
+You have a small jelly attached to you that senses nearby items.
+%%%%
+jelly absorbing missiles mutation
+
+When struck by a missile (such as an arrow or crossbow bolt), a jelly on your
+body may eat it, healing you somewhat.
+%%%%
+# ------ Ru sacrifices ------
+inability to drink while threatened mutation
+
+When you are harmed, there is a chance that you will become temporarily unable
+to drink potions. The greater the damage done and the closer you are to death,
+the greater the odds.
+%%%%
+inability to read while threatened mutation
+
+When you are harmed, there is a chance that you will become temporarily unable
+to read. The greater the damage done and the closer you are to death, the
+greater the odds.
+%%%%
+missing a hand mutation
+
+You are considerably less handy than you used to be. You cannot wield
+two-handed weapons, wear a shield, launch off-handed attacks, or use more than
+one magical ring at a time.
+%%%%
+no stealth mutation
+
+Your have no Stealth. You will always alert monsters when they see you, and
+they will track you very effectively.
+%%%%
+inability to use devices mutation
+
+You cannot use magical devices. This includes wands and most items evoked with
+<input>$cmd[CMD_EVOKE]</input>, excepting reaching weapons and ziggurat
+figurines. This also renders magical staves much less effective in melee.
+%%%%
+hated by all mutation
+
+You are hated by all and cannot acquire allies, temporarily or permanently, by
+any means. Simplistic, unthinking magical constructs, such as spectral weapons,
+orbs of destruction, and battlespheres, are unaffected.
+%%%%
+cowardly mutation
+
+Seeing threatening monsters fills you with dread, reducing the power of your
+spells and your ability to slay monsters with melee and ranged attacks. Seeing
+multiple such monsters at once, or extremely threatening monsters, renders this
+even worse.
+%%%%
+disrupted magic mutation
+
+Your chance to miscast spells is higher. Each level of this sacrifice increases
+the chance to miscast further.
+%%%%
+unskilled mutation
+
+It takes you more experience to improve your skills. Each level of this
+sacrifice makes your skills cost even more.
+%%%%

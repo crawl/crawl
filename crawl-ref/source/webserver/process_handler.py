@@ -143,6 +143,7 @@ class CrawlProcessHandlerBase(object):
         self.idle_checker.start()
         self._was_idle = False
         self.last_watcher_join = 0
+        self.receiving_direct_milestones = False
 
         global last_game_id
         self.id = last_game_id + 1
@@ -511,16 +512,27 @@ class CrawlProcessHandlerBase(object):
             self.kill_timeout = None
 
     interesting_info = ("xl", "char", "place", "turn", "dur", "god", "title")
+
     def set_where_info(self, newwhere):
-        interesting = False
-        for key in CrawlProcessHandlerBase.interesting_info:
-            if self.where.get(key) != newwhere.get(key):
-                interesting = True
-        self.where = newwhere
+        # milestone doesn't count as "interesting" but the field is directly
+        # handled when sending lobby info by looking at last_milestone
+        milestone = bool(newwhere.get("milestone"))
+        interesting = (milestone
+                or newwhere.get("status") == "chargen"
+                or any([self.where.get(key) != newwhere.get(key)
+                        for key in CrawlProcessHandlerBase.interesting_info]))
+
+        # ignore milestone sync messages for where purposes
+        if newwhere.get("status") != "milestone_only":
+            self.where = newwhere
+        if milestone:
+            self.last_milestone = newwhere
         if interesting:
             update_all_lobbys(self)
 
     def check_where(self):
+        if self.receiving_direct_milestones:
+            return
         morgue_path = self.config_path("morgue_path")
         wherefile = os.path.join(morgue_path, self.username + ".where")
         try:
@@ -538,7 +550,7 @@ class CrawlProcessHandlerBase(object):
                                         exc_info=True)
                 else:
                     if (newwhere.get("status") == "active" or
-                        newwhere.get("status") == "saved"):
+                                        newwhere.get("status") == "saved"):
                         self.set_where_info(newwhere)
         except (OSError, IOError):
             pass
@@ -554,7 +566,7 @@ class CrawlProcessHandlerBase(object):
         for key in CrawlProcessHandlerBase.interesting_info:
             if key in self.where:
                 entry[key] = self.where[key]
-        if self.last_milestone:
+        if self.last_milestone and self.last_milestone.get("milestone"):
             entry["milestone"] = self.last_milestone.get("milestone")
         return entry
 
@@ -563,13 +575,6 @@ class CrawlProcessHandlerBase(object):
             return "L{xl} {char}, {place}".format(**self.where)
         except KeyError:
             return ""
-
-    def log_milestone(self, milestone):
-        # Use the updated where info in the milestone
-        self.where = milestone
-
-        self.last_milestone = milestone
-        update_all_lobbys(self)
 
     def _base_call(self):
         game = self.game_params
@@ -993,6 +998,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.exit_message = msgobj["message"]
                 else:
                     self.exit_message = None
+            elif msgobj["msg"] == "milestone":
+                # milestone/whereis update: milestone fields are right in the
+                # message
+                self.receiving_direct_milestones = True # no need for .where files
+                self.set_where_info(msgobj)
             else:
                 self.logger.warning("Unknown message from the crawl process: %s",
                                     msgobj["msg"])

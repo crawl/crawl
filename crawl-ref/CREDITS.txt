@@ -77,6 +77,7 @@
   Crawl Stone Soup:
     Eugene Abramchuk
     achuah
+    Santiago Acosta
     AdamPG
     Brent Adams
     Mike Adams
@@ -90,6 +91,7 @@
     Austin Appleby
     araganzar
     argonaut
+    ArmiesAndCastles
     Juha Arpiainen
     Arxale
     John 'Poor Yurik' Attea
@@ -170,6 +172,7 @@
     floraline
     Brett Foster
     Kyle Fox
+    Perry Fraser
     freepotion
     Chris Galardi
     GenericPseudonym
@@ -432,6 +435,7 @@ The Dungeon Crawl Stone Soup development team is:
     Aaron Pixton
     David Ploog
     Sage
+    Sastreii
     Marc H. Thoben
     Chris West
     Samuel Wilson

@@ -23,13 +23,6 @@ using std::vector;
 
 #define NUM_PIETY_STARS 6
 
-enum class lifesaving_chance
-{
-    never,
-    sometimes,
-    always,
-};
-
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
@@ -112,7 +105,6 @@ bool god_loathes_spell(spell_type spell, god_type god);
 string god_spell_warn_string(spell_type spell, god_type god);
 
 void initialize_ashenzari_props();
-lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 bool ignis_is_dead();

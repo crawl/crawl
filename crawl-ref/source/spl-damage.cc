@@ -1167,8 +1167,10 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_ROCK_WALL, { "rock", "wall" } },
     { DNGN_SLIMY_WALL, { "rock", "wall" } },
     { DNGN_STONE_WALL, { "rock", "wall" } },
+    { DNGN_PERMAROCK_WALL, { "rock", "wall" } },
     { DNGN_CLEAR_ROCK_WALL, { "rock", "wall" } },
     { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
+    { DNGN_CLEAR_PERMAROCK_WALL, { "rock", "wall" } },
     { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
     { DNGN_GRANITE_STATUE, { "rock", "statue" } },
     { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
@@ -2196,20 +2198,6 @@ static bool maybe_abort_ignite()
 }
 
 /**
- * Does Ignite Poison affect the given creature?
- *
- * @param act       The creature in question.
- * @return          Whether Ignite Poison can directly damage the given
- *                  creature (not counting clouds).
- */
-bool ignite_poison_affects(const actor* act)
-{
-    if (act->is_player())
-        return you.duration[DUR_POISONING];
-    return act->as_monster()->has_ench(ENCH_POISON);
-}
-
-/**
  * Does Ignite Poison do something to this cell?
  *
  * @param where       Where to look
@@ -2790,7 +2778,7 @@ void forest_damage(const actor *mon)
                 int dmg = 0;
                 string msg;
 
-                if (!apply_chunked_AC(1, foe->evasion(ev_ignore::none, mon)))
+                if (!apply_chunked_AC(1, foe->evasion(false, mon)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch",
@@ -3056,6 +3044,39 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             }
         }
     }
+}
+
+spret cast_inner_flame(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const monster* mons = monster_at(target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You can't see anything there.");
+        return spret::abort;
+    }
+
+    if (mons->has_ench(ENCH_INNER_FLAME))
+    {
+        mprf("%s is already burning with an inner flame!",
+             mons->name(DESC_THE).c_str());
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return spret::abort;
+
+    bolt beam;
+    beam.source = mons->pos();
+    beam.target = mons->pos();
+    beam.set_agent(&you);
+
+    return zapping(ZAP_INNER_FLAME, pow, beam, false, nullptr, fail);
 }
 
 spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
@@ -3671,6 +3692,9 @@ void actor_apply_toxic_bog(actor * act)
     if (mons && mons->type == MONS_FENSTRIDER_WITCH)
         return; // stilting above the muck!
 
+    if (player && you.duration[DUR_NOXIOUS_BOG])
+        return;
+
     actor *oppressor = nullptr;
 
     for (map_marker *marker : env.markers.get_markers_at(act->pos()))
@@ -3981,26 +4005,22 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow)
     vector<coord_def> bog_locs;
     const int radius = spell_range(SPELL_NOXIOUS_BOG, pow, false);
 
-    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS, true); ri;
-            ri++)
+    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS); ri; ri++)
     {
         if (!feat_has_solid_floor(env.grid(*ri)))
             continue;
 
-        // If a candidate cell is next to a solid feature, we can't bog it.
-        // Additionally, if it's next to a cell we can't currently see, we
-        // can't bog it, regardless of what the cell contains. Don't want to
-        // leak information about out-of-los cells.
-        bool valid = true;
+        // If a candidate cell is next to more than one solid feature, we can't
+        // bog it. Cells we can't currently see are also considered solid,
+        // regardless of what the cell contains. Don't want to leak information
+        // about out-of-los cells.
+        int walls = 0;
         for (adjacent_iterator ai(*ri); ai; ai++)
         {
             if (!you.see_cell(*ai) || feat_is_solid(env.grid(*ai)))
-            {
-                valid = false;
-                break;
-            }
+                walls++;
         }
-        if (valid)
+        if (walls <= 1)
             bog_locs.push_back(*ri);
     }
 

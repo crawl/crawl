@@ -109,18 +109,9 @@ static void _apply_contam_over_time()
 {
     int added_contamination = 0;
 
-    //Increase contamination each turn while invisible
-    if (you.duration[DUR_INVIS])
-        added_contamination += INVIS_CONTAM_PER_TURN;
     //If not invisible, normal dissipation
-    else
+    if (!you.duration[DUR_INVIS])
         added_contamination -= 75;
-
-    // The Orb halves dissipation (well a bit more, I had to round it),
-    // but won't cause glow on its own -- otherwise it'd spam the player
-    // with messages about contamination oscillating near zero.
-    if (you.magic_contamination && player_has_orb())
-        added_contamination += 38;
 
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
@@ -254,13 +245,6 @@ static void _jiyva_effects(int /*time_delta*/)
                     break;
             }
         }
-    }
-
-    if (have_passive(passive_t::fluid_stats)
-        && x_chance_in_y(you.piety / 4, MAX_PIETY)
-        && !player_under_penance() && one_chance_in(4))
-    {
-        jiyva_stat_action();
     }
 
     if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
@@ -612,6 +596,9 @@ void monster::timeout_enchantments(int levels)
     const mon_enchant_list ec = enchantments;
     for (auto &entry : ec)
     {
+        if (entry.second.duration >= INFINITE_DURATION)
+            continue;
+
         switch (entry.first)
         {
         case ENCH_POISON: case ENCH_CORONA:

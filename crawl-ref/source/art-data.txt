@@ -833,7 +833,7 @@ TILE_EQ:  bear
 BRAND:    SPARM_SPIRIT_SHIELD
 ANGRY:    20
 WILL:     2
-LIFE:     1
+DBRAND:   Going berserk makes the wearer tougher, and they're slowed less afterward.
 
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE

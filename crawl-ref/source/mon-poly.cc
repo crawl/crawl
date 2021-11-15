@@ -299,8 +299,8 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        const monster_type type = mons_is_job(mons->type)
-                                ? draco_or_demonspawn_subspecies(*mons)
+        const monster_type type = mons_is_draconian_job(mons->type)
+                                ? draconian_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
@@ -411,7 +411,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all();
     mons->stop_being_constricted();
-    mons->clear_far_engulf();
+    mons->clear_far_engulf(true);
 }
 
 // Is the new monster able to live in *any* habitat that the original

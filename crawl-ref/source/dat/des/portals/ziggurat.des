@@ -220,8 +220,9 @@ TAGS: ziggurat_pillar centered unrand no_exits
 # This pillar has tactical implications: you will have to stay away from it,
 # and teleports are more risky.
 MONS: dread lich / shadow demon / curse skull / \
-      ironbound convoker / corrupter / deep elf demonologist
-MONS: eye of devastation / floating eye / ghost moth / black sun / torpor snail
+      ironbound convoker / demonspawn corrupter / deep elf demonologist
+MONS: eye of devastation / floating eye / ghost moth / demonspawn black sun / \
+      torpor snail
 MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
