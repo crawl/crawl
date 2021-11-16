@@ -148,6 +148,15 @@ item_def* newgame_make_item(object_class_type base,
             item.sub_type = ARM_ROBE;
     }
 
+    // small/little players should start with bucklers instead of shields
+    if (item.base_type == OBJ_ARMOUR
+        && item.sub_type == ARM_SHIELD
+        && you.char_class == JOB_FIGHTER
+        && you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
+    {
+        item.sub_type = ARM_BUCKLER;
+    }
+
     // Make sure we didn't get a stack of shields or such nonsense.
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
