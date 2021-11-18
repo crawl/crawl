@@ -1189,6 +1189,7 @@ COLOUR:   ETC_MUTAGENIC
 TILE:     urand_vitality
 
 NAME:     autumn katana
+INSCRIP:  manifold assault,
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
 FALLBACK: OBJ_WEAPONS/WPN_DOUBLE_SWORD
 TYPE:     katana
@@ -1200,7 +1201,7 @@ BASE_ACC: +2
 BASE_DAM: +4
 BASE_DELAY: -2
 BOOL:     clarity
-BRAND:    SPWPN_VORPAL
+DESCRIP:  Launches melee attacks against multiple visible enemies.
 
 NAME:     shillelagh "Devastator"
 INSCRIP:  shatter

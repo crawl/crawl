@@ -49,6 +49,7 @@
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
+#include "spl-transloc.h"  // For manifold assault
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
 #include "view.h"          // For arc blade's discharge effect
@@ -1485,6 +1486,29 @@ static void _RCLOUDS_world_reacts(item_def */*item*/)
         {
             mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());
             place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
+        }
+    }
+}
+
+////////////////////////////////////////////////////
+
+static void _AUTUMN_KATANA_equip(item_def*/*item*/, bool* show_msgs, bool /*unmeld*/)
+{
+    _equip_mpr
+    (show_msgs, "The moment you hold it, everything starts to look clear to you.");
+}
+
+
+static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
+    actor* defender, bool /*mondied*/, int /*dam*/)
+{
+    if (attacker->is_player()
+        && defender->is_monster())
+    {
+        if (one_chance_in(5))
+        {
+            const int pow = 50 + random2avg(50, 2);
+            cast_manifold_assault(pow, false);
         }
     }
 }
