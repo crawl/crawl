@@ -1123,7 +1123,10 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
 
     fail_check();
 
-    mpr("Space momentarily warps into an impossible shape!");
+    if (player_equip_unrand(UNRAND_AUTUMN_KATANA))
+        mpr("Space folds impossibly around your blade!");
+    else
+        mpr("Space momentarily warps into an impossible shape!");
 
     const int initial_time = you.time_taken;
 

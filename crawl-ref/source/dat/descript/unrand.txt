@@ -508,8 +508,8 @@ the amulet vanished from the pages of history.
 %%%%
 autumn katana
 
-An exquisitely crafted sword, enchanted to provide both mental and physical
-strength to the wielder.
+An exquisitely crafted sword. Its blade is so sharp that it can cut through
+space itself.
 %%%%
 shillelagh "Devastator"
 
