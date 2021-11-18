@@ -1327,7 +1327,7 @@ bool elyvilon_divine_vigour()
         mprf("%s grants you divine vigour.",
              god_name(GOD_ELYVILON).c_str());
 
-        const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
+        const int vigour_amt = 30;
         const int old_hp_max = you.hp_max;
         const int old_mp_max = you.max_magic_points;
         you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;

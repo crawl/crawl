@@ -453,7 +453,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_ELYVILON_HEAL_SELF, "Heal Self",
             2, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
-            0, 0, 6, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            0, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Lugonu
         { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
