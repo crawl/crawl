@@ -1935,7 +1935,8 @@ TAGS:  uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 KFEAT: _ = altar_okawaru
 KPROP: 1 = no_tele_into
 : if you.in_branch("Depths") then
-MONS:  minotaur ; javelin q:5
+MONS:  spriggan defender ; flail . robe . buckler . boomerang w:3 /\
+       tengu warrior ; long sword . leather armour . buckler . boomerang
 :else
 MONS:  goblin; stone q:5 / hobgoblin; stone q:5 / gnoll; stone q:5 /\
        orc; stone q:5 / kobold; stone q:5
@@ -1995,7 +1996,7 @@ TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   no_pool_fixup transparent
 KFEAT:  _ = altar_okawaru
 : if you.in_branch("Depths") then
-KMONS: 1 = minotaur ; glaive . chain mail . javelin q:3
+KMONS:  1 = spriggan defender ; demon trident . robe . boomerang
 :else
 KMONS:  1 = goblin ; spear
 :end
