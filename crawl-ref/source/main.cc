@@ -1975,6 +1975,10 @@ public:
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("Lookup info",
             MEL_ITEM, 'i', CMD_LOOKUP_HELP_MENU));
+#ifdef TARGET_OS_MACOSX
+        add_entry(new CmdMenuEntry("Show options file in finder",
+            MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
+#endif
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
                             "Quit and <lightred>abandon character</lightred>",
@@ -2248,6 +2252,14 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
         break;
 
+#ifdef TARGET_OS_MACOSX
+    case CMD_REVEAL_OPTIONS:
+        // TODO: implement for other OSs
+        // TODO: add a way of triggering this from the main menu
+        system(make_stringf("/usr/bin/open -R '%s'",
+                                            Options.filename.c_str()).c_str());
+        break;
+#endif
     case CMD_SHOW_CHARACTER_DUMP:
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))
