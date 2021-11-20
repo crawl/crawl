@@ -210,7 +210,7 @@ enum class passive_t
     /// You have a chance to gain mana when you kill
     mp_on_kill,
 
-    /// You are less likely to miscat destructive spells
+    /// You are less likely to miscast destructive spells
     spells_success,
 
     /// You can cast destructive spells farther
