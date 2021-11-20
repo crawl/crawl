@@ -207,9 +207,6 @@ static bool _mut_has_use(const mutation_def &mut, mutflag use)
     return bool(mut.uses & use);
 }
 
-#define MUT_BAD(mut) _mut_has_use((mut), mutflag::bad)
-#define MUT_GOOD(mut) _mut_has_use((mut), mutflag::good)
-
 static int _mut_weight(const mutation_def &mut, mutflag use)
 {
     switch (use)
@@ -288,6 +285,16 @@ static const mutation_category_def& _get_category_mutation_def(mutation_type mut
 static bool _is_valid_mutation(mutation_type mut)
 {
     return mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1;
+}
+
+bool is_bad_mutation(mutation_type mut)
+{
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::bad);
+}
+
+bool is_good_mutation(mutation_type mut)
+{
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::good);
 }
 
 static const mutation_type _ds_scales[] =
@@ -1258,9 +1265,9 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
 {
     int amusement = 12 * (11 - _get_mutation_def(which_mutation).weight);
 
-    if (MUT_GOOD(mut_data[which_mutation]))
+    if (is_good_mutation(which_mutation))
         amusement /= 2;
-    else if (MUT_BAD(mut_data[which_mutation]))
+    else if (is_bad_mutation(which_mutation))
         amusement *= 2;
     // currently is only ever one of these, but maybe that'll change?
 
@@ -2313,9 +2320,9 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 
             const bool mismatch =
                 (which_mutation == RANDOM_GOOD_MUTATION
-                 && MUT_BAD(mdef))
+                 && is_bad_mutation(mutat))
                     || (which_mutation == RANDOM_BAD_MUTATION
-                        && MUT_GOOD(mdef));
+                        && is_good_mutation(mutat));
 
             if (mismatch && (disallow_mismatch || !one_chance_in(10)))
                 continue;
@@ -2631,7 +2638,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
 
     if (colour)
     {
-        const char* colourname = (MUT_BAD(mdef) ? "red" : "lightgrey");
+        const char* colourname = (is_bad_mutation(mut) ? "red" : "lightgrey");
         const bool permanent   = you.has_innate_mutation(mut);
 
         if (permanent)

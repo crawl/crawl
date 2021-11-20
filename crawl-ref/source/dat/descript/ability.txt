@@ -517,10 +517,6 @@ Slimify ability
 Coats a wielded weapon or your fists with slime, turning the next living or
 corporeal undead monster hit into a neutral slime.
 %%%%
-Cure Bad Mutation ability
-
-Removes a randomly selected bad mutation.
-%%%%
 # Ashenzari
 Curse Item ability
 

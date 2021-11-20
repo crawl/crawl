@@ -312,10 +312,9 @@ Jiyva powers
 
 Jiyva's followers can request jellies, which curry Jiyva's favour by consuming
 items. Jiyva will also consume items elsewhere in the dungeon. Followers will
-later become able to turn monsters to slime, and eventually to reshape
-themselves to remove harmful mutations. As their piety grows, Jiyva will drop
-jellies into the dungeon, regenerate followers' wounds and magic, and mutate
-them to better reflect Jiyva's image.
+later become able to turn monsters to slime. As their piety grows, Jiyva will
+drop jellies into the dungeon, regenerate followers' wounds and magic, and
+mutate them to better reflect Jiyva's image.
 %%%%
 Kikubaaqudgha powers
 

@@ -38,6 +38,8 @@ vector<mutation_type> get_removed_mutations();
 
 void init_mut_index();
 
+bool is_bad_mutation(mutation_type mut);
+bool is_good_mutation(mutation_type mut);
 bool is_body_facet(mutation_type mut);
 bool is_slime_mutation(mutation_type mut);
 bool undead_mutation_rot();

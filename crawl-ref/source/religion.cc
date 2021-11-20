@@ -259,8 +259,6 @@ const vector<god_power> god_powers[NUM_GODS] =
         { 5, "You may now expel jellies when seriously injured.",
              "You will no longer expel jellies when injured.",
              "You may expel jellies when seriously injured." },
-        { 5, ABIL_JIYVA_CURE_BAD_MUTATION,
-             "call upon Jiyva to remove your harmful mutations" },
     },
 
     // Fedhas
@@ -1164,15 +1162,17 @@ static bool _jiyva_mutate()
 
     bool deleted = false;
     // Go through each level of each existing non-temp, non-innate mutation.
-    // Give a 1/4 chance of removing each. Since we gift 4 mut levels, this
-    // means we stabilize when total mut levels = (total levels) * 3/4 + 4, or
-    // about 16 total mut levels.
+    // Give a 1/4 chance of removing each, or a 1/2 chance for bad mutations.
+    // Since we gift 4 mut levels, this means we stabilize when total mut
+    // levels = (total levels) * 3/4 + 4, or about 16 total mut levels.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         const mutation_type mut = (mutation_type)i;
         const int lvl = you.get_base_mutation_level(mut, false, false, true);
-        if (!lvl) continue;
-        const int deletions = binomial(lvl, 25);
+        if (!lvl)
+            continue;
+        const int chance = is_bad_mutation(mut) ? 50 : 25;
+        const int deletions = binomial(lvl, chance);
         for (int del = 0; del < deletions; ++del)
         {
             deleted = delete_mutation(mut, "Jiyva's grace", true, false, true)

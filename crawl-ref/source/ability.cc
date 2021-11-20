@@ -500,8 +500,6 @@ static vector<ability_def> &_get_ability_list()
             2, 0, 1, {fail_basis::invo}, abflag::none },
         { ABIL_JIYVA_SLIMIFY, "Slimify",
             4, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
-        { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
-            0, 0, 15, {fail_basis::invo}, abflag::none },
 
         // Fedhas
         { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
@@ -2995,11 +2993,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
                               random2avg(you.piety / 4, 2) + 3, 100);
         break;
     }
-
-    case ABIL_JIYVA_CURE_BAD_MUTATION:
-        fail_check();
-        jiyva_remove_bad_mutation();
-        break;
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
         fail_check();

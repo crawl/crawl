@@ -1650,25 +1650,6 @@ bool beogh_resurrect()
     return true;
 }
 
-bool jiyva_remove_bad_mutation()
-{
-    if (!you.how_mutated())
-    {
-        mpr("You have no bad mutations to be cured!");
-        return false;
-    }
-
-    // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, "Jiyva's power", true, false, true, true))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return false;
-    }
-
-    mpr("You feel cleansed.");
-    return true;
-}
-
 bool yred_injury_mirror()
 {
     return in_good_standing(GOD_YREDELEMNUL, 1)
