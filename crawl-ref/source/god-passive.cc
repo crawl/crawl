@@ -282,14 +282,6 @@ static const vector<god_passive> god_passives[] =
               "are NOW immune to slime covered walls" },
         {  3, passive_t::resist_corrosion,
               "GOD NOW protects you from corrosion" },
-        {  4, passive_t::slime_mp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your magical power"
-        },
-        {  5, passive_t::slime_hp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your health"
-        },
         {  6, passive_t::spawn_slimes_on_hit,
               "spawn slimes when struck by massive blows" },
         {  6, passive_t::unlock_slime_vaults,

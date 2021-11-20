@@ -850,17 +850,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
     }
 
-    case GOD_JIYVA:
-        have_any = true;
-        if (have_passive(passive_t::slime_hp))
-            desc.cprintf("You gain magic and health when your fellow slimes consume items.\n");
-        else if (have_passive(passive_t::slime_mp))
-            desc.cprintf("You gain magic when your fellow slimes consume items.\n");
-        else
-            desc.cprintf("Your fellow slimes can consume items.\n");
-
-        break;
-
     case GOD_FEDHAS:
         have_any = true;
         desc.cprintf("You can walk through plants and fire through allied plants.\n");
