@@ -249,9 +249,9 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Jiyva
     {   { 1, ABIL_JIYVA_CALL_JELLY, "request a jelly" },
-        { 3, "Jiyva will now mutate your body and modify your attributes as you gain piety.",
-             "Jiyva will no longer mutate your body and modify your attributes.",
-             "Jiyva will mutate your body and modify your attributes as you gain piety." },
+        { 3, "Jiyva will now mutate your body as you gain piety.",
+             "Jiyva will no longer mutate your body.",
+             "Jiyva will mutate your body as you gain piety." },
         { 3, "Jiyva is now protecting you from corrosive effects.",
              "Jiyva will no longer protect you from corrosive effects.",
              "Jiyva protects you from corrosive effects." },
