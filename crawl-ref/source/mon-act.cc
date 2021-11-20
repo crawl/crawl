@@ -2481,9 +2481,6 @@ static bool _monster_eat_item(monster* mons)
             shown_msg = true;
         }
 
-        if (you_worship(GOD_JIYVA))
-            jiyva_slurp_item_stack(*si, quant);
-
         if (quant >= si->quantity)
             item_was_destroyed(*si);
         dec_mitm_item_quantity(si.index(), quant);

@@ -212,36 +212,3 @@ int zin_tithe(const item_def& item, int quant, bool converting)
     you.attribute[ATTR_TITHE_BASE] = due;
     return taken;
 }
-
-// God effects of sacrificing one item from a stack (e.g., a weapon, one
-// out of 20 arrows, etc.). Does not modify the actual item in any way.
-static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
-{
-    // item_value() multiplies by quantity.
-    const int shop_value = item_value(item, true) / item.quantity;
-    // Since the god is taking the items as a sacrifice, they must have at
-    // least minimal value, otherwise they wouldn't be taken.
-    const int value = is_worthless_consumable(item) ? 1 : shop_value;
-
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
-        mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
-#endif
-
-    // compress into range 0..250
-    const int stepped = stepdown_value(value, 50, 50, 200, 250);
-    gain_piety(stepped, 50);
-    return (piety_gain_t)min(2, div_rand_round(stepped, 50));
-}
-
-void jiyva_slurp_item_stack(const item_def& item, int quantity)
-{
-    ASSERT(you_worship(GOD_JIYVA));
-    if (quantity <= 0)
-        quantity = item.quantity;
-    piety_gain_t gain = PIETY_NONE;
-    for (int j = 0; j < quantity; ++j)
-        gain = max(gain, _sacrifice_one_item_noncount(item));
-
-    if (gain > PIETY_NONE)
-        simple_god_message(" appreciates your sacrifice.");
-}

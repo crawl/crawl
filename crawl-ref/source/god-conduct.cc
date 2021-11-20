@@ -808,7 +808,17 @@ static like_map divine_likes[] =
         } },
     },
     // GOD_JIYVA,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            "you explore the world", false,
+            0, 0, 0, nullptr,
+            [] (int &piety, int &/*denom*/, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 26;
+            }
+        } },
+    },
     // GOD_FEDHAS,
     {
         { DID_KILL_LIVING, _fedhas_kill_living_response() },
@@ -1057,10 +1067,6 @@ string get_god_likes(god_type which_god)
     // Unique/unusual piety gain methods first.
     switch (which_god)
     {
-    case GOD_JIYVA:
-        likes.emplace_back("you sacrifice items by allowing slimes to consume "
-                           "them");
-        break;
     case GOD_GOZAG:
         likes.emplace_back("you collect gold");
         break;

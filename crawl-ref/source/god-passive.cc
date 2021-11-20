@@ -531,10 +531,7 @@ void jiyva_eat_offlevel_items()
                 dprf("Eating %s on %s",
                      si->name(DESC_PLAIN).c_str(), lid.describe().c_str());
 
-                // Needs a message now to explain possible hp or mp
-                // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
             }

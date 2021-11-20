@@ -496,8 +496,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 28, {fail_basis::invo}, abflag::none },
 
         // Jiyva
-        { ABIL_JIYVA_CALL_JELLY, "Request Jelly",
-            2, 0, 1, {fail_basis::invo}, abflag::none },
         { ABIL_JIYVA_SLIMIFY, "Slimify",
             4, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
 
@@ -2968,19 +2966,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         fail_check();
         start_delay<RevivifyDelay>(5);
         break;
-
-    case ABIL_JIYVA_CALL_JELLY:
-    {
-        fail_check();
-        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos(),
-                     MHITNOT, MG_NONE, GOD_JIYVA);
-
-        mg.non_actor_summoner = "Jiyva";
-
-        if (!create_monster(mg))
-            return spret::abort;
-        break;
-    }
 
     case ABIL_JIYVA_SLIMIFY:
     {

@@ -248,8 +248,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Jiyva
-    {   { 1, ABIL_JIYVA_CALL_JELLY, "request a jelly" },
-        { 3, "Jiyva will now mutate your body as you gain piety.",
+    {   { 3, "Jiyva will now mutate your body as you gain piety.",
              "Jiyva will no longer mutate your body.",
              "Jiyva will mutate your body as you gain piety." },
         { 3, "Jiyva is now protecting you from corrosive effects.",
@@ -1818,16 +1817,6 @@ static bool _is_plant_follower(const monster* mon)
 {
     return mon->alive() && mons_is_plant(*mon)
            && mon->attitude == ATT_FRIENDLY;
-}
-
-static bool _has_jelly()
-{
-    ASSERT(you_worship(GOD_JIYVA));
-
-    for (monster_iterator mi; mi; ++mi)
-        if (mons_is_god_gift(**mi, GOD_JIYVA))
-            return true;
-    return false;
 }
 
 bool is_follower(const monster& mon)
@@ -3819,20 +3808,6 @@ static void _join_gozag()
     add_daction(DACT_GOLD_ON_TOP);
 }
 
-/// Setup when joining the gelatinous groupies of Jiyva.
-static void _join_jiyva()
-{
-    // Complimentary jelly upon joining.
-    if (_has_jelly())
-        return;
-
-    mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos());
-    mg.set_summoned(&you, 0, 0, GOD_JIYVA);
-
-    delayed_monster(mg);
-    simple_god_message(" grants you a jelly!");
-}
-
 static void _join_okawaru()
 {
     bool needs_message = false;
@@ -3918,7 +3893,6 @@ static const map<god_type, function<void ()>> on_join = {
                 mi->del_ench(ENCH_AWAKEN_FOREST);
     }},
     { GOD_GOZAG, _join_gozag },
-    { GOD_JIYVA, _join_jiyva },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
