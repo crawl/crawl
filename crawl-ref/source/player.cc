@@ -1213,7 +1213,7 @@ int player_total_spell_levels()
  * How many spell levels does the player currently have available for
  * memorising new spells?
  */
-int player_spell_levels()
+int player_spell_levels(bool floored)
 {
     int sl = min(player_total_spell_levels(), 99);
 
@@ -1223,7 +1223,7 @@ int player_spell_levels()
             sl -= spell_difficulty(spell);
     }
 
-    if (sl < 0)
+    if (sl < 0 && floored)
         sl = 0;
 
     return sl;
