@@ -1431,7 +1431,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                         // see the documentation of getPressure(i)
                         p = 1.0f;
                     }
-                    // CRAWK HACK: Cancel other events while scrolling
+                    // CRAWL HACK: Cancel other events while scrolling
                     if (!scrolling) {
                         SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p);
                     }

@@ -338,7 +338,11 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_font_lbl_size), 0, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_cell_pixels), 32, 1, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_map_pixels), 0, 0, INT_MAX),
+#ifndef __ANDROID__
         new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 500, 0, INT_MAX),
+#else
+        new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 0, 0, INT_MAX),
+#endif
         new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
         // minimap colours

@@ -399,6 +399,9 @@ bool TilesFramework::initialise()
     TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
                                                    TILEG_TAB_NAVIGATION);
     m_region_tab->activate_tab(TAB_ITEM);
+    // the layout crashes with no previous active tab
+    if (tiles.is_using_small_layout())
+        m_region_tab->deactivate_tab();
 
     m_region_msg  = new MessageRegion(m_msg_font);
     m_region_stat = new StatRegion(m_stat_font);
@@ -829,7 +832,6 @@ void TilesFramework::do_layout()
     if (use_small_layout)
     {
         //   * dungeon view, on left, is full height of screen and square
-        //   * message area is overlaid on dungeon view
         //   * command tabs are scaled to height of screen and put to far right
         //   * command boxes are hidden (appear when tabs pressed, covering screen)
         //   * stats region squeezed between dungeon and command tabs
@@ -947,7 +949,16 @@ void TilesFramework::do_layout()
     }
 
     if (use_small_layout)
+    {
         m_stat_col = m_stat_x_divider;
+
+        // place tabs (covering the map view)
+        m_region_tab->set_small_layout(true, m_windowsz);
+        m_region_tab->resize_to_fit(m_stat_x_divider+m_region_tab->ox*2, message_y_divider-m_tab_margin);
+
+        // place tabs waay to the right (all offsets will be negative)
+        m_region_tab->place(m_windowsz.x-m_region_tab->ox, 0);
+    }
     else
         m_stat_col = m_stat_x_divider + map_stat_margin;
     m_region_stat->resize_to_fit(sidebar_pw, m_windowsz.y);
@@ -1149,16 +1160,6 @@ void TilesFramework::layout_statcol()
         // * stats will be squeezed in gap between dungeon and commands
         m_statcol_top = 0;
         m_statcol_bottom = m_windowsz.y;
-
-        // place tabs (covering whole screen)
-        m_region_tab->set_small_layout(true, m_windowsz);
-        m_region_tab->resize_to_fit(m_windowsz.x-m_region_tab->ox, m_windowsz.y);
-
-        // place tabs waay to the right (all offsets will be negative)
-        m_region_tab->place(m_windowsz.x-m_region_tab->ox, 0);
-
-        // close any open tab
-        m_region_tab->deactivate_tab();
 
         // resize stats to be up to beginning of command tabs
         //  ... this works because the margin (ox) on m_region_tab contains the tabs themselves

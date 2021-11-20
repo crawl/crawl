@@ -167,7 +167,11 @@ void TabbedRegion::deactivate_tab()
         m_tabs[m_active].reg->clear();
 
     if (m_use_small_layout)
+    {
+        if (m_tabs[0].reg)
+            m_tabs[0].reg->clear();
         m_active = 0;
+    }
 }
 
 int TabbedRegion::active_tab() const
