@@ -275,7 +275,7 @@ namespace species
 
     bool wears_barding(species_type species)
     {
-        return bool(get_species_def(species).flags & SPF_SMALL_TORSO);
+        return bool(get_species_def(species).flags & SPF_BARDING);
     }
 
     bool has_claws(species_type species)
