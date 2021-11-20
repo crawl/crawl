@@ -1163,6 +1163,14 @@ int player_regen()
     if (you.duration[DUR_TROGS_HAND])
         rr += REGEN_PIP;
 
+    // Jiyva's passive healing also bypasses sickness, as befits a god.
+    if (have_passive(passive_t::jelly_regen))
+    {
+        // One regen pip at 1* piety, scaling to two pips at 6*.
+        // We use piety rank to avoid leaking piety info to the player.
+        rr += REGEN_PIP + (REGEN_PIP * (piety_rank(you.piety) - 1)) / 5;
+    }
+
     return rr;
 }
 
@@ -1178,6 +1186,12 @@ int player_mp_regen()
 
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
         regen_amount += 25;
+
+    if (have_passive(passive_t::jelly_regen))
+    {
+        // We use piety rank to avoid leaking piety info to the player.
+        regen_amount += 25 + (25 * (piety_rank(you.piety) - 1)) / 5;
+    }
 
     return regen_amount;
 }

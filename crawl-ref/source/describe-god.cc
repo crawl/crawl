@@ -855,6 +855,16 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("You can walk through plants and fire through allied plants.\n");
         break;
 
+    case GOD_JIYVA:
+        if (!have_passive(passive_t::jelly_regen))
+            break;
+        have_any = true;
+        desc.cprintf("Your health and magic regeneration is %saccelerated.\n",
+                     piety >= piety_breakpoint(5) ? "very greatly " :
+                     piety >= piety_breakpoint(3) ? "greatly " :
+                                                    "");
+        break;
+
     case GOD_CHEIBRIADOS:
         have_any = true;
         if (have_passive(passive_t::stat_boost))
