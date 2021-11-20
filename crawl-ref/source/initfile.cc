@@ -48,6 +48,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
+#include "maps.h"
 #include "message.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -1000,6 +1001,41 @@ static string _get_save_path(string subdir)
     return _resolve_dir(SysEnv.crawl_dir, subdir);
 }
 
+/**
+ * Reset options paths based on SysEnv values. Should be called if these get
+ * changed, but will override several options values.
+ */
+void game_options::reset_paths()
+{
+    macro_dir = SysEnv.macro_dir;
+
+    save_dir = _get_save_path("saves/");
+#ifdef DGAMELAUNCH
+    morgue_dir = _get_save_path("morgue/");
+#else
+    if (macro_dir.empty())
+    {
+#ifdef UNIX
+        macro_dir = _user_home_subpath(".crawl");
+#else
+        macro_dir = "settings/";
+#endif
+    }
+#endif
+
+#if defined(TARGET_OS_MACOSX)
+    if (SysEnv.macro_dir.empty())
+        macro_dir  = _get_save_path("");
+#endif
+
+#if defined(SHARED_DIR_PATH)
+    shared_dir = _resolve_dir(SHARED_DIR_PATH, "");
+#else
+    shared_dir = save_dir;
+#endif
+
+}
+
 void game_options::reset_options()
 {
     // XXX: do we really need to rebuild the list and map every time?
@@ -1028,34 +1064,7 @@ void game_options::reset_options()
 # endif
 #endif
 
-    macro_dir = SysEnv.macro_dir;
-
-    save_dir = _get_save_path("saves/");
-#ifdef DGAMELAUNCH
-    morgue_dir = _get_save_path("morgue/");
-#else
-    if (macro_dir.empty())
-    {
-#ifdef UNIX
-        macro_dir = _user_home_subpath(".crawl");
-#else
-        macro_dir = "settings/";
-#endif
-    }
-#endif
-
-#if defined(TARGET_OS_MACOSX)
-    UNUSED(_resolve_dir);
-
-    if (SysEnv.macro_dir.empty())
-        macro_dir  = _get_save_path("");
-#endif
-
-#if defined(SHARED_DIR_PATH)
-    shared_dir = _resolve_dir(SHARED_DIR_PATH, "");
-#else
-    shared_dir = save_dir;
-#endif
+    reset_paths();
 
     additional_macro_files.clear();
 
@@ -2565,6 +2574,16 @@ void game_options::set_option_fragment(const string &s, bool /*prepend*/)
     }
 }
 
+static void _set_crawl_dir(const string &d)
+{
+    const string new_crawl_dir = _resolve_dir(d, "");
+    mprf("Setting crawl_dir to `%s`.", d.c_str());
+    SysEnv.crawl_dir = _resolve_dir(d, "");
+    // need to double check that a valid data directory can still be found,so
+    // revalidate.
+    validate_basedirs();
+}
+
 // Not a method of the game_options class since keybindings aren't
 // stored in that class.
 static void _bindkey(string field)
@@ -3050,9 +3069,14 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifndef DATA_DIR_PATH
     else if (key == "crawl_dir")
     {
-        // We shouldn't bother to allocate this a second time
-        // if the user puts two crawl_dir lines in the init file.
-        SysEnv.crawl_dir = _resolve_dir(field, "");
+        _set_crawl_dir(field);
+
+        // reset all paths in the current options object, so that save_dir
+        // and so on will now default to being in `crawl_dir`. If this isn't
+        // done immediately, we get a fairly confused situation where save_dir
+        // is still the default for part of initialization, and the des cache
+        // ends up in the wrong place.
+        reset_paths();
     }
 #endif
 #ifndef SAVE_DIR_PATH
@@ -5202,7 +5226,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
-            SysEnv.crawl_dir = next_arg;
+            // n.b. this is overridden by an rc file setting for this -- maybe
+            // it shouldn't be?
+            _set_crawl_dir(next_arg);
+
             nextUsed = true;
             break;
 

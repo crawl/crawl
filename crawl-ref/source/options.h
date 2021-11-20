@@ -134,6 +134,7 @@ public:
     game_options();
     ~game_options();
     void reset_options();
+    void reset_paths();
 
     void read_option_line(const string &s, bool runscripts = false);
     void read_options(LineInput &, bool runscripts,
