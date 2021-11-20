@@ -4240,7 +4240,10 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         return;
 
     // Check only if actual damage and the monster is worth caring about.
-    if (final > 0 && (mons_is_threatening(*mon) || mons_class_is_test(mon->type)))
+    // Living spells do count as threats, but are fine being collateral damage.
+    if (final > 0
+        && (mons_is_threatening(*mon) || mons_class_is_test(mon->type))
+        && mon->type != MONS_LIVING_SPELL)
     {
         ASSERT(preac > 0);
 
