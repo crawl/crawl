@@ -3052,19 +3052,19 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         // We shouldn't bother to allocate this a second time
         // if the user puts two crawl_dir lines in the init file.
-        SysEnv.crawl_dir = field;
+        SysEnv.crawl_dir = _resolve_dir(field, "");
     }
 #endif
 #ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
     {
-        save_dir = field;
+        save_dir = _resolve_dir(field, "");
 #ifndef SHARED_DIR_PATH
         shared_dir = save_dir;
 #endif
     }
     else if (key == "macro_dir")
-        macro_dir = field;
+        macro_dir = _resolve_dir(field, "");
 #endif
 #endif
     else if (key == "view_lock")
