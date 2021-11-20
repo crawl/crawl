@@ -257,7 +257,7 @@ static int _etc_tree(int, const coord_def& loc)
 
 static int _etc_mangrove(int, const coord_def& loc)
 {
-    static int col = _etc_tree(0, loc);
+    const int col = _etc_tree(0, loc);
     return col == LIGHTGREEN ? BROWN : col;
 }
 
