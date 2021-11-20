@@ -1187,8 +1187,7 @@ static bool _jiyva_mutate()
     {
         const mutation_type cat
             = random_choose_weighted(6, RANDOM_GOOD_MUTATION,
-                                     3, RANDOM_SLIME_MUTATION,
-                                     1, RANDOM_BAD_MUTATION);
+                                     4, RANDOM_SLIME_MUTATION);
         const mutation_type mut = concretize_mut(cat);
         while (to_give > 0 && mutate(mut, "Jiyva's grace", false, false, true))
                --to_give;
