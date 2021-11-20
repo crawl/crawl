@@ -1032,7 +1032,7 @@ int player_adjust_evoc_power(const int power, int enhancers = 0);
 
 int player_speed();
 
-int player_spell_levels();
+int player_spell_levels(bool floored = true);
 int player_total_spell_levels();
 
 int player_teleport();

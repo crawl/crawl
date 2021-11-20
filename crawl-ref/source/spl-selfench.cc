@@ -136,7 +136,7 @@ int cast_selective_amnesia(const string &pre_msg)
                     "Forget %s, freeing %d spell level%s for a total of %d?%s",
                     spell_title(spell), spell_levels_required(spell),
                     spell_levels_required(spell) != 1 ? "s" : "",
-                    player_spell_levels() + spell_levels_required(spell),
+                    player_spell_levels(false) + spell_levels_required(spell),
                     in_library ? "" : " This spell is not in your library!");
 
             if (yesno(prompt.c_str(), in_library, 'n', false))
