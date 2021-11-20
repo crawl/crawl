@@ -1162,18 +1162,38 @@ static bool _jiyva_mutate()
 {
     simple_god_message(" alters your body.");
 
-    const int rand = random2(100);
+    bool deleted = false;
+    // Go through each level of each existing non-temp, non-innate mutation.
+    // Give a 1/4 chance of removing each. Since we gift 4 mut levels, this
+    // means we stabilize when total mut levels = (total levels) * 3/4 + 4, or
+    // about 16 total mut levels.
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        const mutation_type mut = (mutation_type)i;
+        const int lvl = you.get_base_mutation_level(mut, false, false, true);
+        if (!lvl) continue;
+        const int deletions = binomial(lvl, 25);
+        for (int del = 0; del < deletions; ++del)
+        {
+            deleted = delete_mutation(mut, "Jiyva's grace", true, false, true)
+                      || deleted;
+        }
+    }
 
-    if (rand < 5)
-        return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 30)
-        return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 55)
-        return mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 75)
-        return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else
-        return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
+    // Try to gift 4 total levels of mutations. Focus on one mutation at a time
+    // until capping its level, to maximize impact.
+    int to_give = 4;
+    for (int attempts = 0; to_give > 0 && attempts < 500; ++attempts)
+    {
+        const mutation_type cat
+            = random_choose_weighted(6, RANDOM_GOOD_MUTATION,
+                                     3, RANDOM_SLIME_MUTATION,
+                                     1, RANDOM_BAD_MUTATION);
+        const mutation_type mut = concretize_mut(cat);
+        while (to_give > 0 && mutate(mut, "Jiyva's grace", false, false, true))
+               --to_give;
+    }
+    return to_give == 0 || deleted;
 }
 
 bool vehumet_is_offering(spell_type spell)
@@ -1541,7 +1561,7 @@ static bool _gift_jiyva_gift(bool forced)
     {
         if (_jiyva_mutate())
         {
-            _inc_gift_timeout(15 + roll_dice(2, 4));
+            _inc_gift_timeout(45 + random2avg(30, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
             return true;

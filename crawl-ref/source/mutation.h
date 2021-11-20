@@ -69,6 +69,7 @@ bool delete_all_mutations(const string &reason);
 const char* mutation_name(mutation_type mut, bool allow_category = false);
 const char* category_mutation_name(mutation_type mut);
 mutation_type mutation_from_name(string name, bool allow_category, vector<mutation_type> *partial_matches = nullptr);
+mutation_type concretize_mut(mutation_type mut, mutation_permanence_class mutclass = MUTCLASS_NORMAL);
 
 string mut_upgrade_summary(mutation_type mut);
 int mutation_max_levels(mutation_type mut);

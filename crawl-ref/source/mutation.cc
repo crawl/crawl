@@ -1818,28 +1818,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                                    force_mutation, false);
     }
 
-    switch (which_mutation)
-    {
-    case RANDOM_MUTATION:
-    case RANDOM_GOOD_MUTATION:
-    case RANDOM_BAD_MUTATION:
-    case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_mutation(which_mutation, mutclass);
-        break;
-    case RANDOM_XOM_MUTATION:
-        mutat = _get_random_xom_mutation();
-        break;
-    case RANDOM_SLIME_MUTATION:
-        mutat = _get_random_slime_mutation();
-        break;
-    case RANDOM_QAZLAL_MUTATION:
-        mutat = _get_random_qazlal_mutation();
-        break;
-    default:
-        break;
-    }
-
-
+    mutat = concretize_mut(which_mutation, mutclass);
     if (!_is_valid_mutation(mutat))
         return false;
 
@@ -2102,7 +2081,33 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     return true;
 }
 
-/*
+/**
+ * If the given mutation is a 'random' type (e.g. RANDOM_GOOD_MUTATION),
+ * turn it into a specific appropriate mut (e.g. MUT_HORNS). Otherwise, return
+ * the given mut as-is.
+ */
+mutation_type concretize_mut(mutation_type mut,
+                             mutation_permanence_class mutclass)
+{
+    switch (mut)
+    {
+    case RANDOM_MUTATION:
+    case RANDOM_GOOD_MUTATION:
+    case RANDOM_BAD_MUTATION:
+    case RANDOM_CORRUPT_MUTATION:
+        return _get_random_mutation(mut, mutclass);
+    case RANDOM_XOM_MUTATION:
+        return _get_random_xom_mutation();
+    case RANDOM_SLIME_MUTATION:
+        return _get_random_slime_mutation();
+    case RANDOM_QAZLAL_MUTATION:
+        return _get_random_qazlal_mutation();
+    default:
+        return mut;
+    }
+}
+
+/**
  * Delete a single mutation level of fixed type `mutat`.
  * If `transient` is set, allow deleting temporary mutations, and prioritize them.
  * Note that if `transient` is true and there are no temporary mutations, this can delete non-temp mutations.
