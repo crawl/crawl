@@ -45,10 +45,24 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         actionKeys.add(KeyEvent.KEYCODE_TAB);
         actionKeys.add(KeyEvent.KEYCODE_ENTER);
         actionKeys.add(KeyEvent.KEYCODE_ESCAPE);
+        actionKeys.add(KeyEvent.KEYCODE_DEL);
+        actionKeys.add(KeyEvent.KEYCODE_FORWARD_DEL);
         actionKeys.add(KeyEvent.KEYCODE_SHIFT_LEFT);
         actionKeys.add(KeyEvent.KEYCODE_SHIFT_RIGHT);
         actionKeys.add(KeyEvent.KEYCODE_CTRL_LEFT);
         actionKeys.add(KeyEvent.KEYCODE_CTRL_RIGHT);
+        actionKeys.add(KeyEvent.KEYCODE_F1);
+        actionKeys.add(KeyEvent.KEYCODE_F2);
+        actionKeys.add(KeyEvent.KEYCODE_F3);
+        actionKeys.add(KeyEvent.KEYCODE_F4);
+        actionKeys.add(KeyEvent.KEYCODE_F5);
+        actionKeys.add(KeyEvent.KEYCODE_F6);
+        actionKeys.add(KeyEvent.KEYCODE_F7);
+        actionKeys.add(KeyEvent.KEYCODE_F8);
+        actionKeys.add(KeyEvent.KEYCODE_F9);
+        actionKeys.add(KeyEvent.KEYCODE_F10);
+        actionKeys.add(KeyEvent.KEYCODE_F11);
+        actionKeys.add(KeyEvent.KEYCODE_F12);
 
         // Load layout
         LayoutInflater.from(context).inflate(R.layout.keyboard, this, true);
@@ -80,7 +94,7 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         findViewById(R.id.key_j).setOnClickListener(this);
         findViewById(R.id.key_k).setOnClickListener(this);
         findViewById(R.id.key_l).setOnClickListener(this);
-        findViewById(R.id.key_apos).setOnClickListener(this);
+        findViewById(R.id.key_bspace).setOnClickListener(this);
 
         findViewById(R.id.key_tab_lower).setOnClickListener(this);
         findViewById(R.id.key_z).setOnClickListener(this);
@@ -90,14 +104,15 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         findViewById(R.id.key_b).setOnClickListener(this);
         findViewById(R.id.key_n).setOnClickListener(this);
         findViewById(R.id.key_m).setOnClickListener(this);
-        findViewById(R.id.key_bspace).setOnClickListener(this);
+        findViewById(R.id.key_semicol).setOnClickListener(this);
+        findViewById(R.id.key_apos).setOnClickListener(this);
 
         findViewById(R.id.key_shift_lower).setOnClickListener(this);
         findViewById(R.id.key_ctrl_lower).setOnClickListener(this);
         findViewById(R.id.key_grave).setOnClickListener(this);
         findViewById(R.id.key_5).setOnClickListener(this);
-        findViewById(R.id.key_lt).setOnClickListener(this);
-        findViewById(R.id.key_gt).setOnClickListener(this);
+        findViewById(R.id.key_minus).setOnClickListener(this);
+        findViewById(R.id.key_plus).setOnClickListener(this);
         findViewById(R.id.key_enter).setOnClickListener(this);
         findViewById(R.id.key_123_lower).setOnClickListener(this);
 
@@ -122,7 +137,7 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         findViewById(R.id.key_J).setOnClickListener(this);
         findViewById(R.id.key_K).setOnClickListener(this);
         findViewById(R.id.key_L).setOnClickListener(this);
-        findViewById(R.id.key_semicol).setOnClickListener(this);
+        findViewById(R.id.key_equal).setOnClickListener(this);
 
         findViewById(R.id.key_tab_upper).setOnClickListener(this);
         findViewById(R.id.key_Z).setOnClickListener(this);
@@ -132,14 +147,15 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         findViewById(R.id.key_B).setOnClickListener(this);
         findViewById(R.id.key_N).setOnClickListener(this);
         findViewById(R.id.key_M).setOnClickListener(this);
-        findViewById(R.id.key_delete).setOnClickListener(this);
+        findViewById(R.id.key_colon).setOnClickListener(this);
+        findViewById(R.id.key_quot).setOnClickListener(this);
 
         findViewById(R.id.key_shift_upper).setOnClickListener(this);
         findViewById(R.id.key_ctrl_upper).setOnClickListener(this);
+        findViewById(R.id.key_lt).setOnClickListener(this);
+        findViewById(R.id.key_gt).setOnClickListener(this);
         findViewById(R.id.key_comma).setOnClickListener(this);
         findViewById(R.id.key_dot).setOnClickListener(this);
-        findViewById(R.id.key_slash).setOnClickListener(this);
-        findViewById(R.id.key_bslash).setOnClickListener(this);
         findViewById(R.id.key_space).setOnClickListener(this);
         findViewById(R.id.key_123_upper).setOnClickListener(this);
 
@@ -164,8 +180,9 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         findViewById(R.id.key_Cj).setOnClickListener(this);
         findViewById(R.id.key_Ck).setOnClickListener(this);
         findViewById(R.id.key_Cl).setOnClickListener(this);
-        findViewById(R.id.key_quest).setOnClickListener(this);
+        findViewById(R.id.key_pipe).setOnClickListener(this);
 
+        findViewById(R.id.key_quest).setOnClickListener(this);
         findViewById(R.id.key_Cz).setOnClickListener(this);
         findViewById(R.id.key_Cx).setOnClickListener(this);
         findViewById(R.id.key_Cc).setOnClickListener(this);
@@ -173,59 +190,58 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         findViewById(R.id.key_Cb).setOnClickListener(this);
         findViewById(R.id.key_Cn).setOnClickListener(this);
         findViewById(R.id.key_Cm).setOnClickListener(this);
-        findViewById(R.id.key_minus).setOnClickListener(this);
-        findViewById(R.id.key_plus).setOnClickListener(this);
-        findViewById(R.id.key_equal).setOnClickListener(this);
+        findViewById(R.id.key_slash).setOnClickListener(this);
+        findViewById(R.id.key_bslash).setOnClickListener(this);
 
         findViewById(R.id.key_shift_ctrl).setOnClickListener(this);
         findViewById(R.id.key_ctrl_ctrl).setOnClickListener(this);
-        findViewById(R.id.key_lparen).setOnClickListener(this);
-        findViewById(R.id.key_rparen).setOnClickListener(this);
+        findViewById(R.id.key_lcurly).setOnClickListener(this);
+        findViewById(R.id.key_rcurly).setOnClickListener(this);
         findViewById(R.id.key_lbracket).setOnClickListener(this);
         findViewById(R.id.key_rbracket).setOnClickListener(this);
         findViewById(R.id.key_escape).setOnClickListener(this);
         findViewById(R.id.key_123_ctrl).setOnClickListener(this);
 
         // Initialize buttons - numeric keyboard
-        findViewById(R.id.key_num_lowline).setOnClickListener(this);
+        findViewById(R.id.key_num_F1).setOnClickListener(this);
+        findViewById(R.id.key_num_F2).setOnClickListener(this);
+        findViewById(R.id.key_num_F3).setOnClickListener(this);
         findViewById(R.id.key_num_tilde).setOnClickListener(this);
         findViewById(R.id.key_num_exclam).setOnClickListener(this);
         findViewById(R.id.key_num_at).setOnClickListener(this);
         findViewById(R.id.key_num_hash).setOnClickListener(this);
-        findViewById(R.id.key_num_dollar).setOnClickListener(this);
-        findViewById(R.id.key_num_percent).setOnClickListener(this);
         findViewById(R.id.key_num_7).setOnClickListener(this);
         findViewById(R.id.key_num_8).setOnClickListener(this);
         findViewById(R.id.key_num_9).setOnClickListener(this);
 
+        findViewById(R.id.key_num_F4).setOnClickListener(this);
+        findViewById(R.id.key_num_F5).setOnClickListener(this);
+        findViewById(R.id.key_num_F6).setOnClickListener(this);
+        findViewById(R.id.key_num_dollar).setOnClickListener(this);
+        findViewById(R.id.key_num_percent).setOnClickListener(this);
         findViewById(R.id.key_num_circum).setOnClickListener(this);
         findViewById(R.id.key_num_amper).setOnClickListener(this);
-        findViewById(R.id.key_num_aster).setOnClickListener(this);
-        findViewById(R.id.key_num_lparen).setOnClickListener(this);
-        findViewById(R.id.key_num_rparen).setOnClickListener(this);
-        findViewById(R.id.key_num_lbracket).setOnClickListener(this);
-        findViewById(R.id.key_num_rbracket).setOnClickListener(this);
         findViewById(R.id.key_num_4).setOnClickListener(this);
         findViewById(R.id.key_num_5).setOnClickListener(this);
         findViewById(R.id.key_num_6).setOnClickListener(this);
 
-        findViewById(R.id.key_num_lcurly).setOnClickListener(this);
-        findViewById(R.id.key_num_rcurly).setOnClickListener(this);
-        findViewById(R.id.key_num_slash).setOnClickListener(this);
-        findViewById(R.id.key_num_bslash).setOnClickListener(this);
-        findViewById(R.id.key_num_pipe).setOnClickListener(this);
-        findViewById(R.id.key_num_lt).setOnClickListener(this);
-        findViewById(R.id.key_num_gt).setOnClickListener(this);
+        findViewById(R.id.key_num_F7).setOnClickListener(this);
+        findViewById(R.id.key_num_F8).setOnClickListener(this);
+        findViewById(R.id.key_num_F9).setOnClickListener(this);
+        findViewById(R.id.key_num_aster).setOnClickListener(this);
+        findViewById(R.id.key_num_lparen).setOnClickListener(this);
+        findViewById(R.id.key_num_rparen).setOnClickListener(this);
+        findViewById(R.id.key_num_lowline).setOnClickListener(this);
         findViewById(R.id.key_num_1).setOnClickListener(this);
         findViewById(R.id.key_num_2).setOnClickListener(this);
         findViewById(R.id.key_num_3).setOnClickListener(this);
 
-        findViewById(R.id.key_num_comma).setOnClickListener(this);
-        findViewById(R.id.key_num_dot).setOnClickListener(this);
-        findViewById(R.id.key_num_semicol).setOnClickListener(this);
-        findViewById(R.id.key_num_colon).setOnClickListener(this);
-        findViewById(R.id.key_num_apos).setOnClickListener(this);
-        findViewById(R.id.key_num_quot).setOnClickListener(this);
+        findViewById(R.id.key_num_F10).setOnClickListener(this);
+        findViewById(R.id.key_num_F11).setOnClickListener(this);
+        findViewById(R.id.key_num_F12).setOnClickListener(this);
+        findViewById(R.id.key_num_minus).setOnClickListener(this);
+        findViewById(R.id.key_num_plus).setOnClickListener(this);
+        findViewById(R.id.key_num_equal).setOnClickListener(this);
         findViewById(R.id.key_num_quest).setOnClickListener(this);
         findViewById(R.id.key_num_0).setOnClickListener(this);
         findViewById(R.id.key_abc).setOnClickListener(this);
@@ -321,11 +337,7 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         Log.v("KEY", "KeyEvent: " + event.toString());
-        if (event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                inputConnection.deleteSurroundingText(1, 0);
-            }
-        } else if (isActionEvent(event)) {
+        if (isActionEvent(event)) {
             inputConnection.sendKeyEvent(event);
         } else if (event.getAction() == KeyEvent.ACTION_DOWN) {
             inputConnection.commitText(String.valueOf((char) event.getUnicodeChar()), 1);
