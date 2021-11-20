@@ -434,24 +434,30 @@ pregen_dungeon = incremental
 2-  File System.
 ================
 
+The following directory options may be ignored or overridden on some systems
+and builds. For example, they cannot be set in an rc file for online play. They
+can also be set via the command line.
+
 crawl_dir = <path>
-        The path used for the relative paths when looking for other
-        files. Defaults to the directory that contains the Crawl
-        executable.
+        A path to be used for the relative paths when looking for other
+        files. The default for this value is dependent on the system and
+        build type. This option can also be set the `CRAWL_DIR` environment
+        variable. When set, this will override the following three directory
+        options if they have been previously set.
 
-morgue_dir = morgue
+save_dir = saves/
+        Directory where saves and bones are stored. A relative path
+        will be interpreted relative to the value of `crawl_dir`.
+
+morgue_dir = morgues/
         Directory where morgue dumps files (morgue*.txt and
-        morgue*.lst) as well as character dumps files are written.
+        morgue*.lst) as well as character dumps files are written. A relative
+        path will be interpreted relative to the value of `crawl_dir`.
 
-save_dir = saves
-        Directory where saves and bones are stored. This option may be
-        ignored depending on the settings used to compile Crawl, but
-        should be honoured for the official Crawl binaries.
-
-macro_dir = settings/
+macro_dir = <path>
         Directory for reading macro.txt.
-        For tile games, wininit.txt will also be stored here.
-        It should end with the path delimiter.
+        It should end with the path delimiter. The default value for this
+        is dependent on system and build type.
 
 sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Requires "Sound support"; check your version info)
