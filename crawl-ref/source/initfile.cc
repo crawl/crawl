@@ -1167,16 +1167,22 @@ void game_options::reset_options()
 #endif
 
 #ifdef WIZARD
-#ifdef DGAMELAUNCH
+#  ifdef DGAMELAUNCH
     if (wiz_mode != WIZ_NO)
     {
         wiz_mode         = WIZ_NEVER;
         explore_mode     = WIZ_NEVER;
     }
-#else
+#  else
+#    ifdef DEBUG_DIAGNOSTICS
+    // Most of the time in debug builds, you want to be using wizmode anyways.
+    // This can be overridden by an explicit rc setting.
+    wiz_mode             = WIZ_YES;
+#    else
     wiz_mode             = WIZ_NO;
+#    endif
     explore_mode         = WIZ_NO;
-#endif
+#  endif
 #endif
     terp_files.clear();
 
