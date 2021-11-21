@@ -188,8 +188,6 @@ bool tile_command_not_applicable(const command_type cmd, bool safe)
         return your_talents(false).empty();
     case CMD_CAST_SPELL:
         return can_cast_spells(true);
-    case CMD_DISPLAY_MAP:
-        return tiles.get_map_display();
     default:
         return false;
     }
@@ -207,7 +205,12 @@ void CommandRegion::update()
 
     for (int idx = 0; idx < n_common_commands; ++idx)
     {
-        const command_type cmd = _common_commands[idx];
+        command_type cmd = _common_commands[idx];
+
+        // hackily toggle between display map and exit map display depending
+        // on whether we are in map mode
+        if (cmd == CMD_DISPLAY_MAP && tiles.get_map_display())
+            cmd = CMD_MAP_EXIT_MAP;
 
         InventoryTile desc;
         desc.tile = tileidx_command(cmd);
