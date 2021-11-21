@@ -19,6 +19,7 @@
 #include "rltiles/tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
+#include "viewmap.h"
 
 CommandRegion::CommandRegion(const TileRegionInit &init,
                              const command_type commands[],
@@ -70,12 +71,11 @@ int CommandRegion::handle_mouse(wm_mouse_event &event)
             tiles.deactivate_tab();
         }
 
-        // this is a really horrid way to preserve the interface in viewmap.cc
-        // which expects a keypress rather than a command :(
         if (tiles.get_map_display())
-            return command_to_key(cmd);
+            process_map_command(cmd);
+        else
+            process_command(cmd);
 
-        process_command(cmd);
         return CK_MOUSE_CMD;
     }
     return 0;
