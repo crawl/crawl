@@ -248,12 +248,12 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Jiyva
-    {   { 3, "Jiyva will now mutate your body as you gain piety.",
-             "Jiyva will no longer mutate your body.",
-             "Jiyva will mutate your body as you gain piety." },
-        { 3, "Jiyva is now protecting you from corrosive effects.",
+    {   { 2, "Jiyva is now protecting you from corrosive effects.",
              "Jiyva will no longer protect you from corrosive effects.",
              "Jiyva protects you from corrosive effects." },
+        { 3, "Jiyva will now mutate your body as you gain piety.",
+             "Jiyva will no longer mutate your body.",
+             "Jiyva will mutate your body as you gain piety." },
         { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
         { 5, "You may now expel jellies when seriously injured.",
              "You will no longer expel jellies when injured.",
