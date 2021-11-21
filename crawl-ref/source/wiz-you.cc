@@ -36,6 +36,7 @@
 #include "tag-version.h"
 #include "timed-effects.h" // zot clock
 #include "transform.h"
+#include "ui.h"
 #include "unicode.h"
 #include "view.h"
 #include "xom.h"
@@ -94,6 +95,9 @@ void wizard_suppress()
 {
     you.wizard = false;
     you.suppress_wizard = true;
+#ifdef USE_TILE_LOCAL
+    tiles.layout_statcol();
+#endif
     redraw_screen();
     update_screen();
 }
