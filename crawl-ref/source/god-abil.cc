@@ -6023,3 +6023,86 @@ void okawaru_end_duel()
     stop_delay(true);
     down_stairs(DNGN_EXIT_ARENA);
 }
+
+// XXX: just used as a one-off, but should be extended for abilities in general
+class ability_targeting_behaviour : public targeting_behaviour
+{
+public:
+    ability_targeting_behaviour() : targeting_behaviour(false)
+    {
+    }
+
+    bool targeted() override
+    {
+        return false;
+    }
+};
+
+vector<coord_def> find_slimeable_walls(const coord_def &centre)
+{
+    vector<coord_def> walls;
+
+    for (radius_iterator ri(centre, 4, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (feat_is_wall(env.grid(*ri))
+            && !feat_is_permarock(env.grid(*ri))
+            && env.grid(*ri) != DNGN_SLIMY_WALL)
+        {
+            walls.push_back(*ri);
+        }
+    }
+
+    return walls;
+}
+
+spret jiyva_oozemancy(bool fail)
+{
+    vector<coord_def> walls = find_slimeable_walls(you.pos());
+
+    dist spd;
+    bolt beam;
+    targeter_walls tgt(&you, walls);
+    ability_targeting_behaviour beh;
+
+    direction_chooser_args args;
+    args.needs_path = false;
+    args.hitfunc = &tgt;
+    args.top_prompt = "Activating: <white>Oozemancy</white>";
+    args.default_place = you.pos();
+    args.show_floor_desc = true;
+    args.show_boring_feats = false;
+    args.self = confirm_prompt_type::none;
+    args.behaviour = &beh;
+
+    if (!spell_direction(spd, beam, &args))
+        return spret::abort;
+
+    if (walls.empty())
+    {
+        mpr("There are no walls around you to affect.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int dur = 10 + random2avg(you.piety / 8, 2);
+
+    for (auto pos : walls)
+    {
+        temp_change_terrain(pos, DNGN_SLIMY_WALL, dur * BASELINE_DELAY,
+                            TERRAIN_CHANGE_SLIME);
+    }
+
+    you.increase_duration(DUR_OOZEMANCY, dur);
+    mpr("Slime begins to ooze from the nearby walls!");
+
+    return spret::success;
+}
+
+void jiyva_end_oozemancy()
+{
+    you.duration[DUR_OOZEMANCY] = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (env.grid(*ri) == DNGN_SLIMY_WALL && is_temp_terrain(*ri))
+            revert_terrain_change(*ri, TERRAIN_CHANGE_SLIME);
+}

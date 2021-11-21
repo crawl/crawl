@@ -2598,8 +2598,8 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
         return true;
     }
 
-    // Temporary trees (from Summon Forest) can't be burned.
-    if (feat_is_tree(wall) && is_temp_terrain(p))
+    // Temporary trees and slime walls can't be burned/dug.
+    if ((feat_is_tree(wall) || wall == DNGN_SLIMY_WALL) && is_temp_terrain(p))
         return false;
 
     // digging

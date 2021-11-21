@@ -254,6 +254,7 @@ const vector<god_power> god_powers[NUM_GODS] =
         { 3, "Jiyva will now mutate your body as you gain piety.",
              "Jiyva will no longer mutate your body.",
              "Jiyva will mutate your body as you gain piety." },
+        { 3, ABIL_JIYVA_OOZEMANCY, "call acidic ooze from nearby walls" },
         { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
         { 5, "You may now expel jellies when seriously injured.",
              "You will no longer expel jellies when injured.",
@@ -871,6 +872,8 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_SLIMIFY])
                 you.duration[DUR_SLIMIFY] = 0;
+            if (you.duration[DUR_OOZEMANCY])
+                jiyva_end_oozemancy();
         }
         else if (god == GOD_QAZLAL)
         {
@@ -3187,6 +3190,8 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_JIYVA:
         if (you.duration[DUR_SLIMIFY])
             you.duration[DUR_SLIMIFY] = 0;
+        if (you.duration[DUR_OOZEMANCY])
+            jiyva_end_oozemancy();
 
         if (query_daction_counter(DACT_ALLY_SLIME))
         {

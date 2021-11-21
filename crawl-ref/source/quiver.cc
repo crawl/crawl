@@ -1492,6 +1492,7 @@ namespace quiver
             case ABIL_USKAYAW_LINE_PASS:
             case ABIL_USKAYAW_GRAND_FINALE:
             case ABIL_WU_JIAN_WALLJUMP:
+            case ABIL_JIYVA_OOZEMANCY:
             case ABIL_EVOKE_DISPATER:
             case ABIL_EVOKE_OLGREB:
 #ifdef WIZARD

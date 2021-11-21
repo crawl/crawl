@@ -226,5 +226,6 @@ enum duration_type
     DUR_DUEL_COMPLETE,
     DUR_RISING_FLAME,
     DUR_BLINK_COOLDOWN,
+    DUR_OOZEMANCY,
     NUM_DURATIONS
 };

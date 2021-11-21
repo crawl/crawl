@@ -1302,7 +1302,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_MAXWELLS_COUPLING:
         return make_unique<targeter_maxwells_coupling>();
     case SPELL_FROZEN_RAMPARTS:
-        return make_unique<targeter_ramparts>(&you);
+        return make_unique<targeter_walls>(&you, find_ramparts_walls(you.pos()));
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
     case SPELL_DAZZLING_FLASH:

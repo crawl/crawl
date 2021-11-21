@@ -513,6 +513,11 @@ Slimify ability
 Coats a wielded weapon or your fists with slime, turning the next living or
 corporeal undead monster hit into a neutral slime.
 %%%%
+Oozemancy ability
+
+Calls forth acidic ooze from the walls of the dungeon around you, damaging foes
+depending on the number of affected walls they remain adjacent to.
+%%%%
 # Ashenzari
 Curse Item ability
 

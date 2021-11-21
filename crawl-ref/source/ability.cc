@@ -496,6 +496,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 28, {fail_basis::invo}, abflag::none },
 
         // Jiyva
+        { ABIL_JIYVA_OOZEMANCY, "Oozemancy",
+            3, 0, 8, {fail_basis::invo, 80, 0, 2}, abflag::none },
         { ABIL_JIYVA_SLIMIFY, "Slimify",
             5, 0, 10, {fail_basis::invo, 90, 0, 2}, abflag::none },
 
@@ -1601,6 +1603,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 mpr("Nothing ails you!");
+            return false;
+        }
+        return true;
+
+    case ABIL_JIYVA_OOZEMANCY:
+        if (you.duration[DUR_OOZEMANCY])
+        {
+            if (!quiet)
+                mpr("You are already calling forth ooze!");
             return false;
         }
         return true;
@@ -2978,6 +2989,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
                               random2avg(you.piety / 4, 2) + 3, 100);
         break;
     }
+
+    case ABIL_JIYVA_OOZEMANCY:
+        return jiyva_oozemancy(fail);
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
         fail_check();

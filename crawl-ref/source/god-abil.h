@@ -199,3 +199,7 @@ spret okawaru_duel(bool fail);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
 void okawaru_end_duel();
+
+vector<coord_def> find_slimeable_walls(const coord_def &centre);
+spret jiyva_oozemancy(bool fail);
+void jiyva_end_oozemancy();

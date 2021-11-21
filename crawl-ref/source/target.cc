@@ -1984,10 +1984,9 @@ targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def>
     }
 }
 
-targeter_ramparts::targeter_ramparts(const actor *a)
-    : targeter_multiposition(a, { })
+targeter_walls::targeter_walls(const actor *a, vector<coord_def> seeds)
+    : targeter_multiposition(a, seeds)
 {
-    auto seeds = find_ramparts_walls(a->pos());
     for (auto &c : seeds)
     {
         affected_positions.insert(c);
@@ -1997,7 +1996,7 @@ targeter_ramparts::targeter_ramparts(const actor *a)
     }
 }
 
-aff_type targeter_ramparts::is_affected(coord_def loc)
+aff_type targeter_walls::is_affected(coord_def loc)
 {
     if (!affected_positions.count(loc)
         || !cell_see_cell(agent->pos(), loc, LOS_NO_TRANS))
