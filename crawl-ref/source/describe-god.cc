@@ -856,9 +856,11 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
 
     case GOD_JIYVA:
-        if (!have_passive(passive_t::jelly_regen))
-            break;
         have_any = true;
+        if (!have_passive(passive_t::jelly_regen))
+            desc.textcolour(DARKGREY);
+        else
+            desc.textcolour(god_colour(which_god));
         desc.cprintf("Your health and magic regeneration is %saccelerated.\n",
                      piety >= piety_breakpoint(5) ? "very greatly " :
                      piety >= piety_breakpoint(3) ? "greatly " :
