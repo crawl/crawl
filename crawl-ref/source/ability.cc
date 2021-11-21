@@ -497,7 +497,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Jiyva
         { ABIL_JIYVA_SLIMIFY, "Slimify",
-            4, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
+            5, 0, 10, {fail_basis::invo, 90, 0, 2}, abflag::none },
 
         // Fedhas
         { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
