@@ -169,8 +169,13 @@ void CommandRegion::pack_buffers()
     }
 }
 
-static bool _command_not_applicable(const command_type cmd, bool safe)
+bool tile_command_not_applicable(const command_type cmd, bool safe)
 {
+    // in the level map, only the map pan commands work
+    const bool map_cmd = context_for_command(cmd) == KMC_LEVELMAP;
+    if (tiles.get_map_display() != map_cmd)
+        return true;
+
     switch (cmd)
     {
     case CMD_REST:
@@ -185,23 +190,6 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
         return can_cast_spells(true);
     case CMD_DISPLAY_MAP:
         return tiles.get_map_display();
-    case CMD_MAP_GOTO_TARGET:
-    case CMD_MAP_ADD_WAYPOINT:
-    case CMD_MAP_EXCLUDE_AREA:
-    case CMD_MAP_CLEAR_EXCLUDES:
-    case CMD_MAP_NEXT_LEVEL:
-    case CMD_MAP_PREV_LEVEL:
-    case CMD_MAP_GOTO_LEVEL:
-    case CMD_MAP_FIND_UPSTAIR:
-    case CMD_MAP_FIND_DOWNSTAIR:
-    case CMD_MAP_FIND_YOU:
-    case CMD_MAP_FIND_PORTAL:
-    case CMD_MAP_FIND_TRAP:
-    case CMD_MAP_FIND_ALTAR:
-    case CMD_MAP_FIND_EXCLUDED:
-    case CMD_MAP_FIND_WAYPOINT:
-    case CMD_MAP_FIND_STASH:
-        return !tiles.get_map_display();
     default:
         return false;
     }
@@ -226,7 +214,7 @@ void CommandRegion::update()
         desc.idx  = cmd;
 
         // Auto-explore while monsters around etc.
-        if (_command_not_applicable(cmd, safe))
+        if (tile_command_not_applicable(cmd, safe))
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);
