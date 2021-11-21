@@ -3331,6 +3331,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DROP;
     case CMD_DISPLAY_MAP:
         return TILEG_CMD_DISPLAY_MAP;
+    case CMD_MAP_EXIT_MAP:
+        return TILEG_CMD_MAP_EXIT_MAP;
     case CMD_MAP_GOTO_TARGET:
         return TILEG_CMD_MAP_GOTO_TARGET;
     case CMD_MAP_NEXT_LEVEL:
