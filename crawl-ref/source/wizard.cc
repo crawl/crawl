@@ -269,6 +269,9 @@ void handle_wizard_command()
         mprf(MSGCH_WARN, "Re-activating wizard mode.");
         you.wizard = true;
         you.suppress_wizard = false;
+#ifdef USE_TILE_LOCAL
+        tiles.layout_statcol();
+#endif
         redraw_screen();
         update_screen();
         if (crawl_state.cmd_repeat_start)
@@ -302,6 +305,9 @@ void handle_wizard_command()
 
         you.wizard = true;
         save_game(false);
+#ifdef USE_TILE_LOCAL
+        tiles.layout_statcol();
+#endif
         redraw_screen();
         update_screen();
 
