@@ -1011,9 +1011,9 @@ void game_options::reset_paths()
     macro_dir = SysEnv.macro_dir;
 
     save_dir = _get_save_path("saves/");
-#ifdef DGAMELAUNCH
     morgue_dir = _get_save_path("morgue/");
-#else
+
+#ifndef DGAMELAUNCH
     if (macro_dir.empty())
     {
 #ifdef UNIX
@@ -2182,6 +2182,7 @@ void game_options::fixup_options()
     if (!check_mkdir("Save directory", &save_dir))
         end(1, false, "Cannot create save directory '%s'", save_dir.c_str());
 
+    // TODO: why is morgue_dir, and only morgue_dir, reset to SysEnv here?
     if (!SysEnv.morgue_dir.empty())
         morgue_dir = SysEnv.morgue_dir;
 
