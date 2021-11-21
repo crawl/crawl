@@ -1825,6 +1825,11 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 
         if (check_validity)
         {
+            // manually skip LRD: it has setup behavior that needs to interact
+            // with the dungeon, and can get crashes/invalid memory accesses.
+            // TODO: is there a better way to handle this?
+            if (spell_cast == SPELL_LRD)
+                return true;
             bolt beam = mons_spell_beam(mons, spell_cast, 1, true);
             return beam.flavour != NUM_BEAMS;
         }

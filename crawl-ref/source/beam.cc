@@ -2032,6 +2032,10 @@ int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
 void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
                  bool explosion_hole)
 {
+    // If this ASSERT triggers, your spell's setup code probably is doing
+    // something bad when setup_mons_cast is called with check_validity=true.
+    ASSERT(crawl_state.game_started);
+
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
     pbolt.source        = mons->pos();
