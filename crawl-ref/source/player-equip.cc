@@ -4,6 +4,7 @@
 
 #include <cmath>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -27,6 +28,7 @@
 #include "message.h"
 #include "nearby-danger.h"
 #include "notes.h"
+#include "output.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
@@ -68,10 +70,24 @@ void equip_item(equipment_type slot, int item_slot, bool msg, bool skip_effects)
     ASSERT(you.equip[slot] == -1);
     ASSERT(!you.melded[slot]);
 
+#ifdef USE_TILE_LOCAL
+    const unsigned int old_talents = your_talents(false).size();
+#endif
+
     you.equip[slot] = item_slot;
 
     if (!skip_effects)
         equip_effect(slot, item_slot, false, msg);
+
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+        update_screen();
+    }
+#endif
+
     you.gear_change = true;
 }
 
@@ -86,6 +102,10 @@ bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
         return false;
     else
     {
+#ifdef USE_TILE_LOCAL
+        const unsigned int old_talents = your_talents(false).size();
+#endif
+
         you.equip[slot] = -1;
 
         if (you.melded[slot])
@@ -95,6 +115,16 @@ bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
 
         ash_check_bondage();
         you.last_unequip = item_slot;
+
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+        update_screen();
+    }
+#endif
+
         you.gear_change = true;
         return true;
     }
