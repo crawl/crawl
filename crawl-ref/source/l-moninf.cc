@@ -110,6 +110,11 @@ MIRET1(number, threat, threat)
  * @function mname
  */
 MIRET1(string, mname, mname.c_str())
+/*** Monster turns counter (when you first saw it).
+ * @treturn int
+ * @function type
+ */
+MIRET1(number, turns, turns)
 /*** Monster type enum value as in monster_type.h.
  * @treturn int
  * @function type
@@ -803,6 +808,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(number),
     MIREG(colour),
     MIREG(mname),
+    MIREG(turns),
     MIREG(is),
     MIREG(flags),
     MIREG(is_safe),
