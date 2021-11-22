@@ -75,10 +75,12 @@ The contents of this text are:
                 monster_list_colour, view_delay, use_animations,
                 darken_beyond_range, force_more_message, flash_screen_message,
                 cloud_status, always_show_zot
-3-i     Colours (messages and menus)
+3-i     Colours (messages and menus).
                 menu_colour, message_colour
-3-j     Missiles.
-                fire_items_start, fire_order
+3-j     Quivers, firing, and ammo.
+                fire_items_start, fire_order, fire_order_spell,
+                fire_order_ability, fail_severity_to_quiver,
+                launcher_autoquiver
 3-k     Message Channels.
                 plain, prompt, god, duration, danger, warning, recovery,
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
@@ -1051,7 +1053,7 @@ force_targeter = hailstorm, starburst, frozen ramparts, maxwell's capacitive
         be shown with every spell.
 
 allow_self_target = prompt
-        Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
+        Allow targeting yourself with risky magic (e.g., the spell Stone Arrow
         or a wand of paralysis.) Values: (yes | no | prompt).
         When set to 'yes', you are a valid target. When set to 'no', you cannot
         target yourself with such spells. When set to 'prompt' (the default),
