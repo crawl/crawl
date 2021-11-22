@@ -2065,7 +2065,8 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
 {
     // If this ASSERT triggers, your spell's setup code probably is doing
     // something bad when setup_mons_cast is called with check_validity=true.
-    ASSERT(crawl_state.game_started);
+    ASSERT(crawl_state.game_started || crawl_state.test || crawl_state.script
+        || crawl_state.game_is_arena());
 
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
