@@ -181,6 +181,7 @@ bool tile_command_not_applicable(const command_type cmd, bool safe)
     case CMD_REST:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
+    case CMD_MEMORISE_SPELL:
         return !safe;
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
@@ -191,6 +192,11 @@ bool tile_command_not_applicable(const command_type cmd, bool safe)
     default:
         return false;
     }
+}
+
+bool tile_command_not_applicable(const command_type cmd)
+{
+    return tile_command_not_applicable(cmd, i_feel_safe(false));
 }
 
 void CommandRegion::update()

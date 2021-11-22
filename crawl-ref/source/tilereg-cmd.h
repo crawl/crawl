@@ -60,6 +60,7 @@ static const command_type ct_action_commands[] =
 };
 
 bool tile_command_not_applicable(const command_type cmd, bool safe);
+bool tile_command_not_applicable(const command_type cmd);
 
 class CommandRegion : public GridRegion
 {
