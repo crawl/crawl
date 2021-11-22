@@ -1638,9 +1638,8 @@ void attract_monsters()
     }
 }
 
-spret word_of_chaos(int pow, bool fail)
+vector<monster *> find_chaos_targets(bool just_check)
 {
-    vector<monster *> visible_targets;
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
@@ -1649,12 +1648,18 @@ spret word_of_chaos(int pow, bool fail)
             && !mons_is_conjured(mi->type)
             && !mi->friendly())
         {
-            if (you.can_see(**mi))
-                visible_targets.push_back(*mi);
-            targets.push_back(*mi);
+            if (!just_check || you.can_see(**mi))
+                targets.push_back(*mi);
         }
     }
 
+    return targets;
+}
+
+spret word_of_chaos(int pow, bool fail)
+{
+    vector<monster *> visible_targets = find_chaos_targets(true);
+    vector<monster *> targets = find_chaos_targets();
     if (visible_targets.empty())
     {
         if (!yesno("You cannot see any enemies that you can affect. Speak a "

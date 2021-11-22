@@ -83,6 +83,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour);
 bool zin_donate_gold();
 string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
+vector<coord_def> find_recite_targets();
 recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
                                                   recite_counts &eligibility,
                                                   bool quiet = false);
@@ -159,6 +160,7 @@ bool gozag_bribe_branch();
 
 spret qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false, dist *player_target=nullptr);
+vector<coord_def> find_elemental_targets();
 spret qazlal_elemental_force(bool fail);
 bool qazlal_disaster_area();
 
@@ -200,6 +202,6 @@ void okawaru_remove_heroism();
 void okawaru_remove_finesse();
 void okawaru_end_duel();
 
-vector<coord_def> find_slimeable_walls(const coord_def &centre);
+vector<coord_def> find_slimeable_walls();
 spret jiyva_oozemancy(bool fail);
 void jiyva_end_oozemancy();

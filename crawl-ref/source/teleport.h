@@ -14,6 +14,7 @@ bool monster_space_valid(const monster* mons, coord_def target,
                          bool forbid_sanctuary);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 
+vector<coord_def> find_blink_targets();
 bool valid_blink_destination(const actor* moved, const coord_def& target,
                              bool forbid_sanctuary = false,
                              bool forbid_unhabitable = true);

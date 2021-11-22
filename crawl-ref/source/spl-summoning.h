@@ -69,6 +69,7 @@ bool spell_servitorable(spell_type spell);
 void init_servitor(monster* servitor, actor* caster);
 spret cast_spellforged_servitor(int pow, god_type god, bool fail);
 
+vector<coord_def> simple_find_corpses();
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, int pow, unsigned short hitting,
                     actor *as = nullptr, string nas = "",

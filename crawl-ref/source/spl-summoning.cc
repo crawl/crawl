@@ -1351,6 +1351,24 @@ static bool _animatable_remains(const item_def& item)
             || mons_skeleton(item.mon_type));
 }
 
+vector<coord_def> simple_find_corpses()
+{
+    vector<coord_def> result;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        for (stack_iterator si(*ri, true); si; ++si)
+        {
+            if (_animatable_remains(*si))
+            {
+                result.push_back(*ri);
+                break;
+            }
+        }
+    }
+
+    return result;
+}
+
 /**
  * Equip the dearly departed with its ex-possessions.
  *

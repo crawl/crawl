@@ -256,7 +256,10 @@ public:
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
-    bool        always_use_static_targeters; // whether to use static targeters even in `z`
+    bool        always_use_static_spell_targeters; // whether to always use
+                                                   // static spell targeters
+    bool        always_use_static_ability_targeters; // whether to always use
+                                                     // static ability targeters
 
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
@@ -290,8 +293,10 @@ public:
     unordered_set<ability_type, hash<int>> fire_order_ability;
     bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
 
-    unordered_set<int> force_targeter; // spell types to always use a
-                                       // targeter for
+    unordered_set<int> force_spell_targeter; // spell types to always use a
+                                             // targeter for
+    unordered_set<int> force_ability_targeter; // ability types to always use a
+                                               // targeter for
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
@@ -686,8 +691,10 @@ private:
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
-    void add_force_targeter(const string &s, bool prepend);
-    void remove_force_targeter(const string &s, bool prepend);
+    void add_force_spell_targeter(const string &s, bool prepend);
+    void remove_force_spell_targeter(const string &s, bool prepend);
+    void add_force_ability_targeter(const string &s, bool prepend);
+    void remove_force_ability_targeter(const string &s, bool prepend);
 
     static const string interrupt_prefix;
 

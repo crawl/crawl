@@ -761,6 +761,23 @@ bool zin_check_able_to_recite(bool quiet)
     return true;
 }
 
+vector<coord_def> find_recite_targets()
+{
+    vector<coord_def> result;
+    recite_counts eligibility;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi)
+            && zin_check_recite_to_single_monster(*mi, eligibility,
+                                                  true) == RE_ELIGIBLE)
+        {
+            result.push_back((*mi)->pos());
+        }
+    }
+
+    return result;
+}
+
 /**
  * Check whether there are monsters who might be influenced by Recite.
  * If prayertype is null, we're just checking whether we can.
@@ -3442,22 +3459,22 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     return spret::success;
 }
 
-spret qazlal_elemental_force(bool fail)
-{
-    static const map<cloud_type, monster_type> elemental_clouds = {
-        { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
-        { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
-        { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
-        { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
-        { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
-        { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
-        { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
-        { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
-        { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
-        { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
-        { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
-    };
+static const map<cloud_type, monster_type> elemental_clouds = {
+    { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
+    { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
+    { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
+    { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
+    { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
+    { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
+    { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
+    { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
+    { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
+    { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
+    { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
+};
 
+vector<coord_def> find_elemental_targets()
+{
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
     {
@@ -3470,6 +3487,12 @@ spret qazlal_elemental_force(bool fail)
             targets.push_back(*ri);
     }
 
+    return targets;
+}
+
+spret qazlal_elemental_force(bool fail)
+{
+    vector<coord_def> targets = find_elemental_targets();
     if (targets.empty())
     {
         mpr("You can't see any clouds you can empower.");
@@ -6024,25 +6047,11 @@ void okawaru_end_duel()
     down_stairs(DNGN_EXIT_ARENA);
 }
 
-// XXX: just used as a one-off, but should be extended for abilities in general
-class ability_targeting_behaviour : public targeting_behaviour
-{
-public:
-    ability_targeting_behaviour() : targeting_behaviour(false)
-    {
-    }
-
-    bool targeted() override
-    {
-        return false;
-    }
-};
-
-vector<coord_def> find_slimeable_walls(const coord_def &centre)
+vector<coord_def> find_slimeable_walls()
 {
     vector<coord_def> walls;
 
-    for (radius_iterator ri(centre, 4, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (feat_is_wall(env.grid(*ri))
             && !feat_is_permarock(env.grid(*ri))
@@ -6057,25 +6066,7 @@ vector<coord_def> find_slimeable_walls(const coord_def &centre)
 
 spret jiyva_oozemancy(bool fail)
 {
-    vector<coord_def> walls = find_slimeable_walls(you.pos());
-
-    dist spd;
-    bolt beam;
-    targeter_walls tgt(&you, walls);
-    ability_targeting_behaviour beh;
-
-    direction_chooser_args args;
-    args.needs_path = false;
-    args.hitfunc = &tgt;
-    args.top_prompt = "Activating: <white>Oozemancy</white>";
-    args.default_place = you.pos();
-    args.show_floor_desc = true;
-    args.show_boring_feats = false;
-    args.self = confirm_prompt_type::none;
-    args.behaviour = &beh;
-
-    if (!spell_direction(spd, beam, &args))
-        return spret::abort;
+    vector<coord_def> walls = find_slimeable_walls();
 
     if (walls.empty())
     {

@@ -1141,12 +1141,20 @@ void game_options::reset_options()
     fire_order_ability.erase(ABIL_WIZ_CLEAR_TERRAIN);
 #endif
 
-    force_targeter =
+    force_spell_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_MAXWELLS_COUPLING, SPELL_IGNITION, SPELL_NOXIOUS_BOG,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
           SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE };
-    always_use_static_targeters = false;
+    always_use_static_spell_targeters = false;
+
+    force_ability_targeter =
+        { ABIL_ZIN_SANCTUARY, ABIL_TSO_CLEANSING_FLAME, ABIL_WORD_OF_CHAOS,
+          ABIL_ZIN_RECITE, ABIL_QAZLAL_ELEMENTAL_FORCE, ABIL_JIYVA_OOZEMANCY,
+          ABIL_BREATHE_LIGHTNING, ABIL_KIKU_TORMENT, ABIL_YRED_DRAIN_LIFE,
+          ABIL_CHEIBRIADOS_SLOUCH, ABIL_QAZLAL_DISASTER_AREA,
+          ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE };
+    always_use_static_ability_targeters = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -1445,32 +1453,60 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
     }
 }
 
-void game_options::add_force_targeter(const string &s, bool)
+void game_options::add_force_spell_targeter(const string &s, bool)
 {
     if (lowercase_string(s) == "all")
     {
-        always_use_static_targeters = true;
+        always_use_static_spell_targeters = true;
         return;
     }
     auto spell = spell_by_name(s, true);
     if (is_valid_spell(spell))
-        force_targeter.insert(spell);
+        force_spell_targeter.insert(spell);
     else
         report_error("Unknown spell '%s'\n", s.c_str());
 }
 
-void game_options::remove_force_targeter(const string &s, bool)
+void game_options::remove_force_spell_targeter(const string &s, bool)
 {
     if (lowercase_string(s) == "all")
     {
-        always_use_static_targeters = false;
+        always_use_static_spell_targeters = false;
         return;
     }
     auto spell = spell_by_name(s, true);
     if (is_valid_spell(spell))
-        force_targeter.erase(spell);
+        force_spell_targeter.erase(spell);
     else
         report_error("Unknown spell '%s'\n", s.c_str());
+}
+
+void game_options::add_force_ability_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_ability_targeters = true;
+        return;
+    }
+    auto abil = ability_by_name(s);
+    if (abil == ABIL_NON_ABILITY)
+        report_error("Unknown ability '%s'\n", s.c_str());
+    else
+        force_ability_targeter.insert(abil);
+}
+
+void game_options::remove_force_ability_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_ability_targeters = false;
+        return;
+    }
+    auto abil = ability_by_name(s);
+    if (abil == ABIL_NON_ABILITY)
+        report_error("Unknown ability '%s'\n", s.c_str());
+    else
+        force_ability_targeter.erase(abil);
 }
 
 static monster_type _mons_class_by_string(const string &name)
@@ -3413,7 +3449,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else if (key == "force_targeter")
+    else if (key == "force_spell_targeter")
     {
         // first pass through the rc file happens before the spell name cache
         // is initialized, just skip it
@@ -3421,15 +3457,37 @@ void game_options::read_option_line(const string &str, bool runscript)
         {
             if (plain)
             {
-                always_use_static_targeters = false;
-                force_targeter.clear();
+                always_use_static_spell_targeters = false;
+                force_spell_targeter.clear();
             }
 
             if (minus_equal)
-                split_parse(field, ",", &game_options::remove_force_targeter);
+            {
+                split_parse(field, ",",
+                            &game_options::remove_force_spell_targeter);
+            }
             else
-                split_parse(field, ",", &game_options::add_force_targeter);
+            {
+                split_parse(field, ",",
+                            &game_options::add_force_spell_targeter);
+            }
         }
+    }
+    else if (key == "force_ability_targeter")
+    {
+        if (plain)
+        {
+            always_use_static_ability_targeters = false;
+            force_ability_targeter.clear();
+        }
+
+        if (minus_equal)
+        {
+            split_parse(field, ",",
+                        &game_options::remove_force_ability_targeter);
+        }
+        else
+            split_parse(field, ",", &game_options::add_force_ability_targeter);
     }
     else if (key == "spell_slot"
              || key == "item_slot"
