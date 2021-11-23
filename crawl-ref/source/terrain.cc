@@ -885,10 +885,13 @@ void slime_wall_damage(actor* act, int delay)
         mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
               verb, act->name(DESC_THE).c_str());
         act->hurt(agent, dam, BEAM_ACID);
-        if (agent)
-            behaviour_event(act->as_monster(), ME_WHACK, agent);
-        else
-            behaviour_event(act->as_monster(), ME_DISTURB);
+        if (act->alive())
+        {
+            if (agent)
+                behaviour_event(act->as_monster(), ME_WHACK, agent, agent->pos());
+            else
+                behaviour_event(act->as_monster(), ME_DISTURB, 0, act->pos());
+        }
     }
 }
 
