@@ -1165,8 +1165,11 @@ static bool _jiyva_mutate()
     bool deleted = false;
     // Go through each level of each existing non-temp, non-innate mutation.
     // Give a 1/4 chance of removing each, or a 1/2 chance for bad mutations.
-    // Since we gift 4 mut levels, this means we stabilize when total mut
-    // levels = (total levels) * 3/4 + 4, or about 16 total mut levels.
+    // Since we gift 4 mut levels (90% good), this means we stabilize at:
+    //
+    //      total mut levels = (t.m.l * (0.75 * 0.9 + 0.1 * 0.5)) + 4
+    //
+    // Which comes out to about 14.5 mut levels.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         const mutation_type mut = (mutation_type)i;
