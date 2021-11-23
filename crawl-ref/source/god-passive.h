@@ -259,6 +259,9 @@ enum class passive_t
 
     // rF+
     resist_fire,
+
+    // Yredelemnul reaping
+    reaping,
 };
 
 enum ru_interference

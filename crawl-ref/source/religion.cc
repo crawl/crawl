@@ -135,10 +135,8 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Yredelemnul
-        {   { 2, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
-            { 3, "Yredelemnul will now gift you servants as you gain piety.",
-                 "Yredelemnul will no longer gift you servants.",
-                 "Yredelemnul will gift you servants as you gain piety." },
+        {   { 0, "reap souls" },
+            { 0, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
             { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient life force" },
             { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" },
         },

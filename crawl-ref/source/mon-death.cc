@@ -1141,78 +1141,88 @@ static string _killer_type_name(killer_type killer)
 }
 
 /**
- * Make a spectral thing or simulacrum out of a dying/dead monster.
+ * Make derived undead out of a dying/dead monster.
  *
  * @param mons       the monster that died
  * @param quiet      whether to print flavour messages
- * @param bound_soul whether the undead is from Bind Souls (true) or DChan
+ * @param which_z    the kind of zombie
+ * @param beh        the zombie's behavior
+ * @param spell      the spell used (if any)
+ * @param god        the god involved (if any)
  */
-static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
+static void _make_derived_undead(monster* mons, bool quiet,
+                                 monster_type which_z, beh_type beh,
+                                 spell_type spell, god_type god)
 {
-    bool valid_mons = bound_soul ? mons->holiness() & MH_NATURAL
-                                   && mons_can_be_zombified(*mons)
-                                 : mons_can_be_spectralised(*mons);
-
-    if (valid_mons)
+    // This function is used by several different sorts of things, each with
+    // their own validity conditions that are enforced here
+    // - Death Channel and Yred reaping of unzombifiable things:
+    if (which_z == MONS_SPECTRAL_THING && !mons_can_be_spectralised(*mons))
+        return;
+    // - Monster Bind Souls
+    if (spell == SPELL_BIND_SOULS && !(mons->holiness() & MH_NATURAL
+                                       && mons_can_be_zombified(*mons)))
     {
-        // Use the original monster type as the zombified type here, to
-        // get the proper stats from it.
-        mgen_data mg(bound_soul ? MONS_SIMULACRUM : MONS_SPECTRAL_THING,
-                     bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
-                     mons->pos(),
-                     // XXX: is MHITYOU really correct here?
-                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
-        // Simulacra aren't summons, and we want them to stick
-        // around even after killing the necromancer.
-        mg.set_summoned(bound_soul ? nullptr : &you,
-                        0,
-                        bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
-                        bound_soul ?
-                        GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
-        mg.set_base(mons->type);
-
-        if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
-            mg.mname = mons->mname;
-        else if (mons_is_unique(mons->type))
-            mg.mname = mons_type_name(mons->type, DESC_PLAIN);
-        mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
-                                          | MF_NAME_ADJECTIVE
-                                          | MF_NAME_DESCRIPTOR);
-
-        if (mons->mons_species() == MONS_HYDRA)
-        {
-            // No undead 0-headed hydras, sorry.
-            if (mons->heads() == 0)
-            {
-                if (!quiet)
-                {
-                    mprf("A %s mist gathers momentarily, then fades.",
-                         bound_soul ? "freezing" : "glowing");
-                }
-                return;
-            }
-            else
-                mg.props[MGEN_NUM_HEADS] = mons->heads();
-        }
-
-        string agent_name = "";
-        if (bound_soul)
-        {
-            const auto agent = mons->get_ench(ENCH_BOUND_SOUL).agent();
-            if (agent)
-                agent_name = agent->as_monster()->full_name(DESC_A);
-        }
-
-        string monster_name = "";
-
-        string message = quiet ? "" :
-            make_stringf("A %s mist starts to gather...",
-                         bound_soul ? "freezing" : "glowing");
-
-        make_derived_undead_fineff::schedule(mons->pos(), mg,
-                mons->get_experience_level(), agent_name, message);
-
+        return;
     }
+    // - all other reaping (brand, chaos, and Yred)
+    if (which_z != MONS_SPECTRAL_THING && !mons_can_be_zombified(*mons))
+        return;
+
+    // Use the original monster type as the zombified type here, to
+    // get the proper stats from it.
+    mgen_data mg(which_z,
+                 beh,
+                 mons->pos(),
+                 // XXX: is MHITYOU really correct here?
+                 crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+    // Don't link monster-created derived undead to the summoner, they
+    // shouldn't poof
+    mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr,
+                    0,
+                    spell, god);
+    mg.set_base(mons->type);
+
+    if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
+        mg.mname = mons->mname;
+    else if (mons_is_unique(mons->type))
+        mg.mname = mons_type_name(mons->type, DESC_PLAIN);
+    mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
+                                      | MF_NAME_ADJECTIVE
+                                      | MF_NAME_DESCRIPTOR);
+
+    const char* mist = which_z == MONS_SIMULACRUM ? "freezing" :
+                       god == GOD_YREDELEMNUL ? "black" :
+                       "glowing";
+
+    if (mons->mons_species() == MONS_HYDRA)
+    {
+        // No undead 0-headed hydras, sorry.
+        if (mons->heads() == 0)
+        {
+            if (!quiet)
+                mprf("A %s mist gathers momentarily, then fades.", mist);
+            return;
+        }
+        else
+            mg.props[MGEN_NUM_HEADS] = mons->heads();
+    }
+
+    string agent_name = "";
+    if (mons->has_ench(ENCH_BOUND_SOUL))
+    {
+        const auto agent = mons->get_ench(ENCH_BOUND_SOUL).agent();
+        if (agent)
+            agent_name = agent->as_monster()->full_name(DESC_A);
+    }
+
+    string monster_name = "";
+
+    string message = quiet ? "" :
+        make_stringf("A %s mist starts to gather...", mist);
+
+    make_derived_undead_fineff::schedule(mons->pos(), mg,
+            mons->get_experience_level(), agent_name, message);
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -1261,43 +1271,27 @@ static void _druid_final_boon(const monster* mons)
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
-    unsigned short hitting;
 
     if (killer.is_player())
-    {
-        hitting = MHITYOU;
         beh     = BEH_FRIENDLY;
-    }
     else
     {
         monster* mon = killer.as_monster();
-
         beh = SAME_ATTITUDE(mon);
-
-        // Get a new foe for the zombie to target.
-        behaviour_event(mon, ME_EVAL);
-        hitting = mon->foe;
     }
 
-    monster *zombie = 0;
-    if (animate_remains(victim.pos(), CORPSE_BODY, beh, 0, hitting, &killer, "",
-                        GOD_NO_GOD, true, true, false, &zombie) <= 0)
-    {
-        return false;
-    }
-
-    if (you.can_see(victim))
-    {
-        mprf("%s turns into a %s!", victim.name(DESC_THE).c_str(),
-                                    zombie->type == MONS_ZOMBIE ? "zombie"
-                                                                : "skeleton");
-    }
-    else if (you.can_see(*zombie))
-        mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
-
-    check_lovelessness(*zombie);
+    _make_derived_undead(&victim, false, MONS_ZOMBIE, beh, SPELL_NO_SPELL, GOD_NO_GOD);
 
     return true;
+}
+
+static void _yred_reap(monster &mons, bool expl)
+{
+    monster_type which_z = !expl && mons_can_be_zombified(mons) ? MONS_ZOMBIE :
+                           MONS_SPECTRAL_THING;
+
+    _make_derived_undead(&mons, false, which_z, BEH_FRIENDLY,
+                         SPELL_NO_SPELL, you.religion);
 }
 
 static bool _reaping(monster &mons)
@@ -2291,12 +2285,36 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Necromancy
+    bool corpse_consumed = false;
     if (!was_banished && !mons_reset)
     {
         if (mons.has_ench(ENCH_INFESTATION))
             _infestation_create_scarab(&mons);
-        if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
-            _make_derived_undead(&mons, !death_message, false);
+
+        // Yred worship and death channel aren't stronger than this enchantment
+        if (mons.has_ench(ENCH_BOUND_SOUL))
+        {
+            _make_derived_undead(&mons, !death_message, MONS_SIMULACRUM,
+                                 SAME_ATTITUDE(&mons),
+                                 SPELL_BIND_SOULS, GOD_NO_GOD);
+            corpse_consumed = true;
+        }
+        else if (was_visible && gives_player_xp)
+        {
+            // no doubling up with yred and death channel
+            if (have_passive(passive_t::reaping) && yred_reap_chance())
+            {
+                _yred_reap(mons, exploded);
+                corpse_consumed = true;
+            }
+            else if (you.duration[DUR_DEATH_CHANNEL])
+            {
+                _make_derived_undead(&mons, !death_message, MONS_SPECTRAL_THING,
+                                     BEH_FRIENDLY,
+                                     SPELL_DEATH_CHANNEL,
+                                     static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
+            }
+        }
     }
 
     if (!wizard && !submerged && !was_banished)
@@ -2306,7 +2324,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     item_def* corpse = nullptr;
-    if (leaves_corpse && !was_banished && !spectralised)
+    if (leaves_corpse && !was_banished && !spectralised && !corpse_consumed)
     {
         // Have to add case for disintegration effect here? {dlb}
         item_def* daddy_corpse = nullptr;
@@ -2320,8 +2338,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!corpse)
             corpse = daddy_corpse;
     }
-    if (mons.has_ench(ENCH_BOUND_SOUL))
-        _make_derived_undead(&mons, !death_message, true);
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;

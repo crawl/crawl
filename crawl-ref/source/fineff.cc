@@ -644,7 +644,8 @@ void make_derived_undead_fineff::fire()
         if (!mg.mname.empty())
             name_zombie(*undead, mg.base_type, mg.mname);
 
-        undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
+        if (mg.god != GOD_YREDELEMNUL)
+            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
         if (!agent.empty())
         {
             mons_add_blame(undead,

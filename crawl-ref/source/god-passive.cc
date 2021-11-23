@@ -192,7 +192,8 @@ static const vector<god_passive> god_passives[] =
 
     // Yredelemnul
     {
-        {  3, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::reaping, "can NOW harvest souls to fight along side you" },
+        {   3, passive_t::nightvision, "can NOW see well in the dark" },
     },
 
     // Xom

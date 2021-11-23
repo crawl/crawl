@@ -506,6 +506,25 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
     }
 
+    // Yred zombies crumble on floor change
+    if (mon->friendly() && is_yred_undead_slave(*mon)
+        && !mons_enslaved_soul(*mon))
+    {
+        if (turns > 2)
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+        else
+        {
+            // handle expiration messages if the player was quick
+            // doing it this way so the mesages are kept consistent with
+            // corresponding non-yred derived undead
+            mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
+            mon->add_ench(abj);
+            abj.duration = 0;
+            mon->update_ench(abj);
+        }
+        return;
+    }
+
     // Don't move non-land or stationary monsters around.
     if (mons_primary_habitat(*mon) != HT_LAND
         || mons_is_zombified(*mon)
