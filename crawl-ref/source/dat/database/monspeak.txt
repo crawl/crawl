@@ -3650,6 +3650,14 @@ w:1
 w:1
 @The_monster@ says, "What's the big idea?!"
 %%%%
+friendly Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ sings, "Roses are red / violets are blue / I hate many things /
+But most of all you!"
+%%%%
 default hostile confused Donald
 
 @The_monster@ says, "I suppose everything's okay, then?"
@@ -3685,6 +3693,14 @@ __NONE
 
 w:1
 @The_monster@ says, "I'm dying. I hate that."
+%%%%
+Donald banished
+
+w:100
+__NONE
+
+w:1
+@The_monster@ says, "Banished to the Abyss. I hate that."
 %%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan
