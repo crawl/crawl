@@ -1945,7 +1945,6 @@ void save_player_name()
 // the entire pref should be updated then?
 void save_seed_pref()
 {
-#ifndef DGAMELAUNCH
     if (!crawl_state.game_standard_levelgen())
         return;
     // Read other preferences
@@ -1954,7 +1953,6 @@ void save_seed_pref()
 
     // And save
     write_newgame_options_file(prefs);
-#endif
 }
 
 void read_options(const string &s, bool runscript, bool clear_aliases)
