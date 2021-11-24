@@ -293,8 +293,12 @@ enum ability_type
     ABIL_WU_JIAN_WALLJUMP,
 
     // Ignis
+#if TAG_MAJOR_VERSION == 34
     ABIL_IGNIS_SEA_OF_FIRE = 1300,
     ABIL_IGNIS_FOXFIRE,
+#else
+    ABIL_IGNIS_FOXFIRE = 1300,
+#endif
     ABIL_IGNIS_RISING_FLAME,
 
     // For both Yred and Beogh

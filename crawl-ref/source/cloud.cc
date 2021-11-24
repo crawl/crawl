@@ -527,12 +527,7 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
     }
 
     mpr("The fire ignites!");
-    int dur = 5 + random2avg(20, 2);      // ignis sea of flames duration
-    if (you.props.exists(CFLAME_DUR_KEY)) // this ember was created by cflame
-    {
-        dur = you.props[CFLAME_DUR_KEY].get_int();
-        you.props.erase(CFLAME_DUR_KEY);
-    }
+    const int dur = you.props[CFLAME_DUR_KEY].get_int();
     place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
     you.props.erase(CFLAME_DUR_KEY);
     return true;

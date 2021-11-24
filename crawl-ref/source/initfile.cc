@@ -1131,7 +1131,6 @@ void game_options::reset_options()
 
     fire_order_ability.erase(ABIL_TROG_BERSERK);
     fire_order_ability.erase(ABIL_REVIVIFY);
-    fire_order_ability.erase(ABIL_IGNIS_SEA_OF_FIRE);
     fire_order_ability.erase(ABIL_IGNIS_FOXFIRE);
     fire_order_ability.erase(ABIL_IGNIS_RISING_FLAME);
 #ifdef WIZARD

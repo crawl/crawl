@@ -636,9 +636,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {}, abflag::berserk_ok },
 
         // Ignis
-        { ABIL_IGNIS_SEA_OF_FIRE, "Sea of Fire",
-            0, 0, 8, /*avg 12 uses from 150 to <30 piety*/
-            {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
             0, 0, 12, {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
@@ -3235,9 +3232,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_IGNIS_FOXFIRE:
         return foxfire_swarm();
-
-    case ABIL_IGNIS_SEA_OF_FIRE:
-        return sea_of_fire();
 
     case ABIL_IGNIS_RISING_FLAME:
         if (!_can_rising_flame(false))

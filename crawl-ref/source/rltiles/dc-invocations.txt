@@ -30,7 +30,6 @@ hep_recall ABILITY_HEP_RECALL
 hep_knight ABILITY_HEP_KNIGHT
 hep_battlemage ABILITY_HEP_BATTLEMAGE
 hep_hexer ABILITY_HEP_HEXER
-ignis_sea_of_fire ABILITY_IGNIS_SEA_OF_FIRE
 ignis_foxfire_swarm ABILITY_IGNIS_FOXFIRE
 ignis_rising_flame ABILITY_IGNIS_RISING_FLAME
 jiyva_slimify ABILITY_JIYVA_SLIMIFY
