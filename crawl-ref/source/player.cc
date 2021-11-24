@@ -5946,6 +5946,9 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();
 
+    if (duration[DUR_FIERY_ARMOUR])
+        AC += 7 * scale;
+
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 

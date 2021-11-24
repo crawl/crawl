@@ -10,6 +10,8 @@ spret cast_deaths_door(int pow, bool fail);
 void remove_ice_armour();
 spret ice_armour(int pow, bool fail);
 
+void fiery_armour();
+
 int harvest_corpses(const actor &harvester,
                     bool dry_run = false, bool defy_god = false);
 spret corpse_armour(int pow, bool fail);

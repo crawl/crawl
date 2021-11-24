@@ -636,6 +636,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {}, abflag::berserk_ok },
 
         // Ignis
+        { ABIL_IGNIS_FIERY_ARMOUR, "Fiery Armour",
+            0, 0, 8, {fail_basis::invo}, abflag::none },
         { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
             0, 0, 12, {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
@@ -3229,6 +3231,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_WU_JIAN_WALLJUMP:
         fail_check();
         return wu_jian_wall_jump_ability();
+
+    case ABIL_IGNIS_FIERY_ARMOUR:
+        fail_check();
+        fiery_armour();
+        return spret::success;
 
     case ABIL_IGNIS_FOXFIRE:
         return foxfire_swarm();

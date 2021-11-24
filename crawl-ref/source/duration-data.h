@@ -223,6 +223,13 @@ static const duration_def duration_data[] =
       "ice-armoured", "icy armour",
       "You are protected by a layer of icy armour.", D_DISPELLABLE | D_EXPIRES,
       {}, 6},
+    { DUR_FIERY_ARMOUR,
+      0, "",
+      "fiery-armoured", "fiery armour",
+      "You are armoured with a cloak of flame.", D_EXPIRES,
+      {{ "Your fiery armour burns out.", [](){
+          you.redraw_armour_class = true;
+      }}}, 20},
     { DUR_LIQUID_FLAMES,
       RED, "Fire",
       "on fire", "liquid flames",

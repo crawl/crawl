@@ -227,5 +227,6 @@ enum duration_type
     DUR_RISING_FLAME,
     DUR_BLINK_COOLDOWN,
     DUR_OOZEMANCY,
+    DUR_FIERY_ARMOUR,
     NUM_DURATIONS
 };

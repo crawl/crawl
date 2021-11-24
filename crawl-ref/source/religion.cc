@@ -393,6 +393,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Ignis
     {
+        { 1, ABIL_IGNIS_FIERY_ARMOUR, "armour yourself in flame" },
         { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
         { 7, ABIL_IGNIS_RISING_FLAME, "rocket upward and away" },
     },
@@ -3307,6 +3308,11 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_IGNIS:
         simple_god_message(" burns away your resistance to fire.", old_god);
+        if (you.duration[DUR_FIERY_ARMOUR])
+        {
+            you.duration[DUR_FIERY_ARMOUR] = 0;
+            mpr("Your cloak of flame burns out.");
+        }
         if (you.duration[DUR_RISING_FLAME])
         {
             you.duration[DUR_RISING_FLAME] = 0;

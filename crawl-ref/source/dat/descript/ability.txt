@@ -799,6 +799,12 @@ with martial attacks increases this bonus. The storm weakens over time and
 fades away once the bonus reaches zero. The heavenly clouds prevent
 invisibility, and obscure the vision of those outside the storm.
 %%%%
+Fiery Armour ability
+
+Armour yourself in fire, burning up some incoming attacks and searing foes
+foolish enough to strike you in melee. This armour lasts quite a long time
+before finally burning out.
+%%%%
 Foxfire Swarm ability
 
 Conjures a swarm of animate flames all around you. These rapidly seek the

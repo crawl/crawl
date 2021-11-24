@@ -3712,6 +3712,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_WU_JIAN_HEAVENLY_STORM:
         return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
     // Ignis
+    case ABIL_IGNIS_FIERY_ARMOUR:
+        return TILEG_ABILITY_IGNIS_FIERY_ARMOUR;
     case ABIL_IGNIS_FOXFIRE:
         return TILEG_ABILITY_IGNIS_FOXFIRE;
     case ABIL_IGNIS_RISING_FLAME:
