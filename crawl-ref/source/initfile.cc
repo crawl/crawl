@@ -1857,7 +1857,6 @@ void read_init_file(bool runscript)
 
 newgame_def read_startup_prefs()
 {
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     FileLineInput fl(get_prefs_filename().c_str());
     if (fl.error())
         return newgame_def();
@@ -1876,10 +1875,8 @@ newgame_def read_startup_prefs()
     if (!Options.remember_name)
         temp.game.name = "";
     return temp.game;
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
 static void write_newgame_options(const newgame_def& prefs, FILE *f)
 {
     if (Options.no_save)
@@ -1901,11 +1898,9 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "game_seed = %" PRIu64 "\n", prefs.seed);
     fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
 }
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
 void write_newgame_options_file(const newgame_def& prefs)
 {
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     // [ds] Saving startup prefs should work like this:
     //
     // 1. If the game is started without specifying a game type, always
@@ -1934,22 +1929,18 @@ void write_newgame_options_file(const newgame_def& prefs)
         return;
     write_newgame_options(prefs, f);
     fclose(f);
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
 void save_player_name()
 {
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     // Read other preferences
     newgame_def prefs = read_startup_prefs();
     prefs.name = Options.remember_name ? you.your_name : "";
 
     // And save
     write_newgame_options_file(prefs);
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
 // TODO: can these functions be generalized? This is called on game end, maybe
 // the entire pref should be updated then?
 void save_seed_pref()
@@ -1965,7 +1956,6 @@ void save_seed_pref()
     write_newgame_options_file(prefs);
 #endif
 }
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
 void read_options(const string &s, bool runscript, bool clear_aliases)
 {

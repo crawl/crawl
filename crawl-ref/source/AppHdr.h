@@ -49,10 +49,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 //
 // #define DISABLE_SAVEGAME_LISTS
 
-// Uncomment to prevent Crawl from remembering startup preferences.
-//
-// #define DISABLE_STICKY_STARTUP_OPTIONS
-
 // Uncomment to let valgrind debug unitialized uses of global classes
 // (you, env, clua, dlua, crawl_state).
 //
