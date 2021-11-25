@@ -1104,7 +1104,7 @@ static int _player_bonus_regen()
     // Powered By Death mutation, boosts regen by variable strength
     // if the duration of the effect is still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += you.props[POWERED_BY_DEATH_KEY].get_int() * REGEN_PIP;
+        rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
     return rr;
 }
@@ -1161,7 +1161,7 @@ int player_regen()
 
     // Trog's Hand. This circumvents sickness or inhibited regeneration.
     if (you.duration[DUR_TROGS_HAND])
-        rr += REGEN_PIP;
+        rr += 100;
 
     // Jiyva's passive healing also bypasses sickness, as befits a god.
     if (have_passive(passive_t::jelly_regen))
