@@ -1185,7 +1185,7 @@ int player_mp_regen()
         regen_amount *= 2;
 
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
-        regen_amount += 25;
+        regen_amount += 40;
 
     if (have_passive(passive_t::jelly_regen))
     {
