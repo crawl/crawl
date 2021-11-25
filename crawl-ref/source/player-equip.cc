@@ -836,7 +836,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_INFUSION:
-            if (you.max_magic_points)
+            if (you.max_magic_points || you.has_mutation(MUT_HP_CASTING))
             {
                 mprf("You feel magic pooling in your %s.",
                      you.hand_name(true).c_str());
@@ -971,7 +971,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_INFUSION:
-        if (you.max_magic_points)
+        if (you.max_magic_points || you.has_mutation(MUT_HP_CASTING))
             mprf("You feel magic leave your %s.", you.hand_name(true).c_str());
         break;
 
