@@ -657,6 +657,8 @@ public:
     int scan_artefacts(artefact_prop_type which_property,
                        vector<const item_def *> *matches = nullptr) const override;
 
+    int infusion_cap() const;
+
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;
 

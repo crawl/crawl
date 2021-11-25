@@ -1187,6 +1187,9 @@ int player_mp_regen()
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
         regen_amount += 40;
 
+    if (player_equip_unrand(UNRAND_POWER_GLOVES))
+        regen_amount += 40;
+
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
@@ -3435,6 +3438,19 @@ int player::scan_artefacts(artefact_prop_type which_property,
     }
 
     return retval;
+}
+
+/**
+ * Is the player wearing an Infusion-branded piece of armour? If so,
+ * at most how much MP can they spend per attack?
+ */
+int player::infusion_cap() const
+{
+    if (player_equip_unrand(UNRAND_POWER_GLOVES))
+        return 999;
+    if (wearing_ego(EQ_GLOVES, SPARM_INFUSION))
+        return 2;
+    return 0;
 }
 
 void dec_hp(int hp_loss, bool fatal, const char *aux)

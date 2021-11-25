@@ -1574,6 +1574,19 @@ VALUE:    400
 DESCRIP:  Its wearer moves as far as possible in that direction when moving
  towards enemies.
 
+ENUM:     POWER_GLOVES
+NAME:     traumaturge's gloves
+OBJ:      OBJ_ARMOUR/ARM_GLOVES
+PLUS:     +3
+COLOUR:   ETC_MAGIC
+TILE:     urand_power_gloves
+TILE_EQ:  glove_brown
+INSCRIP:  Infuse+∞, RegenMP,
+INT:      -3
+VALUE:    400
+DESCRIP:  It empowers its wearer's blows with all of their magic.
++gitIt causes its wearer's magical reserves to regenerate more quickly.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

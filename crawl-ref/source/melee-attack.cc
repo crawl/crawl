@@ -531,9 +531,10 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
-        if (attacker->wearing_ego(EQ_GLOVES, SPARM_INFUSION))
+        const int infusion = you.infusion_cap();
+        if (infusion)
         {
-            pay_mp(min(2, you.magic_points));
+            pay_mp(infusion);
             finalize_mp_cost();
         }
 
