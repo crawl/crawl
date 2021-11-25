@@ -222,9 +222,7 @@ int attack::calc_pre_roll_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(wpn_skill == SK_THROWING
-                              || (weapon && is_range_weapon(*weapon)
-                                         && using_weapon()));
+        mhit += slaying_bonus(wpn_skill == SK_THROWING);
 
         // armour penalty (already calculated if random is true)
         if (!random)
@@ -1140,10 +1138,11 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     if (!aux && using_weapon())
         damage_plus = get_weapon_plus();
 
-    const bool ranged = !weapon && wpn_skill == SK_THROWING
+    const bool throwing = !weapon && wpn_skill == SK_THROWING;
+    const bool ranged = throwing
                         || (weapon && is_range_weapon(*weapon)
                                    && using_weapon());
-    damage_plus += slaying_bonus(ranged);
+    damage_plus += slaying_bonus(throwing);
     damage_plus -= 4 * you.corrosion_amount();
 
     // XXX: should this also trigger on auxes?

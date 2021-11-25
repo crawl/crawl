@@ -3380,13 +3380,13 @@ unsigned int exp_needed(int lev, int exp_apt)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(bool ranged)
+int slaying_bonus(bool throwing)
 {
     int ret = 0;
 
     ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
     ret += you.scan_artefacts(ARTP_SLAYING);
-    if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
+    if (you.wearing_ego(EQ_GLOVES, SPARM_HURLING) && throwing)
         ret += 4;
 
     ret += 3 * augmentation_amount();

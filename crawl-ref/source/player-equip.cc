@@ -818,7 +818,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             _spirit_shield_message(unmeld);
             break;
 
-        case SPARM_ARCHERY:
+        case SPARM_HURLING:
             mpr("You feel that your aim is more steady.");
             break;
 
@@ -952,7 +952,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         }
         break;
 
-    case SPARM_ARCHERY:
+    case SPARM_HURLING:
         mpr("Your aim is not that steady anymore.");
         break;
 

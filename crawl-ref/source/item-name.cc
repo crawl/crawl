@@ -558,7 +558,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PRESERVATION:      return "preservation";
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
-        case SPARM_ARCHERY:           return "archery";
+        case SPARM_HURLING:           return "hurling";
         case SPARM_REPULSION:         return "repulsion";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
@@ -600,7 +600,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PRESERVATION:      return "rCorr";
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
-        case SPARM_ARCHERY:           return "archery";
+        case SPARM_HURLING:           return "hurl";
         case SPARM_REPULSION:         return "repulsion";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "obsolete";

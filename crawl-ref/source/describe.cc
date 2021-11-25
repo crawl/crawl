@@ -1775,9 +1775,9 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_SPIRIT_SHIELD:
         return "it causes incoming damage to be divided between "
                "the wearer's reserves of health and magic.";
-    case SPARM_ARCHERY:
+    case SPARM_HURLING:
         return "it improves its wearer's accuracy and damage with "
-               "ranged weapons, such as bows and javelins (Slay +4).";
+               "thrown weapons, such as rocks and javelins (Slay +4).";
     case SPARM_REPULSION:
         return "it protects its wearer by repelling missiles.";
 #if TAG_MAJOR_VERSION == 34

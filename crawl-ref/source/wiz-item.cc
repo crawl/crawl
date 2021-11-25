@@ -1164,7 +1164,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "preservation",
             "reflection",
             "spirit shield",
-            "archery",
+            "hurling",
 #if TAG_MAJOR_VERSION == 34
             "jumping",
 #endif

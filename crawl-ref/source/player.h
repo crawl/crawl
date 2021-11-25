@@ -1041,7 +1041,7 @@ int player_teleport();
 
 int player_monster_detect_radius();
 
-int slaying_bonus(bool ranged = false);
+int slaying_bonus(bool throwing = false);
 
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);
