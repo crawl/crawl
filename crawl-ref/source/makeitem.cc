@@ -823,7 +823,8 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
         return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
 
     case ARM_GLOVES:
-        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY, SPARM_STEALTH);
+        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY,
+                             SPARM_STEALTH, SPARM_INFUSION);
 
     case ARM_BOOTS:
         return random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_RAMPAGING);
@@ -941,6 +942,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
+    case SPARM_INFUSION:
         if (!strict)
             return true;
         // deliberate fall-through

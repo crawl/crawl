@@ -566,6 +566,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_HARM:              return "harm";
         case SPARM_SHADOWS:           return "shadows";
         case SPARM_RAMPAGING:         return "rampaging";
+        case SPARM_INFUSION:          return "infusion";
         default:                      return "bugginess";
         }
     }
@@ -607,6 +608,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_HARM:              return "harm";
         case SPARM_SHADOWS:           return "shadows";
         case SPARM_RAMPAGING:         return "rampage";
+        case SPARM_INFUSION:          return "infuse";
         default:                      return "buggy";
         }
     }

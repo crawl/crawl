@@ -834,6 +834,21 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_RAMPAGING:
             mpr("You feel ready to rampage towards enemies.");
             break;
+
+        case SPARM_INFUSION:
+            if (you.max_magic_points)
+            {
+                mprf("You feel magic pooling in your %s.",
+                     you.hand_name(true).c_str());
+            }
+            else
+            {
+                bool can_plural = false;
+                const string hands = you.hand_name(true, &can_plural);
+                mprf("Your %s feel%s oddly empty.",
+                     hands.c_str(), can_plural ? "" : "s");
+            }
+            break;
         }
     }
 
@@ -953,6 +968,11 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_RAMPAGING:
         if (!you.rampaging())
             mpr("You no longer feel able to rampage towards enemies.");
+        break;
+
+    case SPARM_INFUSION:
+        if (you.max_magic_points)
+            mprf("You feel magic leave your %s.", you.hand_name(true).c_str());
         break;
 
     default:

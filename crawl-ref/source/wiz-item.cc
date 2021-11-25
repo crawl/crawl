@@ -1174,6 +1174,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 #endif
             "harm",
             "rampaging",
+            "infusion",
         };
 
         const int non_art = acq_calls - num_arts;

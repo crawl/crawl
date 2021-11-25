@@ -531,6 +531,12 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
+        if (attacker->wearing_ego(EQ_GLOVES, SPARM_INFUSION))
+        {
+            pay_mp(min(2, you.magic_points));
+            finalize_mp_cost();
+        }
+
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
