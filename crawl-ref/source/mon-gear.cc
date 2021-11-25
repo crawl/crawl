@@ -1647,9 +1647,6 @@ static void _give_shield(monster* mon, int level)
     case MONS_NIKOLA:
         shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
                                        level * 2 + 1, 1);
-        // Gloves.
-        if (shield && get_armour_ego_type(*shield) == SPARM_HURLING)
-            _strip_item_ego(*shield);
         break;
 
     case MONS_ROBIN:
