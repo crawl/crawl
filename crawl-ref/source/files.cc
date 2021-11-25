@@ -2442,6 +2442,7 @@ static void _save_game_exit()
 
     clrscr();
 
+    save_game_prefs();
     update_whereis("saved");
 
 #ifdef USE_TILE_WEB
@@ -2483,7 +2484,10 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (!leave_game)
     {
         if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+        {
             you.save->commit();
+            save_game_prefs();
+        }
         return;
     }
 

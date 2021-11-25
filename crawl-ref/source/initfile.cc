@@ -1877,26 +1877,29 @@ newgame_def read_startup_prefs()
     return temp.game;
 }
 
-static void write_newgame_options(const newgame_def& prefs, FILE *f)
+/**
+ * Serialize into a format that can be read with a game_options object.
+ */
+void newgame_def::write(FILE *f) const
 {
-    if (Options.no_save)
-        return;
-    if (prefs.type != NUM_GAME_TYPE)
-        fprintf(f, "type = %s\n", gametype_to_str(prefs.type).c_str());
-    if (!prefs.map.empty())
-        fprintf(f, "map = %s\n", prefs.map.c_str());
-    if (!prefs.arena_teams.empty())
-        fprintf(f, "arena_teams = %s\n", prefs.arena_teams.c_str());
-    fprintf(f, "name = %s\n", prefs.name.c_str());
-    if (prefs.species != SP_UNKNOWN)
-        fprintf(f, "species = %s\n", _species_to_str(prefs.species).c_str());
-    if (prefs.job != JOB_UNKNOWN)
-        fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
-    if (prefs.weapon != WPN_UNKNOWN)
-        fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
-    if (prefs.seed != 0)
-        fprintf(f, "game_seed = %" PRIu64 "\n", prefs.seed);
-    fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
+    // TODO: generalize whatever of this writing code can be generalized
+    if (type != NUM_GAME_TYPE)
+        fprintf(f, "type = %s\n", gametype_to_str(type).c_str());
+    if (!map.empty())
+        fprintf(f, "map = %s\n", map.c_str());
+    if (!arena_teams.empty())
+        fprintf(f, "arena_teams = %s\n", arena_teams.c_str());
+    fprintf(f, "name = %s\n", name.c_str());
+    if (species != SP_UNKNOWN)
+        fprintf(f, "species = %s\n", _species_to_str(species).c_str());
+    if (job != JOB_UNKNOWN)
+        fprintf(f, "background = %s\n", _job_to_str(job).c_str());
+    if (weapon != WPN_UNKNOWN)
+        fprintf(f, "weapon = %s\n", _weapon_to_str(weapon).c_str());
+    if (seed != 0)
+        fprintf(f, "game_seed = %" PRIu64 "\n", seed);
+    fprintf(f, "fully_random = %s\n", fully_random ? "yes" : "no");
+
 }
 
 void write_newgame_options_file(const newgame_def& prefs)
@@ -1923,14 +1926,19 @@ void write_newgame_options_file(const newgame_def& prefs)
     //
     unwind_var<game_type> gt(crawl_state.type, Options.game.type);
 
+    if (Options.no_save)
+        return;
+
     string fn = get_prefs_filename();
     FILE *f = fopen_u(fn.c_str(), "w");
     if (!f)
         return;
-    write_newgame_options(prefs, f);
+    prefs.write(f);
     fclose(f);
 }
 
+// save only the player name -- used to keep it in sync with whatever the last
+// loaded save is
 void save_player_name()
 {
     // Read other preferences
@@ -1941,18 +1949,29 @@ void save_player_name()
     write_newgame_options_file(prefs);
 }
 
-// TODO: can these functions be generalized? This is called on game end, maybe
-// the entire pref should be updated then?
-void save_seed_pref()
+// TODO: update all newgame prefs based on the current char, in this function?
+void save_game_prefs()
 {
-    if (!crawl_state.game_standard_levelgen())
+    if (!crawl_state.game_standard_levelgen() || Options.no_save)
         return;
-    // Read other preferences
-    newgame_def prefs = read_startup_prefs();
-    prefs.seed = crawl_state.seed;
+    // Read existing preferences
+    const newgame_def old_prefs = read_startup_prefs();
+    newgame_def prefs = old_prefs;
+    // make some updates
+    prefs.name = Options.remember_name ? you.your_name : "";
+    // update seed here only if the char is finished or the game type is seeded,
+    // even for offline games.
+    if (crawl_state.player_is_dead()
+        || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
+    {
+        prefs.seed = crawl_state.seed;
+    }
+    else
+        prefs.seed = 0;
 
     // And save
-    write_newgame_options_file(prefs);
+    if (prefs != old_prefs)
+        write_newgame_options_file(prefs);
 }
 
 void read_options(const string &s, bool runscript, bool clear_aliases)

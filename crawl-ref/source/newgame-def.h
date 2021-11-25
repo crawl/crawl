@@ -16,6 +16,28 @@ using std::vector;
 // Or a character choice, with possibly random/viable entries.
 struct newgame_def
 {
+    bool operator==(const newgame_def& other) const
+    {
+        // values relevant for serialization
+        return name == other.name
+            && type == other.type
+            && seed == other.seed
+            && pregenerate == other.pregenerate
+            && map == other.map
+            && arena_teams == other.arena_teams
+            && species == other.species
+            && job == other.job
+            && weapon == other.weapon
+            && fully_random == other.fully_random;
+    }
+
+    bool operator!=(const newgame_def& other) const
+    {
+        return !(*this == other);
+    }
+
+    void write(FILE *f) const;
+
     string name;
     game_type type;
     string filename;

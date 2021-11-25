@@ -457,9 +457,7 @@ NORETURN void end_game(scorefile_entry &se)
     UNUSED(_exit_type_to_string);
 #endif
 
-    // TODO: update all sticky prefs based on the dead char? Right now this
-    // would lose weapon choice, and random select, as far as I can tell.
-    save_seed_pref();
+    save_game_prefs();
 
     if (!crawl_state.seen_hups)
         more();
