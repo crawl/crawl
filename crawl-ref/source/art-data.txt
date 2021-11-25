@@ -1585,7 +1585,7 @@ INSCRIP:  Infuse+∞, RegenMP,
 INT:      -3
 VALUE:    400
 DESCRIP:  It empowers its wearer's blows with all of their magic.
-+gitIt causes its wearer's magical reserves to regenerate more quickly.
++It causes its wearer's magical reserves to regenerate more quickly.
 
 # This entry must always be last.
 ENUM:   DUMMY2
