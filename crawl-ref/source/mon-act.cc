@@ -1068,24 +1068,8 @@ static bool _handle_wand(monster& mons)
     beem.source     = mons.pos();
     beem.aux_source =
         wand->name(DESC_QUALNAME, false, true, false, false);
-
-    bool should_fire = false;
-    const wand_type kind = (wand_type)wand->sub_type;
-    switch (kind)
-    {
-    case WAND_MINDBURST:
-        // Dial down damage from wands of disintegration, since
-        // disintegration beams can do large amounts of damage.
-        beem.damage.size = beem.damage.size * 2 / 3;
-
-        // Intentional fallthrough
-    default:
-        fire_tracer(&mons, beem);
-        should_fire = mons_should_fire(beem);
-        break;
-    }
-
-    if (should_fire)
+    fire_tracer(&mons, beem);
+    if (mons_should_fire(beem))
     {
         _mons_fire_wand(mons, *wand, beem, you.see_cell(mons.pos()));
         return true;
