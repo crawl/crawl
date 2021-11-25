@@ -1466,10 +1466,16 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
 
 ////////////////////////////////////////////////////
 
-static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
+static void _SEVEN_LEAGUE_BOOTS_equip(item_def * /*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
+}
+
+static void _SEVEN_LEAGUE_BOOTS_unequip(item_def * /*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You no longer feel ready to stride towards your "
+                          "foes.");
 }
 
 ////////////////////////////////////////////////////
@@ -1487,4 +1493,24 @@ static void _RCLOUDS_world_reacts(item_def */*item*/)
             place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
         }
     }
+}
+
+////////////////////////////////////////////////////
+
+static void _POWER_GLOVES_equip(item_def * /*item*/, bool *show_msgs,
+                                bool /*unmeld*/)
+{
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        _equip_mpr(show_msgs, "The gloves are unable to connect with your "
+                              "magical essence.");
+    }
+    else
+        _equip_mpr(show_msgs, "You feel an incredible surge of magic.");
+}
+
+static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
+{
+    if (!you.has_mutation(MUT_HP_CASTING))
+        _equip_mpr(show_msgs, "The surge of magic dissipates.");
 }
