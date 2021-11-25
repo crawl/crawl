@@ -3441,16 +3441,22 @@ int player::scan_artefacts(artefact_prop_type which_property,
 }
 
 /**
- * Is the player wearing an Infusion-branded piece of armour? If so,
- * at most how much MP can they spend per attack?
+ * Is the player wearing an Infusion-branded piece of armour? If so, returns
+ * how much MP they can spend per attack, depending on their available MP (or
+ * HP if they're a Djinn).
  */
-int player::infusion_cap() const
+int player::infusion_amount() const
 {
+    int cost = 0;
     if (player_equip_unrand(UNRAND_POWER_GLOVES))
-        return 999;
-    if (wearing_ego(EQ_GLOVES, SPARM_INFUSION))
-        return 2;
-    return 0;
+        cost = you.has_mutation(MUT_HP_CASTING) ? 0 : 999;
+    else if (wearing_ego(EQ_GLOVES, SPARM_INFUSION))
+        cost = 2;
+
+    if (you.has_mutation(MUT_HP_CASTING))
+        return min(you.hp - 1, cost);
+    else
+        return min(you.magic_points, cost);
 }
 
 void dec_hp(int hp_loss, bool fatal, const char *aux)
@@ -3547,7 +3553,7 @@ void pay_hp(int cost)
 void pay_mp(int cost)
 {
     if (you.has_mutation(MUT_HP_CASTING))
-        you.hp -= cost;
+        pay_hp(cost);
     else
         _dec_mp(cost, true);
 }

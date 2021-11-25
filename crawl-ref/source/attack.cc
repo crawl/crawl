@@ -1147,12 +1147,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
     // XXX: should this also trigger on auxes?
     if (!aux && !ranged)
-    {
-        const int infusion_cap = you.infusion_cap();
-        const int resource =
-            you.has_mutation(MUT_HP_CASTING) ? (you.hp-1) : you.magic_points;
-        damage_plus += min(infusion_cap, resource) * 2;
-    }
+        damage_plus += you.infusion_amount() * 2;
 
     return _core_apply_slaying(damage, damage_plus);
 }

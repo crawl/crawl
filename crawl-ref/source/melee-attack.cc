@@ -531,7 +531,7 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
-        const int infusion = you.infusion_cap();
+        const int infusion = you.infusion_amount();
         if (infusion)
         {
             pay_mp(infusion);
