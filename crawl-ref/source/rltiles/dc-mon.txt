@@ -1064,8 +1064,8 @@ searing_wretch SEARING_WRETCH
 ghoul MONS_GHOUL
 
 %sdir mon/unique
-blork_the_orc MONS_BLORK_THE_ORC
 %rim 0
+blork_the_orc MONS_BLORK_THE_ORC
 urug MONS_URUG
 nergalle MONS_NERGALLE
 saint_roka MONS_SAINT_ROKA
