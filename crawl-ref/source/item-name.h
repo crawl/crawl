@@ -137,6 +137,7 @@ const char* armour_ego_name(const item_def& item, bool terse);
 const char* missile_brand_name(const item_def& item, mbn_type t);
 
 bool item_type_has_ids(object_class_type base_type);
+void check_if_everything_is_identified(void);
 bool get_ident_type(const item_def &item);
 bool get_ident_type(object_class_type basetype, int subtype);
 bool set_ident_type(item_def &item, bool identify);

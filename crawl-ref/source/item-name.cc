@@ -1952,6 +1952,30 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
     return you.type_ids[base_type][sub_type];
 }
 
+// Has every item a scroll can identify (i.e. all scrolls and potions) been
+// identified by "you"?
+static bool _is_everything_identified;
+
+void check_if_everything_is_identified(void)
+{
+    const object_class_type types[] = {OBJ_SCROLLS, OBJ_POTIONS};
+
+    for (const auto t : types)
+    {
+        ASSERT(item_type_has_ids(t));
+
+        for (const auto s : all_item_subtypes(t))
+        {
+            if (!item_type_known(t, s))
+            {
+                _is_everything_identified = false;
+                return;
+            }
+        }
+    }
+    _is_everything_identified = true;
+}
+
 bool set_ident_type(item_def &item, bool identify)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
@@ -2002,6 +2026,8 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify)
     // elimination.
     if (identify && !(you.pending_revival || crawl_state.updating_scores))
         _maybe_identify_pack_item();
+
+    check_if_everything_is_identified();
 
     return true;
 }
@@ -2884,7 +2910,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
-            return have_passive(passive_t::identify_items);
+            return _is_everything_identified
+                   || have_passive(passive_t::identify_items);
         default:
             return false;
         }
