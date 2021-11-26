@@ -1966,12 +1966,38 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
     return you.type_ids[base_type][sub_type];
 }
 
-bool set_ident_type(item_def &item, bool identify)
+// Has every item a scroll can identify that is worth identifying
+// (i.e. all scrolls and potions for non-mummies) been identified by "you"?
+void check_if_everything_is_identified()
+{
+    vector<object_class_type> types = { OBJ_SCROLLS };
+
+    if (you.can_drink(false))
+        types.push_back(OBJ_POTIONS);
+
+    for (const auto t : types)
+    {
+        ASSERT(item_type_has_ids(t));
+        int unidentified = 0;
+
+        for (const auto s : all_item_subtypes(t))
+        {
+            if (!item_type_known(t, s) && unidentified++)
+            {
+                you.props.erase(IDENTIFIED_ALL_KEY);
+                return;
+            }
+        }
+    }
+    you.props[IDENTIFIED_ALL_KEY] = true;
+}
+
+bool set_ident_type(item_def &item, bool identify, bool check_last)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return false;
 
-    if (!set_ident_type(item.base_type, item.sub_type, identify))
+    if (!set_ident_type(item.base_type, item.sub_type, identify, check_last))
         return false;
 
     if (in_inventory(item))
@@ -1997,7 +2023,8 @@ bool set_ident_type(item_def &item, bool identify)
     return true;
 }
 
-bool set_ident_type(object_class_type basetype, int subtype, bool identify)
+bool set_ident_type(object_class_type basetype, int subtype, bool identify,
+                    bool check_last)
 {
     if (!item_type_has_ids(basetype))
         return false;
@@ -2016,6 +2043,9 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify)
     // elimination.
     if (identify && !(you.pending_revival || crawl_state.updating_scores))
         _maybe_identify_pack_item();
+
+    if (check_last)
+        check_if_everything_is_identified();
 
     return true;
 }
@@ -2911,7 +2941,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
-            return have_passive(passive_t::identify_items);
+            return you.props.exists(IDENTIFIED_ALL_KEY)
+                   || have_passive(passive_t::identify_items);
         default:
             return false;
         }

@@ -62,6 +62,7 @@
  #include "windowmanager.h"
 #endif
 #include "ui.h"
+#include "version.h"
 
 using namespace ui;
 
@@ -366,6 +367,8 @@ static void _post_init(bool newc)
     update_vision_range();
     init_exclusion_los();
     ash_check_bondage();
+    if (you.prev_save_version != Version::Long)
+        check_if_everything_is_identified();
 
     trackers_init_new_level();
 
