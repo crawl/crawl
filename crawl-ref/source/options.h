@@ -622,6 +622,11 @@ private:
 public:
     // Fix option values if necessary, specifically file paths.
     void fixup_options();
+    void reset_loaded_state();
+    vector<GameOption*> get_option_behaviour() const
+    {
+        return option_behaviour;
+    }
 
 private:
     string unalias(const string &key) const;

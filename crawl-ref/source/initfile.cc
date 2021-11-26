@@ -1759,6 +1759,12 @@ static const char* config_defaults[] =
     "defaults/misc.txt",
 };
 
+void game_options::reset_loaded_state()
+{
+    for (auto *o : option_behaviour)
+        o->loaded = false;
+}
+
 void read_init_file(bool runscript)
 {
     Options.reset_options();
@@ -1778,6 +1784,9 @@ void read_init_file(bool runscript)
     // Load default options.
     for (const char *def_file : config_defaults)
         Options.include(datafile_path(def_file), false, runscript);
+
+    // don't count anything up to here as customized
+    Options.reset_loaded_state();
 
     // Load early binding extra options from the command line BEFORE init.txt.
     Options.filename     = "extra opts first";
@@ -1853,6 +1862,19 @@ void read_init_file(bool runscript)
     Options.filename     = init_file_name;
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
+
+#ifdef DEBUG_DIAGNOSTICS
+    vector<string> modified;
+    for (const auto *o : Options.get_option_behaviour())
+        if (o->was_loaded())
+            modified.push_back(o->name());
+    if (modified.size())
+    {
+        dprf("Modified regular options after loading rc file: %s",
+            join_strings(modified.begin(), modified.end(), ", ").c_str());
+    }
+#endif
+
 }
 
 newgame_def read_startup_prefs()
@@ -2186,7 +2208,6 @@ void game_options::read_options(LineInput &il, bool runscript,
         }
 #endif
     }
-
 }
 
 void game_options::fixup_options()
