@@ -90,11 +90,7 @@ static string _get_version_information()
 static string _get_version_features()
 {
     string result;
-    if (crawl_state.need_save
-#ifdef DGAMELAUNCH
-        && (you.wizard || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
-#endif
-       )
+    if (crawl_state.seed_is_known())
     {
         if (you.fully_seeded)
         {
@@ -103,7 +99,7 @@ static string _get_version_features()
                 result += " (seed may be affected by game upgrades)";
         }
         else
-            result += "Game is not seeded.";
+            result += "Game is non-seeded.";
         result += "\n\n";
     }
     if (Version::history_size() > 1)
