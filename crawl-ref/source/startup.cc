@@ -340,6 +340,7 @@ static void _post_init(bool newc)
 
     read_init_file(true);
     Options.fixup_options();
+    read_startup_prefs();
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);

@@ -1051,6 +1051,7 @@ void game_options::reset_options()
     filename     = "unknown";
     basefilename = "unknown";
     line_num     = -1;
+    prefs_dirty  = false;
 
     set_default_activity_interrupts();
 
@@ -1765,6 +1766,24 @@ void game_options::reset_loaded_state()
         o->loaded = false;
 }
 
+void game_options::merge(const game_options &other)
+{
+    for (auto *o : option_behaviour)
+    {
+        if (o->loaded)
+            continue; // skip explicitly set values
+        GameOption *other_o = other.option_from_name(o->name());
+        if (!other_o)
+            continue;
+        o->set_from(other_o);
+        // this function is used to merge preferences from the sticky prefs
+        // file, so in that context we want to mark this now as loaded so it
+        // won't get overridden again
+        o->loaded = true;
+    }
+}
+
+
 void read_init_file(bool runscript)
 {
     Options.reset_options();
@@ -1886,6 +1905,9 @@ newgame_def read_startup_prefs()
     game_options temp;
     temp.read_options(fl, false);
 
+    // !!side effect warning!!
+    Options.merge(temp);
+
     if (!temp.game.allowed_species.empty())
         temp.game.species = temp.game.allowed_species[0];
     if (!temp.game.allowed_jobs.empty())
@@ -1900,9 +1922,24 @@ newgame_def read_startup_prefs()
 }
 
 /**
+ * Serialize preferences that should be stored in the sticky prefs file and
+ * used across games automatically.
+ */
+void game_options::write_prefs(FILE *f)
+{
+    // TODO: generalize, probably some polymorphic functions on GameOption
+    // classes. Not worth doing until more stuff is serialized though...
+    fprintf(f, "default_manual_training = %s\n",
+                        default_manual_training ? "yes" : "no");
+    // TODO: this variable is extremely coarse, maybe something better? Per
+    // opts setting? comparison of serializable values like for newgame_def?
+    prefs_dirty = false;
+}
+
+/**
  * Serialize into a format that can be read with a game_options object.
  */
-void newgame_def::write(FILE *f) const
+void newgame_def::write_prefs(FILE *f) const
 {
     // TODO: generalize whatever of this writing code can be generalized
     if (type != NUM_GAME_TYPE)
@@ -1955,7 +1992,8 @@ void write_newgame_options_file(const newgame_def& prefs)
     FILE *f = fopen_u(fn.c_str(), "w");
     if (!f)
         return;
-    prefs.write(f);
+    prefs.write_prefs(f);
+    Options.write_prefs(f);
     fclose(f);
 }
 
@@ -1978,22 +2016,22 @@ void save_game_prefs()
         return;
     // Read existing preferences
     const newgame_def old_prefs = read_startup_prefs();
-    newgame_def prefs = old_prefs;
+    newgame_def ng_prefs = old_prefs;
     // make some updates
-    prefs.name = Options.remember_name ? you.your_name : "";
+    ng_prefs.name = Options.remember_name ? you.your_name : "";
     // update seed here only if the char is finished or the game type is seeded,
     // even for offline games.
     if (crawl_state.player_is_dead()
         || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
     {
-        prefs.seed = crawl_state.seed;
+        ng_prefs.seed = crawl_state.seed;
     }
     else
-        prefs.seed = 0;
+        ng_prefs.seed = 0;
 
     // And save
-    if (prefs != old_prefs)
-        write_newgame_options_file(prefs);
+    if (ng_prefs != old_prefs || Options.prefs_dirty)
+        write_newgame_options_file(ng_prefs);
 }
 
 void read_options(const string &s, bool runscript, bool clear_aliases)
@@ -2004,7 +2042,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), seed_from_rc(0),
-    no_save(false), language(lang_t::EN), lang_name(nullptr)
+    no_save(false), language(lang_t::EN), lang_name(nullptr),
+    prefs_dirty(false)
 {
     reset_options();
 }

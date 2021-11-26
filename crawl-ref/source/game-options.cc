@@ -67,12 +67,6 @@ bool read_bool(const string &field, bool def_value)
 }
 
 
-void BoolGameOption::reset()
-{
-    value = default_value;
-    GameOption::reset();
-}
-
 string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     string error;
@@ -87,12 +81,6 @@ string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
     return GameOption::loadFromString(field, ltyp);
 }
 
-void ColourGameOption::reset()
-{
-    value = default_value;
-    GameOption::reset();
-}
-
 string ColourGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     const int col = str_to_colour(field, -1, true, elemental);
@@ -101,12 +89,6 @@ string ColourGameOption::loadFromString(const string &field, rc_line_type ltyp)
 
     value = col;
     return GameOption::loadFromString(field, ltyp);
-}
-
-void CursesGameOption::reset()
-{
-    value = default_value;
-    GameOption::reset();
 }
 
 string CursesGameOption::loadFromString(const string &field, rc_line_type ltyp)
@@ -126,24 +108,12 @@ TileColGameOption::TileColGameOption(VColour &val, std::set<std::string> _names,
         : GameOption(_names), value(val),
           default_value(str_to_tile_colour(_default)) { }
 
-void TileColGameOption::reset()
-{
-    value = default_value;
-    GameOption::reset();
-}
-
 string TileColGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     value = str_to_tile_colour(field);
     return GameOption::loadFromString(field, ltyp);
 }
 #endif
-
-void IntGameOption::reset()
-{
-    value = default_value;
-    GameOption::reset();
-}
 
 string IntGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
@@ -158,22 +128,10 @@ string IntGameOption::loadFromString(const string &field, rc_line_type ltyp)
     return GameOption::loadFromString(field, ltyp);
 }
 
-void StringGameOption::reset()
-{
-    value = default_value;
-    GameOption::reset();
-}
-
 string StringGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     value = field;
     return GameOption::loadFromString(field, ltyp);
-}
-
-void ColourThresholdOption::reset()
-{
-    value = default_value;
-    GameOption::reset();
 }
 
 string ColourThresholdOption::loadFromString(const string &field,

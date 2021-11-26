@@ -36,7 +36,7 @@ struct newgame_def
         return !(*this == other);
     }
 
-    void write(FILE *f) const;
+    void write_prefs(FILE *f) const;
 
     string name;
     game_type type;

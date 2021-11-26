@@ -620,6 +620,7 @@ private:
     set<string>    included;  // Files we've included already.
 
 public:
+    bool prefs_dirty;
     // Fix option values if necessary, specifically file paths.
     void fixup_options();
     void reset_loaded_state();
@@ -627,6 +628,16 @@ public:
     {
         return option_behaviour;
     }
+    void merge(const game_options &other);
+    GameOption *option_from_name(string name) const
+    {
+        auto o = options_by_name.find(name);
+        if (o == options_by_name.end())
+            return nullptr;
+        return o->second;
+    }
+
+    void write_prefs(FILE *f);
 
 private:
     string unalias(const string &key) const;
