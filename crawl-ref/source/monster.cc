@@ -1247,7 +1247,6 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
             mprf("%s drops %s.", name(DESC_THE).c_str(),
                  pitem.name(DESC_A).c_str());
         }
-        pitem.props[DROPPER_MID_KEY].get_int() = mid;
 
         if (!move_item_to_grid(&item_index, pos(), swimming()))
         {
