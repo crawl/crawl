@@ -227,7 +227,7 @@ string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
-void seen_item(const item_def &item);
+void seen_item(item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {

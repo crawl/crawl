@@ -2748,7 +2748,7 @@ weapon_type name_nospace_to_weapon(string name_nospace)
     return WPN_UNKNOWN;
 }
 
-void seen_item(const item_def &item)
+void seen_item(item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
     {
@@ -2763,15 +2763,9 @@ void seen_item(const item_def &item)
 
     _maybe_note_found_unrand(item);
 
-    // major hack. Deconstify should be safe here, but it's still repulsive.
-    item_def& malleable_item = const_cast<item_def &>(item);
-
-    malleable_item.flags |= ISFLAG_SEEN;
+    item.flags |= ISFLAG_SEEN;
     if (item.base_type == OBJ_GOLD && !item.tithe_state)
-    {
-        malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE
-                                                     : TS_NO_PIETY;
-    }
+        item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE : TS_NO_PIETY;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)
