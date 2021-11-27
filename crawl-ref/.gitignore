@@ -230,6 +230,7 @@ source/.tx/config
 # generated files for android
 /source/android-project/.gradle/
 /source/android-project/.idea/
+/source/android-project/local.properties
 /source/android-project/app/.cxx/
 /source/android-project/app/build/
 /source/android-project/app/build.gradle

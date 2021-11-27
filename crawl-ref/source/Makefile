@@ -1585,10 +1585,8 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-ifneq ($(ANDROID),)
 	$(RM) -r $(datadir_fp)
-	+cd android-project && rm app/build.gradle
-endif
+	+cd android-project && rm -f local.properties && rm -f app/build.gradle
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1988,8 +1986,10 @@ NPROC := $(shell nproc)
 
 android-project/app/build.gradle: android-project/app/build.gradle.in
 	sed -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle
+android-project/local.properties: android-project/local.properties.in
+	sed -e "s~@HOME@~${HOME}~" <android-project/local.properties.in >android-project/local.properties
 
-android: install-data .android-cflags android-project/app/build.gradle
+android: install-data .android-cflags android-project/local.properties android-project/app/build.gradle
 ifeq ($(ANDROID),)
 	@echo Please define ANDROID to use this build.
 	@exit 1
