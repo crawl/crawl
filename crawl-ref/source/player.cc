@@ -1184,8 +1184,11 @@ int player_mp_regen()
     if (you.get_mutation_level(MUT_MANA_REGENERATION))
         regen_amount *= 2;
 
-    if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
+    if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
+        && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
+    {
         regen_amount += 40;
+    }
 
     if (player_equip_unrand(UNRAND_POWER_GLOVES))
         regen_amount += 40;

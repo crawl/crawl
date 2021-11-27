@@ -1254,6 +1254,11 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         if (you.species == SP_DEEP_DWARF && player_regenerates_mp())
             mpr("Your magic begins regenerating once more.");
         break;
+
+    case AMU_MANA_REGENERATION:
+        if (!meld)
+            you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
+        break;
     }
 
     if (is_artefact(item))

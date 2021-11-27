@@ -886,7 +886,7 @@ static void _update_mana_regen_amulet_attunement()
                 "regenerate magic more quickly.");
         }
     }
-    else
+    else if (!you.melded[EQ_AMULET])
         you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
 }
 
