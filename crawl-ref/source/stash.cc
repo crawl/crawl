@@ -437,7 +437,7 @@ void Stash::_update_identification()
     }
 }
 
-void Stash::add_item(const item_def &item, bool add_to_front)
+void Stash::add_item(item_def &item, bool add_to_front)
 {
     if (_is_rottable(item))
         StashTrack.update_corpses();
