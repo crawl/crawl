@@ -1153,8 +1153,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_ACROBAT:
-        if (!unmeld)
-            mpr("You feel ready to tumble and roll out of harm's way.");
+        mpr("You feel ready to tumble and roll out of harm's way.");
         break;
 
     case AMU_MANA_REGENERATION:
@@ -1163,8 +1162,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_REFLECTION:
-        if (!unmeld)
-            _equip_amulet_of_reflection();
+        _equip_amulet_of_reflection();
         break;
 
     case AMU_GUARDIAN_SPIRIT:
@@ -1210,11 +1208,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         _deactivate_regeneration_item(item, meld);
         break;
 
-    case AMU_ACROBAT:
-        if (!meld)
-            you.activated.set(EQ_AMULET, false);
-        break;
-
     case RING_SEE_INVISIBLE:
         _mark_unseen_monsters();
         break;
@@ -1224,8 +1217,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case AMU_REFLECTION:
-        if (!meld)
-            you.activated.set(EQ_AMULET, false);
         you.redraw_armour_class = true;
         break;
 
