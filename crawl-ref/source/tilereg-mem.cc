@@ -141,6 +141,9 @@ void MemoriseRegion::update()
     {
         const spell_type spell = spells[i];
 
+        if (you.hidden_spells.get(spell))
+            continue;
+
         InventoryTile desc;
         desc.tile     = tileidx_spell(spell);
         desc.idx      = (int) spell;
