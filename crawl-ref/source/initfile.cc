@@ -1769,10 +1769,10 @@ void game_options::merge(const game_options &other)
 {
     for (auto *o : option_behaviour)
     {
-        if (o->loaded)
+        if (o->was_loaded())
             continue; // skip explicitly set values
         GameOption *other_o = other.option_from_name(o->name());
-        if (!other_o)
+        if (!other_o || !other_o->was_loaded())
             continue;
         o->set_from(other_o);
         // this function is used to merge preferences from the sticky prefs
