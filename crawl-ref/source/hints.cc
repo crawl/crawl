@@ -3665,6 +3665,8 @@ void hints_observe_cell(const coord_def& gc)
 {
     if (feat_is_escape_hatch(env.grid(gc)))
         learned_something_new(HINT_SEEN_ESCAPE_HATCH, gc);
+    else if (feat_is_portal_entrance(env.grid(gc)))
+        learned_something_new(HINT_SEEN_PORTAL, gc);
     else if (feat_is_branch_entrance(env.grid(gc)))
         learned_something_new(HINT_SEEN_BRANCH, gc);
     else if (is_feature('>', gc))
@@ -3679,8 +3681,6 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_DOOR, gc);
     else if (env.grid(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
-    else if (feat_is_portal_entrance(env.grid(gc)))
-        learned_something_new(HINT_SEEN_PORTAL, gc);
 
     const int it = you.visible_igrd(gc);
     if (it != NON_ITEM)
