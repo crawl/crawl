@@ -493,6 +493,8 @@ LUAFN(moninf_get_is)
  */
 LUAFN(moninf_get_flags)
 {
+    if (mi_flags.empty())
+        _init_mi_flags();
     MONINF(ls, 1, mi);
     lua_newtable(ls);
     int index = 0;
