@@ -2500,6 +2500,17 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         long_desc += "\nIt can be dug through.";
     }
 
+    // Mention things which don't stop LOS_NO_TRANS or reaching weapons,
+    // but block movement.
+    if (feat_is_solid(feat) && !feat_is_opaque(feat) && !feat_is_wall(feat)
+        && !feat_is_closed_door(feat) && !feat_is_endless(feat))
+    {
+        if (feat_is_reachable_past(feat))
+            long_desc += "\nA suitable weapon or spell can reach past it.";
+        else
+            long_desc += "\nSome spells can be cast through it.";
+    }
+
     inf.body << long_desc;
 
     if (include_extra)
