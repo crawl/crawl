@@ -153,7 +153,6 @@ const vector<GameOption*> game_options::build_options_list()
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     vector<GameOption*> options = {
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
-        new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(default_show_all_skills), false),
         new BoolGameOption(SIMPLE_NAME(read_persist_options), false),
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
