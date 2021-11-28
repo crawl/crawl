@@ -1150,7 +1150,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             return true;
         }
 
-        string prompt = make_stringf("The spell is %s to cast "
+        string prompt = make_stringf("The spell is %s to miscast "
                                      "(%s risk of failure)%s",
                                      fail_severity_adjs[severity],
                                      failure_rate.c_str(),
