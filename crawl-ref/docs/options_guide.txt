@@ -1582,7 +1582,7 @@ view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
         attacks and invocations with visual effects.
 
-use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
+use_animations += beam, range, hp, monster_in_sight, pickup, monster, player,
                   branch_entry
         Controls whether or not to run special animations, such as when being
         banished. All animations are enabled by default, and the categories
