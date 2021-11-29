@@ -529,10 +529,17 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (stepped)
         _moveto_maybe_repel_stairs();
 
+    bool was_running = you.running;
+
     update_monsters_in_view();
     maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
         stop_running();
+
+    // If travel was interrupted, we need to add the last step
+    // to the travel trail.
+    if (was_running && !you.running)
+        env.travel_trail.push_back(you.pos());
 }
 
 // Use this function whenever the player enters (or lands and thus re-enters)
