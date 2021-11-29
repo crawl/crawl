@@ -2524,8 +2524,9 @@ ENDMAP
 ################################################################################
 # A Pandemonium lord with a mercantile bent has set up a bazaar in Pandemonium.
 # There are three mostly-usual stores, but the center store is where the Pan
-# lord keeps their most special merchandise: the demonic rune of Zot. 
-# If you already have the demonic rune, it's got a zigfig for you.
+# lord keeps their most special merchandise: the demonic rune of Zot.
+# If you already have the demonic rune, it's got a selection of randarts for
+# you instead.
 NAME:    nicolae_pan_bazaar_rune
 TAGS:    patrolling transparent no_item_gen
 WEIGHT:  5
@@ -2539,12 +2540,14 @@ ORIENT:  float
   kmons("Z = pandemonium lord name:" .. shoplord)
   if you.have_rune("demonic") or is_validating() then
     kfeat("Z = general shop name:" .. shoplord .. " type:Rarities suffix:"
-               .. shopsuffix .. " count:1 ; figurine of a ziggurat")
+               .. shopsuffix .. " ; any weapon randart | any armour randart | "
+               .. "any jewellery randart | any randbook")
   else
     kfeat("Z = general shop name:" .. shoplord .. " type:Demonic_Rune suffix:"
                .. shopsuffix .. " count:1 ; demonic rune of Zot")
   end
-  kfeat("SH = general shop name:" .. shoplord)
+  kfeat("H = general shop name:" .. shoplord .. " type:Assorted" ..
+        " suffix:Sundries ; any | any good_item | star_item")
   kfeat("J = scroll shop name:" .. shoplord .. " type:Exquisite" ..
         " suffix:Manuscripts ; " .. string.gsub(dgn.good_scrolls, "/", "|"))
   kfeat("K = distillery shop name:" .. shoplord .. " type:Quality" ..
@@ -2553,23 +2556,31 @@ ORIENT:  float
         " suffix:Accessories ; any misc | any wand w:15")
   kfeat("M = jewellery shop name:" .. shoplord)
   kfeat("N = book shop name:" .. shoplord)
-  kfeat("O = antiques shop name:" .. shoplord .. " type:Forgotten" ..
-        " suffix:Relics ; any weapon randart | any armour randart | " ..
-        " any jewellery randart")
+  kfeat("O = general shop name:" .. shoplord .. " type:Superb" ..
+        " suffix:Hardware ; any weapon good_item | any armour good_item")
+  kfeat("S = general shop name:" .. shoplord .. " type:Infernal " ..
+        "suffix:Boutique ; any weapon good_item ego:draining | " ..
+        "any weapon good_item ego:pain | any weapon good_item ego:chaos | " ..
+        "any weapon good_item ego:vampirism | demon blade good_item | " ..
+        "demon trident good_item | demon whip good_item | " ..
+        "staff of death w:3 | scroll of torment q:2 w:5 | " ..
+        "scroll of torment q:3 w:5 | randbook disc:necromancy")
 }}
 # 2/3 chance of nothing, 4/15 chance of gold, 1/15 chance of a lot of gold
-KITEM:   S-_ = $ w:4 / $ good_item w:1 / nothing w:10
+KITEM:   HJKLMNOS-_ = $ w:4 / $ good_item w:1 / nothing w:10
 # Fountains just get a 1/6 chance of a regular stack of gold
 KITEM:   TUY = $ / nothing w:50
-# 2/3 chance of nothing, 2/9 chance of any demon, 1/9 chance of a guest.
+# Monsters in the outer promenade area: 1/9 chance of a guest, 1/9 chance of
+# a greater demon, 2/9 chance of any demon or demonspawn, 5/9 chance of nothing.
 # Guests are demon summoning monsters from other branches, who are here to
 # commune with demons, make deals, or just browse the pandemonic bazaar.
-KMONS:   S-_ = deep elf demonologist / kobold demonologist / mummy priest / \
-               orc high priest / orc sorcerer / dread lich w:5 / \
-               any demon w:110 / nothing w:495
-KMONS:   YPQR = greater demon w:80 / demonspawn black sun / \
-                demonspawn blood saint / demonspawn corrupter / \
-                demonspawn warmonger / nothing w:20
+KMONS:   HJKLMNOS-_ = deep elf demonologist / kobold demonologist / \
+           mummy priest / orc high priest / orc sorcerer / dread lich / \
+           greater demon w:60 / demonspawn warmonger w:2 / \
+           demonspawn black sun w:2 / demonspawn blood saint w:2 / \
+           demonspawn corrupter w:2 / any demon w:112 / nothing w:300
+KMONS:   YPQR = greater demon w:360 / demonspawn black sun / \
+           demonspawn blood saint / demonspawn corrupter / demonspawn warmonger
 KFEAT:   _ = altar_gozag
 KFEAT:   P = exit_pandemonium
 KFEAT:   QR = transit_pandemonium
@@ -2577,10 +2588,8 @@ KFEAT:   Y = Y
 SHUFFLE: Pp/Qq/Rr, S_, TU
 SUBST:   p = +, qr = c
 NSUBST:  D = + / x, E = + / x, F = + / x
-: if crawl.x_chance_in_y( 2, 3 ) then
 NSUBST:  S = H / J / K
-SHUFFLE: HJKLMNO
-: end
+SHUFFLE: HJKLMNOS
 FTILE:   HJKLMNOPQRSTUYZcx-+_. = floor_limestone
 # This vault has a special announcement to provide a heads-up that this rune
 # is not obtained in the usual way. It uses yellow text to evoke Gozag's gold
