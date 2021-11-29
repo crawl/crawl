@@ -1946,6 +1946,28 @@ static string _describe_lignify_ac()
                         treeform_ac);
 }
 
+static string _describe_item_rarity(const item_def &item)
+{
+    item_rarity_type rarity = consumable_rarity(item);
+
+    switch (rarity)
+    {
+    case RARITY_VERY_RARE:
+        return "very rarely";
+    case RARITY_RARE:
+        return "rarely";
+    case RARITY_UNCOMMON:
+        return "uncommonly";
+    case RARITY_COMMON:
+        return "commonly";
+    case RARITY_VERY_COMMON:
+        return "very commonly";
+    case RARITY_NONE:
+    default:
+        return "buggily";
+    }
+}
+
 static string _describe_jewellery(const item_def &item, bool verbose)
 {
     string description;
@@ -2227,20 +2249,26 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
-        if (verbose && item_type_known(item))
+        if (item_type_known(item))
         {
-            if (item.sub_type == POT_LIGNIFY)
-                description << "\n\n" + _describe_lignify_ac();
-            else if (item.sub_type == POT_CANCELLATION)
+            if (verbose)
             {
-                if (player_is_cancellable())
+                if (item.sub_type == POT_LIGNIFY)
+                    description << "\n\n" + _describe_lignify_ac();
+                else if (item.sub_type == POT_CANCELLATION)
                 {
-                    description << "\n\nIf you drink this now, you will no longer be " <<
-                        describe_player_cancellation() << ".";
+                    if (player_is_cancellable())
+                    {
+                        description << "\n\nIf you drink this now, you will no longer be " <<
+                            describe_player_cancellation() << ".";
+                    }
+                    else
+                        description << "\n\nDrinking this now will have no effect.";
                 }
-                else
-                    description << "\n\nDrinking this now will have no effect.";
             }
+            description << "\n\nIt is found "
+                        << _describe_item_rarity(item)
+                        << " compared to other types of potion.";
         }
         break;
 
@@ -2260,6 +2288,14 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_SCROLLS:
+        if (item_type_known(item))
+        {
+            description << "\n\nIt is found "
+                        << _describe_item_rarity(item)
+                        << " compared to other types of scroll.";
+        }
+        break;
+
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
