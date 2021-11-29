@@ -1293,7 +1293,7 @@ static int _potion_weight(item_rarity_type rarity)
 }
 
 static void _generate_potion_item(item_def& item, int force_type,
-                                  int item_level, int agent)
+                                  int item_level)
 {
     item.quantity = 1;
 
@@ -1879,7 +1879,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_POTIONS:
-        _generate_potion_item(item, force_type, item_level, agent);
+        _generate_potion_item(item, force_type, item_level);
         break;
 
     case OBJ_SCROLLS:
