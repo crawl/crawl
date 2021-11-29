@@ -770,7 +770,7 @@ Charge- status
 
 You are currently channeling electrical charge. Pressing . will
 maintain and continue this process until it discharges; any other action,
-including recasting the spell, will end the charge up harmlessly.
+including recasting the spell, will dissipate the charge harmlessly.
 %%%%
 Charge/ status
 
