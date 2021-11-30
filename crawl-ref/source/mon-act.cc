@@ -1337,7 +1337,7 @@ static void _pre_monster_move(monster& mons)
     // (monsters are allowed to 'cheat', as with orb of destruction)
     if ((mons.type == MONS_BALL_LIGHTNING || mons.type == MONS_FOXFIRE)
         && mons.summoner == MID_PLAYER
-        && !cell_see_cell(you.pos(), mons.pos(), LOS_SOLID))
+        && !cell_see_cell(you.pos(), mons.pos(), LOS_NO_TRANS))
     {
         if (mons.type == MONS_FOXFIRE)
             check_place_cloud(CLOUD_FLAME, mons.pos(), 2, &mons);
