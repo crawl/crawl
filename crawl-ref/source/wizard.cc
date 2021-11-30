@@ -34,6 +34,7 @@
 #include "spl-transloc.h" // wizard_blink
 #include "stairs.h" // down_stairs
 #include "state.h"
+#include "traps.h" // do_trap_effects
 #include "wizard-option-type.h"
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
@@ -81,6 +82,7 @@ static void _do_wizard_command(int wiz_command)
     case 'D': wizard_detect_creatures(); break;
     case CONTROL('D'): wizard_edit_durations(); break;
 
+    case 'e': do_trap_effects(); break;
     case 'E': wizard_freeze_time(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
@@ -460,6 +462,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>B</w>      controlled teleport\n"
                        "<w>~</w>      go to a specific level\n"
                        "<w>u</w>/<w>d</w>    shift up/down one level\n"
+                       "<w>e</w>      trigger explore traps\n"
                        "<w>Ctrl-B</w> banish yourself to the Abyss\n"
                        "<w>Ctrl-S</w> change Abyss speed\n"
                        "<w>R</w>      change monster spawn rate\n"
