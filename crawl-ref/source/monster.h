@@ -533,7 +533,7 @@ public:
 
     int action_energy(energy_use_type et) const;
 
-    bool do_shaft() override;
+    bool do_shaft(bool check_terrain = true) override;
     bool has_spell_of_type(spschool discipline) const;
 
     void bind_melee_flags();

@@ -5486,7 +5486,7 @@ bool monster::swap_with(monster* other)
 }
 
 // Returns true if the trap should be revealed to the player.
-bool monster::do_shaft()
+bool monster::do_shaft(bool check_terrain)
 {
     if (!is_valid_shaft_level())
         return false;
@@ -5497,7 +5497,8 @@ bool monster::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
-    if (get_trap_type(pos()) != TRAP_SHAFT
+    if (check_terrain
+        && get_trap_type(pos()) != TRAP_SHAFT
         && !feat_is_shaftable(env.grid(pos())))
     {
         return false;

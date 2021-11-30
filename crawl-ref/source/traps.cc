@@ -1105,7 +1105,7 @@ void do_trap_effects()
     {
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
-            you.do_shaft();
+            you.do_shaft(false);
             break;
 
         case TRAP_ALARM:

@@ -373,7 +373,7 @@ public:
 
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;
-    virtual bool     do_shaft() = 0;
+    virtual bool     do_shaft(bool check_terrain = true) = 0;
 
     coord_def position;
 

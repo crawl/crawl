@@ -852,8 +852,8 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
-    bool do_shaft() override;
-    bool shaftable() const;
+    bool do_shaft(bool check_terrain = true) override;
+    bool shaftable(bool check_terrain = true) const;
 
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
