@@ -1266,7 +1266,8 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.sub_type = _random_wand_subtype();
 
     // Add wand charges and ensure we have at least one charge.
-    item.charges = 1 + random2avg(wand_charge_value(item.sub_type), 3);
+    const int max_charges = wand_charge_value(item.sub_type, item_level);
+    item.charges = 1 + random2avg(max_charges, 2);
 
     // Don't let monsters pickup early high-tier wands
     if (item_level < 2 && is_high_tier_wand(item.sub_type))
