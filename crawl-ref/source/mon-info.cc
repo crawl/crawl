@@ -731,6 +731,8 @@ monster_info::monster_info(const monster* m, int milev)
             ok = false;
         else if (i == MSLOT_MISCELLANY)
             ok = false;
+        else if (i == MSLOT_WAND && !m->likes_wand(env.item[m->inv[i]]))
+            ok = false;
         else if (attitude == ATT_FRIENDLY)
             ok = true;
         else if (i == MSLOT_ALT_WEAPON)

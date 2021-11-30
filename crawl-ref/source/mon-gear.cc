@@ -127,18 +127,17 @@ static void _give_book(monster* mon, int level)
 
 static void _give_wand(monster* mon, int level)
 {
-    bool wand_allowed = mons_is_unique(mon->type)
-                        && !mons_class_flag(mon->type, M_NO_WAND)
-                        && _should_give_unique_item(mon);
-
-    if (!wand_allowed)
-        return;
-
-    bool give_wand = mons_class_flag(mon->type, M_ALWAYS_WAND)
-                     || one_chance_in(5);
-
-    if (!give_wand)
-        return;
+    const bool always_wand = mons_class_flag(mon->type, M_ALWAYS_WAND);
+    if (!always_wand)
+    {
+        if (!mons_is_unique(mon->type)
+            || mons_class_flag(mon->type, M_NO_WAND)
+            || !_should_give_unique_item(mon)
+            || !one_chance_in(5))
+        {
+            return;
+        }
+    }
 
     // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
     const bool no_high_tier =
@@ -158,7 +157,7 @@ static void _give_wand(monster* mon, int level)
                                     !mon->likes_wand(wand) ?      "weak" :
                                                                   nullptr;
 
-    if (rejection_reason)
+    if (rejection_reason && !always_wand)
     {
         dprf(DIAG_MONPLACE,
              "Destroying %s because %s doesn't want a %s wand.",

@@ -452,6 +452,7 @@ static bool _mons_can_zap_dig(const monster* mons)
            && mons_itemuse(*mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
            && env.item[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
+           && mons->likes_wand(env.item[mons->inv[MSLOT_WAND]])
            && env.item[mons->inv[MSLOT_WAND]].charges > 0;
 }
 
@@ -1039,6 +1040,7 @@ static bool _handle_wand(monster& mons)
         || mons.pacified()
         || mons.confused()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
+        || !mons.likes_wand(*wand)
         || mons.has_ench(ENCH_SUBMERGED)
 
         || x_chance_in_y(3, 4))
