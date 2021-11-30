@@ -2713,7 +2713,8 @@ void level_change(bool skip_attribute_increase)
                      new_exp);
             }
 
-            const bool manual_stat_level = new_exp % 3 == 0;  // 3,6,9,12...
+            const bool manual_stat_level = new_exp % 3 == 0  // 3,6,9,12...
+                && (you.species == SP_DEMIGOD || new_exp % 6 == 3); // 3,9,15,21,27
 
             // Must do this before actually changing experience_level,
             // so we will re-prompt on load if a hup is received.

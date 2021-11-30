@@ -216,7 +216,7 @@ unpleasant side-effects, being slowed and suffering some stat-specific
 negative effects. These effects will persist for a short while even after the
 attribute is restored.
 
-Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
+Upon gaining levels 3, 9, 15, etc., you may choose an attribute to raise. Most
 species gain additional attributes at some levels, with the frequency and the
 attribute to be increased determined by species.
 
