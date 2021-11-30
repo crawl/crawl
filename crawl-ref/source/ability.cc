@@ -259,6 +259,11 @@ struct ability_def
             return cost + mp_cost;
         return cost;
     }
+
+    int get_souls_cost() const
+    {
+        return flags & abflag::souls ? mp_cost / 2 : 0;
+    }
 };
 
 static int _lookup_ability_slot(ability_type abil);
@@ -384,9 +389,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
             2, 0, 0, -1, {fail_basis::invo, 50, 4, 20}, abflag::none },
         { ABIL_YRED_DRAIN_LIFE, "Drain Life",
-            6, 0, 2, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            6, 0, 0, -1, {fail_basis::invo, 60, 4, 25}, abflag::souls },
         { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul",
-            8, 0, 4, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            8, 0, 0, -1, {fail_basis::invo, 80, 4, 25}, abflag::souls },
 
         // Okawaru
         { ABIL_OKAWARU_HEROISM, "Heroism",
@@ -894,6 +899,9 @@ const string make_cost_description(ability_type ability)
         ret += nemelex_card_text(ability);
     }
 
+    if (abil.flags & abflag::souls)
+        ret += make_stringf(", %d Souls", abil.get_souls_cost());
+
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
         return "None";
@@ -961,6 +969,13 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\nOne cursed item";
+    }
+
+    if (abil.flags & abflag::souls)
+    {
+        have_cost = true;
+        ret << "\nSouls  : ";
+        ret << abil.get_mp_cost() / 2;
     }
 
     if (!have_cost)
@@ -1534,6 +1549,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     {
         if (!quiet)
             mpr("That deck is empty!");
+        return false;
+    }
+
+    if (!pay_yred_souls(abil.get_souls_cost(), true))
+    {
+        if (!quiet)
+        {
+            mprf("You lack nearby souls to offer %s!",
+                 god_name(you.religion).c_str());
+        }
         return false;
     }
 
@@ -2745,10 +2770,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         }
 
-        const spret result = fire_los_attack_spell(SPELL_DRAIN_LIFE, pow,
-                                                   &you, fail, &damage);
-        if (result != spret::success)
-            return result;
+        fail_check();
+
+        fire_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you, false, &damage);
 
         if (damage > 0)
         {
@@ -3410,6 +3434,9 @@ static void _pay_ability_costs(const ability_def& abil)
 
     if (piety_cost)
         lose_piety(piety_cost);
+
+    if (abil.get_souls_cost())
+        pay_yred_souls(abil.get_souls_cost());
 }
 
 int choose_ability_menu(const vector<talent>& talents)

@@ -39,6 +39,9 @@ enum class abflag
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     quiet_fail          = 0x00008000, // no message on failure
+    souls               = 0x00010000, // ability costs reaped allies
+
+    // targeting flags
     dir_or_target       = 0x10000000, // uses DIR_NONE targeting
     target              = 0x20000000, // uses DIR_TARGET targeting
     targeting_mask      = abflag::dir_or_target | abflag::target,

@@ -50,6 +50,7 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
+#include "mon-death.h"
 #include "mon-gear.h" // give_shield
 #include "mon-place.h"
 #include "mutation.h"
@@ -81,6 +82,7 @@
 #define PIETY_HYSTERESIS_LIMIT 1
 
 #define MIN_IGNIS_PIETY_KEY "min_ignis_piety"
+#define YRED_SEEN_ZOMBIE_KEY "yred_seen_zombie"
 
 static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD);
 static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
@@ -1065,6 +1067,43 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     }
 
     return created;
+}
+
+bool pay_yred_souls(unsigned int how_many, bool just_check)
+{
+    vector<monster *> selected;
+    unsigned int seen = 0;
+    for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
+    {
+        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_enslaved_soul(**mi))
+        {
+            continue;
+        }
+
+        ++seen;
+        if (selected.size() < how_many)
+        {
+            selected.push_back(*mi);
+            continue;
+        }
+
+        unsigned int swap = random2(seen);
+
+        if (swap < how_many)
+            selected[swap] = *mi;
+    }
+
+    if (selected.size() < how_many)
+        return false;
+    else if (just_check)
+        return true;
+
+    simple_god_message(" accepts your bounty of souls!");
+    for (auto m : selected)
+        monster_die(*m, KILL_DISMISSED, NON_MONSTER);
+
+    return true;
 }
 
 static bool _want_missile_gift()
@@ -2418,17 +2457,49 @@ void god_speaks(god_type god, const char *mesg)
     env.mgrid(you.pos()) = orig_mon;
 }
 
+
+static void _calculate_yred_piety()
+{
+    if (!you_worship(GOD_YREDELEMNUL))
+        return;
+
+    int soul_harvest = 0;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!is_yred_undead_slave(**mi) || mi->is_summoned())
+            continue;
+
+
+        // To smooth out yred piety fluctuations count zombies for piety
+        // as lont as they've been recently seen
+        if (you.can_see(**mi))
+            mi->props[YRED_SEEN_ZOMBIE_KEY] = you.elapsed_time;
+
+        if (mi->props.exists(YRED_SEEN_ZOMBIE_KEY) &&
+            mi->props[YRED_SEEN_ZOMBIE_KEY].get_int()
+            > you.elapsed_time - 5 * BASELINE_DELAY)
+        {
+            soul_harvest += 2 * mi->get_hit_dice() + 2;
+        }
+    }
+
+    set_piety(min(200, 15 + soul_harvest));
+}
+
 void religion_turn_start()
 {
     if (you.turn_is_over)
         religion_turn_end();
 
+    _calculate_yred_piety();
     crawl_state.clear_god_acting();
 }
 
 void religion_turn_end()
 {
     ASSERT(you.turn_is_over);
+    _calculate_yred_piety();
     _place_delayed_monsters();
 }
 
@@ -4313,7 +4384,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_LUGONU:
         case GOD_DITHMENOS:
         case GOD_QAZLAL:
-        case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
         case GOD_ZIN:
@@ -4370,6 +4440,7 @@ void handle_god_time(int /*time_delta*/)
             // trying to get polytheist with Ignis. Almost impossible.
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
+        case GOD_YREDELEMNUL:
         case GOD_GOZAG:
         case GOD_XOM:
             // Gods without normal piety do nothing each tick.

@@ -79,7 +79,7 @@ int god_favour_rank(god_type which_god)
 {
     if (which_god == GOD_GOZAG)
         return _gold_level();
-    else if (which_god == GOD_USKAYAW)
+    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
         return _invocations_level();
     else
         return _piety_level(you.piety);
@@ -251,7 +251,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
-    else if (which_god == GOD_USKAYAW)
+    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
         title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
