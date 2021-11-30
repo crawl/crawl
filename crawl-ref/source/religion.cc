@@ -1148,32 +1148,6 @@ static int _preferably_unseen_item(const vector<int> &item_types,
 }
 #endif
 
-static void _delayed_gift_callback(const mgen_data &/*mg*/, monster *&mon,
-                                   int placed)
-{
-    if (placed <= 0)
-        return;
-    ASSERT(mon);
-
-    // Make sure monsters are shown.
-    viewwindow();
-    update_screen();
-    more();
-    _inc_gift_timeout(4 + random2avg(7, 2));
-    you.num_current_gifts[you.religion]++;
-    you.num_total_gifts[you.religion]++;
-    string gift;
-    if (placed == 1)
-        gift = mon->name(DESC_A);
-    else
-    {
-        gift = make_stringf("%d %s", placed,
-                            pluralise(mon->name(DESC_PLAIN)).c_str());
-    }
-
-    take_note(Note(NOTE_GOD_GIFT, you.religion, 0, gift));
-}
-
 static bool _jiyva_mutate()
 {
     simple_god_message(" alters your body.");
@@ -1547,29 +1521,6 @@ static bool _give_trog_oka_gift(bool forced)
     you.num_total_gifts[you.religion]++;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     return true;
-}
-
-static bool _give_yred_gift(bool forced)
-{
-    bool success = false;
-    if (forced || (random2(you.piety) >= piety_breakpoint(2)
-                   && one_chance_in(4)))
-    {
-        unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
-                                 + you.num_current_gifts[you.religion] / 2;
-        threshold = max(threshold,
-            static_cast<unsigned int>(MIN_YRED_SERVANT_THRESHOLD));
-        threshold = min(threshold,
-            static_cast<unsigned int>(MAX_YRED_SERVANT_THRESHOLD));
-
-        if (yred_random_servants(threshold) != -1)
-        {
-            delayed_monster_done(" grants you @servant@!",
-                                 _delayed_gift_callback);
-            success = true;
-        }
-    }
-    return success;
 }
 
 static bool _gift_jiyva_gift(bool forced)
@@ -2244,10 +2195,6 @@ bool do_god_gift(bool forced)
         case GOD_OKAWARU:
         case GOD_TROG:
             success = _give_trog_oka_gift(forced);
-            break;
-
-        case GOD_YREDELEMNUL:
-            success = _give_yred_gift(forced);
             break;
 
         case GOD_JIYVA:
