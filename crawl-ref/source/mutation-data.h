@@ -2276,6 +2276,12 @@ static const mutation_def mut_data[] =
     {"The shadows grow bolder once more.", "", ""},
 },
 
+{ MUT_DIVINE_ATTRS, 0, 1, mutflag::good, false, "divine attributes",
+  {"Your divine heritage dramatically boosts your attributes as you level up.", "", ""},
+  {"You feel more divine.", "", ""},
+  {"You feel more mortal.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

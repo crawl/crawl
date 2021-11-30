@@ -626,6 +626,13 @@ You are cursed with vampirism, torn between false life and a bloodless,
 dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to
 exsanguinate yourself or to fill once more with blood.
 %%%%
+divine attributes mutation
+
+Your divine heritage dramatically boosts your attribute gain (Strength,
+Intelligence, and Dexterity) as you level up relative to other species, both
+in quantity and in how much you can control your development. Every three
+levels, you choose an attribute to increase by four points.
+%%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
 

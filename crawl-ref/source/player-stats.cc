@@ -105,7 +105,7 @@ bool attribute_increase()
 {
     const bool need_caps = Options.easy_confirm != easy_confirm_type::all;
 
-    const int statgain = you.species == SP_DEMIGOD ? 4 : 2;
+    const int statgain = you.has_mutation(MUT_DIVINE_ATTRS) ? 4 : 2;
 
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
