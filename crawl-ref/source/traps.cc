@@ -1100,6 +1100,7 @@ void do_trap_effects()
     if (env.absdepth0 > 3)
         available_traps.push_back(TRAP_ALARM);
 
+    mprf("A sudden malevolence fills the %s...", branches[you.where_are_you].shortname);
     switch (*random_iterator(available_traps))
     {
         case TRAP_SHAFT:
@@ -1112,13 +1113,13 @@ void do_trap_effects()
             // silenced, to avoid "travel only while silenced" behaviour.
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
-            mprf("You set off the alarm!");
+            mprf("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
             break;
 
         case TRAP_TELEPORT:
-            you_teleport_now(false, true, "You stumble into a teleport trap!");
+            you_teleport_now(false, true, "A teleportation trap spontaneously manifests!");
             break;
 
         // Other cases shouldn't be possible, but having a default here quiets
