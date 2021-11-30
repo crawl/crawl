@@ -2557,7 +2557,10 @@ static bool _handle_pickup(monster* mons)
             continue;
 
         if (mons->pickup_item(*si, you.see_cell(mons->pos()), false))
+        {
             count_pickup++;
+            si->props.erase(DROPPER_MID_KEY);
+        }
 
         if (count_pickup > 1 || coinflip())
             break;
