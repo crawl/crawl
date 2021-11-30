@@ -933,7 +933,7 @@ static vector<string> _get_fakemuts(bool terse)
     if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))
         result.push_back(_innatemut(armour_mut, terse));
 
-    if (!terse && species::get_stat_gain_multiplier(you.species) > 1)
+    if (!terse && you.species == SP_DEMIGOD)
         result.push_back(_innatemut("Your attributes grow dramatically as you level up."));
 
     if (you.has_mutation(MUT_VAMPIRISM))

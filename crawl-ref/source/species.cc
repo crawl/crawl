@@ -535,13 +535,6 @@ namespace species
         return get_species_def(species).wl_mod;
     }
 
-    int get_stat_gain_multiplier(species_type species)
-    {
-        // TODO: is this worth dataifying? Currently matters only for
-        // player-stats.cc:attribute_increase
-        return species == SP_DEMIGOD ? 4 : 1;
-    }
-
     /**
      *  Does this species have (relatively) low strength?
      *  Used to generate the title for UC ghosts.
@@ -653,10 +646,7 @@ void species_stat_gain(species_type species)
 {
     const species_def& sd = get_species_def(species);
     if (sd.level_stats.size() > 0 && you.experience_level % sd.how_often == 0)
-    {
-        modify_stat(*random_iterator(sd.level_stats),
-                        species::get_stat_gain_multiplier(species), false);
-    }
+        modify_stat(*random_iterator(sd.level_stats), 1, false);
 }
 
 static void _swap_equip(equipment_type a, equipment_type b)
