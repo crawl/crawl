@@ -1049,19 +1049,26 @@ bool is_valid_shaft_level()
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
-/***
+///
+static bool& _shafted_in(const Branch &branch)
+{
+    return you.props[make_stringf("shafted_in_%s", branch.abbrevname)].get_bool();
+}
+
+/**
  * Can we force shaft the player from this level?
  *
  * @returns true if we can.
  */
-bool is_valid_shaft_effect_level()
+static bool _is_valid_shaft_effect_level()
 {
     const level_id place = level_id::current();
     const Branch &branch = branches[place.branch];
 
-    // Don't shaft the player when we can't, and also when it would be into a
-    // dangerous end.
+    // Don't shaft the player when we can't, or when we already did once this game
+    // in this branch, or when it would be into a dangerous end.
     return is_valid_shaft_level()
+           && !_shafted_in(branch)
            && !(branch.branch_flags & brflag::dangerous_end
                 && brdepth[place.branch] - place.depth == 1);
 }
@@ -1094,7 +1101,7 @@ void do_trap_effects()
     vector<trap_type> available_traps = { TRAP_TELEPORT };
     // Don't shaft the player when shafts aren't allowed in the location or when
     //  it would be into a dangerous end.
-    if (is_valid_shaft_effect_level())
+    if (_is_valid_shaft_effect_level())
         available_traps.push_back(TRAP_SHAFT);
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
@@ -1105,7 +1112,8 @@ void do_trap_effects()
     {
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
-            you.do_shaft(false);
+            if (you.do_shaft(false))
+                _shafted_in(branches[you.where_are_you]) = true;
             break;
 
         case TRAP_ALARM:

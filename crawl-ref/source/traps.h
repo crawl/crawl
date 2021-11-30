@@ -39,7 +39,6 @@ trap_def* trap_at(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
 
 bool is_valid_shaft_level();
-bool is_valid_shaft_effect_level();
 void roll_trap_effects();
 void do_trap_effects();
 level_id generic_shaft_dest(level_id place);
