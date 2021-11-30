@@ -816,7 +816,7 @@ bool monster::likes_wand(const item_def &item) const
     ASSERT(item.base_type == OBJ_WANDS);
     // kind of a hack
     // assumptions:
-    // bad wands are value 48, so won't be used past hd 4
+    // bad wands are value 32, so won't be used past hd 6
     // mediocre wands are value 24; won't be used past hd 8
     // good wands are value 15; won't be used past hd 9
     // best wands are value 9; won't be used past hd 10
