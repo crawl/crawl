@@ -1888,11 +1888,7 @@ bool monster::pickup_weapon(item_def &item, bool msg, bool force)
 
     if (is_range_weapon(item))
         return pickup_launcher(item, msg, force);
-
-    if (pickup_melee_weapon(item, msg))
-        return true;
-
-    return false;
+    return pickup_melee_weapon(item, msg);
 }
 
 /**
@@ -2046,67 +2042,22 @@ bool monster::pickup_misc(item_def &item, bool msg, bool force)
 bool monster::pickup_item(item_def &item, bool msg, bool force)
 {
     // Equipping stuff can be forced when initially equipping monsters.
-    if (!force)
-    {
-        // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
-        // it is considered wandering.
-        bool wandering = mons_is_wandering(*this);
-        const int itype = item.base_type;
-
-        // Weak(ened) monsters won't stop to pick up things as long as they
-        // feel unsafe.
-        if (!wandering && (hit_points * 10 < max_hit_points || hit_points < 10)
-            && mon_enemies_around(this))
-        {
-            return false;
-        }
-        if (!wandering && !wont_attack())
-        {
-            // These are not important enough for pickup when
-            // seeking, fleeing etc.
-            if (itype == OBJ_ARMOUR || itype == OBJ_CORPSES
-                || itype == OBJ_JEWELLERY
-                || itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
-            {
-                return false;
-            }
-
-            if (itype == OBJ_WEAPONS || itype == OBJ_MISSILES)
-            {
-                // Fleeing monsters only pick up emergency equipment.
-                if (mons_is_fleeing(*this))
-                    return false;
-
-                // While occupied, hostile monsters won't pick up items
-                // dropped or thrown by you. (You might have done that to
-                // distract them.)
-                if (testbits(item.flags, ISFLAG_DROPPED)
-                    || testbits(item.flags, ISFLAG_THROWN))
-                {
-                    return false;
-                }
-            }
-        }
-    }
+    if (!force && mons_is_fleeing(*this))
+        return false;
 
     switch (item.base_type)
     {
-    // Pickup some stuff only if WANDERING.
     case OBJ_ARMOUR:
         return pickup_armour(item, msg, force);
     case OBJ_GOLD:
         return pickup_gold(item, msg);
     case OBJ_JEWELLERY:
         return pickup_jewellery(item, msg, force);
-    // Fleeing monsters won't pick up these.
-    // Hostiles won't pick them up if they were ever dropped/thrown by you.
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         return pickup_weapon(item, msg, force);
     case OBJ_MISSILES:
         return pickup_missile(item, msg, force);
-    // Other types can always be picked up
-    // (barring other checks depending on subtype, of course).
     case OBJ_WANDS:
         return pickup_wand(item, msg, force);
     case OBJ_SCROLLS:
