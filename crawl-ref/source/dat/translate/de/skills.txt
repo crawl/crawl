@@ -1,0 +1,164 @@
+###############################################################################
+#
+# Translations for skills
+#
+###############################################################################
+
+##################
+# Long form
+##################
+
+%%%%
+Fighting
+Kämpfen
+%%%%
+Short Blades
+Kurzklingen
+%%%%
+Long Blades
+Langklingen
+%%%%
+Axes
+Äxte
+%%%%
+Maces & Flails
+Keulen & Flegeln
+%%%%
+Polearms
+Stangenwaffen
+%%%%
+Staves
+Stäbe
+%%%%
+Slings
+Schleuder
+%%%%
+Bows
+Bogen
+%%%%
+Crossbows
+Armbrüste
+%%%%
+Throwing
+Werfen
+%%%%
+Dodging
+Ausweichen
+%%%%
+Stabbing
+# obsolete
+%%%%
+Shields
+Schilde
+%%%%
+Traps
+# obsolete
+%%%%
+Unarmed Combat
+Unbewaffneter Kampf
+%%%%
+# triggering the special property of an item
+Evocations
+Evokation
+%%%%
+# calling on a god for help
+Invocations
+Anrufung
+%%%%
+Spellcasting
+Zaubern
+%%%%
+Conjurations
+Hervorrufung
+%%%%
+Hexes
+Verzauberung
+%%%%
+Charms
+Bannzauber
+%%%%
+Summonings
+Beschwörung
+%%%%
+Translocations
+Translokation
+%%%%
+Transmutations
+Verwandlung
+%%%%
+Fire Magic
+Feuermagie
+%%%%
+Ice Magic
+Eismagie
+%%%%
+Air Magic
+Luftmagie
+%%%%
+Earth Magic
+Erdmagie
+%%%%
+Poison Magic
+Giftmagie
+%%%%
+
+##################
+# Short form
+##################
+
+%%%%
+Conjuration
+Hervorrufung
+%%%%
+Transmutation
+Verwandlung
+%%%%
+Summoning
+Beschwörung
+%%%%
+Translocation
+Translokation
+%%%%
+Poison
+Gift
+%%%%
+Earth
+Erde
+%%%%
+Air
+Luft
+%%%%
+Fire
+Feuer
+%%%%
+Ice
+Eis
+%%%%
+
+##################
+# Really short form
+##################
+
+%%%%
+Conj
+Herv
+%%%%
+Tmut
+Verw
+%%%%
+Necr
+Necr
+%%%%
+Summ
+Besch
+%%%%
+Tloc
+Tlok
+%%%%
+Pois
+Gift
+%%%%
+Erth
+Erde
+%%%%
+

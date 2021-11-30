@@ -41,6 +41,12 @@ string make_stringf(PRINTF(0, ));
 
 bool strip_suffix(string &s, const string &suffix);
 
+// Replace first occurrence of string
+string replace_first(const string &s, const string &tofind, const string &replacement);
+
+// Replace last occurrence of string
+string replace_last(const string &s, const string &tofind, const string &replacement);
+
 string replace_all(string s, const string &tofind, const string &replacement);
 
 string replace_all_of(string s, const string &tofind, const string &replacement);
@@ -52,7 +58,11 @@ string maybe_pick_random_substring(string s);
 
 int count_occurrences(const string &text, const string &searchfor);
 
+// check if text contains the string in searchfor
+bool contains(const string &text, const string &searchfor);
+
 string &trim_string(string &str);
+string &trim_string_left(string &str);
 string &trim_string_right(string &str);
 string trimmed_string(string s);
 
@@ -215,6 +225,14 @@ string comma_separated_line(Z start, Z end, const string &andc = " and ",
 {
     return comma_separated_fn(start, end, [] (const string &s) { return s; },
                               andc, comma);
+}
+
+template <typename Z>
+string comma_separated_line(const Z& container, const string &andc = " and ",
+                            const string &comma = ", ")
+{
+    return comma_separated_line(container.cbegin(), container.cend(),
+                                andc, comma);
 }
 
 /**

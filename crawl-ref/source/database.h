@@ -52,3 +52,5 @@ string getHintString(const string &key);
 vector<string> getAllFAQKeys();
 string getFAQ_Question(const string &key);
 string getFAQ_Answer(const string &question);
+
+string getTranslatedString(const string &key);

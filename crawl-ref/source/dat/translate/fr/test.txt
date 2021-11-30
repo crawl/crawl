@@ -1,0 +1,27 @@
+
+
+
+%%%%
+%s is %s.
+%s est %s.
+%%%%
+the %shorse
+le cheval{m}%s
+%%%%
+the %scow
+la vache{f}%s
+%%%%
+
+%%%%
+"{m}gray "
+" gris"
+%%%%
+"{f}gray "
+" grise"
+%%%%
+{m}happy
+heureux
+%%%%
+{f}happy
+heureuse
+%%%%

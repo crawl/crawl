@@ -1,0 +1,1048 @@
+###############################################################################
+#
+# German translations for item names
+# Accustive case where it differs from nominative (i.e. masculine nouns)
+#
+###############################################################################
+%%%%
+
+#################################
+# Generic Adjectives
+#################################
+# These can be applied to various classes of items
+%%%%
+"{adj-en}cursed "
+"verfluchten "
+%%%%
+"{adj-en}uncursed "
+"unverfluchten "
+%%%%
+"{adj-en}enchanted "
+"verzauberten "
+%%%%
+"{adj-en}glowing "
+"glühenden "
+%%%%
+"{adj-en}shiny "
+"glänzenden "
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+# with definite article
+# Note that %s is a placeholder for any adjectives
+%%%%
+{acc}the %smace
+den {adj-en}%sStreitkolben
+%%%%
+{acc}the %sflail
+den {adj-en}%sFlegel
+%%%%
+{acc}the %smorningstar
+den {adj-en}%sMorgenstern
+%%%%
+{acc}the %sdire flail
+den {adj-en}%sSchreckensflegel
+%%%%
+{acc}the %seveningstar
+den {adj-en}%sAbendstern
+%%%%
+{acc}the %sgreat mace
+den {adj-en}%sgroßer Streitkolben
+%%%%
+{acc}the %sdagger
+den {adj-en}%sDolch
+%%%%
+{acc}the %sscimitar
+den {adj-en}%sKrummsäbel
+%%%%
+{acc}the %sspear
+den {adj-en}%sSpeer
+%%%%
+{acc}the %strident
+den {adj-en}%sDreizack
+%%%%
+{acc}the %sdemon trident
+den {adj-en}%sDämonendreizack
+%%%%
+{acc}the %strishula
+den {adj-en}%sTrishula
+%%%%
+{acc}the %squarterstaff
+den {adj-en}%sKampfstab
+%%%%
+{acc}the %slajatang
+den {adj-en}%sLajatang
+%%%%
+# with indefinite article
+# Note that %s is a placeholder for any adjectives
+%%%%
+{acc}a %smace
+einen {adj-en}%sStreitkolben
+%%%%
+{acc}a %sflail
+einen {adj-en}%sFlegel
+%%%%
+{acc}a %smorningstar
+einen {adj-en}%sMorgenstern
+%%%%
+{acc}a %sdire flail
+einen {adj-en}%sSchreckensflegel
+%%%%
+{acc}a %seveningstar
+einen {adj-en}%sAbendstern
+%%%%
+{acc}a %sgreat mace
+einen {adj-en}%sgroßer Streitkolben
+%%%%
+{acc}a %sdagger
+einen {adj-en}%sDolch
+%%%%
+{acc}a %sscimitar
+einen {adj-en}%sKrummsäbel
+%%%%
+{acc}a %sspear
+einen {adj-en}%sSpeer
+%%%%
+{acc}a %strident
+einen {adj-en}%sDreizack
+%%%%
+{acc}a %sdemon trident
+einen {adj-en}%sDämonendreizack
+%%%%
+{acc}a %strishula
+einen {adj-en}%sTrishula
+%%%%
+{acc}a %squarterstaff
+einen {adj-en}%sKampfstab
+%%%%
+{acc}a %slajatang
+einen {adj-en}%sLajatang
+%%%%
+
+#################################
+# Launchers
+#################################
+# definite article
+# Note that %s is a placeholder for any adjectives
+%%%%
+{acc}the %sfustibalus
+den {adj-en}%sFustibalus
+%%%%
+{acc}the %sshortbow
+den {adj-en}%sKurzbogen
+%%%%
+{acc}the %slongbow
+den {adj-en}%sLangbogen
+%%%%
+# indefinite article
+# Note that %s is a placeholder for any adjectives
+%%%%
+{acc}a %sfustibalus
+einen {adj-en}%sFustibalus
+%%%%
+{acc}a %sshortbow
+einen {adj-en}%sKurzbogen
+%%%%
+{acc}a %slongbow
+einen {adj-en}%sLangbogen
+%%%%
+
+#################################
+# Missiles
+#################################
+%%%%
+{acc}the arrow
+den Pfeil
+%%%%
+{acc}the bolt
+den Bolzen
+%%%%
+{acc}the dart
+den Wurfpfeil
+%%%%
+{acc}the stone
+den Stein
+%%%%
+{acc}the large rock
+den Felsblock
+%%%%
+{acc}the javelin
+den Wurfspeer
+%%%%
+{acc}the boomerang
+den Bumerang
+%%%%
+{acc}an arrow
+einen Pfeil
+%%%%
+{acc}a bolt
+einen Bolzen
+%%%%
+{acc}a dart
+einen Wurfpfeil
+%%%%
+{acc}a poisoned dart
+einen Giftwurfpfeil
+%%%%
+{acc}a curare dart
+einen Kurare-Wurfpfeil
+%%%%
+{acc}an atropa dart
+einen Atropa-Wurfpfeil
+%%%%
+{acc}a datura dart
+einen Datura-Wurfpfeil
+%%%%
+{acc}a stone
+einen Stein
+%%%%
+{acc}a large rock
+einen Felsblock
+%%%%
+{acc}a javelin
+einen Wurfspeer
+%%%%
+{acc}a silver javelin
+einen Silberwurfspeer
+%%%%
+{acc}a boomerang
+einen Bumerang
+%%%%
+{acc}a silver boomerang
+einen Silberbumerang
+%%%%
+
+#################################
+# Weapon Brands
+#################################
+# the first 3 are applied as adjectives
+%%%%
+"{adj-en}antimagic "
+"antimagischer "
+%%%%
+"{adj-en}vampiric "
+"vampirischer "
+%%%%
+
+#################################
+# Armour
+#################################
+# definite article
+# Note that the %s is a placeholder for any adjectives
+%%%%
+{acc}the %sring mail
+den {adj-en}%sRingpanzer
+%%%%
+{acc}the %sscale mail
+den {adj-en}%sSchuppenpanzer
+%%%%
+{acc}the %schain mail
+den {adj-en}%sKettenpanzer
+%%%%
+{acc}the %splate armour
+den {adj-en}%sPlattenpanzer
+%%%%
+{acc}the %scrystal plate armour
+den {adj-en}%sKristallplattenpanzer
+%%%%
+{acc}the %scloak
+den {adj-en}%sUmhang
+%%%%
+{acc}the %sscarf
+den {adj-en}%sSchal
+%%%%
+{acc}the %shelmet
+den {adj-en}%sHelm
+%%%%
+{acc}the %shat
+den {adj-en}%sHut
+%%%%
+{acc}the %scentaur barding
+den {adj-en}%sZentaurenharnisch
+%%%%
+{acc}the %snaga barding
+den {adj-en}%sNagaharnisch
+%%%%
+{acc}the %sbuckler
+den {adj-en}%sBuckler
+%%%%
+# indefinite article
+# Note that the %s is a placeholder for any adjectives
+%%%%
+{acc}a %sring mail
+einen {adj-en}%sRingpanzer
+%%%%
+{acc}a %sscale mail
+einen {adj-en}%sSchuppenpanzer
+%%%%
+{acc}a %schain mail
+einen {adj-en}%sKettenpanzer
+%%%%
+{acc}a %splate armour
+einen {adj-en}%sPlattenpanzer
+%%%%
+{acc}a %scrystal plate armour
+einen {adj-en}%sKristallplattenpanzer
+%%%%
+{acc}a %scloak
+einen {adj-en}%sUmhang
+%%%%
+{acc}a %sscarf
+einen {adj-en}%sSchal
+%%%%
+{acc}a %shelmet
+einen {adj-en}%sHelm
+%%%%
+{acc}a %shat
+einen {adj-en}%sHut
+%%%%
+{acc}a %scentaur barding
+einen {adj-en}%sZentaurenharnisch
+%%%%
+{acc}a %snaga barding
+einen {adj-en}%sNagaharnisch
+%%%%
+{acc}a %sbuckler
+einen {adj-en}%sBuckler
+%%%%
+
+#################################
+# Armour adjectives
+#################################
+%%%%
+"{adj-en}embroidered "
+"bestickter "
+%%%%
+"{adj-en}dyed "
+"gefärbter "
+%%%%
+
+#################################
+# Rings
+#################################
+%%%%
+{acc}the %sring
+den {adj-en}%sRing
+%%%%
+{acc}a %sring
+einen {adj-en}%sRing
+%%%%
+{acc}a %sring of protection
+einen {adj-en}%sRing des Schutzes
+%%%%
+{acc}a %sring of protection from fire
+einen {adj-en}%sRing der Feuerresistenz
+%%%%
+{acc}a %sring of poison resistance
+einen {adj-en}%sRing der Giftresistenz
+%%%%
+{acc}a %sring of protection from cold
+einen {adj-en}%sRing dee Kälteresistenz
+%%%%
+{acc}a %sring of strength
+einen {adj-en}%sRing der Stärke
+%%%%
+{acc}a %sring of slaying
+einen {adj-en}%sRing des Tötens
+%%%%
+{acc}a %sring of see invisible
+einen {adj-en}%sRing von Unsichtbares sehen
+%%%%
+{acc}a %sring of resist corrosion
+einen {adj-en}%sRing der Korrosionresistenz
+%%%%
+{acc}a %sring of attention
+einen {adj-en}%sRing der Aufmerksamkeit
+%%%%
+{acc}a %sring of teleportation
+einen {adj-en}%sRing der Teleportation
+%%%%
+{acc}a %sring of evasion
+einen {adj-en}%sRing der Umgehung
+%%%%
+{acc}a %sring of stealth
+einen {adj-en}%sRing der Heimlichkeit
+%%%%
+{acc}a %sring of dexterity
+einen {adj-en}%sRing der Geschicklichkeit
+%%%%
+{acc}a %sring of intelligence
+einen {adj-en}%sRing der Intelligenz
+%%%%
+{acc}a %sring of wizardry
+einen {adj-en}%sRing der Zauberei
+%%%%
+{acc}a %sring of magical power
+einen {adj-en}%sRing magischer Kraft
+%%%%
+{acc}a %sring of flight
+einen {adj-en}%sRing des Fliegens
+%%%%
+{acc}a %sring of positive energy
+einen {adj-en}%sRing positiver Energie
+%%%%
+{acc}a %sring of protection from magic
+einen {adj-en}%sRing der Magieresistenz
+%%%%
+{acc}a %sring of fire
+einen {adj-en}%sRing des Feuers
+%%%%
+{acc}a %sring of ice
+einen {adj-en}%sRing des Eises
+%%%%
+{acc}a %sring of obsoleteness
+einen {adj-en}%sobsoleter Ring
+%%%%
+# unidentified
+%%%%
+{acc}a %swooden ring
+einen {adj-en}%sHolzring
+%%%%
+{acc}a %ssilver ring
+einen {adj-en}%sSilberring
+%%%%
+{acc}a %sgolden ring
+einen {adj-en}%sGoldring
+%%%%
+{acc}a %siron ring
+einen {adj-en}%sEisenring
+%%%%
+{acc}a %ssteel ring
+einen {adj-en}%sStahlring
+%%%%
+{acc}a %stourmaline ring
+einen {adj-en}%sTurmalinring
+%%%%
+{acc}a %sbrass ring
+einen {adj-en}%sMessingring
+%%%%
+{acc}a %scopper ring
+einen {adj-en}%sKupferring
+%%%%
+{acc}a %sgranite ring
+einen {adj-en}%sGranitring
+%%%%
+{acc}a %sivory ring
+einen {adj-en}%sElfenbeinring
+%%%%
+{acc}a %sruby ring
+einen {adj-en}%sRubinring
+%%%%
+{acc}a %smarble ring
+einen {adj-en}%sMarmorring
+%%%%
+{acc}a %sjade ring
+einen {adj-en}%sJadering
+%%%%
+{acc}a %sglass ring
+einen {adj-en}%sGlasring
+%%%%
+{acc}a %sagate ring
+einen {adj-en}%sAchatring
+%%%%
+{acc}a %sbone ring
+einen {adj-en}%sKnochenring
+%%%%
+{acc}a %sdiamond ring
+einen {adj-en}%sDiamantring
+%%%%
+{acc}a %semerald ring
+einen {adj-en}%sSmaragdring
+%%%%
+{acc}a %speridot ring
+einen {adj-en}%sPeridotring
+%%%%
+{acc}a %sgarnet ring
+einen {adj-en}%sGranatring
+%%%%
+{acc}a %sopal ring
+einen {adj-en}%sOpalring
+%%%%
+{acc}a %spearl ring
+einen {adj-en}%sPerlenring
+%%%%
+{acc}a %scoral ring
+einen {adj-en}%sKorallenring
+%%%%
+{acc}a %ssapphire ring
+einen {adj-en}%sSaphirring
+%%%%
+{acc}a %scabochon ring
+einen {adj-en}%sCabochonring
+%%%%
+{acc}a %sgilded ring
+einen {adj-en}%svergoldeter Ring
+%%%%
+{acc}a %sonyx ring
+einen {adj-en}%sOnyxring
+%%%%
+{acc}a %sbronze ring
+einen {adj-en}%sBronzering
+%%%%
+{acc}a %smoonstone ring
+einen {adj-en}%sMondsteinring
+%%%%
+# adjectives
+%%%%
+"{adj-en}encrusted "
+"verkrusteten "
+%%%%
+"{adj-en}tubular "
+"röhrenförmigen "
+%%%%
+"{adj-en}blackened "
+"geschwärzten "
+%%%%
+"{adj-en}scratched "
+"zerkratzten "
+%%%%
+"{adj-en}small "
+"kleinen "
+%%%%
+"{adj-en}twisted "
+"verdrehten "
+%%%%
+"{adj-en}notched "
+"gekerbten "
+%%%%
+"{adj-en}knobbly "
+"knubbeligen "
+%%%%
+
+#################################
+# Wands
+#################################
+%%%%
+{acc}a wand of flame
+einen Zauberstab des Flammens
+%%%%
+{acc}a wand of paralysis
+einen Zauberstab der Paralyse
+%%%%
+{acc}a wand of digging
+einen Zauberstab des Grabens
+%%%%
+{acc}a wand of iceblast
+einen Zauberstab des Eisstrahls
+%%%%
+{acc}a wand of polymorph
+einen Zauberstab der Verwandlung
+%%%%
+{acc}a wand of enslavement
+einen Zauberstab der Versklavung
+%%%%
+{acc}a wand of acid
+einen Zauberstab der Säure
+%%%%
+{acc}a wand of random effects
+einen Zauberstab der zufälligen Effekten
+%%%%
+{acc}a wand of disintegration
+einen Zauberstab der Auflösung
+%%%%
+{acc}a wand of clouds
+einen Zauberstab der Wolken
+%%%%
+{acc}a wand of removedness
+einen beseitigter Zauberstab
+%%%%
+# unidentified
+%%%%
+{acc}a %siron wand
+einen {adj-en}%sEisenzauberstab
+%%%%
+{acc}a %sbrass wand
+einen {adj-en}%sMessingzauberstab
+%%%%
+{acc}a %sbone wand
+einen {adj-en}%sZauberstab aus Knochen
+%%%%
+{acc}a %swooden wand
+einen {adj-en}%sHolzzauberstab
+%%%%
+{acc}a %scopper wand
+einen {adj-en}%sKupferzauberstab
+%%%%
+{acc}a %sgold wand
+einen {adj-en}%sGoldzauberstab
+%%%%
+{acc}a %ssilver wand
+einen {adj-en}%sSilberzauberstab
+%%%%
+{acc}a %sbronze wand
+einen {adj-en}%sZauberstab aus Bronze
+%%%%
+{acc}a %sivory wand
+einen {adj-en}%sElfenbeinzauberstab
+%%%%
+{acc}a %sglass wand
+einen {adj-en}%sgläserner Zauberstab
+%%%%
+{acc}a %slead wand
+einen {adj-en}%sZauberstab aus Blei
+%%%%
+{acc}a %sfluorescent wand
+einen {adj-en}%sfluoreszierender Zauberstab
+%%%%
+# adjectives
+%%%%
+"{adj-en}jewelled "
+"juwelenbesetzten "
+%%%%
+"{adj-en}curved "
+"gebogenen "
+%%%%
+"{adj-en}long "
+"langen "
+%%%%
+"{adj-en}short "
+"kurzen "
+%%%%
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"twisted "
+#"verdrehten "
+%%%%
+"{adj-en}crooked "
+"krummen "
+%%%%
+"{adj-en}forked "
+"gegabelten "
+%%%%
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"blackened "
+#"geschwärzten "
+%%%%
+"{adj-en}tapered "
+"verjüngten "
+%%%%
+"{adj-en}worn "
+"abgenutzten "
+%%%%
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"encrusted "
+#"verkrusteten "
+%%%%
+"{adj-en}sharpened "
+"geschärften "
+%%%%
+
+#################################
+# Potions
+#################################
+%%%%
+{acc}a potion of ambrosia
+einen Trank der Ambrosia
+%%%%
+{acc}a potion of berserk rage
+einen Trank der Berserker-Wut
+%%%%
+{acc}a potion of brilliance
+einen Trank der Brillanz
+%%%%
+{acc}a potion of cancellation
+einen Trank der Aufhebung
+%%%%
+{acc}a potion of curing
+einen Trank des Gegenmittels
+%%%%
+{acc}a potion of degeneration
+einen Trank der Degeneration
+%%%%
+{acc}a potion of experience
+einen Trank der Erfahrung
+%%%%
+{acc}a potion of flight
+einen Trank des Fliegens
+%%%%
+{acc}a potion of haste
+einen Trank der Geschwindigkeit
+%%%%
+{acc}a potion of heal wounds
+einen Heiltrank
+%%%%
+{acc}a potion of invisibility
+einen Trank der Unsichtbarkeit
+%%%%
+{acc}a potion of lignification
+einen Trank der Verholzung
+%%%%
+{acc}a potion of magic
+einen Trank der Magie
+%%%%
+{acc}a potion of might
+einen Trank der Macht
+%%%%
+{acc}a potion of mutation
+einen Trank der Mutation
+%%%%
+{acc}a potion of resistance
+einen Trank des Widerstands
+%%%%
+{acc}a potion of stabbing
+einen Trank der Stecherei
+%%%%
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+{acc}a %spotion
+einen {adj-en}%sZaubertrank
+%%%%
+# potion colours
+%%%%
+"{adj-en}blue "
+"blauen "
+%%%%
+"{adj-en}black "
+"schwarzen "
+%%%%
+"{adj-en}silvery "
+"silbernen "
+%%%%
+"{adj-en}cyan "
+"blaugrünen "
+%%%%
+"{adj-en}purple "
+"purpurroten "
+%%%%
+"{adj-en}inky "
+"tintigen "
+%%%%
+"{adj-en}red "
+"roten "
+%%%%
+"{adj-en}yellow "
+"gelben "
+%%%%
+"{adj-en}green "
+"grünen "
+%%%%
+"{adj-en}brown "
+"braunen "
+%%%%
+"{adj-en}ruby "
+"rubinroten "
+%%%%
+"{adj-en}white "
+"weißen "
+%%%%
+"{adj-en}emerald "
+"smaragdgrünen "
+%%%%
+"{adj-en}grey "
+"grauen "
+%%%%
+"{adj-en}coppery "
+"kupferfarbenen "
+%%%%
+"{adj-en}golden "
+"goldenen "
+%%%%
+"{adj-en}dark "
+"dunklen "
+%%%%
+"{adj-en}puce "
+"braunroten "
+%%%%
+"{adj-en}amethyst "
+"amethystfarbenen "
+%%%%
+"{adj-en}sapphire "
+"saphirblauen "
+%%%%
+# potion qualifiers
+%%%%
+"{adj-en}bubbling "
+"sprudelnden "
+%%%%
+"{adj-en}fizzy "
+"zischenden "
+%%%%
+"{adj-en}fuming "
+"rauchenden "
+%%%%
+"{adj-en}smoky "
+"rauchigen "
+%%%%
+"{adj-en}viscous "
+"dickflüssigen "
+%%%%
+"{adj-en}lumpy "
+"klumpigen "
+%%%%
+"{adj-en}sedimented "
+"sedimentierten "
+%%%%
+"{adj-en}metallic "
+"metallischen "
+%%%%
+"{adj-en}murky "
+"trüben "
+%%%%
+"{adj-en}gluggy "
+"klebrigen "
+%%%%
+"{adj-en}oily "
+"öligen "
+%%%%
+"{adj-en}slimy "
+"schleimigen "
+%%%%
+"{adj-en}emulsified "
+"emulgierten "
+%%%%
+
+#################################
+# Magical Staves
+#################################
+%%%%
+{acc}a %sstaff of wizardry
+einen {adj-en}%sStecken der Zauberei
+%%%%
+{acc}a %sstaff of fire
+einen {adj-en}%sStecken des Feuers
+%%%%
+{acc}a %sstaff of cold
+einen {adj-en}%sStecken der Kälte
+%%%%
+{acc}a %sstaff of poison
+einen {adj-en}%sStecken des Giftes
+%%%%
+{acc}a %sstaff of energy
+einen {adj-en}%sStecken der Energie
+%%%%
+{acc}a %sstaff of death
+einen {adj-en}%sStecken des Todes
+%%%%
+{acc}a %sstaff of conjuration
+einen {adj-en}%sStecken der Hervorrufung
+%%%%
+{acc}a %sstaff of air
+einen {adj-en}%sStecken der Luft
+%%%%
+{acc}a %sstaff of earth
+einen {adj-en}%sStecken der Erde
+%%%%
+{acc}a %sstaff of summoning
+einen {adj-en}%sStecken der Herbeirufung
+%%%%
+{acc}a %sstaff
+einen {adj-en}%sStecken
+%%%%
+# adjectives
+# covered elsewhere
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"crooked "
+#"krummen "
+# covered elsewhere
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"knobbly "
+#"knubbeligen "
+%%%%
+"{adj-en}weird "
+"seltsamen "
+%%%%
+"{adj-en}gnarled "
+"knorrigen "
+%%%%
+"{adj-en}thin "
+"dünnen "
+%%%%
+# covered elsewhere
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"curved "
+#"gebogenen "
+# covered elsewhere
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"twisted "
+#"verdrehten "
+%%%%
+"{adj-en}thick "
+"dicken "
+%%%%
+# covered elsewhere
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"long "
+#"langen "
+# covered elsewhere
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"short "
+#"kurzen "
+%%%%
+"{adj-en}smoking "
+"rauchigen "
+%%%%
+# covered elsewhere
+#msgctxt "adj-en"
+#msgctxt "acc"
+#"jewelled "
+#"juwelenbesetzten "
+#################################
+# Miscellaneous Items
+#################################
+%%%%
+{acc}a phantom mirror
+einen Phantomspiegel
+%%%%
+
+#################################
+# Unrand Artefacts
+#################################
+%%%%
+{acc}the %sWrath of Trog
+den {adj-en}%sZorn von Trog
+%%%%
+{acc}the %smace of Variability
+den {adj-en}%sStreitkolben der Variabilität
+%%%%
+{acc}the %sstaff of Olgreb
+den {adj-en}%sStecken von Olgreb
+%%%%
+{acc}the %sstaff of Wucad Mu
+den {adj-en}%sStecken von Wucad Mu
+%%%%
+{acc}the %sVampire's Tooth
+den {adj-en}%sZahn des Vampirs
+%%%%
+{acc}the %sstaff of Dispater
+den {adj-en}%sStecken von Dispater
+%%%%
+{acc}the %sscimitar of Flaming Death
+den {adj-en}%sKrummsäbel des flammenden Todes
+%%%%
+{acc}the %seveningstar "Brilliance"
+den {adj-en}%sAbendstar "Brillanz"
+%%%%
+{acc}the %sdagger of Chilly Death
+den {adj-en}%sDolch des kühlen Todes
+%%%%
+{acc}the %sdagger "Morg"
+den {adj-en}%sDolch "Morg"
+%%%%
+{acc}the %slongbow "Zephyr"
+den {adj-en}%sLangbogen "Zephyr"
+%%%%
+{acc}the %smorningstar "Eos"
+den {adj-en}%sMorgenstern "Eos"
+%%%%
+{acc}the %sspear of the Botono
+den {adj-en}%sSpeer des Botonos
+%%%%
+{acc}the %strident of the Octopus King
+den {adj-en}%sDreizack des Krakenkönigs
+%%%%
+{acc}the %sElemental Staff
+den {adj-en}%sElementarstecken
+%%%%
+{acc}the %slongbow "Piercer"
+den {adj-en}%sLangbogen "Stecher"
+%%%%
+{acc}the %sgreat mace "Undeadhunter"
+den {adj-en}%sgroße Streitkolben "Untotenjäger"
+%%%%
+{acc}the %sLehudib's crystal spear
+den {adj-en}%sKristallspeer Lehudibs
+%%%%
+{acc}the %sstorm bow
+den {adj-en}%sSturmbogen
+%%%%
+{acc}the %stower shield of Ignorance
+den {adj-en}%sTurmschild des Nichtwissens
+%%%%
+{acc}the %scloak of the Thief
+den {adj-en}%sUmhang des Diebes
+%%%%
+{acc}the %stower shield "Bullseye"
+den {adj-en}%sTurmschild "Volltreffer"
+%%%%
+{acc}the %shat of the Bear Spirit
+den {adj-en}%sHut des Bärengeistes
+%%%%
+{acc}the %scloak of Flash
+den {adj-en}%sUmhang von Flash
+%%%%
+{acc}the %sshield of Resistance
+den {adj-en}%sSchild der Resistenz
+%%%%
+{acc}the %shat of the Alchemist
+den {adj-en}%sHut des Alchemisten
+%%%%
+{acc}the %scloak of Starlight
+den {adj-en}%sUmhang des Sternenlichts
+%%%%
+{acc}the %sratskin cloak
+den {adj-en}%sRattenfellumhang
+%%%%
+{acc}the %sshield of the Gong
+den {adj-en}%sSchild des Gongs
+%%%%
+{acc}the %sring of Shadows
+den {adj-en}%sRing der Schatten
+%%%%
+{acc}the %sring of Phasing
+den {adj-en}%sRing der Phase
+%%%%
+{acc}the %sring of Robustness
+den {adj-en}%sRing der Robustheit
+%%%%
+{acc}the %sring of the Mage
+den {adj-en}%sRing des Magiers
+%%%%
+{acc}the %shat of Pondering
+den {adj-en}%sHut der Schwerfälligkeit
+%%%%
+{acc}the %sBlack Knight's horse barding
+den {adj-en}%sRossharnisch des schwarzen Ritters
+%%%%
+{acc}the %sshillelagh "Devastator"
+den {adj-en}%sShillelagh "Verwüster"
+%%%%
+{acc}the %sdragonskin cloak
+den {adj-en}%sDrachenhautumhang
+%%%%
+{acc}a %sring of the Octopus King
+einen {adj-en}%sRing des Krakenkönigs
+%%%%
+{acc}the %sdark maul
+den {adj-en}%sdunkle Kriegshammer
+%%%%
+{acc}the %shat of the High Council
+den {adj-en}%sHut des Hohen Rates
+%%%%
+{acc}the %slajatang of Order
+den {adj-en}%sLajatang der Ordnung
+%%%%
+{acc}the %sgreat mace "Firestarter"
+den {adj-en}%sgroße Streitkolben "Brandstifter"
+%%%%
+{acc}the %sorange crystal plate armour
+den {adj-en}%sorange Kristallplattenpanzer
+%%%%
+{acc}the %sMajin-Bo
+den {adj-en}%sMajin-Bo
+%%%%
+{acc}the %sMaxwell's etheric cage
+den {adj-en}%sÄtherkäfig von Maxwell
+%%%%
+{acc}the %sKryia's mail coat
+den {adj-en}%sSchuppenpanzer von Kryia
+%%%%
+{acc}the %swarlock's mirror
+den {adj-en}%sSpiegel des Hexenmeisters
+%%%%
+{acc}the %sdemon trident "Rift"
+den {adj-en}%sDämonendreizack "Riss"
+%%%%
+{acc}the %sstaff of Battle
+den {adj-en}%sStecken der Schlacht
+%%%%

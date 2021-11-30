@@ -1,0 +1,468 @@
+###############################################################################
+#
+# German translations - abilities
+# NOTE: The abilities menu will truncate these to 32 characters if they are longer than that
+#
+###############################################################################
+%%%%
+No ability
+Keine Fähigkeit
+%%%%
+Spit Poison
+Gift spucken
+%%%%
+Blink
+Flimmern
+%%%%
+Breathe Fire
+Feuer spucken
+%%%%
+Breathe Frost
+Frost spucken
+%%%%
+Breathe Poison Gas
+Giftgas spucken
+%%%%
+Breathe Noxious Fumes
+Schädliche Dämpfe spucken
+%%%%
+Breathe Lightning
+Blitz spucken
+%%%%
+Breathe Dispelling Energy
+Vertreibende Energie spucken
+%%%%
+Breathe Steam
+Dampf spucken
+%%%%
+Breathe Acid
+Säure spucken
+%%%%
+Bat Form
+Fledermaus-Form
+%%%%
+Exsanguinate
+Ausbluten
+%%%%
+Revivify
+Wiederbeleben
+%%%%
+Fly
+Fliegen
+%%%%
+Stop Flying
+Fliegen stoppen
+%%%%
+Hurl Damnation
+Verdammnis schleudern
+%%%%
+Cancel Portal Projectile
+Portalprojektil abbrechen
+%%%%
+Dig
+Graben
+%%%%
+Shaft Self
+Selbst schächten
+%%%%
+Hop
+Hüpfen
+%%%%
+Rolling Charge
+Rollender Ansturm
+%%%%
+# NOTE: "Evoke" abilities come from items and use the Evocations skill,
+# so we need to distinguish between these and similar god-given or intrinsic abilities
+# Example: "Evoke Berserk Rage" (item ability) vs "Berserk" (god-given ability)
+Evoke
+Evozieren
+%%%%
+Evoke Blink
+Flimmern evozieren
+%%%%
+Heal Wounds
+Wunden heilen
+%%%%
+Evoke Berserk Rage
+Berserkerwut evozieren
+%%%%
+Evoke Invisibility
+Unsichtbarkeit evozieren
+%%%%
+Turn Visible
+Sichtbar werden
+%%%%
+Evoke Flight
+Flug evozieren
+%%%%
+Evoke Fog
+Nebel evozieren
+%%%%
+Evoke Ratskin
+Rattenhaut evozieren
+%%%%
+Evoke Thunderclouds
+Gewitterwolken evozieren
+%%%%
+End Transformation
+Verwandlung beenden
+%%%%
+Recite
+Rezitieren
+%%%%
+Vitalisation
+Belebung
+%%%%
+Imprison
+Einsperren
+%%%%
+Sanctuary
+Heiligtum
+%%%%
+Donate Gold
+Gold spenden
+%%%%
+Divine Shield
+Göttliches Schutzschild
+%%%%
+Cleansing Flame
+Reinigende Flamme
+%%%%
+Summon Divine Warrior
+Göttlichen Krieger herbeirufen
+%%%%
+Brand Weapon With Holy Wrath
+Waffe mit heiligem Zorn segnen
+%%%%
+Receive Corpses
+Leichen empfangen
+%%%%
+Torment
+Quälen
+%%%%
+Receive Necronomicon
+Necronomicon erhalten
+%%%%
+Brand Weapon With Pain
+Waffe mit Schmerz branden
+%%%%
+Injury Mirror
+Verletzungs-Spiegel
+%%%%
+Animate Remains
+Überreste beleben
+%%%%
+Recall Undead Slaves
+Untote Sklaven zurückrufen
+%%%%
+Animate Dead
+Tote beleben
+%%%%
+Drain Life
+Leben entziehen
+%%%%
+Enslave Soul
+Seele versklaven
+%%%%
+Heroism
+Heldentum
+%%%%
+Finesse
+Finesse
+%%%%
+Minor Destruction
+Geringe Zerstörung
+%%%%
+Lesser Servant of Makhleb
+Kleinerer Diener Makhlebs
+%%%%
+Major Destruction
+Große Zerstörung
+%%%%
+Greater Servant of Makhleb
+Großerer Diener Makhlebs
+%%%%
+Channel Magic
+Magie leiten
+%%%%
+Forget Spell
+Zauber vergessen
+%%%%
+Divine Exegesis
+Göttliche Exegese
+%%%%
+# Go berserk (Trog ability)
+Berserk
+Berserkerwut
+%%%%
+Trog's Hand
+Trogs Hand
+%%%%
+Brothers in Arms
+Waffenbrüder
+%%%%
+Divine Protection
+Göttlicher Schutz
+%%%%
+Lesser Healing
+Geringere Heilung
+%%%%
+Heal Other
+Andere heilen
+%%%%
+Purification
+Reinigung
+%%%%
+Greater Healing
+Größere Heilung
+%%%%
+Divine Vigour
+Göttliche Lebenskraft
+%%%%
+Depart the Abyss
+Den Abgrund verlassen
+%%%%
+Bend Space
+Raum beugen
+%%%%
+Banish
+Verbannen
+%%%%
+Corrupt
+Verderben
+%%%%
+Enter the Abyss
+Den Abgrund betreten
+%%%%
+Brand Weapon With Distortion
+Waffe mit Verzerrung brandmarken
+%%%%
+
+# Nemelex card/deck abilities
+%%%%
+Draw Destruction
+Zerstörung ziehen
+%%%%
+Draw Escape
+Flucht ziehen
+%%%%
+Draw Summoning
+Herbeirufung ziehen
+%%%%
+Draw Stack
+Vorsortierte ziehen
+%%%%
+Triple Draw
+Dreifach ziehen
+%%%%
+Deal Four
+Vier ausgeben
+%%%%
+Stack Five
+Fünf vorsortieren
+%%%%
+
+%%%%
+Smiting
+Niederstrecken
+%%%%
+Recall Orcish Followers
+Orkische Gefolgsleute zurückrufen
+%%%%
+Give Item to Named Follower
+Benanntem Anhänger Gegenstand geben
+%%%%
+Resurrection
+Auferstehung
+%%%%
+Request Jelly
+Gelee anfordern
+%%%%
+# Turns next monster you hit into a slime
+Slimify
+Verschleimen
+%%%%
+Cure Bad Mutation
+Schlimme Mutation heilen
+%%%%
+Wall of Briars
+Dornbusch-Mauer
+%%%%
+Grow Ballistomycete
+Ballistomycete wachsen lassen
+%%%%
+Overgrow
+Überwuchern
+%%%%
+Grow Oklob
+Oklob wachsen lassen
+%%%%
+Bend Time
+Zeit verbiegen
+%%%%
+Temporal Distortion
+Temporale Verzerrung
+%%%%
+Slouch
+Latschen
+%%%%
+Step From Time
+Aus der Zeit treten
+%%%%
+Curse Item
+Gegenstand verfluchen
+%%%%
+Scrying
+Wahrsagen
+%%%%
+Transfer Knowledge
+Wissen übertragen
+%%%%
+End Transfer Knowledge
+Wissenstransfer beenden
+%%%%
+Shadow Step
+Schattenschritt
+%%%%
+Shadow Form
+Schattenform
+%%%%
+Draw Out Power
+Macht entziehen
+%%%%
+Power Leap
+Macht-Sprung
+%%%%
+Apocalypse
+Apokalypse
+%%%%
+Sacrifice Purity
+Reinheit opfern
+%%%%
+Sacrifice Words
+Worte opfern
+%%%%
+Sacrifice Drink
+Trinken opfern
+%%%%
+Sacrifice Essence
+Essenz opfern
+%%%%
+Sacrifice Health
+Gesundheit opfern
+%%%%
+Sacrifice Stealth
+Heimlichkeit opfern
+%%%%
+# sacrifice the ability to use evocable items
+Sacrifice Artifice
+Verwendung opfern
+%%%%
+Sacrifice Love
+Liebe opfern
+%%%%
+Sacrifice Courage
+Mut opfern
+%%%%
+Sacrifice Arcana
+Arkana opfern
+%%%%
+Sacrifice Nimbleness
+Flinkheit opfern
+%%%%
+Sacrifice Durability
+Ausdauer opfern
+%%%%
+Sacrifice a Hand
+Eine Hand opfern
+%%%%
+Sacrifice Experience
+Erfahrung opfern
+%%%%
+Sacrifice Skill
+Geschicklichkeit opfern
+%%%%
+Sacrifice an Eye
+Ein Auge opfern
+%%%%
+Sacrifice Resistance
+Resistanz opfern
+%%%%
+Reject Sacrifices
+Opferungen ablehnen
+%%%%
+Potion Petition
+Zaubertrank erbitten
+%%%%
+Call Merchant
+Händler rufen
+%%%%
+Bribe Branch
+Zweig bestechen
+%%%%
+Upheaval
+Umwälzung
+%%%%
+Elemental Force
+Elementare Kraft
+%%%%
+Disaster Area
+Katastrophengebiet
+%%%%
+Device Surge
+Geräteschwemme
+%%%%
+Stomp
+Stampfen
+%%%%
+Line Pass
+Linienpass
+%%%%
+Grand Finale
+Großes Finale
+%%%%
+Recall Ancestor
+Ahne zurückrufen
+%%%%
+Transference
+Übertragen
+%%%%
+Idealise
+Idealisieren
+%%%%
+Ancestor Life: Knight
+Ahne-Leben: Ritter
+%%%%
+Ancestor Life: Battlemage
+Ahne-Leben: Kampfmagier
+%%%%
+Ancestor Life: Hexer
+Ahne-Leben: Verzauberer
+%%%%
+Ancestor Identity
+Ahne-Identität
+%%%%
+Serpent's Lash
+Schlangenpeitsche
+%%%%
+Heavenly Storm
+Himmlischer Sturm
+%%%%
+Lunge
+Ausfallschritt
+%%%%
+Whirlwind
+Wirbelwind
+%%%%
+Wall Jump
+Wandsprung
+%%%%
+Stop Recall
+Rückruf stoppen
+%%%%
+Renounce Religion
+Religion abschwören
+%%%%
+Convert to Beogh
+Zu Beogh konvertieren
+%%%%

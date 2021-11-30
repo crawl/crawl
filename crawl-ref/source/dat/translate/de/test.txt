@@ -1,0 +1,41 @@
+###############################################################################
+#
+# Stuff for regression tests
+#
+###############################################################################
+
+%%%%
+a %shorse
+ein {adj-es}%sPferd
+%%%%
+a %scow
+eine %sKuh
+%%%%
+
+%%%%
+"gray "
+"graue "
+%%%%
+"{adj-es}gray "
+"graues "
+%%%%
+"{adj-es}happy "
+"glückliches "
+%%%%
+
+# predicate adjectives
+%%%%
+happy
+glücklich
+%%%%
+gray
+grau
+%%%%
+
+%%%%
+@The_monster@ hits you.
+@The_monster@ schlägt Euch.
+%%%%
+You hit @the_monster@.
+Ihr schlagt {acc}@the_monster@.
+%%%%

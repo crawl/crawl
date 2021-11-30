@@ -1,0 +1,64 @@
+###############################################################################
+#
+# Translations for Nemelex card decks
+#
+###############################################################################
+
+%%%%
+escape
+Flucht
+%%%%
+destruction
+Zerstörung
+%%%%
+summoning
+Herbeirufung
+%%%%
+punishment
+Strafe
+%%%%
+
+# used with the above
+%%%%
+a %s card
+eine %s-Karte
+%%%%
+
+
+%%%%
+deck of escape
+Stapel der Flucht
+%%%%
+deck of destruction
+Stapel der Zerstörung
+%%%%
+deck of summoning
+Stapel der Herbeirufung
+%%%%
+deck of punishment
+Stapel der Strafe
+%%%%
+stacked deck
+vorsortierter Stapel
+%%%%
+
+
+%%%%
+the deck of escape
+der Stapel der Flucht
+%%%%
+the deck of destruction
+der Stapel der Zerstörung
+%%%%
+the deck of summoning
+der Stapel der Herbeirufung
+%%%%
+the deck of punishment
+der Stapel der Strafe
+%%%%
+a stacked deck
+ein vorsortierter Stapel
+%%%%
+your stacked deck
+Euer vorsortierter Stapel
+%%%%

@@ -126,6 +126,7 @@ lang-fake.o \
 lev-pand.o \
 libutil.o \
 loading-screen.o \
+localise.o \
 lookup-help.o \
 los.o \
 los-def.o \
@@ -141,6 +142,7 @@ maps.o \
 melee-attack.o \
 menu.o \
 message-stream.o \
+message-util.o \
 message.o \
 misc.o \
 mon-abil.o \
@@ -251,6 +253,7 @@ tutorial.o \
 ui.o \
 uncancel.o \
 unicode.o \
+variant-msg.o \
 view.o \
 viewchar.o \
 viewgeom.o \
@@ -264,6 +267,7 @@ wiz-mon.o \
 wiz-you.o \
 wizard.o \
 worley.o \
+xlate.o \
 xom.o \
 tilepick.o \
 tileview.o
@@ -584,8 +588,15 @@ xp-evoker-data.h.o \
 xp-tracking-type.h.o \
 zap-type.h.o \
 
+I18N_TEST_OBJECTS = \
+test/i18n/de/item-test.o \
+test/i18n/de/misc-test.o \
+test/i18n/fr/misc-test.o \
+test/i18n/ru/misc-test.o
+
 ALL_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) $(TILES_OBJECTS) $(GLTILES_OBJECTS) \
 $(WEBTILES_OBJECTS) $(YACC_OBJECTS) $(TILEDEFOBJS) $(HEADER_OBJECTS) \
+$(I18N_TEST_OBJECTS) \
 libw32c.o \
 libunix.o \
 catch2-tests/test_plug_and_play.o \

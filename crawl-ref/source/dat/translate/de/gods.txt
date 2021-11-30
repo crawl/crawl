@@ -1,0 +1,395 @@
+###############################################################################
+#
+# German translations - miscellaneous
+#
+###############################################################################
+%%%%
+
+########################
+# God names - nominative
+########################
+%%%%
+Ashenzari
+Aschenzari
+%%%%
+Beogh
+Beogh
+%%%%
+Cheibriados
+Cheibriados
+%%%%
+Dithmenos
+Dithmenos
+%%%%
+Elyvilon
+Elyvilon
+%%%%
+Fedhas
+Fedhas
+%%%%
+Fedhas Madash
+Fedhas Madash
+%%%%
+Gozag
+Gozag
+%%%%
+Hepliaklqana
+Hepliaklqana
+%%%%
+Jiyva
+Jiyva
+%%%%
+Kikubaaqudgha
+Kikubaaqudgha
+%%%%
+Lugonu
+Lugonu
+%%%%
+Makhleb
+Makhleb
+%%%%
+Nemelex
+Nemelex
+%%%%
+Nemelex Xobeh
+Nemelex Xobeh
+%%%%
+Okawaru
+Okawaru
+%%%%
+Qazlal
+Qazlal
+%%%%
+Ru
+Ru
+%%%%
+Sif Muna
+Sif Muna
+%%%%
+Trog
+Trog
+%%%%
+Uskayaw
+Uskayaw
+%%%%
+Vehumet
+Vehumet
+%%%%
+Xom
+Xom
+%%%%
+Yredelemnul
+Yredelemnul
+%%%%
+Zin
+Zin
+%%%%
+the Shining One
+der Glänzende
+%%%%
+the Wu Jian Council
+das Wu Jian Konzil
+%%%%
+
+########################
+# God names - genitive
+########################
+%%%%
+{gen}Ashenzari
+Aschenzaris
+%%%%
+{gen}Beogh
+Beoghs
+%%%%
+{gen}Cheibriados
+Cheibriados'
+%%%%
+{gen}Dithmenos
+Dithmenos'
+%%%%
+{gen}Elyvilon
+Elyvilons
+%%%%
+{gen}Fedhas
+Fedhas'
+%%%%
+{gen}Gozag
+Gozags
+%%%%
+{gen}Hepliaklqana
+Hepliaklqanas
+%%%%
+{gen}Jiyva
+Jiyvas
+%%%%
+{gen}Kikubaaqudgha
+Kikubaaqudghas
+%%%%
+{gen}Lugonu
+Lugonus
+%%%%
+{gen}Makhleb
+Makhlebs
+%%%%
+{gen}Nemelex Xobeh
+Nemelex Xobehs
+%%%%
+{gen}Okawaru
+Okawarus
+%%%%
+{gen}Qazlal
+Qazlals
+%%%%
+{gen}Ru
+Rus
+%%%%
+{gen}Sif Muna
+Sif Munas
+%%%%
+{gen}Trog
+Trogs
+%%%%
+{gen}Uskayaw
+Uskayaws
+%%%%
+{gen}Vehumet
+Vehumets
+%%%%
+{gen}Xom
+Xoms
+%%%%
+{gen}Yredelemnul
+Yredelemnuls
+%%%%
+{gen}Zin
+Zins
+%%%%
+{gen}the Shining One
+des Glänzenden
+%%%%
+{gen}the Wu Jian Council
+des Wu Jian Konzils
+%%%%
+
+########################
+# God names - accusative
+########################
+%%%%
+{acc}the Shining One
+den Glänzenden
+%%%%
+
+########################
+# God names - dative
+########################
+%%%%
+{dat}the Shining One
+dem Glänzenden
+%%%%
+{dat}the Wu Jian Council
+dem Wu Jian Konzil
+%%%%
+
+##################
+# god blessings
+##################
+%%%%
+Beogh blesses you with reinforcements.
+Beogh segnet Euch mit Verstärkungen.
+%%%%
+%s blesses %s with %s.
+%s segnet %s mit %s.
+%%%%
+# when recipient is an unnamed follower
+a follower
+einen Anhänger
+%%%%
+# The following are the blessings that come after the word "with"
+%%%%
+uncursed armament
+unverfluchter Bewaffnung
+%%%%
+superior armament
+überlegener Bewaffnung
+%%%%
+ammunition
+Munition
+%%%%
+ranged armament
+Fernbewaffnung
+%%%%
+armament
+Bewaffnung
+%%%%
+a shield
+einem Schild
+%%%%
+improved armour
+verbesserter Rüstung
+%%%%
+divine balms
+göttlicher Salbe
+%%%%
+priesthood
+Priestertum
+%%%%
+friendliness
+Freundlichkeit
+%%%%
+more time in this world
+mehr Zeit in dieser Welt
+%%%%
+
+########################
+# God conducts
+########################
+%%%%
+%s doesn't like anything? This is a bug; please report it.
+%s mag nichts? Das ist ein Fehler. Bitte meldet ihn.
+%%%%
+%s likes it when %s.
+%s mag es, wenn %s.
+%%%%
+%s especially likes it when %s.
+%s mag es besonders, wenn %s.
+%%%%
+%s dislikes it when %s.
+%s mag es nicht, wenn %s.
+%%%%
+%s strongly dislikes it when %s.
+%s mag es besonders nicht, wenn %s.
+%%%%
+
+# These are the conducts the gods like/dislike:
+# (i.e. these go after the word "when")
+%%%%
+you use evil magic or items
+Ihr verwendet böse Magie oder Gegenstände
+%%%%
+you attack non-hostile holy beings
+Ihr greift nicht-feindliche heilige Wesen an
+%%%%
+you kill non-hostile holy beings
+Ihr tötet nicht-feindliche heilige Wesen
+%%%%
+you attack neutral beings
+Ihr greift neutrale Wesen an
+%%%%
+you attack allies
+Ihr greift Verbündete an
+%%%%
+you attack monsters in a sanctuary
+Ihr greift Monster in einem Heiligtum an
+%%%%
+you use unclean or chaotic magic or items
+Ihr unreine oder chaotische Magie oder Gegenstände verwendet
+%%%%
+you polymorph monsters
+Ihr polymorphisiert Monster
+%%%%
+you deliberately mutate or transform yourself
+Ihr mutiert oder verwandelt Euch absichtlich
+%%%%
+you use holy magic or items
+Ihr verwendet heilige Magie oder Gegenstände
+%%%%
+you memorise spells
+Ihr lernt Zaubersprüche auswendig
+%%%%
+you attempt to cast spells
+Ihr versucht, Zaubersprüche zu wirken
+%%%%
+you train magic skills
+Ihr trainiert magische Fähigkeiten
+%%%%
+you use magical staves or pain-branded weapons
+Ihr verwendet magische Stecken oder mit Schmerz versehene Waffen
+%%%%
+you kill living things while asking for your life to be spared
+Ihr tötet Lebewesen, während Ihr darum bittet, dass Euer Leben verschont wird
+%%%%
+you desecrate orcish remains
+Ihr schändet die Überreste von Orks
+%%%%
+you attack allied orcs
+Ihr greift verbündete Orks an
+%%%%
+you kill slimes
+Ihr tötet Schleime
+%%%%
+you attack fellow slimes
+Ihr greift andere Schleime an
+%%%%
+you destroy plants
+Ihr zerstört Pflanzen
+%%%%
+you hasten yourself or others
+Ihr hetzt Euch oder andere
+%%%%
+you channel magical energy
+Ihr kanalisiert magische Energie
+%%%%
+use unnaturally quick items
+Ihr benutzt unnatürlich schnelle Gegenstände
+%%%%
+you kill living beings
+Ihr tötet lebende Wesen
+%%%%
+you destroy the undead
+Ihr vernichtet Untote
+%%%%
+you kill demons
+Ihr tötet Dämonen
+%%%%
+you kill holy beings
+Ihr tötet heilige Wesen
+%%%%
+you destroy nonliving beings
+Ihr vernichtet nicht-lebende Wesen
+%%%%
+you explore the world
+Ihr erforscht die Welt
+%%%%
+you kill unclean or chaotic beings
+Ihr tötet unreine oder chaotische Wesen
+%%%%
+you kill the undead
+Ihr tötet die Untoten
+%%%%
+you kill evil beings
+Ihr tötet böse Wesen
+%%%%
+you encounter other hostile creatures
+Ihr trifft auf andere feindliche Kreaturen
+%%%%
+you kill wizards and other users of magic
+Ihr tötet Zauberer und andere Benutzer von Magie
+%%%%
+you banish creatures to the Abyss
+Ihr verbannt Kreaturen in den Abgrund
+%%%%
+you kill the priests of other religions
+Ihr tötet die Priester anderer Religionen
+%%%%
+you kill fast things, relative to your speed
+Ihr tötet schnelle Dinge, relativ zu Eurer Geschwindigkeit
+%%%%
+you explore the world (preferably while bound by curses)
+Ihr erkundet die Welt (vorzugsweise während Ihr durch Flüche gebunden seid)
+%%%%
+you hurt your foes; however, effects that cause damage over time do not interest Uskayaw
+Ihr verletzt Eure Feinde; Effekte, die Schaden über Zeit verursachen, interessieren Uskayaw jedoch nicht
+%%%%
+you sacrifice items by allowing slimes to consume them
+Ihr opfert Gegenstände, indem Ihr ihnen von Schleimen verzehren lässt
+%%%%
+you collect gold
+Ihr sammelt Gold
+%%%%
+you make personal sacrifices
+Ihr bringt persönliche Opfer
+%%%%
+you donate money
+Ihr spendet Geld
+%%%%
+

@@ -1,0 +1,19 @@
+###############################################################################
+#
+# Translations for transformations (masculine accusative)
+#
+# Needed for "Ihr verwandelt Euch in {acc}%s"
+#
+###############################################################################
+
+%%%%
+{acc}a lump of jelly
+einen Klumpen Gelee
+%%%%
+{acc}a fearsome dragon
+einen furchterregenden Drache
+%%%%
+{acc}a sentient fungus
+einen empfindungsfähigen Pilz
+%%%%
+

@@ -1,0 +1,58 @@
+###############################################################################
+#
+# Translations for adjectives
+#
+###############################################################################
+
+################################
+# General adjectives
+# (used for more than one type of thing)
+################################
+%%%%
+"large "
+"grand "
+%%%%
+"runed "
+" décoré de runes"
+%%%%
+
+%%%%
+"{f}large "
+"grande "
+%%%%
+"{f}runed "
+" décorée de runes"
+%%%%
+
+################################
+# Adjectives for doors/gates
+################################
+%%%%
+"open "
+" ouvert"
+%%%%
+"closed "
+" fermé"
+%%%%
+"sealed "
+" scellé"
+%%%%
+"translucent "
+" translucide"
+%%%%
+"huge "
+"énorme "
+%%%%
+
+%%%%
+"{f}open "
+" ouverte"
+%%%%
+"{f}closed "
+" fermée"
+%%%%
+"{f}sealed "
+" scellée"
+%%%%
+
+

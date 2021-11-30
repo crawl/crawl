@@ -1,0 +1,360 @@
+###############################################################################
+#
+# Translations for dungeon-related stuff
+#
+###############################################################################
+
+##############################################
+# Short branch names
+##############################################
+%%%%
+Dungeon
+Dungeon
+%%%%
+Temple
+Tempel
+%%%%
+Orcish Mines
+Orkische Minen
+%%%%
+Elven Halls
+Elfenhallen
+%%%%
+Lair
+Versteck
+%%%%
+Swamp
+Sumpf
+%%%%
+Shoals
+Untiefen
+%%%%
+Snake Pit
+Schlangengrube
+%%%%
+Spider Nest
+Spinnennest
+%%%%
+Slime Pits
+Schleimgruben
+%%%%
+Vaults
+Gewölbe
+%%%%
+Crypt
+Krypta
+%%%%
+Tomb
+Gruft
+%%%%
+Depths
+Tiefen
+%%%%
+Hell
+Hölle
+%%%%
+Dis
+Dis
+%%%%
+Gehenna
+Gehenna
+%%%%
+Cocytus
+Kokytus
+%%%%
+Tartarus
+Tartarus
+%%%%
+Pandemonium
+Pandämonium
+%%%%
+Zot
+Zot
+%%%%
+Abyss
+Abgrund
+%%%%
+Ziggurat
+Zikkurat
+%%%%
+Bazaar
+Basar
+%%%%
+Trove
+Fund
+%%%%
+Sewer
+Siel
+%%%%
+Ossuary
+Beinhaus
+%%%%
+Bailey
+Burghof
+%%%%
+Gauntlet
+Spießrute
+%%%%
+Ice Cave
+Eishöhle
+%%%%
+Volcano
+Vulkan
+%%%%
+Wizlab
+Zaublab
+%%%%
+Desolation
+Verwüstung
+%%%%
+
+# obsolete branches
+%%%%
+Dwarven Hall
+Halle der Zwerge
+%%%%
+Hall of Blades
+Halle der Klingen
+%%%%
+Forest
+Wald
+%%%%
+Labyrinth
+Labyrinth
+%%%%
+
+##############################################
+# Long branch names
+# (where different to short name)
+##############################################
+%%%%
+the Dungeon
+der Dungeon
+%%%%
+the Ecumenical Temple
+der Ökumenische Tempel
+%%%%
+the Orcish Mines
+die orkischen Minen
+%%%%
+the Elven Halls
+die Elfenhallen
+%%%%
+the Lair of Beasts
+das Versteck der Bestien
+%%%%
+the Swamp
+der Sumpf
+%%%%
+the Shoals
+die Untiefen
+%%%%
+the Snake Pit
+die Schlangengrube
+%%%%
+the Spider Nest
+das Spinnennest
+%%%%
+the Pits of Slime
+die Schleimgruben
+%%%%
+the Vaults
+die Gewölbe
+%%%%
+the Crypt
+die Krypta
+%%%%
+the Tomb of the Ancients
+die Gruft der Antiker
+%%%%
+the Depths
+die Tiefen
+%%%%
+the Vestibule of Hell
+das Vestibül der Hölle
+%%%%
+the Iron City of Dis
+die Eiserne Stadt von Dis
+%%%%
+the Realm of Zot
+das Reich von Zot
+%%%%
+the Abyss
+der Abyss
+%%%%
+a ziggurat
+eine Zikkurat
+%%%%
+a bazaar
+ein Basar
+%%%%
+a treasure trove
+ein Schatzfund
+%%%%
+a sewer
+ein Siel
+%%%%
+an ossuary
+ein Beinhaus
+%%%%
+a bailey
+ein Burghof
+%%%%
+a Gauntlet
+eine Spießrute
+%%%%
+an ice cave
+eine Eishöhle
+%%%%
+a volcano
+ein Vulkan
+%%%%
+a wizard's laboratory
+das Labor eines Zauberers
+%%%%
+the Desolation of Salt
+die Verwüstung des Salzes
+%%%%
+
+# obsolete branches
+%%%%
+the Dwarven Hall
+die Zwergenhalle
+%%%%
+the Hall of Blades
+die Halle der Klingen
+%%%%
+the Enchanted Forest
+der Verzauberte Wald
+%%%%
+a Labyrinth
+ein Labyrinth
+%%%%
+
+##############################################
+# Branch abbreviations
+# These should be 8 characters or less.
+#
+# Note: Some of the English abbreviations are the same as the short names (or player genus).
+# To force specific translation for abbreviation in that case, use {branch_abbrev} annotation.
+##############################################
+%%%%
+# This is different to the short name, but do not want to define a global translation for the letter D
+{branch_abbrev}D
+D
+%%%%
+# D is the real English abbreviation, but Dungeon is used in overview screen
+{branch_abbrev}Dungeon
+Dungeon
+%%%%
+{branch_abbrev}Temple
+Tempel
+%%%%
+# also a player genus
+{branch_abbrev}Orc
+Ork
+%%%%
+# also a player genus
+{branch_abbrev}Elf
+Elf
+%%%%
+{branch_abbrev}Lair
+Versteck
+%%%%
+{branch_abbrev}Swamp
+Sumpf
+%%%%
+{branch_abbrev}Shoals
+Untiefen
+%%%%
+Snake
+Schlange
+%%%%
+Spider
+Spinne
+%%%%
+Slime
+Schleim
+%%%%
+{branch_abbrev}Vaults
+Gewölbe
+%%%%
+{branch_abbrev}Crypt
+Krypta
+%%%%
+{branch_abbrev}Tomb
+Gruft
+%%%%
+{branch_abbrev}Depths
+Tiefen
+%%%%
+{branch_abbrev}Hell
+Hölle
+%%%%
+{branch_abbrev}Dis
+Dis
+%%%%
+Geh
+Geh
+%%%%
+Coc
+Coc
+%%%%
+Tar
+Tar
+%%%%
+Pan
+Pan
+%%%%
+Zig
+Zik
+%%%%
+{branch_abbrev}Abyss
+Abgrund
+%%%%
+{branch_abbrev}Bazaar
+Basar
+%%%%
+{branch_abbrev}Trove
+Fund
+%%%%
+{branch_abbrev}Sewer
+Siel
+%%%%
+{branch_abbrev}Ossuary
+Beinhaus
+%%%%
+{branch_abbrev}Bailey
+Burghof
+%%%%
+{branch_abbrev}Gauntlet
+Spießrute
+%%%%
+IceCv
+Eishöhle
+%%%%
+{branch_abbrev}Volcano
+Vulkan
+%%%%
+# Note: English short name has small L, but abbreviation has capital L.
+WizLab
+Zaublab
+%%%%
+{branch_abbrev}Desolation
+Verwüst
+%%%%
+
+# obsolete branches
+%%%%
+Dwarf
+Zwerg
+%%%%
+# duplicate : also used as HUD abbreviation for blade hands
+#Blade
+#Klinge
+%%%%
+# Labyrinth
+Lab
+Lab
+%%%%
+

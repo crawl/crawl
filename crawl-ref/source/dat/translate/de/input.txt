@@ -1,0 +1,73 @@
+###############################################################################
+#
+# German translations for user inputs
+#
+###############################################################################
+%%%%
+Yes
+Ja
+%%%%
+yes
+ja
+%%%%
+# Y for Yes
+%%%%
+Y
+J
+%%%%
+# y for yes
+%%%%
+y
+j
+%%%%
+No
+Nein
+%%%%
+no
+nein
+%%%%
+# N for No
+%%%%
+N
+N
+%%%%
+# n for no
+%%%%
+n
+n
+%%%%
+# Q for Quit (beenden)
+%%%%
+Q
+B
+%%%%
+# q for quit (beenden)
+%%%%
+q
+b
+%%%%
+# A for All
+%%%%
+A
+A
+%%%%
+# a for all
+%%%%
+a
+a
+%%%%
+# strength
+%%%%
+S
+S
+%%%%
+# dexterity (Geschicklichkeit)
+%%%%
+D
+G
+%%%%
+# intelligence
+%%%%
+I
+I
+%%%%

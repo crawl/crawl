@@ -1,0 +1,1400 @@
+###############################################################################
+#
+# German translations for user interfaces
+#
+###############################################################################
+%%%%
+
+##############################
+# Startup and Main Menu
+##############################
+%%%%
+Loading databases...
+Datenbanken wird geladen...
+%%%%
+Loading spells and features...
+Zaubersprüche und Features wird geladen...
+%%%%
+Loading maps...
+Karten wird geladen...
+%%%%
+Loading complete, press any key to start.
+Laden fertig, drücke eine Taste um zu starten.
+%%%%
+Hello, welcome to %s %s!
+Hallo, willkommen bei %s %s!
+%%%%
+Dismissing %s
+%s wird entlassen
+%%%%
+Dungeon Crawl
+Dungeon Crawl
+%%%%
+Dungeon Crawl: The main game: full of monsters, items, gods and danger!
+Dungeon Crawl: Das Hauptspiel: voller Monster, Gegstände, Götter und Gefahr!
+%%%%
+Choose Game Seed
+Spielsamen wählen
+%%%%
+Play with a chosen custom dungeon seed.
+Spielen mit einem gewählten Samen für Erzeugung des Dungeons
+%%%%
+Tutorial for Dungeon Crawl
+Tutorial für Dungeon Crawl
+%%%%
+Tutorial that covers the basics of Dungeon Crawl survival.
+Tutorial, das die Grundlagen des Überlebens behandelt.
+%%%%
+Hints Mode for Dungeon Crawl
+Hinweismodus für Dungeon Crawl
+%%%%
+A mostly normal game that provides more advanced hints than the tutorial.
+Ein fast normales Spiel, das fortgeschrittenere Hinweise bietet.
+%%%%
+Dungeon Sprint
+Dungeon-Sprint
+%%%%
+Hard, fixed single level game mode.
+Harter, fester Single-Level-Spielmodus.
+%%%%
+Instructions
+Anleitungen
+%%%%
+Help menu.
+Hilfemenü.
+%%%%
+The Arena
+Die Arena
+%%%%
+Pit computer controlled teams versus each other!
+Computergesteuerte Teams gegeneinander antreten!
+%%%%
+High Scores
+Highscores
+%%%%
+View the high score list.
+Die Highscore-Liste anschauen.
+%%%%
+New Game
+Neues Spiel
+%%%%
+" (WIZ)"
+" (WIZ)"
+%%%%
+Enter your name:
+Gebt Euren Namen ein:
+%%%%
+Choices:
+Optionen:
+%%%%
+Saved games:
+Gespeicherte Spiele:
+%%%%
+"quick-load last game: "
+"letztes Spiel schnell laden: "
+%%%%
+"quick-start last combo: "
+"letzte Kombination schnell starten: "
+%%%%
+view rc file information and log
+Log und Informationen zur Startup-Datei anschauen
+%%%%
+Errors during initialization!
+Fehler bei der Initialisierung!
+%%%%
+Press Esc to close, arrows/pgup/pgdn to scroll.
+Drücke Esc zu schließen, pfiele/pgup/pgdn zu scrollen.
+%%%%
+Crawl encountered errors during initialization:
+Crawl trifft Fehler bei der Initialisierung:
+%%%%
+Initialization log:
+Initialisierungslog:
+%%%%
+# key names (NOTE: these are names only - you can't change the input keys with this)
+%%%%
+tab
+tab
+%%%%
+ctrl-p
+ctrl-p
+%%%%
+# "<player name> the <species> <background>"
+%%%%
+%s the %s %s
+%s der %s %s
+%%%%
+# "<player name> the <combo>"
+%%%%
+%s the %s
+%s der %s
+%%%%
+
+##############################
+# New Game Menu
+##############################
+%%%%
+"Welcome. "
+"Willkommen. "
+%%%%
+"Welcome, %s. "
+"Willkommen, %s. "
+%%%%
+# "You are a <species>." or "You are a <background>."
+%%%%
+You are a %s.
+Ihr seid %s.
+%%%%
+You are an %s.
+Ihr seid %s.
+%%%%
+# "You are a <species> <background>."
+%%%%
+You are a %s %s.
+Ihr seid %s %s.
+%%%%
+You are an %s %s.
+Ihr seid %s %s.
+%%%%
+Please select your species.
+Bitte wählt Eure Spezies.
+%%%%
+Please select your background.
+Bitte wählt Euren Hintergrund.
+%%%%
+# species groupings
+%%%%
+Simple
+Einfach
+%%%%
+Intermediate
+Intermediär
+%%%%
+Advanced
+Fortgeschritten
+%%%%
+# background groupings
+%%%%
+Warrior
+Krieger
+%%%%
+Mage
+Magier
+%%%%
+Warrior-mage
+Krieger-Magier
+%%%%
+Zealot
+Zelot
+%%%%
+Adventurer
+Abenteurer
+%%%%
+# species/background options - first column entries
+%%%%
++ - Recommended species
++ - Vorgeschlagene Spezies
+%%%%
++ - Recommended background
++ - Vorgeschlagener Hintergrund
+%%%%
+# - Recommended character
+# - Vorgeschlagener Charakter
+%%%%
+% - List aptitudes
+% - Begabungen-Liste
+%%%%
+? - Help
+? - Hilfe
+%%%%
+# species/background options - first column desciptions
+%%%%
+Picks a random recommended species based on your current background choice.
+Wählt eine zufällige vorgeschlagene Spezies für Euren Hintergrund.
+%%%%
+Picks a random recommended background based on your current species choice.
+Wählt einen zufälligen vorgeschlagenen Hintergrund für Eure Spezies.
+%%%%
+Shuffles through random recommended character combinations until you accept one.
+Stellt zufällige vorgeschlagene Charaktere vor
+%%%%
+Lists the numerical skill train aptitudes for all races.
+Führt die Begabungen für Fertigkeitstraining auf.
+%%%%
+Opens the help screen.
+Öffnet die Hilfsseite.
+%%%%
+# species/background options - second column entries
+# prefix with spaces where needed to make the hyphens line up
+%%%%
+"    * - Random species"
+"        * - Zufällige Spezies"
+%%%%
+"    * - Random background"
+"        * - Zufälliger Hintergrund"
+%%%%
+"    ! - Random character"
+"        ! - Zufälliger Charakter"
+%%%%
+Space - Change species
+Leertaste - Spezies ändern
+%%%%
+Space - Change background
+Leertaste - Hintergrund ändern
+%%%%
+Space - Pick background first
+Leertaste - Hintergrund zuerst wählen
+%%%%
+Space - Pick species first
+Leertaste - Spezies zuerst wählen
+%%%%
+# this one will have the last species + background appended
+%%%%
+"  Tab - "
+"      Tab - "
+%%%%
+# species/background options - second column descriptions
+%%%%
+Picks a random species.
+Wählt eine zufällige Spezies.
+%%%%
+Picks a random background.
+Wählt einen zufälligen Hintergrund.
+%%%%
+Shuffles through random character combinations until you accept one.
+Stellt zufällige Charaktere vor.
+%%%%
+Lets you change your species choice.
+Eure Spezies-Auswahl ändern.
+%%%%
+Lets you change your background choice.
+Eure Hintergrund-Auswahl ändern.
+%%%%
+Lets you pick your background first.
+Wählt zuerst Euren Hintergrund.
+%%%%
+Lets you pick your species first.
+Wähle zuerst Eure Spezies.
+%%%%
+Play a new game with your previous choice.
+Ein spiel mit Eurer letzten Auswahl spielen.
+%%%%
+# species/background - other messages
+%%%%
+Incompatible species and background (%s) selected.
+Inkompatible Spezies und Hintergrund (%s) ausgewählt.
+%%%%
+Do you want to play this combination? [Y/n/q]
+Spiele diese Kombnation? [Y/n/q]
+%%%%
+# weapon selection
+%%%%
+You have a choice of weapons.
+Bitte wähle eine Waffe.
+%%%%
+# apt = aptitude
+%%%%
+(%+d apt)
+(%+d Beg)
+%%%%
+large rocks and throwing nets
+Felsblöcke und Wurfnetze
+%%%%
+boomerangs and throwing nets
+Bumerangs und Wurfnetze
+%%%%
+javelins and throwing nets
+Wurfspeer und Wurfnetze
+%%%%
+hunting sling and sling bullets
+Schleuder und Schleuderkugeln
+%%%%
+shortbow and arrows
+Kurzbogen und Pfeile
+%%%%
+hand crossbow and bolts
+Handarmbrust und Bolzen
+%%%%
++ - Recommended random choice
++ - Zufällige vorgeschagene Auswahl
+%%%%
+* - Random weapon
+* - Zufällige Waffe
+%%%%
+# "Tab - <last combo>"
+%%%%
+"Tab - "
+"Tab - "
+%%%%
+Bksp - Return to character menu
+Bksp - Zurück zu Charakter-Menü
+%%%%
+Picks a random recommended weapon
+Wählt eine zufällige vorgeschagene Waffe
+%%%%
+Picks a random weapon
+Wählt eine zufällige Waffe
+%%%%
+Lets you return back to Character choice menu
+Führt zurück zu Charakter-Auswahl-Menü
+%%%%
+Select your old weapon
+Wähle Eure letzte Waffe
+%%%%
+# name entry
+%%%%
+What is your name today?
+Wie heißt Ihr heute?
+%%%%
+Esc - Quit
+Esc - Beenden
+%%%%
+* - Random name
+* - Zufälliger Name
+%%%%
+Enter - Begin!
+Enter-Taste - Beginnen!
+%%%%
+That's a silly name!
+Das ist ein alberner Name!
+%%%%
+You have an existing game under this name; really overwrite? [Y/n]
+Ihr habt schon ein Spiel mit dieser Name; Wirklich überschreiben? [Y/n]
+%%%%
+# seeded games
+%%%%
+Play a game with a custom seed for version %s.
+Spiel ein Spiel mit einem spezifischen Samen für version %s.
+%%%%
+Choose 0 for a random seed. [Tab]/[Shift-Tab] to cycle input focus.
+Wähle 0 für einen zufälligen Samen. [Tab]/[Shift-Tab] um Fokus zu verwechseln.
+%%%%
+"Seed: "
+"Samen: "
+%%%%
+[-] Clear
+[-] Löschen
+%%%%
+[Enter] Begin!
+[Enter-Taste] Beginnen!
+%%%%
+[d] Today's daily seed
+[d] Samen des Tages
+%%%%
+Fully pregenerate the dungeon
+Ganzes Dungeon am Anfang bauen
+%%%%
+# Dungeon Sprints
+%%%%
+Sprint I: "Red Sonja"
+Sprint I: "Rote Sonja"
+%%%%
+Sprint II: "The Violet Keep of Menkaure"
+Sprint II: "Der Violette Bergfried von Menkaure"
+%%%%
+Sprint III: "The Ten Rune Challenge"
+Sprint III: "Die Zehn-Rune-Aufgabe"
+%%%%
+Sprint IV: "Fedhas' Mad Dash"
+Sprint IV: "Fedhas' Verrücktes Rennen"
+%%%%
+Sprint V: "Ziggurat Sprint"
+Sprint V: "Zikkurat-Sprint"
+%%%%
+Sprint VI: "Thunderdome"
+Sprint VI: "Donnerkuppel"
+%%%%
+Sprint VII: "The Pits"
+Sprint VII: "Die Gruben"
+%%%%
+Sprint VIII: "Arena of Blood"
+Sprint VIII: "Arena des Blutes"
+%%%%
+Sprint IX: "|||||||||||||||||||||||||||||"
+Sprint IX: "|||||||||||||||||||||||||||||"
+%%%%
+* - Random map
+* - zufälliger Plan
+%%%%
+Picks a random sprint map
+Wählt einen zufälligen Dungeon-Sprint-Plan
+%%%%
+Select your previous sprint map and character
+Wähle Eure letzte Dungeon-Pan and Charakter
+%%%%
+Custom seed:
+Benutzerdefinierter Samen:
+%%%%
+You have a choice of lessons:
+Die folgende Lektionen sind wählbar:
+%%%%
+You have a choice of maps:
+Die folgende Pläne sind wählbar:
+%%%%
+# tutorials
+%%%%
+Lesson 1: Movement and Exploration
+Lektion 1: Bewegung und Erkundung
+%%%%
+Lesson 2: Monsters and Combat
+Lektion 2: Monster und Kampf
+%%%%
+Lesson 3: Items and Inventory
+Lektion 3: Gegenstände und Inventar
+%%%%
+Lesson 4: Magic and Spellcasting
+Lektion 4: Zauberei und Zauberwirken
+%%%%
+Lesson 5: Gods and Divine Abilities
+Lektion 5: Götter und Göttliche Fähigkeiten
+%%%%
+# other
+%%%%
+Trunk games don't count for the tournament, you want %s. Play trunk anyway? (Y/N)
+Trunk-Spiele gelten nicht für das Turnier. Ihr wollt veilleicht %s. Trunk trotzdem spielen? (Y/N)
+%%%%
+
+###############################################################
+# Player HUD
+#
+# --------------------------------------------
+# Bob the Chopper                            |
+# Minotaur of Okawaru *.....                 |
+# Health: 120/200   ======================== |
+# Magic:  20/20                              |
+# AC: 27            Str: 31                  |
+# EV: 12            Int: 4                   |
+# SH: 14            Dex: 10                  |
+# XL: 11 Next: 83%  Place: Dungeon:15        |
+# Noise: ---------  Time: 72030.9 (0.0)      |
+# a) +0 hand axe                             |
+# -) Nothing quivered                        |
+# Hungry                                     |
+# --------------------------------------------
+#
+# The labels on the left need to be the same length in order to preserve alignment.
+# There's a bit more freedom with the ones on the right, but they mustn't be so long as
+# to push stuff off the screen.
+###############################################################
+# "<species> of <god>"
+%%%%
+%s of %s
+%s von {dat}%s
+%%%%
+"Health: "
+"Gesund: "
+%%%%
+# Health changes to HP when a 3rd number has to be shown (player rotted)
+# Hit points = Trefferpünkte
+%%%%
+"HP: "
+"TP: "
+%%%%
+"Magic:  "
+"Mana:   "
+%%%%
+# Magic changes to MP when a 3rd number has to be shown (MP drained)
+# Magic points = Manapunkte(?)
+%%%%
+"MP: "
+"MP: "
+%%%%
+# Armour Class = Rüstingsklasse
+%%%%
+AC:
+RK:
+%%%%
+# Evasion = Ausweichen
+%%%%
+EV:
+AW:
+%%%%
+# Shields = Schilde
+%%%%
+SH:
+Sch:
+%%%%
+# eXperience Level = Erfahrungsstufe(?)
+%%%%
+"XL: "
+"St: "
+%%%%
+# percentage of next XL achieved
+# Next = Nächste, but that's too long, so I used kommende
+%%%%
+"Next: "
+Komm:
+%%%%
+"Noise: "
+"Lärm: "
+%%%%
+# If silenced, this shows instead of noise bar
+%%%%
+"Silenced  "
+"Stumm     "
+%%%%
+# There is an option to show equipment instaed of noise
+# equipment = Ausrüstung
+%%%%
+"Equip: "
+"Ausr:  "
+%%%%
+# Equipment abbreviated for octopodes
+%%%%
+"Eq: "
+"Ar: "
+%%%%
+# Strength = Stärke
+%%%%
+Str:
+Stä:
+%%%%
+# Intelligence = Intelligenz
+%%%%
+Int:
+Int:
+%%%%
+# Dexterity = Geschicklichkeit
+%%%%
+Dex:
+Ges:
+%%%%
+"Place: "
+"Ort: "
+%%%%
+Time:
+Zeit:
+%%%%
+# this shows if god is Gozag
+%%%%
+Gold:
+Gold:
+%%%%
+
+###############################################################
+# Character overview screen. Contrived example:
+#
+# Kitty the Vexing (Felid Enchanter)                     Turns: 0, Time: 00:00:02
+# Health: 7/7        AC:  1    Str:  4    XL:     1   Next: 0%
+# Magic:  4/4        EV: 18    Int: 16    God:
+# Gold:   0          SH:  0    Dex: 16    Spells: 3/4 levels left
+#                                         Lives:  0   Deaths: 0
+#
+# rFire    . . .     SeeInvis +     - Unarmed
+# rCold    . . .     Gourm    .   (shield unavailable)
+# rNeg     . . .     Faith    .   (armour unavailable)
+# rPois    .         Spirit   .   (helmet unavailable)
+# rElec    .         Reflect  .   (cloak unavailable)
+# rCorr    .         Harm     .   (gloves unavailable)
+# Will     .....                  (boots unavailable)
+# Stlth    +++.......             (no amulet)
+# HPRegen  0.02/turn              (no ring)
+# MPRegen  0.09/turn              (no ring)
+#
+# @: quick
+# A: very small, no armour, no weapons or thrown items, stealth, claws 1, fangs 3,
+# see invisible, carnivore, speed 1, shaggy fur 1, slow metabolism 1, sharp paws
+# }: 2/15 runes: decaying, gossamer
+#
+###############################################################
+%%%%
+" Turns: %d, Time: "
+" Wend: %d, Zeit: "
+%%%%
+# Health changes to HP if player rotted
+%%%%
+"HP:   "
+"TP:   "
+%%%%
+# Magic changes to MP if player rotted
+%%%%
+"MP:   "
+"MP:   "
+%%%%
+"Gold:   "
+"Gold:   "
+%%%%
+# Align Gold with HP/MP if playerrotted
+%%%%
+"Gold: "
+"Gold: "
+%%%%
+# Armour Class = Rüstingsklasse
+%%%%
+"AC: "
+"RK:  "
+%%%%
+# Evasion = Ausweichen
+%%%%
+"EV: "
+"AW:  "
+%%%%
+# Shields = Schilde
+%%%%
+"SH: "
+"Sch: "
+%%%%
+# Strength = Stärke
+%%%%
+"Str: "
+"Stä: "
+%%%%
+# Intelligence = Intelligenz
+%%%%
+"Int: "
+"Int: "
+%%%%
+# Dexterity = Geschicklichkeit
+%%%%
+"Dex: "
+"Ges: "
+%%%%
+# eXperience Level = Erfahrungsstufe
+%%%%
+"XL:     "
+"Stufe:  "
+%%%%
+"   Next: "
+" Nächste: "
+%%%%
+"God:    "
+"Gott:   "
+%%%%
+"Spells: "
+"Zauber: "
+%%%%
+%d/%d levels left
+%d/%d Stufen übrig
+%%%%
+# Felids have multiple lives (and deaths)
+%%%%
+"Lives:  "
+"Leben:  "
+%%%%
+"   Deaths: "
+"   Tode: "
+%%%%
+# fire resistance
+%%%%
+rFire
+rFeuer
+%%%%
+# cold resistance
+%%%%
+rCold
+rKalt
+%%%%
+# negative energy resistance
+%%%%
+rNeg
+rNeg
+%%%%
+# poison resistance
+%%%%
+rPois
+rGift
+%%%%
+# electricty resistance
+%%%%
+rElec
+rElek
+%%%%
+# corrosion resistance
+%%%%
+rCorr
+rKorr
+%%%%
+# mutation resistance
+%%%%
+rMut
+rMut
+%%%%
+# magic resistance
+%%%%
+Will
+Wille
+%%%%
+# Stealth = Heimlichkeit
+%%%%
+"Stlth    "
+"Heiml    "
+%%%%
+# HP regeneration rate
+%%%%
+HPRegen  %03.2f/turn
+TPRegen  %03.2f/Wendung
+%%%%
+# MP regeneration rate
+%%%%
+MPRegen  %03.2f/turn
+MPRegen  %03.2f/Wendung
+%%%%
+SeeInvis
+SeheUns
+%%%%
+# Gourmand
+%%%%
+Gourm
+Gourm
+%%%%
+Faith
+Glaube
+%%%%
+# spirit shield
+%%%%
+Spirit
+Geist
+%%%%
+# reflection
+%%%%
+Reflect
+Reflex
+%%%%
+Harm
+Leid
+%%%%
+# the following ones show up only if applicable
+%%%%
+Rnd*Rage
+Zfg*Wut
+%%%%
+Clarity
+Klarheit
+%%%%
+NoTele
+KeinTele
+%%%%
+Rnd*Tele
+Zfg*Tele
+%%%%
+NoCast
+KeinZauber
+%%%%
+
+#######################
+# Mutations
+#######################
+%%%%
+unfitting armour
+unpassende Rüstung
+%%%%
+amphibious
+amphibisch
+%%%%
+# The number here will only ever be 7 or 8
+%%%%
+%d rings
+%d Ringe
+%%%%
+constrict %d
+verengen %d
+%%%%
+walk on water
+auf dem Wasser gehen
+%%%%
+reduced essence
+reduzierte Essenz
+%%%%
+AC +%d
+RK +%d
+%%%%
+no striking features
+keine auffälligen Merkmale
+%%%%
+very quick
+sehr schnell
+%%%%
+quick
+schnell
+%%%%
+slow
+langsam
+%%%%
+very slow
+sehr langsam
+%%%%
+no status effects
+keine Statuseffekte
+%%%%
+Orb of Zot
+Kugel von Zot
+%%%%
+"%d/%d runes: "
+"%d/%d Runen: "
+%%%%
+# wizard (cheat) mode flags
+%%%%
+WIZARD
+WIZARD
+%%%%
+EX-WIZARD
+EX-WIZARD
+%%%%
+EXPLORE
+ERKUNDEN
+%%%%
+Your terminal window is too small; please resize to at least %d,%d
+Euer Terminalfenster ist zu klein; Bitte ändere die Größe auf mindestens %d,%d
+%%%%
+There were no monsters in sight!
+Es gab keine Monster im Sicht!
+%%%%
+There are no monsters in sight!
+Es gibt keine Monster im Sicht!
+%%%%
+You could see %s.
+Ihr saht %s.
+%%%%
+You can see %s.
+Ihr seht %s.
+%%%%
+# some items become "melded" when you change form
+%%%%
+"melded "
+vereint
+%%%%
+Unarmed
+Unbewaffnet
+%%%%
+Blade Hand
+Klingenhand
+%%%%
+# Note: The maximum is 2, even for an octopode
+%%%%
+Blade Hands
+Klingenhände
+%%%%
+
+##############################################
+# Equipment Slots
+##############################################
+%%%%
+Quiver unavailable
+Köcher nicht verfügbar
+%%%%
+Nothing quivered
+Nichts im Köcher
+%%%%
+%s unavailable
+%s nicht verfügbar
+%%%%
+%s currently unavailable
+%s aktuell nicht verfügbar
+%%%%
+%s restricted
+%s beschränkt
+%%%%
+weapon
+Waffe
+%%%%
+cloak
+Umhang
+%%%%
+helmet
+Helm
+%%%%
+gloves
+Handschuhe
+%%%%
+boots
+Stiefel
+%%%%
+# Centaurs and Nagas have barding instead of boots
+%%%%
+barding
+Gelieger
+%%%%
+shield
+Schild
+%%%%
+armour
+Rüstung
+%%%%
+amulet
+Amulett
+%%%%
+ring
+Ring
+%%%%
+no weapon
+keine Waffe
+%%%%
+no cloak
+kein Umhang
+%%%%
+no helmet
+kein Helm
+%%%%
+no gloves
+keine Handschuhe
+%%%%
+no boots
+keine Stiefel
+%%%%
+# Centaurs and Nagas have barding instead of boots
+%%%%
+no barding
+kein Gelieger
+%%%%
+no shield
+kein Schild
+%%%%
+no armour
+keine Rüstung
+%%%%
+no amulet
+kein Amulett
+%%%%
+no ring
+kein Ring
+%%%%
+
+##############################################
+# Local Tiles - Tab titles/tooltips
+##############################################
+%%%%
+Abilities
+Fähigkeiten
+%%%%
+Inventory
+Inventar
+%%%%
+Memorisation
+Memorieren
+%%%%
+Monsters
+Monster
+%%%%
+Skills
+Fertigkeiten
+%%%%
+Spells
+Zaubersprüche
+%%%%
+System Commands
+Systembefehle
+%%%%
+Navigation
+Navigation
+%%%%
+Commands
+Befehle
+%%%%
+Execute commands
+Befehle ausführen
+%%%%
+Navigate around map
+Auf der Karte navigieren
+%%%%
+
+##############################################
+# Local Tiles - Commands and  tooltips
+##############################################
+
+%%%%
+# format string for "<mouse button> <command name> (<key>)"
+# Example "[L-Click] Fire (f)"
+# The annotation {cmd} is used to disambiguate from other meanings of the same word
+# (e.g. fire meaning shoot vs. fire meaning flames)
+"%s %s (%%)"
+"%s {cmd}%s (%%)"
+%%%%
+# format string for "<command name> (<key>)"
+# Example "Fire (f)"
+# {cmd} annotation as per above entry
+"%s (%%)"
+"{cmd}%s (%%)"
+%%%%
+[L-Click]
+[L-Klick]
+%%%%
+[R-Click]
+[R-Klick]
+%%%%
+[Shift + L-Click]
+[Shift + L-Klick]
+%%%%
+[Shift + R-Click]
+[Shift + R-Klick]
+%%%%
+[Ctrl + L-Click]
+[Strg + L-Klick]
+%%%%
+[Alt + L-Click]
+[Alt + L-Klick]
+%%%%
+[Ctrl-Shift + L-Click]
+[Strg-Shift + L-Klick]
+%%%%
+Display abilities
+Fähigkeiten zeigen
+%%%%
+Use abilities
+Fähigkeiten anwenden
+%%%%
+You cannot use this ability right now.
+Diese Fähigkeit ist im Moment nicht verfügbar.
+%%%%
+Use
+Anwenden
+%%%%
+Describe
+Beschreiben
+%%%%
+Wand to zap?
+Zauberstab zu benutzen?
+%%%%
+Your Spells
+Eure Zaubersprüche
+%%%%
+Cast spell
+Zauberspruch wirken
+%%%%
+Zap wand
+Zauberstab benutzen
+%%%%
+# move one square
+Move
+Bewegen
+%%%%
+# move a longer distance
+Travel
+Reisen
+%%%%
+Attack
+Angreifen
+%%%%
+# fire - shoot a bow/crossbow/sling, or throw a boomerang, etc.
+# the {cmd} annotation is needed to disambiguate from fire meaning flames
+{cmd}Fire
+Schießen
+%%%%
+Open door
+Tür öffnen
+%%%%
+Pick up items
+Gegenstände aufheben
+%%%%
+Enter shop
+Laden eintreten
+%%%%
+Pray at altar
+An Altar beten
+%%%%
+Enter gate
+Tor eintreten
+%%%%
+Use stairs
+Treppen benutzen
+%%%%
+Wait one turn
+Eine Runde warten
+%%%%
+Overview
+Überblick
+%%%%
+Religion
+Religion
+%%%%
+out of sight
+außer Sichtweite
+%%%%
+floor
+Boden
+%%%%
+wall
+Wand
+%%%%
+feat
+feat
+%%%%
+special
+speziell
+%%%%
+# wield weapon (i.e. put it in your hand)
+Wield
+Waffe führen
+%%%%
+# unwield weapon (i.e. put it back in your backpack)
+Unwield
+Wegstecken
+%%%%
+Display inventory
+Inventar anzeigen
+%%%%
+Use items
+Gegenstände benutzen
+%%%%
+Next page
+Nächste Seite
+%%%%
+Show next page of items
+Nächste Seite der Gegenstände anzeigen
+%%%%
+Previous page
+Vorige Seite
+%%%%
+Show previous page of items
+Vorige Seite der Gegenstände anzeigen
+%%%%
+%%%%
+# suffix used when net is holding monster
+" (holding %s)"
+" (haltet {acc}%s)"
+%%%%
+# used by above entry (in unlikely edge case)
+nobody
+niemanden
+%%%%
+Pick up
+Aufheben
+%%%%
+# Pick up some
+Partial pick up
+Einige aufheben
+%%%%
+Chop up
+Zerhacken
+%%%%
+Eat
+Essen
+%%%%
+# evoke a wand, magical item or polearm
+Evoke
+Aktivieren
+%%%%
+# wear armour, helm, gloves, boots
+Wear
+Anziehen
+%%%%
+# take off armour, helm, gloves, boots
+Take off
+Ausziehen
+%%%%
+# put on ring or amulet
+Put on
+Anlegen
+%%%%
+# remove ring or amulet
+Remove
+Abnehmen
+%%%%
+# memorise (learn) a spell
+Memorise
+Erlernen
+%%%%
+Read
+Lesen
+%%%%
+# quaff (drink) a potion
+Quaff
+Trinken
+%%%%
+Drop
+Hinlegen
+%%%%
+Drop quantity
+Anzahl hinlegen
+%%%%
+Enable map mode
+Kartenmodus aktivieren
+%%%%
+View
+Ansehen
+%%%%
+Autoexplore
+Automatisch erkunden 
+%%%%
+1 spell slot
+1 Zauberstelle
+%%%%
+%d spell slots
+%d Zauberstellen
+%%%%
+Display spells in carried books
+Zaubersprüche in getragene Bücher anzeigen
+%%%%
+Memorise spells
+Zaubersprüche erlernen
+%%%%
+You cannot memorise this spell now.
+Ihr könnt diesen Zauber jetzt nicht erlernen.
+%%%%
+Browse message history
+Nachrichtenverlauf sehen
+%%%%
+# format string for skill training entry
+"%-14s Skill %4.1f Aptitude %c%d"
+"{skill}%-14s Fertigkeit %4.1f Begabung %c%d"
+%%%%
+Manage skills
+Fertigkeiten verwalten
+%%%%
+You cannot train this skill now.
+Diese Fertigkeit ist jetzt nicht trainierbar.
+%%%%
+Disable training
+Training ausschalten
+%%%%
+Enable training
+Training anschalten
+%%%%
+Change skill level (wizmode)
+Stufe ändern (wizmodus)
+%%%%
+Display memorised spells
+Erlernte Zaubersprüche anzeigen
+%%%%
+Cast spells
+Zaubersprüche wirken
+%%%%
+You cannot cast this spell right now.
+Ihr könnt diesen Zauber im Moment nich wirken.
+%%%%
+Cast
+Wirken
+%%%%
+Show player information
+Spielerinformationen anzeigen
+%%%%
+
+##############################################
+# Local Tiles - doll editor
+##############################################
+%%%%
+Doll Editor
+Puppenarbeiter
+%%%%
+Custom
+Speziell
+%%%%
+Default
+Standard
+%%%%
+Equip
+Ausrüstung
+%%%%
+none
+nichts
+%%%%
+show equip
+Ausrüstung
+%%%%
+Doll index
+Puppenindex
+%%%%
+Doll Mode
+Puppenmodus
+%%%%
+Current Equipment
+Aktuelle Ausrüstung
+%%%%
+Custom Doll
+Spezielle Puppe
+%%%%
+# job = background
+Job Defaults
+Nach Hintergrund
+%%%%
+Base
+Basis
+%%%%
+Shadow
+Schatte
+%%%%
+Halo
+%%%%
+Ench
+%%%%
+Cloak
+Umhang
+%%%%
+Boots
+Stiefeln
+%%%%
+Legs
+Beine
+%%%%
+Body
+Leib
+%%%%
+Gloves
+Stulpen
+%%%%
+LHand
+LHand
+%%%%
+RHand
+RHand
+%%%%
+Hair
+Haar
+%%%%
+Beard
+Bart
+%%%%
+Helm
+Helm
+%%%%
+DrcWing
+DrkFlügel
+%%%%
+DrcHead
+DrkKopf
+%%%%
+Change parts
+Teile ändern
+%%%%
+left/right
+links/rechts
+%%%%
+Confirm choice
+Bestätigen
+%%%%
+Enter
+Enter
+%%%%
+Change category
+Klasse ändern
+%%%%
+up/down
+oben/unter
+%%%%
+Copy doll
+Puppe kopieren
+%%%%
+Change doll
+Puppe ändern
+%%%%
+Shift + arrows
+Shift + Pfeile
+%%%%
+Paste copied doll
+Einfügen
+%%%%
+Change doll mode
+Modus ändern
+%%%%
+Randomise doll
+Randomisieren
+%%%%
+Save menu
+Speichern
+%%%%
+Toggle equipment
+Ausrüstung umschalten
+%%%%
+Quit menu
+Abbrechen
+%%%%
+
+##############################################
+# Inventory list
+##############################################
+%%%%
+Inventory:
+Inventar:
+%%%%
+"%d/%d slots"
+"%d/%d Plätze"
+%%%%

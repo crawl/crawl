@@ -288,6 +288,30 @@ bool strip_suffix(string &s, const string &suffix)
     return false;
 }
 
+// Replace first occurrence of <tofind> with <replacement>
+string replace_first(const string &s, const string &tofind, const string &replacement)
+{
+    string result = s;
+    size_t pos = s.find(tofind);
+    if (pos != string::npos)
+    {
+        result.replace(pos, tofind.length(), replacement);
+    }
+    return result;
+}
+
+// Replace last occurrence of <tofind> with <replacement>
+string replace_last(const string &s, const string &tofind, const string &replacement)
+{
+    string result = s;
+    size_t pos = s.rfind(tofind);
+    if (pos != string::npos)
+    {
+        result.replace(pos, tofind.length(), replacement);
+    }
+    return result;
+}
+
 string replace_all(string s, const string &find, const string &repl)
 {
     ASSERT(!find.empty());
@@ -417,12 +441,23 @@ int count_occurrences(const string &text, const string &s)
     return nfound;
 }
 
+bool contains(const string &text, const string &s)
+{
+    return !s.empty() && text.find(s) != string::npos;
+}
+
 // also used with macros
 string &trim_string(string &str)
 {
     str.erase(0, str.find_first_not_of(" \t\n\r"));
     str.erase(str.find_last_not_of(" \t\n\r") + 1);
 
+    return str;
+}
+
+string &trim_string_left(string &str)
+{
+    str.erase(0, str.find_first_not_of(" \t\n\r"));
     return str;
 }
 

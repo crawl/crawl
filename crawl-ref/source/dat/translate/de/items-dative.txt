@@ -1,0 +1,523 @@
+###############################################################################
+#
+# German translations for item names
+# Dative case
+#
+###############################################################################
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+# with indefinite article
+# used in message "<monster> hits you (from afar) with <weapon>" (melee-attack.cc)
+# Note that %s is a placeholder for any adjectives
+%%%%
+{dat}a %sclub
+einer {adj-en}%s Keule
+%%%%
+{dat}a %swhip
+einer {adj-en}%s Peitsche
+%%%%
+{dat}a %smace
+einem {adj-en}%sStreitkolben
+%%%%
+{dat}a %sflail
+einem {adj-en}%sFlegel
+%%%%
+{dat}a %smorningstar
+einem {adj-en}%sMorgenstern
+%%%%
+{dat}a %sdemon whip
+einer {adj-en}%s Dämonenpeitsche
+%%%%
+{dat}a %ssacred scourge
+einer {adj-en}%s geistliche Geißel
+%%%%
+{dat}a %sdire flail
+einem {adj-en}%sSchreckensflegel
+%%%%
+{dat}a %seveningstar
+einem {adj-en}%sAbendstern
+%%%%
+{dat}a %sgreat mace
+einem {adj-en}%sgroßer Streitkolben
+%%%%
+{dat}a %sgiant club
+einer {adj-en}%s Riesenkeule
+%%%%
+{dat}a %sgiant spiked club
+einer {adj-en}%s riesige Stachelkeule
+%%%%
+{dat}a %sdagger
+einem {adj-en}%sDolch
+%%%%
+{dat}a %squick blade
+einer {adj-en}%s Schnellklinge
+%%%%
+{dat}a %sshort sword
+einem {adj-en}%sKurzschwert
+%%%%
+# neut
+%%%%
+{dat}a %srapier
+einem {adj-en}%sRapier
+%%%%
+# neut
+%%%%
+{dat}a %sfalchion
+einem {adj-en}%sFalchion
+%%%%
+{dat}a %slong sword
+einem {adj-en}%sLangschwert
+%%%%
+{dat}a %sscimitar
+einem {adj-en}%sKrummsäbel
+%%%%
+{dat}a %sdemon blade
+einer {adj-en}%s Dämonenklinge
+%%%%
+{dat}a %seudemon blade
+einer {adj-en}%s Eudämonenklinge
+%%%%
+{dat}a %sdouble sword
+einem {adj-en}%sDoppelschwert
+%%%%
+{dat}a %sgreat sword
+einem {adj-en}%sGroßschwert
+%%%%
+{dat}a %striple sword
+einem {adj-en}%sDreifach-Schwert
+%%%%
+# neut
+%%%%
+{dat}a %shand axe
+einem {adj-en}%sBeil
+%%%%
+{dat}a %swar axe
+einer {adj-en}%s Kriegsaxt
+%%%%
+{dat}a %sbroad axe
+einer {adj-en}%s Breitaxt
+%%%%
+{dat}a %sbattleaxe
+einer {adj-en}%s Streitaxt
+%%%%
+{dat}a %sexecutioner's axe
+einer {adj-en}%s Henkersaxt
+%%%%
+{dat}a %sspear
+einem {adj-en}%sSpeer
+%%%%
+{dat}a %strident
+einem {adj-en}%sDreizack
+%%%%
+{dat}a %shalberd
+einer {adj-en}%s Hellebarde
+%%%%
+{dat}a %sscythe
+einer {adj-en}%s Sense
+%%%%
+{dat}a %sdemon trident
+einem {adj-en}%sDämonendreizack
+%%%%
+{dat}a %strishula
+einem {adj-en}%sTrishula
+%%%%
+{dat}a %sglaive
+einer {adj-en}%s Gleve
+%%%%
+{dat}a %sbardiche
+einer {adj-en}%s Bardiche
+%%%%
+{dat}a %squarterstaff
+einem {adj-en}%sKampfstab
+%%%%
+{dat}a %slajatang
+einem {adj-en}%sLajatang
+%%%%
+
+#################################
+# Launchers
+#################################
+# your...
+# used in the message "You cannot shoot with your <launcher> while held in a net/caught in a web."
+# Note that %s is a placeholder for any adjectives
+%%%%
+{dat}your %shunting sling
+Eurer {adj-en}%s Schleuder
+%%%%
+{dat}your %sfustibalus
+Eurem {adj-en}%sFustibalus
+%%%%
+{dat}your %shand crossbow
+Eurer {adj-en}%s Handarmbrust
+%%%%
+{dat}your %sarbalest
+Eurer {adj-en}%s Armbrust
+%%%%
+{dat}your %striple crossbow
+Eurer {adj-en}%s Dreifach-Armbrust
+%%%%
+{dat}your %sshortbow
+Eurem {adj-en}%sKurzbogen
+%%%%
+{dat}your %slongbow
+Eurem {adj-en}%sLangbogen
+%%%%
+
+#################################
+# Unrand Artefacts
+#################################
+# probably only the ones that are weapons need dative, but it's easy enough to list them all
+%%%%
+{dat}the %sSinging Sword
+dem {adj-en}%ssingenden Schwert
+%%%%
+# alternative name for the Singing Sword
+{dat}the %sScreaming Sword
+dem {adj-en}%sschreienden Schwert
+%%%%
+# alternative name for the Singing Sword
+{dat}the %sSulking Sword
+dem {adj-en}%sschmollenden Schwert
+%%%%
+{dat}the %spair of quick blades "Gyre" and "Gimble"
+dem {adj-en}%sPaar Schnellklingen "Gyre" und "Gimble"
+%%%%
+{dat}the %sWrath of Trog
+dem {adj-en}%sZorn von Trog
+%%%%
+{dat}the %smace of Variability
+dem {adj-en}%sStreitkolben der Variabilität
+%%%%
+{dat}the %sglaive of Prune
+der {adj-en}%sGleve der Prünelle
+%%%%
+{dat}the %ssword of Power
+dem {adj-en}%sSchwert der Macht
+%%%%
+{dat}the %sstaff of Olgreb
+dem {adj-en}%sStecken von Olgreb
+%%%%
+{dat}the %sstaff of Wucad Mu
+dem {adj-en}%sStecken von Wucad Mu
+%%%%
+{dat}the %sVampire's Tooth
+dem {adj-en}%sZahn des Vampirs
+%%%%
+{dat}the %sscythe of Curses
+der {adj-en}%sSense der Flüche
+%%%%
+{dat}the %ssceptre of Torment
+dem {adj-en}%sZepter der Qual
+%%%%
+{dat}the %ssword of Zonguldrok
+dem {adj-en}%sSchwert von Zonguldrok
+%%%%
+{dat}the %ssword of Cerebov
+dem {adj-en}%sSchwert von Cerebov
+%%%%
+{dat}the %sstaff of Dispater
+dem {adj-en}%sStecken von Dispater
+%%%%
+{dat}the %ssceptre of Asmodeus
+dem {adj-en}%sZepter von Asmodeus
+%%%%
+{dat}the %sfaerie dragon scales
+der {adj-en}%sFeen-Drachenschuppen
+%%%%
+{dat}the %sdemon blade "Bloodbane"
+der {adj-en}%sDämonenklinge "Blutfluch"
+%%%%
+{dat}the %sscimitar of Flaming Death
+dem {adj-en}%sKrummsäbel des flammenden Todes
+%%%%
+{dat}the %seveningstar "Brilliance"
+dem {adj-en}%sAbendstar "Brillanz"
+%%%%
+{dat}the %sdemon blade "Leech"
+der {adj-en}%sDämonenklinge "Egel"
+%%%%
+{dat}the %sdagger of Chilly Death
+dem {adj-en}%sDolch des kühlen Todes
+%%%%
+{dat}the %sdagger "Morg"
+dem {adj-en}%sDolch "Morg"
+%%%%
+{dat}the %sscythe "Finisher"
+der {adj-en}%sSense "Beender"
+%%%%
+{dat}the %ssling "Punk"
+der {adj-en}%sSchleuder "Punk"
+%%%%
+{dat}the %slongbow "Zephyr"
+dem {adj-en}%sLangbogen "Zephyr"
+%%%%
+{dat}the %sgiant club "Skullcrusher"
+der {adj-en}%sRiesenkeule "Schädelbrecher"
+%%%%
+{dat}the %sglaive of the Guard
+der {adj-en}%sGleve der Wache
+%%%%
+{dat}the %szealot's sword
+dem {adj-en}%sSchwert des Zeloten
+%%%%
+{dat}the %sarbalest "Damnation"
+der {adj-en}%sArmbrust "Verdammnis"
+%%%%
+{dat}the %ssword of the Doom Knight
+dem {adj-en}%sSchwert des Verhängnis-Ritters
+%%%%
+{dat}the %smorningstar "Eos"
+dem {adj-en}%sMorgenstern "Eos"
+%%%%
+{dat}the %sspear of the Botono
+dem {adj-en}%sSpeer des Botonos
+%%%%
+{dat}the %strident of the Octopus King
+dem {adj-en}%sDreizack des Krakenkönigs
+%%%%
+{dat}the %smithril axe "Arga"
+der {adj-en}%sMithrilaxt "Arga"
+%%%%
+{dat}the %sElemental Staff
+dem {adj-en}%sElementarstecken
+%%%%
+{dat}the %sheavy crossbow "Sniper"
+der {adj-en}%sschwere Armbrust "Scharfschütze"
+%%%%
+{dat}the %slongbow "Piercer"
+dem {adj-en}%sLangbogen "Stecher"
+%%%%
+{dat}the %sblowgun of the Assassin
+dem {adj-en}%sBlasrohr des Assassinen
+%%%%
+{dat}the %slance "Wyrmbane"
+der {adj-en}%sLanze "Wyrmbane"
+%%%%
+{dat}the %sSpriggan's Knife
+dem {adj-en}%sMesser des Spriggans
+%%%%
+{dat}the %splutonium sword
+dem {adj-en}%sPlutoniumschwert
+%%%%
+{dat}the %sgreat mace "Undeadhunter"
+dem {adj-en}%sgroße Streitkolben "Untotenjäger"
+%%%%
+{dat}the %swhip "Snakebite"
+der {adj-en}%sPeitsche "Schlangenbiss"
+%%%%
+{dat}the %sknife of Accuracy
+dem {adj-en}%sMesser der Genauigkeit
+%%%%
+{dat}the %sLehudib's crystal spear
+dem {adj-en}%sKristallspeer Lehudibs
+%%%%
+{dat}the %scaptain's cutlass
+dem {adj-en}%sEntermesser des Kapitäns
+%%%%
+{dat}the %sstorm bow
+dem {adj-en}%sSturmbogen
+%%%%
+{dat}the %stower shield of Ignorance
+dem {adj-en}%sTurmschild des Nichtwissens
+%%%%
+{dat}the %srobe of Augmentation
+dem {adj-en}%sGewand der Augmentation
+%%%%
+{dat}the %scloak of the Thief
+dem {adj-en}%sUmhang des Diebes
+%%%%
+{dat}the %stower shield "Bullseye"
+dem {adj-en}%sTurmschild "Volltreffer"
+%%%%
+{dat}the %scrown of Dyrovepreva
+der {adj-en}%sKrone von Dyrovepreva
+%%%%
+{dat}the %shat of the Bear Spirit
+dem {adj-en}%sHut des Bärengeistes
+%%%%
+{dat}the %srobe of Misfortune
+dem {adj-en}%sRobe des Unglücks
+%%%%
+{dat}the %scloak of Flash
+dem {adj-en}%sUmhang von Flash
+%%%%
+{dat}the %shood of the Assassin
+der {adj-en}%sKapuze des Assassinen
+%%%%
+{dat}the %sLear's hauberk
+der {adj-en}%sHalsberge Lears
+%%%%
+{dat}the %sskin of Zhor
+der {adj-en}%sHaut von Zhor
+%%%%
+{dat}the %ssalamander hide armour
+der {adj-en}%sSalamanderhaut-Rüstung
+%%%%
+{dat}the %spair of gauntlets of War
+dem {adj-en}%sPaar Gantelets des Krieges
+%%%%
+{dat}the %sshield of Resistance
+dem {adj-en}%sSchild der Resistenz
+%%%%
+{dat}the %srobe of Folly
+dem {adj-en}%sGewand der Torheit
+%%%%
+{dat}the %sMaxwell's patent armour
+der {adj-en}%spatentierte Rüstung Maxwells
+%%%%
+{dat}the %smask of the Dragon
+der {adj-en}%sMaske des Drachens
+%%%%
+{dat}the %srobe of Night
+der {adj-en}%sRobe der Nacht
+%%%%
+{dat}the %sscales of the Dragon King
+der {adj-en}%sSchuppen des Drachenkönigs
+%%%%
+{dat}the %shat of the Alchemist
+dem {adj-en}%sHut des Alchemisten
+%%%%
+{dat}the %spair of fencer's gloves
+dem {adj-en}%sPaar Handschuhe des Fechters
+%%%%
+{dat}the %scloak of Starlight
+dem {adj-en}%sUmhang des Sternenlichts
+%%%%
+{dat}the %sratskin cloak
+dem {adj-en}%sRattenfellumhang
+%%%%
+{dat}the %sshield of the Gong
+dem {adj-en}%sSchild des Gongs
+%%%%
+{dat}the %samulet of the Air
+dem {adj-en}%sAmulett der Luft
+%%%%
+{dat}the %sring of Shadows
+dem {adj-en}%sRing der Schatten
+%%%%
+{dat}the %samulet of Cekugob
+dem {adj-en}%sAmulett von Cekugob
+%%%%
+{dat}the %samulet of the Four Winds
+dem {adj-en}%sAmulett der vier Winde
+%%%%
+{dat}the %snecklace of Bloodlust
+der {adj-en}%sKette des Blutrausches
+%%%%
+{dat}the %sring of Phasing
+dem {adj-en}%sRing der Phase
+%%%%
+{dat}the %sring of Robustness
+dem {adj-en}%sRing der Robustheit
+%%%%
+{dat}the %sring of the Mage
+dem {adj-en}%sRing des Magiers
+%%%%
+{dat}the %sbrooch of Shielding
+der {adj-en}%sBrosche der Abschirmung
+%%%%
+{dat}the %srobe of Clouds
+der {adj-en}%sRobe der Wolken
+%%%%
+{dat}the %shat of Pondering
+dem {adj-en}%sHut der Schwerfälligkeit
+%%%%
+{dat}the %sobsidian axe
+der {adj-en}%sObsidianaxt
+%%%%
+{dat}the %slightning scales
+der {adj-en}%sBlitzschuppen
+%%%%
+{dat}the %sBlack Knight's horse barding
+dem {adj-en}%sRossharnisch des schwarzen Ritters
+%%%%
+{dat}the %samulet of Vitality
+dem {adj-en}%sAmulett der Vitalität
+%%%%
+{dat}the %sautumn katana
+dem {adj-en}%sHerbstkatana
+%%%%
+{dat}the %sshillelagh "Devastator"
+dem {adj-en}%sShillelagh "Verwüster"
+%%%%
+{dat}the %sdragonskin cloak
+dem {adj-en}%sDrachenhautumhang
+%%%%
+{dat}a %sring of the Octopus King
+einem {adj-en}%sRing des Krakenkönigs
+%%%%
+{dat}the %sAxe of Woe
+der {adj-en}%sAxt des Wehs
+%%%%
+{dat}the %smoon troll leather armour
+der {adj-en}%sMondtroll-lederrüstung
+%%%%
+{dat}the %smacabre finger necklace
+der {adj-en}%smakabere Fingerhalskette
+%%%%
+{dat}the %spair of boots of the spider
+dem {adj-en}%sPaar Stiefel der Spinne
+%%%%
+{dat}the %sdark maul
+dem {adj-en}%sdunkle Kriegshammer
+%%%%
+{dat}the %shat of the High Council
+dem {adj-en}%sHut des Hohen Rates
+%%%%
+{dat}the %sarc blade
+der {adj-en}%sLichtbogenklinge
+%%%%
+{dat}the %sdemon whip "Spellbinder"
+der {adj-en}%sDämonenpeitsche "Verzauberer"
+%%%%
+{dat}the %slajatang of Order
+dem {adj-en}%sLajatang der Ordnung
+%%%%
+{dat}the %sgreat mace "Firestarter"
+dem {adj-en}%sgroße Streitkolben "Brandstifter"
+%%%%
+{dat}the %sorange crystal plate armour
+dem {adj-en}%sorange Kristallplattenpanzer
+%%%%
+{dat}the %sMajin-Bo
+dem {adj-en}%sMajin-Bo
+%%%%
+{dat}the %sMaxwell's etheric cage
+dem {adj-en}%sÄtherkäfig von Maxwell
+%%%%
+{dat}the %scrown of Eternal Torment
+der {adj-en}%sKrone der ewigen Qual
+%%%%
+{dat}the %srobe of Vines
+dem {adj-en}%sGewand der Reben
+%%%%
+{dat}the %sKryia's mail coat
+dem {adj-en}%sSchuppenpanzer von Kryia
+%%%%
+{dat}the %sfrozen axe "Frostbite"
+der {adj-en}%sgefrorene Axt "Erfrierungen"
+%%%%
+{dat}the %sarmour of Talos
+der {adj-en}%sRüstung von Talos
+%%%%
+{dat}the %swarlock's mirror
+dem {adj-en}%sSpiegel des Hexenmeisters
+%%%%
+{dat}the %samulet of invisibility
+dem {adj-en}%sAmulett der Unsichtbarkeit
+%%%%
+{dat}the %sMaxwell's thermic engine
+dem {adj-en}%sthermische Gerät von Maxwell
+%%%%
+{dat}the %sdemon trident "Rift"
+dem {adj-en}%sDämonendreizack "Riss"
+%%%%
+{dat}the %sstaff of Battle
+dem {adj-en}%sStecken der Schlacht
+%%%%
+{dat}the %sCigotuvi's embrace
+der {adj-en}%sUmarmung von Cigotuvi
+%%%%

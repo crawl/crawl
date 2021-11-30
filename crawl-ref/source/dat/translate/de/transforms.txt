@@ -1,0 +1,763 @@
+###############################################################################
+#
+# Translations for transformations
+#
+###############################################################################
+
+################################
+# Untransformed
+################################
+
+# hand
+%%%%
+hand
+Hand
+%%%%
+hands
+Hände
+%%%%
+your hand
+Eure Hand
+%%%%
+your hands
+Eure Hände
+%%%%
+your weapon hand
+Eure Waffenhand
+%%%%
+your shield hand
+Eure Schildhand
+%%%%
+
+# claw (troll/ghoul)
+%%%%
+claw
+Kralle
+%%%%
+claws
+Krallen
+%%%%
+your claw
+Eure Kralle
+%%%%
+your claws
+Eure Krallen
+%%%%
+your weapon claw
+Eure Waffenkralle
+%%%%
+your shield claw
+Eure Schildkralle
+%%%%
+
+# paw (felid)
+%%%%
+paw
+Pfote
+%%%%
+paws
+Pfoten
+%%%%
+your paw
+Eure Pfote
+%%%%
+your paws
+Eure Pfoten
+%%%%
+
+# tentacle (octopode)
+%%%%
+tentacle
+Tentakel
+%%%%
+tentacles
+Tentakel
+%%%%
+your tentacle
+Euer Tentakel
+%%%%
+your tentacles
+Eure Tentakel
+%%%%
+your weapon tentacle
+Euer Waffententakel
+%%%%
+your shield tentacle
+Euer Schildtentakel
+%%%%
+
+
+################################
+# Spider-form
+################################
+%%%%
+# abbreviation for HUD
+# duplicate (also abbreviation for Spider Nest branch)
+#Spider
+%%%%
+# long name
+spider-form
+Spinnen-Form
+%%%%
+# wizmode name
+# duplicate: spider
+%%%%
+# description
+a venomous arachnid creature
+eine giftige Arachnide
+%%%%
+# unarmed attack
+Fangs
+Giftzähne
+%%%%
+# shout-equivalent
+hiss
+zischt
+%%%%
+# hand-equivalent
+front leg
+Vorderbein
+%%%%
+front legs
+Vorderbeine
+%%%%
+your front leg
+Euer Vorderbein
+%%%%
+your front legs
+Eure Vorderbeine
+%%%%
+your weapon front leg
+Euer Waffenvorderbein
+%%%%
+your shield front leg
+Euer Schildvorderbein
+%%%%
+# altar action
+You crawl onto the altar of %s.
+Ihr kriecht auf den Altar von {dat}%s.
+%%%%
+# flesh type
+flesh
+Fleisch
+%%%%
+
+################################
+# Blade hands
+################################
+%%%%
+# abbreviation for HUD
+Blade
+Klinge
+%%%%
+# long name (default)
+blade hands
+Klingenhände
+%%%%
+# long name (missing hand)
+blade hand
+Klingenhand
+%%%%
+# long name (felid)
+blade paws
+Klingenpfoten
+%%%%
+# long name (felid, missing hand)
+blade paw
+Klingenpfote
+%%%%
+# long name (octopode)
+blade tentacles
+Klingententakeln
+%%%%
+# long name (octopode, missing hand)
+blade tentacle
+Klingententakel
+%%%%
+# wizmode name
+blade
+klinge
+%%%%
+# hand-equivalent
+scythe-like blade
+sensenartige Klinge
+%%%%
+scythe-like blades
+sensenartige Klingen
+%%%%
+your scythe-like blade
+Eure sensenartige Klinge
+%%%%
+your scythe-like blades
+Eure sensenartige Klingen
+%%%%
+your weapon scythe-like blade
+Eure sensenartige Waffenklinge
+%%%%
+your shield scythe-like blade
+Eure sensenartige Schildklinge
+%%%%
+
+################################
+# Statue-form
+################################
+%%%%
+# abbreviation for HUD
+Statue
+Statue
+%%%%
+# long name
+statue-form
+Statue-Form
+%%%%
+# wizmode name
+# duplicate: statue
+%%%%
+# description (@ command)
+a stone statue
+eine Steinstatue
+%%%%
+# description (transformation message)
+a living statue of rough stone
+eine lebende Statue aus rohem Stein
+%%%%
+# unarmed attack
+Stone fists
+Steinfäuste
+%%%%
+# unarmed attack (missing hand)
+Stone fist
+Steinfaust
+%%%%
+# unarmed attack (felid)
+Stone claws
+Steinkrallen
+%%%%
+# unarmed attack (octopode)
+Stone tentacles
+Steintentakeln
+%%%%
+# altar action
+You place yourself before the altar of %s.
+Ihr stellt Euch vor dem Altar von {dat}%s.
+%%%%
+# flesh type
+# duplicate: stone
+%%%%
+
+################################
+# Ice-form
+################################
+%%%%
+# abbreviation for HUD
+# duplicate: Ice
+%%%%
+# long name
+ice-form
+Eis-Form
+%%%%
+# wizmode name
+# duplicate: ice
+%%%%
+# description
+a creature of crystalline ice
+eine Kreatur aus kristallinem Eis
+%%%%
+# unarmed attack
+Ice fists
+Eisfäuste
+%%%%
+# unarmed attack (missing hand)
+Ice fist
+Eisfaust
+%%%%
+# hand-equivalent
+front paw
+Vorderpfote
+%%%%
+front paws
+Vorderpfoten
+%%%%
+your front paw
+Eure Vorderpfote
+%%%%
+front paws
+Eure Vorderpfoten
+%%%%
+your weapon front paw
+Eure Waffenvorderpfote
+%%%%
+your shield front paw
+Eure Schildvorderpfote
+%%%%
+# foot equivalent
+paw
+Pfote
+%%%%
+# altar action
+You bow your head before the altar of %s.
+Ihr verneigt Euer Kopf vor dem Altar von {dat}%s.
+%%%%
+
+################################
+# Dragon-form
+################################
+%%%%
+# abbreviation for HUD
+Dragon
+Drache
+%%%%
+# long name
+dragon-form
+Drachen-Form
+%%%%
+# wizmode name
+# duplicate: dragon
+%%%%
+# description
+a fearsome dragon
+ein furchterregender Drache
+%%%%
+# unarmed attack
+Teeth and claws
+Zähne und Krallen
+%%%%
+# shout-equivalent
+roar
+brüllt
+%%%%
+# hand-equivalent
+foreclaw
+Vorderkralle
+%%%%
+foreclaws
+Vorderkrallen
+%%%%
+your foreclaw
+Eure Vorderkralle
+%%%%
+your foreclaws
+Eure Vorderkrallen
+%%%%
+your weapon foreclaw
+Eure Waffenvorderkralle
+%%%%
+your shield foreclaw
+Eure Schildvorderkralle
+%%%%
+
+################################
+# Lich-form
+################################
+%%%%
+# abbreviation for HUD
+Lich
+Lich
+%%%%
+# long name
+lich-form
+Lich-Form
+%%%%
+# wizmode name
+# duplicate: lich
+%%%%
+# description
+# duplicate of monster name
+#a lich
+%%%%
+# flesh type
+# duplicate: bone
+%%%%
+
+################################
+# Bat-form
+################################
+%%%%
+# abbreviation for HUD
+Bat
+Flmaus
+%%%%
+# long name
+bat-form
+Fledermaus-Form
+%%%%
+# long name (vampire)
+vampire-bat-form
+Vampirfledermaus-Form
+%%%%
+# wizmode name
+# duplicate: bat
+%%%%
+# description
+# duplicate of monster name
+#a bat
+%%%%
+# description (vampire)
+# duplicate of monster name
+#a vampire bat
+%%%%
+# unarmed attack
+Teeth
+Zähne
+%%%%
+# shout-equivalent
+squeak
+quietscht
+%%%%
+# altar action
+You perch on the altar of %s.
+Ihr hockt Euch auf dem Altar von {acc}%s.
+%%%%
+
+################################
+# Pig-form
+################################
+%%%%
+# abbreviation for HUD
+Pig
+Schwein
+%%%%
+# long name
+pig-form
+Schweine-Form
+%%%%
+# wizmode name
+pig
+schwein
+%%%%
+# description
+a filthy swine
+ein dreckiges Schwein
+%%%%
+# shout-equivalent
+squeal
+kreischt
+%%%%
+# hand-equivalent
+front trotter
+Vorderfuß
+%%%%
+front trotters
+Vorderfüße
+%%%%
+your front trotter
+Euer Vorderfuß
+%%%%
+your front trotters
+Eure Vorderfüße
+%%%%
+your weapon front trotter
+Euer Waffenvorderfuß
+%%%%
+your shield front trotter
+Euer Schildvorderfuß
+%%%%
+# foot-equivalent
+trotter
+Fuß
+%%%%
+
+################################
+# Beastly Appendage
+################################
+%%%%
+# abbreviation for HUD
+App
+Gliede
+%%%%
+# long name / wizmode name
+appendages
+Körpergliede
+%%%%
+
+# untransform messages
+%%%%
+Your horns disappear.
+Eure Hörner verschwinden.
+%%%%
+Your talons disappear.
+Eure Krallen verschwinden.
+%%%%
+# this one is for octopode only
+Your tentacle spike disappears.
+Euer Tentakelstachel verschwindet.
+%%%%
+
+# untransform messages (when player keeps appendage due to mutation)
+%%%%
+Your horns shrink.
+Eure Hörner schrumpfen.
+%%%%
+Your talons shrink.
+Eure Krallen schrumpfen.
+%%%%
+# this one is for octopode only
+Your tentacle spike shrinks.
+Euer Tentakelstachel schrumpft.
+%%%%
+
+################################
+# Tree-form
+################################
+%%%%
+Tree
+Baum
+%%%%
+tree-form
+Baum-Form
+%%%%
+# wizmode name
+# duplicate: tree
+%%%%
+# description
+# duplicate (also a dungeon feature)
+#a tree
+%%%%
+# unarmed attack
+Branches
+Äste
+%%%%
+# shout-equivalent
+creak
+ächzt
+%%%%
+# hand-equivalent
+branch
+Zweig
+%%%%
+branches
+Zweige
+%%%%
+your branch
+Euer Zweig
+%%%%
+your branches
+Eure Zweige
+%%%%
+your weapon branch
+Euer Waffenzweig
+%%%%
+your shield branch
+Euer Schildzweig
+%%%%
+# foot-equivalent
+root
+Wurzel
+%%%%
+# altar action
+You sway towards the altar of %s.
+Ihr schwankt zum Altar von {dat}%s.
+%%%%
+# flesh type
+wood
+Holz
+%%%%
+
+################################
+# Porcupine-form
+################################
+%%%%
+# abbreviation for HUD
+Porc
+Stach
+%%%%
+# long name
+porcupine-form
+Stachelschwein-Form
+%%%%
+# wizmode name
+# duplicate of monster name
+#porcupine
+%%%%
+# description
+a spiny porcupine
+ein stacheliges Stachelschwein
+%%%%
+# altar action
+You curl into a sanctuary of spikes before the altar of %s.
+Ihr rollt Euch zu einem Heiligtum aus Stacheln vor dem Altar von {dat}%s zusammen.
+%%%%
+
+################################
+# Wisp-form
+################################
+%%%%
+# abbreviation for HUD
+Wisp
+Irrlicht
+%%%%
+# long name
+wisp-form
+Irrlicht-Form
+%%%%
+# wizmode name
+wisp
+irrlicht
+%%%%
+# description
+# duplicate of monster
+#an insubstantial wisp
+%%%%
+# unarmed attack
+Misty tendrils
+Neblige Ranken
+%%%%
+# shout
+whoosh
+rauscht
+%%%%
+# hand
+misty tendril
+Nebelranke
+%%%%
+misty tendrils
+Nebelranken
+%%%%
+your misty tendril
+Eure Nebelranke
+%%%%
+your misty tendrils
+Eure Nebelranken
+%%%%
+your weapon misty tendril
+Eure Waffennebelranke
+%%%%
+your shield misty tendril
+Eure Schildnebelranke
+%%%%
+# foot
+strand
+Strähne
+%%%%
+# altar action
+You swirl around the altar of %s.
+Ihr wirbelt um den Altar von {dat}%s.
+%%%%
+# flesh
+vapour
+Dunst
+%%%%
+
+################################
+# Jelly-form
+################################
+%%%%
+# abbreviation for HUD
+# duplicate: Jelly
+%%%%
+# long name
+jelly-form
+Gelee-Form
+%%%%
+# wizmode name
+# duplicate: jelly
+%%%%
+# description
+a lump of jelly
+ein Klumpen Gelee
+%%%%
+
+################################
+# Fungus-form
+################################
+%%%%
+# abbreviation for HUD
+Fungus
+Pilz
+%%%%
+# long name
+fungus-form
+Pilz-Form
+%%%%
+# wizmode name
+# duplicate: fungus
+%%%%
+# description
+a sentient fungus
+ein empfindungsfähiger Pilz
+%%%%
+# unarmed attack
+Spores
+Sporen
+%%%%
+# shout
+sporulate
+sporuliert
+%%%%
+# hand
+hypha
+Hyphe
+%%%%
+hyphae
+Hyphen
+%%%%
+your hypha
+Eure Hyphe
+%%%%
+your hyphae
+Eure Hyphen
+%%%%
+your weapon hypha
+Eure Waffenhyphe
+%%%%
+your shield hypha
+Eure Schildhyphe
+%%%%
+# altar action
+You release spores on the altar of %s.
+Ihr setzt Sporen auf dem Altar von {dat}%s frei.
+%%%%
+
+################################
+# Shadow-form
+################################
+%%%%
+# abbreviation for HUD
+Shadow
+Schatte
+%%%%
+# long name
+shadow-form
+Schatten-Form
+%%%%
+# wizmode name
+# duplicate: shadow
+%%%%
+# description
+a swirling mass of dark shadows
+eine wirbelnde Masse aus dunklen Schatten
+%%%%
+
+################################
+# Hydra-form
+################################
+%%%%
+# abbreviation for HUD
+Hydra
+Hydra
+%%%%
+# long name
+hydra-form
+Hydra-Form
+%%%%
+# wizmode name
+# duplicate: hydra
+%%%%
+# unarmed attack
+Bite (x%d)
+Biss (x%d)
+%%%%
+# altar action
+You bow your heads before the altar of %s.
+Ihr verneigt Eure Köpfe vor dem Altar von {dat}%s.
+%%%%
+
+################################
+# Untransform
+################################
+%%%%
+# description
+your old self
+Euer altes Ich
+%%%%
+

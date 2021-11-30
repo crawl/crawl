@@ -1,0 +1,119 @@
+###############################################################################
+#
+# Translations for adjectives
+#
+# German-specific notes:
+# - we make the -e form default because in practice it will likely be the most common
+# - the -em form isn't needed
+#
+###############################################################################
+
+################################
+# General adjectives
+# (used for more than one type of thing)
+################################
+%%%%
+"large "
+"große "
+%%%%
+"runed "
+"runenverzierte "
+%%%%
+
+%%%%
+"{adj-er}large "
+"großer "
+%%%%
+"{adj-er}runed "
+"runenverzierter "
+%%%%
+
+%%%%
+"{adj-es}large "
+"großes "
+%%%%
+"{adj-es}runed "
+"runenverziertes "
+%%%%
+
+%%%%
+"{adj-en}large "
+"großen "
+%%%%
+"{adj-en}runed "
+"runenverzierten "
+%%%%
+
+################################
+# Adjectives for doors/gates
+################################
+%%%%
+"open "
+"offene "
+%%%%
+"closed "
+"geschlossene "
+%%%%
+"sealed "
+"versiegelte "
+%%%%
+"translucent "
+"durchsichtige "
+%%%%
+"huge "
+"riesige "
+%%%%
+
+%%%%
+"{adj-er}open "
+"offener "
+%%%%
+"{adj-er}closed "
+"geschlossener "
+%%%%
+"{adj-er}sealed "
+"versiegelter "
+%%%%
+"{adj-er}translucent "
+"durchsichtiger "
+%%%%
+"{adj-er}huge "
+"riesiger "
+%%%%
+
+%%%%
+"{adj-es}open "
+"offenes "
+%%%%
+"{adj-es}closed "
+"geschlossenes "
+%%%%
+"{adj-es}sealed "
+"versiegeltes "
+%%%%
+"{adj-es}translucent "
+"durchsichtiges "
+%%%%
+"{adj-es}huge "
+"riesiges "
+%%%%
+
+%%%%
+"{adj-en}open "
+"offenen "
+%%%%
+"{adj-en}closed "
+"geschlossenen "
+%%%%
+"{adj-en}sealed "
+"versiegelten "
+%%%%
+"{adj-en}translucent "
+"durchsichtigen "
+%%%%
+"{adj-en}huge "
+"riesigen "
+%%%%
+
+
+

@@ -1,0 +1,178 @@
+###############################################################################
+#
+# German translations - miscellaneous
+#
+###############################################################################
+
+####################
+# List construction
+####################
+%%%%
+", "
+", "
+%%%%
+"; "
+"; "
+%%%%
+", and "
+", und "
+%%%%
+", or "
+", oder "
+%%%%
+"; and "
+"; und "
+%%%%
+"; or "
+"; oder "
+%%%%
+" and "
+" und "
+%%%%
+" or "
+" oder "
+%%%%
+
+##############################
+# Attack strength punctuation
+##############################
+# Exclamation marks show amount of damage.
+# The %s is a placeholder for the sentence. It's done this way
+# because some languages don't simply append punctuation to the end.
+# For example, in Spanish, you would translate "%s!" as "¡%s!"
+%%%%
+%s!
+%s!
+%%%%
+%s!!
+%s!!
+%%%%
+%s!!!
+%s!!!
+%%%%
+%s!!!!
+%s!!!!
+%%%%
+%s!!!!!
+%s!!!!!
+%%%%
+%s!!!!!!
+%s!!!!!!
+%%%%
+%s!!!!!!!
+%s!!!!!!!
+%%%%
+%s!!!!!!!!
+%s!!!!!!!!
+%%%%
+%s!!!!!!!!!
+%s!!!!!!!!!
+%%%%
+%s!!!!!!!!!!
+%s!!!!!!!!!!
+
+####################
+# General punctuation
+####################
+
+%%%%
+" "
+" "
+%%%%
+"."
+"."
+%%%%
+"%s."
+"%s."
+%%%%
+
+####################
+# Keys and key combos
+####################
+%%%%
+Escape
+Escape
+%%%%
+Enter
+Enter
+%%%%
+Ctrl-A
+Strg-A
+%%%%
+Ctrl-B
+Strg-B
+%%%%
+Ctrl-C
+Strg-C
+%%%%
+%%%%
+Ctrl-D
+Strg-D
+%%%%
+Ctrl-E
+Strg-E
+%%%%
+Ctrl-F
+Strg-F
+%%%%
+Ctrl-G
+Strg-G
+%%%%
+Ctrl-H
+Strg-H
+%%%%
+Ctrl-I
+Strg-I
+%%%%
+Ctrl-J
+Strg-J
+%%%%
+Ctrl-K
+Strg-K
+%%%%
+Ctrl-L
+Strg-L
+%%%%
+Ctrl-M
+Strg-M
+%%%%
+Ctrl-N
+Strg-N
+%%%%
+Ctrl-O
+Strg-O
+%%%%
+Ctrl-P
+Strg-P
+%%%%
+Ctrl-Q
+Strg-Q
+%%%%
+Ctrl-R
+Strg-R
+%%%%
+Ctrl-S
+Strg-S
+%%%%
+Ctrl-T
+Strg-T
+%%%%
+Ctrl-U
+Strg-U
+%%%%
+Ctrl-V
+Strg-V
+%%%%
+Ctrl-W
+Strg-W
+%%%%
+Ctrl-X
+Strg-X
+%%%%
+Ctrl-Y
+Strg-Y
+%%%%
+Ctrl-Z
+Strg-Z
+%%%%
+
