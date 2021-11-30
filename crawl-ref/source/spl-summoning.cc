@@ -1566,8 +1566,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     return true;
 }
 
-// Note that quiet will *not* suppress the message about a corpse
-// you are butchering being animated.
 // This is called for Animate Skeleton and from animate_dead.
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, int pow, unsigned short hitting,
