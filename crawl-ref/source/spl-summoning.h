@@ -114,7 +114,8 @@ bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell, bool player);
 int count_summons(const actor *summoner, spell_type spell);
 
-bool fedhas_wall_of_briars();
+vector<coord_def> find_briar_spaces(bool just_check = false);
+void fedhas_wall_of_briars();
 spret fedhas_grow_ballistomycete(bool fail);
 spret fedhas_overgrow(bool fail);
 spret fedhas_grow_oklob(bool fail);

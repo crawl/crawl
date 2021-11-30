@@ -2771,24 +2771,32 @@ static bool _create_briar_patch(coord_def& target)
     return false;
 }
 
-bool fedhas_wall_of_briars()
+vector<coord_def> find_briar_spaces(bool just_check)
 {
-    // How many adjacent open spaces are there?
-    vector<coord_def> adjacent;
+    vector<coord_def> result;
+
     for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
     {
         if (monster_habitable_grid(MONS_BRIAR_PATCH, env.grid(*adj_it))
-            && !actor_at(*adj_it))
+            && (!actor_at(*adj_it)
+                || just_check && !you.can_see(*actor_at(*adj_it))))
         {
-            adjacent.push_back(*adj_it);
+            result.push_back(*adj_it);
         }
     }
 
-    // Don't prompt if we can't do anything.
+    return result;
+}
+
+void fedhas_wall_of_briars()
+{
+    // How many adjacent open spaces are there?
+    vector<coord_def> adjacent = find_briar_spaces();
+
     if (adjacent.empty())
     {
-        mpr("No empty adjacent squares.");
-        return false;
+        mpr("Something you can't see blocks your briars from growing!");
+        return;
     }
 
     int created_count = 0;
@@ -2801,7 +2809,7 @@ bool fedhas_wall_of_briars()
     if (!created_count)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return created_count;
+    return;
 }
 
 static void _overgrow_wall(const coord_def &pos)

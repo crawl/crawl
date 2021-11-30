@@ -1678,6 +1678,18 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return can_cast_spells(quiet, true);
 
+    case ABIL_FEDHAS_WALL_OF_BRIARS:
+    {
+        vector<coord_def> spaces = find_briar_spaces(true);
+        if (spaces.empty())
+        {
+            if (!quiet)
+                mpr("There isn't enough space to grow briars here.");
+            return false;
+        }
+        return true;
+    }
+
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
@@ -2959,8 +2971,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         fail_check();
-        if (!fedhas_wall_of_briars())
-            return spret::abort;
+        fedhas_wall_of_briars();
         break;
 
     case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
