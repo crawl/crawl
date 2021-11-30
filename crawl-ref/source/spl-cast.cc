@@ -1377,9 +1377,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_BATTLESPHERE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2, 0, 1);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
     case SPELL_FOXFIRE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1, 0, 1);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
     // directions, so this targeter is not entirely accurate.
     case SPELL_MALIGN_GATEWAY:
