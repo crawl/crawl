@@ -2178,7 +2178,7 @@ item_rarity_type consumable_rarity(const item_def &item)
 
 item_rarity_type consumable_rarity(object_class_type base_type, int sub_type)
 {
-    item_rarity_type *rarity;
+    item_rarity_type *rarity = nullptr;
     if (base_type == OBJ_POTIONS)
         rarity = map_find(_potion_rarity, (potion_type) sub_type);
     else if (base_type == OBJ_SCROLLS)
