@@ -373,7 +373,7 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
 
 static string _who_banished(const string &who)
 {
-    return who.empty() ? who : " (" + who + ")";
+    return who.empty() ? who : " (" + who + ")"; // noloc
 }
 
 static int _banished_depth(const int power)
@@ -413,7 +413,7 @@ void banished(const string &who, const int power)
     }
 
     const int depth = _banished_depth(power);
-    const string what = make_stringf("Cast into level %d of the Abyss", depth)
+    const string what = make_stringf("Cast into level %d of the Abyss", depth) // noloc (note)
                       + _who_banished(who);
     take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
@@ -427,8 +427,8 @@ void banished(const string &who, const int power)
         "was cast into the Abyss!" + _who_banished(who), "parent");
 
     // Xom just might decide to interfere.
-    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
-        && who != "a distortion unwield")
+    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command" //noloc
+        && who != "a distortion unwield") // noloc
     {
         xom_maybe_reverts_banishment(false, false);
     }
@@ -1155,7 +1155,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
         if (is_existing_level(lid))
         {
             auto &vault_list =  you.vault_list[level_id::current()];
-            vault_list.push_back("base: " + lid.describe(false));
+            vault_list.push_back("base: " + lid.describe(false)); // noloc
         }
     }
 
@@ -1627,8 +1627,8 @@ static bool _abyss_has_path(const coord_def &to)
 // _generate_area generates all other Abyss areas.
 void generate_abyss()
 {
-    env.level_build_method += " abyss";
-    env.level_layout_types.insert("abyss");
+    env.level_build_method += " abyss"; // noloc
+    env.level_layout_types.insert("abyss"); // noloc
     destroy_abyss();
 
 retry:
@@ -2201,9 +2201,14 @@ void abyss_maybe_spawn_xp_exit()
     big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
     redraw_screen(); // before the force-more
     update_screen();
-    mprf(MSGCH_BANISHMENT,
-         "The substance of the Abyss twists violently,"
-         " and a gateway leading %s appears!", stairs ? "down" : "out");
+    if (stairs)
+        mprf(MSGCH_BANISHMENT,
+             "The substance of the Abyss twists violently,"
+             " and a gateway leading down appears!");
+    else
+        mprf(MSGCH_BANISHMENT,
+             "The substance of the Abyss twists violently,"
+             " and a gateway leading out appears!");
 
     you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;

@@ -34,6 +34,7 @@
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "losglobal.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -322,8 +323,11 @@ static bool _box_of_beasts()
         return false;
     }
 
-    mprf("...and %s %s out!",
-         mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
+    if (mons->airborne())
+        mprf("...and %s flies out!", mons->name(DESC_A).c_str());
+    else
+        mprf("...and %s leaps out!", mons->name(DESC_A).c_str());
+
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
     return true;
@@ -556,12 +560,16 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     if (agent->is_player())
     {
-        const string source = card ? "card" : "fan";
-
         if (pow > 120)
-            mprf("A mighty gale blasts forth from the %s!", source.c_str());
+        {
+            mpr(card ? "A mighty gale blasts forth from the card!"
+                     : "A mighty gale blasts forth from the fan!");
+        }
         else
-            mprf("A fierce wind blows from the %s.", source.c_str());
+        {
+            mpr(card ? "A fierce wind blows from the card."
+                     : "A fierce wind blows from the fan.");
+        }
     }
 
     noisy(8, agent->pos());
@@ -572,12 +580,15 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     if (!affected_monsters.empty())
     {
         counted_monster_list affected = counted_monster_list(affected_monsters);
-        const string message =
-            make_stringf("%s %s blown away by the wind.",
-                         affected.describe().c_str(),
-                         conjugate_verb("be", affected.count() > 1).c_str());
+        string mons_descr = affected.describe();
+        string message;
+        if (affected.count() > 1)
+            message = localise("%s are blown away by the wind.", mons_descr);
+        else
+            message = localise("%s is blown away by the wind.", mons_descr);
+
         if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message);
+            mpr_nolocalise(message);
         else
             mpr("The monsters around you are blown away!");
     }
@@ -1129,7 +1140,10 @@ bool evoke_check(int slot, bool quiet)
     {
         // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
         if (!quiet)
-            mprf("The %s is presently inert.", i->name(DESC_DBNAME).c_str());
+        {
+            string name = "the " + i->name(DESC_DBNAME); // noloc
+            mprf("%s is presently inert.", name.c_str());
+        }
         return false;
     }
 

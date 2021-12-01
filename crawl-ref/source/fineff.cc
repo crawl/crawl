@@ -349,26 +349,29 @@ void trj_spawn_fineff::fire()
     if (trj)
     {
         const string monnam = trj->name(DESC_THE);
-        mprf("%s shudders%s.", monnam.c_str(),
-             spawned >= 5 ? " alarmingly" :
-             spawned >= 3 ? " violently" :
-             spawned > 1 ? " vigorously" : "");
+        if (spawned >= 5)
+            mprf("%s shudders alarmingly.", monnam.c_str());
+        else if (spawned >= 3)
+            mprf("%s shudders violently.", monnam.c_str());
+        else if (spawned > 1)
+            mprf("%s shudders vigorously.", monnam.c_str());
+        else
+            mprf("%s shudders.", monnam.c_str());
 
         if (spawned == 1)
             mprf("%s spits out another jelly.", monnam.c_str());
         else
         {
-            mprf("%s spits out %s more jellies.",
-                 monnam.c_str(),
-                 number_in_words(spawned).c_str());
+            mprf("%s spits out %d more jellies.",
+                 monnam.c_str(), spawned);
         }
     }
     else if (spawned == 1)
         mpr("One of the Royal Jelly's fragments survives.");
     else
     {
-        mprf("The dying Royal Jelly spits out %s more jellies.",
-             number_in_words(spawned).c_str());
+        mprf("The dying Royal Jelly spits out %d more jellies.",
+             spawned);
     }
 }
 
@@ -437,7 +440,7 @@ void starcursed_merge_fineff::fire()
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
             simple_monster_message(*mon,
-                    " shudders and is absorbed by its neighbour.");
+                    "%s shudders and is absorbed by its neighbour.");
             _do_merge_masses(mon, mergee);
             return;
         }
@@ -502,10 +505,18 @@ void shock_serpent_discharge_fineff::fire()
     const monster* serpent = defender() ? defender()->as_monster() : nullptr;
     if (serpent && you.can_see(*serpent))
     {
-        mprf("%s electric aura discharges%s, shocking %s!",
-             serpent->name(DESC_ITS).c_str(),
-             power < 4 ? "" : " violently",
-             oppressor.name(DESC_THE).c_str());
+        if (power < 4)
+        {
+            mprf("%s electric aura discharges, shocking %s!",
+                 serpent->name(DESC_ITS).c_str(),
+                 oppressor.name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("%s electric aura discharges violently, shocking %s!",
+                 serpent->name(DESC_ITS).c_str(),
+                 oppressor.name(DESC_THE).c_str());
+        }
     }
     else if (you.can_see(oppressor))
     {
@@ -576,9 +587,8 @@ void rakshasa_clone_fineff::fire()
 
     if (you.can_see(*rakshasa))
     {
-        mprf(MSGCH_MONSTER_SPELL,
-             "The injured %s weaves a defensive illusion!",
-             rakshasa->name(DESC_PLAIN).c_str());
+        mpr(MSGCH_MONSTER_SPELL,
+            "The injured rakshasa weaves a defensive illusion!");
     }
 }
 

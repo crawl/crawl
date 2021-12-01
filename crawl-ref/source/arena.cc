@@ -19,6 +19,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "los.h"
 #include "macro.h"
 #include "maps.h"
@@ -75,7 +76,7 @@ namespace msg
                 switch (ch)
                 {
                     case MSGCH_DIAGNOSTICS:
-                        prefix = "DIAG: ";
+                        prefix = "DIAG: "; // noloc
                         if (Options.arena_dump_msgs_all)
                             break;
                         return;
@@ -97,16 +98,16 @@ namespace msg
                             return;
                         break;
 
-                    case MSGCH_ERROR: prefix = "ERROR: "; break;
-                    case MSGCH_WARN: prefix = "WARN: "; break;
-                    case MSGCH_SOUND: prefix = "SOUND: "; break;
+                    case MSGCH_ERROR: prefix = "ERROR: "; break; // noloc
+                    case MSGCH_WARN: prefix = "WARN: "; break; // noloc
+                    case MSGCH_SOUND: prefix = "SOUND: "; break; // noloc
 
                     case MSGCH_TALK_VISUAL:
-                    case MSGCH_TALK: prefix = "TALK: "; break;
+                    case MSGCH_TALK: prefix = "TALK: "; break; // noloc
                     default: break;
                 }
                 formatted_string fs = formatted_string::parse_string(s);
-                fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str());
+                fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str()); // noloc
                 fflush(*file);
             }
         }
@@ -130,15 +131,18 @@ static void _results_popup(string msg, bool error=false)
 
     if (error)
     {
-        msg = string("Arena error:\n\n<lightred>")
-                       + replace_all(msg, "<", "<<");
+        msg = localise("Arena error:")
+            + "\n\n<lightred>"
+            + replace_all(msg, "<", "<<"); // noloc
         msg += "</lightred>";
     }
     else
-        msg = string("Arena results:\n\n") + msg;
+        msg = localise("Arena results:")
+            + "\n\n" + msg;
 
-    msg += "\n\n<cyan>Hit any key to continue, "
-                 "ctrl-p for the full log.</cyan>";
+    msg += "\n\n<cyan>"
+        + localise("Hit any key to continue, ctrl-p for the full log.")
+        + "</cyan>";
 
     auto prompt_ui = make_shared<Text>(
             formatted_string::parse_string(msg));
@@ -169,8 +173,8 @@ namespace arena
             : runtime_error(msg), fatal(_fatal) {}
         bool fatal;
     };
-#define arena_error_f(...) arena_error(make_stringf(__VA_ARGS__))
-#define arena_error_nonfatal_f(...) arena_error(make_stringf(__VA_ARGS__), false)
+#define arena_error_f(msg) arena_error(msg)
+#define arena_error_nonfatal_f(msg) arena_error(msg, false)
 
     // A faction is just a big list of monsters. Monsters will be dropped
     // around the appropriate marker.
@@ -329,7 +333,7 @@ namespace arena
                 {
                     game_ended_with_error(
                         make_stringf(
-                            "Failed to create monster at (%d,%d) env.grid: %s",
+                            "Failed to create monster at (%d,%d) env.grid: %s", // noloc
                             loc.x, loc.y, dungeon_feature_name(env.grid(loc))));
                 }
                 list_eq(mon);
@@ -341,13 +345,13 @@ namespace arena
     static void center_print(unsigned sz, string text, int number = -1)
     {
         if (number >= 0)
-            text = make_stringf("(%d) %s", number, text.c_str());
+            text = make_stringf("(%d) %s", number, text.c_str()); // noloc
 
         unsigned len = strwidth(text);
         if (len > sz)
             text = chop_string(text, len = sz);
 
-        cprintf("%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str());
+        cprintf("%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str()); // noloc
     }
 
     static void setup_level()
@@ -382,8 +386,9 @@ namespace arena
 
         if (!map)
         {
-            throw arena_error_f("No arena maps named \"%s\"",
-                                arena_type.c_str());
+            throw arena_error_f(
+                localise("No arena maps named \"%s\"",
+                         LocalisationArg(arena_type, false)));
         }
 
 #ifdef USE_TILE
@@ -396,8 +401,9 @@ namespace arena
         bool success = dgn_place_map(map, false, true);
         if (!success)
         {
-            throw arena_error_f("Failed to create arena named \"%s\"",
-                                arena_type.c_str());
+            throw arena_error_f(
+                localise("Failed to create arena named \"%s\"",
+                         LocalisationArg(arena_type, false)));
         }
         link_items();
 
@@ -418,7 +424,7 @@ namespace arena
         if (!teams.empty())
             return teams;
         else
-            return "random v random";
+            return "random v random"; // noloc
     }
 
     /// @throws arena_error if a monster specification is invalid.
@@ -427,7 +433,7 @@ namespace arena
         fact.clear();
         fact.desc = spec;
 
-        for (const string &monster : split_string(",", spec))
+        for (const string &monster : split_string(",", spec)) // noloc
         {
             const string err = fact.members.add_mons(monster, false);
             if (!err.empty())
@@ -456,8 +462,9 @@ namespace arena
 
         if (real_summons && respawn)
         {
-            throw arena_error("Can't set real_summons and respawn at same time.",
-                                    false);
+            throw arena_error(
+                localise("Can't set real_summons and respawn at same time."),
+                false);
         }
 
         if (summon_throttle <= 0)
@@ -477,7 +484,7 @@ namespace arena
         arena_type = strip_tag_prefix(spec, "arena:");
 
         if (arena_type.empty())
-            arena_type = "default";
+            arena_type = "default"; // noloc
 
         const int arena_delay = strip_number_tag(spec, "delay:");
         if (arena_delay >= 0 && arena_delay < 2000)
@@ -492,9 +499,10 @@ namespace arena
             }
             catch (const bad_level_id &err)
             {
-                throw arena_error_nonfatal_f("Bad place '%s': %s",
-                                    arena_place.c_str(),
-                                    err.what());
+                throw arena_error_nonfatal_f(
+                    localise("Bad place '%s': %s",
+                             LocalisationArg(arena_place, false),
+                             err.what()));
             }
         }
 
@@ -502,16 +510,18 @@ namespace arena
             if (gly < ARRAYSZ(banned_glyphs))
                 banned_glyphs[gly] = true;
 
-        vector<string> factions = split_string(" v ", spec);
+        vector<string> factions = split_string(" v ", spec); // noloc
 
         if (factions.size() == 1)
-            factions = split_string(" vs ", spec);
+            factions = split_string(" vs ", spec); // noloc
 
         if (factions.size() != 2)
         {
-            throw arena_error_nonfatal_f(
-                                "Expected arena monster spec \"xxx v yyy\", "
-                                "but got \"%s\"", spec.c_str());
+            string msg = localise(
+                "Expected arena monster spec \"xxx v yyy\", but got \"%s\"",
+                LocalisationArg(spec, false));
+            throw arena_error_nonfatal_f(msg);
+
         }
 
         try
@@ -521,15 +531,16 @@ namespace arena
         }
         catch (const arena_error &err)
         {
-            throw arena_error_nonfatal_f("Bad monster spec \"%s\": %s",
-                                spec.c_str(),
-                                err.what());
+            throw arena_error_nonfatal_f(
+                localise("Bad monster spec \"%s\": %s",
+                         LocalisationArg(spec, false),
+                         err.what()));
         }
 
         if (faction_a.desc == faction_b.desc)
         {
-            faction_a.desc += " (A)";
-            faction_b.desc += " (B)";
+            faction_a.desc += " (A)"; // noloc
+            faction_b.desc += " (B)"; // noloc
         }
     }
 
@@ -569,7 +580,7 @@ namespace arena
 
         cgotoxy(1, line++, GOTO_STAT);
         textcolour(WHITE);
-        center_print(crawl_view.hudsz.x, string("Crawl ") + Version::Long);
+        center_print(crawl_view.hudsz.x, string("Crawl ") + Version::Long); // noloc
         line++;
 
         cgotoxy(1, line++, GOTO_STAT);
@@ -578,7 +589,7 @@ namespace arena
                      total_trials ? team_a_wins : -1);
         cgotoxy(1, line++, GOTO_STAT);
         textcolour(LIGHTGREY);
-        center_print(crawl_view.hudsz.x, "vs");
+        center_print(crawl_view.hudsz.x, localise("vs"));
         cgotoxy(1, line++, GOTO_STAT);
         textcolour(YELLOW);
         center_print(crawl_view.hudsz.x, faction_b.desc,
@@ -589,7 +600,7 @@ namespace arena
             cgotoxy(1, line++, GOTO_STAT);
             textcolour(BROWN);
             center_print(crawl_view.hudsz.x,
-                         make_stringf("Round %d of %d",
+                         localise("Round %d of %d",
                                       after_fight ? trials_done
                                                   : trials_done + 1,
                                       total_trials));
@@ -614,7 +625,7 @@ namespace arena
 
         you.mutation[MUT_ACUTE_VISION] = 3;
 
-        you.your_name = "Arena";
+        you.your_name = "Arena"; // noloc
 
         you.hp = you.hp_max = 99;
 
@@ -969,7 +980,7 @@ namespace arena
             msg = "Winner: %s!";
 
         if (Options.arena_dump_msgs || Options.arena_list_eq)
-            msg = "---------- " + msg + " ----------";
+            msg = "---------- " + msg + " ----------"; // noloc
 
         if (was_tied)
             mpr(msg);
@@ -1495,17 +1506,20 @@ static void _choose_arena_teams(newgame_def& choice,
     clear_message_store();
 
     auto vbox = make_shared<Box>(ui::Widget::VERT);
-    vbox->add_child(make_shared<Text>("Enter your choice of teams:\n "));
+    string text = localise("Enter your choice of teams:") + "\n ";
+    vbox->add_child(make_shared<Text>(text));
     vbox->set_cross_alignment(Widget::Align::STRETCH);
     auto teams_input = make_shared<ui::TextEntry>();
-    teams_input->set_sync_id("teams");
+    teams_input->set_sync_id("teams"); // noloc
     teams_input->set_text(default_arena_teams);
     vbox->add_child(teams_input);
     formatted_string prompt;
-    prompt.cprintf("\nExamples:\n");
-    prompt.cprintf("  Sigmund v Jessica\n");
-    prompt.cprintf("  99 orc v the Royal Jelly\n");
-    prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
+    prompt.cprintf("\n");
+    prompt.cprintf("%s", localise("Examples:").c_str());
+    prompt.cprintf("\n");
+    prompt.cprintf("  Sigmund v Jessica\n"); // noloc
+    prompt.cprintf("  99 orc v the Royal Jelly\n"); // noloc
+    prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming"); // noloc
     vbox->add_child(make_shared<Text>(move(prompt)));
 
     auto popup = make_shared<ui::Popup>(move(vbox));

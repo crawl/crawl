@@ -187,7 +187,7 @@ static const duration_def duration_data[] =
       "" , D_DISPELLABLE,
       {{ "", []() {
           mprf(MSGCH_DURATION, "%s",
-               you.hands_act("stop", "glowing.").c_str());
+               you.hand_act("%s stops glowing.", "%s stop glowing.").c_str());
       }}}, 20},
     { DUR_CORONA, // Has custom long_text
       YELLOW, "Corona",

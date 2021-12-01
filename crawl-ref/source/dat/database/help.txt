@@ -658,3 +658,334 @@ at the macro edit menu.
 <w>Saving</w>: Bindings edited at this menu are saved in a .macro file in your
 save directory. They will be overridden by settings in your options file. See
 the `macro` command in options_guide.txt for more information.
+%%%%
+targeting-help-1
+<h>Examine surroundings ('<w>x</w><h>' in main):
+<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)
+<w>Ctrl-X</w> : list all things in view
+<w>Dir.</w>: move cursor in that direction
+<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)
+<w>g</w> : pick up item at cursor
+<w>v</w> : describe monster under cursor
+<w>+</w> : cycle monsters forward (also <w>=</w>)
+<w>-</w> : cycle monsters backward
+<w>*</w> : cycle objects forward (also <w>'</w>)
+<w>/</w> : cycle objects backward (also <w>;</w>)
+<w>^</w> : cycle through traps
+<w>_</w> : cycle through altars
+<w><<</w>/<w>></w> : cycle through up/down stairs
+<w>Tab</w> : cycle through shops and portals
+<w>r</w> : move cursor to you
+<w>e</w> : create/remove travel exclusion
+<w>Ctrl-P</w> : repeat prompt
+%%%%
+targeting-help-2
+<h>Targeting (zap wands, cast spells, etc.):
+Most keys from examine surroundings work.
+Some keys fire at the target. <w>Ctrl-X</w> only
+lists eligible targets. By default,
+range is respected and beams don't stop.
+<w>Enter</w> : fire (<w>Space</w>, <w>Del</w>)
+<w>.</w> : fire, stop at target
+<w>@</w> : fire, stop at target, ignore range
+<w>!</w> : fire, don't stop, ignore range
+<w>p</w> : fire at Previous target (also <w>f</w>)
+<w>:</w> : show/hide beam path
+<w>Shift-Dir.</w> : fire straight-line beam
+
+<h>Firing mode ('<w>f</w><h>' in main):
+<w>Q</w> : choose fire action.
+<w>(</w> : cycle to previous suitable action
+<w>)</w> : cycle to next suitable action.
+%%%%
+targeting-help-wiz
+<h>Wizard targeting commands:</h>
+<w>Ctrl-C</w> : cycle through beam paths
+<w>D</w>: get debugging information about the monster
+<w>o</w>: give item to monster
+<w>F</w>: cycle monster friendly/good neutral/neutral/hostile
+<w>G</w>: make monster gain experience
+<w>Ctrl-H</w>: heal the monster fully
+<w>P</w>: apply divine blessing to monster
+<w>m</w>: move monster or player
+<w>M</w>: cause spell miscast for monster or player
+<w>s</w>: force monster to shout or speak
+<w>S</w>: make monster a summoned monster
+<w>w</w>: calculate shortest path to any point on the map
+<w>"</w>: get debugging information about a portal
+<w>~</w>: polymorph monster to specific type
+<w>,</w>: bring down the monster to 1 hp
+<w>Ctrl-(</w>: place a mimic
+<w>Ctrl-B</w>: banish monster
+<w>Ctrl-K</w>: kill monster
+%%%%
+help-menu-1
+<h>Dungeon Crawl Help
+
+Press one of the following keys to
+obtain more information on a certain
+aspect of Dungeon Crawl.
+<w>?</w>: List of commands
+<w>^</w>: Quickstart Guide
+<w>:</w>: Browse character notes
+<w>#</w>: Browse character dump
+<w>~</w>: Macros help
+<w>&</w>: Options help
+<w>%</w>: Table of aptitudes
+<w>/</w>: Lookup description
+<w>Q</w>: FAQ
+{{
+if crawl.is_tiles()
+then
+    return "<w>T</w>: Tiles key help"
+end
+}}
+<w>V</w>: Version information
+<w>Home</w>: This screen
+%%%%
+help-menu-2
+<h>Manual Contents
+
+<w>*</w>       Table of contents
+<w>A</w>.      Overview
+<w>B</w>.      Starting Screen
+<w>C</w>.      Attributes and Stats
+<w>D</w>.      Exploring the Dungeon
+<w>E</w>.      Experience and Skills
+<w>F</w>.      Monsters
+<w>G</w>.      Items
+<w>H</w>.      Spellcasting
+<w>I</w>.      Targeting
+<w>J</w>.      Religion
+<w>K</w>.      Mutations
+<w>L</w>.      Licence, Contact, History
+<w>M</w>.      Macros, Options, Performance
+<w>N</w>.      Philosophy
+<w>1</w>.      List of Character Species
+<w>2</w>.      List of Character Backgrounds
+<w>3</w>.      List of Skills
+<w>4</w>.      List of Keys and Commands
+<w>5</w>.      Inscriptions
+<w>6</w>.      Dungeon sprint modes
+%%%%
+cmd-help-movement
+<h>Movement:
+To move in a direction or to attack,
+use the numpad (try Numlock off and
+on) or vi keys:
+%%%%
+cmd-help-rest
+<h>Rest:
+<w>%</w> : wait a turn (also <w>s</w>, <w>Del</w>)
+<w>%</w> : rest and long wait; stops when
+    Health or Magic become full or
+    something is detected. If Health
+    and Magic are already full, stops
+    when 100 turns over (<w>numpad-5</w>)
+%%%%
+cmd-help-ext-movement
+<h>Extended Movement:
+<w>%</w> : auto-explore
+<w>%</w> : interlevel travel
+<w>%</w> : Find items
+<w>%</w> : set Waypoint
+<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk
+<w>* Dir.</w>, <w>Ctrl-Dir.</w> : attack without move
+%%%%
+cmd-help-autofight
+<h>Autofight:
+<w>Tab</w>          : attack nearest monster,
+               moving if necessary
+<w>Shift-Tab</w>, <w>p</w> : trigger quivered action;
+               if targeted, aims at
+               nearest monster
+%%%%
+cmd-help-item-types
+<h>Item types (and common commands)
+<cyan>)</cyan> : hand weapons (<w>%</w>ield)
+<brown>(</brown> : missiles(<w>%</w>uiver, <w>%</w>ire, <w>%</w>/<w>%</w> cycle)
+<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)
+<w>?</w> : scrolls (<w>%</w>ead)
+<magenta>!</magenta> : potions (<w>%</w>uaff)
+<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)
+<red>"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)
+<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)
+<lightcyan>@book_glyph@</lightcyan> : books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap
+    pick up to add to library)
+<brown>|</brown> : staves (<w>%</w>ield)
+<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)
+<yellow>$</yellow> : gold (<w>%</w> counts gold)
+<lightmagenta>0</lightmagenta> : the Orb of Zot
+    Carry it to the surface and win!
+%%%%
+cmd-help-other-gameplay
+<h>Other Gameplay Actions:
+<w>%</w> : use special Ability (<w>%!</w> for help)
+<w>%</w> : cast spell, abort without targets
+<w>%</w> : cast spell, no matter what
+<w>%</w> : list all memorised spells
+<w>%</w> : Memorise a spell from your library
+<w>%</w> : tell allies (<w>%t</w> to shout)
+<w>%</w> : re-do previous command
+<w>%</w> : repeat next command # of times
+%%%%
+cmd-help-non-gameplay
+<h>Non-Gameplay Commands / Info
+<w>%</w> : game menu
+<w>%</w> : show Previous messages
+<w>%</w> : Redraw screen
+<w>%</w> : Clear main and level maps
+<w>%</w> : quick add macro
+<w>%</w> : edit macros
+<w>%</w> : annotate the dungeon level
+<w>%</w> : dump character to file
+<w>%</w> : add note (use <w>%:</w> to read notes)
+<w>%</w> : reassign inventory/spell letters
+{{if crawl.is_tiles() then
+    return "<w>%</w> : edit player doll"
+else
+    return "<w>F12</w> : read messages (online play only)"
+end}}
+%%%%
+cmd-help-save-quit
+<h>Game Saving and Quitting:
+<w>%</w> : Save game and exit
+<w>%</w> : Save and exit without query
+<w>%</w> : Abandon the current character
+         and quit the game
+%%%%
+cmd-help-character
+<h>Player Character Information:
+<w>%</w> : display character status
+<w>%</w> : show skill screen
+<w>%</w> : character overview
+<w>%</w> : show religion screen
+<w>%</w> : show Abilities/mutations
+<w>%</w> : show item knowledge
+<w>%</w> : show your spell library
+<w>%</w> : show runes collected
+<w>%</w> : display worn armour
+<w>%</w> : display worn jewellery
+<w>%</w> : display gold in possession
+<w>%</w> : display experience info
+%%%%
+cmd-help-dungeon
+<h>Dungeon Interaction and Information:
+<w>%</w>/<w>%</w>    : Open/Close door
+<w>%</w>/<w>%</w>    : use staircase
+<w>%</w>      : examine occupied tile and
+         pickup part of a single stack
+<w>%</w>      : eXamine surroundings/targets
+<w>%</w>      : eXamine level map (<w>%?</w> for help)
+<w>%</w> : list monsters, items, features
+         in view
+<w>%</w>      : toggle view layers
+<w>%</w> : show dungeon Overview
+<w>%</w> : toggle auto-pickup
+<w>%</w> : set your travel speed to your
+         slowest ally
+%%%%
+cmd-help-sound
+<w>%</w>      : mute/unmute sound effects
+%%%%
+cmd-help-zoom
+<w>%</w>/<w>%</w> : zoom out/in
+%%%%
+cmd-help-inventory
+<h>Inventory management:
+<w>%</w> : show Inventory list
+<w>%</w> : pick up items (also <w>g</w>)
+    (press twice for pick up menu)
+<w>%</w> : Drop an item
+<w>%#</w>: Drop exact number of items
+<w>%</w> : Drop the last item(s) you picked up
+%%%%
+cmd-help-items
+<h>Item Interaction:
+<w>%</w> : inscribe item
+<w>%</w> : Fire the currently quivered action
+<w>%</w> : select an item and Fire it
+<w>%</w> : select action to be Quivered
+<w>%</w> : swap between most recent quiver actions
+<w>%</w> : Quaff a potion
+<w>%</w> : Read a scroll
+<w>%</w> : Wield an item (<w>-</w> for none)
+<w>%</w> : wield item a, or switch to b
+    (use <w>%</w> to assign slots)
+<w>%</w> : attack with wielded item
+<w>%</w> : eVoke wand and miscellaneous item
+<w>%</w>/<w>%</w> : Wear or Take off armour
+<w>%</w>/<w>%</w> : Put on or Remove jewellery
+%%%%
+cmd-help-additional
+<h>Additional help:
+Many commands have context sensitive
+help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any
+form of targeting), <w>%</w>, and <w>%</w>.
+You can read descriptions of your
+current spells (<w>%</w>), skills (<w>%?</w>) and
+abilities (<w>%!</w>).
+%%%%
+cmd-hints-move
+<w>Shift-Dir.</w> runs into one direction
+<w>%</w> or <w>%</w> : ascend/descend the stairs
+<w>%</w>             : autoexplore
+%%%%
+cmd-hints-rest
+<h>Rest:
+<w>%</w> : wait a turn (also <w>s</w>, <w>Del</w>)
+<w>%</w> : rest and long wait; stops when
+    Health or Magic become full or
+    something is detected. If Health
+    and Magic are already full, stops
+    when 100 turns over (<w>numpad-5</w>)
+%%%%
+cmd-hints-attack
+<h>Attacking monsters
+Walking into a monster will attack it
+with the wielded weapon or barehanded.
+%%%%
+cmd-hints-ranged
+<h>Ranged combat and magic
+<w>%</w> to throw/fire missiles
+<w>%</w>/<w>%</w> to cast spells (<w>%?/%</w> lists spells)
+<w>%</w> : Memorise spells and view spell
+    library (get books to add to it)
+%%%%
+cmd-hints-items
+<h>Item types and inventory management
+<console><cyan>)</cyan> : </console>hand weapons (<w>%</w>ield)
+<console><brown>(</brown> : </console>missiles (<w>%</w>uiver, <w>%</w>ire, <w>%</w>/<w>%</w> cycle)
+<console><cyan>[</cyan> : </console>armour (<w>%</w>ear and <w>%</w>ake off)
+<console><w>?</w> : </console>scrolls (<w>%</w>ead)
+<console><magenta>!</magenta> : </console>potions (<w>%</w>uaff)
+<console><blue>=</blue> : </console>rings (<w>%</w>ut on and <w>%</w>emove)
+<console><red>"</red> : </console>amulets (<w>%</w>ut on and <w>%</w>emove)
+<console><lightgrey>/</lightgrey> : </console>wands (e<w>%</w>oke)
+<console><lightcyan>@book_glyph@</lightcyan> : </console>books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap,
+    pick up to add to spell library)
+<console><brown>@staff_glyph@</brown> : </console>staves (<w>%</w>ield)
+%%%%
+cmd-hints-items2
+<w>%</w> : inventory (select item to view)
+<w>%</w> : pick up item from ground (also <w>g</w>)
+<w>%</w> : drop item
+<w>%</w> : drop the last item(s) you picked up
+%%%%
+cmd-hints-additional
+<h>Additional important commands
+<w>%</w> : Save the game and exit
+<w>%</w> : show previous messages
+<w>%</w> : use an ability
+<w>%</w> : show character overview
+<w>%</w> : show religion overview
+<w>%</w> : show map of the whole level
+<w>%</w> : show dungeon overview
+%%%%
+cmd-hints-targeting
+<h>Targeting
+<w>Enter</w> or <w>.</w> or <w>Del</w> : confirm target
+<w>+</w> and <w>-</w> : cycle between targets
+<w>f</w> or <w>p</w> : shoot at previous target
+         if still alive and in sight
+%%%%

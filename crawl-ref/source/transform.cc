@@ -1764,7 +1764,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         && x_chance_in_y(you.piety, MAX_PIETY)
         && which_trans != transformation::none)
     {
-        simple_god_message("%s protects your body from unnatural transformation!");
+        simple_god_message(" protects your body from unnatural transformation!");
         return false;
     }
 

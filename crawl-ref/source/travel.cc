@@ -40,6 +40,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
@@ -3268,10 +3269,18 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     return id;
 }
 
-string level_id::describe(bool long_name, bool with_number) const
+string level_id::describe(bool long_name, bool with_number, bool localize) const
 {
-    string result = (long_name ? branches[branch].longname
-                               : branches[branch].abbrevname);
+    string result;
+
+    // localise abbreviation now, but delay localisation of long name until
+    // depth is added, because that might change the translation (grammatical case)
+    if (long_name)
+        result = branches[branch].longname;
+    else if (localize)
+        result = branch_abbrev_local(branch);
+    else
+        result = branches[branch].abbrevname;
 
     if (with_number && brdepth[branch] != 1)
     {
@@ -3280,14 +3289,19 @@ string level_id::describe(bool long_name, bool with_number) const
             // decapitalise 'the'
             if (starts_with(result, "The"))
                 result[0] = 't';
-            result = make_stringf("Level %d of %s",
-                      depth, result.c_str());
+            if (localize)
+                result = localise("Level %d of %s", depth, result);
+            else
+                result = make_stringf("Level %d of %s", depth, result.c_str());
         }
         else if (depth)
             result = make_stringf("%s:%d", result.c_str(), depth);
         else
             result = make_stringf("%s:$", result.c_str());
     }
+    else if (localize && long_name)
+       result = localise(result);
+
     return result;
 }
 
@@ -4725,8 +4739,7 @@ void explore_discoveries::add_item(const item_def &i)
         if (cname == item.thing.name(DESC_PLAIN))
         {
             item.thing.quantity = orig_quantity + i.quantity;
-            item.name = item.thing.name(DESC_A, false, false, true,
-                                        !is_stackable_item(i));
+            item.name = item.thing.name(DESC_A, false, false, true);
             return;
         }
         item.thing.quantity = orig_quantity;
@@ -4812,7 +4825,7 @@ template <class C> void explore_discoveries::say_any(
 
     if (has_duplicates(coll.begin(), coll.end()))
     {
-        mprf("Found %s %s.", number_in_words(size).c_str(), category);
+        mprf("Found %d %s.", size, category);
         return;
     }
 
@@ -4820,7 +4833,7 @@ template <class C> void explore_discoveries::say_any(
                            comma_separated_line(coll.begin(), coll.end()) + ".");
 
     if (message.width() >= get_number_of_cols())
-        mprf("Found %s %s.", number_in_words(size).c_str(), category);
+        mprf("Found %d %s.", size, category);
     else
         mpr(message);
 }
@@ -4841,7 +4854,7 @@ vector<string> explore_discoveries::apply_quantities(
             things.push_back(article_a(nt.name));
         else
         {
-            things.push_back(number_in_words(nt.thing)
+            things.push_back(to_string(nt.thing)
                              + " "
                              + pluralise(nt.name, feature_plural_qualifiers));
         }

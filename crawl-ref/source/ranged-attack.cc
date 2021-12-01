@@ -16,7 +16,9 @@
 #include "fprop.h"
 #include "god-conduct.h"
 #include "item-prop.h"
+#include "localise.h"
 #include "message.h"
+#include "message-util.h"
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -83,6 +85,11 @@ int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
         modifiers -= (mhit + 1) / 2;
 
     return modifiers;
+}
+
+bool ranged_attack::is_penetrating_attack() const
+{
+    return ::is_penetrating_attack(*attacker, weapon, *projectile);
 }
 
 bool ranged_attack::attack()
@@ -228,11 +235,33 @@ bool ranged_attack::handle_phase_dodged()
 
     if (needs_message)
     {
-        mprf("%s%s misses %s%s",
-             projectile->name(DESC_THE).c_str(),
-             evasion_margin_adverb().c_str(),
-             defender_name(false).c_str(),
-             attack_strength_punctuation(damage_done).c_str());
+        string proj = projectile->name(DESC_THE);
+        string dfndr = defender_name(false);
+
+        if (ev_margin <= -20)
+        {
+            do_3rd_person_message(proj, dfndr,
+                                  "%s completely misses you.",
+                                  "%s completely misses %s.");
+        }
+        else if (ev_margin <= -12)
+        {
+            do_3rd_person_message(proj, dfndr,
+                                  "%s misses you.",
+                                  "%s misses %s.");
+        }
+        else if (ev_margin <= -6)
+        {
+            do_3rd_person_message(proj, dfndr,
+                                  "%s closely misses you.",
+                                  "%s closely misses %s.");
+        }
+        else
+        {
+            do_3rd_person_message(proj, dfndr,
+                                  "%s barely misses you.",
+                                  "%s barely misses %s.");
+        }
     }
 
     return true;
@@ -241,18 +270,16 @@ bool ranged_attack::handle_phase_dodged()
 bool ranged_attack::handle_phase_hit()
 {
     // XXX: this kind of hijacks the shield block check
-    if (!is_penetrating_attack(*attacker, weapon, *projectile))
+    if (!is_penetrating_attack())
         range_used = BEAM_STOP;
 
     if (projectile->is_type(OBJ_MISSILES, MI_DART))
     {
         damage_done = dart_duration_roll(get_ammo_brand(*projectile));
-        set_attack_verb(0);
         announce_hit();
     }
     else if (projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
-        set_attack_verb(0);
         announce_hit();
         if (defender->is_player())
             player_caught_in_net();
@@ -269,10 +296,9 @@ bool ranged_attack::handle_phase_hit()
         }
         else if (needs_message)
         {
-            mprf("%s %s %s but does no damage.",
-                 projectile->name(DESC_THE).c_str(),
-                 attack_verb.c_str(),
-                 defender->name(DESC_THE).c_str());
+            string msg = get_hit_message();
+            msg += localise(" but does no damage.");
+            mpr_nolocalise(msg);
         }
     }
 
@@ -362,7 +388,7 @@ bool ranged_attack::ignores_shield(bool verbose)
     if (defender->is_player() && player_omnireflects())
         return false;
 
-    if (is_penetrating_attack(*attacker, weapon, *projectile))
+    if (is_penetrating_attack())
     {
         if (verbose)
         {
@@ -491,7 +517,7 @@ bool ranged_attack::dart_check(special_missile_type type)
             if (defender->is_monster())
             {
                 simple_monster_message(*defender->as_monster(),
-                                       " is unaffected.");
+                                       "%s is unaffected.");
             }
             else
                 canned_msg(MSG_YOU_UNAFFECTED);
@@ -580,7 +606,6 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_FLAME:
         calc_elemental_brand_damage(BEAM_FIRE,
-                                    defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
 
         defender->expose_to_element(BEAM_FIRE, 2);
@@ -588,7 +613,7 @@ bool ranged_attack::apply_missile_brand()
             maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
         break;
     case SPMSL_FROST:
-        calc_elemental_brand_damage(BEAM_COLD, "freeze",
+        calc_elemental_brand_damage(BEAM_COLD,
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_COLD, 2);
         break;
@@ -730,20 +755,29 @@ bool ranged_attack::player_good_stab()
     return false;
 }
 
-void ranged_attack::set_attack_verb(int/* damage*/)
+string ranged_attack::get_hit_message()
 {
-    attack_verb = is_penetrating_attack(*attacker, weapon, *projectile) ? "pierces through" : "hits";
+    if (is_penetrating_attack())
+    {
+        return get_3rd_person_message(projectile->name(DESC_THE),
+                                      defender_name(false),
+                                      "%s pierces through you",
+                                      "$s pierces through %s");
+    }
+    else
+    {
+        return get_3rd_person_message(projectile->name(DESC_THE),
+                                      defender_name(false),
+                                      "%s hits you",
+                                      "%s hits %s");
+    }
 }
-
 void ranged_attack::announce_hit()
 {
     if (!needs_message)
         return;
 
-    mprf("%s %s %s%s%s",
-         projectile->name(DESC_THE).c_str(),
-         attack_verb.c_str(),
-         defender_name(false).c_str(),
-         debug_damage_number().c_str(),
-         attack_strength_punctuation(damage_done).c_str());
+    string msg = get_hit_message();
+    msg += debug_damage_number(); // empty in non-debug build
+    attack_strength_message(msg, damage_done, false);
 }

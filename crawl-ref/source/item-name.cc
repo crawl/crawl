@@ -33,6 +33,7 @@
 #include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "makeitem.h"
 #include "notes.h"
 #include "options.h"
@@ -128,8 +129,7 @@ static string _item_inscription(const item_def &item)
 }
 
 string item_def::name(description_level_type descrip, bool terse, bool ident,
-                      bool with_inscription, bool quantity_in_words,
-                      iflags_t ignore_flags) const
+                      bool with_inscription, iflags_t ignore_flags) const
 {
     if (crawl_state.game_is_arena())
         ignore_flags |= ISFLAG_KNOW_PLUSES | ISFLAG_COSMETIC_MASK;
@@ -214,10 +214,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME
             && descrip != DESC_DBNAME && !always_plural)
         {
-            if (quantity_in_words)
-                buff << number_in_words(quantity) << " ";
-            else
-                buff << quantity << " ";
+            buff << quantity << " ";
         }
     }
     else
@@ -924,6 +921,18 @@ const char* rune_type_name(short p)
     }
 }
 
+// Get rune short name ( e.g. "the abyssal rune")
+const string rune_short_name(short p)
+{
+    return string("the ") + rune_type_name(p) + " rune";
+}
+
+// Get rune long name ( e.g. "the abyssal rune of Zot")
+const string rune_long_name(short p)
+{
+    return rune_short_name(p) + " of Zot";
+}
+
 static string misc_type_name(int type)
 {
 #if TAG_MAJOR_VERSION == 34
@@ -970,77 +979,77 @@ static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
     {
-    case BOOK_MINOR_MAGIC:            return "Minor Magic";
-    case BOOK_CONJURATIONS:           return "Conjurations";
-    case BOOK_FLAMES:                 return "Flames";
-    case BOOK_FROST:                  return "Frost";
-    case BOOK_DRYADS:                 return "the Dryads";
-    case BOOK_FIRE:                   return "Fire";
-    case BOOK_ICE:                    return "Ice";
-    case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
-    case BOOK_HEXES:                  return "Hexes";
-    case BOOK_LIGHTNING:              return "Lightning";
-    case BOOK_DEATH:                  return "Death";
-    case BOOK_MISFORTUNE:             return "Misfortune";
-    case BOOK_CHANGES:                return "Changes";
-    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
+    case BOOK_MINOR_MAGIC:            return "book of Minor Magic";
+    case BOOK_CONJURATIONS:           return "book of Conjurations";
+    case BOOK_FLAMES:                 return "book of Flames";
+    case BOOK_FROST:                  return "book of Frost";
+    case BOOK_DRYADS:                 return "book of the Dryads";
+    case BOOK_FIRE:                   return "book of Fire";
+    case BOOK_ICE:                    return "book of Ice";
+    case BOOK_SPATIAL_TRANSLOCATIONS: return "book of Spatial Translocations";
+    case BOOK_HEXES:                  return "book of Hexes";
+    case BOOK_LIGHTNING:              return "book of Lightning";
+    case BOOK_DEATH:                  return "book of Death";
+    case BOOK_MISFORTUNE:             return "book of Misfortune";
+    case BOOK_CHANGES:                return "book of Changes";
+    case BOOK_TRANSFIGURATIONS:       return "book of Transfigurations";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_BATTLE:                 return "Battle";
+    case BOOK_BATTLE:                 return "book of Battle";
 #endif
-    case BOOK_VAPOURS:                return "Vapours";
-    case BOOK_NECROMANCY:             return "Necromancy";
-    case BOOK_CALLINGS:               return "Callings";
-    case BOOK_MALEDICT:               return "Maledictions";
-    case BOOK_AIR:                    return "Air";
-    case BOOK_SKY:                    return "the Sky";
-    case BOOK_WARP:                   return "the Warp";
+    case BOOK_VAPOURS:                return "book of Vapours";
+    case BOOK_NECROMANCY:             return "book of Necromancy";
+    case BOOK_CALLINGS:               return "book of Callings";
+    case BOOK_MALEDICT:               return "book of Maledictions";
+    case BOOK_AIR:                    return "book of Air";
+    case BOOK_SKY:                    return "book of the Sky";
+    case BOOK_WARP:                   return "book of the Warp";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_ENVENOMATIONS:          return "Envenomations";
+    case BOOK_ENVENOMATIONS:          return "book of Envenomations";
 #endif
-    case BOOK_ANNIHILATIONS:          return "Annihilations";
-    case BOOK_UNLIFE:                 return "Unlife";
+    case BOOK_ANNIHILATIONS:          return "book of Annihilations";
+    case BOOK_UNLIFE:                 return "book of Unlife";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_CONTROL:                return "Control";
+    case BOOK_CONTROL:                return "book of Control";
 #endif
-    case BOOK_GEOMANCY:               return "Geomancy";
-    case BOOK_EARTH:                  return "the Earth";
+    case BOOK_GEOMANCY:               return "book of Geomancy";
+    case BOOK_EARTH:                  return "book of the Earth";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_WIZARDRY:               return "Wizardry";
+    case BOOK_WIZARDRY:               return "book of Wizardry";
 #endif
-    case BOOK_POWER:                  return "Power";
-    case BOOK_CANTRIPS:               return "Cantrips";
-    case BOOK_PARTY_TRICKS:           return "Party Tricks";
-    case BOOK_DEBILITATION:           return "Debilitation";
-    case BOOK_DRAGON:                 return "the Dragon";
-    case BOOK_BURGLARY:               return "Burglary";
-    case BOOK_DREAMS:                 return "Dreams";
-    case BOOK_ALCHEMY:                return "Alchemy";
-    case BOOK_BEASTS:                 return "Beasts";
-    case BOOK_SPECTACLE:              return "Spectacle";
-    case BOOK_WINTER:                 return "Winter";
-    case BOOK_SPHERES:                return "the Spheres";
-    case BOOK_ARMAMENTS:              return "Armaments";
-    case BOOK_PAIN:                   return "Pain";
-    case BOOK_DECAY:                  return "Decay";
-    case BOOK_DISPLACEMENT:           return "Displacement";
-    case BOOK_RIME:                   return "Rime";
-    case BOOK_STONE:                  return "Stone";
-    case BOOK_SENSES:                 return "the Senses";
-    case BOOK_BLASTING:               return "Blasting";
-    case BOOK_IRON:                   return "Iron";
-    case BOOK_TUNDRA:                 return "the Tundra";
-    case BOOK_MOON:                   return "the Moon";
-    case BOOK_STORMS:                 return "Storms";
-    case BOOK_WEAPONS:                return "Weapons";
-    case BOOK_SLOTH:                  return "Sloth";
-    case BOOK_BLOOD:                  return "Blood";
-    case BOOK_DANGEROUS_FRIENDS:      return "Dangerous Friends";
-    case BOOK_TOUCH:                  return "Touch";
-    case BOOK_CHAOS:                  return "Chaos";
-    case BOOK_HUNTER:                 return "the Hunter";
-    case BOOK_RANDART_LEVEL:          return "Fixed Level";
-    case BOOK_RANDART_THEME:          return "Fixed Theme";
-    default:                          return "Bugginess";
+    case BOOK_POWER:                  return "book of Power";
+    case BOOK_CANTRIPS:               return "book of Cantrips";
+    case BOOK_PARTY_TRICKS:           return "book of Party Tricks";
+    case BOOK_DEBILITATION:           return "book of Debilitation";
+    case BOOK_DRAGON:                 return "book of the Dragon";
+    case BOOK_BURGLARY:               return "book of Burglary";
+    case BOOK_DREAMS:                 return "book of Dreams";
+    case BOOK_ALCHEMY:                return "book of Alchemy";
+    case BOOK_BEASTS:                 return "book of Beasts";
+    case BOOK_SPECTACLE:              return "book of Spectacle";
+    case BOOK_WINTER:                 return "book of Winter";
+    case BOOK_SPHERES:                return "book of the Spheres";
+    case BOOK_ARMAMENTS:              return "book of Armaments";
+    case BOOK_PAIN:                   return "book of Pain";
+    case BOOK_DECAY:                  return "book of Decay";
+    case BOOK_DISPLACEMENT:           return "book of Displacement";
+    case BOOK_RIME:                   return "book of Rime";
+    case BOOK_STONE:                  return "book of Stone";
+    case BOOK_SENSES:                 return "book of the Senses";
+    case BOOK_BLASTING:               return "book of Blasting";
+    case BOOK_IRON:                   return "book of Iron";
+    case BOOK_TUNDRA:                 return "book of the Tundra";
+    case BOOK_MOON:                   return "book of the Moon";
+    case BOOK_STORMS:                 return "book of Storms";
+    case BOOK_WEAPONS:                return "book of Weapons";
+    case BOOK_SLOTH:                  return "book of Sloth";
+    case BOOK_BLOOD:                  return "book of Blood";
+    case BOOK_DANGEROUS_FRIENDS:      return "book of Dangerous Friends";
+    case BOOK_TOUCH:                  return "book of Touch";
+    case BOOK_CHAOS:                  return "book of Chaos";
+    case BOOK_HUNTER:                 return "book of the Hunter";
+    case BOOK_RANDART_LEVEL:          return "book of Fixed Level"; // noloc
+    case BOOK_RANDART_THEME:          return "book of Fixed Theme"; // noloc
+    default:                          return "book of Bugginess"; // noloc
     }
 }
 
@@ -1133,7 +1142,7 @@ string sub_type_string(const item_def &item, bool known)
             {
             if (!known)
                 return "manual";
-            string bookname = "manual of ";
+            string bookname = "manual of "; // noloc
             bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
             }
@@ -1171,7 +1180,7 @@ string sub_type_string(const item_def &item, bool known)
             return "Akashic Record";
 #endif
         default:
-            return string("book of ") + _book_type_name(sub_type);
+            return _book_type_name(sub_type);
         }
     }
     case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
@@ -2038,9 +2047,7 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         else
             colour = DARKGREY;
 
-        string text = "<";
-        text += colour_to_str(colour);
-        text += ">";
+        string text;
         text += rune_type_name(rune);
         text += " rune of Zot";
         if (!you.runes[rune])
@@ -2049,19 +2056,31 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
             text += branches[rune_location(rune)].longname;
             text += ")";
         }
-        text += "</";
-        text += colour_to_str(colour);
-        text += ">";
-        entry->text = text;
+        text = localise(text);
+
+        string formatted_text;
+        formatted_text = "<";
+        formatted_text += colour_to_str(colour);
+        formatted_text += ">";
+        formatted_text += text;
+        formatted_text += "</";
+        formatted_text += colour_to_str(colour);
+        formatted_text += ">";
+        entry->text = formatted_text;
     }
     else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
     {
+        string text = "The Orb of Zot";
         if (player_has_orb())
-            entry->text = "<magenta>The Orb of Zot</magenta>";
+        {
+            text = localise(text);
+            entry->text = "<magenta>" + text + "</magenta>";
+        }
         else
         {
-            entry->text = "<darkgrey>The Orb of Zot"
-                          " (the Realm of Zot)</darkgrey>";
+            text += " (the Realm of Zot)";
+            text = localise(text);
+            entry->text = "<darkgrey>" + text + "</darkgrey>";
         }
     }
 
@@ -2384,24 +2403,24 @@ static string _random_consonant_set(size_t c)
 
     static const string consonant_sets[] = {
         // 0-13: start, middle
-        "kl", "gr", "cl", "cr", "fr",
-        "pr", "tr", "tw", "br", "pl",
-        "bl", "str", "shr", "thr",
+        "kl", "gr", "cl", "cr", "fr", // noloc
+        "pr", "tr", "tw", "br", "pl", // noloc
+        "bl", "str", "shr", "thr",    // noloc
         // 14-26: start, middle, end
-        "sm", "sh", "ch", "th", "ph",
-        "pn", "kh", "gh", "mn", "ps",
-        "st", "sk", "sch",
+        "sm", "sh", "ch", "th", "ph", // noloc
+        "pn", "kh", "gh", "mn", "ps", // noloc
+        "st", "sk", "sch",            // noloc
         // 27-55: middle, end
-        "ts", "cs", "xt", "nt", "ll",
-        "rr", "ss", "wk", "wn", "ng",
-        "cw", "mp", "ck", "nk", "dd",
-        "tt", "bb", "pp", "nn", "mm",
-        "kk", "gg", "ff", "pt", "tz",
-        "dgh", "rgh", "rph", "rch",
+        "ts", "cs", "xt", "nt", "ll", // noloc
+        "rr", "ss", "wk", "wn", "ng", // noloc
+        "cw", "mp", "ck", "nk", "dd", // noloc
+        "tt", "bb", "pp", "nn", "mm", // noloc
+        "kk", "gg", "ff", "pt", "tz", // noloc
+        "dgh", "rgh", "rph", "rch",   // noloc
         // 56-66: middle only
-        "cz", "xk", "zx", "xz", "cv",
-        "vv", "nl", "rh", "dw", "nw",
-        "khl",
+        "cz", "xk", "zx", "xz", "cv", // noloc
+        "vv", "nl", "rh", "dw", "nw", // noloc
+        "khl",                        // noloc
     };
     COMPILE_CHECK(ARRAYSZ(consonant_sets) == RCS_END);
 
@@ -3205,7 +3224,7 @@ string menu_colour_item_name(const item_def &item, description_level_type desc)
 
     const string colour = colour_to_str(col);
     const char * const colour_z = colour.c_str();
-    return make_stringf("<%s>%s</%s>", colour_z, item_name.c_str(), colour_z);
+    return make_stringf("<%s>%s</%s>", colour_z, localise(item_name).c_str(), colour_z);
 }
 
 typedef map<string, item_kind> item_names_map;

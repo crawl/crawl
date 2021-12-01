@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "env.h"
 #include "item-prop.h"
+#include "localise.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-death.h"
@@ -330,7 +331,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     if (dist < 3)
         beam.name = "wavering " + beam.name;
     if (dist < 2)
-        beam.hit_verb = "weakly hits";
+        beam.hit_verb = BHV_WEAKLY_HIT;
     beam.ex_size = 1;
     beam.loudness = 7;
 
@@ -524,8 +525,9 @@ move_again:
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
                 else
                 {
-                    simple_monster_message(*mons, (" blocks "
-                        + mon.name(DESC_THE, true) + ".").c_str());
+                    string msg = localise("%s blocks %s.", mons->name(DESC_THE),
+                                          mon.name(DESC_THE, true));
+                    simple_monster_message(*mons, msg.c_str());
                 }
                 victim->shield_block_succeeded();
                 _iood_stop(mon);

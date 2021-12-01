@@ -42,6 +42,7 @@
 #include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "maps.h"
 #include "menu.h"
@@ -716,7 +717,7 @@ ability_type ability_by_name(const string &key)
 
 string print_abilities()
 {
-    string text = "\n<w>a:</w> ";
+    string text = "\n<w>a:</w> "; // noloc
 
     const vector<talent> talents = your_talents(false);
 
@@ -755,9 +756,9 @@ string nemelex_card_text(ability_type ability)
     int cards = deck_cards(ability_deck(ability));
 
     if (ability == ABIL_NEMELEX_DRAW_STACK)
-        return make_stringf("(next: %s)", stack_top().c_str());
+        return localise("(next: %s)", stack_top());
     else
-        return make_stringf("(%d in deck)", cards);
+        return localise("(%d in deck)", cards);
 }
 
 static const int VAMPIRE_BAT_FORM_STAT_DRAIN = 2;
@@ -776,22 +777,35 @@ const string make_cost_description(ability_type ability)
     const ability_def& abil = get_ability_def(ability);
     string ret;
     if (abil.get_mp_cost())
-        ret += make_stringf(", %d MP", abil.get_mp_cost());
+    {
+        ret += localise(", ");
+        ret += localise("%d MP", (int)abil.mp_cost);
+    }
 
     if (abil.flags & abflag::variable_mp)
-        ret += ", MP";
+    {
+        ret += localise(", ");
+        ret += localise("MP");
+    }
 
     if (ability == ABIL_HEAL_WOUNDS)
-        ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
+    {
+        ret += localise(", ");
+        ret += localise("Permanent MP (%d left)", get_real_mp(false));
+    }
 
     if (ability == ABIL_TRAN_BAT)
     {
-        ret += make_stringf(", Stat Drain (%d each)",
+        ret += localise(", ");
+        ret += localise("Stat Drain (%d each)",
                             VAMPIRE_BAT_FORM_STAT_DRAIN);
     }
 
     if (ability == ABIL_REVIVIFY)
-        ret += ", Frailty";
+    {
+        ret += localise(", ");
+        ret += localise("Frailty");
+    }
 
     if (ability == ABIL_ASHENZARI_CURSE
         && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
@@ -802,64 +816,98 @@ const string make_cost_description(ability_type ability)
 
     const int hp_cost = abil.get_hp_cost();
     if (hp_cost)
-        ret += make_stringf(", %d HP", hp_cost);
+    {
+        ret += localise(", ");
+        ret += localise("%d HP", hp_cost);
+    }
 
     if (abil.piety_cost || abil.flags & abflag::piety)
-        ret += ", Piety"; // randomised and exact amount hidden from player
+    {
+        ret += localise(", ");
+        ret += localise("Piety"); // randomised and exact amount hidden from player
+    }
 
     if (abil.flags & abflag::breath)
-        ret += ", Breath";
+    {
+        ret += localise(", ");
+        ret += localise("Breath");
+    }
 
     if (abil.flags & abflag::delay)
-        ret += ", Delay";
+    {
+        ret += localise(", ");
+        ret += localise("Delay");
+    }
 
     if (abil.flags & abflag::pain)
-        ret += ", Pain";
+    {
+        ret += localise(", ");
+        ret += localise("Pain");
+    }
 
     if (abil.flags & abflag::exhaustion)
-        ret += ", Exhaustion";
+    {
+        ret += localise(", ");
+        ret += localise("Exhaustion");
+    }
 
     if (abil.flags & abflag::instant)
-        ret += ", Instant"; // not really a cost, more of a bonus - bwr
+    {
+        ret += localise(", ");
+        ret += localise("Instant"); // not really a cost, more of a bonus - bwr
+    }
 
     if (abil.flags & abflag::max_hp_drain
         && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
-        ret += ", Max HP drain";
+        ret += localise(", ");
+        ret += localise("Max HP drain");
     }
 
     if (abil.flags & abflag::curse)
-        ret += ", Cursed item";
+    {
+        ret += localise(", ");
+        ret += localise("Cursed item");
+    }
 
     if (abil.flags & abflag::gold)
     {
         const int amount = get_gold_cost(ability);
         if (amount)
-            ret += make_stringf(", %d Gold", amount);
+        {
+            ret += localise(", ");
+            ret += localise("%d Gold", amount);
+        }
         else if (ability == ABIL_GOZAG_POTION_PETITION)
-            ret += ", Free";
+        {
+            ret += localise(", ");
+            ret += localise("Free");
+        }
         else
-            ret += ", Gold";
+        {
+            ret += localise(", ");
+            ret += localise("Gold");
+        }
     }
 
     if (abil.flags & abflag::sacrifice)
     {
-        ret += ", ";
-        const string prefix = "Sacrifice ";
+        ret += localise(", ");
+        const string prefix = "Sacrifice "; // noloc
         ret += string(ability_name(ability)).substr(prefix.size());
         ret += ru_sac_text(ability);
     }
 
     if (abil.flags & abflag::card)
     {
-        ret += ", ";
-        ret += "A Card ";
+        ret += localise(", ");
+        ret += localise("A Card") + " ";
         ret += nemelex_card_text(ability);
     }
 
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
-        return "None";
+        return localise("None");
 
     ret.erase(0, 2);
     return ret;
@@ -879,88 +927,113 @@ static const string _detailed_cost_description(ability_type ability)
     ostringstream ret;
 
     bool have_cost = false;
-    ret << "This ability costs: ";
+    ret << localise("This ability costs: ");
 
     if (abil.get_mp_cost())
     {
         have_cost = true;
-        ret << "\nMP     : ";
+        ret << "\n";
+        ret << left << setw(7) << localise("MP");
+        ret << ": ";
         ret << abil.get_mp_cost();
     }
     if (abil.get_hp_cost())
     {
         have_cost = true;
-        ret << "\nHP     : ";
+        ret << "\n";
+        ret << left << setw(7) << localise("HP");
+        ret << ": ";
         ret << abil.get_hp_cost();
     }
 
     if (abil.piety_cost || abil.flags & abflag::piety)
     {
         have_cost = true;
-        ret << "\nPiety  : ";
+        ret << "\n";
+        ret << left << setw(7) << localise("Piety");
+        ret << ": ";
         if (abil.flags & abflag::piety)
-            ret << "variable";
+            ret << localise("variable");
         else
         {
             int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
-            ret << _get_piety_amount_str(avgcost);
+            ret << localise(_get_piety_amount_str(avgcost));
         }
     }
 
     if (abil.flags & abflag::gold)
     {
         have_cost = true;
-        ret << "\nGold   : ";
+        ret << "\n";
+        ret << left << setw(7) << localise("Gold");
+        ret << ": ";
         int gold_amount = get_gold_cost(ability);
         if (gold_amount)
             ret << gold_amount;
         else if (ability == ABIL_GOZAG_POTION_PETITION)
-            ret << "free";
+            ret << localise("free");
         else
-            ret << "variable";
+            ret << localise("variable");
     }
 
     if (abil.flags & abflag::curse)
     {
         have_cost = true;
-        ret << "\nOne cursed item";
+        ret << "\n";
+        ret << localise("One cursed item");
     }
 
     if (!have_cost)
-        ret << "nothing.";
+        ret << localise("nothing.");
 
     if (abil.flags & abflag::breath)
-        ret << "\nYou must catch your breath between uses of this ability.";
+    {
+        ret << "\n";
+        ret << localise("You must catch your breath between uses of this ability.");
+    }
 
     if (abil.flags & abflag::delay)
-        ret << "\nThis ability takes some time before being effective.";
+    {
+        ret << "\n";
+        ret << localise("This ability takes some time before being effective.");
+    }
 
     if (abil.flags & abflag::pain)
         ret << "\nUsing this ability will hurt you.";
 
     if (abil.flags & abflag::exhaustion)
-        ret << "\nThis ability causes exhaustion, and cannot be used when exhausted.";
+    {
+        ret << "\n";
+        ret << localise("This ability causes exhaustion, and cannot be used when exhausted.");
+    }
 
     if (abil.flags & abflag::instant)
-        ret << "\nThis ability is instantaneous.";
+    {
+        ret << "\n";
+        ret << localise("This ability is instantaneous.");
+    }
 
     if (abil.flags & abflag::conf_ok)
-        ret << "\nYou can use this ability even if confused.";
+    {
+        ret << "\n";
+        ret << localise("You can use this ability even if confused.");
+    }
 
     if (abil.flags & abflag::max_hp_drain
         && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
-        ret << "\nThis ability will temporarily drain your maximum hit points when used";
+        ret << "\n";
         if (ability == ABIL_EVOKE_TURN_INVISIBLE)
-            ret << ", even unsuccessfully";
-        ret << ".";
+            ret << localise("This ability will temporarily drain your maximum hit points when used, even unsuccessfully.");
+        else
+            ret << localise("This ability will temporarily drain your maximum hit points when used.");
+
     }
 
     if (abil.ability == ABIL_HEAL_WOUNDS)
     {
         ASSERT(!have_cost); // validate just in case this ever changes
-        return "This ability has a chance of reducing your maximum magic "
-               "capacity when used.";
+        return localise("This ability has a chance of reducing your maximum magic capacity when used.");
     }
 
     return ret.str();
@@ -1128,11 +1201,13 @@ static string _desc_sac_mut(const CrawlStoreValue &mut_store)
 
 static string _sacrifice_desc(const ability_type ability)
 {
-    const string boilerplate =
-        "\nIf you make this sacrifice, your powers granted by Ru "
-        "will become stronger in proportion to the value of the "
-        "sacrifice, and you may gain new powers as well.\n\n"
-        "Sacrifices cannot be taken back.\n";
+    const string boilerplate = "\n"
+        + localise("If you make this sacrifice, your powers granted by Ru "
+                   "will become stronger in proportion to the value of the "
+                   "sacrifice, and you may gain new powers as well.")
+        + "\n\n"
+        + localise("Sacrifices cannot be taken back.")
+        + "\n";
     const string piety_info = ru_sacrifice_description(ability);
     const string desc = boilerplate + piety_info;
 
@@ -1145,10 +1220,12 @@ static string _sacrifice_desc(const ability_type ability)
 
     ASSERT(you.props.exists(sac_vec_key));
     const CrawlVector &sacrifice_muts = you.props[sac_vec_key].get_vector();
-    return "\nAfter this sacrifice, you will find that "
-            + comma_separated_fn(sacrifice_muts.begin(), sacrifice_muts.end(),
-                                 _desc_sac_mut)
-            + ".\n" + desc;
+    return "\n"
+            + localise("After this sacrifice, you will find that %s.",
+                       comma_separated_fn(sacrifice_muts.begin(),
+                                          sacrifice_muts.end(),
+                                          _desc_sac_mut))
+            + "\n" + desc;
 }
 
 static string _nemelex_desc(ability_type ability)
@@ -1156,8 +1233,14 @@ static string _nemelex_desc(ability_type ability)
     ostringstream desc;
     deck_type deck = ability_deck(ability);
 
-    desc << "Draw a card from " << (deck == DECK_STACK ? "your " : "the ");
-    desc << deck_name(deck) << "; " << lowercase_first(deck_description(deck));
+    string name;
+    if (deck == DECK_STACK)
+        name = "your stacked deck";
+    else
+        name = "the " + deck_name(deck); // noloc
+
+    desc << localise("Draw a card from %s; ", name);
+    desc << lowercase_first(deck_description(deck));
 
     return desc.str();
 }
@@ -1175,7 +1258,7 @@ string get_ability_desc(const ability_type ability, bool need_title)
         lookup = getLongDescription(name + " ability");
 
     if (lookup.empty()) // Nothing found?
-        lookup = "No description found.\n";
+        lookup = localise("No description found.") + "\n";
 
     if (ability == ABIL_ASHENZARI_CURSE)
         lookup += _curse_desc();
@@ -1185,8 +1268,9 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     if (god_hates_ability(ability, you.religion))
     {
-        lookup += uppercase_first(god_name(you.religion))
-                  + " frowns upon the use of this ability.\n";
+        lookup += localise("%s frowns upon the use of this ability.",
+                           uppercase_first(god_name(you.religion)));
+        lookup += "\n";
     }
 
     ostringstream res;
@@ -1248,7 +1332,7 @@ bool activate_ability()
 
     string luachoice;
 
-    if (!clua.callfn("c_choose_ability", ">s", &luachoice))
+    if (!clua.callfn("c_choose_ability", ">s", &luachoice)) // noloc
     {
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
@@ -1291,8 +1375,9 @@ bool activate_ability()
     {
         while (selected < 0)
         {
-            msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list) "
-                                       << endl;
+            msg::streams(MSGCH_PROMPT)
+                << localise("Use which ability? (? or * to list) ")
+                << endl;
 
             const int keyin = get_ch();
 
@@ -1400,8 +1485,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
             {
-                mprf("Turning back right now would cause you to %s!",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+                if (env.grid(you.pos()) == DNGN_LAVA)
+                    mpr("Turning back right now would cause you to burn!");
+                else
+                    mpr("Turning back right now would cause you to drown!");
             }
 
             return false;
@@ -1415,9 +1502,20 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
             {
-                mprf("Becoming %s right now would cause you to %s!",
-                    abil.ability == ABIL_EXSANGUINATE ? "bloodless" : "alive",
-                    env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
+                if (abil.ability == ABIL_EXSANGUINATE)
+                {
+                    if (env.grid(you.pos()) == DNGN_LAVA)
+                        mpr("Becoming bloodless right now would cause you to burn!");
+                    else
+                        mpr("Becoming bloodless right now would cause you to drown!");
+                }
+                else
+                {
+                    if (env.grid(you.pos()) == DNGN_LAVA)
+                        mpr("Becoming alive right now would cause you to burn!");
+                    else
+                        mpr("Becoming alive right now would cause you to drown!");
+                }
             }
 
             return false;
@@ -1447,10 +1545,12 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
             {
-                mprf("You cannot call out to %s while %s.",
-                     god_name(you.religion).c_str(),
-                     you.duration[DUR_WATER_HOLD] ? "unable to breathe"
-                                                  : "silenced");
+                if (you.duration[DUR_WATER_HOLD])
+                    mprf("You cannot call out to %s while unable to breath.",
+                         god_name(you.religion).c_str());
+                else
+                    mprf("You cannot call out to %s while silenced.",
+                         god_name(you.religion).c_str());
             }
             return false;
         }
@@ -1491,7 +1591,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             {
                 if (action.matches(name))
                 {
-                    string prompt = "Really use " + string(name) + "?";
+                    string prompt = localise("Really use %s?", name);
                     if (!yesno(prompt.c_str(), false, 'n'))
                     {
                         canned_msg(MSG_OK);
@@ -1726,8 +1826,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
             {
-                mprf("You cannot wall jump while caught in a %s.",
-                     get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+                if (get_trapping_net(you.pos()) == NON_ITEM)
+                    mpr("You cannot wall jump while caught in a web.");
+                else
+                    mpr("You cannot wall jump while caught in a net.");
             }
             return false;
         }
@@ -1870,12 +1972,6 @@ static bool _cleansing_flame_affects(const actor *act)
     return act->res_holy_energy() < 3;
 }
 
-static string _vampire_str_int_info_blurb(string stats_affected)
-{
-    return make_stringf("This will reduce your %s to zero. ",
-                        stats_affected.c_str());
-}
-
 /*
  * Create a string which informs the player of the consequences of bat form.
  *
@@ -1893,18 +1989,18 @@ static string _vampire_bat_transform_prompt(bool str_affected, bool dex_affected
     string prompt = "";
 
     if (str_affected && intel_affected)
-        prompt += _vampire_str_int_info_blurb("strength and intelligence");
+        prompt += localise("This will reduce your strength and intelligence to zero. ");
     else if (str_affected)
-        prompt += _vampire_str_int_info_blurb("strength");
+        prompt += localise("This will reduce your strength to zero. ");
     else if (intel_affected)
-        prompt += _vampire_str_int_info_blurb("intelligence");
+        prompt += localise("This will reduce your intelligence to zero. ");
 
     // Bat form's dexterity boost will keep a vampire's dexterity above zero until
     // they untransform.
     if (dex_affected)
-        prompt += "This will reduce your dexterity to zero once you untransform. ";
+        prompt += localise("This will reduce your dexterity to zero once you untransform. ");
 
-    prompt += "Continue?";
+    prompt += localise("Continue?");
 
     return prompt;
 }
@@ -2110,8 +2206,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             if (you.form == transformation::dragon)
                 power += 12;
 
-            string msg = "You breathe a blast of fire";
-            msg += (power < 15) ? '.' : '!';
+            string msg;
+            if (power < 15)
+                msg = "You breathe a blast of fire.";
+            else
+                msg = "You breathe a blast of fire!";
 
             if (zapping(ZAP_BREATHE_FIRE, power, beam, true, msg.c_str())
                 == spret::abort)
@@ -2522,7 +2621,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         {
             // "Your [hand(s)] get{s} new energy."
             mprf(MSGCH_DURATION, "%s",
-                 you.hands_act("get", "new energy.").c_str());
+                 you.hand_act("%s gets new energy.", "%s get new energy.").c_str());
         }
         else
             mprf(MSGCH_DURATION, "You can now deal lightning-fast blows.");
@@ -2880,7 +2979,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos(),
                      MHITNOT, MG_NONE, GOD_JIYVA);
 
-        mg.non_actor_summoner = "Jiyva";
+        mg.non_actor_summoner = "Jiyva"; // noloc (handled elsewhere)
 
         if (!create_monster(mg))
             return spret::abort;
@@ -2892,7 +2991,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         fail_check();
         const item_def* const weapon = you.weapon();
         const string msg = weapon ? weapon->name(DESC_YOUR)
-                                  : ("your " + you.hand_name(true));
+                                  : ("your " + you.hand_name(true)); // noloc
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
                               random2avg(you.piety / 4, 2) + 3, 100);
@@ -3234,26 +3333,23 @@ int choose_ability_menu(const vector<talent>& talents)
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
 
     abil_menu.set_highlighter(nullptr);
-#ifdef USE_TILE_LOCAL
+
     {
-        // Hack like the one in spl-cast.cc:list_spells() to align the title.
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry("Ability - do what?                  "
-                                    "Cost                            Failure",
-                                    "Ability - describe what?            "
-                                    "Cost                            Failure",
-                                    MEL_ITEM);
+        string txt = chop_string(localise("Ability - do what?"), 36)
+                   + chop_string(localise("Cost"), 32) + localise("Failure");
+        string alt_txt = chop_string(localise("Ability - describe what?"), 36)
+                       + chop_string(localise("Cost"), 32) + localise("Failure");
+
+        ToggleableMenuEntry* me;
+#ifdef USE_TILE_LOCAL
+        me = new ToggleableMenuEntry(txt, alt_txt, MEL_ITEM);
         me->colour = BLUE;
+#else
+        me = new ToggleableMenuEntry(txt, alt_txt, MEL_TITLE);
+#endif
         abil_menu.set_title(me, true, true);
     }
-#else
-    abil_menu.set_title(
-        new ToggleableMenuEntry("Ability - do what?                  "
-                                "Cost                            Failure",
-                                "Ability - describe what?            "
-                                "Cost                            Failure",
-                                MEL_TITLE), true, true);
-#endif
+
     abil_menu.set_tag("ability");
     abil_menu.add_toggle_key('!');
     abil_menu.add_toggle_key('?');
@@ -3267,9 +3363,9 @@ int choose_ability_menu(const vector<talent>& talents)
     }
     else
     {
-        abil_menu.set_more(formatted_string::parse_string(
-                           "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                           "between ability selection and description."));
+        string txt = localise("Press '<w>!</w>' or '<w>?</w>' to toggle "
+                              "between ability selection and description.");
+        abil_menu.set_more(formatted_string::parse_string(txt));
     }
 
     int numbers[52];
@@ -3307,12 +3403,15 @@ int choose_ability_menu(const vector<talent>& talents)
 
     if (found_invocations)
     {
+        // I don't understand the purpose of the trailing spaces here
+        // Is it to overwrite something?
+        string txt = localise(" %s -    ", "Invocations");
 #ifdef USE_TILE_LOCAL
-        MenuEntry* subtitle = new MenuEntry(" Invocations -    ", MEL_ITEM);
+        MenuEntry* subtitle = new MenuEntry(txt, MEL_ITEM);
         subtitle->colour = BLUE;
         abil_menu.add_entry(subtitle);
 #else
-        abil_menu.add_entry(new MenuEntry(" Invocations -    ", MEL_SUBTITLE));
+        abil_menu.add_entry(new MenuEntry(txt, MEL_SUBTITLE));
 #endif
         for (unsigned int i = 0; i < talents.size(); ++i)
         {
@@ -3362,14 +3461,16 @@ string describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
 
-    const string failure = failure_rate_to_string(tal.fail)
-        + (testbits(get_ability_def(tal.which).flags, abflag::hostile)
-           ? " hostile" : "");
+    string failure;
+    if (testbits(get_ability_def(tal.which).flags, abflag::hostile))
+        failure = localise("%d%% hostile", failure_rate_to_int(tal.fail));
+    else
+        failure = failure_rate_to_string(tal.fail);
 
     ostringstream desc;
     desc << left
-         << chop_string(ability_name(tal.which), 32)
-         << chop_string(make_cost_description(tal.which), 32)
+         << chop_string(localise(ability_name(tal.which)), 32)
+         << chop_string(localise(make_cost_description(tal.which)), 32)
          << chop_string(failure, 12);
     return trimmed_string(desc.str());
 }
@@ -3808,7 +3909,7 @@ void swap_ability_slots(int index1, int index2, bool silent)
 
     if (!silent)
     {
-        mprf_nocap("%c - %s", index_to_letter(index2),
+        mprf_nocap("%c - %s", index_to_letter(index2), // noloc
                    ability_name(you.ability_letter_table[index2]));
     }
 

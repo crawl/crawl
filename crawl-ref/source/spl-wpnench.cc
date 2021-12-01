@@ -124,9 +124,12 @@ spret cast_excruciating_wounds(int power, bool fail)
 spret cast_confusing_touch(int power, bool fail)
 {
     fail_check();
-    msg::stream << you.hands_act("begin", "to glow ")
-                << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
-                << "." << endl;
+
+    if (you.duration[DUR_CONFUSING_TOUCH])
+        msg::stream << you.hand_act("%s begins to glow brighter.", "%s begin to glow brighter.");
+    else
+        msg::stream << you.hand_act("%s begins to glow red.", "%s begin to glow red.");
+    msg::stream << endl;
 
     you.set_duration(DUR_CONFUSING_TOUCH,
                      max(10 + random2(power) / 5,

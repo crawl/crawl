@@ -23,6 +23,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "los.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -760,34 +761,33 @@ monster_info::monster_info(const monster* m, int milev)
 
     // init names of constrictor and constrictees
     constrictor_name = "";
+    constrictor_damage = false;
     constricting_name.clear();
+    holding_name.clear();
 
     // Name of what this monster is directly constricted by, if any
     if (m->is_directly_constricted())
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
-        constrictor_name = (constrictor->constriction_does_damage(true) ?
-                            "constricted by " : "held by ")
-                           + constrictor->name(_article_for(constrictor),
-                                               true);
+        constrictor_name = constrictor->name(_article_for(constrictor), true);
+        constrictor_damage = constrictor->constriction_does_damage(true);
     }
 
     // Names of what this monster is directly constricting, if any
     if (m->constricting)
     {
-        const char *participle =
-            m->constriction_does_damage(true) ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
             const actor* const constrictee = actor_by_mid(entry.first);
 
             if (constrictee && constrictee->is_directly_constricted())
             {
-                constricting_name.push_back(participle
-                                            + constrictee->name(
-                                                  _article_for(constrictee),
-                                                  true));
+                string name = constrictee->name(_article_for(constrictee), true);
+                if (m->constriction_does_damage(true))
+                    constricting_name.push_back(name);
+                else
+                    holding_name.push_back(name);
             }
         }
     }
@@ -887,7 +887,7 @@ string monster_info::db_name() const
     {
         iflags_t ignore_flags = ISFLAG_KNOW_PLUSES;
         bool     use_inscrip  = false;
-        return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
+        return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip,
                          ignore_flags);
     }
 
@@ -962,7 +962,7 @@ string monster_info::_core_name() const
             if (inv[MSLOT_ARMOUR])
             {
                 const item_def& item = *inv[MSLOT_ARMOUR];
-                s = "animated " + item.name(DESC_PLAIN, false, false, true, false, ISFLAG_KNOW_PLUSES);
+                s = "animated " + item.name(DESC_PLAIN, false, false, true, ISFLAG_KNOW_PLUSES);
             }
             break;
 
@@ -1449,23 +1449,42 @@ string monster_info::wounds_description(bool use_colour) const
 string monster_info::constriction_description() const
 {
     string cinfo = "";
-    bool bymsg = false;
 
-    if (!constrictor_name.empty())
+    if (constrictor_damage)
     {
-        cinfo += constrictor_name;
-        bymsg = true;
+        if (constrictor_name == "you")
+            cinfo = localise("constricted by you");
+        else if(!constrictor_name.empty())
+            cinfo = localise("constricted by %s", constrictor_name);
+    }
+    else
+    {
+        if (constrictor_name == "you")
+            cinfo = localise("held by you");
+        else if(!constrictor_name.empty())
+            cinfo = localise("held by %s", constrictor_name);
     }
 
-    string constricting = comma_separated_line(constricting_name.begin(),
-                                               constricting_name.end());
-
-    if (!constricting.empty())
+    for (string constrictee: constricting_name)
     {
-        if (bymsg)
-            cinfo += ", ";
-        cinfo += constricting;
+        if (!cinfo.empty())
+            cinfo += localise(", ");
+        if (constrictee == "you")
+            cinfo += localise("constricting you", constrictee);
+        else
+            cinfo += localise("constricting %s", constrictee);
     }
+
+    for (string holdee: holding_name)
+    {
+        if (!cinfo.empty())
+            cinfo += localise(", ");
+        if (holdee == "you")
+            cinfo += localise("holding you");
+        else
+            cinfo += localise("holding %s", holdee);
+    }
+
     return cinfo;
 }
 

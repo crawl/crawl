@@ -340,13 +340,13 @@ bool fill_status_info(int status, status_info& inf)
 
     case DUR_CONFUSING_TOUCH:
     {
-        inf.long_text = you.hands_act("are", "glowing red.");
+        inf.long_text = you.hand_act("%s is glowing red.", "%s are glowing red.");
         break;
     }
 
     case DUR_SLIMIFY:
     {
-        inf.long_text = you.hands_act("are", "covered in slime.");
+        inf.long_text = you.hand_act("%s is covered in slime.", "%s are covered in slime.");
         break;
     }
 

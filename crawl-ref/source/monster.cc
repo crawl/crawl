@@ -40,6 +40,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -822,9 +823,10 @@ bool monster::likes_wand(const item_def &item) const
 
 void monster::equip_weapon_message(item_def &item)
 {
-    const string str = " wields " +
-                       item.name(DESC_A, false, false, true, false,
-                                 ISFLAG_CURSED) + ".";
+    const string str = localise("%s wields %s.", this->name(DESC_THE),
+                                item.name(DESC_A, false, false, true,
+                                          ISFLAG_CURSED));
+
     simple_monster_message(*this, str.c_str());
 
     const int brand = get_weapon_brand(item);
@@ -919,8 +921,8 @@ int monster::armour_bonus(const item_def &item, bool calc_unid) const
 
 void monster::equip_armour_message(item_def &item)
 {
-    const string str = " wears " +
-                       item.name(DESC_A) + ".";
+    string str = localise("%s wears %s.", this->name(DESC_THE),
+                          item.name(DESC_A));
     simple_monster_message(*this, str.c_str());
 }
 
@@ -928,8 +930,8 @@ void monster::equip_jewellery_message(item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    const string str = " puts on " +
-                       item.name(DESC_A) + ".";
+    string str = localise("%s puts on %s.", this->name(DESC_THE),
+                          item.name(DESC_A));
     simple_monster_message(*this, str.c_str());
 }
 
@@ -959,9 +961,8 @@ void monster::unequip_weapon(item_def &item, bool msg)
 {
     if (msg)
     {
-        const string str = " unwields " +
-                           item.name(DESC_A, false, false, true, false,
-                                     ISFLAG_CURSED) + ".";
+        string obj = item.name(DESC_A, false, false, true, ISFLAG_CURSED);
+        string str = localise("%s unwields %s.", name(DESC_THE), obj);
         msg = simple_monster_message(*this, str.c_str());
     }
 
@@ -1012,8 +1013,8 @@ void monster::unequip_armour(item_def &item, bool msg)
 {
     if (msg)
     {
-        const string str = " takes off " +
-                           item.name(DESC_A) + ".";
+        const string str = localise("%s takes off %s.", name(DESC_THE),
+                                    item.name(DESC_A));
         simple_monster_message(*this, str.c_str());
     }
 }
@@ -1024,8 +1025,8 @@ void monster::unequip_jewellery(item_def &item, bool msg)
 
     if (msg)
     {
-        const string str = " takes off " +
-                           item.name(DESC_A) + ".";
+        const string str = localise("%s takes off %s.", name(DESC_THE),
+                                    item.name(DESC_A));
         simple_monster_message(*this, str.c_str());
     }
 }
@@ -1231,11 +1232,11 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     {
         if (msg)
         {
-            mprf("%s %s as %s drops %s!",
-                 pitem.name(DESC_THE).c_str(),
-                 summoned_poof_msg(this, pitem).c_str(),
-                 name(DESC_THE).c_str(),
-                 pitem.quantity > 1 ? "them" : "it");
+            mprf("%s drops %s.", name(DESC_THE).c_str(),
+                 pitem.name(DESC_THE).c_str());
+
+            mprf(summoned_poof_msg(this, pitem).c_str(),
+                 pitem.name(DESC_THE).c_str());
         }
 
         item_was_destroyed(pitem);
@@ -2760,9 +2761,7 @@ bool monster::go_frenzy(actor *source)
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
-        simple_monster_message(*this,
-            make_stringf(" shakes off %s lethargy.",
-                         pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
+        simple_monster_message(*this," seems less lethargic.");
     }
     del_ench(ENCH_HASTE, true);
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
@@ -2795,9 +2794,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
-        simple_monster_message(*this,
-            make_stringf(" shakes off %s lethargy.",
-                         pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
+        simple_monster_message(*this, " seems less lethargic.");
     }
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
     del_ench(ENCH_FEAR, true);    // Going berserk breaks fear.
@@ -4317,8 +4314,8 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
 
     if (this->observable())
     {
-        mprf("%s is splashed with acid%s", this->name(DESC_THE).c_str(),
-             attack_strength_punctuation(post_res_dam).c_str());
+        string msg = localise("%s is splashed with acid", this->name(DESC_THE));
+        attack_strength_message(msg, post_res_dam, false);
     }
 
     if (!one_chance_in(3))
@@ -4520,7 +4517,7 @@ void monster::petrify(const actor *atk, bool /*force*/)
 bool monster::fully_petrify(bool quiet)
 {
     bool msg = !quiet && simple_monster_message(*this, mons_is_immotile(*this) ?
-                         " turns to stone!" : " stops moving altogether!");
+                         "%s turns to stone!" : "%s stops moving altogether!");
 
     add_ench(ENCH_PETRIFIED);
     return msg;
@@ -5621,9 +5618,8 @@ bool monster::do_shaft()
     if (!pacified() && !mons_is_conjured(type))
         set_transit(lev);
 
-    string msg = make_stringf(" %s a shaft!",
-                              !ground_level() ? "is sucked into"
-                                              : "falls through");
+    string msg = ground_level() ? "%s falls through a shaft!"
+                                : "%s is sucked into a shaft!";
 
     const bool reveal = simple_monster_message(*this, msg.c_str());
 
@@ -5952,9 +5948,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                     mpr("Your spectral weapon shares its damage with you!");
                 else if (owner->alive() && you.can_see(*owner))
                 {
-                    string buf = " shares ";
-                    buf += owner->pronoun(PRONOUN_POSSESSIVE);
-                    buf += " spectral weapon's damage!";
+                    string buf = "%s shares the spectral weapon's damage!";
                     simple_monster_message(*owner->as_monster(), buf.c_str());
                 }
 
@@ -6473,14 +6467,13 @@ bool monster::has_usable_tentacle() const
 }
 
 // Move the monster to the nearest valid space.
-bool monster::shove(const char* feat_name)
+bool monster::shove(const char* /*feat_name*/)
 {
     for (distance_iterator di(pos()); di; ++di)
         if (monster_space_valid(this, *di, false))
         {
             move_to_pos(*di);
-            simple_monster_message(*this,
-                make_stringf(" is pushed out of the %s.", feat_name).c_str());
+            simple_monster_message(*this, " is pushed out of the way.");
             dprf("Moved to (%d, %d).", pos().x, pos().y);
 
             return true;

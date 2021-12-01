@@ -8,6 +8,7 @@
 #include "decks.h"
 
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <sstream>
@@ -33,8 +34,10 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
+#include "message-util.h"
 #include "mon-cast.h"
 #include "mon-clone.h"
 #include "mon-place.h"
@@ -118,23 +121,28 @@ struct deck_type_data
 static map<deck_type, deck_type_data> all_decks =
 {
     { DECK_OF_ESCAPE, {
-        "escape", "mainly dealing with various forms of escape.",
+        "escape",
+        "A deck of cards, mainly dealing with various forms of escape.",
         deck_of_escape,
         13,
     } },
     { DECK_OF_DESTRUCTION, {
-        "destruction", "most of which hurl death and destruction "
+        "destruction",
+        "A deck of cards, most of which hurl death and destruction "
             "at one's foes (or, if unlucky, at oneself).",
         deck_of_destruction,
         26,
     } },
     { DECK_OF_SUMMONING, {
-        "summoning", "depicting a range of weird and wonderful creatures.",
+        "summoning",
+        "A deck of cards, depicting a range of weird and wonderful creatures.",
         deck_of_summoning,
         13,
     } },
     { DECK_OF_PUNISHMENT, {
-        "punishment", "which wreak havoc on the user.", deck_of_punishment,
+        "punishment",
+        "A deck of cards, which wreak havoc on the user.",
+        deck_of_punishment,
         0, // Not a user deck
     } },
 };
@@ -178,9 +186,9 @@ const char* card_name(card_type card)
     case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
 #endif
-    case NUM_CARDS:            return "a buggy card";
+    case NUM_CARDS:            return "a buggy card"; // noloc
     }
-    return "a very buggy card";
+    return "a very buggy card"; // noloc
 }
 
 card_type name_to_card(string name)
@@ -216,7 +224,7 @@ const string stack_contents()
                 reverse_iterator<CrawlVector::const_iterator>(stack.begin()),
               [](const CrawlStoreValue& card) { return card_name((card_type)card.get_int()); });
     if (!stack.empty())
-        output += ".";
+        output = localise("%s.", output);
 
     return output;
 }
@@ -233,9 +241,9 @@ const string stack_top()
 const string deck_contents(deck_type deck)
 {
     if (deck == DECK_STACK)
-        return "Remaining cards: " + stack_contents();
+        return localise("Remaining cards: ") + stack_contents();
 
-    string output = "It may contain the following cards: ";
+    string output = localise("It may contain the following cards: ");
 
     // This way of doing things is intended to prevent a card
     // that appears in multiple subdecks from showing up twice in the
@@ -246,7 +254,7 @@ const string deck_contents(deck_type deck)
         cards.insert(cww.first);
 
     output += comma_separated_fn(cards.begin(), cards.end(), card_name);
-    output += ".";
+    output = localise("%s.", output);
 
     return output;
 }
@@ -254,7 +262,7 @@ const string deck_contents(deck_type deck)
 const string deck_flavour(deck_type deck)
 {
     if (deck == DECK_STACK)
-        return "set aside for later.";
+        return "A deck of cards, set aside for later.";
 
     deck_type_data* deck_data = map_find(all_decks, deck);
 
@@ -311,14 +319,16 @@ string deck_summary()
     {
         int cards = deck_cards((deck_type) i);
         const deck_type_data *deck_data = map_find(all_decks, (deck_type) i);
-        const string name = deck_data ? deck_data->name : "bugginess";
+        const string name = deck_data ? deck_data->name : "bugginess"; // noloc
         if (cards)
         {
-            stats.push_back(make_stringf("%d %s card%s", cards,
-               name.c_str(), cards == 1 ? "" : "s"));
+            if (cards == 1)
+                stats.push_back(make_stringf("1 %s card", name.c_str()));
+            else
+                stats.push_back(make_stringf("%d %s cards", cards, name.c_str()));
         }
     }
-    return comma_separated_line(stats.begin(), stats.end());
+    return localise(comma_separated_line(stats.begin(), stats.end()));
 }
 
 string which_decks(card_type card)
@@ -339,19 +349,22 @@ string which_decks(card_type card)
 
     if (!decks.empty())
     {
-        output += "It is found in decks of "
-               +  comma_separated_line(decks.begin(), decks.end());
+        string list = comma_separated_line(decks.begin(), decks.end());
         if (punishment)
-            output += ", or in Nemelex Xobeh's deck of punishment";
-        output += ".";
+        {
+            output += localise("It is found in decks of %s, or in "
+                               "Nemelex Xobeh's deck of punishment.", list);
+        }
+        else
+            output += localise("It is found in decks of %s.", list);
     }
     else if (punishment)
     {
-        output += "It is only found in Nemelex Xobeh's deck of "
-                  "punishment.";
+        output += localise("It is only found in Nemelex Xobeh's deck of "
+                           "punishment.");
     }
     else
-        output += "It is normally not part of any deck.";
+        output += localise("It is normally not part of any deck.");
 
     return output;
 }
@@ -381,7 +394,7 @@ static void _describe_cards(CrawlVector& cards)
         string name = card_name(card);
         string desc = getLongDescription(name + " card");
         if (desc.empty())
-            desc = "No description found.\n";
+            desc = localise("No description found.") + "\n";
         string decks = which_decks(card);
 
         name = uppercase_first(name);
@@ -443,7 +456,7 @@ string deck_status(deck_type deck)
 
     ostringstream desc;
 
-    desc << chop_string(deck_name(deck), 24)
+    desc << chop_string(localise(name), 24, true)
          << to_string(cards);
 
     return trimmed_string(desc.str());
@@ -453,8 +466,7 @@ string deck_description(deck_type deck)
 {
     ostringstream desc;
 
-    desc << "A deck of magical cards, ";
-    desc << deck_flavour(deck) << "\n\n";
+    desc << localise(deck_flavour(deck)) << "\n\n";
     desc << deck_contents(deck) << "\n";
 
     if (deck != DECK_STACK)
@@ -463,14 +475,14 @@ string deck_description(deck_type deck)
         desc << "\n";
 
         if (cards > 1)
-            desc << make_stringf("It currently has %d cards ", cards);
+            desc << localise("It currently has %d cards ", cards);
         else if (cards == 1)
-            desc << "It currently has 1 card ";
+            desc << localise("It currently has 1 card ");
         else
-            desc << "It is currently empty ";
+            desc << localise("It is currently empty ");
 
-        desc << make_stringf("and can contain up to %d cards.",
-                             all_decks[deck].deck_max);
+        desc << localise("and can contain up to %d cards.",
+                         all_decks[deck].deck_max);
         desc << "\n";
     }
 
@@ -500,17 +512,24 @@ static char _deck_hotkey(deck_type deck)
     return get_talent(deck_ability[deck], false).hotkey;
 }
 
-static deck_type _choose_deck(const string title = "Draw")
+static deck_type _choose_deck(bool deal = false)
 {
+    string text;
+    if (deal)
+        text = chop_string(localise("Deal which deck?"), 24);
+    else
+        text = chop_string(localise("Draw which deck?"), 24);
+    text += localise("Cards available");
+
+    string alt_text;
+    text = chop_string(localise("Describe which deck?"), 24);
+    text += localise("Cards available");
+
     ToggleableMenu deck_menu(MF_SINGLESELECT
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
     {
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(make_stringf("%s which deck?        "
-                                    "Cards available", title.c_str()),
-                                    "Describe which deck?    "
-                                    "Cards available",
-                                    MEL_TITLE);
+            new ToggleableMenuEntry(text, alt_text, MEL_TITLE);
         deck_menu.set_title(me, true, true);
     }
     deck_menu.set_tag("deck");
@@ -518,9 +537,9 @@ static deck_type _choose_deck(const string title = "Draw")
     deck_menu.add_toggle_key('?');
     deck_menu.menu_action = Menu::ACT_EXECUTE;
 
-    deck_menu.set_more(formatted_string::parse_string(
+    deck_menu.set_more(formatted_string::parse_string(localise(
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                       "between deck selection and description."));
+                       "between deck selection and description.")));
 
     int numbers[NUM_DECKS];
 
@@ -568,17 +587,18 @@ static deck_type _choose_deck(const string title = "Draw")
  */
 static string _empty_deck_msg()
 {
-    string message = random_choose("disappears without a trace.",
-        "glows slightly and disappears.",
-        "glows with a rainbow of weird colours and disappears.");
-    return "The deck of cards " + message;
+    return random_choose(
+        "The deck of cards disappears without a trace.",
+        "The deck of cards glows slightly and disappears.",
+        "The deck of cards glows with a rainbow of weird colours and disappears."
+    );
 }
 
 static void _evoke_deck(deck_type deck, bool dealt = false)
 {
     ASSERT(deck_cards(deck) > 0);
 
-    mprf("You %s a card...", dealt ? "deal" : "draw");
+    mpr(dealt ? "You deal a card..." : "You draw a card...");
 
     if (deck == DECK_STACK)
     {
@@ -663,7 +683,7 @@ bool StackFiveMenu::process_key(int keyin)
     {
         formatted_string old_more = more;
         set_more(formatted_string::parse_string(
-                "Are you done? (press y or Y to confirm)"));
+                 localise("Are you done? (press y or Y to confirm)")));
         if (yesno(nullptr, true, 'n', false, false, true))
             return false;
         set_more(old_more);
@@ -693,15 +713,18 @@ bool StackFiveMenu::process_key(int keyin)
 
 static void _draw_stack(int to_stack)
 {
+    string text = chop_string(localise("Draw which deck?"), 24);
+    text += localise("Cards available");
+
+    string alt_text;
+    text = chop_string(localise("Describe which deck?"), 24);
+    text += localise("Cards available");
+
     ToggleableMenu deck_menu(MF_SINGLESELECT | MF_UNCANCEL
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
     {
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry("Draw which deck?        "
-                                    "Cards available",
-                                    "Describe which deck?    "
-                                    "Cards available",
-                                    MEL_TITLE);
+            new ToggleableMenuEntry(text, alt_text, MEL_TITLE);
         deck_menu.set_title(me, true, true);
     }
     deck_menu.set_tag("deck");
@@ -713,17 +736,17 @@ static void _draw_stack(int to_stack)
 
     if (!stack.empty())
     {
-            string status = "Drawn so far: " + stack_contents();
+            string status = localise("Drawn so far: ") + stack_contents();
             deck_menu.set_more(formatted_string::parse_string(
-                       status + "\n" +
+                       status + "\n" + localise(
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                       "between deck selection and description."));
+                       "between deck selection and description.")));
     }
     else
     {
-        deck_menu.set_more(formatted_string::parse_string(
+        deck_menu.set_more(formatted_string::parse_string(localise(
                            "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                           "between deck selection and description."));
+                           "between deck selection and description.")));
     }
 
     int numbers[NUM_DECKS];
@@ -766,14 +789,17 @@ static void _draw_stack(int to_stack)
                 stack.push_back(draw);
             }
             else
-                status = "<lightred>That deck is empty!</lightred> ";
+            {
+                status = "<lightred>" + localise("That deck is empty!")
+                       + "</lightred> ";
+            }
 
             if (stack.size() > 0)
-                status += "Drawn so far: " + stack_contents();
+                status += localise("Drawn so far: ") + stack_contents();
             deck_menu.set_more(formatted_string::parse_string(
-                       status + "\n" +
+                       status + "\n" + localise(
                        "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                       "between deck selection and description."));
+                       "between deck selection and description.")));
         }
         return stack.size() < to_stack
                || deck_menu.menu_action == Menu::ACT_EXAMINE;
@@ -794,7 +820,8 @@ bool stack_five(int to_stack)
     }
 
     StackFiveMenu menu(stack);
-    MenuEntry *const title = new MenuEntry("Select two cards to swap them:", MEL_TITLE);
+    string text = localise("Select two cards to swap them:");
+    MenuEntry *const title = new MenuEntry(text, MEL_TITLE);
     menu.set_title(title);
     for (unsigned int i = 0; i < stack.size(); i++)
     {
@@ -804,9 +831,10 @@ bool stack_five(int to_stack)
         entry->add_tile(tile_def(TILEG_NEMELEX_CARD));
         menu.add_entry(entry);
     }
-    menu.set_more(formatted_string::parse_string(
-                "<lightgrey>Press <w>?</w> for the card descriptions"
-                " or <w>Enter</w> to accept."));
+    string more = "<lightgrey>"
+                + localise("Press <w>?</w> for the card descriptions"
+                           " or <w>Enter</w> to accept.");
+    menu.set_more(formatted_string::parse_string(more));
     menu.show();
 
     if (crawl_state.seen_hups)
@@ -822,7 +850,7 @@ bool stack_five(int to_stack)
 // Return false if the operation was failed/aborted along the way.
 bool deck_deal()
 {
-    deck_type choice = _choose_deck("Deal");
+    deck_type choice = _choose_deck(true);
 
     if (choice == NUM_DECKS)
         return false;
@@ -908,7 +936,7 @@ bool draw_three()
             for (int i = 0; i < draws.size(); ++i)
             {
                 msg::streams(MSGCH_PROMPT)
-                    << msg::nocap << (static_cast<char>(i + 'a')) << " - "
+                    << msg::nocap << (static_cast<char>(i + 'a')) << " - " // noloc
                     << card_name((card_type)draws[i].get_int()) << endl;
             }
             need_prompt_redraw = false;
@@ -945,7 +973,7 @@ void draw_from_deck_of_punishment(bool deal)
 {
     card_type card = _random_card(DECK_OF_PUNISHMENT);
 
-    mprf("You %s a card...", deal ? "deal" : "draw");
+    mprf(deal ? "You deal a card..." : "You draw a card...");
     card_effect(card, deal, true);
 }
 
@@ -1092,11 +1120,13 @@ static void _damaging_card(card_type card, int power,
                            bool dealt = false)
 {
     const int power_level = _get_power_level(power);
-    const char *participle = dealt ? "dealt" : "drawn";
 
     bool done_prompt = false;
-    string prompt = make_stringf("You have %s %s.", participle,
-                                 card_name(card));
+    string prompt;
+    if (dealt)
+        prompt = localise("You have dealt %s.", card_name(card));
+    else
+        prompt = localise("You have drawn %s.", card_name(card));
 
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
@@ -1150,7 +1180,7 @@ static void _damaging_card(card_type card, int power,
         args.top_prompt = prompt;
 
     // Confirm aborts as they waste the card.
-    prompt = make_stringf("Aiming: %s", card_name(card));
+    prompt = localise("Aiming: %s", card_name(card));
     while (!(spell_direction(target, beam, &args)
             && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam)))
     {
@@ -1466,16 +1496,47 @@ static void _storm_card(int power)
     }
     // Lots of loud bangs, even if everything is silenced get a message.
     // Thunder comes after the animation runs.
-    if (targets.size() > 0)
+    if (targets.size() == 1)
     {
-        vector<string> thunder_adjectives = { "mighty",
-                                              "violent",
-                                              "cataclysmic" };
-        mprf("You %s %s%s peal%s of thunder!",
-              heard ? "hear" : "feel",
-              targets.size() > 1 ? "" : "a ",
-              thunder_adjectives[power_level].c_str(),
-              targets.size() > 1 ? "s" : "");
+        if (heard)
+        {
+            if (power_level == 0)
+                mpr("You hear a mighty peal of thunder!");
+            else if (power_level == 1)
+                mpr("You hear a violent peal of thunder!");
+            else
+                mpr("You hear a cataclysmic peal of thunder!");
+        }
+        else
+        {
+            if (power_level == 0)
+                mpr("You feel a mighty peal of thunder!");
+            else if (power_level == 1)
+                mpr("You feel a violent peal of thunder!");
+            else
+                mpr("You feel a cataclysmic peal of thunder!");
+        }
+    }
+    else if (targets.size() > 1)
+    {
+        if (heard)
+        {
+            if (power_level == 0)
+                mpr("You hear mighty peals of thunder!");
+            else if (power_level == 1)
+                mpr("You hear violent peals of thunder!");
+            else
+                mpr("You hear cataclysmic peals of thunder!");
+        }
+        else
+        {
+            if (power_level == 0)
+                mpr("You feel mighty peals of thunder!");
+            else if (power_level == 1)
+                mpr("You feel violent peals of thunder!");
+            else
+                mpr("You feel cataclysmic peals of thunder!");
+        }
     }
 }
 
@@ -1523,7 +1584,7 @@ static void _degeneration_card(int power)
                    const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
                    mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
                    simple_monster_message(mons,
-                                          " is dazed by the mutagenic energy.");
+                                          "%s is dazed by the mutagenic energy.");
                }
                return true;
            }))
@@ -1561,7 +1622,7 @@ static void _wild_magic_card(int power)
             miscast_effect(*mons, &you,
                            {miscast_source::deck}, type,
                            3 * (power_level + 1), random2(70),
-                           "a card of wild magic");
+                           "a card of wild magic"); // noloc
 
             num_affected++;
         }
@@ -1615,7 +1676,6 @@ void card_effect(card_type which_card,
                  bool dealt,
                  bool punishment, bool tell_card)
 {
-    const char *participle = dealt ? "dealt" : "drawn";
     const int power = _card_power(punishment);
 
     dprf("Card power: %d", power);
@@ -1628,7 +1688,10 @@ void card_effect(card_type which_card,
             && which_card != CARD_PAIN
             && which_card != CARD_ORB)
         {
-            mprf("You have %s %s.", participle, card_name(which_card));
+            if (dealt)
+                mprf("You have dealt %s.", card_name(which_card));
+            else
+                mprf("You have drawn %s.", card_name(which_card));
         }
     }
 
@@ -1672,7 +1735,7 @@ void card_effect(card_type which_card,
 #endif
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
-        mprf("You have %s a buggy card!", participle);
+        mprf("You have drawn a buggy card!"); // noloc
         break;
     }
 }
@@ -1689,7 +1752,7 @@ string deck_name(deck_type deck)
     if (deck == DECK_STACK)
         return "stacked deck";
     const deck_type_data *deck_data = map_find(all_decks, deck);
-    const string name = deck_data ? deck_data->name : "bugginess";
+    const string name = deck_data ? deck_data->name : "bugginess"; // noloc
     return "deck of " + name;
 }
 

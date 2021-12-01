@@ -213,7 +213,7 @@ void MonsterRegion::draw_tag()
         return;
 
     string desc = mon->proper_name(DESC_A);
-    draw_desc(desc.c_str());
+    draw_desc(desc);
 }
 
 void MonsterRegion::activate()

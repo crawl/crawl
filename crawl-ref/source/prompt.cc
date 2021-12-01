@@ -11,6 +11,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "libutil.h"
+#include "localise.h"
 #include "menu.h"
 #include "message.h"
 #include "options.h"
@@ -38,7 +39,7 @@ bool yes_or_no(const char* fmt, ...)
 
     if (cancellable_get_line(buf, sizeof buf))
         return false;
-    if (strcasecmp(buf, "yes") != 0)
+    if (strcasecmp(buf, "yes") != 0 && strcasecmp(buf, localise("yes").c_str()) != 0)
         return false;
 
     return true;
@@ -54,13 +55,13 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         interrupt_activity(activity_interrupt::force);
 
     // Allow players to answer prompts via clua.
-    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
+    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str); // noloc
     if (res == MB_TRUE)
         return true;
     if (res == MB_FALSE)
         return false;
 
-    string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
+    string prompt = localise("%s ", str ? str : "Buggy prompt?");
 
 #ifdef TOUCH_UI
     bool use_popup = true;
@@ -78,8 +79,8 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     if (use_popup)
     {
         status = new MenuEntry("", MEL_SUBTITLE);
-        MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
-        MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
+        MenuEntry * const y_me = new MenuEntry(localise("Yes"), MEL_ITEM, 1, localise_char('Y'));
+        MenuEntry * const n_me = new MenuEntry(localise("No"), MEL_ITEM, 1, localise_char('N'));
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 
@@ -128,6 +129,9 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;
 
+        if (default_answer)
+            default_answer = localise_char(default_answer);
+
         if (default_answer
             && (tmp == ' ' || key_is_escape(tmp)
                 || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
@@ -146,17 +150,17 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         if (clear_after)
             clear_messages();
 
-        if (tmp == 'N')
+        if (tmp == localise_char('N'))
             return false;
-        else if (tmp == 'Y')
+        else if (tmp == localise_char('Y'))
             return true;
         else if (!noprompt)
         {
             bool upper = !allow_lowercase
-                         && (tmp == 'n' || tmp == 'y'
+                         && (tmp == localise_char('n') || tmp == localise_char('y')
                              || crawl_state.game_is_hints_tutorial());
-            const string pr = make_stringf("%s[Y]es or [N]o only, please.",
-                                           upper ? "Uppercase " : "");
+            const string pr = localise((upper ? "Uppercase " : "")
+                                       + string("[Y]es or [N]o only, please."));
             if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
             else
@@ -170,7 +174,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
 {
     string help = "";
     bool print_yes = false;
-    if (yes1 != 'Y')
+    if (yes1 != localise_char('Y'))
     {
         if (lowered)
             help += toalower(yes1);
@@ -179,7 +183,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
         print_yes = true;
     }
 
-    if (yes2 != 'Y' && yes2 != yes1)
+    if (yes2 != localise_char('Y') && yes2 != yes1)
     {
         if (print_yes)
             help += "/";
@@ -213,7 +217,7 @@ static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
     result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
     result += "]";
 
-    return result;
+    return localise(result);
 }
 
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
@@ -257,31 +261,32 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
         if (clear_after)
             clear_messages();
 
-        if (tmp == 'N')
+        if (tmp == localise_char('N'))
             return 0;
-        else if (tmp == 'Y' || tmp == alt_yes || tmp == alt_yes2)
+        else if (tmp == localise_char('Y') || tmp == localise_char(alt_yes) || tmp == localise_char(alt_yes2))
             return 1;
         else if (allow_all)
         {
-            if (tmp == 'A')
+            if (tmp == localise_char('A'))
                 return 2;
             else
             {
                 bool upper = !allow_lowercase
-                             && (tmp == 'n' || tmp == 'y' || tmp == 'a'
+                             && (tmp == localise_char('n') || tmp == localise_char('y')
+                                 || tmp == localise_char('a')
                                  || crawl_state.game_is_hints_tutorial());
-                mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
-                     upper ? "uppercase " : "",
+                mprf(upper ? "Choose uppercase [Y]es%s, [N]o, [Q]uit, or [A]ll!" :
+                             "Choose [Y]es%s, [N]o, [Q]uit, or [A]ll!",
                      _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
             }
         }
         else
         {
             bool upper = !allow_lowercase
-                         && (tmp == 'n' || tmp == 'y'
+                         && (tmp == localise_char('n') || tmp == localise_char('y')
                              || crawl_state.game_is_hints_tutorial());
-            mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
-                 upper ? "Uppercase " : "",
+            mprf(upper ? "Uppercase [Y]es%s, [N]o or [Q]uit only, please." :
+                         "[Y]es%s, [N]o or [Q]uit only, please.",
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
         }
     }

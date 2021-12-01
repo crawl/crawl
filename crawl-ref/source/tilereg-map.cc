@@ -7,6 +7,7 @@
 #include "cio.h"
 #include "command.h"
 #include "libutil.h"
+#include "localise.h"
 #include "nearby-danger.h"
 #include "player.h"
 #include "options.h"
@@ -298,11 +299,11 @@ bool MapRegion::update_tip_text(string& tip)
         return false;
 
 #ifdef TOUCH_UI
-    tip = "[L-Click] Enable map mode";
+    tip = localise("%s %s", "[L-Click]", "Enable map mode");
 #else
-    tip = "[L-Click] Travel / [R-Click] View";
+    tip = localise("%s %s / %s %s", "[L-Click]", "Travel", "[R-Click]", "View");
     if (i_feel_safe())
-        tip += "\n[Shift + L-Click] Autoexplore";
+        tip += localise("\n%s %s", "[Shift + L-Click]", "Autoexplore");
 #endif
     return true;
 }

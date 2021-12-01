@@ -8,6 +8,7 @@
 #include "format.h"
 #include "item-name.h" // make_name
 #include "libutil.h"
+#include "localise.h"
 #include "options.h"
 #include "stringutil.h"
 #include "unicode.h"
@@ -16,8 +17,11 @@
 // Eventually, this should be something more grand. {dlb}
 formatted_string opening_screen()
 {
-    string msg =
-    "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
+    string greeting = localise("Hello, welcome to %s %s!",
+                               LocalisationArg(CRAWL, false),
+                               LocalisationArg(Version::Long, false));
+
+    string msg = "<yellow>" + greeting + "</yellow>\n"
     "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2021 Crawl DevTeam";
 
     return formatted_string::parse_string(msg);

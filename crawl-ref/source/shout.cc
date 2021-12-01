@@ -428,7 +428,7 @@ void noisy_equipment()
 
     if (is_unrandom_artefact(*weapon))
     {
-        string name = weapon->name(DESC_PLAIN, false, true, false, false,
+        string name = weapon->name(DESC_PLAIN, false, true, false,
                                    ISFLAG_IDENT_MASK);
         msg = getSpeakString(name);
         if (msg == "NONE")

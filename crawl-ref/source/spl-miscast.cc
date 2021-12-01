@@ -63,7 +63,7 @@ static void _do_msg(actor& target, miscast_datum effect, int dam)
             msg = replace_all(msg, "'s body", "");
     }
 
-    mpr(msg + attack_strength_punctuation(dam));
+    attack_strength_message(msg, dam, true);
 }
 
 static void _ouch(actor& target, actor * source, miscast_source_info mc_info, int dam, beam_type flavour, string cause)

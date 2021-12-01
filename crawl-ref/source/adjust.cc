@@ -22,7 +22,7 @@ static void _adjust_ability();
 
 void adjust()
 {
-    mprf(MSGCH_PROMPT, "Adjust (i)tems, (s)pells, or (a)bilities? ");
+    mprf(MSGCH_PROMPT, "%s ", "Adjust (i)tems, (s)pells, or (a)bilities?");
 
     const int keyin = toalower(get_ch());
 
@@ -85,7 +85,7 @@ static void _adjust_spell()
     }
 
     // Select starting slot
-    mprf(MSGCH_PROMPT, "Adjust which spell? ");
+    mprf(MSGCH_PROMPT, "%s ", "Adjust which spell?");
     int keyin = list_spells(false, false, false, "Adjust which spell?");
 
     if (!isaalpha(keyin))
@@ -111,7 +111,7 @@ static void _adjust_spell()
     keyin = 0;
     while (!isaalpha(keyin))
     {
-        mprf(MSGCH_PROMPT, "Adjust to which letter? ");
+        mprf(MSGCH_PROMPT, "%s ", "Adjust to which letter?");
         keyin = get_ch();
         if (key_is_escape(keyin))
         {
@@ -158,7 +158,7 @@ static void _adjust_ability()
         return;
     }
 
-    mprf(MSGCH_PROMPT, "Adjust which ability? ");
+    mprf(MSGCH_PROMPT, "%s ", "Adjust which ability?");
     int selected = choose_ability_menu(talents);
 
     // If we couldn't find anything, cancel out.

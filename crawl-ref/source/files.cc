@@ -64,6 +64,7 @@
 #include "kills.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
@@ -388,21 +389,24 @@ static bool _create_dirs(const string &dir)
 // 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
 void assert_read_safe_path(const string &path)
 {
+    // i18n: Localisation may or may not be init'd at this point
+    // If yes then errors will be translated, otherwise user gets English
+
     // Check for rank tomfoolery first:
     if (path.empty())
-        throw unsafe_path("Empty file name.");
+        throw unsafe_path(localise("Empty file name."));
 
 #ifdef UNIX
     if (!shell_safe(path.c_str()))
-        throw unsafe_path_f("\"%s\" contains bad characters.", path.c_str());
+        throw unsafe_path(localise("\"%s\" contains bad characters.", path));
 #endif
 
 #ifdef DATA_DIR_PATH
     if (is_absolute_path(path))
-        throw unsafe_path_f("\"%s\" is an absolute path.", path.c_str());
+        throw unsafe_path(localise("\"%s\" is an absolute path.", path));
 
     if (path.find("..") != string::npos)
-        throw unsafe_path_f("\"%s\" contains \"..\" sequences.", path.c_str());
+        throw unsafe_path(localise("\"%s\" contains \"..\" sequences.", path));
 #endif
 
     // Path is okay.
@@ -544,10 +548,10 @@ void validate_basedirs()
     // can't proceed if nothing complete was found.
     if (!found)
     {
-        string err = "Missing DCSS data directory; tried: \n";
-        err += comma_separated_line(bases.begin(), bases.end());
+        string err = "Missing DCSS data directory; tried:"; // localise
+        string dirs = comma_separated_line(bases.begin(), bases.end());
 
-        end(1, false, "%s", err.c_str());
+        end(1, false, "%s\n%s", err.c_str(), dirs.c_str()); // noloc
     }
 }
 
@@ -572,7 +576,7 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     // Die horribly.
     if (croak_on_fail)
     {
-        end(1, false, "Cannot find data file '%s' anywhere, aborting\n",
+        end(1, false, "Cannot find data file '%s' anywhere, aborting",
             basename.c_str());
     }
 
@@ -610,9 +614,9 @@ bool check_mkdir(const string &whatdir, string *dir, bool silent)
                                 "%s \"%s\" does not exist and I can't create it.",
                                 whatdir.c_str(), dir->c_str());
 #endif
-            fprintf(stderr, "%s \"%s\" does not exist "
-                    "and I can't create it.\n",
-                    whatdir.c_str(), dir->c_str());
+            string msg = localise("%s \"%s\" does not exist and I can't create it.",
+                                  whatdir, *dir);
+            fprintf(stderr, "%s\n", msg.c_str());
         }
         return false;
     }
@@ -958,7 +962,8 @@ NORETURN void print_save_json(const char *name)
         {
             if (!_append_save_info(json, name))
             {
-                fprintf(stderr, "Could not load '%s'\n", name);
+                string msg = localise("Could not load '%s'", name);
+                fprintf(stderr, "%s\n", msg.c_str());
                 end(1);
             }
         }
@@ -1229,14 +1234,18 @@ static void _grab_followers()
         // Summons won't follow and will time out.
         if (non_stair_using_summons > 0)
         {
-            mprf("Your summoned %s left behind.",
-                 non_stair_using_allies > 1 ? "allies are" : "ally is");
+            if (non_stair_using_allies == 1)
+                mpr("Your summoned ally is left behind.");
+            else
+                mpr("Your summoned allies are left behind.");
         }
         else
         {
             // Permanent undead are left behind but stay.
-            mprf("Your mindless thrall%s behind.",
-                 non_stair_using_allies > 1 ? "s stay" : " stays");
+            if (non_stair_using_allies == 1)
+                mpr("Your mindless thrall stays behind.");
+            else
+                mpr("Your mindless thralls stay behind.");
         }
     }
 
@@ -1340,7 +1349,8 @@ static bool _leave_level(dungeon_feature_type stair_taken,
         if (you.wizard)
         {
             // warn about breakage so testers know it's an abnormal situation.
-            mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
+            mprf_nolocalise(MSGCH_ERROR,
+                 "Error: you smelly wizard, how dare you enter "
                  "the same level (%s) twice! It will be trampled upon return.\n"
                  "The stack has: %s.",
                  level_id::current().describe().c_str(),
@@ -1836,25 +1846,27 @@ bool pregen_dungeon(const level_id &stopping_point)
         // be sure that AK start doesn't interfere with the builder
         unwind_var<game_chapter> chapter(you.chapter, CHAPTER_ORB_HUNTING);
 
-        ui::progress_popup progress("Generating dungeon...\n\n", 35);
+        string msg = localise("Generating dungeon...");
+        ui::progress_popup progress(msg + "\n\n", 35);
         progress.advance_progress();
 
         for (const level_id &new_level : to_generate)
         {
-            string status = "\nbuilding ";
+            string status = "\n";
 
             switch (new_level.branch)
             {
             case BRANCH_SPIDER:
             case BRANCH_SNAKE:
-                status += "a lair branch";
+                status += localise("building a lair branch");
                 break;
             case BRANCH_SHOALS:
             case BRANCH_SWAMP:
-                status += "another lair branch";
+                status += localise("building another lair branch");
                 break;
             default:
-                status += branches[new_level.branch].longname;
+                status += localise("building %s",
+                                   branches[new_level.branch].longname);
                 break;
             }
             progress.set_status_text(status);
@@ -2235,7 +2247,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             && static_cast<int>(curr_PlaceInfo.levels_seen)
                                         > brdepth[curr_PlaceInfo.branch])
         {
-            mprf(MSGCH_ERROR,
+            mprf_nolocalise(MSGCH_ERROR,
                 "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
                 branches[curr_PlaceInfo.branch].shortname,
                 curr_PlaceInfo.levels_seen);
@@ -2272,13 +2284,16 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             {
                 string stair_str = feature_description_at(you.pos(), false,
                                                           DESC_THE);
-                string verb = stair_climb_verb(feat);
 
                 if (coinflip()
                     && slide_feature_over(you.pos()))
                 {
-                    mprf("%s slides away from you right after you %s it!",
-                         stair_str.c_str(), verb.c_str());
+                    if (feat_is_staircase(feat))
+                        mpr("The staircase slides away right after you climb it!");
+                    else if (feat_is_escape_hatch(feat))
+                        mpr("The hatch slides away right after you use it!");
+                    else
+                        mpr("The portal slides away right after you pass through it!");
                 }
 
                 if (coinflip())
@@ -2464,8 +2479,16 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    game_ended(game_exit::save, farewellmsg ? farewellmsg
-                                : "See you soon, " + you.your_name + "!");
+    string msg;
+    if (farewellmsg)
+        msg = localise(farewellmsg);
+    else
+    {
+        msg = localise("See you soon, %s!",
+                       LocalisationArg(you.your_name, false));
+    }
+
+    game_ended(game_exit::save, msg);
 }
 
 // Saves the game without exiting.
@@ -2970,7 +2993,7 @@ bool load_ghosts(int max_ghosts, bool creating_level)
 static string _type_name_processed(game_type t)
 {
     string name = game_state::game_type_name_for(t);
-    return name.size() ? name : "regular";
+    return name.size() ? name : "regular"; // localise
 }
 
 // returns false if a new game should start instead
@@ -2993,13 +3016,17 @@ static bool _restore_game(const string& filename)
     {
         // Note: if we are here, the save info was properly read, it would
         // raise an exception otherwise.
-        if (yesno(("There is an existing game for name '" + you.your_name +
-                   "' from an incompatible version of Crawl ("
-                   + you.prev_save_version + ").\n"
-                   "Unless you reinstall that version, you can't load it.\n"
-                   "Do you want to DELETE that game and start a new one?"
-                  ).c_str(),
-                  true, 'n'))
+        string prompt = localise("There is an existing game for name '%s' "
+                                 "from an incompatible version of Crawl (%s).",
+                                 LocalisationArg(you.your_name, false),
+                                 LocalisationArg(you.prev_save_version, false));
+        prompt += "\n";
+        prompt += localise("Unless you reinstall that version, you can't load it.");
+        prompt += "\n";
+        prompt += localise("Do you want to DELETE that game and start a new one?");
+
+        // i18n: TODO: Tell yesno() not to translate already translated prompt
+        if (yesno(prompt.c_str(), true, 'n'))
         {
             you.save->unlink();
             you.save = 0;
@@ -3010,25 +3037,31 @@ static bool _restore_game(const string& filename)
         you.save->abort();
         delete you.save;
         you.save = 0;
-        game_ended(game_exit::abort,
-            you.your_name + " is from an incompatible version and can't be loaded.");
+        string msg = localise("%s is from an incompatible version and can't be loaded.",
+                              LocalisationArg(you.your_name, false));
+        game_ended(game_exit::abort, msg);
     }
 
     if (!crawl_state.bypassed_startup_menu
         && menu_game_type != crawl_state.type)
     {
-        if (!yesno(("You already have a "
-                        + _type_name_processed(crawl_state.type) +
-                    " game saved under the name '" + you.your_name + "';\n"
-                    "do you want to load that instead?").c_str(),
-                   true, 'n'))
+        string prompt = localise("You already have a %s game saved under the "
+                                 "name '%s';",
+                                 _type_name_processed(crawl_state.type),
+                                 LocalisationArg(you.your_name, false));
+        prompt += "\n";
+        prompt += localise("do you want to load that instead?");
+
+        // i18n: TODO: Tell yesno not to translate already translated prompt
+        if (!yesno(prompt.c_str(),  true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            game_ended(game_exit::abort,
-                "Please use a different name to start a new " +
-                _type_name_processed(menu_game_type) + " game, then.");
+            string msg = localise("Please use a different name to start a new "
+                                  "%s game, then.",
+                                  _type_name_processed(menu_game_type));
+            game_ended(game_exit::abort, msg);
         }
     }
 
@@ -3038,16 +3071,21 @@ static bool _restore_game(const string& filename)
     if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
-        if (!yesno(("This game comes from a previous release of Crawl (" +
-                    you.prev_save_version + ").\n\nIf you load it now,"
-                    " you won't be able to go back. Continue?").c_str(),
-                    true, 'n'))
+        string prompt = localise("This game comes from a previous release of Crawl (%s).",
+                                 LocalisationArg(you.prev_save_version, false));
+        prompt += "\n\n";
+        prompt += localise("If you load it now, you won't be able to go back. Continue?");
+
+        // i18n: TODO: Tell yesno not to translate already translated prompt
+        if (!yesno(prompt.c_str(), true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            game_ended(game_exit::abort, "Please use version " +
-                you.prev_save_version + " to load " + you.your_name + " then.");
+            string msg = localise("Please use version %s to load %s then.",
+                                  LocalisationArg(you.prev_save_version, false),
+                                  LocalisationArg(you.your_name, false));
+            game_ended(game_exit::abort, msg);
         }
     }
 
@@ -3125,11 +3163,14 @@ bool restore_game(const string& filename)
     }
     catch (corrupted_save &err)
     {
-        if (yesno(make_stringf(
-                   "There exists a save by that name but it appears to be invalid.\n"
-                   "Do you want to delete it?\n"
-                   "Error: %s", err.what()).c_str(), // TODO linebreak error
-                  true, 'n'))
+        string prompt = localise("There exists a save by that name but it appears to be invalid.");
+        prompt += "\n";
+        prompt += localise("Do you want to delete it?");
+        prompt += "\n";
+        // TODO linebreak error
+        prompt += localise("Error: %s", err.what());
+
+        if (yesno(prompt.c_str(), true, 'n'))
         {
             if (you.save)
                 you.save->unlink();
@@ -3276,17 +3317,21 @@ static bool _convert_obsolete_species()
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
     {
-        if (!yesno(
-            "This Lava Orc save game cannot be loaded as-is. If you load it now,\n"
-            "your character will be converted to a Hill Orc. Continue?",
-                       false, 'N'))
+        string prompt;
+        prompt = localise("This Lava Orc save game cannot be loaded as-is.");
+        prompt += "\n";
+        prompt += localise("If you load it now, your character will be "
+                           "converted to a Hill Orc. Continue?");
+
+        if (!yesno(prompt.c_str(), false, 'N'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            game_ended(game_exit::abort,
+            string msg = localise(
                 "Please load the save in an earlier version "
                 "if you want to keep it as a Lava Orc.");
+            game_ended(game_exit::abort, msg);
         }
         change_species_to(SP_HILL_ORC);
         // No need for conservation
@@ -3358,8 +3403,8 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
 
     if (!version.valid())
     {
-        *reason = make_stringf("File is corrupt (found version %d,%d).",
-                                version.major, version.minor);
+        *reason = localise("File is corrupt (found version %d.%d).",
+                           version.major, version.minor);
         return false;
     }
 
@@ -3368,29 +3413,34 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
         if (version.is_ancient())
         {
             const auto min_supported = save_version::minimum_supported();
-            *reason = make_stringf("This save is from an older version.\n"
-                    "\n"
-                    CRAWL " %s is not compatible with save files this old. You can:\n"
-                    " • continue your game with an older version of " CRAWL "\n"
-                    " • delete it and start a new game\n"
-                    "\n"
-                    "This save's version: (%d.%d) (must be >= %d.%d)",
-                    Version::Short,
-                    version.major, version.minor,
-                    min_supported.major, min_supported.minor);
+            *reason = localise("This save is from an older version.");
+            *reason += "\n\n";
+            *reason += localise("%s %s is not compatible with save files this old. You can:",
+                                CRAWL, LocalisationArg(Version::Short, false));
+            *reason += "\n";
+            *reason += localise(" • continue your game with an older version of %s", CRAWL);
+            *reason += "\n";
+            *reason += localise(" • delete it and start a new game");
+            *reason += "\n\n";
+            *reason += localise("This save's version: (%d.%d) (must be >= %d.%d)",
+                                version.major, version.minor,
+                                min_supported.major, min_supported.minor);
         }
         else if (version.is_future())
         {
             const auto current = save_version::current();
-            *reason = make_stringf("This save is from a newer version.\n"
-                    "\n"
-                    CRAWL " cannot load saves from newer versions. You can:\n"
-                    " • continue your game with a newer version of " CRAWL "\n"
-                    " • delete it and start a new game\n"
-                    "\n"
-                    "This save's version: (%d.%d) (must be <= %d.%d)",
-                    version.major, version.minor,
-                    current.major, current.minor);
+            *reason = localise("This save is from a newer version.");
+            *reason += "\n\n";
+            *reason += localise("%s cannot load saves from newer versions. You can:",
+                                CRAWL);
+            *reason += "\n";
+            *reason += localise(" • continue your game with a newer version of %s", CRAWL);
+            *reason += "\n";
+            *reason += localise(" • delete it and start a new game");
+            *reason += "\n\n";
+            *reason += localise("This save's version: (%d.%d) (must be <= %d.%d)",
+                                version.major, version.minor,
+                                current.major, current.minor);
         }
         return false;
     }
@@ -3412,7 +3462,7 @@ static bool _restore_tagged_chunk(package *save, const string &name,
             return false;
         }
         else
-            end(-1, false, "\n%s %s\n", complaint, reason.c_str());
+            end(-1, false, "\n%s %s\n", complaint, reason.c_str()); // noloc
     }
 
     crawl_state.minor_version = inf.getMinorVersion();

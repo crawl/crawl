@@ -558,12 +558,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (is_nonliving() || berserk_or_insane())
         {
             // This should only happen because of fleeing sanctuary
-            msg = " stops retreating.";
+            msg = "%s stops retreating.";
         }
         else if (!mons_is_tentacle_or_tentacle_segment(type))
         {
-            msg = " seems to regain " + pronoun(PRONOUN_POSSESSIVE, true)
-                                      + " courage.";
+            msg = "%s seems to regain courage.";
         }
 
         if (!quiet)
@@ -632,15 +631,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
                 {
                     simple_monster_message(*this,
-                                           " breaks free of your control!");
+                                           "%s breaks free of your control!");
                 }
                 else
                     simple_monster_message(*this,
                                         me.ench == ENCH_CHARM
-                                        ? " is no longer charmed."
+                                        ? "%s is no longer charmed."
                                         : me.ench == ENCH_HEXED
-                                        ? " is no longer hexed."
-                                        : " is no longer bribed.");
+                                        ? "%s is no longer hexed."
+                                        : "%s is no longer bribed.");
             }
 
         }
@@ -776,7 +775,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
         {
             simple_monster_message(*this,
-                                   "'s soul is no longer ripe for the taking.");
+                                   "%s's soul is no longer ripe for the taking.");
         }
         break;
 
@@ -851,9 +850,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_WRETCHED:
         if (!quiet)
         {
-            const string msg = " seems to return to " +
-                               pronoun(PRONOUN_POSSESSIVE, true) +
-                               " normal shape.";
+            const string msg = "%s seems to return to a normal shape.";
             simple_monster_message(*this, msg.c_str());
         }
         break;
@@ -1836,9 +1833,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PAIN_BOND:
         if (decay_enchantment(en))
         {
-            const string msg = " is no longer sharing " +
-                               pronoun(PRONOUN_POSSESSIVE, true) +
-                               " pain.";
+            const string msg = "%s is no longer sharing pain.";
             simple_monster_message(*this, msg.c_str());
         }
         break;

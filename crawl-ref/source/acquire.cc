@@ -31,6 +31,7 @@
 #include "invent.h"
 #include "known-items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "notes.h"
@@ -1171,18 +1172,18 @@ static string _why_reject(const item_def &item, int agent)
             || item.base_type == OBJ_ARMOUR
                 && !can_wear_armour(item, false, true)))
     {
-        return "Destroying unusable weapon or armour!";
+        return "Destroying unusable weapon or armour!"; // noloc (debug msg)
     }
 
     // Trog does not gift the Wrath of Trog.
     if (agent == GOD_TROG && is_unrandom_artefact(item, UNRAND_TROG))
-        return "Destroying Trog-gifted Wrath of Trog!";
+        return "Destroying Trog-gifted Wrath of Trog!"; // noloc (debug msg)
 
     // Pain brand is useless if you've sacrificed Necromacy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
         && get_weapon_brand(item) == SPWPN_PAIN)
     {
-        return "Destroying pain weapon after Necro sac!";
+        return "Destroying pain weapon after Necro sac!"; // noloc (debug msg)
     }
 
     return ""; // all OK
@@ -1410,7 +1411,7 @@ int acquirement_create_item(object_class_type class_wanted,
         && agent < NUM_GODS)
     {
         if (!quiet && agent == GOD_XOM)
-            simple_god_message(" snickers.", GOD_XOM);
+            god_speaks(GOD_XOM, "Xom snickers.");
         else
             return _failed_acquirement(quiet);
     }
@@ -1446,7 +1447,7 @@ class AcquireEntry : public InvEntry
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
         const string gold_text = item->base_type == OBJ_GOLD
-            ? make_stringf(" (you have %d gold)", you.gold) : "";
+            ? localise(" (you have %d gold)", you.gold) : "";
         return make_stringf(" <%s>%c%c%c%c</%s><%s>%s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
@@ -1481,7 +1482,7 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems)
 
     update_help();
 
-    set_title("Choose an item to acquire.");
+    set_title(localise("Choose an item to acquire."));
 }
 
 void AcquireMenu::init_entries()
@@ -1503,7 +1504,7 @@ static string _hyphenated_letters(int how_many, char first)
     s += "</w>";
     if (how_many > 1)
     {
-        s += "-<w>";
+        s += "-<w>"; // noloc
         s += first + how_many - 1;
         s += "</w>";
     }
@@ -1514,16 +1515,16 @@ void AcquireMenu::update_help()
 {
     string top_line = string(80, ' ') + '\n';
 
-    set_more(formatted_string::parse_string(top_line + make_stringf(
+    set_more(formatted_string::parse_string(top_line + localise(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "%s  [%s] %s\n"
-        "[Esc/R-Click] exit",
+        "%s  [%s] %s\n%s", // noloc
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
                                      "[<w>!</w>] acquire|<w>examine</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for acquirement"
-                                   : "examine item")));
+                                   : "examine item",
+        "[Esc/R-Click] exit")));
 }
 
 static void _create_acquirement_item(item_def &item)
@@ -1567,11 +1568,14 @@ bool AcquireMenu::acquire_selected()
     const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
     update_help();
     const formatted_string old_more = more;
+    string text = localise("Acquire %s? (%s/%s)",
+                           entry.text,
+                           Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
+                           "N");
     more = formatted_string::parse_string(make_stringf(
-               "<%s>Acquire %s? (%s/N)</%s>\n",
+               "<%s>%s</%s>\n", // noloc
                col.c_str(),
-               entry.text.c_str(),
-               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
+               text.c_str(),
                col.c_str()));
     more += old_more;
     update_more();

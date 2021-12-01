@@ -45,7 +45,8 @@ public:
     static level_id from_packed_place(const unsigned short place);
 #endif
 
-    string describe(bool long_name = false, bool with_number = true) const;
+    string describe(bool long_name = false, bool with_number = true,
+                    bool localize = false) const;
 
     void clear()
     {

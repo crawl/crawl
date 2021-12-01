@@ -35,6 +35,7 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
+#include "localise.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mutation.h"
@@ -183,7 +184,15 @@ static dump_params _get_dump(bool full_id = false,
 bool dump_char(const string &fname, bool quiet, bool full_id,
                const scorefile_entry *se)
 {
-    return _write_dump(fname, _get_dump(full_id, se), quiet);
+    // switch to English
+    pause_localisation();
+
+    dump_params dp = _get_dump(full_id, se);
+
+    // switch back to previous language
+    unpause_localisation();
+
+    return _write_dump(fname, dp, quiet);
 }
 
 string seed_description()

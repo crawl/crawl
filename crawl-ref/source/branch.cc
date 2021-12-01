@@ -4,10 +4,12 @@
 #include "branch-data.h"
 
 #include "item-name.h"
+#include "localise.h"
 #include "player.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "travel.h"
+#include "unicode.h"
 
 FixedVector<level_id, NUM_BRANCHES> brentry;
 FixedVector<int, NUM_BRANCHES> brdepth;
@@ -316,21 +318,20 @@ string branch_noise_desc(branch_type br)
     const int noise = ambient_noise(br);
     if (noise != 0)
     {
-        desc = "This branch is ";
         if (noise > 0)
         {
-            desc += make_stringf("very noisy, and so sound travels much less "
-                                 "far.");
+            desc = "This branch is very noisy, and so sound travels much less "
+                   "far.";
         }
         else
         {
-            desc += make_stringf("unnaturally silent, and so sound travels "
-                                 "much further.");
+            desc = "This branch is unnaturally silent, and so sound travels "
+                   "much further.";
 
         }
     }
 
-    return desc;
+    return localise(desc);
 }
 
 /**
@@ -348,17 +349,24 @@ string branch_rune_desc(branch_type br, bool remaining_only)
 
     for (rune_type rune : branches[br].runes)
         if (!(remaining_only && you.runes[rune]))
-            rune_names.push_back(rune_type_name(rune));
-
-    if (!rune_names.empty())
-    {
-        desc = make_stringf("This branch contains the %s rune%s of Zot.",
-                            comma_separated_line(begin(rune_names),
-                                                 end(rune_names)).c_str(),
-                            rune_names.size() > 1 ? "s" : "");
-    }
+        {
+            desc += desc.empty() ? "" : " ";
+            desc += localise("This branch contains %s.", rune_long_name(rune));
+        }
 
     return desc;
+}
+
+/**
+ * Get localised branch abbrev
+ */
+string branch_abbrev_local(branch_type br)
+{
+    // We have to disambiguate abbreviation from short name because sometimes
+    // they are the same in English, but may not be in the target language
+    string result = localise_contextual("branch_abbrev", branches[br].abbrevname);
+    // guard against translator making the abbreviation too long
+    return chop_string(result, 8, false);
 }
 
 branch_type rune_location(rune_type rune)

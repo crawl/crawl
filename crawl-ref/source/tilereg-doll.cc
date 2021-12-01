@@ -4,6 +4,7 @@
 
 #include "tilereg-doll.h"
 
+#include "localise.h"
 #include "macro.h"
 #include "player.h"
 #include "state.h"
@@ -161,13 +162,13 @@ void DollEditRegion::render()
         // Describe the three middle tiles.
         float tile_name_x = (left_gutter + 2.7) * 32.0f;
         float tile_name_y = (edit_doll_line + 1) * 32.0f;
-        m_font_buf.add("Custom", VColour::white, tile_name_x, tile_name_y);
+        m_font_buf.add(localise("Custom"), VColour::white, tile_name_x, tile_name_y);
         tile_name_x = (left_gutter + 4.7) * 32.0f;
         tile_name_y = (edit_doll_line + 1) * 32.0f;
-        m_font_buf.add("Default", VColour::white, tile_name_x, tile_name_y);
+        m_font_buf.add(localise("Default"), VColour::white, tile_name_x, tile_name_y);
         tile_name_x = (left_gutter + 7) * 32.0f;
         tile_name_y = (edit_doll_line + 1) * 32.0f;
-        m_font_buf.add("Equip", VColour::white, tile_name_x, tile_name_y);
+        m_font_buf.add(localise("Equip"), VColour::white, tile_name_x, tile_name_y);
     }
 
     set_transform();
@@ -222,13 +223,13 @@ void DollEditRegion::render()
         glmanager->set_transform(trans, scale);
     }
 
-    string item_str = part_name;
+    string item_str = localise(part_name);
     float item_name_x = left_gutter * 32.0f;
     float item_name_y = (item_line + 1) * 32.0f;
     m_font_buf.add(item_str, VColour::white, item_name_x, item_name_y);
 
     string doll_name;
-    doll_name = make_stringf("Doll index %d / %d", m_doll_idx, NUM_MAX_DOLLS - 1);
+    doll_name = localise("%s %d / %d", "Doll index", m_doll_idx, NUM_MAX_DOLLS - 1);
     float doll_name_x = left_gutter * 32.0f;
     float doll_name_y = (doll_line + 1) * 32.0f;
     m_font_buf.add(doll_name, VColour::white, doll_name_x, doll_name_y);
@@ -239,7 +240,7 @@ void DollEditRegion::render()
         "Custom Doll",
         "Job Defaults"
     };
-    doll_name = make_stringf("Doll Mode: %s", mode_name[m_mode]);
+    doll_name = localise("%s: %s", "Doll Mode", mode_name[m_mode]);
     doll_name_y += m_font->char_height() * 2.0f;
     m_font_buf.add(doll_name, VColour::white, doll_name_x, doll_name_y);
 
@@ -280,11 +281,11 @@ void DollEditRegion::render()
         const char *sel = (m_cat_idx == i) ? "->" : "  ";
 
         if (part == TILEP_SHOW_EQUIP)
-            info_str = make_stringf("%2s%9s: (show equip)", sel, cat_name[i]);
+            info_str = localise("%2s%9s: (%s)", sel, cat_name[i], "show equip");
         else if (!part)
-            info_str = make_stringf("%2s%9s: (none)", sel, cat_name[i]);
+            info_str = localise("%2s%9s: (%s)", sel, cat_name[i], "none");
         else
-            info_str = make_stringf("%2s%9s: %3d/%3d", sel, cat_name[i], disp, maxp);
+            info_str = localise("%2s%9s: %3d/%3d", sel, cat_name[i], disp, maxp);
         m_font_buf.add(info_str, VColour::white, info_x, info_y);
         info_y += m_font->char_height();
     }
@@ -296,22 +297,27 @@ void DollEditRegion::render()
         const float start_y = doll_name_y + height * 3;
         const float start_x = 0;
         m_font_buf.add(
-            "Change parts       left/right              Confirm choice      Enter",
+            localise("%-18.18s %-23.23s %-19.19s %s",
+                     "Change parts", "left/right", "Confirm choice", "Enter"),
             VColour::white, start_x, start_y);
         m_font_buf.add(
-            "Change category    up/down                 Copy doll           Ctrl-C",
+            localise("%-18.18s %-23.23s %-19.19s %s",
+                     "Change category", "up/down", "Copy doll", "Ctrl-C"),
             VColour::white, start_x, start_y + height * 1);
         m_font_buf.add(
-            "Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V",
+            localise("%-18.18s 0-9, %-18.18s %-19.19s %s",
+                     "Change doll", "Shift + arrows", "Paste copied doll", "Ctrl-V"),
             VColour::white, start_x, start_y + height * 2);
         m_font_buf.add(
-            "Change doll mode   m                       Randomise doll      Ctrl-R",
+            localise("%-18.18s m                       %-19.19s %s",
+                     "Change doll mode", "Randomise doll", "Ctrl-R"),
             VColour::white, start_x, start_y + height * 3);
         m_font_buf.add(
-            "Save menu          Escape, Ctrl-S          Toggle equipment    *",
+            localise("%-18.18s %-23.23s %-19.19s %s",
+                     "Save menu", "Escape, Ctrl-S", "Toggle equipment", "*"),
             VColour::white, start_x, start_y + height * 4);
         m_font_buf.add(
-            "Quit menu          q, Ctrl-Q",
+            localise("%-18.18s q, %s", "Quit menu", "Ctrl-Q"),
             VColour::white, start_x, start_y + height * 5);
     }
 
@@ -388,7 +394,7 @@ void DollEditRegion::run()
 
     auto vbox = make_shared<Box>(Widget::VERT);
     vbox->set_cross_alignment(Widget::CENTER);
-    auto title = make_shared<Text>(formatted_string("Doll Editor", YELLOW));
+    auto title = make_shared<Text>(formatted_string(localise("Doll Editor"), YELLOW));
     title->set_margin_for_sdl(0, 0, 20, 0);
     vbox->add_child(move(title));
     vbox->add_child(doll_ui);

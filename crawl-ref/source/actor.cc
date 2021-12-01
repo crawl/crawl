@@ -15,6 +15,7 @@
 #include "fprop.h"
 #include "god-passive.h"
 #include "item-prop.h"
+#include "localise.h"
 #include "los.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -420,7 +421,6 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
         string attacker_desc;
-        const string verb = intentional ? "release" : "lose";
         bool force_plural = false;
 
         if (vile_clutch)
@@ -436,12 +436,41 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
         else
             attacker_desc = name(DESC_THE);
 
-        mprf("%s %s %s grip on %s.",
-             attacker_desc.c_str(),
-             force_plural ? verb.c_str()
-                          : conj_verb(verb).c_str(),
-             force_plural ? "their" : pronoun(PRONOUN_POSSESSIVE).c_str(),
-             constrictee->name(DESC_THE).c_str());
+        string target = constrictee->name(DESC_THE);
+
+        // i18n: In order to be able to translate properly:
+        //   a) we have to avoid possessive pronouns (e.g. his/her/its grip)
+        //   b) we have to list all possibilities longform
+        if (intentional)
+        {
+            if (attacker_desc == "you")
+                mprf("You release %s.", target.c_str());
+            else if (target == "you")
+                if (force_plural)
+                    mprf("%s release you.", attacker_desc.c_str());
+                else
+                    mprf("%s releases you.", attacker_desc.c_str());
+            else
+                if (force_plural)
+                    mprf("%s release %s.", attacker_desc.c_str(), target.c_str());
+                else
+                    mprf("%s releases %s.", attacker_desc.c_str(), target.c_str());
+        }
+        else
+        {
+            if (attacker_desc == "you")
+                mprf("You lose hold of %s.", target.c_str());
+            else if (target == "you")
+                if (force_plural)
+                    mprf("%s lose hold of you.", attacker_desc.c_str());
+                else
+                    mprf("%s loses hold of you.", attacker_desc.c_str());
+            else
+                if (force_plural)
+                    mprf("%s lose hold of %s.", attacker_desc.c_str(), target.c_str());
+                else
+                    mprf("%s loses hold of %s.", attacker_desc.c_str(), target.c_str());
+        }
     }
 
     if (vile_clutch)
@@ -723,14 +752,12 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
 
-    string exclamations;
+    string but;
     if (damage <= 0 && is_player()
         && you.can_see(defender))
     {
-        exclamations = ", but do no damage.";
+        but = " but do no damage.";
     }
-    else
-        exclamations = attack_strength_punctuation(damage);
 
     if (is_player() || you.can_see(*this))
     {
@@ -747,32 +774,55 @@ void actor::constriction_damage_defender(actor &defender, int duration)
             force_plural = true;
         }
         else if (is_player())
-            attacker_desc = "You";
+            attacker_desc = "You"; // noloc
         else
             attacker_desc = name(DESC_THE);
 
-        mprf("%s %s %s%s%s", attacker_desc.c_str(),
-             force_plural ? "constrict"
-                          : conj_verb("constrict").c_str(),
-             defender.name(DESC_THE).c_str(),
+        string target = defender.name(DESC_THE);
+
+        string msg;
+        if (attacker_desc == "You")
+            msg = localise("You constrict %s", target);
+        else if (defender.is_player())
+            if (force_plural)
+                msg = localise("%s constrict you", attacker_desc);
+            else
+                msg = localise("%s constricts you", attacker_desc);
+        else
+            if (force_plural)
+                msg = localise("%s constrict %s", attacker_desc, target);
+            else
+                msg = localise("%s constricts %s", attacker_desc, target);
+
 #ifdef DEBUG_DIAGNOSTICS
-             make_stringf(" for %d", damage).c_str(),
-#else
-             "",
+        msg += make_stringf(" for %d", damage);
 #endif
-             exclamations.c_str());
+
+        if (!but.empty())
+            msg += localise(but);
+        else
+            msg = add_attack_strength_punct(msg, damage, false);
+
+        mpr_nolocalise(msg);
     }
     else if (you.can_see(defender) || defender.is_player())
     {
-        mprf("%s %s constricted%s%s",
-             defender.name(DESC_THE).c_str(),
-             defender.conj_verb("are").c_str(),
+        string msg;
+        if (defender.is_player())
+            msg = localise("You are constricted");
+        else
+            msg = localise("%s is constricted", defender.name(DESC_THE));
+
 #ifdef DEBUG_DIAGNOSTICS
-             make_stringf(" for %d", damage).c_str(),
-#else
-             "",
+        msg += make_stringf(" for %d", damage);
 #endif
-             exclamations.c_str());
+
+        if (!but.empty())
+            msg += localise(but);
+        else
+            msg = add_attack_strength_punct(msg, damage, false);
+
+        mpr_nolocalise(msg);
     }
 
     damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_CONSTRICTION, "",
@@ -826,8 +876,8 @@ string actor::describe_props() const
     for (auto i = props.begin(); i != props.end(); ++i)
     {
         if (i != props.begin())
-            oss <<  ", ";
-        oss << string(i->first) << ": ";
+            oss <<  ", "; // noloc
+        oss << string(i->first) << ": "; // noloc
 
         CrawlStoreValue val = i->second;
 
@@ -854,13 +904,13 @@ string actor::describe_props() const
             case SV_COORD:
             {
                 coord_def coord = val.get_coord();
-                oss << "(" << coord.x << ", " << coord.y << ")";
+                oss << "(" << coord.x << ", " << coord.y << ")"; // noloc
                 break;
             }
             case SV_MONST:
             {
                 monster mon = val.get_monster();
-                oss << mon.name(DESC_PLAIN) << "(" << mon.mid << ")";
+                oss << mon.name(DESC_PLAIN) << "(" << mon.mid << ")"; // noloc
                 break;
             }
             case SV_INT64:
@@ -868,7 +918,7 @@ string actor::describe_props() const
                 break;
 
             default:
-                oss << "???";
+                oss << "???"; // noloc
                 break;
         }
     }
@@ -904,23 +954,45 @@ bool actor::torpor_slowed() const
 string actor::resist_margin_phrase(int margin) const
 {
     if (willpower() == WILL_INVULN)
-        return " " + conj_verb("are") + " unaffected.";
-
-    static const string resist_messages[][2] =
     {
-      { " barely %s.",                  "resist" },
-      { " %s to resist.",               "struggle" },
-      { " %s with significant effort.", "resist" },
-      { " %s with some effort.",        "resist" },
-      { " easily %s.",                  "resist" },
-      { " %s with almost no effort.",   "resist" },
+        if (is_player())
+            return "You are unaffected.";
+        else
+            return "%s is unaffected.";
+    }
+
+    static const string you_resist_messages[] =
+    {
+        "You barely resist.",
+        "You struggle to resist.",
+        "You resist with significant effort.",
+        "You resist with some effort.",
+        "You easily resist.",
+        "You resist with almost no effort."
     };
 
-    const int index = max(0, min((int)ARRAYSZ(resist_messages) - 1,
-                                 ((margin + 45) / 15)));
+    static const string it_resists_messages[] =
+    {
+        "%s barely resists.",
+        "%s struggles to resist.",
+        "%s resists with significant effort.",
+        "%s resists with some effort.",
+        "%s easily resists.",
+        "%s resists with almost no effort."
+    };
 
-    return make_stringf(resist_messages[index][0].c_str(),
-                        conj_verb(resist_messages[index][1]).c_str());
+    int index = max(0, (margin + 45) / 15);
+
+    if (is_player())
+    {
+        index = min(index, (int)ARRAYSZ(you_resist_messages) - 1);
+        return you_resist_messages[index];
+    }
+    else
+    {
+        index = min(index, (int)ARRAYSZ(it_resists_messages) - 1);
+        return it_resists_messages[index];
+    }
 }
 
 void actor::collide(coord_def newpos, const actor *agent, int pow)
@@ -949,10 +1021,15 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     {
         if (you.can_see(*this) || you.can_see(*other))
         {
-            mprf("%s %s with %s!",
-                 name(DESC_THE).c_str(),
-                 conj_verb("collide").c_str(),
-                 other->name(DESC_THE).c_str());
+            if (is_player())
+                mprf("You collide with %s!", other->name(DESC_THE).c_str());
+            else if (other->is_player())
+                mprf("%s collides with you!", name(DESC_THE).c_str());
+            else
+                mprf("%s collides with %s!",
+                     name(DESC_THE).c_str(),
+                     other->name(DESC_THE).c_str());
+
             if (god_prot || god_prot_other)
             {
                 // do messaging at the right time.
@@ -985,17 +1062,23 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     {
         if (!can_pass_through_feat(env.grid(newpos)))
         {
-            mprf("%s %s into %s!",
-                 name(DESC_THE).c_str(), conj_verb("slam").c_str(),
-                 env.map_knowledge(newpos).known()
-                 ? feature_description_at(newpos, false, DESC_THE)
-                       .c_str()
-                 : "something");
+            string object;
+            if (env.map_knowledge(newpos).known())
+                object = feature_description_at(newpos, false, DESC_THE);
+            else
+                object = "something";
+
+            if (is_player())
+                mprf("You slam into %s!", object.c_str());
+            else
+                mprf("%s slams into %s!", name(DESC_THE).c_str(), object.c_str());
         }
         else
         {
-            mprf("%s violently %s moving!",
-                 name(DESC_THE).c_str(), conj_verb("stop").c_str());
+            if (is_player())
+                mprf("You violently stop moving!");
+            else
+                mprf("%s violently stops moving!", name(DESC_THE).c_str());
         }
 
         if (god_prot)

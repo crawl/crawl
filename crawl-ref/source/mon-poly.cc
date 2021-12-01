@@ -549,7 +549,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (source_tier == -1)
     {
         return simple_monster_message(*mons,
-            "'s appearance momentarily alters.");
+            "%s's appearance momentarily alters.");
     }
     relax = 1;
 

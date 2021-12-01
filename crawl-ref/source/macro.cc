@@ -735,7 +735,7 @@ void macro_save()
                "# WARNING: This file is entirely auto-generated.\n"
                "\n"
                "# Key Mappings:\n",
-            OUTS(CRAWL), // ok, localizing the game name is not likely
+            OUTS(CRAWL), // ok, localising the game name is not likely
             OUTS(Version::Long)); // nor the version string
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {

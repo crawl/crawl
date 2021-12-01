@@ -29,6 +29,7 @@
 
 string god_prayer_reaction()
 {
+    // i18n: this is only used in chardump, so no need to localise
     string result = uppercase_first(god_name(you.religion));
     const int rank = god_favour_rank(you.religion);
     if (crawl_state.player_is_dead())
@@ -142,9 +143,13 @@ void try_god_conversion(god_type god)
     else
     {
         // Already worshipping this god - just print a message.
-        mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
-             you.cannot_speak() ? "silent " : "",
-             god_name(god).c_str());
+        if (you.cannot_speak())
+        {
+            mprf(MSGCH_GOD, "You offer a silent prayer to %s.",
+                 god_name(god).c_str());
+        }
+        else
+            mprf(MSGCH_GOD, "You offer a prayer to %s.", god_name(god).c_str());
     }
 }
 

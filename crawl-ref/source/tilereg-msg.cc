@@ -5,6 +5,7 @@
 #include "tilereg-msg.h"
 
 #include "libutil.h"
+#include "localise.h"
 #include "format.h"
 #include "macro.h"
 #include "tilebuf.h"
@@ -43,7 +44,7 @@ bool MessageRegion::update_tip_text(string& tip)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
 
-    tip = "[L-Click] Browse message history";
+    tip = localise("%s %s", "[L-Click]", "Browse message history");
     return true;
 }
 

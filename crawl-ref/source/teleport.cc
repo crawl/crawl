@@ -67,7 +67,6 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         return false;
 
     bool was_constricted = false;
-    const string verb = (jump ? "leap" : "blink");
 
     if (is_constricted())
     {
@@ -77,8 +76,11 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         {
             if (!quiet)
             {
-                string message = " struggles to " + verb
-                                 + " free from constriction.";
+                string message;
+                if (jump)
+                    message = "%s struggles to leap free from constriction.";
+                else
+                    message = "%s struggles to blink free from constriction.";
                 simple_monster_message(*this, message.c_str());
             }
             return false;
@@ -87,9 +89,15 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
 
     if (!quiet)
     {
-        string message = " " + conj_verb(verb)
-                         + (was_constricted ? " free!" : "!");
-        simple_monster_message(*this, message.c_str());
+        string message;
+        if (was_constricted && jump)
+            simple_monster_message(*this, " jumps free!");
+        else if (was_constricted)
+            simple_monster_message(*this, " blinks free!");
+        else if (jump)
+            simple_monster_message(*this, " jumps!");
+        else
+            simple_monster_message(*this, " blinks!");
     }
 
     if (!(flags & MF_WAS_IN_VIEW))

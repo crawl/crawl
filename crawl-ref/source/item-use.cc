@@ -1729,10 +1729,13 @@ static bool _swap_rings(item_def& to_puton)
     }
     else if (available == 0)
     {
-        mprf("You're already wearing %s cursed ring%s!%s",
-             number_in_words(cursed).c_str(),
-             (cursed == 1 ? "" : "s"),
-             (cursed > 2 ? " Isn't that enough for you?" : ""));
+        if (cursed == 1)
+            mpr("You're already wearing one cursed ring!");
+        else if (cursed == 2)
+            mpr("You're already wearing two cursed rings!");
+        else if (cursed > 2)
+            mprf("You're already wearing %d cursed rings! Isn't that enough for you?",
+                 cursed);
         return false;
     }
     // The simple case - only one available ring.

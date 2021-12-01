@@ -2573,7 +2573,7 @@ void debug_bands()
 
     if (!unhandled_bands.empty())
     {
-        const string fails = "Unhandled bands: "
+        const string fails = "Unhandled bands: " // noloc
            + comma_separated_fn(unhandled_bands.begin(), unhandled_bands.end(),
                                 [](int i){ return make_stringf("%d", i); });
 

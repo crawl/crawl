@@ -1112,7 +1112,7 @@ static bool _handle_wand(monster& mons)
 
     beem.source     = mons.pos();
     beem.aux_source =
-        wand->name(DESC_QUALNAME, false, true, false, false);
+        wand->name(DESC_QUALNAME, false, true, false);
 
     bool should_fire = false;
     const wand_type kind = (wand_type)wand->sub_type;
@@ -1248,7 +1248,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         if (interference == DO_BLOCK_ATTACK)
         {
             simple_monster_message(*mons,
-                                " is stunned by your conviction and fails to attack.",
+                                "%s is stunned by your conviction and fails to attack.",
                                 MSGCH_GOD);
             return false;
         }
@@ -1890,7 +1890,7 @@ void handle_monster_move(monster* mons)
                         if (interference == DO_BLOCK_ATTACK)
                         {
                             simple_monster_message(*mons,
-                                " is stunned by your conviction and fails to attack.",
+                                "%s is stunned by your conviction and fails to attack.",
                                 MSGCH_GOD);
                             mons->speed_increment -= non_move_energy;
                             return;
@@ -2059,7 +2059,7 @@ void monster::struggle_against_net()
                         mpr("Something you can't see is thrashing in a web.");
                     else
                         simple_monster_message(*this,
-                                           " struggles to get unstuck from the web.");
+                                           "%s struggles to get unstuck from the web.");
                 }
                 return;
             }

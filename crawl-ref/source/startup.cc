@@ -29,6 +29,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "loading-screen.h"
+#include "localise.h"
 #include "macro.h"
 #include "maps.h"
 #include "menu.h"
@@ -65,8 +66,9 @@
 
 using namespace ui;
 
-static void _loading_message(string m)
+static void _loading_message(const string& msg)
 {
+    string m = localise(msg);
     mpr(m.c_str());
 #ifdef USE_TILE_LOCAL
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
@@ -226,7 +228,7 @@ static void _zap_los_monsters()
             continue;
 
         dprf("Dismissing %s",
-             mon->name(DESC_PLAIN, true).c_str());
+             mon->name(DESC_THE, true).c_str());
 
         if (mons_is_or_was_unique(*mon))
         {
@@ -437,7 +439,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         hbox->add_child(label);
 #endif
 
-        label->set_text(formatted_string(entry.label, WHITE));
+        label->set_text(formatted_string(localise(entry.label), WHITE));
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
@@ -447,7 +449,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         btn->set_child(move(label));
 #endif
         btn->id = entry.id;
-        btn->description = entry.description;
+        btn->description = localise(entry.description);
         btn->highlight_colour = LIGHTGREY;
         container->add_button(move(btn), 0, i);
     }
@@ -455,7 +457,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 
 static shared_ptr<MenuButton> _make_newgame_button(int num_chars)
 {
-    auto label = make_shared<Text>(formatted_string("New Game", WHITE));
+    auto label = make_shared<Text>(formatted_string(localise("New Game"), WHITE));
 
 #ifdef USE_TILE_LOCAL
     auto hbox = make_shared<Box>(Box::HORZ);
@@ -493,7 +495,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 
         const COLOURS fg = chars.at(i).save_loadable ? WHITE : RED;
         auto text = chars.at(i).short_desc();
-        bool wiz = strip_suffix(text, " (WIZ)");
+        bool wiz = strip_suffix(text, localise(" (WIZ)"));
         auto label = make_shared<Text>(formatted_string(text, fg));
         label->set_ellipsize(true);
 #ifdef USE_TILE_LOCAL
@@ -570,7 +572,7 @@ public:
         auto grid = make_shared<Grid>();
         grid->set_margin_for_crt(0, 0, 1, 0);
 
-        auto name_prompt = make_shared<Text>("Enter your name:");
+        auto name_prompt = make_shared<Text>(localise("Enter your name:"));
         name_prompt->set_margin_for_crt(0, 1, 1, 0);
         name_prompt->set_margin_for_sdl(0, 0, 10, 0);
 
@@ -586,7 +588,7 @@ public:
 
         descriptions = make_shared<Switcher>();
 
-        auto mode_prompt = make_shared<Text>("Choices:");
+        auto mode_prompt = make_shared<Text>(localise("Choices:"));
         mode_prompt->set_margin_for_crt(0, 1, 1, 0);
         mode_prompt->set_margin_for_sdl(0, 0, 10, 0);
         game_modes_menu = make_shared<OuterMenu>(true, 1, ARRAYSZ(entries));
@@ -607,7 +609,7 @@ public:
         save_games_menu = make_shared<OuterMenu>(num_saves > 1, 1, num_saves + 1);
         if (num_saves > 0)
         {
-            auto save_prompt = make_shared<Text>("Saved games:");
+            auto save_prompt = make_shared<Text>(localise("Saved games:"));
             save_prompt->set_margin_for_crt(0, 1, 1, 0);
             save_prompt->set_margin_for_sdl(0, 0, 10, 0);
             save_games_menu->set_margin_for_sdl(0, 0, 10, 10);
@@ -664,20 +666,27 @@ public:
         {
             auto save = _find_save(chars, defaults.name);
             instructions_text +=
-                    "<white>[tab]</white> quick-load last game: "
+                    string("<white>[") + localise("tab") + "]</white> "
+                    + localise("quick-load last game: ")
                     + chars[save].really_short_desc() + "\n";
         }
         else if (_game_defined(defaults))
         {
+            string game_desc = newgame_char_description(defaults);
+            if (!defaults.name.empty())
+            {
+                game_desc = localise("%s the %s", defaults.name.c_str(), game_desc.c_str());
+            }
             instructions_text +=
-                    "<white>[tab]</white> quick-start last combo: "
-                    + (defaults.name.size() ? (defaults.name + " the ") : "")
-                    + newgame_char_description(defaults) + "\n";
+                    string("<white>[") + localise("tab") + "]</white> "
+                    + localise("quick-start last combo: ")
+                    + game_desc + "\n";
         }
         instructions_text +=
-            "<white>[ctrl-p]</white> view rc file information and log";
+            string("<white>[") +localise("ctrl-p") + "]</white> "
+            + localise("view rc file information and log");
         if (recent_error_messages())
-            instructions_text += " (<red>Errors during initialization!</red>)";
+            instructions_text += string(" (<red>") + localise("Errors during initialization!") + "</red>)";
 
         m_root->add_child(make_shared<Text>(
                         formatted_string::parse_string(instructions_text)));

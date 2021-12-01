@@ -47,6 +47,7 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "localise.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "maps.h"
@@ -111,13 +112,13 @@ static const char *_god_blessing_description(god_type god)
     switch (god)
     {
     case GOD_SHINING_ONE:
-        return "blessed by the Shining One";
+        return "blessed by the Shining One"; // noloc (milestone)
     case GOD_LUGONU:
-        return "corrupted by Lugonu";
+        return "corrupted by Lugonu"; // noloc (milestone)
     case GOD_KIKUBAAQUDGHA:
-        return "bloodied by Kikubaaqudgha";
+        return "bloodied by Kikubaaqudgha"; // noloc (milestone)
     default:
-        return "touched by the gods";
+        return "touched by the gods"; // noloc (milestone)
     }
 }
 
@@ -150,15 +151,14 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
         return false;
 
-    string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
-                       + " ";
+    string prompt;
     if (brand == SPWPN_PAIN)
-        prompt += "bloodied with pain";
+        prompt = "Do you wish to have %s bloodied with pain?";
     else if (brand == SPWPN_DISTORTION)
-        prompt += "corrupted with distortion";
+        prompt = "Do you wish to have %s corrupted with distortion?";
     else
-        prompt += "blessed with holy wrath";
-    prompt += "?";
+        prompt = "Do you wish to have %s blessed with holy wrath?";
+    prompt = localise(prompt, wpn.name(DESC_YOUR));
     if (!yesno(prompt.c_str(), true, 'n'))
     {
         canned_msg(MSG_OK);
@@ -197,7 +197,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     wpn.flags |= ISFLAG_NOTED_ID;
     wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
-    mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
+    mprf(MSGCH_GOD, "%s shines brightly!", wpn.name(DESC_YOUR).c_str());
     flash_view(UA_PLAYER, colour);
     simple_god_message(" booms: Use this gift wisely!");
     you.one_time_ability_used.set(you.religion);
@@ -285,18 +285,20 @@ bool zin_donate_gold()
     }
     else
     {
-        string result = "You feel that " + god_name(GOD_ZIN) + " will soon be ";
-        result +=
-            (estimated_piety >= piety_breakpoint(5)) ? "exalted by your worship" :
-            (estimated_piety >= piety_breakpoint(4)) ? "extremely pleased with you" :
-            (estimated_piety >= piety_breakpoint(3)) ? "greatly pleased with you" :
-            (estimated_piety >= piety_breakpoint(2)) ? "most pleased with you" :
-            (estimated_piety >= piety_breakpoint(1)) ? "pleased with you" :
-            (estimated_piety >= piety_breakpoint(0)) ? "aware of your devotion"
-                                                     : "noncommittal";
-        result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
-
-        mpr(result);
+        if (estimated_piety >= piety_breakpoint(5))
+            mpr("You feel that Zin will soon be exalted by your worship.");
+        else if (estimated_piety >= piety_breakpoint(4))
+            mpr("You feel that Zin will soon be extremely pleased with you.");
+        else if (estimated_piety >= piety_breakpoint(3))
+            mpr("You feel that Zin will soon be greatly pleased with you.");
+        else if (estimated_piety >= piety_breakpoint(2))
+            mpr("You feel that Zin will soon be most pleased with you.");
+        else if (estimated_piety >= piety_breakpoint(1))
+            mpr("You feel that Zin will soon be pleased with you.");
+        else if (estimated_piety >= piety_breakpoint(0))
+            mpr("You feel that Zin will soon be aware of your devotion.");
+        else
+            mpr("You feel that Zin will soon be noncommittal.");
     }
 
     return true;
@@ -544,6 +546,7 @@ static const char * const smite_text[][2] =
  */
 string zin_recite_text(const int seed, const int prayertype, int step)
 {
+    // i18n: TODO: handle this
     // To have deterministic passages we extract portions of the seed.
     // We use trits: "digits" in the base-3 expansion of seed.
 
@@ -588,17 +591,17 @@ string zin_recite_text(const int seed, const int prayertype, int step)
 
     const map<string, string> replacements =
     {
-        { "sinners", sinner_text[sinner_seed] },
+        { "sinners", sinner_text[sinner_seed] }, // noloc
 
         { "sin_adj",  sin_text[sin_seed][0] },
         { "sin_noun", sin_text[sin_seed][1] },
 
-        { "virtuous", virtue_text[virtue_seed][0] },
-        { "virtue",   virtue_text[virtue_seed][1] },
+        { "virtuous", virtue_text[virtue_seed][0] }, // noloc
+        { "virtue",   virtue_text[virtue_seed][1] }, // noloc
 
-        { "smite",   smite_text[smite_seed][0] },
-        { "smitten", smite_text[smite_seed][1] },
-        { "Smitten", uppercase_first(smite_text[smite_seed][1]) },
+        { "smite",   smite_text[smite_seed][0] }, // noloc
+        { "smitten", smite_text[smite_seed][1] }, // noloc
+        { "Smitten", uppercase_first(smite_text[smite_seed][1]) }, // noloc
     };
 
     return replace_keys(recite, replacements);
@@ -1046,8 +1049,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
-                minor ? " is awed by your recitation."
-                      : " is aghast at the heresy of your recitation.");
+                minor ? "%s is awed by your recitation."
+                      : "%s is aghast at the heresy of your recitation.");
             affected = true;
         }
         break;
@@ -1087,8 +1090,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
-                minor ? " quails at your recitation."
-                      : " looks feeble and powerless before your recitation.");
+                minor ? "%s quails at your recitation."
+                      : "%s looks feeble and powerless before your recitation.");
             affected = true;
         }
         break;
@@ -1133,9 +1136,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 if (mon->alive())
                 {
                     simple_monster_message(*mon,
-                      (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
-                      (damage < 50) ? "'s chaotic flesh bubbles and boils."
-                                    : "'s chaotic flesh runs like molten wax.");
+                      (damage < 25) ? "%s's chaotic flesh sizzles and spatters!" :
+                      (damage < 50) ? "%s's chaotic flesh bubbles and boils."
+                                    : "%s's chaotic flesh runs like molten wax.");
 
                     print_wounds(*mon);
                     behaviour_event(mon, ME_WHACK, &you);
@@ -1144,7 +1147,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 else
                 {
                     simple_monster_message(*mon,
-                        " melts away into a sizzling puddle of chaotic flesh.");
+                        "%s melts away into a sizzling puddle of chaotic flesh.");
                     monster_die(*mon, KILL_YOU, NON_MONSTER);
                 }
             }
@@ -1210,7 +1213,7 @@ static void _zin_saltify(monster* mon)
 
 bool zin_vitalisation()
 {
-    simple_god_message(" grants you divine stamina.");
+    simple_god_message("Zin grants you divine stamina.");
 
     // Add divine stamina.
     const int stamina_amt =
@@ -1254,7 +1257,7 @@ bool zin_remove_all_mutations()
     you.one_time_ability_used.set(GOD_ZIN);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations("Zin's power");
+    delete_all_mutations("Zin's power"); // noloc
     return true;
 }
 
@@ -1289,8 +1292,7 @@ void tso_divine_shield()
     {
         if (you.shield())
         {
-            mprf("Your shield is strengthened by %s divine power.",
-                 apostrophise(god_name(GOD_SHINING_ONE)).c_str());
+            mprf("Your shield is strengthened by the Shining One's divine power.");
         }
         else
             mpr("A divine shield forms around you!");
@@ -1338,8 +1340,7 @@ bool elyvilon_divine_vigour()
 
     if (!you.duration[DUR_DIVINE_VIGOUR])
     {
-        mprf("%s grants you divine vigour.",
-             god_name(GOD_ELYVILON).c_str());
+        mprf("Elyvilon grants you divine vigour.");
 
         const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
         const int old_hp_max = you.hp_max;
@@ -1609,9 +1610,10 @@ bool beogh_resurrect()
         if (si->props.exists(ORC_CORPSE_KEY))
         {
             found_any = true;
-            if (yesno(("Resurrect "
-                       + si->props[ORC_CORPSE_KEY].get_monster().full_name(DESC_THE)
-                       + "?").c_str(), true, 'n'))
+            const monster& mon = si->props[ORC_CORPSE_KEY].get_monster();
+            string prompt = localise("Resurrect %s?", mon.full_name(DESC_THE));
+
+            if (yesno(prompt.c_str(), true, 'n'))
             {
                 corpse = &*si;
                 break;
@@ -1619,8 +1621,10 @@ bool beogh_resurrect()
         }
     if (!corpse)
     {
-        mprf("There's nobody %shere you can resurrect.",
-             found_any ? "else " : "");
+        if (found_any)
+            mpr("There's nobody else here you can resurrect.");
+        else
+            mpr("There's nobody here you can resurrect.");
         return false;
     }
 
@@ -1709,9 +1713,6 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     add_daction(DACT_OLD_CHARMD_SOULS_POOF);
     remove_enslaved_soul_companion();
 
-    const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
-                                           : mon->pronoun(PRONOUN_POSSESSIVE);
-
     // Remove the monster's soul-enslaving enchantment, as it's no
     // longer needed.
     mon->del_ench(ENCH_SOUL_RIPE, false, false);
@@ -1786,8 +1787,20 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         invalidate_agrid();
     }
 
-    mprf("%s soul %s.", whose.c_str(),
-         !force_hostile ? "is now yours" : "fights you");
+    if (you.can_see(*mon))
+    {
+        if (force_hostile)
+            mprf("%s's soul fights you.", mon->name(DESC_THE).c_str());
+        else
+            mprf("%s's soul is now yours.", mon->name(DESC_THE).c_str());
+    }
+    else
+    {
+        if (force_hostile)
+            mprf("Its soul fights you.");
+        else
+            mprf("Its soul is now yours.");
+    }
 }
 
 bool kiku_receive_corpses(int pow)
@@ -1985,7 +1998,10 @@ void lugonu_bend_space()
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
     const bool area_warp = random2(pow) > 9;
 
-    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
+    if (area_warp)
+        mpr("Space bends sharply around you!");
+    else
+        mpr("Space bends around you!");
 
     if (area_warp)
         _lugonu_warp_area(pow);
@@ -2006,16 +2022,13 @@ void cheibriados_time_bend(int pow)
             res_margin -= random2avg(pow, 2);
             if (res_margin > 0)
             {
-                mprf("%s%s",
-                     mon->name(DESC_THE).c_str(),
-                     mon->resist_margin_phrase(res_margin).c_str());
+                mprf(mon->resist_margin_phrase(res_margin).c_str(),
+                     mon->name(DESC_THE).c_str());
                 continue;
             }
 
-            simple_god_message(
-                make_stringf(" rebukes %s.",
-                             mon->name(DESC_THE).c_str()).c_str(),
-                             GOD_CHEIBRIADOS);
+            string msg = localise("Cheibriados rebukes %s.", mon->name(DESC_THE));
+            god_speaks(GOD_CHEIBRIADOS, msg.c_str());
             do_slow_monster(*mon, &you);
         }
     }
@@ -2276,8 +2289,9 @@ string desc_curse_skills(const CrawlStoreValue& curse)
         if (you.can_currently_train[sk])
             trainable.push_back(sk);
 
-    return c.name + ": "
-           + comma_separated_fn(trainable.begin(), trainable.end(), skill_name);
+    string skills = comma_separated_fn(trainable.begin(), trainable.end(),
+                                       skill_name);
+    return localise("%s: %s", c.name, skills);                   
 }
 
 /**
@@ -2377,7 +2391,9 @@ static void _do_curse_item(item_def &item)
  */
 bool ashenzari_curse_item()
 {
-    const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
+    string prompt_msg = localise("Curse which item?");
+    prompt_msg += localise(" (Esc to abort)");
+
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,
@@ -2775,12 +2791,12 @@ bool gozag_potion_petition()
         clear_messages();
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
-            string line = make_stringf("  [%c] - %d gold - ", i + 'a',
-                                       prices[i]);
+            string line = localise("  [%c] - %d gold - ", i + 'a', prices[i]);
             vector<string> pot_names;
             for (const CrawlStoreValue& store : *pots[i])
                 pot_names.emplace_back(potion_type_name(store.get_int()));
-            line += comma_separated_line(pot_names.begin(), pot_names.end());
+            line += localise(comma_separated_line(pot_names.begin(),
+                                                  pot_names.end()));
             mpr_nojoin(MSGCH_PLAIN, line);
         }
         mprf(MSGCH_PROMPT, "Purchase which effect?");
@@ -2952,6 +2968,7 @@ static string _describe_gozag_shop(int index)
     const string suffix =
         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
 
+    // i18n: TODO:  handle this
     return make_stringf("  [%c] %5d gold - %s %s %s",
                         offer_letter,
                         cost,
@@ -3002,13 +3019,13 @@ static string _gozag_shop_spec(int index)
     string suffix = replace_all(
                                 you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
                                                        index)]
-                                .get_string(), " ", "_");
+                                .get_string(), " ", "_"); // noloc
     if (!suffix.empty())
-        suffix = " suffix:" + suffix;
+        suffix = " suffix:" + suffix; // noloc
 
-    return make_stringf("%s shop name:%s%s gozag",
+    return make_stringf("%s shop name:%s%s gozag", // noloc
                         shoptype_to_str(type),
-                        replace_all(name, " ", "_").c_str(),
+                        replace_all(name, " ", "_").c_str(), // noloc
                         suffix.c_str());
 
 }
@@ -3039,6 +3056,7 @@ static void _gozag_place_shop(int index)
     const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
                                              GENDER_NEUTRAL);
 
+    // i18n: TODO: handle this
     mprf(MSGCH_GOD, "%s invites you to visit %s %s%s%s.",
                     shop->shop_name.c_str(),
                     decline_pronoun(gender, PRONOUN_POSSESSIVE),
@@ -3205,12 +3223,6 @@ bool gozag_check_bribe_branch(bool quiet)
                 break;
             }
     }
-    const string who = make_stringf("the denizens of %s",
-                                   branches[branch].longname);
-    const string who2 = branch2 != NUM_BRANCHES
-                        ? make_stringf("the denizens of %s",
-                                       branches[branch2].longname)
-                        : "";
     if (!gozag_branch_bribable(branch)
         && (branch2 == NUM_BRANCHES
             || !gozag_branch_bribable(branch2)))
@@ -3218,9 +3230,15 @@ bool gozag_check_bribe_branch(bool quiet)
         if (!quiet)
         {
             if (branch2 != NUM_BRANCHES)
-                mprf("You can't bribe %s or %s.", who.c_str(), who2.c_str());
+            {
+                mprf("You can't bribe the denizens of %s or the denizens of %s.",
+                     branches[branch].longname, branches[branch2].longname);
+            }
             else
-                mprf("You can't bribe %s.", who.c_str());
+            {
+                mprf("You can't bribe the denizens of %s.",
+                     branches[branch].longname);
+            }
         }
         return false;
     }
@@ -3259,28 +3277,27 @@ bool gozag_bribe_branch()
                 break;
             }
     }
-    string who = make_stringf("the denizens of %s",
-                              branches[branch].longname);
+
     if (!gozag_branch_bribable(branch))
     {
-        mprf("You can't bribe %s.", who.c_str());
+        mprf("You can't bribe the denizens of %s.", branches[branch].longname);
         return false;
     }
 
     string prompt =
-        make_stringf("Do you want to bribe the denizens of %s?",
-                     branch == BRANCH_VESTIBULE ? "the Hells" :
-                     branches[branch].longname);
+        localise("Do you want to bribe the denizens of %s?",
+                 branch == BRANCH_VESTIBULE ? "the Hells" :
+                 branches[branch].longname);
 
     if (prompted || yesno(prompt.c_str(), true, 'n'))
     {
         you.del_gold(bribe_amount);
         you.attribute[ATTR_GOZAG_GOLD_USED] += bribe_amount;
         branch_bribe[branch] += bribe_amount;
-        string msg = make_stringf(" spreads your bribe to %s!",
-                                  branch == BRANCH_VESTIBULE ? "the Hells" :
-                                  branches[branch].longname);
-        simple_god_message(msg.c_str());
+        string msg = localise("Gozag spreads your bribe to %s!",
+                              branch == BRANCH_VESTIBULE ? "the Hells" :
+                              branches[branch].longname);
+        god_speaks(GOD_GOZAG, msg.c_str());
         add_daction(DACT_SET_BRIBES);
         return true;
     }
@@ -3363,7 +3380,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
             beam.name     = "blast of magma";
             beam.flavour  = BEAM_LAVA;
             beam.colour   = RED;
-            beam.hit_verb = "engulfs";
+            beam.hit_verb = BHV_ENGULF;
             message       = "Magma suddenly erupts from the ground!";
             break;
         case 1:
@@ -4332,18 +4349,18 @@ string ru_sacrifice_vector(ability_type sac)
     return sac_def.sacrifice_vector ? sac_def.sacrifice_vector : "";
 }
 
-static const char* _describe_sacrifice_piety_gain(int piety_gain)
+static string _describe_sacrifice_piety_gain(int piety_gain)
 {
     if (piety_gain >= 40)
-        return "an incredible";
+        return localise("This is an incredible sacrifice.");
     else if (piety_gain >= 29)
-        return "a major";
+        return localise("This is a major sacrifice.");
     else if (piety_gain >= 21)
-        return "a significant";
+        return localise("This is a significant sacrifice.");
     else if (piety_gain >= 13)
-        return "a modest";
+        return localise("This is a modest sacrifice.");
     else
-        return "a trivial";
+        return localise("This is a trivial sacrifice.");
 }
 
 static const string _piety_asterisks(int piety)
@@ -4360,8 +4377,8 @@ static void _apply_ru_sacrifice(mutation_type sacrifice)
 
 static bool _execute_sacrifice(ability_type sac, const char* message)
 {
-    mprf("Ru asks you to %s.", message);
-    mpr(ru_sacrifice_description(sac));
+    mpr_nolocalise(message);
+    mpr_nolocalise(ru_sacrifice_description(sac));
     if (!yesno("Do you really want to make this sacrifice?",
                false, 'n'))
     {
@@ -4430,10 +4447,38 @@ static void _extra_sacrifice_code(ability_type sac)
             unequip_item(sac_ring_slot, true, can_keep);
             if (can_keep)
             {
-                mprf("You put %s back on %s %s!",
-                     ring->name(DESC_YOUR).c_str(),
-                     (ring_slots.size() > 1 ? "another" : "your other"),
-                     you.hand_name(true).c_str());
+                if (you.species == SP_OCTOPODE)
+                {
+                    mprf("You put %s back on another tentacle!",
+                         ring->name(DESC_YOUR).c_str());
+                }
+                else
+                {
+                    string hand_name = you.hand_name(false);
+                    if (hand_name == "hand")
+                    {
+                        mprf("You put %s back on your other hand!",
+                             ring->name(DESC_YOUR).c_str());
+                    }
+                    else if (contains(hand_name, "claw"))
+                    {
+                        mprf("You put %s back on your other claw!",
+                             ring->name(DESC_YOUR).c_str());
+                    }
+                    else if (contains(hand_name, "paw"))
+                    {
+                        mprf("You put %s back on your other paw!",
+                             ring->name(DESC_YOUR).c_str());
+                    }
+                    else
+                    {
+                        // i18n: It's too much effort to provide a translation for each possibility
+                        // in what is an edge case (you sacrifice a hand while transformed into
+                        // something that has neither hands nor claws nor paws).
+                        mprf("You put %s back on the other side!",
+                             ring->name(DESC_YOUR).c_str());
+                    }
+                }
                 equip_item(open_ring_slot, ring_inv_slot, false, true);
             }
         }
@@ -4486,7 +4531,7 @@ string ru_sac_text(ability_type sac)
     {
         ASSERT(sacrifice_muts.size() == 1);
         const mutation_type mut = AS_MUT(sacrifice_muts[0]);
-        return make_stringf(" (%s)", mutation_name(mut));
+        return localise(" (%s)", mutation_name(mut));
     }
 
     // "Tloc/Fire/Ice"
@@ -4496,7 +4541,7 @@ string ru_sac_text(ability_type sac)
                     return _arcane_mutation_to_school_abbr(AS_MUT(mut));
                 }, "/", "/");
 
-    return make_stringf(" (%s)", school_names.c_str());
+    return localise(" (%s)", school_names);
 }
 
 static int _ru_get_sac_piety_gain(ability_type sac)
@@ -4523,9 +4568,11 @@ string ru_sacrifice_description(ability_type sac)
         return "";
 
     const int piety_gain = _ru_get_sac_piety_gain(sac);
-    return make_stringf("This is %s sacrifice. Piety after sacrifice: %s",
-                        _describe_sacrifice_piety_gain(piety_gain),
-                        _piety_asterisks(you.piety + piety_gain).c_str());
+    string result = _describe_sacrifice_piety_gain(sac);
+    result += localise(" ");
+    result += localise("Piety after sacrifice: %s",
+                       _piety_asterisks(you.piety + piety_gain));
+    return result;
 }
 
 
@@ -4572,8 +4619,7 @@ bool ru_do_sacrifice(ability_type sac)
             else
                 sac_text = mut_upgrade_summary(mut);
         }
-        offer_text = make_stringf("%s: %s", sac_def.sacrifice_text,
-            sac_text.c_str());
+        offer_text = localise(sac_def.sacrifice_text, sac_text);
         mile_text = make_stringf("%s: %s.", sac_def.milestone_text,
             sac_text.c_str());
     }
@@ -4584,9 +4630,15 @@ bool ru_do_sacrifice(ability_type sac)
         num_sacrifices = 1;
         string handtxt = "";
         if (sac == ABIL_RU_SACRIFICE_HAND)
-            handtxt = you.hand_name(true);
+        {
+            handtxt = article_a(you.hand_name(false));
+            offer_text = localise(sac_def.sacrifice_text, handtxt);
+        }
+        else
+        {
+            offer_text = localise(sac_def.sacrifice_text);
+        }
 
-        offer_text = sac_def.sacrifice_text + handtxt;
         mile_text = make_stringf("%s.", sac_def.milestone_text);
     }
 
@@ -5021,22 +5073,21 @@ static int _apply_apocalypse(coord_def where)
         case 0:
             if (mons->antimagic_susceptible())
             {
-                message = " doubts " + mons->pronoun(PRONOUN_POSSESSIVE)
-                          + " magic when faced with ultimate truth!";
+                message = "%s doubts the power of magic when faced with ultimate truth!";
                 enchantment = ENCH_ANTIMAGIC;
                 duration = 500 + random2(200);
                 num_dice = 4;
                 break;
             } // if not antimagicable, fall through to paralysis.
         case 1:
-            message = " is paralysed by terrible understanding!";
+            message = "%s is paralysed by terrible understanding!";
             enchantment = ENCH_PARALYSIS;
             duration = 80 + random2(60);
             num_dice = 4;
             break;
 
         case 2:
-            message = " slows down under the weight of truth!";
+            message = "%s slows down under the weight of truth!";
             enchantment = ENCH_SLOW;
             duration = 300 + random2(100);
             num_dice = 6;
@@ -5418,7 +5469,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     god_speaks(you.religion, "It is so.");
     take_note(Note(NOTE_ANCESTOR_TYPE, 0, 0, ancestor_type_name));
     const string mile_text
-        = make_stringf("remembered their ancestor %s as %s.",
+        = make_stringf("remembered their ancestor %s as %s.", //noloc
                        hepliaklqana_ally_name().c_str(),
                        ancestor_type_name.c_str());
     mark_milestone("ancestor.class", mile_text);
@@ -5451,8 +5502,9 @@ spret hepliaklqana_idealise(bool fail)
 
     fail_check();
 
-    simple_god_message(make_stringf(" grants %s healing and protection!",
-                                    ancestor->name(DESC_YOUR).c_str()).c_str());
+    string msg = localise("%s grants %s healing and protection!",
+                          god_speaker(you.religion), ancestor->name(DESC_YOUR));
+    god_speaks(you.religion, msg.c_str());
 
     // 1/3 mhp healed at 0 skill, full at 27 invo
     const int healing = ancestor->max_hit_points
@@ -5600,10 +5652,14 @@ spret hepliaklqana_transference(bool fail)
     else
         ancestor->swap_with(victim->as_monster());
 
-    mprf("%s swap%s with %s!",
-         victim->name(DESC_THE).c_str(),
-         victim->is_player() ? "" : "s",
-         ancestor->name(DESC_YOUR).c_str());
+    if (victim->is_player())
+        mprf("You swap with %s!", ancestor->name(DESC_YOUR).c_str());
+    else
+    {
+        mprf("%s swaps with %s!",
+             victim->name(DESC_THE).c_str(),
+             ancestor->name(DESC_YOUR).c_str());
+    }
 
     check_place_cloud(CLOUD_MIST, target, random_range(10,20), ancestor);
     check_place_cloud(CLOUD_MIST, destination, random_range(10,20), ancestor);
@@ -5726,7 +5782,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
 {
     if (target.distance_from(you.pos()) != 1)
     {
-        error_ret = "Please select an adjacent position to wall jump against.";
+        error_ret = localise("Please select an adjacent position to wall jump against.");
         return false;
     }
 
@@ -5734,8 +5790,8 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     {
         if (!feat_can_wall_jump_against(env.grid(target)))
         {
-            error_ret = string("You cannot wall jump against ") +
-                feature_description_at(target, false, DESC_THE) + ".";
+            string feat = feature_description_at(target, false, DESC_THE);
+            error_ret = localise("You cannot wall jump against %s.", feat);
         }
         else
             error_ret = "";
@@ -5749,16 +5805,16 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     monster* beholder = you.get_beholder(wall_jump_landing_spot);
     if (beholder)
     {
-        error_ret = make_stringf("You cannot wall jump away from %s!",
-             beholder->name(DESC_THE, true).c_str());
+        error_ret = localise("You cannot wall jump away from %s!",
+                             beholder->name(DESC_THE, true));
         return false;
     }
 
     monster* fearmonger = you.get_fearmonger(wall_jump_landing_spot);
     if (fearmonger)
     {
-        error_ret = make_stringf("You cannot wall jump closer to %s!",
-             fearmonger->name(DESC_THE, true).c_str());
+        error_ret = localise("You cannot wall jump closer to %s!",
+                             fearmonger->name(DESC_THE, true));
         return false;
     }
 
@@ -5770,14 +5826,20 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     {
         if (landing_actor)
         {
-            error_ret = make_stringf(
-                "You have no room to wall jump there; %s is in the way.",
-                landing_actor->observable()
-                            ? landing_actor->name(DESC_THE).c_str()
-                            : "something you can't see");
+            if (landing_actor->observable())
+            {
+                error_ret = localise(
+                    "You have no room to wall jump there; %s is in the way.",
+                    landing_actor->name(DESC_THE));
+            }
+            else
+            {
+                error_ret = localise("You have no room to wall jump there; "
+                                     "something you can't see is in the way.");
+            }
         }
         else
-            error_ret = "You have no room to wall jump there.";
+            error_ret = localise("You have no room to wall jump there.");
         return false;
     }
     error_ret = "";
@@ -5866,8 +5928,10 @@ spret wu_jian_wall_jump_ability()
 
     if (you.attribute[ATTR_HELD])
     {
-        mprf("You cannot wall jump while caught in a %s.",
-             get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+        if (get_trapping_net(you.pos()) == NON_ITEM)
+            mpr("You cannot wall jump while caught in a web.");
+        else
+            mpr("You cannot wall jump while caught in a net.");
         return spret::abort;
     }
 
@@ -5922,7 +5986,7 @@ spret wu_jian_wall_jump_ability()
 void wu_jian_heavenly_storm()
 {
     mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
-    wu_jian_sifu_message(" says: The storm will not cease as long as you "
+    wu_jian_sifu_message("The storm will not cease as long as you "
                          "keep fighting, disciple!");
 
     for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
@@ -5944,6 +6008,8 @@ void okawaru_remove_heroism()
 
 void okawaru_remove_finesse()
 {
-    mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
+    // you.hand_act() returns a localised string
+    string msg = you.hand_act("%s slows down.", "%s slow down.");
+    mpr_nolocalise(MSGCH_DURATION, msg.c_str());
     you.duration[DUR_FINESSE] = 0;
 }

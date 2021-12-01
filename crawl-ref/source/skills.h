@@ -93,7 +93,7 @@ skill_type str_to_skill(const string &skill);
 skill_type str_to_skill_safe(const string &skill);
 
 string skill_title_by_rank(
-    skill_type best_skill, uint8_t skill_rank,
+    skill_type best_skill, uint8_t skill_rank, bool the,
     // these used for ghosts and hiscores:
     species_type species = you.species,
     bool dex_better = you.base_stats[STAT_DEX] >= you.base_stats[STAT_STR],

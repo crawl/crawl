@@ -23,6 +23,20 @@ using std::vector;
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 
+enum beam_hit_verb
+{
+    BHV_NONE,
+    BHV_HIT,
+    BHV_BURN,
+    BHV_FREEZE,
+    BHV_PELT,
+    BHV_ENGULF,
+    BHV_GRIP,
+    BHV_SKEWER,
+    BHV_PIERCE_THROUGH,
+    BHV_WEAKLY_HIT
+};
+
 class monster;
 
 enum mon_resist_type
@@ -82,10 +96,10 @@ struct bolt
                                   // or if the actor dies prematurely.
     string name = "";
     string short_name = "";
-    string hit_verb = "";         // The verb to use when this beam hits
-                                  // something. If not set, will use
-                                  // "engulfs" if an explosion or cloud
-                                  // and "hits" otherwise.
+    beam_hit_verb hit_verb = BHV_NONE; // The verb to use when this beam hits
+                                       // something. If not set, will use
+                                       // "engulfs" if an explosion or cloud
+                                       // and "hits" otherwise.
     int    loudness = 0;          // Noise level on hitting or exploding.
     string hit_noise_msg = "";    // Message to give player for each hit
                                   // monster that isn't in view.
@@ -187,6 +201,8 @@ public:
 
     void fire();
 
+    // name with "the" in front of it
+    string get_the_name() const;
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
     string get_short_name() const;
@@ -244,6 +260,8 @@ private:
     int range_used_on_hit() const;
     bool bush_immune(const monster &mons) const;
     int apply_lighting(int base_hit, const actor &target) const;
+    string get_hit_message(const string& object) const;
+    void do_hit_message(const string& object, const string& punctuation) const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
@@ -320,7 +338,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 bool enchant_actor_with_flavour(actor* victim, const actor *atk,
                                 beam_type flavour, int powc = 0);
 
-bool enchant_monster_invisible(monster* mon, const string &how);
+bool enchant_monster_invisible(monster* mon, bool invis_beam);
 
 bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
                                                   bool intrinsic_only = false);

@@ -85,6 +85,15 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         const monster *mons = nullptr);
 
 string rude_stop_summoning_reason();
-bool rude_stop_summoning_prompt(string verb = "summon");
+
+enum rude_stop_prompt
+{
+    RUDE_STOP_SUMMON,
+    RUDE_STOP_SUMMON_FOREST,
+    RUDE_STOP_CALL_DRAGONS,
+    RUDE_STOP_CHARM
+};
+
+bool rude_stop_summoning_prompt(rude_stop_prompt prompt_id = RUDE_STOP_SUMMON);
 
 bool can_reach_attack_between(coord_def source, coord_def target);

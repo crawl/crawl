@@ -10,6 +10,7 @@
 #include <queue>
 
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "options.h"
@@ -91,7 +92,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
         if (keyin == '*')
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
-            cprintf("CTRL");
+            cprintf(localise("CTRL").c_str());
             keyin = getchm(keymap);
             // return control-key
             keyin = CONTROL(toupper_safe(_numpad2vi(keyin)));
@@ -99,7 +100,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
         else if (keyin == '/')
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
-            cprintf("SHIFT");
+            cprintf(localise("SHIFT").c_str());
             keyin = getchm(keymap);
             // return shift-key
             keyin = toupper_safe(_numpad2vi(keyin));

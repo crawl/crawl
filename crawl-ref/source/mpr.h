@@ -97,10 +97,18 @@ enum diag_type
 msg_colour_type msg_colour(int colour);
 
 void do_message_print(msg_channel_type channel, int param, bool cap,
-                             bool nojoin, const char *format, va_list argp);
+                             bool nojoin, const char *format, va_list argp,
+                             bool localise=true);
 
 void mpr(const string &text);
+void mpr(msg_channel_type channel, const string &text);
+void mpr(msg_channel_type channel, int param, const string &text);
 void mpr_nojoin(msg_channel_type channel, string text);
+
+// message print without localisation (translation)
+void mpr_nolocalise(const string& text);
+void mpr_nolocalise(msg_channel_type channel, const string& text);
+void mpr_nolocalise(msg_channel_type channel, int param, const string &text);
 
 static inline void mpr(const formatted_string &text)
 {
@@ -117,6 +125,11 @@ void mprf_nojoin(PRINTF(0,));
 void mprf_nocap(msg_channel_type channel, int param, PRINTF(2, ));
 void mprf_nocap(msg_channel_type channel, PRINTF(1, ));
 void mprf_nocap(PRINTF(0, ));
+
+// message print without localisation (translation)
+void mprf_nolocalise(msg_channel_type channel, int param, PRINTF(2, ));
+void mprf_nolocalise(msg_channel_type channel, PRINTF(1, ));
+void mprf_nolocalise(PRINTF(0, ));
 
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(PRINTF(0, ));

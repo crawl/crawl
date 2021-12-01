@@ -1896,8 +1896,8 @@ static void _get_rune(const item_def& it, bool quiet)
     if (!quiet)
     {
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
-        mprf("You pick up the %s rune and feel its power.",
-             rune_type_name(it.sub_type));
+        mprf("You pick up %s and feel its power.",
+             rune_short_name(it.sub_type).c_str());
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");

@@ -237,7 +237,10 @@ struct monster_info_base
     mon_energy_usage menergy;
     CrawlHashTable props;
     string constrictor_name;
+    bool constrictor_damage;
+    // constricting = holding and damaging, holding = no damage
     vector<string> constricting_name;
+    vector<string> holding_name;
     monster_spells spells;
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;

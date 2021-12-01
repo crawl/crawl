@@ -11,6 +11,7 @@
 #include <cinttypes>
 #include <cstdio>
 #include <cstring>
+#include <iomanip>
 #include <sstream>
 
 #include "chardump.h"
@@ -23,6 +24,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "lookup-help.h"
 #include "macro.h"
 #include "message.h"
@@ -45,31 +47,31 @@ using namespace ui;
 static const char *features[] =
 {
 #ifdef CLUA_BINDINGS
-    "Lua user scripts",
+    "Lua user scripts", // noloc
 #endif
 
 #ifdef USE_TILE_LOCAL
-    "Tile support",
+    "Tile support", // noloc
 #endif
 
 #ifdef USE_TILE_WEB
-    "Web Tile support",
+    "Web Tile support", // noloc
 #endif
 
 #ifdef WIZARD
-    "Wizard mode",
+    "Wizard mode", // noloc
 #endif
 
 #ifdef DEBUG
-    "Debug mode",
+    "Debug mode", // noloc
 #endif
 
 #if defined(REGEX_POSIX)
-    "POSIX regexps",
+    "POSIX regexps", // noloc
 #elif defined(REGEX_PCRE)
-    "PCRE regexps",
+    "PCRE regexps", // noloc
 #else
-    "Glob patterns",
+    "Glob patterns", // noloc
 #endif
 
 #if defined(USE_SOUND) && defined(SOUND_BACKEND)
@@ -77,13 +79,13 @@ static const char *features[] =
 #endif
 
 #ifdef DGL_MILESTONES
-    "Milestones",
+    "Milestones", // noloc
 #endif
 };
 
 static string _get_version_information()
 {
-    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>"; // noloc
     return result;
 }
 
@@ -100,25 +102,25 @@ static string _get_version_features()
         {
             result += seed_description();
             if (Version::history_size() > 1)
-                result += " (seed may be affected by game upgrades)";
+                result += " (seed may be affected by game upgrades)"; // noloc
         }
         else
-            result += "Game is not seeded.";
+            result += "Game is not seeded."; // noloc
         result += "\n\n";
     }
     if (Version::history_size() > 1)
     {
-        result += "Version history for your current game:\n";
+        result += "Version history for your current game:\n"; // noloc
         result += Version::history();
         result += "\n\n";
     }
 
-    result += "<w>Features</w>\n"
-                 "--------\n";
+    result += "<w>Features</w>\n" // noloc
+                 "--------\n"; // noloc
 
     for (const char *feature : features)
     {
-        result += " * ";
+        result += " * "; // noloc
         result += feature;
         result += "\n";
     }
@@ -163,7 +165,7 @@ static string _get_version_changes()
         {
         highlight:
             // Highlight the Highlights, so to speak.
-            result += "<w>" + help + "</w>\n";
+            result += "<w>" + help + "</w>\n"; // noloc
             // And start printing from now on.
             start = true;
         }
@@ -182,13 +184,13 @@ static string _get_version_changes()
     {
         result.erase(1+result.find_last_not_of('\n'));
         result += "\n\n";
-        result += "For earlier changes, see changelog.txt "
-                  "in the docs/ directory.";
+        result += "For earlier changes, see changelog.txt " // noloc
+                  "in the docs/ directory."; // noloc
     }
     else
     {
-        result += "For a list of changes, see changelog.txt in the docs/ "
-                  "directory.";
+        result += "For a list of changes, see changelog.txt " // noloc
+                  "in the docs/ directory."; // noloc
     }
 
     return result;
@@ -250,6 +252,8 @@ static void _print_version()
     ui::run_layout(move(popup), done);
 }
 
+const string _indent = "    ";
+
 void list_armour()
 {
     ostringstream estr;
@@ -262,36 +266,37 @@ void list_armour()
         estr.str("");
         estr.clear();
 
-        estr << ((i == EQ_CLOAK)       ? "Cloak  " :
-                 (i == EQ_HELMET)      ? "Helmet " :
-                 (i == EQ_GLOVES)      ? "Gloves " :
-                 (i == EQ_SHIELD)      ? "Shield " :
-                 (i == EQ_BODY_ARMOUR) ? "Armour " :
-                 (i == EQ_BOOTS)       ?
-                   (you.wear_barding() ? "Barding"
-                                       : "Boots  ")
-                                       : "unknown")
-             << " : ";
+        string slot = ((i == EQ_CLOAK)       ? "Cloak" :
+                       (i == EQ_HELMET)      ? "Helmet" :
+                       (i == EQ_GLOVES)      ? "Gloves" :
+                       (i == EQ_SHIELD)      ? "Shield" :
+                       (i == EQ_BODY_ARMOUR) ? "Armour" :
+                       (i == EQ_BOOTS)       ?
+                         (you.wear_barding() ? "Barding"
+                                             : "Boots")
+                                             : "unknown");
+
+        estr << setw(8) << left << localise(slot) << ": "; // noloc
 
         if (you_can_wear(i) == MB_FALSE)
-            estr << "    (unavailable)";
+            estr << _indent << localise("(unavailable)");
         else if (you_can_wear(i, true) == MB_FALSE)
-            estr << "    (currently unavailable)";
+            estr << _indent << localise("(currently unavailable)");
         else if (armour_id != -1)
         {
-            estr << you.inv[armour_id].name(DESC_INVENTORY);
+            estr << localise(you.inv[armour_id].name(DESC_INVENTORY));
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
-                                 "equip");
+                                 "equip"); // noloc
         }
         else if (you_can_wear(i) == MB_MAYBE)
-            estr << "    (restricted)";
+            estr << _indent << localise("(restricted)");
         else
-            estr << "    none";
+            estr << _indent << localise("none");
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str(), "", "equip");
+            colour = menu_colour(estr.str(), "", "equip"); // noloc
 
-        mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
+        mpr_nolocalise(MSGCH_EQUIPMENT, colour, estr.str());
     }
 }
 
@@ -310,7 +315,7 @@ void list_jewellery()
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;
 
-        const char *slot =
+        string slot =
                  (i == EQ_LEFT_RING)   ? "Left ring" :
                  (i == EQ_RIGHT_RING)  ? "Right ring" :
                  (i == EQ_AMULET)      ? "Amulet" :
@@ -324,101 +329,38 @@ void list_jewellery()
                  (i == EQ_RING_EIGHT)  ? "8th ring" :
                  (i == EQ_RING_AMULET) ? "Amulet ring"
                                        : "unknown";
+        slot = localise(slot);
 
         string item;
         if (you_can_wear(i, true) == MB_FALSE)
-            item = "    (currently unavailable)";
+            item = _indent + localise("(currently unavailable)");
         else if (jewellery_id != -1)
         {
-            item = you.inv[jewellery_id].name(DESC_INVENTORY);
+            item = localise(you.inv[jewellery_id].name(DESC_INVENTORY));
             string prefix = item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(item, prefix, "equip");
+            colour = menu_colour(item, prefix, "equip"); // noloc
         }
         else
-            item = "    none";
+            item = _indent + localise("none");
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(item, "", "equip");
+            colour = menu_colour(item, "", "equip"); // noloc
 
-        item = chop_string(make_stringf("%-*s: %s",
+        item = chop_string(make_stringf("%-*s: %s", // noloc
                                         split ? cols > 96 ? 9 : 8 : 11,
-                                        slot, item.c_str()),
+                                        slot.c_str(), item.c_str()),
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
         item = colour_string(item, colour);
 
         // doesn't handle arbitrary arm counts
         if (i == EQ_RING_SEVEN && you.arm_count() == 7)
-            mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
+            mpr_nolocalise(MSGCH_EQUIPMENT, item);
         else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
-            mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
+            mprf_nolocalise(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
     }
 }
-
-static const char *targeting_help_1 =
-    "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
-    "<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)\n"
-    "<w>Ctrl-X</w> : list all things in view\n"
-    "<w>Dir.</w>: move cursor in that direction\n"
-    "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
-    "<w>g</w> : pick up item at cursor\n"
-    "<w>v</w> : describe monster under cursor\n"
-    "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
-    "<w>-</w> : cycle monsters backward\n"
-    "<w>*</w> : cycle objects forward (also <w>'</w>)\n"
-    "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
-    "<w>^</w> : cycle through traps\n"
-    "<w>_</w> : cycle through altars\n"
-    "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
-    "<w>Tab</w> : cycle through shops and portals\n"
-    "<w>r</w> : move cursor to you\n"
-    "<w>e</w> : create/remove travel exclusion\n"
-    "<w>Ctrl-P</w> : repeat prompt\n"
-;
-#ifdef WIZARD
-static const char *targeting_help_wiz =
-    "<h>Wizard targeting commands:</h>\n"
-    "<w>Ctrl-C</w> : cycle through beam paths\n"
-    "<w>D</w>: get debugging information about the monster\n"
-    "<w>o</w>: give item to monster\n"
-    "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
-    "<w>G</w>: make monster gain experience\n"
-    "<w>Ctrl-H</w>: heal the monster fully\n"
-    "<w>P</w>: apply divine blessing to monster\n"
-    "<w>m</w>: move monster or player\n"
-    "<w>M</w>: cause spell miscast for monster or player\n"
-    "<w>s</w>: force monster to shout or speak\n"
-    "<w>S</w>: make monster a summoned monster\n"
-    "<w>w</w>: calculate shortest path to any point on the map\n"
-    "<w>\"</w>: get debugging information about a portal\n"
-    "<w>~</w>: polymorph monster to specific type\n"
-    "<w>,</w>: bring down the monster to 1 hp\n"
-    "<w>Ctrl-(</w>: place a mimic\n"
-    "<w>Ctrl-B</w>: banish monster\n"
-    "<w>Ctrl-K</w>: kill monster\n"
-;
-#endif
-
-static const char *targeting_help_2 =
-    "<h>Targeting (zap wands, cast spells, etc.):\n"
-    "Most keys from examine surroundings work.\n"
-    "Some keys fire at the target. <w>Ctrl-X</w> only\n"
-    "lists eligible targets. By default,\n"
-    "range is respected and beams don't stop.\n"
-    "<w>Enter</w> : fire (<w>Space</w>, <w>Del</w>)\n"
-    "<w>.</w> : fire, stop at target\n"
-    "<w>@</w> : fire, stop at target, ignore range\n"
-    "<w>!</w> : fire, don't stop, ignore range\n"
-    "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
-    "<w>:</w> : show/hide beam path\n"
-    "<w>Shift-Dir.</w> : fire straight-line beam\n"
-    "\n"
-    "<h>Firing mode ('<w>f</w><h>' in main):\n"
-    "<w>Q</w> : choose fire action.\n"
-    "<w>(</w> : cycle to previous suitable action\n"
-    "<w>)</w> : cycle to next suitable action.\n"
-;
 
 struct help_file
 {
@@ -479,10 +421,10 @@ static void _handle_FAQ()
             string answer = getFAQ_Answer(key);
             if (answer.empty())
             {
-                answer = "No answer found in the FAQ! Please submit a "
-                         "bug report!";
+                answer = localise("No answer found in the FAQ! Please submit "
+                                  "a bug report!");
             }
-            answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
+            answer = localise("Q: ") + getFAQ_Question(key) + "\n" + answer;
             show_description(answer);
         }
     }
@@ -525,11 +467,16 @@ void show_levelmap_help()
 void show_targeting_help()
 {
     column_composer cols(2, 40);
+    string targeting_help_1 = getHelpString("targeting-help-1");
     cols.add_formatted(0, targeting_help_1, true);
 #ifdef WIZARD
     if (you.wizard)
+    {
+        string targeting_help_wiz = getHelpString("targeting-help-wiz");
         cols.add_formatted(0, targeting_help_wiz, true);
+    }
 #endif
+    string targeting_help_2 = getHelpString("targeting-help-2");
     cols.add_formatted(1, targeting_help_2, true);
     show_keyhelp_menu(cols.formatted_lines());
 }
@@ -583,37 +530,6 @@ void show_spell_library_help()
         show_specific_help("spell-library");
 }
 
-static void _add_command(column_composer &cols, const int column,
-                         const command_type cmd,
-                         const string &desc,
-                         const unsigned int space_to_colon = 7)
-{
-    string command_name = command_to_string(cmd);
-    if (strcmp(command_name.c_str(), "<") == 0)
-        command_name += "<";
-
-    const int cmd_len = strwidth(command_name);
-    string line = "<w>" + command_name + "</w>";
-    for (unsigned int i = cmd_len; i < space_to_colon; ++i)
-        line += " ";
-    line += ": " + untag_tiles_console(desc) + "\n";
-
-    cols.add_formatted(
-            column,
-            line.c_str(),
-            false);
-}
-
-static void _add_insert_commands(column_composer &cols, const int column,
-                                 const unsigned int space_to_colon,
-                                 command_type lead_cmd, string desc,
-                                 const vector<command_type> &cmd_vector)
-{
-    insert_commands(desc, cmd_vector);
-    desc += "\n";
-    _add_command(cols, column, lead_cmd, desc, space_to_colon);
-}
-
 static void _add_insert_commands(column_composer &cols, const int column,
                                  string desc,
                                  const vector<command_type> &cmd_vector)
@@ -625,480 +541,286 @@ static void _add_insert_commands(column_composer &cols, const int column,
 
 static void _add_formatted_help_menu(column_composer &cols)
 {
-    cols.add_formatted(
-        0,
-        "<h>Dungeon Crawl Help\n"
-        "\n"
-        "Press one of the following keys to\n"
-        "obtain more information on a certain\n"
-        "aspect of Dungeon Crawl.\n"
-
-        "<w>?</w>: List of commands\n"
-        "<w>^</w>: Quickstart Guide\n"
-        "<w>:</w>: Browse character notes\n"
-        "<w>#</w>: Browse character dump\n"
-        "<w>~</w>: Macros help\n"
-        "<w>&</w>: Options help\n"
-        "<w>%</w>: Table of aptitudes\n"
-        "<w>/</w>: Lookup description\n"
-        "<w>Q</w>: FAQ\n"
-#ifdef USE_TILE_LOCAL
-        "<w>T</w>: Tiles key help\n"
-#endif
-        "<w>V</w>: Version information\n"
-        "<w>Home</w>: This screen\n");
+    cols.add_formatted(0, getHelpString("help-menu-1"));
 
     // TODO: generate this from the manual somehow
-    cols.add_formatted(
-        1,
-        "<h>Manual Contents\n\n"
-        "<w>*</w>       Table of contents\n"
-        "<w>A</w>.      Overview\n"
-        "<w>B</w>.      Starting Screen\n"
-        "<w>C</w>.      Attributes and Stats\n"
-        "<w>D</w>.      Exploring the Dungeon\n"
-        "<w>E</w>.      Experience and Skills\n"
-        "<w>F</w>.      Monsters\n"
-        "<w>G</w>.      Items\n"
-        "<w>H</w>.      Spellcasting\n"
-        "<w>I</w>.      Targeting\n"
-        "<w>J</w>.      Religion\n"
-        "<w>K</w>.      Mutations\n"
-        "<w>L</w>.      Licence, Contact, History\n"
-        "<w>M</w>.      Macros, Options, Performance\n"
-        "<w>N</w>.      Philosophy\n"
-        "<w>1</w>.      List of Character Species\n"
-        "<w>2</w>.      List of Character Backgrounds\n"
-        "<w>3</w>.      List of Skills\n"
-        "<w>4</w>.      List of Keys and Commands\n"
-        "<w>5</w>.      Inscriptions\n"
-        "<w>6</w>.      Dungeon sprint modes\n");
+    cols.add_formatted(1, getHelpString("help-menu-2"));
+}
+
+static void _add_movement_diagram(column_composer &cols)
+{
+    // i18n: This should be the same regardless of language
+    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %", // noloc
+                         { CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT });
+    _add_insert_commands(cols, 0, "                  \\|/        \\|/", {}); // noloc
+    _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>" // noloc
+                                  "      <w>%</w>-<w>%</w>-<w>%</w>", // noloc
+                         { CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT });
+    _add_insert_commands(cols, 0, "                  /|\\        /|\\", {}); // noloc
+    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %", // noloc
+                         { CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN,
+                           CMD_MOVE_DOWN_RIGHT });
 }
 
 static void _add_formatted_keyhelp(column_composer &cols)
 {
-    cols.add_formatted(
-            0,
-            "<h>Movement:\n"
-            "To move in a direction or to attack, \n"
-            "use the numpad (try Numlock off and \n"
-            "on) or vi keys:\n");
+    string move_help = getHelpString("cmd-help-movement");
+    linebreak_string(move_help, 40);
+    cols.add_formatted(0, move_help);
 
-    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
-                         { CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT });
-    _add_insert_commands(cols, 0, "                  \\|/        \\|/", {});
-    _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>"
-                                  "      <w>%</w>-<w>%</w>-<w>%</w>",
-                         { CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT });
-    _add_insert_commands(cols, 0, "                  /|\\        /|\\", {});
-    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
-                         { CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN,
-                           CMD_MOVE_DOWN_RIGHT });
+    _add_movement_diagram(cols);
 
-    cols.add_formatted(
-            0,
-            "<h>Rest:\n");
+    string rest_help = getHelpString("cmd-help-rest");
+    insert_commands(rest_help, { CMD_WAIT, CMD_REST });
+    linebreak_string(rest_help, 40, 4);
+    cols.add_formatted(0, rest_help);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
-    _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
-    cols.add_formatted(
-            0,
-            "    Health or Magic become full or\n"
-            "    something is detected. If Health\n"
-            "    and Magic are already full, stops\n"
-            "    when 100 turns over (<w>numpad-5</w>)\n",
-            false);
+    string extended_move = getHelpString("cmd-help-ext-movement");
+    insert_commands(extended_move,
+                    { CMD_EXPLORE,
+                      CMD_INTERLEVEL_TRAVEL,
+                      CMD_SEARCH_STASHES,
+                      CMD_FIX_WAYPOINT});
+    linebreak_string(extended_move, 40, 9);
+    cols.add_formatted(0, extended_move);
 
-    cols.add_formatted(
-            0,
-            "<h>Extended Movement:\n");
+    string autofight_help = getHelpString("cmd-help-autofight");
+    linebreak_string(autofight_help, 40, 4);
+    cols.add_formatted(0, autofight_help);
 
-    _add_command(cols, 0, CMD_EXPLORE, "auto-explore");
-    _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "interlevel travel");
-    _add_command(cols, 0, CMD_SEARCH_STASHES, "Find items");
-    _add_command(cols, 0, CMD_FIX_WAYPOINT, "set Waypoint");
+    string item_type_help = getHelpString("cmd-help-item-types");
+    item_type_help = replace_all(item_type_help, "@book_glyph@",
+                            stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK)));
+    insert_commands(item_type_help,
+                    { CMD_WIELD_WEAPON,
+                      CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                                                 CMD_CYCLE_QUIVER_BACKWARD,
+                      CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR,
+                      CMD_READ,
+                      CMD_QUAFF,
+                      CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY,
+                      CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY,
+                      CMD_EVOKE,
+                      CMD_MEMORISE_SPELL, CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL,
+                      CMD_WIELD_WEAPON,
+                      CMD_EVOKE,
+                      CMD_LIST_GOLD
+                    });
+    linebreak_string(item_type_help, 40, 4);
+    cols.add_formatted(0, item_type_help);
 
-    cols.add_formatted(
-            0,
-            "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
-            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : attack without move \n",
-            false);
+    string other_gameplay = getHelpString("cmd-help-other-gameplay");
+    insert_commands(other_gameplay,
+                    { CMD_USE_ABILITY, CMD_USE_ABILITY,
+                      CMD_CAST_SPELL,
+                      CMD_FORCE_CAST_SPELL,
+                      CMD_DISPLAY_SPELLS,
+                      CMD_MEMORISE_SPELL,
+                      CMD_SHOUT, CMD_SHOUT,
+                      CMD_PREV_CMD_AGAIN,
+                      CMD_REPEAT_CMD
+                    });
+    linebreak_string(other_gameplay, 40, 4);
+    cols.add_formatted(0, other_gameplay);
 
-    cols.add_formatted(
-            0,
-            "<h>Autofight:\n"
-            "<w>Tab</w>          : attack nearest monster,\n"
-            "               moving if necessary\n"
-            "<w>Shift-Tab</w>, <w>p</w> : trigger quivered action;\n"
-            "               if targeted, aims at\n"
-            "               nearest monster\n");
-
-    cols.add_formatted(
-            0,
-            "<h>Item types (and common commands)\n");
-
-    _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
-                         { CMD_WIELD_WEAPON });
-    _add_insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
-                                  "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
-                         { CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
-                           CMD_CYCLE_QUIVER_BACKWARD });
-    _add_insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
-                         { CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR });
-    _add_insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
-                         { CMD_READ });
-    _add_insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
-                         { CMD_QUAFF });
-    _add_insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
-                         { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
-    _add_insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
-                         { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
-    _add_insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
-                         { CMD_EVOKE });
-
-    string item_types = "<lightcyan>";
-    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
-    item_types +=
-        "</lightcyan> : books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap,\n"
-        "    pick up to add to library)";
-    _add_insert_commands(cols, 0, item_types,
-                         { CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
-                           CMD_FORCE_CAST_SPELL });
-    _add_insert_commands(cols, 0, "<brown>|</brown> : staves (<w>%</w>ield)",
-                         { CMD_WIELD_WEAPON});
-    _add_insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
-                         { CMD_EVOKE });
-    _add_insert_commands(cols, 0, "<yellow>$</yellow> : gold (<w>%</w> counts gold)",
-                         { CMD_LIST_GOLD });
-
-    cols.add_formatted(
-            0,
-            "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
-            "    Carry it to the surface and win!\n",
-            false);
-
-    cols.add_formatted(
-            0,
-            "<h>Other Gameplay Actions:\n");
-
-    _add_insert_commands(cols, 0, 2, CMD_USE_ABILITY,
-                         "use special Ability (<w>%!</w> for help)",
-                         { CMD_USE_ABILITY });
-    _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
-    _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
-    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all memorised spells", 2);
-    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a spell from your library", 2);
-
-    _add_insert_commands(cols, 0, 2, CMD_SHOUT,
-                         "tell allies (<w>%t</w> to shout)",
-                         { CMD_SHOUT });
-    _add_command(cols, 0, CMD_PREV_CMD_AGAIN, "re-do previous command", 2);
-    _add_command(cols, 0, CMD_REPEAT_CMD, "repeat next command # of times", 2);
-
-    cols.add_formatted(
-            0,
-            "<h>Non-Gameplay Commands / Info\n");
-
-    _add_command(cols, 0, CMD_GAME_MENU, "game menu", 2);
-    _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
-    _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
-    _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
-    _add_command(cols, 0, CMD_MACRO_ADD, "quick add macro");
-    _add_command(cols, 0, CMD_MACRO_MENU, "edit macros");
-    _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
-    _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
-    _add_insert_commands(cols, 0, 2, CMD_MAKE_NOTE,
-                         "add note (use <w>%:</w> to read notes)",
-                         { CMD_DISPLAY_COMMANDS });
-    _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
+    string non_gameplay = getHelpString("cmd-help-non-gameplay");
+    insert_commands(non_gameplay,
+                    { CMD_GAME_MENU,
+                      CMD_REPLAY_MESSAGES,
+                      CMD_REDRAW_SCREEN,
+                      CMD_CLEAR_MAP,
+                      CMD_MACRO_ADD,
+                      CMD_MACRO_MENU,
+                      CMD_ANNOTATE_LEVEL,
+                      CMD_CHARACTER_DUMP,
+                      CMD_MAKE_NOTE, CMD_DISPLAY_COMMANDS,
+                      CMD_ADJUST_INVENTORY,
 #ifdef USE_TILE_LOCAL
-    _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
-#else
-#ifdef USE_TILE_WEB
-    if (tiles.is_controlled_from_web())
-    {
-        cols.add_formatted(0, "<w>F12</w> : read messages (online play only)",
-                           false);
-    }
-    else
+                      CMD_EDIT_PLAYER_TILE,
 #endif
-    _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);
-#endif
+                    });
+    linebreak_string(non_gameplay, 40, 4);
+    cols.add_formatted(0, non_gameplay);
 
-    cols.add_formatted(
-            1,
-            "<h>Game Saving and Quitting:\n");
+    string save_quit = getHelpString("cmd-help-save-quit");
+    insert_commands(extended_move,
+                    { CMD_SAVE_GAME,
+                      CMD_SAVE_GAME_NOW,
+                      CMD_QUIT});
+    linebreak_string(save_quit, 40, 9);
+    cols.add_formatted(1, save_quit);
 
-    _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
-    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
-    _add_command(cols, 1, CMD_QUIT, "Abandon the current character");
-    cols.add_formatted(1, "         and quit the game\n",
-                       false);
+    string character_help = getHelpString("cmd-help-character");
+    insert_commands(character_help,
+                    { CMD_DISPLAY_CHARACTER_STATUS,
+                      CMD_DISPLAY_SKILLS,
+                      CMD_RESISTS_SCREEN,
+                      CMD_DISPLAY_RELIGION,
+                      CMD_DISPLAY_MUTATIONS,
+                      CMD_DISPLAY_KNOWN_OBJECTS,
+                      CMD_MEMORISE_SPELL,
+                      CMD_DISPLAY_RUNES,
+                      CMD_LIST_ARMOUR,
+                      CMD_LIST_JEWELLERY,
+                      CMD_LIST_GOLD,
+                      CMD_EXPERIENCE_CHECK,
+                      CMD_QUIT});
+    linebreak_string(character_help, 40, 4);
+    cols.add_formatted(1, character_help);
 
-    cols.add_formatted(
-            1,
-            "<h>Player Character Information:\n");
-
-    _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
-    _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
-    _add_command(cols, 1, CMD_RESISTS_SCREEN, "character overview", 2);
-    _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
-    _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
-    _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
-    _add_command(cols, 1, CMD_MEMORISE_SPELL, "show your spell library", 2);
-    _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
-    _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
-    _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
-    _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
-    _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
-
-    cols.add_formatted(
-            1,
-            "<h>Dungeon Interaction and Information:\n");
-
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w>    : Open/Close door",
-                         { CMD_OPEN_DOOR, CMD_CLOSE_DOOR });
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w>    : use staircase",
-                         { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
-
-    _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile and");
-    cols.add_formatted(1, "         pickup part of a single stack\n",
-                       false);
-
-    _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
-    _add_insert_commands(cols, 1, 7, CMD_DISPLAY_MAP,
-                         "eXamine level map (<w>%?</w> for help)",
-                         { CMD_DISPLAY_MAP });
-    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
-    cols.add_formatted(1, "         in view\n",
-                       false);
-    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
-    _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
-    _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+    string dungeon_help = getHelpString("cmd-help-dungeon");
+    insert_commands(dungeon_help,
+                    { CMD_OPEN_DOOR, CMD_CLOSE_DOOR,
+                      CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS,
+                      CMD_INSPECT_FLOOR,
+                      CMD_LOOK_AROUND,
+                      CMD_DISPLAY_MAP, CMD_DISPLAY_MAP,
+                      CMD_FULL_VIEW,
+                      CMD_SHOW_TERRAIN,
+                      CMD_DISPLAY_OVERMAP,
+                      CMD_TOGGLE_AUTOPICKUP,
+                      CMD_TOGGLE_TRAVEL_SPEED,
+                    });
 #ifdef USE_SOUND
-    _add_command(cols, 1, CMD_TOGGLE_SOUND, "mute/unmute sound effects");
+    string sound_help = getHelpString("cmd-help-sound");
+    insert_commands(sound_help, { CMD_TOGGLE_SOUND });
+    dungeon_help += sound_help;
 #endif
-    _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
-    cols.add_formatted(1, "         slowest ally\n",
-                           false);
 #ifdef USE_TILE_LOCAL
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : zoom out/in",
-                        { CMD_ZOOM_OUT, CMD_ZOOM_IN });
+    string zoom_help = getHelpString("cmd-help-zoom");
+    insert_commands(zoom_help, { CMD_ZOOM_OUT, CMD_ZOOM_IN });
+    dungeon_help += zoom_help;
 #endif
+    linebreak_string(dungeon_help, 40, 9);
+    cols.add_formatted(1, dungeon_help);
 
-    cols.add_formatted(
-            1,
-            "<h>Inventory management:\n");
+    string inventory_help = getHelpString("cmd-help-inventory");
+    insert_commands(inventory_help,
+                    { CMD_DISPLAY_INVENTORY,
+                      CMD_PICKUP,
+                      CMD_DROP,
+                      CMD_DROP,
+                      CMD_DROP_LAST,
+                      CMD_QUIT});
+    linebreak_string(inventory_help, 40, 4);
+    cols.add_formatted(1, inventory_help);
 
-    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
-    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
-    cols.add_formatted(
-            1,
-            "    (press twice for pick up menu)\n",
-            false);
+    string item_help = getHelpString("cmd-help-items");
+    insert_commands(item_help,
+                    { CMD_INSCRIBE_ITEM,
+                      CMD_FIRE,
+                      CMD_THROW_ITEM_NO_QUIVER,
+                      CMD_QUIVER_ITEM,
+                      CMD_SWAP_QUIVER_RECENT,
+                      CMD_QUAFF,
+                      CMD_READ,
+                      CMD_WIELD_WEAPON,
+                      CMD_WEAPON_SWAP,
+                      CMD_ADJUST_INVENTORY,
+                      CMD_PRIMARY_ATTACK,
+                      CMD_EVOKE,
+                      CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR,
+                      CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY,
+                      CMD_QUIT});
+    cols.add_formatted(1, item_help);
 
-    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
-    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
-                         { CMD_DROP });
-    _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
-
-    cols.add_formatted(
-            1,
-            "<h>Item Interaction:\n");
-
-    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
-    _add_command(cols, 1, CMD_FIRE, "Fire the currently quivered action", 2);
-    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
-    _add_command(cols, 1, CMD_QUIVER_ITEM, "select action to be Quivered", 2);
-    _add_command(cols, 1, CMD_SWAP_QUIVER_RECENT, "swap between most recent quiver actions", 2);
-    _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
-    _add_command(cols, 1, CMD_READ, "Read a scroll", 2);
-    _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item (<w>-</w> for none)", 2);
-    _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
-
-    _add_insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
-                         { CMD_ADJUST_INVENTORY });
-
-    _add_command(cols, 1, CMD_PRIMARY_ATTACK, "attack with wielded item", 2);
-    _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
-
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
-                         { CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR });
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
-                         { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
-
-    cols.add_formatted(
-            1,
-            "<h>Additional help:\n");
-
-    string text =
-            "Many commands have context sensitive "
-            "help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any "
-            "form of targeting), <w>%</w>, and <w>%</w>.\n"
-            "You can read descriptions of your "
-            "current spells (<w>%</w>), skills (<w>%?</w>) and "
-            "abilities (<w>%!</w>).";
+    string text = getHelpString("cmd-help-additional");
     insert_commands(text, { CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
                             CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
                             CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS,
                             CMD_USE_ABILITY
                           });
     linebreak_string(text, 40);
-
-    cols.add_formatted(
-            1, text,
-            false);
+    cols.add_formatted(1, text);
 }
 
 static void _add_formatted_hints_help(column_composer &cols)
 {
     // First column.
-    cols.add_formatted(
-            0,
-            "<h>Movement:\n"
-            "To move in a direction or to attack, \n"
-            "use the numpad (try Numlock off and \n"
-            "on) or vi keys:\n",
-            false);
+    string move_help = getHelpString("cmd-help-movement");
+    linebreak_string(move_help, 40);
+    cols.add_formatted(0, move_help, false);
 
-    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
-                         { CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT });
-    _add_insert_commands(cols, 0, "                  \\|/        \\|/", {});
-    _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>"
-                                  "      <w>%</w>-<w>%</w>-<w>%</w>",
-                         { CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT });
-    _add_insert_commands(cols, 0, "                  /|\\        /|\\", {});
-    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
-                         { CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN,
-                           CMD_MOVE_DOWN_RIGHT });
+    _add_movement_diagram(cols);
 
-    cols.add_formatted(0, " ", false);
-    cols.add_formatted(0, "<w>Shift-Dir.</w> runs into one direction",
-                       false);
-    _add_insert_commands(cols, 0, "<w>%</w> or <w>%</w> : ascend/descend the stairs",
-                         { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
-    _add_command(cols, 0, CMD_EXPLORE, "autoexplore", 2);
+    string move_hints = getHelpString("cmd-hints-move");
+    insert_commands(move_hints,
+                    { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS,
+                      CMD_EXPLORE
+                    });
+    linebreak_string(move_hints, 40);
+    cols.add_formatted(0, move_hints);
 
-    cols.add_formatted(
-            0,
-            "<h>Rest:\n");
+    string rest_hints = getHelpString("cmd-hints-rest");
+    insert_commands(rest_hints,
+                    { CMD_WAIT,
+                      CMD_REST
+                    });
+    linebreak_string(rest_hints, 40);
+    cols.add_formatted(0, rest_hints);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
-    _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
-    cols.add_formatted(
-            0,
-            "    Health or Magic become full or\n"
-            "    something is detected. If Health\n"
-            "    and Magic are already full, stops\n"
-            "    when 100 turns over (<w>numpad-5</w>)\n",
-            false);
+    string attack_hints = getHelpString("cmd-hints-attack");
+    linebreak_string(attack_hints, 40);
+    cols.add_formatted(0, attack_hints);
 
-    cols.add_formatted(
-            0,
-            "\n<h>Attacking monsters\n"
-            "Walking into a monster will attack it\n"
-            "with the wielded weapon or barehanded.",
-            false);
-
-    cols.add_formatted(
-            0,
-            "\n<h>Ranged combat and magic\n",
-            false);
-
-    _add_insert_commands(cols, 0, "<w>%</w> to throw/fire missiles",
-                         { CMD_FIRE });
-    _add_insert_commands(cols, 0, "<w>%</w>/<w>%</w> to cast spells "
-                                  "(<w>%?/%</w> lists spells)",
-                         { CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL,
-                           CMD_DISPLAY_SPELLS });
-    _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise spells and view spell\n"
-                                              "    library (get books to add to it)", 2);
+    string ranged_hints = getHelpString("cmd-hints-ranged");
+    insert_commands(ranged_hints,
+                    { CMD_FIRE,
+                      CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL,
+                          CMD_CAST_SPELL, CMD_DISPLAY_SPELLS,
+                      CMD_MEMORISE_SPELL
+                    });
+    linebreak_string(ranged_hints, 40);
+    cols.add_formatted(0, ranged_hints);
 
     // Second column.
-    cols.add_formatted(
-            1, "<h>Item types and inventory management\n",
-            false);
+    string item_hints = getHelpString("cmd-hints-items");
+    item_hints = replace_all(item_hints, "@book_glyph@",
+                             stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK)));
+    item_hints = replace_all(item_hints, "@staff_glyph@",
+                             stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF)));
+    insert_commands(item_hints,
+                    { CMD_WIELD_WEAPON,
+                      CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                                                 CMD_CYCLE_QUIVER_BACKWARD,
+                      CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR,
+                      CMD_READ,
+                      CMD_QUAFF,
+                      CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY,
+                      CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY,
+                      CMD_EVOKE,
+                      CMD_MEMORISE_SPELL, CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL,
+                      CMD_WIELD_WEAPON
+                    });
+    linebreak_string(item_hints, 40);
+    cols.add_formatted(1, item_hints, false);
 
-    _add_insert_commands(cols, 1,
-                         "<console><cyan>)</cyan> : </console>"
-                         "hand weapons (<w>%</w>ield)",
-                         { CMD_WIELD_WEAPON });
-    _add_insert_commands(cols, 1,
-                         "<console><brown>(</brown> : </console>"
-                         "missiles (<w>%</w>uiver, <w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
-                         { CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
-                           CMD_CYCLE_QUIVER_BACKWARD });
-    _add_insert_commands(cols, 1,
-                         "<console><cyan>[</cyan> : </console>"
-                         "armour (<w>%</w>ear and <w>%</w>ake off)",
-                         { CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR });
-    _add_insert_commands(cols, 1,
-                         "<console><w>?</w> : </console>"
-                         "scrolls (<w>%</w>ead)",
-                         { CMD_READ });
-    _add_insert_commands(cols, 1,
-                         "<console><magenta>!</magenta> : </console>"
-                         "potions (<w>%</w>uaff)",
-                         { CMD_QUAFF });
-    _add_insert_commands(cols, 1,
-                         "<console><blue>=</blue> : </console>"
-                         "rings (<w>%</w>ut on and <w>%</w>emove)",
-                         { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
-    _add_insert_commands(cols, 1,
-                         "<console><red>\"</red> : </console>"
-                         "amulets (<w>%</w>ut on and <w>%</w>emove)",
-                         { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
-    _add_insert_commands(cols, 1,
-                         "<console><lightgrey>/</lightgrey> : </console>"
-                         "wands (e<w>%</w>oke)",
-                         { CMD_EVOKE });
+    string item_hints2 = getHelpString("cmd-hints-items2");
+    insert_commands(item_hints2,
+                    { CMD_DISPLAY_INVENTORY,
+                      CMD_PICKUP,
+                      CMD_DROP,
+                      CMD_DROP_LAST
+                    });
+    linebreak_string(item_hints2, 40);
+    cols.add_formatted(1, item_hints2);
 
-    string item_types =
-                  "<console><lightcyan>";
-    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
-    item_types +=
-        "</lightcyan> : </console>"
-        "books (<w>%</w>emorise, <w>%</w>ap, <w>%</w>ap,\n"
-        "    pick up to add to spell library)";
-    _add_insert_commands(cols, 1, item_types,
-                         { CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
-                           CMD_FORCE_CAST_SPELL });
+    string hints_additional = getHelpString("cmd-hints-additional");
+    insert_commands(hints_additional,
+                    { CMD_SAVE_GAME_NOW,
+                      CMD_REPLAY_MESSAGES,
+                      CMD_USE_ABILITY,
+                      CMD_RESISTS_SCREEN,
+                      CMD_DISPLAY_RELIGION,
+                      CMD_DISPLAY_MAP,
+                      CMD_DISPLAY_OVERMAP
+                    });
+    linebreak_string(hints_additional, 40);
+    cols.add_formatted(1, hints_additional);
 
-    item_types =
-                  "<console><brown>";
-    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF));
-    item_types +=
-        "</brown> : </console>"
-        "staves (<w>%</w>ield)";
-    _add_insert_commands(cols, 1, item_types,
-                         { CMD_WIELD_WEAPON });
-
-    cols.add_formatted(1, " ", false);
-    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "inventory (select item to view)", 2);
-    _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
-    _add_command(cols, 1, CMD_DROP, "drop item", 2);
-    _add_command(cols, 1, CMD_DROP_LAST, "drop the last item(s) you picked up", 2);
-
-    cols.add_formatted(
-            1,
-            "<h>Additional important commands\n");
-
-    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save the game and exit", 2);
-    _add_command(cols, 1, CMD_REPLAY_MESSAGES, "show previous messages", 2);
-    _add_command(cols, 1, CMD_USE_ABILITY, "use an ability", 2);
-    _add_command(cols, 1, CMD_RESISTS_SCREEN, "show character overview", 2);
-    _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion overview", 2);
-    _add_command(cols, 1, CMD_DISPLAY_MAP, "show map of the whole level", 2);
-    _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon overview", 2);
-
-    cols.add_formatted(
-            1,
-            "\n<h>Targeting\n"
-            "<w>Enter</w> or <w>.</w> or <w>Del</w> : confirm target\n"
-            "<w>+</w> and <w>-</w> : cycle between targets\n"
-            "<w>f</w> or <w>p</w> : shoot at previous target\n"
-            "         if still alive and in sight\n",
-            false);
+    string targeting_hints = getHelpString("cmd-hints-targeting");
+    linebreak_string(targeting_hints, 40);
+    cols.add_formatted(1, targeting_hints);
 }
 
 static formatted_string _col_conv(void (*func)(column_composer &))
@@ -1120,9 +842,9 @@ static int _get_help_section(int section, formatted_string &header_out, formatte
     static map<int, int> hotkeys;
     static map<int, formatted_string> page_text;
     static map<int, string> headers = {
-        {'*', "Manual"}, {'%', "Aptitudes"}, {'^', "Quickstart"},
-        {'~', "Macros"}, {'&', "Options"}, {'t', "Tiles"},
-        {'?', "Key help"}
+        {'*', "Manual"}, {'%', "Aptitudes"}, {'^', "Quickstart"}, // noloc
+        {'~', "Macros"}, {'&', "Options"}, {'t', "Tiles"}, // noloc
+        {'?', "Key help"} // noloc
     };
 
     if (!page_text.size())
@@ -1158,7 +880,7 @@ static int _get_help_section(int section, formatted_string &header_out, formatte
 
     string header = headers.count(page) ? ": "+headers[page] : "";
     header_out = formatted_string::parse_string(
-                    "<yellow>Dungeon Crawl Help"+header+"</yellow>");
+                    "<yellow>Dungeon Crawl Help"+header+"</yellow>"); // noloc
     scroll_out = 0;
     switch (section)
     {

@@ -19,6 +19,7 @@
 #include "feature.h"
 #include "files.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -145,7 +146,7 @@ static string coloured_branch(branch_type br)
     if (br < 0 || br >= NUM_BRANCHES)
         return "<lightred>Buggy buglands</lightred>";
 
-    return make_stringf("<yellow>%s</yellow>", branches[br].shortname);
+    return "<yellow>" + localise(branches[br].shortname) + "</yellow>";
 }
 
 static string shoptype_to_string(shop_type s)
@@ -209,7 +210,7 @@ static string _portals_description_string()
                 else
                 {
                     disp += ' ';
-                    disp += entry.first.id.describe(false, true);
+                    disp += entry.first.id.describe(false, true, true);
                 }
                 last_id = entry.first.id;
 
@@ -228,9 +229,15 @@ static string _portals_description_string()
 // display: format for in-game display; !display: format for dump
 string overview_description_string(bool display)
 {
+    const int DISPLAY_WIDTH = 78;
     string disp;
 
-    disp += "                    <white>Dungeon Overview and Level Annotations</white>\n" ;
+    // centre the heading
+    string heading = localise("Dungeon Overview and Level Annotations");
+    heading = chop_string(heading, DISPLAY_WIDTH, false);
+    string padding = string((DISPLAY_WIDTH - strwidth(heading)) / 2, ' ');
+    disp += padding + "<white>" + heading + "</white>\n";
+
     disp += _get_branches(display);
     disp += _get_altars(display);
     disp += _get_shops(display);
@@ -243,18 +250,17 @@ string overview_description_string(bool display)
 // iterate through every dungeon branch, listing the ones which have been found
 static string _get_seen_branches(bool display)
 {
-    // Each branch entry takes up 26 spaces + 38 for tags.
-    const int width = 64;
+    const int col_width = 26;
 
     int num_printed_branches = 0;
-    char buffer[100];
     string disp;
 
-    disp += "\n<green>Branches:</green>";
+    disp += "\n";
+    disp += "<green>" + localise("Branches:") + "</green>";
     if (display)
     {
-        disp += " (press <white>G</white> to reach them and "
-                "<white>?/B</white> for more information)";
+        disp += localise(" (press <white>G</white> to reach them and "
+                         "<white>?/B</white> for more information)");
     }
     disp += "\n";
 
@@ -275,35 +281,44 @@ static string _get_seen_branches(bool display)
 
             string entry_desc;
             for (auto lvl : stair_level[branch])
-                entry_desc += " " + lvl.describe(false, true);
+                entry_desc += " " + lvl.describe(false, true, true);
 
             // "D" is a little too short here.
-            const char *brname = (branch == BRANCH_DUNGEON
+            string branch_name = (branch == BRANCH_DUNGEON
                                   ? it->shortname
                                   : it->abbrevname);
+            // i18n: We have to disambiguate short name and abbreviation
+            // because sometimes thay are the same in English)
+            branch_name = localise_contextual("branch_abbrev", branch_name);
+            branch_name = chop_string(branch_name, 8, true, true);
+            branch_name += " ";
+            disp += "<yellow>" + branch_name + "</yellow>";
 
+            // calculate remaining space in the column
+            int remaining = col_width - strwidth(branch_name);
+
+            // is this the right-most column?
+            num_printed_branches++;
+            bool right_col = (num_printed_branches % 3 == 0);
+
+            string visited;
             if (entry_desc.size() == 0 && branch != BRANCH_DUNGEON
                 && you.where_are_you != branch)
             {
                 // previously visited portal branches
-                snprintf(buffer, sizeof buffer,
-                    "<yellow>%7s</yellow> <darkgrey>(visited)</darkgrey>",
-                    brname);
+                visited = chop_string(localise("(visited)"), remaining, !right_col);
+                disp += "<darkgrey>" + visited + "</darkgrey>";
             }
             else
             {
-                snprintf(buffer, sizeof buffer,
-                    "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
-                    branch == root_branch ? -7 : 7,
-                    brname, lid.depth, brdepth[branch], entry_desc.c_str());
+                visited = make_stringf("(%d/%d)", lid.depth, brdepth[branch]);
+                disp += "<darkgrey>" + visited + "</darkgrey>";
+                remaining -= strwidth(visited);
+                disp += chop_string(entry_desc, remaining, !right_col);
             }
 
-            disp += buffer;
-            num_printed_branches++;
-
-            disp += (num_printed_branches % 3) == 0
-                    ? "\n"
-                    : string(max<int>(width - strlen(buffer), 0), ' ');
+            if (right_col)
+                disp += "\n";
         }
     }
 
@@ -315,9 +330,9 @@ static string _get_seen_branches(bool display)
 static string _get_unseen_branches()
 {
     int num_printed_branches = 0;
-    char buffer[100];
     string disp;
 
+    bool right_col = false;
     for (branch_iterator it; it; ++it)
     {
         if (it->id < BRANCH_FIRST_NON_DUNGEON)
@@ -343,36 +358,31 @@ static string _get_unseen_branches()
             lid = find_deepest_explored(lid);
             if (lid.depth >= it->mindepth)
             {
+                string desc = branch_abbrev_local(it->id);
+                desc = chop_string(desc, 8, true, true);
+
+                desc += ": ";
+                desc += branch_abbrev_local(parent);
+                desc += ":";
+                desc += to_string(it->mindepth);
+
                 if (it->mindepth != it->maxdepth)
-                {
-                    snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d-%d</darkgrey>",
-                            it->abbrevname,
-                            branches[parent].abbrevname,
-                            it->mindepth,
-                            it->maxdepth);
-                }
-                else
-                {
-                    snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d</darkgrey>",
-                            it->abbrevname,
-                            branches[parent].abbrevname,
-                            it->mindepth);
-                }
+                    desc += '-' + to_string(it->maxdepth);
 
-                disp += buffer;
                 num_printed_branches++;
+                right_col = (num_printed_branches % 3 == 0);
 
-                disp += (num_printed_branches % 4) == 0
-                        ? "\n"
-                        // Each branch entry takes up 20 spaces
-                        : string(20 + 21 - strlen(buffer), ' ');
+                disp += "<darkgrey>";
+                disp += chop_string(desc, 26, !right_col);
+                disp += "</darkgrey>";
+
+                if (right_col)
+                    disp += "\n";
             }
         }
     }
 
-    if (num_printed_branches % 4 != 0)
+    if (!right_col)
         disp += "\n";
     return disp;
 }
@@ -389,13 +399,13 @@ static string _get_altars(bool display)
     if (you.has_mutation(MUT_FORLORN))
         return "";
 
-    string disp;
+    string disp = "\n";
 
-    disp += "\n<green>Altars:</green>";
+    disp += "<green>" + localise("Altars:") + "</green>";
     if (display)
     {
-        disp += " (press <white>_</white> to reach them and "
-                "<white>?/G</white> for information about gods)";
+        disp += localise(" (press <white>_</white> to reach them and "
+                         "<white>?/G</white> for information about gods)");
     }
     disp += "\n";
     disp += _print_altars_for_gods(temple_god_list(), true, display);
@@ -431,7 +441,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         if (!display)
         {
             if (has_altar_been_seen)
-                disp += uppercase_first(god_name(god, false)) + "\n";
+                disp += uppercase_first(localise(god_name(god, false))) + "\n";
             continue;
         }
 
@@ -458,7 +468,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         if (is_unavailable_god(god))
             colour = "darkgrey";
 
-        string disp_name = uppercase_first(god_name(god, false));
+        string disp_name = uppercase_first(localise(god_name(god, false)));
         if (god == GOD_GOZAG && !you_worship(GOD_GOZAG))
             disp_name += make_stringf(" ($%d)", gozag_service_fee());
 
@@ -495,9 +505,12 @@ static string _get_shops(bool display)
 
     if (!shops_present.empty())
     {
-        disp +="\n<green>Shops:</green>";
+        disp += "\n<green>" + localise("Shops:") + "</green>";
         if (display)
-            disp += " (press <white>$</white> to reach them - yellow denotes antique shop)";
+        {
+            disp += localise(" (press <white>$</white> to reach them - "
+                             "yellow denotes antique shop)");
+        }
         disp += "\n";
     }
     last_id.depth = 10000;
@@ -527,7 +540,7 @@ static string _get_shops(bool display)
             }
             disp += existing ? "<lightgrey>" : "<darkgrey>";
 
-            const string loc = entry.first.id.describe(false, true);
+            const string loc = entry.first.id.describe(false, true, true);
             disp += loc;
             column_count += strwidth(loc);
 
@@ -553,7 +566,7 @@ static string _get_portals()
     string disp;
 
     if (!portals_present.empty())
-        disp += "\n<green>Portals:</green>\n";
+        disp += "\n<green>" + localise("Portals:") + "</green>\n";
     disp += _portals_description_string();
 
     return disp;
@@ -575,9 +588,12 @@ static string _get_notes(bool display)
     if (disp.empty())
         return disp;
 
+    string header = "\n<green>" + localise("Annotations:") + "</green>";
     if (display)
-        return "\n<green>Annotations:</green> (press <white>!</white> to add a new annotation)\n" + disp;
-    return "\n<green>Annotations:</green>\n" + disp;
+        header += localise(" (press <white>!</white> to add a new annotation)");
+    header += "\n";
+
+    return header + disp;
 }
 
 template <typename Z, typename Key>
@@ -773,12 +789,18 @@ static void _update_tracked_feature_annot(dungeon_feature_type feat,
     const char *feat_key = _get_tracked_feature_key(feat);
     const int new_num = env.properties[feat_key];
     const char *feat_desc = get_feature_def(feat).name;
-    const string new_string = make_stringf("%d %s%s", new_num, feat_desc,
-                                           new_num == 1 ? "" : "s");
-    const string old_string = make_stringf("%d %s%s", old_num, feat_desc,
-                                           old_num == 1 ? "" : "s");
+
+    string old_string = string("%d ") + feat_desc;
+    string new_string = old_string;
+
+    old_string += old_num == 1 ? "" : "s";
+    old_string = localise(old_string, old_num);
+
+    new_string += new_num == 1 ? "" : "s";
+    new_string = localise(new_string, new_num);
 
     //TODO: regexes
+    string sep = localise(", ");
     if (old_num > 0 && new_num > 0)
     {
        level_annotations[li] = replace_all(level_annotations[li],
@@ -787,17 +809,17 @@ static void _update_tracked_feature_annot(dungeon_feature_type feat,
     else if (old_num == 0)
     {
         if (!level_annotations[li].empty())
-            level_annotations[li] += ", ";
+            level_annotations[li] += sep;
         level_annotations[li] += new_string;
     }
     else if (new_num == 0)
     {
         level_annotations[li] = replace_all(level_annotations[li],
-                                            old_string + ", ", "");
+                                            old_string + sep, "");
         level_annotations[li] = replace_all(level_annotations[li],
                                             old_string, "");
+        strip_suffix(level_annotations[li], sep);
         trim_string(level_annotations[li]);
-        strip_suffix(level_annotations[li], ",");
     }
 }
 
@@ -853,7 +875,7 @@ void mark_corrupted_level(level_id li)
 {
     if (!level_annotations[li].empty())
         level_annotations[li] += ", ";
-    level_annotations[li] += "corrupted";
+    level_annotations[li] += localise("corrupted");
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -969,22 +991,25 @@ string get_level_annotation(level_id li, bool skip_excl, bool skip_uniq,
     string note = "";
 
     if (string *ann = map_find(level_annotations, li))
-        note += use_colour ? colour_string(*ann, colour) : *ann;
+    {
+        string ann_loc = localise(*ann);
+        note += use_colour ? colour_string(ann_loc, colour) : ann_loc;
+    }
 
     if (!skip_excl)
         if (string *excl = map_find(level_exclusions, li))
         {
             if (note.length() > 0)
-                note += ", ";
-            note += *excl;
+                note += localise(", ");
+            note += localise(*excl);
         }
 
     if (!skip_uniq)
         if (string *uniq = map_find(level_uniques, li))
         {
             if (note.length() > 0)
-                note += ", ";
-            note += *uniq;
+                note += localise(", ");
+            note += localise(*uniq);
         }
 
     return note;
@@ -992,7 +1017,7 @@ string get_level_annotation(level_id li, bool skip_excl, bool skip_uniq,
 
 static const string _get_coloured_level_annotation(level_id li)
 {
-    string place = "<yellow>" + li.describe() + "</yellow>";
+    string place = "<yellow>" + li.describe(false, true, true) + "</yellow>";
     int col = level_annotation_has("!", li) ? LIGHTRED : WHITE;
     return place + " " + get_level_annotation(li, false, false, true, col);
 }
@@ -1072,6 +1097,8 @@ bool connected_branch_can_exist(branch_type br)
 */
 static void _show_dungeon_overview(vector<branch_type> brs)
 {
+    const string fmt = "(%c) %-14s ";
+
     clear_messages();
     int linec = 0;
     string line;
@@ -1080,16 +1107,16 @@ static void _show_dungeon_overview(vector<branch_type> brs)
         if (linec == 4)
         {
             linec = 0;
-            mpr(line);
+            mpr_nolocalise(line);
             line = "";
         }
-        line += make_stringf("(%c) %-14s ",
-                             branches[br].travel_shortcut,
-                             branches[br].shortname);
+        line += localise(fmt,
+                         branches[br].travel_shortcut,
+                         branches[br].shortname);
         ++linec;
     }
     if (!line.empty())
-        mpr(line);
+        mpr_nolocalise(line);
     flush_prev_message();
     return;
 }
@@ -1186,7 +1213,7 @@ void do_annotate()
     else
     {
         clear_messages();
-        const string prompt = make_stringf ("What level of %s? ",
+        const string prompt = localise("What level of %s? ",
                     branches[branch].longname);
         depth = prompt_for_int(prompt.c_str(), true);
     }
@@ -1205,12 +1232,14 @@ void annotate_level(level_id li)
     const string old = get_level_annotation(li, true, true);
     if (!old.empty())
     {
-        mprf(MSGCH_PROMPT, "Current level annotation: <lightgrey>%s</lightgrey>",
-             old.c_str());
+        string msg = localise("Current level annotation: ");
+        msg += "<lightgrey>" + old + "</lightgrey>";
+        mpr_nolocalise(MSGCH_PROMPT, msg);
     }
 
-    const string prompt = "New annotation for " + li.describe()
-                          + " (include '!' for warning): ";
+    const string level = li.describe(false, true, true);
+    const string prompt = localise("New annotation for %s (include '!' for warning): ",
+                                   LocalisationArg(level, false));
 
     char buf[77];
     if (msgwin_get_line_autohist(prompt, buf, sizeof(buf), old))

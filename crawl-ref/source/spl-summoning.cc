@@ -288,7 +288,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    if (rude_stop_summoning_prompt("call dragons"))
+    if (rude_stop_summoning_prompt(RUDE_STOP_CALL_DRAGONS))
         return spret::abort;
 
     fail_check();
@@ -662,10 +662,10 @@ static bool _check_tukima_validity(const actor *target)
             return _fail_tukimas();
 
         if (target_is_player)
-            mpr(you.hands_act("twitch", "."));
+            mpr(you.hand_act("%s twitches.", "%s twitch."));
         else
         {
-            // FIXME: maybe move hands_act to class actor?
+            // FIXME: maybe move hand_act to class actor?
             bool plural = true;
             const string hand = target->hand_name(true, &plural);
 
@@ -684,7 +684,7 @@ static bool _check_tukima_validity(const actor *target)
         if (mons_class_is_animated_weapon(target->type))
         {
             simple_monster_message(*(monster*)target,
-                                   " is already dancing.");
+                                   "%s is already dancing.");
         }
         else
         {
@@ -1055,7 +1055,7 @@ spret cast_summon_demon(int pow)
 spret cast_shadow_creatures(int st, god_type god, level_id place,
                                  bool fail)
 {
-    if (rude_stop_summoning_prompt("summon"))
+    if (rude_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -1316,7 +1316,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
 
     if (success)
     {
-        if (rude_stop_summoning_prompt("summon a forest"))
+        if (rude_stop_summoning_prompt(RUDE_STOP_SUMMON_FOREST))
             return spret::abort;
 
         fail_check();
@@ -2176,7 +2176,7 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 if (you.can_see(*agent) && you.can_see(*battlesphere))
                 {
                     simple_monster_message(*agent->as_monster(),
-                                           " conjures a globe of magical energy!");
+                                           "%s conjures a globe of magical energy!");
                 }
                 else if (you.can_see(*battlesphere))
                     simple_monster_message(*battlesphere, " appears!");

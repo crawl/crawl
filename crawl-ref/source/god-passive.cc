@@ -27,6 +27,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "los.h"
+#include "localise.h"
 #include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
@@ -963,7 +964,6 @@ void qazlal_element_adapt(beam_type flavour, int strength)
 
     beam_type what = BEAM_NONE;
     duration_type dur = NUM_DURATIONS;
-    string descript = "";
     switch (flavour)
     {
         case BEAM_FIRE:
@@ -972,26 +972,22 @@ void qazlal_element_adapt(beam_type flavour, int strength)
         case BEAM_STEAM:
             what = BEAM_FIRE;
             dur = DUR_QAZLAL_FIRE_RES;
-            descript = "fire";
             break;
         case BEAM_COLD:
         case BEAM_ICE:
             what = BEAM_COLD;
             dur = DUR_QAZLAL_COLD_RES;
-            descript = "cold";
             break;
         case BEAM_ELECTRICITY:
         case BEAM_THUNDER:
             what = BEAM_ELECTRICITY;
             dur = DUR_QAZLAL_ELEC_RES;
-            descript = "electricity";
             break;
         case BEAM_MMISSILE: // for LCS, iron shot
         case BEAM_MISSILE:
         case BEAM_FRAG:
             what = BEAM_MISSILE;
             dur = DUR_QAZLAL_AC;
-            descript = "physical attacks";
             break;
         default:
             return;
@@ -1022,8 +1018,34 @@ void qazlal_element_adapt(beam_type flavour, int strength)
         you.redraw_armour_class = true;
     }
 
-    mprf(MSGCH_GOD, "You feel %sprotected from %s.",
-         you.duration[dur] > 0 ? "more " : "", descript.c_str());
+    if (what == BEAM_FIRE)
+    {
+        if (you.duration[dur] <= 0)
+            mprf(MSGCH_GOD, "You feel protected from fire.");
+        else
+            mprf(MSGCH_GOD, "You feel more protected from fire.");
+    }
+    else if (what == BEAM_COLD)
+    {
+        if (you.duration[dur] <= 0)
+            mprf(MSGCH_GOD, "You feel protected from cold.");
+        else
+            mprf(MSGCH_GOD, "You feel more protected from cold.");
+    }
+    else if (what == BEAM_ELECTRICITY)
+    {
+        if (you.duration[dur] <= 0)
+            mprf(MSGCH_GOD, "You feel protected from electricity.");
+        else
+            mprf(MSGCH_GOD, "You feel more protected from electricity.");
+    }
+    else if (what == BEAM_MISSILE)
+    {
+        if (you.duration[dur] <= 0)
+            mprf(MSGCH_GOD, "You feel protected from physical damage.");
+        else
+            mprf(MSGCH_GOD, "You feel more protected from physical damage.");
+    }
 
     // was scaled by 10 * strength. But the strength parameter is used so inconsistently that
     // it seems like a constant would be better, based on the typical value of 2.
@@ -1417,19 +1439,29 @@ static bool _wu_jian_lunge(const coord_def& old_pos)
 
     const int number_of_attacks = _wu_jian_number_of_attacks(false);
 
-    if (number_of_attacks == 0)
+    string mon_name = mons->name(DESC_THE);
+    if (number_of_attacks < 1)
     {
         mprf("You lunge at %s, but your attack speed is too slow for a blow "
-             "to land.", mons->name(DESC_THE).c_str());
+             "to land.", mon_name.c_str());
         return false;
+    }
+    else if (number_of_attacks == 1)
+    {
+        if (!wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
+            mprf("You lunge at %s.", mon_name.c_str());
+        else
+            mprf("You lunge with incredible momentum at %s.", mon_name.c_str());
     }
     else
     {
-        mprf("You lunge%s at %s%s.",
-             wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
-                 " with incredible momentum" : "",
-             mons->name(DESC_THE).c_str(),
-             number_of_attacks > 1 ? ", in a flurry of attacks" : "");
+        if (!wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
+            mprf("You lunge at %s, in a flurry of attacks.", mon_name.c_str());
+        else
+        {
+            mprf("You lunge with incredible momentum at %s"
+                 ", in a flurry of attacks.", mon_name.c_str());
+        }
     }
 
     count_action(CACT_INVOKE, ABIL_WU_JIAN_LUNGE);
@@ -1481,20 +1513,33 @@ static bool _wu_jian_whirlwind(const coord_def& old_pos)
 
         you.apply_berserk_penalty = false;
 
+        string mon_name = mons->name(DESC_THE);
         const int number_of_attacks = _wu_jian_number_of_attacks(false);
-        if (number_of_attacks == 0)
+        if (number_of_attacks < 1)
         {
             mprf("You spin to attack %s, but your attack speed is too slow for "
-                 "a blow to land.", mons->name(DESC_THE).c_str());
+                 "a blow to land.", mon_name.c_str());
             continue;
+        }
+        else if (number_of_attacks == 1)
+        {
+            if (!wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
+                mprf("You spin and attack %s.", mon_name.c_str());
+            else
+            {
+                mprf("You spin and attack %s, with incredible momentum.",
+                     mon_name.c_str());
+            }
         }
         else
         {
-            mprf("You spin and attack %s%s%s.",
-                 mons->name(DESC_THE).c_str(),
-                 number_of_attacks > 1 ? " repeatedly" : "",
-                 wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
-                     ", with incredible momentum" : "");
+            if (!wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
+                mprf("You spin and attack %s repeatedly.", mon_name.c_str());
+            else
+            {
+                mprf("You spin and attack %s repeatedly"
+                     ", with incredible momentum.", mon_name.c_str());
+            }
         }
 
         count_action(CACT_INVOKE, ABIL_WU_JIAN_WHIRLWIND);
@@ -1560,19 +1605,32 @@ void wu_jian_wall_jump_effects()
 
         // Twice the attacks as Wall Jump spends twice the time
         const int number_of_attacks = _wu_jian_number_of_attacks(true);
-        if (number_of_attacks == 0)
+        string mon_name = target->name(DESC_THE);
+        if (number_of_attacks < 1)
         {
             mprf("You attack %s from above, but your attack speed is too slow"
-                 " for a blow to land.", target->name(DESC_THE).c_str());
+                 " for a blow to land.", mon_name.c_str());
             continue;
+        }
+        else if (number_of_attacks == 1)
+        {
+            if (!wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
+                mprf("You attack %s from above.", mon_name.c_str());
+            else
+            {
+                mprf("You attack %s from above, with incredible momentum.",
+                     mon_name.c_str());
+            }
         }
         else
         {
-            mprf("You %sattack %s from above%s.",
-                 number_of_attacks > 1 ? "repeatedly " : "",
-                 target->name(DESC_THE).c_str(),
-                 wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
-                     ", with incredible momentum" : "");
+            if (!wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
+                mprf("You repeatedly attack %s from above.", mon_name.c_str());
+            else
+            {
+                mprf("You repeatedly attack %s from above"
+                     ", with incredible momentum.", mon_name.c_str());
+            }
         }
 
         for (int i = 0; i < number_of_attacks; i++)

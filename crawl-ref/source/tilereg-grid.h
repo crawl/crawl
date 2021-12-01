@@ -55,7 +55,7 @@ protected:
     unsigned int cursor_index() const;
     int add_quad_char(char c, int x, int y, int ox, int oy);
     void draw_number(int x, int y, int number);
-    void draw_desc(const char *desc);
+    void draw_desc(const string& desc);
 
     coord_def m_cursor;
     int m_last_clicked_item;

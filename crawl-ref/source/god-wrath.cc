@@ -27,6 +27,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "items.h"
+#include "localise.h"
 #include "losglobal.h"
 #include "makeitem.h"
 #include "message.h"
@@ -60,39 +61,42 @@ static void _god_smites_you(god_type god, const char *message = nullptr,
                             kill_method_type death_type = NUM_KILLBY);
 static void _tso_blasts_cleansing_flame(const char *message = nullptr);
 
-static const char *_god_wrath_adjectives[] =
+// i18n: Currently, most of these don't need to be localised as they're only
+// used in notes. The exception is Wu Jian wrath which is used for a message
+// in player::corrode_equipment()
+static const char *_god_wrath[] =
 {
-    "bugginess",        // NO_GOD
-    "wrath",            // Zin
-    "wrath",            // the Shining One (unused)
-    "malice",           // Kikubaaqudgha
-    "anger",            // Yredelemnul
-    "capriciousness",   // Xom
-    "wrath",            // Vehumet
-    "fury",             // Okawaru
-    "fury",             // Makhleb
-    "will",             // Sif Muna
-    "fiery rage",       // Trog
-    "wrath",            // Nemelex
-    "displeasure",      // Elyvilon
-    "touch",            // Lugonu
-    "wrath",            // Beogh
-    "vengeance",        // Jiyva
-    "enmity",           // Fedhas Madhash
-    "meddling",         // Cheibriados
-    "doom",             // Ashenzari (unused)
-    "darkness",         // Dithmenos
-    "greed",            // Gozag (unused)
-    "adversity",        // Qazlal
-    "disappointment",   // Ru
+    "the bugginess of No God",      // noloc (should't happen)
+    "the wrath of Zin",             // noloc
+    "the wrath of the Shining One", // noloc
+    "the malice of Kikubaaqudgha",  // noloc
+    "the anger of Yredelemnul",     // noloc
+    "the capriciousness of Xom",    // noloc
+    "the wrath of Vehumet",         // noloc
+    "the fury of Okawaru",          // noloc
+    "the fury of Makhleb",          // noloc
+    "the will of Sif Muna",         // noloc
+    "the fiery rage of Trog",       // noloc
+    "the wrath of Nemelex",         // noloc
+    "the displeasure of Elyvilon",  // noloc
+    "the touch of Lugonu",          // noloc
+    "the wrath of Beogh",           // noloc
+    "the vengeance of %s",          // Jiyva name is variable - noloc
+    "the enmity of Fedhas Madhash", // noloc
+    "the meddling of Cheibriados",  // noloc
+    "the doom of Ashenzari",        // noloc (unused)
+    "the darkness of Dithmenos",    // noloc
+    "the greed of Gozag",           // noloc (unused)
+    "the adversity of Qazlal",      // noloc
+    "the disappointment of Ru",     // noloc
 #if TAG_MAJOR_VERSION == 34
-    "progress",         // Pakellas
+    "the progress of Pakellas",     // noloc (obsolete)
 #endif
-    "fury",             // Uskayaw
-    "memory",           // Hepliaklqana (unused)
-    "rancor",           // Wu Jian
+    "the fury of Uskayaw",          // noloc
+    "the memory of Hepliaklqana",   // noloc (unused)
+    "the rancour of the Wu Jian Council", // localise (used in corrode msg)
 };
-COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
+COMPILE_CHECK(ARRAYSZ(_god_wrath) == NUM_GODS);
 
 /**
  * Return a name associated with the given god's wrath.
@@ -106,12 +110,10 @@ COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
  */
 static string _god_wrath_name(god_type god)
 {
-    const bool use_full_name = god == GOD_FEDHAS      // fedhas is very formal.
-                               || god == GOD_WU_JIAN; // apparently.
-
-    return make_stringf("the %s of %s",
-                        _god_wrath_adjectives[god],
-                        god_name(god, use_full_name).c_str());
+    if (god == GOD_JIYVA)
+        return make_stringf(_god_wrath[god], god_name(god).c_str());
+    else
+        return _god_wrath[god];
 }
 
 static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
@@ -214,9 +216,13 @@ static void _tso_summon_warriors()
             success = true;
     }
 
-    simple_god_message(success ? " sends the divine host to punish "
-                       "you for your evil ways!"
-                       : "'s divine host fails to appear.", GOD_SHINING_ONE);
+    string msg;
+    if (success)
+        msg = "%s sends the divine host to punish you for your evil ways!";
+    else
+        msg = "%s's divine host fails to appear.";
+
+    simple_god_message(msg.c_str(), GOD_SHINING_ONE);
 
 }
 
@@ -713,8 +719,8 @@ static bool _yredelemnul_retribution()
             }
 
             simple_god_message(count > 1 ? " sends servants to punish you." :
-                               count > 0 ? " sends a servant to punish you."
-                                         : "'s servants fail to arrive.", god);
+                               count > 0 ? "%s sends a servant to punish you."
+                                         : "%s's servants fail to arrive.", god);
         }
     }
     else
@@ -729,7 +735,7 @@ static bool _yredelemnul_retribution()
         }
 
         _spell_retribution(avatar, SPELL_BOLT_OF_DRAINING, god,
-                           "'s anger turns toward you for a moment.");
+                           "%s's anger turns toward you for a moment.");
         _reset_avatar(*avatar);
     }
 
@@ -826,7 +832,7 @@ static bool _trog_retribution()
         }
 
         _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls fiery rage upon you!");
+                           god, "%s hurls fiery rage upon you!");
         _reset_avatar(*avatar);
     }
 
@@ -888,11 +894,12 @@ static bool _beogh_retribution()
 
         if (num_created > 0)
         {
-            ostringstream msg;
-            msg << " throws "
-                << (num_created == 1 ? "an implement" : "implements")
-                << " of electrocution at you.";
-            simple_god_message(msg.str().c_str(), god);
+            string msg;
+            if (num_created == 1)
+                msg = "%s throws an implement of electrocution at you.";
+            else
+                msg = "%s throws implements of electrocution at you.";
+            simple_god_message(msg.c_str(), god);
             break;
         } // else fall through
     }
@@ -1331,7 +1338,7 @@ static void _fedhas_nature_retribution()
                                      SPELL_PRIMAL_WAVE,
                                      SPELL_THORN_VOLLEY);
 
-    _spell_retribution(avatar, spell, god, " invokes nature against you.");
+    _spell_retribution(avatar, spell, god, "%s invokes nature against you.");
     _reset_avatar(*avatar);
 }
 
@@ -1988,20 +1995,20 @@ static bool _wu_jian_retribution()
         switch (random2(4))
         {
         case 0:
-            wu_jian_sifu_message(" says: Die by a thousand cuts!");
+            wu_jian_sifu_message("Die by a thousand cuts!");
             you.set_duration(DUR_BARBS, random_range(5, 10));
             break;
         case 1:
-            wu_jian_sifu_message(" whispers: Nowhere to run...");
+            wu_jian_sifu_message("Nowhere to run...");
             you.set_duration(DUR_SLOW, random_range(5, 10));
             break;
         case 2:
-            wu_jian_sifu_message(" whispers: These will loosen your tongue!");
+            wu_jian_sifu_message("These will loosen your tongue!");
             you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
             invalidate_agrid(true);
             break;
         case 3:
-            wu_jian_sifu_message(" says: Suffer, mortal!");
+            wu_jian_sifu_message("Suffer, mortal!");
             you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
             break;
         }
@@ -2026,8 +2033,9 @@ static bool _uskayaw_retribution()
     case 1:
         if (mon && mon->can_go_berserk())
         {
-            simple_god_message(make_stringf(" drives %s into a dance frenzy!",
-                                     mon->name(DESC_THE).c_str()).c_str(), god);
+            string msg = localise("%s drives %s into a dance frenzy!",
+                                  god_speaker(god), mon->name(DESC_THE));
+            god_speaks(god, msg.c_str());
             mon->go_berserk(true);
             return true;
         }
@@ -2184,7 +2192,7 @@ static void _god_smites_you(god_type god, const char *message,
     if (death_type != KILLED_BY_BEOGH_SMITING
         && death_type != KILLED_BY_TSO_SMITING)
     {
-        aux = "smitten by " + god_name(god);
+        aux = "smitten by " + god_name(god); // noloc
     }
 
     // If there's a message, display it before smiting.

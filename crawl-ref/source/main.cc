@@ -402,7 +402,7 @@ static void _launch_game_loop()
         }
         catch (short_read_exception &E)
         {
-            end(1, false, "Error: truncation inside the save file.\n");
+            end(1, false, "Error: truncation inside the save file.");
         }
     } while (crawl_should_restart(crawl_state.last_game_exit.exit_reason)
              && game_ended

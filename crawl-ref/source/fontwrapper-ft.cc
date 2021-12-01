@@ -195,20 +195,20 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
     // do that ourselves.
     FILE *f = fopen_u(font_path.c_str(), "rb");
     if (!f)
-        end(1, false, "Could not read font '%s'\n", font_name);
+        end(1, false, "Could not read font '%s'", font_name);
     unsigned long size = file_size(f);
     ttf = new FT_Byte[size];
     ASSERT(ttf);
     if (fread(ttf, 1, size, f) != size)
-        end(1, false, "Could not read font '%s': %s\n", font_name, strerror(errno));
+        end(1, false, "Could not read font '%s': %s", font_name, strerror(errno));
     fclose(f);
 
     error = FT_New_Memory_Face(library, ttf, size, 0, &face);
     if (error == FT_Err_Unknown_File_Format)
-        end(1, false, "Unknown font format for file '%s'\n", font_path.c_str());
+        end(1, false, "Unknown font format for file '%s'", font_path.c_str());
     else if (error)
     {
-        end(1, false, "Invalid font from file '%s' (size %lu): 0x%0x\n",
+        end(1, false, "Invalid font from file '%s' (size %lu): 0x%0x",
                    font_path.c_str(), size, error);
     }
 

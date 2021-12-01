@@ -18,6 +18,7 @@
 #include "god-companions.h"
 #include "god-passive.h" // passive_t::convert_orcs
 #include "libutil.h"
+#include "localise.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -243,11 +244,11 @@ bool beogh_followers_abandon_you()
         if (num_reconvert > 0)
         {
             if (num_reconvert == 1 && num_followers > 1)
-                chan << "One of your followers decides to abandon you.";
+                chan << localise("One of your followers decides to abandon you.");
             else if (num_reconvert == num_followers)
-                chan << "Your followers decide to abandon you.";
+                chan << localise("Your followers decide to abandon you.");
             else
-                chan << "Some of your followers decide to abandon you.";
+                chan << localise("Some of your followers decide to abandon you.");
         }
 
         chan << endl;

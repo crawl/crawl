@@ -11,6 +11,7 @@
 #include "env.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "nearby-danger.h"
 #include "religion.h"
@@ -51,7 +52,7 @@ void CommandRegion::draw_tag()
 
     const command_type cmd = (command_type) idx;
 
-    draw_desc(get_command_description(cmd, true).c_str());
+    draw_desc(get_command_description(cmd, true));
 }
 
 int CommandRegion::handle_mouse(wm_mouse_event &event)
@@ -83,9 +84,11 @@ int CommandRegion::handle_mouse(wm_mouse_event &event)
 
 bool CommandRegion::update_tab_tip_text(string &tip, bool active)
 {
-    const char *prefix = active ? "" : "[L-Click] ";
+    if (active)
+        tip = localise("%s %s", "[L-Click]", m_help);
+    else
+        tip = localise(m_help);
 
-    tip = make_stringf("%s%s", prefix, m_help.c_str());
     return true;
 }
 
@@ -99,8 +102,9 @@ bool CommandRegion::update_tip_text(string& tip)
         return false;
 
     const command_type cmd = (command_type) m_items[item_idx].idx;
-    tip = make_stringf("[L-Click] %s",
-                       get_command_description(cmd, true).c_str());
+    tip = localise("[L-Click]") + " "
+          // command description comes from the descriptions db, so is already localised
+          + get_command_description(cmd, true).c_str();
 
     if (command_to_key(cmd) != '\0')
     {

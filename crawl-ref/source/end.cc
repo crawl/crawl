@@ -23,6 +23,7 @@
 #include "initfile.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "localise.h"
 #include "los.h"
 #include "macro.h"
 #include "message.h"
@@ -104,7 +105,7 @@ bool fatal_error_notification(string error_msg)
         cio_init(); // this, however, should be fairly safe
 #endif
 
-    mprf(MSGCH_ERROR, "%s", error_msg.c_str());
+    mpr_nolocalise(MSGCH_ERROR, error_msg);
 
     if (!ui::is_available() || msg::uses_stderr(MSGCH_ERROR))
         return false;
@@ -131,8 +132,9 @@ bool fatal_error_notification(string error_msg)
     //       any formatting!
     error_msg = string("Fatal error:\n\n<lightred>")
                        + replace_all(error_msg, "<", "<<");
-    error_msg += "</lightred>\n\n<cyan>Hit any key to exit, "
-                 "ctrl-p for the full log.</cyan>";
+    error_msg += "</lightred>\n\n<cyan>";
+    error_msg += localise("Hit any key to exit, ctrl-p for the full log.");
+    error_msg += "</cyan>";
     linebreak_string(error_msg, cgetsize(GOTO_CRT).x - 1);
 
     auto prompt_ui =
@@ -176,14 +178,13 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
         {
             va_list arg;
             va_start(arg, format);
-            char buffer[1024];
-            vsnprintf(buffer, sizeof buffer, format, arg);
+            string error2 = vlocalise(format, arg);
             va_end(arg);
 
             if (error.empty())
-                error = string(buffer);
+                error = error2;
             else
-                error = string(buffer) + ": " + error;
+                error = error2 + ": " + error;
 
             if (!error.empty() && error[error.length() - 1] != '\n')
                 error += "\n";
@@ -392,10 +393,8 @@ NORETURN void end_game(scorefile_entry &se)
             {
                 if (killer->is_monster() && killer->deity() == GOD_BEOGH)
                 {
-                    const string msg = " appreciates "
-                        + killer->name(DESC_ITS)
-                        + " killing of a heretic priest.";
-                    simple_god_message(msg.c_str());
+                    simple_god_message(" appreciates the killing of "
+                                       "a heretic priest.");
                 }
             }
             break;
@@ -475,7 +474,8 @@ NORETURN void end_game(scorefile_entry &se)
     tile->set_margin_for_sdl(0, 10, 0, 0);
     title_hbox->add_child(move(tile));
 #endif
-    string goodbye_title = make_stringf("Goodbye, %s.", you.your_name.c_str());
+    string goodbye_title = localise("Goodbye, %s.",
+                                    LocalisationArg(you.your_name, false));
     title_hbox->add_child(make_shared<Text>(goodbye_title));
     title_hbox->set_cross_alignment(Widget::CENTER);
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
@@ -491,8 +491,9 @@ NORETURN void end_game(scorefile_entry &se)
 
     goodbye_msg += hiscore;
 
-    goodbye_msg += make_stringf("\nBest Crawlers - %s\n",
-            crawl_state.game_type_name().c_str());
+    goodbye_msg += "\n";
+    goodbye_msg += localise("Best Crawlers - %s", crawl_state.game_type_name());
+    goodbye_msg += "\n";
 
 #ifdef USE_TILE_LOCAL
         const int line_height = tiles.get_crt_font()->char_height();
@@ -516,8 +517,9 @@ NORETURN void end_game(scorefile_entry &se)
     vbox->add_child(scroller);
 
 #ifndef DGAMELAUNCH
-    string morgue_dir = make_stringf("\nYou can find your morgue file in the '%s' directory.",
-            morgue_directory().c_str());
+    string morgue_dir = "\n";
+    morgue_dir += localise("You can find your morgue file in the '%s' directory.",
+                           LocalisationArg(morgue_directory(), false));
     vbox->add_child(make_shared<Text>(formatted_string::parse_string(morgue_dir)));
 #endif
 

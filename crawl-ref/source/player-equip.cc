@@ -511,7 +511,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_SPEED:
-                    mpr(you.hands_act("tingle", "!"));
+                    mpr(you.hand_act("%s tingles!", "%s tingle!"));
                     break;
 
                 case SPWPN_VAMPIRISM:
@@ -546,7 +546,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
                 case SPWPN_PENETRATION:
                 {
-                    // FIXME: make hands_act take a pre-verb adverb so we can
+                    // FIXME: make hand_act take a pre-verb adverb so we can
                     // use it here.
                     bool plural = true;
                     string hand = you.hand_name(true, &plural);
@@ -1304,9 +1304,16 @@ void unwield_distortion(bool brand)
 {
     if (have_passive(passive_t::safe_distortion))
     {
-        simple_god_message(make_stringf(" absorbs the residual spatial "
-                           "distortion as you %s your "
-                           "weapon.", brand ? "rebrand" : "unwield").c_str());
+        if (brand)
+        {
+            simple_god_message(" absorbs the residual spatial distortion "
+                               "as you rebrand your weapon.");
+        }
+        else
+        {
+            simple_god_message(" absorbs the residual spatial distortion "
+                               "as you unwield your weapon.");
+        }
         return;
     }
     // Makes no sense to discourage unwielding a temporarily

@@ -368,8 +368,20 @@ namespace quiver
             if (!weapon)
             {
                 const auto form_verbs = get_form(you.form)->uc_attack_verbs;
-                if (form_verbs.medium) // we use med because it mostly has better flavor
-                    return form_verbs.medium;
+                if (form_verbs.medium != FAV_DEFAULT) // we use med because it mostly has better flavor
+                {
+                    switch (form_verbs.medium)
+                    {
+                        case FAV_BITE: return "bite";
+                        case FAV_CLAW: return "claw";
+                        case FAV_TOUCH: return "touch";
+                        case FAV_ENGULF: return "engulf";
+                        case FAV_RELEASE_SPORES_AT: return "release spores";
+                        case FAV_SLASH: return "slash";
+                        case FAV_SMACK: return "smack";
+                        default: return "hit";
+                    }
+                }
                 else
                 {
                     // this is actually a bitmask, but we will simplify quite a

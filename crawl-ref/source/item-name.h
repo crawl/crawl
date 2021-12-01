@@ -154,6 +154,12 @@ vector<string> item_name_list_for_glyph(char32_t glyph);
 
 const char* rune_type_name(short p);
 
+// Get rune short name ( e.g. "the abyssal rune")
+const string rune_short_name(short p);
+
+// Get rune short name ( e.g. "the abyssal rune of Zot")
+const string rune_long_name(short p);
+
 bool   is_named_corpse(const item_def &corpse);
 string get_corpse_name(const item_def &corpse,
                        monster_flags_t *name_type = nullptr);

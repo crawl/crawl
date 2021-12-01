@@ -218,7 +218,7 @@ struct god_power
               god_power(rank_, ABIL_NON_ABILITY, gain_, loss_, general_)
     { }
 
-    void display(bool gaining, const char* fmt) const;
+    void display(bool gaining) const;
 };
 
 void set_god_ability_slots();

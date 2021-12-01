@@ -1079,12 +1079,17 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_STORM:
         if (act->is_fiery() && final_damage > 0)
         {
-            if (you.can_see(*act))
+            bool silence = silenced(act->pos());
+            if (player)
             {
-                mprf("%s %s in the rain.",
-                     act->name(DESC_THE).c_str(),
-                     act->conj_verb(silenced(act->pos())?
-                                    "steam" : "sizzle").c_str());
+                mpr(silence ? "You steam in the rain."
+                            : "You sizzle in the rain.");
+            }
+            else if (you.can_see(*act))
+            {
+                mprf(silence ? "%s steams in the rain."
+                             : "%s sizzles in the rain.",
+                     act->name(DESC_THE).c_str());
             }
         }
         break;
@@ -1593,7 +1598,7 @@ bool is_harmless_cloud(cloud_type type)
 string cloud_type_name(cloud_type type, bool terse)
 {
     if (type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES)
-        return "buggy goodness";
+        return "buggy goodness"; // noloc
 
     ASSERT(clouds[type].terse_name);
     if (terse || clouds[type].verbose_name == nullptr)
@@ -1732,11 +1737,20 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     // Normal clouds. (Unmodified rain clouds have a different message.)
     if (type != CLOUD_RAIN && type != CLOUD_STORM)
     {
-        mprf("%s %s in %s.",
-             act->name(DESC_THE).c_str(),
-             beneficial ? act->conj_verb("bask").c_str()
-                        : (act->conj_verb("are") + " engulfed").c_str(),
-             cloud_name().c_str());
+        if (act->is_player() && beneficial)
+            mprf("You bask in %s.", cloud_name().c_str());
+        else if (act->is_player())
+            mprf("You are engulfed in %s.", cloud_name().c_str());
+        else if (beneficial)
+        {
+            mprf("%s basks in %s.", act->name(DESC_THE).c_str(),
+                 cloud_name().c_str());
+        }
+        else
+        {
+            mprf("%s is engulfed in %s.", act->name(DESC_THE).c_str(),
+                 cloud_name().c_str());
+        }
         return;
     }
 
@@ -1744,10 +1758,10 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     // of spam reduction.
     if (act->is_player())
     {
-        mprf("%s %s standing in %s.",
-             act->name(DESC_THE).c_str(),
-             act->conj_verb("are").c_str(),
-             type == CLOUD_STORM ? "a thunderstorm" : "the rain");
+        if (type == CLOUD_STORM)
+            mpr("You are standing in a thunderstorm.");
+        else
+            mpr("You are standing in the rain.");
     }
 }
 

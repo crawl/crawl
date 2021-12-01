@@ -4,6 +4,7 @@
 
 #include "loading-screen.h"
 #include "files.h"
+#include "localise.h"
 #include "options.h"
 #include "random.h"
 #include "state.h"
@@ -71,7 +72,7 @@ void loading_screen_open()
     vbox->add_child(move(splash));
     vbox->add_child(loading_text);
     FontWrapper *font = tiles.get_crt_font();
-    vbox->min_size().width = font->string_width(load_complete_msg.c_str());
+    vbox->min_size().width = font->string_width(localise(load_complete_msg).c_str());
     popup = make_shared<ui::Popup>(move(vbox));
     ui::push_layout(popup);
 }
@@ -81,7 +82,7 @@ void loading_screen_close()
     bool done = Options.tile_skip_title || crawl_state.test;
     popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
     if (!done)
-        loading_screen_update_msg(load_complete_msg);
+        loading_screen_update_msg(localise(load_complete_msg));
     while (!done && !crawl_state.seen_hups)
         ui::pump_events();
     ui::pop_layout();

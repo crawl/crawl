@@ -6,6 +6,7 @@
 
 #include "format.h"
 #include "libutil.h"
+#include "localise.h"
 #include "random.h"
 #include "tile-inventory-flags.h"
 #include "rltiles/tiledef-icons.h"
@@ -75,10 +76,9 @@ void GridRegion::place_cursor(const coord_def &cursor)
     m_dirty = true;
 }
 
-void GridRegion::draw_desc(const char *desc)
+void GridRegion::draw_desc(const string& desc)
 {
     ASSERT(m_tag_font);
-    ASSERT(desc);
 
     // Always draw the description in the inventory header. (jpeg)
     int x = sx + ox;

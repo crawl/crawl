@@ -99,7 +99,6 @@ static void _ouch(actor& target, const actor * source, int dam,
 
 struct  curse_effect
 {
-    string name;
     function<void (actor& target, actor* source,
              string cause, int severity)> effect;
     int trivial_weight; // Weight at severity 0
@@ -167,12 +166,12 @@ static void _curse_message(actor& target, actor* /*source*/,
  */
 static const vector<curse_effect> curse_effects = {
     {
-        "message",
+        // message
         _curse_message,
         80, 0,
     },
     {
-        "pain",
+        // pain
         [](actor& target, actor* source, string cause, int severity) {
             if (target.res_torment())
             {
@@ -184,17 +183,20 @@ static const vector<curse_effect> curse_effects = {
             else
             {
                 int dmg = 5 + random2avg(2*severity,2);
-                string punct = attack_strength_punctuation(dmg);
-                _do_msg(target, "Pain shoots through your body" + punct,
-                        "@The_monster@ convulses with pain" + punct,
-                        "Something is bathed in an unholy light" + punct);
+                string msg_player = add_attack_strength_punct(
+                    "Pain shoots through your body", dmg, true);
+                string msg_seen = add_attack_strength_punct(
+                    "@The_monster@ convulses with pain", dmg, true);
+                string msg_unseen = add_attack_strength_punct(
+                    "Something is bathed in an unholy light", dmg, true);
+                _do_msg(target, msg_player, msg_seen, msg_unseen);
                 _ouch(target, source, dmg, cause);
             }
         },
         20, 40,
     },
     {
-        "slow",
+        // slow
         [](actor& target, actor* source, string /*cause*/, int severity) {
             _do_msg(target,
                     "You feel horribly lethargic.",
@@ -205,7 +207,7 @@ static const vector<curse_effect> curse_effects = {
         0, 40,
     },
     {
-        "drain",
+        // drain
         [](actor& target, actor* source, string /*cause*/, int severity) {
             _do_msg(target,
                     "You are engulfed in negative energy!",
@@ -219,7 +221,7 @@ static const vector<curse_effect> curse_effects = {
         0, 40,
     },
     {
-        "torment",
+        // torment
         [](actor& target, actor* source,
            string /*cause*/, int /*severity*/) {
             torment_cell(target.pos(), source, TORMENT_MISCAST);

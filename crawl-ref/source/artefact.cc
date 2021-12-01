@@ -179,15 +179,15 @@ string replace_name_parts(const string &name_in, const item_def& item)
                                "@player_name@"
                                + getRandNameString("killer_name"));
             name = replace_all(name, "@player_doom@",
-                               "@player_name@'s "
+                               "@player_name@'s " // noloc
                                + getRandNameString("death_or_doom"));
         }
         else
         {
             // Simply overwrite the name with one of type "God's Favour".
-            name = "of ";
+            name = "of "; // noloc
             name += god_name(god_gift, false);
-            name += "'s ";
+            name += "'s "; // noloc
             name += getRandNameString("divine_esteem");
         }
     }
@@ -1257,14 +1257,14 @@ string make_artefact_name(const item_def &item, bool appearance)
 
         if (one_chance_in(3))
         {
-            result += " of ";
+            result += " of "; // noloc
             result += st_p;
         }
         else
         {
-            result += " \"";
+            result += " \""; // noloc
             result += st_p;
-            result += "\"";
+            result += "\""; // noloc
         }
     }
 
@@ -1397,18 +1397,18 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 int get_unrandart_num(const char *name)
 {
     string uname = name;
-    uname = replace_all(uname, " ", "_");
-    uname = replace_all(uname, "'", "");
+    uname = replace_all(uname, " ", "_"); // noloc
+    uname = replace_all(uname, "'", ""); // noloc
     lowercase(uname);
-    string quoted = "\"";
+    string quoted = "\""; // noloc
     quoted += uname;
-    quoted += "\"";
+    quoted += "\""; // noloc
 
     for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
     {
         string art = unranddata[i].name;
-        art = replace_all(art, " ", "_");
-        art = replace_all(art, "'", "");
+        art = replace_all(art, " ", "_"); // noloc
+        art = replace_all(art, "'", ""); // noloc
         lowercase(art);
         if (art == uname || art.find(quoted) != string::npos)
             return UNRAND_START + i;

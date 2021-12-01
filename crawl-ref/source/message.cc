@@ -12,9 +12,11 @@
 #include "areas.h"
 #include "colour.h"
 #include "delay.h"
+#include "english.h"
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
+#include "localise.h"
 #ifdef WIZARD
  #include "luaterp.h"
 #endif
@@ -33,17 +35,47 @@
 #include "unwind.h"
 #include "view.h"
 
-static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
+static void _mpr(string text, const string& text_orig = "",
+                 msg_channel_type channel=MSGCH_PLAIN,int param=0,
                  bool nojoin=false, bool cap=true);
 
 void mpr(const string &text)
 {
-    _mpr(text);
+    string text_locl = localise(text);
+    _mpr(text_locl, text);
+}
+
+void mpr(msg_channel_type channel, const string &text)
+{
+    string text_locl = localise(text);
+    _mpr(text_locl, text, channel);
+}
+
+void mpr(msg_channel_type channel, int param, const string &text)
+{
+    string text_locl = localise(text);
+    _mpr(text_locl, text, channel, param);
 }
 
 void mpr_nojoin(msg_channel_type channel, string text)
 {
-    _mpr(text, channel, 0, true);
+    string text_locl = localise(text);
+    _mpr(text_locl, text, channel, 0, true);
+}
+
+void mpr_nolocalise(const string& text)
+{
+    _mpr(text, "", MSGCH_PLAIN, 0, false, true);
+}
+
+void mpr_nolocalise(msg_channel_type channel, const string& text)
+{
+    _mpr(text, "", channel, 0, false, true);
+}
+
+void mpr_nolocalise(msg_channel_type channel, int param, const string& text)
+{
+    _mpr(text, "", channel, param, false, true);
 }
 
 static bool _ends_in_punctuation(const string& text)
@@ -722,10 +754,10 @@ public:
                     more_str += "or click ";
                 more_str += "to continue. You can later reread messages with "
                             "Ctrl-P.";
-                cprintf(more_str.c_str());
+                cprintf(localise(more_str).c_str());
             }
             else
-                cprintf("--more--");
+                cprintf(localise("--more--").c_str());
 
             readkey_more(user);
         }
@@ -1237,22 +1269,22 @@ int channel_to_colour(msg_channel_type channel, int param)
 }
 
 void do_message_print(msg_channel_type channel, int param, bool cap,
-                             bool nojoin, const char *format, va_list argp)
+                             bool nojoin, const char *format, va_list argp, bool locls)
 {
-    va_list ap;
-    va_copy(ap, argp);
-    char buff[200];
-    size_t len = vsnprintf(buff, sizeof(buff), format, argp);
-    if (len < sizeof(buff))
-        _mpr(buff, channel, param, nojoin, cap);
+    string text_orig;
+    string text;
+
+    if (locls)
+    {
+        text_orig = vmake_stringf(format, argp); // english
+        text = vlocalise(format, argp); // target language
+    }
     else
     {
-        char *heapbuf = (char*)malloc(len + 1);
-        vsnprintf(heapbuf, len + 1, format, ap);
-        _mpr(heapbuf, channel, param, nojoin, cap);
-        free(heapbuf);
+        text = vmake_stringf(format, argp); // english
     }
-    va_end(ap);
+
+    _mpr(text, text_orig, channel, param, nojoin, cap);
 }
 
 void mprf_nocap(msg_channel_type channel, int param, const char *format, ...)
@@ -1277,6 +1309,31 @@ void mprf_nocap(const char *format, ...)
     va_list argp;
     va_start(argp, format);
     do_message_print(MSGCH_PLAIN, 0, false, false, format, argp);
+    va_end(argp);
+}
+
+void mprf_nolocalise(msg_channel_type channel, int param, const char *format, ...)
+{
+    va_list argp;
+    va_start(argp, format);
+    do_message_print(channel, param, false, false, format, argp, false);
+    va_end(argp);
+}
+
+void mprf_nolocalise(msg_channel_type channel, const char *format, ...)
+{
+    va_list argp;
+    va_start(argp, format);
+    do_message_print(channel, channel == MSGCH_GOD ? you.religion : 0,
+                     false, false, format, argp, false);
+    va_end(argp);
+}
+
+void mprf_nolocalise(const char *format, ...)
+{
+    va_list argp;
+    va_start(argp, format);
+    do_message_print(MSGCH_PLAIN, 0, false, false, format, argp, false);
     va_end(argp);
 }
 
@@ -1330,7 +1387,7 @@ void dprf(const char *format, ...)
 
     va_list argp;
     va_start(argp, format);
-    do_message_print(MSGCH_DIAGNOSTICS, 0, false, false, format, argp);
+    do_message_print(MSGCH_DIAGNOSTICS, 0, false, false, format, argp, false);
     va_end(argp);
 }
 
@@ -1341,7 +1398,7 @@ void dprf(diag_type param, const char *format, ...)
 
     va_list argp;
     va_start(argp, format);
-    do_message_print(MSGCH_DIAGNOSTICS, param, false, false, format, argp);
+    do_message_print(MSGCH_DIAGNOSTICS, param, false, false, format, argp, false);
     va_end(argp);
 }
 #endif
@@ -1490,8 +1547,8 @@ void msgwin_clear_temporary()
 
 static int _last_msg_turn = -1; // Turn of last message.
 
-static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
-                 bool cap)
+static void _mpr(string text, const string& text_orig,
+                 msg_channel_type channel, int param, bool nojoin, bool cap)
 {
     static bool _doing_c_message_hook = false;
 
@@ -1556,8 +1613,9 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
                                         channel_to_str(channel).c_str());
     }
 
-    bool domore = _check_more(text, channel);
-    bool do_flash_screen = _check_flash_screen(text, channel);
+    bool domore = _check_more(text, channel) || _check_more(text_orig, channel);
+    bool do_flash_screen = _check_flash_screen(text, channel) ||
+                           _check_flash_screen(text_orig, channel);
     bool join = !domore && !nojoin && _check_join(text, channel);
 
     // Must do this before converting to formatted string and back;
@@ -1731,20 +1789,20 @@ void mpr_comma_separated_list(const string &prefix,
                               const msg_channel_type channel,
                               const int param)
 {
-    string out = prefix;
+    string out = localise(prefix);
 
     for (int i = 0, size = list.size(); i < size; i++)
     {
-        out += list[i];
+        out += localise(list[i]);
 
         if (size > 0 && i < (size - 2))
-            out += comma;
+            out += localise(comma);
         else if (i == (size - 2))
-            out += andc;
+            out += localise(andc);
         else if (i == (size - 1))
-            out += ".";
+            out += localise(".");
     }
-    _mpr(out, channel, param);
+    _mpr(out, "", channel, param, false, true);
 }
 
 // Checks whether a given message contains patterns relevant for
@@ -2096,13 +2154,19 @@ bool simple_monster_message(const monster& mons, const char *event,
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
             || mons.visible_to(&you)))
     {
-        string msg = mons.name(descrip);
-        msg += event;
-
         if (channel == MSGCH_PLAIN && mons.wont_attack())
             channel = MSGCH_FRIEND_ACTION;
 
-        mprf(channel, param, "%s", msg.c_str());
+        string msg;
+        if (event != nullptr)
+        {
+            if (event[0] == ' ' || event[0] == '\'')
+                msg = string("%s") + event;
+            else
+                msg = event;
+        }
+
+        mprf(channel, param, msg.c_str(), mons.name(descrip).c_str());
         return true;
     }
 
@@ -2120,7 +2184,16 @@ string god_speaker(god_type which_deity)
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    string msg = god_speaker(which_deity) + event;
+    string msg;
+    if (event != nullptr)
+    {
+        if (event[0] == ' ' || event[0] == '\'')
+            msg = string("%s") + event;
+        else
+            msg = event;
+    }
+
+    msg = localise(msg, god_speaker(which_deity));
 
     god_speaks(which_deity, msg.c_str());
 }
@@ -2128,7 +2201,7 @@ void simple_god_message(const char *event, god_type which_deity)
 void wu_jian_sifu_message(const char *event)
 {
     string msg;
-    msg = uppercase_first(string("Sifu ") + wu_jian_random_sifu_name() + event);
+    msg = localise("Sifu %s says: %s", wu_jian_random_sifu_name(), event);
     god_speaks(GOD_WU_JIAN, msg.c_str());
 }
 
@@ -2304,11 +2377,13 @@ void replay_messages_during_startup()
 {
     formatted_scroller hist(FS_PREWRAPPED_TEXT);
     hist.set_more();
-    hist.set_more(formatted_string::parse_string(
-            "<cyan>Press Esc to close, arrows/pgup/pgdn to scroll.</cyan>"));
-    hist.set_title(formatted_string::parse_string(recent_error_messages()
-        ? "<yellow>Crawl encountered errors during initialization:</yellow>"
-        : "<yellow>Initialization log:</yellow>"));
+    string more_msg = localise("Press Esc to close, arrows/pgup/pgdn to scroll.");
+    hist.set_more(formatted_string::parse_string(string("<cyan>") + more_msg + "</cyan>"));
+    string title = localise(
+            recent_error_messages()
+            ? "Crawl encountered errors during initialization:"
+            : "Initialization log:");
+    hist.set_title(formatted_string::parse_string(string("<yellow>") + title + "</yellow>"));
     _replay_messages_core(hist);
 }
 
@@ -2320,5 +2395,5 @@ void set_msg_dump_file(FILE* file)
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel, int param)
 {
-    _mpr(fs.to_colour_string(), channel, param);
+    _mpr(fs.to_colour_string(), "", channel, param);
 }

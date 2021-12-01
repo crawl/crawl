@@ -31,6 +31,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "localise.h"
 #include "menu.h"
 #include "message.h"
 #include "notes.h"
@@ -312,20 +313,20 @@ static short _min_rot(const item_def &item)
 // stash-tracking pre/suffixes.
 string Stash::stash_item_name(const item_def &item)
 {
-    string name = item.name(DESC_A);
+    string name = localise(item.name(DESC_A));
 
     if (in_inventory(item))
     {
-        name.insert(0, " (carried) ");
+        name.insert(0, localise(" (carried) "));
         return name;
     }
 
     if (!_is_rottable(item))
-        return name;
+        return localise(name);
 
     if (item.stash_freshness <= _min_rot(item))
     {
-        name += " (gone by now)";
+        name += localise(" (gone by now)");
         return name;
     }
 
@@ -334,7 +335,7 @@ string Stash::stash_item_name(const item_def &item)
         return name;
 
     if (item.stash_freshness <= 0)
-        name += " (skeletalised by now)";
+        name += localise(" (skeletalised by now)");
 
     return name;
 }
@@ -894,7 +895,7 @@ void LevelStashes::write(FILE *f, bool identify) const
     if (!has_stashes())
         return;
 
-    // very unlikely level names will be localized, but hey
+    // very unlikely level names will be localised, but hey
     fprintf(f, "%s\n", OUTS(level_name()));
 
     for (const ShopInfo &shop : m_shops)

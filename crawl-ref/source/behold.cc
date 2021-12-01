@@ -34,7 +34,7 @@ void player::add_beholder(const monster& mon, bool axe)
         else
         {
             if (can_see(mon))
-                mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
+                mprf("%s is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
             else
                 mpr("Your mesmeriser suddenly seems less interesting!");
         }
@@ -147,7 +147,7 @@ static void _removed_beholder_msg(const monster *mons)
         else
         {
             if (you.can_see(mon))
-                mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
+                mprf("%s is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
             else
                 mpr("Your mesmeriser suddenly seems less interesting!");
         }

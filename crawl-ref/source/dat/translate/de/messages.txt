@@ -646,7 +646,7 @@ Lugonu's corruption
 This place is already infused with evil and corruption.
 Dieser Ort ist bereits voller Übel und Korruption.
 %%%%
-Lugonu's Hand of Corruption reaches out!
+%s's Hand of Corruption reaches out!
 
 %%%%
 The substance of the Abyss twists violently, and a gateway leading down appears!
@@ -878,7 +878,7 @@ So eine Fähigkeit gibt es nicht.
 # areas.cc
 ##################
 %%%%
-Zin revokes the gift of sanctuary.
+%s revokes the gift of sanctuary.
 
 %%%%
 The sanctuary starts shrinking.
@@ -1581,7 +1581,7 @@ Blitzen fließt durch %s
 %s reclaims some of your granted undead slaves!
 
 %%%%
-Beogh's voice booms out, "Who do you think you are?"
+%s's voice booms out, "Who do you think you are?"
 
 %%%%
 One of your followers decides to abandon you.
@@ -8186,7 +8186,7 @@ Eure göttliche Ausdauer schwindet.
 Do you wish to cure all of your mutations?
 
 %%%%
-Zin draws all chaos from your body!
+%s draws all chaos from your body!
 
 %%%%
 You hear a choir sing!
@@ -8498,7 +8498,7 @@ There are friendlies around; are you sure you want to hurt them?
 Nature churns violently around you!
 Die Natur wirbelt heftig um Euch herum!
 %%%%
-Ru believes you are ready to make a new sacrifice.
+%s believes you are ready to make a new sacrifice.
 
 %%%%
 This is an incredible sacrifice.
@@ -8546,13 +8546,13 @@ Piety after sacrifice: %s
 %sand %s
 
 %%%%
-Ru indicates that your awakening is complete.
+%s indicates that your awakening is complete.
 
 %%%%
 Do you really want to reject the sacrifices Ru is offering?
 
 %%%%
-Ru will take longer to evaluate your readiness.
+%s will take longer to evaluate your readiness.
 
 %%%%
 You focus your inner power and drain %s's magic in retribution!
@@ -27069,9 +27069,6 @@ You sense decay.
 Ihr spürt den Verfall.
 %%%%
 %s reclaims all of your granted undead slaves!
-
-%%%%
-%s's voice booms out, "Who do you think you are?"
 
 %%%%
 All of your followers decide to abandon you.

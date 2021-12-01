@@ -381,7 +381,7 @@ void check_net_will_hold_monster(monster* mons)
             free_stationary_net(net);
 
         simple_monster_message(*mons,
-                               " drifts right through the net!");
+                               "%s drifts right through the net!");
     }
     else
         mons->add_ench(ENCH_HELD);
@@ -652,7 +652,7 @@ void trap_def::trigger(actor& triggerer)
                      || (trig_smart && random2(m->evasion()) > 8))
             {
                 if (!simple_monster_message(*m,
-                                            " avoids a huge, swinging blade."))
+                                            "%s avoids a huge, swinging blade."))
                 {
                     mpr("A huge blade swings out!");
                 }
@@ -706,7 +706,7 @@ void trap_def::trigger(actor& triggerer)
                 triggered = true;
 
                 if (!simple_monster_message(*m,
-                                            " drops a net on you."))
+                                            "%s drops a net on you."))
                 {
                     mpr("Something launches a net on you.");
                 }
@@ -1245,7 +1245,7 @@ void trap_def::shoot_ammo(actor& act, bool trig_smart)
                      shot.name(DESC_A).c_str(),
                      act.name(DESC_THE).c_str(),
                      (damage_taken == 0 && !poison) ?
-                         ", but does no damage" : "");
+                         " but does no damage" : "");
             }
 
             if (poison)

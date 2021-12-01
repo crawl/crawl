@@ -40,6 +40,7 @@
 #include "item-name.h" // item_type_known
 #include "item-prop.h" // get_weapon_brand
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "map-knowledge.h"
 #include "message.h"
@@ -381,8 +382,10 @@ static void _divine_headsup(const vector<monster*> &monsters,
     if (!warnings.size())
         return;
 
-    const string warning_msg = " warns you: " + warnings;
-    simple_god_message(warning_msg.c_str());
+    string msg = localise("%s warns you: %s", god_speaker(you.religion),
+                          warnings);
+    god_speaks(you.religion, msg.c_str());
+
 #ifndef USE_TILE_LOCAL
     // XXX: should this really be here...?
     if (you_worship(GOD_ZIN))
@@ -797,7 +800,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         }
 
         if (!sensed.empty())
-            mpr_comma_separated_list("You sensed ", sensed);
+        {
+            mprf("You sensed %s.", comma_separated_line(sensed).c_str());
+        }
     }
 
     return did_map;

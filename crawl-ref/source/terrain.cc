@@ -31,6 +31,7 @@
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -2408,10 +2409,14 @@ void ice_wall_damage(monster &mons, int delay)
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
     int dam = mons_adjust_flavoured(&mons, beam, orig_dam);
-    mprf("The wall freezes %s%s%s",
-         you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something",
-         dam ? "" : " but does no damage",
-         attack_strength_punctuation(dam).c_str());
+
+    string mon_name = you.can_see(mons) ? mons.name(DESC_THE): "something";
+    string msg = localise("The wall freezes %s", mon_name);
+    if (dam > 0)
+        msg = add_attack_strength_punct(msg, dam, false);
+    else
+        msg += localise(" but does no damage.");
+    mpr_nolocalise(msg);
 
     if (dam > 0)
     {

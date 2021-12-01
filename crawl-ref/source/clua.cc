@@ -152,7 +152,7 @@ void CLua::save_persist()
     fprintf(f, "-- %s %s persistent clua file\n"
                "-- WARNING: This file is entirely auto-generated.\n"
             "\n",
-            OUTS(CRAWL), // ok, localizing the game name is not likely
+            OUTS(CRAWL), // ok, localising the game name is not likely
             OUTS(Version::Long)); // nor the version string
     fprintf(f, "%s", persist.c_str());
     fclose(f);

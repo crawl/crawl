@@ -7,6 +7,7 @@
 #include "kill-method-type.h"
 #include "pronoun-type.h"
 #include "spl-util.h" // spschool type definition
+#include "variant-msg-type.h"
 
 // Used throughout inheriting classes, define them here for universal access
 const int HIT_WEAK   = 7;
@@ -78,10 +79,9 @@ public:
     int     attacker_to_hit_penalty;
 
     // Attack messages
-    string     attack_verb, verb_degree;
     string     no_damage_message;
     string     special_damage_message;
-    string     aux_attack, aux_verb;
+    string     aux_attack, aux_message;
 
     // Combined to-hit penalty from armour and shield.
     int             attacker_armour_tohit_penalty;
@@ -101,13 +101,6 @@ public:
     virtual int calc_to_hit(bool random);
     int calc_pre_roll_to_hit(bool random);
     virtual int post_roll_to_hit_modifiers(int mhit, bool random);
-
-    // Exact copies of their melee_attack predecessors
-    string actor_name(const actor *a, description_level_type desc,
-                      bool actor_visible);
-    string actor_pronoun(const actor *a, pronoun_type ptyp, bool actor_visible);
-    string anon_name(description_level_type desc);
-    string anon_pronoun(pronoun_type ptyp);
 
     // TODO: Definitely want to get rid of this, which we can't really do
     // until we refactor the whole pronoun / desc usage from these lowly
@@ -153,7 +146,6 @@ protected:
     }
     virtual bool apply_damage_brand(const char *what = nullptr);
     void calc_elemental_brand_damage(beam_type flavour,
-                                     const char *verb,
                                      const char *what = nullptr);
 
     /* Weapon Effects */
@@ -174,10 +166,8 @@ protected:
                                bool clean = false);
 
     /* Output */
-    string debug_damage_number();
-    string evasion_margin_adverb();
+    string debug_damage_number(bool special = false);
 
-    virtual void set_attack_verb(int damage) = 0;
     virtual void announce_hit() = 0;
 
     void stab_message();
@@ -206,3 +196,5 @@ protected:
 };
 
 string attack_strength_punctuation(int dmg);
+string add_attack_strength_punct(const string& msg, int dmg, bool localise_msg);
+void attack_strength_message(const string& msg, int dmg, bool localise_msg);
