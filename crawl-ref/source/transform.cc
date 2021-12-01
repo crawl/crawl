@@ -993,6 +993,14 @@ public:
     }
 
     bool can_offhand_punch() const override { return true; }
+    
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string /*default_name*/) const override
+    {
+        return "Storm " + storm_parts(true);
+    }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -1425,6 +1433,18 @@ string blade_parts(bool terse)
         str = "front " + str;
     else if (!terse && you.arm_count() > 2)
         str = "main " + str; // Op have four main tentacles
+
+    return str;
+}
+
+string storm_parts(bool)
+{
+    if (you.has_mutation(MUT_PAWS, false))
+        str = "paws";
+    else if (you.arm_count() > 2)
+        str = "tentacles"; // Op have four main tentacles
+    else
+        str = "fists";
 
     return str;
 }
