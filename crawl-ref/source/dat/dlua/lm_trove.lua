@@ -6,10 +6,8 @@
 --  any armour
 --  any jewellery
 --  any weapon
---  any book
 --  any scroll
 --  any potion
---  any wand
 --  runes
 --  the horn of Geryon
 --  your piety!
@@ -341,15 +339,6 @@ function TroveMarker:item_name(do_grammar)
     else
       s = s .. " " .. item.base_type .. " of"
     end
-  elseif item.base_type == "book" then
-    books = {"Necronomicon", "Young Poisoner's Handbook", "Grand Grimoire"}
-    if util.contains(books, item.sub_type) then
-      if do_grammar == false then
-        return item.sub_type
-      else
-        return "a " .. item.sub_type
-      end
-    end
   elseif item.base_type == "wand" then
     s = s .. " wand of"
   end
@@ -571,8 +560,7 @@ function TroveMarker:check_item_veto(marker, pname)
     if self:showing_item() then
       crawl.mpr("You don't have " .. self:item_name() .. " with you.")
     else
-      crawl.mpr("You don't have the item" .. self:plural() ..
-                " to give!")
+      crawl.mpr("You don't have the item" .. self:plural() .. " to give!")
     end
     return "veto"
   end
