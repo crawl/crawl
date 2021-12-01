@@ -25,24 +25,53 @@ enum form_capability
     FC_FORBID
 };
 
+// attack verb (NOTE: not the same thing as attack type)
+enum form_attack_verb
+{
+    FAV_DEFAULT,
+    FAV_HIT,
+    FAV_SLASH,
+    FAV_SLICE,
+    FAV_SHRED,
+    FAV_CLAW,
+    FAV_BITE,
+    FAV_MAUL,
+    FAV_SMACK,
+    FAV_PUMMEL,
+    FAV_THRASH,
+    FAV_TOUCH,
+    FAV_ENGULF,
+    FAV_RELEASE_SPORES_AT,
+    FAV_NIP_AT,
+    FAV_GOUGE,
+    FAV_CHOMP,
+    FAV_BUFFET,
+    FAV_BATTER,
+    FAV_BLAST
+};
+
 class FormAttackVerbs
 {
 public:
-    FormAttackVerbs(const char *_weak, const char *_medium,
-                    const char *_strong, const char *_devastating)
+    FormAttackVerbs(
+        form_attack_verb _weak,
+        form_attack_verb _medium,
+        form_attack_verb _strong,
+        form_attack_verb _devastating
+    )
         : weak(_weak), medium(_medium), strong(_strong),
           devastating(_devastating)
     { }
 
-    FormAttackVerbs(const char *msg)
-        : weak(msg), medium(msg), strong(msg), devastating(msg)
+    FormAttackVerbs(form_attack_verb verb)
+        : weak(verb), medium(verb), strong(verb), devastating(verb)
     { }
 
 public:
-    const char * const weak;
-    const char * const medium;
-    const char * const strong;
-    const char * const devastating;
+    const form_attack_verb weak;
+    const form_attack_verb medium;
+    const form_attack_verb strong;
+    const form_attack_verb devastating;
 };
 
 enum duration_power_scaling
@@ -117,8 +146,8 @@ public:
     virtual string get_transform_description() const { return description; }
 
     virtual string get_description(bool past_tense = false) const;
-    virtual string transform_message(transformation previous_trans) const;
-    virtual string get_untransform_message() const;
+    virtual void do_transform_message(transformation previous_trans) const;
+    virtual void do_untransform_message() const;
 
     virtual int res_fire() const;
     virtual int res_cold() const;
@@ -299,7 +328,6 @@ void remove_one_equip(equipment_type eq, bool meld = true,
 void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
-string blade_parts(bool terse = false);
 void set_hydra_form_heads(int heads);
 void set_airform_power(int pow);
 const char* transform_name(transformation form = you.form);
