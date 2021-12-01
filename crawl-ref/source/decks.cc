@@ -118,13 +118,12 @@ struct deck_type_data
 static map<deck_type, deck_type_data> all_decks =
 {
     { DECK_OF_ESCAPE, {
-        "escape", "mainly dealing with various forms of escape.",
+        "escape", "which may bring the user to safety or impede their foes.",
         deck_of_escape,
         13,
     } },
     { DECK_OF_DESTRUCTION, {
-        "destruction", "most of which hurl death and destruction "
-            "at one's foes (or, if unlucky, at oneself).",
+        "destruction", "which hurl death and destruction with wild abandon.",
         deck_of_destruction,
         26,
     } },
