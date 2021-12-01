@@ -73,4 +73,4 @@ recommended_weapons:
 create_enum: false
 # end TAG_MAJOR_VERSION
 
-altar_action: sit before
+altar_action: You sit before the altar of %s.

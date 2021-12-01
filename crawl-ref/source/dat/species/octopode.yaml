@@ -46,5 +46,6 @@ recommended_jobs:
 create_enum: false
 # end TAG_MAJOR_VERSION
 
-walking_verb: Wriggl
-altar_action: curl up in front of
+walking_verb: Wriggling
+walker_noun: Wriggler
+altar_action: You curl up in front of the altar of %s.

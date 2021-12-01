@@ -64,4 +64,5 @@ recommended_weapons:
 create_enum: false
 # end TAG_MAJOR_VERSION
 
-walking_verb: Glid
+walking_verb: Gliding
+walker_noun: Glider

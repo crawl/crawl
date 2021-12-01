@@ -62,4 +62,5 @@ recommended_weapons:
 create_enum: false
 # end TAG_MAJOR_VERSION
 
-walking_verb: Stalk
+walking_verb: Stalking
+walker_noun: Stalker

@@ -315,12 +315,18 @@ namespace species
     /** What walking-like thing does this species do?
      *
      *  @param sp what kind of species to look at
-     *  @returns a "word" to which "-er" or "-ing" can be appended.
+     *  @returns an "-ing" verb
      */
     string walking_verb(species_type sp)
     {
         auto verb = get_species_def(sp).walking_verb;
-        return verb ? verb : "Walk";
+        return verb ? verb : "Walking";
+    }
+
+    string walker_noun(species_type sp)
+    {
+        auto noun = get_species_def(sp).walker_noun;
+        return noun ? noun : "Walker";
     }
 
     /**
