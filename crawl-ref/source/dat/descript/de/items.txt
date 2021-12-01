@@ -203,7 +203,7 @@ Ein Stoffumhang.
 %%%%
 corpse
 
-Eine Leiche. Du kannst sie schlachten, um essbare Fleischstücke zu erhalten.
+Eine Leiche. Ihr könnt sie schlachten, um essbare Fleischstücke zu erhalten.
 %%%%
 crystal plate armour
 
@@ -303,7 +303,7 @@ Verwundungen .
         or you.race() == "Kobold"
         or you.race() == "Spriggan"
     then
-        return "Bedauerlicherweise ist er zu lang und unhandlich für dich."
+        return "Bedauerlicherweise ist er zu lang und unhandlich für Euch."
     else
         return ""
     end
@@ -341,8 +341,8 @@ Eine köstliche, saftige und orangene Frucht.
 %%%%
 orb of zot
 
-Sobald du zur Oberfläche mit diesem unschätzbaren Artefakt geflüchtet bist, ist
-deine Suche vorbei.
+Sobald Ihr zur Oberfläche mit diesem unschätzbaren Artefakt geflüchtet seid, ist
+Eure Suche vorbei.
 %%%%
 pair of boots
 
@@ -371,7 +371,7 @@ die es trinkt.
 %%%%
 potion of beneficial mutation
 
-Ein Trank, der dir gibt eine vermeintlich gute Mutation gibt.
+Ein Trank, der Euch gibt eine vermeintlich gute Mutation gibt.
 %%%%
 potion of berserk rage
 
@@ -414,7 +414,7 @@ Ein Trank, welcher eine große Beschwingtheit, auf denjenigen der ihn trinkt,
 %%%%
 potion of invisibility
 
-Ein Trank der dich vor der Sicht Anderer versteckt.
+Ein Trank der Euch vor der Sicht Anderer versteckt.
 %%%%
 potion of might
 
@@ -541,9 +541,8 @@ Speicher zu löschen, um die eingebundene magische Energie zurückzuerobern.
 scroll of blinking
 
 Diese Schriftrolle ermöglicht seinem Leser auf eine kurze Distanz zu
-teleportieren, mit präziser Kontrolle. Seien Sie vorsichtig, dass die
-kontrollierte Teleportierung das Objekt mit magischer Energie verunreinigt
-wird.
+teleportieren, mit präziser Kontrolle. Sei vorsichtig: Durch kontrollierte
+Teleports wird das Subjekt mit magischer Energie kontaminiert.
 %%%%
 scroll of curse armour
 
@@ -581,11 +580,11 @@ Diese Schriftrolle offenbart die Umgebungen von demjenigen, der es liest.
 %%%%
 scroll of remove curse
 
-Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.
+Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die Ihr tragt.
 %%%%
 scroll of teleportation
 
-Liest man die Worte auf dieser Schriftrolle wird sie dich nach kurzer Zeit an
+Liest man die Worte auf dieser Schriftrolle wird sie Euch nach kurzer Zeit an
 eine zufällige Position teleportieren.
 %%%%
 scythe

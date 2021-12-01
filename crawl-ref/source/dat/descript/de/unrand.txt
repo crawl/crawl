@@ -114,8 +114,8 @@ captain's cutlass
 Diese berüchtigte Waffe wurde von einem schrecklichen Piraten-Kapitän benutzt,
 um zahllose Unschuldige abzuschlachten. Letztendlich fand er sein Schicksal,
 als ein Krake sein Schiff mitsamt seiner Besatzung verschlang. Das Entermesser
-galt als für immer verschollen, doch nun hältst du den gegenteiligen Beweis in
-deinen bloßen Händen.
+galt als für immer verschollen, doch nun haltet Ihr den gegenteiligen Beweis in
+Euren bloßen Händen.
 %%%%
 storm bow
 
@@ -138,7 +138,7 @@ aktiviert werden, um dicke Rauchwolken zur schnellen Flucht auszustoßen.
 %%%%
 tower shield "Bullseye"
 
-Nur für den Fall, dass du Probleme hattest, getroffen zu werden.
+Nur für den Fall, dass Ihr Probleme hattet, getroffen zu werden.
 %%%%
 crown of Dyrovepreva
 
@@ -169,7 +169,7 @@ Eine lederne Rüstung aus der Haut eines Salamanders hergestellt.
 gauntlets of War
 
 Diese dicken Handschuhe aus Stahl waren Okawaru´s Belohnung für einen mächtigen
-Kriegsherren. Verdienst du es sie zu besitzen?
+Kriegsherren. Habt Ihr es verdient, sie zu besitzen?
 %%%%
 shield of Resistance
 
@@ -193,7 +193,7 @@ Drachenhaut.
 hat of the Alchemist
 
 Ein dreckiger Hut. Man sieht ihm an, dass er einige seltsame Explosionen
-überstanden hat, was dich vermuten lässt, dass er den Kopf der ihn getragen hat
+überstanden hat, was Euch vermuten lässt, dass er den Kopf der ihn getragen hat
 vor einigen Alchemie-Experimenten geschützt wurde. Bei der Art des Schutzes,
 die diese Hut gewährt ist es auch sicher, dass der Kopf der diesen Hut getragen
 hat schon vorher einigen Schaden bei Experimenten abbekommen hat.
@@ -244,7 +244,7 @@ Dieses exotische Schwert ist eine Waffe für wahrhaft Erleuchtete.
 %%%%
 shillelagh "Devastator"
 
-Wie du erraten kannst ist dieser Stock mehr als nur aus Blei.
+Wie Ihr erraten könnt ist dieser Stock mehr als nur aus Blei.
 %%%%
 dragonskin cloak
 

@@ -1,7 +1,7 @@
 %%%%
 No ability ability
 
-Wenn du diese Beschreibung siehst dann ist es ein Fehler.
+Wenn Ihr diese Beschreibung seht dann ist es ein Fehler.
 %%%%
 Spit Poison ability
 
@@ -13,8 +13,9 @@ Teleportiere über eine zufällige, kurze Distanz.
 %%%%
 Breathe Dispelling Energy ability
 
-Atmen Sie eine Druckwelle der Macht an einem ins Visier genommenen Ungeheuer,
-vielleicht etwas von seinem Entzücken entfernend.
+Haucht einen Bolzen aus vertreibender Energie auf ein anvisiertes Wesen, 
+wodurch möglicherweise einige seiner Verzauberungen entfernt werden.
+Die Reichweite des Bolzens wird für jedes getroffene Wesen um eins verringert.
 %%%%
 Breathe Frost ability
 
@@ -46,13 +47,13 @@ Atme eine Welle gesundheitsschädlicher Gase auf ein Monster aus.
 %%%%
 Bat Form ability
 
-Verwandle dich in eine schnelle Vampirfledermaus. In diesem Zustand kannst du
-weder mit Gegenständen aller Art umgehen (du kannst sie allerdings aufheben
+Verwandelt Euch in eine schnelle Vampirfledermaus. In diesem Zustand könnt Ihr
+weder mit Gegenständen aller Art umgehen (Ihr könnt sie allerdings aufheben
 oder fallen lassen), noch Zaubersprüche einsetzen. Denk daran, dass die
-Fledermausform deine Stärke senken und deine Geschicklichkeit erhöhen wird.
-Daher kannst du dich nicht verwandeln, wenn du nicht stark genug bist. Der Flug
-ist magisch verstärkt, sodass du selbst dann in der Luft bleiben wirst, wenn
-das Gewicht deiner Besitztümer oder eine Flugunfähigkeit dich normalerweise am
+Fledermausform Eure Stärke senken und Eure Geschicklichkeit erhöhen wird.
+Daher könnt Ihr Euch nicht verwandeln, wenn Ihr nicht stark genug seid. Der Flug
+ist magisch verstärkt, sodass Ihr selbst dann in der Luft bleiben werdet, wenn
+das Gewicht Eurer Besitztümer oder eine Flugunfähigkeit Euch normalerweise am
 Boden halten würden.
 %%%%
 Bottle Blood ability
@@ -66,13 +67,13 @@ Spucke Säure auf das anvisierte Monster.
 %%%%
 Fly ability
 
-Fliege los. Während des Fluges kannst du Wasser und ähnliche Hindernisse sicher
+Fliege los. Während des Fluges könnt Ihr Wasser und ähnliche Hindernisse sicher
 überqueren. Sei gewarnt, der Flug kann in einem ungünstigen Moment zu Ende sein
-und du kannst dadurch in den Tod stürzen.
+und Ihr könnt dadurch in den Tod stürzen.
 %%%%
 Hellfire ability
 
-Beschießt deine Gegner mit Höllenfeuer.
+Beschießt Eure Gegner mit Höllenfeuer.
 %%%%
 Stop Singing ability
 
@@ -85,22 +86,22 @@ Zauberstange(?) wieder auf.
 %%%%
 Evoke Teleportation ability
 
-Teleportiere dich selbst an einen zufälligen Ort auf der Ebene.
+Teleportiere Euch selbst an einen zufälligen Ort auf der Ebene.
 %%%%
 Evoke Berserk Rage ability
 
 Verfalle in Raserei. In Raserei verfallen erhöht, auch wenn es vorübergehend
-ist, deine Lebenspunkte und den Schaden welchen du im Nahkampf anrichtest, Es
-geht schnell zu Ende wenn du nichts tötest, kann aber bei mehreren Tötungen
-hintereinander verlängert werden. In Raserei kannst du einige Aktionen nicht
+ist, Eure Lebenspunkte und den Schaden welchen Ihr im Nahkampf anrichtet, Es
+geht schnell zu Ende wenn Ihr nichts tötet, kann aber bei mehreren Tötungen
+hintereinander verlängert werden. In Raserei könnt Ihr einige Aktionen nicht
 ausführen (z.B.: an-/ablegen einer Waffe, etwas trinken, Zauberstäbe oder
 Gegenstände auslösen oder Zauber wirken). Auf solch eine Wut folgt eine tiefe
-Erschöpfung, eine Zeit in der du verlangsamt wirst und nicht nochmal in Raserei
+Erschöpfung, eine Zeit in der Ihr verlangsamt werdet und nicht nochmal in Raserei
 verfallen kannst.
 %%%%
 Evoke Invisibility ability
 
-Werde für eine kurze Zeit unsichtbar. Unsichtbarkeit erhöht deine magische
+Werde für eine kurze Zeit unsichtbar. Unsichtbarkeit erhöht Eure magische
 Kontamination und wird schließlich Glühen verursachen.
 %%%%
 Stop Flying ability
@@ -113,43 +114,43 @@ Gebe eine dicke Nebelwolke frei um die Sicht zu verschlechtern.
 %%%%
 End Transformation ability
 
-Beende deine Verwandlung mit einer kurzen Verzögerung.
+Beende Eure Verwandlung mit einer kurzen Verzögerung.
 %%%%
 Vitalisation ability
 
-Belebe dich selbst, erlange göttliche Kondition und Nahrung von Zin. Göttliche
-Kondition schützt dich vor Krankheit, Vergiftung, Versteinerung, Verwirrung und
-Verwesung. Sie erhöht und erhält zeitweise deine Stärke, Intelligenz und
+Belebe Euch selbst, erlange göttliche Kondition und Nahrung von Zin. Göttliche
+Kondition schützt Euch vor Krankheit, Vergiftung, Versteinerung, Verwirrung und
+Verwesung. Sie erhöht und erhält zeitweise Eure Stärke, Intelligenz und
 Geschicklichkeit.
 %%%%
 Imprison ability
 
-Sperren Sie provisorisch ein Ungeheuer in Wänden von Silber ein. Die Dauer des
+Sperre provisorisch ein Ungeheuer in Wänden von Silber ein. Die Dauer des
 Gefängnisses wird durch die Beschwörungssachkenntnis vergrößert.
 %%%%
 Sanctuary ability
 
-Für eine kurze Dauer bekommst du Sicherheit in der göttlichen Zuflucht. Solange
-du in diesem Heiligtum bist können Monster dich nicht angreifen, allerdings
-wird der Schutz verschwinden wenn du den göttlichen Frieden stören solltest.
+Für eine kurze Dauer bekommt Ihr Sicherheit in der göttlichen Zuflucht. Solange
+Ihr in diesem Heiligtum seid können Monster Euch nicht angreifen, allerdings
+wird der Schutz verschwinden wenn Ihr den göttlichen Frieden störet.
 %%%%
 Cure All Mutations ability
 
-Befreie dich von allen Mutationen – aber nur einmal.
+Befreie Euch von allen Mutationen – aber nur einmal.
 %%%%
 Divine Shield ability
 
-'The Shining One' belohnt dich mit einem göttlichen Schild. Da es von
-göttlicher Kraft aufrecht gehalten wird, beeinflusst es nicht deine Ausrüstung.
-Wie auch immer, es wird von deiner Willenskraft kontrolliert, und deine
+'The Shining One' belohnt Euch mit einem göttlichen Schild. Da es von
+göttlicher Kraft aufrecht gehalten wird, beeinflusst es nicht Eure Ausrüstung.
+Wie auch immer, es wird von Eurer Willenskraft kontrolliert, und Eure
 Fähigkeiten mit Schilden verbessert es noch.
 %%%%
 Cleansing Flame ability
 
 Rufe eine riesige Explosion göttlichen Zornes, welche Untote und Dämonen um
-dich herum schweren Schaden zufügt. Alle anderen feindlichen Kreaturen nehmen
-auch geringeren Schaden, wohingegen du und deine Verbündeten nie betroffen
-seid.
+Euch herum schweren Schaden zufügt. Alle anderen feindlichen Kreaturen nehmen
+auch geringeren Schaden, wohingegen Ihr und Eure Verbündeten nie betroffen
+werden.
 %%%%
 Summon Divine Warrior ability
 
@@ -158,64 +159,64 @@ können vom Shining One gesegnet werden, um länger in dieser Welt zu bleiben.
 %%%%
 Receive Corpses ability
 
-Erschaffe ein oder mehrere wieder erweckbare Monsterleichen neben dir. Die
+Erschaffe ein oder mehrere wieder erweckbare Monsterleichen neben Euch. Die
 Anzahl und Frische der Leichen ist abhängig von der Nekromantie-Fähigkeit.
 %%%%
 Torment ability
 
-Opfere einen Kadaver um jeden im Sichtfeld, dich eingeschlossen, die Schmerzen
+Opfere einen Kadaver um jeden im Sichtfeld, Euch eingeschlossen, die Schmerzen
 die dieses Wesen in seinem Leben erlitt mit zu erleben. Dies wird die
 Belastbarkeit derer dezimieren die sie fühlen können.
 
-Kikubaaqudgha wird dich vielleicht davor bewahren ... oder auch nicht.
+Kikubaaqudgha wird Euch vielleicht davor bewahren ... oder auch nicht.
 %%%%
 Animate Remains ability
 
-Belebe eine einzige Leiche bzw. ein einziges Skelett als deinen Anhänger
+Belebe eine einzige Leiche bzw. ein einziges Skelett als Euren Anhänger
 wieder. Denk daran, dass Zombies und Skelette die Ebene, auf der sie erstellt
 wurden, nicht verlassen können.
 %%%%
 Recall Undead Slaves ability
 
-Rufen Sie Ihre untoten Anhänger von überall her im Kerker zu Ihren
+Rufe Eure untoten Anhänger von überall her im Kerker zu Euren
 unmittelbaren Umgebungen zurück.
 %%%%
 Animate Dead ability
 
-Belebe alle Leichen und Skelette in deiner Nähe als deine Anhänger wieder. Denk
+Belebe alle Leichen und Skelette in Eurer Nähe als Eure Anhänger wieder. Denk
 daran, dass Zombies und Skelette die Ebene, auf der sie erstellt wurden, nicht
 verlassen können.
 %%%%
 Drain Life ability
 
-Heile dich, indem du den Wesen um dich herum Leben entziehst.
+Heile Euch, indem Ihr den Wesen um Euch herum Leben entzieht.
 %%%%
 Enslave Soul ability
 
 Markiere dies Seele eines lebenden intelligenten Monster als reif zum pflücken.
-Sobald dieses Monster stirbt gehört seine Seele dir.
+Sobald dieses Monster stirbt gehört seine Seele Euch.
 
 Die versklavte Seele behält die Fähigkeiten, Ausrüstung und Eigenschaften des
 Monsters, sowie einige seiner angebohrenen Heilung. Wie auch immer, nur bei
 einem relativ unverwundetem Monster kann die Seele markiert werden, und nur
 eine Seele kann in einem Zeitraum versklavt werden. Desweiteren ist die Dauer
-der Markierung abhängig von deiner Anrufungs-Fähigkeit.
+der Markierung abhängig von Eurer Anrufungs-Fähigkeit.
 
-Denke daran das versklavte Seelen dir über die Ebene hinaus, in der sie
+Denke daran das versklavte Seelen Euch über die Ebene hinaus, in der sie
 gegründet wurden folgen können.
 %%%%
 Animate Remains or Dead ability
 
-Wenn du diese Beschreibung siehst, ist es ein Bug.
+Wenn Ihr diese Beschreibung seht, ist es ein Bug.
 %%%%
 Heroism ability
 
-Erhöht vorübergehend deine Kampffähigkeit, eingeschlossen die Fähigkeit zum
+Erhöht vorübergehend Eure Kampffähigkeit, eingeschlossen die Fähigkeit zum
 Schleichen.
 %%%%
 Finesse ability
 
-Steigert massiv deine Geschwindigkeit im Kampf, ohne Verlust der
+Steigert massiv Eure Geschwindigkeit im Kampf, ohne Verlust der
 Trefferwahrscheinlichkeit. Dieser unnatürliche Effekt verursacht eine kleine
 Menge an magischer Kontamination, was bei längerer Nutzung schlecht für die
 Gesundheit ist.
@@ -231,24 +232,24 @@ Monster.
 %%%%
 Channel Energy ability
 
-Frische deine magischen Reserven, abhängig von deiner Anrufungs-Fähigkeit, auf.
+Frische Eure magischen Reserven, abhängig von Eurer Anrufungs-Fähigkeit, auf.
 %%%%
 Forget Spell ability
 
-Vergiss irgendeinen Zauberspruch den du dir momentan eingeprägt hast, damit du
-deinen Verstand frei hast um Andere zu lernen.
+Vergiss irgendeinen Zauberspruch den Ihr Euch momentan eingeprägt habt, damit Ihr
+Euren Verstand frei habt um Andere zu lernen.
 %%%%
 Berserk ability
 
 Verfalle in Raserei. In Raserei verfallen erhöht, auch wenn es vorübergehend
-ist, deine Lebenspunkte und den Schaden welchen du im Nahkampf anrichtest, Es
-geht schnell zu Ende wenn du nichts tötest, kann aber bei mehreren Tötungen
-hintereinander verlängert werden. In Raserei kannst du einige Aktionen nicht
+ist, Eure Lebenspunkte und den Schaden welchen Ihr im Nahkampf anrichtet, Es
+geht schnell zu Ende wenn Ihr nichts tötet, kann aber bei mehreren Tötungen
+hintereinander verlängert werden. In Raserei könnt Ihr einige Aktionen nicht
 ausführen (z.B.: an-/ablegen einer Waffe, etwas trinken, Zauberstäbe oder
 Gegenstände auslösen oder Zauber wirken). Auf solch eine Wut folgt eine tiefe
-Erschöpfung, eine Zeit in der du verlangsamt wirst und nicht nochmal in Raserei
+Erschöpfung, eine Zeit in der Ihr verlangsamt werdet und nicht nochmal in Raserei
 verfallen kannst. Im Gegensatz zu anderen Quellen der Raserei, abhängig von
-deiner Frömmigkeit, kann Trog diese Erschöpfung gelegentlich verhindern.
+Eurer Frömmigkeit, kann Trog diese Erschöpfung gelegentlich verhindern.
 %%%%
 Brothers in Arms ability
 
@@ -256,7 +257,7 @@ Beschwöre riesige, wütende Verbündete, um Zerstörung zu verursachen.
 %%%%
 Divine Protection ability
 
-Flehe Elyvilon an um dein Leben zu retten. Wenn du tödlich Verwundet bist kann
+Flehe Elyvilon an um Euer Leben zu retten. Wenn Ihr tödlich Verwundet seid, kann
 der Heiler den todbringenden Schlag rückgängig machen. Speziell fromme Personen
 können sich dieser Hilfe sicher sein, aber in diesem Fall kostet jeder
 aktueller Eingriff etwas an Religiosität (eine bloße Frage nach einem Eingriff
@@ -267,21 +268,21 @@ Sünde!
 %%%%
 Lesser Self-Healing ability
 
-Abhängig von deiner Anrufungs-Fähigkeit kannst du einen kleine Menge an
+Abhängig von Eurer Anrufungs-Fähigkeit könnt Ihr einen kleine Menge an
 Lebenspunkten heilen.
 %%%%
 Purification ability
 
-Reinige deinen Körper von allen schlechten Effekten wie Krankheit, Vergiftung,
+Reinige Euren Körper von allen schlechten Effekten wie Krankheit, Vergiftung,
 Verlangsamung, Versteinerung, Verwirrung und Fäulnis. Dann werden noch Stärke,
 Geschicklichkeit und Intelligenz wieder hergestellt.
 %%%%
 Greater Healing ability
 
-Abhängig von deiner Anrufungs-Fähigkeit kannst du einer andere Kreatur einen
+Abhängig von Eurer Anrufungs-Fähigkeit könnt Ihr einer andere Kreatur einen
 mäßigen Teil seiner Lebensenergie heilen. Benutzt man diese Fähigkeit auf
 feindselige Monster, kann ihr Verhalten neutral werden. Dieses funktioniert am
-besten bei Tieren, schlechter bei Humanoiden deiner Art, noch schlechter auf
+besten bei Tieren, schlechter bei Humanoiden Eurer Art, noch schlechter auf
 andere Humanoiden und am schlechtesten von allen auf Dämonen und Untoten.
 Hirnlose Kreaturen können nicht befriedet werden, und kein Monster das schläft
 kann befriedet werden. Die Chance einer erfolgreichen Befriedung hängt von der
@@ -289,21 +290,21 @@ Heilkraft ab, so ist es bedeutend besser als leichte Heilung zu benutzen.
 
 Unabhängig davon, ob die Befriedung funktioniert hat oder nicht, die
 investierte Nahrung, Frömmigkeit und Magie-Punkte sind verbraucht. Wenn es
-gelingt, ist das Monster geheilt und du erhältst die hälfte seines
+gelingt, ist das Monster geheilt und Ihr erhaltet die hälfte seines
 Erfahrungswertes und möglicherweise etwas Frömmigkeit. Anderenfalls bleibt das
-Monster unbetroffen und du bekommst nichts.
+Monster unbetroffen und Ihr bekommt nichts.
 
-Du kannst auch Verbündete und neutrale Monster heilen.
+Ihr könnt auch Verbündete und neutrale Monster heilen.
 %%%%
 Greater Self-Healing ability
 
-Abhängig von deiner Anrufungs-Fähigkeit kannst du einen mäßigen Teil deiner
+Abhängig von Eurer Anrufungs-Fähigkeit könnt Ihr einen mäßigen Teil Eurer
 Lebenspunkte heilen. Grob gesagt heilt die Größere Heilung dreimal so viel wie
 die Geringere Heilung bei etwas höheren Kosten an Frömmigkeit.
 %%%%
 Depart the Abyss ability
 
-Verlasse den Abgrund, um an den Ort zurückzukehren, von dem du kamst.
+Verlasse den Abgrund, um an den Ort zurückzukehren, von dem Ihr kamt.
 %%%%
 Banish ability
 
@@ -311,50 +312,50 @@ Versuche, ein Monster in den Abgrund zu verbannen.
 %%%%
 Corrupt ability
 
-Verderbe die aktuelle Ebene indem du die Kräfte des Abgrundes entfesselst.
+Verderbe die aktuelle Ebene indem Ihr die Kräfte des Abgrundes entfesselt.
 Dieses wird das Aussehen der Ebene extrem ändern und Dämonen vom Abrund
 hineinholen welche darauf aus sind Zerstörung zu verursachen. Das funktioniert
 nicht auf Ebenen die schon verdorben wurden oder sich im Abgrund befinden.
 %%%%
 Enter the Abyss ability
 
-Versetz dich augenblicklich in das Reich von Lugonu... die Hälfte deiner
+Versetz Euch augenblicklich in das Reich von Lugonu... die Hälfte Eurer
 maximalen Lebens- und Magiepunkte sind dafür permanente Kosten. Nur die
-Bemühung diese Fähigkeit zu benutzen wird deine Lebens- und Magiepunkte
+Bemühung diese Fähigkeit zu benutzen wird Eure Lebens- und Magiepunkte
 verbrauchen.
 %%%%
 Triple Draw ability
 
-Ziehe drei Karten von einem Deck in deinem Inventar und siehe sie dir an, dann
-entscheide welche du behalten und welche zwei du abwerfen willst.
+Ziehe drei Karten von einem Deck in Eurem Inventar und siehe sie Euch an, dann
+entscheide welche Ihr behalten und welche zwei Ihr abwerfen wollt.
 %%%%
 Deal Four ability
 
 Teilt vier Karten von einem unbezeichneten Deck, in der Zeit die es
 normalerweise bräuchte eine Karte zu ziehen, aus. Der Rest von dem Deck geht
-verloren. Wenn das Deck nicht genügen Karten enthalten sollte gibt Nemelex dir
-eine extra Karte, jedoch wirst du sie nicht mögen.
+verloren. Wenn das Deck nicht genügen Karten enthalten sollte gibt Nemelex Euch
+eine extra Karte, jedoch werdet Ihr sie nicht mögen.
 %%%%
 Stack Five ability
 
-Ziehe fünf Karten von einem unbezeichnetem Deck in deinem Inventar, dabei geht
-der Rest verloren. Schau dir die Karten an und sortiere sie in die Reihenfolge
-welche du möchtest. Anschließend kannst du die Karten in der Reihenfolge ziehen
-wie du es gewählt hast.
+Ziehe fünf Karten von einem unbezeichnetem Deck in Eurem Inventar, dabei geht
+der Rest verloren. Schau Euch die Karten an und sortiere sie in die Reihenfolge
+welche Ihr möchtet. Anschließend könnt Ihr die Karten in der Reihenfolge ziehen
+wie Ihr es gewählt habt.
 %%%%
 Smiting ability
 
-Erschlage einen Gegner in deinem Sichtbereich. Es benötig keinen geraden Weg,
+Erschlage einen Gegner in Eurem Sichtbereich. Es benötig keinen geraden Weg,
 sondern es reicht den Gegner zu sehen.
 %%%%
 Recall Orcish Followers ability
 
-Rufen Sie Ihre orkischen Anhänger von überall her im Kerker zu Ihren
+Rufe Eure orkischen Anhänger von überall her im Kerker zu Euren
 unmittelbaren Umgebungen zurück.
 %%%%
 Stop Recall ability
 
-Hören Sie auf, Ihre Anhänger zurückzurufen.
+Hör auf, Eure Anhänger zurückzurufen.
 %%%%
 Sunlight ability
 
@@ -366,18 +367,18 @@ Verliesboden zum Vorschein bringen.
 %%%%
 Rain ability
 
-Lasse Regen um dich herum fallen, was den Verliesboden in seichtes Wasser
+Lasse Regen um Euch herum fallen, was den Verliesboden in seichtes Wasser
 verwandelt und seichtes Wasser in tiefes Wasser. Dies ist geeignet um Pflanzen
 und Pilze in einem Bereich wachsen zu lassen der nicht bewässert ist.
 %%%%
 Reproduction ability
 
-Erschaffe riesige Sporen aus den Leichen in deiner Sichtlinie. Die Sporen
-werden explodieren und dir oder deinen Feinden Schaden zufügen.
+Erschaffe riesige Sporen aus den Leichen in Eurer Sichtlinie. Die Sporen
+werden explodieren und Euch oder Euren Feinden Schaden zufügen.
 %%%%
 Evolution ability
 
-Verwandeln Sie Pflanzen und Pilze in stärkere Arten. Aufrüstung von Pilzen
+Verwandle Pflanzen und Pilze in stärkere Arten. Aufrüstung von Pilzen
 verlangt Gläubigkeit, während die Aufrüstung von Werken Frucht verlangt.
 Beförderte Werke gewinnen einen Bonus, um Genauigkeit anzugreifen, die zur
 Beschwörungssachkenntnis des Benutzers proportional ist, und Pflanzen werden
@@ -385,20 +386,20 @@ mit größerer Wahrscheinlichkeit Säure an höheren Beschwörungen spucken.
 %%%%
 Bend Time ability
 
-Versuche, jeden um dich herum zu verlangsamen. Erfahrung mit Beten macht es
+Versuche, jeden um Euch herum zu verlangsamen. Erfahrung mit Beten macht es
 schwerer, sich dem Zauber zu widerstehen.
 %%%%
 Temporal Distortion ability
 
-Verzerre den Fluss der Zeit um dich herum, wodurch Monster relativ zu dir in
+Verzerre den Fluss der Zeit um Euch herum, wodurch Monster relativ zu Euch in
 der Zeit anhalten.
 %%%%
 Step From Time ability
 
-Entferne dich selbst aus dem Fluss der Zeit. Dinge um dich herum nehmen ihren
+Entferne Euch selbst aus dem Fluss der Zeit. Dinge um Euch herum nehmen ihren
 üblichen Gang, Monster gehen weiter, verderbliche Dinge werden verfaulen und
-Pflanzen weiter wachsen. Nachdem etwas Zeit vergangen ist wirst du im gleichen
-Zustand zurückkehren so wie du sie verlassen hast.
+Pflanzen weiter wachsen. Nachdem etwas Zeit vergangen ist werdet Ihr im gleichen
+Zustand zurückkehren so wie Ihr sie verlassen habt.
 %%%%
 Request Jelly ability
 
@@ -407,7 +408,7 @@ einsaugt.
 %%%%
 Slimify ability
 
-Bedecke deine getragene Waffe oder deine Faust mit Schleim, welche das nächste
+Bedecke Eure getragene Waffe oder Eure Faust mit Schleim, welche das nächste
 lebende oder untote Monster bei einem Treffer in Schleim verwandelt.
 %%%%
 Cure Bad Mutation ability
@@ -416,18 +417,18 @@ Entferne eine zufällig gewählte schlechte Mutation.
 %%%%
 Renounce Religion ability
 
-Gebe deinen Glauben auf. Damit verlässt dein Charakter seinen Gott (und
+Gebe Euren Glauben auf. Damit verlässt Euer Charakter seinen Gott (und
 verärgert diesen Gott normalerweise noch).
 %%%%
 Convert to Beogh ability
 
-Schwöre Beogh deine Treue, dem Gott der Höhlen Orks. Dieser Gott verlangt, dass
+Schwöre Beogh Eure Treue, dem Gott der Höhlen Orks. Dieser Gott verlangt, dass
 alle Nicht-Gläubigen sterben müssen, aber neue Gläubige müssen geschont und in
 die Gemeinschaft aufgenommen werden. Vorsicht! Für Orks, die nicht gesehen
-haben dass Sie konvertierten, sind sie eventuell noch feindlich bis Sie Ihren
-Ruf aufgebaut haben!
+haben dass Ihr konvertiertet, sind sie eventuell noch feindlich bis Ihr Euren 
+Ruf aufgebaut habt!
 
-Alle anderen Götter hassen Beogh, und nehmen Sie Fahnenfluch nicht auf die
+Alle anderen Götter hassen Beogh, und nehmen Fahnenfluch nicht auf die
 leichte Schulter.
 %%%%
 Make oklob sapling ability
@@ -445,7 +446,7 @@ Lässt eine Pflanze an der gewählten Position wachsen.
 %%%%
 Remove Curse ability
 
-Hebt alle Flüche auf deiner Ausrüstung auf.
+Hebt alle Flüche auf Eurer Ausrüstung auf.
 %%%%
 Make burning bush ability
 
@@ -454,11 +455,11 @@ Feuer zu schießen und unsichtbare Monster zu sehen.
 %%%%
 Make altar ability
 
-Erschaffe einen Altar eines ausgesuchten Gottes an deiner Position.
+Erschaffe einen Altar eines ausgesuchten Gottes an Eurer Position.
 %%%%
 Make grenades ability
 
-Rufe eine Anzahl explosiver riesiger Sporen um dich herum hervor.
+Rufe eine Anzahl explosiver riesiger Sporen um Euch herum hervor.
 %%%%
 Make oklob plant ability
 
@@ -479,7 +480,7 @@ Erschaffe eine Speer-Falle auf der gewählten Position.
 %%%%
 Make alarm trap ability
 
-Erschaffe eine Alarm-Falle an der gewählten Position um dich von der
+Erschaffe eine Alarm-Falle an der gewählten Position um Euch von der
 Anwesenheit von Monstern zu warnen.
 %%%%
 Make mushroom circle ability
@@ -505,7 +506,7 @@ Führe einen kontrollierten Teleport aus.
 %%%%
 Make water ability
 
-Erschaffe einen Teich aus seichtem Wasser auf deinem Standpunkt.
+Erschaffe einen Teich aus seichtem Wasser auf Eurem Standpunkt.
 %%%%
 Make lightning spire ability
 
@@ -519,7 +520,7 @@ Dämonen zu beschwören.
 %%%%
 Make bazaar ability
 
-Erschaffe auf deiner Position ein Portal zu einem Basar.
+Erschaffe auf Eurer Position ein Portal zu einem Basar.
 %%%%
 Acquire gold ability
 
@@ -531,7 +532,7 @@ Lässt einen Kreis an Oklob-Pflanzen an der gewählten Position wachsen.
 %%%%
 Sage ability
 
-Lasse etwas von deiner gesammelten Erfahrung in eine Fähigkeit fließen, um
+Lasse etwas von Eurer gesammelten Erfahrung in eine Fähigkeit fließen, um
 diese schneller als normal zu trainieren.
 %%%%
 Acquirement ability
@@ -545,5 +546,5 @@ Erschaffe eine Klingen-Falle an der gewählten Position.
 Make curse skull ability
 
 Erschaffe einen Unheil-Schädel mit der Fähigkeit Untote an einen Zielort zu
-beschwören, zu den Kosten von nekromantischem Rückschlag auf dich.
+beschwören, zu den Kosten von nekromantischem Rückschlag auf Euch.
 %%%%

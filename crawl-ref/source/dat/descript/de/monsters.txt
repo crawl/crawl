@@ -11,7 +11,7 @@ __cap-N_suffix
 %%%%
 __cap-T_suffix
 
-Du spürst einen Klumpen im inneren deines Magens.
+Ihr spürt einen Klumpen im inneren Eures Magens.
 %%%%
 Aizul
 
@@ -52,7 +52,7 @@ Crazy Yiuf
 
 Ein verwelkter alter gnoll mit einem langen Silberbart, einen quarterstaff
 ausübend und einen Umhang tragend. Er sieht wie eine Zahl von der Mythologie
-aus! Warten Sie, wird sein Bart an seinen Ohren mit Haken festgehalten?
+aus! Warte Mal, wird sein Bart an seinen Ohren mit Haken festgehalten?
 %%%%
 Dispater
 
@@ -69,20 +69,8 @@ Hass auf irgendetwas gefüllt, was eine Form halten kann.
 %%%%
 Donald
 
-{{
-    local descript = "Ein Abenteurer gerade wie Sie, versuchend, die Kugel " ..
-                     "zu finden."
-
-    if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
-        descript = descript .. " Unlike you, and d"
-    else
-        descript = descript .. " D"
-    end
-
-        descript = descript .. "espite his hatred of it, he takes to water " ..
-                               "like a fowl."
-        return descript
-}}
+Ein Abenteurer wie Ihr, versuchend, die Kugel zu finden.
+Obwohl er es hasst, nimmt er das Wasser an wie ein Federvieh.
 %%%%
 Dowan
 
@@ -121,7 +109,7 @@ Ansichten zu Ehre.
 Frederick
 
 Ein anmütiger Kampfmagier, der ein golden eingefasstes Monokel trägt und einen
-würdigen Gegner sucht. Du wirst ihm wahrscheinlich nicht gerecht werden.
+würdigen Gegner sucht. Ihr werdet ihm wahrscheinlich nicht gerecht werden.
 %%%%
 Gloorx Vloq
 
@@ -161,7 +149,7 @@ Purgy
 
 Ein ungewöhnlich dünner Troll.
 
-Du spürst einen Klumpen im inneren deines Magens.
+Ihr spürt einen Klumpen im inneren Eures Magens.
 %%%%
 Rupert
 

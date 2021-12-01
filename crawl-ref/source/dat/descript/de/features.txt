@@ -51,11 +51,11 @@ Ein ausgetrockneter Brunnen, der schon bessere Tage gesehen hat.
 %%%%
 A gate leading back out of this place
 
-Dieses Tor führt dich zurück zum Verlies.
+Dieses Tor führt Euch zurück zum Verlies.
 %%%%
 A gate leading to another region of Pandemonium
 
-Dieses Tor führt dich zu noch einer weiteren Region des Pandemoniums. Es wird
+Dieses Tor führt Euch zu noch einer weiteren Region des Pandemoniums. Es wird
 immer mehr geben.
 %%%%
 A gateway back into the Dungeon
@@ -127,9 +127,9 @@ Ein Altar für Beogh, unverkennbar grob gehauen von orkischen Kunsthandwerkern.
 A runed door
 
 Eine Tür, überzogen von Runen. Es sieht so aus, als befinde sich dahinter etwas
-besonderes – vielleicht Gefahr, vielleicht Schätze. Du kannst die Runen brechen
-und sie wie jede andere Tür öffnen (zum Beispiel, indem du dagegen läufst oder
-‚O‘ drückst).
+besonderes – vielleicht Gefahr, vielleicht Schätze. Ihr könnt die Runen brechen
+und sie wie jede andere Tür öffnen (zum Beispiel, indem Ihr dagegen lauft oder
+‚O‘ drückt).
 %%%%
 A sealed door
 
@@ -148,7 +148,7 @@ ist. So lange der Zauber besteht, scheint es unmöglich hindurch zu gelangen.
 %%%%
 A shaft
 
-Ein tiefes Loch. Wer weiß, wo du herauskommen könntest, wenn du herunterfällst?
+Ein tiefes Loch. Wer weiß, wo Ihr herauskommen könntet, wenn Ihr herunterfallt?
 %%%%
 A shattered altar of Ashenzari
 
@@ -167,15 +167,14 @@ A shop
 
 Ein Geschäft im Verlies, jenseits der Sicht der Oberwelt, besetzt von einem
 verschwiegenen, zurückgezogenen Ladenhüter, mit dem man nicht verhandeln kann,
-der nichts zurückerstattet und an nichts interessiert ist, was du ihm anbieten
-könntest. Manche Geschäfte verkaufen antike Gegenstände unbekannter Herkunft,
+der nichts zurückerstattet und an nichts interessiert ist, was Ihr ihm anbieten
+könntet. Manche Geschäfte verkaufen antike Gegenstände unbekannter Herkunft,
 und geben wenig Auskunft über die Qualität oder die Art ihrer Güter.
 %%%%
 A slime covered rock wall
 
-Diese Felsen-Wand wird mit dem hellgrünen Schlamm dick angestrichen. Ewwwwww.
-Es ist säurig zur Berührung, scheinend, mehr kaustisch das tiefere zu wachsen,
-Sie reisen.
+Diese Felsen-Wand wird mit hellgrünem Schlamm dick angestrichen.
+Er ist säurig zur Berührung.
 %%%%
 A snail-covered altar of Cheibriados
 
@@ -235,7 +234,7 @@ wenn sie nur darüber fliegt!
 A translucent rock wall
 
 Das Mineral, aus dem dieser Fels besteht, ist so durchsichtig wie
-hochqualitatives Glas. Ob es natürlich oder magisch ist, kannst du nicht
+hochqualitatives Glas. Ob es natürlich oder magisch ist, könnt Ihr nicht
 herausfinden.
 %%%%
 A translucent stone wall
@@ -259,8 +258,8 @@ wachsen können.
 %%%%
 A viscous altar of Jiyva
 
-Ein schleimiger, stets veränderlicher Altar für Jiyva. Du bist dir nicht
-sicher, woraus er gemacht ist, und du willst es auch eigentlich gar nicht
+Ein schleimiger, stets veränderlicher Altar für Jiyva. Ihr seid Euch nicht
+sicher, woraus er gemacht ist, und Ihr wollt es auch eigentlich gar nicht
 wissen.
 %%%%
 A wall of the weird stuff which makes up Pandemonium
@@ -310,7 +309,7 @@ erstaunlich scharfen Kanten.
 %%%%
 An open door
 
-Eine Holztür. Wenn du neben ihr stehst kannst du sie {{
+Eine Holztür. Wenn Ihr neben ihr stehst könnt Ihr sie {{
     if crawl.is_tiles() then
         return "entweder mit einem STRG-Links-Klick auf die Tür oder mit " ..
                "der Eingabe von 'C' schließen."
@@ -325,7 +324,7 @@ Ein Idol des Orkgottes Beogh. Seine Zerstörung würde Beogh zornig machen.
 %%%%
 An unnaturally hard rock wall
 
-Du kannst diese Wand auf keine Weise beeinflussen.
+Ihr könnt diese Wand auf keine Weise beeinflussen.
 %%%%
 Some lava
 
@@ -339,7 +338,7 @@ lästig – das kann gefährlich sein, wird aber nie direkt zum Tod führen.
 %%%%
 The open sea
 
-Nichts außer endlosem Wind und Wellen, und kein Leuchtturm in Sicht. Du würdest
+Nichts außer endlosem Wind und Wellen, und kein Leuchtturm in Sicht. Ihr würdet
 sehr schnell hoffnungslos verloren sein – riskiere es lieber nicht.
 %%%%
 An autumnal tree
@@ -478,13 +477,13 @@ Dieser schwebende Ball verbreitet ein schimmerndes Licht.
 %%%%
 An open sea?
 
-Obwohl es jedem dir bekannten physischen und geometrischen Gesetz widerspricht,
-weißt du, dass sich in diesem winzigen Raum unzweifelhaft ein schrecklich
+Obwohl es jedem Euch bekannten physischen und geometrischen Gesetz widerspricht,
+weißt Ihr, dass sich in diesem winzigen Raum unzweifelhaft ein schrecklich
 großes Meer unmöglicher Größe befindet.
 
 Entweder das, oder es ist eine blaue Wand.
 %%%%
 An exit from the tutorial
 
-Dies ist ein Weg aus dem Verlies, der dir das Beenden des Tutorials ermöglicht.
+Dies ist ein Weg aus dem Verlies, der Euch das Beenden des Tutorials ermöglicht.
 %%%%

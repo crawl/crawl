@@ -3,22 +3,22 @@ welcome
 
 <white>Willkommen bei Dungeon Crawl!</white>
 
-Deine Aufgabe ist es einen <w>{{ return you.race() }} {{ return you.class()
+Eure Aufgabe ist es einen <w>{{ return you.race() }} {{ return you.class()
 }}</w> sicher durch die Tiefen der Höhlen zu leiten und dabei den sagenhaften
-Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei deinen ersten
+Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei Euren ersten
 Versuchen sollte entdecken das Hauptziel sein. Versuche so tief wie möglich zu
-erforschen, aber nehm dich in Acht : der Tod schleicht um jede Ecke!
+erforschen, aber nehm Euch in Acht : der Tod schleicht um jede Ecke!
 
 Für jetzt merke die die folgenden Tasten und Funktionen:
  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — zeigt die Gegenstände und die
 Befehle
  <input>$cmd[CMD_SAVE_GAME]</input>  — speichert das Spiel um später
 fortzufahren (aber bedenke das der Tod permanent ist)
- <input>$cmd[CMD_LOOK_AROUND]</input>  — untersucht etwas in deiner Nähe
+ <input>$cmd[CMD_LOOK_AROUND]</input>  — untersucht etwas in Eurer Nähe
 
-Der Hinweismodus wird dir helfen Crawl zu spielen ohne irgendwelche Handbücher
-zu lesen. Falls du es noch nicht versucht hast möchtest du vielleicht die
-Einführung ausprobieren. Und wenn es dich dann noch interessiert bekommst du
+Der Hinweismodus wird Euch helfen Crawl zu spielen ohne irgendwelche Handbücher
+zu lesen. Falls Ihr es noch nicht versucht habt möchtet Ihr vielleicht die
+Einführung ausprobieren. Und wenn es Euch dann noch interessiert bekommt Ihr
 noch mehr Informationen in den folgenden doks / Verzeichnissen (die man auch
 alle im Spiel selbst lesen kann):
  <lightblue>quickstart.txt</lightblue>     — eine Kurzeinführung in Crawl.
@@ -31,39 +31,39 @@ Viel Spass beim Crawlen!
 %%%%
 death
 
-Mein Beileid! Der frühzeitige Tod deines Charakters ist bedauerlich, aber ein
-übliches Ereignis in Crawl. Doch lass dich beruhigen, mit Fleiß und einiger
-Spielerfahrung wird dein Charakter länger überdauern.
+Mein Beileid! Der frühzeitige Tod Eures Charakters ist bedauerlich, aber ein
+übliches Ereignis in Crawl. Doch lass Euch beruhigen, mit Fleiß und einiger
+Spielerfahrung wird Euer Charakter länger überdauern.
 
-Eventuell kann der folgende Ratschlag deine Spielweise verbessern:
+Eventuell kann der folgende Ratschlag Eure Spielweise verbessern:
 %%%%
 death conjurer melee
 
-Angriffszauber sollten als Zauberer deine Hauptwaffe sein. Wirke deine
-Zaubersprüche so oft es geht. Denke daran zu rasten wenn deine Magie niedrig
+Angriffszauber sollten als Zauberer Eure Hauptwaffe sein. Wirke Eure
+Zaubersprüche so oft es geht. Denke daran zu rasten wenn Eure Magie niedrig
 ist.
 %%%%
 death berserker unberserked
 
-Vergiss nicht die Berserkerwut zu nutzen wenn du gegen besonders schwierige
-Gegner kämpfst. Das ist zwar riskant, macht dich aber schneller und kräftiger.
+Vergesst nicht die Berserkerwut zu nutzen wenn Ihr gegen besonders schwierige
+Gegner kämpft. Das ist zwar riskant, macht Euch aber schneller und kräftiger.
 %%%%
 death ranger melee
 
-Dein Bogen mit Pfeilen ist unheimlich stark gegen entfernte Monster. Denke dran
+Euer Bogen mit Pfeilen ist unheimlich stark gegen entfernte Monster. Denke dran
 alle Pfeile die in den Höhlen liegen mitzunehmen.
 %%%%
 death random 0
 
-Erwäge immer die Nutzung von Geschossen, Stäben und Zaubersprüchen bevor du
-dich einem Monster im Nahkampf stellst.
+Erwäge immer die Nutzung von Geschossen, Stäben und Zaubersprüchen bevor Ihr
+Euch einem Monster im Nahkampf stellt.
 %%%%
 death random 1
 
-Lerne wann du vor Dingen davonlaufen musst die du nicht bewältigen kannst — das
+Lerne wann Ihr vor Dingen davonlaufen müsst die Ihr nicht bewältigen könnt — das
 ist sehr wichtig! Es ist oft sehr weise einen teilweise gefährlichen Level zu
 überspringen. Doch übertreibe es dabei nicht, denn die Monster werden immer
-Mächtiger je tiefer du vordringst.
+Mächtiger je tiefer Ihr vordringt.
 %%%%
 death random 2
 
@@ -72,25 +72,25 @@ erforschtem und von Monstern bereinigtem Bereich. In Crawl sind suchen und
 rasten ein und dasselbe. Um eine Runde zu suchen drücke <input>s</input>,
 <input>.</input>, <input>Entf</input> oder <input>Tastenfeld-5</input>. Beim
 Druck auf <input>5</input> oder <input>Shift-und-Tastenfeld-5</input> <tiles>,
-oder <input>klick in den Statistik bereich</input></tiles> lässt dich einen
-längeren Zeitraum rasten (nach 100 Runden oder wenn du vollständig geheilt bist
+oder <input>klick in den Statistik bereich</input></tiles> lässt Euch einen
+längeren Zeitraum rasten (nach 100 Runden oder wenn Ihr vollständig geheilt seid
 ist die Rast zu Ende).
 %%%%
 death random 3
 
-Denke daran von dir gefundene Schriftrollen, Tränke und Stäbe zu benutzen. Du
-wirst sehr häufig nicht alles mit der Schriftrolle identifizieren können. Lerne
-zu improvisieren : finde es durch ausprobieren heraus.
+Denke daran von Euch gefundene Schriftrollen, Tränke und Stäbe zu benutzen. Ihr
+werdet sehr häufig nicht alles mit der Schriftrolle identifizieren können. Lernt
+zu improvisieren : findet es durch ausprobieren heraus.
 %%%%
 death random 5
 
-Bekämpfe nie mehr als ein Monster wenn du es verhindern kannst. Ziehe dich
-immer in einen Gang zurück damit sie gezwungen sind dich einzeln zu bekämpfen.
+Bekämpft nie mehr als ein Monster wenn Ihr es vermeiden könnt. Ziehe Euch
+immer in einen Gang zurück damit sie gezwungen sind Euch einzeln zu bekämpfen.
 %%%%
 finished
 
-Glückwunsch! Du hast bis zum Ende des Hilfe-Modus überlebt — sicherlich willst
-du die anderen auch versuchen. Bitte beachte das der Kommando Hilfe-Schirm
+Glückwunsch! Ihr habt bis zum Ende des Hilfe-Modus überlebt — sicherlich wollt
+Ihr die anderen auch versuchen. Bitte beachte das der Kommando Hilfe-Schirm
 (<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) von nun an ganz anders aussehen
 wird. Hier noch ein letzter Spieltipp:
 %%%%
@@ -98,7 +98,7 @@ finished explored
 
 Herumwandern und die Level erforschen wird einfacher man Auto-Erforschen
 (<input>$cmd[CMD_EXPLORE]</input>) benutzt. Crawl bewegt und hebt automatisch
-interessante Gegenstände für dich auf.<tiles>
+interessante Gegenstände für Euch auf.<tiles>
 
 Auto-Erforschen lässt sich auch mit einem <input>links-klick</input> bei
 gehaltener <input>Strg</input>-Taste starten.</tiles>
@@ -113,20 +113,20 @@ wird ein Druck auf <input>$cmd[CMD_INTERLEVEL_TRAVEL] Eingabe</input> or
 %%%%
 finished stashes
 
-Du kannst unter allen Gegenstände in den Höhlen mit dem Befehl
+Ihr könnt unter allen Gegenstände in den Höhlen mit dem Befehl
 <input>$cmd[CMD_SEARCH_STASHES]</input> suchen. Zum Beispiel,
 <input>$cmd[CMD_SEARCH_STASHES]</input> <w>„dolch“</w> listet alle dolche auf.
-Dann kannst du zu einem der Punkte reisen. Es ist genauso möglich Worte wie
+Dann könnt Ihr zu einem der Punkte reisen. Es ist genauso möglich Worte wie
 <w>„Shop“</w> oder <w>„Altar“</w> einzugeben.
 %%%%
 finished random 0
 
-Das Spiel legt automatisch ein Logbuch für deine Charaktere an. Benutze
+Das Spiel legt automatisch ein Logbuch für Eure Charaktere an. Benutze
 <input>$cmd[CMD_DISPLAY_COMMANDS]:</input> um es zu lesen. Mit dem
-<input>$cmd[CMD_MAKE_NOTE]</input> Befehl kannst du selbst Notizen hinzufügen.
-Sobald dein Charakter umkommt werden zwei Archiv Dateien im Ordner
-<w>morgue/</w> angelegt. Die Eine mit der Endung .txt enthält eine Kopie deines
-Logbuches. Währen des Spiels kannst du mit
+<input>$cmd[CMD_MAKE_NOTE]</input> Befehl könnt Ihr selbst Notizen hinzufügen.
+Sobald Euer Charakter umkommt werden zwei Archiv Dateien im Ordner
+<w>morgue/</w> angelegt. Die Eine mit der Endung .txt enthält eine Kopie Eures
+Logbuches. Währen des Spiels könnt Ihr mit
 <input>$cmd[CMD_CHARACTER_DUMP]</input> ein Dump-File bzw. eine Momentaufnahme
 erzeugen.
 %%%%
@@ -156,53 +156,53 @@ Um Rat und Hilfe fragst du am besten andere Crawl-Spieler auf dem
 %%%%
 dissection reminder
 
-Wenn du sie nicht verspeisen möchtest, dann überlege dir die Leichen mit einem
-Gebet als Opfer an {{ return you.god() }} anzubieten. Genauso kannst du
-jederzeit die Leichen, welche du auf dem Bodenabschnitt deines Inventarfeldes
-siehst, kleinhacken indem du mit der <input>linken Maustaste</input> drauf
-klickst. Immer wenn du einen Leichnam im Hilfe-Modus siehst kannst du diese
+Wenn Ihr sie nicht verspeisen möchtet, dann überlege Euch die Leichen mit einem
+Gebet als Opfer an {{ return you.god() }} anzubieten. Genauso könnt Ihr
+jederzeit die Leichen, welche Ihr auf dem Bodenabschnitt Eures Inventarfeldes
+seht, kleinhacken indem Ihr mit der <input>linken Maustaste</input> drauf
+klickt. Immer wenn Ihr einen Leichnam im Hilfe-Modus sehst könnt Ihr diese
 Information erneut lesen.
 %%%%
 HINT_CONVERT Xom
 
-Du bist gerade zur Anbetung von <w>Xom</w> konvertiert. Du kannst Xom bei Laune
-halten indem du absolut nichts tust damit dieser Gott sich an dir langweilt.
+Ihr seid gerade zur Anbetung von <w>Xom</w> konvertiert. Ihr könnt Xom bei Laune
+halten indem Ihr absolut nichts tut damit dieser Gott sich an Euch langweilt.
 
-Wenn du Xom bei Laune hältst dann behandelt er dich wie ein Spielzeug, er wird
-dir zufällig helfen oder schaden, ganz zu seinem Vergnügen; andererseits wird
-er dich wie ein missbilligtes Spielzeug behandeln.
+Wenn Ihr Xom bei Laune haltet dann behandelt er Euch wie ein Spielzeug, er wird
+Euch zufällig helfen oder schaden, ganz zu seinem Vergnügen; andererseits wird
+er Euch wie ein missbilligtes Spielzeug behandeln.
 %%%%
 HINT_CONVERT
 
-Du bist gerade zur Anbetung von <w>{{ return you.god() }}</w> konvertiert.
-Deine Frömmigkeit (Göttliche Gefälligkeit) wird mit der Zeit schrittweise
-abnehmen, und sobald sie verlischt wird dich {{ return you.god()
-}} verbannen und bestrafen. Allerdings kannst du das verhindern und sogar genug
-Frömmigkeit erhalten um Macht und göttliche Gaben zu erlangen indem du Dinge
-tust die {{ return you.god() }} gefallen. Aber keine Panik: du beginnst mit
+Ihr seid gerade zur Anbetung von <w>{{ return you.god() }}</w> konvertiert.
+Eure Frömmigkeit (Göttliche Gefälligkeit) wird mit der Zeit schrittweise
+abnehmen, und sobald sie verlischt wird Euch {{ return you.god()
+}} verbannen und bestrafen. Allerdings könnt Ihr das verhindern und sogar genug
+Frömmigkeit erhalten um Macht und göttliche Gaben zu erlangen indem Ihr Dinge
+tut die {{ return you.god() }} gefallen. Aber keine Panik: Ihr beginnt mit
 einem angemessenen Betrag an Frömmigkeit, somit ist jegliche Gefahr der
 Verbannung erstmal weit entfernt.
 
-Die Vorlieben und Abneigungen deines Gottes sowie deinen aktuellen Stand und
+Die Vorlieben und Abneigungen Eures Gottes sowie Euren aktuellen Stand und
 göttlichen Fähigkeiten mit drücken von <input>^</input><tiles> überprüfen
 (alternativ drücke <input>Shift</input> zusammen mit
-<input>rechts-klick</input> auf deine Figur)</tiles>.
+<input>rechts-klick</input> auf Eure Figur)</tiles>.
 %%%%
 HINT_SEEN_FIRST_OBJECT
 
-<console>$1 </console> ist ein Gegenstand. Wenn du dort hin gehst und
-<input>g</input> oder <input>,</input> drückst wirst du es
+<console>$1 </console> ist ein Gegenstand. Wenn Ihr dort hin geht und
+<input>g</input> oder <input>,</input> drückt werdet Ihr es
 aufsammeln.<console>Normalerweise werden Gegenstände mit Symbolen wie
-<w>%?!"=()[</w> angezeigt. </console><tiles>Du kannst Gegenstände auch
-aufsammeln indem du die <input>linke Maustaste</input> drückst wenn du auf dem
-Feld über ihm stehst. </tiles> Außerdem werden einige Dinge normalerweise
+<w>%?!"=()[</w> angezeigt. </console><tiles>Ihr könnt Gegenstände auch
+aufsammeln indem Ihr die <input>linke Maustaste</input> drückt als Ihr auf dem
+Feld über ihm steht. </tiles> Außerdem werden einige Dinge normalerweise
 automatisch aufgesammelt.<tiles>(Auf dem Feld werden diese dann grün
 umrandet.)</tiles>
 
-Sobald es in deinem Inventar ist kannst du es wieder fallen lassen indem du
+Sobald es in Eurem Inventar ist könnt Ihr es wieder fallen lassen indem Ihr
 <tiles> die <input>linke Maustaste</input> mit gehaltener <input>Shift
-Taste</input> klickst. Immer wenn du einen <input>Rechtsklick</input> auf einen
-Gegenstand mit</tiles><console><input>d</input>. Jederzeit wenn du ein Objekt
-in deinem <input>i</input>nventar</console> ansiehst, kannst du alles über
+Taste</input> klickt. Immer wenn Ihr einen <input>Rechtsklick</input> auf einen
+Gegenstand mit</tiles><console><input>d</input>. Jederzeit wenn Ihr ein Objekt
+in Eurem <input>i</input>nventar</console> anseht, könnt Ihr alles über
 seine Eigenschaften und die Beschreibung dazu lesen.
 %%%%

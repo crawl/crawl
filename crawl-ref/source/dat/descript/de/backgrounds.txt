@@ -1,34 +1,32 @@
 %%%%
 Abyssal Knight
 
-verehren Lugonu und wurden aus der Abyssos ausgesandt, um Verderbtheit und
+Abgrundritter verehren Lugonu und wurden aus dem Abgrund geschickt, um Verderbtheit und
 Chaos zu verbreiten.
 %%%%
 Air Elementalist
 
-kennen den Spruch Stromschlag. Später erlaubt ihnen das breitgefächerte Buch
+Luftmagier kennen den Spruch Stromschlag. Später erlaubt ihnen das breitgefächerte Buch
 der Winde, im Überlebenskampf zu bestehen.
 %%%%
 Arcane Marksman
 
-sind für den Fernkampf bewaffnet und verwenden Magie, um ihre Feinde anfälliger
-für derartige Angriffe zu machen.
+Arkane Scharfschützen sind für den Fernkampf bewaffnet und verwenden Magie, um ihre 
+Feinde anfälliger für derartige Angriffe zu machen.
 %%%%
 Artificer
 
-beginnen mit einigen magischen Gerätschaften und können mit solchen Werkzeugen
+Artificer beginnen mit einigen magischen Gerätschaften und können mit solchen Werkzeugen
 kompetent umgehen.
 %%%%
 Assassin
 
-Assassinen sind die Heimlichkeit in Person, bereit um ahnungslose Gegner zu
-erstechen. Nicht nur Mantel und Degen, sie tragen fiese Curare Nadeln für ihr
-Blasrohr.
+Assassinen tragen giftige Wurfpfeile und auch fiese Curare-Wurfpfeile.
 %%%%
 Berserker
 
 Berserker glauben an Trog, den Magiehassenden Gott der Raserei. Nicht viel kann
-einen tobenden Berserker anfangs aufhalten, außer die eigene Hybris
+einen tobenden Berserker anfangs aufhalten, außer die eigene Hybris.
 %%%%
 Chaos Knight
 
@@ -37,17 +35,12 @@ wechselnden Gefühlen des Gottes ausgesetzt.
 %%%%
 Conjurer
 
-Elementbeschwörer konfrontieren Probleme mit schädlichen Zaubersprüchen aus dem
+Beschwörer konfrontieren Probleme mit schädlichen Zaubersprüchen aus dem
 Buch der Elementbeschwörungen.
-%%%%
-Death Knight
-
-Todesritter sind Nahkämpfer, die die Untoten im Namen von Yredelemnul, dem
-Dunklen, kontrollieren.
 %%%%
 Earth Elementalist
 
-Erd-Elementalisten kennen den Sandstrahl-Zauber und tragen Steine mit sich, um
+Erdmagier kennen den Sandstrahl-Zauber und tragen Steine mit sich, um
 die Kraft des Zaubers zu erhöhen. Mehr Erdzaubersprüche befinden sich in ihrem
 Buch der Geomantie.
 %%%%
@@ -56,9 +49,14 @@ Enchanter
 Verzauberer benutzen Zaubersprüche, um sich selbst im Kampf zu stärken oder
 Gegner kampfunfähig zu machen. Sie starten zusätzlich mit guten Wurfpfeilen.
 %%%%
+Fighter
+
+Kämpfer sind mit Rüstung und Schild ausgrüstet, und auch mit einer Waffe ihrer 
+Wahl und einem Trank der Macht.
+%%%%
 Fire Elementalist
 
-Feuer-Elementalisten starten mit dem Buch der Flammen und kennen den
+Feuermagier starten mit dem Buch der Flammen und kennen den
 Flammenzungen-Zauber. Die anderen Zauber in ihrem Buch befassen sich ebenfalls
 mit Zerstörung.
 %%%%
@@ -67,11 +65,6 @@ Gladiator
 Gladiatoren sind bereit für die Arena mit leichter Rüstung, Schild, Netzen und
 einer Waffe ihrer Wahl.
 %%%%
-Healer
-
-Heiler sind Anhänger Elyvilons, bereit sich selbst und andere zu heilen. Solche
-Heilung kann Bestien und Barbaren befrieden, was Erfahrung einbringt.
-%%%%
 Hunter
 
 Jäger können aus der Ferne angreifen ohne auf nervtötende Magie zurückgreifen
@@ -79,7 +72,7 @@ zu müssen.
 %%%%
 Ice Elementalist
 
-Eis-Elementalisten starten mit dem Buch des Frosts und dem Gefrierzauber. Die
+Eismagier starten mit dem Buch des Frosts und dem Gefrierzauber. Die
 anderen Zauber in ihrem Buch sind recht vielseitig.
 %%%%
 Monk
@@ -94,13 +87,11 @@ mit dem Schmerzfluch.
 %%%%
 Summoner
 
-Boten fangen mit dem Buch von Callings an und sind im Stande sich zu werfen
-Fordern Kleines Säugetier vom Anfang Auf.
+Herbeirufer können am Anfang kleine Säugetiere herbeirufen, und haben andere Herbeirufung-Zauberspruche in ihrer Sammlung.
 %%%%
 Transmuter
 
-Verwandler ändern ihre Form in die eines Monsters. Sie können außerdem Stäbe in
-Schlangen verwandeln.
+Verwandler ändern ihre Form in die eines Monsters.
 %%%%
 Venom Mage
 
@@ -113,7 +104,7 @@ Wanderer beginnen mit zufälliger Ausrüstung und Fertigkeiten.
 %%%%
 Warper
 
-Teleporter starten mit einer Waffe ihrer Wahl und einer
+Warper starten mit einer Waffe ihrer Wahl und einer
 Kurzstreckenteleport-Schriftrolle(?). Sie können Zaubersprüche aus dem Buch der
 räumlichen Bewegungen lernen.
 %%%%

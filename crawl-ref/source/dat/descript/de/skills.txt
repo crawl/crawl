@@ -1,8 +1,8 @@
 %%%%
 Fighting
 
-Erfahrung mit Kämpfen erhöht deine Trefferwahrscheinlichkeit und deinen Schaden
-im Nahkampf; außerdem erhöht sie deine maximalen Lebenspunkte.
+Erfahrung mit Kämpfen erhöht Eure Trefferwahrscheinlichkeit und Euren Schaden
+im Nahkampf; außerdem erhöht sie Eure maximalen Lebenspunkte.
 %%%%
 Throwing
 
@@ -21,35 +21,35 @@ Zaubern verursacht.
 %%%%
 Dodging
 
-Erfahrung mit Ausweichen beeinflusst deine Chance, einer Attacke auszuweichen —
+Erfahrung mit Ausweichen beeinflusst Eure Chance, einer Attacke auszuweichen —
 sei es Nahkampf, Fernkampf oder Magie. Manchen Arten von Attacken kann man
 allerdings nicht ausweichen, zum Beispiel Verzauberungen (dafür ist
 Magiewiderstand wichtig) und Explosionen.
 %%%%
 Stabbing
 
-Erfahrung mit Erdolchen erhöht deine Wahrscheinlichkeit, großen Schaden zu
-verursachen, wenn du einen abgelenkten oder hilflosen Gegner angreifst
-(normalerweise mit einem Kurzschwert). Je erfahrener du mit Erdolchen bist,
+Erfahrung mit Erdolchen erhöht Eure Wahrscheinlichkeit, großen Schaden zu
+verursachen, wenn Ihr einen abgelenkten oder hilflosen Gegner angreift
+(normalerweise mit einem Kurzschwert). Je erfahrener Ihr mit Erdolchen seid,
 desto mehr Schaden verursacht ein solcher Angriff. Manche Götter missbilligen
 diese Angriffsart.
 %%%%
 Shields
 
-Erfahrung mit Schutzschildern hilft dir, Nahkampfangriffe oder Projektile
+Erfahrung mit Schutzschildern hilft Euch, Nahkampfangriffe oder Projektile
 (magisch und nicht-magisch) mit einem ausgerüsteten (oder magischen)
 Schutzschuild abzuwehren. Manche Angriffe, beispielsweise durchdringende
 Pfeile, können nicht abgewehrt werden.
 %%%%
 Traps
 
-Erfahrung mit Fallen macht dich aufmerksamer auf deine Umgebung und lässt dich
+Erfahrung mit Fallen macht Euch aufmerksamer auf Eure Umgebung und lässt Euch
 Fallen schneller erkennen und unschädlich machen.
 %%%%
 Unarmed Combat
 
-Erfahrung mit waffenlosem Kampf erhöht deine Trefferwahrscheinlichkeit, deinen
-Schaden und deine Geschwindigkeit im Nahkampf, wenn du unbewaffnet bist. Ein
+Erfahrung mit waffenlosem Kampf erhöht Eure Trefferwahrscheinlichkeit, Euren
+Schaden und Eure Geschwindigkeit im Nahkampf, wenn Ihr unbewaffnet seid. Ein
 erfahrener waffenloser Kämpfer kann außerdem eine freie Hand nutzen, um während
 eines bewaffneten Kampfes zusätzliche Schläge auszuteilen.
 %%%%
