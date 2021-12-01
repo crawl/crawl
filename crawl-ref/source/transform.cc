@@ -999,7 +999,9 @@ public:
      */
     string get_uc_attack_name(string /*default_name*/) const override
     {
-        return "Storm " + storm_parts(true);
+        // there's special casing in base_hand_name to get "fists"
+        string hand = you.base_hand_name(true, true);
+        return make_stringf("Storm %s", hand.c_str());
     }
 };
 
@@ -1433,18 +1435,6 @@ string blade_parts(bool terse)
         str = "front " + str;
     else if (!terse && you.arm_count() > 2)
         str = "main " + str; // Op have four main tentacles
-
-    return str;
-}
-
-string storm_parts(bool)
-{
-    if (you.has_mutation(MUT_PAWS, false))
-        str = "paws";
-    else if (you.arm_count() > 2)
-        str = "tentacles"; // Op have four main tentacles
-    else
-        str = "fists";
 
     return str;
 }
