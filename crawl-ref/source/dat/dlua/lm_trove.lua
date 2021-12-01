@@ -339,15 +339,9 @@ function TroveMarker:item_name(do_grammar)
     else
       s = s .. " " .. item.base_type .. " of"
     end
-  elseif item.base_type == "wand" then
-    s = s .. " wand of"
   end
 
   s = s .. " " .. item.sub_type
-
-  if item.base_type == "wand" then
-    s = s .. " (" .. item.plus1 .. ")"
-  end
 
   if item.base_type == "armour" or item.base_type == "weapon" then
     if item.ego_type then
