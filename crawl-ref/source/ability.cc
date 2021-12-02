@@ -87,34 +87,6 @@
 #include "view.h"
 #include "wiz-dgn.h"
 
-enum class abflag
-{
-    none                = 0x00000000,
-    breath              = 0x00000001, // ability uses DUR_BREATH_WEAPON
-    delay               = 0x00000002, // ability has its own delay
-    pain                = 0x00000004, // ability must hurt player (ie torment)
-    piety               = 0x00000008, // ability has its own piety cost
-    exhaustion          = 0x00000010, // fails if you.exhausted
-    instant             = 0x00000020, // doesn't take time to use
-    conf_ok             = 0x00000040, // can use even if confused
-    variable_mp         = 0x00000080, // costs a variable amount of MP
-    curse               = 0x00000100, // Destroys a cursed item
-    max_hp_drain        = 0x00000200, // drains max hit points
-    gold                = 0x00000400, // costs gold
-    sacrifice           = 0x00000800, // sacrifice (Ru)
-    hostile             = 0x00001000, // failure summons a hostile (Makhleb)
-    berserk_ok          = 0x00002000, // can use even if berserk
-    card                = 0x00004000, // deck drawing (Nemelex)
-    quiet_fail          = 0x00008000, // no message on failure
-
-    // TODO: these are currently unused, but targeted abilities should be
-    // converted to use these along with the shared ability targeting code.
-    dir_or_target       = 0x00010000, // use DIR_NONE targeting
-    target              = 0x00020000, // use DIR_TARGET targeting
-    targeting_mask      = abflag::dir_or_target | abflag::target,
-};
-DEF_BITFIELD(ability_flags, abflag);
-
 struct generic_cost
 {
     int base, add, rolls;
@@ -290,7 +262,8 @@ struct ability_def
 };
 
 static int _lookup_ability_slot(ability_type abil);
-static spret _do_ability(const ability_def& abil, bool fail, dist *target);
+static spret _do_ability(const ability_def& abil, bool fail, dist *target,
+                         bolt beam);
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 
@@ -731,6 +704,12 @@ int ability_range(ability_type abil)
     }
 
     return min((int)you.current_vision, range);
+}
+
+ability_flags get_ability_flags(ability_type ability)
+{
+    const ability_def& abil = get_ability_def(ability);
+    return abil.flags;
 }
 
 /**
@@ -1956,7 +1935,7 @@ public:
 
     bool targeted() override
     {
-        return testbits(get_ability_def(abil).flags, abflag::targeting_mask);
+        return !!(get_ability_flags(abil) & abflag::targeting_mask);
     }
 private:
     ability_type abil;
@@ -2070,6 +2049,11 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     return nullptr;
 }
 
+bool ability_has_targeter(ability_type abil)
+{
+    return bool(find_ability_targeter(abil));
+}
+
 bool activate_talent(const talent& tal, dist *target)
 {
     const ability_def& abil = get_ability_def(tal.which);
@@ -2103,7 +2087,7 @@ bool activate_talent(const talent& tal, dist *target)
         args.hitfunc = hitfunc.get();
         args.restricts = testbits(abil.flags, abflag::target) ? DIR_TARGET
                                                               : DIR_NONE;
-        args.mode = TARG_ANY; // TODO: add abflags for targeting mode
+        args.mode = TARG_HOSTILE;
         args.range = range;
         args.needs_path = !testbits(abil.flags, abflag::target);
         args.top_prompt = make_stringf("%s: <w>%s</w>",
@@ -2125,10 +2109,18 @@ bool activate_talent(const talent& tal, dist *target)
             args.show_floor_desc = true;
             args.show_boring_feats = false;
         }
-        args.self = confirm_prompt_type::none; // TODO: add abflags for prompts
+        args.self = testbits(abil.flags, abflag::not_self) ?
+            confirm_prompt_type::cancel : confirm_prompt_type::none;
 
         if (!spell_direction(*target, beam, &args))
         {
+            crawl_state.zero_turns_taken();
+            return false;
+        }
+
+        if (testbits(abil.flags, abflag::not_self) && target->isMe())
+        {
+            canned_msg(MSG_UNTHINKING_ACT);
             crawl_state.zero_turns_taken();
             return false;
         }
@@ -2136,7 +2128,7 @@ bool activate_talent(const talent& tal, dist *target)
 
     bool fail = random2avg(100, 3) < tal.fail;
 
-    const spret ability_result = _do_ability(abil, fail, target);
+    const spret ability_result = _do_ability(abil, fail, target, beam);
     switch (ability_result)
     {
         case spret::success:
@@ -2363,10 +2355,9 @@ static bool _evoke_staff_of_olgreb(dist *target)
  * @returns Whether the spell succeeded (spret::success), failed (spret::fail),
  *  or was canceled (spret::abort). Never returns spret::none.
  */
-static spret _do_ability(const ability_def& abil, bool fail, dist *target)
+static spret _do_ability(const ability_def& abil, bool fail, dist *target,
+                         bolt beam)
 {
-    bolt beam;
-
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)

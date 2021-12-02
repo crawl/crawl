@@ -1367,12 +1367,15 @@ namespace quiver
             return palentonga_charge_possible(quiet, false);
         }
 
-        if (get_dist_to_nearest_monster() <= ability_range(abil))
-            return true;
-        if (!quiet)
-            mpr("You can't see any hostile targets that would be affected.");
-        return false;
+        if (get_dist_to_nearest_monster() > ability_range(abil)
+            && (get_ability_flags(abil) & abflag::targeting_mask))
+
+        {
+            if (!quiet)
+                mpr("You can't see any hostile targets in range.");
+            return false;
         }
+        return true;
     }
 
     bool is_autofight_combat_ability(ability_type ability)
@@ -1440,6 +1443,11 @@ namespace quiver
             return check_ability_possible(ability, true);
         }
 
+        bool is_dynamic_targeted() const
+        {
+            return !!(get_ability_flags(ability) & abflag::targeting_mask);
+        }
+
         bool is_targeted() const override
         {
             // hard-coded list of abilities that have a targeter
@@ -1486,7 +1494,8 @@ namespace quiver
 #endif
                 return true;
             default:
-                return bool(find_ability_targeter(ability));
+                return is_dynamic_targeted()
+                       || ability_has_targeter(ability);
             }
         }
 
