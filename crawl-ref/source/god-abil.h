@@ -124,7 +124,6 @@ bool kiku_gift_capstone_spells();
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
-int fedhas_rain(const coord_def &target);
 
 void lugonu_bend_space();
 
