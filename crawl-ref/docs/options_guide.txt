@@ -1553,7 +1553,6 @@ default_show_all_skills = false
         even untrained and untrainable ones. As usual, '*' toggles back to
         trainable mode. This option does not affect hints and tutorial games.
 
-
 monster_list_colour = friendly:green, neutral:brown, good_neutral:brown, strict_neutral:brown
 monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lightred
         (List option)
