@@ -207,10 +207,10 @@ capricious. There is nothing a follower can do to influence Xom's mood.
 Yredelemnul
 
 Yredelemnul the Dark is a god worshipped by those who seek powers over death
-and the undead. Followers can raise legions of servile undead, and gain a
+and the soul. Followers can reap legions of servile undead, and gain a
 number of other useful powers with which to make better use of the souls of
-the living. Yredelemnul especially favours those who would destroy holy
-creatures, which oppose the realm of undeath.
+the living. Yredelemnul especially favours those who would surround themselves
+with a bounty of collected souls.
 %%%%
 Zin
 
@@ -466,13 +466,12 @@ playthings...
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives followers the power to raise skeletons and corpses, to recall
-undead followers to their vicinity, and to heal by draining the life force of
-living creatures. With sufficient piety, Yredelemnul can be called upon to
-mirror a follower's injuries onto attackers. Eventually, followers will gain
-the power to bind a monster's soul, and make it fight for them instead.
-Yredelemnul will sporadically gift followers increasingly powerful undead
-servants.
+Yredelemnul gives followers the power to reap corpses and spectres from living
+and ensouled beings, to recall undead followers to their vicinity, and to heal
+by draining the life force of living creatures. Followers can also exchange
+members of their undead collection for Yredelemnul's more powerful servants.
+Eventually, followers will gain the power to fully bind a monster's soul, and
+make it fight for them instead.
 %%%%
 Zin powers
 
