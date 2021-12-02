@@ -13459,6 +13459,15 @@ Es gibt keine Gegenstände, die hier abgeholt werden können.
 There are several objects here.
 Hier gibt es mehrere Objekte.
 %%%%
+Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)
+
+%%%%
+" (gained %d)"
+
+%%%%
+You now have %d gold piece%s%s.
+
+%%%%
 %s burns to shimmering ash in your grasp.
 
 %%%%
@@ -33276,6 +33285,24 @@ Abyss-Geschwindigkeit auf%i setzen.
 ##################
 # wiz-dump.cc
 ##################
+%%%%
+"{(, "
+
+%%%%
+"}), "
+
+%%%%
+({
+
+%%%%
+Unknown species: %s
+
+%%%%
+Unknown job: %s
+
+%%%%
+unknown item: %s
+
 %%%%
 "Which dump file? "
 

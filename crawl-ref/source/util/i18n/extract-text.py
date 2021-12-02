@@ -2,7 +2,52 @@ import glob
 import re
 import sys
 
-def strip_comment(line):
+# strip (potentially) multi-line comments (i.e. /*...*/)
+def strip_multiline_comments(data):
+    result = ""
+    escaped = False
+    in_string = False
+    in_char = False
+    in_multiline_comment = False
+    in_line_comment = False
+    prev = '\0'
+    length = len(data)
+    for i in range(length):
+        ch = data[i]
+
+        if ch == '\\' and not escaped:
+            escaped = True
+        else:
+            escaped = False
+
+        if in_string:
+            in_string = (ch != '"' or escaped)
+        elif in_char:
+            in_char = (ch != "'" or escaped)
+        elif in_multiline_comment:
+            in_multiline_comment = (ch != "/" or prev != '*')
+            prev = ch
+            continue
+        elif in_line_comment:
+            in_line_comment = (ch != "\n" and ch != "\r")
+        elif ch == '"':
+            in_string = True
+        elif ch == "'":
+            in_char = True
+        elif ch == '/' and i+1 < length:
+            if data[i+1] == "*":
+                in_multiline_comment = True
+            elif data[i+1] == "/":
+                in_line_comment = True
+
+        if not in_multiline_comment:
+            result += ch
+        prev = ch
+
+    return result
+
+# strip single-line comments (i.e. //...)
+def strip_line_comment(line):
     escaped = False
     in_string = False
     for i in range(len(line)):
@@ -19,13 +64,14 @@ def strip_comment(line):
             if i > 0 and line[i-1] == '/':
                 # comment
                 return line[0:i-1]
-    # no comment - return while line
+    # no comment - return whole line
     return line
 
-def is_debug_if(line):
-    return re.match(r'\s*#\s*ifdef .*DEBUG', line) or \
-       re.match(r'\s*#\s*ifdef .*VERBOSE', line) or \
-       re.match(r'\s*#\s*if +defined *\(DEBUG', line)
+# start of conditionally compiled section that can be skipped (debug or obsolete code)?
+def is_skippable_if(line):
+    return re.match(r'^\s*#\s*ifdef .*DEBUG', line) or \
+       re.match(r'^\s*#\s*ifdef .*VERBOSE', line) or \
+       re.match(r'^\s*#\s*if +defined *\(DEBUG', line)
 
 # strip out stuff that is excluded by #ifdef's, etc.
 def strip_uncompiled(lines):
@@ -39,16 +85,16 @@ def strip_uncompiled(lines):
             if re.match('^\s*#\s*if', line):
                 ifs.append(line)
                 # skip parts that are only included in DEBUG build
-                if is_debug_if(line):
+                if is_skippable_if(line):
                     skip = True
                     continue
             elif re.match(r'\s*#\s*else', line):
-                if is_debug_if(ifs[-1]):
+                if is_skippable_if(ifs[-1]):
                     skip = False
                     continue
             elif re.match(r'\s*#\s*endif', line):
                 if_line = ifs.pop()
-                if is_debug_if(if_line):
+                if is_skippable_if(if_line):
                     skip = False
                     continue
 
@@ -147,9 +193,7 @@ for filename in files:
     with open(filename) as infile:
         data = infile.read()
 
-        # remove (potentially) multi-line comments
-        # NOTE: *? is a non-greedy match, and DOTALL allows dot to match newlines
-        data = re.sub(r'/\*.*?\*/', '', data, 0, re.DOTALL)
+        data = strip_multiline_comments(data)
 
         lines_raw = strip_uncompiled(data.splitlines())
         lines = []
@@ -163,7 +207,7 @@ for filename in files:
 
             # remove comment
             if '//' in line and not re.search('// *localise', line):
-                line = strip_comment(line)
+                line = strip_line_comment(line)
 
             line = line.strip()
             if line == '':
