@@ -1568,7 +1568,7 @@ default_show_all_skills = false
         even untrained and untrainable ones. As usual, '*' toggles back to
         trainable mode. This option does not affect hints and tutorial games.
 
-monster_list_colour = friendly:green, neutral:brown, good_neutral:brown, strict_neutral:brown
+monster_list_colour = friendly:green, neutral:brown, good_neutral:brown
 monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lightred
         (List option)
         Change the colours used to display monster names in the monster list.
@@ -1578,7 +1578,6 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lig
              friendly       - green
              neutral        - brown ("indifferent")
              good_neutral   - brown ("peaceful")
-             strict_neutral - brown ("fellow slime")
 
            Threat levels for hostile monsters:
              trivial        - darkgrey
@@ -1588,10 +1587,6 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lig
 
          Removing a key with -= currently has the same effect as setting its
          colour to lightgrey.
-
-         Note that, for TSO worshippers, monsters whom it is forbidden to
-         attack will appear in the "evil colour" (magenta by default)
-         regardless of this option.
 
 view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
