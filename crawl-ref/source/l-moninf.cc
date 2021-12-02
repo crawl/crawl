@@ -492,12 +492,14 @@ LUAFN(moninf_get_is)
 }
 
 /*** Get the monster's flags.
- * Returns all flags set for the moster, as a list of flag names.
+ * Returns all flags set for the monster, as a list of flag names.
  * @treturn array
  * @function flags
  */
 LUAFN(moninf_get_flags)
 {
+    if (mi_flags.empty())
+        _init_mi_flags();
     MONINF(ls, 1, mi);
     lua_newtable(ls);
     int index = 0;
