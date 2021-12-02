@@ -249,8 +249,9 @@ Invocations skill. If the monster dies while still marked, its soul will become
 yours.
 
 The enslaved soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. However, only one soul can be enslaved
-at a time.
+as well as some of its innate healing. The enslaved soul will follow its captor
+through stairs and come when recalled from a different level. However, only one
+soul can be enslaved at a time.
 %%%%
 # Okawaru
 Heroism ability
