@@ -288,6 +288,8 @@ for filename in files:
                     continue
                 if 'show_specific_help' in line:
                     continue
+                if 'print_hint' in line:
+                    continue
                 if re.search('^[^"]*property[A-Za-z_]* *\(', line):
                     continue
                 if re.match(r'^\s*key[A-Za-z_]*\.[A-Za-z_]*\(', line):
@@ -371,6 +373,8 @@ for filename in files:
                         if re.search(r'\bsend_dump_info\s*\(', last):
                             continue
                         if re.search(r'\bmons_add_blame\s*\(', last):
+                            continue
+                        if re.search(r'\breplace[a-zA-Z_]*\s*\(', last):
                             continue
 
                 # simple_god/monster_message may contain an implied %s

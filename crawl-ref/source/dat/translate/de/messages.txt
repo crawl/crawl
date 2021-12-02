@@ -140,6 +140,15 @@ Ihr sprengt {acc}%s
 # ability.cc
 ##################
 %%%%
+Word of Chaos
+
+%%%%
+Receive Forbidden Knowledge
+
+%%%%
+Shatter the Chains
+
+%%%%
 no special abilities
 
 %%%%
@@ -147,6 +156,9 @@ no special abilities
 
 %%%%
 (%d in deck)
+
+%%%%
+"(Boost: "
 
 %%%%
 %d MP
@@ -185,7 +197,7 @@ Instant
 Max HP drain
 
 %%%%
-Scroll of remove curse
+Cursed item
 
 %%%%
 %d Gold
@@ -230,7 +242,7 @@ variable
 free
 
 %%%%
-One scroll of remove curse
+One cursed item
 
 %%%%
 nothing.
@@ -261,6 +273,12 @@ This ability will temporarily drain your maximum hit points when used.
 
 %%%%
 This ability has a chance of reducing your maximum magic capacity when used.
+
+%%%%
+\nIf you bind an item with this curse Ashenzari will enhance the following skills:\n
+
+%%%%
+.\n
 
 %%%%
 If you make this sacrifice, your powers granted by Ru will become stronger in proportion to the value of the sacrifice, and you may gain new powers as well.
@@ -311,8 +329,8 @@ You cannot do that while %s.
 Your legs are too worn out to hop.
 Ihre Beine sind zu abgenutzt, zu hüpfen.
 %%%%
-Stopping flight right now would be fatal!
-Fliegen jetzt halten wäre tödlich!
+You aren't ready to blinkbolt again yet.
+
 %%%%
 Turning back right now would cause you to burn!
 Wenn Ihr jetzt unverwandeln würdet, würdet Ihr brennen!
@@ -337,6 +355,15 @@ Ihr könnt {acc}%s nicht anrufen, während Ihr nicht atmen könnt.
 %%%%
 You cannot call out to %s while silenced.
 Ihr könnt {acc}%s nicht anrufen, während Ihr schweigend seid.
+%%%%
+You cannot speak a word of chaos while %s.
+
+%%%%
+unable to breathe
+
+%%%%
+silenced
+
 %%%%
 That deck is empty!
 Der Stapel ist leer!
@@ -365,9 +392,6 @@ Ihr seid nicht im Abgrund!
 You're already here!
 Ihr seid schon hier!
 %%%%
-You have nothing more to learn.
-Ihr habt nichts mehr zu lernen.
-%%%%
 You don't have enough innate magic capacity.
 Ihr habt nicht genug angeborene magische Kapazität.
 %%%%
@@ -376,9 +400,6 @@ Ihr seid bereits unsichtbar!
 %%%%
 You don't have enough experience to sacrifice.
 Ihr habt nicht genügend Erfahrung, zu opfern.
-%%%%
-You have no magic power.
-Ihr habt keine magische Energie.
 %%%%
 %s is still trapped in memory!
 %s wird immer noch im Gedächtnis gefangen!
@@ -455,20 +476,8 @@ You exhale a blast of scalding steam.
 You exhale a blast of noxious fumes.
 
 %%%%
-You feel very comfortable in the air.
-Ihr fühlt Euch sehr wohl in der Luft.
-%%%%
-You feel less transparent.
-Ihr fühlt Euch weniger transparent.
-%%%%
-You feel more buoyant.
-Ihr fühlt mehreren Auftrieb.
-%%%%
 The folds of your robe billow into a mighty storm.
 Die Falten Eures Gewandes bauschen sich zu einem mächtigen Sturm.
-%%%%
-You are no longer teleporting projectiles to their destination.
-Ihr teleportiert keine Projektile mehr an ihr Ziel.
 %%%%
 You clear your throat and prepare to recite.
 Ihr räuspert Euch und bereitet Euch auf das Rezitieren vor.
@@ -560,15 +569,6 @@ Ihr hört auf, Eure Verbündeten rückzurufen.
 A thick mucus forms on %s.
 Auf {dat}%s bildet sich ein dicker Schleim.
 %%%%
-You need a scroll of remove curse to do this.
-Ihr braucht eine Schriftrolle des Unverfluchtens, um das zu tun.
-%%%%
-You extend your astral sight.
-Ihr erweitert Eure astrale Sicht.
-%%%%
-You gain astral sight.
-Ihr erlangt astrale Sicht.
-%%%%
 You're too exhausted to draw out your power.
 Ihr seid zu erschöpft, Eure Kraft herauszuholen.
 %%%%
@@ -580,9 +580,6 @@ Ihr seid zu erschöpft, einen Kraftsprung zu machen.
 %%%%
 You're too exhausted to unleash your apocalyptic power.
 Ihr seid zu erschöpft, Eure apokalyptische Kraft freizusetzen.
-%%%%
-You feel a buildup of energy.
-Ihr fühlt einen Energieaufbau.
 %%%%
 You are already lashing out.
 Ihr schlagt schon aus.
@@ -817,18 +814,6 @@ You collide with %s!
 %s collides with %s!
 
 %%%%
-Fedhas protects your plants from harm.
-
-%%%%
-Fedhas protects your plant from harm.
-
-%%%%
-Fedhas protects some plants from harm.
-
-%%%%
-Fedhas protects a plant from harm.
-
-%%%%
 You slam into %s!
 
 %%%%
@@ -1008,9 +993,6 @@ Results file already open
 # art-func.h
 ##################
 %%%%
-You are hated by all, and nothing answers your call!
-
-%%%%
 The sceptre summons one of its servants.
 Das Zepter ruft einen seiner Diener herbei.
 %%%%
@@ -1019,6 +1001,9 @@ Ihr fühlt Euch nicht so gut dabei ...
 %%%%
 The air shimmers briefly.
 Die Luft schimmert kurz.
+%%%%
+You are hated by all, and nothing will answer your call!
+
 %%%%
 The sword of Cerebov burns away your fire resistance.
 Das Schwert von Cerebov verbrennt Euren Feuerwiderstand.
@@ -1071,20 +1056,26 @@ Screaming Sword
 You feel pruney.
 Ihr fühlt Euch geschrumpft.
 %%%%
-A terribly searing pain shoots up your arm!
-Ein schrecklich brennender Schmerz schießt Euren Arm hoch!
+You feel lightning quick.
+
 %%%%
-You feel bloodthirsty!
-Ihr fühlt Euch blutrünstig!
+You feel rather sluggish.
+Ihr fühlt Euch ziemlich träge.
+%%%%
+A terrible, searing pain shoots up your arm!
+
+%%%%
+You feel the exhaustion of battles past.
+
 %%%%
 You feel less violent.
 Ihr fühlt Euch weniger gewalttätig.
 %%%%
-You feel a strange hunger, and smell blood in the air...
-
-%%%%
 You feel strangely empty.
 Ihr fühlt Euch seltsam leer.
+%%%%
+You feel a strange hunger, and smell blood in the air...
+
 %%%%
 The mace of Variability scintillates.
 Der Streitkolben der Variabilität funkelt.
@@ -1353,11 +1344,11 @@ Eure Abstimmung auf Heiltränke nimmt zu.
 Your attunement to healing potions decreases.
 Eure Abstimmung auf Heiltränke nimmt ab.
 %%%%
-You feel a powerful hunger.
-Ihr fühlt einen starken Hunger.
-%%%%
 You feel very empty.
 Ihr fühlt Euch sehr leer.
+%%%%
+You feel a powerful hunger.
+Ihr fühlt einen starken Hunger.
 %%%%
 %s liquefies into a cloud of blood!
 
@@ -1389,6 +1380,12 @@ Your ring of flames gutters out.
 Your spectral weapon disappears as you unwield.
 
 %%%%
+The staff is unable to connect with your magical essence.
+
+%%%%
+You feel ready to stride towards your foes.
+
+%%%%
 
 ##################
 # artefact.cc
@@ -1418,7 +1415,7 @@ Brand
 Hungry
 
 %%%%
-*Contam
+Contam
 
 %%%%
 Acc
@@ -1454,7 +1451,7 @@ nupgr
 *Corrode
 
 %%%%
-*Drain
+Drain
 
 %%%%
 *Slow
@@ -1485,6 +1482,9 @@ g.spiked club
 
 %%%%
 triple xbow
+
+%%%%
+of Ashenzari
 
 %%%%
 
@@ -1610,6 +1610,9 @@ Some of your followers decide to abandon you.
 %s engulfs you
 %s hüllt Euch ein
 %%%%
+%s grips you
+
+%%%%
 %s skewers you
 %s spießt Euch auf
 %%%%
@@ -1627,6 +1630,9 @@ Some of your followers decide to abandon you.
 %%%%
 %s engulfs %s
 %s hüllt {acc}%s ein
+%%%%
+%s grips %s
+
 %%%%
 %s skewers %s
 %s spießt {acc}%s auf
@@ -1673,10 +1679,13 @@ Some weird stuff shatters into small pieces.
 Some rock shatters into small pieces.
 
 %%%%
-The tree smoulders and burns.
+The tree burns like a torch!
 
 %%%%
-The tree burns like a torch!
+The mangrove smoulders and burns.
+
+%%%%
+The demonic tree burns, releasing chaotic energy.
 
 %%%%
 You smell burning wood.
@@ -1721,6 +1730,9 @@ Your line of fire to the targeted %s is blocked by %s. Continue anyway?
 %s is electrocuted!
 
 %%%%
+concentrated venom
+
+%%%%
 %s partially resists.
 
 %%%%
@@ -1728,9 +1740,6 @@ Your line of fire to the targeted %s is blocked by %s. Continue anyway?
 
 %%%%
 %s writhes in agony!
-
-%%%%
-%s gets badly buffeted.
 
 %%%%
 %s looks frightened!
@@ -1775,6 +1784,18 @@ The silver sears %s!
 %s life force is offered up.
 %s Lebenskraft wird angeboten.
 %%%%
+%s %s life force from %s%s
+
+%%%%
+draw
+
+%%%%
+%s is healed by the life force!
+
+%%%%
+You feel life coursing into your body%s
+
+%%%%
 The wave splashes down.
 Die Welle spritzt runter.
 %%%%
@@ -1814,6 +1835,9 @@ Something tries to affect you, but you are unaffected.
 Something tries to affect you, but you resist.
 
 %%%%
+Your will lashes out at %s%s
+
+%%%%
 Strange energies course through your body.
 Seltsame Energien fließen durch Euren Körper.
 %%%%
@@ -1835,10 +1859,10 @@ Ihr krümmt Euch!
 by dispel undead
 
 %%%%
-You are blasted!
-Ihr seid gesprengt!
+Your mind is blasted!
+
 %%%%
-disintegration bolt
+mindburst bolt
 
 %%%%
 You feel a momentary urge to oink.
@@ -1940,6 +1964,9 @@ Die Stacheldornen stecken in Eurem Körper.
 The acid splashes onto %s!
 Die Säure spritzt auf%s!
 %%%%
+%s is paralysed.
+
+%%%%
 You are blown backwards by the freezing wind.
 
 %%%%
@@ -2000,8 +2027,11 @@ Euer dämonischer Wächter vermeidet Euren Angriff.
 %s is dispelled
 %s wird%s zerstre
 %%%%
-%s is blasted
-%s ist gesprengt
+%s mind is blasted
+
+%%%%
+%s minds are blasted
+
 %%%%
 %s looks drowsy...
 
@@ -2024,7 +2054,7 @@ Euer dämonischer Wächter vermeidet Euren Angriff.
 %s falls asleep!
 
 %%%%
-%s is enslaved!
+%s is charmed!
 
 %%%%
 %s is charmed.
@@ -2055,6 +2085,9 @@ Euer dämonischer Wächter vermeidet Euren Angriff.
 
 %%%%
 %s is infested!
+
+%%%%
+%s seems to grow toxic.
 
 %%%%
 The sphere of damnation explodes!
@@ -2159,6 +2192,12 @@ fragments
 magma
 
 %%%%
+thunder
+
+%%%%
+stunning bolt
+
+%%%%
 devastation
 
 %%%%
@@ -2169,9 +2208,6 @@ healing
 
 %%%%
 malmutation
-
-%%%%
-enslave
 
 %%%%
 banishment
@@ -2240,9 +2276,6 @@ drain magic
 tukima's dance
 
 %%%%
-bouncy tracer
-
-%%%%
 breath of the dead
 
 %%%%
@@ -2256,6 +2289,12 @@ infestation
 
 %%%%
 vile clutch
+
+%%%%
+vampiric draining
+
+%%%%
+concentrate venom
 
 %%%%
 
@@ -2454,7 +2493,7 @@ mutagenic fog
 magical condensation
 
 %%%%
-raging winds
+whirling frost
 
 %%%%
 sparse dust
@@ -2464,9 +2503,6 @@ spectral mist
 
 %%%%
 acidic fog
-
-%%%%
-thunder
 
 %%%%
 a thunderstorm
@@ -2481,7 +2517,7 @@ salt
 golden dust
 
 %%%%
-smoldering embers
+smouldering embers
 
 %%%%
 embers
@@ -2501,9 +2537,6 @@ Ihr erstickt die Flamme.
 %%%%
 The fire ignites!
 Das Feuer entzündet sich!
-%%%%
-Lightning arcs down from a storm cloud!
-Blitzbögen von einer Gewitterwolke!
 %%%%
 The rain has left you waist-deep in water!
 Der Regen hat Euch hüfthoch im Wasser gelassen!
@@ -2691,6 +2724,12 @@ You smell decay.
 Your bandages flutter.
 Eure Bandagen flattern.
 %%%%
+Your %s prickle%s.
+
+%%%%
+s
+
+%%%%
 You hear strange and distant voices.
 
 %%%%
@@ -2778,6 +2817,9 @@ the Pentagram
 
 %%%%
 the Dance
+
+%%%%
+the Swarm
 
 %%%%
 the Rangers
@@ -2882,6 +2924,9 @@ You deal a card...
 You draw a card...
 
 %%%%
+You can't repeat Stack Five.
+
+%%%%
 Replace your current stack?
 
 %%%%
@@ -2901,6 +2946,9 @@ Select two cards to swap them:
 
 %%%%
 Press <w>?</w> for the card descriptions or <w>Enter</w> to accept.
+
+%%%%
+You can't repeat Triple Draw.
 
 %%%%
 There's fewer than three cards, still triple draw?
@@ -2935,12 +2983,6 @@ Really abort (and waste the card)?
 %%%%
 You begin rapidly regenerating health and magic.
 Ihr fangt an, Gesundheit und Magie schnell zu regenerieren.
-%%%%
-You begin rapidly regenerating.
-Ihr beginnt Euch schnell zu regenerieren.
-%%%%
-You begin rapidly regenerating magic.
-Ihr fangt an, Magie schnell zu regenerieren.
 %%%%
 You somehow manage to escape divine attention...
 Ihr schafft es irgendwie, der göttlichen Aufmerksamkeit zu entkommen ...
@@ -3028,9 +3070,6 @@ Ihr meditiert weiter auf dem Felsen.
 You continue digging a shaft.
 Ihr grabt weiter einen Schacht.
 %%%%
-You continue reading the scroll.
-Ihr liet weiter die Schriftrolle.
-%%%%
 You continue bloodletting.
 Ihr macht weiter Blutvergießen.
 %%%%
@@ -3065,12 +3104,6 @@ You stop removing your amulet.
 %%%%
 You stop removing your armour.
 
-%%%%
-Keep reading the scroll?
-
-%%%%
-You stop reading the scroll.
-Ihr hört auf, die Schriftrolle zu lesen.
 %%%%
 You stop ascending the stairs.
 Ihr hört auf die Treppe hinaufzusteigen.
@@ -3123,9 +3156,6 @@ Ihr fangt an, an der Wand zu meditieren.
 You begin to dig a shaft.
 Ihr fangt an, einen Schacht zu graben.
 %%%%
-You begin reading the scroll.
-Ihr fangt an, die Schriftrolle zu lesen.
-%%%%
 You begin bloodletting.
 Ihr fangt an Blut zu lassen.
 %%%%
@@ -3153,11 +3183,11 @@ Ihr seid mit dem Felsen fertig.
 ...and sense your way blocked. You quickly turn back.
 ... und spüre, wie Euer Weg blockiert ist. Ihr dreht Euch schnell um.
 %%%%
-Now bloodless.
-Jetzt unblutig.
+You become bloodless.
+
 %%%%
-Now alive.
-Jetzt lebt.
+You return to life.
+
 %%%%
 CLua bindings not available on this build!
 
@@ -3329,40 +3359,13 @@ A rising star in the eyes of %s.
 %s is noncommittal.
 
 %%%%
-Ashenzari won't support your skills until you bind yourself with cursed items.
+Bound item
 
 %%%%
-Weapon hand
+Curse bonuses
 
 %%%%
-Shield hand
-
-%%%%
-Jewellery
-
-%%%%
-Low
-
-%%%%
-Medium
-
-%%%%
-High
-
-%%%%
-Bound part
-
-%%%%
-Boosted skills
-
-%%%%
-Bonus
-
-%%%%
-Hands
-
-%%%%
-Magic schools
+melded
 
 %%%%
 Flail
@@ -3446,7 +3449,7 @@ Decks of power:
 stacked deck:
 
 %%%%
-Ashenzari supports the following skills because of your curses:
+Ashenzari supports the following skill groups because of your curses:
 
 %%%%
 Martial attacks:
@@ -3545,9 +3548,6 @@ You gain magic when your fellow slimes consume items.
 You can walk through plants and fire through allied plants.
 
 %%%%
-You are provided with a bounty of information.
-
-%%%%
 Cheibriados greatly slows your movement.
 
 %%%%
@@ -3588,6 +3588,9 @@ Your enemies may become distracted by gold.
 
 %%%%
 Your life essence is reduced. (-10%% HP)
+
+%%%%
+Your ancestor manifests to aid you.
 
 %%%%
 %s prevents your magic from regenerating.
@@ -3682,6 +3685,12 @@ Are you sure you want to abandon %s?
 # describe-spells.cc
 ##################
 %%%%
+silence and antimagic
+
+%%%%
+antimagic (but not silence)
+
+%%%%
 , which are affected by silence and antimagic
 , die von Stille und Antimagie betroffen wird
 %%%%
@@ -3691,35 +3700,17 @@ Are you sure you want to abandon %s?
 , which are affected by antimagic
 , die von Antimagie betroffen wird
 %%%%
-" (judging by the spells you have seen cast)"
-" (nach den Zaubersprüchen zu urteilen, die Ihr gewirkt gesehen habt)"
+This monster has mastered the following spells%s:
+
 %%%%
-" (judging by the abilities you have seen used)"
-" (nach den Fähigkeiten zu urteilen, die Ihr verwendet gesehen habt)"
+This monster has the following magical abilities%s:
+
 %%%%
-Has mastered one of the following spellbooks%s%s:
-Hat eines der folgenden Zauberbücher beherrscht%s%s:
+This monster has the following divine abilities%s:
+
 %%%%
-Has mastered the following spells%s%s:
-Hat die folgenden Zaubersprüche beherrscht%s%s:
-%%%%
-Possesses the following natural abilities%s%s:
-Besitzt die folgenden natürlichen Fähigkeiten%s%s:
-%%%%
-Possesses the following magical abilities%s%s:
-Besitzt die folgenden magischen Fähigkeiten%s%s:
-%%%%
-Possesses the following divine abilities%s%s:
-Besitzt die folgenden göttlichen Fähigkeiten%s%s:
-%%%%
-Possesses the following abilities%s%s:
-Besitzt die folgenden Fähigkeiten%s%s:
-%%%%
-Book %d:
-Buch %d:
-%%%%
-Set %d:
-Satz %d:
+This monster has the following natural abilities%s:
+
 %%%%
 (immune)
 (immun)
@@ -3727,11 +3718,11 @@ Satz %d:
 2x
 2x
 %%%%
-(%s%dd%d)
-(%s%dd%d)
+3x
+
 %%%%
-Spell
-Zauber
+(%s%dd%d)
+(%s%dd%d)
 %%%%
 Type
 Art
@@ -3804,25 +3795,28 @@ It increases damage dealt and taken.
 It allows you to eat raw meat even when not hungry.
 
 %%%%
-It increases your magic regeneration.
+It increases your rate of magic regeneration.
 
 %%%%
-It helps you evade while moving and waiting.
+It increases your evasion while moving and waiting.
 
 %%%%
 It protects your inventory from destruction.
 
 %%%%
-It causes incoming damage to be split between your health and magic.
+It causes incoming damage to be divided between your reserves of health and magic.
 
 %%%%
 It allows you to gain divine favour quickly.
 
 %%%%
-It shields you and reflects attacks.
+It reflects blocked missile attacks.
 
 %%%%
 It reduces the accuracy of all your attacks.
+
+%%%%
+:
 
 %%%%
 It affects your AC (%+d).
@@ -3840,13 +3834,10 @@ It affects your intelligence (%+d).
 It affects your dexterity (%+d).
 
 %%%%
-It affects your accuracy and damage with ranged weapons and melee attacks (%+d).
+It affects your accuracy & damage with ranged weapons and melee (%+d).
 
 %%%%
 It insulates you from electricity.
-
-%%%%
-It affects your willpower, your defense against some magical effects.
 
 %%%%
 It affects your health (%+d).
@@ -3861,7 +3852,7 @@ It lets you see invisible.
 It lets you turn invisible.
 
 %%%%
-It lets you fly.
+It grants you flight.
 
 %%%%
 It lets you blink.
@@ -3882,9 +3873,6 @@ It prevents most forms of teleportation.
 It may make you go berserk in combat.
 
 %%%%
-It curses itself when equipped.
-
-%%%%
 It protects you against confusion.
 
 %%%%
@@ -3894,10 +3882,10 @@ It causes magical contamination when unequipped.
 It protects you from missiles.
 
 %%%%
-It increases your rate of regeneration.
+It increases your rate of health regeneration.
 
 %%%%
-It provides partial protection from all sources of acid and corrosion.
+It protects you from acid and corrosion.
 
 %%%%
 It protects you from mutation.
@@ -3906,7 +3894,7 @@ It protects you from mutation.
 It may corrode you when you take damage.
 
 %%%%
-It causes draining when unequipped.
+It drains your maximum health when unequipped.
 
 %%%%
 It may slow you when you take damage.
@@ -3919,6 +3907,12 @@ It affects your SH (%+d).
 
 %%%%
 It bestows one free step when moving towards enemies.
+
+%%%%
+It increases the power of your magical spells.
+
+%%%%
+%+d
 
 %%%%
 It makes you extremely vulnerable to %s.
@@ -3939,6 +3933,18 @@ It greatly protects you from %s.
 It renders you almost immune to %s.
 
 %%%%
+%s%s It %s%s your willpower.
+
+%%%%
+"greatly "
+
+%%%%
+decreases
+
+%%%%
+increases
+
+%%%%
 It makes you much less stealthy.
 
 %%%%
@@ -3949,6 +3955,9 @@ It makes you less stealthy.
 
 %%%%
 It makes you more stealthy.
+
+%%%%
+It may have some hidden properties.
 
 %%%%
 needle trap
@@ -4338,19 +4347,25 @@ At current training (%d%%) you reach %d.%d in about %d.%d XLs.
 Firing bullets:    Base damage: %d
 
 %%%%
+Your inability to study %s prevents you from drawing on the full power of this staff in melee.
+
+%%%%
 Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f
 
 %%%%
 This weapon's minimum attack delay (%.1f) is reached at skill level %d.
 
 %%%%
+It is a one-handed weapon.
+
+%%%%
+It is a two-handed weapon.
+
+%%%%
 It is a weapon for one hand-pair.
 
 %%%%
-It is a one handed weapon.
-
-%%%%
-It is a two handed weapon.
+It is a weapon for two hand-pairs.
 
 %%%%
 It can be evoked to extend its reach.
@@ -4362,46 +4377,43 @@ It hits all enemies adjacent to the wielder, dealing less damage to those not ta
 It can be used to riposte, swiftly retaliating against a missed attack.
 
 %%%%
-It is extremely good for stabbing unaware enemies.
+It is extremely good for stabbing helpless or unaware enemies.
 
 %%%%
-It is particularly good for stabbing unaware enemies.
+It is particularly good for stabbing helpless or unaware enemies.
 
 %%%%
-It causes projectiles fired from it to burn those they strike, causing extra injury to most foes and up to half again as much damage against particularly susceptible opponents.
+Any ammunition fired from it burns those it strikes, dealing additional fire damage.
 
 %%%%
-It has been specially enchanted to burn those struck by it, causing extra injury to most foes and up to half again as much damage against particularly susceptible opponents.
+It burns those it strikes, dealing additional fire damage.
 
 %%%%
 " Big, fiery blades are also staple armaments of hydra-hunters."
 
 %%%%
-It causes projectiles fired from it to freeze those they strike, causing extra injury to most foes and up to half again as much damage against particularly susceptible opponents.
+Any ammunition fired from it freezes those it strikes, dealing additional cold damage.
 
 %%%%
-It has been specially enchanted to freeze those struck by it, causing extra injury to most foes and up to half again as much damage against particularly susceptible opponents.
-
-%%%%
-" They can also slow down cold-blooded creatures."
+It freezes those it strikes, dealing additional cold damage.
 
 %%%%
 " It can also slow down cold-blooded creatures."
 
 %%%%
-It has been blessed by the Shining One, and any projectiles fired from it cause great damage to the undead and demons.
+It has been blessed by the Shining One, and any ammunition fired from it cause great damage to the undead and demons.
 
 %%%%
 It has been blessed by the Shining One to cause great damage to the undead and demons.
 
 %%%%
-It charges the ammunition it shoots with electricity; occasionally upon a hit, such missiles may discharge and cause terrible harm.
+Any ammunition fired from it occasionally discharges a powerful burst of electricity upon striking a foe.
 
 %%%%
-Occasionally, upon striking a foe, it can discharge electrical energy and cause terrible harm.
+It occasionally discharges a powerful burst of electricity upon striking a foe.
 
 %%%%
-It poisons the ammo it fires.
+Any ammunition fired from it poisons the flesh of those it strikes.
 
 %%%%
 It poisons the flesh of those it strikes.
@@ -4410,13 +4422,13 @@ It poisons the flesh of those it strikes.
 It grants its wielder temporary protection when it strikes (+7 to AC).
 
 %%%%
-A truly terrible weapon, it drains the life of those it strikes.
+A truly terrible weapon, it drains the life of any living foe it strikes.
 
 %%%%
 Attacks with this weapon are significantly faster.
 
 %%%%
-Any projectile fired from it inflicts extra damage.
+Any ammunition fired from it inflicts extra damage upon your enemies.
 
 %%%%
 It inflicts extra damage upon your enemies.
@@ -4428,40 +4440,37 @@ Each projectile launched from it has a different, random effect.
 Each time it hits an enemy it has a different, random effect.
 
 %%%%
-It inflicts no extra harm, but heals its wielder when it wounds a living foe.
+It occasionally heals its wielder for a portion of the damage dealt when it wounds a living foe.
 
 %%%%
 In the hands of one skilled in necromantic magic, it inflicts extra damage on living creatures.
 
 %%%%
-It warps and distorts space around it. Unwielding it can cause banishment or high damage.
+It warps and distorts space around it, and may blink, banish, or inflict extra damage upon those it strikes. Unwielding it can cause banishment or high damage.
 
 %%%%
-Ammo fired by it passes through the targets it hits, potentially hitting all targets in its path until it reaches maximum range.
+Any living foe damaged by it may be reanimated upon death as a zombie friendly to the wielder, with an increasing chance as more damage is dealt.
 
 %%%%
-If a monster killed with it leaves a corpse in good enough shape, the corpse is reanimated as a zombie friendly to the killer.
+It reduces the magical energy of the wielder, and disrupts the spells and magical abilities of those it strikes. Natural abilities and divine invocations are not affected.
 
 %%%%
-It reduces the magical energy of the wielder, and disrupts the spells and magical abilities of those hit. Natural abilities and divine invocations are not affected.
+When its wielder attacks, the weapon's spirit leaps out and strikes again. The spirit shares a part of any damage it takes with its wielder.
 
 %%%%
-It retains the spirit of the tree from which it was made. In the hands of one skilled in evocations this spirit is drawn out to fight along side the wielder.
+Any ammunition fired from it is coated in acid, damaging and corroding those it strikes.
+
+%%%%
+It is coated in acid, damaging and corroding those it strikes.
 
 %%%%
 It has no special brand (it is not flaming, freezing, etc), but is still enchanted in some way - positive or negative.
-
-%%%%
-It grants immunity to poison.
 
 %%%%
 It is temporarily rebranded; it is actually an unbranded weapon.
 
 %%%%
 It is temporarily rebranded; it is actually %s.
-
-%%%%
-This weapon may have some hidden properties.
 
 %%%%
 "This is %s. "
@@ -4494,10 +4503,10 @@ It is coated with poison.
 It is tipped with a substance that causes asphyxiation, dealing direct damage as well as poisoning and slowing those it strikes.\nIt is twice as likely to be destroyed on impact as other darts.
 
 %%%%
-It is tipped with a substance that sends those it hits into a mindless rage, attacking friend and foe alike.
+It is tipped with a substance that sends those it hits into a mindless rage, attacking friend and foe alike.\nThe chance of successfully applying its effect increases with Throwing and Stealth skill.
 
 %%%%
-It is tipped with a substance that causes blindness and brief confusion.
+It is tipped with a substance that causes blindness and brief confusion.\nThe chance of successfully applying its effect increases with Throwing and Stealth skill.
 
 %%%%
 It causes any target it hits to blink, with a tendency towards blinking further away from the attacker.
@@ -4518,7 +4527,7 @@ It is always destroyed on impact.
 It may be destroyed on impact.
 
 %%%%
-With your current SH, it has a %d%% chance to reflect enchantments and other normally unblockable effects.
+With your current SH, it has a %d%% chance to reflect attacks against your willpower and other normally unblockable effects.
 
 %%%%
 If you switch to wearing this armour, your AC would increase by %d (%d -> %d).
@@ -4539,6 +4548,84 @@ If you remove this armour, your AC would decrease by %d (%d -> %d).
 If you remove this armour, your AC would remain unchanged.
 
 %%%%
+it protects its wearer from fire.
+
+%%%%
+it protects its wearer from cold.
+
+%%%%
+it protects its wearer from poison.
+
+%%%%
+it allows its wearer to see invisible things.
+
+%%%%
+when activated, it grants its wearer temporary invisibility, but also drains their maximum health.
+
+%%%%
+it increases the strength of its wearer (Str +3).
+
+%%%%
+it increases the dexterity of its wearer (Dex +3).
+
+%%%%
+it increases the intelligence of its wearer (Int +3).
+
+%%%%
+it is very cumbersome, slowing its wearer's movement.
+
+%%%%
+it grants its wearer flight.
+
+%%%%
+it increases its wearer's willpower, protecting against certain magical effects.
+
+%%%%
+it protects its wearer from most sources of damage (AC +3).
+
+%%%%
+it enhances the stealth of its wearer.
+
+%%%%
+it protects its wearer from the effects of both fire and cold.
+
+%%%%
+it protects its wearer from the effects of negative energy.
+
+%%%%
+it increases the power of its wearer's magical spells.
+
+%%%%
+it protects its wearer from the effects of acid and corrosion.
+
+%%%%
+it reflects blocked missile attacks back in the direction they came from.
+
+%%%%
+it causes incoming damage to be divided between the wearer's reserves of health and magic.
+
+%%%%
+it improves its wearer's accuracy and damage with ranged weapons, such as bows and javelins (Slay +4).
+
+%%%%
+it protects its wearer by repelling missiles.
+
+%%%%
+it does nothing special.
+
+%%%%
+it increases damage dealt and taken.
+
+%%%%
+it reduces the distance the wearer can be seen at and can see.
+
+%%%%
+its wearer takes one free step when moving towards enemies.
+
+%%%%
+it makes the wearer crave the taste of eggplant.
+
+%%%%
 Base shield rating: %d
 
 %%%%
@@ -4554,97 +4641,19 @@ Encumbrance rating: %d
 Evasion: %d
 
 %%%%
-It allows its wearer to slither at a great speed.
-
-%%%%
-It allows its wearer to run at a great speed.
-
-%%%%
-It protects its wearer from heat.
-
-%%%%
-It protects its wearer from cold.
-
-%%%%
-It protects its wearer from poison.
-
-%%%%
-It allows its wearer to see invisible things.
-
-%%%%
-When activated it hides its wearer from the sight of others, but also drains their skills.
-
-%%%%
-It increases the physical power of its wearer (+3 to strength).
-
-%%%%
-It increases the dexterity of its wearer (+3 to dexterity).
-
-%%%%
-It makes you more clever (+3 to intelligence).
-
-%%%%
-It is very cumbersome, thus slowing your movement.
-
-%%%%
-It can be activated to allow its wearer to fly indefinitely.
-
-%%%%
-It increases its wearer's willpower, protecting against some magical effects.
-
-%%%%
-It protects its wearer from harm (+3 to AC).
-
-%%%%
-It enhances the stealth of its wearer.
-
-%%%%
-It protects its wearer from the effects of both cold and heat.
-
-%%%%
-It protects its wearer from the effects of negative energy.
-
-%%%%
-It increases the power of its wearer's magical spells.
-
-%%%%
-It reflects blocked things back in the direction they came from.
-
-%%%%
-It shields its wearer from harm at the cost of magical power.
-
-%%%%
-It has no special ego (it is not resistant to fire, etc), but is still enchanted in some way - positive or negative.
-
-%%%%
-It improves your effectiveness with ranged weaponry, such as bows and javelins (Slay+4).
-
-%%%%
-It protects its wearer by repelling missiles.
-
-%%%%
-It does nothing special.
-
-%%%%
-It reduces the wearer's line of sight and spell power.
-
-%%%%
-Its wearer takes one free step when moving towards enemies.
-
-%%%%
-This armour may have some hidden properties.
-
-%%%%
 If you quaff this potion your AC would be %d.
 
 %%%%
 It affects your shielding (%+d).
 
 %%%%
-This amulet may have hidden properties.
+It affects your accuracy and damage with ranged weapons and melee (%+d).
 
 %%%%
-This ring may have hidden properties.
+It has a curse placed upon it.
+
+%%%%
+It has a curse which improves the following skills:
 
 %%%%
 It is an ancient artefact.
@@ -4689,10 +4698,13 @@ Once activated, this device and all other devices of its kind are rendered tempo
 " The device is presently inert."
 
 %%%%
-"Damage: "
+"\n\nIf you drink this now, you will no longer be "
 
 %%%%
-It has a curse placed upon it.
+\n\nDrinking this now will have no effect.
+
+%%%%
+"Damage: "
 
 %%%%
 This ancient artefact cannot be changed by magic or mundane means.
@@ -4711,6 +4723,12 @@ This ancient artefact cannot be changed by magic or mundane means.
 
 %%%%
 A cloud of %s.
+
+%%%%
+Awoken.
+
+%%%%
+awoken
 
 %%%%
 A covering of ice.
@@ -4743,16 +4761,28 @@ Translocational energy.
 disjunction haloed
 
 %%%%
-(Pray here with '%s' to learn more.)
+"\nYou have not yet explored it and cannot tell "
 
 %%%%
-It is susceptible to bolts of lightning and to sufficiently intense sources of fire.
+where it leads.
+
+%%%%
+\nYou can view the location it leads to by examining it with <w>%s</w> and pressing <w>%s</w>.
+
+%%%%
+(Pray here with <w>'%s'</w> to learn more.)
+
+%%%%
+tree burning
+
+%%%%
+mangrove burning
+
+%%%%
+demonic tree burning
 
 %%%%
 It can be dug through.
-
-%%%%
-Hints.
 
 %%%%
 (w)ield
@@ -4848,7 +4878,7 @@ summons a nameless horror
 further contaminates you
 
 %%%%
-dimensionally anchors you
+anchors you in place
 
 %%%%
 debuffs and slows you
@@ -4902,6 +4932,9 @@ This spell has no description. Casting it may therefore be unwise. Please file a
 "Range : "
 
 %%%%
+..---->
+
+%%%%
 " (pow %d)"
 
 %%%%
@@ -4909,15 +4942,6 @@ You cannot be affected by this spell right now. %s
 
 %%%%
 Chance to defeat your Will: %d%%%s
-
-%%%%
-This spell is not found in any books.
-
-%%%%
-This spell can be found in the following books:
-
-%%%%
-This spell can be found in the following book:
 
 %%%%
 "pale "
@@ -4974,7 +4998,7 @@ It gives off an intense heat.
 It oozes dark energies.
 
 %%%%
-tornadoes
+polar vortices
 
 %%%%
 This monster looks harmless.
@@ -4998,7 +5022,10 @@ This monster looks extremely dangerous.
 " and deal extra acid damage if any damage is dealt"
 
 %%%%
-" and blink itself if any damage is dealt"
+" and blink self if any damage is dealt"
+
+%%%%
+" and blink together with the defender if any damage is dealt"
 
 %%%%
 " and deal up to %d extra cold damage if any damage is dealt"
@@ -5073,7 +5100,7 @@ This monster looks extremely dangerous.
 " and ensnare with webbing if any damage is dealt"
 
 %%%%
-" and engulf with water"
+" and engulf"
 
 %%%%
 " and drain speed if any damage is dealt"
@@ -5166,7 +5193,10 @@ quickly
 buggily
 
 %%%%
-" (about %d%% to evade %s)"
+about %d%% to evade %s
+
+%%%%
+" (about %d%% to hit you)"
 
 %%%%
 none (normally %s)
@@ -5197,6 +5227,15 @@ medium
 
 %%%%
 very large
+
+%%%%
+"It is currently targeted by "
+
+%%%%
+It is currently targeted by allies:\n
+
+%%%%
+"It is currently targeting "
 
 %%%%
 clouds of all kinds
@@ -5334,7 +5373,7 @@ If angered it will immediately vanish, yielding no experience or items
 Killing it yields no experience or items
 
 %%%%
-" and it is incapable of using stairs"
+; it is incapable of using stairs
 
 %%%%
 " and it cannot be abjured"
@@ -5624,9 +5663,6 @@ Out of range.
 sanctuary
 
 %%%%
-silenced
-
-%%%%
 Disturbance
 
 %%%%
@@ -5690,13 +5726,19 @@ Vorsicht, der Minotaurus wartet!
 wall of the weird stuff which makes up Pandemonium
 
 %%%%
+, awoken
+
+%%%%
+, covered with ice
+
+%%%%
+, summoned
+
+%%%%
+, spattered with blood
+
+%%%%
 UNAMED PORTAL VAULT ENTRY
-
-%%%%
-"awoken "
-
-%%%%
-summoned
 
 %%%%
 " armed with %s"
@@ -5896,9 +5938,6 @@ You feel a little less agile now.
 berserking
 
 %%%%
-berserker
-
-%%%%
 You are possessed by a berserker rage.
 
 %%%%
@@ -5908,7 +5947,13 @@ You are no longer berserk.
 -Berserk
 
 %%%%
+on berserk cooldown
+
+%%%%
 berserk cooldown
+
+%%%%
+You are unable to berserk.
 
 %%%%
 short of breath
@@ -5950,6 +5995,9 @@ You feel less confused.
 Touch
 
 %%%%
+confusing by touch
+
+%%%%
 confusing touch
 
 %%%%
@@ -5959,6 +6007,9 @@ confusing touch
 %s stop glowing.
 
 %%%%
+lit by a corona
+
+%%%%
 corona
 
 %%%%
@@ -5966,6 +6017,9 @@ You are no longer glowing.
 Ihr leuchtet nicht mehr.
 %%%%
 DChan
+
+%%%%
+death channeling
 
 %%%%
 death channel
@@ -6013,10 +6067,16 @@ Ihr seid erschöpft.
 You feel less exhausted.
 
 %%%%
+ice-armoured
+
+%%%%
 icy armour
 
 %%%%
 You are protected by a layer of icy armour.
+
+%%%%
+on fire
 
 %%%%
 liquid flames
@@ -6025,13 +6085,19 @@ liquid flames
 You are covered in liquid flames.
 
 %%%%
+You are no longer on fire.
+
+%%%%
 Will/2
 
 %%%%
 weak-willed
 
 %%%%
-lowered wp
+lowered wl
+
+%%%%
+You are weak-willed.
 
 %%%%
 You feel your willpower return.
@@ -6079,7 +6145,7 @@ Resist
 resistant
 
 %%%%
-You resist elements.
+You are resistant to the elements.
 
 %%%%
 Your resistance to elements expires.
@@ -6127,7 +6193,7 @@ You are about to teleport.
 DDoor
 
 %%%%
-death's door
+in death's door
 
 %%%%
 deaths door
@@ -6145,7 +6211,13 @@ Your time is quickly running out!
 -DDoor
 
 %%%%
-death's door cooldown
+on death's door cooldown
+
+%%%%
+deaths door cooldown
+
+%%%%
+You are unable to enter death's door.
 
 %%%%
 You step away from death's doorway.
@@ -6169,6 +6241,9 @@ Stealth
 especially stealthy
 
 %%%%
+You are especially stealthy.
+
+%%%%
 You feel less stealthy.
 Ihr fühlt Euch weniger heimlich.
 %%%%
@@ -6187,7 +6262,7 @@ Your fear fades away.
 Mirror
 
 %%%%
-injury mirror
+mirroring injuries
 
 %%%%
 mirror damage
@@ -6199,22 +6274,13 @@ You mirror injuries.
 Your dark mirror aura disappears.
 
 %%%%
-Scry
+in a vortex
 
 %%%%
-scrying
+vortex
 
 %%%%
-Your astral vision lets you see through walls.
-
-%%%%
-Your astral sight fades away.
-
-%%%%
-tornado
-
-%%%%
-You are in the eye of a mighty hurricane.
+You are in the eye of a polar vortex.
 
 %%%%
 Liquid
@@ -6223,7 +6289,7 @@ Liquid
 liquefying
 
 %%%%
-The ground has become liquefied beneath your feet.
+You are liquefying the ground beneath you.
 
 %%%%
 The ground is no longer liquid beneath you.
@@ -6232,10 +6298,16 @@ The ground is no longer liquid beneath you.
 Hero
 
 %%%%
+heroic
+
+%%%%
 heroism
 
 %%%%
 You possess the skills of a mighty hero.
+
+%%%%
+finesse-ful
 
 %%%%
 finesse
@@ -6247,6 +6319,9 @@ Your blows are lightning fast.
 Prot
 
 %%%%
+divinely protected
+
+%%%%
 lifesaving
 
 %%%%
@@ -6256,10 +6331,16 @@ You are calling for your life to be saved.
 Your divine protection fades away.
 
 %%%%
--Tornado
+-Vortex
 
 %%%%
-tornado cooldown
+on vortex cooldown
+
+%%%%
+vortex cooldown
+
+%%%%
+You are unable to create a polar vortex.
 
 %%%%
 The winds around you calm down.
@@ -6328,7 +6409,7 @@ Your attacks are enfeebled.
 Your attacks no longer feel as feeble.
 
 %%%%
-cannot translocate
+untranslocatable
 
 %%%%
 You are firmly anchored to this plane.
@@ -6340,10 +6421,7 @@ You are no longer firmly anchored in space.
 -Move
 
 %%%%
-can't move
-
-%%%%
-lockdown
+immobile
 
 %%%%
 You are magically locked in place.
@@ -6370,13 +6448,19 @@ Your toxic aura wanes.
 reciting
 
 %%%%
+recite
+
+%%%%
 You are reciting Zin's Axioms of Law.
 
 %%%%
 -Recite
 
 %%%%
-recite cooldown
+on recite cooldown
+
+%%%%
+You are unable to recite.
 
 %%%%
 You are ready to recite again.
@@ -6388,6 +6472,9 @@ rF-
 fire vulnerable
 
 %%%%
+fire vulnerability
+
+%%%%
 You are more vulnerable to fire.
 
 %%%%
@@ -6395,6 +6482,9 @@ You feel less vulnerable to fire.
 
 %%%%
 Barbs
+
+%%%%
+spiked
 
 %%%%
 barbed spikes
@@ -6433,6 +6523,9 @@ The ice encasing you melts away.
 Sap
 
 %%%%
+magic-sapped
+
+%%%%
 Casting spells hinders your spell success.
 
 %%%%
@@ -6442,13 +6535,22 @@ Your magic seems less tainted.
 PProj
 
 %%%%
+portalling projectiles
+
+%%%%
 portal projectile
 
 %%%%
 You are teleporting projectiles to their destination.
 
 %%%%
+You are no longer teleporting projectiles to their destination.
+Ihr teleportiert keine Projektile mehr an ihr Ziel.
+%%%%
 forested
+
+%%%%
+You are summoning a forest.
 
 %%%%
 Space becomes stable.
@@ -6457,7 +6559,7 @@ Space becomes stable.
 Dragoncall
 
 %%%%
-dragon's call
+calling dragons
 
 %%%%
 dragon call
@@ -6472,13 +6574,25 @@ The roar of the dragon horde subsides.
 -Dragoncall
 
 %%%%
+on dragon call cooldown
+
+%%%%
 dragon call cooldown
+
+%%%%
+You are unable to call dragons.
 
 %%%%
 You can once more reach out to the dragon horde.
 
 %%%%
 -Potion
+
+%%%%
+unable to drink
+
+%%%%
+no potions
 
 %%%%
 You cannot drink potions.
@@ -6571,10 +6685,16 @@ Horr
 horrified
 
 %%%%
+horror
+
+%%%%
 You are horrified, weakening your attacks and spells.
 
 %%%%
 -Scroll
+
+%%%%
+unable to read
 
 %%%%
 no scrolls
@@ -6586,6 +6706,9 @@ You cannot read scrolls.
 You can read scrolls again.
 
 %%%%
+divinely shielded
+
+%%%%
 divine shield
 
 %%%%
@@ -6593,9 +6716,6 @@ You are shielded by the power of the Shining One.
 
 %%%%
 Cleave
-
-%%%%
-cleaving
 
 %%%%
 cleave
@@ -6610,34 +6730,22 @@ Your cleaving frenzy subsides.
 Ambros
 
 %%%%
+ambrosia-drunk
+
+%%%%
 You are regenerating under the effects of ambrosia.
 
 %%%%
 Channel
 
 %%%%
+channeling
+
+%%%%
 channel
 
 %%%%
 You are rapidly regenerating magical energy.
-
-%%%%
-Surge
-
-%%%%
-device surging
-
-%%%%
-device surge
-
-%%%%
-You have readied a device surge.
-
-%%%%
-Your device surge dissipates.
-
-%%%%
-Your device surge is dissipating.
 
 %%%%
 Howl
@@ -6658,6 +6766,9 @@ The infernal howling subsides.
 Vertigo
 
 %%%%
+vertiginous
+
+%%%%
 vertigo
 
 %%%%
@@ -6670,6 +6781,9 @@ The world stops spinning.
 Blood
 
 %%%%
+sanguine armoured
+
+%%%%
 sanguine armour
 
 %%%%
@@ -6677,6 +6791,9 @@ Your shed blood clings to and protects you.
 
 %%%%
 Your blood armour dries and flakes away.
+
+%%%%
+under a protective aura
 
 %%%%
 protection aura
@@ -6688,13 +6805,37 @@ Your weapon is exuding a protective aura.
 -Hop
 
 %%%%
-can't hop
+unable to hop
+
+%%%%
+no hop
+
+%%%%
+You are unable to hop.
 
 %%%%
 You are ready to hop once more.
 
 %%%%
+-Bbolt
+
+%%%%
+blinkbolt cooldown
+
+%%%%
+no blinkbolt
+
+%%%%
+You feel energetic enough to blinkbolt again.
+
+%%%%
+acrobatic
+
+%%%%
 acrobat
+
+%%%%
+You are acrobatic and have increased evasion.
 
 %%%%
 Attr
@@ -6707,6 +6848,33 @@ attract
 
 %%%%
 You attract monsters toward you.
+
+%%%%
+Elixir
+
+%%%%
+elixired
+
+%%%%
+elixir
+
+%%%%
+You are rapidly regenerating health and magic.
+
+%%%%
+-Word
+
+%%%%
+on word of chaos cooldown
+
+%%%%
+word of chaos cooldown
+
+%%%%
+You are unable to speak a word of chaos.
+
+%%%%
+You are ready to speak a word of chaos again.
 
 %%%%
 invis
@@ -6775,13 +6943,13 @@ drowning
 sleep immunity
 
 %%%%
-elixir health
-
-%%%%
-elixir magic
+strong-willed
 
 %%%%
 trogs hand
+
+%%%%
+Your willpower is greatly increased.
 
 %%%%
 You feel the effects of Trog's Hand fading.
@@ -6817,7 +6985,7 @@ shaft immunity
 Bog
 
 %%%%
-noxious spew
+spewing sludge
 
 %%%%
 noxious bog
@@ -6832,10 +7000,16 @@ Your noxious spew wanes.
 Ramparts
 
 %%%%
+freezing walls
+
+%%%%
 frozen ramparts
 
 %%%%
 You have covered nearby walls with an icy ambush.
+
+%%%%
+in a heavenly storm
 
 %%%%
 heavenly storm
@@ -6843,6 +7017,9 @@ heavenly storm
 %%%%
 Heavenly clouds are increasing your accuracy and damage.
 
+%%%%
+You feel your health improve.
+Ihr fühlt, wie sich Eure Gesundheit verbessert.
 %%%%
 old magic sapped
 
@@ -6916,15 +7093,6 @@ old condensation shield
 old phase shift
 
 %%%%
--Mag
-
-%%%%
-You have trouble accessing your magic.
-
-%%%%
-You regain control over your magic.
-
-%%%%
 old telepathy
 
 %%%%
@@ -6965,6 +7133,18 @@ old darkness
 
 %%%%
 old stabbing
+
+%%%%
+old scrying
+
+%%%%
+old elixir magic
+
+%%%%
+old antimagic
+
+%%%%
+old device surge
 
 %%%%
 
@@ -7030,9 +7210,6 @@ Das könnt Ihr nicht zappen!
 %%%%
 The now-empty wand crumbles to dust.
 Der jetzt leere Zauberstab zerfällt zu Staub.
-%%%%
-You have finished your manual of %s and toss it away.
-Ihr habt Euer Handbuch von%s beendet und es weggeworfen.
 %%%%
 %lu skills
 
@@ -7118,6 +7295,12 @@ You can't see anything. Try to condense clouds anyway?
 Clouds of %s condense around you!
 
 %%%%
+You can't see anything. Try to make a move anyway?
+
+%%%%
+You make a move on Xom's chessboard...
+
+%%%%
 Sorry, this item was removed!
 
 %%%%
@@ -7155,6 +7338,9 @@ The tin is emptied!
 Die Dose ist geleert!
 %%%%
 The condenser dries out!
+
+%%%%
+The chess piece greys!
 
 %%%%
 
@@ -7265,17 +7451,26 @@ Wirklich %s angreife?
 Really do that near %s?
 Mach das wirklich in der Nähe {gen}%s?
 %%%%
-Really summon a forest while emitting a toxic aura?
-Wirklich einien Forst beschwöre, während Ihr eine giftige Aura ausstrahlt?
-%%%%
-Really call dragons while emitting a toxic aura?
-Wirklich Drachen rufe, während Ihr eine giftige Aura ausstrahlt?
-%%%%
-Really enslave while emitting a toxic aura?
+a toxic aura
 
 %%%%
-Really summon while emitting a toxic aura?
-Wirklich beschwöre, während Ihr eine giftige Aura ausstrahlt?
+a noxious bog
+
+%%%%
+a polar vortex
+
+%%%%
+Really summon a forest while emitting %s?
+
+%%%%
+Really call dragons while emitting %s?
+
+%%%%
+Really enslave while emitting %s?
+
+%%%%
+Really summon while emitting %s?
+
 %%%%
 
 ##################
@@ -7294,11 +7489,11 @@ Empty file name.
 "%s" contains ".." sequences.
 
 %%%%
-Data directory '%s' found.
-Datenverzeichnis '%s' gefunden.
-%%%%
 Incomplete or corrupted data directory '%s'
 
+%%%%
+Data directory '%s' found.
+Datenverzeichnis '%s' gefunden.
 %%%%
 Missing DCSS data directory; tried:
 
@@ -7343,6 +7538,9 @@ building %s
 
 %%%%
 Emergency fixup: removing player from wall at %d,%d. Please report this as a bug!
+
+%%%%
+&P with '%s' failed; clearing force props and trying with random generation next.
 
 %%%%
 Level annotation: %s
@@ -7448,15 +7646,6 @@ If you load it now, your character will be converted to a Hill Orc. Continue?
 
 %%%%
 Please load the save in an earlier version if you want to keep it as a Lava Orc.
-
-%%%%
-This Djinni save game cannot be loaded as-is.
-
-%%%%
-If you load it now, your character will be converted to a Vine Stalker. Continue?
-
-%%%%
-Please load the save in an earlier version if you want to keep it as a Djinni.
 
 %%%%
 File is corrupt (found version %d.%d).
@@ -8252,9 +8441,6 @@ Das könnt Ihr%s nicht geben.
 %s can't equip that with a two-handed weapon.
 %s können das nicht mit einer Zweihandwaffe ausstatten.
 %%%%
-%s removes the curse on %s.
-%s entfernt den Fluch auf%s.
-%%%%
 Gift failed: %s is unable to take %s.
 Geschenk fehlgeschlagen:%s kann%s nicht nehmen.
 %%%%
@@ -8300,11 +8486,11 @@ Its soul is now yours.
 %s can find no cadavers for you!
 
 %%%%
-Do you wish to receive a Necronomicon?
+"Do you wish to receive knowledge of "
 
 %%%%
-%s grants you a gift!
-%s gewährt Euch ein Geschenk!
+%s grants you forbidden knowledge!
+
 %%%%
 Space bends sharply around you!
 
@@ -8333,28 +8519,70 @@ Ihr trittt aus dem Fluss der Zeit heraus.
 You return to the normal time flow.
 Ihr kehrt zum normalen Zeitfluss zurück.
 %%%%
-As you forget about %s, you feel ready to understand %s.
-Als Ihr %s vergesst, fühlt Ihr Euch bereit, %s zu verstehen.
-%%%%
-You are currently transferring knowledge from %s to %s.
-Ihr übertragt derzeit Wissen von %s auf %s.
-%%%%
-Are you sure you want to cancel the transfer?
+Melee Combat
 
 %%%%
-You have finished forgetting about %s and learning about %s.
+Melee
 
 %%%%
-You stop forgetting about %s and learning about %s.
+Ranged Combat
+
+%%%%
+Range
+
+%%%%
+Elements
+
+%%%%
+Elem
+
+%%%%
+Alchemy
+
+%%%%
+Alch
+
+%%%%
+Companions
+
+%%%%
+Comp
+
+%%%%
+Beguiling
+
+%%%%
+Bglg
+
+%%%%
+Introspection
+
+%%%%
+Self
+
+%%%%
+Fortitude
+
+%%%%
+Fort
+
+%%%%
+Cunning
+
+%%%%
+Cun
+
+%%%%
+Evo
+
+%%%%
+Ashenzari invites you to partake of a vision and a curse%s.
+
+%%%%
+Your %s glows black for a moment.
 
 %%%%
 Curse which item?
-
-%%%%
-" (1 remove curse scroll left)"
-
-%%%%
-" (%d remove curse scrolls left)"
 
 %%%%
 " (Esc to abort)"
@@ -8362,6 +8590,27 @@ Curse which item?
 %%%%
 You can't curse that!
 Das könnt Ihr nicht verfluchen!
+%%%%
+Uncurse and destroy which item?
+
+%%%%
+You must shatter the curse binding the ring to the amulet's finger first!
+
+%%%%
+You cannot shatter the curse on %s while it is melded with your body!
+
+%%%%
+Really remove and destroy %s?%s
+
+%%%%
+" Ashenzari will withdraw the offered vision and curse!"
+
+%%%%
+You shatter the curse binding %s!
+
+%%%%
+%s withdraws the vision and curse.
+
 %%%%
 The priest welcomes you and lets you live.
 Der Priester heißt Euch willkommen und lässt Euch leben.
@@ -8579,7 +8828,7 @@ Ihr seid aus den Netzen geplatzt!
 You burst free from the net!
 Ihr seid aus dem Netz geplatzt!
 %%%%
-You can't repeat power leap.
+You can't repeat Power Leap.
 
 %%%%
 You are too terrified to leap around!
@@ -8630,16 +8879,13 @@ There are no visible enemies. Unleash your apocalypse anyway?
 You reveal the great annihilating truth to your foes!
 Ihr offenbart Euren Feinden die große vernichtende Wahrheit!
 %%%%
-The surge fizzles.
-Die Welle sprudelt.
-%%%%
 There are friendlies around, are you sure you want to hurt them?
 
 %%%%
 You stomp with the beat, sending a shockwave through the revellers around you!
 
 %%%%
-You can't repeat line pass.
+You can't repeat Line Pass.
 
 %%%%
 line pass
@@ -8726,8 +8972,8 @@ Select a target.
 You can't see anything there. Try transferring anyway?
 
 %%%%
-You can't transfer your ancestor with themself.
-Ihr könnt Euren Vorfahren nicht mit Euch selbst übertragen.
+You can't transfer your ancestor with %s.
+
 %%%%
 You can't transfer that.
 Das könnt Ihr nicht übertragen.
@@ -8735,8 +8981,8 @@ Das könnt Ihr nicht übertragen.
 transfer
 
 %%%%
-%s can't be transferred into %s.
-%s kann nicht in%s übertragen werden.
+%s can't be transferred there.
+
 %%%%
 You swap with %s!
 
@@ -8771,10 +9017,10 @@ Please select an adjacent position to wall jump against.
 You cannot wall jump against %s.
 
 %%%%
-You cannot move away from %s to wall jump!
+You cannot wall jump away from %s!
 
 %%%%
-You are too afraid to wall jump closer to %s!
+You cannot wall jump closer to %s!
 
 %%%%
 You have no room to wall jump there; %s is in the way.
@@ -8788,9 +9034,6 @@ You have no room to wall jump there.
 %%%%
 wall jump
 
-%%%%
-You slip free of the water engulfing you.
-Ihr rutscht frei von dem Wasser, das Euch verschlingt.
 %%%%
 You can't repeat a wall jump.
 
@@ -8863,10 +9106,10 @@ Beschädigter Ex-Anhänger wird gelöscht von Ebene: %s.
 %s forgives your inadvertent holy act, just this once.
 
 %%%%
-%s doesn't appreciate your training magic!
+%s does not appreciate your training of magic skills!
 
 %%%%
-%s doesn't appreciate your use of wizardly items!
+%s does not appreciate your use of wizardly items!
 
 %%%%
 %s does not appreciate your shedding blood when asking for salvation!
@@ -8902,6 +9145,9 @@ Beschädigter Ex-Anhänger wird gelöscht von Ebene: %s.
 %s appreciates the change of pace.
 
 %%%%
+you bind yourself with curses
+
+%%%%
 
 ##################
 # god-passive.cc
@@ -8909,66 +9155,6 @@ Beschädigter Ex-Anhänger wird gelöscht von Ebene: %s.
 %%%%
 You hear a distant slurping noise.
 Ihr hört ein entferntes Schlürfen.
-%%%%
-%s is bound.
-%s ist gebunden.
-%%%%
-%s are bound.
-%s sind gebunden.
-%%%%
-%s is not bound.
-%s ist nicht gebunden.
-%%%%
-%s are not bound.
-%s sind nicht gebunden.
-%%%%
-%s is bound but not %s.
-%s ist gebunden, aber %s nicht.
-%%%%
-You are not bound in armour or jewellery.
-Ihr seid nicht in Rüstung oder Schmuck gebunden.
-%%%%
-You are partially bound in armour and jewellery.
-Ihr seid teilweise in Rüstung und Schmuck gebunden.
-%%%%
-You are fully bound in armour and jewellery.
-Ihr seid vollständig in Rüstung und Schmuck gebunden.
-%%%%
-You are not bound in armour.
-Ihr seid nicht in eine Rüstung gebunden.
-%%%%
-You are partially bound in armour.
-Ihr seid teilweise in eine Rüstung gebunden.
-%%%%
-You are fully bound in armour.
-Ihr seid vollständig in eine Rüstung gebunden.
-%%%%
-You are not bound in jewellery.
-Ihr seid nicht in Schmuck gebunden.
-%%%%
-You are partially bound in jewellery.
-Ihr seid teilweise in Schmuck gebunden.
-%%%%
-You are fully bound in jewellery.
-Ihr seid vollständig in Schmuck gebunden.
-%%%%
-You are not bound.
-Ihr seid nicht gebunden.
-%%%%
-You are slightly bound.
-Ihr seid leicht gebunden.
-%%%%
-You are moderately bound.
-Ihr seid mäßig gebunden.
-%%%%
-You are seriously bound.
-Ihr seid stark gebunden.
-%%%%
-You are fully bound.
-Ihr seid vollständig gebunden.
-%%%%
-You are buggily bound.
-Ihr seid verbuggt gebunden.
 %%%%
 Your resistance to fire fades away.
 Euer Widerstand gegen Feuer schwindet.
@@ -9073,6 +9259,9 @@ Ihr greift {acc}%s wiederholt von oben an, mit unglaublichem Schwung.
 %%%%
 You cannot tell which god this altar belongs to. Convert to them anyway?
 Ihr wisst nicht, welchem Gott dieser Altar gehört. Trotzdem konvertieren?
+%%%%
+Really abandon %s for an unknown god?
+
 %%%%
 %s accepts your prayer!
 %s nimmt Euer Gebet an!
@@ -9190,8 +9379,8 @@ Ihr werdet plötzlich ohnmächtig!
 You suddenly feel lethargic!
 Ihr fühlt Euch plötzlich träge!
 %%%%
-%s hurls firey rage upon you!
-%s schleudert feurige Wut auf Euch!
+%s hurls fiery rage upon you!
+
 %%%%
 %s throws an implement of electrocution at you.
 %s wirft ein Stromschlagsgerät auf Euch.
@@ -9348,6 +9537,9 @@ Die göttliche Erfahrung erschöpft Eure Kraft!
 <lightred>ERROR: unterminated $item</lightred>
 
 %%%%
+<lightred>ERROR: unterminated $feature</lightred>
+
+%%%%
 <lightred>ERROR: unterminated <input></lightred>
 
 %%%%
@@ -9360,49 +9552,16 @@ Die göttliche Erfahrung erschöpft Eure Kraft!
 Error, no hint for '%s'.
 Fehler, kein Hinweis für '%s'.
 %%%%
-$1
-
-%%%%
-$2
-
-%%%%
-death conjurer melee
-
-%%%%
-death berserker unberserked
-
-%%%%
-death ranger melee
-
-%%%%
-death random %d
-
-%%%%
 See you next game!
 Bis zum nächsten Spiel!
-%%%%
-finished
-
-%%%%
-finished explored
-
-%%%%
-finished travel
-
-%%%%
-finished stashes
-
-%%%%
-finished random %d
-
 %%%%
 tut
 
 %%%%
-Remember to rest between fights and to enter unexplored terrain with full health and magic. Ideally you should retreat into areas you've already explored and cleared of monsters; resting on the edge of the explored terrain increases the chances of your rest being interrupted by wandering monsters. For resting, press <w>5</w> or <w>Shift-numpad 5</w><tiles>, or <w>click the rest button</w></tiles>.
+Remember to rest between fights and to enter unexplored terrain with full health and magic. Ideally you should retreat into areas you've already explored and cleared of monsters; resting on the edge of the explored terrain increases the chances of your rest being interrupted by wandering monsters. To rest, press <w>5</w> or <w>Shift-numpad 5</w><tiles>, or <w>click the rest button</w></tiles>.
 
 %%%%
-\nAlso, berserking might help you not to lose so much health in the first place. To use your abilities type <w>a</w>.
+\nAlso, berserking might help you not to lose so much health in the first place. To use your abilities press <w>a</w>.
 
 %%%%
 "That "
@@ -9441,226 +9600,19 @@ First <w>w</w>ield it, then follow the instructions.<tiles>\nAs a short-cut you 
 However, as a conjurer you will want to deal with it using magic. If you look at the help entry for the <w>M</w>emorisation screen you'll find an explanation of how to do this.
 
 %%%%
-"is a portal to an inter-dimensional bazaar filled with shops. It will disappear if you don't enter it soon, so hurry. "
-
-%%%%
-"is a portal to an optional level, offering extra loot in exchange for extra danger. There's no penalty for skipping it, but the portal will disappear if you wait, so you have to decide now if you want to risk it. "
-
-%%%%
-You can enter a portal just like a set of stairs, by standing on it and <tiles><w>clicking</w></tiles><console>pressing <w>></w></console>. To return, find <tiles>a similar looking portal.</tiles><console>another <w>
-
-%%%%
-</w> - but NOT the ancient stone arch you'll start out on!</console>
-
-%%%%
-You have picked up your first potion<console> ('<w>
-
-%%%%
-</w>'). Use </console><tiles>. Simply <w>left-click</w> on it, or press </tiles><w>%</w> to quaff it.\nOnce you've identified a potion, either with a scroll of identification or by drinking it, you'll automatically recognize all other potions of the same type; this means it's sometimes useful to drink potions just to identify them.
-
-%%%%
-You have picked up your first scroll<console> ('<w>
-
-%%%%
-</w>'). Type </console><tiles>. Simply <w>left-click</w> on it, or press </tiles><w>%</w> to read it.\nOnce you've identified a scroll, either with a scroll of identification or by reading it, you'll automatically recognize all other scrolls of the same type; this means it's sometimes useful to read scrolls just to identify them.
-
-%%%%
-You have picked up your first wand<console> ('<w>
-
-%%%%
-</w>'). Type </console><tiles>. Simply <w>left-click</w> on it, or press </tiles><w>%</w> to evoke it.\nIf you find more wands of the same type, they'll merge into this wand and add charges to it.
-
-%%%%
-You have picked up a book<console> ('<w>
-
-%%%%
-'</w>) </console>If it's a spellbook, you can pick it up to add its spells to your library. You'll be able to memorise spells from it via <w>%</w>, and cast them with <w>%</w>.</console>
-
-%%%%
-" hates it when you memorise or study magic, though."
-
-%%%%
-This is the first weapon <console>('<w>
-
-%%%%
-</w>') </console>you've picked up. Use <w>%</w> <tiles>or <w>left-click</w> on it </tiles>to wield it, but be aware that this weapon might train a different skill from your current one. You can view the weapon's properties from your <w>%</w>nventory<tiles> or by <w>right-clicking</w> on it</tiles>.
-
-%%%%
-\nYou should probably stick with axes. Checking other axes' enchantments can be worthwhile, but weapons can be cursed and difficult to remove, so unless you have a scroll of remove curse, only wield weapons you're ready to be stuck with!
-
-%%%%
-This is the first stack of missiles <console>('<w>
-
-%%%%
-"</w>') </console>you've picked up. Missiles like boomerangs and throwing nets can be thrown by hand, but other missiles like arrows and bolts require a launcher and training in using it to be really effective. "
-
-%%%%
-"<w>Right-clicking</w> on "
-
-%%%%
-"Selecting "
-
-%%%%
-the item in your <w>%</w>nventory will give more information about both missiles and launcher.
-
-%%%%
-\nAs you're already trained in Bows, you only need to bother collecting arrows.
-
-%%%%
-\nHowever, as a spellslinger, you don't really need another type of ranged attack.
-
-%%%%
-\nFor now you might be best off with sticking to stones for ranged attacks.
-
-%%%%
-This is the first piece of armour <console>('<w>
-
-%%%%
-</w>') </console>you've picked up. <tiles>You can click on it to wear it, and click again to remove it. <w>Right-clicking</w> on it will give more information.</tiles><console>Use <w>%</w> to wear it and <w>%</w> to take it off again. You can view its properties from your <w>%</w>nventory.</console>
-
-%%%%
-"\nNote that as a "
-
-%%%%
-" you will be unable to wear "
-
-%%%%
-helmets
-
-%%%%
-Weapons and armour that have unusual descriptions like this are much more likely to be of higher enchantment or have special properties, good or bad.
-
-%%%%
-Ah, a corpse!
-
-%%%%
-That <console>
-
-%%%%
-percent
-
-%%%%
-</console>is a corpse.
-
-%%%%
-You have picked up a piece of jewellery, either a ring
-
-%%%%
-<console> ('<w>
-
-%%%%
-</w>')</console>
-
-%%%%
-" or an amulet"
-
-%%%%
-</w>')
-
-%%%%
-. Type <w>%</w> to put it on and <w>%</w> to remove it. You can view its properties from your <w>%</w>nventory</console>
-
-%%%%
-<tiles>. You can click on it to put it on, and click again to remove it. By <w>right-clicking</w> on it, you can view its properties</tiles>.
-
-%%%%
-This is a curious object indeed. You can play around with it to find out what it does by <tiles>clicking on it to e<w>%</w>oke </tiles><console>e<w>%</w>oking </console>it. As usual, selecting it from your <w>%</w>nventory might give you more information.
-
-%%%%
-You have picked up a magic staff<console> ('<w>
-
-%%%%
-</w>')</console>. It must be <w>%</w>ielded to be of use. Magicians use staves to increase their power in certain spell schools. It can also be used as a weapon.<tiles> You can wield a staff by <w>left-clicking</w>.</tiles>
-
-%%%%
-You have picked up your first pile of gold<console> ('<yellow>
-
-%%%%
-</yellow>')</console>. Unlike most other objects in Crawl it doesn't show up in your inventory, takes up no space in your inventory, weighs nothing and can't be dropped. Gold can be used to buy items from shops, and is appreciated by certain gods.
-
-%%%%
-"These "
-
-%%%%
 Stairs
-
-%%%%
-are downstairs. You can enter the next (deeper) level by following them down (<w>%</w>). To return to this level, press <w>%</w> while standing on the upstairs.
-
-%%%%
-\nAlternately, you can <w>left-click</w> on stairs you're standing on to use them.
-
-%%%%
-"This "
 
 %%%%
 Escape hatch
 
 %%%%
-is an escape hatch. You can use it to leave a level with <w>%</w> and <w>%</w> respectively
-
-%%%%
-" (or by <w>left-clicking</w>)"
-
-%%%%
-, like stairs; unlike stairs, however, hatches are a one-way  trip, so be careful when descending!
-
-%%%%
 Branch stairs
-
-%%%%
-is the entrance to a different branch of the dungeon, which might have different terrain, level layout and monsters from the current main branch you're in. Some branches contain only a single level, and others are many levels deep. They can also contain entrances to other branches.\n\nThe first three branches you'll encounter are the Temple, the Lair and the Orcish Mines. While the Lairand the Mines can be dangerous for the new adventurer, the Temple is completely safe and contains a number of altars at which you might convert to a new god.
 
 %%%%
 Portal
 
 %%%%
-A small symbol on a stair tile signifies that there are items in that position that you may want to check out.
-
-%%%%
-If any items are covering stairs or an escape hatch, then that will be indicated by highlighting the <w><<</w> or <w>></w> symbol, instead of hiding the stair symbol with an item glyph.
-
-%%%%
-A small symbol on an item tile signifies that there is at least one other item in the same heap that you may want to check out.
-
-%%%%
-If two or more items are on a single square, then the square will be highlighted, and the symbol for the item on the top of the heap will be shown.
-
-%%%%
-If any items are covering a trap, then that will be indicated by highlighting the <w>^</w> symbol, instead of hiding the trap symbol with an item glyph.
-
-%%%%
-"Oops... you just triggered a trap. "
-
-%%%%
-"You just discovered a trap. "
-
-%%%%
-You'll occasionally stumble into these nasty constructions
-
-%%%%
-", depicted by "
-
-%%%%
-. Each type of trap has a different effect when stepped on, like alerting enemies or causing random teleportation.
-
-%%%%
 "An altar to "
-
-%%%%
-"is an altar. "
-
-%%%%
-"By <w>right-clicking</w> on it with your mouse "
-
-%%%%
-"If you target the altar with <w>x</w>, then press <w>v</w> "
-
-%%%%
-you can get a short description.\nPress <w>%</w> or <w>%</w> while standing on the square to join the faith or read some information about the god in question. Before taking up the corresponding faith you'll be asked for confirmation.
-
-%%%%
-\n\nThe simplest god for an unexperienced conjurer is probably Vehumet, though Sif Muna is a good second choice.
 
 %%%%
 is a shop. You can enter it by typing <w>%</w> or <w>%</w>
@@ -9672,7 +9624,7 @@ is a shop. You can enter it by typing <w>%</w> or <w>%</w>
 while standing on the square.
 
 %%%%
-\n\nIf there's anything you want which you can't afford yet you can hold <w>Shift</w> and press the corresponding letter to put them on your shopping list. The game will then remind you when you gather enough gold to buy them.
+\n\nIf there's anything you want which you can't afford yet you can hold <w>Shift</w> and press the corresponding letter to put it on your shopping list. The game will then remind you when you gather enough gold to buy it.
 
 %%%%
 Closed door
@@ -9726,16 +9678,10 @@ Every third level, you get to choose an attribute to raise: strength, intelligen
 Enchantments of all types can befall you temporarily. Brief descriptions of these appear at the lower end of the stats area. Press <w>%</w> for more details. You can search for full enchantment descriptions by pressing <w>%/T</w>.
 
 %%%%
-Poison will slowly reduce your health. You can wait it out with <w>%</w>, if you're in combat or lethally poisoned, you'll probably want to quaff a potion of curing.
+Poison will rapidly reduce your health. You can wait it out with <w>%</w>, but if you're in combat or lethally poisoned, you'll probably want to quaff a potion of curing.
 
 %%%%
-Cursed equipment, once worn or wielded, cannot be dropped or removed. Scrolls of remove curse will remove all curses from your current equipment.
-
-%%%%
-The curses on your worn equipment have been removed, so you can now unequip any previously cursed items.
-
-%%%%
-"There are a lot of items here. You choose what to pick up from a menu: type <w>%</w> "
+"There are a lot of items here. You choose what to pick up from a menu: press <w>%</w> "
 
 %%%%
 "or <w>click</w> on the player doll "
@@ -9801,13 +9747,10 @@ You recently noticed an invisible monster, so unless you killed it or left the s
 Against particularly difficult foes, you should use your Berserk <w>%</w>bility. Killing monsters while berserking makes it last longer.
 
 %%%%
-Berserking is extremely exhausting! Afterwards you are slowed down and occasionally even pass out. You won't be able to berserk again until enough time passes for your exhaustion to fade.
+Berserking is extremely exhausting! Afterwards you are slowed down, and you won't be able to berserk again until enough time passes for your exhaustion to fade.
 
 %%%%
 Whenever your health is very low and you're in danger of dying, check your options carefully. Often, retreat or use of some item might be a viable alternative to fighting on.
-
-%%%%
-" As a four-legged centaur, you are particularly quick - running away is usually an option!"
 
 %%%%
 "With "
@@ -9840,18 +9783,6 @@ to take a look at your abilities.
 You just gained a divine ability. Press <w>%</w> to take a look at your abilities or to use one of them.
 
 %%%%
-That mutation granted you a new ability. Press <w>%</w> to take a look at your abilities or to use one of them.
-
-%%%%
-Flight will allow you to cross deep water or lava. To activate it, select the corresponding ability in the ability menu (<w>%</w>
-
-%%%%
-" or via <w>mouseclick</w> in the <w>command panel</w>"
-
-%%%%
-). Once flying, keep an eye on the status line and messages, as most forms of flight have a limited duration.
-
-%%%%
 "That item you just equipped granted you a new ability. Press <w>%</w> "
 
 %%%%
@@ -9859,6 +9790,9 @@ Flight will allow you to cross deep water or lava. To activate it, select the co
 
 %%%%
 to take a look at your abilities or to use one of them.
+
+%%%%
+Flight will allow you to cross deep water or lava. Items that allow you to fly will activate automatically when worn.
 
 %%%%
 Equipping this item affects your resistances. Check the overview screen (<w>%</w>
@@ -9870,27 +9804,6 @@ Equipping this item affects your resistances. Check the overview screen (<w>%</w
 ) for details.
 
 %%%%
-To stop flying, use the corresponding ability in the ability menu (<w>%</w>).
-
-%%%%
-"Not all items are useful, and some of them are outright harmful. Press <w>%</w> "
-
-%%%%
-or <w>click</w> on your equipped amulet to remove it.
-
-%%%%
-to remove your amulet.
-
-%%%%
-HINT_CONVERT Xom
-
-%%%%
-HINT_CONVERT Gozag
-
-%%%%
-HINT_CONVERT Ru
-
-%%%%
 "Uh-oh, "
 
 %%%%
@@ -9900,7 +9813,7 @@ HINT_CONVERT Ru
 " finds your worship lacking, or a combination of the two. If your piety goes to zero, then you'll be excommunicated. Better get cracking on raising your piety, and/or stop annoying your god. "
 
 %%%%
-In any case, you'd better reread the religious description. To do so, type <w>%</w>
+In any case, you'd better reread the religious description. To do so, press <w>%</w>
 
 %%%%
 " or press <w>Shift</w> and <w>right-click</w> on your avatar"
@@ -9969,7 +9882,7 @@ Note that this kind of alliance only exists between the three good gods, so don'
 You can easily switch between weapons in slots a and b by pressing <w>%</w>.
 
 %%%%
-You can easily switch back to your weapon in slot a by pressing <w>%</w>. To change the slot of an item, type <w>%i</w> and choose the appropriate slots.
+You can easily switch back to your weapon in slot a by pressing <w>%</w>. To change the slot of an item, press <w>%i</w> and choose the appropriate slots.
 
 %%%%
 Now that monster is scared of you! Note that you do not absolutely have to follow it. Rather, you can let it run away. Sometimes, though, it can be useful to attack a fleeing creature by throwing something after it. If you have any stones in your <w>%</w>nventory, you can look at one of them to read an explanation of how to do this.
@@ -10197,7 +10110,7 @@ This screen shows the spells in your spell library. From here you can memorise s
 "you can <w>left mouse click</w> on the monster you wish to target (or on your player character to cast a spell on yourself) while pressing the <w>Control key</w>, and then select a spell from the menu. Or you can switch to the spellcasting display by <w>clicking on the</w> corresponding <w>tab</w>.\n\nAlternatively, "
 
 %%%%
-"you can type <w>%</w> and choose a spell, e.g. <w>a</w> (check with <w>?</w>). For attack spells you'll "
+"you can press <w>%</w> and choose a spell, e.g. <w>a</w> (check with <w>?</w>). For attack spells you'll "
 
 %%%%
 "To do this, "
@@ -10221,7 +10134,7 @@ first <w>%</w>ut it on
 enter the ability menu with <w>%</w>, and then choose the corresponding ability. Note that such an attempt of activation, especially by the untrained, is likely to fail.
 
 %%%%
-"To do this, type <w>%</w> to fire, then "
+"To do this, press <w>%</w> to fire, then "
 
 %%%%
 </w> for
@@ -10236,16 +10149,13 @@ these
 this
 
 %%%%
-s
-
-%%%%
 ". You'll "
 
 %%%%
 "When wielded, some weapons (such as this one) offer certain abilities you can activate. "
 
 %%%%
-\nThis weapon offers its wearer protection from certain sources. For an overview of your resistances (among other things) type <w>%</w>
+\nThis weapon offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
 
 %%%%
 " or click on your avatar with the <w>right mouse button</w>"
@@ -10260,7 +10170,7 @@ You can wield this weapon with <w>%</w>, or use <w>%</w> to switch between the w
 </w> for a while, so maybe you should continue training that rather than <w>
 
 %%%%
-</w>. (Type <w>%</w> to see the skill management screen for the actual numbers.)
+</w>. (Press <w>%</w> to see the skill management screen for the actual numbers.)
 
 %%%%
 "To attack a monster, "
@@ -10287,9 +10197,6 @@ To attack a monster, you can simply walk into it.
 enchantment or have special properties, good or bad.
 
 %%%%
-\n\nOnce wielded, a cursed weapon can't be unwielded until the curse has been lifted by reading a scroll of remove curse.
-
-%%%%
 " can be <w>%</w>ired without the use of a launcher. "
 
 %%%%
@@ -10308,10 +10215,7 @@ enchantment or have special properties, good or bad.
 , first you need to <w>%</w>ield an appropriate launcher.
 
 %%%%
-As a Centaur you cannot wear boots. (Type <w>%</w> to see a list of your mutations and innate abilities.)
-
-%%%%
-As a Minotaur you cannot wear helmets. (Type <w>%</w> to see a list of your mutations and innate abilities.)
+Because of your horns you cannot wear helmets. (Press <w>%</w> to see a list of your mutations and innate abilities.)
 
 %%%%
 Only nagas and palentongas can wear barding.
@@ -10332,10 +10236,7 @@ You can wear pieces of armour with <w>%</w> and take them off again with <w>%</w
 \nNote that many ranged weapons are two handed and so cannot be used with a shield.
 
 %%%%
-\nA cursed piece of armour, once worn, cannot be removed again until the curse has been lifted by reading a scroll of remove curse.
-
-%%%%
-\n\nThis armour offers its wearer protection from certain sources. For an overview of your resistances (among other things) type <w>%</w>
+\n\nThis armour offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
 
 %%%%
 "\n\nWhen worn, some types of armour (such as this one) offer certain <w>%</w>bilities you can activate. "
@@ -10356,7 +10257,7 @@ Alt key
 </w> and pick the wand from the menu, or 2) <w>left mouse click</w> on the wand tile and then <w>left mouse click</w> on your target.
 
 %%%%
-Type <w>%</w> to read this scroll
+Press <w>%</w> to read this scroll
 
 %%%%
 or simply click on it with your <w>left mouse button</w>
@@ -10368,34 +10269,31 @@ Jewellery can be <w>%</w>ut on or <w>%</w>emoved again
 , though in Tiles, either can be done by clicking on the item in your inventory
 
 %%%%
-\nA cursed piece of jewellery will stick to its wearer when equipped, and cannot be removed until you read a scroll of remove curse.
-
-%%%%
 "\n\nThis "
 
 %%%%
-" offers its wearer protection from certain sources. For an overview of your resistances (among other things) type <w>%</w>"
+" offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>"
 
 %%%%
 "\n\nWhen worn, some types of jewellery (such as this one) offer certain <w>%</w>bilities you can activate. "
 
 %%%%
-Type <w>%</w> to quaff this potion
+Press <w>%</w> to quaff this potion
 
 %%%%
-A manual can greatly help you in training a skill. As long as you are carrying it, the skill in question will be trained more efficiently and will level up faster.
+A manual can greatly help you in training a skill. After you pick one up, the skill in question will be trained more efficiently and will level up faster until you exhaust the manual's contents.
 
 %%%%
-\nIt's a book, you can pick it up to add its spells to your spell library. (View your spell  library with <w>%</w>
+\nYou can pick up a spellbook to add its spells to your spell library. (View your spell library with <w>%</w>.)
 
 %%%%
 Skeletons and corpses can be used as components for certain necromantic spells. Apart from that, they are largely useless.
 
 %%%%
-"This staff can enhance your spellcasting, possibly making a certain spell school more powerful, or making difficult magic easier to cast. "
+This staff can enhance your spellcasting, making spells of its related spell school more powerful.
 
 %%%%
-It also offers its wielder protection from certain sources. For an overview of your resistances (among other things) type <w>%</w>
+It also offers its wielder protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
 
 %%%%
 "\n\nSeeing how "
@@ -10419,7 +10317,7 @@ These nasty constructions can cause a range of unpleasant effects. You won't be 
 The dungeon contains a number of natural obstacles such as shafts, which lead one to three levels down. Once you know the shaft is there, you can safely step over it.\nIf you want to jump down there, use <w>></w> to do so. Be warned that getting back here might be difficult.
 
 %%%%
-"Some areas of the dungeon, such as the Spider Nest, may be strewn with giant webs that may ensnare you for a short time and notify nearby spiders of your location. Players in Spider Form can safely navigate the webs (as can incorporeal entities and various oozes). "
+Some areas of the dungeon, such as the Spider Nest, may be strewn with giant webs that may ensnare you for a short time. Players in Spider Form can safely navigate the webs (as can incorporeal entities and various oozes).
 
 %%%%
 You can enter the next (deeper) level by following them down (<w>></w>). To get back to this level again, press <w><<</w> while standing on the upstairs.
@@ -10446,10 +10344,22 @@ Escape hatches can be used to quickly leave a level with <w><<</w> and <w>></w>,
 \nTo avoid accidentally opening a door you'd rather remain closed during travel or autoexplore, you can mark it with an exclusion from the map view (<w>X</w>) with <w>ee</w> while your cursor is on the grid in question. Such an exclusion will prevent autotravel from ever entering that grid until you remove the exclusion with another press of <w>Xe</w>.
 
 %%%%
-This is your chance to join a religion! In general, the gods will help their followers, bestowing powers of all sorts upon them, but many of them demand a life of dedication, constant tributes or entertainment in return.\nYou can get information about <w>
+This is your chance to join a religion! In general, the gods will help their followers, bestowing powers of all sorts upon them, but many of them demand a life of dedication, constant tributes or entertainment in return.\n
+
+%%%%
+This particular altar is so ancient that you cannot make out which god it is dedicated to! Converting here by pressing <w>></w> while standing on the altar will enter you into service of a random god, who will grant you some additional piety in thanks.
+
+%%%%
+You can get information about <w>
 
 %%%%
 </w> by pressing <w>></w> while standing on the altar. Before taking up the responding faith you'll be asked for confirmation.
+
+%%%%
+"This particular altar is so ancient that you cannot make out which god it is dedicated to, and "
+
+%%%%
+" probably won't like it if you switch allegiance. If you want to take the risk, you can convert here by pressing <w>></w> while standing on the altar. Doing so will enter you into service of a random god, who will grant you some additional piety in thanks."
 
 %%%%
 " probably won't like it if you switch allegiance, but having a look won't hurt: to get information on <w>"
@@ -10468,9 +10378,6 @@ This is your chance to join a religion! In general, the gods will help their fol
 
 %%%%
 Beware, sometimes these can be deadly!
-
-%%%%
-Many forms of combat will spatter the surroundings with blood (if the victim has any, that is). Some monsters, like jackals or vampires, can smell blood from a distance and may come looking.
 
 %%%%
 "The "
@@ -10498,9 +10405,6 @@ It
 
 %%%%
 " is opaque. If two or more opaque clouds are between you and a square, you won't be able to see anything in that square."
-
-%%%%
-The strange disturbance means that there's a monster hiding under the surface of the shallow water. Submerged monsters will not be autotargeted when doing a ranged attack while there are other, visible targets in sight. Of course you can still target it manually if you wish to.
 
 %%%%
 Did you think you were the only adventurer in the dungeon? Well, you thought wrong! These unique adversaries often possess skills that normal monsters wouldn't, so be careful.\n\n
@@ -10724,6 +10628,9 @@ petrification
 bounce
 
 %%%%
+disintegration
+
+%%%%
 headbutt
 
 %%%%
@@ -10743,6 +10650,9 @@ collision
 
 %%%%
 zot
+
+%%%%
+constriction
 
 %%%%
 Thief
@@ -10773,6 +10683,9 @@ Gnome
 
 %%%%
 Mountain Dwarf
+
+%%%%
+Unknown (buggy) species!
 
 %%%%
 El
@@ -11024,9 +10937,6 @@ unique
 "ed to "
 
 %%%%
-:
-
-%%%%
 unknown source
 
 %%%%
@@ -11270,7 +11180,7 @@ Drained of all life
 Starved to death
 
 %%%%
-Froze to death
+Frozen to death
 
 %%%%
 burnt
@@ -11420,6 +11330,9 @@ Succumbed to barbed spike wounds
 Tarried too long and was consumed by Zot
 
 %%%%
+"Constricted to death by "
+
+%%%%
 Nibbled to death by software bugs
 
 %%%%
@@ -11444,6 +11357,9 @@ with
 "... with "
 
 %%%%
+"... by "
+
+%%%%
 "... with an "
 
 %%%%
@@ -11457,6 +11373,9 @@ caused
 
 %%%%
 awakened
+
+%%%%
+generated
 
 %%%%
 invoked
@@ -11719,7 +11638,7 @@ interrupt_multidrop = hp_loss, monster_attack, teleport, stat
 interrupt_macro = interrupt_multidrop
 
 %%%%
-interrupt_travel = interrupt_butcher, hungry, hit_monster, sense_monster
+interrupt_travel = interrupt_butcher, hit_monster, sense_monster
 
 %%%%
 interrupt_run = interrupt_travel, message
@@ -11767,11 +11686,17 @@ pickup: true
 launcher, throwing, inscribed, spell, evokable, ability
 
 %%%%
+all
+
+%%%%
 header,hiscore,stats,misc,inventory,skills,spells,overview,mutations,messages,screenshot,monlist,kills,notes,screenshots,vaults,skill_gains,action_counts
 
 %%%%
 Invalid glyph override: %X
 Ungültige Glyphenüberschreibung:%X
+%%%%
+Unknown ability '%s'\n
+
 %%%%
 Unknown spell '%s'\n
 
@@ -11891,6 +11816,9 @@ $
 
 %%%%
 " = "
+
+%%%%
+Setting crawl_dir to `%s`.
 
 %%%%
 Bad bindkey bracketing in '%s'
@@ -12550,9 +12478,6 @@ Bones file '
 "No matching ghosts for "
 
 %%%%
-.\n
-
-%%%%
 Empty ghost file.\n
 
 %%%%
@@ -12735,7 +12660,7 @@ You aren't carrying any weapons that can be enchanted.
 You aren't carrying anything you can give to a follower.
 
 %%%%
-You don't have any cursable items.
+You aren't wearing any cursable items.
 
 %%%%
 You aren't wearing any uncursed rings.
@@ -12760,9 +12685,6 @@ dbname
 
 %%%%
 curse
-
-%%%%
-ego
 
 %%%%
 art
@@ -12811,6 +12733,9 @@ Comestibles
 
 %%%%
 Scrolls
+
+%%%%
+Jewellery
 
 %%%%
 Potions
@@ -12871,6 +12796,9 @@ Ihr habt kein solches Objekt.
 
 %%%%
 "Really remove "
+
+%%%%
+"and destroy "
 
 %%%%
 " This could place you under penance!"
@@ -12965,14 +12893,17 @@ Ihr könnt nichts in Eurer gegenwärtigen Form führen.
 You cannot break your focus on the pain!
 
 %%%%
+Your thirst for blood prevents you from unwielding your weapon!
+
+%%%%
 You can't unwield your weapon%s!
 Ihr könnt Eure Waffe%s nicht loswerden!
 %%%%
 " to draw a new one"
 
 %%%%
-You can't wield that without your missing limb.
-Das könnt Ihr nicht ohne Euer fehlendes Glied ausüben.
+You can't wield that without your missing %s.
+
 %%%%
 You are wearing that object!
 Ihr tragt das Objekt!
@@ -13001,9 +12932,6 @@ Das könnt Ihr nicht tragen!
 You can wear that only in your normal form.
 Das könnt Ihr nur in Eurer normalen Form tragen.
 %%%%
-You can't wear that.
-Das könnt Ihr nicht tragen.
-%%%%
 Your wings%s won't fit in that.
 Eure Flügel%s passen nicht dazu.
 %%%%
@@ -13018,6 +12946,9 @@ Dafür braucht Ihr noch %s!
 %%%%
 You'd need three %s to do that!
 Dafür braucht Ihr drei %s!
+%%%%
+The hauberk won't fit over your tail.
+
 %%%%
 You have no feet.
 Ihr habt keine Füße.
@@ -13061,6 +12992,9 @@ Boots don't fit your feet!
 You don't currently have feet!
 Ihr habt momentan keine Füße!
 %%%%
+You have no feet!
+
+%%%%
 You can't wear any headgear with your large horns!
 Ihr könnt keine Kopfbedeckung mit Euren großen Hörnern tragen!
 %%%%
@@ -13081,6 +13015,9 @@ Das könnt Ihr nicht mit Eurem Reptilienkopf tragen.
 %%%%
 You can't wear that in your present form.
 Das könnt Ihr nicht in Eurer jetzigen Form tragen.
+%%%%
+You can't wear that.
+Das könnt Ihr nicht tragen.
 %%%%
 You can't wear anything.
 Ihr könnt nichts tragen.
@@ -13124,8 +13061,8 @@ Remov
 %sing this item will reduce your %s to zero or below. Continue?
 
 %%%%
-Losing flight right now would be fatal!
-Jetzt den Flug zu verlieren wäre tödlich!
+Losing flight right now would be extremely painful!
+
 %%%%
 You're already wearing one cursed ring!
 
@@ -13286,37 +13223,16 @@ glühen
 Enchant which item?
 
 %%%%
-The dust glows %s!
-Der Staub leuchtet%s!
-%%%%
-%s glows %s for a moment.
-%s leuchtet%s für einen Moment.
-%%%%
-%s glow %s for a moment.
-
-%%%%
-You smell %s.
-Ihr riecht %s.
-%%%%
-You experience a momentary feeling of inescapable doom!
-Ihr erlebt ein kurzes Gefühl des unausweichlichen Untergangs!
-%%%%
-Your brain hurts!
-Euer Gehirn tut weh!
-%%%%
-Your ears itch!
-Eure Ohren jucken!
-%%%%
-Your nose twitches suddenly!
-Eure Nase zuckt plötzlich!
-%%%%
-You hear %s.
-Ihr hört %s.
-%%%%
 Magic quickly surges around you.
 
 %%%%
-You can't read that!
+You are too berserk!
+Ihr seid zu wütend!
+%%%%
+You are too confused!
+
+%%%%
+You cannot read scrolls in your current state!
 
 %%%%
 Magic scrolls do not work when you're silenced!
@@ -13325,7 +13241,7 @@ Magic scrolls do not work when you're silenced!
 You cannot read scrolls while unable to breathe!
 
 %%%%
-You cannot read scrolls in your current state!
+You can't read that!
 
 %%%%
 You have no spells to forget!
@@ -13340,19 +13256,34 @@ Your weapon is already cursed!
 Holy weapons cannot be cursed!
 
 %%%%
+infinite will
+
+%%%%
+susceptible
+
+%%%%
+not susceptible
+
+%%%%
 Read which item (* to show all)?
 
 %%%%
 "read the "
 
 %%%%
-Really %s? This action would place you under penance!
+Really %s? This action would place you under penance%s!
 
 %%%%
-Really %s?
+" and you can't even see any enemies this would affect"
 
 %%%%
-Really read with blurry vision while enemies are nearby?
+Really %s?%s
+
+%%%%
+" You can't even see any enemies this would affect."
+
+%%%%
+You can't see any enemies this would affect, really %s?
 
 %%%%
 You almost manage to decipher the scroll, but fail in this attempt.
@@ -13387,9 +13318,6 @@ Die Kreaturen um Euch herum sind mit einer inneren Flamme gefüllt!
 %%%%
 The air around you briefly surges with heat, but it dissipates.
 Die Luft um Euch herum schwankt kurz vor Hitze, aber sie löst sich auf.
-%%%%
-%s very briefly gain%s a black sheen.
-%s erhalten sehr kurz%s einen schwarzen Schimmer.
 %%%%
 It is a scroll of enchant weapon.
 Es ist eine Schriftrolle mit verzauberten Waffen.
@@ -13531,10 +13459,25 @@ Es gibt keine Gegenstände, die hier abgeholt werden können.
 There are several objects here.
 Hier gibt es mehrere Objekte.
 %%%%
+%s burns to shimmering ash in your grasp.
+
+%%%%
 You pick up %s and begin reading...
 Ihr nimmt %s und fängst an zu lesen...
 %%%%
 Unfortunately, you learned nothing new.
+
+%%%%
+You pick up %s. Unfortunately, it's quite useless to you.
+
+%%%%
+You pick up %s, but it has nothing more to teach you.
+
+%%%%
+You pick up another %s and continue studying.
+
+%%%%
+You pick up %s and begin studying.
 
 %%%%
 You pick up %s and feel its power.
@@ -13590,9 +13533,6 @@ Autopickup für%s deaktiviert.
 %%%%
 Autopickup disabled for %d items.
 Autopickup für%d-Elemente deaktiviert.
-%%%%
-=g
-
 %%%%
 {gold}
 
@@ -13769,6 +13709,9 @@ known-menu
 
 %%%%
 manuals
+
+%%%%
+spellbooks
 
 %%%%
 "unknown "
@@ -14113,6 +14056,9 @@ Expected map-bounds check fn and action fn.
 
 %%%%
 Expected vault_placement
+
+%%%%
+filename
 
 %%%%
 depth
@@ -14546,6 +14492,9 @@ encumbrance
 inscription
 
 %%%%
+description
+
+%%%%
 pluses
 
 %%%%
@@ -14595,9 +14544,6 @@ mapmarker
 ##################
 # l-moninf.cc
 ##################
-%%%%
-infinite will
-
 %%%%
 no such holiness: '
 
@@ -14731,6 +14677,9 @@ power
 cast
 
 %%%%
+describe
+
+%%%%
 
 ##################
 # l-travel.cc
@@ -14821,9 +14770,6 @@ anchored
 
 %%%%
 rooted
-
-%%%%
-invisible
 
 %%%%
 silencing
@@ -15013,13 +14959,7 @@ qual
 "\n "
 
 %%%%
->\n<
-
-%%%%
 ><
-
-%%%%
-\n
 
 %%%%
 TZ
@@ -15214,80 +15154,131 @@ Flushing non-empty key buffer (Buffer is '%s')
 Flushing non-empty key buffer
 Leeren des nicht leeren Schlüsselpuffers
 %%%%
-"Input %s action: "
+<red>[none]</red>
 
 %%%%
-"default "
+macros
 
 %%%%
-"level-map "
+default
 
 %%%%
-"targeting "
+menu
 
 %%%%
-"confirm "
+confirmation
 
 %%%%
-"menu "
+"Create/edit "
 
 %%%%
-keymap
+" from key"
+
+%%%%
+"Clear all "
+
+%%%%
+"Current "
+
+%%%%
+"cycle mode: "
+
+%%%%
+|
+
+%%%%
+edit keymaps
+
+%%%%
+\nArrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help\n[<w>!</w>
+
+%%%%
+/<w>Right-click</w>
+
+%%%%
+"] "
+
+%%%%
+regular keymap
+
+%%%%
+menu keymap
+
+%%%%
+targeting keymap
+
+%%%%
+level map keymap
+
+%%%%
+confirmation keymap
+
+%%%%
+buggy keymap
 
 %%%%
 Editing <w>
 
 %%%%
-</w>. <w>[Enter]</w> to add/edit by key, <w>-</w> to clear all, other keys add
-
-%%%%
-"(m)acro, keymap [(k) default, (x) level-map, (t)argeting, (c)onfirm, m(e)nu], (s)ave? "
-
-%%%%
-Saving macros.
-Makros speichern.
-%%%%
-Aborting.
-Abbruch.
-%%%%
-"Input %s trigger key (<white>\</white> to enter by keycode): "
-
-%%%%
-keycode
-
-%%%%
-"Input keycode: "
+s</w>.
 
 %%%%
 Really clear all %ss?
 
 %%%%
-All %ss cleared!
+"All "
 
 %%%%
-<red>[none]</red>
-
-%%%%
-Current Action for %s: %s
-
-%%%%
-"Do you wish to (r)edefine, %s%sor (a)bort? "
-
-%%%%
-"redefine (R)aw, "
-
-%%%%
-"(c)lear, "
+s cleared!
 
 %%%%
 Cleared %s '%s' => '%s'.
 %s '%s' => '%s' gelöscht.
 %%%%
-Deleted %s for '%s'.
-%s für '%s' gelöscht.
+Input trigger key to edit or create a %s:
+
 %%%%
-Created %s '%s' => '%s'.
-Erstellt %s '%s' => '%s'.
+<lightgray>([<w>~</w>] to enter by keycode)</lightgray>
+
+%%%%
+Current %s for %s: %s
+
+%%%%
+redefine
+
+%%%%
+redefine with raw key entry
+
+%%%%
+abort
+
+%%%%
+"<w>%s</w>\nInput (raw) new %s for %s: "
+
+%%%%
+Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.
+
+%%%%
+<w>%s</w>\nInput new %s for %s:
+
+%%%%
+Input a key sequence. Use <w>\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu
+
+%%%%
+Parsing error in key sequence '%s'
+
+%%%%
+Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]
+
+%%%%
+Enter keycode by number:
+
+%%%%
+Redefined
+
+%%%%
+Created
+
 %%%%
 Cannot parse marcos += %s , there is only one argument
 
@@ -15295,7 +15286,7 @@ Cannot parse marcos += %s , there is only one argument
 ' is not a valid macro or keymap context (macros += %s)
 
 %%%%
-Cannot parse marcos += %s , there are only two arguments
+Cannot parse macros += %s , there are only two arguments
 
 %%%%
 newline
@@ -15478,6 +15469,9 @@ Numpad %d
 Ctrl-%c
 
 %%%%
+percent
+
+%%%%
 
 ##################
 # main.cc
@@ -15624,14 +15618,17 @@ Dungeon Crawl command line help
 "the following items: "
 
 %%%%
+"the following spells memorised: "
+
+%%%%
+You begin with %s%s%s.
+Ihr beginnt mit {dat}%s%s%s.
+%%%%
 "; and the following spell memorised: "
 
 %%%%
 "; and the following spells available to memorise: "
 
-%%%%
-You begin with %s%s%s.
-Ihr beginnt mit {dat}%s%s%s.
 %%%%
 " set off with "
 
@@ -15707,6 +15704,9 @@ Cannot move, cancelling command repetition.
 %%%%
 Infinite lua loop detected, aborting.
 Endlose Lua-Schleife erkannt, abgebrochen.
+%%%%
+Banning ready() after %d throttles
+
 %%%%
 You can't repeat %s actions.
 Ihr könnt%s Aktionen nicht wiederholen.
@@ -15816,8 +15816,8 @@ You have unlimited time to explore this branch.
 " new floors."
 
 %%%%
-You can't remove your fur, sorry.
-Ihr könnt Euer Fell nicht entfernen, sorry.
+You can't remove your %s, sorry.
+
 %%%%
 Take off which item?
 
@@ -15856,6 +15856,27 @@ You should not fight recklessly!
 Ihr sollt nicht rücksichtslos kämpfen!
 %%%%
 Nothing quivered!
+
+%%%%
+Return to game
+
+%%%%
+Save and return to main menu
+
+%%%%
+Generate and view character dump
+
+%%%%
+Edit player tile
+
+%%%%
+Edit macros
+
+%%%%
+Help and manual
+
+%%%%
+Quit and <lightred>abandon character</lightred>
 
 %%%%
 Autopickup is now %s.
@@ -16070,9 +16091,6 @@ any
 Bad depth range: %d-%d
 
 %%%%
-" \t"
-
-%%%%
 block shuffle segment length mismatch
 
 %%%%
@@ -16080,9 +16098,6 @@ use / for block shuffle, or multiple SHUFFLE: lines
 
 %%%%
 no glyphs specified for clearing
-
-%%%%
-\t
 
 %%%%
 Invalid weight specifier in "
@@ -16244,6 +16259,9 @@ luniq
 No vault found for tag '%s'
 
 %%%%
+Fatal lua error while resolving subvault '%s'
+
+%%%%
 Could not fit '%s' in (%d,%d) to (%d, %d).
 
 %%%%
@@ -16283,9 +16301,6 @@ Not enough non-semicolons for '%s' spec.
 Too many semi-colons for '%s' spec.
 
 %%%%
-|
-
-%%%%
 More items than monster item slots for '%s'.
 
 %%%%
@@ -16320,6 +16335,9 @@ Can't give spec items to a random monster.
 
 %%%%
 Monster '%s' can't use items.
+
+%%%%
+Monster '%s' needs a defining item.
 
 %%%%
 Index out of range: %d
@@ -16483,9 +16501,6 @@ notify_dgn_event: Lua-Fehler:%s
 error (%s): %s
 
 %%%%
-describe
-
-%%%%
 Lua marker property (%s) error: %s
 Fehler der Lua-Markereigenschaft (%s):%s
 %%%%
@@ -16538,6 +16553,12 @@ position (%d,%d)
 ##################
 # maps.cc
 ##################
+%%%%
+Fatal lua error: %s
+
+%%%%
+Map resolution error: %s
+
 %%%%
 Lua validation for map %s failed.
 
@@ -16616,16 +16637,7 @@ Ihr versucht {acc}%s anzugreifen, zuckst aber vor Angst zurück!
 %s barely misses %s.
 %s verfehlt {acc}%s sehr knapp.
 %%%%
-You devour %s!
-Ihr fresst {acc}%s auf!
-%%%%
-It tastes like %s.
-Es schmeckt wie %s.
-%%%%
-Spicy!
-Scharf!
-%%%%
-You spit out the corpse of %s as it twists & changes in your mouth!
+You engulf %s in ooze!
 
 %%%%
 quick blade "Gimble"
@@ -16874,6 +16886,12 @@ Ihr meißelt {acc}%s
 You chomp %s
 Ihr kaut {acc}%s
 %%%%
+You buffet %s
+
+%%%%
+You batter %s
+Iht verprügelt {acc}%s
+%%%%
 You scratch %s
 Ihr kratzt {acc}%s
 %%%%
@@ -16882,9 +16900,6 @@ Ihr zerfleischt {acc}%s
 %%%%
 You eviscerate %s
 Ihr weidet {acc}%s aus
-%%%%
-You batter %s
-Iht verprügelt {acc}%s
 %%%%
 You squash %s like the proverbial ant
 Ihr zerquetscht {acc}%s wie die sprichwörtliche Ameise
@@ -17255,6 +17270,12 @@ Eure göttliche Ausdauer schützt Euch vor Gift!
 %s engulfs %s in water!
 %s überflutet {acc}%s!
 %%%%
+%s engulfs you!
+
+%%%%
+%s engulfs %s!
+
+%%%%
 %s willpower is stripped away!
 
 %%%%
@@ -17365,9 +17386,6 @@ top
 bot
 
 %%%%
-XXX
-
-%%%%
 <w>-</w>|<w><<</w>
 
 %%%%
@@ -17380,13 +17398,10 @@ XXX
 ]: page up        [<w>Esc</w>]: close        [<w>XXX</w>]</lightgrey>
 
 %%%%
-"Select what? (regex) "
+Select what (regex)?
 
 %%%%
 " (%d item%s)"
-
-%%%%
-Select what? (regex) %s
 
 %%%%
 %-*s
@@ -17455,12 +17470,6 @@ Ihr widersteht.
 You partially resist.
 Ihr widersteht teilweise.
 %%%%
-You are too berserk!
-Ihr seid zu wütend!
-%%%%
-You are too confused!
-
-%%%%
 You can't do that in your present form.
 Das könnt Ihr in Eurer jetzigen Form nicht tun.
 %%%%
@@ -17518,9 +17527,6 @@ Ihr fühlt, dass Eure magische Kapazität abnimmt.
 You feel momentarily disoriented.
 Ihr fühlt Euch momentan desorientiert.
 %%%%
-You're too hungry.
-Ihr habt zu viel hunger.
-%%%%
 You detect nothing.
 Ihr entdeckt nichts.
 %%%%
@@ -17550,6 +17556,9 @@ Ihr fühlt Euch besser.
 %%%%
 You feel your power returning.
 Ihr fühlt, dass Eure Kraft zurückkehrt.
+%%%%
+You feel momentarily drained.
+
 %%%%
 You suddenly feel drained of magical energy!
 Ihr fühlt Euch plötzlich von magischer Energie erschöpft!
@@ -17598,6 +17607,9 @@ strong
 
 %%%%
 fleeing
+
+%%%%
+summoned
 
 %%%%
 charmed
@@ -17727,8 +17739,19 @@ maybe
 %%%%
 
 ##################
+# mon-abil.h
+##################
+%%%%
+boris orb key
+
+%%%%
+
+##################
 # mon-abil.cc
 ##################
+%%%%
+%s is empowered by the presence of the orb!
+
 %%%%
 %s basks in your mutagenic energy and changes!
 
@@ -17742,32 +17765,14 @@ maybe
 %s splits.
 %s teilt sich.
 %%%%
-Two %s merge%s%s.
-Zwei%s führen%s%s zusammen.
-%%%%
-" to form "
-
-%%%%
-%s merges with %s%s%s.
-%s verschmilzt mit%s%s%s.
-%%%%
-%s suddenly becomes %s.
-%s wird plötzlich zu%s.
-%%%%
-%s twists grotesquely.
-%s dreht sich grotesk.
-%%%%
-%s suddenly disappears!
-%s verschwindet plötzlich!
-%%%%
 Two slime creatures merge to form %s.
 Zwei Schleimkreaturen verschmelzen zu%s.
 %%%%
-A slime creature suddenly becomes %s.
-Eine Schleimkreatur wird plötzlich zu%s.
+Something merges into %s, and it vanishes!
+
 %%%%
-A slime creature suddenly disappears!
-Eine Schleimkreatur verschwindet plötzlich!
+%s merges with something you can't see.
+
 %%%%
 A cacophony of accursed wailing tears at your sanity!
 
@@ -17802,7 +17807,7 @@ Wütende Insekten schießen unter%s Laub hervor!
 %s flows with the water.
 
 %%%%
-%s melds with the trees.
+%s flows through the trees.
 
 %%%%
 %s overheats!
@@ -17813,7 +17818,7 @@ Wütende Insekten schießen unter%s Laub hervor!
 # mon-act.cc
 ##################
 %%%%
-%s slips free of the water.
+%s is no longer engulfed.
 
 %%%%
 %s and %s swap places.
@@ -17846,28 +17851,7 @@ Ihr lenkt den Angriff von%s um!
 %s falls limply to the ground.
 
 %%%%
-%s hums quietly as it recharges.
-
-%%%%
-%s crackles loudly.
-
-%%%%
-You hear a loud crackle.
-Ihr hört ein lautes Knistern.
-%%%%
-%s is lost in a daze.
-
-%%%%
-%s becomes distracted by the nearby gold, dreaming of imaginary riches.
-
-%%%%
-%s becomes distracted by your gold, dreaming of imaginary riches.
-
-%%%%
-%s is distracted by dreams of imaginary riches.
-
-%%%%
-handle_pickup()
+_handle_reaching()
 
 %%%%
 spell or special
@@ -17879,19 +17863,28 @@ _handle_potion()
 _handle_scroll()
 
 %%%%
-_handle_evoke_equipment()
-
-%%%%
 _handle_wand()
 
 %%%%
 _handle_swoop()
 
 %%%%
-_handle_reaching()
+_handle_throw()
 
 %%%%
-_handle_throw()
+%s crackles loudly.
+
+%%%%
+You hear a loud crackle.
+Ihr hört ein lautes Knistern.
+%%%%
+%s is lost in a daze.
+
+%%%%
+%s is distracted by your dazzling golden aura.
+
+%%%%
+handle_pickup()
 
 %%%%
 fight_melee()
@@ -18120,6 +18113,12 @@ Eine Tür schlägt zu!
 You are pushed out of the doorway!
 Ihr werdet aus der Tür geschoben!
 %%%%
+creeping frost
+
+%%%%
+flame surge
+
+%%%%
 %s calls on %s to defend %s!
 %s fordert%s auf,%s zu verteidigen!
 %%%%
@@ -18165,26 +18164,8 @@ Zins Macht schützt Euren Mitkrieger vor böser Magie!
 Send 'em back where they came from!
 Schick sie zurück, wo sie herkommen!
 %%%%
-%s is infused with unholy energy, but nothing happens.
+%s %s frozen%s
 
-%%%%
-%s is infused with unholy energy.
-
-%%%%
-Unholy energy fills the air.
-Unheilige Energie erfüllt die Luft.
-%%%%
-%s draws life force from you and is healed!
-
-%%%%
-%s draws life force from %s!
-
-%%%%
-%s draws life force from %s and is healed!
-
-%%%%
-%s %s frozen.
-%s%s eingefroren.
 %%%%
 %s attempts to bespell you!
 
@@ -18243,14 +18224,8 @@ The dream sheep attempt%s to lull %s to sleep.
 " You feel drowsy..."
 
 %%%%
-vortex
+A freezing vortex appears %s%s%s!
 
-%%%%
-great vortex
-
-%%%%
-A %s of raging winds appears %s%s%s!
-Ein%s von wütenden Winden erscheint%s%s%s!
 %%%%
 "around "
 
@@ -18261,8 +18236,8 @@ Ein%s von wütenden Winden erscheint%s%s%s!
 " up!"
 
 %%%%
-A %s of raging winds appears out of thin air!
-Ein %s der tobenden Winde erscheinen aus der Luft!
+A freezing vortex appears out of thin air!
+
 %%%%
 The water rises up and strikes you
 
@@ -18282,10 +18257,7 @@ The air twists around and violently strikes you in flight
 The air twists around and strikes you
 
 %%%%
-The air twists around and violently strikes %s in flight
-
-%%%%
-The air twists around and strikes %s
+The air twists around and strikes %s%s
 
 %%%%
 Something feeds on your intellect!
@@ -18339,8 +18311,8 @@ Wände tauchen aus dem Boden auf!
 The forest starts to sway and rumble!
 
 %%%%
-A film of ice covers %s body!
-Ein Eisfilm bedeckt%s Körper!
+An electric hum fills the air.
+Ein elektrisches Summen erfüllt die Luft.
 %%%%
 %s begins to accept the injuries of allies.
 
@@ -18513,8 +18485,8 @@ Mit einem infernalischen Schauder verschwindet die Macht, die diesen Ort beherrs
 With an infernal noise, the power ruling this place vanishes!
 Mit einem infernalischen Geräusch verschwindet die Macht, die diesen Ort beherrscht!
 %%%%
-%s's corpse
-die Leiche {gen}%s
+"'s corpse "
+
 %%%%
 A freezing mist gathers momentarily, then fades.
 Ein eisiger Nebel sammelt sich kurz, dann vergeht er.
@@ -18534,8 +18506,8 @@ Mit seinem letzten Atemzug opfert der Spriggan-Druide seine Kraft den Bestien de
 %s seems to grow more fierce.
 %s scheint immer grimmiger zu werden.
 %%%%
-%s turns into a zombie!
-%s verwandelt sich in einen Zombie!
+%s turns into a %s!
+
 %%%%
 %s appears out of thin air!
 %s erscheint aus der Luft!
@@ -18555,14 +18527,20 @@ Ihr spürt {gen}%s Macht in Euch, als Eure Wut wächst.
 The necklace of Bloodlust glows a violent red.
 Die Kette von Bloodlust leuchtet heftig rot.
 %%%%
+You feel the ancient rage of your axe.
+
+%%%%
 %s detonates feebly.
 %s detoniert kraftlos.
 %%%%
 %s dissipates!
 %s verflüchtigt sich!
 %%%%
-%s vapourises!
-%s verdampft!
+%s vaporises!
+
+%%%%
+%s turns to gold and falls from the air.
+
 %%%%
 %s falls from the air.
 %s fällt aus der Luft.
@@ -18576,8 +18554,8 @@ Mit einem Gebrüll wird die Tentakel zurück durch das Portal gezogen!
 %s crumbles away.
 %s bröckelt weg.
 %%%%
-%s exhausts itself and dries up.
-%s erschöpft sich und trocknet aus.
+You feel a bit better.
+
 %%%%
 %s is blown up!
 %s wird gesprengt!
@@ -18602,6 +18580,9 @@ Das fühlte sich seltsam undankbar an.
 %%%%
 %s collects the excess magic power.
 %s sammelt die überschüssige Zauberkraft ein.
+%%%%
+%s grants you a gift!
+%s gewährt Euch ein Geschenk!
 %%%%
 %s dies!
 %s stirbt!
@@ -18788,9 +18769,6 @@ dies
 %s is no longer moving slowly.
 
 %%%%
-%s icy armour evaporates.
-%s eisige Rüstung verdunstet.
-%%%%
 %s is no longer paralysed.
 
 %%%%
@@ -18959,6 +18937,9 @@ Die%s lassen%s los.
 %s stops rolling and uncurls.
 
 %%%%
+%s no longer looks unusually toxic.
+
+%%%%
 The pull of its song draws you forwards.
 Der Zug seines Liedes zieht Euch nach vorne.
 %%%%
@@ -19009,6 +18990,9 @@ Die Winde um%s beginnen sich zu beruhigen.
 %%%%
 %s chant is interrupted.
 %s Gesang ist unterbrochen.
+%%%%
+%s is asphyxiated!
+
 %%%%
 The winds around %s calm down.
 Die Winde um%s beruhigen sich.
@@ -19162,7 +19146,7 @@ explosion is contained
 By Zin's power, the fiery explosion is contained.
 
 %%%%
-exploding inner flame
+ignited by their inner flame
 
 %%%%
 ignited by themself
@@ -19270,7 +19254,10 @@ brilliance aura
 brilliance auras
 
 %%%%
-surrounded by raging winds
+surrounded by a freezing vortex
+
+%%%%
+vortices
 
 %%%%
 gusty
@@ -19315,9 +19302,6 @@ absorbing vital energies
 black marks
 
 %%%%
-covered in an icy film
-
-%%%%
 surrounded by an icy envelope
 
 %%%%
@@ -19325,12 +19309,6 @@ unusually resistant
 
 %%%%
 slightly transparent
-
-%%%%
-strong-willed
-
-%%%%
-strong-willedmr
 
 %%%%
 sheltered
@@ -19405,7 +19383,7 @@ encased in ice
 engulfed
 
 %%%%
-unable to breathe
+asphyxiating
 
 %%%%
 covered in liquid flames
@@ -19468,9 +19446,6 @@ lightly drained
 heavily drained
 
 %%%%
-magic-sapped
-
-%%%%
 softly glowing
 
 %%%%
@@ -19495,10 +19470,16 @@ sharing @possessive@ pain
 disembodied soul
 
 %%%%
+ally target
+
+%%%%
 
 ##################
 # mon-info.cc
 ##################
+%%%%
+nightvision
+
 %%%%
 inwards
 
@@ -19522,6 +19503,9 @@ INVALID MONSTER
 
 %%%%
 "titanic "
+
+%%%%
+"animated "
 
 %%%%
 " ghost"
@@ -19716,6 +19700,9 @@ something unseen
 %s quivers momentarily.
 
 %%%%
+<green>Wyrmbane glows as a worthy foe approaches.</green>
+
+%%%%
 
 ##################
 # mon-project.cc
@@ -19886,9 +19873,6 @@ hit, bite, peck, or gore
 hit or gore
 
 %%%%
-" at"
-
-%%%%
 " on"
 
 %%%%
@@ -19958,28 +19942,13 @@ your god
 "insult general "
 
 %%%%
-" @foe,@"
-
-%%%%
-@player
-
-%%%%
 @foe
-
-%%%%
-@Player
 
 %%%%
 @Foe
 
 %%%%
 to
-
-%%%%
-@says@ @to_foe@
-
-%%%%
-@foe,@
 
 %%%%
 @foe@,
@@ -20166,9 +20135,6 @@ Spellbook %s has spell %s at freq %d (greater than max freq %d)\n
 
 %%%%
 Spellbook %s has spell %s in multiple categories (%d and %d)\n
-
-%%%%
-Spellbook %s has spell %s marked MON_SPELL_NO_SILENT redundantly\n
 
 %%%%
 Spellbook %s has spell %s marked MON_SPELL_NOISY redundantly\n
@@ -20424,9 +20390,6 @@ Ihr hört ein plätscherndes Geräusch.
 %s goes berserk!
 
 %%%%
-The heat melts %s icy armour.
-Die Hitze schmilzt%s eisige Rüstung.
-%%%%
 %s wobbles for a moment.
 
 %%%%
@@ -20444,6 +20407,9 @@ Die Hitze schmilzt%s eisige Rüstung.
 %%%%
 %s is splashed with acid
 %s ist mit Säure%s besprit
+%%%%
+Your corrupting presence
+
 %%%%
 %s begins to crumble.
 
@@ -20564,6 +20530,9 @@ Your icy armour cracks and falls away as you move.
 The frozen ramparts melt away as you move.
 
 %%%%
+You slip free of the %s engulfing you.
+
+%%%%
 "Are you sure you want to "
 
 %%%%
@@ -20621,13 +20590,16 @@ You can't repeat rampage.
 Something unexpectedly blocked you, preventing you from rampaging!
 
 %%%%
-You rampage quickly through the %s towards %s!
+You %s quickly through the %s towards %s!
+
+%%%%
+stride
 
 %%%%
 plants
 
 %%%%
-You rampage towards %s!
+You %s towards %s!
 
 %%%%
 You cannot move. (Use ctrl+direction or * direction to attack without moving.)
@@ -20649,9 +20621,6 @@ fly
 
 %%%%
 swim
-
-%%%%
-slither
 
 %%%%
 walk
@@ -21039,13 +21008,13 @@ You feel your will become almost unbreakable.
 You no longer feel strong-willed.
 
 %%%%
-You cover ground quickly.
+You cover ground quickly. (Speed+)
 
 %%%%
-You cover ground very quickly.
+You cover ground very quickly. (Speed++)
 
 %%%%
-You cover ground extremely quickly.
+You cover ground extremely quickly. (Speed+++)
 
 %%%%
 You feel quick.
@@ -21180,16 +21149,10 @@ screaming
 You occasionally shout uncontrollably at your foes.
 
 %%%%
-You sometimes yell uncontrollably at your foes.
-
-%%%%
 You frequently scream uncontrollably at your foes.
 
 %%%%
 You feel the urge to shout.
-
-%%%%
-You feel a strong urge to yell.
 
 %%%%
 You feel a strong urge to scream.
@@ -21198,10 +21161,19 @@ You feel a strong urge to scream.
 Your urge to shout disappears.
 
 %%%%
-Your urge to yell lessens.
+Your urge to scream lessens.
 
 %%%%
-Your urge to scream lessens.
+noise suppression
+
+%%%%
+You passively dampen the noise of your surroundings.
+
+%%%%
+You feel your surroundings grow quieter.
+
+%%%%
+You feel your surroundings grow louder
 
 %%%%
 clarity
@@ -21357,16 +21329,19 @@ unbreathing
 You can survive without breathing.
 
 %%%%
+You can survive without breathing, even under water.
+
+%%%%
 You feel breathless.
 
 %%%%
 torment resistance
 
 %%%%
-You are immune to unholy pain and torment.
+You feel a strange anaesthesia.
 
 %%%%
-You feel a strange anaesthesia.
+You feel a very strange anaesthesia.
 
 %%%%
 negative energy resistance
@@ -21408,13 +21383,13 @@ You are strongly in touch with the powers of death.
 You feel more in touch with the powers of death.
 
 %%%%
-able to fly
+nimble flight
 
 %%%%
-You can fly continuously.
+Your magical nature lets you fly swiftly and evasively.
 
 %%%%
-You have gained the ability to fly.
+Your magical nature develops, letting you fly swiftly and evasively.
 
 %%%%
 hurl damnation
@@ -21621,13 +21596,25 @@ You taste something nasty.
 Your breath is less nasty.
 
 %%%%
-constrict 1
+naga tail
+
+%%%%
+You have a snake-like lower body.
 
 %%%%
 You can use your snake-like lower body to constrict enemies.
 
 %%%%
+Your lower body turns into a snake tail.
+
+%%%%
 Your tail grows strong enough to constrict your enemies.
+
+%%%%
+Your lower body returns to normal.
+
+%%%%
+Your snake tail weakens and can no longer constrict your enemies.
 
 %%%%
 stinger
@@ -21660,7 +21647,7 @@ The barb on your tail seems less sharp.
 big wings
 
 %%%%
-Your large and strong wings let you fly indefinitely.
+Your large and strong wings let you fly.
 
 %%%%
 Your wings grow larger and stronger.
@@ -21855,10 +21842,31 @@ Your magic regains its normal vibrancy.
 Your connection to magic feels less subdued.
 
 %%%%
+demonic magic
+
+%%%%
+Spells you cast may paralyse adjacent enemies.
+
+%%%%
+Spells you cast may paralyse nearby enemies.
+
+%%%%
+Spells you cast and wands you use may paralyse nearby enemies.
+
+%%%%
+A menacing aura infuses your magic.
+
+%%%%
+Your magic grows more menacing.
+
+%%%%
+Your wands become infused with your menacing aura.
+
+%%%%
 forlorn
 
 %%%%
-You have difficulty communicating with the divine.
+You shall have no god before yourself.
 
 %%%%
 You feel forlorn.
@@ -21867,10 +21875,7 @@ You feel forlorn.
 You feel more spiritual.
 
 %%%%
-50% torment resistance
-
-%%%%
-You are somewhat able to resist unholy torments (1 in 2 success).
+You are somewhat able to resist unholy torments.
 
 %%%%
 sense surroundings
@@ -21900,7 +21905,22 @@ You feel slightly disoriented.
 A meltable icy envelope protects you from harm. (AC +
 
 %%%%
+A thick, meltable icy envelope protects you from harm. (AC +
+
+%%%%
 An icy envelope takes form around you.
+
+%%%%
+Your icy envelope grows thicker.
+
+%%%%
+condensation shield
+
+%%%%
+A meltable shield of frost defends you. (SH +
+
+%%%%
+Frost condenses into a shield before you.
 
 %%%%
 conserve scrolls
@@ -21928,6 +21948,9 @@ A frigid envelope surrounds you and freezes all who hurt you.
 
 %%%%
 Your skin feels very cold.
+
+%%%%
+Your skin warms up.
 
 %%%%
 nightstalker
@@ -22062,7 +22085,7 @@ You feel your magical essence form a protective shroud around your flesh.
 You regenerate magic rapidly.
 
 %%%%
-You feel your magic shroud grow more resilient.
+Your magic begins to regenerate rapidly.
 
 %%%%
 magic link
@@ -22134,13 +22157,13 @@ The eyeballs on your body recede somewhat.
 translucent skin
 
 %%%%
-Your translucent skin slightly reduces your foes' accuracy. (Stealth)
+Your translucent skin slightly reduces your foes' accuracy. (Stealth+)
 
 %%%%
-Your translucent skin reduces your foes' accuracy. (Stealth)
+Your translucent skin reduces your foes' accuracy. (Stealth+)
 
 %%%%
-Your transparent skin significantly reduces your foes' accuracy. (Stealth)
+Your transparent skin significantly reduces your foes' accuracy. (Stealth+)
 
 %%%%
 Your skin becomes partially translucent.
@@ -22227,25 +22250,16 @@ no potion heal
 Potions are less effective at restoring your health.
 
 %%%%
-Potions are poor at restoring your health.
-
-%%%%
 Potions cannot restore your health.
 
 %%%%
 Your system partially rejects the healing effects of potions.
 
 %%%%
-Your system mostly rejects the healing effects of potions.
-
-%%%%
 Your system completely rejects the healing effects of potions.
 
 %%%%
 Your system completely accepts the healing effects of potions.
-
-%%%%
-Your system mostly accepts the healing effects of potions.
 
 %%%%
 Your system partly accepts the healing effects of potions.
@@ -22491,13 +22505,13 @@ Your thin metallic scales recede somewhat.
 thin skeletal structure
 
 %%%%
-You have a somewhat thin skeletal structure. (Dex +2, Stealth)
+You have a somewhat thin skeletal structure. (Dex +2, Stealth+)
 
 %%%%
-You have a moderately thin skeletal structure. (Dex +4, Stealth+)
+You have a moderately thin skeletal structure. (Dex +4, Stealth++)
 
 %%%%
-You have an unnaturally thin skeletal structure. (Dex +6, Stealth++)
+You have an unnaturally thin skeletal structure. (Dex +6, Stealth+++)
 
 %%%%
 Your bones become slightly less dense.
@@ -22659,22 +22673,40 @@ Your natural camouflage becomes less effective.
 ignite blood
 
 %%%%
-Your demonic aura causes spilled blood to erupt in flames.
+Your demonic aura sometimes causes spilled blood to erupt in flames.
+
+%%%%
+Your demonic aura often causes spilled blood to erupt in flames.
+
+%%%%
+Your demonic aura causes all spilled blood to erupt in flames.
+
+%%%%
+Your blood heats up.
 
 %%%%
 Your blood runs red-hot!
 
 %%%%
+Your blood burns even hotter!
+
+%%%%
 foul stench
 
 %%%%
-You may emit foul miasma when damaged in melee.
+You may rarely emit foul miasma when damaged in melee.
+
+%%%%
+You sometimes emit foul miasma when damaged in melee.
 
 %%%%
 You frequently emit foul miasma when damaged in melee.
 
 %%%%
 You begin to emit a foul stench of rot and decay.
+
+%%%%
+Your foul stench grows more powerful.
 
 %%%%
 You begin to radiate miasma.
@@ -22791,6 +22823,57 @@ Your melee attacks may debilitate your foes.
 An ominous black mark forms on your body.
 
 %%%%
+aura of silence
+
+%%%%
+You are surrounded by an aura of silence.
+
+%%%%
+An unnatural silence shrouds you.
+
+%%%%
+bedeviling
+
+%%%%
+Your hexes are more powerful.
+
+%%%%
+You feel devilish.
+
+%%%%
+corrupting presence
+
+%%%%
+Your presence sometimes corrodes those you injure.
+
+%%%%
+Your presence sometimes corrodes or deforms those you injure.
+
+%%%%
+You feel corrupt.
+
+%%%%
+Your corrupting presence intensifies.
+
+%%%%
+word of chaos
+
+%%%%
+You can speak a Word of Chaos.
+
+%%%%
+Your tongue twists.
+
+%%%%
+demonic willpower
+
+%%%%
+You punish those that try to bend your will. (Will+)
+
+%%%%
+You feel willful.
+
+%%%%
 cold-blooded
 
 %%%%
@@ -22821,10 +22904,10 @@ Your attributes are resistant to harm.
 inability to drink while threatened
 
 %%%%
-You cannot drink potions while threatened.
+You sometimes lose the ability to drink potions when taking damage.
 
 %%%%
-You no longer can drink potions while threatened.
+You lose the ability to drink potions when threatened.
 
 %%%%
 You can once more drink potions while threatened.
@@ -22833,10 +22916,10 @@ You can once more drink potions while threatened.
 inability to read while threatened
 
 %%%%
-You cannot read scrolls while threatened.
+You sometimes lose the ability to read scrolls when taking damage.
 
 %%%%
-You can no longer read scrolls while threatened.
+You lose the ability to read scrolls when threatened.
 
 %%%%
 You can once more read scrolls while threatened.
@@ -23214,10 +23297,10 @@ You regain all your potential.
 You regain some potential.
 
 %%%%
-sharp paws
+stealthy paws
 
 %%%%
-Your sharp claws are effective at attacking unaware monsters.
+Your paws help you pounce on unaware monsters.
 
 %%%%
 missing an eye
@@ -23280,6 +23363,225 @@ You feel resistant to acid.
 You feel less resistant to acid.
 
 %%%%
+four strong arms
+
+%%%%
+Your four strong arms can wield two-handed weapons with a shield.
+
+%%%%
+Two of your arms shrink away.
+
+%%%%
+You grow two extra arms.
+
+%%%%
+You do not drink.
+
+%%%%
+Your mouth dries to ashes.
+
+%%%%
+You gain the ability to drink.
+
+%%%%
+retaliatory headbutt
+
+%%%%
+You reflexively headbutt those who attack you in melee.
+
+%%%%
+Your retaliatory reflexes feel sharp.
+
+%%%%
+Your retaliatory reflexes feel dull.
+
+%%%%
+steam resistance
+
+%%%%
+You are immune to the effects of steam.
+
+%%%%
+You are now immune to the effects of steam.
+
+%%%%
+You are no longer immune to the effects of steam.
+
+%%%%
+no weapons or thrown items
+
+%%%%
+You are incapable of wielding weapons or throwing items.
+
+%%%%
+You can no longer grasp objects.
+
+%%%%
+You can now grasp objects.
+
+%%%%
+You cannot wear armour.
+
+%%%%
+You can no longer wear armour.
+
+%%%%
+You can now wear armour.
+
+%%%%
+multi-lived
+
+%%%%
+You gain extra lives every three experience levels.
+
+%%%%
+You are no longer multi-lived.
+
+%%%%
+You can now gain extra lives.
+
+%%%%
+distributed training
+
+%%%%
+Your experience applies equally to all skills.
+
+%%%%
+Your experience now applies equally to all skills.
+
+%%%%
+Your experience no longer applies equally to all skills.
+
+%%%%
+nimble swimmer
+
+%%%%
+You are camouflaged near water. (Stealth+)
+
+%%%%
+You are quick and stealthy near water. (Stealth+, EV+, Speed+++)
+
+%%%%
+You feel comfortable near water.
+
+%%%%
+You feel very comfortable near water.
+
+%%%%
+You feel less comfortable near water.
+
+%%%%
+You have tentacles for arms and can constrict enemies.
+
+%%%%
+Your arms feel tentacular.
+
+%%%%
+Your arms no longer feel tentacular.
+
+%%%%
+You are afflicted with vampirism.
+
+%%%%
+You are afflicted with vampirism and can become a bat while bloodless.
+
+%%%%
+You feel a craving for blood.
+
+%%%%
+You can now turn into a vampire bat when bloodless.
+
+%%%%
+Your craving for blood subsides.
+
+%%%%
+You can no longer turn into a bat.
+
+%%%%
+mertail
+
+%%%%
+Your lower body shifts to a powerful aquatic tail in water.
+
+%%%%
+Your legs feel aquatic.
+
+%%%%
+Your legs no longer feel aquatic.
+
+%%%%
+You float through the air rather than walking.
+
+%%%%
+You feel both weightless and legless.
+
+%%%%
+You feel dragged down by the weight of the world.
+
+%%%%
+innate caster
+
+%%%%
+You learn spells naturally, not from books.
+
+%%%%
+You feel mystic power welling inside you.
+
+%%%%
+You feel a greater respect for book-learning.
+
+%%%%
+hp casting
+
+%%%%
+Your magical power is your life essence.
+
+%%%%
+Your magical power and health merge together.
+
+%%%%
+Your life and magic unlink.
+
+%%%%
+extra vitality
+
+%%%%
+You have superior vitality. (+4 HP)
+
+%%%%
+You have much superior vitality. (+8 MHP)
+
+%%%%
+You have exceptionally superior vitality. (+12 MHP)
+
+%%%%
+You feel less vital.
+
+%%%%
+You feel more vital.
+
+%%%%
+Your melee attacks may engulf your foes in ooze.
+
+%%%%
+You begin exuding ooze.
+
+%%%%
+You stop exuding ooze.
+
+%%%%
++LOS
+
+%%%%
+You have an extended range of vision and can be seen from far away.
+
+%%%%
+The darkness flees at your approach.
+
+%%%%
+The shadows grow bolder once more.
+
+%%%%
 good
 
 %%%%
@@ -23309,7 +23611,73 @@ qazlal
 ))</darkgrey>
 
 %%%%
-Innate Abilities, Weirdness & Mutations
+[+
+
+%%%%
+Your breath weapon is enhanced in this form.
+
+%%%%
+You move quickly.
+
+%%%%
+You are flying.
+
+%%%%
+You are amphibious.
+
+%%%%
+boosted hp
+
+%%%%
+Your maximum health is %sincreased.
+
+%%%%
+reduced hp
+
+%%%%
+Your maximum health is decreased.
+
+%%%%
+You are immune to poison.
+
+%%%%
+Your spellcasting is less reliable in this form.
+
+%%%%
+no casting
+
+%%%%
+You cannot cast spells.
+
+%%%%
+You cannot drink.
+
+%%%%
+alive
+
+%%%%
+Your natural rate of healing is accelerated.
+
+%%%%
+bloodless
+
+%%%%
+You are frail without blood (-20% HP).
+
+%%%%
+You can heal yourself when you bite living creatures.
+
+%%%%
+You can walk on water.
+
+%%%%
+You can walk on water until reaching land.
+
+%%%%
+Your life essence is reduced to manifest your ancestor. (-10% HP)
+
+%%%%
+AC +
 
 %%%%
 " scales are "
@@ -23330,49 +23698,31 @@ serpentine skin is tough
 stone body is resilient
 
 %%%%
-<green>You do not regenerate when monsters are visible.</green>\n
+You can wear up to %s rings at the same time.
 
 %%%%
-<green>You are frail without blood (-20% HP).</green>\n
+You are too small for most types of armour.
 
 %%%%
-<green>You can heal yourself when you bite living creatures.</green>\n
+no large weapons
 
 %%%%
-<green>Your natural rate of healing is unusually fast.</green>\n
+You are very small and have problems with some larger weapons.
 
 %%%%
-You are amphibious.
+You are small and have problems with some larger weapons.
 
 %%%%
-You can wear up to %d rings at the same time.
+You are too large for most types of armour.
 
 %%%%
-You can use your tentacles to constrict %d enemies at once.
+You cannot fit into any form of body armour.
 
 %%%%
-You are very small and have problems with some larger weapons.\nYou are too small for most types of armour.\n
+Your attributes grow dramatically as you level up.
 
 %%%%
-You are small and have problems with some larger weapons.\n
-
-%%%%
-You are too large for most types of armour.\n
-
-%%%%
-You cannot fit into any form of body armour.\n
-
-%%%%
-You are immune to poison.\n
-
-%%%%
-<green>You can walk on water.</green>\n
-
-%%%%
-<lightgreen>You can walk on water until reaching land.</lightgreen>
-
-%%%%
-<lightred>Your life essence is reduced to manifest your ancestor. (-10% HP)</lightred>\n
+Innate Abilities, Weirdness & Mutations
 
 %%%%
 You are rather mundane.\n
@@ -23441,28 +23791,28 @@ immune
 "+++   "
 
 %%%%
-"Miasma  resistance   "
-
-%%%%
-"+     "
+"Miasma resistance    "
 
 %%%%
 "Torment resistance   "
 
 %%%%
-"\n<w>Transformations</w>\nBat form             "
+"\n<w>Transformations</w>\nBat form (XL 3+)     "
 
 %%%%
 "yes   "
 
 %%%%
-"Other forms and \nberserk              "
+"Other forms          "
 
 %%%%
 "yes        "
 
 %%%%
 "no    "
+
+%%%%
+"Berserk              "
 
 %%%%
 <brown>()</brown>  : Partially suppressed.\n
@@ -23492,12 +23842,6 @@ Eure Mutationen fühlen sich dauerhafter an.
 You feel %s.
 Ihr fühlt %s.
 %%%%
-legs
-
-%%%%
-arms
-
-%%%%
 You feel rather odd for a moment.
 Ihr fühlt Euch für einen Moment ziemlich seltsam.
 %%%%
@@ -23505,6 +23849,12 @@ Found no temp mutations, clearing.
 Keine temporären Mutationen gefunden, Clearing.
 %%%%
 temp mutation expiry
+
+%%%%
+You expend health (3 HP) to strengthen your wands.
+
+%%%%
+You have tentacles for arms and can constrict up to %s enemies at once.
 
 %%%%
 You have sharp claws.
@@ -23541,6 +23891,9 @@ completely
 
 %%%%
 somewhat
+
+%%%%
+A demonic guardian appears!
 
 %%%%
 
@@ -23747,6 +24100,9 @@ Temple %s set as variable but has no sizes.
 temple_altars_%d
 
 %%%%
+Failed to load map, reloading all maps (%s).
+
+%%%%
 Temple %s: %s
 Tempel %s: %s
 %%%%
@@ -23825,8 +24181,11 @@ Die Herren von Pandemonium sind nicht amüsiert. Vorsicht!
 # ouch.cc
 ##################
 %%%%
-Your icy envelope dissipates!
-Euer eisiger Umschlag löst sich auf!
+Your icy defenses dissipate!
+
+%%%%
+Your condensation shield dissipates!
+
 %%%%
 You shrug off the wave.
 Ihr schüttelt die Welle ab.
@@ -23851,9 +24210,6 @@ Ihr krümmt Euch in Qual!
 %%%%
 The flames go out!
 Die Flammen gehen aus!
-%%%%
-You feel your flight won't last long.
-Ihr habt das Gefühl, Euer Flug wird nicht lange dauern.
 %%%%
 You are now level %d!
 
@@ -23918,9 +24274,6 @@ Ihr fühlt Euch bedroht und verlierst die Fähigkeit, Tränke zu trinken!
 Ouch! That really hurt!
 Autsch! Das hat wirklich wehgetan!
 %%%%
-* * * LOW HITPOINT WARNING * * *
-* * * LOW HITPOINT WARNING * * *
-%%%%
 something (%d)
 
 %%%%
@@ -23968,6 +24321,9 @@ Turn:
 
 %%%%
 (…)
+
+%%%%
+∞
 
 %%%%
 Weapon
@@ -24030,13 +24386,7 @@ Ring
 )</darkgrey>
 
 %%%%
-∞
-
-%%%%
 *\n
-
-%%%%
-[+
 
 %%%%
 "<w>@:</w> "
@@ -24177,8 +24527,17 @@ Ihr könnt%s nicht führen.
 You can't use weapons.
 Ihr könnt keine Waffen benutzen.
 %%%%
+You can't use weapons in this form.
+
+%%%%
 That's too large for you to wield.
 Das ist zu groß für Euch.
+%%%%
+fist
+
+%%%%
+"blade "
+
 %%%%
 underbelly
 
@@ -24245,14 +24604,20 @@ Ihr werdet aus den%s gedrängt.
 # player-equip.cc
 ##################
 %%%%
+You feel rather light.
+Ihr fühlt Euch ziemlich leicht.
+%%%%
 You feel a build-up of mutagenic energy.
 Ihr fühlt einen Aufbau mutagener Energie.
 %%%%
 You feel ready to rampage towards enemies.
 
 %%%%
-You absorb a burst of magical contamination as your invisibility abruptly ends!
-
+You feel strangely lacking in power.
+Ihr fühlt Euch seltsamerweise kraftlos.
+%%%%
+You feel powerful.
+Ihr fühlt Euch mächtig.
 %%%%
 %s crumbles to dust!
 %s zerfällt zu Staub!
@@ -24262,6 +24627,9 @@ Mutagene Energien fluten in Euren Körper!
 %%%%
 You no longer feel able to rampage towards enemies.
 
+%%%%
+You feel strangely numb.
+Ihr fühlt Euch seltsam taub.
 %%%%
 You really shouldn't be using a holy item like this.
 Ihr sollt wirklich keinen heiligen Gegenstand wie diesen benutzen.
@@ -24280,9 +24648,6 @@ Ihr sollt wirklich keinen hastigen Gegenstand wie diesen benutzen.
 %%%%
 You really shouldn't be using a wizardly item like this.
 Ihr sollt wirklich keinen Zauber wie diesen benutzen.
-%%%%
-It sticks to your %s!
-Es bleibt bei Eurem %s!
 %%%%
 %s bursts into flame!
 %s geht in Flammen auf!
@@ -24335,6 +24700,9 @@ Your %s briefly %s through it before you manage to get a firm grip on it.
 %s is briefly surrounded by shifting shadows.
 %s ist kurz von wechselnden Schatten umgeben.
 %%%%
+You feel a force failing to suppress your magic.
+
+%%%%
 You feel magic leave you.
 Ihr fühlt, wie Magie Euch verlässt.
 %%%%
@@ -24345,9 +24713,6 @@ Der Weltraum verzieht sich für einen Moment um Euch!
 %s beginnt ätzenden Schleim zu sickern!
 %%%%
 You feel a bond with your %s.
-
-%%%%
-You feel a deep bond with your %s!
 
 %%%%
 %s stops flaming.
@@ -24410,21 +24775,6 @@ Ihr werdet für einen Moment transparent.
 You feel rather ponderous.
 Ihr fühlt Euch ziemlich schwerfällig.
 %%%%
-You feel rather light.
-Ihr fühlt Euch ziemlich leicht.
-%%%%
-Take your %s off to stop flying.
-Zieh Eure %s aus, um nicht mehr zu fliegen.
-%%%%
-(use the <w>%s</w>bility menu to %s flying)
-(Verwende das Fähigkeitsmenü <w>%s</w>, um %s zu fliegen)
-%%%%
-stop or start
-
-%%%%
-start or stop
-
-%%%%
 You feel protected.
 Ihr fühlt Euch beschützt.
 %%%%
@@ -24437,12 +24787,6 @@ Ihr fühlt Euch widerstandsfähig gegen extreme Temperaturen.
 You feel more protected from negative energy.
 Ihr fühlt Euch besser vor negativer Energie geschützt.
 %%%%
-You feel strangely lacking in power.
-Ihr fühlt Euch seltsamerweise kraftlos.
-%%%%
-You feel powerful.
-Ihr fühlt Euch mächtig.
-%%%%
 You feel that your aim is more steady.
 Ihr fühlt, dass Euer Zielen genauer ist.
 %%%%
@@ -24451,12 +24795,6 @@ Ihr seid von einem Abstoßungsfeld umgeben.
 %%%%
 It gets dark.
 Es wird dunkel.
-%%%%
-Oops, that feels deathly cold.
-Ups, das fühlt sich tödlich kalt an.
-%%%%
-You feel rather sluggish.
-Ihr fühlt Euch ziemlich träge.
 %%%%
 You feel less resistant to fire.
 Ihr fühlt Euch weniger feuerbeständig.
@@ -24469,6 +24807,9 @@ Ihr fühlt Euch nicht länger resistent gegen Gift.
 %%%%
 You feel less perceptive.
 Ihr fühlt Euch weniger scharfsinnig.
+%%%%
+slither
+
 %%%%
 step
 
@@ -24484,9 +24825,6 @@ Ihr fühlt Euch überall heiß und kalt an.
 %%%%
 You feel less protected from negative energy.
 Ihr fühlt Euch weniger vor negativer Energie geschützt.
-%%%%
-You feel strangely numb.
-Ihr fühlt Euch seltsam taub.
 %%%%
 You feel strangely alone.
 Ihr fühlt Euch seltsam allein.
@@ -24545,16 +24883,16 @@ Ihr fühlt Euch mehr auf Feuer eingestellt.
 You feel more attuned to ice.
 Ihr fühlt Euch mehr auf Eis eingestellt.
 %%%%
-You feel a slight, muted jump rush through you.
-Ihr fühlt einen leichten, gedämpften Sprung durch Euch.
-%%%%
-You feel slightly %sjumpy.
-Ihr fühlt Euch leicht %snervös.
+You repel a surge of foreign magic.
+
 %%%%
 You feel a surge of self-confidence.
 Ihr fühlt eine Welle des Selbstbewusstseins.
 %%%%
 %s says: An ascetic of your devotion has no use for such trinkets.
+
+%%%%
+%s cares nothing for such trivial demonstrations of your faith.
 
 %%%%
 %s cares for nothing but gold!
@@ -24568,9 +24906,6 @@ Ihr fühlt einen %sAnstieg des göttlichen Interesses.
 %%%%
 You feel ready to tumble and roll out of harm's way.
 Ihr fühlt Euch bereit zu stürzen und aus dem Weg zu rollen.
-%%%%
-Oops, that %s feels deathly cold.
-Ups, das%s fühlt sich tödlich kalt an.
 %%%%
 %s absorbs the residual spatial distortion as you rebrand your weapon.
 
@@ -24880,6 +25215,12 @@ Eure Lebenskraft fühlt sich wiederhergestellt.
 Extra life!
 Extra Leben!
 %%%%
+Your capacity for spells is full, and you lose access to an earlier spell.
+
+%%%%
+The power to cast %s wells up from within.
+
+%%%%
 Welcome back to level %d!
 
 %%%%
@@ -24891,12 +25232,6 @@ Ihr habt Level %d erreicht, das höchste, das Ihr jemals erreichen werdet!
 %%%%
 You have reached level %d!
 Ihr habt Level%d erreicht!
-%%%%
-If you were bloodless you could now transform into a vampire bat.
-
-%%%%
-You can now transform into a vampire bat.
-
 %%%%
 Your skin feels tougher.
 Eure Haut fühlt sich härter an.
@@ -24970,25 +25305,7 @@ hindered by the wind
 average
 
 %%%%
-extremely slow
-
-%%%%
-quite slow
-
-%%%%
-below average
-
-%%%%
-above average
-
-%%%%
-quite fast
-
-%%%%
-blindingly fast
-
-%%%%
-Your attack speed is %s%s%s
+Your attack delay is about %.1f%s%s.
 
 %%%%
 " (and cannot be improved with additional weapon skill)"
@@ -25011,6 +25328,9 @@ Ein äußerer göttlicher Heiligenschein erleuchtet Euch.
 %%%%
 * * * LOW MAGIC WARNING * * *
 * * * LOW MAGIC WARNING * * *
+%%%%
+* * * LOW HITPOINT WARNING * * *
+* * * LOW HITPOINT WARNING * * *
 %%%%
 You cannot pay life while functionally dead.
 Ihr könnt kein Leben bezahlen, solange Ihr funktionell tot seid.
@@ -25114,9 +25434,6 @@ Ihr habt das Gefühl, als würde Eure beschleunigte Geschwindigkeit länger daue
 Your extra speed is starting to run out.
 Eure zusätzliche Geschwindigkeit geht langsam zur Neige.
 %%%%
-You feel your health improve.
-Ihr fühlt, wie sich Eure Gesundheit verbessert.
-%%%%
 You feel less invigorated.
 Ihr fühlt Euch weniger belebt.
 %%%%
@@ -25147,9 +25464,6 @@ Your roots keep you in place.
 You can't fly in this form.
 
 %%%%
-You can't fly while stuck in liquid ground.
-
-%%%%
 Your tail turns into legs as you fly out of the water.
 Euer Schwanz verwandelt sich in Beine, als Ihr aus dem Wasser fliegt.
 %%%%
@@ -25171,8 +25485,8 @@ You can't survive in this terrain! You fly above the %s, but the process is drai
 buggy terrain
 
 %%%%
-The water engulfing you falls away.
-Das Wasser, das Euch verschlingt, fällt ab.
+The %s engulfing you falls away.
+
 %%%%
 You gasp with relief as air once again reaches your lungs.
 Ihr schnappt erleichtert nach Luft, als Luft wieder Eure Lunge erreicht.
@@ -25180,43 +25494,7 @@ Ihr schnappt erleichtert nach Luft, als Luft wieder Eure Lunge erreicht.
 Your lungs strain for air!
 Eure Lungen belasten die Luft!
 %%%%
-"] "
-
-%%%%
 ", a level "
-
-%%%%
-shout
-
-%%%%
-yell
-
-%%%%
-scream
-
-%%%%
-meow
-
-%%%%
-yowl
-
-%%%%
-caterwaul
-
-%%%%
-ribbit
-
-%%%%
-croak
-
-%%%%
-bellow
-
-%%%%
-bark
-
-%%%%
-screech
 
 %%%%
 You resist the pull of the Abyss.
@@ -25420,12 +25698,6 @@ Ihr greift nach unten und schließt die%s%s%s.
 You close the %s%s%s.
 Ihr schließt die %s%s%s.
 %%%%
-Trog's vigour flows through your veins.
-Trogs Kraft fließt durch Eure Adern.
-%%%%
-You pass out from exhaustion.
-Ihr werdet ohnmächtig vor Erschöpfung.
-%%%%
 Your blood congeals into armour.
 Euer Blut erstarrt zu einer Rüstung.
 %%%%
@@ -25452,7 +25724,7 @@ Ihr fühlt Euch mulmig.
 That felt strangely inert.
 Das fühlte sich seltsam träge an.
 %%%%
-That would not heal you.
+You cannot be healed by potions.
 
 %%%%
 You cannot heal while in death's door.
@@ -25480,6 +25752,9 @@ You feel %sattractive to monsters.
 
 %%%%
 You cannot fly right now.
+
+%%%%
+Drinking this now will have no effect.
 
 %%%%
 You feel magically purged.
@@ -25525,6 +25800,12 @@ A flood of memories washes over you.
 Eine Flut von Erinnerungen überschwemmt Euch.
 %%%%
 Your magic is already full.
+
+%%%%
+You have no magic to restore.
+
+%%%%
+Magic washes over you without effect.
 
 %%%%
 Magic courses through your body.
@@ -25623,7 +25904,13 @@ Nur [J]a%s, [N]ein oder [B]eenden, bitte.
 You are too injured to fight recklessly!
 
 %%%%
-You are too depleted to draw on your mana recklessly!
+You are too depleted to draw on your %s recklessly!
+
+%%%%
+health
+
+%%%%
+mana
 
 %%%%
 <darkgrey>Empty</darkgrey>
@@ -25668,6 +25955,9 @@ Ihr könnt nicht angreifen, solange%s.
 Your weapon can't reach that far!
 
 %%%%
+You attack %s.
+
+%%%%
 You could not reach far enough!
 Ihr konntet nicht weit genug kommen!
 %%%%
@@ -25686,6 +25976,9 @@ Ihr schwingt an nichts.
 You attack empty space.
 Ihr greift den leeren Raum an.
 %%%%
+Activate
+
+%%%%
 toss (no damage)
 
 %%%%
@@ -25695,7 +25988,13 @@ throw
 %d bullet%s
 
 %%%%
+"Continue: "
+
+%%%%
 "Cast: "
+
+%%%%
+Capacitive Coupling
 
 %%%%
 " (stones: %d)"
@@ -25708,6 +26007,12 @@ No targets found!
 
 %%%%
 "Abil: "
+
+%%%%
+Buggy
+
+%%%%
+Drink
 
 %%%%
 Zap
@@ -25797,12 +26102,6 @@ Could not create fixed level randart spellbook: %s
 
 %%%%
 owner
-
-%%%%
-"Kikubaaqudgha's "
-
-%%%%
-Necromancy
 
 %%%%
 
@@ -25976,13 +26275,13 @@ You can no longer invoke torment by sacrificing a corpse.
 You can invoke torment by sacrificing a corpse.
 
 %%%%
-Kikubaaqudgha will grant you a Necronomicon or bloody your weapon with pain... once.
+Kikubaaqudgha will grant you forbidden knowledge or bloody your weapon with pain... once.
 
 %%%%
 Kikubaaqudgha is no longer ready to enhance your necromancy.
 
 %%%%
-Kikubaaqudgha will grant you a Necronomicon.
+Kikubaaqudgha will grant you forbidden knowledge.
 
 %%%%
 You can now animate remains.
@@ -26375,9 +26674,6 @@ You can now walk on water.
 You can no longer walk on water.
 
 %%%%
-You can walk on water.
-
-%%%%
 You can now give items to your followers.
 
 %%%%
@@ -26531,31 +26827,7 @@ You can no longer step out of the flow of time.
 You can step out of the flow of time.
 
 %%%%
-You can now curse your items.
-
-%%%%
-You can no longer curse your items.
-
-%%%%
-You can curse your items.
-
-%%%%
-You can now scry through walls.
-
-%%%%
-You can no longer scry through walls.
-
-%%%%
-You can scry through walls.
-
-%%%%
-The more cursed you are, the more Ashenzari will now support your skills.
-
-%%%%
-Ashenzari will no longer support your skills.
-
-%%%%
-The more cursed you are, the more Ashenzari supports your skills.
+Ashenzari warns you of distant threats and treasures.\nAshenzari reveals the structure of the dungeon to you.\nAshenzari shows you where magical portals lie.\nAshenzari prevents you from stumbling into unseen traps.\nAshenzari identifies your possessions.
 
 %%%%
 Ashenzari will now reveal the unseen.
@@ -26576,10 +26848,13 @@ Ashenzari will no longer keep your mind clear.
 Ashenzari keeps your mind clear.
 
 %%%%
-Ashenzari will help you to reconsider your skills.
+Ashenzari will now grant you astral sight.
 
 %%%%
-Ashenzari will no longer help you to reconsider your skills.
+Ashenzari will no longer grant you astral sight.
+
+%%%%
+Ashenzari grants you astral sight.
 
 %%%%
 You can now step into the shadows of nearby creatures.
@@ -26744,13 +27019,7 @@ You can no longer wreak a terrible wrath on your foes.
 You can wreak a terrible wrath on your foes.
 
 %%%%
-You can now spend magic to empower your devices.
-
-%%%%
-You can no longer spend magic to empower your devices.
-
-%%%%
-You can spend magic to empower your devices.
+gain magical power from killing
 
 %%%%
 You can now stomp with the beat.
@@ -26945,6 +27214,12 @@ Jiyva's grace
 %s grants you armour!
 
 %%%%
+%s grants you bugs!
+
+%%%%
+...but nothing appears.
+
+%%%%
 " grants you @servant@!"
 
 %%%%
@@ -26955,6 +27230,12 @@ Vehumet offers you knowledge of %s.
 
 %%%%
 " These spells will remain available as long as you worship Vehumet."
+
+%%%%
+" male "
+
+%%%%
+" female "
 
 %%%%
 %s regains the memory of %s %s.
@@ -26984,22 +27265,19 @@ Wu Jian
 an unknown god
 
 %%%%
-Buggy
+Yunchang
 
 %%%%
-Deng Ai
+Lu Zhishen
 
 %%%%
-Jiang Wei
-
-%%%%
-Zhang Bao
+Xiang Ba
 
 %%%%
 Ma Yunglu
 
 %%%%
-Sun Luban
+Hu Sanniang
 
 %%%%
 Gene Jian Bin
@@ -27029,6 +27307,9 @@ You feel%sguilty.
 \"You will pay for your transgression, mortal!\"
 
 %%%%
+%s forms a fragment of your life essence into the memory of your ancestor, %s!
+
+%%%%
 A divine halo surrounds you!
 Ein göttlicher Heiligenschein umgibt Euch!
 %%%%
@@ -27051,6 +27332,18 @@ You may now remember your ancestor's life.
 
 %%%%
 %s lowers the support of your attributes.
+
+%%%%
+%s protects your plant from harm.
+
+%%%%
+%s protects a plant from harm.
+
+%%%%
+%s avoids your attack.
+
+%%%%
+Your curses shatter.
 
 %%%%
 You have lost your religion!
@@ -27146,12 +27439,6 @@ Ihr bezahlt eine Servicegebühr von%d Gold.
 %s waives the service fee.
 
 %%%%
-" name"
-
-%%%%
-%s forms a fragment of your life essence into the memory of your ancestor, %s!
-
-%%%%
 %s grants you a jelly!
 
 %%%%
@@ -27198,6 +27485,9 @@ The service fee for joining is currently %d gold; you only have %d.
 
 %%%%
 by name
+
+%%%%
+"default "
 
 %%%%
 "Which god (%s)? "
@@ -27329,9 +27619,6 @@ formatted-scroller
 -<w>
 
 %%%%
-default
-
-%%%%
 price
 
 %%%%
@@ -27413,10 +27700,10 @@ Antique Weapon
 Antique Armour
 
 %%%%
-Gadget
+Book
 
 %%%%
-Book
+Gadget
 
 %%%%
 Removed Food
@@ -27443,7 +27730,7 @@ antique armour
 antiques
 
 %%%%
-gadget
+removed gadget
 
 %%%%
 distillery
@@ -27476,7 +27763,7 @@ buy
 "You now have enough gold to "
 
 %%%%
-%d %s%s, total %d gold
+%d %s%s, total cost %d gp
 
 %%%%
 "<lightgrey>  [<w>a-z</w>] "
@@ -27655,16 +27942,10 @@ monster %s (%d) at (%d, %d) was improperly placed. Updating env.mgrid.
 %s %-15s
 
 %%%%
-%+d
-
-%%%%
 <lightred>+4</lightred>
 
 %%%%
 --
-
-%%%%
-"  *  "
 
 %%%%
 "     Skill"
@@ -27673,19 +27954,13 @@ monster %s (%d) at (%d, %d) was improperly placed. Updating env.mgrid.
 <blue>Apt </blue>
 
 %%%%
-Source
+Train
 
 %%%%
 Target
 
 %%%%
-Train
-
-%%%%
 Progr
-
-%%%%
-Trnsf
 
 %%%%
 Points
@@ -27736,9 +28011,6 @@ The current training targets, if any.\n
 The percentage of the progress done before reaching next level is in <cyan>cyan</cyan>.\n
 
 %%%%
-The progress of the knowledge transfer is displayed in <cyan>cyan</cyan> in front of the skill receiving the knowledge. The donating skill is marked with <cyan>*</cyan>.
-
-%%%%
 The relative cost of raising each skill is in <cyan>cyan</cyan>
 
 %%%%
@@ -27755,9 +28027,6 @@ focus
 
 %%%%
 useful
-
-%%%%
-all
 
 %%%%
 modified
@@ -27844,12 +28113,6 @@ set skill target
 [<yellow>-</yellow>] clear all targets
 
 %%%%
-Select a skill as the source of the knowledge transfer. The chosen skill will be reduced to the level shown in <brown>brown</brown>.
-
-%%%%
-Select a skill as the destination of the knowledge transfer. The chosen skill will be raised to the level shown in <cyan>cyan</cyan>.
-
-%%%%
 Select the skills you want to be trained. The chosen skills will be raised to the level shown in <cyan>cyan</cyan>.
 
 %%%%
@@ -27859,19 +28122,7 @@ Select the skills you want to be trained. The chosen skills will be raised to th
 "Bonus from skill manuals is in <lightred>red</lightred>. "
 
 %%%%
-Transfer Knowledge: select the %s skill
-
-%%%%
-You have %s. Select the skills to train.
-
-%%%%
-source
-
-%%%%
-destination
-
-%%%%
-quaffed a potion of experience
+You have quaffed a potion of experience. Select the skills to train.
 
 %%%%
 You feel omnipotent.
@@ -27882,6 +28133,72 @@ Ihr fühlt Euch allmächtig.
 # skills.cc
 ##################
 %%%%
+Fgt
+
+%%%%
+SBl
+
+%%%%
+LBl
+
+%%%%
+Axs
+
+%%%%
+M&F
+
+%%%%
+Pla
+
+%%%%
+Stv
+
+%%%%
+Slg
+
+%%%%
+Bws
+
+%%%%
+Crb
+
+%%%%
+Thr
+
+%%%%
+Arm
+
+%%%%
+Ddg
+
+%%%%
+Sth
+
+%%%%
+Stb
+
+%%%%
+Shd
+
+%%%%
+Trp
+
+%%%%
+UC
+
+%%%%
+Spc
+
+%%%%
+Chrm
+
+%%%%
+Necromancy
+
+%%%%
+Invo
+
+%%%%
 You have mastered %s!
 Ihr habt %s gemeistert!
 %%%%
@@ -27889,12 +28206,6 @@ Your %s%s skill %s to level %d!
 Eure %s%s Fertigkeit %s auf Level %d!
 %%%%
 "base "
-
-%%%%
-increases
-
-%%%%
-decreases
 
 %%%%
 Your %s%s skill %s %d levels and is now at level %d!
@@ -27921,14 +28232,77 @@ Base t
 T
 
 %%%%
-Gnolls can't set training targets!
-Gnolle können keine Trainingsziele setzen!
+You have finished your manual of %s and toss it away.
+Ihr habt Euer Handbuch von%s beendet und es weggeworfen.
+%%%%
+You can't set training targets!
+
 %%%%
 Clearing the skill training target for %s.
 Löschen des Fertigkeit-Trainingsziels für %s.
 %%%%
 Setting a skill training target for %s at %d.%d.
 Festlegen eines Fertigkeitstrainingsziels für %s bei %d,%d.
+%%%%
+Prickly Pangolin
+
+%%%%
+Pharaoh
+
+%%%%
+Weightless Champion
+
+%%%%
+Swordfish
+
+%%%%
+Rolling Thunder
+
+%%%%
+Holy Roller
+
+%%%%
+Forbidden One
+
+%%%%
+Black Lotus
+
+%%%%
+Rockslime
+
+%%%%
+God-Hated
+
+%%%%
+Wallbreaker
+
+%%%%
+Fire Dragon
+
+%%%%
+Highly Combustible
+
+%%%%
+Ice Dragon
+
+%%%%
+Iron Dragon
+
+%%%%
+Storm Dragon
+
+%%%%
+Swamp Dragon
+
+%%%%
+Faerie Dragon
+
+%%%%
+Teletunneler
+
+%%%%
+Corpseflower
+
 %%%%
 Adj
 
@@ -27968,9 +28342,6 @@ Sound support (SDL_mixer)
 # species.cc
 ##################
 %%%%
-You kneel at the altar of %s.
-Ihr kniet vor dem Altar von {dat}%s.
-%%%%
 fiery red
 
 %%%%
@@ -27998,6 +28369,63 @@ pale cyan-grey
 plain brown
 
 %%%%
+kneel at
+
+%%%%
+shout
+
+%%%%
+yell
+
+%%%%
+scream
+
+%%%%
+meow
+
+%%%%
+yowl
+
+%%%%
+caterwaul
+
+%%%%
+croak
+
+%%%%
+ribbit
+
+%%%%
+bark
+
+%%%%
+screech
+
+%%%%
+growl
+
+%%%%
+scales
+
+%%%%
+feathers
+
+%%%%
+furry
+
+%%%%
+fur
+
+%%%%
+bandages
+
+%%%%
+fleshy
+
+%%%%
+skin
+
+%%%%
 %s fall%s away.
 %s fallen%s weg.
 %%%%
@@ -28007,6 +28435,9 @@ plain brown
 ##################
 %%%%
 theme
+
+%%%%
+You need no library to learn spells.
 
 %%%%
 Your library has no spells.
@@ -28030,7 +28461,7 @@ Ihr fügt den Zauber%s %s in Eure Bibliothek ein.
 <w>Spells %s                 Type                          %sLevel
 
 %%%%
-(Cast)
+"(Cast)    "
 
 %%%%
 (Memorise)
@@ -28076,6 +28507,9 @@ Matches: '<w>%.20s</w>'
 
 %%%%
 "Search for what? (regex) "
+
+%%%%
+<lightgreen>Select a spell to cast with Divine Exegesis: %d MP available</lightgreen>
 
 %%%%
 <lightgreen>%d spell level%s</lightgreen>
@@ -28156,7 +28590,7 @@ Ihr fühlt einen %sMachtanstieg%s
 Type                          Failure  Level
 
 %%%%
-"Power        Range    Hunger  Noise         "
+"Power     Damage    Range     Noise "
 
 %%%%
 "Press '<w>!</w>' "
@@ -28252,10 +28686,7 @@ The spell is %s to cast (%s risk of failure)%s
 %s Continue anyway?
 
 %%%%
-%d%% to evade
-
-%%%%
-not susceptible
+%d%% to hit
 
 %%%%
 chance to confuse: %d%%
@@ -28265,6 +28696,15 @@ chance to slow: %d%%
 
 %%%%
 chance to dazzle: %d%%
+
+%%%%
+chance to affect: %d%%
+
+%%%%
+will blink
+
+%%%%
+chance to teleport: %d%%
 
 %%%%
 will change colour
@@ -28279,10 +28719,10 @@ will probably split
 "will become "
 
 %%%%
-chance to affect: %d%%
+w
 
 %%%%
-w
+<lightred>Restarting spell</lightred>
 
 %%%%
 Aiming
@@ -28296,9 +28736,6 @@ Casting
 %%%%
 Sorry, this spell works on others only.
 Entschuldigung, dieser Zauber funktioniert nur bei anderen.
-%%%%
-You fail to access your magic.
-Ihr habt keinen Zugang zu Eurer Magie.
 %%%%
 You feel a surge of divine spite.
 
@@ -28366,19 +28803,13 @@ Extremely loud
 Deafening
 
 %%%%
-2d5+1d%d
-
-%%%%
-3x
-
-%%%%
-8x
-
-%%%%
 %s%dd%d
 
 %%%%
 @.->
+
+%%%%
+Malevolent energies surge around you.
 
 %%%%
 
@@ -28392,20 +28823,8 @@ Hier ist schon eine Wolke!
 The fire blazes with new energy!
 Das Feuer lodert mit neuer Energie!
 %%%%
-The fire begins to smolder!
-Das Feuer beginnt zu schwelen!
-%%%%
-But poisonous vapours would do no harm to %s!
-Aber giftige Dämpfe würden%s keinen Schaden zufügen!
-%%%%
-There's already a cloud there!
-Da ist schon eine Wolke!
-%%%%
-The poisonous vapours increase!
-Die giftigen Dämpfe nehmen zu!
-%%%%
-Poisonous vapours surround %s!
-Giftige Dämpfe umgeben%s!
+The fire begins to smoulder!
+
 %%%%
 That is beyond the maximum range.
 Das ist jenseits der maximalen Reichweite.
@@ -28442,10 +28861,16 @@ Ihr könnt den Sturm nicht auf %s setzen.
 You call forth a pillar of damnation!
 Ihr ruft eine Säule der Verdammnis hervor!
 %%%%
-lightning arc
+arc of chain lightning
 
 %%%%
-chain lightning
+" (and %lu other bad targets)"
+
+%%%%
+Chain Lightning might hit %s%s. Cast it anyway?
+
+%%%%
+Lightning arcs from %s %s!
 
 %%%%
 arc of chaos
@@ -28466,14 +28891,8 @@ Die %s-Bögen befinden sich außerhalb Ihrer Sichtlinie!
 The %s suddenly appears!
 Das%s erscheint plötzlich!
 %%%%
-%s protects your plant from harm.
-
-%%%%
 The monsters around %s are %s!
 Die Monster um%s sind%s!
-%%%%
-You feel very cold.
-Ihr fühlt Euch sehr kalt.
 %%%%
 The heat is drained from your surroundings.
 
@@ -28517,13 +28936,79 @@ Something sends a blast of sound all around you.
 Sound blasts the surrounding area!
 
 %%%%
-You can't drain life from that!
-Daraus könnt Ihr kein Leben ziehen!
+You feel very cold.
+Ihr fühlt Euch sehr kalt.
 %%%%
-You feel life coursing into your body
-Ihr fühlt, wie das Leben in Euren Körper fließt
+You freeze %s%s
+
 %%%%
-The air twists around and violently strikes %s
+The air twists around and strikes %s%s%s
+
+%%%%
+" but does no damage"
+
+%%%%
+blast of rock fragments
+
+%%%%
+blast of petrified fragments
+
+%%%%
+icy blast
+
+%%%%
+toenail
+
+%%%%
+salt crystal
+
+%%%%
+rock
+
+%%%%
+metal
+
+%%%%
+crystal
+
+%%%%
+orange crystal
+
+%%%%
+blast of %s %s
+
+%%%%
+shards
+
+%%%%
+blast of bone shards
+
+%%%%
+stone idol
+
+%%%%
+petrified wood
+
+%%%%
+stone door frame
+
+%%%%
+stone arch
+
+%%%%
+You can't deconstruct that!
+Das könnt Ihr nicht dekonstruieren!
+%%%%
+by Lee's Rapid Deconstruction
+
+%%%%
+The %s shatters!
+Das%s zerbricht!
+%%%%
+You shatter%s
+
+%%%%
+%s shatters%s
 
 %%%%
 A door shatters!
@@ -28556,10 +29041,7 @@ Der Dungeon rumpelt um%s!
 There is a shattering impact!
 Es gibt einen erschütternden Aufprall!
 %%%%
-%s is blasted with magical radiation
-%s wird mit magischer Strahlung%s gestrah
-%%%%
-%s protects a plant from harm.
+%s is blasted with magical radiation%s
 
 %%%%
 irradiate
@@ -28610,8 +29092,8 @@ static discharge
 You are struck by an arc of lightning
 Ihr werdet von einem Blitz getroffen
 %%%%
-%s is struck by an arc of lightning
-%s wird von einem Blitz getroffen
+%s is struck by an arc of lightning%s
+
 %%%%
 The lightning grounds out.
 Der Blitz fällt aus.
@@ -28619,68 +29101,11 @@ Der Blitz fällt aus.
 The air crackles with electrical energy.
 Die Luft knistert vor elektrischer Energie.
 %%%%
-%s blue arc%s ground%s harmlessly.
-%s blauer Bogen%s Boden%s harmlos.
-%%%%
-Some
+Some blue arcs ground themselves harmlessly.
 
 %%%%
-by Lee's Rapid Deconstruction
+A blue arc grounds itself harmlessly.
 
-%%%%
-blast of rock fragments
-
-%%%%
-blast of petrified fragments
-
-%%%%
-icy blast
-
-%%%%
-blast of toenail fragments
-
-%%%%
-blast of metal fragments
-
-%%%%
-blast of salt crystal fragments
-
-%%%%
-blast of obsidian shards
-
-%%%%
-blast of orange crystal shards
-
-%%%%
-blast of crystal shards
-
-%%%%
-blast of sapphire shards
-
-%%%%
-blast of bone shards
-
-%%%%
-stone idol
-
-%%%%
-stone door frame
-
-%%%%
-stone arch
-
-%%%%
-You can't deconstruct that!
-Das könnt Ihr nicht dekonstruieren!
-%%%%
-The %s shatters!
-Das%s zerbricht!
-%%%%
-You shatter
-Ihr zerschmettert
-%%%%
-%s shatters
-%s zerbricht
 %%%%
 You don't have any stones to cast with.
 Ihr habt keine Steine ​​zum Werfen.
@@ -28748,6 +29173,12 @@ Eure giftige Ausstrahlung nimmt an Intensität zu.
 %s begins to radiate toxic energy.
 
 %%%%
+%s cannot be affected by poisonous vapours!
+
+%%%%
+Poisonous vapours surround %s!
+Giftige Dämpfe umgeben%s!
+%%%%
 (Press <w>%</w> to maintain the ray.)
 
 %%%%
@@ -28772,9 +29203,6 @@ great icy blast
 conjure
 
 %%%%
-%s dances in the hail.
-
-%%%%
 hailstorm
 
 %%%%
@@ -28796,11 +29224,32 @@ Es gibt keine Mauern um Euch herum, die beeinflusst werden könnten.
 The walls around you are covered in ice.
 Die Wände um Euch herum sind mit Eis bedeckt.
 %%%%
-A cloud of jellies burst out of %s as it chills to absolute zero!
+You begin accumulating electric charge.
 
 %%%%
-You chill %s to absolute zero!
-Ihr kühlt %s auf den absoluten Nullpunkt!
+(Press <w>%</w> to continue charging.)
+
+%%%%
+Your charge dissipates without a target.
+
+%%%%
+A cloud of jellies burst out of %s as the current ripples through it!
+
+%%%%
+The electricity discharges through %s!
+
+%%%%
+%s vaporises and condenses as gold!
+
+%%%%
+%s vaporises in an electric haze!
+
+%%%%
+You feel charge building up...
+
+%%%%
+The insufficient charge dissipates harmlessly.
+
 %%%%
 There are no places for you to create a bog.
 
@@ -28843,10 +29292,19 @@ mindless
 uninterested
 
 %%%%
+chance to pacify: <<1%%
+
+%%%%
 chance to pacify: %d%%
 
 %%%%
 Heal
+
+%%%%
+as magically contaminated
+
+%%%%
+transformed
 
 %%%%
 Your charged fireball dissipates.
@@ -28863,27 +29321,6 @@ Eure magischen Effekte lösen sich auf.
 %%%%
 %s's magical effects unravel!
 
-%%%%
-You have uncursed all your worn items.
-Ihr habt alle Eure abgenutzten Gegenstände verflucht.
-%%%%
-Uncurse which item?
-
-%%%%
-Choose a cursed equipped item, or Esc to abort.
-Wähle einen verfluchten ausgerüsteten Gegenstand oder Esc zum Abbrechen.
-%%%%
-You feel as if something is helping you.
-Ihr habt das Gefühl, als ob Euch etwas hilft.
-%%%%
-You feel blessed for a moment.
-Ihr fühlt Euch für einen Moment gesegnet.
-%%%%
-Choose an uncursed equipped piece of %s, or Esc to abort.
-Wähle ein nicht verfluchtes ausgerüstetes Stück von %s oder Esc zum Abbrechen.
-%%%%
-You aren't wearing any piece of uncursed %s.
-Ihr tragt kein Stück unverfluchter%s.
 %%%%
 You briefly glimpse something next to %s.
 Ihr seht kurz etwas neben%s.
@@ -28955,9 +29392,6 @@ the Shining One's cleansing flame
 ##################
 # spl-miscast.cc
 ##################
-%%%%
-'s body
-
 %%%%
 Sparks fly from your @hands@
 
@@ -29645,11 +30079,11 @@ Der Boden um Euch herum verflüssigt sich!
 # spl-summoning.cc
 ##################
 %%%%
+You aren't wearing any armour!
+
+%%%%
 A chill wind blows around you.
 Ein kalter Wind weht um Euch herum.
-%%%%
-some
-
 %%%%
 %s appears.
 %s erscheint.
@@ -29705,9 +30139,6 @@ zucken
 You create some ball lightning!
 Ihr erschafft einen Kugelblitz!
 %%%%
-An electric hum fills the air.
-Ein elektrisches Summen erfüllt die Luft.
-%%%%
 A guardian golem appears, shielding your allies.
 Ein Wächtergolem erscheint und schützt Eure Verbündeten.
 %%%%
@@ -29747,9 +30178,6 @@ In diesem engen Raum kann kein Tor geöffnet werden!
 A forested plane collides here with a resounding crunch!
 Ein bewaldetes Flugzeug kollidiert hier mit einem lauten Knirschen!
 %%%%
-You need more open space to cast this spell.
-Ihr braucht mehr Freiraum, um diesen Zauber zu wirken.
-%%%%
 walking
 
 %%%%
@@ -29768,9 +30196,6 @@ Die Toten sind auferstanden!
 The dead are %s!
 Die Toten %s!
 %%%%
-The flesh is too rotten for a proper zombie; only a skeleton remains.
-
-%%%%
 The headless hydra %s sways and immediately collapses!
 Die kopflose Hydra schwankt %s und bricht sofort zusammen!
 %%%%
@@ -29784,39 +30209,6 @@ The headless hydra simulacr%s immediately collapse%s into snow!
 Die kopflose Hydra simulacr%s kollabiert sofort%s in Schnee!
 %%%%
 um
-
-%%%%
-%s %s into %s!
-%s %s in %s!
-%%%%
-corpse collapses
-
-%%%%
-corpses collapse
-
-%%%%
-a pulpy mess
-
-%%%%
-pulpy messes
-
-%%%%
-%s %s to drag %s along the ground!
-%s%s, um%s über den Boden zu ziehen!
-%%%%
-corpse begins
-
-%%%%
-corpses begin
-
-%%%%
-%s corpses meld into %s of writhing flesh!
-%s Leichen verschmelzen zu%s sich windendem Fleisch!
-%%%%
-an agglomeration
-
-%%%%
-agglomerations
 
 %%%%
 An evil force gathers, but it quickly dissipates.
@@ -29888,12 +30280,6 @@ Ihr könnt das Prisma nicht auf eine Kreatur legen.
 A prism of explosive energy appears from nowhere!
 Ein Prisma explosiver Energie erscheint aus dem Nichts!
 %%%%
-You draw out your weapon's spirit!
-Ihr zieht den Geist Eurer Waffe heraus!
-%%%%
-%s draws out a weapon's spirit!
-
-%%%%
 %s fades away.
 
 %%%%
@@ -29942,34 +30328,11 @@ Etwas, das Ihr nicht sehen könnt, besetzt diesen Raum!
 An oklob plant grows from the ground.
 Eine Klumpenpflanze wächst aus dem Boden.
 %%%%
+There is not enough space to conjure foxfire!
+
+%%%%
 %s conjure%s some foxfire!
 
-%%%%
-
-##################
-# spl-tornado.cc
-##################
-%%%%
-make a tornado
-
-%%%%
-A great vortex of raging winds %s.
-Ein großer Wirbel tobender Winde%s.
-%%%%
-appears around you
-
-%%%%
-appears and lifts you up
-
-%%%%
-A tree falls to the hurricane!
-Ein Baum fällt dem Hurrikan zu!
-%%%%
-The vortex of raging winds lifts you up.
-Der Wirbel der tobenden Winde hebt Euch hoch.
-%%%%
-Careful! You are now flying above %s.
-Vorsicht! Ihr fliegt jetzt über%s.
 %%%%
 
 ##################
@@ -30072,6 +30435,9 @@ Sogar Ihr könnt jetzt nicht dorthin gehen. Entschuldigung!
 You are suddenly yanked towards %s nearby monster%s!
 Ihr werdet plötzlich zu%s nahegelegenem Monster%s gezogen!
 %%%%
+some
+
+%%%%
 Your surroundings flicker for a moment.
 Eure Umgebung flackert für einen Moment.
 %%%%
@@ -30086,6 +30452,15 @@ Ihr fangt an, Projektile an ihr Ziel zu teleportieren.
 %%%%
 You renew your portal.
 Ihr erneuert Euer Portal.
+%%%%
+%s would react catastrophically with paradoxical space!
+
+%%%%
+You can't see anything to attack.
+
+%%%%
+Space momentarily warps into an impossible shape!
+
 %%%%
 You don't see anything to apport there.
 Ihr seht dort nichts zu verteilen.
@@ -30156,6 +30531,18 @@ hurl
 %s is pulled toward you!
 
 %%%%
+You cannot see any enemies that you can affect. Speak a word of chaos anyway?
+
+%%%%
+You speak a word of chaos!
+
+%%%%
+You see nothing there to target!
+
+%%%%
+shock of your passage
+
+%%%%
 
 ##################
 # spl-util.cc
@@ -30185,19 +30572,37 @@ Rndm
 you're too confused to cast spells.
 
 %%%%
-you don't have enough magic to cast that spell.
+you aren't experienced enough to cast this spell.
+
+%%%%
+you cannot pay life while functionally dead.
+
+%%%%
+you don't have enough health to cast this spell.
+
+%%%%
+you don't have enough magic to cast this spell.
+
+%%%%
+your magic and health are inextricable.
+
+%%%%
+your reserves of magic are already full.
 
 %%%%
 you cannot use spells of this school.
+
+%%%%
+you cannot coerce anything to answer your summons.
+
+%%%%
+you cannot coerce anything to obey you.
 
 %%%%
 you can't cast spells right now.
 
 %%%%
 you can't see any hostile targets that would be affected.
-
-%%%%
-you cannot coerce anything to obey you.
 
 %%%%
 your stasis prevents you from teleporting.
@@ -30225,6 +30630,9 @@ your undead flesh cannot be transformed.
 
 %%%%
 your current blood level is not sufficient.
+
+%%%%
+you lack the necromantic skill to inflict true pain.
 
 %%%%
 you aren't wielding a brandable weapon.
@@ -30260,9 +30668,6 @@ your ring of flames would instantly melt the ice.
 you have no blood to sublime.
 
 %%%%
-your reserves of magic are already full.
-
-%%%%
 you need to wait for the winds to calm down.
 
 %%%%
@@ -30270,6 +30675,9 @@ the dungeon can only cope with one malign gateway at a time.
 
 %%%%
 you can only summon one forest at a time.
+
+%%%%
+you need more open space to fit a forest.
 
 %%%%
 you aren't next to any passable walls.
@@ -30305,8 +30713,37 @@ you don't have any stones to cast with.
 you cannot sustain more bogs right now.
 
 %%%%
-you cannot coerce anything to answer your summons.
+you cannot wear body armour.
 
+%%%%
+you have no body armour to summon the spirit of.
+
+%%%%
+
+##################
+# spl-vortex.cc
+##################
+%%%%
+make a polar vortex
+
+%%%%
+A great freezing vortex %s.
+
+%%%%
+appears around you
+
+%%%%
+appears and lifts you up
+
+%%%%
+A tree falls to the furious winds!
+
+%%%%
+The freezing vortex lifts you up.
+
+%%%%
+Careful! You are now flying above %s.
+Vorsicht! Ihr fliegt jetzt über%s.
 %%%%
 
 ##################
@@ -30355,41 +30792,6 @@ shrieks
 
 %%%%
 %s begin to glow red.
-
-%%%%
-
-##################
-# sqldbm.cc
-##################
-%%%%
-Unknown error
-
-%%%%
-No filename!
-
-%%%%
-.db
-
-%%%%
-CREATE TABLE dbm (key STRING UNIQUE PRIMARY KEY,                  value STRING);
-
-%%%%
-BEGIN;
-
-%%%%
-COMMIT;
-
-%%%%
-INSERT INTO dbm VALUES (?, ?)
-
-%%%%
-DELETE FROM dbm WHERE key = ?
-
-%%%%
-SELECT value FROM dbm WHERE key = ?
-
-%%%%
-SELECT key FROM dbm
 
 %%%%
 
@@ -30446,6 +30848,9 @@ You %s %swards.
 Ihr %s %swards.
 %%%%
 climb
+
+%%%%
+You have passed through the Ziggurat. Zot will hunt you nevermore.
 
 %%%%
 This shop has been abandoned, nothing of value remains.
@@ -30732,6 +31137,18 @@ Ray++
 Ray
 
 %%%%
+Charge-
+
+%%%%
+Charge/
+
+%%%%
+Charge|
+
+%%%%
+Charge\
+
+%%%%
 Corr (%d)
 
 %%%%
@@ -30756,9 +31173,6 @@ curled up
 You are defensively curled.
 
 %%%%
-Mesm
-
-%%%%
 You are mesmerised.
 
 %%%%
@@ -30780,9 +31194,6 @@ Ihr seid %s.
 Bloodless
 
 %%%%
-bloodless
-
-%%%%
 Alive
 
 %%%%
@@ -30799,6 +31210,12 @@ Your movement is slowed on this liquid ground.
 
 %%%%
 %s are glowing red.
+
+%%%%
+%s is covered in slime.
+
+%%%%
+%s are covered in slime.
 
 %%%%
 Regen (%d)
@@ -30846,16 +31263,13 @@ You are recalling your allies.
 Engulf
 
 %%%%
-You are engulfed in water.
+You are engulfed.
 
 %%%%
 engulfed (cannot breathe)
 
 %%%%
-You are engulfed in water and unable to breathe.
-
-%%%%
-Drain
+You are engulfed and unable to breathe.
 
 %%%%
 extremely drained
@@ -30877,9 +31291,6 @@ Your life force is drained.
 
 %%%%
 Your life force is lightly drained.
-
-%%%%
-Elixir
 
 %%%%
 -Wiz
@@ -30957,9 +31368,6 @@ Zot is approaching!
 Zot (%d)
 
 %%%%
-Contam
-
-%%%%
 "very slightly "
 
 %%%%
@@ -30978,22 +31386,22 @@ Contam
 "impossibly "
 
 %%%%
-" Will++"
-
-%%%%
-non-regenerating
-
-%%%%
-recuperating
-
-%%%%
-You are recuperating from your illness.
+Regen Will++
 
 %%%%
 You are regenerating.
 
 %%%%
-" quickly"
+healing quickly
+
+%%%%
+-Regen
+
+%%%%
+inhibited regen
+
+%%%%
+Your regeneration is inhibited by nearby monsters.
 
 %%%%
 lethally
@@ -31094,9 +31502,6 @@ Invis
 <lightred>ERROR: string above had unterminated tag</lightred>
 
 %%%%
-" .&`\"\'|;{}()[]<>*%$#@!~?"
-
-%%%%
 " \t\n\r"
 
 %%%%
@@ -31140,6 +31545,9 @@ Error writing to %s
 Placing missing branch entry: %s.
 Fehlender Zweigeintrag platzieren:%s.
 %%%%
+Placing missing branch exit: %s.
+
+%%%%
 Error: monster %s in %s at (%d,%d)
 Fehler: Monster%s in%s bei (%d,%d)
 %%%%
@@ -31179,13 +31587,7 @@ Save file has uninitialized PlaceInfo for branch %s
 "(quantity: 0) "
 
 %%%%
-"god gift, "
-
-%%%%
 dragon armour
-
-%%%%
-dragon scales
 
 %%%%
 +Lev
@@ -31238,6 +31640,9 @@ Please select a direction to dig.
 
 %%%%
 Digging in that direction won't affect any walls.
+
+%%%%
+"You can't transfer your ancestor with "
 
 %%%%
 You cannot affect that.
@@ -31316,17 +31721,17 @@ You cannot grow anything here.
 buggy door
 
 %%%%
-The walls burn you!
+melt
 
 %%%%
-The wall burns you!
+burn
 
 %%%%
-The walls burn %s!
-Die Wände brennen %s!
+The walls %s %s!
+
 %%%%
-The wall burns %s!
-Die Wand brennt %s!
+The wall %ss %s!
+
 %%%%
 You hear a sizzling splash.
 Ihr hört ein brutzelndes Plätschern.
@@ -31414,9 +31819,6 @@ No action selected
 "Non-targeted "
 
 %%%%
-%d%% to hit
-
-%%%%
 immune to nets
 
 %%%%
@@ -31487,15 +31889,6 @@ toss away
 
 %%%%
 " throws "
-
-%%%%
-"The weapon returns "
-
-%%%%
-"to "
-
-%%%%
-from whence it came
 
 %%%%
 
@@ -31645,6 +32038,9 @@ Escape, Ctrl-S
 %s\n%s %s
 
 %%%%
+Evoke (%)
+
+%%%%
 
 ##################
 # tilereg-map.cc
@@ -31681,8 +32077,8 @@ Escape, Ctrl-S
 You cannot train this skill.
 Ihr könnt diese Fruchtbarkeit nicht trainieren.
 %%%%
-Gnolls can't change their training allocations!
-Gnolle können ihre Trainingszuordnungen nicht ändern!
+You can't change your training allocations!
+
 %%%%
 There's no point to toggling this skill anymore.
 Es hat keinen Sinn mehr, diese Fruchtbarkeit umzuschalten.
@@ -31838,6 +32234,18 @@ Zot has nearly found you. Death is approaching. Descend or flee this branch!
 # transform.cc
 ##################
 %%%%
+Your equipment is entirely melded.
+
+%%%%
+Your armour is entirely melded.
+
+%%%%
+Your equipment is almost entirely melded.
+
+%%%%
+Your equipment is partially melded.
+
+%%%%
 You were %s.
 Ihr wart %s.
 %%%%
@@ -31925,6 +32333,15 @@ Ihr nehmt wieder Eure normale fleischige Form an.
 You warm up again.
 Ihr wärmt Euch wieder auf.
 %%%%
+Ice paw
+
+%%%%
+Ice paws
+
+%%%%
+a fearsome %s!
+
+%%%%
 Your body is suffused with negative energy!
 Euer Körper wird von negativer Energie durchflutet!
 %%%%
@@ -31946,17 +32363,17 @@ Ihr wart in Fledermaus-Form.
 You are in bat-form.
 Ihr seid in Fledermaus-Form.
 %%%%
-One of your tentacles had a temporary spike.
-Einer Eurer Tentakel hatte einen temporären Stachel.
+One of your tentacles had grown a beastly spike.
+
 %%%%
-One of your tentacles has a temporary spike.
-Einer Eurer Tentakel hat einen temporären Stachel.
+One of your tentacles has grown a beastly spike.
+
 %%%%
-You had grown temporary %s.
-Euch waren vorübergehende %s gewachsen.
+You had temporarily grown %s.
+
 %%%%
-You have grown temporary %s.
-Euch sind vorübergehende %s gewachsen.
+You have temporarily grown %s.
+
 %%%%
 You grow a pair of large bovine horns.
 Euch wächst ein Paar großer Rinderhörner.
@@ -31979,6 +32396,12 @@ Ihr fühlt Euch weniger schattenhaft.
 You emerge from the shadows.
 Ihr tretet aus den Schatten hervor.
 %%%%
+%s falls away, shattering the curse!
+
+%%%%
+%s fall away, shattering the curse!
+
+%%%%
 %s fall away!
 %s fallen weg!
 %%%%
@@ -31993,6 +32416,9 @@ Ihr tretet aus den Schatten hervor.
 %%%%
 %s unmelds from your body.
 %s löst sich von Eurem Körper.
+%%%%
+"main "
+
 %%%%
 You would drown in your new form.
 Ihr würdet in Eurer neuen Form ertrinken.
@@ -32011,18 +32437,6 @@ Zurückverwandeln wird Eure Stärke auf Null reduzieren. Fortfahren?
 %%%%
 Turning back will reduce your dexterity to zero. Continue?
 Zurückverwandeln wird Eure Geschicklichkeit auf Null reduzieren. Fortfahren?
-%%%%
-%d of your heads shrink away.
-%d Eurer Köpfe schrumpfen weg.
-%%%%
-One of your heads shrinks away.
-Einer Eurer Köpfe schrumpft weg.
-%%%%
-%d new heads grow.
-%d neue Köpfe wachsen.
-%%%%
-A new head grows.
-Ein neuer Kopf wächst.
 %%%%
 %s protects your body from unnatural transformation!
 %s schützt Euren Körper vor unnatürlicher Verwandlung!
@@ -32293,9 +32707,6 @@ someone's
 %s hits %s%s!
 %s trifft%s%s!
 %%%%
-" but does no damage"
-
-%%%%
 You stumble into a teleport trap!
 
 %%%%
@@ -32349,6 +32760,9 @@ an item
 some items
 
 %%%%
+"Could not "
+
+%%%%
 Key pressed, stopping %s.
 Taste gedrückt,%s gestoppt.
 %%%%
@@ -32357,9 +32771,6 @@ Ihr seid verwirrt und hörst%s auf.
 %%%%
 You're in a travel-excluded area, stopping %s.
 Ihr seid in einem von Reisen ausgeschlossenen Gebiet und hältst%s an.
-%%%%
-"Could not "
-
 %%%%
 " @ (x,y)"
 
@@ -32614,7 +33025,7 @@ Select layers to display:\n<%s>(m)onsters</%s>|<%s>(p)layer</%s>|<%s>(i)tems</%s
 |<%s>monster (w)eapons</%s>|<%s>monster (h)ealth</%s>
 
 %%%%
-Press escape to toggle all layers. Press any other key to exit.
+Press 'a' to toggle all layers. Press any other key to exit.
 
 %%%%
 Restoring view layers.
@@ -32906,7 +33317,7 @@ Damage source\tAvHitDam\tMaxDam\tAccuracy\tAvDam\tAvTime\tAvSpeed\tAvEffDam
 "Quivering: "
 
 %%%%
-"mundane not_cursed ident:all "
+"mundane ident:all "
 
 %%%%
 Cannot wield weapon
@@ -33103,12 +33514,6 @@ Buch konnte nicht in Randart verwandelt werden.
 Failed to turn item into randart.
 Fehler beim Verwandeln des Elements in einen Randart.
 %%%%
-(Un)curse which item?
-
-%%%%
-That type of item cannot be cursed.
-Diese Art von Gegenstand kann nicht verflucht werden.
-%%%%
 You feel a rush of knowledge.
 Ihr fühlt einen Ansturm von Wissen.
 %%%%
@@ -33225,6 +33630,9 @@ Evokers aufgeladen.
 # wiz-mon.cc
 ##################
 %%%%
+"Enter monster name (or MONS spec) (? for help): "
+
+%%%%
 Couldn't find player ghost, probably going to crash.
 Spielergeist konnte nicht gefunden werden und wird wahrscheinlich abstürzen.
 %%%%
@@ -33285,7 +33693,7 @@ M
 P
 
 %%%%
-ns
+V
 
 %%%%
 in
@@ -33659,8 +34067,8 @@ Welches Formular (ESC zum Beenden)?
 Transformation failed.
 Transformation fehlgeschlagen.
 %%%%
-Not even in wizmode may Demigods worship a god!
-Nicht einmal im Zaubermodus dürfen Halbgötter einen Gott verehren!
+Not even in wizmode may divine creatures worship a god!
+
 %%%%
 You already have no god!
 Ihr habt schon keinen Gott!
@@ -33733,10 +34141,10 @@ Do you really want to enter explore mode?
 Can't repeat entering explore mode
 
 %%%%
-<yellow>Player stats</yellow>\n<w>A</w>      set all skills to level\n<w>Ctrl-D</w> change enchantments/durations\n<w>g</w>      exercise a skill\n<w>k</w>      change experience level and skills\n<w>l</w>      change experience level\n<w>Ctrl-P</w> list props\n<w>r</w>      change character's species\n<w>s</w>      set skill to level\n<w>x</w>      gain an experience level\n<w>$</w>      set gold to a specified value\n<w>]</w>      get a mutation\n<w>_</w>      gain religion\n<w>^</w>      set piety to a value\n<w>@</w>      set Str Int Dex\n<w>#</w>      load character from a dump file\n<w>&</w>      list all divine followers\n<w>=</w>      show info about skill points\n<w>n</w>      set Zot clock to a value\n\n<yellow>Create level features</yellow>\n<w>L</w>      place a vault by name\n<w>T</w>      make a trap\n<w>,</w>/<w>.</w>    create up/down staircase\n<w>(</w>      turn cell into feature\n<w>\</w>      make a shop\n<w>K</w>      mark all vaults as unused\n\n<yellow>Other level related commands</yellow>\n<w>Ctrl-A</w> generate new Abyss area\n<w>b</w>      controlled blink\n<w>B</w>      controlled teleport\n<w>Ctrl-B</w> banish yourself to the Abyss\n<w>R</w>      change monster spawn rate\n<w>Ctrl-S</w> change Abyss speed\n<w>u</w>/<w>d</w>    shift up/down one level\n<w>~</w>      go to a specific level\n<w>:</w>      find branches and overflow\n       temples in the dungeon\n<w>;</w>      list known levels and counters\n<w>{</w>      magic mapping\n<w>Ctrl-W</w> change Shoals' tide speed\n<w>Ctrl-E</w> dump level builder information\n<w>Ctrl-R</w> regenerate current level\n<w>P</w>      create a level based on a vault\n
+<yellow>Player stats</yellow>\n<w>A</w>      set all skills to level\n<w>Ctrl-D</w> change enchantments/durations\n<w>g</w>      exercise a skill\n<w>k</w>      change experience level and skills\n<w>l</w>      change experience level\n<w>Ctrl-P</w> list props\n<w>r</w>      change character's species\n<w>s</w>      set skill to level\n<w>x</w>      gain an experience level\n<w>$</w>      set gold to a specified value\n<w>]</w>      get a mutation\n<w>_</w>      gain religion\n<w>^</w>      set piety to a value\n<w>@</w>      set Str Int Dex\n<w>#</w>      load character from a dump file\n<w>&</w>      list all divine followers\n<w>=</w>      show info about skill points\n<w>n</w>      set Zot clock to a value\n\n<yellow>Dungeon features</yellow>\n<w>T</w>      make a trap\n<w>,</w>/<w>.</w>    create up/down staircase\n<w>(</w>      turn cell into feature\n<w>\</w>      make a shop\n\n<yellow>Builder debugging</yellow>\n<w>L</w>      place a vault by name\n<w>P</w>      create a level based on a vault\n<w>Ctrl-R</w> regenerate current level\n<w>Ctrl-A</w> generate new Abyss area\n<w>K</w>      mark all vaults as unused\n<w>:</w>      find branches and overflow\n       temples in the dungeon\n<w>;</w>      list known levels and counters\n<w>Ctrl-E</w> dump level builder information\n\n<yellow>Other level related commands</yellow>\n<w>{</w>      magic mapping\n<w>b</w>      controlled blink\n<w>B</w>      controlled teleport\n<w>~</w>      go to a specific level\n<w>u</w>/<w>d</w>    shift up/down one level\n<w>Ctrl-B</w> banish yourself to the Abyss\n<w>Ctrl-S</w> change Abyss speed\n<w>R</w>      change monster spawn rate\n<w>Ctrl-W</w> change Shoals' tide speed\n
 
 %%%%
-<yellow>Other player related effects</yellow>\n<w>c</w>      card effect\n<w>h</w>/<w>H</w>    heal yourself (super-Heal)\n<w>X</w>      make Xom do something now\n<w>z</w>      cast spell by number/name\n<w>!</w>      memorise spell\n<w>W</w>      god wrath\n<w>w</w>      god mollification\n<w>p</w>      polymorph into a form\n<w>V</w>      toggle xray vision\n<w>E</w>      (un)freeze time\n\n<yellow>Monster related commands</yellow>\n<w>m</w>/<w>M</w>    create specified monster\n<w>D</w>      detect all monsters\n<w>G</w>      dismiss all monsters\n<w>"</w>      list monsters\n\n<yellow>Item related commands</yellow>\n<w>a</w>      acquirement\n<w>C</w>      (un)curse item\n<w>i</w>/<w>I</w>    identify/unidentify inventory\n<w>y</w>/<w>Y</w>    id/unid item types+level items\n<w>o</w>/<w>%</w>    create an object\n<w>t</w>      tweak object properties\n<w>v</w>      recharge all XP evokers\n<w>Ctrl-V</w> show gold value of an item\n<w>-</w>      get a god gift\n<w>|</w>      create all unrand artefacts\n<w>Ctrl-\</w> create all unrands / fallbacks\n<w>+</w>      make randart from item\n<w>'</w>      list items\n<w>J</w>      Jiyva off-level sacrifice\n\n<yellow>Debugging commands</yellow>\n<w>f</w>      quick fight simulation\n<w>F</w>      single scale fsim\n<w>Ctrl-F</w> double scale fsim\n<w>Ctrl-I</w> item generation stats\n<w>O</w>      measure exploration time\n<w>Ctrl-T</w> dungeon (D)Lua interpreter\n<w>Ctrl-U</w> client (C)Lua interpreter\n<w>Ctrl-X</w> Xom effect stats\n<w>Ctrl-Y</w> temporarily suppress wizmode\n<w>Ctrl-C</w> force a crash\n<w>`</w>      list unassigned command keys\n\n<yellow>Other wizard commands</yellow>\n(not prefixed with <w>&</w>!)\n<w>x?</w>     list targeted commands\n<w>X?</w>     list map-mode commands\n
+<yellow>Other player related effects</yellow>\n<w>c</w>      card effect\n<w>h</w>/<w>H</w>    heal yourself (super-Heal)\n<w>X</w>      make Xom do something now\n<w>z</w>      cast spell by number/name\n<w>!</w>      memorise spell\n<w>W</w>      god wrath\n<w>w</w>      god mollification\n<w>p</w>      polymorph into a form\n<w>V</w>      toggle xray vision\n<w>E</w>      (un)freeze time\n\n<yellow>Monster related commands</yellow>\n<w>m</w>/<w>M</w>    create specified monster\n<w>D</w>      detect all monsters\n<w>G</w>      dismiss all monsters\n<w>"</w>      list monsters\n\n<yellow>Item related commands</yellow>\n<w>a</w>      acquirement\n<w>i</w>/<w>I</w>    identify/unidentify inventory\n<w>y</w>/<w>Y</w>    id/unid item types+level items\n<w>o</w>/<w>%</w>    create an object\n<w>t</w>      tweak object properties\n<w>v</w>      recharge all XP evokers\n<w>Ctrl-V</w> show gold value of an item\n<w>-</w>      get a god gift\n<w>|</w>      create all unrand artefacts\n<w>Ctrl-\</w> create all unrands / fallbacks\n<w>+</w>      make randart from item\n<w>'</w>      list items\n<w>J</w>      Jiyva off-level sacrifice\n\n<yellow>Debugging commands</yellow>\n<w>f</w>      quick fight simulation\n<w>F</w>      single scale fsim\n<w>Ctrl-F</w> double scale fsim\n<w>Ctrl-I</w> item generation stats\n<w>O</w>      measure exploration time\n<w>Ctrl-T</w> dungeon (D)Lua interpreter\n<w>Ctrl-U</w> client (C)Lua interpreter\n<w>Ctrl-X</w> Xom effect stats\n<w>Ctrl-Y</w> temporarily suppress wizmode\n<w>Ctrl-C</w> force a crash\n<w>`</w>      list unassigned command keys\n\n<yellow>Other wizard commands</yellow>\n(not prefixed with <w>&</w>!)\n<w>x?</w>     list targeted commands\n<w>X?</w>     list map-mode commands\n
 
 %%%%
 
@@ -33846,7 +34254,7 @@ god gift: %s
 general gift
 
 %%%%
-" is briefly surrounded by a scintillating aura of random colours."
+%s %s erupts in a glittering mayhem of colour.
 
 %%%%
 "potion effect "

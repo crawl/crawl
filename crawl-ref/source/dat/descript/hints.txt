@@ -202,3 +202,253 @@ item</tiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at an
 item in your inventory (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>,
 you can read about its properties and its description.
 %%%%
+HINT_SEEN_POTION
+
+You have picked up your first potion<console> ('<w>$item[potion]</w>').
+Use </console><tiles>. Simply <w>left-click</w> on it, or press </tiles>
+<w>$cmd[CMD_QUAFF]</w> to quaff it.
+
+Once you've identified a potion, either with a scroll of identification or by
+drinking it, you'll automatically recognize all other potions of the same type;
+this means it's sometimes useful to drink potions just to identify them.
+%%%%
+HINT_SEEN_SCROLL
+
+You have picked up your first scroll<console> ('<w>$item[scroll]</w>')
+Press </console><tiles>. Simply <w>left-click</w> on it, or press </tiles>
+<w>$cmd[CMD_READ]</w> to read it.
+
+Once you've identified a scroll, either with a scroll of
+identification or by reading it, you'll automatically
+recognize all other scrolls of the same type; this means
+it's sometimes useful to read scrolls just to identify them.
+%%%%
+HINT_SEEN_WAND
+
+You have picked up your first wand<console> ('<w>$item[wand]</w>').
+Press </console><tiles>. Simply <w>left-click</w> on it, or press </tiles>
+<w>$cmd[CMD_EVOKE]</w> to evoke it.
+
+If you find more wands of the same type, they'll merge into this wand and add
+charges to it.
+%%%%
+HINT_SEEN_SPBOOK
+
+You have picked up a book<console> ('<w>$item[book]'</w>) </console>. If it's a
+spellbook, its spells are immediately added to your library on pickup. You'll
+be able to memorise spells from it via <w>$cmd[CMD_MEMORISE_SPELL]</w>, and cast
+them with <w>$cmd[CMD_CAST_SPELL]</w>.
+{{
+    if you.god() == "Trog" then
+        return "Trog hates it when you memorise or study magic, though!"
+    end
+}}
+%%%%
+HINT_SEEN_WEAPON
+
+This is the first weapon<console>('<w>$item[weapon]</w>')</console> you've
+picked up. Use <w>$cmd[CMD_WIELD_WEAPON]</w><tiles> or
+<w>left-click</w> on it</tiles> to wield it, but be aware that this
+weapon might train a different skill from your current one. You can view the
+weapon's properties from your
+<w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory<localtiles> or by 
+<w>right-clicking</w> on it</localtiles>.
+
+{{
+    if you.class() == "Berserker" then
+        return "You should probably stick with axes. Checking other axes'"
+               .. " enchantments can be worthwhile, though!"
+    end
+}}
+%%%%
+HINT_SEEN_MISSILES
+
+This is the first stack of missiles<console> ('<w>$item[missile]</w>')</console>
+you've picked up. Missiles like boomerangs and throwing nets can be thrown by
+hand, but other missiles like arrows and bolts require a launcher and training
+in using it to be really effective.
+<localtiles><w>Right-click</w> on</localtiles><nomouse>Select</nomouse>
+the item in your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory to see more
+information about both missiles and launcher.
+
+{{
+    if you.class() == "Hunter" then
+        return "As you're already trained in Bows, you only need to bother"
+               .." collecting arrows."
+    elseif you.class() == "Conjurer" then
+        return "However, as a spellslinger, you don't really need another type"
+               .. " of ranged attack."
+    else
+        return "For now you might be best off sticking with stones for ranged"
+               .. " attacks."
+    end
+}}
+%%%%
+HINT_SEEN_ARMOUR
+
+This is the first piece of armour<console> ('<w>$item[armour]</w>')</console>
+you've picked up. <localtiles>You can click on it to wear it, and click again
+to remove it. <w>Right-clicking</w> on it will give more information.
+</localtiles><nomouse>Use <w>$cmd[CMD_WEAR_ARMOUR]</w> to wear it and
+<w>$cmd[CMD_REMOVE_ARMOUR]</w> to take it off again. You can view its
+properties from your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory.
+</nomouse>
+
+{{
+    if you.get_base_mutation_level("horns") > 0 then
+        return "Note that because of your horns you will be unable to wear"
+               .. " helmets. (Press <w>$cmd[CMD_DISPLAY_MUTATIONS]</w> to see"
+               .. " a list of your mutations and innate abilities.)"
+    end
+}}
+%%%%
+HINT_SEEN_RANDART
+
+Weapons and armour that have unusual descriptions like this are much more likely
+to be of higher enchantment or have special properties, good or bad.
+%%%%
+HINT_SEEN_CARRION
+
+That<console> <w>$item[corpse]</w></console> is a corpse.
+%%%%
+HINT_NON_FLOOR_CARRION
+
+Ah, a corpse!
+%%%%
+HINT_SEEN_JEWELLERY
+
+You have picked up a piece of jewellery, either a ring
+<console>('<w>$item[jewellery]</w>') </console>or an 
+amulet<console> ('<w>$item[amulet]</w>'). Press
+<w>$cmd[CMD_WEAR_JEWELLERY]</w> to put it on and 
+<w>$cmd[CMD_REMOVE_JEWELLERY]</w> to remove it. You can view its properties
+from your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory.</console>
+<tiles>. You can click on it to put it on, and click again
+to remove it. By <w>right-clicking</w> on it, you can view its
+properties.</tiles>
+%%%%
+HINT_SEEN_MISC
+
+This is a curious object indeed. You can play around with it to find out what
+it does by <localtiles>clicking on it to e<w>$cmd[CMD_EVOKE]</w>oke </localtiles>
+<console>e<w>$cmd[CMD_EVOKE]</w>oking </console>it. As usual, selecting it from
+your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory might give you more information.
+%%%%
+HINT_SEEN_STAFF
+
+You have picked up a magic staff<console> ('<w>$item[magical staff]</w>')</console>.
+It must be <w>$cmd[CMD_WIELD_WEAPON]</w>ielded to be of use. Magicians use
+staves to increase their power in certain spell schools. It can also be used as
+a weapon.<localtiles> You can wield a staff by <w>left-clicking</w>.</localtiles>
+%%%%
+HINT_SEEN_GOLD
+
+You have picked up your first pile of
+gold<console> ('<yellow>$item[gold]</yellow>')</console>. Unlike most other
+objects in Crawl it takes up no space in your inventory and can't be dropped.
+Gold can be used to buy items from shops, and is appreciated by certain gods.
+%%%%
+HINT_SEEN_STAIRS
+
+These<console> '$1'</console> are downstairs. You can enter the next (deeper)
+level by following them down (<w>$cmd[CMD_GO_DOWNSTAIRS]</w>). To return to this
+level, press <w>$cmd[CMD_GO_UPSTAIRS]</w> while standing on the upstairs.
+
+<localtiles>Alternatively, you can <w>left-click</w> on stairs you're standing
+on to use them.</localtiles>
+%%%%
+HINT_SEEN_ESCAPE_HATCH
+
+This<console> '$1'</console> is an escape hatch. You can use it to leave a
+level with <w>$cmd[CMD_GO_UPSTAIRS]</w> and <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
+respectively<localtiles> (or by<w>left-clicking</w>)</localtiles>, like stairs;
+unlike stairs, however, hatches are a one-way trip, so be careful when 
+descending!
+%%%%
+HINT_SEEN_BRANCH
+
+This<console> '$1'</console> is the entrance to a different branch of the
+dungeon, which might have different terrain, level layout and monsters from the
+current main branch you're in. Some branches contain only a single level, and
+others are many levels deep. They can also contain entrances to other branches.
+
+The first three branches you'll encounter are the Temple, the Lair and the
+Orcish Mines. While the Lair and the Mines can be dangerous for the new
+adventurer, the Temple is completely safe and contains a number of altars at
+which you might convert to a new god.
+%%%%
+HINT_SEEN_PORTAL
+
+This<console> '$1'</console> is a portal to an optional level, offering extra
+loot in exchange for extra danger. There's no penalty for skipping it, but the
+portal will disappear if you wait, so you have to decide now if you want to risk
+it. 
+%%%%
+HINT_SEEN_BAZAAR_PORTAL
+
+This<console> '$1'</console> is a portal to an inter-dimensional bazaar filled
+with shops. It will disappear if you don't enter it soon, so hurry.
+%%%%
+HINT_SEEN_PORTAL_2
+
+You can enter a portal just like a set of stairs, by standing on it and
+<tiles><w>clicking</w></tiles><console>pressing
+<w>$cmd[CMD_GO_DOWNSTAIRS]</w></console>. To return, find <tiles>a similar
+looking portal.</tiles><console>another $1 - but NOT the ancient stone arch
+you'll start out on!</console>
+%%%%
+HINT_STAIR_BRAND
+
+<tiles>A small symbol on a stair tile signifies that there are items in that
+position that you may want to check out.</tiles>
+<console>If any items are covering stairs or an escape hatch, then that will
+be indicated by highlighting the <w><<</w> or <w>></w> symbol, instead of hiding
+the stair symbol with an item glyph.</console>
+%%%%
+HINT_HEAP_BRAND
+
+<tiles>A small symbol on an item tile signifies that there is at least one other
+item in the same heap that you may want to check out.</tiles>
+<console>If two or more items are on a single square, then the square will be
+highlighted, and the symbol for the item on the top of the heap will be shown.
+</console>
+%%%%
+HINT_TRAP_BRAND
+
+<console>If any items are covering a trap, then that will be indicated by 
+highlighting the <w>^</w> symbol, instead of hiding the trap symbol with an item
+glyph.</console>
+%%%%
+HINT_SEEN_TRAP
+
+You just discovered a trap. You'll occasionally stumble into these nasty
+constructions<console>, depicted by $1</console>. Each type of trap has a
+different effect when stepped on, like alerting enemies or causing random
+teleportation.
+%%%%
+HINT_TRIGGERED_TRAP
+
+Oops... you just triggered a trap. You'll occasionally stumble into these nasty
+constructions<console>, depicted by $1</console>. Each type of trap has a
+different effect when stepped on, like alerting enemies or causing random
+teleportation.
+%%%%
+HINT_SEEN_ALTAR
+
+That<console> $1</console> is an altar.
+<localtiles>By <w>right-clicking</w> on it with your mouse</localtiles>
+<nomouse>If you target the altar with <w>$cmd[CMD_LOOK_AROUND]</w>, then press
+<w>$cmd[CMD_TARGET_DESCRIBE]</w></nomouse> you can get a short description.
+
+Press <w>$cmd[CMD_GO_UPSTAIRS]</w> or <w>$cmd[CMD_GO_DOWNSTAIRS]</w> while
+standing on the square to join the faith or read some information about the god
+in question. Before taking up the corresponding faith you'll be asked for
+confirmation.
+
+{{
+    if you.god() == "No God" and you.class() == "Conjurer" then
+        return "The simplest god for an inexperienced conjurer is probably"
+               .. " Vehumet, though Sif Muna is a good second choice."
+    end
+}}
+%%%%

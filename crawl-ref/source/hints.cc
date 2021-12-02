@@ -368,6 +368,26 @@ static void _replace_static_tags(string &text)
         text.replace(p, q - p + 1, item);
     }
 
+    while ((p = text.find("$feature[")) != string::npos)
+    {
+        size_t q = text.find("]", p + 9);
+        if (q == string::npos)
+        {
+            text += "<lightred>ERROR: unterminated $feature</lightred>";
+            break;
+        }
+
+        string feat_name = text.substr(p + 9, q - p - 9);
+        dungeon_feature_type feat = dungeon_feature_by_name(feat_name);
+
+        string glyph = stringize_glyph(get_feat_symbol(feat));
+
+        if (glyph == "<")
+            glyph += "<";
+
+        text.replace(p, q - p + 1, glyph);
+    }
+
     // Brand user-input -related (tutorial) items with <w>[(text here)]</w>.
     while ((p = text.find("<input>")) != string::npos)
     {
@@ -483,7 +503,7 @@ void print_hint(string key, const string& arg1, const string& arg2)
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
     for (const string &chunk : split_string("\n", text))
-        mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
+        mprf_nolocalise(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
     stop_running();
 }
@@ -987,39 +1007,24 @@ void hints_first_item(const item_def &item)
                glyph_to_tagstr(get_item_glyph(item)));
 }
 
-static string _describe_portal(const coord_def &gc)
+static void _describe_portal(const coord_def &gc)
 {
     const dungeon_feature_type feat = env.grid(gc);
-    string text;
+    string glyph_tagstr = glyph_to_tagstr(get_cell_glyph(gc));
 
     // For the sake of completeness, though it's very unlikely that a
     // player will find a bazaar entrance before reaching XL 7.
     if (feat == DNGN_ENTER_BAZAAR)
     {
-        text =  "is a portal to an inter-dimensional bazaar filled with "
-                "shops. It will disappear if you don't enter it soon, "
-                "so hurry. ";
+        print_hint("HINT_SEEN_BAZAAR_PORTAL", glyph_tagstr);
     }
     // Sewers can appear on D:3-6, ossuaries D:4-8.
     else
     {
-        text =  "is a portal to an optional level, offering extra loot in "
-                "exchange for extra danger. There's no penalty for skipping "
-                "it, but the portal will disappear if you wait, so you have "
-                "to decide now if you want to risk it. ";
+        print_hint("HINT_SEEN_PORTAL", glyph_tagstr);
     }
 
-    text += "You can enter a portal just like a set of stairs, by standing on "
-            "it and <tiles><w>clicking</w></tiles>"
-            "<console>pressing <w>></w></console>. "
-            "To return, find "
-            "<tiles>a similar looking portal.</tiles>"
-            "<console>another <w>"
-          + stringize_glyph(get_feat_symbol(DNGN_EXIT_SEWER))
-          + "</w> - but NOT the ancient stone arch you'll start "
-            "out on!</console>";
-
-    return text;
+    print_hint("HINT_SEEN_PORTAL_2", glyph_tagstr);
 }
 
 #define DELAY_EVENT \
@@ -1127,175 +1132,50 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     switch (seen_what)
     {
     case HINT_SEEN_POTION:
-        text << "You have picked up your first potion"
-                "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_POTION))
-             << "</w>'). Use </console>"
-                "<tiles>. Simply <w>left-click</w> on it, or press </tiles>"
-                "<w>%</w> to quaff it.\n"
-                "Once you've identified a potion, either with a scroll of "
-                "identification or by drinking it, you'll automatically "
-                "recognize all other potions of the same type; this means "
-                "it's sometimes useful to drink potions just to identify them.";
-        cmd.push_back(CMD_QUAFF);
+        print_hint("HINT_SEEN_POTION");
         break;
 
     case HINT_SEEN_SCROLL:
-        text << "You have picked up your first scroll"
-                "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_SCROLL))
-             << "</w>'). Press </console>"
-                "<tiles>. Simply <w>left-click</w> on it, or press </tiles>"
-                "<w>%</w> to read it.\n"
-                "Once you've identified a scroll, either with a scroll of "
-                "identification or by reading it, you'll automatically "
-                "recognize all other scrolls of the same type; this means "
-                "it's sometimes useful to read scrolls just to identify them.";
-        cmd.push_back(CMD_READ);
+        print_hint("HINT_SEEN_SCROLL");
         break;
 
     case HINT_SEEN_WAND:
-        text << "You have picked up your first wand"
-                "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_WAND))
-             << "</w>'). Press </console>"
-                "<tiles>. Simply <w>left-click</w> on it, or press </tiles>"
-                "<w>%</w> to evoke it.\n"
-                "If you find more wands of the same type, they'll merge "
-                "into this wand and add charges to it.";
-        cmd.push_back(CMD_EVOKE);
+        print_hint("HINT_SEEN_WAND");
         break;
 
     case HINT_SEEN_SPBOOK:
-        text << "You have picked up a book"
-                "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
-             << "</w>')</console>"
-                ". On pickup, its spells are immediately added to your "
-                "library. You'll be able to memorise spells from it via "
-                "<w>%</w>, and cast them with <w>%</w>.";
-        cmd.push_back(CMD_MEMORISE_SPELL);
-        cmd.push_back(CMD_CAST_SPELL);
-
-        if (you_worship(GOD_TROG))
-        {
-            text << " "
-                 << god_name(GOD_TROG)
-                 << " hates it when you study or use magic, though!";
-            cmd.push_back(CMD_USE_ABILITY);
-        }
+        print_hint("HINT_SEEN_SPBOOK");
         break;
 
     case HINT_SEEN_WEAPON:
-        text << "This is the first weapon "
-                "<console>('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_WEAPON))
-             << "</w>') </console>"
-                "you've picked up. Use <w>%</w> "
-                "<tiles>or <w>left-click</w> on it </tiles>"
-                "to wield it, but be aware that this weapon "
-                "might train a different skill from your current one. You can "
-                "view the weapon's properties from your <w>%</w>nventory"
-                "<tiles> or by <w>right-clicking</w> on it</tiles>"
-                ".";
-
-        cmd.push_back(CMD_WIELD_WEAPON);
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
-
-        if (Hints.hints_type == HINT_BERSERK_CHAR)
-        {
-            text << "\nYou should probably stick with axes. Checking other "
-                    "axes' enchantments can be worthwhile, though!";
-        }
+        print_hint("HINT_SEEN_WEAPON");
         break;
 
     case HINT_SEEN_MISSILES:
-        text << "This is the first stack of missiles "
-                "<console>('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
-             << "</w>') </console>"
-                "you've picked up. Missiles like boomerangs and throwing nets "
-                "can be thrown by hand, but other missiles like arrows and "
-                "bolts require a launcher and training in using it to be "
-                "really effective. "
-#ifdef USE_TILE_LOCAL
-                "<w>Right-clicking</w> on "
-#else
-                "Selecting "
-#endif
-                "the item in your <w>%</w>nventory will give more "
-                "information about both missiles and launcher.";
-
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
-
-        if (Hints.hints_type == HINT_RANGER_CHAR)
-        {
-            text << "\nAs you're already trained in Bows, you only need to "
-                    "bother collecting arrows.";
-        }
-        else if (Hints.hints_type == HINT_MAGIC_CHAR)
-        {
-            text << "\nHowever, as a spellslinger, you don't really need "
-                    "another type of ranged attack.";
-        }
-        else
-        {
-            text << "\nFor now you might be best off with sticking to "
-                    "stones for ranged attacks.";
-        }
+        print_hint("HINT_SEEN_MISSILES");
         break;
 
     case HINT_SEEN_ARMOUR:
-        text << "This is the first piece of armour "
-                "<console>('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_ARMOUR))
-             << "</w>') </console>"
-                "you've picked up. "
-                "<tiles>You can click on it to wear it, and click again to "
-                "remove it. <w>Right-clicking</w> on it will give more "
-                "information.</tiles>"
-                "<console>Use <w>%</w> to wear it and <w>%</w> to take it off "
-                "again. You can view its properties from your "
-                "<w>%</w>nventory.</console>";
-        cmd.push_back(CMD_WEAR_ARMOUR);
-        cmd.push_back(CMD_REMOVE_ARMOUR);
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
-
-        if (you.get_innate_mutation_level(MUT_HORNS) > 0)
-        {
-            text << "\nNote that because of your horns you will be unable"
-                    " to wear helmets. "
-                    "(Press <w>%</w> to see a list of your mutations and "
-                    "innate abilities.)";
-            cmd.push_back(CMD_DISPLAY_MUTATIONS);
-        }
+        print_hint("HINT_SEEN_ARMOUR");
         break;
 
     case HINT_SEEN_RANDART:
-        text << "Weapons and armour that have unusual descriptions like this "
-                "are much more likely to be of higher enchantment or have "
-                "special properties, good or bad.";
+        print_hint("HINT_SEEN_RANDART");
         break;
 
     case HINT_SEEN_CARRION:
         // TODO: Specialcase skeletons!
 
         if (gc.x <= 0 || gc.y <= 0) // XXX: only relevant for carrion shops?
-            text << "Ah, a corpse!";
+            print_hint("HINT_NON_FLOOR_CARRION");
         else
         {
             int i = you.visible_igrd(gc);
             if (i == NON_ITEM)
-                text << "Ah, a corpse!";
+                print_hint("HINT_NON_FLOOR_CARRION");
             else
             {
-                text << "That <console>";
-                string glyph = glyph_to_tagstr(get_item_glyph(env.item[i]));
-                const string::size_type found = glyph.find("%");
-                if (found != string::npos)
-                    glyph.replace(found, 1, "percent");
-                text << glyph << " ";
-                text << "</console>is a corpse.";
+                print_hint("HINT_SEEN_CARRION");
 #ifdef USE_TILE
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
                 tiles.add_text_tag(TAG_TUTORIAL, env.item[i].name(DESC_A), gc);
@@ -1305,57 +1185,19 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SEEN_JEWELLERY:
-        text << "You have picked up a piece of jewellery, either a ring"
-             << "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_RING))
-             << "</w>')</console>"
-             << " or an amulet"
-             << "<console> ('<w>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_AMULET))
-             << "</w>')"
-             << ". Press <w>%</w> to put it on and <w>%</w> to remove "
-                "it. You can view its properties from your <w>%</w>nventory</console>"
-             << "<tiles>. You can click on it to put it on, and click again "
-                "to remove it. By <w>right-clicking</w> on it, you can view its "
-                "properties</tiles>.";
-        cmd.push_back(CMD_WEAR_JEWELLERY);
-        cmd.push_back(CMD_REMOVE_JEWELLERY);
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
+        print_hint("HINT_SEEN_JEWELLERY");
         break;
 
     case HINT_SEEN_MISC:
-        text << "This is a curious object indeed. You can play around with "
-                "it to find out what it does by "
-                "<tiles>clicking on it to e<w>%</w>oke </tiles>"
-                "<console>e<w>%</w>oking </console>"
-                "it. As usual, selecting it from your <w>%</w>nventory "
-                "might give you more information.";
-        cmd.push_back(CMD_EVOKE);
-        cmd.push_back(CMD_EVOKE);
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
+        print_hint("HINT_SEEN_MISC");
         break;
 
     case HINT_SEEN_STAFF:
-        text << "You have picked up a magic staff"
-                "<console> ('<w>";
-
-        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF))
-             << "</w>')</console>"
-                ". It must be <w>%</w>ielded to be of use. "
-                "Magicians use staves to increase their power in certain "
-                "spell schools. It can also be used as a weapon."
-                "<tiles> You can wield a staff by <w>left-clicking</w>.</tiles>";
-        cmd.push_back(CMD_WIELD_WEAPON);
+        print_hint("HINT_SEEN_STAFF");
         break;
 
     case HINT_SEEN_GOLD:
-        text << "You have picked up your first pile of gold"
-                "<console> ('<yellow>"
-             << stringize_glyph(get_item_symbol(SHOW_ITEM_GOLD))
-             << "</yellow>')</console>"
-                ". Unlike most other objects in Crawl it takes up no space in "
-                "your inventory and can't be dropped. Gold can be used to buy "
-                "items from shops, and is appreciated by certain gods.";
+        print_hint("HINT_SEEN_GOLD");
         break;
 
     case HINT_SEEN_STAIRS:
@@ -1364,28 +1206,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (you.num_turns < 1)
             DELAY_EVENT;
 
-        text << "These ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
         if (monster_at(gc))
             DELAY_EVENT;
-
-        text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
 #endif
-        text << "are downstairs. You can enter the next (deeper) "
-                "level by following them down (<w>%</w>). To return to "
-                "this level, press <w>%</w> while standing on the "
-                "upstairs.";
-        cmd.push_back(CMD_GO_DOWNSTAIRS);
-        cmd.push_back(CMD_GO_UPSTAIRS);
-
-#ifdef USE_TILE
-        text << "\nAlternately, you can <w>left-click</w> on stairs you're "
-                "standing on to use them.";
-#endif
+        print_hint("HINT_SEEN_STAIRS", glyph_to_tagstr(get_cell_glyph(gc)));
         break;
 
     case HINT_SEEN_ESCAPE_HATCH:
@@ -1396,50 +1225,24 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << "This ";
-#ifndef USE_TILE
-        text << glyph_to_tagstr(get_cell_glyph(gc));
-        text << " ";
-#else
+#ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Escape hatch", gc);
 #endif
-        text << "is an escape hatch. You can use it to "
-                "leave a level with <w>%</w> and <w>%</w> respectively"
-#ifdef USE_TILE
-                " (or by <w>left-clicking</w>)"
-#endif
-                ", like stairs; unlike stairs, however, hatches are a one-way "
-                "trip, so be careful when descending!";
-        cmd.push_back(CMD_GO_UPSTAIRS);
-        cmd.push_back(CMD_GO_DOWNSTAIRS);
+        print_hint("HINT_SEEN_ESCAPE_HATCH",
+                   glyph_to_tagstr(get_cell_glyph(gc)));
         break;
 
     case HINT_SEEN_BRANCH:
-        text << "This ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
         if (monster_at(gc))
             DELAY_EVENT;
-
-        // FIXME: Branch entrance character is not being coloured yellow.
-        text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
 #endif
-        text << "is the entrance to a different branch of the dungeon, "
-                "which might have different terrain, level layout and "
-                "monsters from the current main branch you're in. Some "
-                "branches contain only a single level, and others are many "
-                "levels deep. They can also contain entrances to other "
-                "branches."
-
-                "\n\nThe first three branches you'll encounter are the "
-                "Temple, the Lair and the Orcish Mines. While the Lair"
-                "and the Mines can be dangerous for the new adventurer, "
-                "the Temple is completely safe and contains a number of "
-                "altars at which you might convert to a new god.";
+        print_hint("HINT_SEEN_BRANCH", glyph_to_tagstr(get_cell_glyph(gc)));
         break;
 
     case HINT_SEEN_PORTAL:
@@ -1450,18 +1253,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (you.pos() == gc)
             DELAY_EVENT;
 
-        text << "This ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
         if (monster_at(gc))
             DELAY_EVENT;
-
-        text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
 #endif
-        text << _describe_portal(gc);
+        _describe_portal(gc);
         break;
 
     case HINT_STAIR_BRAND:
@@ -1469,15 +1269,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (actor_at(gc))
             DELAY_EVENT;
 
-#ifdef USE_TILE
-        text << "A small symbol on a stair tile signifies that there are "
-                "items in that position that you may want to check out.";
-#else
-        text << "If any items are covering stairs or an escape hatch, then "
-                "that will be indicated by highlighting the <w><<</w> or "
-                "<w>></w> symbol, instead of hiding the stair symbol with "
-                "an item glyph.";
-#endif
+        print_hint("HINT_STAIR_BRAND");
         break;
 
     case HINT_HEAP_BRAND:
@@ -1485,16 +1277,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (actor_at(gc))
             DELAY_EVENT;
 
-#ifdef USE_TILE
-        text << "A small symbol on an item tile signifies that there is at "
-                "least one other item in the same heap that you may want to "
-                "check out.";
-        break;
-#else
-        text << "If two or more items are on a single square, then the square "
-                "will be highlighted, and the symbol for the item on the top "
-                "of the heap will be shown.";
-#endif
+        print_hint("HINT_HEAP_BRAND");
         break;
 
     case HINT_TRAP_BRAND:
@@ -1506,41 +1289,34 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (actor_at(gc))
             DELAY_EVENT;
 
-        text << "If any items are covering a trap, then that will be "
-                "indicated by highlighting the <w>^</w> symbol, instead of "
-                "hiding the trap symbol with an item glyph.";
+        print_hint("HINT_TRAP_BRAND");
 #endif
         break;
 
     case HINT_SEEN_TRAP:
-        if (you.pos() == gc)
-            text << "Oops... you just triggered a trap. ";
-        else
-            text << "You just discovered a trap. ";
-
-        text << "You'll occasionally stumble into these nasty constructions";
-#ifndef USE_TILE
         {
+            string glyph_tagstr;
+#ifndef USE_TILE
             cglyph_t g = get_cell_glyph(gc);
 
             if (g.ch == ' ' || g.col == BLACK)
                 g.col = LIGHTCYAN;
 
-            text << ", depicted by " << _colourize_glyph(g.col, '^');
-        }
+            glyph_tagstr = _colourize_glyph(g.col, '^');
 #endif
-        text << ". Each type of trap has a different effect when stepped on, "
-                "like alerting enemies or causing random teleportation.";
+            if (you.pos() == gc)
+                print_hint("HINT_TRIGGERED_TRAP", glyph_tagstr);
+            else
+                print_hint("HINT_SEEN_TRAP", glyph_tagstr);
+        }
+
         break;
 
     case HINT_SEEN_ALTAR:
-        text << "That ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
         if (monster_at(gc))
             DELAY_EVENT;
-
-        text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #else
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -1549,27 +1325,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
 #endif
-        text << "is an altar. "
-#ifdef USE_TILE
-                "By <w>right-clicking</w> on it with your mouse "
-#else
-                "If you target the altar with <w>x</w>, then press <w>v</w> "
-#endif
-                "you can get a short description.\n"
-                "Press <w>%</w> or <w>%</w> while standing on the square to join the faith "
-                "or read some information about the god in question. Before "
-                "taking up the corresponding faith you'll be asked for "
-                "confirmation.";
-        cmd.push_back(CMD_GO_UPSTAIRS);
-        cmd.push_back(CMD_GO_DOWNSTAIRS);
-
-        if (you_worship(GOD_NO_GOD)
-            && Hints.hints_type == HINT_MAGIC_CHAR)
-        {
-            text << "\n\nThe simplest god for an unexperienced conjurer is "
-                    "probably Vehumet, though Sif Muna is a good second "
-                    "choice.";
-        }
+        print_hint("HINT_SEEN_ALTAR", glyph_to_tagstr(get_cell_glyph(gc)));
         break;
 
     case HINT_SEEN_SHOP:
@@ -3382,7 +3138,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
 
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
-        ostr << "This " << _describe_portal(where);
+        _describe_portal(where);
         Hints.hints_events[HINT_SEEN_PORTAL] = false;
         break;
 #endif
