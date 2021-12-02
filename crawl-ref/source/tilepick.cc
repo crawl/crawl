@@ -4079,8 +4079,11 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
 
     const int etype = enchant_to_int(item);
 
-    // XXX: only helmets, robes and boots have variants, but it would be nice
+    // XXX: only helmets, hats, robes and boots have variants, but it would be nice
     // if this weren't hardcoded.
+    if (tile == TILE_THELM_HAT && etype == 4)
+        return _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
+
     if (tile == TILE_THELM_HELM)
     {
         switch (etype)

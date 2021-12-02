@@ -458,7 +458,8 @@ cap_jester THELM_CAP_JESTER
 %rim 0
 hat1 THELM_HAT
 hat2
-hat3
+hat3 THELM_HAT_ART_FIRST
+wizard_hat THELM_HAT_ART_LAST
 
 helmet1 THELM_HELM THELM_FIRST
 helmet2
