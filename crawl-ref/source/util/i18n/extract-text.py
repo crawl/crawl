@@ -71,7 +71,8 @@ def strip_line_comment(line):
 def is_skippable_if(line):
     return re.match(r'^\s*#\s*ifdef .*DEBUG', line) or \
        re.match(r'^\s*#\s*ifdef .*VERBOSE', line) or \
-       re.match(r'^\s*#\s*if +defined *\(DEBUG', line)
+       re.match(r'^\s*#\s*if +defined *\(DEBUG', line) or \
+       re.match(r'^\s*#\s*if\s*TAG_MAJOR_VERSION\s*==\s*34', line)
 
 # strip out stuff that is excluded by #ifdef's, etc.
 def strip_uncompiled(lines):

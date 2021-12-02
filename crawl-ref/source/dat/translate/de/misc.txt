@@ -176,3 +176,10 @@ Ctrl-Z
 Strg-Z
 %%%%
 
+####################
+# Messages for obsolete items
+####################
+%%%%
+This item has been removed, sorry!
+Dieser Gegenstand wurde abgeschafft, sorry!
+%%%%

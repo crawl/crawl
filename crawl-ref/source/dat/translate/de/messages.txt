@@ -1287,24 +1287,6 @@ Eure innere Flamme verschwindet.
 %s is filled with an inner flame.
 %s ist mit einer inneren Flamme gefüllt.
 %%%%
-The dagger glows with an icy blue light!
-Der Dolch leuchtet mit einem eisblauen Licht!
-%%%%
-The dagger stops glowing.
-Der Dolch hört auf zu leuchten.
-%%%%
-%s is flash-frozen.
-%s ist blitzgefroren.
-%%%%
-You are encased in ice.
-Ihr seid in Eis gehüllt.
-%%%%
-The scimitar bursts into red hot flame!
-Der Krummsäbel bricht in glühende Flamme!
-%%%%
-The scimitar stops flaming.
-Der Krummsäbel hört auf zu flammen.
-%%%%
 You feel a darkness envelop your magic.
 Ihr fühlt eine Dunkelheit, die Eure Magie umhüllt.
 %%%%
@@ -1328,9 +1310,6 @@ Das Entermesser des Kapitäns blinkt! Ihr zerreißt {acc}%s!!
 %%%%
 En garde!
 En garde!
-%%%%
-You sense a greater flux of ambient magical fields.
-Ihr spürt einen größeren Fluss von magischen Umgebungsfeldern.
 %%%%
 The vines latch onto your body!
 Die Reben klammern sich an Euren Körper!
@@ -1397,6 +1376,9 @@ Brand
 +Blink
 
 %%%%
++Rage
+
+%%%%
 *Noise
 
 %%%%
@@ -1412,16 +1394,7 @@ Brand
 *Rage
 
 %%%%
-Hungry
-
-%%%%
 Contam
-
-%%%%
-Acc
-
-%%%%
-*Curse
 
 %%%%
 Clar
@@ -1436,16 +1409,7 @@ BDam
 RMsl
 
 %%%%
-+Fog
-
-%%%%
-SustAt
-
-%%%%
 nupgr
-
-%%%%
-+Twstr
 
 %%%%
 *Corrode
@@ -1955,6 +1919,9 @@ Euer anhaftendes Gelee isst %s!
 The barbed spikes become lodged in your body.
 Die Stacheldornen stecken in Eurem Körper.
 %%%%
+You are encased in ice.
+Ihr seid in Eis gehüllt.
+%%%%
 %s shatters and turns to gold!
 
 %%%%
@@ -1963,6 +1930,9 @@ Die Stacheldornen stecken in Eurem Körper.
 %%%%
 The acid splashes onto %s!
 Die Säure spritzt auf%s!
+%%%%
+%s is flash-frozen.
+%s ist blitzgefroren.
 %%%%
 %s is paralysed.
 
@@ -2234,6 +2204,9 @@ porkalator
 hibernation
 
 %%%%
+sleep
+
+%%%%
 berserk
 
 %%%%
@@ -2361,9 +2334,6 @@ You enter the halls of Pandemonium!\nTo return, you must find a gate leading bac
 You land on top of a ziggurat so tall you cannot make out the ground.
 
 %%%%
-You enter a labyrinth!
-
-%%%%
 You enter an inter-dimensional bazaar!
 
 %%%%
@@ -2455,12 +2425,6 @@ a forest fire
 
 %%%%
 a cloud of scalding steam
-
-%%%%
-gloom
-
-%%%%
-thick gloom
 
 %%%%
 ink
@@ -2673,6 +2637,39 @@ No answer found in the FAQ! Please submit a bug report!
 ##################
 # dactions.cc
 ##################
+%%%%
+slimes allow another conversion attempt
+
+%%%%
+reapply passive mapping
+
+%%%%
+remove Jiyva altars
+
+%%%%
+Pikel's minions go poof
+
+%%%%
+corpses rot
+
+%%%%
+hogs to humans
+
+%%%%
+gold to top of piles
+
+%%%%
+bribe timeout
+
+%%%%
+remove Gozag shops
+
+%%%%
+ancestor vanishes
+
+%%%%
+upgrade ancestor
+
 %%%%
 %s crumbles into dust!
 %s zerbröckelt zu Staub!
@@ -3593,15 +3590,6 @@ Your life essence is reduced. (-10%% HP)
 Your ancestor manifests to aid you.
 
 %%%%
-%s prevents your magic from regenerating.
-
-%%%%
-%s identifies device charges for you.
-
-%%%%
-%s will collect and distill excess magic from your kills.
-
-%%%%
 You are protected from the effects of unwielding distortion weapons.
 
 %%%%
@@ -3753,25 +3741,10 @@ Description|<w>Quote</w>
 Wiz
 
 %%%%
-+cTele
-
-%%%%
 RegenMP
 
 %%%%
-Cons
-
-%%%%
-cFly
-
-%%%%
-Inacc
-
-%%%%
 ,
-
-%%%%
-It sustains your strength, intelligence and dexterity.
 
 %%%%
 It improves your spell success rate.
@@ -3783,25 +3756,10 @@ It enhances your fire magic.
 It enhances your ice magic.
 
 %%%%
-It may teleport you next to monsters.
-
-%%%%
-It can be evoked for teleport control.
-
-%%%%
-It increases damage dealt and taken.
-
-%%%%
-It allows you to eat raw meat even when not hungry.
-
-%%%%
 It increases your rate of magic regeneration.
 
 %%%%
 It increases your evasion while moving and waiting.
-
-%%%%
-It protects your inventory from destruction.
 
 %%%%
 It causes incoming damage to be divided between your reserves of health and magic.
@@ -3811,9 +3769,6 @@ It allows you to gain divine favour quickly.
 
 %%%%
 It reflects blocked missile attacks.
-
-%%%%
-It reduces the accuracy of all your attacks.
 
 %%%%
 :
@@ -3867,6 +3822,9 @@ It may make noises in combat.
 It prevents spellcasting.
 
 %%%%
+It may teleport you next to monsters.
+
+%%%%
 It prevents most forms of teleportation.
 
 %%%%
@@ -3904,6 +3862,9 @@ It will be destroyed if unequipped.
 
 %%%%
 It affects your SH (%+d).
+
+%%%%
+It increases damage dealt and taken.
 
 %%%%
 It bestows one free step when moving towards enemies.
@@ -3958,12 +3919,6 @@ It makes you more stealthy.
 
 %%%%
 It may have some hidden properties.
-
-%%%%
-needle trap
-
-%%%%
-gas trap
 
 %%%%
 "One of the many lords of Pandemonium, @name@ has "
@@ -4488,12 +4443,6 @@ It cannot be enchanted further.
 It can be maximally enchanted to +%d.
 
 %%%%
-It burns those it strikes, causing extra injury to most foes and up to half again as much damage against particularly susceptible opponents. Compared to normal ammo, it is twice as likely to be destroyed on impact.
-
-%%%%
-It freezes those it strikes, causing extra injury to most foes and up to half again as much damage against particularly susceptible opponents. It can also slow down cold-blooded creatures. Compared to normal ammo, it is twice as likely to be destroyed on impact.
-
-%%%%
 It has a random effect on any target it hits.
 
 %%%%
@@ -4609,9 +4558,6 @@ it improves its wearer's accuracy and damage with ranged weapons, such as bows a
 
 %%%%
 it protects its wearer by repelling missiles.
-
-%%%%
-it does nothing special.
 
 %%%%
 it increases damage dealt and taken.
@@ -5738,9 +5684,6 @@ wall of the weird stuff which makes up Pandemonium
 , spattered with blood
 
 %%%%
-UNAMED PORTAL VAULT ENTRY
-
-%%%%
 " armed with %s"
 
 %%%%
@@ -5986,6 +5929,9 @@ Conf
 confused
 
 %%%%
+conf
+
+%%%%
 You are confused.
 
 %%%%
@@ -6161,6 +6107,9 @@ You feel less slimy.
 
 %%%%
 Your slime is starting to congeal.
+
+%%%%
+sleeping
 
 %%%%
 You are sleeping.
@@ -7018,134 +6967,11 @@ heavenly storm
 Heavenly clouds are increasing your accuracy and damage.
 
 %%%%
+sickness
+
+%%%%
 You feel your health improve.
 Ihr fühlt, wie sich Eure Gesundheit verbessert.
-%%%%
-old magic sapped
-
-%%%%
-old repel missiles
-
-%%%%
-old deflect missiles
-
-%%%%
-old jelly prayer
-
-%%%%
-old controlled flight
-
-%%%%
-old see invisible
-
-%%%%
-old insulation
-
-%%%%
-old bargain
-
-%%%%
-old slaying
-
-%%%%
-old misled
-
-%%%%
-old nausea
-
-%%%%
-old temporary mutations
-
-%%%%
-old battlesphere
-
-%%%%
-old retching
-
-%%%%
-old spirit howl
-
-%%%%
-old song of shielding
-
-%%%%
-old antennae extend
-
-%%%%
-old building rage
-
-%%%%
-old negative vuln
-
-%%%%
-old sure blade
-
-%%%%
-old control teleport
-
-%%%%
-old howl immunity
-
-%%%%
-old condensation shield
-
-%%%%
-old phase shift
-
-%%%%
-old telepathy
-
-%%%%
-old magic armour
-
-%%%%
-old magic shield
-
-%%%%
-old fortitude
-
-%%%%
-old drowning immunity
-
-%%%%
-old regeneration
-
-%%%%
-old no cast
-
-%%%%
-old gourmand
-
-%%%%
-old abjuration
-
-%%%%
-old infusion
-
-%%%%
-old shroud
-
-%%%%
-old ring of flames
-
-%%%%
-old darkness
-
-%%%%
-old stabbing
-
-%%%%
-old scrying
-
-%%%%
-old elixir magic
-
-%%%%
-old antimagic
-
-%%%%
-old device surge
-
 %%%%
 
 ##################
@@ -7305,9 +7131,6 @@ Sorry, this item was removed!
 
 %%%%
 You do not have any ammo quivered for %s.
-
-%%%%
-%s's wrath prevents you from evoking devices!
 
 %%%%
 You cannot evoke magical items.
@@ -7638,15 +7461,6 @@ Do you want to delete it?
 %%%%
 Error: %s
 Fehler:%s
-%%%%
-This Lava Orc save game cannot be loaded as-is.
-
-%%%%
-If you load it now, your character will be converted to a Hill Orc. Continue?
-
-%%%%
-Please load the save in an earlier version if you want to keep it as a Lava Orc.
-
 %%%%
 File is corrupt (found version %d.%d).
 
@@ -9073,9 +8887,6 @@ You feel like a meek peon again.
 %%%%
 You have no companions.
 Ihr habt keine Gefährten.
-%%%%
-Removing corrupted ex-follower from level: %s.
-Beschädigter Ex-Anhänger wird gelöscht von Ebene: %s.
 %%%%
 
 ##################
@@ -10658,16 +10469,40 @@ constriction
 Thief
 
 %%%%
+Death Knight
+
+%%%%
 Paladin
 
 %%%%
 Reaver
 
 %%%%
+Healer
+
+%%%%
 Th
 
 %%%%
+DK
+
+%%%%
 Re
+
+%%%%
+St
+
+%%%%
+Jr
+
+%%%%
+Pr
+
+%%%%
+He
+
+%%%%
+Sk
 
 %%%%
 Hill Dwarf
@@ -10701,6 +10536,12 @@ GE
 
 %%%%
 MD
+
+%%%%
+SE
+
+%%%%
+LO
 
 %%%%
 v
@@ -12645,12 +12486,6 @@ You aren't carrying any items that you can evoke.
 None of your equipped items are cursed.
 Keiner Eurer ausgerüsteten Gegenstände ist verflucht.
 %%%%
-You aren't wearing any piece of uncursed armour.
-
-%%%%
-You aren't wearing any piece of uncursed jewellery.
-
-%%%%
 You aren't carrying any weapons that can be branded.
 
 %%%%
@@ -12729,9 +12564,6 @@ Missiles
 Wands
 
 %%%%
-Comestibles
-
-%%%%
 Scrolls
 
 %%%%
@@ -12745,9 +12577,6 @@ Books
 
 %%%%
 Magical Staves
-
-%%%%
-Rods
 
 %%%%
 Orbs of Power
@@ -13247,15 +13076,6 @@ You can't read that!
 You have no spells to forget!
 
 %%%%
-This scroll only affects a wielded weapon!
-
-%%%%
-Your weapon is already cursed!
-
-%%%%
-Holy weapons cannot be cursed!
-
-%%%%
 infinite will
 
 %%%%
@@ -13330,9 +13150,6 @@ Es ist eine Schriftrolle der Identifizierung.
 %%%%
 It is a scroll of enchant armour.
 Es ist eine Schriftrolle mit verzauberter Rüstung.
-%%%%
-This item has been removed, sorry!
-Dieser Artikel wurde entfernt, sorry!
 %%%%
 It is a scroll of amnesia.
 Es ist eine Schriftrolle der Amnesie.
@@ -13412,9 +13229,6 @@ Original Equipment
 
 %%%%
 "You acquired "
-
-%%%%
-"You drew the Genie "
 
 %%%%
 "Your wizardly powers created "
@@ -14088,6 +13902,9 @@ orient
 shuffle
 
 %%%%
+clear
+
+%%%%
 subst
 
 %%%%
@@ -14625,12 +14442,6 @@ flee
 cornered
 
 %%%%
-panic
-
-%%%%
-lurk
-
-%%%%
 retreat
 
 %%%%
@@ -14785,6 +14596,9 @@ silencing
 
 %%%%
 regenerating
+
+%%%%
+sick
 
 %%%%
 deaths
@@ -16004,6 +15818,9 @@ Failed to create item '
 Invalid brand on item %s, annulling.
 Ungültige Marke auf Artikel%s, annulliert.
 %%%%
+Running generate_armour_item tests.
+
+%%%%
 
 ##################
 # map-knowledge.cc
@@ -16358,6 +16175,12 @@ Index out of range: %d
 archmagi
 
 %%%%
+frost
+
+%%%%
+exploding
+
+%%%%
 unknown god name: '%s'
 
 %%%%
@@ -16541,12 +16364,6 @@ Tomb (%d, %d, %d)
 
 %%%%
 Malign gateway (%d, %s)
-
-%%%%
-Phoenix marker (%d, %d)
-
-%%%%
-Door seal marker (%d, %d)
 
 %%%%
 Terrain change marker (%d->%d, %d)
@@ -17165,29 +16982,11 @@ schlägt Euch mit dem Tentakel
 %s trunk-slaps %s
 %s schlägt {acc}%s mit dem Rüssel
 %%%%
-%s snaps at you
-
-%%%%
-%s snaps at %s
-
-%%%%
-%s splashes you
-
-%%%%
-%s splashes %s
-
-%%%%
 %s pounces on you
 %s stürzt sich auf Euch
 %%%%
 %s pounces on %s
 %s stürzt sich auf {acc}%s
-%%%%
-%s stings you from afar
-
-%%%%
-%s stings %s from afar
-
 %%%%
 %s hits you from afar
 %s schlägt Euch von weitem
@@ -18587,12 +18386,6 @@ Ihr tötet {acc}%s!
 That felt strangely unrewarding.
 Das fühlte sich seltsam undankbar an.
 %%%%
-%s collects the excess magic power.
-%s sammelt die überschüssige Zauberkraft ein.
-%%%%
-%s grants you a gift!
-%s gewährt Euch ein Geschenk!
-%%%%
 %s dies!
 %s stirbt!
 %%%%
@@ -19015,9 +18808,6 @@ Die Winde um%s beruhigen sich.
 fatigue
 
 %%%%
-rot
-
-%%%%
 summon
 
 %%%%
@@ -19030,13 +18820,7 @@ charm
 tp
 
 %%%%
-sleepy
-
-%%%%
 held
-
-%%%%
-slouch
 
 %%%%
 tide
@@ -19051,19 +18835,10 @@ severed
 regen
 
 %%%%
-stoneskin
-
-%%%%
-fear inspiring
-
-%%%%
 temporarily pacified
 
 %%%%
 recite timer
-
-%%%%
-roused
 
 %%%%
 breath timer
@@ -19082,9 +18857,6 @@ permabribed
 
 %%%%
 repel missiles
-
-%%%%
-deflect missiles
 
 %%%%
 stilling the winds
@@ -19867,12 +19639,6 @@ trample
 trunk-slap
 
 %%%%
-snap closed at
-
-%%%%
-splash
-
-%%%%
 pounce on
 
 %%%%
@@ -19895,9 +19661,6 @@ gelid
 
 %%%%
 infernal
-
-%%%%
-putrid
 
 %%%%
 torturous
@@ -20744,24 +20507,6 @@ You feel resistant to poisons.
 You feel less resistant to poisons.
 
 %%%%
-carnivore
-
-%%%%
-You are carnivorous and can eat meat at any time.
-
-%%%%
-You hunger for flesh.
-
-%%%%
-You feel able to eat a more balanced diet.
-
-%%%%
-herbivore
-
-%%%%
-You are a herbivore.
-
-%%%%
 Your flesh is heat resistant. (rF+)
 
 %%%%
@@ -20921,33 +20666,6 @@ Your regeneration stops near monsters.
 You begin to regenerate regardless of the presence of monsters.
 
 %%%%
-fast metabolism
-
-%%%%
-You have a fast metabolism.
-
-%%%%
-You have a very fast metabolism.
-
-%%%%
-Your metabolism is lightning-fast.
-
-%%%%
-You feel a little hungry.
-
-%%%%
-Your metabolism slows.
-
-%%%%
-slow metabolism
-
-%%%%
-You have a slow metabolism.
-
-%%%%
-You need to consume almost no food.
-
-%%%%
 You are weak. (Str -2)
 
 %%%%
@@ -20967,15 +20685,6 @@ You are clumsy. (Dex -2)
 
 %%%%
 You are very clumsy. (Dex -4)
-
-%%%%
-You can control translocations.
-
-%%%%
-You feel controlled.
-
-%%%%
-You feel random.
 
 %%%%
 teleportitis
@@ -21080,78 +20789,6 @@ There is a nasty taste in your mouth for a moment.
 You feel an ache in your throat.
 
 %%%%
-breathe flames
-
-%%%%
-You can breathe flames.
-
-%%%%
-You can breathe fire.
-
-%%%%
-Your throat feels hot.
-
-%%%%
-A chill runs up and down your throat.
-
-%%%%
-jump
-
-%%%%
-You can jump attack at a short distance.
-
-%%%%
-You can jump attack at a medium distance.
-
-%%%%
-You can jump attack at a long distance.
-
-%%%%
-You feel more sure on your feet.
-
-%%%%
-You feel less sure on your feet.
-
-%%%%
-You can translocate small distances at will.
-
-%%%%
-You feel jittery.
-
-%%%%
-You no longer feel jittery.
-
-%%%%
-strong stiff
-
-%%%%
-Your muscles are strong, but stiff. (Str +1, Dex -1)
-
-%%%%
-Your muscles are very strong, but stiff. (Str +2, Dex -2)
-
-%%%%
-Your muscles are extremely strong, but stiff. (Str +3, Dex -3)
-
-%%%%
-Your muscles feel sore.
-
-%%%%
-Your muscles feel loose.
-
-%%%%
-flexible weak
-
-%%%%
-Your muscles are flexible, but weak (Str -1, Dex +1).
-
-%%%%
-Your muscles are very flexible, but weak (Str -2, Dex +2).
-
-%%%%
-Your muscles are extremely flexible, but weak (Str -3, Dex +3).
-
-%%%%
 screaming
 
 %%%%
@@ -21242,24 +20879,6 @@ You feel healthier.
 You feel a little healthier.
 
 %%%%
-blurry vision
-
-%%%%
-Scrolls take you a little longer to read.
-
-%%%%
-Scrolls take you longer to read.
-
-%%%%
-Scrolls take you much longer to read.
-
-%%%%
-Your vision blurs.
-
-%%%%
-Your vision sharpens a little.
-
-%%%%
 mutation resistance
 
 %%%%
@@ -21332,18 +20951,6 @@ You are very robust. (+20% HP)
 You are extremely robust. (+30% HP)
 
 %%%%
-unbreathing
-
-%%%%
-You can survive without breathing.
-
-%%%%
-You can survive without breathing, even under water.
-
-%%%%
-You feel breathless.
-
-%%%%
 torment resistance
 
 %%%%
@@ -21369,15 +20976,6 @@ You feel resistant to negative energy.
 
 %%%%
 You feel more resistant to negative energy.
-
-%%%%
-restore body
-
-%%%%
-You can restore your body by infusing magical energy.
-
-%%%%
-You can now infuse your body with magic to restore decomposition.
 
 %%%%
 in touch with death
@@ -21596,15 +21194,6 @@ Your tentacle spike becomes smaller.
 Your tentacle spike recedes somewhat.
 
 %%%%
-breathe poison
-
-%%%%
-You taste something nasty.
-
-%%%%
-Your breath is less nasty.
-
-%%%%
 naga tail
 
 %%%%
@@ -21663,36 +21252,6 @@ Your wings grow larger and stronger.
 
 %%%%
 Your wings shrivel and weaken.
-
-%%%%
-saprovore
-
-%%%%
-You can tolerate rotten meat.
-
-%%%%
-You can eat rotten meat.
-
-%%%%
-You thrive on rotten meat.
-
-%%%%
-You hunger for rotting flesh.
-
-%%%%
-miasma immunity
-
-%%%%
-You are immune to miasma.
-
-%%%%
-You feel immune to miasma.
-
-%%%%
-You feel vulnerable to miasma.
-
-%%%%
-You like to eat raw meat.
 
 %%%%
 strong legs
@@ -21884,9 +21443,6 @@ You feel forlorn.
 You feel more spiritual.
 
 %%%%
-You are somewhat able to resist unholy torments.
-
-%%%%
 sense surroundings
 
 %%%%
@@ -21930,24 +21486,6 @@ A meltable shield of frost defends you. (SH +
 
 %%%%
 Frost condenses into a shield before you.
-
-%%%%
-conserve scrolls
-
-%%%%
-You are very good at protecting items from fire.
-
-%%%%
-You feel less concerned about heat.
-
-%%%%
-conserve potions
-
-%%%%
-You are very good at protecting items from cold.
-
-%%%%
-You feel less concerned about cold.
 
 %%%%
 passive freeze
@@ -22217,18 +21755,6 @@ Your pseudopods retract into your body.
 Your pseudopods become smaller.
 
 %%%%
-spawn jellies when eating
-
-%%%%
-You occasionally spawn a jelly by eating.
-
-%%%%
-You feel more connected to the slimes.
-
-%%%%
-Your connection to the slimes vanishes.
-
-%%%%
 acidic bite
 
 %%%%
@@ -22401,33 +21927,6 @@ Your molten scales disappear.
 
 %%%%
 Your molten scales recede somewhat.
-
-%%%%
-rough black scales
-
-%%%%
-You are partially covered in rough black scales. (AC +2, Dex -1)
-
-%%%%
-You are mostly covered in rough black scales. (AC +5, Dex -2)
-
-%%%%
-You are completely covered in rough black scales. (AC +8, Dex -3)
-
-%%%%
-Rough black scales grow over part of your body.
-
-%%%%
-Rough black scales spread over more of your body.
-
-%%%%
-Rough black scales cover your body completely.
-
-%%%%
-Your rough black scales disappear.
-
-%%%%
-Your rough black scales recede somewhat.
 
 %%%%
 rugged brown scales
@@ -22763,69 +22262,6 @@ Your body vibrates.
 You briefly stop moving.
 
 %%%%
-trample resistance
-
-%%%%
-You are resistant to trampling.
-
-%%%%
-You feel steady.
-
-%%%%
-You feel unsteady..
-
-%%%%
-cling
-
-%%%%
-You can cling to walls.
-
-%%%%
-You feel sticky.
-
-%%%%
-You feel slippery.
-
-%%%%
-exoskeleton
-
-%%%%
-Your body is surrounded by an exoskeleton. (buggy)
-
-%%%%
-Your body is surrounded by a tough exoskeleton. (buggy)
-
-%%%%
-Your exoskeleton hardens.
-
-%%%%
-Your exoskeleton becomes even harder.
-
-%%%%
-Your exoskeleton softens.
-
-%%%%
-fuming
-
-%%%%
-You emit clouds of smoke.
-
-%%%%
-You frequently emit clouds of smoke.
-
-%%%%
-You fume.
-
-%%%%
-You fume more.
-
-%%%%
-You stop fuming.
-
-%%%%
-You fume less.
-
-%%%%
 Your melee attacks may debilitate your foes.
 
 %%%%
@@ -22893,21 +22329,6 @@ You feel cold-blooded.
 
 %%%%
 You feel warm-blooded.
-
-%%%%
-flame cloud immunity
-
-%%%%
-You are immune to clouds of flame.
-
-%%%%
-freezing cloud immunity
-
-%%%%
-You are immune to freezing clouds.
-
-%%%%
-Your attributes are resistant to harm.
 
 %%%%
 inability to drink while threatened
@@ -23028,18 +22449,6 @@ You can no longer study or cast Air magic.
 
 %%%%
 You can once more study and cast Air magic.
-
-%%%%
-no charms magic
-
-%%%%
-You cannot study or cast removed Charms magic.
-
-%%%%
-You can no longer study or cast Charms magic.
-
-%%%%
-You can once more study and cast Charms magic.
 
 %%%%
 no conjurations magic
@@ -23623,6 +23032,9 @@ qazlal
 [+
 
 %%%%
+You can breathe fire.
+
+%%%%
 Your breath weapon is enhanced in this form.
 
 %%%%
@@ -23853,9 +23265,6 @@ Ihr fühlt %s.
 %%%%
 You feel rather odd for a moment.
 Ihr fühlt Euch für einen Moment ziemlich seltsam.
-%%%%
-Found no temp mutations, clearing.
-Keine temporären Mutationen gefunden, Clearing.
 %%%%
 temp mutation expiry
 
@@ -24395,9 +23804,6 @@ Ring
 )</darkgrey>
 
 %%%%
-*\n
-
-%%%%
 "<w>@:</w> "
 
 %%%%
@@ -24759,9 +24165,6 @@ you unwield
 %%%%
 You feel your power drawn to a protective spirit.
 Ihr fühlt Eure Kraft von einem schützenden Geist angezogen.
-%%%%
-Now linked to your health, your magic stops regenerating.
-Jetzt, verbunden mit Eurer Gesundheit, hört Eure Magie auf, sich zu regenerieren.
 %%%%
 You feel the presence of a powerless spirit.
 Ihr fühlt die Gegenwart eines machtlosen Geistes.
@@ -27028,9 +26431,6 @@ You can no longer wreak a terrible wrath on your foes.
 You can wreak a terrible wrath on your foes.
 
 %%%%
-gain magical power from killing
-
-%%%%
 You can now stomp with the beat.
 
 %%%%
@@ -27178,9 +26578,6 @@ Eure Vision gewinnt ihr göttliches Sehvermögen zurück.
 A storm instantly forms around you!
 Ein Sturm bildet sich sofort um Euch!
 %%%%
-You begin regenerating magic.
-Ihr fangt an, Magie zu regenerieren.
-%%%%
 Your full life essence returns.
 Eure volle Lebensessenz kehrt zurück.
 %%%%
@@ -27235,6 +26632,9 @@ Jiyva's grace
 You feel as though nothing has changed.
 Ihr habt das Gefühl, als hätte sich nichts geändert.
 %%%%
+%s grants you a gift!
+%s gewährt Euch ein Geschenk!
+%%%%
 Vehumet offers you knowledge of %s.
 
 %%%%
@@ -27263,9 +26663,6 @@ No God
 
 %%%%
 nameless
-
-%%%%
-Pakellas
 
 %%%%
 Wu Jian
@@ -27391,9 +26788,6 @@ Your funded stores close, unable to pay their debts without your funds.
 Your storm instantly dissipates.
 Euer Sturm löst sich sofort auf.
 %%%%
-%s continues to block your magic from regenerating.
-
-%%%%
 %s continues to slow your movements.
 
 %%%%
@@ -27451,9 +26845,6 @@ Ihr bezahlt eine Servicegebühr von%d Gold.
 %s grants you a jelly!
 
 %%%%
-You stop regenerating magic.
-Ihr hört auf, Magie zu regenerieren.
-%%%%
 %s begins to support your attributes as your movement slows.
 
 %%%%
@@ -27479,9 +26870,6 @@ The service fee for joining is currently %d gold; you only have %d.
 
 %%%%
 %s does not accept worship from the loveless!
-
-%%%%
-%s does not accept worship from those who are unable to use magical devices!
 
 %%%%
 %s says: How dare you approach in such a loathsome form!
@@ -27712,12 +27100,6 @@ Antique Armour
 Book
 
 %%%%
-Gadget
-
-%%%%
-Removed Food
-
-%%%%
 Magic Scroll
 
 %%%%
@@ -27737,9 +27119,6 @@ antique armour
 
 %%%%
 antiques
-
-%%%%
-removed gadget
 
 %%%%
 distillery
@@ -28184,22 +27563,13 @@ Ddg
 Sth
 
 %%%%
-Stb
-
-%%%%
 Shd
-
-%%%%
-Trp
 
 %%%%
 UC
 
 %%%%
 Spc
-
-%%%%
-Chrm
 
 %%%%
 Necromancy
@@ -29315,9 +28685,6 @@ as magically contaminated
 %%%%
 transformed
 
-%%%%
-Your charged fireball dissipates.
-Euer geladener Feuerball löst sich auf.
 %%%%
 You feel strangely stable.
 Ihr fühlt Euch seltsam stabil.
@@ -31551,17 +30918,8 @@ Incomplete read of "%s" - aborting.
 Error writing to %s
 
 %%%%
-Placing missing branch entry: %s.
-Fehlender Zweigeintrag platzieren:%s.
-%%%%
-Placing missing branch exit: %s.
-
-%%%%
 Error: monster %s in %s at (%d,%d)
 Fehler: Monster%s in%s bei (%d,%d)
-%%%%
-Placing emergency exit: %s.
-Notausgang platzieren:%s.
 %%%%
 Failed to save Lua data: %s
 Fehler beim Speichern der Lua-Daten:%s
@@ -31578,29 +30936,8 @@ The Shining One
 Marduk
 
 %%%%
-Mutation #%d out of sync, fixing up.
-Mutation #%d nicht synchron, repariert.
-%%%%
 Failed to load Lua persist table: %s
 Fehler beim Laden der Lua-Persist-Tabelle:%s
-%%%%
-Fixing up incorrect heavenly storm key
-
-%%%%
-Fixed bad positions for inventory slots %s
-Schlechte Positionen für Inventarplätze%s behoben
-%%%%
-Save file has uninitialized PlaceInfo for branch %s
-
-%%%%
-"(quantity: 0) "
-
-%%%%
-dragon armour
-
-%%%%
-+Lev
-
 %%%%
 elsewhere companion has duplicate mid %d: %s
 An anderer Stelle hat der Begleiter ein doppeltes%d:%s
@@ -32656,9 +31993,6 @@ Ihr hört ein lautes "Zot"!
 %s shaft crumbles and collapses.
 %s Welle bröckelt und bricht zusammen.
 %%%%
-The gas trap seems to be inoperative.
-Die Gasfalle scheint nicht funktionsfähig zu sein.
-%%%%
 The web tears apart.
 Das Netz zerreißt.
 %%%%
@@ -33590,6 +32924,9 @@ Keine Elemente generiert.
 
 %%%%
 debug randart
+
+%%%%
+running
 
 %%%%
 see invis
