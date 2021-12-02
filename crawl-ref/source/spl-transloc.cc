@@ -323,6 +323,11 @@ static coord_def _fuzz_hop_destination(coord_def target)
     return chosen;
 }
 
+int frog_hop_range()
+{
+    return 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+}
+
 /**
  * Attempt to hop the player to a space near a tile of their choosing.
  *
@@ -335,7 +340,7 @@ spret frog_hop(bool fail, dist *target)
     dist empty;
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
-    const int hop_range = 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+    const int hop_range = frog_hop_range();
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     tgt.obeys_mesmerise = true;
 

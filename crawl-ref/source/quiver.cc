@@ -1348,7 +1348,8 @@ namespace quiver
         }
     }
 
-    static bool _ability_quiver_range_check(ability_type abil, bool quiet=true)
+    static bool _ability_quiver_range_check(ability_type abil,
+                                            bool quiet = true)
     {
         // Hacky: do some quiver-specific range checks for the sake of
         // autofight. We can't approach this like spells (which are marked
@@ -1358,41 +1359,19 @@ namespace quiver
         // it from the `a` menu, just not from the quiver.
         // (What abilities are missing here?)
 
-        switch (abil)
+        if (abil == ABIL_ROLLING_CHARGE)
         {
-        case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        {
-            // can this be consolidated with spell range checks?
-            // n.b. the range value here is used differently than in spell range
-            // checks (for consistency with the ability implementation)
-            const int range = min((int)you.current_vision, 5);
-            if (get_dist_to_nearest_monster() <= range)
-                return true;
-            if (!quiet)
-                mpr("You can't see any hostile targets that would be affected.");
-            return false;
-        }
-        case ABIL_ROLLING_CHARGE:
             // Use a version of the palentonga charge range check that
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
             return palentonga_charge_possible(quiet, false);
-        case ABIL_EVOKE_DISPATER:
-            // assumes constant range with power
-            if (!spell_no_hostile_in_range(SPELL_HURL_DAMNATION))
-                return true;
-            // TODO: code duplication
-            if (!quiet)
-                mpr("You can't see any hostile targets that would be affected.");
-            return false;
-        case ABIL_BLINKBOLT:
-            if (!spell_no_hostile_in_range(SPELL_BLINKBOLT))
-                return true;
-            if (!quiet)
-                mpr("You can't see any hostile targets that would be affected.");
-            return false;
-        default:
+        }
+
+        if (get_dist_to_nearest_monster() <= ability_range(abil))
             return true;
+        if (!quiet)
+            mpr("You can't see any hostile targets that would be affected.");
+        return false;
         }
     }
 

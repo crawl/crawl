@@ -28,6 +28,7 @@ int get_gold_cost(ability_type ability);
 string nemelex_card_text(ability_type ability);
 const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
+int ability_range(ability_type abil);
 talent get_talent(ability_type ability, bool check_confused);
 const char* ability_name(ability_type ability);
 vector<const char*> get_ability_names();
