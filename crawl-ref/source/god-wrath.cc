@@ -703,13 +703,12 @@ static bool _yredelemnul_retribution()
                 if (one_chance_in(you.experience_level))
                 {
                     if (_yred_random_zombified_hostile())
-                        count++;
+                        ++count;
                 }
                 else
                 {
-                    const int num = yred_random_servants(0, true);
-                    if (num >= 0)
-                        count += num;
+                    if (yred_random_servant(0, true))
+                        ++count;
                     else
                         ++how_many;
                 }

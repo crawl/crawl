@@ -124,6 +124,7 @@ enum ability_type
 #endif
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_ENSLAVE_SOUL,
+    ABIL_YRED_DARK_BARGAIN,
     // Vehumet
     // = 1040
     // Okawaru

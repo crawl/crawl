@@ -139,6 +139,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Yredelemnul
         {   { 0, "reap souls" },
             { 0, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
+            { 2, ABIL_YRED_DARK_BARGAIN, "trade souls for undead servants" },
             { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient life force" },
             { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" },
         },
@@ -976,97 +977,64 @@ static void _inc_gift_timeout(int val)
 }
 
 // These are sorted in order of power.
+// monsteres here come from genera: n, z, V and W
+// - Vampire mages are excluded because they worship scholarly Kiku
+// - M genus is all Kiku's domain
+// - Curse *, putrid mouths, and bloated husks left out as they might
+//   do too much collatoral damage
 static monster_type _yred_servants[] =
 {
-    MONS_MUMMY, MONS_WIGHT, MONS_FLYING_SKULL, MONS_WRAITH,
-    MONS_VAMPIRE, MONS_PHANTASMAL_WARRIOR, MONS_SKELETAL_WARRIOR,
-    MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_GHOUL, MONS_BONE_DRAGON,
-    MONS_PROFANE_SERVITOR
+    MONS_WIGHT, MONS_NECROPHAGE, MONS_PHANTOM, MONS_WRAITH, MONS_FLYING_SKULL,
+    MONS_FREEZING_WRAITH, MONS_VAMPIRE, MONS_PHANTASMAL_WARRIOR,
+    MONS_BOG_BODY, MONS_SKELETAL_WARRIOR, MONS_JIANGSHI,
+    MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_EIDOLON,
+    MONS_DEATH_COB, MONS_ANCIENT_CHAMPION, MONS_GHOUL,
+    MONS_REVENANT, MONS_SEARING_WRETCH, MONS_BONE_DRAGON, MONS_PROFANE_SERVITOR
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
-#define MAX_YRED_SERVANT_THRESHOLD ARRAYSZ(_yred_servants)
+#define MAX_YRED_SERVANT_THRESHOLD (int) ARRAYSZ(_yred_servants)
 
-static bool _yred_high_level_servant(monster_type type)
+bool yred_random_servant(unsigned int pow, bool force_hostile)
 {
-    return type == MONS_BONE_DRAGON
-           || type == MONS_PROFANE_SERVITOR;
-}
+    int top_threshold;
 
-int yred_random_servants(unsigned int threshold, bool force_hostile)
-{
-    if (threshold == 0)
+    if (force_hostile)
     {
-        if (force_hostile)
-        {
-            // This implies wrath - scale the threshold with XL.
-            threshold =
-                MIN_YRED_SERVANT_THRESHOLD
-                + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
-                  * you.experience_level / 27;
-        }
-        else
-            threshold = ARRAYSZ(_yred_servants);
+        // This implies wrath - scale the threshold with XL.
+        top_threshold =
+            MIN_YRED_SERVANT_THRESHOLD
+            + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
+              * you.experience_level / 21;
     }
     else
     {
-        threshold = min(static_cast<unsigned int>(ARRAYSZ(_yred_servants)),
-                        threshold);
+        top_threshold =
+            MIN_YRED_SERVANT_THRESHOLD
+            + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
+              * pow / 21;
     }
 
-    const unsigned int servant = random2(threshold);
-
     // Skip some of the weakest servants, once the threshold is high.
-    if ((servant + 2) * 2 < threshold)
-        return -1;
+    const int bot_threshold = top_threshold <= 4 ? 0 : top_threshold / 2 + 2;
+    top_threshold = min(top_threshold, MAX_YRED_SERVANT_THRESHOLD - 1);
+
+    const unsigned int servant = random_range(bot_threshold, top_threshold);
 
     monster_type mon_type = _yred_servants[servant];
 
-    // Cap some of the strongest servants.
-    if (!force_hostile && _yred_high_level_servant(mon_type))
-    {
-        int current_high_level = 0;
-        for (auto &entry : companion_list)
-        {
-            monster* mons = monster_by_mid(entry.first);
-            if (!mons)
-                mons = &entry.second.mons.mons;
-            if (_yred_high_level_servant(mons->type))
-                current_high_level++;
-        }
-
-        if (current_high_level >= 3)
-            return -1;
-    }
-
-    int how_many = (mon_type == MONS_FLYING_SKULL) ? 2 + random2(4)
-                                                   : 1;
-
     mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
                  you.pos(), MHITYOU);
-    mg.set_summoned(!force_hostile ? &you : 0, 0, 0, GOD_YREDELEMNUL);
+    mg.set_summoned(!force_hostile ? &you : 0, !force_hostile ? 6 : 0,
+                    0, GOD_YREDELEMNUL);
 
     if (force_hostile)
+    {
         mg.non_actor_summoner = "the anger of Yredelemnul";
-
-    int created = 0;
-    if (force_hostile)
-    {
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        for (; how_many > 0; --how_many)
-        {
-            if (create_monster(mg))
-                created++;
-        }
-    }
-    else
-    {
-        for (; how_many > 0; --how_many)
-            delayed_monster(mg);
     }
 
-    return created;
+    return create_monster(mg);
 }
 
 bool pay_yred_souls(unsigned int how_many, bool just_check)

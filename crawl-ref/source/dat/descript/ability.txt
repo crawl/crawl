@@ -229,6 +229,12 @@ Recall Undead Slaves ability
 Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
+Dark Bargain ability
+
+Offer up your reaped souls to Yredelemnul in exchange for the temporary help of
+an undead servant. The strength of the servant granted is increased by
+Invocations skill.
+%%%%
 Drain Life ability
 
 [[Drain Life spell]] The amount of life force drained is increased by
