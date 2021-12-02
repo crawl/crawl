@@ -117,9 +117,9 @@ int count_summons(const actor *summoner, spell_type spell);
 
 vector<coord_def> find_briar_spaces(bool just_check = false);
 void fedhas_wall_of_briars();
-spret fedhas_grow_ballistomycete(bool fail);
+spret fedhas_grow_ballistomycete(const coord_def& target, bool fail);
 spret fedhas_overgrow(bool fail);
-spret fedhas_grow_oklob(bool fail);
+spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
 spret foxfire_swarm();

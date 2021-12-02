@@ -1607,7 +1607,6 @@ void card_effect(card_type which_card,
     case CARD_VELOCITY:         _velocity_card(power); break;
     case CARD_EXILE:            _exile_card(power); break;
     case CARD_ELIXIR:           _elixir_card(power); break;
-    case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false, true); break;
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power); break;
@@ -1626,6 +1625,10 @@ void card_effect(card_type which_card,
     case CARD_PAIN:
     case CARD_ORB:
         _damaging_card(which_card, power, dealt);
+        break;
+
+    case CARD_TOMB:
+        cast_tomb(10 + power/20 + random2(power/4), &you, you.mindex(), false);
         break;
 
     case CARD_SWINE:

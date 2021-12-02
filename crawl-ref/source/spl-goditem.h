@@ -72,8 +72,7 @@ void debuff_monster(monster &mon);
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
 
-bool entomb(int pow);
-bool cast_imprison(int pow, monster* mons, int source);
+spret cast_tomb(int pow, actor* victim, int source, bool fail);
 
 bool cast_smiting(int pow, monster* mons);
 

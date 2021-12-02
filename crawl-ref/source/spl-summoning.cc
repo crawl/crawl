@@ -2886,31 +2886,21 @@ spret fedhas_overgrow(bool fail)
     return spret::success;
 }
 
-spret fedhas_grow_ballistomycete(bool fail)
+spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
 {
-    dist spd;
-    bolt beam;
-    beam.range = 2;
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE;
-    args.needs_path = false;
-    if (!spell_direction(spd, beam, &args))
-        return spret::abort;
-
-    if (grid_distance(beam.target, you.pos()) > 2 || !in_bounds(beam.target))
+    if (grid_distance(target, you.pos()) > 2 || !in_bounds(target))
     {
         mpr("That's too far away.");
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, env.grid(beam.target)))
+    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, env.grid(target)))
     {
         mpr("You can't grow a ballistomycete there.");
         return spret::abort;
     }
 
-    monster* mons = monster_at(beam.target);
+    monster* mons = monster_at(target);
     if (mons)
     {
         if (you.can_see(*mons))
@@ -2928,7 +2918,7 @@ spret fedhas_grow_ballistomycete(bool fail)
 
     fail_check();
 
-    mgen_data mgen(MONS_BALLISTOMYCETE, BEH_FRIENDLY, beam.target, MHITYOU,
+    mgen_data mgen(MONS_BALLISTOMYCETE, BEH_FRIENDLY, target, MHITYOU,
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE) +
         you.skill_rdiv(SK_INVOCATIONS);
@@ -2943,31 +2933,21 @@ spret fedhas_grow_ballistomycete(bool fail)
     return spret::success;
 }
 
-spret fedhas_grow_oklob(bool fail)
+spret fedhas_grow_oklob(const coord_def& target, bool fail)
 {
-    dist spd;
-    bolt beam;
-    beam.range = 2;
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE;
-    args.needs_path = false;
-    if (!spell_direction(spd, beam, &args))
-        return spret::abort;
-
-    if (grid_distance(beam.target, you.pos()) > 2 || !in_bounds(beam.target))
+    if (grid_distance(target, you.pos()) > 2 || !in_bounds(target))
     {
         mpr("That's too far away.");
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_OKLOB_PLANT, env.grid(beam.target)))
+    if (!monster_habitable_grid(MONS_OKLOB_PLANT, env.grid(target)))
     {
         mpr("You can't grow an oklob plant there.");
         return spret::abort;
     }
 
-    monster* mons = monster_at(beam.target);
+    monster* mons = monster_at(target);
     if (mons)
     {
         if (you.can_see(*mons))
@@ -2985,7 +2965,7 @@ spret fedhas_grow_oklob(bool fail)
 
     fail_check();
 
-    mgen_data mgen(MONS_OKLOB_PLANT, BEH_FRIENDLY, beam.target, MHITYOU,
+    mgen_data mgen(MONS_OKLOB_PLANT, BEH_FRIENDLY, target, MHITYOU,
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_OKLOB_PLANT) +
         you.skill_rdiv(SK_INVOCATIONS);

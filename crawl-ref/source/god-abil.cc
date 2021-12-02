@@ -1261,6 +1261,32 @@ void zin_remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
+spret zin_imprison(const coord_def& target, bool fail)
+{
+    monster* mons = monster_at(target);
+    if (mons == nullptr || !you.can_see(*mons))
+    {
+        mpr("You can see no monster there to imprison!");
+        return spret::abort;
+    }
+
+    if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
+    {
+        mpr("You cannot imprison that!");
+        return spret::abort;
+    }
+
+    if (mons->friendly() || mons->good_neutral())
+    {
+        mpr("You cannot imprison a law-abiding creature!");
+        return spret::abort;
+    }
+
+    int power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
+
+    return cast_tomb(power, mons, -GOD_ZIN, fail);
+}
+
 void zin_sanctuary()
 {
     ASSERT(!env.sanctuary_time);
@@ -5925,31 +5951,9 @@ bool okawaru_duel_active()
     return false;
 }
 
-spret okawaru_duel(bool fail)
+spret okawaru_duel(const coord_def& target, bool fail)
 {
-    if (okawaru_duel_active() || player_in_branch(BRANCH_ARENA))
-    {
-        mpr("You are already engaged in single combat!");
-        return spret::abort;
-    }
-
-    dist spd;
-    bolt beam;
-    beam.range = LOS_MAX_RANGE;
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE;
-    args.needs_path = false;
-    if (!spell_direction(spd, beam, &args))
-        return spret::abort;
-
-    if (beam.target == you.pos())
-    {
-        mpr("You cannot duel yourself!");
-        return spret::abort;
-    }
-
-    monster* mons = monster_at(beam.target);
+    monster* mons = monster_at(target);
     if (!mons || !you.can_see(*mons))
     {
         mpr("You can see no monster there to duel!");

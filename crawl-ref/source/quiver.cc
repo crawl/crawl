@@ -1458,28 +1458,14 @@ namespace quiver
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
             case ABIL_ROLLING_CHARGE:
-            case ABIL_SPIT_POISON:
             case ABIL_BREATHE_ACID:
-            case ABIL_BREATHE_FIRE:
-            case ABIL_BREATHE_FROST:
-            case ABIL_BREATHE_POISON:
-            case ABIL_BREATHE_POWER:
-            case ABIL_BREATHE_STEAM:
-            case ABIL_BREATHE_MEPHITIC:
             case ABIL_DAMNATION:
-            case ABIL_ZIN_IMPRISON:
             case ABIL_YRED_ENSLAVE_SOUL:
-            case ABIL_OKAWARU_DUEL:
-            case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-            case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
             case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:
             case ABIL_BEOGH_SMITING:
             case ABIL_BEOGH_GIFT_ITEM:
-            case ABIL_JIYVA_OOZEMANCY:
-            case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
             case ABIL_FEDHAS_OVERGROW:
-            case ABIL_FEDHAS_GROW_OKLOB:
             case ABIL_DITHMENOS_SHADOW_STEP:
             case ABIL_QAZLAL_UPHEAVAL:
             case ABIL_RU_POWER_LEAP:

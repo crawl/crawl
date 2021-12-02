@@ -92,6 +92,7 @@ bool zin_recite_to_single_monster(const coord_def& where);
 int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
+spret zin_imprison(const coord_def& target, bool fail);
 void zin_sanctuary();
 
 void tso_divine_shield();
@@ -196,7 +197,7 @@ spret wu_jian_wall_jump_ability();
 void wu_jian_heavenly_storm();
 
 bool okawaru_duel_active();
-spret okawaru_duel(bool fail);
+spret okawaru_duel(const coord_def& target, bool fail);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
 void okawaru_end_duel();

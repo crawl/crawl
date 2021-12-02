@@ -284,21 +284,28 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_NON_ABILITY, "No ability", 0, 0, 0, -1, {}, abflag::none },
         // Innate abilities:
         { ABIL_SPIT_POISON, "Spit Poison",
-            0, 0, 0, 5, {fail_basis::xl, 20, 1}, abflag::breath },
+            0, 0, 0, 5, {fail_basis::xl, 20, 1},
+            abflag::breath | abflag::dir_or_target },
         { ABIL_BREATHE_FIRE, "Breathe Fire",
-            0, 0, 0, 5, {fail_basis::xl, 30, 1}, abflag::breath },
+            0, 0, 0, 5, {fail_basis::xl, 30, 1},
+            abflag::breath |  abflag::dir_or_target },
         { ABIL_BREATHE_FROST, "Breathe Frost",
-            0, 0, 0, 5, {fail_basis::xl, 30, 1}, abflag::breath },
+            0, 0, 0, 5, {fail_basis::xl, 30, 1},
+            abflag::breath | abflag::dir_or_target },
         { ABIL_BREATHE_POISON, "Breathe Poison Gas",
-            0, 0, 0, 6, {fail_basis::xl, 30, 1}, abflag::breath },
+            0, 0, 0, 6, {fail_basis::xl, 30, 1},
+            abflag::breath | abflag::dir_or_target },
         { ABIL_BREATHE_MEPHITIC, "Breathe Noxious Fumes",
-            0, 0, 0, 6, {fail_basis::xl, 30, 1}, abflag::breath },
+            0, 0, 0, 6, {fail_basis::xl, 30, 1},
+            abflag::breath | abflag::dir_or_target },
         { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
             0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1}, abflag::breath },
         { ABIL_BREATHE_POWER, "Breathe Dispelling Energy",
-            0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1}, abflag::breath },
+            0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1},
+            abflag::breath | abflag::dir_or_target },
         { ABIL_BREATHE_STEAM, "Breathe Steam",
-            0, 0, 0, 6, {fail_basis::xl, 20, 1}, abflag::breath },
+            0, 0, 0, 6, {fail_basis::xl, 20, 1},
+            abflag::breath | abflag::dir_or_target },
         { ABIL_BREATHE_ACID, "Breathe Acid",
             0, 0, 0, 3, {fail_basis::xl, 30, 1}, abflag::breath },
         { ABIL_TRAN_BAT, "Bat Form",
@@ -347,7 +354,7 @@ static vector<ability_def> &_get_ability_list()
             2, 0, 1, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_ZIN_IMPRISON, "Imprison",
             5, 0, 4, LOS_MAX_RANGE, {fail_basis::invo, 60, 5, 20},
-            abflag::none },
+            abflag::target | abflag::not_self },
         { ABIL_ZIN_SANCTUARY, "Sanctuary",
             7, 0, 15, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
         { ABIL_ZIN_DONATE_GOLD, "Donate Gold",
@@ -394,18 +401,18 @@ static vector<ability_def> &_get_ability_list()
             5, 0, 3, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_OKAWARU_DUEL, "Duel",
             7, 0, 8, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 20},
-            abflag::none },
+            abflag::target | abflag::not_self },
 
         // Makhleb
         { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
             0, scaling_cost::fixed(1), 0, 5, {fail_basis::invo, 40, 5, 20},
-            abflag::none },
+            abflag::dir_or_target },
         { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
             0, scaling_cost::fixed(4), 2, -1, {fail_basis::invo, 40, 5, 20},
             abflag::hostile },
         { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
             0, scaling_cost::fixed(6), generic_cost::range(0, 1), LOS_MAX_RANGE,
-            {fail_basis::invo, 60, 4, 25}, abflag::none },
+            {fail_basis::invo, 60, 4, 25}, abflag::dir_or_target },
         { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
             0, scaling_cost::fixed(10), 5, -1, {fail_basis::invo, 90, 2, 5},
             abflag::hostile },
@@ -492,14 +499,14 @@ static vector<ability_def> &_get_ability_list()
 
         // Fedhas
         { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
-            3, 0, 2, -1, {fail_basis::invo, 30, 6, 20}, abflag::none},
+            3, 0, 2, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_FEDHAS_GROW_BALLISTOMYCETE, "Grow Ballistomycete",
-            4, 0, 4, 2, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            4, 0, 4, 2, {fail_basis::invo, 60, 4, 25}, abflag::target },
         { ABIL_FEDHAS_OVERGROW, "Overgrow",
             8, 0, 12, LOS_MAX_RANGE, {fail_basis::invo, 70, 5, 20},
-            abflag::none},
+            abflag::none },
         { ABIL_FEDHAS_GROW_OKLOB, "Grow Oklob",
-            6, 0, 6, 2, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            6, 0, 6, 2, {fail_basis::invo, 80, 4, 25}, abflag::target },
 
         // Cheibriados
         { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time",
@@ -1635,6 +1642,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_OKAWARU_DUEL:
+        if (okawaru_duel_active() || player_in_branch(BRANCH_ARENA))
+        {
+            if (!quiet)
+                mpr("You are already engaged in single combat!");
+            return false;
+        }
+        return true;
+
     case ABIL_ELYVILON_HEAL_SELF:
         if (you.hp == you.hp_max)
         {
@@ -2152,37 +2168,6 @@ bool activate_talent(const talent& tal, dist *target)
     }
 }
 
-static int _calc_breath_ability_range(ability_type ability)
-{
-    int range = 0;
-
-    switch (ability)
-    {
-    case ABIL_BREATHE_ACID:
-        range = 3;
-        break;
-    case ABIL_BREATHE_FIRE:
-    case ABIL_BREATHE_FROST:
-    case ABIL_SPIT_POISON:
-        range = 5;
-        break;
-    case ABIL_BREATHE_MEPHITIC:
-    case ABIL_BREATHE_STEAM:
-    case ABIL_BREATHE_POISON:
-        range = 6;
-        break;
-    case ABIL_BREATHE_LIGHTNING:
-    case ABIL_BREATHE_POWER:
-        range = LOS_MAX_RANGE;
-        break;
-    default:
-        die("Bad breath type!");
-        break;
-    }
-
-    return min((int)you.current_vision, range);
-}
-
 static bool _acid_breath_can_hit(const actor *act)
 {
     if (act->is_monster())
@@ -2434,13 +2419,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
         int power = 10 + you.experience_level;
-        beam.range = _calc_breath_ability_range(abil.ability);
 
-        if (!spell_direction(*target, beam)
-            || !player_tracer(ZAP_SPIT_POISON, power, beam))
-        {
+        if (!player_tracer(ZAP_SPIT_POISON, power, beam))
             return spret::abort;
-        }
         else
         {
             fail_check();
@@ -2454,7 +2435,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         int pow = (you.form == transformation::dragon) ?
             2 * you.experience_level : you.experience_level;
-        beam.range = _calc_breath_ability_range(abil.ability);
         targeter_splash hitfunc(&you, beam.range, pow);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
@@ -2479,100 +2459,87 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
-        beam.range = _calc_breath_ability_range(abil.ability);
-        if (!spell_direction(*target, beam))
-            return spret::abort;
-
-        // fallthrough to ABIL_BREATHE_LIGHTNING
-
     case ABIL_BREATHE_LIGHTNING: // not targeted
-        fail_check();
+    {
 
-        // TODO: refactor this to use only one call to zapping(), don't
-        // duplicate its fail_check(), split out breathe_lightning, etc
+        // TODO: refactor this to use only one call to zapping(), split out
+        // breathe_lightning, etc
+
+        spret result;
 
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
-            if (zapping(ZAP_BREATHE_FIRE,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You breathe a blast of fire.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
+            result = zapping(ZAP_BREATHE_FIRE,
+                             you.form == transformation::dragon
+                                 ? 2 * you.experience_level
+                                 : you.experience_level,
+                             beam, true, "You breathe a blast of fire.",
+                             fail);
             break;
 
         case ABIL_BREATHE_FROST:
-            if (zapping(ZAP_BREATHE_FROST,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You exhale a wave of freezing cold.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
+            result = zapping(ZAP_BREATHE_FROST,
+                             you.form == transformation::dragon
+                                 ? 2 * you.experience_level
+                                 : you.experience_level,
+                             beam, true, "You exhale a wave of freezing cold.",
+                             fail);
             break;
 
         case ABIL_BREATHE_POISON:
-            if (zapping(ZAP_BREATHE_POISON, you.experience_level, beam, true,
-                        "You exhale a blast of poison gas.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
-            break;
+            result = zapping(ZAP_BREATHE_POISON, you.experience_level, beam,
+                             true, "You exhale a blast of poison gas.", fail);
 
         case ABIL_BREATHE_LIGHTNING:
+            fail_check();
             mpr("You breathe a wild blast of lightning!");
             black_drac_breath();
+            result = spret::success;
             break;
 
         case ABIL_BREATHE_POWER:
-            if (zapping(ZAP_BREATHE_POWER,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You breathe a bolt of dispelling energy.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
+            result = zapping(ZAP_BREATHE_POWER,
+                             you.form == transformation::dragon
+                                 ? 2 * you.experience_level
+                                 : you.experience_level,
+                             beam, true,
+                             "You breathe a bolt of dispelling energy.", fail);
             break;
 
         case ABIL_BREATHE_STEAM:
-            if (zapping(ZAP_BREATHE_STEAM,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You exhale a blast of scalding steam.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
+            result = zapping(ZAP_BREATHE_STEAM,
+                             you.form == transformation::dragon
+                                 ? 2 * you.experience_level
+                                 : you.experience_level,
+                             beam, true,
+                             "You exhale a blast of scalding steam.", fail);
             break;
 
         case ABIL_BREATHE_MEPHITIC:
-            if (zapping(ZAP_BREATHE_MEPHITIC,
-                        you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level,
-                        beam, true, "You exhale a blast of noxious fumes.")
-                == spret::abort)
-            {
-                return spret::abort;
-            }
+            result = zapping(ZAP_BREATHE_MEPHITIC,
+                             you.form == transformation::dragon
+                                 ? 2 * you.experience_level
+                                 : you.experience_level,
+                             beam, true,
+                             "You exhale a blast of noxious fumes.", fail);
             break;
 
         default:
             break;
         }
 
-        you.increase_duration(DUR_BREATH_WEAPON,
-                      3 + random2(10) + random2(30 - you.experience_level));
+        if (result == spret::success)
+        {
+            you.increase_duration(DUR_BREATH_WEAPON,
+                          3 + random2(10) + random2(30 - you.experience_level));
 
-        if (abil.ability == ABIL_BREATHE_STEAM)
-            you.duration[DUR_BREATH_WEAPON] /= 2;
+            if (abil.ability == ABIL_BREATHE_STEAM)
+                you.duration[DUR_BREATH_WEAPON] /= 2;
+        }
 
-        break;
+        return result;
+    }
 
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
@@ -2647,49 +2614,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_ZIN_IMPRISON:
-    {
-        beam.range = LOS_MAX_RANGE;
-        direction_chooser_args args;
-        args.restricts = DIR_TARGET;
-        args.mode = TARG_HOSTILE;
-        args.needs_path = false;
-        if (!spell_direction(*target, beam, &args))
-            return spret::abort;
-
-        if (beam.target == you.pos())
-        {
-            mpr("You cannot imprison yourself!");
-            return spret::abort;
-        }
-
-        monster* mons = monster_at(beam.target);
-
-        if (mons == nullptr || !you.can_see(*mons))
-        {
-            mpr("There is no monster there to imprison!");
-            return spret::abort;
-        }
-
-        if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
-        {
-            mpr("You cannot imprison that!");
-            return spret::abort;
-        }
-
-        if (mons->friendly() || mons->good_neutral())
-        {
-            mpr("You cannot imprison a law-abiding creature!");
-            return spret::abort;
-        }
-
-        fail_check();
-
-        int power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
-
-        if (!cast_imprison(power, mons, -GOD_ZIN))
-            return spret::abort;
-        break;
-    }
+        return zin_imprison(beam.target, fail);
 
     case ABIL_ZIN_SANCTUARY:
         fail_check();
@@ -2913,17 +2838,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_OKAWARU_DUEL:
-        return okawaru_duel(fail);
+        return okawaru_duel(beam.target, fail);
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {
-        // TODO: range check duplicated for UI/messaging purposes in quiver.cc,
-        // _ability_quiver_range_check
-        beam.range = min((int)you.current_vision, 5);
-
-        if (!spell_direction(*target, beam))
-            return spret::abort;
-
         int power = you.skill(SK_INVOCATIONS, 1)
                     + random2(1 + you.skill(SK_INVOCATIONS, 1))
                     + random2(1 + you.skill(SK_INVOCATIONS, 1));
@@ -2956,11 +2874,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
     {
-        beam.range = you.current_vision;
-
-        if (!spell_direction(*target, beam))
-            return spret::abort;
-
         int power = you.skill(SK_INVOCATIONS, 2)
                     + random2(1 + you.skill(SK_INVOCATIONS, 2))
                     + random2(1 + you.skill(SK_INVOCATIONS, 2));
@@ -3200,13 +3113,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
-        return fedhas_grow_ballistomycete(fail);
+        return fedhas_grow_ballistomycete(beam.target, fail);
 
     case ABIL_FEDHAS_OVERGROW:
         return fedhas_overgrow(fail);
 
     case ABIL_FEDHAS_GROW_OKLOB:
-        return fedhas_grow_oklob(fail);
+        return fedhas_grow_oklob(beam.target, fail);
 
     case ABIL_TRAN_BAT:
     {

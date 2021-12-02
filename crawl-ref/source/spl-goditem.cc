@@ -728,12 +728,13 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool zin)
+spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
     // up to 300 or so with godly assistance or end-level, and 1200
     // as more or less the theoretical maximum.
+    const coord_def& where = victim->pos();
     int number_built = 0;
 
     // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
@@ -743,8 +744,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR
     };
 
+    bool zin = source == -GOD_ZIN;
     bool proceed;
-    monster *mon;
     string targname;
 
     vector<coord_def> veto_spots(8);
@@ -756,8 +757,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     {
         // We need to get this now because we won't be able to see
         // the monster once the walls go up!
-        mon = monster_at(where);
-        targname = mon->name(DESC_THE);
+        targname = victim->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
 
@@ -803,12 +803,20 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (!success)
         {
-            mprf(none_vis ? "You briefly glimpse something next to %s."
-                        : "You need more space to imprison %s.",
-                targname.c_str());
-            return false;
+            if (none_vis)
+            {
+                fail_check();
+                mprf("You briefly glimpse something next to %s.",
+                     targname.c_str());
+                return spret::success;
+            }
+
+            mprf("You need more space to imprison %s.", targname.c_str());
+            return spret::abort;
         }
     }
+
+    fail_check();
 
     veto_spots = adj_spots;
     for (adjacent_iterator ai(where); ai; ++ai)
@@ -892,44 +900,17 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         you.update_beholders();
         you.update_fearmongers();
-        env.markers.clear_need_activate();
+        const int tomb_duration = BASELINE_DELAY * pow;
+        env.markers.add(new map_tomb_marker(where,
+                                            tomb_duration,
+                                            source,
+                                            victim->mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return number_built > 0;
-}
-
-bool entomb(int pow)
-{
-    if (_do_imprison(pow, you.pos(), false))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(you.pos(),
-                                            tomb_duration,
-                                            you.mindex(),
-                                            you.mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
-}
-
-bool cast_imprison(int pow, monster* mons, int source)
-{
-    if (_do_imprison(pow, mons->pos(), true))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(mons->pos(),
-                                            tomb_duration,
-                                            source,
-                                            mons->mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
+    return spret::success;
 }
 
 bool cast_smiting(int pow, monster* mons)
