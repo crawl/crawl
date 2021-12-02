@@ -719,8 +719,8 @@ static bool _yredelemnul_retribution()
             }
 
             simple_god_message(count > 1 ? " sends servants to punish you." :
-                               count > 0 ? "%s sends a servant to punish you."
-                                         : "%s's servants fail to arrive.", god);
+                               count > 0 ? " sends a servant to punish you."
+                                         : "'s servants fail to arrive.", god);
         }
     }
     else

@@ -5638,7 +5638,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             mons->props[TIDE_CALL_TURN].get_int() = you.num_turns;
             if (simple_monster_message(*
                     mons,
-                    "%s sings a water chant to call the tide!"))
+                    " sings a water chant to call the tide!"))
             {
                 flash_view_delay(UA_MONSTER, ETC_WATER, 300);
             }
@@ -5653,7 +5653,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         simple_monster_message(*
             mons,
-            "%s squirts a massive cloud of ink into the water!");
+            " squirts a massive cloud of ink into the water!");
         return;
 
     case SPELL_SUMMON_SMALL_MAMMAL:
@@ -6192,7 +6192,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_INJURY_BOND:
     {
         simple_monster_message(*mons,
-            "%s begins to accept the injuries of allies.");
+            " begins to accept the injuries of allies.");
 
         // FIXME: allies preservers vs the player
         for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
@@ -6483,7 +6483,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_ROLL:
         mons->add_ench(ENCH_ROLLING);
         simple_monster_message(*mons,
-                "%s curls into a ball and begins rolling!");
+                " curls into a ball and begins rolling!");
         return;
 
     case SPELL_GOAD_BEASTS:

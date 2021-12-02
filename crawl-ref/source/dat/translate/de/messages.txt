@@ -8366,7 +8366,7 @@ Ihr seid noch nicht bereit, noch einmal zu rezitieren.
 %s is turned into a pillar of salt by the wrath of Zin!
 
 %%%%
-Zin grants you divine stamina.
+%s grants you divine stamina.
 
 %%%%
 Your divine stamina fades away.

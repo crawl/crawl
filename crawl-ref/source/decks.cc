@@ -1584,7 +1584,7 @@ static void _degeneration_card(int power)
                    const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
                    mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
                    simple_monster_message(mons,
-                                          "%s is dazed by the mutagenic energy.");
+                                          " is dazed by the mutagenic energy.");
                }
                return true;
            }))

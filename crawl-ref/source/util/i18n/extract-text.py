@@ -178,7 +178,8 @@ for filename in files:
                     continue
 
                 # join function calls split over multiple lines (because we want to filter out some function calls)
-                if last[-1] == ',' or last[-1] == ':' or last[-1] == '?' or last[-1] == '(' or \
+                if last[-1] == ',' or last[-1] == ':' or last[-1] == '?' or \
+                     last[-1] == '(' or last[-1] == '*' or \
                      line[0] == ',' or line[0] == ':' or line[0] == '?':
                     lines[-1] = last + line
                     continue

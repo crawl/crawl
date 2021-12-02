@@ -2045,7 +2045,7 @@ void melee_attack::attacker_sustain_passive_damage()
     else
     {
         simple_monster_message(*attacker->as_monster(),
-                               "%s is burned by acid!");
+                               " is burned by acid!");
     }
     attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
                    KILLED_BY_ACID);
@@ -3172,7 +3172,7 @@ void melee_attack::do_spines()
                 return;
 
             simple_monster_message(*attacker->as_monster(),
-                                   "%s is struck by your spines.");
+                                   " is struck by your spines.");
 
             attacker->hurt(&you, hurt);
         }

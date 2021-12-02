@@ -1049,8 +1049,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
-                minor ? "%s is awed by your recitation."
-                      : "%s is aghast at the heresy of your recitation.");
+                minor ? " is awed by your recitation."
+                      : " is aghast at the heresy of your recitation.");
             affected = true;
         }
         break;
@@ -1090,8 +1090,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
-                minor ? "%s quails at your recitation."
-                      : "%s looks feeble and powerless before your recitation.");
+                minor ? " quails at your recitation."
+                      : " looks feeble and powerless before your recitation.");
             affected = true;
         }
         break;
@@ -1136,9 +1136,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 if (mon->alive())
                 {
                     simple_monster_message(*mon,
-                      (damage < 25) ? "%s's chaotic flesh sizzles and spatters!" :
-                      (damage < 50) ? "%s's chaotic flesh bubbles and boils."
-                                    : "%s's chaotic flesh runs like molten wax.");
+                      (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
+                      (damage < 50) ? "'s chaotic flesh bubbles and boils."
+                                    : "'s chaotic flesh runs like molten wax.");
 
                     print_wounds(*mon);
                     behaviour_event(mon, ME_WHACK, &you);
@@ -1147,7 +1147,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 else
                 {
                     simple_monster_message(*mon,
-                        "%s melts away into a sizzling puddle of chaotic flesh.");
+                        " melts away into a sizzling puddle of chaotic flesh.");
                     monster_die(*mon, KILL_YOU, NON_MONSTER);
                 }
             }
@@ -1213,7 +1213,7 @@ static void _zin_saltify(monster* mon)
 
 bool zin_vitalisation()
 {
-    simple_god_message("Zin grants you divine stamina.");
+    simple_god_message(" grants you divine stamina.");
 
     // Add divine stamina.
     const int stamina_amt =
