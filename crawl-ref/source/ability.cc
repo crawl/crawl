@@ -1609,28 +1609,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-<<<<<<< HEAD
-    case ABIL_YRED_ANIMATE_REMAINS:
-        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY, 1,
-                            MHITYOU, &you, "", GOD_YREDELEMNUL, false,
-                            true) <= 0)
-        {
-            if (!quiet)
-                mpr("There is nothing here to animate!");
-            return false;
-        }
-        return true;
-
-    case ABIL_YRED_ANIMATE_DEAD:
-        if (!animate_dead(&you, 1, BEH_FRIENDLY, MHITYOU, &you, "",
-                          GOD_YREDELEMNUL, false))
-        {
-            if (!quiet)
-                mpr("There is nothing nearby to animate!");
-            return false;
-        }
-        return true;
-
     case ABIL_OKAWARU_DUEL:
         if (okawaru_duel_active() || player_in_branch(BRANCH_ARENA))
         {
@@ -1640,8 +1618,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-=======
->>>>>>> 3cd2fafe56 (feat: black torch: remove yred animation actives)
     case ABIL_ELYVILON_HEAL_SELF:
         if (you.hp == you.hp_max)
         {
