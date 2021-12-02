@@ -480,15 +480,3 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
 
     return spret::success;
 }
-
-spret cast_invisibility(int pow, bool fail)
-{
-    if (!invis_allowed())
-        return spret::abort;
-
-    fail_check();
-
-    potionlike_effect(POT_INVISIBILITY, pow);
-    contaminate_player(1000 + random2(1000), true);
-    return spret::success;
-}

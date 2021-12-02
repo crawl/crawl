@@ -1272,11 +1272,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case SPELL_INVISIBILITY:
-        if (!prevent && temp && you.backlit())
-            return "invisibility won't help you when you glow in the dark.";
-        break;
-
     case SPELL_STATUE_FORM:
         if (SP_GARGOYLE == you.species)
             return "you're already a statue.";

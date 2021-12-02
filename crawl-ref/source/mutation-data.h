@@ -1253,9 +1253,9 @@ static const mutation_def mut_data[] =
 { MUT_EYEBALLS, 0, 3, mutflag::good | mutflag::jiyva, true,
   "eyeballs",
 
-  {"Your body has grown golden eyes which may confuse attackers. (Acc +3)",
-   "Your body has grown many golden eyes which may confuse attackers. (Acc +5)",
-   "Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)"},
+  {"Your body has grown eyes which may confuse attackers. (Acc +3)",
+   "Your body has grown many eyes which may confuse attackers. (Acc +5)",
+   "Your body is covered in eyes which may confuse attackers. (Acc +7, SInv)"},
 
   {"Eyeballs grow over part of your body.",
    "Eyeballs cover a large portion of your body.",
@@ -1554,9 +1554,9 @@ static const mutation_def mut_data[] =
 { MUT_SANGUINE_ARMOUR, 0, 3, mutflag::good, false,
   "sanguine armour",
 
-  {"When seriously injured, your bleeding wounds create armour. (AC +",
-   "When seriously injured, your bleeding wounds create thick armour. (AC +",
-   "When seriously injured, your bleeding wounds create very thick armour. (AC +"},
+  {"When seriously injured, your blood forms armour. (AC +",
+   "When seriously injured, your blood forms thick armour. (AC +",
+   "When seriously injured, your blood forms very thick armour. (AC +"},
 
   {"You feel your blood ready itself to protect you.",
    "You feel your blood thicken.",
@@ -1645,7 +1645,7 @@ static const mutation_def mut_data[] =
 { MUT_JELLY_MISSILE, 0, 1, mutflag::good | mutflag::jiyva, true,
   "jelly absorbing missiles",
 
-  {"You have a small jelly attached to you that may absorb incoming projectiles.", "", ""},
+  {"You have a small jelly attached to you that may absorb projectiles.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
   {"The jelly growth is reabsorbed into your body.", "", ""},
 },
@@ -1862,7 +1862,7 @@ static const mutation_def mut_data[] =
 { MUT_COWARDICE, 0, 1, mutflag::bad, false,
   "cowardly",
 
-  {"Your cowardice makes you less effective in combat with threatening monsters.", "", ""},
+  {"Your cowardice makes you less effective in combat with threatening foes.", "", ""},
   {"You have lost your courage.", "", ""},
   {"You have regained your courage.", "", ""},
 },
@@ -2274,6 +2274,12 @@ static const mutation_def mut_data[] =
       "", ""},
     {"The darkness flees at your approach.", "", ""},
     {"The shadows grow bolder once more.", "", ""},
+},
+
+{ MUT_DIVINE_ATTRS, 0, 1, mutflag::good, false, "divine attributes",
+  {"Your divine heritage dramatically boosts your attributes as you level up.", "", ""},
+  {"You feel more divine.", "", ""},
+  {"You feel more mortal.", "", ""},
 },
 
 };

@@ -212,7 +212,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Wizardry
     SPELL_AGONY,
-    SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
 #endif
@@ -232,7 +231,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_APPORTATION,
     SPELL_INTOXICATE,
-    SPELL_INVISIBILITY
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -258,7 +256,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Burglary
     SPELL_PASSWALL,
     SPELL_SWIFTNESS,
-    SPELL_INVISIBILITY,
 },
 
 {   // Book of Dreams

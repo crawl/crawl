@@ -48,6 +48,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
+#include "maps.h"
 #include "message.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -152,7 +153,6 @@ const vector<GameOption*> game_options::build_options_list()
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     vector<GameOption*> options = {
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
-        new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(default_show_all_skills), false),
         new BoolGameOption(SIMPLE_NAME(read_persist_options), false),
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
@@ -1001,6 +1001,41 @@ static string _get_save_path(string subdir)
     return _resolve_dir(SysEnv.crawl_dir, subdir);
 }
 
+/**
+ * Reset options paths based on SysEnv values. Should be called if these get
+ * changed, but will override several options values.
+ */
+void game_options::reset_paths()
+{
+    macro_dir = SysEnv.macro_dir;
+
+    save_dir = _get_save_path("saves/");
+    morgue_dir = _get_save_path("morgue/");
+
+#ifndef DGAMELAUNCH
+    if (macro_dir.empty())
+    {
+#ifdef UNIX
+        macro_dir = _user_home_subpath(".crawl");
+#else
+        macro_dir = "settings/";
+#endif
+    }
+#endif
+
+#if defined(TARGET_OS_MACOSX)
+    if (SysEnv.macro_dir.empty())
+        macro_dir  = _get_save_path("");
+#endif
+
+#if defined(SHARED_DIR_PATH)
+    shared_dir = _resolve_dir(SHARED_DIR_PATH, "");
+#else
+    shared_dir = save_dir;
+#endif
+
+}
+
 void game_options::reset_options()
 {
     // XXX: do we really need to rebuild the list and map every time?
@@ -1015,6 +1050,7 @@ void game_options::reset_options()
     filename     = "unknown";
     basefilename = "unknown";
     line_num     = -1;
+    prefs_dirty  = false;
 
     set_default_activity_interrupts();
 
@@ -1029,34 +1065,7 @@ void game_options::reset_options()
 # endif
 #endif
 
-    macro_dir = SysEnv.macro_dir;
-
-    save_dir = _get_save_path("saves/");
-#ifdef DGAMELAUNCH
-    morgue_dir = _get_save_path("morgue/");
-#else
-    if (macro_dir.empty())
-    {
-#ifdef UNIX
-        macro_dir = _user_home_subpath(".crawl");
-#else
-        macro_dir = "settings/";
-#endif
-    }
-#endif
-
-#if defined(TARGET_OS_MACOSX)
-    UNUSED(_resolve_dir);
-
-    if (SysEnv.macro_dir.empty())
-        macro_dir  = _get_save_path("");
-#endif
-
-#if defined(SHARED_DIR_PATH)
-    shared_dir = _resolve_dir(SHARED_DIR_PATH, "");
-#else
-    shared_dir = save_dir;
-#endif
+    reset_paths();
 
     additional_macro_files.clear();
 
@@ -1122,7 +1131,7 @@ void game_options::reset_options()
 
     fire_order_ability.erase(ABIL_TROG_BERSERK);
     fire_order_ability.erase(ABIL_REVIVIFY);
-    fire_order_ability.erase(ABIL_IGNIS_SEA_OF_FIRE);
+    fire_order_ability.erase(ABIL_IGNIS_FIERY_ARMOUR);
     fire_order_ability.erase(ABIL_IGNIS_FOXFIRE);
     fire_order_ability.erase(ABIL_IGNIS_RISING_FLAME);
 #ifdef WIZARD
@@ -1132,12 +1141,20 @@ void game_options::reset_options()
     fire_order_ability.erase(ABIL_WIZ_CLEAR_TERRAIN);
 #endif
 
-    force_targeter =
+    force_spell_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_MAXWELLS_COUPLING, SPELL_IGNITION, SPELL_NOXIOUS_BOG,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
           SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE };
-    always_use_static_targeters = false;
+    always_use_static_spell_targeters = false;
+
+    force_ability_targeter =
+        { ABIL_ZIN_SANCTUARY, ABIL_TSO_CLEANSING_FLAME, ABIL_WORD_OF_CHAOS,
+          ABIL_ZIN_RECITE, ABIL_QAZLAL_ELEMENTAL_FORCE, ABIL_JIYVA_OOZEMANCY,
+          ABIL_BREATHE_LIGHTNING, ABIL_KIKU_TORMENT, ABIL_YRED_DRAIN_LIFE,
+          ABIL_CHEIBRIADOS_SLOUCH, ABIL_QAZLAL_DISASTER_AREA,
+          ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE };
+    always_use_static_ability_targeters = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -1158,16 +1175,22 @@ void game_options::reset_options()
 #endif
 
 #ifdef WIZARD
-#ifdef DGAMELAUNCH
+#  ifdef DGAMELAUNCH
     if (wiz_mode != WIZ_NO)
     {
         wiz_mode         = WIZ_NEVER;
         explore_mode     = WIZ_NEVER;
     }
-#else
+#  else
+#    ifdef DEBUG_DIAGNOSTICS
+    // Most of the time in debug builds, you want to be using wizmode anyways.
+    // This can be overridden by an explicit rc setting.
+    wiz_mode             = WIZ_YES;
+#    else
     wiz_mode             = WIZ_NO;
+#    endif
     explore_mode         = WIZ_NO;
-#endif
+#  endif
 #endif
     terp_files.clear();
 
@@ -1430,32 +1453,60 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
     }
 }
 
-void game_options::add_force_targeter(const string &s, bool)
+void game_options::add_force_spell_targeter(const string &s, bool)
 {
     if (lowercase_string(s) == "all")
     {
-        always_use_static_targeters = true;
+        always_use_static_spell_targeters = true;
         return;
     }
     auto spell = spell_by_name(s, true);
     if (is_valid_spell(spell))
-        force_targeter.insert(spell);
+        force_spell_targeter.insert(spell);
     else
         report_error("Unknown spell '%s'\n", s.c_str());
 }
 
-void game_options::remove_force_targeter(const string &s, bool)
+void game_options::remove_force_spell_targeter(const string &s, bool)
 {
     if (lowercase_string(s) == "all")
     {
-        always_use_static_targeters = false;
+        always_use_static_spell_targeters = false;
         return;
     }
     auto spell = spell_by_name(s, true);
     if (is_valid_spell(spell))
-        force_targeter.erase(spell);
+        force_spell_targeter.erase(spell);
     else
         report_error("Unknown spell '%s'\n", s.c_str());
+}
+
+void game_options::add_force_ability_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_ability_targeters = true;
+        return;
+    }
+    auto abil = ability_by_name(s);
+    if (abil == ABIL_NON_ABILITY)
+        report_error("Unknown ability '%s'\n", s.c_str());
+    else
+        force_ability_targeter.insert(abil);
+}
+
+void game_options::remove_force_ability_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_ability_targeters = false;
+        return;
+    }
+    auto abil = ability_by_name(s);
+    if (abil == ABIL_NON_ABILITY)
+        report_error("Unknown ability '%s'\n", s.c_str());
+    else
+        force_ability_targeter.erase(abil);
 }
 
 static monster_type _mons_class_by_string(const string &name)
@@ -1744,6 +1795,30 @@ static const char* config_defaults[] =
     "defaults/misc.txt",
 };
 
+void game_options::reset_loaded_state()
+{
+    for (auto *o : option_behaviour)
+        o->loaded = false;
+}
+
+void game_options::merge(const game_options &other)
+{
+    for (auto *o : option_behaviour)
+    {
+        if (o->was_loaded())
+            continue; // skip explicitly set values
+        GameOption *other_o = other.option_from_name(o->name());
+        if (!other_o || !other_o->was_loaded())
+            continue;
+        o->set_from(other_o);
+        // this function is used to merge preferences from the sticky prefs
+        // file, so in that context we want to mark this now as loaded so it
+        // won't get overridden again
+        o->loaded = true;
+    }
+}
+
+
 void read_init_file(bool runscript)
 {
     Options.reset_options();
@@ -1763,6 +1838,9 @@ void read_init_file(bool runscript)
     // Load default options.
     for (const char *def_file : config_defaults)
         Options.include(datafile_path(def_file), false, runscript);
+
+    // don't count anything up to here as customized
+    Options.reset_loaded_state();
 
     // Load early binding extra options from the command line BEFORE init.txt.
     Options.filename     = "extra opts first";
@@ -1838,17 +1916,32 @@ void read_init_file(bool runscript)
     Options.filename     = init_file_name;
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
+
+#ifdef DEBUG_DIAGNOSTICS
+    vector<string> modified;
+    for (const auto *o : Options.get_option_behaviour())
+        if (o->was_loaded())
+            modified.push_back(o->name());
+    if (modified.size())
+    {
+        dprf("Modified regular options after loading rc file: %s",
+            join_strings(modified.begin(), modified.end(), ", ").c_str());
+    }
+#endif
+
 }
 
 newgame_def read_startup_prefs()
 {
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     FileLineInput fl(get_prefs_filename().c_str());
     if (fl.error())
         return newgame_def();
 
     game_options temp;
     temp.read_options(fl, false);
+
+    // !!side effect warning!!
+    Options.merge(temp);
 
     if (!temp.game.allowed_species.empty())
         temp.game.species = temp.game.allowed_species[0];
@@ -1861,36 +1954,50 @@ newgame_def read_startup_prefs()
     if (!Options.remember_name)
         temp.game.name = "";
     return temp.game;
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
-static void write_newgame_options(const newgame_def& prefs, FILE *f)
+/**
+ * Serialize preferences that should be stored in the sticky prefs file and
+ * used across games automatically.
+ */
+void game_options::write_prefs(FILE *f)
 {
-    if (Options.no_save)
-        return;
-    if (prefs.type != NUM_GAME_TYPE)
-        fprintf(f, "type = %s\n", gametype_to_str(prefs.type).c_str());
-    if (!prefs.map.empty())
-        fprintf(f, "map = %s\n", prefs.map.c_str());
-    if (!prefs.arena_teams.empty())
-        fprintf(f, "arena_teams = %s\n", prefs.arena_teams.c_str());
-    fprintf(f, "name = %s\n", prefs.name.c_str());
-    if (prefs.species != SP_UNKNOWN)
-        fprintf(f, "species = %s\n", _species_to_str(prefs.species).c_str());
-    if (prefs.job != JOB_UNKNOWN)
-        fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
-    if (prefs.weapon != WPN_UNKNOWN)
-        fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
-    if (prefs.seed != 0)
-        fprintf(f, "game_seed = %" PRIu64 "\n", prefs.seed);
-    fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
+    // TODO: generalize, probably some polymorphic functions on GameOption
+    // classes. Not worth doing until more stuff is serialized though...
+    fprintf(f, "default_manual_training = %s\n",
+                        default_manual_training ? "yes" : "no");
+    // TODO: this variable is extremely coarse, maybe something better? Per
+    // opts setting? comparison of serializable values like for newgame_def?
+    prefs_dirty = false;
 }
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
+
+/**
+ * Serialize into a format that can be read with a game_options object.
+ */
+void newgame_def::write_prefs(FILE *f) const
+{
+    // TODO: generalize whatever of this writing code can be generalized
+    if (type != NUM_GAME_TYPE)
+        fprintf(f, "type = %s\n", gametype_to_str(type).c_str());
+    if (!map.empty())
+        fprintf(f, "map = %s\n", map.c_str());
+    if (!arena_teams.empty())
+        fprintf(f, "arena_teams = %s\n", arena_teams.c_str());
+    fprintf(f, "name = %s\n", name.c_str());
+    if (species != SP_UNKNOWN)
+        fprintf(f, "species = %s\n", _species_to_str(species).c_str());
+    if (job != JOB_UNKNOWN)
+        fprintf(f, "background = %s\n", _job_to_str(job).c_str());
+    if (weapon != WPN_UNKNOWN)
+        fprintf(f, "weapon = %s\n", _weapon_to_str(weapon).c_str());
+    if (seed != 0)
+        fprintf(f, "game_seed = %" PRIu64 "\n", seed);
+    fprintf(f, "fully_random = %s\n", fully_random ? "yes" : "no");
+
+}
 
 void write_newgame_options_file(const newgame_def& prefs)
 {
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     // [ds] Saving startup prefs should work like this:
     //
     // 1. If the game is started without specifying a game type, always
@@ -1913,44 +2020,54 @@ void write_newgame_options_file(const newgame_def& prefs)
     //
     unwind_var<game_type> gt(crawl_state.type, Options.game.type);
 
+    if (Options.no_save)
+        return;
+
     string fn = get_prefs_filename();
     FILE *f = fopen_u(fn.c_str(), "w");
     if (!f)
         return;
-    write_newgame_options(prefs, f);
+    prefs.write_prefs(f);
+    Options.write_prefs(f);
     fclose(f);
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
+// save only the player name -- used to keep it in sync with whatever the last
+// loaded save is
 void save_player_name()
 {
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     // Read other preferences
     newgame_def prefs = read_startup_prefs();
     prefs.name = Options.remember_name ? you.your_name : "";
 
     // And save
     write_newgame_options_file(prefs);
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
-// TODO: can these functions be generalized? This is called on game end, maybe
-// the entire pref should be updated then?
-void save_seed_pref()
+// TODO: update all newgame prefs based on the current char, in this function?
+void save_game_prefs()
 {
-#ifndef DGAMELAUNCH
-    if (!crawl_state.game_standard_levelgen())
+    if (!crawl_state.game_standard_levelgen() || Options.no_save)
         return;
-    // Read other preferences
-    newgame_def prefs = read_startup_prefs();
-    prefs.seed = crawl_state.seed;
+    // Read existing preferences
+    const newgame_def old_prefs = read_startup_prefs();
+    newgame_def ng_prefs = old_prefs;
+    // make some updates
+    ng_prefs.name = Options.remember_name ? you.your_name : "";
+    // update seed here only if the char is finished or the game type is seeded,
+    // even for offline games.
+    if (crawl_state.player_is_dead()
+        || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
+    {
+        ng_prefs.seed = crawl_state.seed;
+    }
+    else
+        ng_prefs.seed = 0;
 
     // And save
-    write_newgame_options_file(prefs);
-#endif
+    if (ng_prefs != old_prefs || Options.prefs_dirty)
+        write_newgame_options_file(ng_prefs);
 }
-#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
 void read_options(const string &s, bool runscript, bool clear_aliases)
 {
@@ -1960,7 +2077,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), seed_from_rc(0),
-    no_save(false), language(lang_t::EN), lang_name(nullptr)
+    no_save(false), language(lang_t::EN), lang_name(nullptr),
+    prefs_dirty(false)
 {
     reset_options();
 }
@@ -2164,7 +2282,6 @@ void game_options::read_options(LineInput &il, bool runscript,
         }
 #endif
     }
-
 }
 
 void game_options::fixup_options()
@@ -2173,6 +2290,7 @@ void game_options::fixup_options()
     if (!check_mkdir("Save directory", &save_dir))
         end(1, false, "Cannot create save directory '%s'", save_dir.c_str());
 
+    // TODO: why is morgue_dir, and only morgue_dir, reset to SysEnv here?
     if (!SysEnv.morgue_dir.empty())
         morgue_dir = SysEnv.morgue_dir;
 
@@ -2576,6 +2694,16 @@ void game_options::set_option_fragment(const string &s, bool /*prepend*/)
         // key:val option.
         read_option_line(s.substr(0, st) + " = " + s.substr(st + 1), true);
     }
+}
+
+static void _set_crawl_dir(const string &d)
+{
+    const string new_crawl_dir = _resolve_dir(d, "");
+    mprf("Setting crawl_dir to `%s`.", d.c_str());
+    SysEnv.crawl_dir = _resolve_dir(d, "");
+    // need to double check that a valid data directory can still be found,so
+    // revalidate.
+    validate_basedirs();
 }
 
 // Not a method of the game_options class since keybindings aren't
@@ -3063,21 +3191,26 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifndef DATA_DIR_PATH
     else if (key == "crawl_dir")
     {
-        // We shouldn't bother to allocate this a second time
-        // if the user puts two crawl_dir lines in the init file.
-        SysEnv.crawl_dir = field;
+        _set_crawl_dir(field);
+
+        // reset all paths in the current options object, so that save_dir
+        // and so on will now default to being in `crawl_dir`. If this isn't
+        // done immediately, we get a fairly confused situation where save_dir
+        // is still the default for part of initialization, and the des cache
+        // ends up in the wrong place.
+        reset_paths();
     }
 #endif
 #ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
     {
-        save_dir = field;
+        save_dir = _resolve_dir(field, "");
 #ifndef SHARED_DIR_PATH
         shared_dir = save_dir;
 #endif
     }
     else if (key == "macro_dir")
-        macro_dir = field;
+        macro_dir = _resolve_dir(field, "");
 #endif
 #endif
     else if (key == "view_lock")
@@ -3316,7 +3449,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else if (key == "force_targeter")
+    else if (key == "force_spell_targeter")
     {
         // first pass through the rc file happens before the spell name cache
         // is initialized, just skip it
@@ -3324,15 +3457,37 @@ void game_options::read_option_line(const string &str, bool runscript)
         {
             if (plain)
             {
-                always_use_static_targeters = false;
-                force_targeter.clear();
+                always_use_static_spell_targeters = false;
+                force_spell_targeter.clear();
             }
 
             if (minus_equal)
-                split_parse(field, ",", &game_options::remove_force_targeter);
+            {
+                split_parse(field, ",",
+                            &game_options::remove_force_spell_targeter);
+            }
             else
-                split_parse(field, ",", &game_options::add_force_targeter);
+            {
+                split_parse(field, ",",
+                            &game_options::add_force_spell_targeter);
+            }
         }
+    }
+    else if (key == "force_ability_targeter")
+    {
+        if (plain)
+        {
+            always_use_static_ability_targeters = false;
+            force_ability_targeter.clear();
+        }
+
+        if (minus_equal)
+        {
+            split_parse(field, ",",
+                        &game_options::remove_force_ability_targeter);
+        }
+        else
+            split_parse(field, ",", &game_options::add_force_ability_targeter);
     }
     else if (key == "spell_slot"
              || key == "item_slot"
@@ -5215,7 +5370,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
-            SysEnv.crawl_dir = next_arg;
+            // n.b. this is overridden by an rc file setting for this -- maybe
+            // it shouldn't be?
+            _set_crawl_dir(next_arg);
+
             nextUsed = true;
             break;
 

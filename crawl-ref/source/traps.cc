@@ -1049,19 +1049,26 @@ bool is_valid_shaft_level()
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
-/***
+///
+static bool& _shafted_in(const Branch &branch)
+{
+    return you.props[make_stringf("shafted_in_%s", branch.abbrevname)].get_bool();
+}
+
+/**
  * Can we force shaft the player from this level?
  *
  * @returns true if we can.
  */
-bool is_valid_shaft_effect_level()
+static bool _is_valid_shaft_effect_level()
 {
     const level_id place = level_id::current();
     const Branch &branch = branches[place.branch];
 
-    // Don't shaft the player when we can't, and also when it would be into a
-    // dangerous end.
+    // Don't shaft the player when we can't, or when we already did once this game
+    // in this branch, or when it would be into a dangerous end.
     return is_valid_shaft_level()
+           && !_shafted_in(branch)
            && !(branch.branch_flags & brflag::dangerous_end
                 && brdepth[place.branch] - place.depth == 1);
 }
@@ -1094,17 +1101,19 @@ void do_trap_effects()
     vector<trap_type> available_traps = { TRAP_TELEPORT };
     // Don't shaft the player when shafts aren't allowed in the location or when
     //  it would be into a dangerous end.
-    if (is_valid_shaft_effect_level())
+    if (_is_valid_shaft_effect_level())
         available_traps.push_back(TRAP_SHAFT);
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
         available_traps.push_back(TRAP_ALARM);
 
+    mprf("A sudden malevolence fills the %s...", branches[you.where_are_you].shortname);
     switch (*random_iterator(available_traps))
     {
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
-            you.do_shaft();
+            if (you.do_shaft(false))
+                _shafted_in(branches[you.where_are_you]) = true;
             break;
 
         case TRAP_ALARM:
@@ -1112,13 +1121,13 @@ void do_trap_effects()
             // silenced, to avoid "travel only while silenced" behaviour.
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
-            mprf("You set off the alarm!");
+            mprf("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
             break;
 
         case TRAP_TELEPORT:
-            you_teleport_now(false, true, "You stumble into a teleport trap!");
+            you_teleport_now(false, true, "A teleportation trap spontaneously manifests!");
             break;
 
         // Other cases shouldn't be possible, but having a default here quiets

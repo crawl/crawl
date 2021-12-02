@@ -207,9 +207,6 @@ static bool _mut_has_use(const mutation_def &mut, mutflag use)
     return bool(mut.uses & use);
 }
 
-#define MUT_BAD(mut) _mut_has_use((mut), mutflag::bad)
-#define MUT_GOOD(mut) _mut_has_use((mut), mutflag::good)
-
 static int _mut_weight(const mutation_def &mut, mutflag use)
 {
     switch (use)
@@ -288,6 +285,16 @@ static const mutation_category_def& _get_category_mutation_def(mutation_type mut
 static bool _is_valid_mutation(mutation_type mut)
 {
     return mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1;
+}
+
+bool is_bad_mutation(mutation_type mut)
+{
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::bad);
+}
+
+bool is_good_mutation(mutation_type mut)
+{
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::good);
 }
 
 static const mutation_type _ds_scales[] =
@@ -926,9 +933,6 @@ static vector<string> _get_fakemuts(bool terse)
     if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))
         result.push_back(_innatemut(armour_mut, terse));
 
-    if (!terse && species::get_stat_gain_multiplier(you.species) > 1)
-        result.push_back(_innatemut("Your attributes grow dramatically as you level up."));
-
     if (you.has_mutation(MUT_VAMPIRISM))
     {
         if (you.vampire_alive)
@@ -1258,9 +1262,9 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
 {
     int amusement = 12 * (11 - _get_mutation_def(which_mutation).weight);
 
-    if (MUT_GOOD(mut_data[which_mutation]))
+    if (is_good_mutation(which_mutation))
         amusement /= 2;
-    else if (MUT_BAD(mut_data[which_mutation]))
+    else if (is_bad_mutation(which_mutation))
         amusement *= 2;
     // currently is only ever one of these, but maybe that'll change?
 
@@ -1818,28 +1822,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                                    force_mutation, false);
     }
 
-    switch (which_mutation)
-    {
-    case RANDOM_MUTATION:
-    case RANDOM_GOOD_MUTATION:
-    case RANDOM_BAD_MUTATION:
-    case RANDOM_CORRUPT_MUTATION:
-        mutat = _get_random_mutation(which_mutation, mutclass);
-        break;
-    case RANDOM_XOM_MUTATION:
-        mutat = _get_random_xom_mutation();
-        break;
-    case RANDOM_SLIME_MUTATION:
-        mutat = _get_random_slime_mutation();
-        break;
-    case RANDOM_QAZLAL_MUTATION:
-        mutat = _get_random_qazlal_mutation();
-        break;
-    default:
-        break;
-    }
-
-
+    mutat = concretize_mut(which_mutation, mutclass);
     if (!_is_valid_mutation(mutat))
         return false;
 
@@ -2102,7 +2085,33 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     return true;
 }
 
-/*
+/**
+ * If the given mutation is a 'random' type (e.g. RANDOM_GOOD_MUTATION),
+ * turn it into a specific appropriate mut (e.g. MUT_HORNS). Otherwise, return
+ * the given mut as-is.
+ */
+mutation_type concretize_mut(mutation_type mut,
+                             mutation_permanence_class mutclass)
+{
+    switch (mut)
+    {
+    case RANDOM_MUTATION:
+    case RANDOM_GOOD_MUTATION:
+    case RANDOM_BAD_MUTATION:
+    case RANDOM_CORRUPT_MUTATION:
+        return _get_random_mutation(mut, mutclass);
+    case RANDOM_XOM_MUTATION:
+        return _get_random_xom_mutation();
+    case RANDOM_SLIME_MUTATION:
+        return _get_random_slime_mutation();
+    case RANDOM_QAZLAL_MUTATION:
+        return _get_random_qazlal_mutation();
+    default:
+        return mut;
+    }
+}
+
+/**
  * Delete a single mutation level of fixed type `mutat`.
  * If `transient` is set, allow deleting temporary mutations, and prioritize them.
  * Note that if `transient` is true and there are no temporary mutations, this can delete non-temp mutations.
@@ -2308,9 +2317,9 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 
             const bool mismatch =
                 (which_mutation == RANDOM_GOOD_MUTATION
-                 && MUT_BAD(mdef))
+                 && is_bad_mutation(mutat))
                     || (which_mutation == RANDOM_BAD_MUTATION
-                        && MUT_GOOD(mdef));
+                        && is_good_mutation(mutat));
 
             if (mismatch && (disallow_mismatch || !one_chance_in(10)))
                 continue;
@@ -2626,7 +2635,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
 
     if (colour)
     {
-        const char* colourname = (MUT_BAD(mdef) ? "red" : "lightgrey");
+        const char* colourname = (is_bad_mutation(mut) ? "red" : "lightgrey");
         const bool permanent   = you.has_innate_mutation(mut);
 
         if (permanent)

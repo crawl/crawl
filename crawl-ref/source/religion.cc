@@ -248,19 +248,17 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Jiyva
-    {   { 1, ABIL_JIYVA_CALL_JELLY, "request a jelly" },
-        { 3, "Jiyva will now mutate your body and modify your attributes as you gain piety.",
-             "Jiyva will no longer mutate your body and modify your attributes.",
-             "Jiyva will mutate your body and modify your attributes as you gain piety." },
-        { 3, "Jiyva is now protecting you from corrosive effects.",
+    {   { 2, "Jiyva is now protecting you from corrosive effects.",
              "Jiyva will no longer protect you from corrosive effects.",
              "Jiyva protects you from corrosive effects." },
+        { 3, "Jiyva will now mutate your body as you gain piety.",
+             "Jiyva will no longer mutate your body.",
+             "Jiyva will mutate your body as you gain piety." },
+        { 3, ABIL_JIYVA_OOZEMANCY, "call acidic ooze from nearby walls" },
         { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
         { 5, "You may now expel jellies when seriously injured.",
              "You will no longer expel jellies when injured.",
              "You may expel jellies when seriously injured." },
-        { 5, ABIL_JIYVA_CURE_BAD_MUTATION,
-             "call upon Jiyva to remove your harmful mutations" },
     },
 
     // Fedhas
@@ -272,10 +270,10 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Cheibriados
-    {   { 0, ABIL_CHEIBRIADOS_TIME_BEND, "bend time to slow others" },
-        { 1, "Cheibriados is now slowing the effects of poison on you.",
+    {   { 0, "Cheibriados is now slowing the effects of poison on you.",
              "Cheibriados will no longer slow the effects of poison on you.",
              "Cheibriados slows the effects of poison on you." },
+        { 1, ABIL_CHEIBRIADOS_TIME_BEND, "bend time to slow others" },
         { 3, ABIL_CHEIBRIADOS_DISTORTION, "warp the flow of time around you" },
         { 4, ABIL_CHEIBRIADOS_SLOUCH, "inflict damage on those overly hasty" },
         { 5, ABIL_CHEIBRIADOS_TIME_STEP, "step out of the flow of time" },
@@ -395,7 +393,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Ignis
     {
-        { 1, ABIL_IGNIS_SEA_OF_FIRE, "fill your surroundings with clouds of flame" },
+        { 1, ABIL_IGNIS_FIERY_ARMOUR, "armour yourself in flame" },
         { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
         { 7, ABIL_IGNIS_RISING_FLAME, "rocket upward and away" },
     },
@@ -874,6 +872,8 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_SLIMIFY])
                 you.duration[DUR_SLIMIFY] = 0;
+            if (you.duration[DUR_OOZEMANCY])
+                jiyva_end_oozemancy();
         }
         else if (god == GOD_QAZLAL)
         {
@@ -1162,18 +1162,42 @@ static bool _jiyva_mutate()
 {
     simple_god_message(" alters your body.");
 
-    const int rand = random2(100);
+    bool deleted = false;
+    // Go through each level of each existing non-temp, non-innate mutation.
+    // Give a 1/4 chance of removing each, or a 1/2 chance for bad mutations.
+    // Since we gift 4 mut levels (90% good), this means we stabilize at:
+    //
+    //      total mut levels = (t.m.l * (0.75 * 0.9 + 0.1 * 0.5)) + 4
+    //
+    // Which comes out to about 14.5 mut levels.
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        const mutation_type mut = (mutation_type)i;
+        const int lvl = you.get_base_mutation_level(mut, false, false, true);
+        if (!lvl)
+            continue;
+        const int chance = is_bad_mutation(mut) ? 50 : 25;
+        const int deletions = binomial(lvl, chance);
+        for (int del = 0; del < deletions; ++del)
+        {
+            deleted = delete_mutation(mut, "Jiyva's grace", true, false, true)
+                      || deleted;
+        }
+    }
 
-    if (rand < 5)
-        return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 30)
-        return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 55)
-        return mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 75)
-        return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else
-        return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
+    // Try to gift 4 total levels of mutations. Focus on one mutation at a time
+    // until capping its level, to maximize impact.
+    int to_give = 4;
+    for (int attempts = 0; to_give > 0 && attempts < 500; ++attempts)
+    {
+        const mutation_type cat
+            = random_choose_weighted(6, RANDOM_GOOD_MUTATION,
+                                     4, RANDOM_SLIME_MUTATION);
+        const mutation_type mut = concretize_mut(cat);
+        while (to_give > 0 && mutate(mut, "Jiyva's grace", false, false, true))
+               --to_give;
+    }
+    return to_give == 0 || deleted;
 }
 
 bool vehumet_is_offering(spell_type spell)
@@ -1541,7 +1565,7 @@ static bool _gift_jiyva_gift(bool forced)
     {
         if (_jiyva_mutate())
         {
-            _inc_gift_timeout(15 + roll_dice(2, 4));
+            _inc_gift_timeout(45 + random2avg(30, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
             return true;
@@ -1799,16 +1823,6 @@ static bool _is_plant_follower(const monster* mon)
 {
     return mon->alive() && mons_is_plant(*mon)
            && mon->attitude == ATT_FRIENDLY;
-}
-
-static bool _has_jelly()
-{
-    ASSERT(you_worship(GOD_JIYVA));
-
-    for (monster_iterator mi; mi; ++mi)
-        if (mons_is_god_gift(**mi, GOD_JIYVA))
-            return true;
-    return false;
 }
 
 bool is_follower(const monster& mon)
@@ -2598,6 +2612,11 @@ static void _gain_piety_point()
             mprf(MSGCH_GOD, "A divine halo surrounds you!");
         if (rank == rank_for_passive(passive_t::umbra))
             mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
+        if (rank == rank_for_passive(passive_t::jelly_regen))
+        {
+            simple_god_message(" begins accelerating your health and magic "
+                               "regeneration.");
+        }
         if (rank == rank_for_passive(passive_t::sinv))
             autotoggle_autopickup(false);
         if (rank == rank_for_passive(passive_t::clarity))
@@ -3174,6 +3193,8 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_JIYVA:
         if (you.duration[DUR_SLIMIFY])
             you.duration[DUR_SLIMIFY] = 0;
+        if (you.duration[DUR_OOZEMANCY])
+            jiyva_end_oozemancy();
 
         if (query_daction_counter(DACT_ALLY_SLIME))
         {
@@ -3287,6 +3308,11 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_IGNIS:
         simple_god_message(" burns away your resistance to fire.", old_god);
+        if (you.duration[DUR_FIERY_ARMOUR])
+        {
+            you.duration[DUR_FIERY_ARMOUR] = 0;
+            mpr("Your cloak of flame burns out.");
+        }
         if (you.duration[DUR_RISING_FLAME])
         {
             you.duration[DUR_RISING_FLAME] = 0;
@@ -3795,20 +3821,6 @@ static void _join_gozag()
     add_daction(DACT_GOLD_ON_TOP);
 }
 
-/// Setup when joining the gelatinous groupies of Jiyva.
-static void _join_jiyva()
-{
-    // Complimentary jelly upon joining.
-    if (_has_jelly())
-        return;
-
-    mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos());
-    mg.set_summoned(&you, 0, 0, GOD_JIYVA);
-
-    delayed_monster(mg);
-    simple_god_message(" grants you a jelly!");
-}
-
 static void _join_okawaru()
 {
     bool needs_message = false;
@@ -3894,7 +3906,6 @@ static const map<god_type, function<void ()>> on_join = {
                 mi->del_ench(ENCH_AWAKEN_FOREST);
     }},
     { GOD_GOZAG, _join_gozag },
-    { GOD_JIYVA, _join_jiyva },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power

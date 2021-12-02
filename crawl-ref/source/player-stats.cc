@@ -105,11 +105,11 @@ bool attribute_increase()
 {
     const bool need_caps = Options.easy_confirm != easy_confirm_type::all;
 
-    const int statgain = species::get_stat_gain_multiplier(you.species);
+    const int statgain = you.has_mutation(MUT_DIVINE_ATTRS) ? 4 : 2;
 
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
-                                                  (statgain > 1) ?
+                                                  (statgain > 2) ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI

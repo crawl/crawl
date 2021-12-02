@@ -761,6 +761,23 @@ bool zin_check_able_to_recite(bool quiet)
     return true;
 }
 
+vector<coord_def> find_recite_targets()
+{
+    vector<coord_def> result;
+    recite_counts eligibility;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi)
+            && zin_check_recite_to_single_monster(*mi, eligibility,
+                                                  true) == RE_ELIGIBLE)
+        {
+            result.push_back((*mi)->pos());
+        }
+    }
+
+    return result;
+}
+
 /**
  * Check whether there are monsters who might be influenced by Recite.
  * If prayertype is null, we're just checking whether we can.
@@ -1650,25 +1667,6 @@ bool beogh_resurrect()
     return true;
 }
 
-bool jiyva_remove_bad_mutation()
-{
-    if (!you.how_mutated())
-    {
-        mpr("You have no bad mutations to be cured!");
-        return false;
-    }
-
-    // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, "Jiyva's power", true, false, true, true))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return false;
-    }
-
-    mpr("You feel cleansed.");
-    return true;
-}
-
 bool yred_injury_mirror()
 {
     return in_good_standing(GOD_YREDELEMNUL, 1)
@@ -1678,14 +1676,10 @@ bool yred_injury_mirror()
 
 bool yred_can_enslave_soul(monster* mon)
 {
-    return (mon->holiness() & MH_NATURAL
-            || mon->holiness() & MH_DEMONIC
-            || mon->holiness() & MH_HOLY)
-           && !mon->is_summoned()
+    return mons_can_be_spectralised(*mon)
            && !mons_enslaved_body_and_soul(*mon)
            && mon->attitude != ATT_FRIENDLY
-           && mons_intel(*mon) >= I_HUMAN
-           && mon->type != MONS_PANDEMONIUM_LORD;
+           && mons_intel(*mon) >= I_HUMAN;
 }
 
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
@@ -2041,7 +2035,7 @@ static int _slouch_damage(monster *mon)
 static bool _slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
+    if (mon == nullptr || mon->is_stationary() || mon->cannot_act()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(*mon))
     {
@@ -3465,22 +3459,22 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     return spret::success;
 }
 
-spret qazlal_elemental_force(bool fail)
-{
-    static const map<cloud_type, monster_type> elemental_clouds = {
-        { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
-        { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
-        { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
-        { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
-        { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
-        { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
-        { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
-        { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
-        { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
-        { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
-        { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
-    };
+static const map<cloud_type, monster_type> elemental_clouds = {
+    { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
+    { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
+    { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
+    { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
+    { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
+    { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
+    { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
+    { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
+    { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
+    { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
+    { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
+};
 
+vector<coord_def> find_elemental_targets()
+{
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
     {
@@ -3493,6 +3487,12 @@ spret qazlal_elemental_force(bool fail)
             targets.push_back(*ri);
     }
 
+    return targets;
+}
+
+spret qazlal_elemental_force(bool fail)
+{
+    vector<coord_def> targets = find_elemental_targets();
     if (targets.empty())
     {
         mpr("You can't see any clouds you can empower.");
@@ -6045,4 +6045,55 @@ void okawaru_end_duel()
     mpr("You are returned from the Arena.");
     stop_delay(true);
     down_stairs(DNGN_EXIT_ARENA);
+}
+
+vector<coord_def> find_slimeable_walls()
+{
+    vector<coord_def> walls;
+
+    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (feat_is_wall(env.grid(*ri))
+            && !feat_is_permarock(env.grid(*ri))
+            && env.grid(*ri) != DNGN_SLIMY_WALL)
+        {
+            walls.push_back(*ri);
+        }
+    }
+
+    return walls;
+}
+
+spret jiyva_oozemancy(bool fail)
+{
+    vector<coord_def> walls = find_slimeable_walls();
+
+    if (walls.empty())
+    {
+        mpr("There are no walls around you to affect.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int dur = 10 + random2avg(you.piety / 8, 2);
+
+    for (auto pos : walls)
+    {
+        temp_change_terrain(pos, DNGN_SLIMY_WALL, dur * BASELINE_DELAY,
+                            TERRAIN_CHANGE_SLIME);
+    }
+
+    you.increase_duration(DUR_OOZEMANCY, dur);
+    mpr("Slime begins to ooze from the nearby walls!");
+
+    return spret::success;
+}
+
+void jiyva_end_oozemancy()
+{
+    you.duration[DUR_OOZEMANCY] = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (env.grid(*ri) == DNGN_SLIMY_WALL && is_temp_terrain(*ri))
+            revert_terrain_change(*ri, TERRAIN_CHANGE_SLIME);
 }

@@ -5897,7 +5897,7 @@ static int _shop_num_items(const shop_spec &spec)
         return (int) spec.items.size();
     }
 
-    return 5 + random2avg(12, 3);
+    return 5 + random2avg(8, 3);
 }
 
 /**

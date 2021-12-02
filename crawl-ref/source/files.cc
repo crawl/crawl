@@ -472,15 +472,16 @@ static vector<string> _get_base_dirs()
 
     return bases;
 }
-
-void validate_basedirs()
+/**
+ * check if `d` is a complete crawl data directory.
+ *
+ * @return MB_TRUE if yes, otherwise no. Returns MB_FALSE if there are some
+ * but not all data subfolders.
+ */
+maybe_bool validate_data_dir(const string &d)
 {
-    // TODO: could use this to pick a single data directory?
-    vector<string> bases(_get_base_dirs());
-    bool found = false;
-
     // there are a few others, but this should be enough to minimally run something
-    const vector<string> data_subfolders =
+    static const vector<string> data_subfolders =
     {
         "clua",
         "database",
@@ -493,36 +494,51 @@ void validate_basedirs()
 #endif
     };
 
+    if (!dir_exists(d))
+        return MB_FALSE;
+
+    bool everything = true;
+    bool something = false;
+    for (auto subdir : data_subfolders)
+    {
+        if (dir_exists(catpath(d, subdir)))
+            something = true;
+        else
+            everything = false;
+    }
+    return everything ? MB_TRUE : something ? MB_MAYBE : MB_FALSE;
+}
+
+void validate_basedirs()
+{
+    // TODO: could use this to pick a single data directory? Right now the
+    // behavior is that files in directories earliest on this list get
+    // priority.
+    vector<string> bases(_get_base_dirs());
+    bool found = false;
+
     for (const string &d : bases)
     {
-        if (dir_exists(d))
+        maybe_bool status = validate_data_dir(d);
+        if (status == MB_FALSE)
+            continue; // empty or non-existent, ignore
+        else if (status == MB_MAYBE)
         {
-            bool everything = true;
-            bool something = false;
-            for (auto subdir : data_subfolders)
+            // give an error for this case because this incomplete data
+            // directory will be checked before others, possibly leading
+            // to a weird mix of data files.
+            if (!found)
             {
-                if (dir_exists(d + subdir))
-                    something = true;
-                else
-                    everything = false;
+                mprf(MSGCH_ERROR,
+                    "Incomplete or corrupted data directory '%s'",
+                            d.c_str());
             }
-            if (everything)
-            {
+        }
+        else // MB_TRUE -- found a complete data directory
+        {
+            if (!found)
                 mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
-                found = true;
-            }
-            else if (something)
-            {
-                // give an error for this case because this incomplete data
-                // directory will be checked before others, possibly leading
-                // to a weird mix of data files.
-                if (!found)
-                {
-                    mprf(MSGCH_ERROR,
-                        "Incomplete or corrupted data directory '%s'",
-                                d.c_str());
-                }
-            }
+            found = true;
         }
     }
 
@@ -2426,6 +2442,7 @@ static void _save_game_exit()
 
     clrscr();
 
+    save_game_prefs();
     update_whereis("saved");
 
 #ifdef USE_TILE_WEB
@@ -2467,7 +2484,10 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (!leave_game)
     {
         if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+        {
             you.save->commit();
+            save_game_prefs();
+        }
         return;
     }
 

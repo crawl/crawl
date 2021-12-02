@@ -134,6 +134,7 @@ public:
     game_options();
     ~game_options();
     void reset_options();
+    void reset_paths();
 
     void read_option_line(const string &s, bool runscripts = false);
     void read_options(LineInput &, bool runscripts,
@@ -255,7 +256,10 @@ public:
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
-    bool        always_use_static_targeters; // whether to use static targeters even in `z`
+    bool        always_use_static_spell_targeters; // whether to always use
+                                                   // static spell targeters
+    bool        always_use_static_ability_targeters; // whether to always use
+                                                     // static ability targeters
 
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
@@ -289,8 +293,10 @@ public:
     unordered_set<ability_type, hash<int>> fire_order_ability;
     bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
 
-    unordered_set<int> force_targeter; // spell types to always use a
-                                       // targeter for
+    unordered_set<int> force_spell_targeter; // spell types to always use a
+                                             // targeter for
+    unordered_set<int> force_ability_targeter; // ability types to always use a
+                                               // targeter for
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
@@ -619,8 +625,24 @@ private:
     set<string>    included;  // Files we've included already.
 
 public:
+    bool prefs_dirty;
     // Fix option values if necessary, specifically file paths.
     void fixup_options();
+    void reset_loaded_state();
+    vector<GameOption*> get_option_behaviour() const
+    {
+        return option_behaviour;
+    }
+    void merge(const game_options &other);
+    GameOption *option_from_name(string name) const
+    {
+        auto o = options_by_name.find(name);
+        if (o == options_by_name.end())
+            return nullptr;
+        return o->second;
+    }
+
+    void write_prefs(FILE *f);
 
 private:
     string unalias(const string &key) const;
@@ -669,8 +691,10 @@ private:
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
-    void add_force_targeter(const string &s, bool prepend);
-    void remove_force_targeter(const string &s, bool prepend);
+    void add_force_spell_targeter(const string &s, bool prepend);
+    void remove_force_spell_targeter(const string &s, bool prepend);
+    void add_force_ability_targeter(const string &s, bool prepend);
+    void remove_force_ability_targeter(const string &s, bool prepend);
 
     static const string interrupt_prefix;
 

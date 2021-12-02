@@ -52,7 +52,8 @@ The contents of this text are:
                 travel_open_doors
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
-                easy_confirm, simple_targeting, allow_self_target,
+                easy_confirm, simple_targeting, force_spell_targeter,
+                force_ability_targeter, allow_self_target,
                 easy_quit_item_prompts, ability_menu, spell_menu,
                 easy_floor_use, sort_menus, spell_slot, item_slot,
                 ability_slot, autofight_stop, autofight_warning,
@@ -75,10 +76,12 @@ The contents of this text are:
                 monster_list_colour, view_delay, use_animations,
                 darken_beyond_range, force_more_message, flash_screen_message,
                 cloud_status, always_show_zot
-3-i     Colours (messages and menus)
+3-i     Colours (messages and menus).
                 menu_colour, message_colour
-3-j     Missiles.
-                fire_items_start, fire_order
+3-j     Quivers, firing, and ammo.
+                fire_items_start, fire_order, fire_order_spell,
+                fire_order_ability, fail_severity_to_quiver,
+                launcher_autoquiver
 3-k     Message Channels.
                 plain, prompt, god, duration, danger, warning, recovery,
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
@@ -434,24 +437,30 @@ pregen_dungeon = incremental
 2-  File System.
 ================
 
+The following directory options may be ignored or overridden on some systems
+and builds. For example, they cannot be set in an rc file for online play. They
+can also be set via the command line.
+
 crawl_dir = <path>
-        The path used for the relative paths when looking for other
-        files. Defaults to the directory that contains the Crawl
-        executable.
+        A path to be used for the relative paths when looking for other
+        files. The default for this value is dependent on the system and
+        build type. This option can also be set the `CRAWL_DIR` environment
+        variable. When set, this will override the following three directory
+        options if they have been previously set.
 
-morgue_dir = morgue
+save_dir = saves/
+        Directory where saves and bones are stored. A relative path
+        will be interpreted relative to the value of `crawl_dir`.
+
+morgue_dir = morgues/
         Directory where morgue dumps files (morgue*.txt and
-        morgue*.lst) as well as character dumps files are written.
+        morgue*.lst) as well as character dumps files are written. A relative
+        path will be interpreted relative to the value of `crawl_dir`.
 
-save_dir = saves
-        Directory where saves and bones are stored. This option may be
-        ignored depending on the settings used to compile Crawl, but
-        should be honoured for the official Crawl binaries.
-
-macro_dir = settings/
+macro_dir = <path>
         Directory for reading macro.txt.
-        For tile games, wininit.txt will also be stored here.
-        It should end with the path delimiter.
+        It should end with the path delimiter. The default value for this
+        is dependent on system and build type.
 
 sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Requires "Sound support"; check your version info)
@@ -1032,10 +1041,10 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
-force_targeter = hailstorm, starburst, frozen ramparts, maxwell's capacitive
-                 coupling, ignition, eringya's noxious bog, cause fear,
-                 alistair's intoxication, discord, dispersal, metabolic
-                 englaciation, dazzling flash, flame wave
+force_spell_targeter = hailstorm, starburst, frozen ramparts, maxwell's
+                       capacitive coupling, ignition, eringya's noxious bog,
+                       cause fear, alistair's intoxication, discord, dispersal,
+                       metabolic englaciation, dazzling flash, flame wave
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1044,8 +1053,20 @@ force_targeter = hailstorm, starburst, frozen ramparts, maxwell's capacitive
         the list (however constructed) will be ignored, and targeters will
         be shown with every spell.
 
+force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
+                         elemental force, oozemancy, breathe lightning, torment,
+                         drain life, slouch, disaster area, apocalypse,
+                         corrupt, foxfire swarm
+        Force showing a targeter for the listed abilities when activating them
+        normally, even if the ability isn't targeted. This for practical
+        purposes only has an effect on statically targeted abilities, such as
+        the ones in the default value; it is particularly useful for abilities
+        with an unusual targeting pattern. If "all" appears in the options list,
+        the rest of the list (however constructed) will be ignored, and
+        targeters will be shown with every ability.
+
 allow_self_target = prompt
-        Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
+        Allow targeting yourself with risky magic (e.g., the spell Stone Arrow
         or a wand of paralysis.) Values: (yes | no | prompt).
         When set to 'yes', you are a valid target. When set to 'no', you cannot
         target yourself with such spells. When set to 'prompt' (the default),

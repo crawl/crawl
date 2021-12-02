@@ -1775,9 +1775,9 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_SPIRIT_SHIELD:
         return "it causes incoming damage to be divided between "
                "the wearer's reserves of health and magic.";
-    case SPARM_ARCHERY:
+    case SPARM_HURLING:
         return "it improves its wearer's accuracy and damage with "
-               "ranged weapons, such as bows and javelins (Slay +4).";
+               "thrown weapons, such as rocks and javelins (Slay +4).";
     case SPARM_REPULSION:
         return "it protects its wearer by repelling missiles.";
 #if TAG_MAJOR_VERSION == 34
@@ -1791,6 +1791,9 @@ static const char* _item_ego_desc(special_armour_type ego)
                "and can see.";
     case SPARM_RAMPAGING:
         return "its wearer takes one free step when moving towards enemies.";
+    case SPARM_INFUSION:
+        return "it empowers each of its wearer's blows with a small part of "
+               "their magic.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -1941,6 +1944,28 @@ static string _describe_lignify_ac()
 
     return make_stringf("If you quaff this potion your AC would be %d.",
                         treeform_ac);
+}
+
+static string _describe_item_rarity(const item_def &item)
+{
+    item_rarity_type rarity = consumable_rarity(item);
+
+    switch (rarity)
+    {
+    case RARITY_VERY_RARE:
+        return "very rarely";
+    case RARITY_RARE:
+        return "rarely";
+    case RARITY_UNCOMMON:
+        return "uncommonly";
+    case RARITY_COMMON:
+        return "commonly";
+    case RARITY_VERY_COMMON:
+        return "very commonly";
+    case RARITY_NONE:
+    default:
+        return "buggily";
+    }
 }
 
 static string _describe_jewellery(const item_def &item, bool verbose)
@@ -2224,20 +2249,26 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
-        if (verbose && item_type_known(item))
+        if (item_type_known(item))
         {
-            if (item.sub_type == POT_LIGNIFY)
-                description << "\n\n" + _describe_lignify_ac();
-            else if (item.sub_type == POT_CANCELLATION)
+            if (verbose)
             {
-                if (player_is_cancellable())
+                if (item.sub_type == POT_LIGNIFY)
+                    description << "\n\n" + _describe_lignify_ac();
+                else if (item.sub_type == POT_CANCELLATION)
                 {
-                    description << "\n\nIf you drink this now, you will no longer be " <<
-                        describe_player_cancellation() << ".";
+                    if (player_is_cancellable())
+                    {
+                        description << "\n\nIf you drink this now, you will no longer be " <<
+                            describe_player_cancellation() << ".";
+                    }
+                    else
+                        description << "\n\nDrinking this now will have no effect.";
                 }
-                else
-                    description << "\n\nDrinking this now will have no effect.";
             }
+            description << "\n\nIt is found "
+                        << _describe_item_rarity(item)
+                        << " compared to other types of potion.";
         }
         break;
 
@@ -2257,6 +2288,14 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_SCROLLS:
+        if (item_type_known(item))
+        {
+            description << "\n\nIt is found "
+                        << _describe_item_rarity(item)
+                        << " compared to other types of scroll.";
+        }
+        break;
+
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:

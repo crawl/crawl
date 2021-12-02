@@ -63,7 +63,7 @@
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
-static const int REGEN_PIP = 100;
+static const int REGEN_PIP = 80;
 /// The standard unit of WL; one level in %/@ screens
 static const int WL_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
@@ -657,6 +657,8 @@ public:
     int scan_artefacts(artefact_prop_type which_property,
                        vector<const item_def *> *matches = nullptr) const override;
 
+    int infusion_amount() const;
+
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;
 
@@ -789,7 +791,6 @@ public:
     bool is_dragonkind() const override;
 
     bool paralysed() const override;
-    bool cannot_move() const override;
     bool cannot_act() const override;
     bool confused() const override;
     bool caught() const override;
@@ -851,8 +852,8 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
-    bool do_shaft() override;
-    bool shaftable() const;
+    bool do_shaft(bool check_terrain = true) override;
+    bool shaftable(bool check_terrain = true) const;
 
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
@@ -1033,14 +1034,14 @@ int player_adjust_evoc_power(const int power, int enhancers = 0);
 
 int player_speed();
 
-int player_spell_levels();
+int player_spell_levels(bool floored = true);
 int player_total_spell_levels();
 
 int player_teleport();
 
 int player_monster_detect_radius();
 
-int slaying_bonus(bool ranged = false);
+int slaying_bonus(bool throwing = false);
 
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);

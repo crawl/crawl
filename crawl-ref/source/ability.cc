@@ -77,6 +77,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "target.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "transform.h"
@@ -105,6 +106,12 @@ enum class abflag
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     quiet_fail          = 0x00008000, // no message on failure
+
+    // TODO: these are currently unused, but targeted abilities should be
+    // converted to use these along with the shared ability targeting code.
+    dir_or_target       = 0x00010000, // use DIR_NONE targeting
+    target              = 0x00020000, // use DIR_TARGET targeting
+    targeting_mask      = abflag::dir_or_target | abflag::target,
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -282,7 +289,7 @@ struct ability_def
 };
 
 static int _lookup_ability_slot(ability_type abil);
-static spret _do_ability(const ability_def& abil, bool fail, dist *target=nullptr);
+static spret _do_ability(const ability_def& abil, bool fail, dist *target);
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 
@@ -437,7 +444,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Trog
         { ABIL_TROG_BERSERK, "Berserk",
-            0, 0, 0, {fail_basis::invo, 45, 0, 2}, abflag::none },
+            0, 0, 1, {fail_basis::invo, 45, 0, 2}, abflag::none },
         { ABIL_TROG_HAND, "Trog's Hand",
             0, 0, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
         { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
@@ -487,7 +494,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Beogh
         { ABIL_BEOGH_SMITING, "Smiting",
-            3, 0, generic_cost::fixed(3), {fail_basis::invo, 40, 5, 20}, abflag::none },
+            3, 0, generic_cost::range(3, 4), {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
             2, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
@@ -496,12 +503,10 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 28, {fail_basis::invo}, abflag::none },
 
         // Jiyva
-        { ABIL_JIYVA_CALL_JELLY, "Request Jelly",
-            2, 0, 1, {fail_basis::invo}, abflag::none },
+        { ABIL_JIYVA_OOZEMANCY, "Oozemancy",
+            3, 0, 8, {fail_basis::invo, 80, 0, 2}, abflag::none },
         { ABIL_JIYVA_SLIMIFY, "Slimify",
-            4, 0, 8, {fail_basis::invo, 90, 0, 2}, abflag::none },
-        { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
-            0, 0, 15, {fail_basis::invo}, abflag::none },
+            5, 0, 10, {fail_basis::invo, 90, 0, 2}, abflag::none },
 
         // Fedhas
         { ABIL_FEDHAS_WALL_OF_BRIARS, "Wall of Briars",
@@ -638,9 +643,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {}, abflag::berserk_ok },
 
         // Ignis
-        { ABIL_IGNIS_SEA_OF_FIRE, "Sea of Fire",
-            0, 0, 8, /*avg 12 uses from 150 to <30 piety*/
-            {fail_basis::invo}, abflag::quiet_fail },
+        { ABIL_IGNIS_FIERY_ARMOUR, "Fiery Armour",
+            0, 0, 8, {fail_basis::invo}, abflag::none },
         { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
             0, 0, 12, {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
@@ -1583,6 +1587,27 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_YRED_ANIMATE_REMAINS:
+        if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY, 1,
+                            MHITYOU, &you, "", GOD_YREDELEMNUL, false,
+                            true) <= 0)
+        {
+            if (!quiet)
+                mpr("There is nothing here to animate!");
+            return false;
+        }
+        return true;
+
+    case ABIL_YRED_ANIMATE_DEAD:
+        if (!animate_dead(&you, 1, BEH_FRIENDLY, MHITYOU, &you, "",
+                          GOD_YREDELEMNUL, false))
+        {
+            if (!quiet)
+                mpr("There is nothing nearby to animate!");
+            return false;
+        }
+        return true;
+
     case ABIL_ELYVILON_HEAL_SELF:
         if (you.hp == you.hp_max)
         {
@@ -1605,6 +1630,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 mpr("Nothing ails you!");
+            return false;
+        }
+        return true;
+
+    case ABIL_JIYVA_OOZEMANCY:
+        if (you.duration[DUR_OOZEMANCY])
+        {
+            if (!quiet)
+                mpr("You are already calling forth ooze!");
             return false;
         }
         return true;
@@ -1650,6 +1684,30 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return can_cast_spells(quiet, true);
+
+    case ABIL_FEDHAS_WALL_OF_BRIARS:
+    {
+        vector<coord_def> spaces = find_briar_spaces(true);
+        if (spaces.empty())
+        {
+            if (!quiet)
+                mpr("There isn't enough space to grow briars here.");
+            return false;
+        }
+        return true;
+    }
+
+    case ABIL_QAZLAL_ELEMENTAL_FORCE:
+    {
+        vector<coord_def> clouds = find_elemental_targets();
+        if (clouds.empty())
+        {
+            if (!quiet)
+                mpr("You can't see any clouds you can empower.");
+            return false;
+        }
+        return true;
+    }
 
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
@@ -1840,14 +1898,189 @@ bool check_ability_possible(const ability_type ability, bool quiet)
     return _check_ability_possible(get_ability_def(ability), quiet);
 }
 
+class ability_targeting_behaviour : public targeting_behaviour
+{
+public:
+    ability_targeting_behaviour(ability_type _abil)
+        : targeting_behaviour(false), abil(_abil)
+    {
+    }
+
+    bool targeted() override
+    {
+        return testbits(get_ability_def(abil).flags, abflag::targeting_mask);
+    }
+private:
+    ability_type abil;
+};
+
+unique_ptr<targeter> find_ability_targeter(ability_type ability)
+{
+    switch (ability)
+    {
+    // Limited radius:
+    case ABIL_ZIN_SANCTUARY:
+        return make_unique<targeter_radius>(&you, LOS_DEFAULT, 4);
+    case ABIL_TSO_CLEANSING_FLAME:
+    case ABIL_WU_JIAN_HEAVENLY_STORM:
+        return make_unique<targeter_radius>(&you, LOS_SOLID, 2);
+    case ABIL_KIKU_RECEIVE_CORPSES:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
+    case ABIL_CHEIBRIADOS_TIME_BEND:
+    case ABIL_USKAYAW_STOMP:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
+
+    // Multiposition:
+    case ABIL_EVOKE_BLINK:
+        return make_unique<targeter_multiposition>(&you, find_blink_targets());
+    case ABIL_WORD_OF_CHAOS:
+        return make_unique<targeter_multiposition>(&you, find_chaos_targets(true));
+    case ABIL_ZIN_RECITE:
+        return make_unique<targeter_multiposition>(&you, find_recite_targets());
+    case ABIL_YRED_ANIMATE_DEAD:
+        return make_unique<targeter_multiposition>(&you, simple_find_corpses(), AFF_YES);
+    case ABIL_LUGONU_BEND_SPACE:
+        return make_unique<targeter_multiposition>(&you, find_blink_targets());
+    case ABIL_FEDHAS_WALL_OF_BRIARS:
+        return make_unique<targeter_multiposition>(&you, find_briar_spaces(true), AFF_YES);
+    case ABIL_QAZLAL_ELEMENTAL_FORCE:
+        return make_unique<targeter_multiposition>(&you, find_elemental_targets());
+    case ABIL_JIYVA_OOZEMANCY:
+        return make_unique<targeter_walls>(&you, find_slimeable_walls());
+
+    // Full LOS:
+    case ABIL_BREATHE_LIGHTNING: // Doesn't account for bounces/explosions
+                                 // hitting areas behind glass/statues.
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID, LOS_RADIUS);
+    case ABIL_KIKU_TORMENT:
+    case ABIL_YRED_DRAIN_LIFE:
+    case ABIL_CHEIBRIADOS_SLOUCH:
+    case ABIL_QAZLAL_DISASTER_AREA: // Doesn't account for explosions hitting
+                                    // areas behind glass.
+    case ABIL_RU_APOCALYPSE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, LOS_RADIUS);
+     case ABIL_LUGONU_CORRUPT:
+        return make_unique<targeter_maybe_radius>(&you, LOS_DEFAULT, LOS_RADIUS);
+
+    // Summons:
+    case ABIL_EVOKE_ASMODEUS:
+    case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
+    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
+    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+    case ABIL_TROG_BROTHERS_IN_ARMS:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+    case ABIL_IGNIS_FOXFIRE:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+
+    // Self-targeted:
+    case ABIL_TRAN_BAT:
+    case ABIL_EXSANGUINATE:
+    case ABIL_REVIVIFY:
+    case ABIL_SHAFT_SELF:
+    case ABIL_HEAL_WOUNDS:
+    case ABIL_EVOKE_TURN_INVISIBLE:
+    case ABIL_END_TRANSFORMATION:
+    case ABIL_ZIN_VITALISATION:
+    case ABIL_TSO_DIVINE_SHIELD:
+    case ABIL_YRED_INJURY_MIRROR:
+    case ABIL_YRED_ANIMATE_REMAINS:
+    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
+    case ABIL_OKAWARU_HEROISM:
+    case ABIL_OKAWARU_FINESSE:
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
+    case ABIL_TROG_BERSERK:
+    case ABIL_TROG_HAND:
+    case ABIL_ELYVILON_PURIFICATION:
+    case ABIL_ELYVILON_HEAL_SELF:
+    case ABIL_ELYVILON_DIVINE_VIGOUR:
+    case ABIL_LUGONU_ABYSS_EXIT:
+    case ABIL_LUGONU_ABYSS_ENTER:
+    case ABIL_NEMELEX_DRAW_DESTRUCTION: // Sometimes targeted, but not always.
+    case ABIL_NEMELEX_DRAW_ESCAPE:
+    case ABIL_NEMELEX_DRAW_SUMMONING:
+    case ABIL_NEMELEX_DRAW_STACK:
+    case ABIL_NEMELEX_STACK_FIVE:
+    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_JIYVA_SLIMIFY:
+    case ABIL_CHEIBRIADOS_TIME_STEP:
+    case ABIL_CHEIBRIADOS_DISTORTION:
+    case ABIL_DITHMENOS_SHADOW_FORM:
+    case ABIL_RU_DRAW_OUT_POWER:
+    case ABIL_GOZAG_POTION_PETITION:
+    case ABIL_GOZAG_CALL_MERCHANT:
+    case ABIL_HEPLIAKLQANA_RECALL:
+    case ABIL_WU_JIAN_SERPENTS_LASH:
+    case ABIL_IGNIS_FIERY_ARMOUR:
+    case ABIL_IGNIS_RISING_FLAME:
+    case ABIL_STOP_RECALL:
+        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
+
+    default:
+        break;
+    }
+
+    return nullptr;
+}
+
 bool activate_talent(const talent& tal, dist *target)
 {
     const ability_def& abil = get_ability_def(tal.which);
+
+    dist target_local;
+    if (!target)
+        target = &target_local;
 
     if (_check_ability_dangerous(abil.ability) || !_check_ability_possible(abil))
     {
         crawl_state.zero_turns_taken();
         return false;
+    }
+
+    bool is_targeted = !!(abil.flags & abflag::targeting_mask);
+    unique_ptr<targeter> hitfunc = find_ability_targeter(abil.ability);
+
+    if (is_targeted
+        || hitfunc
+           && (target->fire_context
+               || Options.always_use_static_ability_targeters
+               || Options.force_ability_targeter.count(abil.ability) > 0))
+    {
+        bolt beam;
+        ability_targeting_behaviour beh(abil.ability);
+        direction_chooser_args args;
+
+        args.hitfunc = hitfunc.get();
+        args.restricts = testbits(abil.flags, abflag::target) ? DIR_TARGET
+                                                              : DIR_NONE;
+        args.mode = TARG_ANY; // TODO: add abflags for targeting mode
+        args.range = -1; // TODO: add handling for ability range
+        args.needs_path = !testbits(abil.flags, abflag::target);
+        args.top_prompt = make_stringf("%s: <w>%s</w>",
+                                       is_targeted ? "Aiming" : "Activating",
+                                       ability_name(abil.ability));
+        if (abil.failure.base_chance)
+        {
+            args.top_prompt +=
+                make_stringf(" <lightgrey>(%s risk of %s)</lightgrey>",
+                             failure_rate_to_string(tal.fail).c_str(),
+                             testbits(abil.flags, abflag::hostile) ? "hostile"
+                                                                   : "failure");
+        }
+        args.behaviour = &beh;
+        if (!is_targeted)
+            args.default_place = you.pos();
+        if (hitfunc && hitfunc->can_affect_walls())
+        {
+            args.show_floor_desc = true;
+            args.show_boring_feats = false;
+        }
+        args.self = confirm_prompt_type::none; // TODO: add abflags for prompts
+
+        if (!spell_direction(*target, beam, &args))
+        {
+            crawl_state.zero_turns_taken();
+            return false;
+        }
     }
 
     bool fail = random2avg(100, 3) < tal.fail;
@@ -2081,10 +2314,6 @@ static bool _evoke_staff_of_olgreb(dist *target)
  */
 static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 {
-    dist target_local;
-    if (!target)
-        target = &target_local;
-
     bolt beam;
 
     // Note: the costs will not be applied until after this switch
@@ -2346,12 +2575,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         if (!invis_allowed())
             return spret::abort;
         if (_invis_causes_drain())
-            drain_player(40, false, true); // yes, before the fail check!
+            drain_player(60, false, true); // yes, before the fail check!
         fail_check();
         potionlike_effect(POT_INVISIBILITY,
                           player_adjust_evoc_power(
                               you.skill(SK_EVOCATIONS, 2) + 5));
-        contaminate_player(1000 + random2(2000), true);
+        contaminate_player(1000 + random2(500), true);
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -2932,8 +3161,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         fail_check();
-        if (!fedhas_wall_of_briars())
-            return spret::abort;
+        fedhas_wall_of_briars();
         break;
 
     case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
@@ -2971,19 +3199,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         start_delay<RevivifyDelay>(5);
         break;
 
-    case ABIL_JIYVA_CALL_JELLY:
-    {
-        fail_check();
-        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos(),
-                     MHITNOT, MG_NONE, GOD_JIYVA);
-
-        mg.non_actor_summoner = "Jiyva";
-
-        if (!create_monster(mg))
-            return spret::abort;
-        break;
-    }
-
     case ABIL_JIYVA_SLIMIFY:
     {
         fail_check();
@@ -2996,10 +3211,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
     }
 
-    case ABIL_JIYVA_CURE_BAD_MUTATION:
-        fail_check();
-        jiyva_remove_bad_mutation();
-        break;
+    case ABIL_JIYVA_OOZEMANCY:
+        return jiyva_oozemancy(fail);
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
         fail_check();
@@ -3241,11 +3454,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         fail_check();
         return wu_jian_wall_jump_ability();
 
+    case ABIL_IGNIS_FIERY_ARMOUR:
+        fail_check();
+        fiery_armour();
+        return spret::success;
+
     case ABIL_IGNIS_FOXFIRE:
         return foxfire_swarm();
-
-    case ABIL_IGNIS_SEA_OF_FIRE:
-        return sea_of_fire();
 
     case ABIL_IGNIS_RISING_FLAME:
         if (!_can_rising_flame(false))

@@ -13,10 +13,14 @@
    crawl_require("dlua/util.lua")
 
    function ownername(s)
-     -- The string.lower and .gsub calls are to crunch names with spaces down
-     -- into a single word. Otherwise it messes up the "KFEAT" shop line.
-     local name = s .. string.sub(string.lower(crawl.make_name()), 2)
-     return string.gsub(name, " ", "")
+     if s == "N" and crawl.one_chance_in( 20 ) then
+       return "Nicolae"
+     else
+       -- The string.lower and .gsub calls are to crunch names with spaces down
+       -- into a single word. Otherwise it messes up the "KFEAT" shop line.
+       local name = s .. string.sub(string.lower(crawl.make_name()), 2)
+       return string.gsub(name, " ", "")
+     end
    end
 
    function shopname(s)

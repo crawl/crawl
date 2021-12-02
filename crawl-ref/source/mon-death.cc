@@ -1119,7 +1119,11 @@ static string _killer_type_name(killer_type killer)
  */
 static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
 {
-    if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(*mons))
+    bool valid_mons = bound_soul ? mons->holiness() & MH_NATURAL
+                                   && mons_can_be_zombified(*mons)
+                                 : mons_can_be_spectralised(*mons);
+
+    if (valid_mons)
     {
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.
@@ -1376,7 +1380,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
         did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.
-    if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_move())
+    if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_act())
         did_kill_conduct(DID_KILL_FAST, mons);
 }
 
@@ -3004,7 +3008,6 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         mons->spells[0].spell = SPELL_STONE_ARROW;
         mons->spells[1].spell = SPELL_THROW_ICICLE;
         mons->spells[3].spell = SPELL_BLINK;
-        mons->spells[4].spell = SPELL_HASTE;
         // Nothing with 6.
 
         // Indicate that he has an updated spellbook.
@@ -3039,7 +3042,7 @@ void elven_twin_energize(monster* mons)
         if (mons->observable())
             simple_monster_message(*mons, " seems to find hidden reserves of power!");
 
-        mons->add_ench(ENCH_HASTE);
+        mons->add_ench(mon_enchant(ENCH_HASTE, 1, mons, INFINITE_DURATION));
         mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
     }
 }

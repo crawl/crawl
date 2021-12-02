@@ -400,7 +400,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons->is_stationary() || mons->asleep() || mons->cannot_move())
+    if (mons->is_stationary() || mons->asleep() || mons->cannot_act())
     {
         if (!quiet)
             simple_monster_message(*mons, " cannot move out of your way!");
@@ -1104,7 +1104,7 @@ static int _player_bonus_regen()
     // Powered By Death mutation, boosts regen by variable strength
     // if the duration of the effect is still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += you.props[POWERED_BY_DEATH_KEY].get_int() * REGEN_PIP;
+        rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
     return rr;
 }
@@ -1161,7 +1161,15 @@ int player_regen()
 
     // Trog's Hand. This circumvents sickness or inhibited regeneration.
     if (you.duration[DUR_TROGS_HAND])
-        rr += REGEN_PIP;
+        rr += 100;
+
+    // Jiyva's passive healing also bypasses sickness, as befits a god.
+    if (have_passive(passive_t::jelly_regen))
+    {
+        // One regen pip at 1* piety, scaling to two pips at 6*.
+        // We use piety rank to avoid leaking piety info to the player.
+        rr += REGEN_PIP + (REGEN_PIP * (piety_rank(you.piety) - 1)) / 5;
+    }
 
     return rr;
 }
@@ -1176,8 +1184,20 @@ int player_mp_regen()
     if (you.get_mutation_level(MUT_MANA_REGENERATION))
         regen_amount *= 2;
 
-    if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
-        regen_amount += 25;
+    if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
+        && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
+    {
+        regen_amount += 40;
+    }
+
+    if (player_equip_unrand(UNRAND_POWER_GLOVES))
+        regen_amount += 40;
+
+    if (have_passive(passive_t::jelly_regen))
+    {
+        // We use piety rank to avoid leaking piety info to the player.
+        regen_amount += 25 + (25 * (piety_rank(you.piety) - 1)) / 5;
+    }
 
     return regen_amount;
 }
@@ -1195,7 +1215,7 @@ int player_total_spell_levels()
  * How many spell levels does the player currently have available for
  * memorising new spells?
  */
-int player_spell_levels()
+int player_spell_levels(bool floored)
 {
     int sl = min(player_total_spell_levels(), 99);
 
@@ -1205,7 +1225,7 @@ int player_spell_levels()
             sl -= spell_difficulty(spell);
     }
 
-    if (sl < 0)
+    if (sl < 0 && floored)
         sl = 0;
 
     return sl;
@@ -1400,7 +1420,7 @@ bool player::res_corr(bool allow_random, bool temp) const
         return true;
     }
 
-    return actor::res_corr(temp);
+    return actor::res_corr(allow_random, temp);
 }
 
 int player_res_acid(bool items)
@@ -2038,7 +2058,7 @@ static int _player_evasion(bool ignore_helpless)
 {
     const int size_factor = _player_evasion_size_factor();
     // Size is all that matters when paralysed or at 0 dex.
-    if ((you.cannot_move() || you.duration[DUR_CLUMSY]
+    if ((you.cannot_act() || you.duration[DUR_CLUMSY]
             || you.form == transformation::tree)
         && !ignore_helpless)
     {
@@ -2693,7 +2713,9 @@ void level_change(bool skip_attribute_increase)
                      new_exp);
             }
 
-            const bool manual_stat_level = new_exp % 3 == 0;  // 3,6,9,12...
+            const bool manual_stat_level = you.has_mutation(MUT_DIVINE_ATTRS)
+                ? (new_exp % 3 == 0)  // 3,6,9,12...
+                : (new_exp % 6 == 3); // 3,9,15,21,27
 
             // Must do this before actually changing experience_level,
             // so we will re-prompt on load if a hup is received.
@@ -3363,13 +3385,13 @@ unsigned int exp_needed(int lev, int exp_apt)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(bool ranged)
+int slaying_bonus(bool throwing)
 {
     int ret = 0;
 
     ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
     ret += you.scan_artefacts(ARTP_SLAYING);
-    if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
+    if (you.wearing_ego(EQ_GLOVES, SPARM_HURLING) && throwing)
         ret += 4;
 
     ret += 3 * augmentation_amount();
@@ -3421,6 +3443,25 @@ int player::scan_artefacts(artefact_prop_type which_property,
     }
 
     return retval;
+}
+
+/**
+ * Is the player wearing an Infusion-branded piece of armour? If so, returns
+ * how much MP they can spend per attack, depending on their available MP (or
+ * HP if they're a Djinn).
+ */
+int player::infusion_amount() const
+{
+    int cost = 0;
+    if (player_equip_unrand(UNRAND_POWER_GLOVES))
+        cost = you.has_mutation(MUT_HP_CASTING) ? 0 : 999;
+    else if (wearing_ego(EQ_GLOVES, SPARM_INFUSION))
+        cost = 2;
+
+    if (you.has_mutation(MUT_HP_CASTING))
+        return min(you.hp - 1, cost);
+    else
+        return min(you.magic_points, cost);
 }
 
 void dec_hp(int hp_loss, bool fatal, const char *aux)
@@ -3517,7 +3558,7 @@ void pay_hp(int cost)
 void pay_mp(int cost)
 {
     if (you.has_mutation(MUT_HP_CASTING))
-        you.hp -= cost;
+        pay_hp(cost);
     else
         _dec_mp(cost, true);
 }
@@ -3781,7 +3822,12 @@ int get_real_hp(bool trans, bool drained)
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
-        hitp = hitp * 3 / 2;
+    {
+        if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+            hitp *= 2;
+        else
+            hitp = hitp * 3 / 2;
+    }
 
     // Some transformations give you extra hp.
     if (trans)
@@ -5244,7 +5290,7 @@ bool player::cannot_speak() const
     if (silenced(pos()))
         return true;
 
-    if (cannot_move()) // we allow talking during sleep ;)
+    if (paralysed() || petrified()) // we allow talking during sleep ;)
         return true;
 
     // No transform that prevents the player from speaking yet.
@@ -5369,9 +5415,9 @@ bool player::paralysed() const
     return duration[DUR_PARALYSIS];
 }
 
-bool player::cannot_move() const
+bool player::cannot_act() const
 {
-    return paralysed() || petrified();
+    return asleep() || paralysed() || petrified();
 }
 
 bool player::confused() const
@@ -5926,6 +5972,9 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
 
     if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();
+
+    if (duration[DUR_FIERY_ARMOUR])
+        AC += 7 * scale;
 
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
@@ -6613,6 +6662,8 @@ void player::paralyse(const actor *who, int str, string source)
 
     stop_directly_constricting_all(false);
     end_wait_spells();
+    redraw_armour_class = true;
+    redraw_evasion = true;
 }
 
 void player::petrify(const actor *who, bool force)
@@ -6658,6 +6709,7 @@ bool player::fully_petrify(bool /*quiet*/)
 {
     duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
                         + random2(4 * BASELINE_DELAY);
+    redraw_armour_class = true;
     redraw_evasion = true;
     mpr("You have turned to stone.");
 
@@ -7096,12 +7148,6 @@ bool player::asleep() const
     return duration[DUR_SLEEP];
 }
 
-bool player::cannot_act() const
-{
-    return asleep() || cannot_move();
-}
-
-
 bool player::can_feel_fear(bool include_unknown) const
 {
     // XXX: monsters are immune to fear when berserking.
@@ -7169,6 +7215,8 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     const int dur = hibernate ? 3 + random2avg(5, 2) :
                                 5 + random2avg(power/10, 5);
     set_duration(DUR_SLEEP, dur);
+    redraw_armour_class = true;
+    redraw_evasion = true;
 }
 
 void player::awaken()
@@ -7179,6 +7227,8 @@ void player::awaken()
     set_duration(DUR_SLEEP_IMMUNITY, random_range(3, 5));
     mpr("You wake up.");
     flash_view(UA_MONSTER, BLACK);
+    redraw_armour_class = true;
+    redraw_evasion = true;
 }
 
 void player::check_awaken(int disturbance)
@@ -7195,18 +7245,18 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
     return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
-bool player::shaftable() const
+bool player::shaftable(bool check_terrain) const
 {
     return is_valid_shaft_level()
-        && feat_is_shaftable(env.grid(pos()))
+        && (!check_terrain || feat_is_shaftable(env.grid(pos())))
         && !duration[DUR_SHAFT_IMMUNITY];
 }
 
 // Used for falling into traps and other bad effects, but is a slightly
 // different effect from the player invokable ability.
-bool player::do_shaft()
+bool player::do_shaft(bool check_terrain)
 {
-    if (!shaftable())
+    if (!shaftable(check_terrain))
         return false;
 
     // Ensure altars, items, and shops discovered at the moment
@@ -8045,7 +8095,7 @@ void player_end_berserk()
 
     you.berserk_penalty = 0;
 
-    const int dur = 12 + roll_dice(2, 12);
+    int dur = 12 + roll_dice(2, 12);
     // Slow durations are multiplied by haste_mul (3/2), exhaustion lasts
     // slightly longer.
     you.increase_duration(DUR_BERSERK_COOLDOWN, dur * 2);
@@ -8054,6 +8104,8 @@ void player_end_berserk()
     const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
     Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
+    if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+        dur = div_rand_round(dur * 2, 3);
     slow_player(dur);
 
     //Un-apply Berserk's +50% Current/Max HP

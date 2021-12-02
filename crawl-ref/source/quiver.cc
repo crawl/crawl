@@ -1465,8 +1465,7 @@ namespace quiver
         {
             // hard-coded list of abilities that have a targeter
             // there is no general way of getting this?
-            // TODO: implement static targeters for relevant abilities (which
-            // is pretty much everything)
+            // TODO: convert these to use the shared ability targeting code.
             switch (ability)
             {
             case ABIL_HOP:
@@ -1482,10 +1481,18 @@ namespace quiver
             case ABIL_BREATHE_MEPHITIC:
             case ABIL_DAMNATION:
             case ABIL_ZIN_IMPRISON:
+            case ABIL_YRED_ENSLAVE_SOUL:
+            case ABIL_OKAWARU_DUEL:
             case ABIL_MAKHLEB_MINOR_DESTRUCTION:
             case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+            case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:
             case ABIL_BEOGH_SMITING:
+            case ABIL_BEOGH_GIFT_ITEM:
+            case ABIL_JIYVA_OOZEMANCY:
+            case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
+            case ABIL_FEDHAS_OVERGROW:
+            case ABIL_FEDHAS_GROW_OKLOB:
             case ABIL_DITHMENOS_SHADOW_STEP:
             case ABIL_QAZLAL_UPHEAVAL:
             case ABIL_RU_POWER_LEAP:
@@ -1500,7 +1507,7 @@ namespace quiver
 #endif
                 return true;
             default:
-                return false;
+                return bool(find_ability_targeter(ability));
             }
         }
 

@@ -102,7 +102,7 @@ spret cast_imb(int pow, bool fail);
 
 void actor_apply_toxic_bog(actor *act);
 
-vector<coord_def> find_ramparts_walls(const coord_def &center);
+vector<coord_def> find_ramparts_walls();
 spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);

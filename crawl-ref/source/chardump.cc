@@ -216,16 +216,8 @@ static void _sdump_header(dump_params &par)
 #endif
     par.text += " character file.\n\n";
 
-    if (you.fully_seeded
-#ifdef DGAMELAUNCH
-        && (par.se // for online games, show seed for a dead char
-            || you.wizard
-            || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
-#endif
-        )
-    {
+    if (you.fully_seeded && crawl_state.seed_is_known())
         par.text += seed_description() + "\n\n";
-    }
 }
 
 static void _sdump_stats(dump_params &par)

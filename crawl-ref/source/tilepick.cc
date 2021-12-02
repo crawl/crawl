@@ -3324,6 +3324,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DROP;
     case CMD_DISPLAY_MAP:
         return TILEG_CMD_DISPLAY_MAP;
+    case CMD_MAP_EXIT_MAP:
+        return TILEG_CMD_MAP_EXIT_MAP;
     case CMD_MAP_GOTO_TARGET:
         return TILEG_CMD_MAP_GOTO_TARGET;
     case CMD_MAP_NEXT_LEVEL:
@@ -3471,8 +3473,6 @@ tileidx_t tileidx_ability(const ability_type ability)
 
     // Divine abilities
     // Zin
-    case ABIL_ZIN_SUSTENANCE:
-        return TILEG_TODO;
     case ABIL_ZIN_RECITE:
         return TILEG_ABILITY_ZIN_RECITE;
     case ABIL_ZIN_VITALISATION:
@@ -3594,12 +3594,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_BEOGH_RESURRECTION:
         return TILEG_ABILITY_BEOGH_RESURRECTION;
     // Jiyva
-    case ABIL_JIYVA_CALL_JELLY:
-        return TILEG_ABILITY_JIYVA_REQUEST_JELLY;
     case ABIL_JIYVA_SLIMIFY:
         return TILEG_ABILITY_JIYVA_SLIMIFY;
-    case ABIL_JIYVA_CURE_BAD_MUTATION:
-        return TILEG_ABILITY_JIYVA_CURE_BAD_MUTATIONS;
     // Fedhas
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         return TILEG_ABILITY_FEDHAS_WALL_OF_BRIARS;
@@ -3716,8 +3712,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_WU_JIAN_HEAVENLY_STORM:
         return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
     // Ignis
-    case ABIL_IGNIS_SEA_OF_FIRE:
-        return TILEG_ABILITY_IGNIS_SEA_OF_FIRE;
+    case ABIL_IGNIS_FIERY_ARMOUR:
+        return TILEG_ABILITY_IGNIS_FIERY_ARMOUR;
     case ABIL_IGNIS_FOXFIRE:
         return TILEG_ABILITY_IGNIS_FOXFIRE;
     case ABIL_IGNIS_RISING_FLAME:

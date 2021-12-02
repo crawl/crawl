@@ -418,7 +418,6 @@ public:
     bool is_skeletal() const override;
     bool is_spiny() const;
     bool paralysed() const override;
-    bool cannot_move() const override;
     bool cannot_act() const override;
     bool confused() const override;
     bool confused_by_you() const;
@@ -534,7 +533,7 @@ public:
 
     int action_energy(energy_use_type et) const;
 
-    bool do_shaft() override;
+    bool do_shaft(bool check_terrain = true) override;
     bool has_spell_of_type(spschool discipline) const;
 
     void bind_melee_flags();

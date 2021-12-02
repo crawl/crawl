@@ -208,20 +208,19 @@ Dexterity
   effectiveness with shields, your stealth, and your effectiveness when stabbing
   unaware enemies.
 
-Attributes grow permanently from gaining levels, and may increase or decrease
-temporarily from mutations or while using certain artefacts or abilities.
+These primary attributes grow permanently from gaining levels, and may
+increase or decrease temporarily from mutations or while using certain
+artefacts or abilities. Upon gaining levels 3, 9, 15, etc., you may choose an
+attribute to raise. Most species gain additional attributes at some levels,
+with the frequency and the attribute to be increased determined by species.
 
 If any attribute drops to zero for some reason, you will experience very
 unpleasant side-effects, being slowed and suffering some stat-specific
 negative effects. These effects will persist for a short while even after the
 attribute is restored.
 
-Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
-species gain additional attributes at some levels, with the frequency and the
-attribute to be increased determined by species.
-
-Finally some additional information about your character and your progress through
-the dungeon is displayed.
+Finally some additional information about your character and your progress
+through the dungeon is displayed.
 
 Experience Level
   Abbreviated to "XL". Starting characters have experience level 1; the highest

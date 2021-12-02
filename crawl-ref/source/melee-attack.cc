@@ -531,6 +531,13 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
+        const int infusion = you.infusion_amount();
+        if (infusion)
+        {
+            pay_mp(infusion);
+            finalize_mp_cost();
+        }
+
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
@@ -546,6 +553,7 @@ bool melee_attack::handle_phase_hit()
         // the player is hit, each of them will verify their own required
         // parameters.
         do_passive_freeze();
+        do_fiery_armour_burn();
         emit_foul_stench();
     }
 
@@ -2989,6 +2997,39 @@ void melee_attack::mons_apply_attack_flavour()
     }
 }
 
+void melee_attack::do_fiery_armour_burn()
+{
+    if (!you.duration[DUR_FIERY_ARMOUR]
+        || !attacker->alive()
+        || !adjacent(you.pos(), attacker->pos()))
+    {
+        return;
+    }
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+    beam.thrower = KILL_YOU;
+
+    monster* mon = attacker->as_monster();
+
+    const int pre_ac = roll_dice(2, 4);
+    const int post_ac = attacker->apply_ac(pre_ac);
+    const int hurted = mons_adjust_flavoured(mon, beam, post_ac);
+
+    if (!hurted)
+        return;
+
+    simple_monster_message(*mon, " is burned by your cloak of flames.");
+
+    mon->hurt(&you, hurted);
+
+    if (mon->alive())
+    {
+        mon->expose_to_element(BEAM_FIRE, post_ac);
+        print_wounds(*mon);
+    }
+}
+
 void melee_attack::do_passive_freeze()
 {
     if (you.has_mutation(MUT_PASSIVE_FREEZE)
@@ -3262,7 +3303,7 @@ bool melee_attack::do_knockback(bool trample)
     if (defender->is_stationary())
         return false; // don't even print a message
 
-    if (attacker->cannot_move())
+    if (attacker->cannot_act())
         return false;
 
     const int size_diff =

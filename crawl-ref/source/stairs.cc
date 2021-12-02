@@ -20,6 +20,7 @@
 #include "dungeon.h" // place_specific_trap
 #include "env.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
@@ -711,6 +712,10 @@ void floor_transition(dungeon_feature_type how,
     you.clear_beholders();
     you.clear_fearmongers();
     dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
+    if (you.duration[DUR_OOZEMANCY])
+        jiyva_end_oozemancy();
+    if (you.duration[DUR_NOXIOUS_BOG])
+        you.duration[DUR_NOXIOUS_BOG] = 0;
 
     // Fire level-leaving trigger.
     leaving_level_now(how);

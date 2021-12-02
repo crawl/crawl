@@ -439,6 +439,16 @@ bool valid_blink_destination(const actor* moved, const coord_def& target,
     return true;
 }
 
+vector<coord_def> find_blink_targets()
+{
+    vector<coord_def> result;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+        if (valid_blink_destination(&you, *ri))
+            result.push_back(*ri);
+
+    return result;
+}
+
 bool random_near_space(const actor* victim,
                        const coord_def& origin, coord_def& target,
                        bool allow_adjacent, bool forbid_sanctuary,

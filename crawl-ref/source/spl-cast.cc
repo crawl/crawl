@@ -1150,7 +1150,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             return true;
         }
 
-        string prompt = make_stringf("The spell is %s to cast "
+        string prompt = make_stringf("The spell is %s to miscast "
                                      "(%s risk of failure)%s",
                                      fail_severity_adjs[severity],
                                      failure_rate.c_str(),
@@ -1167,50 +1167,20 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     return false;
 }
 
-static vector<coord_def> _find_blink_targets(actor *a)
-{
-    vector<coord_def> result;
-    if (!a)
-        return result;
-
-    for (radius_iterator ri(a->pos(), LOS_NO_TRANS); ri; ++ri)
-        if (valid_blink_destination(a, *ri))
-            result.push_back(*ri);
-
-    return result;
-}
 // this is a crude approximation used for the convenience UI targeter of
 // Dragon's call and Manifold Assault
-static vector<coord_def> _simple_find_all_hostiles(actor *a)
+static vector<coord_def> _simple_find_all_hostiles()
 {
     vector<coord_def> result;
-    if (!a)
-        return result;
-
-    for (monster_near_iterator mi(a->pos(), LOS_NO_TRANS); mi; ++mi)
-        if (!mons_aligned(&you, *mi) && mons_is_threatening(**mi))
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_aligned(&you, *mi)
+            && mons_is_threatening(**mi)
+            && you.can_see(**mi))
+        {
             result.push_back((*mi)->pos());
-
-    return result;
-}
-
-static bool _simple_corpse_check(const coord_def &c)
-{
-    int motions; // ???
-    return animate_remains(c, CORPSE_BODY, BEH_FRIENDLY, 1, MHITYOU, &you, "",
-                        GOD_NO_GOD, false, true, true, nullptr, &motions) > 0;
-}
-
-// XX unify with animate dead code for finding corpses
-static vector<coord_def> _simple_find_corpses(actor *a)
-{
-    vector<coord_def> result;
-    if (!a)
-        return result;
-
-    for (radius_iterator ri(a->pos(), LOS_NO_TRANS); ri; ++ri)
-        if (_simple_corpse_check(*ri))
-            result.push_back(*ri);
+        }
+    }
 
     return result;
 }
@@ -1296,7 +1266,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_MAXWELLS_COUPLING:
         return make_unique<targeter_maxwells_coupling>();
     case SPELL_FROZEN_RAMPARTS:
-        return make_unique<targeter_ramparts>(&you);
+        return make_unique<targeter_walls>(&you, find_ramparts_walls());
     case SPELL_DISPERSAL:
     case SPELL_DISJUNCTION:
     case SPELL_DAZZLING_FLASH:
@@ -1371,9 +1341,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_BATTLESPHERE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2, 0, 1);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
     case SPELL_FOXFIRE:
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1, 0, 1);
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
     // directions, so this targeter is not entirely accurate.
     case SPELL_MALIGN_GATEWAY:
@@ -1383,17 +1353,17 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ANIMATE_SKELETON:
         return make_unique<targeter_multiposition>(&you, find_animatable_skeletons(you.pos()), AFF_MAYBE);
     case SPELL_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
+        return make_unique<targeter_multiposition>(&you, simple_find_corpses(), AFF_YES);
     case SPELL_SIMULACRUM:
         return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
     case SPELL_BLINK:
-        return make_unique<targeter_multiposition>(&you, _find_blink_targets(&you));
+        return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case SPELL_MANIFOLD_ASSAULT:
-        return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles(&you));
+        return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles());
     case SPELL_SCORCH:
         return make_unique<targeter_multiposition>(&you, find_near_hostiles(range));
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
-        return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles(&you));
+        return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles());
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
     case SPELL_FLAME_WAVE:
@@ -1850,8 +1820,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
            && hitfunc
            && (target->fire_context // force static targeters when called in
                                     // "fire" mode
-               || Options.always_use_static_targeters
-               || Options.force_targeter.count(spell) > 0);
+               || Options.always_use_static_spell_targeters
+               || Options.force_spell_targeter.count(spell) > 0);
 
     if (use_targeter)
     {
@@ -2349,9 +2319,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_DEATHS_DOOR:
         return cast_deaths_door(powc, fail);
-
-    case SPELL_INVISIBILITY:
-        return cast_invisibility(powc, fail);
 
     // Escape spells.
     case SPELL_BLINK:

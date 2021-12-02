@@ -1825,6 +1825,11 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 
         if (check_validity)
         {
+            // manually skip LRD: it has setup behavior that needs to interact
+            // with the dungeon, and can get crashes/invalid memory accesses.
+            // TODO: is there a better way to handle this?
+            if (spell_cast == SPELL_LRD)
+                return true;
             bolt beam = mons_spell_beam(mons, spell_cast, 1, true);
             return beam.flavour != NUM_BEAMS;
         }
@@ -1846,6 +1851,10 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.aux_source = pbolt.name;
     else
         pbolt.aux_source.clear();
+    // Dial down damage from wands of disintegration, since
+    // disintegration beams can do large amounts of damage.
+    if (evoke && spell_cast == SPELL_MINDBURST)
+        pbolt.damage.size = pbolt.damage.size * 2 / 3;
 
     return true;
 }
@@ -2022,7 +2031,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
         // no buffing confused/paralysed mons
         if (mons->berserk_or_insane()
             || mons->confused()
-            || mons->cannot_move())
+            || mons->cannot_act())
         {
             continue;
         }

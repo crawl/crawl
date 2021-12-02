@@ -440,10 +440,10 @@ public:
 };
 
 // this is implemented a bit like multifireball, but with some tweaks
-class targeter_ramparts : public targeter_multiposition
+class targeter_walls : public targeter_multiposition
 {
 public:
-    targeter_ramparts(const actor *a);
+    targeter_walls(const actor *a, vector<coord_def> seeds);
 
     aff_type is_affected(coord_def loc) override;
     bool can_affect_walls() override { return true; }

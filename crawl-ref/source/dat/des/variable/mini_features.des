@@ -2718,6 +2718,156 @@ xp.px
 xx@xx
 ENDMAP
 
+NAME:    nicolae_concentric_dashed_squares_mild
+TAGS:    transparent extra decor luniq_nicocondashsquares
+DEPTH:   D, Depths, Elf
+SHUFFLE: DEFHJ/ZZZZZ
+SUBST:   D : cnbvx, E : cnbvx, F : cnbvx, H : cnbvx, J : cnbvx, Z : cnbvx
+MAP
+JJ.JJJ.JJJ.JJJ.JJ
+J...............J
+..HH.HHH.HHH.HH..
+J.H...........H.J
+J...FF.FFF.FF...J
+J.H.F.......F.H.J
+..H...EE.EE...H..
+J.H.F.E...E.F.H.J
+J...F...D...F...J
+J.H.F.E...E.F.H.J
+..H...EE.EE...H..
+J.H.F.......F.H.J
+J...FF.FFF.FF...J
+J.H...........H.J
+..HH.HHH.HHH.HH..
+J...............J
+JJ.JJJ.JJJ.JJJ.JJ
+ENDMAP
+
+NAME:  nicolae_concentric_dashed_squares_wild
+TAGS:  transparent extra decor luniq_nicocondashsquares
+DEPTH: D, Depths, Elf
+SUBST: D : cnbvxtGTU, E : cnbvx, F : cnbvx, H : cnbvx, J : cnbvx, K : cnbvx, \
+       L : cnbvx, M : cnbvx, N : cnbvx, O : cnbvx, P : cnbvx, Q : cnbvx, \
+       R : cnbvx, S : cnbvx, Z : cnbvx, a : cnbvx, p : cnbvx
+MAP
+FF.MMM.LLL.KKK.JJ
+F...............J
+..EE.OOO.NNN.HH..
+S.E...........H.Q
+S...FF.PPP.JJ...Q
+S.a.F.......J.Z.Q
+..a...EE.HH...Z..
+R.a.p.E...H.p.Z.R
+R...p...D...p...R
+R.Z.p.H...E.p.a.R
+..Z...HH.EE...a..
+Q.Z.J.......F.a.S
+Q...JJ.PPP.FF...S
+Q.H...........E.S
+..HH.NNN.OOO.EE..
+J...............F
+JJ.KKK.LLL.MMM.FF
+ENDMAP
+
+NAME:    nicolae_elevator_lobby_asterisk
+TAGS:    transparent decor luniq_nicolobby
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$, Snake:2-, !Snake:$, Elf:2-, !Elf:$, \
+         Crypt:2-, !Crypt:$
+SHUFFLE: FJ, DE/FH
+NSUBST:  E = 1={ / 1=}
+SHUFFLE: {}/[]/()
+SUBST:   DJ = x, F = @, H = T
+MAP
+   xDDDx
+   x...xxxFFFx
+   x.E.xxx...J
+xxxx...xxx.H.J
+x............J
+x.G........xxx
+x..........xxx
+xxxx.......xxxx
+ xxx..........x
+ xxx........G.x
+ J............x
+ J.H.xxx...xxxx
+ J...xxx.E.x
+ xFFFxxx...x
+       xDDDx
+ENDMAP
+
+NAME:    nicolae_elevator_lobby_plus
+TAGS:    transparent decor luniq_nicolobby
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$, Snake:2-, !Snake:$, Elf:2-, !Elf:$, \
+         Crypt:2-, !Crypt:$
+# Chance of X sets of real stairs (not escape hatches): 1=30%, 2=60%, 3=10%
+SHUFFLE: {}/[]/()/<>/<>, PQ/pq, RS/rs, !Z/yz, PR!/QSZ, DEF
+SUBST:   pqrsyz = ., PR! : +., QSZ : nc, D = ., E = G, F = T
+MAP
+    xxxxxx@@@xxxxxx
+    xccccc...cccccx
+    xc...c...c...cx
+    xc.(.c.F.c.}.cx
+xxxxxc...c...c...cxxxxx
+xcccccPQPc!Z!cPQPcccccx
+xc...P...R...R...P...cx
+xc.[.Q.D.S.E.S.D.Q.].cx
+xc...P...R...R...P...cx
+xcccccPQPc!Z!cPQPcccccx
+xxxxxc...c...c...cxxxxx
+    xc.{.c.F.c.).cx
+    xc...c...c...cx
+    xccccc...cccccx
+    xxxxxx@@@xxxxxx
+ENDMAP
+
+NAME:    nicolae_figureground_pulse
+TAGS:    transparent decor
+DEPTH:   D, Depths
+SHUFFLE: x.
+MAP
+          ....x....
+         ....xxx....
+        ....xxxxx....
+     ....x.xxxxxxx.x....
+........xxxxxxxxxxxxx........
+.....x.xxxxxxxxxxxxxxx.x.....
+..x.xxxxxxxxxxxxxxxxxxxxx.x..
+.xxxxxxxxxxxxxxxxxxxxxxxxxxx.
+..x.xxxxxxxxxxxxxxxxxxxxx.x..
+.....x.xxxxxxxxxxxxxxx.x.....
+........xxxxxxxxxxxxx........
+     ....x.xxxxxxx.x....
+        ....xxxxx....
+         ....xxx....
+          ....x....
+ENDMAP
+
+NAME:    nicolae_figureground_sparkle
+TAGS:    transparent decor
+DEPTH:   D, Depths
+SHUFFLE: x.
+MAP
+       ..x..
+      ..xxx..
+     ....x....
+    ....xxx....
+   ....xxxxx....
+  ......xxx......
+ ......xxxxx......
+....x.xxxxxxx.x....
+.x.xxxxxxxxxxxxx.x.
+xxxxxxxxxxxxxxxxxxx
+.x.xxxxxxxxxxxxx.x.
+....x.xxxxxxx.x....
+ ......xxxxx......
+  ......xxx......
+   ....xxxxx....
+    ....xxx....
+     ....x....
+      ..xxx..
+       ..x..
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

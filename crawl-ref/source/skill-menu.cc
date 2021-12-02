@@ -1122,6 +1122,9 @@ void SkillMenu::toggle(skill_menu_switch sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
+        // TODO: these are probably now redundant
+        Options.default_manual_training = !you.auto_training;
+        Options.prefs_dirty = true;
 
         // Switch the skill train state with the saved version.
         tmp = you.train;

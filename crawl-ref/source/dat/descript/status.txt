@@ -635,8 +635,14 @@ Ray status
 You are currently channelling a ray of searing magical energy. Pressing . will
 maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
 including recasting the spell, will end it.
+%%%%
+Ray+ status
 
-# XXX: also cover Ray+, Ray++?
+<Ray status>
+%%%%
+Ray++ status
+
+<Ray status>
 %%%%
 Lash status
 
@@ -754,4 +760,37 @@ You are unstable and cannot cast Blink or activate evoked blink abilities
 for a short period of time. Powerful sources of translocation magic such as
 scrolls of blinking ignore this limitation, as do external sources of blinking
 outside of your control.
+%%%%
+-Bbolt status
+
+You are recovering from becoming lightning, and are unable to blinkbolt again
+for a short duration.
+%%%%
+Charge- status
+
+You are currently channeling electrical charge. Pressing . will
+maintain and continue this process until it discharges; any other action,
+including recasting the spell, will dissipate the charge harmlessly.
+%%%%
+Charge/ status
+
+<Charge- status>
+%%%%
+Charge\ status
+
+<Charge- status>
+%%%%
+Charge| status
+
+<Charge- status>
+%%%%
+Wave status
+
+You are currently channeling a wave of flames. Pressing . will
+maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
+including recasting the spell, will end it.
+%%%%
+Wave+ status
+
+<Wave status>
 %%%%

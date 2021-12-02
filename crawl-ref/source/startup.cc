@@ -311,10 +311,6 @@ static void _post_init(bool newc)
         save_level(level_id::current());
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    // Debug compiles display a lot of "hidden" information, so we auto-wiz.
-    you.wizard = true;
-#endif
 #ifdef WIZARD
     // Save-less games are pointless except for tests.
     if (Options.no_save)
@@ -344,6 +340,7 @@ static void _post_init(bool newc)
 
     read_init_file(true);
     Options.fixup_options();
+    read_startup_prefs();
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);

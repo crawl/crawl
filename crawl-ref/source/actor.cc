@@ -969,14 +969,19 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         const string othername = other->name(DESC_A, true);
         if (other->alive() && !god_prot_other)
         {
-            other->hurt(agent, other->apply_ac(damage.roll()),
-                        BEAM_MISSILE, KILLED_BY_COLLISION,
+            const int dam = other->apply_ac(damage.roll());
+            other->hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
                         othername, thisname);
+            if (dam && other->is_monster())
+                print_wounds(*other->as_monster());
         }
         if (alive() && !god_prot)
         {
-            hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-                 KILLED_BY_COLLISION, thisname, othername);
+            const int dam = apply_ac(damage.roll());
+            hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
+                 thisname, othername);
+            if (dam && is_monster())
+                print_wounds(*as_monster());
         }
         return;
     }
@@ -1004,8 +1009,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 
     if (!god_prot)
     {
-        hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-             KILLED_BY_COLLISION, "", feature_description_at(newpos));
+        const int dam = apply_ac(damage.roll());
+        hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
+             "", feature_description_at(newpos));
+        if (dam && is_monster())
+            print_wounds(*as_monster());
     }
 }
 

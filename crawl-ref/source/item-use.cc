@@ -2085,14 +2085,6 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
     equip_item(hand_used, item_slot);
 
     check_item_hint(you.inv[item_slot], old_talents);
-#ifdef USE_TILE_LOCAL
-    if (your_talents(false).size() != old_talents)
-    {
-        tiles.layout_statcol();
-        redraw_screen();
-        update_screen();
-    }
-#endif
 
     // Putting on jewellery is fast.
     you.time_taken /= 2;

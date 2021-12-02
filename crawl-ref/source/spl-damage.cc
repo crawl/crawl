@@ -3754,10 +3754,10 @@ void actor_apply_toxic_bog(actor * act)
     }
 }
 
-vector<coord_def> find_ramparts_walls(const coord_def &center)
+vector<coord_def> find_ramparts_walls()
 {
     vector<coord_def> wall_locs;
-    for (radius_iterator ri(center,
+    for (radius_iterator ri(you.pos(),
             spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
                                                         LOS_NO_TRANS, true);
         ri; ++ri)
@@ -3772,15 +3772,15 @@ vector<coord_def> find_ramparts_walls(const coord_def &center)
 /**
  * Cast Frozen Ramparts
  *
- * @param caster The caster.
  * @param pow    The spell power.
  * @param fail   Did this spell miscast? If true, abort the cast.
- * @return       spret::fail if one could be found but we miscast, and
+ * @return       spret::abort if no affectable walls could be found,
+ *               spret::fail if one could be found but we miscast, and
  *               spret::success if the spell was successfully cast.
 */
 spret cast_frozen_ramparts(int pow, bool fail)
 {
-    vector<coord_def> wall_locs = find_ramparts_walls(you.pos());
+    vector<coord_def> wall_locs = find_ramparts_walls();
 
     if (wall_locs.empty())
     {
@@ -4005,26 +4005,22 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow)
     vector<coord_def> bog_locs;
     const int radius = spell_range(SPELL_NOXIOUS_BOG, pow, false);
 
-    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS, true); ri;
-            ri++)
+    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS); ri; ri++)
     {
         if (!feat_has_solid_floor(env.grid(*ri)))
             continue;
 
-        // If a candidate cell is next to a solid feature, we can't bog it.
-        // Additionally, if it's next to a cell we can't currently see, we
-        // can't bog it, regardless of what the cell contains. Don't want to
-        // leak information about out-of-los cells.
-        bool valid = true;
+        // If a candidate cell is next to more than one solid feature, we can't
+        // bog it. Cells we can't currently see are also considered solid,
+        // regardless of what the cell contains. Don't want to leak information
+        // about out-of-los cells.
+        int walls = 0;
         for (adjacent_iterator ai(*ri); ai; ai++)
         {
             if (!you.see_cell(*ai) || feat_is_solid(env.grid(*ai)))
-            {
-                valid = false;
-                break;
-            }
+                walls++;
         }
-        if (valid)
+        if (walls <= 1)
             bog_locs.push_back(*ri);
     }
 

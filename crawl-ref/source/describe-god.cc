@@ -850,20 +850,21 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
     }
 
-    case GOD_JIYVA:
-        have_any = true;
-        if (have_passive(passive_t::slime_hp))
-            desc.cprintf("You gain magic and health when your fellow slimes consume items.\n");
-        else if (have_passive(passive_t::slime_mp))
-            desc.cprintf("You gain magic when your fellow slimes consume items.\n");
-        else
-            desc.cprintf("Your fellow slimes can consume items.\n");
-
-        break;
-
     case GOD_FEDHAS:
         have_any = true;
         desc.cprintf("You can walk through plants and fire through allied plants.\n");
+        break;
+
+    case GOD_JIYVA:
+        have_any = true;
+        if (!have_passive(passive_t::jelly_regen))
+            desc.textcolour(DARKGREY);
+        else
+            desc.textcolour(god_colour(which_god));
+        desc.cprintf("Your health and magic regeneration is %saccelerated.\n",
+                     piety >= piety_breakpoint(5) ? "very greatly " :
+                     piety >= piety_breakpoint(3) ? "greatly " :
+                                                    "");
         break;
 
     case GOD_CHEIBRIADOS:

@@ -322,7 +322,10 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     }
 
     if (!orc->alive())
-        orc->hit_points = min(random_range(1, 4), orc->max_hit_points);
+    {
+        orc->hit_points = max(1, random_range(orc->max_hit_points / 5,
+                                              orc->max_hit_points * 2 / 5));
+    }
 
     mons_make_god_gift(*orc, GOD_BEOGH);
     add_companion(orc);
@@ -422,7 +425,7 @@ void gozag_check_bribe(monster* traitor)
     if (branch_bribe[branch] == 0)
         return; // Do nothing if branch isn't currently bribed.
 
-    const int base_cost = max(1, exper_value(*traitor) / 20);
+    const int base_cost = max(1, exper_value(*traitor, true, true) / 20);
 
     int cost = 0;
 

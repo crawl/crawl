@@ -878,12 +878,20 @@ void slime_wall_damage(actor* act, int delay)
              attack_strength_punctuation(dam).c_str());
         ouch(dam, KILLED_BY_ACID, MID_NOBODY);
     }
-    else if (dam > 0 && you.can_see(*act))
+    else if (dam > 0 && you.see_cell_no_trans(act->pos()))
     {
+        const actor *agent = you.duration[DUR_OOZEMANCY] ? &you : nullptr;
         const char *verb = act->is_icy() ? "melt" : "burn";
         mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
               verb, act->name(DESC_THE).c_str());
-        act->hurt(nullptr, dam, BEAM_ACID);
+        act->hurt(agent, dam, BEAM_ACID);
+        if (act->alive())
+        {
+            if (agent)
+                behaviour_event(act->as_monster(), ME_WHACK, agent, agent->pos());
+            else
+                behaviour_event(act->as_monster(), ME_DISTURB, 0, act->pos());
+        }
     }
 }
 
@@ -2063,9 +2071,10 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 
             // Don't revert sealed doors to normal doors if we're trying to
             // remove the door altogether
-            // Same for destroyed trees
+            // Same for destroyed trees and slime walls
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-                || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
+                || tmarker->change_type == TERRAIN_CHANGE_FORESTED
+                || tmarker->change_type == TERRAIN_CHANGE_SLIME)
                 && newfeat == feat)
             {
                 env.markers.remove(tmarker);

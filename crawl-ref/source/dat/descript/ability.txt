@@ -508,18 +508,15 @@ second you departed. Invocations skill increases the amount of time that passes
 while you're gone.
 %%%%
 # Jiyva
-Request Jelly ability
-
-Creates a neutral jelly that will wander the floor and digest items.
-%%%%
 Slimify ability
 
 Coats a wielded weapon or your fists with slime, turning the next living or
 corporeal undead monster hit into a neutral slime.
 %%%%
-Cure Bad Mutation ability
+Oozemancy ability
 
-Removes a randomly selected bad mutation.
+Calls forth acidic ooze from the walls of the dungeon around you, damaging foes
+depending on the number of affected walls they remain adjacent to.
 %%%%
 # Ashenzari
 Curse Item ability
@@ -802,16 +799,17 @@ with martial attacks increases this bonus. The storm weakens over time and
 fades away once the bonus reaches zero. The heavenly clouds prevent
 invisibility, and obscure the vision of those outside the storm.
 %%%%
+Fiery Armour ability
+
+Armour yourself in fire, burning up some incoming attacks and searing foes
+foolish enough to strike you in melee. This armour lasts quite a long time
+before finally burning out.
+%%%%
 Foxfire Swarm ability
 
 Conjures a swarm of animate flames all around you. These rapidly seek the
 nearest monsters, burning them. They will dissipate harmlessly if unable to
 reach a target or if you swap places with them.
-%%%%
-Sea of Fire ability
-
-Fills your surroundings with burning coals which, if not immediately stamped
-out, burst into raging flames.
 %%%%
 Rising Flame ability
 

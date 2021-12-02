@@ -25,6 +25,7 @@ cast_spell CMD_CAST_SPELL
 memorise CMD_MEMORISE_SPELL
 drop CMD_DROP
 display_map CMD_DISPLAY_MAP
+display_map CMD_MAP_EXIT_MAP
 goto_target CMD_MAP_GOTO_TARGET
 prev_level CMD_MAP_PREV_LEVEL
 next_level CMD_MAP_NEXT_LEVEL

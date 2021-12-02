@@ -323,7 +323,6 @@ public:
     virtual int  dragon_level() const;
 
     virtual bool paralysed() const = 0;
-    virtual bool cannot_move() const = 0;
     virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
@@ -360,7 +359,7 @@ public:
 
     virtual bool incapacitated() const
     {
-        return cannot_move()
+        return cannot_act()
             || asleep()
             || confused()
             || caught();
@@ -374,7 +373,7 @@ public:
 
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;
-    virtual bool     do_shaft() = 0;
+    virtual bool     do_shaft(bool check_terrain = true) = 0;
 
     coord_def position;
 
