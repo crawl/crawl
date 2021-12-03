@@ -250,8 +250,9 @@ struct message_line
         {
             if (!text.empty())
             {
-                text += make_stringf("<lightgrey>%s </lightgrey>",
-                                     needs_semicolon ? ";" : "");
+                text += "<lightgrey>";
+                text += localise(needs_semicolon ? "; " : " ");
+                text += "</lightgrey>";
             }
             text += msg.with_repeats();
             needs_semicolon = msg.needs_semicolon();
@@ -749,12 +750,16 @@ public:
             textcolour(channel_to_colour(MSGCH_PROMPT));
             if (crawl_state.game_is_hints())
             {
-                string more_str = "--more-- Press Space ";
+                string more_str;
                 if (is_tiles())
-                    more_str += "or click ";
-                more_str += "to continue. You can later reread messages with "
-                            "Ctrl-P.";
-                cprintf(localise(more_str).c_str());
+                    more_str = "--more-- Press Space or click to continue.";
+                else
+                    more_str = "--more-- Press Space to continue.";
+
+                more_str = localise(more_str) + localise(" ");
+                more_str += localise("You can later reread messages with "
+                                     "Ctrl-P.");
+                cprintf(more_str.c_str());
             }
             else
                 cprintf(localise("--more--").c_str());
@@ -1675,7 +1680,8 @@ void msgwin_reply(string reply)
     msgwin_clear_temporary();
     msgwin_set_temporary(false);
     reply = replace_all(reply, "<", "<<");
-    mprf(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>", _prompt.c_str(), reply.c_str());
+    mprf(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>", // noloc
+         _prompt.c_str(), reply.c_str());
     msgwin.got_input();
 }
 
@@ -2000,8 +2006,10 @@ void canned_msg(canned_message_type which_message)
     switch (which_message)
     {
         case MSG_SOMETHING_APPEARS:
-            mprf("Something appears %s!",
-                 player_has_feet() ? "at your feet" : "before you");
+            if (player_has_feet())
+                mpr("Something appears at your feet!");
+            else
+                mpr("Something appears before you!");
             break;
         case MSG_NOTHING_HAPPENS:
             mpr("Nothing appears to happen.");
@@ -2061,16 +2069,28 @@ void canned_msg(canned_message_type which_message)
         case MSG_EMPTY_HANDED_ALREADY:
         case MSG_EMPTY_HANDED_NOW:
         {
-            const char* when =
-            (which_message == MSG_EMPTY_HANDED_ALREADY ? "already" : "now");
-            if (you.has_mutation(MUT_NO_GRASPING))
-                mprf("Your mouth is %s empty.", when);
-            else if (you.has_usable_claws(true))
-                mprf("You are %s empty-clawed.", when);
-            else if (you.has_usable_tentacles(true))
-                mprf("You are %s empty-tentacled.", when);
+            if (which_message == MSG_EMPTY_HANDED_ALREADY)
+            {
+                if (you.has_mutation(MUT_NO_GRASPING))
+                    mpr("Your mouth is already empty.");
+                else if (you.has_usable_claws(true))
+                    mpr("You are already empty-clawed.");
+                else if (you.has_usable_tentacles(true))
+                    mpr("You are already empty-tentacled.");
+                else
+                    mpr("You are already empty-handed.");
+            }
             else
-                mprf("You are %s empty-handed.", when);
+            {
+                if (you.has_mutation(MUT_NO_GRASPING))
+                    mpr("Your mouth is now empty.");
+                else if (you.has_usable_claws(true))
+                    mpr("You are now empty-clawed.");
+                else if (you.has_usable_tentacles(true))
+                    mpr("You are now empty-tentacled.");
+                else
+                    mpr("You are now empty-handed.");
+            }
             break;
         }
         case MSG_YOU_BLINK:

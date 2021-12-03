@@ -340,6 +340,8 @@ for filename in files:
                     continue
                 if re.match(r'^\s*key[A-Za-z_]*\.[A-Za-z_]*\(', line):
                     continue
+                if re.search(r'set_sync_id\s*\(', line):
+                    continue
 
                 # just a find
                 if re.search(r'\bstrstr\s*\(', line):

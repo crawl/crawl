@@ -17237,37 +17237,25 @@ Ups, Hit Overflow
 ##################
 %%%%
 " x%d"
-
+" x%d"
 %%%%
-<lightgrey>%s </lightgrey>
-
+--more-- Press Space or click to continue.
+--mehr-- Die Leertaste drücken oder klicken, um fortzufahren.
 %%%%
-"--more-- Press Space "
-
+--more-- Press Space to continue.
+--mehr-- Die Leertaste drücken, um fortzufahren.
 %%%%
-"or click "
-
-%%%%
-to continue. You can later reread messages with Ctrl-P.
-
+You can later reread messages with Ctrl-P.
+Ihr könnt die Nachrichten später mit Strg-P erneut lesen.
 %%%%
 --more--
 --mehr--
 %%%%
-%s<lightgrey>%s</lightgrey>
-
+Something appears at your feet!
+Etwas erscheint zu Euren Füßen!
 %%%%
-input
-
-%%%%
-Something appears %s!
-
-%%%%
-at your feet
-
-%%%%
-before you
-
+Something appears before you!
+Etwas erscheint vor Euch!
 %%%%
 Nothing appears to happen.
 Nichts scheint zu passieren.
@@ -17299,23 +17287,29 @@ Der Zauber scheitert.
 Huh?
 Hä?
 %%%%
-already
-
+Your mouth is already empty.
+Euer Mund ist schon leer.
 %%%%
-now
-
+You are already empty-clawed.
+Eure Krallen sind schon leer.
 %%%%
-Your mouth is %s empty.
-
+You are already empty-tentacled.
+Eure Tentakel sind schon leer.
 %%%%
-You are %s empty-clawed.
-
+You are already empty-handed.
+Eure Hände sind schon leer.
 %%%%
-You are %s empty-tentacled.
-
+Your mouth is now empty.
+Euer Mund ist jetzt leer.
 %%%%
-You are %s empty-handed.
-
+You are now empty-clawed.
+Eure Krallen sind jetzt leer.
+%%%%
+You are now empty-tentacled.
+Eure Tentakel sind jetzt leer.
+%%%%
+You are now empty-handed.
+Eure Hände sind jetzt leer.
 %%%%
 You blink.
 Ihr flimmert.
@@ -17366,7 +17360,7 @@ You feel your power returning.
 Ihr fühlt, dass Eure Kraft zurückkehrt.
 %%%%
 You feel momentarily drained.
-
+Ihr fühlt Euch kurzzeitig ausgelaugt.
 %%%%
 You suddenly feel drained of magical energy!
 Ihr fühlt Euch plötzlich von magischer Energie erschöpft!
@@ -17375,10 +17369,10 @@ Your god isn't willing to do this for you now.
 Euer Gott ist nicht bereit, das jetzt für Euch zu tun.
 %%%%
 The Council
-
+Das Konzil
 %%%%
 Sifu %s says: %s
-
+Sifu %s sagt: %s
 %%%%
 
 ##################
@@ -23375,12 +23369,6 @@ Trunk games don't count for the tournament, you want %s.
 " Play trunk anyway? (Y/N)"
 
 %%%%
-btn-clear
-
-%%%%
-btn-daily
-
-%%%%
 \nPress [p] or [ctrl-v] to paste a seed from the clipboard\n(overwriting the current value).\n
 
 %%%%
@@ -23388,12 +23376,6 @@ btn-daily
 
 %%%%
 Warning: your build of crawl does not support stable seeding!\nLevels may differ from 'official' seeded games.\n
-
-%%%%
-pregenerate
-
-%%%%
-btn-begin
 
 %%%%
 Seeded play
