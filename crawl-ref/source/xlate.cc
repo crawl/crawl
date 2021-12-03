@@ -1,8 +1,8 @@
 /**
  * @file  xlate.cc
  * @brief Low-level translation routines.
- * This implementation uses gnu gettext, but references to gettext are deliberately kept
- * within this file to allow easy change to a different implementation.
+ * This works similarly to gnu gettext, except that it uses plain text files
+ * (so there's no need to compile .po to .mo every time you change some text).
  **/
 
 #include "AppHdr.h"
@@ -17,15 +17,15 @@ using namespace std;
 #ifdef NO_TRANSLATE
 //// compile without translation logic ////
 
-string cxlate(const string &context, const string &msgid)
+string cxlate(const string &context, const string &text_en)
 {
-    return msgid;
+    return text_en;
 }
 
 string cnxlate(const string &context,
-        const string &msgid1, const string &msgid2, unsigned long n)
+        const string &singular_en, const string &plural_en, unsigned long n)
 {
-    return (n == 1 ? msgid1 : msgid2);
+    return (n == 1 ? singular_en : plural_en);
 }
 
 #else
@@ -44,13 +44,13 @@ const string exp_end = "))";
 // context = the context in which the text is being used (optional, default=none)
 //  (for disambiguating same English text used in different contexts which may require different translations)
 //  if no translation is found in the specified context, will look for translation at global (no) context
-// msgid = English text to be translated
+// text_en = English text to be translated
 // fallback_en = fall back to English if no translation is found?
-string cxlate(const string &context, const string &msgid, bool fallback_en)
+string cxlate(const string &context, const string &text_en, bool fallback_en)
 {
-    if (msgid.empty())
+    if (text_en.empty())
     {
-        return msgid;
+        return text_en;
     }
 
     string translation;
@@ -58,18 +58,18 @@ string cxlate(const string &context, const string &msgid, bool fallback_en)
     if (!context.empty())
     {
         // check for translation in specific context
-        string ctx_msgid = string("{") + context + "}" + msgid;
-        translation = getTranslatedString(ctx_msgid);
+        string ctx_text_en = string("{") + context + "}" + text_en;
+        translation = getTranslatedString(ctx_text_en);
     }
 
     if (translation.empty())
     {
         // check for translation in global context
-        translation = getTranslatedString(msgid);
+        translation = getTranslatedString(text_en);
     }
 
     if (translation.empty() && fallback_en)
-        return msgid;
+        return text_en;
     else
         return translation;
 }
@@ -80,31 +80,32 @@ string cxlate(const string &context, const string &msgid, bool fallback_en)
 // context = the context in which the text is being used (optional, default=none)
 //  (for disambiguating same English text used in different contexts which may require different translations)
 //  if no translation is found in the specified context, will look for translation at global (no) context
-// msgid1 = English singular text
-// msgid2 = English plural text
+// singular_en = English singular text
+// plural_en = English plural text
 // n = the count of whatever it is
 string cnxlate(const string &context,
-        const string &msgid1, const string &msgid2, unsigned long n)
+        const string &singular_en, const string &plural_en, unsigned long n)
 {
-    if (msgid1.empty() || msgid2.empty())
-    {
-        // apply English rules
-        return (n == 1 ? msgid1 : msgid2);
-    }
-
     if (n == 1)
     {
-        return cxlate(context, msgid1);
+        // translate English singular form
+        return cxlate(context, singular_en);
     }
     else
     {
-        string result = cxlate(context, msgid2);
+        // translate English plural form
+        string result = cxlate(context, plural_en);
 
+        // if the target language has multiple plural forms,
+        // there will be an embedded expression for choosing the right one
         if (result.substr(0, exp_start.length()) != exp_start)
-            // single plural form
+        {
+            // target language has only one plural form
            return result;
+        }
 
-        // pass in the value of n. Surely there's a better way to do this.
+        // Pass in the value of n to the experssion. 
+        // Surely there's a better way to do this.
         string lua_prefix = make_stringf("n=%ld\nreturn ", n);
 
         vector<string> lines = split_string("\n", result, false, false);
@@ -136,7 +137,7 @@ string cnxlate(const string &context,
             }
         }
 
-        return msgid2;
+        return plural_en;
     }
 }
 
