@@ -2452,22 +2452,15 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
-        {
-            int power = you.experience_level;
-
-            if (you.form == transformation::dragon)
-                power += 12;
-
-            string msg = "You breathe a blast of fire";
-            msg += (power < 15) ? '.' : '!';
-
-            if (zapping(ZAP_BREATHE_FIRE, power, beam, true, msg.c_str())
+            if (zapping(ZAP_BREATHE_FIRE,
+                        you.form == transformation::dragon
+                            ? 2 * you.experience_level : you.experience_level,
+                        beam, true, "You breathe a blast of fire.")
                 == spret::abort)
             {
                 return spret::abort;
             }
             break;
-        }
 
         case ABIL_BREATHE_FROST:
             if (zapping(ZAP_BREATHE_FROST,
