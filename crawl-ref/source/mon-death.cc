@@ -685,12 +685,11 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
-    // Damage by permanent divine allies (Beogh orcs and Yredelemnul gifts)
-    // counts for half experience. Hepliaklqana ancestors and all other allies
-    // grant full experience.
+    // Damage by Beogh orcs counts for half experience. Hepliaklqana ancestors
+    // and all other allies grant full experience.
     if (!invalid_monster_index(killer)
         && env.mons[killer].is_divine_companion()
-        && !mons_is_hepliaklqana_ancestor(env.mons[killer].type))
+        && env.mons[killer].god == GOD_BEOGH)
     {
         return 1;
     }
