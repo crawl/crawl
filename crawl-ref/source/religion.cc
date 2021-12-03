@@ -1037,6 +1037,55 @@ bool yred_random_servant(unsigned int pow, bool force_hostile)
     return create_monster(mg);
 }
 
+bool yred_reap_chance()
+{
+    return coinflip() || (you.faith() && one_chance_in(3));
+}
+
+// When under penance or after removing faith,
+// Yredelemnulites can lose many nearby undead slaves.
+bool yred_reclaim_souls()
+{
+    int num_reclaim = 0;
+    int num_slaves = 0;
+
+    // no hiding them in a closet to take of faith halfway through a level
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_enslaved_soul(**mi))
+        {
+            continue;
+        }
+
+        num_slaves++;
+        const int hd = mi->get_hit_dice();
+
+        // the player gets to keep a few, particularly weaklings,
+        // but always loses at least one
+        if (num_reclaim > 0 && (one_chance_in(num_slaves) || random2(20) < hd))
+            continue;
+
+        monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+
+        num_reclaim++;
+    }
+
+    if (num_reclaim > 0)
+    {
+        if (num_reclaim == 1 && num_slaves > 1)
+            simple_god_message(" reclaims one of your reaped souls!");
+        else if (num_reclaim == num_slaves)
+            simple_god_message(" reclaims your reaped souls!");
+        else
+            simple_god_message(" reclaims some of your reaped souls!");
+        return true;
+    }
+
+    // Nothing to reclaim, apply other punishments for penance.
+    return false;
+}
+
 bool pay_yred_souls(unsigned int how_many, bool just_check)
 {
     vector<monster *> selected;

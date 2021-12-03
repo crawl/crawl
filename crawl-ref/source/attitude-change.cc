@@ -147,51 +147,6 @@ void make_god_gifts_disappear()
     }
 }
 
-// When under penance, Yredelemnulites can lose all nearby undead slaves.
-bool yred_slaves_abandon_you()
-{
-    int num_reclaim = 0;
-    int num_slaves = 0;
-
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-    {
-        monster* mons = monster_at(*ri);
-        if (mons == nullptr)
-            continue;
-
-        if (is_yred_undead_slave(*mons))
-        {
-            num_slaves++;
-
-            const int hd = mons->get_experience_level();
-
-            // During penance, followers get a saving throw.
-            if (random2(20) > random2(hd))
-                continue;
-
-            mons->attitude = ATT_HOSTILE;
-            behaviour_event(mons, ME_ALERT, &you);
-            // For now CREATED_FRIENDLY stays.
-            mons_att_changed(mons);
-
-            num_reclaim++;
-        }
-    }
-
-    if (num_reclaim > 0)
-    {
-        if (num_reclaim == 1 && num_slaves > 1)
-            simple_god_message(" reclaims one of your granted undead slaves!");
-        else if (num_reclaim == num_slaves)
-            simple_god_message(" reclaims your granted undead slaves!");
-        else
-            simple_god_message(" reclaims some of your granted undead slaves!");
-        return true;
-    }
-
-    return false;
-}
-
 // When under penance, Beoghites can lose all nearby orcish followers,
 // subject to a few limitations.
 bool beogh_followers_abandon_you()

@@ -691,7 +691,7 @@ static bool _yredelemnul_retribution()
 
     if (coinflip())
     {
-        if (you_worship(god) && coinflip() && yred_slaves_abandon_you())
+        if (you_worship(god) && coinflip() && yred_reclaim_souls())
             ;
         else
         {

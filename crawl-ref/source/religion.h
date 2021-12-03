@@ -122,6 +122,8 @@ void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
 
 bool yred_random_servant(unsigned int threshold, bool force_hostile = false);
+bool yred_reap_chance();
+bool yred_reclaim_souls();
 bool pay_yred_souls(unsigned int how_many, bool just_check = false);
 bool is_yred_undead_slave(const monster& mon);
 bool is_orcish_follower(const monster& mon);
