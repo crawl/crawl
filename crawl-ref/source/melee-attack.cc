@@ -2383,6 +2383,8 @@ string melee_attack::mons_attack_desc()
         ret = mons_attack_message();
     }
 
+    ret = localise(ret, atk_name(DESC_THE), def_name(DESC_THE));
+
     if (weapon && !mons_class_is_animated_weapon(attacker->type))
         ret += localise(" with %s", weapon->name(DESC_A));
 
