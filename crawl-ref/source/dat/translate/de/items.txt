@@ -3139,7 +3139,7 @@ book of Battle
 Buch der Schlacht
 %%%%
 book of Vapours
-Buch des Dampfes
+Buch der Dämpfe
 %%%%
 book of Necromancy
 Buch der Nekromantie
@@ -3330,7 +3330,7 @@ a book of Battle
 ein Buch der Schlacht
 %%%%
 a book of Vapours
-ein Buch des Dampfes
+ein Buch der Dämpfe
 %%%%
 a book of Necromancy
 ein Buch der Nekromantie
