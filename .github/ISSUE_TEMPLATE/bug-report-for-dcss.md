@@ -8,7 +8,8 @@ assignees: ''
 ---
 
 <!-- When reporting a dcss bug, please include answers to the following
-    questions, replacing or deleting the text between &lt;!-- and --&gt; -->
+    questions, replacing or deleting the text between angle-bracketed comments
+    like this one. -->
 
 **PLATFORM and OS or BROWSER:**
 <!-- e.g. "local tiles", "webtiles", or "console". Putting this in the labels
