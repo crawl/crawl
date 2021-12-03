@@ -1540,8 +1540,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_pluses && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
-        if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
+        if ((item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
+            && !is_unrandom_artefact(*this, UNRAND_POWER_GLOVES))
+        {
             buff << "pair of ";
+        }
 
         if (is_artefact(*this) && !dbname)
         {
