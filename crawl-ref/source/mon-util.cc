@@ -1690,7 +1690,7 @@ bool mons_can_be_spectralised(const monster& mon)
 
 bool mons_class_can_use_stairs(monster_type mc)
 {
-    return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
+    return !mons_class_is_zombified(mc)
            && !mons_is_tentacle_or_tentacle_segment(mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
@@ -1706,6 +1706,11 @@ bool mons_class_can_use_transporter(monster_type mc)
 
 bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
 {
+    // Always ok, comes before mc check because other specters cannot
+    // take stairs
+    if (mons_enslaved_soul(mon))
+        return true;
+
     if (!mons_class_can_use_stairs(mon.type))
         return false;
 
