@@ -743,6 +743,7 @@ static void _dreamshard_summon_ally()
     monster* m = create_monster(mg);
     auto smoke = random_smoke_type();
     surround_actor_with_cloud(m, smoke);
+    mprf("The dream spectre morphs into %s.",m->name(DESC_A).c_str());
 }
 
 /**
@@ -801,7 +802,6 @@ static void _dreamshard_do_visual_square(const coord_def &c, colour_t colour)
 
     if (roll < recolour_perc_chance && _dreamshard_can_colour_square(c))
         {
-                mpr("doing tile recolour");
                 dungeon_feature_type feat = env.grid(c);
                 env.grid_colours(c) = colour;
 
@@ -893,9 +893,9 @@ static void _maybe_dream_heal()
     else
     {
         int sumcount2 = 2 + random2(4);
+        mprf("%d dream spectres charge to your aid!",sumcount2);
         for (int sumcount = 0; sumcount < sumcount2; ++sumcount)
             _dreamshard_summon_ally();
-        mpr("A troupe from your wildest dreams charges to your aid!");
     }
 
     // STEP THREE: destroy the necklace
