@@ -1692,8 +1692,7 @@ bool yred_can_enslave_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon)
            && !mons_enslaved_body_and_soul(*mon)
-           && mon->attitude != ATT_FRIENDLY
-           && mons_intel(*mon) >= I_HUMAN;
+           && mon->attitude != ATT_FRIENDLY;
 }
 
 void yred_make_enslaved_soul(monster* mon, bool force_hostile)
