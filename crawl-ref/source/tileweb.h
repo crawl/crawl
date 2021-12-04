@@ -217,6 +217,7 @@ public:
 
     void send_doll(const dolls_data &doll, bool submerged, bool ghost);
     void send_milestone(const xlog_fields &xl);
+    void send_options();
 
 protected:
     int m_sock;
@@ -309,7 +310,6 @@ protected:
     player_info m_current_player_info;
 
     void _send_version();
-    void _send_options();
     void _send_layout();
 
     void _send_everything();
