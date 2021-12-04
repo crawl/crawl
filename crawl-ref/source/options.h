@@ -291,6 +291,7 @@ public:
     vector<object_class_type> consumables_panel;   // types of items to show on the panel
     vector<text_pattern> consumables_panel_filter; // what should be filtered out
     bool        show_unidentified_consumables; // whether to show unidentified items
+    bool        consumables_panel_show;
     int         consumables_panel_scale;       // the scale factor for resizing the panel
     string      consumables_panel_orientation; // whether to place the panel horizontally
     string      consumables_panel_font_family; // font used to display the quantities

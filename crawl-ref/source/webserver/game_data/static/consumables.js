@@ -14,12 +14,32 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     var font; // cached font name for the canvas: size (in px) + family
     var selected = -1;
 
-    function hide_consumables()
+    function send_options()
+    {
+        options.set("consumables_panel_orientation", orientation, false);
+        options.set("consumables_panel_show", !minimized, false);
+        options.send("consumables_panel_orientation");
+        options.send("consumables_panel_show");
+    }
+
+    function hide_consumables(send_opts=true)
     {
         $("#consumables-settings").hide();
         $("#consumables").addClass("hidden");
         $("#consumables-placeholder").removeClass("hidden").show();
         minimized = true;
+        if (send_opts)
+            send_options();
+    }
+
+    function show_consumables(send_opts=true)
+    {
+        $("#consumables-settings").hide(); // sanitize
+        $("#consumables").removeClass("hidden");
+        $("#consumables-placeholder").addClass("hidden");
+        minimized = false;
+        if (send_opts)
+            send_options();
     }
 
     function show_settings(e)
@@ -134,22 +154,20 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
                 var input = e.target;
                 if (input.type === "number" && !input.checkValidity())
                     return;
-                window.set_option(input.name, input.value);
+                options.set(input.name, input.value);
         });
 
         $("#consumables-settings button.reset").click(function () {
             var input = $(this).siblings("input");
             var default_value = input.data("default");
             input.val(default_value);
-            window.set_option(input.prop("name"), default_value);
+            options.set(input.prop("name"), default_value);
         });
 
         $("#minimize-panel").click(hide_consumables);
 
         $("#consumables-placeholder").click(function () {
-            $("#consumables-placeholder").addClass("hidden");
-            $canvas.removeClass("hidden");
-            minimized = false;
+            show_consumables();
             update();
         });
 
@@ -238,7 +256,10 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     function update()
     {
         if (minimized)
+        {
+            hide_consumables(false);
             return;
+        }
 
         // Filter
         filtered_inv = Object.values(player.inv).filter(function (item) {
@@ -332,6 +353,9 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     }
 
     options.add_listener(function () {
+        // synchronize visible state with new options. Because of messy timing
+        // issues with the crawl binary, this will run at least twice on
+        // startup.
         var update_required = false;
 
         var new_scale = options.get("consumables_panel_scale") / 100;
@@ -341,10 +365,17 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             update_required = true;
         }
 
+        // is one of: horizontal, vertical
         var new_orientation = options.get("consumables_panel_orientation");
+        var new_min = !options.get("consumables_panel_show");
         if (orientation !== new_orientation)
         {
             orientation = new_orientation;
+            update_required = true;
+        }
+        if (new_min != minimized)
+        {
+            minimized = new_min;
             update_required = true;
         }
 
@@ -365,6 +396,10 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         }
 
         if (update_required)
+        {
+            if (!minimized)
+                show_consumables(false);
             update();
+        }
     });
 });
