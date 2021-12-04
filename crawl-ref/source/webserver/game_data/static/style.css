@@ -1337,8 +1337,8 @@ body {
     cursor: pointer;
 }
 
-/* consumables panel */
-#consumables {
+/* action panel */
+#action-panel {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -1346,7 +1346,7 @@ body {
     border-radius: 3px;
 }
 
-#consumables-tooltip
+#action-panel-tooltip
 {
     position: absolute;
     display: table;
@@ -1359,11 +1359,11 @@ body {
 }
 
 /* makes the hidden panel or its placeholder immune to $.show() */
-.consumables.hidden {
+.action-panel.hidden {
     display: none !important;
 }
 
-#consumables-placeholder {
+#action-panel-placeholder {
     position: absolute;
     left: 5px;
     top: 5px;
@@ -1376,23 +1376,23 @@ body {
     padding: 5px;
 }
 
-#consumables-placeholder a {
+#action-panel-placeholder a {
     text-decoration: none;
 }
 
-#consumables-settings {
+#action-panel-settings {
     position: absolute;
     background: black;
     border: 2px solid #7d623c;
     padding: 2px;
 }
 
-#consumables-settings fieldset {
+#action-panel-settings fieldset {
     margin-bottom: 2px;
     border-width: 1px;
 }
 
-#consumables-settings fieldset button,input {
+#action-panel-settings fieldset button,input {
     display: inline;
 }
 
@@ -1405,12 +1405,12 @@ div.settings-buttons {
     display: flex;
 }
 
-#consumables-settings input[type=number] {
+#action-panel-settings input[type=number] {
     width: 100px;
     font: 14px monospace;
 }
 
-#consumables-settings input[type=number]:invalid {
+#action-panel-settings input[type=number]:invalid {
     border: 2px solid red;
 }
 

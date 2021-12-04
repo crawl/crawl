@@ -459,7 +459,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         $.extend(player.equip, data.equip);
 
         if (data.inv)
-            $("#consumables").triggerHandler("update");
+            $("#action-panel").triggerHandler("update");
 
         delete data.equip;
         delete data.inv;

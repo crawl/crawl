@@ -408,15 +408,15 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
-        new BoolGameOption(SIMPLE_NAME(consumables_panel_show), true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(consumables_panel_filter)),
-        new BoolGameOption(SIMPLE_NAME(show_unidentified_consumables), false),
-        new StringGameOption(SIMPLE_NAME(consumables_panel_font_family),
+        new BoolGameOption(SIMPLE_NAME(action_panel_show), true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(action_panel_filter)),
+        new BoolGameOption(SIMPLE_NAME(action_panel_show_unidentified), false),
+        new StringGameOption(SIMPLE_NAME(action_panel_font_family),
                              "monospace"),
-        new IntGameOption(SIMPLE_NAME(consumables_panel_font_size), 16),
-        new StringGameOption(SIMPLE_NAME(consumables_panel_orientation),
+        new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16),
+        new StringGameOption(SIMPLE_NAME(action_panel_orientation),
                                                                 "horizontal"),
-        new IntGameOption(SIMPLE_NAME(consumables_panel_scale), 100),
+        new IntGameOption(SIMPLE_NAME(action_panel_scale), 100),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -1228,10 +1228,10 @@ void game_options::reset_options()
 #ifdef USE_TILE_WEB
     tile_display_mode = "tiles";
 
-    consumables_panel.clear();
-    consumables_panel.emplace_back(OBJ_SCROLLS);
-    consumables_panel.emplace_back(OBJ_POTIONS);
-    consumables_panel.emplace_back(OBJ_MISCELLANY);
+    action_panel.clear();
+    action_panel.emplace_back(OBJ_SCROLLS);
+    action_panel.emplace_back(OBJ_POTIONS);
+    action_panel.emplace_back(OBJ_MISCELLANY);
 #endif
 
     // map each colour to itself as default
@@ -1981,10 +1981,10 @@ void game_options::write_prefs(FILE *f)
     fprintf(f, "default_manual_training = %s\n",
                         default_manual_training ? "yes" : "no");
 #ifdef USE_TILE_WEB
-    fprintf(f, "consumables_panel_orientation = %s\n",
-                        consumables_panel_orientation.c_str());
-    fprintf(f, "consumables_panel_show = %s\n",
-                        consumables_panel_show ? "yes" : "no");
+    fprintf(f, "action_panel_orientation = %s\n",
+                        action_panel_orientation.c_str());
+    fprintf(f, "action_panel_show = %s\n",
+                        action_panel_show ? "yes" : "no");
 #endif
     // TODO: this variable is extremely coarse, maybe something better? Per
     // opts setting? comparison of serializable values like for newgame_def?
@@ -2940,7 +2940,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "ability_slot"
         && key != "sound" && key != "hold_sound" && key != "sound_file_path"
 #ifdef USE_TILE_WEB
-        && key != "consumables_panel_filter"
+        && key != "action_panel_filter"
 #endif
         && key.find("font") == string::npos)
     {
@@ -3894,10 +3894,10 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 #endif
 #ifdef USE_TILE_WEB
-    else if (key == "consumables_panel")
+    else if (key == "action_panel")
     {
         // clear out the default list
-        consumables_panel.clear();
+        action_panel.clear();
 
         char32_t c;
         for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
@@ -3909,36 +3909,36 @@ void game_options::read_option_line(const string &str, bool runscript)
                 || type == OBJ_WANDS
                 || type == OBJ_MISCELLANY)
             {
-                consumables_panel.emplace_back(type);
+                action_panel.emplace_back(type);
             }
             else
             {
-                report_error("Bad item type '%*s' for consumables_panel.\n",
+                report_error("Bad item type '%*s' for action_panel.\n",
                              s, tp);
             }
         }
     }
-    else if (key == "consumables_panel_scale")
+    else if (key == "action_panel_scale")
     {
         float tmp_scale;
         if (sscanf(field.c_str(), "%f", &tmp_scale))
         {
-            consumables_panel_scale = min(1600, max(20,
+            action_panel_scale = min(1600, max(20,
                                         static_cast<int>(tmp_scale * 100)));
         }
         else
         {
-            report_error("Expected a decimal value for consumables_panel_scale,"
+            report_error("Expected a decimal value for action_panel_scale,"
                 " but got '%s'.", field.c_str());
         }
     }
-    else if (key == "consumables_panel_orientation")
+    else if (key == "action_panel_orientation")
     {
         if (field == "horizontal" || field == "vertical")
-            consumables_panel_orientation = field;
+            action_panel_orientation = field;
         else
         {
-            report_error("Bad value for consumables_panel_orientation: %s"
+            report_error("Bad value for action_panel_orientation: %s"
                          " (should be `horizontal` or `vertical`)",
                          field.c_str());
         }
@@ -5002,16 +5002,16 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 
-    tiles.json_write_bool("consumables_panel_show",
-            Options.consumables_panel_show);
-    tiles.json_write_int("consumables_panel_scale",
-            Options.consumables_panel_scale);
-    tiles.json_write_string("consumables_panel_orientation",
-            Options.consumables_panel_orientation);
-    tiles.json_write_string("consumables_panel_font_family",
-            Options.consumables_panel_font_family);
-    tiles.json_write_int("consumables_panel_font_size",
-            Options.consumables_panel_font_size);
+    tiles.json_write_bool("action_panel_show",
+            Options.action_panel_show);
+    tiles.json_write_int("action_panel_scale",
+            Options.action_panel_scale);
+    tiles.json_write_string("action_panel_orientation",
+            Options.action_panel_orientation);
+    tiles.json_write_string("action_panel_font_family",
+            Options.action_panel_font_family);
+    tiles.json_write_int("action_panel_font_size",
+            Options.action_panel_font_size);
 
     _write_minimap_colours();
 
