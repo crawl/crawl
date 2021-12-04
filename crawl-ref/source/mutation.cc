@@ -1538,8 +1538,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Only species that already have tails can get this one. For merfolk it
-    // would only work in the water, so skip it.
-    if ((!you.has_tail(false) || you.has_innate_mutation(MUT_MERTAIL))
+    // would only work in the water, so skip it, and demonspawn tails come
+    // with a stinger already.
+    if ((!you.has_tail(false)
+         || you.has_innate_mutation(MUT_MERTAIL)
+         || you.has_mutation(MUT_WEAKNESS_STINGER))
         && mutat == MUT_STINGER)
     {
         return true;
