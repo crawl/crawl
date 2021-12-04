@@ -1656,6 +1656,10 @@ always_show_zot = false
         Whether to show the "Zot" status light at all times, even when you've
         got plenty of time left.
 
+action_panel_show = true
+        Whether to show or hide the action panel. This option is automatically
+        saved between games, and is only available on Webtiles.
+
 action_panel = ?!}
         The above is the default list of items to show on the action panel.
         The valid symbols are
@@ -1663,30 +1667,32 @@ action_panel = ?!}
         !       Potions
         /       Wands
         }       Misc. items
-        If set to an empty string, the panel will be hidden permanently.
-        This option is only available on WebTiles.
+        If set to an empty string, the panel will be hidden entirely.
+        This option is only available on Webtiles.
 
 action_panel_filter += <regex>, <regex>, ...
         (List option)
         Any item matching the filter expression(s) will not be shown on the
-        action panel.
+        action panel. This option is only available on Webtiles.
         The file dat/defaults/misc.txt contains default settings.
 
 action_panel_show_unidentified = false
         When set to true, the action panel will show unidentified scrolls
-        and potions.
+        and potions. This option is only available on Webtiles.
 
 action_panel_scale = 1.0
-        A scale factor to apply to the action panel.
+        A scale factor to apply to the action panel. This option is only
+        available on Webtiles.
 
 action_panel_orientation = (horizontal | vertical)
         When set to 'horizontal' (the default), the action panel will be
-        placed along the top edge of the screen.
-        When set to 'vertical', the panel will be placed along the left edge.
+        placed along the top edge of the screen. When set to 'vertical', the panel will be placed along the left edge. This option is automatically
+        saved between games, and is only available on Webtiles.
 
 action_panel_font_family = monospace
 action_panel_font_size = 16
-        Font used for displaying the quantities of items.
+        Font used for displaying quantities of items in the action panel.
+        This option is only available on Webtiles.
 
 3-i     Colours (messages and menus)
 -----------------
