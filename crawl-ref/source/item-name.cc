@@ -3034,9 +3034,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_CORPSES:
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
-            || you.has_spell(SPELL_SIMULACRUM)
-            || you_worship(GOD_YREDELEMNUL) && !you.penance[GOD_YREDELEMNUL]
-               && you.piety >= piety_breakpoint(0))
+            || you.has_spell(SPELL_SIMULACRUM))
         {
             return false;
         }

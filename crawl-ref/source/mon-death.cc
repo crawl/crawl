@@ -2301,9 +2301,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         else if (was_visible && gives_player_xp)
         {
             // no doubling up with yred and death channel
-            if (have_passive(passive_t::reaping) && yred_reap_chance())
+            if (have_passive(passive_t::reaping))
             {
-                _yred_reap(mons, exploded);
+                if (yred_reap_chance())
+                    _yred_reap(mons, exploded);
                 corpse_consumed = true;
             }
             else if (you.duration[DUR_DEATH_CHANNEL])
@@ -2421,6 +2422,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         if (!silent && !wizard)
             _special_corpse_messaging(mons);
+        // don't drop a hide if we get reanimated immediately
+        if (_reaping(mons))
+            corpse = nullptr;
         // message ordering... :(
         if (corpse->base_type == OBJ_CORPSES) // not gold
             _maybe_drop_monster_organ(*corpse, silent);
@@ -2456,9 +2460,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         autotoggle_autopickup(false);
     }
-
-    if (corpse && _reaping(mons))
-        corpse = nullptr;
 
     crawl_state.dec_mon_acting(&mons);
     monster_cleanup(&mons);
