@@ -2531,7 +2531,13 @@ void dock_piety(int piety_loss, int penance)
                        "\"You will pay for your transgression, mortal!\"");
         }
         last_penance_lecture = you.num_turns;
-        _inc_penance(penance);
+
+        // Yred piety doesn't work on a time scale compatible with traditional
+        // penance, instead immediate retribution.
+        if (you_worship(GOD_YREDELEMNUL))
+            divine_retribution(GOD_YREDELEMNUL, true, true);
+        else
+            _inc_penance(penance);
     }
 }
 
