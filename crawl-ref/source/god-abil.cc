@@ -248,7 +248,7 @@ bool zin_donate_gold()
 {
     if (you.gold == 0)
     {
-        mpr("You don't have anything to sacrifice.");
+        mpr("You have nothing to donate!");
         return false;
     }
 
@@ -275,7 +275,7 @@ bool zin_donate_gold()
     if (donation < 1)
     {
         simple_god_message(" finds your generosity lacking.");
-        return false;
+        return true;
     }
 
     you.duration[DUR_PIETY_POOL] += donation;
@@ -1361,38 +1361,30 @@ void elyvilon_purification()
     you.redraw_evasion = true;
 }
 
-bool elyvilon_divine_vigour()
+void elyvilon_divine_vigour()
 {
-    bool success = false;
+    if (you.duration[DUR_DIVINE_VIGOUR])
+        return;
 
-    if (!you.duration[DUR_DIVINE_VIGOUR])
+    mprf("%s grants you divine vigour.",
+         god_name(GOD_ELYVILON).c_str());
+
+    const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
+    const int old_hp_max = you.hp_max;
+    const int old_mp_max = you.max_magic_points;
+    you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
+    you.set_duration(DUR_DIVINE_VIGOUR,
+                     40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
+
+    calc_hp();
+    inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
+    calc_mp();
+    if (old_mp_max > 0)
     {
-        mprf("%s grants you divine vigour.",
-             god_name(GOD_ELYVILON).c_str());
-
-        const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        const int old_hp_max = you.hp_max;
-        const int old_mp_max = you.max_magic_points;
-        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
-        you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
-
-        calc_hp();
-        inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
-        calc_mp();
-        if (old_mp_max > 0)
-        {
-            inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
-                     / old_mp_max
-                   - you.magic_points);
-        }
-
-        success = true;
+        inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
+                 / old_mp_max
+               - you.magic_points);
     }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return success;
 }
 
 void elyvilon_remove_divine_vigour()
@@ -2094,7 +2086,7 @@ static int _slouch_monsters(coord_def where)
     return 1;
 }
 
-bool cheibriados_slouch()
+spret cheibriados_slouch(bool fail)
 {
     int count = apply_area_visible(_slouchable, you.pos());
     if (!count)
@@ -2102,18 +2094,20 @@ bool cheibriados_slouch()
                    true, 'n'))
         {
             canned_msg(MSG_OK);
-            return false;
+            return spret::abort;
         }
 
     targeter_radius hitfunc(&you, LOS_DEFAULT);
     if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
-        return false;
+        return spret::abort;
+
+    fail_check();
 
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
     apply_area_visible(_slouch_monsters, you.pos());
-    return true;
+    return spret::success;
 }
 
 static void _run_time_step()
@@ -2561,7 +2555,7 @@ void spare_beogh_convert()
     }
 }
 
-bool dithmenos_shadow_step()
+spret dithmenos_shadow_step(bool fail)
 {
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius() > -1);
@@ -2579,7 +2573,10 @@ bool dithmenos_shadow_step()
     dist sdirect;
     direction(sdirect, args);
     if (!sdirect.isValid || tgt.landing_site.origin())
-        return false;
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
 
     // Check for hazards.
     bool zot_trap_prompted = false,
@@ -2593,7 +2590,8 @@ bool dithmenos_shadow_step()
         if (!cloud_prompted
             && !check_moveto_cloud(site, "shadow step", &cloud_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
 
         if (!zot_trap_prompted)
@@ -2604,8 +2602,8 @@ bool dithmenos_shadow_step()
                 if (!check_moveto_trap(site, "shadow step",
                                        &trap_prompted))
                 {
-                    you.turn_is_over = false;
-                    return false;
+                    canned_msg(MSG_OK);
+                    return spret::abort;
                 }
                 zot_trap_prompted = true;
             }
@@ -2613,8 +2611,8 @@ bool dithmenos_shadow_step()
                      && !check_moveto_trap(site, "shadow step",
                                            &trap_prompted))
             {
-                you.turn_is_over = false;
-                return false;
+                canned_msg(MSG_OK);
+                return spret::abort;
             }
         }
 
@@ -2622,16 +2620,20 @@ bool dithmenos_shadow_step()
             && !check_moveto_exclusion(site, "shadow step",
                                        &exclusion_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
 
         if (!terrain_prompted
             && !check_moveto_terrain(site, "shadow step", "",
                                      &terrain_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
     }
+
+    fail_check();
 
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
@@ -2639,7 +2641,7 @@ bool dithmenos_shadow_step()
     if (!you.move_to_pos(tgt.landing_site))
     {
         mpr("Something blocks your shadow step.");
-        return true;
+        return spret::success;
     }
 
     const actor *victim = actor_at(sdirect.target);
@@ -2649,7 +2651,7 @@ bool dithmenos_shadow_step()
     // This helps to evade splash upon landing on water.
     moveto_location_effects(env.grid(old_pos), true, old_pos);
 
-    return true;
+    return spret::success;
 }
 
 static potion_type _gozag_potion_list[][4] =
@@ -3563,7 +3565,7 @@ spret qazlal_elemental_force(bool fail)
     return spret::success;
 }
 
-bool qazlal_disaster_area()
+spret qazlal_disaster_area(bool fail)
 {
     bool friendlies = false;
     vector<coord_def> targets;
@@ -3600,7 +3602,7 @@ bool qazlal_disaster_area()
     if (targets.empty())
     {
         mpr("There isn't enough space here!");
-        return false;
+        return spret::abort;
     }
 
     if (friendlies
@@ -3608,8 +3610,10 @@ bool qazlal_disaster_area()
                   "them?", true, 'n'))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     mprf(MSGCH_GOD, "Nature churns violently around you!");
 
@@ -3634,7 +3638,7 @@ bool qazlal_disaster_area()
     }
     scaled_delay(200);
 
-    return true;
+    return spret::success;
 }
 
 static map<ability_type, const sacrifice_def *> sacrifice_data_map;

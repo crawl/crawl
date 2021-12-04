@@ -12,6 +12,7 @@
 #include "deck-type.h"
 #include "ability-type.h"
 #include "enum.h"
+#include "spl-cast.h"
 #include "tag-version.h"
 
 #define NEMELEX_TRIPLE_DRAW_KEY "nemelex_triple_draw"
@@ -70,9 +71,9 @@ void reset_cards();
 string deck_summary();
 
 bool deck_draw(deck_type deck);
-bool deck_triple_draw();
-bool deck_deal();
-bool deck_stack();
+spret deck_triple_draw(bool fail);
+spret deck_deal(bool fail);
+spret deck_stack(bool fail);
 
 bool draw_three();
 bool stack_five(int slot);

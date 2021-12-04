@@ -99,7 +99,7 @@ void tso_divine_shield();
 void tso_remove_divine_shield();
 
 void elyvilon_purification();
-bool elyvilon_divine_vigour();
+void elyvilon_divine_vigour();
 void elyvilon_remove_divine_vigour();
 
 bool vehumet_supports_spell(spell_type spell);
@@ -130,7 +130,7 @@ void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
-bool cheibriados_slouch();
+spret cheibriados_slouch(bool fail);
 void cheibriados_time_step(int pow);
 
 void ashenzari_offer_new_curse();
@@ -144,7 +144,7 @@ const vector<skill_type>& curse_skills(const CrawlStoreValue& curse);
 bool can_convert_to_beogh();
 void spare_beogh_convert();
 
-bool dithmenos_shadow_step();
+spret dithmenos_shadow_step(bool fail);
 
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
@@ -162,7 +162,7 @@ spret qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false, dist *player_target=nullptr);
 vector<coord_def> find_elemental_targets();
 spret qazlal_elemental_force(bool fail);
-bool qazlal_disaster_area();
+spret qazlal_disaster_area(bool fail);
 
 void init_sac_index();
 int get_sacrifice_piety(ability_type sac, bool include_skill = true);
