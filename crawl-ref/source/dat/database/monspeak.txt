@@ -5535,7 +5535,7 @@ Nikola
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
-############ Pikel ######## A big kobold slaver!
+############ Pikel ######## A big kobold trading souls of the damned
 Pikel
 
 @_Pikel_common_@
