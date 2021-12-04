@@ -2852,7 +2852,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         }
         fail_check();
 
-        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
+        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 2) + 4;
         mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, &you,
                                    duration * BASELINE_DELAY));
         simple_monster_message(*mons, "'s soul is now ripe for the taking.");
