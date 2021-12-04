@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "key_conversion", "./dungeon_renderer",
         "./display", "./minimap", "./enums", "./messages", "./options",
-        "./text", "./menu", "./consumables",  "./player", "./mouse_control",
+        "./text", "./menu", "./action_panel",  "./player", "./mouse_control",
          "./ui","./ui-layouts"],
 function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
         enums, messages, options) {
@@ -168,7 +168,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
                 height = layout_parameters.window_height - 5;
                 messages.hide();
             }
-            $(".consumables").hide();
+            $(".action-panel").hide();
 
             dungeon_renderer.fit_to(width, height, show_diameter);
         }
@@ -178,7 +178,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
                                     layout_parameters.remaining_height,
                                     show_diameter);
             $("#right_column").show();
-            $(".consumables").show();
+            $(".action-panel").show();
             messages.show();
         }
         minimap.stop_minimap_farview();
@@ -299,7 +299,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
                 var params = $.extend({}, layout_parameters);
                 layout(params);
             }
-            $("#consumables").triggerHandler("update");
+            $("#action-panel").triggerHandler("update");
         });
     });
 

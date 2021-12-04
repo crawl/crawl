@@ -285,14 +285,14 @@ public:
     bool        always_show_zot;  // Whether to always show the Zot timer
 
 #ifdef USE_TILE_WEB
-    vector<object_class_type> consumables_panel;   // types of items to show on the panel
-    vector<text_pattern> consumables_panel_filter; // what should be filtered out
-    bool        show_unidentified_consumables; // whether to show unidentified items
-    bool        consumables_panel_show;
-    int         consumables_panel_scale;       // the scale factor for resizing the panel
-    string      consumables_panel_orientation; // whether to place the panel horizontally
-    string      consumables_panel_font_family; // font used to display the quantities
-    int         consumables_panel_font_size;
+    vector<object_class_type> action_panel;   // types of items to show on the panel
+    vector<text_pattern> action_panel_filter; // what should be filtered out
+    bool        action_panel_show_unidentified; // whether to show unidentified items
+    bool        action_panel_show;
+    int         action_panel_scale;       // the scale factor for resizing the panel
+    string      action_panel_orientation; // whether to place the panel horizontally
+    string      action_panel_font_family; // font used to display the quantities
+    int         action_panel_font_size;
 #endif
 
     int         fire_items_start; // index of first item for fire command

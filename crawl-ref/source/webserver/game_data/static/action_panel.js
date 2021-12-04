@@ -16,27 +16,27 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
 
     function send_options()
     {
-        options.set("consumables_panel_orientation", orientation, false);
-        options.set("consumables_panel_show", !minimized, false);
-        options.send("consumables_panel_orientation");
-        options.send("consumables_panel_show");
+        options.set("action_panel_orientation", orientation, false);
+        options.set("action_panel_show", !minimized, false);
+        options.send("action_panel_orientation");
+        options.send("action_panel_show");
     }
 
-    function hide_consumables(send_opts=true)
+    function hide_panel(send_opts=true)
     {
-        $("#consumables-settings").hide();
-        $("#consumables").addClass("hidden");
-        $("#consumables-placeholder").removeClass("hidden").show();
+        $("#action-panel-settings").hide();
+        $("#action-panel").addClass("hidden");
+        $("#action-panel-placeholder").removeClass("hidden").show();
         minimized = true;
         if (send_opts)
             send_options();
     }
 
-    function show_consumables(send_opts=true)
+    function show_panel(send_opts=true)
     {
-        $("#consumables-settings").hide(); // sanitize
-        $("#consumables").removeClass("hidden");
-        $("#consumables-placeholder").addClass("hidden");
+        $("#action-panel-settings").hide(); // sanitize
+        $("#action-panel").removeClass("hidden");
+        $("#action-panel-placeholder").addClass("hidden");
         minimized = false;
         if (send_opts)
             send_options();
@@ -61,7 +61,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             $("#font-size-val").data("default", font_size);
 
         // Show the context menu near the cursor
-        $settings = $("#consumables-settings");
+        $settings = $("#action-panel-settings");
         $settings.css({top: e.pageY + 10 + "px",
                       left: e.pageX + 10 + "px"});
         $settings.show();
@@ -72,7 +72,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
 
     function hide_settings()
     {
-        $("#consumables-settings").hide();
+        $("#action-panel-settings").hide();
         settings_visible = false;
     }
 
@@ -118,9 +118,9 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     // Note that "game_init" happens before the client receives
     // the options and inventory data from the server.
     $(document).bind("game_init", function () {
-        $canvas = $("#consumables");
-        $settings = $("#consumables-settings");
-        $tooltip = $("#consumables-tooltip");
+        $canvas = $("#action-panel");
+        $settings = $("#action-panel-settings");
+        $tooltip = $("#action-panel-tooltip");
 
         renderer = new cr.DungeonCellRenderer();
         borders_width = (parseInt($canvas.css("border-left-width"), 10) || 0) * 2;
@@ -143,13 +143,13 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         });
 
         // Clicking on the panel/Close button closes the settings menu
-        $("#consumables, #close-settings").click(function () {
+        $("#action-panel, #close-settings").click(function () {
             hide_settings();
         });
 
         // Triggering this function on keyup might be too agressive,
         // but at least the player doesn't have to press Enter to confirm changes
-        $("#consumables-settings input[type=radio],input[type=number]")
+        $("#action-panel-settings input[type=radio],input[type=number]")
             .on("change keyup", function (e) {
                 var input = e.target;
                 if (input.type === "number" && !input.checkValidity())
@@ -157,17 +157,17 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
                 options.set(input.name, input.value);
         });
 
-        $("#consumables-settings button.reset").click(function () {
+        $("#action-panel-settings button.reset").click(function () {
             var input = $(this).siblings("input");
             var default_value = input.data("default");
             input.val(default_value);
             options.set(input.prop("name"), default_value);
         });
 
-        $("#minimize-panel").click(hide_consumables);
+        $("#minimize-panel").click(hide_panel);
 
-        $("#consumables-placeholder").click(function () {
-            show_consumables();
+        $("#action-panel-placeholder").click(function () {
+            show_panel();
             update();
         });
 
@@ -228,7 +228,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             else if (ev.type === "mousedown" && ev.which == 1)
             {
                 if (selected == 0)
-                    hide_consumables();
+                    hide_panel();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                     && selected > 0 && selected < filtered_inv.length + 1)
                 {
@@ -257,7 +257,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     {
         if (minimized)
         {
-            hide_consumables(false);
+            hide_panel(false);
             return;
         }
 
@@ -358,7 +358,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         // startup.
         var update_required = false;
 
-        var new_scale = options.get("consumables_panel_scale") / 100;
+        var new_scale = options.get("action_panel_scale") / 100;
         if (scale !== new_scale)
         {
             scale = new_scale;
@@ -366,8 +366,8 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         }
 
         // is one of: horizontal, vertical
-        var new_orientation = options.get("consumables_panel_orientation");
-        var new_min = !options.get("consumables_panel_show");
+        var new_orientation = options.get("action_panel_orientation");
+        var new_min = !options.get("action_panel_show");
         if (orientation !== new_orientation)
         {
             orientation = new_orientation;
@@ -379,7 +379,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             update_required = true;
         }
 
-        var new_font_family = options.get("consumables_panel_font_family");
+        var new_font_family = options.get("action_panel_font_family");
         if (font_family !== new_font_family)
         {
             font_family = new_font_family;
@@ -387,7 +387,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             update_required = true;
         }
 
-        var new_font_size = options.get("consumables_panel_font_size");
+        var new_font_size = options.get("action_panel_font_size");
         if (font_size !== new_font_size)
         {
             font_size = new_font_size;
@@ -398,7 +398,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         if (update_required)
         {
             if (!minimized)
-                show_consumables(false);
+                show_panel(false);
             update();
         }
     });

@@ -1165,28 +1165,28 @@ void TilesFramework::_send_player(bool force_full)
     finish_message();
 }
 
-// Checks if an item should be displayed on the consumables panel
+// Checks if an item should be displayed on the action panel
 static bool _is_useful_consumable(const item_def &item, const string &name)
 {
-    const vector<object_class_type> &base_types = Options.consumables_panel;
+    const vector<object_class_type> &base_types = Options.action_panel;
 
     if (item.quantity < 1
         || base_types.empty()
         || std::find(base_types.begin(), base_types.end(), item.base_type)
            == base_types.end()
-        || (!Options.show_unidentified_consumables && !fully_identified(item)))
+        || (!Options.action_panel_show_unidentified && !fully_identified(item)))
     {
         return false;
     }
 
-    for (const text_pattern &p : Options.consumables_panel_filter)
+    for (const text_pattern &p : Options.action_panel_filter)
         if (p.matches(name))
             return false;
 
     return true;
 }
 
-// Returns the name of an item_def field to display on the consumables panel
+// Returns the name of an item_def field to display on the action panel
 static string _qty_field_name(const item_def &item)
 {
     if (item.base_type == OBJ_MISCELLANY && item.sub_type != MISC_ZIGGURAT

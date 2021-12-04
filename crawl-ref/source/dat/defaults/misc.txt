@@ -20,5 +20,5 @@ monster_item_view_features += stair, trap
 tile_show_threat_levels = nasty
 
 # Dangerous and non-tactical items
-consumables_panel_filter = attraction,degeneration,experience,flight,mutation
-consumables_panel_filter += acquirement,amnesia,brand,enchant,identify,mapping,noise,torment
+action_panel_filter = attraction,degeneration,experience,flight,mutation
+action_panel_filter += acquirement,amnesia,brand,enchant,identify,mapping,noise,torment
