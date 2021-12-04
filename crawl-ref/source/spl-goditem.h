@@ -74,7 +74,7 @@ int detect_creatures(int pow, bool telepathic = false);
 
 spret cast_tomb(int pow, actor* victim, int source, bool fail);
 
-bool cast_smiting(int pow, monster* mons);
+spret cast_smiting(int pow, monster* mons, bool fail);
 
 string unpacifiable_reason(const monster& mon);
 string unpacifiable_reason(const monster_info& mi);

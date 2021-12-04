@@ -1036,13 +1036,7 @@ spret divine_exegesis(bool fail)
 
     ASSERT(is_valid_spell(spell));
 
-    if (fail)
-        return spret::fail;
-
-    if (cast_a_spell(false, spell))
-        return spret::success;
-
-    return spret::abort;
+    return cast_a_spell(false, spell, nullptr, fail);
 }
 
 /// For a given dungeon depth (or item level), how much weight should we give

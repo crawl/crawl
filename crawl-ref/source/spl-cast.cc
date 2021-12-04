@@ -666,7 +666,7 @@ bool can_cast_spells(bool quiet, bool exegesis)
 
 void do_cast_spell_cmd(bool force)
 {
-    if (!cast_a_spell(!force))
+    if (cast_a_spell(!force) == spret::abort)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
@@ -731,14 +731,17 @@ static bool _majin_charge_hp()
  *
  * @param check_range   If true, abort if no targets are in range. (z vs Z)
  * @param spell         The type of spell to be cast.
+ * @param force_failure True if the spell's failure has already been determined
+ *                      in advance (for spells being cast via Divine Exegesis).
  * @return              Whether the spell was successfully cast.
  **/
-bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
+spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
+                   bool force_failure)
 {
     if (!can_cast_spells(false, you.divine_exegesis))
     {
         crawl_state.zero_turns_taken();
-        return false;
+        return spret::abort;
     }
 
     if (crawl_state.game_is_hints())
@@ -856,7 +859,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         {
             canned_msg(MSG_OK);
             crawl_state.zero_turns_taken();
-            return false;
+            return spret::abort;
         }
         else if (Options.enable_recast_spell
                  && (keyin == '.' || keyin == CK_ENTER))
@@ -867,7 +870,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         {
             mpr("You don't know that spell.");
             crawl_state.zero_turns_taken();
-            return false;
+            return spret::abort;
         }
         else
             spell = get_spell_by_letter(keyin);
@@ -877,7 +880,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     {
         mpr("You don't know that spell.");
         crawl_state.zero_turns_taken();
-        return false;
+        return spret::abort;
     }
 
     // MP, confusion, Ru sacs
@@ -886,7 +889,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     {
         mpr(reason);
         crawl_state.zero_turns_taken();
-        return false;
+        return spret::abort;
     }
 
     if (check_range && spell_no_hostile_in_range(spell))
@@ -903,7 +906,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
             delay(50);
         }
         crawl_state.zero_turns_taken();
-        return false;
+        return spret::abort;
     }
 
     if (god_punishes_spell(spell, you.religion)
@@ -918,7 +921,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         {
             canned_msg(MSG_OK);
             crawl_state.zero_turns_taken();
-            return false;
+            return spret::abort;
         }
     }
 
@@ -934,10 +937,12 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         pay_hp(hp_cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
-                                          nullptr, _target);
-    if (cast_result == spret::abort)
+                                          nullptr, _target, force_failure);
+    if (cast_result == spret::abort
+        || you.divine_exegesis && cast_result == spret::fail)
     {
-        crawl_state.zero_turns_taken();
+        if (cast_result == spret::abort)
+            crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
         refund_mp(cost);
         if (_majin_charge_hp())
@@ -945,7 +950,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
 
         redraw_screen();
         update_screen();
-        return false;
+        return cast_result;
     }
 
     practise_casting(spell, cast_result == spret::success);
@@ -962,7 +967,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     you.turn_is_over = true;
     alert_nearby_monsters();
 
-    return true;
+    return cast_result;
 }
 
 /**
@@ -1764,23 +1769,28 @@ string target_desc(const monster_info& mi, spell_type spell)
  *
  * @param spell         The type of spell being cast.
  * @param powc          Spellpower.
- * @param allow_fail    true if it is a spell being cast normally.
- *                      false if the spell is evoked or from an innate or divine ability
- *
+ * @param actual_spell  true if it is a spell being cast normally.
+ *                      false if the spell is evoked or from an innate or
+ *                      divine ability.
  * @param evoked_wand   The wand the spell was evoked from if applicable, or
-                        nullptr.
+ *                      nullptr.
+ * @param force_failure True if the spell's failure has already been determined
+ *                      in advance (for spells being cast via an innate or
+ *                      divine ability).
  * @return spret::success if spell is successfully cast for purposes of
  * exercising, spret::fail otherwise, or spret::abort if the player cancelled
  * the casting.
  **/
-spret your_spells(spell_type spell, int powc, bool allow_fail,
-                       const item_def* const evoked_wand, dist *target)
+spret your_spells(spell_type spell, int powc, bool actual_spell,
+                  const item_def* const evoked_wand, dist *target,
+                  bool force_failure)
 {
     ASSERT(!crawl_state.game_is_arena());
-    ASSERT(!(allow_fail && evoked_wand));
+    ASSERT(!(actual_spell && evoked_wand));
     ASSERT(!evoked_wand || evoked_wand->base_type == OBJ_WANDS);
+    ASSERT(!force_failure || !actual_spell && !evoked_wand);
 
-    const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
+    const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !actual_spell);
 
     dist target_local;
     if (!target)
@@ -1790,7 +1800,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (!wiz_cast && _spellcasting_aborted(spell, !allow_fail))
+    if (!wiz_cast && _spellcasting_aborted(spell, !actual_spell))
         return spret::abort;
 
     const spell_flags flags = get_spell_flags(spell);
@@ -1800,7 +1810,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     if (!powc)
         powc = calc_spell_power(spell, true);
 
-    const int range = calc_spell_range(spell, powc, allow_fail);
+    const int range = calc_spell_range(spell, powc, actual_spell);
     beam.range = range;
 
     unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
@@ -1859,7 +1869,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             : is_targeted ? "Aiming" : "Casting";
         string title = make_stringf("%s: <%s>%s</%s>", verb.c_str(),
                     spell_title_color, spell_title(spell), spell_title_color);
-        if (allow_fail)
+        if (actual_spell)
         {
             title += make_stringf(" <lightgrey>(%s)</lightgrey>",
                 _spell_failure_rate_description(spell).c_str());
@@ -1914,7 +1924,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         powc = player_adjust_evoc_power(powc);
         surge_power_wand(wand_mp_cost());
     }
-    else if (allow_fail)
+    else if (actual_spell)
         surge_power(_spell_enhancement(spell));
 
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
@@ -1923,7 +1933,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     int fail = 0;
     if (evoked_wand && evoked_wand->charges == 0)
         return spret::fail;
-    else if (allow_fail)
+    else if (actual_spell)
     {
         int spfl = random2avg(100, 3);
 
@@ -1978,14 +1988,15 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     dprf("Spell #%d, power=%d", spell, powc);
 
     // Have to set aim first, in case the spellcast kills its first target
-    if (you.props.exists(BATTLESPHERE_KEY) && allow_fail)
+    if (you.props.exists(BATTLESPHERE_KEY) && actual_spell)
         aim_battlesphere(&you, spell);
 
     const auto orig_target = monster_at(beam.target);
     const bool self_target = you.pos() == beam.target;
     const bool had_tele = orig_target && orig_target->has_ench(ENCH_TP);
 
-    spret cast_result = _do_cast(spell, powc, *target, beam, god, fail);
+    spret cast_result = _do_cast(spell, powc, *target, beam, god,
+                                 force_failure || fail);
 
     switch (cast_result)
     {
@@ -1994,12 +2005,12 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
         if ((demonic_magic == 3 && evoked_wand)
-            || (demonic_magic > 0 && allow_fail))
+            || (demonic_magic > 0 && actual_spell))
         {
             do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
         }
 
-        if (you.props.exists(BATTLESPHERE_KEY) && allow_fail
+        if (you.props.exists(BATTLESPHERE_KEY) && actual_spell
             && battlesphere_can_mirror(spell))
         {
             trigger_battlesphere(&you);
@@ -2007,8 +2018,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
         const auto victim = monster_at(beam.target);
         if (will_have_passive(passive_t::shadow_spells)
-            && allow_fail
-            && !god_hates_spell(spell, you.religion, !allow_fail)
+            && actual_spell
+            && !god_hates_spell(spell, you.religion, !actual_spell)
             && (flags & spflag::targeting_mask)
             && !(flags & spflag::neutral)
             && (beam.is_enchantment()
@@ -2026,15 +2037,18 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         {
             dithmenos_shadow_spell(&beam, spell);
         }
-        _spellcasting_side_effects(spell, god, !allow_fail);
+        _spellcasting_side_effects(spell, god, !actual_spell);
         return spret::success;
     }
     case spret::fail:
     {
-        mprf("You miscast %s.", spell_title(spell));
-        flush_input_buffer(FLUSH_ON_FAILURE);
-        learned_something_new(HINT_SPELL_MISCAST);
-        miscast_effect(spell, fail);
+        if (actual_spell)
+        {
+            mprf("You miscast %s.", spell_title(spell));
+            flush_input_buffer(FLUSH_ON_FAILURE);
+            learned_something_new(HINT_SPELL_MISCAST);
+            miscast_effect(spell, fail);
+        }
 
         return spret::fail;
     }
@@ -2044,7 +2058,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     case spret::none:
 #ifdef WIZARD
-        if (you.wizard && !allow_fail && is_valid_spell(spell)
+        if (you.wizard && !actual_spell && is_valid_spell(spell)
             && (flags & spflag::monster))
         {
             _try_monster_cast(spell, powc, *target, beam);
@@ -2103,11 +2117,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_smitey_damnation(powc, beam) ? spret::success : spret::abort;
 
     // LOS spells
-
-    // Beogh ability, no failure.
     case SPELL_SMITING:
-        return cast_smiting(powc, monster_at(target)) ? spret::success
-                                                      : spret::abort;
+        return cast_smiting(powc, monster_at(target), fail);
 
     case SPELL_AIRSTRIKE:
         return cast_airstrike(powc, spd.target, fail);

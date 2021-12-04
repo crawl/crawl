@@ -2654,15 +2654,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     // DEMONIC POWERS:
     case ABIL_DAMNATION:
-        // XXX: has a fail_check() before targeting
-        fail_check();
-        if (your_spells(SPELL_HURL_DAMNATION,
-                        40 + you.experience_level * 6,
-                        false, nullptr, target) == spret::abort)
-        {
-            return spret::abort;
-        }
-        break;
+        return your_spells(SPELL_HURL_DAMNATION, 40 + you.experience_level * 6,
+                           false, nullptr, target, fail);
 
     case ABIL_WORD_OF_CHAOS:
         return word_of_chaos(40 + you.experience_level * 6, fail);
@@ -3028,7 +3021,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
-        // XXX: has a fail_check() before targeting
         return divine_exegesis(fail);
 
     case ABIL_ELYVILON_HEAL_SELF:
@@ -3151,15 +3143,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return deck_stack(fail);
 
     case ABIL_BEOGH_SMITING:
-        // XXX: has a fail_check() before targeting
-        fail_check();
-        if (your_spells(SPELL_SMITING,
-                        12 + skill_bump(SK_INVOCATIONS, 6),
-                        false, nullptr, target) == spret::abort)
-        {
-            return spret::abort;
-        }
-        break;
+        return your_spells(SPELL_SMITING, 12 + skill_bump(SK_INVOCATIONS, 6),
+                           false, nullptr, target, fail);
 
     case ABIL_BEOGH_GIFT_ITEM:
         if (!beogh_gift_item())

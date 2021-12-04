@@ -913,17 +913,20 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
     return spret::success;
 }
 
-bool cast_smiting(int pow, monster* mons)
+spret cast_smiting(int pow, monster* mons, bool fail)
 {
     if (mons == nullptr || mons->submerged())
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to invisible/submerged monsters.
-        return true;
+        return spret::success;
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
-        return false;
+        return spret::abort;
+
+    fail_check();
 
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
@@ -944,7 +947,7 @@ bool cast_smiting(int pow, monster* mons)
         you.pet_target = mons->mindex();
     }
 
-    return true;
+    return spret::success;
 }
 
 void holy_word_player(holy_word_source_type source)
