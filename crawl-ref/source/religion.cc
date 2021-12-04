@@ -451,6 +451,15 @@ void god_power::display(bool gaining, const char* fmt) const
     {
         return;
     }
+
+    // these gods use short-time-scale piety where the gain/loss messasges
+    // are not informative while running
+    if (you.running
+        && (you_worship(GOD_YREDELEMNUL) || you_worship(GOD_USKAYAW)))
+    {
+        return;
+    }
+
     const char* str = gaining ? gain : loss;
     if (isupper(str[0]))
         god_speaks(you.religion, str);
