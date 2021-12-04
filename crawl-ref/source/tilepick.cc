@@ -4254,7 +4254,6 @@ void tile_init_props(monster* mon)
         case MONS_BUTTERFLY:
         case MONS_HUMAN:
         case MONS_DEEP_ELF_ELEMENTALIST:
-        case MONS_DREAM_SPECTRE:
             break;
         default:
             return;

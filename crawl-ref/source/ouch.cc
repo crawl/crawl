@@ -736,7 +736,7 @@ static void _maybe_slow()
 static void _dreamshard_summon_ally()
 {
     // consider overriding mon name based on appearance
-    const monster_type mon = MONS_DREAM_SPECTRE;
+    const monster_type mon = RANDOM_COMPATIBLE_MONSTER;
     mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU,
                  MG_FORCE_BEH, GOD_NO_GOD);
     mg.set_summoned(&you, 4, GOD_NO_GOD);

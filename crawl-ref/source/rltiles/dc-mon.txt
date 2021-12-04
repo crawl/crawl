@@ -390,24 +390,6 @@ ancestor_knight MONS_ANCESTOR_KNIGHT
 ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
 ancestor_hexer MONS_ANCESTOR_HEXER
 %rim 1
-%sdir mon/dreams
-dream_spectre MONS_DREAM_SPECTRE
-dream_spectre1
-dream_spectre2
-dream_spectre3
-dream_spectre4
-dream_spectre5
-dream_spectre6
-dream_spectre7
-dream_spectre8
-dream_spectre9
-dream_spectre10
-dream_spectre11
-dream_spectre12
-dream_spectre13
-dream_spectre14
-dream_spectre15
-dream_spectre16
 
 ## Abominations ('X')
 %sdir mon/aberrations
