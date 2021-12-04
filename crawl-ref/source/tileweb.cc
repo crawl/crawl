@@ -157,7 +157,7 @@ bool TilesFramework::initialise()
 
     _send_version();
     send_exit_reason("unknown");
-    _send_options();
+    send_options(); // n.b. full rc read hasn't happened yet
     _send_layout();
 
     return true;
@@ -507,6 +507,15 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
             c = CK_MOUSE_CMD;
         }
     }
+    else if (msgtype == "set_option")
+    {
+        // this is an extremely brute force approach...
+        JsonWrapper opt_line = json_find_member(obj.node, "line");
+        opt_line.check(JSON_STRING);
+        Options.read_option_line(opt_line->string_, true);
+        // XX only set this flag if a relevant option has actually changed
+        Options.prefs_dirty = true;
+    }
 
     return c;
 }
@@ -628,7 +637,7 @@ void TilesFramework::send_milestone(const xlog_fields &xl)
     finish_message();
 }
 
-void TilesFramework::_send_options()
+void TilesFramework::send_options()
 {
     json_open_object();
     json_write_string("msg", "options");
@@ -1999,7 +2008,7 @@ void TilesFramework::_send_messages()
 void TilesFramework::_send_everything()
 {
     _send_version();
-    _send_options();
+    send_options();
     _send_layout();
 
     _send_text_cursor(m_text_cursor);

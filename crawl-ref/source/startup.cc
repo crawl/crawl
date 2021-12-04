@@ -341,6 +341,9 @@ static void _post_init(bool newc)
     read_init_file(true);
     Options.fixup_options();
     read_startup_prefs();
+#ifdef USE_TILE_WEB
+    tiles.send_options();
+#endif
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
