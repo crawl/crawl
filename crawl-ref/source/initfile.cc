@@ -408,11 +408,15 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
+        new BoolGameOption(SIMPLE_NAME(consumables_panel_show), true),
         new ListGameOption<text_pattern>(SIMPLE_NAME(consumables_panel_filter)),
         new BoolGameOption(SIMPLE_NAME(show_unidentified_consumables), false),
         new StringGameOption(SIMPLE_NAME(consumables_panel_font_family),
                              "monospace"),
         new IntGameOption(SIMPLE_NAME(consumables_panel_font_size), 16),
+        new StringGameOption(SIMPLE_NAME(consumables_panel_orientation),
+                                                                "horizontal"),
+        new IntGameOption(SIMPLE_NAME(consumables_panel_scale), 100),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -1220,9 +1224,6 @@ void game_options::reset_options()
     consumables_panel.emplace_back(OBJ_SCROLLS);
     consumables_panel.emplace_back(OBJ_POTIONS);
     consumables_panel.emplace_back(OBJ_MISCELLANY);
-
-    consumables_panel_scale = 100;
-    consumables_panel_orientation = "horizontal";
 #endif
 
     // map each colour to itself as default
@@ -1943,6 +1944,12 @@ void game_options::write_prefs(FILE *f)
     // classes. Not worth doing until more stuff is serialized though...
     fprintf(f, "default_manual_training = %s\n",
                         default_manual_training ? "yes" : "no");
+#ifdef USE_TILE_WEB
+    fprintf(f, "consumables_panel_orientation = %s\n",
+                        consumables_panel_orientation.c_str());
+    fprintf(f, "consumables_panel_show = %s\n",
+                        consumables_panel_show ? "yes" : "no");
+#endif
     // TODO: this variable is extremely coarse, maybe something better? Per
     // opts setting? comparison of serializable values like for newgame_def?
     prefs_dirty = false;
@@ -3869,14 +3876,14 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "consumables_panel_orientation")
     {
-        if (field != "horizontal" && field != "vertical")
+        if (field == "horizontal" || field == "vertical")
+            consumables_panel_orientation = field;
+        else
         {
             report_error("Bad value for consumables_panel_orientation: %s"
-                         " (should be horizontal or vertical)",
+                         " (should be `horizontal` or `vertical`)",
                          field.c_str());
         }
-        else
-            consumables_panel_orientation = field;
     }
 #endif
 
@@ -4937,6 +4944,8 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 
+    tiles.json_write_bool("consumables_panel_show",
+            Options.consumables_panel_show);
     tiles.json_write_int("consumables_panel_scale",
             Options.consumables_panel_scale);
     tiles.json_write_string("consumables_panel_orientation",
