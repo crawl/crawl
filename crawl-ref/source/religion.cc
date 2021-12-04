@@ -1093,7 +1093,7 @@ bool yred_reap_chance()
 
 // When under penance or after removing faith,
 // Yredelemnulites can lose many nearby undead slaves.
-bool yred_reclaim_souls()
+bool yred_reclaim_souls(bool all)
 {
     int num_reclaim = 0;
     int num_slaves = 0;
@@ -1112,8 +1112,11 @@ bool yred_reclaim_souls()
 
         // the player gets to keep a few, particularly weaklings,
         // but always loses at least one
-        if (num_reclaim > 0 && (one_chance_in(num_slaves) || random2(20) < hd))
+        if (!all && num_reclaim > 0
+            && (one_chance_in(num_slaves) || random2(20) < hd))
+        {
             continue;
+        }
 
         monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
 
@@ -1123,11 +1126,11 @@ bool yred_reclaim_souls()
     if (num_reclaim > 0)
     {
         if (num_reclaim == 1 && num_slaves > 1)
-            simple_god_message(" reclaims one of your reaped souls!");
+            simple_god_message(" reclaims one of your reaped souls!", GOD_YREDELEMNUL);
         else if (num_reclaim == num_slaves)
-            simple_god_message(" reclaims your reaped souls!");
+            simple_god_message(" reclaims your reaped souls!", GOD_YREDELEMNUL);
         else
-            simple_god_message(" reclaims some of your reaped souls!");
+            simple_god_message(" reclaims some of your reaped souls!", GOD_YREDELEMNUL);
         return true;
     }
 
@@ -3164,13 +3167,12 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
-        if (query_daction_counter(DACT_ALLY_YRED_SLAVE))
-        {
-            simple_god_message(" reclaims all of your granted undead slaves!",
-                               old_god);
-            add_daction(DACT_ALLY_YRED_SLAVE);
-            remove_all_companions(GOD_YREDELEMNUL);
-        }
+        yred_reclaim_souls(true);
+        for (monster_iterator mi; mi; ++mi)
+            if (is_yred_undead_slave(**mi))
+                monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+        remove_all_companions(GOD_YREDELEMNUL);
+        add_daction(DACT_OLD_CHARMD_SOULS_POOF);
         break;
 
     case GOD_VEHUMET:

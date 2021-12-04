@@ -86,9 +86,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_YRED_SLAVE:
-        // Changed: we don't force enslavement of those merely marked.
-        return is_yred_undead_slave(*mon);
     case DACT_ALLY_BEOGH: // both orcs and demons summoned by high priests
         return mon->wont_attack() && mons_is_god_gift(*mon, GOD_BEOGH);
     case DACT_ALLY_SLIME:
@@ -177,13 +174,6 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
     // See _daction_hog_to_human for an example.
     switch (act)
     {
-        case DACT_ALLY_YRED_SLAVE:
-            if (mon->type == MONS_ZOMBIE)
-            {
-                simple_monster_message(*mon, " crumbles into dust!");
-                monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-                break;
-            }
         case DACT_ALLY_BEOGH:
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
@@ -266,7 +256,6 @@ static void _apply_daction(daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_YRED_SLAVE:
     case DACT_ALLY_BEOGH:
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
@@ -346,6 +335,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_UNHOLY_EVIL:
     case DACT_ALLY_UNCLEAN_CHAOTIC:
     case DACT_ALLY_SPELLCASTER:
+    case DACT_ALLY_YRED_SLAVE:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:
