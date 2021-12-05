@@ -353,28 +353,28 @@
     <fieldset>
         <legend>Orientation:</legend>
         <div>
-            <input type="radio" class="text" id="orient-horizontal" name="action_panel_orientation" value="horizontal">
-            <label for="orient-horizontal">horizontal</label>
+            <input type="radio" class="text" id="action-orient-horizontal" name="action_panel_orientation" value="horizontal">
+            <label for="action-orient-horizontal">horizontal</label>
         </div>
         <div>
-            <input type="radio" class="text" id="orient-vertical" name="action_panel_orientation" value="vertical">
-            <label for="orient-vertical">vertical</label>
+            <input type="radio" class="text" id="action-orient-vertical" name="action_panel_orientation" value="vertical">
+            <label for="action-orient-vertical">vertical</label>
         </div>
     </fieldset>
     <fieldset id="scale-set" class="option">
         <legend>Scale, %:</legend>
         <input type="number" class="text" id="scale-val" min="50" max="500" name="action_panel_scale" required>
-        <button class="reset" type="button">reset</button>
+        <button class="reset" type="button" tabindex="-1">reset</button>
     </fieldset>
     <fieldset id="font-size-set" class="option">
         <legend>Font size, px:</legend>
         <input type="number" class="text" id="font-size-val" min="1" max="40" name="action_panel_font_size" required>
-        <button class="reset" type="button">reset</button>
+        <button class="reset" type="button" tabindex="-1">reset</button>
     </fieldset>
     <span id="settings-note">Note: to make these settings permanent, edit your config file.</span>
     <div class="settings-buttons">
-        <button id="minimize-panel" type="button">Minimize</button>
-        <button id="close-settings" type="button">Close</button>
+        <button id="minimize-panel" type="button" tabindex="-1">Minimize</button>
+        <button id="close-settings" type="button" tabindex="-1">Close</button>
     </div>
 </div>
 <div id="action-panel-placeholder" class="action-panel hidden" style="display: none;"><a href="javascript:">+</a></div>
