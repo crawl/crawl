@@ -228,7 +228,12 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             else if (ev.type === "mousedown" && ev.which == 1)
             {
                 if (selected == 0)
-                    hide_panel();
+                {
+                    if (settings_visible)
+                        hide_settings();
+                    else
+                        hide_panel();
+                }
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                     && selected > 0 && selected < filtered_inv.length + 1)
                 {
