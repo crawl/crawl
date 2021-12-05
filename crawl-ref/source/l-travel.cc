@@ -173,7 +173,7 @@ static int l_clear_travel_trail(lua_State*)
 }
 
 /*** Set travel_trail on a cell
- * Call crawl.redraw_screen afterward to see changes. 
+ * Call crawl.redraw_screen afterward to see changes.
  * Uses player-centered coordinates.
  * @tparam int x
  * @tparam int y
