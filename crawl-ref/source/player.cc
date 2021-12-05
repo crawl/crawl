@@ -3055,17 +3055,21 @@ int player_stealth()
     if (you.umbra())
     {
         int umbra_mul = 1, umbra_div = 1;
-        if (you.nightvision())
+        if (you.umbra_radius() >= 0)
         {
-            umbra_mul = you.piety + MAX_PIETY;
-            umbra_div = MAX_PIETY;
+            if (have_passive(passive_t::umbra))
+            {
+                umbra_mul = you.piety + MAX_PIETY;
+                umbra_div = MAX_PIETY;
+            }
+            if (player_equip_unrand(UNRAND_SHADOWS)
+                && 2 * umbra_mul < 3 * umbra_div)
+            {
+                umbra_mul = 3;
+                umbra_div = 2;
+            }
         }
-        if (player_equip_unrand(UNRAND_SHADOWS)
-            && 2 * umbra_mul < 3 * umbra_div)
-        {
-            umbra_mul = 3;
-            umbra_div = 2;
-        }
+
         stealth *= umbra_mul;
         stealth /= umbra_div;
     }
@@ -6457,7 +6461,8 @@ undead_state_type player::undead_state(bool temp) const
 
 bool player::nightvision() const
 {
-    return have_passive(passive_t::nightvision);
+    return have_passive(passive_t::nightvision)
+           || player_equip_unrand(UNRAND_SHADOWS);
 }
 
 reach_type player::reach_range() const

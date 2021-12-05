@@ -1066,7 +1066,7 @@ TILE:    urand_shadows
 BOOL:    inv
 VALUE:   400
 DESCRIP: It surrounds you with an aura of shadow, increasing your stealth and
- reducing the accuracy of all within it (including the wearer).
+ reducing the accuracy of all others within it.
 
 # start TAG_MAJOR_VERSION == 34
 NAME:    amulet of Cekugob

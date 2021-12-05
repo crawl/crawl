@@ -6241,12 +6241,13 @@ bool monster::is_web_immune() const
             || mons_genus(type) == MONS_JELLY;
 }
 
-// Followers of Yredelemnul and Dithmenos don't have their accuracy
-// reduced by umbra.
+// Monsters with an innate umbra don't have their accuracy reduced by it, and
+// nor do followers of Yredelemnul and Dithmenos.
 bool monster::nightvision() const
 {
     return god == GOD_YREDELEMNUL
-           || god == GOD_DITHMENOS;
+           || god == GOD_DITHMENOS
+           || umbra_radius() >= 0;
 }
 
 bool monster::attempt_escape(int attempts)
