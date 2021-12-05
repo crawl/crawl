@@ -427,5 +427,6 @@ function ($, comm, client, options, focus_trap) {
         hide_all_popups: hide_all_popups,
         utf8_from_key_value: utf8_from_key_value,
         key_value_from_utf8: key_value_from_utf8,
+        sync_focus_state: sync_focus_state,
     };
 });

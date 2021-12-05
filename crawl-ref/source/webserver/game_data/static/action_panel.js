@@ -1,6 +1,7 @@
 define(["jquery", "comm", "./cell_renderer", "./enums", "./options", "./player",
-        "./tileinfo-icons", "./tileinfo-gui", "./util"],
-function ($, comm, cr, enums, options, player, icons, gui, util) {
+        "./tileinfo-icons", "./tileinfo-gui", "./util", "./focus-trap", "./ui"],
+function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
+            ui) {
     "use strict";
 
     var filtered_inv;
@@ -27,7 +28,9 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         $("#action-panel-settings").hide();
         $("#action-panel").addClass("hidden");
         $("#action-panel-placeholder").removeClass("hidden").show();
+        // order of these two matters
         minimized = true;
+        hide_settings();
         if (send_opts)
             send_options();
     }
@@ -48,8 +51,9 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     {
         if (selected > 0)
             return false;
+        var o_button = $("#action-orient-" + orientation);
         // Initialize the form with the current values
-        $("#orient-" + orientation).prop("checked", true);
+        o_button.prop("checked", true);
 
         // Parsing is required, because 1.1 * 100 is 110.00000000000001
         // instead of 110 in JavaScript
@@ -69,14 +73,53 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         $settings.show();
         settings_visible = true;
 
+        // TODO: I have had to set the buttons with tabindex -1, as I cannot
+        // for the life of me get focus-trap to intercept their key input
+        // correctly for esc and tab/shift-tab. This is non-ideal for
+        // accessibility reasons.
+        $settings[0].focus_trap = focus_trap($settings[0], {
+            escapeDeactivates: true,
+            onActivate: function () {
+                $settings.addClass("focus-trap");
+            },
+            onDeactivate: function() {
+                $settings.removeClass("focus-trap");
+                // ugly to do this as a timeout, but it is the best way I've
+                // found to get the key handling sequence right. This ensures
+                // that if a mousedown event triggers deactivate, it is handled
+                // while the settings panel is still open.
+                setTimeout(hide_settings_final, 50);
+            },
+            returnFocusOnDeactivate: false,
+            clickOutsideDeactivates: true,
+        }).activate();
+
         return false;
     }
 
     function hide_settings()
     {
+        if (!settings_visible)
+            return;
+        $settings[0].focus_trap.deactivate();
+    }
+
+    // triggered via focus-trap onDeactivate
+    function hide_settings_final()
+    {
         $("#action-panel-settings").hide();
         settings_visible = false;
-        send_options();
+
+        // TODO: I can't quite figure out why the conditional is necessary, but
+        // maybe something about the timing. Without it, sync_focus_state
+        // steals focus from the chat window.
+        if (!$("#chat").hasClass("focus-trap"))
+            ui.sync_focus_state();
+
+        // somewhat hacky: if hide_settings is triggered by hide_panel,
+        // don't send options twice. Assumes that this flag is set first...
+        if (!minimized)
+            send_options();
     }
 
     function hide_tooltip()
@@ -154,6 +197,12 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         // but at least the player doesn't have to press Enter to confirm changes
         $("#action-panel-settings input[type=radio],input[type=number]")
             .on("change keyup", function (e) {
+                if (e.which == 27)
+                {
+                    hide_settings();
+                    e.preventDefault();
+                    return;
+                }
                 var input = e.target;
                 if (input.type === "number" && !input.checkValidity())
                     return;
@@ -202,6 +251,10 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
         }
         else
         {
+            // focus-trap handles this case: the settings panel is about to
+            // be closed and we should ignore the click
+            if (ev.type == "mousedown" && settings_visible)
+                return;
             var cell_width = renderer.cell_width * scale;
             var cell_height = renderer.cell_height * scale;
             var cell_length = _horizontal() ? cell_width : cell_height;
@@ -231,12 +284,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             else if (ev.type === "mousedown" && ev.which == 1)
             {
                 if (selected == 0)
-                {
-                    if (settings_visible)
-                        hide_settings();
-                    else
-                        hide_panel();
-                }
+                    hide_panel();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                     && selected > 0 && selected < filtered_inv.length + 1)
                 {
@@ -246,10 +294,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
             }
             else if (ev.type === "mousedown" && ev.which == 3)
             {
-                // right click anywhere hides settings
-                if (settings_visible)
-                    hide_settings();
-                else if (selected == 0) // right click on the x shows settings
+                if (selected == 0) // right click on the x shows settings
                     show_settings(ev);
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                     && selected > 0 && selected < filtered_inv.length + 1)
