@@ -15,6 +15,7 @@
 #include "libutil.h" // map_find
 #include "mon-book.h"
 #include "mon-pick.h"
+#include "mon-place.h"
 #include "ranged-attack.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -659,6 +660,22 @@ LUAFN(moninf_get_can_be_constricted)
     return 1;
 }
 
+/*** Can this monster traverse a particular cell?
+ * Does not address doors or traps; returns true if the monster can occupy the cell.
+ * Uses player coordinates
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function can_traverse
+ */
+LUAFN(moninf_get_can_traverse)
+{
+    MONINF(ls, 1, mi);
+    PLAYERCOORDS(p, 2, 3)
+    lua_pushboolean(ls, monster_habitable_grid(mi->type, env.map_knowledge(p).feat()));
+    return 1;
+}
+
 /*** How far can the monster reach with their melee weapon?
  * @treturn int
  * @function reach_range
@@ -797,6 +814,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_constricting),
     MIREG(is_constricting_you),
     MIREG(can_be_constricted),
+    MIREG(can_traverse),
     MIREG(reach_range),
     MIREG(is_unique),
     MIREG(is_stationary),
