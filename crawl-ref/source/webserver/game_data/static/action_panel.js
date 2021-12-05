@@ -34,6 +34,8 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
 
     function show_panel(send_opts=true)
     {
+        if (settings_visible)
+            return;
         $("#action-panel-settings").hide(); // sanitize
         $("#action-panel").removeClass("hidden");
         $("#action-panel-placeholder").addClass("hidden");
@@ -74,6 +76,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util) {
     {
         $("#action-panel-settings").hide();
         settings_visible = false;
+        send_options();
     }
 
     function hide_tooltip()
