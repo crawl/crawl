@@ -194,6 +194,7 @@ static const vector<god_passive> god_passives[] =
     {
         {  -1, passive_t::reaping, "can NOW harvest souls to fight along side you" },
         {  -1, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::r_spectral_mist, "are NOW immune to spectral mist" },
     },
 
     // Xom
