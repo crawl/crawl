@@ -1540,7 +1540,10 @@ bool beogh_gift_item()
     direction(spd, args);
 
     if (!spd.isValid)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     monster* mons = monster_at(spd.target);
     if (!beogh_can_gift_items_to(mons, false))
@@ -4891,7 +4894,10 @@ bool ru_power_leap()
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return false;         // early return
+        }
 
         monster* beholder = you.get_beholder(beam.target);
         if (beholder)
@@ -5080,6 +5086,7 @@ bool ru_apocalypse()
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
             true, 'n'))
         {
+            canned_msg(MSG_OK);
             return false;
         }
     }
@@ -5308,7 +5315,10 @@ spret uskayaw_grand_finale(bool fail)
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return spret::abort;   // early return
+        }
 
         mons = monster_at(beam.target);
         if (!mons || !you.can_see(*mons))
@@ -5913,7 +5923,10 @@ spret wu_jian_wall_jump_ability()
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return spret::abort; // early return
+        }
 
         if (wu_jian_can_wall_jump(beam.target, wj_error))
             break;
