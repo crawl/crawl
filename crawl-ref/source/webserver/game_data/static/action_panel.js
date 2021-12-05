@@ -51,6 +51,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
     {
         if (selected > 0)
             return false;
+        hide_tooltip();
         var o_button = $("#action-orient-" + orientation);
         // Initialize the form with the current values
         o_button.prop("checked", true);
@@ -272,7 +273,7 @@ function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
                 var oldselected = selected;
                 selected = _horizontal() ? loc.x : loc.y;
                 update();
-                if (oldselected != selected)
+                if (oldselected != selected && !settings_visible)
                 {
                     hide_tooltip();
                     tooltip_timeout = setTimeout(function()
