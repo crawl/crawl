@@ -202,7 +202,7 @@ static const struct luaL_reg travel_lib[] =
     { "waypoint_delta", l_waypoint_delta },
     { "set_waypoint", l_set_waypoint },
     { "clear_travel_trail", l_clear_travel_trail },
-    { "set_travel_trail", l_set_travel_trail },    
+    { "set_travel_trail", l_set_travel_trail },
 
     { nullptr, nullptr }
 };
