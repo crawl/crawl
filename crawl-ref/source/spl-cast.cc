@@ -1988,8 +1988,11 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     dprf("Spell #%d, power=%d", spell, powc);
 
     // Have to set aim first, in case the spellcast kills its first target
-    if (you.props.exists(BATTLESPHERE_KEY) && actual_spell)
+    if (you.props.exists(BATTLESPHERE_KEY)
+        && (actual_spell || you.divine_exegesis))
+    {
         aim_battlesphere(&you, spell);
+    }
 
     const auto orig_target = monster_at(beam.target);
     const bool self_target = you.pos() == beam.target;
@@ -2005,12 +2008,13 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
         if ((demonic_magic == 3 && evoked_wand)
-            || (demonic_magic > 0 && actual_spell))
+            || (demonic_magic > 0 && (actual_spell || you.divine_exegesis)))
         {
             do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
         }
 
-        if (you.props.exists(BATTLESPHERE_KEY) && actual_spell
+        if (you.props.exists(BATTLESPHERE_KEY)
+            && (actual_spell || you.divine_exegesis)
             && battlesphere_can_mirror(spell))
         {
             trigger_battlesphere(&you);
