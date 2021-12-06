@@ -22,8 +22,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             return;
         options.set("action_panel_orientation", orientation, false);
         options.set("action_panel_show", !minimized, false);
+        options.set("action_panel_scale", scale, false);
+        options.set("action_panel_font_size", font_size, false);
+        // TODO: some cleaner approach to this than multiple msgs
         options.send("action_panel_orientation");
         options.send("action_panel_show");
+        options.send("action_panel_scale");
+        options.send("action_panel_font_size");
     }
 
     function hide_panel(send_opts=true)
@@ -59,9 +64,10 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         // Initialize the form with the current values
         o_button.prop("checked", true);
 
-        // Parsing is required, because 1.1 * 100 is 110.00000000000001
-        // instead of 110 in JavaScript
-        var scale_percent = parseInt(scale * 100, 10);
+        // TODO: should these just reset to 100/16, rather than this somewhat
+        // complicate context-sensitive behavior?
+        // use parseInt to cut out any decimals
+        var scale_percent = parseInt(scale);
         $("#scale-val").val(scale_percent);
         if (!$("#scale-val").data("default"))
             $("#scale-val").data("default", scale_percent);
@@ -264,8 +270,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             // be closed and we should ignore the click
             if (ev.type == "mousedown" && settings_visible)
                 return;
-            var cell_width = renderer.cell_width * scale;
-            var cell_height = renderer.cell_height * scale;
+            var cell_width = renderer.cell_width * scale / 100;
+            var cell_height = renderer.cell_height * scale / 100;
             var cell_length = _horizontal() ? cell_width : cell_height;
 
             // XX this code is copied from dungeon renderer, needs tested on a
@@ -349,8 +355,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         });
 
         // Render
-        var cell_width = renderer.cell_width * scale;
-        var cell_height = renderer.cell_height * scale;
+        var cell_width = renderer.cell_width * scale / 100;
+        var cell_height = renderer.cell_height * scale / 100;
         var cell_length = _horizontal() ? cell_width
                                         : cell_height;
         var required_length = cell_length * (filtered_inv.length + 1);
@@ -371,9 +377,9 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                               _horizontal() ? cell_height : panel_length);
 
         // XX This should definitely be a different/custom icon
-        renderer.draw_gui(gui.PROMPT_NO, 0, 0, scale);
+        renderer.draw_gui(gui.PROMPT_NO, 0, 0, scale / 100);
         if (selected == 0)
-            renderer.draw_icon(icons.CURSOR3, 0, 0, undefined, undefined, scale);
+            renderer.draw_icon(icons.CURSOR3, 0, 0, undefined, undefined, scale / 100);
 
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
             var offset = cell_length * (idx + 1);
@@ -381,14 +387,14 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                 renderer.draw_main(tile,
                                    _horizontal() ? offset : 0,
                                    _horizontal() ? 0 : offset,
-                                   scale);
+                                   scale / 100);
                 if (selected == idx + 1)
                 {
                     renderer.draw_icon(icons.CURSOR3,
                                        _horizontal() ? offset : 0,
                                        _horizontal() ? 0 : offset,
                                        undefined, undefined,
-                                       scale);
+                                       scale / 100);
                 }
             });
 
@@ -408,11 +414,11 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             var x_pos = 0, y_pos = 0;
 
             if (_horizontal())
-                x_pos = available_length - icons.get_tile_info(ellipsis).w * scale;
+                x_pos = available_length - icons.get_tile_info(ellipsis).w * scale / 100;
             else
-                y_pos = available_length - icons.get_tile_info(ellipsis).h * scale;
+                y_pos = available_length - icons.get_tile_info(ellipsis).h * scale / 100;
 
-            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, scale);
+            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, scale / 100);
         }
         $canvas.removeClass("hidden");
     }
@@ -425,7 +431,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         // startup.
         var update_required = false;
 
-        var new_scale = options.get("action_panel_scale") / 100;
+        var new_scale = options.get("action_panel_scale");
         if (scale !== new_scale)
         {
             scale = new_scale;

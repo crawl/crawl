@@ -1680,9 +1680,9 @@ action_panel_show_unidentified = false
         When set to true, the action panel will show unidentified scrolls
         and potions. This option is only available on Webtiles.
 
-action_panel_scale = 1.0
-        A scale factor to apply to the action panel. This option is only
-        available on Webtiles.
+action_panel_scale = 100
+        A percentage scale factor to apply to the action panel. This option is
+        automatically saved between games, and only available on Webtiles.
 
 action_panel_orientation = (horizontal | vertical)
         When set to 'horizontal' (the default), the action panel will be
@@ -1692,7 +1692,8 @@ action_panel_orientation = (horizontal | vertical)
 action_panel_font_family = monospace
 action_panel_font_size = 16
         Font used for displaying quantities of items in the action panel.
-        This option is only available on Webtiles.
+        The size option is automatically saved between games, and both are only
+        available on Webtiles.
 
 3-i     Colours (messages and menus)
 -----------------
