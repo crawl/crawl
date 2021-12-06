@@ -4689,12 +4689,8 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
-<<<<<<< HEAD
     if (crawl_state.game_started)
         describe_to_hit(mi, result, true, you.weapon());
-=======
-    describe_to_hit(mi, result, true, you.weapon());
->>>>>>> 947f6a8401... dth
     result << "\n";
 }
 
