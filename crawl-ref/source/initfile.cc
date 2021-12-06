@@ -1233,6 +1233,7 @@ void game_options::reset_options()
     action_panel.emplace_back(OBJ_SCROLLS);
     action_panel.emplace_back(OBJ_POTIONS);
     action_panel.emplace_back(OBJ_MISCELLANY);
+    action_panel.emplace_back(OBJ_WANDS);
 #endif
 
     // map each colour to itself as default
