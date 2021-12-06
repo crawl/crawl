@@ -501,9 +501,15 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         int inv_slot = (int) slot->number_;
         if (inv_slot >=0 && inv_slot < ENDOFPACK)
         {
-            auto action = quiver::slot_to_action(inv_slot);
-            if (action)
-                action->trigger();
+            quiver::action_cycler tmp;
+            tmp.set_from_slot(inv_slot);
+            if (!tmp.is_empty())
+            {
+                if (tmp.get()->is_targeted())
+                    tmp.target();
+                else
+                    tmp.get()->trigger();
+            }
             c = CK_MOUSE_CMD;
         }
     }
