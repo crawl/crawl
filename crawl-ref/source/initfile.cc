@@ -414,8 +414,9 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(action_panel_font_family),
                              "monospace"),
         new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16),
-        new StringGameOption(SIMPLE_NAME(action_panel_orientation),
-                                                                "horizontal"),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(action_panel_orientation), "horizontal",
+            {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
         new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
 #endif
 #ifdef USE_FT
@@ -3860,17 +3861,6 @@ void game_options::read_option_line(const string &str, bool runscript)
                 report_error("Bad item type '%*s' for action_panel.\n",
                              s, tp);
             }
-        }
-    }
-    else if (key == "action_panel_orientation")
-    {
-        if (field == "horizontal" || field == "vertical")
-            action_panel_orientation = field;
-        else
-        {
-            report_error("Bad value for action_panel_orientation: %s"
-                         " (should be `horizontal` or `vertical`)",
-                         field.c_str());
         }
     }
 #endif
