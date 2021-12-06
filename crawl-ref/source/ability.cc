@@ -2546,19 +2546,24 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
     }
 
+    case ABIL_BREATHE_LIGHTNING:
+        fail_check();
+        mpr("You breathe a wild blast of lightning!");
+        black_drac_breath();
+        you.increase_duration(DUR_BREATH_WEAPON,
+                          3 + random2(10) + random2(30 - you.experience_level));
+        break;
+
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
-    case ABIL_BREATHE_LIGHTNING: // not targeted
     {
-
-        // TODO: refactor this to use only one call to zapping(), split out
-        // breathe_lightning, etc
-
+        // TODO: refactor this to use only one call to zapping()
         spret result = spret::abort;
+        int cooldown = 3 + random2(10) + random2(30 - you.experience_level);
 
         switch (abil.ability)
         {
@@ -2584,13 +2589,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             result = zapping(ZAP_BREATHE_POISON, you.experience_level, beam,
                              true, "You exhale a blast of poison gas.", fail);
 
-        case ABIL_BREATHE_LIGHTNING:
-            fail_check();
-            mpr("You breathe a wild blast of lightning!");
-            black_drac_breath();
-            result = spret::success;
-            break;
-
         case ABIL_BREATHE_POWER:
             result = zapping(ZAP_BREATHE_POWER,
                              you.form == transformation::dragon
@@ -2607,6 +2605,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                                  : you.experience_level,
                              beam, true,
                              "You exhale a blast of scalding steam.", fail);
+            cooldown /= 2;
             break;
 
         case ABIL_BREATHE_MEPHITIC:
@@ -2619,17 +2618,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             break;
 
         default:
-            break;
+            die("Unknown breath weapon!");
         }
 
         if (result == spret::success)
-        {
-            you.increase_duration(DUR_BREATH_WEAPON,
-                          3 + random2(10) + random2(30 - you.experience_level));
-
-            if (abil.ability == ABIL_BREATHE_STEAM)
-                you.duration[DUR_BREATH_WEAPON] /= 2;
-        }
+            you.increase_duration(DUR_BREATH_WEAPON, cooldown);
 
         return result;
     }
