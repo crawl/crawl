@@ -1581,7 +1581,7 @@ PLUS:     +3
 COLOUR:   ETC_MAGIC
 TILE:     urand_power_gloves
 TILE_EQ:  glove_brown
-INSCRIP:  Infuse+∞, RegenMP,
+INSCRIP:  Infuse+∞ RegenMP
 INT:      -3
 VALUE:    400
 DESCRIP:  It empowers its wearer's blows with all of their magic.
