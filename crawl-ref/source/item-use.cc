@@ -942,7 +942,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3)
+        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3
+            || you.get_mutation_level(MUT_DEMONIC_TOUCH,
+                                      !ignore_temporary) >= 3)
         {
             if (verbose)
             {
