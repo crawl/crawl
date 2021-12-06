@@ -204,8 +204,8 @@ LUAFN(view_cell_see_cell)
 
 /*** Returns the entire visible map as a table of cell objects.
  * Cells have x, y, feature; optional monster (object);
- * optional cloud (name); and optional flags [visible, mapped, 
- * traversable, solid, excluded, item, unsafe, 
+ * optional cloud (name); and optional flags [visible, mapped,
+ * traversable, solid, excluded, item, unsafe,
  * invisible_monster, detected_item, detected_monster].
  * The key for each cell is 40000*(100+x) + (100+y), which is
  * a reversible composition of the x,y coordinates.
@@ -239,7 +239,7 @@ LUAFN(view_get_map)
                 LUA_PUSHBOOL("edge", true);
                 break;
             }
-*/            
+*/
         if (feat_is_traversable_now(feat))
             LUA_PUSHBOOL("traversable", true);
         if (feat_is_solid(feat) )
@@ -247,8 +247,8 @@ LUAFN(view_get_map)
             LUA_PUSHBOOL("solid", true);
             if (!feat_is_diggable(feat))
                 LUA_PUSHBOOL("undiggable", true);
-        } 
-        else 
+        }
+        else
         {
             for (adjacent_iterator ai(p); ai; ++ai)
                 if (!env.map_knowledge(*ai).known())
@@ -258,7 +258,7 @@ LUAFN(view_get_map)
                 }
             if (is_excluded(p))
                 LUA_PUSHBOOL("excluded", true);
-            if (cell.item() && cell.item()->defined()) 
+            if (cell.item() && cell.item()->defined())
                 LUA_PUSHBOOL("item", true)
             if (cell.monsterinfo() )
             {
