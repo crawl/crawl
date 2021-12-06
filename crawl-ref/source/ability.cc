@@ -2558,7 +2558,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         // TODO: refactor this to use only one call to zapping(), split out
         // breathe_lightning, etc
 
-        spret result;
+        spret result = spret::abort;
 
         switch (abil.ability)
         {
