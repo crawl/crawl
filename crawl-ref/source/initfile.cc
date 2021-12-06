@@ -416,7 +416,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16),
         new StringGameOption(SIMPLE_NAME(action_panel_orientation),
                                                                 "horizontal"),
-        new IntGameOption(SIMPLE_NAME(action_panel_scale), 100),
+        new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -1949,6 +1949,8 @@ void game_options::write_prefs(FILE *f)
                         action_panel_orientation.c_str());
     fprintf(f, "action_panel_show = %s\n",
                         action_panel_show ? "yes" : "no");
+    fprintf(f, "action_panel_scale = %d\n", action_panel_scale);
+    fprintf(f, "action_panel_font_size = %d\n", action_panel_font_size);
 #endif
     // TODO: this variable is extremely coarse, maybe something better? Per
     // opts setting? comparison of serializable values like for newgame_def?
@@ -3858,20 +3860,6 @@ void game_options::read_option_line(const string &str, bool runscript)
                 report_error("Bad item type '%*s' for action_panel.\n",
                              s, tp);
             }
-        }
-    }
-    else if (key == "action_panel_scale")
-    {
-        float tmp_scale;
-        if (sscanf(field.c_str(), "%f", &tmp_scale))
-        {
-            action_panel_scale = min(1600, max(20,
-                                        static_cast<int>(tmp_scale * 100)));
-        }
-        else
-        {
-            report_error("Expected a decimal value for action_panel_scale,"
-                " but got '%s'.", field.c_str());
         }
     }
     else if (key == "action_panel_orientation")

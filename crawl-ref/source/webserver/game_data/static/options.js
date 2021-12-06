@@ -45,6 +45,7 @@ function ($, comm) {
         options[name] = value;
         if (fire_listeners)
             listeners.fire();
+        return old != value;
     }
 
     function send_option(name)
