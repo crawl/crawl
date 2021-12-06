@@ -4056,11 +4056,8 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param result[in,out]    The stringstream to append to.
  */
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     bool parenthesize)
+                     bool parenthesize, const item_def* weapon)
 {
-    // TODO: don't do this if the player doesn't exist (main menu)
-
-    const item_def* weapon = you.weapon();
     if (weapon != nullptr && !is_weapon(*weapon))
         return; // breadwielding
 
@@ -4074,7 +4071,7 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
     else
     {
         // TODO: handle throwing to-hit somehow?
-        const int missile = quiver::find_action_from_launcher(you.weapon())->get_item();
+        const int missile = quiver::find_action_from_launcher(weapon)->get_item();
         if (missile < 0)
             return; // failure to launch
         ranged_attack attk(&you, nullptr, &you.inv[missile], is_pproj_active());
@@ -4239,7 +4236,8 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
-    describe_to_hit(mi, result, true);
+    if (crawl_state.game_started)
+        describe_to_hit(mi, result, true, you.weapon());
     result << "\n";
 }
 
