@@ -172,10 +172,9 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
     // Don't want results to show up behind the player.
     los_def ld(where, opc_no_actor);
 
-    if (mons_class_leaves_hide(corpse.mon_type)
-        && mons_genus(corpse.mon_type) == MONS_DRAGON)
+    if (mons_class_leaves_organ(corpse.mon_type))
     {
-        // Uh... dragon hide is tough stuff and it keeps the monster in
+        // Uh... magical organs are tough stuff and it keeps the monster in
         // one piece?  More importantly, it prevents a flavour feature
         // from becoming a trap for the unwary.
 
@@ -481,10 +480,41 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
-static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
+static void _create_monster_wand(const item_def &corpse, bool silent)
+{
+
+    const coord_def pos = item_pos(corpse);
+    if (pos.origin())
+        return;
+
+    int w = items(false, OBJ_WANDS, OBJ_RANDOM,
+                  mons_class_hit_dice(corpse.mon_type));
+
+    if (w == NON_ITEM)
+        return;
+    item_def& item = env.item[w];
+    move_item_to_grid(&w, pos);
+
+    item.plus *= 2;
+
+    if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
+    {
+        mprf("Residual magic twists a bone of %s into %s.",
+             corpse.name(DESC_THE).c_str(),
+             item.name(DESC_A).c_str());
+    }
+
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+}
+
+static void _maybe_drop_monster_organ(const item_def &corpse, bool silent)
 {
     if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
         _create_monster_hide(corpse, silent);
+
+    // corpse RNG is enough for these right now
+    if (mons_class_leaves_wand(corpse.mon_type))
+        _create_monster_wand(corpse, silent);
 }
 
 /**
@@ -493,7 +523,7 @@ static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
  * @param mons the monster to corpsify
  * @param silent whether to suppress all messages
  * @param force whether to always make a corpse (no 50% chance not to make a
-                corpse, no goldification, no hides -- being summoned etc. still
+                corpse, no goldification, no organs -- being summoned etc. still
   *             matters, though)
  * @returns a pointer to an item; it may be null, if the monster can't leave a
  *          corpse or if the 50% chance is rolled; it may be gold, if the player
@@ -2378,7 +2408,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             _special_corpse_messaging(mons);
         // message ordering... :(
         if (corpse->base_type == OBJ_CORPSES) // not gold
-            _maybe_drop_monster_hide(*corpse, silent);
+            _maybe_drop_monster_organ(*corpse, silent);
     }
 
     if (mons.is_divine_companion()

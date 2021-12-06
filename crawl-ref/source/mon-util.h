@@ -314,6 +314,8 @@ bool mons_class_is_animated_object(monster_type type);
 monster_type mons_base_type(const monster& mon);
 bool mons_class_can_leave_corpse(monster_type mc);
 bool mons_class_leaves_hide(monster_type mc);
+bool mons_class_leaves_wand(monster_type mc);
+bool mons_class_leaves_organ(monster_type mc);
 bool mons_is_zombified(const monster& mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster& mon);

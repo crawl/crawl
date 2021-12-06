@@ -1593,6 +1593,16 @@ bool mons_class_leaves_hide(monster_type mc)
     return hide_for_monster(mc) != NUM_ARMOURS;
 }
 
+bool mons_class_leaves_wand(monster_type mc)
+{
+    return mc == MONS_ELEIONOMA || mc == MONS_FENSTRIDER_WITCH;
+}
+
+bool mons_class_leaves_organ(monster_type mc)
+{
+    return mons_class_leaves_hide(mc) || mons_class_leaves_wand(mc);
+}
+
 int mons_zombie_size(monster_type mc)
 {
     mc = mons_species(mc);
