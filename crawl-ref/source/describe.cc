@@ -4048,7 +4048,7 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
                      bool parenthesize, const item_def* weapon)
 {
     // TODO: don't do this if the player doesn't exist (main menu)
-    // const item_def* weapon = you.weapon();
+
     if (weapon != nullptr && !is_weapon(*weapon))
         return; // breadwielding
 
@@ -4227,7 +4227,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
-    describe_to_hit(mi, result, true);
+    describe_to_hit(mi, result, true, you.weapon());
     result << "\n";
 }
 
