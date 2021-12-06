@@ -1,7 +1,8 @@
-define(["jquery", "comm", "./cell_renderer", "./enums", "./options", "./player",
+define(["jquery", "comm", "client",
+        "./cell_renderer", "./enums", "./options", "./player",
         "./tileinfo-icons", "./tileinfo-gui", "./util", "./focus-trap", "./ui"],
-function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
-            ui) {
+function ($, comm, client, cr, enums, options, player, icons, gui, util,
+             focus_trap, ui) {
     "use strict";
 
     var filtered_inv;
@@ -17,6 +18,8 @@ function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
 
     function send_options()
     {
+        if (client.is_watching())
+            return;
         options.set("action_panel_orientation", orientation, false);
         options.set("action_panel_show", !minimized, false);
         options.send("action_panel_orientation");
@@ -168,6 +171,11 @@ function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
         $canvas = $("#action-panel");
         $settings = $("#action-panel-settings");
         $tooltip = $("#action-panel-tooltip");
+        if (client.is_watching())
+        {
+            $canvas.addClass("hidden");
+            return;
+        }
 
         renderer = new cr.DungeonCellRenderer();
         borders_width = (parseInt($canvas.css("border-left-width"), 10) || 0) * 2;
@@ -309,6 +317,9 @@ function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
 
     function update()
     {
+        if (client.is_watching())
+            return;
+
         if (minimized)
         {
             hide_panel(false);
@@ -407,6 +418,8 @@ function ($, comm, cr, enums, options, player, icons, gui, util, focus_trap,
     }
 
     options.add_listener(function () {
+        if (client.is_watching())
+            return;
         // synchronize visible state with new options. Because of messy timing
         // issues with the crawl binary, this will run at least twice on
         // startup.
