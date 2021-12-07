@@ -1033,7 +1033,7 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
     if (!mons_atts_aligned(caster.temp_attitude(), targ.real_attitude()))
         return false;
 
-    if (caster.type == MONS_IRONBOUND_CONVOKER || mons_enslaved_soul(caster))
+    if (caster.type == MONS_IRONBOUND_CONVOKER || mons_bound_soul(caster))
         return true; // will buff any ally
 
     if (targ.is_holy() && caster.is_holy())
@@ -1314,7 +1314,7 @@ static god_type _find_god(const monster &mons, mon_spell_slot_flags flags)
 {
     // Permanent wizard summons of Yred should have the same god even
     // though they aren't priests. This is so that e.g. the zombies of
-    // Yred's enslaved souls will properly turn on you if you abandon
+    // Yred's bound souls will properly turn on you if you abandon
     // Yred.
     if (mons.god == GOD_YREDELEMNUL)
         return mons.god;

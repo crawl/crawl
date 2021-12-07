@@ -779,16 +779,16 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
     return true;
 }
 
-static bool _yred_enslave_soul(monster* mons, killer_type killer)
+static bool _yred_bound_soul(monster* mons, killer_type killer)
 {
-    if (you_worship(GOD_YREDELEMNUL) && mons_enslaved_body_and_soul(*mons)
+    if (you_worship(GOD_YREDELEMNUL) && mons_bound_body_and_soul(*mons)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
         record_monster_defeat(mons, killer);
         record_monster_defeat(mons, KILL_CHARMD);
-        yred_make_enslaved_soul(mons, player_under_penance());
+        yred_make_bound_soul(mons, player_under_penance());
         return true;
     }
 
@@ -882,7 +882,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
         return true;
 
     // Yredelemnul special.
-    if (_yred_enslave_soul(mons, killer))
+    if (_yred_bound_soul(mons, killer))
         return true;
 
     // Beogh special.
@@ -2675,7 +2675,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Yredelemnul special, redux: It's the only one that can
     // work on drowned monsters.
-    if (!_yred_enslave_soul(mons, killer))
+    if (!_yred_bound_soul(mons, killer))
         monster_die(*mons, killer, killnum, true);
 }
 

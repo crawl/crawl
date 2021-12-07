@@ -224,7 +224,7 @@ You must choose between this gift or that of branding a weapon with pain, and
 either gift may only be received once.
 %%%%
 # Yredelemnul
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
@@ -240,15 +240,15 @@ Drain Life ability
 [[Drain Life spell]] The amount of life force drained is increased by
 Invocations skill.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Marks a monster's soul as ripe for the taking. Living, holy and demonic
 monsters can be targeted (excepting most lords of Pandemonium), as long as they
 are relatively uninjured. The duration of the mark is dependent on Invocations
 skill. If the monster dies while still marked, its soul will become yours.
 
-The enslaved soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. The enslaved soul will follow its captor
+The bound soul will retain the monster's faculties, equipment and abilities,
+as well as some of its innate healing. The bound soul will follow its captor
 through stairs and come when recalled from a different level. However, only one
 soul can be enslaved at a time.
 %%%%

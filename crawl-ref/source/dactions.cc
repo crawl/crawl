@@ -42,7 +42,7 @@ static const char *daction_names[] =
     0, 0, 0, 0, 0, 0, 0, 0,
 
     // Actions not needing a counter.
-    "old enslaved souls go poof",
+    "old bound souls go poof",
 #if TAG_MAJOR_VERSION == 34
     "holy beings allow another conversion attempt",
 #else
@@ -105,7 +105,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && mon->props.exists(PIKEL_BAND_KEY);
 
     case DACT_OLD_CHARMD_SOULS_POOF:
-        return mons_enslaved_soul(*mon);
+        return mons_bound_soul(*mon);
 
     case DACT_SLIME_NEW_ATTEMPT:
         return mons_is_slime(*mon);

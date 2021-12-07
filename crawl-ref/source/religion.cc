@@ -138,10 +138,10 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Yredelemnul
         {   { 0, "reap souls" },
-            { 0, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
+            { 0, ABIL_YRED_RECALL_UNDEAD_HARVEST, "recall your undead harvest" },
             { 2, ABIL_YRED_DARK_BARGAIN, "trade souls for undead servants" },
             { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient life force" },
-            { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" },
+            { 5, ABIL_YRED_BIND_SOUL, "bind living souls" },
         },
 
         // Xom
@@ -1111,7 +1111,7 @@ bool yred_reclaim_souls(bool all)
     for (monster_iterator mi; mi; ++mi)
     {
         if (!is_yred_undead_slave(**mi) || mi->is_summoned()
-            || mons_enslaved_soul(**mi))
+            || mons_bound_soul(**mi))
         {
             continue;
         }
@@ -1154,7 +1154,7 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
     for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
     {
         if (!is_yred_undead_slave(**mi) || mi->is_summoned()
-            || mons_enslaved_soul(**mi))
+            || mons_bound_soul(**mi))
         {
             continue;
         }

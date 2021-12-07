@@ -3506,12 +3506,12 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         return TILEG_ABILITY_KIKU_NECRONOMICON;
     // Yredelemnul
-    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
+    case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         return TILEG_ABILITY_YRED_RECALL;
     case ABIL_YRED_DRAIN_LIFE:
         return TILEG_ABILITY_YRED_DRAIN_LIFE;
-    case ABIL_YRED_ENSLAVE_SOUL:
-        return TILEG_ABILITY_YRED_ENSLAVE_SOUL;
+    case ABIL_YRED_BIND_SOUL:
+        return TILEG_ABILITY_YRED_BIND_SOUL;
     // Xom, Vehumet = 90
     // Okawaru
     case ABIL_OKAWARU_HEROISM:

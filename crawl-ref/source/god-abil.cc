@@ -1688,20 +1688,20 @@ bool beogh_resurrect()
     return true;
 }
 
-bool yred_can_enslave_soul(monster* mon)
+bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon)
-           && !mons_enslaved_body_and_soul(*mon)
+           && !mons_bound_body_and_soul(*mon)
            && mon->attitude != ATT_FRIENDLY;
 }
 
-void yred_make_enslaved_soul(monster* mon, bool force_hostile)
+void yred_make_bound_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon
-    ASSERT(mons_enslaved_body_and_soul(*mon));
+    ASSERT(mons_bound_body_and_soul(*mon));
 
     add_daction(DACT_OLD_CHARMD_SOULS_POOF);
-    remove_enslaved_soul_companion();
+    remove_bound_soul_companion();
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);

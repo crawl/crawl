@@ -6606,7 +6606,7 @@ void unmarshallMonster(reader &th, monster& m)
         if (th.getMinorVersion() < TAG_MINOR_MORE_GHOST_MAGIC)
             slot.spell = _fixup_positional_monster_spell(slot.spell);
 
-        if (mons_is_zombified(m) && !mons_enslaved_soul(m)
+        if (mons_is_zombified(m) && !mons_bound_soul(m)
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
             // zombies shouldn't have (most) spells

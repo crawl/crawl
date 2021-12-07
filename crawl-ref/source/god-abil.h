@@ -114,8 +114,8 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 bool beogh_resurrect();
 
-bool yred_can_enslave_soul(monster* mon);
-void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
+bool yred_can_bind_soul(monster* mon);
+void yred_make_bound_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
 bool kiku_take_corpse(bool just_check = false);

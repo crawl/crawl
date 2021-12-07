@@ -5075,7 +5075,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
     {TILEP_MONS_SPECTRAL_LARGE}, TILE_ERROR
 },
 
-// yred enslaved soul - similar to a spectral thing, stats overridden
+// yred bound soul - similar to a spectral thing, stats overridden
 // on creation
 {
     MONS_BOUND_SOUL, 'Z', LIGHTRED, "bound soul",

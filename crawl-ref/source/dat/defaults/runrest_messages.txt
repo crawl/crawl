@@ -67,7 +67,7 @@ ignore += .*merge with and destroy a victim.*
 #
 ignore += .*trade souls for undead servants.*
 ignore += .*drain ambient life force.*
-ignore += .*enslave living souls.*
+ignore += .*bind living souls.*
 
 ignore += talk:
 ignore += talk_visual:

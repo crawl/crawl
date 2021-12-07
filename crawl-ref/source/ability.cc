@@ -386,13 +386,13 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::pain },
 
         // Yredelemnul
-        { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
+        { ABIL_YRED_RECALL_UNDEAD_HARVEST, "Recall Undead Harvest",
             2, 0, 0, -1, {fail_basis::invo, 50, 4, 20}, abflag::none },
         { ABIL_YRED_DARK_BARGAIN, "Dark Bargain",
             4, 0, 0, -1, {fail_basis::invo, 40, 4, 25}, abflag::souls },
         { ABIL_YRED_DRAIN_LIFE, "Drain Life",
             6, 0, 0, -1, {fail_basis::invo, 60, 4, 25}, abflag::souls },
-        { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul",
+        { ABIL_YRED_BIND_SOUL, "Bind Soul",
             8, 0, 0, -1, {fail_basis::invo, 80, 4, 25}, abflag::souls },
 
         // Okawaru
@@ -1025,7 +1025,7 @@ ability_type fixup_ability(ability_type ability)
 {
     switch (ability)
     {
-    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
+    case ABIL_YRED_RECALL_UNDEAD_HARVEST:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
@@ -2113,7 +2113,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_END_TRANSFORMATION:
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
-    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
+    case ABIL_YRED_RECALL_UNDEAD_HARVEST:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_OKAWARU_FINESSE:
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
@@ -2755,7 +2755,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         break;
 
-    case ABIL_YRED_RECALL_UNDEAD_SLAVES:
+    case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         fail_check();
         start_recall(recall_t::yred);
         break;
@@ -2809,7 +2809,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
     }
 
-    case ABIL_YRED_ENSLAVE_SOUL:
+    case ABIL_YRED_BIND_SOUL:
     {
         god_acting gdact;
         beam.range = LOS_MAX_RANGE;
@@ -2832,15 +2832,15 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (mons && you.can_see(*mons) && mons->is_illusion())
         {
             fail_check();
-            simple_monster_message(*mons, "'s clone doesn't have a soul to enslave!");
+            simple_monster_message(*mons, "'s clone doesn't have a soul to bind!");
             // Still costs a turn to gain the information.
             return spret::success;
         }
 
         if (mons == nullptr || !you.can_see(*mons)
-            || !yred_can_enslave_soul(mons))
+            || !yred_can_bind_soul(mons))
         {
-            mpr("You see nothing there you can enslave the soul of!");
+            mpr("You see nothing there you can bind the soul of!");
             return spret::abort;
         }
 
