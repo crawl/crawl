@@ -1107,7 +1107,8 @@ void do_trap_effects()
     if (env.absdepth0 > 3)
         available_traps.push_back(TRAP_ALARM);
 
-    mprf("A sudden malevolence fills the %s...", branches[you.where_are_you].shortname);
+    mprf("A sudden malevolence fills %s...",
+                                        branches[you.where_are_you].longname);
     switch (*random_iterator(available_traps))
     {
         case TRAP_SHAFT:
