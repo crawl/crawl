@@ -371,8 +371,9 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         var cell_length = _horizontal() ? cell_width
                                         : cell_height;
         var required_length = cell_length * (filtered_inv.length + 1);
-        var available_length = _horizontal() ? $("#dungeon").width()
-                                             : $("#dungeon").height();
+        var available_length = _horizontal()
+                            ? $("#dungeon").width() * window.devicePixelRatio
+                            : $("#dungeon").height() * window.devicePixelRatio;
         available_length -= borders_width;
         var max_cells = Math.floor(available_length / cell_length);
         var panel_length = Math.min(required_length, available_length);
