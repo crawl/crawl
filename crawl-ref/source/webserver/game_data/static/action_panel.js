@@ -35,12 +35,26 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
     {
         $("#action-panel-settings").hide();
         $("#action-panel").addClass("hidden");
-        $("#action-panel-placeholder").removeClass("hidden").show();
-        // order of these two matters
-        minimized = true;
-        hide_settings();
-        if (send_opts)
-            send_options();
+        // if there's no inventory to display at all, don't even show the
+        // placeholder button, don't update settings, etc. If this happens
+        // because the player genuinely has nothing, the panel will return
+        // to its prev state once they do. If they've configured it to not
+        // show any items, it should never appear.
+        if (!filtered_inv.length)
+        {
+            // explicitly remove this, in case a player drops consumables with
+            // the panel minimized
+            $("#action-panel-placeholder").addClass("hidden");
+        }
+        else
+        {
+            $("#action-panel-placeholder").removeClass("hidden").show();
+            // order of these two matters
+            minimized = true;
+            hide_settings();
+            if (send_opts)
+                send_options();
+        }
     }
 
     function show_panel(send_opts=true)
@@ -326,12 +340,6 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         if (client.is_watching())
             return;
 
-        if (minimized)
-        {
-            hide_panel(false);
-            return;
-        }
-
         // Filter
         filtered_inv = Object.values(player.inv).filter(function (item) {
             if (!item.quantity) // Skip empty inventory slots
@@ -340,9 +348,9 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                 return true;
         });
 
-        if (!filtered_inv.length)
+        if (minimized || !filtered_inv.length)
         {
-            $canvas.addClass("hidden");
+            hide_panel(false);
             return;
         }
 
