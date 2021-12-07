@@ -1258,7 +1258,7 @@ static void _grab_followers()
         else
         {
             // Permanent undead are left behind but stay.
-            mprf("Your mindless thrall%s behind.",
+            mprf("Your mindless thrall%s behind to rot.",
                  non_stair_using_allies > 1 ? "s stay" : " stays");
         }
     }
