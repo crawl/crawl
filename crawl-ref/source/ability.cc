@@ -589,12 +589,13 @@ static vector<ability_def> &_get_ability_list()
 
         // Qazlal
         { ABIL_QAZLAL_UPHEAVAL, "Upheaval",
-            4, 0, 3, LOS_MAX_RANGE, {fail_basis::invo, 40, 5, 20},
+            3, 0, generic_cost::range(3, 4), LOS_MAX_RANGE,
+            {fail_basis::invo, 40, 5, 20},
             abflag::none },
         { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
-            6, 0, 6, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
+            5, 0, 6, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area",
-            7, 0, 10, -1, {fail_basis::invo, 70, 4, 25}, abflag::none },
+            8, 0, 10, -1, {fail_basis::invo, 70, 4, 25}, abflag::none },
 
         // Uskayaw
         { ABIL_USKAYAW_STOMP, "Stomp",
