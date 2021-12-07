@@ -284,16 +284,15 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             // be closed and we should ignore the click
             if (ev.type == "mousedown" && settings_visible)
                 return;
+
+            // for finding the mouse position, we need to *not* use the device
+            // pixel ratio to adjust the scale
             var cell_width = renderer.cell_width * scale / 100;
             var cell_height = renderer.cell_height * scale / 100;
             var cell_length = _horizontal() ? cell_width : cell_height;
-
-            // XX this code is copied from dungeon renderer, needs tested on a
-            // hidpi device
-            var ratio = window.devicePixelRatio;
             var loc = {
-                x: Math.round(ev.clientX / (cell_width / ratio) - 0.5),
-                y: Math.round(ev.clientY / (cell_height / ratio) - 0.5)
+                x: Math.round(ev.clientX / cell_width - 0.5),
+                y: Math.round(ev.clientY / cell_height - 0.5)
             };
 
             if (ev.type === "mousemove" || ev.type === "mouseenter")
@@ -363,8 +362,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         });
 
         // Render
-        var cell_width = renderer.cell_width * scale / 100;
-        var cell_height = renderer.cell_height * scale / 100;
+        // renderer here stores unscaled values. (This is different than how
+        // it is done for the dungeon rendering.)
+        var adjusted_scale = scale * window.devicePixelRatio;
+
+        var cell_width = renderer.cell_width * adjusted_scale / 100;
+        var cell_height = renderer.cell_height * adjusted_scale / 100;
         var cell_length = _horizontal() ? cell_width
                                         : cell_height;
         var required_length = cell_length * (filtered_inv.length + 1);
@@ -385,9 +388,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                               _horizontal() ? cell_height : panel_length);
 
         // XX This should definitely be a different/custom icon
-        renderer.draw_gui(gui.PROMPT_NO, 0, 0, scale / 100);
+        renderer.draw_gui(gui.PROMPT_NO, 0, 0, adjusted_scale / 100);
         if (selected == 0)
-            renderer.draw_icon(icons.CURSOR3, 0, 0, undefined, undefined, scale / 100);
+        {
+            renderer.draw_icon(icons.CURSOR3, 0, 0, undefined, undefined,
+                adjusted_scale / 100);
+        }
 
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
             var offset = cell_length * (idx + 1);
@@ -395,14 +401,14 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                 renderer.draw_main(tile,
                                    _horizontal() ? offset : 0,
                                    _horizontal() ? 0 : offset,
-                                   scale / 100);
+                                   adjusted_scale / 100);
                 if (selected == idx + 1)
                 {
                     renderer.draw_icon(icons.CURSOR3,
                                        _horizontal() ? offset : 0,
                                        _horizontal() ? 0 : offset,
                                        undefined, undefined,
-                                       scale / 100);
+                                       adjusted_scale / 100);
                 }
             });
 
@@ -422,11 +428,11 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             var x_pos = 0, y_pos = 0;
 
             if (_horizontal())
-                x_pos = available_length - icons.get_tile_info(ellipsis).w * scale / 100;
+                x_pos = available_length - icons.get_tile_info(ellipsis).w * adjusted_scale / 100;
             else
-                y_pos = available_length - icons.get_tile_info(ellipsis).h * scale / 100;
+                y_pos = available_length - icons.get_tile_info(ellipsis).h * adjusted_scale / 100;
 
-            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, scale / 100);
+            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, adjusted_scale / 100);
         }
         $canvas.removeClass("hidden");
     }
