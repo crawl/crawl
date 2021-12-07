@@ -39,6 +39,7 @@ tiamat_purple
 tiamat_yellow
 %sdir mon/holy
 seraph MONS_SERAPH
+seraph_swordless MONS_SERAPH_SWORDLESS
 %sdir mon/sprint
 bag_of_meat MONS_BAG_OF_MEAT
 meatzerker MONS_MEATZERKER

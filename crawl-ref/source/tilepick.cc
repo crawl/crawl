@@ -1764,6 +1764,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return base + (_bow_offset(mon) ? 1 : 0);
 
         case MONS_CEREBOV:
+        case MONS_SERAPH:
             return base + (mon.inv[MSLOT_WEAPON] ? 0 : 1);
 
         case MONS_BALLISTOMYCETE:
