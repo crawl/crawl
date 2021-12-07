@@ -1683,7 +1683,7 @@ void okawaru_handle_duel()
         && !okawaru_duel_active()
         && !you.duration[DUR_DUEL_COMPLETE])
     {
-        you.set_duration(DUR_DUEL_COMPLETE, random_range(30, 40));
+        you.set_duration(DUR_DUEL_COMPLETE, random_range(15, 25));
     }
 
     if (!player_in_branch(BRANCH_ARENA) && you.duration[DUR_DUEL_COMPLETE])
