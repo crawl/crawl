@@ -700,6 +700,12 @@ A grey beetle with an almost impenetrable rocky carapace. When at some distance
 from its foe, a boulder beetle is capable of rolling at high speed, attempting
 to crash into its target for heavy damage.
 %%%%
+bound soul
+
+The soul of a living, holy, or demonic creature, captured by a dark sacrifice
+to Yredelemnul. The bound soul will follow its captor through stairs and come
+when recalled from a different level.
+%%%%
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and

@@ -1414,6 +1414,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     {
         case MONS_SKELETON:
             return _zombie_tile_to_skeleton(zombie_tile);
+        case MONS_BOUND_SOUL:
         case MONS_SPECTRAL_THING:
             return _zombie_tile_to_spectral(zombie_tile);
         case MONS_SIMULACRUM:
@@ -1693,6 +1694,7 @@ static tentacle_type _get_tentacle_type(const monster_info& mon)
                     return tentacle_type::zombie_kraken;
                 case MONS_SIMULACRUM:
                     return tentacle_type::simulacrum_kraken;
+                case MONS_BOUND_SOUL:
                 case MONS_SPECTRAL_THING:
                     return tentacle_type::spectral_kraken;
                 default:
@@ -1925,7 +1927,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 tile += TILEP_MONS_KRAKEN_SIMULACRUM_TENTACLE_SEGMENT_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
             }
-            if (_mons_is_kraken_tentacle(mon.type) && mon.base_type == MONS_SPECTRAL_THING)
+            if (_mons_is_kraken_tentacle(mon.type)
+                && (mon.base_type == MONS_SPECTRAL_THING || mon.base_type == MONS_BOUND_SOUL))
             {
                 tile += TILEP_MONS_KRAKEN_SPECTRAL_TENTACLE_SEGMENT_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;

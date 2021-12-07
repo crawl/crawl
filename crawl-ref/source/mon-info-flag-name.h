@@ -124,7 +124,6 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SLOW_MOVEMENT, "struggling", "covering ground slowly", "struggling"},
     { MB_PAIN_BOND, "pain bonded", "sharing @possessive@ pain", "pain bonded"},
     { MB_IDEALISED, "idealised", "idealised", "idealised"},
-    { MB_ENSLAVED, "", "disembodied soul", "" },
     { MB_ALLY_TARGET, "ally target", "ally target", "ally target"},
     { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
 };

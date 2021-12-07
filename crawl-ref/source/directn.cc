@@ -3577,11 +3577,6 @@ static string _get_monster_desc(const monster_info& mi)
         text += string(mi.pronoun(PRONOUN_POSSESSIVE))
                 + " soul is ripe for the taking.\n";
     }
-    else if (mi.is(MB_ENSLAVED))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " a disembodied soul.\n";
-    }
 
     if (mi.is(MB_MIRROR_DAMAGE))
     {

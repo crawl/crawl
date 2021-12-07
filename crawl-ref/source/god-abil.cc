@@ -1737,7 +1737,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
-    define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
+    define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
     // If the original monster has been levelled up, its HD might be different
     // from its class HD, in which case its HP should be rerolled to match.
@@ -1747,10 +1747,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         roll_zombie_hp(mon);
     }
 
-    mon->colour = ETC_UNHOLY;
-
     mon->flags |= MF_NO_REWARD;
-    mon->flags |= MF_ENSLAVED_SOUL;
 
     // If the original monster type has melee abilities, make sure
     // its spectral thing has them as well.

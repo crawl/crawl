@@ -659,9 +659,6 @@ monster_info::monster_info(const monster* m, int milev)
     if (you.afraid_of(m))
         mb.set(MB_FEAR_INSPIRING);
 
-    if (testbits(m->flags, MF_ENSLAVED_SOUL))
-        mb.set(MB_ENSLAVED);
-
     if (m->is_shapeshifter() && (m->flags & MF_KNOWN_SHIFTER))
         mb.set(MB_SHAPESHIFTER);
 
@@ -1042,6 +1039,9 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";
 
+    if (type == MONS_BOUND_SOUL && !is(MB_NAME_ZOMBIE) && !nocore)
+        ss << "bound ";
+
     if (is(MB_SPECTRALISED))
         ss << "ghostly ";
 
@@ -1109,6 +1109,10 @@ string monster_info::common_name(description_level_type desc) const
     case MONS_SPECTRAL_THING:
         if (nocore)
             ss << "spectre";
+        break;
+    case MONS_BOUND_SOUL:
+        if (nocore)
+            ss << "bound soul";
         break;
     case MONS_PILLAR_OF_SALT:
         ss << (nocore ? "" : " ") << "shaped pillar of salt";

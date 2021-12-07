@@ -3159,6 +3159,7 @@ static int _zombie_ac_modifier(monster_type type)
         case MONS_SKELETON:
             return -6;
         case MONS_SPECTRAL_THING:
+        case MONS_BOUND_SOUL:
             return 2;
         default:
             die("invalid zombie type %d (%s)", type,
@@ -3294,6 +3295,7 @@ static int _zombie_ev_modifier(monster_type type)
         case MONS_ZOMBIE:
         case MONS_SIMULACRUM:
         case MONS_SPECTRAL_THING:
+        case MONS_BOUND_SOUL:
             return -5;
         case MONS_SKELETON:
             return -7;

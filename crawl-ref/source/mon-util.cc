@@ -1254,6 +1254,7 @@ int derived_undead_avg_hp(monster_type mtype, int hd, int scale)
 {
     static const map<monster_type, int> hp_per_hd_by_type = {
         { MONS_ZOMBIE,          85 },
+        { MONS_BOUND_SOUL,      80 },
         { MONS_SKELETON,        70 },
         { MONS_SPECTRAL_THING,  60 },
         // Simulacra aren't tough, but you can create piles of them. - bwr
@@ -1635,7 +1636,8 @@ bool mons_class_is_zombified(monster_type mc)
     return mc == MONS_ZOMBIE
         || mc == MONS_SKELETON
         || mc == MONS_SIMULACRUM
-        || mc == MONS_SPECTRAL_THING;
+        || mc == MONS_SPECTRAL_THING
+        || mc == MONS_BOUND_SOUL;
 }
 
 bool mons_class_is_animated_weapon(monster_type type)
@@ -1690,7 +1692,7 @@ bool mons_can_be_spectralised(const monster& mon)
 
 bool mons_class_can_use_stairs(monster_type mc)
 {
-    return !mons_class_is_zombified(mc)
+    return (!mons_class_is_zombified(mc) || mc == MONS_BOUND_SOUL)
            && !mons_is_tentacle_or_tentacle_segment(mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
@@ -1706,11 +1708,6 @@ bool mons_class_can_use_transporter(monster_type mc)
 
 bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
 {
-    // Always ok, comes before mc check because other specters cannot
-    // take stairs
-    if (mons_enslaved_soul(mon))
-        return true;
-
     if (!mons_class_can_use_stairs(mon.type))
         return false;
 
@@ -1736,7 +1733,7 @@ bool mons_enslaved_body_and_soul(const monster& mon)
 
 bool mons_enslaved_soul(const monster& mon)
 {
-    return testbits(mon.flags, MF_ENSLAVED_SOUL);
+    return mon.type == MONS_BOUND_SOUL;
 }
 
 void name_zombie(monster& mon, monster_type mc, const string &mon_name)
@@ -1825,7 +1822,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
     // overwrite all other AFs
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
-    else if (mons.type == MONS_SPECTRAL_THING)
+    else if (mons.mons_species() == MONS_SPECTRAL_THING)
         attk.flavour = AF_DRAIN;
     else
         attk.flavour = AF_PLAIN;
@@ -3171,7 +3168,7 @@ int mons_base_speed(const monster& mon, bool known)
         return mon.props[MON_SPEED_KEY];
     }
 
-    if (mon.type == MONS_SPECTRAL_THING)
+    if (mon.mons_species() == MONS_SPECTRAL_THING)
         return mons_class_base_speed(mons_zombie_base(mon));
 
     return mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))

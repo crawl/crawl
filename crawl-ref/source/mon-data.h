@@ -5075,6 +5075,22 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
     {TILEP_MONS_SPECTRAL_LARGE}, TILE_ERROR
 },
 
+// yred enslaved soul - similar to a spectral thing, stats overridden
+// on creation
+{
+    MONS_BOUND_SOUL, 'Z', LIGHTRED, "bound soul",
+    M_SEE_INVIS | M_INSUBSTANTIAL | M_FLIES,
+    MR_RES_COLD,
+    11, MONS_WRAITH, MONS_SPECTRAL_THING, MH_UNDEAD, WILL_INVULN,
+    { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    8, 440,
+    8, 5, MST_NO_SPELLS, false, S_SILENT,
+    I_BRAINLESS, HT_LAND, 7, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC,
+    {TILEP_MONS_SPECTRAL_LARGE}, TILE_ERROR
+},
+
+
 // water monsters
 {
     MONS_ELECTRIC_EEL, 'S', LIGHTCYAN, "electric eel",
