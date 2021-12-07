@@ -1235,7 +1235,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             this.ctx.shadowOffsetY = 1;
             this.ctx.textAlign = "left";
             this.ctx.textBaseline = "top";
-            this.ctx.fillText(qty, x + 2, y + 2);
+            // XX this way of doing device scaling is v ugly
+            var ratio = window.devicePixelRatio;
+            this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            this.ctx.fillText(qty, (x + 2) / ratio, (y + 2) / ratio);
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         },
 
         draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max, centre, img_scale)
