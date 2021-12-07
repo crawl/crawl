@@ -1780,6 +1780,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         invalidate_agrid();
     }
 
+    // schedule our actual revival for the end of this combat round
+    avoided_death_fineff::schedule(mon);
+
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
 }

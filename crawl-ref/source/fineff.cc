@@ -605,6 +605,12 @@ void bennu_revive_fineff::fire()
     }
 }
 
+void avoided_death_fineff::fire()
+{
+    ASSERT(defender()->is_monster());
+    defender()->as_monster()->hit_points = hp;
+}
+
 void infestation_death_fineff::fire()
 {
     if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,

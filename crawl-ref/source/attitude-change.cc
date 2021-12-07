@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
+#include "fineff.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h" // passive_t::convert_orcs
@@ -280,6 +281,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     {
         orc->hit_points = max(1, random_range(orc->max_hit_points / 5,
                                               orc->max_hit_points * 2 / 5));
+        avoided_death_fineff::schedule(orc);
     }
 
     mons_make_god_gift(*orc, GOD_BEOGH);
