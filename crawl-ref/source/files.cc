@@ -993,14 +993,36 @@ NORETURN void print_save_json(const char *name)
     }
 }
 
+static string _get_prefs_path()
+{
+#ifdef DGL_STARTUP_PREFS_BY_NAME
+    // if prfs are being organized by name, the save directory per se is most
+    // likely versioned, so store them in a subdirectory of the shared
+    // directory instead.
+    string dir = catpath(catpath(
+            Options.shared_dir,
+            crawl_state.game_savedir_path()),
+        "prefs");
+    check_mkdir("Preferences directory", &dir, false);
+    return dir;
+#else
+    return _get_savefile_directory();
+#endif
+}
+
 string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
-    return _get_savefile_directory() + "start-"
-           + strip_filename_unsafe_chars(Options.game.name) + "-ns.prf";
+    // in the early startup sequence we need to use Options.game.name, but this
+    // becomes empty by the time the game is actually starting. (...)
+    const string player_name = Options.game.name.length()
+        ? Options.game.name : you.your_name;
+    const string filename =
+        "start-" + strip_filename_unsafe_chars(player_name) + "-ns.prf";
 #else
-    return _get_savefile_directory() + "start-ns.prf";
+    const string filename = "start-ns.prf";
 #endif
+    return catpath(_get_prefs_path(), filename);
 }
 
 void write_ghost_version(writer &outf)
