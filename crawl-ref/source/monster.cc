@@ -682,7 +682,8 @@ bool monster::can_throw_large_rocks() const
     return species == MONS_TAINTED_LEVIATHAN
            || species == MONS_STONE_GIANT
            || species == MONS_CYCLOPS
-           || species == MONS_OGRE;
+           || species == MONS_OGRE
+           || mons_bound_soul(*this);
 }
 
 bool monster::can_speak()
