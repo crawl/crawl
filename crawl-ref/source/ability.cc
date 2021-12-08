@@ -393,7 +393,8 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_YRED_DRAIN_LIFE, "Drain Life",
             6, 0, 0, -1, {fail_basis::invo, 60, 4, 25}, abflag::souls },
         { ABIL_YRED_BIND_SOUL, "Bind Soul",
-            8, 0, 0, -1, {fail_basis::invo, 80, 4, 25}, abflag::souls },
+            8, 0, 0, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 25},
+            abflag::target | abflag::not_self | abflag::souls },
 
         // Okawaru
         { ABIL_OKAWARU_HEROISM, "Heroism",
@@ -2814,28 +2815,14 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_YRED_BIND_SOUL:
     {
-        god_acting gdact;
-        beam.range = LOS_MAX_RANGE;
-        direction_chooser_args args;
-        args.restricts = DIR_TARGET;
-        args.mode = TARG_HOSTILE;
-        args.needs_path = false;
-
-        if (!spell_direction(*target, beam, &args))
-            return spret::abort;
-
-        if (beam.target == you.pos())
-        {
-            mpr("Your soul already belongs to Yredelemnul.");
-            return spret::abort;
-        }
-
         monster* mons = monster_at(beam.target);
 
         if (mons && you.can_see(*mons) && mons->is_illusion())
         {
             fail_check();
-            simple_monster_message(*mons, "'s clone doesn't have a soul to bind!");
+            mprf("You attempt to bind %s soul, but %s is merely a clone!",
+                 mons->name(DESC_ITS).c_str(),
+                 mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
             // Still costs a turn to gain the information.
             return spret::success;
         }

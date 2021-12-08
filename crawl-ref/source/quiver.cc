@@ -1460,7 +1460,6 @@ namespace quiver
             case ABIL_ROLLING_CHARGE:
             case ABIL_BREATHE_ACID:
             case ABIL_DAMNATION:
-            case ABIL_YRED_BIND_SOUL:
             case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:
             case ABIL_BEOGH_SMITING:
