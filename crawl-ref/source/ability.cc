@@ -2763,13 +2763,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_YRED_DARK_BARGAIN:
     {
         fail_check();
-        const int soul_cost = abil.get_mp_cost() / 2;
-
-        if (!pay_yred_souls(soul_cost, true))
-        {
-            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
-            return spret::abort;
-        }
 
         // XXX: call rude_summon_prompt()?
         // a reason not to: the only rude summon things that damage
@@ -2777,9 +2770,19 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         // hostile already, rendering the player unable to use this ability.
         fail_check();
 
-        pay_yred_souls(soul_cost);
         if (yred_random_servant(you.skill_rdiv(SK_INVOCATIONS)))
             simple_god_message(" sends a servant to aid you.");
+        else
+        {
+            // this is technically an information leak, but in the situation
+            // where there's an invisible monster the player has enough zombies
+            // to locate it; I guess it could reveal if the player was
+            // completely surrounded by unseen invisible foes but that edge
+            // case is punishing enough that I'd rather have this ability be
+            // nice to players surrounded by their own zombies. -ebering
+            simple_god_message(" has nowhere to place a servant.");
+            return spret::abort;
+        }
 
         break;
     }
