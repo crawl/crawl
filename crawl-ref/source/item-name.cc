@@ -1963,10 +1963,11 @@ void check_if_everything_is_identified(void)
     for (const auto t : types)
     {
         ASSERT(item_type_has_ids(t));
+        int unidentified = 0;
 
         for (const auto s : all_item_subtypes(t))
         {
-            if (!item_type_known(t, s))
+            if (!item_type_known(t, s) && unidentified++)
             {
                 _is_everything_identified = false;
                 return;
