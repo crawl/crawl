@@ -1270,7 +1270,7 @@ static int _ench_power(spell_type spell, const monster &mons)
     return min(cap, mons_spellpower(mons, spell) / ENCH_POW_FACTOR);
 }
 
-static int _mons_spell_range(const monster &mons, spell_type spell)
+int mons_spell_range(const monster &mons, spell_type spell)
 {
     return mons_spell_range_for_hd(spell, mons.spell_hd());
 }
@@ -1364,7 +1364,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.is_explosion = false;
     beam.attitude     = mons_attitude(*mons);
 
-    beam.range = _mons_spell_range(*mons, spell_cast);
+    beam.range = mons_spell_range(*mons, spell_cast);
 
     spell_type real_spell = spell_cast;
 
@@ -4723,7 +4723,7 @@ static coord_def _mons_fragment_target(const monster &mon)
         return mons->target;
     }
 
-    const int range = _mons_spell_range(*mons, SPELL_LRD);
+    const int range = mons_spell_range(*mons, SPELL_LRD);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
     {
