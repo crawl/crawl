@@ -993,12 +993,12 @@ static void _inc_gift_timeout(int val)
 //   do too much collatoral damage
 static monster_type _yred_servants[] =
 {
-    MONS_WIGHT, MONS_NECROPHAGE, MONS_PHANTOM, MONS_WRAITH, MONS_FLYING_SKULL,
-    MONS_FREEZING_WRAITH, MONS_VAMPIRE, MONS_PHANTASMAL_WARRIOR,
-    MONS_BOG_BODY, MONS_SKELETAL_WARRIOR, MONS_JIANGSHI,
-    MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_EIDOLON,
-    MONS_DEATH_COB, MONS_ANCIENT_CHAMPION, MONS_GHOUL,
-    MONS_REVENANT, MONS_SEARING_WRETCH, MONS_BONE_DRAGON, MONS_PROFANE_SERVITOR
+    MONS_WIGHT, MONS_NECROPHAGE, MONS_SHADOW, MONS_PHANTOM, MONS_WRAITH,
+    MONS_FLYING_SKULL, MONS_FREEZING_WRAITH, MONS_VAMPIRE, MONS_SHADOW_WRAITH,
+    MONS_PHANTASMAL_WARRIOR, MONS_BOG_BODY, MONS_SKELETAL_WARRIOR,
+    MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_EIDOLON,
+    MONS_DEATH_COB, MONS_ANCIENT_CHAMPION, MONS_GHOUL, MONS_REVENANT,
+    MONS_SEARING_WRETCH, MONS_PROFANE_SERVITOR, MONS_BONE_DRAGON
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
@@ -1025,7 +1025,7 @@ bool yred_random_servant(unsigned int pow, bool force_hostile)
     }
 
     // Skip some of the weakest servants, once the threshold is high.
-    const int bot_threshold = top_threshold <= 4 ? 0 : top_threshold / 2 + 2;
+    const int bot_threshold = top_threshold <= 6 ? 0 : top_threshold / 2 + 3;
     top_threshold = min(top_threshold, MAX_YRED_SERVANT_THRESHOLD - 1);
 
     const unsigned int servant = random_range(bot_threshold, top_threshold);
