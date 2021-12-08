@@ -85,8 +85,10 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
 static armour_type _hepliaklqana_shield_type(monster_type mc, int HD);
 static special_armour_type _hepliaklqana_shield_ego(int HD);
 
-const vector<god_power> god_powers[NUM_GODS] =
+const vector<vector<god_power>> & get_all_god_powers()
 {
+    static vector<vector<god_power>> god_powers =
+    {
     // no god
     { },
 
@@ -386,12 +388,24 @@ const vector<god_power> god_powers[NUM_GODS] =
              "summon a storm of heavenly clouds to empower your attacks",
              "summon a storm of heavenly clouds" },
     },
-};
+    };
+    static bool god_powers_init = false;
+
+    if (!god_powers_init)
+    {
+        ASSERT(god_powers.size() == NUM_GODS);
+        for (int i = 0; i < NUM_GODS; i++)
+            for (auto &p : god_powers[i])
+                p.god = static_cast<god_type>(i);
+        god_powers_init = true;
+    }
+    return god_powers;
+}
 
 vector<god_power> get_god_powers(god_type god)
 {
     vector<god_power> ret;
-    for (const auto& power : god_powers[god])
+    for (const auto& power : get_all_god_powers()[god])
     {
         // hack :( don't show fake hp restore
         if (god == GOD_VEHUMET && power.rank == 1
@@ -3451,7 +3465,7 @@ void set_god_ability_slots()
                 break;
             if (*it == you.religion)
                 continue;
-            for (const god_power& power : god_powers[*it])
+            for (const god_power& power : get_all_god_powers()[*it])
                 if (slot == power.abil)
                     slot = ABIL_NON_ABILITY;
         }
@@ -3460,7 +3474,7 @@ void set_god_ability_slots()
     int num = letter_to_index('a');
     // Not using get_god_powers, so that hotkeys remain stable across games
     // even if you can't use a particular ability in a given game.
-    for (const god_power& power : god_powers[you.religion])
+    for (const god_power& power : get_all_god_powers()[you.religion])
     {
         if (power.abil != ABIL_NON_ABILITY
             // Animate Dead doesn't have its own hotkey; it steals
@@ -4838,20 +4852,21 @@ bool god_power_usable(const god_power& power, bool ignore_piety, bool ignore_pen
         return false;
     const ability_type abil = fixup_ability(power.abil);
     ASSERT(abil != ABIL_NON_ABILITY);
-    return (power.rank <= 0
-            || power.rank == 7 && can_do_capstone_ability(you.religion)
-            || piety_rank() >= power.rank
-            || ignore_piety)
-           && (!player_under_penance()
-               || power.rank == -1
-               || ignore_penance);
+    return power.god == you.religion
+            && (power.rank <= 0
+                || power.rank == 7 && can_do_capstone_ability(you.religion)
+                || piety_rank() >= power.rank
+                || ignore_piety)
+            && (!player_under_penance()
+                || power.rank == -1
+                || ignore_penance);
 }
 
 const god_power* god_power_from_ability(ability_type abil)
 {
     for (int god = GOD_NO_GOD; god < NUM_GODS; god++)
     {
-        for (const auto& power : god_powers[god])
+        for (const auto& power : get_all_god_powers()[god])
         {
             if (power.abil == abil)
                 return &power;
