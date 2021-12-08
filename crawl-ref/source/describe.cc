@@ -3425,7 +3425,8 @@ static void _get_spell_description(const spell_type spell,
 
         }
 
-        const int range = mons_spell_range(mon_owner, spell);
+        const int hd = mon_owner->spell_hd();
+        const int range = mons_spell_range_for_hd(spell, hd);
         description += "\nRange : ";
         if (spell == SPELL_CALL_DOWN_LIGHTNING)
             description += stringize_glyph(mons_char(mon_owner->type)) + "..---->";
