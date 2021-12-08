@@ -3293,10 +3293,11 @@ static int _zombie_ev_modifier(monster_type type)
 
     switch (type)
     {
+        case MONS_BOUND_SOUL:
+            return  2;
         case MONS_ZOMBIE:
         case MONS_SIMULACRUM:
         case MONS_SPECTRAL_THING:
-        case MONS_BOUND_SOUL:
             return -5;
         case MONS_SKELETON:
             return -7;
