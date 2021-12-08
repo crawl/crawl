@@ -433,15 +433,14 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 2, -1, {fail_basis::invo, piety_breakpoint(2), 0, 1},
             abflag::none },
         { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
-            0, 0, generic_cost::range(5, 6), -1,
-            {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
+            0, 0, 5, -1, {fail_basis::invo, piety_breakpoint(5), 0, 1},
+            abflag::none },
 
         // Elyvilon
         { ABIL_ELYVILON_PURIFICATION, "Purification",
             2, 0, 2, -1, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
         { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
             2, 0, 2, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
-
         { ABIL_ELYVILON_HEAL_SELF, "Heal Self",
             2, 0, 3, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
