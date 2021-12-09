@@ -1954,9 +1954,7 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
 
 // Has every item a scroll can identify (i.e. all scrolls and potions) been
 // identified by "you"?
-static bool _is_everything_identified;
-
-void check_if_everything_is_identified(void)
+void check_if_everything_is_identified()
 {
     const object_class_type types[] = {OBJ_SCROLLS, OBJ_POTIONS};
 
@@ -1969,20 +1967,20 @@ void check_if_everything_is_identified(void)
         {
             if (!item_type_known(t, s) && unidentified++)
             {
-                _is_everything_identified = false;
+                you.props.erase(IDENTIFIED_ALL_KEY);
                 return;
             }
         }
     }
-    _is_everything_identified = true;
+    you.props[IDENTIFIED_ALL_KEY] = true;
 }
 
-bool set_ident_type(item_def &item, bool identify)
+bool set_ident_type(item_def &item, bool identify, bool check_last)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
         return false;
 
-    if (!set_ident_type(item.base_type, item.sub_type, identify))
+    if (!set_ident_type(item.base_type, item.sub_type, identify, check_last))
         return false;
 
     if (in_inventory(item))
@@ -2008,7 +2006,8 @@ bool set_ident_type(item_def &item, bool identify)
     return true;
 }
 
-bool set_ident_type(object_class_type basetype, int subtype, bool identify)
+bool set_ident_type(object_class_type basetype, int subtype, bool identify,
+                    bool check_last)
 {
     if (!item_type_has_ids(basetype))
         return false;
@@ -2028,7 +2027,8 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify)
     if (identify && !(you.pending_revival || crawl_state.updating_scores))
         _maybe_identify_pack_item();
 
-    check_if_everything_is_identified();
+    if (check_last)
+        check_if_everything_is_identified();
 
     return true;
 }
@@ -2911,7 +2911,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
-            return _is_everything_identified
+            return you.props.exists(IDENTIFIED_ALL_KEY)
                    || have_passive(passive_t::identify_items);
         default:
             return false;

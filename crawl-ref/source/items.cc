@@ -4671,7 +4671,7 @@ static void _identify_last_item(item_def &item)
         item.props[NEEDS_AUTOPICKUP_KEY] = true;
     }
 
-    set_ident_type(item, true);
+    set_ident_type(item, true, false);
 
     if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
         item.props.erase(NEEDS_AUTOPICKUP_KEY);
