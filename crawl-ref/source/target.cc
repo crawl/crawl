@@ -419,7 +419,7 @@ static bool _unravelling_explodes_at(const coord_def c)
         return true;
 
     const monster_info* mi = env.map_knowledge(c).monsterinfo();
-    return mi && mi->debuffable();
+    return mi && mi->unravellable();
 }
 
 bool targeter_unravelling::set_aim(coord_def a)

@@ -4290,7 +4290,7 @@ void bolt::tracer_affect_monster(monster* mon)
     if (!agent() || !agent()->can_see(*mon))
         return;
 
-    if (flavour == BEAM_UNRAVELLING && monster_is_debuffable(*mon))
+    if (flavour == BEAM_UNRAVELLING && monster_can_be_unravelled(*mon))
         is_explosion = true;
 
     // Trigger explosion on exploding beams.
@@ -5777,10 +5777,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_UNRAVELLING:
-        if (!monster_is_debuffable(*mon))
+        if (!monster_can_be_unravelled(*mon))
             return MON_UNAFFECTED;
 
-        debuff_monster(*mon);
+        if (mon->is_summoned())
+        {
+            mprf("The magic binding %s to this plane unravels!",
+                 mon->name(DESC_THE).c_str());
+            monster_die(*mon, KILL_DISMISSED, actor_to_death_source(agent()));
+        }
+        else
+            debuff_monster(*mon);
         _unravelling_explode(*this);
         return MON_AFFECTED;
 
@@ -6336,7 +6343,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
         case BEAM_UNRAVELLING:
-            return monster_is_debuffable(*mon); // XXX: as tukima's
+            return monster_can_be_unravelled(*mon); // XXX: as tukima's
         default:
             break;
     }

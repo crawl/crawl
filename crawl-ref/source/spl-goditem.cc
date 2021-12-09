@@ -553,7 +553,6 @@ void debuff_player()
         mprf(MSGCH_WARN, "Your magical effects are unravelling.");
 }
 
-
 /**
   * What dispellable effects currently exist on a given monster?
   *
@@ -584,7 +583,6 @@ static void _dispellable_monster_buffs(const monster &mon,
         buffs.push_back(ENCH_INVIS);
 }
 
-
 /**
  * Does a given monster have any buffs that can be removed?
  *
@@ -595,6 +593,11 @@ bool monster_is_debuffable(const monster &mon)
     vector<enchant_type> buffs;
     _dispellable_monster_buffs(mon, buffs);
     return !buffs.empty();
+}
+
+bool monster_can_be_unravelled(const monster& mon)
+{
+    return monster_is_debuffable(mon) || mon.is_summoned();
 }
 
 /**

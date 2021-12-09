@@ -405,7 +405,7 @@ struct monster_info : public monster_info_base
     void set_colour(int colour);
 
     bool has_trivial_ench(enchant_type ench) const;
-    bool debuffable() const;
+    bool unravellable() const;
 
 protected:
     string _core_name() const;

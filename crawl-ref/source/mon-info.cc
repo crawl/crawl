@@ -1689,9 +1689,13 @@ bool monster_info::has_trivial_ench(enchant_type ench) const
     return flag && is(*flag);
 }
 
-/// Can this monster be debuffed, to the best of the player's knowledge?
-bool monster_info::debuffable() const
+// Can this monster be affected by Yara's Violent Unravelling, to the best of
+// the player's knowledge?
+bool monster_info::unravellable() const
 {
+    if (is(MB_SUMMONED))
+        return true;
+
     // NOTE: assumes that all debuffable enchantments are trivially mapped
     // to MBs.
 
