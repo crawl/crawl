@@ -144,6 +144,10 @@ enum command_type
     CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
 #endif
 
+#ifdef USE_TILE_LOCAL
+    CMD_TOGGLE_TAB_ICONS,
+#endif
+
 #ifdef __ANDROID__
     // toggle the on-screen keyboard visibility
     CMD_TOGGLE_KEYBOARD,

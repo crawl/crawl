@@ -89,7 +89,8 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab
                                                   : tileidx_t{TILEG_TAB_BLANK};
     const tile_info &tinf = tile_gui_info(actual_tile_tab);
-    ox = max((int)tinf.width, ox);
+    _icon_width = max((int)tinf.width, ox);
+    ox = _icon_width;
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
@@ -293,7 +294,8 @@ void TabbedRegion::render()
     cprintf("rendering TabbedRegion\n");
 #endif
     set_transform();
-    m_buf_gui.draw();
+    if (ox > 0)
+        m_buf_gui.draw();
 
     m_tabs[m_active].reg->render();
 
@@ -463,6 +465,14 @@ void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &wind
     scale /= 2; // half size fits better
     dx = scale;
     dy = scale;
+}
+
+void TabbedRegion::set_tab_icons_visibility(bool show_tab_icons)
+{
+    if (show_tab_icons)
+      ox = _icon_width;
+    else
+      ox = 0;
 }
 
 #endif

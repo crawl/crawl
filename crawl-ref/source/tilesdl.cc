@@ -72,12 +72,12 @@ static int _screen_sizes[4][8] =
 // Extra values for viewport and map scale
 static int _screen_sizes[6][10] =
 {
-    {960, 768, 2, 18, 20, 18, 18, 18, 150, 110},
-    {800, 640, 2, 15, 17, 15, 15, 15, 140, 100},
-    {720, 576, 2, 13, 15, 13, 13, 13, 120, 80},
-    {640, 512, 1, 12, 14, 12, 12, 12, 100, 60},
-    {540, 432, 1, 10, 12, 10, 10, 10, 90, 50},
-    {480, 384, 1, 9, 11, 9, 9, 9, 80, 40}
+    {960, 960, 2, 18, 20, 18, 18, 18, 180, 130},
+    {800, 800, 2, 15, 17, 15, 15, 15, 150, 100},
+    {720, 720, 2, 13, 15, 13, 13, 13, 130, 80},
+    {640, 640, 1, 12, 14, 12, 12, 12, 120, 70},
+    {540, 540, 1, 10, 12, 10, 10, 10, 100, 50},
+    {480, 480, 1, 9, 11, 9, 9, 9, 90, 40}
 };
 #endif
 
@@ -116,6 +116,7 @@ TilesFramework::TilesFramework() :
     m_windowsz(1024, 768),
     m_fullscreen(false),
     m_need_redraw(false),
+    m_show_tab_icons(true),
     m_active_layer(LAYER_CRT),
     m_mouse(-1, -1),
     m_last_tick_redraw(0)
@@ -399,9 +400,13 @@ bool TilesFramework::initialise()
     TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
                                                    TILEG_TAB_NAVIGATION);
     m_region_tab->activate_tab(TAB_ITEM);
-    // the layout crashes with no previous active tab
     if (tiles.is_using_small_layout())
+    {
+        // the layout crashes with no previous active tab
         m_region_tab->deactivate_tab();
+        m_show_tab_icons = false;
+        m_region_tab->set_tab_icons_visibility(m_show_tab_icons);
+    }
 
     m_region_msg  = new MessageRegion(m_msg_font);
     m_region_stat = new StatRegion(m_stat_font);
@@ -1018,6 +1023,15 @@ void TilesFramework::zoom_dungeon(bool in)
 void TilesFramework::deactivate_tab()
 {
     m_region_tab->deactivate_tab();
+}
+
+void TilesFramework::toggle_tab_icons()
+{
+    m_show_tab_icons = !m_show_tab_icons;
+    m_region_tab->set_tab_icons_visibility(m_show_tab_icons);
+    resize();
+    redraw_screen();
+    update_screen();
 }
 
 void TilesFramework::autosize_minimap()

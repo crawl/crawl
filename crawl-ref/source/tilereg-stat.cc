@@ -23,8 +23,16 @@ int StatRegion::handle_mouse(wm_mouse_event &event)
     if (event.event != wm_mouse_event::PRESS || event.button != wm_mouse_event::LEFT)
         return 0;
 
-    // clicking on stats should show all the stats
-    return command_to_key(CMD_RESISTS_SCREEN);
+    if (!tiles.is_using_small_layout())
+    {
+        // clicking on stats should show all the stats
+        return command_to_key(CMD_RESISTS_SCREEN);
+    }
+    else
+    {
+        // if small layout, toggle the tab icons instead
+        return command_to_key(CMD_TOGGLE_TAB_ICONS);
+    }
 }
 
 bool StatRegion::update_tip_text(string& tip)
@@ -32,7 +40,10 @@ bool StatRegion::update_tip_text(string& tip)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
 
-    tip = "[L-Click] Show player information";
+    if (!tiles.is_using_small_layout())
+        tip = "[L-Click] Show player information";
+    else
+        tip = "[L-Click] Toggle tab icons";
     return true;
 }
 

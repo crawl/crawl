@@ -170,6 +170,7 @@ public:
     void zoom_dungeon(bool in);
 
     void deactivate_tab();
+    void toggle_tab_icons();
 
     void update_minimap(const coord_def &gc);
     void clear_minimap();
@@ -228,6 +229,7 @@ protected:
 
     bool m_fullscreen;
     bool m_need_redraw;
+    bool m_show_tab_icons;
 
     int TAB_ABILITY;
     int TAB_COMMAND;
