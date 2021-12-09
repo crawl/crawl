@@ -44,6 +44,7 @@
 #include "player-equip.h"
 #include "religion.h"
 #include "scroller.h"
+#include "showsymb.h"
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
@@ -64,6 +65,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "version.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 #include "view.h"
 
@@ -1230,6 +1232,12 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
 
     changed |= _update_int(force_full, current.sub_type, next.sub_type,
                            "sub_type", false);
+    if (Options.action_panel_glyphs)
+    {
+        string cur_glyph = stringize_glyph(get_item_glyph(current).ch);
+        string next_glyph = stringize_glyph(get_item_glyph(next).ch);
+        changed |= _update_string(force_full, cur_glyph, next_glyph, "g", false);
+    }
     if (is_xp_evoker(next))
     {
         short int next_charges = evoker_charges(next.sub_type);

@@ -418,6 +418,7 @@ const vector<GameOption*> game_options::build_options_list()
             SIMPLE_NAME(action_panel_orientation), "horizontal",
             {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
         new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
+        new BoolGameOption(SIMPLE_NAME(action_panel_glyphs), false),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -4991,6 +4992,7 @@ void game_options::write_webtiles_options(const string& name)
             Options.action_panel_font_family);
     tiles.json_write_int("action_panel_font_size",
             Options.action_panel_font_size);
+    tiles.json_write_bool("action_panel_glyphs", Options.action_panel_glyphs);
 
     _write_minimap_colours();
 

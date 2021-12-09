@@ -394,13 +394,40 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                 adjusted_scale / 100);
         }
 
+        var draw_glyphs = options.get("action_panel_glyphs")
+
+        if (draw_glyphs)
+        {
+            // need to manually initialize for this type of renderer
+            renderer.glyph_mode_font_size = options.get("glyph_mode_font_size");
+            renderer.glyph_mode_font = options.get("glyph_mode_font");
+            renderer.glyph_mode_update_font_metrics();
+        }
+
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
             var offset = cell_length * (idx + 1);
             item.tile.forEach(function (tile) { // Draw item and brand tiles
-                renderer.draw_main(tile,
+                if (draw_glyphs)
+                {
+                    // ugh, couldn't get this to work without a transform.
+                    // Also, I don't know why the font size here looks
+                    // different than map view, something about scaling?
+                    renderer.ctx.setTransform(scale / 100, 0, 0, scale / 100, 0, 0);
+                    // XX just the glyph is not very informative. One idea might
+                    // be to tack on the subtype icon, but those are currently
+                    // baked into the item tile so this would be a lot of work.
+                    renderer.render_glyph(_horizontal() ? offset * 100 / scale : 0,
+                                      _horizontal() ? 0 : offset * 100 / scale ,
+                                      item, true, true);
+                    renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                }
+                else
+                {
+                    renderer.draw_main(tile,
                                    _horizontal() ? offset : 0,
                                    _horizontal() ? 0 : offset,
                                    adjusted_scale / 100);
+                }
                 if (selected == idx + 1)
                 {
                     renderer.draw_icon(icons.CURSOR3,

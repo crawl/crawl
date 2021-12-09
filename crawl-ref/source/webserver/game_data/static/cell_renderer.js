@@ -220,7 +220,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
             if (options.get("tile_display_mode") == "glyphs")
             {
-                this.render_glyph(x, y, map_cell);
+                this.render_glyph(x, y, map_cell, false);
 
                 this.render_cursors(cx, cy, x, y);
                 this.draw_ray(x, y, cell);
@@ -502,8 +502,9 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_glyph: function (x, y, map_cell, omit_bg)
+        render_glyph: function (x, y, map_cell, omit_bg, square)
         {
+            // `map_cell` can be anything as long as it provides `col` and `g`
             var col = split_term_colour(map_cell.col);
             if (omit_bg && col.attr == enums.CHATTR.REVERSE)
                 col.attr = 0;
@@ -531,7 +532,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.rect(x, y, this.cell_width, this.cell_height);
                 this.ctx.clip();
 
-                if (options.get("tile_display_mode") == "hybrid")
+                if (square)
                 {
                     this.ctx.textAlign = "center";
                     this.ctx.textBaseline = "middle";
@@ -872,7 +873,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
             else if (options.get("tile_display_mode") == "hybrid")
             {
-                this.render_glyph(x, y, map_cell, true);
+                this.render_glyph(x, y, map_cell, true, true);
                 this.draw_ray(x, y, cell);
                 img_scale = undefined; // TODO: make this work?
             }
@@ -1229,6 +1230,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
             this.ctx.fillStyle = "white";
             this.ctx.font = font;
+
             this.ctx.shadowColor = "black";
             this.ctx.shadowBlur = 2;
             this.ctx.shadowOffsetX = 1;
