@@ -1172,24 +1172,24 @@ void TilesFramework::_send_player(bool force_full)
 }
 
 // Checks if an item should be displayed on the action panel
-static bool _is_useful_consumable(const item_def &item, const string &name)
+static int _useful_consumable_order(const item_def &item, const string &name)
 {
     const vector<object_class_type> &base_types = Options.action_panel;
+    const auto order = std::find(base_types.begin(), base_types.end(),
+                                                            item.base_type);
 
     if (item.quantity < 1
-        || base_types.empty()
-        || std::find(base_types.begin(), base_types.end(), item.base_type)
-           == base_types.end()
+        || order == base_types.end() // covers the empty case
         || (!Options.action_panel_show_unidentified && !fully_identified(item)))
     {
-        return false;
+        return -1;
     }
 
     for (const text_pattern &p : Options.action_panel_filter)
         if (p.matches(name))
-            return false;
+            return -1;
 
-    return true;
+    return order - base_types.begin();
 }
 
 // Returns the name of an item_def field to display on the action panel
@@ -1264,10 +1264,11 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
             json_write_string("name", name);
         }
 
-        json_write_string("qty_field",
-                          _is_useful_consumable(next, name)
-                          ? _qty_field_name(next)
-                          : "");
+        // -1 in this field means don't show. *note*: showing in the action
+        // panel has undefined behavior for item types that don't have a
+        // quiver::action implementation...
+        json_write_int("action_panel_order", _useful_consumable_order(next, name));
+        json_write_string("qty_field", _qty_field_name(next));
 
         const string prefix = item_prefix(next);
         const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);

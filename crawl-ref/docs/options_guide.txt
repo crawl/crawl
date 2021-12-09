@@ -1660,15 +1660,17 @@ action_panel_show = true
         Whether to show or hide the action panel. This option is automatically
         saved between games, and is only available on Webtiles.
 
-action_panel = ?!}/
+action_panel = /?!}
         The above is the default list of items to show on the action panel.
         The valid symbols are
         ?       Scrolls
         !       Potions
         }       Misc. items
         /       Wands
-        If set to an empty string, the panel will be hidden entirely.
-        This option is only available on Webtiles.
+        If set to an empty string, the panel will be hidden entirely. The order
+        of item types in this option determines the order of item types in the
+        action panel; sub-order is determined by inventory letter. This option
+        is only available on Webtiles.
 
 action_panel_filter += <regex>, <regex>, ...
         (List option)

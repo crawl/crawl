@@ -1230,10 +1230,10 @@ void game_options::reset_options()
     tile_display_mode = "tiles";
 
     action_panel.clear();
+    action_panel.emplace_back(OBJ_WANDS);
     action_panel.emplace_back(OBJ_SCROLLS);
     action_panel.emplace_back(OBJ_POTIONS);
     action_panel.emplace_back(OBJ_MISCELLANY);
-    action_panel.emplace_back(OBJ_WANDS);
 #endif
 
     // map each colour to itself as default

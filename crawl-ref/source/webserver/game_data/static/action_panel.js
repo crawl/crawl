@@ -341,10 +341,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
 
         // Filter
         filtered_inv = Object.values(player.inv).filter(function (item) {
-            if (!item.quantity) // Skip empty inventory slots
-                return false
-            else if (item.hasOwnProperty("qty_field") && item.qty_field)
-                return true;
+            return item.quantity && item.action_panel_order >= 0;
         });
 
         if (minimized || !filtered_inv.length)
@@ -353,12 +350,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             return;
         }
 
-        // Sort
+        // primary sort: determined by the `action_panel` option
+        // secondary sort: determined by inventory lettering
         filtered_inv.sort(function (a, b) {
-            if (a.base_type === b.base_type)
-                return a.sub_type - b.sub_type;
+            if (a.action_panel_order === b.action_panel_order)
+                return a.slot - b.slot;
 
-            return a.base_type - b.base_type;
+            return a.action_panel_order - b.action_panel_order;
         });
 
         // Render
