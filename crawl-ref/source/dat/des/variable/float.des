@@ -10548,16 +10548,16 @@ xx..+..+..xx
     xx+x
 ENDMAP
 
-NAME:    minmay_chambers_of_sevens
-ORIENT:  float
-DEPTH:   D:7-14
-SUBST:   T = TTTTV
-SUBST:   x : xxxxxcccvb
+NAME:   minmay_chambers_of_sevens
+ORIENT: float
+DEPTH:  D:7-14
+SUBST:  T = TTTTV
+SUBST:  x : xxxxxcccvb
 MAP
 xxxxxxxxxxxxxxx
-x.9.9**b**9.9.x
+x.0.9%*b*%9.0.x
 xx...9***9...xx
- xx....9....xx
+ xx....0....xx
   xx.......xx
    xx.....xx
     xx...xx
