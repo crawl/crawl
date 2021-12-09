@@ -1697,6 +1697,10 @@ action_panel_font_size = 16
         The size option is automatically saved between games, and both are only
         available on Webtiles.
 
+action_panel_glyphs = false
+        If set to true, show glyphs instead of tiles in the action panel. This
+        option is only available on webtiles.
+
 3-i     Colours (messages and menus)
 -----------------
 
