@@ -1662,7 +1662,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     {
         return true;
     }
-    
+
     if (oper == OPER_PUTON
         && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
         && faith_has_penalty())
