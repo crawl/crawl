@@ -4373,6 +4373,7 @@ void handle_god_time(int /*time_delta*/)
     }
 
     // Update the god's opinion of the player.
+    // This is the main bit that would change.
     if (!you_worship(GOD_NO_GOD))
     {
         int delay;
