@@ -186,6 +186,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function clickify_action(action_text)
     {
         var suffix = "";
+        var prefix = "";
         // makes some assumptions about how this is joined...see describe.cc
         // _actions_desc.
         if (action_text.endsWith(".")) // could be more elegant...
@@ -193,15 +194,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             suffix = ".";
             action_text = action_text.slice(0, -1);
         }
-        // handle "or ..."
-        var words = action_text.split(" ");
-        action_text = words.pop();
-        var hotkeys = action_text.match(/\(.\)/); // very inclusive for the key
+        if (action_text.startsWith("or "))
+        {
+            prefix = "or ";
+            action_text = action_text.substr(3);
+        }
+        var hotkeys = action_text.match(/\(.\)/); // very inclusive for the key name
         var data_attr = ""
         if (hotkeys)
             data_attr = " data-hotkey='" + hotkeys[0][1] + "'";
-        words.push("<span" + data_attr + ">" + action_text + "</span>" + suffix);
-        return words.join(" ");
+        return prefix
+            + "<span" + data_attr + ">" + action_text + "</span>"
+            + suffix;
     }
 
     // Turn a list of actions like that found in the describe item popup into
