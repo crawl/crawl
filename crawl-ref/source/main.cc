@@ -1717,7 +1717,7 @@ static void _do_rest()
 #ifdef WIZARD
     if (you.props.exists(FREEZE_TIME_KEY))
     {
-        mpr(MSGCH_WARN, "Cannot rest while time is frozen.");
+        mprf(MSGCH_WARN, "Cannot rest while time is frozen.");
         return;
     }
 #endif
