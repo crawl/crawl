@@ -991,7 +991,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 ? handler(msg)
                 : $("<div>Unhandled UI type " + msg.type + "</div>");
         }
-        catch(err)
+        catch (err)
         {
             popup = $("<div>Buggy UI of type " + msg.type + "</div>");
         }
