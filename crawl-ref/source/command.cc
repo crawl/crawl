@@ -655,6 +655,7 @@ static void _add_formatted_help_menu(column_composer &cols)
         "\n"
         "<w>Back key</w>: Alias for escape\n"
         "<w>Volume keys</w>: Zoom dungeon & map\n"
+        "Long press for right click.\n"
         "Touch with two fingers for scrolling.\n"
         "Toggle keyboard icon controls the\n"
         "virtual keyboard visibility.\n");

@@ -385,6 +385,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
     // Request OpenGL ES 1.0 context
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
+    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "1");
 #endif
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);

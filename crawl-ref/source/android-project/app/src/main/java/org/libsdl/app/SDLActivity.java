@@ -1143,6 +1143,9 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     // CRAWL HACK: Keep track of scroll status
     protected static boolean scrolling;
 
+    // CRAWL HACK: Long press as right click
+    protected static long touchStart = 0L;
+
     // Startup
     public SDLSurface(Context context) {
         super(context);
@@ -1360,8 +1363,8 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         /* Ref: http://developer.android.com/training/gestures/multi.html */
-        final int touchDevId = event.getDeviceId();
-        final int pointerCount = event.getPointerCount();
+        int touchDevId = event.getDeviceId();
+        int pointerCount = event.getPointerCount();
         int action = event.getActionMasked();
         int pointerFingerId;
         int mouseButton;
@@ -1391,24 +1394,14 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                             float scroll0 = event.getY(0) - event.getHistoricalY(0, 0);
                             float scroll1 = event.getY(1) - event.getHistoricalY(1, 0);
                             if ((scroll0 * scroll1) > 0) { // Both are positive or negative
-                                SDLActivity.onNativeMouse(1, MotionEvent.ACTION_SCROLL, 0, scroll0*0.1f);
+                                SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, MotionEvent.ACTION_SCROLL, 0, scroll0*0.1f);
                             }
                         }
                         return true;
                     }
 
-                    for (i = 0; i < pointerCount; i++) {
-                        pointerFingerId = event.getPointerId(i);
-                        x = event.getX(i) / mWidth;
-                        y = event.getY(i) / mHeight;
-                        p = event.getPressure(i);
-                        if (p > 1.0f) {
-                            // may be larger than 1.0f on some devices
-                            // see the documentation of getPressure(i)
-                            p = 1.0f;
-                        }
-                        SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p);
-                    }
+                    // CRAWL HACK: Long press as right click
+                    SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, action, event.getX(0), event.getY(0));
                     break;
 
                 // CRAWK HACK: Start scrolling
@@ -1417,46 +1410,29 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     scrolling = true;
                     break;
 
-                case MotionEvent.ACTION_UP:
+                // CRAWL HACK: Long press as right click
                 case MotionEvent.ACTION_DOWN:
-                    // Primary pointer up/down, the index is always zero
-                    i = 0;
+                    touchStart = System.currentTimeMillis();
+                    break;
 
-                    pointerFingerId = event.getPointerId(i);
-                    x = event.getX(i) / mWidth;
-                    y = event.getY(i) / mHeight;
-                    p = event.getPressure(i);
-                    if (p > 1.0f) {
-                        // may be larger than 1.0f on some devices
-                        // see the documentation of getPressure(i)
-                        p = 1.0f;
-                    }
-                    // CRAWL HACK: Cancel other events while scrolling
+                // CRAWL HACK: Long press as right click
+                case MotionEvent.ACTION_UP:
                     if (!scrolling) {
-                        SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p);
+                        if (touchStart+500 > System.currentTimeMillis()) {
+                            SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                        } else {
+                            SDLActivity.onNativeMouse(MotionEvent.BUTTON_SECONDARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                        }
+                        SDLActivity.onNativeMouse(0, MotionEvent.ACTION_UP, event.getX(0), event.getY(0));
                     }
-                    if (action == MotionEvent.ACTION_UP) {
-                        scrolling = false;
-                    }
+                    scrolling = false;
+                    touchStart = 0L;
                     break;
 
                 case MotionEvent.ACTION_CANCEL:
-                    for (i = 0; i < pointerCount; i++) {
-                        pointerFingerId = event.getPointerId(i);
-                        x = event.getX(i) / mWidth;
-                        y = event.getY(i) / mHeight;
-                        p = event.getPressure(i);
-                        if (p > 1.0f) {
-                            // may be larger than 1.0f on some devices
-                            // see the documentation of getPressure(i)
-                            p = 1.0f;
-                        }
-                        // CRAWK HACK: Cancel other events while scrolling
-                        if (!scrolling) {
-                            SDLActivity.onNativeTouch(touchDevId, pointerFingerId, MotionEvent.ACTION_UP, x, y, p);
-                        }
-                        scrolling = false;
-                    }
+                    // CRAWK HACK: Stop actions
+                    scrolling = false;
+                    touchStart = 0L;
                     break;
 
                 default:
