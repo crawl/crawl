@@ -1972,10 +1972,12 @@ bool is_useless_skill(skill_type skill)
     if (mut != skill_sac_muts.end() && you.has_mutation(mut->second))
         return true;
     // shields isn't in the big map because shields being useless doesn't
-    // imply that missing hand is meaningless.
+    // imply that missing hand is meaningless. likewise for summoning magic
+    // vs. ability to have friendlies at all.
     if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
         || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
                             && !you.has_innate_mutation(MUT_QUADRUMANOUS)
+        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE)
     )
     {
         return true;
