@@ -1279,7 +1279,8 @@ static bool _mons_reaped(actor &killer, monster& victim)
         beh = SAME_ATTITUDE(mon);
     }
 
-    _make_derived_undead(&victim, false, MONS_ZOMBIE, beh, SPELL_NO_SPELL, GOD_NO_GOD);
+    _make_derived_undead(&victim, true, MONS_ZOMBIE, beh,
+                         SPELL_NO_SPELL, GOD_NO_GOD);
 
     return true;
 }
@@ -2315,6 +2316,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                                      static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
             }
         }
+
+        if (!corpse_consumed && coinflip() && _reaping(mons))
+            corpse_consumed = true;
     }
 
     if (!wizard && !submerged && !was_banished)
@@ -2372,8 +2376,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (fake)
     {
-        if (corpse && _reaping(mons))
-            corpse = nullptr;
         _give_experience(player_xp, monster_xp, killer, killer_index,
                          pet_kill, was_visible, mons.xp_tracking);
         crawl_state.dec_mon_acting(&mons);
@@ -2422,9 +2424,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         if (!silent && !wizard)
             _special_corpse_messaging(mons);
-        // don't drop a hide if we get reanimated immediately
-        if (_reaping(mons))
-            corpse = nullptr;
         // message ordering... :(
         if (corpse->base_type == OBJ_CORPSES) // not gold
             _maybe_drop_monster_organ(*corpse, silent);
