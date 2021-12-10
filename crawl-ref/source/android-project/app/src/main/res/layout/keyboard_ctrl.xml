@@ -65,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^y\u2196"
+            android:text="^y\u2196\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
@@ -76,7 +76,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^u\u2197"
+            android:text="^u\u2197\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
@@ -167,7 +167,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^h\u2190"
+            android:text="^h\u2190\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
@@ -178,7 +178,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^j\u2193"
+            android:text="^j\u2193\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
@@ -189,7 +189,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^k\u2191"
+            android:text="^k\u2191\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
@@ -200,7 +200,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^l\u2192"
+            android:text="^l\u2192\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
@@ -273,7 +273,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^b\u2199"
+            android:text="^b\u2199\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
@@ -284,7 +284,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/key_height"
             android:layout_weight="1"
-            android:text="^n\u2198"
+            android:text="^n\u2198\ufe0e"
             android:padding="0dp"
             android:backgroundTint="@color/key_tint3"
             android:backgroundTintMode="src_in"/>
