@@ -13,6 +13,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var settings_visible;
     var tooltip_timeout = null;
     // Options
+    var panel_disabled;
     var scale, orientation, font_family, font_size;
     var font; // cached font name for the canvas: size (in px) + family
     var selected = -1;
@@ -37,18 +38,9 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     {
         $("#action-panel-settings").hide();
         $("#action-panel").addClass("hidden");
-        // if there's no inventory to display at all, don't even show the
-        // placeholder button, don't update settings, etc. If this happens
-        // because the player genuinely has nothing, the panel will return
-        // to its prev state once they do. If they've configured it to not
-        // show any items, it should never appear.
-        if (!filtered_inv.length)
-        {
-            // explicitly remove this, in case a player drops consumables with
-            // the panel minimized
-            $("#action-panel-placeholder").addClass("hidden");
-        }
-        else
+        // if the player configured the panel to not show any items,
+        // don't even show the placeholder button, don't update settings, etc.
+        if (!panel_disabled)
         {
             $("#action-panel-placeholder").removeClass("hidden").show();
             // order of these two matters
@@ -413,16 +405,25 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         if (client.is_watching())
             return;
 
-        // Filter
-        filtered_inv = Object.values(player.inv).filter(function (item) {
-            return item.quantity && item.action_panel_order >= 0;
-        });
+        // Have we received the inventory yet?
+        // Note: an empty inventory will still have 52 empty slots.
+        var inventory_initialized = Object.values(player.inv).length;
+        if (!inventory_initialized)
+        {
+            $("#action-panel").addClass("hidden");
+            return;
+        }
 
-        if (minimized || !filtered_inv.length)
+        if (panel_disabled || minimized)
         {
             hide_panel(false);
             return;
         }
+
+        // Filter
+        filtered_inv = Object.values(player.inv).filter(function (item) {
+            return item.quantity && item.action_panel_order >= 0;
+        });
 
         // primary sort: determined by the `action_panel` option
         // secondary sort: determined by inventory lettering
@@ -527,12 +528,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
 
         // is one of: horizontal, vertical
         var new_orientation = options.get("action_panel_orientation");
-        var new_min = !options.get("action_panel_show");
         if (orientation !== new_orientation)
         {
             orientation = new_orientation;
             update_required = true;
         }
+
+        var new_min = !options.get("action_panel_show");
         if (new_min != minimized)
         {
             minimized = new_min;
@@ -554,6 +556,10 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             _update_font_props();
             update_required = true;
         }
+
+        // The panel should be disabled completely only if the player
+        // set the action_panel option to an empty string in the .rc
+        panel_disabled = options.get("action_panel_disabled");
 
         if (update_required)
         {
