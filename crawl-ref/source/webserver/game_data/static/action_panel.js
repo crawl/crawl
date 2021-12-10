@@ -16,6 +16,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var panel_disabled;
     var scale, orientation, font_family, font_size;
     var font; // cached font name for the canvas: size (in px) + family
+    var draw_glyphs;
     var selected = -1;
     const NUM_RESERVED_BUTTONS = 2;
 
@@ -338,49 +339,34 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         }
     }
 
-    function draw_action(texture, tiles, offset, scale, needs_cursor, text)
+    function draw_action(texture, tiles, item, offset, scale, needs_cursor, text)
     {
-        tiles = Array.isArray(tiles) ? tiles : [tiles];
-        tiles.forEach(function (tile) {
-            renderer.draw_tile(tile,
-                               _horizontal() ? offset : 0,
-                               _horizontal() ? 0 : offset,
-                               texture,
-                               undefined, undefined, undefined, undefined,
-                               scale);
-        });
-
-        if (text)
+        if (item && draw_glyphs)
         {
-            renderer.draw_quantity(text,
+            // ugh, couldn't get this to work without a transform.
+            // Also, I don't know why the font size here looks
+            // different than map view, something about scaling?
+            renderer.ctx.setTransform(scale, 0, 0, scale, 0, 0);
+            // XX just the glyph is not very informative. One idea might
+            // be to tack on the subtype icon, but those are currently
+            // baked into the item tile so this would be a lot of work.
+            renderer.render_glyph(_horizontal() ? offset / scale : 0,
+                                  _horizontal() ? 0 : offset / scale,
+                                  item, true, true);
+            renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        }
+        else
+        {
+            tiles = Array.isArray(tiles) ? tiles : [tiles];
+            tiles.forEach(function (tile) {
+                renderer.draw_tile(tile,
                                    _horizontal() ? offset : 0,
                                    _horizontal() ? 0 : offset,
-                                   font);
+                                   texture,
+                                   undefined, undefined, undefined, undefined,
+                                   scale);
+            });
         }
-
-        if (needs_cursor)
-        {
-            renderer.draw_icon(icons.CURSOR3,
-                               _horizontal() ? offset : 0,
-                               _horizontal() ? 0 : offset,
-                               undefined, undefined,
-                               scale);
-        }
-    }
-
-    function draw_item_glyph(item, offset, scale, needs_cursor, text)
-    {
-        // ugh, couldn't get this to work without a transform.
-        // Also, I don't know why the font size here looks
-        // different than map view, something about scaling?
-        renderer.ctx.setTransform(scale, 0, 0, scale, 0, 0);
-        // XX just the glyph is not very informative. One idea might
-        // be to tack on the subtype icon, but those are currently
-        // baked into the item tile so this would be a lot of work.
-        renderer.render_glyph(_horizontal() ? offset / scale : 0,
-                              _horizontal() ? 0 : offset / scale,
-                              item, true, true);
-        renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         if (text)
         {
@@ -462,11 +448,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                               _horizontal() ? cell_height : panel_length);
 
         // XX The "X" should definitely be a different/custom icon
-        draw_action(gui, gui.PROMPT_NO, 0, adjusted_scale, selected == 0);
-        draw_action(gui, gui.STARTUP_STONESOUP, cell_length, adjusted_scale,
+        // TODO: select tile via something like c++ `tileidx_command`
+        draw_action(gui, gui.PROMPT_NO, null, 0, adjusted_scale, selected == 0);
+        draw_action(gui, gui.STARTUP_STONESOUP, null, cell_length, adjusted_scale,
                     selected == 1);
 
-        var draw_glyphs = options.get("action_panel_glyphs")
+        draw_glyphs = options.get("action_panel_glyphs");
 
         if (draw_glyphs)
         {
@@ -483,17 +470,10 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             var qty = "";
             if (item.hasOwnProperty(qty_field_name))
                 qty = item[qty_field_name];
+            var cursor_required = selected == idx + NUM_RESERVED_BUTTONS;
 
-            if (draw_glyphs)
-            {
-                draw_item_glyph(item, offset, adjusted_scale,
-                                selected == idx + NUM_RESERVED_BUTTONS, qty);
-            }
-            else
-            {
-                draw_action(main, item.tile, offset, adjusted_scale,
-                            selected == idx + NUM_RESERVED_BUTTONS, qty);
-            }
+            draw_action(main, item.tile, item, offset, adjusted_scale,
+                        cursor_required, qty);
         });
 
         if (available_length < required_length)
