@@ -979,8 +979,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function recv_ui_push(msg)
     {
+        var popup = null
         var handler = ui_handlers[msg.type];
-        var popup = handler ? handler(msg) : $("<div>Unhandled UI type "+msg.type+"</div>");
+        try
+        {
+            popup = handler
+                ? handler(msg)
+                : $("<div>Unhandled UI type " + msg.type + "</div>");
+        }
+        catch(err)
+        {
+            popup = $("<div>Buggy UI of type " + msg.type + "</div>");
+        }
         ui.show_popup(popup, msg["ui-centred"], msg.generation_id);
     }
 
