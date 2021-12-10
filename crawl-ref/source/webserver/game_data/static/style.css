@@ -659,6 +659,9 @@ body {
     margin-top: 15px;
     color: cyan;
 }
+.describe-item > .actions span[data-hotkey]:hover {
+    background: #555;
+}
 
 .describe-spell {
     max-width: 80ch;
