@@ -2466,7 +2466,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             if (yesno("Are you sure you want to shaft yourself?", true, 'n'))
                 start_delay<ShaftSelfDelay>(1);
             else
+            {
+                canned_msg(MSG_OK);
                 return spret::abort;
+            }
         }
         else
             return spret::abort;
