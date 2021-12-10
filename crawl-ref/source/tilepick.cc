@@ -3584,6 +3584,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Yredelemnul
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         return TILEG_ABILITY_YRED_RECALL;
+    case ABIL_YRED_DARK_BARGAIN:
+        return TILEG_ABILITY_YRED_DARK_BARGAIN;
     case ABIL_YRED_DRAIN_LIFE:
         return TILEG_ABILITY_YRED_DRAIN_LIFE;
     case ABIL_YRED_BIND_SOUL:
