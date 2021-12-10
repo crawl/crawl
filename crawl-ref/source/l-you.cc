@@ -808,7 +808,7 @@ static int l_you_abil_table(lua_State *ls)
 
 
 /*** Known items.
- * @treturn table The list of identifiable item subtypes you know.
+ * @treturn table The list of identifiable items you know.
  * @function known_items
  */
 static int you_known_items(lua_State *ls)
@@ -824,7 +824,7 @@ static int you_known_items(lua_State *ls)
         {
             if (basetype == OBJ_JEWELLERY && subtype >= NUM_RINGS && subtype < AMU_FIRST_AMULET)
                 continue;
-            if (you.type_ids[basetype][subtype] ) {
+            if (you.type_ids[basetype][subtype]) {
                 item_def it = item_def();
                 it.base_type = basetype;
                 it.sub_type  = subtype;
