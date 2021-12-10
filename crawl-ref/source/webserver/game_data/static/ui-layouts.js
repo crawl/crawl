@@ -198,7 +198,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         action_text = words.pop();
         var hotkeys = action_text.match(/\(.\)/); // very inclusive for the key
         var data_attr = ""
-        if (hotkeys.length)
+        if (hotkeys)
             data_attr = " data-hotkey='" + hotkeys[0][1] + "'";
         words.push("<span" + data_attr + ">" + action_text + "</span>" + suffix);
         return words.join(" ");
