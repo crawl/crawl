@@ -1,8 +1,9 @@
 define(["jquery", "comm", "client",
         "./cell_renderer", "./enums", "./options", "./player",
-        "./tileinfo-icons", "./tileinfo-gui", "./util", "./focus-trap", "./ui"],
-function ($, comm, client, cr, enums, options, player, icons, gui, util,
-             focus_trap, ui) {
+        "./tileinfo-icons", "./tileinfo-gui", "./tileinfo-main",
+        "./util", "./focus-trap", "./ui"],
+function ($, comm, client, cr, enums, options, player, icons, gui, main,
+          util, focus_trap, ui) {
     "use strict";
 
     var filtered_inv;
@@ -334,6 +335,68 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         }
     }
 
+    function draw_action(texture, tiles, offset, scale, needs_cursor, text)
+    {
+        tiles = Array.isArray(tiles) ? tiles : [tiles];
+        tiles.forEach(function (tile) {
+            renderer.draw_tile(tile,
+                               _horizontal() ? offset : 0,
+                               _horizontal() ? 0 : offset,
+                               texture,
+                               undefined, undefined, undefined, undefined,
+                               scale);
+        });
+
+        if (text)
+        {
+            renderer.draw_quantity(text,
+                                   _horizontal() ? offset : 0,
+                                   _horizontal() ? 0 : offset,
+                                   font);
+        }
+
+        if (needs_cursor)
+        {
+            renderer.draw_icon(icons.CURSOR3,
+                               _horizontal() ? offset : 0,
+                               _horizontal() ? 0 : offset,
+                               undefined, undefined,
+                               scale);
+        }
+    }
+
+    function draw_item_glyph(item, offset, scale, needs_cursor, text)
+    {
+        // ugh, couldn't get this to work without a transform.
+        // Also, I don't know why the font size here looks
+        // different than map view, something about scaling?
+        renderer.ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        // XX just the glyph is not very informative. One idea might
+        // be to tack on the subtype icon, but those are currently
+        // baked into the item tile so this would be a lot of work.
+        renderer.render_glyph(_horizontal() ? offset / scale : 0,
+                              _horizontal() ? 0 : offset / scale,
+                              item, true, true);
+        renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        if (text)
+        {
+            renderer.draw_quantity(text,
+                                   _horizontal() ? offset : 0,
+                                   _horizontal() ? 0 : offset,
+                                   font);
+        }
+
+        if (needs_cursor)
+        {
+            renderer.draw_icon(icons.CURSOR3,
+                               _horizontal() ? offset : 0,
+                               _horizontal() ? 0 : offset,
+                               undefined, undefined,
+                               scale);
+        }
+    }
+
     function update()
     {
         if (client.is_watching())
@@ -362,10 +425,10 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         // Render
         // renderer here stores unscaled values. (This is different than how
         // it is done for the dungeon rendering.)
-        var adjusted_scale = scale * window.devicePixelRatio;
+        var adjusted_scale = scale * window.devicePixelRatio / 100;
 
-        var cell_width = renderer.cell_width * adjusted_scale / 100;
-        var cell_height = renderer.cell_height * adjusted_scale / 100;
+        var cell_width = renderer.cell_width * adjusted_scale;
+        var cell_height = renderer.cell_height * adjusted_scale;
         var cell_length = _horizontal() ? cell_width
                                         : cell_height;
         var required_length = cell_length * (filtered_inv.length + 1);
@@ -387,12 +450,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                               _horizontal() ? cell_height : panel_length);
 
         // XX This should definitely be a different/custom icon
-        renderer.draw_gui(gui.PROMPT_NO, 0, 0, adjusted_scale / 100);
-        if (selected == 0)
-        {
-            renderer.draw_icon(icons.CURSOR3, 0, 0, undefined, undefined,
-                adjusted_scale / 100);
-        }
+        draw_action(gui, gui.PROMPT_NO, 0, adjusted_scale, selected == 0);
 
         var draw_glyphs = options.get("action_panel_glyphs")
 
@@ -404,47 +462,23 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             renderer.glyph_mode_update_font_metrics();
         }
 
+        // Inventory items
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
             var offset = cell_length * (idx + 1);
-            item.tile.forEach(function (tile) { // Draw item and brand tiles
-                if (draw_glyphs)
-                {
-                    // ugh, couldn't get this to work without a transform.
-                    // Also, I don't know why the font size here looks
-                    // different than map view, something about scaling?
-                    renderer.ctx.setTransform(scale / 100, 0, 0, scale / 100, 0, 0);
-                    // XX just the glyph is not very informative. One idea might
-                    // be to tack on the subtype icon, but those are currently
-                    // baked into the item tile so this would be a lot of work.
-                    renderer.render_glyph(_horizontal() ? offset * 100 / scale : 0,
-                                      _horizontal() ? 0 : offset * 100 / scale ,
-                                      item, true, true);
-                    renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
-                }
-                else
-                {
-                    renderer.draw_main(tile,
-                                   _horizontal() ? offset : 0,
-                                   _horizontal() ? 0 : offset,
-                                   adjusted_scale / 100);
-                }
-                if (selected == idx + 1)
-                {
-                    renderer.draw_icon(icons.CURSOR3,
-                                       _horizontal() ? offset : 0,
-                                       _horizontal() ? 0 : offset,
-                                       undefined, undefined,
-                                       adjusted_scale / 100);
-                }
-            });
-
             var qty_field_name = item.qty_field;
+            var qty = "";
             if (item.hasOwnProperty(qty_field_name))
+                qty = item[qty_field_name];
+
+            if (draw_glyphs)
             {
-                renderer.draw_quantity(item[qty_field_name],
-                                       _horizontal() ? offset : 0,
-                                       _horizontal() ? 0 : offset,
-                                       font);
+                draw_item_glyph(item, offset, adjusted_scale,
+                                selected == idx + 1, qty);
+            }
+            else
+            {
+                draw_action(main, item.tile, offset, adjusted_scale,
+                            selected == idx + 1, qty);
             }
         });
 
@@ -454,11 +488,11 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             var x_pos = 0, y_pos = 0;
 
             if (_horizontal())
-                x_pos = available_length - icons.get_tile_info(ellipsis).w * adjusted_scale / 100;
+                x_pos = available_length - icons.get_tile_info(ellipsis).w * adjusted_scale;
             else
-                y_pos = available_length - icons.get_tile_info(ellipsis).h * adjusted_scale / 100;
+                y_pos = available_length - icons.get_tile_info(ellipsis).h * adjusted_scale;
 
-            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, adjusted_scale / 100);
+            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, adjusted_scale);
         }
         $canvas.removeClass("hidden");
     }
