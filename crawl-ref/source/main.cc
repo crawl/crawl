@@ -1113,20 +1113,20 @@ static void _input()
 
         // Some delays set you.turn_is_over.
 
+        bool time_is_frozen = false;
+
 #ifdef WIZARD
         if (you.props.exists(FREEZE_TIME_KEY))
-            you.turn_is_over = false;
+            time_is_frozen = true;
 #endif
 
         // Some delays reset you.time_taken.
-        if (you.time_taken || you.turn_is_over)
+        if (!time_is_frozen && (you.time_taken || you.turn_is_over))
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
             _uncurl();
-
-            if (you.turn_is_over)
-                world_reacts();
+            world_reacts();
         }
 
         if (!you_are_delayed())
