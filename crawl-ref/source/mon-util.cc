@@ -1616,7 +1616,7 @@ int mons_zombie_size(monster_type mc)
 
 monster_type mons_zombie_base(const monster& mon)
 {
-    return mons_species(mon.base_monster);
+    return mon.base_monster;
 }
 
 bool mons_class_is_zombified(monster_type mc)
@@ -1659,7 +1659,7 @@ bool mons_is_zombified(const monster& mon)
 monster_type mons_base_type(const monster& mon)
 {
     if (mons_class_is_zombified(mon.type))
-        return mons_species(mon.base_monster);
+        return mons_zombie_base(mon);
     return mon.type;
 }
 
