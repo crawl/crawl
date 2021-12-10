@@ -527,6 +527,8 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     else if (msgtype == "main_menu_action"
              && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
     {
+        // TODO: add a control message type that can send arbitrary commands
+        // (possibly just as a string, like the lua API for this)
         process_command(CMD_GAME_MENU);
     }
 

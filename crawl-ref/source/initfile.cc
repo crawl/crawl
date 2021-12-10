@@ -4982,6 +4982,9 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 
+    // TODO: convert action_panel_show into a yes/no/never option. It would be
+    // better to have a more straightforward way of disabling the panel
+    // completely
     tiles.json_write_bool("action_panel_disabled",
             Options.action_panel.empty());
     tiles.json_write_bool("action_panel_show",
