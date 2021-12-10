@@ -1118,14 +1118,15 @@ from Berserker, Chaos Knight, Abyssal Knight or Cinder Acolyte.
 K. Mutations
 ****************************************
 
-Although it would doubtless be a nice thing if you could remain genetically
-pure, there are too many toxic wastes and mutagenic radiations in the Dungeon
-for that to be possible. If your character is so affected by these that they
-undergo physiological change, you can use the 'A' command to see how much
-of a freak they've become and the 'a' command to activate any mutations which
-can be controlled. Many mutations are actually beneficial to your character, but
-there are plenty of nasty ones as well. Many mutations have multiple levels,
-each of which counts as a single mutation.
+The Dungeon contains many sources of mutagenic radiation and magical
+contamination, which may cause your character to gain semi-permanent mutations
+if affected. You can use the 'A' command to view a list of any mutations that
+you have acquired. Individual mutations can be examined in further detail by
+pressing the letter they are labelled with.
+
+Many mutations are actually beneficial to your character, but there are plenty
+of nasty ones as well. Some mutations have multiple levels, each of which counts
+as a single mutation.
 
 Miscasting spells will cause magical contamination, which in turn can cause
 mutations if too much contamination is accrued at once. Certain powerful
@@ -1154,6 +1155,8 @@ Many a species starts with some special intrinsic features, like the greater
 speed of Felids or Spriggans, or the claws of Trolls and Ghouls. These are
 often, but not always, like a preset mutation. In case such an innate feature
 gets amplified by an ordinary mutation, it is displayed in a light blue colour.
+Some of these innate features will provide an activated ability, which can be
+used with the 'a' command.
 
 Some mutations are only temporary and will dissipate after slaying more enemies.
 These are listed in purple on the list of mutations, and marked as temporary.
