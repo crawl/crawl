@@ -16,6 +16,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var scale, orientation, font_family, font_size;
     var font; // cached font name for the canvas: size (in px) + family
     var selected = -1;
+    const NUM_RESERVED_BUTTONS = 2;
 
     function send_options()
     {
@@ -163,11 +164,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         }
         $tooltip.css({top: y + 10 + "px",
                      left: x + 10 + "px"});
-        if (slot == -1)
+        if (slot == -2)
         {
             $tooltip.html("<span>Left click: minimize</span><br />"
                           + "<span>Right click: open settings</span>");
         }
+        else if (slot == -1 && game.get_input_mode() == enums.mouse_mode.COMMAND)
+            $tooltip.html("<span>Left click: show main menu</span>");
         else
         {
             var item = filtered_inv[slot];
@@ -306,19 +309,26 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                     hide_tooltip();
                     tooltip_timeout = setTimeout(function()
                     {
-                        show_tooltip(ev.pageX, ev.pageY, selected - 1);
+                        show_tooltip(ev.pageX, ev.pageY,
+                                     selected - NUM_RESERVED_BUTTONS);
                     }, 500);
                 }
             }
             else if (ev.type === "mousedown" && ev.which == 1)
             {
-                if (selected == 0)
+                if (selected == 0) // It should be available even in targeting mode
                     hide_panel();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
-                    && selected > 0 && selected < filtered_inv.length + 1)
+                         && selected == 1)
+                {
+                    comm.send_message("main_menu_action");
+                }
+                else if (game.get_input_mode() == enums.mouse_mode.COMMAND
+                         && selected >= NUM_RESERVED_BUTTONS
+                         && selected < filtered_inv.length + NUM_RESERVED_BUTTONS)
                 {
                     comm.send_message("inv_item_action",
-                                      {slot: filtered_inv[selected - 1].slot});
+                                      {slot: filtered_inv[selected - NUM_RESERVED_BUTTONS].slot});
                 }
             }
             else if (ev.type === "mousedown" && ev.which == 3)
@@ -326,10 +336,11 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                 if (selected == 0) // right click on the x shows settings
                     show_settings(ev);
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
-                    && selected > 0 && selected < filtered_inv.length + 1)
+                         && selected >= NUM_RESERVED_BUTTONS
+                         && selected < filtered_inv.length + NUM_RESERVED_BUTTONS)
                 {
                     comm.send_message("inv_item_describe",
-                                      {slot: filtered_inv[selected - 1].slot});
+                                      {slot: filtered_inv[selected - NUM_RESERVED_BUTTONS].slot});
                 }
             }
         }
@@ -431,7 +442,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         var cell_height = renderer.cell_height * adjusted_scale;
         var cell_length = _horizontal() ? cell_width
                                         : cell_height;
-        var required_length = cell_length * (filtered_inv.length + 1);
+        var required_length = cell_length * (filtered_inv.length + NUM_RESERVED_BUTTONS);
         var available_length = _horizontal()
                             ? $("#dungeon").width() * window.devicePixelRatio
                             : $("#dungeon").height() * window.devicePixelRatio;
@@ -449,8 +460,10 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                               _horizontal() ? panel_length : cell_width,
                               _horizontal() ? cell_height : panel_length);
 
-        // XX This should definitely be a different/custom icon
+        // XX The "X" should definitely be a different/custom icon
         draw_action(gui, gui.PROMPT_NO, 0, adjusted_scale, selected == 0);
+        draw_action(gui, gui.STARTUP_STONESOUP, cell_length, adjusted_scale,
+                    selected == 1);
 
         var draw_glyphs = options.get("action_panel_glyphs")
 
@@ -464,7 +477,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
 
         // Inventory items
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
-            var offset = cell_length * (idx + 1);
+            var offset = cell_length * (idx + NUM_RESERVED_BUTTONS);
             var qty_field_name = item.qty_field;
             var qty = "";
             if (item.hasOwnProperty(qty_field_name))
@@ -473,12 +486,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             if (draw_glyphs)
             {
                 draw_item_glyph(item, offset, adjusted_scale,
-                                selected == idx + 1, qty);
+                                selected == idx + NUM_RESERVED_BUTTONS, qty);
             }
             else
             {
                 draw_action(main, item.tile, offset, adjusted_scale,
-                            selected == idx + 1, qty);
+                            selected == idx + NUM_RESERVED_BUTTONS, qty);
             }
         });
 

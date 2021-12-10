@@ -586,6 +586,11 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         // XX only set this flag if a relevant option has actually changed
         Options.prefs_dirty = true;
     }
+    else if (msgtype == "main_menu_action"
+             && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        process_command(CMD_GAME_MENU);
+    }
 
     return c;
 }
