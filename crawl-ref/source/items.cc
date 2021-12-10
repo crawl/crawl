@@ -953,9 +953,8 @@ static bool _id_floor_item(item_def &item)
         if (fully_identified(item))
             return false;
 
-        // Same logic as wands here, may be viable to merge the two cases.
+        identify_item(item);
         bool should_pickup = item_needs_autopickup(item);
-        set_ident_type(item, true);
         if (!should_pickup)
             set_item_autopickup(item, AP_FORCE_OFF);
         return true;
