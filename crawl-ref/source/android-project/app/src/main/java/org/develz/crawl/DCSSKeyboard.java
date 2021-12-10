@@ -239,9 +239,9 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         findViewById(R.id.key_num_F10).setOnClickListener(this);
         findViewById(R.id.key_num_F11).setOnClickListener(this);
         findViewById(R.id.key_num_F12).setOnClickListener(this);
-        findViewById(R.id.key_num_minus).setOnClickListener(this);
-        findViewById(R.id.key_num_plus).setOnClickListener(this);
         findViewById(R.id.key_num_equal).setOnClickListener(this);
+        findViewById(R.id.key_num_lt).setOnClickListener(this);
+        findViewById(R.id.key_num_gt).setOnClickListener(this);
         findViewById(R.id.key_num_quest).setOnClickListener(this);
         findViewById(R.id.key_num_0).setOnClickListener(this);
         findViewById(R.id.key_abc).setOnClickListener(this);
