@@ -16,6 +16,7 @@
 #include "rltiles/tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
+#include "tilereg-cmd.h"
 
 AbilityRegion::AbilityRegion(const TileRegionInit &init) : GridRegion(init)
 {
@@ -53,8 +54,11 @@ void AbilityRegion::draw_tag()
 int AbilityRegion::handle_mouse(wm_mouse_event &event)
 {
     unsigned int item_idx;
-    if (!place_cursor(event, item_idx))
+    if (!place_cursor(event, item_idx)
+        || tile_command_not_applicable(CMD_USE_ABILITY, true))
+    {
         return 0;
+    }
 
     const ability_type ability = (ability_type) m_items[item_idx].idx;
     if (event.button == wm_mouse_event::LEFT)
@@ -188,8 +192,11 @@ static InventoryTile _tile_for_ability(ability_type ability)
     desc.idx      = (int) ability;
     desc.quantity = ability_mp_cost(ability);
 
-    if (!check_ability_possible(ability, true))
+    if (tile_command_not_applicable(CMD_USE_ABILITY, true)
+        || !check_ability_possible(ability, true))
+    {
         desc.flag |= TILEI_FLAG_INVALID;
+    }
 
     return desc;
 }

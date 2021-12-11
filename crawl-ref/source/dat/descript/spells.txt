@@ -26,7 +26,7 @@ meteorological fury. It does more damage to targets surrounded by empty space.
 Alistair's Intoxication spell
 
 Converts a small portion of the brain matter of those around you into alcohol,
-attempting to confuse all intelligent living creatures within view (although
+attempting to confuse all intelligent creatures within view (although
 poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
@@ -188,7 +188,9 @@ still within sight of the target.
 %%%%
 Blink spell
 
-Randomly translocates the caster a short distance.
+Randomly translocates the caster a short distance. Translocating in this way
+destabilises the caster temporarily, preventing consecutive blinks for a
+short period of time depending on spellpower.
 %%%%
 Blinkbolt spell
 
@@ -266,8 +268,10 @@ creatures into spectral versions of themselves.
 %%%%
 Call of Chaos spell
 
-Calls upon the powers of Chaos to empower nearby allies. The effects vary
-wildly and are usually, but not always, positive.
+Calls upon the powers of chaos to empower nearby allies, granting them haste,
+might, agility, or improved resistances. The chaotic magic may occasionally
+backfire and cause allies to instead lose their willpower or be berserked,
+polymorphed, or filled with inner flame.
 %%%%
 Call Tide spell
 
@@ -317,7 +321,7 @@ Cleansing Flame spell
 %%%%
 Cold Breath spell
 
-Exhales a focused blast of icy-cold air. It may knock back airborne targets.
+Exhales a focused blast of icy-cold air.
 %%%%
 Concentrate Venom spell
 
@@ -357,6 +361,11 @@ a moment to begin burning with vigor and in its fragile initial state is easily
 smothered by either the caster or a wandering monster. Re-casting the spell
 will bring the fire fully to life, but will burn the caster.
 %%%%
+Conjure Living Spells spell
+
+Creates several living, autonomous spells, which cast themselves at the first foe
+to enter their range. Once cast, they dissipate.
+%%%%
 Corona spell
 
 Causes a halo of glowing light to surround and effectively outline a creature.
@@ -373,6 +382,12 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
+Corrupt spell
+
+Unleashes Abyssal energies in the immediate vicinity. This changes the
+appearance of the affected area and temporarily summons creatures from the
+Abyss. This cannot be used in the Abyss itself.
+%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their
@@ -381,8 +396,9 @@ undead will decompose if affected.
 %%%%
 Creeping Frost spell
 
-Calls forth freezing cold from the walls. Any enemies of the caster standing
-next to those walls will be frozen and will find their movements slowed.
+Calls forth freezing cold from the walls and other similarly solid terrain. Any
+enemies of the caster standing next to that terrain will be frozen and will find
+their movements slowed.
 %%%%
 Crystal Bolt spell
 
@@ -397,9 +413,9 @@ nearby may be dazzled and left stumbling blindly.
 %%%%
 Death Channel spell
 
-Raises living creatures slain by the caster and their allies, reducing them to
-a state of spectral slavery. When the channel expires the spectres are released
-from bondage.
+Binds the souls of living, demonic and holy creatures slain by the caster and
+their allies, causing their spectres to remain and fight for the caster. When
+the channel expires the spectres will fade away.
 %%%%
 Death Rattle spell
 
@@ -559,10 +575,10 @@ Eringya's Noxious Bog spell
 
 Causes the caster to release a torrent of sludge that transforms nearby areas
 into a toxic bog. The sludge damages and poisons all monsters, even those
-resistant to poison. The bog cannot form on areas adjacent to solid features,
-nor on areas that lack solid floor, like deep water or lava. The transformation
-is temporary and cannot be sustained out of the caster's sight. Spellpower will
-increase how long the bog lingers.
+resistant to poison. The bog cannot form on areas adjacent to multiple solid
+features, nor on areas that lack solid floor, like deep water or lava. The
+transformation is temporary and cannot be sustained out of the caster's sight.
+Spellpower will increase how long the bog lingers.
 %%%%
 Eruption spell
 
@@ -604,6 +620,12 @@ Flame Tongue spell
 
 Creates a short burst of flame.
 %%%%
+Flame Wave spell
+
+Blasts the caster's surroundings with a wave of fire. If the caster maintains
+focus and supplies the spell with magical power (by waiting in place and not
+taking any other actions), more and larger flame waves will radiate outward.
+%%%%
 Flaming Cloud spell
 
 Conjures up a large cloud of roaring flames.
@@ -620,9 +642,9 @@ target back.
 %%%%
 Forceful Invitation spell
 
-Summons some of the lesser threats from one of the Lair of Beasts, the Snake
-Pit, the Spider Nest, the Swamp, the Shoals, the Orcish Mines, the Elven Halls,
-the Vaults, or the Crypt; the specific branch varies with the caster.
+Summons some creatures from one of the Snake Pit, the Spider Nest, the Swamp,
+the Shoals, the Elven Halls, the Vaults, or the Crypt; the specific branch
+varies with the caster.
 %%%%
 Foxfire spell
 
@@ -695,11 +717,6 @@ out of view.
 Greater Servant of Makhleb spell
 
 Summons a major demon.
-%%%%
-Goad Beasts spell
-
-Provokes nearby beasts to act faster. The effect is fleeting, but repeated use
-can move even the most stubborn mule.
 %%%%
 Hailstorm spell
 
@@ -806,8 +823,7 @@ is dependent on the size of the target.
 %%%%
 Invisibility spell
 
-Turns the caster invisible. Turning invisible causes magical contamination
-and may eventually cause glowing, nullifying the invisibility.
+Turns the caster invisible.
 %%%%
 Invisibility Other spell
 
@@ -827,11 +843,10 @@ dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
-Conjures a small globe of magical energy linked to the caster's own magical
-reserves. While the battlesphere cannot take independent action, it will fire
-volleys of energy at the caster's enemies in sync with its creator's own
-destructive conjurations. With increasing power, the battlesphere lasts longer
-and deals more damage per volley.
+Conjures a small globe of magical energy. Each time its creator casts a
+destructive Conjuration, the battlesphere will launch its own volley of energy
+at a random foe. With increasing power, the battlesphere lasts longer and deals
+more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -909,10 +924,10 @@ cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
 Manifold Assault spell
 
-Launches melee attacks against multiple visible enemies, warping space into
-paradoxical configurations to allow one swing to be in many places. The effect
-is too imprecise to allow stabbing unsuspecting foes. At high power, it can be
-used to strike more enemies at once.
+Warps space into paradoxical configurations in order to strike many visible
+targets with one melee attack. The effect is too imprecise to allow stabbing
+unsuspecting foes. At high power, it can be used to strike more enemies at
+once.
 %%%%
 Mara Summon spell
 
@@ -931,9 +946,9 @@ Causes confusion in all who gaze upon the caster.
 %%%%
 Maxwell's Capacitive Coupling spell
 
-Gradually builds up electric charge in the caster. When a critical threshold is
-reached the charge couples with the nearest foe, vapourizing them instantly.
-The resulting charge is so intense it bypasses even electrical immunity.
+Gradually builds up electric charge in the caster, so long as they maintain
+focus (by waiting in place and not taking any other actions). When a threshold
+is reached, the charge couples with the nearest foe, vaporising them instantly.
 Higher spell power will allow the caster to accumulate charge more rapidly.
 %%%%
 Mephitic Cloud spell
@@ -1083,10 +1098,9 @@ otherwise almost indistinguishable from the original.
 %%%%
 Plane Rend spell
 
-Summons some of the greater threats from one of the Snake Pit, the Spider Nest,
-the Swamp, the Shoals, the Pits of Slime, the Elven Halls, the Vaults, the
-Crypt, the Tomb of Ancients, or the Realm of Zot; the specific branch varies
-with each cast of the spell.
+Summons some of the greater threats from one of the Pits of Slime, the Elven
+Halls, the Vaults, the Crypt, the Tomb of Ancients, or the Realm of Zot; the
+specific branch varies with each cast of the spell.
 %%%%
 Poison Arrow spell
 
@@ -1169,14 +1183,18 @@ damage is strongly reduced by armour.
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
-afflicted with this condition may cause the target to lose control over their
-magic, progressively hindering their chances of success as more spells are
-cast.
+afflicted with this condition causes the target to lose access to their magic,
+briefly preventing them from casting any further spells.
 %%%%
 Scattershot spell
 
 Blasts a cone-shaped area in front of the caster with metallic fragments. Its
 damage is strongly reduced by armour.
+%%%%
+Scorch spell
+
+Scorches a random foe. Those injured by this have their resistance to fire
+burned away for a short time.
 %%%%
 Seal Doors spell
 
@@ -1199,6 +1217,12 @@ Sentinel's Mark spell
 
 Bestows a strong beacon upon a targeted creature. It announces the presence
 and location of the marked creature to everyone on the same level.
+%%%%
+Seracfall spell
+
+Violently collapses a nearby simulacrum into a large mass of ice, which
+explodes on impact. The ice affects even cold-resistant creatures somewhat, due
+to the strong impact and cutting edges.
 %%%%
 Shadow Bolt spell
 
@@ -1368,6 +1392,10 @@ which lashes out at the target. The stinger's impact will always poison a
 susceptible target. Even resistant targets have a chance to be poisoned and
 immune monsters will be damaged by the physical impact of the stinger.
 %%%%
+Stoke Flames spell
+
+Adds malice to hellish fires, binding it with flame into a creeping inferno.
+%%%%
 Stone Arrow spell
 
 Fires a sharp spine of rock.
@@ -1403,6 +1431,12 @@ spell's power.
 Summon Air Elementals spell
 
 Summons one or more air elementals.
+%%%%
+Summon Cactus Giant spell
+
+Summons a warrior from a particularly prickly tribe. Foes that strike these
+giants in melee are in for a painful surprise! When cast at a higher power,
+older, more robust warriors will answer the call.
 %%%%
 Summon Demon spell
 
@@ -1551,10 +1585,6 @@ Teleport Other spell
 
 Randomly translocates a targeted creature.
 %%%%
-Teleport Self spell
-
-Teleports the caster to a random location.
-%%%%
 Throw Barbs spell
 
 Fires a volley of barbs at the target, skewering them and making movement
@@ -1601,8 +1631,8 @@ Animates the weapon of a targeted foe, ripping it from their hands and causing
 it to attack them relentlessly. Once the target dies, the weapon will fall to
 the ground shortly thereafter.
 
-Ranged weapons and certain powerful named artefacts cannot be affected, and
-any abilities that require evocation skill to trigger will not be active.
+Certain powerful named artefacts cannot be animated, and any properties that
+require skill in evocations will not be active.
 %%%%
 Twisted Resurrection spell
 

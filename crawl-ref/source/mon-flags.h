@@ -149,8 +149,7 @@ enum monclass_flag_type : uint64_t
     /// derived undead can't be randomly generated
     M_NO_GEN_DERIVED    = BIT(47),
 
-    /// only generate when bands are permitted
-    M_REQUIRE_BAND      = BIT(48),
+                        //BIT(48), // was M_REQUIRE_BAND
 
                         //BIT(49), // was M_HYBRID
 
@@ -179,6 +178,7 @@ enum monclass_flag_type : uint64_t
     /// is surrounded by a ring of clouds. Only one can be active at a time!
     M_THUNDER_RING      = BIT(58),
     M_FIRE_RING         = BIT(59),
+    M_MIASMA_RING       = BIT(60),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
@@ -220,9 +220,8 @@ enum monster_flag_type : uint64_t
     /// Consider this monster to have MH_UNDEAD holiness, regardless
     /// of its actual type
     MF_FAKE_UNDEAD        = BIT(13),
-    /// An undead monster soul enslaved by
-    /// Yredelemnul's power
-    MF_ENSLAVED_SOUL      = BIT(14),
+
+    //                      BIT(14), Was for marking bound souls
 
     /// mname is a suffix.
     MF_NAME_SUFFIX        = BIT(15),

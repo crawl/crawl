@@ -335,8 +335,7 @@ bool melee_attack::handle_phase_dodged()
     if (attacker != defender && adjacent(defender->pos(), attack_position)
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
-        && (!defender->is_player() || (!you.duration[DUR_LIFESAVING]
-                                       && !attacker->as_monster()->neutral()))
+        && (!defender->is_player() || !attacker->as_monster()->neutral())
         && !mons_aligned(attacker, defender) // confused friendlies attacking
         // Retaliation only works on the first attack in a round.
         // FIXME: player's attack is -1, even for auxes
@@ -359,14 +358,10 @@ bool melee_attack::handle_phase_dodged()
 
         if (defender->is_player())
         {
-            const bool using_lbl = defender->weapon()
-                && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
             const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
                 && (!defender->weapon()
                     || is_melee_weapon(*defender->weapon()));
-            const int chance = using_lbl + using_fencers;
-
-            if (x_chance_in_y(chance, 3) && !is_riposte) // no ping-pong!
+            if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
                 riposte();
 
             // Retaliations can kill!
@@ -536,6 +531,13 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
+        const int infusion = you.infusion_amount();
+        if (infusion)
+        {
+            pay_mp(infusion);
+            finalize_mp_cost();
+        }
+
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
@@ -551,6 +553,7 @@ bool melee_attack::handle_phase_hit()
         // the player is hit, each of them will verify their own required
         // parameters.
         do_passive_freeze();
+        do_fiery_armour_burn();
         emit_foul_stench();
     }
 
@@ -723,7 +726,7 @@ bool melee_attack::attack()
 
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
-    const int ev = defender->evasion(ev_ignore::none, attacker);
+    const int ev = defender->evasion(false, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(true);
 
@@ -823,42 +826,10 @@ void melee_attack::check_autoberserk()
     if (defender->is_monster() && mons_is_firewood(*defender->as_monster()))
         return;
 
-    if (attacker->is_player())
+    if (x_chance_in_y(attacker->angry(), 100))
     {
-        for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        {
-            const item_def *item = you.slot_item(static_cast<equipment_type>(i));
-            if (!item)
-                continue;
-
-            if (!is_artefact(*item))
-                continue;
-
-            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
-            {
-                attacker->go_berserk(false);
-                return;
-            }
-        }
-    }
-    else
-    {
-        for (int i = MSLOT_WEAPON; i <= MSLOT_JEWELLERY; ++i)
-        {
-            const item_def *item =
-                attacker->as_monster()->mslot_item(static_cast<mon_inv_type>(i));
-            if (!item)
-                continue;
-
-            if (!is_artefact(*item))
-                continue;
-
-            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
-            {
-                attacker->go_berserk(false);
-                return;
-            }
-        }
+        attacker->go_berserk(false);
+        return;
     }
 }
 
@@ -974,11 +945,15 @@ public:
     int get_damage() const override
     {
         return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
-                      + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4;
+                      + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4
+                      + you.get_mutation_level(MUT_WEAKNESS_STINGER);
     }
 
     int get_brand() const override
     {
+        if (you.get_mutation_level(MUT_WEAKNESS_STINGER) == 3)
+            return SPWPN_WEAKNESS;
+
         return you.get_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
     }
 };
@@ -1069,11 +1044,34 @@ public:
     : AuxAttackType(12, "squeeze") { };
 };
 
+
+class AuxTouch: public AuxAttackType
+{
+public:
+    AuxTouch()
+    : AuxAttackType(3, "touch") { };
+
+    int get_damage() const override
+    {
+        return damage
+               + random2(1 + you.get_mutation_level(MUT_DEMONIC_TOUCH) * 2);
+    }
+
+    int get_brand() const override
+    {
+        if (you.get_mutation_level(MUT_DEMONIC_TOUCH) == 3)
+            return SPWPN_VULNERABILITY;
+
+        return SPWPN_NORMAL;
+    }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
 static const AuxHeadbutt    AUX_HEADBUTT = AuxHeadbutt();
 static const AuxTailslap    AUX_TAILSLAP = AuxTailslap();
+static const AuxTouch       AUX_TOUCH = AuxTouch();
 static const AuxPunch       AUX_PUNCH = AuxPunch();
 static const AuxBite        AUX_BITE = AuxBite();
 static const AuxPseudopods  AUX_PSEUDOPODS = AuxPseudopods();
@@ -1086,6 +1084,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_HEADBUTT,
     &AUX_PECK,
     &AUX_TAILSLAP,
+    &AUX_TOUCH,
     &AUX_PUNCH,
     &AUX_BITE,
     &AUX_PSEUDOPODS,
@@ -1156,7 +1155,7 @@ bool melee_attack::player_aux_test_hit()
     // XXX We're clobbering did_hit
     did_hit = false;
 
-    const int evasion = defender->evasion(ev_ignore::none, attacker);
+    const int evasion = defender->evasion(false, attacker);
 
     if (player_under_penance(GOD_ELYVILON)
         && god_hates_your_god(GOD_ELYVILON)
@@ -1244,22 +1243,25 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     count_action(CACT_MELEE, -1, atk); // aux_attack subtype/auxtype
 
-    aux_damage  = player_stat_modify_damage(aux_damage);
+    if (atk != UNAT_TOUCH)
+    {
+        aux_damage  = player_stat_modify_damage(aux_damage);
 
-    aux_damage  = random2(aux_damage);
+        aux_damage  = random2(aux_damage);
 
-    aux_damage  = player_apply_fighting_skill(aux_damage, true);
+        aux_damage  = player_apply_fighting_skill(aux_damage, true);
 
-    aux_damage  = player_apply_misc_modifiers(aux_damage);
+        aux_damage  = player_apply_misc_modifiers(aux_damage);
 
-    aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
+        aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
 
-    aux_damage  = player_apply_final_multipliers(aux_damage);
+        aux_damage  = player_apply_final_multipliers(aux_damage);
 
-    if (atk == UNAT_CONSTRICT)
-        aux_damage = 0;
-    else
-        aux_damage = apply_defender_ac(aux_damage);
+        if (atk == UNAT_CONSTRICT)
+            aux_damage = 0;
+        else
+            aux_damage = apply_defender_ac(aux_damage);
+    }
 
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
@@ -1278,6 +1280,22 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
             if (damage_brand == SPWPN_VENOM && coinflip())
                 poison_monster(defender->as_monster(), &you);
+
+            if (damage_brand == SPWPN_WEAKNESS
+                && !(defender->holiness() & (MH_UNDEAD | MH_NONLIVING)))
+            {
+                defender->weaken(&you, 6);
+            }
+
+            if (damage_brand == SPWPN_VULNERABILITY
+                && defender->as_monster()->willpower() != WILL_INVULN)
+            {
+                defender->as_monster()->add_ench(
+                    mon_enchant(ENCH_LOWERED_WL, 1, &you,
+                                random_range(4, 8) * BASELINE_DELAY));
+                mprf("You sap %s willpower!",
+                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+            }
 
             // Normal vampiric biting attack, not if already got stabbing special.
             if (damage_brand == SPWPN_VAMPIRISM
@@ -1352,32 +1370,29 @@ void melee_attack::player_announce_aux_hit()
 
 string melee_attack::player_why_missed()
 {
-    const int ev = defender->evasion(ev_ignore::none, attacker);
-    const int combined_penalty =
-        attacker_armour_tohit_penalty + attacker_shield_tohit_penalty;
-    if (to_hit < ev && to_hit + combined_penalty >= ev)
-    {
-        const bool armour_miss =
-            (attacker_armour_tohit_penalty
-             && to_hit + attacker_armour_tohit_penalty >= ev);
-        const bool shield_miss =
-            (attacker_shield_tohit_penalty
-             && to_hit + attacker_shield_tohit_penalty >= ev);
+    const int ev = defender->evasion(false, attacker);
+    // We roll (random2) these penalties before comparing them to EV.
+    // Thus, on average, they're effectively half as large.
+    const int adj_armour_penalty = div_rand_round(attacker_armour_tohit_penalty, 2);
+    const int adj_shield_penalty = div_rand_round(attacker_shield_tohit_penalty, 2);
+    const int combined_penalty = adj_armour_penalty + adj_shield_penalty;
+    if (to_hit >= ev || to_hit + combined_penalty < ev)
+        return "You" + evasion_margin_adverb() + " miss ";
 
-        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        const string armour_name = armour ? armour->name(DESC_BASENAME)
-                                          : string("armour");
+    const bool armour_miss =
+        adj_armour_penalty && to_hit + adj_armour_penalty >= ev;
+    const bool shield_miss =
+        adj_shield_penalty && to_hit + adj_shield_penalty >= ev;
 
-        if (armour_miss && !shield_miss)
-            return "Your " + armour_name + " prevents you from hitting ";
-        else if (shield_miss && !armour_miss)
-            return "Your shield prevents you from hitting ";
-        else
-            return "Your shield and " + armour_name
-                   + " prevent you from hitting ";
-    }
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
+    const string armour_name = armour ? armour->name(DESC_BASENAME)
+                                      : string("armour");
 
-    return "You" + evasion_margin_adverb() + " miss ";
+    if (armour_miss && !shield_miss)
+        return "Your " + armour_name + " prevents you from hitting ";
+    if (shield_miss && !armour_miss)
+        return "Your shield prevents you from hitting ";
+    return "Your shield and " + armour_name + " prevent you from hitting ";
 }
 
 void melee_attack::player_warn_miss()
@@ -1832,7 +1847,7 @@ static bool actor_can_lose_heads(const actor* defender)
 {
     if (defender->is_monster()
         && defender->as_monster()->has_hydra_multi_attack()
-        && defender->type != MONS_SPECTRAL_THING
+        && defender->as_monster()->mons_species() != MONS_SPECTRAL_THING
         && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL)
     {
         return true;
@@ -2650,6 +2665,40 @@ void melee_attack::mons_apply_attack_flavour()
             drain_defender();
         break;
 
+    case AF_BARBS:
+        if (defender->is_player())
+        {
+            mpr("Barbed spikes become lodged in your body.");
+            // same duration as manticore barbs
+            if (!you.duration[DUR_BARBS])
+                you.set_duration(DUR_BARBS, random_range(4, 8));
+            else
+                you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
+
+            if (you.attribute[ATTR_BARBS_POW])
+            {
+                you.attribute[ATTR_BARBS_POW] =
+                    min(6, you.attribute[ATTR_BARBS_POW]++);
+            }
+            else
+                you.attribute[ATTR_BARBS_POW] = 4;
+        }
+        // Insubstantial and jellies are immune
+        else if (!(defender->is_insubstantial() &&
+                    mons_genus(defender->type) != MONS_JELLY))
+        {
+            if (defender_visible)
+            {
+                mprf("%s %s skewered by barbed spikes.",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str());
+            }
+            defender->as_monster()->add_ench(mon_enchant(ENCH_BARBS, 1,
+                                        attacker,
+                                        random_range(5, 7) * BASELINE_DELAY));
+        }
+        break;
+
     case AF_POISON_PARALYSE:
     {
         // Doesn't affect the poison-immune.
@@ -2804,8 +2853,8 @@ void melee_attack::mons_apply_attack_flavour()
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD])
             {
                 you.duration[DUR_WATER_HOLD] = 10;
-                you.props["water_holder"].get_int() = attacker->as_monster()->mid;
-                you.props["water_hold_substance"].get_string() = watery ? "water" : "ooze";
+                you.props[WATER_HOLDER_KEY].get_int() = attacker->as_monster()->mid;
+                you.props[WATER_HOLD_SUBSTANCE_KEY].get_string() = watery ? "water" : "ooze";
             }
             else if (defender->is_monster()
                      && !defender->as_monster()->has_ench(ENCH_WATER_HOLD))
@@ -2916,6 +2965,68 @@ void melee_attack::mons_apply_attack_flavour()
         if (coinflip())
             defender->weaken(attacker, 12);
         break;
+
+    case AF_SEAR:
+    {
+        if (!one_chance_in(3))
+            break;
+
+        bool visible_effect = false;
+        if (defender->is_player())
+        {
+            if (defender->res_fire() <= 3 && !you.duration[DUR_FIRE_VULN])
+                visible_effect = true;
+            you.increase_duration(DUR_FIRE_VULN, 3 + random2(attk_damage), 50);
+        }
+        else
+        {
+            if (!defender->as_monster()->has_ench(ENCH_FIRE_VULN))
+                visible_effect = true;
+            defender->as_monster()->add_ench(
+                mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+                            (3 + random2(attk_damage)) * BASELINE_DELAY));
+        }
+
+        if (needs_message && visible_effect)
+        {
+            mprf("%s fire resistance is stripped away!",
+                 def_name(DESC_ITS).c_str());
+        }
+        break;
+    }
+    }
+}
+
+void melee_attack::do_fiery_armour_burn()
+{
+    if (!you.duration[DUR_FIERY_ARMOUR]
+        || !attacker->alive()
+        || !adjacent(you.pos(), attacker->pos()))
+    {
+        return;
+    }
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+    beam.thrower = KILL_YOU;
+
+    monster* mon = attacker->as_monster();
+
+    const int pre_ac = roll_dice(2, 4);
+    const int post_ac = attacker->apply_ac(pre_ac);
+    const int hurted = mons_adjust_flavoured(mon, beam, post_ac);
+
+    if (!hurted)
+        return;
+
+    simple_monster_message(*mon, " is burned by your cloak of flames.");
+
+    mon->hurt(&you, hurted);
+
+    if (mon->alive())
+    {
+        mon->expose_to_element(BEAM_FIRE, post_ac);
+        print_wounds(*mon);
     }
 }
 
@@ -3028,14 +3139,17 @@ void melee_attack::do_spines()
         if (defender->type == MONS_BRIAR_PATCH
             && attacker->type == MONS_THORN_HUNTER
             // Dithmenos' shadow can't take damage, don't spam.
-            || attacker->type == MONS_PLAYER_SHADOW)
+            || attacker->type == MONS_PLAYER_SHADOW
+            // Don't let spines kill things out of LOS.
+            || !summon_can_attack(defender->as_monster(), attacker))
         {
             return;
         }
 
-        if (attacker->alive() && one_chance_in(3))
+        const bool cactus = defender->type == MONS_CACTUS_GIANT;
+        if (attacker->alive() && (cactus || one_chance_in(3)))
         {
-            int dmg = roll_dice(5, 4);
+            const int dmg = spines_damage(defender->type).roll();
             int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
@@ -3189,7 +3303,7 @@ bool melee_attack::do_knockback(bool trample)
     if (defender->is_stationary())
         return false; // don't even print a message
 
-    if (attacker->cannot_move())
+    if (attacker->cannot_act())
         return false;
 
     const int size_diff =
@@ -3329,7 +3443,7 @@ void melee_attack::chaos_affect_actor(actor *victim)
  */
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
-    if (atk != UNAT_CONSTRICT
+    if (atk != UNAT_CONSTRICT && atk != UNAT_TOUCH
         && you.strength() + you.dex() <= random2(50))
     {
         return false;
@@ -3363,9 +3477,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 
     case UNAT_TAILSLAP:
         return you.has_tail()
-            // constricting tails are too slow to slap
-            && !you.has_mutation(MUT_CONSTRICTING_TAIL)
-            && coinflip();
+               // constricting tails are too slow to slap
+               && !you.has_mutation(MUT_CONSTRICTING_TAIL)
+               && coinflip();
 
     case UNAT_PSEUDOPODS:
         return you.has_usable_pseudopods() && !one_chance_in(3);
@@ -3381,6 +3495,11 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 
     case UNAT_PUNCH:
         return player_gets_aux_punch();
+
+    case UNAT_TOUCH:
+        return you.get_mutation_level(MUT_DEMONIC_TOUCH)
+               && you.has_usable_offhand()
+               && x_chance_in_y(2, 5);
 
     default:
         return false;
@@ -3434,7 +3553,7 @@ int melee_attack::calc_mon_to_hit_base()
 {
     const bool fighter = attacker->is_monster()
                          && attacker->as_monster()->is_fighter();
-    return mon_to_hit_base(attacker->get_hit_dice(), fighter, false);
+    return mon_to_hit_base(attacker->get_hit_dice(), fighter);
 }
 
 /**

@@ -15,11 +15,11 @@ static const command_type ct_system_commands[] =
     CMD_DISPLAY_CHARACTER_STATUS, CMD_DISPLAY_KNOWN_OBJECTS,
 
     // meta commands
-    CMD_SAVE_GAME_NOW, CMD_DISPLAY_COMMANDS,
+    CMD_SAVE_GAME_NOW, CMD_DISPLAY_COMMANDS, CMD_GAME_MENU,
+    CMD_LOOKUP_HELP_MENU,
 #ifdef __ANDROID__
     CMD_TOGGLE_KEYBOARD,
 #endif
-    CMD_GAME_MENU,
 };
 
 static const command_type ct_map_commands[] =
@@ -59,6 +59,9 @@ static const command_type ct_action_commands[] =
     CMD_INTERLEVEL_TRAVEL, CMD_SEARCH_STASHES,
     CMD_LOOKUP_HELP,
 };
+
+bool tile_command_not_applicable(const command_type cmd, bool safe);
+bool tile_command_not_applicable(const command_type cmd);
 
 class CommandRegion : public GridRegion
 {

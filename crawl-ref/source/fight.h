@@ -58,7 +58,7 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
-int mon_to_hit_base(int hd, bool skilled, bool ranged);
+int mon_to_hit_base(int hd, bool skilled);
 int mon_to_hit_pct(int to_land, int ev);
 int mon_shield_bypass(int hd);
 int mon_beat_sh_pct(int shield_bypass, int shield_class);
@@ -87,4 +87,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 string rude_stop_summoning_reason();
 bool rude_stop_summoning_prompt(string verb = "summon");
 
-bool can_reach_attack_between(coord_def source, coord_def target);
+bool can_reach_attack_between(coord_def source, coord_def target,
+                              reach_type range);
+dice_def spines_damage(monster_type mon);
+int archer_bonus_damage(int hd);

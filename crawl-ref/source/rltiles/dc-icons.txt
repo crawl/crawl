@@ -58,10 +58,13 @@ swift SWIFT
 vile_clutch VILE_CLUTCH
 possessable POSSESSABLE
 slowly_dying SLOWLY_DYING
+fire_champ FIRE_CHAMP
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
 new_transporter NEW_TRANSPORTER
+
+ellipsis ELLIPSIS
 
 %sdir misc
 out_of_sight MESH

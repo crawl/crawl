@@ -9,8 +9,8 @@ enum daction_type
     DACT_ALLY_UNHOLY_EVIL,
     DACT_ALLY_UNCLEAN_CHAOTIC,
     DACT_ALLY_SPELLCASTER,
-#endif
     DACT_ALLY_YRED_SLAVE,
+#endif
     DACT_ALLY_BEOGH, // both orcs and demons summoned by high priests
     DACT_ALLY_SLIME,
     DACT_ALLY_PLANT,
@@ -51,6 +51,7 @@ enum daction_type
 #endif
     DACT_ALLY_HEPLIAKLQANA,
     DACT_UPGRADE_ANCESTOR,
+    DACT_REMOVE_IGNIS_ALTARS,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]

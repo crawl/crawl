@@ -114,10 +114,10 @@ void give_job_equipment(job_type job)
     {
         const item_spec spec = items.get_item(i);
         int plus = 0;
-        if (spec.props.exists("charges"))
-            plus = spec.props["charges"];
-        if (spec.props.exists("plus"))
-            plus = spec.props["plus"];
+        if (spec.props.exists(CHARGES_KEY))
+            plus = spec.props[CHARGES_KEY];
+        if (spec.props.exists(PLUS_KEY))
+            plus = spec.props[PLUS_KEY];
         newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
                           plus, spec.ego);
     }

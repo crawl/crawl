@@ -103,7 +103,8 @@ int calc_spell_power(spell_type spell, bool apply_intel,
 int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
                      bool ignore_shadows = false);
 
-bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL, dist *_target = nullptr);
+spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
+                   dist *_target = nullptr, bool force_failure = false);
 
 int apply_enhancement(const int initial_power, const int enhancer_levels);
 
@@ -116,15 +117,16 @@ int hex_success_chance(const int mr, int powc, int scale,
 class targeter;
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);
 bool spell_has_targeter(spell_type spell);
+string target_desc(const monster_info& mi, spell_type spell);
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       targeter* hitfunc);
 
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);
 desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
                                        targeter *hitfunc);
-spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
+spret your_spells(spell_type spell, int powc = 0, bool actual_spell = true,
                   const item_def* const evoked_item = nullptr,
-                  dist *_target = nullptr);
+                  dist *_target = nullptr, bool force_failure = false);
 
 extern const char *fail_severity_adjs[];
 

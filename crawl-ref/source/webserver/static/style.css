@@ -99,6 +99,15 @@ body {
 #player_list th.place {
     width: 3em;
 }
+#player_list th.turn {
+    width: 3em;
+}
+#player_list th.dur {
+    width: 4em;
+}
+#player_list.no_game_times .turn, #player_list.no_game_times .dur {
+    display: none;
+}
 
 #player_list th.idle_time {
     width: 3em;

@@ -388,6 +388,15 @@ slime_stone1
 slime_stone2
 slime_stone3
 
+rock_wall_crypt0 ROCK_WALL_CRYPT
+%weight 2
+rock_wall_crypt1
+%weight 3
+rock_wall_crypt2
+%weight 2
+rock_wall_crypt3
+
+%weight 10
 tomb0 WALL_TOMB
 tomb1
 tomb2
@@ -416,6 +425,40 @@ vault_stone12
 vault_stone13
 vault_stone14
 vault_stone15
+
+# ssssssss
+%weight 10
+wall_stone_spider0 STONE_WALL_SPIDER
+%weight 5
+wall_stone_spider1
+%weight 1
+wall_stone_spider2
+wall_stone_spider3
+
+# sss (more snakeishly)
+%weight 10
+wall_stone_snake0 STONE_WALL_SNAKE
+%weight 3
+wall_stone_snake1
+wall_stone_snake2
+wall_stone_snake3
+
+# sss (like the tide rolling over sand)
+%weight 2
+wall_stone_shoals0 STONE_WALL_SHOALS
+wall_stone_shoals1
+%weight 4
+wall_stone_shoals2
+wall_stone_shoals3
+%weight 10
+wall_stone_shoals4
+
+wall_oozing0 WALL_OOZING
+wall_oozing1
+%weight 4
+wall_oozing2
+wall_oozing3
+%weight 10
 
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
@@ -754,6 +797,13 @@ stone_dark0 WALL_STONE_DARK
 stone_dark1
 stone_dark2
 stone_dark3
+
+stone_mossy0 WALL_STONE_MOSSY
+stone_mossy1
+%weight 3
+stone_mossy2
+stone_mossy3
+%weight 10
 
 # For the Doroklohe WizLab
 stone_black_marked0 WALL_STONE_BLACK_MARKED

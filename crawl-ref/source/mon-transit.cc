@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "dungeon.h"
+#include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h" // passive_t::convert_orcs
 #include "items.h"
@@ -146,13 +147,20 @@ void place_followers()
 static monster* _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
-    if (monster* mons = f.place(false))
+
+    // Duel targets have to arrive next to the player.
+    bool near_player = f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY)
+                       || f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
+
+    if (monster* mons = f.place(near_player))
     {
         // Figure out how many turns we need to update the monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
 
         //Unflag as summoned or else monster will be ignored in update_monster
         mons->flags &= ~MF_JUST_SUMMONED;
+        // Don't keep chasing forever.
+        mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
         return update_monster(*mons, turns);
     }
     else
@@ -167,8 +175,14 @@ static void _level_place_lost_monsters(m_transit_list &m)
 
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
-        if (player_in_branch(BRANCH_ABYSS) && coinflip())
+        // Always place monsters that are chasing the player after abandoning
+        // a duel, even in the Abyss.
+        if (player_in_branch(BRANCH_ABYSS)
+            && !mon->mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY)
+            && coinflip())
+        {
             continue;
+        }
 
         if (monster* new_mon =_place_lost_monster(*mon))
         {

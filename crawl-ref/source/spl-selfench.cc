@@ -70,6 +70,26 @@ spret ice_armour(int pow, bool fail)
     return spret::success;
 }
 
+void fiery_armour()
+{
+    if (you.duration[DUR_FIERY_ARMOUR])
+        mpr("Your cloak of flame flares fiercely!");
+    else if (you.duration[DUR_ICY_ARMOUR]
+        || you.form == transformation::ice_beast
+        || player_icemail_armour_class())
+    {
+        mprf("A sizzling cloak of flame settles atop your ic%s.",
+             you.form == transformation::ice_beast ? "e" : "y armour");
+        // TODO: add corresponding inverse message for casting ozo's etc
+        // while DUR_FIERY_ARMOUR is active (maybe..?)
+    } else {
+        mpr("A protective cloak of flame settles atop you.");
+    }
+
+    you.increase_duration(DUR_FIERY_ARMOUR, random_range(110, 140), 1500);
+    you.redraw_armour_class = true;
+}
+
 spret cast_revivification(int pow, bool fail)
 {
     fail_check();
@@ -136,7 +156,7 @@ int cast_selective_amnesia(const string &pre_msg)
                     "Forget %s, freeing %d spell level%s for a total of %d?%s",
                     spell_title(spell), spell_levels_required(spell),
                     spell_levels_required(spell) != 1 ? "s" : "",
-                    player_spell_levels() + spell_levels_required(spell),
+                    player_spell_levels(false) + spell_levels_required(spell),
                     in_library ? "" : " This spell is not in your library!");
 
             if (yesno(prompt.c_str(), in_library, 'n', false))
@@ -167,6 +187,16 @@ spret cast_wereblood(int pow, bool fail)
     return spret::success;
 }
 
+int silence_min_range(int pow)
+{
+    return shrinking_aoe_range((10 + pow/4) * BASELINE_DELAY);
+}
+
+int silence_max_range(int pow)
+{
+    return shrinking_aoe_range((9 + pow/4 + pow/2) * BASELINE_DELAY);
+}
+
 spret cast_silence(int pow, bool fail)
 {
     fail_check();
@@ -180,6 +210,11 @@ spret cast_silence(int pow, bool fail)
 
     learned_something_new(HINT_YOU_SILENCE);
     return spret::success;
+}
+
+int liquefaction_max_range(int pow)
+{
+    return shrinking_aoe_range((9 + pow) * BASELINE_DELAY);
 }
 
 spret cast_liquefaction(int pow, bool fail)

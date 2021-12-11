@@ -249,6 +249,23 @@ set<string> &get_uniq_map_names()
         return you.uniq_map_names;
 }
 
+// TODO: datify into branch data
+int dgn_builder_x()
+{
+    if (is_hell_subbranch(you.where_are_you) && !at_branch_bottom())
+        return GXM / 2;
+    else
+        return GXM;
+}
+
+int dgn_builder_y()
+{
+    if (is_hell_subbranch(you.where_are_you) && !at_branch_bottom())
+        return GYM / 2;
+    else
+        return GYM;
+}
+
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
@@ -287,7 +304,7 @@ bool builder(bool enable_random_maps)
     rng::generator levelgen_rng(you.where_are_you);
 
 #ifdef DEBUG_DIAGNOSTICS // no point in enabling unless dprf works
-    CrawlHashTable &debug_logs = you.props["debug_builder_logs"].get_table();
+    CrawlHashTable &debug_logs = you.props[DEBUG_BUILDER_LOGS_KEY].get_table();
     string &cur_level_log = debug_logs[level_id::current().describe()].get_string();
     msg::tee debug_messages(cur_level_log);
     debug_messages.append_line(make_stringf("Builder log for %s:",
@@ -373,7 +390,7 @@ bool builder(bool enable_random_maps)
         get_uniq_map_tags() = uniq_tags;
         get_uniq_map_names() = uniq_names;
         if (crawl_state.last_builder_error_fatal &&
-            (you.props.exists("force_map") || you.props.exists("force_minivault")))
+            (you.props.exists(FORCE_MAP_KEY) || you.props.exists(FORCE_MINIVAULT_KEY)))
         {
             // if there was a fatal lua error and this is a forced levelgen,
             // it's most likely that the same thing will keep happening over
@@ -1970,7 +1987,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
         base = DNGN_STONE_STAIRS_UP_I;
         // Pan abuses stair placement for transits, as we want connectivity
         // checks.
-        needed_stairs = you.depth == 1
+        needed_stairs = (you.depth == 1 || player_in_hell())
                         && !player_in_branch(BRANCH_PANDEMONIUM)
                         ? 1 : 3;
     }
@@ -1981,13 +1998,16 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
 
         if (at_branch_bottom())
             needed_stairs = 0;
+        else if (player_in_hell())
+            needed_stairs = 1;
         else
             needed_stairs = 3;
     }
 
     // In Zot, don't create extra escape hatches, in order to force
     // the player through vaults that use all three down stone stairs.
-    if (player_in_branch(BRANCH_ZOT))
+    // In Hell, don't create extra hatches, the levels are small already.
+    if (player_in_branch(BRANCH_ZOT) || player_in_hell())
     {
         replace = random_choose(DNGN_FOUNTAIN_BLUE,
                                 DNGN_FOUNTAIN_SPARKLING,
@@ -2050,11 +2070,15 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     // If we only need one stone stair, make sure it's _I.
     if (needed_stairs != 3)
     {
-        ASSERT(checking_up_stairs);
+        ASSERT(checking_up_stairs || player_in_hell());
         ASSERT(needed_stairs == 1);
         ASSERT(stairs.size() == 1 || player_in_branch(root_branch));
         if (stairs.size() == 1)
-            env.grid(stairs.front()) = DNGN_STONE_STAIRS_UP_I;
+        {
+            env.grid(stairs.front()) =
+                checking_up_stairs ? DNGN_STONE_STAIRS_UP_I
+                                   : DNGN_STONE_STAIRS_DOWN_I;
+        }
 
         return true;
     }
@@ -2800,12 +2824,6 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
     return result;
 }
 
-// Count how many neighbours of env.grid[x][y] are the feature feat.
-int count_neighbours(int x, int y, dungeon_feature_type feat)
-{
-    return count_feature_in_box(x-1, y-1, x+2, y+2, feat);
-}
-
 // Gives water which is next to ground/shallow water a chance of being
 // shallow. Checks each water space.
 static void _prepare_water()
@@ -2831,6 +2849,9 @@ static void _prepare_water()
 
 static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
 {
+    if (!layout)
+        return false;
+
     bool permissive = false;
     if (!vault->has_tag_prefix("layout_")
         && !(permissive = vault->has_tag_prefix("nolayout_")))
@@ -2881,7 +2902,7 @@ static const map_def *_pick_layout(const map_def *vault)
             }
             layout = random_map_for_tag("layout", true, true);
         }
-        while (layout->has_tag("no_primary_vault")
+        while (layout && layout->has_tag("no_primary_vault")
                || (tries > 10 && !_vault_can_use_layout(vault, layout)));
     }
 
@@ -2896,10 +2917,10 @@ static bool _pan_level()
     const PlaceInfo &place_info = you.get_place_info();
     bool all_demons_generated = true;
 
-    if (you.props.exists("force_map"))
+    if (you.props.exists(FORCE_MAP_KEY))
     {
         const map_def *vault =
-            find_map_by_name(you.props["force_map"].get_string());
+            find_map_by_name(you.props[FORCE_MAP_KEY].get_string());
         ASSERT(vault);
 
         _dgn_ensure_vault_placed(_build_primary_vault(vault), false, vault->name);
@@ -2972,7 +2993,12 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     if (!minivault && player_in_branch(BRANCH_TEMPLE))
     {
         // Temple vault determined at new game time.
-        const string name = you.props[TEMPLE_MAP_KEY];
+        const string name = you.props.exists(FORCE_MAP_KEY)
+                ? you.props[FORCE_MAP_KEY]
+                : you.props[TEMPLE_MAP_KEY];
+
+        if (name != you.props[TEMPLE_MAP_KEY].get_string())
+            mprf(MSGCH_ERROR, "Overriding seed-determined temple map.");
 
         // Tolerate this for a little while, for old games.
         if (!name.empty())
@@ -3008,8 +3034,8 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     const map_def *vault = 0;
 
-    if (you.props.exists("force_map"))
-        vault = find_map_by_name(you.props["force_map"].get_string());
+    if (you.props.exists(FORCE_MAP_KEY))
+        vault = find_map_by_name(you.props[FORCE_MAP_KEY].get_string());
     else if (lid.branch == root_branch && lid.depth == 1
         && (crawl_state.game_is_sprint()
             || crawl_state.game_is_tutorial()))
@@ -3415,8 +3441,8 @@ static void _place_minivaults()
 {
     const map_def *vault = nullptr;
     // First place the vault requested with &P
-    if (you.props.exists("force_minivault")
-        && (vault = find_map_by_name(you.props["force_minivault"])))
+    if (you.props.exists(FORCE_MINIVAULT_KEY)
+        && (vault = find_map_by_name(you.props[FORCE_MINIVAULT_KEY])))
     {
         _dgn_ensure_vault_placed(_build_secondary_vault(vault), false, vault->name);
     }
@@ -3582,6 +3608,10 @@ void dgn_place_stone_stairs(bool maybe_place_hatches)
 
     for (int i = 0; i < pair_count; ++i)
     {
+        // only place the first stair and hatches in hell
+        if (player_in_hell() && i > 0 && i <= 3)
+            continue;
+
         if (!existing[i])
         {
             _dgn_place_feature_at_random_floor_square(
@@ -4625,7 +4655,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 {
     const CrawlHashTable props = spec.props;
 
-    if (props.exists("build_themed_book"))
+    if (props.exists(THEME_BOOK_KEY))
     {
         string owner = props[RANDBK_OWNER_KEY].get_string();
         if (owner == "player")
@@ -4639,13 +4669,15 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 
         spschool disc1 = (spschool)props[RANDBK_DISC1_KEY].get_short();
         spschool disc2 = (spschool)props[RANDBK_DISC2_KEY].get_short();
+        bool disc1_rerollable = false;
+        bool disc2_rerollable = false;
         if (disc1 == spschool::none && disc2 == spschool::none)
         {
             if (spells.size())
                 disc1 = matching_book_theme(spells);
             else
-                disc1 = random_book_theme();
-            disc2 = random_book_theme();
+                disc1_rerollable = true;
+            disc2_rerollable = true;
         }
         else if (disc2 == spschool::none)
             disc2 = disc1;
@@ -4658,11 +4690,29 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         const int max_levels = props[RANDBK_SLVLS_KEY].get_short();
 
         vector<spell_type> chosen_spells;
-        theme_book_spells(disc1, disc2,
+        int retries = 0;
+        // TODO: retry if the spell list is smaller than requested?
+        while (chosen_spells.size() == 0 && retries < 10)
+        {
+            // allow rerolling these in case the spell schools are too sparse
+            // for the vault spec. Most likely to come up in corner cases such
+            // as a 1-spell book with 1 spell level, if the same school is
+            // rolled twice and it lacks a lvl 1 spll
+            if (disc1_rerollable)
+                disc1 = random_book_theme();
+            if (disc2_rerollable)
+                disc2 = random_book_theme();
+            theme_book_spells(disc1, disc2,
                           forced_spell_filter(spells,
                                                capped_spell_filter(max_levels)),
                           origin_as_god_gift(item), num_spells, chosen_spells);
+            if (!disc1_rerollable && !disc2_rerollable)
+                break;
+            retries++;
+        }
         fixup_randbook_disciplines(disc1, disc2, chosen_spells);
+        // if a size 0 spell list gets through here it'll crash in the following
+        // call:
         init_book_theme_randart(item, chosen_spells);
         name_book_theme_randart(item, disc1, disc2, owner, title);
         // XXX: changing the signature of build_themed_book()'s get_discipline
@@ -4696,40 +4746,40 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_colour(item);
     }
 
-    if (props.exists("useful") && is_useless_item(item, false)
+    if (props.exists(USEFUL_KEY) && is_useless_item(item, false)
         && !allow_useless)
     {
         destroy_item(item, true);
         return false;
     }
-    if (item.base_type == OBJ_WANDS && props.exists("charges"))
-        item.charges = props["charges"].get_int();
+    if (item.base_type == OBJ_WANDS && props.exists(CHARGES_KEY))
+        item.charges = props[CHARGES_KEY].get_int();
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
          || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
-        && props.exists("plus") && !is_unrandom_artefact(item))
+        && props.exists(PLUS_KEY) && !is_unrandom_artefact(item))
     {
-        item.plus = props["plus"].get_int();
+        item.plus = props[PLUS_KEY].get_int();
         item_set_appearance(item);
     }
-    if (props.exists("ident"))
-        item.flags |= props["ident"].get_int();
-    if (props.exists("unobtainable"))
+    if (props.exists(IDENT_KEY))
+        item.flags |= props[IDENT_KEY].get_int();
+    if (props.exists(UNOBTAINABLE_KEY))
         item.flags |= ISFLAG_UNOBTAINABLE;
 
-    if (props.exists("no_pickup"))
+    if (props.exists(NO_PICKUP_KEY))
         item.flags |= ISFLAG_NO_PICKUP;
 
-    if (props.exists("item_tile_name"))
-        item.props["item_tile_name"] = props["item_tile_name"].get_string();
-    if (props.exists("worn_tile_name"))
-        item.props["worn_tile_name"] = props["worn_tile_name"].get_string();
+    if (props.exists(ITEM_TILE_NAME_KEY))
+        item.props[ITEM_TILE_NAME_KEY] = props[ITEM_TILE_NAME_KEY].get_string();
+    if (props.exists(WORN_TILE_NAME_KEY))
+        item.props[WORN_TILE_NAME_KEY] = props[WORN_TILE_NAME_KEY].get_string();
     bind_item_tile(item);
 
     if (!monster)
     {
-        if (props.exists("mimic"))
+        if (props.exists(MIMIC_KEY))
         {
-            const int chance = props["mimic"];
+            const int chance = props[MIMIC_KEY];
             if (chance > 0 && one_chance_in(chance))
                 item.flags |= ISFLAG_MIMIC;
         }
@@ -4790,7 +4840,7 @@ int dgn_place_item(const item_spec &spec,
             break;
         }
 
-        if (spec.props.exists("mimic") && base_type == OBJ_RANDOM)
+        if (spec.props.exists(MIMIC_KEY) && base_type == OBJ_RANDOM)
             base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
@@ -5172,25 +5222,25 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (!mspec.items.empty())
         _dgn_give_mon_spec_items(mspec, mons);
 
-    if (mspec.props.exists("monster_tile"))
+    if (mspec.props.exists(MONSTER_TILE_KEY))
     {
-        mons->props["monster_tile"] =
-            mspec.props["monster_tile"].get_short();
+        mons->props[MONSTER_TILE_KEY] =
+            mspec.props[MONSTER_TILE_KEY].get_short();
     }
-    if (mspec.props.exists("monster_tile_name"))
+    if (mspec.props.exists(MONSTER_TILE_NAME_KEY))
     {
-        mons->props["monster_tile_name"].get_string() =
-            mspec.props["monster_tile_name"].get_string();
+        mons->props[MONSTER_TILE_NAME_KEY].get_string() =
+            mspec.props[MONSTER_TILE_NAME_KEY].get_string();
     }
 
-    if (mspec.props.exists("always_corpse"))
-        mons->props["always_corpse"] = true;
+    if (mspec.props.exists(ALWAYS_CORPSE_KEY))
+        mons->props[ALWAYS_CORPSE_KEY] = true;
 
     if (mspec.props.exists(NEVER_CORPSE_KEY))
         mons->props[NEVER_CORPSE_KEY] = true;
 
-    if (mspec.props.exists("dbname"))
-        mons->props["dbname"].get_string() = mspec.props["dbname"].get_string();
+    if (mspec.props.exists(DBNAME_KEY))
+        mons->props[DBNAME_KEY].get_string() = mspec.props[DBNAME_KEY].get_string();
 
     // These are applied earlier to prevent issues with renamed monsters
     // and "<monster> comes into view" (see delay.cc:_monster_warning).
@@ -5376,9 +5426,6 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         break;
     case '^':
         place_specific_trap(where, TRAP_RANDOM);
-        break;
-    case '~':
-        place_specific_trap(where, random_vault_trap());
         break;
     case 'B':
         env.grid(where) = _pick_temple_altar();
@@ -5676,8 +5723,11 @@ static dungeon_feature_type _pick_temple_altar()
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
-            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen)
+            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen
+                || you.props.exists(FORCE_MAP_KEY))
+            {
                 return DNGN_ALTAR_XOM;
+            }
 
             mprf(MSGCH_ERROR, "Ran out of altars for temple!");
             return DNGN_FLOOR;
@@ -5748,12 +5798,9 @@ static dungeon_feature_type _pick_an_altar()
                 god = GOD_MAKHLEB;
             break;
 
-        default: // Any god (with exceptions).
-            do
-            {
-                god = random_god();
-            }
-            while (god == GOD_LUGONU || god == GOD_BEOGH || god == GOD_JIYVA);
+        default: // Any temple-valid god
+            auto temple_gods = temple_god_list();
+            god = *random_iterator(temple_gods);
             break;
         }
     }
@@ -5850,7 +5897,7 @@ static int _shop_num_items(const shop_spec &spec)
         return (int) spec.items.size();
     }
 
-    return 5 + random2avg(12, 3);
+    return 5 + random2avg(8, 3);
 }
 
 /**
@@ -6214,10 +6261,6 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
             spec_type = static_cast<trap_type>(random2(NUM_TRAPS));
         }
         while (!is_regular_trap(spec_type)
-#if TAG_MAJOR_VERSION == 34
-               || spec_type == TRAP_NEEDLE || spec_type == TRAP_GAS
-               || spec_type == TRAP_SHADOW || spec_type == TRAP_SHADOW_DORMANT
-#endif
                || !is_valid_shaft_level() && spec_type == TRAP_SHAFT);
     }
 
@@ -6561,7 +6604,8 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // can land in vaults, which is considered acceptable.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (feat_has_dry_floor(env.grid(*ri)))
+        if (feat_has_dry_floor(env.grid(*ri))
+            && !(env.pgrid(*ri) & FPROP_NO_TELE_INTO))
         {
             found++;
             if (one_chance_in(found))
@@ -6825,7 +6869,7 @@ static bool _fixup_interlevel_connectivity()
         }
     }
 
-    const int up_region_max = you.depth == 1 ? 1 : 3;
+    const int up_region_max = (you.depth == 1 || player_in_hell()) ? 1 : 3;
 
     // Ensure all up stairs were found.
     for (int i = 0; i < up_region_max; i++)

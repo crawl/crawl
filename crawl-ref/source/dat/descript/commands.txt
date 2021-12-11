@@ -217,6 +217,10 @@ CMD_DISPLAY_MAP
 
 Enter map mode
 %%%%
+CMD_MAP_EXIT_MAP
+
+Exit map mode
+%%%%
 CMD_DISPLAY_MAP verbose
 
 Displays a map of the current level.
@@ -388,3 +392,11 @@ Show game menu
 CMD_GAME_MENU verbose
 
 Show the game menu
+%%%%
+CMD_LOOKUP_HELP_MENU
+
+Lookup help menu
+%%%%
+CMD_LOOKUP_HELP_MENU verbose
+
+Opens a menu for descriptions of monsters, spells, abilities, items and more.

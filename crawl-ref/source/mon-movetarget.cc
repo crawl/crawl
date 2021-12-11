@@ -741,11 +741,11 @@ void set_random_target(monster* mon)
 static monster * _active_band_leader(monster * mon)
 {
     // Not a band member
-    if (!mon->props.exists("band_leader"))
+    if (!mon->props.exists(BAND_LEADER_KEY))
         return nullptr;
 
     // Try to find our fearless leader.
-    unsigned leader_mid = mon->props["band_leader"].get_int();
+    unsigned leader_mid = mon->props[BAND_LEADER_KEY].get_int();
 
     return monster_by_mid(leader_mid);
 }

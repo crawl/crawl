@@ -218,6 +218,8 @@ public:
                                   int count, int r,
                                   bool stop_at_statues, bool stop_at_walls);
 
+    bool self_targeted() const;
+
     // Setup.
     void fake_flavour();
 private:

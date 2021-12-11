@@ -126,7 +126,9 @@ enum attack_flavour
 #endif
     AF_CORRODE,
     AF_SCARAB,
+#if TAG_MAJOR_VERSION == 34
     AF_KITE,  // Hops backwards if attacking with a polearm.
+#endif
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
     AF_WEAKNESS,
@@ -135,6 +137,8 @@ enum attack_flavour
 #endif
     AF_REACH_TONGUE,
     AF_BLINK_WITH,
+    AF_SEAR,
+    AF_BARBS,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -252,6 +256,7 @@ enum shout_type
     S_CHERUB,               // for cherubs
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
+    S_RUSTLE,               // books
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

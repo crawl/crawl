@@ -121,10 +121,20 @@ _anger_possessive_
 the Extremely Mad
 
 the Absolute Madman
+
+the Incandescent
+
+the Furious
+
+the Howling One
+
+the Gibberer
+
+the Hated
+
+the Scorned
 %%%%
 _battle_or_war_
-
-Battle
 
 Crusades
 
@@ -991,7 +1001,7 @@ Embarrassment
 
 Flawed Execution
 
-Foul Odors
+Foul Odours
 
 Frustration
 
@@ -1073,6 +1083,8 @@ Atheism
 Autotheism
 
 Cynicism
+
+Disestablishmentarianism
 
 Dogma
 

@@ -415,7 +415,7 @@ static bool _check_can_do_command(lua_State *ls)
 
 /****
  * Handle any command that takes a target and no other parameters. This includes
- * CMD_PRIMARY_ATTACK, CMD_EVOKE_WIELDED, and CMD_FIRE. If the target
+ * CMD_PRIMARY_ATTACK, and CMD_FIRE. If the target
  * coordinates are out of bounds (the default), this enters interactive
  * targeting.
  *
@@ -449,9 +449,6 @@ static int crawl_do_targeted_command(lua_State *ls)
     {
     case CMD_PRIMARY_ATTACK:
         quiver::get_primary_action()->trigger(target);
-        break;
-    case CMD_EVOKE_WIELDED:
-        evoke_item(you.equip[EQ_WEAPON], &target);
         break;
     case CMD_FIRE:
         quiver::get_secondary_action()->trigger(target);
@@ -1307,7 +1304,7 @@ static int crawl_get_command(lua_State *ls)
 LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_safe_checkint(ls, 2)))
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
-LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
+LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1), luaL_optstring(ls, 2, ""), luaL_optstring(ls, 3, "")))
 
 /*** Lua error trace a call
  * Attempts to call-trace a lua function that is producing an error.

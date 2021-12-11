@@ -259,6 +259,11 @@ static void _post_init(bool newc)
     // case there are any early game warning messages to be logged.
 #ifdef USE_TILE
     tiles.resize();
+
+#ifdef USE_TILE_WEB
+    if (!newc)
+        sync_last_milestone();
+#endif
 #endif
 
     clua.load_persist();
@@ -309,10 +314,6 @@ static void _post_init(bool newc)
         save_level(level_id::current());
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    // Debug compiles display a lot of "hidden" information, so we auto-wiz.
-    you.wizard = true;
-#endif
 #ifdef WIZARD
     // Save-less games are pointless except for tests.
     if (Options.no_save)
@@ -342,6 +343,10 @@ static void _post_init(bool newc)
 
     read_init_file(true);
     Options.fixup_options();
+    read_startup_prefs();
+#ifdef USE_TILE_WEB
+    tiles.send_options();
+#endif
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);

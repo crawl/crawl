@@ -1150,11 +1150,13 @@ static void _add_missing_branches()
         _ensure_entry(BRANCH_VAULTS);
     if (brentry[BRANCH_ZOT] == lc)
         _ensure_entry(BRANCH_ZOT);
-    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 21))
+    // TODO: centralize these numbers
+    // crosscheck with check_map_validity when changing
+    if (lc == level_id(BRANCH_DEPTHS, 1) || lc == level_id(BRANCH_DUNGEON, 21))
         _ensure_entry(BRANCH_VESTIBULE);
-    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 24))
+    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 24))
         _ensure_entry(BRANCH_PANDEMONIUM);
-    if (lc == level_id(BRANCH_DEPTHS, 4) || lc == level_id(BRANCH_DUNGEON, 25))
+    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 25))
         _ensure_entry(BRANCH_ABYSS);
     if (player_in_branch(BRANCH_VESTIBULE))
     {
@@ -3013,7 +3015,6 @@ static void _tag_read_you(reader &th)
             }
         }
     }
-
 #endif
 
 #if TAG_MAJOR_VERSION == 34
@@ -3231,6 +3232,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
     SP_MUT_FIX(MUT_FLAT_HP, SP_DJINNI);
     SP_MUT_FIX(MUT_FORLORN, SP_DEMIGOD);
+    SP_MUT_FIX(MUT_DIVINE_ATTRS, SP_DEMIGOD);
     SP_MUT_FIX(MUT_DAYSTALKER, SP_BARACHI);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
@@ -3377,6 +3379,9 @@ static void _tag_read_you(reader &th)
     const int xl_remaining = you.get_max_xl() - you.experience_level;
     if (xl_remaining < 0)
         adjust_level(xl_remaining);
+
+    if (th.getMinorVersion() < TAG_MINOR_EVOLUTION_XP)
+        set_evolution_mut_xp(you.has_mutation(MUT_DEVOLUTION));
 #endif
 
     count = unmarshallUByte(th);
@@ -3914,9 +3919,9 @@ static void _tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_STICKY_FLAME)
     {
         if (you.props.exists("napalmer"))
-            you.props["sticky_flame_source"] = you.props["napalmer"];
+            you.props[STICKY_FLAMER_KEY] = you.props["napalmer"];
         if (you.props.exists("napalm_aux"))
-            you.props["sticky_flame_aux"] = you.props["napalm_aux"];
+            you.props[STICKY_FLAME_AUX_KEY] = you.props["napalm_aux"];
     }
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && !you.props.exists(ORIGINAL_BRAND_KEY))
@@ -3982,7 +3987,7 @@ static void _tag_read_you(reader &th)
 
     if (you.props.exists("tornado_since"))
     {
-        you.props["polar_vortex_since"] = you.props["tornado_since"].get_int();
+        you.props[POLAR_VORTEX_KEY] = you.props["tornado_since"].get_int();
         you.props.erase("tornado_since");
     }
 
@@ -4422,6 +4427,13 @@ static void _tag_read_you_dungeon(reader &th)
 #endif
         brentry[j]    = unmarshall_level_id(th);
 #if TAG_MAJOR_VERSION == 34
+        // Have to check this in case of old saves with 6-floor Depths.
+        if (th.getMinorVersion() < TAG_MINOR_ZOT_ENTRY_FIXUP
+            && j == BRANCH_ZOT
+            && brentry[j] == level_id(BRANCH_DEPTHS, 5))
+        {
+            brentry[j].depth = branches[j].mindepth;
+        }
         if (th.getMinorVersion() < TAG_MINOR_BRIBE_BRANCH)
             branch_bribe[j] = 0;
         else
@@ -5334,7 +5346,7 @@ void unmarshallItem(reader &th, item_def &item)
     }
     if (item.is_type(OBJ_FOOD, FOOD_RATION) && item.pos == ITEM_IN_INVENTORY)
     {
-        item.props["item_tile_name"] = "food_ration_inventory";
+        item.props[ITEM_TILE_NAME_KEY] = "food_ration_inventory";
         bind_item_tile(item);
     }
 
@@ -5909,21 +5921,21 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
             break;
         case LIGHTBLUE:    // blood saint, shock serpent
             if (mi.base_type != MONS_NO_MONSTER)
-                mi.type = MONS_BLOOD_SAINT;
+                mi.type = MONS_DEMONSPAWN_BLOOD_SAINT;
             else
                 mi.type = MONS_SHOCK_SERPENT;
             break;
         case LIGHTCYAN:    // warmonger, drowned soul
             if (mi.base_type != MONS_NO_MONSTER)
-                mi.type = MONS_WARMONGER;
+                mi.type = MONS_DEMONSPAWN_WARMONGER;
             else
                 mi.type = MONS_DROWNED_SOUL;
             break;
         case LIGHTGREEN:   // corrupter
-            mi.type = MONS_CORRUPTER;
+            mi.type = MONS_DEMONSPAWN_CORRUPTER;
             break;
         case LIGHTMAGENTA: // black sun
-            mi.type = MONS_BLACK_SUN;
+            mi.type = MONS_DEMONSPAWN_BLACK_SUN;
             break;
         case CYAN:         // worldbinder
             mi.type = MONS_WORLDBINDER;
@@ -5943,12 +5955,6 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
         default:
             die("Unexpected monster with type %d and colour %d",
                 mi.type, mi.colour(true));
-        }
-        if (mons_is_demonspawn(mi.type)
-            && mons_species(mi.type) == MONS_DEMONSPAWN
-            && mi.type != MONS_DEMONSPAWN)
-        {
-            ASSERT(mi.base_type != MONS_NO_MONSTER);
         }
     }
 
@@ -6600,7 +6606,7 @@ void unmarshallMonster(reader &th, monster& m)
         if (th.getMinorVersion() < TAG_MINOR_MORE_GHOST_MAGIC)
             slot.spell = _fixup_positional_monster_spell(slot.spell);
 
-        if (mons_is_zombified(m) && !mons_enslaved_soul(m)
+        if (mons_is_zombified(m) && !mons_bound_soul(m)
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
             // zombies shouldn't have (most) spells
@@ -6610,7 +6616,7 @@ void unmarshallMonster(reader &th, monster& m)
             // Replace Draconian Breath with the colour-specific spell,
             // and remove Azrael's bad breath while we're at it.
             if (mons_genus(m.type) == MONS_DRACONIAN)
-                m.spells.push_back(drac_breath(draco_or_demonspawn_subspecies(m)));
+                m.spells.push_back(drac_breath(draconian_subspecies(m)));
         }
         // Give Mnoleg back malign gateway in place of tentacles.
         else if (slot.spell == SPELL_CREATE_TENTACLES
@@ -6767,21 +6773,21 @@ void unmarshallMonster(reader &th, monster& m)
             break;
         case LIGHTBLUE:    // blood saint, shock serpent
             if (m.base_monster != MONS_NO_MONSTER)
-                m.type = MONS_BLOOD_SAINT;
+                m.type = MONS_DEMONSPAWN_BLOOD_SAINT;
             else
                 m.type = MONS_SHOCK_SERPENT;
             break;
         case LIGHTCYAN:    // warmonger, drowned soul
             if (m.base_monster != MONS_NO_MONSTER)
-                m.type = MONS_WARMONGER;
+                m.type = MONS_DEMONSPAWN_WARMONGER;
             else
                 m.type = MONS_DROWNED_SOUL;
             break;
         case LIGHTGREEN:   // corrupter
-            m.type = MONS_CORRUPTER;
+            m.type = MONS_DEMONSPAWN_CORRUPTER;
             break;
         case LIGHTMAGENTA: // black sun
-            m.type = MONS_BLACK_SUN;
+            m.type = MONS_DEMONSPAWN_BLACK_SUN;
             break;
         case CYAN:         // worldbinder
             m.type = MONS_WORLDBINDER;
@@ -6815,12 +6821,6 @@ void unmarshallMonster(reader &th, monster& m)
             die("Unexpected monster with type %d and colour %d",
                 m.type, m.colour);
         }
-        if (mons_is_demonspawn(m.type)
-            && mons_species(m.type) == MONS_DEMONSPAWN
-            && m.type != MONS_DEMONSPAWN)
-        {
-            ASSERT(m.base_monster != MONS_NO_MONSTER);
-        }
     }
     else if (th.getMinorVersion() < TAG_MINOR_EXORCISE
         && th.getMinorVersion() >= TAG_MINOR_RANDLICHES
@@ -6846,20 +6846,20 @@ void unmarshallMonster(reader &th, monster& m)
     m.props.clear();
     m.props.read(th);
 
-    if (m.props.exists("monster_tile_name"))
+    if (m.props.exists(MONSTER_TILE_NAME_KEY))
     {
-        string tile = m.props["monster_tile_name"].get_string();
+        string tile = m.props[MONSTER_TILE_NAME_KEY].get_string();
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
             dprf("bad tile name: \"%s\".", tile.c_str());
-            m.props.erase("monster_tile_name");
-            if (m.props.exists("monster_tile"))
-                m.props.erase("monster_tile");
+            m.props.erase(MONSTER_TILE_NAME_KEY);
+            if (m.props.exists(MONSTER_TILE_KEY))
+                m.props.erase(MONSTER_TILE_KEY);
         }
         else // Update monster tile.
-            m.props["monster_tile"] = short(index);
+            m.props[MONSTER_TILE_KEY] = short(index);
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -6887,7 +6887,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.props.exists("siren_call"))
     {
-        m.props["merfolk_avatar_call"] = m.props["siren_call"].get_bool();
+        m.props[MERFOLK_AVATAR_CALL_KEY] = m.props["siren_call"].get_bool();
         m.props.erase("siren_call");
     }
 
@@ -7079,21 +7079,21 @@ static void _tag_read_level_monsters(reader &th)
     {
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mi->props.exists("inwards"))
+            if (mi->props.exists(INWARDS_KEY))
             {
-                const int old_midx = mi->props["inwards"].get_int();
+                const int old_midx = mi->props[INWARDS_KEY].get_int();
                 if (invalid_monster_index(old_midx))
-                    mi->props["inwards"].get_int() = MID_NOBODY;
+                    mi->props[INWARDS_KEY].get_int() = MID_NOBODY;
                 else
-                    mi->props["inwards"].get_int() = env.mons[old_midx].mid;
+                    mi->props[INWARDS_KEY].get_int() = env.mons[old_midx].mid;
             }
-            if (mi->props.exists("outwards"))
+            if (mi->props.exists(OUTWARDS_KEY))
             {
-                const int old_midx = mi->props["outwards"].get_int();
+                const int old_midx = mi->props[OUTWARDS_KEY].get_int();
                 if (invalid_monster_index(old_midx))
-                    mi->props["outwards"].get_int() = MID_NOBODY;
+                    mi->props[OUTWARDS_KEY].get_int() = MID_NOBODY;
                 else
-                    mi->props["outwards"].get_int() = env.mons[old_midx].mid;
+                    mi->props[OUTWARDS_KEY].get_int() = env.mons[old_midx].mid;
             }
             if (mons_is_tentacle_or_tentacle_segment(mi->type))
                 mi->tentacle_connect = env.mons[mi->tentacle_connect].mid;

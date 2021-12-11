@@ -42,7 +42,7 @@ static const char *daction_names[] =
     0, 0, 0, 0, 0, 0, 0, 0,
 
     // Actions not needing a counter.
-    "old enslaved souls go poof",
+    "old bound souls go poof",
 #if TAG_MAJOR_VERSION == 34
     "holy beings allow another conversion attempt",
 #else
@@ -75,6 +75,7 @@ static const char *daction_names[] =
 #endif
     "ancestor vanishes",
     "upgrade ancestor",
+    "remove Ignis altars",
 };
 #endif
 
@@ -85,9 +86,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_YRED_SLAVE:
-        // Changed: we don't force enslavement of those merely marked.
-        return is_yred_undead_slave(*mon);
     case DACT_ALLY_BEOGH: // both orcs and demons summoned by high priests
         return mon->wont_attack() && mons_is_god_gift(*mon, GOD_BEOGH);
     case DACT_ALLY_SLIME:
@@ -104,10 +102,10 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_PIKEL_MINIONS:
         return mon->type == MONS_LEMURE
                && testbits(mon->flags, MF_BAND_MEMBER)
-               && mon->props.exists("pikel_band");
+               && mon->props.exists(PIKEL_BAND_KEY);
 
     case DACT_OLD_CHARMD_SOULS_POOF:
-        return mons_enslaved_soul(*mon);
+        return mons_bound_soul(*mon);
 
     case DACT_SLIME_NEW_ATTEMPT:
         return mons_is_slime(*mon);
@@ -119,7 +117,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && !mon->is_shapeshifter()
                // Must be one of Kirke's original band
                // *or* another monster that got porkalated
-               && (mon->props.exists("kirke_band")
+               && (mon->props.exists(KIRKE_BAND_KEY)
                    || mon->props.exists(ORIG_MONSTER_KEY));
 
     case DACT_BRIBE_TIMEOUT:
@@ -176,13 +174,6 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
     // See _daction_hog_to_human for an example.
     switch (act)
     {
-        case DACT_ALLY_YRED_SLAVE:
-            if (mon->type == MONS_ZOMBIE)
-            {
-                simple_monster_message(*mon, " crumbles into dust!");
-                monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-                break;
-            }
         case DACT_ALLY_BEOGH:
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
@@ -265,7 +256,6 @@ static void _apply_daction(daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_YRED_SLAVE:
     case DACT_ALLY_BEOGH:
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
@@ -297,6 +287,11 @@ static void _apply_daction(daction_type act)
             if (env.grid(*ri) == DNGN_ALTAR_JIYVA)
                 env.grid(*ri) = DNGN_FLOOR;
         }
+        break;
+    case DACT_REMOVE_IGNIS_ALTARS:
+        for (rectangle_iterator ri(1); ri; ++ri)
+            if (env.grid(*ri) == DNGN_ALTAR_IGNIS)
+                env.grid(*ri) = DNGN_FLOOR;
         break;
     case DACT_ROT_CORPSES:
         for (auto &item : env.item)
@@ -340,6 +335,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_UNHOLY_EVIL:
     case DACT_ALLY_UNCLEAN_CHAOTIC:
     case DACT_ALLY_SPELLCASTER:
+    case DACT_ALLY_YRED_SLAVE:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:

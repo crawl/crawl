@@ -35,6 +35,8 @@
  #include "tilepick.h"
 #endif
 
+static string _effect_string(spell_type spell, const monster_info *mon_owner);
+
 /**
  * Returns a spellset containing the spells for the given item.
  *
@@ -71,6 +73,19 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
     return lookup(descriptors, type, "buggy");
 }
 
+static const char* _abil_type_vuln_core(bool silencable, bool antimagicable)
+{
+    // No one gets confused by the rare spells that are hit by silence
+    // but not antimagic, AFAIK. Let's keep it simple.
+    if (!antimagicable)
+        return "silence";
+    if (silencable)
+        return "silence and antimagic";
+    // Explicitly clarify about spells that are hit by antimagic but
+    // NOT silence, since those confuse players nonstop.
+    return "antimagic (but not silence)";
+}
+
 /**
  * What type of effects is this spell type vulnerable to?
  *
@@ -87,10 +102,8 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
     const bool antimagicable = type == MON_SPELL_WIZARD
                                || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
-    return make_stringf(", which are affected by%s%s%s",
-                        silencable ? " silence" : "",
-                        silencable && antimagicable ? " and" : "",
-                        antimagicable ? " antimagic" : "");
+    return make_stringf(", which are affected by %s",
+                        _abil_type_vuln_core(silencable, antimagicable));
 }
 
 /**
@@ -437,10 +450,24 @@ static string _colourize(string base, colour_t col)
     return out;
 }
 
+static string _describe_living_spells(const monster_info &mon_owner)
+{
+    const spell_type spell = living_spell_type_for(mon_owner.type);
+    const int n = living_spell_count(spell, false);
+    const string base_desc = _effect_string(spell, &mon_owner);
+    const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)",
+            base_desc.c_str());
+    return make_stringf("%dx%s", n, desc.c_str());
+}
+
+
 static string _effect_string(spell_type spell, const monster_info *mon_owner)
 {
     if (!mon_owner)
         return "";
+
+    if (spell == SPELL_CONJURE_LIVING_SPELLS)
+        return _describe_living_spells(*mon_owner);
 
     const int hd = _spell_hd(spell, *mon_owner);
     if (!hd)
@@ -461,6 +488,9 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
             return "(immune)";
         return make_stringf("(%d%%)", hex_chance(spell, hd));
     }
+
+    if (spell == SPELL_SMITING)
+        return "7-17"; // sigh
 
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)

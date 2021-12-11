@@ -3933,8 +3933,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         if (strip_tag(mon_str, "seen"))
             mspec.extra_monster_flags |= MF_SEEN;
 
-        if (strip_tag(mon_str, "always_corpse"))
-            mspec.props["always_corpse"] = true;
+        if (strip_tag(mon_str, ALWAYS_CORPSE_KEY))
+            mspec.props[ALWAYS_CORPSE_KEY] = true;
 
         if (strip_tag(mon_str, NEVER_CORPSE_KEY))
             mspec.props[NEVER_CORPSE_KEY] = true;
@@ -4074,15 +4074,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
             // Store name along with the tile.
-            mspec.props["monster_tile_name"].get_string() = tile;
-            mspec.props["monster_tile"] = short(index);
+            mspec.props[MONSTER_TILE_NAME_KEY].get_string() = tile;
+            mspec.props[MONSTER_TILE_KEY] = short(index);
         }
 
         string dbname = strip_tag_prefix(mon_str, "dbname:");
         if (!dbname.empty())
         {
             dbname = replace_all_of(dbname, "_", " ");
-            mspec.props["dbname"].get_string() = dbname;
+            mspec.props[DBNAME_KEY].get_string() = dbname;
         }
 
         string name = strip_tag_prefix(mon_str, "name:");
@@ -4483,6 +4483,11 @@ mons_spec mons_list::get_salt_spec(const string &name) const
     return spec;
 }
 
+// Randomly-generated draconians have fixed colour/job combos - see
+// _draconian_combos in mon-util.cc. Vaults can override this, but shouldn't do
+// so without good reason (for example an elemental-flavoured vault might use
+// classed draconians all of a single colour).
+//
 // Handle draconians specified as:
 // Exactly as in mon-data.h:
 //    yellow draconian or draconian knight - the monster specified.
@@ -4492,7 +4497,9 @@ mons_spec mons_list::get_salt_spec(const string &name) const
 //    any base draconian => any unspecialised coloured draconian.
 //    any nonbase draconian => any specialised coloured draconian.
 //    any <colour> draconian => any draconian of the colour.
-//    any nonbase <colour> draconian => any specialised drac of the colour.
+//    any nonbase <colour> draconian => any specialised drac of the colour,
+//                                      ignoring the standard colour/job
+//                                      restrictions.
 //
 mons_spec mons_list::drac_monspec(string name) const
 {
@@ -4551,73 +4558,6 @@ mons_spec mons_list::drac_monspec(string name) const
     if (spec.type == MONS_PROGRAM_BUG
         || mons_genus(static_cast<monster_type>(spec.type)) != MONS_DRACONIAN
         || mons_is_base_draconian(spec.type))
-    {
-        return MONS_PROGRAM_BUG;
-    }
-
-    return spec;
-}
-
-// As with draconians, so with demonspawn.
-mons_spec mons_list::demonspawn_monspec(string name) const
-{
-    mons_spec spec;
-
-    spec.type = get_monster_by_name(name);
-
-    // Check if it's a simple demonspawn name, we're done.
-    if (spec.type != MONS_PROGRAM_BUG)
-        return spec;
-
-    spec.type = RANDOM_DEMONSPAWN;
-
-    // Request for any demonspawn?
-    if (starts_with(name, "any "))
-        name = name.substr(4); // Strip "any "
-
-    if (starts_with(name, "base "))
-    {
-        // Base demonspawn need no further work.
-        return RANDOM_BASE_DEMONSPAWN;
-    }
-    else if (starts_with(name, "nonbase "))
-    {
-        spec.type = RANDOM_NONBASE_DEMONSPAWN;
-        name = name.substr(8);
-    }
-
-    trim_string(name);
-
-    // Match "any demonspawn"
-    if (name == "demonspawn")
-        return spec;
-
-    // Check for recognition again to match any (nonbase) <base> demonspawn.
-    const monster_type base = get_monster_by_name(name);
-    if (base != MONS_PROGRAM_BUG)
-    {
-        spec.monbase = base;
-        return spec;
-    }
-
-    // Only legal possibility left is <base> boss demonspawn.
-    string::size_type wordend = name.find(' ');
-    if (wordend == string::npos)
-        return MONS_PROGRAM_BUG;
-
-    string sbase = name.substr(0, wordend);
-    if ((spec.monbase = demonspawn_base_by_name(sbase)) == MONS_PROGRAM_BUG)
-        return MONS_PROGRAM_BUG;
-
-    name = trimmed_string(name.substr(wordend + 1));
-    spec.type = get_monster_by_name(name);
-
-    // We should have a non-base demonspawn here.
-    if (spec.type == MONS_PROGRAM_BUG
-        || mons_genus(static_cast<monster_type>(spec.type)) != MONS_DEMONSPAWN
-        || spec.type == MONS_DEMONSPAWN
-        || (spec.type >= MONS_FIRST_BASE_DEMONSPAWN
-            && spec.type <= MONS_LAST_BASE_DEMONSPAWN))
     {
         return MONS_PROGRAM_BUG;
     }
@@ -4777,16 +4717,6 @@ mons_spec mons_list::mons_by_name(string name) const
 
     if (name.find("draconian") != string::npos)
         return drac_monspec(name);
-
-    // FIXME: cleaner way to do this?
-    if (name.find("demonspawn") != string::npos
-        || name.find("black sun") != string::npos
-        || name.find("blood saint") != string::npos
-        || name.find("corrupter") != string::npos
-        || name.find("warmonger") != string::npos)
-    {
-        return demonspawn_monspec(name);
-    }
 
     // The space is important - it indicates a flavour is being specified.
     if (name.find("serpent of hell ") != string::npos)
@@ -5012,7 +4942,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "preservation",
         "reflection",
         "spirit_shield",
-        "archery",
+        "hurling",
 #if TAG_MAJOR_VERSION == 34
         "jumping",
 #endif
@@ -5023,6 +4953,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "harm",
         "shadows",
         "rampaging",
+        "infusion",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
@@ -5166,7 +5097,7 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
                                         const string &name,
                                         bool skeleton)
 {
-    if (*mons == RANDOM_NONBASE_DRACONIAN || *mons == RANDOM_NONBASE_DEMONSPAWN)
+    if (*mons == RANDOM_NONBASE_DRACONIAN)
     {
         error = "Can't use non-base monster for corpse/chunk items";
         return false;
@@ -5276,13 +5207,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         }
     }
 
-    // Damaged + cursed, but allow other specs to override the former.
-    if (strip_tag(s, "cursed"))
-    {
-        result.level = ISPEC_BAD;
-        result.props["cursed"] = bool(true);
-    }
-
     const string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
@@ -5305,7 +5229,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     string id_str = strip_tag_prefix(s, "ident:");
     if (id_str == "all")
-        result.props["ident"].get_int() = ISFLAG_IDENT_MASK;
+        result.props[IDENT_KEY].get_int() = ISFLAG_IDENT_MASK;
     else if (!id_str.empty())
     {
         vector<string> ids = split_string("|", id_str);
@@ -5324,7 +5248,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
                 return false;
             }
         }
-        result.props["ident"].get_int() = id;
+        result.props[IDENT_KEY].get_int() = id;
     }
 
     if (strip_tag(s, "good_item"))
@@ -5355,29 +5279,26 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
     if (strip_tag(s, "useful"))
-        result.props["useful"] = bool(true);
+        result.props[USEFUL_KEY] = bool(true);
     if (strip_tag(s, "unobtainable"))
-        result.props["unobtainable"] = true;
+        result.props[UNOBTAINABLE_KEY] = true;
 
     const int mimic = strip_number_tag(s, "mimic:");
     if (mimic != TAG_UNFOUND)
-        result.props["mimic"] = mimic;
+        result.props[MIMIC_KEY] = mimic;
     if (strip_tag(s, "mimic"))
-        result.props["mimic"] = 1;
+        result.props[MIMIC_KEY] = 1;
 
     if (strip_tag(s, "no_pickup"))
-        result.props["no_pickup"] = true;
+        result.props[NO_PICKUP_KEY] = true;
 
     const short charges = strip_number_tag(s, "charges:");
     if (charges >= 0)
-        result.props["charges"].get_int() = charges;
+        result.props[CHARGES_KEY].get_int() = charges;
 
     const int plus = strip_number_tag(s, "plus:");
     if (plus != TAG_UNFOUND)
-        result.props["plus"].get_int() = plus;
-    const int plus2 = strip_number_tag(s, "plus2:");
-    if (plus2 != TAG_UNFOUND)
-        result.props["plus2"].get_int() = plus2;
+        result.props[PLUS_KEY].get_int() = plus;
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
@@ -5400,7 +5321,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     // XXX: This is nice-ish now, but could probably do with being improved.
     if (strip_tag(s, "randbook"))
     {
-        result.props["build_themed_book"] = true;
+        result.props[THEME_BOOK_KEY] = true;
         // build_themed_book requires the following properties:
         // disc: <first discipline>, disc2: <optional second discipline>
         // numspells: <total number of spells>, slevels: <maximum levels>
@@ -5511,7 +5432,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             error = make_stringf("bad tile name: \"%s\".", tile.c_str());
             return false;
         }
-        result.props["item_tile_name"].get_string() = tile;
+        result.props[ITEM_TILE_NAME_KEY].get_string() = tile;
     }
 
     tile = strip_tag_prefix(s, "wtile:");
@@ -5523,7 +5444,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             error = make_stringf("bad tile name: \"%s\".", tile.c_str());
             return false;
         }
-        result.props["worn_tile_name"].get_string() = tile;
+        result.props[WORN_TILE_NAME_KEY].get_string() = tile;
     }
 
     // Clean up after any tag brain damage.
@@ -6092,7 +6013,7 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
         weight = 10;
 
     int mimic = strip_number_tag(s, "mimic:");
-    if (mimic == TAG_UNFOUND && strip_tag(s, "mimic"))
+    if (mimic == TAG_UNFOUND && strip_tag(s, MIMIC_KEY))
         mimic = 1;
     const bool no_mimic = strip_tag(s, "no_mimic");
 

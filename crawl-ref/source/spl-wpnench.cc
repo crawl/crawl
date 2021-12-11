@@ -132,7 +132,7 @@ spret cast_confusing_touch(int power, bool fail)
                      max(10 + random2(power) / 5,
                          you.duration[DUR_CONFUSING_TOUCH]),
                      20, nullptr);
-    you.props["confusing touch power"] = power;
+    you.props[CONFUSING_TOUCH_KEY] = power;
 
     return spret::success;
 }

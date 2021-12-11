@@ -1,7 +1,8 @@
-define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
-        "./tileinfo-icons", "./tileinfo-dngn", "./enums", "./map_knowledge",
-        "./tileinfos", "./player", "./options", "contrib/jquery.json"],
-function ($, view_data, main, tileinfo_player, icons, dngn, enums,
+define(["jquery", "./view_data", "./tileinfo-gui", "./tileinfo-main",
+        "./tileinfo-player", "./tileinfo-icons", "./tileinfo-dngn", "./enums",
+        "./map_knowledge", "./tileinfos", "./player", "./options",
+        "contrib/jquery.json"],
+function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
           map_knowledge, tileinfos, player, options) {
     "use strict";
 
@@ -219,7 +220,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
             if (options.get("tile_display_mode") == "glyphs")
             {
-                this.render_glyph(x, y, map_cell);
+                this.render_glyph(x, y, map_cell, false);
 
                 this.render_cursors(cx, cy, x, y);
                 this.draw_ray(x, y, cell);
@@ -501,8 +502,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_glyph: function (x, y, map_cell, omit_bg)
+        render_glyph: function (x, y, map_cell, omit_bg, square)
         {
+            // `map_cell` can be anything as long as it provides `col` and `g`
             var col = split_term_colour(map_cell.col);
             if (omit_bg && col.attr == enums.CHATTR.REVERSE)
                 col.attr = 0;
@@ -530,7 +532,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.rect(x, y, this.cell_width, this.cell_height);
                 this.ctx.clip();
 
-                if (options.get("tile_display_mode") == "hybrid")
+                if (square)
                 {
                     this.ctx.textAlign = "center";
                     this.ctx.textBaseline = "middle";
@@ -705,20 +707,36 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     this.draw_blood_overlay(x, y, cell, bg_idx > dngn.FLOOR_MAX);
 
                 // Draw overlays
+                var ray_tile = 0;
                 if (cell.ov)
                 {
                     $.each(cell.ov, function (i, overlay)
-                           {
-                               if (overlay > dngn.DNGN_MAX)
-                                   return;
-                               else if (overlay &&
-                                   (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
-                                    overlay > dngn.FLOOR_MAX))
-                               {
-                                   renderer.draw_dngn(overlay, x, y);
-                               }
-                           });
+                        {
+                            if (overlay > dngn.DNGN_MAX)
+                                return;
+                            else if (overlay == dngn.RAY
+                                    || overlay == dngn.RAY_MULTI
+                                    || overlay == dngn.RAY_OUT_OF_RANGE)
+                            {
+                                // these need to be drawn last because of the
+                                // way alpha blending happens here, but for
+                                // hard-to-change reasons they are assembled on
+                                // the server side in the wrong order. (In local
+                                // tiles it's ok to blend them in any order.)
+                                // assumption: only one can appear on any tile.
+                                // TODO: a more general fix for this issue?
+                                ray_tile = overlay;
+                            }
+                            else if (overlay &&
+                                (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
+                                 overlay > dngn.FLOOR_MAX))
+                            {
+                                renderer.draw_dngn(overlay, x, y);
+                            }
+                        });
                 }
+                if (ray_tile)
+                    renderer.draw_dngn(ray_tile, x, y);
 
                 if (!bg.UNSEEN)
                 {
@@ -855,7 +873,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
             else if (options.get("tile_display_mode") == "hybrid")
             {
-                this.render_glyph(x, y, map_cell, true);
+                this.render_glyph(x, y, map_cell, true, true);
                 this.draw_ray(x, y, cell);
                 img_scale = undefined; // TODO: make this work?
             }
@@ -1024,6 +1042,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.SLOWLY_DYING, x, y, -status_shift, 0, img_scale);
                 status_shift += 10;
             }
+            if (fg.FIRE_CHAMP)
+            {
+                this.draw_icon(icons.FIRE_CHAMP, x, y, -status_shift, 0, img_scale);
+                status_shift += 7;
+            }
 
             // Anim. weap. and summoned might overlap, but that's okay
             if (fg.ANIM_WEP)
@@ -1157,10 +1180,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             var h = info.ey - info.sy;
 
             this.ctx.imageSmoothingEnabled = options.get("tile_filter_scaling");
-            this.ctx.webkitImageSmoothingEnabled =
-                options.get("tile_filter_scaling");
-            this.ctx.mozImageSmoothingEnabled =
-                options.get("tile_filter_scaling");
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
@@ -1173,6 +1192,13 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         draw_dngn: function(idx, x, y, img_scale)
         {
             this.draw_tile(idx, x, y, dngn,
+                undefined, undefined, undefined, undefined,
+                img_scale);
+        },
+
+        draw_gui: function(idx, x, y, img_scale)
+        {
+            this.draw_tile(idx, x, y, gui,
                 undefined, undefined, undefined, undefined,
                 img_scale);
         },
@@ -1196,6 +1222,26 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             this.draw_tile(idx, x, y, icons, ofsx, ofsy,
                 undefined, undefined,
                 img_scale);
+        },
+
+        draw_quantity: function(qty, x, y, font)
+        {
+            qty = Math.max(0, Math.min(999, qty));
+
+            this.ctx.fillStyle = "white";
+            this.ctx.font = font;
+
+            this.ctx.shadowColor = "black";
+            this.ctx.shadowBlur = 2;
+            this.ctx.shadowOffsetX = 1;
+            this.ctx.shadowOffsetY = 1;
+            this.ctx.textAlign = "left";
+            this.ctx.textBaseline = "top";
+            // XX this way of doing device scaling is v ugly
+            var ratio = window.devicePixelRatio;
+            this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            this.ctx.fillText(qty, (x + 2) / ratio, (y + 2) / ratio);
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         },
 
         draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max, centre, img_scale)

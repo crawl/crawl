@@ -17,6 +17,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "ghost.h"
 #include "hints.h"
@@ -416,6 +417,18 @@ NORETURN void end_game(scorefile_entry &se)
             {
                 mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
             }
+            // Doesn't depend on Okawaru worship - you can still lose the duel
+            // after abandoning.
+            if (actor* killer = se.killer())
+            {
+                if (killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
+                {
+                    const string msg = " crowns "
+                        + killer->name(DESC_THE, true)
+                        + " victorious!";
+                    simple_god_message(msg.c_str(), GOD_OKAWARU);
+                }
+            }
             break;
         }
 
@@ -439,18 +452,12 @@ NORETURN void end_game(scorefile_entry &se)
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
     const string reason = _exit_type_to_string(exit_reason);
 
-# ifdef DGL_WHEREIS
-    whereis_record(reason.c_str());
-# endif
+    update_whereis(reason.c_str());
 #else
     UNUSED(_exit_type_to_string);
 #endif
 
-#ifndef DISABLE_STICKY_STARTUP_OPTIONS
-    // TODO: update all sticky prefs based on the dead char? Right now this
-    // would lose weapon choice, and random select, as far as I can tell.
-    save_seed_pref();
-#endif
+    save_game_prefs();
 
     if (!crawl_state.seen_hups)
         more();

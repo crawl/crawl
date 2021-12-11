@@ -53,6 +53,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_FOXFIRE,
     SPELL_CONJURE_FLAME,
     SPELL_INNER_FLAME,
+    SPELL_FLAME_WAVE,
 },
 
 {   // Book of Frost
@@ -61,10 +62,10 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_HAILSTORM,
 },
 
-{   // Book of Dryads
+{   // Book of the Wilderness
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_SHADOW_CREATURES,
+    SPELL_SUMMON_CACTUS,
 },
 
 {   // Book of Fire
@@ -136,7 +137,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
     SPELL_CORPSE_ROT,
-    SPELL_FREEZING_CLOUD,
 },
 
 {   // Book of Necromancy
@@ -152,7 +152,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Maledictions
-    SPELL_CORONA,
     SPELL_HIBERNATION,
     SPELL_TUKIMAS_DANCE,
 },
@@ -202,19 +201,17 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Geomancy
     SPELL_SANDBLAST,
     SPELL_PASSWALL,
-    SPELL_LRD,
-},
-
-{   // Book of Stone
-    SPELL_LEDAS_LIQUEFACTION,
-    SPELL_BOLT_OF_MAGMA,
-    SPELL_STATUE_FORM,
+    SPELL_STONE_ARROW,
 },
 
 #if TAG_MAJOR_VERSION == 34
+{   // Book of Stone
+    SPELL_LEDAS_LIQUEFACTION,
+    SPELL_STATUE_FORM,
+},
+
 {   // Book of Wizardry
     SPELL_AGONY,
-    SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
 #endif
@@ -226,7 +223,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_CORONA,
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
@@ -235,7 +231,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_APPORTATION,
     SPELL_INTOXICATE,
-    SPELL_INVISIBILITY
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -261,13 +256,11 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Burglary
     SPELL_PASSWALL,
     SPELL_SWIFTNESS,
-    SPELL_INVISIBILITY,
 },
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
     SPELL_SPIDER_FORM,
-    SPELL_SHADOW_CREATURES,
 },
 
 {   // Book of Alchemy
@@ -285,6 +278,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Annihilations
     SPELL_CHAIN_LIGHTNING,
     SPELL_FIRE_STORM,
+    SPELL_SHATTER,
 },
 
 {   // Grand Grimoire
@@ -361,9 +355,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Earth
-    SPELL_STONE_ARROW,
-    SPELL_BOLT_OF_MAGMA,
-    SPELL_SHATTER,
+    SPELL_LEDAS_LIQUEFACTION,
+    SPELL_LRD,
+    SPELL_STATUE_FORM,
 },
 
 { // Ozocubu's Autobio
@@ -476,13 +470,19 @@ static const vector<spell_type> spellbook_templates[] =
 { // Trismegistus Codex
     SPELL_IGNITE_POISON,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_BOLT_OF_MAGMA,
+    SPELL_FREEZING_CLOUD,
 },
 
 { // Book of the Hunter
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_PORTAL_PROJECTILE,
     SPELL_LEDAS_LIQUEFACTION,
+},
+
+{ // Book of Scorching
+    SPELL_SCORCH,
+    SPELL_FLAME_WAVE,
+    SPELL_SUMMON_CACTUS,
 },
 
 };

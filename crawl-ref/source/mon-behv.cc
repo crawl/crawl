@@ -197,7 +197,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
         // Hold position if we've reached our ideal range
         else if (mon->type == MONS_SPELLFORGED_SERVITOR
                  && (mon->pos() - target->pos()).rdist()
-                 <= mon->props["ideal_range"].get_int()
+                 <= mon->props[IDEAL_RANGE_KEY].get_int()
                  && !one_chance_in(8))
         {
             mon->firing_pos = mon->pos();
@@ -763,10 +763,10 @@ void handle_behaviour(monster* mon)
         case BEH_CORNERED:
 
             // If we were able to move since becoming cornered, resume fleeing
-            if (mon->pos() != mon->props["last_pos"].get_coord())
+            if (mon->pos() != mon->props[LAST_POS_KEY].get_coord())
             {
                 new_beh = BEH_FLEE;
-                mon->props.erase("last_pos");
+                mon->props.erase(LAST_POS_KEY);
             }
 
             // Foe gone out of LOS?
@@ -811,20 +811,20 @@ void handle_behaviour(monster* mon)
             {
                 // We're too far from the player. Idle around and wait for
                 // them to catch up.
-                if (!mon->props.exists("idle_point"))
+                if (!mon->props.exists(IDLE_POINT_KEY))
                 {
-                    mon->props["idle_point"] = mon->pos();
-                    mon->props["idle_deadline"] = you.elapsed_time + 200;
+                    mon->props[IDLE_POINT_KEY] = mon->pos();
+                    mon->props[IDLE_DEADLINE_KEY] = you.elapsed_time + 200;
                 }
 
                 coord_def target_rnd;
                 target_rnd.x = random_range(-2, 2);
                 target_rnd.y = random_range(-2, 2);
                 mon->target = clamp_in_bounds(
-                                    mon->props["idle_point"].get_coord()
+                                    mon->props[IDLE_POINT_KEY].get_coord()
                                     + target_rnd);
 
-                if (you.elapsed_time >= mon->props["idle_deadline"].get_int())
+                if (you.elapsed_time >= mon->props[IDLE_DEADLINE_KEY].get_int())
                     stop_retreat = true;
             }
             else
@@ -832,32 +832,32 @@ void handle_behaviour(monster* mon)
                 // Be more lenient about player distance if a monster is
                 // idling (to prevent it from repeatedly resetting idle
                 // time if its own wanderings bring it closer to the player)
-                if (mon->props.exists("idle_point")
+                if (mon->props.exists(IDLE_POINT_KEY)
                     && grid_distance(mon->pos(), you.pos()) < LOS_DEFAULT_RANGE)
                 {
-                    mon->props.erase("idle_point");
-                    mon->props.erase("idle_deadline");
+                    mon->props.erase(IDLE_POINT_KEY);
+                    mon->props.erase(IDLE_DEADLINE_KEY);
                     mon->target = mon->patrol_point;
                 }
 
-                if (mon->pos() == mon->props["last_pos"].get_coord())
+                if (mon->pos() == mon->props[LAST_POS_KEY].get_coord())
                 {
-                    if (!mon->props.exists("blocked_deadline"))
-                        mon->props["blocked_deadline"] = you.elapsed_time + 30;
+                    if (!mon->props.exists(BLOCKED_DEADLINE_KEY))
+                        mon->props[BLOCKED_DEADLINE_KEY] = you.elapsed_time + 30;
 
-                    if (!mon->props.exists("idle_deadline"))
-                        mon->props["idle_deadline"] = you.elapsed_time + 200;
+                    if (!mon->props.exists(IDLE_DEADLINE_KEY))
+                        mon->props[IDLE_DEADLINE_KEY] = you.elapsed_time + 200;
 
-                    if (you.elapsed_time >= mon->props["blocked_deadline"].get_int()
-                        || you.elapsed_time >= mon->props["idle_deadline"].get_int())
+                    if (you.elapsed_time >= mon->props[BLOCKED_DEADLINE_KEY].get_int()
+                        || you.elapsed_time >= mon->props[IDLE_DEADLINE_KEY].get_int())
                     {
                         stop_retreat = true;
                     }
                 }
                 else
                 {
-                    mon->props.erase("blocked_deadline");
-                    mon->props.erase("idle_deadline");
+                    mon->props.erase(BLOCKED_DEADLINE_KEY);
+                    mon->props.erase(IDLE_DEADLINE_KEY);
                 }
             }
 
@@ -865,13 +865,13 @@ void handle_behaviour(monster* mon)
             {
                 new_beh = BEH_SEEK;
                 new_foe = MHITYOU;
-                mon->props.erase("last_pos");
-                mon->props.erase("idle_point");
-                mon->props.erase("blocked_deadline");
-                mon->props.erase("idle_deadline");
+                mon->props.erase(LAST_POS_KEY);
+                mon->props.erase(IDLE_POINT_KEY);
+                mon->props.erase(BLOCKED_DEADLINE_KEY);
+                mon->props.erase(IDLE_DEADLINE_KEY);
             }
             else
-                mon->props["last_pos"] = mon->pos();
+                mon->props[LAST_POS_KEY] = mon->pos();
 
             break;
         }
@@ -1235,7 +1235,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             // Save their current position so we know if they manage to move
             // on the following turn (and thus resume BEH_FLEE)
-            mon->props["last_pos"].get_coord() = mon->pos();
+            mon->props[LAST_POS_KEY].get_coord() = mon->pos();
             mon->behaviour = BEH_CORNERED;
         }
         else
@@ -1255,8 +1255,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             mon->attitude = ATT_HOSTILE;
             // Non-hostile uniques might be removed from dungeon annotation
             // so we add them back.
-            if (mon->props.exists("no_annotate"))
-                mon->props["no_annotate"] = false;
+            if (mon->props.exists(NO_ANNOTATE_KEY))
+                mon->props[NO_ANNOTATE_KEY] = false;
             set_unique_annotation(mon);
             mons_att_changed(mon);
         }

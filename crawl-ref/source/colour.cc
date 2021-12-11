@@ -257,7 +257,7 @@ static int _etc_tree(int, const coord_def& loc)
 
 static int _etc_mangrove(int, const coord_def& loc)
 {
-    static int col = _etc_tree(0, loc);
+    const int col = _etc_tree(0, loc);
     return col == LIGHTGREEN ? BROWN : col;
 }
 
@@ -635,6 +635,12 @@ void init_element_colours()
                             { {40, LIGHTRED},
                               {40, YELLOW},
                               {10, WHITE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
+                            ETC_CANDLES, "candles",
+                            { {40,  RED},
+                              {40,  YELLOW},
+                              {40,  WHITE},
                             }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(

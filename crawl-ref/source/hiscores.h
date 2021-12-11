@@ -8,6 +8,9 @@
 #include <vector>
 
 #include "god-type.h"
+#ifdef USE_TILE_WEB
+#include "json-wrapper.h"
+#endif
 #include "score-format-type.h"
 
 using std::vector;
@@ -31,8 +34,11 @@ string hiscores_format_single_long(const scorefile_entry &se,
 void mark_milestone(const string &type, const string &milestone,
                     const string &origin_level = "", time_t t = 0);
 
-#ifdef DGL_WHEREIS
-string xlog_status_line();
+void update_whereis(const char *status = "active");
+
+#if defined(USE_TILE_WEB)
+void sync_last_milestone();
+void update_whereis_chargen(string name);
 #endif
 
 class xlog_fields
@@ -43,6 +49,9 @@ public:
 
     void init(const string &line);
     string xlog_line() const;
+#ifdef USE_TILE_WEB
+    JsonWrapper xlog_json() const;
+#endif
 
     void add_field(const string &key, PRINTF(2, ));
 

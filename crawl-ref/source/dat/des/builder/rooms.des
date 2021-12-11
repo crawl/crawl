@@ -354,7 +354,9 @@ function sroom_demon_pit(e)
     end
 
     lord_mon = "brimstone fiend / ice fiend / tzitzimitl / " ..
-               "hell sentinel / nonbase demonspawn w:20"
+               "hell sentinel / demonspawn blood saint w:5 / " ..
+               "demonspawn black sun w:5 / demonspawn corrupter w:5 / " ..
+               "demonspawn warmonger"
 
     fill_special_room(e, mons, lord_mon, true)
 
@@ -393,7 +395,7 @@ ENDMAP
 NAME:   special_room_morgue
 DEPTH:  Depths, Crypt, Dis, Tar, Coc, Geh
 TAGS:   special_room allow_dup unrand
-WEIGHT: 29 (Depths:1-3), 34
+WEIGHT: 29 (Depths:1-2), 34
 : sroom_morgue(_G)
 MAP
 ENDMAP
@@ -401,7 +403,7 @@ ENDMAP
 NAME:   special_room_jelly
 DEPTH:  Depths, Lair:$, Slime
 TAGS:   special_room allow_dup unrand
-WEIGHT: 9 (Lair:$), 13 (Depths:1-3), 40
+WEIGHT: 9 (Lair:$), 13 (Depths:1-2), 40
 : sroom_jelly_pit(_G)
 MAP
 ENDMAP
@@ -409,7 +411,7 @@ ENDMAP
 NAME:   special_room_mythical_zoo
 DEPTH:  D:14-, Depths, Lair:4-, Elf
 TAGS:   special_room allow_dup unrand
-WEIGHT: 20 (D:14-, Lair:4-5), 25 (Depths:1-3, Lair:$, Elf), 28
+WEIGHT: 20 (D:14-, Lair:4-5), 25 (Depths:1-2, Lair:$, Elf), 28
 : sroom_mythical_zoo(_G)
 MAP
 ENDMAP

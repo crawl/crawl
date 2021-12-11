@@ -356,16 +356,6 @@ static peeve_map divine_peeves[] =
         { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
-        { DID_KILL_LIVING, {
-            "you kill living things while asking for your life to be spared",
-            true,
-            1, 2, nullptr, " does not appreciate your shedding blood"
-                            " when asking for salvation!",
-            [] (const monster*) -> bool {
-                // Killing is only disapproved of during prayer.
-                return you.duration[DUR_LIFESAVING] != 0;
-            }
-        } },
     },
     // GOD_LUGONU,
     peeve_map(),
@@ -431,6 +421,8 @@ static peeve_map divine_peeves[] =
     // GOD_HEPLIAKLQANA,
     peeve_map(),
     // GOD_WU_JIAN,
+    peeve_map(),
+    // GOD_IGNIS,
     peeve_map(),
 };
 
@@ -712,23 +704,7 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_YREDELEMNUL,
-    {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
-        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
-        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
-        { DID_KILL_HOLY, _on_kill("you kill holy beings", MH_HOLY, false,
-                                  [](int &piety, int &/*denom*/,
-                                     const monster* /*victim*/)
-            {
-                piety *= 2;
-                simple_god_message(" appreciates your killing of a holy being.");
-            },
-            true
-        ) },
-        { DID_KILL_NONLIVING, {
-            "you destroy nonliving beings", true, 3, 18, 2, " accepts your kill."
-        } },
-    },
+    like_map(),
     // GOD_XOM,
     like_map(),
     // GOD_VEHUMET,
@@ -816,7 +792,17 @@ static like_map divine_likes[] =
         } },
     },
     // GOD_JIYVA,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            "you explore the world", false,
+            0, 0, 0, nullptr,
+            [] (int &piety, int &/*denom*/, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 26;
+            }
+        } },
+    },
     // GOD_FEDHAS,
     {
         { DID_KILL_LIVING, _fedhas_kill_living_response() },
@@ -938,6 +924,8 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
+    // GOD_IGNIS,
+    like_map(),
 };
 
 /**
@@ -1046,8 +1034,15 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
 
 string get_god_likes(god_type which_god)
 {
-    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
+    switch (which_god)
+    {
+    case GOD_NO_GOD:
+    case GOD_XOM:
+    case GOD_IGNIS:
         return "";
+    default:
+        break;
+    }
 
     string text = uppercase_first(god_name(which_god));
     vector<string> likes;
@@ -1056,9 +1051,8 @@ string get_god_likes(god_type which_god)
     // Unique/unusual piety gain methods first.
     switch (which_god)
     {
-    case GOD_JIYVA:
-        likes.emplace_back("you sacrifice items by allowing slimes to consume "
-                           "them");
+    case GOD_ASHENZARI:
+        likes.emplace_back("you bind yourself with curses");
         break;
     case GOD_GOZAG:
         likes.emplace_back("you collect gold");
@@ -1066,11 +1060,12 @@ string get_god_likes(god_type which_god)
     case GOD_RU:
         likes.emplace_back("you make personal sacrifices");
         break;
+    case GOD_YREDELEMNUL:
+        likes.emplace_back("you surround yourself with harvested souls");
+        break;
     case GOD_ZIN:
         likes.emplace_back("you donate money");
         break;
-    case GOD_ASHENZARI:
-        likes.emplace_back("you bind yourself with curses");
     default:
         break;
     }

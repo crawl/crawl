@@ -51,18 +51,18 @@ function pan_lord_setup(_G, name)
                  "tentacled monstrosity w:5 / " ..
                  "floating eye / golden eye band / eye of devastation / " ..
                  "shining eye / very ugly thing band / "..
-                 "monstrous corrupter",
+                 "demonspawn corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
                  "green death w:200 / glowing orange brain / rakshasa / " ..
                  "wizard / draconian annihilator / deep elf annihilator / " ..
-                 "titan w:5 / lich w:5 / gelid blood saint",
+                 "titan w:5 / lich w:5 / demonspawn blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
-                  "brimstone fiend w:1 / infernal warmonger w:1",
+                  "brimstone fiend w:1 / demonspawn warmonger w:1",
         ['Gloorx Vloq'] = "skeleton w:400 / soul eater w:200 / " ..
                  "lorocyproca w:100 / executioner w:300 / " ..
                  "demonic crawler / shadow wraith / " ..
-                 "unseen horror / torturous black sun"
+                 "unseen horror / demonspawn black sun"
     }
 
     _G.set_random_mon_list(monsters[name])
@@ -175,10 +175,16 @@ end
 function pan_lord_vault_contents(e, anyglyph, commonglyph, greaterglyph)
     e.tags('allow_dup')
     e.orient('float')
-    e.kmons(anyglyph .. " = any demon w:17 / base demonspawn w:2 / \
-                            nonbase demonspawn w:1")
-    e.kmons(commonglyph .. " = common demon / base demonspawn w:2")
-    e.kmons(greaterglyph .. " = greater demon / nonbase demonspawn w:1")
+    e.kmons(anyglyph .. " = any demon w:76 / demonspawn black sun w:1 / \
+                            demonspawn blood saint w:1 / \
+                            demonspawn corrupter w:1 / \
+                            demonspawn warmonger w:1")
+    e.kmons(commonglyph .. " = common demon")
+    e.kmons(greaterglyph .. " = greater demon w:36 / \
+                                demonspawn black sun w:1 / \
+                                demonspawn blood saint w:1 / \
+                                demonspawn corrupter w:1 / \
+                                demonspawn warmonger w:1")
     e.kfeat('< = {')
 end
 
@@ -186,14 +192,14 @@ function pan_entry_feature(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
 -- start TAG_MAJOR_VERSION == 34
     e.depth("Depths, D:21-")
-    -- 100% chance of placing on Depths:3
-    e.depth_chance("Depths:3", 10000)
+    -- 100% chance of placing on Depths:2
+    e.depth_chance("Depths:2", 10000)
     e.depth_chance("D:24", 10000)
 -- end TAG_MAJOR_VERSION
 -- start TAG_MAJOR_VERSION == 35
 --     e.depth("Depths")
---     -- 100% chance of placing on Depths:3
---     e.depth_chance("Depths:3", 10000)
+--     -- 100% chance of placing on Depths:2
+--     e.depth_chance("Depths:2", 10000)
 -- end TAG_MAJOR_VERSION
     e.chance(2500)
     e.kfeat(glyph .. " = enter_pandemonium")
@@ -201,7 +207,7 @@ end
 
 function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
-    e.mons("common demon / base demonspawn w:2")
+    e.mons("common demon")
     e.mons("common demon / nothing")
     if e.is_validating() then return end
     if crawl.x_chance_in_y(you.depth() + 3, you.depth() + 5) then
@@ -2379,9 +2385,8 @@ KMONS:  p = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
             ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
             mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
             octopode; nothing / vampire spells:. / formicid; nothing / \
-            gargoyle; nothing / vine stalker; nothing / djinni / \
-            merfolk; nothing / palentonga / gnoll; nothing / barachi / \
-            demonspawn / demigod / tengu; nothing
+            gargoyle; nothing / vine stalker; nothing / merfolk; nothing / \
+            gnoll; nothing / demonspawn / demigod / tengu; nothing
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)
@@ -2544,7 +2549,7 @@ NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
 MONS:   pandemonium lord, ghost moth
-MONS:   black sun, lorocyproca, any demon
+MONS:   demonspawn black sun, lorocyproca, any demon
 KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
@@ -2560,6 +2565,7 @@ KFEAT:  m = iron_grate
 KFEAT:  { = {
 SUBST:  n : m.
 KMASK:  2O = opaque
+KPROP:  2 = no_tele_into
 MAP
   ...................
   .............mmm...
@@ -2785,7 +2791,7 @@ NAME:   grunt_pan_frozen_over
 TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen
 TAGS:   no_pool_fixup no_monster_gen transparent
 ORIENT: float
-MONS:   blizzard demon, nonbase gelid demonspawn
+MONS:   blizzard demon, demonspawn black sun
 MONS:   juggernaut simulacrum, ice devil
 KMONS:  56 = ice statue
 KMONS:  P = pandemonium lord
@@ -2875,7 +2881,7 @@ ENDMAP
 NAME:    pan_disco_hall
 TAGS:    pan_fixed_rune_disco pan_fixed_lure_disco no_rotate
 ORIENT:  southeast
-MONS:    rakshasa, corrupter, blood saint
+MONS:    rakshasa, demonspawn corrupter, demonspawn blood saint
 MONS:    dancing weapon ; demon trident good_item ego:distortion
 MONS:    dancing weapon ; lajatang good_item ego:distortion
 MONS:    dancing weapon ; demon blade good_item ego:distortion

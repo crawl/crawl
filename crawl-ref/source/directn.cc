@@ -337,7 +337,7 @@ void direction_chooser::print_key_hints() const
                 break;
             case DIR_TARGET:
             case DIR_SHADOW_STEP:
-            case DIR_LEAP:
+            case DIR_ENFORCE_RANGE:
                 direction_hint = "Dir - move target";
                 break;
             }
@@ -1383,7 +1383,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     }
 
     // leap and shadow step never allow selecting from past the target point
-    if ((restricts == DIR_LEAP
+    if ((restricts == DIR_ENFORCE_RANGE
          || restricts == DIR_SHADOW_STEP
          || !allow_out_of_range)
         && !in_range(target()))
@@ -1533,17 +1533,17 @@ static void _push_back_if_nonempty(const string& str, vector<string>* vec)
         vec->push_back(str);
 }
 
-void direction_chooser::print_target_monster_description(bool &did_cloud) const
+string direction_chooser::target_description() const
 {
     // Do we see anything?
     const monster* mon = monster_at(target());
     if (!mon)
-        return;
+        return "";
 
     const bool visible = you.can_see(*mon);
     const bool exposed = _mon_exposed(mon);
     if (!visible && !exposed)
-        return;
+        return "";
 
     // OK, now we know that we have something to describe.
     vector<string> suffixes;
@@ -1567,13 +1567,20 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
             + ")";
     }
+    return text;
+}
 
-    mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
-         target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
-         text.c_str());
-
-    // If there's a cloud here, it's been described.
-    did_cloud = true;
+void direction_chooser::print_target_monster_description(bool &did_cloud) const
+{
+    string text = target_description();
+    if (text > "")
+    {
+        mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
+            target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
+            text.c_str());
+        // If there's a cloud here, it's been described.
+        did_cloud = true;
+    }
 }
 
 // FIXME: this should really take a cell as argument.
@@ -1665,7 +1672,7 @@ void direction_chooser::reinitialize_move_flags()
 // Returns true if we've completed targeting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
-    if (restricts != DIR_TARGET && restricts != DIR_SHADOW_STEP)
+    if (restricts == DIR_NONE)
     {
         // A direction is allowed, and we've selected it.
         moves.delta    = delta;
@@ -1805,7 +1812,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_CREATE_MIMIC:
         if (target() != you.pos())
         {
-            wizard_create_feature(target());
+            wizard_create_feature(target(), DNGN_UNSEEN, true);
             need_viewport_redraw = true;
         }
         return;
@@ -2217,7 +2224,7 @@ public:
         if (ev.type() == ui::Event::Type::KeyDown)
         {
             auto key = static_cast<const ui::KeyEvent&>(ev).key();
-            key = unmangle_direction_keys(key, KMC_TARGETING, false);
+            key = unmangle_direction_keys(key, KMC_TARGETING);
 
             const auto command = m_dc.behaviour->get_command(key);
             // XX a bit ugly to do this here..
@@ -2413,6 +2420,7 @@ bool direction_chooser::choose_direction()
     return moves.isValid;
 }
 
+#ifdef USE_TILE
 string get_terse_square_desc(const coord_def &gc)
 {
     string desc = "";
@@ -2444,6 +2452,7 @@ string get_terse_square_desc(const coord_def &gc)
 
     return desc;
 }
+#endif
 
 void terse_describe_square(const coord_def &c, bool in_range)
 {
@@ -2453,6 +2462,7 @@ void terse_describe_square(const coord_def &c, bool in_range)
         _describe_cell(c, in_range);
 }
 
+#ifdef USE_TILE_LOCAL
 // Get description of the "top" thing in a square; for mouseover text.
 void get_square_desc(const coord_def &c, describe_info &inf)
 {
@@ -2491,6 +2501,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
     else // Fourth priority: clouds.
         inf.body << get_cloud_desc(cloud);
 }
+#endif
 
 // Show a description of the only thing on a square, or a selection menu with
 // visible things on the square if there are many. For x-v and similar contexts.
@@ -3209,7 +3220,11 @@ string feature_description_at(const coord_def& where, bool covering,
     if (covering && you.see_cell(where))
     {
         if (feat_is_tree(grid) && env.forest_awoken_until)
+        {
             covering_description += ", awoken";
+            covering_description += env.forest_is_hostile ? " (hostile)" :
+                                                            " (friendly)";
+        }
 
         if (is_icecovered(where))
             covering_description = ", covered with ice";
@@ -3275,6 +3290,10 @@ string feature_description_at(const coord_def& where, bool covering,
                 desc += "sealed ";
             else if (grid == DNGN_SEALED_CLEAR_DOOR)
                 desc += "sealed translucent ";
+            else if (grid == DNGN_BROKEN_DOOR)
+                desc += "broken ";
+            else if (grid == DNGN_BROKEN_CLEAR_DOOR)
+                desc += "broken translucent ";
             else
                 desc += "closed ";
         }
@@ -3431,7 +3450,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
-        const int pow = you.props["confusing touch power"].get_int();
+        const int pow = you.props[CONFUSING_TOUCH_KEY].get_int();
         descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",
                                         hex_success_chance(mi.willpower(),
                                                            pow, 100)));
@@ -3561,11 +3580,6 @@ static string _get_monster_desc(const monster_info& mi)
     {
         text += string(mi.pronoun(PRONOUN_POSSESSIVE))
                 + " soul is ripe for the taking.\n";
-    }
-    else if (mi.is(MB_ENSLAVED))
-    {
-        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + " a disembodied soul.\n";
     }
 
     if (mi.is(MB_MIRROR_DAMAGE))
@@ -3845,7 +3859,9 @@ static void _debug_describe_feature_at(const coord_def &where)
     }
 
     char32_t ch = get_cell_glyph(where).ch;
-    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %x",
+    // TODO: expand out some of this in the cell description for console in a
+    // more readable fashion
+    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %x%s",
          where.x, where.y,
          ch == '<' ? "<<" : stringize_glyph(ch).c_str(),
          feature_desc.c_str(),
@@ -3855,7 +3871,8 @@ static void _debug_describe_feature_at(const coord_def &where)
          traveldest.c_str(),
          height_desc.c_str(),
          vault.c_str(),
-         env.map_knowledge(where).flags);
+         env.map_knowledge(where).flags,
+         (env.pgrid(where) & FPROP_NO_TELE_INTO) ? ", no_tele" : "");
 }
 #endif
 

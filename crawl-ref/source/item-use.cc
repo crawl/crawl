@@ -942,7 +942,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3)
+        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3
+            || you.get_mutation_level(MUT_DEMONIC_TOUCH,
+                                      !ignore_temporary) >= 3)
         {
             if (verbose)
             {
@@ -1031,9 +1033,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                mprf("You can't wear a glove with your huge claw%s!",
+                mprf("You can't wear gloves with your huge claw%s!",
                      you.arm_count() == 1 ? "" : "s");
             }
+            return false;
+        }
+
+        if (you.get_mutation_level(MUT_DEMONIC_TOUCH) == 3)
+        {
+            if (verbose)
+                mpr("Your demonic touch would destroy the gloves!");
             return false;
         }
     }
@@ -1135,6 +1144,16 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     mpr("You can't wear that!");
                 return false;
             }
+        }
+    }
+
+    if (slot == EQ_CLOAK)
+    {
+        if (you.get_mutation_level(MUT_WEAKNESS_STINGER) == 3)
+        {
+            if (verbose)
+                mpr("You can't wear that with your sharp stinger!");
+            return false;
         }
     }
 
@@ -2066,14 +2085,6 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
     equip_item(hand_used, item_slot);
 
     check_item_hint(you.inv[item_slot], old_talents);
-#ifdef USE_TILE_LOCAL
-    if (your_talents(false).size() != old_talents)
-    {
-        tiles.layout_statcol();
-        redraw_screen();
-        update_screen();
-    }
-#endif
 
     // Putting on jewellery is fast.
     you.time_taken /= 2;
@@ -2311,6 +2322,11 @@ void drink(item_def* potion)
         mpr("You cannot drink potions in your current state!");
         return;
     }
+    else if (player_in_branch(BRANCH_COCYTUS))
+    {
+        mpr("It's too cold; everything's frozen solid!");
+        return;
+    }
 
     if (you.berserk())
     {
@@ -2430,27 +2446,25 @@ static void _rebrand_weapon(item_def& wpn)
     {
         if (is_range_weapon(wpn))
         {
-            new_brand = random_choose_weighted(
-                                    33, SPWPN_FLAMING,
-                                    33, SPWPN_FREEZING,
-                                    23, SPWPN_VENOM,
-                                    23, SPWPN_VORPAL,
-                                    5, SPWPN_ELECTROCUTION,
-                                    3, SPWPN_CHAOS);
+            new_brand = random_choose_weighted(3, SPWPN_FLAMING,
+                                               3, SPWPN_FREEZING,
+                                               3, SPWPN_VENOM,
+                                               3, SPWPN_VORPAL,
+                                               1, SPWPN_ELECTROCUTION,
+                                               1, SPWPN_CHAOS);
         }
         else
         {
-            new_brand = random_choose_weighted(
-                                    28, SPWPN_FLAMING,
-                                    28, SPWPN_FREEZING,
-                                    23, SPWPN_VORPAL,
-                                    18, SPWPN_VENOM,
-                                    14, SPWPN_DRAINING,
-                                    14, SPWPN_ELECTROCUTION,
-                                    11, SPWPN_PROTECTION,
-                                    11, SPWPN_SPECTRAL,
-                                    8, SPWPN_VAMPIRISM,
-                                    3, SPWPN_CHAOS);
+            new_brand = random_choose_weighted(2, SPWPN_FLAMING,
+                                               2, SPWPN_FREEZING,
+                                               2, SPWPN_VORPAL,
+                                               2, SPWPN_VENOM,
+                                               2, SPWPN_PROTECTION,
+                                               1, SPWPN_DRAINING,
+                                               1, SPWPN_ELECTROCUTION,
+                                               1, SPWPN_SPECTRAL,
+                                               1, SPWPN_VAMPIRISM,
+                                               1, SPWPN_CHAOS);
         }
     }
 
@@ -2812,6 +2826,9 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
 string cannot_read_item_reason(const item_def *item)
 {
     // general checks
+    if (player_in_branch(BRANCH_GEHENNA))
+        return "You cannot see clearly; the smoke and ash is too thick!";
+
     if (you.berserk())
         return "You are too berserk!";
 
@@ -2819,7 +2836,7 @@ string cannot_read_item_reason(const item_def *item)
         return "You are too confused!";
 
     // no reading while threatened (Ru/random mutation)
-    if (you.duration[DUR_NO_SCROLLS])
+    if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
         return "You cannot read scrolls in your current state!";
 
     if (silenced(you.pos()))
@@ -2848,7 +2865,7 @@ string cannot_read_item_reason(const item_def *item)
     {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            return you.no_tele_reason(false, item->sub_type == SCR_BLINKING);
+            return you.no_tele_reason(item->sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
             if (you.spell_no == 0)
@@ -2862,8 +2879,6 @@ string cannot_read_item_reason(const item_def *item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
-            if (have_passive(passive_t::want_curses))
-                return _no_items_reason(OSEL_CURSED_WORN);
             return _no_items_reason(OSEL_UNIDENT, true);
 
 #if TAG_MAJOR_VERSION == 34
@@ -2938,6 +2953,14 @@ static vector<string> _desc_holy_word(const monster_info& mi)
         return { "not susceptible" };
 }
 
+static vector<string> _desc_res_torment(const monster_info& mi)
+{
+    if (mi.resists() & (MR_RES_TORMENT))
+        return { "not susceptible" };
+    else
+        return { "susceptible" };
+}
+
 class targeter_finite_will : public targeter_multimonster
 {
 public:
@@ -2966,6 +2989,20 @@ public:
         if (loc == you.pos() && you.undead_or_demonic())
             return AFF_YES;
         return targeter_multimonster::is_affected(loc);
+    }
+};
+
+class targeter_torment : public targeter_multimonster
+{
+public:
+    targeter_torment() : targeter_multimonster(&you)
+    { }
+
+    bool affects_monster(const monster_info& mon)
+    {
+        // TODO: if this is ever used for the pain card it will need an
+        // override for the player in `is_affected`
+        return !bool(mon.resists() & MR_RES_TORMENT);
     }
 };
 
@@ -3020,6 +3057,8 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
         return make_unique<targeter_holy_word>();
     case SCR_SILENCE:
         return make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
+    case SCR_TORMENT:
+        return make_unique<targeter_torment>();
     default:
         return nullptr;
     }
@@ -3046,6 +3085,8 @@ static bool _scroll_targeting_check(scroll_type scroll, dist *target)
             args.get_desc_func = _desc_holy_word;
         else if (scroll == SCR_VULNERABILITY || scroll == SCR_IMMOLATION)
             args.get_desc_func = _desc_finite_wl;
+        else if (scroll == SCR_TORMENT)
+            args.get_desc_func = _desc_res_torment;
 
         args.mode = TARG_ANY;
         args.self = confirm_prompt_type::cancel;
@@ -3071,6 +3112,7 @@ bool scroll_has_targeter(scroll_type which_scroll)
     case SCR_IMMOLATION:
     case SCR_HOLY_WORD:
     case SCR_SILENCE:
+    case SCR_TORMENT:
         return true;
     default:
         return false;
@@ -3159,6 +3201,10 @@ void read(item_def* scroll, dist *target)
 
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
+        const bool bad_item = (is_dangerous_item(*scroll, true)
+                                    || is_bad_item(*scroll))
+                            && Options.bad_item_prompt;
+
         if (stop_attack_prompt(hitfunc, verb_object.c_str(),
                                [which_scroll] (const actor* m)
                                {
@@ -3173,9 +3219,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if ((is_dangerous_item(*scroll, true)
-                  || is_bad_item(*scroll))
-                 && Options.bad_item_prompt
+        else if (bad_item
                  && !yesno(make_stringf("Really %s?%s",
                                         verb_object.c_str(),
                                         hostile_check ? ""
@@ -3186,7 +3230,7 @@ void read(item_def* scroll, dist *target)
             canned_msg(MSG_OK);
             return;
         }
-        else if (!hostile_check && !yesno(make_stringf(
+        else if (!bad_item && !hostile_check && !yesno(make_stringf(
             "You can't see any enemies this would affect, really %s?",
                                         verb_object.c_str()).c_str(),
                                                 false, 'n'))
@@ -3199,13 +3243,6 @@ void read(item_def* scroll, dist *target)
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
-
-    if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
-    {
-        mpr("You almost manage to decipher the scroll,"
-            " but fail in this attempt.");
-        return;
-    }
 
     const int prev_quantity = scroll->quantity;
     int link = in_inventory(*scroll) ? scroll->link : -1;
@@ -3243,7 +3280,7 @@ void read(item_def* scroll, dist *target)
     {
     case SCR_BLINKING:
     {
-        const string reason = you.no_tele_reason(true, true);
+        const string reason = you.no_tele_reason(true);
         if (!reason.empty())
         {
             mpr(pre_succ_msg);
@@ -3291,9 +3328,8 @@ void read(item_def* scroll, dist *target)
         break;
 
     case SCR_SUMMONING:
-        cancel_scroll =
-                    cast_shadow_creatures(MON_SUMM_SCROLL) == spret::abort
-                    && alreadyknown;
+        cancel_scroll = summon_shadow_creatures() == spret::abort
+                        && alreadyknown;
         break;
 
     case SCR_FOG:

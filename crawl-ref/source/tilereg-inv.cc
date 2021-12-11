@@ -140,6 +140,9 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         return CK_NO_KEY;
     }
 
+    if (tiles.get_map_display())
+        return CK_NO_KEY;
+
     int idx = m_items[item_idx].idx;
 
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
@@ -382,14 +385,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                 tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
-            case OBJ_MISCELLANY + EQUIP_OFFSET:
-#if TAG_MAJOR_VERSION == 34
-            case OBJ_RODS + EQUIP_OFFSET:
-                tmp += "Evoke (%)";
-                cmd.push_back(CMD_EVOKE_WIELDED);
-                _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                break;
-#endif
             case OBJ_ARMOUR:
                 if (!you.has_mutation(MUT_NO_ARMOUR))
                 {
@@ -602,6 +597,10 @@ void InventoryRegion::update()
     if (mx * my == 0)
         return;
 
+    // XX in principle this should check specific commands in
+    // tile_command_not_applicable
+    const bool disable_all = tiles.get_map_display();
+
     const int max_pack_items = ENDOFPACK;
 
     bool inv_shown[ENDOFPACK];
@@ -641,6 +640,8 @@ void InventoryRegion::update()
             InventoryTile desc;
             _fill_item_info(desc, get_item_known_info(you.inv[i]));
             desc.idx = i;
+            if (disable_all)
+                desc.flag |= TILEI_FLAG_INVALID;
 
             for (int eq = EQ_FIRST_EQUIP; eq < NUM_EQUIP; ++eq)
             {
@@ -679,7 +680,7 @@ void InventoryRegion::update()
             for (int i = 0; i < fill; ++i)
             {
                 InventoryTile desc;
-                if ((int)m_items.size() >= max_pack_items)
+                if (disable_all || (int)m_items.size() >= max_pack_items)
                     desc.flag |= TILEI_FLAG_INVALID;
                 m_items.push_back(desc);
             }
@@ -690,7 +691,7 @@ void InventoryRegion::update()
             while (m_items.size() % mx != 0)
             {
                 InventoryTile desc;
-                if ((int)m_items.size() >= max_pack_items)
+                if (disable_all || (int)m_items.size() >= max_pack_items)
                     desc.flag |= TILEI_FLAG_INVALID;
                 m_items.push_back(desc);
             }
@@ -704,7 +705,7 @@ void InventoryRegion::update()
                 for (int i = 0; i < mx; i++)
                 {
                     InventoryTile desc;
-                    if ((int)m_items.size() >= max_pack_items)
+                    if (disable_all || (int)m_items.size() >= max_pack_items)
                         desc.flag |= TILEI_FLAG_INVALID;
                     m_items.push_back(desc);
                 }
@@ -749,6 +750,8 @@ void InventoryRegion::update()
             _fill_item_info(desc, get_item_known_info(env.item[i]));
             desc.idx = i;
             ground_shown[i] = true;
+            if (disable_all)
+                desc.flag |= TILEI_FLAG_INVALID;
 
             m_items.push_back(desc);
         }
@@ -761,6 +764,8 @@ void InventoryRegion::update()
         {
             InventoryTile desc;
             desc.flag = TILEI_FLAG_FLOOR;
+            if (disable_all)
+                desc.flag |= TILEI_FLAG_INVALID;
             m_items.push_back(desc);
         }
     }

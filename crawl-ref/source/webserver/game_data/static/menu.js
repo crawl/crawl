@@ -573,6 +573,22 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 return false;
             })
 
+        if (menu.tag == "macro_mapping")
+        {
+            input.keypress(function (ev) {
+                var chr = String.fromCharCode(event.which);
+                if (chr == '?')
+                {
+                    // TODO: a popup from here does not take focus over
+                    // the input, which is still receiving keys. But I'm not
+                    // sure how to fix...
+                    comm.send_message("key", { keycode: ev.which });
+                    ev.preventDefault();
+                    return false;
+                }
+            });
+        }
+
         input.keydown(function (ev) {
             if (ev.which == 13)
             {
@@ -713,7 +729,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         if (!menu || menu.type === "crt") return;
         // can't check `hidden` class, which is on a 3x containing div
-        if (ui.top_popup().is(":hidden")) return;
+        if (!ui.top_popup() || ui.top_popup().is(":hidden")) return;
         if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         if (event.altKey || event.shiftkey) {
@@ -788,7 +804,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function menu_keypress_handler(event)
     {
         if (!menu || menu.type === "crt") return;
-        if (ui.top_popup()[0] !== menu.elem[0]) return;
+        if (!ui.top_popup() || ui.top_popup()[0] !== menu.elem[0]) return;
         if (menu.tag == "macro_mapping") return; // Treat input as raw, no need
                                                  // to scroll anyway
 

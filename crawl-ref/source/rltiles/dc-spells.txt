@@ -62,6 +62,8 @@ inner_flame INNER_FLAME
 ignition IGNITION
 starburst STARBURST
 foxfire FOXFIRE
+scorch SCORCH
+flame_wave FLAME_WAVE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -133,6 +135,7 @@ summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
 spellforged_servitor SPELLFORGED_SERVITOR
+summon_cactus_giant SUMMON_CACTUS_GIANT
 
 %sdir gui/spells/translocation
 apportation APPORTATION
@@ -216,7 +219,6 @@ summon_spectral_orcs SUMMON_SPECTRAL_ORCS
 summon_ufetubus SUMMON_UFETUBUS
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
-teleport TELEPORT
 wall_of_brambles WALL_OF_BRAMBLES
 water_elementals WATER_ELEMENTALS
 %back none
@@ -230,7 +232,7 @@ hurl_damnation HURL_DAMNATION
 beogh_smite SMITING
 elyvilon_heal_other HEAL_OTHER
 elyvilon_lesser_healing MINOR_HEALING
-elyvilon_greater_healing MAJOR_HEALING
+elyvilon_heal_self MAJOR_HEALING
 makhleb_major_destruction MAJOR_DESTRUCTION
 lugonu_banish BANISHMENT
 trog_hand TROGS_HAND

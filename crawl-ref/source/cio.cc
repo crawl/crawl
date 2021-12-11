@@ -75,6 +75,19 @@ private:
     coord_def pos;
 };
 
+// Convert letters (and 6 other characters) to control codes. Don't change
+// anything else.
+// Uses int instead of char32_t to match the caller.
+static inline int _control_safe(int c)
+{
+    if (c >= 'A'-1 && c < 'A'+' '-1) // ASCII letters and @ [ \ ] ^ _ `
+        return c-'A'+1;
+    else if (c >= 'a' && c <= 'z') // ASCII letters
+        return c-'a'+1;
+    else
+        return c; // anything else
+}
+
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
                             bool allow_fake_modifiers)
 {
@@ -85,21 +98,37 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     if (allow_fake_modifiers && Options.use_modifier_prefix_keys)
     {
         /* can we say yuck? -- haranp */
-        if (keyin == '*')
+        if (keyin == '*'
+#ifndef USE_TILE_LOCAL
+            || keyin == CK_NUMPAD_MULTIPLY
+                && key_to_command(keyin, KMC_DEFAULT) == CMD_NO_CMD
+#endif
+            )
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("CTRL");
+            webtiles_send_more_text("CTRL");
+
             keyin = getchm(keymap);
-            // return control-key
-            keyin = CONTROL(toupper_safe(_numpad2vi(keyin)));
+            // return control-key, if there is one.
+            keyin = _control_safe(_numpad2vi(keyin));
+            webtiles_send_more_text("");
         }
-        else if (keyin == '/')
+        else if (keyin == '/'
+#ifndef USE_TILE_LOCAL
+            || keyin == CK_NUMPAD_DIVIDE
+                && key_to_command(keyin, KMC_DEFAULT) == CMD_NO_CMD
+#endif
+            )
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("SHIFT");
+            webtiles_send_more_text("SHIFT");
+
             keyin = getchm(keymap);
             // return shift-key
             keyin = toupper_safe(_numpad2vi(keyin));
+            webtiles_send_more_text("");
         }
     }
 

@@ -280,6 +280,22 @@ const char *decline_pronoun(gender_type gender, pronoun_type variant)
     return _pronoun_declension[gender][variant];
 }
 
+// Takes a lowercase verb stem like "walk", "glid" or "wriggl"
+// (as could be used for "walking", "gliding", or "wriggler")
+// and turn it into the present tense form.
+// TODO: make this more general. (Does english have rules?)
+string walk_verb_to_present(string verb)
+{
+    if (verb == "wriggl")
+        return "wriggle";
+    if (verb == "glid")
+    {
+        return "walk"; // it's a lie! tengu only get this
+                       // verb when they can't fly!
+    }
+    return verb;
+}
+
 static string _tens_in_words(unsigned num)
 {
     static const char *numbers[] =
@@ -423,18 +439,4 @@ string thing_do_grammar(description_level_type dtype, string desc,
     default:
         return desc;
     }
-}
-
-string get_desc_quantity(const int quant, const int total, const string &whose)
-{
-    if (total == quant)
-        return uppercase_first(whose);
-    else if (quant == 1)
-        return "One of " + whose;
-    else if (quant == 2)
-        return "Two of " + whose;
-    else if (quant >= total * 3 / 4)
-        return "Most of " + whose;
-    else
-        return "Some of " + whose;
 }

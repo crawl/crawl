@@ -177,6 +177,51 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         return $popup;
     }
 
+    // Given some string like "e(v)oke", produce a span with the `data-hotkey`
+    // attribute set on that span. This auto-enables clicking. This will
+    // handle both a final period, and a sequence of prefix words that do not
+    // have a hotkey marked in them.
+    // TODO: it might be more robust to produce structured info on the server
+    // side...
+    function clickify_action(action_text)
+    {
+        var suffix = "";
+        var prefix = "";
+        // makes some assumptions about how this is joined...see describe.cc
+        // _actions_desc.
+        if (action_text.endsWith(".")) // could be more elegant...
+        {
+            suffix = ".";
+            action_text = action_text.slice(0, -1);
+        }
+        if (action_text.startsWith("or "))
+        {
+            prefix = "or ";
+            action_text = action_text.substr(3);
+        }
+        var hotkeys = action_text.match(/\(.\)/); // very inclusive for the key name
+        var data_attr = ""
+        if (hotkeys)
+            data_attr = " data-hotkey='" + hotkeys[0][1] + "'";
+        return prefix
+            + "<span" + data_attr + ">" + action_text + "</span>"
+            + suffix;
+    }
+
+    // Turn a list of actions like that found in the describe item popup into
+    // clickable links.
+    function clickify_actions(actions_text)
+    {
+        // assumes that the list is joined via ", ", including the final
+        // element. (I.e. this will break without the Oxford comma.)
+        var words = actions_text.split(", ");
+        var linkized = [];
+        words.forEach(function(w) {
+            linkized.push(clickify_action(w));
+        });
+        return linkized.join(", ");
+    }
+
     function describe_item(desc)
     {
         var $popup = $(".templates > .describe-item").clone();
@@ -189,7 +234,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             scroller_handle_key(s, event);
         });
         if (desc.actions !== "")
-            $popup.find(".actions").html(desc.actions);
+            $popup.find(".actions").html(clickify_actions(desc.actions));
         else
             $popup.find(".actions").remove();
 
@@ -938,8 +983,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function recv_ui_push(msg)
     {
+        var popup = null
         var handler = ui_handlers[msg.type];
-        var popup = handler ? handler(msg) : $("<div>Unhandled UI type "+msg.type+"</div>");
+        try
+        {
+            popup = handler
+                ? handler(msg)
+                : $("<div>Unhandled UI type " + msg.type + "</div>");
+        }
+        catch (err)
+        {
+            popup = $("<div>Buggy UI of type " + msg.type + "</div>");
+        }
         ui.show_popup(popup, msg["ui-centred"], msg.generation_id);
     }
 

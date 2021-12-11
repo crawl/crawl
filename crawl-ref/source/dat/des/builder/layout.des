@@ -623,7 +623,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
         percent_inner_split = percent_inner_split * 2
     end
 
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'} --wall_type}
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
@@ -1211,7 +1211,10 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    local subdivide_threshold = 12
+    local gxm, gym = dgn.builder_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+
+    local subdivide_threshold = 9 + gym / 35
 
     -- Create the alternate version?
     local alt = crawl.x_chance_in_y(2,3)
@@ -1280,9 +1283,6 @@ TAGS:   no_rotate no_vmirror no_hmirror
         end
     end
 
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
     fill_area { fill = 'x' }
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
@@ -1290,8 +1290,9 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
     -- Alternate version, connect rooms at the end.
     if alt then
-        connect_adjacent_rooms { max = crawl.random_range(500, 750),
-                                 min = 250, replace = '+' }
+        local thresh = 150 + (50 * gym) / 35
+        connect_adjacent_rooms { max = crawl.random_range(2 * thresh, 3 * thresh),
+                                 min = thresh, replace = '+' }
         zonify.map_fill_zones(_G, 1, 'x')
     end
 }}
@@ -1320,8 +1321,9 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    local ROOMS_ACROSS = 4
-    local ROOM_SIZE = 11
+    local gxm, gym = dgn.builder_bounds()
+    local ROOMS_ACROSS = 2 * (gym / 35)
+    local ROOM_SIZE = 1 + 5 * (gym / 35)
     local ROOM_SEPARATION = 2
     local EDGE_IN = 5
     local ROOM_IN = 4
@@ -1333,7 +1335,6 @@ TAGS:   no_rotate no_vmirror no_hmirror
     local DOOR_OFFSET_MIN = FIRST_ROOM + ROOM_IN - 1
     local DOOR_OFFSET_MAX = FIRST_ROOM + ROOM_SIZE - ROOM_IN
 
-    local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
     assert(MAP_SIZE < gxm, "Map size is too large")

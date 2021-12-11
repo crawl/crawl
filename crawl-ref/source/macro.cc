@@ -31,6 +31,8 @@
 #include <string>
 #include <vector>
 
+// TODO: these includes look not very general relative to how other files
+// approach it...
 #ifdef USE_TILE_LOCAL
 #include <SDL.h>
 #include <SDL_keycode.h>
@@ -254,37 +256,6 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
-int function_keycode_fixup(int keycode)
-{
-    // is this harmless on windows console?
-#if !defined(USE_TILE_LOCAL) && TAG_MAJOR_VERSION == 34
-    // For many years, dcss has (accidentally, it seems) used these keycodes
-    // for function keys, because of a patch from 2009 that mapped some common
-    // terminal escape codes for F1-F4 to 1011-1014 under the belief (??) that
-    // these were used for some numpad keys. In webtiles code, these keycodes
-    // are even hardcoded in to the non-versioned part of the js code, so it's
-    // extremely hard to change. So we do this somewhat horrible fixup to deal
-    // with the complicated history. TODO: remove some day
-    switch (keycode)
-    {
-    case -1011: return CK_F1;
-    case -1012: return CK_F2;
-    case -1013: return CK_F3;
-    case -1014: return CK_F4;
-    case -1015: return CK_F5;
-    case -1016: return CK_F6;
-    case -1017: return CK_F7;
-    case -1018: return CK_F8;
-    case -1019: return CK_F9;
-    case -1020: return CK_F10;
-    default:
-        return keycode;
-    }
-#else
-    return keycode;
-#endif
-}
-
 static int read_key_code(string s)
 {
     if (s.empty())
@@ -367,7 +338,7 @@ keyseq parse_keyseq(string s)
             }
             else
             {
-                const int key = function_keycode_fixup(read_key_code(arg));
+                const int key = read_key_code(arg);
                 v.push_back(key);
             }
 
@@ -461,19 +432,6 @@ static void _macro_inject_sent_keys()
         macro_buf_add(SendKeysBuffer, false, true);
         SendKeysBuffer.clear();
     }
-}
-
-/*
- * Safely add a command to the end of the sendkeys keybuffer.
- */
-void macro_sendkeys_end_add_cmd(command_type cmd)
-{
-    ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
-
-    // There should be plenty of room between the synthetic keys
-    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
-    // command_type to fit (currently 1000 through 2069).
-    macro_sendkeys_end_add_expanded(-((int) cmd));
 }
 
 /*
@@ -970,22 +928,6 @@ public:
         action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
         set_title(new MenuEntry("", MEL_TITLE));
-        on_single_selection = [this](const MenuEntry& item)
-        {
-            status_msg = "";
-            update_macro_more();
-            if (item.data)
-                edit_mapping(*static_cast<keyseq *>(item.data));
-            else if (item.hotkeys.size() && item.hotkeys[0] == '~')
-                edit_mapping(keyseq());
-            else if (item.hotkeys.size() && item.hotkeys[0] == '-')
-            {
-                if (item_count() > 0)
-                    clear_all();
-            }
-
-            return true;
-        };
     }
 
     void fill_entries(int set_hover_keycode=0)
@@ -993,21 +935,36 @@ public:
         // TODO: this seems like somehow it should involve ui::Switcher, but I
         // have no idea how to use that class with a Menu
         clear();
-        add_entry(new MenuEntry("Create/edit " + mode_name() + " from key",
-            MEL_ITEM, 1, '~'));
+        add_entry(new MenuEntry("Create/edit " + mode_name() + " from key", '~',
+            [this](const MenuEntry &)
+                {
+                    edit_mapping(keyseq());
+                    return true;
+                }));
         if (get_map().size())
         {
-            add_entry(new MenuEntry("Clear all " + mode_name() + "s",
-                MEL_ITEM, 1, '-'));
+            add_entry(new MenuEntry("Clear all " + mode_name() + "s", '-',
+                [this](const MenuEntry &)
+                    {
+                        status_msg = "";
+                        update_macro_more();
+                        if (item_count() > 0)
+                            clear_all();
+                        return true;
+                    }));
             add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
             for (auto &mapping : get_map())
             {
                 // TODO: indicate if macro is from rc file somehow?
                 string action_str = vtostr(mapping.second);
                 action_str = replace_all(action_str, "<", "<<");
-                MenuEntry *me = new MenuEntry(action_str,
-                                                        MEL_ITEM, 1,
-                                                        (int) mapping.first[0]);
+                MenuEntry *me = new MenuEntry(action_str, (int) mapping.first[0],
+                    [this](const MenuEntry &item)
+                    {
+                        if (item.data)
+                            edit_mapping(*static_cast<keyseq *>(item.data));
+                        return true;
+                    });
                 me->data = (void *) &mapping.first;
                 add_entry(me);
                 if (set_hover_keycode == mapping.first[0])
@@ -1227,30 +1184,38 @@ public:
             reset_key_prompt();
             set_more(string(""));
 
-            add_entry(new MenuEntry("redefine", MEL_ITEM, 1, 'r'));
-            add_entry(new MenuEntry("redefine with raw key entry", MEL_ITEM, 1, 'R'));
-            if (!action.empty())
-                add_entry(new MenuEntry("clear", MEL_ITEM, 1, 'c'));
-            add_entry(new MenuEntry("abort", MEL_ITEM, 1, 'a'));
-
-            on_single_selection = [this](const MenuEntry& item)
-            {
-                set_more("");
-                if (!item.hotkeys.size())
-                    return true;
-                if (item.hotkeys[0] == 'r')
-                    return !edit_action();
-                else if (item.hotkeys[0] == 'R')
+            add_entry(new MenuEntry("redefine", 'r',
+                [this](const MenuEntry &)
                 {
+                    set_more("");
+                    return !edit_action();
+                }));
+
+            add_entry(new MenuEntry("redefine with raw key entry", 'R',
+                [this](const MenuEntry &)
+                {
+                    set_more("");
                     edit_action_raw();
                     return true;
-                }
-                else if (item.hotkeys[0] == 'c')
-                    action.clear();
-                else if (item.hotkeys[0] == 'a')
+                }));
+
+            if (!action.empty())
+            {
+                add_entry(new MenuEntry("clear", 'c',
+                    [this](const MenuEntry &)
+                    {
+                        action.clear();
+                        return false;
+                    }));
+            }
+
+            add_entry(new MenuEntry("abort", 'a',
+                [this](const MenuEntry &)
+                {
                     abort = true;
-                return false;
-            };
+                    return false;
+                }));
+
             if (last_hovered == -1)
                 cycle_hover();
         }
@@ -1350,8 +1315,16 @@ public:
                 else if (keyin == '~')
                 {
                     char buff[10];
-                    set_more("Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]");
-                    if (!title_prompt(buff, sizeof(buff), "Enter keycode by number:"))
+                    set_more("[<w>?</w>] Keycode help. "
+                        "Quick reference: 8: [<w>bksp</w>], "
+                        "9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]"
+                        );
+                    if (!title_prompt(buff, sizeof(buff),
+                        "Enter keycode by number:"
+#ifndef USE_TILE_LOCAL
+                        , "console-keycodes"
+#endif
+                        ))
                     {
                         abort = true;
                         return false;
@@ -1389,7 +1362,13 @@ public:
             }
 
             if (keyin == '?')
-                show_specific_help("macro-menu");
+            {
+                show_specific_helps({ "macro-menu"
+#ifndef USE_TILE_LOCAL
+                    , "console-keycodes"
+#endif
+                    });
+            }
             else if (keyin == 'a')
                 return false; // legacy key
             return Menu::process_key(keyin);
@@ -1408,6 +1387,9 @@ public:
 
     bool edit_mapping(keyseq key)
     {
+        status_msg = "";
+        update_macro_more();
+
         const bool existed = get_map().count(key);
 
         MappingEditMenu pop = MappingEditMenu(key,
@@ -1466,7 +1448,11 @@ public:
         case '~':
             return Menu::process_key(keyin);
         case '?':
-            show_specific_help("macro-menu");
+            show_specific_helps({ "macro-menu"
+#ifndef USE_TILE_LOCAL
+                    , "console-keycodes"
+#endif
+                    });
             return true;
         case CK_MOUSE_CMD:
         case '!':
@@ -1632,6 +1618,7 @@ string read_rc_file_macro(const string& field)
     return "";
 }
 
+#ifdef DEBUG
 // useful for debugging
 string keyseq_to_str(const keyseq &seq)
 {
@@ -1649,6 +1636,7 @@ string keyseq_to_str(const keyseq &seq)
     return s.size() == 0 ? s : s.substr(0, s.size() - 2);
 
 }
+#endif
 
 bool keycode_is_printable(int keycode)
 {
@@ -1766,9 +1754,16 @@ string keycode_to_name(int keycode, bool shorten)
     case CK_NUMPAD_SUBTRACT2: return NP_DESC("-");
     case CK_NUMPAD_DECIMAL:  return NP_DESC(".");
     case CK_NUMPAD_DIVIDE:   return NP_DESC("/");
+    case CK_NUMPAD_ENTER:    return NP_DESC("enter");
 #endif
     default:
+        if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
+            return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
 #ifdef USE_TILE_LOCAL
+        // SDL allows control modifiers for some extra punctuation
+        else if (keycode < 0 && keycode > SDLK_EXCLAIM - SDLK_a + 1)
+            return make_stringf("%s%c", CTRL_DESC(""), (char) (keycode + SDLK_a - 1));
+
         // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
         // numbers; convert back to plain SDL form
         if (keycode < 0)
@@ -1778,9 +1773,6 @@ string keycode_to_name(int keycode, bool shorten)
         return string(SDL_GetKeyName(keycode));
 #else
     {
-        if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
-            return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
-
         keyseq v;
         v.push_back(keycode);
         return vtostr(v);
@@ -2056,16 +2048,11 @@ string command_to_string(command_type cmd, bool tutorial)
         else
             result = string(1, (char) key);
     }
-    else if (key > 1000 && key <= 1009)
+    else if (key > 1000 && key <= 1009) // can this be removed?
     {
         const int numpad = (key - 1000);
         result = make_stringf("Numpad %d", numpad);
     }
-#ifdef USE_TILE_LOCAL
-    // SDL allows control modifiers for some extra punctuation
-    else if (key < 0 && key > SDLK_EXCLAIM - SDLK_a + 1)
-        result = make_stringf("Ctrl-%c", (char) (key + SDLK_a - 1));
-#endif
     else
         result = keycode_to_name(key, false);
 

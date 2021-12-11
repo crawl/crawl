@@ -318,7 +318,9 @@ static job_type _get_hints_job(unsigned int type)
     }
 }
 
-static void _replace_static_tags(string &text)
+/// Substitute $cmd[CMD_FOO] with the corresponding key, and likewise
+/// transform <input>foo</input>.
+void hint_replace_cmds(string &text)
 {
     size_t p;
     while ((p = text.find("$cmd[")) != string::npos)
@@ -340,6 +342,28 @@ static void _replace_static_tags(string &text)
         text.replace(p, q - p + 1, command);
     }
 
+    // Brand user-input -related (tutorial) items with <w>[(text here)]</w>.
+    while ((p = text.find("<input>")) != string::npos)
+    {
+        size_t q = text.find("</input>", p + 7);
+        if (q == string::npos)
+        {
+            text += "<lightred>ERROR: unterminated <input></lightred>";
+            break;
+        }
+
+        string input = text.substr(p + 7, q - p - 7);
+        input = "<w>[" + input;
+        input += "]</w>";
+        text.replace(p, q - p + 8, input);
+    }
+}
+
+static void _replace_static_tags(string &text)
+{
+    hint_replace_cmds(text);
+
+    size_t p;
     while ((p = text.find("$item[")) != string::npos)
     {
         size_t q = text.find("]", p + 6);
@@ -366,22 +390,6 @@ static void _replace_static_tags(string &text)
             item += "<";
 
         text.replace(p, q - p + 1, item);
-    }
-
-    // Brand user-input -related (tutorial) items with <w>[(text here)]</w>.
-    while ((p = text.find("<input>")) != string::npos)
-    {
-        size_t q = text.find("</input>", p + 7);
-        if (q == string::npos)
-        {
-            text += "<lightred>ERROR: unterminated <input></lightred>";
-            break;
-        }
-
-        string input = text.substr(p + 7, q - p - 7);
-        input = "<w>[" + input;
-        input += "]</w>";
-        text.replace(p, q - p + 8, input);
     }
 }
 
@@ -3290,12 +3298,12 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     case DNGN_TRAP_ZOT:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
-#endif
     case DNGN_TRAP_ARROW:
     case DNGN_TRAP_SPEAR:
     case DNGN_TRAP_BLADE:
     case DNGN_TRAP_DART:
     case DNGN_TRAP_BOLT:
+#endif
     case DNGN_TRAP_NET:
     case DNGN_TRAP_PLATE:
         ostr << "These nasty constructions can cause a range of "
@@ -3665,6 +3673,8 @@ void hints_observe_cell(const coord_def& gc)
 {
     if (feat_is_escape_hatch(env.grid(gc)))
         learned_something_new(HINT_SEEN_ESCAPE_HATCH, gc);
+    else if (feat_is_portal_entrance(env.grid(gc)))
+        learned_something_new(HINT_SEEN_PORTAL, gc);
     else if (feat_is_branch_entrance(env.grid(gc)))
         learned_something_new(HINT_SEEN_BRANCH, gc);
     else if (is_feature('>', gc))
@@ -3679,8 +3689,6 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_DOOR, gc);
     else if (env.grid(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
-    else if (feat_is_portal_entrance(env.grid(gc)))
-        learned_something_new(HINT_SEEN_PORTAL, gc);
 
     const int it = you.visible_igrd(gc);
     if (it != NON_ITEM)

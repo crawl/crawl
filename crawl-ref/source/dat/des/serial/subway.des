@@ -1,0 +1,58 @@
+# A small vault allowing fast travel around a level. Unlike other transporter
+# vaults, you don't see where you end up, but there's no big guaranteed hazards
+# at the other end either. So you'll probably be fine!
+# Each "subway station" is labelled by the material that appears twice, in
+# opposite corners. Each "exit" is labelled by the material that appears in the
+# corner next to that transporter. For example, if you exit through the
+# transporter next to the crystal, you come out at the "crystal" station; that
+# is, the one with two crystal corners. It's easy. You'll figure it out.
+
+NAME:   serial_nicolae_subway
+DEPTH:  D:8-, Depths, Elf, Shoals, Snake, Zot
+TAGS:   luniq_serial
+{{
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_nico_subway", count=3}
+  end)
+}}
+
+default-depth:
+
+NAME:   nicolae_sub_station_stone
+TAGS:   transparent serial_nico_subway
+MARKER: D = lua:transp_loc("nico_metal_station")
+MARKER: E = lua:transp_dest_loc("nico_stone_station")
+MARKER: F = lua:transp_loc("nico_crystal_station")
+MAP
+vv.cc
+vD..c
+..E..
+c..Fb
+cc.bb
+ENDMAP
+
+NAME:   nicolae_sub_station_crystal
+TAGS:   transparent serial_nico_subway
+MARKER: D = lua:transp_loc("nico_stone_station")
+MARKER: E = lua:transp_dest_loc("nico_crystal_station")
+MARKER: F = lua:transp_loc("nico_metal_station")
+MAP
+cc.bb
+cD..b
+..E..
+b..Fv
+bb.vv
+ENDMAP
+
+NAME:   nicolae_sub_station_metal
+TAGS:   transparent serial_nico_subway
+MARKER: D = lua:transp_loc("nico_crystal_station")
+MARKER: E = lua:transp_dest_loc("nico_metal_station")
+MARKER: F = lua:transp_loc("nico_stone_station")
+MAP
+bb.vv
+bD..v
+..E..
+v..Fc
+vv.cc
+ENDMAP

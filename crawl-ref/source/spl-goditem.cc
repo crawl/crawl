@@ -8,6 +8,7 @@
 #include "spl-goditem.h"
 
 #include "art-enum.h"
+#include "attack.h"
 #include "cleansing-flame-source-type.h"
 #include "coordit.h"
 #include "database.h"
@@ -81,32 +82,29 @@ string unpacifiable_reason(const monster& mon)
  */
 string unpacifiable_reason(const monster_info& mi)
 {
-    // XXX: be more specific?
-    const string generic_reason = "You cannot pacify this monster!";
-
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mi.intel() <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mi.type)) // body part
     {
-        return generic_reason;
+        return "You cannot pacify mindless monsters!";
     }
 
     const mon_holy_type holiness = mi.holi;
 
-    if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
-        return generic_reason;
+    if (holiness & MH_NONLIVING)
+        return "You cannot pacify nonliving monsters!";
 
     if (mons_class_is_stationary(mi.type)) // not able to leave the level
-        return generic_reason;
+        return "You cannot pacify immobile monsters!";
 
-    if (mi.is(MB_SLEEPING)) // not aware of what is happening
+    if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)) // unaware of what's happening
     {
-        return make_stringf("You cannot pacify this monster while %s %s "
-                            "sleeping!",
+        return make_stringf("You cannot pacify this monster while %s %s %s!",
                             mi.pronoun(PRONOUN_SUBJECTIVE),
                             conjugate_verb("are",
-                                           mi.pronoun_plurality()).c_str());
+                                           mi.pronoun_plurality()).c_str(),
+                            mi.is(MB_SLEEPING) ? "asleep" : "dormant");
     }
 
     // pacifiable, maybe!
@@ -356,6 +354,7 @@ spret cast_healing(int pow, bool fail)
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
@@ -432,13 +431,15 @@ bool player_is_cancellable()
 
 /**
  * Lists out the effects that will be removed by cancellation.
+ *
+ * @param debuffs_only   If true, contamination levels are unaffected.
  */
-string describe_player_cancellation()
+string describe_player_cancellation(bool debuffs_only)
 {
     vector<string> effects;
 
     // Try to clarify it doesn't remove all contam?
-    if (get_contamination_level())
+    if (!debuffs_only && get_contamination_level())
         effects.push_back("as magically contaminated");
 
     player_debuff_effects buffs;
@@ -470,24 +471,17 @@ string describe_player_cancellation()
     for (auto status : dispellable_statuses)
     {
         status_info inf;
-        if (fill_status_info(status, inf) && !inf.short_text.empty())
+        if (!fill_status_info(status, inf) || inf.short_text.empty())
+            continue;
+        if (status != STATUS_AIRBORNE)
         {
-            if (status == STATUS_AIRBORNE)
-            {
-                if (!you.attribute[ATTR_PERM_FLIGHT]
-                    && !you.racial_permanent_flight())
-                {
-                    effects.push_back("flying");
-                }
-                else
-                    effects.push_back("buoyant");
-            }
-            else
-            {
-                strip_suffix(inf.short_text, " (expiring)");
-                effects.push_back(inf.short_text);
-            }
+            strip_suffix(inf.short_text, " (expiring)");
+            effects.push_back(inf.short_text);
+            continue;
         }
+        if (you.attribute[ATTR_PERM_FLIGHT] || you.racial_permanent_flight())
+            continue;
+        effects.push_back("flying");
     }
 
     return comma_separated_line(begin(effects), end(effects), " or ");
@@ -541,8 +535,8 @@ void debuff_player()
         {
             len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase("sticky_flame_aux");
-            you.props.erase("sticky_flame_source");
+            you.props.erase(STICKY_FLAME_AUX_KEY);
+            you.props.erase(STICKY_FLAMER_KEY);
         }
         else if (len > 1)
         {
@@ -734,22 +728,24 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool zin)
+spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
     // up to 300 or so with godly assistance or end-level, and 1200
     // as more or less the theoretical maximum.
+    const coord_def& where = victim->pos();
     int number_built = 0;
 
+    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-        DNGN_OPEN_CLEAR_DOOR
+        DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR
     };
 
+    bool zin = source == -GOD_ZIN;
     bool proceed;
-    monster *mon;
     string targname;
 
     vector<coord_def> veto_spots(8);
@@ -761,8 +757,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     {
         // We need to get this now because we won't be able to see
         // the monster once the walls go up!
-        mon = monster_at(where);
-        targname = mon->name(DESC_THE);
+        targname = victim->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
 
@@ -808,12 +803,20 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (!success)
         {
-            mprf(none_vis ? "You briefly glimpse something next to %s."
-                        : "You need more space to imprison %s.",
-                targname.c_str());
-            return false;
+            if (none_vis)
+            {
+                fail_check();
+                mprf("You briefly glimpse something next to %s.",
+                     targname.c_str());
+                return spret::success;
+            }
+
+            mprf("You need more space to imprison %s.", targname.c_str());
+            return spret::abort;
         }
     }
+
+    fail_check();
 
     veto_spots = adj_spots;
     for (adjacent_iterator ai(where); ai; ++ai)
@@ -897,71 +900,54 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         you.update_beholders();
         you.update_fearmongers();
-        env.markers.clear_need_activate();
+        const int tomb_duration = BASELINE_DELAY * pow;
+        env.markers.add(new map_tomb_marker(where,
+                                            tomb_duration,
+                                            source,
+                                            victim->mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return number_built > 0;
+    return spret::success;
 }
 
-bool entomb(int pow)
-{
-    if (_do_imprison(pow, you.pos(), false))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(you.pos(),
-                                            tomb_duration,
-                                            you.mindex(),
-                                            you.mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
-}
-
-bool cast_imprison(int pow, monster* mons, int source)
-{
-    if (_do_imprison(pow, mons->pos(), true))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(mons->pos(),
-                                            tomb_duration,
-                                            source,
-                                            mons->mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
-}
-
-bool cast_smiting(int pow, monster* mons)
+spret cast_smiting(int pow, monster* mons, bool fail)
 {
     if (mons == nullptr || mons->submerged())
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to invisible/submerged monsters.
-        return true;
+        return spret::success;
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
-        return false;
+        return spret::abort;
+
+    fail_check();
 
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
-    mprf("You smite %s!", mons->name(DESC_THE).c_str());
-    behaviour_event(mons, ME_ANNOY, &you);
-
     // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
-    int damage_increment = div_rand_round(pow, 8);
-    mons->hurt(&you, 6 + roll_dice(3, damage_increment));
-    if (mons->alive())
-        print_wounds(*mons);
+    int damage = 6 + roll_dice(3, div_rand_round(pow, 8));
 
-    return true;
+    mprf("You smite %s%s",
+         mons->name(DESC_THE).c_str(),
+         attack_strength_punctuation(damage).c_str());
+
+    behaviour_event(mons, ME_ANNOY, &you);
+    mons->hurt(&you, damage);
+
+    if (mons->alive())
+    {
+        print_wounds(*mons);
+        you.pet_target = mons->mindex();
+    }
+
+    return spret::success;
 }
 
 void holy_word_player(holy_word_source_type source)
@@ -1111,7 +1097,9 @@ void torment_player(const actor *attacker, torment_source_type taux)
                 hploss = 0;
                 simple_god_message(" shields you from torment!");
             }
-            else if (random2(250) < you.piety) // 24% to 80% chance
+            // Always give at least partial protection for invoked torment.
+            // 24% to 80% chance for other sources.
+            else if (random2(250) < you.piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
                 hploss -= random2(hploss - 1);
                 simple_god_message(" partially shields you from torment!");
@@ -1126,7 +1114,6 @@ void torment_player(const actor *attacker, torment_source_type taux)
     }
 
     mpr("Your body is wracked with pain!");
-
 
     kill_method_type type = KILLED_BY_BEAM;
     if (crawl_state.is_god_acting())

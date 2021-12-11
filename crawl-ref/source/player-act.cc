@@ -377,7 +377,8 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform, bool quiet) const
 {
-    // Only ogres and trolls can wield large rocks (for sandblast).
+    // Some lingering flavor from the days where sandblast ammo was wielded.
+    // harmless.
     if (!can_throw_large_rocks()
         && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
     {
@@ -673,7 +674,7 @@ bool player::fumbles_attack()
     return did_fumble;
 }
 
-void player::attacking(actor *other, bool ranged)
+void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -686,13 +687,6 @@ void player::attacking(actor *other, bool ranged)
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
-
-    if (ranged || mons_is_firewood(*(monster*) other))
-        return;
-
-    const int chance = pow(3, get_mutation_level(MUT_BERSERK) - 1);
-    if (has_mutation(MUT_BERSERK) && x_chance_in_y(chance, 100))
-        go_berserk(false);
 }
 
 /**
@@ -703,45 +697,31 @@ void player::attacking(actor *other, bool ranged)
  */
 static bool _god_prevents_berserk_haste(bool intentional)
 {
-    const god_type old_religion = you.religion;
-
     if (!have_passive(passive_t::no_haste))
         return false;
 
-    // Chei makes berserk not speed you up.
-    // Unintentional would be forgiven "just this once" every time.
-    // Intentional could work as normal, but that would require storing
-    // whether you transgressed to start it -- so we just consider this
-    // a part of your penance.
-    if (!intentional)
-    {
+    if (intentional)
+        simple_god_message(" forces you to slow down.");
+    else
         simple_god_message(" protects you from inadvertent hurry.");
-        return true;
-    }
 
-    did_god_conduct(DID_HASTY, 8);
-    // Let's see if you've lost your religion...
-    if (!you_worship(old_religion))
-        return false;
-
-    simple_god_message(" forces you to slow down.");
     return true;
 }
 
 /**
  * Make the player go berserk!
- * @param intentional If true, this was initiated by the player, and additional
- *                    messages can be printed if we can't berserk.
+ * @param intentional If true, this was initiated by the player, so god conduts
+ *                    about anger apply.
  * @param potion      If true, this was caused by the player quaffing !berserk;
- *                    and we get the same additional messages as when
- *                    intentional is true.
+ *                    and we get additional messages if goingn berserk isn't
+ *                    possible.
  * @return            True if we went berserk, false otherwise.
  */
 bool player::go_berserk(bool intentional, bool potion)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!you.can_go_berserk(intentional, potion))
+    if (!you.can_go_berserk(intentional, potion, !potion))
         return false;
 
     if (crawl_state.game_is_hints())
@@ -866,19 +846,6 @@ int player::constriction_damage(bool direct) const
     return roll_dice(2, div_rand_round(70 +
                 calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
 }
-
-/**
- * How many heads does the player have, in their current form?
- *
- * Currently only checks for hydra form.
- */
-int player::heads() const
-{
-    if (props.exists(HYDRA_FORM_HEADS_KEY))
-        return props[HYDRA_FORM_HEADS_KEY].get_int();
-    return 1; // not actually always true
-}
-
 
 bool player::is_dragonkind() const
 {

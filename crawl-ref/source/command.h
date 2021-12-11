@@ -16,6 +16,7 @@
 void list_armour();
 void list_jewellery();
 
+void show_specific_helps(const vector<string> keys);
 void show_specific_help(const string& key);
 void show_levelmap_help();
 void show_targeting_help();

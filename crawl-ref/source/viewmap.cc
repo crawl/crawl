@@ -747,8 +747,12 @@ public:
             || ev.type() == ui::Event::Type::MouseDown)
         {
             auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
-            tiles.handle_mouse(wm_event);
-            if (ev.type() == ui::Event::Type::MouseDown)
+            int k = tiles.handle_mouse(wm_event);
+            // XX this really seems like it shouldn't be here, maybe should be
+            // in tilereg stuff?
+            // in any case, CK_MOUSE_CLICK *should* be what only tilereg-dgn.cc
+            // could returns, if the player clicked in the dungeon region.
+            if (k == CK_MOUSE_CLICK && ev.type() == ui::Event::Type::MouseDown)
             {
                 if (tiles.get_cursor() == m_state.lpos.pos)
                 {
@@ -874,7 +878,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     cursor_control cc(!Options.use_fake_cursor);
 #endif
 
-    ui::push_layout(map_view);
+    ui::push_layout(map_view, KMC_LEVELMAP);
     while (map_view->is_alive() && !crawl_state.seen_hups)
         ui::pump_events();
     ui::pop_layout();
@@ -888,6 +892,14 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
     lpos = map_view->lpos();
     return map_view->chose();
+}
+
+void process_map_command(command_type cmd)
+{
+    // XX cleaner API for this
+    shared_ptr<ui::Widget> l = ui::top_layout();
+    if (UIMapView *mv = dynamic_cast<UIMapView *>(l.get()))
+        mv->process_command(cmd);
 }
 
 map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)

@@ -18,7 +18,7 @@ struct job_def
 {
     const char* abbrev; ///< Two-letter abbreviation
     const char* name; ///< Long name
-    int s, i, d; ///< Starting Str, Dex, and Int
+    int s, i, d; ///< Starting Str, Int, and Dex
     /// Which species are good at it
     /// No recommended species = job is disabled
     vector<species_type> recommended_species;
@@ -38,7 +38,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ABYSSAL_KNIGHT, {
     "AK", "Abyssal Knight",
-    4, 4, 4,
+    5, 2, 5,
     { SP_HILL_ORC, SP_PALENTONGA, SP_TROLL, SP_MERFOLK, SP_BASE_DRACONIAN,
       SP_DEMONSPAWN, },
     { },
@@ -70,7 +70,6 @@ static const map<job_type, job_def> job_data =
     2, 5, 5,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_TROLL, },
     {
-        SPELL_CORONA,
         SPELL_SLOW,
         SPELL_INNER_FLAME,
         SPELL_PORTAL_PROJECTILE,
@@ -128,6 +127,17 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 3 } },
 } },
 
+{ JOB_CINDER_ACOLYTE, {
+    "CA", "Cinder Acolyte",
+    6, 6, 0,
+    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL },
+    { SPELL_SCORCH },
+    { "robe" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 },
+      { SK_FIRE_MAGIC, 3 }, {SK_SPELLCASTING, 1} },
+} },
+
 { JOB_CONJURER, {
     "Cj", "Conjurer",
     -1, 10, 3,
@@ -167,13 +177,12 @@ static const map<job_type, job_def> job_data =
     0, 7, 5,
     { SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
     {
-        SPELL_CORONA,
         SPELL_HIBERNATION,
         SPELL_CONFUSING_TOUCH,
         SPELL_TUKIMAS_DANCE,
         SPELL_DAZZLING_FLASH,
     },
-    { "dagger plus:1", "robe" },
+    { "dagger plus:1", "robe", "potion of invisibility" },
     WCHOICE_NONE,
     { { SK_WEAPON, 1 }, { SK_HEXES, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 3 }, },
@@ -185,7 +194,7 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE,
       SP_PALENTONGA, },
     { },
-    { "scale mail", "kite shield", "potion of might" },
+    { "scale mail", "buckler", "potion of might" },
     WCHOICE_GOOD,
     { { SK_FIGHTING, 3 }, { SK_SHIELDS, 3 }, { SK_ARMOUR, 3 },
       { SK_WEAPON, 2 } },
@@ -198,10 +207,10 @@ static const map<job_type, job_def> job_data =
       SP_DJINNI, },
     {
         SPELL_FOXFIRE,
+        SPELL_SCORCH,
         SPELL_CONJURE_FLAME,
         SPELL_INNER_FLAME,
-        SPELL_STICKY_FLAME,
-        SPELL_FIREBALL,
+        SPELL_FLAME_WAVE,
     },
     { "robe" },
     WCHOICE_NONE,

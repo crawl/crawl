@@ -176,7 +176,7 @@ syn keyword desOrientation no_wall_fixup opaque no_trap_gen
 syn keyword desOrientation bloody highlight mold no_cloud_gen no_tele_into
 syn keyword desOrientation no_tide no_jiyva
 
-syn match desComment "^\s*#.*$&"
+syn match desComment "^\s*#.*$"
 
 "Note: `;` and `|` are necessary due to monster/randbook `spells:`,
 " `.` can be an empty spell slot and `'` is contained in certain spell names,

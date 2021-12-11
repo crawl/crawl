@@ -192,7 +192,9 @@ static const vector<god_passive> god_passives[] =
 
     // Yredelemnul
     {
-        {  3, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::reaping, "can NOW harvest souls to fight along side you" },
+        {  -1, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::r_spectral_mist, "are NOW immune to spectral mist" },
     },
 
     // Xom
@@ -210,7 +212,8 @@ static const vector<god_passive> god_passives[] =
 
     // Okawaru
     {
-        // None
+        { -1, passive_t::no_allies,
+              "are NOW prevented from gaining allies" },
     },
 
     // Makhleb
@@ -238,8 +241,8 @@ static const vector<god_passive> god_passives[] =
 
     // Elyvilon
     {
-        { -1, passive_t::protect_from_harm,
-              "GOD sometimes watches over you",
+        { -1, passive_t::lifesaving,
+              "GOD carefully watches over you",
               "GOD no longer watches over you"
         },
         { -1, passive_t::protect_ally,
@@ -274,26 +277,16 @@ static const vector<god_passive> god_passives[] =
         { -1, passive_t::neutral_slimes,
               "Slimes and eye monsters are NOW neutral towards you" },
         { -1, passive_t::jellies_army,
-              "GOD NOW summons jellies to protect you" },
+              "GOD NOW summons slimes to protect you" },
         { -1, passive_t::jelly_eating,
-              "GOD NOW allows jellies to devour items" },
-        { -1, passive_t::fluid_stats,
-              "GOD NOW adjusts your attributes periodically" },
+              "GOD NOW allows slimes to devour items" },
         {  0, passive_t::slime_wall_immune,
               "are NOW immune to slime covered walls" },
-        {  2, passive_t::slime_feed,
-              "Your fellow slimes NOW consume items" },
-        {  3, passive_t::resist_corrosion,
+        {  1, passive_t::jelly_regen,
+              "GOD NOW accelerates your HP and MP regeneration" },
+        {  2, passive_t::resist_corrosion,
               "GOD NOW protects you from corrosion" },
-        {  4, passive_t::slime_mp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your magical power"
-        },
-        {  5, passive_t::slime_hp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your health"
-        },
-        {  6, passive_t::spawn_slimes_on_hit,
+        {  5, passive_t::spawn_slimes_on_hit,
               "spawn slimes when struck by massive blows" },
         {  6, passive_t::unlock_slime_vaults,
               "GOD NOW grants you access to the hidden treasures"
@@ -329,21 +322,20 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::slow_zot,
               "GOD will NOW slow Zot's hunt for you"
         },
-        {  1, passive_t::slow_poison, "process poison slowly" },
+        {  0, passive_t::slow_poison, "process poison slowly" },
     },
 
     // Ashenzari
     {
         { -1, passive_t::want_curses, "prefer cursed items" },
-        { -1, passive_t::detect_portals, "sense portals" },
-        { -1, passive_t::identify_items, "sense the properties of items" },
+        {  0, passive_t::detect_portals, "sense portals" },
         {  0, passive_t::auto_map, "have improved mapping abilities" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
-        {  0, passive_t::avoid_traps,
-              "avoid traps" },
         {  0, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
+        {  1, passive_t::identify_items, "sense the properties of items" },
+        {  1, passive_t::avoid_traps, "avoid traps" },
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
         {  4, passive_t::xray_vision, "GOD NOW grants you astral sight" },
@@ -426,6 +418,11 @@ static const vector<god_passive> god_passives[] =
         { 1, passive_t::wu_jian_whirlwind, "lightly attack monsters by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks in an area by jumping off a solid obstacle." },
     },
+
+    // Ignis
+    {
+        { 0, passive_t::resist_fire, "resist fire." },
+    }, // TODO
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
@@ -536,10 +533,7 @@ void jiyva_eat_offlevel_items()
                 dprf("Eating %s on %s",
                      si->name(DESC_PLAIN).c_str(), lid.describe().c_str());
 
-                // Needs a message now to explain possible hp or mp
-                // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
             }
@@ -656,7 +650,7 @@ bool god_id_item(item_def& item, bool silent)
         if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
             && item_needs_autopickup(item))
         {
-            item.props["needs_autopickup"] = true;
+            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         }
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -666,8 +660,8 @@ bool god_id_item(item_def& item, bool silent)
 
     if (ided & ~old_ided)
     {
-        if (item.props.exists("needs_autopickup") && is_useless_item(item))
-            item.props.erase("needs_autopickup");
+        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+            item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
         if (&item == you.weapon())
             you.wield_change = true;
@@ -796,26 +790,6 @@ int ash_skill_boost(skill_type sk, int scale)
     level = level * scale + get_skill_progress(sk, level, skill_points, scale);
 
     return min(level, MAX_SKILL_LEVEL * scale);
-}
-
-int gozag_gold_in_los(actor *whom)
-{
-    if (!have_passive(passive_t::gold_aura))
-        return 0;
-
-    int gold_count = 0;
-
-    for (radius_iterator ri(whom->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
-         ri; ++ri)
-    {
-        for (stack_iterator j(*ri); j; ++j)
-        {
-            if (j->base_type == OBJ_GOLD)
-                ++gold_count;
-        }
-    }
-
-    return gold_count;
 }
 
 void gozag_detect_level_gold(bool count)
@@ -1698,4 +1672,21 @@ void uskayaw_bonds_audience()
     }
     else // Reset the timer because we didn't actually execute.
         you.props[USKAYAW_BOND_TIMER] = 0;
+}
+
+// Clean up after a duel ends. If we're still in the Arena, start a timer to
+// kick the player back out (after they've had some time to loot), and if
+// we've left the Arena via the gate, clear the timer.
+void okawaru_handle_duel()
+{
+    if (player_in_branch(BRANCH_ARENA)
+        && !okawaru_duel_active()
+        && !you.duration[DUR_DUEL_COMPLETE])
+    {
+        you.set_duration(DUR_DUEL_COMPLETE, random_range(15, 25));
+    }
+
+    if (!player_in_branch(BRANCH_ARENA) && you.duration[DUR_DUEL_COMPLETE])
+        you.duration[DUR_DUEL_COMPLETE] = 0;
+
 }

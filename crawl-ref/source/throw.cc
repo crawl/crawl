@@ -187,7 +187,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
     item_def* item = active_item();
-    if (!item)
+    if (!item || !targeted() || item->base_type != OBJ_MISSILES)
         return descs;
 
     ranged_attack attk(&you, nullptr, item, is_pproj_active());
@@ -928,6 +928,10 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         return false;
 
     beam.aimed_at_spot |= returning;
+    // Avoid overshooting and potentially hitting the player.
+    // Piercing beams' tracers already account for this.
+    beam.aimed_at_spot |= mons->temp_attitude() == ATT_FRIENDLY
+                          && !beam.pierce;
 
     const launch_retval projected =
         is_launched(mons, mons->mslot_item(MSLOT_WEAPON),

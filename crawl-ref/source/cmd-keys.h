@@ -10,6 +10,9 @@
 {'s', CMD_WAIT},
 {CK_CLEAR, CMD_WAIT},
 {-1019, CMD_WAIT}, // numpad .
+#ifdef USE_TILE_LOCAL
+{CK_DELETE, CMD_WAIT}, // numpad . on some keyboards on sdl??
+#endif
 {'.', CMD_WAIT},
 {CK_END, CMD_MOVE_DOWN_LEFT},
 {CK_LEFT, CMD_MOVE_LEFT},

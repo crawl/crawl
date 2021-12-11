@@ -15,7 +15,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
 
     var defense_boosters = {
         "ac": "ice-armoured|protected from physical damage|sanguine armoured"
-              + "|under a protective aura|curled up",
+              + "|under a protective aura|curled up|fiery-armoured",
         "ev": "agile|acrobatic|in a heavenly storm",
         "sh": "divinely shielded",
     }
@@ -158,6 +158,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         else
             return String.fromCharCode("A".charCodeAt(0) + index - 26);
     }
+    player.index_to_letter = index_to_letter;
 
     function inventory_item_desc(index, parens=false)
     {
@@ -171,6 +172,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             elem.addClass("fg" + item.col);
         return elem;
     }
+    player.inventory_item_desc = inventory_item_desc;
 
     function wielded_weapon()
     {
@@ -223,7 +225,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
     {
         // FIXME: does this cover all ATTR_HELD cases?
         return player.has_status("paralysed|petrified|sleeping")
-               || player.has_status("confused|petrifying")
+               || player.has_status("confused")
                || player.has_status("held", 4);
     }
 
@@ -452,8 +454,13 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         {
             player.inv[i] = player.inv[i] || {};
             $.extend(player.inv[i], data.inv[i]);
+            player.inv[i].slot = Number(i); // XX why is i a string?
         }
         $.extend(player.equip, data.equip);
+
+        if (data.inv)
+            $("#action-panel").triggerHandler("update");
+
         delete data.equip;
         delete data.inv;
         delete data.msg;

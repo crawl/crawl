@@ -202,6 +202,9 @@ void write_level_connectivity(writer &th);
 
 bool builder(bool enable_random_maps = true);
 
+int dgn_builder_x();
+int dgn_builder_y();
+
 void dgn_clear_vault_placements();
 void dgn_erase_unused_vault_placements();
 void dgn_flush_map_memory();
@@ -281,12 +284,6 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
 
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
-
-int count_neighbours(int x, int y, dungeon_feature_type feat);
-static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
-{
-    return count_neighbours(p.x, p.y, feat);
-}
 
 string dump_vault_maps();
 

@@ -44,18 +44,50 @@ def shutdown():
 def update_global_status():
     write_dgl_status_file()
 
+# lobbies that need updating
+game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
+
+def do_lobby_updates():
+    global game_lobby_cache
+    lobby_sockets = [s for s in list(sockets) if s.is_in_lobby()]
+    games_to_update = list(game_lobby_cache)
+    game_lobby_cache.clear()
+    for game in games_to_update:
+        if not game.process:
+            # handled immediately in `remove_in_lobbys`, ignore here
+            continue
+
+        game_entry = game.lobby_entry()
+        # Queue up the collected lobby changes in each socket. This loop is
+        # synchronous.
+        for socket in lobby_sockets:
+            socket.queue_message("lobby_entry", **game_entry)
+
+    # ...and finally, flush all the updates. This loop may be asynchronous.
+    for socket in lobby_sockets:
+        socket.flush_messages()
+
+def do_periodic_lobby_updates():
+    # TODO: in the Future, refactor as a simple async loop
+    do_lobby_updates()
+    rate = getattr(config, "lobby_update_rate", 2)
+    IOLoop.current().add_timeout(time.time() + rate, do_periodic_lobby_updates)
+
 def update_all_lobbys(game):
-    lobby_entry = game.lobby_entry()
+    global game_lobby_cache
+    # mark the game for display in the lobby
+    game_lobby_cache.add(game)
+
+def remove_in_lobbys(game):
+    global game_lobby_cache
+    if game in game_lobby_cache:
+        game_lobby_cache.remove(game)
     for socket in list(sockets):
         if socket.is_in_lobby():
-            socket.send_message("lobby_entry", **lobby_entry)
-def remove_in_lobbys(process):
-    for socket in list(sockets):
-        if socket.is_in_lobby():
-            socket.send_message("lobby_remove", id=process.id,
-                                reason=process.exit_reason,
-                                message=process.exit_message,
-                                dump=process.exit_dump_url)
+            socket.send_message("lobby_remove", id=game.id,
+                                reason=game.exit_reason,
+                                message=game.exit_message,
+                                dump=game.exit_dump_url)
 
 def global_announce(text):
     for socket in list(sockets):
@@ -135,9 +167,11 @@ def start_reading_milestones():
 
 def handle_new_milestone(line):
     data = parse_where_data(line)
-    if "name" not in data: return
+    if "name" not in data:
+        return
     game = find_running_game(data.get("name"), data.get("start"))
-    if game: game.log_milestone(data)
+    if game and not game.receiving_direct_milestones:
+        game.set_where_info(data)
 
 # decorator for admin calls
 def admin_required(f):
@@ -176,6 +210,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
         self.message_queue = []  # type: List[str]
+        self.failed_messages = 0
 
         self.subprotocol = None
 
@@ -501,11 +536,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.go_lobby()
         else:
             if self.process is None: # Can happen if the process creation fails
-                self.go_lobby()
+                # lobby should be handled in exit callback
                 return
 
             self.send_message("game_started")
             self.restore_mutelist()
+            self.process.handle_notification(self.process.username,
+                            "'/help' to see available chat commands")
 
             if config.dgl_mode:
                 if self.process.where == {}:
@@ -935,18 +972,33 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.uncompressed_bytes_sent += len(binmsg)
                 f = self.write_message(binmsg)
 
+            import traceback
+            cur_stack = traceback.format_stack()
+
             # handle any exceptions lingering in the Future
             # TODO: this whole call chain should be converted to use coroutines
             def after_write_callback(f):
                 try:
                     f.result()
+                except tornado.websocket.StreamClosedError as e:
+                    # not supposed to be raised here in current versions of
+                    # tornado, but in some older versions it is.
+                    if self.failed_messages == 0:
+                        self.logger.warning("Connection closed during async write_message")
+                    self.failed_messages += 1
+                    if self.ws_connection is not None:
+                        self.ws_connection._abort()
                 except tornado.websocket.WebSocketClosedError as e:
-                    self.logger.warning("Connection closed during async write_message")
+                    if self.failed_messages == 0:
+                        self.logger.warning("Connection closed during async write_message")
+                    self.failed_messages += 1
                     if self.ws_connection is not None:
                         self.ws_connection._abort()
                 except Exception as e:
-                    self.logger.warning("Exception during async write_message")
+                    self.logger.warning("Exception during async write_message, stack at call:")
+                    self.logger.warning("".join(cur_stack))
                     self.logger.warning(e, exc_info=True)
+                    self.failed_messages += 1
                     if self.ws_connection is not None:
                         self.ws_connection._abort()
 
@@ -961,6 +1013,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return True
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
+            self.failed_messages += 1
             if self.ws_connection is not None:
                 self.ws_connection._abort()
             return False
@@ -1012,5 +1065,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
             comp_ratio = round(comp_ratio, 2)
 
-        self.logger.info("Socket closed. (%s sent, compression ratio %s%%)",
-                         util.humanise_bytes(self.total_message_bytes), comp_ratio)
+        if self.failed_messages > 0:
+            failed_msg = ", %d failed messages" % self.failed_messages
+        else:
+            failed_msg = ""
+
+        self.logger.info("Socket closed. (%s sent, compression ratio %s%%%s)",
+                         util.humanise_bytes(self.total_message_bytes),
+                         comp_ratio,
+                         failed_msg)

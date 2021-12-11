@@ -426,7 +426,10 @@ bool feat_is_closed_door(dungeon_feature_type feat)
  */
 bool feat_is_open_door(dungeon_feature_type feat)
 {
-    return feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR;
+    return feat == DNGN_OPEN_DOOR
+        || feat == DNGN_OPEN_CLEAR_DOOR
+        || feat == DNGN_BROKEN_DOOR
+        || feat == DNGN_BROKEN_CLEAR_DOOR;
 }
 
 /** Has this feature been sealed by a vault warden?
@@ -553,6 +556,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
     { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
+    { GOD_IGNIS, DNGN_ALTAR_IGNIS },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
@@ -703,9 +707,6 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
     if (feat == DNGN_ENTER_ZIGGURAT)
         return false;
 
-    if (feat_is_portal_entrance(feat))
-        return true;
-
     if (feat == DNGN_ENTER_SHOP)
         return true;
 
@@ -792,24 +793,6 @@ void get_door_description(int door_size, const char** adjective, const char** no
     *noun = descriptions[idx+1];
 }
 
-coord_def get_random_stair()
-{
-    vector<coord_def> st;
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        const dungeon_feature_type feat = env.grid(*ri);
-        if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat)
-            && feat != DNGN_EXIT_DUNGEON
-            && feat != DNGN_EXIT_HELL)
-        {
-            st.push_back(*ri);
-        }
-    }
-    if (st.empty())
-        return coord_def();        // sanity check: shouldn't happen
-    return st[random2(st.size())];
-}
-
 static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
@@ -883,23 +866,32 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
+    // Consider pulling out damage from splash_with_acid() into
+    // its own function and calling that.
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
-
+    const int base_dam = act->is_player() ? roll_dice(4, strength) : roll_dice(2, 4);
+    const int dam = resist_adjust_damage(act, BEAM_ACID, base_dam);
     if (act->is_player())
-        you.splash_with_acid(nullptr, strength, false);
-    else
     {
-        monster* mon = act->as_monster();
-
-        const int dam = resist_adjust_damage(mon, BEAM_ACID,
-                                             roll_dice(2, strength));
-        if (dam > 0 && you.can_see(*mon))
+        mprf("You are splashed with acid%s%s",
+             dam > 0 ? "" : " but take no damage",
+             attack_strength_punctuation(dam).c_str());
+        ouch(dam, KILLED_BY_ACID, MID_NOBODY);
+    }
+    else if (dam > 0 && you.see_cell_no_trans(act->pos()))
+    {
+        const actor *agent = you.duration[DUR_OOZEMANCY] ? &you : nullptr;
+        const char *verb = act->is_icy() ? "melt" : "burn";
+        mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
+              verb, act->name(DESC_THE).c_str());
+        act->hurt(agent, dam, BEAM_ACID);
+        if (act->alive())
         {
-            const char *verb = act->is_icy() ? "melt" : "burn";
-            mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
-                  verb, mon->name(DESC_THE).c_str());
+            if (agent)
+                behaviour_event(act->as_monster(), ME_WHACK, agent, agent->pos());
+            else
+                behaviour_event(act->as_monster(), ME_DISTURB, 0, act->pos());
         }
-        mon->hurt(nullptr, dam, BEAM_ACID);
     }
 }
 
@@ -1108,12 +1100,12 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
             mon->moveto(dst);
             if (mon->type == MONS_ELDRITCH_TENTACLE)
             {
-                if (mon->props.exists("base_position"))
+                if (mon->props.exists(BASE_POSITION_KEY))
                 {
                     coord_def delta = dst - src;
-                    coord_def base_pos = mon->props["base_position"].get_coord();
+                    coord_def base_pos = mon->props[BASE_POSITION_KEY].get_coord();
                     base_pos += delta;
-                    mon->props["base_position"].get_coord() = base_pos;
+                    mon->props[BASE_POSITION_KEY].get_coord() = base_pos;
                 }
 
             }
@@ -2079,9 +2071,10 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 
             // Don't revert sealed doors to normal doors if we're trying to
             // remove the door altogether
-            // Same for destroyed trees
+            // Same for destroyed trees and slime walls
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-                || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
+                || tmarker->change_type == TERRAIN_CHANGE_FORESTED
+                || tmarker->change_type == TERRAIN_CHANGE_SLIME)
                 && newfeat == feat)
             {
                 env.markers.remove(tmarker);
@@ -2362,7 +2355,9 @@ void dgn_close_door(const coord_def &dest)
     if (!feat_is_open_door(env.grid(dest)))
         return;
 
-    if (env.grid(dest) == DNGN_OPEN_CLEAR_DOOR)
+    // Yes, this fixes broken doors.
+    const auto feat = env.grid(dest);
+    if (feat == DNGN_OPEN_CLEAR_DOOR || feat == DNGN_BROKEN_CLEAR_DOOR)
         env.grid(dest) = DNGN_CLOSED_CLEAR_DOOR;
     else
         env.grid(dest) = DNGN_CLOSED_DOOR;
@@ -2386,6 +2381,26 @@ void dgn_open_door(const coord_def &dest)
     else
         env.grid(dest) = DNGN_OPEN_DOOR;
 }
+
+/** Breaks any door at the given position. Handles the grid change, but does not
+ * mark terrain or do any event handling.
+ *
+ * @param dest The location of the door.
+ */
+void dgn_break_door(const coord_def &dest)
+{
+    if (!feat_is_closed_door(env.grid(dest)))
+        return;
+
+    if (env.grid(dest) == DNGN_CLOSED_CLEAR_DOOR
+        || env.grid(dest) == DNGN_RUNED_CLEAR_DOOR)
+    {
+        env.grid(dest) = DNGN_BROKEN_CLEAR_DOOR;
+    }
+    else
+        env.grid(dest) = DNGN_BROKEN_DOOR;
+}
+
 
 void ice_wall_damage(monster &mons, int delay)
 {

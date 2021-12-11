@@ -21,6 +21,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h" // walk_verb_to_present
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
@@ -222,7 +223,7 @@ void remove_ice_movement()
 
 string water_hold_substance()
 {
-    return you.props["water_hold_substance"].get_string();
+    return you.props[WATER_HOLD_SUBSTANCE_KEY].get_string();
 }
 
 void remove_water_hold()
@@ -435,7 +436,7 @@ void open_door_action(coord_def move)
     }
     case DNGN_SEALED_DOOR:
     case DNGN_SEALED_CLEAR_DOOR:
-        mpr("That door is sealed shut!");
+        mpr("That door is sealed shut!"); // should use door noun?
         break;
     default:
         mpr("There isn't anything that you can open there!");
@@ -466,7 +467,13 @@ void close_door_action(coord_def move)
                   + _check_adjacent(DNGN_OPEN_CLEAR_DOOR, move);
         if (num == 0)
         {
-            mpr("There's nothing to close nearby.");
+            if (_check_adjacent(DNGN_BROKEN_DOOR, move)
+                || _check_adjacent(DNGN_BROKEN_CLEAR_DOOR, move))
+            {
+                mpr("It's broken and can't be closed.");
+            }
+            else
+                mpr("There's nothing to close nearby.");
             return;
         }
         // move got set in _check_adjacent
@@ -500,6 +507,10 @@ void close_door_action(coord_def move)
     case DNGN_SEALED_CLEAR_DOOR:
         mpr("It's already closed!");
         break;
+    case DNGN_BROKEN_DOOR:
+    case DNGN_BROKEN_CLEAR_DOOR:
+        mpr("It's broken and can't be closed!");
+        break;
     default:
         mpr("There isn't anything that you can close there!");
         break;
@@ -513,6 +524,7 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     switch (ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_ENTER_ZIGGURAT:
     case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');
@@ -900,7 +912,7 @@ void move_player_action(coord_def move)
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"
                           : you.form != transformation::none   ? "walk" // XX
-                          : lowercase_first(species::walking_verb(you.species));
+                          : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
@@ -991,6 +1003,12 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
+            if (!you.can_see(*targ_monst) && you.is_stationary())
+            {
+                canned_msg(MSG_CANNOT_MOVE);
+                you.turn_is_over = false;
+                return;
+            }
             // Rampaging forcibly initiates the attack, but the attack
             // can still be cancelled.
             if (!rampaged && !you.can_see(*targ_monst)

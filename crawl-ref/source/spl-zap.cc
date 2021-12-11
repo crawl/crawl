@@ -40,7 +40,6 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     // Wizard mode only.
     { SPELL_PORKALATOR, ZAP_PORKALATOR },
     { SPELL_HURL_DAMNATION, ZAP_HURL_DAMNATION },
-    { SPELL_CORONA, ZAP_CORONA },
     { SPELL_CHARMING, ZAP_CHARMING },
     { SPELL_BANISHMENT, ZAP_BANISHMENT },
     { SPELL_SLOW, ZAP_SLOW },
@@ -69,6 +68,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SEARING_RAY, ZAP_SEARING_RAY },
     { SPELL_HAILSTORM, ZAP_HAILSTORM },
     { SPELL_ISKENDERUNS_MYSTIC_BLAST, ZAP_MYSTIC_BLAST },
+    { SPELL_FLAME_WAVE, ZAP_FLAME_WAVE },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
@@ -111,6 +111,8 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_CALL_DOWN_LIGHTNING, ZAP_LIGHTNING_BOLT },
     { SPELL_FLAMING_CLOUD, ZAP_FLAMING_CLOUD },
     { SPELL_STUNNING_BURST, ZAP_STUNNING_BURST },
+    { SPELL_SERACFALL, ZAP_ICEBLAST },
+    { SPELL_CORONA, ZAP_CORONA },
 
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },
@@ -151,8 +153,6 @@ int spell_zap_power(spell_type spell, int pow)
 {
     switch (spell)
     {
-    case SPELL_CORONA:
-        return pow + 10;
     case SPELL_HIBERNATION:
         return stepdown_value(pow * 9 / 10, 5, 35, 45, 50);
     default:
@@ -171,8 +171,6 @@ int spell_zap_power_cap(spell_type spell)
 
     switch (spell)
     {
-    case SPELL_CORONA:
-        return max<int>(cap - 10, 0);
     case SPELL_HIBERNATION:
         return 50;
     default:

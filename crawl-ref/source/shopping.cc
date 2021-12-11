@@ -138,9 +138,6 @@ int artefact_value(const item_def &item)
     if (prop[ARTP_BLINK])
         ret += 10;
 
-    if (prop[ARTP_BERSERK])
-        ret += 5;
-
     if (prop[ARTP_INVISIBLE])
         ret += 10;
 
@@ -352,11 +349,12 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_INVISIBILITY:
             case SPARM_WILLPOWER:
             case SPARM_PROTECTION:
-            case SPARM_ARCHERY:
+            case SPARM_HURLING:
             case SPARM_REPULSION:
             case SPARM_PRESERVATION:
             case SPARM_SHADOWS:
             case SPARM_RAMPAGING:
+            case SPARM_INFUSION:
                 valued += 50;
                 break;
 

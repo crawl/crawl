@@ -73,124 +73,6 @@ static void _hell_effect_noise()
         noisy(15, you.pos());
 }
 
-/**
- * Choose a random miscast effect (from a weighted list) & apply it to the
- * player.
- */
-static void _random_hell_miscast()
-{
-    const spschool which_miscast
-        = random_choose_weighted(8, spschool::necromancy,
-                                 4, spschool::summoning,
-                                 2, spschool::conjuration,
-                                 2, spschool::hexes);
-
-    miscast_effect(you, nullptr, {miscast_source::hell_effect}, which_miscast,
-                   5, random2avg(40, 3), "the effects of Hell");
-}
-
-/// The thematically appropriate hell effects for a given hell branch.
-struct hell_effect_spec
-{
-    /// The type of greater demon to spawn from hell effects.
-    vector<monster_type> fiend_types;
-    /// The appropriate theme of miscast effects to toss at the player.
-    spschool miscast_type;
-    /// A weighted list of lesser creatures to spawn.
-    vector<pair<monster_type, int>> minor_summons;
-};
-
-/// Hell effects for each branch of hell
-static map<branch_type, hell_effect_spec> hell_effects_by_branch =
-{
-    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, spschool::earth, {
-        { RANDOM_MONSTER, 100 }, // TODO
-    }}},
-    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, spschool::fire, {
-        { RANDOM_MONSTER, 100 }, // TODO
-    }}},
-    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, spschool::ice, {
-        // total weight 100
-        { MONS_ZOMBIE, 15 },
-        { MONS_SKELETON, 10 },
-        { MONS_SIMULACRUM, 10 },
-        { MONS_FREEZING_WRAITH, 10 },
-        { MONS_FLYING_SKULL, 10 },
-        { MONS_TORMENTOR, 10 },
-        { MONS_REAPER, 10 },
-        { MONS_BONE_DRAGON, 5 },
-        { MONS_ICE_DRAGON, 5 },
-        { MONS_BLIZZARD_DEMON, 5 },
-        { MONS_ICE_DEVIL, 5 },
-    }}},
-    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, spschool::necromancy, {
-        { RANDOM_MONSTER, 100 }, // TODO
-    }}},
-};
-
-/**
- * Either dump a fiend or a hell-appropriate miscast effect on the player.
- *
- * 40% chance of fiend, 60% chance of miscast.
- */
-static void _themed_hell_summon_or_miscast()
-{
-    const hell_effect_spec *spec = map_find(hell_effects_by_branch,
-                                            you.where_are_you);
-    if (!spec)
-        die("Attempting to call down a hell effect in a non-hellish branch.");
-
-    if (x_chance_in_y(2, 5))
-    {
-        const monster_type fiend
-            = spec->fiend_types[random2(spec->fiend_types.size())];
-        create_monster(
-                       mgen_data::hostile_at(fiend, true, you.pos())
-                       .set_non_actor_summoner("the effects of Hell"));
-    }
-    else
-    {
-        miscast_effect(you, nullptr, {miscast_source::hell_effect},
-                      spec->miscast_type, 5, random2avg(40, 3),
-                      "the effects of Hell");
-    }
-}
-
-/**
- * Try to summon at some number of random spawns from the current branch, to
- * harass the player & give them easy xp/TSO piety. Occasionally, to kill them.
- *
- * Min zero, max five, average 1.67.
- *
- * Can and does summon bands as individual spawns.
- */
-static void _minor_hell_summons()
-{
-    hell_effect_spec *spec = map_find(hell_effects_by_branch,
-                                      you.where_are_you);
-    if (!spec)
-        die("Attempting to call down a hell effect in a non-hellish branch.");
-
-    // Try to summon at least one and up to five random monsters. {dlb}
-    mgen_data mg;
-    mg.pos = you.pos();
-    mg.foe = MHITYOU;
-    mg.non_actor_summoner = "the effects of Hell";
-    create_monster(mg);
-
-    for (int i = 0; i < 4; ++i)
-    {
-        if (one_chance_in(3))
-        {
-            monster_type *type
-                = random_choose_weighted(spec->minor_summons);
-            ASSERT(type);
-            mg.cls = *type;
-            create_monster(mg);
-        }
-    }
-}
-
 /// Nasty things happen to people who spend too long in Hell.
 static void _hell_effects(int /*time_delta*/)
 {
@@ -207,31 +89,29 @@ static void _hell_effects(int /*time_delta*/)
 
     _hell_effect_noise();
 
-    if (one_chance_in(3))
-        _random_hell_miscast();
-    else if (x_chance_in_y(5, 9))
-        _themed_hell_summon_or_miscast();
-
-    if (one_chance_in(3))   // NB: No "else"
-        _minor_hell_summons();
+    switch (random2(4))
+    {
+        case 0:
+            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
+            break;
+        case 1:
+            drain_player(100, true, true);
+            break;
+        case 2:
+            lose_stat(STAT_RANDOM, roll_dice(1, 5));
+            break;
+        default:
+            break;
+    }
 }
 
 static void _apply_contam_over_time()
 {
     int added_contamination = 0;
 
-    //Increase contamination each turn while invisible
-    if (you.duration[DUR_INVIS])
-        added_contamination += INVIS_CONTAM_PER_TURN;
     //If not invisible, normal dissipation
-    else
+    if (!you.duration[DUR_INVIS])
         added_contamination -= 75;
-
-    // The Orb halves dissipation (well a bit more, I had to round it),
-    // but won't cause glow on its own -- otherwise it'd spam the player
-    // with messages about contamination oscillating near zero.
-    if (you.magic_contamination && player_has_orb())
-        added_contamination += 38;
 
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
@@ -367,44 +247,37 @@ static void _jiyva_effects(int /*time_delta*/)
         }
     }
 
-    if (have_passive(passive_t::fluid_stats)
-        && x_chance_in_y(you.piety / 4, MAX_PIETY)
-        && !player_under_penance() && one_chance_in(4))
-    {
-        jiyva_stat_action();
-    }
-
     if (have_passive(passive_t::jelly_eating) && one_chance_in(25))
         jiyva_eat_offlevel_items();
 }
 
 static void _evolve(int /*time_delta*/)
 {
-    if (int lev = you.get_mutation_level(MUT_EVOLUTION))
-        if (one_chance_in(2 / lev)
-            && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
-               > (int)exp_needed(you.experience_level + 1))
-        {
-            you.attribute[ATTR_EVOL_XP] = 0;
-            mpr("You feel a genetic drift.");
-            bool evol = one_chance_in(5) ?
-                delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
-                mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
-                       "evolution", false, false, false, false, MUTCLASS_NORMAL);
-            // it would kill itself anyway, but let's speed that up
-            if (one_chance_in(10)
-                && (!you.rmut_from_item()
-                    || one_chance_in(10)))
-            {
-                const string reason = (you.get_mutation_level(MUT_EVOLUTION) == 1)
-                                    ? "end of evolution"
-                                    : "decline of evolution";
-                evol |= delete_mutation(MUT_EVOLUTION, reason, false);
-            }
-            // interrupt the player only if something actually happened
-            if (evol)
-                more();
-        }
+    const bool malignant = you.has_mutation(MUT_DEVOLUTION);
+    if (!malignant && !you.has_mutation(MUT_EVOLUTION))
+        return;
+
+    if (you.attribute[ATTR_EVOL_XP] > 0)
+        return;
+    set_evolution_mut_xp(malignant);
+
+    mpr("You feel a genetic drift.");
+    const mutation_type typ = malignant ? RANDOM_BAD_MUTATION : RANDOM_GOOD_MUTATION;
+    const char* const reason = malignant ? "hidden defects" : "hidden potential";
+    if (!mutate(typ, reason, false, false, false, false, MUTCLASS_NORMAL))
+        return;
+
+    int &muts = you.props[EVOLUTION_MUTS_KEY].get_int();
+    ++muts;
+    if (muts >= 2)
+    {
+        muts -= 2;
+        if (malignant)
+            delete_mutation(MUT_DEVOLUTION, "hidden defects expressed", false);
+        else
+            delete_mutation(MUT_EVOLUTION, "hidden potential expressed", false);
+    }
+    more();
 }
 
 // Get around C++ dividing integers towards 0.
@@ -427,7 +300,7 @@ struct timed_effect
 static struct timed_effect timed_effects[] =
 {
     { rot_corpses,               200,   200, true  },
-    { _hell_effects,                 200,   600, false },
+    { _hell_effects,                 500,  1500, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
@@ -446,7 +319,7 @@ static struct timed_effect timed_effects[] =
 #endif
     { _abyss_speed,                  100,   300, false },
     { _jiyva_effects,                100,   300, false },
-    { _evolve,                      5000, 15000, false },
+    { _evolve,                       100,   300, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
@@ -633,6 +506,25 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
     }
 
+    // Yred zombies crumble on floor change
+    if (mon->friendly() && is_yred_undead_slave(*mon)
+        && !mons_bound_soul(*mon))
+    {
+        if (turns > 2)
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+        else
+        {
+            // handle expiration messages if the player was quick
+            // doing it this way so the mesages are kept consistent with
+            // corresponding non-yred derived undead
+            mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
+            mon->add_ench(abj);
+            abj.duration = 0;
+            mon->update_ench(abj);
+        }
+        return;
+    }
+
     // Don't move non-land or stationary monsters around.
     if (mons_primary_habitat(*mon) != HT_LAND
         || mons_is_zombified(*mon)
@@ -723,6 +615,9 @@ void monster::timeout_enchantments(int levels)
     const mon_enchant_list ec = enchantments;
     for (auto &entry : ec)
     {
+        if (entry.second.duration >= INFINITE_DURATION)
+            continue;
+
         switch (entry.first)
         {
         case ENCH_POISON: case ENCH_CORONA:
@@ -1051,7 +946,7 @@ void timeout_malign_gateways(int duration)
                     dur *= 10;
                     mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
                         caster, dur);
-                    tentacle->props["base_position"].get_coord()
+                    tentacle->props[BASE_POSITION_KEY].get_coord()
                                         = tentacle->pos();
                     tentacle->add_ench(kduration);
 

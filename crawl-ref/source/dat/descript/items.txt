@@ -257,10 +257,10 @@ party, as well as a number of toasts, jokes, and party games.
 %%%%
 book of pain
 
-A magical book said to have written by the demon-queen Ereshkigal, who delights
-in the painful death of mortals. Some would say that it would be best to consider
-the book's origin before putting it to use, but wizards are rarely deterred by
-such concerns.
+A magical book said to have been written by the demon-queen Ereshkigal, who
+delights in the painful death of mortals. Some would say that it would be best
+to consider the book's origin before putting it to use, but wizards are rarely
+deterred by such concerns.
 %%%%
 book of power
 
@@ -272,6 +272,12 @@ book of rime
 A frost-gripped tome describing icy spells, somewhat abridged. The Vaults are
 said to hold the full text, but the guardians of that place guard their
 treasures jealously.
+%%%%
+book of scorching
+
+A magical book, blasted and scoured by long exposure to the desert sun. Upon
+its badly-weathered pages lie the secrets to inflicting the desert's dangers
+upon the caster's foes.
 %%%%
 book of sloth
 
@@ -293,12 +299,6 @@ A book containing a comprehensive, well-rounded collection of sphere-related
 spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
 but sadly, the remainder of the book has been completely vaporised.
 %%%%
-book of stone
-
-A textbook of advanced Earth magic. Its cover and spine are inlaid with an
-impressive variety of precious stones, which may contain immense arcane power.
-Then again, the creator may have just liked the way they twinkle.
-%%%%
 book of storms
 
 A book written by the magician Lan Shi, who was preoccupied with the study and
@@ -311,10 +311,10 @@ book of the dragon
 A magical book of spells which allow some command over dragons and their
 aspects.
 %%%%
-book of the dryads
+book of the wilderness
 
-A book holding lore ripped from the deep forest, allowing its denizens to be
-called forth to serve the reader.
+A book holding lore ripped from distant and untamed lands, allowing their
+denizens to be called forth to serve the reader.
 {{
     if you.can_smell() then
         return "It smells distressingly musty."
@@ -515,7 +515,7 @@ A flail with long spikes and a heavy head.
 %%%%
 double sword
 
-A magical weapon with two razor-sharp blades.
+A fearsome weapon with a forked, razor-sharp blade.
 %%%%
 eggplant
 
@@ -530,7 +530,8 @@ forces of evil.
 %%%%
 eveningstar
 
-The opposite of a morningstar.
+The opposite of a morningstar. A balanced mace with a long shaft and a metal
+head covered in lethal spikes.
 %%%%
 everburning encyclopedia
 
@@ -853,9 +854,9 @@ potion of lignification
 
 A potion which transforms the imbiber into an animated tree with branches
 capable of holding weapons. Such a tree has minimal evasion but increased
-health and natural armour, and is resistant to poison and immune to negative
-energy. However, it is rooted in place while the transformation lasts, and
-cannot teleport.
+health and natural armour, and is resistant to poison and immune to torment.
+However, it is rooted in place while the transformation lasts, and cannot
+teleport.
 %%%%
 potion of magic
 
@@ -878,8 +879,9 @@ fire, cold, electricity, poison, and acid.
 %%%%
 potion of attraction
 
-A potion which makes the drinker attract enemies, pulling them quickly closer
-for the duration of the effect.
+A potion which makes the drinker attract enemies, translocating them quickly closer
+for the duration of the effect. The effect is surprisingly subtle, and unwary
+victims may sleep through it entirely.
 %%%%
 quad damage
 
@@ -1038,9 +1040,16 @@ control.
 %%%%
 scroll of brand weapon
 
-A scroll that imbues a weapon with a random brand, such as flame, freezing, or
-venom. Any existing brand will be replaced. Artefacts cannot be branded in this
-way.
+A scroll that imbues a weapon with a random brand. Any existing brand will be
+replaced with a different one, and any brand forbidden by your current god will
+not be chosen. Artefacts cannot be branded in this way.
+
+Melee weapons will commonly be branded with the vorpal, flaming, freezing,
+venom or protection brand, and rarely with the draining, electrocution,
+spectral, vampiric or chaos brand.
+
+Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
+venom brand, and rarely with the electrocution or chaos brand.
 %%%%
 scroll of enchant armour
 
@@ -1059,9 +1068,9 @@ artefacts cannot be enchanted at all.
 scroll of fear
 
 A scroll that causes great fear in those who see the one who reads it, even if
-the reader is invisible. Allies of the reader will remain unaffected. Monsters
-that are non-living, undead, demonic, holy, plants, berserk, or frenzied cannot
-be feared.
+the reader is invisible. Allies of the reader will remain unaffected.
+Non-living, undead and plant monsters cannot be feared, and berserk or frenzied
+monsters are also immune.
 %%%%
 scroll of fog
 
@@ -1274,7 +1283,8 @@ considerable amount of time to load and fire.
 %%%%
 triple sword
 
-A magical weapon with three great razor-sharp blades.
+A formidable weapon created by a master craftsman. The blade of the sword forks
+into three great razor-sharp edges.
 %%%%
 trishula
 

@@ -59,7 +59,6 @@ void macro_userfn(const char *keys, const char *registryname);
 
 // Add macro-expanded keys to the end or start of the keyboard buffer.
 void macro_sendkeys_end_add_expanded(int key);
-void macro_sendkeys_end_add_cmd(command_type cmd);
 
 // [ds] Unless you know what you're doing, prefer macro_sendkeys_add_expanded
 // to direct calls to macro_buf_add for pre-expanded key sequences.
@@ -112,7 +111,6 @@ void init_keybindings();
 command_type name_to_command(string name);
 string  command_to_name(command_type cmd);
 
-int function_keycode_fixup(int keycode);
 bool keycode_is_printable(int keycode);
 string keycode_to_name(int keycode, bool shorten = true);
 string keyseq_to_str(const keyseq &seq);

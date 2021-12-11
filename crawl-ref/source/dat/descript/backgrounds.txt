@@ -33,6 +33,11 @@ Chaos Knight
 Chaos Knights are playthings of the unpredictable Xom, and are subject to the
 god's constantly changing moods.
 %%%%
+Cinder Acolyte
+
+Cinder Acolytes worship Ignis, drawing upon the flame of a dying god until
+there is nothing left.
+%%%%
 Conjurer
 
 Conjurers confront problems with damaging spells.
@@ -50,7 +55,7 @@ spell. More earthen spells are in their set of starting spells.
 Enchanter
 
 Enchanters know a variety of Hexes that can incapacitate their foes, and are
-equipped with an enchanted dagger.
+equipped with an enchanted dagger and a potion of invisibility.
 %%%%
 Fighter
 

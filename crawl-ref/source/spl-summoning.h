@@ -23,6 +23,7 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 spret cast_call_canine_familiar(int pow, god_type god, bool fail);
 spret cast_summon_armour_spirit(int pow, god_type god, bool fail);
 spret cast_summon_ice_beast(int pow, god_type god, bool fail);
+spret cast_summon_cactus(int pow, god_type god, bool fail);
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god,
                                  bool fail = false);
 spret cast_summon_dragon(actor *caster, int pow,
@@ -46,17 +47,15 @@ spret cast_call_imp(int pow, god_type god, bool fail);
 bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
                        int spell = 0, bool friendly = true);
 spret cast_summon_demon(int pow);
-spret cast_shadow_creatures(int st = SPELL_SHADOW_CREATURES,
-                                 god_type god = GOD_NO_GOD,
-                                 level_id place = level_id::current(),
-                                 bool fail = false);
+spret summon_shadow_creatures();
 spret cast_summon_horrible_things(int pow, god_type god, bool fail);
 bool can_cast_malign_gateway();
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
                            int pow, god_type god = GOD_NO_GOD,
                            bool is_player = false);
 spret cast_malign_gateway(actor* caster, int pow,
-                               god_type god = GOD_NO_GOD, bool fail = false);
+                          god_type god = GOD_NO_GOD, bool fail = false,
+                          bool test = false);
 coord_def find_gateway_location(actor* caster);
 spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test=false);
 spret cast_summon_guardian_golem(int pow, god_type god, bool fail);
@@ -71,6 +70,7 @@ bool spell_servitorable(spell_type spell);
 void init_servitor(monster* servitor, actor* caster);
 spret cast_spellforged_servitor(int pow, god_type god, bool fail);
 
+vector<coord_def> simple_find_corpses();
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, int pow, unsigned short hitting,
                     actor *as = nullptr, string nas = "",
@@ -78,7 +78,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     bool quiet = false, bool apply_lovelessness = true,
                     monster** mon = nullptr, int* motions = nullptr);
 
-coord_def find_animatable_skeleton(coord_def c);
+vector<coord_def> find_animatable_skeletons(coord_def c);
 spret cast_animate_skeleton(int pow, god_type god, bool fail);
 spret cast_animate_dead(int pow, god_type god, bool fail);
 int animate_dead(actor *caster, int pow, beh_type beha,
@@ -113,12 +113,14 @@ spret cast_infestation(int pow, bolt &beam, bool fail);
 void summoned_monster(const monster* mons, const actor* caster,
                       spell_type spell);
 bool summons_are_capped(spell_type spell);
-int summons_limit(spell_type spell);
+int summons_limit(spell_type spell, bool player);
 int count_summons(const actor *summoner, spell_type spell);
 
-bool fedhas_wall_of_briars();
-spret fedhas_grow_ballistomycete(bool fail);
+vector<coord_def> find_briar_spaces(bool just_check = false);
+void fedhas_wall_of_briars();
+spret fedhas_grow_ballistomycete(const coord_def& target, bool fail);
 spret fedhas_overgrow(bool fail);
-spret fedhas_grow_oklob(bool fail);
+spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
+spret foxfire_swarm();

@@ -309,7 +309,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
     for (const monster* mon : monsters)
     {
         monster_info mi(mon);
-        const bool zin_ided = mon->props.exists("zin_id");
+        const bool zin_ided = mon->props.exists(ZIN_ID_KEY);
         const bool has_interesting_equipment
             = _is_mon_equipment_worth_listing(mi);
         if ((divine && !zin_ided)
@@ -801,28 +801,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     }
 
     return did_map;
-}
-
-void fully_map_level()
-{
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        bool ok = false;
-        for (adjacent_iterator ai(*ri, false); ai; ++ai)
-            if (!feat_is_opaque(env.grid(*ai)))
-                ok = true;
-        if (!ok)
-            continue;
-        env.map_knowledge(*ri).set_feature(env.grid(*ri), 0,
-            feat_is_trap(env.grid(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
-        set_terrain_seen(*ri);
-#ifdef USE_TILE
-        tile_wizmap_terrain(*ri);
-#endif
-        if (env.igrid(*ri) != NON_ITEM)
-            env.map_knowledge(*ri).set_detected_item();
-        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
-    }
 }
 
 bool mon_enemies_around(const monster* mons)
@@ -1777,7 +1755,7 @@ static void _config_layers_menu()
            _layers & LAYER_MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
 #endif
         );
-        mprf(MSGCH_PROMPT, "Press escape to toggle all layers. "
+        mprf(MSGCH_PROMPT, "Press 'a' to toggle all layers. "
                            "Press any other key to exit.");
 
         switch (get_ch())
@@ -1796,7 +1774,7 @@ static void _config_layers_menu()
                       _layers_saved = _layers |= LAYER_MONSTERS;
                   break;
 #endif
-        CASE_ESCAPE if (_layers)
+        case 'a': if (_layers)
                       _layers_saved = _layers = LAYERS_NONE;
                   else
                   {

@@ -25,6 +25,7 @@ monster_type pick_monster_no_rarity(branch_type branch);
 monster_type pick_monster_by_hash(branch_type branch, uint32_t hash);
 monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto = nullptr);
 int branch_ood_cap(branch_type branch);
+int branch_zombie_cap(branch_type branch);
 bool branch_has_monsters(branch_type branch);
 const vector<pop_entry>& fish_population(branch_type br, bool lava);
 const vector<pop_entry>& zombie_population(branch_type br);

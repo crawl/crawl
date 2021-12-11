@@ -111,7 +111,7 @@ static bool _evoke_horn_of_geryon()
 }
 
 /**
- * Spray lightning in all directions. (Randomly: shock, lightning bolt, OoE.)
+ * Spray lightning in all directions. (Randomly lightning bolt or OoE.)
  *
  * @param range         The range of the beams. (As with all beams, eventually
  *                      capped at LOS.)
@@ -119,9 +119,8 @@ static bool _evoke_horn_of_geryon()
  */
 static void _spray_lightning(int range, int power)
 {
-    const zap_type which_zap = random_choose(ZAP_SHOCK,
-                                             ZAP_LIGHTNING_BOLT,
-                                             ZAP_ORB_OF_ELECTRICITY);
+    const zap_type zap = random_choose_weighted(3, ZAP_LIGHTNING_BOLT,
+                                                2, ZAP_ORB_OF_ELECTRICITY);
 
     bolt beam;
     // range has no tracer, so randomness is ok
@@ -131,7 +130,7 @@ static void _spray_lightning(int range, int power)
     beam.target.x += random2(13) - 6;
     beam.target.y += random2(13) - 6;
     // Non-controlleable, so no player tracer.
-    zapping(which_zap, power, beam);
+    zapping(zap, power, beam);
 }
 
 /**
@@ -142,12 +141,6 @@ static void _spray_lightning(int range, int power)
  */
 static bool _lightning_rod(dist *preselect)
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     const int power =
         player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
 
@@ -331,7 +324,8 @@ static bool _box_of_beasts()
 
 static bool _make_zig(item_def &zig)
 {
-    if (feat_is_critical(env.grid(you.pos())))
+    if (feat_is_critical(env.grid(you.pos()))
+        || player_in_branch(BRANCH_ARENA))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;
@@ -359,7 +353,7 @@ static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 
     if (victim->body_size(PSIZE_BODY) < SIZE_MEDIUM)
         dist++;
-    else if (victim->body_size(PSIZE_BODY) > SIZE_BIG)
+    else if (victim->body_size(PSIZE_BODY) > SIZE_LARGE)
         dist /= 2;
     else if (victim->body_size(PSIZE_BODY) > SIZE_MEDIUM)
         dist -= 1;
@@ -383,7 +377,7 @@ static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
     return min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
 }
 
-void wind_blast(actor* agent, int pow, coord_def target, bool card)
+void wind_blast(actor* agent, int pow, coord_def target)
 {
     vector<actor *> act_list;
 
@@ -556,12 +550,11 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     if (agent->is_player())
     {
-        const string source = card ? "card" : "fan";
-
+        // Nemelex card only.
         if (pow > 120)
-            mprf("A mighty gale blasts forth from the %s!", source.c_str());
+            mpr("A mighty gale blasts forth from the card!");
         else
-            mprf("A fierce wind blows from the %s.", source.c_str());
+            mpr("A fierce wind blows from the card.");
     }
 
     noisy(8, agent->pos());
@@ -615,23 +608,10 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
 static bool _phial_of_floods(dist *target)
 {
-    // TODO: code duplication with your_spells
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     dist target_local;
     if (!target)
         target = &target_local;
     bolt beam;
-
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
 
     const int base_pow = 10 + you.skill(SK_EVOCATIONS, 4); // placeholder?
     zappy(ZAP_PRIMAL_WAVE, base_pow, false, beam);
@@ -823,12 +803,6 @@ static int _tremorstone_count(int pow)
  */
 static spret _tremorstone()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return spret::abort;
-    }
-
     bool see_target;
     bolt beam;
 
@@ -885,12 +859,6 @@ static const vector<random_pick_entry<cloud_type>> condenser_clouds =
 
 static spret _condenser()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return spret::abort;
-    }
-
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         mpr("The air is too still to form clouds.");
@@ -955,12 +923,6 @@ static spret _condenser()
 
 static bool _xoms_chessboard()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     vector<monster *> targets;
     bool see_target = false;
 
@@ -999,6 +961,7 @@ static bool _xoms_chessboard()
     const monster * target = *random_iterator(targets);
     beam.source = target->pos();
     beam.target = target->pos();
+    beam.set_agent(&you);
 
     // List of possible effects. Mostly debuffs, a few buffs to keep it
     // exciting
@@ -1035,52 +998,6 @@ bool evoke_check(int slot, bool quiet)
         return false;
     }
 
-    // TODO: are these reaching checks necessary any more?
-    // is slot a wielded reaching weapon, or if no slot, is the player wielding
-    // a reaching weapon?
-    const bool wielded = you.weapon()
-                         && (slot != -1 && slot == you.equip[EQ_WEAPON]
-                                || slot == -1 && you.equip[EQ_WEAPON] >= 0);
-    const bool reaching = wielded
-                          && weapon_reach(*you.weapon()) > REACH_NONE;
-
-    // ammo checks are done below, this is the precondition for messaging
-    // about ranged failures
-    const bool ranged = wielded && is_range_weapon(*you.weapon());
-
-    if ((reaching || ranged) && you.melded[EQ_WEAPON])
-    {
-        if (!quiet)
-            canned_msg(MSG_PRESENT_FORM);
-        return false;
-    }
-
-    if (you.berserk() && !reaching)
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-    if (you.confused() && !ranged) // attack is ok under confusion, but not reaching
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-    if (ranged && i && (you.launcher_action.is_empty()
-                    || !you.launcher_action.get()->is_valid()))
-    {
-        if (!quiet)
-        {
-            // XX messaging should be unified with actual launching code
-            mprf("You do not have any ammo quivered for %s.",
-                                    you.weapon()->name(DESC_YOUR).c_str());
-        }
-        return false;
-    }
-    if (reaching || ranged)
-        return true;
-
     // is this supposed to be allowed under confusion?
     if (i && i->base_type == OBJ_MISCELLANY && i->sub_type == MISC_ZIGGURAT)
         return true;
@@ -1113,6 +1030,20 @@ bool evoke_check(int slot, bool quiet)
     {
         if (!quiet)
             mpr("You cannot evoke magical items.");
+        return false;
+    }
+
+    if (you.confused())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    if (you.berserk())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
         return false;
     }
 
@@ -1161,36 +1092,13 @@ bool evoke_item(int slot, dist *preselect)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, true, false, true) || !evoke_check(slot))
+    if (!item_is_evokable(item, true) || !evoke_check(slot))
         return false;
 
     bool did_work   = false;  // "Nothing happens" message
     bool unevokable = false;
 
-    const unrandart_entry *entry = is_unrandom_artefact(item)
-        ? get_unrand_entry(item.unrand_idx) : nullptr;
-
-    if (entry && (entry->evoke_func || entry->targeted_evoke_func))
-    {
-        ASSERT(item_is_equipped(item));
-
-        bool qret;
-        // only use one of these, prioritizing the targeted version. In
-        // principle we could call them both?
-        ASSERT(!(entry->evoke_func && entry->targeted_evoke_func)); // probably should be in art-data.pl
-        if (entry->targeted_evoke_func)
-            qret = entry->targeted_evoke_func(&item, &did_work, &unevokable, preselect);
-        else
-            qret = entry->evoke_func(&item, &did_work, &unevokable);
-
-        if (!unevokable)
-            count_action(CACT_EVOKE, item.unrand_idx);
-
-        // what even _is_ this return value?
-        if (qret)
-            return did_work;
-    }
-    else switch (item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WANDS:
         zap_wand(slot, preselect);

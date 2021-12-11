@@ -118,13 +118,6 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures.set(type, false);
 
-    if (mons_class_requires_band(type) && !mspec.band)
-    {
-        mprf(MSGCH_DIAGNOSTICS,
-             "That monster can only be created with a band.");
-        return;
-    }
-
     if (!dgn_place_monster(mspec, place, true, false))
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");
@@ -159,7 +152,7 @@ void wizard_create_spec_monster_name()
         monster    &mon = env.mons[idx];
         ghost_demon ghost;
 
-        ghost.name = "John Doe";
+        ghost.name = random_choose("John Doe", "Jane Doe", "Jay Doe");
 
         char input_str[80];
         msgwin_get_line("Make player ghost which species? (case-sensitive) ",

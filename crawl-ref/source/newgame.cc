@@ -975,6 +975,8 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 {
 #ifdef USE_TILE_WEB
     tiles.set_ui_state(UI_CRT);
+    // send some minimal where info, in case there is a lingering .where file
+    update_whereis_chargen(choice.name);
 #endif
 
     clrscr();
@@ -1084,13 +1086,14 @@ static job_group jobs_order[] =
     },
     {
         "Adventurer",
-        coord_def(0, 7), 20,
+        coord_def(0, 6), 20,
         { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, }
     },
     {
         "Zealot",
         coord_def(1, 0), 25,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT }
+        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CINDER_ACOLYTE,
+          JOB_CHAOS_KNIGHT }
     },
     {
         "Warrior-mage",

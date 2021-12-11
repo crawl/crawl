@@ -167,7 +167,7 @@ zealot's sword
 
 A sword made of one huge piece of crystal. Legend says it was the Shining One's
 gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
-both the wielder and all of their mortal followers.
+both the wielder and all of their followers.
 %%%%
 arbalest "Damnation"
 
@@ -312,7 +312,7 @@ artefact was to unite his rivals against him.
 hat of the Bear Spirit
 
 A fur hat once owned by Ukta, a powerful ogre shaman. It houses the spirit of
-an especially mighty bear.
+an especially mighty bear, whose rages devastated the ogres until it was slain.
 %%%%
 robe of Misfortune
 
@@ -470,8 +470,8 @@ devices. That, and a pony.
 %%%%
 robe of Clouds
 
-A robe of a material as nebulous and insubstantial as the clouds. The pleats
-and folds can be swirled into a furious storm.
+A robe of a material as nebulous and insubstantial as the clouds. It whips the
+air around it up into a furious storm as it ripples and swirls.
 %%%%
 hat of Pondering
 
@@ -681,3 +681,10 @@ An enchanted pair of boots which grant the ability to take strides of incredible
 length, as long as the wearer is advancing bravely towards their foes. They
 allow the wearer to engage in combat in a single step, although it becomes
 impossible to remain stealthy while taking such strides.
+%%%%
+Mad Mage's Maulers
+
+A pair of gloves designed to carefully control and channel the flow of magic,
+later misused and mangled by the lunatic murderer-mages of the Fifth Circle.
+Their influence leaves the wearer of these gloves distracted by intrusive
+images, vividly aware of the death and destruction their hands could wreak.

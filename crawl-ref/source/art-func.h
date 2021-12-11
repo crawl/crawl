@@ -33,7 +33,6 @@
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "god-conduct.h"   // did_god_conduct
-#include "god-passive.h"   // passive_t::want_curses
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "message.h"
 #include "monster.h"
@@ -81,56 +80,6 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
  * Unrand functions.
  *******************/
 
-static bool _evoke_sceptre_of_asmodeus()
-{
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-        return false;
-
-    const monster_type mon = random_choose_weighted(
-                                   3, MONS_BALRUG,
-                                   2, MONS_HELLION,
-                                   1, MONS_BRIMSTONE_FIEND);
-
-    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, you.religion);
-    mg.set_summoned(&you, 0, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    monster *m = create_monster(mg);
-
-    if (m)
-    {
-        mpr("The sceptre summons one of its servants.");
-        did_god_conduct(DID_EVIL, 3);
-
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        mpr("You don't feel so good about this...");
-    }
-    else
-        mpr("The air shimmers briefly.");
-
-    return true;
-}
-
-static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
-                            bool* unevokable)
-{
-    if (you.get_mutation_level(MUT_NO_LOVE))
-    {
-        mpr("You are hated by all, and nothing will answer your call!");
-        *unevokable = true;
-        return true;
-    }
-    if (_evoke_sceptre_of_asmodeus())
-    {
-        *did_work = true;
-        practise_evoking(1);
-    }
-
-    return false;
-}
-
 ////////////////////////////////////////////////////
 static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
                                    actor* defender, bool mondied, int dam)
@@ -174,58 +123,8 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 {
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
-    if (!mondied && defender->holiness() == MH_NATURAL)
+    if (!mondied && defender->holiness() & (MH_NATURAL | MH_PLANT))
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
-}
-
-/////////////////////////////////////////////////////
-
-static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    int hp_cost = 14;
-    int mp_cost = 4;
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        hp_cost += mp_cost;
-        mp_cost = 0;
-    }
-
-    if (!enough_hp(hp_cost, true))
-    {
-        mpr("You're too close to death to use this item.");
-        *unevokable = true;
-        return true;
-    }
-
-    if (!enough_mp(mp_cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    *did_work = true;
-    pay_hp(hp_cost);
-    pay_mp(mp_cost);
-
-    int power = you.skill(SK_EVOCATIONS, 8);
-
-    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target)
-        == spret::abort)
-    {
-        *unevokable = true;
-        refund_hp(hp_cost);
-        refund_mp(mp_cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    mpr("You feel the staff feeding on your energy!");
-    finalize_mp_cost(hp_cost);
-    practise_evoking(random_range(1, 2));
-
-    return false;
 }
 
 ////////////////////////////////////////////////////
@@ -269,54 +168,6 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
     else
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
-}
-
-// this isn't targeted, but using the targeted version lets the olgreb static
-// targeter work
-static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    const int cost = 4;
-
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        if (!enough_hp(cost, true))
-        {
-            mpr("You're too close to death to use this item.");
-            *unevokable = true;
-            return true;
-        }
-    }
-    else if (!enough_mp(cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
-        return false;
-
-    *did_work = true;
-    pay_mp(cost);
-
-    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
-
-    // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr,
-        target) == spret::abort)
-    {
-        *unevokable = true;
-        refund_mp(cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    finalize_mp_cost();
-    practise_evoking(1);
-    did_god_conduct(DID_WIZARDLY_ITEM, 10);
-
-    return false;
 }
 
 // Based on melee_attack::staff_damage(), but using only evocations skill.
@@ -597,8 +448,8 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
                           SAME_ATTITUDE(mons), mons->pos(), mons->foe)
                 .set_summoned(mons, 6, SPELL_SUMMON_DEMON));
         }
-        else
-            cast_summon_demon(50+random2(100));
+        else if (!you.allies_forbidden())
+            cast_summon_demon(50 + random2(100));
     }
 }
 
@@ -1452,6 +1303,16 @@ static void _BATTLE_world_reacts(item_def */*item*/)
     }
 }
 
+static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                  actor* /*defender*/, bool /*mondied*/, int /*dam*/)
+{
+    if (attacker)
+    {
+        aim_battlesphere(attacker, SPELL_MAGIC_DART);
+        trigger_battlesphere(attacker);
+    }
+}
+
 ////////////////////////////////////////////////////
 
 static void _EMBRACE_unequip(item_def *item, bool *show_msgs)
@@ -1586,7 +1447,7 @@ static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
     monster *spectral_weapon = find_spectral_weapon(&you);
     if (spectral_weapon)
     {
-        _equip_mpr(show_msgs, "Your spectral weapon disappears as you unwield.");
+        _equip_mpr(show_msgs, "Your spectral weapon disappears.");
         end_spectral_weapon(spectral_weapon, false, true);
     }
 }
@@ -1605,8 +1466,51 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
 
 ////////////////////////////////////////////////////
 
-static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
+static void _SEVEN_LEAGUE_BOOTS_equip(item_def * /*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
+}
+
+static void _SEVEN_LEAGUE_BOOTS_unequip(item_def * /*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You no longer feel ready to stride towards your "
+                          "foes.");
+}
+
+////////////////////////////////////////////////////
+
+static void _RCLOUDS_world_reacts(item_def */*item*/)
+{
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
+    {
+        monster* m = monster_at(*ri);
+        if (m && !m->wont_attack() && mons_is_threatening(*m)
+            && !cell_is_solid(*ri) && !cloud_at(*ri)
+            && one_chance_in(7))
+        {
+            mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());
+            place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
+        }
+    }
+}
+
+////////////////////////////////////////////////////
+
+static void _POWER_GLOVES_equip(item_def * /*item*/, bool *show_msgs,
+                                bool /*unmeld*/)
+{
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        _equip_mpr(show_msgs, "The gloves are unable to connect with your "
+                              "magical essence.");
+    }
+    else
+        _equip_mpr(show_msgs, "You feel an incredible surge of magic.");
+}
+
+static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
+{
+    if (!you.has_mutation(MUT_HP_CASTING))
+        _equip_mpr(show_msgs, "The surge of magic dissipates.");
 }

@@ -3266,6 +3266,7 @@ void pump_events(int wait_event_timeout)
         {
             // triggers ui::resize:
             tiles.resize_event(event.resize.w, event.resize.h);
+            ui_root.needs_paint = true;
             break;
         }
 

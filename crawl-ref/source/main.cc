@@ -85,8 +85,8 @@
 #include "known-items.h"
 #include "level-state-type.h"
 #include "libutil.h"
-#include "luaterp.h"
 #include "lookup-help.h"
+#include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "map-knowledge.h"
@@ -1107,8 +1107,17 @@ static void _input()
         end_wait_spells();
         handle_delay();
 
+        // Some delays set you.turn_is_over.
+
+        bool time_is_frozen = false;
+
+#ifdef WIZARD
+        if (you.props.exists(FREEZE_TIME_KEY))
+            time_is_frozen = true;
+#endif
+
         // Some delays reset you.time_taken.
-        if (you.time_taken || you.turn_is_over)
+        if (!time_is_frozen && (you.time_taken || you.turn_is_over))
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
@@ -1145,10 +1154,25 @@ static void _input()
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
-            else
+            else if (!crawl_state.lua_ready_throttled)
             {
                 if (!clua.callfn("ready", 0, 0) && !clua.error.empty())
+                {
+                    // if ready() has been killed once, it is considered
+                    // buggy and should not run again. Note: the sequencing is
+                    // important here, because mprs trigger the c_message hook,
+                    // so this state variable needs to be checked immediately.
+                    if (crawl_state.lua_script_killed)
+                        crawl_state.lua_ready_throttled = true;
+
                     mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                    if (crawl_state.lua_ready_throttled)
+                    {
+                        mprf(MSGCH_ERROR, "Banning ready() after %d throttles",
+                            CLua::MAX_THROTTLE_SLEEPS);
+                    }
+
+                }
             }
         }
 
@@ -1445,7 +1469,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
             canned_msg(MSG_OK);
             return false;
         }
-      }
+    }
 
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
@@ -1464,9 +1488,22 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     if (Options.warn_hatches)
     {
         if (feat_is_escape_hatch(ygrd))
-            return yesno("Really go through this one-way escape hatch?", true, 'n');
+        {
+            if (!yesno("Really go through this one-way escape hatch?", true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
+
         if (down && shaft) // voluntary shaft usage
-            return yesno("Really dive through this shaft in the floor?", true, 'n');
+        {
+            if (!yesno("Really dive through this shaft in the floor?", true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
     }
 
     return true;
@@ -1672,6 +1709,15 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
+
+#ifdef WIZARD
+    if (you.props.exists(FREEZE_TIME_KEY))
+    {
+        mprf(MSGCH_WARN, "Cannot rest while time is frozen.");
+        return;
+    }
+#endif
+
     if (i_feel_safe())
     {
         if ((you.hp == you.hp_max || !player_regenerates_hp())
@@ -1822,6 +1868,58 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 }
 
+class LookupHelpMenu : public Menu
+{
+public:
+    class LookupHelpMenuEntry : public MenuEntry
+    {
+    public:
+        LookupHelpMenuEntry(lookup_help_type lht)
+        : MenuEntry(uppercase_first(lookup_help_type_name(lht)),
+                    MEL_ITEM, 1, tolower(lookup_help_type_shortcut(lht))),
+          typ(lht)
+        {
+            // TODO: tiles!
+        }
+
+        lookup_help_type typ;
+    };
+
+    LookupHelpMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP)
+    {
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry("Info Lookup", MEL_TITLE));
+        on_single_selection = [](const MenuEntry& item)
+        {
+            const LookupHelpMenuEntry *lhme = dynamic_cast<const LookupHelpMenuEntry *>(&item);
+            if (!lhme)
+                return false; // back button
+            find_description_of_type(lhme->typ);
+            return true;
+        };
+    }
+
+    void fill_entries()
+    {
+        clear();
+        auto back = new MenuEntry("Back to main menu", MEL_ITEM, 1, CK_ESCAPE);
+        back->add_tile(tileidx_command(CMD_GAME_MENU));
+        add_entry(back);
+        for (int i = FIRST_LOOKUP_HELP_TYPE; i < NUM_LOOKUP_HELP_TYPES; ++i)
+            add_entry(new LookupHelpMenuEntry((lookup_help_type)i));
+    }
+
+    vector<MenuEntry *> show(bool reuse_selections = false) override
+    {
+        fill_entries();
+        cycle_hover();
+        return Menu::show(reuse_selections);
+    }
+};
+
 class GameMenu : public Menu
 {
 // this could be easily generalized for other menus that select among commands
@@ -1857,7 +1955,16 @@ public:
         {
             const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
             if (c)
+            {
+                if (c->cmd == CMD_LOOKUP_HELP_MENU)
+                {
+                    LookupHelpMenu m;
+                    m.show();
+                    return true;
+                }
+
                 cmd = c->cmd;
+            }
             return false;
         };
     }
@@ -1880,6 +1987,12 @@ public:
             MEL_ITEM, '~', CMD_MACRO_MENU));
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
+        add_entry(new CmdMenuEntry("Lookup info",
+            MEL_ITEM, 'i', CMD_LOOKUP_HELP_MENU));
+#ifdef TARGET_OS_MACOSX
+        add_entry(new CmdMenuEntry("Show options file in finder",
+            MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
+#endif
 #ifdef __ANDROID__
         add_entry(new CmdMenuEntry("Toggle on-screen keyboard",
             MEL_ITEM, CK_F12, CMD_TOGGLE_KEYBOARD));
@@ -2089,11 +2202,6 @@ void process_command(command_type cmd, command_type prev_cmd)
             flush_input_buffer(FLUSH_ON_FAILURE);
         break;
 
-    case CMD_EVOKE_WIELDED:
-        if (!evoke_item(you.equip[EQ_WEAPON]))
-            flush_input_buffer(FLUSH_ON_FAILURE);
-        break;
-
     case CMD_MEMORISE_SPELL:
         if (!learn_spell())
             flush_input_buffer(FLUSH_ON_FAILURE);
@@ -2162,6 +2270,14 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
         break;
 
+#ifdef TARGET_OS_MACOSX
+    case CMD_REVEAL_OPTIONS:
+        // TODO: implement for other OSs
+        // TODO: add a way of triggering this from the main menu
+        system(make_stringf("/usr/bin/open -R '%s'",
+                                            Options.filename.c_str()).c_str());
+        break;
+#endif
     case CMD_SHOW_CHARACTER_DUMP:
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))
@@ -2447,6 +2563,9 @@ void world_reacts()
         update_screen();
     }
 
+    // prevent monsters wandering into view and picking up an item before
+    // our next prep_input
+    maybe_update_stashes();
     update_monsters_in_view();
 
     reset_show_terrain();
@@ -2691,15 +2810,16 @@ static void _do_berserk_no_combat_penalty()
     return;
 }
 
-// Update damaging spells that are channeled by waiting
-// These only update when the player actively waits with CMD_WAIT,
-// so should not be moved to world_reacts()
-//
-// Currently this handles Searing Ray and Maxwell's Coupling
+/**
+ * Update damaging spells that are channeled by waiting.
+ * These only update when the player actively waits with CMD_WAIT,
+ * so should not be moved to world_reacts().
+ */
 static void _do_wait_spells()
 {
     handle_searing_ray();
     handle_maxwells_coupling();
+    handle_flame_wave();
 }
 
 // palentongas uncurl at the start of the turn

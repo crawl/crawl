@@ -169,6 +169,7 @@ static void _decrement_petrification(int delay)
 {
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
+        you.redraw_armour_class = true;
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
         // flesh when not petrified. (Unfortunately, species::skin_name doesn't
@@ -224,6 +225,7 @@ static void _decrement_paralysis(int delay)
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
             mprf(MSGCH_DURATION, "You can move again.");
+            you.redraw_armour_class = true;
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
             * BASELINE_DELAY;
@@ -775,9 +777,8 @@ static void _decrement_durations()
     dec_elixir_player(delay);
     dec_frozen_ramparts(delay);
 
-    if (!you.cannot_move()
-        && !you.confused()
-        && !you.asleep())
+    if (!you.cannot_act()
+        && !you.confused())
     {
         extract_manticore_spikes(
             make_stringf("You %s the barbed spikes from your body.",
@@ -790,6 +791,8 @@ static void _decrement_durations()
     {
         _try_to_respawn_ancestor();
     }
+
+    okawaru_handle_duel();
 
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
@@ -881,7 +884,7 @@ static void _update_mana_regen_amulet_attunement()
                 "regenerate magic more quickly.");
         }
     }
-    else
+    else if (!you.melded[EQ_AMULET])
         you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
 }
 

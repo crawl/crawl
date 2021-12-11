@@ -659,6 +659,9 @@ body {
     margin-top: 15px;
     color: cyan;
 }
+.describe-item > .actions span[data-hotkey]:hover {
+    background: #555;
+}
 
 .describe-spell {
     max-width: 80ch;
@@ -1335,4 +1338,98 @@ body {
     padding: 4px 8px;
     font-family: monospace;
     cursor: pointer;
+}
+
+/* action panel */
+#action-panel {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    border: 2px solid #7d623c;
+    border-radius: 3px;
+}
+
+#action-panel-tooltip
+{
+    position: absolute;
+    display: table;
+    left: 0px;
+    right: 0px;
+    border: 1px solid #7d623c;
+    background: rgba(0, 0, 0, 0.85);
+    font-size: small;
+    padding: 5px;
+}
+
+/* makes the hidden panel or its placeholder immune to $.show() */
+.action-panel.hidden {
+    display: none !important;
+}
+
+#action-panel-placeholder {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    border: 1px solid #7d623c;
+
+    background: rgba(0, 0, 0, 0.85);
+    width: 1em;
+    text-align: center;
+    font-size: small;
+    padding: 5px;
+}
+
+#action-panel-placeholder a {
+    text-decoration: none;
+}
+
+#action-panel-settings {
+    position: absolute;
+    background: black;
+    border: 2px solid #7d623c;
+    padding: 2px;
+}
+
+#action-panel-settings fieldset {
+    margin-bottom: 2px;
+    border-width: 1px;
+}
+
+#action-panel-settings fieldset button,input {
+    display: inline;
+}
+
+fieldset.option {
+    display: flex;
+    justify-content: space-around;
+}
+
+div.settings-buttons {
+    display: flex;
+}
+
+#action-panel-settings input[type=number] {
+    width: 100px;
+    font: 14px monospace;
+}
+
+#action-panel-settings input[type=number]:invalid {
+    border: 2px solid red;
+}
+
+fieldset.option button {
+    margin-left: 4px;
+    min-width: 30%;
+}
+
+#settings-note {
+    inline-size: 180px;
+    display: inline-block;
+    font-size: smaller;
+    padding: 0.5em;
+}
+
+div.settings-buttons button {
+    width: 50%;
+    margin: 2px;
 }

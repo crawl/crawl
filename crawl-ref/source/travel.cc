@@ -1128,7 +1128,7 @@ command_type travel()
                 if (lev && lev->needs_stop(newpos))
                 {
                     explore_stopped_pos = newpos;
-                    stop_running();
+                    stop_running(false);
                     return direction_to_command(*move_x, *move_y);
                 }
             }
@@ -2262,6 +2262,7 @@ static god_type _god_from_initial(const char god_initial)
         case 'F': return GOD_FEDHAS;
         case 'G': return GOD_GOZAG;
         case 'H': return GOD_HEPLIAKLQANA;
+        case 'I': return GOD_IGNIS;
         case 'J': return GOD_JIYVA;
         case 'K': return GOD_KIKUBAAQUDGHA;
         case 'L': return GOD_LUGONU;
@@ -4923,18 +4924,15 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
             continue;
 
         int cmd = cmd_array[i];
-        if (force)
+        if (!force)
+            return cmd;
+        const dungeon_feature_type feat = env.grid(gc);
+        if ((feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR)
+            && !env.map_knowledge(gc).monsterinfo())
         {
-            if (feat_is_open_door(env.grid(gc))
-                && !env.map_knowledge(gc).monsterinfo())
-            {
-                cmd += CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
-            }
-            else
-                cmd += CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
+            return CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
         }
-
-        return cmd;
+        return cmd + CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
     }
 
     return CK_MOUSE_CMD;
@@ -4986,7 +4984,7 @@ bool check_for_interesting_features()
     // Scan through the shadow map, compare it with the actual map, and if
     // there are any squares of the shadow map that have just been
     // discovered and contain an item, or have an interesting dungeon
-    // feature, stop exploring.
+    // feature, announce the discovery and return true.
     explore_discoveries discoveries;
     for (vision_iterator ri(you); ri; ++ri)
     {

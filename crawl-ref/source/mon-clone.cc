@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "coordit.h"
 #include "env.h"
+#include "god-abil.h"
 #include "items.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -305,12 +306,26 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     mons->attitude = mon_att;
 
     // The monster copy constructor doesn't copy constriction, so no need to
-    // worry about that.
+    // worry about that. We do need to worry about the enchantments associated
+    // with direct constriction, though.
+    if (mons->has_ench(ENCH_VILE_CLUTCH))
+        mons->del_ench(ENCH_VILE_CLUTCH);
+
+    if (mons->has_ench(ENCH_GRASPING_ROOTS))
+        mons->del_ench(ENCH_GRASPING_ROOTS);
 
     // Don't copy death triggers - phantom royal jellies should not open the
     // Slime vaults on death.
     if (mons->props.exists(MONSTER_DIES_LUA_KEY))
         mons->props.erase(MONSTER_DIES_LUA_KEY);
+
+    // Clear all duel-related keys from clones.
+    if (mons->props.exists(OKAWARU_DUEL_TARGET_KEY))
+    {
+        mons->props.erase(OKAWARU_DUEL_TARGET_KEY);
+        mons->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+        mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
+    }
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)

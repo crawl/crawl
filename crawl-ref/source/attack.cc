@@ -222,9 +222,7 @@ int attack::calc_pre_roll_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(wpn_skill == SK_THROWING
-                              || (weapon && is_range_weapon(*weapon)
-                                         && using_weapon()));
+        mhit += slaying_bonus(wpn_skill == SK_THROWING);
 
         // armour penalty (already calculated if random is true)
         if (!random)
@@ -514,7 +512,7 @@ bool attack::distortion_affects_defender()
     {
     case SMALL_DMG:
         special_damage += 1 + random2avg(7, 2);
-        special_damage_message = make_stringf("Space bends around %s%s",
+        special_damage_message = make_stringf("Space warps around %s%s",
                                               defender_name(false).c_str(),
                                               attack_strength_punctuation(special_damage).c_str());
         break;
@@ -528,7 +526,7 @@ bool attack::distortion_affects_defender()
     case BLINK:
         if (defender_visible)
             obvious_effect = true;
-        if (!defender->no_tele(true, false))
+        if (!defender->no_tele())
             blink_fineff::schedule(defender);
         break;
     case BANISH:
@@ -798,10 +796,12 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_CHAOTIC,   SPWPN_CHAOS,         10,
       nullptr },
     { AF_DRAIN,  SPWPN_DRAINING,      5,
-      [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
+      [](const actor &d) {
+          return bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
-          return !d.is_summoned() && bool(d.holiness() & MH_NATURAL); } },
+          return !d.is_summoned()
+                 && bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
     { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
@@ -866,7 +866,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (!(defender->holiness() & MH_NATURAL))
+    if (!(defender->holiness() & (MH_NATURAL | MH_PLANT)))
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
@@ -909,10 +909,10 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     if (damage_brand == SPWPN_REAPING
         || damage_brand == SPWPN_CHAOS && one_chance_in(100))
     {
-        defender->props["reaping_damage"].get_int() += dam;
+        defender->props[REAPING_DAMAGE_KEY].get_int() += dam;
         // With two reapers of different friendliness, the most recent one
         // gets the zombie. Too rare a case to care any more.
-        defender->props["reaper"].get_int() = attacker->mid;
+        defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
     return defender->hurt(responsible, dam, flavour, kill_type,
                           "", aux_source.c_str(), clean);
@@ -959,7 +959,7 @@ string attack::evasion_margin_adverb()
 
 void attack::stab_message()
 {
-    defender->props["helpless"] = true;
+    defender->props[HELPLESS_KEY] = true;
 
     switch (stab_bonus)
     {
@@ -1003,7 +1003,7 @@ void attack::stab_message()
         break;
     }
 
-    defender->props.erase("helpless");
+    defender->props.erase(HELPLESS_KEY);
 }
 
 /* Returns the attacker's name
@@ -1121,6 +1121,15 @@ int attack::get_weapon_plus()
     return weapon->plus;
 }
 
+static int _core_apply_slaying(int damage, int plus)
+{
+    // +0 is random2(1) (which is 0)
+    if (plus >= 0)
+        return damage + random2(1 + plus);
+    else
+        return damage - random2(1 - plus);
+}
+
 // Slaying and weapon enchantment. Apply this for slaying even if not
 // using a weapon to attack.
 int attack::player_apply_slaying_bonuses(int damage, bool aux)
@@ -1128,15 +1137,19 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     int damage_plus = 0;
     if (!aux && using_weapon())
         damage_plus = get_weapon_plus();
-    if (you.duration[DUR_CORROSION])
-        damage_plus -= 4 * you.props["corrosion_amount"].get_int();
-    damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
-                                 || (weapon && is_range_weapon(*weapon)
-                                            && using_weapon()));
 
-    damage += (damage_plus > -1) ? (random2(1 + damage_plus))
-                                 : (-random2(1 - damage_plus));
-    return damage;
+    const bool throwing = !weapon && wpn_skill == SK_THROWING;
+    const bool ranged = throwing
+                        || (weapon && is_range_weapon(*weapon)
+                                   && using_weapon());
+    damage_plus += slaying_bonus(throwing);
+    damage_plus -= 4 * you.corrosion_amount();
+
+    // XXX: should this also trigger on auxes?
+    if (!aux && !ranged)
+        damage_plus += you.infusion_amount() * 2;
+
+    return _core_apply_slaying(damage, damage_plus);
 }
 
 int attack::player_apply_final_multipliers(int damage)
@@ -1209,10 +1222,7 @@ int attack::calc_damage()
 
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
-            if (wpn_damage_plus >= 0)
-                damage += random2(1 + wpn_damage_plus);
-            else
-                damage -= random2(1 - wpn_damage_plus);
+            damage = _core_apply_slaying(damage, wpn_damage_plus);
         }
 
         damage_max += attk_damage;
@@ -1447,7 +1457,7 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_ELECTROCUTION:
         if (defender->res_elec() > 0)
             break;
-        else if (one_chance_in(3))
+        else if (one_chance_in(4))
         {
             special_damage = 8 + random2(13);
             const string punctuation =
@@ -1560,13 +1570,20 @@ bool attack::apply_damage_brand(const char *what)
         if (attacker->is_player() && damage_brand == SPWPN_CONFUSE
             && you.duration[DUR_CONFUSING_TOUCH])
         {
-            beam_temp.ench_power = you.props["confusing touch power"].get_int();
+            beam_temp.ench_power = you.props[CONFUSING_TOUCH_KEY].get_int();
             int margin;
-            if (beam_temp.try_enchant_monster(defender->as_monster(), margin)
-                    == MON_AFFECTED)
+            monster* mon = defender->as_monster();
+            if (beam_temp.try_enchant_monster(mon, margin) == MON_AFFECTED)
             {
                 you.duration[DUR_CONFUSING_TOUCH] = 0;
                 obvious_effect = false;
+            }
+            else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
+                     || mons_invuln_will(*mon))
+            {
+                mprf("%s is completely immune to your confusing touch!",
+                     mon->name(DESC_THE).c_str());
+                you.duration[DUR_CONFUSING_TOUCH] = 1;
             }
         }
         else if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()),

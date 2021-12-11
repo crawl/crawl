@@ -1016,10 +1016,9 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
         {
         case SKM_MODE:  return SKM_MODE_MANUAL;
         case SKM_DO:    return SKM_DO_FOCUS;
-        case SKM_SHOW:  return SKM_SHOW_DEFAULT;
-        case SKM_LEVEL: return SKM_LEVEL_NORMAL;
         case SKM_VIEW:  return SKM_VIEW_NEW_LEVEL;
-        default:        return SKM_NONE;
+        default:        return !m_switches[sw] ? SKM_NONE
+                                               : m_switches[sw]->get_state();
         }
     }
     else if (!m_switches[sw])
@@ -1123,6 +1122,9 @@ void SkillMenu::toggle(skill_menu_switch sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
+        // TODO: these are probably now redundant
+        Options.default_manual_training = !you.auto_training;
+        Options.prefs_dirty = true;
 
         // Switch the skill train state with the saved version.
         tmp = you.train;
@@ -1230,6 +1232,10 @@ void SkillMenu::init_button_row()
         m_clear_targets_button = new FormattedTextItem();
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
+#ifndef USE_TILE_LOCAL
+        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT);
+        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT2);
+#endif
         m_clear_targets_button->set_highlight_colour(YELLOW);
         add_item(m_clear_targets_button, 25, m_pos);
         refresh_button_row();
@@ -1243,6 +1249,9 @@ void SkillMenu::init_switches()
     {
         sw = new SkillMenuSwitch("mode", '/');
         m_switches[SKM_MODE] = sw;
+#ifndef USE_TILE_LOCAL
+        sw->add_hotkey(CK_NUMPAD_DIVIDE);
+#endif
         sw->add(SKM_MODE_AUTO);
         if (!is_set(SKMF_SPECIAL) && !is_set(SKMF_SIMPLE))
             sw->add(SKM_MODE_MANUAL);
@@ -1269,9 +1278,12 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
 
         sw = new SkillMenuSwitch("skills", '*');
+#ifndef USE_TILE_LOCAL
+        sw->add_hotkey(CK_NUMPAD_MULTIPLY);
+#endif
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
-        if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
+        if (!is_set(SKMF_SIMPLE))
         {
             sw->add(SKM_SHOW_ALL);
             if (Options.default_show_all_skills)
@@ -1303,10 +1315,10 @@ void SkillMenu::init_switches()
 
         if (!you.auto_training)
             sw->set_state(SKM_VIEW_COST);
-    }
 
-    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        sw->add(SKM_VIEW_TARGETS);
+        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            sw->add(SKM_VIEW_TARGETS);
+    }
 
     if (you.wizard)
     {

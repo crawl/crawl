@@ -90,11 +90,7 @@ static string _get_version_information()
 static string _get_version_features()
 {
     string result;
-    if (crawl_state.need_save
-#ifdef DGAMELAUNCH
-        && (you.wizard || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
-#endif
-       )
+    if (crawl_state.seed_is_known())
     {
         if (you.fully_seeded)
         {
@@ -103,7 +99,7 @@ static string _get_version_features()
                 result += " (seed may be affected by game upgrades)";
         }
         else
-            result += "Game is not seeded.";
+            result += "Game is non-seeded.";
         result += "\n\n";
     }
     if (Version::history_size() > 1)
@@ -366,8 +362,8 @@ static const char *targeting_help_1 =
     "<w>v</w> : describe monster under cursor\n"
     "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
     "<w>-</w> : cycle monsters backward\n"
-    "<w>*</w> : cycle objects forward (also <w>'</w>)\n"
-    "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
+    "<w>'</w> : cycle objects forward (also <w>*</w>)\n"
+    "<w>;</w> : cycle objects backward (also <w>/</w>)\n"
     "<w>^</w> : cycle through traps\n"
     "<w>_</w> : cycle through altars\n"
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
@@ -413,6 +409,7 @@ static const char *targeting_help_2 =
     "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
+    "             (also <w>/ Dir.</w>)\n"
     "\n"
     "<h>Firing mode ('<w>f</w><h>' in main):\n"
     "<w>Q</w> : choose fire action.\n"
@@ -507,14 +504,29 @@ int show_keyhelp_menu(const vector<formatted_string> &lines)
     return cmd_help.get_lastch();
 }
 
+void show_specific_helps(const vector<string> keys)
+{
+    // a fancier version of this might toggle between tabs, but this just
+    // concatenates
+    vector<formatted_string> formatted_lines;
+    size_t i = 0;
+    for (const auto &key : keys)
+    {
+        string help = getHelpString(key);
+        trim_string_right(help);
+        for (const string &line : split_string("\n", help, false, true))
+            formatted_lines.push_back(formatted_string::parse_string(line));
+
+        i++;
+        if (i < keys.size())
+            formatted_lines.emplace_back("");
+    }
+    show_keyhelp_menu(formatted_lines);
+}
+
 void show_specific_help(const string &key)
 {
-    string help = getHelpString(key);
-    trim_string_right(help);
-    vector<formatted_string> formatted_lines;
-    for (const string &line : split_string("\n", help, false, true))
-        formatted_lines.push_back(formatted_string::parse_string(line));
-    show_keyhelp_menu(formatted_lines);
+    show_specific_helps({ key });
 }
 
 void show_levelmap_help()

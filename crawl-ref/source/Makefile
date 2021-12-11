@@ -153,7 +153,7 @@ CFWARN_L += -Wextra \
 	    -Wno-type-limits \
 	    -Wno-uninitialized \
 
-DEFINES := -DTOURNEY='"0.27"' $(EXTERNAL_DEFINES)
+DEFINES := $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
 LDFLAGS :=
@@ -1199,6 +1199,20 @@ INCLUDES_L += -isystem contrib/install/$(ARCH)/include
 LIBS += -Lcontrib/install/$(ARCH)/lib
 endif
 
+ifdef APPLE_PLATFORM
+# workaround: mac clang hardcodes (as far as I can tell) `-I /usr/local/include`
+# into the include path. Homebrew also installs into this directory. So a user
+# that has homebrew installed will get includes from there rather than contribs,
+# leading to build failures. This workaround relies on that if both -I and
+# -isystem are defined for the same path, then the -I version is ignored, which
+# effectively demotes this include path below the contrib -isystem paths.
+# TODO: it's not clear to me that using -isystem for contribs is at all the
+# right thing to do, since they are libraries we control, aren't actually
+# system libraries, and always take lower precedence than any -I that might be
+# caused by environment variables.
+INCLUDES_L += -isystem /usr/local/include
+endif
+
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 
 
@@ -1268,10 +1282,11 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             white_noise_grabbing_the_orb pooryurik_knight \
             psiweapon_roxanne baconkid_gastronok baconkid_mnoleg \
             peileppe_bloax_eye baconkid_duvessa_dowan ploomutoo_ijyb \
-	    froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
-	    froggy_natasha_and_boris froggy_jiyva_felid \
-	    froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
-	    e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu
+            froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
+            froggy_natasha_and_boris froggy_jiyva_felid \
+            froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
+            e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
+            kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \

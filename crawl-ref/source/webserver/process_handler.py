@@ -143,6 +143,7 @@ class CrawlProcessHandlerBase(object):
         self.idle_checker.start()
         self._was_idle = False
         self.last_watcher_join = 0
+        self.receiving_direct_milestones = False
 
         global last_game_id
         self.id = last_game_id + 1
@@ -280,7 +281,7 @@ class CrawlProcessHandlerBase(object):
     def handle_notification_raw(self, username, text):
         # type: (str, str) -> None
         msg = ("<span class='chat_msg'>%s</span>" % text)
-        self.send_to_user(username, "chat", content=msg)
+        self.send_to_user(username, "chat", content=msg, meta=True)
 
     def handle_notification(self, username, text):
         # type: (str, str) -> None
@@ -293,6 +294,8 @@ class CrawlProcessHandlerBase(object):
 
         self.idle_checker.stop()
 
+        # send game_ended message to watchers. The player is handled in cleanup
+        # code in ws_handler.py.
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
                 watcher.send_message("game_ended", reason = self.exit_reason,
@@ -508,17 +511,28 @@ class CrawlProcessHandlerBase(object):
             self.process.send_signal(subprocess.signal.SIGABRT)
             self.kill_timeout = None
 
-    interesting_info = ("xl", "char", "place", "god", "title")
+    interesting_info = ("xl", "char", "place", "turn", "dur", "god", "title")
+
     def set_where_info(self, newwhere):
-        interesting = False
-        for key in CrawlProcessHandlerBase.interesting_info:
-            if self.where.get(key) != newwhere.get(key):
-                interesting = True
-        self.where = newwhere
+        # milestone doesn't count as "interesting" but the field is directly
+        # handled when sending lobby info by looking at last_milestone
+        milestone = bool(newwhere.get("milestone"))
+        interesting = (milestone
+                or newwhere.get("status") == "chargen"
+                or any([self.where.get(key) != newwhere.get(key)
+                        for key in CrawlProcessHandlerBase.interesting_info]))
+
+        # ignore milestone sync messages for where purposes
+        if newwhere.get("status") != "milestone_only":
+            self.where = newwhere
+        if milestone:
+            self.last_milestone = newwhere
         if interesting:
             update_all_lobbys(self)
 
     def check_where(self):
+        if self.receiving_direct_milestones:
+            return
         morgue_path = self.config_path("morgue_path")
         wherefile = os.path.join(morgue_path, self.username + ".where")
         try:
@@ -536,7 +550,7 @@ class CrawlProcessHandlerBase(object):
                                         exc_info=True)
                 else:
                     if (newwhere.get("status") == "active" or
-                        newwhere.get("status") == "saved"):
+                                        newwhere.get("status") == "saved"):
                         self.set_where_info(newwhere)
         except (OSError, IOError):
             pass
@@ -552,7 +566,7 @@ class CrawlProcessHandlerBase(object):
         for key in CrawlProcessHandlerBase.interesting_info:
             if key in self.where:
                 entry[key] = self.where[key]
-        if self.last_milestone:
+        if self.last_milestone and self.last_milestone.get("milestone"):
             entry["milestone"] = self.last_milestone.get("milestone")
         return entry
 
@@ -561,13 +575,6 @@ class CrawlProcessHandlerBase(object):
             return "L{xl} {char}, {place}".format(**self.where)
         except KeyError:
             return ""
-
-    def log_milestone(self, milestone):
-        # Use the updated where info in the milestone
-        self.where = milestone
-
-        self.last_milestone = milestone
-        update_all_lobbys(self)
 
     def _base_call(self):
         game = self.game_params
@@ -795,6 +802,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.check_where()
         except Exception:
             self.logger.warning("Error while starting the Crawl process!", exc_info=True)
+            self.exit_reason = "error"
+            self.exit_message = "Error while starting the Crawl process!\nSomething has gone very wrong; please let a server admin know."
+            self.exit_dump_url = None
+
             if self.process:
                 self.stop()
             else:
@@ -841,7 +852,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                  clrscr)
 
     def _on_process_end(self):
-        self.logger.debug("Crawl PID %s terminated.", self.process.pid)
+        if self.process:
+            self.logger.debug("Crawl PID %s terminated.", self.process.pid)
+        else:
+            self.logger.error("Crawl process failed to start, cleaning up.")
 
         self.remove_inprogress_lock()
 
@@ -984,6 +998,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.exit_message = msgobj["message"]
                 else:
                     self.exit_message = None
+            elif msgobj["msg"] == "milestone":
+                # milestone/whereis update: milestone fields are right in the
+                # message
+                self.receiving_direct_milestones = True # no need for .where files
+                self.set_where_info(msgobj)
             else:
                 self.logger.warning("Unknown message from the crawl process: %s",
                                     msgobj["msg"])

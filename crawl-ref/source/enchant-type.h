@@ -139,7 +139,9 @@ enum enchant_type
     ENCH_BUILDING_CHARGE,
 #endif
     ENCH_POISON_VULN,
+#if TAG_MAJOR_VERSION == 34
     ENCH_ICEMAIL,
+#endif
     ENCH_AGILE,
     ENCH_FROZEN,
 #if TAG_MAJOR_VERSION == 34
@@ -197,6 +199,7 @@ enum enchant_type
     ENCH_RING_OF_ACID,
     ENCH_RING_OF_MIASMA,
     ENCH_CONCENTRATE_VENOM,
+    ENCH_FIRE_CHAMPION,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

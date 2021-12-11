@@ -169,22 +169,10 @@ Belastbarkeit derer dezimieren die sie fühlen können.
 
 Kikubaaqudgha wird dich vielleicht davor bewahren ... oder auch nicht.
 %%%%
-Animate Remains ability
-
-Belebe eine einzige Leiche bzw. ein einziges Skelett als deinen Anhänger
-wieder. Denk daran, dass Zombies und Skelette die Ebene, auf der sie erstellt
-wurden, nicht verlassen können.
-%%%%
 Recall Undead Slaves ability
 
 Rufen Sie Ihre untoten Anhänger von überall her im Kerker zu Ihren
 unmittelbaren Umgebungen zurück.
-%%%%
-Animate Dead ability
-
-Belebe alle Leichen und Skelette in deiner Nähe als deine Anhänger wieder. Denk
-daran, dass Zombies und Skelette die Ebene, auf der sie erstellt wurden, nicht
-verlassen können.
 %%%%
 Drain Life ability
 
@@ -203,10 +191,6 @@ der Markierung abhängig von deiner Anrufungs-Fähigkeit.
 
 Denke daran das versklavte Seelen dir über die Ebene hinaus, in der sie
 gegründet wurden folgen können.
-%%%%
-Animate Remains or Dead ability
-
-Wenn du diese Beschreibung siehst, ist es ein Bug.
 %%%%
 Heroism ability
 

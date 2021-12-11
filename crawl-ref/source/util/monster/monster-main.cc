@@ -8,6 +8,7 @@
 #include "fake-main.hpp"
 
 #include "coordit.h"
+#include "fight.h" // spines_damage
 #include "item-name.h"
 #include "item-prop.h"
 #include "los.h"
@@ -148,8 +149,6 @@ static string monster_size(const monster& mon)
         return "Medium";
     case SIZE_LARGE:
         return "Large";
-    case SIZE_BIG:
-        return "Big";
     case SIZE_GIANT:
         return "Giant";
     default:
@@ -567,11 +566,7 @@ static void rebind_mspec(string* requested_name,
                          const string& actual_name, mons_spec* mspec)
 {
     if (*requested_name != actual_name
-        && (requested_name->find("draconian") == 0
-            || requested_name->find("blood saint") == 0
-            || requested_name->find("corrupter") == 0
-            || requested_name->find("warmonger") == 0
-            || requested_name->find("black sun") == 0))
+        && requested_name->find("draconian") == 0)
     {
         // If the user requested a drac, the game might generate a
         // coloured drac in response. Try to reuse that colour for further
@@ -829,16 +824,14 @@ int main(int argc, char* argv[])
                               || spec_type == MONS_GLOWING_SHAPESHIFTER;
 
     const bool nonbase =
-        mons_species(mon.type) == MONS_DRACONIAN && mon.type != MONS_DRACONIAN
-        || mons_species(mon.type) == MONS_DEMONSPAWN
-               && mon.type != MONS_DEMONSPAWN;
+        mons_species(mon.type) == MONS_DRACONIAN && mon.type != MONS_DRACONIAN;
 
     const monsterentry* me =
         shapeshifter ? get_monster_data(spec_type) : mon.find_monsterentry();
 
     const monsterentry* mbase =
-        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(mon)) :
-                  (monsterentry*)0;
+        nonbase ? get_monster_data(draconian_subspecies(mon))
+                : (monsterentry*)0;
 
     if (me)
     {
@@ -877,8 +870,12 @@ int main(int argc, char* argv[])
         printf(" | AC/EV: %i/%i", mac, mev);
 
         string defenses;
-        if (mon.is_spiny() > 0)
-            defenses += colour(YELLOW, "(spiny 5d4)");
+        if (mon.is_spiny())
+        {
+            string dmg = dice_def_string(spines_damage(mon.type));
+            defenses += colour(YELLOW, make_stringf("(spiny %s)",
+                                                    dmg.c_str()));
+        }
         if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
             defenses += colour(LIGHTRED, "(headbutt: d20-1)");
         if (!defenses.empty())
@@ -922,9 +919,6 @@ int main(int argc, char* argv[])
                     monsterattacks += "(reach)";
                 switch (flavour)
                 {
-                case AF_KITE:
-                    monsterattacks += "(kite)";
-                    break;
                 case AF_SWOOP:
                     monsterattacks += "(swoop)";
                     break;
@@ -1048,6 +1042,12 @@ int main(int argc, char* argv[])
                 case AF_WEAKNESS:
                     monsterattacks += colour(LIGHTRED, "(weakness)");
                     break;
+                case AF_SEAR:
+                    monsterattacks += colour(LIGHTRED, "(sear fire resist)");
+                    break;
+                case AF_BARBS:
+                    monsterattacks += colour(RED, "(barbs)");
+                    break;
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:
@@ -1068,6 +1068,7 @@ int main(int argc, char* argv[])
                 case AF_MIASMATA:
                 case AF_ROT:
                 case AF_KLOWN:
+                case AF_KITE:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
