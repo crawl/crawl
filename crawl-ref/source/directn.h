@@ -329,4 +329,9 @@ void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 bool get_look_position(coord_def *c);
 
+#ifdef USE_TILE
+bool targeting_mouse_select(const coord_def &gc);
+bool targeting_mouse_move(const coord_def &gc);
+#endif
+
 extern const struct coord_def Compass[9];

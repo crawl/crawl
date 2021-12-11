@@ -359,6 +359,61 @@ wint_t TilesFramework::_receive_control_message()
     }
 }
 
+static int _handle_cell_target(const coord_def &gc)
+{
+    // describe
+    if (mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH)
+    {
+        if (targeting_mouse_move(gc))
+            return CK_REDRAW;
+    }
+    return 0;
+}
+
+static int _handle_cell_click(const coord_def &gc, int button, bool force)
+{
+    // describe
+    if ((mouse_control::current_mode() == MOUSE_MODE_COMMAND
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
+        || tiles.get_ui_state() == UI_VIEW_MAP)
+        && button == 3)
+    {
+        full_describe_square(gc, false);
+        return CK_MOUSE_CMD;
+    }
+
+    // click travel
+    if (mouse_control::current_mode() == MOUSE_MODE_COMMAND && button == 1)
+    {
+        int c = click_travel(gc, force);
+        if (c != CK_MOUSE_CMD)
+        {
+            clear_messages();
+            process_command((command_type) c);
+        }
+        return CK_MOUSE_CMD;
+    }
+
+    // fire
+    if ((mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH)
+        && button == 1)
+    {
+        if (targeting_mouse_select(gc))
+            return CK_MOUSE_CMD;
+        // if the targeter is still live, the player did something like click
+        // out of range, and we want to redraw immediately
+        return CK_REDRAW;
+    }
+
+    return 0;
+}
+
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 {
     JsonWrapper obj = json_decode(data.c_str());
@@ -449,23 +504,30 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         flush_prev_message();
         c = CK_REDRAW;
     }
-    else if (msgtype == "click_travel" &&
-             mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    else if (msgtype == "click_cell")
+    {
+        JsonWrapper x = json_find_member(obj.node, "x");
+        JsonWrapper y = json_find_member(obj.node, "y");
+        JsonWrapper button = json_find_member(obj.node, "button");
+        x.check(JSON_NUMBER);
+        y.check(JSON_NUMBER);
+        button.check(JSON_NUMBER);
+        // XX force is currently unused
+        JsonWrapper force = json_find_member(obj.node, "force");
+        coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
+
+        c = _handle_cell_click(gc, button->number_,
+                        force.node && force->tag == JSON_BOOL && force->bool_);
+    }
+    else if (msgtype == "target_cursor")
     {
         JsonWrapper x = json_find_member(obj.node, "x");
         JsonWrapper y = json_find_member(obj.node, "y");
         x.check(JSON_NUMBER);
         y.check(JSON_NUMBER);
-        JsonWrapper force = json_find_member(obj.node, "force");
-
         coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
-        c = click_travel(gc, force.node && force->tag == JSON_BOOL && force->bool_);
-        if (c != CK_MOUSE_CMD)
-        {
-            clear_messages();
-            process_command((command_type) c);
-        }
-        c = CK_MOUSE_CMD;
+        _handle_cell_target(gc);
+        c = CK_REDRAW;
     }
     else if (msgtype == "formatted_scroller_scroll")
     {

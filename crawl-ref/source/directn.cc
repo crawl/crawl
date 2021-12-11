@@ -2039,7 +2039,7 @@ bool direction_chooser::process_command(command_type command)
 {
     bool loop_done = false;
 
-    // Move flags are volitile, reset them to defaults before each command
+    // Move flags are volatile, reset them to defaults before each command
     reinitialize_move_flags();
 
     switch (command)
@@ -2226,7 +2226,10 @@ public:
             auto key = static_cast<const ui::KeyEvent&>(ev).key();
             key = unmangle_direction_keys(key, KMC_TARGETING);
 
-            const auto command = m_dc.behaviour->get_command(key);
+            // CK_MOUSE_CMD: the command has already been handled (webtiles)
+            const auto command = key == CK_MOUSE_CMD
+                ? CMD_NO_CMD
+                : m_dc.behaviour->get_command(key);
             // XX a bit ugly to do this here..
             if (m_dc.behaviour->needs_path != MB_MAYBE)
             {
@@ -2250,7 +2253,8 @@ public:
                 m_dc.top_prompt = top_prompt;
             }
 
-            process_command(command);
+            if (key != CK_MOUSE_CMD)
+                process_command(command);
 
             // Flush the input buffer before the next command.
             if (!crawl_state.is_replaying_keys())
@@ -2284,6 +2288,18 @@ public:
         if (!crawl_view.in_viewport_g(m_dc.target()))
             m_dc.set_target(old_target);
 
+        // Update ray and flag any redraws that will be needed if the loop is
+        // not done.
+        if (old_target != m_dc.target())
+        {
+            m_dc.have_beam = m_dc.show_beam
+                             && find_ray(you.pos(), m_dc.target(), m_dc.beam,
+                                         opc_solid_see, you.current_vision);
+            m_dc.need_text_redraw = true;
+            m_dc.need_viewport_redraw = true;
+            m_dc.need_cursor_redraw = true;
+        }
+
         if (loop_done)
         {
             m_is_alive = false;
@@ -2294,17 +2310,6 @@ public:
                 m_dc.moves.isValid = false;
             }
             return;
-        }
-
-        // Redraw whatever is necessary.
-        if (old_target != m_dc.target())
-        {
-            m_dc.have_beam = m_dc.show_beam
-                             && find_ray(you.pos(), m_dc.target(), m_dc.beam,
-                                         opc_solid_see, you.current_vision);
-            m_dc.need_text_redraw = true;
-            m_dc.need_viewport_redraw = true;
-            m_dc.need_cursor_redraw = true;
         }
 
         if (m_dc.need_viewport_redraw || m_dc.need_cursor_redraw
@@ -2321,11 +2326,56 @@ public:
         return m_is_alive;
     }
 
+#ifdef USE_TILE
+    bool mouse_select(const coord_def &gc)
+    {
+        // in principle this doesn't need a coordinate -- it should already be
+        // set by mouse move. But I'm a bit worried about latency / sync issues
+        // on webtiles and it is very easy to explicitly provide.
+        if (map_bounds(gc))
+        {
+            tiles.place_cursor(CURSOR_MOUSE, gc);
+            process_command(CMD_TARGET_MOUSE_SELECT);
+            return !m_is_alive;
+        }
+        return false;
+    }
+
+    bool mouse_move(const coord_def &gc)
+    {
+        if (map_bounds(gc) && m_dc.in_range(gc))
+        {
+            tiles.place_cursor(CURSOR_MOUSE, gc);
+            process_command(CMD_TARGET_MOUSE_MOVE);
+            return !m_is_alive;
+        }
+        return false;
+    }
+#endif
+
 private:
     direction_chooser& m_dc;
     coord_def old_target;
     bool m_is_alive = true;
 };
+
+#ifdef USE_TILE
+bool targeting_mouse_select(const coord_def &gc)
+{
+    auto l = ui::top_layout();
+    if (auto view = dynamic_cast<UIDirectionChooserView *>(l.get()))
+        return view->mouse_select(gc);
+    return false;
+}
+
+bool targeting_mouse_move(const coord_def &gc)
+{
+    auto l = ui::top_layout();
+    if (auto view = dynamic_cast<UIDirectionChooserView *>(l.get()))
+        return view->mouse_move(gc);
+    return false;
+}
+#endif
 
 void direction_chooser::update_validity()
 {
@@ -2415,6 +2465,7 @@ bool direction_chooser::choose_direction()
     ui::pop_layout();
 
     finalize_moves();
+
     if (moves.isValid && !moves.isCancel)
         moves.cmd_result = CMD_FIRE;
     return moves.isValid;

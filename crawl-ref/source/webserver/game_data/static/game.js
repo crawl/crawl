@@ -1,9 +1,9 @@
-define(["jquery", "comm", "client", "key_conversion", "./dungeon_renderer",
+define(["jquery", "exports", "comm", "client", "key_conversion", "./dungeon_renderer",
         "./display", "./minimap", "./enums", "./messages", "./options",
-        "./text", "./menu", "./action_panel",  "./player", "./mouse_control",
-         "./ui","./ui-layouts"],
-function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
-        enums, messages, options) {
+        "./mouse_control", "./text", "./menu", "./action_panel",  "./player",
+        "./ui","./ui-layouts"],
+function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
+        minimap, enums, messages, options, mouse_control) {
     "use strict";
 
     var layout_parameters = null, ui_state, input_mode;
@@ -249,11 +249,35 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
     {
         if (mode == input_mode) return;
         input_mode = mode;
+        dungeon_renderer.update_mouse_mode(input_mode);
         if (mode == enums.mouse_mode.COMMAND)
             messages.new_command();
     }
 
     game.get_input_mode = function() { return input_mode; }
+    game.get_ui_state = function() { return ui_state; }
+
+    game.can_target = function()
+    {
+        return (input_mode == enums.mouse_mode.TARGET
+                || input_mode == enums.mouse_mode.TARGET_DIR
+                || input_mode == enums.mouse_mode.TARGET_PATH);
+    }
+    game.can_move = function()
+    {
+        // XX just looking
+        return (input_mode == enums.mouse_mode.COMMAND
+                || ui_state == enums.ui.VIEW_MAP);
+    }
+    game.can_describe = function()
+    {
+        return (input_mode == enums.mouse_mode.TARGET
+                || input_mode == enums.mouse_mode.TARGET_DIR
+                || input_mode == enums.mouse_mode.TARGET_PATH
+                || input_mode == enums.mouse_mode.COMMAND
+                || ui_state == enums.ui.VIEW_MAP);
+    }
+
 
     function handle_set_input_mode(data)
     {
@@ -311,4 +335,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
         "ui_cutoff": handle_set_ui_cutoff,
         "input_mode": handle_set_input_mode,
     });
+
+    // ugly circular reference breaking
+    mouse_control.game = game;
 });
