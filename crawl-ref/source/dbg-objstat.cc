@@ -1093,7 +1093,15 @@ static void _write_stat(map<string, int> &stats, const string &field)
         || field == "MonsHP"
         || field == "MonsXP")
     {
-        out_val = field_val / stats["Num"];
+        string num_field = "Num";
+        // The classed fields need to be average relative to the right count.
+        if (ends_with(field, "Vault"))
+            num_field = "NumVault";
+        else if (ends_with(field, "Shop"))
+            num_field = "NumShop";
+        else if (ends_with(field, "Mons"))
+            num_field = "NumMons";
+        out_val = field_val / stats[num_field.c_str()];
     }
     // Turn the sum of squares into the standard deviation.
     else if (field == "NumSD")
