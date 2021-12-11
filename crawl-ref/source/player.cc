@@ -6051,8 +6051,9 @@ int player::evasion(bool ignore_helpless, const actor* act) const
 
 bool player::heal(int amount)
 {
+    int oldhp = hp;
     ::inc_hp(amount);
-    return true; /* TODO Check whether the player was healed. */
+    return oldhp < hp;
 }
 
 /**
