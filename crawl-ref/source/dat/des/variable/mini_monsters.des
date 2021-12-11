@@ -3524,8 +3524,8 @@ xxpppxx
 ENDMAP
 
 NAME:    nicolae_danse_macabre
-TAGS:    transparent patrolling no_monster_gen no_item_gen
-DEPTH:   D:11-, Elf:3, Depths, Crypt
+TAGS:    transparent patrolling no_monster_gen no_item_gen no_trap_gen
+DEPTH:   D:11-, Elf, Depths, Crypt
 : local evilegos = util.random_subset({ "pain", "vampirism", "draining" }, 3)
 : kmons("1 = dancing weapon ; demon whip good_item ego:" .. evilegos[1] )
 : kmons("2 = dancing weapon ; demon blade good_item ego:" .. evilegos[2] )
@@ -3536,8 +3536,18 @@ DEPTH:   D:11-, Elf:3, Depths, Crypt
 KFEAT:   D = altar_uskayaw
 KFEAT:   E = altar_dithmenos / altar_kikubaaqudgha / altar_lugonu / \
              altar_makhleb / altar_yredelemnul
+KFEAT:   + = closed_clear_door
 SHUFFLE: FH
+# D and Elf get a runed door instead, and D gets only three weapons.
+: if you.branch() == "D" then
+SUBST:   + = =
+NSUBST:  F = 1444 / 2555 / 3666 / .
+: elseif you.branch() == "Elf" then
+SUBST:   + = =
 NSUBST:  F = 1 / 2 / 3 / 4 / 5 / 6
+: else
+NSUBST:  F = 1 / 2 / 3 / 4 / 5 / 6
+: end
 SUBST:   H = ., Y = YYDE
 MAP
 xxxm+mxxx
