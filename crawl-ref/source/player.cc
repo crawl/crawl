@@ -2539,6 +2539,16 @@ static void _gain_and_note_hp_mp()
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 }
 
+static int _rest_trigger_level(int max)
+{
+    return (max * Options.rest_wait_percent) / 100;
+}
+
+static bool _should_stop_resting(int cur, int max)
+{
+    return cur == max || cur >= _rest_trigger_level(max);
+}
+
 /**
  * Calculate max HP changes and scale current HP accordingly.
  */
@@ -2568,6 +2578,8 @@ void calc_hp(bool scale, bool set)
 
     if (oldhp != you.hp || old_max != you.hp_max)
     {
+        if (_should_stop_resting(you.hp, you.hp_max))
+            interrupt_activity(activity_interrupt::full_hp);
         dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
         you.redraw_hit_points = true;
     }
@@ -3660,16 +3672,6 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
     }
 
     return true;
-}
-
-static int _rest_trigger_level(int max)
-{
-    return (max * Options.rest_wait_percent) / 100;
-}
-
-static bool _should_stop_resting(int cur, int max)
-{
-    return cur == max || cur == _rest_trigger_level(max);
 }
 
 void inc_mp(int mp_gain, bool silent)
@@ -5253,10 +5255,11 @@ bool player::is_banished() const
 bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
-    return (!player_regenerates_hp() || hp >= _rest_trigger_level(hp_max))
-            && (magic_points >= _rest_trigger_level(max_magic_points)
-                || !player_regenerates_mp())
-            && !you.duration[DUR_BARBS];
+    return (!player_regenerates_hp()
+                || _should_stop_resting(hp, hp_max))
+        && (!player_regenerates_mp()
+                || _should_stop_resting(magic_points, max_magic_points))
+        && !you.duration[DUR_BARBS];
 }
 
 bool player::in_water() const
