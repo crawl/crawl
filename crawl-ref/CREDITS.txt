@@ -130,6 +130,7 @@
     Cedor
     Cerol
     Marcelo Cerri
+    Zachary Chandler
     Rahul Chandra
     Joe Childers
     Thom Chiovoloni
@@ -287,6 +288,7 @@
     John Olender
     Aaron Olowin
     Andrew O'Neill
+    Oneirical
     Yuuma Oohara
     Julian Ospald
     Malwyn P
@@ -368,6 +370,7 @@
     Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus
+    Jonathan Klabunde Tomer
     Tommy
     Sean VanMeter
     Mikko Vepsäläinen
