@@ -182,11 +182,6 @@ bool melee_attack::handle_phase_attempted()
                 return false;
             }
         }
-        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_AUTUMN_KATANA)
-            && you.can_see(*defender))
-        {
-            targeter_radius hitfunc(&you, LOS_NO_TRANS);
-        }
         else if (!cleave_targets.empty())
         {
             targeter_cleave hitfunc(attacker, defender->pos());
