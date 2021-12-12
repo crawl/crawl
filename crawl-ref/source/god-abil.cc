@@ -1765,6 +1765,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
+    mons_att_changed(mon);
+
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
