@@ -1113,8 +1113,7 @@ NAME:    ring of the Mage
 OBJ:     OBJ_JEWELLERY/RING_WIZARDRY
 COLOUR:  ETC_ENCHANT
 TILE:    urand_mage
-INT:     3
-WILL:    2
+BOOL:    archmagi
 
 NAME:     brooch of Shielding
 OBJ:      OBJ_JEWELLERY/AMU_GUARDIAN_SPIRIT
