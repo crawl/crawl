@@ -1199,7 +1199,7 @@ PLUS:     +8
 BASE_ACC: +2
 BASE_DAM: +4
 BASE_DELAY: -2
-DESCRIP:  Sometimes launches melee attacks against multiple visible enemies.
+DESCRIP:  It sometimes launches melee attacks against multiple visible enemies.
 
 NAME:     shillelagh "Devastator"
 INSCRIP:  shatter
