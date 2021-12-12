@@ -1386,17 +1386,29 @@ body {
 #action-panel-settings {
     position: absolute;
     background: black;
+    color: #babdb6;
     border: 2px solid #7d623c;
     padding: 2px;
+    font-size: 16px;
+    font-family: monospace;
 }
 
 #action-panel-settings fieldset {
-    margin-bottom: 2px;
     border-width: 1px;
+    margin: 0px 2px 2px 2px;
+    padding: 5px 5px 10px 5px;
 }
 
-#action-panel-settings fieldset button,input {
+#action-panel-settings fieldset legend
+{
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 0px;
+}
+
+#action-panel-settings button,input {
     display: inline;
+    color: black;
 }
 
 fieldset.option {
