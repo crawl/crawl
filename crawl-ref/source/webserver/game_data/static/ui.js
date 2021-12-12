@@ -78,6 +78,34 @@ function ($, comm, client, options, focus_trap) {
         maybe_prevent_server_from_handling_key(ev);
     }
 
+    function target_outside_game(ev)
+    {
+        // I think this is for filtering clicks to the chat window, which is
+        // supposed to work even with a popup in place
+        return ($(ev.target).closest("#game").length !== 1)
+    }
+
+    function popup_clickoutside_handler(ev)
+    {
+        // this simulates the focus-trap click outside to deactivate code,
+        // since for crawl we really need to send a "close popup" message
+        // to the server rather than do it in the client.
+        // TODO focus-trap also uses touchstart for this case, do we need
+        // that?
+        // TODO this lets through clicks that are in the popup's margin?
+        // using parent() doesn't help with this issue because the space is
+        // still in the border of ui-popup-outer. Maybe this is ok...
+        if (!target_outside_game(ev) && !top_popup()[0].contains(ev.target))
+            comm.send_message("key", { keycode: 27 });
+        // otherwise, ignore -- focus-trap checkPointerDown should get it
+        // next.
+    }
+
+    function event_disable(ev)
+    {
+        ev.preventDefault();
+    }
+
     function show_popup(id, centred, generation_id)
     {
         var $ui_stack = $("#ui-stack");
@@ -94,7 +122,8 @@ function ($, comm, client, options, focus_trap) {
             if (client.is_watching())
                 return;
             wrapper[0].focus_trap = focus_trap(elem[0], {
-                escapeDeactivates: false,
+                escapeDeactivates: false, // explicitly handled
+                clickOutsideDeactivates: false, // explicitly handled
                 fallbackFocus: document.body,
                 onActivate: function () {
                     if ($("#ui-stack").children().length == 1) {
@@ -102,6 +131,10 @@ function ($, comm, client, options, focus_trap) {
                             popup_keydown_handler, true);
                         document.addEventListener("keypress",
                             popup_keypress_handler, true);
+                        document.addEventListener("mousedown",
+                            popup_clickoutside_handler, true);
+                        document.addEventListener("contextmenu",
+                            event_disable, true);
                     }
                 },
                 onDeactivate: function () {
@@ -110,11 +143,13 @@ function ($, comm, client, options, focus_trap) {
                             popup_keydown_handler, true);
                         document.removeEventListener("keypress",
                             popup_keypress_handler, true);
+                        document.removeEventListener("mousedown",
+                            popup_clickoutside_handler, true);
+                        document.removeEventListener("contextmenu",
+                            event_disable, true);
                     }
                 },
-                allowOutsideClick: function (ev) {
-                    return $(ev.target).closest("#game").length !== 1;
-                },
+                allowOutsideClick: target_outside_game,
             }).activate();
         }).css("display","");
         if (client.is_watching())
@@ -294,9 +329,7 @@ function ($, comm, client, options, focus_trap) {
                 $chat.removeClass("focus-trap");
             },
             returnFocusOnDeactivate: false,
-            clickOutsideDeactivates: true, // warning: this only seems to work
-                                           // with some slightly weird changes
-                                           // to focus-trap.js...
+            clickOutsideDeactivates: true,
         }).activate();
     }
 
