@@ -254,3 +254,4 @@ icon.png
 
 # generated files for appimage
 /source/appimage
+/source/stone_soup-*.AppImage

@@ -617,20 +617,22 @@ endif
 endif
 
 ifdef TILES
-  xdg_name := crawl-tiles
+  xdg_name := org.develz.crawl_tiles
 else
-  xdg_name := crawl
+  xdg_name := org.develz.crawl
 endif
 
 ifdef LINUXDEPLOY
   prefix=usr
   DESTDIR=appimage/
   SAVEDIR=~/.crawl
+  COPY_FONTS=yes
 ifdef TILES
-  export OUTPUT = ../../dcss-$(SRC_VERSION)-linux-tiles.$(uname_M).AppImage
+  appimage_build := tiles
 else
-  export OUTPUT = ../../dcss-$(SRC_VERSION)-linux-console.$(uname_M).AppImage
+  appimage_build := console
 endif
+  export OUTPUT = stone_soup-$(SRC_VERSION)-linux-$(appimage_build).$(uname_M).AppImage
 endif
 
 ifdef ANDROID
@@ -969,7 +971,11 @@ ifneq ($(strip $(DATADIR)),)
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-	FONTDIR = $(strip $(DATADIR))/dat/tiles/
+        ifeq ($(LINUXDEPLOY),)
+	  FONTDIR = $(strip $(DATADIR))/dat/tiles/
+        else
+	  FONTDIR = dat/tiles/
+        endif
   else
     ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/
@@ -1617,14 +1623,14 @@ install-xdg-data:
 	[ -d $(prefix_fp)/share/icons/hicolor/48x48/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/48x48/apps
 	[ -d $(prefix_fp)/share/icons/hicolor/512x512/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/512x512/apps
 	[ -d $(prefix_fp)/share/icons/hicolor/scalable/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/scalable/apps
-	$(COPY) xdg-data/$(xdg_name).desktop $(prefix_fp)/share/applications/$(GAME).desktop
-	echo Icon=$(GAME) >>$(prefix_fp)/share/applications/$(GAME).desktop
+	$(COPY) xdg-data/$(xdg_name).desktop $(prefix_fp)/share/applications/$(xdg_name).desktop
+	echo Icon=$(GAME) >>$(prefix_fp)/share/applications/$(xdg_name).desktop
 ifdef LINUXDEPLOY
-	echo Exec=$(GAME) >>$(prefix_fp)/share/applications/$(GAME).desktop
+	echo Exec=$(GAME) >>$(prefix_fp)/share/applications/$(xdg_name).desktop
 else
-	echo Exec=$(prefix)/$(bin_prefix)/$(GAME) >>$(prefix_fp)/share/applications/$(GAME).desktop
+	echo Exec=$(prefix)/$(bin_prefix)/$(GAME) >>$(prefix_fp)/share/applications/$(xdg_name).desktop
 endif
-	$(COPY) xdg-data/$(xdg_name).metainfo.xml $(prefix_fp)/share/metainfo/$(GAME).metainfo.xml
+	$(COPY) xdg-data/$(xdg_name).appdata.xml $(prefix_fp)/share/metainfo/$(xdg_name).appdata.xml
 	$(COPY) dat/tiles/stone_soup_icon-32x32.png $(prefix_fp)/share/icons/hicolor/32x32/apps/$(GAME).png
 	$(COPY) dat/tiles/stone_soup_icon-48x48.png $(prefix_fp)/share/icons/hicolor/48x48/apps/$(GAME).png
 	$(COPY) dat/tiles/stone_soup_icon-512x512.png $(prefix_fp)/share/icons/hicolor/512x512/apps/$(GAME).png
@@ -1958,18 +1964,22 @@ removeold:
 # Linux AppImage
 #
 
+ifdef LINUXDEPLOY
+endif
+
 appimage: install install-xdg-data
 ifeq ($(LINUXDEPLOY),)
 	@echo Please define LINUXDEPLOY path to use this build.
 	@exit 1
 endif
 	$(LINUXDEPLOY) --appdir appimage\
-                       --desktop-file appimage/usr/share/applications/$(GAME).desktop \
-                       --icon-file appimage/usr/share/icons/hicolor/scalable/apps/$(GAME).svg \
-                       --output appimage
+	               --desktop-file appimage/usr/share/applications/$(xdg_name).desktop \
+	               --icon-file appimage/usr/share/icons/hicolor/scalable/apps/$(GAME).svg \
+	               --output appimage
+	ln -sf "stone_soup-$(SRC_VERSION)-linux-$(appimage_build).$(uname_M).AppImage" "stone_soup-latest-linux-$(appimage_build).$(uname_M).AppImage"
 
 clean-appimage:
-	$(RM) dcss-*.AppImage
+	$(RM) stone_soup-*.AppImage
 	$(RM) -r appimage
 
 #############################################################################
