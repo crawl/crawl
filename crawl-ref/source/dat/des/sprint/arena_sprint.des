@@ -696,7 +696,7 @@ function arena_sprint_init_boss_table()
                    "spells:mephitic_cloud.15.wizard;" ..
                           "summon_hydra.15.wizard;" ..
                           "invisibility.15.wizard;" ..
-                          "teleport_self.15.wizard.emergency",
+                          "blink_away.15.wizard.emergency",
                  "decaying rune of zot"}
     end
 
@@ -704,7 +704,7 @@ function arena_sprint_init_boss_table()
         bs[2] = {"place:Spider", "arachne hp:250 / " ..
                  "wolf spider name:dire n_adj n_noc col:blue hp:300 / " ..
                  "jumping spider name:phase_spider n_rpl n_des never_corpse " ..
-                    "col:lightgreen spells:teleport_self.58.natural hp:300",
+                    "col:lightgreen spells:blink_away.58.natural hp:300",
                  "gossamer rune of zot"}
     else
         bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 / " ..
@@ -768,7 +768,7 @@ function arena_sprint_init_boss_table()
     -- Final (and tenth) boss
     bs[10] = {"pandemonium lord",
               "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta " ..
-              "spells:fire_storm.32.wizard;glaciate.16.wizard;miasma_breath.16.wizard;teleport_self.16.wizard.emergency", "demonic rune of zot"}
+              "spells:fire_storm.32.wizard;glaciate.16.wizard;miasma_breath.16.wizard;blink_away.16.wizard.emergency", "demonic rune of zot"}
     return bs
 end
 
@@ -987,7 +987,7 @@ LROCKTILE:  wall_hall
 # NB: At present, there are 24 slots in the map, that's enough to take
 # us to up to 'u'; if you want more you'll have to rejigger the map.
 NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / i / j / k / l / \
-            m / n / o / p / q / r / *:.
+            m / n / o / p / q / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KFEAT:  2 = altar_lugonu
@@ -1001,14 +1001,13 @@ KFEAT:  9 = altar_sif_muna
 KFEAT:  h = altar_trog
 KFEAT:  i = altar_beogh
 KFEAT:  j = altar_cheibriados
-KFEAT:  k = altar_jiyva
-KFEAT:  l = altar_fedhas
-KFEAT:  m = altar_dithmenos
-KFEAT:  n = altar_gozag
-KFEAT:  o = altar_qazlal
-KFEAT:  p = altar_ru
-KFEAT:  q = altar_uskayaw
-KFEAT:  r = altar_wu_jian
+KFEAT:  k = altar_fedhas
+KFEAT:  l = altar_dithmenos
+KFEAT:  m = altar_gozag
+KFEAT:  n = altar_qazlal
+KFEAT:  o = altar_ru
+KFEAT:  p = altar_uskayaw
+KFEAT:  q = altar_wu_jian
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of iceblast charges:5 ident:all, \
