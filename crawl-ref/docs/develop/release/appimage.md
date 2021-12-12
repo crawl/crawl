@@ -79,6 +79,6 @@ is roughly equivalent to
 6. The AppStream metadata is validated.
 
 7. Finally, the `appimage` directory is packaged into a Squashfs filesystem.
-   The resulting file will be stored in the toplevel repo dir named as:
-   `dcss-<version>-linux-<tiles/console>.<arch>.AppImage`.
+   The resulting file will be named as:
+   `stone_soup-<version>-linux-<tiles/console>.<arch>.AppImage`
 
