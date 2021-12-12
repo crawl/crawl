@@ -2481,7 +2481,7 @@ static vector<formatted_string> _get_overview_resistances(
 
     const int archmagi = you.archmagi();
     if (archmagi)
-        out += _resist_composer("Archmagi", cwidth, archmagi) + "\n";
+        out += _resist_composer("Archmagi", cwidth, archmagi, archmagi) + "\n";
 
     const int rclarity = you.clarity();
     if (rclarity)
