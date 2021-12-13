@@ -131,8 +131,11 @@ function ($, comm, client, options, focus_trap) {
                             popup_keydown_handler, true);
                         document.addEventListener("keypress",
                             popup_keypress_handler, true);
-                        document.addEventListener("mousedown",
-                            popup_clickoutside_handler, true);
+                        if (options.get("tile_web_mouse_control"))
+                        {
+                            document.addEventListener("mousedown",
+                                popup_clickoutside_handler, true);
+                        }
                         document.addEventListener("contextmenu",
                             event_disable, true);
                     }
@@ -143,8 +146,11 @@ function ($, comm, client, options, focus_trap) {
                             popup_keydown_handler, true);
                         document.removeEventListener("keypress",
                             popup_keypress_handler, true);
-                        document.removeEventListener("mousedown",
-                            popup_clickoutside_handler, true);
+                        if (options.get("tile_web_mouse_control"))
+                        {
+                            document.removeEventListener("mousedown",
+                                popup_clickoutside_handler, true);
+                        }
                         document.removeEventListener("contextmenu",
                             event_disable, true);
                     }
