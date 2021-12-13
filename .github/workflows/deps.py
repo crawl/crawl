@@ -127,6 +127,11 @@ def setup_msys_ccache_symlinks() -> None:
     )
 
 
+def install_linuxdeploy() -> None:
+    run(["wget", "-O", "/tmp/linuxdeploy-x86_64.AppImage", "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"])
+    run(["chmod", "+x", "/tmp/linuxdeploy-x86_64.AppImage"])
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Install packages required to build DCSS"
@@ -136,6 +141,7 @@ if __name__ == "__main__":
     parser.add_argument("--debug-opts", default={}, type=make_opts)
     parser.add_argument("--coverage", action="store_true")
     parser.add_argument("--crosscompile", action="store_true")
+    parser.add_argument("--appimage", action="store_true")
 
     args = parser.parse_args()
 
@@ -145,3 +151,5 @@ if __name__ == "__main__":
         install_llvm()
     if args.crosscompile:
         setup_msys_ccache_symlinks()
+    if args.appimage:
+        install_linuxdeploy()
