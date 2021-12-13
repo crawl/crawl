@@ -490,6 +490,7 @@ direction_chooser::direction_chooser(dist& moves_,
     default_place(args.default_place),
     renderer(*this),
     unrestricted(args.unrestricted),
+    force_cancel(false),
     needs_path(args.needs_path)
 {
     if (!behaviour)
@@ -2022,7 +2023,8 @@ void direction_chooser::describe_target()
 {
     if (!map_bounds(target()) || !env.map_knowledge(target()).known())
         return;
-    full_describe_square(target(), false);
+    if (full_describe_square(target(), false))
+        force_cancel = true;
     need_all_redraw = true;
 }
 
@@ -2156,7 +2158,7 @@ bool direction_chooser::process_command(command_type command)
         break;
     }
 
-    return loop_done;
+    return loop_done || force_cancel;
 }
 
 void direction_chooser::finalize_moves()
@@ -2379,7 +2381,7 @@ bool targeting_mouse_move(const coord_def &gc)
 
 void direction_chooser::update_validity()
 {
-    if (!select(false, moves.isEndpoint) || !move_is_ok())
+    if (force_cancel || !select(false, moves.isEndpoint) || !move_is_ok())
     {
         moves.isCancel = true;
         moves.isValid = false;
@@ -2557,14 +2559,15 @@ void get_square_desc(const coord_def &c, describe_info &inf)
 // Show a description of the only thing on a square, or a selection menu with
 // visible things on the square if there are many. For x-v and similar contexts.
 // Used for both in- and out-of-los cells.
-void full_describe_square(const coord_def &c, bool cleanup)
+bool full_describe_square(const coord_def &c, bool cleanup)
 {
     if (!in_bounds(c))
-        return;
+        return false;
     vector<monster_info> list_mons;
     vector<item_def> list_items;
     vector<coord_def> list_features;
     int quantity = 0;
+    bool action_taken = false;
 
     const monster_info *mi = env.map_knowledge(c).monsterinfo();
     item_def *obj = env.map_knowledge(c).item();
@@ -2601,10 +2604,10 @@ void full_describe_square(const coord_def &c, bool cleanup)
         else if (list_items.size())
             describe_item(*obj);
         else
-            describe_feature_wide(c);
+            action_taken = !describe_feature_wide(c, true);
     }
     else
-        describe_feature_wide(c);
+        action_taken = !describe_feature_wide(c, true);
 
     if (cleanup)
     {
@@ -2612,6 +2615,7 @@ void full_describe_square(const coord_def &c, bool cleanup)
         update_screen();
         clear_messages();
     }
+    return action_taken;
 }
 
 static void _extend_move_to_edge(dist &moves)

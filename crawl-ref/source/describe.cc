@@ -25,6 +25,7 @@
 #include "cloud.h" // cloud_type_name
 #include "clua.h"
 #include "colour.h"
+#include "command.h"
 #include "database.h"
 #include "dbg-util.h"
 #include "decks.h"
@@ -55,6 +56,7 @@
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "movement.h"
 #include "mutation.h" // mutation_name, get_mutation_desc
 #include "output.h"
 #include "potion.h"
@@ -89,10 +91,11 @@
 #include "travel.h"
 #include "unicode.h"
 #include "viewchar.h"
+#include "viewmap.h"
 
 using namespace ui;
 
-
+static command_type _get_action(int key, vector<command_type> actions);
 static void _print_bar(int value, int scale, string name,
                        ostringstream &result, int base_value = INT_MAX);
 
@@ -2450,18 +2453,105 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
     return ret;
 }
 
+static string _feat_action_desc(const vector<command_type>& actions,
+                                                dungeon_feature_type feat)
+{
+    static const map<command_type, string> act_str =
+    {
+        { CMD_GO_UPSTAIRS,      "(<)go up" },
+        { CMD_GO_DOWNSTAIRS,    "(>)go down" },
+        { CMD_MAP_PREV_LEVEL,   "([)view destination" },
+        { CMD_MAP_NEXT_LEVEL,   "(])view destination" },
+        { CMD_OPEN_DOOR,        "(O)pen" },
+        { CMD_CLOSE_DOOR,       "(C)lose" },
+
+    };
+    return comma_separated_fn(begin(actions), end(actions),
+        [feat] (command_type cmd)
+        {
+            if (cmd == CMD_GO_DOWNSTAIRS && feat_is_altar(feat))
+                return string("(>)pray");
+            else if (cmd == CMD_GO_DOWNSTAIRS &&
+                (feat == DNGN_ENTER_SHOP
+                    || feat_is_portal(feat)
+                    || feat_is_gate(feat)
+                    || feat == DNGN_TRANSPORTER))
+            {
+                // XX disable for portals without item? The command still works.
+                return string("(>)enter");
+            }
+            else if (cmd == CMD_GO_UPSTAIRS && feat_is_gate(feat))
+                return string("(<)exit");
+            else
+                return act_str.at(cmd);
+        },
+        ", or ") + ".";
+}
+
+static vector<command_type> _allowed_feat_actions(const coord_def &pos)
+{
+    vector<command_type> actions;
+
+    // ugh code duplication, some refactoring could be useful in all of this
+    dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    const command_type dir = feat_stair_direction(feat);
+
+    if (dir != CMD_NO_CMD && you.pos() == pos)
+        actions.push_back(dir);
+
+    if ((feat_is_staircase(feat) || feat_is_escape_hatch(feat))
+        && !is_unknown_stair(pos)
+        && feat != DNGN_EXIT_DUNGEON)
+    {
+        actions.push_back(dir == CMD_GO_UPSTAIRS
+                            ? CMD_MAP_PREV_LEVEL : CMD_MAP_NEXT_LEVEL);
+    }
+
+    if (feat_is_door(feat) && feat != DNGN_BROKEN_DOOR && feat != DNGN_BROKEN_CLEAR_DOOR
+        && (you.pos() - pos).rdist() == 1 // XX better handling of big gates
+        && !feat_is_sealed(feat))
+    {
+        // XX maybe also a (G)o and traverse command?
+        actions.push_back(feat_is_closed_door(feat)
+            ? CMD_OPEN_DOOR : CMD_CLOSE_DOOR); // munge these later
+    }
+    return actions;
+}
+
+static string _esc_cmd_to_str(command_type cmd)
+{
+    string s = command_to_string(cmd);
+    if (s == "<")
+        return "<<";
+    else
+        return s;
+}
+
 void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_extra)
 {
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
     string desc      = feature_description_at(pos, false, DESC_A);
+    string desc_the  = feature_description_at(pos, false, DESC_THE);
+    // remove " leading down", " leading back out of this place", etc.
+    // XX maybe just dataify a short form, rather than do this awkward fixup?
+    const vector<string> to_trim = {
+        " leading ",
+        " in the ",
+        " through the ",
+        " back to the ",
+        " to a ",
+        " to the "};
+    for (const string &trim: to_trim)
+        desc_the = desc_the.substr(0, desc_the.find(trim));
+
     string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc;
     strip_suffix(db_name, " (summoned)");
     string long_desc = getLongDescription(db_name);
 
     inf.title = uppercase_first(desc);
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
-        && !ends_with(desc, "?"))
+        && !ends_with(desc, "?") && !desc.empty())
     {
         inf.title += ".";
     }
@@ -2485,35 +2575,95 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                 break;
             }
         }
+        const auto stair_dir = feat_stair_direction(feat);
 
-        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
+        // it seems like there must be some way to refactor all this stuff so
+        // it's cleaner...
+        if (feat == DNGN_EXIT_DUNGEON)
         {
+            // XX custom messages for other branch entrances/exits?
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can exit the dungeon "
+                    "with the <w>%s</w> key.",
+                    _esc_cmd_to_str(stair_dir).c_str());
+        }
+        else if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
+        {
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can traverse %s "
+                    "with the <w>%s</w> key.",
+                    desc_the.c_str(),
+                    _esc_cmd_to_str(stair_dir).c_str());
+
             if (is_unknown_stair(pos))
             {
-                long_desc += "\nYou have not yet explored it and cannot tell ";
-                long_desc += "where it leads.";
+                long_desc += " You have not yet explored it and cannot tell "
+                             "where it leads.";
             }
             else
             {
+                const command_type look_dir =
+                    feat_stair_direction(feat) == CMD_GO_UPSTAIRS
+                                         ? CMD_MAP_PREV_LEVEL
+                                         : CMD_MAP_NEXT_LEVEL;
                 long_desc +=
-                    make_stringf("\nYou can view the location it leads to by "
+                    make_stringf(" You can view the location it leads to by "
                                  "examining it with <w>%s</w> and pressing "
                                  "<w>%s</w>.",
                                  command_to_string(CMD_DISPLAY_MAP).c_str(),
-                                 command_to_string(
-                                     feat_stair_direction(feat) ==
-                                         CMD_GO_UPSTAIRS ? CMD_MAP_PREV_LEVEL
-                                         : CMD_MAP_NEXT_LEVEL).c_str());
+                                 command_to_string(look_dir).c_str());
             }
         }
+        else if (feat_is_portal(feat)
+            || feat == DNGN_ENTER_ZIGGURAT) // augh this is technically a gate
+        {
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can %senter %s "
+                    "with the <w>%s</w> key; it will vanish after you do so.",
+                    feat == DNGN_ENTER_TROVE ? "try to " : "",
+                    desc_the.c_str(),
+                    _esc_cmd_to_str(stair_dir).c_str());
+        }
+        else if (feat_is_gate(feat))
+        {
+            // it's just special case after special case with these descs
+            const string how = feat == DNGN_ENTER_HELL
+                ? (stair_dir == CMD_GO_UPSTAIRS ? "to Hell" : "Hell")
+                : make_stringf("through %s", desc_the.c_str());
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can %s %s "
+                    "with the <w>%s</w> key%s.",
+                    stair_dir == CMD_GO_DOWNSTAIRS ? "enter" : "exit",
+                    how.c_str(),
+                    _esc_cmd_to_str(stair_dir).c_str(),
+                    // TODO should probably derive this from `runes_for_branch`:
+                    (feat == DNGN_ENTER_ZOT || feat == DNGN_ENTER_VAULTS)
+                        ? " if you have enough runes" : "");
+        }
     }
-
-    // mention the ability to pray at altars
-    if (feat_is_altar(feat))
+    else if (feat_is_altar(feat))
     {
         long_desc +=
-            make_stringf("\n(Pray here with <w>%s</w> to learn more.)\n",
+            make_stringf("\nPray here with <w>%s</w> to learn more.\n",
                          command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
+    else if (feat == DNGN_ENTER_SHOP)
+    {
+        long_desc += make_stringf(
+                "\nWhile standing here, you can enter <w>%s</w> with "
+                "the <w>%s</w> key.",
+                desc.c_str(),
+                command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
+    else if (feat == DNGN_MALIGN_GATEWAY)
+        long_desc += "\nMoving into it will do damage and cause you to blink.";
+    else if (feat == DNGN_TRANSPORTER)
+    {
+        long_desc += make_stringf(
+                "\nWhile standing here, you can enter %s with "
+                "with the <w>%s</w> key.",
+                desc_the.c_str(),
+                command_to_string(CMD_GO_DOWNSTAIRS).c_str());
     }
 
     // mention that permanent trees are usually flammable
@@ -2527,6 +2677,21 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += "\n" + getLongDescription("mangrove burning");
         else if (feat == DNGN_DEMONIC_TREE)
             long_desc += "\n" + getLongDescription("demonic tree burning");
+    }
+
+    if (feat_is_door(feat) && feat != DNGN_BROKEN_DOOR && feat != DNGN_BROKEN_CLEAR_DOOR)
+    {
+        const bool openable = feat_is_closed_door(feat);
+        const bool sealed = feat_is_sealed(feat);
+
+        long_desc += make_stringf(
+            "\nWhile adjacent to it, you can %s%s it by pressing the "
+            "<w>%s</w> key.",
+            sealed ? "normally " : "",
+            openable ? "open" : "close",
+            command_to_string(openable ? CMD_OPEN_DOOR : CMD_CLOSE_DOOR).c_str());
+        if (sealed)
+            long_desc += " However, this will not work until the sealing runes wear off.";
     }
 
     // mention that diggable walls are
@@ -2559,7 +2724,43 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     inf.quote = getQuoteString(db_name);
 }
 
-void describe_feature_wide(const coord_def& pos)
+static bool _do_feat_action(const coord_def &pos, const command_type action)
+{
+    if (action == CMD_NO_CMD)
+        return true;
+
+    switch (action)
+    {
+    case CMD_GO_UPSTAIRS:
+    case CMD_GO_DOWNSTAIRS:
+        ASSERT(pos == you.pos());
+        process_command(action, crawl_state.prev_cmd);
+        return false;
+    case CMD_MAP_PREV_LEVEL:
+    case CMD_MAP_NEXT_LEVEL:
+    {
+        level_pos dest = map_follow_stairs(action == CMD_MAP_PREV_LEVEL, pos);
+        // XX this leaves view mode on the ui stack, any issues?
+        if (dest.is_valid())
+        {
+            show_map(dest, true, true);
+            return false; // or true?
+        }
+        break;
+    }
+    case CMD_OPEN_DOOR:
+        open_door_action(pos - you.pos());
+        return false;
+    case CMD_CLOSE_DOOR:
+        close_door_action(pos - you.pos());
+        return false;
+    default:
+        break;
+    }
+    return true;
+}
+
+bool describe_feature_wide(const coord_def& pos, bool do_actions)
 {
     typedef struct {
         string title, body, quote;
@@ -2580,7 +2781,8 @@ void describe_feature_wide(const coord_def& pos)
         f.tile = tile_def(tile);
 #endif
         f.quote = trimmed_string(inf.quote);
-        feats.emplace_back(f);
+        if (f.title.size() || f.body.size() || f.quote.size())
+            feats.emplace_back(f);
     }
     auto extra_descs = _get_feature_extra_descs(pos);
     for (const auto &desc : extra_descs)
@@ -2589,7 +2791,8 @@ void describe_feature_wide(const coord_def& pos)
         f.title = desc.title;
         f.body = trimmed_string(desc.description);
         f.tile = desc.tile;
-        feats.emplace_back(f);
+        if (f.title.size() || f.body.size() || f.quote.size())
+            feats.emplace_back(f);
     }
     if (crawl_state.game_is_hints())
     {
@@ -2602,6 +2805,8 @@ void describe_feature_wide(const coord_def& pos)
             feats.emplace_back(f);
         }
     }
+    if (feats.empty())
+        return CMD_NO_CMD;
 
     auto scroller = make_shared<Scroller>();
     auto vbox = make_shared<Box>(Widget::VERT);
@@ -2646,6 +2851,22 @@ void describe_feature_wide(const coord_def& pos)
             vbox->add_child(text);
         }
     }
+
+    vector<command_type> actions;
+    if (do_actions)
+        actions = _allowed_feat_actions(pos);
+    formatted_string footer_text("", CYAN);
+    if (!actions.empty())
+    {
+        const dungeon_feature_type feat = env.map_knowledge(pos).feat();
+        footer_text += formatted_string(_feat_action_desc(actions, feat));
+        auto footer = make_shared<Text>();
+        footer->set_text(footer_text);
+        footer->set_margin_for_crt(1, 0, 0, 0);
+        footer->set_margin_for_sdl(20, 0, 0, 0);
+        vbox->add_child(move(footer));
+    }
+
 #ifdef USE_TILE_LOCAL
     vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
@@ -2654,8 +2875,15 @@ void describe_feature_wide(const coord_def& pos)
     auto popup = make_shared<ui::Popup>(scroller);
 
     bool done = false;
-    popup->on_keydown_event([&](const KeyEvent& ev) {
-        done = !scroller->on_event(ev);
+    command_type action = CMD_NO_CMD;
+
+    // use on_hotkey_event, not on_event, to preempt the scroller key handling
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        action = _get_action(ev.key(), actions);
+        if (action != CMD_NO_CMD)
+            done = true;
+        else
+            done = !scroller->on_event(ev);
         return true;
     });
 
@@ -2677,11 +2905,13 @@ void describe_feature_wide(const coord_def& pos)
         tiles.json_close_object();
     }
     tiles.json_close_array();
+    tiles.json_write_string("actions", footer_text.tostring());
     tiles.push_ui_layout("describe-feature-wide", 0);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(move(popup), done);
+    return _do_feat_action(pos, action);
 }
 
 void describe_feature_type(dungeon_feature_type feat)
@@ -2780,6 +3010,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
 
 static string _actions_desc(const vector<command_type>& actions)
 {
+    // XX code duplication
     static const map<command_type, string> act_str =
     {
         { CMD_WIELD_WEAPON, "(w)ield" },
@@ -2826,6 +3057,12 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_INSCRIBE_ITEM,    'i' },
         { CMD_ADJUST_INVENTORY, '=' },
         { CMD_SET_SKILL_TARGET, 's' },
+        { CMD_GO_UPSTAIRS,      '<' },
+        { CMD_GO_DOWNSTAIRS,    '>' },
+        { CMD_MAP_PREV_LEVEL,   '[' },
+        { CMD_MAP_NEXT_LEVEL,   ']' },
+        { CMD_OPEN_DOOR,        'o' },
+        { CMD_CLOSE_DOOR,       'c' },
     };
 
     key = tolower_safe(key);

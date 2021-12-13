@@ -323,7 +323,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     }
 
     if (feat_is_altar(feat))
-        return CMD_GO_UPSTAIRS; // arbitrary; consistent with shops
+        return CMD_GO_DOWNSTAIRS; // arbitrary; consistent with shops
 
     switch (feat)
     {
@@ -334,7 +334,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
-    case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
         return CMD_GO_UPSTAIRS;
 
@@ -350,6 +349,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_TRANSPORTER:
+    case DNGN_ENTER_SHOP:
         return CMD_GO_DOWNSTAIRS;
 
     default:

@@ -288,6 +288,7 @@ private:
 
     bool unrestricted;
 public:
+    bool force_cancel;
     // TODO: fix the weird behaviour that led to this hack
     bool needs_path;            // Determine a ray while we're at it?
 };
@@ -305,7 +306,7 @@ void direction(dist &moves, const direction_chooser_args& args);
 
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
-void full_describe_square(const coord_def &c, bool cleanup = true);
+bool full_describe_square(const coord_def &c, bool cleanup = true);
 void get_square_desc(const coord_def &c, describe_info &inf);
 
 void describe_floor();

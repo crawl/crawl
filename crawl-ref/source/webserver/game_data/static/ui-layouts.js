@@ -155,7 +155,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 var text = feat.body;
                 if (feat.quote)
                      text += "\n\n" + feat.quote;
-                $feat.find(".body").html(text);
+                $feat.find(".body").html(util.formatted_string_to_html(text));
             }
             else
                 $feat.find(".body").remove();
@@ -170,9 +170,17 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 feat.tile.ymax, false, describe_scale);
             $popup.append($feat);
         });
+        if (desc.actions)
+        {
+            $popup.append("<div class=actions></div>");
+            $popup.find(".actions").html(clickify_actions(desc.actions));
+        }
+
         var s = scroller($popup[0]);
         $popup.on("keydown keypress", function (event) {
-            scroller_handle_key(s, event);
+            var key = String.fromCharCode(event.which);
+            if (key != "<" && key != ">") // XX not always
+                scroller_handle_key(s, event);
         });
         return $popup;
     }
@@ -233,7 +241,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $popup.on("keydown keypress", function (event) {
             scroller_handle_key(s, event);
         });
-        if (desc.actions !== "")
+        if (desc.actions)
             $popup.find(".actions").html(clickify_actions(desc.actions));
         else
             $popup.find(".actions").remove();
