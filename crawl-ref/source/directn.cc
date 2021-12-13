@@ -2559,6 +2559,8 @@ void get_square_desc(const coord_def &c, describe_info &inf)
 // Used for both in- and out-of-los cells.
 void full_describe_square(const coord_def &c, bool cleanup)
 {
+    if (!in_bounds(c))
+        return;
     vector<monster_info> list_mons;
     vector<item_def> list_items;
     vector<coord_def> list_features;
