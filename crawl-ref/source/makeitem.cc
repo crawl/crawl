@@ -690,8 +690,8 @@ static void _generate_missile_item(item_def& item, int force_type,
 
 static bool _armour_disallows_randart(int sub_type)
 {
-    // Scarves are never randarts.
-    return sub_type == ARM_SCARF;
+    // Scarves and orbs are never randarts.
+    return sub_type == ARM_SCARF || sub_type == ARM_ORB;
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
@@ -775,6 +775,9 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
                                       3, SPARM_POSITIVE_ENERGY,
                                       6, SPARM_REFLECTION,
                                       12, SPARM_PROTECTION);
+
+    case ARM_ORB:
+        return random_choose_weighted(1, SPARM_PONDEROUSNESS);
 
     case ARM_SCARF:
         return random_choose_weighted(1, SPARM_RESISTANCE,
@@ -1036,9 +1039,10 @@ static armour_type _get_random_armour_type(int item_level)
                                          10, ARM_HELMET,
                                          2, ARM_HAT,
                                          // Shield slot
-                                         4, ARM_KITE_SHIELD,
-                                         6, ARM_BUCKLER,
-                                         2, ARM_TOWER_SHIELD);
+                                         3, ARM_KITE_SHIELD,
+                                         5, ARM_BUCKLER,
+                                         2, ARM_TOWER_SHIELD,
+                                         2, ARM_ORB);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
@@ -1173,8 +1177,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
         item.plus -= 1 + random2(3);
     }
-    // Scarves always get an ego.
-    else if (item.sub_type == ARM_SCARF)
+    // Scarves and orbs always get an ego.
+    else if (item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB)
         set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))

@@ -1841,6 +1841,8 @@ static string _describe_armour(const item_def &item, bool verbose)
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
                 description += _warlock_mirror_reflect_desc();
         }
+        else if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
+            ;
         else
         {
             const int evp = property(item, PARM_EVASION);

@@ -426,7 +426,10 @@ centaur_barding_red
 # end TAG_MAJOR_VERSION
 
 %sdir item/armour/shields
+
 %rim 0
+orb ARM_ORB
+
 buckler1 ARM_BUCKLER
 buckler2
 buckler3

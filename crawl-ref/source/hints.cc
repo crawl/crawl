@@ -2385,7 +2385,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "You just miscast a spell. ";
 
         const item_def *shield = you.slot_item(EQ_SHIELD, false);
-        if (!player_effectively_in_light_armour() || shield)
+        if (!player_effectively_in_light_armour()
+            || (shield && shield->sub_type != ARM_ORB))
         {
             text << "Wearing heavy body armour or using a shield, especially a "
                     "large one, can severely hamper your spellcasting "

@@ -809,10 +809,9 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         break;
 
     case EQ_SHIELD:
-        // No races right now that can wear ARM_TOWER_SHIELD but not ARM_KITE_SHIELD
-        dummy.sub_type = ARM_TOWER_SHIELD;
-        if (you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM)
-            alternate.sub_type = ARM_BUCKLER;
+        // Assume that anything that can use an orb can wear some kind of
+        // shield
+        dummy.sub_type = ARM_ORB;
         break;
 
     case EQ_HELMET:
@@ -2145,6 +2144,10 @@ int player_shield_class()
     if (you.shield())
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
+
+        if (item.sub_type == ARM_ORB)
+            return 0;
+
         int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                         * (item.sub_type - ARM_TOWER_SHIELD);
         int base_shield = property(item, PARM_AC) * 2 + size_factor;

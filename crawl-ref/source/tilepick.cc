@@ -2474,6 +2474,9 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_BOOTS:
         return TILE_ARM_BOOTS;
 
+    case ARM_ORB:
+        return TILE_ARM_ORB;
+
     case ARM_BUCKLER:
         return TILE_ARM_BUCKLER;
 

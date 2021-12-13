@@ -3516,6 +3516,7 @@ colour_t item_def::armour_colour() const
         case ARM_ANIMAL_SKIN:
             return LIGHTGREY;
         case ARM_CRYSTAL_PLATE_ARMOUR:
+        case ARM_ORB:
             return WHITE;
         case ARM_KITE_SHIELD:
         case ARM_TOWER_SHIELD:
