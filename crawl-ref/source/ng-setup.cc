@@ -136,7 +136,7 @@ item_def* newgame_make_item(object_class_type base,
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
     if (item.base_type == OBJ_ARMOUR
-        && !can_wear_armour(item, false, false))
+        && !can_wear_armour(item, false, true))
     {
         if (item.sub_type == ARM_HELMET || item.sub_type == ARM_HAT)
             item.sub_type = ARM_HAT;
