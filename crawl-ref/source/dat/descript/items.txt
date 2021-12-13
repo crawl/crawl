@@ -872,6 +872,11 @@ A potion which mutates the drinker, removing several mutations then
 granting a few random mutations, which are likely (but not guaranteed) to be
 beneficial.
 %%%%
+potion of cure mutation
+
+A potion which removes several mutations from the drinker. A favorite of those who
+wander the infinite planes of the abyss.
+%%%%
 potion of resistance
 
 A potion which grants temporary resistance to a variety of harmful effects:

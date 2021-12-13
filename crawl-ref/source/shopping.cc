@@ -461,6 +461,10 @@ unsigned int item_value(item_def item, bool ident)
             case POT_MUTATION:
                 valued += 80;
                 break;
+			
+			case POT_CURE_MUTATION:
+                valued += 200;
+                break;
 
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:

@@ -765,6 +765,55 @@ public:
     }
 };
 
+const int MIN_REMOVED = 3;
+const int MAX_REMOVED = 4;
+
+class PotionCureMutation : public PotionEffect
+{
+private:
+    PotionCureMutation() : PotionEffect(POT_CURE_MUTATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionCureMutation);
+public:
+    static const PotionCureMutation &instance()
+    {
+        static PotionCureMutation inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr) const override
+    {
+        if (!_can_mutate(reason))
+            return false;
+
+        return true;
+    }
+
+    bool effect(bool = true, int = 40, bool = true) const override
+    {
+        mpr("It has a very clean taste.");
+        bool mutated = false;
+        int remove_mutations = random_range(MIN_REMOVED, MAX_REMOVED);
+
+        // Remove mutations.
+        for (int i = 0; i < remove_mutations; i++)
+            mutated |= delete_mutation(RANDOM_MUTATION, "potion of cure mutation", false);
+
+        learned_something_new(HINT_YOU_MUTATED);
+        return mutated;
+    }
+
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        string msg = "Really drink that potion of cure mutation";
+        msg += you.rmut_from_item() ? " while resistant to mutation?" : "?";
+
+        effect();
+    }
+};
+
 class PotionDegeneration : public PotionEffect
 {
 private:

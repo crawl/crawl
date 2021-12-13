@@ -672,6 +672,7 @@ const char* potion_type_name(int potiontype)
     case POT_MAGIC:             return "magic";
     case POT_BERSERK_RAGE:      return "berserk rage";
     case POT_MUTATION:          return "mutation";
+	case POT_CURE_MUTATION:     return "cure mutation";
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
 
