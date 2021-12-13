@@ -140,6 +140,62 @@ jobs:
       - name: Print ccache stats
         run: ccache -s
 
+
+  build_appimage:
+    name: Linux AppImage ${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type:
+          - console
+          - tiles
+        build_opts:
+          - LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+          - TILES=1 LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+        exclude:
+          - build_type: console
+            build_opts: TILES=1 LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+          - build_type: tiles
+            build_opts: LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # all history
+          submodules: false
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Install dependencies
+        run: ./deps.py --build-opts "${{ matrix.build_opts }}" --appimage
+        working-directory: .github/workflows
+      - name: Cache compilation
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ccache-appimage-${{ matrix.build_type }}-${{ github.sha }}
+          restore-keys: |
+            ccache-appimage-${{ matrix.build_type }}-
+            ccache-appiamge-
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
+      - run: make -j$(nproc) ${{ matrix.build_opts }} appimage
+        working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
+      - name: Add build to release
+        if: github.event.release.tag_name != null
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          file: crawl-ref/source/stone_soup-latest-linux-${{ matrix.build_type }}.x86_64.AppImage
+          asset_name: dcss-$tag-linux-${{ matrix.build_type }}.x86_64.AppImage
+
+
   build_macos:
     name: macOS ${{ matrix.build_type }}
     runs-on: macos-latest
