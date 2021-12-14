@@ -125,7 +125,33 @@ LUAFN(crawl_stderr)
     return 0;
 }
 
-/*** Print to the debugging channel, which is desplayed only for debug builds.
+/*** Returns the current lua stack, for debugging.
+ * @treturn string channel name 
+ * @function stack
+ */
+LUAFN(crawl_stack)
+{
+    string r;
+    struct lua_Debug dbg;
+    int i = 0;
+    while (lua_getstack(ls, i++, &dbg) == 1)
+    {
+        lua_getinfo(ls, "lnuS", &dbg);
+        char* file = strrchr(dbg.short_src, '/');
+        if (file == nullptr)
+            file = dbg.short_src;
+        else
+            file++;
+        char buf[1000];
+        sprintf(buf, "%s, function %s, line %d\n", file, dbg.name, dbg.currentline);
+        r += buf;
+    }
+    lua_pushstring(ls, r.c_str());
+    return 1;
+}
+
+
+/*** Print to the debugging channel, which is displayed only for debug builds.
  * @tparam string text
  * @function dpr
  */
@@ -1471,6 +1497,7 @@ static const struct luaL_reg crawl_clib[] =
     { "formatted_mpr",      crawl_formatted_mpr },
     { "dpr",                crawl_dpr },
     { "stderr",             crawl_stderr },
+    { "stack",              crawl_stack },
     { "more",               crawl_more },
     { "more_autoclear",     crawl_set_more_autoclear },
     { "enable_more",        crawl_enable_more },
