@@ -1058,7 +1058,7 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
 
         const level_pos dest = map_follow_stairs(
                                     cmd == CMD_MAP_PREV_LEVEL, state.lpos.pos);
-        if (dest.is_valid())
+        if (dest.id.is_valid())
         {
             state.lpos = dest;
             los_changed();
