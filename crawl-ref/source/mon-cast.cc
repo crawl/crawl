@@ -1469,7 +1469,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_FIRE_STORM:
-        setup_fire_storm(mons, power / 2, beam);
+        setup_fire_storm(mons, power, beam);
         beam.foe_ratio = random_range(40, 55);
         break;
 
