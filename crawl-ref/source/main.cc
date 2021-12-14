@@ -603,9 +603,9 @@ static string _wanderer_spell_str()
 
 static void _djinn_announce_spells()
 {
-    const string equip_str = you.char_class == JOB_WANDERER ?
-                                        _wanderer_equip_str():
-                                        "";
+    const string equip_str = (you.char_class == JOB_WANDERER
+                                 && inv_count() > 0) ? _wanderer_equip_str()
+                                                    : "";
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -620,18 +620,22 @@ static void _djinn_announce_spells()
 // spells and spell library
 static void _wanderer_note_equipment()
 {
-    const string equip_str = _wanderer_equip_str();
+    const string equip_str = inv_count() > 0 ? _wanderer_equip_str() : "";
+
+    const string eq_spacer = equip_str.empty() ? "" : "; and ";
 
     // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
-        "; and the following spell memorised: "
+        eq_spacer + "the following spell memorised: "
         + _wanderer_spell_str();
+
+    const string spell_spacer = spell_str.empty() && equip_str.empty() ? "" : "; and ";
 
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
         !library.size() ? "" :
-        "; and the following spells available to memorise: "
+        spell_spacer + "the following spells available to memorise: "
         + comma_separated_fn(library.begin(), library.end(),
                              [] (const spell_type spell) -> string
                              {
