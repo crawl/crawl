@@ -935,7 +935,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
                 interrupt_activity(activity_interrupt::teleport);
                 if (!reason.empty())
                     mpr(reason);
-                mprf("You are suddenly yanked towards %s nearby monster%s!",
+                mprf("You are yanked towards %s nearby monster%s!",
                      mons_near_target > 1 ? "some" : "a",
                      mons_near_target > 1 ? "s" : "");
             }
