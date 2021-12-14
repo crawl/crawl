@@ -408,6 +408,13 @@ Bat Form ability
  The victims have been bled”
     -Bauhaus, “Bela Lugosi's Dead”. 1979.
 %%%%
+Bend Time ability
+
+“It's astounding
+ Time is fleeting
+ Madness takes its toll”
+    -Richard O'Brien, “Time Warp”. 1975.
+%%%%
 Call Canine Familiar spell
 
 “There seemed a strange stillness over everything. But as I listened, I heard
@@ -802,11 +809,28 @@ Sigmund
     -William Morris, _The Story of Sigurd the Volsung and the Fall of the
 Niblungs_. 1891.
 %%%%
+Slouch ability
+
+“I remember doing the Time Warp
+ Drinking those moments when
+ The blackness would hit me
+ And the void would be calling”
+    -Richard O'Brien, “Time Warp”. 1975.
+%%%%
 Sticky Flame spell
 
 “Give a man a fire and he's warm for a day, but set fire to him and he's warm
  for the rest of his life.”
     -Terry Pratchett, “Jingo”. 1997.
+%%%%
+Step From Time ability
+
+“It's so dreamy
+ Oh, fantasy free me
+ So you can't see me
+ No, not at all
+ In another dimension”
+    -Richard O'Brien, “Time Warp”. 1975.
 %%%%
 Storm Form spell
 
@@ -838,6 +862,13 @@ Temple
 “And I heard a great voice out of the temple saying to the seven angels, Go
  your ways, and pour out the vials of the wrath of God upon the earth.”
     -KJV Bible, Revelations 16:1.
+%%%%
+Temporal Distortion ability
+
+“With a bit of a mind flip
+ You're into the time slip
+ And nothing can ever be the same”
+    -Richard O'Brien, “Time Warp”. 1975.
 %%%%
 Terence
 
