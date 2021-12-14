@@ -237,7 +237,7 @@ static void _give_job_spells(job_type job)
         return;
     }
 
-    library_add_spells(spells);
+    library_add_spells(spells, true);
 
     const spell_type first_spell = spells[0];
     if (!spell_is_useless(first_spell, false, true)

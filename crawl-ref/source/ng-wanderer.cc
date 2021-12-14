@@ -411,7 +411,7 @@ static vector<spell_type> _give_wanderer_major_spells(skill_type skill,
         }
     }
 
-    library_add_spells(spells);
+    library_add_spells(spells, true);
     return spells;
 }
 
@@ -433,7 +433,7 @@ static vector<spell_type> _give_wanderer_minor_spells(skill_type skill)
     theme_book_spells(discipline_1, discipline_2,
                       exact_level_spell_filter,
                       IT_SRC_NONE, 2, spells);
-    library_add_spells(spells);
+    library_add_spells(spells, true);
     return spells;
 }
 
