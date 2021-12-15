@@ -3052,6 +3052,73 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     }
 }
 
+static bool _setup_unravelling(bolt &beam, int pow, coord_def target)
+{
+    zappy(ZAP_UNRAVELLING, pow, false, beam);
+    beam.set_agent(&you);
+    beam.source = target;
+    beam.target = target;
+    beam.ex_size = 1;
+
+    bolt tracer_beam = beam;
+    tracer_beam.is_tracer = true;
+    tracer_beam.explode(false);
+    return !tracer_beam.beam_cancelled;
+}
+
+spret cast_unravelling(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const actor* victim = actor_at(target);
+    if ((!victim || !you.can_see(*victim))
+        && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    if (victim && (victim->is_player() && !player_is_debuffable()
+                   || victim->is_monster() && you.can_see(*victim)
+                      && !monster_can_be_unravelled(*victim->as_monster())))
+    {
+        mprf("%s %s no magical effects to unravel.",
+             victim->name(DESC_THE).c_str(),
+             victim->conj_verb("have").c_str());
+        return spret::abort;
+    }
+
+    targeter_unravelling hitfunc;
+    hitfunc.set_aim(target);
+    auto vulnerable = [](const actor *act) -> bool
+    {
+        return !(act->is_monster() && god_protects(act->as_monster()));
+    };
+
+    if (stop_attack_prompt(hitfunc, "unravel", vulnerable))
+        return spret::abort;
+
+    bolt beam;
+    if (!_setup_unravelling(beam, pow, target))
+        return spret::abort;
+
+    fail_check();
+
+    if (!victim)
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return spret::success;
+    }
+
+    beam.fire();
+
+    return spret::success;
+}
+
 spret cast_inner_flame(coord_def target, int pow, bool fail)
 {
     if (cell_is_solid(target))

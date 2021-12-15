@@ -1241,7 +1241,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                            [](const coord_def& p) -> bool {
                                               return you.pos() != p; });
     case SPELL_VIOLENT_UNRAVELLING:
-        return make_unique<targeter_unravelling>(&you, range, pow);
+        return make_unique<targeter_unravelling>();
     case SPELL_INFESTATION:
         return make_unique<targeter_smite>(&you, range, 2, 2, false,
                                            [](const coord_def& p) -> bool {
@@ -2132,6 +2132,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_GRAVITAS:
         return cast_gravitas(powc, beam.target, fail);
+
+    case SPELL_VIOLENT_UNRAVELLING:
+        return cast_unravelling(spd.target, powc, fail);
 
     // other effects
     case SPELL_DISCHARGE:
