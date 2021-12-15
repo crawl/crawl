@@ -758,8 +758,14 @@ void floor_transition(dungeon_feature_type how,
         mpr("You have escaped!");
 
         if (player_has_orb())
+        {
+            if (you_worship(GOD_IGNIS))
+                simple_god_message(" is restored to blazing glory by the Orb!");
             ouch(INSTANT_DEATH, KILLED_BY_WINNING);
+        }
 
+        if (you_worship(GOD_IGNIS))
+            simple_god_message(" burns out slowly, despite your efforts.");
         ouch(INSTANT_DEATH, KILLED_BY_LEAVING);
     }
 
