@@ -2946,14 +2946,16 @@ void get_item_desc(const item_def &item, describe_info &inf)
 static vector<command_type> _allowed_actions(const item_def& item)
 {
     vector<command_type> actions;
-    actions.push_back(CMD_ADJUST_INVENTORY);
-    if (item_equip_slot(item) == EQ_WEAPON)
-        actions.push_back(CMD_UNWIELD_WEAPON);
-    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-        && _is_below_training_target(item, false))
+    if (item_is_evokable(item))
     {
-        actions.push_back(CMD_SET_SKILL_TARGET);
+        actions.push_back(CMD_EVOKE);
+        actions.push_back(CMD_QUIVER_ITEM);
     }
+
+    // what is this for?
+    if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
+        actions.push_back(CMD_WIELD_WEAPON);
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -2963,6 +2965,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
             if (item_is_wieldable(item))
                 actions.push_back(CMD_WIELD_WEAPON);
         }
+        else if (item_equip_slot(item) == EQ_WEAPON)
+            actions.push_back(CMD_UNWIELD_WEAPON);
         break;
     case OBJ_MISSILES:
         if (!you.has_mutation(MUT_NO_GRASPING))
@@ -2975,7 +2979,6 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
     case OBJ_SCROLLS:
-    //case OBJ_BOOKS: these are handled differently
         actions.push_back(CMD_READ);
         break;
     case OBJ_JEWELLERY:
@@ -2991,16 +2994,13 @@ static vector<command_type> _allowed_actions(const item_def& item)
     default:
         ;
     }
-    if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
-        actions.push_back(CMD_WIELD_WEAPON);
-
-    if (item_is_evokable(item))
-    {
-        actions.push_back(CMD_QUIVER_ITEM);
-        actions.push_back(CMD_EVOKE);
-    }
-
     actions.push_back(CMD_DROP);
+    actions.push_back(CMD_ADJUST_INVENTORY);
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+        && _is_below_training_target(item, false))
+    {
+        actions.push_back(CMD_SET_SKILL_TARGET);
+    }
 
     if (!crawl_state.game_is_tutorial())
         actions.push_back(CMD_INSCRIBE_ITEM);
@@ -3026,7 +3026,7 @@ static string _actions_desc(const vector<command_type>& actions)
         { CMD_DROP, "(d)rop" },
         { CMD_INSCRIBE_ITEM, "(i)nscribe" },
         { CMD_ADJUST_INVENTORY, "(=)adjust" },
-        { CMD_SET_SKILL_TARGET, "(s)kill" },
+        { CMD_SET_SKILL_TARGET, "(s)kill target" },
     };
     return comma_separated_fn(begin(actions), end(actions),
                                 [] (command_type cmd)
