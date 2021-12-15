@@ -31,14 +31,6 @@
 
 spret cast_deaths_door(int pow, bool fail)
 {
-    if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
-        && !yesno("Your necklace cannot protect you in death's doorway. "
-                  "Continue anyway?", false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
     fail_check();
     mpr("You stand defiantly in death's doorway!");
     mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
