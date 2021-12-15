@@ -2570,7 +2570,12 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     bool action_taken = false;
 
     const monster_info *mi = env.map_knowledge(c).monsterinfo();
-    item_def *obj = env.map_knowledge(c).item();
+    // get the real items if we are describing the player's position, so that
+    // actions can work. (Feels like there should be an easier way of doing
+    // this?)
+    item_def *obj = c == you.pos()
+                ? (you.visible_igrd(c) == NON_ITEM ? nullptr : &env.item[you.visible_igrd(c)])
+                : env.map_knowledge(c).item();
     const dungeon_feature_type feat = env.map_knowledge(c).feat();
 
     if (mi)

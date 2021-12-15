@@ -2952,11 +2952,30 @@ void get_item_desc(const item_def &item, describe_info &inf)
 static vector<command_type> _allowed_actions(const item_def& item)
 {
     vector<command_type> actions;
-    if (item_is_evokable(item))
+
+    // XX CMD_ACTIVATE
+    switch (item.base_type)
     {
-        actions.push_back(CMD_EVOKE);
-        actions.push_back(CMD_QUIVER_ITEM);
+    case OBJ_SCROLLS:
+        actions.push_back(CMD_READ);
+        break;
+    case OBJ_POTIONS:
+        if (you.can_drink()) // mummies and lich form forbidden
+            actions.push_back(CMD_QUAFF);
+        break;
+    default:
+        break;
     }
+
+    // n.b. this assumes that pos has already been checked
+    if (!in_inventory(item))
+        return actions;
+
+    if (item_is_evokable(item))
+        actions.push_back(CMD_EVOKE);
+
+    if (quiver::slot_to_action(item.link)->is_valid())
+        actions.push_back(CMD_QUIVER_ITEM);
 
     // what is this for?
     if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
@@ -2974,18 +2993,11 @@ static vector<command_type> _allowed_actions(const item_def& item)
         else if (item_equip_slot(item) == EQ_WEAPON)
             actions.push_back(CMD_UNWIELD_WEAPON);
         break;
-    case OBJ_MISSILES:
-        if (!you.has_mutation(MUT_NO_GRASPING))
-            actions.push_back(CMD_QUIVER_ITEM);
-        break;
     case OBJ_ARMOUR:
         if (item_is_equipped(item))
             actions.push_back(CMD_REMOVE_ARMOUR);
         else
             actions.push_back(CMD_WEAR_ARMOUR);
-        break;
-    case OBJ_SCROLLS:
-        actions.push_back(CMD_READ);
         break;
     case OBJ_JEWELLERY:
         if (item_is_equipped(item))
@@ -2993,12 +3005,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
         else
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
-    case OBJ_POTIONS:
-        if (you.can_drink()) // mummies and lich form forbidden
-            actions.push_back(CMD_QUAFF);
-        break;
     default:
-        ;
+        break;
     }
     actions.push_back(CMD_DROP);
     actions.push_back(CMD_ADJUST_INVENTORY);
@@ -3021,7 +3029,7 @@ static string _actions_desc(const vector<command_type>& actions)
     {
         { CMD_WIELD_WEAPON, "(w)ield" },
         { CMD_UNWIELD_WEAPON, "(u)nwield" },
-        { CMD_QUIVER_ITEM, "(q)uiver" },
+        { CMD_QUIVER_ITEM, "(q)uiver" }, // except for potions, see below
         { CMD_WEAR_ARMOUR, "(w)ear" },
         { CMD_REMOVE_ARMOUR, "(t)ake off" },
         { CMD_EVOKE, "e(v)oke" },
@@ -3034,9 +3042,14 @@ static string _actions_desc(const vector<command_type>& actions)
         { CMD_ADJUST_INVENTORY, "(=)adjust" },
         { CMD_SET_SKILL_TARGET, "(s)kill target" },
     };
+    bool push_quiver = false;
     return comma_separated_fn(begin(actions), end(actions),
-                                [] (command_type cmd)
+                                [&push_quiver] (command_type cmd)
                                 {
+                                    if (cmd == CMD_QUAFF) // assumes quaff appears first
+                                        push_quiver = true;
+                                    else if (push_quiver && cmd == CMD_QUIVER_ITEM)
+                                        return string("qui(v)er");
                                     return act_str.at(cmd);
                                 },
                                 ", or ") + ".";
@@ -3051,7 +3064,7 @@ static command_type _get_action(int key, vector<command_type> actions)
     {
         { CMD_WIELD_WEAPON,     'w' },
         { CMD_UNWIELD_WEAPON,   'u' },
-        { CMD_QUIVER_ITEM,      'q' },
+        { CMD_QUIVER_ITEM,      'q' }, // except for potions, see below
         { CMD_WEAR_ARMOUR,      'w' },
         { CMD_REMOVE_ARMOUR,    't' },
         { CMD_EVOKE,            'v' },
@@ -3072,10 +3085,16 @@ static command_type _get_action(int key, vector<command_type> actions)
     };
 
     key = tolower_safe(key);
+    bool push_quiver = false;
 
     for (auto cmd : actions)
-        if (key == act_key.at(cmd))
+    {
+        if (cmd == CMD_QUAFF) // quaff must come first
+            push_quiver = true;
+        if (push_quiver && cmd == CMD_QUIVER_ITEM && key == 'v' // ugly
+            || key == act_key.at(cmd))
             return cmd;
+    }
 
     return CMD_NO_CMD;
 }
@@ -3092,6 +3111,18 @@ static bool _do_action(item_def &item, const command_type action)
     if (action == CMD_NO_CMD)
         return true;
 
+    // ok in principle on floor items (though I didn't enable the last two)
+    switch (action)
+    {
+    case CMD_READ:             read(&item);         return false;
+    case CMD_QUAFF:            drink(&item);        return false;
+    case CMD_INSCRIBE_ITEM:    inscribe_item(item); return false;
+    case CMD_SET_SKILL_TARGET: target_item(item);   return false;
+    default:
+        break;
+    }
+
+    // inv item only
     const int slot = item.link;
     ASSERT_RANGE(slot, 0, ENDOFPACK);
 
@@ -3102,17 +3133,11 @@ static bool _do_action(item_def &item, const command_type action)
     case CMD_QUIVER_ITEM:      you.quiver_action.set_from_slot(slot); break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
-    case CMD_READ:             read(&item);                         break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
     case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);             break;
-    case CMD_QUAFF:            drink(&item);                        break;
     case CMD_DROP:             drop_item(slot, item.quantity);      break;
-    case CMD_INSCRIBE_ITEM:    inscribe_item(item);                 break;
     case CMD_ADJUST_INVENTORY: adjust_item(slot);                   break;
-    case CMD_SET_SKILL_TARGET: target_item(item);                   break;
-    case CMD_EVOKE:
-        evoke_item(slot);
-        break;
+    case CMD_EVOKE:            evoke_item(slot);                    break;
     default:
         die("illegal inventory cmd %d", action);
     }
@@ -3313,7 +3338,9 @@ command_type describe_item_popup(const item_def &item,
 bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 {
 
-    const bool do_actions = in_inventory(item) // Dead men use no items.
+    const bool do_actions = (in_inventory(item)
+                                || item_on_floor(item, you.pos()) != NON_ITEM)
+            // Dead players use no items.
             && !(you.pending_revival || crawl_state.updating_scores);
     command_type action = describe_item_popup(item, fixup_desc, do_actions);
 
