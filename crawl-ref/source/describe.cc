@@ -2555,6 +2555,9 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     {
         inf.title += ".";
     }
+    // don't show "The floor." twice (maybe other things).
+    if (trimmed_string(long_desc) == inf.title)
+        long_desc = "";
 
     const string marker_desc =
         env.markers.property_at(pos, MAT_ANY, "feature_description_long");
@@ -2711,6 +2714,9 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         else
             long_desc += "\nSome spells can be cast through it.";
     }
+
+    if (pos == you.pos())
+        long_desc += "\nYou are here.";
 
     inf.body << long_desc;
 
