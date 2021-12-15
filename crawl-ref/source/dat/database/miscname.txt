@@ -126,6 +126,10 @@ You feel drawn to the Orb of Zot, downwards into the unfathomable depths...
 
 The @_great_adj_@ Orb of Zot lies far below, as if waiting for you to find it.
 
+Somewhere lies the Orb of Zot, rumored to be powerful enough to resurrect a god...
+
+The Orb of Zot is coveted for a hundred different reasons. Will you seize it for yourself?
+
 %%%%
 # things that surround us on Halloween
 _halloween_things_
