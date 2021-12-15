@@ -387,7 +387,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Yredelemnul
         { ABIL_YRED_RECALL_UNDEAD_HARVEST, "Recall Undead Harvest",
-            2, 0, 0, -1, {fail_basis::invo, 50, 4, 20}, abflag::none },
+            2, 0, 0, -1, {fail_basis::invo, 20, 4, 25}, abflag::none },
         { ABIL_YRED_DARK_BARGAIN, "Dark Bargain",
             4, 0, 0, -1, {fail_basis::invo, 40, 4, 25}, abflag::souls },
         { ABIL_YRED_DRAIN_LIFE, "Drain Life",
