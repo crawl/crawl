@@ -754,19 +754,17 @@ void floor_transition(dungeon_feature_type how,
 
     if (how == DNGN_EXIT_DUNGEON)
     {
+        const bool orb = player_has_orb();
+        if (orb && you_worship(GOD_IGNIS))
+            simple_god_message(" is restored to blazing glory by the Orb!");
+
         you.depth = 0;
         mpr("You have escaped!");
 
-        if (player_has_orb())
-        {
-            if (you_worship(GOD_IGNIS))
-                simple_god_message(" is restored to blazing glory by the Orb!");
+        if (orb)
             ouch(INSTANT_DEATH, KILLED_BY_WINNING);
-        }
-
-        if (you_worship(GOD_IGNIS))
-            simple_god_message(" burns out slowly, despite your efforts.");
-        ouch(INSTANT_DEATH, KILLED_BY_LEAVING);
+        else
+            ouch(INSTANT_DEATH, KILLED_BY_LEAVING);
     }
 
     if (how == DNGN_ENTER_ZIGGURAT)
