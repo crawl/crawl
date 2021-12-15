@@ -3093,7 +3093,9 @@ static command_type _get_action(int key, vector<command_type> actions)
             push_quiver = true;
         if (push_quiver && cmd == CMD_QUIVER_ITEM && key == 'v' // ugly
             || key == act_key.at(cmd))
+        {
             return cmd;
+        }
     }
 
     return CMD_NO_CMD;
