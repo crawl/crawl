@@ -1340,10 +1340,7 @@ spret cast_fragmentation(int pow, const actor *caster,
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
-        {
-            canned_msg(MSG_OK);
             return spret::abort;
-        }
     }
 
     fail_check();
