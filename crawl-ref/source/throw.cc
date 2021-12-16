@@ -1022,7 +1022,7 @@ bool thrown_object_destroyed(item_def *item)
     const int mult = 2;
     int chance = base_chance * mult;
 
-    if (brand == SPMSL_CURARE)
+    if (brand == (SPMSL_CURARE)||(SPMSL_BLINDING)||(SPMSL_FRENZY))
         chance /= 2;
 
     dprf("mulch chance: %d in %d", mult, chance);
