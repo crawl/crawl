@@ -674,6 +674,9 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_READY_TO_HOWL);
     }
 
+    if (m->is_silenced() && m->has_spells() && m->immune_to_silence())
+        mb.set(MB_SILENCE_IMMUNE);
+
     if (mons_is_pghost(type))
     {
         ASSERT(m->ghost);

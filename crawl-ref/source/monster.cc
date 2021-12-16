@@ -2864,6 +2864,14 @@ mon_spell_slot_flags monster::spell_slot_flags(spell_type spell) const
     return slot_flags;
 }
 
+bool monster::immune_to_silence() const
+{
+    for (const mon_spell_slot &slot : spells)
+        if (slot.flags & MON_SPELL_SILENCE_MASK)
+            return false;
+    return true;
+}
+
 bool monster::has_unclean_spell() const
 {
     return search_spells(is_unclean_spell);

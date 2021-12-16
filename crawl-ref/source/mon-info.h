@@ -201,6 +201,7 @@ enum monster_info_flags
     MB_CANT_DRAIN,
     MB_CONCENTRATE_VENOM,
     MB_FIRE_CHAMPION,
+    MB_SILENCE_IMMUNE,
     NUM_MB_FLAGS
 };
 
