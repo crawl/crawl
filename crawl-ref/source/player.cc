@@ -3479,12 +3479,18 @@ int player::infusion_amount() const
     if (player_equip_unrand(UNRAND_POWER_GLOVES))
         cost = you.has_mutation(MUT_HP_CASTING) ? 0 : 999;
     else if (wearing_ego(EQ_GLOVES, SPARM_INFUSION))
-        cost = 2;
+        cost = 1;
 
     if (you.has_mutation(MUT_HP_CASTING))
         return min(you.hp - 1, cost);
     else
         return min(you.magic_points, cost);
+}
+
+/// How much bonus damage do you get per MP spent?
+int player::infusion_multiplier() const {
+    // Maulers are pretty fun as is, but infusion needs a buff.
+    return player_equip_unrand(UNRAND_POWER_GLOVES) ? 2 : 4;
 }
 
 void dec_hp(int hp_loss, bool fatal, const char *aux)
