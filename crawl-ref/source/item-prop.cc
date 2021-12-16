@@ -662,15 +662,15 @@ struct missile_def
 static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
-    { MI_DART,          "dart",          0, 12, 2,  true  },
+    { MI_DART,          "dart",          0, 20, 2,  true  },
 #if TAG_MAJOR_VERSION == 34
     { MI_NEEDLE,        "needle",        0, 12, 2,  false },
 #endif
-    { MI_STONE,         "stone",         2, 8,  1,  true  },
-    { MI_ARROW,         "arrow",         0, 8,  2,  false },
-    { MI_BOLT,          "bolt",          0, 8,  2,  false },
-    { MI_LARGE_ROCK,    "large rock",   20, 25, 7,  true  },
-    { MI_SLING_BULLET,  "sling bullet",  4, 8,  5,  false },
+    { MI_STONE,         "stone",         2, 20,  1,  true  },
+    { MI_ARROW,         "arrow",         0, 20,  2,  false },
+    { MI_BOLT,          "bolt",          0, 20,  2,  false },
+    { MI_LARGE_ROCK,    "large rock",   20, 20, 7,  true  },
+    { MI_SLING_BULLET,  "sling bullet",  4, 20,  5,  false },
     { MI_JAVELIN,       "javelin",      10, 20, 8,  true  },
     { MI_THROWING_NET,  "throwing net",  0, 0,  30, true  },
     { MI_BOOMERANG,     "boomerang",     6, 20, 5,  true  },
