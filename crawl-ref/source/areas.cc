@@ -596,6 +596,8 @@ int player::halo_radius() const
 
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
+    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+        size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         size = max(size, 2);
 
@@ -635,6 +637,9 @@ int monster::halo_radius() const
     int size = -1;
 
     if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
+        size = 3;
+
+    if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = 3;
 
     if (!(holiness() & MH_HOLY))

@@ -777,7 +777,8 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
                                       12, SPARM_PROTECTION);
 
     case ARM_ORB:
-        return random_choose_weighted(1, SPARM_PONDEROUSNESS);
+        return random_choose_weighted(1, SPARM_PONDEROUSNESS,
+                                      1, SPARM_LIGHT);
 
     case ARM_SCARF:
         return random_choose_weighted(1, SPARM_RESISTANCE,
@@ -979,6 +980,9 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 #endif
     case SPARM_SHADOWS:
         return type == ARM_SCARF;
+
+    case SPARM_LIGHT:
+        return type == ARM_ORB;
 
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:

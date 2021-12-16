@@ -355,6 +355,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_SHADOWS:
             case SPARM_RAMPAGING:
             case SPARM_INFUSION:
+            case SPARM_LIGHT:
                 valued += 50;
                 break;
 

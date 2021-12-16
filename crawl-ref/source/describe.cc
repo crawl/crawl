@@ -1797,6 +1797,8 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_INFUSION:
         return "it empowers each of its wearer's blows with a small part of "
                "their magic.";
+    case SPARM_LIGHT:
+        return "it lights the dungeon around the wearer.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
