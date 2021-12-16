@@ -71,6 +71,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CLOUD_RING_DRAINING, "clouds", "surrounded by negative energy", "clouds" },
     { MB_CLOUD_RING_ACID, "clouds", "surrounded by acidic fog", "clouds" },
     { MB_CLOUD_RING_MIASMA, "clouds", "surrounded by foul miasma", "clouds" },
+    { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
     // Vulnerabilities
     { MB_POSSESSABLE, "possessable", "possessable", "possessable"},
     { MB_CAUGHT, "caught", "entangled in a net", "caught"},
@@ -125,5 +126,4 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_PAIN_BOND, "pain bonded", "sharing @possessive@ pain", "pain bonded"},
     { MB_IDEALISED, "idealised", "idealised", "idealised"},
     { MB_ALLY_TARGET, "ally target", "ally target", "ally target"},
-    { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
 };
