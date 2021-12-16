@@ -518,9 +518,9 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
         return;
     }
 
-    // chance rises linearly with damage taken, up to 50% at half hp.
+    // chance rises linearly with damage taken, up to 75% at half hp.
     const int capped_dam = min(dam, you.hp_max / 2);
-    if (!x_chance_in_y(capped_dam, you.hp_max))
+    if (!x_chance_in_y(capped_dam * 3, you.hp_max * 2))
         return;
 
     auto rats = { MONS_HELL_RAT, MONS_RIVER_RAT };
