@@ -1653,6 +1653,12 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 canned_msg(MSG_FULL_HEALTH);
             return false;
         }
+        if (you.duration[DUR_DEATHS_DOOR])
+        {
+            if (!quiet)
+                mpr("You can't heal while in death's door.");
+            return false;
+        }
         return true;
 
     case ABIL_ELYVILON_PURIFICATION:
@@ -1840,6 +1846,12 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 canned_msg(MSG_FULL_HEALTH);
+            return false;
+        }
+        if (you.duration[DUR_DEATHS_DOOR])
+        {
+            if (!quiet)
+                mpr("You can't heal while in death's door.");
             return false;
         }
         if (get_real_mp(false) < 1)
