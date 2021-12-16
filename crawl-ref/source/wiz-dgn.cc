@@ -504,7 +504,7 @@ bool debug_make_trap(const coord_def& pos)
     }
 
     place_specific_trap(you.pos(), trap);
-    mprf("Created %s, marked it undiscovered.",
+    mprf("Created %s.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
             : trap_at(you.pos())->name(DESC_A).c_str());
