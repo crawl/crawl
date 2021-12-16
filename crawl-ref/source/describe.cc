@@ -2766,6 +2766,9 @@ static bool _do_feat_action(const coord_def &pos, const command_type action)
     return true;
 }
 
+/*
+ * @return: true if the game should stay in any outer mode (e.g. `xv`).
+ */
 bool describe_feature_wide(const coord_def& pos, bool do_actions)
 {
     typedef struct {
@@ -3334,7 +3337,7 @@ command_type describe_item_popup(const item_def &item,
  *  @param item       the item to be described.
  *  @param fixup_desc a function (possibly null) to modify the
  *                    description before it's displayed.
- *  @return whether to remain in the inventory menu after description
+ *  @return whether to remain in the outer mode (inventory, `xv`) after the popup.
  *
  */
 bool describe_item(item_def &item, function<void (string&)> fixup_desc)
