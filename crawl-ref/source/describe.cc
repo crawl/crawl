@@ -2812,7 +2812,7 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
         }
     }
     if (feats.empty())
-        return CMD_NO_CMD;
+        return true;
 
     auto scroller = make_shared<Scroller>();
     auto vbox = make_shared<Box>(Widget::VERT);
