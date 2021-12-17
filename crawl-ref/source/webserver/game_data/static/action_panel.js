@@ -450,7 +450,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         // XX The "X" should definitely be a different/custom icon
         // TODO: select tile via something like c++ `tileidx_command`
         draw_action(gui, gui.PROMPT_NO, null, 0, adjusted_scale, selected == 0);
-        draw_action(gui, gui.STARTUP_STONESOUP, null, cell_length, adjusted_scale,
+        draw_action(gui, gui.CMD_GAME_MENU, null, cell_length, adjusted_scale,
                     selected == 1);
 
         draw_glyphs = options.get("action_panel_glyphs");
