@@ -499,8 +499,8 @@ static void _create_monster_wand(const item_def &corpse, bool silent)
 
     if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
     {
-        mprf("Residual magic twists a bone of %s into %s.",
-             corpse.name(DESC_THE).c_str(),
+        mprf("%s bone magically twists into %s.",
+             mons_type_name(corpse.mon_type, DESC_A).c_str(),
              item.name(DESC_A).c_str());
     }
 
