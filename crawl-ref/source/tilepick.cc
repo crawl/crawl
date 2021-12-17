@@ -3441,7 +3441,7 @@ tileidx_t tileidx_command(const command_type cmd)
     case CMD_QUIT:
         return TILEG_SYMBOL_OF_TORMENT;
     case CMD_GAME_MENU:
-        return TILEG_STARTUP_STONESOUP;
+        return TILEG_CMD_GAME_MENU;
 #ifdef TOUCH_UI
     case CMD_SHOW_KEYBOARD:
         return TILEG_CMD_KEYBOARD;
