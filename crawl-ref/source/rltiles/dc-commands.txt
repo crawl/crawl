@@ -43,3 +43,4 @@ find_traps CMD_MAP_FIND_TRAP
 find_altar CMD_MAP_FIND_ALTAR
 find_stash CMD_MAP_FIND_STASH
 keyboard CMD_KEYBOARD
+game_menu CMD_GAME_MENU
