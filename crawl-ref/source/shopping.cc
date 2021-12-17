@@ -364,6 +364,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_REFLECTION:
             case SPARM_SPIRIT_SHIELD:
             case SPARM_HARM:
+            case SPARM_RAGE:
                 valued += 20;
                 break;
 
