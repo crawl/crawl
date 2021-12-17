@@ -2972,7 +2972,11 @@ static vector<command_type> _allowed_actions(const item_def& item)
 
     // n.b. this assumes that pos has already been checked
     if (!in_inventory(item))
+    {
+        if (item.pos == you.pos() && !item_is_stationary(item))
+            actions.push_back(CMD_PICKUP);
         return actions;
+    }
 
     if (item_is_evokable(item))
         actions.push_back(CMD_EVOKE);
@@ -3040,6 +3044,7 @@ static string _actions_desc(const vector<command_type>& actions)
         { CMD_WEAR_JEWELLERY, "(p)ut on" },
         { CMD_REMOVE_JEWELLERY, "(r)emove" },
         { CMD_QUAFF, "(q)uaff" },
+        { CMD_PICKUP, "(g)et" },
         { CMD_DROP, "(d)rop" },
         { CMD_INSCRIBE_ITEM, "(i)nscribe" },
         { CMD_ADJUST_INVENTORY, "(=)adjust" },
@@ -3077,6 +3082,7 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_QUAFF,            'q' },
         { CMD_DROP,             'd' },
         { CMD_INSCRIBE_ITEM,    'i' },
+        { CMD_PICKUP,           'g' },
         { CMD_ADJUST_INVENTORY, '=' },
         { CMD_SET_SKILL_TARGET, 's' },
         { CMD_GO_UPSTAIRS,      '<' },
@@ -3119,6 +3125,10 @@ static bool _do_action(item_def &item, const command_type action)
     // ok in principle on floor items (though I didn't enable the last two)
     switch (action)
     {
+    case CMD_PICKUP:
+        ASSERT(!in_inventory(item));
+        pickup_single_item(item.index(), item.quantity);
+        return false;
     case CMD_READ:             read(&item);         return false;
     case CMD_QUAFF:            drink(&item);        return false;
     case CMD_INSCRIBE_ITEM:    inscribe_item(item); return false;
