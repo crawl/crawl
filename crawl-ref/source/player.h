@@ -932,8 +932,6 @@ protected:
     bool _possible_fearmonger(const monster* mon) const;
 
 };
-COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
-COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
 
 class monster;
 struct item_def;
