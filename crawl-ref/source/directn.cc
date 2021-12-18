@@ -535,11 +535,28 @@ public:
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
 
+class FullViewInvEntry : public InvEntry
+{
+public:
+    FullViewInvEntry(const item_def &i)
+        : InvEntry(i)
+    { }
+
+    string get_text(const bool need_cursor = false) const override
+    {
+        const string t = InvEntry::get_text(need_cursor);
+        if (item && item->pos == you.pos())
+            return t + " (here)";
+        return t;
+    }
+};
+
 static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                                      vector<item_def *> const &list_items,
                                      vector<coord_def> const &list_features,
                                      string selectverb,
                                      bool examine_only = false,
+                                     bool full_view = false,
                                      string title = "")
 {
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
@@ -651,7 +668,11 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     {
         vector<InvEntry*> all_items;
         for (const item_def *item : list_items)
-            all_items.push_back(new InvEntry(*item));
+        {
+            all_items.push_back(full_view
+                                ? new FullViewInvEntry(*item)
+                                : new InvEntry(*item));
+        }
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
@@ -874,7 +895,8 @@ void full_describe_view()
     }
 
     coord_def target = _full_describe_menu(list_mons, list_items,
-                                           list_features, "target/travel");
+                                           list_features, "target/travel",
+                                           false, true);
 
     // need to do this after the menu has been closed on console,
     // since do_look_around() runs its own loop
@@ -2614,8 +2636,8 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     {
         const coord_def describe_result =
             _full_describe_menu(list_mons, list_items, list_features, "", true,
-                            you.see_cell(c) ? "What do you want to examine?"
-                                            : "What do you want to remember?");
+                    false, you.see_cell(c) ? "What do you want to examine?"
+                                           : "What do you want to remember?");
         if (describe_result == coord_def(-1, -1))
             return true; // something happened, we want to exit
     }
