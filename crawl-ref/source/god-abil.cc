@@ -2093,7 +2093,7 @@ spret cheibriados_slouch(bool fail)
         }
 
     targeter_radius hitfunc(&you, LOS_DEFAULT);
-    if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
+    if (stop_attack_prompt(hitfunc, "Slouch", _act_slouchable))
         return spret::abort;
 
     fail_check();
