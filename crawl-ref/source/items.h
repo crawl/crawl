@@ -97,7 +97,8 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-vector<const item_def*> item_list_on_square(int obj);
+vector<item_def*> item_list_on_square(int obj);
+vector<const item_def*> const_item_list_on_square(int obj);
 
 bool copy_item_to_grid(item_def &item, const coord_def& p,
                        int quant_drop = -1,    // item.quantity by default

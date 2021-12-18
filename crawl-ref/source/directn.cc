@@ -536,7 +536,7 @@ public:
 };
 
 static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
-                                     vector<item_def> const &list_items,
+                                     vector<item_def *> const &list_items,
                                      vector<coord_def> const &list_features,
                                      string selectverb,
                                      bool examine_only = false,
@@ -650,8 +650,8 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     if (!list_items.empty())
     {
         vector<InvEntry*> all_items;
-        for (const item_def &item : list_items)
-            all_items.push_back(new InvEntry(item));
+        for (const item_def *item : list_items)
+            all_items.push_back(new InvEntry(*item));
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
@@ -744,9 +744,15 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         else if (quant == 2)
         {
             // Get selected item.
-            const item_def* i = static_cast<item_def*>(sel.data);
+            item_def* i = static_cast<item_def*>(sel.data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-                describe_item_popup(*i);
+            {
+                if (!describe_item(*i))
+                {
+                    target = coord_def(-1, -1);
+                    return false;
+                }
+            }
             else // ACT_EXECUTE -> view/travel
                 target = i->pos;
         }
@@ -773,7 +779,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     if (!list_items.empty())
     {
         // Unset show_glyph for other menus.
-        InvEntry me(list_items[0]);
+        InvEntry me(*list_items[0]);
         me.set_show_glyph(false);
     }
 #endif
@@ -785,7 +791,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     return target;
 }
 
-static void _get_nearby_items(vector<item_def> &list_items,
+static void _get_nearby_items(vector<item_def *> &list_items,
                                 bool need_path, int range, targeter *hitfunc)
 {
     // Grab all items known (or thought) to be in the stashes in view.
@@ -801,11 +807,11 @@ static void _get_nearby_items(vector<item_def> &list_items,
         if (oid == NON_ITEM)
             continue;
 
-        const vector<const item_def *> items = item_list_on_square(
+        const vector<item_def *> items = item_list_on_square(
                                                    you.visible_igrd(*ri));
 
-        for (const item_def * item : items)
-            list_items.push_back(*item);
+        for (item_def * item : items)
+            list_items.push_back(item);
     }
 }
 
@@ -854,7 +860,7 @@ static void _get_nearby_features(vector<coord_def> &list_features,
 void full_describe_view()
 {
     vector<monster_info> list_mons;
-    vector<item_def> list_items;
+    vector<item_def *> list_items;
     vector<coord_def> list_features;
     // Get monsters via the monster_info, sorted by difficulty.
     get_monster_info(list_mons);
@@ -1631,7 +1637,7 @@ void direction_chooser::print_items_description() const
     if (!in_bounds(target()))
         return;
 
-    auto items = item_list_on_square(you.visible_igrd(target()));
+    auto items = const_item_list_on_square(you.visible_igrd(target()));
 
     if (items.empty())
         return;
@@ -1987,7 +1993,7 @@ void direction_chooser::move_to_you()
 void direction_chooser::full_describe()
 {
     vector <monster_info> list_mons;
-    vector<item_def> list_items;
+    vector<item_def *> list_items;
     vector<coord_def> list_features;
 
     vector <monster *> nearby_mons = get_nearby_monsters(true, false, false,
@@ -2564,30 +2570,38 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     if (!in_bounds(c))
         return false;
     vector<monster_info> list_mons;
-    vector<item_def> list_items;
+    vector<item_def *> list_items;
     vector<coord_def> list_features;
     int quantity = 0;
     bool action_taken = false;
 
     const monster_info *mi = env.map_knowledge(c).monsterinfo();
-    // get the real items if we are describing the player's position, so that
-    // actions can work. (Feels like there should be an easier way of doing
-    // this?)
-    item_def *obj = c == you.pos()
-                ? (you.visible_igrd(c) == NON_ITEM ? nullptr : &env.item[you.visible_igrd(c)])
-                : env.map_knowledge(c).item();
     const dungeon_feature_type feat = env.map_knowledge(c).feat();
+
+    // warning: we use pointers to the elements of this vector past here for
+    // the stash list case
+    vector<item_def> stash_items;
+
+    // get the real items if we are describing the player's position, so that
+    // actions can work.
+    if (c == you.pos() && you.visible_igrd(c) != NON_ITEM)
+        list_items = item_list_on_square(you.visible_igrd(c));
+    else if (env.map_knowledge(c).item())
+    {
+        // otherwise, use stash info. These are item copies, not the real
+        // things.
+        stash_items = item_list_in_stash(c);
+        for (item_def &i: stash_items)
+            list_items.push_back(&i);
+    }
+    quantity += list_items.size();
 
     if (mi)
     {
         list_mons.emplace_back(*mi);
         ++quantity;
     }
-    if (obj)
-    {
-        list_items = item_list_in_stash(c);
-        quantity += list_items.size();
-    }
+
     // I'm not sure if features should be included. But it seems reasonable to
     // at least include what full_describe_view shows
     if (feat_stair_direction(feat) != CMD_NO_CMD || feat_is_trap(feat))
@@ -2598,16 +2612,19 @@ bool full_describe_square(const coord_def &c, bool cleanup)
 
     if (quantity > 1)
     {
-        _full_describe_menu(list_mons, list_items, list_features, "", true,
+        const coord_def describe_result =
+            _full_describe_menu(list_mons, list_items, list_features, "", true,
                             you.see_cell(c) ? "What do you want to examine?"
                                             : "What do you want to remember?");
+        if (describe_result == coord_def(-1, -1))
+            return true; // something happened, we want to exit
     }
     else if (quantity == 1)
     {
         if (mi)
             describe_monsters(*mi);
         else if (list_items.size())
-            describe_item(*obj);
+            action_taken = describe_item(*list_items.back()); // should be size 1
         else
             action_taken = !describe_feature_wide(c, true);
     }

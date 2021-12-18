@@ -89,6 +89,7 @@ public:
     bool is_inventory;
     int item_type_filter;
 
+    // XX these probably shouldn't be const...
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
 
@@ -123,7 +124,7 @@ void UseItemMenu::populate_list()
             item_inv.push_back(&item);
     }
     // Load floor items...
-    item_floor = item_list_on_square(you.visible_igrd(you.pos()));
+    item_floor = const_item_list_on_square(you.visible_igrd(you.pos()));
     // ...only stuff that can go into your inventory though
     erase_if(item_floor, [=](const item_def* it)
     {
