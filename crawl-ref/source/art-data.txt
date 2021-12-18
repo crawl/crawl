@@ -235,6 +235,7 @@ TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
+DESCRIP: It halves damage taken while paralysed, petrified or unconscious.
 
 NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD

@@ -91,6 +91,15 @@
 #include "wizard-option-type.h"
 #include "xom.h"
 
+static void _prunify()
+{
+    if (!player_equip_unrand(UNRAND_PRUNE))
+        return;
+
+    mpr("The curse of the Prune overcomes you.");
+    did_god_conduct(DID_CHAOS, 10);
+}
+
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
@@ -6679,6 +6688,7 @@ void player::paralyse(const actor *who, int str, string source)
         you.awaken();
 
     mpr("You suddenly lose the ability to move!");
+    _prunify();
 
     paralysis = min(str, 13) * BASELINE_DELAY;
 
@@ -6734,6 +6744,7 @@ bool player::fully_petrify(bool /*quiet*/)
     redraw_armour_class = true;
     redraw_evasion = true;
     mpr("You have turned to stone.");
+    _prunify();
 
     end_wait_spells();
 
@@ -7227,6 +7238,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     }
 
     mpr("You fall asleep.");
+    _prunify();
 
     stop_directly_constricting_all(false);
     end_wait_spells();
