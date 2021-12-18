@@ -426,6 +426,45 @@ jobs:
       - name: Print ccache stats
         run: ccache -s
 
+  build_android:
+    name: Android
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_opts:
+          - ANDROID=1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # all history
+          submodules: true
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Install dependencies
+        run: ./deps.py --build-opts "${{ matrix.build_opts }}"
+        working-directory: .github/workflows
+      - name: Cache compilation
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ccache-android-${{ github.sha }}
+          restore-keys: |
+            ccache-android-
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
+      - run: make -j$(nproc) ${{ matrix.build_opts }} android
+        working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
+      - name: Run gradle
+        run: gradle :app:assembleDebug
+        working-directory: crawl-ref/source/android-project
+
   notify_irc:
     name: "Notify #crawl-dev of build failure"
     needs:
