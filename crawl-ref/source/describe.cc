@@ -2494,6 +2494,7 @@ static vector<command_type> _allowed_feat_actions(const coord_def &pos)
 
     // ugh code duplication, some refactoring could be useful in all of this
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    // TODO: CMD_MAP_GOTO_TARGET
     const command_type dir = feat_stair_direction(feat);
 
     if (dir != CMD_NO_CMD && you.pos() == pos)
@@ -2956,6 +2957,12 @@ static vector<command_type> _allowed_actions(const item_def& item)
 {
     vector<command_type> actions;
 
+    if (!in_inventory(item) && item.pos != you.pos())
+    {
+        actions.push_back(CMD_MAP_GOTO_TARGET);
+        return actions;
+    }
+
     // XX CMD_ACTIVATE
     switch (item.base_type)
     {
@@ -2970,10 +2977,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
         break;
     }
 
-    // n.b. this assumes that pos has already been checked
     if (!in_inventory(item))
     {
-        if (item.pos == you.pos() && !item_is_stationary(item))
+        // guaranteed to be at the player's position
+        if (!item_is_stationary(item))
             actions.push_back(CMD_PICKUP);
         return actions;
     }
@@ -3049,6 +3056,7 @@ static string _actions_desc(const vector<command_type>& actions)
         { CMD_INSCRIBE_ITEM, "(i)nscribe" },
         { CMD_ADJUST_INVENTORY, "(=)adjust" },
         { CMD_SET_SKILL_TARGET, "(s)kill target" },
+        { CMD_MAP_GOTO_TARGET, "(g)o to location" },
     };
     bool push_quiver = false;
     return comma_separated_fn(begin(actions), end(actions),
@@ -3085,6 +3093,7 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_PICKUP,           'g' },
         { CMD_ADJUST_INVENTORY, '=' },
         { CMD_SET_SKILL_TARGET, 's' },
+        { CMD_MAP_GOTO_TARGET,  'g' },
         { CMD_GO_UPSTAIRS,      '<' },
         { CMD_GO_DOWNSTAIRS,    '>' },
         { CMD_MAP_PREV_LEVEL,   '[' },
@@ -3110,6 +3119,24 @@ static command_type _get_action(int key, vector<command_type> actions)
     return CMD_NO_CMD;
 }
 
+static level_id _item_level_id(const item_def &item)
+{
+    level_id loc;
+    // set on stash search only
+    if (!item.props.exists("level_id"))
+        return loc;
+
+    try
+    {
+        loc = level_id::parse_level_id(item.props["level_id"]);
+    }
+    catch(const bad_level_id &err)
+    {
+        // die?
+    }
+    return loc;
+}
+
 /**
  * Do the specified action on the specified item.
  *
@@ -3125,6 +3152,17 @@ static bool _do_action(item_def &item, const command_type action)
     // ok in principle on floor items (though I didn't enable the last two)
     switch (action)
     {
+    case CMD_MAP_GOTO_TARGET:
+        if (in_bounds(item.pos))
+        {
+            level_id loc = _item_level_id(item); // stash search handling
+            if (!loc.is_valid())
+                loc = level_id::current(); // may still be during an excursion
+            level_pos target(loc, item.pos);
+            start_translevel_travel(target);
+            return false;
+        }
+        break;
     case CMD_PICKUP:
         ASSERT(!in_inventory(item));
         pickup_single_item(item.index(), item.quantity);
@@ -3198,7 +3236,16 @@ command_type describe_item_popup(const item_def &item,
     if (!in_inventory(item))
         name = uppercase_first(name);
 
-    string desc = get_item_description(item, true, false);
+    string desc = "";
+    level_id loc = _item_level_id(item);
+    if (loc.is_valid() && loc != level_id::current())
+    {
+        // should be off-level stash search only
+        desc += make_stringf("It can be found on %s.\n\n",
+            loc.describe(true, true).c_str());
+    }
+
+    desc += get_item_description(item, true, false);
 
     string quote;
     if (is_unrandom_artefact(item) && item_type_known(item))
@@ -3352,11 +3399,8 @@ command_type describe_item_popup(const item_def &item,
  */
 bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 {
-
-    const bool do_actions = (in_inventory(item)
-                                || item_on_floor(item, you.pos()) != NON_ITEM)
-            // Dead players use no items.
-            && !(you.pending_revival || crawl_state.updating_scores);
+    // Dead players use no items.
+    const bool do_actions = !(you.pending_revival || crawl_state.updating_scores);
     command_type action = describe_item_popup(item, fixup_desc, do_actions);
 
     return _do_action(item, action);

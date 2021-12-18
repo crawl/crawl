@@ -1292,7 +1292,11 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
     case CMD_MAP_DESCRIBE:
         if (map_bounds(state.lpos.pos) && env.map_knowledge(state.lpos.pos).known())
         {
-            full_describe_square(state.lpos.pos, false);
+            if (full_describe_square(state.lpos.pos, false))
+            {
+                state.map_alive = false;
+                state.chose = true;
+            }
             state.redraw_map = true;
         }
         break;

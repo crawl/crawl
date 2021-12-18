@@ -2646,7 +2646,7 @@ bool full_describe_square(const coord_def &c, bool cleanup)
         if (mi)
             describe_monsters(*mi);
         else if (list_items.size())
-            action_taken = describe_item(*list_items.back()); // should be size 1
+            action_taken = !describe_item(*list_items.back()); // should be size 1
         else
             action_taken = !describe_feature_wide(c, true);
     }
