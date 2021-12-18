@@ -91,9 +91,9 @@
 #include "wizard-option-type.h"
 #include "xom.h"
 
-static void _prunify()
+static void _pruneify()
 {
-    if (!player_equip_unrand(UNRAND_PRUNE))
+    if (!you.may_pruneify())
         return;
 
     mpr("The curse of the Prune overcomes you.");
@@ -6688,7 +6688,7 @@ void player::paralyse(const actor *who, int str, string source)
         you.awaken();
 
     mpr("You suddenly lose the ability to move!");
-    _prunify();
+    _pruneify();
 
     paralysis = min(str, 13) * BASELINE_DELAY;
 
@@ -6744,7 +6744,7 @@ bool player::fully_petrify(bool /*quiet*/)
     redraw_armour_class = true;
     redraw_evasion = true;
     mpr("You have turned to stone.");
-    _prunify();
+    _pruneify();
 
     end_wait_spells();
 
@@ -7238,7 +7238,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
     }
 
     mpr("You fall asleep.");
-    _prunify();
+    _pruneify();
 
     stop_directly_constricting_all(false);
     end_wait_spells();
@@ -7272,6 +7272,11 @@ void player::check_awaken(int disturbance)
         awaken();
         dprf("Disturbance of intensity %d awoke player", disturbance);
     }
+}
+
+bool player::may_pruneify() const {
+    return player_equip_unrand(UNRAND_PRUNE)
+        && you.undead_state() == US_ALIVE;
 }
 
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)

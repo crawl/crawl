@@ -518,6 +518,7 @@ public:
     bool can_see(const actor& a) const override;
     undead_state_type undead_state(bool temp = true) const;
     bool nightvision() const override;
+    bool may_pruneify() const;
     reach_type reach_range() const override;
     bool see_cell(const coord_def& p) const override;
 

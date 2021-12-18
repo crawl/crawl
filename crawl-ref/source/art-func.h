@@ -322,12 +322,16 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
 
 static void _PRUNE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "You struggle to resist the curse of the Prune...");
+    if (you.undead_state() == US_ALIVE)
+        _equip_mpr(show_msgs, "You struggle to resist the curse of the Prune...");
+    else
+        _equip_mpr(show_msgs, "The curse of the Prune has no hold on the dead.");
 }
 
 static void _PRUNE_unequip(item_def */*item*/, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "The curse of the Prune lifts from you.");
+    if (you.undead_state() == US_ALIVE)
+        _equip_mpr(show_msgs, "The curse of the Prune lifts from you.");
 }
 
 ////////////////////////////////////////////////////
