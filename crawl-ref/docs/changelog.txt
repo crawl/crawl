@@ -1,4 +1,4 @@
-Stone Soup 0.28-a0 (through 0.28-a0-1004-g00e6d53)
+Stone Soup 0.28-a0 (through 0.28-a0-1190-g77e1c55)
 --------------------------------------------------
 
 Branches, Environment
@@ -51,6 +51,9 @@ Character
     blocks gloves and applies the vulnerable status.
 * Player-chosen attribute increases now happen every 6 XLs, starting at XL 3,
   and increase a stat by 2. Demigods are unchanged.
+* Wanderer creation rules have been overhauled again, to give more useful
+  starting skills in combination with the items generated. Many new item
+  possibilities are added.
 
 Gods
 ----
@@ -102,12 +105,32 @@ Gods
   - Passive rCorr is now granted at 2*, and jelly spawning on hit at 5*.
   - New active 'Oozemancy' 3* ability. Temporarily turns nearby walls within
     radius 4 into slime-covered walls that do acid damage to adjacent monsters.
+* Yredelemnul is overhauled to use temporary zombies as piety
+  - The animate remains, animate dead, and injury mirror active abilities are
+    removed.
+  - Starting at 0* piety Yredelemnul grants passive reaping of all
+    corpses, raising zombies and spectral things from dead living, demonic, and
+    holy beings. Zombies cannot leave the level and expire when the player
+    leaves the level (by any route).
+  - Yredelemnul piety scales with the number and strength of the zombies in
+    sight of the player.
+  - Yredelemnul grants the following active abilities:
+      - 0*: Recall Undead. Can recall a bound soul across floors.
+      - 2*: Dark Bargain. Trade 2 zombies for a long-duration undead summon
+            that scales with invocations.
+      - 4*: Drain Life. Same as previous drain life, but also costs 3 zombies.
+      - 5*: Bind Soul. Re-named from previous Enslave Soul, also costs 4
+            zombies. A bound soul is permanent and can follow the player
+            between floors.
 
 Interface
 ---------
 * The mutation panel is now a menu, selecting individual mutations provides a
   description of the mutation.
 * Most abilities now have targeters like the spell targeters.
+* WebTiles now has a clickable action panel, similar to the local tiles
+  inventory panel.
+* WebTiles mouse support is expanded.
 
 Items
 -----
@@ -125,10 +148,13 @@ Items
 * One 'pip' of regen is reduced to 0.8 HP/turn.
 * MPRegen amulets are buffed to 0.4 MP/turn.
 * New glove ego: infusion. Gloves of infusion add damage per hit in exchange
-  for 2 MP per hit.
+  for 1 MP per hit.
 * The archery ego is renamed hurling and now only applies to throwing.
 * New unrand: the +3 Mad Mage's Maulers {Infuse+∞ RegenMP Int-3}. These use all
   available MP to give proportional bonus damage to a melee hit.
+* New unrand: the dreamshard necklace {*Dream}. On receiving a lethal or
+  near-lethal hit, the dreamshard necklace shatters, averting the blow, healing
+  the player, releasing dream allies, and fog. Otherwise does nothing.
 * Unrandart tweaks:
   - The staff of Battle now triggers the battlesphere on melee hit (in addition
     to the usual spell trigger).
@@ -141,6 +167,9 @@ Items
   - The hat of the bear spirit gives a 20% chance to go berserk on hit,
     increases the bonus HP from going berserk, and reduces the slow duration
     after. It no longer has rN+.
+  - The ring of the Mage is now a ring of Wizardry and Archmagi.
+  - The autumn katana loses Clarity and gains a chance to manifold assault on
+    hit.
 
 Monsters
 --------
@@ -201,6 +230,8 @@ Spells
 * Metabolic Englaciation has a minimum slow duration when successful.
 * Death Channel now works on demonic and holy creatures as well as corpseless
   living creatures
+* Yara's Violent Unravelling can now unravel summons, killing them immediately
+  and turning them into explosions, and is smite targeted.
 * Bolt of Magma, Corona, Shadow Creatures, and Invisibility are now monster
   only.
 
