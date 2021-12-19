@@ -202,6 +202,7 @@ enum monster_info_flags
     MB_CONCENTRATE_VENOM,
     MB_FIRE_CHAMPION,
     MB_SILENCE_IMMUNE,
+    MB_ANTIMAGIC,
     NUM_MB_FLAGS
 };
 

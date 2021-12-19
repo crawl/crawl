@@ -1408,7 +1408,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
-    case ENCH_ANTIMAGIC:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
@@ -1417,6 +1416,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
         decay_enchantment(en);
+        break;
+
+    case ENCH_ANTIMAGIC:
+        if (decay_enchantment(en))
+            simple_monster_message(*this, "'s magic is no longer disrupted.");
         break;
 
     case ENCH_ROLLING:
