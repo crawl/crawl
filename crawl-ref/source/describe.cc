@@ -3128,7 +3128,7 @@ static level_id _item_level_id(const item_def &item)
 
     try
     {
-        loc = level_id::parse_level_id(item.props["level_id"]);
+        loc = level_id::parse_level_id(item.props["level_id"].get_string());
     }
     catch(const bad_level_id &err)
     {

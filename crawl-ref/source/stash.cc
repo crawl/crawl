@@ -1690,7 +1690,7 @@ bool StashTracker::display_search_results(
             {
                 item_def it = res->item;
                 // pass the level as a prop, not very elegant
-                it.props["level_id"] = res->pos.id.describe();
+                it.props["level_id"].get_string() = res->pos.id.describe();
                 if (!describe_item(it,
                     [search, nohl](string& desc)
                     {
