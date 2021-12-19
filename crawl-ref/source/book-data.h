@@ -111,9 +111,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Misfortune
-    SPELL_SLOW,
     SPELL_CONFUSING_TOUCH,
     SPELL_VIOLENT_UNRAVELLING,
+    SPELL_ENFEEBLE,
 },
 
 {   // Book of Changes
@@ -154,6 +154,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Maledictions
     SPELL_HIBERNATION,
     SPELL_TUKIMAS_DANCE,
+    SPELL_ENFEEBLE,
 },
 
 {   // Book of Air

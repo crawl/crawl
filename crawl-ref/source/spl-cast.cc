@@ -1600,6 +1600,34 @@ static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
     return vector<string>{make_stringf("chance to teleport: %d%%", success)};
 }
 
+static vector<string> _desc_enfeeble_chance(const monster_info& mi, int pow)
+{
+    vector<string> base_effects;
+    vector<string> all_effects;
+    const int wl = mi.willpower();
+
+    if (!mi.is(MB_NO_ATTACKS))
+        base_effects.push_back("weakness");
+    if (mi.antimagic_susceptible())
+        base_effects.push_back("antimagic");
+    if (!base_effects.empty())
+    {
+        all_effects.push_back("will inflict " +
+            comma_separated_line(base_effects.begin(), base_effects.end()));
+    }
+    if (wl != WILL_INVULN)
+    {
+        const int success = hex_success_chance(wl, pow, 100);
+        all_effects.push_back(make_stringf("chance to daze%s: %d%%",
+            mons_can_be_blinded(mi.type) ? " and blind" : "", success));
+    }
+
+    if (all_effects.empty())
+        return vector<string>{"not susceptible"};
+
+    return all_effects;
+}
+
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
 {
     monster dummy;
@@ -1695,8 +1723,12 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
                                             :
               testbits(flags, spflag::area) ? ( powc * 3 ) / 2
                                             : powc;
-        return bind(desc_wl_success_chance, placeholders::_1,
-                    eff_pow, hitfunc);
+
+        if (spell == SPELL_ENFEEBLE)
+            return bind(_desc_enfeeble_chance, placeholders::_1, eff_pow);
+        else
+            return bind(desc_wl_success_chance, placeholders::_1, eff_pow,
+                        hitfunc);
     }
     switch (spell)
     {

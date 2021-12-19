@@ -3504,6 +3504,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ENFEEBLE, "Enfeeble",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    7, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

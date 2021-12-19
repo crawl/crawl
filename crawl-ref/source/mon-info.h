@@ -203,6 +203,7 @@ enum monster_info_flags
     MB_FIRE_CHAMPION,
     MB_SILENCE_IMMUNE,
     MB_ANTIMAGIC,
+    MB_NO_ATTACKS,
     NUM_MB_FLAGS
 };
 
@@ -402,6 +403,7 @@ struct monster_info : public monster_info_base
     }
 
     bool has_spells() const;
+    bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);

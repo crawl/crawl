@@ -790,6 +790,9 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
+    if (!mons_has_attacks(*m))
+        mb.set(MB_NO_ATTACKS);
+
     if (mons_has_ranged_attack(*m))
         mb.set(MB_RANGED_ATTACK);
 
@@ -1648,6 +1651,17 @@ bool monster_info::has_spells() const
         return spells.size() > 0;
 
     return true;
+}
+
+bool monster_info::antimagic_susceptible() const
+{
+    if (!has_spells())
+        return false;
+
+    vector<mon_spell_slot> slots =
+        get_unique_spells(*this, MON_SPELL_ANTIMAGIC_MASK);
+
+    return !slots.empty();
 }
 
 /// What hd does this monster cast spells with? May vary from actual HD.

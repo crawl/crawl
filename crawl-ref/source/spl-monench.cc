@@ -111,3 +111,46 @@ bool do_slow_monster(monster& mon, const actor* agent, int dur)
 
     return false;
 }
+
+bool enfeeble_monster(monster* mon, int pow)
+{
+    int res_margin = mon->check_willpower(pow);
+    vector<enchant_type> hexes;
+
+    if (mons_has_attacks(*mon))
+        hexes.push_back(ENCH_WEAK);
+    if (mon->antimagic_susceptible())
+        hexes.push_back(ENCH_ANTIMAGIC);
+    if (res_margin <= 0)
+    {
+        if (mons_can_be_blinded(mon->type))
+            hexes.push_back(ENCH_BLIND);
+        hexes.push_back(ENCH_DAZED);
+    }
+
+    // Resisted the upgraded effects, and immune to the irresistible effects.
+    if (hexes.empty())
+    {
+        return simple_monster_message(*mon,
+                   mon->resist_margin_phrase(res_margin).c_str());
+    }
+
+    int dur = 5 + random2avg(pow / 40, 3);
+
+    for (auto hex : hexes)
+    {
+        if (mon->has_ench(hex))
+        {
+            mon_enchant ench = mon->get_ench(hex);
+            ench.duration = max(dur * BASELINE_DELAY, ench.duration);
+            mon->update_ench(ench);
+        }
+        else
+            mon->add_ench(mon_enchant(hex, 0, &you, dur * BASELINE_DELAY));
+    }
+
+    if (res_margin > 0)
+        simple_monster_message(*mon, " partially resists.");
+
+    return simple_monster_message(*mon, " is enfeebled!");
+}

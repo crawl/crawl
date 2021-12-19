@@ -558,6 +558,12 @@ Energy Bolt spell
 
 Fires a bolt of highly destructive energy.
 %%%%
+Enfeeble spell
+
+Overwhelms an enemy with malignant energies, irresistibly weakening their melee
+attacks and disrupting their magic. It will additionally daze and blind any foe
+that fails to resist the full force of the curse.
+%%%%
 Ensnare spell
 
 Shoots a stream of webbing at a creature, ensnaring the target in a spider web.

@@ -528,5 +528,6 @@ enum spell_type : int
     SPELL_SCORCH,
     SPELL_FLAME_WAVE,
     SPELL_CONJURE_LIVING_SPELLS,
+    SPELL_ENFEEBLE,
     NUM_SPELLS
 };

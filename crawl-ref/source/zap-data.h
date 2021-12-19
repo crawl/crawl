@@ -1781,5 +1781,21 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0
 },
 
+{
+    ZAP_ENFEEBLE,
+    "",
+    200,
+    nullptr,
+    new tohit_calculator<0, 4, 1>,
+    nullptr,
+    new tohit_calculator<0, 1, 3>,
+    BLACK,
+    true,
+    BEAM_ENFEEBLE,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    0
+},
 
 };

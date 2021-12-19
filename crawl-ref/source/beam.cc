@@ -3240,8 +3240,12 @@ void bolt::affect_player_enchantment(bool resistible)
     }
 
     // Never affects the player.
-    if (flavour == BEAM_INFESTATION || flavour == BEAM_VILE_CLUTCH)
+    if (flavour == BEAM_INFESTATION
+        || flavour == BEAM_VILE_CLUTCH
+        || flavour == BEAM_ENFEEBLE)
+    {
         return;
+    }
 
     // You didn't resist it.
     if (animate)
@@ -5128,6 +5132,7 @@ bool bolt::has_saving_throw() const
     case BEAM_VILE_CLUTCH:
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
+    case BEAM_ENFEEBLE:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
@@ -5229,6 +5234,12 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_MINDBURST:
         rc = mons_intel(*mon) > I_BRAINLESS;
+        break;
+
+    case BEAM_ENFEEBLE:
+        rc = mons_has_attacks(*mon)
+             || mon->antimagic_susceptible()
+             || !mons_invuln_will(*mon);
         break;
 
     default:
@@ -5820,6 +5831,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_ENFEEBLE:
+        if (enfeeble_monster(mon, ench_power))
+            obvious_effect = true;
+        return MON_AFFECTED;
+
     default:
         break;
     }
@@ -6339,6 +6355,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_HIBERNATION:
         case BEAM_MINDBURST:
         case BEAM_VAMPIRIC_DRAINING:
+        case BEAM_ENFEEBLE:
             return ench_flavour_affects_monster(flavour, mon);
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
@@ -6613,6 +6630,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VILE_CLUTCH:           return "vile clutch";
     case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
     case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
+    case BEAM_ENFEEBLE:              return "enfeeble";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

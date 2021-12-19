@@ -1496,7 +1496,6 @@ bool mons_can_be_blinded(monster_type mc)
     return !mons_class_flag(mc, M_UNBLINDABLE);
 }
 
-
 /**
  * Can this kind of monster be dazzled?
  *
