@@ -375,6 +375,13 @@ bool melee_attack::handle_phase_dodged()
 
 void melee_attack::apply_black_mark_effects()
 {
+    enum black_mark_effect
+    {
+        ANTIMAGIC,
+        WEAKNESS,
+        DRAINING,
+    };
+
     // Less reliable effects for players.
     if (attacker->is_player()
         && you.has_mutation(MUT_BLACK_MARK)
@@ -385,15 +392,32 @@ void melee_attack::apply_black_mark_effects()
         if (!defender->alive())
             return;
 
-        switch (random2(3))
+        vector<black_mark_effect> effects;
+
+        if (defender->antimagic_susceptible())
+            effects.push_back(ANTIMAGIC);
+        if (defender->is_player()
+            || mons_has_attacks(*defender->as_monster()))
         {
-            case 0:
+            effects.push_back(WEAKNESS);
+        }
+        if (defender->res_negative_energy() < 3)
+            effects.push_back(DRAINING);
+
+        if (effects.empty())
+            return;
+
+        black_mark_effect choice = effects[random2(effects.size())];
+
+        switch (choice)
+        {
+            case ANTIMAGIC:
                 antimagic_affects_defender(damage_done * 8);
                 break;
-            case 1:
+            case WEAKNESS:
                 defender->weaken(attacker, 6);
                 break;
-            case 2:
+            case DRAINING:
                 defender->drain(attacker, false, damage_done);
                 break;
         }
