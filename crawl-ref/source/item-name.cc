@@ -569,6 +569,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_INFUSION:          return "infusion";
         case SPARM_LIGHT:             return "light";
         case SPARM_RAGE:              return "wrath";
+        case SPARM_MAYHEM:            return "mayhem";
         default:                      return "bugginess";
         }
     }
@@ -613,6 +614,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_INFUSION:          return "infuse";
         case SPARM_LIGHT:             return "light";
         case SPARM_RAGE:              return "*Rage";
+        case SPARM_MAYHEM:            return "mayhem";
         default:                      return "buggy";
         }
     }

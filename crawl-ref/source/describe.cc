@@ -1801,6 +1801,8 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it lights the dungeon around the wearer.";
     case SPARM_RAGE:
         return "it berserks the wearer when making melee attacks (20% chance).";
+    case SPARM_MAYHEM:
+        return "it causes witnesses of the wearer's kills to go into a frenzy.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

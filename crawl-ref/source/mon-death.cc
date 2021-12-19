@@ -1284,6 +1284,17 @@ static void _druid_final_boon(const monster* mons)
     }
 }
 
+static void _orb_of_mayhem(actor& maniac, const monster& victim)
+{
+    vector<monster *> witnesses;
+    for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
+        if (mi->can_see(maniac) && mi->can_go_frenzy())
+            witnesses.push_back(*mi);
+
+    if (coinflip() && !witnesses.empty())
+        (*random_iterator(witnesses))->go_frenzy(&maniac);
+}
+
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
@@ -2005,6 +2016,13 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 bless_follower();
             }
+
+            if (gives_player_xp
+                && !mons_is_object(mons.type)
+                && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+            {
+                _orb_of_mayhem(you, mons);
+            }
             break;
         }
 
@@ -2045,6 +2063,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 // Randomly bless the follower who killed.
                 bless_follower(killer_mon);
+                if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+                    _orb_of_mayhem(*killer_mon, mons);
             }
             break;
         }
