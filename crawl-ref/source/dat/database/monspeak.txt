@@ -2502,20 +2502,6 @@ sizzlefizz
 
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
-### Cantrips - messages used when casting jelly prayers after Jiyva is dead
-dissolution_prayer
-
-@The_monster@ gurgles to an absent god.
-
-@The_monster@ jiggles mournfully.
-
-@The_monster@ wobbles aimlessly.
-
-@The_monster@ says, "Become one with my sorrow!"
-
-w:1
-@The_monster@ asks, "Why have you forsaken me?"
-%%%%
 Dissolution
 
 @_dissolution_common_@
@@ -4224,55 +4210,6 @@ _Fannar_rare_
 @The_monster@ says @to_foe@, "Does this not give you the chills?"
 %%%%
 ############ Gastronok ### A rather hungry wizard-slug
-# Cantrip messages:
-gastronok_self_buff
-
-@_gastronok_self_buff_@
-%%%%
-gastronok_other_buff
-
-@_gastronok_other_buff_@
-%%%%
-gastronok_debuff
-
-@_gastronok_debuff_@
-%%%%
-_gastronok_self_buff_
-
-@The_monster@ bubbles merrily.
-
-@The_monster@ glows a brilliant shade of cerise.
-
-@The_monster@ wobbles crazily.
-
-@The_monster@'s eyestalks stretch out, then return to normal size.
-%%%%
-# When targeting other monsters.
-_gastronok_other_buff_
-
-@The_monster@ wobbles.
-
-@The_monster@ slows momentarily.
-
-@The_monster@ makes a slurping sound, then looks surprised.
-%%%%
-# Slugform affecting the player.
-_gastronok_debuff_
-
-w:20
-You feel sluggish.
-
-You feel a sudden, passing aversion to salt.
-
-Your skin takes on a slight green cast.
-
-# Doesn't work for Naga and transformed Merfolk.
-# There's a hack in mon-cast.cc to prevent it from being used in those cases.
-Your legs wobble like jelly.
-
-w:5
-You feel a sudden urge to swivel your nonexistent eyestalks around.
-%%%%
 # And finally, his speech.
 Gastronok
 
