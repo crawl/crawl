@@ -128,6 +128,8 @@ bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
 
+int guile_adjust_willpower(int wl) PURE;
+
 // Only works for armour/weapons/missiles
 // weapon functions:
 int weapon_rarity(int w_type) IMMUTABLE;

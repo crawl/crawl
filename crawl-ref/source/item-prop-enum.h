@@ -488,6 +488,7 @@ enum special_armour_type
     SPARM_LIGHT,
     SPARM_RAGE,
     SPARM_MAYHEM,
+    SPARM_GUILE,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

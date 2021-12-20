@@ -117,12 +117,15 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_willpower(int power)
+int actor::check_willpower(const actor* source, int power)
 {
-    const int wl = willpower();
+    int wl = willpower();
 
     if (wl == WILL_INVULN)
         return 100;
+
+    if (source && source->wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE))
+        wl = guile_adjust_willpower(wl);
 
     const int adj_pow = ench_power_stepdown(power);
 

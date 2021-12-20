@@ -114,7 +114,7 @@ bool do_slow_monster(monster& mon, const actor* agent, int dur)
 
 bool enfeeble_monster(monster &mon, int pow)
 {
-    const int res_margin = mon.check_willpower(pow);
+    const int res_margin = mon.check_willpower(&you, pow);
     vector<enchant_type> hexes;
 
     if (mons_has_attacks(mon))

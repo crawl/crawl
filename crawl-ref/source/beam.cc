@@ -1702,7 +1702,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         return true;
     }
 
-    int res_margin = mons->check_willpower(pow);
+    int res_margin = mons->check_willpower(&you, pow);
     if (res_margin > 0)
     {
         if (simple_monster_message(*mons,
@@ -3187,7 +3187,7 @@ void bolt::affect_player_enchantment(bool resistible)
 {
     if (resistible
         && has_saving_throw()
-        && you.check_willpower(ench_power) > 0)
+        && you.check_willpower(agent(true), ench_power) > 0)
     {
         // You resisted it.
 
@@ -5317,7 +5317,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         // Chaos effects don't get a resistance check to match melee chaos.
         else if (real_flavour != BEAM_CHAOS)
         {
-            if (mon->check_willpower(ench_power) > 0)
+            if (mon->check_willpower(agent(true), ench_power) > 0)
             {
                 // Note only actually used by messages in this case.
                 res_margin = mon->willpower() - ench_power_stepdown(ench_power);

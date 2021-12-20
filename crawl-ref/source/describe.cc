@@ -1803,6 +1803,8 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it berserks the wearer when making melee attacks (20% chance).";
     case SPARM_MAYHEM:
         return "it causes witnesses of the wearer's kills to go into a frenzy.";
+    case SPARM_GUILE:
+        return "it weakens the willpower of the wielder and everyone they hex.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -3563,10 +3565,14 @@ static int _hex_pow(const spell_type spell, const int hd)
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
-int hex_chance(const spell_type spell, const int hd)
+int hex_chance(const spell_type spell, const monster_info* mi)
 {
-    const int capped_pow = _hex_pow(spell, hd);
-    const int chance = hex_success_chance(you.willpower(), capped_pow,
+    const int capped_pow = _hex_pow(spell, mi->spell_hd());
+    const bool guile = mi->inv[MSLOT_SHIELD]
+                       && get_armour_ego_type(*mi->inv[MSLOT_SHIELD]) == SPARM_GUILE;
+    const int will = guile ? guile_adjust_willpower(you.willpower())
+                           : you.willpower();
+    const int chance = hex_success_chance(will, capped_pow,
                                           100, true);
     if (spell == SPELL_STRIP_WILLPOWER)
         return chance + (100 - chance) / 3; // ignores wl 1/3rd of the time
@@ -3810,7 +3816,7 @@ static void _get_spell_description(const spell_type spell,
                                "spell right now. %s\n",
                                wiz_info.c_str())
                 : make_stringf("Chance to defeat your Will: %d%%%s\n",
-                               hex_chance(spell, hd),
+                               hex_chance(spell, mon_owner),
                                wiz_info.c_str());
         }
 

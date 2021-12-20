@@ -288,7 +288,7 @@ public:
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
     virtual int willpower() const = 0;
-    virtual int check_willpower(int power);
+    virtual int check_willpower(const actor* source, int power);
     virtual bool no_tele(bool blink = false) const = 0;
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;

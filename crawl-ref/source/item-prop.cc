@@ -2300,6 +2300,9 @@ int get_armour_willpower(const item_def &arm, bool check_artp)
     if (get_armour_ego_type(arm) == SPARM_WILLPOWER)
         res += WL_PIP;
 
+    if (get_armour_ego_type(arm) == SPARM_GUILE)
+        res -= 2 * WL_PIP;
+
     if (check_artp && is_artefact(arm))
         res += WL_PIP * artefact_property(arm, ARTP_WILLPOWER);
 
@@ -2754,6 +2757,11 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
 bool shield_reflects(const item_def &shield)
 {
     return is_shield(shield) && get_armour_ego_type(shield) == SPARM_REFLECTION;
+}
+
+int guile_adjust_willpower(int wl)
+{
+    return max(0, wl - 3 * WL_PIP);
 }
 
 string item_base_name(const item_def &item)

@@ -684,7 +684,7 @@ static spret _phantom_mirror(dist *target)
     int dur = min(6, max(1,
                          player_adjust_evoc_power(
                              you.skill(SK_EVOCATIONS, 1) / 4 + 1)
-                         * (100 - victim->check_willpower(power)) / 100));
+                         * (100 - victim->check_willpower(&you, power)) / 100));
 
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 

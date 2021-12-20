@@ -6325,6 +6325,8 @@ int player_willpower(bool temp)
     // ego armours
     rm += WL_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_WILLPOWER);
 
+    rm -= 2 * WL_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE);
+
     // rings of willpower
     rm += WL_PIP * you.wearing(EQ_RINGS, RING_WILLPOWER);
 
