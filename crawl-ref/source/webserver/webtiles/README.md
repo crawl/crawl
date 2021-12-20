@@ -5,7 +5,8 @@ Module organization, highlights:
 * The core code runs a single process using `asyncio` via Tornado. (On older
   installs it will not literally use `asyncio`, but Tornado-specific async
   code.) Each playing connection spawns a subprocess in which a crawl binary is
-  running.
+  running. The main IOLoop is started from `server.py` via the `run()` call.
+  An example of starting the server is in the (non-module) `../server.py` file.
 * Each webtiles connection involves a websockets connection to the javascript
   client and (when playing) a socket connection to a crawl binary subprocess.
   The former is primarily managed by `ws_handler.py` and the latter by
