@@ -2745,11 +2745,11 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     return hand == HANDS_TWO;
 }
 
+// Returns true if the worn shield has the reflection ego. Used only for
+// messaging, to distinguish between a reflective shield and ego reflection.
 bool shield_reflects(const item_def &shield)
 {
-    ASSERT(is_shield(shield));
-
-    return get_armour_ego_type(shield) == SPARM_REFLECTION;
+    return is_shield(shield) && get_armour_ego_type(shield) == SPARM_REFLECTION;
 }
 
 string item_base_name(const item_def &item)

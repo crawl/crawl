@@ -2957,8 +2957,7 @@ bool bolt::is_reflectable(const actor &whom) const
     if (range_used() > range)
         return false;
 
-    const item_def *it = whom.shield();
-    return (it && is_shield(*it) && shield_reflects(*it)) || whom.reflection();
+    return whom.reflection();
 }
 
 bool bolt::is_big_cloud() const
@@ -3132,7 +3131,7 @@ bool bolt::misses_player()
             const item_def *shield = you.shield();
             if (is_reflectable(you))
             {
-                if (shield && is_shield(*shield) && shield_reflects(*shield))
+                if (shield && shield_reflects(*shield))
                 {
                     mprf("Your %s reflects the %s!",
                             shield->name(DESC_PLAIN).c_str(),
@@ -4707,7 +4706,7 @@ bool bolt::attempt_block(monster* mon)
     {
         if (mon->observable())
         {
-            if (shield && is_shield(*shield) && shield_reflects(*shield))
+            if (shield && shield_reflects(*shield))
             {
                 mprf("%s reflects the %s off %s %s!",
                      mon->name(DESC_THE).c_str(),

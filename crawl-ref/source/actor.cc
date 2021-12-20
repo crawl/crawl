@@ -283,7 +283,9 @@ bool actor::no_cast(bool items) const
 
 bool actor::reflection(bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_REFLECTION);
+    return items &&
+           (wearing(EQ_AMULET, AMU_REFLECTION)
+            || wearing_ego(EQ_ALL_ARMOUR, SPARM_REFLECTION));
 }
 
 bool actor::extra_harm(bool items) const

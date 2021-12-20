@@ -159,16 +159,13 @@ bool ranged_attack::handle_phase_blocked()
     string punctuation = ".";
     string verb = "block";
 
-    const bool reflected_by_shield = defender_shield
-                                     && is_shield(*defender_shield)
-                                     && shield_reflects(*defender_shield);
-    if (reflected_by_shield || defender->reflection())
+    if (defender->reflection())
     {
         reflected = true;
         verb = "reflect";
         if (defender->observable())
         {
-            if (reflected_by_shield)
+            if (defender_shield && shield_reflects(*defender_shield))
             {
                 punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
                               + " " + defender_shield->name(DESC_PLAIN).c_str()
