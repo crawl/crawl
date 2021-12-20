@@ -670,34 +670,39 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-static void _handle_wucad_mu(int cost)
+static void _handle_channeling(int cost)
 {
-    if (!player_equip_unrand(UNRAND_WUCAD_MU))
-        return;
-
     if (you.has_mutation(MUT_HP_CASTING))
         return;
 
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 54))
+    const int sources = 2 * player_equip_unrand(UNRAND_WUCAD_MU)
+                        + you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
+
+    if (!x_chance_in_y(sources * you.skill(SK_EVOCATIONS), 54))
         return;
 
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
     // The chance of backfiring goes down with evo skill and up with cost
-    if (one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+    // and is greatly reduced by more sources of channeling
+    for (int i = 0; i < sources; ++i)
     {
-        mpr(random_choose("Weird images run through your mind.",
-                          "Your head hurts.",
-                          "You feel a strange surge of energy.",
-                          "You feel uncomfortable."));
-        if (coinflip())
-            confuse_player(2 + random2(4));
-        else
-            lose_stat(STAT_INT, 1 + random2avg(5, 2));
+        if (!one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+        {
+            mpr("Magical energy flows into your mind!");
+            inc_mp(cost, true);
+            return;
+        }
     }
 
-    mpr("Magical energy flows into your mind!");
-    inc_mp(cost, true);
+    mpr(random_choose("Weird images run through your mind.",
+                      "Your head hurts.",
+                      "You feel a strange surge of energy.",
+                      "You feel uncomfortable."));
+    if (coinflip())
+        confuse_player(2 + random2(4));
+    else
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
 }
 
 /**
@@ -956,7 +961,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     practise_casting(spell, cast_result == spret::success);
     if (cast_result == spret::success)
     {
-        _handle_wucad_mu(cost);
+        _handle_channeling(cost);
         if (player_equip_unrand(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));

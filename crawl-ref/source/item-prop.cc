@@ -1846,7 +1846,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         if (is_shield(item))
             skills.insert(SK_SHIELDS);
 
-        if (gives_ability(item))
+        if (gives_ability(item) || get_armour_ego_type(item) == SPARM_ENERGY)
             skills.insert(SK_EVOCATIONS);
     }
 

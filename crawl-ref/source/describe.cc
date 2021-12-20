@@ -1805,6 +1805,11 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it causes witnesses of the wearer's kills to go into a frenzy.";
     case SPARM_GUILE:
         return "it weakens the willpower of the wielder and everyone they hex.";
+    case SPARM_ENERGY:
+        return "it occasionally powers its wielder's spells, but with a chance"
+               " of causing confusion or draining the wielder's intelligence."
+               " It becomes more likely to activate and less likely to backfire"
+               " with Evocations skill.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
