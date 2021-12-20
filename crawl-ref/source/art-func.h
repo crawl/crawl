@@ -1304,7 +1304,8 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         && there_are_monsters_nearby(true, true, false)
         && rude_stop_summoning_reason().empty())
     {
-        your_spells(SPELL_BATTLESPHERE, 0, false);
+        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
+                          GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
     }
 }
