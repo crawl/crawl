@@ -397,10 +397,6 @@ def run():
         # it is set?
         sys.exit("No configuration provided!")
 
-    if config.get('live_debug'):
-        logging.info("Starting in live-debug mode.")
-        config.set('watch_socket_dirs', False)
-
     # do this here so it can happen before logging init
     if args.logfile:
         if args.logfile == "-":
@@ -411,6 +407,10 @@ def run():
 
     init_logging(config.get('logging_config'))
     logging.info("Loaded server configuration from: %s", config.source_file)
+
+    if config.get('live_debug'):
+        logging.info("Starting in live-debug mode.")
+        config.set('watch_socket_dirs', False)
 
     if args.logfile:
         logging.info("Using command-line supplied logfile: '%s'", args.logfile)
