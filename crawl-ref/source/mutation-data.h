@@ -2247,7 +2247,7 @@ static const mutation_def mut_data[] =
 { MUT_FLAT_HP, 0, 3, mutflag::good, false,
   "extra vitality",
 
-    {"You have superior vitality. (+4 HP)",
+    {"You have superior vitality. (+4 MHP)",
      "You have much superior vitality. (+8 MHP)",
      "You have exceptionally superior vitality. (+12 MHP)"},
     {"You feel less vital.",
