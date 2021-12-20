@@ -30,6 +30,9 @@ class ConfigModuleWrapper(object):
     def __contains__(self, key):
         return hasattr(self.module, key)
 
+# temporary compatibility shim for config calls in templates
+allow_password_reset = False
+admin_password_reset = False
 
 # classic config: everything is just done in a module
 # (TODO: add some alternative)
@@ -37,6 +40,9 @@ def init_config_from_module(module):
     global server_config, source_file
     server_config = ConfigModuleWrapper(module)
     source_file = os.path.abspath(module.__file__)
+    global allow_password_reset, admin_password_reset
+    allow_password_reset = get('allow_password_reset')
+    admin_password_reset = get('admin_password_reset')
 
 
 server_path = None
