@@ -466,12 +466,12 @@ playthings...
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives followers the power to reap corpses and spectres from living
-and ensouled beings, to recall undead followers to their vicinity, and to heal
-by draining the life force of living creatures. Followers can also exchange
-members of their undead collection for Yredelemnul's more powerful servants.
-Eventually, followers will gain the power to fully bind a monster's soul, and
-make it fight for them instead.
+Yredelemnul gives followers the power to raise slain foes from the dead and
+bind them into service. Followers also can recall undead followers to them,
+heal by draining life from the living, and exchange members of their undead
+army for Yredelemnul's more powerful servants. With a large and powerful enough
+mass of the dead, followers can fully bind a foe's soul and make it fight for
+them in death with the full capacities it held in life.
 %%%%
 Zin powers
 
