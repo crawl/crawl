@@ -778,35 +778,12 @@ static bool _legs_msg_applicable()
                 || you.has_mutation(MUT_TENTACLE_ARMS));
 }
 
-// Monster spell of uselessness, just prints a message.
-// This spell exists so that some monsters with really strong
-// spells (ie orc priest) can be toned down a bit. -- bwr
-static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
+static void _gastronok_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
 {
-    // only messaging; don't bother if you can't see anything anyway.
-    if (!you.see_cell(mons.pos()))
-        return;
-
     const bool friendly  = mons.friendly();
     const bool buff_only = !friendly && is_sanctuary(you.pos());
     const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                 : MSGCH_MONSTER_ENCHANT;
-
-    if (mons.type != MONS_GASTRONOK)
-    {
-        const char* msgs[] =
-        {
-            " casts a cantrip, but nothing happens.",
-            " begins to cast a cantrip, but forgets the words!",
-            " miscasts a cantrip.",
-            " looks braver for a moment.",
-            " looks encouraged for a moment.",
-            " looks satisfied for a moment.",
-        };
-
-        simple_monster_message(mons, RANDOM_ELEMENT(msgs), channel);
-        return;
-    }
 
     bool has_mon_foe = !invalid_monster_index(mons.foe);
     if (buff_only
@@ -846,6 +823,61 @@ static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
             mprf(channel, "%s", slugform.c_str());
         }
     }
+}
+
+static void _dissolution_cantrip(monster &mons)
+{
+    const bool friendly  = mons.friendly();
+    const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
+                                                : MSGCH_MONSTER_ENCHANT;
+
+    string jellyprayer = getSpeakString("dissolution_prayer");
+    if (jellyprayer.empty())
+        return;
+
+    jellyprayer = replace_all(jellyprayer, "@The_monster@",
+                              mons.name(DESC_THE));
+    mprf(channel, "%s", jellyprayer.c_str());
+}
+
+// Monster spell of uselessness, just prints a message.
+// This spell exists so that some monsters with really strong
+// spells (ie orc priest) can be toned down a bit. -- bwr
+static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
+{
+    // only messaging; don't bother if you can't see anything anyway.
+    if (!you.see_cell(mons.pos()))
+        return;
+
+    const bool friendly  = mons.friendly();
+    const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
+                                                : MSGCH_MONSTER_ENCHANT;
+
+    if (mons.type == MONS_GASTRONOK)
+    {
+        _gastronok_cantrip(mons, slot, pbolt);
+        return;
+    }
+
+    // Mourn that Jiyva is dead
+    if (mons.type == MONS_DISSOLUTION)
+    {
+        _dissolution_cantrip(mons);
+        return;
+    }
+
+    const char* msgs[] =
+    {
+        " casts a cantrip, but nothing happens.",
+        " begins to cast a cantrip, but forgets the words!",
+        " miscasts a cantrip.",
+        " looks braver for a moment.",
+        " looks encouraged for a moment.",
+        " looks satisfied for a moment.",
+    };
+
+    simple_monster_message(mons, RANDOM_ELEMENT(msgs), channel);
+    return;
 }
 
 static void _cast_injury_mirror(monster &mons, mon_spell_slot /*slot*/, bolt&)
