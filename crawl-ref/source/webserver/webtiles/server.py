@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from __future__ import absolute_import
 
 import argparse
@@ -17,14 +16,9 @@ import tornado.template
 import tornado.web
 from tornado.ioloop import IOLoop
 
-# TODO: refactor more of this file into webtiles?
 import webtiles
 from webtiles import auth, load_games, process_handler, userdb, config
 from webtiles import game_data_handler, util, ws_handler
-
-# load config values from the traditional module location
-import config as server_config
-config.init_config_from_module(server_config)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -386,17 +380,22 @@ def reset_token_commands(args):
             print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
 
 
-def server_main():
+# before running, this needs to have its config source set up. See
+# ../server.py in the official repository for an example.
+def run():
     args = parse_args()
+    # XX in chroot setups, running the module won't work right
     if config.get('chroot'):
         os.chroot(config.get('chroot'))
-
-    ## TODO: is there a better way to handle this? Needed for games.d
-    config.server_path = os.path.dirname(os.path.abspath(__file__))
 
     if args.reset_password or args.clear_reset_password:
         reset_token_commands(args)
         return
+
+    if config.source_file is None:
+        # we could try to automatically figure this out from server_path, if
+        # it is set?
+        sys.exit("No configuration provided!")
 
     if config.get('live_debug'):
         logging.info("Starting in live-debug mode.")
@@ -411,6 +410,7 @@ def server_main():
             config.get('logging_config')['filename'] = args.logfile
 
     init_logging(config.get('logging_config'))
+    logging.info("Loaded server configuration from: %s", config.source_file)
 
     if args.logfile:
         logging.info("Using command-line supplied logfile: '%s'", args.logfile)
@@ -478,5 +478,5 @@ def server_main():
     remove_pidfile()
 
 
-if __name__ == "__main__":
-    server_main()
+# TODO: it might be nice to simply make this module runnable, but that would
+# need some way of specifying the config source and `config.server_path`.

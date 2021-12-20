@@ -8,6 +8,7 @@ import logging
 from webtiles import load_games
 
 server_config = {}
+source_file = None
 
 # light wrapper class that maps get/set/etc to getattr/setattr/etc
 # doesn't bother to implement most of the dict interface...
@@ -33,8 +34,9 @@ class ConfigModuleWrapper(object):
 # classic config: everything is just done in a module
 # (TODO: add some alternative)
 def init_config_from_module(module):
-    global server_config
+    global server_config, source_file
     server_config = ConfigModuleWrapper(module)
+    source_file = os.path.abspath(module.__file__)
 
 
 server_path = None

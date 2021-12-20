@@ -24,6 +24,9 @@ try:
 except ImportError:
     from ordereddict import OrderedDict # type: ignore
 
+# directory to look for `games.d` files among other things.
+server_path = os.path.dirname(os.path.abspath(__file__))
+
 # dgl_mode = True
 
 bind_nonsecure = True # Set to false to only use SSL
