@@ -616,9 +616,9 @@ such as divine restrictions, do not cause your other skills to rise faster.
 %%%%
 nimble swimmer mutation
 
-You can take advantage of the water while underwater or skimming the waves,
-gaining Stealth+. The second level of this mutation also provides you improved
-EV and movement speed through the water.
+You can blend into the waves while swimming through water or flying above it,
+gaining Stealth+. The second level of this mutation also grants you improved
+evasion and increases your movement speed when in or above water.
 %%%%
 vampiric mutation
 
