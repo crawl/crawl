@@ -242,15 +242,16 @@ Invocations skill.
 %%%%
 Bind Soul ability
 
-Marks a monster's soul as ripe for the taking. Living, holy and demonic
-monsters can be targeted (excepting most lords of Pandemonium), as long as they
-are relatively uninjured. The duration of the mark is dependent on Invocations
-skill. If the monster dies while still marked, its soul will become yours.
+Marks a monster's soul as ripe for the taking. If the monster dies before the mark
+expires, it will return as a bound soul, still retaining the equipment, spells and
+abilities it had in life.
 
-The bound soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. The bound soul will follow its captor
-through stairs and come when recalled from a different level. However, only one
-soul can be enslaved at a time.
+Living, holy and demonic monsters can be targeted (excepting most lords of
+Pandemonium), as long as they are relatively uninjured. The duration of the mark
+is dependent on Invocations skill.
+
+The bound soul will follow its captor through stairs, and can be recalled from
+other levels. Only one soul can be bound at a time.
 %%%%
 # Okawaru
 Heroism ability
