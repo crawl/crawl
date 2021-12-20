@@ -53,6 +53,7 @@
 #include "mon-death.h"
 #include "mon-gear.h" // give_shield
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
@@ -1056,8 +1057,11 @@ static void _calculate_yred_piety()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned())
+        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_is_tentacle_or_tentacle_segment(mi->type))
+        {
             continue;
+        }
 
 
         // To smooth out yred piety fluctuations count zombies for piety
@@ -1111,6 +1115,7 @@ bool yred_reclaim_souls(bool all)
     for (monster_iterator mi; mi; ++mi)
     {
         if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
             continue;
@@ -1154,6 +1159,7 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
     for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
     {
         if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
             continue;
