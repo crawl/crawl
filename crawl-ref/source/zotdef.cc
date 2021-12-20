@@ -21,6 +21,10 @@
 #include "message.h"
 #include "mon-pick.h"
 #include "mon-place.h"
+
+// used to find a staircase to spawn monsters at.
+#include "mon-movetarget.h"
+
 #include "place.h"
 #include "religion.h"
 #include "state.h"
@@ -425,10 +429,10 @@ static void _insect_wave(int power)
                 MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
                 MONS_BOULDER_BEETLE, MONS_REDBACK,
                 MONS_VAMPIRE_MOSQUITO, MONS_HORNET, /* MONS_SOLDIER_ANT, MONS_QUEEN_ANT,*/
-                MONS_GIANT_COCKROACH, MONS_TRAPDOOR_SPIDER,
+                MONS_GIANT_COCKROACH /*, MONS_TRAPDOOR_SPIDER */,
                 MONS_SCORPION, END};
     monster_type boss[] = {MONS_HORNET, MONS_BOULDER_BEETLE,
-                MONS_QUEEN_ANT, MONS_QUEEN_BEE, END};
+                /* MONS_QUEEN_ANT, */ MONS_QUEEN_BEE, END};
     _zotdef_fill_from_list(insects, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear an ominous buzzing.");
@@ -741,6 +745,9 @@ string zotdef_debug_wave_desc()
 
 
 
+// zotdef spawns montsres at stairs?
+vector<level_exit> spawn_points;
+
 monster* zotdef_spawn(bool boss)
 {
     monster_type mt = env.mons_alloc[random2(NSLOTS)];
@@ -759,9 +766,16 @@ monster* zotdef_spawn(bool boss)
     mgen_data mg(mt, BEH_SEEK, coord_def(), MHITYOU);
 
 	
-	
-	// seems to be currnetly unused
 	//mg.proximity = PROX_NEAR_STAIRS;
+	//this flag was removed, so I had to jury rig a solution:
+	// My solution?
+	// use this function to find all the exits
+	// _find_all_level_exits(vector<level_exit> &e)
+	// determine how many stairs their are (because one zotdef level has four for some reason).
+	//  vector_name.size()
+	// then randomly choose one of those stairs
+	
+	
 	
     mg.flags |= MG_PERMIT_BANDS;
 
@@ -794,10 +808,17 @@ monster* zotdef_spawn(bool boss)
 
 static rune_type _get_rune()
 {
-    FixedBitVector<NUM_RUNE_TYPES> runes = you.runes;
-    for (int i = 0; i < MAX_ITEMS; i++)
-        if (env.item[i].base_type ==  OBJ_RUNES)
+    
+ 	FixedBitVector<NUM_RUNE_TYPES> runes = you.runes;
+	
+     for (int i = 0; i < MAX_ITEMS; i++){
+		
+         if (env.item[i].base_type ==  OBJ_RUNES ){
+			
             runes.set(env.item[i].plus);
+		}
+		
+	}
     int already = 0;
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
         if (runes[i])
@@ -809,6 +830,8 @@ static rune_type _get_rune()
     rune_type rune;
     do rune = (rune_type)random2(NUM_RUNE_TYPES);
     while (runes[rune] || rune == RUNE_FOREST || rune == RUNE_DEMONIC);
+
+	// mprf("RUNE NUMBER: %d ", rune);
 
     return rune;
 }
@@ -1019,13 +1042,21 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                int ip = items(true, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, 0);
+                //int ip = items(true, OBJ_RUNES, RUNE_SPIDER, 0);
+				int ip = items(true, OBJ_RUNES, _get_rune(), 0);
+				
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {
-                    env.item[ip].plus = _get_rune();
-                    move_item_to_grid(item_made, mon->pos());
+                   // env.item[ip].sub_type = _get_rune();
+				   
+					 //move_item_to_grid(item_made, mon->pos());
+                    
+					// for now we will have the runes spawn at the player.
+					move_item_to_grid(item_made, you.pos());
+					
                     msg = "You feel a sense of great excitement!";
+					
                 }
             }
             _zotdef_danger_msg(msg);
