@@ -103,7 +103,7 @@ def check_keys_all(required, raise_on_missing=False):
     if isinstance(required, str):
         required = [required]
     for k in required:
-        if not has_key(k):
+        if not has_key(k) or get(k) is None:
             if raise_on_missing:
                 raise ValueError("Webtiles config: Missing configuration key: %s" % k)
             return False
@@ -115,7 +115,7 @@ def check_keys_any(required, raise_on_missing=False):
     if not any([check_keys_all(key) for key in required]):
         if raise_on_missing:
             raise ValueError("Webtiles config: Need at least one of %s!" %
-                                                        ", ".join(required))
+                                        ", ".join([repr(r) for r in required]))
         return False
     return True
 
@@ -151,9 +151,9 @@ def load_game_data():
 def validate():
     # TODO: some way of setting defaults in this module?
     check_keys_any(['bind_nonsecure', 'ssl_options'], True)
-    if has_key('bind_nonsecure'):
+    if has_key('bind_nonsecure') and get('bind_nonsecure'):
         check_keys_any(['bind_pairs', ['bind_address', 'bind_port']], True)
-    if has_key('ssl_options'):
+    if has_key('ssl_options') and get('ssl_options'):
         check_keys_any(['ssl_bind_pairs', ['ssl_address', 'ssl_port']], True)
 
     required = ['static_path', 'template_path', 'server_id',
