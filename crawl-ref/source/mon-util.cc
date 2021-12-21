@@ -5022,6 +5022,10 @@ bool mons_is_player_shadow(const monster& mon)
         && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
 }
 
+// Zero-damage attacks with special effects (constriction, drowning, pure fire,
+// etc.) aren't counted, since this is used to decide whether the monster can
+// go berserk or be weakened, both of which require an attack with non-zero
+// base damage.
 bool mons_has_attacks(const monster& mon)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);
