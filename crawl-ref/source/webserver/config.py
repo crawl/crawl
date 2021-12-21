@@ -1,18 +1,19 @@
 # Warning! Servers will not update or merge with the version controlled copy of
-# this file, so any parameters here, and code that uses them, need to come
-# without the assumption that they will be present in any given config.py on a
-# server. Furthermore, on a typical rebuild in a production server, a running
-# webtiles server *will not restart*, so you can't even assume that any config-
-# specific code that you've added will be consistently present. This
-# particularly impacts templated html files, which are loaded and called
-# dynamically, so *do* get updated immediately on a rebuild. If something like
-# client.html raises an exception, this will trigger 500 errors across the whole
-# server.
+# this file, so any parameters here should be presented as recommendations or
+# documentation of the default, not a default value, and option name changes
+# here will require manual intervention on the part of server admins. New
+# values should always come with a default that does not lead to crashes, so
+# that something sensible happens on DGL upgrade.
 #
-# One useful workaround for all this is to get config paramters with the builtin
-# `getattr` function: e.g. `getattr(config, "dgl_mode", False) will safely get
-# this variable from the module, defaulting to False if it doesn't exist (and
-# not raising an exception). `hasattr` is also safe.
+# To add new default values, see the `webtiles.config` module. Note that
+# webtiles.config.get(x) returns `None` if `x` is not present in the config
+# data, so this can be taken as a default default value.
+#
+# Bad assumptions about config defaults particularly impacts templated html
+# files, which are loaded and called dynamically, so *do* get updated
+# immediately on a rebuild (unlike python code in this module or
+# webtiles.config). If something like client.html raises an exception, this
+# will trigger 500 errors across the whole server.
 
 import logging
 import os
