@@ -278,10 +278,10 @@ def usr1_handler(signum, frame):
         logging.exception("Failed to update games after USR1 signal.")
 
 
-def parse_args():
+def parse_args_main():
     parser = argparse.ArgumentParser(
         description='Dungeon Crawl webtiles server',
-        epilog='Command line options will override config settings.')
+        epilog='Command line options will override config settings. See wtutil.py for database commands.')
     parser.add_argument('-p', '--port', type=int, help='A port to bind; disables SSL.')
     # TODO: --ssl-port or something?
     parser.add_argument('--logfile',
@@ -300,10 +300,8 @@ def parse_args():
         help=('Debug mode for server admins. Will use a separate directory for sockets. '
               'Entails --no-pidfile, --no-daemon, --logfile -, watch_socket_dirs=False. '
               '(Further command line options can override these.)'))
-    parser.add_argument('--reset-password', type=str, help='A username to generate a password reset token for. Does not start the server.')
-    parser.add_argument('--clear-reset-password', type=str, help='A username to clear password reset tokens for. Does not start the server.')
     result = parser.parse_args()
-    if result.live_debug or result.reset_password or result.clear_reset_password:
+    if result.live_debug:
         if not result.logfile:
             result.logfile = '-'
         if result.daemon is None:
@@ -334,28 +332,15 @@ def export_args_to_config(args):
                 logging.info("Command line overrides config-specified PID file!")
             config.set('pidfile', None)
 
+
 def reset_token_commands(args):
-    if args.clear_reset_password:
-        username = args.clear_reset_password
+    if args.clear_reset:
+        username = args.clear_reset
     else:
-        username = args.reset_password
+        username = args.reset
 
-    try:
-        config.validate()
-    except:
-        err_exit("Errors in config. Exiting.", exc_info=True)
-
-    # duplicate some minimal setup needed for this to work
-    config.get('logging_config').pop('filename', None)
-    args.logfile = "<stdout>"  # make the log message easier to read
-
-    init_logging(config.get('logging_config'))
-
-    if config.get('dgl_mode'):
-        userdb.ensure_user_db_exists()
-        userdb.upgrade_user_db()
-    userdb.ensure_settings_db_exists()
     user_info = userdb.get_user_info(username)
+
     if not user_info:
         err_exit("Reset/clear password failed; invalid user: %s" % username)
 
@@ -363,7 +348,7 @@ def reset_token_commands(args):
     if config.get('lobby_url') is None:
         config.set('lobby_url', "[insert lobby url here]")
 
-    if args.clear_reset_password:
+    if args.clear_reset:
         ok, msg = userdb.clear_password_token(username)
         if not ok:
             err_exit("Error clearing password reset token for %s: %s" % (username, msg))
@@ -380,17 +365,65 @@ def reset_token_commands(args):
             print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
 
 
-# before running, this needs to have its config source set up. See
-# ../server.py in the official repository for an example.
-def run():
-    args = parse_args()
-    # XX in chroot setups, running the module won't work right
+def parse_args_util():
+    parser = argparse.ArgumentParser(
+        description='Dungeon Crawl webtiles utilities.',
+        epilog='Command line options will override config settings.')
+    parser.add_argument('--logfile',
+        help='A logfile to write to; use "-" for stdout (the default, overrides config).')
+    subparsers = parser.add_subparsers(help='Mode', dest='mode')
+    subparsers.required = True
+    parser_pw = subparsers.add_parser('password',
+        help="Set and clear password reset tokens.",
+        description="Set and clear password reset tokens.")
+    parser_pw.add_argument('--reset', type=str,
+            help='Generate a password reset token for the specified username.')
+    parser_pw.add_argument('--clear-reset', type=str,
+            help='Clear any password reset tokens for the specified username.')
+    result = parser.parse_args()
+    if result.mode == "password" and not result.reset and not result.clear_reset:
+        parser_pw.print_help()
+    if not result.logfile:
+        result.logfile = '-'
+    result.daemon = False
+    result.pidfile = False
+    return result
+
+
+def run_util():
+    args = parse_args_util()
     if config.get('chroot'):
         os.chroot(config.get('chroot'))
 
-    if args.reset_password or args.clear_reset_password:
+    if config.source_file is None:
+        sys.exit("No configuration provided!")
+
+    try:
+        config.validate()
+    except:
+        err_exit("Errors in config. Exiting.", exc_info=True)
+
+    # duplicate some minimal setup needed for this to work
+    config.get('logging_config').pop('filename', None)
+    args.logfile = "<stdout>"  # make the log message easier to read
+
+    init_logging(config.get('logging_config'))
+
+    if config.get('dgl_mode'):
+        userdb.ensure_user_db_exists()
+        userdb.upgrade_user_db()
+    userdb.ensure_settings_db_exists()
+
+    if args.reset or args.clear_reset:
         reset_token_commands(args)
-        return
+
+
+# before running, this needs to have its config source set up. See
+# ../server.py in the official repository for an example.
+def run():
+    args = parse_args_main()
+    if config.get('chroot'):
+        os.chroot(config.get('chroot'))
 
     if config.source_file is None:
         # we could try to automatically figure this out from server_path, if
