@@ -365,6 +365,27 @@ def reset_token_commands(args):
             print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
 
 
+def ban_commands(args):
+    if args.list:
+        banned = userdb.get_bans()
+        if len(banned):
+            print("Banned users: " + ", ".join(banned))
+        else:
+            print("No banned users!")
+    elif args.add:
+        err = userdb.set_ban(args.add, True)
+        if err:
+            print(err, file=sys.stderr)
+        else:
+            print("'%s' is now banned." % args.add)
+    elif args.clear:
+        err = userdb.set_ban(args.clear, False)
+        if err:
+            print(err, file=sys.stderr)
+        else:
+            print("'%s' is no longer banned." % args.clear)
+
+
 def parse_args_util():
     parser = argparse.ArgumentParser(
         description='Dungeon Crawl webtiles utilities.',
@@ -377,12 +398,25 @@ def parse_args_util():
         help="Set and clear password reset tokens.",
         description="Set and clear password reset tokens.")
     parser_pw.add_argument('--reset', type=str,
-            help='Generate a password reset token for the specified username.')
+        help='Generate a password reset token for the specified username.')
     parser_pw.add_argument('--clear-reset', type=str,
-            help='Clear any password reset tokens for the specified username.')
+        help='Clear any password reset tokens for the specified username.')
+    parser_ban = subparsers.add_parser('ban',
+        help="Set and clear bans by username.",
+        description="Set and clear bans by username.")
+    parser_ban.add_argument('--add', type=str, help='Set a ban for a user.')
+    parser_ban.add_argument('--clear', type=str, help='Clear a ban for a user.')
+    parser_ban.add_argument('--list', action='store_true',
+            help='List current banned users.')
     result = parser.parse_args()
+    # XX is there a better way to do this
     if result.mode == "password" and not result.reset and not result.clear_reset:
         parser_pw.print_help()
+        sys.exit()
+    elif result.mode == "ban" and not result.add and not result.clear and not result.list:
+        parser_ban.print_help()
+        sys.exit()
+
     if not result.logfile:
         result.logfile = '-'
     result.daemon = False
@@ -414,8 +448,10 @@ def run_util():
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
 
-    if args.reset or args.clear_reset:
+    if args.mode == "password":
         reset_token_commands(args)
+    elif args.mode == "ban":
+        ban_commands(args)
 
 
 # before running, this needs to have its config source set up. See

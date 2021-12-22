@@ -86,8 +86,8 @@ def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
 # from dgamelaunch.h
 DGLACCT_ADMIN = 1
 DGLACCT_LOGIN_LOCK = 2
-DGLACCT_PASSWD_LOCK = 4
-DGLACCT_EMAIL_LOCK = 8
+DGLACCT_PASSWD_LOCK = 4 # unused by crawl
+DGLACCT_EMAIL_LOCK = 8  # unused by crawl
 
 
 def dgl_is_admin(flags):  # type: (int) -> bool
@@ -255,6 +255,49 @@ def change_email(user_id, email):  # type: (str, str) -> Optional[str]
         db.conn.commit()
 
     return None
+
+def set_ban(username, banned=True):
+    with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, flags
+            FROM dglusers
+            WHERE username=?
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (username,))
+        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+        if not result:
+            return "Invalid username!"
+        if banned and dgl_is_banned(result[1]):
+            return "User '%s' is already banned." % username
+        elif not banned and not dgl_is_banned(result[1]):
+            return "User '%s' isn't currently banned." % username
+        if banned and dgl_is_admin(result[1]):
+            return "Remove admin flag before banning."
+
+        if banned:
+            new_flags = result[1] | DGLACCT_LOGIN_LOCK
+        else:
+            new_flags = result[1] & ~DGLACCT_LOGIN_LOCK
+        db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
+                    (new_flags, result[0]))
+        db.c.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                     (result[0],))
+        db.conn.commit()
+    return None
+
+
+def get_bans():
+    with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, username, flags
+            FROM dglusers
+            WHERE (flags & ?) <> 0
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (DGLACCT_LOGIN_LOCK,))
+        result = db.c.fetchall()
+        return [x[1] for x in result]
 
 
 def find_recovery_token(token):
