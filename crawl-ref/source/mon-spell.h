@@ -70,6 +70,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // Howler monkeys and demonic crawlers.
+    { MST_SCREAMER,
+      {
+        { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
+      }
+    },
+
     // Deep elf annihilators and draconian annihilators.
     {  MST_ANNIHILATOR,
       {
@@ -229,12 +236,6 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('h') Carnivorous quadrupeds.
-    { MST_HOWLER_MONKEY,
-      {
-        { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
-      }
-    },
-
     {  MST_BEAR,
       {
        { SPELL_BERSERKER_RAGE, 100, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
