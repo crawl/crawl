@@ -106,7 +106,7 @@ enum class abflag
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     quiet_fail          = 0x00008000, // no message on failure
-    zotdef       = 0x00040000, // ZotDef ability, w/ appropriate hotkey
+    zotdef      		= 0x00040000, // ZotDef ability, w/ appropriate hotkey
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -691,7 +691,7 @@ static vector<ability_def> &_get_ability_list()
 		{ ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 0, {}, abflag::zotdef, 2000 },
 		{ ABIL_MAKE_OBSIDIAN_STATUE, "Make obsidian statue", 0, 0, 0, {}, abflag::zotdef, 3000 },
 		{ ABIL_MAKE_CURSE_SKULL, "Make curse skull",
-		  0, 0, 0, {}, abflag::zotdef, 10000    },
+		  0, 0, 0, {}, abflag::zotdef | abflag::max_hp_drain, 10000    },
 		{ ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, {}, abflag::zotdef, 2 },
 		{ ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, {}, abflag::zotdef, 30 },
 		{ ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, {}, abflag::zotdef, 300 },
@@ -702,13 +702,13 @@ static vector<ability_def> &_get_ability_list()
 		{ ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, {}, abflag::zotdef, 3000 },
 		{ ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, {}, abflag::zotdef, 1000 },
 		{ ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold",
-		  0, 0, 0, {}, abflag::zotdef, 1000   },
+		  0, 0, 0, {}, abflag::zotdef | abflag::max_hp_drain, 1000   },
 		{ ABIL_MAKE_ACQUIREMENT, "Acquirement",
-		  0, 0, 0, {}, abflag::zotdef, 10000   },
+		  0, 0, 0, {}, abflag::zotdef | abflag::max_hp_drain, 10000   },
 		{ ABIL_MAKE_WATER, "Make water", 0, 0, 0, {}, abflag::zotdef, 10 },
 		{ ABIL_MAKE_LIGHTNING_SPIRE, "Make lightning spire", 0, 0, 0, {}, abflag::zotdef, 100 },
 		{ ABIL_MAKE_BAZAAR, "Make bazaar",
-		  0, 30, 0, {}, abflag::zotdef, 1000  },
+		  0, 30, 0, {}, abflag::zotdef | abflag::max_hp_drain, 10000  },
 		{ ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, {}, abflag::zotdef, 50 },
 		{ ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, {}, abflag::zotdef, 2 } 
 		// the price for some of these zot defence abilities probably will need rebalancing.
@@ -3652,15 +3652,19 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_MAKE_ACQUIRE_GOLD:
         fail_check();
-        //acquirement(OBJ_GOLD, AQ_SCROLL);
+		// TODO: prevent the gold from turning into bugs.
+		// so make it actually acquire gold?
+		// or remove the ability.
+        // acquirement(OBJ_GOLD, AQ_SCROLL);
 		mpr("Gold appears before you, but turns into bugs and vanishes!");
         break;
 
     case ABIL_MAKE_ACQUIREMENT:
         fail_check();
         acquirement_menu();
-		//we should probably make it so you dont loose ZP if you cancell acquirement
-		//FIX ME
+		// TODO:
+		// we should probably make it so you dont loose ZP if you cancell acquirement
+		// 
 		
         break;
 
@@ -3704,9 +3708,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_MAKE_GRENADES:
         fail_check();
         
-		//mgen_data(MONS_BALLISTOMYCETE_SPORE, BEH_FRIENDLY, &you, 6, 0, you.pos(), you.pet_target,0)
+		// mgen_data(MONS_BALLISTOMYCETE_SPORE, BEH_FRIENDLY, &you, 6, 0, you.pos(), you.pet_target,0)
 		
-		// This is an incredibly double edge ability, you are probably going to end up confusing yourself  
+		// This is an incredibly double edge ability, you are probably going to end up confusing yourself 
+		// but its super cheap....
 		
 		if (create_monster(
                mgen_data(MONS_BALLISTOMYCETE_SPORE, BEH_FRIENDLY,  
@@ -3724,13 +3729,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 		// MON_GIANT_SPORE was renamed to MONS_BALLISTOMYCETE_SPORE
 		// probably since they were created by ballistomycetes
 
-		//FIX THIS UP BRO
-		//mpr("Sorry, this is still buggy");
+		// FIX THIS UP BRO
+		// mpr("Sorry, this is still buggy");
 		
         break;
 
 
-	//cursed items were removed from the game after zot defence bit the dust, so this code is no longer needed
+	// cursed items were removed from the game after zot defence bit the dust, so this code is no longer needed
 	/*
     case ABIL_REMOVE_CURSE:
         fail_check();
@@ -3739,7 +3744,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 		
 	*/
-	//END OF ZOT DEFENCE ABILITIES zotdef
+	// END OF ZOT DEFENCE ABILITIES zotdef
 
 
     case ABIL_NON_ABILITY:
@@ -3808,16 +3813,16 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
         you.redraw_experience = true;
     }
 
-
-	//used in zotdef when summoning curse skulls
-	//curerntly dummied out for fixing or removal.
+	// TODO:
+	// used in zotdef when summoning curse skulls
+	// curerntly dummied out for fixing or removal.
 /*
     if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
     {
         MiscastEffect(&you, nullptr, ABIL_MISCAST, SPTYP_NECROMANCY, 5, 90,
                       "power out of control");
     }*/
-	//end of zOtdef code
+	// end of zOtdef code
 
     if (piety_cost)
         lose_piety(piety_cost);
