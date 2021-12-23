@@ -587,7 +587,7 @@ static const weapon_def Weapon_prop[] =
 
     // Staves
     // WPN_STAFF is for weapon stats for magical staves only.
-    { WPN_STAFF,             "staff",               5,  5, 12,
+    { WPN_STAFF,             "staff",               10,  0, 18,
         SK_STAVES,       SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_CRUSHING, 0, 0, 15, {} },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13,
