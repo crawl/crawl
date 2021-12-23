@@ -2213,7 +2213,7 @@ MONS:   mana viper, quicksilver dragon
 KMONS:  P = bush
 {{
 wizname = crawl.make_name()
-kmons("5 = patrolling Head dbname:Head Instructor name:"
+kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
       .. string.gsub(wizname, " ", "_") .. " ; triple sword ego:antimagic \
             . triple sword ego:antimagic . plate armour ego:willpower")
 }}

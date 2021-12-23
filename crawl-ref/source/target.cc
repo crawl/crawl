@@ -401,66 +401,6 @@ bool targeter_beam::affects_monster(const monster_info& mon)
            || beam.flavour == BEAM_INNER_FLAME;
 }
 
-targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)
-    : targeter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
-{
-}
-
-/**
- * Will a casting of Violent Unravelling explode a target at the given loc?
- *
- * @param c     The location in question.
- * @return      Whether, to the player's knowledge, there's a valid target for
- *              Violent Unravelling at the given coordinate.
- */
-static bool _unravelling_explodes_at(const coord_def c)
-{
-    if (you.pos() == c && player_is_debuffable())
-        return true;
-
-    const monster_info* mi = env.map_knowledge(c).monsterinfo();
-    return mi && mi->debuffable();
-}
-
-bool targeter_unravelling::set_aim(coord_def a)
-{
-    if (!targeter::set_aim(a))
-        return false;
-
-    bolt tempbeam = beam;
-
-    tempbeam.target = aim;
-    tempbeam.path_taken.clear();
-    tempbeam.fire();
-    path_taken = tempbeam.path_taken;
-
-    bolt explosion_beam = beam;
-    set_explosion_target(beam);
-    if (_unravelling_explodes_at(beam.target))
-        min_expl_rad = 1;
-    else
-        min_expl_rad = 0;
-
-    set_explosion_aim(beam);
-
-    return true;
-}
-
-bool targeter_unravelling::valid_aim(coord_def a)
-{
-    if (!targeter_beam::valid_aim(a))
-        return false;
-
-    const monster* mons = monster_at(a);
-    if (mons && you.can_see(*mons) && !_unravelling_explodes_at(a))
-    {
-        return notify_fail(mons->name(DESC_THE) + " has no enchantments to "
-                           "unravel.");
-    }
-
-    return true;
-}
-
 targeter_view::targeter_view()
 {
     origin = aim = you.pos();
@@ -754,6 +694,69 @@ bool targeter_transference::valid_aim(coord_def a)
             return notify_fail("You can't transfer that.");
         }
     }
+    return true;
+}
+
+targeter_unravelling::targeter_unravelling()
+    : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+{
+}
+
+/**
+ * Will a casting of Violent Unravelling explode a target at the given loc?
+ *
+ * @param c     The location in question.
+ * @return      Whether, to the player's knowledge, there's a valid target for
+ *              Violent Unravelling at the given coordinate.
+ */
+static bool _unravelling_explodes_at(const coord_def c)
+{
+    if (you.pos() == c && player_is_debuffable())
+        return true;
+
+    const monster_info* mi = env.map_knowledge(c).monsterinfo();
+    return mi && mi->unravellable();
+}
+
+bool targeter_unravelling::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mons = monster_at(a);
+    if (mons && you.can_see(*mons) && !_unravelling_explodes_at(a))
+    {
+        return notify_fail(mons->name(DESC_THE) + " has no magical effects to "
+                           "unravel.");
+    }
+
+    return true;
+}
+
+bool targeter_unravelling::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    if (_unravelling_explodes_at(a))
+    {
+        exp_range_min = 1;
+        exp_range_max = 1;
+    }
+    else
+    {
+        exp_range_min = exp_range_max = 0;
+        return false;
+    }
+
+    bolt beam;
+    beam.target = a;
+    beam.use_target_as_pos = true;
+    exp_map_min.init(INT_MAX);
+    beam.determine_affected_cells(exp_map_min, coord_def(), 0,
+                                  exp_range_min, true, true);
+    _copy_explosion_map(exp_map_min, exp_map_max);
+
     return true;
 }
 
@@ -1103,8 +1106,8 @@ aff_type targeter_splash::is_affected(coord_def loc)
 }
 
 targeter_radius::targeter_radius(const actor *act, los_type _los,
-                             int ran, int ran_max, int ran_min):
-    range(ran), range_max(ran_max), range_min(ran_min)
+                             int ran, int ran_max, int ran_min, int ran_maybe):
+    range(ran), range_max(ran_max), range_min(ran_min), range_maybe(ran_maybe)
 {
     ASSERT(act);
     agent = act;
@@ -1112,6 +1115,8 @@ targeter_radius::targeter_radius(const actor *act, los_type _los,
     los = _los;
     if (!range_max)
         range_max = range;
+    if (!range_maybe)
+        range_maybe = range;
     ASSERT(range_max >= range);
 }
 
@@ -1137,6 +1142,9 @@ aff_type targeter_radius::is_affected(coord_def loc)
 
     if (!cell_see_cell(loc, origin, los))
         return AFF_NO;
+
+    if ((loc - origin).rdist() > range_maybe)
+        return AFF_MAYBE;
 
     return AFF_YES;
 }
@@ -1979,10 +1987,9 @@ targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def>
     }
 }
 
-targeter_ramparts::targeter_ramparts(const actor *a)
-    : targeter_multiposition(a, { })
+targeter_walls::targeter_walls(const actor *a, vector<coord_def> seeds)
+    : targeter_multiposition(a, seeds)
 {
-    auto seeds = find_ramparts_walls(a->pos());
     for (auto &c : seeds)
     {
         affected_positions.insert(c);
@@ -1992,7 +1999,7 @@ targeter_ramparts::targeter_ramparts(const actor *a)
     }
 }
 
-aff_type targeter_ramparts::is_affected(coord_def loc)
+aff_type targeter_walls::is_affected(coord_def loc)
 {
     if (!affected_positions.count(loc)
         || !cell_see_cell(agent->pos(), loc, LOS_NO_TRANS))

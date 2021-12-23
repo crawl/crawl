@@ -51,7 +51,9 @@ enum monster_info_flags
     MB_PETRIFIED,
     MB_LOWERED_WL,
     MB_POSSESSABLE,
-    MB_ENSLAVED,
+#if TAG_MAJOR_VERSION == 34
+    MB_OLD_ENSLAVED,
+#endif
     MB_SWIFT,
     MB_INSANE,
     MB_SILENCING,
@@ -199,6 +201,8 @@ enum monster_info_flags
     MB_CANT_DRAIN,
     MB_CONCENTRATE_VENOM,
     MB_FIRE_CHAMPION,
+    MB_SILENCE_IMMUNE,
+    MB_ANTIMAGIC,
     NUM_MB_FLAGS
 };
 
@@ -377,6 +381,7 @@ struct monster_info : public monster_info_base
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)
+    // Note: actor version is now actor::cannot_act.
     bool cannot_move() const;
     bool airborne() const;
     bool ground_level() const;
@@ -402,7 +407,7 @@ struct monster_info : public monster_info_base
     void set_colour(int colour);
 
     bool has_trivial_ench(enchant_type ench) const;
-    bool debuffable() const;
+    bool unravellable() const;
 
 protected:
     string _core_name() const;

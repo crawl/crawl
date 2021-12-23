@@ -95,8 +95,8 @@ enum duration_type
 #endif
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
-    DUR_MIRROR_DAMAGE,
 #if TAG_MAJOR_VERSION == 34
+    DUR_MIRROR_DAMAGE,
     DUR_SCRYING,
 #endif
     DUR_VORTEX,
@@ -226,5 +226,7 @@ enum duration_type
     DUR_DUEL_COMPLETE,
     DUR_RISING_FLAME,
     DUR_BLINK_COOLDOWN,
+    DUR_OOZEMANCY,
+    DUR_FIERY_ARMOUR,
     NUM_DURATIONS
 };

@@ -9,6 +9,7 @@
 
 #include "spl-damage.h"
 
+#include <cmath>
 #include <functional>
 
 #include "act-iter.h"
@@ -190,14 +191,22 @@ struct arc_victim
 
 static const int ARC_DIST = 3;
 
-static void _chain_lightning_to(const actor &caster, int pow,
+static void _chain_lightning_to(const actor &caster, int power,
                                 vector<arc_victim> &victims,
-                                set<actor*> &seen_set, int arcs)
+                                set<actor*> &seen_set, int arcs,
+                                int initial_range = 0)
 {
     bolt beam;
-    zappy(ZAP_CHAIN_LIGHTNING, pow, caster.is_monster(), beam);
+    zappy(ZAP_CHAIN_LIGHTNING, power, caster.is_monster(), beam);
+    // Initial arc scales with range.
+    if (initial_range > 0)
+    {
+        beam.damage.size =
+            beam.damage.size * pow(0.6, (initial_range - 1) / 3.0);
+    }
+    // Further arcs scale a fixed amount per arc.
     for (int i = 0; i < arcs; i++)
-        beam.damage.size = beam.damage.size * 2 / 3;
+        beam.damage.size = beam.damage.size * 3 / 5;
     const int dam_size = beam.damage.size;
 
     vector<arc_victim> new_victims;
@@ -240,7 +249,7 @@ static void _chain_lightning_to(const actor &caster, int pow,
     }
 
     if (!new_victims.empty())
-        _chain_lightning_to(caster, pow, new_victims, seen_set, arcs + 1);
+        _chain_lightning_to(caster, power, new_victims, seen_set, arcs + 1);
 }
 
 // Assuming the player casts Chain Lightning, who *might* get hit?
@@ -341,8 +350,8 @@ spret cast_chain_lightning(int pow, const actor &caster, bool fail)
     victims.push_back(arc_victim{caster.pos(), act});
     set<actor*> seen_set;
     seen_set.insert(act);
-    const int initial_arc_dist = (grid_distance(caster.pos(), act->pos()) - 1) / ARC_DIST; // 1 arc at range 4, 2 at range 7
-    _chain_lightning_to(caster, pow, victims, seen_set, initial_arc_dist);
+    _chain_lightning_to(caster, pow, victims, seen_set, 0,
+                        grid_distance(caster.pos(), act->pos()));
 
     return spret::success;
 }
@@ -1331,10 +1340,7 @@ spret cast_fragmentation(int pow, const actor *caster,
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
-        {
-            canned_msg(MSG_OK);
             return spret::abort;
-        }
     }
 
     fail_check();
@@ -2778,7 +2784,7 @@ void forest_damage(const actor *mon)
                 int dmg = 0;
                 string msg;
 
-                if (!apply_chunked_AC(1, foe->evasion(ev_ignore::none, mon)))
+                if (!apply_chunked_AC(1, foe->evasion(false, mon)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch",
@@ -3044,6 +3050,73 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             }
         }
     }
+}
+
+static bool _setup_unravelling(bolt &beam, int pow, coord_def target)
+{
+    zappy(ZAP_UNRAVELLING, pow, false, beam);
+    beam.set_agent(&you);
+    beam.source = target;
+    beam.target = target;
+    beam.ex_size = 1;
+
+    bolt tracer_beam = beam;
+    tracer_beam.is_tracer = true;
+    tracer_beam.explode(false);
+    return !tracer_beam.beam_cancelled;
+}
+
+spret cast_unravelling(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const actor* victim = actor_at(target);
+    if ((!victim || !you.can_see(*victim))
+        && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    if (victim && (victim->is_player() && !player_is_debuffable()
+                   || victim->is_monster() && you.can_see(*victim)
+                      && !monster_can_be_unravelled(*victim->as_monster())))
+    {
+        mprf("%s %s no magical effects to unravel.",
+             victim->name(DESC_THE).c_str(),
+             victim->conj_verb("have").c_str());
+        return spret::abort;
+    }
+
+    targeter_unravelling hitfunc;
+    hitfunc.set_aim(target);
+    auto vulnerable = [](const actor *act) -> bool
+    {
+        return !(act->is_monster() && god_protects(act->as_monster()));
+    };
+
+    if (stop_attack_prompt(hitfunc, "unravel", vulnerable))
+        return spret::abort;
+
+    bolt beam;
+    if (!_setup_unravelling(beam, pow, target))
+        return spret::abort;
+
+    fail_check();
+
+    if (!victim)
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return spret::success;
+    }
+
+    beam.fire();
+
+    return spret::success;
 }
 
 spret cast_inner_flame(coord_def target, int pow, bool fail)
@@ -3754,10 +3827,10 @@ void actor_apply_toxic_bog(actor * act)
     }
 }
 
-vector<coord_def> find_ramparts_walls(const coord_def &center)
+vector<coord_def> find_ramparts_walls()
 {
     vector<coord_def> wall_locs;
-    for (radius_iterator ri(center,
+    for (radius_iterator ri(you.pos(),
             spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
                                                         LOS_NO_TRANS, true);
         ri; ++ri)
@@ -3772,15 +3845,15 @@ vector<coord_def> find_ramparts_walls(const coord_def &center)
 /**
  * Cast Frozen Ramparts
  *
- * @param caster The caster.
  * @param pow    The spell power.
  * @param fail   Did this spell miscast? If true, abort the cast.
- * @return       spret::fail if one could be found but we miscast, and
+ * @return       spret::abort if no affectable walls could be found,
+ *               spret::fail if one could be found but we miscast, and
  *               spret::success if the spell was successfully cast.
 */
 spret cast_frozen_ramparts(int pow, bool fail)
 {
-    vector<coord_def> wall_locs = find_ramparts_walls(you.pos());
+    vector<coord_def> wall_locs = find_ramparts_walls();
 
     if (wall_locs.empty())
     {
@@ -4005,26 +4078,22 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow)
     vector<coord_def> bog_locs;
     const int radius = spell_range(SPELL_NOXIOUS_BOG, pow, false);
 
-    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS, true); ri;
-            ri++)
+    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS); ri; ri++)
     {
         if (!feat_has_solid_floor(env.grid(*ri)))
             continue;
 
-        // If a candidate cell is next to a solid feature, we can't bog it.
-        // Additionally, if it's next to a cell we can't currently see, we
-        // can't bog it, regardless of what the cell contains. Don't want to
-        // leak information about out-of-los cells.
-        bool valid = true;
+        // If a candidate cell is next to more than one solid feature, we can't
+        // bog it. Cells we can't currently see are also considered solid,
+        // regardless of what the cell contains. Don't want to leak information
+        // about out-of-los cells.
+        int walls = 0;
         for (adjacent_iterator ai(*ri); ai; ai++)
         {
             if (!you.see_cell(*ai) || feat_is_solid(env.grid(*ai)))
-            {
-                valid = false;
-                break;
-            }
+                walls++;
         }
-        if (valid)
+        if (walls <= 1)
             bog_locs.push_back(*ri);
     }
 

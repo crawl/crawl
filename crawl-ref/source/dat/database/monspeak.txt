@@ -3650,6 +3650,14 @@ w:1
 w:1
 @The_monster@ says, "What's the big idea?!"
 %%%%
+friendly Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ sings, "Roses are red / violets are blue / I hate many things /
+But most of all you!"
+%%%%
 default hostile confused Donald
 
 @The_monster@ says, "I suppose everything's okay, then?"
@@ -3685,6 +3693,14 @@ __NONE
 
 w:1
 @The_monster@ says, "I'm dying. I hate that."
+%%%%
+Donald banished
+
+w:100
+__NONE
+
+w:1
+@The_monster@ says, "Banished to the Abyss. I hate that."
 %%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan
@@ -4194,55 +4210,6 @@ _Fannar_rare_
 @The_monster@ says @to_foe@, "Does this not give you the chills?"
 %%%%
 ############ Gastronok ### A rather hungry wizard-slug
-# Cantrip messages:
-gastronok_self_buff
-
-@_gastronok_self_buff_@
-%%%%
-gastronok_other_buff
-
-@_gastronok_other_buff_@
-%%%%
-gastronok_debuff
-
-@_gastronok_debuff_@
-%%%%
-_gastronok_self_buff_
-
-@The_monster@ bubbles merrily.
-
-@The_monster@ glows a brilliant shade of cerise.
-
-@The_monster@ wobbles crazily.
-
-@The_monster@'s eyestalks stretch out, then return to normal size.
-%%%%
-# When targeting other monsters.
-_gastronok_other_buff_
-
-@The_monster@ wobbles.
-
-@The_monster@ slows momentarily.
-
-@The_monster@ makes a slurping sound, then looks surprised.
-%%%%
-# Slugform affecting the player.
-_gastronok_debuff_
-
-w:20
-You feel sluggish.
-
-You feel a sudden, passing aversion to salt.
-
-Your skin takes on a slight green cast.
-
-# Doesn't work for Naga and transformed Merfolk.
-# There's a hack in mon-cast.cc to prevent it from being used in those cases.
-Your legs wobble like jelly.
-
-w:5
-You feel a sudden urge to swivel your nonexistent eyestalks around.
-%%%%
 # And finally, his speech.
 Gastronok
 
@@ -5519,7 +5486,7 @@ Nikola
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
-############ Pikel ######## A big kobold slaver!
+############ Pikel ######## A big kobold trading souls of the damned
 Pikel
 
 @_Pikel_common_@

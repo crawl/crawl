@@ -79,7 +79,7 @@ int god_favour_rank(god_type which_god)
 {
     if (which_god == GOD_GOZAG)
         return _gold_level();
-    else if (which_god == GOD_USKAYAW)
+    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
         return _invocations_level();
     else
         return _piety_level(you.piety);
@@ -251,7 +251,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
-    else if (which_god == GOD_USKAYAW)
+    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
         title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
@@ -725,10 +725,12 @@ static string _raw_penance_message(god_type which_god)
         return "%s well remembers your sins.";
     if (penance > initial_penance / 4)
         return "%s's wrath is beginning to fade.";
-    if (which_god == GOD_IGNIS)
-        return "%s' wrath will not burn much longer.";
     if (penance > 0)
+    {
+        if (which_god == GOD_IGNIS)
+            return "%s' wrath will not burn much longer.";
         return "%s is almost ready to forgive your sins.";
+    }
     return "%s is neutral towards you.";
 }
 
@@ -848,20 +850,21 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
     }
 
-    case GOD_JIYVA:
-        have_any = true;
-        if (have_passive(passive_t::slime_hp))
-            desc.cprintf("You gain magic and health when your fellow slimes consume items.\n");
-        else if (have_passive(passive_t::slime_mp))
-            desc.cprintf("You gain magic when your fellow slimes consume items.\n");
-        else
-            desc.cprintf("Your fellow slimes can consume items.\n");
-
-        break;
-
     case GOD_FEDHAS:
         have_any = true;
         desc.cprintf("You can walk through plants and fire through allied plants.\n");
+        break;
+
+    case GOD_JIYVA:
+        have_any = true;
+        if (!have_passive(passive_t::jelly_regen))
+            desc.textcolour(DARKGREY);
+        else
+            desc.textcolour(god_colour(which_god));
+        desc.cprintf("Your health and magic regeneration is %saccelerated.\n",
+                     piety >= piety_breakpoint(5) ? "very greatly " :
+                     piety >= piety_breakpoint(3) ? "greatly " :
+                                                    "");
         break;
 
     case GOD_CHEIBRIADOS:

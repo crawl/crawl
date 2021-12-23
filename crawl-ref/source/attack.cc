@@ -222,9 +222,7 @@ int attack::calc_pre_roll_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(wpn_skill == SK_THROWING
-                              || (weapon && is_range_weapon(*weapon)
-                                         && using_weapon()));
+        mhit += slaying_bonus(wpn_skill == SK_THROWING);
 
         // armour penalty (already calculated if random is true)
         if (!random)
@@ -528,7 +526,7 @@ bool attack::distortion_affects_defender()
     case BLINK:
         if (defender_visible)
             obvious_effect = true;
-        if (!defender->no_tele(true, false))
+        if (!defender->no_tele())
             blink_fineff::schedule(defender);
         break;
     case BANISH:
@@ -1140,10 +1138,16 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     if (!aux && using_weapon())
         damage_plus = get_weapon_plus();
 
+    const bool throwing = !weapon && wpn_skill == SK_THROWING;
+    const bool ranged = throwing
+                        || (weapon && is_range_weapon(*weapon)
+                                   && using_weapon());
+    damage_plus += slaying_bonus(throwing);
     damage_plus -= 4 * you.corrosion_amount();
-    damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
-                                 || (weapon && is_range_weapon(*weapon)
-                                            && using_weapon()));
+
+    // XXX: should this also trigger on auxes?
+    if (!aux && !ranged)
+        damage_plus += you.infusion_amount() * you.infusion_multiplier();
 
     return _core_apply_slaying(damage, damage_plus);
 }

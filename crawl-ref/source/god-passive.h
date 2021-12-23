@@ -189,20 +189,14 @@ enum class passive_t
     /// Jiyva protects you from corrosion
     resist_corrosion,
 
-    /// Items consumed by your fellow slimes restores your mana reserve
-    slime_mp,
-
-    /// Items consumed by your fellow slimes restores your health
-    slime_hp,
-
     /// Jiyva summons jellies to protect you
     jellies_army,
 
     /// Jiyva allows jellies to eats off-level and seen items.
     jelly_eating,
 
-    /// Jiyva adjusts your stats as needed.
-    fluid_stats,
+    /// Piety-scaled healing & mpreg
+    jelly_regen,
 
     // You have a chance to spawn slimes when hit hard
     spawn_slimes_on_hit,
@@ -213,7 +207,7 @@ enum class passive_t
     /// You have a chance to gain mana when you kill
     mp_on_kill,
 
-    /// You are less likely to miscat destructive spells
+    /// You are less likely to miscast destructive spells
     spells_success,
 
     /// You can cast destructive spells farther
@@ -265,6 +259,12 @@ enum class passive_t
 
     // rF+
     resist_fire,
+
+    // Yredelemnul reaping
+    reaping,
+
+    // Immunity to spectral mist clouds
+    r_spectral_mist,
 };
 
 enum ru_interference

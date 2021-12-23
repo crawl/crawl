@@ -489,11 +489,22 @@ static string _hand_name_singular(bool temp)
     if (you.has_usable_tentacles())
         return "tentacle";
 
+    // Storm Form inactivates the paws mutation, but graphically, a Felid's
+    // electric body still maintains similar anatomy.
+    if (temp && you.form == transformation::storm
+        && you.species == SP_FELID)
+    {
+        return "paw";
+    }
+
     // For flavor reasons, use "fists" instead of "hands" in various places,
     // but if the creature does have a custom hand name, let the above code
     // preempt it.
-    if (temp && you.form == transformation::statue)
+    if (temp && (you.form == transformation::statue
+                 || you.form == transformation::storm))
+    {
         return "fist";
+    }
 
     // player has no usable claws, but has the mutation -- they are suppressed
     // by something. (The species names will give the wrong answer for this

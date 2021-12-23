@@ -48,7 +48,7 @@ bool is_dumpable_artefact(const item_def &item);
 string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool lookup = false);
 
-void describe_feature_wide(const coord_def& pos);
+bool describe_feature_wide(const coord_def& pos, bool do_actions=false);
 void describe_feature_type(dungeon_feature_type feat);
 string get_cloud_desc(cloud_type cloud, bool include_title = true);
 void get_feature_desc(const coord_def &gc, describe_info &inf, bool include_extra = true);
@@ -87,7 +87,7 @@ void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const int hd);
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     bool parenthesize = false);
+                     bool parenthesize = false, const item_def* weapon = nullptr);
 
 string get_command_description(const command_type cmd, bool terse);
 

@@ -375,6 +375,13 @@ bool melee_attack::handle_phase_dodged()
 
 void melee_attack::apply_black_mark_effects()
 {
+    enum black_mark_effect
+    {
+        ANTIMAGIC,
+        WEAKNESS,
+        DRAINING,
+    };
+
     // Less reliable effects for players.
     if (attacker->is_player()
         && you.has_mutation(MUT_BLACK_MARK)
@@ -385,15 +392,32 @@ void melee_attack::apply_black_mark_effects()
         if (!defender->alive())
             return;
 
-        switch (random2(3))
+        vector<black_mark_effect> effects;
+
+        if (defender->antimagic_susceptible())
+            effects.push_back(ANTIMAGIC);
+        if (defender->is_player()
+            || mons_has_attacks(*defender->as_monster()))
         {
-            case 0:
+            effects.push_back(WEAKNESS);
+        }
+        if (defender->res_negative_energy() < 3)
+            effects.push_back(DRAINING);
+
+        if (effects.empty())
+            return;
+
+        black_mark_effect choice = effects[random2(effects.size())];
+
+        switch (choice)
+        {
+            case ANTIMAGIC:
                 antimagic_affects_defender(damage_done * 8);
                 break;
-            case 1:
+            case WEAKNESS:
                 defender->weaken(attacker, 6);
                 break;
-            case 2:
+            case DRAINING:
                 defender->drain(attacker, false, damage_done);
                 break;
         }
@@ -531,6 +555,13 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
+        const int infusion = you.infusion_amount();
+        if (infusion)
+        {
+            pay_mp(infusion);
+            finalize_mp_cost();
+        }
+
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
@@ -546,6 +577,7 @@ bool melee_attack::handle_phase_hit()
         // the player is hit, each of them will verify their own required
         // parameters.
         do_passive_freeze();
+        do_fiery_armour_burn();
         emit_foul_stench();
     }
 
@@ -718,7 +750,7 @@ bool melee_attack::attack()
 
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
-    const int ev = defender->evasion(ev_ignore::none, attacker);
+    const int ev = defender->evasion(false, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(true);
 
@@ -1147,7 +1179,7 @@ bool melee_attack::player_aux_test_hit()
     // XXX We're clobbering did_hit
     did_hit = false;
 
-    const int evasion = defender->evasion(ev_ignore::none, attacker);
+    const int evasion = defender->evasion(false, attacker);
 
     if (player_under_penance(GOD_ELYVILON)
         && god_hates_your_god(GOD_ELYVILON)
@@ -1362,7 +1394,7 @@ void melee_attack::player_announce_aux_hit()
 
 string melee_attack::player_why_missed()
 {
-    const int ev = defender->evasion(ev_ignore::none, attacker);
+    const int ev = defender->evasion(false, attacker);
     // We roll (random2) these penalties before comparing them to EV.
     // Thus, on average, they're effectively half as large.
     const int adj_armour_penalty = div_rand_round(attacker_armour_tohit_penalty, 2);
@@ -1839,7 +1871,7 @@ static bool actor_can_lose_heads(const actor* defender)
 {
     if (defender->is_monster()
         && defender->as_monster()->has_hydra_multi_attack()
-        && defender->type != MONS_SPECTRAL_THING
+        && defender->as_monster()->mons_species() != MONS_SPECTRAL_THING
         && defender->as_monster()->mons_species() != MONS_SERPENT_OF_HELL)
     {
         return true;
@@ -2989,6 +3021,39 @@ void melee_attack::mons_apply_attack_flavour()
     }
 }
 
+void melee_attack::do_fiery_armour_burn()
+{
+    if (!you.duration[DUR_FIERY_ARMOUR]
+        || !attacker->alive()
+        || !adjacent(you.pos(), attacker->pos()))
+    {
+        return;
+    }
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+    beam.thrower = KILL_YOU;
+
+    monster* mon = attacker->as_monster();
+
+    const int pre_ac = roll_dice(2, 4);
+    const int post_ac = attacker->apply_ac(pre_ac);
+    const int hurted = mons_adjust_flavoured(mon, beam, post_ac);
+
+    if (!hurted)
+        return;
+
+    simple_monster_message(*mon, " is burned by your cloak of flames.");
+
+    mon->hurt(&you, hurted);
+
+    if (mon->alive())
+    {
+        mon->expose_to_element(BEAM_FIRE, post_ac);
+        print_wounds(*mon);
+    }
+}
+
 void melee_attack::do_passive_freeze()
 {
     if (you.has_mutation(MUT_PASSIVE_FREEZE)
@@ -3262,7 +3327,7 @@ bool melee_attack::do_knockback(bool trample)
     if (defender->is_stationary())
         return false; // don't even print a message
 
-    if (attacker->cannot_move())
+    if (attacker->cannot_act())
         return false;
 
     const int size_diff =

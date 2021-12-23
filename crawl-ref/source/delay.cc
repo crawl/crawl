@@ -652,7 +652,9 @@ void EquipOffDelay::finish()
 {
     const bool is_amu = equip.base_type == OBJ_JEWELLERY;
     const equipment_type slot = is_amu ? EQ_AMULET : get_armour_slot(equip);
-    ASSERT(you.equip[slot] == equip.link);
+    ASSERTM(you.equip[slot] == equip.link,
+        "Mismatched link in EquipOffDelay::finish: slot is %d with link %d, link is %d",
+        slot, you.equip[slot], equip.link);
 
 #ifdef USE_SOUND
     parse_sound(is_amu ? REMOVE_JEWELLERY_SOUND : DEQUIP_ARMOUR_SOUND);

@@ -54,7 +54,7 @@ static bool _items_similar(const item_def& a, const item_def& b,
 static vector<string> _desc_hit_chance(const monster_info &mi)
 {
     ostringstream result;
-    describe_to_hit(mi, result);
+    describe_to_hit(mi, result, false, you.weapon());
     string str = result.str();
     if (str.empty())
         return vector<string>{};
@@ -362,7 +362,7 @@ namespace quiver
         bool is_valid() const override { return true; }
         bool is_targeted() const override { return true; }
 
-        string quiver_verb() const
+        string quiver_verb() const override
         {
             const item_def *weapon = you.weapon();
 
@@ -744,7 +744,7 @@ namespace quiver
 
         // TODO: can get_fire_order be generalized?
 
-        virtual string quiver_verb() const { return "Activate"; }
+        string quiver_verb() const override { return "Activate"; }
         virtual bool is_enabled() const override = 0;
         virtual void trigger(dist &) override = 0;
 
@@ -1348,7 +1348,8 @@ namespace quiver
         }
     }
 
-    static bool _ability_quiver_range_check(ability_type abil, bool quiet=true)
+    static bool _ability_quiver_range_check(ability_type abil,
+                                            bool quiet = true)
     {
         // Hacky: do some quiver-specific range checks for the sake of
         // autofight. We can't approach this like spells (which are marked
@@ -1358,42 +1359,23 @@ namespace quiver
         // it from the `a` menu, just not from the quiver.
         // (What abilities are missing here?)
 
-        switch (abil)
+        if (abil == ABIL_ROLLING_CHARGE)
         {
-        case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        {
-            // can this be consolidated with spell range checks?
-            // n.b. the range value here is used differently than in spell range
-            // checks (for consistency with the ability implementation)
-            const int range = min((int)you.current_vision, 5);
-            if (get_dist_to_nearest_monster() <= range)
-                return true;
-            if (!quiet)
-                mpr("You can't see any hostile targets that would be affected.");
-            return false;
-        }
-        case ABIL_ROLLING_CHARGE:
             // Use a version of the palentonga charge range check that
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
             return palentonga_charge_possible(quiet, false);
-        case ABIL_EVOKE_DISPATER:
-            // assumes constant range with power
-            if (!spell_no_hostile_in_range(SPELL_HURL_DAMNATION))
-                return true;
-            // TODO: code duplication
-            if (!quiet)
-                mpr("You can't see any hostile targets that would be affected.");
-            return false;
-        case ABIL_BLINKBOLT:
-            if (!spell_no_hostile_in_range(SPELL_BLINKBOLT))
-                return true;
-            if (!quiet)
-                mpr("You can't see any hostile targets that would be affected.");
-            return false;
-        default:
-            return true;
         }
+
+        if (get_dist_to_nearest_monster() > ability_range(abil)
+            && (get_ability_flags(abil) & abflag::targeting_mask))
+
+        {
+            if (!quiet)
+                mpr("You can't see any hostile targets in range.");
+            return false;
+        }
+        return true;
     }
 
     bool is_autofight_combat_ability(ability_type ability)
@@ -1461,31 +1443,28 @@ namespace quiver
             return check_ability_possible(ability, true);
         }
 
+        bool is_dynamic_targeted() const
+        {
+            return !!(get_ability_flags(ability) & abflag::targeting_mask);
+        }
+
         bool is_targeted() const override
         {
             // hard-coded list of abilities that have a targeter
             // there is no general way of getting this?
-            // TODO: implement static targeters for relevant abilities (which
-            // is pretty much everything)
+            // TODO: convert these to use the shared ability targeting code.
             switch (ability)
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
             case ABIL_ROLLING_CHARGE:
-            case ABIL_SPIT_POISON:
             case ABIL_BREATHE_ACID:
-            case ABIL_BREATHE_FIRE:
-            case ABIL_BREATHE_FROST:
-            case ABIL_BREATHE_POISON:
-            case ABIL_BREATHE_POWER:
-            case ABIL_BREATHE_STEAM:
-            case ABIL_BREATHE_MEPHITIC:
             case ABIL_DAMNATION:
-            case ABIL_ZIN_IMPRISON:
-            case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-            case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+            case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:
             case ABIL_BEOGH_SMITING:
+            case ABIL_BEOGH_GIFT_ITEM:
+            case ABIL_FEDHAS_OVERGROW:
             case ABIL_DITHMENOS_SHADOW_STEP:
             case ABIL_QAZLAL_UPHEAVAL:
             case ABIL_RU_POWER_LEAP:
@@ -1500,7 +1479,8 @@ namespace quiver
 #endif
                 return true;
             default:
-                return false;
+                return is_dynamic_targeted()
+                       || ability_has_targeter(ability);
             }
         }
 
@@ -1625,8 +1605,6 @@ namespace quiver
             if (!item_action::is_valid())
                 return false;
             const item_def& c = you.inv[item_slot];
-            if (!item_type_known(c))
-                return false;
             return c.base_type == OBJ_POTIONS || c.base_type == OBJ_SCROLLS;
         }
 
@@ -1635,7 +1613,9 @@ namespace quiver
             if (!is_valid())
                 return false;
             const item_def& c = you.inv[item_slot];
-            if (c.base_type == OBJ_POTIONS)
+            if (!item_type_known(c))
+                return false;
+            else if (c.base_type == OBJ_POTIONS)
             {
                 ASSERT(get_potion_effect(static_cast<potion_type>(c.sub_type)));
                 return you.can_drink(true) && !you.berserk()

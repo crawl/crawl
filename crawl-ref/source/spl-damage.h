@@ -15,6 +15,7 @@ class dist;
 const int DEFAULT_SHATTER_DICE = 3;
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
+#define VORTEX_POWER_KEY "vortex_power"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -43,6 +44,7 @@ dice_def irradiate_damage(int powc, bool random = true);
 bool ignite_poison_affects_cell(const coord_def where, actor* agent);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);
+spret cast_unravelling(coord_def target, int pow, bool fail);
 spret cast_inner_flame(coord_def target, int pow, bool fail);
 spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test=false);
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);
@@ -102,7 +104,7 @@ spret cast_imb(int pow, bool fail);
 
 void actor_apply_toxic_bog(actor *act);
 
-vector<coord_def> find_ramparts_walls(const coord_def &center);
+vector<coord_def> find_ramparts_walls();
 spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);

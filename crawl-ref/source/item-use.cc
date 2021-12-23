@@ -89,6 +89,7 @@ public:
     bool is_inventory;
     int item_type_filter;
 
+    // XX these probably shouldn't be const...
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
 
@@ -123,7 +124,7 @@ void UseItemMenu::populate_list()
             item_inv.push_back(&item);
     }
     // Load floor items...
-    item_floor = item_list_on_square(you.visible_igrd(you.pos()));
+    item_floor = const_item_list_on_square(you.visible_igrd(you.pos()));
     // ...only stuff that can go into your inventory though
     erase_if(item_floor, [=](const item_def* it)
     {
@@ -942,7 +943,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3)
+        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3
+            || you.get_mutation_level(MUT_DEMONIC_TOUCH,
+                                      !ignore_temporary) >= 3)
         {
             if (verbose)
             {
@@ -2085,14 +2088,6 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
     equip_item(hand_used, item_slot);
 
     check_item_hint(you.inv[item_slot], old_talents);
-#ifdef USE_TILE_LOCAL
-    if (your_talents(false).size() != old_talents)
-    {
-        tiles.layout_statcol();
-        redraw_screen();
-        update_screen();
-    }
-#endif
 
     // Putting on jewellery is fast.
     you.time_taken /= 2;
@@ -2873,7 +2868,7 @@ string cannot_read_item_reason(const item_def *item)
     {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            return you.no_tele_reason(false, item->sub_type == SCR_BLINKING);
+            return you.no_tele_reason(item->sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
             if (you.spell_no == 0)
@@ -3288,7 +3283,7 @@ void read(item_def* scroll, dist *target)
     {
     case SCR_BLINKING:
     {
-        const string reason = you.no_tele_reason(true, true);
+        const string reason = you.no_tele_reason(true);
         if (!reason.empty())
         {
             mpr(pre_succ_msg);

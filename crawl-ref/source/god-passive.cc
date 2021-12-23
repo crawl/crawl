@@ -192,7 +192,9 @@ static const vector<god_passive> god_passives[] =
 
     // Yredelemnul
     {
-        {  3, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::reaping, "can NOW harvest souls to fight along side you" },
+        {  -1, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::r_spectral_mist, "are NOW immune to spectral mist" },
     },
 
     // Xom
@@ -275,24 +277,16 @@ static const vector<god_passive> god_passives[] =
         { -1, passive_t::neutral_slimes,
               "Slimes and eye monsters are NOW neutral towards you" },
         { -1, passive_t::jellies_army,
-              "GOD NOW summons jellies to protect you" },
+              "GOD NOW summons slimes to protect you" },
         { -1, passive_t::jelly_eating,
-              "GOD NOW allows jellies to devour items" },
-        { -1, passive_t::fluid_stats,
-              "GOD NOW adjusts your attributes periodically" },
+              "GOD NOW allows slimes to devour items" },
         {  0, passive_t::slime_wall_immune,
               "are NOW immune to slime covered walls" },
-        {  3, passive_t::resist_corrosion,
+        {  1, passive_t::jelly_regen,
+              "GOD NOW accelerates your HP and MP regeneration" },
+        {  2, passive_t::resist_corrosion,
               "GOD NOW protects you from corrosion" },
-        {  4, passive_t::slime_mp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your magical power"
-        },
-        {  5, passive_t::slime_hp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your health"
-        },
-        {  6, passive_t::spawn_slimes_on_hit,
+        {  5, passive_t::spawn_slimes_on_hit,
               "spawn slimes when struck by massive blows" },
         {  6, passive_t::unlock_slime_vaults,
               "GOD NOW grants you access to the hidden treasures"
@@ -328,7 +322,7 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::slow_zot,
               "GOD will NOW slow Zot's hunt for you"
         },
-        {  1, passive_t::slow_poison, "process poison slowly" },
+        {  0, passive_t::slow_poison, "process poison slowly" },
     },
 
     // Ashenzari
@@ -539,10 +533,7 @@ void jiyva_eat_offlevel_items()
                 dprf("Eating %s on %s",
                      si->name(DESC_PLAIN).c_str(), lid.describe().c_str());
 
-                // Needs a message now to explain possible hp or mp
-                // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
             }
@@ -1692,7 +1683,7 @@ void okawaru_handle_duel()
         && !okawaru_duel_active()
         && !you.duration[DUR_DUEL_COMPLETE])
     {
-        you.set_duration(DUR_DUEL_COMPLETE, random_range(30, 40));
+        you.set_duration(DUR_DUEL_COMPLETE, random_range(15, 25));
     }
 
     if (!player_in_branch(BRANCH_ARENA) && you.duration[DUR_DUEL_COMPLETE])

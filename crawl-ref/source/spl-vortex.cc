@@ -114,7 +114,7 @@ static void _set_vortex_durations()
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
 }
 
-spret cast_polar_vortex(int /*powc*/, bool fail)
+spret cast_polar_vortex(int powc, bool fail)
 {
     targeter_radius hitfunc(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
     if (stop_attack_prompt(hitfunc, "make a polar vortex",
@@ -137,6 +137,7 @@ spret cast_polar_vortex(int /*powc*/, bool fail)
         merfolk_stop_swimming();
 
     you.props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
+    you.props[VORTEX_POWER_KEY] = powc;
     _set_vortex_durations();
     if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
@@ -242,9 +243,8 @@ void polar_vortex_damage(actor *caster, int dur)
     int pow;
     const int max_radius = POLAR_VORTEX_RADIUS;
 
-    // Not stored so unwielding that staff will reduce damage.
     if (caster->is_player())
-        pow = calc_spell_power(SPELL_POLAR_VORTEX, true);
+        pow = you.props[VORTEX_POWER_KEY].get_int();
     else
         // XXX TODO: use the normal spellpower calc functions
         pow = caster->as_monster()->get_hit_dice() * 4;

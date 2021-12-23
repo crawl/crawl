@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
+#include "fineff.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h" // passive_t::convert_orcs
@@ -61,6 +62,9 @@ void mons_att_changed(monster* mon)
     {
         remove_companion(mon);
     }
+
+    if (mon->has_ench(ENCH_AWAKEN_FOREST))
+        mon->del_ench(ENCH_AWAKEN_FOREST);
 
     mon->remove_summons(true);
 }
@@ -145,51 +149,6 @@ void make_god_gifts_disappear()
             monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
-}
-
-// When under penance, Yredelemnulites can lose all nearby undead slaves.
-bool yred_slaves_abandon_you()
-{
-    int num_reclaim = 0;
-    int num_slaves = 0;
-
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-    {
-        monster* mons = monster_at(*ri);
-        if (mons == nullptr)
-            continue;
-
-        if (is_yred_undead_slave(*mons))
-        {
-            num_slaves++;
-
-            const int hd = mons->get_experience_level();
-
-            // During penance, followers get a saving throw.
-            if (random2(20) > random2(hd))
-                continue;
-
-            mons->attitude = ATT_HOSTILE;
-            behaviour_event(mons, ME_ALERT, &you);
-            // For now CREATED_FRIENDLY stays.
-            mons_att_changed(mons);
-
-            num_reclaim++;
-        }
-    }
-
-    if (num_reclaim > 0)
-    {
-        if (num_reclaim == 1 && num_slaves > 1)
-            simple_god_message(" reclaims one of your granted undead slaves!");
-        else if (num_reclaim == num_slaves)
-            simple_god_message(" reclaims your granted undead slaves!");
-        else
-            simple_god_message(" reclaims some of your granted undead slaves!");
-        return true;
-    }
-
-    return false;
 }
 
 // When under penance, Beoghites can lose all nearby orcish followers,
@@ -322,7 +281,10 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     }
 
     if (!orc->alive())
-        orc->hit_points = min(random_range(1, 4), orc->max_hit_points);
+    {
+        orc->hit_points = max(1, random_range(orc->max_hit_points / 5,
+                                              orc->max_hit_points * 2 / 5));
+    }
 
     mons_make_god_gift(*orc, GOD_BEOGH);
     add_companion(orc);
@@ -331,6 +293,10 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     behaviour_event(orc, ME_ALERT);
 
     mons_att_changed(orc);
+
+    // put the actual revival at the end of the round
+    if (conv == conv_t::deathbed || conv == conv_t::deathbed_follower)
+        avoided_death_fineff::schedule(orc);
 }
 
 static void _fedhas_neutralise_plant(monster* plant)
@@ -422,7 +388,7 @@ void gozag_check_bribe(monster* traitor)
     if (branch_bribe[branch] == 0)
         return; // Do nothing if branch isn't currently bribed.
 
-    const int base_cost = max(1, exper_value(*traitor) / 20);
+    const int base_cost = max(1, exper_value(*traitor, true, true) / 20);
 
     int cost = 0;
 

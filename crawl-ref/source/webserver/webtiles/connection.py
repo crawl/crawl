@@ -13,7 +13,7 @@ from tornado.escape import to_unicode
 from tornado.escape import utf8
 from tornado.ioloop import IOLoop
 
-from config import server_socket_path
+from webtiles import config
 
 
 class WebtilesSocketConnection(object):
@@ -60,7 +60,7 @@ class WebtilesSocketConnection(object):
         # socket, regular calls in tempfile are not appropriate.
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            self.socketpath = tempfile.mktemp(dir=server_socket_path,
+            self.socketpath = tempfile.mktemp(dir=config.get('server_socket_path'),
                                               prefix="crawl", suffix=".socket")
         self.socket.bind(self.socketpath)
 

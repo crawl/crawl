@@ -1843,7 +1843,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     if (mons->alive())
     {
-        if (!mons->cannot_move())
+        if (!mons->cannot_act())
         {
             simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
                                          ? " seems to be slow for longer."
@@ -1911,12 +1911,8 @@ bool miasma_monster(monster* mons, const actor* who)
 
     bool success = poison_monster(mons, who);
 
-    if (who && who->is_player()
-        && is_good_god(you.religion)
-        && !(success && you_worship(GOD_SHINING_ONE))) // already penalized
-    {
+    if (who && who->is_player() && is_good_god(you.religion))
         did_god_conduct(DID_EVIL, 5 + random2(3));
-    }
 
     if (one_chance_in(3))
     {
@@ -2032,6 +2028,11 @@ int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
 void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
                  bool explosion_hole)
 {
+    // If this ASSERT triggers, your spell's setup code probably is doing
+    // something bad when setup_mons_cast is called with check_validity=true.
+    ASSERT(crawl_state.game_started || crawl_state.test || crawl_state.script
+        || crawl_state.game_is_arena());
+
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
     pbolt.source        = mons->pos();
@@ -2593,8 +2594,8 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
         return true;
     }
 
-    // Temporary trees (from Summon Forest) can't be burned.
-    if (feat_is_tree(wall) && is_temp_terrain(p))
+    // Temporary trees and slime walls can't be burned/dug.
+    if ((feat_is_tree(wall) || wall == DNGN_SLIMY_WALL) && is_temp_terrain(p))
         return false;
 
     // digging
@@ -2932,8 +2933,7 @@ bool bolt::harmless_to_player() const
         // With clarity, meph still does a tiny amount of damage (1d3 - 1).
         // Normally we'd just ignore it, but we shouldn't let a player
         // kill themselves without a warning.
-        return player_res_poison(false) > 0
-               || you.clarity(false) && you.hp > 2;
+        return player_res_poison(false) > 0 || you.clarity() && you.hp > 2;
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
@@ -3304,7 +3304,6 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_INVISIBILITY:
         potionlike_effect(POT_INVISIBILITY, ench_power);
-        contaminate_player(1000 + random2(1000), blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -4242,7 +4241,10 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         return;
 
     // Check only if actual damage and the monster is worth caring about.
-    if (final > 0 && (mons_is_threatening(*mon) || mons_class_is_test(mon->type)))
+    // Living spells do count as threats, but are fine being collateral damage.
+    if (final > 0
+        && (mons_is_threatening(*mon) || mons_class_is_test(mon->type))
+        && mon->type != MONS_LIVING_SPELL)
     {
         ASSERT(preac > 0);
 
@@ -4288,7 +4290,7 @@ void bolt::tracer_affect_monster(monster* mon)
     if (!agent() || !agent()->can_see(*mon))
         return;
 
-    if (flavour == BEAM_UNRAVELLING && monster_is_debuffable(*mon))
+    if (flavour == BEAM_UNRAVELLING && monster_can_be_unravelled(*mon))
         is_explosion = true;
 
     // Trigger explosion on exploding beams.
@@ -4393,9 +4395,7 @@ void glaciate_freeze(monster* mon, killer_type englaciator,
                              int kindex)
 {
     const coord_def where = mon->pos();
-    const monster_type pillar_type =
-        mons_is_zombified(*mon) ? mons_zombie_base(*mon)
-                                : mons_species(mon->type);
+    const monster_type pillar_type = mons_species(mons_base_type(*mon));
     const int hd = mon->get_experience_level();
 
     bool goldify = have_passive(passive_t::goldify_corpses);
@@ -4709,17 +4709,12 @@ bool bolt::attempt_block(monster* mon)
                      name.c_str(),
                      mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                      shield->name(DESC_PLAIN).c_str());
-                ident_reflector(shield);
             }
             else
             {
                 mprf("The %s reflects off an invisible shield around %s!",
                      name.c_str(),
                      mon->name(DESC_THE).c_str());
-
-                item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
-                if (amulet)
-                    ident_reflector(amulet);
             }
         }
         else if (you.see_cell(pos()))
@@ -4743,13 +4738,15 @@ bool bolt::attempt_block(monster* mon)
 bool bolt::bush_immune(const monster &mons) const
 {
     return
-        (mons_species(mons.type) == MONS_BUSH || mons.type == MONS_BRIAR_PATCH)
-        && !pierce && !is_explosion
-        && !is_enchantment()
-        && target != mons.pos()
-        && origin_spell != SPELL_STICKY_FLAME
-        && origin_spell != SPELL_STICKY_FLAME_RANGE
-        && origin_spell != SPELL_CHAIN_LIGHTNING;
+        // Briars allow bolts fired from aligned actors to pass but block
+        // those from unaligned actors. If this bolt has no agent, we're
+        // assuming alignment.
+        (mons.type == MONS_BRIAR_PATCH && mons_aligned(&mons, agent())
+             // Bushes pass bolts regardless of alignment of the actor.
+             || mons_species(mons.type) == MONS_BUSH)
+        // We allow hitting the bush-like monster with a bolt when it's the
+        // target.
+        && target != mons.pos();
 }
 
 void bolt::affect_monster(monster* mon)
@@ -5176,6 +5173,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_HIBERNATION:
         rc = mon->can_hibernate(false, intrinsic_only);
+        break;
+
+    case BEAM_SLEEP:
+        rc = mon->can_sleep();
         break;
 
     case BEAM_PORKALATOR:
@@ -5776,10 +5777,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_UNRAVELLING:
-        if (!monster_is_debuffable(*mon))
+        if (!monster_can_be_unravelled(*mon))
             return MON_UNAFFECTED;
 
-        debuff_monster(*mon);
+        if (mon->is_summoned())
+        {
+            mprf("The magic binding %s to this plane unravels!",
+                 mon->name(DESC_THE).c_str());
+            monster_die(*mon, KILL_DISMISSED, actor_to_death_source(agent()));
+        }
+        else
+            debuff_monster(*mon);
         _unravelling_explode(*this);
         return MON_AFFECTED;
 
@@ -6335,7 +6343,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
         case BEAM_UNRAVELLING:
-            return monster_is_debuffable(*mon); // XXX: as tukima's
+            return monster_can_be_unravelled(*mon); // XXX: as tukima's
         default:
             break;
     }

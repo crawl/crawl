@@ -121,7 +121,7 @@ function focusTrap(element, userOptions) {
 
     var returnFocus =
       deactivateOptions && deactivateOptions.returnFocus !== undefined
-        ? config.returnFocusOnDeactivate && deactivateOptions.returnFocus
+        ? deactivateOptions.returnFocus
         : config.returnFocusOnDeactivate;
     if (returnFocus) {
       delay(function() {
@@ -236,7 +236,8 @@ function focusTrap(element, userOptions) {
     if (container.contains(e.target)) return;
     if (config.clickOutsideDeactivates) {
       deactivate({
-        returnFocus: !tabbable.isFocusable(e.target)
+        returnFocus: config.returnFocusOnDeactivate
+                        && !tabbable.isFocusable(e.target),
       });
       return;
     }

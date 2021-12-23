@@ -452,6 +452,7 @@ static bool _mons_can_zap_dig(const monster* mons)
            && mons_itemuse(*mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
            && env.item[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
+           && mons->likes_wand(env.item[mons->inv[MSLOT_WAND]])
            && env.item[mons->inv[MSLOT_WAND]].charges > 0;
 }
 
@@ -928,7 +929,7 @@ static bool _handle_reaching(monster& mons)
     }
 
     const coord_def foepos(foe->pos());
-    if (can_reach_attack_between(mons.pos(), foepos)
+    if (can_reach_attack_between(mons.pos(), foepos, range)
         // The monster has to be attacking the correct position.
         && mons.target == foepos)
     {
@@ -1039,6 +1040,7 @@ static bool _handle_wand(monster& mons)
         || mons.pacified()
         || mons.confused()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
+        || !mons.likes_wand(*wand)
         || mons.has_ench(ENCH_SUBMERGED)
 
         || x_chance_in_y(3, 4))
@@ -1068,24 +1070,8 @@ static bool _handle_wand(monster& mons)
     beem.source     = mons.pos();
     beem.aux_source =
         wand->name(DESC_QUALNAME, false, true, false, false);
-
-    bool should_fire = false;
-    const wand_type kind = (wand_type)wand->sub_type;
-    switch (kind)
-    {
-    case WAND_MINDBURST:
-        // Dial down damage from wands of disintegration, since
-        // disintegration beams can do large amounts of damage.
-        beem.damage.size = beem.damage.size * 2 / 3;
-
-        // Intentional fallthrough
-    default:
-        fire_tracer(&mons, beem);
-        should_fire = mons_should_fire(beem);
-        break;
-    }
-
-    if (should_fire)
+    fire_tracer(&mons, beem);
+    if (mons_should_fire(beem))
     {
         _mons_fire_wand(mons, *wand, beem, you.see_cell(mons.pos()));
         return true;
@@ -1106,7 +1092,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
-        && mons->type != MONS_SPECTRAL_THING
+        && !mons_bound_soul(*mons)
         && !mons_class_is_animated_object(mons->type))
     {
         return false;
@@ -1353,7 +1339,7 @@ static void _pre_monster_move(monster& mons)
     // (monsters are allowed to 'cheat', as with orb of destruction)
     if ((mons.type == MONS_BALL_LIGHTNING || mons.type == MONS_FOXFIRE)
         && mons.summoner == MID_PLAYER
-        && !cell_see_cell(you.pos(), mons.pos(), LOS_SOLID))
+        && !cell_see_cell(you.pos(), mons.pos(), LOS_NO_TRANS))
     {
         if (mons.type == MONS_FOXFIRE)
             check_place_cloud(CLOUD_FLAME, mons.pos(), 2, &mons);
@@ -1949,7 +1935,7 @@ void handle_monster_move(monster* mons)
             return;
         }
 
-        if (mons->cannot_move() || !_monster_move(mons))
+        if (mons->cannot_act() || !_monster_move(mons))
             mons->speed_increment -= non_move_energy;
     }
     you.update_beholder(mons);
@@ -2436,9 +2422,6 @@ static bool _jelly_divide(monster& parent)
 // Only Jiyva jellies eat items.
 static bool _monster_eat_item(monster* mons)
 {
-    if (!mons_eats_items(*mons))
-        return false;
-
     // Off-limit squares are off-limit.
     if (testbits(env.pgrid(mons->pos()), FPROP_NO_JIYVA))
         return false;
@@ -2483,9 +2466,6 @@ static bool _monster_eat_item(monster* mons)
                  you.see_cell(mons->pos()) ? "" : " distant");
             shown_msg = true;
         }
-
-        if (you_worship(GOD_JIYVA))
-            jiyva_slurp_item_stack(*si, quant);
 
         if (quant >= si->quantity)
             item_was_destroyed(*si);
@@ -2564,7 +2544,10 @@ static bool _handle_pickup(monster* mons)
                 // encourages killing Maurice, since there's just one of him.
                 // Usually.
                 || (testbits(si->flags, ISFLAG_SEEN)
-                    && !mons->has_attack_flavour(AF_STEAL))))
+                    && !mons->has_attack_flavour(AF_STEAL)))
+            // ...but it's ok if it dropped the item itself.
+            && !(si->props.exists(DROPPER_MID_KEY)
+                 && si->props[DROPPER_MID_KEY].get_int() == (int)mons->mid))
         {
             // don't pick up any items beneath one that the player's seen,
             // to prevent seemingly-buggy behavior (monsters picking up items
@@ -2576,7 +2559,10 @@ static bool _handle_pickup(monster* mons)
             continue;
 
         if (mons->pickup_item(*si, you.see_cell(mons->pos()), false))
+        {
             count_pickup++;
+            si->props.erase(DROPPER_MID_KEY);
+        }
 
         if (count_pickup > 1 || coinflip())
             break;
@@ -2690,10 +2676,10 @@ static bool _mons_can_displace(const monster* mpusher,
     // elbow past them, and the wake-up check happens downstream.
     // Monsters caught in a net also can't be pushed past.
     if (mons_is_confused(*mpusher) || mons_is_confused(*mpushee)
-        || mpusher->cannot_move() || mpusher->is_stationary()
+        || mpusher->cannot_act() || mpusher->is_stationary()
         || mpusher->is_constricted() || mpushee->is_constricted()
         || (!_same_tentacle_parts(mpusher, mpushee)
-           && (mpushee->cannot_move() || mpushee->is_stationary()))
+           && (mpushee->cannot_act() || mpushee->is_stationary()))
         || mpusher->asleep() || mpushee->caught())
     {
         return false;

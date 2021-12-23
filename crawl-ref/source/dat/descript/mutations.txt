@@ -71,7 +71,7 @@ level of this mutation provides more SH.
 thin skeletal structure mutation
 
 Your bones are light and porous. Each level of this mutation provides +2
-Dexterity and +Stealth.
+Dexterity and Stealth+.
 %%%%
 strong mutation
 
@@ -86,7 +86,7 @@ Intelligence.
 agile mutation
 
 Your reflexes have become unnaturally fast. Each level of this mutation
-provides +2 Desterity.
+provides +2 Dexterity.
 %%%%
 weak mutation
 
@@ -101,7 +101,7 @@ Intelligence.
 clumsy mutation
 
 Your reflexes have become unnaturally clumsy. Each level of this mutation
-provides -2 Desterity.
+provides -2 Dexterity.
 %%%%
 high mp mutation
 
@@ -110,7 +110,7 @@ You have an increased reservoir of magic. Each level of this mutation provides
 %%%%
 low mp mutation
 
-You have an low magical capacity. Each level of this mutation provides -10% MP.
+You have a low magical capacity. Each level of this mutation provides -10% MP.
 %%%%
 camouflage mutation
 
@@ -122,22 +122,23 @@ horns mutation
 
 You have horns on your head, allowing you to gore foes when launching melee
 attacks but preventing you from wearing helmets. Each level of this mutation
-increases the strength of your gore attacks. At the third level of this
-mutation, the horns also prevent you from wearing hats.
+increases the strength of your gore attacks. The third level of this mutation
+prevents you from wearing any type of headgear.
 %%%%
 beak mutation
 
 You have a beak for a mouth, allowing you to peck foes when launching melee
-attacks but preventing you from wearing helmets
+attacks but preventing you from wearing helmets.
 %%%%
 fangs mutation
 
 You have sharp teeth, allowing you to bite foes when launching melee attacks.
-Each level of this mutation makes your teeth sharper, longer and stronger.
+Each level of this mutation makes your teeth sharper, longer, and stronger.
 %%%%
 acidic bite mutation
 
-You have acidic saliva, allowing you to bite foes when launching melee attacks.
+You have acidic saliva, allowing you to bite foes and apply corrosion to them
+when launching melee attacks.
 %%%%
 antimagic bite mutation
 
@@ -154,10 +155,11 @@ you from wearing gloves.
 %%%%
 demonic touch mutation
 
-Your hands glow with unholy energy, causing those struck by your unarmed and
-off-hand attacks to take additional AC-bypassing damage if you aren't wearing
-gloves. Each level of this mutation inflicts more damage. The third level of
-this mutation prevents you from wearing gloves.
+Your hands glow with unholy energy, causing those struck by your off-hand
+attacks to take additional damage which ignores armour. Each level of this
+mutation inflicts more damage. The third level of this mutation prevents you
+from wearing gloves, and also causes your off-hand attacks to reduce your foes'
+willpower.
 %%%%
 hooves mutation
 
@@ -175,13 +177,13 @@ from wearing boots.
 antennae mutation
 
 You have antennae, allowing you to sense nearby monsters, but preventing you
-from wearing headgear. Each level of this mutation lets you sense monsters from
-further away. The third level of this mutation also allows you to see invisible
-monsters.
+from wearing helmets. Each level of this mutation lets you sense monsters from
+further away. The third level of this mutation prevents you from wearing any
+type of headgear, and allows you to see invisible monsters.
 %%%%
 tentacle spike mutation
 
-You have a spiked tentacle, allowing you to stab foes when launching melee
+You have a spiked tentacle, allowing you to pierce foes when launching melee
 attacks. Each level of this mutation makes your spike sharper, longer, and
 stronger.
 %%%%
@@ -199,9 +201,9 @@ sharper, longer, and stronger.
 weakness stinger mutation
 
 You have a thin, red tail, allowing you to tail-slap foes when launching melee
-attacks. Each level of this mutation increases your tail's strength. The third
-level of this mutation causes a barb to grow on the end of your tail,
-inflicting brief weakness on those unfortunate enough to be struck on it.
+attacks. Each level of this mutation increases your tail's strength as it turns
+into a sharp stinger. The third level of this mutation causes the stinger to
+inflict brief weakness on those unfortunate enough to be struck by it.
 %%%%
 armoured tail mutation
 
@@ -284,7 +286,8 @@ hidden from mundane sight. This has no effect on your accuracy otherwise.
 clarity mutation
 
 Your mind is exceptionally clear, preventing you from becoming confused,
-mesmerised, or supernaturally afraid.
+mesmerised, or supernaturally afraid. You also cannot become involuntarily
+enraged.
 %%%%
 sense surroundings mutation
 
@@ -319,7 +322,7 @@ slowness mutation
 
 You cover ground slowly - moving to new positions takes you more time. This
 has no effect on other types of actions, like attacking or casting spells.
-Each level of this mutation makes you move faster.
+Each level of this mutation makes you move slower.
 %%%%
 robust mutation
 
@@ -528,8 +531,8 @@ of this mutation intensifies the poison from a single glob into a large cloud.
 %%%%
 in touch with death mutation
 
-Your Necromancy spells are more powerful. The second level of this enhances
-your Necromany spellpower further.
+Your Necromancy spells are more powerful. The second level of this mutation
+enhances your Necromancy spellpower further.
 %%%%
 nimble flight mutation
 
@@ -613,15 +616,22 @@ such as divine restrictions, do not cause your other skills to rise faster.
 %%%%
 nimble swimmer mutation
 
-You can take advantage of the water while underwater or skimming the waves,
-gaining Stealth+. The second level of this mutation also provides you improved
-EV and movement speed through the water.
+You can blend into the waves while swimming through water or flying above it,
+gaining Stealth+. The second level of this mutation also grants you improved
+evasion and increases your movement speed when in or above water.
 %%%%
 vampiric mutation
 
 You are cursed with vampirism, torn between false life and a bloodless,
 dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to
 exsanguinate yourself or to fill once more with blood.
+%%%%
+divine attributes mutation
+
+Your divine heritage dramatically boosts your attribute gain (Strength,
+Intelligence, and Dexterity) as you level up relative to other species, both
+in quantity and in how much you can control your development. Every three
+levels, you choose an attribute to increase by four points.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
@@ -644,7 +654,7 @@ accuracy further.
 tendrils mutation
 
 When struck in melee, the slimy tendrils covering your body may grab your
-attacker's weapon and yank it from their grasp. Greater strength or dexterity
+attacker's weapon and yank it from their grasp. Greater Strength or Dexterity
 makes this somewhat more likely.
 %%%%
 jelly sensing items mutation

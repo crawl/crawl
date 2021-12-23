@@ -306,10 +306,10 @@ static const form_entry formdata[] =
     EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     10, 10, 0, true, 0, true, -1,
-    SPWPN_ELECTROCUTION, LIGHTCYAN, "Storm fists", { "hit", "buffet", "batter", "blast" },
+    SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },
     FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
     "bellow", 0, "", "", "place yourself before", "air",
-    { { "cleaving", "Your stormy fists strike out in all directions at once." },
+    { { "cleaving", "Your electrical attacks strike out in all directions at once." },
       { "", "You are incredibly evasive." }
     }
 }

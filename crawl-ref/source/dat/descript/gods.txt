@@ -78,8 +78,7 @@ Jiyva
 Jiyva is the ancient deity of the slimes. Followers are expected to
 support the spread and satiation of their fellow slimes by allowing them to
 consume items, and are forbidden from harming any slimes. Especially favoured
-followers will become as shapeless as their god, as their attributes and
-mutations shift around under Jiyva's influence.
+followers will become as shapeless as their god, mutating wildly.
 %%%%
 Kikubaaqudgha
 
@@ -208,10 +207,10 @@ capricious. There is nothing a follower can do to influence Xom's mood.
 Yredelemnul
 
 Yredelemnul the Dark is a god worshipped by those who seek powers over death
-and the undead. Followers can raise legions of servile undead, and gain a
+and the soul. Followers can reap legions of servile undead, and gain a
 number of other useful powers with which to make better use of the souls of
-the living. Yredelemnul especially favours those who would destroy holy
-creatures, which oppose the realm of undeath.
+the living. Yredelemnul especially favours those who would surround themselves
+with a bounty of collected souls.
 %%%%
 Zin
 
@@ -303,21 +302,21 @@ their life's talents.
 %%%%
 Ignis powers
 
-Followers can fill their surroundings with a sea of fire, can call a swarm of
-foxfires against their foes, or let Ignis' heat lift them to another level of
-the dungeon. However, the guttering flames of Ignis' power will only sustain a
-limited number of invocations before only flickering embers remain. No matter
-how depleted, Ignis will always grant followers resistance to fire.
+Followers can armour themselves in flame, call a swarm of foxfires against their
+foes, or let Ignis' heat lift them to another level of the dungeon. However, the
+guttering flames of Ignis' power will only sustain a limited number of
+invocations before only flickering embers remain. No matter how depleted, Ignis
+will always grant followers resistance to fire.
 %%%%
 Jiyva powers
 
-Jiyva's followers can request jellies, which will consume nearby items and
-provide health and magic points when doing so. Jiyva will also consume items
-left elsewhere in the dungeon. Followers will later become able to turn
-monsters to slime, and eventually to reshape themselves to remove harmful
-mutations. As their piety grows, Jiyva will, with increasing frequency, drop
-jellies into the dungeon; rearrange followers' attributes based on their skills
-and armour; and mutate followers to better reflect Jiyva's image.
+Jiyva will gradually fill the dungeon with jellies, which will rapidly consume
+nearby items as well as slowly consuming items from elsewhere in the dungeon.
+As they spread slime across more of the dungeon, Jiyva will grant followers
+increasingly rapid health and magic regeneration, and will begin mutating them
+to better reflect Jiyva's image. Followers will later become able to call forth
+acidic ooze from the walls of the dungeon, and to turn monsters to slime with a
+touch.
 %%%%
 Kikubaaqudgha powers
 
@@ -467,13 +466,12 @@ playthings...
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives followers the power to raise skeletons and corpses, to recall
-undead followers to their vicinity, and to heal by draining the life force of
-living creatures. With sufficient piety, Yredelemnul can be called upon to
-mirror a follower's injuries onto attackers. Eventually, followers will gain
-the power to bind a monster's soul, and make it fight for them instead.
-Yredelemnul will sporadically gift followers increasingly powerful undead
-servants.
+Yredelemnul gives followers the power to raise slain foes from the dead and
+bind them into service. Followers also can recall undead followers to them,
+heal by draining life from the living, and exchange members of their undead
+army for Yredelemnul's more powerful servants. With a large and powerful enough
+mass of the dead, followers can fully bind a foe's soul and make it fight for
+them in death with the full capacities it held in life.
 %%%%
 Zin powers
 

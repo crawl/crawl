@@ -603,9 +603,9 @@ static string _wanderer_spell_str()
 
 static void _djinn_announce_spells()
 {
-    const string equip_str = you.char_class == JOB_WANDERER ?
-                                        _wanderer_equip_str():
-                                        "";
+    const string equip_str = (you.char_class == JOB_WANDERER
+                                 && inv_count() > 0) ? _wanderer_equip_str()
+                                                    : "";
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -620,18 +620,22 @@ static void _djinn_announce_spells()
 // spells and spell library
 static void _wanderer_note_equipment()
 {
-    const string equip_str = _wanderer_equip_str();
+    const string equip_str = inv_count() > 0 ? _wanderer_equip_str() : "";
+
+    const string eq_spacer = equip_str.empty() ? "" : "; and ";
 
     // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
-        "; and the following spell memorised: "
+        eq_spacer + "the following spell memorised: "
         + _wanderer_spell_str();
+
+    const string spell_spacer = spell_str.empty() && equip_str.empty() ? "" : "; and ";
 
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
         !library.size() ? "" :
-        "; and the following spells available to memorise: "
+        spell_spacer + "the following spells available to memorise: "
         + comma_separated_fn(library.begin(), library.end(),
                              [] (const spell_type spell) -> string
                              {
@@ -1111,8 +1115,17 @@ static void _input()
         end_wait_spells();
         handle_delay();
 
+        // Some delays set you.turn_is_over.
+
+        bool time_is_frozen = false;
+
+#ifdef WIZARD
+        if (you.props.exists(FREEZE_TIME_KEY))
+            time_is_frozen = true;
+#endif
+
         // Some delays reset you.time_taken.
-        if (you.time_taken || you.turn_is_over)
+        if (!time_is_frozen && (you.time_taken || you.turn_is_over))
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
@@ -1704,6 +1717,15 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
+
+#ifdef WIZARD
+    if (you.props.exists(FREEZE_TIME_KEY))
+    {
+        mprf(MSGCH_WARN, "Cannot rest while time is frozen.");
+        return;
+    }
+#endif
+
     if (i_feel_safe())
     {
         if ((you.hp == you.hp_max || !player_regenerates_hp())
@@ -1975,6 +1997,10 @@ public:
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("Lookup info",
             MEL_ITEM, 'i', CMD_LOOKUP_HELP_MENU));
+#ifdef TARGET_OS_MACOSX
+        add_entry(new CmdMenuEntry("Show options file in finder",
+            MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
+#endif
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
                             "Quit and <lightred>abandon character</lightred>",
@@ -2248,6 +2274,14 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
         break;
 
+#ifdef TARGET_OS_MACOSX
+    case CMD_REVEAL_OPTIONS:
+        // TODO: implement for other OSs
+        // TODO: add a way of triggering this from the main menu
+        system(make_stringf("/usr/bin/open -R '%s'",
+                                            Options.filename.c_str()).c_str());
+        break;
+#endif
     case CMD_SHOW_CHARACTER_DUMP:
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))

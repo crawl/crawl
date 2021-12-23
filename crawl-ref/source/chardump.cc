@@ -216,21 +216,13 @@ static void _sdump_header(dump_params &par)
 #endif
     par.text += " character file.\n\n";
 
-    if (you.fully_seeded
-#ifdef DGAMELAUNCH
-        && (par.se // for online games, show seed for a dead char
-            || you.wizard
-            || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
-#endif
-        )
-    {
+    if (you.fully_seeded && crawl_state.seed_is_known())
         par.text += seed_description() + "\n\n";
-    }
 }
 
 static void _sdump_stats(dump_params &par)
 {
-    par.text += dump_overview_screen(par.full_id);
+    par.text += dump_overview_screen();
     par.text += "\n\n";
 }
 
@@ -1737,7 +1729,7 @@ void display_char_dump()
 #ifdef DGL_WHEREIS
 ///////////////////////////////////////////////////////////////////////////
 // whereis player
-void whereis_record(const char *status)
+void whereis_record(const xlog_fields &xl)
 {
     const string file_name = morgue_directory()
                              + strip_filename_unsafe_chars(you.your_name)
@@ -1746,9 +1738,7 @@ void whereis_record(const char *status)
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
         // no need to bother with supporting ancient charsets for DGL
-        fprintf(handle, "%s:status=%s\n",
-                xlog_status_line().c_str(),
-                status? status : "");
+        fprintf(handle, "%s\n", xl.xlog_line().c_str());
         fclose(handle);
     }
 }

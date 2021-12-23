@@ -20,6 +20,7 @@
 #include "dungeon.h" // place_specific_trap
 #include "env.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
@@ -455,7 +456,7 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (player_teleport(false))
+    if (player_teleport())
         mpr("You feel stable on this floor.");
 }
 
@@ -711,6 +712,10 @@ void floor_transition(dungeon_feature_type how,
     you.clear_beholders();
     you.clear_fearmongers();
     dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
+    if (you.duration[DUR_OOZEMANCY])
+        jiyva_end_oozemancy();
+    if (you.duration[DUR_NOXIOUS_BOG])
+        you.duration[DUR_NOXIOUS_BOG] = 0;
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -751,11 +756,8 @@ void floor_transition(dungeon_feature_type how,
     {
         you.depth = 0;
         mpr("You have escaped!");
-
-        if (player_has_orb())
-            ouch(INSTANT_DEATH, KILLED_BY_WINNING);
-
-        ouch(INSTANT_DEATH, KILLED_BY_LEAVING);
+        ouch(INSTANT_DEATH, player_has_orb() ? KILLED_BY_WINNING
+                                             : KILLED_BY_LEAVING);
     }
 
     if (how == DNGN_ENTER_ZIGGURAT)
@@ -1238,9 +1240,7 @@ static void _update_level_state()
 void new_level(bool restore)
 {
     print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     _update_level_state();
 

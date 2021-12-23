@@ -54,7 +54,8 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
                            int pow, god_type god = GOD_NO_GOD,
                            bool is_player = false);
 spret cast_malign_gateway(actor* caster, int pow,
-                               god_type god = GOD_NO_GOD, bool fail = false);
+                          god_type god = GOD_NO_GOD, bool fail = false,
+                          bool test = false);
 coord_def find_gateway_location(actor* caster);
 spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test=false);
 spret cast_summon_guardian_golem(int pow, god_type god, bool fail);
@@ -69,6 +70,7 @@ bool spell_servitorable(spell_type spell);
 void init_servitor(monster* servitor, actor* caster);
 spret cast_spellforged_servitor(int pow, god_type god, bool fail);
 
+vector<coord_def> simple_find_corpses();
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, int pow, unsigned short hitting,
                     actor *as = nullptr, string nas = "",
@@ -114,10 +116,11 @@ bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell, bool player);
 int count_summons(const actor *summoner, spell_type spell);
 
-bool fedhas_wall_of_briars();
-spret fedhas_grow_ballistomycete(bool fail);
+vector<coord_def> find_briar_spaces(bool just_check = false);
+void fedhas_wall_of_briars();
+spret fedhas_grow_ballistomycete(const coord_def& target, bool fail);
 spret fedhas_overgrow(bool fail);
-spret fedhas_grow_oklob(bool fail);
+spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
 spret foxfire_swarm();

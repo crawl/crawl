@@ -993,6 +993,16 @@ public:
     }
 
     bool can_offhand_punch() const override { return true; }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string /*default_name*/) const override
+    {
+        // there's special casing in base_hand_name to get "fists"
+        string hand = you.base_hand_name(true, true);
+        return make_stringf("Storm %s", hand.c_str());
+    }
 };
 
 #if TAG_MAJOR_VERSION == 34

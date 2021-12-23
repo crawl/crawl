@@ -1253,8 +1253,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && you.duration[DUR_BLINK_COOLDOWN])
             return "you are still too unstable to blink.";
 
-        if (temp && you.no_tele(false, false, true))
-            return lowercase_first(you.no_tele_reason(false, true));
+        if (temp && you.no_tele(true))
+            return lowercase_first(you.no_tele_reason(true));
         break;
 
     case SPELL_SWIFTNESS:
@@ -1270,11 +1270,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             if (you.is_stationary())
                 return "you can't move.";
         }
-        break;
-
-    case SPELL_INVISIBILITY:
-        if (!prevent && temp && you.backlit())
-            return "invisibility won't help you when you glow in the dark.";
         break;
 
     case SPELL_STATUE_FORM:
@@ -1364,6 +1359,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the dungeon can only cope with one malign gateway"
                     " at a time.";
         }
+        if (temp && cast_malign_gateway(&you, 0, GOD_NO_GOD, false, true)
+                    == spret::abort)
+        {
+            return "you need more open space to create a gateway.";
+        }
         break;
 
     case SPELL_SUMMON_FOREST:
@@ -1394,6 +1394,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SIMULACRUM:
         if (temp && find_simulacrable_corpse(you.pos()) < 0)
             return "there is nothing here to animate!";
+        break;
+
+    case SPELL_DEATH_CHANNEL:
+        if (have_passive(passive_t::reaping))
+            return "you are already reaping souls!";
         break;
 
     case SPELL_CORPSE_ROT:

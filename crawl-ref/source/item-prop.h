@@ -45,6 +45,16 @@ enum armour_flag
     ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
 };
 
+enum item_rarity_type
+{
+    RARITY_NONE,
+    RARITY_VERY_RARE,
+    RARITY_RARE,
+    RARITY_UNCOMMON,
+    RARITY_COMMON,
+    RARITY_VERY_COMMON,
+};
+
 #define AMU_REFLECT_SH 5*2
 
 /// Removed items that have item knowledge.
@@ -106,7 +116,7 @@ int fit_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(armour_type sub_type, size_type size) PURE;
 
-int wand_charge_value(int type) PURE;
+int wand_charge_value(int type, int item_level = 1) PURE;
 #if TAG_MAJOR_VERSION == 34
 bool is_known_empty_wand(const item_def &item) PURE;
 #endif
@@ -117,7 +127,6 @@ bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
-void ident_reflector(item_def *item);
 
 // Only works for armour/weapons/missiles
 // weapon functions:
@@ -190,6 +199,9 @@ bool jewellery_type_has_plusses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
+item_rarity_type consumable_rarity(const item_def &item);
+item_rarity_type consumable_rarity(object_class_type base_type, int sub_type);
+
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
 
@@ -228,7 +240,7 @@ string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
-void seen_item(const item_def &item);
+void seen_item(item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {

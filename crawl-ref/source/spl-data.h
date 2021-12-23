@@ -210,8 +210,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INVISIBILITY, "Invisibility",
     spschool::hexes,
-    spflag::helpful | spflag::selfench
-        | spflag::escape,
+    spflag::helpful | spflag::selfench | spflag::escape | spflag::monster,
     6,
     200,
     -1, -1,
@@ -2932,8 +2931,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_VIOLENT_UNRAVELLING, "Yara's Violent Unravelling",
     spschool::hexes | spschool::transmutation,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::no_ghost
-        | spflag::chaotic,
+    spflag::target | spflag::no_ghost | spflag::chaotic,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,

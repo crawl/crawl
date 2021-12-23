@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-import auth
+from webtiles import auth
 
 try:
     import mock
@@ -12,7 +12,7 @@ except ImportError:
 
 class Test_purge_login_tokens:
 
-    @mock.patch('auth.datetime')
+    @mock.patch('webtiles.auth.datetime')
     def test_not_yet_expired_tokens_are_kept(self, stub_datetime):
         auth.login_tokens = {
             ('token', 'username'): datetime.datetime.max,
@@ -23,7 +23,7 @@ class Test_purge_login_tokens:
 
         assert auth.login_tokens
 
-    @mock.patch('auth.datetime')
+    @mock.patch('webtiles.auth.datetime')
     def test_expired_tokens_are_discarded(self, stub_datetime):
         auth.login_tokens = {
             ('token', 'username'): datetime.datetime.min,
@@ -37,10 +37,9 @@ class Test_purge_login_tokens:
 
 class Test_log_in_as_user:
 
-    @mock.patch('auth.config')
-    @mock.patch('auth.datetime')
-    def test_cookies_have_correct_lifetime(self, stub_datetime, stub_config):
-        stub_config.login_token_lifetime = 42
+    @mock.patch('webtiles.auth.datetime')
+    def test_cookies_have_correct_lifetime(self, stub_datetime):
+        auth.config.set('login_token_lifetime', 42)
         stub_datetime.datetime.now.return_value = datetime.datetime.min
         stub_datetime.timedelta = datetime.timedelta
         stub_request = mock.Mock()

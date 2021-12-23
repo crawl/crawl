@@ -1,4 +1,4 @@
-Stone Soup 0.28-a0 (through 0.28-a0-524-g197395d7)
+Stone Soup 0.28-a0 (through 0.28-a0-1190-g77e1c55)
 --------------------------------------------------
 
 Branches, Environment
@@ -20,6 +20,7 @@ Branches, Environment
 * Six new Wizard's Laboratories are added: Eringya's Formal Garden, Tukima's
   Studio, Yara's Duelist Academy, Borgnjor's Mausoleum, Maxwell's Workshop, and
   Alistair's Party Mansion.
+* Exploration-based shaft traps can now happen a maximum of once per branch.
 
 Character
 ---------
@@ -43,6 +44,16 @@ Character
 * Clarity from any source no longer blocks berserk from random rage.
 * Late game XP gains are reduced.
 * The experience cost of high-level skills is reduced.
+* New Demonspawn Mutations:
+  - Weakening stinger, gives a tail aux attack, at level 3 blocks the cloak
+    slot and applies the weak status.
+  - Demonic touch, adds irresistible damage to the off hand punch, at level 3
+    blocks gloves and applies the vulnerable status.
+* Player-chosen attribute increases now happen every 6 XLs, starting at XL 3,
+  and increase a stat by 2. Demigods are unchanged.
+* Wanderer creation rules have been overhauled again, to give more useful
+  starting skills in combination with the items generated. Many new item
+  possibilities are added.
 
 Gods
 ----
@@ -63,15 +74,63 @@ Gods
   - Once abandoned and mollified, Ignis dies.
   - Ignis grants the following abilities:
     - 0*: Passive rF+
-    - 1*: Active 'Sea of Flames' ability. Creates smoldering embers (like
-          conjure flame) on every empty square in LOS. They ignite after the
-          next player turn unless snuffed out by the player.
+    - 1*: Active 'Fiery Armour' ability. When used it gives +7AC and deals fire
+          damage to melee attackers.
     - 1*: Active 'Foxfire Swarm' ability. Conjures foxfire on every open square
           in radus 2 around the player.
-    - 2*: Active 'Rising Flame' ability. Gives the player the "Rise" status,
-          after 2-4 turns the player rockets through the ceiling and up one
-          floor.
+    - One time use: Active 'Rising Flame' ability. Gives the player the "Rise"
+      status, after 2-4 turns the player rockets through the ceiling and up one
+      floor.
 * Cheibriados permits berserk while suppressing the extra speed.
+* Cheibriados now slows poison on worship and grants bend time at 1*.
+* Ashenzari's passive trap protection and item identification is moved to 1*.
+* The Shining One now gives Divine Shield at 1* and Cleansing Flame at 3*.
+* Elyvilon abilities are streamlined
+  - Pacification grants full XP and works on intelligent plants.
+  - Lifesaving is now completely passive, with an extra piety gated chance on
+    top of the basic good god lifesaving chance and a cooldown.
+  - Lesser Healing is removed.
+  - Purification is moved to 1* and reduced in cost.
+  - Greater Healing is renamed ot Heal Self and moved to 3*.
+* Jiyva is morphed.
+  - Stat shuffling is removed.
+  - Healing from jelly item eating is removed.
+  - The cure mutation active is removed.
+  - Piety is now exploration based, not item eating based, and is gained very
+    quickly.
+  - Jiyva grants passive regenration of HP and MP.
+  - Mutation gifts arrive in bursts that first remove a mutation (weighted
+    to bad mutations) then attempt to max out the levels of existing mutations
+    before adding new ones.
+  - Passive rCorr is now granted at 2*, and jelly spawning on hit at 5*.
+  - New active 'Oozemancy' 3* ability. Temporarily turns nearby walls within
+    radius 4 into slime-covered walls that do acid damage to adjacent monsters.
+* Yredelemnul is overhauled to use temporary zombies as piety
+  - The animate remains, animate dead, and injury mirror active abilities are
+    removed.
+  - Starting at 0* piety Yredelemnul grants passive reaping of all
+    corpses, raising zombies and spectral things from dead living, demonic, and
+    holy beings. Zombies cannot leave the level and expire when the player
+    leaves the level (by any route).
+  - Yredelemnul piety scales with the number and strength of the zombies in
+    sight of the player.
+  - Yredelemnul grants the following active abilities:
+      - 0*: Recall Undead. Can recall a bound soul across floors.
+      - 2*: Dark Bargain. Trade 2 zombies for a long-duration undead summon
+            that scales with invocations.
+      - 4*: Drain Life. Same as previous drain life, but also costs 3 zombies.
+      - 5*: Bind Soul. Re-named from previous Enslave Soul, also costs 4
+            zombies. A bound soul is permanent and can follow the player
+            between floors.
+
+Interface
+---------
+* The mutation panel is now a menu, selecting individual mutations provides a
+  description of the mutation.
+* Most abilities now have targeters like the spell targeters.
+* WebTiles now has a clickable action panel, similar to the local tiles
+  inventory panel.
+* WebTiles mouse support is expanded.
 
 Items
 -----
@@ -84,6 +143,18 @@ Items
   chance.
 * Evokable berserk is removed as an artefact property.
 * The generation of throwing ammunition is reduced.
+* Wand generation is reduced.
+* The electrocution brand triggers less often.
+* One 'pip' of regen is reduced to 0.8 HP/turn.
+* MPRegen amulets are buffed to 0.4 MP/turn.
+* New glove ego: infusion. Gloves of infusion add damage per hit in exchange
+  for 1 MP per hit.
+* The archery ego is renamed hurling and now only applies to throwing.
+* New unrand: the +3 Mad Mage's Maulers {Infuse+∞ RegenMP Int-3}. These use all
+  available MP to give proportional bonus damage to a melee hit.
+* New unrand: the dreamshard necklace {*Dream}. On receiving a lethal or
+  near-lethal hit, the dreamshard necklace shatters, averting the blow, healing
+  the player, releasing dream allies, and fog. Otherwise does nothing.
 * Unrandart tweaks:
   - The staff of Battle now triggers the battlesphere on melee hit (in addition
     to the usual spell trigger).
@@ -93,6 +164,12 @@ Items
   - The necklace of bloodlust now gives a 50% chance to go berserk on hit.
   - The Zealot's sword now gives a 20% chance to go berserk on hit (up from
     5%).
+  - The hat of the bear spirit gives a 20% chance to go berserk on hit,
+    increases the bonus HP from going berserk, and reduces the slow duration
+    after. It no longer has rN+.
+  - The ring of the Mage is now a ring of Wizardry and Archmagi.
+  - The autumn katana loses Clarity and gains a chance to manifold assault on
+    hit.
 
 Monsters
 --------
@@ -115,6 +192,13 @@ Monsters
   casting a spell.
 * All derived undead retain their reach, constriction, and trample attacks.
 * Red Devils now apply barbs on hit, instead of hopping back.
+* Demonic and holy monsters are now susceptible to fear, berserk, alistairs
+  intoxication, and ballistomycete spores.
+* Monsters have a chance to break a door permanently when opening it. This
+  chance is higher if the mosnter is berserk.
+* Classed draconians have a fixed colour per job.
+* When Dowan dies Duvessa goes berserk permanently; when Duvessa dies Dowan
+  gains haste permanently.
 * Ironbound Beastmasters are removed.
 
 Spells
@@ -135,7 +219,21 @@ Spells
   flame.
 * Searing Ray and Storm Form have reduced power scaling.
 * Storm Form's blinkbolt ability is now always LOS range.
-* Bolt of Magma, Corona, Shadow Creatures are now monster only.
+* Corpse rot now scales with spell power, placing more clouds per corpse and
+  reaching up to range 2 with sufficient clouds.
+* Passage of Golubria now has a range that scales with spell power.
+* Blink now has a cooldown that scales with spell power.
+* Eringya's Noxious Bog now places a bog under the caster, as well as on cells
+  with only one adjacent wall; the caster is now immune to their own bog.
+* Inner Flame is now smite targeted.
+* Slow is now level 1 with a lower power cap.
+* Metabolic Englaciation has a minimum slow duration when successful.
+* Death Channel now works on demonic and holy creatures as well as corpseless
+  living creatures
+* Yara's Violent Unravelling can now unravel summons, killing them immediately
+  and turning them into explosions, and is smite targeted.
+* Bolt of Magma, Corona, Shadow Creatures, and Invisibility are now monster
+  only.
 
 Stone Soup 0.27.1 (20210820)
 ----------------------------

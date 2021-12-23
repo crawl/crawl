@@ -1146,3 +1146,49 @@ xxxxeee.x.eeexxxx
          xxxx...x
             xxxxx
 ENDMAP
+
+# The loot distribution here is based on the loot from the Desolation, although
+# slightly changed to use acquirement. Places 16 loots.
+NAME:       nicolae_trove_salty
+TAGS:       no_item_gen no_monster_gen allow_dup
+ORIENT:     encompass
+WEIGHT:     5
+KITEM:      d = acquire weapon good_item / acquire armour good_item / \
+                any jewellery randart w:5 / randbook w:5
+KFEAT:      E = endless_salt
+MARKER:     S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                pow_min=6, pow_max=20, delay=5, size=15, spread_rate=10, }
+NSUBST:     d = 16=d / `..
+SUBST:      ` = x., c = c:90 x, d = d:4 |:3
+LFLOORCOL:  lightgrey
+LROCKCOL:   brown
+LFLOORTILE: floor_salt
+LROCKTILE:  wall_desolation
+TILE:       G = DNGN_CRUMBLED_COLUMN
+: set_border_fill_type('endless_salt')
+: set_feature_name("granite_statue", "ruined idol")
+MAP
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+E......................................E
+E.............................`x`x`.S..E
+E.....................cccc...cccccc....E
+E.................``.`c........x.......E
+E...S.............`xx`..d.d.d.dxd.d.`..E
+E..................x.....x.....xx...x..E
+E....................xc.d.d.x.d.d.d.c..E
+E.....................cx...`x......xc..E
+E...............G.G.G.cc.xcx...`c.ccc`.E
+E.....................x...c.....c.`xxx.E
+E......<.A........S................`x`.E
+E........................`c.....c`.....E
+E...............G.G.G`ccc.c...`xxcxx...E
+E....................`c......xx`...`...E
+E.................`..```d.d.x.d.d.d.x..E
+E................`x`..x`............c..E
+E...S............xx`..c.d.dxd.d.d.d....E
+E................``..xc..x.x...........E
+E...................x..c..cccc....ccc..E
+E...................xx.................E
+E..............................S.......E
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+ENDMAP

@@ -68,14 +68,6 @@ private:
     explosion_map exp_map_min, exp_map_max;
 };
 
-class targeter_unravelling : public targeter_beam
-{
-public:
-    targeter_unravelling(const actor *act, int range, int pow);
-    bool set_aim(coord_def a) override;
-    bool valid_aim(coord_def a) override;
-};
-
 class targeter_view : public targeter
 {
 public:
@@ -118,6 +110,14 @@ class targeter_transference : public targeter_smite
 public:
     targeter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
+};
+
+class targeter_unravelling : public targeter_smite
+{
+public:
+    targeter_unravelling();
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
 };
 
 class targeter_fragment : public targeter_smite
@@ -195,12 +195,13 @@ class targeter_radius : public targeter
 {
 public:
     targeter_radius(const actor *act, los_type _los = LOS_DEFAULT,
-                  int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0);
+                    int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0,
+                    int ran_maybe = 0);
     bool valid_aim(coord_def a) override;
     virtual aff_type is_affected(coord_def loc) override;
 private:
     los_type los;
-    int range, range_max, range_min;
+    int range, range_max, range_min, range_maybe;
 };
 
 // like targeter_radius, but converts all AFF_YESes to AFF_MAYBE
@@ -439,10 +440,10 @@ public:
 };
 
 // this is implemented a bit like multifireball, but with some tweaks
-class targeter_ramparts : public targeter_multiposition
+class targeter_walls : public targeter_multiposition
 {
 public:
-    targeter_ramparts(const actor *a);
+    targeter_walls(const actor *a, vector<coord_def> seeds);
 
     aff_type is_affected(coord_def loc) override;
     bool can_affect_walls() override { return true; }

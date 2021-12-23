@@ -1409,25 +1409,27 @@ bool check_armour_size(const item_def &item, size_type size)
     return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
 
-int wand_charge_value(int type)
+int wand_charge_value(int type, int item_level)
 {
     switch (type)
     {
     case WAND_DIGGING:
         return 9;
 
+    // Decrease charge generation later on so that players get wands to play
+    // with early, but aren't totally flooded with charges by late game.
     case WAND_ICEBLAST:
     case WAND_ACID:
     case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
-        return 15;
+        return item_level > 7 ? 8 : 15;
 
     default:
-        return 24;
+        return item_level > 7 ? 12 : 24;
 
     case WAND_FLAME:
-        return 32;
+        return item_level > 7 ? 16 : 32;
     }
 }
 
@@ -2130,6 +2132,66 @@ bool ring_has_stackable_effect(const item_def &item)
     return false;
 }
 
+static map<potion_type, item_rarity_type> _potion_rarity = {
+    { POT_CURING,       RARITY_VERY_COMMON },
+    { POT_HEAL_WOUNDS,  RARITY_COMMON },
+    { POT_FLIGHT,       RARITY_UNCOMMON },
+    { POT_HASTE,        RARITY_UNCOMMON },
+    { POT_LIGNIFY,      RARITY_UNCOMMON },
+    { POT_ATTRACTION,   RARITY_UNCOMMON },
+    { POT_DEGENERATION, RARITY_UNCOMMON },
+    { POT_MIGHT,        RARITY_UNCOMMON },
+    { POT_BRILLIANCE,   RARITY_UNCOMMON },
+    { POT_MUTATION,     RARITY_UNCOMMON },
+    { POT_INVISIBILITY, RARITY_RARE },
+    { POT_RESISTANCE,   RARITY_RARE },
+    { POT_MAGIC,        RARITY_RARE },
+    { POT_BERSERK_RAGE, RARITY_RARE },
+    { POT_CANCELLATION, RARITY_RARE },
+    { POT_AMBROSIA,     RARITY_RARE },
+    { POT_EXPERIENCE,   RARITY_VERY_RARE },
+};
+
+static map<scroll_type, item_rarity_type> _scroll_rarity = {
+    { SCR_IDENTIFY,       RARITY_VERY_COMMON },
+    { SCR_TELEPORTATION,  RARITY_COMMON },
+    { SCR_AMNESIA,        RARITY_UNCOMMON },
+    { SCR_NOISE,          RARITY_UNCOMMON },
+    { SCR_ENCHANT_ARMOUR, RARITY_UNCOMMON },
+    { SCR_ENCHANT_WEAPON, RARITY_UNCOMMON },
+    { SCR_MAGIC_MAPPING,  RARITY_UNCOMMON },
+    { SCR_FEAR,           RARITY_UNCOMMON },
+    { SCR_FOG,            RARITY_UNCOMMON },
+    { SCR_BLINKING,       RARITY_UNCOMMON },
+    { SCR_IMMOLATION,     RARITY_UNCOMMON },
+    { SCR_VULNERABILITY,  RARITY_UNCOMMON },
+    { SCR_SUMMONING,      RARITY_RARE },
+    { SCR_ACQUIREMENT,    RARITY_RARE },
+    { SCR_SILENCE,        RARITY_RARE },
+    { SCR_BRAND_WEAPON,   RARITY_RARE },
+    { SCR_TORMENT,        RARITY_RARE },
+    { SCR_HOLY_WORD,      RARITY_RARE },
+};
+
+item_rarity_type consumable_rarity(const item_def &item)
+{
+    return consumable_rarity(item.base_type, item.sub_type);
+}
+
+item_rarity_type consumable_rarity(object_class_type base_type, int sub_type)
+{
+    item_rarity_type *rarity = nullptr;
+    if (base_type == OBJ_POTIONS)
+        rarity = map_find(_potion_rarity, (potion_type) sub_type);
+    else if (base_type == OBJ_SCROLLS)
+        rarity = map_find(_scroll_rarity, (scroll_type) sub_type);
+
+    if (!rarity)
+        return RARITY_NONE;
+
+    return *rarity;
+}
+
 //
 // Generic item functions:
 //
@@ -2694,12 +2756,6 @@ bool shield_reflects(const item_def &shield)
     return get_armour_ego_type(shield) == SPARM_REFLECTION;
 }
 
-void ident_reflector(item_def *item)
-{
-    if (!is_artefact(*item))
-        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
-}
-
 string item_base_name(const item_def &item)
 {
     return item_base_name(item.base_type, item.sub_type);
@@ -2754,7 +2810,7 @@ weapon_type name_nospace_to_weapon(string name_nospace)
     return WPN_UNKNOWN;
 }
 
-void seen_item(const item_def &item)
+void seen_item(item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
     {
@@ -2769,15 +2825,9 @@ void seen_item(const item_def &item)
 
     _maybe_note_found_unrand(item);
 
-    // major hack. Deconstify should be safe here, but it's still repulsive.
-    item_def& malleable_item = const_cast<item_def &>(item);
-
-    malleable_item.flags |= ISFLAG_SEEN;
+    item.flags |= ISFLAG_SEEN;
     if (item.base_type == OBJ_GOLD && !item.tithe_state)
-    {
-        malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE
-                                                     : TS_NO_PIETY;
-    }
+        item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE : TS_NO_PIETY;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)

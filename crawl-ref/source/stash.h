@@ -64,7 +64,7 @@ public:
 private:
     void _update_corpses(int rot_time);
     void _update_identification();
-    void add_item(const item_def &item, bool add_to_front = false);
+    void add_item(item_def &item, bool add_to_front = false);
 
 private:
     bool visited;      // Is this correct to the best of our knowledge?

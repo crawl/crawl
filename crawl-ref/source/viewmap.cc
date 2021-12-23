@@ -747,8 +747,12 @@ public:
             || ev.type() == ui::Event::Type::MouseDown)
         {
             auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
-            tiles.handle_mouse(wm_event);
-            if (ev.type() == ui::Event::Type::MouseDown)
+            int k = tiles.handle_mouse(wm_event);
+            // XX this really seems like it shouldn't be here, maybe should be
+            // in tilereg stuff?
+            // in any case, CK_MOUSE_CLICK *should* be what only tilereg-dgn.cc
+            // could returns, if the player clicked in the dungeon region.
+            if (k == CK_MOUSE_CLICK && ev.type() == ui::Event::Type::MouseDown)
             {
                 if (tiles.get_cursor() == m_state.lpos.pos)
                 {
@@ -890,6 +894,34 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     return map_view->chose();
 }
 
+level_pos map_follow_stairs(bool up, const coord_def &pos)
+{
+    level_pos dest = _stair_dest(pos, up ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS);
+
+    if (!dest.id.is_valid())
+    {
+        dest.id = up ? find_up_level(level_id::current())
+            : find_down_level(level_id::current());
+        dest.pos = coord_def(-1, -1);
+    }
+
+    if (dest.id.is_valid() && dest.id != level_id::current()
+        && you.level_visited(dest.id))
+    {
+        return dest;
+    }
+    else
+        return level_pos();
+}
+
+void process_map_command(command_type cmd)
+{
+    // XX cleaner API for this
+    shared_ptr<ui::Widget> l = ui::top_layout();
+    if (UIMapView *mv = dynamic_cast<UIMapView *>(l.get()))
+        mv->process_command(cmd);
+}
+
 map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)
 {
     // the map needs a cursor, but we need to hide it here
@@ -1024,24 +1056,13 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         if (!state.allow_offlevel)
             break;
 
-        const bool up = (cmd == CMD_MAP_PREV_LEVEL);
-        level_pos dest =
-            _stair_dest(state.lpos.pos,
-                        up ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS);
-
-        if (!dest.id.is_valid())
-        {
-            dest.id = up ? find_up_level(level_id::current())
-                : find_down_level(level_id::current());
-            dest.pos = coord_def(-1, -1);
-        }
-
-        if (dest.id.is_valid() && dest.id != level_id::current()
-            && you.level_visited(dest.id))
+        const level_pos dest = map_follow_stairs(
+                                    cmd == CMD_MAP_PREV_LEVEL, state.lpos.pos);
+        if (dest.id.is_valid())
         {
             state.lpos = dest;
+            los_changed();
         }
-        los_changed();
         break;
     }
 
@@ -1271,7 +1292,11 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
     case CMD_MAP_DESCRIBE:
         if (map_bounds(state.lpos.pos) && env.map_knowledge(state.lpos.pos).known())
         {
-            full_describe_square(state.lpos.pos, false);
+            if (full_describe_square(state.lpos.pos, false))
+            {
+                state.map_alive = false;
+                state.chose = true;
+            }
             state.redraw_map = true;
         }
         break;

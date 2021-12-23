@@ -100,6 +100,10 @@ private:
     void do_passive_heat();
 #endif
     void emit_foul_stench();
+
+    /* Divine Effect */
+    void do_fiery_armour_burn();
+
     /* Race Effects */
     void do_minotaur_retaliation();
 
