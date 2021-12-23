@@ -696,21 +696,24 @@ static vector<ability_def> &_get_ability_list()
 		{ ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, {}, abflag::zotdef, 30 },
 		{ ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, {}, abflag::zotdef, 300 },
 		{ ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, {}, abflag::zotdef, 50 },
-		{ ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, {}, abflag::zotdef, 30 },
+		{ ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, {}, abflag::zotdef, 30 },
 		{ ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, {}, abflag::zotdef, 2 },
 		{ ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, {}, abflag::zotdef, 2 },
 		{ ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, {}, abflag::zotdef, 3000 },
 		{ ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, {}, abflag::zotdef, 1000 },
 		{ ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold",
-		  0, 0, 0, {}, abflag::zotdef, 0   },
+		  0, 0, 0, {}, abflag::zotdef, 1000   },
 		{ ABIL_MAKE_ACQUIREMENT, "Acquirement",
-		  0, 0, 0, {}, abflag::zotdef, 0   },
+		  0, 0, 0, {}, abflag::zotdef, 10000   },
 		{ ABIL_MAKE_WATER, "Make water", 0, 0, 0, {}, abflag::zotdef, 10 },
 		{ ABIL_MAKE_LIGHTNING_SPIRE, "Make lightning spire", 0, 0, 0, {}, abflag::zotdef, 100 },
 		{ ABIL_MAKE_BAZAAR, "Make bazaar",
-		  0, 30, 0, {}, abflag::zotdef, 100   },
+		  0, 30, 0, {}, abflag::zotdef, 1000  },
 		{ ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, {}, abflag::zotdef, 50 },
 		{ ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, {}, abflag::zotdef, 2 } 
+		// the price for some of these zot defence abilities probably will need rebalancing.
+		// consider the acquirement, gold, & bazaar zotpoint cost to be placeholders for now
+		// TODO?
 	};
     return Ability_List;
 }
@@ -865,7 +868,7 @@ static trap_type _trap_for_ability(const ability_def& abil)
         case ABIL_MAKE_ARROW_TRAP: return TRAP_ARROW;
         case ABIL_MAKE_BOLT_TRAP: return TRAP_BOLT;
         case ABIL_MAKE_SPEAR_TRAP: return TRAP_SPEAR;
-        case ABIL_MAKE_NEEDLE_TRAP: return TRAP_NEEDLE;
+        case ABIL_MAKE_DART_TRAP: return TRAP_DART;
         case ABIL_MAKE_NET_TRAP: return TRAP_NET;
         case ABIL_MAKE_ALARM_TRAP: return TRAP_ALARM;
         case ABIL_MAKE_BLADE_TRAP: return TRAP_BLADE;
@@ -931,7 +934,7 @@ static int _zp_cost(const ability_def& abil)
         case ABIL_MAKE_ARROW_TRAP:
         case ABIL_MAKE_BOLT_TRAP:
         case ABIL_MAKE_SPEAR_TRAP:
-        case ABIL_MAKE_NEEDLE_TRAP:
+        case ABIL_MAKE_DART_TRAP:
         case ABIL_MAKE_NET_TRAP:
         case ABIL_MAKE_ALARM_TRAP:
             num = count_traps(_trap_for_ability(abil));
@@ -3610,7 +3613,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_MAKE_ARROW_TRAP:
     case ABIL_MAKE_BOLT_TRAP:
     case ABIL_MAKE_SPEAR_TRAP:
-    case ABIL_MAKE_NEEDLE_TRAP:
+    case ABIL_MAKE_DART_TRAP:
     case ABIL_MAKE_NET_TRAP:
     case ABIL_MAKE_ALARM_TRAP:
     case ABIL_MAKE_BLADE_TRAP:
@@ -4162,7 +4165,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
         if (you.experience_level >= 14)
             _add_talent(talents, ABIL_MAKE_OCS, check_confused);
         if (you.experience_level >= 15)
-            _add_talent(talents, ABIL_MAKE_NEEDLE_TRAP, check_confused);
+            _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
         if (you.experience_level >= 16 && !player_has_orb())
             _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
         if (you.experience_level >= 17)
