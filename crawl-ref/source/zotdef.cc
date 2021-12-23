@@ -25,8 +25,17 @@
 // used to find a staircase to spawn monsters at.
 #include "mon-movetarget.h"
 
+// we needed to include mon-behv.h to use the level_exit struct.
+#include "mon-behv.h"
+
+
 #include "place.h"
 #include "religion.h"
+
+// used for choosing stairs for monsters to spawn at.
+#include "random.h"
+
+
 #include "state.h"
 #include "stringutil.h"
 #include "traps.h"
@@ -745,8 +754,41 @@ string zotdef_debug_wave_desc()
 
 
 
-// zotdef spawns montsres at stairs?
-vector<level_exit> spawn_points;
+// ALSO taken from mon-movetarget.cc
+// Consider simplifying this at some later point.
+// a TODO if you will.
+static bool _zotdef_is_level_exit(const coord_def& pos)
+{
+    // All types of stairs.
+    if (feat_is_stair(env.grid(pos)))
+        return true;
+
+    // Teleportation and shaft traps.
+    const trap_type tt = get_trap_type(pos);
+    if (tt == TRAP_TELEPORT || tt == TRAP_TELEPORT_PERMANENT
+        || tt == TRAP_SHAFT)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// ""stolen"" from mon-movetarget.cc
+// was originally _find_all_level_exits
+static void _zotdef_find_all_level_exits(vector<level_exit> &e)
+{
+    e.clear();
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (!in_bounds(*ri))
+            continue;
+
+        if (_zotdef_is_level_exit(*ri))
+            e.push_back(level_exit(*ri, false));
+    }
+}
 
 monster* zotdef_spawn(bool boss)
 {
@@ -761,19 +803,35 @@ monster* zotdef_spawn(bool boss)
     if (mt == MONS_PROGRAM_BUG)
         return 0;
 
-    // Generate a monster of the appropriate branch and strength
-    // mgen_data mg(mt, BEH_SEEK, nullptr, 0, 0, coord_def(), MHITYOU);
-    mgen_data mg(mt, BEH_SEEK, coord_def(), MHITYOU);
 
-	
-	//mg.proximity = PROX_NEAR_STAIRS;
-	//this flag was removed, so I had to jury rig a solution:
+
+	// The PROX_NEAR_STAIRS flag was removed, so I had to jury rig a solution:
 	// My solution?
-	// use this function to find all the exits
+	// use this function to find all the exits:
 	// _find_all_level_exits(vector<level_exit> &e)
 	// determine how many stairs their are (because one zotdef level has four for some reason).
 	//  vector_name.size()
 	// then randomly choose one of those stairs
+	// On some zotdef levels the stairs are close together, on others they are farther apart.
+	
+	static vector<level_exit> spawn_points;
+	
+	_zotdef_find_all_level_exits(spawn_points);
+	
+	// dprf("Number of stairs: %d",spawn_points.size());
+
+	// dprf("Random stair chosen: %d ", random2(spawn_points.size() ) );
+	
+	
+	
+    // Generate a monster of the appropriate branch and strength
+    // mgen_data mg(mt, BEH_SEEK, nullptr, 0, 0, coord_def(), MHITYOU);
+    mgen_data mg(mt, BEH_SEEK, spawn_points[ random2(spawn_points.size())].target, MHITYOU);
+
+	// I wonder if  it is a good idea to have monsters spawn at stairs?
+	// would spawn camping be a balance issue?
+
+	
 	
 	
 	
@@ -912,7 +970,7 @@ bool create_trap(trap_type spec_type)
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
-    //args.may_target_monster = false;
+    // args.may_target_monster = false;
     args.top_prompt = "Make ";
     args.top_prompt += trap_name(spec_type);
     args.top_prompt += " trap where?";
@@ -1042,7 +1100,7 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                //int ip = items(true, OBJ_RUNES, RUNE_SPIDER, 0);
+                // int ip = items(true, OBJ_RUNES, RUNE_SPIDER, 0);
 				int ip = items(true, OBJ_RUNES, _get_rune(), 0);
 				
                 int *const item_made = &ip;
@@ -1050,12 +1108,14 @@ void zotdef_bosses_check()
                 {
                    // env.item[ip].sub_type = _get_rune();
 				   
-					 //move_item_to_grid(item_made, mon->pos());
+				   // move_item_to_grid(item_made, mon->pos());
                     
 					// for now we will have the runes spawn at the player.
 					move_item_to_grid(item_made, you.pos());
+					// this doesn't teleport the rune to you.
 					
                     msg = "You feel a sense of great excitement!";
+					// perhaps we should tell them what this message means?
 					
                 }
             }
