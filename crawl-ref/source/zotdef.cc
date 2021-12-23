@@ -809,10 +809,10 @@ monster* zotdef_spawn(bool boss)
 	// My solution?
 	// use this function to find all the exits:
 	// _find_all_level_exits(vector<level_exit> &e)
-	// determine how many stairs their are (because one zotdef level has four for some reason).
-	//  vector_name.size()
-	// then randomly choose one of those stairs
-	// On some zotdef levels the stairs are close together, on others they are farther apart.
+	// determine how many stairs their are, with  vector_name.size()
+	// we can't simply assume there are 3 stairs because 1 zotdef level ( "Columnade") has 2 stairs. And another has 4 stairs ("Glassed Sandwich")
+	// After finding number of stairs, we then randomly choose one of those stairs
+	// Note that on some zotdef levels the stairs are close together, on others they are much farther apart.
 	
 	static vector<level_exit> spawn_points;
 	
