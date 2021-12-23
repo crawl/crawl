@@ -369,6 +369,27 @@ xxxxxxxxx
 xxxxxxxxx
 ENDMAP
 
+NAME:   hellmonk_scarab_ruin
+TAGS:   ruin
+DEPTH:  Crypt, Depths
+MONS:   death scarab band
+FTILE:  1.c = floor_sandstone
+TILE:   c = wall_tomb
+NSUBST: ' = 3 = 1.. / *:.
+MAP
+   ccccc
+ ccc...ccc
+cc..c.c..cc
+ccc..1..ccc
+@...ccc...@
+ccc.....ccc
+c.ccc.ccc.c
+c...c.c...c
+c...c.c...c
+ccc.....ccc
+  ccc@ccc
+ENDMAP
+
 NAME:    nicolae_wormholes
 TAGS:    transparent
 DEPTH:   D:1-5
@@ -2352,6 +2373,35 @@ cppc....cppc
 cp.+.1..+.pc
 cccc....cccc
 cccccccccccc
+ENDMAP
+
+NAME:   hellmonk_jugg_or_not
+DEPTH:  D:13-, Orc:1
+WEIGHT: 3
+TAGS:   no_monster_gen no_item_gen
+MONS:   juggernaut
+KFEAT:   B = altar_nemelex_xobeh
+SHUFFLE: DE
+MARKER:  P = lua:transp_loc("jugg_or_not_entry")
+MARKER:  Q = lua:transp_dest_loc("jugg_or_not_entry")
+MARKER:  R = lua:transp_loc("jugg_or_not_exit")
+MARKER:  S = lua:transp_dest_loc("jugg_or_not_exit")
+MARKER:  D = lua:transp_loc("jugg_or_not_jugg")
+MARKER:  F = lua:transp_dest_loc("jugg_or_not_jugg")
+MARKER:  E = lua:transp_loc("jugg_or_not_not")
+MARKER:  G = lua:transp_dest_loc("jugg_or_not_not")
+MARKER:  H = lua:transp_loc("jugg_or_not_jugg_end")
+MARKER:  K = lua:transp_dest_loc("jugg_or_not_jugg_end")
+MARKER:  J = lua:transp_loc("jugg_or_not_not_end")
+MARKER:  L = lua:transp_dest_loc("jugg_or_not_not_end")
+MAP
+      ..........
+  ....nnnnnnnnnn.
+ .nnnnnF..1HnK|nn.
+@PnQDEnnnnnnnn|RnS.
+ .nnnnnG..BJnL|nn.
+  ....nnnnnnnnnn.
+      ..........
 ENDMAP
 
 NAME:   nicolae_grassy_gnolls
