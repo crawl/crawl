@@ -6702,7 +6702,7 @@ void clear_zap_info_on_exit()
 
 int ench_power_stepdown(int pow)
 {
-    return stepdown_value(pow, 30, 40, 100, 120);
+    return stepdown(pow, 35);
 }
 
 /// Translate a given ench power to a duration, in aut.
