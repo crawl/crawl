@@ -2171,6 +2171,53 @@ WWccccnnnccccWW
  WWssssPssssWW
 ENDMAP
 
+NAME:   dreamdust_from_the_deep
+TAGS:   no_monster_gen no_item_gen no_tide patrolling
+DEPTH:  Shoals, !Shoals:$
+ORIENT: northwest
+ITEM:   any ring randart
+ITEM:   randbook title:Mad_Ravings spells:malign_gateway&summon_horrible_things \
+           numspells:2
+KMONS:  1 = kraken
+KMONS:  2 = merfolk impaler ; trident ego:chaos
+KMONS:  3 = apocalypse crab / great orb of eyes
+KMONS:  4 = tentacled monstrosity
+KFEAT:  1 = deep_water
+KFEAT:  -23 = shallow_water
+KFEAT:  s = open_sea
+KFEAT:  z = x
+KFEAT:  > = escape_hatch_down
+SUBST:  y = xxxw
+NSUBST: w = 1 / w
+NSUBST: - = 3=2 / 3=2- / 2=3 / 1=3- / -
+# Color weights similar to that used for rock in the Abyss.
+COLOUR: z = blue:13 / red:66 / magenta:50 / brown:90 / lightgreen:68 \
+            / lightred:110 / lightmagenta:38 / yellow / white
+RTILE:  z = wall_abyss
+FTILE:  .de4>G = floor_nerves_yellow
+TILE:   G = dngn_statue_tentacles
+MAP
+sssssssssssssssssss
+swwwwwwwwwwwwwwwwww
+swwwwwwyyyywwwwwwww
+swwwww-xxxxxwwwwwww
+swwwwxx----xxwwwwww
+swwwxx------xx--www
+swwxx--zzzz------ww
+swyx--zz.dzz--xywww
+swyx---..4Gz--xywww
+swyx-----e>z--xywww
+swyx--zz--zz--xywww
+swwxx--zzzz------ww
+swwwxx------xx--www
+sww--------xxw-wwww
+swww--xxxxxxwwwwwww
+swwwwwwyyyywwwwwwww
+swwwwwwwwwwwwwwwww
+swwwwwwwwwwwwwwww
+swwwwwwwwwwwwww
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Shoals ending vaults

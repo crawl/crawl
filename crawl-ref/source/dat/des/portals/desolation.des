@@ -15,37 +15,47 @@
 
 {{
 function desolation_portal(e)
-  local timeout_turns = crawl.random_range(600, 800)
+    local timeout_turns = crawl.random_range(600, 800)
 
-  local messager =
-    timed_msg {
-      initmsg = { "You hear a distant wind.",
-                  "There is a portal to the Desolation of Salt on this level."
-                   .. " Hurry and find it before the gateway collapses!" },
-      finalmsg = "The wind is rapidly growing quiet.",
+    local messager = timed_msg {
+        initmsg = {
+            "You hear a distant wind.",
+            "There is a portal to the Desolation of Salt on this level." ..
+            " Hurry and find it before the gateway collapses!"
+        },
+        finalmsg = "The wind is rapidly growing quiet.",
 
-      verb = 'whistling',
-      noisemaker = 'wind',
-      ranges = {
-        { 5000, 'faint ' },  { 4000, 'quiet ' },
-        { 2500, '' }, { 1500, 'loud ' },
-        { 0, 'ear-piercing ' }
-      }
+        verb = 'whistling',
+        noisemaker = 'wind',
+        ranges = {
+            { 5000, 'faint ' },  { 4000, 'quiet ' },
+            { 2500, '' }, { 1500, 'loud ' },
+            { 0, 'ear-piercing ' }
+        }
     }
 
-  e.lua_marker('O',
-      timed_marker {
-        disappear = "The gateway collapses.",
-        entity = 'gateway',
-        turns = timeout_turns,
-        single_timed = true,
-        floor = "expired_portal",
-        feat_tile = "dngn_portal_desolation_gone",
-        msg = messager })
-  e.tags("uniq_desolation no_monster_gen chance_desolation")
-  e.kfeat("O = enter_desolation")
-  e.depth("Elf, !Elf:$, Vaults, !Vaults:$")
-  e.chance(500)
+    e.lua_marker('O',
+        timed_marker {
+            disappear = "The gateway collapses.",
+            entity = 'gateway',
+            turns = timeout_turns,
+            single_timed = true,
+            floor = "expired_portal",
+            feat_tile = "dngn_portal_desolation_gone",
+            msg = messager })
+    e.kfeat("O = enter_desolation")
+
+    e.tags("uniq_desolation vaults_desolation no_monster_gen chance_desolation")
+
+    -- Replace stone walls with whatever wall type the Vaults level is using.
+    if you.in_branch("Vaults") then
+        e.subst("c = x")
+    end
+
+    e.chance(math.floor(dgn.desolation_chance_percent / 100 * 10000))
+    -- Don't apply the chance in Vaults, since we use a Vaults room for that
+    -- branch.
+    e.depth_chance("Vaults", 0)
 end
 
 function desolation_ruins_setup(e)
@@ -61,22 +71,27 @@ end
 ##############################################################################
 # Desolation entrance vaults
 ##############################################################################
+
+default-depth: Elf, !Elf:$, Vaults, !Vaults:$
+
 NAME:       portal_desolation_entry_ruin
 TAGS:       transparent
 FTILE:      ;O = FLOOR_SALT
 : desolation_portal(_G)
 MAP
-...;;..;...
-;;;;;;;;cc.
-.c;;c;;;;c.
-.c;;;;;;;;;
-.ccc;;;cc;.
-...c;O;c...
-.ccc;;;ccc.
-.c;;;;;;;c.
-.c;;ccc;;c.
-.cccc.cccc.
-..........
+.............
+....;;..;....
+.;;;;;;;;cc..
+..c;;c;;;;c..
+..c;;;;;;;;;.
+..ccc;;;cc;..
+....c;O;c....
+..ccc;;;ccc..
+..c;;;;;;;c..
+..c;;ccc;;c..
+..cccc.cccc..
+.............
+.............
 ENDMAP
 
 NAME:       portal_desolation_entry_holy_temple
@@ -90,21 +105,23 @@ SHUFFLE:    BCD
 MONS:       patrolling angel
 FTILE:      ;OBCD1 = FLOOR_LIMESTONE
 MAP
-   .........
-   .cc+++cc.
-   .c;;;;;c.
-....c;;;;;c....
-.cccc;c;c;cccc.
-.c;;;;;;;;;;;c.
-.n;c;;;;;;;c;n.
-.n;;;1;O;1;;;n.
-.n;c;;;;;;;c;n.
-.c;;;;BCD;;;;c.
-.cccc;;;;;cccc.
-....c;c;c;c....
-   .c;;;;;c.
-   .ccnnncc.
-   .........
+.................
+.................
+.....cc+++cc.....
+.....c;;;;;c.....
+.....c;;;;;c.....
+..cccc;c;c;cccc..
+..c;;;;;;;;;;;c..
+..n;c;;;;;;;c;n..
+..n;;;1;O;1;;;n..
+..n;c;;;;;;;c;n..
+..c;;;;BCD;;;;c..
+..cccc;;;;;cccc..
+.....c;c;c;c.....
+.....c;;;;;c.....
+.....ccnnncc.....
+.................
+.................
 ENDMAP
 
 NAME:       portal_desolation_entry_twin_temple
@@ -115,19 +132,20 @@ TAGS:       transparent no_monster_gen
 MONS:       peacekeeper
 FTILE:      ;O1G = FLOOR_NORMAL
 MAP
-   .........
-   .c.....c.
- ...c.....c...
- .ccc+++++ccc.
-..c;;;;;;;;;c..
-.cc;G;;;;;G;cc.
-.c;;;;;;;;;;;c.
-.c1;G;;;;;G;1c.
-.c;;;;;O;;;;;c.
-.cc;G;;;;;G;cc.
-..c;;;;;;;;;c..
- .ccccccccccc.
- .............
+.................
+.....c.....c.....
+.....c.....c.....
+...ccc+++++ccc...
+...c;;;;;;;;;c...
+..cc;G;;;;;G;cc..
+..c;;;;;;;;;;;c..
+..c1;G;;;;;G;1c..
+..c;;;;;O;;;;;c..
+..cc;G;;;;;G;cc..
+...c;;;;;;;;;c...
+...ccccccccccc...
+.................
+.................
 ENDMAP
 
 NAME:       portal_desolation_entry_salt
@@ -151,32 +169,32 @@ ENDMAP
 NAME:       portal_desolation_entry_garden
 TAGS:       transparent no_monster_gen
 : desolation_portal(_G)
-SUBST:      c = 1 .:15
-SUBST:      b = 1 .:40
-SUBST:      a = 1 .:80
+SUBST:      - = 1 .:15
+SUBST:      ' = 1 .:40
+SUBST:      " = 1 .:80
 MONS:       human-shaped pillar of salt / minotaur-shaped pillar of salt w:1 /\
             dwarf-shaped pillar of salt w:3 / elf-shaped pillar of salt w:3 /\
             orc-shaped pillar of salt w:3 / naga-shaped pillar of salt w:1 /\
             draconian-shaped pillar of salt w:1
 KMASK:      1 = no_item_gen
 MAP
-aaaaaaaaa
-aaabbbaaa
-aabbbbbaa
-abbcccbba
-abbcOcbba
-abbcccbba
-aabbbbbaa
-aaabbbaaa
-aaaaaaaaa
+"""""""""
+"""'''"""
+""'''''""
+"''---''"
+"''-O-''"
+"''---''"
+""'''''""
+"""'''"""
+"""""""""
 ENDMAP
 
-NAME: portal_desolation_entry_nicolae_nacl
-TAGS: transparent no_monster_gen
+NAME:   portal_desolation_entry_nicolae_nacl
+TAGS:   transparent no_monster_gen
 : desolation_portal(_G)
-SUBST: C = c;, - = ; .:50
-KMONS: O = saltling band
-FTILE: ;Os = FLOOR_SALT
+SUBST:  C = c;, - = ; .:50
+KMONS:  O = saltling band
+FTILE:  ;Os = FLOOR_SALT
 MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
                                   pow_min=6, pow_max=20, \
                                   delay=5, size=5, spread_rate=5, }
@@ -195,12 +213,12 @@ MAP
 ENDMAP
 
 # I wish there were more extant varieties of slug corpses to put here :(
-NAME: portal_desolation_entry_nicolae_slug
-TAGS: transparent no_monster_gen
+NAME:   portal_desolation_entry_nicolae_slug
+TAGS:   transparent no_monster_gen
 : desolation_portal(_G)
-SUBST: - = ;;;..
+SUBST:  - = ;;;..
 NSUBST: ; = 1:s
-FTILE: ;Os = FLOOR_SALT
+FTILE:  ;Os = FLOOR_SALT
 : dgn.delayed_decay(_G, "s", "dart slug corpse")
 MAP
 .......
@@ -249,7 +267,8 @@ ENDMAP
 # you, [...] a loss of connection to any sense of place."
 NAME:   portal_desolation_entry_nicolae_menacing_earthworks
 TAGS:   transparent no_monster_gen
-WEIGHT: 3
+# Shape doesn't work as well as a Vaults room.
+WEIGHT: 0 (Vaults), 3
 : desolation_portal(_G)
 SUBST:  - = ...;
 FTILE:  ;Oc = FLOOR_SALT
@@ -277,6 +296,10 @@ cc;;;;;;;O;;;;;;;cc
         cc-
          c
 ENDMAP
+
+# Unset default depth so we don't put these vaults in circulation outside of
+# Desolation.
+default-depth:
 
 ##############################################################################
 # Desolation mini-ruins entries

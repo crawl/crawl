@@ -459,9 +459,17 @@ function (exports, $, key_conversion, chat, comm) {
         return false;
     }
 
-    function login_failed()
+    function login_failed(data)
     {
-        $("#login_message").html("Login failed.");
+        var reason = data.reason;
+        if (reason)
+        {
+            $("#login_message").html(reason);
+        }
+        else
+        {
+            $("#login_message").html("Login failed.");
+        }
         $("#login_form").show();
         $("#reg_link").show();
         $("#forgot_link").show();

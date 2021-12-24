@@ -201,7 +201,7 @@ function choose_mset_1(e)
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
-               Purgy, Sonja, Terence, Urug, human")
+               Pargi, Sonja, Terence, Urug, human")
   end
 end
 
@@ -296,7 +296,7 @@ function choose_mset_2(e)
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
-               Purgy, Sonja, Terence, Urug, human")
+               Pargi, Sonja, Terence, Urug, human")
   end
 end
 
@@ -418,7 +418,7 @@ function choose_mset_3(e)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Prince Ribbit / Psyche / Pargi / Sigmund / Sonja / Terence / Urug /\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
                Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg")
@@ -552,7 +552,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Prince Ribbit / Psyche / Pargi / Sigmund / Sonja / Terence / Urug /\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
                Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Antaeus / Asmodeus /\

@@ -1674,7 +1674,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->base_monster = ztype;
 
     mon->colour       = COLOUR_INHERIT;
-    mon->speed        = (cs == MONS_SPECTRAL_THING
+    mon->speed        = ((cs == MONS_SPECTRAL_THING || cs == MONS_BOUND_SOUL)
                             ? mons_class_base_speed(mon->base_monster)
                             : mons_class_zombie_base_speed(mon->base_monster));
 
@@ -1688,25 +1688,6 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
         mon->flags   |= MF_NO_REGEN;
 
     roll_zombie_hp(mon);
-}
-
-bool downgrade_zombie_to_skeleton(monster* mon)
-{
-    if (mon->type != MONS_ZOMBIE || !mons_skeleton(mon->base_monster))
-        return false;
-
-    const int old_hp    = mon->hit_points;
-    const int old_maxhp = mon->max_hit_points;
-
-    mon->type           = MONS_SKELETON;
-    mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
-    roll_zombie_hp(mon);
-
-    // Scale the skeleton HP to the zombie HP.
-    mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
-    mon->hit_points     = max(mon->hit_points, 1);
-
-    return true;
 }
 
 /// Under what conditions should a band spawn with a monster?
@@ -2771,24 +2752,6 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
         pos = empty;
 
     return pos;
-}
-
-bool can_spawn_mushrooms(coord_def where)
-{
-    cloud_struct *cloud = cloud_at(where);
-    if (!cloud)
-        return true;
-    if (you_worship(GOD_FEDHAS)
-        && (cloud->whose == KC_YOU || cloud->whose == KC_FRIENDLY))
-    {
-        return true;
-    }
-
-    monster dummy;
-    dummy.type = MONS_TOADSTOOL;
-    define_monster(dummy);
-
-    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type god_hates_monster(monster_type type)

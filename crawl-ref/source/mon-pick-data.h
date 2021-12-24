@@ -635,9 +635,9 @@ POP_DEPTHS,
   {  1,  7,  200, SEMI, MONS_CRYSTAL_ECHIDNA },
   {  7, 14,  200, FALL, MONS_CRYSTAL_ECHIDNA },
   // "top tier" signature threats
-  {  1,  7,  400, RISE, MONS_IRON_GIANT },
-  {  8, 14,  400, FLAT, MONS_IRON_GIANT },
-  {  1, 14,  400, RISE, MONS_HELL_SENTINEL },
+  {  1,  7,  400, RISE, MONS_HELL_SENTINEL },
+  {  8, 14,  400, FLAT, MONS_HELL_SENTINEL },
+  {  1, 14,  400, RISE, MONS_IRON_GIANT },
 },
 
 { // Gehenna
@@ -681,9 +681,9 @@ POP_DEPTHS,
   {  1,  7,  375, SEMI, MONS_NARGUN },
   {  7, 14,  500, FALL, MONS_NARGUN },
   // "top tier" signature threats
-  {  1,  7,  400, RISE, MONS_SHARD_SHRIKE },
-  {  8, 14,  400, FLAT, MONS_SHARD_SHRIKE },
-  {  1, 14,  400, RISE, MONS_ICE_FIEND },
+  {  1,  7,  400, RISE, MONS_ICE_FIEND },
+  {  8, 14,  400, FLAT, MONS_ICE_FIEND },
+  {  1, 14,  400, RISE, MONS_SHARD_SHRIKE },
 },
 
 { // Tartarus

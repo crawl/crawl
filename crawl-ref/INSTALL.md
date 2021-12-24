@@ -212,23 +212,28 @@ from within the MSYS2 Shell.
     pacman -S mingw-w64-x86_64-toolchain
     ```
 
-3. At this point on current MSYS2 versions, your development environment should
-  be complete. You can test it by running:
+3. At this point on current MSYS2 versions, your core development environment
+  for building windows binaries within MSYS2 should be complete. You can test
+  the toolchain by running:
 
     ```sh
     gcc -v
     ```
 
-    If this works, you're all set. If it doesn't, you may be an an older version
-    of MSYS2 and need to manually add the newly installed toolchain to your
-    path. To do so, run the following line, either at the command line (for
+    If this works, you're nearly all set. If it doesn't, you may be an an older
+    version of MSYS2 and need to manually add the newly installed toolchain to
+    your path. To do so, run the following line, either at the command line (for
     that shell instance only) or in the file `~/.bashrc` to make it permanent:
 
     ```sh
     export PATH=$PATH:/mingw64/bin
     ```
 
-4. To install PyYAML, you can install it from either pacman or Pip/PyPA:
+    (However, you may want to consider just upgrading MSYS2 at this point.)
+
+4. There is one more package dependency needed, the python package PyYAML. This
+  can be installed either via the MSYS2 package or (if you know what you're
+  doing) via pip.
 
     ```sh
     pacman -S mingw-w64-x86_64-python-yaml
@@ -237,9 +242,18 @@ from within the MSYS2 Shell.
     pip install pyyaml
     ```
 
-    You can verify PyYAML is installed by running `python -m yaml`, which should
-    give an error like `'yaml' is a package and cannot be directly imported`
-    (rather than `No module named yaml`).
+    You can verify PyYAML is installed by running something like:
+    ```sh
+    python3 -c "import yaml"
+    ```
+
+    If this gives an error, something went wrong with the installation. One
+    possibility at this point is that you have multiple conflicting python
+    versions installed; recent versions of MSYS2 can have this issue. First,
+    be sure you are using `python3` (and _not_ just `python`), and if this
+    doesn't work, try uninstalling the package named `python`. This may require
+    you to also uninstall other packages that are part of the `base-devel`
+    group, but they aren't needed for developing with python.
 
 5. To get the DCSS source, follow the steps in the [Getting The
    Source](#getting-the-source) section above to clone DCSS into your MSYS2
@@ -256,9 +270,9 @@ from within the MSYS2 Shell.
 6. Build DCSS by simply running:
 
     ```sh
-    # console build
+    # for the console build:
     make
-    # tiles build
+    # or, for the tiles build:
     make TILES=y
     ```
 
@@ -270,7 +284,7 @@ from within the MSYS2 Shell.
    console, type `start crawl`, which will open DCSS in a new command.exe
    window (the Windows version of DCSS requires a command.exe shell and will
    not run in an MSYS2 shell). Both versions can also be started by
-   double-clicking `crawl.exe` using the graphical file explorer.
+   double-clicking `crawl.exe` using the file explorer.
 
 8. If you want to build the installer or zipped packages instead,
    you need to install zip and nsis:

@@ -257,10 +257,10 @@ party, as well as a number of toasts, jokes, and party games.
 %%%%
 book of pain
 
-A magical book said to have written by the demon-queen Ereshkigal, who delights
-in the painful death of mortals. Some would say that it would be best to consider
-the book's origin before putting it to use, but wizards are rarely deterred by
-such concerns.
+A magical book said to have been written by the demon-queen Ereshkigal, who
+delights in the painful death of mortals. Some would say that it would be best
+to consider the book's origin before putting it to use, but wizards are rarely
+deterred by such concerns.
 %%%%
 book of power
 
@@ -1040,9 +1040,16 @@ control.
 %%%%
 scroll of brand weapon
 
-A scroll that imbues a weapon with a random brand, such as flame, freezing, or
-venom. Any existing brand will be replaced. Artefacts cannot be branded in this
-way.
+A scroll that imbues a weapon with a random brand. Any existing brand will be
+replaced with a different one, and any brand forbidden by your current god will
+not be chosen. Artefacts cannot be branded in this way.
+
+Melee weapons will commonly be branded with the vorpal, flaming, freezing,
+venom or protection brand, and rarely with the draining, electrocution,
+spectral, vampiric or chaos brand.
+
+Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
+venom brand, and rarely with the electrocution or chaos brand.
 %%%%
 scroll of enchant armour
 
@@ -1061,9 +1068,9 @@ artefacts cannot be enchanted at all.
 scroll of fear
 
 A scroll that causes great fear in those who see the one who reads it, even if
-the reader is invisible. Allies of the reader will remain unaffected. Monsters
-that are non-living, undead, demonic, holy, plants, berserk, or frenzied cannot
-be feared.
+the reader is invisible. Allies of the reader will remain unaffected.
+Non-living, undead and plant monsters cannot be feared, and berserk or frenzied
+monsters are also immune.
 %%%%
 scroll of fog
 

@@ -407,9 +407,9 @@ Psyche
 
 A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
 %%%%
-Purgy
+Pargi
 
-An unusually thin troll.
+An unusually weak troll.
 %%%%
 Robin
 
@@ -700,14 +700,18 @@ A grey beetle with an almost impenetrable rocky carapace. When at some distance
 from its foe, a boulder beetle is capable of rolling at high speed, attempting
 to crash into its target for heavy damage.
 %%%%
+bound soul
+
+The soul of a living, holy, or demonic creature, captured by a dark sacrifice
+to Yredelemnul. The bound soul will follow its captor through stairs and come
+when recalled from a different level.
+%%%%
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and
-armour. Though the gaps in the copse are plentiful enough to fire missiles
-through, walking through it looks like a painful prospect.
-
-Missiles both magical and mundane will pass through this plant unaffected, but
-enchantments and explosions will not.
+armour. Although stationary, its branches are possessed with a will of their
+own. They move to allow magic and missiles fired by those friendly to this
+plant to pass through unaffected.
 %%%%
 Brimstone Fiend
 
@@ -722,11 +726,8 @@ its surroundings.
 bush
 
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is
-not very dense, permitting missiles to pass through it. However, it is firmly
-rooted, and requires significant effort to destroy.
-
-Missiles both magical and mundane will pass through this plant unaffected, but
-enchantments and explosions will not.
+not very dense, permitting both magic and missiles to pass through unaffected.
+However, it is firmly rooted, and requires significant effort to destroy.
 %%%%
 bullfrog
 
@@ -1644,8 +1645,8 @@ give off an eerie red glow.
 %%%%
 living spell
 
-A semi-sentient construct of floating magic. It casts itself at the first foe
-it sees, expending itself in the process.
+A spell, waiting to cast itself at the first foe that enters its range. Once
+it does, it'll dissipate into the ether.
 %%%%
 lorocyproca
 

@@ -25,6 +25,7 @@
 #include "cloud.h" // cloud_type_name
 #include "clua.h"
 #include "colour.h"
+#include "command.h"
 #include "database.h"
 #include "dbg-util.h"
 #include "decks.h"
@@ -55,6 +56,8 @@
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "movement.h"
+#include "mutation.h" // mutation_name, get_mutation_desc
 #include "output.h"
 #include "potion.h"
 #include "ranged-attack.h" // describe_to_hit
@@ -88,20 +91,15 @@
 #include "travel.h"
 #include "unicode.h"
 #include "viewchar.h"
+#include "viewmap.h"
 
 using namespace ui;
 
-
+static command_type _get_action(int key, vector<command_type> actions);
 static void _print_bar(int value, int scale, string name,
                        ostringstream &result, int base_value = INT_MAX);
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
-
-int count_desc_lines(const string &_desc, const int width)
-{
-    string desc = get_linebreak_string(_desc, width);
-    return count(begin(desc), end(desc), '\n');
-}
 
 int show_description(const string &body, const tile_def *tile)
 {
@@ -1406,6 +1404,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
                 "magic, it inflicts extra damage on living creatures.";
+            if (is_useless_skill(SK_NECROMANCY))
+            {
+                description += " Your inability to study Necromancy prevents "
+                               "you from drawing on the full power of this "
+                               "weapon.";
+            }
             break;
         case SPWPN_DISTORTION:
             description += "It warps and distorts space around it, and may "
@@ -1774,9 +1778,9 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_SPIRIT_SHIELD:
         return "it causes incoming damage to be divided between "
                "the wearer's reserves of health and magic.";
-    case SPARM_ARCHERY:
+    case SPARM_HURLING:
         return "it improves its wearer's accuracy and damage with "
-               "ranged weapons, such as bows and javelins (Slay +4).";
+               "thrown weapons, such as rocks and javelins (Slay +4).";
     case SPARM_REPULSION:
         return "it protects its wearer by repelling missiles.";
 #if TAG_MAJOR_VERSION == 34
@@ -1790,6 +1794,9 @@ static const char* _item_ego_desc(special_armour_type ego)
                "and can see.";
     case SPARM_RAMPAGING:
         return "its wearer takes one free step when moving towards enemies.";
+    case SPARM_INFUSION:
+        return "it empowers each of its wearer's blows with a small part of "
+               "their magic.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -1940,6 +1947,28 @@ static string _describe_lignify_ac()
 
     return make_stringf("If you quaff this potion your AC would be %d.",
                         treeform_ac);
+}
+
+static string _describe_item_rarity(const item_def &item)
+{
+    item_rarity_type rarity = consumable_rarity(item);
+
+    switch (rarity)
+    {
+    case RARITY_VERY_RARE:
+        return "very rarely";
+    case RARITY_RARE:
+        return "rarely";
+    case RARITY_UNCOMMON:
+        return "uncommonly";
+    case RARITY_COMMON:
+        return "commonly";
+    case RARITY_VERY_COMMON:
+        return "very commonly";
+    case RARITY_NONE:
+    default:
+        return "buggily";
+    }
 }
 
 static string _describe_jewellery(const item_def &item, bool verbose)
@@ -2223,20 +2252,26 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
-        if (verbose && item_type_known(item))
+        if (item_type_known(item))
         {
-            if (item.sub_type == POT_LIGNIFY)
-                description << "\n\n" + _describe_lignify_ac();
-            else if (item.sub_type == POT_CANCELLATION)
+            if (verbose)
             {
-                if (player_is_cancellable())
+                if (item.sub_type == POT_LIGNIFY)
+                    description << "\n\n" + _describe_lignify_ac();
+                else if (item.sub_type == POT_CANCELLATION)
                 {
-                    description << "\n\nIf you drink this now, you will no longer be " <<
-                        describe_player_cancellation() << ".";
+                    if (player_is_cancellable())
+                    {
+                        description << "\n\nIf you drink this now, you will no longer be " <<
+                            describe_player_cancellation() << ".";
+                    }
+                    else
+                        description << "\n\nDrinking this now will have no effect.";
                 }
-                else
-                    description << "\n\nDrinking this now will have no effect.";
             }
+            description << "\n\nIt is found "
+                        << _describe_item_rarity(item)
+                        << " compared to other types of potion.";
         }
         break;
 
@@ -2256,6 +2291,14 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_SCROLLS:
+        if (item_type_known(item))
+        {
+            description << "\n\nIt is found "
+                        << _describe_item_rarity(item)
+                        << " compared to other types of scroll.";
+        }
+        break;
+
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
@@ -2410,21 +2453,112 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
     return ret;
 }
 
+static string _feat_action_desc(const vector<command_type>& actions,
+                                                dungeon_feature_type feat)
+{
+    static const map<command_type, string> act_str =
+    {
+        { CMD_GO_UPSTAIRS,      "(<)go up" },
+        { CMD_GO_DOWNSTAIRS,    "(>)go down" },
+        { CMD_MAP_PREV_LEVEL,   "([)view destination" },
+        { CMD_MAP_NEXT_LEVEL,   "(])view destination" },
+        { CMD_OPEN_DOOR,        "(O)pen" },
+        { CMD_CLOSE_DOOR,       "(C)lose" },
+
+    };
+    return comma_separated_fn(begin(actions), end(actions),
+        [feat] (command_type cmd)
+        {
+            if (cmd == CMD_GO_DOWNSTAIRS && feat_is_altar(feat))
+                return string("(>)pray");
+            else if (cmd == CMD_GO_DOWNSTAIRS &&
+                (feat == DNGN_ENTER_SHOP
+                    || feat_is_portal(feat)
+                    || feat_is_gate(feat)
+                    || feat == DNGN_TRANSPORTER))
+            {
+                // XX disable for portals without item? The command still works.
+                return string("(>)enter");
+            }
+            else if (cmd == CMD_GO_UPSTAIRS && feat_is_gate(feat))
+                return string("(<)exit");
+            else
+                return act_str.at(cmd);
+        },
+        ", or ") + ".";
+}
+
+static vector<command_type> _allowed_feat_actions(const coord_def &pos)
+{
+    vector<command_type> actions;
+
+    // ugh code duplication, some refactoring could be useful in all of this
+    dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    // TODO: CMD_MAP_GOTO_TARGET
+    const command_type dir = feat_stair_direction(feat);
+
+    if (dir != CMD_NO_CMD && you.pos() == pos)
+        actions.push_back(dir);
+
+    if ((feat_is_staircase(feat) || feat_is_escape_hatch(feat))
+        && !is_unknown_stair(pos)
+        && feat != DNGN_EXIT_DUNGEON)
+    {
+        actions.push_back(dir == CMD_GO_UPSTAIRS
+                            ? CMD_MAP_PREV_LEVEL : CMD_MAP_NEXT_LEVEL);
+    }
+
+    if (feat_is_door(feat) && feat != DNGN_BROKEN_DOOR && feat != DNGN_BROKEN_CLEAR_DOOR
+        && (you.pos() - pos).rdist() == 1 // XX better handling of big gates
+        && !feat_is_sealed(feat))
+    {
+        // XX maybe also a (G)o and traverse command?
+        actions.push_back(feat_is_closed_door(feat)
+            ? CMD_OPEN_DOOR : CMD_CLOSE_DOOR); // munge these later
+    }
+    return actions;
+}
+
+static string _esc_cmd_to_str(command_type cmd)
+{
+    string s = command_to_string(cmd);
+    if (s == "<")
+        return "<<";
+    else
+        return s;
+}
+
 void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_extra)
 {
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
     string desc      = feature_description_at(pos, false, DESC_A);
+    string desc_the  = feature_description_at(pos, false, DESC_THE);
+    // remove " leading down", " leading back out of this place", etc.
+    // XX maybe just dataify a short form, rather than do this awkward fixup?
+    const vector<string> to_trim = {
+        " leading ",
+        " in the ",
+        " through the ",
+        " back to the ",
+        " to a ",
+        " to the "};
+    for (const string &trim: to_trim)
+        desc_the = desc_the.substr(0, desc_the.find(trim));
+
     string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc;
     strip_suffix(db_name, " (summoned)");
     string long_desc = getLongDescription(db_name);
 
     inf.title = uppercase_first(desc);
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
-        && !ends_with(desc, "?"))
+        && !ends_with(desc, "?") && !desc.empty())
     {
         inf.title += ".";
     }
+    // don't show "The floor." twice (maybe other things).
+    if (trimmed_string(long_desc) == inf.title)
+        long_desc = "";
 
     const string marker_desc =
         env.markers.property_at(pos, MAT_ANY, "feature_description_long");
@@ -2445,40 +2579,100 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                 break;
             }
         }
+        const auto stair_dir = feat_stair_direction(feat);
 
-        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
+        // it seems like there must be some way to refactor all this stuff so
+        // it's cleaner...
+        if (feat == DNGN_EXIT_DUNGEON)
         {
+            // XX custom messages for other branch entrances/exits?
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can exit the dungeon "
+                    "with the <w>%s</w> key.",
+                    _esc_cmd_to_str(stair_dir).c_str());
+        }
+        else if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
+        {
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can traverse %s "
+                    "with the <w>%s</w> key.",
+                    desc_the.c_str(),
+                    _esc_cmd_to_str(stair_dir).c_str());
+
             if (is_unknown_stair(pos))
             {
-                long_desc += "\nYou have not yet explored it and cannot tell ";
-                long_desc += "where it leads.";
+                long_desc += " You have not yet explored it and cannot tell "
+                             "where it leads.";
             }
             else
             {
+                const command_type look_dir =
+                    feat_stair_direction(feat) == CMD_GO_UPSTAIRS
+                                         ? CMD_MAP_PREV_LEVEL
+                                         : CMD_MAP_NEXT_LEVEL;
                 long_desc +=
-                    make_stringf("\nYou can view the location it leads to by "
+                    make_stringf(" You can view the location it leads to by "
                                  "examining it with <w>%s</w> and pressing "
                                  "<w>%s</w>.",
                                  command_to_string(CMD_DISPLAY_MAP).c_str(),
-                                 command_to_string(
-                                     feat_stair_direction(feat) ==
-                                         CMD_GO_UPSTAIRS ? CMD_MAP_PREV_LEVEL
-                                         : CMD_MAP_NEXT_LEVEL).c_str());
+                                 command_to_string(look_dir).c_str());
             }
         }
+        else if (feat_is_portal(feat)
+            || feat == DNGN_ENTER_ZIGGURAT) // augh this is technically a gate
+        {
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can %senter %s "
+                    "with the <w>%s</w> key; it will vanish after you do so.",
+                    feat == DNGN_ENTER_TROVE ? "try to " : "",
+                    desc_the.c_str(),
+                    _esc_cmd_to_str(stair_dir).c_str());
+        }
+        else if (feat_is_gate(feat))
+        {
+            // it's just special case after special case with these descs
+            const string how = feat == DNGN_ENTER_HELL
+                ? (stair_dir == CMD_GO_UPSTAIRS ? "to Hell" : "Hell")
+                : make_stringf("through %s", desc_the.c_str());
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can %s %s "
+                    "with the <w>%s</w> key%s.",
+                    stair_dir == CMD_GO_DOWNSTAIRS ? "enter" : "exit",
+                    how.c_str(),
+                    _esc_cmd_to_str(stair_dir).c_str(),
+                    // TODO should probably derive this from `runes_for_branch`:
+                    (feat == DNGN_ENTER_ZOT || feat == DNGN_ENTER_VAULTS)
+                        ? " if you have enough runes" : "");
+        }
     }
-
-    // mention the ability to pray at altars
-    if (feat_is_altar(feat))
+    else if (feat_is_altar(feat))
     {
         long_desc +=
-            make_stringf("\n(Pray here with <w>%s</w> to learn more.)\n",
+            make_stringf("\nPray here with <w>%s</w> to learn more.\n",
                          command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
+    else if (feat == DNGN_ENTER_SHOP)
+    {
+        long_desc += make_stringf(
+                "\nWhile standing here, you can enter <w>%s</w> with "
+                "the <w>%s</w> key.",
+                desc.c_str(),
+                command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
+    else if (feat == DNGN_MALIGN_GATEWAY)
+        long_desc += "\nMoving into it will do damage and cause you to blink.";
+    else if (feat == DNGN_TRANSPORTER)
+    {
+        long_desc += make_stringf(
+                "\nWhile standing here, you can enter %s with "
+                "with the <w>%s</w> key.",
+                desc_the.c_str(),
+                command_to_string(CMD_GO_DOWNSTAIRS).c_str());
     }
 
     // mention that permanent trees are usually flammable
-    // (expect for autumnal trees in Wucad Mu's Monastery)
-    if (feat_is_flammable(feat) && !is_temp_terrain(pos)
+    // (except for autumnal trees in Wucad Mu's Monastery)
+    if (feat_is_flammable(feat) && !is_temp_terrain(pos) && in_bounds(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         if (feat == DNGN_TREE)
@@ -2489,12 +2683,41 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += "\n" + getLongDescription("demonic tree burning");
     }
 
+    if (feat_is_door(feat) && feat != DNGN_BROKEN_DOOR && feat != DNGN_BROKEN_CLEAR_DOOR)
+    {
+        const bool openable = feat_is_closed_door(feat);
+        const bool sealed = feat_is_sealed(feat);
+
+        long_desc += make_stringf(
+            "\nWhile adjacent to it, you can %s%s it by pressing the "
+            "<w>%s</w> key.",
+            sealed ? "normally " : "",
+            openable ? "open" : "close",
+            command_to_string(openable ? CMD_OPEN_DOOR : CMD_CLOSE_DOOR).c_str());
+        if (sealed)
+            long_desc += " However, this will not work until the sealing runes wear off.";
+    }
+
     // mention that diggable walls are
-    if (feat_is_diggable(feat)
+    if (feat_is_diggable(feat) && in_bounds(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         long_desc += "\nIt can be dug through.";
     }
+
+    // Mention things which don't stop LOS_NO_TRANS or reaching weapons,
+    // but block movement.
+    if (feat_is_solid(feat) && !feat_is_opaque(feat) && !feat_is_wall(feat)
+        && !feat_is_closed_door(feat) && !feat_is_endless(feat))
+    {
+        if (feat_is_reachable_past(feat))
+            long_desc += "\nA suitable weapon or spell can reach past it.";
+        else
+            long_desc += "\nSome spells can be cast through it.";
+    }
+
+    if (pos == you.pos())
+        long_desc += "\nYou are here.";
 
     inf.body << long_desc;
 
@@ -2508,7 +2731,46 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     inf.quote = getQuoteString(db_name);
 }
 
-void describe_feature_wide(const coord_def& pos)
+static bool _do_feat_action(const coord_def &pos, const command_type action)
+{
+    if (action == CMD_NO_CMD)
+        return true;
+
+    switch (action)
+    {
+    case CMD_GO_UPSTAIRS:
+    case CMD_GO_DOWNSTAIRS:
+        ASSERT(pos == you.pos());
+        process_command(action, crawl_state.prev_cmd);
+        return false;
+    case CMD_MAP_PREV_LEVEL:
+    case CMD_MAP_NEXT_LEVEL:
+    {
+        level_pos dest = map_follow_stairs(action == CMD_MAP_PREV_LEVEL, pos);
+        // XX this leaves view mode on the ui stack, any issues?
+        if (dest.is_valid())
+        {
+            show_map(dest, true, true);
+            return false; // or true?
+        }
+        break;
+    }
+    case CMD_OPEN_DOOR:
+        open_door_action(pos - you.pos());
+        return false;
+    case CMD_CLOSE_DOOR:
+        close_door_action(pos - you.pos());
+        return false;
+    default:
+        break;
+    }
+    return true;
+}
+
+/*
+ * @return: true if the game should stay in any outer mode (e.g. `xv`).
+ */
+bool describe_feature_wide(const coord_def& pos, bool do_actions)
 {
     typedef struct {
         string title, body, quote;
@@ -2529,7 +2791,8 @@ void describe_feature_wide(const coord_def& pos)
         f.tile = tile_def(tile);
 #endif
         f.quote = trimmed_string(inf.quote);
-        feats.emplace_back(f);
+        if (f.title.size() || f.body.size() || f.quote.size())
+            feats.emplace_back(f);
     }
     auto extra_descs = _get_feature_extra_descs(pos);
     for (const auto &desc : extra_descs)
@@ -2538,7 +2801,8 @@ void describe_feature_wide(const coord_def& pos)
         f.title = desc.title;
         f.body = trimmed_string(desc.description);
         f.tile = desc.tile;
-        feats.emplace_back(f);
+        if (f.title.size() || f.body.size() || f.quote.size())
+            feats.emplace_back(f);
     }
     if (crawl_state.game_is_hints())
     {
@@ -2551,6 +2815,8 @@ void describe_feature_wide(const coord_def& pos)
             feats.emplace_back(f);
         }
     }
+    if (feats.empty())
+        return true;
 
     auto scroller = make_shared<Scroller>();
     auto vbox = make_shared<Box>(Widget::VERT);
@@ -2595,6 +2861,22 @@ void describe_feature_wide(const coord_def& pos)
             vbox->add_child(text);
         }
     }
+
+    vector<command_type> actions;
+    if (do_actions)
+        actions = _allowed_feat_actions(pos);
+    formatted_string footer_text("", CYAN);
+    if (!actions.empty())
+    {
+        const dungeon_feature_type feat = env.map_knowledge(pos).feat();
+        footer_text += formatted_string(_feat_action_desc(actions, feat));
+        auto footer = make_shared<Text>();
+        footer->set_text(footer_text);
+        footer->set_margin_for_crt(1, 0, 0, 0);
+        footer->set_margin_for_sdl(20, 0, 0, 0);
+        vbox->add_child(move(footer));
+    }
+
 #ifdef USE_TILE_LOCAL
     vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
@@ -2603,8 +2885,15 @@ void describe_feature_wide(const coord_def& pos)
     auto popup = make_shared<ui::Popup>(scroller);
 
     bool done = false;
-    popup->on_keydown_event([&](const KeyEvent& ev) {
-        done = !scroller->on_event(ev);
+    command_type action = CMD_NO_CMD;
+
+    // use on_hotkey_event, not on_event, to preempt the scroller key handling
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        action = _get_action(ev.key(), actions);
+        if (action != CMD_NO_CMD)
+            done = true;
+        else
+            done = !scroller->on_event(ev);
         return true;
     });
 
@@ -2626,11 +2915,13 @@ void describe_feature_wide(const coord_def& pos)
         tiles.json_close_object();
     }
     tiles.json_close_array();
+    tiles.json_write_string("actions", footer_text.tostring());
     tiles.push_ui_layout("describe-feature-wide", 0);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
     ui::run_layout(move(popup), done);
+    return _do_feat_action(pos, action);
 }
 
 void describe_feature_type(dungeon_feature_type feat)
@@ -2665,14 +2956,45 @@ void get_item_desc(const item_def &item, describe_info &inf)
 static vector<command_type> _allowed_actions(const item_def& item)
 {
     vector<command_type> actions;
-    actions.push_back(CMD_ADJUST_INVENTORY);
-    if (item_equip_slot(item) == EQ_WEAPON)
-        actions.push_back(CMD_UNWIELD_WEAPON);
-    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-        && _is_below_training_target(item, false))
+
+    if (!in_inventory(item) && item.pos != you.pos())
     {
-        actions.push_back(CMD_SET_SKILL_TARGET);
+        actions.push_back(CMD_MAP_GOTO_TARGET);
+        return actions;
     }
+
+    // XX CMD_ACTIVATE
+    switch (item.base_type)
+    {
+    case OBJ_SCROLLS:
+        actions.push_back(CMD_READ);
+        break;
+    case OBJ_POTIONS:
+        if (you.can_drink()) // mummies and lich form forbidden
+            actions.push_back(CMD_QUAFF);
+        break;
+    default:
+        break;
+    }
+
+    if (!in_inventory(item))
+    {
+        // guaranteed to be at the player's position
+        if (!item_is_stationary(item))
+            actions.push_back(CMD_PICKUP);
+        return actions;
+    }
+
+    if (item_is_evokable(item))
+        actions.push_back(CMD_EVOKE);
+
+    if (quiver::slot_to_action(item.link)->is_valid())
+        actions.push_back(CMD_QUIVER_ITEM);
+
+    // what is this for?
+    if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
+        actions.push_back(CMD_WIELD_WEAPON);
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -2682,10 +3004,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
             if (item_is_wieldable(item))
                 actions.push_back(CMD_WIELD_WEAPON);
         }
-        break;
-    case OBJ_MISSILES:
-        if (!you.has_mutation(MUT_NO_GRASPING))
-            actions.push_back(CMD_QUIVER_ITEM);
+        else if (item_equip_slot(item) == EQ_WEAPON)
+            actions.push_back(CMD_UNWIELD_WEAPON);
         break;
     case OBJ_ARMOUR:
         if (item_is_equipped(item))
@@ -2693,33 +3013,22 @@ static vector<command_type> _allowed_actions(const item_def& item)
         else
             actions.push_back(CMD_WEAR_ARMOUR);
         break;
-    case OBJ_SCROLLS:
-    //case OBJ_BOOKS: these are handled differently
-        actions.push_back(CMD_READ);
-        break;
     case OBJ_JEWELLERY:
         if (item_is_equipped(item))
             actions.push_back(CMD_REMOVE_JEWELLERY);
         else
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
-    case OBJ_POTIONS:
-        if (you.can_drink()) // mummies and lich form forbidden
-            actions.push_back(CMD_QUAFF);
-        break;
     default:
-        ;
+        break;
     }
-    if (clua.callbooleanfn(false, "ch_item_wieldable", "i", &item))
-        actions.push_back(CMD_WIELD_WEAPON);
-
-    if (item_is_evokable(item))
-    {
-        actions.push_back(CMD_QUIVER_ITEM);
-        actions.push_back(CMD_EVOKE);
-    }
-
     actions.push_back(CMD_DROP);
+    actions.push_back(CMD_ADJUST_INVENTORY);
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+        && _is_below_training_target(item, false))
+    {
+        actions.push_back(CMD_SET_SKILL_TARGET);
+    }
 
     if (!crawl_state.game_is_tutorial())
         actions.push_back(CMD_INSCRIBE_ITEM);
@@ -2729,11 +3038,12 @@ static vector<command_type> _allowed_actions(const item_def& item)
 
 static string _actions_desc(const vector<command_type>& actions)
 {
+    // XX code duplication
     static const map<command_type, string> act_str =
     {
         { CMD_WIELD_WEAPON, "(w)ield" },
         { CMD_UNWIELD_WEAPON, "(u)nwield" },
-        { CMD_QUIVER_ITEM, "(q)uiver" },
+        { CMD_QUIVER_ITEM, "(q)uiver" }, // except for potions, see below
         { CMD_WEAR_ARMOUR, "(w)ear" },
         { CMD_REMOVE_ARMOUR, "(t)ake off" },
         { CMD_EVOKE, "e(v)oke" },
@@ -2741,14 +3051,21 @@ static string _actions_desc(const vector<command_type>& actions)
         { CMD_WEAR_JEWELLERY, "(p)ut on" },
         { CMD_REMOVE_JEWELLERY, "(r)emove" },
         { CMD_QUAFF, "(q)uaff" },
+        { CMD_PICKUP, "(g)et" },
         { CMD_DROP, "(d)rop" },
         { CMD_INSCRIBE_ITEM, "(i)nscribe" },
         { CMD_ADJUST_INVENTORY, "(=)adjust" },
-        { CMD_SET_SKILL_TARGET, "(s)kill" },
+        { CMD_SET_SKILL_TARGET, "(s)kill target" },
+        { CMD_MAP_GOTO_TARGET, "(g)o to location" },
     };
+    bool push_quiver = false;
     return comma_separated_fn(begin(actions), end(actions),
-                                [] (command_type cmd)
+                                [&push_quiver] (command_type cmd)
                                 {
+                                    if (cmd == CMD_QUAFF) // assumes quaff appears first
+                                        push_quiver = true;
+                                    else if (push_quiver && cmd == CMD_QUIVER_ITEM)
+                                        return string("qui(v)er");
                                     return act_str.at(cmd);
                                 },
                                 ", or ") + ".";
@@ -2763,7 +3080,7 @@ static command_type _get_action(int key, vector<command_type> actions)
     {
         { CMD_WIELD_WEAPON,     'w' },
         { CMD_UNWIELD_WEAPON,   'u' },
-        { CMD_QUIVER_ITEM,      'q' },
+        { CMD_QUIVER_ITEM,      'q' }, // except for potions, see below
         { CMD_WEAR_ARMOUR,      'w' },
         { CMD_REMOVE_ARMOUR,    't' },
         { CMD_EVOKE,            'v' },
@@ -2773,17 +3090,51 @@ static command_type _get_action(int key, vector<command_type> actions)
         { CMD_QUAFF,            'q' },
         { CMD_DROP,             'd' },
         { CMD_INSCRIBE_ITEM,    'i' },
+        { CMD_PICKUP,           'g' },
         { CMD_ADJUST_INVENTORY, '=' },
         { CMD_SET_SKILL_TARGET, 's' },
+        { CMD_MAP_GOTO_TARGET,  'g' },
+        { CMD_GO_UPSTAIRS,      '<' },
+        { CMD_GO_DOWNSTAIRS,    '>' },
+        { CMD_MAP_PREV_LEVEL,   '[' },
+        { CMD_MAP_NEXT_LEVEL,   ']' },
+        { CMD_OPEN_DOOR,        'o' },
+        { CMD_CLOSE_DOOR,       'c' },
     };
 
     key = tolower_safe(key);
+    bool push_quiver = false;
 
     for (auto cmd : actions)
-        if (key == act_key.at(cmd))
+    {
+        if (cmd == CMD_QUAFF) // quaff must come first
+            push_quiver = true;
+        if (push_quiver && cmd == CMD_QUIVER_ITEM && key == 'v' // ugly
+            || key == act_key.at(cmd))
+        {
             return cmd;
+        }
+    }
 
     return CMD_NO_CMD;
+}
+
+static level_id _item_level_id(const item_def &item)
+{
+    level_id loc;
+    // set on stash search only
+    if (!item.props.exists("level_id"))
+        return loc;
+
+    try
+    {
+        loc = level_id::parse_level_id(item.props["level_id"].get_string());
+    }
+    catch (const bad_level_id &err)
+    {
+        // die?
+    }
+    return loc;
 }
 
 /**
@@ -2798,6 +3149,33 @@ static bool _do_action(item_def &item, const command_type action)
     if (action == CMD_NO_CMD)
         return true;
 
+    // ok in principle on floor items (though I didn't enable the last two)
+    switch (action)
+    {
+    case CMD_MAP_GOTO_TARGET:
+        if (in_bounds(item.pos))
+        {
+            level_id loc = _item_level_id(item); // stash search handling
+            if (!loc.is_valid())
+                loc = level_id::current(); // may still be during an excursion
+            level_pos target(loc, item.pos);
+            start_translevel_travel(target);
+            return false;
+        }
+        break;
+    case CMD_PICKUP:
+        ASSERT(!in_inventory(item));
+        pickup_single_item(item.index(), item.quantity);
+        return false;
+    case CMD_READ:             read(&item);         return false;
+    case CMD_QUAFF:            drink(&item);        return false;
+    case CMD_INSCRIBE_ITEM:    inscribe_item(item); return false;
+    case CMD_SET_SKILL_TARGET: target_item(item);   return false;
+    default:
+        break;
+    }
+
+    // inv item only
     const int slot = item.link;
     ASSERT_RANGE(slot, 0, ENDOFPACK);
 
@@ -2808,17 +3186,11 @@ static bool _do_action(item_def &item, const command_type action)
     case CMD_QUIVER_ITEM:      you.quiver_action.set_from_slot(slot); break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
-    case CMD_READ:             read(&item);                         break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
     case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);             break;
-    case CMD_QUAFF:            drink(&item);                        break;
     case CMD_DROP:             drop_item(slot, item.quantity);      break;
-    case CMD_INSCRIBE_ITEM:    inscribe_item(item);                 break;
     case CMD_ADJUST_INVENTORY: adjust_item(slot);                   break;
-    case CMD_SET_SKILL_TARGET: target_item(item);                   break;
-    case CMD_EVOKE:
-        evoke_item(slot);
-        break;
+    case CMD_EVOKE:            evoke_item(slot);                    break;
     default:
         die("illegal inventory cmd %d", action);
     }
@@ -2864,7 +3236,16 @@ command_type describe_item_popup(const item_def &item,
     if (!in_inventory(item))
         name = uppercase_first(name);
 
-    string desc = get_item_description(item, true, false);
+    string desc = "";
+    level_id loc = _item_level_id(item);
+    if (loc.is_valid() && loc != level_id::current())
+    {
+        // should be off-level stash search only
+        desc += make_stringf("It can be found on %s.\n\n",
+            loc.describe(true, true).c_str());
+    }
+
+    desc += get_item_description(item, true, false);
 
     string quote;
     if (is_unrandom_artefact(item) && item_type_known(item))
@@ -3013,14 +3394,13 @@ command_type describe_item_popup(const item_def &item,
  *  @param item       the item to be described.
  *  @param fixup_desc a function (possibly null) to modify the
  *                    description before it's displayed.
- *  @return whether to remain in the inventory menu after description
+ *  @return whether to remain in the outer mode (inventory, `xv`) after the popup.
  *
  */
 bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 {
-
-    const bool do_actions = in_inventory(item) // Dead men use no items.
-            && !(you.pending_revival || crawl_state.updating_scores);
+    // Dead players use no items.
+    const bool do_actions = !(you.pending_revival || crawl_state.updating_scores);
     command_type action = describe_item_popup(item, fixup_desc, do_actions);
 
     return _do_action(item, action);
@@ -3442,12 +3822,14 @@ static void _get_spell_description(const spell_type spell,
  * @param inf[out]  The spell's description is concatenated onto the end of
  *                  inf.body.
  */
+#ifdef USE_TILE_LOCAL
 void get_spell_desc(const spell_type spell, describe_info &inf)
 {
     string desc;
     _get_spell_description(spell, nullptr, desc);
     inf.body << desc;
 }
+#endif
 
 /**
  * Examine a given spell. List its description and details, and handle
@@ -3555,6 +3937,23 @@ void describe_deck(deck_type deck)
 
     inf.body << deck_description(deck);
 
+    show_description(inf);
+}
+
+/**
+ * Describe a given mutation. List its description and details.
+ */
+void describe_mutation(mutation_type mut)
+{
+    describe_info inf;
+    inf.title = uppercase_first(mutation_name(mut)).c_str();
+    if (you.has_mutation(mut))
+    {
+        inf.title += make_stringf(" (level %d/%d)",
+                                  you.get_mutation_level(mut),
+                                  mutation_max_levels(mut));
+    }
+    inf.body << get_mutation_desc(mut);
     show_description(inf);
 }
 
@@ -3671,15 +4070,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
  */
 static const char* _special_flavour_prefix(attack_flavour flavour)
 {
-    switch (flavour)
-    {
-        case AF_KITE:
-            return "retreat from adjacent foes and ";
-        case AF_SWOOP:
-            return "swoop behind its foe and ";
-        default:
-            return "";
-    }
+    return flavour == AF_SWOOP ? "swoop behind its foe and " : "";
 }
 
 /**
@@ -3741,7 +4132,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_REACH_TONGUE,      "deal extra acid damage" },
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
-        { AF_KITE,              "" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
     };
@@ -3769,11 +4159,8 @@ static string _flavour_effect(attack_flavour flavour, int HD)
     const int flavour_dam = flavour_damage(flavour, HD, false);
     const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
 
-    if (!flavour_triggers_damageless(flavour)
-        && flavour != AF_KITE && flavour != AF_SWOOP)
-    {
+    if (!flavour_triggers_damageless(flavour) && flavour != AF_SWOOP)
         return " to " + flavour_desc + " if any damage is dealt";
-    }
 
     return " to " + flavour_desc;
 }
@@ -3832,13 +4219,18 @@ static string _monster_attacks_description(const monster_info& mi)
         const item_def* weapon = _weapon_for_attack(mi, i);
         mon_attack_info attack_info = { attack, weapon };
 
-        ++attack_counts[attack_info];
-    }
+        // Multi-headed monsters must always have their multi-attack in the
+        // first slot.
+        if ((mons_genus(mi.base_type) == MONS_HYDRA
+             || mons_species(mi.base_type) == MONS_SERPENT_OF_HELL)
+            && i == 0)
+        {
+            attack_counts[attack_info] = mi.num_heads;
+        }
+        else
+            ++attack_counts[attack_info];
 
-    // Hydrae have only one explicit attack, which is repeated for each head.
-    if (mons_genus(mi.base_type) == MONS_HYDRA)
-        for (auto &attack_count : attack_counts)
-            attack_count.second = mi.num_heads;
+    }
 
     vector<string> attack_descs;
     for (const auto &attack_count : attack_counts)
@@ -3993,11 +4385,8 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param result[in,out]    The stringstream to append to.
  */
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     bool parenthesize)
+                     bool parenthesize, const item_def* weapon)
 {
-    // TODO: don't do this if the player doesn't exist (main menu)
-
-    const item_def* weapon = you.weapon();
     if (weapon != nullptr && !is_weapon(*weapon))
         return; // breadwielding
 
@@ -4011,7 +4400,7 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
     else
     {
         // TODO: handle throwing to-hit somehow?
-        const int missile = quiver::find_action_from_launcher(you.weapon())->get_item();
+        const int missile = quiver::find_action_from_launcher(weapon)->get_item();
         if (missile < 0)
             return; // failure to launch
         ranged_attack attk(&you, nullptr, &you.inv[missile], is_pproj_active());
@@ -4051,7 +4440,7 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
     const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
     const bool skilled = mons_class_flag(mi.type, melee ? M_FIGHTER : M_ARCHER);
-    const int base_to_hit = mon_to_hit_base(mi.hd, skilled, !melee);
+    const int base_to_hit = mon_to_hit_base(mi.hd, skilled);
     const int weapon_to_hit = weapon ? weapon->plus + property(*weapon, PWPN_HIT) : 0;
     const int total_base_hit = base_to_hit + weapon_to_hit;
 
@@ -4176,7 +4565,8 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
-    describe_to_hit(mi, result, true);
+    if (crawl_state.game_started)
+        describe_to_hit(mi, result, true, you.weapon());
     result << "\n";
 }
 
@@ -5221,7 +5611,7 @@ void describe_skill(skill_type skill)
     show_description(inf, &tile);
 }
 
-// only used in tiles
+#ifdef USE_TILE_LOCAL // only used in tiles
 string get_command_description(const command_type cmd, bool terse)
 {
     string lookup = command_to_name(cmd);
@@ -5244,6 +5634,7 @@ string get_command_description(const command_type cmd, bool terse)
 
     return result.substr(0, result.length() - 1);
 }
+#endif
 
 /**
  * Provide auto-generated information about the given cloud type. Describe

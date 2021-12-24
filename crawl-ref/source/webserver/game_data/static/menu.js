@@ -729,7 +729,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         if (!menu || menu.type === "crt") return;
         // can't check `hidden` class, which is on a 3x containing div
-        if (ui.top_popup().is(":hidden")) return;
+        if (!ui.top_popup() || ui.top_popup().is(":hidden")) return;
         if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         if (event.altKey || event.shiftkey) {
@@ -804,7 +804,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function menu_keypress_handler(event)
     {
         if (!menu || menu.type === "crt") return;
-        if (ui.top_popup()[0] !== menu.elem[0]) return;
+        if (!ui.top_popup() || ui.top_popup()[0] !== menu.elem[0]) return;
         if (menu.tag == "macro_mapping") return; // Treat input as raw, no need
                                                  // to scroll anyway
 

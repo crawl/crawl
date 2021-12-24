@@ -75,6 +75,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "species.h"
+#include "spl-damage.h" // vortex_power_key
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -3232,6 +3233,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
     SP_MUT_FIX(MUT_FLAT_HP, SP_DJINNI);
     SP_MUT_FIX(MUT_FORLORN, SP_DEMIGOD);
+    SP_MUT_FIX(MUT_DIVINE_ATTRS, SP_DEMIGOD);
     SP_MUT_FIX(MUT_DAYSTALKER, SP_BARACHI);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
@@ -3988,6 +3990,15 @@ static void _tag_read_you(reader &th)
     {
         you.props[POLAR_VORTEX_KEY] = you.props["tornado_since"].get_int();
         you.props.erase("tornado_since");
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_VORTEX_POWER
+        && you.duration[DUR_VORTEX])
+    {
+        // trying to calculate power here is scary and won't work well.
+        // instead, just give em a high power vortex. let em have fun.
+        // it's one vortex. how much could it cost, mennas? 20 sultanas?
+        you.props[VORTEX_POWER_KEY] = 150;
     }
 
 #endif
@@ -6605,7 +6616,7 @@ void unmarshallMonster(reader &th, monster& m)
         if (th.getMinorVersion() < TAG_MINOR_MORE_GHOST_MAGIC)
             slot.spell = _fixup_positional_monster_spell(slot.spell);
 
-        if (mons_is_zombified(m) && !mons_enslaved_soul(m)
+        if (mons_is_zombified(m) && !mons_bound_soul(m)
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
             // zombies shouldn't have (most) spells

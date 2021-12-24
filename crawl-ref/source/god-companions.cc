@@ -47,14 +47,14 @@ void remove_companion(monster* mons)
     companion_list.erase(mons->mid);
 }
 
-void remove_enslaved_soul_companion()
+void remove_bound_soul_companion()
 {
     for (auto &entry : companion_list)
     {
         monster* mons = monster_by_mid(entry.first);
         if (!mons)
             mons = &entry.second.mons.mons;
-        if (mons_enslaved_soul(*mons))
+        if (mons_bound_soul(*mons))
         {
             remove_companion(mons);
             return;

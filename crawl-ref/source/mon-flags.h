@@ -220,9 +220,8 @@ enum monster_flag_type : uint64_t
     /// Consider this monster to have MH_UNDEAD holiness, regardless
     /// of its actual type
     MF_FAKE_UNDEAD        = BIT(13),
-    /// An undead monster soul enslaved by
-    /// Yredelemnul's power
-    MF_ENSLAVED_SOUL      = BIT(14),
+
+    //                      BIT(14), Was for marking bound souls
 
     /// mname is a suffix.
     MF_NAME_SUFFIX        = BIT(15),

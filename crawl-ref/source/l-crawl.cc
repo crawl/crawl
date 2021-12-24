@@ -1319,7 +1319,7 @@ static int crawl_get_command(lua_State *ls)
 LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_safe_checkint(ls, 2)))
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
-LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
+LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1), luaL_optstring(ls, 2, ""), luaL_optstring(ls, 3, "")))
 
 /*** Lua error trace a call
  * Attempts to call-trace a lua function that is producing an error.

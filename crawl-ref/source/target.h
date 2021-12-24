@@ -68,13 +68,6 @@ private:
     explosion_map exp_map_min, exp_map_max;
 };
 
-class targeter_unravelling : public targeter_beam
-{
-public:
-    targeter_unravelling(const actor *act, int range, int pow);
-    bool set_aim(coord_def a) override;
-};
-
 class targeter_view : public targeter
 {
 public:
@@ -119,6 +112,14 @@ public:
     bool valid_aim(coord_def a) override;
 };
 
+class targeter_unravelling : public targeter_smite
+{
+public:
+    targeter_unravelling();
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+};
+
 class targeter_fragment : public targeter_smite
 {
 public:
@@ -138,6 +139,13 @@ public:
     bool can_affect_outside_range() override { return false; };
     bool can_affect_walls() override { return false; };
     bool can_affect_unseen() override { return true; }; // show empty space outside LOS
+};
+
+class targeter_passage : public targeter_smite
+{
+public:
+    targeter_passage(int _range);
+    aff_type is_affected(coord_def loc) override;
 };
 
 class targeter_reach : public targeter
@@ -176,27 +184,24 @@ public:
     bool avoid_clouds;
 };
 
-// TODO: this should be based on targeter_beam instead
-class targeter_splash : public targeter
+class targeter_splash : public targeter_beam
 {
 public:
-    targeter_splash(const actor *act, int ran);
-    bool valid_aim(coord_def a) override;
+    targeter_splash(const actor *act, int ran, int pow);
     aff_type is_affected(coord_def loc) override;
-private:
-    int range;
 };
 
 class targeter_radius : public targeter
 {
 public:
     targeter_radius(const actor *act, los_type _los = LOS_DEFAULT,
-                  int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0);
+                    int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0,
+                    int ran_maybe = 0);
     bool valid_aim(coord_def a) override;
     virtual aff_type is_affected(coord_def loc) override;
 private:
     los_type los;
-    int range, range_max, range_min;
+    int range, range_max, range_min, range_maybe;
 };
 
 // like targeter_radius, but converts all AFF_YESes to AFF_MAYBE
@@ -221,6 +226,14 @@ class targeter_flame_wave : public targeter_radius
 {
 public:
     targeter_flame_wave(int _range);
+    aff_type is_affected(coord_def loc) override;
+};
+
+
+class targeter_corpse_rot : public targeter_radius
+{
+public:
+    targeter_corpse_rot();
     aff_type is_affected(coord_def loc) override;
 };
 
@@ -427,10 +440,10 @@ public:
 };
 
 // this is implemented a bit like multifireball, but with some tweaks
-class targeter_ramparts : public targeter_multiposition
+class targeter_walls : public targeter_multiposition
 {
 public:
-    targeter_ramparts(const actor *a);
+    targeter_walls(const actor *a, vector<coord_def> seeds);
 
     aff_type is_affected(coord_def loc) override;
     bool can_affect_walls() override { return true; }

@@ -8,7 +8,9 @@
 #include "spl-goditem.h"
 
 #include "art-enum.h"
+#include "attack.h"
 #include "cleansing-flame-source-type.h"
+#include "colour.h"
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
@@ -22,6 +24,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "los.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -30,8 +33,10 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "religion.h"
+#include "spl-clouds.h"
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
@@ -548,7 +553,6 @@ void debuff_player()
         mprf(MSGCH_WARN, "Your magical effects are unravelling.");
 }
 
-
 /**
   * What dispellable effects currently exist on a given monster?
   *
@@ -579,7 +583,6 @@ static void _dispellable_monster_buffs(const monster &mon,
         buffs.push_back(ENCH_INVIS);
 }
 
-
 /**
  * Does a given monster have any buffs that can be removed?
  *
@@ -590,6 +593,11 @@ bool monster_is_debuffable(const monster &mon)
     vector<enchant_type> buffs;
     _dispellable_monster_buffs(mon, buffs);
     return !buffs.empty();
+}
+
+bool monster_can_be_unravelled(const monster& mon)
+{
+    return monster_is_debuffable(mon) || mon.is_summoned();
 }
 
 /**
@@ -727,12 +735,13 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool zin)
+spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
     // up to 300 or so with godly assistance or end-level, and 1200
     // as more or less the theoretical maximum.
+    const coord_def& where = victim->pos();
     int number_built = 0;
 
     // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
@@ -742,8 +751,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR
     };
 
+    bool zin = source == -GOD_ZIN;
     bool proceed;
-    monster *mon;
     string targname;
 
     vector<coord_def> veto_spots(8);
@@ -755,8 +764,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     {
         // We need to get this now because we won't be able to see
         // the monster once the walls go up!
-        mon = monster_at(where);
-        targname = mon->name(DESC_THE);
+        targname = victim->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
 
@@ -802,12 +810,20 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (!success)
         {
-            mprf(none_vis ? "You briefly glimpse something next to %s."
-                        : "You need more space to imprison %s.",
-                targname.c_str());
-            return false;
+            if (none_vis)
+            {
+                fail_check();
+                mprf("You briefly glimpse something next to %s.",
+                     targname.c_str());
+                return spret::success;
+            }
+
+            mprf("You need more space to imprison %s.", targname.c_str());
+            return spret::abort;
         }
     }
+
+    fail_check();
 
     veto_spots = adj_spots;
     for (adjacent_iterator ai(where); ai; ++ai)
@@ -891,71 +907,54 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         you.update_beholders();
         you.update_fearmongers();
-        env.markers.clear_need_activate();
+        const int tomb_duration = BASELINE_DELAY * pow;
+        env.markers.add(new map_tomb_marker(where,
+                                            tomb_duration,
+                                            source,
+                                            victim->mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return number_built > 0;
+    return spret::success;
 }
 
-bool entomb(int pow)
-{
-    if (_do_imprison(pow, you.pos(), false))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(you.pos(),
-                                            tomb_duration,
-                                            you.mindex(),
-                                            you.mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
-}
-
-bool cast_imprison(int pow, monster* mons, int source)
-{
-    if (_do_imprison(pow, mons->pos(), true))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(mons->pos(),
-                                            tomb_duration,
-                                            source,
-                                            mons->mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
-}
-
-bool cast_smiting(int pow, monster* mons)
+spret cast_smiting(int pow, monster* mons, bool fail)
 {
     if (mons == nullptr || mons->submerged())
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to invisible/submerged monsters.
-        return true;
+        return spret::success;
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
-        return false;
+        return spret::abort;
+
+    fail_check();
 
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
-    mprf("You smite %s!", mons->name(DESC_THE).c_str());
-    behaviour_event(mons, ME_ANNOY, &you);
-
     // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
-    int damage_increment = div_rand_round(pow, 8);
-    mons->hurt(&you, 6 + roll_dice(3, damage_increment));
-    if (mons->alive())
-        print_wounds(*mons);
+    int damage = 6 + roll_dice(3, div_rand_round(pow, 8));
 
-    return true;
+    mprf("You smite %s%s",
+         mons->name(DESC_THE).c_str(),
+         attack_strength_punctuation(damage).c_str());
+
+    behaviour_event(mons, ME_ANNOY, &you);
+    mons->hurt(&you, damage);
+
+    if (mons->alive())
+    {
+        print_wounds(*mons);
+        you.pet_target = mons->mindex();
+    }
+
+    return spret::success;
 }
 
 void holy_word_player(holy_word_source_type source)
@@ -1105,7 +1104,9 @@ void torment_player(const actor *attacker, torment_source_type taux)
                 hploss = 0;
                 simple_god_message(" shields you from torment!");
             }
-            else if (random2(250) < you.piety) // 24% to 80% chance
+            // Always give at least partial protection for invoked torment.
+            // 24% to 80% chance for other sources.
+            else if (random2(250) < you.piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
                 hploss -= random2(hploss - 1);
                 simple_god_message(" partially shields you from torment!");
@@ -1120,7 +1121,6 @@ void torment_player(const actor *attacker, torment_source_type taux)
     }
 
     mpr("Your body is wracked with pain!");
-
 
     kill_method_type type = KILLED_BY_BEAM;
     if (crawl_state.is_god_acting())
@@ -1320,4 +1320,57 @@ void majin_bo_vampirism(monster &mon, int damage)
         canned_msg(MSG_GAIN_HEALTH);
         inc_hp(hp_boost);
     }
+}
+
+/**
+ * Handle the dreamshard necklace.
+ **/
+void dreamshard_shatter()
+{
+    ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
+
+    mpr("Your necklace shatters, unleashing a wave of protective dreams!");
+
+    for (int i = 0; i < 5; i++)
+    {
+        flash_view(UA_PLAYER, random_uncommon_colour());
+        scaled_delay(200);
+    }
+
+    vector<string> dreams;
+    if (you.heal(random_range(you.hp_max*0.5, you.hp_max)))
+        dreams.push_back("health");
+
+    if (!you.allies_forbidden())
+    {
+        const int num = 2 + random2(4);
+        int created = 0;
+        for (int i = 0; i < num; ++i)
+        {
+            mgen_data mg(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
+                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD);
+            mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_NO_GOD);
+            if (create_monster(mg))
+                ++created;
+        }
+
+        if (created)
+            dreams.push_back("friendship");
+    }
+
+    if (!(env.level_state & LSTATE_STILL_WINDS))
+    {
+        dreams.push_back("clouds");
+        big_cloud(CLOUD_FLUFFY, &you, you.pos(), 50, 8 + random2(8));
+    }
+
+    mpr_comma_separated_list("You dream of ", dreams);
+
+    // when dreams spill out into reality it wakes you up
+    // put it here after the dream message so that a sleeping player who
+    // gets dreamsharded gets a nice message order
+    you.check_awaken(500);
+
+    dec_inv_item_quantity(you.slot_item(EQ_AMULET,1)->link, 1);
+    ash_check_bondage();
 }

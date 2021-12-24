@@ -1126,12 +1126,16 @@ ENDMAP
 
 NAME:  dreamdust_ecumenical_altar_statues
 TAGS:  transparent
-TILE:  G : DNGN_STATUE_CENTAUR / DNGN_STATUE_SNAIL / DNGN_STATUE_CAT / \
-           DNGN_STATUE_MERMAID / DNGN_STATUE_NAGA / DNGN_STATUE_DRAGON / \
-           DNGN_STATUE_ANGEL / DNGN_STATUE_ELEPHANT / DNGN_STATUE_WRAITH / \
-           DNGN_STATUE_IMP / DNGN_STATUE_CEREBOV / DNGN_STATUE_DEMONIC_BUST / \
-           DNGN_STATUE_ORB_GUARDIAN / DNGN_STATUE_AXE / DNGN_STATUE_POLEARM / \
-           DNGN_STATUE_ANCIENT_HERO / DNGN_STATUE_ANCIENT_EVIL
+TILE:  G : DNGN_STATUE_ANCIENT_EVIL / DNGN_STATUE_ANCIENT_HERO / \
+           DNGN_STATUE_ANGEL / DNGN_STATUE_ARCHER / DNGN_STATUE_AXE / \
+           DNGN_STATUE_CAT / DNGN_STATUE_CENTAUR / DNGN_STATUE_CEREBOV / \
+           DNGN_STATUE_DEMONIC_BUST / DNGN_STATUE_DRAGON / DNGN_STATUE_DWARF / \
+           DNGN_STATUE_ELEPHANT / DNGN_STATUE_HYDRA / DNGN_STATUE_IMP / \
+           DNGN_STATUE_MAW / DNGN_STATUE_MERMAID / DNGN_STATUE_NAGA / \
+           DNGN_STATUE_ORB / DNGN_STATUE_ORB_GUARDIAN / DNGN_STATUE_POLEARM / \
+           DNGN_STATUE_PRINCESS / DNGN_STATUE_SIGMUND / DNGN_STATUE_SNAIL / \
+           DNGN_STATUE_SWORD / DNGN_STATUE_TENGU / DNGN_STATUE_TENTACLES / \
+           DNGN_STATUE_TRIANGLE / DNGN_STATUE_TWINS / DNGN_STATUE_WRAITH
 : ecumenical_altar_setup(_G)
 MAP
 .....
@@ -1139,4 +1143,103 @@ MAP
 .._..
 .....
 .....
+ENDMAP
+
+NAME:    nicolae_ecumenical_lake_church
+TAGS:    transparent
+SHUFFLE: DE/FH, JK/LM
+SUBST:   DJ = N, EK = w, FL = ', HM = N, N = w'
+CLEAR:   '
+: ecumenical_altar_setup(_G)
+MAP
+    NwwwN
+  NwwwwwwwN
+ NwwwwwwwwwN
+ wwwwwwwwwww
+NwwwccnccwwwN
+wwwwc...cwwww
+wwwwn._.nwwww
+wwwwc...cwwww
+Nwwwcc+ccwwwN
+ wwwKJ DEwww
+ NwwN   NwwN
+  NN     NN
+ENDMAP
+
+NAME:   nicolae_ecumenical_oubliette
+TAGS:   transparent no_pool_fixup
+# The ecumenical_altar_setup function includes a DEPTH: D:1-3 line,
+# but I don't want this one to show up on D:1.
+WEIGHT: 0 (D:1), 10
+KFEAT:  ! = iron_grate
+KMASK:  -S({[_ = opaque
+: if crawl.one_chance_in(5) then
+SUBST:  v! : wl!
+: else
+SUBST:  v : v:50 c:30 b n, ! : !:50 n:30 w l
+: end
+SUBST:  S = ({[
+: ecumenical_altar_setup(_G)
+MAP
+.........
+.vvvvvvv.
+.!-----!.
+.!-S-_-!.
+.!-----!.
+.vvvvvvv.
+.........
+ENDMAP
+
+NAME:    nicolae_ecumenical_pavilion
+TAGS:    transparent
+WEIGHT:  0 (D:1), 10
+# 1/4 chance of all three upstairs, 3/4 chance of two upstairs and a hatch.
+SHUFFLE: {[(<
+SUBST:   x : xxxm, c : cccb
+FTILE:   {[(<_cbxm; : floor_black_cobalt / floor_cobble_blood / floor_crypt / \
+         floor_crystal_squares / floor_etched / floor_grass / floor_limestone /\
+         floor_moss / floor_mud / floor_sand / floor_sandstone / floor_vines / \
+         floor_w_marble / none
+COLOUR:  ; : blue / green / cyan / red / magenta / brown / lightgrey / \
+             lightblue / lightgreen / lightcyan / lightred / lightmagenta / \
+             yellow / white
+: ecumenical_altar_setup(_G)
+MAP
+    .....
+  .........
+ ..xxxxc;...
+ .xx;;;;;cx.
+..x;;{;c;;x..
+..c;;;;;;;x..
+..;;c;_;[;x..
+..c;;;;;;;x..
+..x;;(;c;;x..
+ .xx;;;;;cx.
+ ..xxxxc;...
+  .........
+    .....
+ENDMAP
+
+NAME:  nicolae_ecumenical_snake_handling
+TAGS:  transparent
+: if you.absdepth() == 1 then
+KMONS: 1_ = ball python / nothing
+: else
+KMONS: 1_ = ball python w:30 / adder / nothing
+: end
+: ecumenical_altar_setup(_G)
+MAP
+ x    x    x
+xxx..xxx..xxx
+ x..xxxxx..x
+ ..1.xxx.1..
+ .x...x...x.
+ xxx.....xxx
+xxxxx._.xxxxx
+ xxx.....xxx
+ .x...x...x.
+ ..1.xxx.1..
+ x..xxxxx..x
+xxx..xxx..xxx
+ x    x    x
 ENDMAP

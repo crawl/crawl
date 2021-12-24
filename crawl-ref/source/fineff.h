@@ -6,9 +6,11 @@
 
 #pragma once
 
+#include "actor.h"
 #include "beh-type.h"
-#include "mon-util.h"
 #include "mgen-data.h"
+#include "mon-util.h"
+#include "monster.h"
 
 struct bolt;
 
@@ -350,6 +352,29 @@ protected:
     beh_type attitude;
     unsigned short foe;
     bool duel;
+};
+
+class avoided_death_fineff : public final_effect
+{
+public:
+    // Each trigger is from the death of a different monster---no merging.
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(monster * mons)
+    {
+        // pretend to be dead until our revival, to prevent
+        // sequencing errors from inadvertently making us change alignment
+        const int realhp = mons->hit_points;
+        mons->hit_points = -realhp;
+        final_effect::schedule(new avoided_death_fineff(mons, realhp));
+    }
+protected:
+    avoided_death_fineff(const actor * _def, int _hp)
+        : final_effect(0, _def, coord_def()), hp(_hp)
+    {
+    }
+    int hp;
 };
 
 class infestation_death_fineff : public final_effect

@@ -756,6 +756,10 @@ enum monster_type                      // env.mons[].type
     MONS_SPECTRAL_THING,
     MONS_SIMULACRUM_SMALL, // recolouring only
     MONS_SIMULACRUM_LARGE, // recolouring only
+#if TAG_MAJOR_VERSION > 34
+    MONS_BOUND_SOUL,
+#endif
+
 
     // Holies:
     MONS_ANGEL,
@@ -843,7 +847,7 @@ enum monster_type                      // env.mons[].type
     MONS_DISSOLUTION,
     MONS_KIRKE,
     MONS_GRUM,
-    MONS_PURGY,
+    MONS_PARGI,
     MONS_MENKAURE,
     MONS_DUVESSA,
     MONS_DOWAN,
@@ -1140,6 +1144,7 @@ enum monster_type                      // env.mons[].type
     MONS_FROSTBOUND_TOME,
     MONS_STRANGE_MACHINE,
     MONS_SPECTATOR,
+    MONS_BOUND_SOUL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

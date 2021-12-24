@@ -1515,7 +1515,7 @@ TAGS:  transparent no_item_gen
 DEPTH: Elf
 KITEM: 'D = arrow q:1 / arrow q:2 / arrow q:3 / arrow q:4 / nothing w:30
 KITEM: " = shortbow / longbow / shortbow good_item / longbow good_item / \
-           pair of gloves ego:archery / pair of gloves ego:dexterity / \
+           pair of gloves ego:hurling / pair of gloves ego:dexterity / \
            pair of gloves plus:1 / pair of gloves plus:2 / \
            scarf ego:repulsion / scarf w:4 / amulet of reflection / \
            any amulet w:3 / gold good_item / manual of bows w:3

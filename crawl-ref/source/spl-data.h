@@ -27,17 +27,6 @@ static const struct spell_desc spelldata[] =
 {
 
 {
-    SPELL_TELEPORT_SELF, "Teleport Self",
-    spschool::translocation,
-    spflag::escape | spflag::utility | spflag::monster,
-    5,
-    0,
-    -1, -1,
-    4, 0,
-    TILEG_TELEPORT,
-},
-
-{
     SPELL_CAUSE_FEAR, "Cause Fear",
     spschool::hexes,
     spflag::area | spflag::WL_check,
@@ -176,8 +165,8 @@ static const struct spell_desc spelldata[] =
     SPELL_SLOW, "Slow",
     spschool::hexes,
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
-    2,
-    200,
+    1,
+    25,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
     TILEG_SLOW,
@@ -221,8 +210,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INVISIBILITY, "Invisibility",
     spschool::hexes,
-    spflag::helpful | spflag::selfench
-        | spflag::escape,
+    spflag::helpful | spflag::selfench | spflag::escape | spflag::monster,
     6,
     200,
     -1, -1,
@@ -315,7 +303,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::not_self | spflag::escape
         | spflag::needs_tracer | spflag::WL_check,
     3,
-    200,
+    100,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
     TILEG_TELEPORT_OTHER,
@@ -462,7 +450,7 @@ static const struct spell_desc spelldata[] =
     spschool::translocation,
     spflag::escape | spflag::selfench | spflag::utility,
     2,
-    0,
+    50,
     -1, -1,
     2, 0,
     TILEG_BLINK,
@@ -586,7 +574,7 @@ static const struct spell_desc spelldata[] =
     spschool::necromancy,
     spflag::dir_or_target | spflag::not_self,
     3,
-    200,
+    100,
     1, 1,
     3, 0,
     TILEG_VAMPIRIC_DRAINING,
@@ -753,7 +741,7 @@ static const struct spell_desc spelldata[] =
     spschool::necromancy,
     spflag::utility,
     2,
-    200,
+    100,
     -1, -1,
     2, 0,
     TILEG_SUBLIMATION_OF_BLOOD,
@@ -800,7 +788,7 @@ static const struct spell_desc spelldata[] =
     spschool::necromancy | spschool::air,
     spflag::area | spflag::neutral | spflag::unclean,
     2,
-    0,
+    50,
     -1, -1,
     2, 0,
     TILEG_CORPSE_ROT,
@@ -878,7 +866,7 @@ static const struct spell_desc spelldata[] =
     spschool::transmutation | spschool::poison,
     spflag::helpful | spflag::chaotic | spflag::utility,
     3,
-    200,
+    100,
     -1, -1,
     2, 0,
     TILEG_SPIDER_FORM,
@@ -1268,8 +1256,8 @@ static const struct spell_desc spelldata[] =
     spschool::translocation,
     spflag::target | spflag::neutral | spflag::escape | spflag::selfench,
     4,
-    0,
-    LOS_RADIUS, LOS_RADIUS,
+    100,
+    2, LOS_RADIUS,
     3, 8, // when it closes
     TILEG_PASSAGE_OF_GOLUBRIA,
 },
@@ -2021,10 +2009,9 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INNER_FLAME, "Inner Flame",
     spschool::hexes | spschool::fire,
-    spflag::dir_or_target | spflag::not_self | spflag::neutral
-        | spflag::WL_check,
+    spflag::target | spflag::not_self | spflag::neutral | spflag::WL_check,
     3,
-    200,
+    100,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
     TILEG_INNER_FLAME,
@@ -2935,7 +2922,7 @@ static const struct spell_desc spelldata[] =
     spschool::translocation,
     spflag::target | spflag::not_self | spflag::needs_tracer,
     3,
-    200,
+    100,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
     TILEG_GRAVITAS,
@@ -2944,8 +2931,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_VIOLENT_UNRAVELLING, "Yara's Violent Unravelling",
     spschool::hexes | spschool::transmutation,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::no_ghost
-        | spflag::chaotic,
+    spflag::target | spflag::no_ghost | spflag::chaotic,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3616,6 +3602,7 @@ AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
 AXED_SPELL(SPELL_VORTEX, "Vortex")
 AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
+AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
 #endif
 
 };

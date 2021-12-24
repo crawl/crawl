@@ -440,6 +440,44 @@ MAP
     ..@...
 ENDMAP
 
+NAME:    mainiacjoe_lair_zoo
+TAGS:    lair_entry transparent no_monster_gen no_item_gen
+ORIENT:  float
+SHUFFLE: NALPS
+KMONS:   P = anaconda / shock serpent
+KMONS:   L = catoblepas / eight-headed hydra
+KMONS:   N = emperor scorpion / orb spider
+KMONS:   A = kraken / alligator snapping turtle
+KMONS:   S = bunyip / goliath frog
+KMONS:   z = orc knight ; whip
+NSUBST:  P = P / `, N = N / `, A = A / W, S = S / W, L = L / `
+SUBST:   T : TG
+KFEAT:   AS = shallow_water
+KFEAT:   ` = floor
+KFEAT:   # = iron_grate
+KFEAT:   O = enter_lair
+FTILE:   `PNL = floor_dirt
+KPROP:   `WANPLS = no_tele_into
+MAP
+.............
+.............
+..####c####..
+..#AAAcNNN#.....
+..#AAAcNNN#......
+..#AAAcNNN#.T.T...
+..ccccccccc........
+..#PPPc...+.....T..
+..#PPPc.z.+..O.....
+..#PPPc...+.....T..
+..ccccccccc........
+..#LLLcSSS#.T.T...
+..#LLLcSSS#......
+..#LLLcSSS#.....
+..####c####..
+.............
+.............
+ENDMAP
+
 ###############################################################################
 # Regular Lair vaults.
 ###############################################################################
@@ -1684,6 +1722,24 @@ MAP
       777777
 ENDMAP
 
+NAME:    nicolae_quartered_pool_impasse
+TAGS:    transparent extra decor no_pool_fixup uniq_qpool
+DEPTH:   Lair
+SHUFFLE: DN, EO, FP, HQ, JR, KS, LZ, M-
+SUBST:   DEFHJKLM = w, NOPQRSZ- = l
+MAP
+  ......
+ ..LHQZ..
+..MKFPS-..
+.LKJEORSZ.
+.HFEDNOPQ.
+.QPONDEFH.
+.ZSROEJKL.
+..-SPFKM..
+ ..ZQHL..
+  ......
+ENDMAP
+
 NAME:    nicolae_lair_grove_arrangements
 TAGS:    transparent decor extra
 DEPTH:   Lair
@@ -2465,6 +2521,202 @@ PwwwwwwP;-+---;x".""""xx
      ..---+---........xx
       ....@.....@....@xx
                       xx
+ENDMAP
+
+NAME:     nicolae_lair_grazing_beasts
+TAGS:     no_pool_fixup patrolling transparent
+DEPTH:    Lair
+KITEM:    H = % / * w:5
+KMONS:    13 = plant
+KMONS:    2 = bush
+KMONS:    H = plant / nothing w:25
+KMONS:    L = yak band w:25 / elephant band w:25 / death yak band / \
+              catoblepas / dire elephant w:5 / dream sheep band w:5
+KFEAT:    12 = W / .
+SUBVAULT: Q : nico_grazesub
+SUBVAULT: R : nico_grazesub
+SUBVAULT: S : nico_grazesub
+SUBVAULT: Z : nico_grazesub
+NSUBST:   D = 2=W / wW / w, ' = 1=L
+SUBST:    H = H ':15, ' = L:5 .:250 3:100, J = .:20 W:20 1:20 2w, w = wt
+MAP
+     .......
+    ..J...J..
+   ..QDDDDDR..
+  ..QwQ'''RwR..
+ ..QwQ'''''RwR..
+..QwQ'''''''RwR..
+.JwQ'''''''''RwJ.
+.JwJ'''HHH'''JwJ.
+.JwJ'''HHH'''JwJ.
+.JwJ'''HHH'''JwJ.
+.JwZ'''''''''SwJ.
+..ZwZ'''''''SwS..
+ ..ZwZ'''''SwS..
+  ..ZwZJJJSwS..
+   ..ZwwwwwS..
+    ..JJJJJ..
+     .......
+ENDMAP
+
+NAME:   nicolae_sub_lair_graze_edge
+TAGS:   allow_dup nico_grazesub no_pool_fixup unrand
+KMONS:  1 = plant
+KMONS:  2 = bush
+KFEAT:  12 = W / .
+NSUBST: D = w / J, E = w / J, F = w / J, H = w / J
+SUBST:  J = .:20 W:20 1:20 2w, w = wt
+MAP
+ D
+D E
+ E F
+  F H
+   H
+ENDMAP
+
+NAME:  nicolae_lair_lakeside_cave
+TAGS:  no_pool_fixup transparent
+DEPTH: Lair
+KITEM: DEF = % w:40 / * w:16 / | w:4 / nothing w:20
+KMONS: 1D = alligator / anaconda / manticore / fire crab / polar bear / \
+            torpor snail / komodo dragon / dire elephant
+KMONS: 2E = hornet / hell rat / wyvern / cane toad / death yak / elephant / \
+            steam dragon / rime drake / hydra
+KMONS: 3F = basilisk / scorpion / wolf / black mamba / water moccasin / \
+            black bear / yak / bullfrog
+SUBST: K = xxw..., M = wW, N = WWwx, - = x_, H = D E:20 F:40, \
+       p = 2:5 3:80 .:400, q = 1 3 2:80 .:360
+CLEAR: _
+MAP
+                 @..Mw--
+ -----------     ...Mww--
+--xxxxxxxxxxx    ...Mwww--
+-xxxKKKKKKKKxx    ...Mwwx-
+-xxKKqqq.ppKKxx    ...Mwx-
+-xKKqqqMMpppKxxxxxxxppMwx-
+-xKqqqMMMMppppppxxppppMwx-
+-xKqqMwwwwMMMppppppppMwwx-
+-xKqMMwwwwwwwMMMppMMMwwwx-
+-xKqMMwwwwwwwwwwMMwwwwwxx-
+-xKqqMwwwwMxxxwwwwwwxxxx--
+-xKqqqMMMM.+.xxxxxxxxxxx-
+-xKKqqqMM.1x..HHHDxxxxx--
+-xxKKqqq.1.xN.HHHDxxxx--
+--xxKKKKKKxxNNNNxxxx---
+ --xxxxxxxxxxxxxxx---
+  -----------------
+ENDMAP
+
+NAME:   nicolae_lair_lil_pond
+TAGS:   transparent ruin decor extra
+DEPTH:  Lair
+NSUBST: D = . / x
+SUBST:  - = . / W
+MAP
+............
+....xxxx....
+..DDDxxxxx..
+..x------x..
+.xx-wwww-xx.
+.xx-wwww-xx.
+.xx-wwww-xx.
+.xx-wwww-xx.
+..x------x..
+..xxxxxxxx..
+....xxxx....
+............
+ENDMAP
+
+NAME:  nicolae_lair_lindhole
+TAGS:  transparent
+DEPTH: Lair
+KMONS: 1 = lindwurm
+SUBST: K = LLLL., L = lx, ~ = 1.., - = x_, % = %%%$*.
+CLEAR: _
+MAP
+-----------
+-KKKKKKKKKK
+-K....~...@
+-K.~.......
+-L..LLLLLLL-
+-L..Lxxxxxx-
+-L..LLLLLLx-
+-L.~...%%Lx-
+-L....1%%Lx-
+-LLLLLLLLLx-
+-xxxxxxxxxx-
+------------
+ENDMAP
+
+NAME:  nicolae_lair_liquid_snakes
+TAGS:  no_pool_fixup transparent
+DEPTH: Lair
+KMONS: 1 = lava snake
+KMONS: 2 = electric eel
+KFEAT: 1 = l
+KFEAT: 2 = w
+SUBST: L = ..D, M = ..E, - = xx_, D = 1 l:240, E = 2 w:240
+CLEAR: _
+MAP
+        -----------
+       --xxxxxxxxx--
+--------xxDDD1DDDxx-
+xxxxxxxxxDDLLLLLDDxx
+xDDDDxxxDDLL...LLDDx
+x.LLDDxDDLL.....LL.x
+@..LLD1DLL.MMMMM...@
+@...LLLLL.MME2EMM..@
+x.MM.....MMEExEEMM.x
+xEEMM...MMEExxxEEEEx
+xxEEMMMMMEExxxxxxxxx
+-xxEEE2EEExx--------
+--xxxxxxxxx--
+ -----------
+ENDMAP
+
+NAME:   nicolae_lair_run_with_the_wolves
+TAGS:   ruin transparent
+DEPTH:  Lair
+KMONS:  1 = wolf spider
+KMONS:  2 = wolf band
+NSUBST: D = 1 / 12 / 2
+MAP
+         xxxxx
+      xxxxxxxxxxx
+   xxxxxxx...xxxxxxx
+xxxxxxxx.......xxxxxxxx
+...........D...........
+@..........D..........@
+...........D...........
+xxxxxxxx.......xxxxxxxx
+   xxxxxxx...xxxxxxx
+      xxxxxxxxxxx
+         xxxxx
+ENDMAP
+
+NAME:   nicolae_lair_time_for_slime
+TAGS:   transparent patrolling
+DEPTH:  Lair:4-
+KMONS:  1 = slime creature
+KMONS:  2 = azure jelly / quicksilver ooze
+KMONS:  3 = jelly
+# Places 2-6 slime creatures, 1 azure jelly or quicksilver ooze, and
+# 3-5 jellies.
+NSUBST: p = 1 / 3 / s, q = 1 / 3 / s, s = 4=1.. / 1=2 / 2=3. / .
+SUBST:  ' = `:40 %, ` = x..., - = x__
+CLEAR: _
+MAP
+  -------x.@.x-------
+ --xxxxxxx`.`xxxxxxx--
+--xx'''xxx`.`xxx'''xx--
+-xx'.p.'x`...`x'.q.'xx-
+-x'.ppp```...```qqs.'x-
+-x'ppppp...3...qqqqq'x-
+-x'.ppp`````````qqq.'x-
+-xx'.p.'xxxxxxx'.q.'xx-
+--xx'''xxxxxxxxx'''xx-
+ --xxxxxxxxxxxxxxxxx--
+  -------------------
 ENDMAP
 
 ###############################################################################

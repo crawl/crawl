@@ -1128,7 +1128,7 @@ command_type travel()
                 if (lev && lev->needs_stop(newpos))
                 {
                     explore_stopped_pos = newpos;
-                    stop_running();
+                    stop_running(false);
                     return direction_to_command(*move_x, *move_y);
                 }
             }

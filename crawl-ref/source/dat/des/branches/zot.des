@@ -72,7 +72,9 @@ function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
   local targets = dgn.find_marker_positions_by_prop("oklobify", 1)
   for _, pos in ipairs(targets) do
     local mons = dgn.mons_at(pos.x, pos.y)
-    if mons ~= nil and mons.name ~= "oklob plant" then
+    if mons ~= nil and
+       (mons.name == "plant" or mons.name == "fungus"
+        or mons.name == "bush") then
       possible[#possible + 1] = pos
     end
   end
@@ -2682,8 +2684,8 @@ SUBST:   < = {[(
 KFEAT:   ^ = alarm trap / zot trap
 # The possible acts:
 MONS:    red draconian scorcher, red draconian, juggernaut
-MONS:    tentacled monstrosity, ancient lich / dread lich, electric golem
-MONS:    draconian
+MONS:    tentacled monstrosity, ancient lich, electric golem
+MONS:    purple draconian
 SHUFFLE: ABCDEFHI
 # Fire breathers: Red draconians, with some scorchers
 NSUBST:  A = 3 = 112 / 9 = 2. / *:.
@@ -2706,7 +2708,7 @@ KMONS:   s = quicksilver dragon / storm dragon / \
 NSUBST:  F = 8 = z. / 1 = y .:50 / *:.
 KMONS:   y = curse toe
 KMONS:   z = death cob
-# The Jugglers:  draconian shifters and draconians
+# The Jugglers:  draconian shifters and purple draconians
 NSUBST:  H = 3 = aa7 / 9 = 7. / *:.
 KMONS:   a = draconian shifter
 # Those laffy daffy Klowns

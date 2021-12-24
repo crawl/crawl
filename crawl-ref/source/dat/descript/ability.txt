@@ -116,7 +116,9 @@ destination.
 %%%%
 Evoke Blink ability
 
-Randomly translocates the user a short distance.
+Randomly translocates the user a short distance. Translocating in this way
+destabilises the user temporarily, preventing consecutive blinks for a
+short period of time depending on Evocations skill.
 %%%%
 Evoke Berserk Rage ability
 
@@ -204,9 +206,9 @@ freshness of these are dependent on Necromancy skill.
 %%%%
 Torment ability
 
-Sacrifices a cadaver to make all living creatures in sight experience all
-the pain that being suffered in its life. This damage is never directly lethal.
-Kikubaaqudgha may shield you from the effect, depending on your piety.
+Sacrifices an adjacent cadaver to make all living creatures in sight experience
+all the pain that being suffered in its life. This damage is never directly
+lethal. Kikubaaqudgha will always at least partially shield you from the effect.
 %%%%
 Brand Weapon With Pain ability
 
@@ -222,42 +224,34 @@ You must choose between this gift or that of branding a weapon with pain, and
 either gift may only be received once.
 %%%%
 # Yredelemnul
-Animate Remains ability
-
-Reanimates a single corpse or skeleton as a follower. Zombies and skeletons
-cannot leave the level they were created on.
-%%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Injury Mirror ability
+Dark Bargain ability
 
-Reflects damage taken for a short duration, hurting attackers whenever any
-damage is taken and reducing piety depending on the amount of damage dealt.
-%%%%
-Animate Dead ability
-
-Reanimates all corpses and skeletons in the vicinity as followers. Zombies and
-skeletons cannot leave the level they were created on.
+Offer up your reaped souls to Yredelemnul in exchange for the temporary help of
+an undead servant. The strength of the servant granted is increased by
+Invocations skill.
 %%%%
 Drain Life ability
 
 [[Drain Life spell]] The amount of life force drained is increased by
 Invocations skill.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
-Marks a monster's soul as ripe for the taking. Intelligent living, holy and
-demonic monsters can be targeted (excepting most lords of Pandemonium), as
-long as they are relatively uninjured. The duration of the mark is dependent on
-Invocations skill. If the monster dies while still marked, its soul will become
-yours.
+Marks a monster's soul as ripe for the taking. If the monster dies before the mark
+expires, it will return as a bound soul, still retaining the equipment, spells and
+abilities it had in life.
 
-The enslaved soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. However, only one soul can be enslaved
-at a time.
+Living, holy and demonic monsters can be targeted (excepting most lords of
+Pandemonium), as long as they are relatively uninjured. The duration of the mark
+is dependent on Invocations skill.
+
+The bound soul will follow its captor through stairs, and can be recalled from
+other levels. Only one soul can be bound at a time.
 %%%%
 # Okawaru
 Heroism ability
@@ -334,18 +328,6 @@ Brothers in Arms ability
 Summons huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
-Divine Protection ability
-
-Beseeches Elyvilon to save your life. If you are mortally wounded, the Healer
-may undo the killing blow. Especially pious individuals may be certain of this
-help, but in that case, any intervention costs piety (as opposed to merely
-asking for intervention, which is always free). Killing others while asking
-for divine protection will cause penance.
-%%%%
-Lesser Healing ability
-
-Heals a small amount of health, depending on Invocations skill.
-%%%%
 Purification ability
 
 Purges your body of poison, confusion, slowness, petrification, weakness, and
@@ -365,15 +347,13 @@ mindless creatures are too unintelligent to be pacified, and no monster can be
 pacified while it is asleep.
 
 Whether the pacification succeeds or not, the invested piety and magic points
-are lost. If it does succeed, the monster is healed and you gain half the
-monster's experience value. Otherwise, the monster is unaffected and you gain
+are lost. If it does succeed, the monster is healed and you gain the monster's
+full experience value. Otherwise, the monster is unaffected and you gain
 nothing.
 %%%%
-Greater Healing ability
+Heal Self ability
 
-Heals a moderate amount of health, depending on Invocations skill. Greater
-Healing will heal approximately three times as much as Lesser Healing, but at a
-slightly higher total piety cost.
+Heals a moderate amount of health, depending on Invocations skill.
 %%%%
 Divine Vigour ability
 
@@ -390,10 +370,11 @@ entered it.
 Bend Space ability
 
 Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating and damaging other adjacent creatures. In
-warping the fabric of space, this ability ignores effects that would usually
-prevent translocations. Invocations skill increases the chance of affecting
-nearby creatures and the damage dealt to those affected.
+and possibly also translocating and damaging creatures adjacent to the initial
+location or the destination. In warping the fabric of space, this ability
+ignores effects that would usually prevent translocations. Invocations skill
+increases the chance of affecting nearby creatures and the damage dealt to
+those affected.
 %%%%
 Banish ability
 
@@ -519,18 +500,15 @@ second you departed. Invocations skill increases the amount of time that passes
 while you're gone.
 %%%%
 # Jiyva
-Request Jelly ability
-
-Creates a neutral jelly that will wander the floor and digest items.
-%%%%
 Slimify ability
 
 Coats a wielded weapon or your fists with slime, turning the next living or
 corporeal undead monster hit into a neutral slime.
 %%%%
-Cure Bad Mutation ability
+Oozemancy ability
 
-Removes a randomly selected bad mutation.
+Calls forth acidic ooze from the walls of the dungeon around you, damaging foes
+depending on the number of affected walls they remain adjacent to.
 %%%%
 # Ashenzari
 Curse Item ability
@@ -813,21 +791,22 @@ with martial attacks increases this bonus. The storm weakens over time and
 fades away once the bonus reaches zero. The heavenly clouds prevent
 invisibility, and obscure the vision of those outside the storm.
 %%%%
+Fiery Armour ability
+
+Armour yourself in fire, providing +7 AC and searing foes foolish enough to
+strike you in melee. The fire takes quite a long time to burn out.
+%%%%
 Foxfire Swarm ability
 
 Conjures a swarm of animate flames all around you. These rapidly seek the
 nearest monsters, burning them. They will dissipate harmlessly if unable to
 reach a target or if you swap places with them.
 %%%%
-Sea of Fire ability
-
-Fills your surroundings with burning coals which, if not immediately stamped
-out, burst into raging flames.
-%%%%
 Rising Flame ability
 
 Sends you floating upward and, after a short delay for Ignis to gather enough
-power, blasts you through the ceiling and into the level above.
+power, blasts you through the ceiling and into the level above. This ability
+may only be used once.
 %%%%
 Hop ability
 

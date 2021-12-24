@@ -993,20 +993,19 @@ public:
     }
 
     bool can_offhand_punch() const override { return true; }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string /*default_name*/) const override
+    {
+        // there's special casing in base_hand_name to get "fists"
+        string hand = you.base_hand_name(true, true);
+        return make_stringf("Storm %s", hand.c_str());
+    }
 };
 
 #if TAG_MAJOR_VERSION == 34
-
-/**
- * Set the number of hydra heads that the player currently has.
- *
- * @param heads the new number of heads you should have.
- */
-void set_hydra_form_heads(int heads)
-{
-    you.props[HYDRA_FORM_HEADS_KEY] = min(MAX_HYDRA_HEADS, max(1, heads));
-    you.wield_change = true;
-}
 
 class FormHydra : public Form
 {
@@ -1999,8 +1998,6 @@ void untransform(bool skip_move)
         you.received_weapon_warning = false;
     if (you.props.exists(TRANSFORM_POW_KEY))
         you.props.erase(TRANSFORM_POW_KEY);
-    if (you.props.exists(HYDRA_FORM_HEADS_KEY))
-        you.props.erase(HYDRA_FORM_HEADS_KEY);
     if (you.props.exists(AIRFORM_POWER_KEY))
         you.props.erase(AIRFORM_POWER_KEY);
 

@@ -435,7 +435,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_STRONG_STIFF, 0, 3, mutflag::good, false,
-  "strong stiff",
+  "stiff muscles",
 
   {"Your muscles are strong, but stiff. (Str +1, Dex -1)",
    "Your muscles are very strong, but stiff. (Str +2, Dex -2)",
@@ -451,7 +451,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_FLEXIBLE_WEAK, 0, 3, mutflag::good, false,
-  "flexible weak",
+  "flexible muscles",
 
   {"Your muscles are flexible, but weak (Str -1, Dex +1).",
    "Your muscles are very flexible, but weak (Str -2, Dex +2).",
@@ -860,11 +860,11 @@ static const mutation_def mut_data[] =
 { MUT_STINGER, 8, 3, mutflag::good, true,
   "stinger",
 
-  {"Your tail ends in a poisonous barb.",
-   "Your tail ends in a sharp poisonous barb.",
-   "Your tail ends in a wickedly sharp and poisonous barb."},
+  {"Your tail ends in a venomous barb.",
+   "Your tail ends in a sharp venomous barb.",
+   "Your tail ends in a wickedly sharp and venomous barb."},
 
-  {"A poisonous barb forms on the end of your tail.",
+  {"A venomous barb forms on the end of your tail.",
    "The barb on your tail looks sharper.",
    "The barb on your tail looks very sharp."},
 
@@ -955,7 +955,7 @@ static const mutation_def mut_data[] =
 { MUT_CURL, 0, 1, mutflag::good, true,
   "reflexive curl",
 
-  {"You curl defensively after being hit.", "", ""},
+  {"You curl defensively after being hit. (AC +7*)", "", ""},
   {"You now curl defensively after being hit.", "", ""},
   {"", "", ""},
 },
@@ -1065,7 +1065,7 @@ static const mutation_def mut_data[] =
 
 #if TAG_MAJOR_VERSION == 34
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
-  "torment resistance",
+  "removed torment resistance",
 
   {"You are somewhat able to resist unholy torments.","",""},
   {"You feel a strange anaesthesia.", "", ""},
@@ -1253,9 +1253,9 @@ static const mutation_def mut_data[] =
 { MUT_EYEBALLS, 0, 3, mutflag::good | mutflag::jiyva, true,
   "eyeballs",
 
-  {"Your body has grown golden eyes which may confuse attackers. (Acc +3)",
-   "Your body has grown many golden eyes which may confuse attackers. (Acc +5)",
-   "Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)"},
+  {"Your body has grown eyes which may confuse attackers. (Acc +3)",
+   "Your body has grown many eyes which may confuse attackers. (Acc +5)",
+   "Your body is covered in eyes which may confuse attackers. (Acc +7, SInv)"},
 
   {"Eyeballs grow over part of your body.",
    "Eyeballs cover a large portion of your body.",
@@ -1554,9 +1554,9 @@ static const mutation_def mut_data[] =
 { MUT_SANGUINE_ARMOUR, 0, 3, mutflag::good, false,
   "sanguine armour",
 
-  {"When seriously injured, your bleeding wounds create armour. (AC +",
-   "When seriously injured, your bleeding wounds create thick armour. (AC +",
-   "When seriously injured, your bleeding wounds create very thick armour. (AC +"},
+  {"When seriously injured, your blood forms armour. (AC +",
+   "When seriously injured, your blood forms thick armour. (AC +",
+   "When seriously injured, your blood forms very thick armour. (AC +"},
 
   {"You feel your blood ready itself to protect you.",
    "You feel your blood thicken.",
@@ -1645,7 +1645,7 @@ static const mutation_def mut_data[] =
 { MUT_JELLY_MISSILE, 0, 1, mutflag::good | mutflag::jiyva, true,
   "jelly absorbing missiles",
 
-  {"You have a small jelly attached to you that may absorb incoming projectiles.", "", ""},
+  {"You have a small jelly attached to you that may absorb projectiles.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
   {"The jelly growth is reabsorbed into your body.", "", ""},
 },
@@ -1664,7 +1664,7 @@ static const mutation_def mut_data[] =
 
   {"You are resistant to trampling.", "", ""},
   {"You feel steady.", "", ""},
-  {"You feel unsteady..", "", ""},
+  {"You feel unsteady.", "", ""},
 },
 
 { MUT_CLING, 0, 1, mutflag::good, true,
@@ -1862,7 +1862,7 @@ static const mutation_def mut_data[] =
 { MUT_COWARDICE, 0, 1, mutflag::bad, false,
   "cowardly",
 
-  {"Your cowardice makes you less effective in combat with threatening monsters.", "", ""},
+  {"Your cowardice makes you less effective in combat with threatening foes.", "", ""},
   {"You have lost your courage.", "", ""},
   {"You have regained your courage.", "", ""},
 },
@@ -2188,8 +2188,8 @@ static const mutation_def mut_data[] =
 { MUT_NIMBLE_SWIMMER, 0, 2, mutflag::good, true,
   "nimble swimmer",
 
-  {"You are camouflaged near water. (Stealth+)",
-   "You are quick and stealthy near water. (Stealth+, EV+, Speed+++)", ""},
+  {"You are camouflaged when in or above water. (Stealth+)",
+   "You are very nimble when in or above water. (Stealth+, EV+, Speed+++)", ""},
   {"You feel comfortable near water.",
    "You feel very comfortable near water.", ""},
   {"You feel less comfortable near water.",
@@ -2247,7 +2247,7 @@ static const mutation_def mut_data[] =
 { MUT_FLAT_HP, 0, 3, mutflag::good, false,
   "extra vitality",
 
-    {"You have superior vitality. (+4 HP)",
+    {"You have superior vitality. (+4 MHP)",
      "You have much superior vitality. (+8 MHP)",
      "You have exceptionally superior vitality. (+12 MHP)"},
     {"You feel less vital.",
@@ -2274,6 +2274,12 @@ static const mutation_def mut_data[] =
       "", ""},
     {"The darkness flees at your approach.", "", ""},
     {"The shadows grow bolder once more.", "", ""},
+},
+
+{ MUT_DIVINE_ATTRS, 0, 1, mutflag::good, false, "divine attributes",
+  {"Your divine heritage dramatically boosts your attributes as you level up.", "", ""},
+  {"You feel more divine.", "", ""},
+  {"You feel more mortal.", "", ""},
 },
 
 };

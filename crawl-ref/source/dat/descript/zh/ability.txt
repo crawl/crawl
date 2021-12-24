@@ -163,19 +163,9 @@ Torment ability
 
 奇库巴卡德加*可能*会保护你不受该痛苦的影响。
 %%%%
-Animate Remains ability
-
-将一具尸体或骸骨复活，使它成为你的部下。注意：
-僵尸和骷髅都不能离开它们被创造出来的那一层地城。
-%%%%
 Recall Undead Slaves ability
 
 立即将地城中所有属于你的死灵奴仆们召唤到你的身边。
-%%%%
-Animate Dead ability
-
-将你周围所有的尸体和骸骨复活，使它们成为你的部下。注意：
-僵尸和骷髅都不能离开它们被创造出来的那一层地城。
 %%%%
 Drain Life ability
 
@@ -191,10 +181,6 @@ Enslave Soul ability
 你不能同时驱使一个以上的灵魂。灵魂标记的持续时间根据你的神术技能而定。
 
 值得注意的是，被驱使的灵魂是可以跟随你前往地城的其他楼层的。
-%%%%
-Animate Remains or Dead ability
-
-如果你看到这条消息，说明你遇到bug了。
 %%%%
 Heroism ability
 

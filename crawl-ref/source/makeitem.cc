@@ -113,30 +113,6 @@ void item_colour(item_def &item)
         item.subtype_rnd = you.item_description[*idesc][item.sub_type];
 }
 
-// Does Xom consider an item boring?
-static bool _is_boring_item(int type, int sub_type)
-{
-    switch (type)
-    {
-    case OBJ_SCROLLS:
-        // These scrolls increase knowledge and thus reduce risk.
-        switch (sub_type)
-        {
-        case SCR_IDENTIFY:
-        case SCR_MAGIC_MAPPING:
-            return true;
-        default:
-            break;
-        }
-        break;
-    case OBJ_JEWELLERY:
-        return sub_type == AMU_NOTHING;
-    default:
-        break;
-    }
-    return false;
-}
-
 static weapon_type _determine_weapon_subtype(int item_level)
 {
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
@@ -823,7 +799,12 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
         return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
 
     case ARM_GLOVES:
-        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY, SPARM_STEALTH);
+        // XXX: this is only here for testing.
+        // Really actually please revert this before 0.28 is released.
+        if (coinflip())
+            return SPARM_INFUSION;
+        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_HURLING,
+                             SPARM_STEALTH, SPARM_INFUSION);
 
     case ARM_BOOTS:
         return random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_RAMPAGING);
@@ -941,10 +922,11 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
+    case SPARM_INFUSION:
         if (!strict)
             return true;
         // deliberate fall-through
-    case SPARM_ARCHERY:
+    case SPARM_HURLING:
         return slot == EQ_GLOVES;
 
     case SPARM_SEE_INVISIBLE:
@@ -1288,15 +1270,35 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.sub_type = _random_wand_subtype();
 
     // Add wand charges and ensure we have at least one charge.
-    item.charges = 1 + random2avg(wand_charge_value(item.sub_type), 3);
+    const int max_charges = wand_charge_value(item.sub_type, item_level);
+    item.charges = 1 + random2avg(max_charges, 2);
 
     // Don't let monsters pickup early high-tier wands
     if (item_level < 2 && is_high_tier_wand(item.sub_type))
         item.flags |= ISFLAG_NO_PICKUP;
 }
 
+static int _potion_weight(item_rarity_type rarity)
+{
+    switch (rarity)
+    {
+    case RARITY_VERY_COMMON:
+        return 192;
+    case RARITY_COMMON:
+        return 105;
+    case RARITY_UNCOMMON:
+        return 67;
+    case RARITY_RARE:
+        return 35;
+    case RARITY_VERY_RARE:
+        return 2;
+    default:
+        return 0;
+    }
+}
+
 static void _generate_potion_item(item_def& item, int force_type,
-                                  int item_level, int agent)
+                                  int item_level)
 {
     item.quantity = 1;
 
@@ -1310,41 +1312,42 @@ static void _generate_potion_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
-        int stype;
-        int tries = 500;
-
-        // If created by Xom, keep going until an approved potion is chosen
-        // Currently does nothing, until we come up with a boring potion.
-        do
+        vector<pair<potion_type, int>> weights;
+        for (int i = 0; i < NUM_POTIONS; ++i)
         {
-            // total weight: 1045
-            stype = random_choose_weighted(192, POT_CURING,
-                                           105, POT_HEAL_WOUNDS,
-                                            73, POT_FLIGHT,
-                                            73, POT_HASTE,
-                                            73, POT_LIGNIFY,
-                                            66, POT_ATTRACTION,
-                                            66, POT_DEGENERATION,
-                                            66, POT_MIGHT,
-                                            66, POT_BRILLIANCE,
-                                            53, POT_MUTATION,
-                                            35, POT_INVISIBILITY,
-                                            35, POT_RESISTANCE,
-                                            35, POT_MAGIC,
-                                            35, POT_BERSERK_RAGE,
-                                            35, POT_CANCELLATION,
-                                            35, POT_AMBROSIA,
-                                             2, POT_EXPERIENCE);
+            const potion_type pot = (potion_type) i;
+            const int weight = _potion_weight(consumable_rarity(OBJ_POTIONS,
+                                                                pot));
+            if (weight)
+            {
+                const pair<potion_type, int> weight_pair = { pot, weight };
+                weights.push_back(weight_pair);
+            }
         }
-        while (agent == GOD_XOM
-               && _is_boring_item(OBJ_POTIONS, stype)
-               && --tries > 0);
 
-        item.sub_type = stype;
+        // total weight: 1045
+        item.sub_type = *random_choose_weighted(weights);
     }
     // don't let monsters pickup early dangerous potions
     if (item_level < 2 && item.sub_type == POT_BERSERK_RAGE)
         item.flags |= ISFLAG_NO_PICKUP;
+}
+
+static int _scroll_weight(item_rarity_type rarity)
+{
+    switch (rarity)
+    {
+    case RARITY_VERY_COMMON:
+        return 200;
+    case RARITY_COMMON:
+        return 100;
+    case RARITY_UNCOMMON:
+        return 36;
+    case RARITY_RARE:
+        return 15;
+    default:
+        return 0;
+    }
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
@@ -1355,43 +1358,37 @@ static void _generate_scroll_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
-        int tries = 500;
-
-        // If this item is created by Xom, keep looping until an
-        // interesting scroll is discovered (as determined by
-        // _is_boring_item). Otherwise just weighted-choose a scroll.
-        do
+        vector<pair<scroll_type, int>> weights;
+        for (int i = 0; i < NUM_SCROLLS; ++i)
         {
-            // total weight:    750
-            //                 -122  in sprint
-            item.sub_type = random_choose_weighted(
-                200, SCR_IDENTIFY,
-                 // [Cha] don't generate teleportation scrolls if in sprint
-                100, (crawl_state.game_is_sprint() ? NUM_SCROLLS
-                                                   : SCR_TELEPORTATION),
-                 45, SCR_AMNESIA,
-                 // [Cha] don't generate noise scrolls if in sprint
-                 44, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
-                 40, SCR_ENCHANT_ARMOUR,
-                 40, SCR_ENCHANT_WEAPON,
-                 40, SCR_MAGIC_MAPPING,
-                 32, SCR_FEAR,
-                 32, SCR_FOG,
-                 32, SCR_BLINKING,
-                 32, SCR_IMMOLATION,
-                 29, SCR_VULNERABILITY,
-                 // Higher-level scrolls.
-                 14, SCR_SUMMONING,
-                 14, SCR_ACQUIREMENT,
-                 14, SCR_SILENCE,
-                 14, SCR_BRAND_WEAPON,
-                 14, SCR_TORMENT,
-                 14, SCR_HOLY_WORD);
+            const scroll_type scr = (scroll_type) i;
+
+            // No teleportation or noise in Sprint.
+            if (crawl_state.game_is_sprint()
+                && (scr == SCR_TELEPORTATION || scr == SCR_NOISE))
+            {
+                continue;
+            }
+
+            // These scrolls increase knowledge, so Xom considers them boring.
+            if (agent == GOD_XOM
+                && (scr == SCR_IDENTIFY || scr == SCR_MAGIC_MAPPING))
+            {
+                continue;
+            }
+
+            const int weight = _scroll_weight(consumable_rarity(OBJ_SCROLLS,
+                                                                scr));
+            if (weight)
+            {
+                const pair<scroll_type, int> weight_pair = { scr, weight };
+                weights.push_back(weight_pair);
+            }
         }
-        while (item.sub_type == NUM_SCROLLS
-               || agent == GOD_XOM
-                  && _is_boring_item(OBJ_SCROLLS, item.sub_type)
-                  && --tries > 0);
+
+        // total weight:    750
+        //                 -122  in sprint
+        item.sub_type = *random_choose_weighted(weights);
     }
 
     item.quantity = random_choose_weighted(46, 1,
@@ -1608,20 +1605,13 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
     else
     {
-        int tries = 500;
-        do
-        {
-            if (force_type == NUM_RINGS)
-                item.sub_type = get_random_ring_type();
-            else if (force_type == NUM_JEWELLERY)
-                item.sub_type = get_random_amulet_type();
-            else
-                item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
-                                                  : get_random_ring_type());
-        }
-        while (agent == GOD_XOM
-               && _is_boring_item(OBJ_JEWELLERY, item.sub_type)
-               && --tries > 0);
+        if (force_type == NUM_RINGS)
+            item.sub_type = get_random_ring_type();
+        else if (force_type == NUM_JEWELLERY)
+            item.sub_type = get_random_amulet_type();
+        else
+            item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
+                                              : get_random_ring_type());
     }
 
     item.plus = _determine_ring_plus(item.sub_type);
@@ -1894,7 +1884,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_POTIONS:
-        _generate_potion_item(item, force_type, item_level, agent);
+        _generate_potion_item(item, force_type, item_level);
         break;
 
     case OBJ_SCROLLS:

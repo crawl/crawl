@@ -399,7 +399,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 10, MON_SPELL_PRIEST },
        { SPELL_SUMMON_DEMON, 20, MON_SPELL_PRIEST },
        { SPELL_HEAL_OTHER, 10, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 10, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -418,7 +417,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 15, MON_SPELL_WIZARD },
        { SPELL_AGONY_RANGE, 15, MON_SPELL_WIZARD },
        { SPELL_BIND_SOULS, 30, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -922,7 +920,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 11, MON_SPELL_WIZARD },
        { SPELL_SMITING, 11, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 22, MON_SPELL_WIZARD },
       }
     },
 
@@ -1079,6 +1076,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_IRONBOUND_THUNDERHULK,
       {
        { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
+       { SPELL_BLINK_RANGE, 25, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1192,7 +1190,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_HASTE_OTHER, 21, MON_SPELL_PRIEST },
        { SPELL_MIGHT_OTHER, 21, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 21, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1653,7 +1650,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STRIP_WILLPOWER, 11, MON_SPELL_WIZARD },
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1777,14 +1773,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('F') Frogs.
-    {  MST_PRINCE_RIBBIT,
-      {
-       { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
-       { SPELL_TELEPORT_SELF, 66, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-      }
-    },
-
     // ('H') Hybrids.
     {  MST_ARACHNE,
       {
@@ -1820,7 +1808,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_SONJA,
       {
        { SPELL_BLINK, 28, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 28, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1987,7 +1974,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SPRINT, 14, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
        { SPELL_BLINK, 14, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 14, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 

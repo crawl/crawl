@@ -45,6 +45,16 @@ enum armour_flag
     ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
 };
 
+enum item_rarity_type
+{
+    RARITY_NONE,
+    RARITY_VERY_RARE,
+    RARITY_RARE,
+    RARITY_UNCOMMON,
+    RARITY_COMMON,
+    RARITY_VERY_COMMON,
+};
+
 #define AMU_REFLECT_SH 5*2
 
 /// Removed items that have item knowledge.
@@ -75,7 +85,6 @@ bool fully_identified(const item_def &item) PURE;
 void     set_equip_desc(item_def &item, iflags_t flags);
 iflags_t get_equip_desc(const item_def &item) PURE;
 
-bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:
@@ -107,7 +116,7 @@ int fit_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(armour_type sub_type, size_type size) PURE;
 
-int wand_charge_value(int type) PURE;
+int wand_charge_value(int type, int item_level = 1) PURE;
 #if TAG_MAJOR_VERSION == 34
 bool is_known_empty_wand(const item_def &item) PURE;
 #endif
@@ -118,7 +127,6 @@ bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
-void ident_reflector(item_def *item);
 
 // Only works for armour/weapons/missiles
 // weapon functions:
@@ -190,11 +198,9 @@ int evoker_max_charges(int evoker_type);
 bool jewellery_type_has_plusses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
-#if TAG_MAJOR_VERSION == 34
 
-// food functions:
-bool is_real_food(food_type food) PURE;
-#endif
+item_rarity_type consumable_rarity(const item_def &item);
+item_rarity_type consumable_rarity(object_class_type base_type, int sub_type);
 
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
@@ -206,7 +212,6 @@ int get_armour_res_elec(const item_def &arm, bool check_artp) PURE;
 int get_armour_life_protection(const item_def &arm, bool check_artp) PURE;
 int get_armour_willpower(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_corr(const item_def &arm) PURE;
-int get_armour_repel_missiles(const item_def &arm, bool check_artp) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
 bool get_armour_rampaging(const item_def &arm, bool check_artp) PURE;
 
@@ -235,7 +240,7 @@ string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
-void seen_item(const item_def &item);
+void seen_item(item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {
