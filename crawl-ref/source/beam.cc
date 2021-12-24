@@ -5832,7 +5832,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_ENFEEBLE:
-        if (enfeeble_monster(mon, ench_power))
+        if (enfeeble_monster(*mon, ench_power))
             obvious_effect = true;
         return MON_AFFECTED;
 

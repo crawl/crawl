@@ -1655,13 +1655,8 @@ bool monster_info::has_spells() const
 
 bool monster_info::antimagic_susceptible() const
 {
-    if (!has_spells())
-        return false;
-
-    vector<mon_spell_slot> slots =
-        get_unique_spells(*this, MON_SPELL_ANTIMAGIC_MASK);
-
-    return !slots.empty();
+    return has_spells()
+       && !get_unique_spells(*this, MON_SPELL_ANTIMAGIC_MASK).empty();
 }
 
 /// What hd does this monster cast spells with? May vary from actual HD.
