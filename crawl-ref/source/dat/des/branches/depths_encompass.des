@@ -110,14 +110,14 @@ MONS:    spectral thing
 MONS:    phantasmal warrior / vampire knight / vampire mage \
          / deep elf death mage
 MONS:    iron dragon / war gargoyle
-MONS:    spectre place:Depths:5 / simulacrum place:Depths:5
+MONS:    spectre place:Depths:4 / simulacrum place:Depths:4
 MONS:    eidolon / soul eater / death drake / flayed ghost / shadow dragon w:2
 MONS:    ancient lich / dread lich / tzitzimitl
 MONS:    orange crystal statue
 KMONS:   DE = patrolling glowing orange brain
 KMONS:   F = 0 band
-KMONS:   H = patrolling water elemental / patrolling spectral place:Depths:5 \
-             / patrolling simulacrum place:Depths:5
+KMONS:   H = patrolling water elemental / patrolling spectral place:Depths:4 \
+             / patrolling simulacrum place:Depths:4
 KMONS:   P = floating eye
 SHUFFLE: qr / su / yz / JK, 7N
 SUBST:   q = +, syJ = x, N = xw, p = pp.

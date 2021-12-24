@@ -631,6 +631,20 @@ string game_state::game_type_name_for(game_type _type)
     }
 }
 
+bool game_state::seed_is_known() const
+{
+#ifdef DGAMELAUNCH
+    return player_is_dead()
+# ifdef WIZARD
+        || you.wizard
+# endif
+        || type == GAME_TYPE_CUSTOM_SEED;
+#else
+    //offline: it's visible to do what you want with it.
+    return true;
+#endif
+}
+
 string game_state::game_savedir_path() const
 {
     if (!game_is_valid_type())

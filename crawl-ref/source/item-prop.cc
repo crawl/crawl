@@ -508,7 +508,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GREAT_SWORD,           "great sword",           17, -3, 17,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 6, 10, 65, LBL_BRANDS },
-    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19,
+    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 18,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 0, 2, 100, LBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
@@ -527,7 +527,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_BLESSED_GREAT_SWORD,   "old great sword",     17, -3, 16,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
-    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 19, -4, 19,
+    { WPN_BLESSED_TRIPLE_SWORD,      "old triple sword", 19, -4, 18,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_SLICING, 0, 0, 0, {} },
 #endif
@@ -545,7 +545,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 6, 10, 65, AXE_BRANDS },
-    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 20,
+    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 19,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 0, 2, 100, AXE_BRANDS },
 
@@ -581,7 +581,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GLAIVE,            "glaive",             15, -3, 17,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 5, 10, 65, POLEARM_BRANDS },
-    { WPN_BARDICHE,          "bardiche",           18, -6, 20,
+    { WPN_BARDICHE,          "bardiche",           18, -6, 19,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_CHOPPING, 1, 2, 90, POLEARM_BRANDS },
 
@@ -691,9 +691,6 @@ static const food_def Food_prop[] =
 {
     { FOOD_RATION,       "buggy ration", 3400,  1900,  1900 },
     { FOOD_CHUNK,        "buggy chunk",        1000,  1300,     0 },
-
-    // is_real_food assumes we list FOOD_ROYAL_JELLY as the first removed
-    // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy pizza",     0,     0,     0 },
     { FOOD_ROYAL_JELLY,  "buggy jelly",  2000,  2000,  2000 },
     { FOOD_BREAD_RATION, "buggy ration", 4400,     0,  5900 },
@@ -1062,11 +1059,6 @@ void set_equip_desc(item_def &item, iflags_t flags)
     item.flags |= flags;
 }
 
-bool is_helmet(const item_def& item)
-{
-    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
-}
-
 bool is_hard_helmet(const item_def &item)
 {
     return item.is_type(OBJ_ARMOUR, ARM_HELMET);
@@ -1417,25 +1409,27 @@ bool check_armour_size(const item_def &item, size_type size)
     return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
 
-int wand_charge_value(int type)
+int wand_charge_value(int type, int item_level)
 {
     switch (type)
     {
     case WAND_DIGGING:
         return 9;
 
+    // Decrease charge generation later on so that players get wands to play
+    // with early, but aren't totally flooded with charges by late game.
     case WAND_ICEBLAST:
     case WAND_ACID:
     case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
-        return 15;
+        return item_level > 7 ? 8 : 15;
 
     default:
-        return 24;
+        return item_level > 7 ? 12 : 24;
 
     case WAND_FLAME:
-        return 32;
+        return item_level > 7 ? 16 : 32;
     }
 }
 
@@ -2137,16 +2131,66 @@ bool ring_has_stackable_effect(const item_def &item)
 
     return false;
 }
-#if TAG_MAJOR_VERSION == 34
 
-//
-// Food functions:
-//
-bool is_real_food(food_type /*food*/)
+static map<potion_type, item_rarity_type> _potion_rarity = {
+    { POT_CURING,       RARITY_VERY_COMMON },
+    { POT_HEAL_WOUNDS,  RARITY_COMMON },
+    { POT_FLIGHT,       RARITY_UNCOMMON },
+    { POT_HASTE,        RARITY_UNCOMMON },
+    { POT_LIGNIFY,      RARITY_UNCOMMON },
+    { POT_ATTRACTION,   RARITY_UNCOMMON },
+    { POT_DEGENERATION, RARITY_UNCOMMON },
+    { POT_MIGHT,        RARITY_UNCOMMON },
+    { POT_BRILLIANCE,   RARITY_UNCOMMON },
+    { POT_MUTATION,     RARITY_UNCOMMON },
+    { POT_INVISIBILITY, RARITY_RARE },
+    { POT_RESISTANCE,   RARITY_RARE },
+    { POT_MAGIC,        RARITY_RARE },
+    { POT_BERSERK_RAGE, RARITY_RARE },
+    { POT_CANCELLATION, RARITY_RARE },
+    { POT_AMBROSIA,     RARITY_RARE },
+    { POT_EXPERIENCE,   RARITY_VERY_RARE },
+};
+
+static map<scroll_type, item_rarity_type> _scroll_rarity = {
+    { SCR_IDENTIFY,       RARITY_VERY_COMMON },
+    { SCR_TELEPORTATION,  RARITY_COMMON },
+    { SCR_AMNESIA,        RARITY_UNCOMMON },
+    { SCR_NOISE,          RARITY_UNCOMMON },
+    { SCR_ENCHANT_ARMOUR, RARITY_UNCOMMON },
+    { SCR_ENCHANT_WEAPON, RARITY_UNCOMMON },
+    { SCR_MAGIC_MAPPING,  RARITY_UNCOMMON },
+    { SCR_FEAR,           RARITY_UNCOMMON },
+    { SCR_FOG,            RARITY_UNCOMMON },
+    { SCR_BLINKING,       RARITY_UNCOMMON },
+    { SCR_IMMOLATION,     RARITY_UNCOMMON },
+    { SCR_VULNERABILITY,  RARITY_UNCOMMON },
+    { SCR_SUMMONING,      RARITY_RARE },
+    { SCR_ACQUIREMENT,    RARITY_RARE },
+    { SCR_SILENCE,        RARITY_RARE },
+    { SCR_BRAND_WEAPON,   RARITY_RARE },
+    { SCR_TORMENT,        RARITY_RARE },
+    { SCR_HOLY_WORD,      RARITY_RARE },
+};
+
+item_rarity_type consumable_rarity(const item_def &item)
 {
-    return false;
+    return consumable_rarity(item.base_type, item.sub_type);
 }
-#endif
+
+item_rarity_type consumable_rarity(object_class_type base_type, int sub_type)
+{
+    item_rarity_type *rarity = nullptr;
+    if (base_type == OBJ_POTIONS)
+        rarity = map_find(_potion_rarity, (potion_type) sub_type);
+    else if (base_type == OBJ_SCROLLS)
+        rarity = map_find(_scroll_rarity, (scroll_type) sub_type);
+
+    if (!rarity)
+        return RARITY_NONE;
+
+    return *rarity;
+}
 
 //
 // Generic item functions:
@@ -2284,20 +2328,6 @@ int get_armour_res_corr(const item_def &arm)
     // intrinsic armour abilities
     return get_armour_ego_type(arm) == SPARM_PRESERVATION
            || armour_type_prop(arm.sub_type, ARMF_RES_CORR);
-}
-
-int get_armour_repel_missiles(const item_def &arm, bool check_artp)
-{
-    ASSERT(arm.base_type == OBJ_ARMOUR);
-
-    // check for ego resistance
-    if (get_armour_ego_type(arm) == SPARM_REPULSION)
-        return true;
-
-    if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_RMSL);
-
-    return false;
 }
 
 bool get_armour_rampaging(const item_def &arm, bool check_artp)
@@ -2726,12 +2756,6 @@ bool shield_reflects(const item_def &shield)
     return get_armour_ego_type(shield) == SPARM_REFLECTION;
 }
 
-void ident_reflector(item_def *item)
-{
-    if (!is_artefact(*item))
-        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
-}
-
 string item_base_name(const item_def &item)
 {
     return item_base_name(item.base_type, item.sub_type);
@@ -2786,7 +2810,7 @@ weapon_type name_nospace_to_weapon(string name_nospace)
     return WPN_UNKNOWN;
 }
 
-void seen_item(const item_def &item)
+void seen_item(item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
     {
@@ -2801,15 +2825,9 @@ void seen_item(const item_def &item)
 
     _maybe_note_found_unrand(item);
 
-    // major hack. Deconstify should be safe here, but it's still repulsive.
-    item_def& malleable_item = const_cast<item_def &>(item);
-
-    malleable_item.flags |= ISFLAG_SEEN;
+    item.flags |= ISFLAG_SEEN;
     if (item.base_type == OBJ_GOLD && !item.tithe_state)
-    {
-        malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE
-                                                     : TS_NO_PIETY;
-    }
+        item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE : TS_NO_PIETY;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)

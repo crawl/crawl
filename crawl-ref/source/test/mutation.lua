@@ -63,8 +63,8 @@ local function test_basic_mutation_stuff()
     assert(not you.mutate("spit poison", "basic mutation test")) -- only for nagas
     -- could add other species conditions here using you.change_species
 
-    assert(you.mutate("talons", "basic mutation test"))
-    assert(not you.mutate("hooves", "basic mutation test")) -- covered by physiology conflict
+    assert(you.mutate("antennae", "basic mutation test"))
+    assert(not you.mutate("horns", "basic mutation test")) -- covered by physiology conflict
 
     print_mutstate("basic results: ")
     you.delete_all_mutations("mutation test")

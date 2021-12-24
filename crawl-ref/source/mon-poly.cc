@@ -61,42 +61,32 @@ void monster_drop_things(monster* mons,
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
         int item = mons->inv[i];
+        if (item == NON_ITEM || !suitable(env.item[item]))
+            continue;
 
-        if (item != NON_ITEM && suitable(env.item[item]))
+        if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
-            const bool summoned_item =
-                testbits(env.item[item].flags, ISFLAG_SUMMONED);
-            if (summoned_item)
-            {
-                item_was_destroyed(env.item[item]);
-                destroy_item(item);
-            }
-            else
-            {
-                if (mark_item_origins && env.item[item].defined())
-                    origin_set_monster(env.item[item], mons);
-
-                env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
-
-                if (env.item[item].props.exists("autoinscribe"))
-                {
-                    add_inscription(env.item[item],
-                        env.item[item].props["autoinscribe"].get_string());
-                    env.item[item].props.erase("autoinscribe");
-                }
-
-                // Unrands held by fixed monsters would give awfully redundant
-                // messages ("Cerebov hits you with the Sword of Cerebov."),
-                // thus delay identification until drop/death.
-                autoid_unrand(env.item[item]);
-
-                // If a monster is swimming, the items are ALREADY
-                // underwater.
-                move_item_to_grid(&item, mons->pos(), mons->swimming());
-            }
-
+            item_was_destroyed(env.item[item]);
+            destroy_item(item);
             mons->inv[i] = NON_ITEM;
+            continue;
         }
+
+        if (mark_item_origins && env.item[item].defined())
+            origin_set_monster(env.item[item], mons);
+
+        env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
+
+        if (env.item[item].props.exists("autoinscribe"))
+        {
+            add_inscription(env.item[item],
+                env.item[item].props["autoinscribe"].get_string());
+            env.item[item].props.erase("autoinscribe");
+        }
+
+        // If a monster is swimming, the items are ALREADY underwater.
+        move_item_to_grid(&item, mons->pos(), mons->swimming());
+        mons->inv[i] = NON_ITEM;
     }
 }
 
@@ -299,8 +289,8 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        const monster_type type = mons_is_job(mons->type)
-                                ? draco_or_demonspawn_subspecies(*mons)
+        const monster_type type = mons_is_draconian_job(mons->type)
+                                ? draconian_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
@@ -411,7 +401,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all();
     mons->stop_being_constricted();
-    mons->clear_far_engulf();
+    mons->clear_far_engulf(true);
 }
 
 // Is the new monster able to live in *any* habitat that the original

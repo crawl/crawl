@@ -316,15 +316,7 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const monster* mon;
-                if (mons_class_requires_band(spec.type) && !spec.band)
-                {
-                    unwind_bool no(allow_bands, false);
-                    unwind_bool yes(spec.band, true);
-                    mon = dgn_place_monster(spec, loc, false, true, false);
-                }
-                else
-                    mon = dgn_place_monster(spec, loc, false, true, false);
+                const monster* mon = dgn_place_monster(spec, loc, false, true, false);
                 if (!mon)
                 {
                     game_ended_with_error(

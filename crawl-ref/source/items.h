@@ -45,9 +45,6 @@ enum autopickup_level_type
 /// top-priority item override colour
 #define FORCED_ITEM_COLOUR_KEY "forced_item_colour"
 
-pair<bool, int> item_int(item_def &item);
-item_def& item_from_int(bool, int);
-
 int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
@@ -100,7 +97,8 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-vector<const item_def*> item_list_on_square(int obj);
+vector<item_def*> item_list_on_square(int obj);
+vector<const item_def*> const_item_list_on_square(int obj);
 
 bool copy_item_to_grid(item_def &item, const coord_def& p,
                        int quant_drop = -1,    // item.quantity by default
@@ -112,9 +110,6 @@ bool move_top_item(const coord_def &src, const coord_def &dest);
 
 // Get the top item in a given cell. If there are no items, return nullptr.
 const item_def* top_item_at(const coord_def& where);
-
-// Returns whether there is more than one item in a given cell.
-bool multiple_items_at(const coord_def& where);
 
 void drop();
 

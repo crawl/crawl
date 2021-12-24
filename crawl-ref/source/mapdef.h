@@ -735,7 +735,6 @@ private:
 private:
     mons_spec mons_by_name(string name) const;
     mons_spec drac_monspec(string name) const;
-    mons_spec demonspawn_monspec(string name) const;
     mons_spec soh_monspec(string name) const;
     void get_zombie_type(string s, mons_spec &spec) const;
     mons_spec get_hydra_spec(const string &name) const;

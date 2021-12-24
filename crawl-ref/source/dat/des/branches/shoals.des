@@ -9,6 +9,8 @@
 ###############################################################################
 ###############################################################################
 
+: crawl_require("dlua/ghost.lua")
+
 {{
 
 function shoals_finale_setup(e, qualifier, decoy_count)
@@ -2108,6 +2110,112 @@ cccc..c..M
 cww......M
 cww......L
 ccccJJKKLL
+ENDMAP
+
+NAME:    ebering_ghost_davey_jones
+ORIENT:  float
+TAGS:    water_ok
+KMONS:   O = player_ghost
+KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
+KMONS:   1 = snapping turtle / sea snake / alligator snapping turtle w:2
+KMONS:   2 = spectral snapping turtle / spectral sea snake \
+             / spectral alligator snapping turtle w:2
+KMONS:   E = water elemental
+{{
+kmons("F = merfolk ; " .. dgn.monster_weapon("merfolk", "draining") ..
+      "    . throwing net w:3 | nothing w:9")
+local quality = crawl.one_chance_in(3) and "randart" or "good_item"
+kmons("3 = merfolk aquamancer ; " ..
+      dgn.monster_weapon("blademaster", "electrocution", quality) ..
+      "    . robe good_item")
+kmons("4 = merfolk impaler ; " ..
+      dgn.monster_weapon("impaler", "draining", quality) ..
+      "    . robe good_item | leather armour good_item")
+}}
+KMONS:   5 = kraken
+KMONS:   6 = spectral kraken
+KFEAT:   O = W
+KFEAT:   123456EF = w
+# Place 2-6 corpses around the perimiter. Place monsters on D, excluding the
+# merfolk leader's band, which goes on the E.
+NSUBST:  - = 2=- / 4=-s / s, D = 2=1 / 4=1w / 2=E / 3=Ew / 3 / w
+# Either the normal or spectral set. Also randomize wall patterns.
+SHUFFLE: 1E35 / 2F46, pq
+SUBST:   d = |*, r = wW, p = x, q = s, s = W.
+TILE:    G = dngn_statue_mermaid
+MARKER:  P = lua:transp_loc("davey_jones_entry")
+MARKER:  Q = lua:transp_dest_loc("davey_jones_entry")
+MARKER:  R = lua:transp_loc("davey_jones_exit")
+MARKER:  S = lua:transp_dest_loc("davey_jones_exit")
+{{
+dgn.delayed_decay(_G, "-", "minotaur skeleton / elf skeleton" ..
+  " / dwarf skeleton / human skeleton / kobold skeleton" ..
+  " / felid skeleton / orc skeleton / ogre skeleton")
+ghost_setup(_G)
+}}
+MAP
+ WWssssSssssWW
+WWcccccccccccWW
+WccG---Q---GccW
+WcGspqpqpqpsGcW
+Wc-sqqrprqqs-cW
+Wc-srDDDDDrs-cW
+Wn-prDDDDDrp-nW
+Wn-qpDD5DDpq-nW
+Wn-prDDDDDrp-nW
+Wc-srDDDDDrs-cW
+Wc-sqqrprqqs-cW
+WcGspqpOpqpsGcW
+WccG-ddRdd-GccW
+WWccccnnnccccWW
+ WWssssPssssWW
+ENDMAP
+
+NAME:   dreamdust_from_the_deep
+TAGS:   no_monster_gen no_item_gen no_tide patrolling
+DEPTH:  Shoals, !Shoals:$
+ORIENT: northwest
+ITEM:   any ring randart
+ITEM:   randbook title:Mad_Ravings spells:malign_gateway&summon_horrible_things \
+           numspells:2
+KMONS:  1 = kraken
+KMONS:  2 = merfolk impaler ; trident ego:chaos
+KMONS:  3 = apocalypse crab / great orb of eyes
+KMONS:  4 = tentacled monstrosity
+KFEAT:  1 = deep_water
+KFEAT:  -23 = shallow_water
+KFEAT:  s = open_sea
+KFEAT:  z = x
+KFEAT:  > = escape_hatch_down
+SUBST:  y = xxxw
+NSUBST: w = 1 / w
+NSUBST: - = 3=2 / 3=2- / 2=3 / 1=3- / -
+# Color weights similar to that used for rock in the Abyss.
+COLOUR: z = blue:13 / red:66 / magenta:50 / brown:90 / lightgreen:68 \
+            / lightred:110 / lightmagenta:38 / yellow / white
+RTILE:  z = wall_abyss
+FTILE:  .de4>G = floor_nerves_yellow
+TILE:   G = dngn_statue_tentacles
+MAP
+sssssssssssssssssss
+swwwwwwwwwwwwwwwwww
+swwwwwwyyyywwwwwwww
+swwwww-xxxxxwwwwwww
+swwwwxx----xxwwwwww
+swwwxx------xx--www
+swwxx--zzzz------ww
+swyx--zz.dzz--xywww
+swyx---..4Gz--xywww
+swyx-----e>z--xywww
+swyx--zz--zz--xywww
+swwxx--zzzz------ww
+swwwxx------xx--www
+sww--------xxw-wwww
+swww--xxxxxxwwwwwww
+swwwwwwyyyywwwwwwww
+swwwwwwwwwwwwwwwww
+swwwwwwwwwwwwwwww
+swwwwwwwwwwwwww
 ENDMAP
 
 ###############################################################################

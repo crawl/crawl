@@ -170,7 +170,6 @@ const int EXERCISE_QUEUE_SIZE = 100;
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 
 const int BASELINE_DELAY  = 10;
-const int INVIS_CONTAM_PER_TURN = 30;
 
 const int ICEMAIL_MAX  = 8;
 const int ICEMAIL_TIME = 30 * BASELINE_DELAY;

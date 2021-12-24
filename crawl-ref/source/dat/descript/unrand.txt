@@ -26,10 +26,12 @@ of more ordinary instruments of chaos.
 %%%%
 glaive of Prune
 
-A purple glaive that was created by a mad god, and carries a curse which
-transforms anyone wielding it into a prune. Fortunately, the curse works very
-slowly, and one can use it briefly with no consequences worse than slightly
-purple skin and a few wrinkles.
+The glaive of Prune carries a terrible and insidious curse. Unless its wielder
+maintains firm self-control, they are doomed to succumb, undergoing a horrifying
+(albeit temporary) transformation. This is normally trivial to resist, but
+incapacitated wielders are certain to succumb, finding themselves nightmarishly
+purple, squishy, and delicious. They can take comfort in learning that it's
+surprisingly hard to injure a giant prune.
 %%%%
 sword of Power
 
@@ -167,7 +169,7 @@ zealot's sword
 
 A sword made of one huge piece of crystal. Legend says it was the Shining One's
 gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
-both the wielder and all of their mortal followers.
+both the wielder and all of their followers.
 %%%%
 arbalest "Damnation"
 
@@ -312,7 +314,7 @@ artefact was to unite his rivals against him.
 hat of the Bear Spirit
 
 A fur hat once owned by Ukta, a powerful ogre shaman. It houses the spirit of
-an especially mighty bear.
+an especially mighty bear, whose rages devastated the ogres until it was slain.
 %%%%
 robe of Misfortune
 
@@ -508,8 +510,8 @@ the amulet vanished from the pages of history.
 %%%%
 autumn katana
 
-An exquisitely crafted sword, enchanted to provide both mental and physical
-strength to the wielder.
+An exquisitely crafted sword. Its blade is so sharp that it can cut through
+space itself.
 %%%%
 shillelagh "Devastator"
 
@@ -681,3 +683,17 @@ An enchanted pair of boots which grant the ability to take strides of incredible
 length, as long as the wearer is advancing bravely towards their foes. They
 allow the wearer to engage in combat in a single step, although it becomes
 impossible to remain stealthy while taking such strides.
+%%%%
+Mad Mage's Maulers
+
+A pair of gloves designed to carefully control and channel the flow of magic,
+later misused and mangled by the lunatic murderer-mages of the Fifth Circle.
+Their influence leaves the wearer of these gloves distracted by intrusive
+images, vividly aware of the death and destruction their hands could wreak.
+%%%%
+dreamshard necklace
+
+A beautiful rainbow of colour and motion trapped within a delicate crystal on a
+thin silver chain. Listening carefully, one can hear the distant echo of a
+thousand dreams from all corners of reality, their melody giving a warm sense
+of safety.

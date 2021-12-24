@@ -28,6 +28,8 @@ bool remove_sanctuary(bool did_attack = false);
 void decrease_sanctuary_radius();
 bool sanctuary_exists();
 
+int shrinking_aoe_range(int dur);
+
 coord_def find_centre_for(const coord_def& f,
                           area_centre_type at = area_centre_type::none);
 

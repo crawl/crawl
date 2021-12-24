@@ -61,70 +61,6 @@ function dis_statues(e)
 end
 }}
 
-# Following the order at the top, the extra special special_room for hell
-#
-# Of course, since there are special_rooms already,
-# a real dedication here has to step it up a little.
-NAME:    hangedman_mysterious_dungeon_monster_house
-TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup allow_dup luniq
-DEPTH:   Geh:2-, !Geh:$, Coc:2-, !Coc:$, Tar:2-, !Tar:$, Dis:2-, !Dis:$
-ORIENT:  encompass
-WEIGHT:  1
-# Specific allotment of monsters, terrain, and items for this small box.
-# Monsters are in three tiers: generic undead (1), specific fodder (09),
-# bosses (2).
-# Terrain includes zot traps, and per-hell clouds, liquid, statues.
-NSUBST:  . = 2:1 / 1:0 / 2:9 / 4 = 0:3 1:1 / 1 = 9:6 / 2:1 / *:.
-NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:{ / 1:} / *:.
-KFEAT:   ^ = zot trap
-: if you.in_branch("Geh") then
-MONS:    zombie / skeleton
-MONS:    brimstone fiend / hellephant
-MARKER:  F = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 8, pow_max = 10, delay = 100, \
-             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
-SUBST:   ~ = l
-FTILE:   F = floor_volcanic
-COLOUR:  F = lightred
-: elseif you.in_branch("Coc") then
-MONS:    simulacrum
-MONS:    ice fiend / shard shrike
-MARKER:  F = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 8, pow_max = 10, delay = 100, \
-             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
-SUBST:   ~ = w
-FTILE:   F = floor_nerves_blue
-COLOUR:  F = lightblue
-: elseif you.in_branch("Tar") then
-MONS:    spectral thing
-MONS:    tzitzimitl / tainted leviathan
-MARKER:  F = lua:fog_machine {cloud_type = "foul pestilence", \
-             pow_min = 8, pow_max = 10, delay = 100, \
-             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
-SUBST:   ~ = G
-FTILE:   F = floor_crystal_squares
-COLOUR:  F = lightmagenta
-: elseif you.in_branch("Dis") then
-MONS:    zombie / skeleton
-MONS:    hell sentinel / iron giant
-SUBST:   xc = v, F~ = G
-COLOUR:  G = cyan
-TILE:    G = dngn_statue_iron
-: set_feature_name("granite_statue", "iron statue")
-: end
-KPROP:   lw = no_tele_into
-MAP
-cccccccccc
-c........c
-c........c
-c........c
-c........c
-c........c
-c........c
-c........c
-cccccccccc
-ENDMAP
-
 ##############################################################################
 # The Iron City of Dis
 ##############################################################################
@@ -638,6 +574,555 @@ v..vvGGGvvv...V...vvvIIIvvv...V...vvvKKKvvv...V..v..v
 v...................................................v
 v...................................................v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   nicolae_dis_array
+TAGS:   transparent
+DEPTH:  Dis
+ORIENT: centre
+NSUBST: D = + / +v / +vv / v, E = + / +v / +vv / v
+MAP
+vv+vvvDvvvDvvvDvvvDvvvDvvvDvv
+v...v...v...v...v...v...v...v
+v.0.+.0.+.9.+.8.+.9.+.0.+.0.v
+v...v...v...v...v...v...v...v
+vvEvvvEvvvEvvvEvvvEvvvEvvv+vv
+ENDMAP
+
+NAME:    nicolae_dis_big_boring_drill
+TAGS:    transparent
+DEPTH:   Dis
+SHUFFLE: vbn
+MAP
+..................
+.vv.b..b..b..b.vv.
+ vvbnnbnnbnnbnnvv
+ vvnnbnnbnnbnnbvv
+.vv.b..b..b..b.vv.
+..................
+ENDMAP
+
+NAME:   nicolae_dis_big_iron_x
+TAGS:   no_monster_gen
+DEPTH:  Dis:2-, !Dis:$
+ORIENT: encompass
+KMONS:  } = 8
+KFEAT:  } = }
+: local placement = crawl.random2( 4 )
+: if placement == 1 then
+SUBST:  D = {
+NSUBST: EFHJKLM = 1=} / .
+: elseif placement == 2 then
+SUBST:  F = {
+NSUBST: DJKLM = 1=} / .
+: else
+SUBST:  E = {
+NSUBST: DHJKLM = 1=} / .
+: end
+SUBST:  0 = .00, 0 = 009, 9 = 998
+TILE:   G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vG.....Gv...G...G...+...G...v
+v.D..0.vvv....E....vvv.0..F.v
+v.....vv.vv.......vv.vv.....v
+v...0vv...vv0...0vv...vv0..Gv
+v.0.v+.....vv...v+.....vv.0.v
+v..vv.0.0...vv0vv...0.0.vv..v
+vGvv...G.....vvv.....G...vv.v
+vvv...0.9.v+vvGvvvv.9.0...v+v
+v.vv.....vv.......v+.....vv.v
+v..vv...vv.........vv...vv..v
+v...vv..+..8.vGv.8..v..+v...v
+vG..0vv.v....vvv....v.vv0..Gv
+v.....vvv..vvvvvvv..vvv.....v
+v.M...0vG..GvvvvvG..Gv0...H.v
+v.....vvv..vvvvvvv..vvv.....v
+vG..0vv.v....vvv....v.vv0..Gv
+v...v+..v..8.vGv.8..+..vv...v
+v..vv...vv.........vv...vv..v
+v.vv.....+v.......vv.....vv.v
+v+v...0.9.vvvvGvv+v.9.0...vvv
+v.vv...G.....vvv.....G...vvGv
+v..vv.0.0...vv0vv...0.0.vv..v
+v.0.vv.....+v...vv.....+v.0.v
+vG..0vv...vv0...0vv...vv0...v
+v.....vv.vv.......vv.vv.....v
+v.L..0.vvv....K....vvv.0..J.v
+v...G...+...G...G...vG.....Gv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   nicolae_dis_circle_tower
+TAGS:   transparent
+DEPTH:  Dis
+ORIENT: centre
+NSUBST: D = vvv+ / +, E = vvv+ / +, F = vvv+ / +, H = vvv+ / +, Q = + / vv+
+: if you.depth() == 1 then
+SUBST:  { = }
+: elseif you.depth_fraction() < 1 then
+SUBST:  { = {}
+: end
+SUBST:  0 = ...0000099, 9 = 998
+TILE:   G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+     vvvQvvv
+   vvv.....vvv
+  vvG...0...Gvv
+ vvvvvDvvvDvvvvv
+ vGvG..0v0..GvGv
+vv.v....D....v.vv
+v..H..{.v....E..v
+v..v0...v...0v..v
+Q.0vvHvvvvvEvv0.Q
+v..v0...v...0v..v
+v..H....v....E..v
+vv.v....F....v.vv
+ vGvG..0v0..GvGv
+ vvvvvFvvvFvvvvv
+  vvG...0...Gvv
+   vvv.....vvv
+     vvvQvvv
+ENDMAP
+
+NAME:    nicolae_dis_distal_crystal
+TAGS:    transparent
+DEPTH:   Dis
+KMONS:   1 = crystal echidna / crystal guardian
+KMONS:   2 = orange crystal statue
+SHUFFLE: DE
+SUBST:   D : 1, E : 1b, F : 112bb
+MAP
+vvv     vvv
+vbbb...bbbv
+vb.......bv
+ b.E.D.E.b
+ .........
+ ..D.F.D..
+ .........
+ b.E.D.E.b
+vb.......bv
+vbbb...bbbv
+vvv     vvv
+ENDMAP
+
+NAME:  nicolae_dis_emergency_hatch
+TAGS:  transparent
+DEPTH: Dis, !Dis:$
+KFEAT: ! = iron_grate
+KMASK: 9>' = opaque
+SUBST: G : Gvb.
+TILE:  G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+.........
+.Gv!!!vG.
+.vv'''vv.
+.!'9'9'!.
+.!''>''!.
+.!'9'9'!.
+.vv'''vv.
+.Gv!!!vG.
+.........
+ENDMAP
+
+# In the fourth circle of the Inferno, hoarders and spendthrifts fight for
+# eternity, slamming great weights into each other. Here, they are represented
+# by stone giants with heavy clubs and ancient champions with heavy maces.
+# Also, they will be slamming the great weights into you instead of each other.
+NAME:  nicolae_dis_fourth_circle
+TAGS:  transparent
+DEPTH: Dis:2-
+KMONS: 1 = stone giant ; large rock . giant club good_item | \
+                                      giant spiked club good_item
+KMONS: 2 = ancient champion ; morningstar good_item | dire flail good_item | \
+                              eveningstar good_item | great mace good_item
+TILE:   G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+vvvvvvvvvvvvvvv
+vvGvvvv11111vvv
+v...vG.......Gv
+v...v.........v
+v.{.+.........+
+v...v.........v
+v...vG.......Gv
+vvGvvvv22222vvv
+vvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:  nicolae_dis_grated_feature
+TAGS:  transparent allow_dup
+DEPTH: Dis
+KPROP: v = no_tele_into
+KFEAT: ! = iron_grate
+KMASK: vbGl = opaque
+SUBST: v : vbGl
+: set_feature_name("granite_statue", "iron statue")
+TILE:  G = dngn_statue_iron / dngn_statue_iron_golem
+MAP
+.....
+.!!!.
+.!v!.
+.!!!.
+.....
+ENDMAP
+
+NAME:  nicolae_dis_having_a_grate_time
+TAGS:  transparent
+DEPTH: Dis, !Dis:$
+KMONS: 1 = tormentor / hellion / nothing w:5
+KFEAT: ' = iron_grate
+SUBST: v : vvvb, 0 = .009, 9 = 998
+MAP
+'''.'''''''.'''
+'v'....0....'v'
+'''.'''.'''.'''
+...0'v'.'v'0...
+'.'''''.'''''.'
+'.'v'..1..'v'.'
+'.'''..'..'''.'
+'0...1'}'1...0'
+'.'''..'..'''.'
+'.'v'..1..'v'.'
+'.'''''.'''''.'
+...0'v'.'v'0...
+'''.'''.'''.'''
+'v'....0....'v'
+'''.'''''''.'''
+ENDMAP
+
+# Made of various alchemical symbols for iron, along with monsters who are named
+# after iron. The iron giants' Harpoon Shot and Throw Ally will hopefully help
+# counteract the slowness of the inhabitants.
+NAME:   nicolae_dis_heavy_handed_symbolism
+TAGS:   transparent no_monster_gen
+DEPTH:  Dis, !Dis:$
+ORIENT: encompass
+KMONS:  1 = iron troll
+KMONS:  2 = iron dragon
+KMONS:  3 = iron golem
+KMONS:  4 = iron giant
+KFEAT:  ! = iron_grate
+SUBST:  1 = 11., 1 = 111223 4:5, 3 = .2334
+: set_feature_name("granite_statue", "iron statue")
+TILE:   G = dngn_statue_iron
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv...v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv.4..}.v
+vvvvvvvvvvvvvvvvvvvvvvvvv.........v
+vvvvvvvvvvvvvvvvvvvvvv...3...vv..vv
+vvvvvvvvvvvvvvvvvvv........vvvv.4vv
+vvvvvvvvvvvvvvvv.....3...vvvvv...vv
+vvvvvvvvvvvvv..........vvvvvvv..vvv
+vvvvvvvvvv..!.1..4...vvvvvvvv...vvv
+vvvvvvv.....v......vvvvvvvvvv.3.vvv
+vvvv...1...vvv...vvvvvvvvvvv...vvvv
+v.......1.v.v.v...vvvvvvvvvv...vvvv
+v.4......1..v......vvvvvvvv....vvvv
+v..........vvv...3..vvvvvvv.3.vvvvv
+v...vvvv..v...v....vvvvvvv....vvvvv
+v.1.vvvv..v.2.v...vvv.vvvv....vvvvv
+v...vvvv..v...v..vvv...vv....vvvvvv
+v...vvvvv..vvv..vvv..3..v.4..vvvvvv
+v1.....vvv.....vvv...........vvvvvv
+v.1..1..vvv...vvv...........vvvvvvv
+v..1.....vvv.vvv..vvv..v..1.vvvvvvv
+v...vvv...vvvvv..v...v..v...vvvvvvv
+v!!!vvv.4..vvv...v.2.vvvvv!vvvvvvvv
+v...vvv...vvvvv..v...v..v..vvvvvvvv
+v..1.....vvv.vvv..vvv..v...vvvvvvvv
+v.1..1..vvv...vvv.....1...vvvvvvvvv
+v1.....vvv..4..vvv.....1..vvvvvvvvv
+v...vvvvv.......vvvvv...1.vvvvvvvvv
+v.1.vvvv...vvv...vvvv....vvvvvvvvvv
+v...vvvv.1.vvv.1.vvvv....vvvvvvvvvv
+v...vvvv...vvv...vvvv....vvvvvvvvvv
+v.........1.!.1.........vvvvvvvvvvv
+v.{...1..1..!..1...1..4.vvvvvvvvvvv
+v.......1...!...1.......vvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    nicolae_dis_heavy_security
+TAGS:    transparent
+DEPTH:   Dis, !Dis:$
+ORIENT:  centre
+KPROP:   ` = no_tele_into
+KMONS:   1} = hell sentinel w:20 / hellion / tormentor
+KFEAT:   ! = iron_grate
+KFEAT:   } = }
+KMASK:   ` = opaque
+SHUFFLE: LMNO, PQRSZapqrsyz
+SUBST:   MNOP = !, LQRSZapqrsyz = ., - = 1..
+MAP
+  `` `` `` ``..
+ v!!v!!v!!v!!v.
+`!..P..Q..R..L.
+`!.1P.-Q-.R1.L.
+ vzzv!!v!!vSSv.
+`!........!..M.
+`!.-......!-.M.
+ vyyv..}..vZZv.
+`!.-!.....!-.N.
+`!..!.....!..N.
+ vssv!!v!!vaav.
+`!.1r.-q-.p1.O.
+`!..r..q..p..O.
+ v!!v!!v!!v!!v.
+  `` `` `` ``..
+ENDMAP
+
+# It slices! It dices! It juliennes!
+NAME:   nicolae_dis_hell_of_blades
+TAGS:   no_monster_gen patrolling
+DEPTH:  Dis:2-, !Dis:$
+ORIENT: encompass
+KMONS:  1 = executioner
+KMONS:  2} = dancing weapon ; executioner's axe good_item ego:vorpal | \
+        bardiche good_item ego:vorpal | battleaxe good_item ego:vorpal | \
+        great sword good_item ego:vorpal | lajatang good_item ego:vorpal | \
+        triple sword good_item ego:vorpal | glaive good_item ego:vorpal
+# These monsters get items from their usual gear in mon-gear.cc, but a curated
+# list of the biggest slicing/chopping weapons in their given selection.
+# The ones with armour get the best armour on their list.
+# Balrugs and profane servitors get weapons outside their normal purview,
+# because I wanted them here but they don't normally wield blades.
+KMONS:  3 = ancient champion ; battleaxe good_item | \
+          great sword good_item . plate armour / \
+        hell knight ; battleaxe good_item | glaive good_item | \
+          great sword good_item . plate armour / \
+        reaper ; scythe good_item / \
+        war gargoyle ; lajatang good_item / \
+        fire giant ; great sword good_item ego:flaming / \
+        frost giant ; battleaxe good_item ego:freezing / \
+        balrug ; demon blade good_item / \
+        profane servitor ; demon blade good_item
+KFEAT:  } = }
+NSUBST: } = } / 1
+SUBST:  S = 12233.
+# The same floor tile/color as the Hall of Blades; an easter egg for the fans.
+# Since this is a small encompass vault, this way seemed easier than doing it
+# for each possible glyph.
+LFLOORCOL:  lightgrey
+LFLOORTILE: floor_vault
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v....vvvvvvv.........vvvvvvv....v
+v.{...vvvvv..S..S..S..vvvvv...}.v
+v......vvv.............vvv......v
+v.....2.v.......v.......v.2.....v
+vv...3....S..S.vvv.S..S....3...vv
+vvv.2.........3.v.3.........2.vvv
+vvvv.........v.2.2.v.........vvvv
+vvvvv.S...S.vvv.1.vvv.S...S.vvvvv
+vvvv.........v.2.2.v.........vvvv
+vvv.2.........3.v.3.........2.vvv
+vv...3....S..S.vvv.S..S....3...vv
+v.....2.v.......v.......v.2.....v
+v......vvv.............vvv......v
+v.1...vvvvv..S..S..S..vvvvv...}.v
+v....vvvvvvv.........vvvvvvv....v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:   nicolae_dis_liches_on_tour
+TAGS:   transparent
+DEPTH:  Dis:2-
+KMONS:  1 = hell sentinel
+KMONS:  2 = hellion / tormentor
+KMONS:  3 = ancient lich / dread lich
+NSUBST: M = 1=1 / 2=3 / 13
+SUBST:  N = 1223 .:5
+TILE:   G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+     vvvvv
+     N...N
+     .....
+   vvvv+vvvv
+   vM.G.G.Mv
+vN.v.......v.Nv
+v..vG.....Gv..v
+v..+...{...+..v
+v..vG.....Gv..v
+vN.v.......v.Nv
+   vM.G.G.Mv
+   vvvv+vvvv
+     .....
+     N...N
+     vvvvv
+ENDMAP
+
+NAME:   nicolae_dis_metal_dragon_surprise
+TAGS:   transparent
+DEPTH:  Dis:2-
+KMONS:  1 = golden dragon
+KMONS:  2 = quicksilver dragon
+KMONS:  3 = iron dragon
+NSUBST: D = 1 / 2 / 3 / 123
+SUBST:  G : GGv
+TILE:   G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+    .......
+  ....D.G....
+ ...G.....D...
+ .D.........G.
+...............
+.G...........D.
+...............
+.D.....{.....G.
+...............
+.G...........D.
+...............
+ .D.........G.
+ ...G.....D...
+  ....D.G....
+    .......
+ENDMAP
+
+NAME:   nicolae_dis_metal_hellway
+TAGS:   transparent
+DEPTH:  Dis
+ORIENT: centre
+SUBST:  0 = .009, 9 = 998
+TILE:   G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+vvvv vv vv vvvvv vv
+......v v....G....v
+@..0.Gv vG.......Gv
+......v v.9..0....v
+  v....0..9.v v......
+  vG.......Gv vG.0..@
+  v....G....v v......
+  vv vvvvv vv vv vvvv
+ENDMAP
+
+NAME:   nicolae_dis_pentagon_1
+TAGS:   transparent
+DEPTH:  Dis:2-
+ORIENT: centre
+SUBST:  0 = 009, 9 = 998
+MAP
+      v+v
+    vvv.vvv
+   vv.....vv
+ vvv...0...vvv
+vv...........vv
++.............+
+v..0.......0..v
+vv.....{.....vv
+ v...........v
+ vv.........vv
+  v.........v
+  vv.0...0.vv
+   v.......v
+   +vvvvvvv+
+ENDMAP
+
+
+# The staircase is slightly off-center but this way lets you see the whole
+# vault at once as soon as you enter.
+NAME:   nicolae_dis_pentagon_2
+TAGS:   transparent
+DEPTH:  Dis:2-
+ORIENT: centre
+SUBST:  0 = 009, 9 = 998
+MAP
+     vvvv+v
+ +vvvv....v
+ v......0.vv
+ v.0.......v
+ v.........vv
+vv..........v
+v...........vv
+v......{..0..+
+v.0.........vv
++..........vv
+vvv....0..vv
+  vvv....vv
+    vvv.vv
+      v+v
+ENDMAP
+
+NAME:    nicolae_dis_scattering
+TAGS:    transparent allow_dup luniq
+DEPTH:   Dis
+KFEAT:   ! = iron_grate
+SHUFFLE: DEFHJKLMNO
+SUBST:   DEF : v, HJ : b, K : !, L : vvvbb!, M : vvvbb!, N : vvvbb!, O : vvvbb!
+MAP
+    ...J...
+    .M...M.
+   O...H...O
+  ON.L...L.NO
+.......F.......
+.M.L.K...K.L.M.
+.......E.......
+J.H.F.EDE.F.H.J
+.......E.......
+.M.L.K...K.L.M.
+.......F.......
+  ON.L...L.NO
+   O...H...O
+    .M...M.
+    ...J...
+ENDMAP
+
+NAME:    nicolae_dis_spooky_hallway
+TAGS:    transparent
+DEPTH:   Dis, !Dis:$
+SHUFFLE: DE/FH/JK/LM/NO/PQ
+SUBST:   D = @, F : @vv, JLNP = v, K = }, EHMOQ0 = .009, 9 = 998
+: set_feature_name("granite_statue", "iron statue")
+TILE:    G = dngn_statue_iron
+MAP
+vDDDvvFFFvvJJJv
+v...vv...vv...v
+v.E.vv.H.vv.K.v
+v...vv...vv...v
+vv+vvvv+vvvv+vv
+....0.....0....
+@.............@
+@.G..0.G.0..G.@
+@.............@
+....0.....0....
+vv+vvvv+vvvv+vv
+v...vv...vv...v
+v.Q.vv.O.vv.M.v
+v...vv...vv...v
+vPPPvvNNNvvLLLv
+ENDMAP
+
+NAME:    nicolae_dis_step_into_the_octagon
+TAGS:    transparent
+DEPTH:   Dis:2-
+KMONS:   1 = iron golem / iron giant / war gargoyle / ancient champion / \
+             iron dragon / juggernaut / hell sentinel
+KFEAT:   ! = iron_grate
+# Monsters can still show up on the outer edge, to spectate.
+KMASK:   1{' = no_monster_gen
+SHUFFLE: Pp/Qq
+SUBST:   P = {, Q = 1, p = +, q = v
+MAP
+   .......
+ ...!!v!!...
+ .v!!'''!!v.
+..!'''1'''!..
+.!!'1'''Q'!!.
+.!'''''''''!.
+.p'1'''''P'v.
+.!'''''''''!.
+.!!'1'''1'!!.
+..!'''1'''!..
+ .q!!'''!!v.
+ ...!!v!!...
+   .......
 ENDMAP
 
 default-depth:

@@ -975,6 +975,8 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 {
 #ifdef USE_TILE_WEB
     tiles.set_ui_state(UI_CRT);
+    // send some minimal where info, in case there is a lingering .where file
+    update_whereis_chargen(choice.name);
 #endif
 
     clrscr();
@@ -1939,7 +1941,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     return ret;
 }
 
-static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
+weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
                                             species_type species)
 {
     const bool fighter = job == JOB_FIGHTER;
@@ -1993,7 +1995,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
             wp.first = startwep[i];
             if (job_gets_good_weapons(ng.job))
             {
-                wp.first = _starting_weapon_upgrade(wp.first, ng.job,
+                wp.first = starting_weapon_upgrade(wp.first, ng.job,
                                                     ng.species);
             }
 

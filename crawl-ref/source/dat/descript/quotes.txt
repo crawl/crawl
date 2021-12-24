@@ -378,7 +378,7 @@ Azrael
     -J. E. Hanauer, _Folk-lore of the Holy Land, Moslem, Christian and Jewish_.
 1907.
 %%%%
-black sun
+demonspawn black sun
 
 “The sky is sad and beautiful, like a vast altar.
  The sun has drowned in its congealing blood.”
@@ -407,6 +407,13 @@ Bat Form ability
 “The bats have left the bell tower
  The victims have been bled”
     -Bauhaus, “Bela Lugosi's Dead”. 1979.
+%%%%
+Bend Time ability
+
+“It's astounding
+ Time is fleeting
+ Madness takes its toll”
+    -Richard O'Brien, “Time Warp”. 1975.
 %%%%
 Call Canine Familiar spell
 
@@ -802,11 +809,28 @@ Sigmund
     -William Morris, _The Story of Sigurd the Volsung and the Fall of the
 Niblungs_. 1891.
 %%%%
+Slouch ability
+
+“I remember doing the Time Warp
+ Drinking those moments when
+ The blackness would hit me
+ And the void would be calling”
+    -Richard O'Brien, “Time Warp”. 1975.
+%%%%
 Sticky Flame spell
 
 “Give a man a fire and he's warm for a day, but set fire to him and he's warm
  for the rest of his life.”
     -Terry Pratchett, “Jingo”. 1997.
+%%%%
+Step From Time ability
+
+“It's so dreamy
+ Oh, fantasy free me
+ So you can't see me
+ No, not at all
+ In another dimension”
+    -Richard O'Brien, “Time Warp”. 1975.
 %%%%
 Storm Form spell
 
@@ -838,6 +862,13 @@ Temple
 “And I heard a great voice out of the temple saying to the seven angels, Go
  your ways, and pour out the vials of the wrath of God upon the earth.”
     -KJV Bible, Revelations 16:1.
+%%%%
+Temporal Distortion ability
+
+“With a bit of a mind flip
+ You're into the time slip
+ And nothing can ever be the same”
+    -Richard O'Brien, “Time Warp”. 1975.
 %%%%
 Terence
 
@@ -1814,14 +1845,6 @@ iguana
  more to do with the chameleon. But the son continued in his intimacy.”
     -_Khuddaka Nikāya_, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
      trans. Robert Chalmers, 1895.
-%%%%
-Injury Mirror ability
-
-“Will you take the pain
- I will give to you?
- Again and again
- And will you return it?”
-    -Depeche Mode, "Strangelove". 1987
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -3019,6 +3042,20 @@ slime creature
  Yea, slimy things did crawl with legs
  Upon the slimy sea.”
     -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
+%%%%
+Slimify ability
+
+“Rumack: It starts with a slight fever and dryness of the throat. When the
+ virus penetrates the red blood cells, the victim becomes dizzy, begins to
+ experience an itchy rash, then the poison goes to work on the central nervous
+ system, severe muscle spasms followed by the inevitable drooling.
+ [Oveur does all of the above as Rumack describes each one]
+ Rumack: At this point, the entire digestive system collapses accompanied by
+ uncontrollable flatulence.
+ [Oveur begins to fart uncontrollably]
+ Rumack: Until finally, the poor bastard is reduced to a quivering wasted piece
+ of jelly.”
+    -Airplane! 1980.
 %%%%
 hunting sling
 

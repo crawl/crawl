@@ -36,6 +36,7 @@
 #include "travel.h"
 #include "version.h"
 #include "view.h"
+
 #include "zotdef.h"
 
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)

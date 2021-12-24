@@ -645,6 +645,7 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
 #endif
             modifier = M_SIMULACRUM;
             break;
+        case MONS_BOUND_SOUL:
         case MONS_SPECTRAL_THING:
             modifier = M_SPECTRE;
             break;
@@ -682,6 +683,7 @@ kill_monster_desc::kill_monster_desc(const monster_info& mon)
 #endif
             modifier = M_SIMULACRUM;
             break;
+        case MONS_BOUND_SOUL:
         case MONS_SPECTRAL_THING:
             modifier = M_SPECTRE;
             break;

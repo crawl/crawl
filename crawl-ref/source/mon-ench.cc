@@ -899,14 +899,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer more vulnerable to poison.");
         break;
 
-    case ENCH_ICEMAIL:
-        if (!quiet && you.can_see(*this))
-        {
-            mprf("%s icy envelope dissipates!",
-                 apostrophise(name(DESC_THE)).c_str());
-        }
-        break;
-
     case ENCH_AGILE:
         if (!quiet)
             simple_monster_message(*this, " is no longer unusually agile.");
@@ -1141,21 +1133,21 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
-bool monster::clear_far_engulf(bool)
+bool monster::clear_far_engulf(bool force)
 {
     if (you.duration[DUR_WATER_HOLD]
         && (mid_t) you.props[WATER_HOLDER_KEY].get_int() == mid)
     {
-        you.clear_far_engulf();
+        you.clear_far_engulf(force);
     }
 
     const mon_enchant& me = get_ench(ENCH_WATER_HOLD);
     if (me.ench == ENCH_NONE)
         return false;
     const bool nonadj = !me.agent() || !adjacent(me.agent()->pos(), pos());
-    if (nonadj)
+    if (nonadj || force)
         del_ench(ENCH_WATER_HOLD);
-    return nonadj;
+    return nonadj || force;
 }
 
 // Returns true if you resist the merfolk avatar's call.
@@ -1416,7 +1408,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
-    case ENCH_ANTIMAGIC:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
@@ -1424,7 +1415,20 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
+        decay_enchantment(en);
+        break;
+
+    case ENCH_ANTIMAGIC:
+        if (decay_enchantment(en))
+            simple_monster_message(*this, "'s magic is no longer disrupted.");
+        break;
+
     case ENCH_ROLLING:
+        if (cannot_act() || asleep())
+        {
+            del_ench(en, true, false);
+            break;
+        }
         decay_enchantment(en);
         break;
 
@@ -1685,7 +1689,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TP:
-        if (decay_enchantment(en, true) && !no_tele(true, false))
+        if (decay_enchantment(en, true) && !no_tele())
             monster_teleport(this, true);
         break;
 
@@ -2038,7 +2042,11 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "building_charge",
 #endif
-    "poison_vuln", "icemail", "agile",
+    "poison_vuln",
+#if TAG_MAJOR_VERSION == 34
+    "icemail",
+#endif
+    "agile",
     "frozen",
 #if TAG_MAJOR_VERSION == 34
     "ephemeral_infusion",

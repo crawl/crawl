@@ -14,8 +14,8 @@ serious addition to the game, just an example of how to add your own ideas.
 We're going to add in a Shepherd job today. I feel there's a lack of peaceful,
 relaxing jobs in the game, so we'll fill that space with our new job.
 
-First we need to edit enum.h to tell the game our new job exists. Search for
-"enum job_type", and we'll add in an entry right before the NUM_JOBS line.
+First we need to edit job-type.h to tell the game our new job exists. Search
+for "enum job_type", and we'll add in an entry right before the NUM_JOBS line.
 
 This should look like:
 
@@ -39,10 +39,16 @@ job-data.h. This struct in this file is reasonably well-explained:
 
     struct job_def
     {
-        const char* abbrev;    ///< Two-letter abbreviation
-        const char* name;      ///< Long name
-        int s, i, d;           ///< Starting Str, int, and Dex
-        vector<species_type> recommended_species; ///< Which species are good at it
+        const char* abbrev; ///< Two-letter abbreviation
+        const char* name; ///< Long name
+        int s, i, d; ///< Starting Str, Int, and Dex
+        /// Which species are good at it
+        /// No recommended species = job is disabled
+        vector<species_type> recommended_species;
+        /// What spells start out in their library?
+        /// The first spell in the list will be memorised at the start of the game,
+        /// if it's level 1 and not useless.
+        vector<spell_type> library;
         /// Guaranteed starting equipment. Uses vault spec syntax, with the plus:,
         /// charges:, q:, and ego: tags supported.
         vector<string> equipment;
@@ -50,7 +56,7 @@ job-data.h. This struct in this file is reasonably well-explained:
         vector<pair<skill_type, int>> skills; ///< starting skills
     };
 
-The best thing to do is to copy an existing class and edit it's entries, just
+The best thing to do is to copy an existing class and edit its entries, just
 to make sure you get the structure right. Also note that this file sorts the
 entries alphabetically, so we'll follow suit here. Let's fill in our typical
 herd-watcher:
@@ -67,15 +73,19 @@ herd-watcher:
         { SP_HUMAN, SP_MINOTAUR, SP_TENGU, SP_TROLL, SP_NAGA,
           SP_VINE_STALKER, },
 
+        // Shepherds aren't skilled at magic, beyond a cantrip or two.
+        { SPELL_CHAIN_LIGHTNING, SPELL_SHATTER,
+          SPELL_POLAR_VORTEX, SPELL_FIRE_STORM },
+
         // They should have a light breezy garment, something to read to
         // pass the time, and a staff to protect their flock
-        { "gold dragon scales plus:9", "book of the Dragon",
+        { "gold dragon scales plus:9", "scroll of acquirement q:10",
           "greatsword plus:9 ego:flaming" },
         WCHOICE_NONE,
 
         // and just a couple skill points in stuff you might do around a field.
         { { SK_FIGHTING, 6 }, { SK_SUMMONING, 8 }, { SK_SPELLCASTING, 3 },
-          { SK_DODGING, 3 }, {SK_ARMOR, 4} { SK_STEALTH, 1 }, },
+          { SK_DODGING, 3 }, { SK_ARMOR, 4 } { SK_STEALTH, 1 }, },
     } },
 
 That looks like what I expect a shepherd to look like: lightly armed, lightly
@@ -95,7 +105,7 @@ count as a Adventurer, so I'll update the entry for them:
         {
             "Adventurer",
             coord_def(0, 7), 15,
-            { JOB_ARTIFICER, JOB_WANDERER, JOB_SHEPHERD }
+            { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, JOB_SHEPHERD }
         },
 
 And we're done. Compile and enjoy your new background!
@@ -113,7 +123,7 @@ backgrounds touch on for their stuff right now. In most cases you should
 only have to edit 3.
 
 Summary and checklist:
-    - enum.h to add the background to the list
+    - job-type.h to add the background to the list
     - job-data.h to fill in info about the job.
     - newgame.cc to add it to the selection menu.
     - ng-setup.cc for any factors you can't set in the job struct.

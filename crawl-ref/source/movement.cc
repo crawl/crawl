@@ -438,7 +438,7 @@ void open_door_action(coord_def move)
     }
     case DNGN_SEALED_DOOR:
     case DNGN_SEALED_CLEAR_DOOR:
-        mpr("That door is sealed shut!");
+        mpr("That door is sealed shut!"); // should use door noun?
         break;
     default:
         mpr("There isn't anything that you can open there!");
@@ -469,7 +469,13 @@ void close_door_action(coord_def move)
                   + _check_adjacent(DNGN_OPEN_CLEAR_DOOR, move);
         if (num == 0)
         {
-            mpr("There's nothing to close nearby.");
+            if (_check_adjacent(DNGN_BROKEN_DOOR, move)
+                || _check_adjacent(DNGN_BROKEN_CLEAR_DOOR, move))
+            {
+                mpr("It's broken and can't be closed.");
+            }
+            else
+                mpr("There's nothing to close nearby.");
             return;
         }
         // move got set in _check_adjacent
@@ -503,6 +509,10 @@ void close_door_action(coord_def move)
     case DNGN_SEALED_CLEAR_DOOR:
         mpr("It's already closed!");
         break;
+    case DNGN_BROKEN_DOOR:
+    case DNGN_BROKEN_CLEAR_DOOR:
+        mpr("It's broken and can't be closed!");
+        break;
     default:
         mpr("There isn't anything that you can close there!");
         break;
@@ -516,6 +526,7 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     switch (ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_ENTER_ZIGGURAT:
     case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');

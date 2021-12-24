@@ -118,7 +118,7 @@ void monster_consider_shouting(monster &mon)
  */
 bool monster_attempt_shout(monster &mon)
 {
-    if (mon.cannot_move() || mon.asleep() || mon.has_ench(ENCH_DUMB))
+    if (mon.cannot_act() || mon.asleep() || mon.has_ench(ENCH_DUMB))
         return false;
 
     const shout_type shout = mons_shouts(mon.type, false);

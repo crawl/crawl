@@ -4,6 +4,7 @@
 
 #include <cmath>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -27,6 +28,7 @@
 #include "message.h"
 #include "nearby-danger.h"
 #include "notes.h"
+#include "output.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
@@ -68,10 +70,24 @@ void equip_item(equipment_type slot, int item_slot, bool msg, bool skip_effects)
     ASSERT(you.equip[slot] == -1);
     ASSERT(!you.melded[slot]);
 
+#ifdef USE_TILE_LOCAL
+    const unsigned int old_talents = your_talents(false).size();
+#endif
+
     you.equip[slot] = item_slot;
 
     if (!skip_effects)
         equip_effect(slot, item_slot, false, msg);
+
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+        update_screen();
+    }
+#endif
+
     you.gear_change = true;
 }
 
@@ -86,6 +102,10 @@ bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
         return false;
     else
     {
+#ifdef USE_TILE_LOCAL
+        const unsigned int old_talents = your_talents(false).size();
+#endif
+
         you.equip[slot] = -1;
 
         if (you.melded[slot])
@@ -95,6 +115,16 @@ bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
 
         ash_check_bondage();
         you.last_unequip = item_slot;
+
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+        update_screen();
+    }
+#endif
+
         you.gear_change = true;
         return true;
     }
@@ -551,7 +581,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_SPECTRAL:
-                    mprf("You feel a bond with your %s.", item_name.c_str());
+                    mprf("You feel a bond with %s.", item_name.c_str());
                     break;
 
                 default:
@@ -655,8 +685,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                     monster *spectral_weapon = find_spectral_weapon(&you);
                     if (spectral_weapon)
                     {
-                        mprf("Your spectral weapon disappears as %s.",
-                             meld ? "your weapon melds" : "you unwield");
+                        mpr("Your spectral weapon disappears.");
                         end_spectral_weapon(spectral_weapon, false, true);
                     }
                 }
@@ -789,7 +818,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             _spirit_shield_message(unmeld);
             break;
 
-        case SPARM_ARCHERY:
+        case SPARM_HURLING:
             mpr("You feel that your aim is more steady.");
             break;
 
@@ -804,6 +833,21 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
         case SPARM_RAMPAGING:
             mpr("You feel ready to rampage towards enemies.");
+            break;
+
+        case SPARM_INFUSION:
+            if (you.max_magic_points || you.has_mutation(MUT_HP_CASTING))
+            {
+                mprf("You feel magic pooling in your %s.",
+                     you.hand_name(true).c_str());
+            }
+            else
+            {
+                bool can_plural = false;
+                const string hands = you.hand_name(true, &can_plural);
+                mprf("Your %s feel%s oddly empty.",
+                     hands.c_str(), can_plural ? "" : "s");
+            }
             break;
         }
     }
@@ -908,7 +952,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         }
         break;
 
-    case SPARM_ARCHERY:
+    case SPARM_HURLING:
         mpr("Your aim is not that steady anymore.");
         break;
 
@@ -924,6 +968,11 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_RAMPAGING:
         if (!you.rampaging())
             mpr("You no longer feel able to rampage towards enemies.");
+        break;
+
+    case SPARM_INFUSION:
+        if (you.max_magic_points || you.has_mutation(MUT_HP_CASTING))
+            mprf("You feel magic leave your %s.", you.hand_name(true).c_str());
         break;
 
     default:
@@ -954,6 +1003,13 @@ static void _remove_amulet_of_faith(item_def &item)
         ru_reject_sacrifices(true);
         dprf("prev delay %d, new delay %d", cur_delay,
              you.props[RU_SACRIFICE_DELAY_KEY].get_int());
+        return;
+    }
+
+    if (you_worship(GOD_YREDELEMNUL))
+    {
+        mprf(MSGCH_GOD, "The black torch dims.");
+        yred_reclaim_souls();
         return;
     }
 
@@ -1079,22 +1135,27 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
+    {
         if (you.has_mutation(MUT_FORLORN))
         {
             mpr("You feel a surge of self-confidence.");
             break;
         }
 
-        {
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
             simple_god_message(ignore_reason.c_str());
+        else if (you_worship(GOD_YREDELEMNUL))
+        {
+            mprf(MSGCH_GOD, "The black torch glows! You feel the dead"
+                            " draw near.");
+        }
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
                             you_worship(GOD_NO_GOD) ? "strange " : "");
         }
-        }
+    }
 
         break;
 
@@ -1104,8 +1165,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_ACROBAT:
-        if (!unmeld)
-            mpr("You feel ready to tumble and roll out of harm's way.");
+        mpr("You feel ready to tumble and roll out of harm's way.");
         break;
 
     case AMU_MANA_REGENERATION:
@@ -1114,8 +1174,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_REFLECTION:
-        if (!unmeld)
-            _equip_amulet_of_reflection();
+        _equip_amulet_of_reflection();
         break;
 
     case AMU_GUARDIAN_SPIRIT:
@@ -1161,11 +1220,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         _deactivate_regeneration_item(item, meld);
         break;
 
-    case AMU_ACROBAT:
-        if (!meld)
-            you.activated.set(EQ_AMULET, false);
-        break;
-
     case RING_SEE_INVISIBLE:
         _mark_unseen_monsters();
         break;
@@ -1175,8 +1229,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case AMU_REFLECTION:
-        if (!meld)
-            you.activated.set(EQ_AMULET, false);
         you.redraw_armour_class = true;
         break;
 
@@ -1213,6 +1265,11 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case AMU_GUARDIAN_SPIRIT:
         if (you.species == SP_DEEP_DWARF && player_regenerates_mp())
             mpr("Your magic begins regenerating once more.");
+        break;
+
+    case AMU_MANA_REGENERATION:
+        if (!meld)
+            you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
         break;
     }
 

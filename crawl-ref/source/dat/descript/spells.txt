@@ -26,7 +26,7 @@ meteorological fury. It does more damage to targets surrounded by empty space.
 Alistair's Intoxication spell
 
 Converts a small portion of the brain matter of those around you into alcohol,
-attempting to confuse all intelligent living creatures within view (although
+attempting to confuse all intelligent creatures within view (although
 poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
@@ -188,7 +188,9 @@ still within sight of the target.
 %%%%
 Blink spell
 
-Randomly translocates the caster a short distance.
+Randomly translocates the caster a short distance. Translocating in this way
+destabilises the caster temporarily, preventing consecutive blinks for a
+short period of time depending on spellpower.
 %%%%
 Blinkbolt spell
 
@@ -266,8 +268,10 @@ creatures into spectral versions of themselves.
 %%%%
 Call of Chaos spell
 
-Calls upon the powers of Chaos to empower nearby allies. The effects vary
-wildly and are usually, but not always, positive.
+Calls upon the powers of chaos to empower nearby allies, granting them haste,
+might, agility, or improved resistances. The chaotic magic may occasionally
+backfire and cause allies to instead lose their willpower or be berserked,
+polymorphed, or filled with inner flame.
 %%%%
 Call Tide spell
 
@@ -317,7 +321,7 @@ Cleansing Flame spell
 %%%%
 Cold Breath spell
 
-Exhales a focused blast of icy-cold air. It may knock back airborne targets.
+Exhales a focused blast of icy-cold air.
 %%%%
 Concentrate Venom spell
 
@@ -359,8 +363,8 @@ will bring the fire fully to life, but will burn the caster.
 %%%%
 Conjure Living Spells spell
 
-Creates several living, autonomous spells. These will attempt to cast themselves
-at the nearest foe, expending themselves in the process.
+Creates several living, autonomous spells, which cast themselves at the first foe
+to enter their range. Once cast, they dissipate.
 %%%%
 Corona spell
 
@@ -409,9 +413,9 @@ nearby may be dazzled and left stumbling blindly.
 %%%%
 Death Channel spell
 
-Raises living creatures slain by the caster and their allies, reducing them to
-a state of spectral slavery. When the channel expires the spectres are released
-from bondage.
+Binds the souls of living, demonic and holy creatures slain by the caster and
+their allies, causing their spectres to remain and fight for the caster. When
+the channel expires the spectres will fade away.
 %%%%
 Death Rattle spell
 
@@ -571,10 +575,10 @@ Eringya's Noxious Bog spell
 
 Causes the caster to release a torrent of sludge that transforms nearby areas
 into a toxic bog. The sludge damages and poisons all monsters, even those
-resistant to poison. The bog cannot form on areas adjacent to solid features,
-nor on areas that lack solid floor, like deep water or lava. The transformation
-is temporary and cannot be sustained out of the caster's sight. Spellpower will
-increase how long the bog lingers.
+resistant to poison. The bog cannot form on areas adjacent to multiple solid
+features, nor on areas that lack solid floor, like deep water or lava. The
+transformation is temporary and cannot be sustained out of the caster's sight.
+Spellpower will increase how long the bog lingers.
 %%%%
 Eruption spell
 
@@ -638,9 +642,9 @@ target back.
 %%%%
 Forceful Invitation spell
 
-Summons some of the lesser threats from one of the Lair of Beasts, the Snake
-Pit, the Spider Nest, the Swamp, the Shoals, the Orcish Mines, the Elven Halls,
-the Vaults, or the Crypt; the specific branch varies with the caster.
+Summons some creatures from one of the Snake Pit, the Spider Nest, the Swamp,
+the Shoals, the Elven Halls, the Vaults, or the Crypt; the specific branch
+varies with the caster.
 %%%%
 Foxfire spell
 
@@ -713,11 +717,6 @@ out of view.
 Greater Servant of Makhleb spell
 
 Summons a major demon.
-%%%%
-Goad Beasts spell
-
-Provokes nearby beasts to act faster. The effect is fleeting, but repeated use
-can move even the most stubborn mule.
 %%%%
 Hailstorm spell
 
@@ -824,8 +823,7 @@ is dependent on the size of the target.
 %%%%
 Invisibility spell
 
-Turns the caster invisible. Turning invisible causes magical contamination
-and may eventually cause glowing, nullifying the invisibility.
+Turns the caster invisible.
 %%%%
 Invisibility Other spell
 
@@ -845,11 +843,10 @@ dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
-Conjures a small globe of magical energy linked to the caster's own magical
-reserves. While the battlesphere cannot take independent action, it will fire
-volleys of energy at the caster's enemies in sync with its creator's own
-destructive conjurations. With increasing power, the battlesphere lasts longer
-and deals more damage per volley.
+Conjures a small globe of magical energy. Each time its creator casts a
+destructive Conjuration, the battlesphere will launch its own volley of energy
+at a random foe. With increasing power, the battlesphere lasts longer and deals
+more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -1101,10 +1098,9 @@ otherwise almost indistinguishable from the original.
 %%%%
 Plane Rend spell
 
-Summons some of the greater threats from one of the Snake Pit, the Spider Nest,
-the Swamp, the Shoals, the Pits of Slime, the Elven Halls, the Vaults, the
-Crypt, the Tomb of Ancients, or the Realm of Zot; the specific branch varies
-with each cast of the spell.
+Summons some of the greater threats from one of the Pits of Slime, the Elven
+Halls, the Vaults, the Crypt, the Tomb of Ancients, or the Realm of Zot; the
+specific branch varies with each cast of the spell.
 %%%%
 Poison Arrow spell
 
@@ -1589,10 +1585,6 @@ Teleport Other spell
 
 Randomly translocates a targeted creature.
 %%%%
-Teleport Self spell
-
-Teleports the caster to a random location.
-%%%%
 Throw Barbs spell
 
 Fires a volley of barbs at the target, skewering them and making movement
@@ -1719,3 +1711,5 @@ If cast upon a creature already blessed (or cursed) with magical enchantments,
 those enchantments will be torn apart, transforming into a spray of
 destructive mutagenic radiation. The victim and anyone adjacent will be
 blasted and heavily deformed, weakening them and reducing their armour.
+Summoned creatures are particularly vulnerable, as the enchantments binding
+them to this plane will unravel and cause them to be dismissed immediately.

@@ -184,8 +184,9 @@ Magic
 Next come your defences. For all of them, more is better.
 
 Armour Class
-  Abbreviated to "AC". When something injures you, your AC reduces the amount of
-  damage you suffer.
+  Abbreviated to "AC". Your AC reduces the amount of damage you suffer from
+  most attacks (with a few rare exceptions), and provides some guaranteed
+  minimum protection against damage from melee attacks.
 
 Evasion
   Abbreviated to "EV". This helps you avoid being hit by unpleasant things (but
@@ -211,20 +212,19 @@ Dexterity
   effectiveness with shields, your stealth, and your effectiveness when stabbing
   unaware enemies.
 
-Attributes grow permanently from gaining levels, and may increase or decrease
-temporarily from mutations or while using certain artefacts or abilities.
+These primary attributes grow permanently from gaining levels, and may
+increase or decrease temporarily from mutations or while using certain
+artefacts or abilities. Upon gaining levels 3, 9, 15, etc., you may choose an
+attribute to raise. Most species gain additional attributes at some levels,
+with the frequency and the attribute to be increased determined by species.
 
 If any attribute drops to zero for some reason, you will experience very
 unpleasant side-effects, being slowed and suffering some stat-specific
 negative effects. These effects will persist for a short while even after the
 attribute is restored.
 
-Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
-species gain additional attributes at some levels, with the frequency and the
-attribute to be increased determined by species.
-
-Finally some additional information about your character and your progress through
-the dungeon is displayed.
+Finally some additional information about your character and your progress
+through the dungeon is displayed.
 
 Experience Level
   Abbreviated to "XL". Starting characters have experience level 1; the highest
@@ -277,7 +277,7 @@ Size
   Characters of smaller than medium size will have problems with some larger
   weapons. Very small characters and large characters are not able to use most
   types of armour. Players and monsters can only constrict foes of the same size
-  or smaller. In the dungeon you can also meet tiny, very large and giant foes.
+  or smaller. In the dungeon you can also meet tiny and giant foes.
 
 Stealth
   High stealth allows your character to move through the dungeon undetected.
@@ -407,9 +407,10 @@ If there is no door in the indicated space, both Ctrl-direction and
 is apparently nothing there, you will still attack it, just in case there's
 something invisible lurking around.
 
-A variety of dangerous and irritating traps are placed around the dungeon. Some
-traps are visible and can be avoided (or triggered on purpose), others are hidden
-until you stumble upon them.
+The malevolent forces of Zot will attempt to thwart your progress through the
+dungeon, and will occasionally manifest traps to force you into dangerous
+situations. Some traps are visible in advance and can be triggered by monsters
+to unleash their effects on you.
 
 Shops
 ========================================
@@ -555,10 +556,9 @@ it from the in-game help menu.
 E. Experience and skills
 ****************************************
 
-When you kill monsters, you gain experience points (XP). You receive less XP
-when friendly creatures took part in killing the monster. When you get enough
-XP, you gain an experience level, making your character more powerful. As they
-gain levels, characters gain more hit points, magic points, and spell levels.
+When you kill monsters, you gain experience points (XP). When you get enough XP,
+you gain an experience level, making your character more powerful. As they gain
+levels, characters gain more hit points, magic points, and spell levels.
 
 Additionally, the experience you gain is used to train your skills. These skills
 represent proficiency with all areas of endeavour an ambitious adventurer might
@@ -602,7 +602,7 @@ experience. You can highlight as many skills as you like, though obviously if
 all skills being trained are highlighted there will be no net effect.
 
 Occasionally you may find a manual of a skill which allows you to make quick
-progress in this area. When you are carrying it, experience used to practise the
+progress in this area. When you pick it up, experience used to practise the
 given skill will have twice the usual effect for a while.
 
 ****************************************
@@ -627,12 +627,10 @@ distance. They can use the 'z' command to cast spells previously memorised.
 Again, see the Targeting section.
 
 Some monsters can be friendly; friendly monsters will follow you around and
-fight on your behalf (but they gain some of the normal experience points for any
-kills they make, so you get less). You can command your allies using the 't'
-key, which lets you shout to attract them or tell them who to attack, or else
-tell them to stay where they are or to follow you again. You can also shout to
-get the attention of all monsters in range if, for some reason, you want to do
-that.
+fight on your behalf. You can command your allies using the 't' key, which lets
+you shout to attract them or tell them who to attack, or else tell them to stay
+where they are or to follow you again. You can also shout to get the attention
+of all monsters in range if, for some reason, you want to do that.
 
 Some special monsters are Uniques. You can identify a unique because he, she or
 they have a name and personality. Many of these come up with very nasty ideas
@@ -844,9 +842,8 @@ heavier an armour is, the more AC (armour class) it will provide, at the expense
 of your EV (evasion) and stealth. Heavier types of armour also hamper your melee
 accuracy, making it harder for you to hit monsters. Wearing heavy armour also
 increases your chances of miscasting spells, an effect which is only slightly
-reduced by your Armour skill. These penalties are larger if you have low Strength.
-On the other hand, body armour will also provide some guaranteed damage reduction
-against melee attacks, and heavier armours are better at this.
+reduced by your Armour skill. These penalties are larger if you have low
+Strength.
 
 A shield normally increases neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
@@ -895,27 +892,26 @@ the 'q' command.
 Sometimes you will be lucky enough to find a stick which contains stored magical
 energies. Wands each have a certain number of charges, which you immediately
 recognise when you pick them up. When you pick up a wand of type you already
-have in inventory, the charges from the new wand are merged into the existing
-one, and the new wand no longer exists. When a wand's charges are fully depleted,
-it vanishes.
+have in inventory, its charges are absorbed into the existing one. When a wand's
+charges are fully depleted, it vanishes.
 
 Wands are aimed in the same way as missile weapons, and you can release the
 power of a wand by evoking it with 'V'. See section I for targeting.
 
 Wands can be 'Q'uivered in order to shoot via the autofire or 'f'ire
-interface, like spells and ammo
+interface, like spells and ammo.
 
 =" Rings and Amulets
 ========================================
 
 Magical rings are among the most useful of the items you will find in the
-dungeon, but can also be some of the most hazardous. Use the 'P' command to
-put on rings, and 'R' to remove them. You can wear up to two rings
-simultaneously, one on each hand; which hand you put a ring on is immaterial
-to its function. If you try to put on a ring while both ring fingers are full,
-you will be asked which one to remove. Octopodes are an exception, and may
-wear up to eight rings on their tentacles. Some rings function automatically,
-while others require activation (with the 'a' command).
+dungeon. While equipped, they provide some kind of passive benefit to the
+wearer, such as increasing their attributes or providing various types of
+protection. Use the 'P' command to put on rings, and 'R' to remove them. You can
+wear up to two rings simultaneously, one on each hand; which hand you put a ring
+on is immaterial to its function. If you try to put on a ring while both ring
+fingers are full, you will be asked which one to remove. Octopodes are an
+exception, and may wear up to eight rings on their tentacles.
 
 Amulets are similar to rings, but have different range of effects. Amulets are
 worn around the neck, and you can wear only one at a time. It is very quick to
@@ -927,12 +923,11 @@ You can press '"' to quickly check what jewellery you're wearing.
 \| Staves
 ========================================
 
-There are a number of types of magical staves. Some enhance your general
-spellcasting ability, while some greatly increase the power of a certain class
-of spells (and possibly reduce your effectiveness with others). Some can even be
-used in melee combat, although with mediocre effectiveness unless you can
-harness their special power, using a combination of the Evocations skill and the
-skill specific to the staff's type.
+There are a number of types of magical staves, each attuned to a different
+class of spells. While wielded they greatly increase the power of that class
+of spells. They can even be used in melee combat, although with mediocre
+effectiveness unless you can harness their special power, using a combination of
+the Evocations skill and the skill specific to the staff's type.
 
 : Books
 ========================================
@@ -942,8 +937,11 @@ Upon picking up a book, all of the spells in it will be added to your spell
 library, allowing you to access a description of each spell or memorise spells
 from it with the 'M' command.
 
-Occasionally you will find manuals of some skill. Carrying these will cause your
-experience to have twice the effect as usual when used for training that skill.
+Occasionally you will find manuals of some skill. When you pick one up, your
+experience will have twice the usual effect when used for training that skill.
+Once a certain amount of bonus experience has been gained in this way, you will
+automatically discard the finished manual.
+
 
 { Miscellaneous
 ========================================
@@ -958,7 +956,7 @@ probably impossible in the first place, and secondly would be a meaningless
 achievement in any regard.
 
 Miscellany can often be 'Q'uivered in order to shoot via the autofire or 'f'ire
-interface, like spells and ammo
+interface, like spells and ammo.
 
 $ Gold
 ========================================
@@ -976,7 +974,7 @@ double sword" or "shimmering scale mail". Artefacts cannot be modified in any
 way, including enchantments.
 
 Apart from that, otherwise mundane items can get one special property. These are
-called 'ego items', and examples are: boots of running, a weapon of flaming, a
+called 'ego items', and examples are: boots of flight, a weapon of flaming, a
 helmet of see invisible, and so on. Note that, unlike artefacts, such items can
 be modified by enchanting scrolls.
 
@@ -1000,10 +998,10 @@ There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps to
 cast any spell, though less so than schools associated with a spell. Next, there
 are several general magical schools (Conjuration, Hexes, Summoning, Necromancy,
-Translocation and Transmutation) as well as several elemental schools (Fire, Ice,
-Air and Earth) and, finally, Poison. A particular spell can belong to up to three
-schools. Being skilled in a spell's schools improves the casting chance and the
-power of that spell.
+Translocation and Transmutation) as well as several elemental schools (Fire,
+Ice, Air and Earth) and, finally, Poison. A particular spell can belong to up
+to three schools. Being skilled in a spell's schools improves the casting
+chance and the power of that spell.
 
 Spells are stored in books, which you will occasionally find in the dungeon.
 Once you have picked up a book and added its contents to your spell library, you
@@ -1019,8 +1017,8 @@ number of levels of spells; type 'M' to find out how many. When you gain
 experience levels or advance the Spellcasting skill, your maximum increases; you
 will need to save up for several levels to memorise the more powerful spells.
 
-There are two ways to activate memorized spells: by "quivering" them and using
-the fire interface, or directlyby pressing 'z' (for Zap). To choose a spell
+There are two ways to activate memorised spells: by "quivering" them and using
+the fire interface, or directly by pressing 'z' (for Zap). To choose a spell
 for the quiver, use 'Q', or '(' and ')' to cycle among possible actions. Press
 'f' to enter the targeting interface, or shift-tab / 'p' to autofire a
 quivered spell at the nearest monster.
@@ -1081,11 +1079,8 @@ There are some shortcuts while targeting:
   strokes. At times, it will be useful to switch targets with the '+' or '-'
   commands, though.
 
-It is possible to target yourself, and some beneficial effects like invisibility
-will automatically target the cursor on you, leaving to you only the pressing
-of '.', Enter, etc. - except if you want to aim at someone else. If you target
-yourself while firing something harmful (which can be sensible at times), you
-will be asked for confirmation.
+If you target yourself while firing something harmful (which can be sensible at
+times), you will be asked for confirmation.
 
 Finally, the ':' key allows you to hide the path of your spell/wand/missile.
 
@@ -1097,8 +1092,8 @@ There are a number of gods, demons and other assorted powers who will accept
 your character's worship, and sometimes give out favours in exchange. You can
 use the '^' command to check the requirements of whoever it is that you worship,
 and if you find religion to be an inconvenience you can always renounce your
-faith (use the 'a' command - but most gods resent being scorned). Further details
-can be seen with '!' while in the '^' screen.
+faith (use the 'a' command - but most gods resent being scorned). Further
+details can be seen with '!' while in the '^' screen.
 
 To use any powers which your god deems you fit for, access the abilities menu
 via the 'a' command; god-given abilities are listed as invocations. Many god
@@ -1113,38 +1108,43 @@ somewhere near the surface.
 At an altar, you can enter a god's service by pressing < or >. You'll first be
 given a description of the god, and then be asked if you really want to join.
 To see a list of the standard gods and which of their altars you've seen in your
-current game, press 'Ctrl-O'. You can also learn about all gods by pressing '?/G'.
+current game, press 'Ctrl-O'. You can also learn about all gods by pressing
+'?/G'.
 
 Note that some gods are picky about who can enter their service; for example,
 good gods will not accept demonic or undead devotees.
 
 If you would like to start the game with a religion, choose your background
-from Berserker, Chaos Knight or Abyssal Knight.
+from Berserker, Chaos Knight, Abyssal Knight or Cinder Acolyte.
 
 ****************************************
 K. Mutations
 ****************************************
 
-Although it would doubtless be a nice thing if you could remain genetically
-pure, there are too many toxic wastes and mutagenic radiations in the Dungeon
-for that to be possible. If your character is so affected by these that he or
-she undergoes physiological change, you can use the 'A' command to see how much
-of a freak they've become and the 'a' command to activate any mutations which
-can be controlled. Many mutations are actually beneficial to your character, but
-there are plenty of nasty ones as well. Many mutations have multiple levels,
-each of which counts as a single mutation.
+The Dungeon contains many sources of mutagenic radiation and magical
+contamination, which may cause your character to gain semi-permanent mutations
+if affected. You can use the 'A' command to view a list of any mutations that
+you have acquired. Individual mutations can be examined in further detail by
+pressing the letter they are labelled with.
 
-You can also become mutated by overusing certain powerful spells, particularly
-'Invisibility' and 'Irradiate', as your system absorbs too much magical energy.
-A single use of those effects will never cause dangerous levels of magical
-contamination, but multiple uses in short succession, or usage with existing
-contamination from other sources (e.g. from miscasting spells) can cause trouble.
+Many mutations are actually beneficial to your character, but there are plenty
+of nasty ones as well. Some mutations have multiple levels, each of which counts
+as a single mutation.
+
+Miscasting spells will cause magical contamination, which in turn can cause
+mutations if too much contamination is accrued at once. Certain powerful
+magical effects or spells (such as 'Invisibility' and 'Irradiate') also cause
+contamination as a side-effect even when successful. A single use of these
+effects is safe on its own, but multiple uses in short succession, or usage with
+existing contamination from other sources can cause dangerous levels of
+contamination.
+
 Mutations from magical contamination are almost always harmful. Mutations can
 also be caused by specific potions or by spells cast by powerful enemies found
 deep in the dungeon.
 
 It is more difficult to get rid of bad mutations than to get one. Using potions
-of mutations will remove a number of your current mutations, but will give you
+of mutation will remove a number of your current mutations, but will give you
 more mutations. These might be better to your taste. However, the only sure-fire
 ways is to join the gods Zin or Jiyva, each of whom provides some remedy against
 mutations.
@@ -1155,9 +1155,11 @@ can never be removed. If one of your Demonspawn powers has been augmented by a
 random mutation, it is displayed in a lighter colour.
 
 Many a species starts with some special intrinsic features, like the greater
-speed of Felids or Spriggans, or the claws of Trolls and Ghouls. These are often,
-but not always, like a preset mutation. In case such an innate feature gets
-amplified by an ordinary mutation, it is displayed in a light blue colour.
+speed of Felids or Spriggans, or the claws of Trolls and Ghouls. These are
+often, but not always, like a preset mutation. In case such an innate feature
+gets amplified by an ordinary mutation, it is displayed in a light blue colour.
+Some of these innate features will provide an activated ability, which can be
+used with the 'a' command.
 
 Some mutations are only temporary and will dissipate after slaying more enemies.
 These are listed in purple on the list of mutations, and marked as temporary.
@@ -1463,7 +1465,7 @@ Appendices
 1. List of character species
 ****************************************
 
-Species are categorized, roughly, by how difficult and complex they are to
+Species are categorised, roughly, by how difficult and complex they are to
 learn how to play, into three categories: *Simple*, *Intermediate*, and
 *Advanced*. These categories do not necessarily align with difficulty for an
 experienced Crawl player, but rather are intended as an indication of to what
@@ -1490,7 +1492,7 @@ the species.
           they have 0 for almost all aptitudes; have no special abilities,
           weakness, or constraints against using certain types of equipment;
           move normally; and gain experience and willpower at a "typical"
-          rate. However, you will see that they are categorized as an
+          rate. However, you will see that they are categorised as an
           *Intermediate* species -- because they are decent, but not excellent,
           at nearly everything, a Human may need to make use of all sorts of
           game mechanics depending on what they find in the dungeon, and know
@@ -1500,7 +1502,7 @@ the species.
 Simple species
 ==============
 
-Species categorized as *Simple* work straightforwardly for players who have
+Species categorised as *Simple* work straightforwardly for players who have
 less experience with Crawl's game mechanics. While many do have quirks, these
 quirks tend to be passive traits that simplify gameplay, rather than challenges
 that a player has to consciously work around. While all of these species do
@@ -2249,7 +2251,8 @@ Armour
   This skill slightly helps to overcome the evasion penalty of body armours,
   reduce the amount by which heavy armour hampers melee fighting, and mitigate
   the bad effects of heavy armour on spellcasting. Mainly, though, it increases
-  the AC provided by other types of armour (gloves, cloaks, etc.).
+  the AC provided by all types of armour (including gloves, cloaks, etc. as
+  well as body armour).
 
 Dodging
   A high Dodging skill helps you to evade melee and ranged attacks more

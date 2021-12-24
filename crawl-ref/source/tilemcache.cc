@@ -65,7 +65,6 @@ protected:
     tileidx_t m_job_tile;
     tileidx_t m_equ_tile;
     tileidx_t m_shd_tile;
-    bool draco;
 };
 
 class mcache_mbeast : public mcache_entry
@@ -334,7 +333,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_JOSEPH:
     case TILEP_MONS_TERENCE:
     case TILEP_MONS_RAKSHASA:
-    case TILEP_MONS_VAMPIRE_KNIGHT:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
@@ -344,25 +342,23 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ANCESTOR_KNIGHT:
     case TILEP_MONS_ANCESTOR_BATTLEMAGE:
     case TILEP_MONS_RAGGED_HIEROPHANT:
+    case TILEP_MONS_VAMPIRE_MAGE:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
     // Shift to the left.
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
+    case TILEP_MONS_DEMONSPAWN_BLOOD_SAINT:
+    case TILEP_MONS_DEMONSPAWN_WARMONGER:
+    case TILEP_MONS_DEMONSPAWN_CORRUPTER:
+    case TILEP_MONS_DEMONSPAWN_BLACK_SUN:
+    case TILEP_MONS_VAMPIRE_KNIGHT:
         *ofs_x = -1;
         *ofs_y = 0;
         break;
     case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_ROBIN:
     case TILEP_MONS_GNOLL_SERGEANT:
-    case TILEP_MONS_TIAMAT:
-    case TILEP_MONS_TIAMAT_1:
-    case TILEP_MONS_TIAMAT_2:
-    case TILEP_MONS_TIAMAT_3:
-    case TILEP_MONS_TIAMAT_4:
-    case TILEP_MONS_TIAMAT_5:
-    case TILEP_MONS_TIAMAT_6:
-    case TILEP_MONS_TIAMAT_7:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
@@ -377,12 +373,15 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_KOBOLD_BRIGAND:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_EFREET:
-    case TILEP_MONS_VAMPIRE_MAGE:
     case TILEP_MONS_GNOLL:
     case TILEP_MONS_CRAZY_YIUF:
     case TILEP_MONS_GRUM:
     case TILEP_MONS_GNOLL_SHAMAN:
         *ofs_x = -3;
+        *ofs_y = 0;
+        break;
+    case TILEP_MONS_JACK_O_LANTERN:
+        *ofs_x = -6;
         *ofs_y = 0;
         break;
     // Shift to the right.
@@ -455,7 +454,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 0;
         *ofs_y = 1;
         break;
-    case TILEP_MONS_BLORK_THE_ORC:
     case TILEP_MONS_BOGGART:
     case TILEP_MONS_JORGRUN:
     case TILEP_MONS_DIMME:
@@ -512,7 +510,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_2:
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_3:
     case TILEP_MONS_FORMICID:
-    case TILEP_MONS_IRONBOUND_BEASTMASTER:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
@@ -620,8 +617,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = 4;
         break;
-    case TILEP_MONS_ORC:
-    case TILEP_MONS_ORC_WARRIOR:
     case TILEP_MONS_URUG:
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_HIGH_PRIEST:
@@ -647,7 +642,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -3;
         *ofs_y = 1;
         break;
-    case TILEP_MONS_SERAPH:
+    case TILEP_MONS_SERAPH_SWORDLESS:
         *ofs_x = -1;
         *ofs_y = -10;
         break;
@@ -770,6 +765,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -8;
         break;
     case TILEP_MONS_ABOMINATION_LARGE_2:
+    case TILEP_MONS_BLORK_THE_ORC:
         *ofs_x = -3;
         *ofs_y = 0;
         break;
@@ -794,6 +790,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -3;
         break;
     case TILEP_MONS_CHAOS_SPAWN_3:
+    case TILEP_MONS_ORC:
+    case TILEP_MONS_ORC_WARRIOR:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
@@ -874,6 +872,10 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_SAINT_ROKA:
     case TILEP_MONS_MINOTAUR:
+    case TILEP_MONS_DEMONSPAWN_BLOOD_SAINT:
+    case TILEP_MONS_DEMONSPAWN_WARMONGER:
+    case TILEP_MONS_DEMONSPAWN_CORRUPTER:
+    case TILEP_MONS_DEMONSPAWN_BLACK_SUN:
         *ofs_x = 2;
         *ofs_y = 0;
         break;
@@ -888,7 +890,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_IRONBOUND_CONVOKER:
     case TILEP_MONS_IRONBOUND_PRESERVER:
-    case TILEP_MONS_IRONBOUND_BEASTMASTER:
     case TILEP_MONS_IRONBOUND_FROSTHEART:
     case TILEP_MONS_VAULT_WARDEN:
         *ofs_x = -2;
@@ -1008,6 +1009,11 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_WRAITH:
         *ofs_x = -3;
         *ofs_y = -2;
+        break;
+
+    case TILEP_MONS_JACK_O_LANTERN:
+        *ofs_x = -6;
+        *ofs_y = 6;
         break;
 
     case TILEP_MONS_MERFOLK_WATER:
@@ -1325,16 +1331,13 @@ bool mcache_monster::valid(const monster_info& mon)
 mcache_draco::mcache_draco(const monster_info& mon)
 {
     ASSERT(mcache_draco::valid(mon));
-    draco = mons_is_draconian(mon.type);
 
-    m_mon_tile = draco ? tileidx_draco_base(mon)
-                       : tileidx_demonspawn_base(mon);
+    m_mon_tile = tileidx_draco_base(mon);
     const item_def* mon_wep = mon.inv[MSLOT_WEAPON].get();
     m_equ_tile = (mon_wep != nullptr) ? tilep_equ_weapon(*mon_wep) : 0;
     mon_wep = mon.inv[MSLOT_SHIELD].get();
     m_shd_tile = (mon_wep != nullptr) ? tilep_equ_shield(*mon_wep) : 0;
-    m_job_tile = draco ? tileidx_draco_job(mon)
-                       : tileidx_demonspawn_job(mon);
+    m_job_tile = tileidx_draco_job(mon);
 }
 
 int mcache_draco::info(tile_draw_info *dinfo) const
@@ -1345,12 +1348,7 @@ int mcache_draco::info(tile_draw_info *dinfo) const
     if (m_job_tile)
         dinfo[i++].set(m_job_tile);
     if (m_equ_tile)
-    {
-        if (draco)
-            dinfo[i++].set(m_equ_tile, -3, -1);
-        else
-            dinfo[i++].set(m_equ_tile, -1, 0);
-    }
+        dinfo[i++].set(m_equ_tile, -3, -1);
     if (m_shd_tile)
         dinfo[i++].set(m_shd_tile, 2, 0);
 
@@ -1359,7 +1357,7 @@ int mcache_draco::info(tile_draw_info *dinfo) const
 
 bool mcache_draco::valid(const monster_info& mon)
 {
-    return mons_is_draconian(mon.type) || mons_is_demonspawn(mon.type);
+    return mons_is_draconian(mon.type);
 }
 
 /////////////////////////////////////////////////////////////////////////////

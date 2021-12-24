@@ -474,7 +474,7 @@ static bool _teleportation_check()
     if (crawl_state.game_is_sprint())
         return false;
 
-    return !you.no_tele(false, false);
+    return !you.no_tele();
 }
 
 static bool _transformation_check(const spell_type spell)
@@ -3674,7 +3674,7 @@ void debug_xom_effects()
     const int tension       = get_tension(GOD_XOM);
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
-    fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
+    fprintf(ostat, "%s\n", dump_overview_screen().c_str());
     fprintf(ostat, "%s\n", screenshot().c_str());
     fprintf(ostat, "%s\n", _list_exploration_estimate().c_str());
     fprintf(ostat, "%s\n", mpr_monster_list().c_str());

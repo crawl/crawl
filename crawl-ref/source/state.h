@@ -218,6 +218,8 @@ public:
     bool game_is_hints() const;
     bool game_is_hints_tutorial() const;
 
+    bool seed_is_known() const;
+
     // Save subdirectory used for games such as Sprint.
     string game_type_name() const;
     string game_savedir_path() const;

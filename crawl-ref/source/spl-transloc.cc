@@ -76,7 +76,6 @@ spret cast_disjunction(int pow, bool fail)
     you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
         max(you.duration[DUR_DISJUNCTION] + rand,
         30 + rand));
-    contaminate_player(750 + random2(500), true);
     disjunction_spell();
     return spret::success;
 }
@@ -124,7 +123,7 @@ void disjunction_spell()
  */
 void uncontrolled_blink(bool override_stasis)
 {
-    if (you.no_tele(true, true, true) && !override_stasis)
+    if (you.no_tele(true) && !override_stasis)
     {
         canned_msg(MSG_STRANGE_STASIS);
         return;
@@ -163,7 +162,7 @@ void uncontrolled_blink(bool override_stasis)
  * @return              True if a target was found; false if the player aborted.
  */
 static bool _find_cblink_target(dist &target, bool safe_cancel,
-                                string verb, targeter *hitfunc = nullptr)
+                                string verb, targeter *hitfunc = nullptr, bool physical = false)
 {
     while (true)
     {
@@ -244,7 +243,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
             continue;
         }
 
-        if (cancel_harmful_move(false))
+        if (cancel_harmful_move(physical))
         {
             clear_messages();
             continue;
@@ -324,6 +323,11 @@ static coord_def _fuzz_hop_destination(coord_def target)
     return chosen;
 }
 
+int frog_hop_range()
+{
+    return 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+}
+
 /**
  * Attempt to hop the player to a space near a tile of their choosing.
  *
@@ -336,16 +340,13 @@ spret frog_hop(bool fail, dist *target)
     dist empty;
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
-    const int hop_range = 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+    const int hop_range = frog_hop_range();
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     tgt.obeys_mesmerise = true;
 
-    if (cancel_harmful_move())
-        return spret::abort;
-
     while (true)
     {
-        if (!_find_cblink_target(*target, true, "hop", &tgt))
+        if (!_find_cblink_target(*target, true, "hop", &tgt, true))
             return spret::abort;
 
         if (grid_distance(you.pos(), target->target) > hop_range)
@@ -705,10 +706,10 @@ spret controlled_blink(bool safe_cancel, dist *target)
  * @return                  Whether the spell was successfully cast, aborted,
  *                          or miscast.
  */
-spret cast_blink(bool fail)
+spret cast_blink(int pow, bool fail)
 {
     // effects that cast the spell through the player, I guess (e.g. xom)
-    if (you.no_tele(false, false, true))
+    if (you.no_tele(true))
         return fail ? spret::fail : spret::success; // probably always SUCCESS
 
     if (cancel_harmful_move(false))
@@ -716,6 +717,11 @@ spret cast_blink(bool fail)
 
     fail_check();
     uncontrolled_blink();
+
+    int cooldown = div_rand_round(50 - pow, 10);
+    if (cooldown)
+        you.increase_duration(DUR_BLINK_COOLDOWN, 1 + random2(2) + cooldown);
+
     return spret::success;
 }
 
@@ -723,7 +729,7 @@ void you_teleport()
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
-    if (you.no_tele(true, true))
+    if (you.no_tele())
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
@@ -803,6 +809,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #else
     UNUSED(old_pos);
 #endif
+
+    you.clear_far_engulf();
 }
 
 static bool _teleport_player(bool wizard_tele, bool teleportitis,
@@ -927,7 +935,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
                 interrupt_activity(activity_interrupt::teleport);
                 if (!reason.empty())
                     mpr(reason);
-                mprf("You are suddenly yanked towards %s nearby monster%s!",
+                mprf("You are yanked towards %s nearby monster%s!",
                      mons_near_target > 1 ? "some" : "a",
                      mons_near_target > 1 ? "s" : "");
             }
@@ -1115,7 +1123,10 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
 
     fail_check();
 
-    mpr("Space momentarily warps into an impossible shape!");
+    if (player_equip_unrand(UNRAND_AUTUMN_KATANA))
+        mpr("Space folds impossibly around your blade!");
+    else
+        mpr("Space momentarily warps into an impossible shape!");
 
     const int initial_time = you.time_taken;
 
@@ -1268,7 +1279,20 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     return spret::success;
 }
 
-spret cast_golubrias_passage(const coord_def& where, bool fail)
+int golubria_fuzz_range()
+{
+    return orb_limits_translocation() ? 4 : 2;
+}
+
+bool golubria_valid_cell(coord_def p)
+{
+    return in_bounds(p)
+           && env.grid(p) == DNGN_FLOOR
+           && !monster_at(p)
+           && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
+}
+
+spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
 {
     if (player_in_branch(BRANCH_GAUNTLET))
     {
@@ -1277,12 +1301,25 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         return spret::abort;
     }
 
+    if (grid_distance(where, you.pos())
+        > spell_range(SPELL_GOLUBRIAS_PASSAGE, pow))
+    {
+        mpr("That's out of range!");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(where))
+    {
+        mpr("You can't create a passage there!");
+        return spret::abort;
+    }
+
     // randomize position a bit to make it not as useful to use on monsters
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
     int tries2 = 0;
     // Less accurate when the orb is interfering.
-    const int range = orb_limits_translocation() ? 4 : 2;
+    const int range = golubria_fuzz_range();
     coord_def randomized_where = where;
     coord_def randomized_here = you.pos();
     do
@@ -1292,11 +1329,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_where.x += random_range(-range, range);
         randomized_where.y += random_range(-range, range);
     }
-    while ((!in_bounds(randomized_where)
-            || env.grid(randomized_where) != DNGN_FLOOR
-            || monster_at(randomized_where)
-            || !you.see_cell(randomized_where)
-            || you.trans_wall_blocking(randomized_where)
+    while ((!golubria_valid_cell(randomized_where)
             || randomized_where == you.pos())
            && tries < 100);
 
@@ -1307,11 +1340,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_here.x += random_range(-range, range);
         randomized_here.y += random_range(-range, range);
     }
-    while ((!in_bounds(randomized_here)
-            || env.grid(randomized_here) != DNGN_FLOOR
-            || monster_at(randomized_here)
-            || !you.see_cell(randomized_here)
-            || you.trans_wall_blocking(randomized_here)
+    while ((!golubria_valid_cell(randomized_here)
             || randomized_here == randomized_where)
            && tries2 < 100);
 
@@ -1625,9 +1654,8 @@ void attract_monsters()
     }
 }
 
-spret word_of_chaos(int pow, bool fail)
+vector<monster *> find_chaos_targets(bool just_check)
 {
-    vector<monster *> visible_targets;
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
@@ -1636,12 +1664,18 @@ spret word_of_chaos(int pow, bool fail)
             && !mons_is_conjured(mi->type)
             && !mi->friendly())
         {
-            if (you.can_see(**mi))
-                visible_targets.push_back(*mi);
-            targets.push_back(*mi);
+            if (!just_check || you.can_see(**mi))
+                targets.push_back(*mi);
         }
     }
 
+    return targets;
+}
+
+spret word_of_chaos(int pow, bool fail)
+{
+    vector<monster *> visible_targets = find_chaos_targets(true);
+    vector<monster *> targets = find_chaos_targets();
     if (visible_targets.empty())
     {
         if (!yesno("You cannot see any enemies that you can affect. Speak a "

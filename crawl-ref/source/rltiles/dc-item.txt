@@ -387,13 +387,13 @@ animal_skin2
 animal_skin3
 
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-red_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
+fire_dragon_armour ARM_FIRE_DRAGON_ARMOUR
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
-silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR
+steam_dragon_armour ARM_STEAM_DRAGON_ARMOUR
 acid_dragon_armour ARM_ACID_DRAGON_ARMOUR
-quicksilver_dragon_scale_mail ARM_QUICKSILVER_DRAGON_ARMOUR
-blue_dragon_scale_mail ARM_STORM_DRAGON_ARMOUR
-shadow_dragon_scale_mail ARM_SHADOW_DRAGON_ARMOUR
+quicksilver_dragon_armour ARM_QUICKSILVER_DRAGON_ARMOUR
+storm_dragon_armour ARM_STORM_DRAGON_ARMOUR
+shadow_dragon_armour ARM_SHADOW_DRAGON_ARMOUR
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
@@ -458,7 +458,8 @@ cap_jester THELM_CAP_JESTER
 %rim 0
 hat1 THELM_HAT
 hat2
-hat3
+hat3 THELM_HAT_ART_FIRST
+wizard_hat THELM_HAT_ART_LAST
 
 helmet1 THELM_HELM THELM_FIRST
 helmet2
@@ -521,7 +522,7 @@ i-archmagi BRAND_ARM_ARCHMAGI
 i-preservation BRAND_ARM_PRESERVATION
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
-i-archery BRAND_ARM_ARCHERY
+i-hurling BRAND_ARM_HURLING
 # start TAG_MAJOR_VERSION == 34
 i-jumping BRAND_ARM_JUMPING
 # end TAG_MAJOR_VERSION
@@ -532,7 +533,8 @@ i-cloud-immune BRAND_ARM_CLOUD_IMMUNE
 i-harm BRAND_ARM_HARM
 i-shadows BRAND_ARM_SHADOWS
 %rim 0
-i-lunging BRAND_ARM_LUNGING BRAND_ARM_LAST
+i-lunging BRAND_ARM_LUNGING
+i-infusion BRAND_ARM_INFUSION BRAND_ARM_LAST
 %rim 1
 
 ###########OBJ_WANDS

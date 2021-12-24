@@ -23,13 +23,6 @@ using std::vector;
 
 #define NUM_PIETY_STARS 6
 
-enum class lifesaving_chance
-{
-    never,
-    sometimes,
-    always,
-};
-
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
@@ -112,7 +105,6 @@ bool god_loathes_spell(spell_type spell, god_type god);
 string god_spell_warn_string(spell_type spell, god_type god);
 
 void initialize_ashenzari_props();
-lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 bool ignis_is_dead();
@@ -129,7 +121,11 @@ bool faith_has_penalty();
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
 
-int yred_random_servants(unsigned int threshold, bool force_hostile = false);
+bool yred_random_servant(unsigned int threshold, bool force_hostile = false);
+void give_yred_bonus_zombies(int stars);
+bool yred_reap_chance();
+bool yred_reclaim_souls(bool all = false);
+bool pay_yred_souls(unsigned int how_many, bool just_check = false);
 bool is_yred_undead_slave(const monster& mon);
 bool is_orcish_follower(const monster& mon);
 bool is_fellow_slime(const monster& mon);
@@ -184,6 +180,7 @@ protected:
 
 struct god_power
 {
+    god_type god;
     // 1-6 means it unlocks at that many stars of piety;
     // 0 means it is always available when worshipping the god;
     // -1 means it is available even under penance;
@@ -211,6 +208,7 @@ struct god_power
 
     god_power(int rank_, ability_type abil_, const char* gain_,
               const char* loss_ = "", const char* general_ = "") :
+              god(GOD_NO_GOD),
               rank{rank_}, abil{abil_}, gain{gain_},
               loss{*loss_ ? loss_ : gain_},
               general{*general_ ? general_ : gain_}
@@ -225,6 +223,7 @@ struct god_power
 };
 
 void set_god_ability_slots();
+const vector<vector<god_power>> & get_all_god_powers();
 vector<god_power> get_god_powers(god_type god);
 const god_power* god_power_from_ability(ability_type abil);
 bool god_power_usable(const god_power& power, bool ignore_piety=false, bool ignore_penance=false);

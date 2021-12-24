@@ -431,7 +431,6 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
     monster* mons = monster_at(where);
     if (mons == nullptr
         || mons_intel(*mons) < I_HUMAN
-        || !(mons->holiness() & MH_NATURAL)
         || mons->clarity()
         || mons->res_poison() >= 3)
     {
@@ -479,17 +478,5 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
         you.redraw_evasion = true;
     }
 
-    return spret::success;
-}
-
-spret cast_invisibility(int pow, bool fail)
-{
-    if (!invis_allowed())
-        return spret::abort;
-
-    fail_check();
-
-    potionlike_effect(POT_INVISIBILITY, pow);
-    contaminate_player(1000 + random2(1000), true);
     return spret::success;
 }

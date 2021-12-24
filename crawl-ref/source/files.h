@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include "maybe-bool.h"
+
 struct player_save_info;
 
 enum load_mode_type
@@ -49,6 +51,7 @@ vector<string> get_dir_files_recursive(const string &dirname,
                                        int recursion_depth = -1,
                                        bool include_directories = false);
 
+maybe_bool validate_data_dir(const string &d);
 void validate_basedirs();
 string datafile_path(string basename, bool croak_on_fail = true,
                      bool test_base_path = false,

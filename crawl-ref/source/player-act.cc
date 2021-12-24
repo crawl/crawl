@@ -489,11 +489,22 @@ static string _hand_name_singular(bool temp)
     if (you.has_usable_tentacles())
         return "tentacle";
 
+    // Storm Form inactivates the paws mutation, but graphically, a Felid's
+    // electric body still maintains similar anatomy.
+    if (temp && you.form == transformation::storm
+        && you.species == SP_FELID)
+    {
+        return "paw";
+    }
+
     // For flavor reasons, use "fists" instead of "hands" in various places,
     // but if the creature does have a custom hand name, let the above code
     // preempt it.
-    if (temp && you.form == transformation::statue)
+    if (temp && (you.form == transformation::statue
+                 || you.form == transformation::storm))
+    {
         return "fist";
+    }
 
     // player has no usable claws, but has the mutation -- they are suppressed
     // by something. (The species names will give the wrong answer for this
@@ -846,19 +857,6 @@ int player::constriction_damage(bool direct) const
     return roll_dice(2, div_rand_round(70 +
                 calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
 }
-
-/**
- * How many heads does the player have, in their current form?
- *
- * Currently only checks for hydra form.
- */
-int player::heads() const
-{
-    if (props.exists(HYDRA_FORM_HEADS_KEY))
-        return props[HYDRA_FORM_HEADS_KEY].get_int();
-    return 1; // not actually always true
-}
-
 
 bool player::is_dragonkind() const
 {

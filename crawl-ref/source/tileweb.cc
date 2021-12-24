@@ -20,10 +20,12 @@
 #include "command.h"
 #include "coord.h"
 #include "database.h"
+#include "describe.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "invent.h"
 #include "item-name.h"
 #include "item-prop.h" // is_weapon()
 #include "json.h"
@@ -42,6 +44,7 @@
 #include "player-equip.h"
 #include "religion.h"
 #include "scroller.h"
+#include "showsymb.h"
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
@@ -62,6 +65,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "version.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 #include "view.h"
 
@@ -155,7 +159,7 @@ bool TilesFramework::initialise()
 
     _send_version();
     send_exit_reason("unknown");
-    _send_options();
+    send_options(); // n.b. full rc read hasn't happened yet
     _send_layout();
 
     return true;
@@ -355,6 +359,61 @@ wint_t TilesFramework::_receive_control_message()
     }
 }
 
+static int _handle_cell_target(const coord_def &gc)
+{
+    // describe
+    if (mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH)
+    {
+        if (targeting_mouse_move(gc))
+            return CK_REDRAW;
+    }
+    return 0;
+}
+
+static int _handle_cell_click(const coord_def &gc, int button, bool force)
+{
+    // describe
+    if ((mouse_control::current_mode() == MOUSE_MODE_COMMAND
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
+        || tiles.get_ui_state() == UI_VIEW_MAP)
+        && button == 3)
+    {
+        full_describe_square(gc, false);
+        return CK_MOUSE_CMD;
+    }
+
+    // click travel
+    if (mouse_control::current_mode() == MOUSE_MODE_COMMAND && button == 1)
+    {
+        int c = click_travel(gc, force);
+        if (c != CK_MOUSE_CMD)
+        {
+            clear_messages();
+            process_command((command_type) c);
+        }
+        return CK_MOUSE_CMD;
+    }
+
+    // fire
+    if ((mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH)
+        && button == 1)
+    {
+        if (targeting_mouse_select(gc))
+            return CK_MOUSE_CMD;
+        // if the targeter is still live, the player did something like click
+        // out of range, and we want to redraw immediately
+        return CK_REDRAW;
+    }
+
+    return 0;
+}
+
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 {
     JsonWrapper obj = json_decode(data.c_str());
@@ -445,23 +504,30 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         flush_prev_message();
         c = CK_REDRAW;
     }
-    else if (msgtype == "click_travel" &&
-             mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    else if (msgtype == "click_cell")
+    {
+        JsonWrapper x = json_find_member(obj.node, "x");
+        JsonWrapper y = json_find_member(obj.node, "y");
+        JsonWrapper button = json_find_member(obj.node, "button");
+        x.check(JSON_NUMBER);
+        y.check(JSON_NUMBER);
+        button.check(JSON_NUMBER);
+        // XX force is currently unused
+        JsonWrapper force = json_find_member(obj.node, "force");
+        coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
+
+        c = _handle_cell_click(gc, button->number_,
+                        force.node && force->tag == JSON_BOOL && force->bool_);
+    }
+    else if (msgtype == "target_cursor")
     {
         JsonWrapper x = json_find_member(obj.node, "x");
         JsonWrapper y = json_find_member(obj.node, "y");
         x.check(JSON_NUMBER);
         y.check(JSON_NUMBER);
-        JsonWrapper force = json_find_member(obj.node, "force");
-
         coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
-        c = click_travel(gc, force.node && force->tag == JSON_BOOL && force->bool_);
-        if (c != CK_MOUSE_CMD)
-        {
-            clear_messages();
-            process_command((command_type) c);
-        }
-        c = CK_MOUSE_CMD;
+        _handle_cell_target(gc);
+        c = CK_REDRAW;
     }
     else if (msgtype == "formatted_scroller_scroll")
     {
@@ -479,6 +545,54 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     }
     else if (msgtype == "ui_state_sync")
         ui::recv_ui_state_change(obj.node);
+    else if (msgtype == "inv_item_describe"
+        && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        JsonWrapper slot = json_find_member(obj.node, "slot");
+        slot.check(JSON_NUMBER);
+        int inv_slot = (int) slot->number_;
+        if (inv_slot >=0 && inv_slot < ENDOFPACK)
+        {
+            describe_item(you.inv[inv_slot]);
+            c = CK_MOUSE_CMD;
+        }
+    }
+    else if (msgtype == "inv_item_action"
+        && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        JsonWrapper slot = json_find_member(obj.node, "slot");
+        slot.check(JSON_NUMBER);
+        int inv_slot = (int) slot->number_;
+        if (inv_slot >=0 && inv_slot < ENDOFPACK)
+        {
+            quiver::action_cycler tmp;
+            tmp.set_from_slot(inv_slot);
+            if (!tmp.is_empty())
+            {
+                if (tmp.get()->is_targeted())
+                    tmp.target();
+                else
+                    tmp.get()->trigger();
+            }
+            c = CK_MOUSE_CMD;
+        }
+    }
+    else if (msgtype == "set_option")
+    {
+        // this is an extremely brute force approach...
+        JsonWrapper opt_line = json_find_member(obj.node, "line");
+        opt_line.check(JSON_STRING);
+        Options.read_option_line(opt_line->string_, true);
+        // XX only set this flag if a relevant option has actually changed
+        Options.prefs_dirty = true;
+    }
+    else if (msgtype == "main_menu_action"
+             && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        // TODO: add a control message type that can send arbitrary commands
+        // (possibly just as a string, like the lua API for this)
+        process_command(CMD_GAME_MENU);
+    }
 
     return c;
 }
@@ -591,7 +705,16 @@ void TilesFramework::_send_version()
     send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
 }
 
-void TilesFramework::_send_options()
+void TilesFramework::send_milestone(const xlog_fields &xl)
+{
+    JsonWrapper j = xl.xlog_json();
+    json_append_member(j.node, "msg", json_mkstring("milestone"));
+    write_message("*");
+    write_message("%s", j.to_string().c_str());
+    finish_message();
+}
+
+void TilesFramework::send_options()
 {
     json_open_object();
     json_write_string("msg", "options");
@@ -1081,7 +1204,7 @@ void TilesFramework::_send_player(bool force_full)
     {
         json_open_object(to_string(i));
         item_def item = get_item_known_info(you.inv[i]);
-        if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.duration[DUR_CORROSION])
+        if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.corrosion_amount())
             item.plus -= 4 * you.corrosion_amount();
         _send_item(c.inv[i], item, force_full);
         json_close_object(true);
@@ -1121,10 +1244,44 @@ void TilesFramework::_send_player(bool force_full)
     finish_message();
 }
 
+// Checks if an item should be displayed on the action panel
+static int _useful_consumable_order(const item_def &item, const string &name)
+{
+    const vector<object_class_type> &base_types = Options.action_panel;
+    const auto order = std::find(base_types.begin(), base_types.end(),
+                                                            item.base_type);
+
+    if (item.quantity < 1
+        || order == base_types.end() // covers the empty case
+        || (!Options.action_panel_show_unidentified && !fully_identified(item)))
+    {
+        return -1;
+    }
+
+    for (const text_pattern &p : Options.action_panel_filter)
+        if (p.matches(name))
+            return -1;
+
+    return order - base_types.begin();
+}
+
+// Returns the name of an item_def field to display on the action panel
+static string _qty_field_name(const item_def &item)
+{
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type != MISC_ZIGGURAT
+        || item.base_type == OBJ_WANDS)
+    {
+        return "plus";
+    }
+    else
+        return "quantity";
+}
+
 void TilesFramework::_send_item(item_def& current, const item_def& next,
                                 bool force_full)
 {
     bool changed = false;
+    bool xp_evoker_changed = false;
     bool defined = next.defined();
 
     if (force_full || current.base_type != next.base_type)
@@ -1146,8 +1303,25 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
 
     changed |= _update_int(force_full, current.sub_type, next.sub_type,
                            "sub_type", false);
-    changed |= _update_int(force_full, current.plus, next.plus,
-                           PLUS_KEY, false);
+    if (Options.action_panel_glyphs)
+    {
+        string cur_glyph = stringize_glyph(get_item_glyph(current).ch);
+        string next_glyph = stringize_glyph(get_item_glyph(next).ch);
+        changed |= _update_string(force_full, cur_glyph, next_glyph, "g", false);
+    }
+    if (is_xp_evoker(next))
+    {
+        short int next_charges = evoker_charges(next.sub_type);
+        xp_evoker_changed = _update_int(force_full, current.plus,
+                                        next_charges,
+                                        PLUS_KEY, false);
+        changed |= xp_evoker_changed;
+    }
+    else
+    {
+        changed |= _update_int(force_full, current.plus, next.plus,
+                               PLUS_KEY, false);
+    }
     changed |= _update_int(force_full, current.plus2, next.plus2,
                            "plus2", false);
     changed |= _update_int(force_full, current.flags, next.flags,
@@ -1163,8 +1337,17 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     if (changed && defined)
     {
         string name = next.name(DESC_A, true, false, true);
-        if (force_full || current.name(DESC_A, true, false, true) != name)
+        if (force_full || current.name(DESC_A, true, false, true) != name
+            || xp_evoker_changed)
+        {
             json_write_string("name", name);
+        }
+
+        // -1 in this field means don't show. *note*: showing in the action
+        // panel has undefined behavior for item types that don't have a
+        // quiver::action implementation...
+        json_write_int("action_panel_order", _useful_consumable_order(next, name));
+        json_write_string("qty_field", _qty_field_name(next));
 
         const string prefix = item_prefix(next);
         const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
@@ -1180,7 +1363,7 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
         }
 
         tileidx_t tile = tileidx_item(next);
-        if (force_full || tileidx_item(current) != tile)
+        if (force_full || tileidx_item(current) != tile || xp_evoker_changed)
         {
             json_open_array("tile");
             tileidx_t base_tile = tileidx_known_base_item(tile);
@@ -1191,6 +1374,15 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
         }
 
         current = next;
+        if (is_xp_evoker(current))
+            current.plus = evoker_charges(current.sub_type);
+        if (in_inventory(current))
+        {
+            auto action = quiver::slot_to_action(current.link, false);
+            // TODO: does this stay in sync? Do anything with enabledness?
+            if (action && action->is_valid())
+                json_write_string("action_verb", action->quiver_verb());
+        }
     }
 }
 
@@ -1902,7 +2094,7 @@ void TilesFramework::_send_messages()
 void TilesFramework::_send_everything()
 {
     _send_version();
-    _send_options();
+    send_options();
     _send_layout();
 
     _send_text_cursor(m_text_cursor);

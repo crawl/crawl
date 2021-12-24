@@ -32,7 +32,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (dest == pos())
         return false;
 
-    if (no_tele(true, true, true))
+    if (no_tele(true))
     {
         if (!quiet)
             canned_msg(MSG_STRANGE_STASIS);
@@ -437,6 +437,16 @@ bool valid_blink_destination(const actor* moved, const coord_def& target,
         return false;
 
     return true;
+}
+
+vector<coord_def> find_blink_targets()
+{
+    vector<coord_def> result;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+        if (valid_blink_destination(&you, *ri))
+            result.push_back(*ri);
+
+    return result;
 }
 
 bool random_near_space(const actor* victim,

@@ -1173,6 +1173,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
     {
         case DNGN_CLOSED_DOOR:
         case DNGN_OPEN_DOOR:
+        case DNGN_BROKEN_DOOR:
         case DNGN_METAL_WALL:
             return CLOUD_GREY_SMOKE;
         case DNGN_CRYSTAL_WALL:
@@ -1187,6 +1188,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_GRATE:
         case DNGN_CLOSED_CLEAR_DOOR:
         case DNGN_OPEN_CLEAR_DOOR:
+        case DNGN_BROKEN_CLEAR_DOOR:
             return CLOUD_MIST;
         case DNGN_ORCISH_IDOL:
         case DNGN_GRANITE_STATUE:
@@ -2268,10 +2270,10 @@ static void _corrupt_choose_colours(corrupt_env *cenv)
     cenv->floor_colour = colour;
 }
 
-bool lugonu_corrupt_level(int power)
+void lugonu_corrupt_level(int power)
 {
     if (is_level_incorruptible())
-        return false;
+        return;
 
     simple_god_message("'s Hand of Corruption reaches out!");
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
@@ -2291,14 +2293,12 @@ bool lugonu_corrupt_level(int power)
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
 #endif
-
-    return true;
 }
 
-bool lugonu_corrupt_level_monster(const monster &who)
+void lugonu_corrupt_level_monster(const monster &who)
 {
     if (is_level_incorruptible_monster())
-        return false;
+        return;
 
     flash_view_delay(UA_MONSTER, MAGENTA, 200);
 
@@ -2317,8 +2317,6 @@ bool lugonu_corrupt_level_monster(const monster &who)
     // Allow extra time for the flash to linger.
     scaled_delay(300);
 #endif
-
-    return true;
 }
 
 /// If the player has earned enough XP, spawn an exit or stairs down.

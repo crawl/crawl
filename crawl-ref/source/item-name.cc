@@ -421,6 +421,8 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
+    "weak",
+    "vuln",
     "debug",
 };
 
@@ -446,6 +448,8 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
+    "weakness",
+    "vulnerability",
     "debug",
 };
 
@@ -471,8 +475,14 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
+    "weakening",
+    "will-reducing",
     "debug",
 };
+
+COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
+COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
+COMPILE_CHECK(ARRAYSZ(weapon_brands_adj) == NUM_SPECIAL_WEAPONS);
 
 static const set<brand_type> brand_prefers_adj =
             { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
@@ -486,9 +496,6 @@ static const set<brand_type> brand_prefers_adj =
  */
 const char* brand_type_name(brand_type brand, bool terse)
 {
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
-
     if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
         return terse ? "buggy" : "bugginess";
 
@@ -497,9 +504,6 @@ const char* brand_type_name(brand_type brand, bool terse)
 
 const char* brand_type_adj(brand_type brand)
 {
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_terse) == NUM_SPECIAL_WEAPONS);
-    COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
-
     if (brand < 0 || brand >= NUM_SPECIAL_WEAPONS)
         return "buggy";
 
@@ -554,7 +558,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PRESERVATION:      return "preservation";
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
-        case SPARM_ARCHERY:           return "archery";
+        case SPARM_HURLING:           return "hurling";
         case SPARM_REPULSION:         return "repulsion";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
@@ -562,6 +566,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_HARM:              return "harm";
         case SPARM_SHADOWS:           return "shadows";
         case SPARM_RAMPAGING:         return "rampaging";
+        case SPARM_INFUSION:          return "infusion";
         default:                      return "bugginess";
         }
     }
@@ -595,7 +600,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PRESERVATION:      return "rCorr";
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
-        case SPARM_ARCHERY:           return "archery";
+        case SPARM_HURLING:           return "hurl";
         case SPARM_REPULSION:         return "repulsion";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:      return "obsolete";
@@ -603,6 +608,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_HARM:              return "harm";
         case SPARM_SHADOWS:           return "shadows";
         case SPARM_RAMPAGING:         return "rampage";
+        case SPARM_INFUSION:          return "infuse";
         default:                      return "buggy";
         }
     }
@@ -1534,8 +1540,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_pluses && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
-        if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
+        if ((item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
+            && !is_unrandom_artefact(*this, UNRAND_POWER_GLOVES))
+        {
             buff << "pair of ";
+        }
 
         if (is_artefact(*this) && !dbname)
         {
@@ -1998,13 +2007,6 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify)
         _maybe_identify_pack_item();
 
     return true;
-}
-
-void pack_item_identify_message(int base_type, int sub_type)
-{
-    for (const auto &item : you.inv)
-        if (item.defined() && item.is_type(base_type, sub_type))
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 bool get_ident_type(const item_def &item)
@@ -2839,7 +2841,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             switch (ego)
             {
             case SPARM_SPIRIT_SHIELD:
-                return you.spirit_shield(false, false);
+                return you.spirit_shield(false);
             case SPARM_REPULSION:
                 return temp && have_passive(passive_t::upgraded_storm_shield)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
@@ -2885,7 +2887,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
-            return you_worship(GOD_ASHENZARI);
+            return have_passive(passive_t::identify_items);
         default:
             return false;
         }
@@ -2963,11 +2965,10 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         case AMU_FAITH:
             return (you.has_mutation(MUT_FORLORN) && !you.religion) // ??
-                    || you_worship(GOD_GOZAG) || you_worship(GOD_ASHENZARI)
-                    || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
+                    || !ignore_faith_reason().empty();
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.spirit_shield(false, false) || you.has_mutation(MUT_HP_CASTING);
+            return you.spirit_shield(false) || you.has_mutation(MUT_HP_CASTING);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
@@ -3033,9 +3034,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_CORPSES:
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
-            || you.has_spell(SPELL_SIMULACRUM)
-            || you_worship(GOD_YREDELEMNUL) && !you.penance[GOD_YREDELEMNUL]
-               && you.piety >= piety_breakpoint(0))
+            || you.has_spell(SPELL_SIMULACRUM))
         {
             return false;
         }

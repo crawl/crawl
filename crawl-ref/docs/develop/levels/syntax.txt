@@ -134,13 +134,15 @@ ORDER:    <integer>
           line follow those that have one. Maps with the same value of
           ORDER: are sorted by description (if present) or name.
 
-ORIENT:   (float | encompass | north | northwest | ... | southeast)
+ORIENT:   (float | encompass | north | northwest | ... | southeast | centre)
 
           A ORIENT: line is not mandatory for vaults; skipping ORIENT: makes
           your map a minivault. As a rule of thumb, if you're writing a small
           random map, skip the ORIENT: line and make it a minivault.
 
           * "float": The dungeon builder puts your vault wherever it wants to.
+          * "encompass": The dungeon builder uses your vault as the entire map.
+          * "centre": The vault is placed in the centre of the map.
           * "some_direction": The vault lies along that side of the map:
               xxxxxxxxxx       xxxxxxxxxxxxx
               xORIENT:Nx       xORIENT:NW|..

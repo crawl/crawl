@@ -136,118 +136,6 @@ ENDMAP
 
 ##############################################################################
 
-NAME:    hangedman_elemental_grid_stream
-TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
-DEPTH:   Geh, Coc, Zot:1-4
-:  if you.in_branch("Geh") then
-KMONS:   1 = brimstone fiend
-KMONS:   2 = searing wretch / balrug
-KMONS:   34 = fire giant / hellephant w:5
-KMONS:   56 = ancient champion ; broad axe ego:flaming ident:type | \
-         halberd ego:flaming ident:type w:7 | morningstar ego:flaming ident:type
-KMONS:   7 = hell hog
-SUBST:   w = l, W = .
-KPROP:   l = no_cloud_gen
-:  elseif you.in_branch("Coc") then
-KMONS:   1 = ice fiend
-KMONS:   2 = wendigo band / nargun
-KMONS:   34 = frost giant / shard shrike w:5
-KMONS:   56 = reaper ; scythe ego:freezing ident:type
-KMONS:   7 = simulacrum
-SUBST:   l = w, W = .
-:  else
-KMONS:   1 = shard shrike
-KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
-KMONS:   3 = orb of fire / hellephant w:5
-KMONS:   4 = draconian scorcher
-KMONS:   5 = red draconian ; cloak . mace ego:freezing ident:type
-KMONS:   6 = white draconian ; cloak . mace ego:flaming ident:type
-KFEAT:   1 = w
-KFEAT:   3 = l
-NSUBST:  0 = 1:5 / 1:6
-SUBST:   x : x:9 b:1, 7 = .
-:  end
-SHUFFLE: {` / `}
-SUBST:   { : .:4 A:3 B:3, } : .:2 C:3, ` = .
-NSUBST:  A = 1:{ / 1:} / *:., B = 1:{ / 1:< / *:., C = 1:} / 1:> / *:.
-MAP
-xxxx@@....
-xllxxx......
-x47llxxx........xxxx
-xll0.ll..ll...xxxwwx
-x1`ww..ww..ww..ww72x
-xww5.ww{WwwW{ww.6wwx
-x47ww..ww..ww..ll`3x
-xwwxxx...ll..ll.0llx
-xxxx........xxxll72x
-        ......xxxllx
-          ....@@xxxx
-ENDMAP
-
-##############################################################################
-
-NAME:    hangedman_elemental_corridor
-TAGS:    no_monster_gen no_pool_fixup allow_dup
-DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
-SHUFFLE: 123456, }{ / **
-:  if you.in_branch("Geh") then
-MONS:    brimstone fiend / hellephant
-MONS:    searing wretch / balrug / stoker w:5
-SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
-:  elseif you.in_branch("Coc") then
-MONS:    ice fiend / shard shrike
-MONS:    wendigo band / simulacrum w:20
-SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
-:  elseif you.in_branch("Abyss") then
-MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
-MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
-         white very ugly thing w:15 / ice devil w:8
-MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
-MONS:    hell hound w:8 / red draconian / fire elemental w:5 / \
-         red very ugly thing w:15 / efreet w:12
-SUBST:   * = *||, {} = ***|, xc = xxxccb, 5 = 2, 6 = 4
-:  else
-KMONS:   123 = fire dragon
-KMONS:   456 = ice dragon
-KMONS:   789 = red draconian ; cloak . long sword ego:freezing ident:type
-KMONS:   ABC = white draconian ; cloak . long sword ego:flaming ident:type
-KMONS:   D = golden dragon
-SUBST:   c : c:5 b:2 n:1
-SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'
-:  end
-KFEAT:   f = deep_water
-KFEAT:   F = lava
-KPROP:   lF = no_cloud_gen
-SUBST:   % = $:2 %:5 *:2, G : G:6 c:2 b:1 .:1
-# Clearly, they commissioned the deep dwarves.
-MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 3, pow_max = 3, delay = 75, size_min = 2, size_max = 2, \
-             walk_dist = 1, start_clouds = 1, excl_rad = 0 }
-MARKER:  F = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 3, pow_max = 3, delay = 100, size_min = 2, size_max = 2, \
-             walk_dist = 1, start_clouds = 1, excl_rad = 0 }
-MAP
-  xx+++xxx
-  xc...ccxx
- xxc...wccxxx
- xcc...cfcccxx
-xxcc...ccwwccxxxxxx
-xccc...ccccfccccccxx
-xccl..1cccccwcccwccxx
-xcFc...2%{%...6..wccx
-xcFc.....G.G.....cfcx
-xccl..3...%}%5...cfcx
-xxcclccclccccc4..wccx
- xxccccccFcccc...cccx
-  xxxxxxccllcc...ccxx
-       xxcccFc...cxx
-        xxxccl...cx
-          xxcc...cx
-           xxx+++xx
-ENDMAP
-
-##############################################################################
-
 NAME:    nicolae_geh_sunburst
 DEPTH:   Geh, !Geh:$
 TAGS:    transparent extra decor
@@ -394,6 +282,518 @@ llll...lll
  lclllllcl
  lllclclll
    lllll
+ENDMAP
+
+NAME:  nicolae_geh_backdraft
+TAGS:  transparent
+DEPTH: Geh
+KMONS: 12 = creeping inferno / lurking horror w:5
+KFEAT: 2 = } / > w:5
+KMASK: 12 = no_monster_gen
+MAP
+.......
+.c===c.
+.=111=.
+.=121=.
+.=111=.
+.c===c.
+.......
+ENDMAP
+
+
+NAME:   nicolae_geh_erupted_tower
+TAGS:   transparent patrolling
+DEPTH:  Geh, !Geh:$
+ORIENT: centre
+KMONS:  1} = salamander tyrant / stoker w:5
+KFEAT:  1 = l
+KFEAT:  } = }
+SUBST:  L = l., 0 = .0, 0 = 009, 9 = 998
+MAP
+  llllL..Ll..ll
+ .Ll.L.0lll.l..l
+..L.l..l...l.0lL.
+.L.0.lclcccl....L
+L.l.Lccl...lcL.Ll
+ll..cl...1.lcc.lL
+..lllc.l.ll.cl.l.
+.l..c.1.ll...cl.L
+l0..c...l}.9.lc0.
+...c..l.l....lc..
+.l.cc..lll1.ccll.
+..llcc.1l..lccL.L
+ll..clll..lcllll.
+.L...llccclc...l.
+..lL0.llL...l0L.l
+ l.L.l..l0L.lll.
+  ..ll...l...l.
+ENDMAP
+
+NAME:   nicolae_geh_fourpack
+TAGS:   transparent
+DEPTH:  Geh, !Geh:$
+KMONS:  } = 9 / 8
+KFEAT:  } = }
+NSUBST: DEON = 1=+, FHOP = 1=+, JKPQ = 1=+, LMNQ = 1=+, DEFHJKLM = 1=+, \
+        Z = + / +cc, } = }9.. / 9.
+SUBST:  DEFHJKLMNOPQ = c
+MAP
+  cEc   cFc
+ cc.cc cc.cc
+cc...ccc...cc
+D..}..O..}..H
+cc...ccc...cc
+ cc.cZlZc.cc
+  cNclllcPc
+ cc.cZlZc.cc
+cc...ccc...cc
+M..}..Q..}..J
+cc...ccc...cc
+ cc.cc cc.cc
+  cLc   cKc
+ENDMAP
+
+NAME:     nicolae_geh_gridlava
+DEPTH:    Geh
+ORIENT:   centre
+SUBVAULT: a : nico_lavagrid
+SUBVAULT: p : nico_lavagrid
+SUBVAULT: q : nico_lavagrid
+SUBVAULT: r : nico_lavagrid
+SHUFFLE:  DEFH, JKLM, NOPQ, RSZ-, !s, `y, "z, '~, syz~
+SUBST:    DJNRsyz = ., EFHKLMOPQSZ-!`"'~ = l
+NSUBST:   { = {.. / .
+MAP
+llDDllEEllFFllHHll
+llDDllEEllFFllHHll
+--..aa..!!..pp..JJ
+--..aa..!!..pp..JJ
+llaallaallppllppll
+llaallaallppllppll
+ZZ..aa..ss..pp..KK
+ZZ..aa.{ss{.pp..KK
+ll''ll~~llyyll``ll
+ll''ll~~llyyll``ll
+SS..qq.{zz{.rr..LL
+SS..qq..zz..rr..LL
+llqqllqqllrrllrrll
+llqqllqqllrrllrrll
+RR..qq..""..rr..MM
+RR..qq..""..rr..MM
+llQQllPPllOOllNNll
+llQQllPPllOOllNNll
+ENDMAP
+
+NAME: nicolae_sub_geh_gridintersect
+TAGS: unrand transparent nico_lavagrid allow_dup
+MAP
+  ll
+  ll
+..  ..
+..  ..
+  ..
+  ..
+ENDMAP
+
+NAME:    nicolae_geh_gnashing_of_teeth
+TAGS:    transparent
+DEPTH:   Geh, !Geh:$
+SHUFFLE: DE/FH, JK/LM
+SUBST:   DHJM = l, EK = x, FL = ..0, 0 = 009, 9 = 998
+MAP
+xxxxxxxxxxxxx
+KxMxKxMxKxMxK
+KlMlKlMlKlMlK
+JlLlJlLlJlLlJ
+J.L.J.L.J.L.J
+@..9..}..9..@
+D.F.D.F.D.F.D
+DlFlDlFlDlFlD
+ElHlElHlElHlE
+ExHxExHxExHxE
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_geh_isolated_escape
+TAGS:    no_exits
+DEPTH:   Geh, !Geh:$
+KMASK:   .> = no_monster_gen
+SHUFFLE: DE
+NSUBST:  D = + / n
+SUBST:   E = c
+MAP
+          ll
+        llllll
+ llll  llllllll
+lllllllllllllll
+lllllccDcclllll
+llllcE...Ecllll
+llllc.....clll
+llllD..>..Dlll
+ lllc.....cll
+  llcE...Ecll
+   llccDccllll
+    llllllllll
+    llllllllll
+     llllllll
+       lllll
+ENDMAP
+
+NAME:  nicolae_geh_lava_lounge
+TAGS:  transparent
+DEPTH: Geh
+: if you.depth() == 1 then
+SUBST: S = }G
+: elseif you.depth_fraction() < 1 then
+SUBST: S = {}GG
+: else
+SUBST: S = {G
+: end
+SUBST: D = +c@l, 0 = .009, 9 = 998
+MAP
+   ccc+ccc
+ cccl...lccc
+ clll...lllc
+cclll.0.lllcc
+cllll...llllc
+c...........c
+D..0..S..0..D
+c...........c
+cllll...llllc
+cclll.0.lllcc
+ clll...lllc
+ cccl...lccc
+   cccDccc
+ENDMAP
+
+NAME:    nicolae_geh_lava_rosette
+TAGS:    transparent
+DEPTH:   Geh
+SHUFFLE: DE
+SUBST:   D = l, E = .
+MAP
+ ...llll  ll..
+...lllllllll...
+...ll..llll....
+ll..........ll.
+lll.........lll
+ ll...DlE....ll
+ ll..ElllD...ll
+lll..lllll..lll
+ll...DlllE..ll
+ll....ElD...ll
+lll.........lll
+.ll..........ll
+....llll..ll...
+...lllllllll...
+ ..ll  llll...
+ENDMAP
+
+NAME:   nicolae_geh_lava_shack
+TAGS:   transparent
+DEPTH:  Geh
+NSUBST: D = + / c, E = + / c, F = + / c, H = + / c
+SUBST:  L = l.
+MAP
+ llL.......Lll
+llll.EEEEE.llll
+lllcEE...EEclll
+Llcc.......cclL
+..D...LLL...F..
+.DD..LlllL..FF.
+.D..LlllllL..F.
+.D..LlllllL..F.
+.D..LlllllL..F.
+.DD..LlllL..FF.
+..D...LLL...F..
+Llcc.......cclL
+lllcHH...HHclll
+llll.HHHHH.llll
+ llL.......Lll
+ENDMAP
+
+NAME:   nicolae_geh_lava_swirls
+TAGS:   transparent
+DEPTH:  Geh
+ORIENT: centre
+SUBST:  l = l:16 c:3 .:1, . = .:7 0:1, 0 = 009, 9 = 998
+MAP
+  llllllll@ll
+ ll......ll.ll
+ll.llllll.ll.ll
+l.ll....ll.ll.l
+@ll.llll.ll.l.l
+ll.ll..ll.l.l.l
+l.ll.ll.l.l.l.l
+l.l.ll.{.ll.l.l
+l.l.l.l.ll.ll.l
+l.l.l.ll..ll.ll
+l.l.ll.llll.ll@
+l.ll.ll....ll.l
+ll.ll.llllll.ll
+ ll.ll......ll
+  ll@llllllll
+ENDMAP
+
+NAME:    nicolae_geh_lavax
+TAGS:    transparent allow_dup
+DEPTH:   Geh
+SHUFFLE: DEFHJKLM/ccclllcl/ccclllll/cclcclll/ccllclcc/ccllclll/cclllccc/\
+         ccllllll/clccllll/clclcclc/clcllclc/clclllcc/cllclcll/cllcllcc/\
+         cllllccc/cllllllc/clllllll/lccllccc/lccllllc/lcclllll/lclcclcl/\
+         lclclclc/lclcllcl/lcllclcc/llcclcll/lllccccc/lllclccc/lllcllll/\
+         llllcccc/lllllccc/llllllcc
+SUBST:   DEHJL = l, FKM = c
+MAP
+  .....
+ ..DED..
+..FHJHF..
+.DHKLKHD.
+.EJLMLJE.
+.DHKLKHD.
+..FHJHF..
+ ..DED..
+  .....
+ENDMAP
+
+NAME:   nicolae_geh_liches_on_tour
+TAGS:   transparent
+DEPTH:  Geh:2-
+KMONS:  1 = brimstone fiend
+KMONS:  2 = hellion / tormentor
+KMONS:  3 = ancient lich / dread lich
+NSUBST: M = 2=1 / 3=2 / 3=3 / 12233..
+SUBST:  L = l.
+MAP
+.....ccccc
+.LlL.Llllccc
+.lcl..LLlllcc
+.LlLM..MLLllcc
+...M.....MLllc
+cL........MLlcc
+clL........Lllc
+clLM...{...MLlc
+cllL........Llc
+cclLM........Lc
+ cllLM.....M...
+ ccllLLM..MLlL.
+  cclllLL..lcl.
+   ccclllL.LlL.
+     ccccc.....
+ENDMAP
+
+NAME:  nicolae_geh_niches_of_the_damned
+TAGS:  transparent
+DEPTH: Geh, !Geh:$
+KMONS: 2 = stoker / searing wretch / spectral thing
+SUBST: ` = lx
+MAP
+xxxxxxxxxxxxxxx
+xxx``l``xxxxxxx
+xxxlx2xlx`xxx`x
+xxx2...2xlx`xlx
+x`x`...``2xlx2x
+xl2.......`2`.@
+x`x..}........@
+xl2.......`2`.@
+x`x`...``2xlx2x
+xxx2...2xlx`xlx
+xxxlx2xlx`xxx`x
+xxx``l``xxxxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_geh_realm_of_the_lava_sea
+DEPTH:   Geh:2-, !Geh:$
+ORIENT:  encompass
+KMONS:   } = 8
+KFEAT:   ~ = endless_lava
+KFEAT:   } = }
+: set_border_fill_type('endless_lava')
+SHUFFLE: DE, FH, JK/LM, NO/PQ/RS, pq/rs, Zz/ay, '"/-_
+SUBST:   DFJNPpZ' = l, EHLRra- = ., KOQqz" = c, MSsy_ = +, ` = l., \
+         0 = 0009, 9 = 9998, ! = }.., 7 = cccccccl
+NSUBST:  } = } / 9
+MAP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~llllllllllllllllcccccllllllllllllll~
+~ll77llllllllllllc...cll77`.......ll~
+~ll77`...`lll77llc.}.cll77`.ccccc.`l~
+~lll.!.cccccl77llc...clll`..c...c.`l~
+~lll...c...c'''llcc+cc......+.}.c!`l~
+~llll`.+.}."'''''ll....`l`..c...clll~
+~llllllc...c'''''''..`llllllcc+cclll~
+~lll77lcc_cclll''''..llll77ll...llll~
+~lll77ll---llll77''..`laa77lll..77ll~
+~lllllll---llHH77ll...aaaalllll`77ll~
+~llllRRR..HHHHHHHHH...77aaallll..lll~
+~lllRRR...HHHllHHH.0.l77laaalll..lll~
+~llRRRl...ll77llll...lllllaaalcc+ccl~
+~llRR77lFFll77lllcc+cclllllaaac...cl~
+~llRR77lFFFlllllcc...cclll77aay.}.cl~
+~lllRRllllFFFllccl...lccll77lac...cl~
+~llccScclllFF..c.......c.lllllcczccl~
+~l.c...cPPP..0.+...{...+.0`llllZZZll~
+~l!+.}.QPPPP...c.......c...`l77ZZlll~
+~l.c...cllllEEEccl...lcc`...`77ZZlll~
+~llccOcclEEEEEllcc...ccll`....ZZl77l~
+~lllNNNlEEEE77lllcc+ccllll`....Zl77l~
+~l77lNNN.EEl77llll...ll77lll`..rrlll~
+~l77lNN....DDDDll`.0.ll77llll77rrrll~
+~lllllL...DDDDDDD...`lll`.`ll77lrrll~
+~llllLLL..DllDDDD...llll`!...llllrrl~
+~llllLLLll77llll`...plll`.cc+ccllrrl~
+~77llLLLll77lJJJ...ppp77l`c...crrrll~
+~77lllLLLlllJJJJ...ppp77llc.}.srrlll~
+~llllccMcclJJJll`..llpppllc...clllll~
+~llllc...cJJJlllcc+cclppplccqccl77ll~
+~ll..+.}.KJJ77llc...cllpppppplll77ll~
+~ll..c...cJl77ll+.}.+...pppp77llllll~
+~ll..cccccllllllc...c....`ll77llllll~
+~lll..!lllllllllccccclllllllllllllll~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ENDMAP
+
+NAME:  nicolae_geh_rippling_lava
+TAGS:  transparent
+DEPTH: Geh
+SUBST: D : lc, E : lc., F : lc., H : lc., J : lc., K : lc., L : lc., M : lc.
+MAP
+      .....
+    ..lllll..
+  M.ll..H..ll.M
+  .lL.lllll.Ll.
+ .lLKl..F..lKLl.
+ .l.lJ.lll.Jl.l.
+.l.l..l.E.l..l.l.
+.l.l.l.lll.l.l.l.
+.lHlFlElDlElFlHl.
+.l.l.l.lll.l.l.l.
+.l.l..l.E.l..l.l.
+ .l.lJ.lll.Jl.l.
+ .lLKl..F..lKLl.
+  .lL.lllll.Ll.
+  M.ll..H..ll.M
+    ..lllll..
+      .....
+ENDMAP
+
+# Combining cantos 12 and 13 of the Inferno: Phlegethon, the river of boiling
+# blood, and the Forest of Suicides. Centaurs wouldn't be much of a threat at
+# this point, so instead those immersed in Phlegethon are shot by ancient
+# champions. Actually, you'll be the one getting shot by ancient champions.
+# I may be taking liberties with the source material. Much of the forest will
+# probably be burnt up by the stokers, which is fine.
+NAME:   nicolae_geh_seventh_circle
+TAGS:   transparent
+DEPTH:  Geh
+ORIENT: centre
+KMONS:  1 = ancient champion ; longbow ego:flaming | arbalest ego:flaming
+KMONS:  2 = stoker
+KMONS:  3 = spectral harpy
+KFEAT:  t = demonic_tree
+KFEAT:  2 = l
+SUBST:  L = l., 1 = 11., 2 = 22l, T = tttt3, 7 = tt_
+CLEAR:  _
+MAP
+    77777777777ttt
+  77ttttttttttttTTT...
+ 7tttTTTtTTTtttTT.....
+ 7tTTT.TTT.TTtTT..1ll.
+ TTT....1...TTT...llL.
+ .....Ll2lL...1..l2L..
+...1Llllll2lL..LllL...
+...LllL..Ll2lllllL1...
+..L2l...1..Ll2lL.....
+.Lll...TTT...1....TTT
+.ll1..TTtTT.TTT.TTTt7
+.....TTtttTTTtTTTttt7
+...TTTtttttttttttt77
+    ttt77777777777
+ENDMAP
+
+NAME:   nicolae_geh_split_lavaduct
+TAGS:   transparent
+DEPTH:  Geh
+ORIENT: centre
+SUBST:  ` = lc, L = l.
+MAP
+        ...........
+        ....c+c....
+       ....cc.cc....
+       ...cc...cc...
+      ...L`.....`L...
+    ....LllL...LllL....
+  ...LllllllL.LllllllL...
+lllllllllllll8lllllllllllll
+  ...LllllllL.LllllllL...
+    ....LllL...LllL....
+      ...L`.....`L...
+       ...cc...cc...
+       ....cc.cc....
+        ....c+c....
+        ...........
+ENDMAP
+
+NAME:   nicolae_geh_symmetric_flows
+TAGS:   transparent
+DEPTH:  Geh
+ORIENT: centre
+SUBST:  L = l.
+MAP
+   ....Lllll
+  @...Lllllll llllll
+ @....lllllllllL..Lll
+......LllllllL.....Lll
+xxx....LllllL.......Lll xxx
+xxlllL..LllL...LllL..Llllxx
+xxx llL.......LllllL....xxx
+     llL.....LllllllL......
+      llL..Llllllllll....@
+       llllll llllllL...@
+               llllL....
+ENDMAP
+
+NAME:    nicolae_geh_tyrants_menagerie
+TAGS:    transparent patrolling
+DEPTH:   Geh, !Geh:$
+ORIENT:  centre
+KPROP:   JKLM = no_tele_into
+# Animal-ish hell enemies that can't escape and have ranged attacks:
+KMONS:   J = hell hog
+KMONS:   K = hellion
+KMONS:   L = crystal echidna
+KMONS:   M = iron dragon
+KMONS:   N = doom hound
+# Only one type of crab in the menagerie
+KMONS:   O = ghost crab
+KMONS:   P = apocalypse crab
+KMONS:   Q = fire crab
+# The hellephants kept blinking out of their enclosure, they get to roam around
+KMONS:   1} = balrug w:8 / fire giant w:8 / hellephant w:4 / nothing w:5
+KMONS:   2 = salamander tyrant
+KMONS:   3 = hell beast / nothing w:5
+KFEAT:   } = }
+KMASK:   JKLMNOPQ- = opaque
+KMASK:   JKLMNOPQ- = no_monster_gen
+SHUFFLE: JKLMNO, OPQ
+NSUBST:  J = 2=J / 2=J- / -, K = 2=K / 2=K- / -, L = 2=L / 2=L- / -, \
+         M = 2=M / 2=M- / -, N = 2=N / 2=N- / -, O = 2=O / 2=O- / -, \
+         P = 2=P / 2=P- / -, Q = 2=Q / 2=Q- / -, } = } / 1
+MAP
+ccccc.@.ccccccccc
+cJJJl...lKKKcl.lc
+cJJJl.1.lKKKc.}.c
+cJJJl...lKKKcl.lc
+clllc.3.clllc.3.c
+................c
+@.1.3.1.3.1.3.2.c
+................c
+clllc.3.clllc.3.c
+cLLLl...lMMMcl.lc
+cLLLl.1.lMMMc.}.c
+cLLLl...lMMMcl.lc
+ccccc.@.ccccccccc
 ENDMAP
 
 ##############################################################################

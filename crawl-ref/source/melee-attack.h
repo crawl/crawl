@@ -15,6 +15,7 @@ enum unarmed_attack_type
     UNAT_HEADBUTT,
     UNAT_PECK,
     UNAT_TAILSLAP,
+    UNAT_TOUCH,
     UNAT_PUNCH,
     UNAT_BITE,
     UNAT_PSEUDOPODS,
@@ -99,6 +100,10 @@ private:
     void do_passive_heat();
 #endif
     void emit_foul_stench();
+
+    /* Divine Effect */
+    void do_fiery_armour_burn();
+
     /* Race Effects */
     void do_minotaur_retaliation();
 

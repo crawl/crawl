@@ -103,6 +103,13 @@ gate_sealed_right DNGN_GATE_SEALED_RIGHT
 vgate_sealed_up DNGN_VGATE_SEALED_UP
 vgate_sealed_middle DNGN_VGATE_SEALED_MIDDLE
 vgate_sealed_down DNGN_VGATE_SEALED_DOWN
+broken_door DNGN_BROKEN_DOOR
+gate_broken_left DNGN_GATE_BROKEN_LEFT
+gate_broken_middle DNGN_GATE_BROKEN_MIDDLE
+gate_broken_right DNGN_GATE_BROKEN_RIGHT
+vgate_broken_up DNGN_VGATE_BROKEN_UP
+vgate_broken_middle DNGN_VGATE_BROKEN_MIDDLE
+vgate_broken_down DNGN_VGATE_BROKEN_DOWN
 
 # Clear doors.
 closed_clear_door DNGN_CLOSED_CLEAR_DOOR
@@ -133,6 +140,13 @@ gate_sealed_clear_right DNGN_GATE_SEALED_CLEAR_RIGHT
 vgate_sealed_clear_up DNGN_VGATE_SEALED_CLEAR_UP
 vgate_sealed_clear_middle DNGN_VGATE_SEALED_CLEAR_MIDDLE
 vgate_sealed_clear_down DNGN_VGATE_SEALED_CLEAR_DOWN
+broken_clear_door DNGN_BROKEN_CLEAR_DOOR
+gate_broken_clear_left DNGN_GATE_BROKEN_CLEAR_LEFT
+gate_broken_clear_middle DNGN_GATE_BROKEN_CLEAR_MIDDLE
+gate_broken_clear_right DNGN_GATE_BROKEN_CLEAR_RIGHT
+vgate_broken_clear_up DNGN_VGATE_BROKEN_CLEAR_UP
+vgate_broken_clear_middle DNGN_VGATE_BROKEN_CLEAR_MIDDLE
+vgate_broken_clear_down DNGN_VGATE_BROKEN_CLEAR_DOWN
 
 # Crypt doors
 closed_door_crypt DNGN_CLOSED_DOOR_CRYPT
@@ -149,12 +163,20 @@ gate_open_right_crypt DNGN_GATE_OPEN_RIGHT_CRYPT
 vgate_open_up_crypt DNGN_VGATE_OPEN_UP_CRYPT
 vgate_open_middle_crypt DNGN_VGATE_OPEN_MIDDLE_CRYPT
 vgate_open_down_crypt DNGN_VGATE_OPEN_DOWN_CRYPT
+broken_door_crypt DNGN_BROKEN_DOOR_CRYPT
+gate_broken_left_crypt DNGN_GATE_BROKEN_LEFT_CRYPT
+gate_broken_middle_crypt DNGN_GATE_BROKEN_MIDDLE_CRYPT
+gate_broken_right_crypt DNGN_GATE_BROKEN_RIGHT_CRYPT
+vgate_broken_up_crypt DNGN_VGATE_BROKEN_UP_CRYPT
+vgate_broken_middle_crypt DNGN_VGATE_BROKEN_MIDDLE_CRYPT
+vgate_broken_down_crypt DNGN_VGATE_BROKEN_DOWN_CRYPT
 
 ## Alternate doors for vaults, etc. Should be in the order listed above for
-## doors which also provide gateways; otherwise detected, closed, open, or
-## closed, open.
+## doors which also provide gateways; otherwise detected, closed, open, broken,
+## or closed, open, broken.
 fleshy_orifice_closed DNGN_FLESHY_ORIFICE
 fleshy_orifice_open
+fleshy_orifice_ruined
 
 # Place new door tiles before this point, otherwise they can't be used as
 # door overrides.
@@ -167,8 +189,11 @@ orcish_idol DNGN_ORCISH_IDOL
 # dungeon statues
 %weight 5
 statue_dwarf DNGN_GRANITE_STATUE
+%syn DNGN_STATUE_DWARF
 statue_archer
+%syn DNGN_STATUE_ARCHER
 statue_tengu
+%syn DNGN_STATUE_TENGU
 statue_centaur
 %syn DNGN_STATUE_CENTAUR
 statue_snail
@@ -176,6 +201,7 @@ statue_snail
 statue_cat
 %syn DNGN_STATUE_CAT
 statue_princess
+%syn DNGN_STATUE_PRINCESS
 %weight 8
 statue_mermaid
 %syn DNGN_STATUE_MERMAID
@@ -184,6 +210,7 @@ statue_naga
 statue_dragon
 %syn DNGN_STATUE_DRAGON
 statue_hydra
+%syn DNGN_STATUE_HYDRA
 %weight 3
 statue_angel
 %syn DNGN_STATUE_ANGEL
@@ -194,27 +221,38 @@ statue_wraith
 statue_imp
 %syn DNGN_STATUE_IMP
 statue_orb
+%syn DNGN_STATUE_ORB
 statue_cerebov
 %syn DNGN_STATUE_CEREBOV
 statue_demonic_bust
 %syn DNGN_STATUE_DEMONIC_BUST
 statue_twins
+%syn DNGN_STATUE_TWINS
 statue_orb_guardian
 %syn DNGN_STATUE_ORB_GUARDIAN
 statue_sword
+%syn DNGN_STATUE_SWORD
 statue_axe
 %syn DNGN_STATUE_AXE
 statue_polearm
 %syn DNGN_STATUE_POLEARM
 %weight 1
 statue_sigmund
+%syn DNGN_STATUE_SIGMUND
 statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
 statue_ancient_evil
 %syn DNGN_STATUE_ANCIENT_EVIL
 statue_triangle
+%syn DNGN_STATUE_TRIANGLE
+%weight 3
+statue_maw
+%syn DNGN_STATUE_MAW
+statue_tentacles
+%syn DNGN_STATUE_TENTACLES
 
 # damaged statues
+%weight 1
 crumbled_column_1 DNGN_CRUMBLED_COLUMN
 crumbled_column_2
 crumbled_column_3
@@ -690,26 +728,6 @@ monster_threat_easy THREAT_EASY
 monster_threat_tough THREAT_TOUGH
 monster_threat_nasty THREAT_NASTY
 
-%texture none
-%start
-%pal 140 140 85 150
-%blank 32 32
-%rim 1
-%finish HIGHLIGHT_DARK_YELLOW
-%syn RAY_OUT_OF_RANGE
-
-%start
-%pal 255 255 100 150
-%blank 32 32
-%finish HIGHLIGHT_YELLOW
-%syn RAY
-
-%start
-%pal 255 255 100 190
-%blank 32 32
-%finish HIGHLIGHT_BRIGHT_YELLOW
-%syn RAY_MULTI
-
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
 effect/sanctuary SANCTUARY
@@ -758,3 +776,23 @@ vine_corner_NW VINE_OVERLAY_NW
 vine_corner_NE VINE_OVERLAY_NE
 vine_corner_SE VINE_OVERLAY_SE
 vine_corner_SW VINE_OVERLAY_SW
+
+%texture none
+%start
+%pal 140 140 85 150
+%blank 32 32
+%rim 1
+%finish HIGHLIGHT_DARK_YELLOW
+%syn RAY_OUT_OF_RANGE
+
+%start
+%pal 255 255 100 150
+%blank 32 32
+%finish HIGHLIGHT_YELLOW
+%syn RAY
+
+%start
+%pal 255 255 100 190
+%blank 32 32
+%finish HIGHLIGHT_BRIGHT_YELLOW
+%syn RAY_MULTI

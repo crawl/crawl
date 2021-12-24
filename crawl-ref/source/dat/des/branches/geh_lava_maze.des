@@ -1,0 +1,1044 @@
+# Since the new Gehenna blocks reading scrolls, it means players can't read
+# scrolls of magic mapping to find the downstairs. So I thought, a maze would
+# work pretty well in Gehenna...
+#
+# This maze is mostly shaped like eight spokes around a common center, since
+# it's easier to ensure layout connectivity with that kind of map. Ideally,
+# though, the player should have to do more exploring than they would have to on
+# the more open randomly-generated Gehenna levels.
+#
+# Stair placement is handled by subvaults leaving clear squares in spaces where
+# a stair can be placed in that subvault, and then the main vault choosing one
+# of those spots for the up and one for the down.
+#
+# Some of the larger and mazier subvaults can place both the upstair and the
+# downstair. This is so that experienced players, finding themselves on the
+# upstair in one of these subvaults, can't immediately rule out a half or
+# quarter of the map, and have to explore it anyway just in case.
+
+{{
+  function nicolae_geh_maze_setup(e, type, mons)
+    e.tags( "unrand transparent nico_lavamaze_" .. type )
+    -- the "mons" boolean is for whether the subvault should use the "standard"
+    -- subst for setting up monsters
+    if mons then
+      e.subst( "0 = ..009" )
+      e.subst( "9 = 998" )
+    end
+    e.clear( "_" )
+  end
+}}
+
+NAME:     nicolae_geh_i_lava_good_maze
+TAGS:     no_monster_gen
+DEPTH:    Geh:2-, !Geh:$
+ORIENT:   encompass
+: if crawl.coinflip() then
+SUBST:    ps = x
+SUBVAULT: ErH : nico_lavamaze_diaghalf
+SUBVAULT: DqF : nico_lavamaze_diaghalf
+: else
+SUBST:    qr = x
+SUBVAULT: DpE : nico_lavamaze_orthhalf
+SUBVAULT: FsH : nico_lavamaze_orthhalf
+: end
+NSUBST:   DEFHpqrs = 1={ / 1=} / .....998
+SUBST:    - = l., 0 = ..000998
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xppEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEx
+xpppEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEx
+xDpppEEEEEEEEEEEEEEEEEEEEEEEEEEEEEx
+xDDpppEEEEEEEEEEEEEEEEEEEEEEEEEEEEx
+xDDDpppEEEEEEEEEEEEEEEEEEEEEEEEEEEx
+xDDDDpppEEEEEEEEEEEEEEEEEEEEEEEEEEx
+xDDDDDpppEEEEEEEEEEEEEEEEEEEEEEEEEx
+xDDDDDDpppEEEEEEEEEEEEEEEEEEEEEEEEx
+xDDDDDDDpppEEEEEEEEEEEEEEEEEEEEEEEx
+xDDDDDDDDpppEEEEEEEEEEEEEEEEEEEEEEx
+xDDDDDDDDDpppEEEEEEEEEEEEEEEEEEEEEx
+xDDDDDDDDDDpppEEEEEEEEEEEEEEEEEEEEx
+xDDDDDDDDDDDpppEEEEEEEEEEEEEEEEEEEx
+xDDDDDDDDDDDDp.......EEEEEEEEEEEEEx
+xDDDDDDDDDDDDD.0...0.EEEEEEEEEEEEEx
+xDDDDDDDDDDDDD..---..EEEEEEEEEEEEEx
+xqqqqqqqqqqqqq..-l-..rrrrrrrrrrrrrx
+xFFFFFFFFFFFFF..---..HHHHHHHHHHHHHx
+xFFFFFFFFFFFFF.0...0.HHHHHHHHHHHHHx
+xFFFFFFFFFFFFF.......sHHHHHHHHHHHHx
+xFFFFFFFFFFFFFFFFFFFsssHHHHHHHHHHHx
+xFFFFFFFFFFFFFFFFFFFFsssHHHHHHHHHHx
+xFFFFFFFFFFFFFFFFFFFFFsssHHHHHHHHHx
+xFFFFFFFFFFFFFFFFFFFFFFsssHHHHHHHHx
+xFFFFFFFFFFFFFFFFFFFFFFFsssHHHHHHHx
+xFFFFFFFFFFFFFFFFFFFFFFFFsssHHHHHHx
+xFFFFFFFFFFFFFFFFFFFFFFFFFsssHHHHHx
+xFFFFFFFFFFFFFFFFFFFFFFFFFFsssHHHHx
+xFFFFFFFFFFFFFFFFFFFFFFFFFFFsssHHHx
+xFFFFFFFFFFFFFFFFFFFFFFFFFFFFsssHHx
+xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFsssHx
+xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFsssx
+xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFssx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# This subvault should have twice the total WEIGHT of all the other subvaults
+# with nico_lavamaze_diaghalf.
+NAME:     nicolae_geh_lavamaze_diaghalf_recurse
+TAGS:     allow_dup no_dump
+WEIGHT:   80
+: if crawl.coinflip() then
+SUBST:    q = x
+SUBVAULT: DpE : nico_lavamaze_side
+SUBVAULT: FrH : nico_lavamaze_side
+: else
+SUBST:    pr = x
+SUBVAULT: D : nico_lavamaze_oct
+SUBVAULT: EqF : nico_lavamaze_corner
+SUBVAULT: H : nico_lavamaze_oct
+: end
+CLEAR:    DEFHpqr
+: nicolae_geh_maze_setup( _G, "diaghalf", false )
+MAP
+D
+DD
+DDD
+DDDD
+DDDDD
+DDDDDD
+DDDDDDD
+DDDDDDDD
+DDDDDDDDD
+DDDDDDDDDD
+DDDDDDDDDDD
+DDDDDDDDDDDD
+DDDDDDDDDDDDD
+DDDDDDDDDDDDD
+ppppppppppppp
+EEEEEEEEEEEEE
+EEEEEEEEEEEEE
+EEEEEEEEEEEEq
+EEEEEEEEEEEqqqFFrHH
+EEEEEEEEEEqqqFFFrHHH
+EEEEEEEEEqqqFFFFrHHHH
+EEEEEEEEqqqFFFFFrHHHHH
+EEEEEEEqqqFFFFFFrHHHHHH
+EEEEEEqqqFFFFFFFrHHHHHHH
+EEEEEqqqFFFFFFFFrHHHHHHHH
+EEEEqqqFFFFFFFFFrHHHHHHHHH
+EEEqqqFFFFFFFFFFrHHHHHHHHHH
+EEqqqFFFFFFFFFFFrHHHHHHHHHHH
+EqqqFFFFFFFFFFFFrHHHHHHHHHHHH
+qqqFFFFFFFFFFFFFrHHHHHHHHHHHHH
+qqFFFFFFFFFFFFFFrHHHHHHHHHHHHHH
+ENDMAP
+
+# This subvault should have twice the total WEIGHT of all the other subvaults
+# with nico_lavamaze_orthhalf.
+NAME:     nicolae_geh_lavamaze_orthhalf_recurse
+TAGS:     allow_dup no_dump
+WEIGHT:   80
+: if crawl.coinflip() then
+SUBST:    q = x
+SUBVAULT: DpE : nico_lavamaze_corner
+SUBVAULT: FrH : nico_lavamaze_corner
+: else
+SUBST:    pr = x
+SUBVAULT: D : nico_lavamaze_oct
+SUBVAULT: EqF : nico_lavamaze_side
+SUBVAULT: H : nico_lavamaze_oct
+: end
+CLEAR:    DEFHpqr
+: nicolae_geh_maze_setup( _G, "orthhalf", false )
+MAP
+DDDDDDDDDDDDD       HHHHHHHHHHHHH
+DDDDDDDDDDDDD       HHHHHHHHHHHHH
+DDDDDDDDDDDDp       rHHHHHHHHHHHH
+DDDDDDDDDDDpppEEqFFrrrHHHHHHHHHHH
+DDDDDDDDDDpppEEEqFFFrrrHHHHHHHHHH
+DDDDDDDDDpppEEEEqFFFFrrrHHHHHHHHH
+DDDDDDDDpppEEEEEqFFFFFrrrHHHHHHHH
+DDDDDDDpppEEEEEEqFFFFFFrrrHHHHHHH
+DDDDDDpppEEEEEEEqFFFFFFFrrrHHHHHH
+DDDDDpppEEEEEEEEqFFFFFFFFrrrHHHHH
+DDDDpppEEEEEEEEEqFFFFFFFFFrrrHHHH
+DDDpppEEEEEEEEEEqFFFFFFFFFFrrrHHH
+DDpppEEEEEEEEEEEqFFFFFFFFFFFrrrHH
+DpppEEEEEEEEEEEEqFFFFFFFFFFFFrrrH
+pppEEEEEEEEEEEEEqFFFFFFFFFFFFFrrr
+ppEEEEEEEEEEEEEEqFFFFFFFFFFFFFFrr
+ENDMAP
+
+# This subvault should have the total WEIGHT of all the other subvaults
+# with nico_lavamaze_side.
+NAME:     nicolae_geh_lavamaze_side_recurse
+TAGS:     allow_dup no_dump
+WEIGHT:   70
+SUBVAULT: D : nico_lavamaze_oct
+SUBVAULT: E : nico_lavamaze_oct
+CLEAR:    DE
+: nicolae_geh_maze_setup( _G, "side", false )
+MAP
+            DDxEE
+           DDDxEEE
+          DDDDxEEEE
+         DDDDDxEEEEE
+        DDDDDDxEEEEEE
+       DDDDDDDxEEEEEEE
+      DDDDDDDDxEEEEEEEE
+     DDDDDDDDDxEEEEEEEEE
+    DDDDDDDDDDxEEEEEEEEEE
+   DDDDDDDDDDDxEEEEEEEEEEE
+  DDDDDDDDDDDDxEEEEEEEEEEEE
+ DDDDDDDDDDDDDxEEEEEEEEEEEEE
+DDDDDDDDDDDDDDxEEEEEEEEEEEEEE
+ENDMAP
+
+# This subvault should have the total WEIGHT of all the other subvaults
+# with nico_lavamaze_corner.
+NAME:     nicolae_geh_lavamaze_corner_recurse
+TAGS:     allow_dup no_dump
+WEIGHT:   70
+SUBVAULT: D : nico_lavamaze_oct
+SUBVAULT: E : nico_lavamaze_oct
+CLEAR:    DE
+: nicolae_geh_maze_setup( _G, "corner", false )
+MAP
+DDDDDDDDDDDDD
+DDDDDDDDDDDDD
+DDDDDDDDDDDDx
+DDDDDDDDDDDxxxEE
+DDDDDDDDDDxxxEEE
+DDDDDDDDDxxxEEEE
+DDDDDDDDxxxEEEEE
+DDDDDDDxxxEEEEEE
+DDDDDDxxxEEEEEEE
+DDDDDxxxEEEEEEEE
+DDDDxxxEEEEEEEEE
+DDDxxxEEEEEEEEEE
+DDxxxEEEEEEEEEEE
+DxxxEEEEEEEEEEEE
+xxxEEEEEEEEEEEEE
+xxEEEEEEEEEEEEEE
+ENDMAP
+
+################################################################################
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:    nicolae_geh_lavamaze_orthhalf_bubbles
+NSUBST:  _ = 8 / 2=_ / ., M = + / c, N = + / c, O = + / c
+SHUFFLE: DE, FHJ
+SUBST:   DFH = x, EJ = ., ` = lx, L = l.
+: nicolae_geh_maze_setup( _G, "orthhalf", true )
+MAP
+xxxxxxxxxxx..       ...xxxxxxxxxx
+xxxxxx`lllL..       ....Lll`xxxxx
+xxxxx`lllL...       .....Lll`xxxx
+xxxxx`llL.0.xxxxxxxxxx.0.Llll`xxx
+xcccxx`lL.....DxxxxxE.....Lll`xxx
+cc.ccx`llL....D..0..E....Llll`xxx
+c._.cxxxxxF...D.._..EE..Lll``xxxx
+cc.ccx....FFFxx`....`x..Ll`xxxxxx
+xc+c.......FxxxxxHHHxxxJ.xxxxxxxx
+x...........llll.....lxJJJxllcccx
+.....cMc...0.........ll....lcc.cc
+.0..cc.cc........cNc....0...O._.c
+....M._.M.......cc.cc.......cO.cc
+....cc.cc..Llll.N._.N........cOcx
+x....cMc..Llllllcc.ccLLL..0....xx
+xxx.....LllllllllcccllllL.....xxx
+ENDMAP
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:   nicolae_geh_lavamaze_orthhalf_field
+NSUBST: _ = 2=_ / 9 / .
+SUBST:  L = l.
+: nicolae_geh_maze_setup( _G, "orthhalf", true )
+MAP
+xxxxxxxxxxxxx       ....xxxxxxxxx
+xxxxxxxxxxxxx       ..LL...LLxxxx
+xxxxxxxxxxxx.       ..LL.....Lxxx
+xxxxxxxxlllL............0......xx
+xxxxxx.lllllL.....LL.....Lll._.xx
+xx......LllL...lllllL....llll..xx
+x.._..........lllllllL...lllllxxx
+x....lll..0...Llllll......lllxxxx
+...LlllllL.....LL......0...xxxxxx
+...lllllllL.......0............xx
+.0.llllllll..LL.....LllL..Lll...x
+...LllllllL..lllL..LllllL..lll..x
+x....LlllL..L......xxllxx......_x
+xx_.......0..._...xxxxxxxxx...xxx
+xxxx............xxxxxxxxxxxxxxxxx
+xxxxxxxllLLllxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:    nicolae_geh_lavamaze_orthhalf_network
+NSUBST:  _ = 2=_ / .
+SHUFFLE: DE, FH, JK, LM, NOP, pqrsyz/!'!'!'/'!!'!'/!''!'!
+SUBST:   DFJLNqrs' = x, EHKMOPpyz! = ., ` = x., ~ = ll0.
+: nicolae_geh_maze_setup( _G, "orthhalf", true )
+MAP
+xxxxxPPPPPPxx       xxyyyyxxxxxxx
+`..`PPPPPPPP.       .yyyyyyyxxxxx
+.~~.PPxxxxPP.       .xxxxyyyy`..`
+.~~.NxxxxxxO.xx...qx.sssxxxyy.~~.
+`..`NN`..`OOOxppxqqxxxsssxxxx.~~.
+DDxxNN.~~.OOxxppxxqqq`..`zzzz`..`
+DDxxxx.~~.xxxppxxxxxq.~~.zzzzzxMM
+xDDxxx`..`Fxx`..`xrrr.~~.xxxxxxMM
+xDDDxxxEEFFFx.~~.rrrx`..`LLxxxxMM
+xxDDxxEExxFFx.~~.xxxxKKKxxLL`..`M
+xxDDEEExxFFxx`..`JxxKKKxxxLL.~~.x
+x`...ExxxFFxxHHxJJx`..`xxxxx.~~.x
+x.~~.xxxxFF`..`xJJJ.~~.xxxxx`._`x
+x.~~.xxxxxx.~~.xxJJ.~~.xxxxxxxxxx
+x`_.`xxxxxx.~~.xxxx`._`xxxxxxxxxx
+xxxxxxxxxxx`_.`xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:     nicolae_geh_lavamaze_orthhalf_weird_bits
+SUBVAULT: D : nico_lavamaze_oct
+SUBVAULT: E : nico_lavamaze_oct
+SHUFFLE:  FH, MNO
+NSUBST:   _ = _ / .
+SUBST:    FM = x, HNO = ., L = l., ` = lx
+CLEAR:    DE
+: nicolae_geh_maze_setup( _G, "orthhalf", true )
+MAP
+xxxxxxxxxxxxx       .``xxxxxxxxxE
+xxxxxxxxxlL0.       ...Ll``xxxxEE
+DDDDDDDDDDDDD       ....Lll`xxEEE
+DDDDDDDDDDDDDxFFFx....0..LlxxEEEE
+DDDDDDDDDDDDxx...H......LlxxEEEEE
+DDDDDDDDDDDxx..0.HH`...LlxxEEEEEE
+DDDDDDDDDDxx_....Lxx...lxxEEEEEEE
+DDDDDDDDDxx`llxxxxx`.0.xxEEEEEEEE
+DDDDDDDDxxxxxxx`lL....xxEEEEEEEEE
+DDDDDDDxxll...xx....`xxEEEEEEEEEE
+DDDDDDxx`l_.0.M.....xxEEEEEEEEEEE
+DDDDDxxxxxx`..MM`NNNxEEEEEEEEEEEE
+DDDDxxlL.`xxO..MxN..EEEEEEEEEEEEE
+DDDxxll._...OOOOx.0.EEEEEEEEEEEEE
+DDxx`ll....0........Lllxxxxxxxxxx
+Dxxxx`lLL....LLL...Lll`xxxxxxxxxx
+ENDMAP
+
+################################################################################
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:    nicolae_geh_lavamaze_diaghalf_rock_blobs
+NSUBST:  _ = 2=_ / .
+SHUFFLE: DEF, HJ, KL
+SUBST:   DEHK = l, FJL = .
+: nicolae_geh_maze_setup( _G, "diaghalf", true )
+MAP
+x
+xx
+xxx
+xxxx
+xx..x
+x....x
+x._..xx
+x.....xx
+xx..0.xxx
+xxx....xJJ
+xxx....JJ..
+xx....JJJ...
+x..0..JJJ.0..
+.......JJxxx.
+..._...xxxxxx
+x.....Hxxxxxx
+xxlllHHHxxxxx
+xxllllH..xxx.
+xxllll.............
+xxxll...0........0..
+xxx..._....xxxxx....x
+xxx.......xxxxxxx.FFxx
+xxx...0...xxxxxxxFFxxxx
+xx.......EExxxxxFFFxxxxx
+x.....lllEE.......FFxxxxx
+....lllllll.._.0....Lxx...
+..0.lllllllD.......LLLL...x
+.....llllllDD.....KKLL.._.xx
+.......ll...DDxxxKKKK.....xxx
+x...0...._...xxxxxxK......xxxx
+xx.........xxxxxxxxx.....xxxxxx
+ENDMAP
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:   nicolae_geh_lavamaze_diaghalf_village
+NSUBST: _ = 8 / 2=_ / ., D = + / c, E = + / c, F = + / c, H = + / c, J = + / c,\
+        K = + / c
+SUBST:  ` = lx, ~ = l.
+: nicolae_geh_maze_setup( _G, "diaghalf", true )
+MAP
+x
+xx
+x`x
+`lll
+ll~ll
+l~.~ll
+l._..~l
+......~l
+....0..`x
+..cEEc``xx
+.Ec..ccxxxx
+cc....ccxxx.
+c..0...D.x...
+c......D.....
+cc....cc..0..
+`cc..cD......
+`~cDDc...cFc.
+~.......Fc.cF
+`..0...cc.0.cc.....
+x`~....F.._..F......
+xx`ll~.cc...cc..0...l
+xxllllllHc.ccl.....ll`
+x`..~l~~.cHcll...cFcc`x
+x..........lllllFc..cc``
+`.0..cJc....~~lcc...0cc~l
+....cc0cJ......c......K.~l
+...cc...cc.....c.._...K.0l`
+l_.c.._..J..0..cc....cc...`x
+lllcc...cc......cc..cK.._.`xx
+````cc.cJ...`x`..cKKc....`xxxx
+xxxxxccc...`xxx`......``xxxxxxx
+ENDMAP
+
+NAME:    nicolae_geh_lavamaze_diaghalf_cornered
+SHUFFLE: DEF, HJK, LMNO, PQR, SZa, pq, rs, pry
+SUBST:   DEHJLPQSZpr = ., MNqs = x, F : lx, K : lx, O : lx, R : lx, a : lx, \
+         y : lx
+: nicolae_geh_maze_setup( _G, "diaghalf", true )
+MAP
+x
+xx
+xxx
+xxxx
+x...x
+x.0.xx
+x...EEE
+xDDxEEEE
+DDxxxxEEx
+DDxxxxxEEx
+xDDxxxxx...
+xDDxxxFF.0.x
+xDDxxFFF...px
+DDxxxFFxRRppp
+...xxFFxRRxp.
+.0.FFFFxRRxx.
+...FFFxxRRxx.
+xPPxxxxxRRxqq
+x...QQQ...qqqxx....
+x.0.QQQ.0.qxxxr.....
+L...xxM...xxrrrxxxssx
+LLxxxMMMyyxrrxxx...xxx
+LLxxMMMxxyyrrSSS.0.HHHx
+LLxMMMxxxx...SSS...HHHHx
+xLLMMxxNNN.0.xxxJJxxxHHHx
+x...lxNNNN...xxJJxxxxxHHxx
+l.0.llNxxxxZZxxJJxxxxxx...x
+l.....Nx...ZZxxJJxxxKKK.0.xx
+l._.0.xx.0.xxxx...xxKKK...xxx
+l.....OO...aaaa.0.KKKxxxxxxxxx
+xllllxOOxxaaaaa...KKKxxxxxxxxxx
+ENDMAP
+
+NAME:     nicolae_geh_lavamaze_diaghalf_squeeze
+SUBVAULT: D : nico_lavamaze_oct
+SUBVAULT: E : nico_lavamaze_oct
+NSUBST:   _ = _ / .
+SUBST:    ' = lx...
+CLEAR:    DE
+: nicolae_geh_maze_setup( _G, "diaghalf", false )
+MAP
+x
+xx
+xxx
+xxxx
+xxxxx
+xx''''
+x'....'
+x......'
+x..xx._.x
+x'.'xxxxxx
+xx'.'''''''
+xxx'.......'
+xxxxxxxxxx...
+DDDDDDDDDDDDD
+DDDDDDDDDDDDD
+DDDDDDDDDDDDx
+DDDDDDDDDDDxx
+DDDDDDDDDDxx.
+DDDDDDDDDxx.EE....'
+DDDDDDDDxx..EEEx...'
+DDDDDDDxx..'EEEExx'.'
+DDDDDDxx..lxEEEEExx'0'
+DDDDDxx.0llxEEEEEExx'.'
+DDDDxxx'.'lxEEEEEEExx'.'
+DDDxxxlll.'xEEEEEEEExx'.'
+DDxxxlllll.xEEEEEEEEExx'.'
+Dxx_'lllll.xEEEEEEEEEExx'0'
+xxx..'lll.'xEEEEEEEEEEExx'.'
+xxxx...0.'xxEEEEEEEEEEEExx'.'
+xxxxx'..'xxxEEEEEEEEEEEEExx'_'
+xxxxxxxxxxxxEEEEEEEEEEEEEExx'xx
+ENDMAP
+
+################################################################################
+
+NAME:   nicolae_geh_lavamaze_corner_big_pool
+NSUBST: _ = _ / .
+SUBST:  - = x.., L = l..
+: nicolae_geh_maze_setup( _G, "corner", true )
+MAP
+xxxxx__xxxxxx
+_..x-..-x.._x
+x..-.0..-..xx
+x-..LLLL..-xxx..
+x-.LllllL.-xxx..
+-.LllllllL.-x-..
+-.LllllllL.-x..0
+-0LllllllL0-x...
+-.LllllllL.-x..-
+x-.LllllL.-xx..x
+x-..LLLL..-x-..x
+xx......--xx...x
+x...----xxx.0.-x
+x.0.xxxxx-...-xx
+x-..........-xxx
+xx-.......-xxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_corner_chapel
+NSUBST: _ = _ / .
+SUBST:  L = l., ` = lx
+: nicolae_geh_maze_setup( _G, "corner", true )
+MAP
+xxxxcccxx`llL
+xxxccccc`llL.
+xxcc.c.cclL..
+xcc..c..cc..0..L
+cc...c...cc...Ll
+c_.0.+.0..+c.Lll
+cc...c.....ccll`
+xcc..c......cc`x
+x`cc.c.0..0..ccx
+`lLccc........cc
+`l.Lc+cccc+ccccc
+`l..0cc.......cc
+l.._.Lcc..0..ccx
+lL....Lcc...ccxx
+`lL.lll`cc_ccxxx
+x`ll```xxcccxxxx
+ENDMAP
+
+NAME:    nicolae_geh_lavamaze_corner_fiver
+NSUBST:  _ = _ / .
+SHUFFLE: DE, FH, JK
+SUBST:   ` = xll..., DFJ = x, EHK = .
+: nicolae_geh_maze_setup( _G, "corner", true )
+MAP
+`.`xxxx``...`
+._.xxx`..`...
+`..xx`.0..``x
+x.0xx...Dxxxxx.`
+x..``...D..`x`..
+x`...`.`D._.x`..
+x`.0..`xx`..E.`.
+x`..FFFxxxxEE..`
+x.`.F..`xx`..0.`
+x..`x._.x`....`x
+x0.xx`..x``..`xx
+xJJJxxHHH..`xxxx
+x...Kx...0.`xxxx
+x._.K..`....0..`
+x`..K0..```..._.
+xxxxxxxxxxxxx`.`
+ENDMAP
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:   nicolae_geh_lavamaze_corner_flows
+NSUBST: _ = _ / _. / .
+SUBST:  ` = lx, - = x.
+: nicolae_geh_maze_setup( _G, "corner", true )
+MAP
+xx-...xxxxx-.
+x-....0xx-...
+-..ll..xx-...
+..llll.....9...-
+.0l``llll....-xx
+..lxxx`lll...xxx
+..llxxllllll..xx
+-..lx`llllll0.xx
+x-.lx`llllll..-x
+xx0lxx``l``ll..-
+x..llxxxxxx`l..-
+x-..ll`xx`xxll.0
+xx....xx.llx`l..
+xx.._.x._.llll.-
+xxx..xx....0...-
+xxxxxxxx-....--x
+ENDMAP
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:    nicolae_geh_lavamaze_corner_keep
+NSUBST:  D = D / c, F = F / c, H = H / c, K = K / c, L = L / c, \
+         M = M / c, N = N / c, O = O / c, y = _ / 0, z = _ / 0
+: if crawl.coinflip() then
+SUBST:   DH = c
+NSUBST:  EFLM = c / +, JKNO = c / +
+: else
+SHUFFLE: DKNO/FHML, EJ, NO
+SUBST:   EFHN = c, DJKLMO = +
+: end
+: nicolae_geh_maze_setup( _G, "corner", true )
+MAP
+xcccc........
+cc..Fc.0.....
+c.z..F...cLLc
+c....cllcL..Lc..
+cD..Ecllc..z.L..
+.cDcc...M....L..
+...ll.y.cM..Lc..
+.y.ll....cMcc...
+...ccNc....ll.0.
+..cO..Nc.y.ll...
+..O....N...ccHc.
+..O.z..cllcJ..Hc
+..cO..Ocllc....c
+...cOOc...K..z.c
+.y......y.cK..cc
+...........ccccx
+ENDMAP
+
+NAME:     nicolae_geh_lavamaze_corner_offset
+SUBVAULT: D : nico_lavamaze_oct
+SUBST:    - = lx.
+CLEAR:    D
+: nicolae_geh_maze_setup( _G, "corner", true )
+MAP
+xxxxxxxxxxx..
+xxxxxxxx-....
+Dxxxxxl.....-
+DDxxxll.0..-xxxx
+DDDxxll...-xxxxx
+DDDDxxl...-xxxxx
+DDDDDxx-...-xxxx
+DDDDDDxx-...-xxx
+DDDDDDDxx-.0.-xx
+DDDDDDDDxx-...-x
+DDDDDDDDDxx-...-
+DDDDDDDDDDxx-.0.
+DDDDDDDDDDDx-...
+DDDDDDDDDDDD-...
+DDDDDDDDDDDDD..-
+DDDDDDDDDDDDD.-x
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_corner_stream
+NSUBST: _ = _ / ., D = + / c, E = + / c
+SUBST:  - = x..
+: nicolae_geh_maze_setup( _G, "corner", true )
+MAP
+xxxxxxxxxx...
+xxxllllllll..
+x-....llllll.
+-...0....llll...
+...........lll..
+........0...lll.
+.0..........lll.
+...llllll._.lll.
+..llccccll.llll.
+.llcc..cclllll..
+.lcc....cclll...
+.lc.._...E.....-
+.lD......E..0..x
+..DD..0.EE....-x
+.0.DD..EE....-xx
+-...cccc...-xxxx
+ENDMAP
+
+################################################################################
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:   nicolae_geh_lavamaze_side_apartments
+NSUBST: _ = 2=_ / 0, D = + / c, E = + / c, F = + / c, H = + / c, \
+        J = + / c, K = + / c, L = + / c, M = + / c, N = + / c
+: nicolae_geh_maze_setup( _G, "side", true )
+MAP
+            .....
+           ..l.l..
+          ..lc+cl..
+         l.lcc.ccl.l
+        ll.lc.0.cl.ll
+       ccc.ccc.ccc.ccc
+      cc.FcD.DcE.EcH.cc
+     cc.0.F.0.c.0.H.0.cc
+    cccc.ccc.ccc.ccc.cccc
+   xcc.Jcc.LcN.NcM.ccK.ccx
+  xxc._.J._.L._.M._.K._.cxx
+ xxxcl.lcl.lcl.lcl.lcl.lcxxx
+xxxxcccccccccccccccccccccxxxx
+ENDMAP
+
+NAME:    nicolae_geh_lavamaze_side_chamber
+SHUFFLE: DE
+SUBST:   D = l, E = .
+: nicolae_geh_maze_setup( _G, "side", true )
+MAP
+            ..x..
+           x..x...
+          xx..xx...
+         xx...xxx..x
+        ...0.xxxx0.xx
+       .....xxxxx...xx
+      ...xxxxlllxx...xx
+     ...xxxxx._.xxx...xx
+    ...xxxx0.....0xx...xx
+   x.0xxxx....9....xx0.xxx
+  xx..xxxDD..lll..EE...xxxx
+ xxx......DDlllllEE...xxxxxx
+xxxxx.....xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_side_cross
+NSUBST: _ = _ / .
+: nicolae_geh_maze_setup( _G, "side", true )
+MAP
+            cc+cc
+           xcl.lcx
+          xxc...cxx
+         xxxc.0.cxxx
+        ccccc...ccccc
+       xcl.........lcx
+      xxcl_.0.c.0._lcxx
+     xxxcl.........lcxxx
+    ccccccccc.0.ccccccccc
+   xcl......c...c......lcx
+  xxcl_..0..+._.+..0.._lcxx
+ xxxcl......clllc......lcxxx
+xxxxcccccccccccccccccccccxxxx
+ENDMAP
+
+NAME:  nicolae_geh_lavamaze_side_moated
+: nicolae_geh_maze_setup( _G, "side", true )
+MAP
+            .....
+           ...0...
+          xll...llx
+         xllcc+ccllx
+        xllcc...ccllx
+       xxlcc..9..cclxx
+      xxxlc0.....0clxxx
+     xxxxlc...c...clxxxx
+    xxxxxlc0.....0clxxxxx
+   xxxxxxlcc.._..cclxxxxxx
+  xxxxxxxllcc...ccllxxxxxxx
+ xxxxxxxxxllcccccllxxxxxxxxx
+xxxxxxxxxxxlllllllxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_side_shack
+NSUBST: _ = _ / ., D = + / c
+SUBST:  L = l.
+: nicolae_geh_maze_setup( _G, "side", true )
+MAP
+            .....
+           .......
+          ...LllLLx
+         ..0..lllxxx
+        ........Lxxxx
+       ...LcDcL...xxxl
+      L0..cc.cc.0..LlL0
+     llL..D._.D...LlllL.
+    llllL.cc.cc...llllL..
+   xllllL.LcDcL...LlllL..x
+  xxlllL.0......0..LlL._..x
+ xxxxllL._...LlllL.......xxx
+xxxxxxxL....LlllllL..xxxxxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_side_trefoil
+NSUBST: _ = _ / .
+SUBST:  - = x., L = l.
+: nicolae_geh_maze_setup( _G, "side", true )
+MAP
+            x...-
+           xx....x
+          -..0....x
+         x._..x-..-x
+        xx-.-xxx.0.xx
+       xxxxxxxx-...xxx
+      xx....-xx...-x-.-
+     x...0.....LL.xx._.x
+    -...xx-..Llll.xx...xx
+   -.0.xxxx-..lllL-x.0.xxx
+  x-....-xxx-.Lll.....-xxxx
+ xxx-.._.xxxx-...0...-xxxxxx
+xxxxxx-.-xxxxxxxx-..-xxxxxxxx
+ENDMAP
+
+# This subvault has a chance of having both the upstair and the downstair.
+NAME:   nicolae_geh_lavamaze_side_two_rooms
+NSUBST: D = + / c, E = + / c, _ = _ / 8_
+SUBST:  L = l., 0 = ..0, 0 = 009, 9 = 998
+: nicolae_geh_maze_setup( _G, "side", false )
+MAP
+            L...L
+           L..L..L
+          L..LlL..L
+         L..LlllL..L
+        .0.LLllL.L.0.
+       ..cDcLLL.LcEc..
+      ..cc.cc.L.cc.cc..
+     L.cc0.0cc0cc0.0cc..
+    lL0D.._..D.E.._..E0Ll
+   llL.cc0.0ccLcc0.0cc.Lll
+  xxllL.cc.cclllcc.cc.Lllxx
+ xxxxllL.cDclllllcEc.Lllxxxx
+xxxxxxllL..LlllllL..Lllxxxxxx
+ENDMAP
+
+################################################################################
+
+NAME:  nicolae_geh_lavamaze_oct_cave
+SUBST: - = lx., ` = lx
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+..
+..x
+...x
+xl.0l
+xx`..l
+xx..-xx
+x..-xxxx
+.0-xxx-.-
+..`xx-...-
+..``-.._..x
+-0.......-xx
+l-.-.9-.-xxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  nicolae_geh_lavamaze_oct_cave_2
+SUBST: - = lx.
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+..
+-..
+x...
+xx0.x
+x...xx
+-..-x--
+-..xx.0-
+-.......-
+x----x-..-
+xxxxxxx-..-
+-...----...-
+-._.9....0-xx
+-...------xxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_field
+NSUBST: DE = 1=_
+SUBST:  D = ., E` = llllxx...
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+`.
+.``
+`.``
+``0``
+`.`.``
+````.``
+`0`.`0``
+``.```.``
+`.```.`.``
+``.`0```0``
+`DEEEDEEED``
+`EDEEDEEDED`x
+x```````````xx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_forked
+NSUBST: _ = _ / .
+SUBST:  ` = xl
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+..
+...
+`..`
+`...`
+..x..0
+..xx...
+0.`xx..`
+...`xl..`
+`..`xxl.0`
+x0.l`xxx.lx
+x....`x....l
+xl.__.x..__.x
+xx`..lxl...`xx
+ENDMAP
+
+# Freebie: No monsters, and you don't have to check this octant for an exit.
+NAME:   nicolae_geh_lavamaze_oct_freebie
+SUBST:  L = lx
+: nicolae_geh_maze_setup( _G, "oct", false )
+MAP
+..
+..L
+lL.l
+LlllL
+xLLLxx
+xxxxxxx
+xxxxxxxx
+xxxxxxxxx
+xxxxxxxxxx
+xxxxxxxxxxx
+xxxxxxxxxxxx
+xxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_hallway
+NSUBST: _ = _ / .
+SUBST:  L = l.
+: nicolae_geh_maze_setup( _G, "oct", false )
+MAP
+..
+..x
+..xx
+.Lllx
+.Lllxx
+.Lllxxx
+.Llccccc
+..cc._.cc
+..c.....cx
+..+..9._cxx
+LLc.....cxxx
+llcc._.ccxxxx
+lllcccccxxxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_narrow
+NSUBST: D = 0 / L, E = . / L, F = 0 / L, H = . / L
+SUBST:  ` = lx, L = ll., 0 = 009, 9 = 998
+: nicolae_geh_maze_setup( _G, "oct", false )
+MAP
+..
+...
+L..L
+`L.L`
+`LDDL`
+`lL.Ll`
+`lLEELl`
+`llL.Lll`
+`llLFFLll`
+`lllL.Llll`
+`llllHHllll`
+`llllL_Lllll`
+````lllll````x
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_pocket
+NSUBST: _ = _ / .
+SUBST:  ` = lx, L = l.
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+..
+...
+....
+L.0.L
+`L..L`
+`L...L`
+`l.0..l`
+`l.....l`
+`l...0..l`
+`l.......l`
+`ll._._._.l`
+x``lllllll`xx
+xxx```````xxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_split
+NSUBST: _ = _ / .
+SUBST:  - = xl., ~ = l., 0 = 009, 9 = 998
+: nicolae_geh_maze_setup( _G, "oct", false )
+MAP
+..
+..-
+...-
+-...-
+x-.0.-
+xx-...-
+xxx-...-
+xxxx...xx
+x._x.0.x_.
+~..x...x..~
+~....~....~x
+~0..~l~..0~xx
+xlllllllllxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_tower
+NSUBST: D = + / c, E = + / c, _ = _ / .
+SUBST:  L = l.
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+L.
+...
+.LL.
+L..L.
+.L9.LL
+L..DDcc
+L.DD.0cc
+xcc....cc
+xc0.__..cx
+xc..__.0ELl
+xcc....EE_ll
+xxcc0.cE_Lllx
+xxxccccxxllxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_trio_pool
+NSUBST: _ = _ / .
+SUBST:  L = l.
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+..
+...
+.9..
+...L.
+..LlL.
+.LlllL.
+.LlllL..
+.LllllL..
+.LllllL9.x
+..LLLL...xx
+9.......xxxx
+x._____xxxxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_geh_lavamaze_oct_winding
+SUBST:  ` = lx, L = l.
+: nicolae_geh_maze_setup( _G, "oct", true )
+MAP
+..
+..`
+..l`
+.0Ll`
+..LLl`
+L.....`
+`llll0.`
+`LLLL..`x
+......Lccc
+.Lllllcc.cc
+..0...+._.cx
+`L....cc.ccxx
+`llllllcccxxxx
+ENDMAP
+
+################################################################################

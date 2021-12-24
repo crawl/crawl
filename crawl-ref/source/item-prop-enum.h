@@ -176,6 +176,8 @@ enum brand_type // item_def.special
 #if TAG_MAJOR_VERSION > 34
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif
+    SPWPN_WEAKNESS,
+    SPWPN_VULNERABILITY,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
@@ -469,7 +471,7 @@ enum special_armour_type
     SPARM_PRESERVATION,
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,
-    SPARM_ARCHERY,
+    SPARM_HURLING,
 #if TAG_MAJOR_VERSION == 34
     SPARM_JUMPING,
 #endif
@@ -480,6 +482,7 @@ enum special_armour_type
     SPARM_HARM,
     SPARM_SHADOWS,
     SPARM_RAMPAGING,
+    SPARM_INFUSION,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

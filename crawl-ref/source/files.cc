@@ -472,15 +472,16 @@ static vector<string> _get_base_dirs()
 
     return bases;
 }
-
-void validate_basedirs()
+/**
+ * check if `d` is a complete crawl data directory.
+ *
+ * @return MB_TRUE if yes, otherwise no. Returns MB_FALSE if there are some
+ * but not all data subfolders.
+ */
+maybe_bool validate_data_dir(const string &d)
 {
-    // TODO: could use this to pick a single data directory?
-    vector<string> bases(_get_base_dirs());
-    bool found = false;
-
     // there are a few others, but this should be enough to minimally run something
-    const vector<string> data_subfolders =
+    static const vector<string> data_subfolders =
     {
         "clua",
         "database",
@@ -493,36 +494,51 @@ void validate_basedirs()
 #endif
     };
 
+    if (!dir_exists(d))
+        return MB_FALSE;
+
+    bool everything = true;
+    bool something = false;
+    for (auto subdir : data_subfolders)
+    {
+        if (dir_exists(catpath(d, subdir)))
+            something = true;
+        else
+            everything = false;
+    }
+    return everything ? MB_TRUE : something ? MB_MAYBE : MB_FALSE;
+}
+
+void validate_basedirs()
+{
+    // TODO: could use this to pick a single data directory? Right now the
+    // behavior is that files in directories earliest on this list get
+    // priority.
+    vector<string> bases(_get_base_dirs());
+    bool found = false;
+
     for (const string &d : bases)
     {
-        if (dir_exists(d))
+        maybe_bool status = validate_data_dir(d);
+        if (status == MB_FALSE)
+            continue; // empty or non-existent, ignore
+        else if (status == MB_MAYBE)
         {
-            bool everything = true;
-            bool something = false;
-            for (auto subdir : data_subfolders)
+            // give an error for this case because this incomplete data
+            // directory will be checked before others, possibly leading
+            // to a weird mix of data files.
+            if (!found)
             {
-                if (dir_exists(d + subdir))
-                    something = true;
-                else
-                    everything = false;
+                mprf(MSGCH_ERROR,
+                    "Incomplete or corrupted data directory '%s'",
+                            d.c_str());
             }
-            if (everything)
-            {
+        }
+        else // MB_TRUE -- found a complete data directory
+        {
+            if (!found)
                 mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
-                found = true;
-            }
-            else if (something)
-            {
-                // give an error for this case because this incomplete data
-                // directory will be checked before others, possibly leading
-                // to a weird mix of data files.
-                if (!found)
-                {
-                    mprf(MSGCH_ERROR,
-                        "Incomplete or corrupted data directory '%s'",
-                                d.c_str());
-                }
-            }
+            found = true;
         }
     }
 
@@ -977,14 +993,36 @@ NORETURN void print_save_json(const char *name)
     }
 }
 
+static string _get_prefs_path()
+{
+#ifdef DGL_STARTUP_PREFS_BY_NAME
+    // if prfs are being organized by name, the save directory per se is most
+    // likely versioned, so store them in a subdirectory of the shared
+    // directory instead.
+    string dir = catpath(catpath(
+            Options.shared_dir,
+            crawl_state.game_savedir_path()),
+        "prefs");
+    check_mkdir("Preferences directory", &dir, false);
+    return dir;
+#else
+    return _get_savefile_directory();
+#endif
+}
+
 string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
-    return _get_savefile_directory() + "start-"
-           + strip_filename_unsafe_chars(Options.game.name) + "-ns.prf";
+    // in the early startup sequence we need to use Options.game.name, but this
+    // becomes empty by the time the game is actually starting. (...)
+    const string player_name = Options.game.name.length()
+        ? Options.game.name : you.your_name;
+    const string filename =
+        "start-" + strip_filename_unsafe_chars(player_name) + "-ns.prf";
 #else
-    return _get_savefile_directory() + "start-ns.prf";
+    const string filename = "start-ns.prf";
 #endif
+    return catpath(_get_prefs_path(), filename);
 }
 
 void write_ghost_version(writer &outf)
@@ -1236,7 +1274,7 @@ static void _grab_followers()
         else
         {
             // Permanent undead are left behind but stay.
-            mprf("Your mindless thrall%s behind.",
+            mprf("Your mindless puppet%s behind to rot.",
                  non_stair_using_allies > 1 ? "s stay" : " stays");
         }
     }
@@ -2260,10 +2298,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             && static_cast<int>(curr_PlaceInfo.levels_seen)
                                         > brdepth[curr_PlaceInfo.branch])
         {
-            mprf(MSGCH_ERROR,
-                "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
-                branches[curr_PlaceInfo.branch].shortname,
-                curr_PlaceInfo.levels_seen);
+            if (crawl_state.prev_cmd != CMD_WIZARD)
+            {
+                mprf(MSGCH_ERROR,
+                    "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
+                    branches[curr_PlaceInfo.branch].shortname,
+                    curr_PlaceInfo.levels_seen);
+            }
             curr_PlaceInfo.levels_seen = brdepth[curr_PlaceInfo.branch];
         }
 #endif
@@ -2439,9 +2480,9 @@ static void _save_game_exit()
 
     clrscr();
 
-#ifdef DGL_WHEREIS
-    whereis_record("saved");
-#endif
+    save_game_prefs();
+    update_whereis("saved");
+
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason("saved");
 #endif
@@ -2481,7 +2522,10 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (!leave_game)
     {
         if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+        {
             you.save->commit();
+            save_game_prefs();
+        }
         return;
     }
 
@@ -3780,6 +3824,7 @@ off_t file_size(FILE *handle)
 #endif
 }
 
+#ifdef USE_TILE_LOCAL
 vector<string> get_title_files()
 {
     vector<string> titles;
@@ -3789,3 +3834,4 @@ vector<string> get_title_files()
                 titles.push_back(file);
     return titles;
 }
+#endif

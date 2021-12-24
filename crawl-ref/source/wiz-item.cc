@@ -1118,6 +1118,8 @@ static void _debug_acquirement_stats(FILE *ostat)
 #if TAG_MAJOR_VERSION > 34
             "confuse",
 #endif
+            "weak",
+            "vuln",
             "debug randart",
         };
         COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_WEAPONS);
@@ -1162,7 +1164,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "preservation",
             "reflection",
             "spirit shield",
-            "archery",
+            "hurling",
 #if TAG_MAJOR_VERSION == 34
             "jumping",
 #endif
@@ -1172,6 +1174,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 #endif
             "harm",
             "rampaging",
+            "infusion",
         };
 
         const int non_art = acq_calls - num_arts;

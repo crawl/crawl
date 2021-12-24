@@ -437,7 +437,7 @@ void Stash::_update_identification()
     }
 }
 
-void Stash::add_item(const item_def &item, bool add_to_front)
+void Stash::add_item(item_def &item, bool add_to_front)
 {
     if (_is_rottable(item))
         StashTrack.update_corpses();
@@ -1689,12 +1689,17 @@ bool StashTracker::display_search_results(
             if (res->item.defined())
             {
                 item_def it = res->item;
-                describe_item_popup(it,
+                // pass the level as a prop, not very elegant
+                it.props["level_id"].get_string() = res->pos.id.describe();
+                if (!describe_item(it,
                     [search, nohl](string& desc)
                     {
                         if (!nohl)
                             desc = search->match_location(desc).annotate_string("lightcyan");
-                    });
+                    }))
+                {
+                    return false;
+                }
             }
             else if (res->shop)
                 res->shop->show_menu(res->pos);

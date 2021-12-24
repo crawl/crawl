@@ -30,6 +30,7 @@ static const int ENCH_POW_FACTOR = 3;
 bool mons_spell_is_spell(spell_type spell);
 int mons_power_for_hd(spell_type spell, int hd);
 int mons_spellpower(const monster &mons, spell_type spell);
+int mons_spell_range(const monster &mons, spell_type spell);
 int mons_spell_range_for_hd(spell_type spell, int hd);
 bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
@@ -46,7 +47,7 @@ bool mons_word_of_recall(monster* mons, int recall_target);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
 
-int living_spells_for(monster_type mtyp);
+int living_spell_count(spell_type spell, bool random);
 spell_type living_spell_type_for(monster_type mtyp);
 
 monster* cast_phantom_mirror(monster* mons, monster* targ,

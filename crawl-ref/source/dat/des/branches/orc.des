@@ -1978,9 +1978,7 @@ ORIENT: float
 MONS: orc / nothing w:5, orc warrior / nothing w:5
 MONS: orc priest / nothing w:5, common demon / nothing w:5
 MONS: orc knight
-# non-monstrous demonspawn only (1/3 chance of none)
-MONS: gelid demonspawn / infernal demonspawn / \
-      torturous demonspawn / nothing w:15
+MONS: demonspawn / nothing w:5
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
 KFEAT: A = w:20 general shop / distillery shop / scroll shop
@@ -1997,19 +1995,19 @@ MAP
          ccc..ccc232ccc
         ccc..ccc.c2c.ccc
        ccc..ccc...c...ccc
-      ccc..ccc.4.ccc...ccc
+      ccc..ccc...ccc...ccc
      ccc..ccc.4.cc7cc.4.ccc
     ccc.1......cc75.cc.4.ccc
    ccc.1.1c.3.cc..c..cc...ccc
   ccc123c32..cc..ccc.3cc.c.ccc
  cccA2c1211.cc6.cB7cc32.2.27ccc
-ccc5.11.c1.cc77.766Pcc.c....5ccc
+ccc5.11.c1.cc77.76.Pcc.c....5ccc
  cccA2c1211.cc6.cC7cc32.2.27ccc
   ccc123c32..cc..ccc.3cc.c.ccc
    ccc.1.1c.3.cc..c..cc...ccc
     ccc.1......cc75.cc.4.ccc
      ccc..ccc.4.cc7cc.4.ccc
-      ccc..ccc.4.ccc...ccc
+      ccc..ccc...ccc...ccc
        ccc..ccc...c...ccc
         ccc..ccc.c2c.ccc
          ccc..ccc232ccc
