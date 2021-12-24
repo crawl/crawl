@@ -31,6 +31,8 @@
 #include "loading-screen.h"
 #include "macro.h"
 #include "maps.h"
+// map-knowledge.h used in startup zotdef mode code that maps level. TODO, consider simplifying it
+#include "map-knowledge.h"
 #include "menu.h"
 #include "outer-menu.h"
 #include "message.h"
@@ -56,6 +58,10 @@
  #include "tilepick.h"
 #endif
 #include "tileview.h"
+
+// used for a zotdef code chunk that maps the level at startup. TODO: consider removing it later.
+#include "traps.h"
+
 #include "viewchar.h"
 #include "view.h"
 #ifdef USE_TILE_LOCAL
@@ -247,6 +253,34 @@ static void _zap_los_monsters()
     }
 }
 
+
+// only used in zotdef
+// helper function for zotdef
+void _zotdef_fully_map_level()
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        bool ok = false;
+        for (adjacent_iterator ai(*ri, false); ai; ++ai)
+            if (!feat_is_opaque(env.grid(*ai)))
+                ok = true;
+        if (!ok)
+            continue;
+        env.map_knowledge(*ri).set_feature(env.grid(*ri), 0,
+            feat_is_trap(env.grid(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
+        set_terrain_seen(*ri);
+#ifdef USE_TILE
+        tile_wizmap_terrain(*ri);
+#endif
+        if (env.igrid(*ri) != NON_ITEM)
+            env.map_knowledge(*ri).set_detected_item();
+        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
+    }
+}
+// TODO:  consider changing it to whatever wizmode uses?
+
+
+
 static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= MAX_NAME_LENGTH);
@@ -378,7 +412,7 @@ static void _post_init(bool newc)
 
 		
         if (crawl_state.game_is_zotdef())
-            fully_map_level();
+            _zotdef_fully_map_level();
 
     }
 

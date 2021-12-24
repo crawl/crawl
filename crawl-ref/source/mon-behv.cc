@@ -232,6 +232,31 @@ static bool _monster_guesses_invis_player(const monster &mon)
     return false;
 }
 
+
+// TODO: THInk about reworking or changing to old rot_hp
+// only used in zotdef:
+void _zotdef_drain_hp(int hp_loss)
+{
+    if (!player_drained() && hp_loss > 0)
+        you.redraw_magic_points = true;
+
+    const int initial_loss = you.hp_max_adj_temp;
+    you.hp_max_adj_temp -= hp_loss;
+    // don't allow more drain than you have normal mhp
+    you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
+                              you.hp_max_adj_temp);
+    if (initial_loss == you.hp_max_adj_temp)
+        return;
+
+    calc_hp();
+
+	// seems cheesy to let it happen this way:
+	// so lets comment it out for now:
+	// xom_is_stimulated(hp_loss * 25);
+
+    you.redraw_hit_points = true;
+}
+
 /**
  * Evaluates the monster's AI state, and sets its target based on its foe.
  */
@@ -284,8 +309,10 @@ void handle_behaviour(monster* mon)
             const int loss = div_rand_round(10, mon->speed);
             if (loss)
             {	
-				//should the flavor be changed since rot was changed?
+				// should the flavor be changed since rot was changed?
                 mprf(MSGCH_DANGER, "Your flesh rots away as the Orb of Zot is desecrated.");
+				// should the message be differnt for undead?
+				// TODO
 
                 // If the rot would reduce us to <= 0 max HP, attribute the
                 // kill to the monster.
@@ -293,7 +320,7 @@ void handle_behaviour(monster* mon)
                     ouch(loss, KILLED_BY_ROTTING, mon->mid);
 			
                 //rot_hp(loss);
-				drain_hp(loss);
+				_zotdef_drain_hp(loss);
             }
         }
     }

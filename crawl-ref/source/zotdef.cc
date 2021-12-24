@@ -409,7 +409,7 @@ static void _giant_wave(int power)
             MONS_STONE_GIANT, MONS_FIRE_GIANT, MONS_FROST_GIANT, MONS_OGRE_MAGE,
             MONS_IRON_TROLL, MONS_DEEP_TROLL, MONS_TITAN, END};
     monster_type boss[] = {MONS_EROLCHA, MONS_POLYPHEMUS, MONS_ANTAEUS,
-            MONS_SNORG, MONS_PURGY, MONS_STONE_GIANT, MONS_FIRE_GIANT,
+            MONS_SNORG, MONS_PARGI, MONS_STONE_GIANT, MONS_FIRE_GIANT,
             MONS_FROST_GIANT, MONS_TITAN, END};
     _zotdef_fill_from_list(giants, 0, power); // full
     _zotdef_choose_boss(boss, power);
@@ -906,7 +906,7 @@ static monster_type _choose_unique_by_depth(int step)
         break;
     case 1: // depth <= 7
         ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
-                            MONS_EDMUND, MONS_PRINCE_RIBBIT, MONS_PURGY,
+                            MONS_EDMUND, MONS_PRINCE_RIBBIT, MONS_PARGI,
                             MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL);
         break;
     case 2: // depth <= 9
@@ -1041,9 +1041,21 @@ bool zotdef_create_altar()
     }
 }
 
+
+// TODO: simplify this:
+// zotdef code only used in zotdef chunk of the following function  
+int _zotdef_count_allies()
+{
+    return count_if(begin(env.mons), end(env.mons),
+                    [] (const monster &mons) -> bool
+                    {
+                        return mons.alive() && mons.friendly();
+                    });
+}
+
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
 {
-    if (count_allies() > MAX_MONSTERS / 2)
+    if (_zotdef_count_allies() > MAX_MONSTERS / 2)
     {
         mpr("The place is too crowded already!");
         return false;

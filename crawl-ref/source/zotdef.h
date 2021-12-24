@@ -2,7 +2,7 @@
 
 #ifndef ZOTDEF_H
 #define ZOTDEF_H
-// this should be replaced with pragma later or something?
+// TODO: this should be replaced with pragma later or something?
 
 #include "traps.h"
 
@@ -20,5 +20,8 @@ void zotdef_create_pond(const coord_def& center, int radius);
 void zotdef_bosses_check();
 
 string zotdef_debug_wave_desc();
+
+
+int _zotdef_count_allies();
 
 #endif // ZOTDEF_H

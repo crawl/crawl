@@ -2702,16 +2702,7 @@ static bool _evoke_staff_of_olgreb(dist *target)
     return true;
 }
 
-// TODO: simplify this:
-// zotdef code only used in zotdef chunk of the following function
-int _zotdef_count_allies()
-{
-    return count_if(begin(env.mons), end(env.mons),
-                    [] (const monster &mons) -> bool
-                    {
-                        return mons.alive() && mons.friendly();
-                    });
-}
+ 
 
 
 /*

@@ -5430,9 +5430,11 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     case '^':
         place_specific_trap(where, TRAP_RANDOM);
         break;
+		/*
     case '~':
         place_specific_trap(where, random_vault_trap());
         break;
+		*/
     case 'B':
         env.grid(where) = _pick_temple_altar();
         break;

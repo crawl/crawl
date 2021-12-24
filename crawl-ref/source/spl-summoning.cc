@@ -1057,6 +1057,8 @@ spret summon_shadow_creatures()
     mpr("Wisps of shadow whirl around you...");
 
 	// zotdefence shadow code:
+	
+    monster_type critter = RANDOM_COMPATIBLE_MONSTER;
     if (crawl_state.game_is_zotdef())
         critter = _zotdef_shadow();
 	// TODO: decide if we really need this extra code for zotdef shadows.
