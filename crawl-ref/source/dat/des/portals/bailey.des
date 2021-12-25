@@ -65,15 +65,15 @@ end
 
 -- Axes.
 function axe_returning(e)
-  e.mons("generate_awake kobold ; boomerang ident:type q:4 | \
-                                  boomerang ident:type q:3 / \
-          generate_awake hobgoblin ; boomerang ident:type q:4 | \
-                                     boomerang ident:type q:3")
+  e.mons("generate_awake kobold ; boomerang ident:type q:2 | \
+                                  boomerang ident:type q:1 / \
+          generate_awake hobgoblin ; boomerang ident:type q:2 | \
+                                     boomerang ident:type q:1")
 end
 
 function kobold_axe_returning(e)
-  e.mons("generate_awake kobold ; boomerang ident:type q:4 | \
-                                  boomerang ident:type q:3")
+  e.mons("generate_awake kobold ; boomerang ident:type q:2 | \
+                                  boomerang ident:type q:1")
 end
 
 function easy_axe_fighter(e)
@@ -184,12 +184,12 @@ WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
-MONS:   goblin ; boomerang ident:type q:4 | \
-                 boomerang ident:type q:3 / \
-        hobgoblin ; boomerang ident:type q:4 | \
-                    boomerang ident:type q:3 / \
-        orc ; boomerang ident:type q:4 | \
-              boomerang ident:type q:3
+MONS:   goblin ; boomerang ident:type q:2 | \
+                 boomerang ident:type q:1 / \
+        hobgoblin ; boomerang ident:type q:2 | \
+                    boomerang ident:type q:1 / \
+        orc ; boomerang ident:type q:2 | \
+              boomerang ident:type q:1
 SUBST: 1 = 122
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -213,8 +213,8 @@ NAME: enter_bailey_5
 TAGS: transparent no_pool_fixup
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: goblin ; boomerang ident:type q:4 | \
-               boomerang ident:type q:3
+MONS: goblin ; boomerang ident:type q:2 | \
+               boomerang ident:type q:1
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS: goblin ; spear
@@ -320,8 +320,8 @@ TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: orc ; boomerang ident:type q:3 | \
-            boomerang ident:type q:4 . hand axe
+MONS: orc ; boomerang ident:type q:1 | \
+            boomerang ident:type q:2 . hand axe
 MONS: gnoll ; hand axe / goblin ; hand axe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -386,7 +386,7 @@ ENDMAP
 # this used to be an axe map; it's polearm now and has been renamed accordingly
 NAME:   bailey_polearm_nasty_gnolls
 ORIENT: encompass
-TAGS:   bailey_axe bailey_polearm no_rotate
+TAGS:   bailey_polearm no_rotate
 : orc_with_polearm(_G)
 MONS:   gnoll ; halberd ego:draining | halberd ego:electrocution ident:type
 MONS:   orc warrior ; halberd ego:electrocution ident:type . plate armour /\
@@ -508,8 +508,8 @@ SUBST:   H = W.
 SUBST:   ~ = W
 # the following KMONS duplicates monster 1 from kobold_axe_returning
 KFEAT:   ( = exit_bailey
-KMONS:   ( = generate_awake kobold ; boomerang ident:type q:4 | \
-                                     boomerang ident:type q:3
+KMONS:   ( = generate_awake kobold ; boomerang ident:type q:2 | \
+                                     boomerang ident:type q:1
 #
 : kobold_axe_returning(_G)
 : easy_axe_fighter(_G)
