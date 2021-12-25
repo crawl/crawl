@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "decks.h"
+#include "describe.h"
 #include "english.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -140,6 +141,12 @@ public:
         {
             name = pluralise(item->name(DESC_DBNAME));
         }
+        else if (item->base_type == OBJ_SCROLLS
+                 || item->base_type == OBJ_POTIONS)
+        {
+            name = pluralise(item->name(DESC_DBNAME))
+                   + " (" + describe_item_rarity(*item) + ")";
+        }
         else
         {
             name = item->name(DESC_PLAIN, false, true, false, false,
@@ -207,11 +214,17 @@ public:
 
     virtual string get_text(const bool = false) const override
     {
+        if (item->base_type == OBJ_SCROLLS || item->base_type == OBJ_POTIONS)
+        {
+            return " " + item->name(DESC_PLAIN, false, true, false)
+                   + " (" + describe_item_rarity(*item) + ")";
+        }
+
         description_level_type desctype =
             item->base_type == OBJ_WANDS ? DESC_DBNAME : DESC_PLAIN;
 
-        return string(" ") + item->name(desctype, false, true, false, false,
-                                        ISFLAG_KNOW_PLUSES);
+        return " " + item->name(desctype, false, true, false, false,
+                                ISFLAG_KNOW_PLUSES);
     }
 };
 

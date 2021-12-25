@@ -1943,25 +1943,25 @@ static string _describe_lignify_ac()
                         treeform_ac);
 }
 
-static string _describe_item_rarity(const item_def &item)
+string describe_item_rarity(const item_def &item)
 {
     item_rarity_type rarity = consumable_rarity(item);
 
     switch (rarity)
     {
     case RARITY_VERY_RARE:
-        return "very rarely";
+        return "very rare";
     case RARITY_RARE:
-        return "rarely";
+        return "rare";
     case RARITY_UNCOMMON:
-        return "uncommonly";
+        return "uncommon";
     case RARITY_COMMON:
-        return "commonly";
+        return "common";
     case RARITY_VERY_COMMON:
-        return "very commonly";
+        return "very common";
     case RARITY_NONE:
     default:
-        return "buggily";
+        return "buggy";
     }
 }
 
@@ -2263,9 +2263,9 @@ string get_item_description(const item_def &item, bool verbose,
                         description << "\n\nDrinking this now will have no effect.";
                 }
             }
-            description << "\n\nIt is found "
-                        << _describe_item_rarity(item)
-                        << " compared to other types of potion.";
+            description << "\n\nIt is "
+                        << article_a(describe_item_rarity(item))
+                        << " potion.";
         }
         break;
 
@@ -2287,9 +2287,9 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_SCROLLS:
         if (item_type_known(item))
         {
-            description << "\n\nIt is found "
-                        << _describe_item_rarity(item)
-                        << " compared to other types of scroll.";
+            description << "\n\nIt is "
+                        << article_a(describe_item_rarity(item))
+                        << " scroll.";
         }
         break;
 
