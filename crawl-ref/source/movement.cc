@@ -53,7 +53,7 @@
 #include "transform.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
-static void _apply_move_time_taken(int additional_time_taken = 0);
+static void _apply_move_time_taken();
 
 // Swap monster to this location. Player is swapped elsewhere.
 // Moves the monster into position, but does not move the player
@@ -748,11 +748,10 @@ static spret _rampage_forward(coord_def move)
     return spret::success;
 }
 
-static void _apply_move_time_taken(int additional_time_taken)
+static void _apply_move_time_taken()
 {
     you.time_taken *= player_movement_speed();
     you.time_taken = div_rand_round(you.time_taken, 10);
-    you.time_taken += additional_time_taken;
 
     if (you.running && you.running.travel_speed)
     {
@@ -793,8 +792,6 @@ void move_player_action(coord_def move)
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
-
-    int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);
@@ -1078,7 +1075,7 @@ void move_player_action(coord_def move)
                  DESC_THE).c_str());
             destroy_wall(targ);
             noisy(6, you.pos());
-            additional_time_taken += BASELINE_DELAY / 5;
+            drain_player(15, false, true);
             dug = true;
         }
 
@@ -1112,7 +1109,7 @@ void move_player_action(coord_def move)
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        _apply_move_time_taken(additional_time_taken);
+        _apply_move_time_taken();
 
         move.reset();
         you.turn_is_over = true;

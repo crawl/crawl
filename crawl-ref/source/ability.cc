@@ -324,7 +324,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_WORD_OF_CHAOS, "Word of Chaos",
             6, 0, 0, -1, {fail_basis::xl, 50, 1}, abflag::max_hp_drain },
         { ABIL_DIG, "Dig",
-            0, 0, 0, -1, {}, abflag::instant | abflag::none },
+            0, 0, 0, -1, {}, abflag::instant | abflag::max_hp_drain },
         { ABIL_SHAFT_SELF, "Shaft Self",
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_HOP, "Hop",
