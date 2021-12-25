@@ -1569,7 +1569,7 @@ A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
 limbs give it an awkward gait, it moves with surprising speed, leaping upon its
 victims and leeching away their life essence with its vicious claws.
 %%%%
-jorōgumo
+jorogumo
 
 A spider spirit that takes the appearance of a human. It weaves deadly magics to
 incapacitate and kill its prey.
