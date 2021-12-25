@@ -3808,7 +3808,16 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 		// so make it actually acquire gold?
 		// or remove the ability.
         // acquirement(OBJ_GOLD, AQ_SCROLL);
-		mpr("Gold appears before you, but turns into bugs and vanishes!");
+		acquirement_create_item(OBJ_GOLD, AQ_SCROLL, true, you.pos());
+		// THe old gold formula
+		/*
+		           acq_item.quantity = 10 * (20
+                                    + roll_dice(1, 20)
+                                    + (roll_dice(1, 8)
+                                       * roll_dice(1, 8)
+                                       * roll_dice(1, 8)));
+		*/
+		// mpr("Gold appears before you, but turns into bugs and vanishes!");
         break;
 
     case ABIL_MAKE_ACQUIREMENT:

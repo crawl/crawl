@@ -1042,8 +1042,6 @@ bool zotdef_create_altar()
 }
 
 
-// TODO: simplify this:
-// zotdef code only used in zotdef chunk of the following function  
 int _zotdef_count_allies()
 {
     return count_if(begin(env.mons), end(env.mons),
