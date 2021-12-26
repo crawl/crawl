@@ -2604,8 +2604,7 @@ spret cast_sandblast(int pow, bolt &beam, bool fail)
         return spret::abort;
     }
 
-    zap_type zap = ZAP_SANDBLAST;
-    const spret ret = zapping(zap, pow, beam, true, nullptr, fail);
+    const spret ret = zapping(ZAP_SANDBLAST, pow, beam, true, nullptr, fail);
 
     if (ret == spret::success)
     {
