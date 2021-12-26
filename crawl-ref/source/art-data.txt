@@ -214,14 +214,13 @@ DESCRIP: It causes slowness and exhaustion when equipped.
 +It extends the wielder's berserk rage when killing foes.
 
 NAME:    mace of Variability
-OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
+OBJ:     OBJ_WEAPONS/WPN_MACE
 FALLBACK: OBJ_WEAPONS/OBJ_RANDOM
 INSCRIP: chain chaos
-PLUS:    +7
+PLUS:    +12
 COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
-VALUE:   600
 BOOL:    skip_ego
 BRAND:   SPWPN_CHAOS
 DBRAND:  Each time it hits an enemy it has a different, random effect.
