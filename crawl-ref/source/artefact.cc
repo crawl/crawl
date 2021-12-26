@@ -1333,7 +1333,18 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[unrand_index];
 }
 
-int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
+static int _unrand_weight(int unrand_index, int item_level)
+{
+    // TODO: turn this into a max preferred depth field in art-data.txt
+    switch (unrand_index) {
+    case UNRAND_DANYLAS_GLOVES:
+        return item_level < 7 ? 100 : 1;
+    default:
+        return 10;
+    }
+}
+
+int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_abyss)
 {
     int chosen_unrand_idx = -1;
 
@@ -1342,7 +1353,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
     // placed as part of levelgen, but may find unrands that have been acquired.
     // because of this, the caller needs to properly set up a fallback randart
     // in some cases: see makeitem.cc:_setup_fallback_randart.
-    for (int i = 0, valid_unrands = 0; i < NUM_UNRANDARTS; i++)
+    for (int i = 0, seen_weight = 0; i < NUM_UNRANDARTS; i++)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = &unranddata[i];
@@ -1386,8 +1397,9 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
             continue;
         }
 
-        valid_unrands++;
-        if (one_chance_in(valid_unrands))
+        const int weight = _unrand_weight(index, item_level);
+        seen_weight += weight;
+        if (x_chance_in_y(weight, seen_weight))
             chosen_unrand_idx = index;
     }
 

@@ -170,8 +170,10 @@ static bool _try_make_item_unrand(item_def& item, int &force_type, int item_leve
         return false;
 
     // Can we generate unrands that were lost in the abyss?
-    const bool include_abyssed = player_in_branch(BRANCH_ABYSS) && agent == NO_AGENT;
-    const int idx = find_okay_unrandart(item.base_type, force_type, include_abyssed);
+    const bool include_abyssed = player_in_branch(BRANCH_ABYSS)
+                                 && agent == NO_AGENT;
+    const int idx = find_okay_unrandart(item.base_type, force_type, item_level,
+                                        include_abyssed);
     if (idx == -1)
         return false;
 

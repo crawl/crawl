@@ -97,8 +97,8 @@ void set_artefact_name(item_def &item, const string &name);
 string make_artefact_name(const item_def &item, bool appearance = false);
 string replace_name_parts(const string &name_in, const item_def& item);
 
-int find_okay_unrandart(uint8_t aclass, uint8_t atype = OBJ_RANDOM,
-                        bool in_abyss = false);
+int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
+                        bool in_abyss);
 
 typedef FixedVector< int, ART_PROPERTIES >  artefact_properties_t;
 typedef FixedVector< bool, ART_PROPERTIES > artefact_known_props_t;
