@@ -1340,7 +1340,12 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_DANYLAS_GLOVES:
         return 6;
     case UNRAND_WOODCUTTERS_AXE:
+    case UNRAND_MORG:
         return 9;
+    case UNRAND_DEVASTATOR:
+    case UNRAND_RATSKIN_CLOAK:
+    case UNRAND_KRYIAS:
+        return 11;
     default:
         return -1;
     }
