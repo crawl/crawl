@@ -1846,9 +1846,9 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     if (god_protects(act->as_monster(), false))
         return 0;
 
-    mprf("%s%s blasted with magical radiation%s",
-         player ? "you " : act->name(DESC_THE).c_str(),
-         player ? "are " : "is ",
+    mprf("%s %s blasted with magical radiation%s",
+         act->name(DESC_THE).c_str(),
+         act->conj_verb("are").c_str(),
          attack_strength_punctuation(dam).c_str());
 
     if (agent->is_player())
