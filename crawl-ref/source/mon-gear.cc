@@ -1188,6 +1188,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
+        // As a violent thug, Throatcutter suits Terence perfectly.
+    case MONS_TERENCE:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_THROATCUTTER))
+        {
+            make_item_unrandart(item, UNRAND_THROATCUTTER);
+            force_item = true;
+        }
+        break;
+
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:

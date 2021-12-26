@@ -709,3 +709,10 @@ woodcutter's axe
 A weapon that chops foes down as steadily and methodically as a forester cutting
 wood. The unchanging rhythm of its work has settled on it with the force of
 natural law, and no amount of force or skill can make it swing faster or slower.
+%%%%
+Throatcutter
+
+Taken from a paladin of the Shining One by the common cutpurse who murdered her,
+Throatcutter was used for a long series of increasingly sordid deeds thereafter.
+Blood, murder and betrayal stain its history and blade both, and little trace now
+remains of the blade which once stood between danger and the innocent.

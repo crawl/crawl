@@ -1619,6 +1619,17 @@ TILE:       urand_woodcutters_axe
 TILE_EQ:    axe_short
 BRAND:      SPWPN_VORPAL
 
+NAME:       Throatcutter
+OBJ:        OBJ_WEAPONS/WPN_LONG_SWORD
+FALLBACK:   OBJ_WEAPONS/WPN_SCIMITAR
+PLUS:       7
+COLOUR:     LIGHTRED
+TILE:       unrand_throatcutter
+TILE_EQ:    sword_thief
+BRAND:      SPWPN_DRAINING
+INSCRIP:    coup de grace
+DBRAND:     It may instantly kill foes which have little health.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
