@@ -589,7 +589,6 @@ TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
 BOOL:     elec, poison, no_upgrade
-WILL:     1
 
 NAME:    mithril axe "Arga"
 OBJ:     OBJ_WEAPONS/WPN_BROAD_AXE
