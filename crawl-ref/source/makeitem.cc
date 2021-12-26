@@ -169,23 +169,23 @@ static bool _try_make_item_unrand(item_def& item, int &force_type, int agent)
     if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
 
-    int idx = find_okay_unrandart(item.base_type, force_type,
-                                  player_in_branch(BRANCH_ABYSS)
-                                      && agent == NO_AGENT);
+    // Can we generate unrands that were lost in the abyss?
+    const bool include_abyssed = player_in_branch(BRANCH_ABYSS) && agent == NO_AGENT;
+    const int idx = find_okay_unrandart(item.base_type, force_type, include_abyssed);
+    if (idx == -1)
+        return false;
 
     // if an idx was found that exists, the unrand was generated via
     // acquirement or similar; replace it with a fallback randart.
-    if (idx != -1 && get_unique_item_status(idx))
+    // Choosing a new unrand could break seed stability.
+    if (get_unique_item_status(idx))
     {
         int item_level;
         _setup_fallback_randart(idx, item, force_type, item_level);
         return false;
     }
 
-    if (idx != -1 && make_item_unrandart(item, idx))
-        return true;
-
-    return false;
+    return make_item_unrandart(item, idx);
 }
 
 static bool _weapon_disallows_randart(int sub_type)

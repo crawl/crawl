@@ -1335,14 +1335,14 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 {
-    int ret = -1;
+    int chosen_unrand_idx = -1;
 
     // Pick randomly among unrandarts with the proper
     // base_type and sub_type. This will rule out unrands that have already
     // placed as part of levelgen, but may find unrands that have been acquired.
     // because of this, the caller needs to properly set up a fallback randart
     // in some cases: see makeitem.cc:_setup_fallback_randart.
-    for (int i = 0, count = 0; i < NUM_UNRANDARTS; i++)
+    for (int i = 0, valid_unrands = 0; i < NUM_UNRANDARTS; i++)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = &unranddata[i];
@@ -1357,7 +1357,8 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
         if (in_abyss && status != UNIQ_LOST_IN_ABYSS
             || !in_abyss && status != UNIQ_NOT_EXISTS
                // for acquired items, ignore them in the random calculations
-               // here and let fallback artefacts replace them.
+               // here and let fallback artefacts replace them. This is needed
+               // for seed stability.
                // TODO: abyss? double check trove
                && status != UNIQ_EXISTS_NONLEVELGEN)
         {
@@ -1385,13 +1386,12 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
             continue;
         }
 
-        count++;
-
-        if (one_chance_in(count))
-            ret = index;
+        valid_unrands++;
+        if (one_chance_in(valid_unrands))
+            chosen_unrand_idx = index;
     }
 
-    return ret;
+    return chosen_unrand_idx;
 }
 
 int get_unrandart_num(const char *name)
