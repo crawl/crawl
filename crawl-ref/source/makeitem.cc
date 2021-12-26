@@ -178,7 +178,7 @@ static bool _try_make_item_unrand(item_def& item, int &force_type, int agent)
     // if an idx was found that exists, the unrand was generated via
     // acquirement or similar; replace it with a fallback randart.
     // Choosing a new unrand could break seed stability.
-    if (get_unique_item_status(idx))
+    if (get_unique_item_status(idx) == UNIQ_EXISTS_NONLEVELGEN)
     {
         int item_level;
         _setup_fallback_randart(idx, item, force_type, item_level);
