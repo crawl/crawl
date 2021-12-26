@@ -164,7 +164,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
 }
 
-static bool _try_make_item_unrand(item_def& item, int &force_type, int agent)
+static bool _try_make_item_unrand(item_def& item, int &force_type, int item_level, int agent)
 {
     if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
@@ -180,7 +180,6 @@ static bool _try_make_item_unrand(item_def& item, int &force_type, int agent)
     // Choosing a new unrand could break seed stability.
     if (get_unique_item_status(idx) == UNIQ_EXISTS_NONLEVELGEN)
     {
-        int item_level;
         _setup_fallback_randart(idx, item, force_type, item_level);
         return false;
     }
@@ -208,7 +207,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type, agent))
+            if (_try_make_item_unrand(item, force_type, item_level, agent))
                 return true;
             if (item.base_type == OBJ_STAVES)
             {
@@ -706,7 +705,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type, agent))
+            if (_try_make_item_unrand(item, force_type, item_level, agent))
                 return true;
         }
 
@@ -1496,7 +1495,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         // need to use force_type here, because _try_make_item_unrand can set
         // it for fallback randarts.
         force_type = WPN_STAFF;
-        if (_try_make_item_unrand(item, force_type, agent))
+        if (_try_make_item_unrand(item, force_type, item_level, agent))
             return;
         if (item.base_type != OBJ_STAVES)
         {
@@ -1543,7 +1542,7 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        if (_try_make_item_unrand(item, type, agent))
+        if (_try_make_item_unrand(item, type, item_level, agent))
             return true;
     }
 
