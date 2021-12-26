@@ -1112,16 +1112,16 @@ MONS:   gargoyle
 MONS:   vampire ; halberd ego:vampirism w:15 | glaive |\
             glaive ego:vampirism w:3 | bardiche ego:vampirism w:1 .\
             scale mail | chain mail
-KFEAT:  H = granite_statue
 NSUBST: d = 2:d / 2:e / 1:| / * = dde|, f = 1:f / *=f..
-NSUBST: ; = 20=t. / *:., - = 4:H / 12 = 1. / *:.
-NSUBST: 2 = 5:2 / *=2., 3 = 6:3 / *= 3..., 4 = 3:4 / *=4., G = 1:5 / *:G
-NSUBST: ! = 1:6 / 2=6H / *:H
+NSUBST: ; = 20=t. / *:., - = 4:G / 12 = 1. / *:.
+NSUBST: 2 = 5:2 / *=2., 3 = 6:3 / *= 3..., 4 = 3:4 / *=4., 5 = 1:5 / *:G
+NSUBST: ! = 1:6 / 2=6G / *:G
 SHUFFLE: A<
-TILE: t = dngn_tree_dead, H = dngn_gravestone
+TILE: t = dngn_tree_dead, G = dngn_gravestone
 COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
 : dgn.delayed_decay(_G, 'f', 'orc skeleton')
 : set_feature_name("tree", "dead tree")
+: set_feature_name("granite_statue", "a gravestone")
 : bailey_setup(_G)
 MAP
    cccccc
@@ -1130,16 +1130,16 @@ MAP
  c!..cc..!c
  c..cccc..c
  c..cccc..ccccccccccccc
- c...cc...cG......Gcddc
- cc......cc.......Gc44c
+ c...cc...c5......5cddc
+ cc......cc.......5c44c
   cc....cc...ccccccc33c
-  ccc++cc..3cc....Gc..c
+  ccc++cc..3cc....5c..c
   c......333c......c+cccc
-  cG......4........c2222c
+  c5......4........c.2.2c
   ccccccccc....c...c.222c
-   cG....4cc..cc...+..22c
-   c.......cccc....+...2c
-   c..;;;...c43.cccc....c
+   c5....4cc..cc...+..2.c
+   c.......cccc....+.2.2c
+   c..;;;...c43.cccc.22.c
 ccccc..;;;..333.c34c....ct
 cdf4c.;;;.;;;...c43c+cc+ctt
 cfffc.;;;;.;;;..c33..c....tt
