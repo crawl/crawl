@@ -595,7 +595,7 @@ MONS:    scorpion
 MONS:    scorpion / emperor scorpion w:1
 MONS:    redback / nothing w:25
 MONS:    redback / wolf spider
-MONS:    jumping spider / tarantella w:20
+MONS:    culicivora / jumping spider / tarantella w:30
 MONS:    emperor scorpion / demonic crawler / nothing
 MAP
 @@@x
@@ -1171,7 +1171,7 @@ ENDMAP
 NAME:   nicolae_orb_stairs
 TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  Spider:2-
-MONS:   orb spider / nothing w:8
+MONS:   orb spider / nothing
 SUBST:  s = x.
 SUBST:  w = www^
 SUBST:  . = ...^
@@ -1195,7 +1195,7 @@ ENDMAP
 
 NAME:   nicolae_spider_nook
 TAGS:   no_monster_gen
-MONS:   wolf spider / redback w:15 / jumping spider / nothing w:5
+MONS:   wolf spider / redback w:15 / jumping spider / culicivora / nothing w:7
 KITEM:  d = | w:5 / * w:20 / $
 KMONS:  d = orb spider
 MAP
@@ -1284,7 +1284,8 @@ NAME:    lemuel_spider_zombies
 DEPTH:   Spider, !Spider:$
 ORIENT:  float
 TAGS:    no_monster_gen
-MONS:    redback zombie / wolf spider zombie / tarantella zombie
+MONS:    redback zombie / wolf spider zombie / tarantella zombie /\
+            culicivora zombie
 MONS:    necromancer
 MONS:    plant
 SHUFFLE: {}
@@ -1362,7 +1363,7 @@ SHUFFLE: ABC, DEF, GH, IJ, abcdefghi
 SUBST:  AEFGI = x, BCDHJ = .
 NSUBST: a = 1:} / 1:] / 1:) / 1:1 / *:.
 KMONS:  bcdefghi = tarantella / redback w:15 / wolf spider / \
-        jumping spider / orb spider / demonic crawler / \
+        jumping spider / culicivora / orb spider / demonic crawler / \
         scorpion / emperor scorpion / \
         hornet / nothing w:100
 SUBST: X = xxxx^....0
@@ -1397,7 +1398,7 @@ ENDMAP
 NAME: nicolae_spider_hall_of_the_moth_king
 ORIENT: west
 TAGS: transparent
-KMONS: M = moth of wrath / ghost moth / butterfly w:1
+KMONS: M = moth of wrath / ghost moth / sun moth / butterfly w:1
 SHUFFLE: AB, CD
 SUBST: B : ....c, D : ....c, AC : ., G : GGGc, G = GGGG., c : ccccx, \
        & = @...., 0 = 00., 0 = 0009
@@ -1424,7 +1425,7 @@ DEPTH:   Spider, !Spider:$
 TAGS:    no_monster_gen
 ORIENT:  north
 MONS:    entropy weaver, wolf spider, oklob plant
-MONS:    jumping spider / redback w:15 / wolf spider
+MONS:    culicivora / jumping spider / redback w:15 / wolf spider
 MONS:    emperor scorpion, obsidian statue / orange crystal statue
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
@@ -1474,7 +1475,7 @@ NAME: cheibrodos_spider_silkery
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 MONS: entropy weaver, wolf spider, orb spider
-MONS: redback / tarantella / jumping spider
+MONS: redback / tarantella / jumping spider / culicivora
 ITEM: robe good_item / cloak good_item, robe / cloak
 NSUBST: " = 2:1 / 2:2 / 1=2., ' = 1:2 / 1:3 / 6:4 / 4=234.. / 8:^
 NSUBST: - = 2=e% / 4=e%. / 3=%.
