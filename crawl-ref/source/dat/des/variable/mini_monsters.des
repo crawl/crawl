@@ -8273,9 +8273,9 @@ NSUBST: 1 = 2:2 / 1
 : end
 COLOUR: x. = blue
 TILE:   x = wall_pebble_lightblue
-FTILE:  .d1 = floor_pebble_blue
+FTILE:  .de123- = floor_pebble_blue
 MAP
-       G@G
+        @
        x-x
       xx.xx
       x...x
