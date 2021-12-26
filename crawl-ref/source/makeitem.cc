@@ -198,7 +198,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
-    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
         // Make a randart or unrandart.
@@ -696,7 +696,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
-    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
         // Make a randart or unrandart.
@@ -1538,7 +1538,7 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
     int type = (force_type == NUM_RINGS)     ? get_random_ring_type() :
                (force_type == NUM_JEWELLERY) ? get_random_amulet_type()
                                              : force_type;
-    if (item_level > 2
+    if (item_level > 0
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
@@ -1617,7 +1617,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     // All jewellery base types should now work. - bwr
     if (item_level == ISPEC_RANDART
-        || allow_uniques && item_level > 2
+        || allow_uniques && item_level > 0
            && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
