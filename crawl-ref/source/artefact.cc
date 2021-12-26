@@ -1345,6 +1345,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_DEVASTATOR:
     case UNRAND_RATSKIN_CLOAK:
     case UNRAND_KRYIAS:
+    case UNRAND_LEAR:
         return 11;
     default:
         return -1;
