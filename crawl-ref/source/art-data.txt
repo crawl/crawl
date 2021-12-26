@@ -88,6 +88,8 @@
 #             lowercase.
 # * nospell:  Prevents wearer from casting spells.
 # * notelep:  Prevents wearer from teleporting or blinking.
+# * no_upgrade: Don't regenerate this item on load. Used for items with mutable
+#             state, e.g. Wyrmbane's growing enchantment.
 # * poison:   Grants poison resistance.
 # * rcorr:    Grants corrosion resistance.
 # * rmsl:     Passively repels missiles.
