@@ -208,6 +208,50 @@ xxXXXXxxx..xx
    QQQX@@XX
 ENDMAP
 
+NAME: hellmonk_spider_entry_not_the_bees
+TAGS: spider_entry no_monster_gen no_trap_gen
+MONS:  killer bee
+KMONS: O = meliai
+KFEAT: O = enter_spider_nest
+KFEAT: ; = iron_grate
+SUBST: A = ;., 1 = 1.
+MAP
+   .;;;.
+ .;;.A.;;.
+ ;...A...;
+.;.1;;;1.;.
+;..;1A1;..;
+;AA;AOA;AA;
+;..;1A1;..;
+.;.1;;;1.;.
+ ;...A...;
+ .;;;;;;;.
+ENDMAP
+
+NAME: hellmonk_spider_entry_life_and_decay
+TAGS: spider_entry no_monster_gen no_trap_gen ruin
+MONS:  culicivora
+:      dgn.delayed_decay(_G, '%', 'redback corpse')
+KFEAT: O = enter_spider_nest
+KFEAT: ^ = web
+SUBST: . = ^:1 .:25
+NSUBST: % = 1:1 / *=1%%%
+MAP
+  xxxxxxx@@@xxxxxxx
+  xxxxxxxx.xxxxxxxx
+ xxx%..xx.x.xx..%xxx
+xxx....x.x.x.x....xxx
+xx%...x.x.x.x.x...%xx
+xxx....x.x.x.x....xxx
+ xxx%..xx.x.xx..%xxx
+  xxxxxxx%.%xxxxxxx
+    xxxx.....xxxx
+     xxx%...%xxx
+      xxx...xxx
+       xxxOxxx
+        xxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
