@@ -1333,18 +1333,28 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[unrand_index];
 }
 
-static int _unrand_weight(int unrand_index, int item_level)
+static int _preferred_max_level(int unrand_index)
 {
-    // TODO: turn this into a max preferred depth field in art-data.txt
-    // TODO: add more existing unrands here
+    // TODO: turn this into a max preferred level field in art-data.txt
     switch (unrand_index) {
     case UNRAND_DANYLAS_GLOVES:
-        return item_level < 7 ? 100 : 1;
+        return 6;
     case UNRAND_WOODCUTTERS_AXE:
-        return item_level < 10 ? 100 : 1;
+        return 9;
     default:
-        return 10;
+        return -1;
     }
+}
+
+static int _unrand_weight(int unrand_index, int item_level)
+{
+    // Early-game unrands (with a preferred max depth != -1) are
+    // weighted higher within their depth and lower past it.
+    // Normal unrands have a flat weight at all depths.
+    const int pref_max_level = _preferred_max_level(unrand_index);
+    if (pref_max_level == -1)
+        return 10;
+    return item_level <= pref_max_level ? 100 : 1;
 }
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_abyss)
