@@ -2386,11 +2386,19 @@ void drink(item_def* potion)
     if (!quaff_potion(*potion))
         return;
 
-    if (!alreadyknown && dangerous)
+    if (!alreadyknown)
     {
-        // Xom loves it when you drink an unknown potion and there is
-        // a dangerous monster nearby...
-        xom_is_stimulated(200);
+        if (player_equip_unrand(UNRAND_DANYLAS_GLOVES)) {
+            mpr("The energy of discovery flows from your fingertips!");
+            potionlike_effect(POT_HEAL_WOUNDS, 40);
+        }
+
+        if (dangerous)
+        {
+            // Xom loves it when you drink an unknown potion and there is
+            // a dangerous monster nearby...
+            xom_is_stimulated(200);
+        }
     }
 
     // We'll need this later, after destroying the item.
@@ -3531,12 +3539,20 @@ void read(item_def* scroll, dist *target)
              scroll_name.c_str());
     }
 
-    if (!alreadyknown && dangerous)
+    if (!alreadyknown)
     {
-        // Xom loves it when you read an unknown scroll and there is a
-        // dangerous monster nearby... (though not as much as potions
-        // since there are no *really* bad scrolls, merely useless ones).
-        xom_is_stimulated(bad_effect ? 100 : 50);
+        if (player_equip_unrand(UNRAND_DANYLAS_GLOVES)) {
+            mpr("The energy of discovery flows from your fingertips!");
+            potionlike_effect(POT_MAGIC, 40);
+        }
+
+        if (dangerous)
+        {
+            // Xom loves it when you read an unknown scroll and there is a
+            // dangerous monster nearby... (though not as much as potions
+            // since there are no *really* bad scrolls, merely useless ones).
+            xom_is_stimulated(bad_effect ? 100 : 50);
+        }
     }
 
     if (!alreadyknown)
