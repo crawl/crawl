@@ -8290,6 +8290,35 @@ xxxxx.1.2.1.-...x
     xxxxxxxxxxxxx
 ENDMAP
 
+NAME:   pf_guarded_unrand_woodcutter
+TAGS:   no_monster_gen
+DEPTH:  D:2-8
+WEIGHT: 3
+ITEM:   woodcutter's axe, hand axe
+MONS:   gnoll, gnoll shaman, gnoll sergeant
+: if you.depth() < 4 then
+SUBST:  2 = 1
+SUBST:  1 = 1..
+: elseif you.depth() < 6 then
+NSUBST: 2 = 2 / 1
+: else
+SUBST:  1 = 1 / 3
+: end
+MAP
+     xxxxxxxxx
+    xxtttttttxx
+   xxttte.1.ttx
+ xxxttt..ccnccx
+xxttt1..1c..2cx
+xtte..t1.n1..cxx
+@........+.3dccx
+xtt...1t.n1..cxx
+xxttt1e.1c..2cx
+ xxxttt..ccnccx
+   xxttt.1.ettx
+    xxtttttttxx
+     xxxxxxxxx
+ENDMAP
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
