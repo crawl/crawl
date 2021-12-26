@@ -625,16 +625,6 @@ Excruciating
 w:5
 Lethal
 %%%%
-Charms adj
-
-Helpful
-
-Lucky
-
-Assistive
-
-Boosting
-%%%%
 Hexes adj
 
 Enchanting
