@@ -87,7 +87,7 @@ NAME:   spider_nest_entry_funnel_web
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web / floor
-MONS:   w:5 wolf spider / jumping spider / redback / nothing
+MONS:   w:5 wolf spider / jumping spider / redback / culicivora / w:15 nothing
 MAP
       xxxxxx
      xx11.1x
@@ -124,7 +124,7 @@ ENDMAP
 NAME:   spider_nest_entry_rubble
 TAGS:   spider_entry patrolling no_monster_gen transparent
 KFEAT:  O = enter_spider_nest
-KMONS:  O = wolf spider / tarantella / redback / jumping spider
+KMONS:  O = wolf spider / tarantella / redback / jumping spider / culicivora
 SUBST:  x = ..xx^
 KFEAT:  ^ = web
 MAP
@@ -147,7 +147,7 @@ KFEAT: O = enter_spider_nest
 NSUBST: A = 2:x / '
 SUBST: X = xxx', ' = .....^^1
 KFEAT: ^ = web
-KMONS: 1 = redback / jumping spider
+KMONS: 1 = redback / jumping spider / culicivora
 MAP
  xxxxxxxxx
 xxXxXxXxXxx
@@ -169,7 +169,7 @@ TAGS: spider_entry ruin_lair transparent
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
 KMONS: 1 = scorpion w:20 / worm / giant cockroach
-KMONS: 2 = demonic crawler / boulder beetle / hornet
+KMONS: 2 = demonic crawler / boulder beetle / torpor snail
 MAP
 ...........
 ..xx...xx..
