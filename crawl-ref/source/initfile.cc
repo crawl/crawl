@@ -182,6 +182,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
+        new BoolGameOption(SIMPLE_NAME(autopickup_decide_on_sight), true),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
         new BoolGameOption(SIMPLE_NAME(show_game_time), true),
         new BoolGameOption(SIMPLE_NAME(equip_bar), false),

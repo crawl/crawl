@@ -965,11 +965,28 @@ static bool _id_floor_item(item_def &item)
         if (fully_identified(item))
             return false;
 
-        // Same logic as wands here, may be viable to merge the two cases.
-        bool should_pickup = item_needs_autopickup(item);
-        set_ident_type(item, true);
-        if (!should_pickup)
-            set_item_autopickup(item, AP_FORCE_OFF);
+        // This is a weird option—basically, some people might want to change
+        // autopickup settings as soon as they spot an item but still expect
+        // to pick up the item, which is what the true case is for. Other
+        // people may want to disable autopickup for the item as soon as it's
+        // floor ID'd, which is what the second case is for.
+        if (Options.autopickup_decide_on_sight)
+        {
+            // autopickup hack for previously-unknown items
+            if (item_needs_autopickup(item))
+                item.props[NEEDS_AUTOPICKUP_KEY] = true;
+            identify_item(item);
+            // but skip ones that we discover to be useless
+            if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+                item.props.erase(NEEDS_AUTOPICKUP_KEY);
+        }
+        else
+        {
+            bool should_pickup = item_needs_autopickup(item);
+            set_ident_type(item, true);
+            if (!should_pickup)
+                set_item_autopickup(item, AP_FORCE_OFF);
+        }
         return true;
     }
 

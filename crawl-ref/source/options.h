@@ -496,6 +496,8 @@ public:
     bool        regex_search; // whether to default to regex search for ^F
     bool        autopickup_search; // whether to annotate stash items with
                                    // autopickup status
+    bool        autopickup_decide_on_sight; // Mark an item for pickup when you
+                                            // first spot it
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

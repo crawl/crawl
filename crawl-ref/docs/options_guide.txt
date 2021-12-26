@@ -25,8 +25,8 @@ The contents of this text are:
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, assign_item_slot, pickup_menu_limit,
-                drop_filter
+                autopickup_decide_on_sight, pickup_thrown, assign_item_slot,
+                pickup_menu_limit, drop_filter
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -562,6 +562,13 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
 default_autopickup = true
         When set to false, the game starts with autopickup turned off.
         You can still toggle autopickup in-game with Ctrl-A.
+
+autopickup_decide_on_sight = true
+        When set to true, equipment on the ground will be marked to be picked
+        up as soon as you spot them, regardless of autopickup settings
+        changing after the equipment is spotted. When set to false, changing
+        the autopickup settings will not cause the newly-discovered equipment
+        to remain marked for pickup.
 
 pickup_thrown = true
         pickup_thrown = true causes autopickup to pick up thrown/fired
