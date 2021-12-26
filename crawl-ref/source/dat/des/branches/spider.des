@@ -1988,6 +1988,102 @@ xx...^...xx
    @
 ENDMAP
 
+NAME:   hellmonk_motheaten_closet
+TAGS:   no_monster_gen no_item_gen
+MONS:   ghost moth / sun moth / moth of wrath
+ITEM:   robe plus:-2 w:25 / hat plus:-2 / pair of gloves plus:-2
+ITEM:   robe randart w:25 / hat randart / pair of gloves randart
+NSUBST: d = 1:e / *:d, 1 = 2:1 / *=.
+MAP
+ xxxxxxxx
+ xddddddx
+xx++++++xx
+x1..11..1x
+xx1....1xx
+ x......x
+ xxx..xxx
+    @@
+ENDMAP
+
+NAME:   hellmonk_test_site
+TAGS:   no_monster_gen no_trap_gen ruin transparent
+MONS:   radroach
+NSUBST: ' = 1:1 / * = x:4 .
+SUBST:  G = G..
+FTILE:  x.G1 = floor_sand
+TILE:   x = wall_sandstone
+TILE:   G = dngn_crumbled_column
+MAP
+     @
+  xxx.xxx
+ xxx...xxx
+ xG.....Gx
+ x.'''''.x
+ x.'xxx'.x
+ x.'xxx'.x
+ x.'''''.x
+ xG.....Gx
+ xxx...xxx
+  xxx.xxx
+     @
+ENDMAP
+
+NAME:   hellmonk_narrow_tunnel
+TAGS:   transparent
+MONS:   steelbarb worm / demonic crawler
+NSUBST: . = 16 = 1... / *:.
+MAP
+   xxxx
+  xxxxxx
+ xx....xx
+xxx.xx.xxx
+xx..xx..xx
+xxx.xx.xxx
+xx..xx..xx
+xxx.xx.xxx
+xx..xx..xx
+xxx.xx.xxx
+@...xx...@
+xxxxxxxxxx
+ENDMAP
+
+NAME:   hellmonk_deceptive_appearances
+TAGS:   transparent ruin
+MONS:   jorogumo, shapeshifter
+MAP
+ xxxx       xxxx
+xx..xx     xx..xx
+x1......@......2x
+xx..xx     xx..xx
+ xxxx       xxxx
+ENDMAP
+
+NAME:   hellmonk_spider_spawner
+TAGS:   transparent no_monster_gen
+MONS:   broodmother
+SUBST:  0 = 0...
+MAP
+    x@x
+    x.x
+    x.x
+  xxx.xxx
+ xx.....xx
+ x.......x
+xx..0x0..xx
+x0..xxx..0x
+x..xxxxx..x
+x0xxxxxxx0x
+x..xxxxx..x
+x0.0xxx0.0x
+xx...x...xx
+ x.x...x.x
+ x0.0.0.0x
+ xx..x..xx
+  xx0.0xx
+   xx1xx
+    xxx
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Spider ending vaults
