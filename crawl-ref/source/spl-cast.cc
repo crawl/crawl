@@ -2317,6 +2317,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 
+    case SPELL_BORGNJORS_VILE_CLUTCH:
+        return cast_vile_clutch(powc, beam, fail);
+
     case SPELL_EXCRUCIATING_WOUNDS:
         return cast_excruciating_wounds(powc, fail);
 

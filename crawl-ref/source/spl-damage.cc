@@ -63,6 +63,7 @@
 #define SEARING_RAY_AIM_SPOT_KEY "searing_ray_aimed_at_spot"
 #define SEARING_RAY_TARGET_KEY "searing_ray_target"
 #define SEARING_RAY_MID_KEY "searing_ray_mid"
+#define SEARING_RAY_POWER_KEY "searing_ray_power"
 
 static bool _act_worth_targeting(const actor &caster, const actor &a)
 {
@@ -2954,6 +2955,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
             mpr("Your toxic radiance grows in intensity.");
 
         you.increase_duration(DUR_TOXIC_RADIANCE, 2 + random2(pow/20), 15);
+        you.props[TOXIC_RADIANCE_POWER_KEY].get_int() = pow;
         toxic_radiance_effect(&you, 10, true);
 
         flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
@@ -3007,7 +3009,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
 {
     int pow;
     if (agent->is_player())
-        pow = calc_spell_power(SPELL_OLGREBS_TOXIC_RADIANCE, true);
+        pow = you.props[TOXIC_RADIANCE_POWER_KEY].get_int();
     else
         pow = agent->as_monster()->get_hit_dice() * 8;
 
@@ -3238,6 +3240,7 @@ spret cast_flame_wave(int pow, bool fail)
     beam.explode(true, true);
 
     you.props[FLAME_WAVE_KEY] = 0;
+    you.props[FLAME_WAVE_POWER_KEY].get_int() = pow;
 
     string msg = "(Press <w>%</w> to intensify the flame waves.)";
     insert_commands(msg, { CMD_WAIT });
@@ -3269,7 +3272,7 @@ void handle_flame_wave()
         return;
     }
 
-    const int pow = calc_spell_power(SPELL_FLAME_WAVE, true);
+    const int pow = you.props[FLAME_WAVE_POWER_KEY].get_int();
     bolt beam;
     if (!_prep_flame_wave(beam, pow, lvl))
     {
@@ -3313,6 +3316,7 @@ spret cast_searing_ray(int pow, bolt &beam, bool fail)
         you.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
                                                             || !mons;
         you.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
+        you.props[SEARING_RAY_POWER_KEY].get_int() = pow;
 
         if (mons)
             you.props[SEARING_RAY_MID_KEY].get_int() = mons->mid;
@@ -3359,7 +3363,7 @@ void handle_searing_ray()
     }
 
     const zap_type zap = zap_type(ZAP_SEARING_RAY);
-    const int pow = calc_spell_power(SPELL_SEARING_RAY, true);
+    const int pow = you.props[SEARING_RAY_POWER_KEY].get_int();
 
     if (!you.props[SEARING_RAY_AIM_SPOT_KEY].get_bool())
     {
@@ -3881,6 +3885,7 @@ spret cast_frozen_ramparts(int pow, bool fail)
 
     env.level_state |= LSTATE_ICY_WALL;
     you.props[FROZEN_RAMPARTS_KEY] = you.pos();
+    you.props[FROZEN_RAMPARTS_POWER_KEY].get_int() = pow;
 
     mpr("The walls around you are covered in ice.");
     you.duration[DUR_FROZEN_RAMPARTS] = random_range(40 + pow,

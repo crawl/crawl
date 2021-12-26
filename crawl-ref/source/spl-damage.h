@@ -15,6 +15,9 @@ class dist;
 const int DEFAULT_SHATTER_DICE = 3;
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
+#define FLAME_WAVE_POWER_KEY "flame_wave_power"
+#define FROZEN_RAMPARTS_POWER_KEY "frozen_ramparts_power"
+#define TOXIC_RADIANCE_POWER_KEY "toxic_radiance_power"
 #define VORTEX_POWER_KEY "vortex_power"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);

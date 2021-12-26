@@ -30,6 +30,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "state.h"
 #include "terrain.h"
 #include "transform.h"
@@ -855,7 +856,7 @@ int player::constriction_damage(bool direct) const
         return roll_dice(2, div_rand_round(strength(), 5));
 
     return roll_dice(2, div_rand_round(70 +
-                calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
+               you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
 }
 
 bool player::is_dragonkind() const

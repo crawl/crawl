@@ -6272,7 +6272,7 @@ bool monster::attempt_escape(int attempts)
         if (has_ench(ENCH_VILE_CLUTCH))
         {
             randfact = roll_dice(1, 10 + div_rand_round(
-                    calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 5));
+                           you.props[VILE_CLUTCH_POWER_KEY].get_int(), 5));
         }
         else
             randfact = roll_dice(1, 3 + you.experience_level);

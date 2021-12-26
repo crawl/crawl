@@ -155,3 +155,13 @@ bool enfeeble_monster(monster &mon, int pow)
 
     return simple_monster_message(mon, " is enfeebled!");
 }
+
+spret cast_vile_clutch(int pow, bolt &beam, bool fail)
+{
+    spret result = zapping(ZAP_VILE_CLUTCH, pow, beam, true, nullptr, fail);
+
+    if (result == spret::success)
+        you.props[VILE_CLUTCH_POWER_KEY].get_int() = pow;
+
+    return result;
+}

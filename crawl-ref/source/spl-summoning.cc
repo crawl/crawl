@@ -309,13 +309,14 @@ spret cast_dragon_call(int pow, bool fail)
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
     you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
+    you.props[DRAGON_CALL_POWER_KEY].get_int() = pow;
 
     return spret::success;
 }
 
 static void _place_dragon()
 {
-    const int pow = calc_spell_power(SPELL_DRAGON_CALL, true);
+    const int pow = you.props[DRAGON_CALL_POWER_KEY].get_int();
     monster_type mon = _choose_dragon_type(pow, you.religion, true);
     int mp_cost = random_range(2, 3);
 
@@ -1908,8 +1909,6 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return spret::success;
 }
 
-
-
 static spell_type servitor_spells[] =
 {
     // primary spells
@@ -1958,13 +1957,11 @@ bool spell_servitorable(spell_type to_serve)
  *
  * @param mon       The spellforged servitor to be initialized.
  * @param caster    The entity summoning the servitor; may be the player.
+ * @param pow       The caster's spellpower.
  */
-static void _init_servitor_monster(monster &mon, const actor& caster)
+static void _init_servitor_monster(monster &mon, const actor& caster, int pow)
 {
     const monster* caster_mon = caster.as_monster();
-    const int pow = caster_mon ?
-                        6 * caster_mon->spell_hd(SPELL_SPELLFORGED_SERVITOR) :
-                        calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     mon.set_hit_dice(9 + div_rand_round(pow, 14));
     mon.max_hit_points = mon.hit_points = 60 + roll_dice(7, 5); // 67-95
@@ -1996,11 +1993,11 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
     mon.props[CUSTOM_SPELLS_KEY].get_bool() = true;
 }
 
-void init_servitor(monster* servitor, actor* caster)
+void init_servitor(monster* servitor, actor* caster, int pow)
 {
     ASSERT(servitor); // XXX: change to monster &servitor
     ASSERT(caster); // XXX: change to actor &caster
-    _init_servitor_monster(*servitor, *caster);
+    _init_servitor_monster(*servitor, *caster, pow);
 
     if (you.can_see(*caster))
     {
@@ -2025,7 +2022,7 @@ void init_servitor(monster* servitor, actor* caster)
     servitor->props[IDEAL_RANGE_KEY].get_int() = shortest_range;
 }
 
-spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
+spret cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
     if (rude_stop_summoning_prompt())
         return spret::abort;
@@ -2036,7 +2033,7 @@ spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
                                 SPELL_SPELLFORGED_SERVITOR);
 
     if (monster* mon = create_monster(mdata))
-        init_servitor(mon, &you);
+        init_servitor(mon, &you, pow);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 

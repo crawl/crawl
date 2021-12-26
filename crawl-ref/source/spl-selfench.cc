@@ -38,7 +38,7 @@ spret cast_deaths_door(int pow, bool fail)
     you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
                                        + (random2(pow) / 10));
 
-    const int hp = max(calc_spell_power(SPELL_DEATHS_DOOR, true) / 10, 1);
+    const int hp = max(pow / 10, 1);
     you.attribute[ATTR_DEATHS_DOOR_HP] = hp;
     set_hp(hp);
 
