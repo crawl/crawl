@@ -888,6 +888,9 @@ int weapon_min_delay_skill(const item_def &weapon)
 int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
+    if (is_unrandom_artefact(weapon, UNRAND_WOODCUTTERS_AXE))
+        return base;
+
     int min_delay = base/2;
 
     // Short blades can get up to at least unarmed speed.

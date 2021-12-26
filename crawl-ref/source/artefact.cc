@@ -1336,9 +1336,12 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
 static int _unrand_weight(int unrand_index, int item_level)
 {
     // TODO: turn this into a max preferred depth field in art-data.txt
+    // TODO: add more existing unrands here
     switch (unrand_index) {
     case UNRAND_DANYLAS_GLOVES:
         return item_level < 7 ? 100 : 1;
+    case UNRAND_WOODCUTTERS_AXE:
+        return item_level < 10 ? 100 : 1;
     default:
         return 10;
     }

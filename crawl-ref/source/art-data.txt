@@ -1611,6 +1611,16 @@ VALUE:    100
 DESCRIP:  It heals its wearer when they drink unknown potions.
 +It restores its wearer's MP when they read unknown scrolls.
 
+NAME:       woodcutter's axe
+OBJ:        OBJ_WEAPONS/WPN_WAR_AXE
+FALLBACK:   OBJ_WEAPONS/WPN_BROAD_AXE
+PLUS:       8
+BASE_DELAY: -5
+COLOUR:     BROWN
+TILE:       urand_woodcutters_axe
+TILE_EQ:    axe_short
+BRAND:      SPWPN_VORPAL
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -703,3 +703,9 @@ Danyla's gloves
 A pair of long ultramarine gloves, worn by a famed experimental alchemist in an
 age long past. They channel the energy of discovery, empowering their wearer with
 the force created by a blind step from ignorance to certainty.
+%%%%
+woodcutter's axe
+
+A weapon that chops foes down as steadily and methodically as a forester cutting
+wood. The unchanging rhythm of its work has settled on it with the force of
+natural law, and no amount of force or skill can make it swing faster or slower.
