@@ -1892,7 +1892,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
                 // If this monster would otherwise give xp but didn't because
                 // it grants no reward or was neutral, give a message.
-                if (!gives_player_xp
+                if ((!gives_player_xp
+                     || player_in_branch(BRANCH_ABYSS))
                     && mons_class_gives_xp(mons.type)
                     && !summoned
                     && !fake_abjure
