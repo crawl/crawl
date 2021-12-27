@@ -8319,6 +8319,36 @@ xxttt1e.1c..2cxx
     xxtttttttxx
      xxxxxxxxx
 ENDMAP
+
+# Beogh's priests aren't fond of competition.
+NAME:   pf_guarded_unrand_meek
+TAGS:   no_monster_gen
+DEPTH:  D:3-9
+WEIGHT: 3
+ITEM:   staff of the Meek no_pickup
+: dgn.delayed_decay(_G, '_', 'human corpse')
+MONS:  orc, orc priest, orc warrior
+: if you.depth() < 5 then
+SUBST:  2 = .
+SUBST:  1 = 1.
+SUBST:  3 = 2
+: elseif you.depth() >= 8 then
+SUBST:  1 = 123
+: end
+KFEAT: G = orcish_idol
+KFEAT: _ = altar_beogh
+MAP
+  ccc ccc
+cccGcccGcc
+c1...c.1.c
+c.1cc..2Gcc
+@...c1.3d_c
+c.1cc..2Gcc
+c1...c.1.c
+cccGcccGcc
+  ccc ccc
+ENDMAP
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
