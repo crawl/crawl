@@ -131,7 +131,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
     ASSERT(!exploss || expmsg != nullptr);
     const int exppoint = duration_expire_point(dur);
-    ASSERTM(!exploss || exploss * BASELINE_DELAY < exploss,
+    ASSERTM(!exploss || exploss * BASELINE_DELAY < exppoint,
             "expiration delay loss %d not less than duration expiration point %d",
             exploss * BASELINE_DELAY, exppoint);
 
