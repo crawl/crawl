@@ -62,7 +62,7 @@
 
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 
-static const int ABYSSAL_RUNE_MAX_ROLL = 200;
+static const int ABYSSAL_RUNE_MAX_ROLL = 60;
 
 abyss_state abyssal_state;
 
@@ -296,80 +296,6 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask)
     }
 
     return false;
-}
-
-// Returns true if items can be generated on the given square.
-static bool _abyss_square_accepts_items(const map_bitmask &abyss_genlevel_mask,
-                                        coord_def p)
-{
-    return abyss_genlevel_mask(p)
-           && env.grid(p) == DNGN_FLOOR
-           && env.igrid(p) == NON_ITEM
-           && !map_masked(p, MMT_VAULT);
-}
-
-static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
-                               bool placed_abyssal_rune)
-{
-    // During game start, number and level of items mustn't be higher than
-    // that on level 1.
-    int num_items = 150, items_level = 52;
-    int items_placed = 0;
-
-    if (player_in_starting_abyss())
-    {
-        num_items   = 3 + roll_dice(3, 11);
-        items_level = 0;
-    }
-
-    const int abyssal_rune_roll = _abyssal_rune_roll();
-    bool should_place_abyssal_rune = false;
-    vector<coord_def> chosen_item_places;
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-    {
-        if (_abyss_square_accepts_items(abyss_genlevel_mask, *ri))
-        {
-            if (items_placed < num_items && one_chance_in(200))
-            {
-                // [ds] Don't place abyssal rune in this loop to avoid
-                // biasing rune placement toward the north-west of the
-                // abyss level. Instead, make a note of whether we
-                // decided to place the abyssal rune at all, and if we
-                // did, place it randomly somewhere in the map at the
-                // end of the item-gen pass. We may as a result create
-                // (num_items + 1) items instead of num_items, which
-                // is acceptable.
-                if (!placed_abyssal_rune && !should_place_abyssal_rune
-                    && abyssal_rune_roll != -1
-                    && x_chance_in_y(abyssal_rune_roll, ABYSSAL_RUNE_MAX_ROLL))
-                {
-                    should_place_abyssal_rune = true;
-                }
-
-                chosen_item_places.push_back(*ri);
-            }
-        }
-    }
-
-    if (!placed_abyssal_rune && should_place_abyssal_rune)
-    {
-        if (_abyss_place_rune(abyss_genlevel_mask))
-            ++items_placed;
-    }
-
-    for (const coord_def &place : chosen_item_places)
-    {
-        if (_abyss_square_accepts_items(abyss_genlevel_mask, place))
-        {
-            int thing_created = items(true, OBJ_RANDOM, OBJ_RANDOM,
-                                      items_level);
-            move_item_to_grid(&thing_created, place);
-            if (thing_created != NON_ITEM)
-                items_placed++;
-        }
-    }
-
-    return items_placed;
 }
 
 static string _who_banished(const string &who)
@@ -1391,7 +1317,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ASSERT_RANGE(env.grid(*ri), DNGN_UNSEEN + 1, NUM_FEATURES);
 }
 
-static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
+static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask, bool placed_abyssal_rune)
 {
     unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
 
@@ -1433,6 +1359,14 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
         }
     }
 
+    const int abyssal_rune_roll = _abyssal_rune_roll();
+    if (!placed_abyssal_rune && abyssal_rune_roll != -1
+        && x_chance_in_y(abyssal_rune_roll, ABYSSAL_RUNE_MAX_ROLL))
+    {
+        if (_abyss_place_rune(abyss_genlevel_mask))
+            ++vaults_placed;
+    }
+
     return vaults_placed;
 }
 
@@ -1448,12 +1382,11 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
     // Make sure we're not about to link bad items.
     debug_item_scan();
-    _abyss_place_vaults(abyss_genlevel_mask);
+    _abyss_place_vaults(abyss_genlevel_mask, placed_abyssal_rune);
 
     // Link the vault-placed items.
     _abyss_postvault_fixup();
 
-    _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune);
     setup_environment_effects();
 
     _ensure_player_habitable(true);
