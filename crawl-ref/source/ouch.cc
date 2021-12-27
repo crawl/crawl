@@ -1031,6 +1031,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _powered_by_pain(dam);
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
+            refresh_meek_bonus();
             if (death_type != KILLED_BY_POISON)
             {
                 _maybe_corrode();

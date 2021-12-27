@@ -1350,6 +1350,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_LEAR:
     case UNRAND_OCTOPUS_KING:
     case UNRAND_AUGMENTATION:
+    case UNRAND_MEEK:
         return 11;
     default:
         return -1;

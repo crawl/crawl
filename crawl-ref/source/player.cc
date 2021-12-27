@@ -5989,6 +5989,15 @@ int player::corrosion_amount() const
     return corrosion;
 }
 
+static int _meek_bonus()
+{
+    const int scale_bottom = 27; // full bonus given at this HP and below
+    const int hp_per_ac = 4;
+    const int max_ac = 7;
+    const int scale_top = scale_bottom + hp_per_ac * max_ac;
+    return min(max(0, (scale_top - you.hp) / hp_per_ac), max_ac);
+}
+
 int player::armour_class_with_specific_items(vector<const item_def *> items) const
 {
     const int scale = 100;
@@ -6010,7 +6019,11 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
         AC += 300;
 
     if (duration[DUR_SPWPN_PROTECTION])
+    {
         AC += 700;
+        if (player_equip_unrand(UNRAND_MEEK))
+            AC += _meek_bonus() * scale;
+    }
 
     AC -= 400 * corrosion_amount();
 
@@ -8190,6 +8203,30 @@ void refresh_weapon_protection()
         mpr("Your weapon exudes an aura of protection.");
 
     you.increase_duration(DUR_SPWPN_PROTECTION, 3 + random2(2), 5);
+    you.redraw_armour_class = true;
+}
+
+void refresh_meek_bonus()
+{
+    const string MEEK_KEY = "meek_ac_key";
+    const bool meek_possible = you.duration[DUR_SPWPN_PROTECTION]
+                            && player_equip_unrand(UNRAND_MEEK);
+    const int bonus_ac = _meek_bonus();
+    if (!meek_possible || !bonus_ac)
+    {
+        if (you.props.exists(MEEK_KEY))
+        {
+            you.props.erase(MEEK_KEY);
+            you.redraw_armour_class = true;
+        }
+        return;
+    }
+
+    const int last_bonus = you.props[MEEK_KEY].get_int();
+    if (last_bonus == bonus_ac)
+        return;
+
+    you.props[MEEK_KEY] = bonus_ac;
     you.redraw_armour_class = true;
 }
 

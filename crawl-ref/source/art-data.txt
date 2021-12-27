@@ -1630,6 +1630,16 @@ BRAND:      SPWPN_DRAINING
 INSCRIP:    coup de grace
 DBRAND:     It may instantly kill foes which have little health.
 
+NAME:       staff of the Meek
+OBJ:        OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:       7
+COLOUR:     WHITE
+TILE:       urand_meek
+TILE_EQ:    staff_mage_two
+BRAND:      SPWPN_PROTECTION
+INSCRIP:    meekguard
+DBRAND:     It provides extra protection to wielders with little health.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -801,6 +801,7 @@ static void _decrement_durations()
         activate_sanguine_armour();
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
+    refresh_meek_bonus();
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
     {
