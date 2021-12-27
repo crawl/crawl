@@ -1747,11 +1747,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 
         if (check_validity)
         {
-            // manually skip spells that have setup behavior interacts
-            // with the dungeon, and can get crashes/invalid memory accesses.
-            // TODO: is there a better way to handle this?
-            if (spell_cast == SPELL_LRD || spell_cast == SPELL_GHOSTLY_SACRIFICE)
-                return true;
             bolt beam = mons_spell_beam(mons, spell_cast, 1, true);
             return beam.flavour != NUM_BEAMS;
         }
@@ -3406,6 +3401,8 @@ static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
     coord_def best_target = coord_def(GXM+1, GYM+1); // initially out of bounds
+    if (!in_bounds(caster.pos()))
+        return best_target;
     tracer.ex_size = 1;
 
     for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
@@ -4659,6 +4656,8 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 static coord_def _mons_fragment_target(const monster &mon)
 {
     coord_def target(GXM+1, GYM+1);
+    if (!in_bounds(mon.pos()))
+        return target;
     const monster *mons = &mon; // TODO: rewriteme
     const int pow = mons_spellpower(*mons, SPELL_LRD);
 
