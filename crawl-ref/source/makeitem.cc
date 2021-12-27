@@ -777,8 +777,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
                                       12, SPARM_PROTECTION);
 
     case ARM_ORB:
-        return random_choose_weighted(1, SPARM_PONDEROUSNESS,
-                                      1, SPARM_LIGHT,
+        return random_choose_weighted(1, SPARM_LIGHT,
                                       1, SPARM_RAGE,
                                       1, SPARM_MAYHEM,
                                       1, SPARM_GUILE,
