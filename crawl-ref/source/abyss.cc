@@ -1650,21 +1650,21 @@ void abyss_morph()
 
 // Force the player one level deeper in the abyss during an abyss teleport with
 // probability:
-//   (XL + 4 - Depth)^2 / (27^2 * (Depth + 5))
+//   (max(0, XL - Depth))^2 / 27^2 * 3
 //
 // Consequences of this formula:
 // - Chance to be pulled deeper increases with XL and decreases with current
 //   abyss depth.
-// - Characters at XL 1 have about a 0.1% chance of getting pulled from A:1.
+// - Characters won't get pulled to a depth higher than their XL
 // - Characters at XL 13 have chances for getting pulled from A:1/A:2/A:3/A:4
-//   of about 5.9%/4.4%/3.3%/2.6%.
+//   of about 6.6%/5.5%/4.5%/3.7%.
 // - Characters at XL 27 have chances for getting pulled from A:1/A:2/A:3/A:4
-//   of about 20.6%/16.5%/13.4%/11.1%.
+//   of about 31%/28.5%/26.3%/24.1%.
 static bool _abyss_force_descent()
 {
     const int depth = level_id::current().depth;
-    const int xl_factor = you.experience_level + 4 - depth;
-    return x_chance_in_y(xl_factor * xl_factor, 729 * (5 + depth));
+    const int xl_factor = max(0, you.experience_level - depth);
+    return x_chance_in_y(xl_factor * xl_factor, 729 * 3);
 }
 
 void abyss_teleport()
