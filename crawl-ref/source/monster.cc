@@ -712,7 +712,7 @@ bool monster::is_silenced() const
             || has_ench(ENCH_MUTE)
             || (has_ench(ENCH_WATER_HOLD)
                 || has_ench(ENCH_WATERLOGGED))
-               && res_water_drowning() <= 0;
+               && !res_water_drowning();
 }
 
 bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
@@ -3755,21 +3755,11 @@ int monster::res_elec() const
     return u;
 }
 
-int monster::res_water_drowning() const
+bool monster::res_water_drowning() const
 {
-    int rw = 0;
-
-    if (is_unbreathing())
-        rw++;
-
     habitat_type hab = mons_habitat(*this, true);
-    if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
-        rw++;
 
-    if (get_mons_resist(*this, MR_VUL_WATER))
-        rw--;
-
-    return sgn(rw);
+    return is_unbreathing() || hab == HT_WATER || hab == HT_AMPHIBIOUS;
 }
 
 int monster::res_poison(bool temp) const

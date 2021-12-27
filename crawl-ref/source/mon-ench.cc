@@ -1761,7 +1761,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WATER_HOLD:
         if (!clear_far_engulf())
         {
-            if (res_water_drowning() <= 0)
+            if (!res_water_drowning())
             {
                 lose_ench_duration(me, -speed_to_duration(speed));
                 int dur = speed_to_duration(speed); // sequence point for randomness

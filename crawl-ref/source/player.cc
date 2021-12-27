@@ -6200,18 +6200,11 @@ int player::res_elec() const
     return player_res_electricity();
 }
 
-int player::res_water_drowning() const
+bool player::res_water_drowning() const
 {
-    int rw = 0;
-
-    if (is_unbreathing()
-        || species::can_swim(species) && !form_changed_physiology()
-        || form == transformation::ice_beast)
-    {
-        rw++;
-    }
-
-    return rw;
+    return is_unbreathing()
+           || species::can_swim(species) && !form_changed_physiology()
+           || form == transformation::ice_beast;
 }
 
 int player::res_poison(bool temp) const
