@@ -204,6 +204,7 @@ enum monster_info_flags
     MB_SILENCE_IMMUNE,
     MB_ANTIMAGIC,
     MB_NO_ATTACKS,
+    MB_RES_DROWN,
     NUM_MB_FLAGS
 };
 
