@@ -8258,12 +8258,12 @@ MAP
 ENDMAP
 
 # The orcs have wrecked her old lab...
-NAME:   pf_guarded_unrand_danyla
+NAME:   pf_guarded_unrand_delatra
 TAGS:   no_monster_gen
 DEPTH:  D:2-6
 WEIGHT: 3
 KFEAT:  - = broken_door
-ITEM:   danyla's_gloves, any potion no_pickup / any scroll no_pickup
+ITEM:   delatra's gloves, any potion no_pickup / any scroll no_pickup
 MONS:   orc, orc wizard, orc warrior
 : if you.depth() < 4 then
 SUBST:  1 = 1..

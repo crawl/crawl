@@ -1598,11 +1598,11 @@ DESCRIP:  It shatters if its wearer takes lethal or near-lethal damage,
  preventing the blow and releasing protective dreams that heal and fight
  for the wearer.
 
-NAME:     Danyla's gloves
+NAME:     Delatra's gloves
 OBJ:      OBJ_ARMOUR/ARM_GLOVES
 PLUS:     +1
 COLOUR:   BLUE
-TILE:     urand_danyla
+TILE:     urand_delatra
 TILE_EQ:  glove_blue
 INSCRIP:  ID++
 VALUE:    100
