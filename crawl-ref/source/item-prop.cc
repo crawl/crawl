@@ -2740,6 +2740,12 @@ bool is_shield(const item_def &item)
            && item.sub_type != ARM_ORB;
 }
 
+bool is_offhand(const item_def &item)
+{
+    return item.base_type == OBJ_ARMOUR
+           && get_armour_slot(item) == EQ_SHIELD;
+}
+
 // Returns true if the given item cannot be wielded _by you_ with the given shield.
 // The currently equipped shield is used if no shield is passed in.
 bool is_shield_incompatible(const item_def &weapon, const item_def *shield)

@@ -896,7 +896,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (you.get_mutation_level(MUT_MISSING_HAND) && is_shield(item))
+    if (you.get_mutation_level(MUT_MISSING_HAND) && is_offhand(item))
     {
         if (verbose)
         {
@@ -909,7 +909,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     if (!ignore_temporary && you.weapon()
-        && is_shield(item)
+        && is_offhand(item)
         && is_shield_incompatible(*you.weapon(), &item))
     {
         if (verbose)
