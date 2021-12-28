@@ -2128,6 +2128,28 @@ int player_wizardry(spell_type /*spell*/)
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
 }
 
+static int _sh_from_shield(const item_def &item)
+{
+    if (item.sub_type == ARM_ORB)
+        return 0;
+
+    int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
+                    * (item.sub_type - ARM_TOWER_SHIELD);
+    int base_shield = property(item, PARM_AC) * 2 + size_factor;
+
+    // bonus applied only to base, see above for effect:
+    int shield = base_shield * 50;
+    shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
+
+    shield += item.plus * 200;
+
+    shield += you.skill(SK_SHIELDS, 38)
+            + min(you.skill(SK_SHIELDS, 38), 3 * 38);
+
+    shield += you.dex() * 38 * (base_shield + 13) / 26;
+    return shield;
+}
+
 /**
  * Calculate the SH value used internally.
  *
@@ -2142,27 +2164,7 @@ int player_shield_class()
         return 0;
 
     if (you.shield())
-    {
-        const item_def& item = you.inv[you.equip[EQ_SHIELD]];
-
-        if (item.sub_type == ARM_ORB)
-            return 0;
-
-        int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
-                        * (item.sub_type - ARM_TOWER_SHIELD);
-        int base_shield = property(item, PARM_AC) * 2 + size_factor;
-
-        // bonus applied only to base, see above for effect:
-        shield += base_shield * 50;
-        shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
-
-        shield += item.plus * 200;
-
-        shield += you.skill(SK_SHIELDS, 38)
-                + min(you.skill(SK_SHIELDS, 38), 3 * 38);
-
-        shield += you.dex() * 38 * (base_shield + 13) / 26;
-    }
+        shield += _sh_from_shield(you.inv[you.equip[EQ_SHIELD]]);
 
     // mutations
     // +4, +6, +8 (displayed values)
