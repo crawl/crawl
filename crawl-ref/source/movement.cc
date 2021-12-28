@@ -626,12 +626,8 @@ static spret _rampage_forward(coord_def move)
             continue;
         }
         // Don't rampage if the closest mons is non-hostile or a (non-Fedhas) plant.
-        else if (mon && (mon->friendly()
-                         || mon->neutral()
-                         || mons_is_firewood(*mon)))
-        {
+        else if (mon && (mon->wont_attack() || mons_is_firewood(*mon)))
             return spret::fail;
-        }
         // Okay, the first mons along the tracer is a valid target.
         // Don't need terrain checks because we'll attack the mons.
         else if (mon)

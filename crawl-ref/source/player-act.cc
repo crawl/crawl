@@ -700,7 +700,7 @@ void player::attacking(actor *other)
     if (other->is_monster())
     {
         const monster* mon = other->as_monster();
-        if (!mon->friendly() && !mon->neutral())
+        if (!mon->wont_attack())
             pet_target = mon->mindex();
     }
 }
