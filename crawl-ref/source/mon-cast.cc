@@ -5910,7 +5910,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_IRRADIATE:
-        cast_irradiate(splpow, mons, false);
+        cast_irradiate(splpow, *mons, false);
         return;
 
     case SPELL_CORPSE_ROT:

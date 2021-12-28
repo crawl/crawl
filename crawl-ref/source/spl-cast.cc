@@ -2193,7 +2193,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_scorch(powc, fail);
 
     case SPELL_IRRADIATE:
-        return cast_irradiate(powc, &you, fail);
+        return cast_irradiate(powc, you, fail);
 
     case SPELL_LEDAS_LIQUEFACTION:
         return cast_liquefaction(powc, fail);

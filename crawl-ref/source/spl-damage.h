@@ -42,7 +42,7 @@ int airstrike_space_around(coord_def target, bool count_invis);
 spret cast_shatter(int pow, bool fail);
 dice_def shatter_damage(int pow, monster *mons = nullptr);
 int terrain_shatter_chance(coord_def where, const actor &agent);
-spret cast_irradiate(int powc, actor* who, bool fail);
+spret cast_irradiate(int powc, actor &caster, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
 bool ignite_poison_affects_cell(const coord_def where, actor* agent);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,

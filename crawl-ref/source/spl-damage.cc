@@ -1829,15 +1829,14 @@ dice_def irradiate_damage(int pow, bool random)
  *
  * @param where     The cell in question.
  * @param pow       The power with which the spell is being cast.
- * @param agent     The agent (player or monster) doing the irradiating.
+ * @param agent    The agent (player or monster) doing the irradiating.
  */
-static int _irradiate_cell(coord_def where, int pow, actor *agent)
+static int _irradiate_cell(coord_def where, int pow, const actor &agent)
 {
     actor *act = actor_at(where);
     if (!act || !act->alive())
         return 0;
-
-    bool player = act->is_player();
+    const bool hitting_player = act->is_player();
 
     const dice_def dam_dice = irradiate_damage(pow);
     const int base_dam = dam_dice.roll();
@@ -1846,20 +1845,20 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     if (god_protects(act->as_monster(), false))
         return 0;
 
-    mprf("%s%s blasted with magical radiation%s",
-         player ? "you " : act->name(DESC_THE).c_str(),
-         player ? "are " : "is ",
+    mprf("%s %s blasted with magical radiation%s",
+         act->name(DESC_THE).c_str(),
+         conjugate_verb("are", hitting_player).c_str(),
          attack_strength_punctuation(dam).c_str());
 
-    if (agent->is_player())
+    if (agent.is_player())
         _player_hurt_monster(*act->as_monster(), dam, BEAM_MMISSILE);
     else if (dam)
-        act->hurt(agent, dam, BEAM_MMISSILE);
+        act->hurt(&agent, dam, BEAM_MMISSILE);
 
     if (act->alive())
     {
         // be nice and "only" contaminate the player a lot
-        if (player)
+        if (hitting_player)
             contaminate_player(2000 + random2(1000));
         else
             act->malmutate("");
@@ -1873,55 +1872,54 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
  * the player.
  *
  * @param pow   The power at which the spell is being cast.
- * @param who   The actor doing the irradiating.
+ * @param caster   The actor doing the irradiating.
  * @param fail  Whether the player has failed to cast the spell.
  * @return      spret::abort if the player changed their mind about casting after
  *              realizing they would hit an ally; spret::fail if they failed the
  *              cast chance; spret::success otherwise.
  */
-spret cast_irradiate(int powc, actor* who, bool fail)
+spret cast_irradiate(int powc, actor &caster, bool fail)
 {
-    targeter_radius hitfunc(who, LOS_NO_TRANS, 1, 0, 1);
-    auto vulnerable = [who](const actor *act) -> bool
+    targeter_radius hitfunc(&caster, LOS_NO_TRANS, 1, 0, 1);
+    auto vulnerable = [&caster](const actor *act) -> bool
     {
         return !act->is_player()
-               && !god_protects(who, act->as_monster());
+               && !god_protects(&caster, act->as_monster());
     };
 
-    if (stop_attack_prompt(hitfunc, "irradiate", vulnerable))
+    if (caster.is_player() && stop_attack_prompt(hitfunc, "irradiate", vulnerable))
         return spret::abort;
 
     fail_check();
 
-    ASSERT(who);
-    if (who->is_player())
+    if (caster.is_player())
         mpr("You erupt in a fountain of uncontrolled magic!");
     else
     {
-        simple_monster_message(*who->as_monster(),
+        simple_monster_message(*caster.as_monster(),
                                " erupts in a fountain of uncontrolled magic!");
     }
 
     bolt beam;
     beam.name = "irradiate";
     beam.flavour = BEAM_VISUAL;
-    beam.set_agent(who);
+    beam.set_agent(&caster);
     beam.colour = ETC_MUTAGENIC;
     beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
     beam.range = 1;
     beam.ex_size = 1;
     beam.is_explosion = true;
     beam.explode_delay = beam.explode_delay * 3 / 2;
-    beam.source = who->pos();
-    beam.target = who->pos();
+    beam.source = caster.pos();
+    beam.target = caster.pos();
     beam.hit = AUTOMATIC_HIT;
     beam.explode(true, true);
 
-    apply_random_around_square([powc, who] (coord_def where) {
-        return _irradiate_cell(where, powc, who);
-    }, who->pos(), true, 8);
+    apply_random_around_square([powc, &caster] (coord_def where) {
+        return _irradiate_cell(where, powc, caster);
+    }, caster.pos(), true, 8);
 
-    if (who->is_player())
+    if (caster.is_player())
         contaminate_player(1000 + random2(500));
     return spret::success;
 }
