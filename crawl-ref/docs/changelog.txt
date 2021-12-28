@@ -1,4 +1,4 @@
-Stone Soup 0.28-a0 (through 0.28-a0-1190-g77e1c55)
+Stone Soup 0.28-a0 (through 0.28-a0-1340-g77f64c2)
 --------------------------------------------------
 
 Branches, Environment
@@ -20,7 +20,10 @@ Branches, Environment
 * Six new Wizard's Laboratories are added: Eringya's Formal Garden, Tukima's
   Studio, Yara's Duelist Academy, Borgnjor's Mausoleum, Maxwell's Workshop, and
   Alistair's Party Mansion.
+* Sewer maps have been re-balanced and randomized, and two new sewers added.
+* Bailey maps have been re-balanced and randomized, and three new baileys added.
 * Exploration-based shaft traps can now happen a maximum of once per branch.
+* Artefacts can now generate on D:2-3.
 
 Character
 ---------
@@ -54,6 +57,8 @@ Character
 * Wanderer creation rules have been overhauled again, to give more useful
   starting skills in combination with the items generated. Many new item
   possibilities are added.
+* Formicids now dig at normal movement speed, and each cell dug causes
+  draining.
 
 Gods
 ----
@@ -150,11 +155,35 @@ Items
 * New glove ego: infusion. Gloves of infusion add damage per hit in exchange
   for 1 MP per hit.
 * The archery ego is renamed hurling and now only applies to throwing.
+* New item type: orbs, occupying the shield slot.
+  - Orbs give no SH and impose no shield penalty, but always come with an ego.
+  - Orb egos are all new:
+    * light: a radius 3 halo.
+    * wrath: *Rage (20% chance to berserk on melee hit).
+    * mayhem: chance to frenzy a monster in sight after a kill.
+    * guile: reduce target willpower by 3 pips, and the wearer's will by 2
+      pips.
+    * energy: gives a source of passive channeling. Each source of channeling
+      gives a chance to refund the MP of a cast spell and a chance to backfire.
+      If all sources backfire the caster is confused or drained of
+      intelligence.
 * New unrand: the +3 Mad Mage's Maulers {Infuse+∞ RegenMP Int-3}. These use all
   available MP to give proportional bonus damage to a melee hit.
 * New unrand: the dreamshard necklace {*Dream}. On receiving a lethal or
   near-lethal hit, the dreamshard necklace shatters, averting the blow, healing
   the player, releasing dream allies, and fog. Otherwise does nothing.
+* New "early-game" unrandarts, weighted heavily up to D:6 and much less after:
+  - Delatra's gloves. These gloves heal the wearer for drinking unknown potions
+    and give the wearer MP for reading unknown scrolls.
+  - The woodcutter's axe is a vorpal +8 war axe that always swings at 10 aut
+    regardless of skill and speed modifiers.
+  - The staff of the Meek is a +7 quarterstaff of protection that gives extra
+    AC when below 55 HP.
+  - Throatcutter is a +7 long sword of draining with a 1/3 chance to instantly
+    kill foes that are below 21 HP.
+* The following existing unrandarts are given "early-game" weight: Morg,
+  Devastator, the ratskin cloak, Kryia's mail coat, the trident of the Octopus
+  King, the robe of Augmentation, and Lear's Hauberk.
 * Unrandart tweaks:
   - The staff of Battle now triggers the battlesphere on melee hit (in addition
     to the usual spell trigger).
@@ -170,6 +199,12 @@ Items
   - The ring of the Mage is now a ring of Wizardry and Archmagi.
   - The autumn katana loses Clarity and gains a chance to manifold assault on
     hit.
+  - The glaive of Prune turns the wielder into a prune when paralysed,
+    petrified, or asleep, halving the damage received for the duration.
+  - Lear's Hauberk is reduced to +18.
+  - The trident of the Octopus King loses +Will.
+  - Wucad Mu now counts as two sources of channeling. This means it is twice as
+    likely to refund MP and the probability of backfiring is squared.
 
 Monsters
 --------
@@ -186,6 +221,16 @@ Monsters
   - Searing wretch, a hard hitting fighter that strips fire resistance (Geh)
   - Tainted leviathan, a giant with a ring of miasma and mesmerise (Tar)
   - Putrid mouth, a ghost with poisonous melee and miasma breath (Tar)
+* New Spider monsters:
+  - Pharaoh ants are undead that drain and bind souls on death.
+  - Steelbarb worms are fast, regenerate, resist fire and apply barbs in melee.
+  - Jorogumo are tough, ensnare, cast bolt of draining and have hornet poison
+    melee.
+  - Broodmothers summon spiders and bite to summon spiders.
+  - Culicivora join spider packs with a vampiric bite and heal other.
+  - Sun moths are holy with a single tile halo, sticky flame, and energy bolt.
+  - Radroaches are armoured roaches that cast irradiate, greatly contaminating
+    the player.
 * New monsters: walking tomes, which summon living spells that cast themselves
   at the player. Appearing in Tukima's Studio and Depths.
 * Demonspawn warmongers' Sap Magic effect now causes a short term -Cast after
@@ -199,6 +244,7 @@ Monsters
 * Classed draconians have a fixed colour per job.
 * When Dowan dies Duvessa goes berserk permanently; when Duvessa dies Dowan
   gains haste permanently.
+* If Jiyva dies Dissolution's summon eyeballs is replaced with a cantrip.
 * Ironbound Beastmasters are removed.
 
 Spells
@@ -217,6 +263,9 @@ Spells
 * New spell: Flame Wave (L4 Conjuration/Fire). Flame Wave is a channeled spell
   like Searing ray that hits all surrounding tiles in ever wider waves of
   flame.
+* New spell: Enfeeble (L7 Hexes). Enfeeble irresistibly applies weakness and
+  magic to a single foe. Additionally the target is also dazed and blinded if
+  they fail a willpower check.
 * Searing Ray and Storm Form have reduced power scaling.
 * Storm Form's blinkbolt ability is now always LOS range.
 * Corpse rot now scales with spell power, placing more clouds per corpse and
