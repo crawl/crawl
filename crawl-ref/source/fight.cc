@@ -1018,8 +1018,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if ((mon->good_neutral() || mon->strict_neutral())
-        && is_good_god(you.religion))
+    if (mon->neutral() && is_good_god(you.religion))
     {
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
