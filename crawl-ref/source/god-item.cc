@@ -291,6 +291,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     {
     case OBJ_ARMOUR:
         return get_armour_rampaging(item, true)
+               || get_armour_ego_type(item) == SPARM_MAYHEM
                || is_unrandom_artefact(item, UNRAND_LIGHTNING_SCALES);
     case OBJ_POTIONS:
         return item.sub_type == POT_HASTE;
