@@ -1802,7 +1802,8 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_RAGE:
         return "it berserks the wearer when making melee attacks (20% chance).";
     case SPARM_MAYHEM:
-        return "it causes witnesses of the wearer's kills to go into a frenzy.";
+        return "it causes witnesses of the wearer's kills to go into a frenzy,"
+               " attacking everything nearby with great strength and speed.";
     case SPARM_GUILE:
         return "it weakens the willpower of the wielder and everyone they hex.";
     case SPARM_ENERGY:
