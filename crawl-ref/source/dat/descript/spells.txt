@@ -1365,8 +1365,8 @@ Statue Form spell
 
 Transforms the caster into a slow but extremely robust stone statue. The
 caster's melee damage, both unarmed and with weapons, is substantially
-increased. The caster's stone body is insulated from electricity and gains
-resistance to poison, miasma, and negative energy.
+increased. The caster's stone body is immune to poison and miasma, and gains
+resistance to electricity and negative energy.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
@@ -1410,10 +1410,10 @@ Storm Form spell
 
 Lets the caster walk through the air as a raging, lightning-filled tempest. The
 caster's melee attacks are strengthened, electrified, and strike all adjacent
-foes. The caster also flies, is more evasive, and resists electricity. They can
-launch themselves as a lightning bolt, blasting through everything in their way.
-The damage and evasion granted by storm form are highly dependent on the power
-with which it was cast.
+foes. The caster also flies, is more evasive, gains immunity to poison and
+miasma, and resists electricity. They cana launch themselves as a lightning
+bolt, blasting through everything in their way. The damage and evasion granted
+by storm form are highly dependent on the power with which it was cast.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
