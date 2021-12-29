@@ -2161,16 +2161,18 @@ WEIGHT: 20
 PLACE:  Spider:$
 ORIENT: float
 KITEM:  O = gossamer rune of Zot
-ITEM:   potion of ambrosia ident:type
-MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
-MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
-MONS:   orb spider / nothing, redback / nothing w:15
-NSUBST: 4 = 3:3
-NSUBST: 7 = 3:1 / 1:2
+MONS:   ghost moth, moth of wrath / ghost moth, emperor scorpion
+MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
+MONS:   orb spider / steelbarb worm, redback
+NSUBST: 4 = 3:3 / * = 44.
+NSUBST: 7 = 3 = 111.. / 1:2
+NSUBST: d = 3:d / 3:e / *:f
+SUBST:  5 = 5., 6 = 66...
 SUBST:  W = W..
 SUBST:  - = ....WWW^
 KFEAT:  ^ = web trap
 TILE:   c = wall_brick_gray
+: setup_endvault_loot(_G)
 MAP
     4 xxx        xx       x
   ..4@xcxxxxxxxxxxxxxxx xxx xx
@@ -2180,10 +2182,10 @@ W54.x6W6WcWWW.4..........444.ccccxx
 wW.xcccW666....W5.W....WWWWW..cccxx
  4Wxcc66..wwwwcccccccc..444....cccxx
 @WxxcW-..wwcccc--575dccccc..-.-.cccxx
-  xxcW-4.wcc-.575dwww4.--ccc.-..cccxx
+  xxcW-4.wcc-d575dwww4d--ccc.-..cccxx
   WxcW-..5cd4wwwww3Oww474-3c..W5cccxxx
-  xxccW.4.c-74.wwwwwww4..ccc6-.Wcccxx
-   xxccW4Wcccc...4...4---6-6-6ccccxx
+  xxccW.4.c-74.wwwwwww4ddccc6-.Wcccxx
+   xxccW4Wcccc...4.dd4---6-6-6ccccxx
     xxcW45..-cccc-3cc-66-6-ccccxxxx
      xcccW-...44cccc6-6-6-ccxxxxxx
      xxxcccccc4.....-6-ccccxx  xx
