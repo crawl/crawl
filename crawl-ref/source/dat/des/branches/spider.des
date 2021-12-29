@@ -2250,18 +2250,21 @@ ENDMAP
 NAME:   grunt_spider_rune_parallel
 PLACE:  Spider:$
 ORIENT: east
-NSUBST: O = 1:O / *:P
+NSUBST: O = 1:O / *:d
 KITEM:  O = gossamer rune of Zot
-KITEM:  P = potion of ambrosia ident:type
-MONS:   ghost moth, moth of wrath, emperor scorpion / w:5 spark wasp
-MONS:   wolf spider w:11 / redback / tarantella / jumping spider
-MONS:   orb spider / hornet, redback / nothing
-NSUBST: 1 = 2:1 / 1:1.. / *:4, 4 = 20:4 / 16:. / * = 44...
-SUBST:  2 = 12, " = ^^...6, - = .....w^^
+MONS:   ghost moth, moth of wrath
+MONS:   emperor scorpion / w:5 spark wasp / w:5 radroach / w:5 broodmother
+MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
+MONS:   meliai / steelbarb worm / orb spider, redback
+NSUBST: 1 = 2:1 / 1:1.. / *:4
+NSUBST: d = 3:d / 3:e / *:f
+SUBST:  2 = 12, 4 = 44..., 5 = 55. " = ^^...6, - = .....w^^
+SUBST:  6 = 6.
 KFEAT:  ^ = web trap
 SUBST:  C : cx
 TILE:   c = wall_brick_gray
 KMASK:  w = no_monster_gen
+: setup_endvault_loot(_G)
 MAP
                       xxxxxxxxxxx
               xxxxxxxxxxxxxxxxxxxxxxxx
@@ -2274,11 +2277,11 @@ CCCCCC-----------.C......5.4.4.4...----cccxxxxx
 @"""5......4.4.....C"""".-------.4.""".....--ccxxx
 @..........4..4....CC..---ccccc-.----...3.4.--ccxx
 @-------------......CC--ccc---cc--cc-..4..4..--cxx
-@-ccccccccccc--------cccc---.--cc----.4..44....cxx
-@--------------cccccccc---.4.4----.......4...O-cxx
+@-ccccccccccc--------cccc---.--cc----.4..44.dd-cxx
+@--------------cccccccc---.4.4----.......4..dOdcxx
 @"".......4...----------....4.4........3.4.412Ocxx
-@""5.....4.4....""""".5x.4.4.4...........4...O-cxx
-@"".....4.4.....""""".1...4...4...----4..44...-cxx
+@""5.....4.4....""""".5x.4.4.4.5.........4..dO-cxx
+@"".....4.4.....""""".1...4...4...----4..44.dd-cxx
 @---------.4..."""""..5x...4-------cc-.4..4.--ccxx
 @-ccccccc-----..""""".-------ccccc----..3..--ccxxx
 @-------ccccc---------cccccccc-----."""""---ccxxx
