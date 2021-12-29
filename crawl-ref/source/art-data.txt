@@ -846,7 +846,7 @@ COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       5
-BOOL:     harm, mutate, drain, slow, corrode
+BOOL:     harm, slow, corrode
 
 # start TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
