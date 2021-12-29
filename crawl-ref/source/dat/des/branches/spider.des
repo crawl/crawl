@@ -2105,16 +2105,16 @@ WEIGHT: 20
 ORIENT: northwest
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 MONS:   ghost moth, hornet, emperor scorpion / w:5 spark wasp
-MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
-MONS:   redback / nothing w:15
-MONS:   ghost moth
+MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
+MONS:   redback
 MONS:   orb spider
-KMONS:  8 = moth of wrath / ghost moth
-NSUBST: 6 = 1:6 / 1:46 / *:4
+MONS:   moth of wrath / ghost moth / sun moth
+NSUBST: 1 = 2:1 / 1:41 / *:4
+SUBST:  4 = 444.., 5 = 55..., 6 = 6.
 COLOUR: c = white
-COLOUR: 18O+' = lightgrey
-FTILE:  18cO+' = floor_pebble_lightgray
-NSUBST: ' = 3:3 / 4:2 / 4=32'' / *:'
+COLOUR: 18O+'def = lightgrey
+FTILE:  18cO+'def = floor_pebble_lightgray
+NSUBST: ' = 3:3 / 4:2 / 4=32'' / 2:d / 4 = dee / 4 = ff' / *:'
 TILE:   c = wall_brick_gray
 SUBST:  x : cccx
 SUBST:  X = x
@@ -2125,25 +2125,25 @@ SUBST:  W = W..
 : end
 KFEAT:  Ww = shallow_water
 SUBST:  = : .+
-SUBST:  9 : 7.
+: setup_endvault_loot(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 xxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxxxxxxxX
 xxxxxxxxxxxwwxxxxxxx..5.WxxxxxxxxxxxxxxxxxxxxxX
-xxxxxxxxx644wwwxWW7.W..W.WWWWxxxxxxxxxxxxxxxxxX
-xxxxxxxxxx44wwwW..WxxW.xx.57.WWxxxxxxxxxxxxxxxX
+xxxxxxxxx144wwwxWW6.W..W.WWWWxxxxxxxxxxxxxxxxxX
+xxxxxxxxxx44wwwW..WxxW.xx.56.WWxxxxxxxxxxxxxxxX
 xxxxxxxxxxx4xxW..Wxxx.WxxWWxW..WxwwwxxxxxxxxxxX
-xxxxxxxxxxxxxW.5WxxxxW..xxxxxW..Wwwwww46xxxxxxX
+xxxxxxxxxxxxxW.5WxxxxW..xxxxxW..Wwwwww41xxxxxxX
 xxxxxxxxxxxxxW..Wxcccc..ccccxW.5.Wxxw444xxxxxxX
-xxxxxxxxxxxxxW.Wxxc1'c++c'8cxxWW..Wxxxx4xxxxxxX
+xxxxxxxxxxxxxW.Wxxc1'c++c'7cxxWW..Wxxxx4xxxxxxX
 xxxxxxxxxxxxW.Wxxxc'''cc'''cxxxxW.WxxxxxxxxxxxX
 xxxxxxxxxxxW5Wxxxxc''''''''ccccxxW.WWxxxxxxxxxX
 xxxxxxxxxxxW.Wx44xc''''''''+'OcxxWW5.WxxxxxxxxX
 xxxxxxxxxxx.Wwww4xcccccccccccccxxxwW..WxxxxxxxX
 xxxxxxxxxWW.Wwww4xxxxxxxxxxxxxx44wwwW.WxxxxxxxX
-xxxxxxxxW..Wxx46xxxWWWWxxWWWxxx444xxxW.WWxxxxxX
-xxxxxxxxW5.WxxxxxWW...4WW4..WWxx6xxxxxW..WxxxxX
+xxxxxxxxW..Wxx41xxxWWWWxxWWWxxx444xxxW.WWxxxxxX
+xxxxxxxxW5.WxxxxxWW...4WW4..WWxx1xxxxxW..WxxxxX
 xxxxxxxxxW.WxxxxxW.WxW44444W..WxxxxxxxW5.WxxxxX
 xxxxxxxxW..WxxxW.5WxxW.4.WxxW5WxxxxxW...WxxxxxX
 xxxxxxxxxW..WxW..WxxxxW..WxxW..WxxW..WWWxxxxxxX
@@ -2151,7 +2151,7 @@ xxxxxxxxxxW.5.W..WxxxxxW...WxxW..W..WWxxxxxxXXX
 xxxxxxxxxxxWW...Wxxxxxxx...xxxxWW5WWxxxxxXXXX
 xxxxxxxxxxxxxWWWxxxxxxxx===xxxxxxWxxxxxXXX
 xxxxxxxxxxxxxxxxxxxxxxxx+++xxxxxxxxxxxXX
-XXXXXXXXXXXXXXXXXXXXX99.....99XXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX66.....66XXXXXXXXX
 XXXXXXXXXXXXXXXXXX@@@@@@@@@@@@@@@XXXXXX
 ENDMAP
 
