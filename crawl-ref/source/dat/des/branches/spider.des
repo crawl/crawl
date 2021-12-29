@@ -2201,29 +2201,31 @@ TAGS:   no_pool_fixup
 ORIENT: southwest
 KITEM:  O = gossamer rune of zot
 KMONS:  O = ghost moth
-KITEM:  *d = potion of ambrosia ident:type
+KITEM:  * = potion of ambrosia ident:type
 KMONS:  * = emperor scorpion
-MONS:   ghost moth, ghost moth / moth of wrath
-MONS:   hornet / w:5 nothing
-MONS:   w:2 demonic crawler / w:4 emperor scorpion / w:1 spark wasp
-MONS:   tarantella / w:22 wolf spider / jumping spider / w:8 demonic crawler / \
-        w:7 nothing
-MONS:   redback / nothing w:15
+MONS:   ghost moth / sun moth, ghost moth / moth of wrath
+MONS:   demonic crawler / steelbarb worm / wolf spider
+MONS:   w:2 broodmother / w:4 emperor scorpion / w:1 spark wasp
+MONS:   tarantella / wolf spider / jumping spider / culicivora
+MONS:   redback
 MONS:   orb spider
 NSUBST: 8 = 2:c / *:7, " = 1:. / 1:c. / *:c
+NSUBST: d = 1:e / * = def
+SUBST:  3 = 3., 4 = 4., 5 = 55., 6 = 66..., 7 = 777.
 SUBST:  - = .....WWW^
 KFEAT:  ^ = web trap
 SHUFFLE: O12*
 TILE:   C = wall_brick_gray
 SUBST:  C = c
+: setup_endvault_loot(_G)
 MAP
 xxxxxxxxxxxxxxxxxxx@@@@@@@@@@xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx......xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxx
 xxxxxxxxxxccccccccccccc..cccccccccccccxxxxxx
 xxxxxxxxxxcccccccccccc-..-ccccccccccccxxxxxxx
-xxxxxxxxxxc6Wccccccccc-x.-cccccccccW6cxxxxxxxx
-xxxxxxxxxxc6..c...CCCcx..xcCCC...c..6cxxxxxxxx
+xxxxxxxxxxcdWccccccccc-x.-cccccccccWdcxxxxxxxx
+xxxxxxxxxxc66.c..4CCCcx..xcCCC4..c.66cxxxxxxxx
 xxxxxxxxxxcW.-..c.45Oc6..6c154.c..-.Wcxxxxxxxx
 xxxxxxxxxxcc..-c"c55Ccx..xcC55c"c-..ccxxxxxxxx
 xxxxxxxxxxcccW.-ccCCCc-..-cCCCcc-.Wcccxxxxxxxx
@@ -2236,11 +2238,11 @@ xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
 xxxxxxxxxxcccc-.-xx--x.xx-x--xx-.-ccccxxxxxxxx
 xxxxxxxxxxccccxW.-c8cc-.--cc8c-.Wxccccxxxxxxxx
 xxxxxxxxxxcccc..-cccccx-.xccccc-..ccccxxxxxxxx
-xxxxxxxxxxcccW.-ccCCCc-...cCCCcc-.Wcccxxxxxxxx
+xxxxxxxxxxcccW.-ccCCCc-4.4cCCCcc-.Wcccxxxxxxxx
 xxxxxxxxxxcc..-c"c55Ccx-.xcC55c"c-..ccxxxxxxxx
 xxxxxxxxxxcW.-..c.45*c7--7c254.c..-.Wcxxxxxxxx
-xxxxxxxxxxc6..c...CCCccddccCCC...c..6cxxxxxxxx
-xxxxxxxxxxc6WccccccccccccccccccccccW6cxxxxxxxx
+xxxxxxxxxxc66.c..4CCCccffccCCC4..c.66cxxxxxxxx
+xxxxxxxxxxcdWccccccccccccccccccccccWdcxxxxxxxx
 xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
