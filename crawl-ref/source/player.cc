@@ -2560,7 +2560,7 @@ static int _rest_trigger_level(int max)
 
 static bool _should_stop_resting(int cur, int max)
 {
-    return cur == max || cur >= _rest_trigger_level(max);
+    return cur == max || cur == _rest_trigger_level(max);
 }
 
 /**
