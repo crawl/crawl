@@ -1625,7 +1625,7 @@ OBJ:        OBJ_WEAPONS/WPN_LONG_SWORD
 FALLBACK:   OBJ_WEAPONS/WPN_SCIMITAR
 PLUS:       7
 COLOUR:     LIGHTRED
-TILE:       unrand_throatcutter
+TILE:       urand_throatcutter
 TILE_EQ:    sword_thief
 BRAND:      SPWPN_DRAINING
 INSCRIP:    coup de grace
