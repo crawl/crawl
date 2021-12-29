@@ -1577,6 +1577,28 @@ static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs
     _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
 }
 
+static void _NIGHT_CLUB_unequip(item_def * /*item*/, bool *show_msgs)
+{
+    you.set_duration(DUR_RECEDING_DARKNESS, 0, 0);
+}
+
+
+static void _NIGHT_CLUB_melee_effects(item_def* /*weapon*/, actor* /*attacker*/,
+                                    actor* /*defender*/, bool mondied, int /*dam*/)
+{
+    if(mondied)
+    {
+        you.increase_duration(DUR_RECEDING_DARKNESS, RECEDING_DARKNESS_TURNS/3 + 1,
+                                     RECEDING_DARKNESS_TURNS);     
+        update_vision_range();
+    }
+}
+
+static void _NIGHT_CLUB_world_reacts(item_def */*item*/)
+{
+    update_vision_range();
+}
+
 //
 
 static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,

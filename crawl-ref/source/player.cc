@@ -719,6 +719,9 @@ void update_vision_range()
     if (player_equip_unrand(UNRAND_NIGHT))
         you.current_vision = you.current_vision * 3 / 4;
 
+    if (player_equip_unrand(UNRAND_NIGHT_CLUB) && you.duration[DUR_RECEDING_DARKNESS])
+        you.current_vision = you.current_vision - (3 * you.current_vision * you.duration[DUR_RECEDING_DARKNESS] / (4 * RECEDING_DARKNESS_TURNS * BASELINE_DELAY));
+
     ASSERT(you.current_vision > 0);
     set_los_radius(you.current_vision);
 }

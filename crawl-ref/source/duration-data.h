@@ -578,7 +578,12 @@ static const duration_def duration_data[] =
       "on blink cooldown", "blink cooldown",
       "You are unable to blink.", D_NO_FLAGS,
       {{ "You feel stable enough to blink again."}}},
-
+    { DUR_RECEDING_DARKNESS,
+      MAGENTA, "Dark",
+      "darkened", "darkened",
+      "Darkness surrounds you.", D_NO_FLAGS,
+      {{ "Light returns fully to the dungeon."}}},
+      
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 

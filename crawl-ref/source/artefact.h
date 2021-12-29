@@ -18,6 +18,10 @@
 #define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
 
+
+// The maximum duration of the receding duration effect in turns
+const int RECEDING_DARKNESS_TURNS = 30;
+
 struct bolt;
 
 enum unrand_flag_type

@@ -1641,6 +1641,18 @@ BRAND:      SPWPN_PROTECTION
 INSCRIP:    meekguard
 DBRAND:     It provides extra protection to wielders with little health.
 
+ENUM:       NIGHT_CLUB
+NAME:       club of the Night
+OBJ:        OBJ_WEAPONS/WPN_CLUB
+PLUS:       10
+COLOUR:     MAGENTA
+TILE:       urand_night_club
+TILE_EQ:    rod_hammer
+STEALTH:    2
+INSCRIP:    Darkness Stab+ 
+DBRAND:     It shrouds weilders in darkness following a kill
++It is particularly effective at stabbing helpless or unaware enemies
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
