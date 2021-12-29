@@ -96,7 +96,7 @@
 using namespace ui;
 
 static command_type _get_action(int key, vector<command_type> actions);
-static void _print_bar(int value, int scale, string name,
+static void _print_bar(int value, int scale, const string &name,
                        ostringstream &result, int base_value = INT_MAX);
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
@@ -4511,7 +4511,7 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
  * @param base_value[in]    The 'base' value represented by the bar, clamped to
  *                          zero. If INT_MAX, is ignored.
  */
-static void _print_bar(int value, int scale, string name,
+static void _print_bar(int value, int scale, const string &name,
                        ostringstream &result, int base_value)
 {
     value = max(0, value);
