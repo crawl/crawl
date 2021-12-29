@@ -524,7 +524,6 @@ less evasive.
 
 Any equipped weapons and armour are melded.
 %%%%
-# XXX: overlaps with Heavenly Storm and won't be properly displayed.
 Storm status
 
 You have been transformed into a lightning-filled tempest. Your melee attacks
@@ -650,7 +649,7 @@ You are moving at supernatural speed, causing movement actions to become
 instant. Any martial attacks made while moving in this way deal increased
 damage and never miss.
 %%%%
-Storm status
+Heavenly status
 
 You are surrounded by a storm of heavenly clouds. While the storm rages, your
 evasion and combat accuracy and damage are substantially increased, and

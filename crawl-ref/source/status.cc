@@ -462,7 +462,7 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text
-                = make_stringf("Storm (%d)",
+                = make_stringf("Heavenly (%d)",
                                you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
         }
         break;
