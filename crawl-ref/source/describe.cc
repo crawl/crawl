@@ -1798,7 +1798,8 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it empowers each of its wearer's blows with a small part of "
                "their magic.";
     case SPARM_LIGHT:
-        return "it lights the dungeon around the wearer.";
+        return "it surrounds the wearer with a glowing halo, revealing "
+               "invisible creatures and reducing evasion.";
     case SPARM_RAGE:
         return "it berserks the wearer when making melee attacks (20% chance).";
     case SPARM_MAYHEM:
