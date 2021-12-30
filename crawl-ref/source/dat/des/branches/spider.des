@@ -2302,20 +2302,17 @@ NAME:    grunt_spider_rune_island
 TAGS:    no_monster_gen
 PLACE:   Spider:$
 ORIENT:  west
-NSUBST:  d = 1:O / 3:d / *:.
+NSUBST:  d = 1:O / 3:d / 3:e / *:f
 KITEM:   O = gossamer rune of Zot
-ITEM:    potion of ambrosia ident:type
-MONS:    ghost moth, moth of wrath, emperor scorpion / w:5 spark wasp
-MONS:    hornet, orb spider
-MONS:    wolf spider, redback / tarantella
-KMONS:   8 = jumping spider / demonic crawler
-SHUFFLE: efgh, ijk
-NSUBST:  e = 2:6 / 2:. / * = 78., f = 2:7 / 2:. / * = 68
-NSUBST:  g = 2:8 / 2:. / * = 67, h = 2:6 / 3:. / * = 78
-NSUBST:  i = 1:3 / 1:. / * = 678, j = 1:9 / 1:. / * = 678
-NSUBST:  k = 1:9 / 1:. / * = 678.
-NSUBST:  5 = 5:5 / * = 5.., 9 = 3:1 / 1:12 / * = 4.
-SUBST:   0 = 4678..
+MONS:    ghost moth, moth of wrath, sun moth
+MONS:    emperor scorpion / w:5 spark wasp / w:5 jorogumo
+MONS:    orb spider
+MONS:    wolf spider / redback / tarantella / culicivora / jumping spider
+MONS:    demonic crawler / steelbarb worm / torpor snail / meliai
+NSUBST:  h = 2:9 / 2 = 4. / *= 6667....
+NSUBST:  9 = 3:13 / 1:2 / * = 6..
+SUBST:   5 = 5.., g = 6667....
+SUBST:   0 = 667...
 SUBST:   + = ^^^+
 SUBST:   " = ...xxW^
 SUBST:   - = ...cWW^^^
@@ -2325,33 +2322,34 @@ KFEAT:   _ = .
 SUBST:   c : cx
 SUBST:   C : c
 TILE:    c = wall_brick_gray
+: setup_endvault_loot(_G)
 MAP
   xxxxc--"""""@"""x""@5""""""--ccc
- xxxccc-.""".....e.e...."""...--"c
- xxxc--...""".....e....."".....-""
-xxccc-...5.""..........."".....-"-
-xcc---..5...""...e.e...""......f"-
-xc--k........WWWWWWWWWWW"....f.-"-
-xcc..k......WWwwwwwwwwwWWW....5-"-
-xcc...k.k..WWwwwwwwwwwwwwWW..f.-"@
-xcc....k..WWwwwCCCCCCwwwwwW...f-"-
-xcck......WwwwCC----CCCwwwW...g-"-
+ xxxccc-.""".....g.g...."""...--"c
+ xxxc--...""".....g....."".....-""
+xxccc-...5.""...5......."".....-"-
+xcc---......""...g.g..."".5....g"-
+xc--h........WWWWWWWWWWW"....g.-"-
+xcc..h....5.WWwwwwwwwwwWWW....5-"-
+xcc...h.h..WWwwwwwwwwwwwwWW..g.-"@
+xcc....h..WWwwwCCCCCCwwwwwW...g-"-
+xcch.5...hWwwwCC----CCCwwwW...g-"-
 xc-......_WwwCC--0.---CwwwW....-"-
-xc-..j.._-WwwC--3_9__-CCwwW..0.-"-
-xc-.j.j_-"-"wC-0_0d0_--CwwW....-"-
-xc-..._-"---_+3.9ddd9-CCwwW...f-"-
-xc-.j.j_-"-"wC-0_0d0--CwwwW...g-"-
-xc-..j.._"WwwC--3_9--CCwwwW..g.-"@
-xcc......_WwwCC--0_-CCwwwWW....-"-
+xc-..h.._-WwwC--409__-CCwwW..0.-"-
+xc-.h.h_-"-"wC-0ddd0_--CwwW.5..-"-
+xc-..._-"---_+49dddd9-CCwwW...g-"-
+xc-.h.h_-"-"wC-0ddd0--CwwwW...g-"-
+xc-..h.._"WwwC--409--CCwwwW..g.-"@
+xcc..5..._WwwCC--0_-CCwwwWW....-"-
 xcc.......WwwwCC----CwwwwW....5-"-
-xcc.......WwwwwCCCCCCwwwWW...g.-"-
+xcc......hWwwwwCCCCCCwwwWW...g.-"-
 xcc.......WWwwwwwwwwwwwWW......g"-
-xc-i....i...WwwwwwwwwwWW.......-"-
-xc-....i....WWWWWWWWWWW........-"-
-xc--..i......"..h.h..."........-""
-xcc--i......""........"".......-"c
-xxcc-.i.5...""...h...."".......-"c
- xxc"""""5""""""h"h""5""""""""""cc
+xc-h....h...WwwwwwwwwwWW.......-"-
+xc-.5..h....WWWWWWWWWWW........-"-
+xc--..h......".5g.g..."....5...-""
+xcc--h......""........"".......-"c
+xxcc-.h.....""...g...."".......-"c
+ xxc"""""5""""""g"g""5""""""""""cc
   xc----@-"-----x------""-@----ccx
 ENDMAP
 
