@@ -1081,12 +1081,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
-    case MONS_ANGEL:
-    case MONS_DAEVA:
-    case MONS_PROFANE_SERVITOR:
-        set_equip_desc(item, ISFLAG_GLOWING); // will never come up...
-        break;
-
     case MONS_DONALD:
     case MONS_FREDERICK:
     case MONS_URUG:
