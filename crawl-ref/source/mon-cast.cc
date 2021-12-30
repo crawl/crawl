@@ -157,7 +157,7 @@ static bool _torment_vulnerable(const actor* victim);
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
 static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
-static bool _maybe_irradiate(monster *mons);
+static ai_action::goodness _should_irradiate(const monster& mons);
 
 enum spell_logic_flag
 {
@@ -4468,34 +4468,22 @@ static int _mons_mesmerise(monster* mons, bool actual)
     return 1;
 }
 
-// Determine whether irradiating is likely to be profitable
-static bool _maybe_irradiate(monster *mons)
+static ai_action::goodness _should_irradiate(const monster &mons)
 {
-    if (mons->wont_attack() && adjacent(you.pos(), mons->pos()))
-        return false;
+    // make allied monsters extra reluctant to irradiate in melee.
+    if (mons.wont_attack() && adjacent(you.pos(), mons.pos()))
+        return ai_action::bad();
 
-    int val = 0;
-    int adjacent = 0;
-    int hd = mons->spell_hd(SPELL_IRRADIATE);
-
-    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-    {
-        if (actor * act = actor_at(*ai))
-        {
-            adjacent++;
-            if (act->is_player())
-                val += hd;
-            else if (mons->temp_attitude() == act->as_monster()->temp_attitude())
-                val -= 2 * act->get_hit_dice(); // hesitate to kill allies
-            else
-                val += act->get_hit_dice();
-        }
-    }
-
-    // randomize slightly
-    val += random2(3*adjacent + 1) - random2(3*adjacent + 1);
-
-    return val > 0;
+    bolt tracer;
+    tracer.flavour = BEAM_MMISSILE;
+    tracer.range = 0;
+    tracer.is_explosion = true;
+    tracer.ex_size = 1;
+    tracer.source = tracer.target = mons.pos();
+    tracer.hit = AUTOMATIC_HIT;
+    tracer.damage = dice_def(999, 1);
+    fire_tracer(&mons, tracer, true, true);
+    return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
 }
 
 // Check whether targets might be scared.
@@ -7552,8 +7540,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         return ai_action::good_or_impossible(adjacent(mon->pos(), foe->pos()));
 
     case SPELL_IRRADIATE:
-        ASSERT(foe);
-        return ai_action::good_or_bad(_maybe_irradiate(mon));
+        return _should_irradiate(*mon);
 
     case SPELL_DRUIDS_CALL:
         // Don't cast unless there's at least one valid target
