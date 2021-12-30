@@ -2862,6 +2862,19 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                 return false;
             }
         }
+        if (item.sub_type == ARM_ORB && (ident || item_type_known(item)))
+        {
+            special_armour_type ego = get_armour_ego_type(item);
+            switch (ego)
+            {
+            case SPARM_RAGE:
+                return !you.can_go_berserk(true, false, true, nullptr, temp);
+            case SPARM_ENERGY:
+                return you.has_mutation(MUT_HP_CASTING);
+            default:
+                return false;
+            }
+        }
         return false;
 
     case OBJ_SCROLLS:
