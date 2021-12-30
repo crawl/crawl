@@ -2357,11 +2357,9 @@ ENDMAP
 #Arachne Lair Rune Vault
 NAME:   johnstein_spider_rune_arachne_lair
 TAGS:   no_monster_gen
-KMONS:  e = emperor scorpion / spark wasp w:5
-KMONS:  m = moth of wrath / ghost moth w:40 / nothing w:10
-KMONS:  p = hornet
+KMONS:  j = emperor scorpion / spark wasp w:5 / jorogumo
+KMONS:  m = moth of wrath / ghost moth w:40 / sun moth
 KMONS:  o = orb spider w:40 / demonic crawler
-KMONS:  t = redback / nothing
 KMONS:  s = torpor snail / entropy weaver
 ORIENT: float
 PLACE:  Spider:$
@@ -2373,36 +2371,42 @@ PLACE:  Spider:$
     SUBST:  '_!^ = Y
     FTILE:  Y = FLOOR_HALL
     COLOUR: Y = blue
-    KMONS:  Z = Arachne, torpor snail
-    KMONS:  1 = tarantella / wolf spider / redback / jumping spider w:50
+    KMONS:  Z = Arachne, jorogumo
+    KMONS:  1 = tarantella / wolf spider / redback w:20 / jumping spider w:30 /\
+                culicivora
+    KMONS:  2 = torpor snail / pharaoh ant
 : elseif crawl.one_chance_in(2) then
     SUBST:  '-! = .
     SUBST:  "_?^ = Y
     FTILE:  Y = FLOOR_ROUGH_RED
     COLOUR: Y = red
-    KMONS:  Z = Arachne, entropy weaver
-    KMONS:  1 = redback / wolf spider / tarantella w:50 / jumping spider
+    KMONS:  Z = Arachne, jorogumo
+    KMONS:  1 = redback w:20 / wolf spider / tarantella w:30 / jumping spider /\
+                culicivora
+    KMONS:  2 = entropy weaver / steelbarb worm
 : else
     SUBST:  '"_ = .
     SUBST:  -!?^ = Y
     FTILE:  Y = FLOOR_SANDSTONE
     COLOUR: Y = brown
-    KMONS:  Z = Arachne, spark wasp
-    KMONS:  1 = tarantella / wolf spider w:50 / redback / jumping spider
+    KMONS:  Z = Arachne, jorogumo
+    KMONS:  1 = tarantella / wolf spider w:30 / redback w:20 / jumping spider /\
+                culicivora
+    KMONS:  2 = meliai / spark wasp w:5
 : end
 
-NSUBST: 3 = 4:e / 1:s / *:t.2
-NSUBST: 2 = 4:o / 4:p / 2:m / *:t..1
+NSUBST: 3 = 4:j / 1:s / *=2.
+NSUBST: 2 = 6=o. / 2:m / 6=2. / *=1
 
 KITEM:  O = gossamer rune of Zot
-NSUBST: O = 1:O / *:%.
+NSUBST: O = 1:O / *=%
 
-#thin out loot and monsters
-SUBST: % = ...%%t
-SUBST: 1 = 11...t
+#thin out monsters and set up loot
+SUBST: % = 2:d / 2:e / 2:f / *=def...
+SUBST: 1 = 1..
 
-KFEAT: Yt = web / floor w:40
-
+KFEAT: Y = web / floor w:40
+: setup_endvault_loot(_G)
 MAP
     .......@@@@@.......
    ..cccccco...occcccc..
