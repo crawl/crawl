@@ -2402,7 +2402,7 @@ KITEM:  O = gossamer rune of Zot
 NSUBST: O = 1:O / *=%
 
 #thin out monsters and set up loot
-SUBST: % = 2:d / 2:e / 2:f / *=def...
+NSUBST: % = 2:d / 2:e / 2:f / *=def...
 SUBST: 1 = 1..
 
 KFEAT: Y = web / floor w:40
@@ -2459,20 +2459,24 @@ KFEAT:  P = clear_rock_wall
 TILE:   c = wall_sandstone
 TILE:   P = dngn_sarcophagus_pedestal_left
 FTILE:  23+$OEGHNPS. = floor_sandstone:20 / none
-ITEM:   gold w:40 / potion of ambrosia ident:type
+: setup_endvault_loot(_G)
+ITEM:   gold good_item
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 MONS:   death scarab
 MONS:   wolf spider spectre / wolf spider zombie w:5 / demonic crawler w:5 \
-        / emperor scorpion spectre w:2
+        / emperor scorpion spectre w:2 / pharaoh ant w:3 \
+        / broodmother zombie w:3 / jorogumo w:2 / jorogumo spectre w:3
 MONS:   jumping spider spectre w:20 / tarantella spectre w:20 \
-        / redback spectre w:20 / hornet spectre / jumping spider zombie \
-        / tarantella zombie / redback zombie / hornet zombie w:5
+        / redback spectre w:20 / culicivora spectre / jumping spider zombie \
+        / tarantella zombie / redback zombie / culicivora zombie w:5
 MONS:   jumping spider / tarantella / redback / wolf spider w:5 \
-        / hornet w:5 / orb spider w:3 / spark wasp w:2
-MONS:   emperor scorpion, ghost moth, moth of wrath
-NSUBST: S = 8:1 / ., H = 2:5 / 1:6 / 1:7 / K
-SUBST:  K = 2 5:4 6:2 7:2 E:20, E = 3 4:30
+        / steelbarb worm w:5 / orb spider w:3 / spark wasp w:2 \
+        / pharaoh ant w:5 / culicivora
+MONS:   emperor scorpion / jorogumo w:5, ghost moth, moth of wrath
+NSUBST: S = 4:1 / 6 = 1. /*:., H = 2:5 / 1:6 / 1:7 / K
+SUBST:  K = 2 5:4 6:2 7:2 E:20, E = 3 4:30 .:20
 SUBST:  Q = W:15 .
+NSUBST: d = 2:d / 2:e / 3:f / *=gggge
 : set_feature_name("clear_rock_wall", "sarcophagus")
 MAP
   .....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2487,15 +2491,15 @@ MAP
 @......cx....cx...........H.xH.c....Hcx
 @..G.G.cE....c........x...EE..Ec.x...cx
 @......c..x..c..HMMMMMMMMMM.E.Wc....Ecx
-@E.ccc.c.....c...MS..2S.SdM..WWcWW...cx
+@E.ccc.c.....c...MS..2SdSdM..WWcWW...cx
 @QccccccW....c...M.3S3.SMSMxWWWNWWW..cx
-@QWcccccWx..Ec.E.+..3...MdMNNNNNWWx..cx
-@QWWWccWWW...c...+.S.S2SMdMWWWWWWWWE.cx
-@QWWWWWWWW..Ec..H+..S3..POM..WWWWWW..cx
-@QWccWWWWW..Hc.E.+.S.S2SMdM.WWWWWWWW.cx
-@QcccccWWW..Ecx..+..3...MdMNNNNNWxWW.cx
+@QWcccccWx..Ec.E.+..3..dMdMNNNNNWWx..cx
+@QWWWccWWW...c...+.S.SdSMdMWWWWWWWWE.cx
+@QWWWWWWWW..Ec..H+..S3.dPOM..WWWWWW..cx
+@QWccWWWWW..Hc.E.+.S.SdSMdM.WWWWWWWW.cx
+@QcccccWWW..Ecx..+..3..dMdMNNNNNWxWW.cx
 @.ccccccWW...c...M.3S3.SMSMWWWWNWWWWEcx
-@E.cc.ccW.x.Ec.E.MS..2S.SdM..WWcWWW..cx
+@E.cc.ccW.x.Ec.E.MS..2SdSdM..WWcWWW..cx
 @......c..W..c..HMMMMMMMMMM.E.Wc.WW.xcx
 @..G.G.c.....c.......x....EE...c.WWE.cx
 @......c.....c.x..........H.HxEc.WW.Hcx
