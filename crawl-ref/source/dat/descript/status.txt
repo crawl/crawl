@@ -632,7 +632,7 @@ Ray status
 
 You are currently channelling a ray of searing magical energy. Pressing
 <w>.</w> or <w>s</w> to wait in place will maintain and intensify the ray, at
-the cost of 1 MP per turn; any other action, including recasting the spell,
+the cost of 1 MP per turn. Any other action, including recasting the spell,
 will end it.
 %%%%
 Ray+ status
@@ -768,8 +768,8 @@ for a short duration.
 Charge- status
 
 You are currently channeling electrical charge. Pressing <w>.</w> or <w>s</w>
-to wait in place will maintain and continue this process until it discharges;
-any other action, including recasting the spell, will dissipate the charge
+to wait in place will maintain and continue this process until it discharges.
+Any other action, including recasting the spell, will dissipate the charge
 harmlessly.
 %%%%
 Charge/ status
@@ -786,9 +786,9 @@ Charge| status
 %%%%
 Wave status
 
-You are currently channeling a wave of flames. Pressing <w>.</w> or <w>s</w>
-to wait in place will maintain and intensify the wave, at the cost of 1 MP per
-turn; any other action, including recasting the spell, will end it.
+You are currently channeling waves of flames. Pressing <w>.</w> or <w>s</w>
+to wait in place will maintain and intensify the waves, at the cost of 1 MP per
+turn. Any other action, including recasting the spell, will end it.
 %%%%
 Wave+ status
 
