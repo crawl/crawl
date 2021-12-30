@@ -1964,14 +1964,13 @@ public:
             const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
             if (c)
             {
-                if (c->cmd == CMD_LOOKUP_HELP_MENU)
+                cmd = c->cmd;
+                // TODO: better quit behavior here
+                if (cmd != CMD_NO_CMD && cmd != CMD_QUIT)
                 {
-                    LookupHelpMenu m;
-                    m.show();
+                    process_command(cmd, CMD_NO_CMD);
                     return true;
                 }
-
-                cmd = c->cmd;
             }
             return false;
         };
@@ -2258,6 +2257,12 @@ void process_command(command_type cmd, command_type prev_cmd)
         break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
     case CMD_LOOKUP_HELP:           keyhelp_query_descriptions();      break;
+    case CMD_LOOKUP_HELP_MENU:
+    {
+        LookupHelpMenu m;
+        m.show();
+        break;
+    }
 
     case CMD_DISPLAY_RELIGION:
     {
