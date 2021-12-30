@@ -5305,8 +5305,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         attitude.emplace_back("neutral");
     if (mons.good_neutral())
         attitude.emplace_back("good_neutral");
-    if (mons.strict_neutral())
-        attitude.emplace_back("strict_neutral");
     if (mons.pacified())
         attitude.emplace_back("pacified");
     if (mons.wont_attack())

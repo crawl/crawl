@@ -325,7 +325,7 @@ struct monster_info : public monster_info_base
 
     inline bool neutral() const
     {
-        return attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL || attitude == ATT_STRICT_NEUTRAL;
+        return attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL;
     }
 
     string db_name() const;
@@ -402,6 +402,8 @@ struct monster_info : public monster_info_base
     {
         return props.exists(PRIEST_KEY);
     }
+
+    bool fellow_slime() const;
 
     bool has_spells() const;
     bool antimagic_susceptible() const;

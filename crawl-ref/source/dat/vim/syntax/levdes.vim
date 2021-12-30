@@ -129,7 +129,7 @@ syn keyword desOrientation corpse skeleton never_decay
 " MONS | KMONS (in mapdef.cc)
 syn keyword desOrientation fix_slot priest_spells actual_spells god_gift
 syn keyword desOrientation generate_awake patrolling band hostile friendly
-syn keyword desOrientation good_neutral fellow_slime strict_neutral neutral
+syn keyword desOrientation good_neutral fellow_slime neutral
 "Note: `spectre` removed: mis-catches `silent spectre` but was unused as
 "modifier (`spectral` exists)
 syn keyword desOrientation base nonbase zombie skeleton simulacrum spectral

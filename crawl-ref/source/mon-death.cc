@@ -3018,11 +3018,12 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Sometimes, if you pacify one twin near a staircase, they leave
-    // in the same turn. Convert, in those instances. The strict_neutral check
+    // in the same turn. Convert, in those instances. The fellow_slime check
     // is intended to cover the slimify case, we don't want to pacify the other
     // if a slimified twin dies.
-    if (twin->neutral() && !twin->has_ench(ENCH_INSANE)
-                                                    && !twin->strict_neutral())
+    if (twin->neutral()
+        && !twin->has_ench(ENCH_INSANE)
+        && !is_fellow_slime(*twin))
     {
         elven_twins_pacify(twin);
         return;
@@ -3034,7 +3035,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Don't consider already neutralised monsters.
-    if (mons->good_neutral() || mons->strict_neutral())
+    if (mons->good_neutral())
         return;
 
     // Okay, let them climb stairs now.

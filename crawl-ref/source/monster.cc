@@ -3036,9 +3036,8 @@ bool monster::friendly() const
 
 bool monster::neutral() const
 {
-    mon_attitude_type att = temp_attitude();
-    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL
-           || att == ATT_STRICT_NEUTRAL;
+    const mon_attitude_type att = temp_attitude();
+    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL;
 }
 
 bool monster::good_neutral() const
@@ -3046,14 +3045,9 @@ bool monster::good_neutral() const
     return temp_attitude() == ATT_GOOD_NEUTRAL;
 }
 
-bool monster::strict_neutral() const
-{
-    return temp_attitude() == ATT_STRICT_NEUTRAL;
-}
-
 bool monster::wont_attack() const
 {
-    return friendly() || good_neutral() || strict_neutral();
+    return friendly() || good_neutral();
 }
 
 bool monster::pacified() const

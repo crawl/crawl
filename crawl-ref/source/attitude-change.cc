@@ -337,7 +337,7 @@ static void _jiyva_convert_slime(monster* slime)
         }
     }
 
-    slime->attitude = ATT_STRICT_NEUTRAL;
+    slime->attitude = ATT_GOOD_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
     mons_make_god_gift(*slime, GOD_JIYVA);

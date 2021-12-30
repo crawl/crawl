@@ -5144,9 +5144,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     case ATT_GOOD_NEUTRAL:
         mg.behaviour = BEH_GOOD_NEUTRAL;
         break;
-    case ATT_STRICT_NEUTRAL:
-        mg.behaviour = BEH_STRICT_NEUTRAL;
-        break;
     default:
         break;
     }

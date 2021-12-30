@@ -426,8 +426,7 @@ void debug_stethoscope(int mon)
          ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
           (mons.attitude == ATT_FRIENDLY)       ? "friendly" :
           (mons.attitude == ATT_NEUTRAL)        ? "neutral" :
-          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral":
-          (mons.attitude == ATT_STRICT_NEUTRAL) ? "strictly neutral"
+          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral"
                                                 : "unknown alignment"));
 
     // Print stats and other info.

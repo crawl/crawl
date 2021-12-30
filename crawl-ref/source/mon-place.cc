@@ -1327,9 +1327,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.behaviour == BEH_NEUTRAL)
             mon->attitude = ATT_NEUTRAL;
 
-        if (mg.behaviour == BEH_STRICT_NEUTRAL)
-            mon->attitude = ATT_STRICT_NEUTRAL;
-
         mon->behaviour = BEH_WANDER;
     }
 
@@ -2619,11 +2616,8 @@ monster* mons_place(mgen_data mg)
         if (mg.behaviour == BEH_FRIENDLY)
             creation->flags |= MF_NO_REWARD;
 
-        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL
-            || mg.behaviour == BEH_STRICT_NEUTRAL)
-        {
+        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL)
             creation->flags |= MF_WAS_NEUTRAL;
-        }
 
         if (mg.behaviour == BEH_CHARMED)
         {

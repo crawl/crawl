@@ -440,7 +440,6 @@ public:
     bool friendly() const;
     bool neutral() const;
     bool good_neutral() const;
-    bool strict_neutral() const;
     bool wont_attack() const override;
     bool pacified() const;
 

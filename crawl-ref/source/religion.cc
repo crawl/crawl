@@ -1898,7 +1898,7 @@ bool is_orcish_follower(const monster& mon)
 bool is_fellow_slime(const monster& mon)
 {
     return mon.alive() && mons_is_slime(mon)
-           && mon.attitude == ATT_STRICT_NEUTRAL
+           && mon.attitude == ATT_GOOD_NEUTRAL
            && mons_is_god_gift(mon, GOD_JIYVA);
 }
 

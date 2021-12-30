@@ -220,7 +220,7 @@ static void _jiyva_effects(int /*time_delta*/)
                    || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
-            mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, newpos);
+            mgen_data mg(MONS_JELLY, BEH_GOOD_NEUTRAL, newpos);
             mg.god = GOD_JIYVA;
             mg.non_actor_summoner = "Jiyva";
 

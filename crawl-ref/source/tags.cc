@@ -5810,6 +5810,14 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
 #endif
         mi._colour = unmarshallInt(th);
     unmarshallUnsigned(th, mi.attitude);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
+        && mi.attitude == ATT_OLD_STRICT_NEUTRAL)
+    {
+        mi.attitude = ATT_GOOD_NEUTRAL;
+    }
+#endif
+
     unmarshallUnsigned(th, mi.threat);
     unmarshallUnsigned(th, mi.dam);
     unmarshallUnsigned(th, mi.fire_blocker);
@@ -6665,6 +6673,11 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
+    if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
+        && m.attitude == ATT_OLD_STRICT_NEUTRAL)
+    {
+        m.attitude = ATT_GOOD_NEUTRAL;
+    }
     m.foe      = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     // In 0.16 alpha we briefly allowed YOU_FAULTLESS as a monster's foe.

@@ -1701,7 +1701,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     if (m->attitude == ATT_FRIENDLY)
         tileset.emplace_back(TILE_HALO_FRIENDLY);
-    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
+    else if (m->attitude == ATT_GOOD_NEUTRAL)
         tileset.emplace_back(TILE_HALO_GD_NEUTRAL);
     else if (m->neutral())
         tileset.emplace_back(TILE_HALO_NEUTRAL);
@@ -1803,7 +1803,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     if (m->attitude == ATT_FRIENDLY)
         tileset.emplace_back(TILEI_FRIENDLY);
-    else if (m->attitude == ATT_GOOD_NEUTRAL || m->attitude == ATT_STRICT_NEUTRAL)
+    else if (m->attitude == ATT_GOOD_NEUTRAL)
         tileset.emplace_back(TILEI_GOOD_NEUTRAL);
     else if (m->neutral())
         tileset.emplace_back(TILEI_NEUTRAL);

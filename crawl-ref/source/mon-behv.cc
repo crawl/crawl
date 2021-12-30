@@ -665,7 +665,7 @@ void handle_behaviour(monster* mon)
                     return;
             }
 
-            if (mon->strict_neutral() && mons_is_slime(*mon)
+            if (mon->good_neutral() && mons_is_slime(*mon)
                 && have_passive(passive_t::neutral_slimes))
             {
                 set_random_slime_target(mon);
@@ -915,7 +915,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 void set_nearest_monster_foe(monster* mon, bool near_player)
 {
     // These don't look for foes.
-    if (mon->good_neutral() || mon->strict_neutral()
+    if (mon->good_neutral()
         || mon->behaviour == BEH_WITHDRAW
         || mons_is_avatar(mon->type)
         || mon->has_ench(ENCH_HAUNTING))
@@ -1340,8 +1340,6 @@ beh_type attitude_creation_behavior(mon_attitude_type att)
         return BEH_NEUTRAL;
     case ATT_GOOD_NEUTRAL:
         return BEH_GOOD_NEUTRAL;
-    case ATT_STRICT_NEUTRAL:
-        return BEH_STRICT_NEUTRAL;
     case ATT_FRIENDLY:
         return BEH_FRIENDLY;
     default:

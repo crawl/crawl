@@ -3914,10 +3914,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.attitude = ATT_HOSTILE;
         else if (att == "friendly")
             mspec.attitude = ATT_FRIENDLY;
-        else if (att == "good_neutral")
+        else if (att == "good_neutral" || att == "fellow_slime")
             mspec.attitude = ATT_GOOD_NEUTRAL;
-        else if (att == "fellow_slime" || att == "strict_neutral")
-            mspec.attitude = ATT_STRICT_NEUTRAL;
         else if (att == "neutral")
             mspec.attitude = ATT_NEUTRAL;
 

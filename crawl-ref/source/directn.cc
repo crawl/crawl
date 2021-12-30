@@ -148,9 +148,9 @@ static void _wizard_make_friendly(monster* m)
         m->flags |= MF_WAS_NEUTRAL;
         break;
     case ATT_GOOD_NEUTRAL:
-        m->attitude = ATT_STRICT_NEUTRAL;
-        break;
-    case ATT_STRICT_NEUTRAL:
+#if TAG_MAJOR_VERSION == 34
+    case ATT_OLD_STRICT_NEUTRAL:
+#endif
         m->attitude = ATT_NEUTRAL;
         break;
     case ATT_NEUTRAL:
@@ -3565,6 +3565,8 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 
     if (mi.attitude == ATT_FRIENDLY)
         descs.emplace_back("friendly");
+    else if (mi.fellow_slime())
+        descs.emplace_back("fellow slime");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         descs.emplace_back("peaceful");
     else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
