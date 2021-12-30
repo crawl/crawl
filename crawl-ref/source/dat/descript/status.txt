@@ -787,7 +787,7 @@ Charge| status
 Wave status
 
 You are currently channeling a wave of flames. Pressing <w>.</w> or <w>s</w>
-to wait in place will maintain and intensify the ray, at the cost of 1 MP per
+to wait in place will maintain and intensify the wave, at the cost of 1 MP per
 turn; any other action, including recasting the spell, will end it.
 %%%%
 Wave+ status

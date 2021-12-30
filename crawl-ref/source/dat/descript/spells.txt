@@ -1411,7 +1411,7 @@ Storm Form spell
 Lets the caster walk through the air as a raging, lightning-filled tempest. The
 caster's melee attacks are strengthened, electrified, and strike all adjacent
 foes. The caster also flies, is more evasive, gains immunity to poison and
-miasma, and resists electricity. They cana launch themselves as a lightning
+miasma, and resists electricity. They can launch themselves as a lightning
 bolt, blasting through everything in their way. The damage and evasion granted
 by storm form are highly dependent on the power with which it was cast.
 
