@@ -588,10 +588,9 @@ void inspect_spells()
  * spellcasting regardless of the specific spell we want to cast.
  *
  * @param quiet    If true, don't print a reason why no spell can be cast.
- * @param exegesis If true, we're considering casting under Divine Exegesis.
  * @return True if we could cast a spell, false otherwise.
 */
-bool can_cast_spells(bool quiet, bool exegesis)
+bool can_cast_spells(bool quiet)
 {
     if (!get_form()->can_cast)
     {
@@ -626,16 +625,6 @@ bool can_cast_spells(bool quiet, bool exegesis)
     {
         if (!quiet)
             mpr("Something interferes with your magic!");
-        return false;
-    }
-
-    // Check that we have a spell memorised. Divine Exegesis does not need this
-    // condition, but we can't just check you.divine_exegesis in all cases, as
-    // it may not be set yet. Check a passed parameter instead.
-    if (!exegesis && !you.spell_no)
-    {
-        if (!quiet)
-            canned_msg(MSG_NO_SPELLS);
         return false;
     }
 
@@ -743,7 +732,15 @@ static bool _majin_charge_hp()
 spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
                    bool force_failure)
 {
-    if (!can_cast_spells(false, you.divine_exegesis))
+    // If you don't have any spells memorized (and aren't using exegesis),
+    // you can't cast any spells. Simple as.
+    if (!you.spell_no && !you.divine_exegesis)
+    {
+        canned_msg(MSG_NO_SPELLS);
+        return spret::abort;
+    }
+
+    if (!can_cast_spells())
     {
         crawl_state.zero_turns_taken();
         return spret::abort;
