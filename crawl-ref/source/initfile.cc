@@ -4002,7 +4002,9 @@ static const language_def lang_data[] =
     { lang_t::FR, "fr", { "french", "français", "francais" } },
     { lang_t::HU, "hu", { "hungarian", "magyar" } },
     { lang_t::IT, "it", { "italian", "italiano" } },
-    { lang_t::JA, "ja", { "japanese", "日本人" } },
+    // The last of these for compatibility, since it has been accepted ever
+    // since Japanese support was added.
+    { lang_t::JA, "ja", { "japanese", "日本語", "日本人" } },
     { lang_t::KO, "ko", { "korean", "한국의" } },
     { lang_t::LT, "lt", { "lithuanian", "lietuvos" } },
     { lang_t::LV, "lv", { "latvian", "lettish", "latvijas", "latviešu",
