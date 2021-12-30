@@ -4891,7 +4891,7 @@ int monster::foe_distance() const
 }
 
 /**
- * Can the monster suffer ENCH_FRENZY?
+ * Can the monster suffer ENCH_INSANE?
  */
 bool monster::can_go_frenzy() const
 {
