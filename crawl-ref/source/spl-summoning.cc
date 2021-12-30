@@ -3117,9 +3117,9 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
 
     if (created && you.see_cell(agent.pos()))
     {
-        mprf("%s summon%s %s",
+        mprf("%s %s %s!",
              agent.name(DESC_THE).c_str(),
-             agent.is_monster() ? "s" : "",
+             agent.conj_verb("summon").c_str(),
              created > 1 ? "spiders" : "a spider");
     }
     else if (agent.is_player())
