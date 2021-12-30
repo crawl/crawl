@@ -543,6 +543,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     // permanent dancing weapons turn to gold like other monsters.
     bool goldify = have_passive(passive_t::goldify_corpses)
                    && mons_gives_xp(mons, you)
+                   && !player_in_branch(BRANCH_ABYSS)
                    && !force;
 
     const bool no_coinflip = mons.props.exists(ALWAYS_CORPSE_KEY)

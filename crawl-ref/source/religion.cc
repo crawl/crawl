@@ -2783,6 +2783,10 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
         return false;
     }
 
+    // Persistent piety can't be gained in the Abyss.
+    if (player_in_branch(BRANCH_ABYSS) && !you_worship(GOD_USKAYAW))
+        return false;
+
     int pgn = should_scale_piety ? piety_scale(original_gain) : original_gain;
 
     if (crawl_state.game_is_sprint() && should_scale_piety)
