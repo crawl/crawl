@@ -1362,7 +1362,6 @@ static int _lookup_prompt()
 
 #ifdef USE_TILE_WEB
         tiles_crt_popup show_as_popup;
-        tiles.set_ui_state(UI_CRT);
 #endif
         auto prompt_ui =
                 make_shared<ui::Text>(formatted_string::parse_string(prompt));
@@ -1411,6 +1410,10 @@ static bool _find_description(string &response)
 
 static void _show_type_response(string response)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_popup show_as_popup;
+#endif
+    // TODO: not entirely sure what's going on with all this stuff
     auto vbox = make_shared<ui::Box>(ui::Widget::VERT);
     vbox->set_cross_alignment(ui::Widget::CENTER);
     auto text = make_shared<ui::Text>(response);
@@ -1423,8 +1426,6 @@ static void _show_type_response(string response)
         return true;
     });
 
-    // XXX TODO: webtiles needs special handling here
-
     ui::run_layout(move(popup), done);
 }
 
@@ -1434,7 +1435,7 @@ bool find_description_of_type(lookup_help_type lht)
     string response;
     bool done = lookup_types[lht].find_description(response);
     dprf("response: '%s'", response.c_str());
-    if (!response.empty())
+    if (!response.empty() && response != "Okay, then.") // TODO: ...
         _show_type_response(response);
     return done;
 }
