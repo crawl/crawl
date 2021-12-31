@@ -365,14 +365,7 @@ bool direction_chooser::targets_objects() const
 /// Are we looking for enemies?
 bool direction_chooser::targets_enemies() const
 {
-    switch (mode)
-    {
-        case TARG_HOSTILE:
-        case TARG_HOSTILE_SUBMERGED:
-            return true;
-        default:
-            return false;
-    }
+    return mode == TARG_HOSTILE;
 }
 
 void direction_chooser::describe_cell() const
@@ -2721,7 +2714,7 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
         return false;
 
     // Don't target submerged monsters.
-    if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
+    if (mon->submerged())
         return false;
 
     // Don't usually target unseen monsters...
@@ -2747,7 +2740,6 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_ANY:
         return true;
     case TARG_HOSTILE:
-    case TARG_HOSTILE_SUBMERGED:
         return mons_attitude(*mon) == ATT_HOSTILE;
     case TARG_FRIEND:
         return mon->friendly();
