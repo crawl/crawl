@@ -1983,7 +1983,10 @@ public:
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
         items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
-        add_entry(new CmdMenuEntry("Save and return to main menu",
+        add_entry(new CmdMenuEntry(
+            (crawl_should_restart(game_exit::save)
+                            ? "Save and return to main menu"
+                            : "Save and exit"),
             MEL_ITEM, 'S', CMD_SAVE_GAME_NOW));
         add_entry(new CmdMenuEntry("Generate and view character dump",
             MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
