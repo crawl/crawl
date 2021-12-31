@@ -1569,21 +1569,21 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_CURARE:
             description += "It is tipped with a substance that causes "
                            "asphyxiation, dealing direct damage as well as "
-                           "poisoning and slowing those it strikes.\n"
+                           "poisoning and slowing those it strikes.\n\n"
                            "It is twice as likely to be destroyed on impact as "
                            "other darts.";
             break;
         case SPMSL_FRENZY:
             description += "It is tipped with a substance that sends those it "
                            "hits into a mindless rage, attacking friend and "
-                           "foe alike.\n"
+                           "foe alike.\n\n"
                            "The chance of successfully applying its effect "
                            "increases with Throwing and Stealth skill.";
 
             break;
         case SPMSL_BLINDING:
             description += "It is tipped with a substance that causes "
-                           "blindness and brief confusion.\n"
+                           "blindness and brief confusion.\n\n"
                            "The chance of successfully applying its effect "
                            "increases with Throwing and Stealth skill.";
             break;
@@ -1614,7 +1614,7 @@ static string _describe_ammo(const item_def &item)
             && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
         description += make_stringf(
-            "\nBase damage: %d  Base attack delay: %.1f"
+            "\n\nBase damage: %d  Base attack delay: %.1f"
             "\nThis projectile's minimum attack delay (%.1f) "
                 "is reached at skill level %d.",
             dam,
