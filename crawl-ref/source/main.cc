@@ -1876,58 +1876,6 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 }
 
-class LookupHelpMenu : public Menu
-{
-public:
-    class LookupHelpMenuEntry : public MenuEntry
-    {
-    public:
-        LookupHelpMenuEntry(lookup_help_type lht)
-        : MenuEntry(uppercase_first(lookup_help_type_name(lht)),
-                    MEL_ITEM, 1, tolower(lookup_help_type_shortcut(lht))),
-          typ(lht)
-        {
-            // TODO: tiles!
-        }
-
-        lookup_help_type typ;
-    };
-
-    LookupHelpMenu()
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP)
-    {
-        action_cycle = Menu::CYCLE_NONE;
-        menu_action  = Menu::ACT_EXECUTE;
-        set_title(new MenuEntry("Info Lookup", MEL_TITLE));
-        on_single_selection = [](const MenuEntry& item)
-        {
-            const LookupHelpMenuEntry *lhme = dynamic_cast<const LookupHelpMenuEntry *>(&item);
-            if (!lhme)
-                return false; // back button
-            find_description_of_type(lhme->typ);
-            return true;
-        };
-    }
-
-    void fill_entries()
-    {
-        clear();
-        auto back = new MenuEntry("Back to main menu", MEL_ITEM, 1, CK_ESCAPE);
-        back->add_tile(tileidx_command(CMD_GAME_MENU));
-        add_entry(back);
-        for (int i = FIRST_LOOKUP_HELP_TYPE; i < NUM_LOOKUP_HELP_TYPES; ++i)
-            add_entry(new LookupHelpMenuEntry((lookup_help_type)i));
-    }
-
-    vector<MenuEntry *> show(bool reuse_selections = false) override
-    {
-        fill_entries();
-        cycle_hover();
-        return Menu::show(reuse_selections);
-    }
-};
-
 class GameMenu : public Menu
 {
 // this could be easily generalized for other menus that select among commands
@@ -1970,7 +1918,7 @@ public:
                 {
                     // recurse
                     if (c->cmd != CMD_NO_CMD)
-                        process_command(c->cmd, CMD_NO_CMD);
+                        process_command(c->cmd, CMD_GAME_MENU);
                     return true;
                 }
                 // otherwise, exit menu and process in the main process_command call
@@ -2005,7 +1953,7 @@ public:
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("Lookup info",
-            MEL_ITEM, 'i', CMD_LOOKUP_HELP_MENU));
+            MEL_ITEM, '/', CMD_LOOKUP_HELP));
 #ifdef TARGET_OS_MACOSX
         add_entry(new CmdMenuEntry("Show options file in finder",
             MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
@@ -2266,13 +2214,10 @@ void process_command(command_type cmd, command_type prev_cmd)
         update_screen();
         break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
-    case CMD_LOOKUP_HELP:           keyhelp_query_descriptions();      break;
-    case CMD_LOOKUP_HELP_MENU:
-    {
-        LookupHelpMenu m;
-        m.show();
+    case CMD_LOOKUP_HELP:
+        keyhelp_query_descriptions(prev_cmd == CMD_GAME_MENU
+                                                ? prev_cmd : CMD_NO_CMD);
         break;
-    }
 
     case CMD_DISPLAY_RELIGION:
     {
