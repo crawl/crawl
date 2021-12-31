@@ -2740,7 +2740,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_ANY:
         return true;
     case TARG_HOSTILE:
-        return mons_attitude(*mon) == ATT_HOSTILE;
+        return mons_attitude(*mon) == ATT_HOSTILE
+            || mon->has_ench(ENCH_INSANE);
     case TARG_FRIEND:
         return mon->friendly();
     case TARG_INJURED_FRIEND:
