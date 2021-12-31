@@ -1964,11 +1964,12 @@ public:
             const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
             if (c)
             {
-                cmd = c->cmd;
                 // TODO: better quit behavior here
-                if (cmd != CMD_NO_CMD && cmd != CMD_QUIT)
+                if (c->cmd == CMD_QUIT)
+                    cmd = c->cmd;
+                else if (c->cmd != CMD_NO_CMD)
                 {
-                    process_command(cmd, CMD_NO_CMD);
+                    process_command(c->cmd, CMD_NO_CMD);
                     return true;
                 }
             }
