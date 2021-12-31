@@ -146,7 +146,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Xom
-        { },
+        { 
+            { 6, ABIL_XOM_PRAY, "pray to play"},
+        },
 
         // Vehumet
         {   { 1, "gain magical power from killing" },

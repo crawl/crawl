@@ -297,6 +297,9 @@ enum ability_type
     ABIL_WU_JIAN_WHIRLWIND,
     ABIL_WU_JIAN_WALLJUMP,
 
+    // Xom
+    ABIL_XOM_PRAY = 1290,
+
     // Ignis
 #if TAG_MAJOR_VERSION == 34
     ABIL_IGNIS_SEA_OF_FIRE = 1300,

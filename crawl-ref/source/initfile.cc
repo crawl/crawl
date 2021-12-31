@@ -1145,6 +1145,7 @@ void game_options::reset_options()
     fire_order_ability.erase(ABIL_IGNIS_FIERY_ARMOUR);
     fire_order_ability.erase(ABIL_IGNIS_FOXFIRE);
     fire_order_ability.erase(ABIL_IGNIS_RISING_FLAME);
+    fire_order_ability.erase(ABIL_XOM_PRAY);
 #ifdef WIZARD
     // makes testing quiver stuff impossible
     fire_order_ability.erase(ABIL_WIZ_BUILD_TERRAIN);
