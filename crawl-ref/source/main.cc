@@ -1887,7 +1887,8 @@ public:
         CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
                                                 command_type _cmd=CMD_NO_CMD,
                                                 bool _uses_popup=true)
-            : MenuEntry(label, _level, 1, hotk), cmd(_cmd), uses_popup(_uses_popup)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd),
+              uses_popup(_uses_popup)
         {
             if (tileidx_command(cmd) != TILEG_TODO)
                 add_tile(tileidx_command(cmd));
@@ -1933,7 +1934,8 @@ public:
     {
         clear();
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
-        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
+        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE,
+            CMD_NO_CMD, false));
         items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
         // n.b. CMD_SAVE_GAME_NOW crashes on returning to the main menu if we
         // don't exit out of this popup now, not sure why
