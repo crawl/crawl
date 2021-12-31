@@ -60,6 +60,10 @@ const enchant_type dispellable_enchantments[] =
     ENCH_STILL_WINDS,
     ENCH_CONCENTRATE_VENOM,
     ENCH_MIRROR_DAMAGE,
+    ENCH_BLIND,
+    ENCH_INSANE,
+    ENCH_DAZED,
+    ENCH_ANTIMAGIC,
 };
 
 bool player_is_debuffable();
