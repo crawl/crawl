@@ -2165,11 +2165,11 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_IMMOLATION,     RARITY_UNCOMMON },
     { SCR_VULNERABILITY,  RARITY_UNCOMMON },
     { SCR_SUMMONING,      RARITY_RARE },
-    { SCR_ACQUIREMENT,    RARITY_RARE },
     { SCR_SILENCE,        RARITY_RARE },
     { SCR_BRAND_WEAPON,   RARITY_RARE },
     { SCR_TORMENT,        RARITY_RARE },
     { SCR_HOLY_WORD,      RARITY_RARE },
+    { SCR_ACQUIREMENT,    RARITY_VERY_RARE },
 };
 
 item_rarity_type consumable_rarity(const item_def &item)

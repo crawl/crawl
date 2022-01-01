@@ -1361,6 +1361,8 @@ static int _scroll_weight(item_rarity_type rarity)
         return 36;
     case RARITY_RARE:
         return 15;
+    case RARITY_VERY_RARE:
+        return 9;
     default:
         return 0;
     }
