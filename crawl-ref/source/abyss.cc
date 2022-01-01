@@ -1246,8 +1246,9 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
     // The chance is reciprocal to these numbers.
-    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
-                            : 7500 - 1250 * (you.depth - 1);
+    const int depth = you.runes[RUNE_ABYSSAL] ? brdepth[BRANCH_ABYSS] + 1
+                                              : you.depth - 1;
+    const int exit_chance = 7250 - 1250 * (depth - 1);
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
@@ -1306,7 +1307,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 abyss_genlevel_mask)
         ||
         level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 1900, nullptr, nullptr,
+        && _abyss_check_place_feat(p, 1750, nullptr, nullptr,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }
