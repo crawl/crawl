@@ -1708,7 +1708,7 @@ void handle_monster_move(monster* mons)
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-        if (bernoulli(gold, 3.0/100.0))
+        if (x_chance_in_y(3 * gold, 100))
         {
             simple_monster_message(*mons,
                 " is distracted by your dazzling golden aura.");
