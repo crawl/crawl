@@ -842,12 +842,14 @@ Armour skill. These penalties are larger if you have low Strength.
 
 A shield normally increases neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
-shield (especially larger shields) with insufficient Shields skill slows your
-attacks, hampers your ability to cast spells, and lowers your evasion. You also
-obviously cannot wield a two-handed weapon while wearing a shield. Shields are
-most effective against the first attack on you each turn and become less useful
-for every one after that. There are three types: bucklers, kite shields, and
-tower shields, going from smallest to largest.
+shield (especially larger shields) slows your attacks, hampers your ability to
+cast spells, and lowers your evasion. Small species are more strongly affected
+by these penalties, and large species are less affected, but all species can
+reduce and eventually eliminate these penalties by mastering the Shields skill.
+You also obviously cannot wield a two-handed weapon while wearing a shield.
+Shields are most effective against the first attack on you each turn and become
+less useful for every one after that. There are three types: bucklers, kite
+shields, and tower shields, going from smallest to largest.
 
 Some magical armours have special powers. These powers are sometimes automatic,
 affecting you whenever you wear the armour, and sometimes must be activated with
@@ -2265,9 +2267,7 @@ Stealth
 
 Shields
   Affects the amount of protection you gain by using a shield, and the degree to
-  which it hinders you. Examining a shield will show the amount of skill needed
-  to completely compensate for its encumbrance - larger species need less skill
-  and smaller species more.
+  which it hinders your evasion, attack speed and spellcasting success.
 
 Invocations
   Affects your ability to call on your god for aid. Those skilled at Invocations

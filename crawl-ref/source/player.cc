@@ -1936,10 +1936,8 @@ static int _player_evasion_size_factor(bool base = false)
 // other medium-sized races)
 int player_shield_racial_factor()
 {
-    const int ev_factor = you.has_mutation(MUT_QUADRUMANOUS)
-                                        ? -2 // Same as trolls, etc.
-                                        : _player_evasion_size_factor(true);
-    return max(1, 5 + ev_factor);
+    return you.has_mutation(MUT_QUADRUMANOUS) ? -2 // Same as trolls, etc.
+           : _player_evasion_size_factor(true);
 }
 
 
@@ -5586,15 +5584,10 @@ int player::adjusted_shield_penalty(int scale) const
     if (!shield_l)
         return 0;
 
-    const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
-    return max(0, ((base_shield_penalty * scale) - skill(SK_SHIELDS, scale)
-                  / player_shield_racial_factor() * 10) / 10);
-}
-
-float player::get_shield_skill_to_offset_penalty(const item_def &item)
-{
-    int evp = property(item, PARM_EVASION);
-    return -1 * evp * player_shield_racial_factor() / 10.0;
+    const int base_shield_penalty = -property(*shield_l, PARM_EVASION) / 10;
+    return 2 * base_shield_penalty * base_shield_penalty
+           * (270 - skill(SK_SHIELDS, 10)) * scale
+           / (5 * (20 - 3 * player_shield_racial_factor())) / 270;
 }
 
 /**

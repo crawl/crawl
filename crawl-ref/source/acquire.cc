@@ -197,11 +197,11 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  *
  * Weighted by Shields skill & the secret racial shield bonus.
  *
- * Ratios by shields skill & player size (B = buckler, K = kite shield, P = tower shield)
+ * Ratios by shields skill & player size (B = buckler, K = kite shield, T = tower shield)
  *
  *     Shields    0           5         10          15        20
- * Large:   {6B}/5K/4P  ~{1B}/1K/1P  ~{1B}/5K/7P  ~2K/3P     1K/2P
- * Med.:        2B/1K    6B/4K/1P      2B/2K/1P   4B/8K/3P   1K/1P
+ * Large:   {6B}/5K/4T  ~{1B}/1K/1T  ~{1B}/5K/7T  ~2K/3T     1K/2T
+ * Med.:        2B/1K    6B/4K/1T      2B/2K/1T   4B/8K/3T   1K/1T
  * Small:      ~3B/1K     ~5B/2K      ~2B/1K     ~3B/2K     ~1B/1K
  *
  * XXX: possibly shield skill should count for more for non-med races?
@@ -212,11 +212,11 @@ static armour_type _acquirement_shield_type()
 {
     const int scale = 256;
     vector<pair<armour_type, int>> weights = {
-        { ARM_BUCKLER,       player_shield_racial_factor() * 4 * scale
+        { ARM_BUCKLER,       (5 + player_shield_racial_factor()) * 4 * scale
                                 - _skill_rdiv(SK_SHIELDS, scale) },
         { ARM_KITE_SHIELD,        10 * scale },
         { ARM_TOWER_SHIELD,  20 * scale
-                             - player_shield_racial_factor() * 4 * scale
+                             - (5 + player_shield_racial_factor()) * 4 * scale
                              + _skill_rdiv(SK_SHIELDS, scale / 2) },
     };
 

@@ -3362,10 +3362,7 @@ int monster::evasion(bool ignore_helpless, const actor* /*act*/) const
     {
         const item_def* armour = mslot_item(static_cast<mon_inv_type>(slot));
         if (armour)
-        {
-            ev += property(*armour, PARM_EVASION) / 10
-                  / (is_shield(*armour) ? 2 : 6);
-        }
+            ev += property(*armour, PARM_EVASION) / 60;
     }
 
     // evasion from jewellery

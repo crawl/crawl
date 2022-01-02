@@ -117,8 +117,8 @@ distracted or helpless creature, as well as the amount of extra damage dealt.
 Shields
 
 A high Shields skill helps you block melee attacks or projectiles (both magical
-and non-magical) with your equipped shield, and reduces their penalty to your attack
-speed and spellcasting success.
+and non-magical) with your equipped shield, and reduces their penalty to your
+evasion, attack speed and spellcasting success.
 %%%%
 Unarmed Combat
 
