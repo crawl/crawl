@@ -3454,7 +3454,7 @@ void melee_attack::chaos_affect_actor(actor *victim)
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
     if (atk != UNAT_CONSTRICT && atk != UNAT_TOUCH
-        && you.strength() + you.dex() <= random2(50))
+        && 30 + you.experience_level <= random2(60))
     {
         return false;
     }
