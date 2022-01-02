@@ -1354,13 +1354,13 @@ static int _scroll_weight(item_rarity_type rarity)
     switch (rarity)
     {
     case RARITY_VERY_COMMON:
-        return 200;
+        return 196;
     case RARITY_COMMON:
         return 100;
     case RARITY_UNCOMMON:
         return 36;
     case RARITY_RARE:
-        return 15;
+        return 16;
     case RARITY_VERY_RARE:
         return 9;
     default:
