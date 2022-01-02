@@ -1455,17 +1455,10 @@ string Menu::get_select_count_string(int count) const
     string ret;
     if (f_selitem)
         ret = f_selitem(&sel);
-    else
-    {
-        char buf[100] = "";
-        if (count)
-        {
-            snprintf(buf, sizeof buf, " (%d item%s)", count,
-                    (count > 1 ? "s" : ""));
-        }
-        ret = string(buf);
-    }
-    return ret + string(max(12-(int)ret.size(), 0), ' ');
+    else if (count)
+        ret = make_stringf(" (%d selected)", count); // XX is this ever used?
+
+    return ret + string(max(12 - (int)ret.size(), 0), ' ');
 }
 
 vector<MenuEntry*> Menu::selected_entries() const
