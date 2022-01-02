@@ -620,6 +620,7 @@ public:
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
     bool        tile_web_mouse_control;
+    string      tile_web_mobile_input_helper;
 #endif
 #endif // USE_TILE
 

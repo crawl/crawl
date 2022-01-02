@@ -128,6 +128,7 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
 
         $("#stats").width(stat_width_px);
         $("#monster_list").width(stat_width_px);
+        $("#mobile_input input").width(remaining_width-12); // 2*padding+2*border
 
         // Go back to the old layer
         set_ui_state(state);
@@ -140,6 +141,18 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
         var possible_input = $("#messages .game_message input");
         if (possible_input)
            possible_input.focus();
+
+        // Input helper for mobile browsers
+        if (!client.is_watching())
+        {
+            var mobile_input = options.get("tile_web_mobile_input_helper");
+            if ((mobile_input === 'true') || (mobile_input === 'auto' && is_mobile()))
+            {
+                $("#mobile_input").show();
+                $("#mobile_input input").off("input");
+                $("#mobile_input input").on("input", handle_mobile_input);
+            }
+        }
     }
 
     options.add_listener(function () {
@@ -312,6 +325,17 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
             glyph_mode_font: glyph_font
         };
         $.extend(dungeon_renderer, renderer_settings);
+    }
+
+    function is_mobile()
+    {
+        return ('ontouchstart' in document.documentElement);
+    }
+
+    function handle_mobile_input(e)
+    {
+        e.target.value = e.target.defaultValue;
+        comm.send_message("input", { text: e.originalEvent.data });
     }
 
     $(document).ready(function () {

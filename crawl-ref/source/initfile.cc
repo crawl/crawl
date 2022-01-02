@@ -408,6 +408,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_sidebar), false),
         new BoolGameOption(SIMPLE_NAME(tile_web_mouse_control), true),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(tile_web_mobile_input_helper), "auto",
+            {{"auto", "auto"}, {"true", "true"}, {"false", "false"}}),
         new StringGameOption(SIMPLE_NAME(tile_font_crt_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
@@ -5000,6 +5003,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_bool("tile_level_map_hide_sidebar",
             Options.tile_level_map_hide_sidebar);
     tiles.json_write_bool("tile_web_mouse_control", Options.tile_web_mouse_control);
+    tiles.json_write_string("tile_web_mobile_input_helper", Options.tile_web_mobile_input_helper);
     tiles.json_write_bool("tile_menu_icons", Options.tile_menu_icons);
 
     tiles.json_write_string("tile_font_crt_family",
