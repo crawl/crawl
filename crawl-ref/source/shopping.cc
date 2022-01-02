@@ -349,11 +349,14 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_INVISIBILITY:
             case SPARM_WILLPOWER:
             case SPARM_PROTECTION:
-            case SPARM_ARCHERY:
+            case SPARM_HURLING:
             case SPARM_REPULSION:
             case SPARM_PRESERVATION:
             case SPARM_SHADOWS:
             case SPARM_RAMPAGING:
+            case SPARM_INFUSION:
+            case SPARM_LIGHT:
+            case SPARM_ENERGY:
                 valued += 50;
                 break;
 
@@ -362,6 +365,9 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_REFLECTION:
             case SPARM_SPIRIT_SHIELD:
             case SPARM_HARM:
+            case SPARM_RAGE:
+            case SPARM_MAYHEM:
+            case SPARM_GUILE:
                 valued += 20;
                 break;
 

@@ -158,7 +158,6 @@ static bool _fill_inf_from_ddef(duration_type dur, status_info& inf)
 static void _describe_airborne(status_info& inf);
 static void _describe_glow(status_info& inf);
 static void _describe_regen(status_info& inf);
-static void _describe_sickness(status_info& inf);
 static void _describe_speed(status_info& inf);
 static void _describe_poison(status_info& inf);
 static void _describe_transform(status_info& inf);
@@ -312,10 +311,6 @@ bool fill_status_info(int status, status_info& inf)
         _describe_regen(inf);
         break;
 
-    case STATUS_SICK:
-        _describe_sickness(inf);
-        break;
-
     case STATUS_SPEED:
         _describe_speed(inf);
         break;
@@ -467,7 +462,7 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text
-                = make_stringf("Storm (%d)",
+                = make_stringf("Heavenly (%d)",
                                you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
         }
         break;
@@ -864,7 +859,7 @@ static void _describe_poison(status_info& inf)
     int pois_perc = (you.hp <= 0) ? 100
                                   : ((you.hp - max(0, poison_survival())) * 100 / you.hp);
     inf.light_colour = (player_res_poison(false) >= 3
-                         ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
+                        ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
     inf.light_text   = "Pois";
     const string adj =
          (pois_perc >= 100) ? "lethally" :
@@ -921,26 +916,6 @@ static void _describe_airborne(status_info& inf)
     inf.long_text    = "You are flying" + desc + ".";
     inf.light_colour = _dur_colour(inf.light_colour, expiring);
     _mark_expiring(inf, expiring);
-}
-
-static void _describe_sickness(status_info& inf)
-{
-    if (you.duration[DUR_SICKNESS])
-    {
-        const int high = 120 * BASELINE_DELAY;
-        const int low  =  40 * BASELINE_DELAY;
-
-        inf.light_colour   = _bad_ench_colour(you.duration[DUR_SICKNESS],
-                                              low, high);
-        inf.light_text     = "Sick";
-
-        string mod = (you.duration[DUR_SICKNESS] > high) ? "badly "  :
-                     (you.duration[DUR_SICKNESS] >  low) ? ""
-                                                         : "mildly ";
-
-        inf.short_text = mod + "diseased";
-        inf.long_text  = "You are " + mod + "diseased.";
-    }
 }
 
 /**
@@ -1062,26 +1037,27 @@ const char *duration_end_message(duration_type dur)
 }
 
 /**
- * What message should a given duration print when it reaches 50%, if any?
+ * What message should a given duration print when it passes its
+ * expiring threshold, if any?
  *
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
- * @return      A message to print for the duration when it hits 50%.
+ * @return      A message to print.
  */
-const char *duration_mid_message(duration_type dur)
+const char *duration_expire_message(duration_type dur)
 {
-    return _lookup_duration(dur)->decr.mid_msg.msg;
+    return _lookup_duration(dur)->decr.expire_msg.msg;
 }
 
 /**
- * How much should the duration be decreased by when it hits the midpoint (to
- * fuzz the remaining time), if at all?
+ * How much should the duration be decreased by when it passes its
+ * expiring threshold (to fuzz the remaining time), if at all?
  *
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
  * @return      A random value to reduce the remaining duration by; may be 0.
  */
-int duration_mid_offset(duration_type dur)
+int duration_expire_offset(duration_type dur)
 {
-    return _lookup_duration(dur)->decr.mid_msg.offset();
+    return _lookup_duration(dur)->decr.expire_msg.offset();
 }
 
 /**
@@ -1103,7 +1079,7 @@ int duration_expire_point(duration_type dur)
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
  * @return      The appropriate message channel, e.g. MSGCH_RECOVERY.
  */
-msg_channel_type duration_mid_chan(duration_type dur)
+msg_channel_type duration_expire_chan(duration_type dur)
 {
     return _lookup_duration(dur)->decr.recovery ? MSGCH_RECOVERY
                                                 : MSGCH_DURATION;

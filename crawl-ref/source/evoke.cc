@@ -111,7 +111,7 @@ static bool _evoke_horn_of_geryon()
 }
 
 /**
- * Spray lightning in all directions. (Randomly: shock, lightning bolt, OoE.)
+ * Spray lightning in all directions. (Randomly lightning bolt or OoE.)
  *
  * @param range         The range of the beams. (As with all beams, eventually
  *                      capped at LOS.)
@@ -119,9 +119,8 @@ static bool _evoke_horn_of_geryon()
  */
 static void _spray_lightning(int range, int power)
 {
-    const zap_type which_zap = random_choose(ZAP_SHOCK,
-                                             ZAP_LIGHTNING_BOLT,
-                                             ZAP_ORB_OF_ELECTRICITY);
+    const zap_type zap = random_choose_weighted(3, ZAP_LIGHTNING_BOLT,
+                                                2, ZAP_ORB_OF_ELECTRICITY);
 
     bolt beam;
     // range has no tracer, so randomness is ok
@@ -131,7 +130,7 @@ static void _spray_lightning(int range, int power)
     beam.target.x += random2(13) - 6;
     beam.target.y += random2(13) - 6;
     // Non-controlleable, so no player tracer.
-    zapping(which_zap, power, beam);
+    zapping(zap, power, beam);
 }
 
 /**
@@ -378,7 +377,7 @@ static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
     return min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
 }
 
-void wind_blast(actor* agent, int pow, coord_def target, bool card)
+void wind_blast(actor* agent, int pow, coord_def target)
 {
     vector<actor *> act_list;
 
@@ -551,12 +550,11 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     if (agent->is_player())
     {
-        const string source = card ? "card" : "fan";
-
+        // Nemelex card only.
         if (pow > 120)
-            mprf("A mighty gale blasts forth from the %s!", source.c_str());
+            mpr("A mighty gale blasts forth from the card!");
         else
-            mprf("A fierce wind blows from the %s.", source.c_str());
+            mpr("A fierce wind blows from the card.");
     }
 
     noisy(8, agent->pos());
@@ -686,7 +684,7 @@ static spret _phantom_mirror(dist *target)
     int dur = min(6, max(1,
                          player_adjust_evoc_power(
                              you.skill(SK_EVOCATIONS, 1) / 4 + 1)
-                         * (100 - victim->check_willpower(power)) / 100));
+                         * (100 - victim->check_willpower(&you, power)) / 100));
 
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 

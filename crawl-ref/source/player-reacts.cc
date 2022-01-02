@@ -121,37 +121,37 @@
 
 static bool _decrement_a_duration(duration_type dur, int delay,
                                  const char* endmsg = nullptr,
-                                 int midloss = 0,
-                                 const char* midmsg = nullptr,
+                                 int exploss = 0,
+                                 const char* expmsg = nullptr,
                                  msg_channel_type chan = MSGCH_DURATION)
 {
     ASSERT(you.duration[dur] >= 0);
     if (you.duration[dur] == 0)
         return false;
 
-    ASSERT(!midloss || midmsg != nullptr);
-    const int midpoint = duration_expire_point(dur);
-    ASSERTM(!midloss || midloss * BASELINE_DELAY < midpoint,
-            "midpoint delay loss %d not less than duration midpoint %d",
-            midloss * BASELINE_DELAY, midpoint);
+    ASSERT(!exploss || expmsg != nullptr);
+    const int exppoint = duration_expire_point(dur);
+    ASSERTM(!exploss || exploss * BASELINE_DELAY < exppoint,
+            "expiration delay loss %d not less than duration expiration point %d",
+            exploss * BASELINE_DELAY, exppoint);
 
     const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
 
-    // If we cross the midpoint, handle midloss and print the midpoint message.
-    if (you.duration[dur] <= midpoint && old_dur > midpoint)
+    // If we start expiring, handle exploss and print the exppoint message.
+    if (you.duration[dur] <= exppoint && old_dur > exppoint)
     {
-        you.duration[dur] -= midloss * BASELINE_DELAY;
-        if (midmsg)
+        you.duration[dur] -= exploss * BASELINE_DELAY;
+        if (expmsg)
         {
             // Make sure the player has a turn to react to the midpoint
             // message.
             if (you.duration[dur] <= 0)
                 you.duration[dur] = 1;
             if (need_expiration_warning(dur))
-                mprf(MSGCH_DANGER, "Careful! %s", midmsg);
+                mprf(MSGCH_DANGER, "Careful! %s", expmsg);
             else
-                mprf(chan, "%s", midmsg);
+                mprf(chan, "%s", expmsg);
         }
     }
 
@@ -171,6 +171,7 @@ static void _decrement_petrification(int delay)
 {
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
+        you.redraw_armour_class = true;
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
         // flesh when not petrified. (Unfortunately, species::skin_name doesn't
@@ -226,6 +227,7 @@ static void _decrement_paralysis(int delay)
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
             mprf(MSGCH_DURATION, "You can move again.");
+            you.redraw_armour_class = true;
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
             * BASELINE_DELAY;
@@ -538,9 +540,9 @@ static void _try_to_respawn_ancestor()
 static void _decrement_simple_duration(duration_type dur, int delay)
 {
     if (_decrement_a_duration(dur, delay, duration_end_message(dur),
-                             duration_mid_offset(dur),
-                             duration_mid_message(dur),
-                             duration_mid_chan(dur)))
+                             duration_expire_offset(dur),
+                             duration_expire_message(dur),
+                             duration_expire_chan(dur)))
     {
         duration_end_effect(dur);
     }
@@ -777,9 +779,8 @@ static void _decrement_durations()
     dec_elixir_player(delay);
     dec_frozen_ramparts(delay);
 
-    if (!you.cannot_move()
-        && !you.confused()
-        && !you.asleep())
+    if (!you.cannot_act()
+        && !you.confused())
     {
         extract_manticore_spikes(
             make_stringf("You %s the barbed spikes from your body.",
@@ -800,6 +801,7 @@ static void _decrement_durations()
         activate_sanguine_armour();
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
+    refresh_meek_bonus();
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
     {
@@ -885,7 +887,7 @@ static void _update_mana_regen_amulet_attunement()
                 "regenerate magic more quickly.");
         }
     }
-    else
+    else if (!you.melded[EQ_AMULET])
         you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
 }
 

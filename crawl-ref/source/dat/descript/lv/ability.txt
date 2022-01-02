@@ -31,11 +31,6 @@ Cure All Mutations ability
 
 Izdziedēt visas mutācijas, taču tikai vienreiz.
 %%%%
-Animate Dead ability
-
-Atdzīvināt visus apkārtnē esošos līķus un ģindeņus kā savus sekotājus. Ņemiet
-vērā, ka zombiji un ģindeņi nevar pamest to līmeni, kurā tika atdzīvināti.
-%%%%
 End Transfer Knowledge ability
 
 Pārtraukt notiekošo pramju parnesi.

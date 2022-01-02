@@ -504,7 +504,7 @@ bool debug_make_trap(const coord_def& pos)
     }
 
     place_specific_trap(you.pos(), trap);
-    mprf("Created %s, marked it undiscovered.",
+    mprf("Created %s.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
             : trap_at(you.pos())->name(DESC_A).c_str());
@@ -631,6 +631,7 @@ static void debug_load_map_by_name(string name, bool primary)
     {
         if (toplace->orient == MAP_ENCOMPASS
             && !toplace->is_usable_in(level_id::current())
+            && !toplace->place.is_usable_in(level_id::current())
             && !yesno("Warning: this is an encompass vault not designed "
                        "for this location; placing it with &P may result in "
                        "crashes and save corruption. Continue?", true, 'y'))

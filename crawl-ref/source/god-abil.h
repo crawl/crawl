@@ -46,6 +46,7 @@ const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define GOZAG_GOLD_AURA_KEY "gozag_gold_aura_amount"
+#define GOZAG_GOLD_AURA_MAX 20
 #define GOZAG_POTION_PETITION_AMOUNT 400
 #define GOZAG_SHOP_BASE_MULTIPLIER 100
 #define GOZAG_SHOP_MOD_MULTIPLIER 25
@@ -82,6 +83,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour);
 bool zin_donate_gold();
 string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
+vector<coord_def> find_recite_targets();
 recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
                                                   recite_counts &eligibility,
                                                   bool quiet = false);
@@ -90,14 +92,14 @@ bool zin_recite_to_single_monster(const coord_def& where);
 int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
-bool zin_remove_all_mutations();
+spret zin_imprison(const coord_def& target, bool fail);
 void zin_sanctuary();
 
 void tso_divine_shield();
 void tso_remove_divine_shield();
 
 void elyvilon_purification();
-bool elyvilon_divine_vigour();
+void elyvilon_divine_vigour();
 void elyvilon_remove_divine_vigour();
 
 bool vehumet_supports_spell(spell_type spell);
@@ -107,31 +109,27 @@ void sif_do_channel_energy(int pow);
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
-bool jiyva_remove_bad_mutation();
-
 bool given_gift(const monster* mons);
 bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 bool beogh_resurrect();
 
-bool yred_injury_mirror();
-bool yred_can_enslave_soul(monster* mon);
-void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
+bool yred_can_bind_soul(monster* mon);
+void yred_make_bound_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
-bool kiku_take_corpse();
+bool kiku_take_corpse(bool just_check = false);
 bool kiku_gift_capstone_spells();
 
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
-int fedhas_rain(const coord_def &target);
 
 void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
-bool cheibriados_slouch();
+spret cheibriados_slouch(bool fail);
 void cheibriados_time_step(int pow);
 
 void ashenzari_offer_new_curse();
@@ -145,7 +143,7 @@ const vector<skill_type>& curse_skills(const CrawlStoreValue& curse);
 bool can_convert_to_beogh();
 void spare_beogh_convert();
 
-bool dithmenos_shadow_step();
+spret dithmenos_shadow_step(bool fail);
 
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
@@ -161,8 +159,9 @@ bool gozag_bribe_branch();
 
 spret qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false, dist *player_target=nullptr);
+vector<coord_def> find_elemental_targets();
 spret qazlal_elemental_force(bool fail);
-bool qazlal_disaster_area();
+spret qazlal_disaster_area(bool fail);
 
 void init_sac_index();
 int get_sacrifice_piety(ability_type sac, bool include_skill = true);
@@ -197,7 +196,11 @@ spret wu_jian_wall_jump_ability();
 void wu_jian_heavenly_storm();
 
 bool okawaru_duel_active();
-spret okawaru_duel(bool fail);
+spret okawaru_duel(const coord_def& target, bool fail);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
 void okawaru_end_duel();
+
+vector<coord_def> find_slimeable_walls();
+spret jiyva_oozemancy(bool fail);
+void jiyva_end_oozemancy();

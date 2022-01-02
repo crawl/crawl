@@ -17,7 +17,6 @@ enum status_type
     STATUS_ALIVE_STATE,
     STATUS_REGENERATION,
     STATUS_DIG,
-    STATUS_SICK,
     STATUS_SPEED,
     STATUS_STR_ZERO,
     STATUS_INT_ZERO,
@@ -80,7 +79,7 @@ void init_duration_index();
 bool duration_decrements_normally(duration_type dur);
 const char *duration_end_message(duration_type dur);
 void duration_end_effect(duration_type dur);
-const char *duration_mid_message(duration_type dur);
-int duration_mid_offset(duration_type dur);
+const char *duration_expire_message(duration_type dur);
+int duration_expire_offset(duration_type dur);
 int duration_expire_point(duration_type dur);
-msg_channel_type duration_mid_chan(duration_type dur);
+msg_channel_type duration_expire_chan(duration_type dur);

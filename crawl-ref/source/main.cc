@@ -87,8 +87,8 @@
 #include "known-items.h"
 #include "level-state-type.h"
 #include "libutil.h"
-#include "luaterp.h"
 #include "lookup-help.h"
+#include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "map-knowledge.h"
@@ -603,9 +603,9 @@ static string _wanderer_spell_str()
 
 static void _djinn_announce_spells()
 {
-    const string equip_str = you.char_class == JOB_WANDERER ?
-                                        _wanderer_equip_str():
-                                        "";
+    const string equip_str = (you.char_class == JOB_WANDERER
+                                 && inv_count() > 0) ? _wanderer_equip_str()
+                                                    : "";
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -620,18 +620,22 @@ static void _djinn_announce_spells()
 // spells and spell library
 static void _wanderer_note_equipment()
 {
-    const string equip_str = _wanderer_equip_str();
+    const string equip_str = inv_count() > 0 ? _wanderer_equip_str() : "";
+
+    const string eq_spacer = equip_str.empty() ? "" : "; and ";
 
     // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
-        "; and the following spell memorised: "
+        eq_spacer + "the following spell memorised: "
         + _wanderer_spell_str();
+
+    const string spell_spacer = spell_str.empty() && equip_str.empty() ? "" : "; and ";
 
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
         !library.size() ? "" :
-        "; and the following spells available to memorise: "
+        spell_spacer + "the following spells available to memorise: "
         + comma_separated_fn(library.begin(), library.end(),
                              [] (const spell_type spell) -> string
                              {
@@ -1111,8 +1115,17 @@ static void _input()
         end_wait_spells();
         handle_delay();
 
+        // Some delays set you.turn_is_over.
+
+        bool time_is_frozen = false;
+
+#ifdef WIZARD
+        if (you.props.exists(FREEZE_TIME_KEY))
+            time_is_frozen = true;
+#endif
+
         // Some delays reset you.time_taken.
-        if (you.time_taken || you.turn_is_over)
+        if (!time_is_frozen && (you.time_taken || you.turn_is_over))
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
@@ -1704,6 +1717,15 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
+
+#ifdef WIZARD
+    if (you.props.exists(FREEZE_TIME_KEY))
+    {
+        mprf(MSGCH_WARN, "Cannot rest while time is frozen.");
+        return;
+    }
+#endif
+
     if (i_feel_safe())
     {
         if ((you.hp == you.hp_max || !player_regenerates_hp())
@@ -1863,14 +1885,17 @@ public:
     {
     public:
         CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
-                                                command_type _cmd=CMD_NO_CMD)
-            : MenuEntry(label, _level, 1, hotk), cmd(_cmd)
+                                                command_type _cmd=CMD_NO_CMD,
+                                                bool _uses_popup=true)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd),
+              uses_popup(_uses_popup)
         {
             if (tileidx_command(cmd) != TILEG_TODO)
                 add_tile(tileidx_command(cmd));
         }
 
         command_type cmd;
+        bool uses_popup;
     };
 
     command_type cmd;
@@ -1889,8 +1914,19 @@ public:
         {
             const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
             if (c)
+            {
+                if (c->uses_popup)
+                {
+                    // recurse
+                    if (c->cmd != CMD_NO_CMD)
+                        process_command(c->cmd, CMD_GAME_MENU);
+                    return true;
+                }
+                // otherwise, exit menu and process in the main process_command call
                 cmd = c->cmd;
-            return false;
+                return false;
+            }
+            return true;
         };
     }
 
@@ -1898,10 +1934,16 @@ public:
     {
         clear();
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
-        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
+        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE,
+            CMD_NO_CMD, false));
         items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
-        add_entry(new CmdMenuEntry("Save and return to main menu",
-            MEL_ITEM, 'S', CMD_SAVE_GAME_NOW));
+        // n.b. CMD_SAVE_GAME_NOW crashes on returning to the main menu if we
+        // don't exit out of this popup now, not sure why
+        add_entry(new CmdMenuEntry(
+            (crawl_should_restart(game_exit::save)
+                            ? "Save and return to main menu"
+                            : "Save and exit"),
+            MEL_ITEM, 'S', CMD_SAVE_GAME_NOW, false));
         add_entry(new CmdMenuEntry("Generate and view character dump",
             MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
 #ifdef USE_TILE_LOCAL
@@ -1912,10 +1954,16 @@ public:
             MEL_ITEM, '~', CMD_MACRO_MENU));
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
+        add_entry(new CmdMenuEntry("Lookup info",
+            MEL_ITEM, '/', CMD_LOOKUP_HELP));
+#ifdef TARGET_OS_MACOSX
+        add_entry(new CmdMenuEntry("Show options file in finder",
+            MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
+#endif
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
                             "Quit and <lightred>abandon character</lightred>",
-            MEL_ITEM, 'Q', CMD_QUIT));
+            MEL_ITEM, 'Q', CMD_QUIT, false));
     }
 
     vector<MenuEntry *> show(bool reuse_selections = false) override
@@ -2168,7 +2216,10 @@ void process_command(command_type cmd, command_type prev_cmd)
         update_screen();
         break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
-    case CMD_LOOKUP_HELP:           keyhelp_query_descriptions();      break;
+    case CMD_LOOKUP_HELP:
+        keyhelp_query_descriptions(prev_cmd == CMD_GAME_MENU
+                                                ? prev_cmd : CMD_NO_CMD);
+        break;
 
     case CMD_DISPLAY_RELIGION:
     {
@@ -2185,6 +2236,14 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
         break;
 
+#ifdef TARGET_OS_MACOSX
+    case CMD_REVEAL_OPTIONS:
+        // TODO: implement for other OSs
+        // TODO: add a way of triggering this from the main menu
+        system(make_stringf("/usr/bin/open -R '%s'",
+                                            Options.filename.c_str()).c_str());
+        break;
+#endif
     case CMD_SHOW_CHARACTER_DUMP:
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))

@@ -99,7 +99,7 @@ function base_monster_setup(e)
            orc / scorpion / floating eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
-           Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
+           Edmund / Ijyb / Grinder / Pikel band / Pargi / Terence / Menkaure /\
            Prince Ribbit")
   e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\
            Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")

@@ -50,20 +50,6 @@ Invoca uma grande rajada de fúria divina centrada em você, causando grandes
 danos a mortos-vivos e demônios. Todos outros hostis tomam dano, ou não,
 ficando você e seus aliados imunes.
 %%%%
-Animate Remains ability
-
-Reanima um corpo ou esqueleto singular como um seguidor. Note que zumbis e
-esqueletos não podem sair do nível em que foram criados.
-%%%%
-Animate Dead ability
-
-Reanima todos os corpos e esqueletos perto de você como seguidores. Note que
-zumbis e esqueletos não podem sair do nível em que foram criados.
-%%%%
-Animate Remains or Dead ability
-
-Se você obteve esta descrição, houve um erro.
-%%%%
 Channel Energy ability
 
 Reabasteça um pouco de sua reserva mágica, dependendo de sua habilidade de

@@ -175,19 +175,9 @@ Torment ability
 
 キクバークッグァはあなたを苦痛から保護する...かもしれない。
 %%%%
-Animate Remains ability
-
-一つの死体か骨をしもべとして蘇生する。
-ゾンビとスケルトンはそれらが作成された階層を離れることができないことに注意せよ。
-%%%%
 Recall Undead Slaves ability
 
 ダンジョンのあらゆる場所からあなたのすぐ間近にアンデッドのしもべを招集する。
-%%%%
-Animate Dead ability
-
-視界内全ての死体か骨をしもべとして蘇生する。注意せよ！
-ゾンビとスケルトンはそれらが作成された階層を離れることができない。
 %%%%
 Drain Life ability
 
@@ -205,10 +195,6 @@ Enslave Soul ability
 印の継続時間は祈祷スキルに依存している。
 
 隷属した魂は彼らが作成された階層を離れてあなたに従うことができることに注意せよ。
-%%%%
-Animate Remains or Dead ability
-
-もしこの文章が表示されいるならば、それはバグだ。
 %%%%
 Heroism ability
 

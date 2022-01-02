@@ -24,11 +24,11 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "colour.h"
 #include "delay.h"
 #include "dgn-event.h"
 #include "end.h"
-#include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
@@ -38,6 +38,7 @@
 #include "hiscores.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -58,6 +59,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "spl-clouds.h"
+#include "spl-goditem.h"
 #include "spl-selfench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -490,23 +492,6 @@ static void _xom_checks_damage(kill_method_type death_type,
     }
 }
 
-static void _yred_mirrors_injury(int dam, mid_t death_source)
-{
-    if (yred_injury_mirror())
-    {
-        // Cap damage to what was enough to kill you. Can matter if
-        // Yred saves your life or you have an extra kitty.
-        if (you.hp < 0)
-            dam += you.hp;
-
-        monster* mons = monster_by_mid(death_source);
-        if (dam <= 0 || !mons)
-            return;
-
-        mirror_damage_fineff::schedule(mons, &you, dam);
-    }
-}
-
 static void _maybe_ru_retribution(int dam, mid_t death_source)
 {
     if (will_ru_retaliate())
@@ -533,9 +518,9 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
         return;
     }
 
-    // chance rises linearly with damage taken, up to 50% at half hp.
+    // chance rises linearly with damage taken, up to 75% at half hp.
     const int capped_dam = min(dam, you.hp_max / 2);
-    if (!x_chance_in_y(capped_dam, you.hp_max))
+    if (!x_chance_in_y(capped_dam * 3, you.hp_max * 2))
         return;
 
     auto rats = { MONS_HELL_RAT, MONS_RIVER_RAT };
@@ -890,6 +875,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             drain_amount = (dam - (dam / 2));
             dam /= 2;
         }
+        if (you.may_pruneify() && you.cannot_act())
+            dam /= 2;
         if (you.petrified())
             dam /= 2;
         else if (you.petrifying())
@@ -915,12 +902,24 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                            && (death_type == KILLED_BY_LAVA
                                || death_type == KILLED_BY_WATER);
 
-    // death's door protects against everything but falling into water/lava,
-    // Zot, excessive rot, leaving the dungeon, or quitting.
-    if (you.duration[DUR_DEATHS_DOOR] && !env_death && !non_death
-        && death_type != KILLED_BY_ZOT && you.hp_max > 0)
+    if (!env_death && !non_death && death_type != KILLED_BY_ZOT
+        && you.hp_max > 0)
     {
-        return;
+        // death's door protects against everything but falling into
+        // water/lava, Zot, excessive rot, leaving the dungeon, or quitting.
+        if (you.duration[DUR_DEATHS_DOOR])
+            return;
+        // the dreamshard necklace protects from any fatal blow or death source
+        // that death's door would protect from, plus a chance of activating on
+        // hits for more than 80% of a player's remaining hitpoints
+        // (but doesn't activate while in death's door)
+        else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
+                 && (dam >= you.hp
+                     || ((dam * 100) / you.hp) > 80 && coinflip()))
+        {
+            dreamshard_shatter();
+            return;
+        }
     }
 
     if (dam > 0 && death_type != KILLED_BY_POISON)
@@ -1024,7 +1023,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                            damage_desc.c_str()));
 
             _deteriorate(dam);
-            _yred_mirrors_injury(dam, source);
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);
             _maybe_spawn_rats(dam, death_type);
@@ -1033,6 +1031,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _powered_by_pain(dam);
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
+            refresh_meek_bonus();
             if (death_type != KILLED_BY_POISON)
             {
                 _maybe_corrode();

@@ -256,26 +256,6 @@ bool you_can_memorise(spell_type spell)
     return !spell_is_useless(spell, false, true);
 }
 
-bool player_can_memorise(const item_def &book)
-{
-    if (!item_is_spellbook(book) || !player_spell_levels())
-        return false;
-
-    for (spell_type stype : spells_in_book(book))
-    {
-        // Easiest spell already too difficult?
-        if (spell_difficulty(stype) > you.experience_level
-            || player_spell_levels() < spell_levels_required(stype))
-        {
-            return false;
-        }
-
-        if (!you.has_spell(stype))
-            return true;
-    }
-    return false;
-}
-
 /**
  * Populate the given list with all spells the player can currently memorise,
  * from library or Vehumet. Does not filter by currently known spells, spell
@@ -410,7 +390,7 @@ static spell_list _get_spell_list(bool just_check = false,
     return mem_spells;
 }
 
-bool library_add_spells(vector<spell_type> spells)
+bool library_add_spells(vector<spell_type> spells, bool quiet)
 {
     vector<spell_type> new_spells;
     for (spell_type st : spells)
@@ -425,7 +405,7 @@ bool library_add_spells(vector<spell_type> spells)
                 you.hidden_spells.set(st, true);
         }
     }
-    if (!new_spells.empty())
+    if (!new_spells.empty() && !quiet)
     {
         vector<string> spellnames(new_spells.size());
         transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
@@ -433,17 +413,18 @@ bool library_add_spells(vector<spell_type> spells)
              spellnames.size() > 1 ? "s" : "",
              comma_separated_line(spellnames.begin(),
                                   spellnames.end()).c_str());
-        return true;
     }
-    return false;
+    return !new_spells.empty();
 }
 
+#ifdef USE_TILE_LOCAL
 bool has_spells_to_memorise(bool silent)
 {
     // TODO: this is a bit dumb
     spell_list mem_spells(_get_spell_list(silent, true));
     return !mem_spells.empty();
 }
+#endif
 
 static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
 {
@@ -1054,13 +1035,7 @@ spret divine_exegesis(bool fail)
 
     ASSERT(is_valid_spell(spell));
 
-    if (fail)
-        return spret::fail;
-
-    if (cast_a_spell(false, spell))
-        return spret::success;
-
-    return spret::abort;
+    return cast_a_spell(false, spell, nullptr, fail);
 }
 
 /// For a given dungeon depth (or item level), how much weight should we give

@@ -217,6 +217,10 @@ CMD_DISPLAY_MAP
 
 Enter map mode
 %%%%
+CMD_MAP_EXIT_MAP
+
+Exit map mode
+%%%%
 CMD_DISPLAY_MAP verbose
 
 Displays a map of the current level.

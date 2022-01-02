@@ -289,6 +289,9 @@ tileidx_t tilep_equ_shield(const item_def &item)
         case ARM_TOWER_SHIELD:
             return _modrng(item.rnd, TILEP_HAND2_TOWER_SHIELD_FIRST_NORM,
                            TILEP_HAND2_TOWER_SHIELD_LAST_NORM);
+        case ARM_ORB:
+            return _modrng(item.rnd, TILEP_HAND2_ORB_FIRST,
+                           TILEP_HAND2_ORB_LAST);
         default: return 0;
     }
 }

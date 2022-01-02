@@ -648,7 +648,7 @@ static bool _kikubaaqudgha_retribution()
         kiku_receive_corpses(you.experience_level * 4);
 
         if (coinflip())
-            corpse_rot(nullptr);
+            corpse_rot();
     }
 
     if (x_chance_in_y(you.experience_level, 27))
@@ -691,7 +691,7 @@ static bool _yredelemnul_retribution()
 
     if (coinflip())
     {
-        if (you_worship(god) && coinflip() && yred_slaves_abandon_you())
+        if (you_worship(god) && coinflip() && yred_reclaim_souls())
             ;
         else
         {
@@ -703,13 +703,12 @@ static bool _yredelemnul_retribution()
                 if (one_chance_in(you.experience_level))
                 {
                     if (_yred_random_zombified_hostile())
-                        count++;
+                        ++count;
                 }
                 else
                 {
-                    const int num = yred_random_servants(0, true);
-                    if (num >= 0)
-                        count += num;
+                    if (yred_random_servant(0, true))
+                        ++count;
                     else
                         ++how_many;
                 }

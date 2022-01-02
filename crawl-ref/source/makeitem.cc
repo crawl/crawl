@@ -113,30 +113,6 @@ void item_colour(item_def &item)
         item.subtype_rnd = you.item_description[*idesc][item.sub_type];
 }
 
-// Does Xom consider an item boring?
-static bool _is_boring_item(int type, int sub_type)
-{
-    switch (type)
-    {
-    case OBJ_SCROLLS:
-        // These scrolls increase knowledge and thus reduce risk.
-        switch (sub_type)
-        {
-        case SCR_IDENTIFY:
-        case SCR_MAGIC_MAPPING:
-            return true;
-        default:
-            break;
-        }
-        break;
-    case OBJ_JEWELLERY:
-        return sub_type == AMU_NOTHING;
-    default:
-        break;
-    }
-    return false;
-}
-
 static weapon_type _determine_weapon_subtype(int item_level)
 {
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
@@ -188,28 +164,29 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
 }
 
-static bool _try_make_item_unrand(item_def& item, int &force_type, int agent)
+static bool _try_make_item_unrand(item_def& item, int &force_type, int item_level, int agent)
 {
     if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
 
-    int idx = find_okay_unrandart(item.base_type, force_type,
-                                  player_in_branch(BRANCH_ABYSS)
-                                      && agent == NO_AGENT);
+    // Can we generate unrands that were lost in the abyss?
+    const bool include_abyssed = player_in_branch(BRANCH_ABYSS)
+                                 && agent == NO_AGENT;
+    const int idx = find_okay_unrandart(item.base_type, force_type, item_level,
+                                        include_abyssed);
+    if (idx == -1)
+        return false;
 
     // if an idx was found that exists, the unrand was generated via
     // acquirement or similar; replace it with a fallback randart.
-    if (idx != -1 && get_unique_item_status(idx))
+    // Choosing a new unrand could break seed stability.
+    if (get_unique_item_status(idx) == UNIQ_EXISTS_NONLEVELGEN)
     {
-        int item_level;
         _setup_fallback_randart(idx, item, force_type, item_level);
         return false;
     }
 
-    if (idx != -1 && make_item_unrandart(item, idx))
-        return true;
-
-    return false;
+    return make_item_unrandart(item, idx);
 }
 
 static bool _weapon_disallows_randart(int sub_type)
@@ -223,7 +200,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
-    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
         // Make a randart or unrandart.
@@ -232,7 +209,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type, agent))
+            if (_try_make_item_unrand(item, force_type, item_level, agent))
                 return true;
             if (item.base_type == OBJ_STAVES)
             {
@@ -713,15 +690,15 @@ static void _generate_missile_item(item_def& item, int force_type,
 
 static bool _armour_disallows_randart(int sub_type)
 {
-    // Scarves are never randarts.
-    return sub_type == ARM_SCARF;
+    // Scarves and orbs are never randarts.
+    return sub_type == ARM_SCARF || sub_type == ARM_ORB;
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
-    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
         // Make a randart or unrandart.
@@ -730,7 +707,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type, agent))
+            if (_try_make_item_unrand(item, force_type, item_level, agent))
                 return true;
         }
 
@@ -799,6 +776,13 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
                                       6, SPARM_REFLECTION,
                                       12, SPARM_PROTECTION);
 
+    case ARM_ORB:
+        return random_choose_weighted(1, SPARM_LIGHT,
+                                      1, SPARM_RAGE,
+                                      1, SPARM_MAYHEM,
+                                      1, SPARM_GUILE,
+                                      1, SPARM_ENERGY);
+
     case ARM_SCARF:
         return random_choose_weighted(1, SPARM_RESISTANCE,
                                       1, SPARM_REPULSION,
@@ -823,7 +807,12 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
         return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
 
     case ARM_GLOVES:
-        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY, SPARM_STEALTH);
+        // XXX: this is only here for testing.
+        // Really actually please revert this before 0.28 is released.
+        if (coinflip())
+            return SPARM_INFUSION;
+        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_HURLING,
+                             SPARM_STEALTH, SPARM_INFUSION);
 
     case ARM_BOOTS:
         return random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_RAMPAGING);
@@ -941,10 +930,11 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
+    case SPARM_INFUSION:
         if (!strict)
             return true;
         // deliberate fall-through
-    case SPARM_ARCHERY:
+    case SPARM_HURLING:
         return slot == EQ_GLOVES;
 
     case SPARM_SEE_INVISIBLE:
@@ -993,6 +983,13 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 #endif
     case SPARM_SHADOWS:
         return type == ARM_SCARF;
+
+    case SPARM_LIGHT:
+    case SPARM_RAGE:
+    case SPARM_MAYHEM:
+    case SPARM_GUILE:
+    case SPARM_ENERGY:
+        return type == ARM_ORB;
 
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
@@ -1053,9 +1050,10 @@ static armour_type _get_random_armour_type(int item_level)
                                          10, ARM_HELMET,
                                          2, ARM_HAT,
                                          // Shield slot
-                                         4, ARM_KITE_SHIELD,
-                                         6, ARM_BUCKLER,
-                                         2, ARM_TOWER_SHIELD);
+                                         3, ARM_KITE_SHIELD,
+                                         5, ARM_BUCKLER,
+                                         2, ARM_TOWER_SHIELD,
+                                         12, ARM_ORB);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
@@ -1190,8 +1188,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
         item.plus -= 1 + random2(3);
     }
-    // Scarves always get an ego.
-    else if (item.sub_type == ARM_SCARF)
+    // Scarves and orbs always get an ego.
+    else if (item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB)
         set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
@@ -1288,15 +1286,35 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.sub_type = _random_wand_subtype();
 
     // Add wand charges and ensure we have at least one charge.
-    item.charges = 1 + random2avg(wand_charge_value(item.sub_type), 3);
+    const int max_charges = wand_charge_value(item.sub_type, item_level);
+    item.charges = 1 + random2avg(max_charges, 2);
 
     // Don't let monsters pickup early high-tier wands
     if (item_level < 2 && is_high_tier_wand(item.sub_type))
         item.flags |= ISFLAG_NO_PICKUP;
 }
 
+static int _potion_weight(item_rarity_type rarity)
+{
+    switch (rarity)
+    {
+    case RARITY_VERY_COMMON:
+        return 192;
+    case RARITY_COMMON:
+        return 105;
+    case RARITY_UNCOMMON:
+        return 67;
+    case RARITY_RARE:
+        return 35;
+    case RARITY_VERY_RARE:
+        return 2;
+    default:
+        return 0;
+    }
+}
+
 static void _generate_potion_item(item_def& item, int force_type,
-                                  int item_level, int agent)
+                                  int item_level)
 {
     item.quantity = 1;
 
@@ -1310,41 +1328,44 @@ static void _generate_potion_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
-        int stype;
-        int tries = 500;
-
-        // If created by Xom, keep going until an approved potion is chosen
-        // Currently does nothing, until we come up with a boring potion.
-        do
+        vector<pair<potion_type, int>> weights;
+        for (int i = 0; i < NUM_POTIONS; ++i)
         {
-            // total weight: 1045
-            stype = random_choose_weighted(192, POT_CURING,
-                                           105, POT_HEAL_WOUNDS,
-                                            73, POT_FLIGHT,
-                                            73, POT_HASTE,
-                                            73, POT_LIGNIFY,
-                                            66, POT_ATTRACTION,
-                                            66, POT_DEGENERATION,
-                                            66, POT_MIGHT,
-                                            66, POT_BRILLIANCE,
-                                            53, POT_MUTATION,
-                                            35, POT_INVISIBILITY,
-                                            35, POT_RESISTANCE,
-                                            35, POT_MAGIC,
-                                            35, POT_BERSERK_RAGE,
-                                            35, POT_CANCELLATION,
-                                            35, POT_AMBROSIA,
-                                             2, POT_EXPERIENCE);
+            const potion_type pot = (potion_type) i;
+            const int weight = _potion_weight(consumable_rarity(OBJ_POTIONS,
+                                                                pot));
+            if (weight)
+            {
+                const pair<potion_type, int> weight_pair = { pot, weight };
+                weights.push_back(weight_pair);
+            }
         }
-        while (agent == GOD_XOM
-               && _is_boring_item(OBJ_POTIONS, stype)
-               && --tries > 0);
 
-        item.sub_type = stype;
+        // total weight: 1045
+        item.sub_type = *random_choose_weighted(weights);
     }
     // don't let monsters pickup early dangerous potions
     if (item_level < 2 && item.sub_type == POT_BERSERK_RAGE)
         item.flags |= ISFLAG_NO_PICKUP;
+}
+
+static int _scroll_weight(item_rarity_type rarity)
+{
+    switch (rarity)
+    {
+    case RARITY_VERY_COMMON:
+        return 200;
+    case RARITY_COMMON:
+        return 100;
+    case RARITY_UNCOMMON:
+        return 36;
+    case RARITY_RARE:
+        return 15;
+    case RARITY_VERY_RARE:
+        return 9;
+    default:
+        return 0;
+    }
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
@@ -1355,43 +1376,37 @@ static void _generate_scroll_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
-        int tries = 500;
-
-        // If this item is created by Xom, keep looping until an
-        // interesting scroll is discovered (as determined by
-        // _is_boring_item). Otherwise just weighted-choose a scroll.
-        do
+        vector<pair<scroll_type, int>> weights;
+        for (int i = 0; i < NUM_SCROLLS; ++i)
         {
-            // total weight:    750
-            //                 -122  in sprint
-            item.sub_type = random_choose_weighted(
-                200, SCR_IDENTIFY,
-                 // [Cha] don't generate teleportation scrolls if in sprint
-                100, (crawl_state.game_is_sprint() ? NUM_SCROLLS
-                                                   : SCR_TELEPORTATION),
-                 45, SCR_AMNESIA,
-                 // [Cha] don't generate noise scrolls if in sprint
-                 44, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
-                 40, SCR_ENCHANT_ARMOUR,
-                 40, SCR_ENCHANT_WEAPON,
-                 40, SCR_MAGIC_MAPPING,
-                 32, SCR_FEAR,
-                 32, SCR_FOG,
-                 32, SCR_BLINKING,
-                 32, SCR_IMMOLATION,
-                 29, SCR_VULNERABILITY,
-                 // Higher-level scrolls.
-                 14, SCR_SUMMONING,
-                 14, SCR_ACQUIREMENT,
-                 14, SCR_SILENCE,
-                 14, SCR_BRAND_WEAPON,
-                 14, SCR_TORMENT,
-                 14, SCR_HOLY_WORD);
+            const scroll_type scr = (scroll_type) i;
+
+            // No teleportation or noise in Sprint.
+            if (crawl_state.game_is_sprint()
+                && (scr == SCR_TELEPORTATION || scr == SCR_NOISE))
+            {
+                continue;
+            }
+
+            // These scrolls increase knowledge, so Xom considers them boring.
+            if (agent == GOD_XOM
+                && (scr == SCR_IDENTIFY || scr == SCR_MAGIC_MAPPING))
+            {
+                continue;
+            }
+
+            const int weight = _scroll_weight(consumable_rarity(OBJ_SCROLLS,
+                                                                scr));
+            if (weight)
+            {
+                const pair<scroll_type, int> weight_pair = { scr, weight };
+                weights.push_back(weight_pair);
+            }
         }
-        while (item.sub_type == NUM_SCROLLS
-               || agent == GOD_XOM
-                  && _is_boring_item(OBJ_SCROLLS, item.sub_type)
-                  && --tries > 0);
+
+        // total weight:    750
+        //                 -122  in sprint
+        item.sub_type = *random_choose_weighted(weights);
     }
 
     item.quantity = random_choose_weighted(46, 1,
@@ -1499,7 +1514,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         // need to use force_type here, because _try_make_item_unrand can set
         // it for fallback randarts.
         force_type = WPN_STAFF;
-        if (_try_make_item_unrand(item, force_type, agent))
+        if (_try_make_item_unrand(item, force_type, item_level, agent))
             return;
         if (item.base_type != OBJ_STAVES)
         {
@@ -1542,11 +1557,11 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
     int type = (force_type == NUM_RINGS)     ? get_random_ring_type() :
                (force_type == NUM_JEWELLERY) ? get_random_amulet_type()
                                              : force_type;
-    if (item_level > 2
+    if (item_level > 0
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        if (_try_make_item_unrand(item, type, agent))
+        if (_try_make_item_unrand(item, type, item_level, agent))
             return true;
     }
 
@@ -1608,27 +1623,20 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
     else
     {
-        int tries = 500;
-        do
-        {
-            if (force_type == NUM_RINGS)
-                item.sub_type = get_random_ring_type();
-            else if (force_type == NUM_JEWELLERY)
-                item.sub_type = get_random_amulet_type();
-            else
-                item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
-                                                  : get_random_ring_type());
-        }
-        while (agent == GOD_XOM
-               && _is_boring_item(OBJ_JEWELLERY, item.sub_type)
-               && --tries > 0);
+        if (force_type == NUM_RINGS)
+            item.sub_type = get_random_ring_type();
+        else if (force_type == NUM_JEWELLERY)
+            item.sub_type = get_random_amulet_type();
+        else
+            item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
+                                              : get_random_ring_type());
     }
 
     item.plus = _determine_ring_plus(item.sub_type);
 
     // All jewellery base types should now work. - bwr
     if (item_level == ISPEC_RANDART
-        || allow_uniques && item_level > 2
+        || allow_uniques && item_level > 0
            && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
@@ -1894,7 +1902,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_POTIONS:
-        _generate_potion_item(item, force_type, item_level, agent);
+        _generate_potion_item(item, force_type, item_level);
         break;
 
     case OBJ_SCROLLS:

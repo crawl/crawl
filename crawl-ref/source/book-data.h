@@ -111,9 +111,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Misfortune
-    SPELL_SLOW,
     SPELL_CONFUSING_TOUCH,
     SPELL_VIOLENT_UNRAVELLING,
+    SPELL_ENFEEBLE,
 },
 
 {   // Book of Changes
@@ -154,6 +154,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Maledictions
     SPELL_HIBERNATION,
     SPELL_TUKIMAS_DANCE,
+    SPELL_ENFEEBLE,
 },
 
 {   // Book of Air
@@ -212,7 +213,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Wizardry
     SPELL_AGONY,
-    SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
 #endif
@@ -232,7 +232,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_APPORTATION,
     SPELL_INTOXICATE,
-    SPELL_INVISIBILITY
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -258,7 +257,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Burglary
     SPELL_PASSWALL,
     SPELL_SWIFTNESS,
-    SPELL_INVISIBILITY,
 },
 
 {   // Book of Dreams

@@ -924,29 +924,6 @@ v.vv.vb1bv.vv.v
  vv.vv.vv.vv.v
 ENDMAP
 
-# Adapted from labyrinth_spiral.
-NAME:   gauntlet_exit_spiral
-TAGS:   gauntlet_exit
-MONS:   patrolling minotaur
-SUBST:  b : bvz, z = vb
-KFEAT:  < = exit_gauntlet
-: gauntlet_exit_loot(_G)
-MAP
-vvvvvvv.vvvvvvv
-vvvvvvv.vvvvvvv
-vvv.....vvvvvvv
-vvb.bbbbbbbvvvv
-vvb.b.....bvvvv
-vvb.b.bbb.bvvvv
-vvb.b.b<b.bvvvv
-vvb.b.b1b.bvvvv
-vvb.b.b.b.bvvvv
-vvb.b...b.bvvvv
- vb.bbbbb.bvvv
- vb.......bvvv
- vbbbbbbbbbvvv
-ENDMAP
-
 # Adapted from labyrinth_hidden_loot.
 NAME:   gauntlet_exit_hidden_loot
 TAGS:   gauntlet_exit
@@ -1171,6 +1148,36 @@ vvvvvbG'Gbvvvvv
  vvvvbG<Gbvvvv
  vvvvbbbbbvvvv
 ENDMAP
+
+NAME:   dreamdust_gauntlet_exit_labyrinth
+TAGS:   gauntlet_exit
+KMONS:  < = patrolling minotaur
+KFEAT:  a = b
+KFEAT:  < = exit_gauntlet
+# Set up openings in the inner and outer walls.
+NSUBST: a = . / v
+NSUBST: p = . / b
+# Set up dead ends in the inner and outer sections.
+NSUBST: - = c / .
+NSUBST: ` = v / `
+SUBST:  T : T U G
+: gauntlet_exit_loot(_G)
+MAP
+ccccccc.ccccccc
+c.-.-.-.-.-.-.c
+c-vavavavavav-c
+c-a.`.`.`.`.a.c
+c-v`bbbpbbb`v-c
+c-a.bbT.Tbb.a.c
+c-v..p.<.p..v-c
+c-vv`bT.Tb`vv-c
+c..a.bbpbb.a..c
+cc-v..`.`..v-cc
+ c.avavavava.c
+ c..-.-.-.-..c
+ ccccccccccccc
+ENDMAP
+
 
 #############################################################################
 # <<3>> Gauntlet main maps.

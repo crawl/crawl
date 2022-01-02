@@ -15,9 +15,7 @@
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
-#ifdef WIZARD
- #include "luaterp.h"
-#endif
+#include "luaterp.h"
 #include "menu.h"
 #include "monster.h"
 #include "mon-util.h"
@@ -959,7 +957,6 @@ void webtiles_send_more_text(string txt)
 }
 
 #else
-void webtiles_send_messages() { }
 void webtiles_send_more_text(string) { }
 #endif
 
@@ -2188,23 +2185,6 @@ string get_last_messages(int mcount, bool full)
     if (!text.empty())
         text += "\n";
     return text;
-}
-
-void get_recent_messages(vector<string> &mess,
-                         vector<msg_channel_type> &chan)
-{
-    flush_prev_message();
-
-    const store_t& msgs = buffer.get_store();
-    int mcount = NUM_STORED_MESSAGES;
-    for (int i = -1; mcount > 0; --i, --mcount)
-    {
-        const message_line msg = msgs[i];
-        if (!msg)
-            break;
-        mess.push_back(msg.pure_text_with_repeats());
-        chan.push_back(msg.channel);
-    }
 }
 
 bool recent_error_messages()

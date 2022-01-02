@@ -188,7 +188,9 @@ still within sight of the target.
 %%%%
 Blink spell
 
-Randomly translocates the caster a short distance.
+Randomly translocates the caster a short distance. Translocating in this way
+destabilises the caster temporarily, preventing consecutive blinks for a
+short period of time depending on spellpower.
 %%%%
 Blinkbolt spell
 
@@ -319,7 +321,7 @@ Cleansing Flame spell
 %%%%
 Cold Breath spell
 
-Exhales a focused blast of icy-cold air. It may knock back airborne targets.
+Exhales a focused blast of icy-cold air.
 %%%%
 Concentrate Venom spell
 
@@ -361,8 +363,8 @@ will bring the fire fully to life, but will burn the caster.
 %%%%
 Conjure Living Spells spell
 
-Creates several living, autonomous spells. These will attempt to cast themselves
-at the nearest foe, expending themselves in the process.
+Creates several living, autonomous spells, which cast themselves at the first foe
+to enter their range. Once cast, they dissipate.
 %%%%
 Corona spell
 
@@ -411,9 +413,9 @@ nearby may be dazzled and left stumbling blindly.
 %%%%
 Death Channel spell
 
-Raises living creatures slain by the caster and their allies, reducing them to
-a state of spectral slavery. When the channel expires the spectres are released
-from bondage.
+Binds the souls of living, demonic and holy creatures slain by the caster and
+their allies, causing their spectres to remain and fight for the caster. When
+the channel expires the spectres will fade away.
 %%%%
 Death Rattle spell
 
@@ -556,6 +558,12 @@ Energy Bolt spell
 
 Fires a bolt of highly destructive energy.
 %%%%
+Enfeeble spell
+
+Overwhelms an enemy with malignant energies, irresistibly weakening their melee
+attacks and disrupting their magic. It will additionally daze and blind any foe
+that fails to resist the full force of the curse.
+%%%%
 Ensnare spell
 
 Shoots a stream of webbing at a creature, ensnaring the target in a spider web.
@@ -573,10 +581,10 @@ Eringya's Noxious Bog spell
 
 Causes the caster to release a torrent of sludge that transforms nearby areas
 into a toxic bog. The sludge damages and poisons all monsters, even those
-resistant to poison. The bog cannot form on areas adjacent to solid features,
-nor on areas that lack solid floor, like deep water or lava. The transformation
-is temporary and cannot be sustained out of the caster's sight. Spellpower will
-increase how long the bog lingers.
+resistant to poison. The bog cannot form on areas adjacent to multiple solid
+features, nor on areas that lack solid floor, like deep water or lava. The
+transformation is temporary and cannot be sustained out of the caster's sight.
+Spellpower will increase how long the bog lingers.
 %%%%
 Eruption spell
 
@@ -821,8 +829,7 @@ is dependent on the size of the target.
 %%%%
 Invisibility spell
 
-Turns the caster invisible. Turning invisible causes magical contamination
-and may eventually cause glowing, nullifying the invisibility.
+Turns the caster invisible.
 %%%%
 Invisibility Other spell
 
@@ -1358,8 +1365,8 @@ Statue Form spell
 
 Transforms the caster into a slow but extremely robust stone statue. The
 caster's melee damage, both unarmed and with weapons, is substantially
-increased. The caster's stone body is insulated from electricity and gains
-resistance to poison, miasma, and negative energy.
+increased. The caster's stone body is immune to poison and miasma, and gains
+resistance to electricity and negative energy.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
@@ -1403,10 +1410,10 @@ Storm Form spell
 
 Lets the caster walk through the air as a raging, lightning-filled tempest. The
 caster's melee attacks are strengthened, electrified, and strike all adjacent
-foes. The caster also flies, is more evasive, and resists electricity. They can
-launch themselves as a lightning bolt, blasting through everything in their way.
-The damage and evasion granted by storm form are highly dependent on the power
-with which it was cast.
+foes. The caster also flies, is more evasive, gains immunity to poison and
+miasma, and resists electricity. They can launch themselves as a lightning
+bolt, blasting through everything in their way. The damage and evasion granted
+by storm form are highly dependent on the power with which it was cast.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -1548,6 +1555,10 @@ Summon Spectral Orcs spell
 Summons between one and three spectral orcs, specialised for melee combat
 and equipped with spectral weaponry and armour.
 %%%%
+Summon Spiders spell
+
+Summons one or more spiders.
+%%%%
 Summon Tzitzimitl spell
 
 Summons a tzitzimitl, a demon of disease and despair.
@@ -1583,10 +1594,6 @@ never directly lethal.
 Teleport Other spell
 
 Randomly translocates a targeted creature.
-%%%%
-Teleport Self spell
-
-Teleports the caster to a random location.
 %%%%
 Throw Barbs spell
 
@@ -1714,3 +1721,5 @@ If cast upon a creature already blessed (or cursed) with magical enchantments,
 those enchantments will be torn apart, transforming into a spray of
 destructive mutagenic radiation. The victim and anyone adjacent will be
 blasted and heavily deformed, weakening them and reducing their armour.
+Summoned creatures are particularly vulnerable, as the enchantments binding
+them to this plane will unravel and cause them to be dismissed immediately.

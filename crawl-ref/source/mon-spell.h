@@ -70,6 +70,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // Howler monkeys and demonic crawlers.
+    { MST_SCREAMER,
+      {
+        { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
+      }
+    },
+
     // Deep elf annihilators and draconian annihilators.
     {  MST_ANNIHILATOR,
       {
@@ -229,12 +236,6 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('h') Carnivorous quadrupeds.
-    { MST_HOWLER_MONKEY,
-      {
-        { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
-      }
-    },
-
     {  MST_BEAR,
       {
        { SPELL_BERSERKER_RAGE, 100, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
@@ -399,7 +400,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SMITING, 10, MON_SPELL_PRIEST },
        { SPELL_SUMMON_DEMON, 20, MON_SPELL_PRIEST },
        { SPELL_HEAL_OTHER, 10, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 10, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -418,7 +418,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_DRAINING, 15, MON_SPELL_WIZARD },
        { SPELL_AGONY_RANGE, 15, MON_SPELL_WIZARD },
        { SPELL_BIND_SOULS, 30, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -575,7 +574,19 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ORB_SPIDER,
       {
-       { SPELL_IOOD, 57, MON_SPELL_MAGICAL },
+       { SPELL_IOOD, 80, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_BROODMOTHER,
+      {
+       { SPELL_SUMMON_SPIDERS, 30, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_CULICIVORA,
+      {
+       { SPELL_HEAL_OTHER, 40, MON_SPELL_NATURAL },
       }
     },
 
@@ -665,6 +676,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SUN_MOTH,
+      {
+       { SPELL_STICKY_FLAME_RANGE, 20, MON_SPELL_NATURAL },
+       { SPELL_ENERGY_BOLT, 20, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('z') Corporeal semi-humanoid undead.
     {  MST_ANCIENT_CHAMPION,
       {
@@ -721,6 +739,12 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_ROLL, 50, MON_SPELL_NATURAL},
        { SPELL_BLINK_AWAY, 20, MON_SPELL_NATURAL},
+      }
+    },
+
+    {  MST_RADROACH,
+      {
+       { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL},
       }
     },
 
@@ -922,7 +946,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 11, MON_SPELL_WIZARD },
        { SPELL_SMITING, 11, MON_SPELL_WIZARD },
-       { SPELL_MINOR_HEALING, 22, MON_SPELL_WIZARD },
+      }
+    },
+
+    // ('H') Hybrids.
+    {  MST_JOROGUMO,
+      {
+       { SPELL_BOLT_OF_DRAINING, 20, MON_SPELL_WIZARD },
+       { SPELL_ENSNARE, 40, MON_SPELL_WIZARD },
       }
     },
 
@@ -1079,6 +1110,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_IRONBOUND_THUNDERHULK,
       {
        { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
+       { SPELL_BLINK_RANGE, 25, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1192,7 +1224,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_HASTE_OTHER, 21, MON_SPELL_PRIEST },
        { SPELL_MIGHT_OTHER, 21, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 21, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1653,7 +1684,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_STRIP_WILLPOWER, 11, MON_SPELL_WIZARD },
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1777,14 +1807,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('F') Frogs.
-    {  MST_PRINCE_RIBBIT,
-      {
-       { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
-       { SPELL_TELEPORT_SELF, 66, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-      }
-    },
-
     // ('H') Hybrids.
     {  MST_ARACHNE,
       {
@@ -1820,7 +1842,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_SONJA,
       {
        { SPELL_BLINK, 28, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 28, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1987,7 +2008,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SPRINT, 14, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
        { SPELL_BLINK, 14, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_SELF, 14, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 

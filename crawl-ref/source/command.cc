@@ -90,11 +90,7 @@ static string _get_version_information()
 static string _get_version_features()
 {
     string result;
-    if (crawl_state.need_save
-#ifdef DGAMELAUNCH
-        && (you.wizard || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
-#endif
-       )
+    if (crawl_state.seed_is_known())
     {
         if (you.fully_seeded)
         {
@@ -103,7 +99,7 @@ static string _get_version_features()
                 result += " (seed may be affected by game upgrades)";
         }
         else
-            result += "Game is not seeded.";
+            result += "Game is non-seeded.";
         result += "\n\n";
     }
     if (Version::history_size() > 1)
@@ -366,8 +362,8 @@ static const char *targeting_help_1 =
     "<w>v</w> : describe monster under cursor\n"
     "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
     "<w>-</w> : cycle monsters backward\n"
-    "<w>*</w> : cycle objects forward (also <w>'</w>)\n"
-    "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
+    "<w>'</w> : cycle objects forward (also <w>*</w>)\n"
+    "<w>;</w> : cycle objects backward (also <w>/</w>)\n"
     "<w>^</w> : cycle through traps\n"
     "<w>_</w> : cycle through altars\n"
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
@@ -413,6 +409,7 @@ static const char *targeting_help_2 =
     "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
+    "             (also <w>/ Dir.</w>)\n"
     "\n"
     "<h>Firing mode ('<w>f</w><h>' in main):\n"
     "<w>Q</w> : choose fire action.\n"
@@ -1257,7 +1254,7 @@ static bool _show_help_special(int key)
                 display_char_dump();
             return true;
         case '/':
-            keyhelp_query_descriptions();
+            keyhelp_query_descriptions(CMD_DISPLAY_COMMANDS);
             return true;
         case 'q':
             _handle_FAQ();

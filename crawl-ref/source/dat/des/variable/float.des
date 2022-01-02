@@ -1072,6 +1072,363 @@ WWWwwwwwWWWWWwwwwww--WWW                WWWwwW
                   .@@.
 ENDMAP
 
+NAME:    nicolae_BIG_FREAKIN_CUBE
+TAGS:    transparent decor
+DEPTH:   D:4-, Depths
+ORIENT:  float
+SHUFFLE: '`-
+: if you.depth() == 1 then
+SUBST:   S = Z
+: elseif you.depth_fraction() < 1 then
+SUBST:   S : SZ
+: end
+NSUBST:  S = 1=((< / 1={{< / 1=[[<, Z = 1=))> / 1=}}> / 1=]]>
+CLEAR:   '`
+MAP
+              ---xcx'''
+              xxx...xxx
+        ```xcx.........xcx```
+        xxx...xxx...xxx...xxx
+  '''xcx.........xcx.........xcx---
+  xxx...xxx...xxx...xxx...xxx...xxx
+cx.........xcx....S....xcx.........xc
+x.xxx...xxx...xxx...xxx...xxx...xxx.x
+-x...xcx.........xcx.........xcx.....x'
+-x....x.xxx...xxx...xxx...xxx.x......x'
+-x.....x...xcx.........xcx.....x.....x'
+  x....x....x.xxx...xxx.x......x......x
+  cx...x.....x...xcx.....x.....x.....xc
+  x.xxx.x....x....x......x......x.xxx.x
+  `x...xcx...x.....x.....x.....xcx.....x`
+  `x....x.xxx.x....x......x.xxx.x......x`
+  `x.....x...xcx...x.....xcx.....x.....x`
+    x....x....x.xxx.x.xxx.x......x......x
+    cx...x..S..x...xcx.....x..S..x.....xc
+    x.xxx.x....x....x......x......x.xxx.x
+    'x...xcx...x.....x.....x.....xcx.....x-
+    'x....x.xxx.x....x......x.xxx.x......x-
+    'x.....x...xcx...x.....xcx.....x.....x-
+      x....x....x.xxx.x.xxx.x......x......x
+      cx...x.....x...xcx.....x.....x.....xc
+        xxx.x....x....x......x......x.xxx
+        ---xcx...x.....x.....x.....xcx'''
+              xxx.x....x......x.xxx
+              ```xcx...x.....xcx```
+                    xxx.x.xxx
+                    '''xcx---
+ENDMAP
+
+NAME:   nicolae_cairo_tiling
+TAGS:   transparent decor luniq_nicocairo
+DEPTH:  D:4-, Depths
+ORIENT: float
+MAP
+         xcx         xcx
+ cx...xcx...xcx...xcx...xcx...xc
+ x.xcx.x.....x.xcx.x.....x.xcx.x
+x...x...x...x...x...x...x...x...x
+c...x...cxxxc...x...cxxxc...x...c
+x...x...x...x...x...x...x...x...x
+ x.xcx.x.....x.xcx.x.....x.xcx.x
+ cx...xcx...xcx...xcx...xcx...xc
+ x.....x.xcx.x.....x.xcx.x.....x
+ .x...x...x...x...x...x...x...x.
+ .cxxxc...x...cxxxc...x...cxxxc.
+ .x...x...x...x...x...x...x...x.
+ x.....x.xcx.x.....x.xcx.x.....x
+ cx...xcx...xcx...xcx...xcx...xc
+ x.xcx.x.....x.xcx.x.....x.xcx.x
+x...x...x...x...x...x...x...x...x
+c...x...cxxxc...x...cxxxc...x...c
+x...x...x...x...x...x...x...x...x
+ x.xcx.x.....x.xcx.x.....x.xcx.x
+ cx...xcx...xcx...xcx...xcx...xc
+ x.....x.xcx.x.....x.xcx.x.....x
+ .x...x...x...x...x...x...x...x.
+ .cxxxc...x...cxxxc...x...cxxxc.
+ .x...x...x...x...x...x...x...x.
+ x.....x.xcx.x.....x.xcx.x.....x
+ cx...xcx...xcx...xcx...xcx...xc
+ x.xcx.x.....x.xcx.x.....x.xcx.x
+x...x...x...x...x...x...x...x...x
+c...x...cxxxc...x...cxxxc...x...c
+x...x...x...x...x...x...x...x...x
+ x.xcx.x.....x.xcx.x.....x.xcx.x
+ cx...xcx...xcx...xcx...xcx...xc
+         xcx         xcx
+ENDMAP
+
+NAME:   nicolae_cairo_tiling_large
+TAGS:   transparent decor luniq_nicocairo
+DEPTH:  D:4-, Depths
+ORIENT: float
+MAP
+              xxc
+              +.x
+            cxx.x+x
+            x.....x
+            +.....cx+xc
+            x.....x...x
+          xxcxx.x+x...x+x
+          +...+.x.......x
+      xxcxx...xxcxx...xxc
+      +.x.......x.+...+.x
+    cxx.x+x...x+x.xxcxx.x+x
+    x.....x...x.....x.....x
+    +.....cx+xc.....+.....cxxxc
+    x.....x...x.....x.....x...x
+  xxcxx.x+x...x+x.xxcxx.x+x...x+x
+  +...+.x.......x.+...+.x.......x
+cxx...xxcxx...xxcxx...xxcxx...xxc
+x.......x.+...+.x.......x.+...+
+x+x...x+x.xxcxx.x+x...x+x.xxcxx
+  x...x.....x.....x...x.....x
+  cx+xc.....+.....cx+xc.....+
+      x.....x.....x...x.....x
+      x+x.xxcxx.x+x...x+x.xxc
+        x.+...+.x.......x.+
+        cxx...xxcxx...xxcxx
+        x.......x.+...+
+        x+x...x+x.xxcxx
+          x...x.....x
+          cx+xc.....+
+              x.....x
+              x+x.xxc
+                x.+
+                cxx
+ENDMAP
+
+NAME:    nicolae_cairo_tiling_large_dashed
+TAGS:    transparent decor luniq_nicocairo
+DEPTH:   D:4-, Depths
+ORIENT:  float
+SHUFFLE: aq
+SUBST:   a = x, q = .
+MAP
+                   qacaq
+         caq   qacaq...qacaq
+         a.qacaq.a.......a.qac
+        qq...a...qq.....qq...a
+        a....q....a.....a....q
+  caqqqac....q....caqqqac....q
+  a.....a....q....a.....a....q
+ qq.....qq...a...qq.....qq...a
+ a.......a.qacaq.a.......a.qacaq
+ caq...qacaq...qacaq...qacaq...qac
+ a.qacaq.a.......a.qacaq.a.......a
+qq...a...qq.....qq...a...qq.....qq
+a....q....a.....a....q....a.....a
+c....q....caqqqac....q....caqqqac
+a....q....a.....a....q....a.....a
+qq...a...qq.....qq...a...qq.....qq
+ a.qacaq.a.......a.qacaq.a.......a
+ caq...qacaq...qacaq...qacaq...qac
+ a.......a.qacaq.a.......a.qacaq.a
+ qq.....qq...a...qq.....qq...a...qq
+  a.....a....q....a.....a....q....a
+  caqqqac....q....caqqqac....q....c
+  a.....a....q....a.....a....q....a
+ qq.....qq...a...qq.....qq...a...qq
+ a.......a.qacaq.a.......a.qacaq.a
+ caq...qacaq...qacaq...qacaq...qac
+   qacaq.a.......a.qacaq.a.......a
+     a...qq.....qq...a...qq.....qq
+     q....a.....a....q....a.....a
+     q....caqqqac....q....caqqqac
+     q....a.....a....q....a
+     a...qq.....qq...a...qq
+     caq.a.......a.qacaq.a
+       qacaq...qacaq   qac
+           qacaq
+ENDMAP
+
+NAME:   nicolae_cairo_tiling_very_big
+TAGS:   transparent decor luniq_nicocairo
+DEPTH:  D:4-, Depths
+ORIENT: float
+MAP
+        cxxx+xxxc
+        x.......x
+       xx.......xx
+       +.........+
+      xx.........xx   xxcxx
+      x...........x x+x...x+x
+      cxx.......xxcxx.......xxcxx
+      x.x+x...x+x.x...........x.x+x
+     xx...xxcxx...xx.........xx...xxc
+     +......x......+.........+......x
+    xx......x......xx.......xx......x
+    x.......x.......x.......x.......x
+    c.......+.......cxxx+xxxc.......+
+    x.......x.......x.......x.......x
+    xx......x......xx.......xx......x
+     +......x......+.........+......x
+     xx...xxcxx...xx.........xx...xxc
+      x.x+x...x+x.x...........x.x+x
+    xxcxx.......xxcxx.......xxcxx
+  x+x.x...........x.x+x...x+x.x
+cxx...xx.........xx...xxcxx...xx
+x......+.........+......x......+
+x......xx.......xx......x......xx
+x.......x.......x.......x.......x
++.......cxxx+xxxc.......+.......c
+x.......x.......x.......x.......x
+x......xx.......xx......x......xx
+x......+.........+......x......+
+cxx...xx.........xx...xxcxx...xx
+  x+x.x...........x.x+x...x+x.x
+    xxcxx.......xxcxx.......xxc
+        x+x...x+x x...........x
+          xxcxx   xx.........xx
+                   +.........+
+                   xx.......xx
+                    x.......x
+                    cxxx+xxxc
+ENDMAP
+
+##############################################################################
+# A series of large floats that use the ruin tag and don't place monsters
+#
+
+NAME:   hellmonk_ruined_rings
+TAGS:   transparent ruin
+DEPTH:  D:6-, Lair, Depths
+WEIGHT: 5
+ORIENT: float
+:if crawl.one_chance_in(4) and you.in_branch("D") then
+TILE:   x = wall_brick_brown_vines
+:elseif crawl.one_chance_in(4) then
+SUBST:  x : c
+TILE:   c = wall_sandstone
+:end
+:if you.in_branch("Lair") then
+SUBST:  ' = WW...
+:end
+MAP
+           .......
+        ...xxx.xxx...
+       .xxxxxx.xxxxxx.
+      .xxx.........xxx.
+     .xx.............xx.
+    .xx.....xxxxx.....xx.
+   .xx....xxxxxxxxx....xx.
+  .xx....xxx'''''xxx....xx.
+ .xx....xx''.....''xx....xx.
+ .xx...xx'..xx.xx..'xx...xx.
+ .xx..xx'..xxx.xxx..'xx..xx.
+.xx...xx'.xx'...'xx.'xx...xx.
+.xx..xx'.xx'.....'xx.'xx..xx.
+.xx..xx'.xx'.vvv.'xx.'xx..xx.
+.xx..xx'.xx'.vvv.'xx.'xx..xx.
+.xx..xx'.xx'.vvv.'xx.'xx..xx.
+.xx..xx'.xx'.....'xx.'xx..xx.
+.xx...xx..xx'...'xx..xx...xx.
+ .xx..xx...xxxxxxx...xx..xx.
+ .xx...xx...xxxxx...xx...xx.
+ .xx....xx.........xx....xx.
+  .xx....xxx.....xxx....xx.
+   .xx....xxxx.xxxx....xx.
+    .xx.....xx.xx.....xx.
+     .xx.............xx.
+      .xx...........xx.
+       .xxxxxxxxxxxxx.
+          .xxxxxxx.
+           .......
+ENDMAP
+
+NAME:   hellmonk_destroyed_diamonds
+TAGS:   transparent ruin
+DEPTH:  D:6-, Lair, Depths
+WEIGHT: 5
+ORIENT: float
+SUBST:  x : ccx
+:if crawl.coinflip() then
+TILE:   c = stone_wall_shoals
+:else
+TILE:   c = wall_marble
+:end
+FTILE:  c. = floor_sand
+MAP
+   .       .       .       .
+  .x..   ..x..   ..x..   ..x.
+ .xxx.. ..xxx.. ..xxx.. ..xxx.
+.xxxxx...xxxxx...xxxxx...xxxxx..
+ .xxx..x..xxx..x..xxx..x..xxx..x.
+  .x..xxx..x..xxx..x..xxx..x..xxx.
+   ..xxxxx...xxxxx...xxxxx...xxxxx..
+     .xxx..x..xxx..x..xxx..x..xxx..x.
+      .x..xxx..x..xxx..x..xxx..x..xxx.
+       ..xxxxx...xxxxx...xxxxx...xxxxx..
+         .xxx..x..xxx..x..xxx..x..xxx..x.
+          .x..xxx..x..xxx..x..xxx..x..xxx.
+           ..xxxxx...xxxxx...xxxxx...xxxxx.
+             .xxx.. ..xxx.. ..xxx.. ..xxx.
+              .x..   ..x..   ..x..   ..x.
+               .       .       .       .
+ENDMAP
+
+NAME:   hellmonk_warped_wall
+TAGS:   transparent ruin
+DEPTH:  D:6-, Lair, Depths
+WEIGHT: 5
+ORIENT: float
+TILE:   c = wall_stone_smooth
+SUBST:  . : .......W
+MAP
+                                .........@
+........                      ..cccccccccc
+cccccccc....                ..ccccccc.....
+@....ccccccc..             .cccc.....
+     ....ccccc.............ccc..
+         ...cccccccccccccccc..
+            .....cccccc.....
+                 ......
+ENDMAP
+
+NAME:   hellmonk_crumbling_castle
+TAGS:   transparent ruin
+DEPTH:  D:6-, Depths
+WEIGHT: 5
+ORIENT: float
+TILE:   c = wall_stone_smooth
+TILE:   G = dngn_crumbled_column
+MAP
+                     ...
+                    .ccc.
+                   .ccccc.
+                  .ccc.ccc.
+                 .ccc...ccc.
+                 .cc..V..cc.
+                 .ccc...ccc.
+                  .ccc.ccc.
+                  .ccc+ccc.
+                  .ccG.Gcc.
+     .............ccc...ccc.............
+    .ccccccccccccccc.....ccccccccccccccc.
+    .ccccccccccccccG.....Gcccccccccccccc.
+    .ccG........Gc.........cG........Gcc.
+    .cc..........+.........+..........cc.
+    .cc..........c.........c..........cc.
+    .cccc+ccccccccc.......ccccccccc+cccc.
+    .cccc...cccc.GccG...GccG.cccc...cc..
+     ..cc....cc....cc...cc....cc....cc.
+      .cc....c......cc+cc......c....cc.
+      .cc....c......cc.cc......c....cc.
+     ..cc....+......cc.cc......+....cc..
+    .cccc....c.......c.c.......c....cccc.
+   .ccccc...ccc......+.+......ccc...ccccc.
+  .cc...c+cccccc.....c.c.....cccccc+c...cc.
+ .cc......ccccccc...cc.cc...ccccccc......cc.
+.cc.......cccccccccGcc.ccGccccccccc.......cc.
+.cc.......cccccccccccc+cccccccccccc.......cc.
+.ccG......cc.....ccccc.ccccc.....cc......Gcc.
+ .cc.....cc.     .ccc...ccc.     .cc.....cc.
+ .cccG..cc.       ...   ...       .cc..Gccc.
+  .cccccc.                         .cccccc.
+   ..ccc.                           .ccc..
+     ...                             ...
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
@@ -1874,6 +2231,9 @@ ITEM:   ring of evasion randart / ring of protection randart \
 ITEM:   staff of fire / staff of cold / staff of earth / staff of air
 : master_elementalist_setup(_G, "D")
 KFEAT:  a = iron_grate
+# Place fire cloud machines over lava and freezing vapour and storm clouds over
+# deep water to prevent the relevant (not-fully-resistant or at least
+# non-flying and non-giant) monsters from getting harmed by clouds.
 KFEAT:  p = l
 KFEAT:  rs = w
 : if you.in_branch("Elf") then
@@ -1910,10 +2270,6 @@ MARKER: q = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
 MARKER: r = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
                 delay_max = 40, size = 1, cloud_type = "freezing vapour", \
                 excl_rad = -1 }
-# Within the rooms where these machines place, placing them only on deep water
-# protects the monsters not immune to electricity from stepping there, since
-# those monsters are neither giant nor fly. Outside of these rooms, the runed
-# door keeps out monsters not immune to electricity are giant or fly.
 MARKER: s = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
                 delay_max = 40, size = 1, cloud_type = "thunder", excl_rad = 0 }
 TILE:   x = wall_pebble_lightgray
@@ -1926,13 +2282,13 @@ MAP
   cc3x3x3c'''cw5ww5cc
  cc3xxx3xcaaWc5ww5wwcc
 cc3xx3xxxcqaW+5w5wwwwcc
-cxx33x33xcccccwww55555c
+cxx33x33xccnccwww55555c
 ccccccc+ccdddcccccccc+c
 c-----..cd...dcra"""WWc
 c--...--cd.D.dcaa"""aac
 c-.-----cd...dc.."""arc
 c+cccccccc...cc=ccccccc
-c111lll1lc+++c`77`77``c
+c111lll1lc...c`77`77``c
 ccll1l1l1c;.;c```7``7cc
  ccl1l1l1c;;.c`7```7cc
   ccl1ll1c;.;c7`7`7cc
@@ -2400,7 +2756,7 @@ MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          deep troll earth mage w:4 / deep elf death mage w:2
 MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
          sphinx w:5 / nagaraja w:5 / mummy priest w:1 / \
-         white draconian knight w:1
+         draconian knight w:1
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
 SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
 SUBST:   IKO = 1, LPS = 2, T = 3, JMNQRUV = %
@@ -4901,6 +5257,263 @@ MAP
 .cccccccccc
 ENDMAP
 
+# If you keep messing around with terrain-based magic in the same area,
+# sometimes things get messy. Monster set focuses on monsters that modify
+# terrain (Primal Wave, Eruption, Hurl Sludge, Dig, water aura, etc.) and/or use
+# it tactically (Waterstrike, Awaken Forest, Pyroclastic Surge, LRD, etc.).
+NAME:     nicolae_terramorphic_expanse
+TAGS:     patrolling no_pool_fixup transparent
+DEPTH:    Depths
+ORIENT:   float
+KITEM:    12% = % w:30 / * / | w:5
+KMONS:    1 = salamander tyrant / merfolk aquamancer / water nymph / \
+              fenstrider witch / spriggan druid / eleionoma / \
+              deep elf elementalist / deep troll earth mage
+KMONS:    2 = salamander / merfolk / water nymph / spriggan / deep troll
+KFEAT:    % = W / . w:40
+NSUBST:   1 = 2=1 / 112
+SUBST:    " = %-, - = c:90 Wwlxt...., ` = cc_
+# Saving on glyph usage through recursive subvaults.
+# nicolae_terramorphic_biome is where all the meat and potatoes happens.
+SUBVAULT: D : nico_terraquarter
+SUBVAULT: E : nico_terraquarter
+SUBVAULT: F : nico_terraquarter
+SUBVAULT: H : nico_terraquarter
+SUBVAULT: J : nico_terraquarter
+SUBVAULT: K : nico_terrabiome
+SUBVAULT: L : nico_terrabiome
+SUBVAULT: M : nico_terrabiome
+SUBVAULT: N : nico_terrabiome
+CLEAR:    _
+MAP
+``````````      ``````````
+`cccccccccc-@@-cccccccccc`
+`cc""%DD.--.KK.--.EE%""cc`
+`c"1.DDDD..KKKK..EEEE.1"c`
+`c"..DDDD..KKKK..EEEE.."c`
+`c%DD.DD.DD.KK.EE.EE.EE%c`
+`cDDDD..DDDD..EEEE..EEEEc`
+`cDDDD..DDDD..EEEE..EEEEc`
+`c.DD.DD.DD.JJ.EE.EE.EE.c`
+`c-..DDDD..JJJJ..EEEE..-c`
+ c-..DDDD..JJJJ..EEEE..-c
+ -.LL.DD.JJ.JJ.JJ.EE.MM.-
+ @LLLL..JJJJ%%JJJJ..MMMM@
+ @LLLL..JJJJ%%JJJJ..MMMM@
+ -.LL.FF.JJ.JJ.JJ.HH.MM.-
+ c-..FFFF..JJJJ..HHHH..-c
+`c-..FFFF..JJJJ..HHHH..-c`
+`c.FF.FF.FF.JJ.HH.HH.HH.c`
+`cFFFF..FFFF..HHHH..HHHHc`
+`cFFFF..FFFF..HHHH..HHHHc`
+`c%FF.FF.FF.NN.HH.HH.HH%c`
+`c"..FFFF..NNNN..HHHH.."c`
+`c"1.FFFF..NNNN..HHHH.1"c`
+`cc""%FF.--.NN.--.HH%""cc`
+`cccccccccc-@@-cccccccccc`
+``````````      ``````````
+ENDMAP
+
+NAME:     nicolae_terramorphic_quarter
+TAGS:     nico_terraquarter unrand allow_dup no_pool_fixup transparent no_dump
+SUBVAULT: D : nico_terrabiome
+SUBVAULT: E : nico_terrabiome
+SUBVAULT: F : nico_terrabiome
+SUBVAULT: H : nico_terrabiome
+MAP
+    DD
+   DDDD
+   DDDD
+ HH DD EE
+HHHH  EEEE
+HHHH  EEEE
+ HH FF EE
+   FFFF
+   FFFF
+    FF
+ENDMAP
+
+NAME:  nicolae_terramorphic_biome
+TAGS:  nico_terrabiome unrand allow_dup patrolling no_pool_fixup transparent \
+       no_item_gen no_monster_gen no_trap_gen no_dump
+# Monster glyphs:
+# 1234 are the usual glyphs. 12 have a chance to place lava/water.
+# yz always place lava/water. pq never place lava/water.
+# Each glyph has a total weight of 180 and a 1/9 chance of nothing.
+# The glyphs have a 2/9 chance to place weaker versions of the main monsters
+# for that glyph, to keep the vault slightly less of a murder zone.
+KMONS: 1py = salamander tyrant w:120 / salamander w:40 / nothing w:20
+KMONS: 2qz = merfolk aquamancer w:50 / water nymph w:50 / \
+            elemental wellspring w:20 / merfolk w:40 / nothing w:20
+KMONS: 3 = fenstrider witch w:20 / spriggan druid w:20 / eleionoma w:40 / \
+           dryad w:40 / spriggan w:40 / nothing w:20
+KMONS: 4 = deep elf elementalist w:60 / deep troll earth mage w:60 / \
+           deep troll w:40 / nothing w:20
+KMONS: 5 = elemental wellspring w:120 / merfolk aquamancer w:20 / \
+           water nymph w:20 / nothing w:20
+KITEM: $ = $ / $ good_item w:5
+KFEAT: ! = mangrove
+KFEAT: ` = demonic_tree
+KFEAT: ' = petrified_tree
+KFEAT: 1 = l / .
+KFEAT: 2 = w / W / . w:20
+KFEAT: y = l
+KFEAT: 5z = w
+# 1/21 chance for a biome to be a rare type (~ glyph), the vault has 24 biomes,
+# chance of all biomes in vault being nonrare is (25/26)^24 = ~31%
+# Each biome tile has 1/15 chance of putting a monster, chance of a given
+# biome having no monsters is (14/15)^12 = ~43.7%.
+# 24 biomes with 12 tiles each, placing monsters on about 1/15 of tiles, gives
+# 19.2 monster glyphs per vault on average. With each monster glyph having a
+# 1/9 chance of nothing, that's about 17.1 monsters per vault, plus the 4
+# guaranteed monsters in the corners of the main vault.
+SUBST: . : D:4 E:4 F:4 H:4 J:4 ~:1, ~ : KLMNOPQR
+# Volcano (Common)
+SUBST: D = l:100 x:20 .:20 1
+# Watery (Common)
+SUBST: E = w:60 W:50 .:30 2
+# Rocky (Common)
+SUBST: F = x:80 .:40 c:20 4
+# Forest (Common)
+SUBST: H = t:100 .:40 3
+# Swampy (Common)
+SUBST: J = !:85 W:35 .:20 3
+# Oops, All Liquids! (Rare, contains no walkable space)
+SUBST: K = l:70 w:70 y:5 z:5
+# Hellish (Rare)
+SUBST: L = `:70 .:50 l:20 1:5 3:5
+# Melange (Rare)
+SUBST: M = l:20 x:20 w:20 W:20 t:20 !:20 .:20 -, - = 1234
+# Precious Minerals (Rare)
+SUBST: N = x:40 b:40 $:40 .:20 4
+# Wellspring (Rare, only place for elemental wellsprings to generate)
+SUBST: O = w:90 .:50 5
+# Petrified (Rare)
+SUBST: P = ':70 x:30 .:30 c 3:5 4:5
+# Chunk Of Metal (Rare, contains no walkable space)
+SUBST: Q = v:130 l y
+# Flat Empty Terrain (Rare)
+SUBST: R = .:140 -, - = pq34
+MAP
+ ..
+....
+....
+ ..
+ENDMAP
+
+NAME:   dreamdust_black_sun_cult
+TAGS:   transparent no_monster_gen
+ORIENT: float
+DEPTH:  D:13-, Zot
+COLOUR: bm = red
+TILE:   m = dngn_transparent_wall_red
+FTILE:  -mA1 = floor_volcanic
+MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
+                              delay = 10, size = 1, excl_rad = 0 }
+NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
+: if you.in_branch("D") then
+KMONS:  1 = demonspawn black sun
+KMONS:  2 = sun demon
+KMONS:  3 = small abomination / large abomination
+KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
+            randbook disc:fire disc2:necromancy spells:scorch \
+            slevels:8 numspells:4 title:The_Black_Sun, \
+            staff of fire / staff of death / scroll of immolation q:3 / \
+            scroll of torment q:3 / any weapon ego:flaming / \
+            any weapon ego:draining
+: else
+KMONS:  1 = orb of fire
+KMONS:  2 = demonspawn black sun
+KMONS:  3 = draconian scorcher / draconian monk
+KITEM:  1 = manual of fire magic / manual of necromancy, \
+            randbook disc:fire disc2:necromancy spells:starburst \
+            slevels:25 numspells:4 title:The_Black_Sun, \
+            any weapon ego:flaming randart / any weapon ego:draining randart
+: end
+MAP
+ .........
+..!bbbbb!..
+.!bb---bb!.
+.bb-----bb.
+.b--mAm--b.
+.b--m1m--b.
+.b--mmm--b.
+.bb-----bb.
+.!bb---bb!.
+..!bb+bb!..
+ .........
+ENDMAP
+
+NAME:   dreamdust_cat_pyramid
+TAGS:   no_monster_gen transparent no_rotate
+DEPTH:  Crypt, Depths
+ORIENT: float
+# Offerings of gold, valuable items, or good potions to the Cat God.
+: kitem("d = star_item w:100 / " .. dgn.loot_potions)
+MONS:   sphinx
+KFEAT:  ap = granite_statue
+NSUBST: 1 = 2=1 / 1--
+TILE:   c = wall_tomb
+COLOUR: c = yellow
+TILE:   p = dngn_sarcophagus_pedestal_left
+TILE:   aG = dngn_statue_cat
+FTILE:  -d$1+ap = floor_sandstone
+MAP
+       ...
+      ..c..
+     ..ccc..
+    ..ccdcc..
+   ..ccdpdcc..
+  ..cc1$$$1cc..
+ ..cc--111--cc..
+..cccca---acccc..
+.cccccc+++cccccc.
+......G...G......
+     .......
+     .G...G.
+     ...@...
+ENDMAP
+
+# everyone's favorite mechanic
+NAME:   hellmonk_paralyzer
+TAGS:   transparent no_monster_gen
+DEPTH:  D:10-, Orc, Depths, Zot
+ORIENT: float
+MONS:   hornet, orc sorcerer / ogre mage, fenstrider witch / great orb of eyes
+MONS:   sphinx / vampire knight, dread lich, floating eye
+ITEM:   wand of paralysis
+NSUBST: 6 = 1:6 / *:6.
+: if you.in_branch("D") and you.absdepth() < 13 then
+NSUBST:  - = 20 = 1... / 1:2 / *:.
+:elseif you.in_branch("Orc") then
+NSUBST:  - = 12 = 1... / 16 = 2... / *:.
+:elseif you.in_branch("Depths") then
+NSUBST: -  = 12 = 3... / 16 = 4... / 1:5 / *:.
+:elseif you.in_branch("Zot") then
+NSUBST: - = 16 = 4... / 16 = 5... / 16 = 0... / *:.
+SUBST: ' = |'
+:else
+NSUBST: - = 12 = 1... / 12 = 2... / 1:3 / *:.
+:end
+NSUBST: ' = 1:* / * = *..
+TILE:   v = dngn_metal_wall_yellow
+MAP
+ccccccccccccccc
+c-----'''-----c
+c-vv--'d'--vv-c
+c---vv'''vv---c
+c-----vvv-----c
+c-vv-------vv-c
+c---vv---vv---c
+c-----vvv-----c
+c.vv-------vv.c
+c...vv...vv...c
+c6....vvv....6c
+cc...........cc
+ ccc.......ccc
+   cccc+cccc
+      .@.
+ENDMAP
 
 ###############################################################################
 #
@@ -10119,16 +10732,16 @@ xx..+..+..xx
     xx+x
 ENDMAP
 
-NAME:    minmay_chambers_of_sevens
-ORIENT:  float
-DEPTH:   D:7-14
-SUBST:   T = TTTTV
-SUBST:   x : xxxxxcccvb
+NAME:   minmay_chambers_of_sevens
+ORIENT: float
+DEPTH:  D:7-14
+SUBST:  T = TTTTV
+SUBST:  x : xxxxxcccvb
 MAP
 xxxxxxxxxxxxxxx
-x.9.9**b**9.9.x
+x.0.9%*b*%9.0.x
 xx...9***9...xx
- xx....9....xx
+ xx....0....xx
   xx.......xx
    xx.....xx
     xx...xx
@@ -10245,4 +10858,114 @@ xxx.xx.xxx0...........0xxx.xx.xxx
 x..x..x11xx...........xx11x..x..x
 x1.x.1x11*xxx...{...xxx*11x1.x.1x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_hexawheel
+TAGS:    transparent
+DEPTH:   D:10-, Depths
+ORIENT:  float
+KITEM:   z = | / * w:20 / % w:60 / nothing w:90
+KMONS:   z = 8 / 9 w:20 / 0 w:60 / nothing w:90
+# Q: "Why is that one glyph an ! instead of a letter?"
+# A: Because I used L twice by accident and didn't want to rewrite everything.
+: local layout = crawl.random2( 5 )
+: if layout == 0 then         -- Circle Within Circle
+NSUBST:  EFHJKL = c / +, !MNOPQ = + / +c / c, RSZapq = c / +
+: elseif layout == 1 then    -- Spokes
+SUBST:   !MNOPQ = +
+NSUBST:  ER = c / +, FS = c / +, HZ = c / +, Ja = c / +, Kp = c / +, Lq = c / +
+: elseif layout == 2 then    -- Three Cycles
+SHUFFLE: FS/Ja/Lq
+NSUBST:  E!MR = c / +, HNOZ = c / +, KPQp = c / +, FS = c / +, Ja = c / +, \
+         Lq = +c / c
+: elseif layout == 3 then    -- Two Cycles
+SUBST:   PM = c+
+NSUBST:  EF!NRS = c / +, JKOQap = c / +, Lq = c / +, HZ = c / +
+: else                        -- One Cycle
+NSUBST:  EHK!MNOPQSaq = c / +, FJLRZp = +c / c
+: end
+NSUBST:  D = 2=+ / 1=+c / c
+SUBST:   r = c:50 +, 0 = .0009
+MAP
+       cccccccDccccccc
+       cz...........zc
+      ccc...........ccc
+      czc...........czc
+     cc.cc....0....cc.cc
+     c...E.........F...c
+    cc...cc.......cc...cc
+    D.....ccccMcccc.....D
+   cc....ccc.....ccc....cc
+   c..0..c.c.....c.c..0..c
+  cc....cc.cc.0.cc.cc....cc
+  c.....!...R...S...N.....c
+ cc....cc.0.cc.cc.0.cc....cc
+ cz....c....zczcz....c....zc
+ccccLcccccqcccrcccZcccccHcccc
+ cz....c....zczcz....c....zc
+ cc....cc.0.cc.cc.0.cc....cc
+  c.....Q...p...a...O.....c
+  cc....cc.cc.0.cc.cc....cc
+   c..0..c.c.....c.c..0..c
+   cc....ccc.....ccc....cc
+    D.....ccccPcccc.....D
+    cc...cc.......cc...cc
+     c...K.........J...c
+     cc.cc....0....cc.cc
+      czc...........czc
+      ccc...........ccc
+       cz...........zc
+       cccccccDccccccc
+ENDMAP
+
+NAME:    dreamdust_experimentation
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:13-, Depths
+ORIENT:  float
+KPROP:   23 = no_tele_into
+KMONS:   1 = wizard
+KFEAT:   t = demonic_tree
+: item(dgn.loot_potions .. " / potion of mutation w:40")
+KMONS:   p = human perm_ench:berserk generate_awake \
+             / human perm_ench:wretched generate_awake \
+             / human perm_ench:confusion generate_awake \
+             / human perm_ench:blind generate_awake
+KMONS:   q = felid perm_ench:berserk generate_awake \
+             / octopode perm_ench:wretched generate_awake \
+             / spriggan perm_ench:confusion generate_awake ; nothing \
+             / minotaur perm_ench:blind generate_awake ; nothing
+: if you.in_branch("D") then
+KMONS:   2 = shapeshifter / large abomination
+KMONS:   3 = ugly thing
+NSUBST:  - = 1 / 2=1- / 2=2 / 2=2- / -, d = 2=d / 4=d-
+: else
+KMONS:   2 = large abomination / glowing shapeshifter w:20
+KMONS:   3 = very ugly thing
+NSUBST:  - = 2=1 / 4=1- / 3=2 / 6=2- / -
+: end
+# Human (shapeshifters and large abominations) or animal (ugly things)
+# experimentation.
+SHUFFLE: 2p / 3q
+COLOUR:  c = white
+TILE:    c = wall_brick_white
+FTILE:   -+G123pqd = floor_rough_white
+TILE:    G = dngn_statue_demonic_bust
+MAP
+cccccccc
+cddddddc
+ccc++ccc
+cG----Gc
+ccc--ccc
+cpn--npc
+ccc--ccc
+cpn--npc
+ccc--ccc
+cpn--npc
+ccc--ccc
+ccc++ccc
+cG----Gc
+cG----Gc
+ccc++ccc
+..t..t..
+ ..@@..
 ENDMAP

@@ -84,41 +84,6 @@
 #include "view.h"
 #include "xom.h"
 
-/**
- * Return an item's location (floor or inventory) and the corresponding env.item
- * int or inv slot referring to it.
- *
- * @param item_def An item in either env.item (the floor or monster inventory)
- *                 or you.inv.
- *
- * @return A pair containing bool and int. The bool is true for items in
- *         inventory, false for others. The int is the item's index in either
- *         you.inv or env.item.
- */
-
-pair<bool, int> item_int(item_def &item)
-{
-    if (in_inventory(item))
-        return make_pair(true, item.link);
-    return make_pair(false, item.index());
-}
-
-
-/**
- * Return an item_def& requested by an item's inv slot or env.item index.
- *
- * @param inv Is the item in inventory?
- * @param number The index of the item, either in you.inv (if inv == true)
- *               or in env.item (if inv == false).
- *
- * @return The item.
- */
-
-item_def& item_from_int(bool inv, int number)
-{
-    return inv ? you.inv[number] : env.item[number];
-}
-
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
@@ -753,13 +718,24 @@ int count_movable_items(int obj)
  * @param[in] obj The location link; an index in env.item.
  * @param exclude_stationary If true, don't include stationary items.
 */
-vector<const item_def*> item_list_on_square(int obj)
+vector<item_def*> item_list_on_square(int obj)
+{
+    vector<item_def*> items;
+    for (stack_iterator si(obj); si; ++si)
+        items.push_back(& (*si));
+    return items;
+}
+
+// no overloading by return type, so some ugly code duplication. (There may be
+// cleverer template things to do.)
+vector<const item_def*> const_item_list_on_square(int obj)
 {
     vector<const item_def*> items;
     for (stack_iterator si(obj); si; ++si)
         items.push_back(& (*si));
     return items;
 }
+
 
 bool need_to_autopickup()
 {
@@ -895,7 +871,7 @@ void item_check()
 
     ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
-    auto items = item_list_on_square(you.visible_igrd(you.pos()));
+    auto items = const_item_list_on_square(you.visible_igrd(you.pos()));
 
     if (items.empty())
         return;
@@ -1013,7 +989,8 @@ void pickup_menu(int item_link)
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
 
-    auto items = item_list_on_square(item_link);
+    // XX why is this const?
+    auto items = const_item_list_on_square(item_link);
     ASSERT(items.size());
 
     string prompt = "Pick up what? " + slot_description()
@@ -2498,16 +2475,6 @@ const item_def* top_item_at(const coord_def& where)
     return (link == NON_ITEM) ? nullptr : &env.item[link];
 }
 
-bool multiple_items_at(const coord_def& where)
-{
-    int found_count = 0;
-
-    for (stack_iterator si(where); si && found_count < 2; ++si)
-        ++found_count;
-
-    return found_count > 1;
-}
-
 /**
  * Drop an item, possibly starting up a delay to do so.
  *
@@ -3549,6 +3516,7 @@ colour_t item_def::armour_colour() const
         case ARM_ANIMAL_SKIN:
             return LIGHTGREY;
         case ARM_CRYSTAL_PLATE_ARMOUR:
+        case ARM_ORB:
             return WHITE;
         case ARM_KITE_SHIELD:
         case ARM_TOWER_SHIELD:
@@ -4325,8 +4293,10 @@ bool get_item_by_name(item_def *item, const char* specs,
             string buf_lwr = lowercase_string(buf);
             special_wanted = 0;
             size_t best_index = 10000;
+            const int brand_index = max(static_cast<int>(NUM_SPECIAL_WEAPONS),
+                                        static_cast<int>(NUM_SPECIAL_ARMOURS));
 
-            for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
+            for (int i = SPWPN_NORMAL + 1; i < brand_index; ++i)
             {
                 item->brand = i;
                 size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);

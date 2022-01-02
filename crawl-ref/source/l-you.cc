@@ -242,9 +242,9 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  * @treturn int number of WL pips
  * @function willpower
  */
-LUARET1(you_willpower, number, player_willpower(false) / WL_PIP)
+LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 /*** Drowning resistance (rDrown).
- * @treturn int resistance level
+ * @treturn boolean
  * @function res_drowning
  */
 LUARET1(you_res_drowning, boolean, you.res_water_drowning())
@@ -252,18 +252,18 @@ LUARET1(you_res_drowning, boolean, you.res_water_drowning())
  * @treturn int resistance level
  * @function res_mutation
  */
-LUARET1(you_res_mutation, number, you.rmut_from_item(false) ? 1 : 0)
+LUARET1(you_res_mutation, number, you.rmut_from_item() ? 1 : 0)
 /*** See invisible (sInv).
  * @treturn boolean
  * @function see_invisible
  */
-LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
+LUARET1(you_see_invisible, boolean, you.can_see_invisible())
 /*** Guardian spirit.
  * Returns a number for backwards compatibility.
  * @treturn int
  * @function spirit_shield
  */
-LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
+LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
 /*** Corrosion resistance (rCorr).
  * @treturn int resistance level
  * @function res_corr
@@ -807,6 +807,36 @@ static int l_you_abil_table(lua_State *ls)
 }
 
 
+/*** Get the current state of item identification as a list of strings.
+ * @treturn table The list of names of known identifiable items.
+ * @function known_items
+ */
+static int you_known_items(lua_State *ls)
+{
+    lua_newtable(ls);
+    int index = 0;
+    for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
+    {
+        object_class_type basetype = (object_class_type)ii;
+        if (!item_type_has_ids(basetype))
+            continue;
+        for (const auto subtype : all_item_subtypes(basetype))
+        {
+            if (basetype == OBJ_JEWELLERY && subtype >= NUM_RINGS && subtype < AMU_FIRST_AMULET)
+                continue;
+            if (you.type_ids[basetype][subtype]) {
+                item_def it = item_def();
+                it.base_type = basetype;
+                it.sub_type  = subtype;
+                lua_pushstring(ls, it.name(DESC_PLAIN, true).c_str());
+                lua_rawseti(ls, -2, ++index);
+            }
+        }
+    }
+    return 1;
+}
+
+
 /*** Activate an ability by name, supplying a target where relevant. If the
  * ability is not targeted, the target is ignored. An invalid target will
  * open interactive targeting.
@@ -1217,6 +1247,7 @@ static const struct luaL_reg you_clib[] =
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
     { "ability_table", l_you_abil_table },
+    { "known_items" , you_known_items },
     { "name"        , you_name },
     { "race"        , you_race },
     { "hand"        , you_hand },
@@ -1594,7 +1625,9 @@ LUAFN(you_init)
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
+#ifdef WIZARD
 LUAWRAP(you_enter_wizard_mode, you.wizard = true)
+#endif
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
 LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))

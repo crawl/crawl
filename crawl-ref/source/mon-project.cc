@@ -517,8 +517,7 @@ move_again:
 
         if (victim && _iood_shielded(mon, *victim))
         {
-            item_def *shield = victim->shield();
-            if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
+            if (!victim->reflection())
             {
                 if (victim->is_player())
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
@@ -532,6 +531,7 @@ move_again:
                 return true;
             }
 
+            item_def *shield = victim->shield();
             if (victim->is_player())
             {
                 if (shield && shield_reflects(*shield))
@@ -539,7 +539,6 @@ move_again:
                     mprf("Your %s reflects %s!",
                          shield->name(DESC_PLAIN).c_str(),
                          mon.name(DESC_THE, true).c_str());
-                    ident_reflector(shield);
                 }
                 else // has reflection property not from shield
                 {
@@ -558,17 +557,12 @@ move_again:
                              mon.name(DESC_THE, true).c_str(),
                              victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
                              shield->name(DESC_PLAIN).c_str());
-                        ident_reflector(shield);
                     }
                     else
                     {
                         mprf("%s reflects off an invisible shield around %s!",
                              mon.name(DESC_THE, true).c_str(),
                              victim->name(DESC_THE, true).c_str());
-
-                        item_def *amulet = victim->slot_item(EQ_AMULET);
-                        if (amulet)
-                            ident_reflector(amulet);
                     }
                 }
                 else

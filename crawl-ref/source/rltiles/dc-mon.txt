@@ -39,6 +39,7 @@ tiamat_purple
 tiamat_yellow
 %sdir mon/holy
 seraph MONS_SERAPH
+seraph_swordless MONS_SERAPH_SWORDLESS
 %sdir mon/sprint
 bag_of_meat MONS_BAG_OF_MEAT
 meatzerker MONS_MEATZERKER
@@ -54,6 +55,7 @@ unspeakable MONS_UNSPEAKABLE
 
 ## Insects ('a')
 giant_cockroach MONS_GIANT_COCKROACH
+radroach MONS_RADROACH
 
 ## Batty monsters ('b')
 %rim 1
@@ -122,11 +124,11 @@ komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('w')
 %sdir mon/unique
+%rim 0
 gastronok MONS_GASTRONOK
 
 ## Rodents ('r')
 %sdir mon/animals
-%rim 0
 rat MONS_RAT
 green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
@@ -143,11 +145,16 @@ jumping_spider MONS_JUMPING_SPIDER
 wolf_spider MONS_WOLF_SPIDER
 redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
+broodmother MONS_BROODMOTHER
+%rim 0
+culicivora MONS_CULICIVORA
 %sdir mon/demons
+%rim 1
 demonic_crawler MONS_DEMONIC_CRAWLER
 %sdir mon/undead
 %rim 0
 death_scarab MONS_DEATH_SCARAB
+pharaoh_ant  MONS_PHARAOH_ANT
 
 ## Turtles and crabs ('t')
 %sdir mon/animals
@@ -170,6 +177,7 @@ swamp_worm_water
 worm MONS_WORM
 tyrant_leech MONS_TYRANT_LEECH
 dart_slug MONS_DART_SLUG
+steelbarb_worm MONS_STEELBARB_WORM
 %rim 0
 torpor_snail MONS_TORPOR_SNAIL
 %rim 1
@@ -180,6 +188,7 @@ hornet MONS_HORNET
 spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
+sun_moth MONS_SUN_MOTH
 
 ## Aquatics (';')
 %sdir mon/aquatic
@@ -252,9 +261,9 @@ fire_elemental MONS_FIRE_ELEMENTAL
 water_elemental MONS_WATER_ELEMENTAL
 air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
-quicksilver_elemental MONS_QUICKSILVER_ELEMENTAL
 wellspring MONS_ELEMENTAL_WELLSPRING
 %rim 0
+quicksilver_elemental MONS_QUICKSILVER_ELEMENTAL
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
 fire_vortex3
@@ -612,14 +621,16 @@ halfling MONS_HALFLING
 demigod MONS_DEMIGOD
 
 ## Angels ('A')
-%rim 1
 %sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA
+%rim 1
 cherub MONS_CHERUB
 %sdir mon/undead
+%rim 0
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
+%rim 1
 mennas MONS_MENNAS
 
 ## Giants ('C')
@@ -706,6 +717,7 @@ harpy MONS_HARPY
 sphinx MONS_SPHINX
 minotaur MONS_MINOTAUR
 %rim 0
+jorogumo MONS_JOROGUMO
 fenstrider_witch MONS_FENSTRIDER_WITCH
 %rim 1
 tengu MONS_TENGU
@@ -788,6 +800,7 @@ acid_blob MONS_ACID_BLOB
 ## Kobolds ('K')
 %sdir mon/unique
 sonja MONS_SONJA
+%rim 0
 pikel MONS_PIKEL
 %sdir mon/humanoids
 kobold MONS_KOBOLD
@@ -796,7 +809,6 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')
 %sdir mon/unique
-%rim 0
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
@@ -883,7 +895,7 @@ vine_stalker MONS_VINE_STALKER
 
 ## Trolls ('T')
 %sdir mon/unique
-purgy MONS_PURGY
+pargi MONS_PARGI
 snorg MONS_SNORG
 %sdir mon/humanoids
 troll MONS_TROLL
@@ -915,6 +927,7 @@ shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
 %rim 0
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
+putrid_mouth MONS_PUTRID_MOUTH
 %rim 1
 eidolon MONS_EIDOLON
 
@@ -1000,11 +1013,15 @@ robin MONS_ROBIN
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
 %sdir mon/humanoids
+%rim 0
 goblin MONS_GOBLIN
+%rim 1
 hobgoblin MONS_HOBGOBLIN
+%rim 0
 gnoll MONS_GNOLL
 gnoll_shaman MONS_GNOLL_SHAMAN
 gnoll_sergeant MONS_GNOLL_SERGEANT
+%rim 1
 boggart MONS_BOGGART
 
 ## Spriggans ('i')
@@ -1057,8 +1074,8 @@ searing_wretch SEARING_WRETCH
 ghoul MONS_GHOUL
 
 %sdir mon/unique
-blork_the_orc MONS_BLORK_THE_ORC
 %rim 0
+blork_the_orc MONS_BLORK_THE_ORC
 urug MONS_URUG
 nergalle MONS_NERGALLE
 saint_roka MONS_SAINT_ROKA
@@ -1088,8 +1105,6 @@ silent_spectre MONS_SILENT_SPECTRE
 lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
-%rim 1
-hungry_ghost MONS_PUTRID_MOUTH
 %sdir mon/nonliving
 %rim 0
 will_o_the_wisp MONS_WILL_O_THE_WISP
@@ -1220,3 +1235,12 @@ old-serpent-tar MONS_OLD_SERPENT_TAR
 wiglaf MONS_WIGLAF
 orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 polymoth MONS_POLYMOTH
+%rim 0
+jack_o_lantern MONS_JACK_O_LANTERN
+gastronaut MONS_GASTRONAUT
+gastronok1 MONS_GASTRONOK_MUSTACHE
+gastronok2 MONS_GASTRONOK_CLEANSHAVEN
+kit_karsonok MONS_GASTRONOK_HANDLEBAR
+shaolinok MONS_GASTRONOK_FU_MANCHU
+sideburnok MONS_GASTRONOK_SIDEBURNS
+anubis_guard MONS_ANUBIS_GUARD

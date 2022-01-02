@@ -919,9 +919,6 @@ int main(int argc, char* argv[])
                     monsterattacks += "(reach)";
                 switch (flavour)
                 {
-                case AF_KITE:
-                    monsterattacks += "(kite)";
-                    break;
                 case AF_SWOOP:
                     monsterattacks += "(swoop)";
                     break;
@@ -1051,6 +1048,9 @@ int main(int argc, char* argv[])
                 case AF_BARBS:
                     monsterattacks += colour(RED, "(barbs)");
                     break;
+                case AF_SPIDER:
+                    monsterattacks += colour(YELLOW, "(summon spider)");
+                    break;
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:
@@ -1071,6 +1071,7 @@ int main(int argc, char* argv[])
                 case AF_MIASMATA:
                 case AF_ROT:
                 case AF_KLOWN:
+                case AF_KITE:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif

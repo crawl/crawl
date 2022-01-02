@@ -105,8 +105,10 @@
 #
 ##
 
-: crawl_require("dlua/dungeon.lua")
 {{
+crawl_require("dlua/dungeon.lua")
+
+
 function wizlab_portal (e)
     local timeout_turns = crawl.random_range(600, 800)
 
@@ -132,8 +134,18 @@ function wizlab_portal (e)
         feat_tile = "dngn_portal_bazaar_gone",
         msg = messager })
     e.kfeat("O = enter_wizlab")
-    e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
-    e.chance("500")
+
+    e.tags("uniq_wizlab vaults_wizlab no_item_gen no_monster_gen chance_wizlab")
+
+    -- Replace stone walls with whatever wall type the Vaults level is using.
+    if you.in_branch("Vaults") then
+        e.subst("c = x")
+    end
+
+    e.chance(math.floor(dgn.wizlab_chance_percent / 100 * 10000))
+    -- Don't apply the chance in Vaults, since we use a Vaults room for that
+    -- branch.
+    e.depth_chance("Vaults", 0)
 end
 
 -- Destinations:
@@ -446,16 +458,17 @@ function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
 end
 }}
 
-default-depth: Depths, Elf, Crypt, Vaults:1-4
+default-depth: Depths, Elf, Crypt, Vaults, !Vaults:$
 
 ###############################################################################
 # Portal entrances.
 #
 # Todo: more, and better.
-NAME:       mu_enter_wizlab_1
-TILE:       m = dngn_transparent_wall_green
-COLOUR:     m = lightgreen
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_1
+TAGS:   vaults_orient_s
+TILE:   m = dngn_transparent_wall_green
+COLOUR: m = lightgreen
+:       wizlab_portal(_G)
 MAP
     wwwww
    wwwwwww
@@ -468,12 +481,13 @@ wwbm..O..mbww
     w.@.w
 ENDMAP
 
-NAME:       mu_enter_wizlab_2
-SHUFFLE:    tU
-TILE:       m = dngn_transparent_wall_green
-COLOUR:     m = lightgreen
-TILE:       c = wall_stone_gray
-:           wizlab_portal(_G)
+NAME:    mu_enter_wizlab_2
+TAGS:    vaults_orient_s
+SHUFFLE: tU
+TILE:    m = dngn_transparent_wall_green
+COLOUR:  m = lightgreen
+TILE:    c = wall_stone_gray
+:        wizlab_portal(_G)
 MAP
 .................
 .bbbbbbbmbbbbbbb.
@@ -491,24 +505,25 @@ MAP
 .................
 ENDMAP
 
-NAME:       mu_enter_wizlab_3
-MARKER:     ! = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "flame" \
-             }
-MARKER:     ? = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "freezing vapour" \
-             }
-COLOUR:     .' = red / blue
-KPROP:      '?! = no_tele_into
-SUBST:      ' = .
-TILE:       n = dngn_transparent_stone_magenta
-COLOUR:     n = lightmagenta
-TILE:       c = wall_stone_gray
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_3
+TAGS:   vaults_orient_s
+MARKER: ! = lua:fog_machine { \
+             pow_max = 10, delay_min = 10, delay_max = 40, \
+             size = 2, size_buildup_amnt = 5, \
+             size_buildup_time = 25, cloud_type = "flame" \
+         }
+MARKER: ? = lua:fog_machine { \
+             pow_max = 10, delay_min = 10, delay_max = 40, \
+             size = 2, size_buildup_amnt = 5, \
+             size_buildup_time = 25, cloud_type = "freezing vapour" \
+         }
+COLOUR: .' = red / blue
+KPROP:  '?! = no_tele_into
+SUBST:  ' = .
+TILE:   n = dngn_transparent_stone_magenta
+COLOUR: n = lightmagenta
+TILE:   c = wall_stone_gray
+:       wizlab_portal(_G)
 MAP
  ccccccccc
 cc''!'?''cc
@@ -526,11 +541,12 @@ cc!n.n.n?cc
     c@c
 ENDMAP
 
-NAME:       mu_enter_wizlab_4
-KFEAT:      ! = floor
-COLOUR:     ! = magenta
-FTILE:      !O = floor_rough_magenta
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_4
+TAGS:   vaults_orient_s
+KFEAT:  ! = floor
+COLOUR: ! = magenta
+FTILE:  !O = floor_rough_magenta
+:       wizlab_portal(_G, false)
 MAP
     xxxxx
     w!!!x
@@ -544,13 +560,14 @@ w..www
 @www
 ENDMAP
 
-NAME:       mu_enter_wizlab_5
-COLOUR:     U = random
-COLOUR:     W = mutagenic
-KFEAT:      o = granite_statue
-FTILE:      WU.Oo = floor_rough_magenta
-TILE:       b = dngn_crystal_magenta
-:           wizlab_portal(_G)
+NAME:   mu_enter_wizlab_5
+TAGS:   vaults_orient_s
+COLOUR: U = random
+COLOUR: W = mutagenic
+KFEAT:  o = granite_statue
+FTILE:  WU.Oo = floor_rough_magenta
+TILE:   b = dngn_crystal_magenta
+:       wizlab_portal(_G)
 : set_feature_name("crystal_wall", "wall of crystal")
 MAP
 bbbbbbbbbbb
@@ -588,28 +605,41 @@ x.x.x.x.x..
 ENDMAP
 
 NAME:   mu_enter_wizlab_7
-KFEAT:  abcd : floor
-KFEAT:  ABCD : rock_wall
-TILE:   ABCD = floor_rough_white
-TILE:   ABCD = wall_zot_white
-COLOUR: Aa : yellow
-COLOUR: Bb : green
-COLOUR: Cc : blue
-COLOUR: Dd : magenta
+# This one doesn't work as well in Vaults, since one entrance tends to become a
+# dead end.
+WEIGHT: 0 (Vaults)
+KFEAT:  apqr = x
+# Mimic the rock/floor colors of Zot:1-4
+COLOUR: a = white
+COLOUR: - = lightgray
+COLOUR: p = blue
+COLOUR: ' = white
+COLOUR: q = lightblue
+COLOUR: " = blue
+COLOUR: r = magenta
+COLOUR: ` = lightblue
+TILE:   a = wall_zot_white
+TILE:   p = wall_zot_blue
+TILE:   q = wall_zot_lightblue
+TILE:   r = wall_zot_magenta
+FTILE:  - = floor_rough_lightgray
+FTILE:  ' = floor_rough_white
+FTILE:  " = floor_rough_blue
+FTILE:  ` = floor_rough_lightblue
 : wizlab_portal(_G)
 MAP
 xxxxxxxxxxxxx
 x...........@
 x.xxxxxxxxxxx
-xaAbbbbbbbbax
-xaAcBBBBBBAax
-xaAcCddddcAax
-xaAcCdDDCcAax
-xaAcCdOdCcAax
-xaAcCDDdCcAax
-xaAcddddCcAax
-xaABBBBBBcAax
-xabbbbbbbbAax
+x-a''''''''-x
+x-a"ppppppa-x
+x-a"q````"a-x
+x-a"q`rrq"a-x
+x-a"q`O`q"a-x
+x-a"qrr`q"a-x
+x-a"````q"a-x
+x-apppppp"a-x
+x-''''''''a-x
 xxxxxxxxxxx.x
 @...........x
 xxxxxxxxxxxxx
@@ -688,9 +718,10 @@ xG.bbbbbbbbb.Gx
 xx...........xx
 ENDMAP
 
-NAME: lightli_enter_wizlab_magi_temple
+NAME:   lightli_enter_wizlab_magi_temple
+TAGS:   vaults_orient_n
 COLOUR: . = magenta
-FTILE: . = floor_rough_magenta
+FTILE:  . = floor_rough_magenta
 : wizlab_portal(_G)
 MAP
 bmm.@.mmb
@@ -2158,7 +2189,7 @@ v1.4..+.G1.G.1G.+...4..+..;.....~5fv
 v..G..v.........v1....1v..;..5..~.fv
 vv...vv....G....vvvvvvvv..v1.v..v..v
  vvvvvvG1....1Gvvvvvvvvv..v--v--v..v
-       vv.....vvvvvvvvvv..~..1.....v
+      vvv.....vvvvvvvvvv..~..1.....v
         vvv+vvvvvvvvvvvv1.~.....5.1v
         vv...vvvvvvvvvvvvvvvvvvvvvvv
         v.....v
@@ -2182,7 +2213,7 @@ MONS:   mana viper, quicksilver dragon
 KMONS:  P = bush
 {{
 wizname = crawl.make_name()
-kmons("5 = patrolling Head dbname:Head Instructor name:"
+kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
       .. string.gsub(wizname, " ", "_") .. " ; triple sword ego:antimagic \
             . triple sword ego:antimagic . plate armour ego:willpower")
 }}
@@ -2372,8 +2403,9 @@ MONS:   walking frostbound tome / walking earthen tome / walking crystal tome /\
         walking divine tome
 MONS:   strange machine
 KFEAT:   ~ = closed_clear_door
-SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 22...
-NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 2:4 / *= 42., A = 1:< / *:A
+SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 2...
+NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 1:4 / *= 42.., A = 1:< / *:A
+NSUBST:     5 = 1:5 / *:5.
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_w_marble

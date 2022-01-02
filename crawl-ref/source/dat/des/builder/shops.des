@@ -409,6 +409,95 @@ MAP
 .ccccccc.
 ENDMAP
 
+NAME:     nicolae_shop_advertising_works
+TAGS:     extra shop transparent
+# Exploiting subvault placement behavior to get the shop a varying distance
+# from the arrow.
+SUBVAULT: - : nico_adshop
+CLEAR:    -
+MAP
+.........             -------------------------------
+.....b...             -------------------------------
+......b..             -------------------------------
+.bbbbbbb.             -------------------------------
+......b..             -------------------------------
+.....b...             -------------------------------
+.........             -------------------------------
+ENDMAP
+
+NAME:  nicolae_subvault_shop_adworks
+TAGS:  unrand transparent allow_dup nico_adshop
+KFEAT: O = any shop
+MAP
+.......
+.b...b.
+..b.b..
+...O...
+..b.b..
+.b...b.
+.......
+ENDMAP
+
+NAME:    nicolae_shop_hallway_plus
+TAGS:    allow_dup extra shop transparent no_pool_fixup
+KFEAT:   O = any shop
+SHUFFLE: Pp/Pp/Rr, Qq/Qq/Ss
+SUBST:   P : xxxw, p : _, R : mmmw, r : ...xmwGT, \
+         Q : xxxw, q : _, S : mmmw, s : ...xmwGT
+KPROP:   Gw = no_tele_into
+CLEAR:   _
+MAP
+  x+x
+ pP.Qq
+xPP.QQx
++..O..+
+xQQ.PPx
+ qQ.Pp
+  x+x
+ENDMAP
+
+NAME:    nicolae_shop_hallway_stairs
+TAGS:    allow_dup extra shop transparent no_pool_fixup
+KFEAT:   O = any shop
+: if you.depth() == 1 then
+SUBST:   S = )}]
+: elseif you.depth_fraction() < 1 then
+SUBST:   S = (){}[]
+: else
+SUBST:   S = ({[
+: end
+SHUFFLE: Pp/Qq, Rr/Ss
+SUBST:   P : xw_, p = _, Q : mw+, q = ., R : xw_, r = _, S : mw+, s = .
+CLEAR:   _
+MAP
+    pp
+xxxxPPxxxx
++..O..S..+
+xxxxRRxxxx
+    rr
+ENDMAP
+
+# Q: Why is there a dead body outside your shop with blood everywhere?
+# A: Don't worry about it. Are you going to buy something or not?
+NAME:   nicolae_shop_bloodbath_and_beyond
+TAGS:   extra shop transparent
+KITEM:  D = mundane dagger / mundane club / mundane hand axe / mundane spear
+KFEAT:  O = weapon shop
+KFEAT:  E = x
+NSUBST: - = D / Z / -
+SUBST:  . = `.., - = `., ! = ``., x = Exx
+KPROP:  `DOEZ = bloody
+: dgn.delayed_decay(_G, "Z", "human corpse" )
+MAP
+xx...xx
+x-----x
+.-!!!-.
+.-!O!-.
+.-!!!-.
+x-----x
+xx...xx
+ENDMAP
+
 ###############################################################################
 # <<2>> Themed.
 #       Not tagged shop, but still contains one. Can have threats, and can have
@@ -1042,6 +1131,175 @@ cc     cc
 ...ccc...
 ..c   c..
 cc     cc
+ENDMAP
+
+NAME:   hellmonk_scale_shop
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:8-, Snake, Depths
+KFEAT:  D = armour shop type:Superior suffix:Scales count:3 ; \
+        scale mail randart
+: if you.in_branch("Depths") then
+KMONS:  D = golden dragon / iron dragon / quicksilver dragon / storm dragon /\
+        shadow dragon / pearl dragon w:1
+: elseif you.in_branch("D") and you.absdepth() < 13 then
+KMONS:  D = steam dragon / acid dragon
+:else
+KMONS:  D = fire dragon / ice dragon / swamp dragon
+:end
+MAP
+ xxx
+xxll@
+xl..lx
+xlD.lx
+xxllxx
+ xxxx
+ENDMAP
+
+# Q: Why is the shop across from your fire supplies store burned down?
+# A: Don't worry about it. Are you going to buy something or not?
+NAME:     nicolae_shop_fire_sale
+TAGS:     extra transparent no_item_gen
+DEPTH:    D:4-, Depths
+KITEM:    O = ring of ice w:5 / ring of protection from cold / \
+          damaged dagger ego:freezing / wand of iceblast charges:1 w:5
+KFEAT:    O = abandoned_shop
+KFEAT:    P = general shop type:Fire suffix:Supplies ; ring of fire | \
+          ring of protection from fire | staff of fire | wand of flame | \
+          any weapon ego:flaming w:30 | scroll of immolation | \
+          randbook disc:fire w:20 | manual of fire magic w:1 | \
+          any armour ego:fire_resistance w:30 | fire dragon scales w:5
+SUBVAULT: ' : nico_deadtrees
+MARKER:   O = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
+              pow_max = 20, delay = 40, size = 1, walk_dist = 0 }
+MAP
+xxxxx@@xxxxx
+xx''....ttxx
+x''......ttx
+x'O.V..T.Ptx
+x''......ttx
+xx''....ttxx
+xxxxx@@xxxxx
+ENDMAP
+
+# Using a subvault so only these trees become dead trees.
+NAME:   nicolae_sub_dead_trees
+TAGS:   unrand nico_deadtrees
+SUBST:  t = tt.
+COLOUR: t = lightgrey / darkgrey
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+t   t
+tt tt
+ ttt
+ENDMAP
+
+# This shop sells only unique rings. At least one randart, and also ordinary
+# rings whose pluses have been set via vault syntax to something besides the
+# default pluses for that type of ring.
+# For each of the six rings that can have pluses, there is the possibility of
+# a ring of that type whose pluses are worse than default (which makes it a bit
+# less useful, but cheaper, and so possibly more enticing to poor players),
+# and a ring of that type whose pluses are better than default (which will be
+# accordingly more expensive).
+# Evasion and protection are limited to +7 so as not to step on the existing
+# AC/EV+8 unrands. Stat rings go up to +10. Slaying goes up to +9.
+# Default for dex/int/str: +6, default for ev/slay/prot: +4.
+NAME:   nicolae_shop_unique_rings
+TAGS:   transparent extra
+DEPTH:  D, Depths, Elf, Snake, Shoals
+WEIGHT: 5
+{{
+  local itemcount = crawl.roll_dice( 2, 3 ) + 1
+  local rings = {
+     "ring of dexterity    plus:" .. (crawl.roll_dice( 2, 3 ) - 1),
+     "ring of intelligence plus:" .. (crawl.roll_dice( 2, 3 ) - 1),
+     "ring of strength     plus:" .. (crawl.roll_dice( 2, 3 ) - 1),
+     "ring of evasion      plus:" .. (crawl.roll_dice( 2, 2 ) - 1),
+     "ring of slaying      plus:" .. (crawl.roll_dice( 2, 2 ) - 1),
+     "ring of protection   plus:" .. (crawl.roll_dice( 2, 2 ) - 1),
+     "ring of dexterity    plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
+     "ring of intelligence plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
+     "ring of strength     plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
+     "ring of evasion      plus:" .. (crawl.roll_dice( 1, 3 ) + 4),
+     "ring of slaying      plus:" .. (crawl.roll_dice( 2, 3 ) + 3),
+     "ring of protection   plus:" .. (crawl.roll_dice( 1, 3 ) + 4),
+     "any ring randart", "any ring randart", "any ring randart" }
+  local inventory = table.concat( util.random_subset( rings, itemcount ), " | ")
+  kfeat("P = jewellery shop type:One-of-a-Kind suffix:Rings count:" ..
+             (itemcount + 1) .. " use_all ; " ..
+             inventory .. " | any ring randart" )
+}}
+MAP
+  vvv..
+ v...v..
+v.....v.
+v..P..b@
+v.....v.
+ v...v..
+  vvv..
+ENDMAP
+
+NAME:   nicolae_shop_dragon_depot
+TAGS:   transparent extra no_item_gen no_tide
+DEPTH:  D:4-, Depths, Elf, Snake, Shoals
+WEIGHT: 5
+{{
+  -- This shop is guaranteed to generate one of each type of dragon scales.
+  -- About a half will get the good_item modifier. This keeps the shop
+  -- inventory from just being a boring list of gray +0 scales 90% of the time.
+  -- This also makes things slightly less of a guarantee, since if the scales
+  -- you want get turned into a randart, they might become too expensive for
+  -- you, or end up with some kind of negative artefact property like -Tele.
+  local scales = { "steam dragon scales", "acid dragon scales",
+    "swamp dragon scales", "fire dragon scales", "ice dragon scales",
+    "pearl dragon scales", "shadow dragon scales", "storm dragon scales",
+    "gold dragon scales", "quicksilver dragon scales" }
+
+  for i, sc in ipairs(scales) do
+     if crawl.coinflip() then
+       scales[ i ] = sc .. " good_item"
+     end
+  end
+
+  -- Mostly from the Wikipedia list of fictional/mythological dragonslayers,
+  -- although some are from poking around elsewhere in dragon-related articles.
+  -- Some dragonslayers have multiple spellings/alternates/variations of their
+  -- names included, or have their first and last names listed separately.
+  -- No videogame references, but there is some Tolkien in here. Some of these
+  -- dragonslayers are better known for other works.
+  local dragonslayers = { "Apollo", "Argus", "Assipattle", "Baal", "Bahram_Gur",
+    "Bayajidda", "Benzaiten", "Beowulf", "Bulat", "Cadmus", "Daniel",
+    "Dobrynya", "Earendil", "Egara", "El", "Enki", "Erlang", "Erlang_Shen",
+    "Eurybarus", "Fat-Frumos", "Fereydun", "Fraech", "Garshasp", "Gawain",
+    "George", "Gilgamesh", "Hadad", "Hadad-Baal", "Haida", "Haymon",
+    "Heinrich", "Heracles", "Indra", "Ishkur", "John_Lambton", "Keresaspa",
+    "Kirsasp", "Krakus", "Lancelot", "Li_Erlang", "Li_Ji", "Lodbrok", "Marduk",
+    "Margaret", "Michael", "Moore", "Mwindo", "Nabu", "Nezha", "Ninurta",
+    "Perseus", "Piers_Shonks", "Ra", "Ragnar", "Rammanu", "Rostam", "Sarasvati",
+    "Schrutan", "Siegfried", "Sigurd", "Sikandar", "Susanowo", "Tanenaga",
+    "Tarhunz", "Teodosio", "Teshub", "Thor", "Tishpak", "Tokoyo", "Tristan",
+    "Turambar", "Vahagn", "Venera", "Vishabakagh", "Wada", "Winkelried",
+    "Yahweh", "Yegara", "Zeus", "Zhao_Yu" }
+  local shopname = dragonslayers[ crawl.random2( #dragonslayers ) + 1 ]
+  kfeat( "P = armour shop name:" .. shopname ..
+         " type:Dragon-Slaying suffix:Spoils count:10 use_all ; " ..
+         util.join( " | ", scales ) )
+}}
+KFEAT: N = b
+KPROP: PNWY' = bloody
+MAP
+   xxxxxxxx
+  xx......xx
+ xx...bb...xx
+xx'''NbWbb..xx
+xP''Nbbbbbb..@
+xY''Nbbbbbb..@
+xx'''NbWbb..xx
+ xx...bb...xx
+  xx......xx
+   xxxxxxxx
 ENDMAP
 
 ###############################################################################

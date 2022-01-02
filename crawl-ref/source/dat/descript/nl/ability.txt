@@ -1,19 +1,4 @@
 %%%%
-Animate Remains ability
-
-Doet een enkel lijk of skelet herleven als volger. Hou er rekening mee dat
-zombies en skeletten het niveau waarop ze gemaakt werden niet kunnen verlaten.
-%%%%
-Animate Dead ability
-
-Doet alle lijken en skeletten rondom je herleven als volgers. Hou er rekening
-mee dat zombies en skeletten het niveau waarop ze gemaakt werden niet kunnen
-verlaten.
-%%%%
-Animate Remains or Dead ability
-
-Als je deze omschrijving ziet, is dat een bug.
-%%%%
 Banish ability
 
 Probeert een monster naar de Diepte te verbannen.

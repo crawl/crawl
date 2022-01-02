@@ -36,6 +36,7 @@
 #include "tag-version.h"
 #include "timed-effects.h" // zot clock
 #include "transform.h"
+#include "ui.h"
 #include "unicode.h"
 #include "view.h"
 #include "xom.h"
@@ -94,6 +95,9 @@ void wizard_suppress()
 {
     you.wizard = false;
     you.suppress_wizard = true;
+#ifdef USE_TILE_LOCAL
+    tiles.layout_statcol();
+#endif
     redraw_screen();
     update_screen();
 }
@@ -361,6 +365,8 @@ void wizard_exercise_skill()
 
     if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
+    else if (is_removed_skill(skill))
+        mpr("That skill was removed.");
     else
     {
         mpr("Exercising...");
@@ -372,6 +378,11 @@ void wizard_set_skill_level(skill_type skill)
 {
     if (skill == SK_NONE)
         skill = debug_prompt_for_skill("Which skill (by name)? ");
+
+    if (is_removed_skill(skill)){
+        mpr("That skill was removed.");
+        return;
+    }
 
     if (skill == SK_NONE)
     {
@@ -826,6 +837,12 @@ void wizard_get_god_gift()
     if (you_worship(GOD_ASHENZARI))
     {
         ashenzari_offer_new_curse();
+        return;
+    }
+
+    if (you_worship(GOD_YREDELEMNUL))
+    {
+        give_yred_bonus_zombies(min(piety_rank() + 1, NUM_PIETY_STARS));
         return;
     }
 

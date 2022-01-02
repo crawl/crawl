@@ -129,7 +129,7 @@ syn keyword desOrientation corpse skeleton never_decay
 " MONS | KMONS (in mapdef.cc)
 syn keyword desOrientation fix_slot priest_spells actual_spells god_gift
 syn keyword desOrientation generate_awake patrolling band hostile friendly
-syn keyword desOrientation good_neutral fellow_slime strict_neutral neutral
+syn keyword desOrientation good_neutral fellow_slime neutral
 "Note: `spectre` removed: mis-catches `silent spectre` but was unused as
 "modifier (`spectral` exists)
 syn keyword desOrientation base nonbase zombie skeleton simulacrum spectral
@@ -176,7 +176,7 @@ syn keyword desOrientation no_wall_fixup opaque no_trap_gen
 syn keyword desOrientation bloody highlight mold no_cloud_gen no_tele_into
 syn keyword desOrientation no_tide no_jiyva
 
-syn match desComment "^\s*#.*$&"
+syn match desComment "^\s*#.*$"
 
 "Note: `;` and `|` are necessary due to monster/randbook `spells:`,
 " `.` can be an empty spell slot and `'` is contained in certain spell names,

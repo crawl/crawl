@@ -2565,6 +2565,7 @@ KFEAT:  m = iron_grate
 KFEAT:  { = {
 SUBST:  n : m.
 KMASK:  2O = opaque
+KPROP:  2 = no_tele_into
 MAP
   ...................
   .............mmm...

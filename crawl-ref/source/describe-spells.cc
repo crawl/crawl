@@ -452,8 +452,8 @@ static string _colourize(string base, colour_t col)
 
 static string _describe_living_spells(const monster_info &mon_owner)
 {
-    const int n = living_spell_count(false);
     const spell_type spell = living_spell_type_for(mon_owner.type);
+    const int n = living_spell_count(spell, false);
     const string base_desc = _effect_string(spell, &mon_owner);
     const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)",
             base_desc.c_str());
@@ -486,7 +486,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         }
         if (you.immune_to_hex(spell))
             return "(immune)";
-        return make_stringf("(%d%%)", hex_chance(spell, hd));
+        return make_stringf("(%d%%)", hex_chance(spell, mon_owner));
     }
 
     if (spell == SPELL_SMITING)

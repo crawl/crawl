@@ -147,7 +147,7 @@ bool trap_def::is_safe(actor* act) const
 
     // No prompt (teleport traps are ineffective if wearing a -Tele item)
     if ((type == TRAP_TELEPORT || type == TRAP_TELEPORT_PERMANENT)
-        && you.no_tele(false))
+        && you.no_tele())
     {
         return true;
     }
@@ -552,7 +552,7 @@ void trap_def::trigger(actor& triggerer)
             mprf("%s disappears.", name(DESC_THE).c_str());
             destroy();
         }
-        if (!triggerer.no_tele(true, you_trigger))
+        if (!triggerer.no_tele())
             triggerer.teleport(true);
         break;
 
@@ -1049,19 +1049,26 @@ bool is_valid_shaft_level()
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
-/***
+///
+static bool& _shafted_in(const Branch &branch)
+{
+    return you.props[make_stringf("shafted_in_%s", branch.abbrevname)].get_bool();
+}
+
+/**
  * Can we force shaft the player from this level?
  *
  * @returns true if we can.
  */
-bool is_valid_shaft_effect_level()
+static bool _is_valid_shaft_effect_level()
 {
     const level_id place = level_id::current();
     const Branch &branch = branches[place.branch];
 
-    // Don't shaft the player when we can't, and also when it would be into a
-    // dangerous end.
+    // Don't shaft the player when we can't, or when we already did once this game
+    // in this branch, or when it would be into a dangerous end.
     return is_valid_shaft_level()
+           && !_shafted_in(branch)
            && !(branch.branch_flags & brflag::dangerous_end
                 && brdepth[place.branch] - place.depth == 1);
 }
@@ -1078,7 +1085,18 @@ void roll_trap_effects()
         && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
 
-/***
+static string _malev_msg()
+{
+    return make_stringf("A sourceless malevolence fills %s...",
+                        branches[you.where_are_you].longname);
+}
+
+static void _print_malev()
+{
+    mpr(_malev_msg());
+}
+
+/**
  * Separate from roll_trap_effects so the trap triggers when crawl is in an
  * appropriate state
  */
@@ -1094,7 +1112,7 @@ void do_trap_effects()
     vector<trap_type> available_traps = { TRAP_TELEPORT };
     // Don't shaft the player when shafts aren't allowed in the location or when
     //  it would be into a dangerous end.
-    if (is_valid_shaft_effect_level())
+    if (_is_valid_shaft_effect_level())
         available_traps.push_back(TRAP_SHAFT);
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
@@ -1104,7 +1122,9 @@ void do_trap_effects()
     {
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
-            you.do_shaft();
+            _print_malev();
+            if (you.do_shaft(false))
+                _shafted_in(branches[you.where_are_you]) = true;
             break;
 
         case TRAP_ALARM:
@@ -1112,14 +1132,19 @@ void do_trap_effects()
             // silenced, to avoid "travel only while silenced" behaviour.
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
-            mprf("You set off the alarm!");
+            _print_malev();
+            mprf("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
             break;
 
         case TRAP_TELEPORT:
-            you_teleport_now(false, true, "You stumble into a teleport trap!");
+        {
+            string msg = make_stringf("%s and a teleportation trap spontaneously manifests!",
+                                      _malev_msg().c_str());
+            you_teleport_now(false, true, msg);
             break;
+        }
 
         // Other cases shouldn't be possible, but having a default here quiets
         // compiler warnings
@@ -1222,15 +1247,6 @@ trap_type random_trap_for_place(bool dispersal_ok)
 
     const trap_type *trap = random_choose_weighted(trap_weights);
     return trap ? *trap : NUM_TRAPS;
-}
-
-int count_traps(trap_type ttyp)
-{
-    int num = 0;
-    for (const auto& entry : env.trap)
-        if (entry.second.type == ttyp)
-            num++;
-    return num;
 }
 
 void place_webs(int num)

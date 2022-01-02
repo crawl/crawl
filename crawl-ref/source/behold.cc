@@ -258,7 +258,7 @@ bool player::possible_beholder(const monster* mon) const
             && !silenced(pos())
             && !mon->is_silenced()
             && !mon->confused()
-            && !mon->asleep() && !mon->cannot_move()
+            && !mon->asleep() && !mon->cannot_act()
             && !mon->berserk_or_insane()
             && !mons_is_fleeing(*mon)
             && !is_sanctuary(pos())

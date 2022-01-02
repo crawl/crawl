@@ -1358,6 +1358,111 @@ xxlxx`xx'llxxx""--------"""xx
   xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:  nicolae_crypt_crumbling_hall
+DEPTH: Crypt
+TAGS:  transparent no_wall_fixup
+SUBST: - = x..., _ = x___, . = .:150 0, 0 = 0:90 9:30 8
+TILE:  x = wall_spider
+CLEAR: _
+MAP
+      ............
+      .........-.._
+ _    ..ccc++ccc.._xx_
+ xxx  .-cxxx...c.._xxx_
+ xxxx_-xc-c..c.c.. xxxx
+  _xxxxxx.-..-xx..  xxx
+....-xxxx.c..cxx-...xx-.
+..--xxxxc.x..-xcxx.-xxx.
+.-cxxxxcc.c..c-ccccccc-.
+.xxxxx-...---...-.-..c..
+.xxxc-c.c.c..cxc.c.c.c.-
+.-xx....-...---x--...+..
+..+.-..---...-.xx-...+..
+..c.c.c.c.c.-c.cxc.c-c-.
+..c-.------...-xx-..-cxx_
+..cccxxxxxc-.cxcccccccxx_
+..-xxxxxxx-.x.-c....--xxx_
+..-xxxxxx-c-.c-c......-x_
+   _xxxxx-..x-xc.-x-   _
+    _xxxc.c-.c-c.xxx_
+    xx--cx....-c.-xx
+   xxx..ccc++ccc.-x_
+   xx ..-x-...-..xx
+      ..........xx
+ENDMAP
+
+NAME:    nicolae_crypt_knee_deep_in_the_dead
+TAGS:    transparent no_monster_gen
+DEPTH:   Crypt:2-
+KMONS:   0 = 0 zombie / 0 skeleton / 0 simulacrum / 0 spectral thing
+KMONS:   9 = 9 zombie / 9 skeleton / 9 simulacrum / 9 spectral thing
+KMONS:   8 = 8 zombie / 8 skeleton / 8 simulacrum / 8 spectral thing
+SHUFFLE: {[(<
+SUBST:   - = 8 9:30 0:120 .:20
+MAP
+xxxxxxxxxx
+x-----...x
++-----.{.x
++-----.G.x
++-----.[.x
+x-----...x
+xxxxxxxxxx
+ENDMAP
+
+# https://www.youtube.com/watch?v=6j3StwEVchQ
+NAME:   nicolae_crypt_knochenhaus
+TAGS:   patrolling transparent
+DEPTH:  Crypt
+WEIGHT: 5
+ORIENT: float
+KITEM:  3 = * / |
+# The regular-weight skellingtons move at speed 10 or more. The lower-weighted
+# skellingtons hit hard and/or have something tactical like trample or reach.
+KMONS:  1 = anaconda skeleton / caustic shrike skeleton / harpy skeleton / \
+        storm dragon skeleton / juggernaut skeleton / pearl dragon skeleton / \
+        fenstrider witch skeleton / guardian serpent skeleton / \
+        quicksilver dragon skeleton / shard shrike skeleton / \
+        20-headed hydra skeleton w:5 / alligator snapping turtle skeleton w:5 /\
+        apis skeleton w:5 / dire elephant skeleton w:5 / titan skeleton w:5 / \
+        golden dragon skeleton w:5 / hellephant skeleton w:5
+KMONS:  2V = skeletal warrior w:20 / flying skull / curse skull w:5 / \
+        ancient champion band w:5 / nothing w:20
+KMONS:  3 = bone dragon / revenant
+KFEAT:  V = V / .
+KFEAT:  3 = V
+SUBST:  G = GG., H = G, 2 = 2:47 3:3, 1 = 1112 .:40, \
+        L = $%.., M = %**., N = %***, % = %%%*, * = ***|
+NSUBST: ap = 1=c, pq = 1=c, apq = *=+, rs = 1=c, sy = 1=c, rsy = *=+, \
+        P = c / +, Q = c / +, R = + / +c / c, S = + / +c / c, \
+        z = +c / c, Z = + / +c / c
+MAP
+ccccccccccccccccccccccccccc
+cG.MGM.GcG.1.GcG.1.GcG.1.Gc
+c.1...1.c.L.L.c.....c.....c
+cM.2N2..a1.V..R..V..P..V.1c
+cG.N3N..c.L.L.c.....c.....c
+cM.2N2..cG....c.....c....Gc
+c.1...1.cccaccccPcccccccPcc
+cG.M.M..p....Gc...c...c...c
+ccccqcccc.L.L.R.1.P.1.P.1.c
+cG.M.M.Gc1.V..c...c...c...cH
+c.1...1.q.L.L.ccZccczccc+cc.
+cM.2N2..cG.1..R...c...c...c.
+cG.N3N.Gccccccc.1.Z.1.+.1.+@
+cM.2N2..cG.1..S...c...c...c.
+c.1...1.y.L.L.ccZccczccc+cc.
+cG.M.M.Gc1.V..c...c...c...cH
+ccccycccc.L.L.S.1.Q.1.Q.1.c
+cG.M.M..s....Gc...c...c...c
+c.1...1.cccrccccQcccccccQcc
+cM.2N2..cG....c.....c....Gc
+cG.N3N..c.L.L.c.....c.....c
+cM.2N2..r1.V..S..V..Q..V..c
+c.1...1.c.L.L.c.....c.....c
+cG.MGM.GcG.1.GcG.1.GcG.1.Gc
+ccccccccccccccccccccccccccc
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################

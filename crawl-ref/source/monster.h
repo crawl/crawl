@@ -281,12 +281,9 @@ public:
                              bool rescale = true) const override;
     int         has_claws(bool allow_tran = true) const override;
 
-    int wearing(equipment_type slot, int type, bool calc_unid = true) const
-        override;
-    int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const
-        override;
+    int wearing(equipment_type slot, int type) const override;
+    int wearing_ego(equipment_type slot, int type) const override;
     int scan_artefacts(artefact_prop_type which_property,
-                       bool calc_unid = true,
                        vector<const item_def *> *_unused_matches = nullptr) const
         override;
 
@@ -350,7 +347,7 @@ public:
                bool temp = true) const override;
 
     void attacking(actor *other) override;
-    bool can_go_frenzy(bool check_sleep = true) const;
+    bool can_go_frenzy() const;
     bool can_go_berserk() const override;
     bool go_berserk(bool intentional, bool potion = false) override;
     bool go_frenzy(actor *source);
@@ -389,29 +386,28 @@ public:
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
     bool res_miasma(bool /*temp*/ = true) const override;
-    int res_water_drowning() const override;
+    bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
-    int res_acid(bool calc_unid = true) const override;
+    int res_acid() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
-    int willpower(bool calc_unid = true) const override;
-    bool no_tele(bool calc_unid = true, bool permit_id = true,
-                 bool blink = false) const override;
-    bool res_corr(bool calc_unid = true, bool temp = true) const override;
+    int willpower() const override;
+    bool no_tele(bool blink = false) const override;
+    bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 
     bool stasis() const override;
-    bool cloud_immune(bool calc_unid = true, bool items = true) const override;
+    bool cloud_immune(bool items = true) const override;
 
     bool airborne() const override;
     bool is_banished() const override;
     bool is_web_immune() const override;
     bool invisible() const override;
-    bool can_see_invisible(bool calc_unid = true) const override;
+    bool can_see_invisible() const override;
     bool visible_to(const actor *looker) const override;
     bool near_foe() const;
     reach_type reach_range() const override;
@@ -422,7 +418,6 @@ public:
     bool is_skeletal() const override;
     bool is_spiny() const;
     bool paralysed() const override;
-    bool cannot_move() const override;
     bool cannot_act() const override;
     bool confused() const override;
     bool confused_by_you() const;
@@ -445,7 +440,6 @@ public:
     bool friendly() const;
     bool neutral() const;
     bool good_neutral() const;
-    bool strict_neutral() const;
     bool wont_attack() const override;
     bool pacified() const;
 
@@ -454,6 +448,7 @@ public:
     mon_spell_slot_flags spell_slot_flags(spell_type spell) const;
     bool has_unclean_spell() const;
     bool has_chaotic_spell() const;
+    bool immune_to_silence() const;
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);
@@ -465,10 +460,10 @@ public:
     bool is_silenced() const;
 
     int base_armour_class() const;
-    int armour_class(bool calc_unid = true) const override;
+    int armour_class() const override;
     int gdr_perc() const override { return 0; }
     int base_evasion() const;
-    int evasion(ev_ignore_type evit = ev_ignore::none,
+    int evasion(bool ignore_helpless = false,
                 const actor* /*attacker*/ = nullptr) const override;
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;
@@ -538,7 +533,7 @@ public:
 
     int action_energy(energy_use_type et) const;
 
-    bool do_shaft() override;
+    bool do_shaft(bool check_terrain = true) override;
     bool has_spell_of_type(spschool discipline) const;
 
     void bind_melee_flags();
@@ -600,7 +595,7 @@ private:
 
     bool level_up();
     bool level_up_change();
-    int armour_bonus(const item_def &item, bool calc_unid = true) const;
+    int armour_bonus(const item_def &item) const;
 
     void id_if_worn(mon_inv_type mslot, object_class_type base_type,
                     int sub_type) const;

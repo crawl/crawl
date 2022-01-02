@@ -421,7 +421,7 @@ void ghost_demon::init_player_ghost()
 
     name   = you.your_name;
     max_hp = min(get_real_hp(false, false), MAX_GHOST_HP);
-    ev     = min(you.evasion(ev_ignore::helpless), MAX_GHOST_EVASION);
+    ev     = min(you.evasion(true), MAX_GHOST_EVASION);
     ac     = you.armour_class();
     dprf("ghost ac: %d, ev: %d", ac, ev);
 

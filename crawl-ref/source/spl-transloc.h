@@ -8,14 +8,15 @@ class dist;
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
-spret cast_blink(bool fail = false);
+spret cast_blink(int pow, bool fail = false);
 void uncontrolled_blink(bool override_stasis = false);
-spret controlled_blink(bool safe_cancel = true, dist *target=nullptr);
+spret controlled_blink(bool safe_cancel = true, dist *target = nullptr);
 void wizard_blink();
 
-spret frog_hop(bool fail, dist *target=nullptr);
+int frog_hop_range();
+spret frog_hop(bool fail, dist *target = nullptr);
 bool palentonga_charge_possible(bool quiet, bool ignore_safe_monsters);
-spret palentonga_charge(bool fail, dist *target=nullptr);
+spret palentonga_charge(bool fail, dist *target = nullptr);
 int palentonga_charge_range();
 
 void you_teleport();
@@ -33,7 +34,9 @@ string weapon_unprojectability_reason();
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
-spret cast_golubrias_passage(const coord_def& where, bool fail);
+int golubria_fuzz_range();
+bool golubria_valid_cell(coord_def p);
+spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 
 spret cast_dispersal(int pow, bool fail);
 
@@ -43,5 +46,6 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
 void attract_monsters();
+vector<monster *> find_chaos_targets(bool just_check = false);
 spret word_of_chaos(int pow, bool fail);
 spret blinkbolt(int power, bolt &beam, bool fail);

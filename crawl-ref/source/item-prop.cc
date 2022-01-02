@@ -147,6 +147,8 @@ static const armour_def Armour_prop[] =
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
+    { ARM_ORB,              "orb",                0,  0,   90,
+        EQ_SHIELD,      SIZE_LITTLE, SIZE_GIANT, true },
     { ARM_BUCKLER,              "buckler",                3,  -8,   45,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
     { ARM_KITE_SHIELD,               "kite shield",                 8,  -30,  45,
@@ -691,9 +693,6 @@ static const food_def Food_prop[] =
 {
     { FOOD_RATION,       "buggy ration", 3400,  1900,  1900 },
     { FOOD_CHUNK,        "buggy chunk",        1000,  1300,     0 },
-
-    // is_real_food assumes we list FOOD_ROYAL_JELLY as the first removed
-    // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy pizza",     0,     0,     0 },
     { FOOD_ROYAL_JELLY,  "buggy jelly",  2000,  2000,  2000 },
     { FOOD_BREAD_RATION, "buggy ration", 4400,     0,  5900 },
@@ -981,10 +980,6 @@ void set_ident_flags(item_def &item, iflags_t flags)
     if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item)
         && _is_affordable(item))
     {
-        if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1 << item.brand;
-        if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1 << item.brand;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
@@ -1060,11 +1055,6 @@ void set_equip_desc(item_def &item, iflags_t flags)
 
     item.flags &= ~ISFLAG_COSMETIC_MASK; // delete previous
     item.flags |= flags;
-}
-
-bool is_helmet(const item_def& item)
-{
-    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
 }
 
 bool is_hard_helmet(const item_def &item)
@@ -1188,7 +1178,8 @@ bool armour_is_enchantable(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
     return item.sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
-        && item.sub_type != ARM_SCARF;
+        && item.sub_type != ARM_SCARF
+        && item.sub_type != ARM_ORB;
 }
 
 /**
@@ -1417,25 +1408,27 @@ bool check_armour_size(const item_def &item, size_type size)
     return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
 
-int wand_charge_value(int type)
+int wand_charge_value(int type, int item_level)
 {
     switch (type)
     {
     case WAND_DIGGING:
         return 9;
 
+    // Decrease charge generation later on so that players get wands to play
+    // with early, but aren't totally flooded with charges by late game.
     case WAND_ICEBLAST:
     case WAND_ACID:
     case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
-        return 15;
+        return item_level > 7 ? 8 : 15;
 
     default:
-        return 24;
+        return item_level > 7 ? 12 : 24;
 
     case WAND_FLAME:
-        return 32;
+        return item_level > 7 ? 16 : 32;
     }
 }
 
@@ -1853,7 +1846,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         if (is_shield(item))
             skills.insert(SK_SHIELDS);
 
-        if (gives_ability(item))
+        if (gives_ability(item) || get_armour_ego_type(item) == SPARM_ENERGY)
             skills.insert(SK_EVOCATIONS);
     }
 
@@ -2137,16 +2130,66 @@ bool ring_has_stackable_effect(const item_def &item)
 
     return false;
 }
-#if TAG_MAJOR_VERSION == 34
 
-//
-// Food functions:
-//
-bool is_real_food(food_type /*food*/)
+static map<potion_type, item_rarity_type> _potion_rarity = {
+    { POT_CURING,       RARITY_VERY_COMMON },
+    { POT_HEAL_WOUNDS,  RARITY_COMMON },
+    { POT_FLIGHT,       RARITY_UNCOMMON },
+    { POT_HASTE,        RARITY_UNCOMMON },
+    { POT_LIGNIFY,      RARITY_UNCOMMON },
+    { POT_ATTRACTION,   RARITY_UNCOMMON },
+    { POT_DEGENERATION, RARITY_UNCOMMON },
+    { POT_MIGHT,        RARITY_UNCOMMON },
+    { POT_BRILLIANCE,   RARITY_UNCOMMON },
+    { POT_MUTATION,     RARITY_UNCOMMON },
+    { POT_INVISIBILITY, RARITY_RARE },
+    { POT_RESISTANCE,   RARITY_RARE },
+    { POT_MAGIC,        RARITY_RARE },
+    { POT_BERSERK_RAGE, RARITY_RARE },
+    { POT_CANCELLATION, RARITY_RARE },
+    { POT_AMBROSIA,     RARITY_RARE },
+    { POT_EXPERIENCE,   RARITY_VERY_RARE },
+};
+
+static map<scroll_type, item_rarity_type> _scroll_rarity = {
+    { SCR_IDENTIFY,       RARITY_VERY_COMMON },
+    { SCR_TELEPORTATION,  RARITY_COMMON },
+    { SCR_AMNESIA,        RARITY_UNCOMMON },
+    { SCR_NOISE,          RARITY_UNCOMMON },
+    { SCR_ENCHANT_ARMOUR, RARITY_UNCOMMON },
+    { SCR_ENCHANT_WEAPON, RARITY_UNCOMMON },
+    { SCR_MAGIC_MAPPING,  RARITY_UNCOMMON },
+    { SCR_FEAR,           RARITY_UNCOMMON },
+    { SCR_FOG,            RARITY_UNCOMMON },
+    { SCR_BLINKING,       RARITY_UNCOMMON },
+    { SCR_IMMOLATION,     RARITY_UNCOMMON },
+    { SCR_VULNERABILITY,  RARITY_UNCOMMON },
+    { SCR_SUMMONING,      RARITY_RARE },
+    { SCR_SILENCE,        RARITY_RARE },
+    { SCR_BRAND_WEAPON,   RARITY_RARE },
+    { SCR_TORMENT,        RARITY_RARE },
+    { SCR_HOLY_WORD,      RARITY_RARE },
+    { SCR_ACQUIREMENT,    RARITY_VERY_RARE },
+};
+
+item_rarity_type consumable_rarity(const item_def &item)
 {
-    return false;
+    return consumable_rarity(item.base_type, item.sub_type);
 }
-#endif
+
+item_rarity_type consumable_rarity(object_class_type base_type, int sub_type)
+{
+    item_rarity_type *rarity = nullptr;
+    if (base_type == OBJ_POTIONS)
+        rarity = map_find(_potion_rarity, (potion_type) sub_type);
+    else if (base_type == OBJ_SCROLLS)
+        rarity = map_find(_scroll_rarity, (scroll_type) sub_type);
+
+    if (!rarity)
+        return RARITY_NONE;
+
+    return *rarity;
+}
 
 //
 // Generic item functions:
@@ -2257,6 +2300,9 @@ int get_armour_willpower(const item_def &arm, bool check_artp)
     if (get_armour_ego_type(arm) == SPARM_WILLPOWER)
         res += WL_PIP;
 
+    if (get_armour_ego_type(arm) == SPARM_GUILE)
+        res -= 2 * WL_PIP;
+
     if (check_artp && is_artefact(arm))
         res += WL_PIP * artefact_property(arm, ARTP_WILLPOWER);
 
@@ -2284,20 +2330,6 @@ int get_armour_res_corr(const item_def &arm)
     // intrinsic armour abilities
     return get_armour_ego_type(arm) == SPARM_PRESERVATION
            || armour_type_prop(arm.sub_type, ARMF_RES_CORR);
-}
-
-int get_armour_repel_missiles(const item_def &arm, bool check_artp)
-{
-    ASSERT(arm.base_type == OBJ_ARMOUR);
-
-    // check for ego resistance
-    if (get_armour_ego_type(arm) == SPARM_REPULSION)
-        return true;
-
-    if (check_artp && is_artefact(arm))
-        return artefact_property(arm, ARTP_RMSL);
-
-    return false;
 }
 
 bool get_armour_rampaging(const item_def &arm, bool check_artp)
@@ -2704,6 +2736,13 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
+           && get_armour_slot(item) == EQ_SHIELD
+           && item.sub_type != ARM_ORB;
+}
+
+bool is_offhand(const item_def &item)
+{
+    return item.base_type == OBJ_ARMOUR
            && get_armour_slot(item) == EQ_SHIELD;
 }
 
@@ -2719,17 +2758,16 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     return hand == HANDS_TWO;
 }
 
+// Returns true if the worn shield has the reflection ego. Used only for
+// messaging, to distinguish between a reflective shield and ego reflection.
 bool shield_reflects(const item_def &shield)
 {
-    ASSERT(is_shield(shield));
-
-    return get_armour_ego_type(shield) == SPARM_REFLECTION;
+    return is_shield(shield) && get_armour_ego_type(shield) == SPARM_REFLECTION;
 }
 
-void ident_reflector(item_def *item)
+int guile_adjust_willpower(int wl)
 {
-    if (!is_artefact(*item))
-        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
+    return max(0, wl - 3 * WL_PIP);
 }
 
 string item_base_name(const item_def &item)
@@ -2786,30 +2824,26 @@ weapon_type name_nospace_to_weapon(string name_nospace)
     return WPN_UNKNOWN;
 }
 
-void seen_item(const item_def &item)
+void seen_item(item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
     {
-        // Known brands will be set in set_item_flags().
+        // XXX: the first two are unsigned integers because
+        // they used to be a bitfield tracking brands as well
+        // and are marshalled to the save file as such.
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_weapon[item.sub_type] = 1U;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_armour[item.sub_type] = 1U;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
 
     _maybe_note_found_unrand(item);
 
-    // major hack. Deconstify should be safe here, but it's still repulsive.
-    item_def& malleable_item = const_cast<item_def &>(item);
-
-    malleable_item.flags |= ISFLAG_SEEN;
+    item.flags |= ISFLAG_SEEN;
     if (item.base_type == OBJ_GOLD && !item.tithe_state)
-    {
-        malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE
-                                                     : TS_NO_PIETY;
-    }
+        item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE : TS_NO_PIETY;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)

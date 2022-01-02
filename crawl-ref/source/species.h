@@ -71,7 +71,6 @@ namespace species
     int get_hp_modifier(species_type species);
     int get_mp_modifier(species_type species);
     int get_wl_modifier(species_type species);
-    int get_stat_gain_multiplier(species_type species);
     bool has_low_str(species_type species);
     bool recommends_job(species_type species, job_type job);
     bool recommends_weapon(species_type species, weapon_type wpn);

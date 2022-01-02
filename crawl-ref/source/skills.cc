@@ -1306,8 +1306,9 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         you.skill_manual_points[exsk] -= bonus;
         if (!you.skill_manual_points[exsk] && !simu && !crawl_state.simulating_xp_gain)
         {
-            mprf("You have finished your manual of %s and toss it away.",
-                 skill_name(exsk));
+            mprf("You have finished your manual of %s and %stoss it away.",
+                 skill_name(exsk),
+                 exsk == SK_THROWING ? "skillfully " : "");
         }
     }
 
@@ -1972,10 +1973,12 @@ bool is_useless_skill(skill_type skill)
     if (mut != skill_sac_muts.end() && you.has_mutation(mut->second))
         return true;
     // shields isn't in the big map because shields being useless doesn't
-    // imply that missing hand is meaningless.
+    // imply that missing hand is meaningless. likewise for summoning magic
+    // vs. ability to have friendlies at all.
     if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
         || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
                             && !you.has_innate_mutation(MUT_QUADRUMANOUS)
+        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE)
     )
     {
         return true;
@@ -2154,27 +2157,6 @@ int elemental_preference(spell_type spell, int scale)
         if (_skill_is_elemental(sk))
             preference += you.skill(sk, scale);
     return preference;
-}
-
-/**
- * Compare skill levels
- *
- * It compares the level of 2 skills, and breaks ties by using skill order.
- *
- * @param sk1 First skill.
- * @param sk2 Second skill.
- * @return Whether first skill is higher than second skill.
- */
-bool compare_skills(skill_type sk1, skill_type sk2)
-{
-    if (is_invalid_skill(sk1))
-        return false;
-    else if (is_invalid_skill(sk2))
-        return true;
-    else
-        return you.skill(sk1, 10, true) > you.skill(sk2, 10, true)
-               || you.skill(sk1, 10, true) == you.skill(sk2, 10, true)
-                  && you.skill_order[sk1] < you.skill_order[sk2];
 }
 
 void dump_skills(string &text)

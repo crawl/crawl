@@ -2270,10 +2270,10 @@ static void _corrupt_choose_colours(corrupt_env *cenv)
     cenv->floor_colour = colour;
 }
 
-bool lugonu_corrupt_level(int power)
+void lugonu_corrupt_level(int power)
 {
     if (is_level_incorruptible())
-        return false;
+        return;
 
     simple_god_message("'s Hand of Corruption reaches out!");
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
@@ -2293,14 +2293,12 @@ bool lugonu_corrupt_level(int power)
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
 #endif
-
-    return true;
 }
 
-bool lugonu_corrupt_level_monster(const monster &who)
+void lugonu_corrupt_level_monster(const monster &who)
 {
     if (is_level_incorruptible_monster())
-        return false;
+        return;
 
     flash_view_delay(UA_MONSTER, MAGENTA, 200);
 
@@ -2319,8 +2317,6 @@ bool lugonu_corrupt_level_monster(const monster &who)
     // Allow extra time for the flash to linger.
     scaled_delay(300);
 #endif
-
-    return true;
 }
 
 /// If the player has earned enough XP, spawn an exit or stairs down.

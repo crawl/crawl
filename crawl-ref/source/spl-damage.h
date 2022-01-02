@@ -15,6 +15,10 @@ class dist;
 const int DEFAULT_SHATTER_DICE = 3;
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
+#define FLAME_WAVE_POWER_KEY "flame_wave_power"
+#define FROZEN_RAMPARTS_POWER_KEY "frozen_ramparts_power"
+#define TOXIC_RADIANCE_POWER_KEY "toxic_radiance_power"
+#define VORTEX_POWER_KEY "vortex_power"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -38,12 +42,13 @@ int airstrike_space_around(coord_def target, bool count_invis);
 spret cast_shatter(int pow, bool fail);
 dice_def shatter_damage(int pow, monster *mons = nullptr);
 int terrain_shatter_chance(coord_def where, const actor &agent);
-spret cast_irradiate(int powc, actor* who, bool fail);
+spret cast_irradiate(int powc, actor &caster, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
-bool ignite_poison_affects(const actor* act);
 bool ignite_poison_affects_cell(const coord_def where, actor* agent);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);
+spret cast_unravelling(coord_def target, int pow, bool fail);
+spret cast_inner_flame(coord_def target, int pow, bool fail);
 spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test=false);
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
@@ -102,7 +107,7 @@ spret cast_imb(int pow, bool fail);
 
 void actor_apply_toxic_bog(actor *act);
 
-vector<coord_def> find_ramparts_walls(const coord_def &center);
+vector<coord_def> find_ramparts_walls();
 spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);

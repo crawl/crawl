@@ -19,6 +19,7 @@
 #include "rltiles/tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
+#include "viewmap.h"
 
 CommandRegion::CommandRegion(const TileRegionInit &init,
                              const command_type commands[],
@@ -70,12 +71,11 @@ int CommandRegion::handle_mouse(wm_mouse_event &event)
             tiles.deactivate_tab();
         }
 
-        // this is a really horrid way to preserve the interface in viewmap.cc
-        // which expects a keypress rather than a command :(
         if (tiles.get_map_display())
-            return command_to_key(cmd);
+            process_map_command(cmd);
+        else
+            process_command(cmd);
 
-        process_command(cmd);
         return CK_MOUSE_CMD;
     }
     return 0;
@@ -169,42 +169,34 @@ void CommandRegion::pack_buffers()
     }
 }
 
-static bool _command_not_applicable(const command_type cmd, bool safe)
+bool tile_command_not_applicable(const command_type cmd, bool safe)
 {
+    // in the level map, only the map pan commands work
+    const bool map_cmd = context_for_command(cmd) == KMC_LEVELMAP;
+    if (tiles.get_map_display() != map_cmd)
+        return true;
+
     switch (cmd)
     {
     case CMD_REST:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
+    case CMD_MEMORISE_SPELL:
         return !safe;
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
     case CMD_USE_ABILITY:
         return your_talents(false).empty();
     case CMD_CAST_SPELL:
-        return can_cast_spells(true);
-    case CMD_DISPLAY_MAP:
-        return tiles.get_map_display();
-    case CMD_MAP_GOTO_TARGET:
-    case CMD_MAP_ADD_WAYPOINT:
-    case CMD_MAP_EXCLUDE_AREA:
-    case CMD_MAP_CLEAR_EXCLUDES:
-    case CMD_MAP_NEXT_LEVEL:
-    case CMD_MAP_PREV_LEVEL:
-    case CMD_MAP_GOTO_LEVEL:
-    case CMD_MAP_FIND_UPSTAIR:
-    case CMD_MAP_FIND_DOWNSTAIR:
-    case CMD_MAP_FIND_YOU:
-    case CMD_MAP_FIND_PORTAL:
-    case CMD_MAP_FIND_TRAP:
-    case CMD_MAP_FIND_ALTAR:
-    case CMD_MAP_FIND_EXCLUDED:
-    case CMD_MAP_FIND_WAYPOINT:
-    case CMD_MAP_FIND_STASH:
-        return !tiles.get_map_display();
+        return !you.spell_no || !can_cast_spells(true);
     default:
         return false;
     }
+}
+
+bool tile_command_not_applicable(const command_type cmd)
+{
+    return tile_command_not_applicable(cmd, i_feel_safe(false));
 }
 
 void CommandRegion::update()
@@ -219,14 +211,19 @@ void CommandRegion::update()
 
     for (int idx = 0; idx < n_common_commands; ++idx)
     {
-        const command_type cmd = _common_commands[idx];
+        command_type cmd = _common_commands[idx];
+
+        // hackily toggle between display map and exit map display depending
+        // on whether we are in map mode
+        if (cmd == CMD_DISPLAY_MAP && tiles.get_map_display())
+            cmd = CMD_MAP_EXIT_MAP;
 
         InventoryTile desc;
         desc.tile = tileidx_command(cmd);
         desc.idx  = cmd;
 
         // Auto-explore while monsters around etc.
-        if (_command_not_applicable(cmd, safe))
+        if (tile_command_not_applicable(cmd, safe))
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);

@@ -527,12 +527,7 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
     }
 
     mpr("The fire ignites!");
-    int dur = 5 + random2avg(20, 2);      // ignis sea of flames duration
-    if (you.props.exists(CFLAME_DUR_KEY)) // this ember was created by cflame
-    {
-        dur = you.props[CFLAME_DUR_KEY].get_int();
-        you.props.erase(CFLAME_DUR_KEY);
-    }
+    const int dur = you.props[CFLAME_DUR_KEY].get_int();
     place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
     you.props.erase(CFLAME_DUR_KEY);
     return true;
@@ -870,13 +865,6 @@ cloud_type random_smoke_type()
     return random_choose(CLOUD_GREY_SMOKE, CLOUD_BLUE_SMOKE,
                          CLOUD_BLACK_SMOKE, CLOUD_PURPLE_SMOKE);
 }
-int max_cloud_damage(cloud_type cl_type, int power)
-{
-    cloud_struct cloud;
-    cloud.type = cl_type;
-    cloud.decay = power * 10;
-    return _actor_cloud_damage(&you, cloud, true);
-}
 
 // Returns true if the cloud type has negative side effects beyond
 // plain damage and inventory destruction effects.
@@ -982,7 +970,9 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_PETRIFY:
             return act.res_petrify();
         case CLOUD_SPECTRAL:
-            return bool(act.holiness() & MH_UNDEAD);
+            return bool(act.holiness() & MH_UNDEAD)
+                   || act.is_player()
+                      && have_passive(passive_t::r_spectral_mist);
         case CLOUD_ACID:
             return act.res_acid() > 0;
         case CLOUD_STORM:

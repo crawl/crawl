@@ -419,11 +419,6 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place);
 }
 
-bool drac_colour_incompatible(int drac, int colour)
-{
-    return drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN;
-}
-
 bool needs_resolution(monster_type mon_type)
 {
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
@@ -446,18 +441,22 @@ monster_type resolve_monster_type(monster_type mon_type,
 
     if (mon_type == RANDOM_DRACONIAN)
     {
-        // Pick any random drac, constrained by colour if requested.
-        do
+        if (base_type != MONS_NO_MONSTER)
         {
+            // Pick the requested colour, if applicable.
+            if (coinflip())
+                mon_type = base_type;
+            else
+                mon_type = draconian_job_for_colour(base_type);
+        }
+        else
+        {
+            // Pick any random drac.
             if (coinflip())
                 mon_type = random_draconian_monster_species();
             else
                 mon_type = random_draconian_job();
         }
-        while (base_type != MONS_PROGRAM_BUG
-               && mon_type != base_type
-               && (mons_species(mon_type) == mon_type
-                   || drac_colour_incompatible(mon_type, base_type)));
     }
     else if (mon_type == RANDOM_BASE_DRACONIAN)
         mon_type = random_draconian_monster_species();
@@ -1328,9 +1327,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.behaviour == BEH_NEUTRAL)
             mon->attitude = ATT_NEUTRAL;
 
-        if (mg.behaviour == BEH_STRICT_NEUTRAL)
-            mon->attitude = ATT_STRICT_NEUTRAL;
-
         mon->behaviour = BEH_WANDER;
     }
 
@@ -1675,7 +1671,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->base_monster = ztype;
 
     mon->colour       = COLOUR_INHERIT;
-    mon->speed        = (cs == MONS_SPECTRAL_THING
+    mon->speed        = ((cs == MONS_SPECTRAL_THING || cs == MONS_BOUND_SOUL)
                             ? mons_class_base_speed(mon->base_monster)
                             : mons_class_zombie_base_speed(mon->base_monster));
 
@@ -1689,25 +1685,6 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
         mon->flags   |= MF_NO_REGEN;
 
     roll_zombie_hp(mon);
-}
-
-bool downgrade_zombie_to_skeleton(monster* mon)
-{
-    if (mon->type != MONS_ZOMBIE || !mons_skeleton(mon->base_monster))
-        return false;
-
-    const int old_hp    = mon->hit_points;
-    const int old_maxhp = mon->max_hit_points;
-
-    mon->type           = MONS_SKELETON;
-    mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
-    roll_zombie_hp(mon);
-
-    // Scale the skeleton HP to the zombie HP.
-    mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
-    mon->hit_points     = max(mon->hit_points, 1);
-
-    return true;
 }
 
 /// Under what conditions should a band spawn with a monster?
@@ -1892,8 +1869,15 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_MERFOLK_IMPALER, { mf_band_condition,
                                   {{ BAND_MERFOLK_IMPALER, {2, 5} }}}},
     { MONS_ELEPHANT,        { {}, {{ BAND_ELEPHANT, {2, 6} }}}},
-    { MONS_REDBACK,         { {}, {{ BAND_REDBACK, {1, 6} }}}},
-    { MONS_ENTROPY_WEAVER,  { {}, {{ BAND_REDBACK, {1, 5} }}}},
+    { MONS_REDBACK,         { {}, {{ BAND_REDBACK, {1, 5} }}}},
+    { MONS_CULICIVORA,      { {}, {{ BAND_MIXED_SPIDERS, {1, 4} }}}},
+    { MONS_ENTROPY_WEAVER,  { {}, {{ BAND_REDBACK, {1, 4} }}}},
+    { MONS_STEELBARB_WORM,  { {}, {{ BAND_MIXED_SPIDERS, {1, 4} }}}},
+    { MONS_PHARAOH_ANT,     { {}, {{ BAND_MIXED_SPIDERS, {1, 4} }}}},
+    { MONS_JOROGUMO,        { {}, {{ BAND_MIXED_SPIDERS, {1, 4} }}}},
+    { MONS_BROODMOTHER,     { {}, {{ BAND_MIXED_SPIDERS, {2, 5} }}}},
+    { MONS_SUN_MOTH,        { {}, {{ BAND_MIXED_SPIDERS, {1, 4} }}}},
+    { MONS_RADROACH,        { {}, {{ BAND_MIXED_SPIDERS, {1, 3} }}}},
     { MONS_JUMPING_SPIDER,  { {2}, {{ BAND_JUMPING_SPIDER, {1, 6} }}}},
     { MONS_TARANTELLA,      { {2}, {{ BAND_TARANTELLA, {1, 5} }}}},
     { MONS_VAULT_WARDEN,    { {}, {{ BAND_YAKTAURS, {2, 6}, true },
@@ -1925,7 +1909,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_GLOORX_VLOQ,     { {}, {{ BAND_GLOORX_VLOQ, {5, 8}, true }}}},
     { MONS_MNOLEG,          { {}, {{ BAND_MNOLEG, {5, 8}, true }}}},
     { MONS_LOM_LOBON,       { {}, {{ BAND_LOM_LOBON, {5, 8}, true }}}},
-    { MONS_DEATH_SCARAB,    { {}, {{ BAND_DEATH_SCARABS, {3, 6} }}}},
+    { MONS_DEATH_SCARAB,  { {0, 0, []() {
+        return you.where_are_you == BRANCH_TOMB;
+    }},                            {{ BAND_DEATH_SCARABS, {3, 6} }}}},
     { MONS_SERAPH,          { {}, {{ BAND_HOLIES, {1, 4}, true }}}},
     { MONS_IRON_GIANT,      { {}, {{ BAND_IRON_GOLEMS, {2, 3}, true }}}},
     { MONS_SPARK_WASP,      { {0, 0, []() {
@@ -2005,7 +1991,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
                                { { BAND_DEATH_YAKS,    1, 2 },  1 },
                                { { BAND_DREAM_SHEEP,   2, 4 },  1 },
                              } },
-            { BRANCH_SPIDER, { { { BAND_REDBACK,       2, 4 },  1 },
+            { BRANCH_SPIDER, { { { BAND_MIXED_SPIDERS, 2, 4 },  1 },
                                { { BAND_RANDOM_SINGLE, 1, 1 },  1 },
                              } },
             { BRANCH_DEPTHS, { { { BAND_RANDOM_SINGLE, 1, 1 },  1 },
@@ -2246,19 +2232,27 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_IRON_TROLL, 8},
                                   {MONS_DEEP_TROLL_EARTH_MAGE, 3},
                                   {MONS_DEEP_TROLL_SHAMAN, 3}}}},
-    { BAND_REDBACK,             {{{MONS_REDBACK, 6},
+    { BAND_REDBACK,             {{{MONS_REDBACK, 9},
                                   {MONS_TARANTELLA, 1},
+                                  {MONS_CULICIVORA, 1},
                                   {MONS_JUMPING_SPIDER, 1}}}},
-    { BAND_JUMPING_SPIDER,      {{{MONS_JUMPING_SPIDER, 12},
-                                  {MONS_WOLF_SPIDER, 8},
-                                  {MONS_ORB_SPIDER, 7},
-                                  {MONS_REDBACK, 5},
-                                  {MONS_DEMONIC_CRAWLER, 2}}}},
+    { BAND_JUMPING_SPIDER,      {{{MONS_JUMPING_SPIDER, 6},
+                                  {MONS_REDBACK, 2},
+                                  {MONS_CULICIVORA, 1},
+                                  {MONS_WOLF_SPIDER, 1},
+                                  {MONS_ORB_SPIDER, 1},
+                                  {MONS_TARANTELLA, 1}}}},
     { BAND_TARANTELLA,          {{{MONS_TARANTELLA, 10},
-                                  {MONS_REDBACK, 8},
-                                  {MONS_WOLF_SPIDER, 7},
-                                  {MONS_ORB_SPIDER, 3},
-                                  {MONS_DEMONIC_CRAWLER, 2}}}},
+                                  {MONS_REDBACK, 3},
+                                  {MONS_WOLF_SPIDER, 3},
+                                  {MONS_CULICIVORA, 3},
+                                  {MONS_ORB_SPIDER, 1}}}},
+    { BAND_MIXED_SPIDERS,       {{{MONS_JUMPING_SPIDER, 3},
+                                  {MONS_WOLF_SPIDER, 3},
+                                  {MONS_TARANTELLA, 3},
+                                  {MONS_ORB_SPIDER, 1},
+                                  {MONS_REDBACK, 4},
+                                  {MONS_CULICIVORA, 3}}}},
 
     { BAND_VAULT_WARDEN,        {{{MONS_VAULT_SENTINEL, 4},
                                   {MONS_IRONBOUND_CONVOKER, 6},
@@ -2622,11 +2616,8 @@ monster* mons_place(mgen_data mg)
         if (mg.behaviour == BEH_FRIENDLY)
             creation->flags |= MF_NO_REWARD;
 
-        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL
-            || mg.behaviour == BEH_STRICT_NEUTRAL)
-        {
+        if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL)
             creation->flags |= MF_WAS_NEUTRAL;
-        }
 
         if (mg.behaviour == BEH_CHARMED)
         {
@@ -2772,24 +2763,6 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
         pos = empty;
 
     return pos;
-}
-
-bool can_spawn_mushrooms(coord_def where)
-{
-    cloud_struct *cloud = cloud_at(where);
-    if (!cloud)
-        return true;
-    if (you_worship(GOD_FEDHAS)
-        && (cloud->whose == KC_YOU || cloud->whose == KC_FRIENDLY))
-    {
-        return true;
-    }
-
-    monster dummy;
-    dummy.type = MONS_TOADSTOOL;
-    define_monster(dummy);
-
-    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type god_hates_monster(monster_type type)

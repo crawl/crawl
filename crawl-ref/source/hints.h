@@ -147,6 +147,8 @@ void hints_finished();
 
 void hints_healing_check();
 
+void hint_replace_cmds(string &s);
+
 void taken_new_item(object_class_type item_type);
 void hints_gained_new_skill(skill_type skill);
 void hints_monster_seen(const monster& mon);

@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
+#include "artefact.h" // is_unrandom_artefact (woodcutter)
 #include "coordit.h"
 #include "dgn-event.h"
 #include "english.h"
@@ -30,6 +31,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "state.h"
 #include "terrain.h"
 #include "transform.h"
@@ -280,6 +282,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                                   10 * weapon_min_delay_skill(*weap));
 
         attk_delay = random_var(property(*weap, PWPN_SPEED));
+        if (is_unrandom_artefact(*weap, UNRAND_WOODCUTTERS_AXE))
+            return attk_delay;
+
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
         if (get_weapon_brand(*weap) == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
@@ -489,11 +494,22 @@ static string _hand_name_singular(bool temp)
     if (you.has_usable_tentacles())
         return "tentacle";
 
+    // Storm Form inactivates the paws mutation, but graphically, a Felid's
+    // electric body still maintains similar anatomy.
+    if (temp && you.form == transformation::storm
+        && you.species == SP_FELID)
+    {
+        return "paw";
+    }
+
     // For flavor reasons, use "fists" instead of "hands" in various places,
     // but if the creature does have a custom hand name, let the above code
     // preempt it.
-    if (temp && you.form == transformation::statue)
+    if (temp && (you.form == transformation::statue
+                 || you.form == transformation::storm))
+    {
         return "fist";
+    }
 
     // player has no usable claws, but has the mutation -- they are suppressed
     // by something. (The species names will give the wrong answer for this
@@ -844,21 +860,8 @@ int player::constriction_damage(bool direct) const
         return roll_dice(2, div_rand_round(strength(), 5));
 
     return roll_dice(2, div_rand_round(70 +
-                calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
+               you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
 }
-
-/**
- * How many heads does the player have, in their current form?
- *
- * Currently only checks for hydra form.
- */
-int player::heads() const
-{
-    if (props.exists(HYDRA_FORM_HEADS_KEY))
-        return props[HYDRA_FORM_HEADS_KEY].get_int();
-    return 1; // not actually always true
-}
-
 
 bool player::is_dragonkind() const
 {

@@ -15,6 +15,7 @@
 ## Insects ('a')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_cockroach CORPSE_GIANT_COCKROACH
+radroach CORPSE_RADROACH
 
 ## Batty monsters ('b')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
@@ -61,6 +62,8 @@ jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
 redback CORPSE_REDBACK
 orb_spider CORPSE_ORB_SPIDER
+broodmother CORPSE_BROODMOTHER
+culicivora CORPSE_CULICIVORA
 %sdir mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 
@@ -84,6 +87,7 @@ tyrant_leech CORPSE_TYRANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL
 elephant_slug CORPSE_ELEPHANT_SLUG
 dart_slug CORPSE_DART_SLUG
+steelbarb_worm CORPSE_STEELBARB_WORM
 
 ## Flying Insects ('y')
 killer_bee CORPSE_KILLER_BEE
@@ -93,6 +97,7 @@ hornet CORPSE_HORNET
 spark_wasp CORPSE_SPARK_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
+sun_moth CORPSE_SUN_MOTH
 %sdir mon/demihumanoids
 meliai CORPSE_MELIAI
 
@@ -266,6 +271,7 @@ minotaur CORPSE_MINOTAUR
 fenstrider_witch CORPSE_FENSTRIDER_WITCH
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
+jorogumo CORPSE_JOROGUMO
 mon/unique/arachne_staveless CORPSE_ARACHNE
 %sdir mon/mutantbeast
 base3 CORPSE_MUTANT_BEAST

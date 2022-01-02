@@ -309,13 +309,14 @@ spret cast_dragon_call(int pow, bool fail)
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
     you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
+    you.props[DRAGON_CALL_POWER_KEY].get_int() = pow;
 
     return spret::success;
 }
 
 static void _place_dragon()
 {
-    const int pow = calc_spell_power(SPELL_DRAGON_CALL, true);
+    const int pow = you.props[DRAGON_CALL_POWER_KEY].get_int();
     monster_type mon = _choose_dragon_type(pow, you.religion, true);
     int mp_cost = random_range(2, 3);
 
@@ -1034,16 +1035,14 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
-spret cast_shadow_creatures(int st, god_type god, bool fail)
+spret summon_shadow_creatures()
 {
     if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
 
-    fail_check();
-    const bool scroll = (st == MON_SUMM_SCROLL);
     mpr("Wisps of shadow whirl around you...");
 
-    int num = (scroll ? roll_dice(2, 2) : 1);
+    int num = roll_dice(2, 2);
     int num_created = 0;
 
     for (int i = 0; i < num; ++i)
@@ -1052,19 +1051,13 @@ spret cast_shadow_creatures(int st, god_type god, bool fail)
             mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
-                      .set_summoned(&you, scroll ? 2 : 1, st, god)
+                      .set_summoned(&you, 2, MON_SUMM_SCROLL)
                       .set_place(level_id::current()),
             false))
         {
             // Choose a new duration based on HD.
             int x = max(mons->get_experience_level() - 3, 1);
-            int d = div_rand_round(17, x);
-            if (scroll)
-                d++;
-            if (d < 1)
-                d = 1;
-            if (d > 4)
-                d = 4;
+            int d = min(4, 1 + div_rand_round(17, x));
             mon_enchant me = mon_enchant(ENCH_ABJ, d);
             me.set_duration(mons, &me);
             mons->update_ench(me);
@@ -1152,13 +1145,16 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
                      "and a portal to some otherworldly place is opened!");
 }
 
-spret cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
+spret cast_malign_gateway(actor * caster, int pow, god_type god,
+                          bool fail, bool test)
 {
     if (caster->is_player() && rude_stop_summoning_prompt())
         return spret::abort;
 
     coord_def point = find_gateway_location(caster);
     bool success = point != coord_def(0, 0);
+    if (test)
+        return success ? spret::success : spret::abort;
 
     bool is_player = caster->is_player();
 
@@ -1179,10 +1175,6 @@ spret cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 
         return spret::success;
     }
-
-    // We don't care if monsters fail to cast it.
-    if (is_player)
-        mpr("A gateway cannot be opened in this cramped space!");
 
     return spret::abort;
 }
@@ -1357,6 +1349,24 @@ static bool _animatable_remains(const item_def& item)
         // the above allows spectrals/etc
         && (mons_zombifiable(item.mon_type)
             || mons_skeleton(item.mon_type));
+}
+
+vector<coord_def> simple_find_corpses()
+{
+    vector<coord_def> result;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        for (stack_iterator si(*ri, true); si; ++si)
+        {
+            if (_animatable_remains(*si))
+            {
+                result.push_back(*ri);
+                break;
+            }
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -1574,8 +1584,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     return true;
 }
 
-// Note that quiet will *not* suppress the message about a corpse
-// you are butchering being animated.
 // This is called for Animate Skeleton and from animate_dead.
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, int pow, unsigned short hitting,
@@ -1667,8 +1675,9 @@ int animate_dead(actor *caster, int pow, beh_type beha,
     return number_raised;
 }
 
-coord_def find_animatable_skeleton(coord_def c)
+vector<coord_def> find_animatable_skeletons(coord_def c)
 {
+    vector<coord_def> result;
     for (radius_iterator ri(c, LOS_NO_TRANS); ri; ++ri)
     {
         for (stack_iterator si(*ri, true); si; ++si)
@@ -1677,11 +1686,12 @@ coord_def find_animatable_skeleton(coord_def c)
                 && mons_class_can_be_zombified(si->mon_type)
                 && mons_skeleton(si->mon_type))
             {
-                return *ri;
+                result.push_back(*ri);
+                break;
             }
         }
     }
-    return coord_def(-1,-1);
+    return result;
 }
 
 spret cast_animate_skeleton(int pow, god_type god, bool fail)
@@ -1689,13 +1699,15 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
     if (rude_stop_summoning_prompt())
         return spret::abort;
 
-    coord_def skel_loc = find_animatable_skeleton(you.pos());
-    if (!in_bounds(skel_loc))
+    vector<coord_def> skeletons = find_animatable_skeletons(you.pos());
+    if (skeletons.empty())
         return spret::abort;
 
     fail_check();
 
     canned_msg(MSG_ANIMATE_REMAINS);
+
+    const coord_def skel_loc = skeletons[random2(skeletons.size())];
 
     for (stack_iterator si(skel_loc, true); si; ++si)
     {
@@ -1897,8 +1909,6 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return spret::success;
 }
 
-
-
 static spell_type servitor_spells[] =
 {
     // primary spells
@@ -1947,13 +1957,11 @@ bool spell_servitorable(spell_type to_serve)
  *
  * @param mon       The spellforged servitor to be initialized.
  * @param caster    The entity summoning the servitor; may be the player.
+ * @param pow       The caster's spellpower.
  */
-static void _init_servitor_monster(monster &mon, const actor& caster)
+static void _init_servitor_monster(monster &mon, const actor& caster, int pow)
 {
     const monster* caster_mon = caster.as_monster();
-    const int pow = caster_mon ?
-                        6 * caster_mon->spell_hd(SPELL_SPELLFORGED_SERVITOR) :
-                        calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     mon.set_hit_dice(9 + div_rand_round(pow, 14));
     mon.max_hit_points = mon.hit_points = 60 + roll_dice(7, 5); // 67-95
@@ -1985,11 +1993,11 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
     mon.props[CUSTOM_SPELLS_KEY].get_bool() = true;
 }
 
-void init_servitor(monster* servitor, actor* caster)
+void init_servitor(monster* servitor, actor* caster, int pow)
 {
     ASSERT(servitor); // XXX: change to monster &servitor
     ASSERT(caster); // XXX: change to actor &caster
-    _init_servitor_monster(*servitor, *caster);
+    _init_servitor_monster(*servitor, *caster, pow);
 
     if (you.can_see(*caster))
     {
@@ -2014,7 +2022,7 @@ void init_servitor(monster* servitor, actor* caster)
     servitor->props[IDEAL_RANGE_KEY].get_int() = shortest_range;
 }
 
-spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
+spret cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
     if (rude_stop_summoning_prompt())
         return spret::abort;
@@ -2025,7 +2033,7 @@ spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
                                 SPELL_SPELLFORGED_SERVITOR);
 
     if (monster* mon = create_monster(mdata))
-        init_servitor(mon, &you);
+        init_servitor(mon, &you, pow);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -2071,7 +2079,8 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         if (!you.can_see(*battlesphere))
         {
             coord_def empty;
-            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 3, false, empty)
+            if (find_habitable_spot_near(agent->pos(), MONS_BATTLESPHERE, 2,
+                                         false, empty)
                 && battlesphere->move_to_pos(empty))
             {
                 recalled = true;
@@ -2591,6 +2600,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
+    { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
     { SPELL_SUMMON_HELL_BEAST,        { 0, 8 } },
     { SPELL_SUMMON_UNDEAD,            { 0, 8 } },
@@ -2621,6 +2631,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_DEMON,             { 0, 3 } },
     { SPELL_SUMMON_TZITZIMITL,        { 0, 3 } },
     { SPELL_SUMMON_HELL_SENTINEL,     { 0, 3 } },
+    { SPELL_CONJURE_LIVING_SPELLS,    { 0, 6 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -2775,24 +2786,32 @@ static bool _create_briar_patch(coord_def& target)
     return false;
 }
 
-bool fedhas_wall_of_briars()
+vector<coord_def> find_briar_spaces(bool just_check)
 {
-    // How many adjacent open spaces are there?
-    vector<coord_def> adjacent;
+    vector<coord_def> result;
+
     for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
     {
         if (monster_habitable_grid(MONS_BRIAR_PATCH, env.grid(*adj_it))
-            && !actor_at(*adj_it))
+            && (!actor_at(*adj_it)
+                || just_check && !you.can_see(*actor_at(*adj_it))))
         {
-            adjacent.push_back(*adj_it);
+            result.push_back(*adj_it);
         }
     }
 
-    // Don't prompt if we can't do anything.
+    return result;
+}
+
+void fedhas_wall_of_briars()
+{
+    // How many adjacent open spaces are there?
+    vector<coord_def> adjacent = find_briar_spaces();
+
     if (adjacent.empty())
     {
-        mpr("No empty adjacent squares.");
-        return false;
+        mpr("Something you can't see blocks your briars from growing!");
+        return;
     }
 
     int created_count = 0;
@@ -2805,7 +2824,7 @@ bool fedhas_wall_of_briars()
     if (!created_count)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return created_count;
+    return;
 }
 
 static void _overgrow_wall(const coord_def &pos)
@@ -2864,31 +2883,21 @@ spret fedhas_overgrow(bool fail)
     return spret::success;
 }
 
-spret fedhas_grow_ballistomycete(bool fail)
+spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
 {
-    dist spd;
-    bolt beam;
-    beam.range = 2;
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE;
-    args.needs_path = false;
-    if (!spell_direction(spd, beam, &args))
-        return spret::abort;
-
-    if (grid_distance(beam.target, you.pos()) > 2 || !in_bounds(beam.target))
+    if (grid_distance(target, you.pos()) > 2 || !in_bounds(target))
     {
         mpr("That's too far away.");
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, env.grid(beam.target)))
+    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, env.grid(target)))
     {
         mpr("You can't grow a ballistomycete there.");
         return spret::abort;
     }
 
-    monster* mons = monster_at(beam.target);
+    monster* mons = monster_at(target);
     if (mons)
     {
         if (you.can_see(*mons))
@@ -2906,7 +2915,7 @@ spret fedhas_grow_ballistomycete(bool fail)
 
     fail_check();
 
-    mgen_data mgen(MONS_BALLISTOMYCETE, BEH_FRIENDLY, beam.target, MHITYOU,
+    mgen_data mgen(MONS_BALLISTOMYCETE, BEH_FRIENDLY, target, MHITYOU,
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE) +
         you.skill_rdiv(SK_INVOCATIONS);
@@ -2921,31 +2930,21 @@ spret fedhas_grow_ballistomycete(bool fail)
     return spret::success;
 }
 
-spret fedhas_grow_oklob(bool fail)
+spret fedhas_grow_oklob(const coord_def& target, bool fail)
 {
-    dist spd;
-    bolt beam;
-    beam.range = 2;
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE;
-    args.needs_path = false;
-    if (!spell_direction(spd, beam, &args))
-        return spret::abort;
-
-    if (grid_distance(beam.target, you.pos()) > 2 || !in_bounds(beam.target))
+    if (grid_distance(target, you.pos()) > 2 || !in_bounds(target))
     {
         mpr("That's too far away.");
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_OKLOB_PLANT, env.grid(beam.target)))
+    if (!monster_habitable_grid(MONS_OKLOB_PLANT, env.grid(target)))
     {
         mpr("You can't grow an oklob plant there.");
         return spret::abort;
     }
 
-    monster* mons = monster_at(beam.target);
+    monster* mons = monster_at(target);
     if (mons)
     {
         if (you.can_see(*mons))
@@ -2963,7 +2962,7 @@ spret fedhas_grow_oklob(bool fail)
 
     fail_check();
 
-    mgen_data mgen(MONS_OKLOB_PLANT, BEH_FRIENDLY, beam.target, MHITYOU,
+    mgen_data mgen(MONS_OKLOB_PLANT, BEH_FRIENDLY, target, MHITYOU,
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_OKLOB_PLANT) +
         you.skill_rdiv(SK_INVOCATIONS);
@@ -3080,4 +3079,51 @@ spret foxfire_swarm()
     }
     canned_msg(MSG_NOTHING_HAPPENS);
     return spret::fail; // don't spend piety, do spend a turn
+}
+
+bool summon_spider(const actor &agent, coord_def pos, god_type god,
+                        spell_type spell, int pow)
+{
+    monster_type mon = random_choose_weighted(100, MONS_REDBACK,
+                                              100, MONS_JUMPING_SPIDER,
+                                               75, MONS_TARANTELLA,
+                                               50, MONS_CULICIVORA,
+                                               50, MONS_ORB_SPIDER,
+                                               pow / 2, MONS_WOLF_SPIDER);
+
+    monster *mons = create_monster(
+            mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_AUTOFOE)
+                      .set_summoned(&agent, 3, spell, god));
+    if (mons)
+        return true;
+
+    return false;
+}
+
+spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
+{
+    if (agent.is_player() && rude_stop_summoning_prompt())
+        return spret::abort;
+
+    fail_check();
+
+    int created = 0;
+
+    for (int i = 0; i < 1 + div_rand_round(random2(pow), 80); i++)
+    {
+        if (summon_spider(agent, agent.pos(), god, SPELL_SUMMON_SPIDERS, pow))
+            created++;
+    }
+
+    if (created && you.see_cell(agent.pos()))
+    {
+        mprf("%s %s %s!",
+             agent.name(DESC_THE).c_str(),
+             agent.conj_verb("summon").c_str(),
+             created > 1 ? "spiders" : "a spider");
+    }
+    else if (agent.is_player())
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
 }

@@ -26,6 +26,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "item-use.h"
+#include "losglobal.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
@@ -105,19 +106,13 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
  * Return the base to-hit bonus that a monster with the given HD gets.
  * @param hd               The hit dice (level) of the monster.
  * @param skilled    Does the monster have bonus to-hit from the fighter or archer flag?
- * @param ranged      Is this attack ranged or melee?
  *
  * @return         A base to-hit value, before equipment, statuses, etc.
  */
-int mon_to_hit_base(int hd, bool skilled, bool ranged)
+int mon_to_hit_base(int hd, bool skilled)
 {
-    if (ranged)
-    {
-        const int hd_mult = skilled ? 15 : 9;
-        return 18 + hd * hd_mult / 6;
-    }
-    const int hd_mult = skilled ? 25 : 15;
-    return 18 + hd * hd_mult / 10;
+    const int hd_mult = skilled ? 5 : 3;
+    return 18 + hd * hd_mult / 2;
 }
 
 int mon_shield_bypass(int hd)
@@ -362,55 +357,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             // No adjacent hostiles.
             if (end)
                 break;
-        }
-
-        if (!simu && attacker->is_monster()
-            && mons_attack_spec(*attacker->as_monster(), attack_number, true)
-                   .flavour == AF_KITE
-            && attacker->as_monster()->foe_distance() == 1
-            && attacker->reach_range() == REACH_TWO
-            && x_chance_in_y(3, 5))
-        {
-            monster* mons = attacker->as_monster();
-            coord_def foepos = mons->get_foe()->pos();
-            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
-
-            bool found = false;
-            if (!monster_habitable_grid(mons, env.grid(hopspot)) ||
-                actor_at(hopspot))
-            {
-                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-                {
-                    if (ai->distance_from(foepos) != 2)
-                        continue;
-                    else
-                    {
-                        if (monster_habitable_grid(mons, env.grid(*ai))
-                            && !actor_at(*ai))
-                        {
-                            hopspot = *ai;
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-                found = true;
-
-            if (found)
-            {
-                const bool could_see = you.can_see(*mons);
-                if (mons->move_to_pos(hopspot))
-                {
-                    if (could_see || you.can_see(*mons))
-                    {
-                        mprf("%s hops backward while attacking.",
-                             mons->name(DESC_THE, true).c_str());
-                    }
-                    mons->speed_increment -= 2; // Add a small extra delay
-                }
-            }
         }
 
         melee_attack melee_attk(attacker, defender, attack_number,
@@ -942,6 +888,9 @@ int weapon_min_delay_skill(const item_def &weapon)
 int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
+    if (is_unrandom_artefact(weapon, UNRAND_WOODCUTTERS_AXE))
+        return base;
+
     int min_delay = base/2;
 
     // Short blades can get up to at least unarmed speed.
@@ -1037,13 +986,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     if (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos))
         suffix = ", despite your sanctuary";
 
-    if (you.duration[DUR_LIFESAVING]
-        && mon->holiness() & (MH_NATURAL | MH_PLANT))
-    {
-        suffix = " while asking for your life to be spared";
-        would_cause_penance = true;
-    }
-
     if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
     {
@@ -1076,7 +1018,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (mon->neutral() && is_good_god(you.religion))
+    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_INSANE))
     {
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
@@ -1272,20 +1214,30 @@ bool rude_stop_summoning_prompt(string verb)
     }
 }
 
-bool can_reach_attack_between(coord_def source, coord_def target)
+bool can_reach_attack_between(coord_def source, coord_def target,
+                              reach_type range)
 {
+    // The foe should be on the map (not stepped from time).
+    if (!in_bounds(target))
+        return false;
+
     const coord_def delta(target - source);
     const int grid_distance(delta.rdist());
+
+    // Unrand only - Rift is smite-targeted and up to 3 range.
+    if (range == REACH_THREE)
+    {
+        return cell_see_cell(source, target, LOS_NO_TRANS)
+               && grid_distance > 1 && grid_distance <= range;
+    }
+
     const coord_def first_middle(source + delta / 2);
     const coord_def second_middle(target - delta / 2);
 
-    return grid_distance == 2
-        // And with no dungeon furniture in the way of the reaching
-        // attack;
-        && (feat_is_reachable_past(env.grid(first_middle))
-            || feat_is_reachable_past(env.grid(second_middle)))
-        // The foe should be on the map (not stepped from time).
-        && in_bounds(target);
+    return grid_distance == range
+           // And with no dungeon furniture in the way of the reaching attack.
+           && (feat_is_reachable_past(env.grid(first_middle))
+               || feat_is_reachable_past(env.grid(second_middle)));
 }
 
 dice_def spines_damage(monster_type mon)
