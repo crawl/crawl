@@ -162,10 +162,11 @@ function focusTrap(element, userOptions) {
       capture: true,
       passive: false
     });
-    doc.addEventListener('touchstart', checkPointerDown, {
+    // Capturing touch events disables zomming and scrolling on mobile browsers
+    /*doc.addEventListener('touchstart', checkPointerDown, {
       capture: true,
       passive: false
-    });
+    });*/
     doc.addEventListener('click', checkClick, {
       capture: true,
       passive: false

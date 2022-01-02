@@ -2,6 +2,9 @@ define(["jquery", "comm", "client", "./options", "./focus-trap"],
 function ($, comm, client, options, focus_trap) {
     "use strict";
 
+    // Touch event duration
+    var touchstart = 0;
+
     function wrap_popup(elem, ephemeral)
     {
         var wrapper = $(".templates > .ui-popup").clone();
@@ -90,8 +93,6 @@ function ($, comm, client, options, focus_trap) {
         // this simulates the focus-trap click outside to deactivate code,
         // since for crawl we really need to send a "close popup" message
         // to the server rather than do it in the client.
-        // TODO focus-trap also uses touchstart for this case, do we need
-        // that?
         // TODO this lets through clicks that are in the popup's margin?
         // using parent() doesn't help with this issue because the space is
         // still in the border of ui-popup-outer. Maybe this is ok...
@@ -99,6 +100,17 @@ function ($, comm, client, options, focus_trap) {
             comm.send_message("key", { keycode: 27 });
         // otherwise, ignore -- focus-trap checkPointerDown should get it
         // next.
+    }
+
+    function popup_touchstart_handler(ev)
+    {
+        touchstart = Date.now();
+    }
+
+    function popup_touchend_handler(ev)
+    {
+        if (Date.now() - 500 < touchstart)
+            popup_clickoutside_handler(ev);
     }
 
     function event_disable(ev)
@@ -135,6 +147,10 @@ function ($, comm, client, options, focus_trap) {
                         {
                             document.addEventListener("mousedown",
                                 popup_clickoutside_handler, true);
+                            document.addEventListener("touchstart",
+                                popup_touchstart_handler, true);
+                            document.addEventListener("touchend",
+                                popup_touchend_handler, true);
                         }
                         document.addEventListener("contextmenu",
                             event_disable, true);
@@ -150,6 +166,10 @@ function ($, comm, client, options, focus_trap) {
                         {
                             document.removeEventListener("mousedown",
                                 popup_clickoutside_handler, true);
+                            document.removeEventListener("touchstart",
+                                popup_touchstart_handler, true);
+                            document.removeEventListener("touchend",
+                                popup_touchend_handler, true);
                         }
                         document.removeEventListener("contextmenu",
                             event_disable, true);

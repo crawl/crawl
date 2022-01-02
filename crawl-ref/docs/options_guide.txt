@@ -129,7 +129,7 @@ The contents of this text are:
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
                 tile_weapon_offsets, tile_shield_offsets,
-                tile_web_mouse_control
+                tile_web_mouse_control, tile_web_mobile_input_helper
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -2352,6 +2352,13 @@ tile_web_mouse_control = true
         Whether to enable mouse control for tooltips/cursor interaction on
         WebTiles. Regardless of the value of the setting, the minimap will
         respond to mouse control.
+
+tile_web_mobile_input_helper = auto
+        This option controls an optional auxiliary input field in the WebTiles
+        interface that can be focused to enable the vitual keyboard on mobile
+        devices. When set to true or false, the field is manually enabled or
+        disabled. When set to auto, the field is only shown on devices with
+        a touch screen.
 
 4-  Character Dump.
 ===================
