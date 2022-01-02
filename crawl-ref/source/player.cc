@@ -6423,7 +6423,7 @@ bool player::no_tele(bool blinking) const
 
 bool player::fights_well_unarmed()
 {
-    return x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200);
+    return x_chance_in_y(30 + skill(SK_UNARMED_COMBAT, 10), 600);
 }
 
 bool player::racial_permanent_flight() const

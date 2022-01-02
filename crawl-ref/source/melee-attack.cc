@@ -1159,7 +1159,6 @@ bool melee_attack::player_gets_aux_punch()
     if (!get_form()->can_offhand_punch())
         return false;
 
-    // roll for punch chance based on uc skill & armour penalty
     if (!attacker->fights_well_unarmed())
         return false;
 
@@ -1168,8 +1167,7 @@ bool melee_attack::player_gets_aux_punch()
     if (you.arm_count() <= 2 && !you.has_usable_offhand())
         return false;
 
-    // Octopodes get more tentacle-slaps.
-    return x_chance_in_y(you.arm_count() > 2 ? 3 : 2, 6);
+    return true;
 }
 
 bool melee_attack::player_aux_test_hit()
