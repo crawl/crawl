@@ -567,6 +567,11 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_SHADOWS:           return "shadows";
         case SPARM_RAMPAGING:         return "rampaging";
         case SPARM_INFUSION:          return "infusion";
+        case SPARM_LIGHT:             return "light";
+        case SPARM_RAGE:              return "wrath";
+        case SPARM_MAYHEM:            return "mayhem";
+        case SPARM_GUILE:             return "guile";
+        case SPARM_ENERGY:            return "energy";
         default:                      return "bugginess";
         }
     }
@@ -609,6 +614,11 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_SHADOWS:           return "shadows";
         case SPARM_RAMPAGING:         return "rampage";
         case SPARM_INFUSION:          return "infuse";
+        case SPARM_LIGHT:             return "light";
+        case SPARM_RAGE:              return "*Rage";
+        case SPARM_MAYHEM:            return "mayhem";
+        case SPARM_GUILE:             return "guile";
+        case SPARM_ENERGY:            return "*channel";
         default:                      return "buggy";
         }
     }
@@ -1541,7 +1551,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << make_stringf("%+d ", plus);
 
         if ((item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
-            && !is_unrandom_artefact(*this, UNRAND_POWER_GLOVES))
+            && !is_unrandom_artefact(*this, UNRAND_POWER_GLOVES)
+            && !is_unrandom_artefact(*this, UNRAND_DELATRAS_GLOVES))
         {
             buff << "pair of ";
         }
@@ -2847,6 +2858,19 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
             case SPARM_INVISIBILITY:
                 return you.has_mutation(MUT_NO_ARTIFICE);
+            default:
+                return false;
+            }
+        }
+        if (item.sub_type == ARM_ORB && (ident || item_type_known(item)))
+        {
+            special_armour_type ego = get_armour_ego_type(item);
+            switch (ego)
+            {
+            case SPARM_RAGE:
+                return !you.can_go_berserk(true, false, true, nullptr, temp);
+            case SPARM_ENERGY:
+                return you.has_mutation(MUT_HP_CASTING);
             default:
                 return false;
             }

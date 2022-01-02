@@ -809,10 +809,9 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         break;
 
     case EQ_SHIELD:
-        // No races right now that can wear ARM_TOWER_SHIELD but not ARM_KITE_SHIELD
-        dummy.sub_type = ARM_TOWER_SHIELD;
-        if (you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM)
-            alternate.sub_type = ARM_BUCKLER;
+        // Assume that anything that can use an orb can wear some kind of
+        // shield
+        dummy.sub_type = ARM_ORB;
         break;
 
     case EQ_HELMET:
@@ -2129,6 +2128,28 @@ int player_wizardry(spell_type /*spell*/)
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
 }
 
+static int _sh_from_shield(const item_def &item)
+{
+    if (item.sub_type == ARM_ORB)
+        return 0;
+
+    int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
+                    * (item.sub_type - ARM_TOWER_SHIELD);
+    int base_shield = property(item, PARM_AC) * 2 + size_factor;
+
+    // bonus applied only to base, see above for effect:
+    int shield = base_shield * 50;
+    shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
+
+    shield += item.plus * 200;
+
+    shield += you.skill(SK_SHIELDS, 38)
+            + min(you.skill(SK_SHIELDS, 38), 3 * 38);
+
+    shield += you.dex() * 38 * (base_shield + 13) / 26;
+    return shield;
+}
+
 /**
  * Calculate the SH value used internally.
  *
@@ -2143,23 +2164,7 @@ int player_shield_class()
         return 0;
 
     if (you.shield())
-    {
-        const item_def& item = you.inv[you.equip[EQ_SHIELD]];
-        int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
-                        * (item.sub_type - ARM_TOWER_SHIELD);
-        int base_shield = property(item, PARM_AC) * 2 + size_factor;
-
-        // bonus applied only to base, see above for effect:
-        shield += base_shield * 50;
-        shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
-
-        shield += item.plus * 200;
-
-        shield += you.skill(SK_SHIELDS, 38)
-                + min(you.skill(SK_SHIELDS, 38), 3 * 38);
-
-        shield += you.dex() * 38 * (base_shield + 13) / 26;
-    }
+        shield += _sh_from_shield(you.inv[you.equip[EQ_SHIELD]]);
 
     // mutations
     // +4, +6, +8 (displayed values)
@@ -2555,7 +2560,7 @@ static int _rest_trigger_level(int max)
 
 static bool _should_stop_resting(int cur, int max)
 {
-    return cur == max || cur >= _rest_trigger_level(max);
+    return cur == max || cur == _rest_trigger_level(max);
 }
 
 /**
@@ -5989,6 +5994,15 @@ int player::corrosion_amount() const
     return corrosion;
 }
 
+static int _meek_bonus()
+{
+    const int scale_bottom = 27; // full bonus given at this HP and below
+    const int hp_per_ac = 4;
+    const int max_ac = 7;
+    const int scale_top = scale_bottom + hp_per_ac * max_ac;
+    return min(max(0, (scale_top - you.hp) / hp_per_ac), max_ac);
+}
+
 int player::armour_class_with_specific_items(vector<const item_def *> items) const
 {
     const int scale = 100;
@@ -6010,7 +6024,11 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
         AC += 300;
 
     if (duration[DUR_SPWPN_PROTECTION])
+    {
         AC += 700;
+        if (player_equip_unrand(UNRAND_MEEK))
+            AC += _meek_bonus() * scale;
+    }
 
     AC -= 400 * corrosion_amount();
 
@@ -6184,18 +6202,11 @@ int player::res_elec() const
     return player_res_electricity();
 }
 
-int player::res_water_drowning() const
+bool player::res_water_drowning() const
 {
-    int rw = 0;
-
-    if (is_unbreathing()
-        || species::can_swim(species) && !form_changed_physiology()
-        || form == transformation::ice_beast)
-    {
-        rw++;
-    }
-
-    return rw;
+    return is_unbreathing()
+           || species::can_swim(species) && !form_changed_physiology()
+           || form == transformation::ice_beast;
 }
 
 int player::res_poison(bool temp) const
@@ -6308,6 +6319,8 @@ int player_willpower(bool temp)
 
     // ego armours
     rm += WL_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_WILLPOWER);
+
+    rm -= 2 * WL_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE);
 
     // rings of willpower
     rm += WL_PIP * you.wearing(EQ_RINGS, RING_WILLPOWER);
@@ -8190,6 +8203,30 @@ void refresh_weapon_protection()
         mpr("Your weapon exudes an aura of protection.");
 
     you.increase_duration(DUR_SPWPN_PROTECTION, 3 + random2(2), 5);
+    you.redraw_armour_class = true;
+}
+
+void refresh_meek_bonus()
+{
+    const string MEEK_KEY = "meek_ac_key";
+    const bool meek_possible = you.duration[DUR_SPWPN_PROTECTION]
+                            && player_equip_unrand(UNRAND_MEEK);
+    const int bonus_ac = _meek_bonus();
+    if (!meek_possible || !bonus_ac)
+    {
+        if (you.props.exists(MEEK_KEY))
+        {
+            you.props.erase(MEEK_KEY);
+            you.redraw_armour_class = true;
+        }
+        return;
+    }
+
+    const int last_bonus = you.props[MEEK_KEY].get_int();
+    if (last_bonus == bonus_ac)
+        return;
+
+    you.props[MEEK_KEY] = bonus_ac;
     you.redraw_armour_class = true;
 }
 

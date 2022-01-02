@@ -38,6 +38,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "rltiles/tiledef-main.h"
+#include "scroller.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -795,7 +796,8 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-            | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS , toggleable_sort());
+                | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
+            toggleable_sort());
     desc_menu.set_tag("description");
 
     // XXX: ugh
@@ -1334,98 +1336,21 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
     {
         if (by_symbol)
             return "No " + plur_type + " with symbol '" + regex + "'.";
-        return "No matching " + plur_type + ".";
+        return make_stringf("No matching %s for search string '%s'.",
+            plur_type.c_str(), regex.c_str());
     }
 
     // we're good!
     return "";
 }
 
-static int _lookup_prompt()
-{
-    // TODO: show this + the regex prompt in the same menu?
-#ifdef TOUCH_UI
-    bool use_popup = true;
-#else
-    bool use_popup = !crawl_state.need_save || ui::has_layout();
-#endif
-
-    int ch = -1;
-    const string lookup_type_prompts =
-        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
-                           mem_fn(&LookupType::prompt_string), " or ");
-    if (use_popup)
-    {
-        string prompt = make_stringf("Describe a %s? ",
-                                                lookup_type_prompts.c_str());
-        linebreak_string(prompt, 72);
-
-#ifdef USE_TILE_WEB
-        tiles_crt_popup show_as_popup;
-        tiles.set_ui_state(UI_CRT);
-#endif
-        auto prompt_ui =
-                make_shared<ui::Text>(formatted_string::parse_string(prompt));
-        auto popup = make_shared<ui::Popup>(prompt_ui);
-        bool done = false;
-
-        popup->on_keydown_event([&](const ui::KeyEvent& ev) {
-            ch = ev.key();
-            return done = true;
-        });
-
-        mouse_control mc(MOUSE_MODE_MORE);
-        ui::run_layout(move(popup), done);
-    }
-    else
-    {
-        mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
-
-        {
-            cursor_control con(true);
-            ch = getchm();
-        }
-    }
-    return toupper_safe(ch);
-}
-
-/**
- * Run an iteration of ?/.
- *
- * @param response[out]   A response to input, to print before the next iter.
- * @return                true if the ?/ loop should continue
- *                        false if it should return control to the caller
- */
-static bool _find_description(string &response)
-{
-    int ch = _lookup_prompt();
-    const LookupType * const *lookup_type_ptr
-        = map_find(_lookup_types_by_symbol, ch);
-    if (!lookup_type_ptr)
-        return false;
-
-    ASSERT(*lookup_type_ptr);
-    const LookupType ltype = **lookup_type_ptr;
-    return ltype.find_description(response);
-}
-
 static void _show_type_response(string response)
 {
-    auto vbox = make_shared<ui::Box>(ui::Widget::VERT);
-    vbox->set_cross_alignment(ui::Widget::CENTER);
-    auto text = make_shared<ui::Text>(response);
-    vbox->add_child(move(text));
-    auto popup = make_shared<ui::Popup>(vbox);
-
-    bool done = false;
-    popup->on_keydown_event([&done](const ui::KeyEvent&) {
-        done = true;
-        return true;
-    });
-
-    // XXX TODO: webtiles needs special handling here
-
-    ui::run_layout(move(popup), done);
+    // possibly overkill, but this renders very reliably
+    formatted_scroller fs(FS_EASY_EXIT);
+    fs.set_more();
+    fs.add_text(response);
+    fs.show();
 }
 
 bool find_description_of_type(lookup_help_type lht)
@@ -1434,7 +1359,7 @@ bool find_description_of_type(lookup_help_type lht)
     string response;
     bool done = lookup_types[lht].find_description(response);
     dprf("response: '%s'", response.c_str());
-    if (!response.empty())
+    if (!response.empty() && response != "Okay, then.") // TODO: ...
         _show_type_response(response);
     return done;
 }
@@ -1490,29 +1415,73 @@ bool LookupType::find_description(string &response) const
     return true;
 }
 
-/**
- * Run the ?/ loop, repeatedly prompting the player to query for monsters,
- * etc, until they indicate they're done.
- */
-void keyhelp_query_descriptions()
+class LookupHelpMenu : public Menu
 {
-    string response;
-    while (true)
+public:
+    class LookupHelpMenuEntry : public MenuEntry
     {
-        redraw_screen();
-        update_screen();
+    public:
+        LookupHelpMenuEntry(lookup_help_type lht)
+        : MenuEntry(uppercase_first(lookup_help_type_name(lht)),
+                    MEL_ITEM, 1, tolower(lookup_help_type_shortcut(lht))),
+          typ(lht)
+        {
+            // TODO: tiles!
+        }
 
-        if (!response.empty())
-            mprf(MSGCH_PROMPT, "%s", response.c_str());
-        response = "";
+        lookup_help_type typ;
+    };
 
-        if (!_find_description(response))
-            break;
-
-        clear_messages();
+    LookupHelpMenu(command_type where_from=CMD_NO_CMD)
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP),
+          back_cmd(where_from)
+    {
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry("Lookup information about:", MEL_TITLE));
+        on_single_selection = [](const MenuEntry& item)
+        {
+            const LookupHelpMenuEntry *lhme
+                        = dynamic_cast<const LookupHelpMenuEntry *>(&item);
+            if (!lhme)
+                return false; // back button
+            find_description_of_type(lhme->typ);
+            return true;
+        };
     }
 
-    viewwindow();
-    update_screen();
-    mpr("Okay, then.");
+    void fill_entries()
+    {
+        clear();
+        // XX `?/esc` doesn't go back to the main help menu, possibly should
+        const string back = back_cmd == CMD_GAME_MENU
+                                ? "Back to game menu"
+                                : "Exit help lookup";
+        auto back_button = new MenuEntry(back, MEL_ITEM, 1, CK_ESCAPE);
+        if (back_cmd != CMD_NO_CMD)
+            back_button->add_tile(tileidx_command(back_cmd));
+
+        for (int i = FIRST_LOOKUP_HELP_TYPE; i < NUM_LOOKUP_HELP_TYPES; ++i)
+            add_entry(new LookupHelpMenuEntry((lookup_help_type)i));
+
+        add_entry(new MenuEntry("", MEL_SUBTITLE));
+        add_entry(back_button);
+    }
+
+    vector<MenuEntry *> show(bool reuse_selections = false) override
+    {
+        fill_entries();
+        cycle_hover();
+        return Menu::show(reuse_selections);
+    }
+
+private:
+    command_type back_cmd;
+};
+
+void keyhelp_query_descriptions(command_type where_from)
+{
+    LookupHelpMenu m(where_from);
+    m.show();
 }

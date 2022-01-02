@@ -407,8 +407,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     if (crawl_state.game_is_sprint())
         corpse.quantity *= SPRINT_MULTIPLIER;
 
-    const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-    if (!x_chance_in_y(chance, GOZAG_GOLD_AURA_MAX))
+    if (you.props[GOZAG_GOLD_AURA_KEY].get_int() < GOZAG_GOLD_AURA_MAX)
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
     you.redraw_title = true;
 }
@@ -1284,6 +1283,20 @@ static void _druid_final_boon(const monster* mons)
     }
 }
 
+static void _orb_of_mayhem(actor& maniac, const monster& victim)
+{
+    vector<monster *> witnesses;
+    for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
+        if (mi->can_see(maniac) && mi->can_go_frenzy())
+            witnesses.push_back(*mi);
+
+    if (coinflip() && !witnesses.empty())
+    {
+        (*random_iterator(witnesses))->go_frenzy(&maniac);
+        did_god_conduct(DID_HASTY, 8, true);
+    }
+}
+
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
@@ -2005,6 +2018,13 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 bless_follower();
             }
+
+            if (gives_player_xp
+                && !mons_is_object(mons.type)
+                && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+            {
+                _orb_of_mayhem(you, mons);
+            }
             break;
         }
 
@@ -2045,6 +2065,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 // Randomly bless the follower who killed.
                 bless_follower(killer_mon);
+                if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+                    _orb_of_mayhem(*killer_mon, mons);
             }
             break;
         }
@@ -2995,11 +3017,12 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Sometimes, if you pacify one twin near a staircase, they leave
-    // in the same turn. Convert, in those instances. The strict_neutral check
+    // in the same turn. Convert, in those instances. The fellow_slime check
     // is intended to cover the slimify case, we don't want to pacify the other
     // if a slimified twin dies.
-    if (twin->neutral() && !twin->has_ench(ENCH_INSANE)
-                                                    && !twin->strict_neutral())
+    if (twin->neutral()
+        && !twin->has_ench(ENCH_INSANE)
+        && !is_fellow_slime(*twin))
     {
         elven_twins_pacify(twin);
         return;
@@ -3011,7 +3034,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Don't consider already neutralised monsters.
-    if (mons->good_neutral() || mons->strict_neutral())
+    if (mons->good_neutral())
         return;
 
     // Okay, let them climb stairs now.

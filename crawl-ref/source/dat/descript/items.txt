@@ -739,6 +739,11 @@ An extremely rare book, powerful and sinister. Many foolhardy magicians have
 tried to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
 %%%%
+orb
+
+A sphere of crystal, carried in place of a shield. Magic scintilliates within
+its interior.
+%%%%
 orb of zot
 
 An invaluable artefact. Once you have escaped to the surface with it, your

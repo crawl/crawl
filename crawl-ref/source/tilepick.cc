@@ -2078,6 +2078,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_DRAIN;
     if (mons.is(MB_IDEALISED))
         ch |= TILE_FLAG_IDEALISED;
+    if (mons.is(MB_BOUND_SOUL))
+        ch |= TILE_FLAG_BOUND_SOUL;
     if (mons.is(MB_INFESTATION))
         ch |= TILE_FLAG_INFESTED;
     if (mons.is(MB_CORROSION))
@@ -2471,6 +2473,9 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
 
     case ARM_BOOTS:
         return TILE_ARM_BOOTS;
+
+    case ARM_ORB:
+        return TILE_ARM_ORB;
 
     case ARM_BUCKLER:
         return TILE_ARM_BUCKLER;
@@ -3390,8 +3395,6 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_COMMANDS;
     case CMD_LOOKUP_HELP:
         return TILEG_CMD_LOOKUP_HELP;
-    case CMD_LOOKUP_HELP_MENU:
-        return TILEG_CMD_LOOKUP_HELP_MENU;
     case CMD_CHARACTER_DUMP:
         return TILEG_CMD_CHARACTER_DUMP;
     case CMD_DISPLAY_INVENTORY:

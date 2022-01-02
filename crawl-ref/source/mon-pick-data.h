@@ -354,7 +354,7 @@ static const vector<pop_entry> population[] =
 },
 
 { // Shoals
-  { -2,  4,   89, SEMI, MONS_CENTAUR },
+  {  0,  3,   89, SEMI, MONS_CENTAUR_WARRIOR },
   {  0,  3,  355, SEMI, MONS_FAUN },
   {  0,  6,  300, SEMI, MONS_WATER_NYMPH },
   {  0,  6,  170, SEMI, MONS_MERFOLK_AVATAR },

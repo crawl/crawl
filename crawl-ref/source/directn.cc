@@ -148,9 +148,9 @@ static void _wizard_make_friendly(monster* m)
         m->flags |= MF_WAS_NEUTRAL;
         break;
     case ATT_GOOD_NEUTRAL:
-        m->attitude = ATT_STRICT_NEUTRAL;
-        break;
-    case ATT_STRICT_NEUTRAL:
+#if TAG_MAJOR_VERSION == 34
+    case ATT_OLD_STRICT_NEUTRAL:
+#endif
         m->attitude = ATT_NEUTRAL;
         break;
     case ATT_NEUTRAL:
@@ -365,14 +365,7 @@ bool direction_chooser::targets_objects() const
 /// Are we looking for enemies?
 bool direction_chooser::targets_enemies() const
 {
-    switch (mode)
-    {
-        case TARG_HOSTILE:
-        case TARG_HOSTILE_SUBMERGED:
-            return true;
-        default:
-            return false;
-    }
+    return mode == TARG_HOSTILE;
 }
 
 void direction_chooser::describe_cell() const
@@ -2721,7 +2714,7 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
         return false;
 
     // Don't target submerged monsters.
-    if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
+    if (mon->submerged())
         return false;
 
     // Don't usually target unseen monsters...
@@ -2747,8 +2740,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_ANY:
         return true;
     case TARG_HOSTILE:
-    case TARG_HOSTILE_SUBMERGED:
-        return mons_attitude(*mon) == ATT_HOSTILE;
+        return mons_attitude(*mon) == ATT_HOSTILE
+            || mon->has_ench(ENCH_INSANE);
     case TARG_FRIEND:
         return mon->friendly();
     case TARG_INJURED_FRIEND:
@@ -3565,6 +3558,8 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 
     if (mi.attitude == ATT_FRIENDLY)
         descs.emplace_back("friendly");
+    else if (mi.fellow_slime())
+        descs.emplace_back("fellow slime");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         descs.emplace_back("peaceful");
     else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))

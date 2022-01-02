@@ -279,7 +279,7 @@ public:
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
     virtual bool res_miasma(bool temp = true) const = 0;
-    virtual int res_water_drowning() const = 0;
+    virtual bool res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
@@ -288,7 +288,7 @@ public:
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
     virtual int willpower() const = 0;
-    virtual int check_willpower(int power);
+    virtual int check_willpower(const actor* source, int power);
     virtual bool no_tele(bool blink = false) const = 0;
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;

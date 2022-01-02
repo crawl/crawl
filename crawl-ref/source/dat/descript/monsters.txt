@@ -1376,7 +1376,7 @@ of the divine twins, it works to resurrect its fallen masters.
 harpy
 
 A bird-like creature with a human face that roams the coasts endlessly, feared
-for her sharp claws and harrying strikes.
+for its sharp claws and harrying strikes.
 %%%%
 hell beast
 
@@ -2689,8 +2689,8 @@ swimmer.
 %%%%
 water nymph
 
-A capricious nature spirit, deeply bonded with the waters in which she lives.
-Wherever they flow, so may she, and ponds and rivers surge and leap at her
+A capricious nature spirit, deeply bonded with the waters in which it lives.
+Wherever they flow, so may it, and ponds and rivers surge and leap at its
 whim.
 %%%%
 wendigo

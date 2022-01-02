@@ -3516,6 +3516,7 @@ colour_t item_def::armour_colour() const
         case ARM_ANIMAL_SKIN:
             return LIGHTGREY;
         case ARM_CRYSTAL_PLATE_ARMOUR:
+        case ARM_ORB:
             return WHITE;
         case ARM_KITE_SHIELD:
         case ARM_TOWER_SHIELD:
@@ -4292,8 +4293,10 @@ bool get_item_by_name(item_def *item, const char* specs,
             string buf_lwr = lowercase_string(buf);
             special_wanted = 0;
             size_t best_index = 10000;
+            const int brand_index = max(static_cast<int>(NUM_SPECIAL_WEAPONS),
+                                        static_cast<int>(NUM_SPECIAL_ARMOURS));
 
-            for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
+            for (int i = SPWPN_NORMAL + 1; i < brand_index; ++i)
             {
                 item->brand = i;
                 size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);

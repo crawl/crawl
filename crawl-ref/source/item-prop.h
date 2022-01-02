@@ -124,9 +124,12 @@ bool is_offensive_wand(const item_def &item) PURE;
 bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
 bool is_shield(const item_def &item) PURE;
+bool is_offhand(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
+
+int guile_adjust_willpower(int wl) PURE;
 
 // Only works for armour/weapons/missiles
 // weapon functions:

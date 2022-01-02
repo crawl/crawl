@@ -68,7 +68,7 @@ enum duration_flags : uint32_t
 };
 
 /// A description of the behaviour when a duration begins 'expiring'.
-struct midpoint_msg
+struct expiring_msg
 {
     /// What message should be printed when the duration begins expiring?
     const char* msg;
@@ -96,8 +96,8 @@ struct decrement_rules
 {
     /// What happens when the duration ends?
     end_effect end;
-    /// What happens when a duration hits 50% remaining.
-    midpoint_msg mid_msg;
+    /// What happens when a duration passes its expire_threshold.
+    expiring_msg expire_msg;
     /// Should the message be MSGCH_RECOVERY instead of MSGCH_DURATION?
     bool recovery;
 };

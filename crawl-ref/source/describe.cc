@@ -1569,21 +1569,21 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_CURARE:
             description += "It is tipped with a substance that causes "
                            "asphyxiation, dealing direct damage as well as "
-                           "poisoning and slowing those it strikes.\n"
+                           "poisoning and slowing those it strikes.\n\n"
                            "It is twice as likely to be destroyed on impact as "
                            "other darts.";
             break;
         case SPMSL_FRENZY:
             description += "It is tipped with a substance that sends those it "
                            "hits into a mindless rage, attacking friend and "
-                           "foe alike.\n"
+                           "foe alike.\n\n"
                            "The chance of successfully applying its effect "
                            "increases with Throwing and Stealth skill.";
 
             break;
         case SPMSL_BLINDING:
             description += "It is tipped with a substance that causes "
-                           "blindness and brief confusion.\n"
+                           "blindness and brief confusion.\n\n"
                            "The chance of successfully applying its effect "
                            "increases with Throwing and Stealth skill.";
             break;
@@ -1614,7 +1614,7 @@ static string _describe_ammo(const item_def &item)
             && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
 
         description += make_stringf(
-            "\nBase damage: %d  Base attack delay: %.1f"
+            "\n\nBase damage: %d  Base attack delay: %.1f"
             "\nThis projectile's minimum attack delay (%.1f) "
                 "is reached at skill level %d.",
             dam,
@@ -1797,6 +1797,21 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_INFUSION:
         return "it empowers each of its wearer's blows with a small part of "
                "their magic.";
+    case SPARM_LIGHT:
+        return "it surrounds the wearer with a glowing halo, revealing "
+               "invisible creatures and reducing evasion.";
+    case SPARM_RAGE:
+        return "it berserks the wearer when making melee attacks (20% chance).";
+    case SPARM_MAYHEM:
+        return "it causes witnesses of the wearer's kills to go into a frenzy,"
+               " attacking everything nearby with great strength and speed.";
+    case SPARM_GUILE:
+        return "it weakens the willpower of the wielder and everyone they hex.";
+    case SPARM_ENERGY:
+        return "it occasionally powers its wielder's spells, but with a chance"
+               " of causing confusion or draining the wielder's intelligence."
+               " It becomes more likely to activate and less likely to backfire"
+               " with Evocations skill.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -1841,6 +1856,8 @@ static string _describe_armour(const item_def &item, bool verbose)
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
                 description += _warlock_mirror_reflect_desc();
         }
+        else if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
+            ;
         else
         {
             const int evp = property(item, PARM_EVASION);
@@ -1923,7 +1940,7 @@ static string _describe_armour(const item_def &item, bool verbose)
     if (crawl_state.need_save
         && can_wear_armour(item, false, true)
         && item_ident(item, ISFLAG_KNOW_PLUSES)
-        && !is_shield(item))
+        && !is_offhand(item))
     {
         description += _armour_ac_change(item);
     }
@@ -3555,10 +3572,14 @@ static int _hex_pow(const spell_type spell, const int hd)
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
-int hex_chance(const spell_type spell, const int hd)
+int hex_chance(const spell_type spell, const monster_info* mi)
 {
-    const int capped_pow = _hex_pow(spell, hd);
-    const int chance = hex_success_chance(you.willpower(), capped_pow,
+    const int capped_pow = _hex_pow(spell, mi->spell_hd());
+    const bool guile = mi->inv[MSLOT_SHIELD]
+                       && get_armour_ego_type(*mi->inv[MSLOT_SHIELD]) == SPARM_GUILE;
+    const int will = guile ? guile_adjust_willpower(you.willpower())
+                           : you.willpower();
+    const int chance = hex_success_chance(will, capped_pow,
                                           100, true);
     if (spell == SPELL_STRIP_WILLPOWER)
         return chance + (100 - chance) / 3; // ignores wl 1/3rd of the time
@@ -3802,7 +3823,7 @@ static void _get_spell_description(const spell_type spell,
                                "spell right now. %s\n",
                                wiz_info.c_str())
                 : make_stringf("Chance to defeat your Will: %d%%%s\n",
-                               hex_chance(spell, hd),
+                               hex_chance(spell, mon_owner),
                                wiz_info.c_str());
         }
 
@@ -4745,6 +4766,10 @@ static string _monster_stat_description(const monster_info& mi)
         }
     }
 
+    // Resists engulfing/waterlogging but still dies on falling into deep water.
+    if (mi.is(MB_RES_DROWN))
+        base_resists.emplace_back("drowning");
+
     if (mi.props.exists(CLOUD_IMMUNE_MB_KEY) && mi.props[CLOUD_IMMUNE_MB_KEY])
         extreme_resists.emplace_back("clouds of all kinds");
 
@@ -5280,8 +5305,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         attitude.emplace_back("neutral");
     if (mons.good_neutral())
         attitude.emplace_back("good_neutral");
-    if (mons.strict_neutral())
-        attitude.emplace_back("strict_neutral");
     if (mons.pacified())
         attitude.emplace_back("pacified");
     if (mons.wont_attack())

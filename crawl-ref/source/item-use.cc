@@ -453,7 +453,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     {
         if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
         {
-            SAY(mpr("You can't wield that with a shield."));
+            SAY(mpr("You can't wield that with only one hand."));
             return false;
         }
         else
@@ -490,7 +490,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
     {
-        SAY(mpr("You can't wield that with a shield."));
+        SAY(mpr("You can't wield that with only one hand."));
         return false;
     }
 
@@ -896,7 +896,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (you.get_mutation_level(MUT_MISSING_HAND) && is_shield(item))
+    if (you.get_mutation_level(MUT_MISSING_HAND) && is_offhand(item))
     {
         if (verbose)
         {
@@ -909,7 +909,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     if (!ignore_temporary && you.weapon()
-        && is_shield(item)
+        && is_offhand(item)
         && is_shield_incompatible(*you.weapon(), &item))
     {
         if (verbose)
@@ -2386,11 +2386,19 @@ void drink(item_def* potion)
     if (!quaff_potion(*potion))
         return;
 
-    if (!alreadyknown && dangerous)
+    if (!alreadyknown)
     {
-        // Xom loves it when you drink an unknown potion and there is
-        // a dangerous monster nearby...
-        xom_is_stimulated(200);
+        if (player_equip_unrand(UNRAND_DELATRAS_GLOVES)) {
+            mpr("The energy of discovery flows from your fingertips!");
+            potionlike_effect(POT_HEAL_WOUNDS, 40);
+        }
+
+        if (dangerous)
+        {
+            // Xom loves it when you drink an unknown potion and there is
+            // a dangerous monster nearby...
+            xom_is_stimulated(200);
+        }
     }
 
     // We'll need this later, after destroying the item.
@@ -3531,12 +3539,20 @@ void read(item_def* scroll, dist *target)
              scroll_name.c_str());
     }
 
-    if (!alreadyknown && dangerous)
+    if (!alreadyknown)
     {
-        // Xom loves it when you read an unknown scroll and there is a
-        // dangerous monster nearby... (though not as much as potions
-        // since there are no *really* bad scrolls, merely useless ones).
-        xom_is_stimulated(bad_effect ? 100 : 50);
+        if (player_equip_unrand(UNRAND_DELATRAS_GLOVES)) {
+            mpr("The energy of discovery flows from your fingertips!");
+            potionlike_effect(POT_MAGIC, 40);
+        }
+
+        if (dangerous)
+        {
+            // Xom loves it when you read an unknown scroll and there is a
+            // dangerous monster nearby... (though not as much as potions
+            // since there are no *really* bad scrolls, merely useless ones).
+            xom_is_stimulated(bad_effect ? 100 : 50);
+        }
     }
 
     if (!alreadyknown)

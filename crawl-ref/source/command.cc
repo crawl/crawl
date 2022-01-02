@@ -1254,7 +1254,7 @@ static bool _show_help_special(int key)
                 display_char_dump();
             return true;
         case '/':
-            keyhelp_query_descriptions();
+            keyhelp_query_descriptions(CMD_DISPLAY_COMMANDS);
             return true;
         case 'q':
             _handle_FAQ();

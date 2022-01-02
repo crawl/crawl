@@ -712,7 +712,7 @@ bool monster::is_silenced() const
             || has_ench(ENCH_MUTE)
             || (has_ench(ENCH_WATER_HOLD)
                 || has_ench(ENCH_WATERLOGGED))
-               && res_water_drowning() <= 0;
+               && !res_water_drowning();
 }
 
 bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
@@ -3036,9 +3036,8 @@ bool monster::friendly() const
 
 bool monster::neutral() const
 {
-    mon_attitude_type att = temp_attitude();
-    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL
-           || att == ATT_STRICT_NEUTRAL;
+    const mon_attitude_type att = temp_attitude();
+    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL;
 }
 
 bool monster::good_neutral() const
@@ -3046,14 +3045,9 @@ bool monster::good_neutral() const
     return temp_attitude() == ATT_GOOD_NEUTRAL;
 }
 
-bool monster::strict_neutral() const
-{
-    return temp_attitude() == ATT_STRICT_NEUTRAL;
-}
-
 bool monster::wont_attack() const
 {
-    return friendly() || good_neutral() || strict_neutral();
+    return friendly() || good_neutral();
 }
 
 bool monster::pacified() const
@@ -3755,21 +3749,11 @@ int monster::res_elec() const
     return u;
 }
 
-int monster::res_water_drowning() const
+bool monster::res_water_drowning() const
 {
-    int rw = 0;
-
-    if (is_unbreathing())
-        rw++;
-
     habitat_type hab = mons_habitat(*this, true);
-    if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
-        rw++;
 
-    if (get_mons_resist(*this, MR_VUL_WATER))
-        rw--;
-
-    return sgn(rw);
+    return is_unbreathing() || hab == HT_WATER || hab == HT_AMPHIBIOUS;
 }
 
 int monster::res_poison(bool temp) const
@@ -4269,17 +4253,6 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
     if (alive())
     {
-        if (amount != INSTANT_DEATH
-            && mons_species(true) == MONS_DEEP_DWARF)
-        {
-            // Deep Dwarves get to shave _any_ hp loss. Player version:
-            int shave = 1 + random2(2 + random2(1 + get_hit_dice() / 3));
-            dprf("(mon) HP shaved: %d.", shave);
-            amount -= shave;
-            if (amount <= 0)
-                return 0;
-        }
-
         if (amount != INSTANT_DEATH)
         {
             if (petrified())
@@ -4918,7 +4891,7 @@ int monster::foe_distance() const
 }
 
 /**
- * Can the monster suffer ENCH_FRENZY?
+ * Can the monster suffer ENCH_INSANE?
  */
 bool monster::can_go_frenzy() const
 {

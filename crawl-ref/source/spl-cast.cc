@@ -588,10 +588,9 @@ void inspect_spells()
  * spellcasting regardless of the specific spell we want to cast.
  *
  * @param quiet    If true, don't print a reason why no spell can be cast.
- * @param exegesis If true, we're considering casting under Divine Exegesis.
  * @return True if we could cast a spell, false otherwise.
 */
-bool can_cast_spells(bool quiet, bool exegesis)
+bool can_cast_spells(bool quiet)
 {
     if (!get_form()->can_cast)
     {
@@ -629,16 +628,6 @@ bool can_cast_spells(bool quiet, bool exegesis)
         return false;
     }
 
-    // Check that we have a spell memorised. Divine Exegesis does not need this
-    // condition, but we can't just check you.divine_exegesis in all cases, as
-    // it may not be set yet. Check a passed parameter instead.
-    if (!exegesis && !you.spell_no)
-    {
-        if (!quiet)
-            canned_msg(MSG_NO_SPELLS);
-        return false;
-    }
-
     if (you.berserk())
     {
         if (!quiet)
@@ -670,34 +659,39 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-static void _handle_wucad_mu(int cost)
+static void _handle_channeling(int cost)
 {
-    if (!player_equip_unrand(UNRAND_WUCAD_MU))
-        return;
-
     if (you.has_mutation(MUT_HP_CASTING))
         return;
 
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 54))
+    const int sources = 2 * player_equip_unrand(UNRAND_WUCAD_MU)
+                        + you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
+
+    if (!x_chance_in_y(sources * you.skill(SK_EVOCATIONS), 54))
         return;
 
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
     // The chance of backfiring goes down with evo skill and up with cost
-    if (one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+    // and is greatly reduced by more sources of channeling
+    for (int i = 0; i < sources; ++i)
     {
-        mpr(random_choose("Weird images run through your mind.",
-                          "Your head hurts.",
-                          "You feel a strange surge of energy.",
-                          "You feel uncomfortable."));
-        if (coinflip())
-            confuse_player(2 + random2(4));
-        else
-            lose_stat(STAT_INT, 1 + random2avg(5, 2));
+        if (!one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+        {
+            mpr("Magical energy flows into your mind!");
+            inc_mp(cost, true);
+            return;
+        }
     }
 
-    mpr("Magical energy flows into your mind!");
-    inc_mp(cost, true);
+    mpr(random_choose("Weird images run through your mind.",
+                      "Your head hurts.",
+                      "You feel a strange surge of energy.",
+                      "You feel uncomfortable."));
+    if (coinflip())
+        confuse_player(2 + random2(4));
+    else
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
 }
 
 /**
@@ -738,7 +732,15 @@ static bool _majin_charge_hp()
 spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
                    bool force_failure)
 {
-    if (!can_cast_spells(false, you.divine_exegesis))
+    // If you don't have any spells memorized (and aren't using exegesis),
+    // you can't cast any spells. Simple as.
+    if (!you.spell_no && !you.divine_exegesis)
+    {
+        canned_msg(MSG_NO_SPELLS);
+        return spret::abort;
+    }
+
+    if (!can_cast_spells())
     {
         crawl_state.zero_turns_taken();
         return spret::abort;
@@ -956,7 +958,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     practise_casting(spell, cast_result == spret::success);
     if (cast_result == spret::success)
     {
-        _handle_wucad_mu(cost);
+        _handle_channeling(cost);
         if (player_equip_unrand(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
@@ -1303,6 +1305,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_CONJURE_FLAME:
     case SPELL_EXCRUCIATING_WOUNDS:
+    case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
     // LOS radius:
@@ -1647,9 +1650,11 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
-    const int wl = mi.willpower();
+    int wl = mi.willpower();
     if (wl == WILL_INVULN)
         return vector<string>{"infinite will"};
+    if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE))
+        wl = guile_adjust_willpower(wl);
     if (hitfunc && !hitfunc->affects_monster(mi))
         return vector<string>{"not susceptible"};
     vector<string> descs;
@@ -2185,7 +2190,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_scorch(powc, fail);
 
     case SPELL_IRRADIATE:
-        return cast_irradiate(powc, &you, fail);
+        return cast_irradiate(powc, you, fail);
 
     case SPELL_LEDAS_LIQUEFACTION:
         return cast_liquefaction(powc, fail);
@@ -2898,7 +2903,7 @@ void do_demonic_magic(int pow, int rank)
         if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
-        if (mons->check_willpower(pow) <= 0)
+        if (mons->check_willpower(&you, pow) <= 0)
             mons->paralyse(&you, 1 + roll_dice(1,4));
     }
 }

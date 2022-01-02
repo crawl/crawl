@@ -157,7 +157,7 @@ static bool _torment_vulnerable(const actor* victim);
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
 static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
-static bool _maybe_irradiate(monster *mons);
+static ai_action::goodness _should_irradiate(const monster& mons);
 
 enum spell_logic_flag
 {
@@ -1747,11 +1747,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 
         if (check_validity)
         {
-            // manually skip LRD: it has setup behavior that needs to interact
-            // with the dungeon, and can get crashes/invalid memory accesses.
-            // TODO: is there a better way to handle this?
-            if (spell_cast == SPELL_LRD)
-                return true;
             bolt beam = mons_spell_beam(mons, spell_cast, 1, true);
             return beam.flavour != NUM_BEAMS;
         }
@@ -3406,6 +3401,8 @@ static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
     const int dam_scale = 1000;
     int best_dam_fraction = dam_scale / 2;
     coord_def best_target = coord_def(GXM+1, GYM+1); // initially out of bounds
+    if (!in_bounds(caster.pos()))
+        return best_target;
     tracer.ex_size = 1;
 
     for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
@@ -4446,7 +4443,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
     }
 
     const int pow = _ench_power(SPELL_MESMERISE, *mons);
-    const int will_check = you.check_willpower(pow);
+    const int will_check = you.check_willpower(mons, pow);
 
     // Don't mesmerise if you pass an WL check or have clarity.
     // If you're already mesmerised, you cannot resist further.
@@ -4471,34 +4468,22 @@ static int _mons_mesmerise(monster* mons, bool actual)
     return 1;
 }
 
-// Determine whether irradiating is likely to be profitable
-static bool _maybe_irradiate(monster *mons)
+static ai_action::goodness _should_irradiate(const monster &mons)
 {
-    if (mons->wont_attack() && adjacent(you.pos(), mons->pos()))
-        return false;
+    // make allied monsters extra reluctant to irradiate in melee.
+    if (mons.wont_attack() && adjacent(you.pos(), mons.pos()))
+        return ai_action::bad();
 
-    int val = 0;
-    int adjacent = 0;
-    int hd = mons->spell_hd(SPELL_IRRADIATE);
-
-    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-    {
-        if (actor * act = actor_at(*ai))
-        {
-            adjacent++;
-            if (act->is_player())
-                val += hd;
-            else if (mons->temp_attitude() == act->as_monster()->temp_attitude())
-                val -= 2 * act->get_hit_dice(); // hesitate to kill allies
-            else
-                val += act->get_hit_dice();
-        }
-    }
-
-    // randomize slightly
-    val += random2(3*adjacent + 1) - random2(3*adjacent + 1);
-
-    return val > 0;
+    bolt tracer;
+    tracer.flavour = BEAM_MMISSILE;
+    tracer.range = 0;
+    tracer.is_explosion = true;
+    tracer.ex_size = 1;
+    tracer.source = tracer.target = mons.pos();
+    tracer.hit = AUTOMATIC_HIT;
+    tracer.damage = dice_def(999, 1);
+    fire_tracer(&mons, tracer, true, true);
+    return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
 }
 
 // Check whether targets might be scared.
@@ -4533,7 +4518,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             retval = 0;
         else
         {
-            const int res_margin = you.check_willpower(pow);
+            const int res_margin = you.check_willpower(mons, pow);
             if (!you.can_feel_fear(true))
                 canned_msg(MSG_YOU_UNAFFECTED);
             else if (res_margin > 0)
@@ -4571,7 +4556,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
         // It's possible to scare this monster. If its magic
         // resistance fails, do so.
-        int res_margin = mi->check_willpower(pow);
+        int res_margin = mi->check_willpower(mons, pow);
         if (res_margin > 0)
         {
             simple_monster_message(**mi,
@@ -4610,7 +4595,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         if (actual)
         {
-            const int willpower = you.check_willpower(pow);
+            const int willpower = you.check_willpower(mons, pow);
             if (willpower > 0)
                 mprf("You%s", you.resist_margin_phrase(willpower).c_str());
             else
@@ -4636,7 +4621,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         retval = max(retval, 0);
 
-        int res_margin = mi->check_willpower(pow);
+        int res_margin = mi->check_willpower(mons, pow);
         if (res_margin > 0)
         {
             if (actual)
@@ -4659,6 +4644,8 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 static coord_def _mons_fragment_target(const monster &mon)
 {
     coord_def target(GXM+1, GYM+1);
+    if (!in_bounds(mon.pos()))
+        return target;
     const monster *mons = &mon; // TODO: rewriteme
     const int pow = mons_spellpower(*mons, SPELL_LRD);
 
@@ -5570,7 +5557,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONFUSION_GAZE:
     {
         ASSERT(foe);
-        const int res_margin = foe->check_willpower(splpow / ENCH_POW_FACTOR);
+        const int res_margin = foe->check_willpower(mons, splpow / ENCH_POW_FACTOR);
         if (res_margin > 0)
         {
             if (you.can_see(*foe))
@@ -5911,7 +5898,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_IRRADIATE:
-        cast_irradiate(splpow, mons, false);
+        cast_irradiate(splpow, *mons, false);
         return;
 
     case SPELL_CORPSE_ROT:
@@ -7325,7 +7312,7 @@ static void _siren_sing(monster* mons, bool avatar)
 
     // power is the same for siren & avatar song, so just use siren
     const int pow = _ench_power(SPELL_SIREN_SONG, *mons);
-    const int willpower = you.check_willpower(pow);
+    const int willpower = you.check_willpower(mons, pow);
 
     // Once mesmerised by a particular monster, you cannot resist anymore.
     if (you.duration[DUR_MESMERISE_IMMUNE]
@@ -7553,8 +7540,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         return ai_action::good_or_impossible(adjacent(mon->pos(), foe->pos()));
 
     case SPELL_IRRADIATE:
-        ASSERT(foe);
-        return ai_action::good_or_bad(_maybe_irradiate(mon));
+        return _should_irradiate(*mon);
 
     case SPELL_DRUIDS_CALL:
         // Don't cast unless there's at least one valid target

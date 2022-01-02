@@ -300,8 +300,7 @@ body {
 }
 
 #monster_list .good_neutral,
-#monster_list .neutral,
-#monster_list .strict_neutral {
+#monster_list .neutral, {
     color: #8f5902; /* brown */
 }
 

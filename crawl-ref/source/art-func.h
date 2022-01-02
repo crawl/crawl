@@ -154,6 +154,50 @@ static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
+static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                        actor* defender, bool mondied, int /*dam*/)
+{
+    // Can't kill a monster that's already dead.
+    // Don't insta-kill the player
+    if (mondied || defender->is_player())
+        return;
+
+    // Chance to insta-kill based on HP.
+    // (Effectively extra AC-ignoring damage, sort of.)
+    if (defender->stat_hp() <= 20 && one_chance_in(3))
+    {
+        monster* mons = defender->as_monster();
+        if (you.can_see(*attacker))
+        {
+            const bool plural = attacker->is_monster();
+            switch (get_mon_shape(mons_genus(mons->type)))
+            {
+            case MON_SHAPE_PLANT:
+            case MON_SHAPE_ORB:
+            case MON_SHAPE_BLOB:
+            case MON_SHAPE_MISC:
+                mprf("%s put%s %s out of %s misery!",
+                     attacker->name(DESC_THE).c_str(),
+                     plural ? "s" : "",
+                     mons->name(DESC_THE).c_str(),
+                     mons->pronoun(PRONOUN_POSSESSIVE).c_str());
+                break;
+            default: // yes, even fungi have heads :)
+                mprf("%s behead%s %s%s!",
+                     attacker->name(DESC_THE).c_str(),
+                     plural ? "s" : "",
+                     mons->name(DESC_THE).c_str(),
+                     mons->heads() > 1 ? " thoroughly" : "");
+            }
+        }
+        if (mons->num_heads > 1)
+            mons->num_heads = 1; // mass chop those hydra heads
+        mons->hurt(attacker, INSTANT_DEATH);
+    }
+}
+
+////////////////////////////////////////////////////
+
 // XXX: Staff giving a boost to poison spells is hardcoded in
 // player_spec_poison()
 

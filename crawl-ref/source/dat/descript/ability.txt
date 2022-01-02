@@ -273,8 +273,8 @@ with no escape until you either emerge victorious or are slain.
 # Makhleb
 Minor Destruction ability
 
-Shoots a random harmful blast at the targeted creature. Damage and accuracy
-are increased by Invocations skill.
+Shoots a weak blast of fire, lightning, stone, acid, or negative energy at the
+targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Lesser Servant of Makhleb ability
 
@@ -283,8 +283,8 @@ demon hostile.
 %%%%
 Major Destruction ability
 
-[[Major Destruction spell]] Damage and accuracy are increased by Invocations
-skill.
+Shoots a piercing bolt of fire, lightning, magma, acid, or negative energy at
+the targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Greater Servant of Makhleb ability
 

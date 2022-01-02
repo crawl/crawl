@@ -462,7 +462,7 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text
-                = make_stringf("Storm (%d)",
+                = make_stringf("Heavenly (%d)",
                                you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
         }
         break;
@@ -1037,26 +1037,27 @@ const char *duration_end_message(duration_type dur)
 }
 
 /**
- * What message should a given duration print when it reaches 50%, if any?
+ * What message should a given duration print when it passes its
+ * expiring threshold, if any?
  *
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
- * @return      A message to print for the duration when it hits 50%.
+ * @return      A message to print.
  */
-const char *duration_mid_message(duration_type dur)
+const char *duration_expire_message(duration_type dur)
 {
-    return _lookup_duration(dur)->decr.mid_msg.msg;
+    return _lookup_duration(dur)->decr.expire_msg.msg;
 }
 
 /**
- * How much should the duration be decreased by when it hits the midpoint (to
- * fuzz the remaining time), if at all?
+ * How much should the duration be decreased by when it passes its
+ * expiring threshold (to fuzz the remaining time), if at all?
  *
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
  * @return      A random value to reduce the remaining duration by; may be 0.
  */
-int duration_mid_offset(duration_type dur)
+int duration_expire_offset(duration_type dur)
 {
-    return _lookup_duration(dur)->decr.mid_msg.offset();
+    return _lookup_duration(dur)->decr.expire_msg.offset();
 }
 
 /**
@@ -1078,7 +1079,7 @@ int duration_expire_point(duration_type dur)
  * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
  * @return      The appropriate message channel, e.g. MSGCH_RECOVERY.
  */
-msg_channel_type duration_mid_chan(duration_type dur)
+msg_channel_type duration_expire_chan(duration_type dur)
 {
     return _lookup_duration(dur)->decr.recovery ? MSGCH_RECOVERY
                                                 : MSGCH_DURATION;

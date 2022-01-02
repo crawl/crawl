@@ -113,9 +113,21 @@ function ($, comm, client, options, focus_trap) {
             popup_clickoutside_handler(ev);
     }
 
-    function event_disable(ev)
+    function context_disable(ev)
     {
-        ev.preventDefault();
+        // never disable the context menu for text input
+        if (!$(ev.target).is(':input'))
+            ev.preventDefault();
+    }
+
+    function disable_contextmenu()
+    {
+        document.addEventListener("contextmenu", context_disable, true);
+    }
+
+    function undisable_contextmenu()
+    {
+        document.removeEventListener("contextmenu", context_disable, true);
     }
 
     function show_popup(id, centred, generation_id)
@@ -152,8 +164,7 @@ function ($, comm, client, options, focus_trap) {
                             document.addEventListener("touchend",
                                 popup_touchend_handler, true);
                         }
-                        document.addEventListener("contextmenu",
-                            event_disable, true);
+                        disable_contextmenu();
                     }
                 },
                 onDeactivate: function () {
@@ -171,8 +182,7 @@ function ($, comm, client, options, focus_trap) {
                             document.removeEventListener("touchend",
                                 popup_touchend_handler, true);
                         }
-                        document.removeEventListener("contextmenu",
-                            event_disable, true);
+                        undisable_contextmenu();
                     }
                 },
                 allowOutsideClick: target_outside_game,
@@ -483,6 +493,9 @@ function ($, comm, client, options, focus_trap) {
         show_popup: show_popup,
         hide_popup: hide_popup,
         top_popup: top_popup,
+        disable_contextmenu: disable_contextmenu,
+        undisable_contextmenu: undisable_contextmenu,
+        target_outside_game: target_outside_game,
         hide_all_popups: hide_all_popups,
         utf8_from_key_value: utf8_from_key_value,
         key_value_from_utf8: key_value_from_utf8,

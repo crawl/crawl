@@ -1081,12 +1081,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
-    case MONS_ANGEL:
-    case MONS_DAEVA:
-    case MONS_PROFANE_SERVITOR:
-        set_equip_desc(item, ISFLAG_GLOWING); // will never come up...
-        break;
-
     case MONS_DONALD:
     case MONS_FREDERICK:
     case MONS_URUG:
@@ -1184,6 +1178,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         {
             make_item_unrandart(item, UNRAND_WYRMBANE);
             item.plus = 10 + random2(2); // Now she's killed at least 2 dragons
+            force_item = true;
+        }
+        break;
+
+        // As a violent thug, Throatcutter suits Terence perfectly.
+    case MONS_TERENCE:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_THROATCUTTER))
+        {
+            make_item_unrandart(item, UNRAND_THROATCUTTER);
             force_item = true;
         }
         break;

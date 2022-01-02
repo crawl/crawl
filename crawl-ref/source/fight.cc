@@ -888,6 +888,9 @@ int weapon_min_delay_skill(const item_def &weapon)
 int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
+    if (is_unrandom_artefact(weapon, UNRAND_WOODCUTTERS_AXE))
+        return base;
+
     int min_delay = base/2;
 
     // Short blades can get up to at least unarmed speed.
@@ -1015,7 +1018,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (mon->neutral() && is_good_god(you.religion))
+    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_INSANE))
     {
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))

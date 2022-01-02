@@ -1702,7 +1702,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         return true;
     }
 
-    int res_margin = mons->check_willpower(pow);
+    int res_margin = mons->check_willpower(&you, pow);
     if (res_margin > 0)
     {
         if (simple_monster_message(*mons,
@@ -2030,8 +2030,9 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
 {
     // If this ASSERT triggers, your spell's setup code probably is doing
     // something bad when setup_mons_cast is called with check_validity=true.
-    ASSERT(crawl_state.game_started || crawl_state.test || crawl_state.script
-        || crawl_state.game_is_arena());
+    ASSERTM(crawl_state.game_started || crawl_state.test || crawl_state.script
+        || crawl_state.game_is_arena(),
+        "invalid game state for tracer '%s'!", pbolt.name.c_str());
 
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
@@ -2421,7 +2422,7 @@ void bolt::affect_endpoint()
             for (const coord_def &coord : splash_coords)
             {
                 monster* mons = monster_at(coord);
-                if (mons && mons->res_water_drowning() <= 0)
+                if (mons && !mons->res_water_drowning())
                 {
                     simple_monster_message(*mons, " is engulfed in water.");
                     mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you,
@@ -2956,8 +2957,7 @@ bool bolt::is_reflectable(const actor &whom) const
     if (range_used() > range)
         return false;
 
-    const item_def *it = whom.shield();
-    return (it && is_shield(*it) && shield_reflects(*it)) || whom.reflection();
+    return whom.reflection();
 }
 
 bool bolt::is_big_cloud() const
@@ -3131,7 +3131,7 @@ bool bolt::misses_player()
             const item_def *shield = you.shield();
             if (is_reflectable(you))
             {
-                if (shield && is_shield(*shield) && shield_reflects(*shield))
+                if (shield && shield_reflects(*shield))
                 {
                     mprf("Your %s reflects the %s!",
                             shield->name(DESC_PLAIN).c_str(),
@@ -3187,7 +3187,7 @@ void bolt::affect_player_enchantment(bool resistible)
 {
     if (resistible
         && has_saving_throw()
-        && you.check_willpower(ench_power) > 0)
+        && you.check_willpower(agent(true), ench_power) > 0)
     {
         // You resisted it.
 
@@ -4706,7 +4706,7 @@ bool bolt::attempt_block(monster* mon)
     {
         if (mon->observable())
         {
-            if (shield && is_shield(*shield) && shield_reflects(*shield))
+            if (shield && shield_reflects(*shield))
             {
                 mprf("%s reflects the %s off %s %s!",
                      mon->name(DESC_THE).c_str(),
@@ -5317,7 +5317,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         // Chaos effects don't get a resistance check to match melee chaos.
         else if (real_flavour != BEAM_CHAOS)
         {
-            if (mon->check_willpower(ench_power) > 0)
+            if (mon->check_willpower(agent(true), ench_power) > 0)
             {
                 // Note only actually used by messages in this case.
                 res_margin = mon->willpower() - ench_power_stepdown(ench_power);

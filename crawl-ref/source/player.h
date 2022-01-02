@@ -768,7 +768,7 @@ public:
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
     bool res_miasma(bool temp = true) const override;
-    int res_water_drowning() const override;
+    bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
@@ -932,8 +932,6 @@ protected:
     bool _possible_fearmonger(const monster* mon) const;
 
 };
-COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
-COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
 
 class monster;
 struct item_def;
@@ -1109,6 +1107,7 @@ bool sanguine_armour_valid();
 void activate_sanguine_armour();
 
 void refresh_weapon_protection();
+void refresh_meek_bonus();
 
 void set_mp(int new_amount);
 

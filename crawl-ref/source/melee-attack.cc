@@ -2968,7 +2968,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (attacker->type == MONS_DROWNED_SOUL)
             attacker->as_monster()->suicide(-1000);
 
-        if (defender->res_water_drowning() <= 0)
+        if (!defender->res_water_drowning())
         {
             special_damage = attacker->get_hit_dice() * 3 / 4
                             + random2(attacker->get_hit_dice() * 3 / 4);
@@ -3110,7 +3110,7 @@ void melee_attack::mons_do_eyeball_confusion()
         const int ench_pow = you.get_mutation_level(MUT_EYEBALLS) * 30;
         monster* mon = attacker->as_monster();
 
-        if (mon->check_willpower(ench_pow) <= 0)
+        if (mon->check_willpower(&you, ench_pow) <= 0)
         {
             mprf("The eyeballs on your body gaze at %s.",
                  mon->name(DESC_THE).c_str());

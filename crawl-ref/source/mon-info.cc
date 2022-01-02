@@ -20,6 +20,7 @@
 #include "english.h"
 #include "env.h"
 #include "ghost.h"
+#include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "libutil.h"
@@ -152,7 +153,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return get_trapping_net(mons.pos(), true) == NON_ITEM
                ? MB_WEBBED : MB_CAUGHT;
     case ENCH_WATER_HOLD:
-        if (mons.res_water_drowning() > 0)
+        if (mons.res_water_drowning())
             return MB_WATER_HOLD;
         else
             return MB_WATER_HOLD_DROWN;
@@ -612,6 +613,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_SLOW_MOVEMENT);
     if (!actor_is_susceptible_to_vampirism(*m))
         mb.set(MB_CANT_DRAIN);
+    if (m->res_water_drowning())
+        mb.set(MB_RES_DROWN);
 
     dam = mons_get_damage_level(*m);
 
@@ -1317,20 +1320,20 @@ string monster_info::pluralised_name(bool fullname) const
 
 enum _monster_list_colour_type
 {
-    _MLC_FRIENDLY, _MLC_NEUTRAL, _MLC_GOOD_NEUTRAL, _MLC_STRICT_NEUTRAL,
+    _MLC_FRIENDLY, _MLC_NEUTRAL, _MLC_GOOD_NEUTRAL,
     _MLC_TRIVIAL, _MLC_EASY, _MLC_TOUGH, _MLC_NASTY,
     _NUM_MLC
 };
 
 static const char * const _monster_list_colour_names[_NUM_MLC] =
 {
-    "friendly", "neutral", "good_neutral", "strict_neutral",
+    "friendly", "neutral", "good_neutral",
     "trivial", "easy", "tough", "nasty"
 };
 
 static int _monster_list_colours[_NUM_MLC] =
 {
-    GREEN, BROWN, BROWN, BROWN,
+    GREEN, BROWN, BROWN,
     DARKGREY, LIGHTGREY, YELLOW, LIGHTRED,
 };
 
@@ -1384,23 +1387,20 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     switch (attitude)
     {
     case ATT_FRIENDLY:
-        //out << " (friendly)";
         colour_type = _MLC_FRIENDLY;
         break;
     case ATT_GOOD_NEUTRAL:
-        //out << " (neutral)";
+#if TAG_MAJOR_VERSION == 34
+    case ATT_OLD_STRICT_NEUTRAL:
+#endif
+        if (fellow_slime())
+            out << "(fellow slime)";
         colour_type = _MLC_GOOD_NEUTRAL;
         break;
     case ATT_NEUTRAL:
-        //out << " (neutral)";
         colour_type = _MLC_NEUTRAL;
         break;
-    case ATT_STRICT_NEUTRAL:
-        out << " (fellow slime)";
-        colour_type = _MLC_STRICT_NEUTRAL;
-        break;
     case ATT_HOSTILE:
-        // out << " (hostile)";
         switch (threat)
         {
         case MTHRT_TRIVIAL: colour_type = _MLC_TRIVIAL; break;
@@ -1623,6 +1623,12 @@ bool monster_info::airborne() const
 bool monster_info::ground_level() const
 {
     return !airborne();
+}
+
+bool monster_info::fellow_slime() const {
+    return attitude == ATT_GOOD_NEUTRAL
+        && have_passive(passive_t::neutral_slimes)
+        && mons_class_is_slime(type);
 }
 
 // Only checks for spells from preset monster spellbooks.

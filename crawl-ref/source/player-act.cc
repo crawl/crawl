@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
+#include "artefact.h" // is_unrandom_artefact (woodcutter)
 #include "coordit.h"
 #include "dgn-event.h"
 #include "english.h"
@@ -281,6 +282,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                                   10 * weapon_min_delay_skill(*weap));
 
         attk_delay = random_var(property(*weap, PWPN_SPEED));
+        if (is_unrandom_artefact(*weap, UNRAND_WOODCUTTERS_AXE))
+            return attk_delay;
+
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
         if (get_weapon_brand(*weap) == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);

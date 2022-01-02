@@ -1077,30 +1077,6 @@ static bool _is_armour_plain(const item_def &item)
     return get_armour_ego_type(item) == SPARM_NORMAL;
 }
 
-/**
- * Has the player already encountered an item with this brand?
- *
- * Only supports weapons & armour.
- *
- * @param item      The item in question.
- * @param           Whether the player has encountered another weapon or
- *                  piece of armour with the same ego.
- */
-static bool _brand_already_seen(const item_def &item)
-{
-    switch (item.base_type)
-    {
-        case OBJ_WEAPONS:
-            return you.seen_weapon[item.sub_type]
-                   & (1<<get_weapon_brand(item));
-        case OBJ_ARMOUR:
-            return you.seen_armour[item.sub_type]
-                   & (1<<get_armour_ego_type(item));
-        default:
-            die("Unsupported item type!");
-    }
-}
-
 // ugh
 #define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
 
@@ -1147,11 +1123,6 @@ static void _adjust_brand(item_def &item, bool divine, int agent)
             reroll_brand(item, ITEM_LEVEL);
         }
     }
-
-    // Try to not generate brands that were already seen, although unlike
-    // jewellery and books, this is not absolute.
-    while (_brand_already_seen(item) && !one_chance_in(5))
-        reroll_brand(item, ITEM_LEVEL);
 }
 
 /**
@@ -1239,10 +1210,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // matching a currently unfilled equipment slot.
         if (acq_item.base_type == OBJ_ARMOUR && !is_artefact(acq_item))
         {
-            const special_armour_type sparm = get_armour_ego_type(acq_item);
-
             if (agent != GOD_XOM
-                && you.seen_armour[acq_item.sub_type] & (1 << sparm)
                 && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
                 || !divine
                 && you.seen_armour[acq_item.sub_type]

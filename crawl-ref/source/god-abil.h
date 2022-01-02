@@ -46,7 +46,7 @@ const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define GOZAG_GOLD_AURA_KEY "gozag_gold_aura_amount"
-#define GOZAG_GOLD_AURA_MAX 20
+#define GOZAG_GOLD_AURA_MAX 10
 #define GOZAG_POTION_PETITION_AMOUNT 400
 #define GOZAG_SHOP_BASE_MULTIPLIER 100
 #define GOZAG_SHOP_MOD_MULTIPLIER 25
