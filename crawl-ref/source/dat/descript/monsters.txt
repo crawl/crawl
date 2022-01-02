@@ -163,7 +163,7 @@ honour.
 Fannar
 
 A cold-hearted elven sorcerer, draped in robes of high office. They whisper
-grimly to themself as they stalk the dungeon, trailing ice crystals through the
+grimly to themselves as they stalk the dungeon, trailing ice crystals through the
 air behind them.
 %%%%
 Frances
