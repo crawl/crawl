@@ -18,7 +18,8 @@ public:
 
     // Applies attack damage and other effects.
     bool attack();
-    int post_roll_to_hit_modifiers(int mhit, bool random) override;
+    int post_roll_to_hit_modifiers(int mhit, bool random,
+                                   bool /*aux*/ = false) override;
 
 private:
     /* Attack Phases */

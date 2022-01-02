@@ -65,7 +65,8 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         wpn_skill = SK_THROWING;
 }
 
-int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
+int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random,
+                                              bool /*aux*/)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 

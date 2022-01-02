@@ -240,7 +240,7 @@ int attack::calc_pre_roll_to_hit(bool random)
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/, bool /*aux*/)
 {
     int modifiers = 0;
 
@@ -1130,7 +1130,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     return _core_apply_slaying(damage, damage_plus);
 }
 
-int attack::player_apply_final_multipliers(int damage)
+int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
 {
     // Can't affect much of anything as a shadow.
     if (you.form == transformation::shadow)
