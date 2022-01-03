@@ -2513,3 +2513,129 @@ MAP
   .G.G.cccccccccccccccccccccccccccccccx
   .....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+# Broodmother-heavy map
+NAME:   hellmonk_spider_rune_endless_swarm
+PLACE:  Spider:$
+ORIENT: southeast
+MONS:   wolf spider / jumping spider / redback / tarantella / culicivora
+MONS:   orb spider
+MONS:   steelbarb worm / torpor snail / meliai / pharaoh ant / entropy weaver
+MONS:   emperor scorpion w:30 / ghost moth w:20 / moth of wrath / sun moth
+MONS:   jorogumo w:15 / radroach / spark wasp w:5
+MONS:   broodmother
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KFEAT:  ^ = web
+NSUBST: . = 96 = 1... / *:., 2 = 2:2 / *=2...
+NSUBST: 6 = 4:6 / 4 = 456. / *= 4..
+NSUBST: d = 1:O / 3:d / 3:e / 3:f
+SUBST:  3 = 3....
+SUBST:  ; : ;;;;;c
+SUBST:  : = ...xxW^, - = ....W^, Q : xWW, R = ...W^, ; = ...^
+TILE:   c = wall_brick_gray
+: setup_endvault_loot(_G)
+MAP
+            xxxxxxxxx
+           xxxxxxxxxxxxx
+         @xxxx:::::::xxxxx
+        @2'''--x.x--.:::xxxx
+       @'''.-xxx.xxx-..2:xxxx
+      @'''..-xx...xx-....::xxx
+     @'''...xx..3..xx......:xxx
+    @'''........63..........:xxx
+   @'''.....xx..3..xx........:xx
+  x2'''.....-xx...xx-.........:xx
+  xx''......-xxx.xxx-........2:xx
+ xx'--x.x--..--x.x--...........:xx
+ xx-xxx.xxx-.........3..--x.x--:xx
+ x:-xx...xx-...........-xxx.xxx-:xx
+ x:xx.....xx...........-x.....x-:xx
+ x:...363..............xx..3..xx:xx
+xx:xx..3..xx..--x.x--.....363..x-:xx
+xx:-xx...xx-.-xxx.xxx-.xx..3..xx-:xx
+xx:-xxx.xxx-.-xx....x-.-x.....x-.:xx
+xx:.--x.x--..xx..3..xx.-xxx.xxx-2:xx
+xx:.............363.....--x.x--..:xx
+xx:...RR.....xx..3..xx...........:xx
+xx:..RQQR....-xx...xx-....3.....:xxx
+xx:.RQQQQR...-xxx.xxx-........6.:xxx
+xx:..RQQR.....--x.x--...........:xxx
+xx:...RR...3...........ccc+ccc..:xxx
+ xx:.6...............ccc.....ccc:xx
+ xx:.....--x.x--.....c6........c:xx
+ xxx:...-xxx.xxx-...cc...;;;..3ccxx
+  xx:2..-xx...xx-...c...;;c;;.6dcx
+  xxx:..xx.....xx...+..;;ccc;;6dcx
+   xx:.....363......c...;;c;;33dc
+   xxx:.xx..3..xx...cc...;;;36dcc
+    xx:.-xx...xx-....c3...633ddc
+    xxx:-xxx.xxx-....ccc3ddddccc
+     xxx:--x.x--..6....cccccccx
+      xx::...........2..:xxxxx
+       xxx::.2......::::xxxxx
+        xxxx:::..:::xxxxxxxx
+          xxxxx::xxxxxxxxx
+            xxxxxxxxxxxx
+ENDMAP
+
+# A spider-free end vault. Lower density to compensate for tougher monsters.
+# No webs (because there are no spiders, you see)
+NAME:   hellmonk_spider_rune_bug_friends
+PLACE:  Spider:$
+ORIENT: float
+TAGS:   no_monster_gen no_trap_gen
+MONS:   boulder beetle / meliai
+MONS:   steelbarb worm w:15 / demonic crawler
+MONS:   pharaoh ant / entropy weaver / torpor snail
+MONS:   ghost moth w:15 / sun moth / moth of wrath w:5
+MONS:   emperor scorpion
+MONS:   radroach / spark wasp
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+NSUBST: 7 = 4:7 / *=7..
+# bias the big monsters, randomly
+: if crawl.one_chance_in(3) then
+    SUBST:  7 = 44456
+: elseif crawl.one_chance_in(2) then
+    SUBST:  7 = 45556
+: else
+    SUBST:  7 = 45666
+: end
+NSUBST: . = 16 = 3... / 16 = 2... / 16 = 1... / *:.
+NSUBST: ' = 12 = 1... / 16 = 2... / 1:3 / 1:3. / *:.
+# bias the ruination level of the terrain
+: if crawl.one_chance_in(3) then
+    SUBST:  A = cc.
+: elseif crawl.one_chance_in(2) then
+    SUBST:  A = c.
+: else
+    SUBST:  A = c..
+: end
+NSUBST: d = 3:d / 3:e / *:f
+TILE:   c = wall_brick_gray
+: setup_endvault_loot(_G)
+MAP
+        cccc     cccc
+       ccddcccccccddcc
+       cd7..ccOcc..7dc
+       cc..AcdddcA..cc
+        cc..cc7cc..cc
+         c....7....c
+        cc....A....cc  cccc
+   cccccc7...AcA...7cccc..ccc
+  cc....A..AcccccA..AA......cc
+  c....cc..Ac.7.cA..AAcA....cc
+  cc..cc..cc.....cc..Ac...ccc
+   c.AA....A.....A......ccc
+  cc7..................7cc
+ cc...cA....A'''A....cc..cc
+cc...Accc.ccc'''ccc.AA....cc
+ccA..AcccAcA'''''Accc....cc
+ cc..ccA'''''''''''Acc.ccc
+  c...cA'''''''''''''ccc
+  c.ccc''''A'''''A''''Ac
+  cccc''''Acc'''ccA''''c
+     c''''Acc@@@ccA''''c
+     cc''ccc     ccA''cc
+      cc'cc       cc'cc
+       ccc         ccc
+ENDMAP
