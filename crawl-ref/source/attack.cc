@@ -60,7 +60,6 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       shield(nullptr), art_props(0), unrand_entry(nullptr),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
-      attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
       defender_shield(nullptr), fake_chaos_attack(false), simu(false),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
@@ -145,20 +144,6 @@ bool attack::handle_phase_end()
 }
 
 /**
- * Calculate to-hit penalties from the attacker's armour and shield, if any.
- * Set them into the appropriate fields.
- *
- * @param random If false, calculate average to-hit penalties deterministically.
- */
-void attack::calc_encumbrance_penalties(bool random)
-{
-    attacker_armour_tohit_penalty =
-        maybe_random_div(attacker->armour_tohit_penalty(random, 20), 20, random);
-    attacker_shield_tohit_penalty =
-        maybe_random_div(attacker->shield_tohit_penalty(random, 20), 20, random);
-}
-
-/**
  * Calculate the to-hit for an attacker before the main die roll.
  *
  * @param random If false, calculate average to-hit deterministically.
@@ -223,11 +208,6 @@ int attack::calc_pre_roll_to_hit(bool random)
 
         // slaying bonus
         mhit += slaying_bonus(wpn_skill == SK_THROWING);
-
-        // armour penalty (already calculated if random is true)
-        if (!random)
-            calc_encumbrance_penalties(random);
-        mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
         // vertigo penalty
         if (you.duration[DUR_VERTIGO])
@@ -399,7 +379,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
-    calc_encumbrance_penalties(true);
     to_hit          = calc_to_hit(true);
 
     shield = attacker->shield();

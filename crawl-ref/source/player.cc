@@ -5597,16 +5597,6 @@ float player::get_shield_skill_to_offset_penalty(const item_def &item)
     return -1 * evp * player_shield_racial_factor() / 10.0;
 }
 
-int player::armour_tohit_penalty(bool random_factor, int scale) const
-{
-    return maybe_roll_dice(1, adjusted_body_armour_penalty(scale), random_factor);
-}
-
-int player::shield_tohit_penalty(bool random_factor, int scale) const
-{
-    return maybe_roll_dice(1, adjusted_shield_penalty(scale), random_factor);
-}
-
 /**
  * Get the player's skill level for sk.
  *
@@ -6438,10 +6428,9 @@ bool player::no_tele(bool blinking) const
     return !no_tele_reason(blinking).empty();
 }
 
-bool player::fights_well_unarmed(int heavy_armour_penalty)
+bool player::fights_well_unarmed()
 {
-    return x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200)
-        && x_chance_in_y(2, 1 + heavy_armour_penalty);
+    return x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200);
 }
 
 bool player::racial_permanent_flight() const

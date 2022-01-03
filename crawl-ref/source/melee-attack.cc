@@ -1160,11 +1160,8 @@ bool melee_attack::player_gets_aux_punch()
         return false;
 
     // roll for punch chance based on uc skill & armour penalty
-    if (!attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                       + attacker_shield_tohit_penalty))
-    {
+    if (!attacker->fights_well_unarmed())
         return false;
-    }
 
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
@@ -1393,39 +1390,12 @@ void melee_attack::player_announce_aux_hit()
          attack_strength_punctuation(damage_done).c_str());
 }
 
-string melee_attack::player_why_missed()
-{
-    const int ev = defender->evasion(false, attacker);
-    // We roll (random2) these penalties before comparing them to EV.
-    // Thus, on average, they're effectively half as large.
-    const int adj_armour_penalty = div_rand_round(attacker_armour_tohit_penalty, 2);
-    const int adj_shield_penalty = div_rand_round(attacker_shield_tohit_penalty, 2);
-    const int combined_penalty = adj_armour_penalty + adj_shield_penalty;
-    if (to_hit >= ev || to_hit + combined_penalty < ev)
-        return "You" + evasion_margin_adverb() + " miss ";
-
-    const bool armour_miss =
-        adj_armour_penalty && to_hit + adj_armour_penalty >= ev;
-    const bool shield_miss =
-        adj_shield_penalty && to_hit + adj_shield_penalty >= ev;
-
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    const string armour_name = armour ? armour->name(DESC_BASENAME)
-                                      : string("armour");
-
-    if (armour_miss && !shield_miss)
-        return "Your " + armour_name + " prevents you from hitting ";
-    if (shield_miss && !armour_miss)
-        return "Your shield prevents you from hitting ";
-    return "Your shield and " + armour_name + " prevent you from hitting ";
-}
-
 void melee_attack::player_warn_miss()
 {
     did_hit = false;
 
-    mprf("%s%s.",
-         player_why_missed().c_str(),
+    mprf("You %s miss %s.",
+         evasion_margin_adverb().c_str(),
          defender->name(DESC_THE).c_str());
 }
 

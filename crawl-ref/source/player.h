@@ -693,7 +693,7 @@ public:
     string unarmed_attack_name() const;
 
     bool fumbles_attack() override;
-    bool fights_well_unarmed(int heavy_armour_penalty) override;
+    bool fights_well_unarmed() override;
 
     void attacking(actor *other) override;
     bool can_go_berserk() const override;
@@ -847,8 +847,6 @@ public:
     int adjusted_body_armour_penalty(int scale = 1) const override;
     int adjusted_shield_penalty(int scale = 1) const override;
     float get_shield_skill_to_offset_penalty(const item_def &item);
-    int armour_tohit_penalty(bool random_factor, int scale = 1) const override;
-    int shield_tohit_penalty(bool random_factor, int scale = 1) const override;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,

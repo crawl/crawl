@@ -152,7 +152,6 @@ private:
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();
-    string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();

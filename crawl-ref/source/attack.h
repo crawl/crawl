@@ -83,10 +83,6 @@ public:
     string     special_damage_message;
     string     aux_attack, aux_verb;
 
-    // Combined to-hit penalty from armour and shield.
-    int             attacker_armour_tohit_penalty;
-    int             attacker_shield_tohit_penalty;
-
     item_def        *defender_shield;
 
     bool      fake_chaos_attack;
@@ -139,7 +135,6 @@ protected:
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
     virtual int calc_damage();
-    void calc_encumbrance_penalties(bool random);
     int lighting_effects();
     int test_hit(int to_hit, int ev, bool randomise_ev);
     int apply_defender_ac(int damage, int damage_max = 0,
