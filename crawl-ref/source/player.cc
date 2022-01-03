@@ -7300,8 +7300,7 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 bool player::shaftable(bool check_terrain) const
 {
     return is_valid_shaft_level()
-        && (!check_terrain || feat_is_shaftable(env.grid(pos())))
-        && !duration[DUR_SHAFT_IMMUNITY];
+        && (!check_terrain || feat_is_shaftable(env.grid(pos())));
 }
 
 // Used for falling into traps and other bad effects, but is a slightly
@@ -7315,7 +7314,6 @@ bool player::do_shaft(bool check_terrain)
     // the player gets shafted are correctly registered.
     maybe_update_stashes();
 
-    duration[DUR_SHAFT_IMMUNITY] = 1;
     down_stairs(DNGN_TRAP_SHAFT);
 
     return true;
