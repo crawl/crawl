@@ -153,9 +153,9 @@ bool attack::handle_phase_end()
 void attack::calc_encumbrance_penalties(bool random)
 {
     attacker_armour_tohit_penalty =
-        maybe_random_div(attacker->armour_tohit_penalty(true, 20), 20, random);
+        maybe_random_div(attacker->armour_tohit_penalty(random, 20), 20, random);
     attacker_shield_tohit_penalty =
-        maybe_random_div(attacker->shield_tohit_penalty(true, 20), 20, random);
+        maybe_random_div(attacker->shield_tohit_penalty(random, 20), 20, random);
 }
 
 /**
