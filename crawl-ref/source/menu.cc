@@ -494,6 +494,29 @@ public:
         m_wrapped_size = Size(-1);
         wrap_text_to_size(m_region.width, m_region.height);
     };
+
+    void set_more_template(const formatted_string &fs)
+    {
+        // a string with `XXX` in it somewhere, to be replaced by a scroll
+        // position
+        more_template = fs.to_colour_string();
+        set_text(fs);
+    }
+
+    void fill_pos(int scroll_percent)
+    {
+        if (more_template.empty())
+            return;
+        string perc = scroll_percent <= 0 ? "top"
+            : scroll_percent >= 100 ? "bot"
+            : make_stringf("%2d%%", scroll_percent);
+
+        string scroll_more = replace_all(more_template, "XXX", perc);
+        set_text_immediately(formatted_string::parse_string(scroll_more));
+    }
+
+private:
+    string more_template;
 };
 
 class UIMenuPopup : public ui::Popup
@@ -538,10 +561,11 @@ void UIMenuPopup::_allocate_region()
     m_menu->m_ui.menu->do_layout(menu_w, num_cols);
 #endif
 
-#ifndef USE_TILE_LOCAL
     int menu_height = m_menu->m_ui.menu->get_region().height;
 
-    // change more visibility
+    // change more visibility depending on the height of the menu. This is
+    // only appropriate if the keyhelp is mainly about scrolling. (TODO:
+    // generalize somehow.)
     bool can_toggle_more = !m_menu->is_set(MF_ALWAYS_SHOW_MORE)
         && !m_menu->m_ui.more->get_text().ops.empty();
     if (can_toggle_more)
@@ -558,17 +582,10 @@ void UIMenuPopup::_allocate_region()
 
     if (m_menu->m_keyhelp_more && m_menu->m_ui.more->is_visible())
     {
-        int scroll = m_menu->m_ui.scroller->get_scroll();
-        int scroll_percent = scroll*100/(menu_height-viewport_height);
-        string perc = scroll <= 0 ? "top"
-            : scroll_percent >= 100 ? "bot"
-            : make_stringf("%2d%%", scroll_percent);
-
-        string scroll_more = m_menu->more.to_colour_string();
-        scroll_more = replace_all(scroll_more, "XXX", perc);
-        m_menu->m_ui.more->set_text_immediately(formatted_string::parse_string(scroll_more));
+        const int scroll_percent = m_menu->m_ui.scroller->get_scroll() * 100
+                                            / (menu_height - viewport_height);
+        m_menu->m_ui.more->fill_pos(scroll_percent);
     }
-#endif
 
     // adjust maximum height
 #ifdef USE_TILE_LOCAL
@@ -942,15 +959,18 @@ void Menu::set_more(const string s)
     set_more(formatted_string::parse_string(s));
 }
 
+string Menu::get_keyhelp() const
+{
+    return
+        "<lightgrey>[<w>PgDn</w>|<w>></w>]: page down        "
+        "[<w>PgUp</w>|<w><<</w>]: page up        "
+        "[<w>Esc</w>]: close</lightgrey>";
+}
+
 void Menu::set_more()
 {
     m_keyhelp_more = true;
-    string pageup_keys = minus_is_pageup() ? "<w>-</w>|<w><<</w>" : "<w><<</w>";
-    more = formatted_string::parse_string(
-        "<lightgrey>[<w>+</w>|<w>></w>|<w>Space</w>]: page down        "
-        "[" + pageup_keys + "]: page up        "
-        "[<w>Esc</w>]: close        [<w>XXX</w>]</lightgrey>"
-    );
+    more = formatted_string::parse_string(get_keyhelp());
     update_more();
 }
 
@@ -2044,26 +2064,50 @@ void Menu::update_menu(bool update_entries)
 #endif
 }
 
+static formatted_string _pad_more_with(formatted_string s,
+    const formatted_string &pad, int min_width)
+{
+    const auto lines = split_string("\n", s.tostring(), false, true);
+    const int last_len = static_cast<int>(lines.back().size());
+    const int pad_size = static_cast<int>(pad.tostring().size());
+    if (last_len < (min_width - pad_size))
+    {
+        s += string(min_width - (last_len + pad_size), ' ');
+        s += pad;
+    }
+    return s;
+}
+
+static formatted_string _add_pos_string(formatted_string cur_more, int min_width)
+{
+    // the `XXX` is replaced in the ui code with a position in the scroll.
+    // Only for console.
+    const auto pad = formatted_string::parse_string(
+                                        "<lightgrey>[<w>XXX</w>]</lightgrey>");
+    return _pad_more_with(cur_more, pad, min_width);
+}
+
 void Menu::update_more()
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
     formatted_string shown_more = more;
-#ifndef USE_TILE_LOCAL
-    // hacky way of enforcing a min width for non-local-tiles when the more
-    // is visible. (Really targeted at webtiles.)
-    const int padding = m_ui.menu->get_min_col_width()
-                                    - static_cast<int>(more.tostring().size());
-    if (padding > 0)
-        shown_more += string(padding, ' ');
-#endif
-    m_ui.more->set_text(shown_more);
+    if (m_keyhelp_more)
+        m_ui.more->set_more_template(_add_pos_string(shown_more, 79));
 
-    // XX could force webtiles more when it is padded?
+    // hacky way of enforcing a min width for tiles when a more is visible.
+    // results in consistent popup widths. Only has an effect if the min
+    // width is explicitly set.
+    if (m_ui.menu->get_min_col_width() > 0)
+    {
+        shown_more = _pad_more_with(shown_more, formatted_string(""),
+                                            m_ui.menu->get_min_col_width());
+    }
+
+    if (!m_keyhelp_more)
+        m_ui.more->set_text(shown_more);
+
     bool show_more = !more.ops.empty();
-#ifdef USE_TILE_LOCAL
-    show_more = show_more && !m_keyhelp_more;
-#endif
     m_ui.more->set_visible(show_more);
 
 #ifdef USE_TILE_WEB
@@ -2071,8 +2115,9 @@ void Menu::update_more()
         return;
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
-    tiles.json_write_string("more",
-            m_keyhelp_more ? "" : shown_more.to_colour_string());
+    // the position templating is not sent to webtiles, because the client
+    // manages its own scroll
+    tiles.json_write_string("more", shown_more.to_colour_string());
     tiles.json_close_object();
     tiles.finish_message();
 #endif
@@ -2363,8 +2408,7 @@ void Menu::webtiles_write_menu(bool replace) const
 
     webtiles_write_title();
 
-    tiles.json_write_string("more",
-            m_keyhelp_more ? "" : more.to_colour_string());
+    tiles.json_write_string("more", more.to_colour_string());
 
     int count = items.size();
     int start = 0;
