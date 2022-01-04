@@ -253,7 +253,6 @@ public:
     bool        note_chat_messages; // log chat in Webtiles
     bool        note_dgl_messages; // log chat in DGL
     easy_confirm_type easy_confirm;    // make yesno() confirming easier
-    bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
     bool        always_use_static_spell_targeters; // whether to always use

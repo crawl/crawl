@@ -1860,9 +1860,7 @@ int prompt_invent_item(const char *prompt,
                     break;
             }
         }
-        else if (key_is_escape(keyin)
-                 || (Options.easy_quit_item_prompts
-                     && allow_easy_quit && keyin == ' '))
+        else if (key_is_escape(keyin) || allow_easy_quit && keyin == ' ')
         {
             ret = PROMPT_ABORT;
             break;
