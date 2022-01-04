@@ -1252,33 +1252,6 @@ void display_inventory()
     }
 }
 
-// Reads in digits for a count and apprends then to val, the
-// return value is the character that stopped the reading.
-static unsigned char _get_invent_quant(unsigned char keyin, int &quant)
-{
-    quant = keyin - '0';
-
-    while (true)
-    {
-        keyin = get_ch();
-
-        if (!isadigit(keyin))
-            break;
-
-        quant *= 10;
-        quant += (keyin - '0');
-
-        if (quant > 9999999)
-        {
-            quant = 9999999;
-            keyin = '\0';
-            break;
-        }
-    }
-
-    return keyin;
-}
-
 static string _drop_selitem_text(const vector<MenuEntry*> *s)
 {
     bool extraturns = false;
@@ -1336,126 +1309,23 @@ static string _drop_menu_titlefn(const Menu *m, const string &)
  */
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 {
-    unsigned char  keyin = '?'; // TODO: this should not be unsigned, get_ch returns a signed int!
-    int            ret = PROMPT_ABORT;
-
-    bool           need_redraw = false;
-    bool           need_prompt = true;
-    bool           need_getch  = false;
-
     vector<SelItem> items;
-    int count = -1;
-    while (true)
-    {
-        if (need_redraw && !crawl_state.doing_prev_cmd_again)
-        {
-            redraw_screen();
-            update_screen();
-            clear_messages();
-        }
 
-        if (need_prompt)
-        {
-            const string prompt = _drop_prompt(false, false);
-            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt.c_str());
-        }
+    // multi-select some items to drop
+    _invent_select("",
+                      menu_type::drop,
+                      OSEL_ANY,
+                      -1,
+                      MF_MULTISELECT | MF_ALLOW_FILTER,
+                      _drop_menu_titlefn,
+                      &items,
+                      &Options.drop_filter,
+                      _drop_selitem_text,
+                      &preselected_items);
 
-        if (need_getch)
-            keyin = get_ch();
+    for (SelItem &sel : items)
+        sel.slot = letter_to_index(sel.slot);
 
-        need_redraw = false;
-        need_prompt = true;
-        need_getch  = true;
-
-        if (keyin == '_')
-            show_specific_help("pick-up");
-        else if (keyin == '?' || keyin == '*' || keyin == ',')
-        {
-            // The "view inventory listing" mode.
-            const int ch = _invent_select("",
-                                          menu_type::drop,
-                                          OSEL_ANY,
-                                          -1,
-                                          MF_MULTISELECT | MF_ALLOW_FILTER,
-                                          _drop_menu_titlefn,
-                                          &items,
-                                          &Options.drop_filter,
-                                          _drop_selitem_text,
-                                          &preselected_items);
-
-            if (key_is_escape(ch))
-            {
-                keyin       = ch;
-                need_prompt = false;
-                need_getch  = false;
-            }
-            else
-            {
-                keyin       = 0;
-                need_prompt = true;
-                need_getch  = true;
-            }
-
-            if (!items.empty())
-            {
-                if (!crawl_state.doing_prev_cmd_again)
-                {
-                    redraw_screen();
-                    update_screen();
-                    clear_messages();
-                }
-
-                for (SelItem &sel : items)
-                    sel.slot = letter_to_index(sel.slot);
-                return items;
-            }
-
-            need_redraw = !(keyin == '?' || keyin == '*'
-                            || keyin == ',' || keyin == '+');
-        }
-        else if (isadigit(keyin))
-        {
-            // The "read in quantity" mode
-            keyin = _get_invent_quant(keyin, count);
-
-            need_prompt = false;
-            need_getch  = false;
-        }
-        else if (key_is_escape(keyin)
-                || (Options.easy_quit_item_prompts && keyin == ' '))
-        {
-            ret = PROMPT_ABORT;
-            break;
-        }
-        else if (isaalpha(keyin))
-        {
-            ret = letter_to_index(keyin);
-
-            if (!you.inv[ret].defined())
-                mpr("You don't have any such object.");
-            else
-                break;
-        }
-        else if (keyin == ';')
-        {
-            ret = you.last_unequip;
-            break;
-        }
-        else if (!isspace(keyin))
-        {
-            // We've got a character we don't understand...
-            canned_msg(MSG_HUH);
-        }
-        else
-        {
-            // We're going to loop back up, so don't draw another prompt.
-            need_prompt = false;
-        }
-    }
-
-    if (ret != PROMPT_ABORT)
-        items.emplace_back(ret, count, &you.inv[ret]);
     return items;
 }
 
