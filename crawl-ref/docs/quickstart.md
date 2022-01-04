@@ -82,13 +82,12 @@ available commands.
 There are several different types of items:
 
  - **Weapons**, represented by the `)` sign. Wield them with the `w` (wield)
-   command. Some weapons are cursed and cannot be un-wielded without the use of
-   magic.
+   command.
  - **Armour** (`[`). Wear it, or take it off, with the `W` (Wear) command.
-   Heavier armours give more protection, but may hamper your ability to fight,
-   dodge, and cast spells. These can also be cursed.
+   Heavier armours give more protection, but may hamper your ability to dodge
+   and cast spells.
  - **Ammunition** (which has the `(` sign). Throw it with `f` and `F` (fire).
-   Stones, tomahawks and javelins are meant to be thrown by hand; other
+   Stones, boomerangs and javelins are meant to be thrown by hand; other
    missiles need an appropriate launcher to be wielded (e.g. arrows are only
    effective when shot with a bow).
  - **Wands** (`/`), **Scrolls** (`?`) and **Potions** (`!`) can be very
@@ -99,8 +98,7 @@ There are several different types of items:
    physical appearance. But once you have used, for example, a potion of curing,
    you will in the future recognise all potions of curing.
  - **Rings** (`=`) and **Amulets** (`"`) provide various mostly-helpful effects.
-   They are put on with `P` (put on) and can be removed with `R`. They can, like
-   weapons, be cursed.
+   They are put on with `P` (put on) and can be removed with `R`.
  - **Money** (`$`) can be used to buy stuff in shops.
 
 There are a few other types of items, but you will discover these as you play.
@@ -139,8 +137,7 @@ Before long, you'll probably end up dead.
 Death in Crawl is permanent; you cannot just reload a saved game and start
 again where you left off. The `S` (save) command exists only to let you leave
 a game part-way through and come back to it later. Quitting (`Ctrl-Q`) lets
-you commit suicide if you can't even be bothered to help your character escape
-alive.
+you abandon a character if you can't even be bothered to help them escape alive.
 
 Well, that's it for the quick-start guide. This should help you through your
 first few games, but Crawl is extremely (some would say excessively) complex
