@@ -2419,8 +2419,7 @@ void bolt::affect_endpoint()
         set<coord_def> splash_coords = create_feat_splash(pos(), is_player ? 2 : 1, num, dur);
         dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
 
-        // Waterlog anything at the center, even if a pool wasn't generated
-        // there
+        // Waterlog anything at the center, even if a pool wasn't generated there
         splash_coords.insert(pos());
 
         if (is_player)
