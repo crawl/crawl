@@ -65,10 +65,6 @@ public:
     brand_type      damage_brand;
     skill_type      wpn_skill;
 
-    // Attacker's shield, stored so we can reference it and determine
-    // the attacker's combat effectiveness
-    item_def  *shield;
-
     // If weapon is an artefact, its properties.
     artefact_properties_t art_props;
 

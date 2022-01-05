@@ -57,7 +57,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       final_attack_delay(0), special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), ev_margin(0), weapon(nullptr),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
-      shield(nullptr), art_props(0), unrand_entry(nullptr),
+      art_props(0), unrand_entry(nullptr),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
       defender_shield(nullptr), fake_chaos_attack(false), simu(false),
@@ -381,7 +381,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
     to_hit          = calc_to_hit(true);
 
-    shield = attacker->shield();
     defender_shield = defender ? defender->shield() : defender_shield;
 
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
