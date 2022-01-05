@@ -1,6 +1,7 @@
 body {
     margin: 0px;
     overflow: hidden;
+    text-size-adjust: none;
 }
 
 #lobby {
@@ -1447,4 +1448,19 @@ fieldset.option button {
 div.settings-buttons button {
     width: 50%;
     margin: 2px;
+}
+
+#mobile_input {
+    position: relative;
+    height: 0px;
+    bottom: 25px;
+}
+
+#mobile_input input {
+    background: rgba(0, 0, 0, 0.5);
+    color: #A2A2A280;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #62626280;
+    height: 13px;
 }

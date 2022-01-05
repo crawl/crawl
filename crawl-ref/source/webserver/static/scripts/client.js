@@ -255,8 +255,6 @@ function (exports, $, key_conversion, chat, comm) {
             send_message("input", { text: s });
     }
 
-    exports.handle_keypress = handle_keypress;
-
     function send_keycode(code)
     {
         /* TODO: Use send_message for these as soon as crawl uses a proper
@@ -421,8 +419,6 @@ function (exports, $, key_conversion, chat, comm) {
             //    log("Key: " + e.which);
         }
     }
-
-    exports.handle_keydown = handle_keydown;
 
     function start_login()
     {
@@ -1712,30 +1708,6 @@ function (exports, $, key_conversion, chat, comm) {
     {
         return x > 0 ? x : -x;
     }
-
-    function is_mobile()
-    {
-        return ('ontouchstart' in document.documentElement);
-    }
-    function handle_mobile_input(e)
-    {
-        e.target.value = e.target.defaultValue;
-        if (e.originalEvent.data.length === 1)
-        {
-            var keypress = {
-                "ctrlKey": false,
-                "altKey": false,
-                "which": e.originalEvent.data.charCodeAt(0),
-                "preventDefault": function() {},
-                "isDefaultPrevented": function() { return false; },
-                "isPropagationStopped": function() { return false; }
-            };
-            handle_keypress(keypress);
-        }
-    }
-
-    exports.is_mobile = is_mobile;
-    exports.handle_mobile_input = handle_mobile_input;
 
     return exports;
 });

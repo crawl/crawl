@@ -146,11 +146,11 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
         if (!client.is_watching())
         {
             var mobile_input = options.get("tile_web_mobile_input_helper");
-            if ((mobile_input === 'true') || (mobile_input === 'auto' && client.is_mobile()))
+            if ((mobile_input === 'true') || (mobile_input === 'auto' && is_mobile()))
             {
                 $("#mobile_input").show();
                 $("#mobile_input input").off("input");
-                $("#mobile_input input").on("input", client.handle_mobile_input);
+                $("#mobile_input input").on("input", handle_mobile_input);
             }
         }
     }
@@ -325,6 +325,17 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
             glyph_mode_font: glyph_font
         };
         $.extend(dungeon_renderer, renderer_settings);
+    }
+
+    function is_mobile()
+    {
+        return ('ontouchstart' in document.documentElement);
+    }
+
+    function handle_mobile_input(e)
+    {
+        e.target.value = e.target.defaultValue;
+        comm.send_message("input", { text: e.originalEvent.data });
     }
 
     $(document).ready(function () {

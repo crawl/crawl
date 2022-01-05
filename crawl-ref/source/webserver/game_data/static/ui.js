@@ -85,7 +85,9 @@ function ($, comm, client, options, focus_trap) {
     {
         // I think this is for filtering clicks to the chat window, which is
         // supposed to work even with a popup in place
-        return ($(ev.target).closest("#game").length !== 1)
+        return ($(ev.target).closest("#game").length !== 1 ||
+        // Also allow zooming and scrolling on mobile browsers
+            ev.type === 'touchstart');
     }
 
     function popup_clickoutside_handler(ev)
