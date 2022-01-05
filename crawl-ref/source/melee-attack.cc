@@ -1393,7 +1393,7 @@ void melee_attack::player_warn_miss()
 {
     did_hit = false;
 
-    mprf("You %s miss %s.",
+    mprf("You%s miss %s.",
          evasion_margin_adverb().c_str(),
          defender->name(DESC_THE).c_str());
 }
