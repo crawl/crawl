@@ -9,19 +9,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function fmt_body_txt(txt)
     {
         return txt
-            // preserve all leading spaces
-            .split("\n")
-            .map(function (s) { return s.replace(/^\s+/, function (m)
-                    {
-                        // TODO: or mark as preformatted? something else?
-                        return m.replace(/\s/g, "&nbsp;");
-                    }).trim();
-                })
-            .join("\n")
             // convert double linebreaks into paragraph markers
             .split("\n\n")
-            .map(function (s) { return "<p>" + s + "</p>"; })
-            .filter(function (s) { return s !== "<p></p>"; })
+            .map(function (s) { return "<pre>" + s + "</pre>"; })
+            .filter(function (s) { return s !== "<pre></pre>"; })
             .join("")
             // replace single linebreaks with manual linebreaks
             .split("\n")

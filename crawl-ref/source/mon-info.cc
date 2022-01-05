@@ -882,7 +882,7 @@ string monster_info::get_max_hp_desc() const
         mhp *= slime_size;
 
     mhp /= scale;
-    return make_stringf("about %d", mhp);
+    return make_stringf("~%d", mhp);
 }
 
 /**

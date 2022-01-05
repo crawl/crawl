@@ -55,7 +55,7 @@ static bool _items_similar(const item_def& a, const item_def& b,
 static vector<string> _desc_hit_chance(const monster_info &mi)
 {
     ostringstream result;
-    describe_to_hit(mi, result, false, you.weapon());
+    describe_to_hit(mi, result, you.weapon());
     string str = result.str();
     if (str.empty())
         return vector<string>{};

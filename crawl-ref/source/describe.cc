@@ -5105,7 +5105,7 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param result[in,out]    The stringstream to append to.
  */
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     bool parenthesize, const item_def* weapon)
+                     const item_def* weapon)
 {
     if (weapon != nullptr && !is_weapon(*weapon))
         return; // breadwielding
@@ -5126,15 +5126,11 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
         acc_pct = to_hit_pct(mi, attk, false);
     }
 
-    if (parenthesize)
-        result << " (";
     result << "about " << (100 - acc_pct) << "% to evade ";
     if (weapon == nullptr)
         result << "your " << you.hand_name(true);
     else
         result << weapon->name(DESC_YOUR, false, false, false);
-    if (parenthesize)
-        result << ")";
 }
 
 static bool _visible_to(const monster_info& mi)
@@ -5253,63 +5249,78 @@ static void _print_bar(int value, int scale, const string &name,
 #endif
 }
 
-/**
- * Append information about a given monster's HP to the provided stream.
- *
- * @param mi[in]            Player-visible info about the monster in question.
- * @param result[in,out]    The stringstream to append to.
- */
-static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
+static string _padded(string str, int pad_to)
 {
-    result << "Max HP: " << mi.get_max_hp_desc() << "\n";
+    const int padding = pad_to - str.length();
+    if (padding > 0)
+        str.append(padding, ' ');
+    return str;
 }
 
-/**
- * Append information about a given monster's AC to the provided stream.
- *
- * @param mi[in]            Player-visible info about the monster in question.
- * @param result[in,out]    The stringstream to append to.
- */
-static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
+static string _build_bar(int value, int scale)
 {
-    // MAX_GHOST_EVASION + two pips (so with EV in parens it's the same)
-    _print_bar(mi.ac, 5, "    AC:", result);
-    result << "\n";
-}
+    const int pips = value / scale;
+    if (pips == 0)
+        return "none";
+    if (pips > 8) // too many..
+        return make_stringf("~%d", pips * scale);
 
-/**
- * Append information about a given monster's EV to the provided stream.
- *
- * @param mi[in]            Player-visible info about the monster in question.
- * @param result[in,out]    The stringstream to append to.
- */
-static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
-{
-    _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
-    if (crawl_state.game_started)
-        describe_to_hit(mi, result, true, you.weapon());
-    result << "\n";
-}
-
-/**
- * Append information about a given monster's WL to the provided stream.
- *
- * @param mi[in]            Player-visible info about the monster in question.
- * @param result[in,out]    The stringstream to append to.
- */
-static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
-{
-    if (mi.willpower() == WILL_INVULN)
-    {
-        result << (Options.char_set == CSET_ASCII
-                        ? "  Will: \u221e\n" // ∞
-                        : "  Will: inf\n");
-        return;
+    string bar = "";
+    bar.append(min(pips, 4), '+');
+    // Add a space in the middle of long bars,
+    // for readability.
+    if (pips > 4) {
+        bar += " ";
+        bar.append(min(pips - 4, 4), '+');
     }
+    return bar;
+}
 
-    const int bar_scale = WL_PIP;
-    _print_bar(mi.willpower(), bar_scale, "  Will:", result);
-    result << "\n";
+/**
+ * Returns a description of a given monster's max HP.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ */
+static string _describe_monster_hp(const monster_info& mi)
+{
+    return "Max HP: " + mi.get_max_hp_desc();
+}
+
+/**
+ * Returns a description of a given monster's AC.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ */
+static string _describe_monster_ac(const monster_info& mi)
+{
+    return "AC: " + _build_bar(mi.ac, 5);
+}
+
+/**
+ * Returns a description of a given monster's EV.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ */
+static string _describe_monster_ev(const monster_info& mi)
+{
+    return "EV: " + _build_bar(mi.base_ev, 5);
+}
+
+/**
+ * Returns a description of a given monster's WL.
+ *
+ * @param mi[in]            Player-visible info about the monster in question.
+ */
+static string _describe_monster_wl(const monster_info& mi)
+{
+    const int will = mi.willpower();
+    if (will == WILL_INVULN)
+    {
+        if (Options.char_set == CSET_ASCII)
+            return "Will: inf";
+        return "Will: ∞";
+    }
+    return "Will: " + _build_bar(will, WL_PIP);
 }
 
 /**
@@ -5412,12 +5423,31 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     ostringstream result;
 
-    _describe_monster_hp(mi, result);
-    _describe_monster_ac(mi, result);
-    _describe_monster_ev(mi, result);
-    _describe_monster_wl(mi, result);
+    result << _padded(_describe_monster_hp(mi), 21);  // worst case is "Max HP: ~9999"
+                                                      // len 13, then 3 spaces after
+    result << _padded(_describe_monster_ac(mi), 22);  // "AC: ++++ ++++" 13 again
+    result << _padded(_describe_monster_ev(mi), 22);  // "EV*: ++++ ++++" 14
+    result << _padded(_describe_monster_wl(mi), 15);  // "Will: +++++" 11
+                                                      // total 80 (?)
 
-    result << "\n";
+    // TODO: add speed here
+
+    if (crawl_state.game_started)
+    {
+        result << "\n" << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+               << " " << conjugate_verb("have", mi.pronoun_plurality())
+               << " ";
+        describe_to_hit(mi, result, you.weapon());
+        if (mi.base_ev != mi.ev)
+        {
+            if (!mi.ev)
+                result << " (while incapacitated)";
+            else
+                result << " (at present)";
+        }
+        result << ".";
+    }
+    result << "\n\n";
 
     resists_t resist = mi.resists();
 
