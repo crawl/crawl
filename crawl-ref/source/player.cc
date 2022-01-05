@@ -4698,21 +4698,27 @@ bool invis_allowed(bool quiet, string *fail_reason)
 
     if (you.haloed() && you.halo_radius() != -1)
     {
-        bool divine = you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
-                      || you.religion == GOD_SHINING_ONE;
-        bool weapon = player_equip_unrand(UNRAND_EOS);
-        string reason;
+        vector<string> sources;
 
-        if (divine && weapon)
-            reason = "Your weapon and divine halo glow too brightly";
-        else if (divine)
-            reason = "Your divine halo glows too radiantly";
-        else if (weapon)
-            reason = "Your weapon shines too brightly";
-        else
+        if (player_equip_unrand(UNRAND_EOS))
+            sources.push_back("weapon");
+
+        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+            sources.push_back("orb");
+
+        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+            || you.religion == GOD_SHINING_ONE)
+        {
+            sources.push_back("divine halo");
+        }
+
+        if (sources.empty())
             die("haloed by an unknown source");
 
-        msg = reason + " to become invisible.";
+
+        msg = "Your " + comma_separated_line(sources.begin(), sources.end())
+              + " glow" + (sources.size() == 1 ? "s" : "")
+              + " too brightly to become invisible.";
         success = false;
     }
     else if (you.backlit())
