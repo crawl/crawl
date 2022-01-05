@@ -3263,9 +3263,9 @@ void display_char_status()
     const int halo_size = you.halo_radius();
     if (halo_size >= 0)
     {
-        if (halo_size > 37)
+        if (halo_size > 5)
             mpr("You are illuminated by a large divine halo.");
-        else if (halo_size > 10)
+        else if (halo_size > 3)
             mpr("You are illuminated by a divine halo.");
         else
             mpr("You are illuminated by a small divine halo.");
