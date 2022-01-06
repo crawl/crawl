@@ -147,14 +147,14 @@ static const armour_def Armour_prop[] =
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_ORB,              "orb",                0,  0,   90,
+    { ARM_ORB,                 "orb",                     0,   0,   90,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_GIANT, true },
-    { ARM_BUCKLER,              "buckler",                3,  -8,   45,
+    { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
-    { ARM_KITE_SHIELD,               "kite shield",                 8,  -30,  45,
-        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true    },
-    { ARM_TOWER_SHIELD,         "tower shield",          13,  -50,  45,
-        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true  },
+    { ARM_KITE_SHIELD,         "kite shield",             8, -100,  45,
+        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true },
+    { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  45,
+        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true },
 
     // Following all ARM_ entries for the benefit of util/gather_items
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,

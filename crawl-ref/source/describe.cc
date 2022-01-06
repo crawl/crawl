@@ -1030,8 +1030,6 @@ static int _item_training_target(const item_def &item)
     const int throw_dam = property(item, PWPN_DAMAGE);
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
         return weapon_min_delay_skill(item) * 10;
-    else if (is_shield(item))
-        return round(you.get_shield_skill_to_offset_penalty(item) * 10);
     else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
     else
@@ -1086,7 +1084,7 @@ static bool _is_below_training_target(const item_def &item, bool ignore_current)
 
 /**
  * Produce the "Your skill:" line for item descriptions where specific skill targets
- * are relevant (weapons, missiles, shields)
+ * are relevant (weapons, missiles)
  *
  * @param skill the skill to look at.
  * @param show_target_button whether to show the button for setting a skill target.
@@ -1827,32 +1825,10 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         if (is_shield(item))
         {
-            const int target_skill = _item_training_target(item);
-            description += "\n";
-            description += "\nBase shield rating: "
+            description += "\n\nBase shield rating: "
                         + to_string(property(item, PARM_AC));
-            const bool below_target = _is_below_training_target(item, true);
-            const bool can_set_target = below_target && in_inventory(item)
-                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-
-            if (!is_useless_item(item))
-            {
-                description += "       Skill to remove penalty: "
-                            + make_stringf("%d.%d", target_skill / 10,
-                                                target_skill % 10) + "\n";
-
-                if (crawl_state.need_save)
-                {
-                    description += _your_skill_desc(SK_SHIELDS, can_set_target,
-                                                    target_skill);
-                }
-                if (below_target)
-                {
-                    _append_skill_target_desc(description, SK_SHIELDS,
-                                                                target_skill);
-                }
-            }
-
+            description += "       Encumbrance rating: "
+                        + to_string(-property(item, PARM_EVASION) / 10);
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
                 description += _warlock_mirror_reflect_desc();
         }

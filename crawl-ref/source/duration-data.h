@@ -622,7 +622,6 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
       "You are constricted by grasping roots.", D_NO_FLAGS},
-    { DUR_SHAFT_IMMUNITY, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_NOXIOUS_BOG,
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
@@ -682,5 +681,6 @@ static const duration_def duration_data[] =
     { DUR_DEVICE_SURGE, 0, "", "", "old device surge", "", D_NO_FLAGS},
     { DUR_LIFESAVING, 0, "", "", "old lifesaving", "", D_NO_FLAGS},
     { DUR_MIRROR_DAMAGE, 0, "", "", "old injury mirror", "", D_NO_FLAGS},
+    { DUR_SHAFT_IMMUNITY, 0, "", "", "old shaft immunity", "", D_NO_FLAGS, {{""}}},
 #endif
 };

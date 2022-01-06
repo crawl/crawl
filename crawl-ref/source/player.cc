@@ -1936,10 +1936,8 @@ static int _player_evasion_size_factor(bool base = false)
 // other medium-sized races)
 int player_shield_racial_factor()
 {
-    const int ev_factor = you.has_mutation(MUT_QUADRUMANOUS)
-                                        ? -2 // Same as trolls, etc.
-                                        : _player_evasion_size_factor(true);
-    return max(1, 5 + ev_factor);
+    return you.has_mutation(MUT_QUADRUMANOUS) ? -2 // Same as trolls, etc.
+           : _player_evasion_size_factor(true);
 }
 
 
@@ -3263,9 +3261,9 @@ void display_char_status()
     const int halo_size = you.halo_radius();
     if (halo_size >= 0)
     {
-        if (halo_size > 37)
+        if (halo_size > 5)
             mpr("You are illuminated by a large divine halo.");
-        else if (halo_size > 10)
+        else if (halo_size > 3)
             mpr("You are illuminated by a divine halo.");
         else
             mpr("You are illuminated by a small divine halo.");
@@ -4700,21 +4698,27 @@ bool invis_allowed(bool quiet, string *fail_reason)
 
     if (you.haloed() && you.halo_radius() != -1)
     {
-        bool divine = you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
-                      || you.religion == GOD_SHINING_ONE;
-        bool weapon = player_equip_unrand(UNRAND_EOS);
-        string reason;
+        vector<string> sources;
 
-        if (divine && weapon)
-            reason = "Your weapon and divine halo glow too brightly";
-        else if (divine)
-            reason = "Your divine halo glows too radiantly";
-        else if (weapon)
-            reason = "Your weapon shines too brightly";
-        else
+        if (player_equip_unrand(UNRAND_EOS))
+            sources.push_back("weapon");
+
+        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+            sources.push_back("orb");
+
+        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+            || you.religion == GOD_SHINING_ONE)
+        {
+            sources.push_back("divine halo");
+        }
+
+        if (sources.empty())
             die("haloed by an unknown source");
 
-        msg = reason + " to become invisible.";
+
+        msg = "Your " + comma_separated_line(sources.begin(), sources.end())
+              + " glow" + (sources.size() == 1 ? "s" : "")
+              + " too brightly to become invisible.";
         success = false;
     }
     else if (you.backlit())
@@ -5586,25 +5590,10 @@ int player::adjusted_shield_penalty(int scale) const
     if (!shield_l)
         return 0;
 
-    const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
-    return max(0, ((base_shield_penalty * scale) - skill(SK_SHIELDS, scale)
-                  / player_shield_racial_factor() * 10) / 10);
-}
-
-float player::get_shield_skill_to_offset_penalty(const item_def &item)
-{
-    int evp = property(item, PARM_EVASION);
-    return -1 * evp * player_shield_racial_factor() / 10.0;
-}
-
-int player::armour_tohit_penalty(bool random_factor, int scale) const
-{
-    return maybe_roll_dice(1, adjusted_body_armour_penalty(scale), random_factor);
-}
-
-int player::shield_tohit_penalty(bool random_factor, int scale) const
-{
-    return maybe_roll_dice(1, adjusted_shield_penalty(scale), random_factor);
+    const int base_shield_penalty = -property(*shield_l, PARM_EVASION) / 10;
+    return 2 * base_shield_penalty * base_shield_penalty
+           * (270 - skill(SK_SHIELDS, 10)) * scale
+           / (5 * (20 - 3 * player_shield_racial_factor())) / 270;
 }
 
 /**
@@ -6438,10 +6427,9 @@ bool player::no_tele(bool blinking) const
     return !no_tele_reason(blinking).empty();
 }
 
-bool player::fights_well_unarmed(int heavy_armour_penalty)
+bool player::fights_well_unarmed()
 {
-    return x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200)
-        && x_chance_in_y(2, 1 + heavy_armour_penalty);
+    return x_chance_in_y(30 + skill(SK_UNARMED_COMBAT, 10), 600);
 }
 
 bool player::racial_permanent_flight() const
@@ -7300,8 +7288,7 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 bool player::shaftable(bool check_terrain) const
 {
     return is_valid_shaft_level()
-        && (!check_terrain || feat_is_shaftable(env.grid(pos())))
-        && !duration[DUR_SHAFT_IMMUNITY];
+        && (!check_terrain || feat_is_shaftable(env.grid(pos())));
 }
 
 // Used for falling into traps and other bad effects, but is a slightly
@@ -7315,7 +7302,6 @@ bool player::do_shaft(bool check_terrain)
     // the player gets shafted are correctly registered.
     maybe_update_stashes();
 
-    duration[DUR_SHAFT_IMMUNITY] = 1;
     down_stairs(DNGN_TRAP_SHAFT);
 
     return true;

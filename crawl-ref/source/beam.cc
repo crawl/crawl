@@ -129,7 +129,8 @@ bool bolt::is_blockable() const
 bool bolt::is_omnireflectable() const
 {
     return !is_explosion && flavour != BEAM_VISUAL
-            && origin_spell != SPELL_GLACIATE;
+            && origin_spell != SPELL_GLACIATE
+            && flavour != BEAM_VAMPIRIC_DRAINING; // buggy :(
 }
 
 void bolt::emit_message(const char* m)

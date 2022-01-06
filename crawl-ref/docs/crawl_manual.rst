@@ -836,21 +836,20 @@ casting certain spells, and is described in detail in section I (Targeting).
 This is also rather important. Most worn armour improves your Armour Class,
 which decreases the amount of damage you take from most types of injury. The
 heavier an armour is, the more AC (armour class) it will provide, at the expense
-of your EV (evasion) and stealth. Heavier types of armour also hamper your melee
-accuracy, making it harder for you to hit monsters. Wearing heavy armour also
-increases your chances of miscasting spells, an effect which is only slightly
-reduced by your Armour skill. These penalties are larger if you have low
-Strength.
+of your EV (evasion) and stealth. Wearing heavy armour also increases your
+chances of miscasting spells, an effect which is only slightly reduced by your
+Armour skill. These penalties are larger if you have low Strength.
 
 A shield normally increases neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
-shield (especially larger shields) with insufficient Shields skill makes you
-less effective in hand combat and hampers your ability to cast spells. It also
-lowers your evasion if you do not have sufficient skill, and you obviously
-cannot wield a two-handed weapon while wearing a shield. Shields are most
-effective against the first attack on you each turn and become less useful for
-every one after that. There are three types: bucklers, kite shields, and tower
-shields, going from smallest to largest.
+shield (especially larger shields) slows your attacks, hampers your ability to
+cast spells, and lowers your evasion. Small species are more strongly affected
+by these penalties, and large species are less affected, but all species can
+reduce and eventually eliminate these penalties by mastering the Shields skill.
+You also obviously cannot wield a two-handed weapon while wearing a shield.
+Shields are most effective against the first attack on you each turn and become
+less useful for every one after that. There are three types: bucklers, kite
+shields, and tower shields, going from smallest to largest.
 
 Some magical armours have special powers. These powers are sometimes automatic,
 affecting you whenever you wear the armour, and sometimes must be activated with
@@ -1973,7 +1972,7 @@ Warrior backgrounds
 Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
-  Fighters usually start with a good weapon of their choice, a suit of heavy
+  Fighters usually start with a good weapon of their choice, a suit of medium
   armour, a shield, and a potion of might. They have a good general grounding
   in the arts of fighting.
 
@@ -2237,19 +2236,10 @@ Miscellaneous skills
 ========================================
 
 Armour
-  Heavier body armours give more reliable protection from damage but have
-  several disadvantages.
-
-  Having a high Armour skill means that you are used to wearing heavy armour,
-  allowing you to move more freely and gain more protection. When you look at an
-  armour's description (from within the inventory), you can see in particular
-  how cumbersome it is. This is measured by the encumbrance rating.
-
-  This skill slightly helps to overcome the evasion penalty of body armours,
-  reduce the amount by which heavy armour hampers melee fighting, and mitigate
-  the bad effects of heavy armour on spellcasting. Mainly, though, it increases
-  the AC provided by all types of armour (including gloves, cloaks, etc. as
-  well as body armour).
+  Having a high Armour skill means that you are skilled at wearing armour of all
+  kinds, multiplying the protection provided not just by body armour but also
+  by cloaks, gloves, etc. It also very slightly mitigates the penalties to
+  spellcasting from wearing heavy armour.
 
 Dodging
   A high Dodging skill helps you to evade melee and ranged attacks more
@@ -2277,9 +2267,7 @@ Stealth
 
 Shields
   Affects the amount of protection you gain by using a shield, and the degree to
-  which it hinders you. Examining a shield will show the amount of skill needed
-  to completely compensate for its encumbrance - larger species need less skill
-  and smaller species more.
+  which it hinders your evasion, attack speed and spellcasting success.
 
 Invocations
   Affects your ability to call on your god for aid. Those skilled at Invocations

@@ -65,10 +65,6 @@ public:
     brand_type      damage_brand;
     skill_type      wpn_skill;
 
-    // Attacker's shield, stored so we can reference it and determine
-    // the attacker's combat effectiveness
-    item_def  *shield;
-
     // If weapon is an artefact, its properties.
     artefact_properties_t art_props;
 
@@ -83,10 +79,6 @@ public:
     string     special_damage_message;
     string     aux_attack, aux_verb;
 
-    // Combined to-hit penalty from armour and shield.
-    int             attacker_armour_tohit_penalty;
-    int             attacker_shield_tohit_penalty;
-
     item_def        *defender_shield;
 
     bool      fake_chaos_attack;
@@ -100,7 +92,8 @@ public:
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool random);
     int calc_pre_roll_to_hit(bool random);
-    virtual int post_roll_to_hit_modifiers(int mhit, bool random);
+    virtual int post_roll_to_hit_modifiers(int mhit, bool random,
+                                           bool /*aux*/ = false);
 
     // Exact copies of their melee_attack predecessors
     string actor_name(const actor *a, description_level_type desc,
@@ -139,7 +132,6 @@ protected:
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
     virtual int calc_damage();
-    void calc_encumbrance_penalties(bool random);
     int lighting_effects();
     int test_hit(int to_hit, int ev, bool randomise_ev);
     int apply_defender_ac(int damage, int damage_max = 0,
@@ -195,7 +187,8 @@ protected:
     virtual int  player_apply_fighting_skill(int damage, bool aux);
     virtual int  player_apply_misc_modifiers(int damage);
     virtual int  player_apply_slaying_bonuses(int damage, bool aux);
-    virtual int  player_apply_final_multipliers(int damage);
+    virtual int  player_apply_final_multipliers(int damage,
+                                                bool /*aux*/ = false);
 
     virtual void player_exercise_combat_skills();
 

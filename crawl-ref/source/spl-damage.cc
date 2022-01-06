@@ -1783,9 +1783,9 @@ spret cast_scorch(int pow, bool fail)
 
     you.pet_target = targ->mindex();
 
-    if (damage > 0 && !targ->has_ench(ENCH_FIRE_VULN))
+    if (damage > 0)
     {
-        if (you.can_see(*targ))
+        if (you.can_see(*targ) && !targ->has_ench(ENCH_FIRE_VULN))
         {
             mprf("%s fire resistance burns away.",
                  targ->name(DESC_ITS).c_str());

@@ -51,7 +51,8 @@ public:
     // Applies attack damage and other effects.
     bool attack();
     int calc_to_hit(bool random) override;
-    int post_roll_to_hit_modifiers(int mhit, bool random) override;
+    int post_roll_to_hit_modifiers(int mhit, bool random,
+                                   bool aux = false) override;
 
     static void chaos_affect_actor(actor *victim);
 
@@ -142,7 +143,7 @@ private:
     bool player_aux_apply(unarmed_attack_type atk);
 
     int  player_apply_misc_modifiers(int damage) override;
-    int  player_apply_final_multipliers(int damage) override;
+    int  player_apply_final_multipliers(int damage, bool aux = false) override;
 
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
@@ -152,14 +153,13 @@ private:
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();
-    string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
-    int calc_your_to_hit_unarmed();
+    int calc_your_to_hit_aux_unarmed();
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
                                      bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);

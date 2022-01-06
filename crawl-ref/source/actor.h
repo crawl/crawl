@@ -144,10 +144,7 @@ public:
 
     virtual bool fumbles_attack() = 0;
 
-    virtual bool fights_well_unarmed(int /*heavy_armour_penalty*/)
-    {
-        return true;
-    }
+    virtual bool fights_well_unarmed() { return true; }
     virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
@@ -257,8 +254,6 @@ public:
     virtual int unadjusted_body_armour_penalty() const = 0;
     virtual int adjusted_body_armour_penalty(int scale = 1) const = 0;
     virtual int adjusted_shield_penalty(int scale) const = 0;
-    virtual int armour_tohit_penalty(bool random_factor, int scale = 1) const = 0;
-    virtual int shield_tohit_penalty(bool random_factor, int scale = 1) const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 

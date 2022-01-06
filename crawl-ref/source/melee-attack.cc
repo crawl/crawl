@@ -1159,20 +1159,15 @@ bool melee_attack::player_gets_aux_punch()
     if (!get_form()->can_offhand_punch())
         return false;
 
-    // roll for punch chance based on uc skill & armour penalty
-    if (!attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                       + attacker_shield_tohit_penalty))
-    {
+    if (!attacker->fights_well_unarmed())
         return false;
-    }
 
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
     if (you.arm_count() <= 2 && !you.has_usable_offhand())
         return false;
 
-    // Octopodes get more tentacle-slaps.
-    return x_chance_in_y(you.arm_count() > 2 ? 3 : 2, 6);
+    return true;
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -1230,7 +1225,8 @@ bool melee_attack::player_aux_unarmed()
         if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender, true))
             continue;
 
-        to_hit = random2(calc_your_to_hit_unarmed());
+        to_hit = random2(calc_your_to_hit_aux_unarmed());
+        to_hit += post_roll_to_hit_modifiers(to_hit, false, true);
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -1280,7 +1276,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
         aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
 
-        aux_damage  = player_apply_final_multipliers(aux_damage);
+        aux_damage  = player_apply_final_multipliers(aux_damage, true);
 
         if (atk == UNAT_CONSTRICT)
             aux_damage = 0;
@@ -1393,39 +1389,12 @@ void melee_attack::player_announce_aux_hit()
          attack_strength_punctuation(damage_done).c_str());
 }
 
-string melee_attack::player_why_missed()
-{
-    const int ev = defender->evasion(false, attacker);
-    // We roll (random2) these penalties before comparing them to EV.
-    // Thus, on average, they're effectively half as large.
-    const int adj_armour_penalty = div_rand_round(attacker_armour_tohit_penalty, 2);
-    const int adj_shield_penalty = div_rand_round(attacker_shield_tohit_penalty, 2);
-    const int combined_penalty = adj_armour_penalty + adj_shield_penalty;
-    if (to_hit >= ev || to_hit + combined_penalty < ev)
-        return "You" + evasion_margin_adverb() + " miss ";
-
-    const bool armour_miss =
-        adj_armour_penalty && to_hit + adj_armour_penalty >= ev;
-    const bool shield_miss =
-        adj_shield_penalty && to_hit + adj_shield_penalty >= ev;
-
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    const string armour_name = armour ? armour->name(DESC_BASENAME)
-                                      : string("armour");
-
-    if (armour_miss && !shield_miss)
-        return "Your " + armour_name + " prevents you from hitting ";
-    if (shield_miss && !armour_miss)
-        return "Your shield prevents you from hitting ";
-    return "Your shield and " + armour_name + " prevent you from hitting ";
-}
-
 void melee_attack::player_warn_miss()
 {
     did_hit = false;
 
-    mprf("%s%s.",
-         player_why_missed().c_str(),
+    mprf("You%s miss %s.",
+         evasion_margin_adverb().c_str(),
          defender->name(DESC_THE).c_str());
 }
 
@@ -1444,7 +1413,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 // get affected by such multipliers, but putting them at the end is the
 // simplest effect to understand if they aren't just going to be applied
 // to the base damage of the weapon.
-int melee_attack::player_apply_final_multipliers(int damage)
+int melee_attack::player_apply_final_multipliers(int damage, bool aux)
 {
     // cleave damage modifier
     if (cleaving)
@@ -1473,7 +1442,7 @@ int melee_attack::player_apply_final_multipliers(int damage)
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
 
-    if (you.duration[DUR_CONFUSING_TOUCH])
+    if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
 
     return damage;
@@ -2224,12 +2193,12 @@ int melee_attack::calc_to_hit(bool random)
     return mhit;
 }
 
-int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
+int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random, bool aux)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 
     // Just trying to touch is easier than trying to damage.
-    if (you.duration[DUR_CONFUSING_TOUCH])
+    if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         modifiers += maybe_random_div(you.dex(), 2, random);
 
     // Rolling charges feel bad when they miss, so make them miss less often.
@@ -3127,14 +3096,10 @@ void melee_attack::mons_do_eyeball_confusion()
 void melee_attack::mons_do_tendril_disarm()
 {
     monster* mon = attacker->as_monster();
-    // some rounding errors here, but not significant
-    const int adj_mon_hd = mon->is_fighter() ? mon->get_hit_dice() * 3 / 2
-                                             : mon->get_hit_dice();
 
     if (you.get_mutation_level(MUT_TENDRILS)
         && one_chance_in(5)
-        && (random2(you.dex()) > adj_mon_hd
-            || random2(you.strength()) > adj_mon_hd))
+        && !x_chance_in_y(mon->get_hit_dice(), 35))
     {
         item_def* mons_wpn = mon->disarm();
         if (mons_wpn)
@@ -3269,7 +3234,7 @@ void melee_attack::do_minotaur_retaliation()
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = you.get_mutation_level(MUT_HORNS);
 
-    if (5 * you.strength() + 7 * you.dex() > random2(600))
+    if (x_chance_in_y(45 + you.experience_level * 2, 200))
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
@@ -3278,7 +3243,7 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_apply_fighting_skill(dmg, true);
         dmg = player_apply_misc_modifiers(dmg);
         dmg = player_apply_slaying_bonuses(dmg, true);
-        dmg = player_apply_final_multipliers(dmg);
+        dmg = player_apply_final_multipliers(dmg, true);
         int hurt = attacker->apply_ac(dmg);
 
         mpr("You furiously retaliate!");
@@ -3484,7 +3449,7 @@ void melee_attack::chaos_affect_actor(actor *victim)
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
     if (atk != UNAT_CONSTRICT && atk != UNAT_TOUCH
-        && you.strength() + you.dex() <= random2(50))
+        && 30 + you.experience_level <= random2(60))
     {
         return false;
     }
@@ -3551,7 +3516,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 // to-hit method
 // Returns the to-hit for your extra unarmed attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
-int melee_attack::calc_your_to_hit_unarmed()
+int melee_attack::calc_your_to_hit_aux_unarmed()
 {
     int your_to_hit;
 
@@ -3560,15 +3525,10 @@ int melee_attack::calc_your_to_hit_unarmed()
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
-    your_to_hit -= 5 * you.inaccuracy();
-
     if (you.get_mutation_level(MUT_EYEBALLS))
         your_to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
     if (you.duration[DUR_VERTIGO])
-        your_to_hit -= 5;
-
-    if (you.confused())
         your_to_hit -= 5;
 
     your_to_hit += slaying_bonus();
