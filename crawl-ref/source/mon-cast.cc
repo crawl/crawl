@@ -1657,7 +1657,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SWIFTNESS:
 #endif
     case SPELL_CREATE_TENTACLES:
-    case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_CHAIN_OF_CHAOS:
     case SPELL_SUMMON_EYEBALLS:
@@ -5992,103 +5991,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                             silenced(you.pos()) || silenced(mons->pos()));
         }
         break;
-    }
-
-    case SPELL_TOMB_OF_DOROKLOHE:
-    {
-        sumcount = 0;
-
-        const int hp_lost = mons->max_hit_points - mons->hit_points;
-
-        if (!hp_lost)
-            sumcount++;
-
-        // This code is so dubious...
-        static const set<dungeon_feature_type> safe_tiles =
-        {
-            DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-            DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR, DNGN_BROKEN_CLEAR_DOOR,
-        };
-
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-        {
-            const actor* act = actor_at(*ai);
-
-            // We can blink away the crowd, but only our allies.
-            if (act
-                && (act->is_player()
-                    || (act->is_monster()
-                        && act->as_monster()->attitude != mons->attitude)))
-            {
-                sumcount++;
-            }
-
-            // Make sure we have a legitimate tile.
-            if (!safe_tiles.count(env.grid(*ai)) && !feat_is_trap(env.grid(*ai))
-                && feat_is_reachable_past(env.grid(*ai)))
-            {
-                sumcount++;
-            }
-        }
-
-        if (sumcount)
-        {
-            mons->blink();
-            return;
-        }
-
-        sumcount = 0;
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-        {
-            if (monster_at(*ai))
-            {
-                monster_at(*ai)->blink();
-                if (monster_at(*ai))
-                {
-                    monster_at(*ai)->teleport(true);
-                    if (monster_at(*ai))
-                        continue;
-                }
-            }
-
-            // Make sure we have a legitimate tile.
-            if (safe_tiles.count(env.grid(*ai)) || feat_is_trap(env.grid(*ai)))
-            {
-                // All items are moved inside.
-                if (env.igrid(*ai) != NON_ITEM)
-                    move_items(*ai, mons->pos());
-
-                // All clouds are destroyed.
-                delete_cloud(*ai);
-
-                // All traps are destroyed.
-                if (trap_def *ptrap = trap_at(*ai))
-                    ptrap->destroy();
-
-                // Actually place the wall.
-                temp_change_terrain(*ai, DNGN_ROCK_WALL, INFINITE_DURATION,
-                                    TERRAIN_CHANGE_TOMB, mons);
-                sumcount++;
-            }
-        }
-
-        if (sumcount)
-        {
-            mpr("Walls emerge from the floor!");
-
-            // XXX: Assume that the entombed monster can regenerate.
-            // Also, base the regeneration rate on HD to avoid
-            // randomness.
-            const int tomb_duration = BASELINE_DELAY
-                * hp_lost * max(1, mons->spell_hd(spell_cast) / 3);
-            int mon_index = mons->mindex();
-            env.markers.add(new map_tomb_marker(mons->pos(),
-                                                tomb_duration,
-                                                mon_index,
-                                                mon_index));
-            env.markers.clear_need_activate(); // doesn't need activation
-        }
-        return;
     }
 
     case SPELL_CHAIN_LIGHTNING:

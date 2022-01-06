@@ -1655,17 +1655,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
-    spschool::earth,
-    spflag::monster | spflag::escape,
-    5,
-    0,
-    -1, -1,
-    4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_SUMMON_EYEBALLS, "Summon Eyeballs",
     spschool::summoning,
     spflag::monster | spflag::mons_abjure,
@@ -3625,6 +3614,7 @@ AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
 AXED_SPELL(SPELL_VORTEX, "Vortex")
 AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
 AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
+AXED_SPELL(SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe")
 #endif
 
 };
