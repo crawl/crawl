@@ -3238,7 +3238,7 @@ void melee_attack::do_minotaur_retaliation()
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = you.get_mutation_level(MUT_HORNS);
 
-    if (5 * you.strength() + 7 * you.dex() > random2(600))
+    if (x_chance_in_y(45 + you.experience_level * 2, 200))
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
