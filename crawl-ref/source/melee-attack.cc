@@ -3247,7 +3247,7 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_apply_fighting_skill(dmg, true);
         dmg = player_apply_misc_modifiers(dmg);
         dmg = player_apply_slaying_bonuses(dmg, true);
-        dmg = player_apply_final_multipliers(dmg);
+        dmg = player_apply_final_multipliers(dmg, true);
         int hurt = attacker->apply_ac(dmg);
 
         mpr("You furiously retaliate!");
