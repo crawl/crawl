@@ -3096,14 +3096,10 @@ void melee_attack::mons_do_eyeball_confusion()
 void melee_attack::mons_do_tendril_disarm()
 {
     monster* mon = attacker->as_monster();
-    // some rounding errors here, but not significant
-    const int adj_mon_hd = mon->is_fighter() ? mon->get_hit_dice() * 3 / 2
-                                             : mon->get_hit_dice();
 
     if (you.get_mutation_level(MUT_TENDRILS)
         && one_chance_in(5)
-        && (random2(you.dex()) > adj_mon_hd
-            || random2(you.strength()) > adj_mon_hd))
+        && !x_chance_in_y(mon->get_hit_dice(), 35))
     {
         item_def* mons_wpn = mon->disarm();
         if (mons_wpn)
