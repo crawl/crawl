@@ -2157,6 +2157,15 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_STOP_RECALL:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
+    case ABIL_HEPLIAKLQANA_IDEALISE:
+    {
+        monster *ancestor = hepliaklqana_ancestor_mon();
+        if (ancestor && you.can_see(*ancestor))
+            return make_unique<targeter_radius>(ancestor, LOS_SOLID_SEE, 0);
+        else
+            return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
+    }
+
     default:
         break;
     }
