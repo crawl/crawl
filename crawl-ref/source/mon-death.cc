@@ -2943,7 +2943,8 @@ void hogs_to_humans()
 
         const bool could_see = you.can_see(**mi);
 
-        if (could_see) any++;
+        if (could_see)
+            any++;
 
         if (!mi->props.exists(ORIG_MONSTER_KEY) && could_see)
             human++;

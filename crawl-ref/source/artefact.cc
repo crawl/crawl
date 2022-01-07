@@ -1336,7 +1336,8 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
 static int _preferred_max_level(int unrand_index)
 {
     // TODO: turn this into a max preferred level field in art-data.txt
-    switch (unrand_index) {
+    switch (unrand_index)
+    {
     case UNRAND_DELATRAS_GLOVES:
         return 6;
     case UNRAND_WOODCUTTERS_AXE:

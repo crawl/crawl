@@ -2105,7 +2105,8 @@ string mon_attack_name(attack_type attack, bool with_object)
  */
 bool is_plain_attack_type(attack_type attack)
 {
-    switch (attack) {
+    switch (attack)
+    {
         case AT_CONSTRICT:  // constriction
         case AT_ENGULF:     // water hold
         case AT_POUNCE:     // webbing

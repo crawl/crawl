@@ -682,7 +682,8 @@ static string _randart_descrip(const item_def &item)
 // Otherwise, return "".
 static string _artefact_descrip(const item_def &item)
 {
-    if (!is_artefact(item)) return "";
+    if (!is_artefact(item))
+        return "";
 
     ostringstream out;
     if (is_unrandom_artefact(item))

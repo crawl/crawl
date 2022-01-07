@@ -1317,8 +1317,10 @@ void Grid::_render()
 
     for (auto const& child : m_child_info)
     {
-        if (child.pos.y < row_min) continue;
-        if (child.pos.y > row_max) break;
+        if (child.pos.y < row_min)
+            continue;
+        if (child.pos.y > row_max)
+            break;
         child.widget->render();
     }
 }
@@ -1498,7 +1500,8 @@ SizeReq Scroller::_get_preferred_size(Direction dim, int prosp_width)
         return { 0, 0 };
 
     SizeReq sr = m_child->get_preferred_size(dim, prosp_width);
-    if (dim) sr.min = 0; // can shrink to zero height
+    if (dim)
+        sr.min = 0; // can shrink to zero height
     return sr;
 }
 

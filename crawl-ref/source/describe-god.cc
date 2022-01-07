@@ -549,7 +549,8 @@ static formatted_string _beogh_extra_description()
     bool has_named_followers = false;
     for (auto mons : followers)
     {
-        if (!mons->is_named()) continue;
+        if (!mons->is_named())
+            continue;
         has_named_followers = true;
 
         desc += mons->full_name(DESC_PLAIN);

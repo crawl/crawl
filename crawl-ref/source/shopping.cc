@@ -437,8 +437,10 @@ unsigned int item_value(item_def item, bool ident)
 
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                if (good) valued += (valued * item.plus) / 4;
-                else      valued += (valued * item.plus) / 2;
+                if (good)
+                    valued += (valued * item.plus) / 4;
+                else
+                    valued += (valued * item.plus) / 2;
             }
         }
         break;

@@ -471,13 +471,18 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     if (enable_city && city >= city_outer_limit)
     {
         dungeon_feature_type city_wall = DNGN_ROCK_WALL;
-        if (rich > 0.5) city_wall = DNGN_STONE_WALL;
-        else if (rich > 0.75) city_wall = DNGN_METAL_WALL;
-        else if (rich > 0.9) city_wall = DNGN_CRYSTAL_WALL;
+        if (rich > 0.5)
+            city_wall = DNGN_STONE_WALL;
+        else if (rich > 0.75)
+            city_wall = DNGN_METAL_WALL;
+        else if (rich > 0.9)
+            city_wall = DNGN_CRYSTAL_WALL;
 
         // Doors and windows
-        if (jitter>0.5 && jitter<0.6) city_wall = DNGN_CLOSED_DOOR;
-        if (jitter>0.7 && jitter<0.75) city_wall = DNGN_CLEAR_STONE_WALL;
+        if (jitter > 0.5 && jitter < 0.6)
+            city_wall = DNGN_CLOSED_DOOR;
+        if (jitter > 0.7 && jitter < 0.75)
+            city_wall = DNGN_CLEAR_STONE_WALL;
 
         // Outer cloisters
         if (city < city_wall_limit)
@@ -507,11 +512,11 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
                 // Decide on what decor we want within the inner walls
                 else if (jitter > 0.9)
                 {
-                    if (rich>0.8)
+                    if (rich > 0.8)
                         feat = DNGN_FOUNTAIN_BLUE;
-                    else if (rich>0.5)
+                    else if (rich > 0.5)
                         feat = DNGN_GRANITE_STATUE;
-                    else if (rich>0.2)
+                    else if (rich > 0.2)
                         feat = DNGN_GRATE;
                     else
                         feat = DNGN_STONE_ARCH;
@@ -532,8 +537,10 @@ double NoiseLayout::_optimum_range(const double val, const double rstart, const 
 }
 double NoiseLayout::_optimum_range_mid(const double val, const double rstart, const double rmax1, const double rmax2, const double rend) const
 {
-    if (rmax1 <= val && val <= rmax2) return 1.0;
-    if (val <= rstart || val >= rend) return 0.0;
+    if (rmax1 <= val && val <= rmax2)
+        return 1.0;
+    if (val <= rstart || val >= rend)
+        return 0.0;
     if (val < rmax1)
         return (val - rstart) / (rmax1-rstart);
     return 1.0 - (val - rmax2)/(rend - rmax2);

@@ -110,7 +110,8 @@ bool positioned_monster_picker::veto(monster_type mon)
     if (in_bounds(pos) && !monster_habitable_grid(mon, env.grid(pos)))
         return true;
     // Optional positional veto
-    if (posveto && posveto(mon, pos)) return true;
+    if (posveto && posveto(mon, pos))
+        return true;
     return monster_picker::veto(mon);
 }
 

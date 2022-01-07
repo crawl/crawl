@@ -2388,7 +2388,8 @@ void drink(item_def* potion)
 
     if (!alreadyknown)
     {
-        if (player_equip_unrand(UNRAND_DELATRAS_GLOVES)) {
+        if (player_equip_unrand(UNRAND_DELATRAS_GLOVES))
+        {
             mpr("The energy of discovery flows from your fingertips!");
             potionlike_effect(POT_HEAL_WOUNDS, 40);
         }
@@ -3541,7 +3542,8 @@ void read(item_def* scroll, dist *target)
 
     if (!alreadyknown)
     {
-        if (player_equip_unrand(UNRAND_DELATRAS_GLOVES)) {
+        if (player_equip_unrand(UNRAND_DELATRAS_GLOVES))
+        {
             mpr("The energy of discovery flows from your fingertips!");
             potionlike_effect(POT_MAGIC, 40);
         }

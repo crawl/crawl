@@ -512,7 +512,8 @@ static const string BATTY_TURNS_KEY = "BATTY_TURNS";
 
 static void _handle_battiness(monster &mons)
 {
-    if (!mons_is_batty(mons)) return;
+    if (!mons_is_batty(mons))
+        return;
     mons.behaviour = BEH_WANDER;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;

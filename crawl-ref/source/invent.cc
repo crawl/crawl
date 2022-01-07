@@ -838,7 +838,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
 
     vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = nullptr;
-    if (sort) cond = find_menu_sort_condition();
+    if (sort)
+        cond = find_menu_sort_condition();
 
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {

@@ -225,8 +225,10 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
     if (static_cast<size_t>(row + 1) >= row_heights.size())
     {
         // call before UIMenu has been laid out
-        if (y1) *y1 = -1;
-        if (y2) *y2 = -1;
+        if (y1)
+            *y1 = -1;
+        if (y2)
+            *y2 = -1;
         return;
     }
     if (y1)
@@ -2413,7 +2415,8 @@ void Menu::webtiles_scroll(int first, int hover)
 void Menu::webtiles_handle_item_request(int start, int end)
 {
     start = min(max(0, start), (int)items.size()-1);
-    if (end < start) end = start;
+    if (end < start)
+        end = start;
     if (end >= (int)items.size())
         end = (int)items.size() - 1;
 

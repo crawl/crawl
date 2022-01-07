@@ -1064,7 +1064,8 @@ static bool _has_partially_suppressed_muts()
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         mutation_type mut = static_cast<mutation_type>(i);
-        if (!you.get_base_mutation_level(mut)) continue;
+        if (!you.get_base_mutation_level(mut))
+            continue;
         if (mutation_activity_level(mut) == mutation_activity_type::PARTIAL)
             return true;
     }
@@ -1076,7 +1077,8 @@ static bool _has_fully_suppressed_muts()
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         mutation_type mut = static_cast<mutation_type>(i);
-        if (!you.get_base_mutation_level(mut)) continue;
+        if (!you.get_base_mutation_level(mut))
+            continue;
         if (mutation_activity_level(mut) == mutation_activity_type::INACTIVE)
             return true;
     }
@@ -1112,7 +1114,8 @@ public:
         update_more();
         on_single_selection = [](const MenuEntry& item)
         {
-            if (!item.data) return true;
+            if (!item.data)
+                return true;
             const mutation_type mut = *((mutation_type*)(item.data));
             describe_mutation(mut);
             return true;
@@ -1123,11 +1126,10 @@ private:
     void update_entries()
     {
         clear();
-        if (blood) {
+        if (blood)
             update_blood();
-        } else {
+        else
             update_muts();
-        }
     }
 
     void update_blood()
@@ -2203,7 +2205,8 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 /// Returns the mutflag corresponding to a given class of random mutations, or 0.
 static mutflag _mutflag_for_random_type(mutation_type mut_type)
 {
-    switch (mut_type) {
+    switch (mut_type)
+    {
     case RANDOM_GOOD_MUTATION:
         return mutflag::good;
     case RANDOM_BAD_MUTATION:

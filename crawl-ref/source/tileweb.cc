@@ -810,7 +810,8 @@ bool TilesFramework::is_in_menu(Menu* m)
 
 void TilesFramework::pop_menu()
 {
-    if (m_menu_stack.empty()) return;
+    if (m_menu_stack.empty())
+        return;
     m_menu_stack.pop_back();
     send_message("{\"msg\":\"close_menu\"}");
 }
@@ -852,7 +853,8 @@ void TilesFramework::push_ui_layout(const string& type, unsigned num_state_slots
 
 void TilesFramework::pop_ui_layout()
 {
-    if (m_menu_stack.empty()) return;
+    if (m_menu_stack.empty())
+        return;
     m_menu_stack.pop_back();
     send_message("{\"msg\":\"ui-pop\"}");
 }
@@ -894,7 +896,8 @@ static void _send_text_cursor(bool enabled)
 
 void TilesFramework::set_text_cursor(bool enabled)
 {
-    if (m_text_cursor == enabled) return;
+    if (m_text_cursor == enabled)
+        return;
 
     m_text_cursor = enabled;
 }
@@ -910,7 +913,8 @@ static void _send_ui_state(WebtilesUIState state)
 
 void TilesFramework::set_ui_state(WebtilesUIState state)
 {
-    if (m_ui_state == state) return;
+    if (m_ui_state == state)
+        return;
 
     m_ui_state = state;
 }
@@ -2504,9 +2508,11 @@ void TilesFramework::json_close_array(bool erase_if_empty)
 
 void TilesFramework::json_write_comma()
 {
-    if (m_msg_buf.empty()) return;
+    if (m_msg_buf.empty())
+        return;
     char last = m_msg_buf[m_msg_buf.size() - 1];
-    if (last == '{' || last == '[' || last == ',' || last == ':') return;
+    if (last == '{' || last == '[' || last == ',' || last == ':')
+        return;
     write_message(",");
 }
 

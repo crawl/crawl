@@ -438,7 +438,8 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     for (size_t i = 0; i < weights.size(); ++i)
     {
         rand -= weights[i];
-        if (rand < 0) return idx + i;
+        if (rand < 0)
+            return idx + i;
     }
 
     return idx;

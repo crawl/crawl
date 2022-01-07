@@ -292,8 +292,10 @@ void OGLStateManager::reset_transform()
 
 void OGLStateManager::get_transform(GLW_3VF *trans, GLW_3VF *scale)
 {
-    if (trans) *trans = current_transform.trans;
-    if (scale) *scale = current_transform.scale;
+    if (trans)
+        *trans = current_transform.trans;
+    if (scale)
+        *scale = current_transform.scale;
 }
 
 int OGLStateManager::logical_to_device(int n) const

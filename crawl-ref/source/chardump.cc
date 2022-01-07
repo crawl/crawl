@@ -1612,10 +1612,14 @@ void dump_map(FILE *fp, bool debug, bool dist, bool log)
             for (int j = Y_BOUND_1; j <= Y_BOUND_2; j++)
                 if (env.map_knowledge[i][j].known())
                 {
-                    if (i > max_x) max_x = i;
-                    if (i < min_x) min_x = i;
-                    if (j > max_y) max_y = j;
-                    if (j < min_y) min_y = j;
+                    if (i > max_x)
+                        max_x = i;
+                    if (i < min_x)
+                        min_x = i;
+                    if (j > max_y)
+                        max_y = j;
+                    if (j < min_y)
+                        min_y = j;
                 }
 
         for (int y = min_y; y <= max_y; ++y)
