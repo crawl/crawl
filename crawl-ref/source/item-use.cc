@@ -1362,28 +1362,10 @@ bool takeoff_armour(int item, bool noask)
     if (!noask && !_safe_to_remove_or_wear(invitem, true))
         return false;
 
-    const equipment_type slot = get_armour_slot(invitem);
-
-    // TODO: isn't this check covered above by the call to item_is_worn? The
-    // only way to return false inside this switch would be if the player is
-    // wearing a hat on their feet or something like that.
-    switch (slot)
+    if (!check_warning_inscriptions(invitem, OPER_REMOVE))
     {
-    case EQ_BODY_ARMOUR:
-    case EQ_SHIELD:
-    case EQ_CLOAK:
-    case EQ_HELMET:
-    case EQ_GLOVES:
-    case EQ_BOOTS:
-        if (item != you.equip[slot])
-        {
-            mpr("You aren't wearing that!");
-            return false;
-        }
-        break;
-
-    default:
-        break;
+        canned_msg(MSG_OK);
+        return false;
     }
 
     you.turn_is_over = true;
@@ -3645,66 +3627,55 @@ void tile_item_use(int idx)
     // Use it
     switch (type)
     {
-        case OBJ_WEAPONS:
-        case OBJ_STAVES:
-        case OBJ_MISCELLANY:
-        case OBJ_WANDS:
-            // Wield any unwielded item of these types.
-            if (!equipped && item_is_wieldable(item))
-            {
-                wield_weapon(true, idx);
-                return;
-            }
-            // Evoke misc. items or wands.
-            if (item_is_evokable(item, false))
-            {
-                evoke_item(idx);
-                return;
-            }
-            // Unwield wielded items.
-            if (equipped)
-                wield_weapon(true, SLOT_BARE_HANDS);
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+    case OBJ_MISCELLANY:
+    case OBJ_WANDS:
+        // Wield any unwielded item of these types.
+        if (!equipped && item_is_wieldable(item))
+        {
+            wield_weapon(true, idx);
             return;
+        }
+        // Evoke misc. items or wands.
+        if (item_is_evokable(item, false))
+        {
+            evoke_item(idx);
+            return;
+        }
+        // Unwield wielded items.
+        if (equipped)
+            wield_weapon(true, SLOT_BARE_HANDS);
+        return;
 
-        case OBJ_MISSILES:
-            if (check_warning_inscriptions(item, OPER_FIRE))
-                quiver::slot_to_action(idx)->trigger(); // TODO: anything more interesting?
-            return;
+    case OBJ_MISSILES:
+        quiver::slot_to_action(idx)->trigger(); // TODO: anything more interesting?
+        return;
 
-        case OBJ_ARMOUR:
-            if (!form_can_wear())
-            {
-                mpr("You can't wear or remove anything in your present form.");
-                return;
-            }
-            if (equipped && !equipped_weapon)
-            {
-                if (check_warning_inscriptions(item, OPER_TAKEOFF))
-                    takeoff_armour(idx);
-            }
-            else if (check_warning_inscriptions(item, OPER_WEAR))
-                wear_armour(idx);
-            return;
+    case OBJ_ARMOUR:
+        if (equipped && !equipped_weapon)
+            takeoff_armour(idx);
+        else
+            wear_armour(idx);
+        return;
 
-        case OBJ_SCROLLS:
-            if (check_warning_inscriptions(item, OPER_READ))
-                read(&you.inv[idx]);
-            return;
+    case OBJ_SCROLLS:
+        read(&you.inv[idx]);
+        return;
 
-        case OBJ_JEWELLERY:
-            if (equipped && !equipped_weapon)
-                remove_ring(idx);
-            else if (check_warning_inscriptions(item, OPER_PUTON))
-                puton_ring(idx);
-            return;
+    case OBJ_JEWELLERY:
+        if (equipped && !equipped_weapon)
+            remove_ring(idx);
+        else
+            puton_ring(idx);
+        return;
 
-        case OBJ_POTIONS:
-            if (check_warning_inscriptions(item, OPER_QUAFF))
-                drink(&you.inv[idx]);
-            return;
+    case OBJ_POTIONS:
+        drink(&you.inv[idx]);
+        return;
 
-        default:
-            return;
+    default:
+        return;
     }
 }
 #endif
