@@ -481,6 +481,8 @@ string no_selectables_message(int item_selector)
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return "You aren't wearing any piece of uncursed jewellery.";
 #endif
+    case OSEL_WORN_ARMOUR:
+        return "You aren't wearing any pieces of armour.";
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
