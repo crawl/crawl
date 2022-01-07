@@ -472,28 +472,30 @@ public:
         static PotionExperience inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const override
+    bool effect(bool=true, int pow = 40, bool=true) const override
     {
         if (player_under_penance(GOD_HEPLIAKLQANA))
         {
             simple_god_message(" appreciates the memories.",
                                GOD_HEPLIAKLQANA);
-            reduce_xp_penance(GOD_HEPLIAKLQANA, 750 * you.experience_level);
+            reduce_xp_penance(GOD_HEPLIAKLQANA,
+                              750 * you.experience_level * pow / 40);
             return true;
         }
 
         if (you.experience_level < you.get_max_xl())
         {
+            const int levels = min(you.get_max_xl(), pow / 40);
             mpr("You feel more experienced!");
             // Defer calling level_change() until later in drink() to prevent
             // SIGHUP abuse.
-            adjust_level(1, true);
+            adjust_level(levels, true);
         }
         else
             mpr("A flood of memories washes over you.");
 
         // these are included in default force_more_message
-        const int exp = 7500 * you.experience_level;
+        const int exp = 7500 * you.experience_level * pow / 40;
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         {
             you.exp_available += exp;
