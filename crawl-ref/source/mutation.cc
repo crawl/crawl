@@ -2270,10 +2270,9 @@ static mutation_type _concretize_mut_deletion(mutation_type mut_type)
  * @param which_mutation    a mutation, including random
  * @param reason            the reason for deletion
  * @param failMsg           whether to message the player on failure
- * @param force_mutation    whether to try to override certain cases where the mutation would otherwise fail
- * @param god_gift          is the mutation a god gift?  Will also override certain cases.
- *
- * @return true iff a mutation was applied.
+ * @param force_mutation    whether to try to override mut resistance & undeadness
+ * @param god_gift          is the mutation a god gift & thus ignores mut resistance?
+ * @return true iff a mutation was deleted.
  */
 bool delete_mutation(mutation_type which_mutation, const string &reason,
                      bool failMsg,
