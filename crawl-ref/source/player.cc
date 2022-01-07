@@ -6814,7 +6814,7 @@ int player::has_fangs(bool allow_tran) const
     {
         // these transformations bring fangs with them
         if (form == transformation::dragon)
-            return 3;
+            return 5;
     }
 
     return get_mutation_level(MUT_FANGS, allow_tran);

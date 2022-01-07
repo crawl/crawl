@@ -1022,20 +1022,16 @@ class AuxBite: public AuxAttackType
 {
 public:
     AuxBite()
-    : AuxAttackType(0, "bite") { };
+    : AuxAttackType(1, "bite") { };
 
     int get_damage() const override
     {
-        const int fang_damage = you.has_usable_fangs() * 2;
+        const int fang_damage = damage + you.has_usable_fangs() * 2;
+
         if (you.get_mutation_level(MUT_ANTIMAGIC_BITE))
             return fang_damage + div_rand_round(you.get_hit_dice(), 3);
 
-        const int str_damage = div_rand_round(max(you.strength()-10, 0), 5);
-
-        if (you.get_mutation_level(MUT_ACIDIC_BITE))
-            return fang_damage + str_damage;
-
-        return fang_damage + str_damage;
+        return fang_damage;
     }
 
     int get_brand() const override
