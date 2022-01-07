@@ -790,7 +790,7 @@ bool item_is_worn(int inv_slot)
 }
 
 /**
- * Prompt user for carried armour.
+ * Prompt user for carried armour. Will warn user if wearing/removing the armour is dangerous.
  *
  * @param mesg Title for the prompt
  * @param index[out] the inventory slot of the item chosen; not initialised
@@ -1393,12 +1393,6 @@ bool takeoff_armour(int item, bool noask)
     // below 0, we should get confirmation.
     if (!noask && !_safe_to_remove_or_wear(invitem, true))
         return false;
-
-    if (!check_warning_inscriptions(invitem, OPER_REMOVE))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
 
     you.turn_is_over = true;
     start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY - 1, invitem);
