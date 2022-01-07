@@ -118,8 +118,8 @@ why he would deign to share his secrets with others.
 %%%%
 book of burglary
 
-A book containing many diverse spells useful for theft, breaking and entering,
-and other miscellaneous larceny.
+A book containing spells useful for theft, breaking and entering, and other
+miscellaneous larceny.
 %%%%
 book of callings
 
