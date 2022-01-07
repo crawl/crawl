@@ -1328,27 +1328,6 @@ static mutation_type _get_random_slime_mutation()
     return _get_mut_with_use(mutflag::jiyva);
 }
 
-static mutation_type _delete_random_slime_mutation()
-{
-    mutation_type mutat;
-
-    while (true)
-    {
-        mutat = _get_random_slime_mutation();
-
-        if (you.get_base_mutation_level(mutat) > 0)
-            break;
-
-        if (one_chance_in(500))
-        {
-            mutat = NUM_MUTATIONS;
-            break;
-        }
-    }
-
-    return mutat;
-}
-
 bool is_slime_mutation(mutation_type mut)
 {
     return _mut_has_use(mut_data[mut_index[mut]], mutflag::jiyva);
@@ -2233,6 +2212,69 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     return true;
 }
 
+/// Returns the mutflag corresponding to a given class of random mutations, or 0.
+static mutflag _mutflag_for_random_type(mutation_type mut_type)
+{
+    switch (mut_type) {
+    case RANDOM_GOOD_MUTATION:
+        return mutflag::good;
+    case RANDOM_BAD_MUTATION:
+    case RANDOM_CORRUPT_MUTATION:
+        return mutflag::bad;
+    case RANDOM_XOM_MUTATION:
+        return mutflag::xom;
+    case RANDOM_SLIME_MUTATION:
+        return mutflag::jiyva;
+    case RANDOM_QAZLAL_MUTATION:
+        return mutflag::qazlal;
+    case RANDOM_MUTATION:
+    default:
+        return (mutflag)0;
+    }
+}
+
+/**
+ * Given a type of 'random mutation' (eg RANDOM_XOM_MUTATION), return a mutation of that type that
+ * we can delete from the player, or else NUM_MUTATIONS.
+ */
+static mutation_type _concretize_mut_deletion(mutation_type mut_type)
+{
+    switch (mut_type)
+    {
+        case RANDOM_MUTATION:
+        case RANDOM_GOOD_MUTATION:
+        case RANDOM_BAD_MUTATION:
+        case RANDOM_CORRUPT_MUTATION:
+        case RANDOM_XOM_MUTATION:
+        case RANDOM_SLIME_MUTATION:
+        case RANDOM_QAZLAL_MUTATION:
+            break;
+        default:
+            return mut_type;
+    }
+
+    const mutflag mf = _mutflag_for_random_type(mut_type);
+    int seen = 0;
+    mutation_type chosen = NUM_MUTATIONS;
+    for (const mutation_def &mutdef : mut_data)
+    {
+        if (mf != (mutflag)0 && !_mut_has_use(mutdef, mf))
+            continue;
+        // Check whether we have a non-innate, permanent level of this mut
+        if (you.get_base_mutation_level(mutdef.mutation, false, false) == 0)
+            continue;
+        // XXX: the following feels hacky. Is it needed?
+        // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
+        if (mutdef.mutation && _is_appendage_mutation(mutdef.mutation))
+            continue;
+
+        ++seen;
+        if (one_chance_in(seen))
+            chosen = mutdef.mutation;
+    }
+    return chosen;
+}
+
 /*
  * Delete a mutation level, accepting random mutation types and checking mutation resistance.
  * This will not delete temporary or innate mutations.
@@ -2242,18 +2284,14 @@ static bool _delete_single_mutation_level(mutation_type mutat,
  * @param failMsg           whether to message the player on failure
  * @param force_mutation    whether to try to override certain cases where the mutation would otherwise fail
  * @param god_gift          is the mutation a god gift?  Will also override certain cases.
- * @param disallow_mismatch for random mutations, do we override good/bad designations in `which_mutation`? (??)
  *
  * @return true iff a mutation was applied.
  */
 bool delete_mutation(mutation_type which_mutation, const string &reason,
                      bool failMsg,
-                     bool force_mutation, bool god_gift,
-                     bool disallow_mismatch)
+                     bool force_mutation, bool god_gift)
 {
     god_gift |= crawl_state.is_god_acting();
-
-    mutation_type mutat = which_mutation;
 
     if (!force_mutation)
     {
@@ -2273,74 +2311,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             return false;
     }
 
-    if (which_mutation == RANDOM_MUTATION
-        || which_mutation == RANDOM_XOM_MUTATION
-        || which_mutation == RANDOM_GOOD_MUTATION
-        || which_mutation == RANDOM_BAD_MUTATION
-        || which_mutation == RANDOM_NON_SLIME_MUTATION
-        || which_mutation == RANDOM_CORRUPT_MUTATION
-        || which_mutation == RANDOM_QAZLAL_MUTATION)
-    {
-        while (true)
-        {
-            if (one_chance_in(1000))
-                return false;
-
-            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
-
-            if (you.mutation[mutat] == 0
-                && mutat != MUT_STRONG
-                && mutat != MUT_CLEVER
-                && mutat != MUT_AGILE
-                && mutat != MUT_WEAK
-                && mutat != MUT_DOPEY
-                && mutat != MUT_CLUMSY)
-            {
-                continue;
-            }
-
-            if (which_mutation == RANDOM_NON_SLIME_MUTATION
-                && is_slime_mutation(mutat))
-            {
-                continue;
-            }
-
-            // Check whether there is a non-innate level of `mutat` to delete
-            if (you.get_base_mutation_level(mutat, false, true, true) == 0)
-                continue;
-
-            // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
-            if (mutat && _is_appendage_mutation(mutat))
-                continue;
-
-            const mutation_def& mdef = _get_mutation_def(mutat);
-
-            if (random2(10) >= mdef.weight && !is_slime_mutation(mutat))
-                continue;
-
-            const bool mismatch =
-                (which_mutation == RANDOM_GOOD_MUTATION
-                 && is_bad_mutation(mutat))
-                    || (which_mutation == RANDOM_BAD_MUTATION
-                        && is_good_mutation(mutat));
-
-            if (mismatch && (disallow_mismatch || !one_chance_in(10)))
-                continue;
-
-            if (you.get_base_mutation_level(mutat, true, false, true) == 0)
-                continue; // No non-transient mutations in this category to cure
-
-            break;
-        }
-    }
-    else if (which_mutation == RANDOM_SLIME_MUTATION)
-    {
-        mutat = _delete_random_slime_mutation();
-
-        if (mutat == NUM_MUTATIONS)
-            return false;
-    }
-
+    const mutation_type mutat = _concretize_mut_deletion(which_mutation);
     return _delete_single_mutation_level(mutat, reason, false); // won't delete temp mutations
 }
 

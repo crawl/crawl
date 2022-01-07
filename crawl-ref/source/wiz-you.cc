@@ -727,7 +727,7 @@ static void reset_ds_muts_from_schedule(int xl)
                 // there. delete_mutation won't delete mutations otherwise.
                 // This step doesn't affect temporary mutations.
                 you.innate_mutation[mut]--;
-                delete_mutation(mut, "level change", false, true, false, false);
+                delete_mutation(mut, "level change", false, true, false);
             }
             if (you.innate_mutation[mut] < innate_levels)
                 perma_mutate(mut, innate_levels - you.innate_mutation[mut], "level change");
