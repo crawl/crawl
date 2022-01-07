@@ -1695,18 +1695,6 @@ static bool _resist_mutation(mutation_permanence_class mutclass,
 }
 
 /*
- * Does the player rot instead of mutating?
- * Right now this is coextensive with whether the player is unable to mutate.
- * For most undead, they will never mutate and always rot instead; vampires always mutate and never rot.
- *
- * @return true if so.
- */
-bool undead_mutation_rot()
-{
-    return !you.can_safely_mutate();
-}
-
-/*
  * Try to mutate the player, along with associated bookkeeping. This accepts mutation categories as well as particular mutations.
  *
  * In many cases this will produce only 1 level of mutation at a time, but it may mutate more than one level if the mutation category is corrupt or qazlal.
@@ -1768,7 +1756,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
-    if (undead_mutation_rot())
+    if (!you.can_safely_mutate())
     {
         switch (mutclass)
         {
@@ -2307,7 +2295,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
         }
 
-        if (undead_mutation_rot())
+        if (!you.can_safely_mutate())
             return false;
     }
 
