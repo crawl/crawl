@@ -2300,6 +2300,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
     }
 
     const mutation_type mutat = _concretize_mut_deletion(which_mutation);
+    if (mutat == NUM_MUTATIONS) return false;
     return _delete_single_mutation_level(mutat, reason, false); // won't delete temp mutations
 }
 
