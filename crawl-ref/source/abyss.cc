@@ -1668,13 +1668,13 @@ static bool _abyss_force_descent()
     return x_chance_in_y(xl_factor * xl_factor, 729 * 3);
 }
 
-void abyss_teleport()
+void abyss_teleport(bool wizard_tele)
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
 
     if (level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_force_descent())
+        && _abyss_force_descent() && !wizard_tele)
     {
         down_stairs(DNGN_ABYSSAL_STAIR);
         more();

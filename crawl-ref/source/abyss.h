@@ -39,7 +39,7 @@ void push_features_to_abyss();
 void generate_abyss();
 void maybe_shift_abyss_around_player();
 void abyss_maybe_spawn_xp_exit();
-void abyss_teleport();
+void abyss_teleport(bool wizard_tele = false);
 void save_abyss_uniques();
 bool is_level_incorruptible(bool quiet = false);
 bool is_level_incorruptible_monster();
