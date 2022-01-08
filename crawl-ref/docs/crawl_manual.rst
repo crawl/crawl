@@ -2322,8 +2322,8 @@ G or Ctrl-G
   for help on them.
 
 Ctrl-W
-  Set waypoint (a digit between 0 and 9). Check the option show_waypoints. You
-  can go to a waypoint by pressing Ctrl-G or G and the digit.
+  Set waypoint (a digit between 0 and 9). Go to a waypoint by pressing Ctrl-G
+  or uppercase G, then the waypoint's digit.
 
 Attacking and firing
 ----------------------------------------
