@@ -1058,6 +1058,10 @@ turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
+hat_archer ARCHER
+hat_archer2 ARCHER2
+hat_explorer EXPLORER
+hat_explorer2 EXPLORER2
 
 ## Mutations
 horns1 HORNS1

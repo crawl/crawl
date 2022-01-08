@@ -5048,7 +5048,7 @@ ORIENT:  float
 # Item qualities that can upgrade with depth.
 ITEM:    whip good_item w:20 / snakebite w:1
 ITEM:    whip randart w:15 / demon whip w:4 / snakebite w:1
-ITEM:    demon whip good_item, hat good_item, hat randart
+ITEM:    demon whip good_item, hat good_item tile:thelm_hat_explorer, hat randart tile:thelm_hat_explorer
 ITEM:    any jewellery good_item, any jewellery randart
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 # We use boulder beetles at every depth, and lava snakes need a shared marker

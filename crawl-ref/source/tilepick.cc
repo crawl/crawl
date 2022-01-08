@@ -4160,8 +4160,22 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
 
     // XXX: only helmets, hats, robes and boots have variants, but it would be nice
     // if this weren't hardcoded.
-    if (tile == TILE_THELM_HAT && etype == 4)
-        return _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
+    if (tile == TILE_THELM_HAT)
+    {
+        switch (etype)
+        {
+            case 1:
+            case 2:
+            case 3:
+                tile = _modrng(item.rnd, TILE_THELM_HAT_EGO_FIRST, TILE_THELM_HAT_EGO_LAST);
+                break;
+            case 4:
+                tile = _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
+                break;
+            default:
+                tile = _modrng(item.rnd, TILE_THELM_HAT_FIRST, TILE_THELM_HAT_LAST);
+        }
+    }
 
     if (tile == TILE_THELM_HELM)
     {
