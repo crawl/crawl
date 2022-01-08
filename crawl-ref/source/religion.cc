@@ -3083,6 +3083,8 @@ static void _ash_uncurse()
         const int slot = you.equip[eq_typ];
         if (slot == -1)
             continue;
+        if (!you.inv[slot].cursed())
+            continue;
         if (!uncursed)
         {
             mprf(MSGCH_GOD, GOD_ASHENZARI, "Your curses shatter.");
