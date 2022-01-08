@@ -552,7 +552,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _setup_seracfall_beam,
         MSPELL_LOGIC_NONE,
-        30, // 2.5x iceblast
+        18, // 1.5x iceblast
     } },
 };
 
