@@ -402,11 +402,13 @@ DEPTH: D:4-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Snake, !Snake:$, \
 KFEAT: O = any shop
 SUBST: } = }])
 MAP
+ .......
 .ccccccc.
 .n.....n.
 @n.O.}.n@
 .n.....n.
 .ccccccc.
+ .......
 ENDMAP
 
 NAME:     nicolae_shop_advertising_works
