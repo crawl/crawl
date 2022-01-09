@@ -733,7 +733,8 @@ bool mons_gives_xp(const monster& victim, const actor& agent)
         && !victim.has_ench(ENCH_ABJ)              // not-really-summons
         && !victim.has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
         && mons_class_gives_xp(victim.type)        // class must reward xp
-        && !testbits(victim.flags, MF_WAS_NEUTRAL) // no neutral monsters
+        && (!testbits(victim.flags, MF_WAS_NEUTRAL)// no neutral monsters
+            || victim.has_ench(ENCH_MAD))          // ...except frenzied ones
         && !testbits(victim.flags, MF_NO_REWARD)   // no reward for no_reward
         && !mon_killed_friend;
 }
