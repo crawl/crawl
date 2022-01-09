@@ -1683,8 +1683,9 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons_is_firewood(*mons))
         return true;
-    else if (wh_enchant == ENCH_FEAR)
+    switch (wh_enchant)
     {
+    case ENCH_FEAR:
         if (mons->friendly())
             return true;
 
@@ -1694,13 +1695,24 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
-    }
-    else if (wh_enchant == ENCH_INSANE
-             && !mons->can_go_frenzy())
-    {
-        if (simple_monster_message(*mons, " is unaffected."))
-            *did_msg = true;
-        return true;
+    case ENCH_INSANE:
+        if (!mons->can_go_frenzy())
+        {
+            if (simple_monster_message(*mons, " is unaffected."))
+                *did_msg = true;
+            return true;
+        }
+    case ENCH_ANGUISH:
+        if (mons->friendly())
+            return true;
+        if (mons_intel(*mons) <= I_BRAINLESS)
+        {
+            if (simple_monster_message(*mons, " is unaffected."))
+                *did_msg = true;
+            return true;
+        }
+    default:
+        break;
     }
 
     int res_margin = mons->check_willpower(&you, pow);
@@ -1756,6 +1768,8 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             const char* msg = nullptr;
             if (wh_enchant == ENCH_FEAR)
                 msg = " looks frightened!";
+            else if (wh_enchant == ENCH_ANGUISH)
+                msg = " is haunted by guilt!";
 
             if (msg && simple_monster_message(**mi, msg))
                 did_msg = true;
@@ -1763,6 +1777,8 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
                 behaviour_event(*mi, ME_SCARE, &you);
+            else if (wh_enchant == ENCH_ANGUISH)
+                behaviour_event(*mi, ME_ALERT, &you);
         }
     }
 

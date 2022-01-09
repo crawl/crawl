@@ -37,7 +37,6 @@ sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
-glowing GLOWING
 slowed SLOWED
 hasted HASTED
 might MIGHT
@@ -59,6 +58,7 @@ vile_clutch VILE_CLUTCH
 possessable POSSESSABLE
 slowly_dying SLOWLY_DYING
 fire_champ FIRE_CHAMP
+anguish ANGUISH
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

@@ -509,6 +509,18 @@ static void _maybe_ru_retribution(int dam, mid_t death_source)
     }
 }
 
+static void _maybe_inflict_anguish(int dam, mid_t death_source)
+{
+    const monster* mons = monster_by_mid(death_source);
+    if (!mons
+        || !mons->alive()
+        || !mons->has_ench(ENCH_ANGUISH))
+    {
+        return;
+    }
+    anguish_fineff::schedule(mons, dam);
+}
+
 static void _maybe_spawn_rats(int dam, kill_method_type death_type)
 {
     if (dam <= 0
@@ -1024,6 +1036,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             _deteriorate(dam);
             _maybe_ru_retribution(dam, source);
+            _maybe_inflict_anguish(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);
             _maybe_spawn_rats(dam, death_type);
             _maybe_summon_demonic_guardian(dam, death_type);

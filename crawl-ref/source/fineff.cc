@@ -58,6 +58,13 @@ bool mirror_damage_fineff::mergeable(const final_effect &fe) const
     return o && att == o->att && def == o->def;
 }
 
+bool anguish_fineff::mergeable(const final_effect &fe) const
+{
+    const anguish_fineff *o =
+        dynamic_cast<const anguish_fineff *>(&fe);
+    return o && att == o->att;
+}
+
 bool ru_retribution_fineff::mergeable(const final_effect &fe) const
 {
     const ru_retribution_fineff *o =
@@ -144,6 +151,15 @@ void mirror_damage_fineff::merge(const final_effect &fe)
     damage += mdfe->damage;
 }
 
+void anguish_fineff::merge(const final_effect &fe)
+{
+    const anguish_fineff *afe =
+        dynamic_cast<const anguish_fineff *>(&fe);
+    ASSERT(afe);
+    ASSERT(mergeable(*afe));
+    damage += afe->damage;
+}
+
 void ru_retribution_fineff::merge(const final_effect &fe)
 {
     const ru_retribution_fineff *mdfe =
@@ -218,6 +234,18 @@ void mirror_damage_fineff::fire()
         simple_monster_message(*monster_by_mid(att), " suffers a backlash!");
         attack->hurt(defender(), damage);
     }
+}
+
+void anguish_fineff::fire()
+{
+    actor *attack = attacker();
+    ASSERT(attack);
+    if (!attack->alive()) return;
+
+    const string punct = attack_strength_punctuation(damage);
+    const string msg = make_stringf(" is wracked by anguish%s", punct.c_str());
+    simple_monster_message(*monster_by_mid(att), msg.c_str());
+    attack->hurt(monster_by_mid(MID_YOU_FAULTLESS), damage);
 }
 
 void ru_retribution_fineff::fire()

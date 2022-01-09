@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "act-iter.h" // monster_near_iterator
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h"
@@ -1625,6 +1626,22 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     case SPELL_SCORCH:
         return find_near_hostiles(range).empty();
+
+    case SPELL_ANGUISH:
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            const monster &mon = **mi;
+            if (you.can_see(mon)
+                && mons_intel(mon) > I_BRAINLESS
+                && mon.willpower() != WILL_INVULN
+                && !mons_atts_aligned(you.temp_attitude(), mon.attitude)
+                && !mon.has_ench(ENCH_ANGUISH))
+            {
+                return false;
+            }
+
+        }
+        return true; // TODO
 
     default:
         break;

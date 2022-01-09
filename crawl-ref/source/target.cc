@@ -2139,3 +2139,16 @@ bool targeter_intoxicate::affects_monster(const monster_info& mon)
     return !(mon.mintel < I_HUMAN
              || get_resist(mon.resists(), MR_RES_POISON) >= 3);
 }
+
+targeter_anguish::targeter_anguish()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_anguish::affects_monster(const monster_info& mon)
+{
+    return mon.mintel > I_BRAINLESS
+        && mon.willpower() != WILL_INVULN
+        && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
+        && !mon.is(MB_ANGUISH);
+}

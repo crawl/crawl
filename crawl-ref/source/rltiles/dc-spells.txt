@@ -34,6 +34,7 @@ statue_form STATUE_FORM
 stone_arrow STONE_ARROW
 
 %sdir gui/spells/enchantment
+anguish ANGUISH
 berserker_rage BERSERKER_RAGE
 cause_fear CAUSE_FEAR
 confuse CONFUSE

@@ -3515,6 +3515,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ANGUISH, "Anguish",
+    spschool::hexes | spschool::necromancy,
+    spflag::area | spflag::WL_check,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    TILEG_ANGUISH,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

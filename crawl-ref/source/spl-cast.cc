@@ -1322,6 +1322,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_ignite_poison>(&you);
     case SPELL_CAUSE_FEAR: // for these, we just mark the eligible monsters
         return make_unique<targeter_fear>();
+    case SPELL_ANGUISH:
+        return make_unique<targeter_anguish>();
     case SPELL_INTOXICATE:
         return make_unique<targeter_intoxicate>();
     case SPELL_ENGLACIATION:
@@ -2312,6 +2314,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CAUSE_FEAR:
         return mass_enchantment(ENCH_FEAR, powc, fail);
+
+    case SPELL_ANGUISH:
+        return mass_enchantment(ENCH_ANGUISH, powc, fail);
 
     case SPELL_INTOXICATE:
         return cast_intoxicate(powc, fail);

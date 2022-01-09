@@ -527,3 +527,10 @@ public:
     targeter_intoxicate();
     bool affects_monster(const monster_info& mon) override;
 };
+
+class targeter_anguish : public targeter_multimonster
+{
+public:
+    targeter_anguish();
+    bool affects_monster(const monster_info& mon) override;
+};

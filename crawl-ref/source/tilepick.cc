@@ -2052,8 +2052,6 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_CONSTRICTED;
     if (mons.is(MB_BERSERK))
         ch |= TILE_FLAG_BERSERK;
-    if (mons.is(MB_GLOWING))
-        ch |= TILE_FLAG_GLOWING;
     if (mons.is(MB_SLOWED))
         ch |= TILE_FLAG_SLOWED;
     if (mons.is(MB_MIRROR_DAMAGE))
@@ -2094,6 +2092,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_SLOWLY_DYING;
     if (mons.is(MB_FIRE_CHAMPION))
         ch |= TILE_FLAG_FIRE_CHAMP;
+    if (mons.is(MB_ANGUISH))
+        ch |= TILE_FLAG_ANGUISH;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;

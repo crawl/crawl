@@ -4330,6 +4330,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
 
+        if (amount && agent && agent->alive() && agent->is_monster()
+            && agent->as_monster()->has_ench(ENCH_ANGUISH))
+        {
+            anguish_fineff::schedule(agent, amount);
+        }
+
         // Handle pain bond behaviour here. Is technically passive damage.
         // radiate_pain_bond may do additional damage by recursively looping
         // back to the original trigger.

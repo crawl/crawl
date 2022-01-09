@@ -181,7 +181,7 @@ define(function () {
     fg_flags.flags.NET          = 0x00400000;
     // 0x00800000 is used in the POISON 2-bit exclusive flags
     fg_flags.flags.WEB          = 0x01000000;
-    fg_flags.flags.GLOWING      = 0x02000000;
+    fg_flags.flags.ANGUISH      = 0x02000000;
     fg_flags.flags.STICKY_FLAME = 0x04000000;
     fg_flags.flags.BERSERK      = 0x08000000;
     fg_flags.flags.INNER_FLAME  = 0x10000000;
