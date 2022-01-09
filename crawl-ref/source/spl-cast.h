@@ -120,6 +120,7 @@ bool spell_has_targeter(spell_type spell);
 string target_desc(const monster_info& mi, spell_type spell);
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       targeter* hitfunc);
+vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc);
 
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);
 desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,

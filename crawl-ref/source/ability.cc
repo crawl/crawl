@@ -71,6 +71,7 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
+#include "spl-zap.h"
 #include "stairs.h"
 #include "state.h"
 #include "stepdown.h"
@@ -713,6 +714,28 @@ int ability_range(ability_type abil)
     }
 
     return min((int)you.current_vision, range);
+}
+
+static int _ability_zap_pow(ability_type abil)
+{
+    switch (abil)
+    {
+        case ABIL_SPIT_POISON:
+            return 10 + you.experience_level;
+        case ABIL_BREATHE_ACID:
+        case ABIL_BREATHE_FIRE:
+        case ABIL_BREATHE_FROST:
+        case ABIL_BREATHE_POISON:
+        case ABIL_BREATHE_POWER:
+        case ABIL_BREATHE_STEAM:
+        case ABIL_BREATHE_MEPHITIC:
+            return you.form == transformation::dragon
+                                 ? 2 * you.experience_level
+                                 : you.experience_level;
+        default:
+            ASSERT(ability_to_zap(abil) == NUM_ZAPS);
+            return 0;
+    }
 }
 
 ability_flags get_ability_flags(ability_type ability)
@@ -2170,6 +2193,13 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         break;
     }
 
+    if (ability_to_zap(ability) != NUM_ZAPS)
+    {
+        return make_unique<targeter_beam>(&you, ability_range(ability),
+                                          ability_to_zap(ability),
+                                          _ability_zap_pow(ability), 0, 0);
+    }
+
     return nullptr;
 }
 
@@ -2217,6 +2247,10 @@ bool activate_talent(const talent& tal, dist *target)
         args.top_prompt = make_stringf("%s: <w>%s</w>",
                                        is_targeted ? "Aiming" : "Activating",
                                        ability_name(abil.ability));
+        targeter_beam* beamfunc = dynamic_cast<targeter_beam*>(hitfunc.get());
+        if (beamfunc && beamfunc->beam.hit > 0 && !beamfunc->beam.is_explosion)
+            args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1, hitfunc.get());
+
         if (abil.failure.base_chance)
         {
             args.top_prompt +=
@@ -2548,6 +2582,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
+        args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1, &hitfunc);
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
 
@@ -2577,65 +2612,24 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
     {
-        // TODO: refactor this to use only one call to zapping()
         spret result = spret::abort;
         int cooldown = 3 + random2(10) + random2(30 - you.experience_level);
-
-        switch (abil.ability)
-        {
-        case ABIL_BREATHE_FIRE:
-            result = zapping(ZAP_BREATHE_FIRE,
-                             you.form == transformation::dragon
-                                 ? 2 * you.experience_level
-                                 : you.experience_level,
-                             beam, true, "You breathe a blast of fire.",
-                             fail);
-            break;
-
-        case ABIL_BREATHE_FROST:
-            result = zapping(ZAP_BREATHE_FROST,
-                             you.form == transformation::dragon
-                                 ? 2 * you.experience_level
-                                 : you.experience_level,
-                             beam, true, "You exhale a wave of freezing cold.",
-                             fail);
-            break;
-
-        case ABIL_BREATHE_POISON:
-            result = zapping(ZAP_BREATHE_POISON, you.experience_level, beam,
-                             true, "You exhale a blast of poison gas.", fail);
-
-        case ABIL_BREATHE_POWER:
-            result = zapping(ZAP_BREATHE_POWER,
-                             you.form == transformation::dragon
-                                 ? 2 * you.experience_level
-                                 : you.experience_level,
-                             beam, true,
-                             "You breathe a bolt of dispelling energy.", fail);
-            break;
-
-        case ABIL_BREATHE_STEAM:
-            result = zapping(ZAP_BREATHE_STEAM,
-                             you.form == transformation::dragon
-                                 ? 2 * you.experience_level
-                                 : you.experience_level,
-                             beam, true,
-                             "You exhale a blast of scalding steam.", fail);
+        if (abil.ability == ABIL_BREATHE_STEAM)
             cooldown /= 2;
-            break;
 
-        case ABIL_BREATHE_MEPHITIC:
-            result = zapping(ZAP_BREATHE_MEPHITIC,
-                             you.form == transformation::dragon
-                                 ? 2 * you.experience_level
-                                 : you.experience_level,
-                             beam, true,
-                             "You exhale a blast of noxious fumes.", fail);
-            break;
+        static map<ability_type, string> breath_message =
+        {
+            { ABIL_BREATHE_FIRE, "You breathe a blast of fire." },
+            { ABIL_BREATHE_FROST, "You exhale a wave of freezing cold." },
+            { ABIL_BREATHE_POISON, "You exhale a blast of poison gas." },
+            { ABIL_BREATHE_POWER, "You breathe a bolt of dispelling energy." },
+            { ABIL_BREATHE_STEAM, "You exhale a blast of scalding steam." },
+            { ABIL_BREATHE_MEPHITIC, "You exhale a blast of noxious fumes." },
+        };
 
-        default:
-            die("Unknown breath weapon!");
-        }
+        result = zapping(ability_to_zap(abil.ability),
+                         _ability_zap_pow(abil.ability), beam, true,
+                         breath_message[abil.ability].c_str(), fail);
 
         if (result == spret::success)
             you.increase_duration(DUR_BREATH_WEAPON, cooldown);

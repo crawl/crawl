@@ -1497,7 +1497,7 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
     return hits * 100 / iters;
 }
 
-static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc)
+vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     if (!beam_hitf)
@@ -1758,7 +1758,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             if (!burst_hitf)
                 break;
             targeter_starburst_beam* beam_hitf = &burst_hitf->beams[0];
-            return bind(_desc_hit_chance, placeholders::_1, beam_hitf);
+            return bind(desc_beam_hit_chance, placeholders::_1, beam_hitf);
         }
         case SPELL_DISPERSAL:
             return bind(_desc_dispersal_chance, placeholders::_1, powc);
@@ -1769,7 +1769,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
     }
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
-        return bind(_desc_hit_chance, placeholders::_1, hitfunc);
+        return bind(desc_beam_hit_chance, placeholders::_1, hitfunc);
     return nullptr;
 }
 
