@@ -198,7 +198,7 @@ void mirror_damage_fineff::fire()
         return;
     // defender being dead is ok, if we killed them we still suffer
 
-    god_acting gdact(GOD_YREDELEMNUL);
+    god_acting gdact(GOD_YREDELEMNUL); // XXX: remove?
 
     if (att == MID_PLAYER)
     {
@@ -212,17 +212,6 @@ void mirror_damage_fineff::fire()
         else
             mpr("Your damage is reflected back at you!");
         ouch(damage, KILLED_BY_MIRROR_DAMAGE);
-    }
-    else if (def == MID_PLAYER)
-    {
-        simple_god_message(" mirrors your injury!");
-
-        attack->hurt(&you, damage);
-
-        if (attack->alive())
-            print_wounds(*monster_by_mid(att));
-
-        lose_piety(isqrt_ceil(damage));
     }
     else
     {
