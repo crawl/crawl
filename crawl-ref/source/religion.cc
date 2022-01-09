@@ -1715,6 +1715,14 @@ static bool _give_sif_gift(bool forced)
     return true;
 }
 
+static bool _sort_spell_level(spell_type spell1, spell_type spell2)
+{
+    if (spell_difficulty(spell1) != spell_difficulty(spell2))
+        return spell_difficulty(spell1) < spell_difficulty(spell2);
+
+    return strcasecmp(spell_title(spell1), spell_title(spell2)) < 0;
+}
+
 static bool _give_kiku_gift(bool forced)
 {
     // Djinn can't receive spell gifts.
@@ -1732,64 +1740,69 @@ static bool _give_kiku_gift(bool forced)
     }
 
     vector<spell_type> chosen_spells;
+    spell_type spell;
 
     // Each set should guarantee the player at least one corpse-using spell, to
     // complement Receive Corpses.
     if (first_gift)
     {
-        chosen_spells.push_back(SPELL_PAIN);
-        if (you.can_bleed(false))
+        chosen_spells.push_back(SPELL_ANIMATE_SKELETON);
+        do
         {
-            chosen_spells.push_back(SPELL_SUBLIMATION_OF_BLOOD);
-            chosen_spells.push_back(random_choose(SPELL_CORPSE_ROT,
-                                                  SPELL_ANIMATE_SKELETON));
+            spell = random_choose(SPELL_PAIN,
+                                  SPELL_CORPSE_ROT,
+                                  SPELL_SUBLIMATION_OF_BLOOD,
+                                  SPELL_VAMPIRIC_DRAINING,
+                                  SPELL_AGONY);
+
+            if (!you.can_bleed(false) && spell == SPELL_SUBLIMATION_OF_BLOOD)
+                spell = SPELL_NO_SPELL;
+
+            if (find(begin(chosen_spells), end(chosen_spells), spell)
+                != end(chosen_spells))
+            {
+                spell = SPELL_NO_SPELL;
+            }
+
+            if (spell != SPELL_NO_SPELL)
+                chosen_spells.push_back(spell);
         }
-        else
-        {
-            chosen_spells.push_back(SPELL_CORPSE_ROT);
-            chosen_spells.push_back(SPELL_ANIMATE_SKELETON);
-        }
-        chosen_spells.push_back(SPELL_VAMPIRIC_DRAINING);
+        while (chosen_spells.size() < 4);
     }
     else
     {
-        chosen_spells.push_back(random_choose(SPELL_ANIMATE_DEAD,
-                                              SPELL_SIMULACRUM));
-        chosen_spells.push_back((you.has_mutation(MUT_NO_GRASPING)
-                                 || coinflip()) ? SPELL_BORGNJORS_VILE_CLUTCH
-                                                : SPELL_EXCRUCIATING_WOUNDS);
-        chosen_spells.push_back(random_choose(SPELL_AGONY,
-                                              SPELL_DEATH_CHANNEL));
-
-        spell_type extra_spell;
+        chosen_spells.push_back(SPELL_ANIMATE_DEAD);
         do
         {
-            extra_spell = random_choose(SPELL_ANIMATE_DEAD,
-                                        SPELL_AGONY,
-                                        SPELL_BORGNJORS_VILE_CLUTCH,
-                                        SPELL_EXCRUCIATING_WOUNDS,
-                                        SPELL_SIMULACRUM,
-                                        SPELL_DEATH_CHANNEL);
+            spell = random_choose(SPELL_ANGUISH,
+                                  SPELL_DISPEL_UNDEAD,
+                                  SPELL_BORGNJORS_VILE_CLUTCH,
+                                  SPELL_EXCRUCIATING_WOUNDS,
+                                  SPELL_DEATH_CHANNEL,
+                                  SPELL_SIMULACRUM);
+
             if (you.has_mutation(MUT_NO_GRASPING)
-                && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
+                && spell == SPELL_EXCRUCIATING_WOUNDS)
             {
-                extra_spell = SPELL_NO_SPELL;
+                spell = SPELL_NO_SPELL;
             }
 
-            if (find(begin(chosen_spells), end(chosen_spells), extra_spell)
+            if (find(begin(chosen_spells), end(chosen_spells), spell)
                 != end(chosen_spells))
             {
-                extra_spell = SPELL_NO_SPELL;
+                spell = SPELL_NO_SPELL;
             }
-        }
-        while (extra_spell == SPELL_NO_SPELL);
 
-        chosen_spells.push_back(extra_spell);
-        chosen_spells.push_back(SPELL_DISPEL_UNDEAD);
+            if (spell != SPELL_NO_SPELL)
+                chosen_spells.push_back(spell);
+        }
+        while (chosen_spells.size() < 5);
     }
 
     simple_god_message(" grants you a gift!");
     // included in default force_more_message
+
+    sort(chosen_spells.begin(), chosen_spells.end(), _sort_spell_level);
     library_add_spells(chosen_spells);
 
     you.num_current_gifts[you.religion]++;
