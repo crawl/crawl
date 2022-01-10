@@ -2396,7 +2396,7 @@ void Menu::cycle_hover(bool reverse)
     const int max_items = is_set(MF_WRAP) ? items.size()
                         : reverse
                           ? last_hovered
-                          : items.size() - last_hovered;
+                          : items.size() - max(last_hovered, 0);
     int new_hover = last_hovered;
     if (reverse && last_hovered < 0)
         new_hover = 0;
