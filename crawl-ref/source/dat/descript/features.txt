@@ -169,18 +169,19 @@ Nothing but the mythical salamander can cross this without flight.
 Some shallow water
 
 A pool of cloudy, waist-deep water. Those well-adapted to water can swim
-through it; other creatures can wade through it slowly. Non-swimmers will
-occasionally fail to attack in melee when wading through shallow water,
-although large creatures are able to keep their balance and avoid fumbling.
+through it and attack normally. Non-swimmers must wade through the water slowly
+and will occasionally fail to attack in melee when wading through shallow
+water; although large creatures are able to keep their balance, move at a
+normal speed, and avoid fumbling.
 %%%%
 A toxic bog
 
 A filthy pool of poisonous, waist-deep sludge. Wading or swimming through the
 sludge will damage and poison any creature, even those resistant to poison.
-Those well-adapted to water can swim through it; other creatures can wade
-through it slowly. Non-swimmers will occasionally fail to attack in melee when
-wading through shallow water, although large creatures are able to keep their
-balance and avoid fumbling.
+Those well-adapted to water can swim through it and attack normally.
+Non-swimmers must wade through the water slowly and will occasionally fail to
+attack in melee when wading through shallow water; although large creatures are
+able to keep their balance, move at a normal speed, and avoid fumbling.
 %%%%
 The open sea
 
