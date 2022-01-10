@@ -42,7 +42,7 @@ def ensure_settings_db_exists():  # type: () -> None
     if os.path.exists(config.get('settings_db')):
         return
     logging.warn("User settings database didn't exist at '%s'; creating it now.",
-                 settings_db)
+                 config.get('settings_db'))
     create_settings_db()
 
 
