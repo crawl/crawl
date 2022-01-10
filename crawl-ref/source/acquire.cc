@@ -1395,7 +1395,7 @@ class AcquireMenu : public InvMenu
     CrawlVector &acq_items;
 
     void init_entries();
-    void update_help();
+    string get_keyhelp(bool unused) const override;
     bool acquire_selected();
 
     virtual bool process_key(int keyin) override;
@@ -1434,7 +1434,7 @@ public:
 
 AcquireMenu::AcquireMenu(CrawlVector &aitems)
     : InvMenu(MF_SINGLESELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
-              | MF_ALLOW_FORMATTING),
+              | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
       acq_items(aitems)
 {
     menu_action = ACT_EXECUTE;
@@ -1443,8 +1443,6 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems)
     set_tag("acquirement");
 
     init_entries();
-
-    update_help();
 
     set_title("Choose an item to acquire.");
 }
@@ -1475,20 +1473,36 @@ static string _hyphenated_letters(int how_many, char first)
     return s;
 }
 
-void AcquireMenu::update_help()
+string AcquireMenu::get_keyhelp(bool) const
 {
-    string top_line = string(80, ' ') + '\n';
+    string help;
+    vector<MenuEntry*> selected = selected_entries();
+    if (selected.size() == 1 && menu_action == ACT_EXECUTE)
+    {
+        auto& entry = *selected[0];
+        const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
+        help = make_stringf(
+               "<%s>Acquire %s? (%s/N)</%s>\n",
+               col.c_str(),
+               entry.text.c_str(),
+               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
+               col.c_str());
+    }
+    else
+        help = "\n";
+    // looks better with a margin:
+    help += string(MIN_COLS, ' ') + '\n';
 
-    set_more(formatted_string::parse_string(top_line + make_stringf(
+    help += make_stringf(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "%s  [%s] %s\n"
-        "[Esc/R-Click] exit",
+        "<lightgrey>%s  [%s] %s</lightgrey>",
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
                                      "[<w>!</w>] acquire|<w>examine</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for acquirement"
-                                   : "examine item")));
+                                   : "examine item");
+    return pad_more_with(help, "<lightgrey>[<w>Esc</w>] exit</lightgrey>", MIN_COLS);
 }
 
 static void _create_acquirement_item(item_def &item)
@@ -1529,23 +1543,13 @@ bool AcquireMenu::acquire_selected()
     ASSERT(selected.size() == 1);
     auto& entry = *selected[0];
 
-    const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
-    update_help();
-    const formatted_string old_more = more;
-    more = formatted_string::parse_string(make_stringf(
-               "<%s>Acquire %s? (%s/N)</%s>\n",
-               col.c_str(),
-               entry.text.c_str(),
-               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
-               col.c_str()));
-    more += old_more;
+    // update the more with a y/n prompt
     update_more();
 
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
         deselect_all();
-        more = old_more;
-        update_more();
+        update_more(); // go back to the regular more
         return true;
     }
 
@@ -1565,41 +1569,33 @@ bool AcquireMenu::process_key(int keyin)
             menu_action = ACT_EXAMINE;
         else
             menu_action = ACT_EXECUTE;
-        update_help();
         update_more();
         return true;
     default:
         break;
     }
 
-    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size())
+    const bool ret = InvMenu::process_key(keyin);
+    auto selected = selected_entries();
+    if (selected.size() == 1)
     {
         if (menu_action == ACT_EXAMINE)
         {
             // Use a copy to set flags that make the description better
             // See the similar code in shopping.cc for details about const
             // hygene
-            item_def& item(*const_cast<item_def*>(dynamic_cast<AcquireEntry*>(
-                items[letter_to_index(keyin)])->item));
+            item_def &item = *static_cast<item_def*>(selected[0]->data);
 
             item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
                            | ISFLAG_NOTED_GET);
             describe_item_popup(item);
+            deselect_all();
 
             return true;
         }
         else
-        {
-            const unsigned int i = keyin - 'a';
-            select_item_index(i, 1);
             return acquire_selected();
-        }
     }
-
-    const bool ret = InvMenu::process_key(keyin);
-    auto selected = selected_entries();
-    if (selected.size() == 1)
-        return acquire_selected();
     else
         return ret;
 }
@@ -1709,6 +1705,8 @@ bool acquirement_menu()
     }
 
     AcquireMenu acq_menu(acq_items);
+    acq_menu.set_more("\n\n"); // ugly workaround TODO fix
+    acq_menu.set_more();
     acq_menu.show();
 
     return !you.props.exists(ACQUIRE_ITEMS_KEY);

@@ -500,8 +500,16 @@ public:
         // a string that can have `XXX` in it somewhere, to be replaced by a
         // scroll position
         // TODO: might be simpler just to call get_keyhelp directly?
-        text_for_scrollable = scroll;
-        text_for_unscrollable = noscroll;
+        const bool diff = !using_template || text_for_scrollable != scroll
+                                          || text_for_unscrollable != noscroll;
+        if (diff)
+        {
+            text_for_scrollable = scroll;
+            text_for_unscrollable = noscroll;
+            _invalidate_sizereq();
+            _queue_allocation();
+        }
+
         if (!using_template)
         {
             using_template = true;
@@ -610,7 +618,8 @@ void UIMenuPopup::_allocate_region()
     {
         // TODO: for some reason if this is initially set to false, on the
         // first render, toggling it to true doesn't work. (Workaround: always
-        // start true.)
+        // start true.) I think it might be an issue with the more changing
+        // height not working correctly?
         m_menu->m_ui.more->set_visible(!more_visible);
         _invalidate_sizereq();
         m_menu->m_ui.more->_queue_allocation();
@@ -2133,6 +2142,7 @@ void Menu::update_more()
         m_ui.more->set_more_template(
             pad_more_with(get_keyhelp(true), "", width),
             pad_more_with(get_keyhelp(false), "", width));
+        m_ui.more->_expose();
 
         // visibility is handled in lower-level UI code, but for some reason
         // only a toggle from visible to invisible works on initial render
