@@ -603,7 +603,9 @@ void UIMenuPopup::_allocate_region()
     const int menu_height = m_menu->m_ui.menu->get_region().height;
     if (m_menu->m_keyhelp_more)
     {
-        const int scroll_percent = m_menu->m_ui.scroller->get_scroll() * 100
+        const int scroll_percent = (menu_height - viewport_height == 0)
+                    ? 0
+                    : m_menu->m_ui.scroller->get_scroll() * 100
                                             / (menu_height - viewport_height);
         m_menu->m_ui.more->set_from_template(menu_height > max_height, scroll_percent);
         // XX what if this changes the # of lines
