@@ -163,10 +163,8 @@ public:
         selected_qty = inv->selected_qty;
     }
 
-    virtual string get_text(bool need_cursor) const override
+    virtual string get_text() const override
     {
-        need_cursor = need_cursor && show_cursor;
-
         string name;
 
         if (item->base_type == OBJ_MISCELLANY)
@@ -217,9 +215,7 @@ public:
         else
             symbol = '-';
 
-        return make_stringf(" %c%c%c%c%s", hotkeys[0], need_cursor ? '[' : ' ',
-                                           symbol, need_cursor ? ']' : ' ',
-                                           name.c_str());
+        return make_stringf(" %c %c %s", hotkeys[0], symbol, name.c_str());
     }
 
     virtual int highlight_colour() const override
@@ -267,7 +263,7 @@ public:
     {
     }
 
-    virtual string get_text(const bool = false) const override
+    virtual string get_text() const override
     {
         if (item->base_type == OBJ_SCROLLS || item->base_type == OBJ_POTIONS)
         {

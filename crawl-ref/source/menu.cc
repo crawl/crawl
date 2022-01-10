@@ -250,9 +250,7 @@ void UIMenu::update_item(int index)
 #ifdef USE_TILE_LOCAL
     const MenuEntry *me = m_menu->items[index];
     int colour = m_menu->item_colour(me);
-    const bool needs_cursor = (m_menu->get_cursor() == index
-                               && m_menu->is_set(MF_MULTISELECT));
-    string text = me->get_text(needs_cursor);
+    string text = me->get_text();
 
     item_info.resize(m_menu->items.size());
 
@@ -425,7 +423,6 @@ void UIMenu::_render()
         cgotoxy(m_region.x+1, m_region.y+scroll+y);
         const int col = m_menu->item_colour(me);
         textcolour(col);
-        const bool needs_cursor = (m_menu->get_cursor() == i && m_menu->is_set(MF_MULTISELECT));
 
         // TODO: is this highlighting good enough for accessibility purposes?
         if (m_hover_idx == i)
@@ -433,12 +430,12 @@ void UIMenu::_render()
         if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
         {
             formatted_string s = formatted_string::parse_string(
-                me->get_text(needs_cursor), col);
+                me->get_text(), col);
             s.chop(m_region.width).display();
         }
         else
         {
-            string text = me->get_text(needs_cursor);
+            string text = me->get_text();
             text = chop_string(text, m_region.width);
             cprintf("%s", text.c_str());
         }
@@ -888,7 +885,7 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     title2(nullptr), flags(_flags), tag(tagname),
     cur_page(1), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
-    alive(false), last_selected(-1), last_hovered(-1), m_kmc(kmc),
+    alive(false), last_hovered(-1), m_kmc(kmc),
     m_filter(nullptr)
 {
     m_ui.menu = make_shared<UIMenu>(this);
@@ -967,7 +964,6 @@ void Menu::clear()
 {
     deleteAll(items);
     m_ui.menu->_queue_allocation();
-    last_selected = -1;
 }
 
 void Menu::set_flags(int new_flags)
@@ -1218,24 +1214,6 @@ void Menu::do_menu()
     }
     alive = false;
     ui::pop_layout();
-}
-
-int Menu::get_cursor() const
-{
-    if (last_selected == -1)
-        return -1;
-
-    unsigned int last = last_selected % item_count();
-    unsigned int next = (last_selected + 1) % item_count();
-
-    // Items with no hotkeys are unselectable
-    while (next != last && (items[next]->hotkeys.empty()
-                            || items[next]->level != MEL_ITEM))
-    {
-        next = (next + 1) % item_count();
-    }
-
-    return next;
 }
 
 bool Menu::is_set(int flag) const
@@ -1521,9 +1499,6 @@ bool Menu::process_key(int keyin)
         break;
     }
 
-    if (last_selected != -1 && get_cursor() == -1)
-        last_selected = -1;
-
     if (!isadigit(keyin))
         num = -1;
 
@@ -1707,7 +1682,7 @@ void Menu::select_items(int key, int qty)
     }
 }
 
-string MenuEntry::get_text(const bool) const
+string MenuEntry::get_text() const
 {
     if (level == MEL_ITEM && hotkeys.size())
     {
@@ -2042,33 +2017,13 @@ bool Menu::is_selectable(int item) const
     return false;
 }
 
-void Menu::select_item_index(int idx, int qty, bool draw_cursor)
+void Menu::select_item_index(int idx, int qty)
 {
-    const int old_cursor = get_cursor();
-
-    last_selected = idx;
     items[idx]->select(qty);
     m_ui.menu->update_item(idx);
 #ifdef USE_TILE_WEB
     webtiles_update_item(idx);
 #endif
-
-    if (draw_cursor)
-    {
-        int it_count = items.size();
-
-        const int new_cursor = get_cursor();
-        if (old_cursor != -1 && old_cursor < it_count
-            && items[old_cursor]->level == MEL_ITEM)
-        {
-            m_ui.menu->update_item(old_cursor);
-        }
-        if (new_cursor != -1 && new_cursor < it_count
-            && items[new_cursor]->level == MEL_ITEM)
-        {
-            m_ui.menu->update_item(new_cursor);
-        }
-    }
 }
 
 void Menu::select_index(int index, int qty)
@@ -2112,7 +2067,7 @@ void Menu::select_index(int index, int qty)
     else if (items[si]->level == MEL_ITEM
              && (flags & (MF_SINGLESELECT | MF_MULTISELECT)))
     {
-        select_item_index(si, qty, (flags & MF_MULTISELECT));
+        select_item_index(si, qty);
     }
 }
 

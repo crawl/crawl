@@ -161,7 +161,7 @@ public:
         return hotkeys.size() && hotkeys[0] == key;
     }
 
-    virtual string get_text(const bool unused = false) const;
+    virtual string get_text() const;
 
     virtual int highlight_colour() const
     {
@@ -328,7 +328,6 @@ public:
         add_entry(entry.release());
     }
     void get_selected(vector<MenuEntry*> *sel) const;
-    virtual int get_cursor() const;
 
     void set_select_filter(vector<text_pattern> filter)
     {
@@ -401,7 +400,6 @@ protected:
 
     bool alive;
 
-    int last_selected;
     int last_hovered;
     KeymapContext m_kmc;
 
@@ -454,7 +452,7 @@ protected:
 
     void deselect_all(bool update_view = true);
     virtual void select_items(int key, int qty = -1);
-    virtual void select_item_index(int idx, int qty, bool draw_cursor = true);
+    virtual void select_item_index(int idx, int qty);
     void select_index(int index, int qty = -1);
 
     bool is_hotkey(int index, int key);

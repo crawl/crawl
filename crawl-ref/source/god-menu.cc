@@ -38,7 +38,7 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     }
 }
 
-string GodMenuEntry::get_text(const bool) const
+string GodMenuEntry::get_text() const
 {
     if (level == MEL_ITEM && hotkeys.size())
     {

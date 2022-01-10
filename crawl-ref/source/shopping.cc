@@ -887,9 +887,8 @@ class ShopEntry : public InvEntry
 {
     ShopMenu& menu;
 
-    string get_text(bool need_cursor = false) const override
+    string get_text() const override
     {
-        need_cursor = need_cursor && show_cursor;
         const int cost = item_price(*item, menu.shop);
         const int total_cost = menu.selected_cost();
         const bool on_list = shopping_list.is_on_list(*item, &menu.pos);
@@ -911,12 +910,10 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+        return make_stringf(" <%s>%c %c </%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
-                            need_cursor ? '[' : ' ',
                             selected() ? '+' : on_list ? '$' : '-',
-                            need_cursor ? ']' : ' ',
                             keystr.c_str(),
                             itemstr.c_str(),
                             cost,

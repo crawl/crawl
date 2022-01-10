@@ -1406,21 +1406,18 @@ public:
 
 class AcquireEntry : public InvEntry
 {
-    string get_text(bool need_cursor = false) const override
+    string get_text() const override
     {
-        need_cursor = need_cursor && show_cursor;
         const colour_t keycol = LIGHTCYAN;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
         const string gold_text = item->base_type == OBJ_GOLD
             ? make_stringf(" (you have %d gold)", you.gold) : "";
-        return make_stringf(" <%s>%c%c%c%c</%s><%s>%s%s</%s>",
+        return make_stringf(" <%s>%c %c </%s><%s>%s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
-                            need_cursor ? '[' : ' ',
                             selected() ? '+' : '-',
-                            need_cursor ? ']' : ' ',
                             keystr.c_str(),
                             itemstr.c_str(),
                             text.c_str(),
@@ -1594,7 +1591,7 @@ bool AcquireMenu::process_key(int keyin)
         else
         {
             const unsigned int i = keyin - 'a';
-            select_item_index(i, 1, false);
+            select_item_index(i, 1);
             return acquire_selected();
         }
     }

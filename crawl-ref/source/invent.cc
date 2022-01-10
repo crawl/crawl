@@ -61,7 +61,7 @@ InvTitle::InvTitle(Menu *mn, const string &title, invtitle_annotator tfn)
     titlefn = tfn;
 }
 
-string InvTitle::get_text(const bool) const
+string InvTitle::get_text() const
 {
     return titlefn ? titlefn(m, MenuEntry::get_text())
                    : MenuEntry::get_text();
@@ -187,10 +187,8 @@ string InvEntry::get_filter_text() const
     return item_prefix(*item, false) + " " + get_text();
 }
 
-string InvEntry::get_text(bool need_cursor) const
+string InvEntry::get_text() const
 {
-    need_cursor = need_cursor && show_cursor;
-
     ostringstream tstr;
 
     const bool nosel = hotkeys.empty();
@@ -200,12 +198,7 @@ string InvEntry::get_text(bool need_cursor) const
 
     if (!nosel || tag == "pickup")
     {
-        tstr << key;
-
-        if (need_cursor)
-            tstr << '[';
-        else
-            tstr << ' ';
+        tstr << key << ' ';
 
         if (nosel)
             tstr << ' ';
@@ -218,10 +211,7 @@ string InvEntry::get_text(bool need_cursor) const
         else
             tstr << '+';
 
-        if (need_cursor)
-            tstr << ']';
-        else
-            tstr << ' ';
+        tstr << ' ';
     }
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(*item)) << ")" << " ";
@@ -299,12 +289,6 @@ void InvEntry::add_class_hotkeys(const item_def &i)
         add_hotkey(gly);
 }
 
-bool InvEntry::show_cursor = false;
-void InvEntry::set_show_cursor(bool doshow)
-{
-    show_cursor = doshow;
-}
-
 bool InvEntry::show_glyph = false;
 void InvEntry::set_show_glyph(bool doshow)
 {
@@ -327,8 +311,6 @@ InvMenu::InvMenu(int mflags)
     if (Options.tile_menu_icons)
         set_flags(get_flags() | MF_USE_TWO_COLUMNS);
 #endif
-
-    InvEntry::set_show_cursor(false);
 }
 
 bool InvMenu::mode_special_drop() const
@@ -397,10 +379,10 @@ static bool _item_is_permadrop_candidate(const item_def &item)
         || item_type_has_ids(item.base_type);
 }
 
-void InvMenu::select_item_index(int idx, int qty, bool draw_cursor)
+void InvMenu::select_item_index(int idx, int qty)
 {
     if (type != menu_type::drop)
-        return Menu::select_item_index(idx, qty, draw_cursor);
+        return Menu::select_item_index(idx, qty);
 
     InvEntry *ie = static_cast<InvEntry*>(items[idx]);
 
@@ -414,7 +396,7 @@ void InvMenu::select_item_index(int idx, int qty, bool draw_cursor)
         qty = _mode_special_drop ? -2 : 0;
         ie->set_star(!ie->has_star());
     }
-    Menu::select_item_index(idx, qty, draw_cursor);
+    Menu::select_item_index(idx, qty);
 }
 
 void InvEntry::set_star(bool val)

@@ -695,12 +695,12 @@ bool StackFiveMenu::process_key(int keyin)
                 swap(draws[i], draws[j]);
                 swap(items[i]->text, items[j]->text);
                 items[j]->colour = LIGHTGREY;
-                select_item_index(i, 0, false); // this also updates the item
-                select_item_index(j, 0, false);
+                select_item_index(i, 0); // this also updates the item
+                select_item_index(j, 0);
                 return true;
             }
         items[i]->colour = WHITE;
-        select_item_index(i, 1, false);
+        select_item_index(i, 1);
     }
     else
         Menu::process_key(keyin);

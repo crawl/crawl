@@ -535,9 +535,9 @@ public:
         : InvEntry(i)
     { }
 
-    string get_text(const bool need_cursor = false) const override
+    string get_text() const override
     {
-        const string t = InvEntry::get_text(need_cursor);
+        const string t = InvEntry::get_text();
         if (item && item->pos == you.pos())
             return t + " (here)";
         return t;
