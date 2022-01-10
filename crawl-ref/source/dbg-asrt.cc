@@ -647,6 +647,8 @@ void do_crash_dump()
             "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str());
     errno = 0;
+    // TODO: this freopen of stderr persists into a recursive crash, making it
+    // hard to directly log in webtiles...
     FILE* file = crawl_state.test ? stderr : freopen(name, "a+", stderr);
 
     // The errno values are only relevant when the function in
