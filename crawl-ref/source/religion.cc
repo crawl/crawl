@@ -3576,7 +3576,8 @@ static void _god_welcome_handle_gear()
 {
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
-    if (amulet && amulet->sub_type == AMU_FAITH && !is_useless_item(*amulet))
+    if (amulet && amulet->sub_type == AMU_FAITH
+        && ignore_faith_reason().empty())
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
