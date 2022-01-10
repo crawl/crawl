@@ -243,9 +243,6 @@ static void _abyss_postvault_fixup()
 
 static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
 {
-    // Make sure we're not about to link bad items.
-    debug_item_scan();
-
     bool result = false;
     int tries = 10;
     do
@@ -254,10 +251,6 @@ static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
     }
     while (!result && --tries);
 
-    // Make sure the rune is linked.
-    // XXX: I'm fairly sure this does nothing if result == false,
-    //      but leaving it alone for now. -- Grunt
-    _abyss_postvault_fixup();
     return result;
 }
 
@@ -1384,7 +1377,6 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
     // Make sure we're not about to link bad items.
     debug_item_scan();
     _abyss_place_vaults(abyss_genlevel_mask, placed_abyssal_rune);
-
     // Link the vault-placed items.
     _abyss_postvault_fixup();
 
