@@ -182,9 +182,16 @@ void UseItemMenu::populate_menu()
             add_entry(subtitle);
         }
 
-        // nullptr means using the items' normal hotkeys
         if (is_inventory)
-            load_items(item_inv);
+        {
+            load_items(item_inv,
+                        [&](MenuEntry* entry) -> MenuEntry*
+                        {
+                            // hacky: remove the class hotkey
+                            entry->hotkeys.pop_back();
+                            return entry;
+                        });
+        }
         else
         {
             load_items(item_inv,
@@ -222,7 +229,6 @@ void UseItemMenu::populate_menu()
         subtitle->colour = LIGHTGREY;
         add_entry(subtitle);
 
-        // nullptr means using a-zA-Z
         if (is_inventory)
         {
             load_items(item_floor,
@@ -233,7 +239,15 @@ void UseItemMenu::populate_menu()
                         });
         }
         else
-            load_items(item_floor);
+        {
+            load_items(item_floor,
+                        [&](MenuEntry* entry) -> MenuEntry*
+                        {
+                            // hacky: remove the class hotkey
+                            entry->hotkeys.pop_back();
+                            return entry;
+                        });
+        }
     }
     if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
     {
