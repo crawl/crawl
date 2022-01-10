@@ -169,7 +169,7 @@ Belastbarkeit derer dezimieren die sie fühlen können.
 
 Kikubaaqudgha wird dich vielleicht davor bewahren ... oder auch nicht.
 %%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Rufen Sie Ihre untoten Anhänger von überall her im Kerker zu Ihren
 unmittelbaren Umgebungen zurück.
@@ -178,7 +178,7 @@ Drain Life ability
 
 Heile dich, indem du den Wesen um dich herum Leben entziehst.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Markiere dies Seele eines lebenden intelligenten Monster als reif zum pflücken.
 Sobald dieses Monster stirbt gehört seine Seele dir.
