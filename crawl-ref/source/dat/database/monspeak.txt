@@ -5182,7 +5182,7 @@ whispers
 ## END Menkaure ##
 %%%%
 ############ MENNAS ### A silent angel.
-Mennas
+default Mennas
 
 VISUAL:@The_monster@ gestures at you. @player_only@
 
@@ -5191,10 +5191,6 @@ VISUAL:@The_monster@ looks to the heavens.
 VISUAL:@The_monster@ shakes @possessive@ head sadly.
 
 VISUAL:@The_monster@ is caught in a moment of prayer.
-%%%%
-silenced Mennas
-
-@Mennas@
 %%%%
 ############ MURRAY ### A disembodied skull.
 Murray
