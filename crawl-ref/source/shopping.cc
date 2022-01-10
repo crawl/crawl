@@ -2066,7 +2066,9 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
+    ShoppingListMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
+            | MF_INIT_HOVER) {}
     bool view_only {false};
 
 protected:
@@ -2191,8 +2193,6 @@ void ShoppingList::display(bool view_only)
     string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
     shopmenu.set_more(formatted_string::parse_string(more_str));
 
-    shopmenu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
-
     fill_out_menu(shopmenu);
 
     shopmenu.on_single_selection =
@@ -2210,7 +2210,7 @@ void ShoppingList::display(bool view_only)
             if (cost > you.gold)
             {
                 string prompt =
-                   make_stringf("You cannot afford %s; travel there "
+                   make_stringf("Travel to: %s\nYou cannot afford this item; travel there "
                                 "anyway? (y/N)",
                                 describe_thing(*thing, DESC_A).c_str());
                 clrscr();
