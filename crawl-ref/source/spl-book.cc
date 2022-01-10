@@ -722,8 +722,7 @@ private:
 
 public:
     SpellLibraryMenu(spell_list& list)
-        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING
+        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
                // To have the ctrl-f menu show up in webtiles
                | MF_ALLOW_FILTER, "spell"),
         current_action(you.divine_exegesis ? action::cast : action::memorise),

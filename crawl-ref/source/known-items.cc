@@ -21,6 +21,16 @@
 class KnownMenu : public InvMenu
 {
 public:
+    KnownMenu(bool unknown)
+        : InvMenu(MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_USE_TWO_COLUMNS
+                    | ((unknown) ? MF_NOSELECT
+                                 : MF_MULTISELECT | MF_ALLOW_FILTER))
+    {
+        set_type(menu_type::know);
+        set_more(); // force derived class get_keyhelp()
+    }
+
+
     // This loads items in the order they are put into the list (sequentially)
     menu_letter load_items_seq(const vector<const item_def*> &mitems,
                                MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
@@ -96,6 +106,51 @@ protected:
             return true;
         }
         return Menu::process_key(key);
+    }
+
+    string get_keyhelp(bool scrollable) const override
+    {
+        string navigation;
+        if (is_set(MF_NOSELECT))
+        {
+            navigation = "<lightgrey>";
+            if (scrollable)
+            {
+                navigation +=
+                    "[<w>PgDn</w>|<w>></w>] page down"
+                    "  [<w>PgUp</w>|<w><<</w>] page up";
+            }
+            // navigation += "</lightgrey>";
+            navigation += "  [<w>Esc</w>|<w>Ret</w>] close"
+                          "  [<w>-</w>] recognised"
+                          "</lightgrey>";
+        }
+        else
+        {
+            // very similar to the MF_MULTISELECT case for regular Menus, but
+            // various differences require an override
+            navigation = "<lightgrey>"
+                         "[<w>Up</w>|<w>Down</w>] select";
+
+            if (scrollable)
+            {
+                navigation +=
+                    "  [<w>PgDn</w>|<w>></w>] page down"
+                    "  [<w>PgUp</w>|<w><<</w>] page up";
+            }
+            navigation += "</lightgrey>";
+            navigation = pad_more_with(navigation,
+                                    "[<w>Esc</w>|<w>Ret</w>] close", MIN_COLS);
+            navigation +=
+                "\n<lightgrey>"
+                "Letters toggle autopickup  "
+                "[<w>.</w>|<w>Space</w>] toggle selected  "
+                "[<w>-</w>] unrecognised"
+                "</lightgrey>";
+        }
+
+        return pad_more_with(navigation,
+                            "<lightgrey>[<w>XXX</w>]</lightgrey>", MIN_COLS);
     }
 };
 
@@ -376,13 +431,13 @@ void check_item_knowledge(bool unknown_items)
 #endif
     sort(items_misc.begin(), items_misc.end(), _identified_item_names);
 
-    KnownMenu menu;
+    KnownMenu menu(unknown_items);
     string stitle;
 
     if (unknown_items)
-        stitle = "Items not yet recognised: (toggle with -)";
+        stitle = "Items not yet recognised:";
     else if (!all_items_known)
-        stitle = "Recognised items. (- for unrecognised, select to toggle autopickup)";
+        stitle = "Recognised items. (Select to toggle autopickup)";
     else
         stitle = "You recognise all items. (Select to toggle autopickup)";
 
@@ -392,10 +447,6 @@ void check_item_knowledge(bool unknown_items)
                              ' ') + prompt;
 
     menu.set_preselect(&selected_items);
-    menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_USE_TWO_COLUMNS
-                    | ((unknown_items) ? MF_NOSELECT
-                                       : MF_MULTISELECT | MF_ALLOW_FILTER));
-    menu.set_type(menu_type::know);
     menu_letter ml;
     ml = menu.load_items(items, unknown_items ? unknown_item_mangle
                                               : known_item_mangle, 'a', false);

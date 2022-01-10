@@ -89,6 +89,8 @@ public:
     bool is_inventory;
     int item_type_filter;
 
+    int last_inv_pos;
+
     // XX these probably shouldn't be const...
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
@@ -104,12 +106,15 @@ public:
 
     void toggle_display_all();
     void toggle_inv_or_floor();
+    void set_hovered(int hovered) override;
 };
 
 UseItemMenu::UseItemMenu(int item_type, const char* prompt)
-    : InvMenu(MF_SINGLESELECT), display_all(false), is_inventory(true),
-      item_type_filter(item_type)
+    : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER),
+                            display_all(false), is_inventory(true),
+      item_type_filter(item_type), last_inv_pos(-1)
 {
+    set_tag("use_item");
     set_title(prompt);
     populate_list();
     populate_menu();
@@ -190,6 +195,7 @@ void UseItemMenu::populate_menu()
                         });
         }
     }
+    last_inv_pos = items.size() - 1;
 
     if (!item_floor.empty())
     {
@@ -201,7 +207,17 @@ void UseItemMenu::populate_menu()
         // Load floor items to menu
         string subtitle_text = "Floor Items";
         if (is_inventory)
-            subtitle_text += " (',' to select)";
+        {
+            if (Options.easy_floor_use && item_floor.size() == 1)
+            {
+                subtitle_text += string(" (',' to ") +
+                    (item_type_filter == OBJ_ARMOUR ? "wear)"
+                   : item_type_filter == OSEL_WIELD ? "wield)"
+                   : "use)");
+            }
+            else
+                subtitle_text += " (',' to select)";
+        }
         auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
         subtitle->colour = LIGHTGREY;
         add_entry(subtitle);
@@ -219,12 +235,20 @@ void UseItemMenu::populate_menu()
         else
             load_items(item_floor);
     }
+    if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
+    {
+        if (is_inventory && last_hovered > last_inv_pos)
+            set_hovered(0);
+        else if (!is_inventory && last_hovered <= last_inv_pos)
+            set_hovered(last_inv_pos + 1);
+    }
 }
 
 void UseItemMenu::repopulate_menu()
 {
     deleteAll(items);
     populate_menu();
+    update_menu(true);
 }
 
 void UseItemMenu::toggle_display_all()
@@ -238,8 +262,24 @@ void UseItemMenu::toggle_display_all()
 
 void UseItemMenu::toggle_inv_or_floor()
 {
+    if (item_inv.empty() || item_floor.empty())
+        return;
     is_inventory = !is_inventory;
     repopulate_menu();
+}
+
+void UseItemMenu::set_hovered(int hovered)
+{
+    InvMenu::set_hovered(hovered);
+    // keep inv vs floor in sync
+    if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
+    {
+        if (is_inventory && last_hovered > last_inv_pos
+            || !is_inventory && last_hovered <= last_inv_pos)
+        {
+            toggle_inv_or_floor();
+        }
+    }
 }
 
 bool UseItemMenu::process_key(int key)

@@ -318,12 +318,14 @@ void InvEntry::set_show_coordinates(bool doshow)
 }
 
 InvMenu::InvMenu(int mflags)
-    : Menu(mflags, "inventory"), type(menu_type::invlist), pre_select(nullptr),
-      title_annotate(nullptr), _mode_special_drop(false)
+    : Menu((mflags & MF_NOSELECT) ? mflags : (mflags | MF_ARROWS_SELECT),
+                "inventory"),
+        type(menu_type::invlist), pre_select(nullptr),
+        title_annotate(nullptr), _mode_special_drop(false)
 {
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
-        set_flags(mflags | MF_USE_TWO_COLUMNS);
+        set_flags(get_flags() | MF_USE_TWO_COLUMNS);
 #endif
 
     InvEntry::set_show_cursor(false);
@@ -1046,7 +1048,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags &= ~MF_MULTISELECT;
         }
 
-        new_flags |= MF_ALLOW_FORMATTING;
+        new_flags |= MF_ALLOW_FORMATTING | MF_ARROWS_SELECT;
         new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
@@ -1208,7 +1210,7 @@ static unsigned char _invent_select(const char *title = nullptr,
                                     Menu::selitem_tfn selitemfn = nullptr,
                                     const vector<SelItem> *pre_select = nullptr)
 {
-    InvMenu menu(flags | MF_ALLOW_FORMATTING);
+    InvMenu menu(flags | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
 
     menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);

@@ -1437,7 +1437,7 @@ public:
 
 AcquireMenu::AcquireMenu(CrawlVector &aitems)
     : InvMenu(MF_SINGLESELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
-              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
+              | MF_ALLOW_FORMATTING),
       acq_items(aitems)
 {
     menu_action = ACT_EXECUTE;

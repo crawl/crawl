@@ -1506,7 +1506,7 @@ class StashSearchMenu : public Menu
 {
 public:
     StashSearchMenu(const char* sort_style_,const char* filtered_)
-        : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING),
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
           request_toggle_sort_method(false),
           request_toggle_filter_useless(false),
           sort_style(sort_style_),

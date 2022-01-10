@@ -8,7 +8,10 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function item_selectable(item)
     {
         // TODO: the logic on the c++ side is somewhat different here
-        return item.level == 2 && item.hotkeys && item.hotkeys.length;
+        return item.level == 2
+            // in the use item menu, selecting a non-hotkeyed item triggers
+            // relettering on the server
+            && (menu.tag == "use_item" || item.hotkeys && item.hotkeys.length);
     }
 
     function item_text(item)
@@ -91,7 +94,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         if (item == menu.last_hovered)
         {
-            // just make sure the hvoer class is set correctly
+            // just make sure the hover class is set correctly
             add_hover_class(menu.last_hovered);
             return;
         }
@@ -160,8 +163,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         menu.scroller = scroller(content_div[0]);
         menu.scroller.scrollElement.addEventListener('scroll', menu_scroll_handler);
 
-        menu_div.append("<div class='menu_more'>" + util.formatted_string_to_html(menu.more)
-                        + "</div>");
+        menu_div.append("<div class='menu_more'></div>");
+        update_more();
 
         if (client.is_watching())
             menu.following_player_scroll = true;
@@ -348,15 +351,23 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
             menu.last_hovered = 0;
         var next = menu.last_visible + 1;
+        if (relative_hover > 0
+            && menu.items[menu.first_visible + relative_hover - 1].level < 2)
+        {
+            // if the top element is a header, act as if we're scrolling down
+            // from there -- it's more natural this way
+            relative_hover = relative_hover - 1;
+        }
         if (next >= menu.items.length)
             next = menu.items.length - 1;
         scroll_to_item(next);
         if (relative_hover >= 0)
         {
-            if (menu.first_visible + relative_hover == menu.last_hovered)
-                relative_hover = menu.items.length - 1;
-                set_hovered(next_hoverable_item(true,
-                            menu.first_visible + relative_hover, true), false);
+            // The <= here is to handle headers
+            if (menu.first_visible + relative_hover <= menu.last_hovered)
+                relative_hover = menu.items.length - 1 - menu.first_visible;
+            set_hovered(next_hoverable_item(false,
+                            menu.first_visible + relative_hover, true), true);
         }
     }
 
@@ -387,7 +398,12 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function line_down()
     {
+        if (menu.length <= 0)
+            return;
         var next = menu.first_visible + 1;
+        // treat a header and a following item as one item
+        if (menu.items[menu.first_visible].level < 2)
+            next = next + 1;
         if (next >= menu.items.length)
             next = menu.items.length - 1;
         scroll_to_item(next);
@@ -408,9 +424,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (menu.last_hovered < 0)
             return;
         else if (menu.last_hovered < menu.first_visible)
-            set_hovered(first_visible, false);
+            set_hovered(menu.first_visible, false);
         else if (menu.last_hovered > menu.last_visible)
-            set_hovered(last_visible, false);
+            set_hovered(menu.last_visible, false);
     }
 
     function snap_in_page(index)
@@ -418,9 +434,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         // simpler than the c++ version! visible indices already calculated
         if (index < 0 || index >= menu.items.length)
             return;
-        if (index < menu.first_visible)
+        // the `<=` here is in order to check if a hovered first_visible item
+        // is preceded by a header
+        if (index <= menu.first_visible)
             scroll_to_item(index);
-        else if (index > menu.last_visible)
+        else if (index >= menu.last_visible)
             scroll_bottom_to_item(index);
     }
 
@@ -428,11 +446,16 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         var index = (item_or_index.elem ?
                      item_or_index.index : item_or_index);
-        if (menu.items.length == 0 || menu.first_visible == index)
+        if (menu.items.length == 0)
             return;
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
+        // ensure that an immediately preceding heading are visible
+        if (item.index > 0 && menu.items[item.index - 1].level < 2)
+            item = menu.items[item.index - 1];
+        if (item.index == menu.first_visible)
+            return;
         var contents = $(menu.scroller.scrollElement);
         var baseline = contents.children()[0].getBoundingClientRect().top;
         var elem_y = item.elem[0].getBoundingClientRect().top;
@@ -442,8 +465,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             setTimeout(function() { scroll_suppresses_hover = false; }, 50);
             scroll_suppresses_hover = true;
         }
-
-        contents[0].scrollTop = elem_y - baseline;
+        // allow a bit of extra space for the fade, number may need more tuning
+        contents[0].scrollTop = Math.max(0, elem_y - baseline - 18);
 
         menu.anchor_last = false;
         menu_scroll_handler(was_server_initiated);
@@ -467,7 +490,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             setTimeout(function() { scroll_suppresses_hover = false; }, 50);
             scroll_suppresses_hover = true;
         }
-        contents.scrollTop(item.elem.offset().top + item.elem.height()
+        // allow a bit of extra space for the fade, number may need more tuning
+        contents.scrollTop(item.elem.offset().top + item.elem.height() + 24
                 - baseline - menu.elem.find(".menu_contents").innerHeight());
 
         menu.anchor_last = true;
@@ -508,6 +532,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 break;
             }
         }
+        update_more();
     }
 
     function update_server_scroll()
@@ -635,6 +660,37 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             close_menu();
     }
 
+    function update_more()
+    {
+        if (menu.type != "crt")
+        {
+            const contents_height = menu.elem.find(".menu_contents_inner").height();
+            const contents = $(menu.scroller.scrollElement);
+            const avail_height = contents.height();
+            var shown_more = contents_height > avail_height
+                                                ? menu.more : menu.alt_more;
+
+            const scroll_end = contents_height - avail_height;
+            var scroll_percent;
+            if (contents[0].scrollTop === 0 || scroll_end <= 0)
+                scroll_percent = "top";
+            else if (contents[0].scrollTop >= scroll_end)
+                scroll_percent = "bot";
+            else
+            {
+                scroll_percent = (contents[0].scrollTop * 100
+                                / scroll_end).toFixed(0) + "%";
+                if (scroll_percent.length === 2)
+                    scroll_percent = " " + scroll_percent;
+            }
+            shown_more = shown_more.replace(/XXX/, scroll_percent);
+
+            var more = menu.elem.find(".menu_more");
+            more.html(util.formatted_string_to_html(shown_more));
+            more[0].classList.toggle("hidden", shown_more.length === 0);
+        }
+    }
+
     function update_menu(data)
     {
         // n.b. this may overwrite hover, but we can't update it yet because
@@ -657,7 +713,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             });
         }
         update_title();
-        menu.elem.find(".menu_more").html(util.formatted_string_to_html(menu.more));
+        update_more();
     }
 
     function update_menu_items(data)
@@ -675,6 +731,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         {
             scroll_to_item(data.first, true);
             set_hovered(data.last_hovered);
+            update_more();
         }
     }
 
@@ -705,14 +762,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
 
-        if (menu.type != "crt" && !(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
-        {
-            var contents_height = menu.elem.find(".menu_contents_inner").height();
-            var contents = $(menu.scroller.scrollElement);
-            var more = menu.elem.find(".menu_more");
-            var avail_height = contents.height() + more.height();
-            more[0].classList.toggle("hidden", contents_height <= avail_height);
-        }
+        update_more();
     }
 
     function menu_scroll_handler(was_server_initiated)
@@ -732,21 +782,14 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (!ui.top_popup() || ui.top_popup().is(":hidden")) return;
         if (ui.top_popup()[0] !== menu.elem[0]) return;
 
-        if (event.altKey || event.shiftkey) {
+        if (event.altKey || event.ctrlKey) {
             // ???
             if (update_server_scroll_timeout)
                 update_server_scroll();
             return;
         }
 
-        if (event.ctrlKey)
-        {
-            // XX why is this needed?
-            if (update_server_scroll_timeout)
-                update_server_scroll();
-            return;
-        }
-
+        // keycodes only: characters go in menu_keypress_handler
         switch (event.which)
         {
         case 109: // numpad -
@@ -782,14 +825,14 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 38: // up
-            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+            if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(true);
             else
                 line_up();
             event.preventDefault();
             return false;
         case 40: // down
-            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+            if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(false);
             else
                 line_down();
@@ -810,6 +853,13 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         var chr = String.fromCharCode(event.which);
 
+        if (chr == " " && (menu.flags & enums.menu_flag.MULTISELECT)
+            && (menu.flags & enums.menu_flag.ARROWS_SELECT))
+        {
+            chr = ".";
+        }
+
+        // characters only: keycodes go in menu_keydown_handler
         switch (chr)
         {
         case "-":
@@ -831,6 +881,14 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             page_down();
             event.preventDefault();
             return false;
+        case "'": // legacy thing
+            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+            {
+                cycle_hover(false);
+                event.preventDefault();
+                return false;
+            }
+            break;
         }
 
         if (update_server_scroll_timeout)

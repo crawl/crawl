@@ -1901,7 +1901,7 @@ public:
     command_type cmd;
     GameMenu()
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP),
+                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER),
           cmd(CMD_NO_CMD)
     {
         set_tag("game_menu");
@@ -1969,7 +1969,6 @@ public:
     vector<MenuEntry *> show(bool reuse_selections = false) override
     {
         fill_entries();
-        cycle_hover();
         return Menu::show(reuse_selections);
     }
 };

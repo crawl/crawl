@@ -485,7 +485,10 @@ public:
 class UIMenuMore : public Text
 {
 public:
-    virtual ~UIMenuMore() {};
+    UIMenuMore() : using_template(false)
+    {}
+    virtual ~UIMenuMore() {}
+
     void set_text_immediately(const formatted_string &fs)
     {
         m_text.clear();
@@ -493,30 +496,60 @@ public:
         _expose();
         m_wrapped_size = Size(-1);
         wrap_text_to_size(m_region.width, m_region.height);
-    };
-
-    void set_more_template(const formatted_string &fs)
-    {
-        // a string with `XXX` in it somewhere, to be replaced by a scroll
-        // position
-        more_template = fs.to_colour_string();
-        set_text(fs);
     }
 
-    void fill_pos(int scroll_percent)
+    void set_more_template(const string &scroll, const string &noscroll)
     {
-        if (more_template.empty())
+        // a string that can have `XXX` in it somewhere, to be replaced by a
+        // scroll position
+        // TODO: might be simpler just to call get_keyhelp directly?
+        text_for_scrollable = scroll;
+        text_for_unscrollable = noscroll;
+        if (!using_template)
+        {
+            using_template = true;
+            set_from_template(true, 0);
+        }
+    }
+
+    void set_from_template(bool scrollable, int scroll_percent)
+    {
+        if (!using_template)
             return;
-        string perc = scroll_percent <= 0 ? "top"
-            : scroll_percent >= 100 ? "bot"
-            : make_stringf("%2d%%", scroll_percent);
+        string more_template = scrollable
+                                ? text_for_scrollable
+                                : text_for_unscrollable;
+        const string perc = scroll_percent <= 0 ? "top"
+                            : scroll_percent >= 100 ? "bot"
+                            : make_stringf("%2d%%", scroll_percent);
 
-        string scroll_more = replace_all(more_template, "XXX", perc);
-        set_text_immediately(formatted_string::parse_string(scroll_more));
+        more_template = replace_all(more_template, "XXX", perc);
+        set_text_immediately(formatted_string::parse_string(more_template));
     }
+
+#ifdef USE_TILE_WEB
+    void webtiles_write_more()
+    {
+        // assumes an open object
+        if (using_template)
+        {
+            tiles.json_write_string("more", text_for_scrollable);
+            tiles.json_write_string("alt_more", text_for_unscrollable);
+        }
+        else
+        {
+            const string shown_more = get_text().to_colour_string();
+            tiles.json_write_string("more", shown_more);
+            tiles.json_write_string("alt_more", shown_more);
+        }
+    }
+#endif
+
+    bool using_template;
 
 private:
-    string more_template;
+    string text_for_scrollable;
+    string text_for_unscrollable;
 };
 
 class UIMenuPopup : public ui::Popup
@@ -538,6 +571,7 @@ void UIMenuPopup::_allocate_region()
     int max_height = m_menu->m_ui.popup->get_max_child_size().height;
     max_height -= m_menu->m_ui.title->get_region().height;
     max_height -= m_menu->m_ui.title->get_margin().bottom;
+    max_height -= m_menu->m_ui.more->get_region().height;
     int viewport_height = m_menu->m_ui.scroller->get_region().height;
 
 #ifdef USE_TILE_LOCAL
@@ -561,30 +595,29 @@ void UIMenuPopup::_allocate_region()
     m_menu->m_ui.menu->do_layout(menu_w, num_cols);
 #endif
 
-    int menu_height = m_menu->m_ui.menu->get_region().height;
-
-    // change more visibility depending on the height of the menu. This is
-    // only appropriate if the keyhelp is mainly about scrolling. (TODO:
-    // generalize somehow.)
-    bool can_toggle_more = !m_menu->is_set(MF_ALWAYS_SHOW_MORE)
-        && !m_menu->m_ui.more->get_text().ops.empty();
-    if (can_toggle_more)
-    {
-        bool more_visible = m_menu->m_ui.more->is_visible();
-        if (more_visible ? menu_height <= max_height : menu_height > max_height)
-        {
-            m_menu->m_ui.more->set_visible(!more_visible);
-            _invalidate_sizereq();
-            m_menu->m_ui.more->_queue_allocation();
-            ui::restart_layout();
-        }
-    }
-
-    if (m_menu->m_keyhelp_more && m_menu->m_ui.more->is_visible())
+    const int menu_height = m_menu->m_ui.menu->get_region().height;
+    if (m_menu->m_keyhelp_more)
     {
         const int scroll_percent = m_menu->m_ui.scroller->get_scroll() * 100
                                             / (menu_height - viewport_height);
-        m_menu->m_ui.more->fill_pos(scroll_percent);
+        m_menu->m_ui.more->set_from_template(menu_height > max_height, scroll_percent);
+        // XX what if this changes the # of lines
+    }
+
+    // is the more invisible but has some text? This can happen either on
+    // initial layout, or if the keyhelp changes depending on whether there's
+    // a scrollbar.
+    const bool more_visible = m_menu->m_ui.more->is_visible();
+    const bool more_has_text = !m_menu->m_ui.more->get_text().ops.empty();
+    if (more_visible != more_has_text)
+    {
+        // TODO: for some reason if this is initially set to false, on the
+        // first render, toggling it to true doesn't work. (Workaround: always
+        // start true.)
+        m_menu->m_ui.more->set_visible(!more_visible);
+        _invalidate_sizereq();
+        m_menu->m_ui.more->_queue_allocation();
+        ui::restart_layout();
     }
 
     // adjust maximum height
@@ -611,6 +644,8 @@ void UIMenu::_allocate_region()
     do_layout(m_region.width, m_num_columns);
     if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
         update_hovered_entry();
+    else
+        m_hover_idx = m_menu->last_hovered;
     pack_buffers();
 #endif
 }
@@ -682,7 +717,8 @@ bool UIMenu::on_event(const Event& ev)
     if (event.type() == Event::Type::MouseEnter)
     {
         do_layout(m_region.width, m_num_columns);
-        update_hovered_entry();
+        if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
+            update_hovered_entry();
         pack_buffers();
         _expose();
         return false;
@@ -876,6 +912,8 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.scroller->set_child(m_ui.menu);
 
     set_flags(flags);
+    // XX this won't use derived class get_keyhelp, is there a better place way
+    // to set up the more?
     set_more();
 }
 
@@ -959,18 +997,78 @@ void Menu::set_more(const string s)
     set_more(formatted_string::parse_string(s));
 }
 
-string Menu::get_keyhelp() const
+formatted_string pad_more_with(formatted_string s,
+    const formatted_string &pad, int min_width)
 {
-    return
-        "<lightgrey>[<w>PgDn</w>|<w>></w>]: page down        "
-        "[<w>PgUp</w>|<w><<</w>]: page up        "
-        "[<w>Esc</w>]: close</lightgrey>";
+    if (min_width <= 0)
+        return s;
+    // Needs to be done as a parsed formatted_string so that columns are
+    // counted correctly.
+    const auto lines = split_string("\n", s.tostring(), false, true);
+    const int last_len = static_cast<int>(lines.back().size());
+    const int pad_size = static_cast<int>(pad.tostring().size());
+    if (last_len < (min_width - pad_size))
+    {
+        s += string(min_width - (last_len + pad_size), ' ');
+        s += pad;
+    }
+    return s;
 }
 
+string pad_more_with(const string &s, const string &pad, int min_width)
+{
+    return pad_more_with(
+        formatted_string::parse_string(s),
+        formatted_string::parse_string(pad),
+        min_width).to_colour_string();
+}
+
+string Menu::get_keyhelp(bool scrollable) const
+{
+    // multiselect always shows a keyhelp, for singleselect it is blank unless
+    // it can be scrolled
+    if (!scrollable && !is_set(MF_MULTISELECT))
+        return "";
+
+    string navigation = "<lightgrey>";
+    if (is_set(MF_ARROWS_SELECT))
+        navigation += "[<w>Up</w>|<w>Down</w>] select";
+
+    if (scrollable)
+    {
+        navigation +=
+            "  [<w>PgDn</w>|<w>></w>] page down"
+            "  [<w>PgUp</w>|<w><<</w>] page up";
+    }
+    if (!is_set(MF_MULTISELECT))
+        navigation += "  [<w>Esc</w>] close";
+    navigation += "</lightgrey>";
+    if (is_set(MF_MULTISELECT))
+    {
+        navigation = pad_more_with(navigation, "[<w>Esc</w>] close", MIN_COLS);
+        // XX this may not work perfectly with the way InvMenu handles
+        // selection
+        const auto chosen_count = selected_entries().size();
+        navigation += make_stringf(
+            "\n<lightgrey>"
+            "Letters toggle    "
+            "[<w>.</w>|<w>Space</w>] toggle selected    " // assumes MF_ARROWS_SELECT
+            "[<w>Ret</w>] %s "
+            "(%lu chosen)"
+            "</lightgrey>",
+            chosen_count == 0 ? "cancel" : "accept",
+            chosen_count);
+    }
+    // XX this is present on non-scrolling multiselect keyhelps mostly for
+    // aesthetic reasons, but maybe it could change with hover?
+    // the `XXX` is replaced in the ui code with a position in the scroll.
+    return pad_more_with(navigation, "<lightgrey>[<w>XXX</w>]</lightgrey>", MIN_COLS);
+}
+
+// use the class's built in keyhelp string
 void Menu::set_more()
 {
     m_keyhelp_more = true;
-    more = formatted_string::parse_string(get_keyhelp());
     update_more();
 }
 
@@ -1032,7 +1130,17 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
         deselect_all(false);
 
     if (is_set(MF_START_AT_END))
+    {
         m_ui.scroller->set_scroll(INT_MAX);
+        if (is_set(MF_INIT_HOVER))
+        {
+            set_hovered(static_cast<int>(items.size()) - 1);
+            if (items[last_hovered]->level != MEL_ITEM)
+                cycle_hover(true);
+        }
+    }
+    else if (is_set(MF_INIT_HOVER))
+        cycle_hover();
 
     do_menu();
 
@@ -1239,6 +1347,8 @@ bool Menu::process_key(int keyin)
 #ifdef USE_TILE_WEB
     const int old_vis_first = get_first_visible();
 #endif
+    if (keyin == ' ' && !!(flags & MF_MULTISELECT))
+        keyin = '.';
 
     switch (keyin)
     {
@@ -1279,6 +1389,7 @@ bool Menu::process_key(int keyin)
     case CK_SHIFT_DOWN:
         line_down();
         break;
+    case '\'': // backwards compatibility
     case CK_DOWN:
         if (is_set(MF_ARROWS_SELECT))
             cycle_hover();
@@ -1328,59 +1439,12 @@ bool Menu::process_key(int keyin)
 #ifndef USE_TILE_LOCAL
     case CK_NUMPAD_DECIMAL:
 #endif
-        if (last_selected == -1 && is_set(MF_MULTISELECT))
-            last_selected = 0;
-
-        if (last_selected != -1)
+        if (last_hovered != -1 && !!(flags & MF_MULTISELECT))
         {
-            const int next = get_cursor();
-            if (next != -1)
-            {
-                InvEntry::set_show_cursor(true);
-                select_index(next, num);
-                get_selected(&sel);
-                update_title();
-                if (get_cursor() < next)
-                {
-                    m_ui.scroller->set_scroll(0);
-                    break;
-                }
-            }
-
-            if (!in_page(last_selected))
-                page_down();
-        }
-        break;
-
-    case '\'':
-        if (last_selected == -1 && is_set(MF_MULTISELECT))
-            last_selected = 0;
-        else
-            last_selected = get_cursor();
-
-        if (last_selected != -1)
-        {
-            InvEntry::set_show_cursor(true);
-            const int it_count = item_count();
-            if (last_selected < it_count
-                && items[last_selected]->level == MEL_ITEM)
-            {
-                m_ui.menu->update_item(last_selected);
-            }
-
-            const int next_cursor = get_cursor();
-            if (next_cursor != -1)
-            {
-                if (next_cursor < last_selected)
-                    m_ui.scroller->set_scroll(0);
-                else if (!in_page(last_selected))
-                    page_down();
-                else if (next_cursor < it_count
-                         && items[next_cursor]->level == MEL_ITEM)
-                {
-                    m_ui.menu->update_item(next_cursor);
-                }
-            }
+            select_item_index(last_hovered, -1);
+            get_selected(&sel);
+            update_title();
+            update_more();
         }
         break;
 
@@ -1446,6 +1510,7 @@ bool Menu::process_key(int keyin)
         }
 
         update_title();
+        update_more();
 
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
@@ -1573,25 +1638,27 @@ void Menu::select_items(int key, int qty)
         // only select the item on the current page. This is why we
         // use two loops, and check to see if we've matched an item
         // by its primary hotkey (hotkeys[0] for multiple-selection
-        // menus, any hotkey for single-selection menus), in which
-        // case, we stop selecting further items.
+        // menus), in which case, we stop selecting further items.
         const bool check_preselected = (key == CK_ENTER);
         for (int i = first_entry; i < final; ++i)
         {
             if (check_preselected && items[i]->preselected)
             {
                 select_index(i, qty);
+                set_hovered(i);
                 selected = true;
                 break;
             }
-            else if (is_hotkey(i, key))
+            else if (is_hotkey(i, key) && (items[i]->hotkeys[0] == key
+                                                || is_set(MF_SINGLESELECT)))
             {
+                // XX for some singleselect menus, only snapping might be
+                // better. (E.g. inventory)
                 select_index(i, qty);
-                if (items[i]->hotkeys[0] == key || is_set(MF_SINGLESELECT))
-                {
-                    selected = true;
-                    break;
-                }
+                set_hovered(i);
+                selected = true;
+                break;
+
             }
         }
 
@@ -1602,13 +1669,39 @@ void Menu::select_items(int key, int qty)
                 if (check_preselected && items[i]->preselected)
                 {
                     select_index(i, qty);
+                    set_hovered(i);
                     break;
                 }
                 else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
+                    set_hovered(i);
                     break;
                 }
+            }
+        }
+
+        // no primary hotkeys found, check secondary hotkeys for multiselect
+        if (!selected && is_set(MF_MULTISELECT))
+        {
+            int last_snap = -1;
+            int first_snap = -1;
+            for (int i = 0; i < final; ++i)
+                if (is_hotkey(i, key))
+                {
+                    if (first_snap < 0)
+                        first_snap = i;
+                    last_snap = i;
+                    select_index(i, qty);
+                }
+
+            if (first_snap >= 0)
+            {
+                // try to ensure as much of the selection as possible is in
+                // view by snapping twice
+                // XX test on webtiles
+                snap_in_page(last_snap);
+                set_hovered(first_snap);
             }
         }
     }
@@ -2064,60 +2157,48 @@ void Menu::update_menu(bool update_entries)
 #endif
 }
 
-static formatted_string _pad_more_with(formatted_string s,
-    const formatted_string &pad, int min_width)
-{
-    const auto lines = split_string("\n", s.tostring(), false, true);
-    const int last_len = static_cast<int>(lines.back().size());
-    const int pad_size = static_cast<int>(pad.tostring().size());
-    if (last_len < (min_width - pad_size))
-    {
-        s += string(min_width - (last_len + pad_size), ' ');
-        s += pad;
-    }
-    return s;
-}
-
-static formatted_string _add_pos_string(formatted_string cur_more, int min_width)
-{
-    // the `XXX` is replaced in the ui code with a position in the scroll.
-    // Only for console.
-    const auto pad = formatted_string::parse_string(
-                                        "<lightgrey>[<w>XXX</w>]</lightgrey>");
-    return _pad_more_with(cur_more, pad, min_width);
-}
 
 void Menu::update_more()
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
-    formatted_string shown_more = more;
+
+    // used as a hacky way of enforcing a min width for tiles when a more is
+    // visible. results in consistent popup widths. Only has an effect if the
+    // min width is explicitly set.
+    const int width =
+#ifdef USE_TILE_LOCAL
+            0;
+#else
+            m_ui.menu->get_min_col_width();
+#endif
     if (m_keyhelp_more)
-        m_ui.more->set_more_template(_add_pos_string(shown_more, 79));
-
-    // hacky way of enforcing a min width for tiles when a more is visible.
-    // results in consistent popup widths. Only has an effect if the min
-    // width is explicitly set.
-    if (m_ui.menu->get_min_col_width() > 0)
     {
-        shown_more = _pad_more_with(shown_more, formatted_string(""),
-                                            m_ui.menu->get_min_col_width());
+        // this case does not use `this->more` at all
+        m_ui.more->set_more_template(
+            pad_more_with(get_keyhelp(true), "", width),
+            pad_more_with(get_keyhelp(false), "", width));
+
+        // visibility is handled in lower-level UI code, but for some reason
+        // only a toggle from visible to invisible works on initial render
+        m_ui.more->set_visible(true);
     }
-
-    if (!m_keyhelp_more)
+    else
+    {
+        // XX double check with webtiles cases
+        formatted_string shown_more = more.ops.empty()
+            ? more
+            : pad_more_with(more, formatted_string(""), width);
         m_ui.more->set_text(shown_more);
-
-    bool show_more = !more.ops.empty();
-    m_ui.more->set_visible(show_more);
+        m_ui.more->set_visible(!shown_more.ops.empty());
+    }
 
 #ifdef USE_TILE_WEB
     if (!alive)
         return;
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
-    // the position templating is not sent to webtiles, because the client
-    // manages its own scroll
-    tiles.json_write_string("more", shown_more.to_colour_string());
+    m_ui.more->webtiles_write_more();
     tiles.json_close_object();
     tiles.finish_message();
 #endif
@@ -2193,6 +2274,11 @@ void Menu::update_title()
 
 void Menu::set_hovered(int index)
 {
+    if (!is_set(MF_ARROWS_SELECT))
+    {
+        snap_in_page(index);
+        return;
+    }
     // intentionally goes to -1 on size 0
     last_hovered = min(index, static_cast<int>(items.size()) - 1);
 #ifdef USE_TILE_LOCAL
@@ -2408,7 +2494,7 @@ void Menu::webtiles_write_menu(bool replace) const
 
     webtiles_write_title();
 
-    tiles.json_write_string("more", more.to_colour_string());
+    m_ui.more->webtiles_write_more();
 
     int count = items.size();
     int start = 0;

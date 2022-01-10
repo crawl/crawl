@@ -517,7 +517,7 @@ static char _deck_hotkey(deck_type deck)
 static deck_type _choose_deck(const string title = "Draw")
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(make_stringf("%s which deck?        "
@@ -670,7 +670,7 @@ class StackFiveMenu : public Menu
     CrawlVector& draws;
 public:
     StackFiveMenu(CrawlVector& d)
-        : Menu(MF_NOSELECT | MF_UNCANCEL | MF_ALWAYS_SHOW_MORE), draws(d) {};
+        : Menu(MF_NOSELECT | MF_UNCANCEL), draws(d) {};
 };
 
 bool StackFiveMenu::process_key(int keyin)
@@ -710,7 +710,7 @@ bool StackFiveMenu::process_key(int keyin)
 static void _draw_stack(int to_stack)
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT | MF_UNCANCEL
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry("Draw which deck?        "

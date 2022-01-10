@@ -177,7 +177,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         toggle_with_I = false;
 
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-            | MF_NO_WRAP_ROWS | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+            | MF_NO_WRAP_ROWS | MF_ALLOW_FORMATTING);
     string titlestring = make_stringf("%-25.25s", title.c_str());
     {
         ToggleableMenuEntry* me =

@@ -1101,8 +1101,7 @@ private:
     bool blood;
 public:
     MutationMenu()
-        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-               | MF_ALWAYS_SHOW_MORE),
+        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING),
           fakemuts(_get_fakemuts(false)),
           muts( _get_ordered_mutations()),
           blood(false)

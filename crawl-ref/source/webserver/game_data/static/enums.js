@@ -308,7 +308,7 @@ define(function () {
     mf.NO_SELECT_QTY    = 0x0008;
     mf.ANYPRINTABLE     = 0x0010;
     mf.SELECT_BY_PAGE   = 0x0020;
-    mf.ALWAYS_SHOW_MORE = 0x0040;
+    mf.INIT_HOVER       = 0x0040;
     mf.WRAP             = 0x0080;
     mf.ALLOW_FILTER     = 0x0100;
     mf.ALLOW_FORMATTING = 0x0200;

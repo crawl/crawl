@@ -943,7 +943,7 @@ public:
 
 ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase)
     : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
-               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
+                | MF_ALLOW_FORMATTING),
       shop(_shop),
       pos(_pos),
       can_purchase(_can_purchase)
@@ -2194,8 +2194,7 @@ void ShoppingList::display(bool view_only)
     string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
     shopmenu.set_more(formatted_string::parse_string(more_str));
 
-    shopmenu.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
-                        | MF_ALLOW_FORMATTING);
+    shopmenu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
 
     fill_out_menu(shopmenu);
 

@@ -263,7 +263,7 @@ enum MenuFlag
                                      ///< closes the menu.
     MF_SELECT_BY_PAGE   = 0x00020,   ///< Allow selections to occur only on
                                      ///< currently-visible page.
-    MF_ALWAYS_SHOW_MORE = 0x00040,   ///< Always show the -more- footer
+    MF_INIT_HOVER       = 0x00040,   ///< Show the hover on initial display
     MF_WRAP             = 0x00080,   ///< Paging past the end will wrap back.
     MF_ALLOW_FILTER     = 0x00100,   ///< Control-F will ask for regex and
                                      ///< select the appropriate items.
@@ -317,7 +317,7 @@ public:
     // Shows a stock message about scrolling the menu instead of -more-
     void set_more();
     const formatted_string &get_more() const { return more; }
-    virtual string get_keyhelp() const;
+    virtual string get_keyhelp(bool scrollable) const;
     void set_min_col_width(int w);
 
     void set_highlighter(MenuHighlighter *h);
@@ -336,7 +336,7 @@ public:
     }
 
     void update_menu(bool update_entries = false);
-    void set_hovered(int index);
+    virtual void set_hovered(int index);
 
     virtual int getkey() const { return lastch; }
 
@@ -518,3 +518,6 @@ private:
 
 int linebreak_string(string& s, int maxcol, bool indent = false);
 string get_linebreak_string(const string& s, int maxcol);
+formatted_string pad_more_with(formatted_string s,
+                                    const formatted_string &pad, int min_width);
+string pad_more_with(const string &s, const string &pad, int min_width);
