@@ -2157,6 +2157,7 @@ void Menu::update_more()
             ? more
             : pad_more_with(more, formatted_string(""), width);
         m_ui.more->set_text(shown_more);
+        m_ui.more->using_template = false;
         m_ui.more->set_visible(!shown_more.ops.empty());
     }
 
