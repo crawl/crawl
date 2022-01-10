@@ -2724,7 +2724,7 @@ static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
  */
 void drop()
 {
-    if (inv_count() < 1 && you.gold == 0)
+    if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;
