@@ -5216,7 +5216,8 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_VAMPIRIC_DRAINING:
-        rc = actor_is_susceptible_to_vampirism(*mon);
+        rc = actor_is_susceptible_to_vampirism(*mon)
+                && (mon->res_negative_energy(intrinsic_only) < 3);
         break;
 
     case BEAM_VIRULENCE:
