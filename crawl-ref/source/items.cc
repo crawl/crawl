@@ -2487,6 +2487,28 @@ const item_def* top_item_at(const coord_def& where)
     return (link == NON_ITEM) ? nullptr : &env.item[link];
 }
 
+static bool _check_dangerous_drop(const item_def & item)
+{
+    if (!feat_eliminates_items(env.grid(you.pos())))
+        return true;
+
+    string prompt = "Are you sure you want to drop " + item.name(DESC_THE)
+                  + " into "
+                  + feature_description_at(you.pos(), false, DESC_A) + "? "
+                  + "You won't be able to retrieve "
+                  + (item.quantity == 1 ? "it." : "them.");
+
+    // don't interrupt delays; this might do something strange to macros
+    // that trigger it, but the main way drops interact with delays is
+    // through multidrop and armour delays
+    if (yesno(prompt.c_str(), true, 'n', true, false))
+        return true;
+
+    canned_msg(MSG_OK);
+    return false;
+}
+
+
 /**
  * Drop an item, possibly starting up a delay to do so.
  *
@@ -2498,10 +2520,14 @@ const item_def* top_item_at(const coord_def& where)
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
+
     item_def &item = you.inv[item_dropped];
 
     if (quant_drop < 0 || quant_drop > item.quantity)
         quant_drop = item.quantity;
+
+    if (!_check_dangerous_drop(item))
+        return false;
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
