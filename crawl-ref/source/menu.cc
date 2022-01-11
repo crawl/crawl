@@ -896,7 +896,7 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     title2(nullptr), flags(_flags), tag(tagname),
     cur_page(1), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
-    alive(false), last_hovered(-1), m_kmc(kmc),
+    alive(false), more_needs_init(true), last_hovered(-1), m_kmc(kmc),
     m_filter(nullptr)
 {
     m_ui.menu = make_shared<UIMenu>(this);
@@ -920,9 +920,11 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     m_ui.scroller->set_child(m_ui.menu);
 
     set_flags(flags);
-    // XX this won't use derived class get_keyhelp, is there a better place way
-    // to set up the more?
-    set_more();
+
+    // just do minimal initialization for now, full default more initialization
+    // happens on show
+    set_more("");
+    more_needs_init = true; // reset
 }
 
 void Menu::check_add_formatted_line(int firstcol, int nextcol,
@@ -995,6 +997,7 @@ bool Menu::minus_is_pageup() const
 void Menu::set_more(const formatted_string &fs)
 {
     m_keyhelp_more = false;
+    more_needs_init = false;
     more = fs;
     update_more();
 }
@@ -1022,6 +1025,23 @@ formatted_string pad_more_with(formatted_string s,
     return s;
 }
 
+// assumes contiguous lettering
+string hyphenated_hotkey_letters(int how_many, char first)
+{
+    how_many = min(how_many, 52);
+    string s = "[<w>";
+    s += first;
+    s += "</w>";
+    if (how_many > 1)
+    {
+        s += "-<w>";
+        s += first + how_many - 1;
+        s += "</w>";
+    }
+    s += "]";
+    return s;
+}
+
 string pad_more_with(const string &s, const string &pad, int min_width)
 {
     return pad_more_with(
@@ -1039,20 +1059,20 @@ string Menu::get_keyhelp(bool scrollable) const
 
     string navigation = "<lightgrey>";
     if (is_set(MF_ARROWS_SELECT))
-        navigation += "[<w>Up</w>|<w>Down</w>] select";
+        navigation += "[<w>Up</w>|<w>Down</w>] select  ";
 
     if (scrollable)
     {
         navigation +=
-            "  [<w>PgDn</w>|<w>></w>] page down"
-            "  [<w>PgUp</w>|<w><<</w>] page up";
+            "[<w>PgDn</w>|<w>></w>] page down  "
+            "[<w>PgUp</w>|<w><<</w>] page up  ";
     }
     if (!is_set(MF_MULTISELECT))
-        navigation += "  [<w>Esc</w>] close";
+        navigation += "[<w>Esc</w>] close";
     navigation += "</lightgrey>";
     if (is_set(MF_MULTISELECT))
     {
-        navigation = pad_more_with(navigation, "[<w>Esc</w>] close", MIN_COLS);
+        navigation = pad_more_with(navigation, "[<w>Esc</w>] close");
         // XX this may not work perfectly with the way InvMenu handles
         // selection
         const auto chosen_count = selected_entries().size();
@@ -1069,13 +1089,14 @@ string Menu::get_keyhelp(bool scrollable) const
     // XX this is present on non-scrolling multiselect keyhelps mostly for
     // aesthetic reasons, but maybe it could change with hover?
     // the `XXX` is replaced in the ui code with a position in the scroll.
-    return pad_more_with(navigation, "<lightgrey>[<w>XXX</w>]</lightgrey>", MIN_COLS);
+    return pad_more_with(navigation, "<lightgrey>[<w>XXX</w>]</lightgrey>");
 }
 
 // use the class's built in keyhelp string
 void Menu::set_more()
 {
     m_keyhelp_more = true;
+    more_needs_init = false;
     update_more();
 }
 
@@ -1130,6 +1151,12 @@ void Menu::reset()
 vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
     cursor_control cs(false);
+
+    // no one has yet manually called set_more, so use a keyhelp more. We do it
+    // here and this way instead of in the constructor so that a derived class
+    // get_keyhelp is used if relevant -- this sets the height correctly.
+    if (more_needs_init)
+        set_more();
 
     if (reuse_selections)
         get_selected(&sel);
@@ -1314,6 +1341,7 @@ bool Menu::process_key(int keyin)
 
         sel.clear();
         update_title();
+        update_more();
         return true;
     }
 #ifdef TOUCH_UI
@@ -1326,6 +1354,7 @@ bool Menu::process_key(int keyin)
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
         update_title();
+        update_more();
         return true;
     }
 
@@ -2152,7 +2181,6 @@ void Menu::update_more()
     }
     else
     {
-        // XX double check with webtiles cases
         formatted_string shown_more = more.ops.empty()
             ? more
             : pad_more_with(more, formatted_string(""), width);

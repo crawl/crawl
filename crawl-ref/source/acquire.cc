@@ -1459,20 +1459,6 @@ void AcquireMenu::init_entries()
     }
 }
 
-static string _hyphenated_letters(int how_many, char first)
-{
-    string s = "<w>";
-    s += first;
-    s += "</w>";
-    if (how_many > 1)
-    {
-        s += "-<w>";
-        s += first + how_many - 1;
-        s += "</w>";
-    }
-    return s;
-}
-
 string AcquireMenu::get_keyhelp(bool) const
 {
     string help;
@@ -1496,10 +1482,10 @@ string AcquireMenu::get_keyhelp(bool) const
     help += make_stringf(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "<lightgrey>%s  [%s] %s</lightgrey>",
+        "<lightgrey>%s  %s %s</lightgrey>",
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
                                      "[<w>!</w>] acquire|<w>examine</w> items",
-        _hyphenated_letters(item_count(), 'a').c_str(),
+        hyphenated_hotkey_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for acquirement"
                                    : "examine item");
     return pad_more_with(help, "<lightgrey>[<w>Esc</w>] exit</lightgrey>", MIN_COLS);
@@ -1705,8 +1691,6 @@ bool acquirement_menu()
     }
 
     AcquireMenu acq_menu(acq_items);
-    acq_menu.set_more("\n\n"); // ugly workaround TODO fix
-    acq_menu.set_more();
     acq_menu.show();
 
     return !you.props.exists(ACQUIRE_ITEMS_KEY);

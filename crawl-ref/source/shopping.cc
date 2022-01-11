@@ -823,20 +823,6 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
     return true;
 }
 
-static string _hyphenated_letters(int how_many, char first)
-{
-    string s = "<w>";
-    s += first;
-    s += "</w>";
-    if (how_many > 1)
-    {
-        s += "-<w>";
-        s += first + how_many - 1;
-        s += "</w>";
-    }
-    return s;
-}
-
 enum shopping_order
 {
     ORDER_TYPE,
@@ -1018,19 +1004,19 @@ void ShopMenu::update_help()
         //               "/R-Click"
         "[<w>Esc</w>] exit          "
 #endif
-        "%s  [%s] %s\n"
-        "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
+        "%s  %s %s\n"
+        "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
         !can_purchase ? " " " "  "  " "       "  "          " :
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
                                      "[<w>!</w>] buy|<w>examine</w> items",
-        _hyphenated_letters(item_count(), 'a').c_str(),
+        hyphenated_hotkey_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for purchase" : "examine item",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
         !can_purchase ? " " "     "  "               " :
                         "[<w>Enter</w>] make purchase",
-        _hyphenated_letters(item_count(), 'A').c_str())));
+        hyphenated_hotkey_letters(item_count(), 'A').c_str())));
 }
 
 void ShopMenu::purchase_selected()
@@ -2071,6 +2057,39 @@ public:
             | MF_INIT_HOVER) {}
     bool view_only {false};
 
+    string get_keyhelp(bool) const override
+    {
+        string s = make_stringf("<yellow>You have %d gold pieces</yellow>\n", you.gold);
+
+        if (view_only)
+            s += "<lightgrey>Choose to examine item  ";
+        else
+        {
+            s += "<lightgrey>[<w>!</w>] ";
+            switch (menu_action)
+            {
+            case ACT_EXECUTE:
+                s += "<w>travel</w>|examine|delete";
+                break;
+            case ACT_EXAMINE:
+                s += "travel|<w>examine</w>|delete";
+                break;
+            default:
+                s += "travel|examine|<w>delete</w>";
+                break;
+            }
+
+            s += " items    ";
+        }
+        if (items.size() > 0)
+        {
+            // could be dropped if there's ever more interesting hotkeys
+            s += hyphenated_hotkey_letters(items.size(), 'a')
+                    + " choose item</lightgray>";
+        }
+        return pad_more_with(s, "<lightgrey>[<w>Esc</w>] exit</lightgrey>");
+    }
+
 protected:
     virtual formatted_string calc_title() override;
 };
@@ -2081,34 +2100,11 @@ formatted_string ShoppingListMenu::calc_title()
     const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
     fs.textcolour(title->colour);
-    fs.cprintf("%d %s%s, total cost %d gp",
+    fs.cprintf("Shopping list: %d %s%s, total cost %d gold pieces",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1 ? "s" : "",
                 total_cost);
 
-    string s = "<lightgrey>  [<w>a-z</w>] ";
-
-    if (view_only)
-    {
-        fs += formatted_string::parse_string(s + "<w>examine</w>");
-        return fs;
-    }
-
-    switch (menu_action)
-    {
-    case ACT_EXECUTE:
-        s += "<w>travel</w>|examine|delete";
-        break;
-    case ACT_EXAMINE:
-        s += "travel|<w>examine</w>|delete";
-        break;
-    default:
-        s += "travel|examine|<w>delete</w>";
-        break;
-    }
-
-    s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
-    fs += formatted_string::parse_string(s);
     return fs;
 }
 
@@ -2189,9 +2185,6 @@ void ShoppingList::display(bool view_only)
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     mtitle->quantity = list->size();
     shopmenu.set_title(mtitle);
-
-    string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
-    shopmenu.set_more(formatted_string::parse_string(more_str));
 
     fill_out_menu(shopmenu);
 
