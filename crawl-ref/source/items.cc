@@ -2474,6 +2474,9 @@ const item_def* top_item_at(const coord_def& where)
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
+    if (feat_destroys_items(env.grid(you.pos())) && yesno("Are you sure you want to drop that? You won't be able to get it back.", true, 'n',))
+      return false;
+
     item_def &item = you.inv[item_dropped];
 
     if (quant_drop < 0 || quant_drop > item.quantity)
