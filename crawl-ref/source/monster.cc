@@ -4330,7 +4330,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
 
-        if (amount && agent && agent->alive() && agent->is_monster()
+        if (amount && !mons_is_firewood(*this)
+            && agent && agent->alive() && agent->is_monster()
             && agent->as_monster()->has_ench(ENCH_ANGUISH))
         {
             anguish_fineff::schedule(agent, amount);
