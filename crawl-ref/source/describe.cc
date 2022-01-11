@@ -96,7 +96,7 @@
 using namespace ui;
 
 static command_type _get_action(int key, vector<command_type> actions);
-static void _print_bar(int value, int scale, string name,
+static void _print_bar(int value, int scale, const string &name,
                        ostringstream &result, int base_value = INT_MAX);
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
@@ -4480,22 +4480,26 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
 }
 
 /**
- * Print a bar of +s and .s representing a given stat to a provided stream.
+ * Print a bar of +s representing a given stat to a provided stream.
  *
- * @param value[in]         The current value represented by the bar.
- * @param scale[in]         The value that each + and . represents.
+ * @param value[in]         The current value represented by the bar. Clamped
+ *                          to zero.
+ * @param scale[in]         The value that each + represents.
  * @param name              The name of the bar.
  * @param result[in,out]    The stringstream to append to.
- * @param base_value[in]    The 'base' value represented by the bar. If
- *                          INT_MAX, is ignored.
+ * @param base_value[in]    The 'base' value represented by the bar, clamped to
+ *                          zero. If INT_MAX, is ignored.
  */
-static void _print_bar(int value, int scale, string name,
+static void _print_bar(int value, int scale, const string &name,
                        ostringstream &result, int base_value)
 {
+    value = max(0, value);
+    base_value = max(0, base_value);
+
     if (base_value == INT_MAX)
         base_value = value;
 
-    if (name.size())
+    if (!name.empty())
         result << name << " ";
 
     const int display_max = value ? value : base_value;
@@ -4505,7 +4509,7 @@ static void _print_bar(int value, int scale, string name,
       result << "none (normally ";
 
     if (display_max == 0)
-        result <<  "none";
+        result << "none";
     else
     {
         for (int i = 0; i * scale < display_max; i++)
@@ -4521,13 +4525,11 @@ static void _print_bar(int value, int scale, string name,
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!you.suppress_wizard)
+    {
         result << " (" << value << ")";
-#endif
-
-#ifdef DEBUG_DIAGNOSTICS
-    if (currently_disabled)
-        if (!you.suppress_wizard)
+        if (currently_disabled)
             result << " (base: " << base_value << ")";
+    }
 #endif
 }
 
