@@ -53,6 +53,7 @@
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
+#include "traps.h"         // For captain's cutlass
 #include "unwind.h"        // For autumn katana
 #include "view.h"          // For arc blade's discharge effect
 
@@ -1129,12 +1130,12 @@ static void _CAPTAIN_melee_effects(item_def* /*weapon*/, actor* attacker,
     // work but would be complicated.
     if (coinflip()
         && dam >= (3 + random2(defender->get_hit_dice()))
-        && !x_chance_in_y(defender->get_hit_dice(), random2(20) + dam*4)
+        && !x_chance_in_y(defender->get_hit_dice(), random2(20) + dam * 4)
         && attacker->is_player()
         && defender->is_monster()
         && !mondied)
     {
-        item_def *wpn = defender->as_monster()->disarm();
+        item_def* wpn = defender->as_monster()->disarm();
         if (wpn)
         {
             mprf("The captain's cutlass flashes! You lacerate %s!!",
@@ -1144,6 +1145,13 @@ static void _CAPTAIN_melee_effects(item_def* /*weapon*/, actor* attacker,
                 wpn->name(DESC_PLAIN).c_str());
             defender->hurt(attacker, 18 + random2(18));
         }
+    }
+
+    if (one_chance_in(5))
+    {
+        mprf("The hidden ropes moved! Them rushed at %s like a snake!!",
+            defender->name(DESC_THE).c_str());
+        monster_caught_in_net(defender->as_monster());
     }
 }
 

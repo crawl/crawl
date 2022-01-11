@@ -752,7 +752,7 @@ ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_RAPIER
 TYPE:     cutlass
-INSCRIP:  disarm
+INSCRIP:  disarm, rope magic
 PLUS:     +7
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
@@ -760,6 +760,7 @@ TILE_EQ:  capt_cutlass
 BRAND:    SPWPN_SPEED
 DBRAND:   It may disarm weapon-wielding foes when striking them, dealing
  extra damage in the process.
+DESCRIP:  It sometimes calls out a ropes and traps the enemy.
 
 NAME:     storm bow
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
