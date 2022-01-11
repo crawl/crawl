@@ -239,8 +239,8 @@ void mirror_damage_fineff::fire()
 void anguish_fineff::fire()
 {
     actor *attack = attacker();
-    ASSERT(attack);
-    if (!attack->alive()) return;
+    if (!attack || !attack->alive())
+        return;
 
     const string punct = attack_strength_punctuation(damage);
     const string msg = make_stringf(" is wracked by anguish%s", punct.c_str());
