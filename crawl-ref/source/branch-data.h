@@ -95,7 +95,7 @@ const Branch branches[NUM_BRANCHES] =
       "Spider Nest", "the Spider Nest", "Spider",
       nullptr,
       BROWN, YELLOW,
-      'N', { RUNE_SPIDER }, branch_noise::quiet, DEFAULT_MON_DIE_SIZE },
+      'N', { RUNE_SPIDER }, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 
     { BRANCH_SLIME, BRANCH_LAIR, 5, 6, 5, 17,
       brflag::no_items | brflag::dangerous_end | brflag::spotty,
