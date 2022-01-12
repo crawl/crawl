@@ -28,10 +28,12 @@ TEST_CASE( "disable_exactly_one_of_each_lair_branch", "[single-file]" ) {
     {
         candidate_brentry = create_brentry();
 
-        REQUIRE(candidate_brentry[BRANCH_SPIDER].is_valid());
-
+        // != functions as xor here, testing if *exactly* one branch is
+        // valid
         REQUIRE(candidate_brentry[BRANCH_SWAMP].is_valid()
-                + candidate_brentry[BRANCH_SNAKE].is_valid()
-                + candidate_brentry[BRANCH_SHOALS].is_valid() == 1);
+                != candidate_brentry[BRANCH_SHOALS].is_valid());
+
+        REQUIRE(candidate_brentry[BRANCH_SPIDER].is_valid()
+                != candidate_brentry[BRANCH_SNAKE].is_valid());
     }
 }
