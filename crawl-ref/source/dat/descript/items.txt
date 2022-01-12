@@ -743,8 +743,7 @@ forces they could not hope to control.
 %%%%
 orb
 
-A sphere of crystal, carried in place of a shield. Magic scintilliates within
-its interior.
+A sphere of crystal, carried in place of a shield.
 %%%%
 orb of zot
 

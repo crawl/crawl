@@ -1834,7 +1834,45 @@ static string _describe_armour(const item_def &item, bool verbose)
                 description += _warlock_mirror_reflect_desc();
         }
         else if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
-            ;
+        {
+            switch (item.brand)
+            {
+            case SPARM_LIGHT:
+                description += "\n\nThis pale golden orb is slightly warm to the "
+                        "touch. Within you can see a thin coil of some "
+                        "otherworldly black metal, scintilliating with "
+                        "eldritch energy.";
+                break;
+            case SPARM_RAGE:
+                description += "\n\nIntricately engraven on the surface is the "
+                        "image of a raging wolf, with two blood-red gems "
+                        "for eyes. The orb is quite warm, and when you "
+                        "touch it, visions of endless carnage and "
+                        "destruction flood your mind.";
+                break;
+            case SPARM_MAYHEM:
+                description += "\n\nIt is made out of a dark blue material, "
+                        "unnaturally heavy in your hands. As you hold it, you "
+                        "feel a supernatural force urging you to lash out at "
+                        "everything around you.";
+                break;
+            case SPARM_GUILE:
+                description += "\n\nIt is shaped in the form of an unblinking eye, "
+                        "with a single blue gemstone sitting in its catlike "
+                        "pupil.";
+                break;
+            case SPARM_ENERGY:
+                description += "\n\nEncased within the transparent material, you "
+                        "can see a spiral of silver wire wrapped around an "
+                        "iron rod. Seven pink gems adorn the orb, carven in "
+                        "the likeness of some small extinct mammal.";
+                break;
+            default:
+                description += "\n\nAs you stare into the sphere, you are filled "
+                        "with an unnatural longing for horse-drawn carriages.";
+                break;
+            }
+        }
         else
         {
             const int evp = property(item, PARM_EVASION);
