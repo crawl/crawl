@@ -1049,7 +1049,7 @@ static armour_type _get_random_armour_type(int item_level)
                                          3, ARM_KITE_SHIELD,
                                          5, ARM_BUCKLER,
                                          2, ARM_TOWER_SHIELD,
-                                         12, ARM_ORB);
+                                         2, ARM_ORB);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
