@@ -794,7 +794,7 @@ static like_map divine_likes[] =
     // GOD_JIYVA,
     {
         { DID_EXPLORATION, {
-            "you explore the world", false,
+            "you explore the world outside of the Slime Pits", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
