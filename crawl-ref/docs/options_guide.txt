@@ -2810,6 +2810,40 @@ dos_use_background_intensity = false
 
 5-c     Unix.
 -------------
+allow_extended_colours = true
+        Atempt to use more than the eight basic terminal colours for crawl's
+        bright colours. Most modern terminals should use this setting. If
+        successful, this puts console into 16-color mode.
+
+        If this option is enabled and there are enough colours available in
+        the terminal, use the terminal's extended colour palette directly for
+        internal colours.
+
+        An appropriate TERM environment variable must be set for this option to
+        function as expected for capable terminals. For example:
+          * XTerm, MacOS Terminal, or iTerm: xterm-256color
+          * gnome-terminal: vte-256color
+          * PuTTY: putty-256color
+            (set in 'Connection->Data->Terminal-type string')
+
+        If these conditions are not met, crawl will fall back to 8-colour mode
+        and use character attributes to render bright colours, with dark blue
+        as a "fallback" color for rendering dark grey on black. In 8-colour
+        mode, one of the following options may be better.
+
+bold_brightens_foreground = false
+        For 8-colour mode, assume that a bold text attribute will end up
+        brightening the foreground colour. If set to `force` instead of `true`,
+        bright colours will be bolded even in 16-colour mode. Otherwise,
+        this option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+        If enabled in 8 color mode on a terminal where the assumption that bold
+        changes the color does not hold, this will result in invisible glyphs
+        for normal/bright colour combos of the same base colour. For example,
+        in the dungeon display, if squares that are out of line of sight appear
+        black, you should not set this to `true`.
+
 blink_brightens_background = false
         For 8-colour mode, assume that a blink text attribute will end up
         brightening the background colour.
@@ -2820,17 +2854,6 @@ blink_brightens_background = false
 
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
-
-bold_brightens_foreground = false
-        For 8-colour mode, assume that a bold text attribute will end up
-        brightening the foreground colour. If set to `force` instead of `true`,
-        bright colours will be bolded even in 16-colour mode. Otherwise,
-        this option is ignored when running in 16-colour mode via
-        allow_extended_colours.
-
-        If enabled on a terminal where this assumption does not hold, this will
-        result in invisible glyphs for normal/bright colour combos of the same
-        base colour.
 
 best_effort_brighten_background = false
         If set to true, try to brighten a background colour using blink even if
@@ -2853,25 +2876,6 @@ best_effort_brighten_foreground = true
 
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
-
-allow_extended_colours = true
-        Allow an *attempt* to use more than the eight basic terminal colours
-        for crawl's bright colours. Most modern terminals should use this
-        setting.
-
-        If this option is enabled and there are enough colours available in
-        the terminal, use the terminal's extended colour palette directly for
-        internal colours.
-
-        An appropriate TERM environment variable must be set for this option to
-        function as expected for capable terminals. For example:
-          * XTerm: xterm-256color
-          * gnome-terminal: vte-256color
-          * PuTTY: putty-256color
-            (set in 'Connection->Data->Terminal-type string')
-
-        If these conditions are not met, crawl will fall back to 8-colour mode
-        and use character attributes to render bright colours.
 
 background_colour = black
         Sets the default background colour by name (defaults to BLACK).

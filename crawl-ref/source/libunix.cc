@@ -1162,7 +1162,14 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     short fg_default_to_compare = fg_default;
     short bg_default_to_compare = bg_default;
 
-    // Adjust the expected output color depending on the game options.
+    // Adjust the brighten bits of the expected output color depending on the
+    // game options, so we are doing an apples to apples comparison. If we
+    // aren't using extended colors, *and* we aren't applying a bold to
+    // brighten, then brightened colors are guaranteed not to be different
+    // than unbrightened colors. With just a `best_effort..` option set, don't
+    // undo brightening as it isn't assumed to be safe. It is this
+    // transformation that can result in black on black if a player incorrectly
+    // sets one of these options.
     if (!curs_can_use_extended_colors())
     {
         if (Options.bold_brightens_foreground == MB_FALSE)
