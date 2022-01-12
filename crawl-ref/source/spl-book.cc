@@ -505,7 +505,7 @@ protected:
                         : current_action == action::describe ? "(Describe)"
                         : current_action == action::hide ? "(Hide)    "
                         : "(Show)    ",
-                        you.divine_exegesis ? "" : "Failure  "));
+                        you.divine_exegesis ? "         " : "Failure  "));
     }
 
 private:
@@ -514,40 +514,52 @@ private:
     string search_text;
     int hidden_count;
 
-    void update_more()
+    // void update_more()
+    string get_keyhelp(bool) const override
     {
-        // TODO: convert this all to widgets
+        // TODO: convert this all to widgets, or just printf formatting, or
+        // *something* less convoluted and special cased
         ostringstream desc;
 
         // line 1
-        desc << spell_levels_str << "    ";
-        if (search_text.size())
+        if (you.divine_exegesis)
         {
-            // TODO: couldn't figure out how to do this in pure c++
-            const string match_text = make_stringf("Matches: '<w>%.20s</w>'",
-                            replace_all(search_text, "<", "<<").c_str());
-            int escaped_count = (int) std::count(search_text.begin(),
-                                                    search_text.end(), '<');
-            // the width here is a bit complicated because it needs to ignore
-            // any color codes and escaped '<'s.
-            desc << std::left << std::setw(43 + escaped_count) << match_text;
+            desc << make_stringf(
+                "<lightgreen>Casting with Divine Exegesis: %d MP available</lightgreen>",
+                you.magic_points);
         }
         else
-            desc << std::setw(36) << "";
-        if (hidden_count)
+            desc << spell_levels_str;
+
+        // divine exegesis doesn't have space
+        if (hidden_count && (!you.divine_exegesis || !search_text.size()))
         {
-            desc << std::right << std::setw(hidden_count == 1 ? 3 : 2)
+            desc << std::right << std::setw(5)
                  << hidden_count
-                 << (hidden_count > 1 ? " spells" : " spell")
-                 << " hidden";
+                 << (hidden_count > 1 ? " spells hidden" : " spell hidden ")
+                 << "   ";
         }
+        else
+            desc << "   ";
+
+        if (search_text.size())
+        {
+            int max_size = you.divine_exegesis ? 22 : 47;
+            if (!you.divine_exegesis && hidden_count)
+                max_size -= 19;
+            const bool search_overflow =
+                            static_cast<int>(search_text.size()) > max_size;
+            desc << make_stringf("Matches: <w>%.*s%s</w>",
+                            search_overflow ? max_size - 2 : max_size,
+                            replace_all(search_text, "<", "<<").c_str(),
+                            search_overflow ? ".." : "");
+        }
+
         desc << "\n";
 
         const string act = you.divine_exegesis ? "Cast" : "Memorise";
         // line 2
-        desc << "[<yellow>?</yellow>] help                "
-                "[<yellow>Ctrl-f</yellow>] search      "
-                "[<yellow>!</yellow>] ";
+        desc << "[<w>!</w>] ";
         desc << ( current_action == action::cast
                             ? "<w>Cast</w>|Describe|Hide|Show"
                  : current_action == action::memorise
@@ -557,8 +569,13 @@ private:
                  : current_action == action::hide
                             ? act + "|Describe|<w>Hide</w>|Show"
                  : act + "|Describe|Hide|<w>Show</w>");
+        desc << "   [<w>Ctrl-f</w>] search"
+                "   [<w>?</w>] help";
 
-        set_more(formatted_string::parse_string(desc.str()));
+        if (search_text.size())
+            return pad_more_with(desc.str(), "[<w>Esc</w>] clear");
+        else
+            return pad_more_with_esc(desc.str());
     }
 
     virtual bool process_key(int keyin) override
@@ -695,10 +712,12 @@ private:
                 desc << string(60 - so_far, ' ');
             desc << "</" << colour_to_str(colour) << ">";
 
-            if (!you.divine_exegesis)
+            if (you.divine_exegesis)
+                desc << string(9, ' ');
+            else
             {
                 desc << "<" << colour_to_str(spell.fail_rate_colour) << ">";
-                desc << chop_string(failure_rate_to_string(spell.raw_fail), 12);
+                desc << chop_string(failure_rate_to_string(spell.raw_fail), 9);
                 desc << "</" << colour_to_str(spell.fail_rate_colour) << ">";
             }
 
@@ -748,7 +767,6 @@ public:
             if (player_spell_levels() < 9)
                 spell_levels_str += " ";
         }
-        set_more(formatted_string::parse_string(spell_levels_str + "\n"));
 
 #ifdef USE_TILE_LOCAL
         FontWrapper *font = tiles.get_crt_font();

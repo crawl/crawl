@@ -687,6 +687,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
             var more = menu.elem.find(".menu_more");
             more.html(util.formatted_string_to_html(shown_more));
+            more.css("padding-left", menu_title_indent()+"px");
             more[0].classList.toggle("hidden", shown_more.length === 0);
         }
     }

@@ -1044,10 +1044,18 @@ string hyphenated_hotkey_letters(int how_many, char first)
 
 string pad_more_with(const string &s, const string &pad, int min_width)
 {
+    // TODO is there a way of compensating for the tile width on the left margin
+    // of certain menus while adding a padded element?
     return pad_more_with(
         formatted_string::parse_string(s),
         formatted_string::parse_string(pad),
         min_width).to_colour_string();
+}
+
+// standardized formatting for this
+string pad_more_with_esc(const string &s)
+{
+    return pad_more_with(s, "[<w>Esc</w>] close");
 }
 
 string Menu::get_keyhelp(bool scrollable) const
@@ -1072,7 +1080,7 @@ string Menu::get_keyhelp(bool scrollable) const
     navigation += "</lightgrey>";
     if (is_set(MF_MULTISELECT))
     {
-        navigation = pad_more_with(navigation, "[<w>Esc</w>] close");
+        navigation = pad_more_with_esc(navigation);
         // XX this may not work perfectly with the way InvMenu handles
         // selection
         const auto chosen_count = selected_entries().size();
@@ -2260,7 +2268,8 @@ void Menu::update_title()
     const bool tile_indent = m_indent_title && Options.tile_menu_icons;
     m_ui.title->set_margin_for_sdl(0, UIMenu::item_pad+UIMenu::pad_right, 10,
             UIMenu::item_pad + (tile_indent ? 38 : 0));
-    m_ui.more->set_margin_for_sdl(10, UIMenu::item_pad+UIMenu::pad_right, 0, 0);
+    m_ui.more->set_margin_for_sdl(10, UIMenu::item_pad+UIMenu::pad_right, 0,
+            tile_indent ? UIMenu::item_pad + 38 : 0);
 #endif
     m_ui.title->set_text(fs);
 #ifdef USE_TILE_WEB

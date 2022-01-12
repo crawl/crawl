@@ -520,4 +520,5 @@ string get_linebreak_string(const string& s, int maxcol);
 formatted_string pad_more_with(formatted_string s,
                                     const formatted_string &pad, int min_width=MIN_COLS);
 string pad_more_with(const string &s, const string &pad, int min_width=MIN_COLS);
+string pad_more_with_esc(const string &s);
 string hyphenated_hotkey_letters(int how_many, char first);
