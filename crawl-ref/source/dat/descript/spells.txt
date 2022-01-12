@@ -34,9 +34,8 @@ frequently used as an icebreaker at wizard parties.
 Anguish spell
 
 Afflicts nearby foes with supernatural anguish, causing all damage they deal to
-rebound on them twofold for the duration of the effect. Strong-willed foes can
-resist the necromantic visions of pain and suffering, and mindless creatures are
-unaffected.
+rebound on them for the duration of the effect. Strong-willed foes can resist the
+necromantic visions of pain and suffering, and mindless creatures are unaffected.
 %%%%
 Animate Armour spell
 

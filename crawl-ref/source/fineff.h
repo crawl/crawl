@@ -74,7 +74,7 @@ public:
     }
 protected:
     anguish_fineff(const actor *attack, int dam)
-        : final_effect(attack, nullptr, coord_def()), damage(dam*2)
+        : final_effect(attack, nullptr, coord_def()), damage(dam)
     {
     }
     int damage;
