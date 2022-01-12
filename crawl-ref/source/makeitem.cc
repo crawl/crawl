@@ -667,9 +667,9 @@ static void _generate_missile_item(item_def& item, int force_type,
                            _determine_missile_brand(item, item_level));
     }
 
-    // Reduced quantity if special.
+    // Reduced quantity if thrown.
     if (item.sub_type == MI_JAVELIN || item.sub_type == MI_BOOMERANG
-        || (item.sub_type == MI_DART && get_ammo_brand(item) != SPMSL_POISONED)
+        || item.sub_type == MI_DART
 #if TAG_MAJOR_VERSION == 34
         || get_ammo_brand(item) == SPMSL_RETURNING
 #endif
