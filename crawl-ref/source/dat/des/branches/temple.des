@@ -3690,7 +3690,6 @@ TAGS:   temple_altars_9 temple_altars_10 temple_altars_11 temple_altars_12
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 4
-# XXX: The only temple with this...
 KFEAT:  O = altar_ecumenical
 : local altar_count = get_altar_count(_G, 12)
 : nsubst("O = " .. altar_count .. ":B / 1:O.... / *:.")
@@ -4183,4 +4182,54 @@ xxxxxxxxxxxxc..Www..c
 xxxxxxxxxxxxccB.w.Bcc
 xxxxxxxxxxxxxcc.B.ccx
 xxxxxxxxxxxxxxcccccxx
+ENDMAP
+
+# 12 gods with robust flame shrines,
+# plus sputtering smoke for Ignis and some ecumenical altars
+NAME:    ebering_untended_altars
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  2
+SUBST:   A : GTUVt
+NSUBST:  I = 1:I / *:O
+KFEAT:   I = altar_ignis
+KFEAT:   O = altar_ecumenical
+SUBST:   ^ = ^F.
+KFEAT:   ^ = web
+KMONS:   P = plant
+KMONS:   F = fungus
+MARKER:  L = lua:fog_machine { cloud_type = "flame", delay = 10, \
+                  pow_min = 100, pow_max = 100, size = 1, walk_dist = 0, \
+                  excl_rad = 0 }
+MARKER:  S = lua:fog_machine { cloud_type = "black smoke", delay = 50, \
+                  pow_min = 1, pow_max = 10, size = 1, walk_dist = 0, \
+                  excl_rad = 0, spread_rate = 0 }
+MAP
+            ccc
+        cccccLccccc
+       ccSccPBPccLcc
+   ccccc^I^.....PBPccccc
+   cLcPA...........A^cSc
+   ccB...............Icc
+   cP.................^c
+  ccA.................Acc
+ ccP.........A.........Pcc
+ cLB.....A.......A.....BLc
+ ccP...................Pcc
+ cc.....................cc
+ccP.....................^cc
+cLB.....A....{....A.....ISc
+ccP.....................^cc
+ cc.....................cc
+ cc^...................Pcc
+ cSI.....A.......A.....BLc
+ cc^.........A.........Pcc
+  ccA.................Acc
+   cP.................Pc
+   ccB...............Bcc
+   cLcPA...........APcLc
+   cccccPBP.....PBPccccc
+       ccLccPBPccLcc
+        cccccLccccc
+            ccc
 ENDMAP
