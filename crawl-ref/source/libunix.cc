@@ -959,7 +959,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
         if ((fg_curses & COLFLAG_CURSES_BRIGHTEN)
-            && (Options.bold_brightens_foreground
+            && (Options.bold_brightens_foreground != MB_FALSE
                 || Options.best_effort_brighten_foreground))
         {
             style.attr |= WA_BOLD;
@@ -973,6 +973,11 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         {
             style.attr |= WA_BLINK;
         }
+    }
+    else if (Options.bold_brightens_foreground == MB_TRUE
+                && (fg_curses & COLFLAG_CURSES_BRIGHTEN))
+    {
+        style.attr |= WA_BOLD;
     }
 
     if (monochrome_output_requested)
@@ -1160,7 +1165,7 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     // Adjust the expected output color depending on the game options.
     if (!curs_can_use_extended_colors())
     {
-        if (!Options.bold_brightens_foreground)
+        if (Options.bold_brightens_foreground == MB_FALSE)
         {
             fg_to_compare = fg & ~COLFLAG_CURSES_BRIGHTEN;
             fg_default_to_compare = fg_default & ~COLFLAG_CURSES_BRIGHTEN;
@@ -1522,8 +1527,10 @@ static curses_style flip_colour(curses_style style)
             {
                 style.attr |= WA_BLINK;
             }
+            // XX I don't *think* this logic should apply for
+            // bold_brightens_foreground = force...
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
-                && (Options.bold_brightens_foreground
+                && (Options.bold_brightens_foreground != MB_FALSE
                     || Options.best_effort_brighten_foreground))
             {
                 style.attr |= WA_BOLD;

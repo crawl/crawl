@@ -2823,9 +2823,14 @@ blink_brightens_background = false
 
 bold_brightens_foreground = false
         For 8-colour mode, assume that a bold text attribute will end up
-        brightening the foreground colour.
+        brightening the foreground colour. If set to `force` instead of `true`,
+        bright colours will be bolded even in 16-colour mode. Otherwise,
+        this option is ignored when running in 16-colour mode via
+        allow_extended_colours.
 
-        See blink_brightens_background for more information.
+        If enabled on a terminal where this assumption does not hold, this will
+        result in invisible glyphs for normal/bright colour combos of the same
+        base colour.
 
 best_effort_brighten_background = false
         If set to true, try to brighten a background colour using blink even if

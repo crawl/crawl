@@ -168,7 +168,11 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
-        new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
+        new MultipleChoiceGameOption<maybe_bool>(
+            SIMPLE_NAME(bold_brightens_foreground),
+            MB_FALSE, {{"false", MB_FALSE},
+                       {"true", MB_MAYBE},
+                       {"force", MB_TRUE}}, true),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
