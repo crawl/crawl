@@ -1405,6 +1405,17 @@ void textcolour(int col)
 #endif
 }
 
+COLOURS default_hover_colour()
+{
+    // DARKGREY backgrounds go to black with 8 colors. I think this is
+    // generally what we want, rather than applying a workaround (like the
+    // DARKGREY -> BLUE foreground trick), but this means that using a
+    // DARKGREY hover, which arguably looks better in 16colors, won't work.
+    // DARKGREY is also not safe under bold_brightens_foreground, since a
+    // terminal that supports this won't necessarily handle a bold background.
+    return curs_can_use_extended_colors() ? DARKGREY : LIGHTGREY;
+}
+
 void textbackground(int col)
 {
     const auto style = curs_attr_bg(col);

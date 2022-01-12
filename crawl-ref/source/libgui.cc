@@ -92,6 +92,11 @@ void textbackground(int bg)
     TextRegion::textbackground(bg);
 }
 
+COLOURS default_hover_colour()
+{
+    return DARKGREY;
+}
+
 void set_cursor_enabled(bool enabled)
 {
     if (enabled)

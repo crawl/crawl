@@ -17,6 +17,7 @@ void clear_to_end_of_line();
 void gotoxy_sys(int x, int y);
 void textcolour(int c);
 void textbackground(int c);
+COLOURS default_hover_colour();
 void cprintf(const char *format, ...);
 
 int wherex();

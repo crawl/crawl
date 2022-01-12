@@ -89,10 +89,9 @@ void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
             fg_normal = first_op.type == FSOP_COLOUR ? first_op.colour : LIGHTGREY;
         }
 
-        const colour_t fg = focused ? fg_highlight : fg_normal;
         const colour_t bg = focused ? highlight_colour : colour_t{BLACK};
         formatted_string new_contents;
-        new_contents.textcolour(fg);
+        new_contents.textcolour(fg_normal);
         new_contents.cprintf("%s", tw->get_text().tostring().c_str());
         tw->set_text(move(new_contents));
         tw->set_bg_colour(static_cast<COLOURS>(bg));

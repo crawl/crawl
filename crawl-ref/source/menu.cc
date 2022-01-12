@@ -426,7 +426,7 @@ void UIMenu::_render()
 
         // TODO: is this highlighting good enough for accessibility purposes?
         if (m_hover_idx == i)
-            textbackground(DARKGREY);
+            textbackground(default_hover_colour());
         if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
         {
             formatted_string s = formatted_string::parse_string(

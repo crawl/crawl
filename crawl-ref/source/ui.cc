@@ -1752,7 +1752,7 @@ void Checkbox::_render()
     tb.draw();
 #else
     cgotoxy(m_region.x+1, m_region.y+1, GOTO_CRT);
-    textbackground(has_focus ? LIGHTGREY : BLACK);
+    textbackground(has_focus ? default_hover_colour() : BLACK);
     cprintf("[ ]");
     if (m_checked)
     {

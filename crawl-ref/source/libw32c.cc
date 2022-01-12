@@ -649,6 +649,12 @@ void textbackground(int c)
     update_text_colours(get_brand(c));
 }
 
+COLOURS default_hover_colour()
+{
+    // Does this work with all the ancient "dos" options?
+    return DARKGREY;
+}
+
 static void cprintf_aux(const char *s)
 {
     // early out -- not initted yet
