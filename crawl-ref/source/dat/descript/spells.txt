@@ -1506,6 +1506,10 @@ Summon Hell Beast spell
 
 Summons a deadly hell beast.
 %%%%
+Summon Hell Sentinel spell
+
+Summons a Hell Sentinel, a nightmarish edifice of animated hate.
+%%%%
 Summon Holies spell
 
 Calls forth divine warriors to aid the caster.
