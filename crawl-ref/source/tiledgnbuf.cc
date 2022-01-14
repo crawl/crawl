@@ -13,6 +13,7 @@
 #include "tilefont.h"
 #include "tilemcache.h"
 #include "tilepick.h"
+#include "options.h"
 
 DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_floor(&im->get_texture(TEX_FLOOR)),
@@ -272,7 +273,7 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
         m_buf_floor.add(TILE_LIQUEFACTION + offset, x, y);
     }
-    else if (cell.is_bloody)
+    else if (cell.is_bloody && Options.show_blood)
     {
         tileidx_t basetile;
         if (is_wall)

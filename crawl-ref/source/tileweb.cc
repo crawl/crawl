@@ -1637,11 +1637,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.icons != current_pc.icons)
             json_write_icons(next_pc.icons);
 
-        if (next_pc.is_bloody != current_pc.is_bloody)
-            json_write_bool("bloody", next_pc.is_bloody);
+        if (Options.show_blood) {
+            if (next_pc.is_bloody != current_pc.is_bloody)
+                json_write_bool("bloody", next_pc.is_bloody);
 
-        if (next_pc.old_blood != current_pc.old_blood)
-            json_write_bool("old_blood", next_pc.old_blood);
+            if (next_pc.old_blood != current_pc.old_blood)
+                json_write_bool("old_blood", next_pc.old_blood);
+        }
 
         if (next_pc.is_silenced != current_pc.is_silenced)
             json_write_bool("silenced", next_pc.is_silenced);
