@@ -136,7 +136,7 @@ public:
 
     virtual int highlight_colour() const override
     {
-        return menu_colour(get_text(), item_prefix(*item), tag);
+        return menu_colour(get_text(), item_prefix(*item), "inventory");
     }
 
     virtual void select(int qty = -1) override;
