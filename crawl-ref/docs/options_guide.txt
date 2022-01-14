@@ -73,11 +73,12 @@ The contents of this text are:
                 messages_at_top, msg_condense_repeats, msg_condense_short,
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, use_animations,
-                darken_beyond_range, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot, action_panel,
-                action_panel_filter, action_panel_show_unidentified,
-                action_panel_scale, action_panel_orientation,
-                action_panel_font_family, action_panel_font_size
+                darken_beyond_range, show_blood force_more_message,
+                flash_screen_message, cloud_status, always_show_zot,
+                action_panel, action_panel_filter,
+                action_panel_show_unidentified, action_panel_scale,
+                action_panel_orientation, action_panel_font_family,
+                action_panel_font_size
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -1623,6 +1624,11 @@ darken_beyond_range = true
         If set to true, everything beyond range when targeting will be
         coloured grey. Setting this to false will also disable the "range"
         category of the use_animations option.
+
+show_blood = true
+        Setting this option to false will hide blood splatters in the floor
+        and in the walls. In tiles, it will also replace the fresh corpse
+        tiles with their corresponding bone tiles.
 
 force_more_message += <regex>, <regex>
         (List option)

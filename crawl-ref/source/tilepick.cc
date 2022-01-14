@@ -2849,7 +2849,7 @@ tileidx_t tileidx_item(const item_def &item)
 #endif
 
     case OBJ_CORPSES:
-        if (item.sub_type == CORPSE_SKELETON)
+        if (!Options.show_blood || item.sub_type == CORPSE_SKELETON)
             return _tileidx_bone(item);
         else
             return _tileidx_corpse(item);

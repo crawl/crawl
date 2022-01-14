@@ -11,6 +11,7 @@
 #include "tiledoll.h"
 #include "tilemcache.h"
 #include "tilepick.h"
+#include "options.h"
 
 DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_floor(&im->m_textures[TEX_FLOOR]),
@@ -223,6 +224,9 @@ void DungeonCellBuffer::draw()
 void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
                                           bool is_wall)
 {
+    if (!Options.show_blood)
+        return;
+
     if (cell.is_liquefied && !is_wall)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
