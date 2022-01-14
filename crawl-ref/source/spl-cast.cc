@@ -2722,7 +2722,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
         case SPELL_CONJURE_BALL_LIGHTNING:
             return ball_lightning_damage(ball_lightning_hd(power, false));
         case SPELL_IOOD:
-            return iood_damage(power, INFINITE_DISTANCE);
+            return iood_damage(power, INFINITE_DISTANCE, false);
         case SPELL_IRRADIATE:
             return irradiate_damage(power, false);
         case SPELL_SHATTER:

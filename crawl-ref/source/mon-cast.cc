@@ -1098,12 +1098,12 @@ static int _mons_power_hd_factor(spell_type spell)
             return 16;
 
         case SPELL_OLGREBS_TOXIC_RADIANCE:
+        case SPELL_IOOD:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
         case SPELL_BATTLESPHERE:
         case SPELL_IGNITE_POISON:
-        case SPELL_IOOD:
         case SPELL_FREEZE:
         case SPELL_IRRADIATE:
             return 6;

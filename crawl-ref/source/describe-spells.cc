@@ -384,7 +384,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
-            return iood_damage(pow, INFINITE_DISTANCE);
+            return iood_damage(pow, INFINITE_DISTANCE, false);
         case SPELL_GLACIATE:
             return glaciate_damage(pow, 3);
         case SPELL_CONJURE_BALL_LIGHTNING:
