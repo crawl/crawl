@@ -2653,8 +2653,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                 desc.c_str(),
                 command_to_string(CMD_GO_DOWNSTAIRS).c_str());
     }
-    else if (feat == DNGN_MALIGN_GATEWAY)
-        long_desc += "\nMoving into it will do damage and cause you to blink.";
     else if (feat == DNGN_TRANSPORTER)
     {
         long_desc += make_stringf(

@@ -118,20 +118,6 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
-static void _entered_malign_portal(actor* act)
-{
-    ASSERT(act); // XXX: change to actor &act
-    if (you.can_see(*act))
-    {
-        mprf("%s %s twisted violently and ejected from the portal!",
-             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
-    }
-
-    act->blink();
-    act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
-              "", "entering a malign gateway");
-}
-
 static bool _cancel_barbed_move(bool rampaging)
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
@@ -528,12 +514,6 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');
-
-    case DNGN_MALIGN_GATEWAY:
-        return yesno("Are you sure you wish to approach this portal? There's no "
-                     "telling what its forces would wreak upon your fragile "
-                     "self.", false, 'n');
-
     default:
         return true;
     }
@@ -1127,23 +1107,6 @@ void move_player_action(coord_def move)
         move.reset();
         return;
     }
-    else if (!targ_pass && env.grid(targ) == DNGN_MALIGN_GATEWAY
-             && !attacking && !you.is_stationary())
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !prompt_dangerous_portal(env.grid(targ)))
-        {
-            // No rampage check because the portal blocks the
-            // rampage tracer
-            return;
-        }
-
-        move.reset();
-        you.turn_is_over = true;
-
-        _entered_malign_portal(&you);
-        return;
-    }
     else if (!targ_pass && !attacking)
     {
         // No rampage check here, since you can't rampage at walls
@@ -1155,6 +1118,8 @@ void move_player_action(coord_def move)
             mpr("The endless sea of lava is not a nice place.");
         else if (feat_is_tree(env.grid(targ)) && you_worship(GOD_FEDHAS))
             mpr("You cannot walk through the dense trees.");
+        else if (!try_to_swap && env.grid(targ) == DNGN_MALIGN_GATEWAY)
+            mpr("The malign portal rejects you as you step towards it.");
 
         stop_running();
         move.reset();
