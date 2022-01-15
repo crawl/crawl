@@ -1181,22 +1181,12 @@ static void _append_skill_target_desc(string &description, skill_type skill,
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
-    const int ammo_type = fires_ammo_type(item);
-    const int ammo_dam = ammo_type == MI_NONE ? 0 :
-                                                ammo_type_damage(ammo_type);
     const skill_type skill = _item_training_skill(item);
     const int mindelay_skill = _item_training_target(item);
 
     const bool below_target = _is_below_training_target(item, true);
     const bool can_set_target = below_target
         && in_inventory(item) && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-
-    if (skill == SK_SLINGS)
-    {
-        description += make_stringf("\nFiring bullets:    Base damage: %d",
-                                    base_dam +
-                                    ammo_type_damage(MI_SLING_BULLET));
-    }
 
     if (item.base_type == OBJ_STAVES
         && item_type_known(item)
@@ -1213,7 +1203,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
     "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
         property(item, PWPN_HIT),
-        base_dam + ammo_dam,
+        base_dam,
         (float) property(item, PWPN_SPEED) / 10,
         (float) weapon_min_delay(item, item_brand_known(item)) / 10,
         mindelay_skill / 10);
@@ -1513,23 +1503,9 @@ static string _describe_ammo(const item_def &item)
 
     description.reserve(64);
 
-    const bool can_launch = has_launcher(item);
-    const bool can_throw  = is_throwable(nullptr, item);
-
     if (item.brand && item_type_known(item))
     {
         description += "\n\n";
-
-        string threw_or_fired;
-        if (can_throw)
-        {
-            threw_or_fired += "threw";
-            if (can_launch)
-                threw_or_fired += " or ";
-        }
-        if (can_launch)
-            threw_or_fired += "fired";
-
         switch (item.brand)
         {
 #if TAG_MAJOR_VERSION == 34
@@ -1548,19 +1524,7 @@ static string _describe_ammo(const item_def &item)
             break;
 #endif
         case SPMSL_CHAOS:
-            description += "When ";
-
-            if (can_throw)
-            {
-                description += "thrown, ";
-                if (can_launch)
-                    description += "or ";
-            }
-
-            if (can_launch)
-                description += "fired from an appropriate launcher, ";
-
-            description += "it has a random effect.";
+            description += "When thrown, it has a random effect.";
             break;
         case SPMSL_POISONED:
             description += "It is coated with poison.";
@@ -1589,7 +1553,7 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_DISPERSAL:
             description += "It causes any target it hits to blink, with a "
                            "tendency towards blinking further away from the "
-                           "one who " + threw_or_fired + " it.";
+                           "one who threw it.";
             break;
         case SPMSL_SILVER:
             description += "It deals increased damage compared to normal ammo "
@@ -4418,10 +4382,9 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
     else
     {
         // TODO: handle throwing to-hit somehow?
-        const int missile = quiver::find_action_from_launcher(weapon)->get_item();
-        if (missile < 0)
-            return; // failure to launch
-        ranged_attack attk(&you, nullptr, &you.inv[missile], is_pproj_active());
+        item_def fake_proj;
+        populate_fake_projectile(*weapon, fake_proj);
+        ranged_attack attk(&you, nullptr, &fake_proj, is_pproj_active());
         acc_pct = to_hit_pct(mi, attk, false);
     }
 

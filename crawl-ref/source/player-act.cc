@@ -235,14 +235,14 @@ brand_type player::damage_brand(int)
 
 
 /**
- * Return the delay caused by attacking with your weapon and this projectile.
+ * Return the delay caused by attacking with your weapon or this projectile.
  *
- * @param projectile  The projectile to be fired/thrown, if any.
- * @param rescale     Whether to re-scale the time to account for the fact that
- *                    finesse doesn't stack with haste.
- * @return            A random_var representing the range of possible values of
- *                    attack delay. It can be casted to an int, in which case
- *                    its value is determined by the appropriate rolls.
+ * @param projectile  The projectile to be thrown, if any.
+ * @param rescale         Whether to re-scale the time to account for the fact that
+ *                   finesse doesn't stack with haste.
+ * @return           A random_var representing the range of possible values of
+ *                   attack delay. It can be casted to an int, in which case
+ *                   its value is determined by the appropriate rolls.
  */
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
@@ -252,7 +252,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     // math.
     const int DELAY_SCALE = 20;
 
-    if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
+    if (projectile && is_throwable(this, *projectile))
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
@@ -271,9 +271,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
     }
-    else if (weap &&
-             (projectile ? projectile->launched_by(*weap)
-                         : is_melee_weapon(*weap)))
+    else if (weap)
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
         // Cap skill contribution to mindelay skill, so that rounding

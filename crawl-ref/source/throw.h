@@ -14,16 +14,14 @@
 enum fire_type
 {
     FIRE_NONE      = 0x0000,
-    FIRE_LAUNCHER  = 0x0001,
-    FIRE_DART      = 0x0002,
-    FIRE_STONE     = 0x0004,
-    FIRE_JAVELIN   = 0x0010,
-    FIRE_ROCK      = 0x0100,
-    FIRE_NET       = 0x0200, // why is 0x0400 skipped?
-    FIRE_BOOMERANG = 0x0800,
+    FIRE_DART      = 0x0001,
+    FIRE_STONE     = 0x0002,
+    FIRE_JAVELIN   = 0x0004,
+    FIRE_ROCK      = 0x0008,
+    FIRE_NET       = 0x0010,
+    FIRE_BOOMERANG = 0x0020,
     FIRE_THROWING  = FIRE_DART | FIRE_STONE | FIRE_JAVELIN | FIRE_ROCK
                                | FIRE_NET | FIRE_BOOMERANG,
-    FIRE_AMMO      = FIRE_LAUNCHER | FIRE_THROWING,
     FIRE_INSCRIBED = 0x1000,   // Only used for _get_fire_order
     FIRE_SPELL     = 0x2000, // TODO: more fine-grained
     FIRE_EVOKABLE  = 0x4000,
@@ -46,4 +44,4 @@ void throw_it(quiver::action &a);
 bool thrown_object_destroyed(item_def *item);
 
 void setup_monster_throw_beam(monster* mons, bolt &beam);
-bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport = false);
+bool mons_throw(monster* mons, bolt &beam, bool teleport = false);

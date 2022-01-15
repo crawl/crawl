@@ -1774,14 +1774,10 @@ static bool _has_polearm(const monster_info& mi)
 
 static bool _has_launcher(const monster_info& mi)
 {
-    if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
-    {
-        const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        const item_def* missile = mi.inv[MSLOT_MISSILE].get();
-        return weapon && missile && missile->launched_by(*weapon);
-    }
-    else
+    if (mi.itemuse() < MONUSE_STARTING_EQUIPMENT)
         return false;
+    const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
+    return weapon && is_range_weapon(*weapon);
 }
 
 static bool _has_missile(const monster_info& mi)

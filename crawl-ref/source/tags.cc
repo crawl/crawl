@@ -1677,9 +1677,7 @@ static void _tag_construct_you(writer &th)
 
     marshallByte(th, you.piety_hysteresis);
 
-    you.m_quiver_history.save(th);
     you.quiver_action.save(QUIVER_MAIN_SAVE_KEY);
-    you.launcher_action.save(QUIVER_LAUNCHER_SAVE_KEY);
 
     CANARY;
 
@@ -3725,9 +3723,9 @@ static void _tag_read_you(reader &th)
 
     you.piety_hysteresis = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 34
     you.m_quiver_history.load(th);
 
-#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)
         unmarshallByte(th);
     if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
@@ -4240,9 +4238,13 @@ static void _tag_read_you_items(reader &th)
 
     // preconditions: need to have read items, and you (incl props).
     you.quiver_action.load(QUIVER_MAIN_SAVE_KEY);
-    you.launcher_action.load(QUIVER_LAUNCHER_SAVE_KEY);
-
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MOSTLY_REMOVE_AMMO)
+    {
+        quiver::action_cycler ac;
+        ac.load(QUIVER_LAUNCHER_SAVE_KEY);
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP)
     {
         const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];

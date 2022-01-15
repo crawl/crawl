@@ -40,6 +40,8 @@ private:
     bool dart_check(special_missile_type type);
     int dart_duration_roll(special_missile_type type);
     bool apply_missile_brand();
+    bool throwing() const;
+    bool clumsy_throwing() const;
 
     /* Weapon Effects */
     bool check_unrand_effects() override;
@@ -58,5 +60,6 @@ private:
     bool teleport;
     int orig_to_hit;
     bool should_alert_defender;
-    launch_retval launch_type;
 };
+
+ranged_attack build_attack_for(actor &act, const item_def *weapon);

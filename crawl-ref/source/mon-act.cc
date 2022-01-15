@@ -262,12 +262,6 @@ static bool _do_mon_spell(monster* mons)
 {
     if (handle_mon_spell(mons))
     {
-        // If a Pan lord/pghost is known to be a spellcaster, it's safer
-        // to assume it has ranged spells too. For others, it'd just
-        // lead to unnecessary false positives.
-        if (mons_is_ghost_demon(mons->type))
-            mons->flags |= MF_SEEN_RANGED;
-
         mmov.reset();
         return true;
     }
@@ -1012,13 +1006,8 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
 
     mons_cast(&mons, beem, mzap, MON_SPELL_EVOKE, false);
 
-    if (was_visible)
-    {
-        if (wand.charges <= 0)
-            mprf("The now-empty wand crumbles to dust.");
-        else
-            mons.flags |= MF_SEEN_RANGED;
-    }
+    if (was_visible && wand.charges <= 0)
+        mprf("The now-empty wand crumbles to dust.");
 
     if (wand.charges <= 0)
         dec_mitm_item_quantity(wand.index(), 1);
@@ -1122,17 +1111,20 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (mons_is_fleeing(*mons) || mons->pacified())
         return false;
 
-    item_def *launcher = nullptr;
-    const item_def *weapon = nullptr;
-    const int mon_item = mons_usable_missile(mons, &launcher);
-
-    if (mon_item == NON_ITEM || !env.item[mon_item].defined())
-        return false;
+    const item_def *launcher = mons->launcher();
+    item_def fake_proj;
+    item_def *missile = &fake_proj;
+    if (launcher)
+        populate_fake_projectile(*launcher, fake_proj);
+    else
+    {
+        missile = mons->missiles();
+        if (!missile || !is_throwable(mons, *missile))
+            return false;
+    }
 
     if (player_or_mon_in_sanct(*mons))
         return false;
-
-    item_def *missile = &env.item[mon_item];
 
     const actor *act = actor_at(beem.target);
     ASSERT(missile->base_type == OBJ_MISSILES);
@@ -1167,14 +1159,6 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         // Monsters with throwing weapons only use them one turn in three
         // if they're not master archers.
         return false;
-    }
-
-    if (launcher)
-    {
-        // If the attack needs a launcher that we can't wield, bail out.
-        weapon = mons->mslot_item(MSLOT_WEAPON);
-        if (weapon && weapon != launcher && weapon->cursed())
-            return false;
     }
 
     // Ok, we'll try it.
@@ -1244,11 +1228,11 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         // Monsters shouldn't shoot if fleeing, so let them "turn to attack".
         make_mons_stop_fleeing(mons);
 
-        if (launcher && launcher != weapon)
+        if (launcher && launcher != mons->weapon())
             mons->swap_weapons();
 
         beem.name.clear();
-        return mons_throw(mons, beem, mon_item, teleport);
+        return mons_throw(mons, beem, teleport);
     }
 
     return false;

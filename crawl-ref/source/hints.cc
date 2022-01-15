@@ -1223,33 +1223,27 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
              << "</w>') </console>"
                 "you've picked up. Missiles like boomerangs and throwing nets "
-                "can be thrown by hand, but other missiles like arrows and "
-                "bolts require a launcher and training in using it to be "
-                "really effective. "
+                "can be thrown by hand, and become more effective as you "
+                "train the Throwing skill. "
 #ifdef USE_TILE_LOCAL
                 "<w>Right-clicking</w> on "
 #else
                 "Selecting "
 #endif
                 "the item in your <w>%</w>nventory will give more "
-                "information about both missiles and launcher.";
+                "information.";
 
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
         if (Hints.hints_type == HINT_RANGER_CHAR)
         {
-            text << "\nAs you're already trained in Bows, you only need to "
-                    "bother collecting arrows.";
+            text << "\nAs you're already trained in Bows, you don't really "
+                    "need another type of ranged attack.";
         }
         else if (Hints.hints_type == HINT_MAGIC_CHAR)
         {
             text << "\nHowever, as a spellslinger, you don't really need "
                     "another type of ranged attack.";
-        }
-        else
-        {
-            text << "\nFor now you might be best off with sticking to "
-                    "stones for ranged attacks.";
         }
         break;
 
@@ -2920,16 +2914,11 @@ string hints_describe_item(const item_def &item)
                 {
                     ostr << "To attack a monster, ";
 #ifdef USE_TILE
-                    ostr << "if you have appropriate ammo quivered you can "
-                            "<w>left mouse click</w> on the monster while "
-                            "prssing the <w>Shift key</w>. Alternatively, "
-                            "you can <w>left mouse click</w> on the tile for "
-                            "the ammo you wish to fire, and then <w>left "
-                            "mouse click</w> on the monster.\n\n";
+                    ostr << "<w>left mouse click</w> on the monster while "
+                            "prssing the <w>Shift key</w>.\n\n";
                     ostr << "To launch ammunition using the keyboard, ";
 #endif
-                    ostr << "you only need to "
-                            "<w>%</w>ire the appropriate type of ammunition. "
+                    ostr << "you only need to <w>%</w>ire the weapon. "
                             "You'll ";
                     ostr << _hints_target_mode();
                     cmd.push_back(CMD_FIRE);
@@ -2958,40 +2947,6 @@ string hints_describe_item(const item_def &item)
                      << " can be <w>%</w>ired without the use of a launcher. ";
                 ostr << _hints_throw_stuff(item);
                 cmd.push_back(CMD_FIRE);
-            }
-            else if (is_launched(&you, you.weapon(), item) == launch_retval::LAUNCHED)
-            {
-                ostr << "As you're already wielding the appropriate launcher, "
-                        "you can simply ";
-#ifdef USE_TILE
-                ostr << "<w>left mouse click</w> on the monster you want "
-                        "to hit while pressing the <w>Shift key</w>. "
-                        "Alternatively, you can <w>left mouse click</w> on "
-                        "this tile of the ammo you want to fire, and then "
-                        "<w>left mouse click</w> on the monster you want "
-                        "to hit.\n\n"
-
-                        "To launch this ammo using the keyboard, you can "
-                        "simply ";
-#endif
-
-                ostr << "<w>%</w>ire "
-                     << (item.quantity > 1 ? "these" : "this")
-                     << " " << item.name(DESC_BASENAME)
-                     << (item.quantity > 1? "s" : "")
-                     << ". You'll ";
-                ostr << _hints_target_mode();
-                cmd.push_back(CMD_FIRE);
-            }
-            else
-            {
-                ostr << "To shoot "
-                     << (item.quantity > 1 ? "these" : "this")
-                     << " " << item.name(DESC_BASENAME)
-                     << (item.quantity > 1? "s" : "")
-                     << ", first you need to <w>%</w>ield an appropriate "
-                        "launcher.";
-                cmd.push_back(CMD_WIELD_WEAPON);
             }
             Hints.hints_events[HINT_SEEN_MISSILES] = false;
             break;

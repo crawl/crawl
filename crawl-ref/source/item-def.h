@@ -114,8 +114,6 @@ public:
 
     int  armour_rating() const;
 
-    bool launched_by(const item_def &launcher) const;
-
     void clear()
     {
         *this = item_def();

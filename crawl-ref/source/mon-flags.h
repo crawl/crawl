@@ -272,8 +272,8 @@ enum monster_flag_type : uint64_t
     MF_SENSED             = BIT(33),
     /// mname should not be used for corpses
     MF_NAME_NOCORPSE      = BIT(34),
-    /// known to have a ranged attack
-    MF_SEEN_RANGED        = BIT(35),
+
+    // MF_SEEN_RANGED     = BIT(35), // was known to have a ranged attack
 
     /// this monster has been polymorphed.
     MF_POLYMORPHED        = BIT(36),

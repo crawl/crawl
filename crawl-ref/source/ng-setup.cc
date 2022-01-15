@@ -167,9 +167,6 @@ item_def* newgame_make_item(object_class_type base,
 
     if (item.base_type == OBJ_MISSILES)
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
-    // You probably want to pick up both.
-    if (item.is_type(OBJ_MISSILES, MI_SLING_BULLET))
-        _autopickup_ammo(MI_STONE);
 
     origin_set_startequip(item);
 
@@ -195,30 +192,15 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
 static void _give_ammo(weapon_type weapon, int plus)
 {
     ASSERT(weapon != NUM_WEAPONS);
+    if (weapon != WPN_THROWN) return;
 
-    switch (weapon)
-    {
-    case WPN_THROWN:
-        if (species::can_throw_large_rocks(you.species))
-            newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
-        else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
-            newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 8 + 2 * plus);
-        else
-            newgame_make_item(OBJ_MISSILES, MI_JAVELIN, 5 + plus);
-        newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 2);
-        break;
-    case WPN_SHORTBOW:
-        newgame_make_item(OBJ_MISSILES, MI_ARROW, 20);
-        break;
-    case WPN_HAND_CROSSBOW:
-        newgame_make_item(OBJ_MISSILES, MI_BOLT, 20);
-        break;
-    case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
-        break;
-    default:
-        break;
-    }
+    if (species::can_throw_large_rocks(you.species))
+        newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
+    else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
+        newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 8 + 2 * plus);
+    else
+        newgame_make_item(OBJ_MISSILES, MI_JAVELIN, 5 + plus);
+    newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 2);
 }
 
 static void _give_job_spells(job_type job)

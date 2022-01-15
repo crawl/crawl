@@ -510,9 +510,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_THROWING_NET:
     case MI_STONE:
     case MI_LARGE_ROCK:
-    case MI_SLING_BULLET:
-    case MI_ARROW:
-    case MI_BOLT:
         rc = SPMSL_NORMAL;
         break;
     case MI_DART:
@@ -545,12 +542,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
 bool is_missile_brand_ok(int type, int brand, bool strict)
 {
-    // Launcher ammo can never be branded.
-    if ((type == MI_STONE
-        || type == MI_LARGE_ROCK
-        || type == MI_SLING_BULLET
-        || type == MI_ARROW
-        || type == MI_BOLT)
+    // Rocks can't normally be branded.
+    if ((type == MI_STONE || type == MI_LARGE_ROCK)
         && brand != SPMSL_NORMAL
         && strict)
     {
@@ -631,9 +624,6 @@ static void _generate_missile_item(item_def& item, int force_type,
     {
         item.sub_type =
             random_choose_weighted(50, MI_STONE,
-                                   20, MI_ARROW,
-                                   12, MI_BOLT,
-                                   12, MI_SLING_BULLET,
                                    10, MI_DART,
                                    3,  MI_BOOMERANG,
                                    2,  MI_JAVELIN,

@@ -55,11 +55,6 @@ arbalest
 A large piece of machinery used for firing bolts, braced with steel and cranked
 with a windlass. It takes some time to load and fire.
 %%%%
-arrow
-
-A long shafted projectile intended to be shot with a shortbow or longbow,
-fletched with feathers at one end and a point at the other.
-%%%%
 bardiche
 
 A long pole with an enormous, cleaving blade on one end.
@@ -71,10 +66,6 @@ Armour for the scaly midsections of nagas and palentongas.
 battleaxe
 
 A large war axe with a formidable double-sided head.
-%%%%
-bolt
-
-A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
 %%%%
 book of air
 
@@ -1153,11 +1144,6 @@ short sword
 
 A personal stabbing weapon with a short grip.
 %%%%
-sling bullet
-
-A small, heavy projectile specially shaped for use with slings. It is more
-effective as ammunition than simple stones.
-%%%%
 spear
 
 A hunting weapon consisting of a wooden shaft with a pointed metal head
@@ -1219,7 +1205,7 @@ resistance to scalding steam), but it is extremely light and supple.
 stone
 
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
-thrown by hand or launched with a sling.
+thrown to cause minor damage.
 %%%%
 shadow dragon scales
 

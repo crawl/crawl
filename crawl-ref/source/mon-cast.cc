@@ -6196,10 +6196,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         // Swap weapons if necessary so that that happens before the spell
         // casting message.
-        item_def *launcher = nullptr;
-        mons_usable_missile(mons, &launcher);
         const item_def *weapon = mons->mslot_item(MSLOT_WEAPON);
-        if (launcher && launcher != weapon)
+        const item_def *swap = mons->mslot_item(MSLOT_ALT_WEAPON);
+        if (swap && is_range_weapon(*swap) && (!weapon || !is_range_weapon(*weapon)))
             mons->swap_weapons();
         mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
         handle_throw(mons, pbolt, true, false);

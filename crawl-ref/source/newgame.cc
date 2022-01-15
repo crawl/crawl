@@ -1702,13 +1702,6 @@ static void _construct_weapon_menu(const newgame_def& ng,
             item_def dummy;
             dummy.base_type = OBJ_WEAPONS;
             dummy.sub_type = wpn_type;
-            if (is_ranged_weapon_type(wpn_type))
-            {
-                text += " and ";
-                text += wpn_type == WPN_HUNTING_SLING ? ammo_name(MI_SLING_BULLET)
-                                                      : ammo_name(wpn_type);
-                text += "s";
-            }
             choices.emplace_back(item_attack_skill(dummy), text
 #ifdef USE_TILE
                     , tileidx_item(dummy)

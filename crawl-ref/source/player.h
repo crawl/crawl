@@ -196,7 +196,6 @@ public:
     int berserk_penalty;                // The penalty for moving while berserk
 
     FixedVector<int, NUM_ATTRIBUTES> attribute;
-    FixedVector<uint8_t, quiver::NUM_LAUNCHERS> quiver; // default items for quiver
     FixedVector<int, NUM_TIMERS> last_timer_effect;
     FixedVector<int, NUM_TIMERS> next_timer_effect;
 
@@ -320,7 +319,6 @@ public:
     quiver::ammo_history m_quiver_history;
 
     quiver::action_cycler quiver_action;
-    quiver::launcher_action_cycler launcher_action;
 
     // monsters mesmerising player; should be protected, but needs to be saved
     // and restored.

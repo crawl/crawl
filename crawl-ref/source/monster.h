@@ -535,7 +535,6 @@ public:
     bool has_spell_of_type(spschool discipline) const;
 
     void bind_melee_flags();
-    void bind_spell_flags();
     void calc_speed();
     bool attempt_escape(int attempts = 1);
     void struggle_against_net();

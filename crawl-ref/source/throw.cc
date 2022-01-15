@@ -56,11 +56,10 @@ static int  _get_dart_chance(const int hd);
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
 {
-    return is_launched(&attacker, weapon, projectile) != launch_retval::FUMBLED
+    return is_throwable(&attacker, projectile)
             && projectile.base_type == OBJ_MISSILES
             && projectile.sub_type == MI_JAVELIN
            || weapon
-              && is_launched(&attacker, weapon, projectile) == launch_retval::LAUNCHED
               && (get_weapon_brand(*weapon) == SPWPN_PENETRATION
                   || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
 }
@@ -450,9 +449,9 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.colour = cglyph.col;
     beam.was_missile = true;
 
-    item_def *launcher  = agent->weapon(0);
-    if (launcher && !item.launched_by(*launcher))
-        launcher = nullptr;
+    item_def *launcher = nullptr;
+    if (item.base_type != OBJ_MISSILES || !is_throwable(agent, item))
+        launcher = agent->weapon(0);
 
     if (agent->is_player())
     {
@@ -538,17 +537,18 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 static void _throw_noise(actor* act, const item_def &ammo)
 {
     ASSERT(act); // XXX: change to actor &act
+
+    if (is_throwable(act, ammo))
+        return;
+
     const item_def* launcher = act->weapon();
-
     if (launcher == nullptr || launcher->base_type != OBJ_WEAPONS)
-        return;
-
-    if (is_launched(act, launcher, ammo) != launch_retval::LAUNCHED)
-        return;
+        return; // can never happen..?
 
     int         level = 0;
     const char* msg   = nullptr;
 
+    // XXX: move both sound levels & messages into item-prop.cc?
     switch (launcher->sub_type)
     {
     case WPN_HUNTING_SLING:
@@ -650,9 +650,8 @@ void throw_it(quiver::action &a)
     ASSERT(thrown.defined());
 
     // Figure out if we're thrown or launched.
-    const launch_retval projected = is_launched(&you, launcher, thrown);
-
-    const bool tossing = projected == launch_retval::FUMBLED;
+    const bool is_thrown = is_throwable(&you, thrown);
+    const bool tossing = !launcher && !is_thrown;
 
     // Making a copy of the item: changed only for venom launchers.
     item_def item = thrown;
@@ -756,16 +755,11 @@ void throw_it(quiver::action &a)
     if (!teleport)
         pbolt.set_target(a.target);
 
-    const int bow_brand = (projected == launch_retval::LAUNCHED)
-                          ? get_weapon_brand(*launcher)
-                          : SPWPN_NORMAL;
+    const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
     const int ammo_brand = get_ammo_brand(item);
 
-    switch (projected)
+    if (launcher)
     {
-    case launch_retval::LAUNCHED:
-    {
-        ASSERT(launcher);
         practise_launching(*launcher);
         if (is_unrandom_artefact(*launcher)
             && get_unrand_entry(launcher->unrand_idx)->type_name)
@@ -774,17 +768,10 @@ void throw_it(quiver::action &a)
         }
         else
             count_action(CACT_FIRE, launcher->sub_type);
-        break;
-    }
-    case launch_retval::THROWN:
+    } else if (is_thrown)
+    {
         practise_throwing((missile_type)wepType);
         count_action(CACT_THROW, wepType, OBJ_MISSILES);
-        break;
-    case launch_retval::FUMBLED:
-        break;
-    case launch_retval::BUGGY:
-        dprf("Unknown launch type for weapon."); // should never happen :)
-        break;
     }
 
     // check for returning ammo
@@ -796,8 +783,7 @@ void throw_it(quiver::action &a)
     // Create message.
     mprf("You %s%s %s.",
           teleport ? "magically " : "",
-          (projected == launch_retval::FUMBLED ? "toss away" :
-           projected == launch_retval::LAUNCHED ? "shoot" : "throw"),
+          is_thrown ? "throw" : launcher ? "shoot" : "toss away",
           ammo_name.c_str());
 
     // Ensure we're firing a 'missile'-type beam.
@@ -900,34 +886,28 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
     beam.pierce  = false;
 }
 
-// msl is the item index of the thrown missile (or weapon).
-bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
+bool mons_throw(monster* mons, bolt &beam, bool teleport)
 {
     string ammo_name;
-
     bool returning = false;
 
-    // Some initial convenience & initializations.
-    ASSERT(env.item[msl].base_type == OBJ_MISSILES);
-
-    const int weapon    = mons->inv[MSLOT_WEAPON];
-
-    mon_inv_type slot = get_mon_equip_slot(mons, env.item[msl]);
-    ASSERT(slot != NUM_MONSTER_SLOTS);
+    ASSERT(beam.item);
+    item_def &missile = *beam.item;
+    ASSERT(missile.base_type == OBJ_MISSILES);
 
     // Energy is already deducted for the spell cast, if using portal projectile
     // FIXME: should it use this delay and not the spell delay?
     if (!teleport)
     {
         const int energy = mons->action_energy(EUT_MISSILE);
-        const int delay = mons->attack_delay(&env.item[msl]).roll();
+        const int delay = mons->attack_delay(&missile).roll();
         ASSERT(energy > 0);
         ASSERT(delay > 0);
         mons->speed_increment -= div_rand_round(energy * delay, 10);
     }
 
     // Dropping item copy, since the launched item might be different.
-    item_def item = env.item[msl];
+    item_def item = missile;
     item.quantity = 1;
 
     if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
@@ -939,47 +919,17 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     beam.aimed_at_spot |= mons->temp_attitude() == ATT_FRIENDLY
                           && !beam.pierce;
 
-    const launch_retval projected =
-        is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
-                    env.item[msl]);
-
-    // Identify before throwing, so we don't get different
-    // messages for first and subsequent missiles.
-    if (mons->observable())
-    {
-        if (projected == launch_retval::LAUNCHED
-               && item_type_known(env.item[weapon])
-            || projected == launch_retval::THROWN
-               && env.item[msl].base_type == OBJ_MISSILES)
-        {
-            set_ident_flags(env.item[msl], ISFLAG_KNOW_TYPE);
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
-        }
-    }
-
-    // Now, if a monster is, for some reason, throwing something really
-    // stupid, it will have baseHit of 0 and damage of 0. Ah well.
-    string msg = mons->name(DESC_THE);
-    if (teleport)
-        msg += " magically";
-    msg += ((projected == launch_retval::LAUNCHED) ? " shoots " : " throws ");
-
-    if (!beam.name.empty() && projected == launch_retval::LAUNCHED)
-        msg += article_a(beam.name);
-    else
-    {
-        // build shoot message
-        msg += item.name(DESC_A, false, false, false);
-
-        // build beam name
+    if (beam.name.empty())
         beam.name = item.name(DESC_PLAIN, false, false, false);
-    }
-    msg += ".";
 
+    const bool thrown = is_throwable(mons, missile);
     if (mons->observable())
     {
-        mons->flags |= MF_SEEN_RANGED;
-        mpr(msg);
+        mpr(make_stringf("%s%s %s %s.",
+                         mons->name(DESC_THE).c_str(),
+                         teleport ? " magically" : "",
+                         thrown ? "throws" : "shoots",
+                         article_a(beam.name).c_str()).c_str());
     }
 
     _throw_noise(mons, item);
@@ -999,8 +949,8 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     else
         beam.fire();
 
-    if (beam.drop_item && dec_mitm_item_quantity(msl, 1))
-        mons->inv[slot] = NON_ITEM;
+    if (beam.drop_item && dec_mitm_item_quantity(mons->inv[MSLOT_MISSILE], 1))
+        mons->inv[MSLOT_MISSILE] = NON_ITEM;
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;

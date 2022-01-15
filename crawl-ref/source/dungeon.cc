@@ -4926,24 +4926,6 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
     dgn_place_item(spec, where);
 }
 
-static void _give_animated_weapon_ammo(monster &mon)
-{
-    const item_def *launcher = mon.launcher();
-    if (!launcher)
-        return;
-
-    const item_def *missiles = mon.missiles();
-    if (missiles && missiles->launched_by(*launcher))
-        return;
-
-    const int ammo_type = fires_ammo_type(*launcher);
-    const int thing_created = items(false, OBJ_MISSILES, ammo_type, 1);
-    if (thing_created == NON_ITEM)
-        return;
-
-    give_specific_item(&mon, thing_created);
-}
-
 static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
 {
     ASSERT(mspec.place.is_valid());
@@ -5041,11 +5023,6 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     {
         mon->swap_weapons(MB_FALSE);
     }
-
-    // Make dancing launchers less pathetic.
-    // XX this should be done on creation, not placement?
-    if (mons_class_is_animated_weapon(mon->type))
-        _give_animated_weapon_ammo(*mon);
 }
 
 static bool _should_veto_unique(monster_type type)

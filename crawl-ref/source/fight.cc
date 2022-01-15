@@ -927,46 +927,6 @@ int mons_weapon_damage_rating(const item_def &launcher)
     return property(launcher, PWPN_DAMAGE) + launcher.plus;
 }
 
-// Returns a rough estimate of damage from firing/throwing missile.
-int mons_missile_damage(monster* mons, const item_def *launch,
-                        const item_def *missile)
-{
-    if (!missile || (!launch && !is_throwable(mons, *missile)))
-        return 0;
-
-    const int missile_damage = property(*missile, PWPN_DAMAGE) / 2 + 1;
-    const int launch_damage  = launch? property(*launch, PWPN_DAMAGE) : 0;
-    return max(0, launch_damage + missile_damage);
-}
-
-int mons_usable_missile(monster* mons, item_def **launcher)
-{
-    *launcher = nullptr;
-    item_def *launch = nullptr;
-    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-    {
-        if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
-        {
-            if (is_range_weapon(*item))
-                launch = item;
-        }
-    }
-
-    const item_def *missiles = mons->missiles();
-    if (launch && missiles && !missiles->launched_by(*launch))
-        launch = nullptr;
-
-    const int fdam = mons_missile_damage(mons, launch, missiles);
-
-    if (!fdam)
-        return NON_ITEM;
-    else
-    {
-        *launcher = launch;
-        return missiles->index();
-    }
-}
-
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance, coord_def attack_pos)
 {

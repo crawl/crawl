@@ -303,7 +303,6 @@ public:
     vector<unsigned> fire_order;  // missile search order for 'f' command
     unordered_set<spell_type, hash<int>> fire_order_spell;
     unordered_set<ability_type, hash<int>> fire_order_ability;
-    bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
     bool        quiver_menu_focus;
 
     unordered_set<int> force_spell_targeter; // spell types to always use a

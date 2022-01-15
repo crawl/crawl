@@ -110,14 +110,6 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
         plus = 2;
 
     newgame_make_item(OBJ_WEAPONS, sub_type, 1, plus, ego);
-
-    if (sub_type == WPN_SHORTBOW)
-        newgame_make_item(OBJ_MISSILES, MI_ARROW, 15 + random2avg(21, 5));
-    else if (sub_type == WPN_HAND_CROSSBOW)
-        newgame_make_item(OBJ_MISSILES, MI_BOLT, 15 + random2avg(21, 5));
-    // stones are extremely common
-    else if (sub_type == WPN_HUNTING_SLING)
-        newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 15 + random2avg(9, 2));
 }
 
 static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,

@@ -3342,9 +3342,7 @@ equipment_type item_equip_slot(const item_def& item)
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
     return item_equip_slot(item) != EQ_NONE
-           || quiver_too
-                && (you.quiver_action.item_is_quivered(item)
-                    || you.launcher_action.item_is_quivered(item));
+           || quiver_too && you.quiver_action.item_is_quivered(item);
 }
 
 bool item_is_melded(const item_def& item)
@@ -3364,14 +3362,6 @@ bool item_def::has_spells() const
 bool item_def::cursed() const
 {
     return flags & ISFLAG_CURSED;
-}
-
-bool item_def::launched_by(const item_def &launcher) const
-{
-    if (base_type != OBJ_MISSILES)
-        return false;
-    const missile_type mt = fires_ammo_type(launcher);
-    return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
 }
 
 int item_def::index() const
@@ -3500,19 +3490,16 @@ colour_t item_def::missile_colour() const
     {
         case MI_STONE:
             return BROWN;
-        case MI_SLING_BULLET:
-            return CYAN;
         case MI_LARGE_ROCK:
             return LIGHTGREY;
-        case MI_ARROW:
-            return BLUE;
 #if TAG_MAJOR_VERSION == 34
+        case MI_ARROW:
         case MI_NEEDLE:
+        case MI_BOLT:
+        case MI_SLING_BULLET:
 #endif
         case MI_DART:
             return WHITE;
-        case MI_BOLT:
-            return LIGHTBLUE;
         case MI_JAVELIN:
             return RED;
         case MI_THROWING_NET:

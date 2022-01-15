@@ -658,24 +658,23 @@ struct missile_def
     int         dam;
     int         mulch_rate;
     int         price;
-    bool        throwable;
 };
 
 static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
-    { MI_DART,          "dart",          0, 12, 2,  true  },
+    { MI_DART,          "dart",          0, 12, 2  },
 #if TAG_MAJOR_VERSION == 34
-    { MI_NEEDLE,        "needle",        0, 12, 2,  false },
+    { MI_NEEDLE,        "needle",        0, 12, 2  },
 #endif
-    { MI_STONE,         "stone",         2, 8,  1,  true  },
-    { MI_ARROW,         "arrow",         0, 8,  2,  false },
-    { MI_BOLT,          "bolt",          0, 8,  2,  false },
-    { MI_LARGE_ROCK,    "large rock",   20, 25, 7,  true  },
-    { MI_SLING_BULLET,  "sling bullet",  4, 8,  5,  false },
-    { MI_JAVELIN,       "javelin",      10, 20, 8,  true  },
-    { MI_THROWING_NET,  "throwing net",  0, 0,  30, true  },
-    { MI_BOOMERANG,     "boomerang",     6, 20, 5,  true  },
+    { MI_STONE,         "stone",         2, 8,  1  },
+    { MI_ARROW,         "arrow",         0, 1,  2  },
+    { MI_BOLT,          "bolt",          0, 1,  2  },
+    { MI_LARGE_ROCK,    "large rock",   20, 25, 7  },
+    { MI_SLING_BULLET,  "sling bullet",  4, 1,  5  },
+    { MI_JAVELIN,       "javelin",      10, 20, 8  },
+    { MI_THROWING_NET,  "throwing net",  0, 0,  30 },
+    { MI_BOOMERANG,     "boomerang",     6, 20, 5  },
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -1746,20 +1745,17 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
  */
 skill_type item_attack_skill(const item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS)
-        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
-    else if (item.base_type == OBJ_STAVES)
-        return SK_STAVES;
-    else if (item.base_type == OBJ_MISSILES && (!has_launcher(item)
-                || item.is_type(OBJ_MISSILES, MI_STONE)))
+    switch (item.base_type)
     {
+    case OBJ_WEAPONS:
+        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
+    case OBJ_STAVES:
+        return SK_STAVES;
+    case OBJ_MISSILES:
         return SK_THROWING;
+    default:
+        return SK_FIGHTING;
     }
-    // don't return skills for non-throwable ammo: without the launcher they're
-    // just chaff. (Or at least, I think this is the motivation.)
-
-    // This is used to mark that only fighting applies.
-    return SK_FIGHTING;
 }
 
 /**
@@ -1891,14 +1887,6 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 //
 // Launcher and ammo functions:
 //
-missile_type fires_ammo_type(const item_def &item)
-{
-    if (item.base_type != OBJ_WEAPONS)
-        return MI_NONE;
-
-    return Weapon_prop[Weapon_index[item.sub_type]].ammo;
-}
-
 bool is_range_weapon(const item_def &item)
 {
     return is_weapon(item) && is_ranged_weapon_type(item.sub_type);
@@ -1910,68 +1898,47 @@ const char *ammo_name(missile_type ammo)
            : Missile_prop[ Missile_index[ammo] ].name;
 }
 
-const char *ammo_name(const item_def &bow)
-{
-    ASSERT(is_range_weapon(bow));
-    return ammo_name(fires_ammo_type(bow));
-}
-
-const char *ammo_name(const weapon_type bow)
-{
-    missile_type mi = Weapon_prop[Weapon_index[bow]].ammo;
-    ASSERT(mi != MI_NONE);
-    return ammo_name(mi);
-}
-
-// Returns true if item has an associated launcher.
-bool has_launcher(const item_def &ammo)
-{
-    ASSERT(ammo.base_type == OBJ_MISSILES);
-    return ammo.sub_type != MI_LARGE_ROCK
-#if TAG_MAJOR_VERSION == 34
-           && ammo.sub_type != MI_DART
-#endif
-           && ammo.sub_type != MI_JAVELIN
-           && ammo.sub_type != MI_BOOMERANG
-           && ammo.sub_type != MI_THROWING_NET;
-}
-
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn)
 {
     if (wpn.base_type != OBJ_MISSILES)
         return false;
 
-    if (actor)
+#if TAG_MAJOR_VERSION == 34
+    switch (wpn.sub_type)
     {
-        const size_type bodysize = actor->body_size();
-
-        if (wpn.sub_type == MI_LARGE_ROCK)
-            return actor->can_throw_large_rocks();
-
-        if (bodysize < SIZE_MEDIUM
-            && wpn.sub_type == MI_JAVELIN)
-        {
-            return false;
-        }
+    case MI_ARROW:
+    case MI_BOLT:
+    case MI_SLING_BULLET:
+        return false;
+    default:
+        break;
     }
+#endif
 
-    return Missile_prop[Missile_index[wpn.sub_type]].throwable;
+    if (!actor)
+        return true;
+
+    if (wpn.sub_type == MI_LARGE_ROCK)
+        return actor->can_throw_large_rocks();
+    return wpn.sub_type != MI_JAVELIN || actor->body_size() >= SIZE_MEDIUM;
 }
 
 // Decide if something is launched or thrown.
-launch_retval is_launched(const actor *actor, const item_def *launcher,
-                          const item_def &missile)
+launch_retval is_launched(const actor *actor, const item_def &missile)
 {
-    if (missile.base_type != OBJ_MISSILES)
-        return launch_retval::FUMBLED;
-
-    if (launcher && missile.launched_by(*launcher))
-        return launch_retval::LAUNCHED;
-
     return is_throwable(actor, missile) ? launch_retval::THROWN : launch_retval::FUMBLED;
 }
 
+// Sorry about this.
+void populate_fake_projectile(const item_def &wep, item_def &fake_proj)
+{
+    ASSERT(is_weapon(wep) && is_ranged_weapon_type(wep.sub_type));
+    fake_proj.base_type = OBJ_MISSILES;
+    fake_proj.sub_type  = Weapon_prop[Weapon_index[wep.sub_type]].ammo;
+    fake_proj.quantity  = 1;
+    fake_proj.rnd       = 1;
+}
 
 /**
  * Returns whether a given missile will always destroyed on impact.

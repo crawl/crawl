@@ -1307,191 +1307,159 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
 static void _give_ammo(monster* mon, int level, bool mons_summoned)
 {
     if (const item_def *launcher = mon->launcher())
+        return;
+
+    // Give some monsters throwables.
+    int weap_type = -1;
+    int qty = 0;
+    int brand = SPMSL_NORMAL;
+
+    switch (mon->type)
     {
-        const object_class_type xitc = OBJ_MISSILES;
-        int xitt = fires_ammo_type(*launcher);
-
-        if (xitt == MI_STONE
-            && (mon->type == MONS_JOSEPH
-                || mon->type == MONS_SATYR
-                || (mon->type == MONS_FAUN && one_chance_in(3))
-                || one_chance_in(15)))
+    case MONS_KOBOLD:
+        if (one_chance_in(10) && level > 1)
         {
-            xitt = MI_SLING_BULLET;
+            weap_type  = MI_DART;
+            qty = random_range(2, 8);
+            brand = SPMSL_POISONED;
+            break;
         }
-
-        const int thing_created = items(false, xitc, xitt, level);
-
-        if (thing_created == NON_ITEM)
-            return;
+        if (x_chance_in_y(2, 5))
+        {
+            weap_type  = MI_STONE;
+            qty = 1 + random2(5);
+        }
+        break;
+    case MONS_KOBOLD_BRIGAND:
+        weap_type  = MI_DART;
+        if (one_chance_in(3))
+        {
+            // Avoid increasing total amount of generated curare
+            // too much.
+            brand = SPMSL_CURARE;
+            qty = 1;
+        }
         else
         {
-            // Sanity check to avoid useless brands.
-            const int bow_brand  = get_weapon_brand(*launcher);
-            const int ammo_brand = get_ammo_brand(env.item[thing_created]);
-            if (ammo_brand != SPMSL_NORMAL
-                && (bow_brand == SPWPN_FLAMING || bow_brand == SPWPN_FREEZING))
-            {
-                env.item[thing_created].brand = SPMSL_NORMAL;
-            }
+            qty = random_range(2, 8);
+            brand = SPMSL_POISONED;
         }
+        break;
 
-        give_specific_item(mon, thing_created);
-    }
-    else
-    {
-        // Give some monsters throwables.
-        int weap_type = -1;
-        int qty = 0;
-        int brand = SPMSL_NORMAL;
+    case MONS_SONJA:
+        weap_type = MI_DART;
+        brand = SPMSL_CURARE;
+        qty = random_range(2, 5);
+        break;
 
-        switch (mon->type)
+    case MONS_SPRIGGAN_RIDER:
+        if (one_chance_in(15))
         {
-        case MONS_KOBOLD:
-            if (one_chance_in(10) && level > 1)
-            {
-                weap_type  = MI_DART;
-                qty = random_range(2, 8);
-                brand = SPMSL_POISONED;
-                break;
-            }
-            if (x_chance_in_y(2, 5))
-            {
-                weap_type  = MI_STONE;
-                qty = 1 + random2(5);
-            }
-            break;
-        case MONS_KOBOLD_BRIGAND:
-            weap_type  = MI_DART;
-            if (one_chance_in(3))
-            {
-                // Avoid increasing total amount of generated curare
-                // too much.
-                brand = SPMSL_CURARE;
-                qty = 1;
-            }
-            else
-            {
-                qty = random_range(2, 8);
-                brand = SPMSL_POISONED;
-            }
-            break;
-
-        case MONS_SONJA:
             weap_type = MI_DART;
             brand = SPMSL_CURARE;
-            qty = random_range(2, 5);
-            break;
+            qty = random_range(1, 4);
+        }
+        break;
 
-        case MONS_SPRIGGAN_RIDER:
-            if (one_chance_in(15))
-            {
-                weap_type = MI_DART;
-                brand = SPMSL_CURARE;
-                qty = random_range(1, 4);
-            }
-            break;
+    case MONS_ORC_WARRIOR:
+        if (one_chance_in(
+                player_in_branch(BRANCH_ORC)? 9 : 20))
+        {
+            weap_type = MI_BOOMERANG;
+            qty       = random_range(1, 3);
+        }
+        break;
 
-        case MONS_ORC_WARRIOR:
-            if (one_chance_in(
-                    player_in_branch(BRANCH_ORC)? 9 : 20))
-            {
-                weap_type = MI_BOOMERANG;
-                qty       = random_range(1, 3);
-            }
-            break;
+    case MONS_ORC:
+        if (one_chance_in(20))
+        {
+            weap_type = MI_BOOMERANG;
+            qty       = random_range(1, 3);
+        }
+        break;
 
-        case MONS_ORC:
-            if (one_chance_in(20))
-            {
-                weap_type = MI_BOOMERANG;
-                qty       = random_range(1, 3);
-            }
-            break;
+    case MONS_URUG:
+        weap_type  = MI_JAVELIN;
+        qty = random_range(4, 7);
+        break;
 
-        case MONS_URUG:
-            weap_type  = MI_JAVELIN;
-            qty = random_range(4, 7);
-            break;
+    // Sprint-only.
+    case MONS_CHUCK:
+        weap_type  = MI_LARGE_ROCK;
+        brand = SPMSL_CHAOS;
+        qty = random_range(2, 4);
+        break;
 
-        // Sprint-only.
-        case MONS_CHUCK:
-            weap_type  = MI_LARGE_ROCK;
-            brand = SPMSL_CHAOS;
-            qty = random_range(2, 4);
-            break;
+    case MONS_POLYPHEMUS:
+        weap_type  = MI_LARGE_ROCK;
+        qty        = random_range(8, 12);
+        break;
 
-        case MONS_POLYPHEMUS:
-            weap_type  = MI_LARGE_ROCK;
-            qty        = random_range(8, 12);
-            break;
+    case MONS_MERFOLK_JAVELINEER:
+    case MONS_MINOTAUR:
+        weap_type  = MI_JAVELIN;
+        qty        = random_range(1, 3);
+        if (mon->type == MONS_MINOTAUR)
+            qty += random_range(1, 5);
+        if (one_chance_in(3))
+            level = ISPEC_GOOD_ITEM;
+        break;
 
-        case MONS_MERFOLK_JAVELINEER:
-        case MONS_MINOTAUR:
-            weap_type  = MI_JAVELIN;
+    case MONS_MERFOLK:
+        if (one_chance_in(3)
+            || active_monster_band == BAND_MERFOLK_JAVELINEER)
+        {
+            weap_type  = MI_BOOMERANG;
             qty        = random_range(1, 3);
-            if (mon->type == MONS_MINOTAUR)
-                qty += random_range(1, 5);
-            if (one_chance_in(3))
-                level = ISPEC_GOOD_ITEM;
-            break;
-
-        case MONS_MERFOLK:
-            if (one_chance_in(3)
-                || active_monster_band == BAND_MERFOLK_JAVELINEER)
-            {
-                weap_type  = MI_BOOMERANG;
-                qty        = random_range(1, 3);
-                if (active_monster_band == BAND_MERFOLK_JAVELINEER)
-                    break;
-            }
-            if (one_chance_in(4) && !mons_summoned)
-            {
-                weap_type  = MI_THROWING_NET;
-                qty        = 1;
-                if (one_chance_in(4))
-                    qty += random2(3); // up to three nets
-            }
-            break;
-
-        case MONS_DRACONIAN_KNIGHT:
-        case MONS_GNOLL:
-            if (!level || !one_chance_in(20))
+            if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                 break;
-            // deliberate fall-through to harold
-
-        case MONS_HAROLD: // bounty hunter, up to 5 nets
-            if (mons_summoned)
-                break;
-
+        }
+        if (one_chance_in(4) && !mons_summoned)
+        {
             weap_type  = MI_THROWING_NET;
             qty        = 1;
-            if (one_chance_in(3))
-                qty++;
-            if (mon->type == MONS_HAROLD)
-                qty += random2(4);
+            if (one_chance_in(4))
+                qty += random2(3); // up to three nets
+        }
+        break;
 
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_GNOLL:
+        if (!level || !one_chance_in(20))
+            break;
+        // deliberate fall-through to harold
+
+    case MONS_HAROLD: // bounty hunter, up to 5 nets
+        if (mons_summoned)
             break;
 
-        default:
-            break;
-        }
+        weap_type  = MI_THROWING_NET;
+        qty        = 1;
+        if (one_chance_in(3))
+            qty++;
+        if (mon->type == MONS_HAROLD)
+            qty += random2(4);
 
-        if (weap_type == -1)
-            return;
+        break;
 
-        const int thing_created = items(false, OBJ_MISSILES, weap_type, level);
+    default:
+        break;
+    }
 
-        if (thing_created != NON_ITEM)
-        {
-            item_def& w(env.item[thing_created]);
+    if (weap_type == -1)
+        return;
 
-            if (brand != SPMSL_NORMAL)
-                set_item_ego_type(w, OBJ_MISSILES, brand);
+    const int thing_created = items(false, OBJ_MISSILES, weap_type, level);
 
-            w.quantity = qty;
-            give_specific_item(mon, thing_created);
-        }
+    if (thing_created != NON_ITEM)
+    {
+        item_def& w(env.item[thing_created]);
+
+        if (brand != SPMSL_NORMAL)
+            set_item_ego_type(w, OBJ_MISSILES, brand);
+
+        w.quantity = qty;
+        give_specific_item(mon, thing_created);
     }
 }
 

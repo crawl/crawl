@@ -2836,7 +2836,6 @@ void define_monster(monster& mons, bool friendly)
     mons.bind_melee_flags();
 
     mons_load_spells(mons);
-    mons.bind_spell_flags();
 
     // Reset monster enchantments.
     mons.enchantments.clear();
@@ -2852,7 +2851,6 @@ void define_monster(monster& mons, bool friendly)
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
         mons.bind_melee_flags();
-        mons.bind_spell_flags();
         break;
     }
 
@@ -3666,20 +3664,7 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
 
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
-    // Ugh.
-    const item_def *weapon  = mon->launcher();
-    const item_def *primary = mon->mslot_item(MSLOT_WEAPON);
-    const item_def *missile = mon->missiles();
-
-    // We don't have a usable ranged weapon if a different cursed weapon
-    // is presently equipped.
-    if (weapon != primary && primary && primary->cursed())
-        return false;
-
-    if (!missile)
-        return false;
-
-    return is_launched(mon, weapon, *missile) != launch_retval::FUMBLED;
+    return mon->launcher() != nullptr;
 }
 
 static bool _mons_has_attack_wand(const monster& mon)

@@ -3228,25 +3228,12 @@ static void _display_tohit()
 
 /**
  * Print a message indicating the player's attack delay with their current
- * weapon & its ammo (if applicable).
- *
- * Assumes the attack speed of a ranged weapon does not depend on what
- * ammunition is being used (as long as it is valid).
+ * weapon (if applicable).
  */
 static void _display_attack_delay()
 {
+    int delay = you.attack_delay(nullptr, false).expected();
     const item_def* weapon = you.weapon();
-    int delay;
-    if (weapon && is_range_weapon(*weapon))
-    {
-        item_def ammo;
-        ammo.base_type = OBJ_MISSILES;
-        ammo.sub_type = fires_ammo_type(*weapon);
-        delay = you.attack_delay(&ammo, false).expected();
-    }
-    else
-        delay = you.attack_delay(nullptr, false).expected();
-
     const bool at_min_delay = weapon
                               && you.skill(item_attack_skill(*weapon))
                                  >= weapon_min_delay_skill(*weapon);
@@ -5000,7 +4987,6 @@ player::player()
     apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
-    quiver.init(ENDOFPACK);
 
     last_timer_effect.init(0);
     next_timer_effect.init(20 * BASELINE_DELAY);
@@ -5086,7 +5072,6 @@ player::player()
 
     m_quiver_history = quiver::ammo_history();
     quiver_action = quiver::action_cycler();
-    launcher_action = quiver::launcher_action_cycler();
 
     props.clear();
 

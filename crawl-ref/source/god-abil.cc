@@ -1608,10 +1608,6 @@ bool beogh_gift_item()
     if (use_alt_slot)
         mons->swap_weapons();
 
-    dprf("is_ranged weap: %d", range_weapon);
-    if (range_weapon)
-        gift_ammo_to_orc(mons);
-
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
     else if (body_armour)
