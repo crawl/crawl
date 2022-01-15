@@ -2401,8 +2401,14 @@ static bool _near_visible_wall(const monster &caster, const actor &target)
     if (!caster.see_cell_no_trans(target.pos()))
         return false;
     for (adjacent_iterator ai(target.pos()); ai; ++ai)
-        if (cell_is_solid(*ai) && caster.see_cell_no_trans(*ai))
+    {
+        if (cell_is_solid(*ai)
+            && env.grid(*ai) != DNGN_MALIGN_GATEWAY
+            && caster.see_cell_no_trans(*ai))
+        {
             return true;
+        }
+    }
     return false;
 }
 
@@ -2430,8 +2436,8 @@ static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt &bea
     beam.fire();
 }
 
-/// Does the given monster have a foe that's adjacent to a wall, and can the caster see
-/// that wall?
+/// Does the given monster have a foe that's adjacent to a wall, and can the
+/// caster see that wall?
 static ai_action::goodness _foe_near_wall(const monster &caster)
 {
     const actor* foe = caster.get_foe();
@@ -2462,7 +2468,8 @@ static bool _creeping_frost_freeze(coord_def p, bolt &beam)
     return beam.explosion_draw_cell(p);
 }
 
-/// Cast the spell Creeping Frost, freezing any of the caster's foes that are adjacent to walls.
+/// Cast the spell Creeping Frost, freezing any of the caster's foes that are
+/// adjacent to walls.
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
 {
     bool visible_effect = false;
