@@ -1597,7 +1597,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
     const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
-    const bool gives_player_xp = mons_gives_xp(mons, you);
+    const bool could_give_xp = mons_gives_xp(mons, you);
+    const bool gives_real_xp = could_give_xp && !player_in_branch(BRANCH_ABYSS);
     bool drop_items          = !hard_reset;
     const bool submerged     = mons.submerged();
     bool in_transit          = false;
@@ -1849,7 +1850,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     // relevant avatars are adjusted by now to KILL_YOU and are counted.
     if (you.duration[DUR_WEREBLOOD]
         && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && gives_player_xp)
+        && could_give_xp)
     {
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
         if (wereblood_bonus <= 8) // cap at +9 slay
@@ -1893,8 +1894,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
                 // If this monster would otherwise give xp but didn't because
                 // it grants no reward or was neutral, give a message.
-                if ((!gives_player_xp
-                     || player_in_branch(BRANCH_ABYSS))
+                if (!gives_real_xp
                     && mons_class_gives_xp(mons.type)
                     && !summoned
                     && !fake_abjure
@@ -1905,14 +1905,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Killing triggers hints mode lesson.
-            if (gives_player_xp)
+            if (gives_real_xp)
                 _hints_inspect_kill();
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
 
             // Divine and innate health and mana restoration doesn't happen when
             // killing born-friendly monsters.
-            if (gives_player_xp
+            if (could_give_xp
                 && !mons_is_object(mons.type)
                 && (you.species == SP_GHOUL
                     || (have_passive(passive_t::restore_hp)
@@ -2004,7 +2004,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 #endif
             }
 
-            if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
+            if (gives_real_xp && you_worship(GOD_RU) && you.piety < 200
                 && one_chance_in(2))
             {
                 ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
@@ -2014,14 +2014,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Randomly bless a follower.
-            if (gives_player_xp
+            if (could_give_xp
                 && !mons_is_object(mons.type)
                 && _god_will_bless_follower(&mons))
             {
-                bless_follower();
+                bless_follower(nullptr, you.religion, false, gives_real_xp);
             }
 
-            if (gives_player_xp
+            if (could_give_xp
                 && !mons_is_object(mons.type)
                 && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
             {
@@ -2046,12 +2046,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (crawl_state.game_is_arena())
                 break;
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
-            if (!gives_player_xp
+            if (!could_give_xp
                 || !pet_kill
                 || !anon && invalid_monster_index(killer_index))
             {
@@ -2066,7 +2066,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 && _god_will_bless_follower(&mons))
             {
                 // Randomly bless the follower who killed.
-                bless_follower(killer_mon);
+                bless_follower(killer_mon, you.religion, false, gives_real_xp);
                 if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
                     _orb_of_mayhem(*killer_mon, mons);
             }
@@ -2340,7 +2340,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  SPELL_BIND_SOULS, GOD_NO_GOD);
             corpse_consumed = true;
         }
-        else if (was_visible && gives_player_xp)
+        else if (was_visible && could_give_xp)
         {
             // no doubling up with yred and death channel
             if (have_passive(passive_t::reaping))
@@ -2387,13 +2387,13 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (!mons.is_summoned() && mons.type == MONS_PHARAOH_ANT)
         _pharaoh_ant_bind_souls(&mons);
 
-    const unsigned int player_xp = gives_player_xp
+    const unsigned int player_xp = could_give_xp
         ? _calc_player_experience(&mons) : 0;
     const unsigned int monster_xp = _calc_monster_experience(&mons, killer,
                                                              killer_index);
 
     // Player Powered by Death
-    if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
+    if (could_give_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
         && (killer == KILL_YOU
             || killer == KILL_YOU_MISSILE
             || killer == KILL_YOU_CONF

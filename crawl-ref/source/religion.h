@@ -50,7 +50,8 @@ void dec_penance(god_type god, int val);
 void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 int excom_xp_docked();
 
-bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
+bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true,
+                bool force = false);
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
