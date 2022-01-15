@@ -402,7 +402,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return mutation_activity_type::INACTIVE;
 
-    if (you.form == transformation::tree && mut == MUT_TELEPORT)
+    if (you.form == transformation::tree && mut == MUT_BLINKITIS)
         return mutation_activity_type::INACTIVE;
 #if TAG_MAJOR_VERSION == 34
     if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
@@ -1588,7 +1588,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Formicids have stasis and so prevent mutations that would do nothing.
-    if (you.stasis() && (mutat == MUT_BERSERK || mutat == MUT_TELEPORT))
+    if (you.stasis() && (mutat == MUT_BERSERK || mutat == MUT_BLINKITIS))
         return true;
 
     if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
@@ -1795,10 +1795,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     mutat = concretize_mut(which_mutation, mutclass);
     if (!_is_valid_mutation(mutat))
-        return false;
-
-    // [Cha] don't allow teleportitis in sprint
-    if (mutat == MUT_TELEPORT && crawl_state.game_is_sprint())
         return false;
 
     if (physiology_mutation_conflict(mutat))
