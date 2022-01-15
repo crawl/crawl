@@ -292,7 +292,7 @@ static const mutation_def mut_data[] =
   {"You feel controlled.", "", ""},
   {"You feel random.", "", ""},
 },
-#endif
+
 
 { MUT_TELEPORT, 3, 3, mutflag::bad, false,
   "teleportitis",
@@ -309,7 +309,24 @@ static const mutation_def mut_data[] =
    "You feel stable.",
    "You feel stable."},
 },
+#endif
+    
+{ MUT_BLINKITIS, 3, 3, mutflag::bad, false,
+  "blinkitis",
 
+  {"You occasionally distort spacetime upon taking damage.",
+   "You sometimes distort spacetime upon taking damage.",
+   "You often distort spacetime upon taking damage."},
+
+  {"Dimensions around you appear skewed.",
+   "Dimensions around you appear twisted.",
+   "Dimensions around you appear warped!"},
+
+  {"The world regains its normal proportions.",
+   "Proportions around you start making a little bit more sense.",
+   "Proportions around you start making a little bit more sense."},
+},
+    
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
   "strong-willed",
 
