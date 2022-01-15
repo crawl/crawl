@@ -713,6 +713,16 @@ static void _deteriorate(int dam)
     }
 }
 
+static void _blinkitis(int dam)
+{
+    if (x_chance_in_y(you.get_mutation_level(MUT_BLINKITIS), 4)
+        && dam > you.hp_max / 10)
+    {
+        mprf(MSGCH_WARN, "Reality twists in an impossible shape!");
+        you.blink();
+    }
+}
+
 /**
  * Maybe corrode the player after taking damage if they're wearing *Corrode.
  **/
