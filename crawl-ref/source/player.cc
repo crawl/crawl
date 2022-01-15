@@ -1084,9 +1084,6 @@ int player_teleport()
     // artefacts
     tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION);
 
-    // mutations
-    tp += you.get_mutation_level(MUT_TELEPORT) * 4;
-
     return tp;
 }
 
