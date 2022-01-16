@@ -1072,8 +1072,8 @@ There are some shortcuts while targeting:
 
 - Typing Shift-direction on your keypad fires straight away in that direction.
 - Pressing 'p' or 'f' fires at the previous target (if it is still alive and in
-  sight). Due to this, most hunters can go a long way by pressing 'ff' to fire
-  their ammunition at a monster and then keep firing at it with further 'ff'
+  sight). Due to this, most hunters can go a long way by pressing 'vf' to fire
+  their ammunition at a monster and then keep firing at it with further 'vf'
   strokes. At times, it will be useful to switch targets with the '+' or '-'
   commands, though.
 
@@ -1993,7 +1993,7 @@ Monks
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
   starts with either some throwing weapons or a ranged weapon of their choice,
-  as well as a short sword and a set of leathers.
+  as well as a set of leathers.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using

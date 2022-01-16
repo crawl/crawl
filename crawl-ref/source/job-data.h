@@ -235,7 +235,7 @@ static const map<job_type, job_def> job_data =
     4, 3, 5,
     { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_OGRE, SP_TROLL, },
     { },
-    { "short sword", "leather armour" },
+    { "leather armour" },
     WCHOICE_RANGED,
     { { SK_FIGHTING, 2 }, { SK_DODGING, 2 }, { SK_STEALTH, 1 },
       { SK_WEAPON, 4 }, },
