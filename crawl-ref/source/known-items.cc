@@ -395,8 +395,14 @@ void check_item_knowledge(bool unknown_items)
         for (int i = 0; i < NUM_MISSILES; i++)
         {
 #if TAG_MAJOR_VERSION == 34
-            if (i == MI_NEEDLE)
+            switch (i)
+            {
+            case MI_NEEDLE:
+            case MI_ARROW:
+            case MI_BOLT:
+            case MI_SLING_BULLET:
                 continue;
+            }
 #endif
             _add_fake_item(OBJ_MISSILES, i, selected_items, items_missile);
         }
