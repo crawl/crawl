@@ -254,7 +254,7 @@ const vector<GameOption*> game_options::build_options_list()
         new CursesGameOption(SIMPLE_NAME(stab_brand),
                              CHATTR_HILITE | (BLUE << 8)),
         new CursesGameOption(SIMPLE_NAME(may_stab_brand),
-                             CHATTR_HILITE | (YELLOW << 8)),
+                             CHATTR_HILITE | (BROWN << 8)),
         new CursesGameOption(SIMPLE_NAME(feature_item_brand), CHATTR_REVERSE),
         new CursesGameOption(SIMPLE_NAME(trap_item_brand), CHATTR_REVERSE),
         new CursesGameOption(SIMPLE_NAME(heap_brand), CHATTR_REVERSE),

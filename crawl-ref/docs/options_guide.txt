@@ -667,7 +667,7 @@ stab_brand = hi:blue
         of the character (and hence susceptible to being stabbed) without
         using the 'x' command. All the normal 'brand' options apply.
 
-may_stab_brand = hi:yellow
+may_stab_brand = hi:brown
         Stabbing may be possible even if the monster is not asleep (if
         it's confused or distracted, for instance). This option brands
         monsters that you *might* be able to stab.
