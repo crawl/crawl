@@ -487,7 +487,7 @@ SUBST: 1 = 112
 :     end
 # Savage only for Lair, but fewer.
 : elseif you.in_branch("Lair") then
-:     if you.depth() < 4 then
+:     if you.depth() < 3 then
 SUBST: 1 = 2...
 :     else
 SUBST: 1 = 2.
@@ -525,7 +525,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:11-13, Lair:4-, Orc
+DEPTH:  D:11-13, Lair:3-, Orc
 WEIGHT: 5
 : ice_cave_portal(_G)
 MONS:   wolf, yak, polar bear, rime drake, ice dragon

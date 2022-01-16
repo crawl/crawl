@@ -325,7 +325,7 @@ SHUFFLE:  123456
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Lair:6",
+:           door_description_suffix=" to Lair:5",
 :           })
 MAP
 xxxxxxxxxxxxx

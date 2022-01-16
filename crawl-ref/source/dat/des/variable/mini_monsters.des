@@ -1666,7 +1666,7 @@ ENDMAP
 
 NAME:   kilobyte_rumbling_trees
 TAGS:   transparent
-DEPTH:  Depths, Elf, Lair:4-
+DEPTH:  Depths, Elf, Lair:3-
 MONS:   black bear / polar bear w:20 / wolf w:20
 MONS:   patrolling boggart, patrolling spriggan druid
 : if you.in_branch("Lair") then
@@ -3195,7 +3195,7 @@ ENDMAP
 # Oklob assault; statistically, three oklobs
 NAME:    dpeg_oklob_1
 TAGS:    transparent
-DEPTH:   Lair:4-
+DEPTH:   Lair:3-
 MONS:    plant, oklob plant, bush
 SUBST:   ? = 1 2:5 '
 SHUFFLE: '"
