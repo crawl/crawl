@@ -1129,6 +1129,27 @@ static bool curs_can_use_extended_colors()
     return Options.allow_extended_colours && COLORS >= NUM_TERM_COLOURS;
 }
 
+lib_display_info::lib_display_info()
+    : type(
+#ifdef USE_TILE_WEB
+        "Console/Webtiles"
+#elif defined(USE_TILE_LOCAL)
+        "SDL Tiles"
+#else
+        "Console"
+#endif
+        ),
+    term(termname()),
+    fg_colors(
+        (curs_can_use_extended_colors()
+                || Options.bold_brightens_foreground != MB_FALSE)
+        ? 16 : 8),
+    bg_colors(
+        (curs_can_use_extended_colors() || Options.blink_brightens_background)
+        ? 16 : 8)
+{
+}
+
 // see declaration
 static bool curs_color_combo_has_pair(short fg, short bg)
 {
@@ -1413,7 +1434,8 @@ COLOURS default_hover_colour()
     // DARKGREY hover, which arguably looks better in 16colors, won't work.
     // DARKGREY is also not safe under bold_brightens_foreground, since a
     // terminal that supports this won't necessarily handle a bold background.
-    return curs_can_use_extended_colors() ? DARKGREY : LIGHTGREY;
+    return (curs_can_use_extended_colors() || Options.blink_brightens_background)
+                 ? DARKGREY : LIGHTGREY;
 }
 
 void textbackground(int col)

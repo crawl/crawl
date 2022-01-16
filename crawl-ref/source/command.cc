@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "chardump.h"
+#include "colour.h"
 #include "database.h"
 #include "describe.h"
 #include "env.h"
@@ -26,6 +27,7 @@
 #include "lookup-help.h"
 #include "macro.h"
 #include "message.h"
+#include "options.h"
 #include "prompt.h"
 #include "scroller.h"
 #include "showsymb.h"
@@ -635,6 +637,134 @@ static void _add_insert_commands(column_composer &cols, const int column,
     cols.add_formatted(column, desc.c_str(), false);
 }
 
+static int _color_name_width(int c)
+{
+    // name width to use when printing palettes of paired regular+light color
+    // combos; the largest of the two names
+    static vector<int> widths = vector<int>(8, 0);
+    static bool widths_setup = false;
+    if (!widths_setup)
+    {
+        for (int fg = 0; fg < NUM_TERM_COLOURS; fg++)
+        {
+            widths[fg % 8] = max(widths[fg % 8],
+                             static_cast<int>(colour_to_str(fg).size()));
+        }
+        widths_setup = true;
+    }
+    return widths[c % 8];
+}
+
+static string _palette_with_bg(int bg)
+{
+    const string bg_name = colour_to_str(bg);
+    string s = make_stringf("<bg:%s>", bg_name.c_str());
+    // always show 16 foreground colors even with compat options on -- they may
+    // still be distinguished with bold.
+    for (int fg = 0; fg < NUM_TERM_COLOURS; fg++)
+    {
+        const string fg_name = colour_to_str(fg);
+        s += make_stringf("<%s>%-*s</%s>%s",
+                    fg_name.c_str(),
+                    _color_name_width(fg),
+                    fg_name.c_str(),
+                    fg_name.c_str(),
+                    fg == 7 ? "\n" : "");
+    }
+    s += make_stringf("</bg:%s>\n", bg_name.c_str());
+    return s;
+}
+
+static void _display_diag()
+{
+    string s;
+    const lib_display_info info;
+
+    // on webtiles we suppress some info that will just be confusing / not
+    // useful.
+    const bool webtiles_client
+#ifdef USE_TILE_WEB
+        = tiles.is_controlled_from_web();
+#else
+        = false;
+#endif
+
+    // if true, mostly just display the palettes.
+    const bool suppress_unix_stuff =
+#if defined(USE_TILE_LOCAL) || defined(TARGET_OS_WINDOWS)
+        true;
+#else
+        webtiles_client;
+#endif
+
+    s += make_stringf("Display type: <w>%s</w>\n", info.type.c_str());
+    if (!suppress_unix_stuff)
+    {
+        s += make_stringf("Terminal type (`TERM`): <w>%s</w>\n",
+                                                        info.term.c_str());
+    }
+    s += make_stringf("Terminal colours: %d foreground, %d background\n\n",
+        info.fg_colors, info.bg_colors);
+
+    if (webtiles_client)
+        s+= "The webtiles client will display 16 colors.\n\n";
+
+    // TODO: should any of this be shown ever in webtiles?
+    if (!suppress_unix_stuff && (info.fg_colors < 16 || info.bg_colors < 16))
+    {
+        s += "Your terminal is in <red>compatibility mode</red> and will not display full colours.\n";
+        // hint for the putty users:
+        if (info.term == "xterm")
+            s += "For 16 colours, try setting a better TERM value than `xterm`, e.g. `xterm-256color` (most terminals) or `putty-256color` (for PuTTY).\n";
+        // XX is there really value in showing all of these? In 2021 in 99% of
+        // scenarios, I think people shouldn't mess with anything except the
+        // first, and that's only for cosmetic purposes, not compat purposes
+        s += make_stringf(
+            "\nCurrent terminal options (see the Options Guide for details):\n"
+            "    Option `<w>allow_extended_colours</w>`: %d%s\n"
+            "    Option `<w>bold_brightens_foreground</w>`: %d\n"
+            "    Option `<w>best_effort_brighten_foreground</w>`: %d\n"
+            "    Option `<w>best_effort_brighten_background</w>`: %d\n"
+            "    Option `<w>blink_brightens_background</w>`: %d\n\n",
+            (int) Options.allow_extended_colours,
+            Options.allow_extended_colours ? " (overridden by TERM)" : "",
+            Options.bold_brightens_foreground == MB_FALSE ? 0 : 1,
+            (int) Options.best_effort_brighten_foreground,
+            (int) Options.best_effort_brighten_background,
+            (int) Options.blink_brightens_background);
+    }
+    else if (!suppress_unix_stuff && Options.bold_brightens_foreground == MB_TRUE)
+        s += "Option `bold_brightens_foreground`: force\n\n";
+
+#ifndef USE_TILE_LOCAL
+    // no need to show this twice on local tiles
+    s += "Foreground palette:\n";
+
+    // XX should black on black -> blue be explained?
+    s += _palette_with_bg(BLACK);
+    if (!webtiles_client && info.fg_colors < 16)
+        s += "    (Because of compatibility mode, <darkgrey>darkgrey on black renders as blue</darkgrey>.)\n";
+
+    if (!webtiles_client)
+    {
+        // webtiles and local tiles uses their own hover implementations,
+        // ANSI color is irrelevant
+        s += "\nPalette with menu highlight:\n";
+        s += _palette_with_bg(default_hover_colour());
+    }
+#endif
+
+    s += "\nFull palette:\n";
+    const int bgs_to_show = webtiles_client ? NUM_TERM_COLOURS : info.bg_colors;
+    for (int bg = 0; bg < bgs_to_show; bg++)
+        s += _palette_with_bg(bg);
+
+    formatted_scroller fs(FS_EASY_EXIT);
+    fs.set_more();
+    fs.add_text(s);
+    fs.show();
+}
+
 static void _add_formatted_help_menu(column_composer &cols)
 {
     cols.add_formatted(
@@ -658,6 +788,7 @@ static void _add_formatted_help_menu(column_composer &cols)
         "<w>T</w>: Tiles key help\n"
 #endif
         "<w>V</w>: Version information\n"
+        "<w>!</w>: Display diagnostics\n"
         "<w>Home</w>: This screen\n");
 
     // TODO: generate this from the manual somehow
@@ -1218,7 +1349,7 @@ private:
         formatted_string header_text, help_text;
         switch (key)
         {
-            case CK_ESCAPE: case ':': case '#': case '/': case 'q': case 'v':
+            case CK_ESCAPE: case ':': case '#': case '/': case 'q': case 'v': case '!':
                 return false;
             default:
                 if (!(page = _get_help_section(key, header_text, help_text, scroll)))
@@ -1261,6 +1392,9 @@ static bool _show_help_special(int key)
             return true;
         case 'v':
             _print_version();
+            return true;
+        case '!':
+            _display_diag();
             return true;
         default:
             return false;

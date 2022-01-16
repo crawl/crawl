@@ -655,6 +655,15 @@ COLOURS default_hover_colour()
     return DARKGREY;
 }
 
+// TODO: needs testing on windows
+lib_display_info::lib_display_info()
+    : type("Windows Console"),
+    term("N/A"),
+    fg_colors(16),
+    bg_colors(Options.dos_use_background_intensity ? 7 : 8) // ?? no idea really
+{
+}
+
 static void cprintf_aux(const char *s)
 {
     // early out -- not initted yet

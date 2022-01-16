@@ -725,6 +725,6 @@ extern game_options  Options;
 
 static inline short macro_colour(short col)
 {
-    ASSERT(col < NUM_TERM_COLOURS);
+    ASSERTM(col < NUM_TERM_COLOURS, "invalid color %hd", col);
     return col < 0 ? col : Options.colour[ col ];
 }
