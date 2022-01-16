@@ -202,14 +202,6 @@ canvas {
     margin-right:0.5em;
 }
 
-/* float this to the right of the weapon display */
-#stats_launcher_quiver
-{
-    float: right;
-    display: block;
-    margin-left: 0.2em;
-}
-
 #stats_weapon
 {
     white-space: nowrap;
