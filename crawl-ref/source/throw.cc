@@ -646,7 +646,14 @@ void throw_it(quiver::action &a)
     bolt pbolt;
     pbolt.set_target(a.target);
 
-    item_def& thrown = you.inv[ammo_slot];
+    item_def fake_proj;
+    item_def& thrown = fake_proj;
+    if (ammo_slot == -1)
+    {
+        ASSERT(launcher);
+        populate_fake_projectile(*launcher, fake_proj);
+    } else
+        thrown = you.inv[ammo_slot];
     ASSERT(thrown.defined());
 
     // Figure out if we're thrown or launched.
@@ -656,7 +663,8 @@ void throw_it(quiver::action &a)
     // Making a copy of the item: changed only for venom launchers.
     item_def item = thrown;
     item.quantity = 1;
-    item.slot     = index_to_letter(item.link);
+    if (ammo_slot != -1)
+        item.slot     = index_to_letter(item.link);
 
     string ammo_name;
 
@@ -848,7 +856,8 @@ void throw_it(quiver::action &a)
     }
     else
     {
-        dec_inv_item_quantity(ammo_slot, 1);
+        if (ammo_slot != -1)
+            dec_inv_item_quantity(ammo_slot, 1);
         if (unwielded)
             canned_msg(MSG_EMPTY_HANDED_NOW);
     }

@@ -2914,14 +2914,12 @@ string hints_describe_item(const item_def &item)
                 {
                     ostr << "To attack a monster, ";
 #ifdef USE_TILE
-                    ostr << "<w>left mouse click</w> on the monster while "
-                            "prssing the <w>Shift key</w>.\n\n";
-                    ostr << "To launch ammunition using the keyboard, ";
+                    ostr << "<w>left mouse click</w> on the monster.\n\n";
+                    ostr << "To fire a ranged weapon using the keyboard, ";
 #endif
-                    ostr << "you only need to <w>%</w>ire the weapon. "
-                            "You'll ";
+                    ostr << "press <w>%</w>. You'll ";
                     ostr << _hints_target_mode();
-                    cmd.push_back(CMD_FIRE);
+                    cmd.push_back(CMD_EVOKE);
                 }
                 else
                     ostr << "To attack a monster, you can simply walk into it.";

@@ -619,13 +619,11 @@ some monsters are just too nasty to beat, and you will find that discretion is
 often the better part of valour. Sneaky characters are known to choose
 encounters to their liking.
 
-There are several other less dangerous methods you can use to kill monsters.
-Hunters and similarly oriented characters will prefer ranged combat to mindless
-bashing. When wielding some launcher, the 'f' and 'F' commands will fire
-appropriate missiles. See the section on Targeting in the Items Chapter for
-more on this. Likewise, many magicians will prefer to use spells from a safe
-distance. They can use the 'z' command to cast spells previously memorised.
-Again, see the Targeting section.
+There are several other ways to kill monsters. When using a bow or other ranged
+weapon, the 'v' command will fire. See the section on Targeting in the Items
+Chapter for more on this. Likewise, many magicians will prefer to use spells
+from a safe distance. They can use the 'z' command to cast spells previously
+'M'emorised. Again, see the Targeting section.
 
 Some monsters can be friendly; friendly monsters will follow you around and
 fight on your behalf. You can command your allies using the 't' key, which lets
@@ -810,17 +808,15 @@ normally.
 ( Missiles
 ========================================
 
-If you would rather pick off monsters from a safe distance, you will need
-missiles for your sling, bow or other appropriate launcher. Several kinds of
-missiles, such as javelins, are effective when simply thrown; other kinds
-require you to wield an appropriate device to inflict worthwhile damage. Upon
+If monsters are disobligingly distant, you can use missiles to weaken (or kill!)
+them from afar. You'll find a variety of type, ranging from simple stones and
+piercing javelins to sophisticated darts covered in many types of poisons. Upon
 impact, missiles may become destroyed. The chance for this to occur depends on
 the type of missile.
 
-The 'F' and 'f' commands can be used to fire or throw a missile. For launchers,
-the default ammo to be fired is shown next to your launcher, or optionally in
-the main "quiver" display below your launcher. Ammo (as well as many other
-items, spells, and abilities) can fill this quiver as well.
+The 'F' and 'f' commands can be used to throw a missile. The default type to be
+thrown (which 'f' will launch) is shown in the "quiver" display below your
+weapon. Many other items, spells, and abilities can fill this quiver as well.
 
 See Appendix `5. Inscriptions`_ for inscriptions which let you fine-tune the
 list of items to choose from. See also the Missiles section of
@@ -828,7 +824,7 @@ options_guide.txt.
 
 Use the '(', ')' to cycle through your quiver without firing, and 'Q' to choose
 a quivered item from a list. If you would like to choose something to fire
-without inserting it into the quiver use 'F' instead.
+without inserting it into the quiver, use 'F' instead.
 
 The interface for shooting or throwing things is also used for evoking wands and
 casting certain spells, and is described in detail in section I (Targeting).
@@ -1996,8 +1992,8 @@ Monks
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with either some throwing weapons or a ranged weapon of their choice
-  and some ammunition, as well as a short sword, and a set of leathers.
+  starts with either some throwing weapons or a ranged weapon of their choice,
+  as well as a short sword and a set of leathers.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using
@@ -2218,9 +2214,9 @@ There are a number of individual weapon skills for missile weapons:
   * Slings
 
 Throwing is the skill for all things hurled without a launcher: boomerangs,
-javelins, nets, darts, etc. The other skills refer to various types of missiles
-shot with a launcher. Since stones can be thrown without launchers to some
-effect, these skills crosstrain:
+javelins, nets, darts, etc. The other skills refer to various types of ranged
+weapons. Since the motion of using a sling and throwing a stone are somewhat
+similar, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2886,8 +2882,7 @@ f
 
 ( and )
   When 'f'iring, these two commands allow you to cycle between quiverable
-  actions (items, spells, abilities). When wielding a launcher, these options
-  will include ammo for that launcher.
+  actions (items, spells, abilities).
 
 Shift-direction
   Fire straight in that direction.

@@ -306,6 +306,103 @@ namespace quiver
             order[i] &= 0xffff;
     }
 
+    // Similar to melee_action (below), but for firing launchers.
+    struct ranged_action : public action
+    {
+        ranged_action() : action() { }
+
+        bool is_enabled() const override
+        {
+            return !fire_warn_if_impossible(true, you.weapon());
+        }
+
+        bool is_valid() const override
+        {
+            // XXX: do we need to re-check whether the player has a launcher?
+            return true;
+        }
+
+        bool is_targeted() const override
+        {
+            return !you.confused();
+        }
+
+        bool allow_autofight() const override
+        {
+            return is_enabled();
+        }
+
+        void trigger(dist &t) override
+        {
+            set_target(t);
+            if (!is_valid())
+                return;
+            if (!is_enabled())
+            {
+                fire_warn_if_impossible(false, you.weapon()); // for messaging (TODO refactor; message about inscriptions?)
+                return;
+            }
+            if (autofight_check() || !do_inscription_check())
+                return;
+
+            throw_it(*this);
+        }
+
+        bool uses_mp() const override
+        {
+            return is_pproj_active();
+        }
+
+        bool affected_by_pproj() const override
+        {
+            return true;
+        }
+
+        item_def *get_launcher() const override
+        {
+            return you.weapon();
+        }
+
+        string quiver_verb() const override
+        {
+            const item_def &weapon = *get_launcher();
+            return item_attack_skill(weapon) == SK_SLINGS ? "fire" : "shoot";
+        }
+
+        formatted_string quiver_description(bool short_desc=false) const override
+        {
+            if (!is_valid())
+                return action::quiver_description(short_desc);
+
+            formatted_string qdesc;
+            const item_def &weapon = *get_launcher();
+
+            // TODO: or just lightgrey?
+            qdesc.textcolour(Options.status_caption_colour);
+
+            if (!short_desc)
+            {
+                string verb = you.confused() ? "confused " : "";
+                verb += quiver_verb();
+                qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
+                                index_to_letter(weapon.link));
+            }
+
+            const string prefix = item_prefix(weapon);
+            const int prefcol =
+                menu_colour(weapon.name(DESC_PLAIN), prefix, "stats");
+            if (!is_enabled())
+                qdesc.textcolour(DARKGREY);
+            else if (prefcol != -1)
+                qdesc.textcolour(prefcol);
+            else
+                qdesc.textcolour(LIGHTGREY);
+
+            qdesc += weapon.name(DESC_PLAIN, true);
+            return qdesc;
+        }
+    };
+
     // class isn't intended for quivering per se. Rather, it's a wrapper on
     // targeted attacks involving melee weapons or unarmed fighting. This
     // covers regular 1-space melee attacks, as well as reaching attacks of
@@ -350,9 +447,7 @@ namespace quiver
                 return "punch";
             }
 
-            if (is_range_weapon(*weapon))
-                return item_attack_skill(*weapon) == SK_SLINGS ? "fire" : "shoot";
-            else if (weapon_reach(*weapon) > REACH_NONE)
+            if (weapon_reach(*weapon) > REACH_NONE)
                 return "reach";
             else if (attack_cleaves(you))
                 return "cleave";
@@ -808,8 +903,6 @@ namespace quiver
             // globally
             you.m_quiver_history.on_item_fired(you.inv[item_slot],
                     !target.fire_context || !target.fire_context->autoswitched);
-
-            t = target; // copy back, in case they are different
         }
 
         virtual formatted_string quiver_description(bool short_desc) const override
@@ -2257,7 +2350,9 @@ namespace quiver
      */
     shared_ptr<action> get_primary_action()
     {
-        // XXX TODO: support launchers properly
+        const item_def* weapon = you.weapon();
+        if (weapon && is_range_weapon(*weapon))
+            return make_shared<ranged_action>();
         return make_shared<melee_action>(); // always valid
     }
 
