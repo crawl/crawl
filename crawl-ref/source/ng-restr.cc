@@ -106,13 +106,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         return CC_BANNED;
     }
 
-    // Javelins are always good, boomerangs not so much.
-    if (wpn == WPN_THROWN)
-    {
-        return species::size(ng.species) >= SIZE_MEDIUM ? CC_UNRESTRICTED
-                                                       : CC_RESTRICTED;
-    }
-
     if (species::recommends_weapon(ng.species, wpn))
         return CC_UNRESTRICTED;
 

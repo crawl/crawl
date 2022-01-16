@@ -683,9 +683,6 @@ enum weapon_type
     WPN_UNKNOWN,
     WPN_RANDOM,
     WPN_VIABLE,
-
-// thrown weapons (for hunter weapon selection) - rocks, javelins, boomerangs
-    WPN_THROWN,
 };
 
 enum weapon_property_type

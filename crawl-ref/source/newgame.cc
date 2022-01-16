@@ -1656,48 +1656,15 @@ static void _construct_weapon_menu(const newgame_def& ng,
     };
     vector<weapon_menu_item> choices;
 
-    string thrown_name;
-
     for (unsigned int i = 0; i < weapons.size(); ++i)
     {
         weapon_type wpn_type = weapons[i].first;
 
-        switch (wpn_type)
+        if (wpn_type == WPN_UNARMED)
         {
-        case WPN_UNARMED:
             choices.emplace_back(SK_UNARMED_COMBAT,
                         species::has_claws(ng.species) ? "claws" : "unarmed");
-            break;
-        case WPN_THROWN:
-        {
-            // We don't support choosing among multiple thrown weapons.
-            tileidx_t tile = 0;
-            if (species::can_throw_large_rocks(ng.species))
-            {
-                thrown_name = "large rocks";
-#ifdef USE_TILE
-                tile = TILE_MI_LARGE_ROCK;
-#endif
-            }
-            else if (species::size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
-            {
-                thrown_name = "boomerangs";
-#ifdef USE_TILE
-                tile = TILE_MI_BOOMERANG;
-#endif
-            }
-            else
-            {
-                thrown_name = "javelins";
-#ifdef USE_TILE
-                tile = TILE_MI_JAVELIN;
-#endif
-            }
-            choices.emplace_back(SK_THROWING,
-                    thrown_name + " and throwing nets", tile);
-            break;
-        }
-        default:
+        } else {
             string text = weapon_base_name(wpn_type);
             item_def dummy;
             dummy.base_type = OBJ_WEAPONS;
@@ -1707,7 +1674,6 @@ static void _construct_weapon_menu(const newgame_def& ng,
                     , tileidx_item(dummy)
 #endif
             );
-            break;
         }
     }
 
@@ -1729,11 +1695,6 @@ static void _construct_weapon_menu(const newgame_def& ng,
         tile_stack->flex_grow = 0;
         hbox->add_child(tile_stack);
 
-        if (choice.skill == SK_THROWING)
-        {
-            tile_stack->add_child(make_shared<Image>(
-                    tile_def(TILE_MI_THROWING_NET)));
-        }
         if (choice.skill == SK_UNARMED_COMBAT)
         {
 #ifndef USE_TILE_WEB
@@ -1799,11 +1760,9 @@ static void _construct_weapon_menu(const newgame_def& ng,
     {
         string text = "Tab - ";
 
-        ASSERT(defweapon != WPN_THROWN || thrown_name != "");
         text += defweapon == WPN_RANDOM  ? "Random" :
                 defweapon == WPN_VIABLE  ? "Recommended" :
                 defweapon == WPN_UNARMED ? "unarmed" :
-                defweapon == WPN_THROWN  ? thrown_name :
                 weapon_base_name(defweapon);
 
         _add_menu_sub_item(sub_items, 1, 2, text,
@@ -1963,10 +1922,11 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
     vector<weapon_choice> weapons;
     if (job_gets_ranged_weapons(ng.job))
     {
-        weapon_type startwep[4] = { WPN_THROWN, WPN_HUNTING_SLING,
-                                    WPN_SHORTBOW, WPN_HAND_CROSSBOW };
+        weapon_type startwep[3] = { WPN_HUNTING_SLING,
+                                    WPN_SHORTBOW,
+                                    WPN_HAND_CROSSBOW };
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             weapon_choice wp;
             wp.first = startwep[i];
