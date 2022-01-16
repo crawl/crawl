@@ -745,10 +745,34 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
  * @param y the y coordinate
  * @param str the string to store
  * @param col a foreground color
+ */
+void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
+                          const string &str,
+                          const VColour &fg, const VColour &bg)
+{
+    store(buf, x, y, str, fg, bg, x);
+}
+
+/**
+ * Store a string in a FontBuffer.
+ *
+ * @param buf the FontBuffer to store the glyph in.
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param str the string to store
+ * @param col a foreground color
  * @param orig_x an x offset to use as an origin
  */
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const string &str, const VColour &col, float orig_x)
+{
+    // do we really need this whole mess of overloads?
+    store(buf, x, y, str, col, VColour::transparent, orig_x);
+}
+
+void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
+                          const string &str,
+                          const VColour &fg, const VColour &bg, float orig_x)
 {
     const char *sp = str.c_str();
     char32_t c;
@@ -760,8 +784,10 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
             x = orig_x;
             y += m_max_advance.y * display_density.scale_to_logical();
         }
+        else if (bg == VColour::transparent)
+            store(buf, x, y, c, fg);
         else
-            store(buf, x, y, c, col);
+            store(buf, x, y, c, fg, bg);
     }
 }
 
@@ -792,16 +818,25 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const formatted_string &fs, float orig_x)
 {
     int colour = LIGHTGREY;
+    int bg = -1;
     for (const formatted_string::fs_op &op : fs.ops)
     {
         switch (op.type)
         {
             case FSOP_COLOUR:
-                // Only foreground colors for now...
                 colour = op.colour & 0xF;
                 break;
+            case FSOP_BG:
+                bg = op.colour;
+                break;
             case FSOP_TEXT:
-                store(buf, x, y, op.text, term_colours[colour], orig_x);
+                if (bg >= 0)
+                {
+                    store(buf, x, y, op.text,
+                        term_colours[colour], term_colours[bg], orig_x);
+                }
+                else
+                    store(buf, x, y, op.text, term_colours[colour], orig_x);
                 break;
             default:
                 break;
@@ -873,9 +908,12 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     const int this_width = glyph.advance ? glyph.advance : char_width(false);
     const float bg_width = this_width * density_mult;
     const float bg_height = char_height(false) * density_mult;
+
+    // glyph position. But we want to put the background rect at x, unlike
+    // when rendering the glyph.
     const float pos_sx = x + glyph.offset * density_mult;
 
-    GLWPrim bg_rect(pos_sx, y, pos_sx + bg_width, y + bg_height);
+    GLWPrim bg_rect(x, y, pos_sx + bg_width, y + bg_height);
     bg_rect.set_col(bg_col);
     buf.add_primitive(bg_rect);
 
