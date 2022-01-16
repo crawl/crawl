@@ -1816,7 +1816,7 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        // Total weight: 1780
+        // Total weight: 1660
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
                                     45, OBJ_JEWELLERY,
@@ -1825,7 +1825,7 @@ int items(bool allow_uniques,
                                    212, OBJ_ARMOUR,
                                    212, OBJ_WEAPONS,
                                    176, OBJ_POTIONS,
-                                   300, OBJ_MISSILES,
+                                   180, OBJ_MISSILES,
                                    270, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
