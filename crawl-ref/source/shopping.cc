@@ -1199,7 +1199,6 @@ bool ShopMenu::process_key(int keyin)
             update_more();
         }
         return true;
-    case ' ':
     case CK_MOUSE_CLICK:
     case CK_ENTER:
         if (can_purchase)
