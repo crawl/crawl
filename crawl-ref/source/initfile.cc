@@ -313,6 +313,10 @@ const vector<GameOption*> game_options::build_options_list()
              {"open", travel_open_doors_type::open},
              {"false", travel_open_doors_type::_false},
              {"true", travel_open_doors_type::_true}}),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(menu_highlight), "background",
+            {{"background", "background"}, {"inverse", "inverse"},
+             {"square", "square"}}), // matches _menu_highlight_funcs.
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),

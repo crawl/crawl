@@ -65,6 +65,58 @@
 
 using namespace ui;
 
+// If there is a ' - ' or ' + ' in the string, replace it with '[-]' or '[+]'.
+static void _highlighted_item_square(int &, int &, string &text)
+{
+    for (string marker : {" - ", " + ", " # ", " * "})
+    {
+        auto idx = text.find(marker);
+        if (string::npos == idx)
+            continue;
+        text[idx] = '[';
+        text[idx+2] = ']';
+        return;
+    }
+    // The "pick up" menu shows items you cannot pick up like this.
+    if (5 == text.find_first_not_of(' '))
+    {
+        text.replace(2, 3, "[ ]");
+        return;
+    }
+    // No obvious location, so just find a space for the characters.
+    for (char c : {'[', ']'})
+    {
+        auto idx = text.find(' ');
+        if (string::npos == idx)
+            text.append(1, c);
+        else
+            text[idx] = c;
+    }
+}
+
+// Use a fixed background colour, keeping the foreground.
+static void _highlighted_item_bg(int &bg, int &, string &)
+{
+    bg = default_hover_colour();
+}
+
+// Reverse the foreground and background colours.
+// XXX - colour changes within a string still happen as normal, so multicolour
+// strings may be hard to read.
+static void _highlighted_item_swap(int &bg, int &fg, string &)
+{
+    int tmp = fg;
+    fg = bg;
+    bg = tmp;
+}
+
+static map<string, void(*)(int&, int&, string&)> _menu_highlight_funcs =
+{
+    {"background", _highlighted_item_bg},
+    {"inverse", _highlighted_item_swap},
+    {"square", _highlighted_item_square},
+};
+
 class UIMenu : public Widget
 {
     friend class UIMenuPopup;
@@ -421,21 +473,21 @@ void UIMenu::_render()
         const MenuEntry *me = m_menu->items[i];
         int y = i - vis_min + 1;
         cgotoxy(m_region.x+1, m_region.y+scroll+y);
-        const int col = m_menu->item_colour(me);
-        textcolour(col);
+        int col = m_menu->item_colour(me), bg = BLACK;
+        string text = me->get_text();
 
         // TODO: is this highlighting good enough for accessibility purposes?
         if (m_hover_idx == i)
-            textbackground(default_hover_colour());
+            _menu_highlight_funcs[Options.menu_highlight](bg, col, text);
+        textcolour(col);
+        textbackground(bg);
         if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
         {
-            formatted_string s = formatted_string::parse_string(
-                me->get_text(), col);
+            formatted_string s = formatted_string::parse_string(text, col);
             s.chop(m_region.width).display();
         }
         else
         {
-            string text = me->get_text();
             text = chop_string(text, m_region.width);
             cprintf("%s", text.c_str());
         }

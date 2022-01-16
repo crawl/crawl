@@ -74,7 +74,7 @@ The contents of this text are:
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, use_animations,
                 darken_beyond_range, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot, action_panel,
+                cloud_status, always_show_zot, menu_highlight, action_panel,
                 action_panel_filter, action_panel_show_unidentified,
                 action_panel_scale, action_panel_orientation,
                 action_panel_font_family, action_panel_font_size
@@ -1648,6 +1648,16 @@ cloud_status = true
 always_show_zot = false
         Whether to show the "Zot" status light at all times, even when you've
         got plenty of time left.
+
+menu_highlight = (background | inverse | square)
+        Control how the console interface shows highlighted rows in some menus.
+        background = Use a grey background in place of the normal colour,
+                     black by default. (default)
+           inverse = Swap the foreground and background colours for the row.
+                     If the row has differently coloured sections, only the
+                     first colour is changed.
+            square = Display square brackets on the left side of the selected
+                     row.
 
 action_panel_show = true
         Whether to show or hide the action panel. This option is automatically
