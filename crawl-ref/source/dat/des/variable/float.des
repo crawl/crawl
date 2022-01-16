@@ -2646,7 +2646,7 @@ NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen transparent
 ORIENT: float
 : if you.in_branch("Depths") then
-MONS: tengu warrior ; longbow . arrow, stone giant / deep elf master archer
+MONS: tengu warrior ; longbow, stone giant / deep elf master archer
 : else
 MONS:   centaur, centaur warrior
 : end
@@ -3116,7 +3116,7 @@ MONS:    deep troll
 # Fortunately, we have a permanently invisible 2 already.
 MONS:    lorocyproca
 : end
-ITEM:    arbalest, bolt, potion of curing ident:type , potion of heal wounds ident:type
+ITEM:    arbalest, javelin q:2, potion of curing ident:type , potion of heal wounds ident:type
 ITEM:    potion of invisibility ident:type
 KFEAT:   - = open_door
 SHUFFLE: })]>

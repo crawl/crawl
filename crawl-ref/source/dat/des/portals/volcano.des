@@ -225,7 +225,7 @@ function fiery_guardians (e, intelligent, village)
     -- Weighings back and forth with humanoids or not.
     if crawl.x_chance_in_y(9, 20) or village or intelligent then
         local ogrestuff = "great mace " .. flame .. " | giant club w:14 " .. flame
-        local centaurstuff = "shortbow " .. flame .. " . arrow"
+        local centaurstuff = "shortbow " .. flame
         if village then
             e.mons("two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff ..
                    " / centaur ; " .. centaurstuff ..
@@ -239,7 +239,7 @@ function fiery_guardians (e, intelligent, village)
             e.mons("ogre mage w:40 ; " .. magestuff)
         elseif set_weight < 2 then
             e.mons("centaur ; " .. centaurstuff ..
-                   " / yaktaur w:5 ; arbalest " .. flame .. " . bolt")
+                   " / yaktaur w:5 ; arbalest " .. flame)
             e.mons("centaur warrior ; " .. centaurstuff)
         else
            e.mons("salamander")
@@ -1338,7 +1338,7 @@ WEIGHT: 20
 ORIENT: encompass
 :volcano_setup(_G)
 MONS:   fire elemental / hell hound, deep elf pyromancer
-MONS:   deep elf archer ; shortbow ego:flaming . arrow
+MONS:   deep elf archer ; shortbow ego:flaming
 SUBST:  $ = $$$defg, 1 = .11, 2 = .22
 KPROP:  - = no_tele_into
 KFEAT:  - = l

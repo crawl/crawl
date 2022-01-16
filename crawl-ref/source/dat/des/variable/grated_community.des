@@ -329,12 +329,10 @@ TAGS: grated_community_mu_home grated_community_mu_home6 unrand
 FTILE:  12.c'+%$W8n~ = floor_grass_dirt_mix
 : if crawl.coinflip() then
 MONS:   patrolling centaur warrior, plant
-KITEM:  ' = q:1 arrow
-KITEM:  $ = q:30 arrow / any good_item
+KITEM:  $ = any good_item
 : else
 MONS:   patrolling yaktaur captain, plant
-KITEM:  ' = q:1 bolt
-KITEM:  $ = q:30 bolt / any good_item
+KITEM:  $ = any good_item
 :end
 SHUFFLE: %$
 SUBST:  % = %W

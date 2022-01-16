@@ -1513,7 +1513,7 @@ ENDMAP
 NAME:  nicolae_elf_archery_training
 TAGS:  transparent no_item_gen
 DEPTH: Elf
-KITEM: 'D = arrow q:1 / arrow q:2 / arrow q:3 / arrow q:4 / nothing w:30
+# Arrows were here. They're gone now. RIP
 KITEM: " = shortbow / longbow / shortbow good_item / longbow good_item / \
            pair of gloves ego:hurling / pair of gloves ego:dexterity / \
            pair of gloves plus:1 / pair of gloves plus:2 / \

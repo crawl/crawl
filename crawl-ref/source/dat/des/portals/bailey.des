@@ -690,8 +690,8 @@ ENDMAP
 NAME:   bailey_polearm_2
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
-MONS:   orc warrior w:5 ; arbalest . bolt . ring mail | scale mail / \
-        orc ; arbalest . bolt . ring mail | scale mail
+MONS:   orc warrior w:5 ; arbalest  . ring mail | scale mail / \
+        orc ; arbalest . ring mail | scale mail
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)

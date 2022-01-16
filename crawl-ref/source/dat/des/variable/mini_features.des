@@ -3102,7 +3102,7 @@ ENDMAP
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
 TAGS:   no_monster_gen extra transparent
-ITEM:   stone w:15 / arrow / bolt / spear / any potion w:10
+ITEM:   stone w:15 / boomerang / spear / any potion w:10
 MAP
 x+xx
 xddx

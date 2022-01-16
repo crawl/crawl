@@ -62,13 +62,13 @@
    function shopcontents(s)
       local i = {}
       if s == "A" then i = { "arbalest", "book of alchemy", "book of air",
-       "manual of air magic", "book of annihilations", "arrow",
+       "manual of air magic", "book of annihilations",
        "potion of ambrosia", "scroll of acquirement q:1",
        "scroll of amnesia", "staff of air",
        "manual of axes", "manual of armour", "wand of acid",
        "acid dragon scales", "potion of attraction", "book of armaments" }
 
-      elseif s == "B" then i = { "bardiche", "battleaxe", "bolt",
+      elseif s == "B" then i = { "bardiche", "battleaxe",
        "book of burglary", "box of beasts", "book of blasting",
        "book of blood",
        "broad axe", "pair of boots", "potion of berserk rage",
@@ -156,7 +156,7 @@
        "potion of resistance", "robe", "ring mail", "book of rime" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
-       "sling bullet", "scale mail", "book of storms", "book of the sky",
+       "scale mail", "book of storms", "book of the sky",
        "ring of see invisible", "ring of slaying", "spear",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "scythe", "book of spatial translocations", "scroll of silence",

@@ -541,7 +541,7 @@ KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle /
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
-         w:8 sling bullet | w:7 tin of tremorstones | w:8 wand of digging | \
+         w:7 tin of tremorstones | w:8 wand of digging | \
          w:5 randbook disc:earth | w:2 book of the earth | \
          w:2 book of geomancy | w:2 book of iron | w:2 book of the moon | \
          w:2 book of blasting | w:4 staff of earth | w:1 crystal plate armour
@@ -1043,17 +1043,15 @@ NAME:   nicolae_shop_firing_range
 TAGS:   transparent no_monster_gen no_item_gen no_tide
 DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KMONS:  DE = training dummy
-KITEM:  D = arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20, \
-            arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20, \
-            arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20
-KITEM:  H = arrow q:1 / bolt q:1 / sling bullet q:1 / javelin q:1 / dart q:1
+KITEM:  D = stone q:1 / nothing, stone q:1 / nothing, stone q:1 / nothing
+KITEM:  H = stone q:1 w:30 / boomerang q:1 / javelin q:1 / dart q:1
 KITEM:  E = throwing net q:1
 # Launchers are weighted so they have the same total weight as the projectiles.
 # The slightly-higher weights go to the better weapons, because I'm nice.
-KFEAT:  S = weapon shop type:Firing suffix:Range ; dart | throwing net | \
-        sling bullet | boomerang | javelin | large rock | arrow | bolt | \
-        hunting sling w:11 | fustibalus w:12 | shortbow w:11 | longbow w:12 | \
-        hand crossbow w:11 | arbalest w:11 | triple crossbow w:12 | \
+KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
+        throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 | \
+        hunting sling | fustibalus | shortbow | longbow | \
+        hand crossbow | arbalest | triple crossbow | \
         manual of throwing w:1 | manual of slings w:1 | manual of bows w:1 | \
         manual of crossbows w:1
 NSUBST: D = E / D

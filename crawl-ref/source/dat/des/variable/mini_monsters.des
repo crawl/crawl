@@ -1214,7 +1214,7 @@ ENDMAP
 NAME:    minmay_goblin_outpost
 TAGS:    no_pool_fixup transparent
 DEPTH:   D:2-4
-MONS:    goblin / hobgoblin w:5, goblin ; hunting sling . stone q:20
+MONS:    goblin / hobgoblin w:5, goblin ; hunting sling
 KMASK:   >_"+2 = opaque
 SUBST:   y = .WWw, Y = ...W, . = .....1
 SHUFFLE: >X/_"
@@ -1257,7 +1257,7 @@ TAGS:   patrolling transparent
 DEPTH:  D:8-
 WEIGHT: 5
 KMONS:  1 = Joseph / cyclops, \
-            yaktaur ; quarterstaff . hunting sling . stone / cyclops
+            yaktaur ; quarterstaff . hunting sling / cyclops
 ITEM:   stone / club w:5 / large rock w:3 / quarterstaff w:1
 NSUBST: . = 4:d / 4:. / * = d:30 .:150
 MAP
@@ -1396,7 +1396,7 @@ NAME:   minmay_ruffians
 TAGS:   transparent
 DEPTH:  D:6-10
 MONS:   human; club | mace w:3 . animal skin | leather armour
-MONS:   human; hunting sling . stone | sling bullet w:3 . animal skin | \
+MONS:   human; hunting sling . animal skin | \
         leather armour
 SUBST:  1 = 112.
 KMONS:  3 = human; flail . ring mail | scale mail
@@ -2203,12 +2203,12 @@ DEPTH:  D:12-, Depths, Swamp, Snake, Spider, Crypt
 TAGS:   transparent patrolling no_monster_gen no_trap_gen
 : if you.in_branch("D") then
 :     if you.depth() < 14 then
-MONS:   deep elf archer; shortbow good_item . arrow . quarterstaff \
+MONS:   deep elf archer; shortbow good_item . quarterstaff \
             . robe good_item
 MONS:   deep elf knight; quarterstaff good_item . leather armour good_item
 MONS:   elephant, warg / hell hound w:5
 :     else
-MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+MONS:   deep elf archer; longbow good_item . quarterstaff \
             . robe good_item
 MONS:   deep elf knight; lajatang good_item . scale mail good_item
 MONS:   elephant / dire elephant, warg / hell hound / raiju
@@ -2216,14 +2216,14 @@ MONS:   elephant / dire elephant, warg / hell hound / raiju
 MONS:   plant / fungus, nothing
 : elseif you.in_branch("Swamp") or you.in_branch("Spider")
 :        or you.in_branch("Snake") then
-MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+MONS:   deep elf archer; longbow good_item . quarterstaff \
             . robe good_item
 MONS:   deep elf knight; lajatang good_item . chain mail good_item
 MONS:   dire elephant
 MONS:   hell hound / raiju
 MONS:   fungus / nothing, nothing
 : elseif you.in_branch("Crypt") then
-KITEM:  1 = longbow good_item, arrow, quarterstaff, robe good_item
+KITEM:  1 = longbow good_item, quarterstaff, robe good_item
 KITEM:  2 = lajatang good_item, chain mail good_item
 KMONS:  1 = spectral deep elf master archer
 KMONS:  2 = spectral deep elf blademaster
@@ -2234,7 +2234,7 @@ KMONS:  6 = ancient lich / deep elf death mage w:30 / lich / dread lich \
             / vampire mage
 : else
 # The elves have mastered the dungeon and allied with the darkness.
-MONS:   deep elf master archer; longbow good_item | longbow randart . arrow \
+MONS:   deep elf master archer; longbow good_item | longbow randart \
             . chain mail good_item | quicksilver dragon scales
 MONS:   deep elf blademaster; lajatang good_item | lajatang randart \
             . shadow dragon scales good_item | shadow dragon scales randart
@@ -3052,7 +3052,7 @@ TAGS:   transparent
 DEPTH:  D:10-
 WEIGHT: 2
 MONS:   statue tile:mons_statue_archer name:archer name_adjective; \
-        longbow . arrow q:30
+        longbow
 MONS:   bush
 MAP
 .........

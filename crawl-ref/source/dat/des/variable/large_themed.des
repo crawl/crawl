@@ -57,8 +57,7 @@ NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
 DEPTH:   D:3-6
-MONS:    goblin; hunting sling . stone / hobgoblin w:2; hunting sling . sling \
-         bullet / nothing
+MONS:    goblin; hunting sling / hobgoblin w:2; hunting sling / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
 MONS:    kobold; club w:18 / kobold brigand w:1 / gnoll w:3; club | spear / nothing
@@ -1130,7 +1129,7 @@ DEPTH:   D:11-, Depths
 ORIENT:  southeast
 ITEM:    any armour, any armour good_item
 ITEM:    any weapon, any weapon good_item
-ITEM:    arrow, bolt, sling bullet, gold
+ITEM:    boomerang, javelin w:3, throwing net w:3, gold
 : if you.in_branch("D") then
 MONS:    orc warrior / deep elf knight w:1 / deep elf archer w:1
 MONS:    orc warrior w:20 / centaur warrior
@@ -1612,7 +1611,7 @@ DEPTH:  D:3-4
   end
   kmons("O = " .. boss)
 }}
-MONS:   goblin, goblin ; hunting sling . stone, jackal
+MONS:   goblin, goblin ; hunting sling, jackal
 NSUBST: . = 1:0 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx

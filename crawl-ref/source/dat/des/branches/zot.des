@@ -1104,12 +1104,12 @@ KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart scythe ego:chaos | randart dire flail | \
              randart great mace | randart battleaxe | randart great sword | \
              randart glaive | randart scythe
-KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos . sling bullet / \
-             guardian mummy ; randart longbow ego:chaos . arrow / \
-             guardian mummy ; randart triple crossbow . bolt / \
-             guardian mummy ; randart fustibalus . sling bullet / \
-             guardian mummy ; randart longbow . arrow / \
-             guardian mummy ; randart arbalest . bolt
+KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos / \
+             guardian mummy ; randart longbow ego:chaos / \
+             guardian mummy ; randart triple crossbow / \
+             guardian mummy ; randart fustibalus / \
+             guardian mummy ; randart longbow / \
+             guardian mummy ; randart arbalest
 KMONS:   5 = guardian mummy ; wand of acid | scroll of summoning
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
              randart chain mail | randart robe . scroll of summoning
@@ -2347,7 +2347,7 @@ MONS:    very ugly thing w:20 / deep elf annihilator w:15 / \
 MONS:    curse skull w:15 / apocalypse crab / lorocyproca / acid blob
 MONS:    butterfly
 ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
-ITEM:    sling bullet q:1 no_pickup, tin of tremorstones no_pickup
+ITEM:    orb, tin of tremorstones no_pickup
 # Altars obliquely refer to those temple maps.
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / C w:20
 KFEAT:   ~ = zot trap

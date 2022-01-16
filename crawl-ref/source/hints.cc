@@ -2919,7 +2919,7 @@ string hints_describe_item(const item_def &item)
 #endif
                     ostr << "press <w>%</w>. You'll ";
                     ostr << _hints_target_mode();
-                    cmd.push_back(CMD_EVOKE);
+                    cmd.push_back(CMD_PRIMARY_ATTACK);
                 }
                 else
                     ostr << "To attack a monster, you can simply walk into it.";

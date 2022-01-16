@@ -219,14 +219,13 @@ this and fire at the closest monster with <input>shift-tab</input> or <input>p</
 tutorial2 wield_bow
 
 Pick up this shortbow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
-<localtiles> or by <input>mouseclick</input></localtiles>. Then pick up the
-arrows and quiver them with <input>$cmd[CMD_QUIVER_ITEM]</input>.
+<localtiles> or by <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 firing
 
 # FIXME: Lengthy because of the hint for choosing target.
-Firing arrows from your wielded shortbow works exactly the same as throwing boomerangs:
-via <input>$cmd[CMD_FIRE]</input><localtiles> or <input>mouseclick</input>
+Firing arrows from your wielded shortbow works a bit differently from throwing boomerangs.
+Use <input>$cmd[CMD_PRIMARY_ATTACK]</input><localtiles> or <input>mouseclick</input>
 </localtiles>. You can change the targeted monster by pressing
 <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> while in target mode. The worm is
 harmless behind the lava, so concentrate on the dummy which can fire at you.
@@ -261,10 +260,11 @@ tutorial2 exit
   <input>rightclick</input> read a more detailed description</localtiles><nomouse>
   <input>$cmd[CMD_LOOK_AROUND]</input>  examine a monster
   <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</nomouse>
+  <input>$cmd[CMD_PRIMARY_ATTACK]</input> fire held weapon
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fire quiver at pre-targeted monster
   <input>shift-tab</input>, <input>p</input> fire quiver at closest monster
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> target another monster<localtiles>
-  You can also fire an item by <input>clicking</input> on it and the confirming the target with <input>Enter</input>.</localtiles>
+  You can also fire a missile by <input>clicking</input> on it, then confirming the target with <input>Enter</input>.</localtiles>
 
 <yellow>Resting</yellow>
   <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
