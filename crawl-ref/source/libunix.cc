@@ -1434,8 +1434,12 @@ COLOURS default_hover_colour()
     // DARKGREY hover, which arguably looks better in 16colors, won't work.
     // DARKGREY is also not safe under bold_brightens_foreground, since a
     // terminal that supports this won't necessarily handle a bold background.
+
+    // n.b. if your menu uses just one color, and you set that as the hover,
+    // you will get automatic color inversion. That is generally the safest
+    // option where possible.
     return (curs_can_use_extended_colors() || Options.blink_brightens_background)
-                 ? DARKGREY : LIGHTGREY;
+                 ? DARKGREY : BLUE;
 }
 
 void textbackground(int col)
