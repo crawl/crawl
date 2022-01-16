@@ -90,6 +90,7 @@ recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
 int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
 int zin_recite_power();
+void zin_recite_law_of_hell();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 spret zin_imprison(const coord_def& target, bool fail);

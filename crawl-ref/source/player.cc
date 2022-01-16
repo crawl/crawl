@@ -5983,7 +5983,7 @@ int player::corrosion_amount() const
     if (duration[DUR_CORROSION])
         corrosion += you.props[CORROSION_KEY].get_int();
 
-    if (player_in_branch(BRANCH_DIS))
+    if (player_in_branch(BRANCH_DIS) && !you.duration[DUR_ZIN_LAW])
         corrosion += 2;
 
     return corrosion;
@@ -6335,7 +6335,7 @@ int player_willpower(bool temp)
 
     // Enchantment/environment effect
     if ((you.duration[DUR_LOWERED_WL]
-         || player_in_branch(BRANCH_TARTARUS)) && temp)
+         || player_in_branch(BRANCH_TARTARUS)) && !you.duration[DUR_ZIN_LAW] && temp)
     {
         rm /= 2;
     }

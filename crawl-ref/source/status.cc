@@ -207,7 +207,7 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_NO_POTIONS:
         // Don't double the light if under a duration
-        if (!player_in_branch(BRANCH_COCYTUS) || you.duration[DUR_NO_POTIONS])
+        if (!(player_in_branch(BRANCH_COCYTUS) && !you.duration[DUR_ZIN_LAW]) || you.duration[DUR_NO_POTIONS])
             break;
         // use -Potion as a base
         _fill_inf_from_ddef(DUR_NO_POTIONS, inf);
@@ -715,7 +715,7 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_NO_SCROLL:
         if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
-            || player_in_branch(BRANCH_GEHENNA))
+            || (player_in_branch(BRANCH_GEHENNA) && !you.duration[DUR_ZIN_LAW]))
         {
             inf.light_colour = RED;
             inf.light_text   = "-Scroll";
@@ -741,9 +741,9 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_LOWERED_WL:
         // Don't double the light if under a duration
-        if (!player_in_branch(BRANCH_TARTARUS) || you.duration[DUR_LOWERED_WL])
+        if (!(player_in_branch(BRANCH_TARTARUS) && !you.duration[DUR_ZIN_LAW]) || you.duration[DUR_LOWERED_WL])
             break;
-        if (player_in_branch(BRANCH_TARTARUS))
+        if (player_in_branch(BRANCH_TARTARUS) && !you.duration[DUR_ZIN_LAW])
             _fill_inf_from_ddef(DUR_LOWERED_WL, inf);
         break;
 

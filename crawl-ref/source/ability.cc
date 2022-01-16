@@ -1627,6 +1627,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (!zin_check_able_to_recite(quiet))
             return false;
 
+        // you can recite it at any time in hell.
+        if (player_in_branch(BRANCH_COCYTUS) || player_in_branch(BRANCH_GEHENNA) || player_in_branch(BRANCH_TARTARUS) || player_in_branch(BRANCH_DIS))
+            return true;
+
         int result = zin_check_recite_to_monsters(quiet);
         if (result != 1)
         {

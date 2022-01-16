@@ -483,6 +483,8 @@ static void _handle_recitation(int step)
          zin_recite_text(you.attribute[ATTR_RECITE_SEED],
                          you.attribute[ATTR_RECITE_TYPE], step).c_str());
 
+    zin_recite_law_of_hell();
+
     if (apply_area_visible(zin_recite_to_single_monster, you.pos()))
     {
         viewwindow();

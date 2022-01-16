@@ -150,6 +150,7 @@ enum duration_type
 #endif
     DUR_TOXIC_RADIANCE,
     DUR_RECITE,
+    DUR_ZIN_LAW,
     DUR_GRASPING_ROOTS,
     DUR_SLEEP_IMMUNITY,
     DUR_FIRE_VULN,

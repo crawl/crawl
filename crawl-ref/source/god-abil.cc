@@ -66,6 +66,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -742,6 +743,16 @@ int zin_recite_power()
     return (invo_power + piety_power) / 2 / power_mult;
 }
 
+void zin_recite_law_of_hell(){
+    if (player_in_branch(BRANCH_COCYTUS) || player_in_branch(BRANCH_GEHENNA) || player_in_branch(BRANCH_TARTARUS) || player_in_branch(BRANCH_DIS)){
+        if (x_chance_in_y(you.piety, MAX_PIETY * 2)){
+            int temp = 1 + random2avg(you.skill(SK_INVOCATIONS, 6),2);
+            if (you.duration[DUR_ZIN_LAW] < temp)
+                you.set_duration(DUR_ZIN_LAW,temp,30);
+        }
+    }
+}
+
 bool zin_check_able_to_recite(bool quiet)
 {
     if (you.duration[DUR_RECITE])
@@ -794,6 +805,10 @@ int zin_check_recite_to_monsters(bool quiet)
 {
     bool found_temp_ineligible = false;
     bool found_eligible = false;
+
+    // you can recite it at any time in hell.
+    if (player_in_branch(BRANCH_COCYTUS) || player_in_branch(BRANCH_GEHENNA) || player_in_branch(BRANCH_TARTARUS) || player_in_branch(BRANCH_DIS))
+            return 1;
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
