@@ -1403,6 +1403,7 @@ bool Menu::process_key(int keyin)
     case '<':
         page_up();
         break;
+    case CK_SHIFT_LEFT:
     case CK_SHIFT_UP:
         line_up();
         break;
@@ -1412,6 +1413,7 @@ bool Menu::process_key(int keyin)
         else
             line_up();
         break;
+    case CK_SHIFT_RIGHT:
     case CK_SHIFT_DOWN:
         line_down();
         break;

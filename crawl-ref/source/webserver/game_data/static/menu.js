@@ -839,6 +839,22 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 line_down();
             event.preventDefault();
             return false;
+        case 37: // left
+            if (event.shiftKey)
+            {
+                line_up();
+                event.preventDefault();
+                return false;
+            }
+            break;
+        case 39: // right
+            if (event.shiftKey)
+            {
+                line_down();
+                event.preventDefault();
+                return false;
+            }
+            break;
         }
 
         if (update_server_scroll_timeout)
