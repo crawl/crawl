@@ -2123,13 +2123,13 @@ void game_options::reset_aliases(bool clear)
     // Aus compatibility:
     Options.add_alias("center_on_scroll", "centre_on_scroll");
     // Backwards compatibility:
-    Options.add_alias("friend_highlight", "friend_brand");
-    Options.add_alias("neutral_highlight", "neutral_brand");
-    Options.add_alias("stab_highlight", "stab_brand");
-    Options.add_alias("may_stab_highlight", "may_stab_brand");
-    Options.add_alias("heap_highlight", "heap_brand");
-    Options.add_alias("feature_item_highlight", "feature_item_brand");
-    Options.add_alias("trap_item_highlight", "trap_item_brand");
+    Options.add_alias("friend_brand", "friend_highlight");
+    Options.add_alias("neutral_brand", "neutral_highlight");
+    Options.add_alias("stab_brand", "stab_highlight");
+    Options.add_alias("may_stab_brand", "may_stab_highlight");
+    Options.add_alias("heap_brand", "heap_highlight");
+    Options.add_alias("feature_item_brand", "feature_item_highlight");
+    Options.add_alias("trap_item_brand", "trap_item_highlight");
 
 }
 
