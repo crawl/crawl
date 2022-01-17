@@ -794,12 +794,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         switch (event.which)
         {
         case 109: // numpad -
-            if (menu.tag == "inventory" || menu.tag == "stash"
-                || menu.tag == "actions" || menu.tag == "macros")
-            {
-                // TODO: most inventory menus should be ok...
-                break; // Don't capture - for wield prompts or stash search
-            }
+            if (menu_has_custom_dash())
+                break;
+            // otherwise, fall through to pageup:
         case 33: // page up
             if (menu.tag == "macro_mapping")
                 break; // Treat input as raw, no need to scroll anyway
@@ -861,6 +858,16 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             update_server_scroll();
     }
 
+    function menu_has_custom_dash()
+    {
+        return menu.tag == "inventory" // drop/pickup use '-' to clear all (TODO: specific tag?)
+            || menu.tag == "stash"     // TODO: ??
+            || menu.tag == "actions"   // '-' = clear quiver
+            || menu.tag == "macros"    // '-' = clear all macros
+            || menu.tag == "macro_mapping" // leave available for binding
+            || menu.tag == "use_item"; // '-' = unwield
+    }
+
     function menu_keypress_handler(event)
     {
         if (!menu || menu.type === "crt") return;
@@ -880,12 +887,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         switch (chr)
         {
         case "-":
-            if (menu.tag == "inventory" || menu.tag == "stash"
-                || menu.tag == "actions" || menu.tag == "macros")
-            {
-                break; // Don't capture - for wield prompts or stash search
-            }
-
+            if (menu_has_custom_dash())
+                break;
+            // otherwise, fall through to pageup:
         case "<":
         case ";":
             page_up();
