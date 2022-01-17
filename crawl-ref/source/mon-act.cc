@@ -2616,7 +2616,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         if (!you.can_see(mons))
         {
             mprf("Something unseen %s", open_str.c_str());
-            interrupt_activity(activity_interrupt::force);
+            interrupt_activity(activity_interrupt::sense_monster);
         }
         else if (!you_are_delayed())
         {
@@ -3170,7 +3170,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door bursts into shrapnel!");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " bursts through the door, destroying it!");
@@ -3196,7 +3196,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door mysteriously vanishes.");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " eats the door!");

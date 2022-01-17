@@ -768,7 +768,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else if (you.see_cell(pos()) && feat_is_watery(env.grid(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
-            interrupt_activity(activity_interrupt::force);
+            interrupt_activity(activity_interrupt::sense_monster);
         }
         break;
 
