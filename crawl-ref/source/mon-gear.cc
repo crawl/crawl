@@ -1782,7 +1782,9 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_GRUM:
+    case MONS_ROBIN:
     case MONS_SPRIGGAN_BERSERKER:
+    case MONS_IRONBOUND_THUNDERHULK:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
@@ -1836,7 +1838,6 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR);
         break;
 
-    case MONS_IRONBOUND_THUNDERHULK:
     case MONS_VAULT_SENTINEL:
     case MONS_IRONBOUND_CONVOKER:
     case MONS_IRONBOUND_FROSTHEART:
@@ -2004,11 +2005,6 @@ int make_mons_armour(monster_type type, int level)
     case MONS_SPRIGGAN_DEFENDER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
-        break;
-
-    case MONS_ROBIN:
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_ANIMAL_SKIN;
         break;
 
     case MONS_DRACONIAN_SHIFTER:
