@@ -2333,6 +2333,9 @@ static level_pos _prompt_travel_altar()
             if (!nearest_altars[god].is_valid())
                 continue;
 
+            if (is_unavailable_god(god))
+                continue;
+
             // "The Shining One" is too long to keep the same G menu layout
             altar_name  = god == GOD_SHINING_ONE ? "TSO" : god_name(god);
             god_initial = god == GOD_SHINING_ONE ? '1'   : altar_name.at(0);
