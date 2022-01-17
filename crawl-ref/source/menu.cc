@@ -983,6 +983,10 @@ void Menu::set_flags(int new_flags)
 {
     flags = new_flags;
 
+    // disable arrow controls depending on options, or for any noselect menu
+    if (!Options.menu_arrow_control || !!(flags & MF_NOSELECT))
+        flags = flags & (~(MF_ARROWS_SELECT | MF_INIT_HOVER));
+
 #ifdef DEBUG
     int sel_flag = flags & (MF_NOSELECT | MF_SINGLESELECT | MF_MULTISELECT);
     ASSERT(sel_flag == MF_NOSELECT || sel_flag == MF_SINGLESELECT || sel_flag == MF_MULTISELECT);
@@ -1084,13 +1088,18 @@ string Menu::get_keyhelp(bool scrollable) const
         // XX this may not work perfectly with the way InvMenu handles
         // selection
         const auto chosen_count = selected_entries().size();
+        navigation +=
+                "\n<lightgrey>"
+                "Letters toggle    ";
+        if (is_set(MF_ARROWS_SELECT))
+        {
+            navigation +=
+                "[<w>.</w>|<w>Space</w>] toggle selected    ";
+        }
         navigation += make_stringf(
-            "\n<lightgrey>"
-            "Letters toggle    "
-            "[<w>.</w>|<w>Space</w>] toggle selected    " // assumes MF_ARROWS_SELECT
-            "[<w>Ret</w>] %s "
-            "(%lu chosen)"
-            "</lightgrey>",
+                "[<w>Ret</w>] %s "
+                "(%lu chosen)"
+                "</lightgrey>",
             chosen_count == 0 ? "cancel" : "accept",
             chosen_count);
     }

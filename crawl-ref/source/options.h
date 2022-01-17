@@ -189,6 +189,7 @@ public:
     bool        suppress_startup_errors;
 
     bool        mouse_input;
+    bool        menu_arrow_control;
 
     int         view_max_width;
     int         view_max_height;

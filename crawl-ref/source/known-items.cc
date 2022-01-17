@@ -142,11 +142,17 @@ protected:
             navigation = pad_more_with(navigation,
                                     "[<w>Esc</w>|<w>Ret</w>] close", MIN_COLS);
             navigation +=
-                "\n<lightgrey>"
-                "Letters toggle autopickup  "
-                "[<w>.</w>|<w>Space</w>] toggle selected  "
-                "[<w>-</w>] unrecognised"
-                "</lightgrey>";
+                    "\n<lightgrey>"
+                    "Letters toggle autopickup  ";
+            if (is_set(MF_ARROWS_SELECT))
+            {
+                navigation +=
+                    "[<w>.</w>|<w>Space</w>] toggle selected  ";
+            }
+
+            navigation +=
+                    "[<w>-</w>] unrecognised"
+                    "</lightgrey>";
         }
 
         return pad_more_with(navigation,

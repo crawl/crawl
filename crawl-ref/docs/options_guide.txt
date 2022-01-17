@@ -63,8 +63,8 @@ The contents of this text are:
                 automagic_stop, fail_severity_to_confirm, easy_door,
                 warn_hatches, enable_recast_spell, confirm_action,
                 regex_search, autopickup_search, bad_item_prompt,
-                auto_hide_spells
-3-h     Message and Display Improvements.
+                auto_hide_spells, menu_arrow_control
+3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
@@ -1383,6 +1383,12 @@ bad_item_prompt = true
 auto_hide_spells = false
         When set to true, spells added to the library will automatically be
         hidden.
+
+menu_arrow_control = true
+        If set to false, disable using arrow keys to control menu selection.
+        This has no effect on mouse interactions with menus, and only affects
+        menus that use hotkeys for selection. (E.g. the main menu for local
+        play is not affected.)
 
 3-h     Messages and Display Enhancements.
 ------------------------------------------
