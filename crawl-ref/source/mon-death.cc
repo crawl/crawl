@@ -1518,6 +1518,10 @@ item_def* monster_die(monster& mons, killer_type killer,
 {
     ASSERT(!invalid_monster(&mons));
 
+    // trying to die again after scheduling an avoided_death fineff
+    if (testbits(mons.flags, MF_PENDING_REVIVAL))
+        return nullptr;
+
     const bool was_visible = you.can_see(mons);
 
     // If a monster was banished to the Abyss and then killed there,

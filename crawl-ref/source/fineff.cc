@@ -624,8 +624,9 @@ void bennu_revive_fineff::fire()
 
 void avoided_death_fineff::fire()
 {
-    ASSERT(defender()->is_monster());
+    ASSERT(defender() && defender()->is_monster());
     defender()->as_monster()->hit_points = hp;
+    defender()->as_monster()->flags &= ~MF_PENDING_REVIVAL;
 }
 
 void infestation_death_fineff::fire()
