@@ -584,7 +584,14 @@ int getch_ck()
 #ifdef KEY_RESIZE
         case -KEY_RESIZE: return CK_RESIZE;
 #endif
-        case -KEY_BTAB: return CK_SHIFT_TAB;
+        case -KEY_BTAB:  return CK_SHIFT_TAB;
+        // may or may not be defined depending on the terminal. Escape codes
+        // are the xterm convention, other terminals may do different things
+        // and ncurses may or may not handle them correctly.
+        case -KEY_SR:    return CK_SHIFT_UP;     // \033[1;2A
+        case -KEY_SLEFT: return CK_SHIFT_LEFT;   // \033[1;2D
+        case -KEY_SRIGHT: return CK_SHIFT_RIGHT; // \033[1;2C
+        case -KEY_SF:    return CK_SHIFT_DOWN;   // \033[1;2B
         default:         return c;
         }
     }
