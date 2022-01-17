@@ -247,17 +247,17 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK),
         new ColourGameOption(SIMPLE_NAME(foreground_colour), LIGHTGREY),
-        new CursesGameOption(SIMPLE_NAME(friend_brand),
+        new CursesGameOption(SIMPLE_NAME(friend_highlight),
                              CHATTR_HILITE | (GREEN << 8)),
-        new CursesGameOption(SIMPLE_NAME(neutral_brand),
+        new CursesGameOption(SIMPLE_NAME(neutral_highlight),
                              CHATTR_HILITE | (LIGHTGREY << 8)),
-        new CursesGameOption(SIMPLE_NAME(stab_brand),
+        new CursesGameOption(SIMPLE_NAME(stab_highlight),
                              CHATTR_HILITE | (BLUE << 8)),
-        new CursesGameOption(SIMPLE_NAME(may_stab_brand),
+        new CursesGameOption(SIMPLE_NAME(may_stab_highlight),
                              CHATTR_HILITE | (BROWN << 8)),
-        new CursesGameOption(SIMPLE_NAME(feature_item_brand), CHATTR_REVERSE),
-        new CursesGameOption(SIMPLE_NAME(trap_item_brand), CHATTR_REVERSE),
-        new CursesGameOption(SIMPLE_NAME(heap_brand), CHATTR_REVERSE),
+        new CursesGameOption(SIMPLE_NAME(feature_item_highlight), CHATTR_REVERSE),
+        new CursesGameOption(SIMPLE_NAME(trap_item_highlight), CHATTR_REVERSE),
+        new CursesGameOption(SIMPLE_NAME(heap_highlight), CHATTR_REVERSE),
         new IntGameOption(SIMPLE_NAME(note_hp_percent), 5, 0, 100),
         new IntGameOption(SIMPLE_NAME(hp_warning), 30, 0, 100),
         new IntGameOption(magic_point_warning, {"mp_warning"}, 0, 0, 100),
@@ -1841,7 +1841,8 @@ void game_options::merge(const game_options &other)
 void read_init_file(bool runscript)
 {
     Options.reset_options();
-    Options.read_option_line("center_on_scroll := centre_on_scroll"); // alias
+    // XX why didn't this clear first
+    Options.reset_aliases(false);
 
     // Load Lua builtins.
     if (runscript)
@@ -2115,6 +2116,23 @@ game_options::~game_options()
     deleteAll(option_behaviour);
 }
 
+void game_options::reset_aliases(bool clear)
+{
+    if (clear)
+        aliases.clear();
+    // Aus compatibility:
+    Options.add_alias("center_on_scroll", "centre_on_scroll");
+    // Backwards compatibility:
+    Options.add_alias("friend_highlight", "friend_brand");
+    Options.add_alias("neutral_highlight", "neutral_brand");
+    Options.add_alias("stab_highlight", "stab_brand");
+    Options.add_alias("may_stab_highlight", "may_stab_brand");
+    Options.add_alias("heap_highlight", "heap_brand");
+    Options.add_alias("feature_item_highlight", "feature_item_brand");
+    Options.add_alias("trap_item_highlight", "trap_item_brand");
+
+}
+
 void game_options::read_options(LineInput &il, bool runscript,
                                 bool clear_aliases)
 {
@@ -2127,10 +2145,7 @@ void game_options::read_options(LineInput &il, bool runscript,
     bool l_init        = false;
 
     if (clear_aliases)
-    {
-        aliases.clear();
-        Options.add_alias("center_on_scroll", "centre_on_scroll"); // old name
-    }
+        reset_aliases(true);
 
     dlua_chunk luacond(filename);
     dlua_chunk luacode(filename);

@@ -1530,15 +1530,16 @@ static bool _needs_flavour(const packed_cell &cell)
 
 }
 
-static inline unsigned _get_brand(int col)
+// XX code duplicateion
+static inline unsigned _get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
            (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
                                             : unsigned{CHATTR_NORMAL};
 }
@@ -1584,7 +1585,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
          || current_sc.glyph == ' ') && glyph != ' ')
     {
         int col = next_sc.colour;
-        col = (_get_brand(col) << 4) | macro_colour(col & 0xF);
+        col = (_get_highlight(col) << 4) | macro_colour(col & 0xF);
         json_write_int("col", col);
     }
 

@@ -30,9 +30,10 @@ The contents of this text are:
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
-3-c     Branding (Item and Monster Highlighting).
-                friend_brand, neutral_brand, stab_brand, may_stab_brand,
-                heap_brand, feature_item_brand, trap_item_brand
+3-c     Dungeon View Item and Monster Highlighting.
+                friend_highlight, neutral_highlight, stab_highlight,
+                may_stab_highlight, heap_highlight, feature_item_highlight,
+                trap_item_highlight
 3-d     Level Map Functions.
                 level_map_cursor_step
 3-e     Viewport Display Options.
@@ -623,13 +624,14 @@ detected_item_colour = green
 remembered_monster_colour = darkgrey
         The colour for monsters you have seen before.
 
-3-c     Branding (Item and monster highlighting).
+3-c     Dungeon View Item and monster highlighting
 -------------------------------------------------
 
-Branding refers to displaying particular monsters (e.g. summons) or
-items in a special way; special as in reversing fore- and background.
-There are several branding choices (these will not work everywhere; it
-depends on OS and terminal):
+These options allow controlling the way certain monsters and items are shown
+in console dungeon view, by changing their colour or reversing fore- and
+background. There are several highlighting choices (these will not work
+everywhere; it depends on OS and terminal):
+   none             -- disable highlighting for the category
    standout         -- often the same as reverse, might be underline or
                        dim
    bold             -- used by colour curses for brightening foreground
@@ -639,52 +641,49 @@ depends on OS and terminal):
    reverse          -- this will probably work
    dim              -- probably no effect
    underline        -- this will probably work
-   highlight:colour -- set background colour of branded monsters to
+   highlight:colour -- set background colour of highlighted monsters to
                        "colour"
 The last can be abbreviated to hi:colour.
 See part DOS and Windows (5-b) for dos_use_background_intensity.
 
-By default, only two of the item brands are active (and set to reverse):
-   heap_brand, feature_item_brand
-They can be deactivated by setting them to "none".
+Previously these options were named `..._brand`, and the old names are
+available for backwards-compatibility.
 
-friend_brand = hi:green
-        Brand friends in some way. This is very helpful for summoners. The
+friend_highlight = hi:green
+        Highlight friends in some way. This is very helpful for summoners. The
         default setting shows friends with a green background. If the friend is
         itself green, it'll show up as black on green.
 
-neutral_brand = hi:lightgrey
-        Brand neutral monsters in some way. Useful both to get out of
+neutral_highlight = hi:lightgrey
+        Highlight neutral monsters in some way. Useful both to get out of
         a neutral monster's path, and to avoid accidentally killing it.
         The default setting shows neutrals with a dark grey background. Since
         there are no darkgrey monster glyphs anymore, this works fine.
 
-stab_brand = hi:blue
-        Some deities object to you stabbing monsters. Certain backgrounds
-        specialise in stabbing monsters. Still other characters are
-        happy if they spot a monster before the monster spots them. In
-        all these cases, it helps to identify monsters that are unaware
-        of the character (and hence susceptible to being stabbed) without
-        using the 'x' command. All the normal 'brand' options apply.
+stab_highlight = hi:blue
+        This option highlights monsters that are fully unaware of the player
+        and therefore are will not attack, and are guaranteed to take stab
+        damage if attacked appropriately by the player.
 
-may_stab_brand = hi:brown
-        Stabbing may be possible even if the monster is not asleep (if
-        it's confused or distracted, for instance). This option brands
-        monsters that you *might* be able to stab.
+may_stab_highlight = hi:brown
+        This option highlights monsters that are having trouble paying
+        attention to the player by, for example, being confused or
+        distracted. These monsters may be able to be stabbed, depending
+        on Stealth and weapon skill levels and various other factors, and will
+        (at least) have trouble attacking the player with their current status.
 
-heap_brand = reverse
-        Brand heaps of items (more than one item or stack).
+heap_highlight = reverse
+        Highlights heaps of items (more than one item or stack).
 
-feature_item_brand = reverse
-        Brands features (stairs, shops, altars) that would otherwise be
-        hidden by items. If you use this brand, the items on the square
-        are hidden by the feature symbol and the feature symbol is
-        branded.
+feature_item_highlight = reverse
+        Highlights features (stairs, shops, altars) that would otherwise be
+        hidden by items. If you use this option, the item glyph(s) on the
+        square are hidden by the feature symbol.
 
-trap_item_brand = reverse
-        Brands traps that would otherwise be hidden by items. If you
-        use this brand, the items on the square are hidden by the trap
-        symbol (^) and the trap symbol is branded.
+trap_item_highlights = reverse
+        Highlights traps that would otherwise be hidden by items. If you
+        use this option, the item glyph(s) on the square are hidden by the trap
+        symbol (^).
 
 3-d     Level Map Functions.
 ----------------------------
@@ -2803,7 +2802,7 @@ read_persist_options = false
 dos_use_background_intensity = false
         On DOS and Windows, if you're using a console that can do
         high-intensity background colours, set this option to true for
-        superior friend-branding. If your console doesn't like this
+        superior friend-highlighting. If your console doesn't like this
         option, some friendly monsters will appear as blinking
         characters (and setting this option to false may be advisable to
         preserve your sanity in such cases).

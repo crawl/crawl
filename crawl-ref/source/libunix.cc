@@ -100,7 +100,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background = f
  * @brief Change the foreground colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal color with attached highlight.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -111,7 +111,7 @@ static curses_style curs_attr_bg(int col);
  * @brief Change the background colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal color with attached highlight.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -122,19 +122,19 @@ static curses_style curs_attr_fg(int col);
  * @brief Get curses attributes for the passed internal color combination.
  *
  * Performs colour mapping for both default colours as well as the color map.
- * Additionally, this function takes into consideration a passed brand.
+ * Additionally, this function takes into consideration a passed highlight.
  *
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
  *  The internal colour for the background.
- * @param brand
- *  Internal color branding information.
+ * @param highlight
+ *  Internal color highlighting information.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
  */
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand);
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight);
 
 /**
  * @brief Returns a curses color pair index for the passed fg/bg combo.
@@ -919,15 +919,15 @@ bool is_cursor_enabled()
     return cursor_is_enabled;
 }
 
-static inline unsigned get_brand(int col)
+static inline unsigned get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
            (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
                                             : unsigned{CHATTR_NORMAL};
 }
@@ -1005,31 +1005,31 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
 static curses_style curs_attr_bg(int col)
 {
     BG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
 }
 
 // see declaration
 static curses_style curs_attr_fg(int col)
 {
     FG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
 }
 
 // see declaration
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand)
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight)
 {
     COLOURS fg_mod = fg;
     COLOURS bg_mod = bg;
     attr_t flags = 0;
 
     // calculate which curses flags we need...
-    if (brand != CHATTR_NORMAL)
+    if (highlight != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_style(brand);
+        flags |= convert_to_curses_style(highlight);
 
         // Allow highlights to override the current background color.
-        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-            bg_mod = static_cast<COLOURS>((brand & CHATTR_COLMASK) >> 8);
+        if ((highlight & CHATTR_ATTRMASK) == CHATTR_HILITE)
+            bg_mod = static_cast<COLOURS>((highlight & CHATTR_COLMASK) >> 8);
     }
 
     // Respect color remapping.
@@ -1053,7 +1053,7 @@ static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand)
     ret.attr |= flags;
 
     // Reverse color manually to ensure correct brightening attrs.
-    if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
+    if ((highlight & CHATTR_ATTRMASK) == CHATTR_REVERSE)
         return flip_colour(ret);
 
     return ret;

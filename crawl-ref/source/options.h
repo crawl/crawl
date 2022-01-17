@@ -272,8 +272,8 @@ public:
     bool        clear_messages;   // clear messages each turn
     bool        show_more;        // Show message-full more prompts.
     bool        small_more;       // Show one-char more prompts.
-    unsigned    friend_brand;     // Attribute for branding friendly monsters
-    unsigned    neutral_brand;    // Attribute for branding neutral monsters
+    unsigned    friend_highlight;     // Attribute for highlighting friendly monsters
+    unsigned    neutral_highlight;    // Attribute for highlighting neutral monsters
     bool        blink_brightens_background; // Assume blink will brighten bg.
     maybe_bool  bold_brightens_foreground; // Assume bold will brighten fg.
     bool        best_effort_brighten_background; // Allow bg brighten attempts.
@@ -384,11 +384,11 @@ public:
     unsigned    detected_item_colour;       // Colour of detected items
     unsigned    status_caption_colour;      // Colour of captions in HUD.
 
-    unsigned    heap_brand;         // Highlight heaps of items
-    unsigned    stab_brand;         // Highlight monsters that are stabbable
-    unsigned    may_stab_brand;     // Highlight potential stab candidates
-    unsigned    feature_item_brand; // Highlight features covered by items.
-    unsigned    trap_item_brand;    // Highlight traps covered by items.
+    unsigned    heap_highlight;         // Highlight heaps of items
+    unsigned    stab_highlight;         // Highlight monsters that are stabbable
+    unsigned    may_stab_highlight;     // Highlight potential stab candidates
+    unsigned    feature_item_highlight; // Highlight features covered by items.
+    unsigned    trap_item_highlight;    // Highlight traps covered by items.
 
     // What is the minimum number of items in a stack for which
     // you show summary (one-line) information
@@ -655,6 +655,7 @@ public:
 
     void write_prefs(FILE *f);
 
+    void reset_aliases(bool clear=true);
 private:
     string unalias(const string &key) const;
     string expand_vars(const string &field) const;
