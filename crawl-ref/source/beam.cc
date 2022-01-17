@@ -1695,6 +1695,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
+        break;
     case ENCH_INSANE:
         if (!mons->can_go_frenzy())
         {
@@ -1702,6 +1703,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
+        break;
     case ENCH_ANGUISH:
         if (mons->friendly())
             return true;
@@ -1711,6 +1713,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
+        break;
     default:
         break;
     }
