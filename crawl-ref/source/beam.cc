@@ -5178,6 +5178,11 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = !mon->stasis();
         break;
 
+    case BEAM_CONFUSION:
+    case BEAM_IRRESISTIBLE_CONFUSION:
+        rc = !mon->clarity();
+        break;
+
     case BEAM_POLYMORPH:
         rc = mon->can_polymorph();
         break;
@@ -5571,30 +5576,31 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_SPORE:
     case BEAM_CONFUSION:
     case BEAM_IRRESISTIBLE_CONFUSION:
+    {
         if (mon->clarity())
         {
             if (you.can_see(*mon))
                 obvious_effect = true;
             return MON_AFFECTED;
         }
-        {
-            // irresistible confusion has a shorter duration and is weaker
-            // against strong monsters
-            int dur = ench_power;
-            if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
-                dur = max(10, dur - mon->get_hit_dice());
-            else
-                dur = _ench_pow_to_dur(dur);
 
-            if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
-            {
-                // FIXME: Put in an exception for things you won't notice
-                // becoming confused.
-                if (simple_monster_message(*mon, " appears confused."))
-                    obvious_effect = true;
-            }
+        // irresistible confusion has a shorter duration and is weaker
+        // against strong monsters
+        int dur = ench_power;
+        if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
+            dur = max(10, dur - mon->get_hit_dice());
+        else
+            dur = _ench_pow_to_dur(dur);
+
+        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
+        {
+            // FIXME: Put in an exception for things you won't notice
+            // becoming confused.
+            if (simple_monster_message(*mon, " appears confused."))
+                obvious_effect = true;
         }
         return MON_AFFECTED;
+    }
 
     case BEAM_SLEEP:
         if (mons_just_slept(*mon))
