@@ -671,7 +671,11 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
     if (actual)
     {
         if (YOU_KILL(beam.thrower))
+        {
             _player_hurt_monster(target, hurted, beam.flavour, false);
+            if (target.alive())
+                you.pet_target = target->mindex();
+        }
         else if (hurted)
             target.hurt(agent, hurted, beam.flavour);
 
