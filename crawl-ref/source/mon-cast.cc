@@ -7239,17 +7239,16 @@ static void _siren_sing(monster* mons, bool avatar)
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
-static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot)
+ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 {
-    spell_type monspell = slot.spell;
     actor *foe = mon->get_foe();
     const bool friendly = mon->friendly();
 
-    if (!foe && (get_spell_flags(monspell) & spflag::targeting_mask))
+    if (!foe && (get_spell_flags(spell) & spflag::targeting_mask))
         return ai_action::impossible();
 
     // Keep friendly summoners from spamming summons constantly.
-    if (friendly && !foe && spell_typematch(monspell, spschool::summoning))
+    if (friendly && !foe && spell_typematch(spell, spschool::summoning))
         return ai_action::bad();
 
 
@@ -7263,24 +7262,21 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     if (!mon->wont_attack())
     {
-        if (spell_harms_area(monspell) && env.sanctuary_time > 0)
+        if (spell_harms_area(spell) && env.sanctuary_time > 0)
             return ai_action::impossible();
 
-        if (spell_harms_target(monspell) && is_sanctuary(mon->target))
+        if (spell_harms_target(spell) && is_sanctuary(mon->target))
             return ai_action::impossible();
     }
 
-    if (slot.flags & MON_SPELL_BREATH && mon->has_ench(ENCH_BREATH_WEAPON))
-        return ai_action::impossible();
-
     // Don't bother casting a summon spell if we're already at its cap
-    if (summons_are_capped(monspell)
-        && count_summons(mon, monspell) >= summons_limit(monspell, false))
+    if (summons_are_capped(spell)
+        && count_summons(mon, spell) >= summons_limit(spell, false))
     {
         return ai_action::impossible();
     }
 
-    const mons_spell_logic* logic = map_find(spell_to_logic, monspell);
+    const mons_spell_logic* logic = map_find(spell_to_logic, spell);
     if (logic && logic->calc_goodness)
         return logic->calc_goodness(*mon);
 
@@ -7289,7 +7285,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those
     // handled here as well. - bwr
-    switch (monspell)
+    switch (spell)
     {
     case SPELL_CALL_TIDE:
         if (!player_in_branch(BRANCH_SHOALS) || mon->has_ench(ENCH_TIDE))
@@ -7609,7 +7605,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_GLACIATE:
         ASSERT(foe);
         return ai_action::good_or_bad(
-            _glaciate_tracer(mon, mons_spellpower(*mon, monspell), foe->pos()));
+            _glaciate_tracer(mon, mons_spellpower(*mon, spell), foe->pos()));
 
     case SPELL_MALIGN_GATEWAY:
         return ai_action::good_or_bad(can_cast_malign_gateway());
@@ -7631,7 +7627,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     {
         bolt tracer;
         setup_cleansing_flame_beam(tracer,
-                                   5 + (7 * mon->spell_hd(monspell)) / 12,
+                                   5 + (7 * mon->spell_hd(spell)) / 12,
                                    cleansing_flame_source::spell,
                                    mon->pos(), mon);
         fire_tracer(mon, tracer, true);
@@ -7724,6 +7720,14 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         // targeted, removed, or handled via spell_to_logic.
         return ai_action::good();
     }
+}
+
+static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot)
+{
+    if (slot.flags & MON_SPELL_BREATH && mon->has_ench(ENCH_BREATH_WEAPON))
+        return ai_action::impossible();
+
+    return monster_spell_goodness(mon, slot.spell);
 }
 
 static string _god_name(god_type god)

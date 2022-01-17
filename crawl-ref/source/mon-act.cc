@@ -1065,6 +1065,9 @@ static bool _handle_wand(monster& mons)
     const spell_type mzap =
         spell_in_wand(static_cast<wand_type>(wand->sub_type));
 
+    if (!ai_action::is_viable(monster_spell_goodness(&mons, mzap)))
+        return false;
+
     if (!setup_mons_cast(&mons, beem, mzap, true))
         return false;
 
