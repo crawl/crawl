@@ -3657,11 +3657,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return count(god_abils.begin(), god_abils.end(), abil);
     }
 
-    if (species::is_draconian(you.species)
-        && species::draconian_breath(you.species) == abil)
-    {
-        return !form_changed_physiology() || you.form == transformation::dragon;
-    }
+    if (species::draconian_breath(you.species) == abil)
+        return draconian_dragon_exception();
 
     switch (abil)
     {

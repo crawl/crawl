@@ -2215,3 +2215,10 @@ int form_base_movespeed(transformation tran)
     else
         return 10;
 }
+
+bool draconian_dragon_exception()
+{
+    return species::is_draconian(you.species)
+           && (you.form == transformation::dragon
+               || !form_changed_physiology());
+}
