@@ -2112,8 +2112,20 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
     env.grid(pos) = newfeat;
     set_terrain_changed(pos);
 
+    tileidx_t old_floortile = tile_env.flv(pos).floor;
+    tileidx_t old_floor_idx = tile_env.flv(pos).floor_idx;
+
     tile_clear_flavour(pos);
     tile_init_flavour(pos);
+
+    // respect vault FTILE directives
+    if (newfeat == DNGN_FLOOR)
+    {
+        if (old_floortile)
+            tile_env.flv(pos).floor = old_floortile;
+        if (old_floor_idx)
+            tile_env.flv(pos).floor_idx = old_floor_idx;
+    }
 
     return true;
 }
