@@ -241,7 +241,7 @@ bool RevivifyDelay::try_interrupt()
     return false;
 }
 
-void stop_delay(bool stop_stair_travel)
+void stop_delay(bool stop_relocations)
 {
     if (you.delay_queue.empty())
         return;
@@ -262,7 +262,7 @@ void stop_delay(bool stop_stair_travel)
     // list of delays before clearing it.
     _clear_pending_delays();
 
-    if ((!delay->is_stair_travel() || stop_stair_travel)
+    if ((!delay->is_relocation() || stop_relocations)
         && delay->try_interrupt())
     {
         _pop_delay();
