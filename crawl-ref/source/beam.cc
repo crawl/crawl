@@ -2906,7 +2906,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_acid() >= 3;
 
     case BEAM_MEPHITIC:
-        return mon->res_poison() > 0;
+        return mon->res_poison() > 0 || mon->clarity();
 
     default:
         return false;
@@ -2952,10 +2952,7 @@ bool bolt::harmless_to_player() const
                || is_big_cloud() && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
-        // With clarity, meph still does a tiny amount of damage (1d3 - 1).
-        // Normally we'd just ignore it, but we shouldn't let a player
-        // kill themselves without a warning.
-        return player_res_poison(false) > 0 || you.clarity() && you.hp > 2;
+        return player_res_poison(false) > 0 || you.clarity();
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();

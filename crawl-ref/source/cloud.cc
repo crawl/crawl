@@ -95,7 +95,6 @@ static const cloud_data clouds[] = {
       GREEN,                                    // colour
       { TILE_CLOUD_MEPHITIC, CTVARY_DUR },      // tile
       BEAM_MEPHITIC,                            // beam_effect
-      {0, 3},                                   // base, random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name

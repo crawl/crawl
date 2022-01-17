@@ -1575,7 +1575,7 @@ static vector<string> _desc_airstrike_bonus(const monster_info& mi)
 
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
-    if (get_resist(mi.resists(), MR_RES_POISON) >= 1)
+    if (get_resist(mi.resists(), MR_RES_POISON) >= 1 || mi.is(MB_CLARITY))
         return vector<string>{"not susceptible"};
 
     int pct_chance = 2;
