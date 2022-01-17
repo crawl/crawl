@@ -1390,7 +1390,7 @@ menu_arrow_control = true
         menus that use hotkeys for selection. (E.g. the main menu for local
         play is not affected.)
 
-3-h     Messages and Display Enhancements.
+3-h     Message and Display Enhancements.
 ------------------------------------------
 
 hp_warning = 10
