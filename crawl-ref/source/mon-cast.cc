@@ -121,6 +121,7 @@ static void _setup_creeping_frost(bolt &beam, const monster &caster, int pow);
 static void _setup_pyroclastic_surge(bolt &beam, const monster &caster, int pow);
 static ai_action::goodness _negative_energy_spell_goodness(const actor* foe);
 static ai_action::goodness _caster_sees_foe(const monster &caster);
+static ai_action::goodness _foe_polymorph_viable(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
@@ -452,10 +453,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             ASSERT(foe);
             return ai_action::good_or_impossible(!foe->backlit());
     }) },
-    { SPELL_POLYMORPH, _hex_logic(SPELL_POLYMORPH, [](const monster& caster) {
-        return ai_action::good_or_bad(!caster.friendly()); // too dangerous to let allies use
-    }) },
-
+    { SPELL_POLYMORPH, _hex_logic(SPELL_POLYMORPH, _foe_polymorph_viable) },
     { SPELL_SLEEP, _hex_logic(SPELL_SLEEP, _foe_sleep_viable, 6) },
     { SPELL_HIBERNATION, _hex_logic(SPELL_HIBERNATION, _foe_sleep_viable) },
     { SPELL_TELEPORT_OTHER, _hex_logic(SPELL_TELEPORT_OTHER,
@@ -630,6 +628,16 @@ static ai_action::goodness _caster_sees_foe(const monster &caster)
     const actor* foe = caster.get_foe();
     ASSERT(foe);
     return ai_action::good_or_impossible(caster.can_see(*foe));
+}
+
+static ai_action::goodness _foe_polymorph_viable(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    ASSERT(foe);
+    if (foe->is_player())
+        return ai_action::good_or_impossible(!you.transform_uncancellable);
+    else // too dangerous to let allies use
+        return ai_action::good_or_bad(!caster.friendly());
 }
 
 static ai_action::goodness _foe_sleep_viable(const monster &caster)
