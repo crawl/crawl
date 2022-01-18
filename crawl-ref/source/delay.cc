@@ -713,11 +713,8 @@ void PasswallDelay::finish()
     // Move any monsters out of the way.
     if (monster* m = monster_at(dest))
     {
-        // One square, a few squares, anywhere...
-        if (!m->shift() && !monster_blink(m, true))
-            monster_teleport(m, true, true);
-        // Might still fail.
-        if (monster_at(dest))
+        // One square only, this isn't a tloc spell!
+        if (!m->shift())
         {
             mpr("...and sense your way blocked. You quickly turn back.");
             redraw_screen();
