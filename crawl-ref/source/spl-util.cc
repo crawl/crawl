@@ -1151,6 +1151,9 @@ string casting_uselessness_reason(spell_type spell, bool temp)
                 return "your magic and health are inextricable.";
             return "your reserves of magic are already full.";
         }
+
+        if (you.is_constricted())
+            return "you're being held away from the wall.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
