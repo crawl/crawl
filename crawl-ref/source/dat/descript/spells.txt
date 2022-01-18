@@ -144,21 +144,13 @@ Blade Hands spell
 
 {{
     local hands = you.hand() .. "s"
-    local description =
-               "Causes long, scythe-shaped blades to grow from the " ..
-               "caster's " .. hands .. ", increasing melee damage " ..
-               "significantly.\n\nWhile transformed, equipped weapons, " ..
-               "shields, and gloves are melded, and casting spells " ..
-               "becomes somewhat more difficult."
-
-    if hands == "paws" then
-        return description .. " In addition, the clacking of blades " ..
-               "on the ground makes the caster slightly less stealthy."
-    else
-        return description
-    end
+    return "Causes long, scythe-shaped blades to grow from the " ..
+           "caster's " .. hands .. ", increasing melee damage " ..
+           "significantly."
 }}
 
+While transformed, equipped weapons, shields, and gloves are melded, and
+casting spells becomes somewhat more difficult.
 %%%%
 Blink Allies Away spell
 
@@ -794,6 +786,7 @@ Ice Form spell
 Transforms the caster into a frozen ice-creature, light enough to float on
 water. The caster gains a freezing melee attack, and becomes incredibly
 resistant to cold and resistant to poison, but vulnerable to fire.
+High power increases the armour granted by this form.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -1378,7 +1371,8 @@ Statue Form spell
 Transforms the caster into a slow but extremely robust stone statue. The
 caster's melee damage, both unarmed and with weapons, is substantially
 increased. The caster's stone body is immune to poison and miasma, and gains
-resistance to electricity and negative energy.
+resistance to electricity and negative energy. High power increases the armour
+granted by this form.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
