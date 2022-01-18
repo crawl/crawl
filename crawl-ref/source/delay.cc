@@ -199,6 +199,9 @@ bool DescendingStairsDelay::try_interrupt()
 
 bool PasswallDelay::try_interrupt()
 {
+    // finish() can trigger interrupts, avoid a double message
+    if (interrupt_block::blocked())
+        return false;
     mpr("Your meditation is interrupted.");
     return true;
 }
@@ -676,6 +679,9 @@ void MemoriseDelay::finish()
 
 void PasswallDelay::finish()
 {
+    // No interrupt message if our destination causes this delay to be
+    // interrupted
+    const interrupt_block block_double_message;
     mpr("You finish merging with the rock.");
     // included in default force_more_message
 
@@ -736,6 +742,14 @@ void PasswallDelay::finish()
     // refactored in this way.
     you.update_beholders();
     you.update_fearmongers();
+
+    // in addition to missing player_reacts we miss world_reacts until after
+    // we act, missing out on a trap.
+    if (you.trapped)
+    {
+        do_trap_effects();
+        you.trapped = false;
+    }
 }
 
 void ShaftSelfDelay::finish()
