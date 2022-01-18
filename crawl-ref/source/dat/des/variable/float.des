@@ -1591,29 +1591,32 @@ ENDMAP
 # Beware the mummy's curse (Lemuel)
 #
 NAME:    lemuel_minitomb
+TAGS:    patrolling no_monster_gen no_trap_gen
+DEPTH:   Crypt, Depths
 ORIENT:  float
-DEPTH:   Depths, !Depths:$, Crypt
-MONS:    zombie / nothing
-MONS:    mummy, patrolling guardian mummy, patrolling royal mummy
-MONS:    zombie
-MONS:    mummy / nothing
-SHUFFLE: 2F, cbv
-SUBST:   F = G:99 F:1
-KMONS:   F = orange crystal statue / obsidian statue
+MONS:    spectral thing, guardian mummy, obsidian statue
+MONS:    mummy priest, royal mummy
+KFEAT:   ^ = alarm trap w:5 / dispersal trap / net trap / zot trap
+SUBST:   D = 1-, E = 2-, F = 4-, - = .:140 ^
+TILE:    c = wall_tomb
+TILE:    G = dngn_sarcophagus_pedestal_right
+FTILE:   G+.123456$*| = floor_sandstone
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx3$$xxxxxxxxxxxxx
-ccxxxxxxxxccc+cccccccccxxxx
-cccxxxxxxxc.....c...1$cxxxc
-@Fcx6$.xxxc..1..c...25ccccc
-cccccc+cccc.62..c...15c$$$c
-@+111.....+.63..+..F11+4||c
-cccccc+cccc.62..c...15c$$$c
-@Fcx6$.xxxc..1..c...25ccccc
-cccxxxxxxxc.....c...1$cxxxc
-ccxxxxxxxxccc+cccccccccxxxx
-xxxxxxxxxxx3$$xxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxcccccxxxxxxxxxxxxx
+xxxxxxxxxxc*$2cxxxxxxxxxxxxx
+xxxxxxxxxxccc+cccccccccxxxxx
+ccccccccxxc-----c---1$cxxxxx
+@Gcc2$1cccc-----c---2Fcccccx
+cccccc+cG1+-11E-+---14c$**cx
+@+.....DDD+-132-+---11+5||cx
+cccccc+cG1+-11E-+---14c$**cx
+@Gcc2$1cccc-----c---2Fcccccx
+ccccccccxxc-----c---1$cxxxxx
+xxxxxxxxxxccc+cccccccccxxxxx
+xxxxxxxxxxc*$2cxxxxxxxxxxxxx
+xxxxxxxxxxcccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 #############################################################################
