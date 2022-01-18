@@ -825,6 +825,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_FOOD,      FOOD_UNUSED },
     { OBJ_FOOD,      FOOD_FRUIT },
     { OBJ_FOOD,      FOOD_RATION },
+    { OBJ_MISSILES,  MI_ARROW },
+    { OBJ_MISSILES,  MI_BOLT },
+    { OBJ_MISSILES,  MI_SLING_BULLET },
 #endif
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
