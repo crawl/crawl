@@ -1306,7 +1306,7 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
 // throwable missiles depending on the monster type.
 static void _give_ammo(monster* mon, int level, bool mons_summoned)
 {
-    if (const item_def *launcher = mon->launcher())
+    if (mon->launcher())
         return;
 
     // Give some monsters throwables.
