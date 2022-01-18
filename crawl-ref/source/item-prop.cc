@@ -2767,7 +2767,7 @@ bool shield_reflects(const item_def &shield)
 
 int guile_adjust_willpower(int wl)
 {
-    return max(0, wl - 3 * WL_PIP);
+    return max(0, wl - 2 * WL_PIP);
 }
 
 string item_base_name(const item_def &item)
