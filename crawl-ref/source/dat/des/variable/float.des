@@ -1466,9 +1466,11 @@ NAME:   minmay_skeletal_surprise
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  Depths, !Depths:$
 ORIENT: float
-MONS:   skeletal warrior
-KMONS:  $ = skeletal warrior / skeleton / bone dragon w:1 / nothing w:40
-KITEM:  $ = $
+MONS:   ancient champion
+KMONS:  D = skeleton place:Depths:$ w:20 / lich w:2 / bone dragon w:2 \
+        / ancient lich w:1 / dread lich w:1
+KITEM:  D = star_item / superb_item
+SUBST:  $ = D$$$
 MAP
 ccccccccccccc
 c$$$ccccc$$$c
