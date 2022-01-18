@@ -748,7 +748,7 @@ Haunt spell
 
 Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
-dies. The number of spectres summoned  increases with spell power.
+dies. The number of spectres summoned increases with spell power.
 %%%%
 Heal Other spell
 
@@ -1278,7 +1278,7 @@ Simulacrum spell
 Creates an icy replica from the corpse of the original being. This magic is
 unstable, so eventually the replica will sublimate into a freezing cloud.
 Simulacra cannot leave the level they were created on. The number of simulacra
-created depend on the size of the creature and spell power.
+created depends on the size of the creature and spell power.
 %%%%
 Siren Song spell
 
