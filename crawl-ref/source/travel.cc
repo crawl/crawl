@@ -873,10 +873,31 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             explicit_keymap map;
             map[ESCAPE] = 'n';
             map[CONTROL('G')] = 'n';
-            if (yesno(prompt.c_str(), true, 'y', true, false, false, &map))
+
+            //If response is Yes (1) or Always (2), mark items for no pickup 
+            //If the response is Always, remove the item from autopickup
+            //Otherwise, stop autoexplore.
+            //FIXME: always stops autoexplore; likely due to YNQ instead of YN.
+            //FIXME: yesnoquit likely does not work with nonstandard UI.
+            // Also, yesnoquit is very dated code that hasn't been in use for 6 years.
+            //Consider it generally suspect
+            int response = yesnoquit(prompt.c_str(), true, 0, true, true);
+            if (response == 1)
             {
                 mark_items_non_pickup_at(you.pos());
-                // Don't stop explore.
+                // Shouldn't stop explore. Does. 
+                return;
+            }
+            if (response == 2)
+            {
+                int item = env.igrid(you.pos());
+                while (item != NON_ITEM)
+                {
+                    set_item_autopickup(env.item[item], AP_FORCE_OFF);
+                    item = env.item[item].link;
+                }
+                
+                mark_items_non_pickup_at(you.pos());
                 return;
             }
             canned_msg(MSG_OK);
