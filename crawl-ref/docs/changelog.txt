@@ -1,4 +1,4 @@
-Stone Soup 0.28-a0 (through 0.28-a0-1340-g77f64c2)
+Stone Soup 0.28-a0 (through 0.28-a0-1557-g548886b)
 --------------------------------------------------
 
 Branches, Environment
@@ -24,6 +24,13 @@ Branches, Environment
 * Bailey maps have been re-balanced and randomized, and three new baileys added.
 * Exploration-based shaft traps can now happen a maximum of once per branch.
 * Artefacts can now generate on D:2-3.
+* Spider is a normal noise level again.
+* The Abyss no longer generates random items, and kills in the abyss grant no
+  experience or conventional piety (Uskayaw and Yredelemnul continue to
+  grant their special kinds of piety).
+* The chance of an Abyss teleport sending the player deeper is increased; as
+  are the rune, stair, and exit generation rates.
+* Collecting the abyssal rune of zot grants two XP potions worth of experience.
 
 Character
 ---------
@@ -52,6 +59,9 @@ Character
     slot and applies the weak status.
   - Demonic touch, adds irresistible damage to the off hand punch, at level 3
     blocks gloves and applies the vulnerable status.
+* Aux attacks now trigger with a chance based on XL.
+* The chance to offhand punch now starts at 5% and increases to 50% with
+  Unarmed Combat skill.
 * Player-chosen attribute increases now happen every 6 XLs, starting at XL 3,
   and increase a stat by 2. Demigods are unchanged.
 * Wanderer creation rules have been overhauled again, to give more useful
@@ -102,7 +112,7 @@ Gods
   - Healing from jelly item eating is removed.
   - The cure mutation active is removed.
   - Piety is now exploration based, not item eating based, and is gained very
-    quickly.
+    quickly (but not in the Slime pits).
   - Jiyva grants passive regenration of HP and MP.
   - Mutation gifts arrive in bursts that first remove a mutation (weighted
     to bad mutations) then attempt to max out the levels of existing mutations
@@ -135,11 +145,17 @@ Interface
 * Most abilities now have targeters like the spell targeters.
 * WebTiles now has a clickable action panel, similar to the local tiles
   inventory panel.
+* Arrow key navigation and keyhelp is available in many more menus.
+* Arrow key navigation can be disabled with `menu_arrow_control`.
 * WebTiles mouse support is expanded.
 
 Items
 -----
 * All shields now only use Dex for stat scaling.
+* Shield penalties scale linearly with skill, completely disappearing at skill
+  27. The size of the penalty depends on the shield's encumbrance rating and
+  species size factors.
+* Armour and shields no longer impose to-hit penalties.
 * Riposte is removed from long blades and base damage is increased.
 * The skill requirements for minimum delay for executioner's axes and bardiches
   are reduced to 24; for triple swords the requirement is reduced to 22.
@@ -205,6 +221,7 @@ Items
   - The trident of the Octopus King loses +Will.
   - Wucad Mu now counts as two sources of channeling. This means it is twice as
     likely to refund MP and the probability of backfiring is squared.
+  - The robe of Misfortune loses Contam and Drain.
 
 Monsters
 --------
@@ -237,6 +254,8 @@ Monsters
   casting a spell.
 * All derived undead retain their reach, constriction, and trample attacks.
 * Red Devils now apply barbs on hit, instead of hopping back.
+* Wretched Stars only apply one temporary mutation per use of corrupting pulse,
+  and use the spell less often.
 * Demonic and holy monsters are now susceptible to fear, berserk, alistairs
   intoxication, and ballistomycete spores.
 * Monsters have a chance to break a door permanently when opening it. This
@@ -245,6 +264,7 @@ Monsters
 * When Dowan dies Duvessa goes berserk permanently; when Duvessa dies Dowan
   gains haste permanently.
 * If Jiyva dies Dissolution's summon eyeballs is replaced with a cantrip.
+* Kills by and of player-frenzied monsters now grant XP.
 * Ironbound Beastmasters are removed.
 
 Spells
@@ -266,6 +286,9 @@ Spells
 * New spell: Enfeeble (L7 Hexes). Enfeeble irresistibly applies weakness and
   magic to a single foe. Additionally the target is also dazed and blinded if
   they fail a willpower check.
+* New spell: Anguish (L4 Hexes/Necromancy). Gives monsters in sight the
+  anguished status after passing a Will check. Each time an anguished monster
+  deals damage it receives damage equal to the damage dealt.
 * Searing Ray and Storm Form have reduced power scaling.
 * Storm Form's blinkbolt ability is now always LOS range.
 * Corpse rot now scales with spell power, placing more clouds per corpse and
