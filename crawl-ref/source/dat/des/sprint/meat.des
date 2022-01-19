@@ -104,7 +104,7 @@
     "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan " ..
     "generate_awake never_corpse " ..
     "spells:sentinel's_mark.30.wizard;haste.30.wizard;ensnare.30.wizard " ..
-    "; ring of slaying plus:200 . triple sword plus:9 ego:vorpal" 
+    "; ring of slaying plus:200 . triple sword plus:9 ego:vorpal"
 
   local defiler =
     "edmund hp:1000 hd:50 name:The_Defiler n_rpl col:white " ..
