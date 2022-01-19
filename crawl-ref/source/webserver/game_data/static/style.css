@@ -4,6 +4,13 @@ body {
     text-size-adjust: none;
 }
 
+canvas {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 #lobby {
     margin: 4px;
 }
