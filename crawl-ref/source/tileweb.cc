@@ -412,7 +412,9 @@ static int _handle_cell_click(const coord_def &gc, int button, bool force)
         return CK_REDRAW;
     }
 
-    return 0;
+    // generic click: doesn't do a lot, but will interrupt travel, repeats,
+    // etc
+    return CK_MOUSE_CLICK;
 }
 
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
