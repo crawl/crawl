@@ -7832,20 +7832,20 @@ void player_open_door(coord_def doorpos)
                     berserk_open += " " + berserk_adjective;
                 else
                     berserk_open += ".";
-                mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
+                mprf(berserk_open.c_str(), adj, noun);
             }
             else
-                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+                mprf("The %s%s flies open with a bang!", adj, noun);
             noisy(15, you.pos());
         }
     }
     else if (one_chance_in(skill) && !silenced(you.pos()))
     {
         if (!door_open_creak.empty())
-            mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
+            mprf(door_open_creak.c_str(), adj, noun);
         else
         {
-            mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
+            mprf("As you open the %s%s, it creaks loudly!",
                  adj, noun);
         }
         noisy(10, you.pos());
