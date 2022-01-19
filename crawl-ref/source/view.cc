@@ -225,7 +225,7 @@ static void _genus_factoring(map<const string, details> &types,
 
     genera.erase(genus);
 
-    const monster *mon;
+    const monster *mon = nullptr;
 
     auto it = types.begin();
     do
