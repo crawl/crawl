@@ -1463,4 +1463,5 @@ div.settings-buttons button {
     padding: 5px;
     border: 1px solid #62626280;
     height: 13px;
+    caret-color: transparent;
 }
