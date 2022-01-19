@@ -382,17 +382,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             relative_hover = menu.last_hovered - menu.first_visible;
         var pagesz = menu.elem.find(".menu_contents").innerHeight();
         var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
-        var delta = Math.floor(pagesz/itemsz)
+        var delta = Math.floor(pagesz / itemsz)
         var previous = menu.first_visible - delta;
         if (previous < 0)
             previous = 0;
         scroll_to_item(previous);
         if (relative_hover >= 0)
         {
-            if (menu.first_visible + relative_hover == menu.last_hovered)
-                relative_hover = 0;
-            set_hovered(next_hoverable_item(false,
-                            menu.first_visible + relative_hover, true), false);
+            var hover_target = menu.first_visible + relative_hover;
+            // if the hover didn't move, we are on a single-screen menu. Go
+            // to the first item.
+            if (hover_target == menu.last_hovered)
+                hover_target = menu.first_visible;
+            // `relative_hover` is a bit of an estimate, and gets messed up by
+            // headings. So make sure it really does end up visible.
+            // TODO: make this look visually crisper
+            if (hover_target > menu.last_visible)
+                hover_target = menu.last_visible;
+            set_hovered(next_hoverable_item(false, hover_target, true), false);
         }
     }
 
