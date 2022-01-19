@@ -725,10 +725,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function server_menu_scroll(data)
     {
-        if (!client.is_watching())
+        if (!data.force && !client.is_watching())
             return;
+
         menu.server_first_visible = data.first;
-        if (menu.following_player_scroll)
+        if (menu.following_player_scroll || data.force)
         {
             scroll_to_item(data.first, true);
             set_hovered(data.last_hovered);

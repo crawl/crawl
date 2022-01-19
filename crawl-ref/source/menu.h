@@ -336,6 +336,11 @@ public:
 
     void update_menu(bool update_entries = false);
     virtual void set_hovered(int index);
+    bool set_scroll(int index);
+    bool in_page(int index, bool strict=false) const;
+    bool snap_in_page(int index);
+    int get_first_visible() const;
+    bool item_visible(int index);
 
     virtual int getkey() const { return lastch; }
 
@@ -400,6 +405,7 @@ protected:
 
     bool alive;
     bool more_needs_init;
+    int manual_init_hover;
 
     int last_hovered;
     KeymapContext m_kmc;
@@ -428,7 +434,7 @@ protected:
     void webtiles_update_items(int start, int end) const;
     void webtiles_update_item(int index) const;
     void webtiles_update_title() const;
-    void webtiles_update_scroll_pos() const;
+    void webtiles_update_scroll_pos(bool force=false) const;
 
     virtual void webtiles_write_title() const;
     virtual void webtiles_write_item(const MenuEntry *me) const;
@@ -443,13 +449,12 @@ protected:
     virtual bool line_down();
     virtual bool page_up();
     virtual bool line_up();
+    bool cycle_headers(bool forward=true);
+    pair<int,int> get_header_block(int index) const;
+    int next_block_from(int index, bool forward, bool wrap) const;
 
     virtual int pre_process(int key);
     virtual int post_process(int key);
-
-    bool in_page(int index, bool strict=false) const;
-    bool snap_in_page(int index);
-    int get_first_visible() const;
 
     void deselect_all(bool update_view = true);
     virtual void select_items(int key, int qty = -1);

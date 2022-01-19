@@ -100,6 +100,8 @@ public:
     void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
     int get_min_col_width() { return m_min_col_width; }
 
+    void set_initial_scroll(int i) { m_force_scroll = i; }
+
     void update_item(int index);
     void update_items();
 
@@ -121,6 +123,9 @@ protected:
     int m_height; // set by do_layout()
     int m_hover_idx = -1;
     int m_min_col_width = -1;
+
+    int m_force_scroll = -1; // in rows, no pixels
+    bool m_initial_hover_snap = false;
 
 #ifdef USE_TILE_LOCAL
     void do_layout(int mw, int num_columns);
@@ -645,6 +650,20 @@ void UIMenuPopup::_allocate_region()
 
 void UIMenu::_allocate_region()
 {
+    // Do some initial setup that requires higher-level calls but can't happen
+    // until the menu entry heights are known
+    if (m_force_scroll >= 0)
+    {
+        m_menu->set_scroll(m_force_scroll);
+        m_force_scroll = -1;
+    }
+    if (!m_initial_hover_snap)
+    {
+        if (m_menu->last_hovered >= 0)
+            m_menu->snap_in_page(m_menu->last_hovered);
+        m_initial_hover_snap = true;
+    }
+
 #ifndef USE_TILE_LOCAL
     // XXX: is this needed?
     m_height = m_menu->items.size();
@@ -1733,7 +1752,6 @@ void Menu::select_items(int key, int qty)
             {
                 // try to ensure as much of the selection as possible is in
                 // view by snapping twice
-                // XX test on webtiles
                 snap_in_page(last_snap);
                 set_hovered(first_snap);
             }
@@ -2322,36 +2340,116 @@ bool Menu::in_page(int index, bool strict) const
     return strict ? (lower_in && upper_in) : (lower_in || upper_in);
 }
 
-/// Ensure that the item at index is visible in the scroller
-bool Menu::snap_in_page(int index)
+bool Menu::set_scroll(int index)
 {
-    if (index < 0 || index >= static_cast<int>(items.size()))
-        return false;
+    // TODO: code duplication, maybe could be refactored into lower-level code
     const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0) // ui not yet set up
+    if (vph == 0)
+    {
+        // ui not yet set up. Setting this value now will force a
+        // `set_scroll` call with the same index on first render.
+        m_ui.menu->set_initial_scroll(index);
+        return false;
+    }
+    if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 
     int y1, y2;
     m_ui.menu->get_item_region(index, &y1, &y2);
-    // special case: the immediately preceding item is a header of some kind.
-    // could be generalized a bit, if sequences of headers come up? Most
-    // important when the first item in a menu is a header
-    if (index >= 1 && items[index - 1]->level != MEL_ITEM)
-        m_ui.menu->get_item_region(index - 1, &y1, nullptr);
+
+    // special case: the immediately preceding items are a header of some kind.
+    // Most important visually when the first item in a menu is a header
+    const int any_preceding_headers = get_header_block(index).first;
+    if (any_preceding_headers != index)
+        m_ui.menu->get_item_region(any_preceding_headers, &y1, nullptr);
+
+    const int vpy = m_ui.scroller->get_scroll();
+    m_ui.scroller->set_scroll(y1
+#ifdef USE_TILE_LOCAL
+            - UI_SCROLLER_SHADE_SIZE
+#endif
+            );
+
+#ifdef USE_TILE_WEB
+    // XX this doesn't force update the server, should it ever?
+    webtiles_update_scroll_pos();
+#endif
+
+    return vpy != y1;
+}
+
+bool Menu::item_visible(int index)
+{
+    // TODO: code duplication, maybe could be refactored into lower-level code
+    const int vph = m_ui.scroller->get_region().height;
+    if (vph == 0)
+    {
+        // ui not yet set up. Use `set_scroll` for this case, or a hover will
+        // be automatically snapped.
+        return false;
+    }
+    if (index < 0 || index >= static_cast<int>(items.size()))
+        return false;
+
+    int y1, y2;
+    m_ui.menu->get_item_region(index, &y1, &y2);
+
+    // special case: the immediately preceding items are a header of some kind.
+    // Most important visually when the first item in a menu is a header
+    const int any_preceding_headers = get_header_block(index).first;
+    if (any_preceding_headers != index)
+        m_ui.menu->get_item_region(any_preceding_headers, &y1, nullptr);
+
+    const int vpy = m_ui.scroller->get_scroll();
+
+    // full visibility -- should this be partial visibility?
+    return y1 >= vpy && y2 < vpy + vph;
+}
+
+/// Ensure that the item at index is visible in the scroller. This happens
+/// relative to the current scroll.
+bool Menu::snap_in_page(int index)
+{
+    // TODO: code duplication, maybe could be refactored into lower-level code
+    const int vph = m_ui.scroller->get_region().height;
+    if (vph == 0)
+    {
+        // ui not yet set up. Use `set_scroll` for this case, or a hover will
+        // be automatically snapped.
+        return false;
+    }
+    if (index < 0 || index >= static_cast<int>(items.size()))
+        return false;
+
+    int y1, y2;
+    m_ui.menu->get_item_region(index, &y1, &y2);
+
+    // special case: the immediately preceding items are a header of some kind.
+    // Most important visually when the first item in a menu is a header
+    const int any_preceding_headers = get_header_block(index).first;
+    if (any_preceding_headers != index)
+        m_ui.menu->get_item_region(any_preceding_headers, &y1, nullptr);
+
     const int vpy = m_ui.scroller->get_scroll();
 
     if (y2 >= vpy + vph)
+    {
+        // scroll up
         m_ui.scroller->set_scroll(y2 - vph
 #ifdef USE_TILE_LOCAL
             + UI_SCROLLER_SHADE_SIZE
 #endif
             );
+    }
     else if (y1 < vpy)
+    {
+        // scroll down
         m_ui.scroller->set_scroll(y1
 #ifdef USE_TILE_LOCAL
             - UI_SCROLLER_SHADE_SIZE
 #endif
             );
+    }
     else
         return false; // already in page
     return true;
@@ -2440,6 +2538,8 @@ bool Menu::line_down()
 
 void Menu::cycle_hover(bool reverse)
 {
+    if (!is_set(MF_ARROWS_SELECT))
+        return;
     int items_tried = 0;
     const int max_items = is_set(MF_WRAP) ? items.size()
                         : reverse
@@ -2470,7 +2570,6 @@ void Menu::cycle_hover(bool reverse)
 
     set_hovered(new_hover);
 #ifdef USE_TILE_WEB
-    // TODO: not sure if this is enough
     webtiles_update_scroll_pos();
 #endif
 }
@@ -2489,6 +2588,61 @@ bool Menu::line_up()
         m_ui.menu->set_showable_height(y+dy);
 #endif
         return true;
+    }
+    return false;
+}
+
+/// Return a range for index that includes at least one non-header if possible,
+/// and any sequence of adjacent headers. Used for display logic to try to
+/// show headers before any selected item. Doesn't check for valid indices
+pair<int, int> Menu::get_header_block(int index) const
+{
+    int first = index;
+    int last = index;
+    while (first >= 1 && items[first - 1]->level != MEL_ITEM)
+        first--;
+    // if index is a header, scan forward to look for a non-headed
+    while (last + 1 < static_cast<int>(items.size()) && items[last]->level != MEL_ITEM)
+        last++;
+    return make_pair(first, last);
+}
+
+int Menu::next_block_from(int index, bool forward, bool wrap) const
+{
+    const auto cur_block = get_header_block(index);
+    int next = forward ? cur_block.second + 1 : cur_block.first - 1;
+    if (wrap)
+        next = next % items.size();
+    else
+        next = max(min(next, static_cast<int>(items.size()) - 1), 0);
+    return get_header_block(next).first;
+}
+
+bool Menu::cycle_headers(bool forward)
+{
+    int start = is_set(MF_ARROWS_SELECT) ? max(last_hovered, 0)
+                                         : get_first_visible();
+    start = get_header_block(start).first;
+    int cur = next_block_from(start, forward, true);
+    while (cur != start)
+    {
+        if (items[cur]->level == MEL_SUBTITLE || items[cur]->level == MEL_TITLE)
+        {
+            if (!item_visible(cur) || !is_set(MF_ARROWS_SELECT))
+                set_scroll(cur);
+            if (is_set(MF_ARROWS_SELECT))
+            {
+                set_hovered(cur);
+                cycle_hover(); // cycle to get a valid hover
+            }
+#ifdef USE_TILE_WEB
+            // cycle_headers doesn't currently have a client-side
+            // implementation, so force-send the server-side scroll
+            webtiles_update_scroll_pos(true);
+#endif
+            return true;
+        }
+        cur = next_block_from(cur, forward, true);
     }
     return false;
 }
@@ -2639,12 +2793,13 @@ void Menu::webtiles_update_title() const
     tiles.finish_message();
 }
 
-void Menu::webtiles_update_scroll_pos() const
+void Menu::webtiles_update_scroll_pos(bool force) const
 {
     tiles.json_open_object();
     tiles.json_write_string("msg", "menu_scroll");
     tiles.json_write_int("first", get_first_visible());
     tiles.json_write_int("last_hovered", last_hovered);
+    tiles.json_write_bool("force", force);
     tiles.json_close_object();
     tiles.finish_message();
 }
