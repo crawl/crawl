@@ -99,7 +99,15 @@ function ($, comm, client, options, focus_trap) {
         // using parent() doesn't help with this issue because the space is
         // still in the border of ui-popup-outer. Maybe this is ok...
         if (!target_outside_game(ev) && !top_popup()[0].contains(ev.target))
+        {
             comm.send_message("key", { keycode: 27 });
+            if (ev.type == "touchend")
+            {
+                // head off a `click` event, hopefully
+                ev.preventDefault();
+                return;
+            }
+        }
         // otherwise, ignore -- focus-trap checkPointerDown should get it
         // next.
     }
