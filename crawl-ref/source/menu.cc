@@ -1117,7 +1117,7 @@ string Menu::get_keyhelp(bool scrollable) const
         }
         navigation += make_stringf(
                 "[<w>Ret</w>] %s "
-                "(%lu chosen)"
+                "(%llu chosen)"
                 "</lightgrey>",
             chosen_count == 0 ? "cancel" : "accept",
             chosen_count);
