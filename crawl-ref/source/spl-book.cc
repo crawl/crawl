@@ -583,6 +583,33 @@ private:
         bool entries_changed = false;
         switch (keyin)
         {
+        case CK_LEFT:
+            switch (current_action)
+            {
+                case action::cast:
+                case action::memorise:
+                    current_action = action::unhide;
+                    entries_changed = true;
+                    break;
+                case action::describe:
+                    current_action = you.divine_exegesis ? action::cast
+                                                         : action::memorise;
+                    entries_changed = true; // may need to remove hotkeys
+                    break;
+                case action::hide:
+                    current_action = action::describe;
+                    break;
+                case action::unhide:
+                    current_action = action::hide;
+                    entries_changed = true;
+                    break;
+            }
+            update_title();
+            update_more();
+            break;
+
+            break;
+        case CK_RIGHT:
         case '!':
 #ifdef TOUCH_UI
         case CK_TOUCH_DUMMY:
@@ -742,8 +769,9 @@ private:
 public:
     SpellLibraryMenu(spell_list& list)
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-               // To have the ctrl-f menu show up in webtiles
-               | MF_ALLOW_FILTER, "spell"),
+                | MF_ARROWS_SELECT | MF_INIT_HOVER
+                // To have the ctrl-f menu show up in webtiles
+                | MF_ALLOW_FILTER, "spell"),
         current_action(you.divine_exegesis ? action::cast : action::memorise),
         spells(list),
         hidden_count(0)
