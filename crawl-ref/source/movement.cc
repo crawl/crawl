@@ -1103,7 +1103,8 @@ void move_player_action(coord_def move)
              || !you.running)
         && !attacking && feat_is_closed_door(env.grid(targ)))
     {
-        stop_running();
+        if (you.running == RMODE_START)
+            stop_running();
         open_door_action(move);
         move.reset();
         return;
