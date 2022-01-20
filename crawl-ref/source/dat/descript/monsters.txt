@@ -785,7 +785,7 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skillfully.
+and able to use them skilfully.
 %%%%
 chaos spawn
 
