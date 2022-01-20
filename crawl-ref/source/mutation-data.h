@@ -1745,7 +1745,7 @@ static const mutation_def mut_data[] =
   "demonic willpower",
 
   {"You punish those that try to bend your will. (Will+)", "", ""},
-  {"You feel willful.", "", ""},
+  {"You feel wilful.", "", ""},
   {"", "", ""},
 },
 
