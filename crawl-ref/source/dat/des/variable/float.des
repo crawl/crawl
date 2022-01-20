@@ -1649,16 +1649,21 @@ ENDMAP
 # Troll bridge (Lemuel)
 #
 NAME:   lemuel_troll_bridge
+TAGS:   no_pool_fixup patrolling no_monster_gen
 DEPTH:  D:9-, Depths
 ORIENT: float
-TAGS:   no_pool_fixup patrolling
-MONS:   yak, death yak
-MONS:   troll, deep troll, iron troll
-MONS:   deep troll earth mage, deep troll shaman
-: if you.absdepth() > 21 then
-SUBST:  3 = 4:30 5:5 6 7, 1 = 2
+: if you.in_branch("D") then
+:     if you.depth() < 12 then
+MONS:   yak, troll, deep troll
+SUBST:  2 = .:100 2:90 3
+:     else
+MONS:   death yak, troll, deep troll, iron troll
+SUBST:  2 = .:50 2:60 3:30 4
+:     end
+# Depths
 : else
-SUBST:  3 = 3:50 4 5:5
+MONS:   wizard, deep troll, iron troll, deep troll shaman
+SUBST:  2 = 2:30 3 4
 : end
 MAP
 xxxxx...........................xxxxxx
@@ -1667,9 +1672,9 @@ xwwwx.............1.............xxxxxx
 xwwwx...........................xxxxxx
 xwwwwwwwwwwwwwwwww.wwwwwwwwwww..xxxxxx
 xxwwwwwwwwwwxxxxxw.wwwwwwwwwwwwwwwwxxx
-xxwwwwwwwwwwx333xw.wxxxxxwwwwwwwwwwwxx
-xxwwwwwwwwwwx*33+...+33*xwwwwwwwwwwwwx
-xxxwwwwwwwwwxxxxxw.wx333xwwwwwwwwwwwwx
+xxwwwwwwwwwwx222xw.wxxxxxwwwwwwwwwwwxx
+xxwwwwwwwwwwx*22+...+22*xwwwwwwwwwwwwx
+xxxwwwwwwwwwxxxxxw.wx222xwwwwwwwwwwwwx
 xxxxxwwwwwwwwwwwww.wxxxxxwwwwwwwwwwwwx
 xxxxx...wwwwwwwwww.wwwwwwwwwwwwwwwwwwx
 xxxxx...........................xwwwwx
