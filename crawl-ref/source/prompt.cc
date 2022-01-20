@@ -46,14 +46,15 @@ bool yes_or_no(const char* fmt, ...)
 
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
-bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
+int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
            bool interrupt_delays, bool noprompt,
-           const explicit_keymap *map, bool allow_popup)
+           const explicit_keymap *map, bool allow_popup, bool ask_always)
 {
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(activity_interrupt::force);
 
     // Allow players to answer prompts via clua.
+    // XXX: always not currently supported
     maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
     if (res == MB_TRUE)
         return true;
@@ -80,6 +81,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         status = new MenuEntry("", MEL_SUBTITLE);
         MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
         MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
+        MenuEntry * const a_me = new MenuEntry("Always", MEL_ITEM, 1, 'A');
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 
@@ -87,10 +89,14 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         pop.add_entry(status);
         pop.add_entry(y_me);
         pop.add_entry(n_me);
+        if (ask_always)
+            pop.add_entry(a_me);
         if (allow_lowercase && default_answer == 'y')
             pop.set_hovered(1);
         else if (allow_lowercase && default_answer == 'n')
             pop.set_hovered(2);
+        else if (ask_always && allow_lowercase && default_answer == 'a')
+            pop.set_hovered(3);
         pop.on_single_selection = [&pop](const MenuEntry& item)
             {
                 if (item.hotkeys.size())
@@ -147,16 +153,22 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             clear_messages();
 
         if (tmp == 'N')
-            return false;
+            return 0;
         else if (tmp == 'Y')
-            return true;
+            return 1;
+        else if (ask_always && tmp == 'A')
+            return 2;
         else if (!noprompt)
         {
             bool upper = !allow_lowercase
                          && (tmp == 'n' || tmp == 'y'
+                             || (ask_always && tmp == 'a')
                              || crawl_state.game_is_hints_tutorial());
-            const string pr = make_stringf("%s[Y]es or [N]o only, please.",
-                                           upper ? "Uppercase " : "");
+            const string pr = make_stringf("%s%s only, please.",
+                                           upper ? "Uppercase " : "",
+                                           ask_always ?
+                                               "[Y]es, [N]o, or [A]lways" :
+                                               "[Y]es or [N]o");
             if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
             else
