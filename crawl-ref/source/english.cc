@@ -163,6 +163,10 @@ string pluralise(const string &name, const char * const qualifiers[],
         // Tzitzimitl -> Tzitzimimeh (correct Nahuatl pluralisation)
         return name.substr(0, name.length() - 2) + "meh";
     }
+    // "<name>'s ghost" -> "ghosts called <name>".
+    pos = name.find("'s ghost");
+    if (string::npos != pos)
+            return string(name, 0, pos).insert(0, "ghosts called ");
 
     return name + "s";
 }
