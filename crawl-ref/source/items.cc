@@ -323,6 +323,11 @@ stack_iterator stack_iterator::operator++(int)
     return copy;
 }
 
+bool stack_iterator::operator==(const stack_iterator& rhs) const
+{
+    return cur_link == rhs.cur_link;
+}
+
 mon_inv_iterator::mon_inv_iterator(monster& _mon)
     : mon(_mon)
 {

@@ -864,10 +864,15 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     {
         if (explore_stopped_pos == you.pos())
         {
+            stack_iterator stk(you.pos());
+            string wishlist = comma_separated_fn(stk, stack_iterator::end(),
+                    [] (const item_def & item) { return item.name(DESC_A); },
+                    " and ", ", ", bind(item_needs_autopickup, placeholders::_1,
+                                        false));
             const string prompt =
-                make_stringf("Could not pick up %s here; shall I ignore %s?",
-                             tried_pickup == 1? "an item" : "some items",
-                             tried_pickup == 1? "it" : "them");
+                make_stringf("Could not pick up %s here; ([A]lways) ignore %s?",
+                             wishlist.c_str(),
+                             tried_pickup == 1 ? "it" : "them");
 
             // Make Escape => 'n' and stop run.
             explicit_keymap map;
@@ -883,18 +888,25 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             {
                 case 2:
                 {
-                    bool ap_disabled = false;
+                    vector<string> ap_disabled;
                     for (stack_iterator si(you.pos()); si; ++si)
                     {
-                        if (!item_needs_autopickup(*si))
+                        if (!item_needs_autopickup(*si)
+                            || item_autopickup_level(*si) == AP_FORCE_OFF)
+                        {
                             continue;
+                        }
 
                         set_item_autopickup(*si, AP_FORCE_OFF);
-                        ap_disabled = true;
+                        ap_disabled.push_back(pluralise(si->name(DESC_DBNAME)));
                     }
 
-                    if (ap_disabled)
-                        mpr("Autopickup disabled for the items here.");
+                    if (!ap_disabled.empty())
+                    {
+                        mprf("Autopickup disabled for %s.",
+                             comma_separated_line(ap_disabled.begin(),
+                                                  ap_disabled.end()).c_str());
+                    }
                 }
                 // intentional fallthrough
                 case 1:

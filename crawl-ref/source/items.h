@@ -181,6 +181,9 @@ public:
     explicit stack_iterator(const coord_def& pos, bool accessible = false);
     explicit stack_iterator(int start_link);
 
+    bool operator==(const stack_iterator& rhs) const;
+    static stack_iterator end() { return stack_iterator(NON_ITEM); };
+
     operator bool() const;
     item_def& operator *() const;
     item_def* operator->() const;
