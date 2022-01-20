@@ -90,20 +90,29 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         menu.items[item].elem.removeClass("hovered");
     }
 
-    function set_hovered(item, snap=true)
+    function mouse_set_hovered(index)
     {
-        if (item == menu.last_hovered)
+        if (scroll_suppresses_hover)
+            return;
+        if (index < menu.first_part_visible || index > menu.last_part_visible)
+            return;
+        set_hovered(index, false);
+    }
+
+    function set_hovered(index, snap=true)
+    {
+        if (index == menu.last_hovered)
         {
             // just make sure the hover class is set correctly
             add_hover_class(menu.last_hovered);
             return;
         }
-        if (item >= menu.items.length)
-            item = Math.max(0, menu.items.length - 1);
+        if (index >= menu.items.length)
+            index = Math.max(0, menu.items.length - 1);
         remove_hover_class(menu.last_hovered);
-        if (item < 0 || item_selectable(menu.items[item]))
+        if (index < 0 || item_selectable(menu.items[index]))
         {
-            menu.last_hovered = item;
+            menu.last_hovered = index;
             add_hover_class(menu.last_hovered);
             if (menu.last_hovered >= 0 && snap == true)
                 snap_in_page(menu.last_hovered);
@@ -237,8 +246,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             // mouse cursor in and out is needed. Worth addressing?
             elem.hover(
                 function() {
-                    if (!scroll_suppresses_hover)
-                        set_hovered($(this).index());
+                    mouse_set_hovered($(this).index());
                 }, function() {
                     if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
                         set_hovered(-1);
@@ -518,27 +526,37 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         // strange values for the bounding boxes
         menu.first_visible = 0;
         menu.last_visible = Math.max(0, menu.items.length - 1);
+        menu.first_part_visible = -1;
+        menu.last_part_visible = -1;
 
         for (i = 0; i < menu.items.length; i++)
         {
-            var item = menu.items[i];
-            var item_top = item.elem[0].getBoundingClientRect().top;
-            if (item_top >= top)
+            const item = menu.items[i];
+            const item_rect = item.elem[0].getBoundingClientRect();
+            if (item_rect.top >= top)
             {
                 menu.first_visible = i;
                 break;
             }
+            else if (item_rect.bottom - top > 10) // XX 10 here is a bit heuristic
+                menu.first_part_visible = i;
         }
         for (; i < menu.items.length; i++)
         {
-            var item = menu.items[i];
-            var item_bottom = item.elem[0].getBoundingClientRect().bottom;
-            if (item_bottom >= bottom)
+            const item = menu.items[i];
+            const item_rect = item.elem[0].getBoundingClientRect();
+            if (item_rect.bottom >= bottom)
             {
+                if (bottom - item_rect.top > 10)
+                    menu.last_part_visible = i;
                 menu.last_visible = i-1;
                 break;
             }
         }
+        if (menu.first_part_visible === -1)
+            menu.first_part_visible = menu.first_visible;
+        if (menu.last_part_visible === -1)
+            menu.last_part_visible = menu.last_visible;
         update_more();
     }
 
