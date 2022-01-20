@@ -113,7 +113,7 @@ Gods
   - The cure mutation active is removed.
   - Piety is now exploration based, not item eating based, and is gained very
     quickly (but not in the Slime pits).
-  - Jiyva grants passive regenration of HP and MP.
+  - Jiyva grants passive regeneration of HP and MP.
   - Mutation gifts arrive in bursts that first remove a mutation (weighted
     to bad mutations) then attempt to max out the levels of existing mutations
     before adding new ones.
