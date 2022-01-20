@@ -1550,6 +1550,9 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_NAGA_WARRIOR:
+        if (coinflip())
+            level = ISPEC_GOOD_ITEM;
+        // deliberate fall-through
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_ORC_WARLORD:
