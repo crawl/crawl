@@ -74,7 +74,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     var menu = null;
     var update_server_scroll_timeout = null;
     var menu_close_timeout = null;
-    var scroll_suppresses_hover = false;
+    var mouse_hover_suppressed = false;
 
     function add_hover_class(item)
     {
@@ -92,11 +92,18 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function mouse_set_hovered(index)
     {
-        if (scroll_suppresses_hover)
+        if (mouse_hover_suppressed)
             return;
         if (index < menu.first_part_visible || index > menu.last_part_visible)
             return;
         set_hovered(index, false);
+    }
+
+    function suppress_mouse_hover()
+    {
+        // ugh -- keep mouseenter from triggering, is there a better way?
+        setTimeout(function() { mouse_hover_suppressed = false; }, 50);
+        mouse_hover_suppressed = true;
     }
 
     function set_hovered(index, snap=true)
@@ -134,6 +141,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             clearTimeout(menu_close_timeout);
             menu_close_timeout = null;
         }
+        mouse_hover_suppressed = false;
     }
 
     function display_menu()
@@ -181,16 +189,21 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         ui.show_popup(menu_div, menu["ui-centred"]);
         handle_size_change();
 
+        // if we get focus back after a popup over this one, don't use mouse
+        // position at the time to set hover:
+        $(ui.top_popup()).on("focusin",
+            function (ev)
+            {
+                suppress_mouse_hover();
+            });
+
         if (menu.flags & enums.menu_flag.START_AT_END)
-        {
             scroll_bottom_to_item(menu.items.length - 1, true);
-        }
         else if (menu.jump_to)
-        {
             scroll_to_item(menu.jump_to, true);
-        } else if (menu.items.length > 0) {
+        else if (menu.items.length > 0)
             scroll_to_item(0, true);
-        }
+
         if (menu.last_hovered >= 0)
             add_hover_class(menu.last_hovered);
     }
@@ -475,11 +488,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var baseline = contents.children()[0].getBoundingClientRect().top;
         var elem_y = item.elem[0].getBoundingClientRect().top;
         if (menu.flags & enums.menu_flag.ARROWS_SELECT)
-        {
-            // ugh -- keep mouseenter from triggering, is there a better way?
-            setTimeout(function() { scroll_suppresses_hover = false; }, 50);
-            scroll_suppresses_hover = true;
-        }
+            suppress_mouse_hover();
+
         // allow a bit of extra space for the fade, number may need more tuning
         contents[0].scrollTop = Math.max(0, elem_y - baseline - 18);
 
@@ -500,11 +510,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var baseline = contents.children().offset().top;
 
         if (menu.flags & enums.menu_flag.ARROWS_SELECT)
-        {
-            // ugh -- keep mouseenter from triggering, is there a better way?
-            setTimeout(function() { scroll_suppresses_hover = false; }, 50);
-            scroll_suppresses_hover = true;
-        }
+            suppress_mouse_hover();
+
         // allow a bit of extra space for the fade, number may need more tuning
         contents.scrollTop(item.elem.offset().top + item.elem.height() + 24
                 - baseline - menu.elem.find(".menu_contents").innerHeight());
@@ -674,6 +681,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function close_menu()
     {
+        if (menu_stack.length > 1
+            && menu_stack[menu_stack.length - 2].last_hovered >= 0)
+        {
+            suppress_mouse_hover();
+        }
         menu_stack.pop();
         ui.hide_popup();
         menu = menu_stack[menu_stack.length - 1];
