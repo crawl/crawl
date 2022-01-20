@@ -1472,3 +1472,7 @@ div.settings-buttons button {
     height: 13px;
     caret-color: transparent;
 }
+
+#mobile_input input:focus {
+    outline: none;
+}

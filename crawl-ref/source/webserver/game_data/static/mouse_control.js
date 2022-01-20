@@ -70,7 +70,6 @@ function ($, comm, dr, gui, map_knowledge, enums) {
         show_tooltip(text, ev.pageX + 10, ev.pageY + 10);
     }
 
-
     $(document)
         .off("game_init.mouse_control")
         .on("game_init.mouse_control", function () {

@@ -149,8 +149,23 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
             if ((mobile_input === 'true') || (mobile_input === 'auto' && is_mobile()))
             {
                 $("#mobile_input").show();
-                $("#mobile_input input").off("input");
-                $("#mobile_input input").on("input", handle_mobile_input);
+                $("#mobile_input input")
+                    .off("input")
+                    .on("input", handle_mobile_input)
+                    .off("mousedown focusout")
+                    .on("mousedown", mobile_input_click);
+                // the following requires a fairly modern browser
+                $(document).on("visibilitychange",
+                    function(ev)
+                    {
+                        // try to regularize the behavior, on iOS it's flaky
+                        // otherwise
+                        // bug: on iOS zooming out to view tabs doesn't seem
+                        // to trip this event handler. Presumably because
+                        // "prerendered" isn't yet implemented?
+                        if (document.visibilityState !== "visible")
+                            mobile_input_force_defocus();
+                    });
             }
         }
     }
@@ -336,6 +351,82 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
     {
         e.target.value = e.target.defaultValue;
         comm.send_message("input", { text: e.originalEvent.data });
+    }
+
+    function mobile_input_focus_style(focused)
+    {
+        // manually manage the style so that it doesn't blink when the
+        // focusout handler is doing its thing
+        var mi = $("#mobile_input input");
+        if (focused)
+        {
+            mi.attr("placeholder", "Tap here to close keyboard");
+            mi.css("background", "rgba(100, 100, 100, 0.5)");
+        }
+        else
+        {
+            mi.attr("placeholder", "Tap here for keyboard input");
+            mi.css("background", "rgba(0, 0, 0, 0.5)");
+        }
+    }
+
+    function mobile_input_focused()
+    {
+        return $("#mobile_input input").is(":focus");
+    }
+
+    function mobile_input_focusout(ev)
+    {
+        var $mi = $("#mobile_input input");
+        if (ev.relatedTarget && $(ev.relatedTarget).is("input"))
+        {
+            // ok, we'll allow it, but we want it back later. As long as focus
+            // goes from input to input, the keyboard seems to stay open.
+            $(ev.relatedTarget).off("focusout").on("focusout", function (ev)
+                {
+                    $mi[0].focus();
+                    $mi.off("focusout").on("focusout", mobile_input_focusout);
+                    mobile_input_focus_style(true);
+                    $(ev.relatedTarget).off("focusout");
+                });
+            $mi.off("focusout");
+            mobile_input_focus_style(false);
+        }
+        else
+        {
+            // force focus to stay on the mobile input. For iOS purposes, this
+            // is the only thing I've tried that works. This *can't* happen in
+            // a timeout, or the temporary loss of focus is enough to close
+            // the keyboard.
+            // Bug: tapping chat close hides the keyboard
+            $mi[0].focus();
+        }
+    }
+
+    function mobile_input_force_defocus()
+    {
+        var $mi = $("#mobile_input input");
+        // remove any event handlers first
+        $mi.off("focusout");
+        mobile_input_focus_style(false);
+        $mi.blur();
+    }
+
+    function mobile_input_click(ev)
+    {
+        var $mi = $("#mobile_input input");
+        if (mobile_input_focused())
+        {
+            mobile_input_force_defocus();
+            ev.preventDefault();
+        }
+        else
+        {
+            $mi.off("focusout").on("focusout", mobile_input_focusout);
+            mobile_input_focus_style(true);
+            $mi.focus();
+            ev.preventDefault();
+        }
     }
 
     $(document).ready(function () {
