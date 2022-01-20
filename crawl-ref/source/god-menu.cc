@@ -38,14 +38,15 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     }
 }
 
-string GodMenuEntry::get_text() const
+string GodMenuEntry::_get_text_preface() const
 {
     if (level == MEL_ITEM && hotkeys.size())
     {
         char buf[300];
-        snprintf(buf, sizeof buf, " <%s>%c</%s> %c %s",  colour_text.c_str(),
-                 hotkeys[0], colour_text.c_str(), preselected ? '+' : '-', text.c_str());
+        // XX this probably breaks local tiles hotkey handling?
+        snprintf(buf, sizeof buf, " <%s>%c</%s> %c ",  colour_text.c_str(),
+                 hotkeys[0], colour_text.c_str(), preselected ? '+' : '-');
         return string(buf);
     }
-    return text;
+    return "";
 }

@@ -187,7 +187,7 @@ string InvEntry::get_filter_text() const
     return item_prefix(*item, false) + " " + get_text();
 }
 
-string InvEntry::get_text() const
+string InvEntry::_get_text_preface() const
 {
     ostringstream tstr;
 
@@ -222,7 +222,6 @@ string InvEntry::get_text() const
         tstr << "(" << relpos.x << ", " << -relpos.y << ")" << " ";
     }
 
-    tstr << text;
     return tstr.str();
 }
 

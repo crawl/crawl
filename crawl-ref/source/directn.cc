@@ -537,7 +537,7 @@ public:
 
     string get_text() const override
     {
-        const string t = InvEntry::get_text();
+        const string t = MenuEntry::get_text();
         if (item && item->pos == you.pos())
             return t + " (here)";
         return t;

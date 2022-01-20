@@ -85,7 +85,9 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 
-        pop.set_title(new MenuEntry(prompt, MEL_TITLE));
+        MenuEntry *question = new MenuEntry(prompt, MEL_TITLE);
+        question->wrap_text();
+        pop.set_title(question);
         pop.add_entry(status);
         pop.add_entry(y_me);
         pop.add_entry(n_me);

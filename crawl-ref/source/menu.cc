@@ -341,27 +341,28 @@ void UIMenu::do_layout(int mw, int num_columns)
 
             // Split menu entries that don't fit into a single line into two lines.
             if (!m_menu->is_set(MF_NO_WRAP_ROWS))
-            if ((text_width > max_column_width-entry.x-pad_right))
-            {
-                formatted_string text;
-                if (_has_hotkey_prefix(entry.text.tostring()))
+                if ((text_width > max_column_width-entry.x-pad_right))
                 {
-                    formatted_string header = entry.text.chop(5);
-                    text_sx += m_font_entry->string_width(header);
-                    text = entry.text;
-                    // remove hotkeys. As Enne said above, this is a monstrosity.
-                    for (int k = 0; k < 5; k++)
-                        text.del_char();
-                }
-                else
-                    text += entry.text;
+                    formatted_string text;
+                    // TODO: refactor to use _get_text_preface
+                    if (_has_hotkey_prefix(entry.text.tostring()))
+                    {
+                        formatted_string header = entry.text.chop(5);
+                        text_sx += m_font_entry->string_width(header);
+                        text = entry.text;
+                        // remove hotkeys. As Enne said above, this is a monstrosity.
+                        for (int k = 0; k < 5; k++)
+                            text.del_char();
+                    }
+                    else
+                        text += entry.text;
 
-                int w = max_column_width - text_sx - pad_right;
-                formatted_string split = m_font_entry->split(text, w, UINT_MAX);
-                int string_height = m_font_entry->string_height(split);
-                string_height = min(string_height, text_height*2);
-                item_height = max(item_height, string_height);
-            }
+                    int w = max_column_width - text_sx - pad_right;
+                    formatted_string split = m_font_entry->split(text, w, UINT_MAX);
+                    int string_height = m_font_entry->string_height(split);
+                    string_height = min(string_height, text_height*2);
+                    item_height = max(item_height, string_height);
+                }
 
             column_width = max(column_width, text_sx + text_width + pad_right);
             row_height = max(row_height, item_height);
@@ -432,7 +433,8 @@ void UIMenu::_render()
         // TODO: is this highlighting good enough for accessibility purposes?
         if (m_hover_idx == i)
             textbackground(default_hover_colour());
-        // XX these will format the hover differently
+        // XX these will format the hover differently.
+        // TODO: multiline entries
         if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
         {
             formatted_string s = formatted_string::parse_string(
@@ -1760,19 +1762,39 @@ void Menu::select_items(int key, int qty)
     }
 }
 
-string MenuEntry::get_text() const
+string MenuEntry::_get_text_preface() const
 {
     if (level == MEL_ITEM && hotkeys.size())
     {
-        return make_stringf(" %s %c %s",
+        return make_stringf(" %s %c ",
             keycode_to_name(hotkeys[0]).c_str(),
-            preselected ? '+' : '-',
-            text.c_str());
+            preselected ? '+' : '-');
     }
     else if (level == MEL_ITEM && indent_no_hotkeys)
-        return "     " + text;
+        return "     ";
     else
-        return text;
+        return "";
+}
+
+string MenuEntry::get_text() const
+{
+    return _get_text_preface() + text;
+}
+
+void MenuEntry::wrap_text(int width)
+{
+    // Warning: console menus cannot handle multiline regular entries, use for
+    // the title only (TODO)
+    const int indent
+#ifdef USE_TILE_LOCAL
+        = 0; // tiles does line-wrapping inside the text
+#else
+        = static_cast<int>(_get_text_preface().size());
+    width -= indent;
+#endif
+    if (width <= 0)
+        return;
+    linebreak_string(text, width, true, indent);
 }
 
 MonsterMenuEntry::MonsterMenuEntry(const string &str, const monster_info* mon,
@@ -3000,7 +3022,7 @@ void column_composer::compose_formatted_column(
     }
 }
 
-int linebreak_string(string& s, int maxcol, bool indent)
+int linebreak_string(string& s, int maxcol, bool indent, int force_indent)
 {
     // [ds] Don't loop forever if the user is playing silly games with
     // their term size.
@@ -3012,7 +3034,7 @@ int linebreak_string(string& s, int maxcol, bool indent)
 
     while (!s.empty())
     {
-        res += wordwrap_line(s, maxcol, true, indent);
+        res += wordwrap_line(s, maxcol, true, indent, force_indent);
         if (!s.empty())
         {
             res += "\n";

@@ -32,7 +32,7 @@ string uppercase_first(string);
 int ends_with(const string &s, const char * const suffixes[]);
 
 string wordwrap_line(string &s, int cols, bool tags = false,
-                     bool indent = false);
+                     bool indent = false, int force_indent=-1);
 
 string strip_filename_unsafe_chars(const string &s);
 

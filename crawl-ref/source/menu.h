@@ -162,6 +162,7 @@ public:
     }
 
     virtual string get_text() const;
+    void wrap_text(int width=MIN_COLS);
 
     virtual int highlight_colour() const
     {
@@ -193,6 +194,9 @@ public:
     virtual bool get_tiles(vector<tile_def>& tileset) const;
 
     virtual void add_tile(tile_def tile);
+
+protected:
+    virtual string _get_text_preface() const;
 };
 
 class ToggleableMenuEntry : public MenuEntry
@@ -520,7 +524,7 @@ private:
     vector<formatted_string> flines;
 };
 
-int linebreak_string(string& s, int maxcol, bool indent = false);
+int linebreak_string(string& s, int maxcol, bool indent = false, int force_indent=-1);
 string get_linebreak_string(const string& s, int maxcol);
 formatted_string pad_more_with(formatted_string s,
                                     const formatted_string &pad, int min_width=MIN_COLS);
