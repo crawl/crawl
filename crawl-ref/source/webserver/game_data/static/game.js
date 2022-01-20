@@ -143,6 +143,7 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
            possible_input.focus();
 
         // Input helper for mobile browsers
+        // XX should this really happen in `layout`?
         if (!client.is_watching())
         {
             var mobile_input = options.get("tile_web_mobile_input_helper");

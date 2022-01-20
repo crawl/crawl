@@ -1044,7 +1044,7 @@ canvas {
 
 .ui-popup-outer {
     margin: 50px;
-    max-height: calc(100vh - 100px);
+    max-height: calc(95vh - 100px);
 
     padding: 20px;
     background-color: #040204;
@@ -1063,7 +1063,7 @@ canvas {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    max-height: calc(100vh - 100px - 46px); /* for IE11 */
+    max-height: calc(95vh - 100px - 46px); /* for IE11 */
 }
 .ui-popup-inner:after {
     display: block;
@@ -1137,10 +1137,10 @@ canvas {
     }
     .ui-popup-outer {
         margin: 20px;
-        max-height: calc(100vh - 40px);
+        max-height: calc(95vh - 40px);
     }
     .ui-popup-inner {
-        max-height: calc(100vh - 40px - 46px);
+        max-height: calc(95vh - 40px - 46px);
     }
 }
 
