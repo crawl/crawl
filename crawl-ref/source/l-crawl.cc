@@ -292,36 +292,6 @@ static int crawl_yesno(lua_State *ls)
     return 1;
 }
 
-/*** Ask the player a yes/no/quit question.
- * Mostly like yesno(), but doesn't support as many
- * parameters in this Lua binding.
- * @tparam string prompt question for the user
- * @tparam boolean safe accept lowercase answers
- * @tparam[opt] string|nil safeanswer if a letter, this will be considered a
- * safe default
- * @tparam[optchain=false] boolean allow_all actually ask a yes/no/quit/all
- * question
- * @tparam[optchain=true] boolean clear_after clear the question after the user
- * answers
- * @function yesnoquit
- */
-static int crawl_yesnoquit(lua_State *ls)
-{
-    const char *prompt = luaL_checkstring(ls, 1);
-    const bool safe = lua_toboolean(ls, 2);
-    const int safeanswer = _lua_char(ls, 3);
-    const bool allow_all =
-        lua_isnone(ls, 4) ? false : lua_toboolean(ls, 4);
-    const bool clear_after =
-        lua_isnone(ls, 5) ? true : lua_toboolean(ls, 5);
-
-    // Skipping the other params until somebody needs them.
-
-    lua_pushnumber(ls, yesnoquit(prompt, safe, safeanswer, allow_all,
-                                 clear_after));
-    return 1;
-}
-
 static void crawl_sendkeys_proc(lua_State *ls, int argi)
 {
     if (lua_isstring(ls, argi))
@@ -1496,7 +1466,6 @@ static const struct luaL_reg crawl_clib[] =
     { "get_target",         crawl_get_target },
     { "getch",              crawl_getch },
     { "yesno",              crawl_yesno },
-    { "yesnoquit",          crawl_yesnoquit },
     { "kbhit",              crawl_kbhit },
     { "flush_input",        crawl_flush_input },
     { "sendkeys",           crawl_sendkeys },
