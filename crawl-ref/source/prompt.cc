@@ -70,7 +70,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
     use_popup = use_popup && str && allow_popup;
 #endif
 
-    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE;
+    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
     if (allow_lowercase && use_popup)
         flags |= MF_ARROWS_SELECT;
     Menu pop(flags, "", KMC_CONFIRM);
