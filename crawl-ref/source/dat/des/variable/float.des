@@ -1713,52 +1713,88 @@ ENDMAP
 #
 NAME:    lemuel_vampire_tower
 TAGS:    no_monster_gen no_pool_fixup
-DEPTH:   D:12-, Depths, !Depths:$, Crypt
+DEPTH:   D:10-, Depths, Crypt
 ORIENT:  float
-MONS:    rat / w:6 river rat / w:3 hell rat / w:20 bat
-MONS:    wolf / spectral wolf w:2 / hell hound w:12 / raiju w:2
-MONS:    flying skull, phantasmal warrior / jiangshi
-MONS:    human zombie, frost giant zombie / fire giant zombie, vampire
-KMONS:   8 = vampire mage
-KMONS:   9 = vampire knight
-KMONS:   0 = Jory, dancing weapon ; demon blade good_item
-KITEM:   > = any good_item
-KFEAT:   > = >
-KFEAT:   ; = altar_yredelemnul / altar_kikubaaqudgha
-SHUFFLE: defg
-SUBST:   d = +, efg = x
-NSUBST:  1 = 10:1 / 8 = 1. / *:.
-: if you.absdepth() < 18 then
-SUBST:   1 : 1:30 3, 2 = 3
+{{
+local egos = {["vampirism"] = 1, ["draining"] = 1}
+local vamp_def = "vampire knight ; " ..
+    dgn.monster_weapon("knight", egos, "randart") ..
+    " . tower shield good_item | tower shield randart w:5" ..
+    " . plate armour good_item | plate armour randart w:5" ..
+    "     | shadow dragon scales good_item | shadow dragon scales randart"
+}}
+KITEM:   _ = superb_item
+KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
+SHUFFLE: apqr
+SUBST:   a = +, pqr = x
+NSUBST:  1 = 10=1 / 8=1. / .
+: if you.in_branch("D") then
+:    if you.depth() < 13 then
+MONS:    hell rat / vampire mosquito / skeleton / zombie / spectral thing w:5 \
+         / simulacrum w:5
+MONS:    warg / hell hound w:2
+MONS:    flying skull
+MONS:    basilisk / spectral black mamba / black mamba simulacrum \
+         / spectral boulder beetle / boulder beetle simulacrum /
+MONS:    wraith
+MONS:    shadow
+MONS:    vampire
+:    else
+MONS:    skeleton / zombie / flying skull / wraith / spectral thing \
+         / simulacrum
+MONS:    hell hound
+MONS:    freezing wraith
+MONS:    spectral wolf spider / wolf spider simulacrum / spectral ice dragon \
+         / ice dragon simulacrum / spectral deep troll / deep troll simulacrum
+MONS:    vampire / necromancer w:5
+MONS:    skeletal warrior / death knight
+MONS:    vampire knight
+:    end
+: elseif you.in_branch("Crypt") then
+MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    jiangshi / hell beast / doom hound w:2
+MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
+MONS:    spectre place:Crypt:$
+MONS:    vampire mage / deep elf death mage w:5
+MONS:    revenant / eidolon / lich w:5
+# Either Jory or a vampire knight with fancy equipment.
+: kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
+# Depths
 : else
-# Downward order required to cleanly upgrade the monster set.
-SUBST:   3 = 4, 2 = 3, 1 : 2:30 3
-SUBST:   9 = 0, 8 = 9, 7 = 89, 5 = 6
+MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    jiangshi / hell beast / doom hound w:2
+MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
+MONS:    spectral golden dragon / golden dragon simulacrum \
+         / spectral caustic shrike / caustic shrike simulacrum \
+         / spectral juggernaut / juggernaut simulacrum
+MONS:    vampire mage / deep elf death mage w:5
+MONS:    revenant / eidolon / lich w:5
+: kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
 : end
-SUBST:   w : ww...
+SUBST:   D = 56
 MAP
-x..wwwwwwwwwwwwwwwww..x
-..wwwwwwwwwwwwwwwwwww..
+G..wwwwwWwwWwwWwwwww..G
+..wwwwwWwwwWwwwWwwwww..
 .wWw111xxxx+xxxx111wWw.
-www113xxx22522xxx311www
-ww111xx.+25752+.xx111ww
-ww13dx..ccccccc..xe31ww
-ww1xx..ccc|>|ccc..xx1ww
-wwxx..ccccc9ccccc..xxww
-wwx..ccc55+7+55ccc..xww
+www113xxx22422xxx311www
+ww111xx.+24542+.xx111ww
+ww13ax..ccccccc..xp31ww
+ww1xx..ccc|_|ccc..xx1ww
+wWxx..ccccc7ccccc..xxWw
+Wwx..ccc44+6+44ccc..xwW
 wwx.ccccccc+ccccccc.xww
-wwx.c***x.....ccccc7xww
-wwx.c***+..8..ccccc.xww
-wwx7cc**x7.;.7ccccc.xww
-wwx..ccxx.....cccc..xww
-wwxx..ccx..7..ccc..xxww
+wwx.c***c..D..ccccc5xww
+wwx.c***+.....ccccc.xww
+wwx5cc**cD.Y.Dccccc.xww
+Wwx..cccc.....cccc..xwW
+wWxx..ccc..D..ccc..xxWw
 ww1xx..cc.....cc..xx1ww
-ww13fx..ccc.ccc..xg31ww
+ww13qx..ccc.ccc..xr31ww
 ww111xx..cc+cc..xx111ww
 www113xx..333..xx311www
 .wWw111xxxxxxxxx111wWw.
-..wwwwwwwwwwwwwwwwwww..
-x..wwwwwwwwwwwwwwwww..x
+..wwwwwWwwwwwwwWwwwww..
+G..wwwwwWwwwwwWwwwww..G
 ENDMAP
 
 ##############################################################################
