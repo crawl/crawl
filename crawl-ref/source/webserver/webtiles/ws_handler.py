@@ -96,7 +96,14 @@ def write_dgl_status_file():
                         for socket in list(sockets)
                         if socket.username and socket.is_running()]
     try:
-        with open(config.get('dgl_status_file'), "w") as f:
+        status_target = config.get('dgl_status_file')
+        status_dir = os.path.dirname(status_target)
+        # generally created by other things sooner or later, but if we don't do
+        # this preemptively here, there's lot of warnings until that happens.
+        if not os.path.exists(status_dir):
+            os.makedirs(status_dir)
+            logging.warning("Creating dgl status file location '%s'", status_dir)
+        with open(status_target, "w") as f:
             f.write("\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
