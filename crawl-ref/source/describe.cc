@@ -2955,6 +2955,11 @@ static vector<command_type> _allowed_actions(const item_def& item)
         return actions;
     }
 
+    // this is a copy, we can't do anything with it. (Probably via stash
+    // search.)
+    if (!valid_item_index(item.index())
+        return actions;
+
     // XX CMD_ACTIVATE
     switch (item.base_type)
     {
@@ -2972,7 +2977,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
     if (!in_inventory(item))
     {
         // guaranteed to be at the player's position
-        if (!item_is_stationary(item) && valid_item_index(item.index()))
+        if (!item_is_stationary(item))
             actions.push_back(CMD_PICKUP);
         return actions;
     }
