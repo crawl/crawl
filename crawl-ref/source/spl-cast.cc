@@ -163,7 +163,6 @@ static string _spell_extra_description(spell_type spell, bool viewing)
          << chop_string(spell_noise_string(spell, 10), 14);
 
     desc << "</" << colour_to_str(highlight) <<">";
-    fprintf(stderr, "desc '%s'\n", desc.str().c_str());
 
     return desc.str();
 }
