@@ -2957,7 +2957,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
 
     // this is a copy, we can't do anything with it. (Probably via stash
     // search.)
-    if (!valid_item_index(item.index())
+    if (!valid_item_index(item.index()))
         return actions;
 
     // XX CMD_ACTIVATE
