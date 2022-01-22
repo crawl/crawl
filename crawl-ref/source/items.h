@@ -172,6 +172,8 @@ object_class_type get_random_item_mimic_type();
 bool maybe_identify_base_type(item_def &item);
 int count_movable_items(int obj);
 
+bool valid_item_index(int i);
+
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.

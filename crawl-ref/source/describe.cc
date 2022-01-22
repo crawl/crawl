@@ -2972,7 +2972,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
     if (!in_inventory(item))
     {
         // guaranteed to be at the player's position
-        if (!item_is_stationary(item))
+        if (!item_is_stationary(item) && valid_item_index(item.index()))
             actions.push_back(CMD_PICKUP);
         return actions;
     }
@@ -3156,7 +3156,7 @@ static bool _do_action(item_def &item, const command_type action)
         }
         break;
     case CMD_PICKUP:
-        ASSERT(!in_inventory(item));
+        ASSERT(!in_inventory(item) && valid_item_index(item.index()));
         pickup_single_item(item.index(), item.quantity);
         return false;
     case CMD_READ:             read(&item);         return false;

@@ -3379,6 +3379,11 @@ int item_def::index() const
     return this - env.item.buffer();
 }
 
+bool valid_item_index(int i)
+{
+    return i >= 0 && i < MAX_ITEMS;
+}
+
 int item_def::armour_rating() const
 {
     if (!defined() || base_type != OBJ_ARMOUR)
