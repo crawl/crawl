@@ -2743,7 +2743,7 @@ static bool _do_feat_action(const coord_def &pos, const command_type action)
         if (dest.is_valid())
         {
             show_map(dest, true, true);
-            return false; // or true?
+            return true;
         }
         break;
     }
