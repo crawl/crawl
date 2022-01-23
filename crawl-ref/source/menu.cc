@@ -662,6 +662,13 @@ void UIMenu::_allocate_region()
     }
     if (!m_initial_hover_snap)
     {
+        // TODO: because it is initial this does the minimum snap to ensure
+        // the entry is visible, which can leave it the last on the page. This
+        // is exactly what we want for things like pgdn, but it may not be
+        // what a caller wants for an initial snap -- maybe do some extra
+        // scrolling for this case? (A caller can manually set the scroll, but
+        // this is tricky for some use cases because they won't know the menu
+        // height.)
         if (m_menu->last_hovered >= 0)
             m_menu->snap_in_page(m_menu->last_hovered);
         m_initial_hover_snap = true;
@@ -1207,12 +1214,13 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
         m_ui.scroller->set_scroll(INT_MAX);
         if (is_set(MF_INIT_HOVER))
         {
+            // MF_START_AT_END overrides a manually set initial hover
             set_hovered(static_cast<int>(items.size()) - 1);
             if (items[last_hovered]->level != MEL_ITEM)
                 cycle_hover(true);
         }
     }
-    else if (is_set(MF_INIT_HOVER))
+    else if (is_set(MF_INIT_HOVER) && last_hovered < 0)
         cycle_hover();
 
     do_menu();
@@ -2643,6 +2651,7 @@ int Menu::next_block_from(int index, bool forward, bool wrap) const
 
 bool Menu::cycle_headers(bool forward)
 {
+    // XX this doesn't work quite right if called before the menu is displayed
     int start = is_set(MF_ARROWS_SELECT) ? max(last_hovered, 0)
                                          : get_first_visible();
     start = get_header_block(start).first;

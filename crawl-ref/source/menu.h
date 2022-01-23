@@ -370,6 +370,11 @@ public:
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
     void cycle_hover(bool reverse=false);
+    virtual bool page_down();
+    virtual bool line_down();
+    virtual bool page_up();
+    virtual bool line_up();
+    bool cycle_headers(bool forward=true);
 
     bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
 
@@ -449,11 +454,6 @@ protected:
 
     virtual formatted_string calc_title();
     void update_more();
-    virtual bool page_down();
-    virtual bool line_down();
-    virtual bool page_up();
-    virtual bool line_up();
-    bool cycle_headers(bool forward=true);
     pair<int,int> get_header_block(int index) const;
     int next_block_from(int index, bool forward, bool wrap) const;
 

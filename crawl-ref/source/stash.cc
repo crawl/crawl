@@ -1671,6 +1671,7 @@ bool StashTracker::display_search_results(
     StashMenuEntry *first_hdr = nullptr;
 
     menu_letter hotkey;
+    int initial_snap = -1;
     for (stash_search_result &res : *results)
     {
         ostringstream matchtitle;
@@ -1699,6 +1700,7 @@ bool StashTracker::display_search_results(
             ASSERT(first_hdr);
             first_hdr->text += cycle_keyhelp;
             need_there_subtitle = false;
+            initial_snap = static_cast<int>(stashmenu.item_count());
         }
 
         if (!res.in_inventory)
@@ -1769,6 +1771,8 @@ bool StashTracker::display_search_results(
         stashmenu.add_entry(me);
         hotkey++;
     }
+    if (initial_snap > 0)
+        stashmenu.set_hovered(initial_snap);
 
     stashmenu.on_single_selection = [&stashmenu, &search, &nohl](const MenuEntry& item)
     {
