@@ -189,6 +189,16 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
     }
 }
 
+static void _give_throwing_ammo(int mult)
+{
+    if (species::can_throw_large_rocks(you.species))
+        newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, mult);
+    else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
+        newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, mult * 2);
+    else
+        newgame_make_item(OBJ_MISSILES, MI_JAVELIN, mult);
+}
+
 static void _give_job_spells(job_type job)
 {
     vector<spell_type> spells = get_job_spells(job);
@@ -275,7 +285,7 @@ void give_items_skills(const newgame_def& ng)
         you.religion = GOD_LUGONU;
         if (!crawl_state.game_is_sprint())
             you.chapter = CHAPTER_POCKET_ABYSS;
-        you.piety = 38;
+        you.piety = 60;
 
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
@@ -307,6 +317,8 @@ void give_items_skills(const newgame_def& ng)
     give_job_equipment(you.char_class);
     give_job_skills(you.char_class);
     _give_job_spells(you.char_class);
+    if (you.char_class == JOB_GLADIATOR)
+        _give_throwing_ammo(2);
 
     if (you.has_mutation(MUT_NO_GRASPING))
         you.skills[SK_THROWING] = 0;

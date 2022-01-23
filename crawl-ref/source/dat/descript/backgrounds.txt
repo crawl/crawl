@@ -16,8 +16,8 @@ vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers start with two wands, a magic chesspiece, and a club. They'll need
-to find better weapons and armour before their wands run out.
+Artificers start with a few magic wands and a club. They'll need to find better
+weapons and armour before their wands run out.
 %%%%
 Berserker
 
@@ -55,12 +55,12 @@ spell. More earthen spells are in their set of starting spells.
 Enchanter
 
 Enchanters know a variety of Hexes that can incapacitate their foes, and are
-equipped with an enchanted dagger and a potion of invisibility.
+equipped with an enchanted dagger and potions of invisibility.
 %%%%
 Fighter
 
 Fighters are equipped with armour and shield, as well as a weapon of their
-choice and a potion of might.
+choice and potions of might.
 %%%%
 Fire Elementalist
 
@@ -69,8 +69,8 @@ are likewise focused on fiery destruction.
 %%%%
 Gladiator
 
-Gladiators are ready for the arena with light armour, nets, and a weapon of
-their choice.
+Gladiators are ready for the arena with light armour, a weapon of their choice,
+and a few throwing weapons and nets.
 %%%%
 Hedge Wizard
 
@@ -79,7 +79,8 @@ bewildered foes.
 %%%%
 Hunter
 
-Hunters are equipped with light armour and a ranged weapon of their choice.
+Hunters carry a ranged weapon of their choice, and are also equipped with light
+armour and a throwing net.
 %%%%
 Ice Elementalist
 
@@ -88,8 +89,8 @@ library are quite versatile.
 %%%%
 Monk
 
-Monks start with a simple weapon of their choice, and gain additional piety
-with the first god they worship.
+Monks start with a simple weapon of their choice and potions of divine ambrosia,
+and gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
@@ -117,6 +118,6 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice and a scroll of blinking. They
-begin with a number of Translocations spells in their library.
+Warpers start with a weapon of their choice, a scroll of blinking, boomerangs
+of dispersal, and some Translocation spells in their library.
 %%%%

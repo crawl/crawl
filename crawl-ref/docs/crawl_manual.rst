@@ -1976,24 +1976,21 @@ Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
   Fighters usually start with a good weapon of their choice, a suit of medium
-  armour, a shield, and a potion of might. They have a good general grounding
-  in the arts of fighting.
+  armour, a shield, and potions of might.
 
 Gladiators
-  The Gladiator has been trained to fight in the ring, and so is versed in the
-  arts of fighting, but is not so good at anything else. In fact, Gladiators
-  have never learned anything except bashing monsters with heavy things. They
-  start with a weapon of their choice, light armour, headgear and some nets.
+  The Gladiator has been trained to fight in the ring. They start with a good
+  weapon of their choice, light armour, headgear and some throwing weapons and
+  nets.
 
 Monks
-  The Monk is a member of an ascetic order dedicated to the perfection of one's
-  body and soul through the discipline of the martial arts. Monks start with
-  only a simple weapon of their choice and a robe. When they choose a god for
-  the first time, their spiritual training gives them a piety boost.
+  Monks have a head start with the divine. They start with only a simple weapon
+  of their choice, potions of divine ambroia, and a robe, but when they choose
+  a god for the first time, their spiritual training gives them a piety boost.
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with a ranged weapon of their choice and a set of leathers.
+  starts with a ranged weapon of their choice, a net, and a set of leathers.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using
@@ -2007,17 +2004,13 @@ Adventurers have varied and idiosyncratic skills that they have picked up in
 their travels.
 
 Artificers
-  Artificers are attuned to gadgets, mechanics and magic elicited from arcane
-  items, as opposed to casting magic themselves. As a consequence, they enter
-  the Dungeon with an assortment of wands. Artificers are skilled at evoking
-  magical items, and also understand the basics of melee combat.
+  Artificers have built, bought or burgled an assortment of magic wands to
+  help them through the early Dungeon. Wands have a limited number of uses,
+  though, so they'll want to upgrade from their short sword ASAP.
 
 Wanderers
-  Wanderers are people who have not learned a specific trade. Instead, they've
-  travelled around becoming "jacks-of-all-trades, masters of none". They start
-  the game with a random assortment of skills and maybe some small items and
-  spells they picked up along the way, but, other than that, they're pretty much
-  on their own.
+  Wanderers are "jacks-of-all-trades, masters of none". They start the game
+  with a random assortment of skills, items, and maybe spells.
 
 Delvers
   Delvers have, through some mishap, found themselves several floors below the
@@ -2047,7 +2040,7 @@ Chaos Knights
   The Chaos Knight is a plaything of Xom, subject to the god's constantly
   changing moods. Xom is a very unpredictable (and possibly psychotic) entity
   who rewards or punishes according to whim. They begin with a lightly enchanted
-  leather armour, and a simple weapon of their choice.
+  leather armour, a simple weapon of their choice, and one of Xom's toys.
 
 Cinder Acolytes
   Cinder Acolytes serve Ignis, the Dying Flame, who grants them incredible
@@ -2059,13 +2052,14 @@ Warrior-mage backgrounds
 ========================
 
 Warrior mages begin the game with a mix of physical combat and magic skills,
-though usually excel at neither. They start with a book of spells, and usually
-with some way of defending themselves.
+though usually excel at neither. They start with a library of spells and
+(usually) some way of defending themselves.
 
 Transmuters
   Transmuters specialise in transmutation magic, and can cause strange changes
   in themselves and others. They deal damage primarily in unarmed combat, often
   using transformations to enhance their defensive and offensive capabilities.
+  They also enter the dungeon with a potion of lignification.
 
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
@@ -2077,14 +2071,14 @@ Warpers
 Arcane Marksmen
   Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
   attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a ranged weapon of their
-  choice, some spells to support its use, and a robe.
+  They begin the game with a ranged weapon of their choice, some spells to
+  support its use, a few dispersal boomerangs, and a robe.
 
 Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly
   damaging foes, hexes disable and debilitate them, allowing the Enchanter to
   finish the helpless creatures in combat. The Enchanter begins with a lightly
-  enchanted dagger, a robe, a potion of invisibility, and a selection of hexes.
+  enchanted dagger, a robe, potions of invisibility, and a selection of hexes.
 
 Mage backgrounds
 ================
@@ -2092,8 +2086,8 @@ Mage backgrounds
 A mage is not an available character background by itself, but a type of
 background, encompassing Hedge Wizards, Conjurers, Summoners, Necromancers,
 various Elementalists and Venom Mages. Mages are the best at using magic.
-Among other things, they start with a robe and a selection of spells which
-should see them through the first several levels.
+Among other things, they start with a robe, a potion of magic, and spells
+which should see them through the first several levels of the Dungeon.
 
 Hedge Wizards
   A Hedge Wizard is a magician who does not specialise in any area of magic.
