@@ -667,6 +667,7 @@ class UIMapView : public ui::Widget
 public:
     UIMapView(level_pos& lpos, levelview_excursion& le, bool travel_mode,
               bool allow_offlevel)
+        : m_reentry(false)
     {
         m_state.lpos = lpos;
         m_state.features = &m_features;
