@@ -312,14 +312,17 @@ static short _min_rot(const item_def &item)
 // stash-tracking pre/suffixes.
 string Stash::stash_item_name(const item_def &item)
 {
-    string name = item.name(DESC_A);
-
+    string name;
     if (in_inventory(item))
     {
+        name = item.name(DESC_INVENTORY_EQUIP); // add `(worn)`, etc
         // use [] to match with the location info
         name.insert(0, "[carried] ");
         return name;
     }
+    else
+        name = item.name(DESC_A);
+
 
     if (!_is_rottable(item))
         return name;
