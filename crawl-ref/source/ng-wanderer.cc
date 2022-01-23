@@ -899,6 +899,10 @@ void create_wanderer()
     _add_spells(spells, _wanderer_decent_equipment(gift_skill_3, gift_skills));
     gift_skills.insert(gift_skill_3);
 
+    // Give out an extra consumable, to ensure we have some kind of early game
+    // tactical option.
+    coinflip() ? _good_potion_or_scroll() : _decent_potion_or_scroll();
+
     // guarantee some spell levels if we get spells
     if (!spells.empty())
     {
