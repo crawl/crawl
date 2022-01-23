@@ -5494,9 +5494,6 @@ int monster::energy_cost(energy_use_type et, int div, int mult)
 void monster::lose_energy(energy_use_type et, int div, int mult)
 {
     speed_increment -= energy_cost(et, div, mult);
-    // Awful old random energy logic. TODO: REMOVEME
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        speed_increment -= random2(3) - 1;
 }
 
 /**
