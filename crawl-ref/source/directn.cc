@@ -778,7 +778,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             coord_def c(x,y);
 
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-                describe_feature_wide(c);
+                describe_feature_wide(c, true);
             else // ACT_EXECUTE -> view/travel
                 target = c;
         }
