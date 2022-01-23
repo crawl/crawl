@@ -151,6 +151,8 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
             {
                 $("#mobile_input").show();
                 $("#mobile_input input")
+                    .off("keydown")
+                    .on("keydown", handle_mobile_keydown)
                     .off("input")
                     .on("input", handle_mobile_input)
                     .off("mousedown focusout")
@@ -352,6 +354,22 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
     {
         e.target.value = e.target.defaultValue;
         comm.send_message("input", { text: e.originalEvent.data });
+    }
+
+    function handle_mobile_keydown(e)
+    {
+        // translate backspace/delete to esc -- the backspace key is almost
+        // entirely unused outside of text input, and the lack of esc on a
+        // mobile keyboard is really painful. Text input doesn't go through
+        // this input, so that case is fine. (One minor case is the macro
+        // edit menu, but there's at least an alternate way to clear a
+        // binding.)
+        if (e.which == 8 || e.which == 46)
+        {
+            comm.send_message("key", { keycode: 27 });
+            e.preventDefault();
+            return false;
+        }
     }
 
     function mobile_input_focus_style(focused)
