@@ -2542,7 +2542,7 @@ namespace quiver
         return(set(make_shared<action>()));
     }
 
-    static vector<shared_ptr<action>> _menu_quiver_order()
+    static vector<shared_ptr<action>> _menu_quiver_item_order()
     {
         vector<shared_ptr<action>> actions;
         // TODO: this is kind of ugly
@@ -2553,13 +2553,9 @@ namespace quiver
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
         return actions;
     }
+
 
     static bool _any_spells_to_quiver(bool at_all)
     {
@@ -2604,15 +2600,14 @@ namespace quiver
     public:
         ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                    | MF_ARROWS_SELECT | MF_WRAP),
+                    | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER),
               cur_quiver(_quiver), allow_empty(_allow_empty),
               any_spells(_any_spells_to_quiver(true)),
               any_abilities(_any_abils_to_quiver(true)),
               // regular species can force-quiver any (non-equipped) item, but
               // felids have a more limited selection, so we need to directly
               // calculate it.
-              any_items(_any_items_to_quiver(true)),
-              actions(_menu_quiver_order())
+              any_items(_any_items_to_quiver(true))
         {
             set_tag("actions");
             set_title(new MenuEntry("", MEL_TITLE));
@@ -2622,6 +2617,7 @@ namespace quiver
                     // XX can this use indices rather than pointers?
                     const shared_ptr<quiver::action> *a =
                         static_cast<shared_ptr<quiver::action> *>(item.data);
+                    ASSERT(a);
                     return !set_to_quiver(*a);
                 };
 
@@ -2660,37 +2656,80 @@ namespace quiver
         }
 
     protected:
+        void add_action(const shared_ptr<quiver::action> &a, menu_letter hotkey)
+        {
+            if (!a || !a->is_valid())
+                return;
+            string action_desc = a->quiver_description();
+            if (*you.launcher_action.get() == *a)
+                action_desc += " (quivered ammo)";
+            else if (you.quiver_action.item_is_quivered(a->get_item()))
+                action_desc += " (quivered)";
+            MenuEntry *me = new MenuEntry(action_desc,
+                                                MEL_ITEM, 1,
+                                                (int) hotkey);
+            me->colour = a->quiver_color();
+            me->data = (void *) &a; // pointer to vector element - don't change the vector!
+#ifdef USE_TILE
+            for (auto t : a->get_tiles())
+                me->add_tile(t);
+#endif
+            add_entry(me);
+        }
+
         void populate()
         {
             menu_letter hotkey;
+            actions = _menu_quiver_item_order();
+            const auto spell_actions =
+                    spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
+            const auto abil_actions =
+                    ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
+
+            // don't bother with headers unless at least two categories are
+            // present
+            const bool show_headers = (!actions.empty() + !spell_actions.empty()
+                                        + !abil_actions.empty()) > 1;
+            const auto item_count = actions.size();
+            const auto spell_count = spell_actions.size();
+            actions.insert(actions.end(), spell_actions.begin(), spell_actions.end());
+            actions.insert(actions.end(), abil_actions.begin(), abil_actions.end());
+
+            // this key shortcut does still work without arrow selection, but
+            // it typically doesn't do much in this menu.
+            const string keyhelp = is_set(MF_ARROWS_SELECT)
+                ? " <lightgrey>([<w>,</w>] to cycle)</lightgrey>" : "";
+            if (item_count && show_headers)
+            {
+                add_entry(
+                    new MenuEntry("<lightcyan>Items</lightcyan>" + keyhelp,
+                    MEL_SUBTITLE));
+            }
+            size_t i = 0;
             for (const auto &a : actions)
             {
-                if (!a || !a->is_valid())
-                    continue;
-                string action_desc = a->quiver_description();
-                if (*you.launcher_action.get() == *a)
-                    action_desc += " (quivered ammo)";
-                else if (you.quiver_action.item_is_quivered(a->get_item()))
-                    action_desc += " (quivered)";
-                MenuEntry *me = new MenuEntry(action_desc,
-                                                    MEL_ITEM, 1,
-                                                    (int) hotkey);
-                // TODO: is there a way to show formatting in menu items?
-                me->colour = a->quiver_color();
-                me->data = (void *) &a; // pointer to vector element - don't change the vector!
-    #ifdef USE_TILE
-                for (auto t : a->get_tiles())
-                    me->add_tile(t);
-    #endif
-                add_entry(me);
+                if (i == item_count && spell_count && show_headers)
+                {
+                    add_entry(
+                        new MenuEntry("<lightcyan>Spells</lightcyan>" + keyhelp,
+                        MEL_SUBTITLE));
+                }
+                else if (i == item_count + spell_count && show_headers)
+                {
+                    add_entry(
+                        new MenuEntry("<lightcyan>Abilities</lightcyan>" + keyhelp,
+                        MEL_SUBTITLE));
+                }
+                add_action(a, hotkey);
                 hotkey++;
+                i++;
             }
+
             if (actions.size() == 0)
             {
                 set_more(formatted_string::parse_string(
                     "<lightred>No regular actions available to quiver.</lightred>"));
             }
-
         }
 
         bool _choose_from_inv()
@@ -2744,6 +2783,11 @@ namespace quiver
                 mprf("Clearing quiver.");
                 return false;
             }
+            else if (key == ',')
+            {
+                cycle_headers();
+                return true;
+            }
             else if (isadigit(key))
             {
                 item_def *item = digit_inscription_to_item(key, OPER_QUIVER);
@@ -2785,13 +2829,13 @@ namespace quiver
             vector<string> extra_cmds;
 
             if (allow_empty)
-                extra_cmds.push_back("<w>-</w>: none");
+                extra_cmds.push_back("[<w>-</w>] none");
             if (any_items)
-                extra_cmds.push_back("<w>*/%</w>: inventory");
+                extra_cmds.push_back("[<w>*/%</w>] inventory");
             if (any_spells)
-                extra_cmds.push_back("<w>&</w>: spells");
+                extra_cmds.push_back("[<w>&</w>] spells");
             if (any_abilities)
-                extra_cmds.push_back("<w>^</w>: abilities");
+                extra_cmds.push_back("[<w>^</w>] abilities");
             if (extra_cmds.size())
                 s += "(" + join_strings(extra_cmds.begin(), extra_cmds.end(), ", ") + ")";
             return formatted_string::parse_string(s);
