@@ -122,7 +122,8 @@ public:
         hotkeys(), level(lev), preselected(preselect),
         indent_no_hotkeys(false),
         data(nullptr),
-        on_select(action)
+        on_select(action),
+        m_enabled(true)
     {
         colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
                   lev == MEL_SUBTITLE ?  BLUE  :
@@ -140,6 +141,9 @@ public:
 
     virtual ~MenuEntry() { }
 
+    bool is_enabled() const { return m_enabled; }
+    void set_enabled(bool b) { m_enabled = b; }
+
     bool operator<(const MenuEntry& rhs) const
     {
         return text < rhs.text;
@@ -153,12 +157,18 @@ public:
 
     bool is_hotkey(int key) const
     {
-        return find(hotkeys.begin(), hotkeys.end(), key) != hotkeys.end();
+        return is_enabled()
+            && find(hotkeys.begin(), hotkeys.end(), key) != hotkeys.end();
+    }
+
+    int hotkeys_count() const
+    {
+        return is_enabled() ? static_cast<int>(hotkeys.size()) : 0;
     }
 
     bool is_primary_hotkey(int key) const
     {
-        return hotkeys.size() && hotkeys[0] == key;
+        return hotkeys_count() && hotkeys.size() && hotkeys[0] == key;
     }
 
     virtual string get_text() const;
@@ -197,6 +207,7 @@ public:
 
 protected:
     virtual string _get_text_preface() const;
+    bool m_enabled;
 };
 
 class ToggleableMenuEntry : public MenuEntry
@@ -374,7 +385,7 @@ public:
     virtual bool line_down();
     virtual bool page_up();
     virtual bool line_up();
-    bool cycle_headers(bool forward=true);
+    virtual bool cycle_headers(bool forward=true);
 
     bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
 

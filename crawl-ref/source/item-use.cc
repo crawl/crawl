@@ -82,7 +82,7 @@ class UseItemMenu : public InvMenu
     void populate_list();
     void populate_menu();
     bool process_key(int key) override;
-    void repopulate_menu();
+    void update_sections();
 
 public:
     bool display_all;
@@ -107,12 +107,18 @@ public:
     void toggle_display_all();
     void toggle_inv_or_floor();
     void set_hovered(int hovered) override;
+    bool cycle_headers(bool=true) override;
+
+private:
+    MenuEntry *inv_header;
+    MenuEntry *floor_header;
 };
 
 UseItemMenu::UseItemMenu(int item_type, const char* prompt)
     : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER),
                             display_all(false), is_inventory(true),
-      item_type_filter(item_type), last_inv_pos(-1)
+      item_type_filter(item_type), last_inv_pos(-1),
+      inv_header(nullptr), floor_header(nullptr)
 {
     set_tag("use_item");
     set_title(prompt);
@@ -160,7 +166,8 @@ void UseItemMenu::populate_menu()
     else if (item_floor.empty())
         is_inventory = true;
 
-    // Entry for unarmed
+    // Entry for unarmed. Hotkey works for either subsection, though selecting
+    // it (currently) enables the inv section.
     if (item_type_filter == OSEL_WIELD)
     {
         string hands_title = " -   unarmed";
@@ -174,33 +181,17 @@ void UseItemMenu::populate_menu()
         // items.
         if (!item_floor.empty())
         {
-            string subtitle_text = "Inventory Items";
-            if (!is_inventory)
-                subtitle_text += " (',' to select)";
-            auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
-            subtitle->colour = LIGHTGREY;
-            add_entry(subtitle);
+            inv_header = new MenuEntry("Inventory Items", MEL_TITLE);
+            inv_header->colour = LIGHTCYAN;
+            add_entry(inv_header);
         }
-
-        if (is_inventory)
-        {
-            load_items(item_inv,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            // hacky: remove the class hotkey
-                            entry->hotkeys.pop_back();
-                            return entry;
-                        });
-        }
-        else
-        {
-            load_items(item_inv,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            entry->hotkeys.clear();
-                            return entry;
-                        });
-        }
+        load_items(item_inv,
+                    [&](MenuEntry* entry) -> MenuEntry*
+                    {
+                        // hacky: remove the class hotkey
+                        entry->hotkeys.pop_back();
+                        return entry;
+                    });
     }
     last_inv_pos = items.size() - 1;
 
@@ -211,44 +202,22 @@ void UseItemMenu::populate_menu()
         if (!item_inv.empty())
             add_entry(new MenuEntry("", MEL_TITLE));
 #endif
-        // Load floor items to menu
-        string subtitle_text = "Floor Items";
-        if (is_inventory)
-        {
-            if (Options.easy_floor_use && item_floor.size() == 1)
-            {
-                subtitle_text += string(" (',' to ") +
-                    (item_type_filter == OBJ_ARMOUR ? "wear)"
-                   : item_type_filter == OSEL_WIELD ? "wield)"
-                   : "use)");
-            }
-            else
-                subtitle_text += " (',' to select)";
-        }
-        auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
-        subtitle->colour = LIGHTGREY;
-        add_entry(subtitle);
+        // Load floor items to menu. Always add a subtitle, even if there are
+        // no inv items.
+        floor_header = new MenuEntry("Floor Items", MEL_TITLE);
+        floor_header->colour = LIGHTCYAN;
+        add_entry(floor_header);
 
-        if (is_inventory)
-        {
-            load_items(item_floor,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            entry->hotkeys.clear();
-                            return entry;
-                        });
-        }
-        else
-        {
-            load_items(item_floor,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            // hacky: remove the class hotkey
-                            entry->hotkeys.pop_back();
-                            return entry;
-                        });
-        }
+        load_items(item_floor,
+                    [&](MenuEntry* entry) -> MenuEntry*
+                    {
+                        // hacky: remove the class hotkey
+                        entry->hotkeys.pop_back();
+                        return entry;
+                    });
     }
+    update_sections();
+
     if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
     {
         if (is_inventory && last_hovered > last_inv_pos)
@@ -258,10 +227,38 @@ void UseItemMenu::populate_menu()
     }
 }
 
-void UseItemMenu::repopulate_menu()
+void UseItemMenu::update_sections()
 {
-    deleteAll(items);
-    populate_menu();
+    int i;
+    for (i = 0; i <= last_inv_pos; i++)
+        if (items[i]->level == MEL_ITEM)
+            items[i]->set_enabled(is_inventory);
+    for (; i < static_cast<int>(items.size()); i++)
+        if (items[i]->level == MEL_ITEM)
+            items[i]->set_enabled(!is_inventory);
+    if (inv_header)
+    {
+        inv_header->text = "Inventory Items";
+        if (!is_inventory)
+            inv_header->text += " (',' to select)";
+        if (floor_header)
+        {
+            floor_header->text = "Floor Items";
+            if (is_inventory)
+            {
+                if (Options.easy_floor_use && item_floor.size() == 1)
+                {
+                    floor_header->text += string(" (',' to ") +
+                        (item_type_filter == OBJ_ARMOUR ? "wear)"
+                       : item_type_filter == OSEL_WIELD ? "wield)"
+                       : "use)");
+                }
+                else
+                    floor_header->text += " (',' to select)";
+            }
+        }
+    }
+
     update_menu(true);
 }
 
@@ -271,7 +268,7 @@ void UseItemMenu::toggle_display_all()
     item_inv.clear();
     item_floor.clear();
     populate_list();
-    repopulate_menu();
+    update_sections();
 }
 
 void UseItemMenu::toggle_inv_or_floor()
@@ -279,7 +276,22 @@ void UseItemMenu::toggle_inv_or_floor()
     if (item_inv.empty() || item_floor.empty())
         return;
     is_inventory = !is_inventory;
-    repopulate_menu();
+    update_sections();
+}
+
+// only two sections, and we want to skip inv menu subtitles, so it's simplest
+// just to write custom code here
+bool UseItemMenu::cycle_headers(bool)
+{
+    if (item_inv.empty() || item_floor.empty())
+        return false;
+    if (is_inventory)
+        set_hovered(last_inv_pos + 1);
+    else
+        set_hovered(0);
+    // XX this skips `unarmed`, should it?
+    cycle_hover(); // get to a selectable item
+    return true;
 }
 
 void UseItemMenu::set_hovered(int hovered)
@@ -348,6 +360,7 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
     // Init the menu
     UseItemMenu menu(item_type, prompt);
 
+    // XX let the menu run its input loop
     while (true)
     {
         vector<MenuEntry*> sel = menu.show(true);
@@ -371,14 +384,15 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         }
         else if (keyin == ',')
         {
-            if (Options.easy_floor_use && menu.item_floor.size() == 1)
+            if (Options.easy_floor_use && menu.item_floor.size() == 1
+                && menu.is_inventory)
             {
                 choice_made = true;
                 tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
             }
             else
             {
-                menu.toggle_inv_or_floor();
+                menu.cycle_headers();
                 continue;
             }
         }

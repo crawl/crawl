@@ -70,6 +70,8 @@ string InvTitle::get_text() const
 InvEntry::InvEntry(const item_def &i)
     : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
+    indent_no_hotkeys = true;
+
     // Data is an inherited void *. When using InvEntry in menus
     // use the const item in this class whenever possible
     data = const_cast<item_def *>(item);
@@ -191,28 +193,26 @@ string InvEntry::_get_text_preface() const
 {
     ostringstream tstr;
 
-    const bool nosel = hotkeys.empty();
+    const bool nosel = hotkeys_count() == 0;
+    if (nosel && tag != "pickup")
+        return MenuEntry::_get_text_preface();
     const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
+
+    tstr << ' ' << key << ' ';
+
+    if (nosel)
+        tstr << ' '; // pickup only
+    else if (!selected_qty)
+        tstr << '-';
+    else if (selected_qty < quantity)
+        tstr << '#';
+    else if (_has_star)
+        tstr << '*';
+    else
+        tstr << '+';
 
     tstr << ' ';
 
-    if (!nosel || tag == "pickup")
-    {
-        tstr << key << ' ';
-
-        if (nosel)
-            tstr << ' ';
-        else if (!selected_qty)
-            tstr << '-';
-        else if (selected_qty < quantity)
-            tstr << '#';
-        else if (_has_star)
-            tstr << '*';
-        else
-            tstr << '+';
-
-        tstr << ' ';
-    }
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(*item)) << ")" << " ";
 

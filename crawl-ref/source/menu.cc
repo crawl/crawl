@@ -711,7 +711,7 @@ void UIMenu::update_hovered_entry()
         if (entry.heading)
             continue;
         const auto me = m_menu->items[i];
-        if (me->hotkeys.size() == 0)
+        if (me->hotkeys_count() == 0)
             continue;
         const int w = m_region.width / m_num_columns;
         const int entry_x = entry.column * w;
@@ -795,7 +795,7 @@ bool UIMenu::on_event(const Event& ev)
             && m_mouse_pressed)
     {
         int entry = m_hover_idx;
-        if (entry != -1 && m_menu->items[entry]->hotkeys.size() > 0)
+        if (entry != -1 && m_menu->items[entry]->hotkeys_count() > 0)
             key = m_menu->items[entry]->hotkeys[0];
         m_mouse_pressed = false;
         _queue_allocation();
@@ -894,7 +894,7 @@ void UIMenu::pack_buffers()
             m_text_buf.add(split, text_sx, text_sy);
         }
 
-        bool hovered = i == m_hover_idx && !entry.heading && me->hotkeys.size() > 0;
+        bool hovered = i == m_hover_idx && !entry.heading && me->hotkeys_count() > 0;
 
         if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
         {
@@ -1772,7 +1772,7 @@ void Menu::select_items(int key, int qty)
 
 string MenuEntry::_get_text_preface() const
 {
-    if (level == MEL_ITEM && hotkeys.size())
+    if (level == MEL_ITEM && hotkeys_count())
     {
         return make_stringf(" %s %c ",
             keycode_to_name(hotkeys[0]).c_str(),
