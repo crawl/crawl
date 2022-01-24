@@ -2769,8 +2769,8 @@ namespace quiver
             // TODO: better handling for no abilities?
             int selected = choose_ability_menu(talents);
 
-            return selected >= 0 && selected < static_cast<int>(talents.size())
-                && !set_to_quiver(make_shared<ability_action>(talents[selected].which));
+            return selected < 0 || selected >= static_cast<int>(talents.size())
+                || !set_to_quiver(make_shared<ability_action>(talents[selected].which));
         }
 
         bool process_key(int key) override
