@@ -285,7 +285,9 @@ bool UseItemMenu::cycle_headers(bool)
 {
     if (item_inv.empty() || item_floor.empty())
         return false;
-    if (is_inventory)
+    if (!is_set(MF_ARROWS_SELECT))
+        toggle_inv_or_floor();
+    else if (is_inventory)
         set_hovered(last_inv_pos + 1);
     else
         set_hovered(0);
