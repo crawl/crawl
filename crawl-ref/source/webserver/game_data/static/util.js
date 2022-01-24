@@ -36,8 +36,8 @@ function () {
         // string), but we don't want the crazy arbitrary nesting of spans
         // this can lead to. So it ensures that only one fg and one bg span
         // are involved at any time.
-        var cur_fg = -1;
-        var bg_open = false;
+        var cur_fg = [];
+        var bg_open = false; // XX nesting bg tags not handled
         var filtered = str.replace(/<?<(\/?(bg:)?[a-z]*)>?|>|&/ig, function (str, p1) {
             if (p1 === undefined)
                 p1 = "";
@@ -62,10 +62,17 @@ function () {
                         bg_open = false;
                         return "</span>";
                     }
-                    else if (cur_fg >= 0)
+                    else if (cur_fg.length > 0)
                     {
-                        cur_fg = -1;
-                        return "</span>";
+                        cur_fg.pop();
+                        if (cur_fg.length > 0)
+                        {
+                            // restart the previous color
+                            return "</span><span class='fg"
+                                        + cur_fg[cur_fg.length - 1] + "'>";
+                        }
+                        else
+                            return "</span>";
                     }
                     // mismatched close tag
                     return "";
@@ -79,10 +86,11 @@ function () {
                     // new background span, and reopen it inside that span.
                     // This ensures that fg spans are always nested inside
                     // bg spans.
-                    if (cur_fg >= 0)
+                    if (cur_fg.length > 0)
                     {
                         text = "</span>" + text
-                                    + "<span class='fg" + cur_fg + "'>";
+                                + "<span class='fg"
+                                + cur_fg[cur_fg.length - 1] + "'>";
                     }
                     bg_open = true;
                     return text;
@@ -90,10 +98,11 @@ function () {
                 else
                 {
                     var text = "<span class='fg" + cols[p1] + "'>"
-                    // close out a currently open fg span
-                    if (cur_fg >= 0)
+                    // close out a currently open fg span, to keep only one
+                    // at a time
+                    if (cur_fg.length > 0)
                         text = "</span>" + text;
-                    cur_fg = cols[p1];
+                    cur_fg.push(cols[p1]);
                     return text;
                 }
             }
@@ -102,12 +111,10 @@ function () {
                 if (str.match(/^<</))
                     return escape_html(str.substr(1));
                 else
-                {
                     return escape_html(str);
-                }
             }
         });
-        if (cur_fg >= 0)
+        if (cur_fg.length > 0)
             filtered += "</span>";
         if (bg_open)
             filtered += "</span>";
