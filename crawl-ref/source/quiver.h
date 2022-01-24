@@ -128,7 +128,7 @@ namespace quiver
     shared_ptr<action> get_secondary_action();
     void set_needs_redraw();
 
-    int menu_size();
+    bool anything_to_quiver(bool at_all=false);
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler

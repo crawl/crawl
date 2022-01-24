@@ -2542,6 +2542,61 @@ namespace quiver
         return(set(make_shared<action>()));
     }
 
+    static vector<shared_ptr<action>> _menu_quiver_order()
+    {
+        vector<shared_ptr<action>> actions;
+        // TODO: this is kind of ugly
+        auto tmp = ammo_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = launcher_ammo_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = wand_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = misc_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        return actions;
+    }
+
+    static bool _any_spells_to_quiver(bool at_all)
+    {
+        if (at_all)
+            return you.spell_no;
+        else
+            return spell_action(SPELL_NO_SPELL).get_fire_order(true, true).size();
+    }
+
+    static bool _any_abils_to_quiver(bool at_all)
+    {
+        if (at_all)
+            return your_talents(true, true).size() > 0;
+        else
+            return ability_action(ABIL_NON_ABILITY).get_fire_order(true, true).size();
+    }
+
+    static bool _any_items_to_quiver(bool at_all)
+    {
+        if (at_all)
+        {
+            // regular species can force-quiver any (non-equipped) item, but
+            // felids have a more limited selection, so we need to directly
+            // calculate it.
+            return you.has_mutation(MUT_NO_GRASPING)
+                ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
+                : inv_count() > 0;
+        }
+        else
+        {
+            return ammo_action(-1).get_fire_order(true, true).size()
+                || launcher_ammo_action(-1).get_fire_order(true, true).size()
+                || wand_action(-1).get_fire_order(true, true).size()
+                || misc_action(-1).get_fire_order(true, true).size();
+        }
+    }
+
     // note for editing this: Menu::action is defined and will take precedence
     // over quiver::action unless the quiver namespace is explicit.
     class ActionSelectMenu : public Menu
@@ -2551,18 +2606,28 @@ namespace quiver
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
                     | MF_ARROWS_SELECT | MF_WRAP),
               cur_quiver(_quiver), allow_empty(_allow_empty),
-              any_spells(you.spell_no),
-              any_abilities(your_talents(true, true).size() > 0),
+              any_spells(_any_spells_to_quiver(true)),
+              any_abilities(_any_abils_to_quiver(true)),
               // regular species can force-quiver any (non-equipped) item, but
               // felids have a more limited selection, so we need to directly
               // calculate it.
-              any_items(you.has_mutation(MUT_NO_GRASPING)
-                ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
-                : inv_count() > 0)
+              any_items(_any_items_to_quiver(true)),
+              actions(_menu_quiver_order())
         {
             set_tag("actions");
+            set_title(new MenuEntry("", MEL_TITLE));
+
+            on_single_selection = [this](const MenuEntry& item)
+                {
+                    // XX can this use indices rather than pointers?
+                    const shared_ptr<quiver::action> *a =
+                        static_cast<shared_ptr<quiver::action> *>(item.data);
+                    return !set_to_quiver(*a);
+                };
+
             action_cycle = Menu::CYCLE_TOGGLE;
             menu_action  = Menu::ACT_EXECUTE;
+            populate();
         }
 
         action_cycler &cur_quiver;
@@ -2595,6 +2660,39 @@ namespace quiver
         }
 
     protected:
+        void populate()
+        {
+            menu_letter hotkey;
+            for (const auto &a : actions)
+            {
+                if (!a || !a->is_valid())
+                    continue;
+                string action_desc = a->quiver_description();
+                if (*you.launcher_action.get() == *a)
+                    action_desc += " (quivered ammo)";
+                else if (you.quiver_action.item_is_quivered(a->get_item()))
+                    action_desc += " (quivered)";
+                MenuEntry *me = new MenuEntry(action_desc,
+                                                    MEL_ITEM, 1,
+                                                    (int) hotkey);
+                // TODO: is there a way to show formatting in menu items?
+                me->colour = a->quiver_color();
+                me->data = (void *) &a; // pointer to vector element - don't change the vector!
+    #ifdef USE_TILE
+                for (auto t : a->get_tiles())
+                    me->add_tile(t);
+    #endif
+                add_entry(me);
+                hotkey++;
+            }
+            if (actions.size() == 0)
+            {
+                set_more(formatted_string::parse_string(
+                    "<lightred>No regular actions available to quiver.</lightred>"));
+            }
+
+        }
+
         bool _choose_from_inv()
         {
             int slot = prompt_invent_item(allow_empty
@@ -2702,6 +2800,7 @@ namespace quiver
         bool any_spells;
         bool any_abilities;
         bool any_items;
+        vector<shared_ptr<quiver::action>> actions;
     };
 
     /**
@@ -2791,28 +2890,11 @@ namespace quiver
         }
     }
 
-    static vector<shared_ptr<action>> _menu_quiver_order()
+    bool anything_to_quiver(bool at_all)
     {
-        vector<shared_ptr<action>> actions;
-        // TODO: this is kind of ugly
-        auto tmp = ammo_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = launcher_ammo_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = wand_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = misc_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        return actions;
-    }
-
-    int menu_size()
-    {
-        return _menu_quiver_order().size();
+        return _any_items_to_quiver(at_all)
+            || _any_spells_to_quiver(at_all)
+            || _any_abils_to_quiver(at_all);
     }
 
     /**
@@ -2827,49 +2909,12 @@ namespace quiver
         // TODO: dividers or subtitles for each category?
         ActionSelectMenu menu(cur_quiver, allow_empty);
 
-        auto actions = _menu_quiver_order();
-
-        if (actions.size() == 0 && menu.pointless())
+        if (menu.pointless())
         {
             mpr("You have nothing to quiver.");
             return;
         }
 
-        menu.set_title(new MenuEntry("", MEL_TITLE));
-
-        menu_letter hotkey;
-        if (actions.size() == 0)
-            menu.set_more(formatted_string::parse_string("<lightred>No regular actions available to quiver.</lightred>"));
-
-        for (const auto &a : actions)
-        {
-            if (!a || !a->is_valid())
-                continue;
-            string action_desc = a->quiver_description();
-            if (*you.launcher_action.get() == *a)
-                action_desc += " (quivered ammo)";
-            else if (you.quiver_action.item_is_quivered(a->get_item()))
-                action_desc += " (quivered)";
-            MenuEntry *me = new MenuEntry(action_desc,
-                                                MEL_ITEM, 1,
-                                                (int) hotkey);
-            // TODO: is there a way to show formatting in menu items?
-            me->colour = a->quiver_color();
-            me->data = (void *) &a; // pointer to vector element - don't change the vector!
-#ifdef USE_TILE
-            for (auto t : a->get_tiles())
-                me->add_tile(t);
-#endif
-            menu.add_entry(me);
-            hotkey++;
-        }
-        menu.cycle_hover();
-
-        menu.on_single_selection = [&menu](const MenuEntry& item)
-        {
-            const shared_ptr<action> *a = static_cast<shared_ptr<action> *>(item.data);
-            return !menu.set_to_quiver(*a);
-        };
         menu.show();
     }
 
