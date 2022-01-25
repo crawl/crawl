@@ -282,7 +282,9 @@ void UseItemMenu::toggle_display_all()
     display_all = !display_all;
     item_inv.clear();
     item_floor.clear();
+    deleteAll(items);
     populate_list();
+    populate_menu();
     update_sections();
 }
 
