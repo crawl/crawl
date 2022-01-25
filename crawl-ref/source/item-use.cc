@@ -298,9 +298,13 @@ bool UseItemMenu::cycle_headers(bool)
 
 void UseItemMenu::set_hovered(int hovered)
 {
+    // need to be a little bit careful about recursion potential here:
+    // update_menu calls set_hovered to sanitize low level UI state.
+    const bool skip_toggle = hovered == last_hovered;
     InvMenu::set_hovered(hovered);
     // keep inv vs floor in sync
-    if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
+    if (!skip_toggle && last_hovered >= 0
+        && !item_floor.empty() && !item_inv.empty())
     {
         if (is_inventory && last_hovered > last_inv_pos
             || !is_inventory && last_hovered <= last_inv_pos)
