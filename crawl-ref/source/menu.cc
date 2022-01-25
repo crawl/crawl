@@ -1236,8 +1236,11 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
                 cycle_hover(true);
         }
     }
-    else if (is_set(MF_INIT_HOVER) && last_hovered < 0)
+    else if (is_set(MF_INIT_HOVER)
+        && (last_hovered < 0 || items[last_hovered]->level != MEL_ITEM)) // XX check hotkeys?
+    {
         cycle_hover();
+    }
 
     do_menu();
 
@@ -1786,6 +1789,25 @@ void Menu::select_items(int key, int qty)
             }
         }
     }
+}
+
+bool MenuEntry::selected() const
+{
+    return selected_qty > 0 && (quantity || on_select);
+}
+
+// -1: Invert
+// -2: Select all
+void MenuEntry::select(int qty)
+{
+    if (on_select && quantity == 0)
+        selected_qty = 1; // hacky, assume quantity is not relevant
+    else if (qty == -2)
+        selected_qty = quantity;
+    else if (selected())
+        selected_qty = 0;
+    else if (quantity)
+        selected_qty = (qty == -1 ? quantity : qty);
 }
 
 string MenuEntry::_get_text_preface() const

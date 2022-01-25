@@ -124,6 +124,9 @@ UseItemMenu::UseItemMenu(int item_type, const char* prompt)
     set_title(prompt);
     populate_list();
     populate_menu();
+    // start hover on an actual item, rather than - if present
+    if (item_type_filter == OSEL_WIELD && item_inv.size() > 0)
+        set_hovered(1);
 }
 
 void UseItemMenu::populate_list()
@@ -170,8 +173,19 @@ void UseItemMenu::populate_menu()
     // it (currently) enables the inv section.
     if (item_type_filter == OSEL_WIELD)
     {
-        string hands_title = " -   unarmed";
-        MenuEntry *hands = new MenuEntry (hands_title, MEL_ITEM);
+        string hands_string = you.unarmed_attack_name("Unarmed");
+        if (!you.weapon())
+            hands_string += " (current attack)";
+
+        MenuEntry *hands = new MenuEntry(hands_string, MEL_ITEM);
+        if (!you.weapon())
+            hands->colour = LIGHTGREEN;
+        hands->add_hotkey('-');
+        hands->on_select = [this](const MenuEntry&)
+            {
+                lastch = '-';
+                return false;
+            };
         add_entry(hands);
     }
 
@@ -221,7 +235,7 @@ void UseItemMenu::populate_menu()
     if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
     {
         if (is_inventory && last_hovered > last_inv_pos)
-            set_hovered(0);
+            set_hovered(item_type_filter == OSEL_WIELD ? 1 : 0);
         else if (!is_inventory && last_hovered <= last_inv_pos)
             set_hovered(last_inv_pos + 1);
     }
@@ -229,8 +243,9 @@ void UseItemMenu::populate_menu()
 
 void UseItemMenu::update_sections()
 {
-    int i;
-    for (i = 0; i <= last_inv_pos; i++)
+    // never disable the unwield button
+    int i = item_type_filter == OSEL_WIELD ? 1 : 0;
+    for (; i <= last_inv_pos; i++)
         if (items[i]->level == MEL_ITEM)
             items[i]->set_enabled(is_inventory);
     for (; i < static_cast<int>(items.size()); i++)
