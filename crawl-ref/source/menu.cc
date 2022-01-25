@@ -145,7 +145,7 @@ protected:
 
     bool m_mouse_pressed = false;
     int m_mouse_x = -1, m_mouse_y = -1;
-    void update_hovered_entry();
+    void update_hovered_entry(bool force=false);
 
     void pack_buffers();
 
@@ -699,7 +699,7 @@ void UIMenu::set_hovered_entry(int i)
 }
 
 #ifdef USE_TILE_LOCAL
-void UIMenu::update_hovered_entry()
+void UIMenu::update_hovered_entry(bool force)
 {
     const int x = m_mouse_x - m_region.x,
               y = m_mouse_y - m_region.y;
@@ -712,7 +712,7 @@ void UIMenu::update_hovered_entry()
         if (entry.heading)
             continue;
         const auto me = m_menu->items[i];
-        if (me->hotkeys_count() == 0)
+        if (me->hotkeys_count() == 0 && !force)
             continue;
         const int w = m_region.width / m_num_columns;
         const int entry_x = entry.column * w;
@@ -720,16 +720,20 @@ void UIMenu::update_hovered_entry()
         if (x >= entry_x && x < entry_x+w && y >= entry.y && y < entry.y+entry_h)
         {
             wm->set_mouse_cursor(MOUSE_CURSOR_POINTER);
-            m_hover_idx = i;
-            m_menu->last_hovered = i;
+            if (force && m_menu->last_hovered != i)
+                m_menu->set_hovered(i, force); // give menu a chance to change state
+            else if (me->hotkeys_count())
+                m_hover_idx = i;
             return;
         }
     }
     wm->set_mouse_cursor(MOUSE_CURSOR_ARROW);
     if (!(m_menu->flags & MF_ARROWS_SELECT))
     {
-        m_hover_idx = -1;
-        m_menu->last_hovered = -1;
+        if (force)
+            m_menu->set_hovered(-1, force);
+        else
+            m_hover_idx = -1;
     }
 }
 
@@ -756,7 +760,7 @@ bool UIMenu::on_event(const Event& ev)
     {
         do_layout(m_region.width, m_num_columns);
         if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
-            update_hovered_entry();
+            update_hovered_entry(true);
         pack_buffers();
         _expose();
         return false;
@@ -768,7 +772,8 @@ bool UIMenu::on_event(const Event& ev)
         m_mouse_x = -1;
         m_mouse_y = -1;
         m_mouse_pressed = false;
-        m_hover_idx = -1;
+        if (!(m_menu->is_set(MF_ARROWS_SELECT)))
+            m_hover_idx = -1;
         do_layout(m_region.width, m_num_columns);
         pack_buffers();
         _expose();
@@ -778,7 +783,7 @@ bool UIMenu::on_event(const Event& ev)
     if (event.type() == Event::Type::MouseMove)
     {
         do_layout(m_region.width, m_num_columns);
-        update_hovered_entry();
+        update_hovered_entry(true);
         pack_buffers();
         _expose();
         return true;
@@ -895,26 +900,36 @@ void UIMenu::pack_buffers()
             m_text_buf.add(split, text_sx, text_sy);
         }
 
-        bool hovered = i == m_hover_idx && !entry.heading && me->hotkeys_count() > 0;
+        if (!m_menu->is_set(MF_NOSELECT))
+        {
+            bool hovered = i == m_hover_idx
+                && !entry.heading
+                && me->hotkeys_count() > 0;
 
-        if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
-        {
-            m_shape_buf.add(entry_x, entry.y,
-                    entry_ex, entry.y+entry_h, selected_colour);
-        }
-        else if (hovered)
-        {
-            const VColour hover_bg = m_mouse_pressed ?
-                VColour(0, 0, 0, 255) : VColour(255, 255, 255, 25);
-            m_shape_buf.add(entry_x, entry.y,
-                    entry_ex, entry.y+entry_h, hover_bg);
-        }
-        if (hovered)
-        {
-            const VColour mouse_colour = m_mouse_pressed ?
-                VColour(34, 34, 34, 255) : VColour(255, 255, 255, 51);
-            m_line_buf.add_square(entry_x + 1, entry.y + 1,
-                    entry_x+col_width, entry.y+entry_h, mouse_colour);
+            if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
+            {
+                // draw a highlighted background on selected entries (usually only
+                // multiselect menus), overriding hover background
+                m_shape_buf.add(entry_x, entry.y,
+                        entry_ex, entry.y+entry_h, selected_colour);
+            }
+            else if (hovered)
+            {
+                // draw the regular hover background
+                const VColour hover_bg = m_mouse_pressed ?
+                    VColour(0, 0, 0, 255) : VColour(255, 255, 255, 25);
+                m_shape_buf.add(entry_x, entry.y,
+                        entry_ex, entry.y+entry_h, hover_bg);
+            }
+
+            // draw a line around any hovered entry
+            if (hovered)
+            {
+                const VColour mouse_colour = m_mouse_pressed ?
+                    VColour(34, 34, 34, 255) : VColour(255, 255, 255, 51);
+                m_line_buf.add_square(entry_x + 1, entry.y + 1,
+                        entry_x+col_width, entry.y+entry_h, mouse_colour);
+            }
         }
     }
 }
@@ -1430,12 +1445,14 @@ bool Menu::process_key(int keyin)
         sel.clear();
         lastch = keyin;
         return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+    case CK_MOUSE_B1:
+    case CK_MOUSE_CLICK:
+        if (!is_set(MF_NOSELECT))
+            break;
     case ' ': case CK_PGDN: case '>': case '+':
 #ifndef USE_TILE_LOCAL
     case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
 #endif
-    case CK_MOUSE_B1:
-    case CK_MOUSE_CLICK:
         if (!page_down() && is_set(MF_WRAP))
             m_ui.scroller->set_scroll(0);
         break;
