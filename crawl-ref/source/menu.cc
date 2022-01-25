@@ -253,6 +253,7 @@ void UIMenu::update_item(int index)
     _invalidate_sizereq();
     _queue_allocation();
 #ifdef USE_TILE_LOCAL
+    ASSERT(index < static_cast<int>(m_menu->items.size()));
     const MenuEntry *me = m_menu->items[index];
     int colour = m_menu->item_colour(me);
     string text = me->get_text();
@@ -2337,9 +2338,9 @@ void Menu::update_title()
 #endif
 }
 
-void Menu::set_hovered(int index)
+void Menu::set_hovered(int index, bool force)
 {
-    if (!is_set(MF_ARROWS_SELECT))
+    if (!force && !is_set(MF_ARROWS_SELECT))
     {
         snap_in_page(index);
         return;

@@ -350,7 +350,7 @@ public:
     }
 
     void update_menu(bool update_entries = false);
-    virtual void set_hovered(int index);
+    virtual void set_hovered(int index, bool force=false);
     bool set_scroll(int index);
     bool in_page(int index, bool strict=false) const;
     bool snap_in_page(int index);

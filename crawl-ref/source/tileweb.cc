@@ -457,9 +457,16 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     {
         JsonWrapper hover = json_find_member(obj.node, "hover");
         hover.check(JSON_NUMBER);
+        JsonWrapper mouse = json_find_member(obj.node, "mouse");
+        mouse.check(JSON_BOOL);
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
-            m_menu_stack.back().menu->set_hovered((int) hover->number_);
+        if (!m_menu_stack.empty()
+            && m_menu_stack.back().type == UIStackFrame::MENU)
+        {
+            m_menu_stack.back().menu->set_hovered(
+                (int) hover->number_,
+                mouse->bool_);
+        }
 
     }
     else if (msgtype == "menu_scroll")

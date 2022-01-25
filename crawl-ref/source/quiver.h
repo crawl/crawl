@@ -35,6 +35,8 @@ namespace quiver
         NUM_LAUNCHERS
     };
 
+    void reset_state();
+
     struct action : public enable_shared_from_this<action>
     {
         action()
@@ -109,6 +111,8 @@ namespace quiver
         {
             return { };
         }
+
+        virtual int source_hotkey() const;
 
         dist target;
         const action_cycler *default_fire_context;

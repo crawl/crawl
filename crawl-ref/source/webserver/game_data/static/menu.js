@@ -94,9 +94,12 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         if (mouse_hover_suppressed)
             return;
-        if (index < menu.first_part_visible || index > menu.last_part_visible)
+        if (index >= 0 &&
+            (index < menu.first_part_visible || index > menu.last_part_visible))
+        {
             return;
-        set_hovered(index, false);
+        }
+        set_hovered(index, false, true);
     }
 
     function suppress_mouse_hover()
@@ -106,7 +109,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         mouse_hover_suppressed = true;
     }
 
-    function set_hovered(index, snap=true)
+    function set_hovered(index, snap=true, from_mouse=false)
     {
         if (index == menu.last_hovered)
         {
@@ -123,7 +126,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             add_hover_class(menu.last_hovered);
             if (menu.last_hovered >= 0 && snap == true)
                 snap_in_page(menu.last_hovered);
-            comm.send_message("menu_hover", { hover: menu.last_hovered });
+            comm.send_message("menu_hover",
+                {
+                    hover: menu.last_hovered,
+                    mouse: from_mouse
+                });
         }
     }
 
@@ -261,6 +268,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 function() {
                     mouse_set_hovered($(this).index());
                 }, function() {
+                    // XX if this uses mouse_set_hovered, the timing seems
+                    // to be extremely flaky w.r.t. a new hover.
                     if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
                         set_hovered(-1);
                     // otherwise, keep the hover unless mousenter moves it into

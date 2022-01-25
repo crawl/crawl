@@ -106,7 +106,7 @@ public:
 
     void toggle_display_all();
     void toggle_inv_or_floor();
-    void set_hovered(int hovered) override;
+    void set_hovered(int hovered, bool force=false) override;
     bool cycle_headers(bool=true) override;
 
 private:
@@ -296,12 +296,12 @@ bool UseItemMenu::cycle_headers(bool)
     return true;
 }
 
-void UseItemMenu::set_hovered(int hovered)
+void UseItemMenu::set_hovered(int hovered, bool force)
 {
     // need to be a little bit careful about recursion potential here:
     // update_menu calls set_hovered to sanitize low level UI state.
     const bool skip_toggle = hovered == last_hovered;
-    InvMenu::set_hovered(hovered);
+    InvMenu::set_hovered(hovered, force);
     // keep inv vs floor in sync
     if (!skip_toggle && last_hovered >= 0
         && !item_floor.empty() && !item_inv.empty())

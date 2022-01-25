@@ -85,7 +85,7 @@ The contents of this text are:
 3-j     Quivers, firing, and ammo.
                 fire_items_start, fire_order, fire_order_spell,
                 fire_order_ability, fail_severity_to_quiver,
-                launcher_autoquiver
+                launcher_autoquiver, quiver_menu_focus
 3-k     Message Channels.
                 plain, prompt, god, duration, danger, warning, recovery,
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
@@ -172,10 +172,22 @@ The contents of this text are:
 0-  Generalities on options.
 ============================
 
+The standard way of adjusting an option from the default is to manually
+set it in your options file; see (0-a) and (0-c) below for details. A small
+number of options are saved automatically from their current values in the
+relevant in-game user interface; these are marked with "(persistent)" in
+their documentation and can be overridden by a manual setting in the
+options file.
+
 0-a     Standard and additional option files.
 ---------------------------------------------
 
-Crawl uses the first file of the following list as its option file:
+In online play, choose "edit rc" from the webtiles game selection screen,
+or enter the rc file editor via ssh.
+
+In offline play, Crawl uses the first file of the following list as its option
+file:
+
 * settings/init.txt
 * init.txt (in the Crawl directory)
 * .crawlrc (in the Unix home directory)
@@ -184,7 +196,8 @@ Alternatively, you can use the command line option
     -rc <file>
 which tells Crawl to use precisely that file.
 
-On the starting screen, Crawl tells you which init file it uses, if any.
+On the starting screen, Crawl tells you which init file it uses, if any. The
+Crawl directory location is system-specific.
 
 It is possible to include additional files within the options file via
     include = <file>
@@ -405,7 +418,7 @@ name_bypasses_menu = true
         menu and jump right to a game or character selection (if there is no
         save).
 
-default_manual_training = false
+default_manual_training = false (persistent)
         When set to true, new characters will start with skill training
         set to manual mode instead of automatic mode. This will also set the
         [!] selection on the skill (m) menu to "cost" by default, instead of
@@ -1676,17 +1689,19 @@ action_panel_show_unidentified = false
         When set to true, the action panel will show unidentified scrolls
         and potions. This option is only available on Webtiles.
 
-action_panel_scale = 100
+action_panel_scale = 100 (persistent)
         A percentage scale factor to apply to the action panel. This option is
         automatically saved between games, and only available on Webtiles.
 
-action_panel_orientation = (horizontal | vertical)
-        When set to 'horizontal' (the default), the action panel will be
-        placed along the top edge of the screen. When set to 'vertical', the panel will be placed along the left edge. This option is automatically
-        saved between games, and is only available on Webtiles.
+action_panel_orientation = horizontal (persistent)
+        (values: horizontal | vertical)
+        When set to 'horizontal', the action panel will be placed along the top
+        edge of the screen. When set to 'vertical', the panel will be placed
+        along the left edge. This option is automatically saved between games,
+        and is only available on Webtiles.
 
-action_panel_font_family = monospace
-action_panel_font_size = 16
+action_panel_font_family = monospace (persistent)
+action_panel_font_size = 16 (persistent)
         Font used for displaying quantities of items in the action panel.
         The size option is automatically saved between games, and both are only
         available on Webtiles.
@@ -1847,6 +1862,14 @@ launcher_autoquiver = true
         If set to true, change the main quiver to launcher ammo on wielding
         that launcher; if set to false, the main quiver is unaffected by
         wielding a launcher. (Firing via tab or `v` still work.).
+
+quiver_menu_focus = false (persistent)
+        If set to true, start the quiver menu in "focused" mode where action
+        lettering is drawn from item/spell/ability lettering and only one of
+        these can be selected at a time. Otherwise, any action can be selected
+        from the menu, but lettering is not stable in this menu. This option
+        is persistent so that the current value in the quiver menu is saved
+        across games and automatically reloaded unless set explicitly.
 
 (See also pickup_thrown in 3-a, and the various autofight settings in 3-g.)
 
@@ -2804,6 +2827,10 @@ fake_lang = <lang1>[,<lang2>[,...]]
 read_persist_options = false
         When set to true, the game will read additional options from
         the lua variable c_persist.options if it contains a string.
+        This option has no effect unless explicitly used in scripting.
+        This option is persistent so that the current value as set in
+        the skill menu is saved across games and automatically reloaded,
+        unless set explicitly.
 
 5-b     DOS and Windows.
 ------------------------

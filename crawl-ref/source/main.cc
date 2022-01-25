@@ -364,6 +364,7 @@ static void _reset_game()
     clear_message_window();
     note_list.clear();
     msg::deinitialise_mpr_streams();
+    quiver::reset_state();
 
 #ifdef USE_TILE_LOCAL
     // [ds] Don't show the title screen again, just go back to

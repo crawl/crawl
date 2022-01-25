@@ -3794,7 +3794,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
     }
 
     // Side effect alert!
-    // Find hotkeys for the non-hotkeyed talents.
+    // Find hotkeys for the non-hotkeyed talents. (XX: how does this relate
+    // to the hotkey code in find_ability_slot??)
     for (talent &tal : talents)
     {
         const int index = _lookup_ability_slot(tal.which);

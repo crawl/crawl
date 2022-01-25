@@ -239,6 +239,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
         new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
+        new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -1994,6 +1995,8 @@ void game_options::write_prefs(FILE *f)
     // classes. Not worth doing until more stuff is serialized though...
     fprintf(f, "default_manual_training = %s\n",
                         default_manual_training ? "yes" : "no");
+    fprintf(f, "quiver_menu_focus = %s\n",
+                        quiver_menu_focus ? "true" : "false");
 #ifdef USE_TILE_WEB
     fprintf(f, "action_panel_orientation = %s\n",
                         action_panel_orientation.c_str());
