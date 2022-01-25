@@ -4811,13 +4811,12 @@ int dgn_place_item(const item_spec &spec,
         level = env.absdepth0;
 
     object_class_type base_type = spec.base_type;
-    bool acquire = false;
+    bool acquire = false; //was this generated from acquirement?
 
     if (spec.level >= 0)
         level = spec.level;
     else
     {
-        bool adjust_type = false;
         switch (spec.level)
         {
         case ISPEC_DAMAGED:
@@ -4829,11 +4828,11 @@ int dgn_place_item(const item_spec &spec,
             level = 5 + level * 2;
             break;
         case ISPEC_SUPERB:
-            adjust_type = true;
+            if (base_type == OBJ_RANDOM) 
+                base_type = _superb_object_class();
             level = ISPEC_GOOD_ITEM;
             break;
         case ISPEC_ACQUIREMENT:
-            adjust_type = true;
             acquire = true;
             break;
         default:
@@ -4842,11 +4841,6 @@ int dgn_place_item(const item_spec &spec,
 
         if (spec.props.exists(MIMIC_KEY) && base_type == OBJ_RANDOM)
             base_type = get_random_item_mimic_type();
-        else if (adjust_type && base_type == OBJ_RANDOM)
-        {
-            base_type = acquire ? shuffled_acquirement_classes(false)[0]
-                                : _superb_object_class();
-        }
     }
 
     int useless_tries = 0;

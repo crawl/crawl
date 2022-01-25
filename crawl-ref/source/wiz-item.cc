@@ -840,7 +840,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     clear_messages();
     mpr("[a] Weapons [b] Armours   [c] Jewellery [d] Books");
-    mpr("[e] Staves  [f] Evocables");
+    mpr("[e] Staves  [f] Evocables [g] Random");
     mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
 
     object_class_type type;
@@ -853,6 +853,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     case 'd': type = OBJ_BOOKS;      break;
     case 'e': type = OBJ_STAVES;     break;
     case 'f': type = OBJ_MISCELLANY; break;
+    case 'g': type = OBJ_RANDOM; break;
     default:
         canned_msg(MSG_OK);
         return;
@@ -910,7 +911,10 @@ static void _debug_acquirement_stats(FILE *ostat)
         max_plus    = max(max_plus, item.plus);
         total_plus += item.plus;
 
-        if (is_artefact(item))
+        if (type == OBJ_RANDOM) { //just track how many kinds of items we generated
+            subtype_quants[item.base_type]++;
+        }
+        else if (is_artefact(item))
         {
             num_arts++;
             if (type == OBJ_BOOKS)
@@ -967,7 +971,8 @@ static void _debug_acquirement_stats(FILE *ostat)
             type == OBJ_BOOKS      ? "books" :
             type == OBJ_STAVES     ? "staves" :
             type == OBJ_WANDS      ? "wands" :
-            type == OBJ_MISCELLANY ? "misc. items"
+            type == OBJ_MISCELLANY ? "misc. items":
+            type == OBJ_RANDOM     ? "random items"
                                    : "buggy items");
 
     // Print player species/profession.
@@ -1069,6 +1074,41 @@ static void _debug_acquirement_stats(FILE *ostat)
     fprintf(ostat, "%5.2f%% artefacts.\n",
             100.0 * (float) num_arts / (float) acq_calls);
 
+    if (type == OBJ_RANDOM) {
+        const char* categories[] =
+        {
+            "WEAPONS",
+            "MISSILES",
+            "ARMOUR",
+            "WANDS",
+#if TAG_MAJOR_VERSION == 34
+            "FOOD",
+#endif
+            "SCROLLS",
+            "JEWELLERY",
+            "POTIONS",
+            "BOOKS",
+            "STAVES",
+            "ORBS",
+            "MISCELLANY",
+            "CORPSES",
+            "GOLD",
+#if TAG_MAJOR_VERSION == 34
+            "RODS",
+#endif
+            "RUNES",
+        };
+        COMPILE_CHECK(ARRAYSZ(categories) == NUM_OBJECT_CLASSES);
+        for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
+            if (subtype_quants[i] > 0)
+            {
+                fprintf(ostat, "%14s: %5.2f\n", categories[i],
+                        100.0 * (float) subtype_quants[i] / (float) acq_calls);
+            }
+
+        fprintf(ostat, "\n\n");
+
+    }
     if (type == OBJ_WEAPONS)
     {
         fprintf(ostat, "Maximum combined pluses: %d\n", max_plus);
@@ -1267,7 +1307,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     item_def item;
     item.quantity  = 1;
-    item.base_type = type;
+    //item.base_type = type;
 
     const bool terse = (type == OBJ_BOOKS ? false : true);
 

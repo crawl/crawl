@@ -85,6 +85,7 @@ static int _skill_rdiv(skill_type skill, int mult = 1)
 static int _acquirement_armour_subtype(bool divine, int & /*quantity*/,
                                        int /*agent*/)
 {
+    //would realistically make sense to move XOM unwanted armor check here
     const equipment_type slot_type = _acquirement_armour_slot(divine);
     return _acquirement_armour_for_slot(slot_type, divine);
 }
@@ -117,11 +118,10 @@ M filtered_vector_select(vector<pair<M, int>> weights, function<bool(M)> filter)
 /**
  * Choose a random slot to acquire armour for.
  *
- * For most races, even odds for all armour slots when acquiring, or 50-50
- * split between body armour/aux armour when getting god gifts.
+ * Nagas and Palentongas get a 25% chance for bardings (50% if unseen)
  *
- * Nagas and Palentongas get a high extra chance for bardings, especially if they haven't
- * seen any yet.
+ * Otherwise, even odds for all armour slots when acquiring, or 50-50
+ * split between body armour/aux armour when getting god gifts.
  *
  * Guaranteed to be wearable, in principle.
  *
@@ -137,7 +137,7 @@ static equipment_type _acquirement_armour_slot(bool divine)
     }
 
     vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR,   divine ? 5 : 1 },
+        { EQ_BODY_ARMOUR,   divine ? 5 : 1 }, //gods love body armour for some reason
         { EQ_SHIELD,        1 },
         { EQ_CLOAK,         1 },
         { EQ_HELMET,        1 },
@@ -160,6 +160,7 @@ static equipment_type _acquirement_armour_slot(bool divine)
  * heavy investment in armour skill, relative to dodging & spellcasting, makes
  * heavier armours more likely to be generated.
  *
+ * @param slot_type type of armor to generate
  * @param divine    Whether the armour is a god gift.
  * @return          The armour_type of the armour to be generated.
  */
@@ -184,6 +185,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
+            //TODO orbs?
             return _acquirement_shield_type();
         case EQ_BODY_ARMOUR:
             return _acquirement_body_armour(divine);
@@ -214,7 +216,7 @@ static armour_type _acquirement_shield_type()
     vector<pair<armour_type, int>> weights = {
         { ARM_BUCKLER,       (5 + player_shield_racial_factor()) * 4 * scale
                                 - _skill_rdiv(SK_SHIELDS, scale) },
-        { ARM_KITE_SHIELD,        10 * scale },
+        { ARM_KITE_SHIELD,   10 * scale },
         { ARM_TOWER_SHIELD,  20 * scale
                              - (5 + player_shield_racial_factor()) * 4 * scale
                              + _skill_rdiv(SK_SHIELDS, scale / 2) },
@@ -241,14 +243,16 @@ static armour_type _acquirement_shield_type()
 static int _body_acquirement_weight(armour_type armour,
                                     bool divine, bool warrior)
 {
-    const int base_weight = armour_acq_weight(armour);
+    //hardcoded in item-prop.cc by armor
+    const int base_weight = armour_acq_weight(armour); 
     if (divine)
         return base_weight; // gods don't care about your skills, apparently
 
-    if (warrior)
+    if (warrior) //generally, trained ARM more than SPC and DDG
     {
         const int ac = armour_prop(armour, PARM_AC);
-        return base_weight * ac * ac;
+        return base_weight * ac * ac; 
+        //isn't this just completely blowing out the below?
     }
 
     // highest chance when armour skill = (displayed) evp - 3
@@ -263,6 +267,8 @@ static int _body_acquirement_weight(armour_type armour,
 /**
  * Choose a random type of body armour to be generated via acquirement or
  * god gifts.
+ * 
+ * Weighted by armour, spellcasting, and dodging skill.
  *
  * @param divine      Whether the armour is a god gift.
  * @return A potentially wearable type of body armour..
@@ -271,12 +277,17 @@ static armour_type _acquirement_body_armour(bool divine)
 {
     // Using an arbitrary legacy formula, do we think the player doesn't care
     // about armour EVP?
+    // probably just move this logic into _body_acquirement_weight
+    //light armor pref = 0 ~ (3*SPC + DDG)
     int light_pref = _skill_rdiv(SK_SPELLCASTING, 3);
     light_pref += _skill_rdiv(SK_DODGING);
     light_pref = random2(light_pref);
+    //true if 0 ~ (3*SPC + DDG)) < 0 ~ (2*ARM)
     const bool warrior = light_pref < random2(_skill_rdiv(SK_ARMOUR, 2));
 
     vector<pair<armour_type, int>> weights;
+    //iterate over all armors, weighting in favor of the ones we think are good
+    //filter unwearable armor out
     for (int i = ARM_FIRST_MUNDANE_BODY; i < NUM_ARMOURS; ++i)
     {
         const armour_type armour = (armour_type)i;
@@ -402,6 +413,7 @@ static armour_type _pick_unseen_armour()
  *
  * @param divine    Whether this is a god gift, which are less strongly
  *                  tailored to the player's skills.
+ * @param agent     source of acquirement: scroll, named god, etc
  * @return          An appropriate weapon skill; e.g. SK_LONG_BLADES.
  */
 static skill_type _acquirement_weapon_skill(bool divine, int agent)
@@ -410,8 +422,8 @@ static skill_type _acquirement_weapon_skill(bool divine, int agent)
     int count = 0;
     skill_type skill = SK_FIGHTING;
     for (skill_type sk = SK_FIRST_WEAPON;
-         sk <= (agent == GOD_TROG ? SK_LAST_MELEE_WEAPON : SK_LAST_WEAPON);
-         ++sk)
+         sk <= (agent == GOD_TROG ? SK_LAST_MELEE_WEAPON : SK_LAST_WEAPON); 
+         ++sk) //trog only generates melee weapons
     {
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
@@ -428,14 +440,25 @@ static skill_type _acquirement_weapon_skill(bool divine, int agent)
     return skill;
 }
 
+/**
+ * Randomly choose a weapon to generate for acquirement/god gift
+ * 
+ * @param divine  Is this a god gift?
+ * @param agent   source of acquirement: scroll, named god, etc
+ * 
+ * @return an appropriate weapon 
+ */
 static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agent)
 {
+    //pick a weapon skill based on what the player has trained
     const skill_type skill = _acquirement_weapon_skill(divine, agent);
 
+    //find the player's highest weapon skill. this is used for 
+    //the wacky "chance i like shields" check below
     int best_sk = 0;
     for (int i = SK_FIRST_WEAPON;
          i <= (agent == GOD_TROG ? SK_LAST_MELEE_WEAPON : SK_LAST_WEAPON);
-         i++)
+         i++) //trog gift melee only
     {
         best_sk = max(best_sk, _skill_rdiv((skill_type)i));
     }
@@ -449,6 +472,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
     // Let's guess the percentage of shield use the player did, this is
     // based on empirical data where pure-shield MDs get skills like 17 sh
     // 25 m&f and pure-shield Spriggans 7 sh 18 m&f.
+    // does not take into account orbs or aux attacks(lol)
     const int shield_sk = _skill_rdiv(SK_SHIELDS)
                           * species_apt_factor(SK_SHIELDS);
     const int want_shield = min(2 * shield_sk, best_sk) + 10;
@@ -459,13 +483,12 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
         const int wskill = item_attack_skill(OBJ_WEAPONS, i);
-
         if (wskill != skill)
-            continue;
+            continue;  //skip weapons not of the chosen skill
         item_considered.sub_type = i;
 
         int acqweight = property(item_considered, PWPN_ACQ_WEIGHT) * 100;
-
+        //hardcoded in item-prop.cc
         if (!acqweight)
             continue;
 
@@ -474,11 +497,11 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
         if (two_handed && you.get_mutation_level(MUT_MISSING_HAND))
             continue;
 
-        // For non-Trog/Okawaru acquirements, give a boost to high-end items.
+        // For non-Trog/Okawaru acquirements, give a boost to high-end melee items.
         if (!divine && !is_range_weapon(item_considered))
         {
             if (acqweight < 500)
-                acqweight = 500;
+                acqweight = 500; 
             // Quick blades get unproportionately hit by damage weighting.
             if (i == WPN_QUICK_BLADE)
                 acqweight = acqweight * 25 / 9;
@@ -489,6 +512,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
             acqweight *= damage / property(item_considered, PWPN_SPEED);
         }
 
+        //1 vs 2h weighting shenanigans
         if (two_handed)
             acqweight = acqweight * dont_shield / want_shield;
         else
@@ -550,6 +574,11 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/,
     return result;
 }
 
+/**
+ * Randomly generate a piece jewellery for acquirement/god gift
+ * 
+ * @returns an ideally unseen ring or amulet
+ */
 static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
                                           int /*agent*/)
 {
@@ -572,10 +601,15 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
     return result;
 }
 
-
+/**
+ * Randomly choose a staff to generate for acquirement/god gift
+ * 
+ * @return an appropriate staff for the player
+ */
 static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
                                       int /*agent*/)
 {
+    //weighted by spell school skill rates
     vector<pair<stave_type, int>> weights = {
         { STAFF_FIRE,        _skill_rdiv(SK_FIRE_MAGIC) },
         { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
@@ -592,12 +626,13 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
         if (weight.first != NUM_STAVES
             && get_ident_type(OBJ_STAVES, weight.first))
         {
-            weight.second = 0;
+            weight.second = 0; //never pick staff already seen
         }
     }
 
     stave_type staff = *random_choose_weighted(weights);
 
+    //5/X chance of giving you just a random staff. why?
     if (staff == NUM_STAVES)
     {
         do
@@ -689,6 +724,11 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
     return *wand;
 }
 
+/**
+ * generates a placeholder book for acquirement purposes
+ * 
+ * @return book of minor magic. don't worry, we overwrite this later
+ */
 static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent*/)
 {
@@ -722,6 +762,16 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no runes either
 };
 
+/**
+ * refines an object class for acquirement into a subtype
+ * 
+ * @param wanted   desired item type
+ * @param quantity number of items to generate
+ * @param divine   is this a god gift
+ * @param agent    source of acquirement (scroll, god gifting, etc)
+ * 
+ * @return item subtype 
+ */
 static int _find_acquirement_subtype(object_class_type &class_wanted,
                                      int &quantity, bool divine,
                                      int agent)
@@ -735,25 +785,29 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     int type_wanted = OBJ_RANDOM;
 
     int useless_count = 0;
-
     do
     {
         // Wands and misc have a common acquirement class.
+        // i don't think this is right, you can definitely get wands as a type
+        // so this makes misc evocable get replaced with wand 50% of the time
         if (class_wanted == OBJ_MISCELLANY)
             class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
         if (_subtype_finders[class_wanted])
         {
+            //this effectively calls _acquirement_FOO_subtype above
             type_wanted =
                 (*_subtype_finders[class_wanted])(divine, quantity, agent);
         }
 
+        //generate dummy item to check usefulness to player
         item_def dummy;
         dummy.base_type = class_wanted;
         dummy.sub_type = type_wanted;
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
 
+        //if we can't use this or god hates this, try again
         if (!is_useless_item(dummy, false) && !god_hates_item(dummy)
             && (agent >= NUM_GODS || god_likes_item_type(dummy,
                                                          (god_type)agent)))
@@ -1012,6 +1066,14 @@ static int _failed_acquirement(bool quiet)
     return NON_ITEM;
 }
 
+/**
+ * scores a weapon brand on an arbitrary 5 point scale
+ * 
+ * @param brand   the brand in question
+ * @param range   is weapon ranged?
+ * 
+ * @returns a rought estimate of brand quality from 0 to 5
+ */
 static int _weapon_brand_quality(int brand, bool range)
 {
     switch (brand)
@@ -1083,11 +1145,11 @@ static bool _is_armour_plain(const item_def &item)
 /**
  * Take a newly-generated acquirement item, and adjust its brand if we don't
  * like it.
+ * in reality only adjusts weapon brands
  *
  * Specifically, when any of:
  *   - The god doesn't like the brand (for divine gifts)
  *   - We think the brand is too weak (for non-divine gifts)
- *   - Sometimes if we've seen the brand before.
  *
  * @param item      The item which may have its brand adjusted. Not necessarily
  *                  a weapon or piece of armour.
@@ -1159,12 +1221,98 @@ static string _why_reject(const item_def &item, int agent)
     return ""; // all OK
 }
 
+/**
+ * generate a randomly good base item type for acquirement
+ * 
+ * @param agent   source of the acquirement request
+ * @return a good object class for acquirement
+ */
+static object_class_type _get_random_acquirement_class(int agent)
+{
+    int default_weight = _skill_rdiv(best_skill(SK_FIRST_SKILL, SK_LAST_SKILL));
+    int armour_weight = _skill_rdiv(SK_ARMOUR);
+    int weapon_weight = _skill_rdiv(best_skill(SK_FIRST_WEAPON, SK_LAST_WEAPON));
+    int staff_weight = min(_skill_rdiv(SK_STAVES), _skill_rdiv(SK_EVOCATIONS));
+    int evo_weight = _skill_rdiv(SK_EVOCATIONS);
+    //int book_weight = _skill_rdiv(best_skill(SK_SPELLCASTING, SK_LAST_MAGIC);
+    //books can be manuals which everyone likes, so leaving this at default
+    mpr(std::to_string(evo_weight));
+
+    vector<pair<object_class_type, int>> weights = {
+        {OBJ_ARMOUR, 1+armour_weight},
+        {OBJ_WEAPONS, 1+weapon_weight},
+        {OBJ_STAVES, 1+staff_weight},
+        {OBJ_JEWELLERY, 1+default_weight},
+        {OBJ_BOOKS, 1+default_weight},
+        {OBJ_MISCELLANY, 1+evo_weight},
+        {OBJ_WANDS, 1+evo_weight}
+    };
+
+    for (auto &weight : weights)
+    {
+        //don't generate armor if you can't wear it
+        if(you.has_mutation(MUT_NO_ARMOUR) && weight.first == OBJ_ARMOUR) 
+        {
+            weight.second = 0;
+        }
+        //don't generate weapons or staves if you can't use them
+        if(you.has_mutation(MUT_NO_GRASPING) && 
+            (weight.first == OBJ_WEAPONS || weight.first == OBJ_STAVES)) 
+        {
+            weight.second = 0;
+        }
+        //scrolls never generate wands or evocables, apparently
+        if(agent == AQ_SCROLL && 
+            (weight.first == OBJ_MISCELLANY || weight.first == OBJ_WANDS)) 
+        {
+            weight.second = 0;
+        }
+    }
+
+    //don't pick items already in the list of 3 for scrolls
+    if(agent == AQ_SCROLL) {
+        ASSERT(you.props.exists(ACQUIRE_ITEMS_KEY));
+        CrawlVector &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+        for (auto &weight : weights)
+        {       
+            for(item_def &item : acq_items) 
+            { 
+                if(weight.first == item.base_type) 
+                {
+                    weight.second = 0;
+                }
+            }
+        }
+    }
+
+    object_class_type *type = random_choose_weighted(weights);
+    if(type == nullptr) {
+        return OBJ_GOLD; //no valid item classes, just give em some gold
+    }
+
+    return *type;
+}
+
+/**
+ * The main event! given a class of item, generate one that the player might like
+ * 
+ * @param class_wanted type of item requested, e.g. armor, book, etc
+ * @param agent        what's generating this item? scroll or god gift?
+ * @param quiet        debug printing i guess? usually true
+ * @param pos[out]     location to spawn item
+ * 
+ * @return index to the item
+ */
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
                             const coord_def &pos)
 {
-    ASSERT(class_wanted != OBJ_RANDOM);
+    //random acquirement
+    if(class_wanted == OBJ_RANDOM) {
+        class_wanted = _get_random_acquirement_class(agent);
+    }
 
+    //is this a god gift?
     const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
                          || agent == GOD_TROG
 #if TAG_MAJOR_VERSION == 34
@@ -1172,26 +1320,28 @@ int acquirement_create_item(object_class_type class_wanted,
 #endif
                         );
     int thing_created = NON_ITEM;
-    int quant = 1;
-#define MAX_ACQ_TRIES 40
+    int quant = 1; //number of copies of this item to generate
+#define MAX_ACQ_TRIES 40 //maximum number of tries to get a good item
     for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
     {
-        int type_wanted = -1;
+        int type_wanted = -1; //actual type wanted after refining
+        //Xom has a 5% chance to deliberately give you bad armor when requested
+        //probably makese more sense to put this somewhere else
         if (agent == GOD_XOM && class_wanted == OBJ_ARMOUR && one_chance_in(20))
             type_wanted = _useless_armour_type();
         else
         {
-            // This may clobber class_wanted (e.g. staves)
+            // This may clobber class_wanted (e.g. staves) (?)
             type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
         }
-        ASSERT(type_wanted != -1);
+        ASSERT(type_wanted != -1); //by now we should have picked an item type
 
         // Don't generate randart books in items(), we do that
         // ourselves.
         bool want_arts = (class_wanted != OBJ_BOOKS);
         if (agent == GOD_TROG && !one_chance_in(3))
-            want_arts = false;
+            want_arts = false; //trog tends not to grant artifacts
 
         thing_created = items(want_arts, class_wanted, type_wanted,
                               ITEM_LEVEL, 0, agent);
@@ -1204,7 +1354,7 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         item_def &acq_item(env.item[thing_created]);
-        _adjust_brand(acq_item, divine, agent);
+        _adjust_brand(acq_item, divine, agent);  //only affects weapons
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
@@ -1491,8 +1641,14 @@ string AcquireMenu::get_keyhelp(bool) const
     return pad_more_with(help, "<lightgrey>[<w>Esc</w>] exit</lightgrey>", MIN_COLS);
 }
 
+/**
+ * drop a selected item defined in the acquirement menu at the player's feet
+ * 
+ *  @param item [out] the item created
+ */
 static void _create_acquirement_item(item_def &item)
 {
+    //this is the list of already generated items so far this acquirement pass
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 
     // Now that we have a selection, mark any generated unrands as not having
@@ -1514,12 +1670,14 @@ static void _create_acquirement_item(item_def &item)
 
     set_ident_type(item, true);
 
+    //spawn item at your feet
     if (copy_item_to_grid(item, you.pos()))
         canned_msg(MSG_SOMETHING_APPEARS);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     acq_items.clear();
+    //clears the player prop so that next time we acquire we start at the beginning
     you.props.erase(ACQUIRE_ITEMS_KEY);
 }
 
@@ -1586,14 +1744,23 @@ bool AcquireMenu::process_key(int keyin)
         return ret;
 }
 
-static item_def _acquirement_item_def(object_class_type item_type)
+/**
+ * generates a potential item for acquirement
+ * 
+ * @param type what class of item (e.g. armor, wand) should we get
+ * 
+ * @return the item (definition, not actual item)
+ * */
+static item_def _acquirement_item_def(object_class_type type)
 {
     item_def item;
 
-    const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
+    //create the random item!
+    const int item_index = acquirement_create_item(type, AQ_SCROLL, true);
 
     if (item_index != NON_ITEM)
     {
+        //don't make items your god hates
         ASSERT(!god_hates_item(env.item[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
@@ -1607,51 +1774,37 @@ static item_def _acquirement_item_def(object_class_type item_type)
     return item;
 }
 
-vector<object_class_type> shuffled_acquirement_classes(bool scroll)
-{
-    vector<object_class_type> rand_classes;
-
-    if (!you.has_mutation(MUT_NO_ARMOUR))
-        rand_classes.emplace_back(OBJ_ARMOUR);
-
-    if (!you.has_mutation(MUT_NO_GRASPING))
-    {
-        rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_STAVES);
-    }
-
-    rand_classes.emplace_back(OBJ_JEWELLERY);
-    rand_classes.emplace_back(OBJ_BOOKS);
-
-    // dungeon generation
-    if (!scroll)
-    {
-        rand_classes.emplace_back(OBJ_MISCELLANY);
-        rand_classes.emplace_back(OBJ_WANDS);
-    }
-    shuffle_array(rand_classes);
-    return rand_classes;
-}
-
+/**
+ * generate a list of items to acquire for the acquirement menu
+ */
 static void _make_acquirement_items()
 {
-    vector<object_class_type> rand_classes = shuffled_acquirement_classes(true);
-    const int num_wanted = min(3, (int) rand_classes.size());
-
+    const int num_wanted = 3;
+    const int max_tries = 200;
+    int num_tries = 0;
+    //get list of all valid acquirement item types ordered at random. we step through this ensuring you get
+    //at most one of each type.
+    //flush the old list
     CrawlVector &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
     acq_items.empty();
 
     // Generate item defs until we have enough, skipping any random classes
     // that fail to generate an item.
-    for (auto obj_type : rand_classes)
-    {
+    do {
         if (acq_items.size() == num_wanted)
             break;
 
-        auto item = _acquirement_item_def(obj_type);
-        if (item.defined())
+        auto item = _acquirement_item_def(OBJ_RANDOM);
+        /*if (item == nullptr) {
+            break; //cound't find an item to generate
+        }*/
+        if(item.base_type == OBJ_GOLD) {
+            break; //ran out of item classes, stop generating
+        }
+        if (item.defined()) 
             acq_items.push_back(item);
-    }
+        num_tries++;
+    } while (num_tries < max_tries);
 
     // Gold is guaranteed.
     auto gold_item = _acquirement_item_def(OBJ_GOLD);
@@ -1671,13 +1824,14 @@ static void _make_acquirement_items()
 */
 bool acquirement_menu()
 {
-    ASSERT(!crawl_state.game_is_arena());
+    ASSERT(!crawl_state.game_is_arena());  //disabled in arena
 
+    //if the array of acquirable items doesn't exist yet, create it
     if (!you.props.exists(ACQUIRE_ITEMS_KEY))
         _make_acquirement_items();
-
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 
+    //spawns the selected item when picked
     int index = 0;
     if (!clua.callfn("c_choose_acquirement", ">d", &index))
     {
@@ -1690,6 +1844,7 @@ bool acquirement_menu()
         return true;
     }
 
+    //present the menu for picking from the generated items
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();
 
