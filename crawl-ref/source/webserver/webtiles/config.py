@@ -159,7 +159,7 @@ def validate():
     required = ['static_path', 'template_path', 'server_id',
         'dgl_status_file', 'init_player_program',]
     if get('allow_password_reset') or get('admin_password_reset'):
-        required.add('lobby_url')
+        required.append('lobby_url')
 
     check_keys_all(required, raise_on_missing=True)
 
