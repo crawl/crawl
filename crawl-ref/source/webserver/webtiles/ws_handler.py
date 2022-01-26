@@ -1,5 +1,6 @@
 import codecs
 import datetime
+import errno
 import logging
 import os
 import random
@@ -905,9 +906,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         rcfile_path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
-        with open(rcfile_path, 'wb') as f:
-            # TODO: is binary + encode necessary in py 3?
-            f.write(utf8(contents))
+        try:
+            with open(rcfile_path, 'wb') as f:
+                # TODO: is binary + encode necessary in py 3?
+                f.write(utf8(contents))
+        except Exception:
+            self.logger.warning(
+                    "Couldn't save rcfile for %s!",
+                    self.username, exc_info=True)
+            return False
+        return True
 
     def on_message(self, message): # type: (Union[str, bytes]) -> None
         try:
