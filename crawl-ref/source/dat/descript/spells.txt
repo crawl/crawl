@@ -356,10 +356,10 @@ exploding.
 %%%%
 Conjure Flame spell
 
-Creates a cloud of magically sustained fire at the caster's feet. The fire takes
-a moment to begin burning with vigor and in its fragile initial state is easily
-smothered by either the caster or a wandering monster. Re-casting the spell
-will bring the fire fully to life, but will burn the caster.
+Conjures burning embers at the caster's feet, which will burst into flame soon
+after. Any creature (including the caster) that stands on the embers will smother
+them, so casters are well advised to step away immediately after casting.
+Re-casting the spell will also ignite the embers, burning the caster.
 %%%%
 Conjure Living Spells spell
 
