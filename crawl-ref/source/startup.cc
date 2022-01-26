@@ -300,6 +300,11 @@ static void _post_init(bool newc)
     level_id old_level;
     old_level.branch = NUM_BRANCHES;
 
+#ifdef USE_TILE_WEB
+    if (tiles.get_ui_state() == UI_CRT)
+        tiles.set_ui_state(UI_NORMAL);
+#endif
+
     load_level(you.entering_level ? you.transit_stair :
                you.char_class == JOB_DELVER ? DNGN_STONE_STAIRS_UP_I : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :
