@@ -2798,7 +2798,7 @@ namespace quiver
         {
             menu_letter hotkey;
             // resets everything
-            deleteAll(items);
+            clear();
             actions = _menu_quiver_item_order();
             const auto spell_actions =
                     spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
