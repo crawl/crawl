@@ -692,11 +692,18 @@ private:
     // ones; otherwise, show only non-hidden ones.
     void update_entries()
     {
+        // try to keep the hover on the current spell. (Maybe this is too
+        // complicated?)
+        const spell_type hovered_spell =
+            last_hovered >= 0 && items[last_hovered]->data
+                ? *static_cast<spell_type *>(items[last_hovered]->data)
+                : SPELL_NO_SPELL;
         clear();
         hidden_count = 0;
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
         text_pattern pat(search_text, true);
+        int new_hover = 0;
         for (auto& spell : spells)
         {
             if (!search_text.empty()
@@ -762,7 +769,12 @@ private:
 
             me->data = &(spell.spell);
             add_entry(me);
+            if (hovered_spell == spell.spell)
+                new_hover = items.size() - 1;
+
         }
+        reset();
+        set_hovered(new_hover);
         update_menu(true);
     }
 
