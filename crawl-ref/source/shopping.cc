@@ -1110,7 +1110,7 @@ void ShopMenu::purchase_selected()
 
     // Since the old ShopEntrys may now point to past the end of shop.stock (or
     // just the wrong place in general) nuke the whole thing and start over.
-    deleteAll(items);
+    clear();
     init_entries();
     resort();
 
