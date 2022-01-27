@@ -3146,6 +3146,8 @@ static bool _do_action(item_def &item, const command_type action)
     if (action == CMD_NO_CMD)
         return true;
 
+    unwind_bool no_more(crawl_state.show_more_prompt, false);
+
     // ok in principle on floor items (though I didn't enable the last two)
     switch (action)
     {
