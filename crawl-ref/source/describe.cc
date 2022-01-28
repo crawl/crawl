@@ -3951,8 +3951,10 @@ void describe_deck(deck_type deck)
 void describe_mutation(mutation_type mut)
 {
     describe_info inf;
+    // TODO: mutation_name was not designed for use as a title, sometimes has
+    // the wrong casing, is often cryptic
     inf.title = uppercase_first(mutation_name(mut)).c_str();
-    if (you.has_mutation(mut))
+    if (you.has_mutation(mut) && mutation_max_levels(mut) > 1)
     {
         inf.title += make_stringf(" (level %d/%d)",
                                   you.get_mutation_level(mut),
