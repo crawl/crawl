@@ -978,7 +978,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_HIGH_MAGIC, 2, 3, mutflag::good, false,
-  "high mp",
+  "high MP",
 
   {"You have an increased reservoir of magic. (+10% MP)",
    "You have a considerably increased reservoir of magic. (+20% MP)",
@@ -994,7 +994,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_LOW_MAGIC, 9, 3, mutflag::bad, false,
-  "low mp",
+  "low MP",
 
   {"Your magical capacity is low. (-10% MP)",
    "Your magical capacity is very low. (-20% MP)",
@@ -2237,13 +2237,14 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_HP_CASTING, 0, 1, mutflag::good, false,
-  "hp casting",
+  "HP casting",
 
   {"Your magical power is your life essence.", "", ""},
   {"Your magical power and health merge together.", "", ""},
   {"Your life and magic unlink."},
 },
 
+// XX why does this have 3 levels, only 1 is used
 { MUT_FLAT_HP, 0, 3, mutflag::good, false,
   "extra vitality",
 
