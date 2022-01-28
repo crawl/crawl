@@ -219,6 +219,10 @@ on the defensive benefits of training the Armour skill. Each level of this
 mutation makes your pseudopods larger and stronger.
 %%%%
 # ------ Resistance mutations -----
+steam resistance mutation
+
+You are immune to the damage from steam breath and steam clouds.
+%%%%
 mutation resistance mutation
 
 Your genetic code is unusually stable, making it less likely that you will be
@@ -250,6 +254,10 @@ electricity resistance mutation
 
 You resist electricity, taking less damage from it.
 %%%%
+acid resistance mutation
+
+You resist acid, taking less damage. You are less likely to become corroded.
+%%%%
 negative energy resistance
 
 You resist negative energy. Each level of this mutation reduces the amount of
@@ -263,6 +271,11 @@ You are vulnerable to fire and take more damage from it.
 cold vulnerability mutation
 
 You are vulnerable to cold and take more damage from it.
+%%%%
+temperature sensitive mutation
+
+You are vulnerable to both cold and fire, and you take more damage from those
+effects.
 %%%%
 electricity vulnerability mutation
 
