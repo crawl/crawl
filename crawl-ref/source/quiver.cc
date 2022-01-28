@@ -2662,22 +2662,9 @@ namespace quiver
 
         bool set_to_quiver(shared_ptr<quiver::action> s)
         {
-            if (s && s->is_valid()
-                && (allow_empty || *s != quiver::action()))
-            {
-                if (!_quiver_inscription_ok(s->get_item()))
-                {
-                    const string prompt = make_stringf("Really quiver %s?",
-                        you.inv[s->get_item()].name(DESC_INVENTORY).c_str());
-                    if (!yesno(prompt.c_str(), true, 'n'))
-                        return false;
-                }
-                cur_quiver.set(s);
-                // a bit hacky:
-                if (&cur_quiver == &you.quiver_action)
-                    you.launcher_action.set(s);
-                return true;
-            }
+            if (s && s->is_valid() && (allow_empty || *s != quiver::action()))
+                return ::quiver::set_to_quiver(s, cur_quiver);
+
             return false;
         }
 
@@ -3159,6 +3146,29 @@ namespace quiver
 
         menu.show();
     }
+
+    bool set_to_quiver(shared_ptr<quiver::action> s,
+                                action_cycler &cur_quiver=you.quiver_action)
+    {
+        if (s && s->is_valid())
+        {
+            if (!_quiver_inscription_ok(s->get_item()))
+            {
+                const string prompt = make_stringf("Really quiver %s?",
+                    you.inv[s->get_item()].name(DESC_INVENTORY).c_str());
+                if (!yesno(prompt.c_str(), true, 'n'))
+                    return false;
+            }
+            // XX does this really need to be so flexible
+            cur_quiver.set(s);
+            // a bit hacky:
+            if (&cur_quiver == &you.quiver_action)
+                you.launcher_action.set(s);
+            return true;
+        }
+        return false;
+    }
+
 
     // this class is largely legacy code -- can it be done away with?
     // or refactored to use actions.
