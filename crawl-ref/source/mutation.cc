@@ -98,7 +98,9 @@ static const body_facet_def _body_facets[] =
     { EQ_CLOAK, MUT_WEAKNESS_STINGER }
 };
 
-static vector<mutation_type> removed_mutations =
+vector<mutation_type> get_removed_mutations()
+{
+    static vector<mutation_type> removed_mutations =
     {
 #if TAG_MAJOR_VERSION == 34
         MUT_ROUGH_BLACK_SCALES,
@@ -131,8 +133,6 @@ static vector<mutation_type> removed_mutations =
 #endif
     };
 
-vector<mutation_type> get_removed_mutations()
-{
     return removed_mutations;
 }
 
@@ -634,15 +634,19 @@ void validate_mutations(bool debug_msg)
     }
     ASSERT(total_temp == you.attribute[ATTR_TEMP_MUTATIONS]);
 
-//#define DEBUG_MUTATIONS
+// #define DEBUG_MUTATIONS
 #ifdef DEBUG_MUTATIONS
     if (debug_msg)
     {
+        auto removed_v = get_removed_mutations();
+        unordered_set<mutation_type, hash<int>> removed(removed_v.begin(), removed_v.end());
         vector<string> no_desc;
 
         for (int i = 0; i < NUM_MUTATIONS; i++)
         {
             mutation_type mut = static_cast<mutation_type>(i);
+            if (removed.count(mut))
+                continue;
             const string name = mutation_name(mut);
             string lookup = getLongDescription(name + " mutation");
             if (lookup.empty())
