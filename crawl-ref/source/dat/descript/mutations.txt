@@ -569,8 +569,9 @@ Each level of this mutation increases your maximum health by 4 points.
 strong legs mutation
 
 You have big, strong legs, allowing you to hop about with
-<input>$cmd[CMD_USE_ABILITY]</input>. The second level of this mutation allows
-you to hop farther.
+<input>$cmd[CMD_USE_ABILITY]</input>, though you can't perfectly aim where you
+land. The second level of this mutation allows you to hop farther. Each time
+you hop, you need to rest for a bit before you can hop again.
 %%%%
 roll mutation
 
@@ -655,6 +656,41 @@ Your divine heritage dramatically boosts your attribute gain (Strength,
 Intelligence, and Dexterity) as you level up relative to other species, both
 in quantity and in how much you can control your development. Every three
 levels, you choose an attribute to increase by four points.
+%%%%
+tentacles mutation
+
+Your gelatinous body has eight tentacles that help you move around in shallow
+or deep water and can be used to constrict enemies. Each tentacle can wear a
+ring, but you need four of them to move around, and either two or four
+tentacles to hold a weapon depending on its size.
+%%%%
+mertail mutation
+
+Your morphogenic matrix is unstable, allowing your lower body to shift to
+a powerful aquatic tail when in shallow or deep water. It will quickly
+reform into legs once you leave the water.
+%%%%
++LOS mutation
+
+The darkness flees at your approach, allowing an extended range of vision and
+ranged attack (+1 line of sight), but also allowing you to be seen and
+potentially targeted from further away.
+%%%%
+no regeneration mutation
+
+You do not regenerate health while resting, and are unable to receive the
+effects of magic that hastens the speed of regeneration. Sources of HP gain
+such as potions and religious invocations will still heal you, and certain
+divine invocations can temporarily grant you the ability to regenerate.
+To compensate, you are able to heal yourself via the
+<input>$cmd[CMD_USE_ABILITY]</input> key, at the cost of permanent MP.
+%%%%
+strong nose mutation
+
+You have a powerful nose adapted to the Dungeon's scents, allowing you to
+detect where treasures lay hidden. As you explore the dungeon, nearby item
+locations that you cannot directly see will gain a marker for
+as-yet-undiscovered items.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
