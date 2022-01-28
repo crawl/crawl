@@ -189,6 +189,7 @@ namespace quiver
     };
 
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
+    bool set_to_quiver(shared_ptr<quiver::action> s, action_cycler &cur_quiver);
     void on_actions_changed(bool check_autoswitch=false);
     void on_weapon_changed();
     void on_newchar();

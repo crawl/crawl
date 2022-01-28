@@ -3182,7 +3182,9 @@ static bool _do_action(item_def &item, const command_type action)
     {
     case CMD_WIELD_WEAPON:     wield_weapon(true, slot);            break;
     case CMD_UNWIELD_WEAPON:   wield_weapon(true, SLOT_BARE_HANDS); break;
-    case CMD_QUIVER_ITEM:      you.quiver_action.set_from_slot(slot); break;
+    case CMD_QUIVER_ITEM:
+        quiver::set_to_quiver(quiver::slot_to_action(slot), you.quiver_action); // ugh
+        break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
