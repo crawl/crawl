@@ -633,6 +633,25 @@ void validate_mutations(bool debug_msg)
         }
     }
     ASSERT(total_temp == you.attribute[ATTR_TEMP_MUTATIONS]);
+
+//#define DEBUG_MUTATIONS
+#ifdef DEBUG_MUTATIONS
+    if (debug_msg)
+    {
+        vector<string> no_desc;
+
+        for (int i = 0; i < NUM_MUTATIONS; i++)
+        {
+            mutation_type mut = static_cast<mutation_type>(i);
+            const string name = mutation_name(mut);
+            string lookup = getLongDescription(name + " mutation");
+            if (lookup.empty())
+                no_desc.push_back(name);
+        }
+        dprf("Mutations with no description: %s",
+                    join_strings(no_desc.begin(), no_desc.end(), ", ").c_str());
+    }
+#endif
 }
 
 static string _terse_mut_name(mutation_type mut)
@@ -1255,6 +1274,10 @@ private:
 
 void display_mutations()
 {
+#ifdef DEBUG
+    validate_mutations(true);
+#endif
+
     MutationMenu mut_menu;
     mut_menu.show();
 }
