@@ -543,6 +543,29 @@ big wings mutation
 
 You have big, strong wings, capable of bearing you through the air.
 %%%%
+float mutation
+
+You hover through the air, forever free from the surly bonds of earth.
+%%%%
+innate caster mutation
+
+You cannot learn spells from books. Instead, as you gain experience, spells
+of higher and higher level bubble up from your fiery heart. These spells are
+unpredictable and unaffected by your choice of god. You cannot train specific
+spell schools - the Spellcasting skill alone determines these spells' success
+rate and power.
+%%%%
+hp casting mutation
+
+You have no separate reserve of magical power, and anything that would affect
+MP has no effect on you. When casting spells, using abilities, or doing anything
+else that *costs* MP for normal species, you spend HP instead.
+%%%%
+extra vitality mutation
+
+You are built differently from most species, making you slightly harder to kill.
+Each level of this mutation increases your maximum health by 4 points.
+%%%%
 strong legs mutation
 
 You have big, strong legs, allowing you to hop about with
