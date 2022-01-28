@@ -252,11 +252,12 @@ from cold.
 %%%%
 electricity resistance mutation
 
-You resist electricity, taking less damage from it.
+You resist electricity (rElec), taking less damage from it.
 %%%%
 acid resistance mutation
 
-You resist acid, taking less damage. You are less likely to become corroded.
+You resist acid (rCorr), taking less damage from it. You are also less likely to
+become corroded.
 %%%%
 negative energy resistance
 
