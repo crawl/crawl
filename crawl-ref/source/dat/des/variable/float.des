@@ -33,14 +33,14 @@ function zot_entry_setup(e)
 end
 
 function minmay_elemental_octagon_setup(e)
-    e.tags('uniq_elemental_octagon no_pool_fixup')
-    e.subst('A : xcvb m:5 .:5')
-    e.subst('B : .:50 c:20 vbm')
-    e.subst('C : .xcvbmGTdE')
-    e.subst('D : .xcvbmGTd1')
-    e.subst('E : .:60 cvbmGT')
-    e.nsubst('1 = 4:1 / 4 = 1.. / *:.')
-    e.nsubst('d = 1:2 / *:d')
+    e.tags('uniq_elemental_octagon no_pool_fixup no_monster_gen no_item_gen')
+    e.subst('a : xcvb m:5 .:5')
+    e.subst('p : .:50 c:20 vbm')
+    e.subst('q : .:20 xcvbmGTr')
+    e.subst('r : .:60 cvbmGT')
+    e.subst('D : .xcvbmGT')
+    e.nsubst('1 = 4=1 / 4=1. / .')
+    e.nsubst('d = 2 / d')
 end
 }}
 
@@ -3638,123 +3638,182 @@ ENDMAP
 ################################################################################
 # An octagon series
 #
-# ident:type randarts here are a bit weird, showing the name and the brand
-# only- off aesthetically, but aside from strange user autopickup functions
-# should be fine otherwise.
-#
 NAME:   minmay_shoctagon
-DEPTH:  D:12-, Depths:1-2, Elf
+DEPTH:  D:12-, Elf, Depths
 ORIENT: float
-MONS:   raiju / sixfirhy w:2
-KMONS:  2 = shock serpent / storm dragon
-ITEM:   book of air / book of the sky / book of lighting / book of storms / \
-        manual of air magic / staff of air ident:type / \
-        lightning rod w:20 / storm dragon scales w:5
-KITEM:  2 = arc_blade ident:type
+ITEM:   book of air / book of the sky / book of lightning / book of storms \
+        / manual of air magic / staff of air ident:all / lightning rod w:20 \
+        / storm dragon scales w:5
+KITEM:  2 = arc blade / quick blade ego:electrocution randart ident:all \
+        / glaive of the guard \
+        / demon trident ego:electrocution randart ident:all / storm bow
+: if you.in_branch("D") then
+:     if you.depth() < 14 then
+MONS:   raiju / sixfirhy w:5
+KMONS:  2 = shock serpent / deep elf zephyrmancer
+:     else
+MONS:   raiju / sixfirhy
+KMONS:  2 = deep elf zephyrmancer / shock serpent / storm dragon
+:     end
+: elseif you.in_branch("Elf") then
+MONS:   air elemental / deep elf zephyrmancer
+KMONS:  2 = storm dragon
+# Depths
+: else
+MONS:   spark wasp w:20 / storm dragon
+KMONS:  2 = titan
+: end
 : minmay_elemental_octagon_setup(_G)
 MAP
     xxx@xxx
-   xxB...Bxx
-  xxB..E..Bxx
- xxB.......Bxx
-xxB...AAA...Bxx
-xB...11111...Bx
-x...A1DdD1A...x
-@.E.A1dCd1A.E.@
-x...A1DdD1A...x
-xB...11111...Bx
-xxB...AAA...Bxx
- xxB.......Bxx
-  xxB..E..Bxx
-   xxB...Bxx
+   xxp...pxx
+  xxp..r..pxx
+ xxp.......pxx
+xxp...aaa...pxx
+xp...11111...px
+x...a1DdD1a...x
+@.r.a1dqd1a.r.@
+x...a1DdD1a...x
+xp...11111...px
+xxp...aaa...pxx
+ xxp.......pxx
+  xxp..r..pxx
+   xxp...pxx
     xxx@xxx
 ENDMAP
 
 NAME:   minmay_roctagon
-DEPTH:  D:12-, Depths:1-2, Elf
+DEPTH:  D:10-, Elf, Depths
 ORIENT: float
-MONS:   two-headed ogre / troll
-KMONS:  2 = stone giant / iron dragon
-ITEM:   book of geomancy / book of the earth / book of iron / \
-        manual of earth magic / staff of earth ident:type / \
-        ring of protection ident:type / tin of tremorstones / \
-        crystal plate armour w:5
-KITEM:  2 = devastator
+ITEM:   book of geomancy / book of the earth / book of iron \
+        / manual of earth magic / staff of earth ident:all \
+        / ring of protection ident:all / tin of tremorstones \
+        / crystal plate armour w:5
+KITEM:  2 = devastator / eveningstar ego:vorpal randart ident:all \
+        / dark maul
+: if you.in_branch("D") then
+:     if you.depth() < 13 then
+MONS:   two-headed ogre / basilisk / gargoyle / boulder beetle w:5
+KMONS:  2 = catoblepas w:30 / stone giant / war gargoyle \
+        / deep troll earth mage
+:     else
+MONS:   basilisk / gargoyle / boulder beetle / catoblepas
+KMONS:  2 = stone giant / deep troll earth mage / war gargoyle \
+        / iron dragon / crystal guardian
+:     end
+: elseif you.in_branch("Elf") then
+MONS:   earth elemental w:20 / stone giant / war gargoyle
+KMONS:  2 = iron dragon / crystal guardian
+# Depths
+: else
+MONS:   iron troll w:20 / stone giant w:20 / iron dragon \
+        / walking earthen tome / walking crystal tome / juggernaut
+KMONS:  2 = iron giant
+: end
 : minmay_elemental_octagon_setup(_G)
 MAP
     xxx@xxx
-   xxB...Bxx
-  xxB..E..Bxx
- xxB.......Bxx
-xxB.A.A.A.A.Bxx
-xB...11111...Bx
-x...A1DdD1A...x
-@.E..1dCd1..E.@
-x...A1DdD1A...x
-xB...11111...Bx
-xxB.A.A.A.A.Bxx
- xxB.......Bxx
-  xxB..E..Bxx
-   xxB...Bxx
+   xxp...pxx
+  xxp..r..pxx
+ xxp.......pxx
+xxp.a.a.a.a.pxx
+xp...11111...px
+x...a1DdD1a...x
+@.r..1dqd1..r.@
+x...a1DdD1a...x
+xp...11111...px
+xxp.a.a.a.a.pxx
+ xxp.......pxx
+  xxp..r..pxx
+   xxp...pxx
     xxx@xxx
 ENDMAP
 
 NAME:   minmay_coctagon
-DEPTH:  D:10-, Elf
+DEPTH:  D:10-, Elf, Depths
 ORIENT: float
-MONS:   polar bear w:6 / rime drake / ice beast
-KMONS:  2 = frost giant / ice dragon
-ITEM:   book of frost / book of ice / book of winter / book of rime / \
-        ozocubu's autobiography / book of the tundra / manual of ice magic / \
-        wand of iceblast ident:type / staff of cold ident:type / \
-        ring of ice ident:type / phial of floods / ice dragon scales w:5
-KITEM:  2 = frostbite ident:all / \
-            battleaxe ego:freezing randart ident:all / \
-            broad axe ego:freezing randart ident:all
+ITEM:   book of frost / book of ice / book of winter / book of rime \
+        / ozocubu's autobiography / book of the tundra / manual of ice magic \
+        / wand of iceblast ident:all / staff of cold ident:all \
+        / ring of ice ident:all / phial of floods / ice dragon scales w:5
+KITEM:  2 = frostbite / battleaxe ego:freezing randart ident:all \
+        / broad axe ego:freezing randart ident:all
+: if you.in_branch("D") then
+:     if you.depth() < 13 then
+MONS:  simulacrum / polar bear / rime drake
+KMONS: 2 = ice dragon / freezing wraith
+:     else
+MONS:  simulacrum place:D:$ / rime drake / freezing wraith
+KMONS: 2 = ice dragon / frost giant
+:     end
+: elseif you.in_branch("Elf") then
+MONS:  deep elf blademaster simulacrum / freezing wraith / ice dragon \
+       / deep elf knight
+KMONS: 2 = frost giant / shard shrike
+# Depths
+: else
+MONS:   simulacrum w:20 / ice dragon / frost giant
+KMONS:  2 = ice fiend / shard shrike band
+: end
 : minmay_elemental_octagon_setup(_G)
 MAP
     xxx@xxx
-   xxB...Bxx
-  xxB..E..Bxx
- xxB.......Bxx
-xxB..AA.AA..Bxx
-xB..A11111A..Bx
-x...A1DdD1A...x
-@.E..1dCd1..E.@
-x...A1DdD1A...x
-xB..A11111A..Bx
-xxB..AA.AA..Bxx
- xxB.......Bxx
-  xxB..E..Bxx
-   xxB...Bxx
+   xxp...pxx
+  xxp..r..pxx
+ xxp.......pxx
+xxp..aa.aa..pxx
+xp..a11111a..px
+x...a1DdD1a...x
+@.r..1dqd1..r.@
+x...a1DdD1a...x
+xp..a11111a..px
+xxp..aa.aa..pxx
+ xxp.......pxx
+  xxp..r..pxx
+   xxp...pxx
     xxx@xxx
 ENDMAP
 
 NAME:   minmay_firetagon
-DEPTH:  D:10-, Elf, Geh, !Geh:$
+DEPTH:  D:10-, Elf, Depths
 ORIENT: float
-MONS:   fire bat
-KMONS:  2 = fire giant / fire dragon
-ITEM:   book of flames / book of fire / everburning encyclopedia / \
-        manual of fire magic / staff of fire ident:type / \
-        ring of fire ident:type / fire dragon scales w:5
-KITEM:  2 = firestarter ident:type
+ITEM:   book of flames / book of fire / everburning encyclopedia \
+        / manual of fire magic / staff of fire ident:all \
+        / ring of fire ident:all / fire dragon scales w:5
+KITEM:  2 = firestarter / eveningstar ego:flaming ident:all \
+        / demon whip ego:flaming randart ident:all
+: if you.in_branch("D") then
+:     if you.depth() < 13 then
+MONS:   fire bat / fire elemental / smoke demon w:5
+KMONS:  2 = deep elf pyromancer / efreet / salamander tyrant / fire dragon
+:     else
+MONS:   fire elemental / smoke demon / sun demon / efreet / deep elf pyromancer
+KMONS:  2 = salamander tyrant / fire dragon / fire giant
+:     end
+: elseif you.in_branch("Elf") then
+MONS:   fire elemental / deep elf pyromancer / fire dragon
+KMONS:  2 = fire giant
+# Depths
+: else
+MONS:   fire dragon / fire giant / salamander tyrant
+KMONS:  2 = hellephant
+: end
 : minmay_elemental_octagon_setup(_G)
 MAP
     xxx@xxx
-   xxB...Bxx
-  xxB..E..Bxx
- xxB.......Bxx
-xxB.AA...AA.Bxx
-xB..A11111A..Bx
+   xxp...pxx
+  xxp..r..pxx
+ xxp.......pxx
+xxp.aa...aa.pxx
+xp..a11111a..px
 x....1DdD1....x
-@.E..1dCd1..E.@
+@.r..1dqd1..r.@
 x....1DdD1....x
-xB..A11111A..Bx
-xxB.AA...AA.Bxx
- xxB.......Bxx
-  xxB..E..Bxx
-   xxB...Bxx
+xp..a11111a..px
+xxp.aa...aa.pxx
+ xxp.......pxx
+  xxp..r..pxx
+   xxp...pxx
     xxx@xxx
 ENDMAP
 
