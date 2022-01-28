@@ -257,7 +257,7 @@ static string _get_seen_branches(bool display)
     if (display)
     {
         disp += " (press <white>G</white> to reach them and "
-                "<white>?/B</white> for more information)";
+                "<white>?/b</white> for more information)";
     }
     disp += "\n";
 
@@ -398,7 +398,7 @@ static string _get_altars(bool display)
     if (display)
     {
         disp += " (press <white>_</white> to reach them and "
-                "<white>?/G</white> for information about gods)";
+                "<white>?/g</white> for information about gods)";
     }
     disp += "\n";
     disp += _print_altars_for_gods(temple_god_list(), true, display);
