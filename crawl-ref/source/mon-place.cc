@@ -1036,8 +1036,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->god = GOD_MAKHLEB;
         else if (mg.cls == MONS_DEMONSPAWN_BLACK_SUN)
             mon->god = GOD_KIKUBAAQUDGHA;
-        else if (mg.cls == MONS_DEMONSPAWN_CORRUPTER)
+        else if (mg.cls == MONS_DEMONSPAWN_CORRUPTER
+                 || mg.cls == MONS_MLIOGLOTL)
+        {
             mon->god = GOD_LUGONU;
+        }
         else
         {
             switch (mons_genus(mg.cls))
