@@ -4797,63 +4797,59 @@ static object_class_type _superb_object_class()
             10, OBJ_MISCELLANY);
 }
 
+static int _concretize_level(int spec_level, int dgn_level)
+{
+    if (spec_level >= 0)
+        return spec_level;
+
+    if (dgn_level == INVALID_ABSDEPTH)
+        dgn_level = env.absdepth0;
+
+    switch (spec_level)
+    {
+    case ISPEC_DAMAGED:
+    case ISPEC_BAD:
+    case ISPEC_RANDART:
+        return spec_level;
+    case ISPEC_STAR:
+        return 5 + dgn_level * 2;
+    case ISPEC_SUPERB:
+        return ISPEC_GOOD_ITEM;
+    default:
+        return dgn_level;
+    }
+}
+
+static object_class_type _concretize_type(const item_spec &spec)
+{
+    if (spec.base_type != OBJ_RANDOM)
+        return spec.base_type;
+    if (spec.props.exists(MIMIC_KEY))
+        return get_random_item_mimic_type();
+    if (spec.level == ISPEC_SUPERB)
+        return _superb_object_class();
+    if (spec.level == ISPEC_ACQUIREMENT)
+        return shuffled_acquirement_classes(false)[0];
+    return spec.base_type;
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
-                   int level)
+                   int dgn_level)
 {
     // Dummy object?
     if (spec.base_type == OBJ_UNASSIGNED)
         return NON_ITEM;
 
-    if (level == INVALID_ABSDEPTH)
-        level = env.absdepth0;
-
-    object_class_type base_type = spec.base_type;
-    bool acquire = false;
-
-    if (spec.level >= 0)
-        level = spec.level;
-    else
-    {
-        bool adjust_type = false;
-        switch (spec.level)
-        {
-        case ISPEC_DAMAGED:
-        case ISPEC_BAD:
-        case ISPEC_RANDART:
-            level = spec.level;
-            break;
-        case ISPEC_STAR:
-            level = 5 + level * 2;
-            break;
-        case ISPEC_SUPERB:
-            adjust_type = true;
-            level = ISPEC_GOOD_ITEM;
-            break;
-        case ISPEC_ACQUIREMENT:
-            adjust_type = true;
-            acquire = true;
-            break;
-        default:
-            break;
-        }
-
-        if (spec.props.exists(MIMIC_KEY) && base_type == OBJ_RANDOM)
-            base_type = get_random_item_mimic_type();
-        else if (adjust_type && base_type == OBJ_RANDOM)
-        {
-            base_type = acquire ? shuffled_acquirement_classes(false)[0]
-                                : _superb_object_class();
-        }
-    }
+    const int level = _concretize_level(spec.level, dgn_level);
+    const object_class_type base_type = _concretize_type(spec);
 
     int useless_tries = 0;
-
     while (true)
     {
         int item_made = NON_ITEM;
 
-        if (acquire)
+        if (spec.level == ISPEC_ACQUIREMENT)
         {
             item_made = acquirement_create_item(base_type,
                                                 spec.acquirement_source,
@@ -4877,29 +4873,24 @@ int dgn_place_item(const item_spec &spec,
 
         if (item_made == NON_ITEM || item_made == -1)
             return NON_ITEM;
-        else
-        {
-            item_def &item(env.item[item_made]);
-            item.pos = where;
 
-            if (_apply_item_props(item, spec, (useless_tries >= 10), false))
-            {
-                dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
-                    env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
-                    where.x, where.y);
-                env.level_map_mask(where) |= MMT_NO_TRAP;
-                return item_made;
-            }
-            else
-            {
-                // _apply_item_props will not generate a rune you already have,
-                // so don't bother looping.
-                if (base_type == OBJ_RUNES)
-                    return NON_ITEM;
-                useless_tries++;
-            }
+        item_def &item(env.item[item_made]);
+        item.pos = where;
+
+        if (_apply_item_props(item, spec, useless_tries >= 10, false))
+        {
+            dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
+                env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
+                where.x, where.y);
+            env.level_map_mask(where) |= MMT_NO_TRAP;
+            return item_made;
         }
 
+        // _apply_item_props will not generate a rune you already have,
+        // so don't bother looping.
+        if (base_type == OBJ_RUNES)
+            return NON_ITEM;
+        useless_tries++;
     }
 
 }
@@ -4959,30 +4950,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 spec.ego = SP_FORBID_EGO;
         }
 
-        int item_level = mspec.place.absdepth();
-
-        if (spec.level >= 0)
-            item_level = spec.level;
-        else
-        {
-            // TODO: merge this with the equivalent switch in dgn_place_item,
-            // and maybe even handle ISPEC_ACQUIREMENT.
-            switch (spec.level)
-            {
-            case ISPEC_STAR:
-                item_level = 5 + item_level * 2;
-                break;
-            case ISPEC_SUPERB:
-                item_level = ISPEC_GOOD_ITEM;
-                break;
-            case ISPEC_DAMAGED:
-            case ISPEC_BAD:
-            case ISPEC_RANDART:
-                item_level = spec.level;
-                break;
-            }
-        }
-
+        const int item_level = _concretize_level(spec.level,
+                                                 mspec.place.absdepth());
         for (int useless_tries = 0; true; useless_tries++)
         {
             int item_made;
