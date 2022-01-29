@@ -259,7 +259,7 @@ acid resistance mutation
 You resist acid (rCorr), taking less damage from it. You are also less likely to
 become corroded.
 %%%%
-negative energy resistance
+negative energy resistance mutation
 
 You resist negative energy. Each level of this mutation reduces the amount of
 damage taken from negative energy, along with the amount that it drains your
