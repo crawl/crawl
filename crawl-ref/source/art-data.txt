@@ -1611,10 +1611,9 @@ DESCRIP:  It heals its wearer when they drink unknown potions.
 +It restores its wearer's MP when they read unknown scrolls.
 
 NAME:       woodcutter's axe
-OBJ:        OBJ_WEAPONS/WPN_WAR_AXE
-FALLBACK:   OBJ_WEAPONS/WPN_BROAD_AXE
-PLUS:       8
-BASE_DELAY: -5
+OBJ:        OBJ_WEAPONS/WPN_BATTLEAXE
+PLUS:       3
+BASE_DELAY: -7
 COLOUR:     BROWN
 TILE:       urand_woodcutters_axe
 TILE_EQ:    axe_short
