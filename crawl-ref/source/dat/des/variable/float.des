@@ -2411,37 +2411,52 @@ ENDMAP
 # Flame loot (Lemuel)
 #
 NAME:   lemuel_flame_loot_2
-DEPTH:  D:9-, Depths
+DEPTH:  D:9-, !D:$, Depths, !Depths:$
 ORIENT: float
-ITEM:   nothing
-SUBST:  * = |**...
-SUBST:  * : *$
-SUBST:  L = ll.
-KFEAT:  1 = escape_hatch_down
-KMONS:  1 = molten gargoyle / hell hound / lindwurm / nothing w:20
-MARKER: d = lua:fog_machine { cloud_type = "flame", \
+WEIGHT: 5
+KMASK:  12* = no_monster_gen
+KITEM:  1 = star_item
+KITEM:  2 = superb_item
+: if you.in_branch("D") then
+:     if you.depth() < 13 then
+KMONS:  1 = hell hound / lindwurm
+KMONS:  2 = deep elf pyromancer / efreet
+SUBST:  1 = 1..., * = *...
+:    else
+KMONS:  1 = hell hound / lindwurm / deep elf pyromancer / efreet
+KMONS:  2 = fire dragon / salamander tyrant / fire giant
+SUBST:  1 = 1., * = *..
+:    end
+# Depths
+: else
+KMONS:  1 = fire dragon / salamander tyrant / fire giant / balrug
+KMONS:  2 = hellephant
+SUBST:  * = *.
+: end
+KFEAT:  2 = escape_hatch_down
+MARKER: D = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 2, walk_dist = 0, spread_rate= 0 }
 MAP
 ccccc...ccccc
 ccccc...ccccc
 ccccc...ccccc
-ccccc.d.ccccc
+ccccc.D.ccccc
 ccccc...ccccc
 ccccc...ccccc
-ccccc.d.ccccc
+ccccc.D.ccccc
 ccccc...ccccc
 ccccc...ccccc
 ccccc...ccccc
-c...LLlLL...c
-c..LLlllLL..c
-c.LLll*llLL.c
-cLLll***llLLc
-cLll**1**llLc
-cLlll***lllLc
-cLLlll*lllLLc
-c.LLlllllLL.c
-c..LLlllLL..c
+clllllllllllc
+clllllllllllc
+clllll*lllllc
+cllll*1*llllc
+clll*121*lllc
+cllll*1*llllc
+clllll*lllllc
+clllllllllllc
+clllllllllllc
 ccccccccccccc
 ENDMAP
 
