@@ -2765,31 +2765,20 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    deep elf archer w:15 / orc warlord w:7 / \
-         deep elf pyromancer / deep elf zephyrmancer / deep troll / \
-         hell hog w:5 / rakshasa / wizard / necromancer / \
-         spriggan rider w:5 / vampire knight / nothing w:8
-MONS:    orc high priest / naga warrior / nagaraja / \
-         skeletal warrior / stone giant w:5 / wizard w:20 / \
-         deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
-         spriggan berserker / guardian serpent w:5 / caustic shrike w:1 / \
-         salamander mystic / nothing w:4
-MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
-         hell knight w:5 / orc warlord / minotaur / \
-         vampire knight / vampire mage / ghoul w:5 / base draconian / \
-         spriggan berserker w:3 / spriggan air mage w:4 / \
-         deep troll earth mage w:4 / deep elf death mage w:2
-MONS:    titan / lich / deep elf annihilator / deep elf sorcerer / \
-         sphinx w:5 / nagaraja w:5 / mummy priest w:1 / \
-         draconian knight w:1
+MONS:    tengu warrior / deep troll earth mage / rakshasa / wizard \
+         / necromancer / vampire knight
+MONS:    tengu conjurer / ancient champion / stone giant / wizard \
+         / deep elf high priest / phantasmal warrior \
+         / spriggan berserker / salamander mystic / caustic shrike w:5
+MONS:    fire giant / frost giant / stone giant / ettin / hell knight \
+         / vampire knight / vampire mage / spriggan berserker \
+         / spriggan air mage / deep troll earth mage / deep elf death mage
+MONS:    titan / lich / deep elf annihilator / deep elf sorcerer \
+         / sphinx / salamander tyrant / mummy priest w:5 / draconian knight w:5
 SHUFFLE: AB, CD, EF, GH, IJ, KL / MN, OP / QR, ST, ST / UV
 SUBST:   ACEG : x, BDFH : ., c : cccvb, x : x:70 cb
 SUBST:   IKO = 1, LPS = 2, T = 3, JMNQRUV = %
-: if you.absdepth() > 20 then
-SUBST:   3 = 334, 2 = 223, 1 = 112
-: else
-SUBST:   4 = 3
-: end
+SUBST:   3 = 334, 2 = 223, 1 = 1:60 2:30 .
 MAP
              @.ccccccc.@
             ..cc.....cc..
