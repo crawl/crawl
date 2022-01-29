@@ -3842,8 +3842,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 {
     mons_spec_slot slot;
 
-    slot.fix_slot = strip_tag(spec, "fix_slot");
-
     vector<string> specs = split_string("/", spec);
 
     for (const string &monspec : specs)
@@ -5640,8 +5638,6 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
     // lowercase(spec);
 
     item_spec_slot list;
-
-    list.fix_slot = strip_tag(spec, "fix_slot");
 
     for (const string &specifier : split_string("/", spec))
     {
