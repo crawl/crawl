@@ -974,7 +974,7 @@ IDEF(description)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushstring(ls, get_item_description(*item, true, false).c_str());
+    lua_pushstring(ls, get_item_description(*item).c_str());
 
     return 1;
 }

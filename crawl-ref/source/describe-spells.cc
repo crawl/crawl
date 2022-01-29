@@ -529,7 +529,9 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                            Type                      Level       Known");
+            "\n Spells                            Type                      Level");
+        if (crawl_state.need_save)
+            description.cprintf("       Known");
     }
     description.cprintf("\n");
 
@@ -599,7 +601,7 @@ static void _describe_book(const spellbook_contents &book,
                          _spell_schools(spell);
 
         string known = "";
-        if (!mon_owner)
+        if (!mon_owner && crawl_state.need_save)
             known = you.spell_library[spell] ? "         yes" : "          no";
 
         description.cprintf("%s%d%s\n",
@@ -705,4 +707,26 @@ string describe_item_spells(const item_def &item)
     formatted_string description;
     describe_spellset(item_spellset(item), &item, description);
     return description.tostring();
+}
+
+/**
+ * Return a one-line description of the spells in the given item.
+ *
+ * @param item      The book in question.
+ * @return          A one-line listing of the spells in the given item,
+ *                  including names, schools & levels.
+ */
+string terse_spell_list(const item_def &item)
+{
+    vector<string> spell_descs;
+    for (auto spell : spells_in_book(item))
+    {
+        spell_descs.push_back(make_stringf("%s (L%d %s)",
+                                           spell_title(spell),
+                                           spell_difficulty(spell),
+                                           _spell_schools(spell).c_str()));
+    }
+    // could use comma_separated_fn and skip the intervening vec?
+    return "Spells: " + comma_separated_line(spell_descs.begin(),
+                                             spell_descs.end());
 }
