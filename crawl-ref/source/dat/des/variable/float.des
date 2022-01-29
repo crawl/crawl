@@ -2873,63 +2873,54 @@ ENDMAP
 
 ###############################################################################
 
-NAME: lightli_eight_chambers
-ORIENT: float
-DEPTH: Depths
-TAGS: no_monster_gen
-SHUFFLE: PFIEMONLSAKRVCTHD
-KMONS: P = green death / green draconian / nagaraja w:5 / swamp dragon / \
-           redback
-KMONS: F = fire giant w:5 / fire dragon / fire elemental / red draconian / sun demon
-KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
-           ice dragon
-KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning
-KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
-           orc warrior
-KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
-           deep elf annihilator w:5 / deep elf death mage / \
-           deep elf pyromancer / deep elf zephyrmancer / deep elf sorcerer
-KMONS: L = black mamba / catoblepas w:5 / basilisk / lindwurm / boulder beetle
-KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
-           alligator
-KMONS: A = alligator snapping turtle w:5 / merfolk avatar / merfolk aquamancer / \
-           merfolk impaler / harpy
-KMONS: K = nagaraja w:5 / naga mage / anaconda / naga warrior / \
-           guardian serpent
-KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
-           tarantella
-KMONS: M = acid blob w:5 / azure jelly / slime creature w:15 / great orb of eyes
-KMONS: V = vault guard / stone giant w:5 / yaktaur captain / dancing weapon / \
-           skeletal warrior
-KMONS: C = skeletal warrior / bone dragon / vampire / lich w:5
-KMONS: T = mummy priest w:5 / guardian mummy / sphinx / mummy / reaper
-KMONS: H = balrug w:5 / blizzard demon w:5 / shadow demon w:5 / \
-           hell beast w:5 / sun demon / ice devil / rust devil / soul eater / \
-           hell knight w:5
-KMONS: D = frilled lizard / kobold / hobgoblin w:5 / goblin / adder
+NAME:    lightli_eight_chambers
+ORIENT:  float
+DEPTH:   Depths, !Depths:$
+TAGS:    no_monster_gen
+KMONS:   D = ice dragon / frost giant / blizzard demon / shard shrike w:3 \
+         / ice fiend w:2
+KMONS:   E = storm dragon / spriggan air mage / spark wasp / titan w:5
+KMONS:   F = fire dragon / fire giant / salamander tyrant / smoke demon \
+         / balrug / hellephant w:5
+KMONS:   H = stone giant w:20 / iron dragon / walking earthen tome \
+         / juggernaut w:5 / walking crystal tome w:5
+KMONS:   J = death scarab w:20 / guardian mummy / sphinx / reaper \
+         / mummy priest w:5 / royal mummy w:5
+KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage \
+         / deep elf annihilator / deep elf high priest \
+         / deep elf blademaster w:5 / deep elf master archer w:5
+KMONS:   L = great orb of eyes / rockslime / quicksilver ooze / azure jelly \
+         / acid blob w:5
+KMONS:   M = ancient champion / vampire mage / vampire knight \
+         / eidolon / revenant / bone dragon / lich w:5
+KMONS:   N = tengu warrior / tengu conjurer / tengu reaver
+KMONS:   O = spriggan berserker / spriggan air mage / spriggan defender
+KMONS:   P = balrug / blizzard demon / shadow demon / hell beast / hellion \
+         / lorocyproca / reaper / tormentor
+SHUFFLE: DEFHJKLMNOP
 MAP
 xxvvvvvvvvvvvvvxx
 xvv..vvvvvvv..vvx
-vv.II.vvvvv....vv
-v..II.+...+.EEE.v
-v..II.+...+.EEE.v
+vv.DD.vvvvv....vv
+v..DD.+...+.EEE.v
+v..DD.+...+.EEE.v
 vv....vvvvv....vv
 xvv++vv|||vv++vvx
 xxv..v*****v..vxx
 xxv..v%%%%%v..vxx
 xvv++vv%%%vv++vvx
 vv.FF.vv+vv....vv
-v..FF..v.v..MM..v
-v..FF..v.v..MM..v
-vv....vv+vv.MM.vv
+v..FF..v.v..HH..v
+v..FF..v.v..HH..v
+vv....vv+vv.HH.vv
 xvv++vv...vv++vvx
-xxv..v.NNN.v..vxx
-xxv..v.NNN.v..vxx
+xxv..v.JJJ.v..vxx
+xxv..v.JJJ.v..vxx
 xvv++vv...vv++vvx
-vv.PP.vv+vv....vv
-v..PP..v.v..OO..v
-v..PP..v.+..OO..v
-vv....vvvvv.OO.vv
+vv.KK.vv+vv....vv
+v..KK..v.v..LL..v
+v..KK..v.+..LL..v
+vv....vvvvv.LL.vv
 xvv..vvvvvvv..vvx
 xxv==vvvvvvvvvvxx
    @@
