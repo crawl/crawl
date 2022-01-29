@@ -2939,7 +2939,8 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / deep elf archer
+KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight \
+         / deep elf archer
 MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
