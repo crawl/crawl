@@ -2515,7 +2515,7 @@ ORIENT: float
 : if you.in_branch("Lair") then
 MONS:   elephant, dire elephant, spriggan
 : else
-MONS:   w:1 elephant / dire elephant, hellephant, spriggan defender
+MONS:   dire elephant, hellephant, spriggan defender
 SUBST:  W : w
 :end
 MONS:   fungus, plant
