@@ -1078,16 +1078,17 @@ formatted_string pad_more_with(formatted_string s,
 string hyphenated_hotkey_letters(int how_many, char first)
 {
     how_many = min(how_many, 52);
-    string s = "[<w>";
-    s += first;
-    s += "</w>";
+    string s;
     if (how_many > 1)
     {
-        s += "-<w>";
-        s += first + how_many - 1;
-        s += "</w>";
+        // crawl uses A-Z second, but it is first in ascii
+        int last = static_cast<int>(first) + how_many - 1;
+        if (last > 'z')
+            last = 'A' + last - ('z' + 1);
+        s = make_stringf("[<w>%c</w>-<w>%c</w>]", first, static_cast<char>(last));
     }
-    s += "]";
+    else
+        s = make_stringf("[<w>%c</w>]", first);
     return s;
 }
 

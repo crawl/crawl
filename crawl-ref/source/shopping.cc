@@ -2090,6 +2090,8 @@ public:
         return pad_more_with(s, "<lightgrey>[<w>Esc</w>] exit</lightgrey>");
     }
 
+    friend class ShoppingList;
+
 protected:
     virtual formatted_string calc_title() override;
 };
@@ -2254,6 +2256,7 @@ void ShoppingList::display(bool view_only)
 
             shopmenu.clear();
             fill_out_menu(shopmenu);
+            shopmenu.update_more();
             shopmenu.update_menu(true);
         }
         else
