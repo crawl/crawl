@@ -2898,7 +2898,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             switch (ego)
             {
             case SPARM_RAGE:
-                return !you.can_go_berserk(true, false, true, nullptr, temp);
+                return !you.can_go_berserk(false, false, true, nullptr, temp);
             case SPARM_ENERGY:
                 return you.has_mutation(MUT_HP_CASTING);
             default:
