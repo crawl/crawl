@@ -896,6 +896,7 @@ vine_stalker MONS_VINE_STALKER
 ## Trolls ('T')
 %sdir mon/unique
 pargi MONS_PARGI
+parghit MONS_PARGHIT
 snorg MONS_SNORG
 %sdir mon/humanoids
 troll MONS_TROLL

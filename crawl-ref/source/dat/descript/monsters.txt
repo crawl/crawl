@@ -381,6 +381,17 @@ A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
 %%%%
+Pargi
+
+An unusually weak troll.
+%%%%
+Parghit
+
+An unusually strong troll, his wiry frame scarred by many against-the-odds
+victories. He has been wounded so many times that his body has adapted, and now
+heals almost instantly. His necklace of troll claws is a memento of those who
+underestimated him.
+%%%%
 Pikel
 
 A wise kobold would fear the forces of Hell, and certainly would not set up a
@@ -402,10 +413,6 @@ A frog of unusual size, with a tiny crown perched incongruously atop his head.
 Psyche
 
 A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
-%%%%
-Pargi
-
-An unusually weak troll.
 %%%%
 Robin
 

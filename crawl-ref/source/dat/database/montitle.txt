@@ -227,6 +227,14 @@ Nikola title
 
 Nikola the Mad Inventor
 %%%%
+Parghit title
+
+Parghit the Mighty
+%%%%
+Pargi title
+
+Pargi the Meek
+%%%%
 Pikel title
 
 Pikel, Merchant of Souls
@@ -238,10 +246,6 @@ Polyphemus the Watchful Shepherd
 Psyche title
 
 Psyche the Insane Magess
-%%%%
-Pargi title
-
-Pargi the Meek
 %%%%
 Robin title
 

@@ -5727,6 +5727,38 @@ VISUAL:@The_monster@ clenches @possessive@ claws.
 
 VISUAL:@The_monster@ looks very sad for a moment.
 %%%%
+############ PARGHIT ### A once-teased troll
+Parghit
+
+@_Parghit_common_@
+
+w:5
+@_Parghit_rare_@
+%%%%
+_Parghit_common_
+
+@The_monster@ snarls @at_foe@, "Go! Away!"
+
+VISUAL:@The_monster@ looks around cautiously.
+
+@The_monster@ hisses menacingly.
+
+@The_monster@ snarls @at_foe@, "My dungeon! Leave!"
+%%%%
+_Parghit_rare_
+
+VISUAL:@The_monster@ clenches @possessive@ teeth.
+
+VISUAL:@The_monster@ clenches @possessive@ claws.
+
+@The_monster@ hisses @at_foe@, "I bite!"
+
+@The_monster@ snarls, "Me hang you on necklace!"
+
+@The_monster@ warns @foe@, "Me EAT bullies!"
+
+@The_monster@ growls, "You tougher than dragon?"
+%%%%
 ############ ROXANNE ### a sapphire statue of an earth mage
 Roxanne
 

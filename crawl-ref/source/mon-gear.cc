@@ -1830,6 +1830,16 @@ int make_mons_armour(monster_type type, int level)
                                                6, ARM_FIRE_DRAGON_ARMOUR);
         break;
 
+    case MONS_PARGHIT:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_GOLD_DRAGON_ARMOUR;
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_DRAGON_KING))
+            make_item_unrandart(item, UNRAND_DRAGON_KING);
+        else
+            item.plus = random_range(6, 9);
+        force_item = true;
+        break;
+
     case MONS_HELLBINDER:
     case MONS_SALAMANDER_MYSTIC:
     case MONS_SERVANT_OF_WHISPERS:

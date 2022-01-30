@@ -353,6 +353,10 @@ NAME:   uniq_xtahua
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Xtahua")
 
+NAME:   uniq_parghit
+DEPTH:  Depths:3-, Zot:1-4, Crypt, Tomb
+: place_unique(_G, "Parghit")
+
 
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
