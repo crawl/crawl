@@ -1715,8 +1715,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_CHOOSE_STAT:
-        text << "Every third level, you get to choose an attribute to raise: "
-                "strength, intelligence, or dexterity.\n"
+        text << "Upon gaining levels 3, 9, 15, etc., you get to choose an "
+                "attribute to raise: strength, intelligence, or dexterity.\n"
                 "<w>Strength</w> makes heavy armour less cumbersome and "
                 "slightly increases weapon damage.\n"
                 "<w>Intelligence</w> makes your spells more reliable and "
