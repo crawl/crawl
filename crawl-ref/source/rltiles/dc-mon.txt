@@ -551,7 +551,10 @@ frederick MONS_FREDERICK
 harold MONS_HAROLD
 jessica MONS_JESSICA
 joseph MONS_JOSEPH
+%rim 0
+josephina MONS_JOSEPHINA
 josephine MONS_JOSEPHINE
+%rim 1
 kirke MONS_KIRKE
 louise MONS_LOUISE
 maggie MONS_MAGGIE

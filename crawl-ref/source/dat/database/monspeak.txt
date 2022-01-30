@@ -4793,6 +4793,46 @@ _Joseph_rare_
 @The_monster@ shouts @at_foe@, "Wow!"
 ## END Joseph ##
 %%%%
+############ JOSEPHINA ### A half-frozen lich
+Josephina
+
+@_Josephina_common_@
+
+w:5
+@_Josephina_rare_@
+%%%%
+_Josephina_common_
+
+VISUAL:@The_monster@ grins evilly.
+
+VISUAL:@The_monster@ grins malevolently.
+
+@The_monster@ laughs insanely.
+
+@The_monster@ lets out a long cackle.
+
+VISUAL: @The_monster@ glitters frostily.
+
+@The_monster@ screams @at_foe@, "Die!"
+
+%%%%
+_Josephina_rare_
+
+VISUAL:@The_monster@ grinds @possessive@ teeth.
+
+VISUAL: One of @The_monster@'s icy fingers falls off.
+
+@The_monster@ says @to_foe@, "I'll make a rug of your skin."
+
+@The_monster@ howls, "Hell holds no secrets from me!"
+
+@The_monster@ shouts @at_foe@, "You can't hurt me! Ice reforms..."
+
+@The_monster@ screams, "I will never die! I am immortal!"
+
+@The_monster@ screams @at_foe@, "I'll use your head as a decoration in Hell!"
+## END Josephine ##
+%%%%
 ############ JOSEPHINE ### A twisted old witch looking for someone to kill
 Josephine
 

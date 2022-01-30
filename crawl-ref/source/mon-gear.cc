@@ -1093,6 +1093,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
+    case MONS_JOSEPHINA:
+        item.base_type = OBJ_STAVES;
+        item.sub_type = STAFF_COLD;
+        break;
+
     case MONS_FANNAR:
         force_item = true;
         if (one_chance_in(3))
@@ -1299,6 +1304,12 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
     {
         make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
                               0, 1, ISFLAG_KNOW_TYPE);
+    }
+
+    if (mon->type == MONS_JOSEPHINA)
+    {
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
+                              ISPEC_RANDART, true, ISFLAG_KNOW_TYPE);
     }
 }
 
@@ -2025,6 +2036,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_BORIS:
+    case MONS_JOSEPHINA:
         level = ISPEC_GOOD_ITEM;
         // fall-through
     case MONS_AGNES:

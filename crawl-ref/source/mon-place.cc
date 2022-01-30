@@ -1941,6 +1941,7 @@ static const map<monster_type, band_set> bands_by_leader = {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
+    { MONS_JOSEPHINA, { {}, {{ BAND_SIMULACRA, {4, 6} }}}},
     { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_BONE_DRAGONS, {1, 2}} }}},
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},

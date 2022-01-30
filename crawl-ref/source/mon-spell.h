@@ -2026,6 +2026,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_JOSEPHINA,
+      {
+       { SPELL_SERACFALL, 24, MON_SPELL_WIZARD },
+       { SPELL_GHOSTLY_FIREBALL, 24, MON_SPELL_WIZARD },
+       { SPELL_BIND_SOULS, 24, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_RUPERT,
       {
        { SPELL_PARALYSE, 16, MON_SPELL_VOCAL },
