@@ -117,6 +117,11 @@ camouflage mutation
 Your skin changes colour to match your surroundings. Each level of this
 mutation provides Stealth+.
 %%%%
+noise suppression mutation
+
+You passively dampen all noise in your surroundings, making it easier to avoid
+drawing attention to your activities.
+%%%%
 # ------ Auxes -----
 horns mutation
 
@@ -746,6 +751,11 @@ jelly absorbing missiles mutation
 
 When struck by a missile (such as an arrow or crossbow bolt), a jelly on your
 body may eat it, healing you somewhat.
+%%%%
+engulf mutation
+
+Your melee attacks may engulf living foes that are your size or smaller.
+Those foes will be silenced and unable to breathe.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink while threatened mutation
