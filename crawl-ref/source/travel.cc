@@ -878,6 +878,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             explicit_keymap map;
             map[ESCAPE] = 'n';
             map[CONTROL('G')] = 'n';
+            map[' '] = 'y';
 
             // If response is Yes (1) or Always (2), mark items for no pickup
             // If the response is Always, remove the item from autopickup
