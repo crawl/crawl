@@ -3782,18 +3782,7 @@ void actor_apply_toxic_bog(actor * act)
     if (player && you.duration[DUR_NOXIOUS_BOG])
         return;
 
-    actor *oppressor = nullptr;
-
-    for (map_marker *marker : env.markers.get_markers_at(act->pos()))
-    {
-        if (marker->get_type() == MAT_TERRAIN_CHANGE)
-        {
-            map_terrain_change_marker* tmarker =
-                    dynamic_cast<map_terrain_change_marker*>(marker);
-            if (tmarker->change_type == TERRAIN_CHANGE_BOG)
-                oppressor = actor_by_mid(tmarker->mon_num);
-        }
-    }
+    actor *oppressor = &you;
 
     const int base_damage = dice_def(4, 6).roll();
     const int damage = resist_adjust_damage(act, BEAM_POISON_ARROW, base_damage);
