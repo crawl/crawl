@@ -102,7 +102,6 @@ public:
     colour_t colour;
     vector<int> hotkeys;
     MenuEntryLevel level;
-    bool preselected;
     bool indent_no_hotkeys;
     void *data;
     function<bool(const MenuEntry&)> on_select;
@@ -115,14 +114,12 @@ public:
     MenuEntry(const string &txt = string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
-               int hotk = 0,
-               bool preselect = false,
-               function<bool(const MenuEntry&)> action = nullptr) :
+               int hotk = 0) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
-        hotkeys(), level(lev), preselected(preselect),
+        hotkeys(), level(lev),
         indent_no_hotkeys(false),
         data(nullptr),
-        on_select(action),
+        on_select(nullptr),
         m_enabled(true)
     {
         colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
@@ -135,8 +132,9 @@ public:
     // n.b. select code requires that the qty value be >0 (TODO, why)
     MenuEntry(const string &txt, int hotk,
                         function<bool(const MenuEntry&)> action)
-        : MenuEntry(txt, MEL_ITEM, 1, hotk, false, action)
+        : MenuEntry(txt, MEL_ITEM, 1, hotk)
     {
+        on_select = action;
     }
 
     virtual ~MenuEntry() { }
@@ -204,9 +202,8 @@ public:
     ToggleableMenuEntry(const string &txt = string(),
                         const string &alt_txt = string(),
                         MenuEntryLevel lev = MEL_ITEM,
-                        int qty = 0, int hotk = 0,
-                        bool preselect = false) :
-        MenuEntry(txt, lev, qty, hotk, preselect), alt_text(alt_txt) {}
+                        int qty = 0, int hotk = 0) :
+        MenuEntry(txt, lev, qty, hotk), alt_text(alt_txt) {}
 
     void toggle() { text.swap(alt_text); }
 };

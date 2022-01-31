@@ -167,18 +167,63 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     return desc.str();
 }
 
+class SpellMenuEntry : public ToggleableMenuEntry
+{
+public:
+    SpellMenuEntry(const string &txt,
+                   const string &alt_txt,
+                   MenuEntryLevel lev,
+                   int qty, int hotk)
+        : ToggleableMenuEntry(txt, alt_txt, lev, qty, hotk)
+    {
+    }
+
+    bool preselected = false;
+protected:
+    virtual string _get_text_preface() const override
+    {
+        if (preselected)
+            return make_stringf(" %s + ", keycode_to_name(hotkeys[0]).c_str());
+        return ToggleableMenuEntry::_get_text_preface();
+    }
+};
+
+class SpellMenu : public ToggleableMenu
+{
+public:
+    SpellMenu()
+        : ToggleableMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
+            | MF_NO_WRAP_ROWS | MF_ALLOW_FORMATTING
+            | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_PRESELECTED) {}
+protected:
+    virtual void select_items(int key, int qty = -1) override
+    {
+        // If menu_arrow_control is false, cast the last-cast spell on <enter>
+        if (!(flags & MF_ARROWS_SELECT) && key == CK_ENTER)
+        {
+            for (size_t i = 0; i < items.size(); ++i)
+            {
+                if (static_cast<SpellMenuEntry*>(items[i])->preselected)
+                {
+                    select_index(i, qty);
+                    return;
+                }
+            }
+        }
+        ToggleableMenu::select_items(key, qty);
+    }
+};
+
 // selector is a boolean function that filters spells according
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                const string &title, spell_selector selector)
+                const string &title)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
-    ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-            | MF_NO_WRAP_ROWS | MF_ALLOW_FORMATTING
-            | MF_ARROWS_SELECT | MF_INIT_HOVER);
+    SpellMenu spell_menu;
     string titlestring = make_stringf("%-25.25s", title.c_str());
     {
         ToggleableMenuEntry* me =
@@ -204,39 +249,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     more_str += "to toggle spell view.</lightgrey>";
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
-    // If there's only a single spell in the offered spell list,
-    // taking the selector function into account, preselect that one.
-    bool preselect_first = false;
-    if (allow_preselect)
-    {
-        int count = 0;
-        if (you.spell_no == 1)
-            count = 1;
-        else if (selector)
-        {
-            for (int i = 0; i < 52; ++i)
-            {
-                const char letter = index_to_letter(i);
-                const spell_type spell = get_spell_by_letter(letter);
-                if (!is_valid_spell(spell) || !(*selector)(spell))
-                    continue;
-
-                // Break out early if we've got > 1 spells.
-                if (++count > 1)
-                    break;
-            }
-        }
-        // Preselect the first spell if it's only spell applicable.
-        preselect_first = (count == 1);
-    }
-    // TODO: maybe fill this from the quiver if there's a quivered spell and
-    // no last cast one?
-    if (allow_preselect || preselect_first
-                           && you.last_cast_spell != SPELL_NO_SPELL)
-    {
-        spell_menu.set_flags(spell_menu.get_flags() | MF_PRESELECTED);
-    }
-
+    int initial_hover = 0;
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
@@ -245,20 +258,23 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         if (!is_valid_spell(spell))
             continue;
 
-        if (selector && !(*selector)(spell))
-            continue;
+        SpellMenuEntry* me =
+            new SpellMenuEntry(_spell_base_description(spell, viewing),
+                               _spell_extra_description(spell, viewing),
+                               MEL_ITEM, 1, letter);
 
-        bool preselect = (preselect_first
-                          || allow_preselect && you.last_cast_spell == spell);
-
-        ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_spell_base_description(spell, viewing),
-                                    _spell_extra_description(spell, viewing),
-                                    MEL_ITEM, 1, letter, preselect);
+        // TODO: maybe fill this from the quiver if there's a quivered spell and
+        // no last cast one?
+        if (allow_preselect && you.last_cast_spell == spell)
+        {
+            initial_hover = i;
+            me->preselected = true;
+        }
 
         me->add_tile(tile_def(tileidx_spell(spell)));
         spell_menu.add_entry(me);
     }
+    spell_menu.set_hovered(initial_hover);
 
     int choice = 0;
     spell_menu.on_single_selection = [&choice, &spell_menu](const MenuEntry& item)

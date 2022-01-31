@@ -1725,18 +1725,10 @@ void Menu::select_items(int key, int qty)
         // use two loops, and check to see if we've matched an item
         // by its primary hotkey (hotkeys[0] for multiple-selection
         // menus), in which case, we stop selecting further items.
-        const bool check_preselected = (key == CK_ENTER);
         for (int i = first_entry; i < final; ++i)
         {
-            if (check_preselected && items[i]->preselected)
-            {
-                select_index(i, qty);
-                set_hovered(i);
-                selected = true;
-                break;
-            }
-            else if (is_hotkey(i, key) && (items[i]->hotkeys[0] == key
-                                                || is_set(MF_SINGLESELECT)))
+            if (is_hotkey(i, key) && (items[i]->hotkeys[0] == key
+                                      || is_set(MF_SINGLESELECT)))
             {
                 // XX for some singleselect menus, only snapping might be
                 // better. (E.g. inventory)
@@ -1752,13 +1744,7 @@ void Menu::select_items(int key, int qty)
         {
             for (int i = 0; i < first_entry; ++i)
             {
-                if (check_preselected && items[i]->preselected)
-                {
-                    select_index(i, qty);
-                    set_hovered(i);
-                    break;
-                }
-                else if (is_hotkey(i, key))
+                if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
                     set_hovered(i);
@@ -1815,9 +1801,8 @@ string MenuEntry::_get_text_preface() const
 {
     if (level == MEL_ITEM && hotkeys_count())
     {
-        return make_stringf(" %s %c ",
-            keycode_to_name(hotkeys[0]).c_str(),
-            preselected ? '+' : '-');
+        return make_stringf(" %s - ",
+            keycode_to_name(hotkeys[0]).c_str());
     }
     else if (level == MEL_ITEM && indent_no_hotkeys)
         return "     ";
@@ -2939,9 +2924,6 @@ void Menu::webtiles_write_item(const MenuEntry* me) const
 
     if (me->level != MEL_NONE)
         tiles.json_write_int("level", me->level);
-
-    if (me->preselected)
-        tiles.json_write_int("preselected", me->preselected);
 
     webtiles_write_tiles(*me);
 
