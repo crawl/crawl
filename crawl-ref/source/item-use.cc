@@ -202,8 +202,10 @@ void UseItemMenu::populate_menu()
         load_items(item_inv,
                     [&](MenuEntry* entry) -> MenuEntry*
                     {
-                        // hacky: remove the class hotkey
-                        entry->hotkeys.pop_back();
+                        // hacky: remove the class hotkey for cases where it
+                        // is counterintuitive/useless
+                        if (item_type_filter != OSEL_UNIDENT)
+                            entry->hotkeys.pop_back();
                         return entry;
                     });
     }
