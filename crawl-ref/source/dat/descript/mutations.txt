@@ -792,3 +792,63 @@ unskilled mutation
 It takes you more experience to improve your skills. Each level of this
 sacrifice makes your skills cost even more.
 %%%%
+# ------ Skill suppression ------
+# skills go in, skills go out. Can't explain that!
+# XXX - might be cool to deduplicate this
+inability to train dodging mutation
+
+Your Dodging skill is 0 and you cannot train the skill.
+%%%%
+inability to train armour mutation
+
+Your Armour skill is 0 and you cannot train the skill.
+%%%%
+no air magic mutation
+
+Your Air Magic skill is 0 and you cannot train the skill.
+%%%%
+no conjurations magic mutation
+
+Your Conjurations skill is 0 and you cannot train the skill.
+%%%%
+no earth magic mutation
+
+Your Earth Magic skill is 0 and you cannot train the skill.
+%%%%
+no fire magic mutation
+
+Your Fire Magic skill is 0 and you cannot train the skill.
+%%%%
+no hexes magic mutation
+
+Your Hexes skill is 0 and you cannot train the skill.
+%%%%
+no ice magic mutation
+
+Your Ice Magic skill is 0 and you cannot train the skill.
+%%%%
+no necromancy magic mutation
+
+Your Necromancy skill is 0 and you cannot train the skill.
+%%%%
+no poison magic mutation
+
+Your Poison Magic skill is 0 and you cannot train the skill.
+%%%%
+no summoning magic mutation
+
+Your Summoning skill is 0 and you cannot train the skill.
+%%%%
+no translocations magic mutation
+
+Your Translocations skill is 0 and you cannot train the skill.
+%%%%
+no transmutations magic mutation
+
+Your Transmutations skill is 0 and you cannot train the skill.
+%%%%
+# ----- Removed mutations -----
+removed torment resistance mutation
+
+You occasionally resist unholy torments.
+%%%%
