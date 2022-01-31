@@ -810,6 +810,34 @@ unskilled mutation
 It takes you more experience to improve your skills. Each level of this
 sacrifice makes your skills cost even more.
 %%%%
+reduced AC mutation
+
+You are easily battered and bruised, reducing the benefits of your armour.
+%%%%
+reduced EV mutation
+
+Your reflexes are slow, making it easier for foes to hit you.
+%%%%
+inexperienced mutation
+
+You are inexperienced, and unable to fully gain 27 levels.
+%%%%
+missing an eye mutation
+
+You are missing an eye, making it more difficult to aim.
+%%%%
+no potions mutation
+
+You are unable to quaff potions.
+%%%%
+no weapons or thrown items mutation
+
+You are incapable of wielding weapons or throwing items.
+%%%%
+no armour mutation
+
+You cannot wear armour.
+%%%%
 # ------ Skill suppression ------
 # skills go in, skills go out. Can't explain that!
 # XXX - might be cool to deduplicate this
