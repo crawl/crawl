@@ -11,7 +11,7 @@ You are covered in fur, providing a small amount of protection. Each level of
 this mutation provides +1 AC. The third level of this mutation also provides
 resistance to cold.
 %%%%
-distortion field mutation
+repulsion field mutation
 
 You are surrounded by a repulsion field, providing a small amount of evasion.
 Each level of this mutation provides more EV. The third level of this mutation
