@@ -933,9 +933,16 @@ string InvMenu::help_key() const
 int InvMenu::getkey() const
 {
     auto mkey = lastch;
-    if (type == menu_type::know && (mkey == 0 || mkey == CK_ENTER))
+    if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER)
+        return mkey;
+    if (type == menu_type::know && mkey == 0) // ??
         return mkey;
 
+    // this is sort of a mess. It seems to be converting a lot of keys to ' '
+    // so that invprompt_flag::escape_only can work right, but it almost
+    // certainly has other effects. Needless to say, it makes modifying key
+    // handling in specific menus pretty annoying, but I don't dare touch it
+    // right now.
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\'
         && mkey != ',')
@@ -1745,6 +1752,7 @@ int prompt_invent_item(const char *prompt,
             keyin = '*';
     }
 
+    // ugh, why is this done manually
     while (true)
     {
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
@@ -1810,8 +1818,7 @@ int prompt_invent_item(const char *prompt,
             // return '?'. Is this a problem?
             if (keyin == '?' || key_is_escape(keyin) && !auto_list)
                 continue;
-
-            if (keyin == '*')
+            else if (keyin == '*')
             {
                 // let `*` act as a toggle. This is a slightly wacky
                 // implementation in that '?' as a toggle does something
@@ -1823,8 +1830,12 @@ int prompt_invent_item(const char *prompt,
                     keyin = '*';
                 continue;
             }
-
-            if (other_valid_char != 0 && keyin == other_valid_char)
+            else if (keyin == CK_ENTER && items.size() > 0)
+            {
+                // hacky, but lets the inscription checks below trip
+                keyin = items[0].slot;
+            }
+            else if (other_valid_char != 0 && keyin == other_valid_char)
             {
                 // need to handle overrides...ugly code duplication
                 ret = PROMPT_GOT_SPECIAL;
