@@ -1712,7 +1712,6 @@ void Menu::select_items(int key, int qty)
     else
     {
         int first_entry = get_first_visible(), final = items.size();
-        bool selected = false;
 
         // Process all items, in case user hits hotkey for an
         // item not on the current page.
@@ -1721,40 +1720,28 @@ void Menu::select_items(int key, int qty)
         // the same hotkey (as for pickup when there's a stack of
         // >52 items). If there are duplicate hotkeys, the items
         // are usually separated by at least a page, so we should
-        // only select the item on the current page. This is why we
-        // use two loops, and check to see if we've matched an item
+        // only select the item on the current page. We use only
+        // one loop, but we look through the menu starting with the first
+        // visible item, and check to see if we've matched an item
         // by its primary hotkey (hotkeys[0] for multiple-selection
-        // menus), in which case, we stop selecting further items.
-        for (int i = first_entry; i < final; ++i)
+        // menus), in which case we stop selecting further items. If
+        // not, we loop around back to the beginning.
+        for (int i = 0; i < final; ++i)
         {
-            if (is_hotkey(i, key) && (items[i]->hotkeys[0] == key
-                                      || is_set(MF_SINGLESELECT)))
+            const int index = (i + first_entry) % final;
+            if (is_hotkey(index, key) && (items[index]->hotkeys[0] == key
+                                          || is_set(MF_SINGLESELECT)))
             {
                 // XX for some singleselect menus, only snapping might be
                 // better. (E.g. inventory)
-                select_index(i, qty);
-                set_hovered(i);
-                selected = true;
-                break;
-
-            }
-        }
-
-        if (!selected)
-        {
-            for (int i = 0; i < first_entry; ++i)
-            {
-                if (is_hotkey(i, key))
-                {
-                    select_index(i, qty);
-                    set_hovered(i);
-                    break;
-                }
+                select_index(index, qty);
+                set_hovered(index);
+                return;
             }
         }
 
         // no primary hotkeys found, check secondary hotkeys for multiselect
-        if (!selected && is_set(MF_MULTISELECT))
+        if (is_set(MF_MULTISELECT))
         {
             int last_snap = -1;
             int first_snap = -1;
