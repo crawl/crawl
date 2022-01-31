@@ -537,6 +537,14 @@ word of chaos mutation
 
 You can speak a Word of Chaos with <input>$cmd[CMD_USE_ABILITY]</input>.
 %%%%
+freezing cloud immunity mutation
+
+You are immune to freezing clouds.
+%%%%
+flame cloud immunity mutation
+
+You are immune to clouds of flame.
+%%%%
 # ------ Other species-specific mutations -----
 spit poison mutation
 
