@@ -718,22 +718,37 @@ static void _display_diag()
         // hint for the putty users:
         if (info.term == "xterm")
             s += "For full 16-colour-mode, try setting a better TERM value than `xterm`, e.g. `xterm-256color` (most terminals) or `putty-256color` (for PuTTY).\n";
+
         // XX is there really value in showing all of these? In 2021 in 99% of
         // scenarios, I think people shouldn't mess with anything except the
         // first, and that's only for cosmetic purposes, not compat purposes
         s += make_stringf(
             "\nCurrent terminal options (see the Options Guide for details):\n"
-            "    Option `<w>allow_extended_colours</w>`: %d%s\n"
-            "    Option `<w>bold_brightens_foreground</w>`: %d\n"
-            "    Option `<w>best_effort_brighten_foreground</w>`: %d\n"
-            "    Option `<w>best_effort_brighten_background</w>`: %d\n"
-            "    Option `<w>blink_brightens_background</w>`: %d\n\n",
+            "    `<w>allow_extended_colours</w>`: %d%s\n"
+            "    `<w>bold_brightens_foreground</w>`: %d"
+            "        `<w>blink_brightens_background</w>`: %d\n"
+            "    `<w>best_effort_brighten_foreground</w>`: %d"
+            "  `<w>best_effort_brighten_background</w>`: %d\n\n",
             (int) Options.allow_extended_colours,
             Options.allow_extended_colours ? " (overridden by TERM)" : "",
             Options.bold_brightens_foreground == MB_FALSE ? 0 : 1,
+            (int) Options.blink_brightens_background,
             (int) Options.best_effort_brighten_foreground,
-            (int) Options.best_effort_brighten_background,
-            (int) Options.blink_brightens_background);
+            (int) Options.best_effort_brighten_background);
+        if (info.bg_colors >= 16)
+        {
+            // these diagnostics are targeted at putty with bold_brightens_background.
+            // I have no freaking clue why they don't work, but this is here
+            // so that the player knows they are misconfigured.
+            s += "These two blocks should have the same background:"
+                 "    <bg:darkgrey><darkgrey>Block 1</darkgrey></bg:darkgrey>"
+                 "    <bg:darkgrey>Block 2</bg:darkgrey>\n"
+                 "The following two spans should have continuous shading between 1 and 2:\n"
+                 "    <bg:darkgrey><darkgrey>1          2</darkgrey></bg:darkgrey>\n"
+                 "    <bg:darkgrey><darkgrey>1               2</darkgrey></bg:darkgrey>\n";
+            // intentional missing \n here so that the key things still fit in
+            // 80x25 when these diagnostics are shown
+        }
     }
     else if (!suppress_unix_stuff && Options.bold_brightens_foreground == MB_TRUE)
         s += "Option `bold_brightens_foreground`: force\n\n";
