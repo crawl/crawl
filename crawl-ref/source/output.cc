@@ -2114,9 +2114,6 @@ static string _god_asterisks()
     if (you_worship(GOD_NO_GOD))
         return "";
 
-    if (player_under_penance())
-        return "*";
-
     if (you_worship(GOD_GOZAG))
         return "";
 
