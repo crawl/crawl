@@ -408,7 +408,7 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         else if (keyin == ',')
         {
             if (Options.easy_floor_use && menu.item_floor.size() == 1
-                && menu.is_inventory)
+                && (menu.is_inventory || menu.item_inv.empty()))
             {
                 choice_made = true;
                 tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
