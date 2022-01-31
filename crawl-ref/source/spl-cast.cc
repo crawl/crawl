@@ -262,7 +262,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             new SpellMenuEntry(_spell_base_description(spell, viewing),
                                _spell_extra_description(spell, viewing),
                                MEL_ITEM, 1, letter);
-
+        me->colour = spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
         // TODO: maybe fill this from the quiver if there's a quivered spell and
         // no last cast one?
         if (allow_preselect && you.last_cast_spell == spell)
