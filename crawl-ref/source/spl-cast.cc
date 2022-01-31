@@ -1746,7 +1746,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
                                                              false)
                                             :
-              testbits(flags, spflag::area) ? ( powc * 3 ) / 2
+              //XXX: deduplicate this with mass_enchantment?
+              testbits(flags, spflag::area) ? min(200, ( powc * 3 ) / 2)
                                             : powc;
 
         if (spell == SPELL_ENFEEBLE)
