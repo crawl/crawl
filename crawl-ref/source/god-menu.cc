@@ -16,7 +16,7 @@
 #include "tileview.h"
 
 GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
-    MenuEntry(god_name(god_, long_name), MEL_ITEM, 1, 0, false),
+    MenuEntry(god_name(god_, long_name), MEL_ITEM, 1, 0),
     god(god_)
 {
     if (god == GOD_SHINING_ONE)
@@ -44,8 +44,8 @@ string GodMenuEntry::_get_text_preface() const
     {
         char buf[300];
         // XX this probably breaks local tiles hotkey handling?
-        snprintf(buf, sizeof buf, " <%s>%c</%s> %c ",  colour_text.c_str(),
-                 hotkeys[0], colour_text.c_str(), preselected ? '+' : '-');
+        snprintf(buf, sizeof buf, " <%s>%c</%s> - ",  colour_text.c_str(),
+                 hotkeys[0], colour_text.c_str());
         return string(buf);
     }
     return "";
