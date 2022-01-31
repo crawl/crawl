@@ -710,12 +710,14 @@ static void _display_diag()
         s+= "The webtiles client will display 16 colors.\n\n";
 
     // TODO: should any of this be shown ever in webtiles?
-    if (!suppress_unix_stuff && (info.fg_colors < 16 || info.bg_colors < 16))
+    if (!suppress_unix_stuff && (info.fg_colors < 16
+            || info.bg_colors < 16
+            || info.term == "xterm")) // hack for putty. Maybe should set a compat flag in the lib?
     {
-        s += "Your terminal is in <red>compatibility mode</red> and will not display full colours.\n";
+        s += "Your terminal is in <red>compatibility mode</red> and may not display full colours.\n";
         // hint for the putty users:
         if (info.term == "xterm")
-            s += "For 16 colours, try setting a better TERM value than `xterm`, e.g. `xterm-256color` (most terminals) or `putty-256color` (for PuTTY).\n";
+            s += "For full 16-colour-mode, try setting a better TERM value than `xterm`, e.g. `xterm-256color` (most terminals) or `putty-256color` (for PuTTY).\n";
         // XX is there really value in showing all of these? In 2021 in 99% of
         // scenarios, I think people shouldn't mess with anything except the
         // first, and that's only for cosmetic purposes, not compat purposes
