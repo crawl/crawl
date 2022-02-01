@@ -4131,7 +4131,7 @@ spret cast_noxious_bog(int pow, bool fail)
     for (auto pos : bog_locs)
     {
         temp_change_terrain(pos, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
-                TERRAIN_CHANGE_BOG, you.as_monster());
+                TERRAIN_CHANGE_BOG, MID_PLAYER);
     }
 
     flash_view_delay(UA_PLAYER, LIGHTGREEN, 100);

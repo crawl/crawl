@@ -2019,7 +2019,7 @@ dungeon_feature_type orig_terrain(coord_def pos)
 }
 
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
-                         terrain_change_type type, const monster* mon)
+                         terrain_change_type type, int mid)
 {
     dungeon_feature_type old_feat = env.grid(pos);
     for (map_marker *marker : env.markers.get_markers_at(pos))
@@ -2037,16 +2037,14 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                     if (tmarker->duration < dur)
                     {
                         tmarker->duration = dur;
-                        if (mon)
-                            tmarker->mon_num = mon->mid;
+                        tmarker->mon_num = mid;
                     }
                 }
                 else
                 {
                     tmarker->new_feature = newfeat;
                     tmarker->duration = dur;
-                    if (mon)
-                        tmarker->mon_num = mon->mid;
+                    tmarker->mon_num = mid;
                 }
                 // ensure that terrain change happens. Sometimes a terrain
                 // change marker can get stuck; this allows re-doing such
@@ -2064,10 +2062,9 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     if (env.grid(pos) == newfeat && newfeat == old_feat)
         return;
 
-    int col = env.grid_colours(pos);
     map_terrain_change_marker *marker =
         new map_terrain_change_marker(pos, old_feat, newfeat, dur, type,
-                                      mon ? mon->mid : 0, col);
+                                      mid, env.grid_colours(pos));
     env.markers.add(marker);
     env.markers.clear_need_activate();
     dungeon_terrain_changed(pos, newfeat, false, true, true);
