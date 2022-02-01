@@ -1029,10 +1029,10 @@ void timeout_terrain_changes(int duration, bool force)
             marker->duration = 0;
         }
 
-        monster* mon_src = monster_by_mid(marker->mon_num);
+        actor* src = actor_by_mid(marker->mon_num);
         if (marker->duration <= 0
             || (marker->mon_num != 0
-                && (!mon_src || !mon_src->alive() || mon_src->pacified())))
+                && (!src || !src->alive() || (src->is_monster() && src->as_monster()->pacified()))))
         {
             if (you.see_cell(marker->pos))
                 num_seen[marker->change_type]++;
