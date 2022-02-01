@@ -83,6 +83,7 @@ class UseItemMenu : public InvMenu
     void populate_menu();
     bool process_key(int key) override;
     void update_sections();
+    void clear() override;
 
 public:
     bool display_all;
@@ -279,12 +280,20 @@ void UseItemMenu::update_sections()
     update_menu(true);
 }
 
-void UseItemMenu::toggle_display_all()
+void UseItemMenu::clear()
 {
-    display_all = !display_all;
     item_inv.clear();
     item_floor.clear();
+    inv_header = nullptr;
+    floor_header = nullptr;
+    last_inv_pos = -1;
+    Menu::clear();
+}
+
+void UseItemMenu::toggle_display_all()
+{
     clear();
+    display_all = !display_all;
     populate_list();
     populate_menu();
     update_sections();
