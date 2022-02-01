@@ -301,7 +301,7 @@ public:
     virtual ~Menu();
 
     // Remove all items from the Menu, leave title intact.
-    void clear();
+    virtual void clear();
 
     virtual void set_flags(int new_flags);
     int  get_flags() const        { return flags; }
