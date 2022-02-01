@@ -583,6 +583,33 @@ private:
         bool entries_changed = false;
         switch (keyin)
         {
+        case CK_LEFT:
+            switch (current_action)
+            {
+                case action::cast:
+                case action::memorise:
+                    current_action = action::unhide;
+                    entries_changed = true;
+                    break;
+                case action::describe:
+                    current_action = you.divine_exegesis ? action::cast
+                                                         : action::memorise;
+                    entries_changed = true; // may need to remove hotkeys
+                    break;
+                case action::hide:
+                    current_action = action::describe;
+                    break;
+                case action::unhide:
+                    current_action = action::hide;
+                    entries_changed = true;
+                    break;
+            }
+            update_title();
+            update_more();
+            break;
+
+            break;
+        case CK_RIGHT:
         case '!':
 #ifdef TOUCH_UI
         case CK_TOUCH_DUMMY:
@@ -665,11 +692,18 @@ private:
     // ones; otherwise, show only non-hidden ones.
     void update_entries()
     {
+        // try to keep the hover on the current spell. (Maybe this is too
+        // complicated?)
+        const spell_type hovered_spell =
+            last_hovered >= 0 && items[last_hovered]->data
+                ? *static_cast<spell_type *>(items[last_hovered]->data)
+                : SPELL_NO_SPELL;
         clear();
         hidden_count = 0;
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
         text_pattern pat(search_text, true);
+        int new_hover = 0;
         for (auto& spell : spells)
         {
             if (!search_text.empty()
@@ -735,15 +769,21 @@ private:
 
             me->data = &(spell.spell);
             add_entry(me);
+            if (hovered_spell == spell.spell)
+                new_hover = items.size() - 1;
+
         }
+        reset();
+        set_hovered(new_hover);
         update_menu(true);
     }
 
 public:
     SpellLibraryMenu(spell_list& list)
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-               // To have the ctrl-f menu show up in webtiles
-               | MF_ALLOW_FILTER, "spell"),
+                | MF_ARROWS_SELECT | MF_INIT_HOVER
+                // To have the ctrl-f menu show up in webtiles
+                | MF_ALLOW_FILTER, "spell"),
         current_action(you.divine_exegesis ? action::cast : action::memorise),
         spells(list),
         hidden_count(0)

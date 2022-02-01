@@ -100,6 +100,8 @@ public:
     void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
     int get_min_col_width() { return m_min_col_width; }
 
+    void set_initial_scroll(int i) { m_force_scroll = i; }
+
     void update_item(int index);
     void update_items();
 
@@ -122,6 +124,9 @@ protected:
     int m_hover_idx = -1;
     int m_min_col_width = -1;
 
+    int m_force_scroll = -1; // in rows, no pixels
+    bool m_initial_hover_snap = false;
+
 #ifdef USE_TILE_LOCAL
     void do_layout(int mw, int num_columns);
 
@@ -140,7 +145,7 @@ protected:
 
     bool m_mouse_pressed = false;
     int m_mouse_x = -1, m_mouse_y = -1;
-    void update_hovered_entry();
+    void update_hovered_entry(bool force=false);
 
     void pack_buffers();
 
@@ -248,6 +253,7 @@ void UIMenu::update_item(int index)
     _invalidate_sizereq();
     _queue_allocation();
 #ifdef USE_TILE_LOCAL
+    ASSERT(index < static_cast<int>(m_menu->items.size()));
     const MenuEntry *me = m_menu->items[index];
     int colour = m_menu->item_colour(me);
     string text = me->get_text();
@@ -336,27 +342,28 @@ void UIMenu::do_layout(int mw, int num_columns)
 
             // Split menu entries that don't fit into a single line into two lines.
             if (!m_menu->is_set(MF_NO_WRAP_ROWS))
-            if ((text_width > max_column_width-entry.x-pad_right))
-            {
-                formatted_string text;
-                if (_has_hotkey_prefix(entry.text.tostring()))
+                if ((text_width > max_column_width-entry.x-pad_right))
                 {
-                    formatted_string header = entry.text.chop(5);
-                    text_sx += m_font_entry->string_width(header);
-                    text = entry.text;
-                    // remove hotkeys. As Enne said above, this is a monstrosity.
-                    for (int k = 0; k < 5; k++)
-                        text.del_char();
-                }
-                else
-                    text += entry.text;
+                    formatted_string text;
+                    // TODO: refactor to use _get_text_preface
+                    if (_has_hotkey_prefix(entry.text.tostring()))
+                    {
+                        formatted_string header = entry.text.chop(5);
+                        text_sx += m_font_entry->string_width(header);
+                        text = entry.text;
+                        // remove hotkeys. As Enne said above, this is a monstrosity.
+                        for (int k = 0; k < 5; k++)
+                            text.del_char();
+                    }
+                    else
+                        text += entry.text;
 
-                int w = max_column_width - text_sx - pad_right;
-                formatted_string split = m_font_entry->split(text, w, UINT_MAX);
-                int string_height = m_font_entry->string_height(split);
-                string_height = min(string_height, text_height*2);
-                item_height = max(item_height, string_height);
-            }
+                    int w = max_column_width - text_sx - pad_right;
+                    formatted_string split = m_font_entry->split(text, w, UINT_MAX);
+                    int string_height = m_font_entry->string_height(split);
+                    string_height = min(string_height, text_height*2);
+                    item_height = max(item_height, string_height);
+                }
 
             column_width = max(column_width, text_sx + text_width + pad_right);
             row_height = max(row_height, item_height);
@@ -427,6 +434,8 @@ void UIMenu::_render()
         // TODO: is this highlighting good enough for accessibility purposes?
         if (m_hover_idx == i)
             textbackground(default_hover_colour());
+        // XX these will format the hover differently.
+        // TODO: multiline entries
         if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
         {
             formatted_string s = formatted_string::parse_string(
@@ -645,6 +654,27 @@ void UIMenuPopup::_allocate_region()
 
 void UIMenu::_allocate_region()
 {
+    // Do some initial setup that requires higher-level calls but can't happen
+    // until the menu entry heights are known
+    if (m_force_scroll >= 0)
+    {
+        m_menu->set_scroll(m_force_scroll);
+        m_force_scroll = -1;
+    }
+    if (!m_initial_hover_snap)
+    {
+        // TODO: because it is initial this does the minimum snap to ensure
+        // the entry is visible, which can leave it the last on the page. This
+        // is exactly what we want for things like pgdn, but it may not be
+        // what a caller wants for an initial snap -- maybe do some extra
+        // scrolling for this case? (A caller can manually set the scroll, but
+        // this is tricky for some use cases because they won't know the menu
+        // height.)
+        if (m_menu->last_hovered >= 0)
+            m_menu->snap_in_page(m_menu->last_hovered);
+        m_initial_hover_snap = true;
+    }
+
 #ifndef USE_TILE_LOCAL
     // XXX: is this needed?
     m_height = m_menu->items.size();
@@ -669,7 +699,7 @@ void UIMenu::set_hovered_entry(int i)
 }
 
 #ifdef USE_TILE_LOCAL
-void UIMenu::update_hovered_entry()
+void UIMenu::update_hovered_entry(bool force)
 {
     const int x = m_mouse_x - m_region.x,
               y = m_mouse_y - m_region.y;
@@ -682,7 +712,7 @@ void UIMenu::update_hovered_entry()
         if (entry.heading)
             continue;
         const auto me = m_menu->items[i];
-        if (me->hotkeys.size() == 0)
+        if (me->hotkeys_count() == 0 && !force)
             continue;
         const int w = m_region.width / m_num_columns;
         const int entry_x = entry.column * w;
@@ -690,16 +720,20 @@ void UIMenu::update_hovered_entry()
         if (x >= entry_x && x < entry_x+w && y >= entry.y && y < entry.y+entry_h)
         {
             wm->set_mouse_cursor(MOUSE_CURSOR_POINTER);
-            m_hover_idx = i;
-            m_menu->last_hovered = i;
+            if (force && m_menu->last_hovered != i)
+                m_menu->set_hovered(i, force); // give menu a chance to change state
+            else if (me->hotkeys_count())
+                m_hover_idx = i;
             return;
         }
     }
     wm->set_mouse_cursor(MOUSE_CURSOR_ARROW);
     if (!(m_menu->flags & MF_ARROWS_SELECT))
     {
-        m_hover_idx = -1;
-        m_menu->last_hovered = -1;
+        if (force)
+            m_menu->set_hovered(-1, force);
+        else
+            m_hover_idx = -1;
     }
 }
 
@@ -726,7 +760,7 @@ bool UIMenu::on_event(const Event& ev)
     {
         do_layout(m_region.width, m_num_columns);
         if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
-            update_hovered_entry();
+            update_hovered_entry(true);
         pack_buffers();
         _expose();
         return false;
@@ -738,7 +772,8 @@ bool UIMenu::on_event(const Event& ev)
         m_mouse_x = -1;
         m_mouse_y = -1;
         m_mouse_pressed = false;
-        m_hover_idx = -1;
+        if (!(m_menu->is_set(MF_ARROWS_SELECT)))
+            m_hover_idx = -1;
         do_layout(m_region.width, m_num_columns);
         pack_buffers();
         _expose();
@@ -748,7 +783,7 @@ bool UIMenu::on_event(const Event& ev)
     if (event.type() == Event::Type::MouseMove)
     {
         do_layout(m_region.width, m_num_columns);
-        update_hovered_entry();
+        update_hovered_entry(true);
         pack_buffers();
         _expose();
         return true;
@@ -766,7 +801,7 @@ bool UIMenu::on_event(const Event& ev)
             && m_mouse_pressed)
     {
         int entry = m_hover_idx;
-        if (entry != -1 && m_menu->items[entry]->hotkeys.size() > 0)
+        if (entry != -1 && m_menu->items[entry]->hotkeys_count() > 0)
             key = m_menu->items[entry]->hotkeys[0];
         m_mouse_pressed = false;
         _queue_allocation();
@@ -865,26 +900,36 @@ void UIMenu::pack_buffers()
             m_text_buf.add(split, text_sx, text_sy);
         }
 
-        bool hovered = i == m_hover_idx && !entry.heading && me->hotkeys.size() > 0;
+        if (!m_menu->is_set(MF_NOSELECT))
+        {
+            bool hovered = i == m_hover_idx
+                && !entry.heading
+                && me->hotkeys_count() > 0;
 
-        if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
-        {
-            m_shape_buf.add(entry_x, entry.y,
-                    entry_ex, entry.y+entry_h, selected_colour);
-        }
-        else if (hovered)
-        {
-            const VColour hover_bg = m_mouse_pressed ?
-                VColour(0, 0, 0, 255) : VColour(255, 255, 255, 25);
-            m_shape_buf.add(entry_x, entry.y,
-                    entry_ex, entry.y+entry_h, hover_bg);
-        }
-        if (hovered)
-        {
-            const VColour mouse_colour = m_mouse_pressed ?
-                VColour(34, 34, 34, 255) : VColour(255, 255, 255, 51);
-            m_line_buf.add_square(entry_x + 1, entry.y + 1,
-                    entry_x+col_width, entry.y+entry_h, mouse_colour);
+            if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
+            {
+                // draw a highlighted background on selected entries (usually only
+                // multiselect menus), overriding hover background
+                m_shape_buf.add(entry_x, entry.y,
+                        entry_ex, entry.y+entry_h, selected_colour);
+            }
+            else if (hovered)
+            {
+                // draw the regular hover background
+                const VColour hover_bg = m_mouse_pressed ?
+                    VColour(0, 0, 0, 255) : VColour(255, 255, 255, 25);
+                m_shape_buf.add(entry_x, entry.y,
+                        entry_ex, entry.y+entry_h, hover_bg);
+            }
+
+            // draw a line around any hovered entry
+            if (hovered)
+            {
+                const VColour mouse_colour = m_mouse_pressed ?
+                    VColour(34, 34, 34, 255) : VColour(255, 255, 255, 51);
+                m_line_buf.add_square(entry_x + 1, entry.y + 1,
+                        entry_x+col_width, entry.y+entry_h, mouse_colour);
+            }
         }
     }
 }
@@ -983,6 +1028,10 @@ void Menu::set_flags(int new_flags)
 {
     flags = new_flags;
 
+    // disable arrow controls depending on options, or for any noselect menu
+    if (!Options.menu_arrow_control || !!(flags & MF_NOSELECT))
+        flags = flags & (~(MF_ARROWS_SELECT | MF_INIT_HOVER));
+
 #ifdef DEBUG
     int sel_flag = flags & (MF_NOSELECT | MF_SINGLESELECT | MF_MULTISELECT);
     ASSERT(sel_flag == MF_NOSELECT || sel_flag == MF_SINGLESELECT || sel_flag == MF_MULTISELECT);
@@ -1029,16 +1078,17 @@ formatted_string pad_more_with(formatted_string s,
 string hyphenated_hotkey_letters(int how_many, char first)
 {
     how_many = min(how_many, 52);
-    string s = "[<w>";
-    s += first;
-    s += "</w>";
+    string s;
     if (how_many > 1)
     {
-        s += "-<w>";
-        s += first + how_many - 1;
-        s += "</w>";
+        // crawl uses A-Z second, but it is first in ascii
+        int last = static_cast<int>(first) + how_many - 1;
+        if (last > 'z')
+            last = 'A' + last - ('z' + 1);
+        s = make_stringf("[<w>%c</w>-<w>%c</w>]", first, static_cast<char>(last));
     }
-    s += "]";
+    else
+        s = make_stringf("[<w>%c</w>]", first);
     return s;
 }
 
@@ -1084,13 +1134,18 @@ string Menu::get_keyhelp(bool scrollable) const
         // XX this may not work perfectly with the way InvMenu handles
         // selection
         const auto chosen_count = selected_entries().size();
+        navigation +=
+                "\n<lightgrey>"
+                "Letters toggle    ";
+        if (is_set(MF_ARROWS_SELECT))
+        {
+            navigation +=
+                "[<w>.</w>|<w>Space</w>] toggle selected    ";
+        }
         navigation += make_stringf(
-            "\n<lightgrey>"
-            "Letters toggle    "
-            "[<w>.</w>|<w>Space</w>] toggle selected    " // assumes MF_ARROWS_SELECT
-            "[<w>Ret</w>] %s "
-            "(%lu chosen)"
-            "</lightgrey>",
+                "[<w>Ret</w>] %s "
+                "(%zu chosen)"
+                "</lightgrey>",
             chosen_count == 0 ? "cancel" : "accept",
             chosen_count);
     }
@@ -1176,13 +1231,17 @@ vector<MenuEntry *> Menu::show(bool reuse_selections)
         m_ui.scroller->set_scroll(INT_MAX);
         if (is_set(MF_INIT_HOVER))
         {
+            // MF_START_AT_END overrides a manually set initial hover
             set_hovered(static_cast<int>(items.size()) - 1);
             if (items[last_hovered]->level != MEL_ITEM)
                 cycle_hover(true);
         }
     }
-    else if (is_set(MF_INIT_HOVER))
+    else if (is_set(MF_INIT_HOVER)
+        && (last_hovered < 0 || items[last_hovered]->level != MEL_ITEM)) // XX check hotkeys?
+    {
         cycle_hover();
+    }
 
     do_menu();
 
@@ -1390,12 +1449,14 @@ bool Menu::process_key(int keyin)
         sel.clear();
         lastch = keyin;
         return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+    case CK_MOUSE_B1:
+    case CK_MOUSE_CLICK:
+        if (!is_set(MF_NOSELECT))
+            break;
     case ' ': case CK_PGDN: case '>': case '+':
 #ifndef USE_TILE_LOCAL
     case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
 #endif
-    case CK_MOUSE_B1:
-    case CK_MOUSE_CLICK:
         if (!page_down() && is_set(MF_WRAP))
             m_ui.scroller->set_scroll(0);
         break;
@@ -1403,6 +1464,7 @@ bool Menu::process_key(int keyin)
     case '<':
         page_up();
         break;
+    case CK_SHIFT_LEFT:
     case CK_SHIFT_UP:
         line_up();
         break;
@@ -1412,6 +1474,7 @@ bool Menu::process_key(int keyin)
         else
             line_up();
         break;
+    case CK_SHIFT_RIGHT:
     case CK_SHIFT_DOWN:
         line_down();
         break;
@@ -1649,7 +1712,6 @@ void Menu::select_items(int key, int qty)
     else
     {
         int first_entry = get_first_visible(), final = items.size();
-        bool selected = false;
 
         // Process all items, in case user hits hotkey for an
         // item not on the current page.
@@ -1658,54 +1720,28 @@ void Menu::select_items(int key, int qty)
         // the same hotkey (as for pickup when there's a stack of
         // >52 items). If there are duplicate hotkeys, the items
         // are usually separated by at least a page, so we should
-        // only select the item on the current page. This is why we
-        // use two loops, and check to see if we've matched an item
+        // only select the item on the current page. We use only
+        // one loop, but we look through the menu starting with the first
+        // visible item, and check to see if we've matched an item
         // by its primary hotkey (hotkeys[0] for multiple-selection
-        // menus), in which case, we stop selecting further items.
-        const bool check_preselected = (key == CK_ENTER);
-        for (int i = first_entry; i < final; ++i)
+        // menus), in which case we stop selecting further items. If
+        // not, we loop around back to the beginning.
+        for (int i = 0; i < final; ++i)
         {
-            if (check_preselected && items[i]->preselected)
-            {
-                select_index(i, qty);
-                set_hovered(i);
-                selected = true;
-                break;
-            }
-            else if (is_hotkey(i, key) && (items[i]->hotkeys[0] == key
-                                                || is_set(MF_SINGLESELECT)))
+            const int index = (i + first_entry) % final;
+            if (is_hotkey(index, key) && (items[index]->hotkeys[0] == key
+                                          || is_set(MF_SINGLESELECT)))
             {
                 // XX for some singleselect menus, only snapping might be
                 // better. (E.g. inventory)
-                select_index(i, qty);
-                set_hovered(i);
-                selected = true;
-                break;
-
-            }
-        }
-
-        if (!selected)
-        {
-            for (int i = 0; i < first_entry; ++i)
-            {
-                if (check_preselected && items[i]->preselected)
-                {
-                    select_index(i, qty);
-                    set_hovered(i);
-                    break;
-                }
-                else if (is_hotkey(i, key))
-                {
-                    select_index(i, qty);
-                    set_hovered(i);
-                    break;
-                }
+                select_index(index, qty);
+                set_hovered(index);
+                return;
             }
         }
 
         // no primary hotkeys found, check secondary hotkeys for multiselect
-        if (!selected && is_set(MF_MULTISELECT))
+        if (is_set(MF_MULTISELECT))
         {
             int last_snap = -1;
             int first_snap = -1;
@@ -1722,7 +1758,6 @@ void Menu::select_items(int key, int qty)
             {
                 // try to ensure as much of the selection as possible is in
                 // view by snapping twice
-                // XX test on webtiles
                 snap_in_page(last_snap);
                 set_hovered(first_snap);
             }
@@ -1730,19 +1765,57 @@ void Menu::select_items(int key, int qty)
     }
 }
 
-string MenuEntry::get_text() const
+bool MenuEntry::selected() const
 {
-    if (level == MEL_ITEM && hotkeys.size())
+    return selected_qty > 0 && (quantity || on_select);
+}
+
+// -1: Invert
+// -2: Select all
+void MenuEntry::select(int qty)
+{
+    if (on_select && quantity == 0)
+        selected_qty = 1; // hacky, assume quantity is not relevant
+    else if (qty == -2)
+        selected_qty = quantity;
+    else if (selected())
+        selected_qty = 0;
+    else if (quantity)
+        selected_qty = (qty == -1 ? quantity : qty);
+}
+
+string MenuEntry::_get_text_preface() const
+{
+    if (level == MEL_ITEM && hotkeys_count())
     {
-        return make_stringf(" %s %c %s",
-            keycode_to_name(hotkeys[0]).c_str(),
-            preselected ? '+' : '-',
-            text.c_str());
+        return make_stringf(" %s - ",
+            keycode_to_name(hotkeys[0]).c_str());
     }
     else if (level == MEL_ITEM && indent_no_hotkeys)
-        return "     " + text;
+        return "     ";
     else
-        return text;
+        return "";
+}
+
+string MenuEntry::get_text() const
+{
+    return _get_text_preface() + text;
+}
+
+void MenuEntry::wrap_text(int width)
+{
+    // Warning: console menus cannot handle multiline regular entries, use for
+    // the title only (TODO)
+    const int indent
+#ifdef USE_TILE_LOCAL
+        = 0; // tiles does line-wrapping inside the text
+#else
+        = static_cast<int>(_get_text_preface().size());
+    width -= indent;
+#endif
+    if (width <= 0)
+        return;
+    linebreak_string(text, width, true, indent);
 }
 
 MonsterMenuEntry::MonsterMenuEntry(const string &str, const monster_info* mon,
@@ -2277,9 +2350,9 @@ void Menu::update_title()
 #endif
 }
 
-void Menu::set_hovered(int index)
+void Menu::set_hovered(int index, bool force)
 {
-    if (!is_set(MF_ARROWS_SELECT))
+    if (!force && !is_set(MF_ARROWS_SELECT))
     {
         snap_in_page(index);
         return;
@@ -2311,36 +2384,116 @@ bool Menu::in_page(int index, bool strict) const
     return strict ? (lower_in && upper_in) : (lower_in || upper_in);
 }
 
-/// Ensure that the item at index is visible in the scroller
-bool Menu::snap_in_page(int index)
+bool Menu::set_scroll(int index)
 {
-    if (index < 0 || index >= static_cast<int>(items.size()))
-        return false;
+    // TODO: code duplication, maybe could be refactored into lower-level code
     const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0) // ui not yet set up
+    if (vph == 0)
+    {
+        // ui not yet set up. Setting this value now will force a
+        // `set_scroll` call with the same index on first render.
+        m_ui.menu->set_initial_scroll(index);
+        return false;
+    }
+    if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 
     int y1, y2;
     m_ui.menu->get_item_region(index, &y1, &y2);
-    // special case: the immediately preceding item is a header of some kind.
-    // could be generalized a bit, if sequences of headers come up? Most
-    // important when the first item in a menu is a header
-    if (index >= 1 && items[index - 1]->level != MEL_ITEM)
-        m_ui.menu->get_item_region(index - 1, &y1, nullptr);
+
+    // special case: the immediately preceding items are a header of some kind.
+    // Most important visually when the first item in a menu is a header
+    const int any_preceding_headers = get_header_block(index).first;
+    if (any_preceding_headers != index)
+        m_ui.menu->get_item_region(any_preceding_headers, &y1, nullptr);
+
+    const int vpy = m_ui.scroller->get_scroll();
+    m_ui.scroller->set_scroll(y1
+#ifdef USE_TILE_LOCAL
+            - UI_SCROLLER_SHADE_SIZE
+#endif
+            );
+
+#ifdef USE_TILE_WEB
+    // XX this doesn't force update the server, should it ever?
+    webtiles_update_scroll_pos();
+#endif
+
+    return vpy != y1;
+}
+
+bool Menu::item_visible(int index)
+{
+    // TODO: code duplication, maybe could be refactored into lower-level code
+    const int vph = m_ui.scroller->get_region().height;
+    if (vph == 0)
+    {
+        // ui not yet set up. Use `set_scroll` for this case, or a hover will
+        // be automatically snapped.
+        return false;
+    }
+    if (index < 0 || index >= static_cast<int>(items.size()))
+        return false;
+
+    int y1, y2;
+    m_ui.menu->get_item_region(index, &y1, &y2);
+
+    // special case: the immediately preceding items are a header of some kind.
+    // Most important visually when the first item in a menu is a header
+    const int any_preceding_headers = get_header_block(index).first;
+    if (any_preceding_headers != index)
+        m_ui.menu->get_item_region(any_preceding_headers, &y1, nullptr);
+
+    const int vpy = m_ui.scroller->get_scroll();
+
+    // full visibility -- should this be partial visibility?
+    return y1 >= vpy && y2 < vpy + vph;
+}
+
+/// Ensure that the item at index is visible in the scroller. This happens
+/// relative to the current scroll.
+bool Menu::snap_in_page(int index)
+{
+    // TODO: code duplication, maybe could be refactored into lower-level code
+    const int vph = m_ui.scroller->get_region().height;
+    if (vph == 0)
+    {
+        // ui not yet set up. Use `set_scroll` for this case, or a hover will
+        // be automatically snapped.
+        return false;
+    }
+    if (index < 0 || index >= static_cast<int>(items.size()))
+        return false;
+
+    int y1, y2;
+    m_ui.menu->get_item_region(index, &y1, &y2);
+
+    // special case: the immediately preceding items are a header of some kind.
+    // Most important visually when the first item in a menu is a header
+    const int any_preceding_headers = get_header_block(index).first;
+    if (any_preceding_headers != index)
+        m_ui.menu->get_item_region(any_preceding_headers, &y1, nullptr);
+
     const int vpy = m_ui.scroller->get_scroll();
 
     if (y2 >= vpy + vph)
+    {
+        // scroll up
         m_ui.scroller->set_scroll(y2 - vph
 #ifdef USE_TILE_LOCAL
             + UI_SCROLLER_SHADE_SIZE
 #endif
             );
+    }
     else if (y1 < vpy)
+    {
+        // scroll down
         m_ui.scroller->set_scroll(y1
 #ifdef USE_TILE_LOCAL
             - UI_SCROLLER_SHADE_SIZE
 #endif
             );
+    }
     else
         return false; // already in page
     return true;
@@ -2429,6 +2582,8 @@ bool Menu::line_down()
 
 void Menu::cycle_hover(bool reverse)
 {
+    if (!is_set(MF_ARROWS_SELECT))
+        return;
     int items_tried = 0;
     const int max_items = is_set(MF_WRAP) ? items.size()
                         : reverse
@@ -2459,7 +2614,6 @@ void Menu::cycle_hover(bool reverse)
 
     set_hovered(new_hover);
 #ifdef USE_TILE_WEB
-    // TODO: not sure if this is enough
     webtiles_update_scroll_pos();
 #endif
 }
@@ -2478,6 +2632,62 @@ bool Menu::line_up()
         m_ui.menu->set_showable_height(y+dy);
 #endif
         return true;
+    }
+    return false;
+}
+
+/// Return a range for index that includes at least one non-header if possible,
+/// and any sequence of adjacent headers. Used for display logic to try to
+/// show headers before any selected item. Doesn't check for valid indices
+pair<int, int> Menu::get_header_block(int index) const
+{
+    int first = index;
+    int last = index;
+    while (first >= 1 && items[first - 1]->level != MEL_ITEM)
+        first--;
+    // if index is a header, scan forward to look for a non-headed
+    while (last + 1 < static_cast<int>(items.size()) && items[last]->level != MEL_ITEM)
+        last++;
+    return make_pair(first, last);
+}
+
+int Menu::next_block_from(int index, bool forward, bool wrap) const
+{
+    const auto cur_block = get_header_block(index);
+    int next = forward ? cur_block.second + 1 : cur_block.first - 1;
+    if (wrap)
+        next = next % items.size();
+    else
+        next = max(min(next, static_cast<int>(items.size()) - 1), 0);
+    return get_header_block(next).first;
+}
+
+bool Menu::cycle_headers(bool forward)
+{
+    // XX this doesn't work quite right if called before the menu is displayed
+    int start = is_set(MF_ARROWS_SELECT) ? max(last_hovered, 0)
+                                         : get_first_visible();
+    start = get_header_block(start).first;
+    int cur = next_block_from(start, forward, true);
+    while (cur != start)
+    {
+        if (items[cur]->level == MEL_SUBTITLE || items[cur]->level == MEL_TITLE)
+        {
+            if (!item_visible(cur) || !is_set(MF_ARROWS_SELECT))
+                set_scroll(cur);
+            if (is_set(MF_ARROWS_SELECT))
+            {
+                set_hovered(cur);
+                cycle_hover(); // cycle to get a valid hover
+            }
+#ifdef USE_TILE_WEB
+            // cycle_headers doesn't currently have a client-side
+            // implementation, so force-send the server-side scroll
+            webtiles_update_scroll_pos(true);
+#endif
+            return true;
+        }
+        cur = next_block_from(cur, forward, true);
     }
     return false;
 }
@@ -2628,12 +2838,13 @@ void Menu::webtiles_update_title() const
     tiles.finish_message();
 }
 
-void Menu::webtiles_update_scroll_pos() const
+void Menu::webtiles_update_scroll_pos(bool force) const
 {
     tiles.json_open_object();
     tiles.json_write_string("msg", "menu_scroll");
     tiles.json_write_int("first", get_first_visible());
     tiles.json_write_int("last_hovered", last_hovered);
+    tiles.json_write_bool("force", force);
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -2700,9 +2911,6 @@ void Menu::webtiles_write_item(const MenuEntry* me) const
 
     if (me->level != MEL_NONE)
         tiles.json_write_int("level", me->level);
-
-    if (me->preselected)
-        tiles.json_write_int("preselected", me->preselected);
 
     webtiles_write_tiles(*me);
 
@@ -2833,7 +3041,7 @@ void column_composer::compose_formatted_column(
     }
 }
 
-int linebreak_string(string& s, int maxcol, bool indent)
+int linebreak_string(string& s, int maxcol, bool indent, int force_indent)
 {
     // [ds] Don't loop forever if the user is playing silly games with
     // their term size.
@@ -2845,7 +3053,7 @@ int linebreak_string(string& s, int maxcol, bool indent)
 
     while (!s.empty())
     {
-        res += wordwrap_line(s, maxcol, true, indent);
+        res += wordwrap_line(s, maxcol, true, indent, force_indent);
         if (!s.empty())
         {
             res += "\n";

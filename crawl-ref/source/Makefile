@@ -382,7 +382,9 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
 ifndef ANDROID
+ifneq ($(uname_S),Haiku)
 EXTRA_LIBS += -pthread
+endif
 endif
 endif
 

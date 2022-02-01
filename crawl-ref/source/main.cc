@@ -364,6 +364,7 @@ static void _reset_game()
     clear_message_window();
     note_list.clear();
     msg::deinitialise_mpr_streams();
+    quiver::reset_state();
 
 #ifdef USE_TILE_LOCAL
     // [ds] Don't show the title screen again, just go back to
@@ -1777,12 +1778,15 @@ static void _do_cycle_quiver(int dir)
 
     if (!changed || !valid)
     {
-        const bool others = quiver::menu_size() > (valid ? 1 : 0);
-        // Things could be excluded from this via inscriptions, custom
-        // fire_order, or setting fire_items_start.
+        // `others`: there are quiverable but uncyclable actions.
+        // Things could be excluded from cycling via inscriptions, custom
+        // fire_order, or setting fire_items_start, and still available from
+        // the menu. This messaging still excludes stuff that requires
+        // force-quivering, e.g. zigfigs
+        const bool others = !valid && quiver::anything_to_quiver(true);
         mprf("No %squiver actions available for cycling.%s",
             valid ? "other " : "",
-            others ? " Use <white>Q</white> to select from all actions."
+            others ? " Use [<white>Q</white>] to select from all actions."
                    : "");
     }
 }

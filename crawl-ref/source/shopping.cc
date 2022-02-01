@@ -924,6 +924,7 @@ public:
     }
 };
 
+// XX why is this MF_QUIET_SELECT?
 ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase)
     : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
                 | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
@@ -1109,7 +1110,7 @@ void ShopMenu::purchase_selected()
 
     // Since the old ShopEntrys may now point to past the end of shop.stock (or
     // just the wrong place in general) nuke the whole thing and start over.
-    deleteAll(items);
+    clear();
     init_entries();
     resort();
 
@@ -1199,7 +1200,6 @@ bool ShopMenu::process_key(int keyin)
             update_more();
         }
         return true;
-    case ' ':
     case CK_MOUSE_CLICK:
     case CK_ENTER:
         if (can_purchase)
@@ -2090,6 +2090,8 @@ public:
         return pad_more_with(s, "<lightgrey>[<w>Esc</w>] exit</lightgrey>");
     }
 
+    friend class ShoppingList;
+
 protected:
     virtual formatted_string calc_title() override;
 };
@@ -2254,6 +2256,7 @@ void ShoppingList::display(bool view_only)
 
             shopmenu.clear();
             fill_out_menu(shopmenu);
+            shopmenu.update_more();
             shopmenu.update_menu(true);
         }
         else

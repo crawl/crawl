@@ -6198,6 +6198,7 @@ bool player::res_water_drowning() const
 {
     return is_unbreathing()
            || species::can_swim(species) && !form_changed_physiology()
+           || you.species == SP_GREY_DRACONIAN && draconian_dragon_exception()
            || form == transformation::ice_beast;
 }
 

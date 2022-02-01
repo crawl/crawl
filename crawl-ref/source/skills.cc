@@ -1308,7 +1308,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         {
             mprf("You have finished your manual of %s and %stoss it away.",
                  skill_name(exsk),
-                 exsk == SK_THROWING ? "skillfully " : "");
+                 exsk == SK_THROWING ? "skilfully " : "");
         }
     }
 

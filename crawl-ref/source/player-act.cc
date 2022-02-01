@@ -654,10 +654,8 @@ string player::arm_name(bool plural, bool *can_plural) const
  *
  * @return  A string describing the player's UC attack 'weapon'.
  */
-string player::unarmed_attack_name() const
+string player::unarmed_attack_name(string default_name) const
 {
-    string default_name = "Nothing wielded";
-
     if (has_usable_claws(true))
     {
         if (you.has_mutation(MUT_FANGS))

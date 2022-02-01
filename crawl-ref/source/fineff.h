@@ -386,6 +386,7 @@ public:
         // sequencing errors from inadvertently making us change alignment
         const int realhp = mons->hit_points;
         mons->hit_points = -realhp;
+        mons->flags |= MF_PENDING_REVIVAL;
         final_effect::schedule(new avoided_death_fineff(mons, realhp));
     }
 protected:

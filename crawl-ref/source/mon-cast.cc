@@ -121,6 +121,7 @@ static void _setup_creeping_frost(bolt &beam, const monster &caster, int pow);
 static void _setup_pyroclastic_surge(bolt &beam, const monster &caster, int pow);
 static ai_action::goodness _negative_energy_spell_goodness(const actor* foe);
 static ai_action::goodness _caster_sees_foe(const monster &caster);
+static ai_action::goodness _foe_polymorph_viable(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
@@ -452,10 +453,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             ASSERT(foe);
             return ai_action::good_or_impossible(!foe->backlit());
     }) },
-    { SPELL_POLYMORPH, _hex_logic(SPELL_POLYMORPH, [](const monster& caster) {
-        return ai_action::good_or_bad(!caster.friendly()); // too dangerous to let allies use
-    }) },
-
+    { SPELL_POLYMORPH, _hex_logic(SPELL_POLYMORPH, _foe_polymorph_viable) },
     { SPELL_SLEEP, _hex_logic(SPELL_SLEEP, _foe_sleep_viable, 6) },
     { SPELL_HIBERNATION, _hex_logic(SPELL_HIBERNATION, _foe_sleep_viable) },
     { SPELL_TELEPORT_OTHER, _hex_logic(SPELL_TELEPORT_OTHER,
@@ -630,6 +628,16 @@ static ai_action::goodness _caster_sees_foe(const monster &caster)
     const actor* foe = caster.get_foe();
     ASSERT(foe);
     return ai_action::good_or_impossible(caster.can_see(*foe));
+}
+
+static ai_action::goodness _foe_polymorph_viable(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    ASSERT(foe);
+    if (foe->is_player())
+        return ai_action::good_or_impossible(!you.transform_uncancellable);
+    else // too dangerous to let allies use
+        return ai_action::good_or_bad(!caster.friendly());
 }
 
 static ai_action::goodness _foe_sleep_viable(const monster &caster)
@@ -2401,8 +2409,14 @@ static bool _near_visible_wall(const monster &caster, const actor &target)
     if (!caster.see_cell_no_trans(target.pos()))
         return false;
     for (adjacent_iterator ai(target.pos()); ai; ++ai)
-        if (cell_is_solid(*ai) && caster.see_cell_no_trans(*ai))
+    {
+        if (cell_is_solid(*ai)
+            && env.grid(*ai) != DNGN_MALIGN_GATEWAY
+            && caster.see_cell_no_trans(*ai))
+        {
             return true;
+        }
+    }
     return false;
 }
 
@@ -2430,8 +2444,8 @@ static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt &bea
     beam.fire();
 }
 
-/// Does the given monster have a foe that's adjacent to a wall, and can the caster see
-/// that wall?
+/// Does the given monster have a foe that's adjacent to a wall, and can the
+/// caster see that wall?
 static ai_action::goodness _foe_near_wall(const monster &caster)
 {
     const actor* foe = caster.get_foe();
@@ -2462,7 +2476,8 @@ static bool _creeping_frost_freeze(coord_def p, bolt &beam)
     return beam.explosion_draw_cell(p);
 }
 
-/// Cast the spell Creeping Frost, freezing any of the caster's foes that are adjacent to walls.
+/// Cast the spell Creeping Frost, freezing any of the caster's foes that are
+/// adjacent to walls.
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
 {
     bool visible_effect = false;
@@ -3122,7 +3137,9 @@ static void _corrupting_pulse(monster *mons)
         flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
 
         if (!is_sanctuary(you.pos())
-            && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
+            && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID)
+            && one_chance_in(you.how_mutated(false, true, true)
+                             - you.how_mutated(false, true, false)))
         {
             temp_mutate(RANDOM_CORRUPT_MUTATION, "wretched star");
         }
@@ -7232,17 +7249,16 @@ static void _siren_sing(monster* mons, bool avatar)
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
-static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot)
+ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 {
-    spell_type monspell = slot.spell;
     actor *foe = mon->get_foe();
     const bool friendly = mon->friendly();
 
-    if (!foe && (get_spell_flags(monspell) & spflag::targeting_mask))
+    if (!foe && (get_spell_flags(spell) & spflag::targeting_mask))
         return ai_action::impossible();
 
     // Keep friendly summoners from spamming summons constantly.
-    if (friendly && !foe && spell_typematch(monspell, spschool::summoning))
+    if (friendly && !foe && spell_typematch(spell, spschool::summoning))
         return ai_action::bad();
 
 
@@ -7256,24 +7272,21 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     if (!mon->wont_attack())
     {
-        if (spell_harms_area(monspell) && env.sanctuary_time > 0)
+        if (spell_harms_area(spell) && env.sanctuary_time > 0)
             return ai_action::impossible();
 
-        if (spell_harms_target(monspell) && is_sanctuary(mon->target))
+        if (spell_harms_target(spell) && is_sanctuary(mon->target))
             return ai_action::impossible();
     }
 
-    if (slot.flags & MON_SPELL_BREATH && mon->has_ench(ENCH_BREATH_WEAPON))
-        return ai_action::impossible();
-
     // Don't bother casting a summon spell if we're already at its cap
-    if (summons_are_capped(monspell)
-        && count_summons(mon, monspell) >= summons_limit(monspell, false))
+    if (summons_are_capped(spell)
+        && count_summons(mon, spell) >= summons_limit(spell, false))
     {
         return ai_action::impossible();
     }
 
-    const mons_spell_logic* logic = map_find(spell_to_logic, monspell);
+    const mons_spell_logic* logic = map_find(spell_to_logic, spell);
     if (logic && logic->calc_goodness)
         return logic->calc_goodness(*mon);
 
@@ -7282,7 +7295,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those
     // handled here as well. - bwr
-    switch (monspell)
+    switch (spell)
     {
     case SPELL_CALL_TIDE:
         if (!player_in_branch(BRANCH_SHOALS) || mon->has_ench(ENCH_TIDE))
@@ -7602,7 +7615,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_GLACIATE:
         ASSERT(foe);
         return ai_action::good_or_bad(
-            _glaciate_tracer(mon, mons_spellpower(*mon, monspell), foe->pos()));
+            _glaciate_tracer(mon, mons_spellpower(*mon, spell), foe->pos()));
 
     case SPELL_MALIGN_GATEWAY:
         return ai_action::good_or_bad(can_cast_malign_gateway());
@@ -7624,7 +7637,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     {
         bolt tracer;
         setup_cleansing_flame_beam(tracer,
-                                   5 + (7 * mon->spell_hd(monspell)) / 12,
+                                   5 + (7 * mon->spell_hd(spell)) / 12,
                                    cleansing_flame_source::spell,
                                    mon->pos(), mon);
         fire_tracer(mon, tracer, true);
@@ -7717,6 +7730,14 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         // targeted, removed, or handled via spell_to_logic.
         return ai_action::good();
     }
+}
+
+static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot)
+{
+    if (slot.flags & MON_SPELL_BREATH && mon->has_ench(ENCH_BREATH_WEAPON))
+        return ai_action::impossible();
+
+    return monster_spell_goodness(mon, slot.spell);
 }
 
 static string _god_name(god_type god)

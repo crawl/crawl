@@ -337,13 +337,9 @@ seems to have difficulty speaking.
 %%%%
 Mlioglotl
 
-A demon prince once betrayed his realm through a dark ritual to Lugonu.
-Becoming the twisted mass of corruption known as Mlioglotl was his
-reward.
-
-Seeing such a powerful acolyte of Lugonu within the mortal plane is a
-rare sight indeed, and one should fear the denizens and horrors of the
-Abyss that are never far behind.
+A demon prince once possessed a hunger for power that was exceptional even by
+the standards of his kind. He betrayed his realm to Lugonu, and his reward was
+to become this twisted mass of corruption, now known only as Mlioglotl.
 %%%%
 Mnoleg
 
@@ -785,7 +781,7 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skillfully.
+and able to use them skilfully.
 %%%%
 chaos spawn
 

@@ -82,7 +82,8 @@ class UseItemMenu : public InvMenu
     void populate_list();
     void populate_menu();
     bool process_key(int key) override;
-    void repopulate_menu();
+    void update_sections();
+    void clear() override;
 
 public:
     bool display_all;
@@ -106,18 +107,27 @@ public:
 
     void toggle_display_all();
     void toggle_inv_or_floor();
-    void set_hovered(int hovered) override;
+    void set_hovered(int hovered, bool force=false) override;
+    bool cycle_headers(bool=true) override;
+
+private:
+    MenuEntry *inv_header;
+    MenuEntry *floor_header;
 };
 
 UseItemMenu::UseItemMenu(int item_type, const char* prompt)
     : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER),
                             display_all(false), is_inventory(true),
-      item_type_filter(item_type), last_inv_pos(-1)
+      item_type_filter(item_type), last_inv_pos(-1),
+      inv_header(nullptr), floor_header(nullptr)
 {
     set_tag("use_item");
     set_title(prompt);
     populate_list();
     populate_menu();
+    // start hover on an actual item, rather than - if present
+    if (item_type_filter == OSEL_WIELD && item_inv.size() > 0)
+        set_hovered(1);
 }
 
 void UseItemMenu::populate_list()
@@ -160,11 +170,23 @@ void UseItemMenu::populate_menu()
     else if (item_floor.empty())
         is_inventory = true;
 
-    // Entry for unarmed
+    // Entry for unarmed. Hotkey works for either subsection, though selecting
+    // it (currently) enables the inv section.
     if (item_type_filter == OSEL_WIELD)
     {
-        string hands_title = " -   unarmed";
-        MenuEntry *hands = new MenuEntry (hands_title, MEL_ITEM);
+        string hands_string = you.unarmed_attack_name("Unarmed");
+        if (!you.weapon())
+            hands_string += " (current attack)";
+
+        MenuEntry *hands = new MenuEntry(hands_string, MEL_ITEM);
+        if (!you.weapon())
+            hands->colour = LIGHTGREEN;
+        hands->add_hotkey('-');
+        hands->on_select = [this](const MenuEntry&)
+            {
+                lastch = '-';
+                return false;
+            };
         add_entry(hands);
     }
 
@@ -174,33 +196,19 @@ void UseItemMenu::populate_menu()
         // items.
         if (!item_floor.empty())
         {
-            string subtitle_text = "Inventory Items";
-            if (!is_inventory)
-                subtitle_text += " (',' to select)";
-            auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
-            subtitle->colour = LIGHTGREY;
-            add_entry(subtitle);
+            inv_header = new MenuEntry("Inventory Items", MEL_TITLE);
+            inv_header->colour = LIGHTCYAN;
+            add_entry(inv_header);
         }
-
-        if (is_inventory)
-        {
-            load_items(item_inv,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            // hacky: remove the class hotkey
+        load_items(item_inv,
+                    [&](MenuEntry* entry) -> MenuEntry*
+                    {
+                        // hacky: remove the class hotkey for cases where it
+                        // is counterintuitive/useless
+                        if (item_type_filter != OSEL_UNIDENT)
                             entry->hotkeys.pop_back();
-                            return entry;
-                        });
-        }
-        else
-        {
-            load_items(item_inv,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            entry->hotkeys.clear();
-                            return entry;
-                        });
-        }
+                        return entry;
+                    });
     }
     last_inv_pos = items.size() - 1;
 
@@ -211,67 +219,84 @@ void UseItemMenu::populate_menu()
         if (!item_inv.empty())
             add_entry(new MenuEntry("", MEL_TITLE));
 #endif
-        // Load floor items to menu
-        string subtitle_text = "Floor Items";
-        if (is_inventory)
-        {
-            if (Options.easy_floor_use && item_floor.size() == 1)
-            {
-                subtitle_text += string(" (',' to ") +
-                    (item_type_filter == OBJ_ARMOUR ? "wear)"
-                   : item_type_filter == OSEL_WIELD ? "wield)"
-                   : "use)");
-            }
-            else
-                subtitle_text += " (',' to select)";
-        }
-        auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
-        subtitle->colour = LIGHTGREY;
-        add_entry(subtitle);
+        // Load floor items to menu. Always add a subtitle, even if there are
+        // no inv items.
+        floor_header = new MenuEntry("Floor Items", MEL_TITLE);
+        floor_header->colour = LIGHTCYAN;
+        add_entry(floor_header);
 
-        if (is_inventory)
-        {
-            load_items(item_floor,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            entry->hotkeys.clear();
-                            return entry;
-                        });
-        }
-        else
-        {
-            load_items(item_floor,
-                        [&](MenuEntry* entry) -> MenuEntry*
-                        {
-                            // hacky: remove the class hotkey
-                            entry->hotkeys.pop_back();
-                            return entry;
-                        });
-        }
+        load_items(item_floor,
+                    [&](MenuEntry* entry) -> MenuEntry*
+                    {
+                        // hacky: remove the class hotkey
+                        entry->hotkeys.pop_back();
+                        return entry;
+                    });
     }
+    update_sections();
+
     if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
     {
         if (is_inventory && last_hovered > last_inv_pos)
-            set_hovered(0);
+            set_hovered(item_type_filter == OSEL_WIELD ? 1 : 0);
         else if (!is_inventory && last_hovered <= last_inv_pos)
             set_hovered(last_inv_pos + 1);
     }
 }
 
-void UseItemMenu::repopulate_menu()
+void UseItemMenu::update_sections()
 {
-    deleteAll(items);
-    populate_menu();
+    // never disable the unwield button
+    int i = item_type_filter == OSEL_WIELD ? 1 : 0;
+    for (; i <= last_inv_pos; i++)
+        if (items[i]->level == MEL_ITEM)
+            items[i]->set_enabled(is_inventory);
+    for (; i < static_cast<int>(items.size()); i++)
+        if (items[i]->level == MEL_ITEM)
+            items[i]->set_enabled(!is_inventory);
+    if (inv_header)
+    {
+        inv_header->text = "Inventory Items";
+        if (!is_inventory)
+            inv_header->text += " (',' to select)";
+        if (floor_header)
+        {
+            floor_header->text = "Floor Items";
+            if (is_inventory)
+            {
+                if (Options.easy_floor_use && item_floor.size() == 1)
+                {
+                    floor_header->text += string(" (',' to ") +
+                        (item_type_filter == OBJ_ARMOUR ? "wear)"
+                       : item_type_filter == OSEL_WIELD ? "wield)"
+                       : "use)");
+                }
+                else
+                    floor_header->text += " (',' to select)";
+            }
+        }
+    }
+
     update_menu(true);
+}
+
+void UseItemMenu::clear()
+{
+    item_inv.clear();
+    item_floor.clear();
+    inv_header = nullptr;
+    floor_header = nullptr;
+    last_inv_pos = -1;
+    Menu::clear();
 }
 
 void UseItemMenu::toggle_display_all()
 {
+    clear();
     display_all = !display_all;
-    item_inv.clear();
-    item_floor.clear();
     populate_list();
-    repopulate_menu();
+    populate_menu();
+    update_sections();
 }
 
 void UseItemMenu::toggle_inv_or_floor()
@@ -279,14 +304,35 @@ void UseItemMenu::toggle_inv_or_floor()
     if (item_inv.empty() || item_floor.empty())
         return;
     is_inventory = !is_inventory;
-    repopulate_menu();
+    update_sections();
 }
 
-void UseItemMenu::set_hovered(int hovered)
+// only two sections, and we want to skip inv menu subtitles, so it's simplest
+// just to write custom code here
+bool UseItemMenu::cycle_headers(bool)
 {
-    InvMenu::set_hovered(hovered);
+    if (item_inv.empty() || item_floor.empty())
+        return false;
+    if (!is_set(MF_ARROWS_SELECT))
+        toggle_inv_or_floor();
+    else if (is_inventory)
+        set_hovered(last_inv_pos + 1);
+    else
+        set_hovered(0);
+    // XX this skips `unarmed`, should it?
+    cycle_hover(); // get to a selectable item
+    return true;
+}
+
+void UseItemMenu::set_hovered(int hovered, bool force)
+{
+    // need to be a little bit careful about recursion potential here:
+    // update_menu calls set_hovered to sanitize low level UI state.
+    const bool skip_toggle = hovered == last_hovered;
+    InvMenu::set_hovered(hovered, force);
     // keep inv vs floor in sync
-    if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
+    if (!skip_toggle && last_hovered >= 0
+        && !item_floor.empty() && !item_inv.empty())
     {
         if (is_inventory && last_hovered > last_inv_pos
             || !is_inventory && last_hovered <= last_inv_pos)
@@ -348,6 +394,7 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
     // Init the menu
     UseItemMenu menu(item_type, prompt);
 
+    // XX let the menu run its input loop
     while (true)
     {
         vector<MenuEntry*> sel = menu.show(true);
@@ -371,14 +418,15 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         }
         else if (keyin == ',')
         {
-            if (Options.easy_floor_use && menu.item_floor.size() == 1)
+            if (Options.easy_floor_use && menu.item_floor.size() == 1
+                && (menu.is_inventory || menu.item_inv.empty()))
             {
                 choice_made = true;
                 tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
             }
             else
             {
-                menu.toggle_inv_or_floor();
+                menu.cycle_headers();
                 continue;
             }
         }

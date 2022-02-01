@@ -310,7 +310,7 @@ static bool _warn_about_chain_lightning()
     bool penance;
     bad_attack(ex_mon, adj, suffix, penance, you.pos());
     const string and_more = bad_targets.size() > 1 ?
-            make_stringf(" (and %lu other bad targets)",
+            make_stringf(" (and %zu other bad targets)",
                          bad_targets.size() - 1) : "";
     const string prompt = make_stringf("Chain Lightning might hit %s%s. Cast it anyway?",
                                        ex_mon->name(DESC_THE).c_str(),
@@ -671,7 +671,11 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
     if (actual)
     {
         if (YOU_KILL(beam.thrower))
+        {
             _player_hurt_monster(target, hurted, beam.flavour, false);
+            if (target.alive())
+                you.pet_target = target.mindex();
+        }
         else if (hurted)
             target.hurt(agent, hurted, beam.flavour);
 

@@ -667,6 +667,7 @@ class UIMapView : public ui::Widget
 public:
     UIMapView(level_pos& lpos, levelview_excursion& le, bool travel_mode,
               bool allow_offlevel)
+        : m_reentry(false)
     {
         m_state.lpos = lpos;
         m_state.features = &m_features;
@@ -774,7 +775,14 @@ public:
 
     void process_command(command_type cmd)
     {
-        m_state = process_map_command(cmd, m_state);
+        auto ret = process_map_command(cmd, m_state);
+        // reentry happens if during the process, something else called in to
+        // set_lpos. E.g. this can happen via a describe popup. If this
+        // happened, then it set m_state and we don't want to overwrite it.
+        // TODO some refactoring to make this cleaner
+        if (!check_and_reset_reentry())
+            m_state = move(ret);
+
         if (!m_state.map_alive)
             return;
 
@@ -782,6 +790,29 @@ public:
             goto_level();
 
         m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
+    }
+
+    void set_lpos(level_pos dest)
+    {
+        map_control_state state = m_state;
+        state.map_alive = true;
+        state.chose = false;
+
+        if (!dest.id.is_valid()
+            || dest.id != level_id::current() && !state.allow_offlevel)
+        {
+            return;
+        }
+        los_changed();
+
+        state.lpos = dest;
+        m_state = state;
+
+        if (m_state.lpos.id != level_id::current())
+            goto_level();
+
+        m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
+        m_reentry = true;
     }
 
     void goto_level()
@@ -830,6 +861,13 @@ public:
         return m_state.lpos;
     }
 
+    bool check_and_reset_reentry()
+    {
+        const bool ret = m_reentry;
+        m_reentry = false;
+        return ret;
+    }
+
 private:
     map_control_state m_state;
 
@@ -837,6 +875,7 @@ private:
     vector<coord_def> m_features;
     // List of all interesting features for display in the (console) title.
     feature_list m_feats;
+    bool m_reentry;
 
 #ifndef USE_TILE_LOCAL
     coord_def view_ul;
@@ -853,44 +892,60 @@ private:
 // to get that. This function is still a mess, though. -- bwr
 bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 {
+    static shared_ptr<UIMapView> map_view = nullptr;
+
+    if (map_view)
+    {
+        ASSERT(map_view->is_alive());
+        // handle reentry -- just attempt to set the position. Ignore both
+        // the travel_mode and the allow_offlevel params -- inherit from the
+        // running map.
+        map_view->set_lpos(lpos);
+        return false;
+    }
+    else
+    {
 #ifdef USE_TILE_LOCAL
-    mouse_control mc(MOUSE_MODE_NORMAL);
-    tiles.do_map_display();
+        mouse_control mc(MOUSE_MODE_NORMAL);
+        tiles.do_map_display();
 #endif
 
 #ifdef USE_TILE
-    ui::cutoff_point ui_cutoff_point;
+        ui::cutoff_point ui_cutoff_point;
 #endif
 #ifdef USE_TILE_WEB
-    tiles_ui_control ui(UI_VIEW_MAP);
+        tiles_ui_control ui(UI_VIEW_MAP);
 #endif
 
-    if (!lpos.id.is_valid() || !allow_offlevel)
-        lpos.id = level_id::current();
+        if (!lpos.id.is_valid() || !allow_offlevel)
+            lpos.id = level_id::current();
 
-    levelview_excursion le(travel_mode);
-    auto map_view = make_shared<UIMapView>(lpos, le, travel_mode, allow_offlevel);
+        levelview_excursion le(travel_mode);
+        map_view = make_shared<UIMapView>(lpos, le, travel_mode, allow_offlevel);
 
 #ifdef USE_TILE_LOCAL
-    unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
+        unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
 #else
-    cursor_control cc(!Options.use_fake_cursor);
+        cursor_control cc(!Options.use_fake_cursor);
 #endif
 
-    ui::push_layout(map_view, KMC_LEVELMAP);
-    while (map_view->is_alive() && !crawl_state.seen_hups)
-        ui::pump_events();
-    ui::pop_layout();
+        ui::push_layout(map_view, KMC_LEVELMAP);
+        while (map_view->is_alive() && !crawl_state.seen_hups)
+            ui::pump_events();
+        ui::pop_layout();
 
 #ifdef USE_TILE_LOCAL
-    tiles.set_map_display(false);
+        tiles.set_map_display(false);
 #endif
 #ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MAP, NO_CURSOR);
+        tiles.place_cursor(CURSOR_MAP, NO_CURSOR);
 #endif
 
-    lpos = map_view->lpos();
-    return map_view->chose();
+        lpos = map_view->lpos();
+        const bool result = map_view->chose();
+        map_view = nullptr;
+        return result;
+    }
 }
 
 level_pos map_follow_stairs(bool up, const coord_def &pos)
@@ -1294,8 +1349,10 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
             if (full_describe_square(state.lpos.pos, false))
             {
                 state.map_alive = false;
-                state.chose = true;
+                state.chose = false; // don't go to the location
             }
+            // n.b. it's possible for the describe popup to trigger a reentrant
+            // call and overwrite state
             state.redraw_map = true;
         }
         break;

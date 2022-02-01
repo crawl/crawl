@@ -1,6 +1,14 @@
 body {
     margin: 0px;
     overflow: hidden;
+    text-size-adjust: none;
+}
+
+canvas {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #lobby {
@@ -1036,7 +1044,7 @@ body {
 
 .ui-popup-outer {
     margin: 50px;
-    max-height: calc(100vh - 100px);
+    max-height: calc(95vh - 100px);
 
     padding: 20px;
     background-color: #040204;
@@ -1055,7 +1063,7 @@ body {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    max-height: calc(100vh - 100px - 46px); /* for IE11 */
+    max-height: calc(95vh - 100px - 46px); /* for IE11 */
 }
 .ui-popup-inner:after {
     display: block;
@@ -1129,10 +1137,10 @@ body {
     }
     .ui-popup-outer {
         margin: 20px;
-        max-height: calc(100vh - 40px);
+        max-height: calc(95vh - 40px);
     }
     .ui-popup-inner {
-        max-height: calc(100vh - 40px - 46px);
+        max-height: calc(95vh - 40px - 46px);
     }
 }
 
@@ -1447,4 +1455,24 @@ fieldset.option button {
 div.settings-buttons button {
     width: 50%;
     margin: 2px;
+}
+
+#mobile_input {
+    position: relative;
+    height: 0px;
+    bottom: 25px;
+}
+
+#mobile_input input {
+    background: rgba(0, 0, 0, 0.5);
+    color: #A2A2A280;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #62626280;
+    height: 13px;
+    caret-color: transparent;
+}
+
+#mobile_input input:focus {
+    outline: none;
 }

@@ -26,7 +26,10 @@ public:
 
     int id = 0;
     int hotkey = 0;
-    colour_t highlight_colour = default_hover_colour();
+    colour_t highlight_colour = LIGHTGREY;
+#ifndef USE_TILE_LOCAL
+    colour_t fg_highlight = BLACK;
+#endif
     string description;
 
     bool activate();

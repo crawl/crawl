@@ -68,6 +68,7 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "view.h"
+#include "xom.h"
 
 //#define DEBUG_WEBSOCKETS
 
@@ -411,7 +412,9 @@ static int _handle_cell_click(const coord_def &gc, int button, bool force)
         return CK_REDRAW;
     }
 
-    return 0;
+    // generic click: doesn't do a lot, but will interrupt travel, repeats,
+    // etc
+    return CK_MOUSE_CLICK;
 }
 
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
@@ -454,9 +457,16 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     {
         JsonWrapper hover = json_find_member(obj.node, "hover");
         hover.check(JSON_NUMBER);
+        JsonWrapper mouse = json_find_member(obj.node, "mouse");
+        mouse.check(JSON_BOOL);
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
-            m_menu_stack.back().menu->set_hovered((int) hover->number_);
+        if (!m_menu_stack.empty()
+            && m_menu_stack.back().type == UIStackFrame::MENU)
+        {
+            m_menu_stack.back().menu->set_hovered(
+                (int) hover->number_,
+                mouse->bool_);
+        }
 
     }
     else if (msgtype == "menu_scroll")
@@ -1088,7 +1098,9 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.god, god, "god");
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
-    if (!you_worship(GOD_NO_GOD))
+    if (you_worship(GOD_XOM))
+        prank = max(0, xom_favour_rank() - 1);
+    else if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && !you.has_mutation(MUT_FORLORN)
              && !had_gods())
@@ -1530,15 +1542,16 @@ static bool _needs_flavour(const packed_cell &cell)
 
 }
 
-static inline unsigned _get_brand(int col)
+// XX code duplicateion
+static inline unsigned _get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
            (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
                                             : unsigned{CHATTR_NORMAL};
 }
@@ -1584,7 +1597,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
          || current_sc.glyph == ' ') && glyph != ' ')
     {
         int col = next_sc.colour;
-        col = (_get_brand(col) << 4) | macro_colour(col & 0xF);
+        col = (_get_highlight(col) << 4) | macro_colour(col & 0xF);
         json_write_int("col", col);
     }
 

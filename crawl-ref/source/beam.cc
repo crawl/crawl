@@ -1695,6 +1695,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
+        break;
     case ENCH_INSANE:
         if (!mons->can_go_frenzy())
         {
@@ -1702,6 +1703,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
+        break;
     case ENCH_ANGUISH:
         if (mons->friendly())
             return true;
@@ -1711,6 +1713,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
+        break;
     default:
         break;
     }
@@ -2906,7 +2909,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_acid() >= 3;
 
     case BEAM_MEPHITIC:
-        return mon->res_poison() > 0;
+        return mon->res_poison() > 0 || mon->clarity();
 
     default:
         return false;
@@ -2952,10 +2955,7 @@ bool bolt::harmless_to_player() const
                || is_big_cloud() && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
-        // With clarity, meph still does a tiny amount of damage (1d3 - 1).
-        // Normally we'd just ignore it, but we shouldn't let a player
-        // kill themselves without a warning.
-        return player_res_poison(false) > 0 || you.clarity() && you.hp > 2;
+        return player_res_poison(false) > 0 || you.clarity();
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
@@ -5181,6 +5181,11 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = !mon->stasis();
         break;
 
+    case BEAM_CONFUSION:
+    case BEAM_IRRESISTIBLE_CONFUSION:
+        rc = !mon->clarity();
+        break;
+
     case BEAM_POLYMORPH:
         rc = mon->can_polymorph();
         break;
@@ -5574,30 +5579,31 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_SPORE:
     case BEAM_CONFUSION:
     case BEAM_IRRESISTIBLE_CONFUSION:
+    {
         if (mon->clarity())
         {
             if (you.can_see(*mon))
                 obvious_effect = true;
             return MON_AFFECTED;
         }
-        {
-            // irresistible confusion has a shorter duration and is weaker
-            // against strong monsters
-            int dur = ench_power;
-            if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
-                dur = max(10, dur - mon->get_hit_dice());
-            else
-                dur = _ench_pow_to_dur(dur);
 
-            if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
-            {
-                // FIXME: Put in an exception for things you won't notice
-                // becoming confused.
-                if (simple_monster_message(*mon, " appears confused."))
-                    obvious_effect = true;
-            }
+        // irresistible confusion has a shorter duration and is weaker
+        // against strong monsters
+        int dur = ench_power;
+        if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
+            dur = max(10, dur - mon->get_hit_dice());
+        else
+            dur = _ench_pow_to_dur(dur);
+
+        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
+        {
+            // FIXME: Put in an exception for things you won't notice
+            // becoming confused.
+            if (simple_monster_message(*mon, " appears confused."))
+                obvious_effect = true;
         }
         return MON_AFFECTED;
+    }
 
     case BEAM_SLEEP:
         if (mons_just_slept(*mon))

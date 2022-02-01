@@ -2,6 +2,9 @@ define(["jquery", "comm", "client", "./options", "./focus-trap"],
 function ($, comm, client, options, focus_trap) {
     "use strict";
 
+    // Touch event duration
+    var touchstart = 0;
+
     function wrap_popup(elem, ephemeral)
     {
         var wrapper = $(".templates > .ui-popup").clone();
@@ -80,9 +83,12 @@ function ($, comm, client, options, focus_trap) {
 
     function target_outside_game(ev)
     {
+
         // I think this is for filtering clicks to the chat window, which is
         // supposed to work even with a popup in place
-        return ($(ev.target).closest("#game").length !== 1)
+        return ($(ev.target).closest("#game").length !== 1
+            // Also allow zooming and scrolling on mobile browsers
+            || ev.type === 'touchstart');
     }
 
     function popup_clickoutside_handler(ev)
@@ -90,15 +96,32 @@ function ($, comm, client, options, focus_trap) {
         // this simulates the focus-trap click outside to deactivate code,
         // since for crawl we really need to send a "close popup" message
         // to the server rather than do it in the client.
-        // TODO focus-trap also uses touchstart for this case, do we need
-        // that?
         // TODO this lets through clicks that are in the popup's margin?
         // using parent() doesn't help with this issue because the space is
         // still in the border of ui-popup-outer. Maybe this is ok...
         if (!target_outside_game(ev) && !top_popup()[0].contains(ev.target))
+        {
             comm.send_message("key", { keycode: 27 });
+            if (ev.type == "touchend")
+            {
+                // head off a `click` event, hopefully
+                ev.preventDefault();
+                return;
+            }
+        }
         // otherwise, ignore -- focus-trap checkPointerDown should get it
         // next.
+    }
+
+    function popup_touchstart_handler(ev)
+    {
+        touchstart = Date.now();
+    }
+
+    function popup_touchend_handler(ev)
+    {
+        if (Date.now() - 500 < touchstart)
+            popup_clickoutside_handler(ev);
     }
 
     function context_disable(ev)
@@ -147,6 +170,10 @@ function ($, comm, client, options, focus_trap) {
                         {
                             document.addEventListener("mousedown",
                                 popup_clickoutside_handler, true);
+                            document.addEventListener("touchstart",
+                                popup_touchstart_handler, true);
+                            document.addEventListener("touchend",
+                                popup_touchend_handler, true);
                         }
                         disable_contextmenu();
                     }
@@ -161,6 +188,10 @@ function ($, comm, client, options, focus_trap) {
                         {
                             document.removeEventListener("mousedown",
                                 popup_clickoutside_handler, true);
+                            document.removeEventListener("touchstart",
+                                popup_touchstart_handler, true);
+                            document.removeEventListener("touchend",
+                                popup_touchend_handler, true);
                         }
                         undisable_contextmenu();
                     }

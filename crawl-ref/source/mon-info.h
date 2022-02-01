@@ -206,6 +206,7 @@ enum monster_info_flags
     MB_NO_ATTACKS,
     MB_RES_DROWN,
     MB_ANGUISH,
+    MB_CLARITY,
     NUM_MB_FLAGS
 };
 

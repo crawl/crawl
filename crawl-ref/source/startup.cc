@@ -300,6 +300,11 @@ static void _post_init(bool newc)
     level_id old_level;
     old_level.branch = NUM_BRANCHES;
 
+#ifdef USE_TILE_WEB
+    if (tiles.get_ui_state() == UI_CRT)
+        tiles.set_ui_state(UI_NORMAL);
+#endif
+
     load_level(you.entering_level ? you.transit_stair :
                you.char_class == JOB_DELVER ? DNGN_STONE_STAIRS_UP_I : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :
@@ -456,7 +461,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 #endif
         btn->id = entry.id;
         btn->description = entry.description;
-        btn->highlight_colour = default_hover_colour();
+        btn->highlight_colour = LIGHTGREY;
         container->add_button(move(btn), 0, i);
     }
 }
@@ -481,7 +486,7 @@ static shared_ptr<MenuButton> _make_newgame_button(int num_chars)
 #endif
     btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
     btn->id = NUM_GAME_TYPE + num_chars;
-    btn->highlight_colour = default_hover_colour();
+    btn->highlight_colour = LIGHTGREY;
     return btn;
 }
 
@@ -526,7 +531,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 #endif
         btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
         btn->id = NUM_GAME_TYPE + i;
-        btn->highlight_colour = default_hover_colour();
+        btn->highlight_colour = LIGHTGREY;
         container->add_button(move(btn), 0, i);
     }
 

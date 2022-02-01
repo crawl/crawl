@@ -2653,8 +2653,6 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                 desc.c_str(),
                 command_to_string(CMD_GO_DOWNSTAIRS).c_str());
     }
-    else if (feat == DNGN_MALIGN_GATEWAY)
-        long_desc += "\nMoving into it will do damage and cause you to blink.";
     else if (feat == DNGN_TRANSPORTER)
     {
         long_desc += make_stringf(
@@ -2745,7 +2743,7 @@ static bool _do_feat_action(const coord_def &pos, const command_type action)
         if (dest.is_valid())
         {
             show_map(dest, true, true);
-            return false; // or true?
+            return true;
         }
         break;
     }
@@ -2957,6 +2955,11 @@ static vector<command_type> _allowed_actions(const item_def& item)
         return actions;
     }
 
+    // this is a copy, we can't do anything with it. (Probably via stash
+    // search.)
+    if (!valid_item_index(item.index()) && !in_inventory(item))
+        return actions;
+
     // XX CMD_ACTIVATE
     switch (item.base_type)
     {
@@ -3143,6 +3146,8 @@ static bool _do_action(item_def &item, const command_type action)
     if (action == CMD_NO_CMD)
         return true;
 
+    unwind_bool no_more(crawl_state.show_more_prompt, false);
+
     // ok in principle on floor items (though I didn't enable the last two)
     switch (action)
     {
@@ -3158,7 +3163,7 @@ static bool _do_action(item_def &item, const command_type action)
         }
         break;
     case CMD_PICKUP:
-        ASSERT(!in_inventory(item));
+        ASSERT(!in_inventory(item) && valid_item_index(item.index()));
         pickup_single_item(item.index(), item.quantity);
         return false;
     case CMD_READ:             read(&item);         return false;
@@ -3177,7 +3182,9 @@ static bool _do_action(item_def &item, const command_type action)
     {
     case CMD_WIELD_WEAPON:     wield_weapon(true, slot);            break;
     case CMD_UNWIELD_WEAPON:   wield_weapon(true, SLOT_BARE_HANDS); break;
-    case CMD_QUIVER_ITEM:      you.quiver_action.set_from_slot(slot); break;
+    case CMD_QUIVER_ITEM:
+        quiver::set_to_quiver(quiver::slot_to_action(slot), you.quiver_action); // ugh
+        break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);                   break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
@@ -3944,8 +3951,10 @@ void describe_deck(deck_type deck)
 void describe_mutation(mutation_type mut)
 {
     describe_info inf;
+    // TODO: mutation_name was not designed for use as a title, sometimes has
+    // the wrong casing, is often cryptic
     inf.title = uppercase_first(mutation_name(mut)).c_str();
-    if (you.has_mutation(mut))
+    if (you.has_mutation(mut) && mutation_max_levels(mut) > 1)
     {
         inf.title += make_stringf(" (level %d/%d)",
                                   you.get_mutation_level(mut),

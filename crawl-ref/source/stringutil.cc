@@ -147,7 +147,7 @@ static const string _get_indent(const string &s)
 
 
 // The provided string is consumed!
-string wordwrap_line(string &s, int width, bool tags, bool indent)
+string wordwrap_line(string &s, int width, bool tags, bool indent, int force_indent)
 {
     ASSERT(width > 0);
 
@@ -220,7 +220,10 @@ string wordwrap_line(string &s, int width, bool tags, bool indent)
     const string ret = s.substr(0, cp - cp0);
 
     const string indentation = (indent && c != '\n' && seen_nonspace)
-                               ? _get_indent(s) : "";
+                                ? (force_indent > 0
+                                    ? string(force_indent, ' ')
+                                    : _get_indent(s))
+                                : "";
 
     // eat all trailing spaces and up to one newline
     while (*cp == ' ')

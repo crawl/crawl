@@ -21,10 +21,11 @@
 class KnownMenu : public InvMenu
 {
 public:
-    KnownMenu(bool unknown)
+    KnownMenu(bool show_unknown, bool _all_items_known)
         : InvMenu(MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_USE_TWO_COLUMNS
-                    | ((unknown) ? MF_NOSELECT
-                                 : MF_MULTISELECT | MF_ALLOW_FILTER))
+                    | ((show_unknown) ? MF_NOSELECT
+                                      : MF_MULTISELECT | MF_ALLOW_FILTER)),
+        all_items_known(_all_items_known)
     {
         set_type(menu_type::know);
         set_more(); // force derived class get_keyhelp()
@@ -86,6 +87,8 @@ protected:
 
         case '-':
         case '\\':
+            if (all_items_known)
+                return true; // skip process_key for '-', it's confusing
         case CK_ENTER:
         CASE_ESCAPE
             lastch = key;
@@ -142,16 +145,27 @@ protected:
             navigation = pad_more_with(navigation,
                                     "[<w>Esc</w>|<w>Ret</w>] close", MIN_COLS);
             navigation +=
-                "\n<lightgrey>"
-                "Letters toggle autopickup  "
-                "[<w>.</w>|<w>Space</w>] toggle selected  "
-                "[<w>-</w>] unrecognised"
-                "</lightgrey>";
+                    "\n<lightgrey>"
+                    "Letters toggle autopickup  ";
+            if (is_set(MF_ARROWS_SELECT))
+            {
+                navigation +=
+                    "[<w>.</w>|<w>Space</w>] toggle selected  ";
+            }
+
+            if (!all_items_known)
+            {
+                navigation +=
+                    "[<w>-</w>] unrecognised"
+                    "</lightgrey>";
+            }
         }
 
         return pad_more_with(navigation,
                             "<lightgrey>[<w>XXX</w>]</lightgrey>", MIN_COLS);
     }
+
+    bool all_items_known;
 };
 
 class KnownEntry : public InvEntry
@@ -336,6 +350,8 @@ static void _add_fake_item(object_class_type base, int sub,
 
 void check_item_knowledge(bool unknown_items)
 {
+    // TODO: refactor most of this into the menu class...
+
     vector<const item_def*> items;
     vector<const item_def*> items_missile; //List of missiles should go after normal items
 #if TAG_MAJOR_VERSION == 34
@@ -427,7 +443,7 @@ void check_item_knowledge(bool unknown_items)
 #endif
     sort(items_misc.begin(), items_misc.end(), _identified_item_names);
 
-    KnownMenu menu(unknown_items);
+    KnownMenu menu(unknown_items, all_items_known);
     string stitle;
 
     if (unknown_items)

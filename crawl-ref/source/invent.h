@@ -115,12 +115,12 @@ private:
 protected:
     // Should we show the floor tile, etc?
     bool show_background = true;
+    string _get_text_preface() const override;
 
 public:
     const item_def *item;
 
     InvEntry(const item_def &i);
-    string get_text() const override;
     void set_show_glyph(bool doshow);
     void set_show_coordinates(bool doshow);
 

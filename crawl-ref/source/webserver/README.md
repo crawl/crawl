@@ -30,27 +30,77 @@ app's code.
 
 To run the server, you need:
 
-* Linux or macOS (other platforms are untested).
-* Python 3.6 or newer. (Earlier versions will currently work but are
-  deprecated.)
+* Linux, macOS, or windows using WSL (MinGW webtiles is not supported).
+* Python 3.6 or newer. (Earlier versions may work but are not supported.)
 * The Python dependencies specified in `requirements/`, in particular,
-  to just run the server, Tornado 6+  and `pyyaml` (also needed for building).
-  Earlier versions of Tornado are deprecated.
+  minimally to just run the server, you need Tornado 6+  and `pyyaml` (also
+  required for building the crawl binary).
 * A build of DCSS with webtiles support.
 
-You'll need to compile DCSS with `make WEBTILES=y` to get a suitable binary. For
-publicly accessible servers, you should also use `USE_DGAMELAUNCH=y`; this
-disables some things like Wizmode, and enables the milestone and player location
-display in the lobby.
+To get webtiles support in the binary, you'll need to compile DCSS with `make
+WEBTILES=y` (and any other appropriate options). For publicly accessible
+servers, you should also use `USE_DGAMELAUNCH=y`; this disables some things
+like Wizmode (except to admin users), and enables the milestone and player
+location display in the lobby.
 
 ## Running the server for testing purposes
 
 One way to install the prerequisites cleanly is to use a virtual environment.
 You can also install them manually using e.g. `pip` or `conda` and skip step 3.
 
-1. `cd` to the Crawl source directory.
-2. Compile Crawl with `make WEBTILES=y` (or `make debug WEBTILES=y`).
-3. Set up a Python virtualenv:
+1. Install the crawl repository, build prerequisites (see [INSTALL.md](../../INSTALL.md)),
+   and webtiles prerequisites (see below).
+2. `cd` to the Crawl source directory. (`crawl-ref/source` from the repository
+   root.)
+3. Compile Crawl with `make WEBTILES=y` (or `make debug WEBTILES=y`).
+4. Run the server: `python3 webserver/server.py`
+
+    If your python binary is named something else (e.g. just `python`) use that
+    instead. If you are using a virtualenv, you need to activate it every time
+    you start the server)
+
+5. Browse to [localhost:8080](http://localhost:8080/) and you should see the
+   lobby.
+
+When developing, you may want to automatically log in as a testing user and
+disable caching of non-game-data files; see the `autologin` and `no_cache`
+options in webserver/config.py for this.
+
+**Locale issues**: the server requires a UTF-8 locale. If this isn't set, it
+is likely as simple as setting an environment variable. For example, when
+starting up the server, instead of the above, try:
+
+    LANG=en_US.UTF-8 python3 webserver/server.py
+
+## Installing prerequisites
+
+On linux and MacOS, you will typically need to install just a few python support
+packages to get a minimal running webserver. For the core list, see
+[requirements/base.py3.txt](requirements/base.py3.txt), and for a full list of packages used in the test
+infrastructure, see [requirements/dev.py3.txt](requirements/dev.py3.txt). On
+WSL, you will need to first set up the distribution.
+
+### Installing minimal prerequisites manually
+
+You can install the prerequisites manually using e.g. `pip` or `conda`. See the
+requirements files mentioned above for a full list, but generally for running
+the server, you need:
+
+    pip install pyyaml tornado
+
+or
+
+    conda install pyyaml tornado
+
+The requirements files do pin specific versions, but generally any recent
+version of either package should work. Your package manager may also provide
+these python libraries in other forms.
+
+### Installing full prerequisites in a virtual environment
+
+If you want all the prerequisites in the dev requirements, the easiest way to
+install them cleanly is likely to use a virtual environment. The following
+sequence of commands should set this up:
 
     ```sh
     python3 -m virtualenv -p python3 webserver/venv
@@ -58,15 +108,27 @@ You can also install them manually using e.g. `pip` or `conda` and skip step 3.
     pip install -r webserver/requirements/dev.py3.txt
     ```
 
-4. Run the server: `python webserver/server.py`
+If you install the prerequisites this way, you will need to reactivate the
+venv (line 2 above) each time you run it.
 
-    (You need to activate the virtualenv every time you start the server)
+### Setting up WSL for running the webtiles server
 
-5. Browse to [localhost:8080](http://localhost:8080/) and you should see the lobby.
+First, install a distribution. See [the official WSL docs](https://docs.microsoft.com/en-us/windows/wsl/install) for more detail. These instructions are for Debian.
 
-When developing, you may want to automatically log in as a testing user and
-disable caching of non-game-data files; see the `autologin` and `no_cache`
-options in webserver/config.py for this.
+    wsl --install -d Debian
+
+After a while, you will get to a linux command prompt. From here, you will need
+to install the core packages for building crawl as well as the python packages
+needed by the webserver. See [INSTALL.md](../../INSTALL.md) for more details on the former.
+Here is a sequence of commands that should handle this including tornado and
+pyyaml:
+
+    sudo apt-get update
+    sudo apt-get install build-essential bzip2 python-minimal ncurses-term locales-all sqlite3 libpcre3 liblua5.1-0 locales autoconf build-essential lsof bison libncursesw5-dev libsqlite3-dev flex sudo libbot-basicbot-perl git python3-yaml lua5.1 liblua5.1-dev man libpng-dev python3-tornado
+
+At this point, you should have enough to build and run the server following the
+usual linux instructions. For a more detailed rundown of this process, see:
+[http://crawl.montres.org.uk/wsl-webtiles.txt](http://crawl.montres.org.uk/wsl-webtiles.txt).
 
 ## Running a production server
 

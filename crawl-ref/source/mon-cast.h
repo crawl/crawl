@@ -7,6 +7,7 @@
 
 #include "enum.h"
 #include "externs.h"
+#include "mon-ai-action.h"
 #include "spell-type.h"
 
 class actor;
@@ -54,3 +55,5 @@ spell_type living_spell_type_for(monster_type mtyp);
 monster* cast_phantom_mirror(monster* mons, monster* targ,
                              int hp_perc = 35,
                              int summ_type = SPELL_PHANTOM_MIRROR);
+
+ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell);

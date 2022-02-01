@@ -18,6 +18,14 @@ void gotoxy_sys(int x, int y);
 void textcolour(int c);
 void textbackground(int c);
 COLOURS default_hover_colour();
+struct lib_display_info
+{
+    lib_display_info();
+    string type;
+    string term;
+    int fg_colors;
+    int bg_colors;
+};
 void cprintf(const char *format, ...);
 
 int wherex();

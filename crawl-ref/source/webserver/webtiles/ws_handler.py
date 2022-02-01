@@ -1,5 +1,6 @@
 import codecs
 import datetime
+import errno
 import logging
 import os
 import random
@@ -96,7 +97,14 @@ def write_dgl_status_file():
                         for socket in list(sockets)
                         if socket.username and socket.is_running()]
     try:
-        with open(config.get('dgl_status_file'), "w") as f:
+        status_target = config.get('dgl_status_file')
+        status_dir = os.path.dirname(status_target)
+        # generally created by other things sooner or later, but if we don't do
+        # this preemptively here, there's lot of warnings until that happens.
+        if not os.path.exists(status_dir):
+            os.makedirs(status_dir)
+            logging.warning("Creating dgl status file location '%s'", status_dir)
+        with open(status_target, "w") as f:
             f.write("\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
@@ -898,9 +906,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         rcfile_path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
-        with open(rcfile_path, 'wb') as f:
-            # TODO: is binary + encode necessary in py 3?
-            f.write(utf8(contents))
+        try:
+            with open(rcfile_path, 'wb') as f:
+                # TODO: is binary + encode necessary in py 3?
+                f.write(utf8(contents))
+        except Exception:
+            self.logger.warning(
+                    "Couldn't save rcfile for %s!",
+                    self.username, exc_info=True)
+            return False
+        return True
 
     def on_message(self, message): # type: (Union[str, bytes]) -> None
         try:

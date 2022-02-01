@@ -798,11 +798,11 @@ static string _colourize_glyph(int col, unsigned ch)
 static bool _mons_is_highlighted(const monster* mons)
 {
     return mons->friendly()
-               && Options.friend_brand != CHATTR_NORMAL
+               && Options.friend_highlight != CHATTR_NORMAL
            || mons_looks_stabbable(*mons)
-               && Options.stab_brand != CHATTR_NORMAL
+               && Options.stab_highlight != CHATTR_NORMAL
            || mons_looks_distracted(*mons)
-               && Options.may_stab_brand != CHATTR_NORMAL;
+               && Options.may_stab_highlight != CHATTR_NORMAL;
 }
 
 static bool _advise_use_wand()
@@ -859,7 +859,7 @@ void hints_monster_seen(const monster& mon)
             return;
 
         if (_mons_is_highlighted(&mon))
-            learned_something_new(HINT_MONSTER_BRAND, mon.pos());
+            learned_something_new(HINT_MONSTER_HIGHLIGHT, mon.pos());
         if (mon.friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, mon.pos());
 
@@ -1472,7 +1472,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << _describe_portal(gc);
         break;
 
-    case HINT_STAIR_BRAND:
+    case HINT_STAIR_HIGHLIGHT:
         // Monster or player standing on stairs.
         if (actor_at(gc))
             DELAY_EVENT;
@@ -1488,7 +1488,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         break;
 
-    case HINT_HEAP_BRAND:
+    case HINT_HEAP_HIGHLIGHT:
         // Monster or player standing on heap.
         if (actor_at(gc))
             DELAY_EVENT;
@@ -1505,7 +1505,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         break;
 
-    case HINT_TRAP_BRAND:
+    case HINT_TRAP_HIGHLIGHT:
 #ifdef USE_TILE
         // Tiles show both the trap and the item heap.
         return;
@@ -2207,7 +2207,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
-    case HINT_MONSTER_BRAND:
+    case HINT_MONSTER_HIGHLIGHT:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         if (const monster* m = monster_at(gc))
@@ -3640,14 +3640,14 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
             ostr << ".";
         }
     }
-    else if (Options.stab_brand != CHATTR_NORMAL
+    else if (Options.stab_highlight != CHATTR_NORMAL
              && mi.is(MB_STABBABLE))
     {
         ostr << "Apparently it has not noticed you - yet. Note that you do "
                 "not have to engage every monster you meet. Sometimes, "
                 "discretion is the better part of valour.";
     }
-    else if (Options.may_stab_brand != CHATTR_NORMAL
+    else if (Options.may_stab_highlight != CHATTR_NORMAL
              && mi.is(MB_DISTRACTED))
     {
         ostr << "Apparently it has been distracted by something. You could "
@@ -3696,18 +3696,18 @@ void hints_observe_cell(const coord_def& gc)
     {
         const item_def& item(env.item[it]);
 
-        if (Options.feature_item_brand != CHATTR_NORMAL
+        if (Options.feature_item_highlight != CHATTR_NORMAL
             && (is_feature('>', gc) || is_feature('<', gc)))
         {
-            learned_something_new(HINT_STAIR_BRAND, gc);
+            learned_something_new(HINT_STAIR_HIGHLIGHT, gc);
         }
-        else if (Options.trap_item_brand != CHATTR_NORMAL
+        else if (Options.trap_item_highlight != CHATTR_NORMAL
                  && is_feature('^', gc))
         {
-            learned_something_new(HINT_TRAP_BRAND, gc);
+            learned_something_new(HINT_TRAP_HIGHLIGHT, gc);
         }
-        else if (Options.heap_brand != CHATTR_NORMAL && item.link != NON_ITEM)
-            learned_something_new(HINT_HEAP_BRAND, gc);
+        else if (Options.heap_highlight != CHATTR_NORMAL && item.link != NON_ITEM)
+            learned_something_new(HINT_HEAP_HIGHLIGHT, gc);
     }
 }
 

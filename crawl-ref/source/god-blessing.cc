@@ -667,14 +667,22 @@ static void _display_god_blessing(monster* follower, god_type god,
  *
  * If no follower is specified, there is a chance of sending reinforcements.
  *
- * @param[in] follower      The follower to try to bless.
- * @param[in] force         Whether to check follower validity.
+ * @param[in] follower        The follower to try to bless.
+ * @param[in] force           Whether to check follower validity.
+ * @param[in] allow_upgrades  If true, allows persistent gifts (reinforcements,
+ *                            weapons, armour, class upgrades). If false, only
+ *                            allows healing.
  * @return Whether a blessing occurred.
  */
-static bool _beogh_bless_follower(monster* follower, bool force)
+static bool _beogh_bless_follower(monster* follower, bool force,
+                                  bool allow_upgrades)
 {
     if (!follower)
     {
+        // No new pals in the Abyss.
+        if (!allow_upgrades)
+            return false;
+
         // 1/20 chance of spawning a palband
         if (!one_chance_in(5))
             return false;
@@ -701,27 +709,30 @@ static bool _beogh_bless_follower(monster* follower, bool force)
 
     string blessing = "";
 
-    // 10% chance of blessing to priesthood.
-    if (force || one_chance_in(10))
+    if (allow_upgrades)
     {
-        if (_beogh_blessing_priesthood(follower))
-            blessing = "priesthood";
-        else
-            dprf("Couldn't promote monster to priesthood");
-    }
+        // 10% chance of blessing to priesthood.
+        if (force || one_chance_in(10))
+        {
+            if (_beogh_blessing_priesthood(follower))
+                blessing = "priesthood";
+            else
+                dprf("Couldn't promote monster to priesthood");
+        }
 
-    // ~15% chance of blessing armament (assume that most priest buffs fail)
-    if (blessing.empty() && mons_genus(follower->type) == MONS_ORC
-        && (force || one_chance_in(7)))
-    {
-        blessing = coinflip() ? _beogh_bless_weapon(follower)
-                              : _beogh_bless_armour(follower);
-    }
+        // ~15% chance of blessing armament (assume that most priest buffs fail)
+        if (blessing.empty() && mons_genus(follower->type) == MONS_ORC
+            && (force || one_chance_in(7)))
+        {
+            blessing = coinflip() ? _beogh_bless_weapon(follower)
+                                  : _beogh_bless_armour(follower);
+        }
 
-    // If they got a good blessing (priesthood or equipment), maybe give them
-    // a name.
-    if (!blessing.empty())
-        give_monster_proper_name(*follower);
+        // If they got a good blessing (priesthood or equipment), maybe give
+        // them a name.
+        if (!blessing.empty())
+            give_monster_proper_name(*follower);
+    }
 
     // ~85% chance of trying to heal.
     if (blessing.empty())
@@ -806,9 +817,8 @@ static bool _is_friendly_follower(const monster& mon)
 // one, bless a random follower within sight of the player, if any, or
 // any follower on the level.
 // Blessing can be enforced with a wizard mode command.
-bool bless_follower(monster* follower,
-                    god_type god,
-                    bool force)
+bool bless_follower(monster* follower, god_type god, bool force,
+                    bool allow_upgrades)
 {
     // most blessings fail, tragically...
     if (!force && !one_chance_in(4))
@@ -834,8 +844,11 @@ bool bless_follower(monster* follower,
 
     switch (god)
     {
-        case GOD_BEOGH: return _beogh_bless_follower(follower, force);
-        case GOD_SHINING_ONE:   return _tso_bless_follower(follower, force);
-        default: return false; // XXX: print something here?
+        case GOD_BEOGH:
+            return _beogh_bless_follower(follower, force, allow_upgrades);
+        case GOD_SHINING_ONE:
+            return _tso_bless_follower(follower, force);
+        default:
+            return false; // XXX: print something here?
     }
 }

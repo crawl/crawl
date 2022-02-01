@@ -225,7 +225,7 @@ static void _genus_factoring(map<const string, details> &types,
 
     genera.erase(genus);
 
-    const monster *mon;
+    const monster *mon = nullptr;
 
     auto it = types.begin();
     do
@@ -243,6 +243,7 @@ static void _genus_factoring(map<const string, details> &types,
         mon = it->second.mon;
         types.erase(it++);
     } while (it != types.end());
+    ASSERT(mon); // There is a match as genera contains the monsters in types.
 
     const auto name = mons_type_name(genus, DESC_PLAIN);
     types[name] = {mon, name, num, true};
@@ -1071,6 +1072,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         if (!crawl_state.game_is_arena()
             && cell_triggers_conduct(gc)
             && !player_in_branch(BRANCH_TEMPLE)
+            && !player_in_branch(BRANCH_ABYSS)
             && !(player_in_branch(BRANCH_SLIME) && you_worship(GOD_JIYVA)))
         {
             did_god_conduct(DID_EXPLORATION, 2500);

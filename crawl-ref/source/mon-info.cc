@@ -616,6 +616,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_CANT_DRAIN);
     if (m->res_water_drowning())
         mb.set(MB_RES_DROWN);
+    if (m->clarity())
+        mb.set(MB_CLARITY);
 
     dam = mons_get_damage_level(*m);
 

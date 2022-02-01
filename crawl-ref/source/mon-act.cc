@@ -1065,6 +1065,9 @@ static bool _handle_wand(monster& mons)
     const spell_type mzap =
         spell_in_wand(static_cast<wand_type>(wand->sub_type));
 
+    if (!ai_action::is_viable(monster_spell_goodness(&mons, mzap)))
+        return false;
+
     if (!setup_mons_cast(&mons, beem, mzap, true))
         return false;
 
@@ -2613,7 +2616,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         if (!you.can_see(mons))
         {
             mprf("Something unseen %s", open_str.c_str());
-            interrupt_activity(activity_interrupt::force);
+            interrupt_activity(activity_interrupt::sense_monster);
         }
         else if (!you_are_delayed())
         {
@@ -3167,7 +3170,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door bursts into shrapnel!");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " bursts through the door, destroying it!");
@@ -3193,7 +3196,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door mysteriously vanishes.");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " eats the door!");

@@ -70,6 +70,8 @@ string InvTitle::get_text() const
 InvEntry::InvEntry(const item_def &i)
     : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
+    indent_no_hotkeys = true;
+
     // Data is an inherited void *. When using InvEntry in menus
     // use the const item in this class whenever possible
     data = const_cast<item_def *>(item);
@@ -187,32 +189,30 @@ string InvEntry::get_filter_text() const
     return item_prefix(*item, false) + " " + get_text();
 }
 
-string InvEntry::get_text() const
+string InvEntry::_get_text_preface() const
 {
     ostringstream tstr;
 
-    const bool nosel = hotkeys.empty();
+    const bool nosel = hotkeys_count() == 0;
+    if (nosel && tag != "pickup")
+        return MenuEntry::_get_text_preface();
     const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
+
+    tstr << ' ' << key << ' ';
+
+    if (nosel)
+        tstr << ' '; // pickup only
+    else if (!selected_qty)
+        tstr << '-';
+    else if (selected_qty < quantity)
+        tstr << '#';
+    else if (_has_star)
+        tstr << '*';
+    else
+        tstr << '+';
 
     tstr << ' ';
 
-    if (!nosel || tag == "pickup")
-    {
-        tstr << key << ' ';
-
-        if (nosel)
-            tstr << ' ';
-        else if (!selected_qty)
-            tstr << '-';
-        else if (selected_qty < quantity)
-            tstr << '#';
-        else if (_has_star)
-            tstr << '*';
-        else
-            tstr << '+';
-
-        tstr << ' ';
-    }
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(*item)) << ")" << " ";
 
@@ -222,7 +222,6 @@ string InvEntry::get_text() const
         tstr << "(" << relpos.x << ", " << -relpos.y << ")" << " ";
     }
 
-    tstr << text;
     return tstr.str();
 }
 
@@ -934,9 +933,16 @@ string InvMenu::help_key() const
 int InvMenu::getkey() const
 {
     auto mkey = lastch;
-    if (type == menu_type::know && (mkey == 0 || mkey == CK_ENTER))
+    if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER)
+        return mkey;
+    if (type == menu_type::know && mkey == 0) // ??
         return mkey;
 
+    // this is sort of a mess. It seems to be converting a lot of keys to ' '
+    // so that invprompt_flag::escape_only can work right, but it almost
+    // certainly has other effects. Needless to say, it makes modifying key
+    // handling in specific menus pretty annoying, but I don't dare touch it
+    // right now.
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\'
         && mkey != ',')
@@ -1746,6 +1752,7 @@ int prompt_invent_item(const char *prompt,
             keyin = '*';
     }
 
+    // ugh, why is this done manually
     while (true)
     {
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
@@ -1811,8 +1818,7 @@ int prompt_invent_item(const char *prompt,
             // return '?'. Is this a problem?
             if (keyin == '?' || key_is_escape(keyin) && !auto_list)
                 continue;
-
-            if (keyin == '*')
+            else if (keyin == '*')
             {
                 // let `*` act as a toggle. This is a slightly wacky
                 // implementation in that '?' as a toggle does something
@@ -1824,8 +1830,12 @@ int prompt_invent_item(const char *prompt,
                     keyin = '*';
                 continue;
             }
-
-            if (other_valid_char != 0 && keyin == other_valid_char)
+            else if (keyin == CK_ENTER && items.size() > 0)
+            {
+                // hacky, but lets the inscription checks below trip
+                keyin = items[0].slot;
+            }
+            else if (other_valid_char != 0 && keyin == other_valid_char)
             {
                 // need to handle overrides...ugly code duplication
                 ret = PROMPT_GOT_SPECIAL;

@@ -3477,7 +3477,8 @@ static void _pay_ability_costs(const ability_def& abil)
 int choose_ability_menu(const vector<talent>& talents)
 {
     ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ARROWS_SELECT
+            | MF_INIT_HOVER);
 
     abil_menu.set_highlighter(nullptr);
 #ifdef USE_TILE_LOCAL
@@ -3657,11 +3658,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return count(god_abils.begin(), god_abils.end(), abil);
     }
 
-    if (species::is_draconian(you.species)
-        && species::draconian_breath(you.species) == abil)
-    {
-        return !form_changed_physiology() || you.form == transformation::dragon;
-    }
+    if (species::draconian_breath(you.species) == abil)
+        return draconian_dragon_exception();
 
     switch (abil)
     {
@@ -3796,7 +3794,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
     }
 
     // Side effect alert!
-    // Find hotkeys for the non-hotkeyed talents.
+    // Find hotkeys for the non-hotkeyed talents. (XX: how does this relate
+    // to the hotkey code in find_ability_slot??)
     for (talent &tal : talents)
     {
         const int index = _lookup_ability_slot(tal.which);

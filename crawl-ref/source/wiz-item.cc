@@ -875,7 +875,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     int randbook_spells = 0;
 
     int subtype_quants[256];
-    int ego_quants[NUM_SPECIAL_WEAPONS];
+    int ego_quants[256];
 
     memset(subtype_quants, 0, sizeof(subtype_quants));
     memset(ego_quants, 0, sizeof(ego_quants));
@@ -1144,7 +1144,9 @@ static void _debug_acquirement_stats(FILE *ostat)
         const char* names[] =
         {
             "normal",
+#if TAG_MAJOR_VERSION == 34
             "running",
+#endif
             "fire resistance",
             "cold resistance",
             "poison resistance",
@@ -1173,9 +1175,17 @@ static void _debug_acquirement_stats(FILE *ostat)
             "cloud immunity",
 #endif
             "harm",
+            "shadows",
             "rampaging",
             "infusion",
+            "light",
+            "rage",
+            "mayhem",
+            "guile",
+            "energy",
+            "INVALID",
         };
+        COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_ARMOURS);
 
         const int non_art = acq_calls - num_arts;
         for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)

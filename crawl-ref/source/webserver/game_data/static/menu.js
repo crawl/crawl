@@ -74,7 +74,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     var menu = null;
     var update_server_scroll_timeout = null;
     var menu_close_timeout = null;
-    var scroll_suppresses_hover = false;
+    var mouse_hover_suppressed = false;
 
     function add_hover_class(item)
     {
@@ -90,24 +90,47 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         menu.items[item].elem.removeClass("hovered");
     }
 
-    function set_hovered(item, snap=true)
+    function mouse_set_hovered(index)
     {
-        if (item == menu.last_hovered)
+        if (mouse_hover_suppressed)
+            return;
+        if (index >= 0 &&
+            (index < menu.first_part_visible || index > menu.last_part_visible))
+        {
+            return;
+        }
+        set_hovered(index, false, true);
+    }
+
+    function suppress_mouse_hover()
+    {
+        // ugh -- keep mouseenter from triggering, is there a better way?
+        setTimeout(function() { mouse_hover_suppressed = false; }, 50);
+        mouse_hover_suppressed = true;
+    }
+
+    function set_hovered(index, snap=true, from_mouse=false)
+    {
+        if (index == menu.last_hovered)
         {
             // just make sure the hover class is set correctly
             add_hover_class(menu.last_hovered);
             return;
         }
-        if (item >= menu.items.length)
-            item = Math.max(0, menu.items.length - 1);
+        if (index >= menu.items.length)
+            index = Math.max(0, menu.items.length - 1);
         remove_hover_class(menu.last_hovered);
-        if (item < 0 || item_selectable(menu.items[item]))
+        if (index < 0 || item_selectable(menu.items[index]))
         {
-            menu.last_hovered = item;
+            menu.last_hovered = index;
             add_hover_class(menu.last_hovered);
             if (menu.last_hovered >= 0 && snap == true)
                 snap_in_page(menu.last_hovered);
-            comm.send_message("menu_hover", { hover: menu.last_hovered });
+            comm.send_message("menu_hover",
+                {
+                    hover: menu.last_hovered,
+                    mouse: from_mouse
+                });
         }
     }
 
@@ -125,6 +148,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             clearTimeout(menu_close_timeout);
             menu_close_timeout = null;
         }
+        mouse_hover_suppressed = false;
     }
 
     function display_menu()
@@ -172,16 +196,21 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         ui.show_popup(menu_div, menu["ui-centred"]);
         handle_size_change();
 
+        // if we get focus back after a popup over this one, don't use mouse
+        // position at the time to set hover:
+        $(ui.top_popup()).on("focusin",
+            function (ev)
+            {
+                suppress_mouse_hover();
+            });
+
         if (menu.flags & enums.menu_flag.START_AT_END)
-        {
             scroll_bottom_to_item(menu.items.length - 1, true);
-        }
         else if (menu.jump_to)
-        {
             scroll_to_item(menu.jump_to, true);
-        } else if (menu.items.length > 0) {
+        else if (menu.items.length > 0)
             scroll_to_item(0, true);
-        }
+
         if (menu.last_hovered >= 0)
             add_hover_class(menu.last_hovered);
     }
@@ -237,9 +266,10 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             // mouse cursor in and out is needed. Worth addressing?
             elem.hover(
                 function() {
-                    if (!scroll_suppresses_hover)
-                        set_hovered($(this).index());
+                    mouse_set_hovered($(this).index());
                 }, function() {
+                    // XX if this uses mouse_set_hovered, the timing seems
+                    // to be extremely flaky w.r.t. a new hover.
                     if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
                         set_hovered(-1);
                     // otherwise, keep the hover unless mousenter moves it into
@@ -382,17 +412,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             relative_hover = menu.last_hovered - menu.first_visible;
         var pagesz = menu.elem.find(".menu_contents").innerHeight();
         var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
-        var delta = Math.floor(pagesz/itemsz)
+        var delta = Math.floor(pagesz / itemsz)
         var previous = menu.first_visible - delta;
         if (previous < 0)
             previous = 0;
         scroll_to_item(previous);
         if (relative_hover >= 0)
         {
-            if (menu.first_visible + relative_hover == menu.last_hovered)
-                relative_hover = 0;
-            set_hovered(next_hoverable_item(false,
-                            menu.first_visible + relative_hover, true), false);
+            var hover_target = menu.first_visible + relative_hover;
+            // if the hover didn't move, we are on a single-screen menu. Go
+            // to the first item.
+            if (hover_target == menu.last_hovered)
+                hover_target = menu.first_visible;
+            // `relative_hover` is a bit of an estimate, and gets messed up by
+            // headings. So make sure it really does end up visible.
+            // TODO: make this look visually crisper
+            if (hover_target > menu.last_visible)
+                hover_target = menu.last_visible;
+            set_hovered(next_hoverable_item(false, hover_target, true), false);
         }
     }
 
@@ -460,11 +497,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var baseline = contents.children()[0].getBoundingClientRect().top;
         var elem_y = item.elem[0].getBoundingClientRect().top;
         if (menu.flags & enums.menu_flag.ARROWS_SELECT)
-        {
-            // ugh -- keep mouseenter from triggering, is there a better way?
-            setTimeout(function() { scroll_suppresses_hover = false; }, 50);
-            scroll_suppresses_hover = true;
-        }
+            suppress_mouse_hover();
+
         // allow a bit of extra space for the fade, number may need more tuning
         contents[0].scrollTop = Math.max(0, elem_y - baseline - 18);
 
@@ -485,11 +519,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var baseline = contents.children().offset().top;
 
         if (menu.flags & enums.menu_flag.ARROWS_SELECT)
-        {
-            // ugh -- keep mouseenter from triggering, is there a better way?
-            setTimeout(function() { scroll_suppresses_hover = false; }, 50);
-            scroll_suppresses_hover = true;
-        }
+            suppress_mouse_hover();
+
         // allow a bit of extra space for the fade, number may need more tuning
         contents.scrollTop(item.elem.offset().top + item.elem.height() + 24
                 - baseline - menu.elem.find(".menu_contents").innerHeight());
@@ -511,27 +542,37 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         // strange values for the bounding boxes
         menu.first_visible = 0;
         menu.last_visible = Math.max(0, menu.items.length - 1);
+        menu.first_part_visible = -1;
+        menu.last_part_visible = -1;
 
         for (i = 0; i < menu.items.length; i++)
         {
-            var item = menu.items[i];
-            var item_top = item.elem[0].getBoundingClientRect().top;
-            if (item_top >= top)
+            const item = menu.items[i];
+            const item_rect = item.elem[0].getBoundingClientRect();
+            if (item_rect.top >= top)
             {
                 menu.first_visible = i;
                 break;
             }
+            else if (item_rect.bottom - top > 10) // XX 10 here is a bit heuristic
+                menu.first_part_visible = i;
         }
         for (; i < menu.items.length; i++)
         {
-            var item = menu.items[i];
-            var item_bottom = item.elem[0].getBoundingClientRect().bottom;
-            if (item_bottom >= bottom)
+            const item = menu.items[i];
+            const item_rect = item.elem[0].getBoundingClientRect();
+            if (item_rect.bottom >= bottom)
             {
+                if (bottom - item_rect.top > 10)
+                    menu.last_part_visible = i;
                 menu.last_visible = i-1;
                 break;
             }
         }
+        if (menu.first_part_visible === -1)
+            menu.first_part_visible = menu.first_visible;
+        if (menu.last_part_visible === -1)
+            menu.last_part_visible = menu.last_visible;
         update_more();
     }
 
@@ -649,6 +690,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function close_menu()
     {
+        if (menu_stack.length > 1
+            && menu_stack[menu_stack.length - 2].last_hovered >= 0)
+        {
+            suppress_mouse_hover();
+        }
         menu_stack.pop();
         ui.hide_popup();
         menu = menu_stack[menu_stack.length - 1];
@@ -725,10 +771,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function server_menu_scroll(data)
     {
-        if (!client.is_watching())
+        if (!data.force && !client.is_watching())
             return;
+
         menu.server_first_visible = data.first;
-        if (menu.following_player_scroll)
+        if (menu.following_player_scroll || data.force)
         {
             scroll_to_item(data.first, true);
             set_hovered(data.last_hovered);
@@ -794,12 +841,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         switch (event.which)
         {
         case 109: // numpad -
-            if (menu.tag == "inventory" || menu.tag == "stash"
-                || menu.tag == "actions" || menu.tag == "macros")
-            {
-                // TODO: most inventory menus should be ok...
-                break; // Don't capture - for wield prompts or stash search
-            }
+            if (menu_has_custom_dash())
+                break;
+            // otherwise, fall through to pageup:
         case 33: // page up
             if (menu.tag == "macro_mapping")
                 break; // Treat input as raw, no need to scroll anyway
@@ -839,10 +883,36 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 line_down();
             event.preventDefault();
             return false;
+        case 37: // left
+            if (event.shiftKey)
+            {
+                line_up();
+                event.preventDefault();
+                return false;
+            }
+            break;
+        case 39: // right
+            if (event.shiftKey)
+            {
+                line_down();
+                event.preventDefault();
+                return false;
+            }
+            break;
         }
 
         if (update_server_scroll_timeout)
             update_server_scroll();
+    }
+
+    function menu_has_custom_dash()
+    {
+        return menu.tag == "inventory" // drop/pickup use '-' to clear all (TODO: specific tag?)
+            || menu.tag == "stash"     // TODO: ??
+            || menu.tag == "actions"   // '-' = clear quiver
+            || menu.tag == "macros"    // '-' = clear all macros
+            || menu.tag == "macro_mapping" // leave available for binding
+            || menu.tag == "use_item"; // '-' = unwield
     }
 
     function menu_keypress_handler(event)
@@ -864,12 +934,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         switch (chr)
         {
         case "-":
-            if (menu.tag == "inventory" || menu.tag == "stash"
-                || menu.tag == "actions" || menu.tag == "macros")
-            {
-                break; // Don't capture - for wield prompts or stash search
-            }
-
+            if (menu_has_custom_dash())
+                break;
+            // otherwise, fall through to pageup:
         case "<":
         case ";":
             page_up();
@@ -906,10 +973,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (menu.flags & enums.menu_flag.ARROWS_SELECT)
         {
             set_hovered($(this).index()); // should be unnecesssary?
-            // just send enter, for uniform behavior between key entry and
-            // mouse control. TODO: maybe turn this into a specialized
-            // select event?
-            comm.send_message("key", { keycode: 13 });
+            // TODO: send a select event, keycode is rather ad hoc here
+            if (menu.flags & enums.menu_flag.SINGLESELECT)
+                comm.send_message("key", { keycode: 13 });
+            else if (menu.flags & enums.menu_flag.MULTISELECT)
+                comm.send_message("key", { keycode: 32 });
         }
         // TODO: it would be better not to rely on hotkeys here as well
         else if (item.hotkeys && item.hotkeys.length)

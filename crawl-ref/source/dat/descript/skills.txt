@@ -206,7 +206,8 @@ Transmutations
 
 Transmutations deal with changing shapes. Many Transmutations involve changing
 your own form, but the school also contains spells to cause changes in your
-enemies, or to transform objects around you.
+enemies. Form changing spells will last longer with higher spell power, in
+addition to form-specific perks that might scale with power.
 
 Being skilled in Transmutations increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
