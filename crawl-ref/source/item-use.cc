@@ -182,6 +182,10 @@ void UseItemMenu::populate_menu()
         if (!you.weapon())
             hands->colour = LIGHTGREEN;
         hands->add_hotkey('-');
+#ifndef USE_TILE_LOCAL
+        hands->add_hotkey(CK_NUMPAD_SUBTRACT);
+        hands->add_hotkey(CK_NUMPAD_SUBTRACT2);
+#endif
         hands->on_select = [this](const MenuEntry&)
             {
                 lastch = '-';
