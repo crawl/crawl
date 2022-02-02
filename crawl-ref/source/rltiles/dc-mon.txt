@@ -385,6 +385,7 @@ blood_saint MONS_DEMONSPAWN_BLOOD_SAINT
 warmonger MONS_DEMONSPAWN_WARMONGER
 corrupter MONS_DEMONSPAWN_CORRUPTER
 black_sun MONS_DEMONSPAWN_BLACK_SUN
+mon/unique/amaemon MONS_AMAEMON
 ## From the Wucad Mu wizard laboratory
 %sdir mon/vault
 demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK

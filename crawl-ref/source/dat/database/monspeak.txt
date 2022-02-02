@@ -1712,6 +1712,40 @@ Antaeus
 @_hell_lord_taunt_@
 ## END Antaeus
 %%%%
+############ AMAEMON ### A demonspawn with poisoned words and a poisoned heart
+Amaemon
+
+@_Amaemon_common_@
+
+w:5
+@_Amaemon_rare_@
+%%%%
+_Amaemon_common_
+
+@The_monster@ hisses.
+
+VISUAL:Something foul drips from @the_monster@'s claws.
+
+VISUAL:@The_monster@'s eyes glow red.
+
+VISUAL: @The_monster@'s tail lashes.
+
+@The_monster@ shouts @at_foe@, "You think you're better than me?"
+
+@The_monster@ says @to_foe@, "Afraid of a little sting?"
+%%%%
+_Amaemon_rare_
+
+@The_monster@ whines, "They said I was special. Look at me now!"
+
+@The_monster@ sighs, "Demons are the only companions you can really rely on."
+
+@The_monster@ says @to_foe@, "Need some antivenom? Don't worry, you can trust me."
+
+@The_monster@ whispers, "Once I find the ORB, I'll be cured. I'll be normal again!"
+
+@The_monster@ sings, "Eyes close, heart stop, nighty-night for you..."
+%%%%
 ############ ARACHNE ### Half-human half-spider
 Arachne
 

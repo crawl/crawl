@@ -933,7 +933,8 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
         return !monster.has_ench(ENCH_CONCENTRATE_VENOM)
                && (monster.has_spell(SPELL_SPIT_POISON)
                    || monster.has_attack_flavour(AF_POISON)
-                   || monster.has_attack_flavour(AF_POISON_STRONG));
+                   || monster.has_attack_flavour(AF_POISON_STRONG)
+                   || monster.has_attack_flavour(AF_REACH_STING));
 
     default:
         return false;
@@ -960,8 +961,12 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
     if (!mons_atts_aligned(caster.temp_attitude(), targ.real_attitude()))
         return false;
 
-    if (caster.type == MONS_IRONBOUND_CONVOKER || mons_bound_soul(caster))
+    if (caster.type == MONS_IRONBOUND_CONVOKER
+        || caster.type == MONS_AMAEMON
+        || mons_bound_soul(caster))
+    {
         return true; // will buff any ally
+    }
 
     if (targ.is_holy() && caster.is_holy())
         return true;
@@ -1702,6 +1707,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_PHANTOM_MIRROR:
     case SPELL_SUMMON_MANA_VIPER:
+    case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_EMPEROR_SCORPIONS:
     case SPELL_BATTLECRY:
     case SPELL_WARNING_CRY:
@@ -6250,6 +6256,15 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (int i = 0; i < num_vipers; ++i)
             _summon(*mons, MONS_MANA_VIPER, 2, slot);
         return;
+    }
+
+    case SPELL_SUMMON_SCORPIONS:
+    {
+        const int max_scorps = 1 + div_rand_round(splpow, 60);
+        const int num_scorps = random_range(1, max_scorps);
+        for (int i = 0; i < num_scorps; ++i)
+            _summon(*mons, MONS_SCORPION, 2, slot);
+        break;
     }
 
     case SPELL_SUMMON_EMPEROR_SCORPIONS:

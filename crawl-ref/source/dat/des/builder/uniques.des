@@ -96,6 +96,11 @@ ENDMAP
 # Uniques which can appear in the Dungeon (D):
 ################################################################################
 
+NAME:   uniq_amaemon
+DEPTH:  D:7-12, Orc:1, Lair:1-4
+WEIGHT: 5, 15(Lair)
+: place_unique(_G, "Amaemon band")
+
 NAME:   uniq_azrael
 DEPTH:  D:12-, Orc:$, Elf, !Elf:$, Snake, !Snake:$, Spider, !Spider:$
 : place_unique(_G, "Azrael band")

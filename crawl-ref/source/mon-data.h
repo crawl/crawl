@@ -7366,6 +7366,20 @@ DUMMY(MONS_HELL_LORD, '&', COLOUR_UNDEF, "hell lord", TILEP_MONS_PROGRAM_BUG)
 },
 
 {
+    MONS_AMAEMON, '6', GREEN, "Amaemon",
+    M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_MALE,
+    MR_NO_FLAGS,
+    10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL | MH_DEMONIC, 60,
+    { {AT_HIT, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 12},
+      {AT_TAIL_SLAP, AF_POISON, 8}, AT_NO_ATK },
+    10, 925,
+    3, 12, MST_AMAEMON, true, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
+    {TILEP_MONS_AMAEMON}, TILE_CORPSE_DEMONSPAWN
+},
+
+{
     // Roxanne obviously can't use items, but we want to equip her with
     // a spellbook, so MONUSE_STARTING_EQUIPMENT is necessary.
     MONS_ROXANNE, '8', BLUE, "Roxanne",

@@ -1965,6 +1965,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('6') Demonspawn.
+    {  MST_AMAEMON,
+      {
+        { SPELL_CONCENTRATE_VENOM, 30, MON_SPELL_WIZARD },
+        { SPELL_SUMMON_SCORPIONS, 15, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('8') Statues.
     { MST_ROXANNE,
       {

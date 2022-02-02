@@ -1562,6 +1562,10 @@ Summon Scarabs spell
 
 Calls forth a swarm of death scarabs.
 %%%%
+Summon Scorpions spell
+
+Calls forth a swarm of venomous scorpions.
+%%%%
 Summon Small Mammal spell
 
 Summons a rat, bat, or quokka to the caster's aid. Spell power increases the

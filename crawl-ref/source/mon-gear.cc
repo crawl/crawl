@@ -523,6 +523,9 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { WPN_BROAD_AXE,          1 }, },
             {}, {}, 1,
         } },
+        { MONS_AMAEMON, {
+            { { WPN_DEMON_WHIP,       1 } },
+              {}, { { SPWPN_VENOM, 1 } } } },
         { MONS_MARA,
             { { { WPN_DEMON_WHIP,       1 },
                 { WPN_DEMON_TRIDENT,    1 },
@@ -1117,6 +1120,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_NIKOLA:
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_ARC_BLADE))
             make_item_unrandart(item, UNRAND_ARC_BLADE);
+        break;
+
+    case MONS_AMAEMON:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_SNAKEBITE))
+            make_item_unrandart(item, UNRAND_SNAKEBITE);
         break;
 
     case MONS_ARACHNE:
