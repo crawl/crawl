@@ -682,24 +682,20 @@ static void _handle_channeling(int cost)
     if (you.has_mutation(MUT_HP_CASTING))
         return;
 
-    const int sources = 2 * player_equip_unrand(UNRAND_WUCAD_MU)
-                        + you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
+    const int sources = 3 * player_equip_unrand(UNRAND_WUCAD_MU)
+                        + 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
 
-    if (!x_chance_in_y(sources * you.skill(SK_EVOCATIONS), 54))
+    if (!x_chance_in_y(sources * you.skill(SK_EVOCATIONS), 108))
         return;
 
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
-    // The chance of backfiring goes down with evo skill and up with cost
-    // and is greatly reduced by more sources of channeling
-    for (int i = 0; i < sources; ++i)
+    // The chance of backfiring goes down with evo skill and up with cost.
+    if (!one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
     {
-        if (!one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
-        {
-            mpr("Magical energy flows into your mind!");
-            inc_mp(cost, true);
-            return;
-        }
+        mpr("Magical energy flows into your mind!");
+        inc_mp(cost, true);
+        return;
     }
 
     mpr(random_choose("Weird images run through your mind.",
