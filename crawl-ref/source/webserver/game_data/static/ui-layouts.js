@@ -689,10 +689,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function scroller_scroll_page(scroller, dir)
     {
-        // var line_height = scroller_line_height(scroller);
+        var line_height = scroller_line_height(scroller);
         var contents = $(scroller.scrollElement);
-        var page_shift = contents[0].getBoundingClientRect().height;
-        // page_shift = Math.floor(page_shift / line_height) * line_height;
+        // XX this is a bit weird, maybe context[0] is the wrong thing to use?
+        // The -24 is to compensate for the top/bottom shades. In practice, the
+        // top line ends up a bit in the shade in long docs, possibly it should
+        // be adjusted for.
+        var page_shift = contents[0].getBoundingClientRect().height - 24;
+        page_shift = Math.floor(page_shift / line_height) * line_height;
         contents[0].scrollTop += page_shift * dir;
         update_server_scroll();
     }
