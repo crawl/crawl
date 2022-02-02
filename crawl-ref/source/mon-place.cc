@@ -2748,8 +2748,7 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     return in_bounds(p) ? p : coord_def(-1, -1);
 }
 
-coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
-                              const monster* viable_mon)
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
 {
     coord_def empty;
     coord_def pos(-1, -1);
@@ -2761,7 +2760,7 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water or lava this function would work.  -- bwr
 
-    if (find_habitable_spot_near(p, mons_class, 2, true, empty, viable_mon))
+    if (find_habitable_spot_near(p, mons_class, 2, true, empty))
         pos = empty;
 
     return pos;
@@ -2854,30 +2853,7 @@ monster* create_monster(mgen_data mg, bool fail_msg)
         || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, env.grid(mg.pos)))
     {
-        // Gods other than Xom will try to avoid placing their monsters
-        // directly in harm's way.
-        if (mg.god != GOD_NO_GOD && mg.god != GOD_XOM)
-        {
-            monster dummy;
-            const monster_type resistless_mon = MONS_HUMAN;
-            // If the type isn't known yet assume no resists or anything.
-            dummy.type         = needs_resolution(mg.cls) ? resistless_mon
-                                                          : mg.cls;
-            dummy.base_monster = mg.base_type;
-            dummy.god          = mg.god;
-            dummy.behaviour    = mg.behaviour;
-
-            // Monsters that have resistance info in the ghost
-            // structure cannot be handled as dummies, so treat them
-            // as a known no-resist monster. mons_avoids_cloud() will
-            // crash for dummy monsters which should have a
-            // ghost_demon setup.
-            if (mons_is_ghost_demon(dummy.type))
-                dummy.type = resistless_mon;
-            mg.pos = find_newmons_square(montype, mg.pos, &dummy);
-        }
-        else
-            mg.pos = find_newmons_square(montype, mg.pos);
+        mg.pos = find_newmons_square(montype, mg.pos);
     }
 
     if (in_bounds(mg.pos))
@@ -2895,30 +2871,23 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 }
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty,
-                              const monster* viable_mon)
+                              int radius, bool allow_centre, coord_def& empty)
 {
-    // XXX: A lot of hacks that could be avoided by passing the
-    //      monster generation data through.
-
     int good_count = 0;
 
     for (radius_iterator ri(where, radius, C_SQUARE, !allow_centre);
          ri; ++ri)
     {
-        bool success = false;
-
         if (actor_at(*ri))
             continue;
 
         if (!cell_see_cell(where, *ri, LOS_NO_TRANS))
             continue;
 
-        success = monster_habitable_grid(mon_type, env.grid(*ri));
-        if (success && viable_mon)
-            success = !mons_avoids_cloud(viable_mon, *ri, true);
+        if (!monster_habitable_grid(mon_type, env.grid(*ri)))
+            continue;
 
-        if (success && one_chance_in(++good_count))
+        if (one_chance_in(++good_count))
             empty = *ri;
     }
 
