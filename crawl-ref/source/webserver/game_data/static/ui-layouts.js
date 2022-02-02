@@ -39,6 +39,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function _fmt_spells_list(root, spellset, colour)
     {
         var $container = root.find("#spellset_placeholder");
+        if ($container.length == 0)
+        {
+            root.prepend("<div class='fg4'>Buggy spellset!</div>");
+            return;
+        }
         $container.attr("id", "").addClass("menu_contents spellset");
         if (spellset.length === 0)
         {
