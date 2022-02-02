@@ -39,7 +39,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function _fmt_spells_list(root, spellset, colour)
     {
         var $container = root.find("#spellset_placeholder");
-        if ($container.length == 0)
+        // XX this container only seems to be added if there are spells, do
+        // we actually need to remove it again?
+        if ($container.length === 0 && spellset.length !== 0)
         {
             root.prepend("<div class='fg4'>Buggy spellset!</div>");
             return;

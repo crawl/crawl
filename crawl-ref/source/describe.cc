@@ -4335,13 +4335,21 @@ static string _monster_missiles_description(const monster_info& mi)
     return desc;
 }
 
-static string _monster_spells_description(const monster_info& mi)
+#define SPELL_LIST_BEGIN "[SPELL_LIST_BEGIN]"
+#define SPELL_LIST_END "[SPELL_LIST_END]"
+
+static string _monster_spells_description(const monster_info& mi, bool mark_spells)
 {
     // Show monster spells and spell-like abilities.
     if (!mi.has_spells())
         return "";
 
     formatted_string description;
+
+    // hacky, refactor so this isn't necessary
+    if (mark_spells)
+        description += SPELL_LIST_BEGIN;
+
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("\nTo read a description, press the key listed above. "
         "(AdB) indicates damage (the sum of A B-sided dice), "
@@ -4350,6 +4358,8 @@ static string _monster_spells_description(const monster_info& mi)
     description.cprintf(crawl_state.need_save
         ? "; shown in red if you are in range.\n"
         : ".\n");
+    if (mark_spells)
+        description += SPELL_LIST_END;
 
     return description.to_colour_string();
 }
@@ -4690,9 +4700,6 @@ static string _monster_current_target_description(const monster_info &mi)
     return result.str();
 }
 
-#define SPELL_LIST_BEGIN "[SPELL_LIST_BEGIN]"
-#define SPELL_LIST_END "[SPELL_LIST_END]"
-
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi, bool mark_spells)
@@ -5015,12 +5022,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
     result << _monster_habitat_description(mi);
-    // hacky, refactor so this isn't necessary
-    if (mark_spells)
-        result << SPELL_LIST_BEGIN;
-    result << _monster_spells_description(mi);
-    if (mark_spells)
-        result << SPELL_LIST_END;
+    result << _monster_spells_description(mi, mark_spells);
 
     return result.str();
 }
