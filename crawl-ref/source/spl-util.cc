@@ -1660,7 +1660,11 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (testbits(flags, spflag::helpful))
         return false;
 
-    const bool neutral = testbits(flags, spflag::neutral);
+    // For chosing default targets and prompting we don't treat Inner Flame as
+    // neutral, since the seeping flames trigger conducts and harm the monster
+    // before it explodes.
+    const bool allow_friends = testbits(flags, spflag::neutral)
+                               || spell == SPELL_INNER_FLAME;
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
@@ -1726,7 +1730,7 @@ bool spell_no_hostile_in_range(spell_type spell)
                 tempbeam.fire();
 
             if (tempbeam.foe_info.count > 0
-                || neutral && tempbeam.friend_info.count > 0)
+                || allow_friends && tempbeam.friend_info.count > 0)
             {
                 found = true;
                 break;
