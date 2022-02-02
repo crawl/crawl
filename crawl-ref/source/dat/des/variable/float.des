@@ -3203,70 +3203,71 @@ ENDMAP
 ## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
 ## the worship of a life-bringing water deity.
 NAME:     gammafunk_depths_water_palace
+TAGS:     no_monster_gen patrolling no_pool_fixup
 DEPTH:    Depths, !Depths:$
 ORIENT:   float
-TAGS:     no_monster_gen patrolling no_pool_fixup
-KMONS:    1 = deep elf archer w:20 / ettin / stone giant w:20 / spriggan berserker
-KMONS:    2 = wizard / deep troll earth mage / spriggan air mage \
-              / deep elf annihilator / deep troll earth mage / deep elf knight
-KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
-KMONS:    4 = tengu reaver / spriggan air mage / sphinx
-KMONS:    5 = golden dragon / quicksilver dragon / storm dragon
-KMONS:    6 = juggernaut / spark wasp band / caustic shrike
-KMONS:    D = water elemental
-KMONS:    F = orange crystal statue
-KMONS:    K = water elemental / merfolk impaler / merfolk javelineer
-KMONS:    M = ettin / stone giant / frost giant / fire giant
-KMONS:    N = juggernaut
-KMONS:    O = titan
-KMONS:    P = the Enchantress band
-# Place either a giant band headed by a titan or the Enchantress band, if the
-# latter is available.
-: if not you.uniques("the Enchantress") then
-SHUFFLE:  MNO / kkP
-: end
-KMONS:    h = plant / fungus
+KPROP:    a"E = no_tele_into
 # The loot items need KITEM and KFEAT to place in water
 KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
 KITEM:    6| = |
-KFEAT:    h3456DHJK%$*| = W
-KFEAT:    K = w
+KMONS:    1 = tengu warrior / tengu conjurer / ettin / stone giant \
+              / spriggan berserker
+KMONS:    2 = wizard / deep troll earth mage / spriggan air mage \
+              / deep elf annihilator / deep elf high priest
+KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
+KMONS:    4 = tengu reaver / spriggan air mage / sphinx
+KMONS:    5 = golden dragon / quicksilver dragon / storm dragon
+KMONS:    6 = juggernaut / spark wasp band / caustic shrike
+KMONS:    F = orange crystal statue
+KMONS:    KL = merfolk impaler / merfolk javelineer
+KMONS:    M = elemental wellspring
+KMONS:    N = ettin / stone giant / frost giant / fire giant
+KMONS:    O = juggernaut
+KMONS:    P = titan
+KMONS:    Q = the enchantress band
+# Place either a giant band headed by a titan or the Enchantress band, if the
+# latter is available.
+: if not you.uniques("the Enchantress") then
+SHUFFLE:  NOP / kkQ
+: end
+KMONS:    h = plant / fungus
+KFEAT:    -"h3456HJK%$*| = W
+KFEAT:    L = w
 KFEAT:    t = mangrove
-KPROP:    ~"DE = no_tele_into
 SHUFFLE:  FH / IJ
-SUBST:    i : ch, j : ch, ~' = hhhhW, -" = W, k = .
-SUBST:    E = 5, I = G, J = 4, L = 54
-NSUBST:   F = 1:F / G
+SUBST:    i : ch, j : ch, a' = hhhhW, k = .
+SUBST:    E = 5, I = G, J = 4, K = KW, L = Lw, M = LM, R = 45
+NSUBST:   F = F / G
 COLOUR:   c = white
-COLOUR:   .12MNOP = lightblue
+COLOUR:   .12NOPQ = lightblue
 COLOUR:   x = blue
 TILE:     x = wall_pebble_cyan
-FTILE:    .TUwWh123456DFHMNO|$*%$+xctG = floor_pebble_cyan
+FTILE:    .TUwWah123456DFHMNO|$*%$+xctG = floor_pebble_cyan
 MAP
       ccccccccccccccccccccccccc
     cccttct1t.t.-Gx-Fx-Fx-tctTccc
    cc-...+....2.------H----+-wwwcc
   ccG-.1.+.t1t.t--Gx-Fx-Fx-+---wwcc
   ccc-.Gccciiccccccccccccccc----wwc
-  ccGD.cc~""cccccUGUccccc''-3x---Kc
- cccc-.n~E"cccc--*6*--cccc'-t-t--wcc
- cT---.n""~ccc---$%$---ccc'--x4t-wwc
- ct1...c"~cccL---ccc---Lccc'-t-x--wc
- cccc++cD~ccc--cccGccc--ccc'--t3t-Kc
-cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
-c..1...c~ccc--ct-----tc--cccG-t-t-wTc
-+.---..ntcU|$----MNM------++-5----llc
-+.-U-.2nUcG6|----.O.--5---++---U--lGc
-+.---..ntcU|$----MNM------++-5----llc
-c..1...c~ccc--ct-----tc--cccG-t-t-wTc
-cctGt..c~~cc--cc*%$%*cc--cc''--x--wcc
- cccc++cD~ccc--cccGccc--ccc'--t3t-Kc
- ct1...c"~cccL---ccc---Lccc'-t-x--wc
- cT---.n""~ccc---$%$---ccc'--x4t-wwc
- cccc-.n~E"cccc--*6*--cccc'-t-t--wcc
-  ccGD.cc~""cccccUGUccccc''-3x---Kc
+  ccGK.cca""cccccUGUccccc''-3x---Lc
+ cccc-.naE"cccc--*6*--cccc'-t-t--wcc
+ cT---.n""accc---$%$---ccc'--x4t-wwc
+ ct1...c"acccR---ccc---Rccc'-t-x--wc
+ cccc++c"accc--cccGccc--ccc'--t3t-Mc
+cctGt..caacc--cc*%$%*cc--cc''--x--wcc
+c..1...caccc--ct-----tc--cccG-t-t-wTc
++.---..ntcU|$----NON------++-5----llc
++.-U-.2nUcG6|----.P.--5---++---U--lGc
++.---..ntcU|$----NON------++-5----llc
+c..1...caccc--ct-----tc--cccG-t-t-wTc
+cctGt..caacc--cc*%$%*cc--cc''--x--wcc
+ cccc++c"accc--cccGccc--ccc'--t3t-Mc
+ ct1...c"acccR---ccc---Rccc'-t-x--wc
+ cT---.n""accc---$%$---ccc'--x4t-wwc
+ cccc-.naE"cccc--*6*--cccc'-t-t--wcc
+  ccGK.cca""cccccUGUccccc''-3x---Lc
   ccc-.Gcccjjccccccccccccccc----wwc
   ccG-.1.+.t1t.t----Ix-----+---wwcc
    cc-...+....2.------J----+-wwwcc
