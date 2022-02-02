@@ -138,16 +138,51 @@ Gods
             zombies. A bound soul is permanent and can follow the player
             between floors.
 
-Interface
----------
+Interface and Options
+---------------------
+* The inventory-full autopickup prompt now has an "(A)lways ignore" choice.
+* Webtiles chat can be closed, as well as opened, via F12.
 * The mutation panel is now a menu, selecting individual mutations provides a
   description of the mutation.
-* Most abilities now have targeters like the spell targeters.
+* Most abilities now have targeters (similar to spell targeters). These are
+  configurable via the `force_ability_targeter` option, and spell targeter
+  configuration is moved to `force_spell_targeter`.
 * WebTiles now has a clickable action panel, similar to the local tiles
-  inventory panel.
-* Arrow key navigation and keyhelp is available in many more menus.
-* Arrow key navigation can be disabled with `menu_arrow_control`.
+  inventory panel. This UI element by default shows tactically-relevant
+  consumables, and comes with a number of configuration options (see the
+  various `action_panel...` options, or right-click on the X).
+* Many improvements to menus and popups:
+  - Arrow key navigation and selection is available in many more menus. This
+    can be disabled with the new option `menu_arrow_control` for the classic
+    roguelike experience. Shift-arrows replace arrows as the binding to scroll
+    by a single line. (Console users: not all terminals support these keycodes
+    on default settings.)
+  - The quiver menu has a mode that uses hotkeys from the items/spells/abilities
+    it is showing.
+  - The stash search menu more clearly differentiates items that can be
+    traveled to, and has a number of interface improvements. The closest
+    (travelable) search result is always available via the enter key.
+  - Description popups have been improved and actions in these popups are
+    now activatable using the mouse on webtiles.
+  - Improvements and bugfixes to many other menus.
 * WebTiles mouse support is expanded.
+* WebTiles supports virtual keyboards on touch devices, configurable via the
+  `tile_web_mobile_input_helper` option. There have also been a number of
+  improvements to rendering on touch devices. (Caveat: these changes are aimed
+  at tablets, not phones.)
+* Console:
+  - A new console option `bold_brightens_foreground=force` lets bold be applied
+    to bright foreground colors even in 16-color mode.
+  - A popup accessible via ! in the help screen shows current terminal and
+    console settings, and attempts to indicate misconfiguration. (PuTTY users
+    may find this particularly helpful.)
+* A small number of options are automatically saved across games based on their
+  value in the relevant in-game user interface. These include
+  `default_manual_training`, `quiver_menu_focus` (for the new quiver menu
+  modes), and several of the action panel settings, which can be edited by
+  right-clicking on the panel close button.
+* On MacOS local games, a game menu option will reveal the rc file in the
+  Finder.
 
 Items
 -----
