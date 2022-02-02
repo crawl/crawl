@@ -42,8 +42,9 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             old_value = max;
         player["old_" + propname] = value;
         var increase = old_value < value;
+        // XX should both of these be floor?
         var full_bar = Math.round(10000 * (increase ? old_value : value) / max);
-        var change_bar = Math.round(10000 * Math.abs(old_value - value) / max);
+        var change_bar = Math.floor(10000 * Math.abs(old_value - value) / max);
         // Use poison_survival to display our remaining hp after poison expires.
         if (name == "hp")
         {
