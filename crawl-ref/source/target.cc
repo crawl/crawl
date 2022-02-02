@@ -730,6 +730,13 @@ bool targeter_unravelling::valid_aim(coord_def a)
                            "unravel.");
     }
 
+    if (mons && you.can_see(*mons) && _unravelling_explodes_at(a)
+        && god_protects(&you, mons))
+    {
+        return notify_fail(mons->name(DESC_THE) + " is protected by " +
+                           god_name(you.religion) + ".");
+    }
+
     return true;
 }
 
