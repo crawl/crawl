@@ -676,6 +676,8 @@ function (exports, $, key_conversion, chat, comm) {
             case "error":
                 return possessive(watched_name)
                        + " game was terminated due to an error.";
+            case "disconnect":
+                return watched_name + " has been disconnected.";
             default:
                 return possessive(watched_name) + " game ended unexpectedly."
                        + (reason != "unknown" ? " (" + reason + ")" : "");
@@ -696,6 +698,8 @@ function (exports, $, key_conversion, chat, comm) {
                 return "Unfortunately your game crashed.";
             case "error":
                 return "Unfortunately your game terminated due to an error.";
+            case "disconnect":
+                return "You have been disconnected.";
             default:
                 return "Unfortunately your game ended unexpectedly."
                        + (reason != "unknown" ? " (" + reason + ")" : "");

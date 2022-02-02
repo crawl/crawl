@@ -572,7 +572,8 @@ NORETURN void game_ended(game_exit exit, const string &message)
         if (message.size() > 0)
         {
 #ifdef USE_TILE_WEB
-            tiles.send_exit_reason("error", message);
+            tiles.send_exit_reason(crawl_state.seen_hups
+                                        ? "disconnect" : "error", message);
 #endif
             end(retval, false, "%s\n", message.c_str());
         }
