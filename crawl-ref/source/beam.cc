@@ -1087,6 +1087,7 @@ static void _undo_tracer(bolt &orig, bolt &copy)
     orig.target           = copy.target;
     orig.source           = copy.source;
     orig.aimed_at_spot    = copy.aimed_at_spot;
+    orig.aimed_at_feet    = copy.aimed_at_feet;
     orig.extra_range_used = copy.extra_range_used;
     orig.auto_hit         = copy.auto_hit;
     orig.ray              = copy.ray;
