@@ -3064,18 +3064,13 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     }
 }
 
-static bool _setup_unravelling(bolt &beam, int pow, coord_def target)
+static void _setup_unravelling(bolt &beam, int pow, coord_def target)
 {
     zappy(ZAP_UNRAVELLING, pow, false, beam);
     beam.set_agent(&you);
     beam.source = target;
     beam.target = target;
     beam.ex_size = 1;
-
-    bolt tracer_beam = beam;
-    tracer_beam.is_tracer = true;
-    tracer_beam.explode(false);
-    return !tracer_beam.beam_cancelled;
 }
 
 spret cast_unravelling(coord_def target, int pow, bool fail)
@@ -3111,11 +3106,15 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return !(act->is_monster() && god_protects(act->as_monster()));
     };
 
-    if (stop_attack_prompt(hitfunc, "unravel", vulnerable))
+    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE
+        && !yesno("The unravelling is likely to hit you. Continue anyway?",
+                  false, 'n'))
+    {
+        canned_msg(MSG_OK);
         return spret::abort;
+    }
 
-    bolt beam;
-    if (!_setup_unravelling(beam, pow, target))
+    if (stop_attack_prompt(hitfunc, "unravel", vulnerable))
         return spret::abort;
 
     fail_check();
@@ -3126,6 +3125,8 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return spret::success;
     }
 
+    bolt beam;
+    _setup_unravelling(beam, pow, target);
     beam.fire();
 
     return spret::success;
