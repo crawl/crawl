@@ -4690,9 +4690,12 @@ static string _monster_current_target_description(const monster_info &mi)
     return result.str();
 }
 
+#define SPELL_LIST_BEGIN "[SPELL_LIST_BEGIN]"
+#define SPELL_LIST_END "[SPELL_LIST_END]"
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
-static string _monster_stat_description(const monster_info& mi)
+static string _monster_stat_description(const monster_info& mi, bool mark_spells)
 {
     if (mons_is_sensed(mi.type) || mons_is_projectile(mi.type))
         return "";
@@ -5012,7 +5015,12 @@ static string _monster_stat_description(const monster_info& mi)
     result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
     result << _monster_habitat_description(mi);
+    // hacky, refactor so this isn't necessary
+    if (mark_spells)
+        result << SPELL_LIST_BEGIN;
     result << _monster_spells_description(mi);
+    if (mark_spells)
+        result << SPELL_LIST_END;
 
     return result.str();
 }
@@ -5041,7 +5049,7 @@ string serpent_of_hell_flavour(monster_type m)
 
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
-                         bool &has_stat_desc)
+                         bool &has_stat_desc, bool mark_spells)
 {
     if (inf.title.empty())
         inf.title = getMiscString(mi.common_name(DESC_DBNAME) + " title");
@@ -5200,7 +5208,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     }
 
     // Get information on resistances, speed, etc.
-    string result = _monster_stat_description(mi);
+    string result = _monster_stat_description(mi, mark_spells);
     if (!result.empty())
     {
         inf.body << "\n" << result;
@@ -5375,7 +5383,12 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     describe_info inf;
     formatted_string desc;
 
+#ifdef USE_TILE_WEB
+    // mark the spellset (XX, separate mi field?)
+    get_monster_db_desc(mi, inf, has_stat_desc, true);
+#else
     get_monster_db_desc(mi, inf, has_stat_desc);
+#endif
 
     spellset spells = monster_spellset(mi);
 
@@ -5403,7 +5416,18 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     if (crawl_state.game_is_hints())
         desc += formatted_string(hints_describe_monster(mi, has_stat_desc));
     desc += inf.footer;
-    desc = formatted_string::parse_string(trimmed_string(desc));
+    string raw_desc = trimmed_string(desc); // forces us back to a colour string
+
+#ifdef USE_TILE_WEB
+    // the spell list is delimited so that we can later replace this substring
+    // with a placeholder marker; remove the delimeters for console display
+    desc = formatted_string::parse_string(
+        replace_all(
+            replace_all(raw_desc, SPELL_LIST_BEGIN, ""),
+            SPELL_LIST_END, ""));
+#else
+    desc = formatted_string::parse_string(raw_desc);
+#endif
 
     const formatted_string quote = formatted_string(trimmed_string(inf.quote));
 
@@ -5480,13 +5504,19 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_write_string("title", inf.title);
-    formatted_string needle;
-    describe_spellset(spells, nullptr, needle, &mi);
-    string desc_without_spells = desc.to_colour_string();
-    if (!needle.empty())
+
+    string desc_without_spells = raw_desc;
+    if (!spells.empty())
     {
-        desc_without_spells = replace_all(desc_without_spells,
-                needle.to_colour_string(), "SPELLSET_PLACEHOLDER");
+        // TODO: webtiles could could just look for these delimiters? But I'm
+        // fixing a bug very close to release so I'm not going to change this
+        // now -advil
+        auto start = desc_without_spells.find(SPELL_LIST_BEGIN);
+        auto end = desc_without_spells.find(SPELL_LIST_END);
+        if (start == string::npos || end == string::npos || start > end)
+            desc_without_spells += "\n\nBUGGY SPELLSET\n\nSPELLSET_PLACEHOLDER";
+        else
+            desc_without_spells.replace(start, end, "SPELLSET_PLACEHOLDER");
     }
     tiles.json_write_string("body", desc_without_spells);
     tiles.json_write_string("quote", quote);
