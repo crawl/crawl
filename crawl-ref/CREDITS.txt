@@ -148,6 +148,7 @@
     David Damerell
     Paul Dejean
     Denzi
+    Ed Dewey
     dicedlemming
     Lothar Dierkes
     dilly
@@ -203,6 +204,7 @@
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
+    Hurricos
     Iainuki
     ICC
     Icy Lich
@@ -269,6 +271,7 @@
     Mintice
     Byrel Mitchell
     Yer Mivvaggah
+    Monkooky
     Shawn M Moore
     Muffindrake
     Akinori Musha
@@ -308,6 +311,7 @@
     Poroing
     Iago Porto
     Alexander Posch
+    Brian Power
     psywombats
     pubby
     Ashley Elizabeth Raine
