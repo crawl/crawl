@@ -1,22 +1,31 @@
-Stone Soup 0.28-a0 (through 0.28-a0-1557-g548886b)
+Stone Soup 0.28.0 (through 0.28-b1-73-g42dabe0518)
 --------------------------------------------------
+
+Highlights
+----------
+* The Hell branches have been revitalized to provide greater challenge.
+* A new Cinder Acolyte background that worships a new god, Ignis
+* Okawaru, Jiyva, and Yredelemnul have been reworked.
+* The Spider branch has been respun with new monster sets and end maps.
+* New orb item types for the shield slot with egos granting passive effects.
 
 Branches, Environment
 ---------------------
 * Ziggurats no longer require a rune of zot to enter.
-* Hell effects are reorganized into timed effects and per-branch persistent
-  effects.
-* The timed effects are the same for all hells, and consist of temporary
-  mutation, stat drain, hp drain, and noise.
-- The branch-wide persistent effects are:
-  - In Dis there is a baseline -8 Corrosion.
-  - In Cocytus potions cannot be used.
-  - In Gehenna scrolls cannot be used.
-  - In Tartarus willpower is halved.
-* Floors 1-6 of each hell sub-branch are considerably smaller, and place only
-  one pair of stairs.
-* Each hell subbranch's spawn tables are adjusted to produce more depth
-  appropriate monsters and less chaff.
+* The Hell branches have been reworked:
+  - Hell effects are reorganized into timed effects and per-branch persistent
+    effects.
+  - The timed effects are the same for all Hells, and consist of temporary
+    mutation, stat drain, hp drain, and noise.
+  - The branch-wide persistent effects are:
+    + In Dis there is a baseline -8 Corrosion.
+    + In Cocytus potions cannot be used.
+    + In Gehenna scrolls cannot be used.
+    + In Tartarus willpower is halved.
+  - Floors 1-6 of each hell sub-branch are considerably smaller, and place
+    only one pair of stairs.
+  - Each hell subbranch's spawn tables are adjusted to produce more depth
+    appropriate monsters and less chaff.
 * Six new Wizard's Laboratories are added: Eringya's Formal Garden, Tukima's
   Studio, Yara's Duelist Academy, Borgnjor's Mausoleum, Maxwell's Workshop, and
   Alistair's Party Mansion.
@@ -24,6 +33,8 @@ Branches, Environment
 * Bailey maps have been re-balanced and randomized, and three new baileys added.
 * Exploration-based shaft traps can now happen a maximum of once per branch.
 * Artefacts can now generate on D:2-3.
+* Spider has two new end maps, an "Endless Swarm" map featuring broodmothers
+  and a "Bug Friends" map featuring all non-spider insects.
 * Spider is a normal noise level again.
 * The Abyss no longer generates random items, and kills in the abyss grant no
   experience or conventional piety (Uskayaw and Yredelemnul continue to
