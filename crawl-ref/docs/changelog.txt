@@ -306,7 +306,7 @@ Spells
 * New spell: Scorch (L2 Fire). Hits a random enemy within 3 tiles, dealing fire
   damage and (if damage is dealt) applying short term rF- to the foe.
 * New spell: Flame Wave (L4 Conjuration/Fire). Burns adjacent creatures, then
-  when channeled by hitting '.' (like Searing Ray), repeatedly hits enemies in 
+  when channeled by hitting '.' (like Searing Ray), repeatedly hits enemies in
   an increasing radius.
 * New spell: Enfeeble (L7 Hexes). Enfeeble irresistibly applies weakness and
   antimagic to a single foe. Targets that fail a Willpower check are also dazed
