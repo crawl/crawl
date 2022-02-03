@@ -1,11 +1,11 @@
-Stone Soup 0.28.0 (through 0.28-b1-73-g42dabe0518)
---------------------------------------------------
+Stone Soup 0.28.0 (20220203)
+----------------------------
 
 Highlights
 ----------
 * New Cinder Acolyte background, followers of the dying god Ignis.
 * The Hells burn with new fury, filled with new monsters and effects.
-* Yredremnul completely redesigned; Okawaru and Jiyva significantly changed.
+* Yredelemnul completely redesigned; Okawaru and Jiyva significantly changed.
 * The Spider's Nest respun - many new monsters and maps lurk within.
 * Magical orbs added as a new category of off-hand equipment.
 
