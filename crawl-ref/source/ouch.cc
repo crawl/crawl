@@ -580,7 +580,7 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
     monster* damager = monster_by_mid(death_source);
     // We need to exclude acid damage and similar things or this function
     // will crash later.
-    if (!damager)
+    if (!damager || death_source == MID_YOU_FAULTLESS)
         return;
 
     monster_type mon;
@@ -1054,7 +1054,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 drain_player(drain_amount, true, true);
         }
         if (you.hp > 0)
-          return;
+            return;
     }
 
     // Is the player being killed by a direct act of Xom?
