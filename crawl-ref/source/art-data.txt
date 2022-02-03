@@ -255,8 +255,8 @@ NAME:    staff of Olgreb
 INSCRIP: rPois∞
 DESCRIP: It enhances your poison magic.
 +It grants immunity to poison.
-+It can be evoked to radiate toxic energy, with effectiveness depending on
- Evocations skill.
++It can be activated via the 'a'bility menu to radiate toxic energy, with
+ effectiveness depending on Evocations skill.
 DBRAND: If the wielder is skilled in Evocations, they can envenom those struck
  by it, dealing poison damage which bypasses armour.
 OBJ:     OBJ_WEAPONS/WPN_STAFF
