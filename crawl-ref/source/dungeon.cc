@@ -4828,7 +4828,7 @@ int dgn_place_item(const item_spec &spec,
             level = 5 + level * 2;
             break;
         case ISPEC_SUPERB:
-            if (base_type == OBJ_RANDOM) 
+            if (base_type == OBJ_RANDOM)
                 base_type = _superb_object_class();
             level = ISPEC_GOOD_ITEM;
             break;
