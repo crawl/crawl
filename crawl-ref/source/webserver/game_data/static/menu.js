@@ -74,7 +74,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     var menu = null;
     var update_server_scroll_timeout = null;
     var menu_close_timeout = null;
-    var mouse_hover_suppressed = false;
+    var mouse_hover_suppressed = null;
 
     function add_hover_class(item)
     {
@@ -102,11 +102,17 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         set_hovered(index, false, true);
     }
 
+    function clear_suppress()
+    {
+        mouse_hover_suppressed = null;
+    }
+
     function suppress_mouse_hover()
     {
         // ugh -- keep mouseenter from triggering, is there a better way?
-        setTimeout(function() { mouse_hover_suppressed = false; }, 50);
-        mouse_hover_suppressed = true;
+        if (mouse_hover_suppressed)
+            clearTimeout(mouse_hover_suppressed);
+        mouse_hover_suppressed = setTimeout(clear_suppress, 200);
     }
 
     function set_hovered(index, snap=true, from_mouse=false)
@@ -148,7 +154,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             clearTimeout(menu_close_timeout);
             menu_close_timeout = null;
         }
-        mouse_hover_suppressed = false;
+        mouse_hover_suppressed = null;
     }
 
     function display_menu()
