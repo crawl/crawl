@@ -734,6 +734,9 @@ dungeon cell which they are on:
 * door_berserk_verb_open: Replace the verb used for opening the door while
       berserk. Should include "%s%s", as it is printed as a formatted string.
 
+* door_berserk_verb_break: Replace the verb used for breaking the door while
+      berserk. Also requires "%s%s" as it is printed as a formatted string.
+
 * door_berserk_adjective: Replaces the adjective "with a bang" when the player
       is not silenced while opening a door.
 

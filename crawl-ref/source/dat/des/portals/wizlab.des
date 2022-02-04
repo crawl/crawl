@@ -1041,6 +1041,7 @@ COLOUR:     W = green
 : lua_marker('+', props_marker {
 :           door_description_noun="fleshy orifice",
 :           door_berserk_verb_open="You part the %s%s",
+:           door_berserk_verb_break="You sever the %s%s",
 :           door_berserk_adjective="with a squelch!",
 :           door_berserk_verb_close="You squeeze the %s%s closed",
 :           door_noisy_verb_open="You part the %s%s with a squelch!",

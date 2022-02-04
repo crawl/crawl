@@ -7799,9 +7799,12 @@ void player_open_door(coord_def doorpos)
     }
 
     const int skill = 8 + you.skill_rdiv(SK_STEALTH, 4, 3);
+    const bool broken = you.berserk() && one_chance_in(5);
 
-    string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
-                                                  "door_berserk_verb_open");
+    string berserk_open = broken ? env.markers.property_at(doorpos, MAT_ANY,
+                                                           "door_berserk_verb_break")
+                                 : env.markers.property_at(doorpos, MAT_ANY,
+                                                           "door_berserk_verb_open");
     string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
                                                        "door_berserk_adjective");
     string door_open_creak = env.markers.property_at(doorpos, MAT_ANY,
@@ -7822,7 +7825,8 @@ void player_open_door(coord_def doorpos)
                 mprf(berserk_open.c_str(), adj, noun);
             }
             else
-                mprf("The %s%s flies open!", adj, noun);
+                mprf("The %s%s %s!", adj, noun,
+                     broken ? "breaks down" : "flies open");
         }
         else
         {
@@ -7835,7 +7839,8 @@ void player_open_door(coord_def doorpos)
                 mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
             }
             else
-                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+                mprf(MSGCH_SOUND, "The %s%s %s with a bang!", adj, noun,
+                     broken ? "breaks down" : "flies open");
             noisy(15, you.pos());
         }
     }
@@ -7876,7 +7881,10 @@ void player_open_door(coord_def doorpos)
     {
         if (cell_is_runed(dc))
             explored_tracked_feature(env.grid(dc));
-        dgn_open_door(dc);
+        if (broken)
+          dgn_break_door(dc);
+        else
+          dgn_open_door(dc);
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
 
