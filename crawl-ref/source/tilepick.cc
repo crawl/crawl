@@ -3676,6 +3676,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_BEOGH_RESURRECTION:
         return TILEG_ABILITY_BEOGH_RESURRECTION;
     // Jiyva
+    case ABIL_JIYVA_OOZEMANCY:
+        return TILEG_ABILITY_JIYVA_OOZEMANCY;
     case ABIL_JIYVA_SLIMIFY:
         return TILEG_ABILITY_JIYVA_SLIMIFY;
     // Fedhas
