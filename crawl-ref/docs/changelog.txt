@@ -70,7 +70,6 @@ Character
 * Aux attacks now trigger with a chance based on XL.
 * The chance to offhand punch now starts at 5% and increases to 50% with
   Unarmed Combat skill.
-* Clarity from any source no longer blocks berserk from random rage.
 * Strength 0's regeneration reduction is replaced with -Regen in monster LOS.
 * Intelligence 0's 4/5 chance to fail scroll reading is replaced with -Scroll.
 * Wanderers have more useful starting skills and new item possibilities.
@@ -245,8 +244,8 @@ Items
     petrified, or asleep, halving the damage received for the duration.
   - Lear's Hauberk is reduced to +18 (was +27).
   - The trident of the Octopus King loses +Will.
-  - Wucad Mu now counts as two sources of channeling. This means it is twice as
-    likely to refund MP and the probability of backfiring is squared.
+  - Wucad Mu now counts as 1.5 sources of channeling. This means it is 1.5x as
+    likely to refund MP, and the probability of backfiring is reduced.
   - The robe of Misfortune loses Contam and Drain.
 
 Monsters
