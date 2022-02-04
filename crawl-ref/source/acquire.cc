@@ -1252,9 +1252,7 @@ static object_class_type _get_random_acquirement_class(int agent)
     {
         //don't generate armor if you can't wear it
         if (you.has_mutation(MUT_NO_ARMOUR) && weight.first == OBJ_ARMOUR)
-        {
             weight.second = 0;
-        }
         //don't generate weapons or staves if you can't use them
         if (you.has_mutation(MUT_NO_GRASPING) &&
             (weight.first == OBJ_WEAPONS || weight.first == OBJ_STAVES))
@@ -1278,9 +1276,7 @@ static object_class_type _get_random_acquirement_class(int agent)
             for (item_def &item : acq_items)
             {
                 if (weight.first == item.base_type)
-                {
                     weight.second = 0;
-                }
             }
         }
     }
