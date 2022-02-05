@@ -1,6 +1,14 @@
 body {
     margin: 0px;
     overflow: hidden;
+    text-size-adjust: none;
+}
+
+canvas {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #lobby {
@@ -300,8 +308,7 @@ body {
 }
 
 #monster_list .good_neutral,
-#monster_list .neutral,
-#monster_list .strict_neutral {
+#monster_list .neutral, {
     color: #8f5902; /* brown */
 }
 
@@ -623,6 +630,10 @@ body {
     margin-top: 15px;
     font-size: 0.9em;
     white-space: pre-wrap;
+}
+
+.describe-feature .actions span[data-hotkey]:hover {
+    background: #555;
 }
 
 .describe-item {
@@ -1033,7 +1044,7 @@ body {
 
 .ui-popup-outer {
     margin: 50px;
-    max-height: calc(100vh - 100px);
+    max-height: calc(95vh - 100px);
 
     padding: 20px;
     background-color: #040204;
@@ -1052,7 +1063,7 @@ body {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    max-height: calc(100vh - 100px - 46px); /* for IE11 */
+    max-height: calc(95vh - 100px - 46px); /* for IE11 */
 }
 .ui-popup-inner:after {
     display: block;
@@ -1126,10 +1137,10 @@ body {
     }
     .ui-popup-outer {
         margin: 20px;
-        max-height: calc(100vh - 40px);
+        max-height: calc(95vh - 40px);
     }
     .ui-popup-inner {
-        max-height: calc(100vh - 40px - 46px);
+        max-height: calc(95vh - 40px - 46px);
     }
 }
 
@@ -1386,17 +1397,29 @@ body {
 #action-panel-settings {
     position: absolute;
     background: black;
+    color: #babdb6;
     border: 2px solid #7d623c;
     padding: 2px;
+    font-size: 16px;
+    font-family: monospace;
 }
 
 #action-panel-settings fieldset {
-    margin-bottom: 2px;
     border-width: 1px;
+    margin: 0px 2px 2px 2px;
+    padding: 5px 5px 10px 5px;
 }
 
-#action-panel-settings fieldset button,input {
+#action-panel-settings fieldset legend
+{
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 0px;
+}
+
+#action-panel-settings button,input {
     display: inline;
+    color: black;
 }
 
 fieldset.option {
@@ -1432,4 +1455,24 @@ fieldset.option button {
 div.settings-buttons button {
     width: 50%;
     margin: 2px;
+}
+
+#mobile_input {
+    position: relative;
+    height: 0px;
+    bottom: 25px;
+}
+
+#mobile_input input {
+    background: rgba(0, 0, 0, 0.5);
+    color: #A2A2A280;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #62626280;
+    height: 13px;
+    caret-color: transparent;
+}
+
+#mobile_input input:focus {
+    outline: none;
 }

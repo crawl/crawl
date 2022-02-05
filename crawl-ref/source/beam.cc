@@ -129,7 +129,8 @@ bool bolt::is_blockable() const
 bool bolt::is_omnireflectable() const
 {
     return !is_explosion && flavour != BEAM_VISUAL
-            && origin_spell != SPELL_GLACIATE;
+            && origin_spell != SPELL_GLACIATE
+            && flavour != BEAM_VAMPIRIC_DRAINING; // buggy :(
 }
 
 void bolt::emit_message(const char* m)
@@ -1086,6 +1087,7 @@ static void _undo_tracer(bolt &orig, bolt &copy)
     orig.target           = copy.target;
     orig.source           = copy.source;
     orig.aimed_at_spot    = copy.aimed_at_spot;
+    orig.aimed_at_feet    = copy.aimed_at_feet;
     orig.extra_range_used = copy.extra_range_used;
     orig.auto_hit         = copy.auto_hit;
     orig.ray              = copy.ray;
@@ -1682,8 +1684,9 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons_is_firewood(*mons))
         return true;
-    else if (wh_enchant == ENCH_FEAR)
+    switch (wh_enchant)
     {
+    case ENCH_FEAR:
         if (mons->friendly())
             return true;
 
@@ -1693,16 +1696,30 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                 *did_msg = true;
             return true;
         }
-    }
-    else if (wh_enchant == ENCH_INSANE
-             && !mons->can_go_frenzy())
-    {
-        if (simple_monster_message(*mons, " is unaffected."))
-            *did_msg = true;
-        return true;
+        break;
+    case ENCH_INSANE:
+        if (!mons->can_go_frenzy())
+        {
+            if (simple_monster_message(*mons, " is unaffected."))
+                *did_msg = true;
+            return true;
+        }
+        break;
+    case ENCH_ANGUISH:
+        if (mons->friendly())
+            return true;
+        if (mons_intel(*mons) <= I_BRAINLESS)
+        {
+            if (simple_monster_message(*mons, " is unaffected."))
+                *did_msg = true;
+            return true;
+        }
+        break;
+    default:
+        break;
     }
 
-    int res_margin = mons->check_willpower(pow);
+    int res_margin = mons->check_willpower(&you, pow);
     if (res_margin > 0)
     {
         if (simple_monster_message(*mons,
@@ -1755,6 +1772,8 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             const char* msg = nullptr;
             if (wh_enchant == ENCH_FEAR)
                 msg = " looks frightened!";
+            else if (wh_enchant == ENCH_ANGUISH)
+                msg = " is haunted by guilt!";
 
             if (msg && simple_monster_message(**mi, msg))
                 did_msg = true;
@@ -1762,6 +1781,8 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
                 behaviour_event(*mi, ME_SCARE, &you);
+            else if (wh_enchant == ENCH_ANGUISH)
+                behaviour_event(*mi, ME_ALERT, &you);
         }
     }
 
@@ -2030,8 +2051,9 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
 {
     // If this ASSERT triggers, your spell's setup code probably is doing
     // something bad when setup_mons_cast is called with check_validity=true.
-    ASSERT(crawl_state.game_started || crawl_state.test || crawl_state.script
-        || crawl_state.game_is_arena());
+    ASSERTM(crawl_state.game_started || crawl_state.test || crawl_state.script
+        || crawl_state.game_is_arena(),
+        "invalid game state for tracer '%s'!", pbolt.name.c_str());
 
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
@@ -2076,12 +2098,12 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
     pbolt.is_tracer = false;
 }
 
-vector<coord_def> create_feat_splash(coord_def center,
+set<coord_def> create_feat_splash(coord_def center,
                                 int radius,
                                 int number,
                                 int duration)
 {
-    vector<coord_def> splash_coords;
+    set<coord_def> splash_coords;
 
     for (distance_iterator di(center, true, false, radius); di && number > 0; ++di)
     {
@@ -2093,7 +2115,7 @@ vector<coord_def> create_feat_splash(coord_def center,
             int time = random_range(duration, duration * 3 / 2) - (di.radius() * 20);
             temp_change_terrain(*di, DNGN_SHALLOW_WATER, time,
                                 TERRAIN_CHANGE_FLOOD);
-            splash_coords.push_back(*di);
+            splash_coords.insert(*di);
         }
     }
 
@@ -2414,14 +2436,18 @@ void bolt::affect_endpoint()
         const int num = is_player ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
                                   : random_range(3, 12, 2);
         const int dur = div_rand_round(ench_power * 4, 3) + 66;
-        vector<coord_def> splash_coords = create_feat_splash(pos(), is_player ? 2 : 1, num, dur);
+        set<coord_def> splash_coords = create_feat_splash(pos(), is_player ? 2 : 1, num, dur);
         dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
+
+        // Waterlog anything at the center, even if a pool wasn't generated there
+        splash_coords.insert(pos());
+
         if (is_player)
         {
             for (const coord_def &coord : splash_coords)
             {
                 monster* mons = monster_at(coord);
-                if (mons && mons->res_water_drowning() <= 0)
+                if (mons && !mons->res_water_drowning())
                 {
                     simple_monster_message(*mons, " is engulfed in water.");
                     mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you,
@@ -2444,7 +2470,7 @@ void bolt::affect_endpoint()
         // when out of LOS
         temp_change_terrain(pos(), DNGN_TOXIC_BOG, dur,
                             TERRAIN_CHANGE_FLOOD,
-                            agent() ? agent()->as_monster() : nullptr);
+                            agent() ? agent()->mid : MID_NOBODY);
         break;
     }
     case SPELL_BLINKBOLT:
@@ -2884,7 +2910,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_acid() >= 3;
 
     case BEAM_MEPHITIC:
-        return mon->res_poison() > 0;
+        return mon->res_poison() > 0 || mon->clarity();
 
     default:
         return false;
@@ -2930,10 +2956,7 @@ bool bolt::harmless_to_player() const
                || is_big_cloud() && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
-        // With clarity, meph still does a tiny amount of damage (1d3 - 1).
-        // Normally we'd just ignore it, but we shouldn't let a player
-        // kill themselves without a warning.
-        return player_res_poison(false) > 0 || you.clarity() && you.hp > 2;
+        return player_res_poison(false) > 0 || you.clarity();
 
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
@@ -2956,8 +2979,7 @@ bool bolt::is_reflectable(const actor &whom) const
     if (range_used() > range)
         return false;
 
-    const item_def *it = whom.shield();
-    return (it && is_shield(*it) && shield_reflects(*it)) || whom.reflection();
+    return whom.reflection();
 }
 
 bool bolt::is_big_cloud() const
@@ -3131,7 +3153,7 @@ bool bolt::misses_player()
             const item_def *shield = you.shield();
             if (is_reflectable(you))
             {
-                if (shield && is_shield(*shield) && shield_reflects(*shield))
+                if (shield && shield_reflects(*shield))
                 {
                     mprf("Your %s reflects the %s!",
                             shield->name(DESC_PLAIN).c_str(),
@@ -3187,7 +3209,7 @@ void bolt::affect_player_enchantment(bool resistible)
 {
     if (resistible
         && has_saving_throw()
-        && you.check_willpower(ench_power) > 0)
+        && you.check_willpower(agent(true), ench_power) > 0)
     {
         // You resisted it.
 
@@ -3240,8 +3262,12 @@ void bolt::affect_player_enchantment(bool resistible)
     }
 
     // Never affects the player.
-    if (flavour == BEAM_INFESTATION || flavour == BEAM_VILE_CLUTCH)
+    if (flavour == BEAM_INFESTATION
+        || flavour == BEAM_VILE_CLUTCH
+        || flavour == BEAM_ENFEEBLE)
+    {
         return;
+    }
 
     // You didn't resist it.
     if (animate)
@@ -4290,7 +4316,7 @@ void bolt::tracer_affect_monster(monster* mon)
     if (!agent() || !agent()->can_see(*mon))
         return;
 
-    if (flavour == BEAM_UNRAVELLING && monster_is_debuffable(*mon))
+    if (flavour == BEAM_UNRAVELLING && monster_can_be_unravelled(*mon))
         is_explosion = true;
 
     // Trigger explosion on exploding beams.
@@ -4702,7 +4728,7 @@ bool bolt::attempt_block(monster* mon)
     {
         if (mon->observable())
         {
-            if (shield && is_shield(*shield) && shield_reflects(*shield))
+            if (shield && shield_reflects(*shield))
             {
                 mprf("%s reflects the %s off %s %s!",
                      mon->name(DESC_THE).c_str(),
@@ -4738,13 +4764,15 @@ bool bolt::attempt_block(monster* mon)
 bool bolt::bush_immune(const monster &mons) const
 {
     return
-        (mons_species(mons.type) == MONS_BUSH || mons.type == MONS_BRIAR_PATCH)
-        && !pierce && !is_explosion
-        && !is_enchantment()
-        && target != mons.pos()
-        && origin_spell != SPELL_STICKY_FLAME
-        && origin_spell != SPELL_STICKY_FLAME_RANGE
-        && origin_spell != SPELL_CHAIN_LIGHTNING;
+        // Briars allow bolts fired from aligned actors to pass but block
+        // those from unaligned actors. If this bolt has no agent, we're
+        // assuming alignment.
+        (mons.type == MONS_BRIAR_PATCH && mons_aligned(&mons, agent())
+             // Bushes pass bolts regardless of alignment of the actor.
+             || mons_species(mons.type) == MONS_BUSH)
+        // We allow hitting the bush-like monster with a bolt when it's the
+        // target.
+        && target != mons.pos();
 }
 
 void bolt::affect_monster(monster* mon)
@@ -5126,6 +5154,7 @@ bool bolt::has_saving_throw() const
     case BEAM_VILE_CLUTCH:
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
+    case BEAM_ENFEEBLE:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
@@ -5151,6 +5180,11 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     case BEAM_HASTE:
     case BEAM_PARALYSIS:
         rc = !mon->stasis();
+        break;
+
+    case BEAM_CONFUSION:
+    case BEAM_IRRESISTIBLE_CONFUSION:
+        rc = !mon->clarity();
         break;
 
     case BEAM_POLYMORPH:
@@ -5192,7 +5226,8 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_VAMPIRIC_DRAINING:
-        rc = actor_is_susceptible_to_vampirism(*mon);
+        rc = actor_is_susceptible_to_vampirism(*mon)
+                && (mon->res_negative_energy(intrinsic_only) < 3);
         break;
 
     case BEAM_VIRULENCE:
@@ -5227,6 +5262,12 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_MINDBURST:
         rc = mons_intel(*mon) > I_BRAINLESS;
+        break;
+
+    case BEAM_ENFEEBLE:
+        rc = mons_has_attacks(*mon)
+             || mon->antimagic_susceptible()
+             || !mons_invuln_will(*mon);
         break;
 
     default:
@@ -5304,7 +5345,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         // Chaos effects don't get a resistance check to match melee chaos.
         else if (real_flavour != BEAM_CHAOS)
         {
-            if (mon->check_willpower(ench_power) > 0)
+            if (mon->check_willpower(agent(true), ench_power) > 0)
             {
                 // Note only actually used by messages in this case.
                 res_margin = mon->willpower() - ench_power_stepdown(ench_power);
@@ -5539,30 +5580,31 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_SPORE:
     case BEAM_CONFUSION:
     case BEAM_IRRESISTIBLE_CONFUSION:
+    {
         if (mon->clarity())
         {
             if (you.can_see(*mon))
                 obvious_effect = true;
             return MON_AFFECTED;
         }
-        {
-            // irresistible confusion has a shorter duration and is weaker
-            // against strong monsters
-            int dur = ench_power;
-            if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
-                dur = max(10, dur - mon->get_hit_dice());
-            else
-                dur = _ench_pow_to_dur(dur);
 
-            if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
-            {
-                // FIXME: Put in an exception for things you won't notice
-                // becoming confused.
-                if (simple_monster_message(*mon, " appears confused."))
-                    obvious_effect = true;
-            }
+        // irresistible confusion has a shorter duration and is weaker
+        // against strong monsters
+        int dur = ench_power;
+        if (flavour == BEAM_IRRESISTIBLE_CONFUSION)
+            dur = max(10, dur - mon->get_hit_dice());
+        else
+            dur = _ench_pow_to_dur(dur);
+
+        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(), dur)))
+        {
+            // FIXME: Put in an exception for things you won't notice
+            // becoming confused.
+            if (simple_monster_message(*mon, " appears confused."))
+                obvious_effect = true;
         }
         return MON_AFFECTED;
+    }
 
     case BEAM_SLEEP:
         if (mons_just_slept(*mon))
@@ -5775,10 +5817,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_UNRAVELLING:
-        if (!monster_is_debuffable(*mon))
+        if (!monster_can_be_unravelled(*mon))
             return MON_UNAFFECTED;
 
-        debuff_monster(*mon);
+        if (mon->is_summoned())
+        {
+            mprf("The magic binding %s to this plane unravels!",
+                 mon->name(DESC_THE).c_str());
+            monster_die(*mon, KILL_DISMISSED, actor_to_death_source(agent()));
+        }
+        else
+            debuff_monster(*mon);
         _unravelling_explode(*this);
         return MON_AFFECTED;
 
@@ -5809,6 +5858,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             if (simple_monster_message(*mon, " seems to grow toxic."))
                 obvious_effect = true;
         }
+        return MON_AFFECTED;
+
+    case BEAM_ENFEEBLE:
+        if (enfeeble_monster(*mon, ench_power))
+            obvious_effect = true;
         return MON_AFFECTED;
 
     default:
@@ -6330,11 +6384,12 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_HIBERNATION:
         case BEAM_MINDBURST:
         case BEAM_VAMPIRIC_DRAINING:
+        case BEAM_ENFEEBLE:
             return ench_flavour_affects_monster(flavour, mon);
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
         case BEAM_UNRAVELLING:
-            return monster_is_debuffable(*mon); // XXX: as tukima's
+            return monster_can_be_unravelled(*mon); // XXX: as tukima's
         default:
             break;
     }
@@ -6604,6 +6659,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VILE_CLUTCH:           return "vile clutch";
     case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
     case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
+    case BEAM_ENFEEBLE:              return "enfeeble";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
@@ -6675,7 +6731,7 @@ void clear_zap_info_on_exit()
 
 int ench_power_stepdown(int pow)
 {
-    return stepdown_value(pow, 30, 40, 100, 120);
+    return stepdown(pow, 35);
 }
 
 /// Translate a given ench power to a duration, in aut.

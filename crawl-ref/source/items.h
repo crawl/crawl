@@ -97,7 +97,8 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-vector<const item_def*> item_list_on_square(int obj);
+vector<item_def*> item_list_on_square(int obj);
+vector<const item_def*> const_item_list_on_square(int obj);
 
 bool copy_item_to_grid(item_def &item, const coord_def& p,
                        int quant_drop = -1,    // item.quantity by default
@@ -171,6 +172,8 @@ object_class_type get_random_item_mimic_type();
 bool maybe_identify_base_type(item_def &item);
 int count_movable_items(int obj);
 
+bool valid_item_index(int i);
+
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.
@@ -179,6 +182,9 @@ class stack_iterator : public iterator<forward_iterator_tag, item_def>
 public:
     explicit stack_iterator(const coord_def& pos, bool accessible = false);
     explicit stack_iterator(int start_link);
+
+    bool operator==(const stack_iterator& rhs) const;
+    static stack_iterator end() { return stack_iterator(NON_ITEM); };
 
     operator bool() const;
     item_def& operator *() const;

@@ -197,11 +197,11 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  *
  * Weighted by Shields skill & the secret racial shield bonus.
  *
- * Ratios by shields skill & player size (B = buckler, K = kite shield, P = tower shield)
+ * Ratios by shields skill & player size (B = buckler, K = kite shield, T = tower shield)
  *
  *     Shields    0           5         10          15        20
- * Large:   {6B}/5K/4P  ~{1B}/1K/1P  ~{1B}/5K/7P  ~2K/3P     1K/2P
- * Med.:        2B/1K    6B/4K/1P      2B/2K/1P   4B/8K/3P   1K/1P
+ * Large:   {6B}/5K/4T  ~{1B}/1K/1T  ~{1B}/5K/7T  ~2K/3T     1K/2T
+ * Med.:        2B/1K    6B/4K/1T      2B/2K/1T   4B/8K/3T   1K/1T
  * Small:      ~3B/1K     ~5B/2K      ~2B/1K     ~3B/2K     ~1B/1K
  *
  * XXX: possibly shield skill should count for more for non-med races?
@@ -212,11 +212,11 @@ static armour_type _acquirement_shield_type()
 {
     const int scale = 256;
     vector<pair<armour_type, int>> weights = {
-        { ARM_BUCKLER,       player_shield_racial_factor() * 4 * scale
+        { ARM_BUCKLER,       (5 + player_shield_racial_factor()) * 4 * scale
                                 - _skill_rdiv(SK_SHIELDS, scale) },
         { ARM_KITE_SHIELD,        10 * scale },
         { ARM_TOWER_SHIELD,  20 * scale
-                             - player_shield_racial_factor() * 4 * scale
+                             - (5 + player_shield_racial_factor()) * 4 * scale
                              + _skill_rdiv(SK_SHIELDS, scale / 2) },
     };
 
@@ -1077,30 +1077,6 @@ static bool _is_armour_plain(const item_def &item)
     return get_armour_ego_type(item) == SPARM_NORMAL;
 }
 
-/**
- * Has the player already encountered an item with this brand?
- *
- * Only supports weapons & armour.
- *
- * @param item      The item in question.
- * @param           Whether the player has encountered another weapon or
- *                  piece of armour with the same ego.
- */
-static bool _brand_already_seen(const item_def &item)
-{
-    switch (item.base_type)
-    {
-        case OBJ_WEAPONS:
-            return you.seen_weapon[item.sub_type]
-                   & (1<<get_weapon_brand(item));
-        case OBJ_ARMOUR:
-            return you.seen_armour[item.sub_type]
-                   & (1<<get_armour_ego_type(item));
-        default:
-            die("Unsupported item type!");
-    }
-}
-
 // ugh
 #define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
 
@@ -1147,11 +1123,6 @@ static void _adjust_brand(item_def &item, bool divine, int agent)
             reroll_brand(item, ITEM_LEVEL);
         }
     }
-
-    // Try to not generate brands that were already seen, although unlike
-    // jewellery and books, this is not absolute.
-    while (_brand_already_seen(item) && !one_chance_in(5))
-        reroll_brand(item, ITEM_LEVEL);
 }
 
 /**
@@ -1239,10 +1210,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // matching a currently unfilled equipment slot.
         if (acq_item.base_type == OBJ_ARMOUR && !is_artefact(acq_item))
         {
-            const special_armour_type sparm = get_armour_ego_type(acq_item);
-
             if (agent != GOD_XOM
-                && you.seen_armour[acq_item.sub_type] & (1 << sparm)
                 && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
                 || !divine
                 && you.seen_armour[acq_item.sub_type]
@@ -1427,7 +1395,7 @@ class AcquireMenu : public InvMenu
     CrawlVector &acq_items;
 
     void init_entries();
-    void update_help();
+    string get_keyhelp(bool unused) const override;
     bool acquire_selected();
 
     virtual bool process_key(int keyin) override;
@@ -1438,21 +1406,18 @@ public:
 
 class AcquireEntry : public InvEntry
 {
-    string get_text(bool need_cursor = false) const override
+    string get_text() const override
     {
-        need_cursor = need_cursor && show_cursor;
         const colour_t keycol = LIGHTCYAN;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
         const string gold_text = item->base_type == OBJ_GOLD
             ? make_stringf(" (you have %d gold)", you.gold) : "";
-        return make_stringf(" <%s>%c%c%c%c</%s><%s>%s%s</%s>",
+        return make_stringf(" <%s>%c %c </%s><%s>%s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
-                            need_cursor ? '[' : ' ',
                             selected() ? '+' : '-',
-                            need_cursor ? ']' : ' ',
                             keystr.c_str(),
                             itemstr.c_str(),
                             text.c_str(),
@@ -1469,7 +1434,7 @@ public:
 
 AcquireMenu::AcquireMenu(CrawlVector &aitems)
     : InvMenu(MF_SINGLESELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
-              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
+              | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
       acq_items(aitems)
 {
     menu_action = ACT_EXECUTE;
@@ -1478,8 +1443,6 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems)
     set_tag("acquirement");
 
     init_entries();
-
-    update_help();
 
     set_title("Choose an item to acquire.");
 }
@@ -1496,34 +1459,36 @@ void AcquireMenu::init_entries()
     }
 }
 
-static string _hyphenated_letters(int how_many, char first)
+string AcquireMenu::get_keyhelp(bool) const
 {
-    string s = "<w>";
-    s += first;
-    s += "</w>";
-    if (how_many > 1)
+    string help;
+    vector<MenuEntry*> selected = selected_entries();
+    if (selected.size() == 1 && menu_action == ACT_EXECUTE)
     {
-        s += "-<w>";
-        s += first + how_many - 1;
-        s += "</w>";
+        auto& entry = *selected[0];
+        const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
+        help = make_stringf(
+               "<%s>Acquire %s? (%s/N)</%s>\n",
+               col.c_str(),
+               entry.text.c_str(),
+               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
+               col.c_str());
     }
-    return s;
-}
+    else
+        help = "\n";
+    // looks better with a margin:
+    help += string(MIN_COLS, ' ') + '\n';
 
-void AcquireMenu::update_help()
-{
-    string top_line = string(80, ' ') + '\n';
-
-    set_more(formatted_string::parse_string(top_line + make_stringf(
+    help += make_stringf(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "%s  [%s] %s\n"
-        "[Esc/R-Click] exit",
+        "<lightgrey>%s  %s %s</lightgrey>",
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
                                      "[<w>!</w>] acquire|<w>examine</w> items",
-        _hyphenated_letters(item_count(), 'a').c_str(),
+        hyphenated_hotkey_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for acquirement"
-                                   : "examine item")));
+                                   : "examine item");
+    return pad_more_with(help, "<lightgrey>[<w>Esc</w>] exit</lightgrey>", MIN_COLS);
 }
 
 static void _create_acquirement_item(item_def &item)
@@ -1564,23 +1529,13 @@ bool AcquireMenu::acquire_selected()
     ASSERT(selected.size() == 1);
     auto& entry = *selected[0];
 
-    const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
-    update_help();
-    const formatted_string old_more = more;
-    more = formatted_string::parse_string(make_stringf(
-               "<%s>Acquire %s? (%s/N)</%s>\n",
-               col.c_str(),
-               entry.text.c_str(),
-               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
-               col.c_str()));
-    more += old_more;
+    // update the more with a y/n prompt
     update_more();
 
     if (!yesno(nullptr, true, 'n', false, false, true))
     {
         deselect_all();
-        more = old_more;
-        update_more();
+        update_more(); // go back to the regular more
         return true;
     }
 
@@ -1600,41 +1555,33 @@ bool AcquireMenu::process_key(int keyin)
             menu_action = ACT_EXAMINE;
         else
             menu_action = ACT_EXECUTE;
-        update_help();
         update_more();
         return true;
     default:
         break;
     }
 
-    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size())
+    const bool ret = InvMenu::process_key(keyin);
+    auto selected = selected_entries();
+    if (selected.size() == 1)
     {
         if (menu_action == ACT_EXAMINE)
         {
             // Use a copy to set flags that make the description better
             // See the similar code in shopping.cc for details about const
             // hygene
-            item_def& item(*const_cast<item_def*>(dynamic_cast<AcquireEntry*>(
-                items[letter_to_index(keyin)])->item));
+            item_def &item = *static_cast<item_def*>(selected[0]->data);
 
             item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
                            | ISFLAG_NOTED_GET);
             describe_item_popup(item);
+            deselect_all();
 
             return true;
         }
         else
-        {
-            const unsigned int i = keyin - 'a';
-            select_item_index(i, 1, false);
             return acquire_selected();
-        }
     }
-
-    const bool ret = InvMenu::process_key(keyin);
-    auto selected = selected_entries();
-    if (selected.size() == 1)
-        return acquire_selected();
     else
         return ret;
 }

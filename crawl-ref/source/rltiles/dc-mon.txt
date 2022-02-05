@@ -55,6 +55,7 @@ unspeakable MONS_UNSPEAKABLE
 
 ## Insects ('a')
 giant_cockroach MONS_GIANT_COCKROACH
+radroach MONS_RADROACH
 
 ## Batty monsters ('b')
 %rim 1
@@ -144,11 +145,16 @@ jumping_spider MONS_JUMPING_SPIDER
 wolf_spider MONS_WOLF_SPIDER
 redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
+broodmother MONS_BROODMOTHER
+%rim 0
+culicivora MONS_CULICIVORA
 %sdir mon/demons
+%rim 1
 demonic_crawler MONS_DEMONIC_CRAWLER
 %sdir mon/undead
 %rim 0
 death_scarab MONS_DEATH_SCARAB
+pharaoh_ant  MONS_PHARAOH_ANT
 
 ## Turtles and crabs ('t')
 %sdir mon/animals
@@ -171,6 +177,7 @@ swamp_worm_water
 worm MONS_WORM
 tyrant_leech MONS_TYRANT_LEECH
 dart_slug MONS_DART_SLUG
+steelbarb_worm MONS_STEELBARB_WORM
 %rim 0
 torpor_snail MONS_TORPOR_SNAIL
 %rim 1
@@ -181,6 +188,7 @@ hornet MONS_HORNET
 spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
+sun_moth MONS_SUN_MOTH
 
 ## Aquatics (';')
 %sdir mon/aquatic
@@ -709,6 +717,7 @@ harpy MONS_HARPY
 sphinx MONS_SPHINX
 minotaur MONS_MINOTAUR
 %rim 0
+jorogumo MONS_JOROGUMO
 fenstrider_witch MONS_FENSTRIDER_WITCH
 %rim 1
 tengu MONS_TENGU

@@ -58,6 +58,13 @@ bool mirror_damage_fineff::mergeable(const final_effect &fe) const
     return o && att == o->att && def == o->def;
 }
 
+bool anguish_fineff::mergeable(const final_effect &fe) const
+{
+    const anguish_fineff *o =
+        dynamic_cast<const anguish_fineff *>(&fe);
+    return o && att == o->att;
+}
+
 bool ru_retribution_fineff::mergeable(const final_effect &fe) const
 {
     const ru_retribution_fineff *o =
@@ -144,6 +151,15 @@ void mirror_damage_fineff::merge(const final_effect &fe)
     damage += mdfe->damage;
 }
 
+void anguish_fineff::merge(const final_effect &fe)
+{
+    const anguish_fineff *afe =
+        dynamic_cast<const anguish_fineff *>(&fe);
+    ASSERT(afe);
+    ASSERT(mergeable(*afe));
+    damage += afe->damage;
+}
+
 void ru_retribution_fineff::merge(const final_effect &fe)
 {
     const ru_retribution_fineff *mdfe =
@@ -198,7 +214,7 @@ void mirror_damage_fineff::fire()
         return;
     // defender being dead is ok, if we killed them we still suffer
 
-    god_acting gdact(GOD_YREDELEMNUL);
+    god_acting gdact(GOD_YREDELEMNUL); // XXX: remove?
 
     if (att == MID_PLAYER)
     {
@@ -213,22 +229,23 @@ void mirror_damage_fineff::fire()
             mpr("Your damage is reflected back at you!");
         ouch(damage, KILLED_BY_MIRROR_DAMAGE);
     }
-    else if (def == MID_PLAYER)
-    {
-        simple_god_message(" mirrors your injury!");
-
-        attack->hurt(&you, damage);
-
-        if (attack->alive())
-            print_wounds(*monster_by_mid(att));
-
-        lose_piety(isqrt_ceil(damage));
-    }
     else
     {
         simple_monster_message(*monster_by_mid(att), " suffers a backlash!");
         attack->hurt(defender(), damage);
     }
+}
+
+void anguish_fineff::fire()
+{
+    actor *attack = attacker();
+    if (!attack || !attack->alive())
+        return;
+
+    const string punct = attack_strength_punctuation(damage);
+    const string msg = make_stringf(" is wracked by anguish%s", punct.c_str());
+    simple_monster_message(*monster_by_mid(att), msg.c_str());
+    attack->hurt(monster_by_mid(MID_YOU_FAULTLESS), damage);
 }
 
 void ru_retribution_fineff::fire()
@@ -607,8 +624,9 @@ void bennu_revive_fineff::fire()
 
 void avoided_death_fineff::fire()
 {
-    ASSERT(defender()->is_monster());
+    ASSERT(defender() && defender()->is_monster());
     defender()->as_monster()->hit_points = hp;
+    defender()->as_monster()->flags &= ~MF_PENDING_REVIVAL;
 }
 
 void infestation_death_fineff::fire()

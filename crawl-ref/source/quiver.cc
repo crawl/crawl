@@ -222,6 +222,14 @@ namespace quiver
         return check_warning_inscriptions(you.inv[slot], OPER_FIRE);
     }
 
+    int action::source_hotkey() const
+    {
+        if (get_item() >= 0 && is_valid())
+            return index_to_letter(get_item());
+        return 0;
+    }
+
+
     shared_ptr<action> action_cycler::do_target()
     {
         // this might be better as an action method
@@ -1298,6 +1306,12 @@ namespace quiver
             return result;
         }
 
+        int source_hotkey() const override
+        {
+            // for get_spell_letter, invalid is -1, we need 0
+            return max(0, get_spell_letter(spell));
+        }
+
     private:
         spell_type spell;
         bool enabled_cache;
@@ -1587,6 +1601,14 @@ namespace quiver
                     result.push_back(move(a));
             }
             return result;
+        }
+
+        int source_hotkey() const override
+        {
+            int i = find_ability_slot(ability);
+            if (i < 0)
+                return 0;
+            return index_to_letter(i);
         }
 
     private:
@@ -2542,6 +2564,57 @@ namespace quiver
         return(set(make_shared<action>()));
     }
 
+    static vector<shared_ptr<action>> _menu_quiver_item_order()
+    {
+        vector<shared_ptr<action>> actions;
+        // TODO: this is kind of ugly
+        auto tmp = ammo_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = launcher_ammo_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = wand_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = misc_action(-1).get_fire_order(true, true);
+        return actions;
+    }
+
+
+    static bool _any_spells_to_quiver(bool at_all)
+    {
+        if (at_all)
+            return you.spell_no;
+        else
+            return spell_action(SPELL_NO_SPELL).get_fire_order(true, true).size();
+    }
+
+    static bool _any_abils_to_quiver(bool at_all)
+    {
+        if (at_all)
+            return your_talents(true, true).size() > 0;
+        else
+            return ability_action(ABIL_NON_ABILITY).get_fire_order(true, true).size();
+    }
+
+    static bool _any_items_to_quiver(bool at_all)
+    {
+        if (at_all)
+        {
+            // regular species can force-quiver any (non-equipped) item, but
+            // felids have a more limited selection, so we need to directly
+            // calculate it.
+            return you.has_mutation(MUT_NO_GRASPING)
+                ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
+                : inv_count() > 0;
+        }
+        else
+        {
+            return ammo_action(-1).get_fire_order(true, true).size()
+                || launcher_ammo_action(-1).get_fire_order(true, true).size()
+                || wand_action(-1).get_fire_order(true, true).size()
+                || misc_action(-1).get_fire_order(true, true).size();
+        }
+    }
+
     // note for editing this: Menu::action is defined and will take precedence
     // over quiver::action unless the quiver namespace is explicit.
     class ActionSelectMenu : public Menu
@@ -2551,18 +2624,37 @@ namespace quiver
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
                     | MF_ARROWS_SELECT | MF_WRAP),
               cur_quiver(_quiver), allow_empty(_allow_empty),
-              any_spells(you.spell_no),
-              any_abilities(your_talents(true, true).size() > 0),
+              any_spells(_any_spells_to_quiver(true)),
+              any_abilities(_any_abils_to_quiver(true)),
               // regular species can force-quiver any (non-equipped) item, but
               // felids have a more limited selection, so we need to directly
               // calculate it.
-              any_items(you.has_mutation(MUT_NO_GRASPING)
-                ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
-                : inv_count() > 0)
+              any_items(_any_items_to_quiver(true))
         {
             set_tag("actions");
+            set_title(new MenuEntry("", MEL_TITLE));
+
+            on_single_selection = [this](const MenuEntry& item)
+                {
+                    // XX can this use indices rather than pointers?
+                    const shared_ptr<quiver::action> *a =
+                        static_cast<shared_ptr<quiver::action> *>(item.data);
+                    ASSERT(a);
+                    return !set_to_quiver(*a);
+                };
+
             action_cycle = Menu::CYCLE_TOGGLE;
             menu_action  = Menu::ACT_EXECUTE;
+
+            // initial call only
+            if (focus_mode == Focus::INIT)
+            {
+                focus_mode = Options.quiver_menu_focus
+                    ? Focus::ITEM
+                    : Focus::NONE;
+            }
+
+            populate();
         }
 
         action_cycler &cur_quiver;
@@ -2570,22 +2662,9 @@ namespace quiver
 
         bool set_to_quiver(shared_ptr<quiver::action> s)
         {
-            if (s && s->is_valid()
-                && (allow_empty || *s != quiver::action()))
-            {
-                if (!_quiver_inscription_ok(s->get_item()))
-                {
-                    const string prompt = make_stringf("Really quiver %s?",
-                        you.inv[s->get_item()].name(DESC_INVENTORY).c_str());
-                    if (!yesno(prompt.c_str(), true, 'n'))
-                        return false;
-                }
-                cur_quiver.set(s);
-                // a bit hacky:
-                if (&cur_quiver == &you.quiver_action)
-                    you.launcher_action.set(s);
-                return true;
-            }
+            if (s && s->is_valid() && (allow_empty || *s != quiver::action()))
+                return ::quiver::set_to_quiver(s, cur_quiver);
+
             return false;
         }
 
@@ -2594,7 +2673,213 @@ namespace quiver
             return !(any_spells || any_abilities || any_items);
         }
 
+        string get_keyhelp(bool) const override
+        {
+            string s = more_message + "\n";
+
+            if (any_items)
+                s += "[<w>*/%</w>] inventory  ";
+            if (any_spells)
+                s += "[<w>&</w>] all spells  ";
+            if (any_abilities)
+                s += "[<w>^</w>] all abilities  ";
+
+
+            string mode = make_stringf("[<w>!</w>] focus mode: %s",
+                focus_mode == Focus::NONE ? "<w>off</w>|on"
+                                          : "off|<w>on</w>");;
+
+            return pad_more_with(s, mode);
+        }
+
     protected:
+        void add_action(const shared_ptr<quiver::action> &a, menu_letter hotkey)
+        {
+            if (!a || !a->is_valid())
+                return;
+            string action_desc = a->quiver_description();
+            if (*you.launcher_action.get() == *a)
+                action_desc += " (quivered ammo)";
+            else if (you.quiver_action.item_is_quivered(a->get_item()))
+                action_desc += " (quivered)";
+            MenuEntry *me = new MenuEntry(action_desc,
+                                                MEL_ITEM, 1,
+                                                (int) hotkey);
+            me->colour = a->quiver_color();
+            me->data = (void *) &a; // pointer to vector element - don't change the vector!
+            me->indent_no_hotkeys = true;
+#ifdef USE_TILE
+            for (auto t : a->get_tiles())
+                me->add_tile(t);
+#endif
+            add_entry(me);
+        }
+
+        void sync_focus(bool force=false)
+        {
+            if (focus_mode == Focus::NONE
+                || last_hovered < 0 && is_set(MF_ARROWS_SELECT))
+            {
+                if (force)
+                    update_menu(true);
+                return;
+            }
+
+            if (last_hovered >= 0)
+            {
+                // make sure focus is consistent with current hover
+                auto old_mode = focus_mode;
+                if (last_hovered < static_cast<int>(first_spell))
+                    focus_mode = Focus::ITEM;
+                else if (last_hovered < static_cast<int>(first_abil))
+                    focus_mode = Focus::SPELL;
+                else
+                    focus_mode = Focus::ABIL;
+                if (focus_mode == old_mode && !force)
+                    return;
+            }
+
+            size_t i;
+            // XX generalize somehow? See also UseItemMenu
+            for (i = 0; i < first_spell; i++)
+                if (items[i]->level == MEL_ITEM)
+                    items[i]->set_enabled(focus_mode == Focus::ITEM);
+            for (; i < first_abil; i++)
+                if (items[i]->level == MEL_ITEM)
+                    items[i]->set_enabled(focus_mode == Focus::SPELL);
+            for (; i < items.size(); i++)
+                if (items[i]->level == MEL_ITEM)
+                    items[i]->set_enabled(focus_mode == Focus::ABIL);
+
+            update_menu(true);
+        }
+
+        void toggle_focus_mode()
+        {
+            if (focus_mode == Focus::NONE)
+            {
+                Options.quiver_menu_focus = true;
+                if (!is_set(MF_ARROWS_SELECT)
+                    || last_hovered < static_cast<int>(first_spell))
+                {
+                    // XX this is probably awkward if there are a lot of
+                    // actions and the menu is scrolled, but that is rare
+                    focus_mode = Focus::ITEM;
+                }
+                else if (last_hovered < static_cast<int>(first_abil))
+                    focus_mode = Focus::SPELL;
+                else
+                    focus_mode = Focus::ABIL;
+            }
+            else
+            {
+                Options.quiver_menu_focus = false;
+                focus_mode = Focus::NONE;
+            }
+            Options.prefs_dirty = true;
+            update_more();
+            populate();
+        }
+
+        void populate()
+        {
+            menu_letter hotkey;
+            // resets everything
+            clear();
+            actions = _menu_quiver_item_order();
+            const auto spell_actions =
+                    spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
+            const auto abil_actions =
+                    ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
+
+            // don't bother with headers unless at least two categories are
+            // present
+            const bool show_headers = (!actions.empty() + !spell_actions.empty()
+                                        + !abil_actions.empty()) > 1;
+            const auto item_count = actions.size();
+            const auto spell_count = spell_actions.size();
+            actions.insert(actions.end(), spell_actions.begin(), spell_actions.end());
+            actions.insert(actions.end(), abil_actions.begin(), abil_actions.end());
+
+            // this key shortcut does still work without arrow selection, but
+            // it typically doesn't do much in this menu.
+            const string keyhelp =
+                            " <lightgrey>([<w>,</w>] to cycle)</lightgrey>";
+
+            first_item = 0;
+            first_spell = item_count;
+            first_abil = first_spell + spell_count;
+
+            if (item_count && show_headers)
+            {
+                add_entry(
+                    new MenuEntry("<lightcyan>Items</lightcyan>" + keyhelp,
+                    MEL_SUBTITLE));
+                first_spell += 1;
+                first_abil += 1;
+            }
+            size_t i = 0;
+            for (const auto &a : actions)
+            {
+                if (i == 0)
+                    first_item = items.size();
+                if (i == item_count && spell_count && show_headers)
+                {
+                    add_entry(
+                        new MenuEntry("<lightcyan>Spells</lightcyan>" + keyhelp,
+                        MEL_SUBTITLE));
+                    first_spell += 1;
+                    first_abil += 1;
+                }
+                else if (i == item_count + spell_count && show_headers)
+                {
+                    add_entry(
+                        new MenuEntry("<lightcyan>Abilities</lightcyan>" + keyhelp,
+                        MEL_SUBTITLE));
+                    first_abil += 1;
+                }
+
+                if (focus_mode != Focus::NONE)
+                    hotkey = a->source_hotkey();
+
+                add_action(a, hotkey);
+
+                if (focus_mode == Focus::NONE)
+                    hotkey++;
+                i++;
+            }
+
+            if (actions.size() == 0)
+            {
+                more_message =
+                    "<lightred>No regular actions available to quiver.</lightred>";
+            }
+            if (last_hovered < 0)
+            {
+                // initial display
+                if (focus_mode == Focus::ITEM || focus_mode == Focus::NONE)
+                    set_hovered(first_item);
+                else if (focus_mode == Focus::SPELL)
+                    set_hovered(first_spell);
+                else if (focus_mode == Focus::ABIL)
+                    set_hovered(first_abil);
+                // fixup in case mode is items and there are no items, etc.
+                if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
+                    cycle_hover();
+            }
+            sync_focus(true);
+        }
+
+        void set_hovered(int hovered, bool force=false) override
+        {
+            const bool skip_sync = hovered == last_hovered;
+            Menu::set_hovered(hovered, force);
+            // need to be a little bit careful about recursion potential here:
+            // update_menu calls set_hovered to sanitize low level UI state.
+            if (!skip_sync)
+                sync_focus();
+        }
+
         bool _choose_from_inv()
         {
             int slot = prompt_invent_item(allow_empty
@@ -2632,8 +2917,8 @@ namespace quiver
             // TODO: better handling for no abilities?
             int selected = choose_ability_menu(talents);
 
-            return selected >= 0 && selected < static_cast<int>(talents.size())
-                && !set_to_quiver(make_shared<ability_action>(talents[selected].which));
+            return selected < 0 || selected >= static_cast<int>(talents.size())
+                || !set_to_quiver(make_shared<ability_action>(talents[selected].which));
         }
 
         bool process_key(int key) override
@@ -2645,6 +2930,42 @@ namespace quiver
                 // TODO maybe drop this messaging?
                 mprf("Clearing quiver.");
                 return false;
+            }
+            else if (key == ',')
+            {
+                if (!is_set(MF_ARROWS_SELECT))
+                {
+                    last_hovered = -1; // suppress any mouse hover
+                    // need to manually focus mode for this case
+                    // can this be generalized?
+                    if (focus_mode == Focus::ITEM)
+                    {
+                        focus_mode = Focus::SPELL;
+                        if (!item_visible(first_spell))
+                            set_scroll(first_spell);
+                    }
+                    else if (focus_mode == Focus::SPELL)
+                    {
+                        focus_mode = Focus::ABIL;
+                        if (!item_visible(first_abil))
+                            set_scroll(first_abil);
+                    }
+                    else if (focus_mode == Focus::ABIL)
+                    {
+                        if (!item_visible(first_item))
+                            set_scroll(first_item);
+                        focus_mode = Focus::ITEM;
+                    }
+                    sync_focus();
+                }
+                else
+                    cycle_headers();
+                return true;
+            }
+            else if (key == '!')
+            {
+                toggle_focus_mode();
+                return true;
             }
             else if (isadigit(key))
             {
@@ -2687,22 +3008,29 @@ namespace quiver
             vector<string> extra_cmds;
 
             if (allow_empty)
-                extra_cmds.push_back("<w>-</w>: none");
-            if (any_items)
-                extra_cmds.push_back("<w>*/%</w>: inventory");
-            if (any_spells)
-                extra_cmds.push_back("<w>&</w>: spells");
-            if (any_abilities)
-                extra_cmds.push_back("<w>^</w>: abilities");
-            if (extra_cmds.size())
-                s += "(" + join_strings(extra_cmds.begin(), extra_cmds.end(), ", ") + ")";
+                s += "([<w>-</w>] to clear)";
             return formatted_string::parse_string(s);
         }
 
         bool any_spells;
         bool any_abilities;
         bool any_items;
+        size_t first_item;
+        size_t first_spell;
+        size_t first_abil;
+        enum Focus { INIT, NONE, ITEM, SPELL, ABIL };
+        static Focus focus_mode;
+        vector<shared_ptr<quiver::action>> actions;
+        string more_message;
+        friend void quiver::reset_state();
     };
+
+    ActionSelectMenu::Focus ActionSelectMenu::focus_mode = ActionSelectMenu::Focus::INIT;
+
+    void reset_state()
+    {
+        ActionSelectMenu::focus_mode = ActionSelectMenu::Focus::INIT;
+    }
 
     /**
      * Do interactive targeting for the currently selected action. Allows the
@@ -2791,28 +3119,11 @@ namespace quiver
         }
     }
 
-    static vector<shared_ptr<action>> _menu_quiver_order()
+    bool anything_to_quiver(bool at_all)
     {
-        vector<shared_ptr<action>> actions;
-        // TODO: this is kind of ugly
-        auto tmp = ammo_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = launcher_ammo_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = wand_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = misc_action(-1).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
-        actions.insert(actions.end(), tmp.begin(), tmp.end());
-        return actions;
-    }
-
-    int menu_size()
-    {
-        return _menu_quiver_order().size();
+        return _any_items_to_quiver(at_all)
+            || _any_spells_to_quiver(at_all)
+            || _any_abils_to_quiver(at_all);
     }
 
     /**
@@ -2827,51 +3138,37 @@ namespace quiver
         // TODO: dividers or subtitles for each category?
         ActionSelectMenu menu(cur_quiver, allow_empty);
 
-        auto actions = _menu_quiver_order();
-
-        if (actions.size() == 0 && menu.pointless())
+        if (menu.pointless())
         {
             mpr("You have nothing to quiver.");
             return;
         }
 
-        menu.set_title(new MenuEntry("", MEL_TITLE));
-
-        menu_letter hotkey;
-        if (actions.size() == 0)
-            menu.set_more(formatted_string::parse_string("<lightred>No regular actions available to quiver.</lightred>"));
-
-        for (const auto &a : actions)
-        {
-            if (!a || !a->is_valid())
-                continue;
-            string action_desc = a->quiver_description();
-            if (*you.launcher_action.get() == *a)
-                action_desc += " (quivered ammo)";
-            else if (you.quiver_action.item_is_quivered(a->get_item()))
-                action_desc += " (quivered)";
-            MenuEntry *me = new MenuEntry(action_desc,
-                                                MEL_ITEM, 1,
-                                                (int) hotkey);
-            // TODO: is there a way to show formatting in menu items?
-            me->colour = a->quiver_color();
-            me->data = (void *) &a; // pointer to vector element - don't change the vector!
-#ifdef USE_TILE
-            for (auto t : a->get_tiles())
-                me->add_tile(t);
-#endif
-            menu.add_entry(me);
-            hotkey++;
-        }
-        menu.cycle_hover();
-
-        menu.on_single_selection = [&menu](const MenuEntry& item)
-        {
-            const shared_ptr<action> *a = static_cast<shared_ptr<action> *>(item.data);
-            return !menu.set_to_quiver(*a);
-        };
         menu.show();
     }
+
+    bool set_to_quiver(shared_ptr<quiver::action> s,
+                                action_cycler &cur_quiver=you.quiver_action)
+    {
+        if (s && s->is_valid())
+        {
+            if (!_quiver_inscription_ok(s->get_item()))
+            {
+                const string prompt = make_stringf("Really quiver %s?",
+                    you.inv[s->get_item()].name(DESC_INVENTORY).c_str());
+                if (!yesno(prompt.c_str(), true, 'n'))
+                    return false;
+            }
+            // XX does this really need to be so flexible
+            cur_quiver.set(s);
+            // a bit hacky:
+            if (&cur_quiver == &you.quiver_action)
+                you.launcher_action.set(s);
+            return true;
+        }
+        return false;
+    }
+
 
     // this class is largely legacy code -- can it be done away with?
     // or refactored to use actions.

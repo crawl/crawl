@@ -220,7 +220,7 @@ static void _jiyva_effects(int /*time_delta*/)
                    || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
 
-            mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, newpos);
+            mgen_data mg(MONS_JELLY, BEH_GOOD_NEUTRAL, newpos);
             mg.god = GOD_JIYVA;
             mg.non_actor_summoner = "Jiyva";
 
@@ -637,7 +637,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
-        case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS:
+        case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_DRAINED:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -1029,10 +1029,10 @@ void timeout_terrain_changes(int duration, bool force)
             marker->duration = 0;
         }
 
-        monster* mon_src = monster_by_mid(marker->mon_num);
+        actor* src = actor_by_mid(marker->mon_num);
         if (marker->duration <= 0
             || (marker->mon_num != 0
-                && (!mon_src || !mon_src->alive() || mon_src->pacified())))
+                && (!src || !src->alive() || (src->is_monster() && src->as_monster()->pacified()))))
         {
             if (you.see_cell(marker->pos))
                 num_seen[marker->change_type]++;

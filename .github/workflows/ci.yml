@@ -244,10 +244,10 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.ccache
-          key: ccache-mingw64-${{ matrix.build_type }}-${{ github.sha }}
+          key: ccache-key2-mingw64-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-mingw64-${{ matrix.build_type }}-
-            ccache-mingw64-
+            ccache-key2-mingw64-${{ matrix.build_type }}-
+            ccache-key2-mingw64-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
       - name: "Setup ccache: prepend path"

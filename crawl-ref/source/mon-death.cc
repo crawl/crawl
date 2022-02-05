@@ -45,6 +45,7 @@
 #include "message.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-explode.h"
 #include "mon-gear.h"
 #include "mon-place.h"
@@ -406,8 +407,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     if (crawl_state.game_is_sprint())
         corpse.quantity *= SPRINT_MULTIPLIER;
 
-    const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-    if (!x_chance_in_y(chance, GOZAG_GOLD_AURA_MAX))
+    if (you.props[GOZAG_GOLD_AURA_KEY].get_int() < GOZAG_GOLD_AURA_MAX)
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
     you.redraw_title = true;
 }
@@ -499,8 +499,8 @@ static void _create_monster_wand(const item_def &corpse, bool silent)
 
     if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
     {
-        mprf("Residual magic twists a bone of %s into %s.",
-             corpse.name(DESC_THE).c_str(),
+        mprf("%s bone magically twists into %s.",
+             mons_type_name(corpse.mon_type, DESC_A).c_str(),
              item.name(DESC_A).c_str());
     }
 
@@ -543,6 +543,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     // permanent dancing weapons turn to gold like other monsters.
     bool goldify = have_passive(passive_t::goldify_corpses)
                    && mons_gives_xp(mons, you)
+                   && !player_in_branch(BRANCH_ABYSS)
                    && !force;
 
     const bool no_coinflip = mons.props.exists(ALWAYS_CORPSE_KEY)
@@ -906,7 +907,7 @@ static void _jiyva_died()
     if (you_worship(GOD_JIYVA))
         return;
 
-    add_daction(DACT_REMOVE_JIYVA_ALTARS);
+    add_daction(DACT_JIYVA_DEAD);
 
     if (!player_in_branch(BRANCH_SLIME))
         return;
@@ -1056,6 +1057,22 @@ static void _infestation_create_scarab(monster* mons)
 {
     mons->flags |= MF_EXPLODE_KILL;
     infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
+}
+
+static void _pharaoh_ant_bind_souls(monster *mons)
+{
+    bool bound = false;
+    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_can_bind_soul(mons, *mi))
+            continue;
+        if (!bound)
+            simple_monster_message(*mons, " binds the souls of nearby monsters.");
+        bound = true;
+        mi->add_ench(
+            mon_enchant(ENCH_BOUND_SOUL, 0, mons,
+                        random_range(10, 30) * BASELINE_DELAY));
+    }
 }
 
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
@@ -1264,6 +1281,20 @@ static void _druid_final_boon(const monster* mons)
         simple_monster_message(*beasts[i], " seems to grow more fierce.");
         beasts[i]->add_ench(mon_enchant(ENCH_MIGHT, 1, mons,
                                         random_range(100, 160)));
+    }
+}
+
+static void _orb_of_mayhem(actor& maniac, const monster& victim)
+{
+    vector<monster *> witnesses;
+    for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
+        if (mi->can_see(maniac) && mi->can_go_frenzy())
+            witnesses.push_back(*mi);
+
+    if (coinflip() && !witnesses.empty())
+    {
+        (*random_iterator(witnesses))->go_frenzy(&maniac);
+        did_god_conduct(DID_HASTY, 8, true);
     }
 }
 
@@ -1487,6 +1518,10 @@ item_def* monster_die(monster& mons, killer_type killer,
 {
     ASSERT(!invalid_monster(&mons));
 
+    // trying to die again after scheduling an avoided_death fineff
+    if (testbits(mons.flags, MF_PENDING_REVIVAL))
+        return nullptr;
+
     const bool was_visible = you.can_see(mons);
 
     // If a monster was banished to the Abyss and then killed there,
@@ -1566,7 +1601,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
     const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
-    const bool gives_player_xp = mons_gives_xp(mons, you);
+    const bool could_give_xp = mons_gives_xp(mons, you);
+    const bool gives_real_xp = could_give_xp && !player_in_branch(BRANCH_ABYSS);
     bool drop_items          = !hard_reset;
     const bool submerged     = mons.submerged();
     bool in_transit          = false;
@@ -1818,7 +1854,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     // relevant avatars are adjusted by now to KILL_YOU and are counted.
     if (you.duration[DUR_WEREBLOOD]
         && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && gives_player_xp)
+        && could_give_xp)
     {
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
         if (wereblood_bonus <= 8) // cap at +9 slay
@@ -1862,7 +1898,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
                 // If this monster would otherwise give xp but didn't because
                 // it grants no reward or was neutral, give a message.
-                if (!gives_player_xp
+                if (!gives_real_xp
                     && mons_class_gives_xp(mons.type)
                     && !summoned
                     && !fake_abjure
@@ -1873,14 +1909,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Killing triggers hints mode lesson.
-            if (gives_player_xp)
+            if (gives_real_xp)
                 _hints_inspect_kill();
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
 
             // Divine and innate health and mana restoration doesn't happen when
             // killing born-friendly monsters.
-            if (gives_player_xp
+            if (could_give_xp
                 && !mons_is_object(mons.type)
                 && (you.species == SP_GHOUL
                     || (have_passive(passive_t::restore_hp)
@@ -1972,7 +2008,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 #endif
             }
 
-            if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
+            if (gives_real_xp && you_worship(GOD_RU) && you.piety < 200
                 && one_chance_in(2))
             {
                 ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
@@ -1982,11 +2018,18 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Randomly bless a follower.
-            if (gives_player_xp
+            if (could_give_xp
                 && !mons_is_object(mons.type)
                 && _god_will_bless_follower(&mons))
             {
-                bless_follower();
+                bless_follower(nullptr, you.religion, false, gives_real_xp);
+            }
+
+            if (could_give_xp
+                && !mons_is_object(mons.type)
+                && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+            {
+                _orb_of_mayhem(you, mons);
             }
             break;
         }
@@ -2007,12 +2050,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (crawl_state.game_is_arena())
                 break;
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
-            if (!gives_player_xp
+            if (!could_give_xp
                 || !pet_kill
                 || !anon && invalid_monster_index(killer_index))
             {
@@ -2027,7 +2070,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                 && _god_will_bless_follower(&mons))
             {
                 // Randomly bless the follower who killed.
-                bless_follower(killer_mon);
+                bless_follower(killer_mon, you.religion, false, gives_real_xp);
+                if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+                    _orb_of_mayhem(*killer_mon, mons);
             }
             break;
         }
@@ -2299,7 +2344,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  SPELL_BIND_SOULS, GOD_NO_GOD);
             corpse_consumed = true;
         }
-        else if (was_visible && gives_player_xp)
+        else if (was_visible && could_give_xp)
         {
             // no doubling up with yred and death channel
             if (have_passive(passive_t::reaping))
@@ -2343,13 +2388,16 @@ item_def* monster_die(monster& mons, killer_type killer,
             corpse = daddy_corpse;
     }
 
-    const unsigned int player_xp = gives_player_xp
+    if (!mons.is_summoned() && mons.type == MONS_PHARAOH_ANT)
+        _pharaoh_ant_bind_souls(&mons);
+
+    const unsigned int player_xp = could_give_xp
         ? _calc_player_experience(&mons) : 0;
     const unsigned int monster_xp = _calc_monster_experience(&mons, killer,
                                                              killer_index);
 
     // Player Powered by Death
-    if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
+    if (could_give_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
         && (killer == KILL_YOU
             || killer == KILL_YOU_MISSILE
             || killer == KILL_YOU_CONF
@@ -2899,7 +2947,8 @@ void hogs_to_humans()
 
         const bool could_see = you.can_see(**mi);
 
-        if (could_see) any++;
+        if (could_see)
+            any++;
 
         if (!mi->props.exists(ORIG_MONSTER_KEY) && could_see)
             human++;
@@ -2975,11 +3024,12 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Sometimes, if you pacify one twin near a staircase, they leave
-    // in the same turn. Convert, in those instances. The strict_neutral check
+    // in the same turn. Convert, in those instances. The fellow_slime check
     // is intended to cover the slimify case, we don't want to pacify the other
     // if a slimified twin dies.
-    if (twin->neutral() && !twin->has_ench(ENCH_INSANE)
-                                                    && !twin->strict_neutral())
+    if (twin->neutral()
+        && !twin->has_ench(ENCH_INSANE)
+        && !is_fellow_slime(*twin))
     {
         elven_twins_pacify(twin);
         return;
@@ -2991,7 +3041,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Don't consider already neutralised monsters.
-    if (mons->good_neutral() || mons->strict_neutral())
+    if (mons->good_neutral())
         return;
 
     // Okay, let them climb stairs now.

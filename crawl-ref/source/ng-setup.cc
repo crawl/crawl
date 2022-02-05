@@ -136,7 +136,7 @@ item_def* newgame_make_item(object_class_type base,
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
     if (item.base_type == OBJ_ARMOUR
-        && !can_wear_armour(item, false, false))
+        && !can_wear_armour(item, false, true))
     {
         if (item.sub_type == ARM_HELMET || item.sub_type == ARM_HAT)
             item.sub_type = ARM_HAT;
@@ -152,9 +152,7 @@ item_def* newgame_make_item(object_class_type base,
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
     // If that didn't help, nothing will.
-    // However, wanderer randbooks aren't yet initialized and all other
-    // starting books are guaranteed to be useful at game start.
-    if (item.base_type != OBJ_BOOKS && is_useless_item(item, false, true))
+    if (is_useless_item(item, false, true))
     {
         item = item_def();
         return nullptr;
@@ -169,9 +167,6 @@ item_def* newgame_make_item(object_class_type base,
 
     if (item.base_type == OBJ_MISSILES)
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
-    // You can get the books without the corresponding items as a wanderer.
-    else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_GEOMANCY)
-        _autopickup_ammo(MI_STONE);
     // You probably want to pick up both.
     if (item.is_type(OBJ_MISSILES, MI_SLING_BULLET))
         _autopickup_ammo(MI_STONE);
@@ -242,7 +237,7 @@ static void _give_job_spells(job_type job)
         return;
     }
 
-    library_add_spells(spells);
+    library_add_spells(spells, true);
 
     const spell_type first_spell = spells[0];
     if (!spell_is_useless(first_spell, false, true)

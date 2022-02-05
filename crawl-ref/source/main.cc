@@ -360,6 +360,7 @@ static void _reset_game()
     clear_message_window();
     note_list.clear();
     msg::deinitialise_mpr_streams();
+    quiver::reset_state();
 
 #ifdef USE_TILE_LOCAL
     // [ds] Don't show the title screen again, just go back to
@@ -599,9 +600,9 @@ static string _wanderer_spell_str()
 
 static void _djinn_announce_spells()
 {
-    const string equip_str = you.char_class == JOB_WANDERER ?
-                                        _wanderer_equip_str():
-                                        "";
+    const string equip_str = (you.char_class == JOB_WANDERER
+                                 && inv_count() > 0) ? _wanderer_equip_str()
+                                                    : "";
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -616,18 +617,22 @@ static void _djinn_announce_spells()
 // spells and spell library
 static void _wanderer_note_equipment()
 {
-    const string equip_str = _wanderer_equip_str();
+    const string equip_str = inv_count() > 0 ? _wanderer_equip_str() : "";
+
+    const string eq_spacer = equip_str.empty() ? "" : "; and ";
 
     // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
-        "; and the following spell memorised: "
+        eq_spacer + "the following spell memorised: "
         + _wanderer_spell_str();
+
+    const string spell_spacer = spell_str.empty() && equip_str.empty() ? "" : "; and ";
 
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
         !library.size() ? "" :
-        "; and the following spells available to memorise: "
+        spell_spacer + "the following spells available to memorise: "
         + comma_separated_fn(library.begin(), library.end(),
                              [] (const spell_type spell) -> string
                              {
@@ -1769,12 +1774,15 @@ static void _do_cycle_quiver(int dir)
 
     if (!changed || !valid)
     {
-        const bool others = quiver::menu_size() > (valid ? 1 : 0);
-        // Things could be excluded from this via inscriptions, custom
-        // fire_order, or setting fire_items_start.
+        // `others`: there are quiverable but uncyclable actions.
+        // Things could be excluded from cycling via inscriptions, custom
+        // fire_order, or setting fire_items_start, and still available from
+        // the menu. This messaging still excludes stuff that requires
+        // force-quivering, e.g. zigfigs
+        const bool others = !valid && quiver::anything_to_quiver(true);
         mprf("No %squiver actions available for cycling.%s",
             valid ? "other " : "",
-            others ? " Use <white>Q</white> to select from all actions."
+            others ? " Use [<white>Q</white>] to select from all actions."
                    : "");
     }
 }
@@ -1868,58 +1876,6 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 }
 
-class LookupHelpMenu : public Menu
-{
-public:
-    class LookupHelpMenuEntry : public MenuEntry
-    {
-    public:
-        LookupHelpMenuEntry(lookup_help_type lht)
-        : MenuEntry(uppercase_first(lookup_help_type_name(lht)),
-                    MEL_ITEM, 1, tolower(lookup_help_type_shortcut(lht))),
-          typ(lht)
-        {
-            // TODO: tiles!
-        }
-
-        lookup_help_type typ;
-    };
-
-    LookupHelpMenu()
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP)
-    {
-        action_cycle = Menu::CYCLE_NONE;
-        menu_action  = Menu::ACT_EXECUTE;
-        set_title(new MenuEntry("Info Lookup", MEL_TITLE));
-        on_single_selection = [](const MenuEntry& item)
-        {
-            const LookupHelpMenuEntry *lhme = dynamic_cast<const LookupHelpMenuEntry *>(&item);
-            if (!lhme)
-                return false; // back button
-            find_description_of_type(lhme->typ);
-            return true;
-        };
-    }
-
-    void fill_entries()
-    {
-        clear();
-        auto back = new MenuEntry("Back to main menu", MEL_ITEM, 1, CK_ESCAPE);
-        back->add_tile(tileidx_command(CMD_GAME_MENU));
-        add_entry(back);
-        for (int i = FIRST_LOOKUP_HELP_TYPE; i < NUM_LOOKUP_HELP_TYPES; ++i)
-            add_entry(new LookupHelpMenuEntry((lookup_help_type)i));
-    }
-
-    vector<MenuEntry *> show(bool reuse_selections = false) override
-    {
-        fill_entries();
-        cycle_hover();
-        return Menu::show(reuse_selections);
-    }
-};
-
 class GameMenu : public Menu
 {
 // this could be easily generalized for other menus that select among commands
@@ -1929,20 +1885,23 @@ public:
     {
     public:
         CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
-                                                command_type _cmd=CMD_NO_CMD)
-            : MenuEntry(label, _level, 1, hotk), cmd(_cmd)
+                                                command_type _cmd=CMD_NO_CMD,
+                                                bool _uses_popup=true)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd),
+              uses_popup(_uses_popup)
         {
             if (tileidx_command(cmd) != TILEG_TODO)
                 add_tile(tileidx_command(cmd));
         }
 
         command_type cmd;
+        bool uses_popup;
     };
 
     command_type cmd;
     GameMenu()
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP),
+                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER),
           cmd(CMD_NO_CMD)
     {
         set_tag("game_menu");
@@ -1956,16 +1915,18 @@ public:
             const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
             if (c)
             {
-                if (c->cmd == CMD_LOOKUP_HELP_MENU)
+                if (c->uses_popup)
                 {
-                    LookupHelpMenu m;
-                    m.show();
+                    // recurse
+                    if (c->cmd != CMD_NO_CMD)
+                        process_command(c->cmd, CMD_GAME_MENU);
                     return true;
                 }
-
+                // otherwise, exit menu and process in the main process_command call
                 cmd = c->cmd;
+                return false;
             }
-            return false;
+            return true;
         };
     }
 
@@ -1973,10 +1934,16 @@ public:
     {
         clear();
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
-        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
+        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE,
+            CMD_NO_CMD, false));
         items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
-        add_entry(new CmdMenuEntry("Save and return to main menu",
-            MEL_ITEM, 'S', CMD_SAVE_GAME_NOW));
+        // n.b. CMD_SAVE_GAME_NOW crashes on returning to the main menu if we
+        // don't exit out of this popup now, not sure why
+        add_entry(new CmdMenuEntry(
+            (crawl_should_restart(game_exit::save)
+                            ? "Save and return to main menu"
+                            : "Save and exit"),
+            MEL_ITEM, 'S', CMD_SAVE_GAME_NOW, false));
         add_entry(new CmdMenuEntry("Generate and view character dump",
             MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
 #ifdef USE_TILE_LOCAL
@@ -1988,7 +1955,7 @@ public:
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("Lookup info",
-            MEL_ITEM, 'i', CMD_LOOKUP_HELP_MENU));
+            MEL_ITEM, '/', CMD_LOOKUP_HELP));
 #ifdef TARGET_OS_MACOSX
         add_entry(new CmdMenuEntry("Show options file in finder",
             MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
@@ -2000,13 +1967,12 @@ public:
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
                             "Quit and <lightred>abandon character</lightred>",
-            MEL_ITEM, 'Q', CMD_QUIT));
+            MEL_ITEM, 'Q', CMD_QUIT, false));
     }
 
     vector<MenuEntry *> show(bool reuse_selections = false) override
     {
         fill_entries();
-        cycle_hover();
         return Menu::show(reuse_selections);
     }
 };
@@ -2253,7 +2219,10 @@ void process_command(command_type cmd, command_type prev_cmd)
         update_screen();
         break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
-    case CMD_LOOKUP_HELP:           keyhelp_query_descriptions();      break;
+    case CMD_LOOKUP_HELP:
+        keyhelp_query_descriptions(prev_cmd == CMD_GAME_MENU
+                                                ? prev_cmd : CMD_NO_CMD);
+        break;
 
     case CMD_DISPLAY_RELIGION:
     {

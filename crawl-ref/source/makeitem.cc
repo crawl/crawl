@@ -164,28 +164,29 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
 }
 
-static bool _try_make_item_unrand(item_def& item, int &force_type, int agent)
+static bool _try_make_item_unrand(item_def& item, int &force_type, int item_level, int agent)
 {
     if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
 
-    int idx = find_okay_unrandart(item.base_type, force_type,
-                                  player_in_branch(BRANCH_ABYSS)
-                                      && agent == NO_AGENT);
+    // Can we generate unrands that were lost in the abyss?
+    const bool include_abyssed = player_in_branch(BRANCH_ABYSS)
+                                 && agent == NO_AGENT;
+    const int idx = find_okay_unrandart(item.base_type, force_type, item_level,
+                                        include_abyssed);
+    if (idx == -1)
+        return false;
 
     // if an idx was found that exists, the unrand was generated via
     // acquirement or similar; replace it with a fallback randart.
-    if (idx != -1 && get_unique_item_status(idx))
+    // Choosing a new unrand could break seed stability.
+    if (get_unique_item_status(idx) == UNIQ_EXISTS_NONLEVELGEN)
     {
-        int item_level;
         _setup_fallback_randart(idx, item, force_type, item_level);
         return false;
     }
 
-    if (idx != -1 && make_item_unrandart(item, idx))
-        return true;
-
-    return false;
+    return make_item_unrandart(item, idx);
 }
 
 static bool _weapon_disallows_randart(int sub_type)
@@ -199,7 +200,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
-    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
         // Make a randart or unrandart.
@@ -208,7 +209,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type, agent))
+            if (_try_make_item_unrand(item, force_type, item_level, agent))
                 return true;
             if (item.base_type == OBJ_STAVES)
             {
@@ -666,9 +667,9 @@ static void _generate_missile_item(item_def& item, int force_type,
                            _determine_missile_brand(item, item_level));
     }
 
-    // Reduced quantity if special.
+    // Reduced quantity if thrown.
     if (item.sub_type == MI_JAVELIN || item.sub_type == MI_BOOMERANG
-        || (item.sub_type == MI_DART && get_ammo_brand(item) != SPMSL_POISONED)
+        || item.sub_type == MI_DART
 #if TAG_MAJOR_VERSION == 34
         || get_ammo_brand(item) == SPMSL_RETURNING
 #endif
@@ -689,15 +690,15 @@ static void _generate_missile_item(item_def& item, int force_type,
 
 static bool _armour_disallows_randart(int sub_type)
 {
-    // Scarves are never randarts.
-    return sub_type == ARM_SCARF;
+    // Scarves and orbs are never randarts.
+    return sub_type == ARM_SCARF || sub_type == ARM_ORB;
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
 {
-    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
     {
         // Make a randart or unrandart.
@@ -706,7 +707,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
-            if (_try_make_item_unrand(item, force_type, agent))
+            if (_try_make_item_unrand(item, force_type, item_level, agent))
                 return true;
         }
 
@@ -774,6 +775,13 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
                                       3, SPARM_POSITIVE_ENERGY,
                                       6, SPARM_REFLECTION,
                                       12, SPARM_PROTECTION);
+
+    case ARM_ORB:
+        return random_choose_weighted(1, SPARM_LIGHT,
+                                      1, SPARM_RAGE,
+                                      1, SPARM_MAYHEM,
+                                      1, SPARM_GUILE,
+                                      1, SPARM_ENERGY);
 
     case ARM_SCARF:
         return random_choose_weighted(1, SPARM_RESISTANCE,
@@ -972,6 +980,13 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_SHADOWS:
         return type == ARM_SCARF;
 
+    case SPARM_LIGHT:
+    case SPARM_RAGE:
+    case SPARM_MAYHEM:
+    case SPARM_GUILE:
+    case SPARM_ENERGY:
+        return type == ARM_ORB;
+
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
@@ -1031,9 +1046,10 @@ static armour_type _get_random_armour_type(int item_level)
                                          10, ARM_HELMET,
                                          2, ARM_HAT,
                                          // Shield slot
-                                         4, ARM_KITE_SHIELD,
-                                         6, ARM_BUCKLER,
-                                         2, ARM_TOWER_SHIELD);
+                                         2, ARM_KITE_SHIELD,
+                                         4, ARM_BUCKLER,
+                                         1, ARM_TOWER_SHIELD,
+                                         3, ARM_ORB);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
@@ -1168,8 +1184,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
         item.plus -= 1 + random2(3);
     }
-    // Scarves always get an ego.
-    else if (item.sub_type == ARM_SCARF)
+    // Scarves and orbs always get an ego.
+    else if (item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB)
         set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
@@ -1341,6 +1357,8 @@ static int _scroll_weight(item_rarity_type rarity)
         return 36;
     case RARITY_RARE:
         return 15;
+    case RARITY_VERY_RARE:
+        return 9;
     default:
         return 0;
     }
@@ -1492,7 +1510,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         // need to use force_type here, because _try_make_item_unrand can set
         // it for fallback randarts.
         force_type = WPN_STAFF;
-        if (_try_make_item_unrand(item, force_type, agent))
+        if (_try_make_item_unrand(item, force_type, item_level, agent))
             return;
         if (item.base_type != OBJ_STAVES)
         {
@@ -1535,11 +1553,11 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
     int type = (force_type == NUM_RINGS)     ? get_random_ring_type() :
                (force_type == NUM_JEWELLERY) ? get_random_amulet_type()
                                              : force_type;
-    if (item_level > 2
+    if (item_level > 0
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        if (_try_make_item_unrand(item, type, agent))
+        if (_try_make_item_unrand(item, type, item_level, agent))
             return true;
     }
 
@@ -1614,7 +1632,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     // All jewellery base types should now work. - bwr
     if (item_level == ISPEC_RANDART
-        || allow_uniques && item_level > 2
+        || allow_uniques && item_level > 0
            && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);

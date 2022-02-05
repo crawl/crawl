@@ -172,7 +172,7 @@ Torment ability
 키쿠바쿠드하는 이 고통으로부터 당신을 보호해줄 때도 있다. ...안 해줄 때도
 있지만.
 %%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 당신의 오크 추종자들을 주변으로 불러온다. 추종자가 어디에 있어도 (즉, 같은 층에
 있지 않아도)  불러오는 것이 가능하다.
@@ -181,7 +181,7 @@ Drain Life ability
 
 주변에 있는 모든 적들의 생명력을 흡수하여, 당신의 것으로 만든다.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 살아있는 지성체의 영혼에 각인을 새긴다. 각인을 새긴 적이 죽으면, 그 영혼을
 가져올 수 있다.

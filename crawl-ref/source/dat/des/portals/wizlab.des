@@ -2189,7 +2189,7 @@ v1.4..+.G1.G.1G.+...4..+..;.....~5fv
 v..G..v.........v1....1v..;..5..~.fv
 vv...vv....G....vvvvvvvv..v1.v..v..v
  vvvvvvG1....1Gvvvvvvvvv..v--v--v..v
-       vv.....vvvvvvvvvv..~..1.....v
+      vvv.....vvvvvvvvvv..~..1.....v
         vvv+vvvvvvvvvvvv1.~.....5.1v
         vv...vvvvvvvvvvvvvvvvvvvvvvv
         v.....v
@@ -2403,8 +2403,9 @@ MONS:   walking frostbound tome / walking earthen tome / walking crystal tome /\
         walking divine tome
 MONS:   strange machine
 KFEAT:   ~ = closed_clear_door
-SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 22...
-NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 2:4 / *= 42., A = 1:< / *:A
+SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 2...
+NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 1:4 / *= 42.., A = 1:< / *:A
+NSUBST:     5 = 1:5 / *:5.
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_w_marble

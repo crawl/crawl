@@ -426,7 +426,10 @@ centaur_barding_red
 # end TAG_MAJOR_VERSION
 
 %sdir item/armour/shields
+
 %rim 0
+orb ARM_ORB
+
 buckler1 ARM_BUCKLER
 buckler2
 buckler3
@@ -454,10 +457,14 @@ tower_shield_louise TOWER_SHIELD_LOUISE
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
+hat_explorer THELM_HAT_EXPLORER
+hat_explorer2 THELM_HAT_EXPLORER2
 
 %rim 0
-hat1 THELM_HAT
-hat2
+hat1 THELM_HAT THELM_HAT_FIRST
+hat_archer THELM_ARCHER THELM_HAT_LAST
+hat2 THELM_HAT_EGO_FIRST
+hat_archer2 THELM_ARCHER2 THELM_HAT_EGO_LAST
 hat3 THELM_HAT_ART_FIRST
 wizard_hat THELM_HAT_ART_LAST
 
@@ -534,7 +541,12 @@ i-harm BRAND_ARM_HARM
 i-shadows BRAND_ARM_SHADOWS
 %rim 0
 i-lunging BRAND_ARM_LUNGING
-i-infusion BRAND_ARM_INFUSION BRAND_ARM_LAST
+i-infusion BRAND_ARM_INFUSION
+i-light BRAND_ARM_LIGHT
+i-rage BRAND_ARM_RAGE
+i-mayhem BRAND_ARM_MAYHEM
+i-guile BRAND_ARM_GUILE
+i-energy BRAND_ARM_ENERGY BRAND_ARM_LAST
 %rim 1
 
 ###########OBJ_WANDS

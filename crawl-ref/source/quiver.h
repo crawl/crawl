@@ -35,6 +35,8 @@ namespace quiver
         NUM_LAUNCHERS
     };
 
+    void reset_state();
+
     struct action : public enable_shared_from_this<action>
     {
         action()
@@ -110,6 +112,8 @@ namespace quiver
             return { };
         }
 
+        virtual int source_hotkey() const;
+
         dist target;
         const action_cycler *default_fire_context;
     };
@@ -128,7 +132,7 @@ namespace quiver
     shared_ptr<action> get_secondary_action();
     void set_needs_redraw();
 
-    int menu_size();
+    bool anything_to_quiver(bool at_all=false);
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
@@ -185,6 +189,7 @@ namespace quiver
     };
 
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
+    bool set_to_quiver(shared_ptr<quiver::action> s, action_cycler &cur_quiver);
     void on_actions_changed(bool check_autoswitch=false);
     void on_weapon_changed();
     void on_newchar();

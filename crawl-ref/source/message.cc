@@ -894,7 +894,8 @@ public:
 #ifdef USE_TILE_WEB
     void send()
     {
-        if (unsent == 0 || (send_ignore_one && unsent == 1)) return;
+        if (unsent == 0 || (send_ignore_one && unsent == 1))
+            return;
 
         if (client_rollback > 0)
         {

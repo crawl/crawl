@@ -392,11 +392,3 @@ Show game menu
 CMD_GAME_MENU verbose
 
 Show the game menu
-%%%%
-CMD_LOOKUP_HELP_MENU
-
-Lookup help menu
-%%%%
-CMD_LOOKUP_HELP_MENU verbose
-
-Opens a menu for descriptions of monsters, spells, abilities, items and more.

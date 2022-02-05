@@ -98,6 +98,9 @@ extern char **NXArgv;
 #include "SDL_system.h"
 #endif
 
+#ifdef __HAIKU__
+#include <FindDirectory.h>
+#endif
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
@@ -153,9 +156,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
         new BoolGameOption(SIMPLE_NAME(suppress_startup_errors), false),
         new BoolGameOption(SIMPLE_NAME(simple_targeting), false),
-        new BoolGameOption(easy_quit_item_prompts,
-                           { "easy_quit_item_prompts", "easy_quit_item_lists" },
-                           true),
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
@@ -166,7 +166,11 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
-        new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
+        new MultipleChoiceGameOption<maybe_bool>(
+            SIMPLE_NAME(bold_brightens_foreground),
+            MB_FALSE, {{"false", MB_FALSE},
+                       {"true", MB_MAYBE},
+                       {"force", MB_TRUE}}, true),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
@@ -177,6 +181,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(equip_bar), false),
         new BoolGameOption(SIMPLE_NAME(animate_equip_bar), false),
         new BoolGameOption(SIMPLE_NAME(mouse_input), false),
+        new BoolGameOption(SIMPLE_NAME(menu_arrow_control), true),
         new BoolGameOption(SIMPLE_NAME(mlist_allow_alternate_layout), false),
         new BoolGameOption(SIMPLE_NAME(monster_item_view_coordinates), false),
         new ListGameOption<text_pattern>(SIMPLE_NAME(monster_item_view_features)),
@@ -206,7 +211,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(use_modifier_prefix_keys), true),
         new BoolGameOption(SIMPLE_NAME(ability_menu), true),
         new BoolGameOption(SIMPLE_NAME(spell_menu), false),
-        new BoolGameOption(SIMPLE_NAME(easy_floor_use), true),
+        new BoolGameOption(SIMPLE_NAME(easy_floor_use), false),
         new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
@@ -226,6 +231,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
         new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
+        new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -239,17 +245,17 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK),
         new ColourGameOption(SIMPLE_NAME(foreground_colour), LIGHTGREY),
-        new CursesGameOption(SIMPLE_NAME(friend_brand),
+        new CursesGameOption(SIMPLE_NAME(friend_highlight),
                              CHATTR_HILITE | (GREEN << 8)),
-        new CursesGameOption(SIMPLE_NAME(neutral_brand),
+        new CursesGameOption(SIMPLE_NAME(neutral_highlight),
                              CHATTR_HILITE | (LIGHTGREY << 8)),
-        new CursesGameOption(SIMPLE_NAME(stab_brand),
+        new CursesGameOption(SIMPLE_NAME(stab_highlight),
                              CHATTR_HILITE | (BLUE << 8)),
-        new CursesGameOption(SIMPLE_NAME(may_stab_brand),
-                             CHATTR_HILITE | (YELLOW << 8)),
-        new CursesGameOption(SIMPLE_NAME(feature_item_brand), CHATTR_REVERSE),
-        new CursesGameOption(SIMPLE_NAME(trap_item_brand), CHATTR_REVERSE),
-        new CursesGameOption(SIMPLE_NAME(heap_brand), CHATTR_REVERSE),
+        new CursesGameOption(SIMPLE_NAME(may_stab_highlight),
+                             CHATTR_HILITE | (BROWN << 8)),
+        new CursesGameOption(SIMPLE_NAME(feature_item_highlight), CHATTR_REVERSE),
+        new CursesGameOption(SIMPLE_NAME(trap_item_highlight), CHATTR_REVERSE),
+        new CursesGameOption(SIMPLE_NAME(heap_highlight), CHATTR_REVERSE),
         new IntGameOption(SIMPLE_NAME(note_hp_percent), 5, 0, 100),
         new IntGameOption(SIMPLE_NAME(hp_warning), 30, 0, 100),
         new IntGameOption(magic_point_warning, {"mp_warning"}, 0, 0, 100),
@@ -397,6 +403,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_sidebar), false),
         new BoolGameOption(SIMPLE_NAME(tile_web_mouse_control), true),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(tile_web_mobile_input_helper), "auto",
+            {{"auto", "auto"}, {"true", "true"}, {"false", "false"}}),
         new StringGameOption(SIMPLE_NAME(tile_font_crt_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
@@ -1151,7 +1160,8 @@ void game_options::reset_options()
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_MAXWELLS_COUPLING, SPELL_IGNITION, SPELL_NOXIOUS_BOG,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
-          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE };
+          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
+          SPELL_ANGUISH, };
     always_use_static_spell_targeters = false;
 
     force_ability_targeter =
@@ -1844,7 +1854,8 @@ void game_options::merge(const game_options &other)
 void read_init_file(bool runscript)
 {
     Options.reset_options();
-    Options.read_option_line("center_on_scroll := centre_on_scroll"); // alias
+    // XX why didn't this clear first
+    Options.reset_aliases(false);
 
     // Load Lua builtins.
     if (runscript)
@@ -1988,6 +1999,8 @@ void game_options::write_prefs(FILE *f)
     // classes. Not worth doing until more stuff is serialized though...
     fprintf(f, "default_manual_training = %s\n",
                         default_manual_training ? "yes" : "no");
+    fprintf(f, "quiver_menu_focus = %s\n",
+                        quiver_menu_focus ? "true" : "false");
 #ifdef USE_TILE_WEB
     fprintf(f, "action_panel_orientation = %s\n",
                         action_panel_orientation.c_str());
@@ -2118,6 +2131,23 @@ game_options::~game_options()
     deleteAll(option_behaviour);
 }
 
+void game_options::reset_aliases(bool clear)
+{
+    if (clear)
+        aliases.clear();
+    // Aus compatibility:
+    Options.add_alias("center_on_scroll", "centre_on_scroll");
+    // Backwards compatibility:
+    Options.add_alias("friend_brand", "friend_highlight");
+    Options.add_alias("neutral_brand", "neutral_highlight");
+    Options.add_alias("stab_brand", "stab_highlight");
+    Options.add_alias("may_stab_brand", "may_stab_highlight");
+    Options.add_alias("heap_brand", "heap_highlight");
+    Options.add_alias("feature_item_brand", "feature_item_highlight");
+    Options.add_alias("trap_item_brand", "trap_item_highlight");
+
+}
+
 void game_options::read_options(LineInput &il, bool runscript,
                                 bool clear_aliases)
 {
@@ -2130,10 +2160,7 @@ void game_options::read_options(LineInput &il, bool runscript,
     bool l_init        = false;
 
     if (clear_aliases)
-    {
-        aliases.clear();
-        Options.add_alias("center_on_scroll", "centre_on_scroll"); // old name
-    }
+        reset_aliases(true);
 
     dlua_chunk luacond(filename);
     dlua_chunk luacode(filename);
@@ -4005,7 +4032,9 @@ static const language_def lang_data[] =
     { lang_t::FR, "fr", { "french", "français", "francais" } },
     { lang_t::HU, "hu", { "hungarian", "magyar" } },
     { lang_t::IT, "it", { "italian", "italiano" } },
-    { lang_t::JA, "ja", { "japanese", "日本人" } },
+    // The last of these for compatibility, since it has been accepted ever
+    // since Japanese support was added.
+    { lang_t::JA, "ja", { "japanese", "日本語", "日本人" } },
     { lang_t::KO, "ko", { "korean", "한국의" } },
     { lang_t::LT, "lt", { "lithuanian", "lietuvos" } },
     { lang_t::LV, "lv", { "latvian", "lettish", "latvijas", "latviešu",
@@ -4241,6 +4270,20 @@ void get_system_environment()
     {
         SysEnv.crawl_dir
             = _user_home_subpath("Library/Application Support/" CRAWL);
+    }
+#endif
+
+#ifdef __HAIKU__
+    if (SysEnv.crawl_dir.empty())
+    {
+        char path[B_PATH_NAME_LENGTH];
+        find_directory(B_USER_SETTINGS_DIRECTORY,
+                        0,
+                        false,
+                        path,
+                        B_PATH_NAME_LENGTH);
+
+        SysEnv.crawl_dir = catpath(std::string(path), "/crawl");
     }
 #endif
 
@@ -4973,6 +5016,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_bool("tile_level_map_hide_sidebar",
             Options.tile_level_map_hide_sidebar);
     tiles.json_write_bool("tile_web_mouse_control", Options.tile_web_mouse_control);
+    tiles.json_write_string("tile_web_mobile_input_helper", Options.tile_web_mobile_input_helper);
     tiles.json_write_bool("tile_menu_icons", Options.tile_menu_icons);
 
     tiles.json_write_string("tile_font_crt_family",
@@ -4993,6 +5037,11 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 
+    // TODO: convert action_panel_show into a yes/no/never option. It would be
+    // better to have a more straightforward way of disabling the panel
+    // completely
+    tiles.json_write_bool("action_panel_disabled",
+            Options.action_panel.empty());
     tiles.json_write_bool("action_panel_show",
             Options.action_panel_show);
     tiles.json_write_int("action_panel_scale",

@@ -88,6 +88,8 @@
 #             lowercase.
 # * nospell:  Prevents wearer from casting spells.
 # * notelep:  Prevents wearer from teleporting or blinking.
+# * no_upgrade: Don't regenerate this item on load. Used for items with mutable
+#             state, e.g. Wyrmbane's growing enchantment.
 # * poison:   Grants poison resistance.
 # * rcorr:    Grants corrosion resistance.
 # * rmsl:     Passively repels missiles.
@@ -235,6 +237,7 @@ TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
+DESCRIP: It halves damage taken while paralysed, petrified or unconscious.
 
 NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
@@ -252,8 +255,8 @@ NAME:    staff of Olgreb
 INSCRIP: rPois∞
 DESCRIP: It enhances your poison magic.
 +It grants immunity to poison.
-+It can be evoked to radiate toxic energy, with effectiveness depending on
- Evocations skill.
++It can be activated via the 'a'bility menu to radiate toxic energy, with
+ effectiveness depending on Evocations skill.
 DBRAND: If the wielder is skilled in Evocations, they can envenom those struck
  by it, dealing poison damage which bypasses armour.
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -587,7 +590,6 @@ TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
 BOOL:     elec, poison, no_upgrade
-WILL:     1
 
 NAME:    mithril axe "Arga"
 OBJ:     OBJ_WEAPONS/WPN_BROAD_AXE
@@ -844,7 +846,7 @@ COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       5
-BOOL:     harm, mutate, drain, slow, corrode
+BOOL:     harm, slow, corrode
 
 # start TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
@@ -876,7 +878,7 @@ ENUM:    LEAR
 NAME:    Lear's hauberk
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 FALLBACK: OBJ_ARMOUR/ARM_PLATE_ARMOUR
-PLUS:    27
+PLUS:    18
 COLOUR:  ETC_GOLD
 TILE:    urand_lear
 TILE_EQ: lears_hauberk
@@ -1113,8 +1115,7 @@ NAME:    ring of the Mage
 OBJ:     OBJ_JEWELLERY/RING_WIZARDRY
 COLOUR:  ETC_ENCHANT
 TILE:    urand_mage
-INT:     3
-WILL:    2
+BOOL:    archmagi
 
 NAME:     brooch of Shielding
 OBJ:      OBJ_JEWELLERY/AMU_GUARDIAN_SPIRIT
@@ -1189,6 +1190,7 @@ COLOUR:   ETC_MUTAGENIC
 TILE:     urand_vitality
 
 NAME:     autumn katana
+INSCRIP:  vorpal, manifold assault
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
 FALLBACK: OBJ_WEAPONS/WPN_DOUBLE_SWORD
 TYPE:     katana
@@ -1199,8 +1201,7 @@ PLUS:     +8
 BASE_ACC: +2
 BASE_DAM: +4
 BASE_DELAY: -2
-BOOL:     clarity
-BRAND:    SPWPN_VORPAL
+DESCRIP:  It sometimes launches melee attacks against multiple visible enemies.
 
 NAME:     shillelagh "Devastator"
 INSCRIP:  shatter
@@ -1586,6 +1587,59 @@ INT:      -3
 VALUE:    400
 DESCRIP:  It empowers its wearer's blows with all of their magic.
 +It causes its wearer's magical reserves to regenerate more quickly.
+
+NAME:     dreamshard necklace
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:   ETC_SILVER
+TILE:     urand_dreamshard
+INSCRIP:  *Dream
+BOOL:     drain, special
+VALUE:    2000
+DESCRIP:  It shatters if its wearer takes lethal or near-lethal damage,
+ preventing the blow and releasing protective dreams that heal and fight
+ for the wearer.
+
+NAME:     Delatra's gloves
+OBJ:      OBJ_ARMOUR/ARM_GLOVES
+PLUS:     +1
+COLOUR:   BLUE
+TILE:     urand_delatra
+TILE_EQ:  glove_blue
+INSCRIP:  ID++
+VALUE:    100
+DESCRIP:  It heals its wearer when they drink unknown potions.
++It restores its wearer's MP when they read unknown scrolls.
+
+NAME:       woodcutter's axe
+OBJ:        OBJ_WEAPONS/WPN_WAR_AXE
+FALLBACK:   OBJ_WEAPONS/WPN_BROAD_AXE
+PLUS:       8
+BASE_DELAY: -5
+COLOUR:     BROWN
+TILE:       urand_woodcutters_axe
+TILE_EQ:    axe_short
+BRAND:      SPWPN_VORPAL
+
+NAME:       Throatcutter
+OBJ:        OBJ_WEAPONS/WPN_LONG_SWORD
+FALLBACK:   OBJ_WEAPONS/WPN_SCIMITAR
+PLUS:       7
+COLOUR:     LIGHTRED
+TILE:       urand_throatcutter
+TILE_EQ:    throatcutter
+BRAND:      SPWPN_DRAINING
+INSCRIP:    coup de grace
+DBRAND:     It may instantly kill foes which have little health.
+
+NAME:       staff of the Meek
+OBJ:        OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:       7
+COLOUR:     WHITE
+TILE:       urand_meek
+TILE_EQ:    staff_mage_two
+BRAND:      SPWPN_PROTECTION
+INSCRIP:    meekguard
+DBRAND:     It provides extra protection to wielders with little health.
 
 # This entry must always be last.
 ENUM:   DUMMY2

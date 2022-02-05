@@ -401,66 +401,6 @@ bool targeter_beam::affects_monster(const monster_info& mon)
            || beam.flavour == BEAM_INNER_FLAME;
 }
 
-targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)
-    : targeter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
-{
-}
-
-/**
- * Will a casting of Violent Unravelling explode a target at the given loc?
- *
- * @param c     The location in question.
- * @return      Whether, to the player's knowledge, there's a valid target for
- *              Violent Unravelling at the given coordinate.
- */
-static bool _unravelling_explodes_at(const coord_def c)
-{
-    if (you.pos() == c && player_is_debuffable())
-        return true;
-
-    const monster_info* mi = env.map_knowledge(c).monsterinfo();
-    return mi && mi->debuffable();
-}
-
-bool targeter_unravelling::set_aim(coord_def a)
-{
-    if (!targeter::set_aim(a))
-        return false;
-
-    bolt tempbeam = beam;
-
-    tempbeam.target = aim;
-    tempbeam.path_taken.clear();
-    tempbeam.fire();
-    path_taken = tempbeam.path_taken;
-
-    bolt explosion_beam = beam;
-    set_explosion_target(beam);
-    if (_unravelling_explodes_at(beam.target))
-        min_expl_rad = 1;
-    else
-        min_expl_rad = 0;
-
-    set_explosion_aim(beam);
-
-    return true;
-}
-
-bool targeter_unravelling::valid_aim(coord_def a)
-{
-    if (!targeter_beam::valid_aim(a))
-        return false;
-
-    const monster* mons = monster_at(a);
-    if (mons && you.can_see(*mons) && !_unravelling_explodes_at(a))
-    {
-        return notify_fail(mons->name(DESC_THE) + " has no enchantments to "
-                           "unravel.");
-    }
-
-    return true;
-}
-
 targeter_view::targeter_view()
 {
     origin = aim = you.pos();
@@ -754,6 +694,76 @@ bool targeter_transference::valid_aim(coord_def a)
             return notify_fail("You can't transfer that.");
         }
     }
+    return true;
+}
+
+targeter_unravelling::targeter_unravelling()
+    : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+{
+}
+
+/**
+ * Will a casting of Violent Unravelling explode a target at the given loc?
+ *
+ * @param c     The location in question.
+ * @return      Whether, to the player's knowledge, there's a valid target for
+ *              Violent Unravelling at the given coordinate.
+ */
+static bool _unravelling_explodes_at(const coord_def c)
+{
+    if (you.pos() == c && player_is_debuffable())
+        return true;
+
+    const monster_info* mi = env.map_knowledge(c).monsterinfo();
+    return mi && mi->unravellable();
+}
+
+bool targeter_unravelling::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mons = monster_at(a);
+    if (mons && you.can_see(*mons) && !_unravelling_explodes_at(a))
+    {
+        return notify_fail(mons->name(DESC_THE) + " has no magical effects to "
+                           "unravel.");
+    }
+
+    if (mons && you.can_see(*mons) && _unravelling_explodes_at(a)
+        && god_protects(&you, mons))
+    {
+        return notify_fail(mons->name(DESC_THE) + " is protected by " +
+                           god_name(you.religion) + ".");
+    }
+
+    return true;
+}
+
+bool targeter_unravelling::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    if (_unravelling_explodes_at(a))
+    {
+        exp_range_min = 1;
+        exp_range_max = 1;
+    }
+    else
+    {
+        exp_range_min = exp_range_max = 0;
+        return false;
+    }
+
+    bolt beam;
+    beam.target = a;
+    beam.use_target_as_pos = true;
+    exp_map_min.init(INT_MAX);
+    beam.determine_affected_cells(exp_map_min, coord_def(), 0,
+                                  exp_range_min, true, true);
+    _copy_explosion_map(exp_map_min, exp_map_max);
+
     return true;
 }
 
@@ -2135,4 +2145,17 @@ bool targeter_intoxicate::affects_monster(const monster_info& mon)
 {
     return !(mon.mintel < I_HUMAN
              || get_resist(mon.resists(), MR_RES_POISON) >= 3);
+}
+
+targeter_anguish::targeter_anguish()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_anguish::affects_monster(const monster_info& mon)
+{
+    return mon.mintel > I_BRAINLESS
+        && mon.willpower() != WILL_INVULN
+        && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
+        && !mon.is(MB_ANGUISH);
 }

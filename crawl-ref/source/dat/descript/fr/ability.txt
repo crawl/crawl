@@ -220,7 +220,7 @@ ressentiront.
 
 Kikubaaqudgha pourrait vous en protéger... mais rien de moins sur.
 %%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Rappelle autour de vous vos serviteurs morts-vivants, où qu'ils soient
 actuellement dans le donjon.
@@ -230,7 +230,7 @@ Drain Life ability
 Restaure des points de vie en drainant la force vitale des monstres à
 proximité.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Marquez l'âme d'un monstre vivant et intelligent comme prêt à être fauchée. Une
 fois marquée, le monstre meurt, son âme sera vôtre.

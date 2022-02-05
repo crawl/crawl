@@ -1081,12 +1081,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
-    case MONS_ANGEL:
-    case MONS_DAEVA:
-    case MONS_PROFANE_SERVITOR:
-        set_equip_desc(item, ISFLAG_GLOWING); // will never come up...
-        break;
-
     case MONS_DONALD:
     case MONS_FREDERICK:
     case MONS_URUG:
@@ -1184,6 +1178,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         {
             make_item_unrandart(item, UNRAND_WYRMBANE);
             item.plus = 10 + random2(2); // Now she's killed at least 2 dragons
+            force_item = true;
+        }
+        break;
+
+        // As a violent thug, Throatcutter suits Terence perfectly.
+    case MONS_TERENCE:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_THROATCUTTER))
+        {
+            make_item_unrandart(item, UNRAND_THROATCUTTER);
             force_item = true;
         }
         break;
@@ -1547,6 +1550,9 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_NAGA_WARRIOR:
+        if (coinflip())
+            level = ISPEC_GOOD_ITEM;
+        // deliberate fall-through
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_ORC_WARLORD:
@@ -1779,7 +1785,9 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_GRUM:
+    case MONS_ROBIN:
     case MONS_SPRIGGAN_BERSERKER:
+    case MONS_IRONBOUND_THUNDERHULK:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
@@ -1833,7 +1841,6 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR);
         break;
 
-    case MONS_IRONBOUND_THUNDERHULK:
     case MONS_VAULT_SENTINEL:
     case MONS_IRONBOUND_CONVOKER:
     case MONS_IRONBOUND_FROSTHEART:
@@ -2001,11 +2008,6 @@ int make_mons_armour(monster_type type, int level)
     case MONS_SPRIGGAN_DEFENDER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
-        break;
-
-    case MONS_ROBIN:
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_ANIMAL_SKIN;
         break;
 
     case MONS_DRACONIAN_SHIFTER:

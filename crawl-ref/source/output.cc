@@ -2264,9 +2264,6 @@ static string _god_asterisks()
     if (you_worship(GOD_NO_GOD))
         return "";
 
-    if (player_under_penance())
-        return "*";
-
     if (you_worship(GOD_GOZAG))
         return "";
 
@@ -2616,9 +2613,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int rspir = you.spirit_shield();
     out += _resist_composer("Spirit", cwidth, rspir) + "\n";
 
-    const item_def *sh = you.shield();
-    const int reflect = you.reflection()
-                        || sh && shield_reflects(*sh);
+    const int reflect = you.reflection();
     out += _resist_composer("Reflect", cwidth, reflect) + "\n";
 
     const int harm = you.extra_harm();
@@ -2631,7 +2626,7 @@ static vector<formatted_string> _get_overview_resistances(
 
     const int archmagi = you.archmagi();
     if (archmagi)
-        out += _resist_composer("Archmagi", cwidth, archmagi) + "\n";
+        out += _resist_composer("Archmagi", cwidth, archmagi, archmagi) + "\n";
 
     const int rclarity = you.clarity();
     if (rclarity)

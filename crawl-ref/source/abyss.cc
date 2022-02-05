@@ -62,7 +62,7 @@
 
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 
-static const int ABYSSAL_RUNE_MAX_ROLL = 200;
+static const int ABYSSAL_RUNE_MAX_ROLL = 60;
 
 abyss_state abyssal_state;
 
@@ -243,9 +243,6 @@ static void _abyss_postvault_fixup()
 
 static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
 {
-    // Make sure we're not about to link bad items.
-    debug_item_scan();
-
     bool result = false;
     int tries = 10;
     do
@@ -254,10 +251,6 @@ static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
     }
     while (!result && --tries);
 
-    // Make sure the rune is linked.
-    // XXX: I'm fairly sure this does nothing if result == false,
-    //      but leaving it alone for now. -- Grunt
-    _abyss_postvault_fixup();
     return result;
 }
 
@@ -296,80 +289,6 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask)
     }
 
     return false;
-}
-
-// Returns true if items can be generated on the given square.
-static bool _abyss_square_accepts_items(const map_bitmask &abyss_genlevel_mask,
-                                        coord_def p)
-{
-    return abyss_genlevel_mask(p)
-           && env.grid(p) == DNGN_FLOOR
-           && env.igrid(p) == NON_ITEM
-           && !map_masked(p, MMT_VAULT);
-}
-
-static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
-                               bool placed_abyssal_rune)
-{
-    // During game start, number and level of items mustn't be higher than
-    // that on level 1.
-    int num_items = 150, items_level = 52;
-    int items_placed = 0;
-
-    if (player_in_starting_abyss())
-    {
-        num_items   = 3 + roll_dice(3, 11);
-        items_level = 0;
-    }
-
-    const int abyssal_rune_roll = _abyssal_rune_roll();
-    bool should_place_abyssal_rune = false;
-    vector<coord_def> chosen_item_places;
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-    {
-        if (_abyss_square_accepts_items(abyss_genlevel_mask, *ri))
-        {
-            if (items_placed < num_items && one_chance_in(200))
-            {
-                // [ds] Don't place abyssal rune in this loop to avoid
-                // biasing rune placement toward the north-west of the
-                // abyss level. Instead, make a note of whether we
-                // decided to place the abyssal rune at all, and if we
-                // did, place it randomly somewhere in the map at the
-                // end of the item-gen pass. We may as a result create
-                // (num_items + 1) items instead of num_items, which
-                // is acceptable.
-                if (!placed_abyssal_rune && !should_place_abyssal_rune
-                    && abyssal_rune_roll != -1
-                    && x_chance_in_y(abyssal_rune_roll, ABYSSAL_RUNE_MAX_ROLL))
-                {
-                    should_place_abyssal_rune = true;
-                }
-
-                chosen_item_places.push_back(*ri);
-            }
-        }
-    }
-
-    if (!placed_abyssal_rune && should_place_abyssal_rune)
-    {
-        if (_abyss_place_rune(abyss_genlevel_mask))
-            ++items_placed;
-    }
-
-    for (const coord_def &place : chosen_item_places)
-    {
-        if (_abyss_square_accepts_items(abyss_genlevel_mask, place))
-        {
-            int thing_created = items(true, OBJ_RANDOM, OBJ_RANDOM,
-                                      items_level);
-            move_item_to_grid(&thing_created, place);
-            if (thing_created != NON_ITEM)
-                items_placed++;
-        }
-    }
-
-    return items_placed;
 }
 
 static string _who_banished(const string &who)
@@ -1320,8 +1239,9 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
     // The chance is reciprocal to these numbers.
-    const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
-                            : 7500 - 1250 * (you.depth - 1);
+    const int depth = you.runes[RUNE_ABYSSAL] ? brdepth[BRANCH_ABYSS] + 1
+                                              : you.depth - 1;
+    const int exit_chance = 7250 - 1250 * (depth - 1);
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
@@ -1380,7 +1300,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 abyss_genlevel_mask)
         ||
         level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 1900, nullptr, nullptr,
+        && _abyss_check_place_feat(p, 1750, nullptr, nullptr,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }
@@ -1391,7 +1311,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         ASSERT_RANGE(env.grid(*ri), DNGN_UNSEEN + 1, NUM_FEATURES);
 }
 
-static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
+static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask, bool placed_abyssal_rune)
 {
     unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
 
@@ -1433,6 +1353,14 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
         }
     }
 
+    const int abyssal_rune_roll = _abyssal_rune_roll();
+    if (!placed_abyssal_rune && abyssal_rune_roll != -1
+        && x_chance_in_y(abyssal_rune_roll, ABYSSAL_RUNE_MAX_ROLL))
+    {
+        if (_abyss_place_rune(abyss_genlevel_mask))
+            ++vaults_placed;
+    }
+
     return vaults_placed;
 }
 
@@ -1448,12 +1376,10 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
     // Make sure we're not about to link bad items.
     debug_item_scan();
-    _abyss_place_vaults(abyss_genlevel_mask);
-
+    _abyss_place_vaults(abyss_genlevel_mask, placed_abyssal_rune);
     // Link the vault-placed items.
     _abyss_postvault_fixup();
 
-    _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune);
     setup_environment_effects();
 
     _ensure_player_habitable(true);
@@ -1717,30 +1643,30 @@ void abyss_morph()
 
 // Force the player one level deeper in the abyss during an abyss teleport with
 // probability:
-//   (XL + 4 - Depth)^2 / (27^2 * (Depth + 5))
+//   (max(0, XL - Depth))^2 / 27^2 * 3
 //
 // Consequences of this formula:
 // - Chance to be pulled deeper increases with XL and decreases with current
 //   abyss depth.
-// - Characters at XL 1 have about a 0.1% chance of getting pulled from A:1.
+// - Characters won't get pulled to a depth higher than their XL
 // - Characters at XL 13 have chances for getting pulled from A:1/A:2/A:3/A:4
-//   of about 5.9%/4.4%/3.3%/2.6%.
+//   of about 6.6%/5.5%/4.5%/3.7%.
 // - Characters at XL 27 have chances for getting pulled from A:1/A:2/A:3/A:4
-//   of about 20.6%/16.5%/13.4%/11.1%.
+//   of about 31%/28.5%/26.3%/24.1%.
 static bool _abyss_force_descent()
 {
     const int depth = level_id::current().depth;
-    const int xl_factor = you.experience_level + 4 - depth;
-    return x_chance_in_y(xl_factor * xl_factor, 729 * (5 + depth));
+    const int xl_factor = max(0, you.experience_level - depth);
+    return x_chance_in_y(xl_factor * xl_factor, 729 * 3);
 }
 
-void abyss_teleport()
+void abyss_teleport(bool wizard_tele)
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
 
     if (level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_force_descent())
+        && _abyss_force_descent() && !wizard_tele)
     {
         down_stairs(DNGN_ABYSSAL_STAIR);
         more();

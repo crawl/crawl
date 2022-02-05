@@ -3069,7 +3069,8 @@ void mark_milestone(const string &type, const string &milestone,
     xl.add_field("type", "%s", type.c_str());
     xl.add_field("milestone", "%s", milestone.c_str());
 #ifdef USE_TILE_WEB
-    tiles.send_milestone(xl);
+    if (!crawl_state.game_crashed)
+        tiles.send_milestone(xl);
 #endif
 #ifdef DGL_MILESTONES
 #ifndef SCORE_WIZARD_CHARACTERS

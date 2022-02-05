@@ -117,7 +117,7 @@ KFEAT:  _ = altar_nemelex_xobeh
 MARKER: J = lua:transp_loc("the_gamble_entry")
 MARKER: K = lua:transp_dest_loc("the_gamble_entry")
 KFEAT:  L = transporter_landing
-KPROP:  KLMNOU89' = no_tele_into
+KPROP:  KLMNOU89'" = no_tele_into
 NSUBST: " = 3:d / e / '
 MARKER: Q = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 10, pow_max = 10, delay = 10, \

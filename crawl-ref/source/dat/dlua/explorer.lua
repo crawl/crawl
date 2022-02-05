@@ -212,11 +212,7 @@ function explorer.feat_interesting(feat_name)
     if string.find(feat_name, "altar_") == 1 then
         return true
     elseif string.find(feat_name, "enter_") == 1 then -- could be more selective
-        if explorer.in_hell() then
-            return feat_name ~= "enter_hell"
-        else
-            return true
-        end
+        return true
     elseif feat_name == "transporter" or string.find(feat_name, "runed_") then
         return true
     end

@@ -118,8 +118,8 @@ why he would deign to share his secrets with others.
 %%%%
 book of burglary
 
-A book containing many diverse spells useful for theft, breaking and entering,
-and other miscellaneous larceny.
+A book containing spells useful for theft, breaking and entering, and other
+miscellaneous larceny.
 %%%%
 book of callings
 
@@ -433,8 +433,9 @@ An axe with langets, spikes, a lengthed haft and a single-bladed crescent head.
 buckler
 
 A small piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+cumbersome to wear, and slightly impedes the evasion, spellcasting ability, and
+attack speed of the wearer. These penalties will be reduced and eventually
+eliminated with increased Shields skill.
 %%%%
 chain mail
 
@@ -682,7 +683,8 @@ kite shield
 
 A piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+speed of the wearer. These penalties will be reduced and eventually eliminated
+with increased Shields skill.
 %%%%
 lajatang
 
@@ -738,6 +740,11 @@ necronomicon
 An extremely rare book, powerful and sinister. Many foolhardy magicians have
 tried to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
+%%%%
+orb
+
+A sphere of crystal, carried in place of a shield. Magic scintilliates within
+its interior.
 %%%%
 orb of zot
 
@@ -1245,8 +1252,9 @@ free, if they live long enough.
 tower shield
 
 A large piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+cumbersome to wear, and greatly impedes the evasion, spellcasting ability, and
+attack speed of the wearer. These penalties will be reduced and eventually
+eliminated with increased Shields skill.
 %%%%
 tin of tremorstones
 

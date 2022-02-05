@@ -107,6 +107,10 @@
 #define F_OK 0
 #endif
 
+#ifdef __HAIKU__
+#include <FindDirectory.h>
+#endif
+
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS))
 
 #ifdef BONES_DIAGNOSTICS
@@ -356,7 +360,7 @@ static bool _create_directory(const char *dir)
 {
     if (!mkdir_u(dir, 0755))
         return true;
-    if (errno == EEXIST) // might be not a directory
+    if (errno == EEXIST || errno == EROFS) // might be not a directory
         return dir_exists(dir);
     return false;
 }
@@ -419,6 +423,14 @@ string canonicalise_file_separator(const string &path)
 
 static vector<string> _get_base_dirs()
 {
+#ifdef __HAIKU__
+    char path[B_PATH_NAME_LENGTH];
+    find_path(B_APP_IMAGE_SYMBOL,
+            B_FIND_PATH_DATA_DIRECTORY,
+            "crawl/",
+            path,
+            B_PATH_NAME_LENGTH);
+#endif
     const string rawbases[] =
     {
 #ifdef DATA_DIR_PATH
@@ -432,6 +444,9 @@ static vector<string> _get_base_dirs()
 #endif
 #ifdef __ANDROID__
         ANDROID_ASSETS
+#endif
+#ifdef __HAIKU__
+        std::string(path),
 #endif
     };
 
@@ -1062,16 +1077,13 @@ static int _get_dest_stair_type(dungeon_feature_type stair_taken,
         return DNGN_EXIT_DUNGEON;
     }
 
-    if (stair_taken == DNGN_EXIT_HELL)
-        return DNGN_ENTER_HELL;
-
-    if (stair_taken == DNGN_ENTER_HELL)
+    if (feat_is_hell_subbranch_exit(stair_taken))
         return DNGN_EXIT_HELL;
 
     if (player_in_hell() && feat_is_stone_stair_down(stair_taken))
     {
         find_first = false;
-        return DNGN_ENTER_HELL;
+        return branches[you.where_are_you].exit_stairs;
     }
 
     if (feat_is_stone_stair(stair_taken))
@@ -1098,7 +1110,8 @@ static int _get_dest_stair_type(dungeon_feature_type stair_taken,
         || stair_taken == DNGN_ENTER_COCYTUS
         || stair_taken == DNGN_ENTER_TARTARUS)
     {
-        return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
+        return player_in_hell() ? branches[you.where_are_you].exit_stairs
+                                : stair_taken;
     }
 
     if (feat_is_branch_exit(stair_taken))
@@ -2317,8 +2330,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
-                string stair_str = feature_description_at(you.pos(), false,
-                                                          DESC_THE);
+                string stair_str = feature_description(feat, NUM_TRAPS, "",
+                                                       DESC_THE);
                 string verb = stair_climb_verb(feat);
 
                 if (coinflip()

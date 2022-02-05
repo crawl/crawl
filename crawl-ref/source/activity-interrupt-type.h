@@ -4,7 +4,9 @@
 enum class activity_interrupt
 {
     force = 0,          // Forcibly kills any activity that can be
-                        // interrupted.
+                        // interrupted. Delays that can have gameplay
+                        // implications should explicitly avoid this in some
+                        // fashion.
     keypress,           // Not currently used
     full_hp,            // Player is fully healed
     full_mp,            // Player has recovered all mp
@@ -16,7 +18,9 @@ enum class activity_interrupt
     monster_attacks,
     teleport,
     hit_monster,        // Player hit invis monster during travel/explore.
-    sense_monster,
+    sense_monster,      // Any non-hit event (detection as well as things like
+                        // door opening) that reveals the presence of an unseen
+                        // monster.
     mimic,
 
     // Always the last.

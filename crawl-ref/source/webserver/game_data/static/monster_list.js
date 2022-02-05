@@ -114,7 +114,7 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
     var attitude_classes = [
         "hostile",
         "neutral",
-        "strict_neutral",
+        "good_neutral", // was strict_neutral
         "good_neutral",
         "friendly"
     ];

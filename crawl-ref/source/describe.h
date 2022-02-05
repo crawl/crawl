@@ -48,7 +48,7 @@ bool is_dumpable_artefact(const item_def &item);
 string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool lookup = false);
 
-void describe_feature_wide(const coord_def& pos);
+bool describe_feature_wide(const coord_def& pos, bool do_actions=false);
 void describe_feature_type(dungeon_feature_type feat);
 string get_cloud_desc(cloud_type cloud, bool include_title = true);
 void get_feature_desc(const coord_def &gc, describe_info &inf, bool include_extra = true);
@@ -57,6 +57,7 @@ command_type describe_item_popup(const item_def &item,
                                  function<void (string&)> fixup_desc = nullptr,
                                  bool do_actions = false);
 bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
+string describe_item_rarity(const item_def &item);
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
 void target_item(item_def &item);
@@ -64,7 +65,7 @@ void target_item(item_def &item);
 int describe_monsters(const monster_info &mi, const string& footer = "");
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
-                         bool &has_stat_desc);
+                         bool &has_stat_desc, bool mark_spells=false);
 branch_type serpent_of_hell_branch(monster_type m);
 string serpent_of_hell_flavour(monster_type m);
 
@@ -85,7 +86,7 @@ string get_skill_description(skill_type skill, bool need_title = false);
 
 void describe_skill(skill_type skill);
 
-int hex_chance(const spell_type spell, const int hd);
+int hex_chance(const spell_type spell, const monster_info* mon_owner);
 void describe_to_hit(const monster_info& mi, ostringstream &result,
                      bool parenthesize = false, const item_def* weapon = nullptr);
 

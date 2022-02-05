@@ -68,6 +68,7 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "view.h"
+#include "xom.h"
 
 //#define DEBUG_WEBSOCKETS
 
@@ -359,6 +360,63 @@ wint_t TilesFramework::_receive_control_message()
     }
 }
 
+static int _handle_cell_target(const coord_def &gc)
+{
+    // describe
+    if (mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH)
+    {
+        if (targeting_mouse_move(gc))
+            return CK_REDRAW;
+    }
+    return 0;
+}
+
+static int _handle_cell_click(const coord_def &gc, int button, bool force)
+{
+    // describe
+    if ((mouse_control::current_mode() == MOUSE_MODE_COMMAND
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
+        || tiles.get_ui_state() == UI_VIEW_MAP)
+        && button == 3)
+    {
+        full_describe_square(gc, false);
+        return CK_MOUSE_CMD;
+    }
+
+    // click travel
+    if (mouse_control::current_mode() == MOUSE_MODE_COMMAND && button == 1)
+    {
+        int c = click_travel(gc, force);
+        if (c != CK_MOUSE_CMD)
+        {
+            clear_messages();
+            process_command((command_type) c);
+        }
+        return CK_MOUSE_CMD;
+    }
+
+    // fire
+    if ((mouse_control::current_mode() == MOUSE_MODE_TARGET
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
+        || mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH)
+        && button == 1)
+    {
+        if (targeting_mouse_select(gc))
+            return CK_MOUSE_CMD;
+        // if the targeter is still live, the player did something like click
+        // out of range, and we want to redraw immediately
+        return CK_REDRAW;
+    }
+
+    // generic click: doesn't do a lot, but will interrupt travel, repeats,
+    // etc
+    return CK_MOUSE_CLICK;
+}
+
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 {
     JsonWrapper obj = json_decode(data.c_str());
@@ -399,9 +457,16 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     {
         JsonWrapper hover = json_find_member(obj.node, "hover");
         hover.check(JSON_NUMBER);
+        JsonWrapper mouse = json_find_member(obj.node, "mouse");
+        mouse.check(JSON_BOOL);
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
-            m_menu_stack.back().menu->set_hovered((int) hover->number_);
+        if (!m_menu_stack.empty()
+            && m_menu_stack.back().type == UIStackFrame::MENU)
+        {
+            m_menu_stack.back().menu->set_hovered(
+                (int) hover->number_,
+                mouse->bool_);
+        }
 
     }
     else if (msgtype == "menu_scroll")
@@ -449,23 +514,30 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         flush_prev_message();
         c = CK_REDRAW;
     }
-    else if (msgtype == "click_travel" &&
-             mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    else if (msgtype == "click_cell")
+    {
+        JsonWrapper x = json_find_member(obj.node, "x");
+        JsonWrapper y = json_find_member(obj.node, "y");
+        JsonWrapper button = json_find_member(obj.node, "button");
+        x.check(JSON_NUMBER);
+        y.check(JSON_NUMBER);
+        button.check(JSON_NUMBER);
+        // XX force is currently unused
+        JsonWrapper force = json_find_member(obj.node, "force");
+        coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
+
+        c = _handle_cell_click(gc, button->number_,
+                        force.node && force->tag == JSON_BOOL && force->bool_);
+    }
+    else if (msgtype == "target_cursor")
     {
         JsonWrapper x = json_find_member(obj.node, "x");
         JsonWrapper y = json_find_member(obj.node, "y");
         x.check(JSON_NUMBER);
         y.check(JSON_NUMBER);
-        JsonWrapper force = json_find_member(obj.node, "force");
-
         coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
-        c = click_travel(gc, force.node && force->tag == JSON_BOOL && force->bool_);
-        if (c != CK_MOUSE_CMD)
-        {
-            clear_messages();
-            process_command((command_type) c);
-        }
-        c = CK_MOUSE_CMD;
+        _handle_cell_target(gc);
+        c = CK_REDRAW;
     }
     else if (msgtype == "formatted_scroller_scroll")
     {
@@ -523,6 +595,13 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         Options.read_option_line(opt_line->string_, true);
         // XX only set this flag if a relevant option has actually changed
         Options.prefs_dirty = true;
+    }
+    else if (msgtype == "main_menu_action"
+             && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        // TODO: add a control message type that can send arbitrary commands
+        // (possibly just as a string, like the lua API for this)
+        process_command(CMD_GAME_MENU);
     }
 
     return c;
@@ -741,7 +820,8 @@ bool TilesFramework::is_in_menu(Menu* m)
 
 void TilesFramework::pop_menu()
 {
-    if (m_menu_stack.empty()) return;
+    if (m_menu_stack.empty())
+        return;
     m_menu_stack.pop_back();
     send_message("{\"msg\":\"close_menu\"}");
 }
@@ -783,7 +863,8 @@ void TilesFramework::push_ui_layout(const string& type, unsigned num_state_slots
 
 void TilesFramework::pop_ui_layout()
 {
-    if (m_menu_stack.empty()) return;
+    if (m_menu_stack.empty())
+        return;
     m_menu_stack.pop_back();
     send_message("{\"msg\":\"ui-pop\"}");
 }
@@ -825,7 +906,8 @@ static void _send_text_cursor(bool enabled)
 
 void TilesFramework::set_text_cursor(bool enabled)
 {
-    if (m_text_cursor == enabled) return;
+    if (m_text_cursor == enabled)
+        return;
 
     m_text_cursor = enabled;
 }
@@ -841,7 +923,8 @@ static void _send_ui_state(WebtilesUIState state)
 
 void TilesFramework::set_ui_state(WebtilesUIState state)
 {
-    if (m_ui_state == state) return;
+    if (m_ui_state == state)
+        return;
 
     m_ui_state = state;
 }
@@ -1015,7 +1098,9 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.god, god, "god");
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
-    if (!you_worship(GOD_NO_GOD))
+    if (you_worship(GOD_XOM))
+        prank = max(0, xom_favour_rank() - 1);
+    else if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && !you.has_mutation(MUT_FORLORN)
              && !had_gods())
@@ -1457,15 +1542,16 @@ static bool _needs_flavour(const packed_cell &cell)
 
 }
 
-static inline unsigned _get_brand(int col)
+// XX code duplicateion
+static inline unsigned _get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
            (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
                                             : unsigned{CHATTR_NORMAL};
 }
@@ -1511,7 +1597,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
          || current_sc.glyph == ' ') && glyph != ' ')
     {
         int col = next_sc.colour;
-        col = (_get_brand(col) << 4) | macro_colour(col & 0xF);
+        col = (_get_highlight(col) << 4) | macro_colour(col & 0xF);
         json_write_int("col", col);
     }
 
@@ -2435,9 +2521,11 @@ void TilesFramework::json_close_array(bool erase_if_empty)
 
 void TilesFramework::json_write_comma()
 {
-    if (m_msg_buf.empty()) return;
+    if (m_msg_buf.empty())
+        return;
     char last = m_msg_buf[m_msg_buf.size() - 1];
-    if (last == '{' || last == '[' || last == ',' || last == ':') return;
+    if (last == '{' || last == '[' || last == ',' || last == ':')
+        return;
     write_message(",");
 }
 

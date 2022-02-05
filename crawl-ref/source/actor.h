@@ -144,10 +144,7 @@ public:
 
     virtual bool fumbles_attack() = 0;
 
-    virtual bool fights_well_unarmed(int /*heavy_armour_penalty*/)
-    {
-        return true;
-    }
+    virtual bool fights_well_unarmed() { return true; }
     virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
@@ -257,8 +254,6 @@ public:
     virtual int unadjusted_body_armour_penalty() const = 0;
     virtual int adjusted_body_armour_penalty(int scale = 1) const = 0;
     virtual int adjusted_shield_penalty(int scale) const = 0;
-    virtual int armour_tohit_penalty(bool random_factor, int scale = 1) const = 0;
-    virtual int shield_tohit_penalty(bool random_factor, int scale = 1) const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
@@ -279,7 +274,7 @@ public:
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
     virtual bool res_miasma(bool temp = true) const = 0;
-    virtual int res_water_drowning() const = 0;
+    virtual bool res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
@@ -288,7 +283,7 @@ public:
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
     virtual int willpower() const = 0;
-    virtual int check_willpower(int power);
+    virtual int check_willpower(const actor* source, int power);
     virtual bool no_tele(bool blink = false) const = 0;
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;

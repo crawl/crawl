@@ -684,6 +684,10 @@ static bool is_ash_portal(dungeon_feature_type feat)
     switch (feat)
     {
     case DNGN_ENTER_HELL:
+    case DNGN_EXIT_DIS:
+    case DNGN_EXIT_GEHENNA:
+    case DNGN_EXIT_COCYTUS:
+    case DNGN_EXIT_TARTARUS:
     case DNGN_ENTER_ABYSS: // for completeness
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
@@ -768,16 +772,18 @@ bool ash_has_skill_boost(skill_type sk)
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 {
     unsigned int skill_points = 0;
+    const int scale = 10;
+    const int skill_boost = scale * (you.skill_boost[sk] * 3 + 2) / 2;
 
-    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
-                    * max(scaled_skill, 1) * species_apt_factor(sk);
+    skill_points += skill_boost * (piety_rank() + 1) * max(scaled_skill, 1)
+                    * species_apt_factor(sk) / scale;
     return skill_points;
 }
 
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // ( curses * 2 + 1 ) * (piety_rank + 1) * skill_level
+    // ( curses * 3 / 2 + 1 ) * (piety_rank + 1) * skill_level
 
     unsigned int skill_points = you.skill_points[sk]
                   + get_crosstrain_points(sk)

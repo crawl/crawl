@@ -53,6 +53,7 @@
 #include "mon-death.h"
 #include "mon-gear.h" // give_shield
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
@@ -283,9 +284,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
                  "Ashenzari reveals the structure of the dungeon to you.\n"
                  "Ashenzari shows you where magical portals lie." },
-            { 1, "Ashenzari will now prevent you from stumbling into unseen traps.",
-                 "Ashenzari no longer prevents you from stumbling into unseen traps.",
-                 "Ashenzari prevents you from stumbling into unseen traps." },
+            { 1, "Ashenzari will now protect you from malevolent surprises.",
+                 "Ashenzari no longer protects you from malevolent surprises.",
+                 "Ashenzari protects you from malevolent surprises." },
             { 1, "Ashenzari will now identify your possessions.",
                  "Ashenzari will no longer identify your possesions.",
                  "Ashenzari identifies your possessions." },
@@ -648,7 +649,7 @@ void dec_penance(god_type god, int val)
                 god);
 
             if (dead_jiyva)
-                add_daction(DACT_REMOVE_JIYVA_ALTARS);
+                add_daction(DACT_JIYVA_DEAD);
         }
 
 
@@ -1056,8 +1057,11 @@ static void _calculate_yred_piety()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned())
+        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_is_tentacle_or_tentacle_segment(mi->type))
+        {
             continue;
+        }
 
 
         // To smooth out yred piety fluctuations count zombies for piety
@@ -1111,6 +1115,7 @@ bool yred_reclaim_souls(bool all)
     for (monster_iterator mi; mi; ++mi)
     {
         if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
             continue;
@@ -1154,6 +1159,7 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
     for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
     {
         if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+            || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
             continue;
@@ -1709,6 +1715,14 @@ static bool _give_sif_gift(bool forced)
     return true;
 }
 
+static bool _sort_spell_level(spell_type spell1, spell_type spell2)
+{
+    if (spell_difficulty(spell1) != spell_difficulty(spell2))
+        return spell_difficulty(spell1) < spell_difficulty(spell2);
+
+    return strcasecmp(spell_title(spell1), spell_title(spell2)) < 0;
+}
+
 static bool _give_kiku_gift(bool forced)
 {
     // Djinn can't receive spell gifts.
@@ -1726,64 +1740,69 @@ static bool _give_kiku_gift(bool forced)
     }
 
     vector<spell_type> chosen_spells;
+    spell_type spell;
 
     // Each set should guarantee the player at least one corpse-using spell, to
     // complement Receive Corpses.
     if (first_gift)
     {
-        chosen_spells.push_back(SPELL_PAIN);
-        if (you.can_bleed(false))
+        chosen_spells.push_back(SPELL_ANIMATE_SKELETON);
+        do
         {
-            chosen_spells.push_back(SPELL_SUBLIMATION_OF_BLOOD);
-            chosen_spells.push_back(random_choose(SPELL_CORPSE_ROT,
-                                                  SPELL_ANIMATE_SKELETON));
+            spell = random_choose(SPELL_PAIN,
+                                  SPELL_CORPSE_ROT,
+                                  SPELL_SUBLIMATION_OF_BLOOD,
+                                  SPELL_VAMPIRIC_DRAINING,
+                                  SPELL_AGONY);
+
+            if (!you.can_bleed(false) && spell == SPELL_SUBLIMATION_OF_BLOOD)
+                spell = SPELL_NO_SPELL;
+
+            if (find(begin(chosen_spells), end(chosen_spells), spell)
+                != end(chosen_spells))
+            {
+                spell = SPELL_NO_SPELL;
+            }
+
+            if (spell != SPELL_NO_SPELL)
+                chosen_spells.push_back(spell);
         }
-        else
-        {
-            chosen_spells.push_back(SPELL_CORPSE_ROT);
-            chosen_spells.push_back(SPELL_ANIMATE_SKELETON);
-        }
-        chosen_spells.push_back(SPELL_VAMPIRIC_DRAINING);
+        while (chosen_spells.size() < 4);
     }
     else
     {
-        chosen_spells.push_back(random_choose(SPELL_ANIMATE_DEAD,
-                                              SPELL_SIMULACRUM));
-        chosen_spells.push_back((you.has_mutation(MUT_NO_GRASPING)
-                                 || coinflip()) ? SPELL_BORGNJORS_VILE_CLUTCH
-                                                : SPELL_EXCRUCIATING_WOUNDS);
-        chosen_spells.push_back(random_choose(SPELL_AGONY,
-                                              SPELL_DEATH_CHANNEL));
-
-        spell_type extra_spell;
+        chosen_spells.push_back(SPELL_ANIMATE_DEAD);
         do
         {
-            extra_spell = random_choose(SPELL_ANIMATE_DEAD,
-                                        SPELL_AGONY,
-                                        SPELL_BORGNJORS_VILE_CLUTCH,
-                                        SPELL_EXCRUCIATING_WOUNDS,
-                                        SPELL_SIMULACRUM,
-                                        SPELL_DEATH_CHANNEL);
+            spell = random_choose(SPELL_ANGUISH,
+                                  SPELL_DISPEL_UNDEAD,
+                                  SPELL_BORGNJORS_VILE_CLUTCH,
+                                  SPELL_EXCRUCIATING_WOUNDS,
+                                  SPELL_DEATH_CHANNEL,
+                                  SPELL_SIMULACRUM);
+
             if (you.has_mutation(MUT_NO_GRASPING)
-                && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
+                && spell == SPELL_EXCRUCIATING_WOUNDS)
             {
-                extra_spell = SPELL_NO_SPELL;
+                spell = SPELL_NO_SPELL;
             }
 
-            if (find(begin(chosen_spells), end(chosen_spells), extra_spell)
+            if (find(begin(chosen_spells), end(chosen_spells), spell)
                 != end(chosen_spells))
             {
-                extra_spell = SPELL_NO_SPELL;
+                spell = SPELL_NO_SPELL;
             }
-        }
-        while (extra_spell == SPELL_NO_SPELL);
 
-        chosen_spells.push_back(extra_spell);
-        chosen_spells.push_back(SPELL_DISPEL_UNDEAD);
+            if (spell != SPELL_NO_SPELL)
+                chosen_spells.push_back(spell);
+        }
+        while (chosen_spells.size() < 5);
     }
 
     simple_god_message(" grants you a gift!");
     // included in default force_more_message
+
+    sort(chosen_spells.begin(), chosen_spells.end(), _sort_spell_level);
     library_add_spells(chosen_spells);
 
     you.num_current_gifts[you.religion]++;
@@ -1892,7 +1911,7 @@ bool is_orcish_follower(const monster& mon)
 bool is_fellow_slime(const monster& mon)
 {
     return mon.alive() && mons_is_slime(mon)
-           && mon.attitude == ATT_STRICT_NEUTRAL
+           && mon.attitude == ATT_GOOD_NEUTRAL
            && mons_is_god_gift(mon, GOD_JIYVA);
 }
 
@@ -2559,7 +2578,8 @@ int piety_scale(int piety)
 /** Gain or lose piety to reach a certain value.
  *
  * If the player cannot gain piety (because they worship Xom, Gozag, or
- * no god), their piety will be unchanged.
+ * no god), their piety will be unchanged. Ignores the Abyss's piety
+ * restrictions.
  *
  * @param piety The new piety value.
  * @pre piety is between 0 and MAX_PIETY, inclusive.
@@ -2581,7 +2601,7 @@ void set_piety(int piety)
         diff = piety - you.piety;
         if (diff > 0)
         {
-            if (!gain_piety(diff, 1, false))
+            if (!gain_piety(diff, 1, false, true))
                 break;
         }
         else if (diff < 0)
@@ -2760,11 +2780,13 @@ static void _gain_piety_point()
  * @param original_gain The numerator of the nominal piety gain.
  * @param denominator The denominator of the nominal piety gain.
  * @param should_scale_piety Should the piety gain be scaled by faith/Sprint?
+ * @param force Should the piety gain be allowed even in the Abyss?
  * @return True if something happened, or if another call with the same
  *   arguments might cause something to happen (because of random number
  *   rolls).
  */
-bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
+bool gain_piety(int original_gain, int denominator, bool should_scale_piety,
+                bool force)
 {
     if (original_gain <= 0)
         return false;
@@ -2776,6 +2798,10 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
     {
         return false;
     }
+
+    // Regular piety can't be gained in the Abyss.
+    if (!force && player_in_branch(BRANCH_ABYSS) && !you_worship(GOD_USKAYAW))
+        return false;
 
     int pgn = should_scale_piety ? piety_scale(original_gain) : original_gain;
 
@@ -3072,6 +3098,8 @@ static void _ash_uncurse()
     {
         const int slot = you.equip[eq_typ];
         if (slot == -1)
+            continue;
+        if (!you.inv[slot].cursed())
             continue;
         if (!uncursed)
         {
@@ -3551,7 +3579,8 @@ static void _god_welcome_handle_gear()
 {
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
-    if (amulet && amulet->sub_type == AMU_FAITH && !is_useless_item(*amulet))
+    if (amulet && amulet->sub_type == AMU_FAITH
+        && ignore_faith_reason().empty())
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
@@ -3672,12 +3701,12 @@ static void _apply_monk_bonus()
         ashenzari_offer_new_curse();
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 19;
     }
-    else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
-        gain_piety(15, 1, false); // of value with this god and looks weird.
+    else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does
+        gain_piety(15, 1, false, true); // nothing of value and looks weird.
     else if (you_worship(GOD_YREDELEMNUL))
         give_yred_bonus_zombies(2); // top up to **
     else
-        gain_piety(35, 1, false);
+        gain_piety(35, 1, false, true);
 }
 
 /// Transfer some piety from an old good god to a new one, if applicable.
@@ -3712,7 +3741,7 @@ static void _transfer_good_god_piety()
     // Give a piety bonus when switching between good gods, or back to the
     // same good god.
     if (old_piety > piety_breakpoint(0))
-        gain_piety(old_piety - piety_breakpoint(0), 2, false);
+        gain_piety(old_piety - piety_breakpoint(0), 2, false, true);
 }
 
 
@@ -3972,7 +4001,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_GOZAG, _join_gozag },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
-            gain_piety(20, 1, false);  // allow instant access to first power
+            gain_piety(20, 1, false, true);  // allow access to first power
     }},
     { GOD_OKAWARU, _join_okawaru },
 #if TAG_MAJOR_VERSION == 34

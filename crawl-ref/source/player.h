@@ -518,6 +518,7 @@ public:
     bool can_see(const actor& a) const override;
     undead_state_type undead_state(bool temp = true) const;
     bool nightvision() const override;
+    bool may_pruneify() const;
     reach_type reach_range() const override;
     bool see_cell(const coord_def& p) const override;
 
@@ -658,6 +659,7 @@ public:
                        vector<const item_def *> *matches = nullptr) const override;
 
     int infusion_amount() const;
+    int infusion_multiplier() const;
 
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;
@@ -688,10 +690,10 @@ public:
     string foot_name(bool plural, bool *can_plural = nullptr) const override;
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
     int arm_count() const;
-    string unarmed_attack_name() const;
+    string unarmed_attack_name(string default_name="Nothing wielded") const;
 
     bool fumbles_attack() override;
-    bool fights_well_unarmed(int heavy_armour_penalty) override;
+    bool fights_well_unarmed() override;
 
     void attacking(actor *other) override;
     bool can_go_berserk() const override;
@@ -766,7 +768,7 @@ public:
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
     bool res_miasma(bool temp = true) const override;
-    int res_water_drowning() const override;
+    bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
@@ -844,9 +846,6 @@ public:
     int unadjusted_body_armour_penalty() const override;
     int adjusted_body_armour_penalty(int scale = 1) const override;
     int adjusted_shield_penalty(int scale = 1) const override;
-    float get_shield_skill_to_offset_penalty(const item_def &item);
-    int armour_tohit_penalty(bool random_factor, int scale = 1) const override;
-    int shield_tohit_penalty(bool random_factor, int scale = 1) const override;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
@@ -930,8 +929,6 @@ protected:
     bool _possible_fearmonger(const monster* mon) const;
 
 };
-COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
-COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
 
 class monster;
 struct item_def;
@@ -1107,6 +1104,7 @@ bool sanguine_armour_valid();
 void activate_sanguine_armour();
 
 void refresh_weapon_protection();
+void refresh_meek_bonus();
 
 void set_mp(int new_amount);
 

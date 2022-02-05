@@ -967,9 +967,9 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.POSSESSABLE, x, y, -status_shift, 0, img_scale);
                 status_shift += 6;
             }
-            if (fg.GLOWING)
+            if (fg.ANGUISH)
             {
-                this.draw_icon(icons.GLOWING, x, y, -status_shift, 0, img_scale);
+                this.draw_icon(icons.ANGUISH, x, y, -status_shift, 0, img_scale);
                 status_shift += 8;
             }
             if (fg.SWIFT)
@@ -1141,7 +1141,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             var img = get_img(mod.get_img(idx));
             if (!info)
             {
-                throw ("Tile not found: " + idx);
+                throw new Error("Tile not found: " + idx);
             }
 
             // this somewhat convoluted approach is to avoid fp scaling

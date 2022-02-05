@@ -127,13 +127,14 @@ for each species. Although you are free to pick any background with almost any
 species (the only restrictions are religious backgrounds where some species
 are not permitted to worship certain gods, or backgrounds where the starting
 equipment is completely unusable by a given species), looking at the recommended
-combinations should give you a rough impression of the weaknesses and strengths
-of the different species.
+combinations should give you a rough impression of the weaknesses, strengths,
+and roleplaying flavour of the different species.
 
 For some backgrounds, you must pick a starting weapon before starting the game.
 
 When you start a new character (or load an old one) and want to get a rough
-impression, you may examine it with the following commands:
+impression, you may read the full character dump with ?# or examine it with the
+following commands:
 
 A
   shows any peculiarities like unusual speed or body parts
@@ -212,8 +213,9 @@ Dexterity
 These primary attributes grow permanently from gaining levels, and may
 increase or decrease temporarily from mutations or while using certain
 artefacts or abilities. Upon gaining levels 3, 9, 15, etc., you may choose an
-attribute to raise. Most species gain additional attributes at some levels,
-with the frequency and the attribute to be increased determined by species.
+attribute to raise by two points. Most species gain additional attributes at
+some levels, with the frequency and the attribute to be increased determined by
+species.
 
 If any attribute drops to zero for some reason, you will experience very
 unpleasant side-effects, being slowed and suffering some stat-specific
@@ -290,9 +292,10 @@ status effect.
 
 Monsters within your field of vision are listed on a special panel, the monster
 list. Single monsters also get indicators of their health status in the form of
-a coloured box, and also on effects they enjoy or suffer from. Within target
-mode you can directly target single monsters by use of the monster list. Use
-'Ctrl-L' to toggle this.
+a coloured box, and also on effects they enjoy or suffer from. If there are
+many monsters in view, the extended monster list can be displayed with
+'Ctrl-X'. Within target mode you can directly target single monsters by use of
+the monster list by using 'Ctrl-X'.
 
 Sometimes characters will be able to use special abilities, e.g. the Naga's
 ability to spit poison or the magical power to turn invisible granted by a
@@ -360,7 +363,8 @@ dungeon features, and typing 'v' when the cursor is over a monster or feature
 brings up a short description of that monster, as well as a short list of its
 various strengths, weaknesses, immunities, and any spells or abilities it has.
 This is generally useful with monsters you've never encountered before. You can
-get a map of the whole level (which shows where you've already been) by typing 'X'.
+also select monsters and features from a list by pressing 'Ctrl-X'. You can get
+a map of the whole level (which shows where you've already been) by typing 'X'.
 
 You can see the full set of commands available while looking around by pressing
 '?', both in the 'x' and 'X' modes.
@@ -569,8 +573,8 @@ the help screen during play via '?%').
 
 You can see your character's skills by pressing the 'm' key; the higher the
 level of a skill, the better you are at it. All characters start with a few
-skills already trained (which depends essentially on their background), those
-which are not present have to be learned from scratch. Each skill can go up to 27.
+skills already trained (determined by their background), those which are not
+present have to be learned from scratch. Each skill can go up to 27.
 
 The skill screen allows you to change which skills are exercised and at what
 speed. Note to new players: it is generally not necessary to finetune the skill
@@ -625,9 +629,9 @@ Again, see the Targeting section.
 
 Some monsters can be friendly; friendly monsters will follow you around and
 fight on your behalf. You can command your allies using the 't' key, which lets
-you shout to attract them or tell them who to attack, or else tell them to stay
-where they are or to follow you again. You can also shout to get the attention
-of all monsters in range if, for some reason, you want to do that.
+you tell them who to attack, or else tell them to stay where they are, retreat,
+or to follow you again. You can also shout to get the attention of all monsters
+in range if, for some reason, you want to do that.
 
 Some special monsters are Uniques. You can identify a unique because he, she or
 they have a name and personality. Many of these come up with very nasty ideas
@@ -788,11 +792,10 @@ There are several weapon skills (press 'm' to show a list of those that you are
 training) like Short Blades, Long Blades, Axes, etc. These skills affect damage,
 accuracy, and speed (up to a point). The same goes for Unarmed Combat.
 
-Weapons can be enchanted; when you first wield or otherwise identify them,
-you reveal values which tell you how much more effective they are than an
-unenchanted version. Weapons which are not enchanted are simply '+0'. Some
-weapons also have special magical effects which make them very effective
-against vulnerable enemies.
+Weapons can be enchanted; when you first identify them, you reveal values which
+tell you how much more effective they are than an unenchanted version. Weapons
+which are not enchanted are simply '+0'. Some weapons also have special magical
+effects which make them very effective against vulnerable enemies.
 
 You can wield weapons with the 'w' command, which is a very quick action. If for
 some reason you want to go bare-handed, type 'w' followed by a hyphen ('-').
@@ -836,21 +839,20 @@ casting certain spells, and is described in detail in section I (Targeting).
 This is also rather important. Most worn armour improves your Armour Class,
 which decreases the amount of damage you take from most types of injury. The
 heavier an armour is, the more AC (armour class) it will provide, at the expense
-of your EV (evasion) and stealth. Heavier types of armour also hamper your melee
-accuracy, making it harder for you to hit monsters. Wearing heavy armour also
-increases your chances of miscasting spells, an effect which is only slightly
-reduced by your Armour skill. These penalties are larger if you have low
-Strength.
+of your EV (evasion) and stealth. Wearing heavy armour also increases your
+chances of miscasting spells, an effect which is only slightly reduced by your
+Armour skill. These penalties are larger if you have low Strength.
 
 A shield normally increases neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
-shield (especially larger shields) with insufficient Shields skill makes you
-less effective in hand combat and hampers your ability to cast spells. It also
-lowers your evasion if you do not have sufficient skill, and you obviously
-cannot wield a two-handed weapon while wearing a shield. Shields are most
-effective against the first attack on you each turn and become less useful for
-every one after that. There are three types: bucklers, kite shields, and tower
-shields, going from smallest to largest.
+shield (especially larger shields) slows your attacks, hampers your ability to
+cast spells, and lowers your evasion. Small species are more strongly affected
+by these penalties, and large species are less affected, but all species can
+reduce and eventually eliminate these penalties by mastering the Shields skill.
+You also obviously cannot wield a two-handed weapon while wearing a shield.
+Shields are most effective against the first attack on you each turn and become
+less useful for every one after that. There are three types: bucklers, kite
+shields, and tower shields, going from smallest to largest.
 
 Some magical armours have special powers. These powers are sometimes automatic,
 affecting you whenever you wear the armour, and sometimes must be activated with
@@ -976,8 +978,8 @@ helmet of see invisible, and so on. Note that, unlike artefacts, such items can
 be modified by enchanting scrolls.
 
 All ego items are noted with special adjectives but not all items noted in this
-way need have a special property (they often have some positive or negative
-enchantment, though):
+way need have a special property (they often have some positive enchantment,
+instead):
 
 :general: glowing, runed;
 :metal armours: shiny;
@@ -1009,10 +1011,11 @@ old ones by reading a scroll of amnesia, which will let you pick a spell to
 forget.
 
 Each spell has a level. A spell's level denotes the amount of skill required to
-use it and indicates how powerful it may be. You can only memorise a certain
-number of levels of spells; type 'M' to find out how many. When you gain
-experience levels or advance the Spellcasting skill, your maximum increases; you
-will need to save up for several levels to memorise the more powerful spells.
+use it, the MP cost of casting it, and indicates how powerful it may be. You
+can only memorise a certain number of levels of spells; type 'M' to find out
+how many. When you gain experience levels or advance the Spellcasting skill,
+your maximum increases; you will need to save up for several levels to memorise
+the more powerful spells.
 
 There are two ways to activate memorised spells: by "quivering" them and using
 the fire interface, or directly by pressing 'z' (for Zap). To choose a spell
@@ -1047,8 +1050,9 @@ you, if not better, and often use it intelligently.
 I. Targeting
 ****************************************
 
-When throwing something, evoking certain wands, or casting spells, you are asked
-for a direction. There are several ways to tell Crawl which monster to target.
+When throwing or firing something, evoking wands, or casting certain spells,
+you are asked for a direction. There are several ways to tell Crawl which
+monster to target.
 
 You can press '?' when asked for a direction; this will bring up a help screen.
 Otherwise, you use the following commands:
@@ -1060,6 +1064,7 @@ Otherwise, you use the following commands:
   further away. Similarly, '-' cycles backwards.
 - Any direction key moves the cursor by one square. Occasionally, it can be
   useful to target non-inhabited squares.
+- Targets can be selected from a list by pressing 'Ctrl-X'.
 - When you are content with your choice of target, press one key of Enter, Del,
   or Space to fire at the target. If you press '.', you also fire, but the
   spell/missile will stop at the target's square if it misses. This can be
@@ -1265,7 +1270,7 @@ distribution has them in the dat/clua/ directory. Have a look at the single
 scripts for short descriptions.
 
 Generally, Crawl should run swiftly on all machines (it compiles out of the box
-for Linux, Windows, and, to some lesser extent, OS X and other Unices). If, for
+for Linux, Windows, OS X, and, to some lesser extent, other Unices). If, for
 some reason, you find Crawl runs unacceptably slowly on your machine, there are
 a few measures which may improve the situation:
 
@@ -1973,7 +1978,7 @@ Warrior backgrounds
 Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
-  Fighters usually start with a good weapon of their choice, a suit of heavy
+  Fighters usually start with a good weapon of their choice, a suit of medium
   armour, a shield, and a potion of might. They have a good general grounding
   in the arts of fighting.
 
@@ -2237,19 +2242,10 @@ Miscellaneous skills
 ========================================
 
 Armour
-  Heavier body armours give more reliable protection from damage but have
-  several disadvantages.
-
-  Having a high Armour skill means that you are used to wearing heavy armour,
-  allowing you to move more freely and gain more protection. When you look at an
-  armour's description (from within the inventory), you can see in particular
-  how cumbersome it is. This is measured by the encumbrance rating.
-
-  This skill slightly helps to overcome the evasion penalty of body armours,
-  reduce the amount by which heavy armour hampers melee fighting, and mitigate
-  the bad effects of heavy armour on spellcasting. Mainly, though, it increases
-  the AC provided by all types of armour (including gloves, cloaks, etc. as
-  well as body armour).
+  Having a high Armour skill means that you are skilled at wearing armour of all
+  kinds, multiplying the protection provided not just by body armour but also
+  by cloaks, gloves, etc. It also very slightly mitigates the penalties to
+  spellcasting from wearing heavy armour.
 
 Dodging
   A high Dodging skill helps you to evade melee and ranged attacks more
@@ -2277,9 +2273,8 @@ Stealth
 
 Shields
   Affects the amount of protection you gain by using a shield, and the degree to
-  which it hinders you. Examining a shield will show the amount of skill needed
-  to completely compensate for its encumbrance - larger species need less skill
-  and smaller species more.
+  which it hinders your evasion, attack speed and spellcasting success.
+  Mastering the Shields skill removes all penalties from using a shield.
 
 Invocations
   Affects your ability to call on your god for aid. Those skilled at Invocations
@@ -2334,8 +2329,8 @@ G or Ctrl-G
   for help on them.
 
 Ctrl-W
-  Set waypoint (a digit between 0 and 9). Check the option show_waypoints. You
-  can go to a waypoint by pressing Ctrl-G or G and the digit.
+  Set waypoint (a digit between 0 and 9). Go to a waypoint by pressing Ctrl-G
+  or uppercase G, then the waypoint's digit.
 
 Attacking and firing
 ----------------------------------------
@@ -2853,6 +2848,10 @@ _
 Tab
   Cycle shops and portals.
 
+Ctrl-X
+  Lists all monsters, items and features in sight. You may read their
+  descriptions and move the cursor to an item, monster, or feature.
+
 Targeting
 ========================================
 
@@ -2892,6 +2891,10 @@ f
 
 Shift-direction
   Fire straight in that direction.
+
+Ctrl-X
+  Lists all valid targets. You may select a target from the list to move the
+  cursor to that target.
 
 ****************************************
 5. Inscriptions

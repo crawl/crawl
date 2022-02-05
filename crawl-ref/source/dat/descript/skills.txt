@@ -93,8 +93,9 @@ versa.
 %%%%
 Armour
 
-Armour skill increases the AC gained by wearing heavy armour, and it also helps
-slightly lessen the hindrance of heavy armour on melee combat and spellcasting.
+Armour skill multiplies the AC gained from wearing armour of all kinds, both
+from body armour and cloaks, gloves, etc. It also slightly lessens spellcasting
+penalties from heavy armour.
 %%%%
 Dodging
 
@@ -116,8 +117,8 @@ distracted or helpless creature, as well as the amount of extra damage dealt.
 Shields
 
 A high Shields skill helps you block melee attacks or projectiles (both magical
-and non-magical) with your equipped shield. Some attacks, such as penetrating
-bolts, cannot be blocked at all.
+and non-magical) with your equipped shield, and reduces their penalty to your
+evasion, attack speed and spellcasting success.
 %%%%
 Unarmed Combat
 
@@ -205,7 +206,8 @@ Transmutations
 
 Transmutations deal with changing shapes. Many Transmutations involve changing
 your own form, but the school also contains spells to cause changes in your
-enemies, or to transform objects around you.
+enemies. Form changing spells will last longer with higher spell power, in
+addition to form-specific perks that might scale with power.
 
 Being skilled in Transmutations increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,

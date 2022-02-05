@@ -1765,6 +1765,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
+    mons_att_changed(mon);
+
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
@@ -2091,7 +2093,7 @@ spret cheibriados_slouch(bool fail)
         }
 
     targeter_radius hitfunc(&you, LOS_DEFAULT);
-    if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
+    if (stop_attack_prompt(hitfunc, "Slouch", _act_slouchable))
         return spret::abort;
 
     fail_check();
@@ -6011,6 +6013,8 @@ spret okawaru_duel(const coord_def& target, bool fail)
     mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
+    if (mons_is_elven_twin(mons))
+        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
     monster_cleanup(mons);
 
     stop_delay(true);

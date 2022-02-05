@@ -2,6 +2,9 @@ define(["jquery", "comm", "client", "./options", "./focus-trap"],
 function ($, comm, client, options, focus_trap) {
     "use strict";
 
+    // Touch event duration
+    var touchstart = 0;
+
     function wrap_popup(elem, ephemeral)
     {
         var wrapper = $(".templates > .ui-popup").clone();
@@ -78,6 +81,66 @@ function ($, comm, client, options, focus_trap) {
         maybe_prevent_server_from_handling_key(ev);
     }
 
+    function target_outside_game(ev)
+    {
+
+        // I think this is for filtering clicks to the chat window, which is
+        // supposed to work even with a popup in place
+        return ($(ev.target).closest("#game").length !== 1
+            // Also allow zooming and scrolling on mobile browsers
+            || ev.type === 'touchstart');
+    }
+
+    function popup_clickoutside_handler(ev)
+    {
+        // this simulates the focus-trap click outside to deactivate code,
+        // since for crawl we really need to send a "close popup" message
+        // to the server rather than do it in the client.
+        // TODO this lets through clicks that are in the popup's margin?
+        // using parent() doesn't help with this issue because the space is
+        // still in the border of ui-popup-outer. Maybe this is ok...
+        if (!target_outside_game(ev) && !top_popup()[0].contains(ev.target))
+        {
+            comm.send_message("key", { keycode: 27 });
+            if (ev.type == "touchend")
+            {
+                // head off a `click` event, hopefully
+                ev.preventDefault();
+                return;
+            }
+        }
+        // otherwise, ignore -- focus-trap checkPointerDown should get it
+        // next.
+    }
+
+    function popup_touchstart_handler(ev)
+    {
+        touchstart = Date.now();
+    }
+
+    function popup_touchend_handler(ev)
+    {
+        if (Date.now() - 500 < touchstart)
+            popup_clickoutside_handler(ev);
+    }
+
+    function context_disable(ev)
+    {
+        // never disable the context menu for text input
+        if (!$(ev.target).is(':input'))
+            ev.preventDefault();
+    }
+
+    function disable_contextmenu()
+    {
+        document.addEventListener("contextmenu", context_disable, true);
+    }
+
+    function undisable_contextmenu()
+    {
+        document.removeEventListener("contextmenu", context_disable, true);
+    }
+
     function show_popup(id, centred, generation_id)
     {
         var $ui_stack = $("#ui-stack");
@@ -94,7 +157,8 @@ function ($, comm, client, options, focus_trap) {
             if (client.is_watching())
                 return;
             wrapper[0].focus_trap = focus_trap(elem[0], {
-                escapeDeactivates: false,
+                escapeDeactivates: false, // explicitly handled
+                clickOutsideDeactivates: false, // explicitly handled
                 fallbackFocus: document.body,
                 onActivate: function () {
                     if ($("#ui-stack").children().length == 1) {
@@ -102,6 +166,16 @@ function ($, comm, client, options, focus_trap) {
                             popup_keydown_handler, true);
                         document.addEventListener("keypress",
                             popup_keypress_handler, true);
+                        if (options.get("tile_web_mouse_control"))
+                        {
+                            document.addEventListener("mousedown",
+                                popup_clickoutside_handler, true);
+                            document.addEventListener("touchstart",
+                                popup_touchstart_handler, true);
+                            document.addEventListener("touchend",
+                                popup_touchend_handler, true);
+                        }
+                        disable_contextmenu();
                     }
                 },
                 onDeactivate: function () {
@@ -110,11 +184,19 @@ function ($, comm, client, options, focus_trap) {
                             popup_keydown_handler, true);
                         document.removeEventListener("keypress",
                             popup_keypress_handler, true);
+                        if (options.get("tile_web_mouse_control"))
+                        {
+                            document.removeEventListener("mousedown",
+                                popup_clickoutside_handler, true);
+                            document.removeEventListener("touchstart",
+                                popup_touchstart_handler, true);
+                            document.removeEventListener("touchend",
+                                popup_touchend_handler, true);
+                        }
+                        undisable_contextmenu();
                     }
                 },
-                allowOutsideClick: function (ev) {
-                    return $(ev.target).closest("#game").length !== 1;
-                },
+                allowOutsideClick: target_outside_game,
             }).activate();
         }).css("display","");
         if (client.is_watching())
@@ -294,9 +376,7 @@ function ($, comm, client, options, focus_trap) {
                 $chat.removeClass("focus-trap");
             },
             returnFocusOnDeactivate: false,
-            clickOutsideDeactivates: true, // warning: this only seems to work
-                                           // with some slightly weird changes
-                                           // to focus-trap.js...
+            clickOutsideDeactivates: true,
         }).activate();
     }
 
@@ -424,6 +504,9 @@ function ($, comm, client, options, focus_trap) {
         show_popup: show_popup,
         hide_popup: hide_popup,
         top_popup: top_popup,
+        disable_contextmenu: disable_contextmenu,
+        undisable_contextmenu: undisable_contextmenu,
+        target_outside_game: target_outside_game,
         hide_all_popups: hide_all_popups,
         utf8_from_key_value: utf8_from_key_value,
         key_value_from_utf8: key_value_from_utf8,

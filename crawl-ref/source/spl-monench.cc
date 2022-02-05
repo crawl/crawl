@@ -111,3 +111,57 @@ bool do_slow_monster(monster& mon, const actor* agent, int dur)
 
     return false;
 }
+
+bool enfeeble_monster(monster &mon, int pow)
+{
+    const int res_margin = mon.check_willpower(&you, pow);
+    vector<enchant_type> hexes;
+
+    if (mons_has_attacks(mon))
+        hexes.push_back(ENCH_WEAK);
+    if (mon.antimagic_susceptible())
+        hexes.push_back(ENCH_ANTIMAGIC);
+    if (res_margin <= 0)
+    {
+        if (mons_can_be_blinded(mon.type))
+            hexes.push_back(ENCH_BLIND);
+        hexes.push_back(ENCH_DAZED);
+    }
+
+    // Resisted the upgraded effects, and immune to the irresistible effects.
+    if (hexes.empty())
+    {
+        return simple_monster_message(mon,
+                   mon.resist_margin_phrase(res_margin).c_str());
+    }
+
+    const int max_extra_dur = div_rand_round(pow, 40);
+    const int dur = 5 + random2avg(max_extra_dur, 3);
+
+    for (auto hex : hexes)
+    {
+        if (mon.has_ench(hex))
+        {
+            mon_enchant ench = mon.get_ench(hex);
+            ench.duration = max(dur * BASELINE_DELAY, ench.duration);
+            mon.update_ench(ench);
+        }
+        else
+            mon.add_ench(mon_enchant(hex, 0, &you, dur * BASELINE_DELAY));
+    }
+
+    if (res_margin > 0)
+        simple_monster_message(mon, " partially resists.");
+
+    return simple_monster_message(mon, " is enfeebled!");
+}
+
+spret cast_vile_clutch(int pow, bolt &beam, bool fail)
+{
+    spret result = zapping(ZAP_VILE_CLUTCH, pow, beam, true, nullptr, fail);
+
+    if (result == spret::success)
+        you.props[VILE_CLUTCH_POWER_KEY].get_int() = pow;
+
+    return result;
+}

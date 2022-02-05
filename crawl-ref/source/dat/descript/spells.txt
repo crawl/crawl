@@ -31,6 +31,12 @@ poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
 %%%%
+Anguish spell
+
+Afflicts nearby foes with supernatural anguish, causing all damage they deal to
+rebound on them for the duration of the effect. Strong-willed foes can resist the
+necromantic visions of pain and suffering, and mindless creatures are unaffected.
+%%%%
 Animate Armour spell
 
 Call upon the spirit of your worn armour to fight alongside you. The spirit moves
@@ -138,21 +144,13 @@ Blade Hands spell
 
 {{
     local hands = you.hand() .. "s"
-    local description =
-               "Causes long, scythe-shaped blades to grow from the " ..
-               "caster's " .. hands .. ", increasing melee damage " ..
-               "significantly.\n\nWhile transformed, equipped weapons, " ..
-               "shields, and gloves are melded, and casting spells " ..
-               "becomes somewhat more difficult."
-
-    if hands == "paws" then
-        return description .. " In addition, the clacking of blades " ..
-               "on the ground makes the caster slightly less stealthy."
-    else
-        return description
-    end
+    return "Causes long, scythe-shaped blades to grow from the " ..
+           "caster's " .. hands .. ", increasing melee damage " ..
+           "significantly."
 }}
 
+While transformed, equipped weapons, shields, and gloves are melded, and
+casting spells becomes somewhat more difficult.
 %%%%
 Blink Allies Away spell
 
@@ -240,7 +238,8 @@ Brothers in Arms spell
 %%%%
 Call Canine Familiar spell
 
-Summons a solitary canine to the caster's aid.
+Summons a solitary canine to the caster's aid. Spell power increases the chance
+of summoning a stronger breed.
 %%%%
 Call Down Damnation spell
 
@@ -258,7 +257,8 @@ or nearly adjacent cannot be struck by this.
 %%%%
 Call Imp spell
 
-Calls forth a minor demon from the pits of Hell.
+Calls forth a minor demon from the pits of Hell. The demon will fight
+alongside the caster for a time depending on spell power.
 %%%%
 Call Lost Soul spell
 
@@ -356,10 +356,10 @@ exploding.
 %%%%
 Conjure Flame spell
 
-Creates a cloud of magically sustained fire at the caster's feet. The fire takes
-a moment to begin burning with vigor and in its fragile initial state is easily
-smothered by either the caster or a wandering monster. Re-casting the spell
-will bring the fire fully to life, but will burn the caster.
+Conjures burning embers at the caster's feet, which will burst into flame soon
+after. Any creature (including the caster) that stands on the embers will smother
+them, so casters are well advised to step away immediately after casting.
+Re-casting the spell will also ignite the embers, burning the caster.
 %%%%
 Conjure Living Spells spell
 
@@ -522,7 +522,8 @@ Dragon's Call spell
 Issues a powerful call to a draconic realm, beckoning forth dragon after dragon
 to engage the summoner's enemies. The spell is taxing to maintain, and each new
 dragon which answers the call will further drain the summoner's magical
-reserves. After the call ends, it cannot be issued again for a short time.
+reserves. After the call ends, it cannot be issued again for a short time. The
+duration of the call and the species of dragons called depend on spell power.
 %%%%
 Drain Life spell
 
@@ -557,6 +558,12 @@ Throws a bolt of electricity at the target, with high accuracy.
 Energy Bolt spell
 
 Fires a bolt of highly destructive energy.
+%%%%
+Enfeeble spell
+
+Overwhelms an enemy with malignant energies, irresistibly weakening their melee
+attacks and disrupting their magic. It will additionally daze and blind any foe
+that fails to resist the full force of the curse.
 %%%%
 Ensnare spell
 
@@ -741,7 +748,7 @@ Haunt spell
 
 Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
-dies.
+dies. The number of spectres summoned increases with spell power.
 %%%%
 Heal Other spell
 
@@ -779,6 +786,7 @@ Ice Form spell
 Transforms the caster into a frozen ice-creature, light enough to float on
 water. The caster gains a freezing melee attack, and becomes incredibly
 resistant to cold and resistant to poison, but vulnerable to fire.
+High power increases the armour granted by this form.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -911,7 +919,8 @@ Tears a gash in reality, creating a self-sustained but temporary portal to an
 unknown, tainted otherworld. It requires open space to succeed. After a short
 time, a powerful clawed tentacle will reach through the portal, remaining bound
 to the caster's will for a duration depending on power. With the portal's
-expiry, the tentacle will be severed and turn on the caster.
+expiry, the tentacle will be severed and turn on the caster. The duration of
+the portal increases with spell power.
 %%%%
 Malign Offering spell
 
@@ -1268,7 +1277,8 @@ Simulacrum spell
 
 Creates an icy replica from the corpse of the original being. This magic is
 unstable, so eventually the replica will sublimate into a freezing cloud.
-Simulacra cannot leave the level they were created on.
+Simulacra cannot leave the level they were created on. The number of simulacra
+created depends on the size of the creature and spell power.
 %%%%
 Siren Song spell
 
@@ -1307,7 +1317,8 @@ Spellforged Servitor spell
 Summons an extraplanar elemental and binds it to a durable shell forged from
 the caster's own magic. The servitor is capable of unleashing some of the
 destructive spells known to its creator, though the strongest and most volatile
-of magics cannot be imbued in this fashion.
+of magics cannot be imbued in this fashion. The strength of the servitor
+increases with spell power.
 %%%%
 Spider Form spell
 
@@ -1359,8 +1370,9 @@ Statue Form spell
 
 Transforms the caster into a slow but extremely robust stone statue. The
 caster's melee damage, both unarmed and with weapons, is substantially
-increased. The caster's stone body is insulated from electricity and gains
-resistance to poison, miasma, and negative energy.
+increased. The caster's stone body is immune to poison and miasma, and gains
+resistance to electricity and negative energy. High power increases the armour
+granted by this form.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
@@ -1404,10 +1416,10 @@ Storm Form spell
 
 Lets the caster walk through the air as a raging, lightning-filled tempest. The
 caster's melee attacks are strengthened, electrified, and strike all adjacent
-foes. The caster also flies, is more evasive, and resists electricity. They can
-launch themselves as a lightning bolt, blasting through everything in their way.
-The damage and evasion granted by storm form are highly dependent on the power
-with which it was cast.
+foes. The caster also flies, is more evasive, gains immunity to poison and
+miasma, and resists electricity. They can launch themselves as a lightning
+bolt, blasting through everything in their way. The damage and evasion granted
+by storm form are highly dependent on the power with which it was cast.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -1479,6 +1491,8 @@ Summon Forest spell
 Forcefully intersects a forested plane with this world. It requires open space
 to succeed. While the spell holds, a spirit of the forest will be called forth,
 and the trees of the forest will be awakened to deal damage to nearby enemies.
+Spell power increases the duration, size, and thickness of the intersected
+plane; as well as the strength of the spirit.
 %%%%
 Summon Greater Demon spell
 
@@ -1494,6 +1508,10 @@ Summon Hell Beast spell
 
 Summons a deadly hell beast.
 %%%%
+Summon Hell Sentinel spell
+
+Summons a Hell Sentinel, a nightmarish edifice of animated hate.
+%%%%
 Summon Holies spell
 
 Calls forth divine warriors to aid the caster.
@@ -1502,15 +1520,18 @@ Summon Horrible Things spell
 
 Opens a gate to the Abyss and calls through one or more hideous abominations
 from that dreadful place. The opening of the gate may drain a portion of the
-caster's intellect.
+caster's intellect. The number of abominations summoned increases with spell
+power.
 %%%%
 Summon Hydra spell
 
 Summons a many-headed hydra to fight alongside the caster for a short time.
+Spell power determines the number of heads.
 %%%%
 Summon Ice Beast spell
 
-Calls forth a beast of ice to serve the caster.
+Calls forth a beast of ice to serve the caster. The strength of the beast
+depends on spell power.
 %%%%
 Summon Illusion spell
 
@@ -1520,7 +1541,8 @@ prowess as the original, and can cast the same spells.
 Summon Lightning Spire spell
 
 Constructs a lightning spire in a nearby location. It can fire bouncing bolts
-of electricity at the caster's foes, but is completely immobile.
+of electricity at the caster's foes, but is completely immobile. The strength
+of the spire depends on spell power.
 %%%%
 Summon Mana Viper spell
 
@@ -1542,12 +1564,17 @@ Calls forth a swarm of death scarabs.
 %%%%
 Summon Small Mammal spell
 
-Summons a small mammal to the caster's aid.
+Summons a rat, bat, or quokka to the caster's aid. Spell power increases the
+chance of summoning a quokka.
 %%%%
 Summon Spectral Orcs spell
 
 Summons between one and three spectral orcs, specialised for melee combat
 and equipped with spectral weaponry and armour.
+%%%%
+Summon Spiders spell
+
+Summons one or more spiders.
 %%%%
 Summon Tzitzimitl spell
 
@@ -1711,3 +1738,5 @@ If cast upon a creature already blessed (or cursed) with magical enchantments,
 those enchantments will be torn apart, transforming into a spray of
 destructive mutagenic radiation. The victim and anyone adjacent will be
 blasted and heavily deformed, weakening them and reducing their armour.
+Summoned creatures are particularly vulnerable, as the enchantments binding
+them to this plane will unravel and cause them to be dismissed immediately.

@@ -26,10 +26,12 @@ of more ordinary instruments of chaos.
 %%%%
 glaive of Prune
 
-A purple glaive that was created by a mad god, and carries a curse which
-transforms anyone wielding it into a prune. Fortunately, the curse works very
-slowly, and one can use it briefly with no consequences worse than slightly
-purple skin and a few wrinkles.
+The glaive of Prune carries a terrible and insidious curse. Unless its wielder
+maintains firm self-control, they are doomed to succumb, undergoing a horrifying
+(albeit temporary) transformation. This is normally trivial to resist, but
+incapacitated wielders are certain to succumb, finding themselves nightmarishly
+purple, squishy, and delicious. They can take comfort in learning that it's
+surprisingly hard to injure a giant prune.
 %%%%
 sword of Power
 
@@ -508,8 +510,8 @@ the amulet vanished from the pages of history.
 %%%%
 autumn katana
 
-An exquisitely crafted sword, enchanted to provide both mental and physical
-strength to the wielder.
+An exquisitely crafted sword. Its blade is so sharp that it can cut through
+space itself.
 %%%%
 shillelagh "Devastator"
 
@@ -688,3 +690,35 @@ A pair of gloves designed to carefully control and channel the flow of magic,
 later misused and mangled by the lunatic murderer-mages of the Fifth Circle.
 Their influence leaves the wearer of these gloves distracted by intrusive
 images, vividly aware of the death and destruction their hands could wreak.
+%%%%
+dreamshard necklace
+
+A beautiful rainbow of colour and motion trapped within a delicate crystal on a
+thin silver chain. Listening carefully, one can hear the distant echo of a
+thousand dreams from all corners of reality, their melody giving a warm sense
+of safety.
+%%%%
+Delatra's gloves
+
+A pair of long ultramarine gloves, worn by a famed experimental alchemist in an
+age long past. They channel the energy of discovery, empowering their wearer with
+the force created by a blind step from ignorance to certainty.
+%%%%
+woodcutter's axe
+
+A weapon that chops foes down as steadily and methodically as a forester cutting
+wood. The unchanging rhythm of its work has settled on it with the force of
+natural law, and no amount of force or skill can make it swing faster or slower.
+%%%%
+Throatcutter
+
+Taken from a paladin of the Shining One by the common cutpurse who murdered her,
+Throatcutter was used for a long series of increasingly sordid deeds thereafter.
+Blood, murder and betrayal stain its history and blade both, and little trace now
+remains of the blade which once stood between danger and the innocent.
+%%%%
+staff of the Meek
+
+A sacred relic of the Monks of St. Lee, followers of the renunciate archmage. Just
+as St. Lee sought to atone for the destruction his spells wrought by protecting
+others, so his staff protects its wielder.

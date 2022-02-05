@@ -864,21 +864,59 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     {
         if (explore_stopped_pos == you.pos())
         {
+            stack_iterator stk(you.pos());
+            string wishlist = comma_separated_fn(stk, stack_iterator::end(),
+                    [] (const item_def & item) { return item.name(DESC_A); },
+                    " and ", ", ", bind(item_needs_autopickup, placeholders::_1,
+                                        false));
             const string prompt =
-                make_stringf("Could not pick up %s here; shall I ignore %s?",
-                             tried_pickup == 1? "an item" : "some items",
-                             tried_pickup == 1? "it" : "them");
+                make_stringf("Could not pick up %s here; ([A]lways) ignore %s?",
+                             wishlist.c_str(),
+                             tried_pickup == 1 ? "it" : "them");
 
             // Make Escape => 'n' and stop run.
             explicit_keymap map;
             map[ESCAPE] = 'n';
             map[CONTROL('G')] = 'n';
-            if (yesno(prompt.c_str(), true, 'y', true, false, false, &map))
+            map[' '] = 'y';
+
+            // If response is Yes (1) or Always (2), mark items for no pickup
+            // If the response is Always, remove the item from autopickup
+            // Otherwise, stop autoexplore.
+            int response = yesno(prompt.c_str(), true, 'n', true, false,
+                                 false, &map, true, true);
+            switch (response)
             {
-                mark_items_non_pickup_at(you.pos());
-                // Don't stop explore.
-                return;
+                case 2:
+                {
+                    vector<string> ap_disabled;
+                    for (stack_iterator si(you.pos()); si; ++si)
+                    {
+                        if (!item_needs_autopickup(*si)
+                            || item_autopickup_level(*si) == AP_FORCE_OFF)
+                        {
+                            continue;
+                        }
+
+                        set_item_autopickup(*si, AP_FORCE_OFF);
+                        ap_disabled.push_back(pluralise(si->name(DESC_DBNAME)));
+                    }
+
+                    if (!ap_disabled.empty())
+                    {
+                        mprf("Autopickup disabled for %s.",
+                             comma_separated_line(ap_disabled.begin(),
+                                                  ap_disabled.end()).c_str());
+                    }
+                }
+                // intentional fallthrough
+                case 1:
+                    mark_items_non_pickup_at(you.pos());
+                    return;
+                default:
+                    break;
             }
+
             canned_msg(MSG_OK);
         }
         explore_stopped_pos = you.pos();
@@ -2331,6 +2369,9 @@ static level_pos _prompt_travel_altar()
         for (const god_type god : god_list)
         {
             if (!nearest_altars[god].is_valid())
+                continue;
+
+            if (is_unavailable_god(god))
                 continue;
 
             // "The Shining One" is too long to keep the same G menu layout
@@ -4589,7 +4630,7 @@ bool explore_discoveries::merge_feature(
 static bool _feat_is_branchlike(dungeon_feature_type feat)
 {
     return feat_is_branch_entrance(feat)
-        || feat == DNGN_ENTER_HELL
+        || feat_is_hell_subbranch_exit(feat)
         || feat == DNGN_ENTER_ABYSS
         || feat == DNGN_EXIT_THROUGH_ABYSS
         || feat == DNGN_ENTER_PANDEMONIUM;

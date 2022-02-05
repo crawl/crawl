@@ -291,6 +291,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     {
     case OBJ_ARMOUR:
         return get_armour_rampaging(item, true)
+               || get_armour_ego_type(item) == SPARM_MAYHEM
                || is_unrandom_artefact(item, UNRAND_LIGHTNING_SCALES);
     case OBJ_POTIONS:
         return item.sub_type == POT_HASTE;
@@ -306,7 +307,8 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
 bool is_wizardly_item(const item_def& item, bool calc_unid)
 {
     if ((calc_unid || item_brand_known(item))
-        && get_weapon_brand(item) == SPWPN_PAIN)
+        && (get_weapon_brand(item) == SPWPN_PAIN
+           || get_armour_ego_type(item) == SPARM_ENERGY))
     {
         return true;
     }

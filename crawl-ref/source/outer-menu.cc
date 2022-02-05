@@ -22,6 +22,15 @@ MenuButton::MenuButton()
     on_hotkey_event([this](const KeyEvent& event) {
         if (event.key() == hotkey)
             return activate();
+#ifndef USE_TILE_LOCAL
+        // This sucks!
+        if (event.key() == CK_NUMPAD_MULTIPLY && hotkey == '*')
+            return activate();
+        if (event.key() == CK_NUMPAD_ADD && hotkey == '+')
+            return activate();
+        if (event.key() == CK_NUMPAD_ADD2 && hotkey == '+')
+            return activate();
+#endif
         return false;
     });
 }

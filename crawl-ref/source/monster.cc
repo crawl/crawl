@@ -712,7 +712,7 @@ bool monster::is_silenced() const
             || has_ench(ENCH_MUTE)
             || (has_ench(ENCH_WATER_HOLD)
                 || has_ench(ENCH_WATERLOGGED))
-               && res_water_drowning() <= 0;
+               && !res_water_drowning();
 }
 
 bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
@@ -2864,6 +2864,14 @@ mon_spell_slot_flags monster::spell_slot_flags(spell_type spell) const
     return slot_flags;
 }
 
+bool monster::immune_to_silence() const
+{
+    for (const mon_spell_slot &slot : spells)
+        if (slot.flags & MON_SPELL_SILENCE_MASK)
+            return false;
+    return true;
+}
+
 bool monster::has_unclean_spell() const
 {
     return search_spells(is_unclean_spell);
@@ -3028,9 +3036,8 @@ bool monster::friendly() const
 
 bool monster::neutral() const
 {
-    mon_attitude_type att = temp_attitude();
-    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL
-           || att == ATT_STRICT_NEUTRAL;
+    const mon_attitude_type att = temp_attitude();
+    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL;
 }
 
 bool monster::good_neutral() const
@@ -3038,14 +3045,9 @@ bool monster::good_neutral() const
     return temp_attitude() == ATT_GOOD_NEUTRAL;
 }
 
-bool monster::strict_neutral() const
-{
-    return temp_attitude() == ATT_STRICT_NEUTRAL;
-}
-
 bool monster::wont_attack() const
 {
-    return friendly() || good_neutral() || strict_neutral();
+    return friendly() || good_neutral();
 }
 
 bool monster::pacified() const
@@ -3360,10 +3362,7 @@ int monster::evasion(bool ignore_helpless, const actor* /*act*/) const
     {
         const item_def* armour = mslot_item(static_cast<mon_inv_type>(slot));
         if (armour)
-        {
-            ev += property(*armour, PARM_EVASION) / 10
-                  / (is_shield(*armour) ? 2 : 6);
-        }
+            ev += property(*armour, PARM_EVASION) / 60;
     }
 
     // evasion from jewellery
@@ -3747,21 +3746,11 @@ int monster::res_elec() const
     return u;
 }
 
-int monster::res_water_drowning() const
+bool monster::res_water_drowning() const
 {
-    int rw = 0;
-
-    if (is_unbreathing())
-        rw++;
-
     habitat_type hab = mons_habitat(*this, true);
-    if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
-        rw++;
 
-    if (get_mons_resist(*this, MR_VUL_WATER))
-        rw--;
-
-    return sgn(rw);
+    return is_unbreathing() || hab == HT_WATER || hab == HT_AMPHIBIOUS;
 }
 
 int monster::res_poison(bool temp) const
@@ -4261,17 +4250,6 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
     if (alive())
     {
-        if (amount != INSTANT_DEATH
-            && mons_species(true) == MONS_DEEP_DWARF)
-        {
-            // Deep Dwarves get to shave _any_ hp loss. Player version:
-            int shave = 1 + random2(2 + random2(1 + get_hit_dice() / 3));
-            dprf("(mon) HP shaved: %d.", shave);
-            amount -= shave;
-            if (amount <= 0)
-                return 0;
-        }
-
         if (amount != INSTANT_DEATH)
         {
             if (petrified())
@@ -4350,6 +4328,13 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && kill_type != KILLED_BY_CLOUD)
         {
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
+        }
+
+        if (amount && !mons_is_firewood(*this)
+            && agent && agent->alive() && agent->is_monster()
+            && agent->as_monster()->has_ench(ENCH_ANGUISH))
+        {
+            anguish_fineff::schedule(agent, amount);
         }
 
         // Handle pain bond behaviour here. Is technically passive damage.
@@ -4910,7 +4895,7 @@ int monster::foe_distance() const
 }
 
 /**
- * Can the monster suffer ENCH_FRENZY?
+ * Can the monster suffer ENCH_INSANE?
  */
 bool monster::can_go_frenzy() const
 {
@@ -6230,19 +6215,13 @@ item_def* monster::disarm()
 /**
  * Checks if the monster can pass through webs freely.
  *
- * Currently: spiders (including Arachne), moths, demonic crawlers,
- * ghosts & other incorporeal monsters, and jelly monsters.
- *
  * @return Whether the monster is immune to webs.
  */
 bool monster::is_web_immune() const
 {
-    return mons_genus(type) == MONS_SPIDER
-            || type == MONS_ARACHNE
-            || mons_genus(type) == MONS_MOTH
-            || mons_genus(type) == MONS_DEMONIC_CRAWLER
-            || is_insubstantial()
-            || mons_genus(type) == MONS_JELLY;
+    return mons_class_flag(type, M_WEB_IMMUNE)
+            || mons_class_flag(mons_genus(type), M_WEB_IMMUNE)
+            || is_insubstantial();
 }
 
 // Monsters with an innate umbra don't have their accuracy reduced by it, and
@@ -6270,7 +6249,7 @@ bool monster::attempt_escape(int attempts)
         if (has_ench(ENCH_VILE_CLUTCH))
         {
             randfact = roll_dice(1, 10 + div_rand_round(
-                    calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 5));
+                           you.props[VILE_CLUTCH_POWER_KEY].get_int(), 5));
         }
         else
             randfact = roll_dice(1, 3 + you.experience_level);

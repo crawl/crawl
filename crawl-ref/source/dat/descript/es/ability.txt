@@ -175,7 +175,7 @@ diezmará la resiliencia de aquellos que puedan sentirlo.
 
 Kikubaaqudgha puede elegir entre protegerte de ello... o no.
 %%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Llama a tus seguidores no muertos desde cualquier lugar de la mazmorra hasta ti
 %%%%
@@ -184,7 +184,7 @@ Drain Life ability
 Sanas puntos de vida absorbiendo la fuerza vital de los monstruos alrededor de
 ti.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Marcas el alma de un monstruo vivo y con inteligencia como lista para ser
 tomada. Cuando el monstruo marcado muera, su alma será tuya.

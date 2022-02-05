@@ -22,6 +22,7 @@
 
 #define ART_FUNC_H
 
+#include "act-iter.h"      // For autumn katana
 #include "areas.h"         // For silenced() and invalidate_agrid()
 #include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
@@ -34,6 +35,7 @@
 #include "fight.h"
 #include "god-conduct.h"   // did_god_conduct
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
+#include "melee-attack.h"  // For autumn katana
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
@@ -51,6 +53,7 @@
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
+#include "unwind.h"        // For autumn katana
 #include "view.h"          // For arc blade's discharge effect
 
 // prop recording whether the singing sword has said hello yet
@@ -145,6 +148,50 @@ static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
     {
         monster* mons = defender->as_monster();
         mons->flags |= MF_EXPLODE_KILL;
+        mons->hurt(attacker, INSTANT_DEATH);
+    }
+}
+
+////////////////////////////////////////////////////
+
+static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                        actor* defender, bool mondied, int /*dam*/)
+{
+    // Can't kill a monster that's already dead.
+    // Don't insta-kill the player
+    if (mondied || defender->is_player())
+        return;
+
+    // Chance to insta-kill based on HP.
+    // (Effectively extra AC-ignoring damage, sort of.)
+    if (defender->stat_hp() <= 20 && one_chance_in(3))
+    {
+        monster* mons = defender->as_monster();
+        if (you.can_see(*attacker))
+        {
+            const bool plural = attacker->is_monster();
+            switch (get_mon_shape(mons_genus(mons->type)))
+            {
+            case MON_SHAPE_PLANT:
+            case MON_SHAPE_ORB:
+            case MON_SHAPE_BLOB:
+            case MON_SHAPE_MISC:
+                mprf("%s put%s %s out of %s misery!",
+                     attacker->name(DESC_THE).c_str(),
+                     plural ? "s" : "",
+                     mons->name(DESC_THE).c_str(),
+                     mons->pronoun(PRONOUN_POSSESSIVE).c_str());
+                break;
+            default: // yes, even fungi have heads :)
+                mprf("%s behead%s %s%s!",
+                     attacker->name(DESC_THE).c_str(),
+                     plural ? "s" : "",
+                     mons->name(DESC_THE).c_str(),
+                     mons->heads() > 1 ? " thoroughly" : "");
+            }
+        }
+        if (mons->num_heads > 1)
+            mons->num_heads = 1; // mass chop those hydra heads
         mons->hurt(attacker, INSTANT_DEATH);
     }
 }
@@ -319,13 +366,16 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
 
 static void _PRUNE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "You feel pruney.");
+    if (you.undead_state() == US_ALIVE)
+        _equip_mpr(show_msgs, "You struggle to resist the curse of the Prune...");
+    else
+        _equip_mpr(show_msgs, "The curse of the Prune has no hold on the dead.");
 }
 
-static void _PRUNE_world_reacts(item_def */*item*/)
+static void _PRUNE_unequip(item_def */*item*/, bool *show_msgs)
 {
-    if (one_chance_in(10))
-        did_god_conduct(DID_CHAOS, 1);
+    if (you.undead_state() == US_ALIVE)
+        _equip_mpr(show_msgs, "The curse of the Prune lifts from you.");
 }
 
 ////////////////////////////////////////////////////
@@ -1298,7 +1348,8 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         && there_are_monsters_nearby(true, true, false)
         && rude_stop_summoning_reason().empty())
     {
-        your_spells(SPELL_BATTLESPHERE, 0, false);
+        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
+                          GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
     }
 }
@@ -1513,4 +1564,74 @@ static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
 {
     if (!you.has_mutation(MUT_HP_CASTING))
         _equip_mpr(show_msgs, "The surge of magic dissipates.");
+}
+
+static void _DREAMSHARD_NECKLACE_equip(item_def * /*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel a whimsical energy watch over you.");
+}
+
+static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs)
+{
+    _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
+}
+
+//
+
+static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
+    actor* defender, bool /*mondied*/, int /*dam*/)
+{
+    // HACK: yes this is in a header but it's only included once
+    static bool _slicing = false;
+
+    if (!one_chance_in(5) || _slicing || !defender)
+        return;
+
+    unwind_bool nonrecursive_space(_slicing, true);
+
+    vector<actor *> targets;
+    for (actor_near_iterator ai(attacker, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (defender->pos() == ai->pos())
+            continue;
+
+        if (mons_aligned(attacker, *ai))
+            continue;
+        if (attacker->is_player()
+            && (ai->wont_attack()
+                || mons_attitude(*ai->as_monster()) == ATT_NEUTRAL))
+        {
+            continue;
+        }
+        if (ai->is_monster() && (mons_is_firewood(*ai->as_monster())
+                                 || mons_is_projectile(*ai->as_monster())))
+        {
+            continue;
+        }
+        targets.emplace_back(*ai);
+    }
+
+    if (targets.empty())
+        return;
+
+    mprf("%s slice%s through the folds of space itself!",
+         attacker->name(DESC_THE).c_str(),
+         attacker->is_player() ? "" : "s");
+
+    // Save the time taken by the player before slicing, was set by the
+    // melee_attack that called us or left over from the player's previous turn
+    unwind_var<int> initial_time(you.time_taken);
+
+    shuffle_array(targets);
+    const size_t max_targets = 4;
+    for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+    {
+        melee_attack atk(attacker, targets[i]);
+        atk.is_projected = true;
+        atk.attack();
+
+        if (!attacker->alive())
+            break;
+    }
 }

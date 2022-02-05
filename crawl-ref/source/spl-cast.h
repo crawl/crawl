@@ -89,12 +89,9 @@ enum class spret
 void surge_power(const int enhanced);
 void surge_power_wand(const int mp_cost);
 
-typedef bool (*spell_selector)(spell_type spell);
-
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
-                const string &title = "Your Spells",
-                spell_selector selector = nullptr);
+                const string &title = "Your Spells");
 int raw_spell_fail(spell_type spell);
 int stepdown_spellpower(int power, int scale = 1);
 int calc_spell_power(spell_type spell, bool apply_intel,
@@ -109,7 +106,7 @@ spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
 int apply_enhancement(const int initial_power, const int enhancer_levels);
 
 void inspect_spells();
-bool can_cast_spells(bool quiet = false, bool exegesis = false);
+bool can_cast_spells(bool quiet = false);
 void do_cast_spell_cmd(bool force);
 
 int hex_success_chance(const int mr, int powc, int scale,
@@ -120,6 +117,7 @@ bool spell_has_targeter(spell_type spell);
 string target_desc(const monster_info& mi, spell_type spell);
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       targeter* hitfunc);
+vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc);
 
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);
 desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,

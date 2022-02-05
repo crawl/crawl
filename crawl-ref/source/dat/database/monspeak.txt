@@ -738,7 +738,7 @@ _fleeing_humanoid_rare_
 
 @The_monster@ shouts @at_foe@, "No! I'll never do that again!"
 
-@The_monster@ [blubbers|cries], "[Mommeee|Daddeee|Meeeeep|Help meeeeeeee|Eeeeekkkk|Oh nooooooo|Waaaaaa]!"
+@The_monster@ [blubbers|cries], "[Mummeee|Daddeee|Meeeeep|Help meeeeeeee|Eeeeekkkk|Oh nooooooo|Waaaaaa]!"
 
 @The_monster@ @_begs_@ @to_foe@, "Please! I have a lot of children!"
 
@@ -940,7 +940,7 @@ __NONE
 # Speech strings by monster genus
 #########################################
 %%%%
-giant slug
+elephant slug
 
 VISUAL:@The_monster@ briefly extends @possessive@ eye-stalks.
 %%%%
@@ -1213,8 +1213,6 @@ VISUAL:@The_monster@ pulls a quokka out of @possessive@ cap.
 %%%%
 Necromancy player ghost
 
-@The_monster@ says @to_foe@, "Soon you will be my slave."
-
 @The_monster@ says, "Death will end your pain."
 
 @The_monster@ says @to_foe@, "Don't worry, I won't let your corpse go to waste."
@@ -1298,8 +1296,6 @@ VISUAL:@The_monster@ prays.
 Evocations player ghost
 
 @The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
-
-@The_monster@ says, "I could kill you with a [stone|fan|lamp]."
 %%%%
 Ashenzari player ghost
 
@@ -1500,9 +1496,7 @@ Xom player ghost
 %%%%
 Yredelemnul player ghost
 
-@The_monster@ says @to_foe@, "You will serve me forever."
-
-@The_monster@ says @to_foe@, "I shall make you my slave for eternity."
+@The_monster@ says @to_foe@, "Your soul may be of use to me."
 
 @The_monster@ says @to_foe@, "First you will die, then you will suffer."
 %%%%
@@ -2350,6 +2344,8 @@ Mugger
 Walk
 
 Earwax
+
+Millenium
 %%%%
 # Lowercase words
 _crazy_yiuf_wordlist2_
@@ -2362,6 +2358,8 @@ song
 
 broken
 
+hand
+
 leg
 
 down
@@ -2371,6 +2369,8 @@ bush
 tired
 
 snail
+
+shrimp
 
 Xom
 
@@ -2624,8 +2624,6 @@ w:50
 
 @The_monster@ says, "What's with all the gesturing? I hate that."
 
-@The_monster@ says, "Why do these elves have so many gross rats and spiders?"
-
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 
 @The_monster@ says, "What's the point of a Hall of Blades anyway?"
@@ -2640,8 +2638,6 @@ w:50
 @The_monster@ says, "If there's anything I hate more than water, it's brackish swamp water."
 
 @The_monster@ says, "I hate trees. I hate swamp water. I hate this place."
-
-@The_monster@ says, "I'd like to genocide mosquitoes."
 
 @The_monster@ says, "That buzzing noise? I hate that the most."
 
@@ -2876,8 +2872,6 @@ w:50
 
 @The_monster@ says, "This place has the same junk as everywhere else. I hate that."
 
-@The_monster@ says, "There's nothing to eat here. I hate that."
-
 @The_monster@ says, "Why is it so quiet?"
 
 @The_monster@ says, "So much for the uneasy undead."
@@ -3000,10 +2994,6 @@ w:50
 
 @The_monster@ says, "Something seems a little bit odd about a God who wants to be paid."
 
-@The_monster@ says, "At least you'll get really skinny."
-
-@The_monster@ says, "I hate stupid dietary laws! If I wanna eat a cow, I'll eat a cow!"
-
 @The_monster@ says, "I've got two hundred gold pieces. Is that enough to cure these mutations?"
 
 @The_monster@ says, "Didn't you like your horns?"
@@ -3046,16 +3036,24 @@ w:50
 
 @The_monster@ says, "How do you pronounce that?"
 
-@The_monster@ says, "At least you'll get some reading material."
-
 @The_monster@ says, "I hate zombies."
 
 @The_monster@ says, "Yuck, you smell of miasma!"
+%%%%
+friendly Yredelemnul Donald
+
+@_yredelemnul_Donald_@
+
+__NEXT
 %%%%
 Yredelemnul Donald
 
 w:50
 @_generic_Donald_@
+
+@_yredelemnul_Donald_@
+%%%%
+_yredelemnul_Donald_
 
 @The_monster@ says, "How does a bone dragon fly, anyway?"
 
@@ -3065,7 +3063,7 @@ w:50
 
 @The_monster@ says, "Did you drop out of Necromancy School?"
 
-@The_monster@ says, "Ah. You're responsible for all those zombies upstairs."
+@The_monster@ says, "Ah. You're responsible for all those zombies."
 
 @The_monster@ says, "I hate zombies."
 
@@ -3095,6 +3093,8 @@ w:50
 @The_monster@ says, "Do you think you're a hero? I hate that."
 
 @The_monster@ says, "How much finesse does it take to swing your arms real fast, anyway?"
+
+@The_monster@ says, "I could take you in a fair duel. No cheating!"
 %%%%
 Makhleb Donald
 
@@ -3107,9 +3107,7 @@ w:50
 
 @The_monster@ says, "What's so minor about destruction?"
 
-@The_monster@ says, "Hey, watch where you throw those lightning balls!"
-
-@The_monster@ says, "Don't blow yourself up, now."
+@The_monster@ says, "Hey, watch where you throw those lightning bolts!"
 
 @The_monster@ says, "I hate demons."
 
@@ -3163,8 +3161,6 @@ w:50
 
 @The_monster@ says, "I considered Trog, but the aftereffects of berserk scare me."
 
-@The_monster@ says, "Fainting that often must mean something's wrong, right?"
-
 @The_monster@ says, "I bet you wish you could cast spells now, right?"
 
 @The_monster@ says, "Are you sure you're allowed to read scrolls?"
@@ -3187,8 +3183,6 @@ w:50
 @The_monster@ says, "If I draw a card, can you tell me which one it is?"
 
 @The_monster@ says, "Where do you keep all those decks?"
-
-@The_monster@ says, "Do you even have room for potions with all those cards?"
 
 @The_monster@ says, "I'm sure I saw a card fall out of that deck."
 
@@ -3255,7 +3249,7 @@ w:50
 
 @The_monster@ says, "You'd better watch out. The one on the left looks like he gets lost easily."
 
-@The_monster@ says, "You think you're the Messiah? I met another guy who thought that, too."
+@The_monster@ says, "You think you're the Messiah? I met another orc who thought that, too."
 
 @The_monster@ says, "Messiah? I hate messiahs."
 
@@ -3316,17 +3310,9 @@ w:50
 
 @The_monster@ says, "What's with all that fungus?"
 
-@The_monster@ says, "I can make a puddle of water on the floor, too."
-
-@The_monster@ says, "I hate trees."
-
-@The_monster@ says, "I hate plants."
-
-@The_monster@ says, "I hate fruit."
+@The_monster@ says, "I hate [trees|plants|fungi]."
 
 @The_monster@ says, "You're like a walking fruit salad. I hate that."
-
-@The_monster@ says, "Where does that sunlight come from, anyway?"
 
 @The_monster@ says, "Do you like gardening? I hate gardening."
 
@@ -3456,6 +3442,8 @@ w:50
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
 @The_monster@ says, "What do potions have to do with a god of gold, anyway?"
+
+@The_monster@ says, "If you give me all your gold, I promise I'll be your friend too."
 %%%%
 Qazlal Donald
 
@@ -3655,8 +3643,7 @@ friendly Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ sings, "Roses are red / violets are blue / I hate many things /
-But most of all you!"
+@The_monster@ sings, "Roses are red / violets are blue / I hate many things / But most of all you!"
 %%%%
 default hostile confused Donald
 
@@ -3768,7 +3755,7 @@ Dowan_Duvessa_dies
 
 @The_monster@ screams, "No! No!"
 
-VISUAL:@The_monster@ seems overcome with grief, but rights @reflexive@ reflexively soon after.
+VISUAL:@The_monster@ seems overcome with grief.
 
 @The_monster@ screams, "No! Oh no!"
 
@@ -3827,8 +3814,6 @@ VISUAL:@The_monster@ shakes in a combination of rage and grief.
 
 VISUAL:@The_monster@ grits @possessive@ teeth and focuses.
 
-@The_monster@ says, "I will journey into the Abyss to retrieve him!"
-
 @The_monster@ says, "I will get him back!"
 %%%%
 twin_ikilled Dowan
@@ -3876,7 +3861,7 @@ Duvessa_Dowan_dies
 
 @The_monster@ screams, "No! How DARE you!"
 
-VISUAL:@The_monster@ weeps, then rights @reflexive@ and shakes @possessive@ weapon.
+VISUAL:@The_monster@ weeps, and shakes @possessive@ weapon @at_foe@.
 %%%%
 Duvessa_Dowan_dies_invisible
 
@@ -4210,55 +4195,6 @@ _Fannar_rare_
 @The_monster@ says @to_foe@, "Does this not give you the chills?"
 %%%%
 ############ Gastronok ### A rather hungry wizard-slug
-# Cantrip messages:
-gastronok_self_buff
-
-@_gastronok_self_buff_@
-%%%%
-gastronok_other_buff
-
-@_gastronok_other_buff_@
-%%%%
-gastronok_debuff
-
-@_gastronok_debuff_@
-%%%%
-_gastronok_self_buff_
-
-@The_monster@ bubbles merrily.
-
-@The_monster@ glows a brilliant shade of cerise.
-
-@The_monster@ wobbles crazily.
-
-@The_monster@'s eyestalks stretch out, then return to normal size.
-%%%%
-# When targeting other monsters.
-_gastronok_other_buff_
-
-@The_monster@ wobbles.
-
-@The_monster@ slows momentarily.
-
-@The_monster@ makes a slurping sound, then looks surprised.
-%%%%
-# Slugform affecting the player.
-_gastronok_debuff_
-
-w:20
-You feel sluggish.
-
-You feel a sudden, passing aversion to salt.
-
-Your skin takes on a slight green cast.
-
-# Doesn't work for Naga and transformed Merfolk.
-# There's a hack in mon-cast.cc to prevent it from being used in those cases.
-Your legs wobble like jelly.
-
-w:5
-You feel a sudden urge to swivel your nonexistent eyestalks around.
-%%%%
 # And finally, his speech.
 Gastronok
 
@@ -5244,7 +5180,7 @@ whispers
 ## END Menkaure ##
 %%%%
 ############ MENNAS ### A silent angel.
-Mennas
+default Mennas
 
 VISUAL:@The_monster@ gestures at you. @player_only@
 
@@ -5253,10 +5189,6 @@ VISUAL:@The_monster@ looks to the heavens.
 VISUAL:@The_monster@ shakes @possessive@ head sadly.
 
 VISUAL:@The_monster@ is caught in a moment of prayer.
-%%%%
-silenced Mennas
-
-@Mennas@
 %%%%
 ############ MURRAY ### A disembodied skull.
 Murray

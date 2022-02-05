@@ -75,6 +75,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "species.h"
+#include "spl-damage.h" // vortex_power_key
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1043,6 +1044,11 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
         {
             x = DNGN_DEMONIC_TREE;
         }
+    }
+    if (minor_version < TAG_MINOR_SPLIT_HELL_GATE && x == DNGN_ENTER_HELL
+        && player_in_hell())
+    {
+        x = branches[you.where_are_you].exit_stairs;
     }
 #else
     UNUSED(minor_version);
@@ -3991,6 +3997,15 @@ static void _tag_read_you(reader &th)
         you.props.erase("tornado_since");
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_VORTEX_POWER
+        && you.duration[DUR_VORTEX])
+    {
+        // trying to calculate power here is scary and won't work well.
+        // instead, just give em a high power vortex. let em have fun.
+        // it's one vortex. how much could it cost, mennas? 20 sultanas?
+        you.props[VORTEX_POWER_KEY] = 150;
+    }
+
 #endif
 }
 
@@ -5800,6 +5815,14 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
 #endif
         mi._colour = unmarshallInt(th);
     unmarshallUnsigned(th, mi.attitude);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
+        && mi.attitude == ATT_OLD_STRICT_NEUTRAL)
+    {
+        mi.attitude = ATT_GOOD_NEUTRAL;
+    }
+#endif
+
     unmarshallUnsigned(th, mi.threat);
     unmarshallUnsigned(th, mi.dam);
     unmarshallUnsigned(th, mi.fire_blocker);
@@ -6655,6 +6678,13 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
+        && m.attitude == ATT_OLD_STRICT_NEUTRAL)
+    {
+        m.attitude = ATT_GOOD_NEUTRAL;
+    }
+#endif
     m.foe      = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     // In 0.16 alpha we briefly allowed YOU_FAULTLESS as a monster's foe.

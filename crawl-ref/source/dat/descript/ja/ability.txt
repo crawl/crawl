@@ -175,7 +175,7 @@ Torment ability
 
 キクバークッグァはあなたを苦痛から保護する...かもしれない。
 %%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 ダンジョンのあらゆる場所からあなたのすぐ間近にアンデッドのしもべを招集する。
 %%%%
@@ -183,7 +183,7 @@ Drain Life ability
 
 あなたの周囲のモンスターから生命力を奪い取り、体力を回復する。
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 刈り取るに適した知性ある生きたモンスターに印を付ける。
 印を付けられたモンスターが死亡すると、その魂はあなたの物になる。

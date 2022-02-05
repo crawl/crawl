@@ -244,7 +244,7 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  */
 LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 /*** Drowning resistance (rDrown).
- * @treturn int resistance level
+ * @treturn boolean
  * @function res_drowning
  */
 LUARET1(you_res_drowning, boolean, you.res_water_drowning())

@@ -699,7 +699,7 @@ void slimify_monster(monster* mon)
 
     monster_polymorph(mon, target, PPT_SLIME);
 
-    mon->attitude = ATT_STRICT_NEUTRAL;
+    mon->attitude = ATT_GOOD_NEUTRAL;
 
     mons_make_god_gift(*mon, GOD_JIYVA);
 

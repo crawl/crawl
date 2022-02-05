@@ -199,6 +199,9 @@ bool DescendingStairsDelay::try_interrupt()
 
 bool PasswallDelay::try_interrupt()
 {
+    // finish() can trigger interrupts, avoid a double message
+    if (interrupt_block::blocked())
+        return false;
     mpr("Your meditation is interrupted.");
     return true;
 }
@@ -241,7 +244,7 @@ bool RevivifyDelay::try_interrupt()
     return false;
 }
 
-void stop_delay(bool stop_stair_travel)
+void stop_delay(bool stop_relocations)
 {
     if (you.delay_queue.empty())
         return;
@@ -262,7 +265,7 @@ void stop_delay(bool stop_stair_travel)
     // list of delays before clearing it.
     _clear_pending_delays();
 
-    if ((!delay->is_stair_travel() || stop_stair_travel)
+    if ((!delay->is_relocation() || stop_relocations)
         && delay->try_interrupt())
     {
         _pop_delay();
@@ -676,6 +679,9 @@ void MemoriseDelay::finish()
 
 void PasswallDelay::finish()
 {
+    // No interrupt message if our destination causes this delay to be
+    // interrupted
+    const interrupt_block block_double_message;
     mpr("You finish merging with the rock.");
     // included in default force_more_message
 
@@ -707,11 +713,8 @@ void PasswallDelay::finish()
     // Move any monsters out of the way.
     if (monster* m = monster_at(dest))
     {
-        // One square, a few squares, anywhere...
-        if (!m->shift() && !monster_blink(m, true))
-            monster_teleport(m, true, true);
-        // Might still fail.
-        if (monster_at(dest))
+        // One square only, this isn't a tloc spell!
+        if (!m->shift())
         {
             mpr("...and sense your way blocked. You quickly turn back.");
             redraw_screen();
@@ -736,6 +739,14 @@ void PasswallDelay::finish()
     // refactored in this way.
     you.update_beholders();
     you.update_fearmongers();
+
+    // in addition to missing player_reacts we miss world_reacts until after
+    // we act, missing out on a trap.
+    if (you.trapped)
+    {
+        do_trap_effects();
+        you.trapped = false;
+    }
 }
 
 void ShaftSelfDelay::finish()
@@ -1004,7 +1015,11 @@ static inline bool _monster_warning(activity_interrupt ai,
         // seen_monster
         view_monster_equipment(mon);
 
-        string text = getMiscString(mon->name(DESC_DBNAME) + " title");
+        string text;
+        if (mon->has_base_name())
+            text = getMiscString(mon->mname + " title");
+        else
+            text = getMiscString(mon->name(DESC_DBNAME) + " title");
         if (text.empty())
             text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)

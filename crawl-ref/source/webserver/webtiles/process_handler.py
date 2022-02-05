@@ -17,17 +17,13 @@ from tornado.escape import xhtml_escape
 from tornado.ioloop import IOLoop
 from tornado.ioloop import PeriodicCallback
 
-import config
-from connection import WebtilesSocketConnection
-from game_data_handler import GameDataHandler
-from inotify import DirectoryWatcher
-from terminal import TerminalRecorder
-from util import DynamicTemplateLoader
-from util import dgl_format_str
-from util import parse_where_data
-from ws_handler import CrawlWebSocket
-from ws_handler import remove_in_lobbys
-from ws_handler import update_all_lobbys
+from webtiles import config, connection, game_data_handler, inotify, terminal, util, ws_handler
+from webtiles.connection import WebtilesSocketConnection
+from webtiles.game_data_handler import GameDataHandler
+from webtiles.inotify import DirectoryWatcher
+from webtiles.terminal import TerminalRecorder
+from webtiles.util import DynamicTemplateLoader, dgl_format_str, parse_where_data
+from webtiles.ws_handler import CrawlWebSocket, remove_in_lobbys, update_all_lobbys
 
 try:
     from typing import Dict, Set, Tuple, Any
@@ -82,7 +78,7 @@ def handle_new_socket(path, event):
         process.logger.info("Found a %s game.", game_info["id"])
 
         # Notify lobbys
-        if config.dgl_mode:
+        if config.get('dgl_mode'):
             update_all_lobbys(process)
     elif event == DirectoryWatcher.DELETE:
         if abspath not in processes: return
@@ -159,7 +155,7 @@ class CrawlProcessHandlerBase(object):
         if key not in self.game_params:
             return None
         base_path = self.format_path(self.game_params[key])
-        if key == "socket_path" and getattr(config, "live_debug", False):
+        if key == "socket_path" and config.get('live_debug'):
             # TODO: this is kind of brute-force given that regular paths aren't
             # validated at all...
             debug_path = os.path.join(base_path, 'live-debug')
@@ -178,7 +174,7 @@ class CrawlProcessHandlerBase(object):
     def check_idle(self):
         if self.is_idle() != self._was_idle:
             self._was_idle = self.is_idle()
-            if config.dgl_mode:
+            if config.get('dgl_mode'):
                 update_all_lobbys(self)
 
     def flush_messages_to_all(self):
@@ -424,10 +420,8 @@ class CrawlProcessHandlerBase(object):
         return [w for w in self._receivers if not w.username]
 
     def update_watcher_description(self):
-        try:
-            player_url_template = config.player_url
-        except:
-            player_url_template = None
+        player_url_template = config.get('player_url')
+
         def wrap_name(watcher, is_player=False):
             if is_player:
                 class_type = 'player'
@@ -459,7 +453,7 @@ class CrawlProcessHandlerBase(object):
                          count = self.watcher_count(),
                          names = s)
 
-        if config.dgl_mode:
+        if config.get('dgl_mode'):
             update_all_lobbys(self)
 
     def add_watcher(self, watcher):
@@ -502,7 +496,7 @@ class CrawlProcessHandlerBase(object):
     def stop(self):
         if self.process:
             self.process.send_signal(subprocess.signal.SIGHUP)
-            t = time.time() + config.kill_timeout
+            t = time.time() + config.get('kill_timeout')
             self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
 
     def kill(self):
@@ -772,7 +766,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         processes[os.path.abspath(self.socketpath)] = self
 
-        if config.dgl_mode:
+        if config.get('dgl_mode'):
             self.logger.info("Starting %s.", game["id"])
         else:
             self.logger.info("Starting game.")
@@ -781,7 +775,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.process = TerminalRecorder(call, self.ttyrec_filename,
                                             self._ttyrec_id_header(),
                                             self.logger,
-                                            config.recording_term_size,
+                                            config.get('recording_term_size'),
                                             env_vars = game.get("env", {}),
                                             game_cwd = game.get("cwd", None),)
             self.process.end_callback = self._on_process_end
@@ -846,7 +840,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         return (clrscr + b"\033[1;1H" + crlf +
                  utf8("Player: %s" % self.username) + crlf +
                  utf8("Game: %s" % self.game_params["name"]) + crlf +
-                 utf8("Server: %s" % config.server_id) + crlf +
+                 utf8("Server: %s" % config.get('server_id')) + crlf +
                  utf8("Filename: %s" % self.lock_basename) + crlf +
                  utf8("Time: (%s) %s" % (tstamp, ctime)) + crlf +
                  clrscr)

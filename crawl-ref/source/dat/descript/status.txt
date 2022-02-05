@@ -315,11 +315,6 @@ Stealth status
 
 Your stealth is greatly increased.
 %%%%
-Mirror status
-
-You are reflecting any damage taken to your attackers, reducing piety depending
-on the amount of damage dealt.
-%%%%
 Vortex status
 
 You are in the eye of a mighty ice storm. After the vortex fades, it cannot be
@@ -347,12 +342,6 @@ Duel status
 
 You are duelling a foe in Okawaru's Arena, and will be returned whence you came
 if you are victorious.
-%%%%
-Prot status
-
-You are beseeching Elyvilon to save your life. If you are mortally wounded, the
-Healer may undo the killing blow. Killing others while asking for divine
-protection will cause penance.
 %%%%
 Disjoin status
 
@@ -486,8 +475,8 @@ Statue status
 
 You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
-Your stone body is insulated from electricity and gains resistance to poison,
-and negative energy.
+Your stone body is immune to poison and miasma, and gains resistance to
+electricity and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -532,6 +521,15 @@ Dragon status
     return desc
 }} Your melee attacks deal incredible damage, and you are much more robust but
 less evasive.
+
+Any equipped weapons and armour are melded.
+%%%%
+Storm status
+
+You have been transformed into a lightning-filled tempest. Your melee attacks
+are strengthened and electrified, and strike all adjacent foes. You gain flight,
+increased evasion, immunity to poison and miasma, and resistance to electricity.
+You gain the ability to launch yourself at foes as a lightning bolt.
 
 Any equipped weapons and armour are melded.
 %%%%
@@ -632,9 +630,10 @@ casting spells, are fine.)
 %%%%
 Ray status
 
-You are currently channelling a ray of searing magical energy. Pressing . will
-maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
-including recasting the spell, will end it.
+You are currently channelling a ray of searing magical energy. Pressing
+<w>.</w> or <w>s</w> to wait in place will maintain and intensify the ray, at
+the cost of 1 MP per turn. Any other action, including recasting the spell,
+will end it.
 %%%%
 Ray+ status
 
@@ -650,7 +649,7 @@ You are moving at supernatural speed, causing movement actions to become
 instant. Any martial attacks made while moving in this way deal increased
 damage and never miss.
 %%%%
-Storm status
+Heavenly status
 
 You are surrounded by a storm of heavenly clouds. While the storm rages, your
 evasion and combat accuracy and damage are substantially increased, and
@@ -735,8 +734,8 @@ Enemies are magically translocated toward you. (This won't wake them up.)
 %%%%
 Zot status
 
-You have spent too much time in one branch, allowing the malevolent entity Zot to
-notice you. If you spend the indicated number of turns in the branch without
+You have spent too much time in one branch, allowing the malevolent power of Zot
+to notice you. If you spend the indicated number of turns in the branch without
 descending to a new floor, Zot will find and consume you.
 %%%%
 Zot count status
@@ -768,9 +767,10 @@ for a short duration.
 %%%%
 Charge- status
 
-You are currently channeling electrical charge. Pressing . will
-maintain and continue this process until it discharges; any other action,
-including recasting the spell, will dissipate the charge harmlessly.
+You are currently channeling electrical charge. Pressing <w>.</w> or <w>s</w>
+to wait in place will maintain and continue this process until it discharges.
+Any other action, including recasting the spell, will dissipate the charge
+harmlessly.
 %%%%
 Charge/ status
 
@@ -786,11 +786,21 @@ Charge| status
 %%%%
 Wave status
 
-You are currently channeling a wave of flames. Pressing . will
-maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
-including recasting the spell, will end it.
+You are currently channeling waves of flames. Pressing <w>.</w> or <w>s</w>
+to wait in place will maintain and intensify the waves, at the cost of 1 MP per
+turn. Any other action, including recasting the spell, will end it.
 %%%%
 Wave+ status
 
 <Wave status>
+%%%%
+Ramparts
+
+You are encasing nearby walls in ice. The ice will crack and fall away if you
+move to a new position.
+%%%%
+Bog
+
+You are creating a toxic bog in the nearby area. You cannot sustain this
+transformation in areas out of your line of sight.
 %%%%

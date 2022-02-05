@@ -61,6 +61,25 @@ protected:
     int damage;
 };
 
+class anguish_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
+
+    static void schedule(const actor *attack, int dam)
+    {
+        final_effect::schedule(new anguish_fineff(attack, dam));
+    }
+protected:
+    anguish_fineff(const actor *attack, int dam)
+        : final_effect(attack, nullptr, coord_def()), damage(dam)
+    {
+    }
+    int damage;
+};
+
 class ru_retribution_fineff : public final_effect
 {
 public:
@@ -367,6 +386,7 @@ public:
         // sequencing errors from inadvertently making us change alignment
         const int realhp = mons->hit_points;
         mons->hit_points = -realhp;
+        mons->flags |= MF_PENDING_REVIVAL;
         final_effect::schedule(new avoided_death_fineff(mons, realhp));
     }
 protected:

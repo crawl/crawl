@@ -7,6 +7,7 @@
 
 #include "enum.h"
 #include "externs.h"
+#include "mon-ai-action.h"
 #include "spell-type.h"
 
 class actor;
@@ -46,6 +47,7 @@ void mons_cast_haunt(monster* mons);
 bool mons_word_of_recall(monster* mons, int recall_target);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
+bool mons_can_bind_soul(monster* binder, monster* bound);
 
 int living_spell_count(spell_type spell, bool random);
 spell_type living_spell_type_for(monster_type mtyp);
@@ -53,3 +55,5 @@ spell_type living_spell_type_for(monster_type mtyp);
 monster* cast_phantom_mirror(monster* mons, monster* targ,
                              int hp_perc = 35,
                              int summ_type = SPELL_PHANTOM_MIRROR);
+
+ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell);

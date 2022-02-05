@@ -3690,7 +3690,6 @@ TAGS:   temple_altars_9 temple_altars_10 temple_altars_11 temple_altars_12
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 4
-# XXX: The only temple with this...
 KFEAT:  O = altar_ecumenical
 : local altar_count = get_altar_count(_G, 12)
 : nsubst("O = " .. altar_count .. ":B / 1:O.... / *:.")
@@ -3835,17 +3834,17 @@ c...............c
 ccccccccccccccccc
 ENDMAP
 
-# 17, 18 gods
+# 16, 17 gods
 NAME:   minmay_temple_bridge_d
-TAGS:   no_cloud_gen temple_variable temple_altars_17 temple_altars_18
+TAGS:   no_cloud_gen temple_variable temple_altars_16 temple_altars_17
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 2
 SUBST:  A : TUV
-: local altar_count = get_altar_count(_G, 18)
-: if altar_count == "17" then
+: local altar_count = get_altar_count(_G, 17)
+: if altar_count == "16" then
 SUBST:  C = .
-: elseif altar_count == "18" then
+: elseif altar_count == "17" then
 SUBST:  C = B
 : end
 MAP
@@ -4130,4 +4129,107 @@ ccQ..gh.hg..Lcc
  cc.........cc
   ccP.O.N.Mcc
    ccccccccc
+ENDMAP
+
+# 12 gods
+# plus a single "untended" Ignis altar
+NAME:    pdpol_scorched_temple
+TAGS:    no_cloud_gen temple_variable temple_altars_12 no_pool_fixup
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  2
+KFEAT:   I = altar_ignis
+MARKER:  I = lua:fog_machine { cloud_type = "grey smoke", \
+             pow_max = 3, delay_min = 10, delay_max = 30, \
+             start_clouds = 0, size = 1, excl_rad = -1 }
+: set_feature_name("granite_statue", "broken pillar")
+SUBST:   ^ = ^!!
+KFEAT:   ^ = web
+SUBST:   " = -!!
+SUBST:   ' =  LL--!^
+SUBST:   L =  ll-
+SUBST:   b = bbx
+SUBST:   G = G!
+COLOUR:  - = brown
+COLOUR:  x! = red
+COLOUR:  b = lightred
+COLOUR:  AG = red
+TILE:    G = dngn_crumbled_column
+RTILE:   x = wall_volcanic
+FTILE:   AGI^! = floor_rough_red
+FTILE:   - = floor_rough_brown
+MAP
+xxxxxxxxxxxxxxcccccxx
+xxxxxxxxxxxxxcc.B.ccx
+xxxxxxxxxxxxccB.w.Bcc
+xxxxxxxxxxxxc..Www..c
+xxxxxxxxxxxxcTwwBwwTc
+xxxxxxxxxxxxc..www..c
+xxxbbbbbxxxxccB.w.Bcc
+xxbb^G^bbxxxxcc.T.ccx
+xbG^"""^Gbxxxxcc.ccxx
+bb^"'''"^bbbbbbc.cxxx
+b^"'LLL'"G^^^^Gc.cxxx
+bG"""IL'"A"""""+{cxxx
+b^"'LLL'"G^^^^Gc.cxxx
+bb^"'''"^bbbbbbc.cxxx
+xbG^"""^Gbxxxxcc.ccxx
+xxbb^G^bbxxxxcc.T.ccx
+xxxbbbbbxxxxccB.w.Bcc
+xxxxxxxxxxxxc..www..c
+xxxxxxxxxxxxcTwwBwwTc
+xxxxxxxxxxxxc..Www..c
+xxxxxxxxxxxxccB.w.Bcc
+xxxxxxxxxxxxxcc.B.ccx
+xxxxxxxxxxxxxxcccccxx
+ENDMAP
+
+# 12 gods with robust flame shrines,
+# plus sputtering smoke for Ignis and some ecumenical altars
+NAME:    ebering_untended_altars
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  2
+SUBST:   A : GTUVt
+NSUBST:  I = 1:I / *:O
+KFEAT:   I = altar_ignis
+KFEAT:   O = altar_ecumenical
+SUBST:   ^ = ^F.
+KFEAT:   ^ = web
+KMONS:   P = plant
+KMONS:   F = fungus
+MARKER:  L = lua:fog_machine { cloud_type = "flame", delay = 10, \
+                  pow_min = 100, pow_max = 100, size = 1, walk_dist = 0, \
+                  excl_rad = 0 }
+MARKER:  S = lua:fog_machine { cloud_type = "black smoke", delay = 50, \
+                  pow_min = 1, pow_max = 10, size = 1, walk_dist = 0, \
+                  excl_rad = 0, spread_rate = 0 }
+MAP
+            ccc
+        cccccLccccc
+       ccSccPBPccLcc
+   ccccc^I^.....PBPccccc
+   cLcPA...........A^cSc
+   ccB...............Icc
+   cP.................^c
+  ccA.................Acc
+ ccP.........A.........Pcc
+ cLB.....A.......A.....BLc
+ ccP...................Pcc
+ cc.....................cc
+ccP.....................^cc
+cLB.....A....{....A.....ISc
+ccP.....................^cc
+ cc.....................cc
+ cc^...................Pcc
+ cSI.....A.......A.....BLc
+ cc^.........A.........Pcc
+  ccA.................Acc
+   cP.................Pc
+   ccB...............Bcc
+   cLcPA...........APcLc
+   cccccPBP.....PBPccccc
+       ccLccPBPccLcc
+        cccccLccccc
+            ccc
 ENDMAP

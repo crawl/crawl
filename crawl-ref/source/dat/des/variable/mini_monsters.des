@@ -369,6 +369,27 @@ xxxxxxxxx
 xxxxxxxxx
 ENDMAP
 
+NAME:   hellmonk_scarab_ruin
+TAGS:   ruin
+DEPTH:  Crypt, Depths
+MONS:   death scarab band
+FTILE:  1.c = floor_sandstone
+TILE:   c = wall_tomb
+NSUBST: ' = 3 = 1.. / *:.
+MAP
+   ccccc
+ ccc...ccc
+cc..c.c..cc
+ccc..1..ccc
+@...ccc...@
+ccc.....ccc
+c.ccc.ccc.c
+c...c.c...c
+c...c.c...c
+ccc.....ccc
+  ccc@ccc
+ENDMAP
+
 NAME:    nicolae_wormholes
 TAGS:    transparent
 DEPTH:   D:1-5
@@ -2352,6 +2373,35 @@ cppc....cppc
 cp.+.1..+.pc
 cccc....cccc
 cccccccccccc
+ENDMAP
+
+NAME:   hellmonk_jugg_or_not
+DEPTH:  D:13-, Orc:1
+WEIGHT: 3
+TAGS:   no_monster_gen no_item_gen
+MONS:   juggernaut
+KFEAT:   B = altar_nemelex_xobeh
+SHUFFLE: DE
+MARKER:  P = lua:transp_loc("jugg_or_not_entry")
+MARKER:  Q = lua:transp_dest_loc("jugg_or_not_entry")
+MARKER:  R = lua:transp_loc("jugg_or_not_exit")
+MARKER:  S = lua:transp_dest_loc("jugg_or_not_exit")
+MARKER:  D = lua:transp_loc("jugg_or_not_jugg")
+MARKER:  F = lua:transp_dest_loc("jugg_or_not_jugg")
+MARKER:  E = lua:transp_loc("jugg_or_not_not")
+MARKER:  G = lua:transp_dest_loc("jugg_or_not_not")
+MARKER:  H = lua:transp_loc("jugg_or_not_jugg_end")
+MARKER:  K = lua:transp_dest_loc("jugg_or_not_jugg_end")
+MARKER:  J = lua:transp_loc("jugg_or_not_not_end")
+MARKER:  L = lua:transp_dest_loc("jugg_or_not_not_end")
+MAP
+      ..........
+  ....nnnnnnnnnn.
+ .nnnnnF..1HnK|nn.
+@PnQDEnnnnnnnn|RnS.
+ .nnnnnG..BJnL|nn.
+  ....nnnnnnnnnn.
+      ..........
 ENDMAP
 
 NAME:   nicolae_grassy_gnolls
@@ -8205,6 +8255,98 @@ MAP
             nbwbn
              nbn
               b
+ENDMAP
+
+# The orcs have wrecked her old lab...
+NAME:   pf_guarded_unrand_delatra
+TAGS:   no_monster_gen
+DEPTH:  D:2-6
+WEIGHT: 3
+KFEAT:  - = broken_door
+ITEM:   delatra's gloves, any potion no_pickup / any scroll no_pickup
+MONS:   orc, orc wizard, orc warrior
+: if you.depth() < 4 then
+SUBST:  1 = 1..
+: else
+SUBST:  2 = 3
+NSUBST: 1 = 2:2 / 1
+: end
+COLOUR: x. = blue
+TILE:   x = wall_pebble_lightblue
+FTILE:  .de123- = floor_pebble_blue
+MAP
+        @
+       x-x
+      xx.xx
+      x...x
+      xG.Gx
+      x1.1x
+xxxxxxxx-xxxx
+x.e.x.......x
+x...-.1...1.xxxxx
+x1.1x.......x1.1x
+xxxxx.1.2.1.-...x
+    x...d...x.e.x
+    xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   pf_guarded_unrand_woodcutter
+TAGS:   no_monster_gen
+DEPTH:  D:2-8
+WEIGHT: 3
+ITEM:   woodcutter's axe, hand axe
+MONS:   gnoll, gnoll shaman, gnoll sergeant
+: if you.depth() < 4 then
+SUBST:  2 = 1
+SUBST:  1 = 1..
+: elseif you.depth() < 6 then
+NSUBST: 2 = 2 / 1
+: else
+SUBST:  1 = 1 / 3
+: end
+MAP
+     xxxxxxxxx
+    xxtttttttxx
+   xxttte.1.ttx
+ xxxttt..ccnccx
+xxttt1..1c..2cxx
+xtte..t1.n1..ccx
+@........+.3d.cx
+xtt...1t.n1..ccx
+xxttt1e.1c..2cxx
+ xxxttt..ccnccx
+   xxttt.1.ettx
+    xxtttttttxx
+     xxxxxxxxx
+ENDMAP
+
+# Beogh's priests aren't fond of competition.
+NAME:   pf_guarded_unrand_meek
+TAGS:   no_monster_gen
+DEPTH:  D:3-9
+WEIGHT: 3
+ITEM:   staff of the Meek no_pickup
+: dgn.delayed_decay(_G, '_', 'human corpse')
+MONS:  orc, orc priest, orc warrior
+: if you.depth() < 5 then
+SUBST:  2 = .
+SUBST:  1 = 1.
+SUBST:  3 = 2
+: elseif you.depth() >= 8 then
+SUBST:  1 = 123
+: end
+KFEAT: G = orcish_idol
+KFEAT: _ = altar_beogh
+MAP
+  ccc ccc
+cccGcccGcc
+c1...c.1.c
+c.1cc..2Gcc
+@...c1.3d_c
+c.1cc..2Gcc
+c1...c.1.c
+cccGcccGcc
+  ccc ccc
 ENDMAP
 
 ###################################################################

@@ -63,6 +63,7 @@
 #define SEARING_RAY_AIM_SPOT_KEY "searing_ray_aimed_at_spot"
 #define SEARING_RAY_TARGET_KEY "searing_ray_target"
 #define SEARING_RAY_MID_KEY "searing_ray_mid"
+#define SEARING_RAY_POWER_KEY "searing_ray_power"
 
 static bool _act_worth_targeting(const actor &caster, const actor &a)
 {
@@ -309,7 +310,7 @@ static bool _warn_about_chain_lightning()
     bool penance;
     bad_attack(ex_mon, adj, suffix, penance, you.pos());
     const string and_more = bad_targets.size() > 1 ?
-            make_stringf(" (and %lu other bad targets)",
+            make_stringf(" (and %zu other bad targets)",
                          bad_targets.size() - 1) : "";
     const string prompt = make_stringf("Chain Lightning might hit %s%s. Cast it anyway?",
                                        ex_mon->name(DESC_THE).c_str(),
@@ -670,7 +671,11 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
     if (actual)
     {
         if (YOU_KILL(beam.thrower))
+        {
             _player_hurt_monster(target, hurted, beam.flavour, false);
+            if (target.alive())
+                you.pet_target = target.mindex();
+        }
         else if (hurted)
             target.hurt(agent, hurted, beam.flavour);
 
@@ -1340,10 +1345,7 @@ spret cast_fragmentation(int pow, const actor *caster,
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
-        {
-            canned_msg(MSG_OK);
             return spret::abort;
-        }
     }
 
     fail_check();
@@ -1785,9 +1787,9 @@ spret cast_scorch(int pow, bool fail)
 
     you.pet_target = targ->mindex();
 
-    if (damage > 0 && !targ->has_ench(ENCH_FIRE_VULN))
+    if (damage > 0)
     {
-        if (you.can_see(*targ))
+        if (you.can_see(*targ) && !targ->has_ench(ENCH_FIRE_VULN))
         {
             mprf("%s fire resistance burns away.",
                  targ->name(DESC_ITS).c_str());
@@ -1831,32 +1833,40 @@ dice_def irradiate_damage(int pow, bool random)
  *
  * @param where     The cell in question.
  * @param pow       The power with which the spell is being cast.
- * @param agent     The agent (player or monster) doing the irradiating.
+ * @param agent    The agent (player or monster) doing the irradiating.
  */
-static int _irradiate_cell(coord_def where, int pow, actor *agent)
+static int _irradiate_cell(coord_def where, int pow, const actor &agent)
 {
-    monster *mons = monster_at(where);
-    if (!mons || !mons->alive())
-        return 0; // XXX: handle damaging the player for mons casts...?
+    actor *act = actor_at(where);
+    if (!act || !act->alive())
+        return 0;
+    const bool hitting_player = act->is_player();
 
     const dice_def dam_dice = irradiate_damage(pow);
     const int base_dam = dam_dice.roll();
-    const int dam = mons->apply_ac(base_dam);
+    const int dam = act->apply_ac(base_dam);
 
-    if (god_protects(mons, false))
+    if (god_protects(act->as_monster(), false))
         return 0;
 
-    mprf("%s is blasted with magical radiation%s",
-         mons->name(DESC_THE).c_str(),
+    mprf("%s %s blasted with magical radiation%s",
+         act->name(DESC_THE).c_str(),
+         conjugate_verb("are", hitting_player).c_str(),
          attack_strength_punctuation(dam).c_str());
 
-    if (agent->is_player())
-        _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
+    if (agent.is_player())
+        _player_hurt_monster(*act->as_monster(), dam, BEAM_MMISSILE);
     else if (dam)
-        mons->hurt(agent, dam, BEAM_MMISSILE);
+        act->hurt(&agent, dam, BEAM_MMISSILE);
 
-    if (mons->alive())
-        mons->malmutate("");
+    if (act->alive())
+    {
+        // be nice and "only" contaminate the player a lot
+        if (hitting_player)
+            contaminate_player(2000 + random2(1000));
+        else
+            act->malmutate("");
+    }
 
     return dam;
 }
@@ -1866,55 +1876,54 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
  * the player.
  *
  * @param pow   The power at which the spell is being cast.
- * @param who   The actor doing the irradiating.
+ * @param caster   The actor doing the irradiating.
  * @param fail  Whether the player has failed to cast the spell.
  * @return      spret::abort if the player changed their mind about casting after
  *              realizing they would hit an ally; spret::fail if they failed the
  *              cast chance; spret::success otherwise.
  */
-spret cast_irradiate(int powc, actor* who, bool fail)
+spret cast_irradiate(int powc, actor &caster, bool fail)
 {
-    targeter_radius hitfunc(who, LOS_NO_TRANS, 1, 0, 1);
-    auto vulnerable = [who](const actor *act) -> bool
+    targeter_radius hitfunc(&caster, LOS_NO_TRANS, 1, 0, 1);
+    auto vulnerable = [&caster](const actor *act) -> bool
     {
         return !act->is_player()
-               && !god_protects(who, act->as_monster());
+               && !god_protects(&caster, act->as_monster());
     };
 
-    if (stop_attack_prompt(hitfunc, "irradiate", vulnerable))
+    if (caster.is_player() && stop_attack_prompt(hitfunc, "irradiate", vulnerable))
         return spret::abort;
 
     fail_check();
 
-    ASSERT(who);
-    if (who->is_player())
+    if (caster.is_player())
         mpr("You erupt in a fountain of uncontrolled magic!");
     else
     {
-        simple_monster_message(*who->as_monster(),
+        simple_monster_message(*caster.as_monster(),
                                " erupts in a fountain of uncontrolled magic!");
     }
 
     bolt beam;
     beam.name = "irradiate";
     beam.flavour = BEAM_VISUAL;
-    beam.set_agent(&you);
+    beam.set_agent(&caster);
     beam.colour = ETC_MUTAGENIC;
     beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
     beam.range = 1;
     beam.ex_size = 1;
     beam.is_explosion = true;
     beam.explode_delay = beam.explode_delay * 3 / 2;
-    beam.source = you.pos();
-    beam.target = you.pos();
+    beam.source = caster.pos();
+    beam.target = caster.pos();
     beam.hit = AUTOMATIC_HIT;
     beam.explode(true, true);
 
-    apply_random_around_square([powc, who] (coord_def where) {
-        return _irradiate_cell(where, powc, who);
-    }, who->pos(), true, 8);
+    apply_random_around_square([powc, &caster] (coord_def where) {
+        return _irradiate_cell(where, powc, caster);
+    }, caster.pos(), true, 8);
 
-    if (who->is_player())
+    if (caster.is_player())
         contaminate_player(1000 + random2(500));
     return spret::success;
 }
@@ -2597,8 +2606,7 @@ spret cast_sandblast(int pow, bolt &beam, bool fail)
         return spret::abort;
     }
 
-    zap_type zap = ZAP_SANDBLAST;
-    const spret ret = zapping(zap, pow, beam, true, nullptr, fail);
+    const spret ret = zapping(ZAP_SANDBLAST, pow, beam, true, nullptr, fail);
 
     if (ret == spret::success)
     {
@@ -2948,6 +2956,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
             mpr("Your toxic radiance grows in intensity.");
 
         you.increase_duration(DUR_TOXIC_RADIANCE, 2 + random2(pow/20), 15);
+        you.props[TOXIC_RADIANCE_POWER_KEY].get_int() = pow;
         toxic_radiance_effect(&you, 10, true);
 
         flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
@@ -3001,7 +3010,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
 {
     int pow;
     if (agent->is_player())
-        pow = calc_spell_power(SPELL_OLGREBS_TOXIC_RADIANCE, true);
+        pow = you.props[TOXIC_RADIANCE_POWER_KEY].get_int();
     else
         pow = agent->as_monster()->get_hit_dice() * 8;
 
@@ -3053,6 +3062,74 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             }
         }
     }
+}
+
+static void _setup_unravelling(bolt &beam, int pow, coord_def target)
+{
+    zappy(ZAP_UNRAVELLING, pow, false, beam);
+    beam.set_agent(&you);
+    beam.source = target;
+    beam.target = target;
+    beam.ex_size = 1;
+}
+
+spret cast_unravelling(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const actor* victim = actor_at(target);
+    if ((!victim || !you.can_see(*victim))
+        && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    if (victim && (victim->is_player() && !player_is_debuffable()
+                   || victim->is_monster() && you.can_see(*victim)
+                      && !monster_can_be_unravelled(*victim->as_monster())))
+    {
+        mprf("%s %s no magical effects to unravel.",
+             victim->name(DESC_THE).c_str(),
+             victim->conj_verb("have").c_str());
+        return spret::abort;
+    }
+
+    targeter_unravelling hitfunc;
+    hitfunc.set_aim(target);
+    auto vulnerable = [](const actor *act) -> bool
+    {
+        return !(act->is_monster() && god_protects(act->as_monster()));
+    };
+
+    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE
+        && !yesno("The unravelling is likely to hit you. Continue anyway?",
+                  false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(hitfunc, "unravel", vulnerable))
+        return spret::abort;
+
+    fail_check();
+
+    if (!victim)
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return spret::success;
+    }
+
+    bolt beam;
+    _setup_unravelling(beam, pow, target);
+    beam.fire();
+
+    return spret::success;
 }
 
 spret cast_inner_flame(coord_def target, int pow, bool fail)
@@ -3165,6 +3242,7 @@ spret cast_flame_wave(int pow, bool fail)
     beam.explode(true, true);
 
     you.props[FLAME_WAVE_KEY] = 0;
+    you.props[FLAME_WAVE_POWER_KEY].get_int() = pow;
 
     string msg = "(Press <w>%</w> to intensify the flame waves.)";
     insert_commands(msg, { CMD_WAIT });
@@ -3196,7 +3274,7 @@ void handle_flame_wave()
         return;
     }
 
-    const int pow = calc_spell_power(SPELL_FLAME_WAVE, true);
+    const int pow = you.props[FLAME_WAVE_POWER_KEY].get_int();
     bolt beam;
     if (!_prep_flame_wave(beam, pow, lvl))
     {
@@ -3240,6 +3318,7 @@ spret cast_searing_ray(int pow, bolt &beam, bool fail)
         you.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
                                                             || !mons;
         you.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
+        you.props[SEARING_RAY_POWER_KEY].get_int() = pow;
 
         if (mons)
             you.props[SEARING_RAY_MID_KEY].get_int() = mons->mid;
@@ -3286,7 +3365,7 @@ void handle_searing_ray()
     }
 
     const zap_type zap = zap_type(ZAP_SEARING_RAY);
-    const int pow = calc_spell_power(SPELL_SEARING_RAY, true);
+    const int pow = you.props[SEARING_RAY_POWER_KEY].get_int();
 
     if (!you.props[SEARING_RAY_AIM_SPOT_KEY].get_bool())
     {
@@ -3808,6 +3887,7 @@ spret cast_frozen_ramparts(int pow, bool fail)
 
     env.level_state |= LSTATE_ICY_WALL;
     you.props[FROZEN_RAMPARTS_KEY] = you.pos();
+    you.props[FROZEN_RAMPARTS_POWER_KEY].get_int() = pow;
 
     mpr("The walls around you are covered in ice.");
     you.duration[DUR_FROZEN_RAMPARTS] = random_range(40 + pow,
@@ -4052,7 +4132,7 @@ spret cast_noxious_bog(int pow, bool fail)
     for (auto pos : bog_locs)
     {
         temp_change_terrain(pos, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
-                TERRAIN_CHANGE_BOG, you.as_monster());
+                TERRAIN_CHANGE_BOG, MID_PLAYER);
     }
 
     flash_view_delay(UA_PLAYER, LIGHTGREEN, 100);

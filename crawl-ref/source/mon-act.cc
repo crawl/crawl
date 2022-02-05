@@ -512,7 +512,8 @@ static const string BATTY_TURNS_KEY = "BATTY_TURNS";
 
 static void _handle_battiness(monster &mons)
 {
-    if (!mons_is_batty(mons)) return;
+    if (!mons_is_batty(mons))
+        return;
     mons.behaviour = BEH_WANDER;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;
@@ -1063,6 +1064,9 @@ static bool _handle_wand(monster& mons)
 
     const spell_type mzap =
         spell_in_wand(static_cast<wand_type>(wand->sub_type));
+
+    if (!ai_action::is_viable(monster_spell_goodness(&mons, mzap)))
+        return false;
 
     if (!setup_mons_cast(&mons, beem, mzap, true))
         return false;
@@ -1708,7 +1712,7 @@ void handle_monster_move(monster* mons)
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-        if (bernoulli(gold, 3.0/100.0))
+        if (x_chance_in_y(3 * gold, 100))
         {
             simple_monster_message(*mons,
                 " is distracted by your dazzling golden aura.");
@@ -2171,7 +2175,7 @@ static void _post_monster_move(monster* mons)
                 }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER,
                                     random_range(50, 80),
-                                    TERRAIN_CHANGE_FLOOD, mons);
+                                    TERRAIN_CHANGE_FLOOD, mons->mid);
             }
     }
 
@@ -2612,7 +2616,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         if (!you.can_see(mons))
         {
             mprf("Something unseen %s", open_str.c_str());
-            interrupt_activity(activity_interrupt::force);
+            interrupt_activity(activity_interrupt::sense_monster);
         }
         else if (!you_are_delayed())
         {
@@ -3166,7 +3170,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door bursts into shrapnel!");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " bursts through the door, destroying it!");
@@ -3192,7 +3196,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door mysteriously vanishes.");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " eats the door!");

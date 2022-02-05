@@ -57,10 +57,9 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       final_attack_delay(0), special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), ev_margin(0), weapon(nullptr),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
-      shield(nullptr), art_props(0), unrand_entry(nullptr),
+      art_props(0), unrand_entry(nullptr),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
-      attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
       defender_shield(nullptr), fake_chaos_attack(false), simu(false),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
@@ -145,20 +144,6 @@ bool attack::handle_phase_end()
 }
 
 /**
- * Calculate to-hit penalties from the attacker's armour and shield, if any.
- * Set them into the appropriate fields.
- *
- * @param random If false, calculate average to-hit penalties deterministically.
- */
-void attack::calc_encumbrance_penalties(bool random)
-{
-    attacker_armour_tohit_penalty =
-        maybe_random_div(attacker->armour_tohit_penalty(true, 20), 20, random);
-    attacker_shield_tohit_penalty =
-        maybe_random_div(attacker->shield_tohit_penalty(true, 20), 20, random);
-}
-
-/**
  * Calculate the to-hit for an attacker before the main die roll.
  *
  * @param random If false, calculate average to-hit deterministically.
@@ -224,11 +209,6 @@ int attack::calc_pre_roll_to_hit(bool random)
         // slaying bonus
         mhit += slaying_bonus(wpn_skill == SK_THROWING);
 
-        // armour penalty (already calculated if random is true)
-        if (!random)
-            calc_encumbrance_penalties(random);
-        mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
-
         // vertigo penalty
         if (you.duration[DUR_VERTIGO])
             mhit -= 5;
@@ -260,7 +240,7 @@ int attack::calc_pre_roll_to_hit(bool random)
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/, bool /*aux*/)
 {
     int modifiers = 0;
 
@@ -399,10 +379,8 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
-    calc_encumbrance_penalties(true);
     to_hit          = calc_to_hit(true);
 
-    shield = attacker->shield();
     defender_shield = defender ? defender->shield() : defender_shield;
 
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
@@ -1147,12 +1125,12 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
     // XXX: should this also trigger on auxes?
     if (!aux && !ranged)
-        damage_plus += you.infusion_amount() * 2;
+        damage_plus += you.infusion_amount() * you.infusion_multiplier();
 
     return _core_apply_slaying(damage, damage_plus);
 }
 
-int attack::player_apply_final_multipliers(int damage)
+int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
 {
     // Can't affect much of anything as a shadow.
     if (you.form == transformation::shadow)

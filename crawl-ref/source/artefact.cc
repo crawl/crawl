@@ -1333,16 +1333,51 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[unrand_index];
 }
 
-int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
+static int _preferred_max_level(int unrand_index)
 {
-    int ret = -1;
+    // TODO: turn this into a max preferred level field in art-data.txt
+    switch (unrand_index)
+    {
+    case UNRAND_DELATRAS_GLOVES:
+        return 6;
+    case UNRAND_WOODCUTTERS_AXE:
+    case UNRAND_MORG:
+    case UNRAND_THROATCUTTER:
+        return 9;
+    case UNRAND_DEVASTATOR:
+    case UNRAND_RATSKIN_CLOAK:
+    case UNRAND_KRYIAS:
+    case UNRAND_LEAR:
+    case UNRAND_OCTOPUS_KING:
+    case UNRAND_AUGMENTATION:
+    case UNRAND_MEEK:
+        return 11;
+    default:
+        return -1;
+    }
+}
+
+static int _unrand_weight(int unrand_index, int item_level)
+{
+    // Early-game unrands (with a preferred max depth != -1) are
+    // weighted higher within their depth and lower past it.
+    // Normal unrands have a flat weight at all depths.
+    const int pref_max_level = _preferred_max_level(unrand_index);
+    if (pref_max_level == -1)
+        return 10;
+    return item_level <= pref_max_level ? 100 : 1;
+}
+
+int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_abyss)
+{
+    int chosen_unrand_idx = -1;
 
     // Pick randomly among unrandarts with the proper
     // base_type and sub_type. This will rule out unrands that have already
     // placed as part of levelgen, but may find unrands that have been acquired.
     // because of this, the caller needs to properly set up a fallback randart
     // in some cases: see makeitem.cc:_setup_fallback_randart.
-    for (int i = 0, count = 0; i < NUM_UNRANDARTS; i++)
+    for (int i = 0, seen_weight = 0; i < NUM_UNRANDARTS; i++)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = &unranddata[i];
@@ -1357,7 +1392,8 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
         if (in_abyss && status != UNIQ_LOST_IN_ABYSS
             || !in_abyss && status != UNIQ_NOT_EXISTS
                // for acquired items, ignore them in the random calculations
-               // here and let fallback artefacts replace them.
+               // here and let fallback artefacts replace them. This is needed
+               // for seed stability.
                // TODO: abyss? double check trove
                && status != UNIQ_EXISTS_NONLEVELGEN)
         {
@@ -1385,13 +1421,13 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
             continue;
         }
 
-        count++;
-
-        if (one_chance_in(count))
-            ret = index;
+        const int weight = _unrand_weight(index, item_level);
+        seen_weight += weight;
+        if (x_chance_in_y(weight, seen_weight))
+            chosen_unrand_idx = index;
     }
 
-    return ret;
+    return chosen_unrand_idx;
 }
 
 int get_unrandart_num(const char *name)

@@ -337,13 +337,9 @@ seems to have difficulty speaking.
 %%%%
 Mlioglotl
 
-A demon prince once betrayed his realm through a dark ritual to Lugonu.
-Becoming the twisted mass of corruption known as Mlioglotl was his
-reward.
-
-Seeing such a powerful acolyte of Lugonu within the mortal plane is a
-rare sight indeed, and one should fear the denizens and horrors of the
-Abyss that are never far behind.
+A demon prince once possessed a hunger for power that was exceptional even by
+the standards of his kind. He betrayed his realm to Lugonu, and his reward was
+to become this twisted mass of corruption, now known only as Mlioglotl.
 %%%%
 Mnoleg
 
@@ -709,16 +705,19 @@ when recalled from a different level.
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and
-armour. Though the gaps in the copse are plentiful enough to fire missiles
-through, walking through it looks like a painful prospect.
-
-Missiles both magical and mundane will pass through this plant unaffected, but
-enchantments and explosions will not.
+armour. Although stationary, its branches are possessed with a will of their
+own. They move to allow magic and missiles fired by those friendly to this
+plant to pass through unaffected.
 %%%%
 Brimstone Fiend
 
 A huge and powerful demon wreathed in damnation, with great scaly wings. It is
 one of the most fearsome denizens of any of the Hells.
+%%%%
+broodmother
+
+A massive spider swollen with eggs. Its innumerable offspring are always at its
+call.
 %%%%
 burning bush
 
@@ -728,11 +727,8 @@ its surroundings.
 bush
 
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is
-not very dense, permitting missiles to pass through it. However, it is firmly
-rooted, and requires significant effort to destroy.
-
-Missiles both magical and mundane will pass through this plant unaffected, but
-enchantments and explosions will not.
+not very dense, permitting both magic and missiles to pass through unaffected.
+However, it is firmly rooted, and requires significant effort to destroy.
 %%%%
 bullfrog
 
@@ -785,7 +781,7 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skillfully.
+and able to use them skilfully.
 %%%%
 chaos spawn
 
@@ -822,6 +818,11 @@ crystal guardian
 An intricate animated statue made of heavily ensorcelled, tough crystal. It is
 immune to most forms of magic, and is magically charged to toss great bolts of
 fire and cold that are reflected by any surface.
+%%%%
+culicivora
+
+A small spider with rudimentary healing abilities. Though not undead, it packs
+a nasty vampiric bite.
 %%%%
 curse skull
 
@@ -1371,7 +1372,7 @@ of the divine twins, it works to resurrect its fallen masters.
 harpy
 
 A bird-like creature with a human face that roams the coasts endlessly, feared
-for her sharp claws and harrying strikes.
+for its sharp claws and harrying strikes.
 %%%%
 hell beast
 
@@ -1563,6 +1564,11 @@ jiangshi
 A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
 limbs give it an awkward gait, it moves with surprising speed, leaping upon its
 victims and leeching away their life essence with its vicious claws.
+%%%%
+jorogumo
+
+A spider spirit that takes the appearance of a human. It weaves deadly magics to
+incapacitate and kill its prey.
 %%%%
 juggernaut
 
@@ -1950,6 +1956,12 @@ A nearly-transparent undead spirit, suspected by some sages to be a degenerate
 form of ghost, with no memories of its former life. It rarely stays in one
 place for long.
 %%%%
+pharaoh ant
+
+A royal ant returned to unlife through strange, probably horrifying means. It
+binds the souls of its allies when slain, allowing them to fight on after death
+as simulacra.
+%%%%
 pillar of salt
 
 A pillar of salt shaped like a statue, but worked by no living hands.
@@ -2020,6 +2032,11 @@ forward with startling speed. Enchantments slide off it like water.
 quokka
 
 A pesky little marsupial that is a bit like a rat, but not quite.
+%%%%
+radroach
+
+A giant cockroach that has been exposed to high amounts of mutagenic energy. It
+is horrifyingly mutated, but this has only made it stronger.
 %%%%
 ragged hierophant
 
@@ -2368,6 +2385,11 @@ steam dragon
 A relatively small grey dragon, with a resilient-looking scaly hide and steam
 pouring from its mouth.
 %%%%
+steelbarb worm
+
+A large worm covered with hard, spiky metal plates. Despite the apparent
+heaviness of its outer armour, it is rather fast.
+%%%%
 stoker
 
 A mortal who made an unholy pact in life, now chained to tend the fires of
@@ -2391,6 +2413,10 @@ across its reflective surface.
 sun demon
 
 A demonic figure shining with the heat and fury of a fallen star.
+%%%%
+sun moth
+
+A moth of celestial beauty and grace, crackling with power.
 %%%%
 swamp dragon
 
@@ -2659,8 +2685,8 @@ swimmer.
 %%%%
 water nymph
 
-A capricious nature spirit, deeply bonded with the waters in which she lives.
-Wherever they flow, so may she, and ponds and rivers surge and leap at her
+A capricious nature spirit, deeply bonded with the waters in which it lives.
+Wherever they flow, so may it, and ponds and rivers surge and leap at its
 whim.
 %%%%
 wendigo
