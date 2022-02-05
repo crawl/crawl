@@ -104,6 +104,8 @@ local function make_tagged_room(options,chosen)
   dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
   -- restore the original tags to mapdef, since this state is persistent
   dgn.tags(mapdef, nil)
+  -- TODO: if a vault is not tagged transparent, this addition is permanent
+  -- and affects any later placement outside vaults
   dgn.tags(mapdef, old_tags .. " transparent")
 
   local room_width,room_height = dgn.mapsize(map)
