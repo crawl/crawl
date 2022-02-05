@@ -87,9 +87,6 @@ There are several different types of items:
    Heavier armours give more protection, but may hamper your ability to dodge
    and cast spells.
  - **Ammunition** (which has the `(` sign). Throw it with `f` and `F` (fire).
-   Stones, boomerangs and javelins are meant to be thrown by hand; other
-   missiles need an appropriate launcher to be wielded (e.g. arrows are only
-   effective when shot with a bow).
  - **Wands** (`/`), **Scrolls** (`?`) and **Potions** (`!`) can be very
    valuable, but have limited uses (scrolls and potions can only be used once
    each, wands contain only a certain number of charges). Wands are e`V`oked,
