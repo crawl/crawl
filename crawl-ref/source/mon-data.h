@@ -1064,7 +1064,7 @@ static monsterentry mondata[] =
 
 { // Another dummy monster.
     MONS_DWARF, 'g', GREEN, "dwarf",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_DWARF, MONS_DWARF, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1234,7 +1234,7 @@ static monsterentry mondata[] =
 
 { // a dummy monster for recolouring
     MONS_FELID, 'h', MAGENTA, "felid",
-    M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_FELID, MONS_FELID, MH_NATURAL, 40,
     { {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1940,7 +1940,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_IGUANA)
 
 { // dummy; spawns in a single vault.
     MONS_DEMIGOD, 'p', YELLOW, "demigod",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_HUMAN, MONS_DEMIGOD, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1953,7 +1953,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_IGUANA)
 
 { // dummy... literally; single vault
     MONS_HALFLING, 'p', LIGHTGREY, "halfling",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_HALFLING, MONS_HALFLING, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3377,7 +3377,7 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
 // dummy for recolouring
 {
     MONS_BARACHI, 'F', LIGHTCYAN, "barachi",
-    M_SPEAKS | M_NO_POLY_TO,
+    M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_FROG, MONS_BARACHI, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3566,7 +3566,7 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
 // dummy, though it's rude to say so
 {
     MONS_PALENTONGA, 'H', YELLOW, "palentonga",
-    M_SPEAKS | M_NO_POLY_TO,
+    M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_PALENTONGA, MONS_PALENTONGA, MH_NATURAL, 10,
     { {AT_HIT, AF_PLAIN, 18}, {AT_TAIL_SLAP, AF_PLAIN, 12}, AT_NO_ATK,
@@ -5241,7 +5241,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake", TILEP_MONS_ADDER)
 // Dummy monster for recolouring.
 {
     MONS_OCTOPODE, 'x', LIGHTCYAN, "octopode",
-    M_NO_SKELETON | M_SPEAKS | M_NO_POLY_TO,
+    M_NO_SKELETON | M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     10, MONS_OCTOPODE, MONS_OCTOPODE, MH_NATURAL, 10,
     { {AT_TENTACLE_SLAP, AF_PLAIN, 24}, {AT_CONSTRICT, AF_CRUSH, 5},
