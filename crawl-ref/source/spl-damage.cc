@@ -4028,7 +4028,10 @@ static void _discharge_maxwells_coupling()
     else
         mprf("The electricity discharges through %s!", mon->name(DESC_THE).c_str());
 
-    const bool goldify = have_passive(passive_t::goldify_corpses);
+    // XX the messaging and corpse logic here would be better handled in
+    // monster_die, so that various special cases (e.g. dancing weapons in
+    // the abyss) can get clear but non-redundant handling
+    const bool goldify = mons_will_goldify(*mon);
     if (goldify)
         simple_monster_message(*mon, " vaporises and condenses as gold!");
     else
