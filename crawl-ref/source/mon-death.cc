@@ -538,13 +538,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
         return nullptr;
     }
 
-    // Under Gozag, monsters turn into gold on death.
-    // Temporary Tukima's Dance weapons stay as weapons (no free gold),
-    // permanent dancing weapons turn to gold like other monsters.
-    bool goldify = have_passive(passive_t::goldify_corpses)
-                   && mons_gives_xp(mons, you)
-                   && !player_in_branch(BRANCH_ABYSS)
-                   && !force;
+    bool goldify = mons_will_goldify(mons) && !force;
 
     const bool no_coinflip = mons.props.exists(ALWAYS_CORPSE_KEY)
                              || force
@@ -1501,6 +1495,16 @@ static void _special_corpse_messaging(monster &mons)
     simple_monster_message(mons, message.c_str());
 }
 
+bool mons_will_goldify(const monster &mons)
+{
+    // Under Gozag, monsters turn into gold on death.
+    // Temporary Tukima's Dance weapons stay as weapons (no free gold),
+    // permanent dancing weapons turn to gold like other monsters.
+    return have_passive(passive_t::goldify_corpses)
+                   && mons_gives_xp(mons, you)
+                   && !player_in_branch(BRANCH_ABYSS);
+}
+
 /**
  * Kill off a monster.
  *
@@ -1743,6 +1747,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             simple_monster_message(mons, " vaporises!",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
+            did_death_message = true;
         }
 
         if (!wizard && !mons_reset && !submerged && !was_banished
@@ -1775,16 +1780,28 @@ item_def* monster_die(monster& mons, killer_type killer,
             // Under Gozag, permanent dancing weapons get turned to gold.
             if (have_passive(passive_t::goldify_corpses))
             {
-                simple_monster_message(mons,
+                if (mons_will_goldify(mons))
+                {
+                    simple_monster_message(mons,
                                        " turns to gold and falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
+                else
+                {
+                    // something is suppressing goldify, e.g. abyss
+                    simple_monster_message(mons,
+                                       " briefly glints gold and then vanishes.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
                 killer = KILL_RESET;
+                // why does this not set silent?
             }
             else
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 silent = true;
+                did_death_message = true;
             }
         }
 
@@ -1896,6 +1913,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                                                          : "kill",
                          mons.name(DESC_THE).c_str());
                 }
+            }
+
+            // do this for some of the `silent` cases, if they explicitly set
+            // a death message earlier
+            if (death_message || did_death_message)
+            {
                 // If this monster would otherwise give xp but didn't because
                 // it grants no reward or was neutral, give a message.
                 if (!gives_real_xp

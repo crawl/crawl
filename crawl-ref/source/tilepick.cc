@@ -1926,6 +1926,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
+            ASSERT(mon.inv[MSLOT_WEAPON]);
             const item_def& item = *mon.inv[MSLOT_WEAPON];
             return tileidx_item(item) | TILE_FLAG_ANIM_OBJ;
         }
