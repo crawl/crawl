@@ -240,6 +240,8 @@ class EquipOnDelay : public Delay
              equip.name(DESC_YOUR).c_str());
     }
 
+    bool invalidated() override;
+
     void finish() override;
 public:
     EquipOnDelay(int dur, item_def& item) :
