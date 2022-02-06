@@ -628,6 +628,11 @@ void JewelleryOnDelay::finish()
     puton_ring(jewellery, false, false, true);
 }
 
+bool EquipOnDelay::invalidated()
+{
+    return !equip.defined();
+}
+
 void EquipOnDelay::finish()
 {
     const unsigned int old_talents = your_talents(false).size();
