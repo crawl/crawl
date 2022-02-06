@@ -1303,8 +1303,13 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
                                                            : "particularly";
                 description += "\n\nIt is " + adj + " good for stabbing"
-                               " helpless or unaware enemies.";
+                               " helpless or unaware enemies, and dexterity"
+                               " rather than strength increases its damage.";
             }
+            break;
+        case SK_LONG_BLADES:
+            description += "\n\nIts damage is increased by dexterity instead"
+                           " of by strength.";
             break;
         default:
             break;

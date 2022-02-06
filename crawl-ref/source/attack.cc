@@ -1050,7 +1050,14 @@ int attack::player_stat_modify_damage(int damage)
     // Each point of strength over 10 increases this by 0.025 (2.5%),
     // strength below 10 reduces the multiplied by the same amount.
     // Minimum multiplier is 0.01 (1%) (reached at -30 str).
-    damage *= max(1.0, 75 + 2.5 * you.strength());
+    // Short & long blades use dex instead of strength.
+    int attr = you.strength();
+    if (using_weapon() && (wpn_skill == SK_LONG_BLADES
+                           || wpn_skill == SK_SHORT_BLADES))
+    {
+        attr = you.dex();
+    }
+    damage *= max(1.0, 75 + 2.5 * attr);
     damage /= 100;
 
     return damage;
