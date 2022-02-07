@@ -156,7 +156,7 @@ enum command_type
 
     CMD_SHOW_CHARACTER_DUMP,
     CMD_GAME_MENU,
-#ifdef TARGET_OS_MACOSX
+#if defined TARGET_OS_MACOSX || defined TARGET_OS_LINUX
     CMD_REVEAL_OPTIONS,
 #endif
     CMD_LUA_CONSOLE,

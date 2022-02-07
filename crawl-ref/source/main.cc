@@ -1964,6 +1964,10 @@ public:
         add_entry(new CmdMenuEntry("Show options file in finder",
             MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
 #endif
+#ifdef TARGET_OS_LINUX
+        add_entry(new CmdMenuEntry("Show options file in a file manager",
+            MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
+#endif
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
                             "Quit and <lightred>abandon character</lightred>",
@@ -2245,6 +2249,12 @@ void process_command(command_type cmd, command_type prev_cmd)
         // TODO: add a way of triggering this from the main menu
         system(make_stringf("/usr/bin/open -R '%s'",
                                             Options.filename.c_str()).c_str());
+        break;
+#endif
+#ifdef TARGET_OS_LINUX
+    case CMD_REVEAL_OPTIONS:
+        system(make_stringf("xdg-open '%s'",
+                      get_parent_directory(Options.filename).c_str()).c_str());
         break;
 #endif
     case CMD_SHOW_CHARACTER_DUMP:
