@@ -11,15 +11,12 @@
   local bag_of_meat =
     "orc hp:400 hd:30 name:bag_of_meat n_rpl n_des n_spe n_zom " ..
     "col:red tile:mons_bag_of_meat generate_awake ; ring of slaying plus:30 " ..
-    "ident:all no_pickup . war axe plus:9 " ..
-    "ego:none ident:all no_pickup"
+    ". war axe plus:9 ego:none"
 
   local meat_berserker =
     "ogre hp:500 hd:50 name:meat_berserker n_rpl n_des n_spe n_zom " ..
     "always_corpse col:red tile:mons_meatzerker perm_ench:berserk generate_awake " ..
-    "; ring of slaying plus:30 ident:all " ..
-    "no_pickup . battleaxe plus:9 ego:none " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:30 . battleaxe plus:9 ego:none"
 
   local tyrant =
     "lich hp:500 hd:35 name:tyrant n_rpl n_des n_spe n_zom " ..
@@ -43,17 +40,13 @@
   local large_bag =
     "two-headed ogre hp:400 hd:40 name:large_bag_of_meat n_rpl n_des " ..
     "n_spe n_zom  col:red tile:mons_large_bag_of_meat generate_awake perm_ench:inner_flame " ..
-    "; ring of slaying plus:100 ident:all " ..
-    "no_pickup . " ..
-    "giant spiked club plus:9 ego:none " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:100 . giant spiked club plus:9 ego:none"
 
   local destroyer =
     "vampire knight hp:500 hd:40 name:destroyer n_rpl n_des n_spe " ..
     "never_corpse col:red tile:mons_destroyer generate_awake " ..
     "spells:blink_close.90.wizard " ..
-    "; ring of slaying plus:200 ident:all " ..
-    "no_pickup . great sword plus:9 ego:vorpal ident:all no_pickup"
+    "; ring of slaying plus:200 . great sword plus:9 ego:vorpal"
 
   local plague =
     "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe " ..
@@ -65,9 +58,7 @@
   local sculptor =
     "skeletal warrior hp:500 hd:30 name:sculptor_of_flesh n_rpl " ..
     "n_des n_spe n_zom never_corpse col:red generate_awake " ..
-    "; ring of slaying plus:250 ident:all " ..
-    "no_pickup . great sword plus:9 ego:none " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:250 . great sword plus:9 ego:none"
 
   local observer =
     "great orb of eyes hp:2000 hd:30 name:observer n_rpl n_des " ..
@@ -95,9 +86,7 @@
     "hell knight hp:3000 hd:60 name:fleshlord n_rpl n_des n_spe never_corpse " ..
     "col:lightmagenta generate_awake " ..
     "spells:slow.55.wizard;haste.55.wizard " ..
-    "; ring of slaying plus:400 ident:all " ..
-    "no_pickup . great mace plus:9 ego:none " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:400 . great mace plus:9 ego:none"
 
   local vile =
     "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse " ..
@@ -109,36 +98,26 @@
   local servant =
     "harold hp:650 hd:40 name:The_Servant n_rpl col:yellow " ..
     "generate_awake never_corpse spells:none " ..
-    "; ring of slaying plus:130 ident:all " ..
-    "no_pickup . glaive plus:9 ego:flaming " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:130 . glaive plus:9 ego:flaming"
 
   local captor =
     "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan " ..
     "generate_awake never_corpse " ..
     "spells:sentinel's_mark.30.wizard;haste.30.wizard;ensnare.30.wizard " ..
-    "; ring of slaying plus:200 ident:all " ..
-    "no_pickup . triple sword plus:9 ego:vorpal " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:200 . triple sword plus:9 ego:vorpal"
 
   local defiler =
     "edmund hp:1000 hd:50 name:The_Defiler n_rpl col:white " ..
     "generate_awake never_corpse " ..
     "spells:fireball.60.natural;poisonous_cloud.20.natural " ..
-    "; ring of slaying plus:250 ident:all " ..
-    "no_pickup . demon whip plus:9 ego:vorpal " ..
-    "ident:all no_pickup " ..
-    ". tower shield plus:12 ego:none " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:250 . demon whip plus:9 ego:vorpal . tower shield plus:12 ego:none"
 
   -- Meatlord shadow creatures will be tzitzimimeh
   local meatlord =
     "dispater hp:10000 hd:60 name:The_Meatlord n_rpl col:lightmagenta tile:mons_meatlord " ..
     "generate_awake never_corpse " ..
     "spells:shadow_creatures.44.magical;airstrike.44.magical;conjure_ball_lightning.22.magical " ..
-    "; ring of slaying plus:27000 ident:all " ..
-    "no_pickup . sceptre_of_torment " ..
-    "ident:all no_pickup"
+    "; ring of slaying plus:27000 . sceptre_of_torment"
 
   -- Unspeakable shadow creatures will be (a lot of) starcursed masses
   -- This is the secret boss.
@@ -161,7 +140,7 @@
 
   function weapon_creation(e)
     if you.race() == "Felid" then
-      e.kitem("{ = ring of slaying plus:27000 ident:all no_pickup")
+      e.kitem("{ = ring of slaying plus:27000")
     else
       e.kitem("{ = axe_of_woe")
     end
@@ -425,8 +404,8 @@ NSUBST:    ' = 1:& / *:.
     "</red>")
 
 }}
-KITEM:     + = ring of see invisible ident:all no_pickup
-KITEM:     * = ring of protection from fire ident:all no_pickup
+KITEM:     + = ring of see invisible
+KITEM:     * = ring of protection from fire
 SUBST:     1 = 1.
 KPROP:     - = no_tele_into
 KFEAT:     _ = altar_makhleb

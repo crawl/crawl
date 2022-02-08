@@ -81,6 +81,7 @@ static bool _evoke_horn_of_geryon()
     }
 
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
+    noisy(15, you.pos()); // same as hell effect noise
     did_god_conduct(DID_EVIL, 3);
     int num = 1;
     const int adjusted_power =
@@ -684,7 +685,7 @@ static spret _phantom_mirror(dist *target)
     int dur = min(6, max(1,
                          player_adjust_evoc_power(
                              you.skill(SK_EVOCATIONS, 1) / 4 + 1)
-                         * (100 - victim->check_willpower(power)) / 100));
+                         * (100 - victim->check_willpower(&you, power)) / 100));
 
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 

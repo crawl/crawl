@@ -1306,8 +1306,9 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         you.skill_manual_points[exsk] -= bonus;
         if (!you.skill_manual_points[exsk] && !simu && !crawl_state.simulating_xp_gain)
         {
-            mprf("You have finished your manual of %s and toss it away.",
-                 skill_name(exsk));
+            mprf("You have finished your manual of %s and %stoss it away.",
+                 skill_name(exsk),
+                 exsk == SK_THROWING ? "skilfully " : "");
         }
     }
 
@@ -1972,10 +1973,12 @@ bool is_useless_skill(skill_type skill)
     if (mut != skill_sac_muts.end() && you.has_mutation(mut->second))
         return true;
     // shields isn't in the big map because shields being useless doesn't
-    // imply that missing hand is meaningless.
+    // imply that missing hand is meaningless. likewise for summoning magic
+    // vs. ability to have friendlies at all.
     if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
         || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
                             && !you.has_innate_mutation(MUT_QUADRUMANOUS)
+        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE)
     )
     {
         return true;

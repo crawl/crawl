@@ -105,8 +105,11 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
     const god_type god = feat_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         _seen_altar(god, pos);
-    else if (feat_is_branch_entrance(which_thing))
+    else if (which_thing != DNGN_ENTER_HELL
+             && feat_is_branch_entrance(which_thing))
+    {
         _seen_staircase(pos);
+    }
     else if (which_thing == DNGN_ENTER_SHOP)
         _seen_shop(pos);
     else if (feat_is_gate(which_thing)) // overinclusive
@@ -254,7 +257,7 @@ static string _get_seen_branches(bool display)
     if (display)
     {
         disp += " (press <white>G</white> to reach them and "
-                "<white>?/B</white> for more information)";
+                "<white>?/b</white> for more information)";
     }
     disp += "\n";
 
@@ -395,7 +398,7 @@ static string _get_altars(bool display)
     if (display)
     {
         disp += " (press <white>_</white> to reach them and "
-                "<white>?/G</white> for information about gods)";
+                "<white>?/g</white> for information about gods)";
     }
     disp += "\n";
     disp += _print_altars_for_gods(temple_god_list(), true, display);
@@ -610,7 +613,7 @@ static bool _unnotice_shop(const level_pos &pos)
 static bool _unnotice_stair(const level_pos &pos)
 {
     const dungeon_feature_type feat = env.grid(pos.pos);
-    if (!feat_is_branch_entrance(feat))
+    if (feat == DNGN_ENTER_HELL || !feat_is_branch_entrance(feat))
         return false;
 
     for (branch_iterator it; it; ++it)
@@ -729,7 +732,7 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
     if (feat_is_portal_entrance(which_thing)
         || which_thing == DNGN_ENTER_ABYSS
         || which_thing == DNGN_ENTER_PANDEMONIUM
-        || which_thing == DNGN_ENTER_HELL && !player_in_hell())
+        || which_thing == DNGN_ENTER_HELL)
     {
         level_pos where(level_id::current(), pos);
         portals_present[where] = stair_destination(pos).branch;

@@ -189,6 +189,7 @@ public:
     bool        suppress_startup_errors;
 
     bool        mouse_input;
+    bool        menu_arrow_control;
 
     int         view_max_width;
     int         view_max_height;
@@ -253,7 +254,6 @@ public:
     bool        note_chat_messages; // log chat in Webtiles
     bool        note_dgl_messages; // log chat in DGL
     easy_confirm_type easy_confirm;    // make yesno() confirming easier
-    bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
     bool        always_use_static_spell_targeters; // whether to always use
@@ -273,10 +273,10 @@ public:
     bool        clear_messages;   // clear messages each turn
     bool        show_more;        // Show message-full more prompts.
     bool        small_more;       // Show one-char more prompts.
-    unsigned    friend_brand;     // Attribute for branding friendly monsters
-    unsigned    neutral_brand;    // Attribute for branding neutral monsters
+    unsigned    friend_highlight;     // Attribute for highlighting friendly monsters
+    unsigned    neutral_highlight;    // Attribute for highlighting neutral monsters
     bool        blink_brightens_background; // Assume blink will brighten bg.
-    bool        bold_brightens_foreground; // Assume bold will brighten fg.
+    maybe_bool  bold_brightens_foreground; // Assume bold will brighten fg.
     bool        best_effort_brighten_background; // Allow bg brighten attempts.
     bool        best_effort_brighten_foreground; // Allow fg brighten attempts.
     bool        allow_extended_colours; // Use more than 8 terminal colours.
@@ -287,11 +287,24 @@ public:
     bool        cloud_status;     // Whether to show a cloud status light
     bool        always_show_zot;  // Whether to always show the Zot timer
 
+#ifdef USE_TILE_WEB
+    vector<object_class_type> action_panel;   // types of items to show on the panel
+    vector<text_pattern> action_panel_filter; // what should be filtered out
+    bool        action_panel_show_unidentified; // whether to show unidentified items
+    bool        action_panel_show;
+    int         action_panel_scale;       // the scale factor for resizing the panel
+    string      action_panel_orientation; // whether to place the panel horizontally
+    string      action_panel_font_family; // font used to display the quantities
+    int         action_panel_font_size;
+    bool        action_panel_glyphs;
+#endif
+
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
     unordered_set<spell_type, hash<int>> fire_order_spell;
     unordered_set<ability_type, hash<int>> fire_order_ability;
     bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
+    bool        quiver_menu_focus;
 
     unordered_set<int> force_spell_targeter; // spell types to always use a
                                              // targeter for
@@ -373,11 +386,11 @@ public:
     unsigned    detected_item_colour;       // Colour of detected items
     unsigned    status_caption_colour;      // Colour of captions in HUD.
 
-    unsigned    heap_brand;         // Highlight heaps of items
-    unsigned    stab_brand;         // Highlight monsters that are stabbable
-    unsigned    may_stab_brand;     // Highlight potential stab candidates
-    unsigned    feature_item_brand; // Highlight features covered by items.
-    unsigned    trap_item_brand;    // Highlight traps covered by items.
+    unsigned    heap_highlight;         // Highlight heaps of items
+    unsigned    stab_highlight;         // Highlight monsters that are stabbable
+    unsigned    may_stab_highlight;     // Highlight potential stab candidates
+    unsigned    feature_item_highlight; // Highlight features covered by items.
+    unsigned    trap_item_highlight;    // Highlight traps covered by items.
 
     // What is the minimum number of items in a stack for which
     // you show summary (one-line) information
@@ -608,6 +621,7 @@ public:
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
     bool        tile_web_mouse_control;
+    string      tile_web_mobile_input_helper;
 #endif
 #endif // USE_TILE
 
@@ -644,6 +658,7 @@ public:
 
     void write_prefs(FILE *f);
 
+    void reset_aliases(bool clear=true);
 private:
     string unalias(const string &key) const;
     string expand_vars(const string &field) const;
@@ -714,6 +729,6 @@ extern game_options  Options;
 
 static inline short macro_colour(short col)
 {
-    ASSERT(col < NUM_TERM_COLOURS);
+    ASSERTM(col < NUM_TERM_COLOURS, "invalid color %hd", col);
     return col < 0 ? col : Options.colour[ col ];
 }

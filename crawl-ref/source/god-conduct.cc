@@ -704,23 +704,7 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_YREDELEMNUL,
-    {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
-        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
-        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
-        { DID_KILL_HOLY, _on_kill("you kill holy beings", MH_HOLY, false,
-                                  [](int &piety, int &/*denom*/,
-                                     const monster* /*victim*/)
-            {
-                piety *= 2;
-                simple_god_message(" appreciates your killing of a holy being.");
-            },
-            true
-        ) },
-        { DID_KILL_NONLIVING, {
-            "you destroy nonliving beings", true, 3, 18, 2, " accepts your kill."
-        } },
-    },
+    like_map(),
     // GOD_XOM,
     like_map(),
     // GOD_VEHUMET,
@@ -810,7 +794,7 @@ static like_map divine_likes[] =
     // GOD_JIYVA,
     {
         { DID_EXPLORATION, {
-            "you explore the world", false,
+            "you explore the world outside of the Slime Pits", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
@@ -1032,7 +1016,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
             _first_attack_was_friendly.insert(mid);
         }
     }
-    else if (mon.neutral())
+    else if (mon.neutral() && !mon.has_ench(ENCH_INSANE))
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, &mon);
 
     // Penance value is handled by remove_sanctuary().
@@ -1067,17 +1051,20 @@ string get_god_likes(god_type which_god)
     // Unique/unusual piety gain methods first.
     switch (which_god)
     {
+    case GOD_ASHENZARI:
+        likes.emplace_back("you bind yourself with curses");
+        break;
     case GOD_GOZAG:
         likes.emplace_back("you collect gold");
         break;
     case GOD_RU:
         likes.emplace_back("you make personal sacrifices");
         break;
+    case GOD_YREDELEMNUL:
+        likes.emplace_back("you surround yourself with harvested souls");
+        break;
     case GOD_ZIN:
         likes.emplace_back("you donate money");
-        break;
-    case GOD_ASHENZARI:
-        likes.emplace_back("you bind yourself with curses");
         break;
     default:
         break;

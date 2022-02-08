@@ -106,6 +106,20 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
+Cantrip cast
+
+@The_monster@ casts a cantrip, but nothing happens.
+
+@The_monster@ begins to cast a cantrip, but forgets the words!
+
+@The_monster@ miscasts a cantrip.
+
+@The_monster@ looks braver for a moment.
+
+@The_monster@ looks encouraged for a moment.
+
+@The_monster@ looks satisfied for a moment.
+%%%%
 Creeping Frost cast
 
 @The_monster@ calls freezing cold from the walls.
@@ -117,6 +131,10 @@ Goad Beasts cast
 ironbound thunderhulk cast
 
 Electricity crackles from @the_monster@'s apparatus.
+%%%%
+Blink Range ironbound thunderhulk cast
+
+Strange energies crackle from @the_monster@'s apparatus.
 %%%%
 Mara Summon cast
 
@@ -383,23 +401,18 @@ Weakening Gaze cast
 # Unique monsters
 ########################################################################
 %%%%
-Frances cast
+Cantrip Dissolution cast
 
-@The_monster@ mutters in a terrible tongue.
+@The_monster@ gurgles to an absent god.
 
-@The_monster@ whispers indecipherable words.
+@The_monster@ jiggles mournfully.
 
-@The_monster@ chants phrases taken from a devil's mouth.
+@The_monster@ wobbles aimlessly.
 
-@The_monster@ screams a word of power!
-%%%%
-Gastronok cast targeted
+@The_monster@ says, "Become one with my sorrow!"
 
-@The_monster@ looks @at@ @target@ while chanting.
-
-@The_monster@ looks @at@ @target@ and mumbles some strange words.
-
-@The_monster@ casts a spell @at@ @target@.
+w:1
+@The_monster@ asks, "Why have you forsaken me @My_God@?"
 %%%%
 Summon Eyeballs Dissolution cast
 
@@ -410,6 +423,45 @@ Summon Eyeballs Dissolution cast
 Dissolution cast
 
 @The_monster@ gurgles deeply.
+%%%%
+Frances cast
+
+@The_monster@ mutters in a terrible tongue.
+
+@The_monster@ whispers indecipherable words.
+
+@The_monster@ chants phrases taken from a devil's mouth.
+
+@The_monster@ screams a word of power!
+%%%%
+Cantrip Gastronok cast
+
+@The_monster@ bubbles merrily.
+
+VISUAL:@The_monster@ glows a brilliant shade of cerise.
+
+VISUAL:@The_monster@ wobbles crazily.
+
+VISUAL:@The_monster@'s eyestalks stretch out, then return to normal size.
+
+You wobble.
+
+You take on a slight green cast.
+
+You feel briefly sluggish.
+
+You feel a sudden, passing aversion to salt.
+
+w:5
+You feel a sudden urge to swivel your nonexistent eyestalks around.
+%%%%
+Gastronok cast targeted
+
+@The_monster@ looks @at@ @target@ while chanting.
+
+@The_monster@ looks @at@ @target@ and mumbles some strange words.
+
+@The_monster@ casts a spell @at@ @target@.
 %%%%
 Gastronok cast
 
@@ -650,7 +702,7 @@ You hear a deafening rattling sound!
 %%%%
 ushabti cast targeted
 
-@The_monster@ gestures slowly @at@ @target@.
+@The_monster@ gestures stiffly @at@ @target@.
 %%%%
 Ghostly Fireball revenant cast
 
@@ -687,6 +739,14 @@ Throw Icicle shard shrike cast
 Lightning Bolt electric golem cast
 
 @The_monster@ hurls @beam@ @at@ @target@.
+%%%%
+unseen Warning Cry demonic crawler cast
+
+You hear terrible shrieking!
+%%%%
+Warning Cry demonic crawler cast
+
+@The_monster@ shrieks in warning!
 %%%%
 unseen Warning Cry howler monkey cast
 

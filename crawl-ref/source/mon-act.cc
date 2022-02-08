@@ -74,6 +74,7 @@ static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster& mons);
 static bool _monster_move(monster* mons);
 static bool _monster_swaps_places(monster* mon, const coord_def& delta);
+static bool _do_move_monster(monster& mons, const coord_def& delta);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -512,7 +513,8 @@ static const string BATTY_TURNS_KEY = "BATTY_TURNS";
 
 static void _handle_battiness(monster &mons)
 {
-    if (!mons_is_batty(mons)) return;
+    if (!mons_is_batty(mons))
+        return;
     mons.behaviour = BEH_WANDER;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;
@@ -1064,6 +1066,9 @@ static bool _handle_wand(monster& mons)
     const spell_type mzap =
         spell_in_wand(static_cast<wand_type>(wand->sub_type));
 
+    if (!ai_action::is_viable(monster_spell_goodness(&mons, mzap)))
+        return false;
+
     if (!setup_mons_cast(&mons, beem, mzap, true))
         return false;
 
@@ -1092,7 +1097,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
-        && mons->type != MONS_SPECTRAL_THING
+        && !mons_bound_soul(*mons)
         && !mons_class_is_animated_object(mons->type))
     {
         return false;
@@ -1708,7 +1713,7 @@ void handle_monster_move(monster* mons)
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-        if (bernoulli(gold, 3.0/100.0))
+        if (x_chance_in_y(3 * gold, 100))
         {
             simple_monster_message(*mons,
                 " is distracted by your dazzling golden aura.");
@@ -1870,6 +1875,11 @@ void handle_monster_move(monster* mons)
                 }
                 else
                     fight_melee(mons, &you);
+
+                // chance to confusedly whack itself at the same time. Handled
+                // separately for monsters in _monster_move.
+                if (!new_target && mons->confused() && one_chance_in(6))
+                    _do_move_monster(*mons, coord_def(0,0));
 
                 _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
@@ -2171,7 +2181,7 @@ static void _post_monster_move(monster* mons)
                 }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER,
                                     random_range(50, 80),
-                                    TERRAIN_CHANGE_FLOOD, mons);
+                                    TERRAIN_CHANGE_FLOOD, mons->mid);
             }
     }
 
@@ -2612,7 +2622,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         if (!you.can_see(mons))
         {
             mprf("Something unseen %s", open_str.c_str());
-            interrupt_activity(activity_interrupt::force);
+            interrupt_activity(activity_interrupt::sense_monster);
         }
         else if (!you_are_delayed())
         {
@@ -3126,6 +3136,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     if (f == you.pos())
     {
+        // XX is this actually reachable?
         fight_melee(&mons, &you);
         return true;
     }
@@ -3166,7 +3177,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door bursts into shrapnel!");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " bursts through the door, destroying it!");
@@ -3192,7 +3203,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door mysteriously vanishes.");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " eats the door!");
@@ -3324,7 +3335,7 @@ static bool _monster_move(monster* mons)
     }
 
     // Let's not even bother with this if mmov is zero.
-    if (mmov.origin())
+    if (mmov.origin() && !mons->confused())
         return false;
 
     for (int count_x = 0; count_x < 3; count_x++)
@@ -3474,6 +3485,8 @@ static bool _monster_move(monster* mons)
     if (good_move[mmov.x + 1][mmov.y + 1] && !mmov.origin())
     {
         // Check for attacking player.
+        // XX is this actually reachable? this exact condition is already dealt
+        // with in handle_monster_move
         if (mons->pos() + mmov == you.pos())
         {
             ret = fight_melee(mons, &you);
@@ -3510,7 +3523,7 @@ static bool _monster_move(monster* mons)
             {
                 ret = _monster_swaps_places(mons, mmov);
             }
-            else
+            else if (!mmov.origin()) // confused self-hit handled below
             {
                 fight_melee(mons, targ);
                 ret = true;
@@ -3561,6 +3574,10 @@ static bool _monster_move(monster* mons)
     }
 
     // This handles the chance for the monster to hit itself.
+    // n.b. this is reachable by hitting another monster and having mmov.reset()
+    // called. I'm taking this as a sort of intentional slapstick effect and
+    // leaving it in place. (It's also reachable in a few other rare cases
+    // where mmov.reset() is called.)
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(*mons, mmov);
 

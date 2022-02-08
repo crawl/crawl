@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
+#include "fineff.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h" // passive_t::convert_orcs
@@ -61,6 +62,9 @@ void mons_att_changed(monster* mon)
     {
         remove_companion(mon);
     }
+
+    if (mon->has_ench(ENCH_AWAKEN_FOREST))
+        mon->del_ench(ENCH_AWAKEN_FOREST);
 
     mon->remove_summons(true);
 }
@@ -145,51 +149,6 @@ void make_god_gifts_disappear()
             monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
-}
-
-// When under penance, Yredelemnulites can lose all nearby undead slaves.
-bool yred_slaves_abandon_you()
-{
-    int num_reclaim = 0;
-    int num_slaves = 0;
-
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-    {
-        monster* mons = monster_at(*ri);
-        if (mons == nullptr)
-            continue;
-
-        if (is_yred_undead_slave(*mons))
-        {
-            num_slaves++;
-
-            const int hd = mons->get_experience_level();
-
-            // During penance, followers get a saving throw.
-            if (random2(20) > random2(hd))
-                continue;
-
-            mons->attitude = ATT_HOSTILE;
-            behaviour_event(mons, ME_ALERT, &you);
-            // For now CREATED_FRIENDLY stays.
-            mons_att_changed(mons);
-
-            num_reclaim++;
-        }
-    }
-
-    if (num_reclaim > 0)
-    {
-        if (num_reclaim == 1 && num_slaves > 1)
-            simple_god_message(" reclaims one of your granted undead slaves!");
-        else if (num_reclaim == num_slaves)
-            simple_god_message(" reclaims your granted undead slaves!");
-        else
-            simple_god_message(" reclaims some of your granted undead slaves!");
-        return true;
-    }
-
-    return false;
 }
 
 // When under penance, Beoghites can lose all nearby orcish followers,
@@ -334,6 +293,10 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     behaviour_event(orc, ME_ALERT);
 
     mons_att_changed(orc);
+
+    // put the actual revival at the end of the round
+    if (conv == conv_t::deathbed || conv == conv_t::deathbed_follower)
+        avoided_death_fineff::schedule(orc);
 }
 
 static void _fedhas_neutralise_plant(monster* plant)
@@ -374,7 +337,7 @@ static void _jiyva_convert_slime(monster* slime)
         }
     }
 
-    slime->attitude = ATT_STRICT_NEUTRAL;
+    slime->attitude = ATT_GOOD_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
     mons_make_god_gift(*slime, GOD_JIYVA);

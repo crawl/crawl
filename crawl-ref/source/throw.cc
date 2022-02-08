@@ -393,6 +393,12 @@ void throw_item_no_quiver(dist *target)
     if (!target)
         target = &targ_local;
 
+    if (you.has_mutation(MUT_NO_GRASPING))
+    {
+        mpr("You can't grasp things well enough to throw them.");
+        return;
+    }
+
     if (fire_warn_if_impossible(false, you.weapon()))
     {
         flush_input_buffer(FLUSH_ON_FAILURE);

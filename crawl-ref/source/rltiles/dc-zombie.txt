@@ -136,7 +136,11 @@ simulacrum_hydra3
 simulacrum_hydra4
 simulacrum_hydra5
 
-## Spectral things
+## Spectral things (and yred souls)
+%sdir mon/undead/bound_souls
+bound_humanoid MONS_BOUND_HUMANOID
+bound_animal MONS_BOUND_ANIMAL
+bound_strange MONS_BOUND_STRANGE
 %sdir mon/undead/spectrals
 spectral_small MONS_SPECTRAL_SMALL
 spectral_large MONS_SPECTRAL_LARGE

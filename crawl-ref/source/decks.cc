@@ -517,7 +517,7 @@ static char _deck_hotkey(deck_type deck)
 static deck_type _choose_deck(const string title = "Draw")
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(make_stringf("%s which deck?        "
@@ -624,12 +624,12 @@ bool deck_draw(deck_type deck)
     return true;
 }
 
-bool deck_stack()
+spret deck_stack(bool fail)
 {
     if (crawl_state.is_replaying_keys())
     {
         crawl_state.cancel_cmd_all("You can't repeat Stack Five.");
-        return false;
+        return spret::abort;
     }
 
     int total_cards = 0;
@@ -641,25 +641,27 @@ bool deck_stack()
                                           false, 0))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
 
     if (!total_cards)
     {
         mpr("You are out of cards!");
-        return false;
+        return spret::abort;
     }
 
     if (total_cards < 5 && !yesno("You have fewer than five cards, "
                                   "stack them anyway?", false, 0))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     you.props[NEMELEX_STACK_KEY].get_vector().clear();
     run_uncancel(UNC_STACK_FIVE, min(total_cards, 5));
-    return true;
+    return spret::success;
 }
 
 class StackFiveMenu : public Menu
@@ -668,7 +670,7 @@ class StackFiveMenu : public Menu
     CrawlVector& draws;
 public:
     StackFiveMenu(CrawlVector& d)
-        : Menu(MF_NOSELECT | MF_UNCANCEL | MF_ALWAYS_SHOW_MORE), draws(d) {};
+        : Menu(MF_NOSELECT | MF_UNCANCEL), draws(d) {};
 };
 
 bool StackFiveMenu::process_key(int keyin)
@@ -693,12 +695,12 @@ bool StackFiveMenu::process_key(int keyin)
                 swap(draws[i], draws[j]);
                 swap(items[i]->text, items[j]->text);
                 items[j]->colour = LIGHTGREY;
-                select_item_index(i, 0, false); // this also updates the item
-                select_item_index(j, 0, false);
+                select_item_index(i, 0); // this also updates the item
+                select_item_index(j, 0);
                 return true;
             }
         items[i]->colour = WHITE;
-        select_item_index(i, 1, false);
+        select_item_index(i, 1);
     }
     else
         Menu::process_key(keyin);
@@ -708,7 +710,7 @@ bool StackFiveMenu::process_key(int keyin)
 static void _draw_stack(int to_stack)
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT | MF_UNCANCEL
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry("Draw which deck?        "
@@ -833,65 +835,69 @@ bool stack_five(int to_stack)
 }
 
 // Draw the top four cards of an deck and play them all.
-// Return false if the operation was failed/aborted along the way.
-bool deck_deal()
+// Return spret::abort if the operation was failed/aborted along the way.
+spret deck_deal(bool fail)
 {
     deck_type choice = _choose_deck("Deal");
 
     if (choice == NUM_DECKS)
-        return false;
+        return spret::abort;
 
     int num_cards = deck_cards(choice);
 
     if (!num_cards)
     {
         mpr("That deck is empty!");
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     const int num_to_deal = min(num_cards, 4);
 
     for (int i = 0; i < num_to_deal; ++i)
         _evoke_deck(choice, true);
 
-    return true;
+    return spret::success;
 }
 
 // Draw the next three cards, discard two and pick one.
-bool deck_triple_draw()
+spret deck_triple_draw(bool fail)
 {
     if (crawl_state.is_replaying_keys())
     {
         crawl_state.cancel_cmd_all("You can't repeat Triple Draw.");
-        return false;
+        return spret::abort;
     }
 
     deck_type choice = _choose_deck();
 
     if (choice == NUM_DECKS)
-        return false;
+        return spret::abort;
 
     int num_cards = deck_cards(choice);
 
     if (!num_cards)
     {
         mpr("That deck is empty!");
-        return false;
+        return spret::abort;
     }
 
     if (num_cards < 3 && !yesno("There's fewer than three cards, "
                                 "still triple draw?", false, 0))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     if (num_cards == 1)
     {
         // Only one card to draw, so just draw it.
         mpr("There's only one card left!");
         _evoke_deck(choice);
-        return true;
+        return spret::success;
     }
 
     const int num_to_draw = min(num_cards, 3);
@@ -905,7 +911,7 @@ bool deck_triple_draw()
         draw.push_back(_random_card(choice));
 
     run_uncancel(UNC_DRAW_THREE, 0);
-    return true;
+    return spret::success;
 }
 
 bool draw_three()
@@ -1607,7 +1613,6 @@ void card_effect(card_type which_card,
     case CARD_VELOCITY:         _velocity_card(power); break;
     case CARD_EXILE:            _exile_card(power); break;
     case CARD_ELIXIR:           _elixir_card(power); break;
-    case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false, true); break;
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power); break;
@@ -1626,6 +1631,10 @@ void card_effect(card_type which_card,
     case CARD_PAIN:
     case CARD_ORB:
         _damaging_card(which_card, power, dealt);
+        break;
+
+    case CARD_TOMB:
+        cast_tomb(10 + power/20 + random2(power/4), &you, you.mindex(), false);
         break;
 
     case CARD_SWINE:

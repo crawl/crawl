@@ -99,9 +99,9 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
-    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
+    SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_ENGLACIATION,
     SPELL_DEATH_CHANNEL,
@@ -966,11 +966,15 @@ static void _xom_do_potion(int /*sever*/)
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
+    // Experience uses default power, other potions get bonus power.
+    // Curing, heal wounds, magic and berserk rage ignore power.
+    const int pow = pot == POT_EXPERIENCE ? 40 : 150;
+
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
 
     _note_potion_effect(pot);
 
-    get_potion_effect(pot)->effect(true, 150);
+    get_potion_effect(pot)->effect(true, pow);
 
     level_change(); // need this for !xp - see mantis #3245
 }

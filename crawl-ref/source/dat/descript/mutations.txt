@@ -11,7 +11,7 @@ You are covered in fur, providing a small amount of protection. Each level of
 this mutation provides +1 AC. The third level of this mutation also provides
 resistance to cold.
 %%%%
-distortion field mutation
+repulsion field mutation
 
 You are surrounded by a repulsion field, providing a small amount of evasion.
 Each level of this mutation provides more EV. The third level of this mutation
@@ -117,6 +117,11 @@ camouflage mutation
 Your skin changes colour to match your surroundings. Each level of this
 mutation provides Stealth+.
 %%%%
+noise suppression mutation
+
+You passively dampen all noise in your surroundings, making it easier to avoid
+drawing attention to your activities.
+%%%%
 # ------ Auxes -----
 horns mutation
 
@@ -219,6 +224,10 @@ on the defensive benefits of training the Armour skill. Each level of this
 mutation makes your pseudopods larger and stronger.
 %%%%
 # ------ Resistance mutations -----
+steam resistance mutation
+
+You are immune to the damage from steam breath and steam clouds.
+%%%%
 mutation resistance mutation
 
 Your genetic code is unusually stable, making it less likely that you will be
@@ -248,9 +257,14 @@ from cold.
 %%%%
 electricity resistance mutation
 
-You resist electricity, taking less damage from it.
+You resist electricity (rElec), taking less damage from it.
 %%%%
-negative energy resistance
+acid resistance mutation
+
+You resist acid (rCorr), taking less damage from it. You are also less likely to
+become corroded.
+%%%%
+negative energy resistance mutation
 
 You resist negative energy. Each level of this mutation reduces the amount of
 damage taken from negative energy, along with the amount that it drains your
@@ -263,6 +277,11 @@ You are vulnerable to fire and take more damage from it.
 cold vulnerability mutation
 
 You are vulnerable to cold and take more damage from it.
+%%%%
+temperature sensitive mutation
+
+You are vulnerable to both cold and fire, and you take more damage from those
+effects.
 %%%%
 electricity vulnerability mutation
 
@@ -523,6 +542,14 @@ word of chaos mutation
 
 You can speak a Word of Chaos with <input>$cmd[CMD_USE_ABILITY]</input>.
 %%%%
+freezing cloud immunity mutation
+
+You are immune to freezing clouds.
+%%%%
+flame cloud immunity mutation
+
+You are immune to clouds of flame.
+%%%%
 # ------ Other species-specific mutations -----
 spit poison mutation
 
@@ -543,11 +570,35 @@ big wings mutation
 
 You have big, strong wings, capable of bearing you through the air.
 %%%%
+float mutation
+
+You hover through the air, forever free from the surly bonds of earth.
+%%%%
+innate caster mutation
+
+You cannot learn spells from books. Instead, as you gain experience, spells
+of higher and higher level bubble up from your fiery heart. These spells are
+unpredictable and unaffected by your choice of god. You cannot train specific
+spell schools - the Spellcasting skill alone determines these spells' success
+rate and power.
+%%%%
+hp casting mutation
+
+You have no separate reserve of magical power, and anything that would affect
+MP has no effect on you. When casting spells, using abilities, or doing anything
+else that *costs* MP for normal species, you spend HP instead.
+%%%%
+extra vitality mutation
+
+You are built differently from most species, making you slightly harder to kill.
+Each level of this mutation increases your maximum health by 4 points.
+%%%%
 strong legs mutation
 
 You have big, strong legs, allowing you to hop about with
-<input>$cmd[CMD_USE_ABILITY]</input>. The second level of this mutation allows
-you to hop farther.
+<input>$cmd[CMD_USE_ABILITY]</input>, though you can't perfectly aim where you
+land. The second level of this mutation allows you to hop farther. Each time
+you hop, you need to rest for a bit before you can hop again.
 %%%%
 roll mutation
 
@@ -616,9 +667,9 @@ such as divine restrictions, do not cause your other skills to rise faster.
 %%%%
 nimble swimmer mutation
 
-You can take advantage of the water while underwater or skimming the waves,
-gaining Stealth+. The second level of this mutation also provides you improved
-EV and movement speed through the water.
+You can blend into the waves while swimming through water or flying above it,
+gaining Stealth+. The second level of this mutation also grants you improved
+evasion and increases your movement speed when in or above water.
 %%%%
 vampiric mutation
 
@@ -632,6 +683,41 @@ Your divine heritage dramatically boosts your attribute gain (Strength,
 Intelligence, and Dexterity) as you level up relative to other species, both
 in quantity and in how much you can control your development. Every three
 levels, you choose an attribute to increase by four points.
+%%%%
+tentacles mutation
+
+Your gelatinous body has eight tentacles that help you move around in shallow
+or deep water and can be used to constrict enemies. Each tentacle can wear a
+ring, but you need four of them to move around, and either two or four
+tentacles to hold a weapon depending on its size.
+%%%%
+mertail mutation
+
+Your morphogenic matrix is unstable, allowing your lower body to shift to
+a powerful aquatic tail when in shallow or deep water. It will quickly
+reform into legs once you leave the water.
+%%%%
++LOS mutation
+
+The darkness flees at your approach, allowing an extended range of vision and
+ranged attack (+1 line of sight), but also allowing you to be seen and
+potentially targeted from further away.
+%%%%
+no regeneration mutation
+
+You do not regenerate health while resting, and are unable to receive the
+effects of magic that hastens the speed of regeneration. Sources of HP gain
+such as potions and religious invocations will still heal you, and certain
+divine invocations can temporarily grant you the ability to regenerate.
+To compensate, you are able to heal yourself via the
+<input>$cmd[CMD_USE_ABILITY]</input> key, at the cost of permanent MP.
+%%%%
+strong nose mutation
+
+You have a powerful nose adapted to the Dungeon's scents, allowing you to
+detect where treasures lay hidden. As you explore the dungeon, nearby item
+locations that you cannot directly see will gain a marker for
+as-yet-undiscovered items.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
@@ -665,6 +751,11 @@ jelly absorbing missiles mutation
 
 When struck by a missile (such as an arrow or crossbow bolt), a jelly on your
 body may eat it, healing you somewhat.
+%%%%
+engulf mutation
+
+Your melee attacks may engulf living foes that are your size or smaller.
+Those foes will be silenced and unable to breathe.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink while threatened mutation
@@ -718,4 +809,87 @@ unskilled mutation
 
 It takes you more experience to improve your skills. Each level of this
 sacrifice makes your skills cost even more.
+%%%%
+reduced AC mutation
+
+You are easily battered and bruised, reducing the benefits of your armour.
+%%%%
+reduced EV mutation
+
+Your reflexes are slow, making it easier for foes to hit you.
+%%%%
+inexperienced mutation
+
+You are inexperienced, and unable to fully gain 27 levels.
+%%%%
+missing an eye mutation
+
+You are missing an eye, making it more difficult to aim.
+%%%%
+no potions mutation
+
+You are unable to quaff potions.
+%%%%
+no weapons or thrown items mutation
+
+You are incapable of wielding weapons or throwing items.
+%%%%
+no armour mutation
+
+You cannot wear armour.
+%%%%
+# ------ Skill suppression ------
+# skills go in, skills go out. Can't explain that!
+# XXX - might be cool to deduplicate this
+inability to train dodging mutation
+
+Your Dodging skill is 0 and you cannot train the skill.
+%%%%
+inability to train armour mutation
+
+Your Armour skill is 0 and you cannot train the skill.
+%%%%
+no air magic mutation
+
+Your Air Magic skill is 0 and you cannot train the skill.
+%%%%
+no conjurations magic mutation
+
+Your Conjurations skill is 0 and you cannot train the skill.
+%%%%
+no earth magic mutation
+
+Your Earth Magic skill is 0 and you cannot train the skill.
+%%%%
+no fire magic mutation
+
+Your Fire Magic skill is 0 and you cannot train the skill.
+%%%%
+no hexes magic mutation
+
+Your Hexes skill is 0 and you cannot train the skill.
+%%%%
+no ice magic mutation
+
+Your Ice Magic skill is 0 and you cannot train the skill.
+%%%%
+no necromancy magic mutation
+
+Your Necromancy skill is 0 and you cannot train the skill.
+%%%%
+no poison magic mutation
+
+Your Poison Magic skill is 0 and you cannot train the skill.
+%%%%
+no summoning magic mutation
+
+Your Summoning skill is 0 and you cannot train the skill.
+%%%%
+no translocations magic mutation
+
+Your Translocations skill is 0 and you cannot train the skill.
+%%%%
+no transmutations magic mutation
+
+Your Transmutations skill is 0 and you cannot train the skill.
 %%%%

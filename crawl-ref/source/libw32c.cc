@@ -537,7 +537,7 @@ void gotoxy_sys(int x, int y)
     }
 }
 
-static unsigned short _dos_reverse_brand(unsigned short colour)
+static unsigned short _dos_reverse_highlight(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)
     {
@@ -584,52 +584,53 @@ static unsigned short _dos_reverse_brand(unsigned short colour)
     return colour;
 }
 
-static unsigned short _dos_hilite_brand(unsigned short colour,
-                                        unsigned short hilite)
+static unsigned short _dos_do_highlight(unsigned short colour,
+                                        unsigned short highlite)
 {
-    if (!hilite)
+    if (!highlite)
         return colour;
 
-    if (colour == hilite)
+    if (colour == highlite)
         colour = 0;
 
-    colour |= (hilite << 4);
+    colour |= (highlite << 4);
     return colour;
 }
 
-static unsigned short _dos_brand(unsigned short colour, unsigned brand)
+static unsigned short _dos_highlight(unsigned short colour, unsigned highlight)
 {
-    if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
+    if ((highlight & CHATTR_ATTRMASK) == CHATTR_NORMAL)
         return colour;
 
     colour &= 0xFF;
 
-    if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-        return _dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
+    if ((highlight & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        return _dos_do_highlight(colour, (highlight & CHATTR_COLMASK) >> 8);
     else
-        return _dos_reverse_brand(colour);
+        return _dos_reverse_highlight(colour);
 }
 
-static inline unsigned get_brand(int col)
+// XX code duplication
+static inline unsigned get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
            (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
                                             : unsigned{CHATTR_NORMAL};
 }
 
-static void update_text_colours(int brand)
+static void update_text_colours(int highlight)
 {
-    unsigned short branded_bg_fg = _dos_brand(FG_COL, brand);
-    const bool brand_overrides_bg = branded_bg_fg & 0xF0;
+    unsigned short highlighted_bg_fg = _dos_highlight(FG_COL, highlight);
+    const bool highlight_overrides_bg = highlighted_bg_fg & 0xF0;
 
-    const short fg = branded_bg_fg & 0x0F;
-    const short bg = brand_overrides_bg ? (branded_bg_fg & 0xF0) >> 4 : BG_COL;
+    const short fg = highlighted_bg_fg & 0x0F;
+    const short bg = highlight_overrides_bg ? (highlighted_bg_fg & 0xF0) >> 4 : BG_COL;
 
     const short macro_fg = Options.colour[fg];
     const short macro_bg = Options.colour[bg];
@@ -640,13 +641,28 @@ static void update_text_colours(int brand)
 void textcolour(int c)
 {
     FG_COL = static_cast<COLOURS>(c & 0xF);
-    update_text_colours(get_brand(c));
+    update_text_colours(get_highlight(c));
 }
 
 void textbackground(int c)
 {
     BG_COL = static_cast<COLOURS>(c & 0xF);
-    update_text_colours(get_brand(c));
+    update_text_colours(get_highlight(c));
+}
+
+COLOURS default_hover_colour()
+{
+    // Does this work with all the ancient "dos" options?
+    return DARKGREY;
+}
+
+// TODO: needs testing on windows
+lib_display_info::lib_display_info()
+    : type("Windows Console"),
+    term("N/A"),
+    fg_colors(16),
+    bg_colors(Options.dos_use_background_intensity ? 7 : 8) // ?? no idea really
+{
 }
 
 static void cprintf_aux(const char *s)

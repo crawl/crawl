@@ -44,6 +44,7 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-explode.h"
 #include "mon-place.h"
@@ -732,7 +733,8 @@ bool mons_gives_xp(const monster& victim, const actor& agent)
         && !victim.has_ench(ENCH_ABJ)              // not-really-summons
         && !victim.has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
         && mons_class_gives_xp(victim.type)        // class must reward xp
-        && !testbits(victim.flags, MF_WAS_NEUTRAL) // no neutral monsters
+        && (!testbits(victim.flags, MF_WAS_NEUTRAL)// no neutral monsters
+            || victim.has_ench(ENCH_MAD))          // ...except frenzied ones
         && !testbits(victim.flags, MF_NO_REWARD)   // no reward for no_reward
         && !mon_killed_friend;
 }
@@ -1253,6 +1255,7 @@ int max_corpse_chunks(monster_type mc)
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale)
 {
     static const map<monster_type, int> hp_per_hd_by_type = {
+        { MONS_BOUND_SOUL,     100 },
         { MONS_ZOMBIE,          85 },
         { MONS_SKELETON,        70 },
         { MONS_SPECTRAL_THING,  60 },
@@ -1494,7 +1497,6 @@ bool mons_can_be_blinded(monster_type mc)
     return !mons_class_flag(mc, M_UNBLINDABLE);
 }
 
-
 /**
  * Can this kind of monster be dazzled?
  *
@@ -1540,7 +1542,7 @@ mon_itemuse_type mons_class_itemuse(monster_type mc)
 
 mon_itemuse_type mons_itemuse(const monster& mon)
 {
-    if (mons_enslaved_soul(mon))
+    if (mons_bound_soul(mon))
         return mons_class_itemuse(mons_zombie_base(mon));
 
     return mons_class_itemuse(mon.type);
@@ -1593,6 +1595,16 @@ bool mons_class_leaves_hide(monster_type mc)
     return hide_for_monster(mc) != NUM_ARMOURS;
 }
 
+bool mons_class_leaves_wand(monster_type mc)
+{
+    return mc == MONS_ELEIONOMA || mc == MONS_FENSTRIDER_WITCH;
+}
+
+bool mons_class_leaves_organ(monster_type mc)
+{
+    return mons_class_leaves_hide(mc) || mons_class_leaves_wand(mc);
+}
+
 int mons_zombie_size(monster_type mc)
 {
     mc = mons_species(mc);
@@ -1605,7 +1617,7 @@ int mons_zombie_size(monster_type mc)
 
 monster_type mons_zombie_base(const monster& mon)
 {
-    return mons_species(mon.base_monster);
+    return mon.base_monster;
 }
 
 bool mons_class_is_zombified(monster_type mc)
@@ -1625,7 +1637,8 @@ bool mons_class_is_zombified(monster_type mc)
     return mc == MONS_ZOMBIE
         || mc == MONS_SKELETON
         || mc == MONS_SIMULACRUM
-        || mc == MONS_SPECTRAL_THING;
+        || mc == MONS_SPECTRAL_THING
+        || mc == MONS_BOUND_SOUL;
 }
 
 bool mons_class_is_animated_weapon(monster_type type)
@@ -1647,7 +1660,7 @@ bool mons_is_zombified(const monster& mon)
 monster_type mons_base_type(const monster& mon)
 {
     if (mons_class_is_zombified(mon.type))
-        return mons_species(mon.base_monster);
+        return mons_zombie_base(mon);
     return mon.type;
 }
 
@@ -1668,7 +1681,7 @@ bool mons_can_be_zombified(const monster& mon)
 {
     return mons_class_can_be_zombified(mon.type)
            && !mon.is_summoned()
-           && !mons_enslaved_body_and_soul(mon);
+           && !mons_bound_body_and_soul(mon);
 }
 
 bool mons_can_be_spectralised(const monster& mon)
@@ -1680,7 +1693,7 @@ bool mons_can_be_spectralised(const monster& mon)
 
 bool mons_class_can_use_stairs(monster_type mc)
 {
-    return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
+    return (!mons_class_is_zombified(mc) || mc == MONS_BOUND_SOUL)
            && !mons_is_tentacle_or_tentacle_segment(mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
@@ -1704,8 +1717,7 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
         return false;
 
     if (mon.has_ench(ENCH_FRIENDLY_BRIBED)
-        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)
-            || stair == DNGN_ENTER_HELL || stair == DNGN_EXIT_HELL))
+        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)))
     {
         return false;
     }
@@ -1714,14 +1726,14 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
     return true;
 }
 
-bool mons_enslaved_body_and_soul(const monster& mon)
+bool mons_bound_body_and_soul(const monster& mon)
 {
     return mon.has_ench(ENCH_SOUL_RIPE);
 }
 
-bool mons_enslaved_soul(const monster& mon)
+bool mons_bound_soul(const monster& mon)
 {
-    return testbits(mon.flags, MF_ENSLAVED_SOUL);
+    return mon.type == MONS_BOUND_SOUL;
 }
 
 void name_zombie(monster& mon, monster_type mc, const string &mon_name)
@@ -1810,7 +1822,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
     // overwrite all other AFs
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
-    else if (mons.type == MONS_SPECTRAL_THING)
+    else if (mons.mons_species() == MONS_SPECTRAL_THING)
         attk.flavour = AF_DRAIN;
     else
         attk.flavour = AF_PLAIN;
@@ -2092,7 +2104,8 @@ string mon_attack_name(attack_type attack, bool with_object)
  */
 bool is_plain_attack_type(attack_type attack)
 {
-    switch (attack) {
+    switch (attack)
+    {
         case AT_CONSTRICT:  // constriction
         case AT_ENGULF:     // water hold
         case AT_POUNCE:     // webbing
@@ -3156,7 +3169,7 @@ int mons_base_speed(const monster& mon, bool known)
         return mon.props[MON_SPEED_KEY];
     }
 
-    if (mon.type == MONS_SPECTRAL_THING)
+    if (mon.mons_species() == MONS_SPECTRAL_THING)
         return mons_class_base_speed(mons_zombie_base(mon));
 
     return mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
@@ -3173,7 +3186,7 @@ mon_intel_type mons_intel(const monster& m)
 {
     const monster& mon = get_tentacle_head(m);
 
-    if (mons_enslaved_soul(mon))
+    if (mons_bound_soul(mon))
         return mons_class_intel(mons_zombie_base(mon));
 
     return mons_class_intel(mon.type);
@@ -3299,8 +3312,7 @@ bool mons_self_destructs(const monster& m)
 
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
-    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL
-           || fr == ATT_STRICT_NEUTRAL;
+    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL;
 }
 
 mon_attitude_type mons_attitude(const monster& m)
@@ -3646,7 +3658,7 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
         return true;
 
     for (const mon_spell_slot &slot : mon.spells)
-        if (_ms_ranged_spell(slot.spell, attack_only, ench_too))
+        if (_ms_ranged_spell(slot.spell, attack_only, ench_too) && mons_spell_range(mon, slot.spell) > 1)
             return true;
 
     return false;
@@ -5009,6 +5021,10 @@ bool mons_is_player_shadow(const monster& mon)
         && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
 }
 
+// Zero-damage attacks with special effects (constriction, drowning, pure fire,
+// etc.) aren't counted, since this is used to decide whether the monster can
+// go berserk or be weakened, both of which require an attack with non-zero
+// base damage.
 bool mons_has_attacks(const monster& mon)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);

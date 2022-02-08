@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "act-iter.h" // monster_near_iterator
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h"
@@ -1359,6 +1360,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the dungeon can only cope with one malign gateway"
                     " at a time.";
         }
+        if (temp && cast_malign_gateway(&you, 0, GOD_NO_GOD, false, true)
+                    == spret::abort)
+        {
+            return "you need more open space to create a gateway.";
+        }
         break;
 
     case SPELL_SUMMON_FOREST:
@@ -1371,10 +1377,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_PASSWALL:
         // the full check would need a real spellpower here, so we just check
         // a drastically simplified version of it
-        if (temp && you.is_stationary())
+        if (!temp)
+            break;
+        if (you.is_stationary())
             return "you can't move.";
-        if (temp && !passwall_simplified_check(you))
+        if (!passwall_simplified_check(you))
             return "you aren't next to any passable walls.";
+        if (you.is_constricted())
+            return "you're being held away from the wall.";
         break;
 
     case SPELL_ANIMATE_DEAD:
@@ -1389,6 +1399,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SIMULACRUM:
         if (temp && find_simulacrable_corpse(you.pos()) < 0)
             return "there is nothing here to animate!";
+        break;
+
+    case SPELL_DEATH_CHANNEL:
+        if (have_passive(passive_t::reaping))
+            return "you are already reaping souls!";
         break;
 
     case SPELL_CORPSE_ROT:
@@ -1616,6 +1631,22 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_SCORCH:
         return find_near_hostiles(range).empty();
 
+    case SPELL_ANGUISH:
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            const monster &mon = **mi;
+            if (you.can_see(mon)
+                && mons_intel(mon) > I_BRAINLESS
+                && mon.willpower() != WILL_INVULN
+                && !mons_atts_aligned(you.temp_attitude(), mon.attitude)
+                && !mon.has_ench(ENCH_ANGUISH))
+            {
+                return false;
+            }
+
+        }
+        return true; // TODO
+
     default:
         break;
     }
@@ -1629,7 +1660,11 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (testbits(flags, spflag::helpful))
         return false;
 
-    const bool neutral = testbits(flags, spflag::neutral);
+    // For chosing default targets and prompting we don't treat Inner Flame as
+    // neutral, since the seeping flames trigger conducts and harm the monster
+    // before it explodes.
+    const bool allow_friends = testbits(flags, spflag::neutral)
+                               || spell == SPELL_INNER_FLAME;
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
@@ -1695,7 +1730,7 @@ bool spell_no_hostile_in_range(spell_type spell)
                 tempbeam.fire();
 
             if (tempbeam.foe_info.count > 0
-                || neutral && tempbeam.friend_info.count > 0)
+                || allow_friends && tempbeam.friend_info.count > 0)
             {
                 found = true;
                 break;
@@ -1884,6 +1919,7 @@ const set<spell_type> removed_spells =
     SPELL_SUNRAY,
     SPELL_SURE_BLADE,
     SPELL_THROW,
+    SPELL_TOMB_OF_DOROKLOHE,
     SPELL_VAMPIRE_SUMMON,
     SPELL_WARP_BRAND,
     SPELL_WEAVE_SHADOWS,

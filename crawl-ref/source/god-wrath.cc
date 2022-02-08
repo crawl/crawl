@@ -291,7 +291,7 @@ static void _zin_remove_good_mutations()
         // Ensure that only good mutations are removed.
         if (i <= random2(10)
             && delete_mutation(RANDOM_GOOD_MUTATION, _god_wrath_name(god),
-                               failMsg, false, true, true))
+                               failMsg, false, true))
         {
             success = true;
         }
@@ -691,7 +691,7 @@ static bool _yredelemnul_retribution()
 
     if (coinflip())
     {
-        if (you_worship(god) && coinflip() && yred_slaves_abandon_you())
+        if (you_worship(god) && coinflip() && yred_reclaim_souls())
             ;
         else
         {
@@ -703,13 +703,12 @@ static bool _yredelemnul_retribution()
                 if (one_chance_in(you.experience_level))
                 {
                     if (_yred_random_zombified_hostile())
-                        count++;
+                        ++count;
                 }
                 else
                 {
-                    const int num = yred_random_servants(0, true);
-                    if (num >= 0)
-                        count += num;
+                    if (yred_random_servant(0, true))
+                        ++count;
                     else
                         ++how_many;
                 }

@@ -18,6 +18,8 @@
 // How many aut until the next doom hound pops out of doom howl?
 #define NEXT_DOOM_HOUND_KEY "next_doom_hound"
 
+#define DRAGON_CALL_POWER_KEY "dragon_call_power"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail);
@@ -54,7 +56,8 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
                            int pow, god_type god = GOD_NO_GOD,
                            bool is_player = false);
 spret cast_malign_gateway(actor* caster, int pow,
-                               god_type god = GOD_NO_GOD, bool fail = false);
+                          god_type god = GOD_NO_GOD, bool fail = false,
+                          bool test = false);
 coord_def find_gateway_location(actor* caster);
 spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test=false);
 spret cast_summon_guardian_golem(int pow, god_type god, bool fail);
@@ -66,7 +69,7 @@ void doom_howl(int time);
 
 spell_type player_servitor_spell();
 bool spell_servitorable(spell_type spell);
-void init_servitor(monster* servitor, actor* caster);
+void init_servitor(monster* servitor, actor* caster, int pow);
 spret cast_spellforged_servitor(int pow, god_type god, bool fail);
 
 vector<coord_def> simple_find_corpses();
@@ -117,9 +120,12 @@ int count_summons(const actor *summoner, spell_type spell);
 
 vector<coord_def> find_briar_spaces(bool just_check = false);
 void fedhas_wall_of_briars();
-spret fedhas_grow_ballistomycete(bool fail);
+spret fedhas_grow_ballistomycete(const coord_def& target, bool fail);
 spret fedhas_overgrow(bool fail);
-spret fedhas_grow_oklob(bool fail);
+spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
 spret foxfire_swarm();
+bool summon_spider(const actor &agent, coord_def pos, god_type god,
+                        spell_type spell, int pow);
+spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);

@@ -113,8 +113,8 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
                 $("#chat_input").val(message);
             }
         }
-        // Esc key to return to game.
-        else if (e.which == 27)
+        // Esc key or F12 again to return to game.
+        else if (e.which == 27 || e.which == 123)
         {
             e.preventDefault();
             e.stopPropagation();

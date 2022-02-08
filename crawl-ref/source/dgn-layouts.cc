@@ -1115,13 +1115,19 @@ static void _build_river(dungeon_feature_type river_type) //mv
 
     for (int i = 5; i < (GXM - 5); i++)
     {
-        if (one_chance_in(3))   y++;
-        if (one_chance_in(3))   y--;
-        if (coinflip())         width++;
-        if (coinflip())         width--;
+        if (one_chance_in(3))
+            y++;
+        if (one_chance_in(3))
+            y--;
+        if (coinflip())
+            width++;
+        if (coinflip())
+            width--;
 
-        if (width < 2) width = 2;
-        if (width > 6) width = 6;
+        if (width < 2)
+            width = 2;
+        if (width > 6)
+            width = 6;
 
         for (int j = y; j < y+width ; j++)
             if (j >= 5 && j <= GYM - 5)
@@ -1166,10 +1172,14 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
 
     for (j = y1; j < y2; j++)
     {
-        if (coinflip())  x1 += random2(3);
-        if (coinflip())  x1 -= random2(3);
-        if (coinflip())  x2 += random2(3);
-        if (coinflip())  x2 -= random2(3);
+        if (coinflip())
+            x1 += random2(3);
+        if (coinflip())
+            x1 -= random2(3);
+        if (coinflip())
+            x2 += random2(3);
+        if (coinflip())
+            x2 -= random2(3);
 
         if (j - y1 < (y2 - y1) / 2)
         {

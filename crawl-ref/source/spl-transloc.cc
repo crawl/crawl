@@ -162,7 +162,7 @@ void uncontrolled_blink(bool override_stasis)
  * @return              True if a target was found; false if the player aborted.
  */
 static bool _find_cblink_target(dist &target, bool safe_cancel,
-                                string verb, targeter *hitfunc = nullptr)
+                                string verb, targeter *hitfunc = nullptr, bool physical = false)
 {
     while (true)
     {
@@ -243,7 +243,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
             continue;
         }
 
-        if (cancel_harmful_move(false))
+        if (cancel_harmful_move(physical))
         {
             clear_messages();
             continue;
@@ -323,6 +323,11 @@ static coord_def _fuzz_hop_destination(coord_def target)
     return chosen;
 }
 
+int frog_hop_range()
+{
+    return 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+}
+
 /**
  * Attempt to hop the player to a space near a tile of their choosing.
  *
@@ -335,16 +340,13 @@ spret frog_hop(bool fail, dist *target)
     dist empty;
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
-    const int hop_range = 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+    const int hop_range = frog_hop_range();
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     tgt.obeys_mesmerise = true;
 
-    if (cancel_harmful_move())
-        return spret::abort;
-
     while (true)
     {
-        if (!_find_cblink_target(*target, true, "hop", &tgt))
+        if (!_find_cblink_target(*target, true, "hop", &tgt, true))
             return spret::abort;
 
         if (grid_distance(you.pos(), target->target) > hop_range)
@@ -933,7 +935,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
                 interrupt_activity(activity_interrupt::teleport);
                 if (!reason.empty())
                     mpr(reason);
-                mprf("You are suddenly yanked towards %s nearby monster%s!",
+                mprf("You are yanked towards %s nearby monster%s!",
                      mons_near_target > 1 ? "some" : "a",
                      mons_near_target > 1 ? "s" : "");
             }
@@ -1121,7 +1123,10 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
 
     fail_check();
 
-    mpr("Space momentarily warps into an impossible shape!");
+    if (player_equip_unrand(UNRAND_AUTUMN_KATANA))
+        mpr("Space folds impossibly around your blade!");
+    else
+        mpr("Space momentarily warps into an impossible shape!");
 
     const int initial_time = you.time_taken;
 
@@ -1365,13 +1370,13 @@ static int _disperse_monster(monster& mon, int pow)
     if (mon.no_tele())
         return false;
 
-    if (mon.check_willpower(pow) > 0)
+    if (mon.check_willpower(&you, pow) > 0)
         monster_blink(&mon);
     else
         monster_teleport(&mon, true);
 
     // Moving the monster may have killed it in apply_location_effects.
-    if (mon.alive() && mon.check_willpower(pow) <= 0)
+    if (mon.alive() && mon.check_willpower(&you, pow) <= 0)
         mon.confuse(&you, 1 + random2avg(pow / 10, 2));
 
     return true;

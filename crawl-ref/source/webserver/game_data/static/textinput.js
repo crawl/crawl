@@ -10,6 +10,9 @@ function ($, comm, client, enums, util, options, ui) {
 
     function input_cleanup()
     {
+        document.removeEventListener("mousedown", input_mouse_control, true);
+        if (options.get("tile_web_mouse_control"))
+            ui.undisable_contextmenu();
         input_data = null;
     }
 
@@ -22,6 +25,34 @@ function ($, comm, client, enums, util, options, ui) {
             return $(".seed-selection .seed-input input");
         else  //"generic"
             return $("#input_dialog input");
+    }
+
+    function input_mouse_control(ev)
+    {
+        // XX there's some dead space right under the message pane that this
+        // gets which is a bit unintuitive
+        if (ui.target_outside_game(ev)) // allow chat clicks
+            return;
+        if (options.get("tile_web_mouse_control") && ev.which == 3
+            && !$(ev.target).is(':input'))
+        {
+            // abort text input on right click outside of the input itself
+            comm.send_message("key", { keycode: 27 });
+            ev.preventDefault();
+        }
+        else
+        {
+            // Otherwise, refocus input. With mouse control off, this always
+            // happens.
+
+            // manually deactivate a chat focus trap. This is needed because the
+            // preventDefault below prevents auto-disabling, but without
+            // preventDefault, default focus handlers kick in.
+            if ($("#chat").hasClass("focus-trap"))
+                $("#chat")[0].focus_trap.deactivate();
+            find_input().focus();
+            ev.preventDefault();
+        }
     }
 
     function display_input()
@@ -55,6 +86,9 @@ function ($, comm, client, enums, util, options, ui) {
             $("#text_cursor").remove();
             prompt = $("#messages .game_message").last();
             prompt.append(input);
+            document.addEventListener("mousedown", input_mouse_control, true);
+            if (options.get("tile_web_mouse_control"))
+                ui.disable_contextmenu();
         }
         else if (input_data.type == "seed-selection")
         {

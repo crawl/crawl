@@ -3,7 +3,7 @@ import os.path
 import tornado
 import tornado.web
 
-import config
+from webtiles import config
 
 try:
     from typing import Dict
@@ -30,7 +30,7 @@ class GameDataHandler(tornado.web.StaticFileHandler):
                         GameDataHandler._client_paths[version] + "/" + url_path)
 
     def set_extra_headers(self, path):
-        if config.game_data_no_cache:
+        if config.get('game_data_no_cache'):
             self.set_header("Cache-Control",
                             "no-cache, no-store, must-revalidate")
             self.set_header("Pragma", "no-cache")

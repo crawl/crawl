@@ -71,7 +71,7 @@ int SpellRegion::handle_mouse(wm_mouse_event &event)
 
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
-        if (!cast_a_spell(false, spell))
+        if (cast_a_spell(false, spell) == spret::abort)
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
     }

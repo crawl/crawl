@@ -95,7 +95,7 @@ class InvTitle : public MenuEntry
 public:
     InvTitle(Menu *mn, const string &title, invtitle_annotator tfn);
 
-    string get_text(const bool = false) const override;
+    string get_text() const override;
 
 private:
     Menu *m;
@@ -113,18 +113,16 @@ private:
     mutable string dbname;
 
 protected:
-    static bool show_cursor;
     // Should we show the floor tile, etc?
     bool show_background = true;
+    string _get_text_preface() const override;
 
 public:
     const item_def *item;
 
     InvEntry(const item_def &i);
-    string get_text(const bool need_cursor = false) const override;
     void set_show_glyph(bool doshow);
     void set_show_coordinates(bool doshow);
-    static void set_show_cursor(bool doshow);
 
     const string &get_basename() const;
     const string &get_qualname() const;
@@ -138,7 +136,7 @@ public:
 
     virtual int highlight_colour() const override
     {
-        return menu_colour(get_text(), item_prefix(*item), tag);
+        return menu_colour(get_text(), item_prefix(*item), "inventory");
     }
 
     virtual void select(int qty = -1) override;
@@ -203,7 +201,7 @@ public:
 
 protected:
     void do_preselect(InvEntry *ie);
-    void select_item_index(int idx, int qty, bool draw_cursor = true) override;
+    void select_item_index(int idx, int qty) override;
     int pre_process(int key) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;

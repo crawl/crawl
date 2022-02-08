@@ -62,6 +62,7 @@
  #include "windowmanager.h"
 #endif
 #include "ui.h"
+#include "version.h"
 
 using namespace ui;
 
@@ -299,6 +300,11 @@ static void _post_init(bool newc)
     level_id old_level;
     old_level.branch = NUM_BRANCHES;
 
+#ifdef USE_TILE_WEB
+    if (tiles.get_ui_state() == UI_CRT)
+        tiles.set_ui_state(UI_NORMAL);
+#endif
+
     load_level(you.entering_level ? you.transit_stair :
                you.char_class == JOB_DELVER ? DNGN_STONE_STAIRS_UP_I : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :
@@ -341,6 +347,9 @@ static void _post_init(bool newc)
     read_init_file(true);
     Options.fixup_options();
     read_startup_prefs();
+#ifdef USE_TILE_WEB
+    tiles.send_options();
+#endif
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
@@ -363,6 +372,8 @@ static void _post_init(bool newc)
     update_vision_range();
     init_exclusion_los();
     ash_check_bondage();
+    if (you.prev_save_version != Version::Long)
+        check_if_everything_is_identified();
 
     trackers_init_new_level();
 

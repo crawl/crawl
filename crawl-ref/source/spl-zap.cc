@@ -69,6 +69,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_HAILSTORM, ZAP_HAILSTORM },
     { SPELL_ISKENDERUNS_MYSTIC_BLAST, ZAP_MYSTIC_BLAST },
     { SPELL_FLAME_WAVE, ZAP_FLAME_WAVE },
+    { SPELL_ENFEEBLE, ZAP_ENFEEBLE },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
@@ -131,11 +132,34 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_HURL_SLUDGE, ZAP_HURL_SLUDGE },
 };
 
+// Some player abilities are internally zaps but don't go through
+// your_spels
+static pair<ability_type, zap_type> _abil_zaps[] =
+{
+    { ABIL_SPIT_POISON, ZAP_SPIT_POISON },
+    { ABIL_BREATHE_ACID, ZAP_BREATHE_ACID },
+    { ABIL_BREATHE_FIRE, ZAP_BREATHE_FIRE },
+    { ABIL_BREATHE_FROST, ZAP_BREATHE_FROST },
+    { ABIL_BREATHE_POISON, ZAP_BREATHE_POISON },
+    { ABIL_BREATHE_POWER, ZAP_BREATHE_POWER },
+    { ABIL_BREATHE_STEAM, ZAP_BREATHE_STEAM },
+    { ABIL_BREATHE_MEPHITIC, ZAP_BREATHE_MEPHITIC },
+};
+
 zap_type spell_to_zap(spell_type spell)
 {
     for (const auto &spzap : _spl_zaps)
         if (spzap.first == spell)
             return spzap.second;
+
+    return NUM_ZAPS;
+}
+
+zap_type ability_to_zap(ability_type abil)
+{
+    for (const auto &abzap : _abil_zaps)
+        if (abzap.first == abil)
+            return abzap.second;
 
     return NUM_ZAPS;
 }

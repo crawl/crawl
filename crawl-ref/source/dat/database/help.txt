@@ -2,19 +2,19 @@
 pick-up
 
                    <h>Picking up and dropping items</h>
-<h>Item letters</h>
-Pressing an item's letter key will select the item.
-Entering a number before the letter will only select that quantity.
+
+<h>Navigation and selecting items</h>
+Use the usual navigation keys (<w>arrow</w> keys, <w>pgdn</w>/<w>pgup</w>, <w>home</w>, <w>end</w>) to select
+items, and <w>Space</w>/<w>.</w> to toggle whether the selected item will be picked up or
+dropped. Pressing an item's letter key will also toggle its pickup/drop state.
+Press <w>Return</w> to accept the current set of items.
+
+Entering a number before selecting by letter will toggle just that quantity of
+a stack of items.
 
 <h>Regular expressions</h>
-You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
-All matching items will be selected.
-
-<h>Cursor</h>
-There are shortcuts to quickly select several items in succession:
-<w>.</w>   selects the next item and moves the cursor down
-<w>'</w>   moves the cursor down without changing selection
-The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
+You can press <w>Ctrl-F</w> to enter a word (or a regular expression). All matching
+items will be selected.
 
 <h>Category shortcuts</h>
 You can quickly select items by type by pressing:
@@ -34,8 +34,11 @@ leave the menu. To return to the normal selection mode, press <w>\</w> a second 
 known-menu
 
                    <h>Known items menu</h>
-<h>Item letters</h>
-Pressing an item type's letter key selects that item.
+
+<h>Navigation and selecting items</h>
+Use the usual navigation keys (<w>arrow</w> keys, <w>pgdn</w>/<w>pgup</w>, <w>home</w>, <w>end</w>) to select
+items, and <w>Space</w>/<w>.</w> to toggle the autopickup mode for the selected item type.
+Pressing an item type's letter key will also toggle its autopickup state.
 
 <h>Selecting item types</h>
 Item types displayed in grey use the default autopickup options set in your
@@ -64,12 +67,6 @@ settings.
 <h>Regular expressions</h>
 You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
 All matching items will be selected.
-
-<h>Cursor</h>
-There are shortcuts to quickly select several items in succession:
-<w>.</w>   selects the next item and moves the cursor down
-<w>'</w>   moves the cursor down without changing selection
-The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 
 %%%%
 stash-search.prompt

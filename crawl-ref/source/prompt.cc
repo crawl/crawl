@@ -46,14 +46,15 @@ bool yes_or_no(const char* fmt, ...)
 
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
-bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
+int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
            bool interrupt_delays, bool noprompt,
-           const explicit_keymap *map, bool allow_popup)
+           const explicit_keymap *map, bool allow_popup, bool ask_always)
 {
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(activity_interrupt::force);
 
     // Allow players to answer prompts via clua.
+    // XXX: always not currently supported
     maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
     if (res == MB_TRUE)
         return true;
@@ -69,7 +70,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     use_popup = use_popup && str && allow_popup;
 #endif
 
-    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE;
+    int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
     if (allow_lowercase && use_popup)
         flags |= MF_ARROWS_SELECT;
     Menu pop(flags, "", KMC_CONFIRM);
@@ -80,17 +81,24 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         status = new MenuEntry("", MEL_SUBTITLE);
         MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
         MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
+        MenuEntry * const a_me = new MenuEntry("Always", MEL_ITEM, 1, 'A');
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 
-        pop.set_title(new MenuEntry(prompt, MEL_TITLE));
+        MenuEntry *question = new MenuEntry(prompt, MEL_TITLE);
+        question->wrap_text();
+        pop.set_title(question);
         pop.add_entry(status);
         pop.add_entry(y_me);
         pop.add_entry(n_me);
+        if (ask_always)
+            pop.add_entry(a_me);
         if (allow_lowercase && default_answer == 'y')
             pop.set_hovered(1);
         else if (allow_lowercase && default_answer == 'n')
             pop.set_hovered(2);
+        else if (ask_always && allow_lowercase && default_answer == 'a')
+            pop.set_hovered(3);
         pop.on_single_selection = [&pop](const MenuEntry& item)
             {
                 if (item.hotkeys.size())
@@ -147,142 +155,26 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             clear_messages();
 
         if (tmp == 'N')
-            return false;
+            return 0;
         else if (tmp == 'Y')
-            return true;
+            return 1;
+        else if (ask_always && tmp == 'A')
+            return 2;
         else if (!noprompt)
         {
             bool upper = !allow_lowercase
                          && (tmp == 'n' || tmp == 'y'
+                             || (ask_always && tmp == 'a')
                              || crawl_state.game_is_hints_tutorial());
-            const string pr = make_stringf("%s[Y]es or [N]o only, please.",
-                                           upper ? "Uppercase " : "");
+            const string pr = make_stringf("%s%s only, please.",
+                                           upper ? "Uppercase " : "",
+                                           ask_always ?
+                                               "[Y]es, [N]o, or [A]lways" :
+                                               "[Y]es or [N]o");
             if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
             else
                 mprf(MSGCH_PROMPT, "%s", pr.c_str());
-        }
-    }
-}
-
-static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
-                                    bool brackets = false)
-{
-    string help = "";
-    bool print_yes = false;
-    if (yes1 != 'Y')
-    {
-        if (lowered)
-            help += toalower(yes1);
-        else
-            help += yes1;
-        print_yes = true;
-    }
-
-    if (yes2 != 'Y' && yes2 != yes1)
-    {
-        if (print_yes)
-            help += "/";
-
-        if (lowered)
-            help += toalower(yes2);
-        else
-            help += yes2;
-        print_yes = true;
-    }
-
-    if (print_yes)
-    {
-        if (brackets)
-            help = " (" + help + ")";
-        else
-            help = "/" + help;
-    }
-
-    return help;
-}
-
-static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
-                                 bool allow_all = false)
-{
-    string result = " [";
-    result += (lowered ? "(y)es" : "(Y)es");
-    result += _list_alternative_yes(yes1, yes2, lowered);
-    if (allow_all)
-        result += (lowered? "/(a)ll" : "/(A)ll");
-    result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
-    result += "]";
-
-    return result;
-}
-
-// Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
-// alt_yes and alt_yes2 allow up to two synonyms for 'Y'.
-// FIXME: This function is shaping up to be a monster. Help!
-int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool allow_all,
-              bool clear_after, char alt_yes, char alt_yes2)
-{
-    if (!crawl_state.is_repeating_cmd())
-        interrupt_activity(activity_interrupt::force);
-
-    mouse_control mc(MOUSE_MODE_YESNO);
-
-    string prompt =
-    make_stringf("%s%s ", str ? str : "Buggy prompt?",
-                 _list_allowed_keys(alt_yes, alt_yes2,
-                                    allow_lowercase, allow_all).c_str());
-    while (true)
-    {
-        mprf(MSGCH_PROMPT, "%s", prompt.c_str());
-
-        int tmp = ui::getch(KMC_CONFIRM);
-
-        if (key_is_escape(tmp) || tmp == 'q' || tmp == 'Q'
-            || crawl_state.seen_hups)
-        {
-            return -1;
-        }
-
-        if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && default_answer)
-            tmp = default_answer;
-
-        if (Options.easy_confirm == easy_confirm_type::all
-            || tmp == default_answer
-            || allow_lowercase
-               && Options.easy_confirm == easy_confirm_type::safe)
-        {
-            tmp = toupper_safe(tmp);
-        }
-
-        if (clear_after)
-            clear_messages();
-
-        if (tmp == 'N')
-            return 0;
-        else if (tmp == 'Y' || tmp == alt_yes || tmp == alt_yes2)
-            return 1;
-        else if (allow_all)
-        {
-            if (tmp == 'A')
-                return 2;
-            else
-            {
-                bool upper = !allow_lowercase
-                             && (tmp == 'n' || tmp == 'y' || tmp == 'a'
-                                 || crawl_state.game_is_hints_tutorial());
-                mprf("Choose %s[Y]es%s, [N]o, [Q]uit, or [A]ll!",
-                     upper ? "uppercase " : "",
-                     _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
-            }
-        }
-        else
-        {
-            bool upper = !allow_lowercase
-                         && (tmp == 'n' || tmp == 'y'
-                             || crawl_state.game_is_hints_tutorial());
-            mprf("%s[Y]es%s, [N]o or [Q]uit only, please.",
-                 upper ? "Uppercase " : "",
-                 _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
         }
     }
 }

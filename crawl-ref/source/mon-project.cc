@@ -279,12 +279,18 @@ static bool _iood_shielded(monster& mon, actor &victim)
     return pro_block >= con_block;
 }
 
-dice_def iood_damage(int pow, int dist)
+dice_def iood_damage(int pow, int dist, bool random)
 {
-    pow = stepdown_value(pow, 30, 30, 200, -1);
+    int flat = 60;
+
     if (dist < 4)
-        pow = pow * (dist*2+3) / 10;
-    return dice_def(9, pow / 4);
+    {
+        pow = random ? div_rand_round(pow * dist * 3, 10)
+                     : pow * dist * 3 / 10;
+        flat = flat * dist * 3 / 10;
+    }
+    return dice_def(9, random ? div_rand_round(flat + pow, 12)
+                              : (flat + pow) / 12 );
 }
 
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
@@ -517,8 +523,7 @@ move_again:
 
         if (victim && _iood_shielded(mon, *victim))
         {
-            item_def *shield = victim->shield();
-            if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
+            if (!victim->reflection())
             {
                 if (victim->is_player())
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
@@ -532,6 +537,7 @@ move_again:
                 return true;
             }
 
+            item_def *shield = victim->shield();
             if (victim->is_player())
             {
                 if (shield && shield_reflects(*shield))

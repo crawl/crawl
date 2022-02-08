@@ -106,6 +106,10 @@
 #define F_OK 0
 #endif
 
+#ifdef __HAIKU__
+#include <FindDirectory.h>
+#endif
+
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS))
 
 #ifdef BONES_DIAGNOSTICS
@@ -355,7 +359,7 @@ static bool _create_directory(const char *dir)
 {
     if (!mkdir_u(dir, 0755))
         return true;
-    if (errno == EEXIST) // might be not a directory
+    if (errno == EEXIST || errno == EROFS) // might be not a directory
         return dir_exists(dir);
     return false;
 }
@@ -418,6 +422,14 @@ string canonicalise_file_separator(const string &path)
 
 static vector<string> _get_base_dirs()
 {
+#ifdef __HAIKU__
+    char path[B_PATH_NAME_LENGTH];
+    find_path(B_APP_IMAGE_SYMBOL,
+            B_FIND_PATH_DATA_DIRECTORY,
+            "crawl/",
+            path,
+            B_PATH_NAME_LENGTH);
+#endif
     const string rawbases[] =
     {
 #ifdef DATA_DIR_PATH
@@ -432,6 +444,9 @@ static vector<string> _get_base_dirs()
 #ifdef __ANDROID__
         ANDROID_ASSETS,
         "/sdcard/Android/data/org.develz.crawl/files/",
+#endif
+#ifdef __HAIKU__
+        std::string(path),
 #endif
     };
 
@@ -993,14 +1008,36 @@ NORETURN void print_save_json(const char *name)
     }
 }
 
+static string _get_prefs_path()
+{
+#ifdef DGL_STARTUP_PREFS_BY_NAME
+    // if prfs are being organized by name, the save directory per se is most
+    // likely versioned, so store them in a subdirectory of the shared
+    // directory instead.
+    string dir = catpath(catpath(
+            Options.shared_dir,
+            crawl_state.game_savedir_path()),
+        "prefs");
+    check_mkdir("Preferences directory", &dir, false);
+    return dir;
+#else
+    return _get_savefile_directory();
+#endif
+}
+
 string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
-    return _get_savefile_directory() + "start-"
-           + strip_filename_unsafe_chars(Options.game.name) + "-ns.prf";
+    // in the early startup sequence we need to use Options.game.name, but this
+    // becomes empty by the time the game is actually starting. (...)
+    const string player_name = Options.game.name.length()
+        ? Options.game.name : you.your_name;
+    const string filename =
+        "start-" + strip_filename_unsafe_chars(player_name) + "-ns.prf";
 #else
-    return _get_savefile_directory() + "start-ns.prf";
+    const string filename = "start-ns.prf";
 #endif
+    return catpath(_get_prefs_path(), filename);
 }
 
 void write_ghost_version(writer &outf)
@@ -1043,16 +1080,13 @@ static int _get_dest_stair_type(dungeon_feature_type stair_taken,
         return DNGN_EXIT_DUNGEON;
     }
 
-    if (stair_taken == DNGN_EXIT_HELL)
-        return DNGN_ENTER_HELL;
-
-    if (stair_taken == DNGN_ENTER_HELL)
+    if (feat_is_hell_subbranch_exit(stair_taken))
         return DNGN_EXIT_HELL;
 
     if (player_in_hell() && feat_is_stone_stair_down(stair_taken))
     {
         find_first = false;
-        return DNGN_ENTER_HELL;
+        return branches[you.where_are_you].exit_stairs;
     }
 
     if (feat_is_stone_stair(stair_taken))
@@ -1079,7 +1113,8 @@ static int _get_dest_stair_type(dungeon_feature_type stair_taken,
         || stair_taken == DNGN_ENTER_COCYTUS
         || stair_taken == DNGN_ENTER_TARTARUS)
     {
-        return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
+        return player_in_hell() ? branches[you.where_are_you].exit_stairs
+                                : stair_taken;
     }
 
     if (feat_is_branch_exit(stair_taken))
@@ -1236,7 +1271,7 @@ static void _grab_followers()
         else
         {
             // Permanent undead are left behind but stay.
-            mprf("Your mindless thrall%s behind.",
+            mprf("Your mindless puppet%s behind to rot.",
                  non_stair_using_allies > 1 ? "s stay" : " stays");
         }
     }
@@ -2298,8 +2333,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
-                string stair_str = feature_description_at(you.pos(), false,
-                                                          DESC_THE);
+                string stair_str = feature_description(feat, NUM_TRAPS, "",
+                                                       DESC_THE);
                 string verb = stair_climb_verb(feat);
 
                 if (coinflip()

@@ -95,8 +95,8 @@ Dig ability
 
 Allows making tunnels through soft rock and rusted grates. Activating the
 ability has no cost and simply prepares you to start digging; once active,
-moving into a wall will start tunnelling. Doing so makes some noise and is a
-little slower than walking.
+moving into a wall will start tunnelling. Doing so makes some noise and drains
+the user's maximum health.
 
 Once active, activating the ability again or making any non-digging movement
 action will cancel the Dig status.
@@ -224,42 +224,34 @@ You must choose between this gift or that of branding a weapon with pain, and
 either gift may only be received once.
 %%%%
 # Yredelemnul
-Animate Remains ability
-
-Reanimates a single corpse or skeleton as a follower. Zombies and skeletons
-cannot leave the level they were created on.
-%%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Injury Mirror ability
+Dark Bargain ability
 
-Reflects damage taken for a short duration, hurting attackers whenever any
-damage is taken and reducing piety depending on the amount of damage dealt.
-%%%%
-Animate Dead ability
-
-Reanimates all corpses and skeletons in the vicinity as followers. Zombies and
-skeletons cannot leave the level they were created on.
+Offer up your reaped souls to Yredelemnul in exchange for the temporary help of
+an undead servant. The strength of the servant granted is increased by
+Invocations skill.
 %%%%
 Drain Life ability
 
 [[Drain Life spell]] The amount of life force drained is increased by
 Invocations skill.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
-Marks a monster's soul as ripe for the taking. Intelligent living, holy and
-demonic monsters can be targeted (excepting most lords of Pandemonium), as
-long as they are relatively uninjured. The duration of the mark is dependent on
-Invocations skill. If the monster dies while still marked, its soul will become
-yours.
+Marks a monster's soul as ripe for the taking. If the monster dies before the mark
+expires, it will return as a bound soul, still retaining the equipment, spells and
+abilities it had in life.
 
-The enslaved soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. However, only one soul can be enslaved
-at a time.
+Living, holy and demonic monsters can be targeted (excepting most lords of
+Pandemonium), as long as they are relatively uninjured. The duration of the mark
+is dependent on Invocations skill.
+
+The bound soul will follow its captor through stairs, and can be recalled from
+other levels. Only one soul can be bound at a time.
 %%%%
 # Okawaru
 Heroism ability
@@ -281,8 +273,8 @@ with no escape until you either emerge victorious or are slain.
 # Makhleb
 Minor Destruction ability
 
-Shoots a random harmful blast at the targeted creature. Damage and accuracy
-are increased by Invocations skill.
+Shoots a weak blast of fire, lightning, stone, acid, or negative energy at the
+targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Lesser Servant of Makhleb ability
 
@@ -291,8 +283,8 @@ demon hostile.
 %%%%
 Major Destruction ability
 
-[[Major Destruction spell]] Damage and accuracy are increased by Invocations
-skill.
+Shoots a piercing bolt of fire, lightning, magma, acid, or negative energy at
+the targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Greater Servant of Makhleb ability
 
@@ -801,9 +793,8 @@ invisibility, and obscure the vision of those outside the storm.
 %%%%
 Fiery Armour ability
 
-Armour yourself in fire, burning up some incoming attacks and searing foes
-foolish enough to strike you in melee. This armour lasts quite a long time
-before finally burning out.
+Armour yourself in fire, providing +7 AC and searing foes foolish enough to
+strike you in melee. The fire takes quite a long time to burn out.
 %%%%
 Foxfire Swarm ability
 

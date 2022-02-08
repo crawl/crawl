@@ -53,7 +53,7 @@
 #include "transform.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
-static void _apply_move_time_taken(int additional_time_taken = 0);
+static void _apply_move_time_taken();
 
 // Swap monster to this location. Player is swapped elsewhere.
 // Moves the monster into position, but does not move the player
@@ -116,20 +116,6 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     }
 
     return num;
-}
-
-static void _entered_malign_portal(actor* act)
-{
-    ASSERT(act); // XXX: change to actor &act
-    if (you.can_see(*act))
-    {
-        mprf("%s %s twisted violently and ejected from the portal!",
-             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
-    }
-
-    act->blink();
-    act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
-              "", "entering a malign gateway");
 }
 
 static bool _cancel_barbed_move(bool rampaging)
@@ -528,12 +514,6 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     case DNGN_ENTER_ABYSS:
         return yesno("If you enter this portal you might not be able to return "
                      "immediately. Continue?", false, 'n');
-
-    case DNGN_MALIGN_GATEWAY:
-        return yesno("Are you sure you wish to approach this portal? There's no "
-                     "telling what its forces would wreak upon your fragile "
-                     "self.", false, 'n');
-
     default:
         return true;
     }
@@ -748,11 +728,10 @@ static spret _rampage_forward(coord_def move)
     return spret::success;
 }
 
-static void _apply_move_time_taken(int additional_time_taken)
+static void _apply_move_time_taken()
 {
     you.time_taken *= player_movement_speed();
     you.time_taken = div_rand_round(you.time_taken, 10);
-    you.time_taken += additional_time_taken;
 
     if (you.running && you.running.travel_speed)
     {
@@ -793,8 +772,6 @@ void move_player_action(coord_def move)
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
-
-    int additional_time_taken = 0; // Extra time independent of movement speed
 
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);
@@ -991,7 +968,9 @@ void move_player_action(coord_def move)
                 moving = false;
             }
         }
-        else if (targ_monst->temp_attitude() == ATT_NEUTRAL && !you.confused()
+        else if (targ_monst->temp_attitude() == ATT_NEUTRAL
+                 && !targ_monst->has_ench(ENCH_INSANE)
+                 && !you.confused()
                  && targ_monst->visible_to(&you))
         {
             simple_monster_message(*targ_monst, " refuses to make way for you. "
@@ -1078,7 +1057,7 @@ void move_player_action(coord_def move)
                  DESC_THE).c_str());
             destroy_wall(targ);
             noisy(6, you.pos());
-            additional_time_taken += BASELINE_DELAY / 5;
+            drain_player(15, false, true);
             dug = true;
         }
 
@@ -1112,7 +1091,7 @@ void move_player_action(coord_def move)
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        _apply_move_time_taken(additional_time_taken);
+        _apply_move_time_taken();
 
         move.reset();
         you.turn_is_over = true;
@@ -1128,23 +1107,6 @@ void move_player_action(coord_def move)
         move.reset();
         return;
     }
-    else if (!targ_pass && env.grid(targ) == DNGN_MALIGN_GATEWAY
-             && !attacking && !you.is_stationary())
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !prompt_dangerous_portal(env.grid(targ)))
-        {
-            // No rampage check because the portal blocks the
-            // rampage tracer
-            return;
-        }
-
-        move.reset();
-        you.turn_is_over = true;
-
-        _entered_malign_portal(&you);
-        return;
-    }
     else if (!targ_pass && !attacking)
     {
         // No rampage check here, since you can't rampage at walls
@@ -1156,6 +1118,8 @@ void move_player_action(coord_def move)
             mpr("The endless sea of lava is not a nice place.");
         else if (feat_is_tree(env.grid(targ)) && you_worship(GOD_FEDHAS))
             mpr("You cannot walk through the dense trees.");
+        else if (!try_to_swap && env.grid(targ) == DNGN_MALIGN_GATEWAY)
+            mpr("The malign portal rejects you as you step towards it.");
 
         stop_running();
         move.reset();

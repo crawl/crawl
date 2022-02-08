@@ -1655,17 +1655,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
-    spschool::earth,
-    spflag::monster | spflag::escape,
-    5,
-    0,
-    -1, -1,
-    4, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_SUMMON_EYEBALLS, "Summon Eyeballs",
     spschool::summoning,
     spflag::monster | spflag::mons_abjure,
@@ -2009,7 +1998,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INNER_FLAME, "Inner Flame",
     spschool::hexes | spschool::fire,
-    spflag::target | spflag::not_self | spflag::neutral | spflag::WL_check,
+    spflag::target | spflag::not_self | spflag::WL_check,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,
@@ -2931,8 +2920,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_VIOLENT_UNRAVELLING, "Yara's Violent Unravelling",
     spschool::hexes | spschool::transmutation,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::no_ghost
-        | spflag::chaotic,
+    spflag::target | spflag::no_ghost | spflag::chaotic,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3505,6 +3493,39 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ENFEEBLE, "Enfeeble",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    7, 0,
+    TILEG_ENFEEBLE,
+},
+
+{
+    SPELL_SUMMON_SPIDERS, "Summon Spiders",
+    spschool::summoning | spschool::poison,
+    spflag::mons_abjure | spflag::monster,
+    6,
+    200,
+    -1, -1,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_ANGUISH, "Anguish",
+    spschool::hexes | spschool::necromancy,
+    spflag::area | spflag::WL_check,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    TILEG_ANGUISH,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -3604,6 +3625,7 @@ AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
 AXED_SPELL(SPELL_VORTEX, "Vortex")
 AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
 AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
+AXED_SPELL(SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe")
 #endif
 
 };

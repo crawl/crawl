@@ -791,6 +791,8 @@ public:
         return make_stringf("a %sbat.",
                             you.has_mutation(MUT_VAMPIRISM) ? "vampire " : "");
     }
+
+    string get_untransform_message() const override { return "You feel less batty."; }
 };
 
 class FormPig : public Form
@@ -800,6 +802,7 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormPig);
 public:
     static const FormPig &instance() { static FormPig inst; return inst; }
+    string get_untransform_message() const override { return "You feel less porcine."; }
 };
 
 class FormAppendage : public Form
@@ -922,6 +925,7 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormWisp);
 public:
     static const FormWisp &instance() { static FormWisp inst; return inst; }
+    string get_untransform_message() const override { return "You condense into your normal self."; }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -993,6 +997,16 @@ public:
     }
 
     bool can_offhand_punch() const override { return true; }
+
+    /**
+     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
+     */
+    string get_uc_attack_name(string /*default_name*/) const override
+    {
+        // there's special casing in base_hand_name to get "fists"
+        string hand = you.base_hand_name(true, true);
+        return make_stringf("Storm %s", hand.c_str());
+    }
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -2204,4 +2218,11 @@ int form_base_movespeed(transformation tran)
         return 7;
     else
         return 10;
+}
+
+bool draconian_dragon_exception()
+{
+    return species::is_draconian(you.species)
+           && (you.form == transformation::dragon
+               || !form_changed_physiology());
 }

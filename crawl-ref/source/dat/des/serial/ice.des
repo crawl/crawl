@@ -7,7 +7,7 @@ function init_ice(e, force_opaque)
   e.tags('serial_ice')
   e.tags('extra')
   e.tags('mini_float')
-  if force_opaque ~= nil then
+  if not force_opaque then
     e.tags('transparent')
   end
   e.weight('2')

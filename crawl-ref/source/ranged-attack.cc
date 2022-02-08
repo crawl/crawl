@@ -65,7 +65,8 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         wpn_skill = SK_THROWING;
 }
 
-int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
+int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random,
+                                              bool /*aux*/)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 
@@ -159,16 +160,13 @@ bool ranged_attack::handle_phase_blocked()
     string punctuation = ".";
     string verb = "block";
 
-    const bool reflected_by_shield = defender_shield
-                                     && is_shield(*defender_shield)
-                                     && shield_reflects(*defender_shield);
-    if (reflected_by_shield || defender->reflection())
+    if (defender->reflection())
     {
         reflected = true;
         verb = "reflect";
         if (defender->observable())
         {
-            if (reflected_by_shield)
+            if (defender_shield && shield_reflects(*defender_shield))
             {
                 punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
                               + " " + defender_shield->name(DESC_PLAIN).c_str()

@@ -386,7 +386,7 @@ public:
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
     bool res_miasma(bool /*temp*/ = true) const override;
-    int res_water_drowning() const override;
+    bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
@@ -440,7 +440,6 @@ public:
     bool friendly() const;
     bool neutral() const;
     bool good_neutral() const;
-    bool strict_neutral() const;
     bool wont_attack() const override;
     bool pacified() const;
 
@@ -449,6 +448,7 @@ public:
     mon_spell_slot_flags spell_slot_flags(spell_type spell) const;
     bool has_unclean_spell() const;
     bool has_chaotic_spell() const;
+    bool immune_to_silence() const;
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);
@@ -516,8 +516,6 @@ public:
     int     unadjusted_body_armour_penalty() const override { return 0; }
     int     adjusted_body_armour_penalty(int) const override { return 0; }
     int     adjusted_shield_penalty(int) const override { return 0; }
-    int     armour_tohit_penalty(bool, int) const override { return 0; }
-    int     shield_tohit_penalty(bool, int) const override { return 0; }
 
     bool is_player() const override { return false; }
     monster* as_monster() override { return this; }

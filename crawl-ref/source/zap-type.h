@@ -119,5 +119,6 @@ enum zap_type
     ZAP_CHAIN_LIGHTNING,
     ZAP_STUNNING_BURST,
     ZAP_FLAME_WAVE,
+    ZAP_ENFEEBLE,
     NUM_ZAPS
 };

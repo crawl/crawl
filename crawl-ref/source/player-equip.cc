@@ -849,7 +849,13 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
                      hands.c_str(), can_plural ? "" : "s");
             }
             break;
+
+        case SPARM_LIGHT:
+            invalidate_agrid(true);
+            break;
+
         }
+
     }
 
     if (armour_type_prop(arm.sub_type, ARMF_REGENERATION) && !unmeld)
@@ -975,6 +981,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
             mprf("You feel magic leave your %s.", you.hand_name(true).c_str());
         break;
 
+    case SPARM_LIGHT:
+        invalidate_agrid(true);
+        break;
+
     default:
         break;
     }
@@ -1003,6 +1013,13 @@ static void _remove_amulet_of_faith(item_def &item)
         ru_reject_sacrifices(true);
         dprf("prev delay %d, new delay %d", cur_delay,
              you.props[RU_SACRIFICE_DELAY_KEY].get_int());
+        return;
+    }
+
+    if (you_worship(GOD_YREDELEMNUL))
+    {
+        mprf(MSGCH_GOD, "The black torch dims.");
+        yred_reclaim_souls();
         return;
     }
 
@@ -1138,6 +1155,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
             simple_god_message(ignore_reason.c_str());
+        else if (you_worship(GOD_YREDELEMNUL))
+        {
+            mprf(MSGCH_GOD, "The black torch glows! You feel the dead"
+                            " draw near.");
+        }
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",

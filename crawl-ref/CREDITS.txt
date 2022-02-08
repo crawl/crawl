@@ -130,6 +130,7 @@
     Cedor
     Cerol
     Marcelo Cerri
+    Zachary Chandler
     Rahul Chandra
     Joe Childers
     Thom Chiovoloni
@@ -147,6 +148,7 @@
     David Damerell
     Paul Dejean
     Denzi
+    Ed Dewey
     dicedlemming
     Lothar Dierkes
     dilly
@@ -184,6 +186,7 @@
     Ben Goetter
     Aaron Golden
     Ed Gonzalez
+    Gopall
     Goratrix
     Rob Grant
     John Greenberg
@@ -201,6 +204,7 @@
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
+    Hurricos
     Iainuki
     ICC
     Icy Lich
@@ -239,6 +243,7 @@
     Sami Liedes
     Dom 'Bodrick' Light
     Lightli
+    Kiëd Llaentenn
     Mark Lodato
     Matthew Ludivico
     Rob Lund
@@ -266,6 +271,7 @@
     Mintice
     Byrel Mitchell
     Yer Mivvaggah
+    Monkooky
     Shawn M Moore
     Muffindrake
     Akinori Musha
@@ -287,6 +293,8 @@
     John Olender
     Aaron Olowin
     Andrew O'Neill
+    Oneirical
+    Justin Clark Ong
     Yuuma Oohara
     Julian Ospald
     Malwyn P
@@ -303,6 +311,7 @@
     Poroing
     Iago Porto
     Alexander Posch
+    Brian Power
     psywombats
     pubby
     Ashley Elizabeth Raine
@@ -368,6 +377,7 @@
     Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus
+    Jonathan Klabunde Tomer
     Tommy
     Sean VanMeter
     Mikko Vepsäläinen

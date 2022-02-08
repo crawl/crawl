@@ -259,6 +259,12 @@ enum class passive_t
 
     // rF+
     resist_fire,
+
+    // Yredelemnul reaping
+    reaping,
+
+    // Immunity to spectral mist clouds
+    r_spectral_mist,
 };
 
 enum ru_interference

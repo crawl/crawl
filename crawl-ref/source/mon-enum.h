@@ -139,6 +139,7 @@ enum attack_flavour
     AF_BLINK_WITH,
     AF_SEAR,
     AF_BARBS,
+    AF_SPIDER,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -222,11 +223,13 @@ enum mon_resist_flags
     // unused 1 << 25,
 #endif
     MR_RES_STICKY_FLAME  = 1 << 26,
-    MR_RES_VORTEX       = 1 << 27,
+    MR_RES_VORTEX        = 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
+#if TAG_MAJOR_VERSION == 34
     MR_VUL_WATER         = 1 << 29,
+#endif
     MR_VUL_ELEC          = mrd(MR_RES_ELEC, -1),
     MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
     MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),

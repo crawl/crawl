@@ -56,7 +56,8 @@ enum monclass_flag_type : uint64_t
     /// monster is stationary
     M_STATIONARY        = BIT(14),
 
-                        //BIT(15), // was M_BLOOD_SCENT
+    /// monster is immune to webs
+    M_WEB_IMMUNE        = BIT(15),
 
     /// susceptible to cold; drainable by vampires, splashes blood when hit
     M_COLD_BLOOD        = BIT(16),
@@ -220,9 +221,8 @@ enum monster_flag_type : uint64_t
     /// Consider this monster to have MH_UNDEAD holiness, regardless
     /// of its actual type
     MF_FAKE_UNDEAD        = BIT(13),
-    /// An undead monster soul enslaved by
-    /// Yredelemnul's power
-    MF_ENSLAVED_SOUL      = BIT(14),
+
+    MF_PENDING_REVIVAL    = BIT(14),
 
     /// mname is a suffix.
     MF_NAME_SUFFIX        = BIT(15),

@@ -45,6 +45,7 @@
 #include "message.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-explode.h"
 #include "mon-gear.h"
 #include "mon-place.h"
@@ -172,10 +173,9 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
     // Don't want results to show up behind the player.
     los_def ld(where, opc_no_actor);
 
-    if (mons_class_leaves_hide(corpse.mon_type)
-        && mons_genus(corpse.mon_type) == MONS_DRAGON)
+    if (mons_class_leaves_organ(corpse.mon_type))
     {
-        // Uh... dragon hide is tough stuff and it keeps the monster in
+        // Uh... magical organs are tough stuff and it keeps the monster in
         // one piece?  More importantly, it prevents a flavour feature
         // from becoming a trap for the unwary.
 
@@ -407,8 +407,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     if (crawl_state.game_is_sprint())
         corpse.quantity *= SPRINT_MULTIPLIER;
 
-    const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-    if (!x_chance_in_y(chance, GOZAG_GOLD_AURA_MAX))
+    if (you.props[GOZAG_GOLD_AURA_KEY].get_int() < GOZAG_GOLD_AURA_MAX)
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
     you.redraw_title = true;
 }
@@ -481,10 +480,41 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
-static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
+static void _create_monster_wand(const item_def &corpse, bool silent)
+{
+
+    const coord_def pos = item_pos(corpse);
+    if (pos.origin())
+        return;
+
+    int w = items(false, OBJ_WANDS, OBJ_RANDOM,
+                  mons_class_hit_dice(corpse.mon_type));
+
+    if (w == NON_ITEM)
+        return;
+    item_def& item = env.item[w];
+    move_item_to_grid(&w, pos);
+
+    item.plus *= 2;
+
+    if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
+    {
+        mprf("%s bone magically twists into %s.",
+             mons_type_name(corpse.mon_type, DESC_A).c_str(),
+             item.name(DESC_A).c_str());
+    }
+
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+}
+
+static void _maybe_drop_monster_organ(const item_def &corpse, bool silent)
 {
     if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
         _create_monster_hide(corpse, silent);
+
+    // corpse RNG is enough for these right now
+    if (mons_class_leaves_wand(corpse.mon_type))
+        _create_monster_wand(corpse, silent);
 }
 
 /**
@@ -493,7 +523,7 @@ static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
  * @param mons the monster to corpsify
  * @param silent whether to suppress all messages
  * @param force whether to always make a corpse (no 50% chance not to make a
-                corpse, no goldification, no hides -- being summoned etc. still
+                corpse, no goldification, no organs -- being summoned etc. still
   *             matters, though)
  * @returns a pointer to an item; it may be null, if the monster can't leave a
  *          corpse or if the 50% chance is rolled; it may be gold, if the player
@@ -508,12 +538,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
         return nullptr;
     }
 
-    // Under Gozag, monsters turn into gold on death.
-    // Temporary Tukima's Dance weapons stay as weapons (no free gold),
-    // permanent dancing weapons turn to gold like other monsters.
-    bool goldify = have_passive(passive_t::goldify_corpses)
-                   && mons_gives_xp(mons, you)
-                   && !force;
+    bool goldify = mons_will_goldify(mons) && !force;
 
     const bool no_coinflip = mons.props.exists(ALWAYS_CORPSE_KEY)
                              || force
@@ -655,12 +680,11 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
-    // Damage by permanent divine allies (Beogh orcs and Yredelemnul gifts)
-    // counts for half experience. Hepliaklqana ancestors and all other allies
-    // grant full experience.
+    // Damage by Beogh orcs counts for half experience. Hepliaklqana ancestors
+    // and all other allies grant full experience.
     if (!invalid_monster_index(killer)
         && env.mons[killer].is_divine_companion()
-        && !mons_is_hepliaklqana_ancestor(env.mons[killer].type))
+        && env.mons[killer].god == GOD_BEOGH)
     {
         return 1;
     }
@@ -750,16 +774,16 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
     return true;
 }
 
-static bool _yred_enslave_soul(monster* mons, killer_type killer)
+static bool _yred_bound_soul(monster* mons, killer_type killer)
 {
-    if (you_worship(GOD_YREDELEMNUL) && mons_enslaved_body_and_soul(*mons)
+    if (you_worship(GOD_YREDELEMNUL) && mons_bound_body_and_soul(*mons)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
         record_monster_defeat(mons, killer);
         record_monster_defeat(mons, KILL_CHARMD);
-        yred_make_enslaved_soul(mons, player_under_penance());
+        yred_make_bound_soul(mons, player_under_penance());
         return true;
     }
 
@@ -853,7 +877,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
         return true;
 
     // Yredelemnul special.
-    if (_yred_enslave_soul(mons, killer))
+    if (_yred_bound_soul(mons, killer))
         return true;
 
     // Beogh special.
@@ -877,7 +901,7 @@ static void _jiyva_died()
     if (you_worship(GOD_JIYVA))
         return;
 
-    add_daction(DACT_REMOVE_JIYVA_ALTARS);
+    add_daction(DACT_JIYVA_DEAD);
 
     if (!player_in_branch(BRANCH_SLIME))
         return;
@@ -1029,6 +1053,22 @@ static void _infestation_create_scarab(monster* mons)
     infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
 }
 
+static void _pharaoh_ant_bind_souls(monster *mons)
+{
+    bool bound = false;
+    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_can_bind_soul(mons, *mi))
+            continue;
+        if (!bound)
+            simple_monster_message(*mons, " binds the souls of nearby monsters.");
+        bound = true;
+        mi->add_ench(
+            mon_enchant(ENCH_BOUND_SOUL, 0, mons,
+                        random_range(10, 30) * BASELINE_DELAY));
+    }
+}
+
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
@@ -1111,78 +1151,88 @@ static string _killer_type_name(killer_type killer)
 }
 
 /**
- * Make a spectral thing or simulacrum out of a dying/dead monster.
+ * Make derived undead out of a dying/dead monster.
  *
  * @param mons       the monster that died
  * @param quiet      whether to print flavour messages
- * @param bound_soul whether the undead is from Bind Souls (true) or DChan
+ * @param which_z    the kind of zombie
+ * @param beh        the zombie's behavior
+ * @param spell      the spell used (if any)
+ * @param god        the god involved (if any)
  */
-static void _make_derived_undead(monster* mons, bool quiet, bool bound_soul)
+static void _make_derived_undead(monster* mons, bool quiet,
+                                 monster_type which_z, beh_type beh,
+                                 spell_type spell, god_type god)
 {
-    bool valid_mons = bound_soul ? mons->holiness() & MH_NATURAL
-                                   && mons_can_be_zombified(*mons)
-                                 : mons_can_be_spectralised(*mons);
-
-    if (valid_mons)
+    // This function is used by several different sorts of things, each with
+    // their own validity conditions that are enforced here
+    // - Death Channel and Yred reaping of unzombifiable things:
+    if (which_z == MONS_SPECTRAL_THING && !mons_can_be_spectralised(*mons))
+        return;
+    // - Monster Bind Souls
+    if (spell == SPELL_BIND_SOULS && !(mons->holiness() & MH_NATURAL
+                                       && mons_can_be_zombified(*mons)))
     {
-        // Use the original monster type as the zombified type here, to
-        // get the proper stats from it.
-        mgen_data mg(bound_soul ? MONS_SIMULACRUM : MONS_SPECTRAL_THING,
-                     bound_soul ? SAME_ATTITUDE(mons) : BEH_FRIENDLY,
-                     mons->pos(),
-                     // XXX: is MHITYOU really correct here?
-                     crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
-        // Simulacra aren't summons, and we want them to stick
-        // around even after killing the necromancer.
-        mg.set_summoned(bound_soul ? nullptr : &you,
-                        0,
-                        bound_soul ? SPELL_BIND_SOULS : SPELL_DEATH_CHANNEL,
-                        bound_soul ?
-                        GOD_NO_GOD : static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
-        mg.set_base(mons->type);
-
-        if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
-            mg.mname = mons->mname;
-        else if (mons_is_unique(mons->type))
-            mg.mname = mons_type_name(mons->type, DESC_PLAIN);
-        mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
-                                          | MF_NAME_ADJECTIVE
-                                          | MF_NAME_DESCRIPTOR);
-
-        if (mons->mons_species() == MONS_HYDRA)
-        {
-            // No undead 0-headed hydras, sorry.
-            if (mons->heads() == 0)
-            {
-                if (!quiet)
-                {
-                    mprf("A %s mist gathers momentarily, then fades.",
-                         bound_soul ? "freezing" : "glowing");
-                }
-                return;
-            }
-            else
-                mg.props[MGEN_NUM_HEADS] = mons->heads();
-        }
-
-        string agent_name = "";
-        if (bound_soul)
-        {
-            const auto agent = mons->get_ench(ENCH_BOUND_SOUL).agent();
-            if (agent)
-                agent_name = agent->as_monster()->full_name(DESC_A);
-        }
-
-        string monster_name = "";
-
-        string message = quiet ? "" :
-            make_stringf("A %s mist starts to gather...",
-                         bound_soul ? "freezing" : "glowing");
-
-        make_derived_undead_fineff::schedule(mons->pos(), mg,
-                mons->get_experience_level(), agent_name, message);
-
+        return;
     }
+    // - all other reaping (brand, chaos, and Yred)
+    if (which_z != MONS_SPECTRAL_THING && !mons_can_be_zombified(*mons))
+        return;
+
+    // Use the original monster type as the zombified type here, to
+    // get the proper stats from it.
+    mgen_data mg(which_z,
+                 beh,
+                 mons->pos(),
+                 // XXX: is MHITYOU really correct here?
+                 crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+    // Don't link monster-created derived undead to the summoner, they
+    // shouldn't poof
+    mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr,
+                    0,
+                    spell, god);
+    mg.set_base(mons->type);
+
+    if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
+        mg.mname = mons->mname;
+    else if (mons_is_unique(mons->type))
+        mg.mname = mons_type_name(mons->type, DESC_PLAIN);
+    mg.extra_flags = mons->flags & (MF_NAME_SUFFIX
+                                      | MF_NAME_ADJECTIVE
+                                      | MF_NAME_DESCRIPTOR);
+
+    const char* mist = which_z == MONS_SIMULACRUM ? "freezing" :
+                       god == GOD_YREDELEMNUL ? "black" :
+                       "glowing";
+
+    if (mons->mons_species() == MONS_HYDRA)
+    {
+        // No undead 0-headed hydras, sorry.
+        if (mons->heads() == 0)
+        {
+            if (!quiet)
+                mprf("A %s mist gathers momentarily, then fades.", mist);
+            return;
+        }
+        else
+            mg.props[MGEN_NUM_HEADS] = mons->heads();
+    }
+
+    string agent_name = "";
+    if (mons->has_ench(ENCH_BOUND_SOUL))
+    {
+        const auto agent = mons->get_ench(ENCH_BOUND_SOUL).agent();
+        if (agent)
+            agent_name = agent->as_monster()->full_name(DESC_A);
+    }
+
+    string monster_name = "";
+
+    string message = quiet ? "" :
+        make_stringf("A %s mist starts to gather...", mist);
+
+    make_derived_undead_fineff::schedule(mons->pos(), mg,
+            mons->get_experience_level(), agent_name, message);
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -1228,46 +1278,45 @@ static void _druid_final_boon(const monster* mons)
     }
 }
 
+static void _orb_of_mayhem(actor& maniac, const monster& victim)
+{
+    vector<monster *> witnesses;
+    for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
+        if (mi->can_see(maniac) && mi->can_go_frenzy())
+            witnesses.push_back(*mi);
+
+    if (coinflip() && !witnesses.empty())
+    {
+        (*random_iterator(witnesses))->go_frenzy(&maniac);
+        did_god_conduct(DID_HASTY, 8, true);
+    }
+}
+
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
-    unsigned short hitting;
 
     if (killer.is_player())
-    {
-        hitting = MHITYOU;
         beh     = BEH_FRIENDLY;
-    }
     else
     {
         monster* mon = killer.as_monster();
-
         beh = SAME_ATTITUDE(mon);
-
-        // Get a new foe for the zombie to target.
-        behaviour_event(mon, ME_EVAL);
-        hitting = mon->foe;
     }
 
-    monster *zombie = 0;
-    if (animate_remains(victim.pos(), CORPSE_BODY, beh, 0, hitting, &killer, "",
-                        GOD_NO_GOD, true, true, false, &zombie) <= 0)
-    {
-        return false;
-    }
-
-    if (you.can_see(victim))
-    {
-        mprf("%s turns into a %s!", victim.name(DESC_THE).c_str(),
-                                    zombie->type == MONS_ZOMBIE ? "zombie"
-                                                                : "skeleton");
-    }
-    else if (you.can_see(*zombie))
-        mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
-
-    check_lovelessness(*zombie);
+    _make_derived_undead(&victim, true, MONS_ZOMBIE, beh,
+                         SPELL_NO_SPELL, GOD_NO_GOD);
 
     return true;
+}
+
+static void _yred_reap(monster &mons, bool expl)
+{
+    monster_type which_z = !expl && mons_can_be_zombified(mons) ? MONS_ZOMBIE :
+                           MONS_SPECTRAL_THING;
+
+    _make_derived_undead(&mons, false, which_z, BEH_FRIENDLY,
+                         SPELL_NO_SPELL, you.religion);
 }
 
 static bool _reaping(monster &mons)
@@ -1446,6 +1495,16 @@ static void _special_corpse_messaging(monster &mons)
     simple_monster_message(mons, message.c_str());
 }
 
+bool mons_will_goldify(const monster &mons)
+{
+    // Under Gozag, monsters turn into gold on death.
+    // Temporary Tukima's Dance weapons stay as weapons (no free gold),
+    // permanent dancing weapons turn to gold like other monsters.
+    return have_passive(passive_t::goldify_corpses)
+                   && mons_gives_xp(mons, you)
+                   && !player_in_branch(BRANCH_ABYSS);
+}
+
 /**
  * Kill off a monster.
  *
@@ -1462,6 +1521,10 @@ item_def* monster_die(monster& mons, killer_type killer,
                       int killer_index, bool silent, bool wizard, bool fake)
 {
     ASSERT(!invalid_monster(&mons));
+
+    // trying to die again after scheduling an avoided_death fineff
+    if (testbits(mons.flags, MF_PENDING_REVIVAL))
+        return nullptr;
 
     const bool was_visible = you.can_see(mons);
 
@@ -1542,7 +1605,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
     const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
-    const bool gives_player_xp = mons_gives_xp(mons, you);
+    const bool could_give_xp = mons_gives_xp(mons, you);
+    const bool gives_real_xp = could_give_xp && !player_in_branch(BRANCH_ABYSS);
     bool drop_items          = !hard_reset;
     const bool submerged     = mons.submerged();
     bool in_transit          = false;
@@ -1683,6 +1747,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             simple_monster_message(mons, " vaporises!",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
+            did_death_message = true;
         }
 
         if (!wizard && !mons_reset && !submerged && !was_banished
@@ -1715,16 +1780,28 @@ item_def* monster_die(monster& mons, killer_type killer,
             // Under Gozag, permanent dancing weapons get turned to gold.
             if (have_passive(passive_t::goldify_corpses))
             {
-                simple_monster_message(mons,
+                if (mons_will_goldify(mons))
+                {
+                    simple_monster_message(mons,
                                        " turns to gold and falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
+                else
+                {
+                    // something is suppressing goldify, e.g. abyss
+                    simple_monster_message(mons,
+                                       " briefly glints gold and then vanishes.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                }
                 killer = KILL_RESET;
+                // why does this not set silent?
             }
             else
             {
                 simple_monster_message(mons, " falls from the air.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 silent = true;
+                did_death_message = true;
             }
         }
 
@@ -1794,7 +1871,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     // relevant avatars are adjusted by now to KILL_YOU and are counted.
     if (you.duration[DUR_WEREBLOOD]
         && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && gives_player_xp)
+        && could_give_xp)
     {
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
         if (wereblood_bonus <= 8) // cap at +9 slay
@@ -1836,9 +1913,15 @@ item_def* monster_die(monster& mons, killer_type killer,
                                                          : "kill",
                          mons.name(DESC_THE).c_str());
                 }
+            }
+
+            // do this for some of the `silent` cases, if they explicitly set
+            // a death message earlier
+            if (death_message || did_death_message)
+            {
                 // If this monster would otherwise give xp but didn't because
                 // it grants no reward or was neutral, give a message.
-                if (!gives_player_xp
+                if (!gives_real_xp
                     && mons_class_gives_xp(mons.type)
                     && !summoned
                     && !fake_abjure
@@ -1849,14 +1932,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Killing triggers hints mode lesson.
-            if (gives_player_xp)
+            if (gives_real_xp)
                 _hints_inspect_kill();
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
 
             // Divine and innate health and mana restoration doesn't happen when
             // killing born-friendly monsters.
-            if (gives_player_xp
+            if (could_give_xp
                 && !mons_is_object(mons.type)
                 && (you.species == SP_GHOUL
                     || (have_passive(passive_t::restore_hp)
@@ -1948,7 +2031,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 #endif
             }
 
-            if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
+            if (gives_real_xp && you_worship(GOD_RU) && you.piety < 200
                 && one_chance_in(2))
             {
                 ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
@@ -1958,11 +2041,18 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Randomly bless a follower.
-            if (gives_player_xp
+            if (could_give_xp
                 && !mons_is_object(mons.type)
                 && _god_will_bless_follower(&mons))
             {
-                bless_follower();
+                bless_follower(nullptr, you.religion, false, gives_real_xp);
+            }
+
+            if (could_give_xp
+                && !mons_is_object(mons.type)
+                && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+            {
+                _orb_of_mayhem(you, mons);
             }
             break;
         }
@@ -1983,12 +2073,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (crawl_state.game_is_arena())
                 break;
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
-            if (!gives_player_xp
+            if (!could_give_xp
                 || !pet_kill
                 || !anon && invalid_monster_index(killer_index))
             {
@@ -2003,7 +2093,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                 && _god_will_bless_follower(&mons))
             {
                 // Randomly bless the follower who killed.
-                bless_follower(killer_mon);
+                bless_follower(killer_mon, you.religion, false, gives_real_xp);
+                if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+                    _orb_of_mayhem(*killer_mon, mons);
             }
             break;
         }
@@ -2261,12 +2353,40 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Necromancy
+    bool corpse_consumed = false;
     if (!was_banished && !mons_reset)
     {
         if (mons.has_ench(ENCH_INFESTATION))
             _infestation_create_scarab(&mons);
-        if (you.duration[DUR_DEATH_CHANNEL] && was_visible && gives_player_xp)
-            _make_derived_undead(&mons, !death_message, false);
+
+        // Yred worship and death channel aren't stronger than this enchantment
+        if (mons.has_ench(ENCH_BOUND_SOUL))
+        {
+            _make_derived_undead(&mons, !death_message, MONS_SIMULACRUM,
+                                 SAME_ATTITUDE(&mons),
+                                 SPELL_BIND_SOULS, GOD_NO_GOD);
+            corpse_consumed = true;
+        }
+        else if (was_visible && could_give_xp)
+        {
+            // no doubling up with yred and death channel
+            if (have_passive(passive_t::reaping))
+            {
+                if (yred_reap_chance())
+                    _yred_reap(mons, exploded);
+                corpse_consumed = true;
+            }
+            else if (you.duration[DUR_DEATH_CHANNEL])
+            {
+                _make_derived_undead(&mons, !death_message, MONS_SPECTRAL_THING,
+                                     BEH_FRIENDLY,
+                                     SPELL_DEATH_CHANNEL,
+                                     static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
+            }
+        }
+
+        if (!corpse_consumed && coinflip() && _reaping(mons))
+            corpse_consumed = true;
     }
 
     if (!wizard && !submerged && !was_banished)
@@ -2276,7 +2396,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     item_def* corpse = nullptr;
-    if (leaves_corpse && !was_banished && !spectralised)
+    if (leaves_corpse && !was_banished && !spectralised && !corpse_consumed)
     {
         // Have to add case for disintegration effect here? {dlb}
         item_def* daddy_corpse = nullptr;
@@ -2290,16 +2410,17 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!corpse)
             corpse = daddy_corpse;
     }
-    if (mons.has_ench(ENCH_BOUND_SOUL))
-        _make_derived_undead(&mons, !death_message, true);
 
-    const unsigned int player_xp = gives_player_xp
+    if (!mons.is_summoned() && mons.type == MONS_PHARAOH_ANT)
+        _pharaoh_ant_bind_souls(&mons);
+
+    const unsigned int player_xp = could_give_xp
         ? _calc_player_experience(&mons) : 0;
     const unsigned int monster_xp = _calc_monster_experience(&mons, killer,
                                                              killer_index);
 
     // Player Powered by Death
-    if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
+    if (could_give_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
         && (killer == KILL_YOU
             || killer == KILL_YOU_MISSILE
             || killer == KILL_YOU_CONF
@@ -2326,8 +2447,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (fake)
     {
-        if (corpse && _reaping(mons))
-            corpse = nullptr;
         _give_experience(player_xp, monster_xp, killer, killer_index,
                          pet_kill, was_visible, mons.xp_tracking);
         crawl_state.dec_mon_acting(&mons);
@@ -2378,7 +2497,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             _special_corpse_messaging(mons);
         // message ordering... :(
         if (corpse->base_type == OBJ_CORPSES) // not gold
-            _maybe_drop_monster_hide(*corpse, silent);
+            _maybe_drop_monster_organ(*corpse, silent);
     }
 
     if (mons.is_divine_companion()
@@ -2411,9 +2530,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         autotoggle_autopickup(false);
     }
-
-    if (corpse && _reaping(mons))
-        corpse = nullptr;
 
     crawl_state.dec_mon_acting(&mons);
     monster_cleanup(&mons);
@@ -2629,7 +2745,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Yredelemnul special, redux: It's the only one that can
     // work on drowned monsters.
-    if (!_yred_enslave_soul(mons, killer))
+    if (!_yred_bound_soul(mons, killer))
         monster_die(*mons, killer, killnum, true);
 }
 
@@ -2854,7 +2970,8 @@ void hogs_to_humans()
 
         const bool could_see = you.can_see(**mi);
 
-        if (could_see) any++;
+        if (could_see)
+            any++;
 
         if (!mi->props.exists(ORIG_MONSTER_KEY) && could_see)
             human++;
@@ -2930,11 +3047,12 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Sometimes, if you pacify one twin near a staircase, they leave
-    // in the same turn. Convert, in those instances. The strict_neutral check
+    // in the same turn. Convert, in those instances. The fellow_slime check
     // is intended to cover the slimify case, we don't want to pacify the other
     // if a slimified twin dies.
-    if (twin->neutral() && !twin->has_ench(ENCH_INSANE)
-                                                    && !twin->strict_neutral())
+    if (twin->neutral()
+        && !twin->has_ench(ENCH_INSANE)
+        && !is_fellow_slime(*twin))
     {
         elven_twins_pacify(twin);
         return;
@@ -2946,7 +3064,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Don't consider already neutralised monsters.
-    if (mons->good_neutral() || mons->strict_neutral())
+    if (mons->good_neutral())
         return;
 
     // Okay, let them climb stairs now.

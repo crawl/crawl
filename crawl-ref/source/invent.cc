@@ -61,7 +61,7 @@ InvTitle::InvTitle(Menu *mn, const string &title, invtitle_annotator tfn)
     titlefn = tfn;
 }
 
-string InvTitle::get_text(const bool) const
+string InvTitle::get_text() const
 {
     return titlefn ? titlefn(m, MenuEntry::get_text())
                    : MenuEntry::get_text();
@@ -70,6 +70,8 @@ string InvTitle::get_text(const bool) const
 InvEntry::InvEntry(const item_def &i)
     : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
+    indent_no_hotkeys = true;
+
     // Data is an inherited void *. When using InvEntry in menus
     // use the const item in this class whenever possible
     data = const_cast<item_def *>(item);
@@ -187,42 +189,30 @@ string InvEntry::get_filter_text() const
     return item_prefix(*item, false) + " " + get_text();
 }
 
-string InvEntry::get_text(bool need_cursor) const
+string InvEntry::_get_text_preface() const
 {
-    need_cursor = need_cursor && show_cursor;
-
     ostringstream tstr;
 
-    const bool nosel = hotkeys.empty();
+    const bool nosel = hotkeys_count() == 0;
+    if (nosel && tag != "pickup")
+        return MenuEntry::_get_text_preface();
     const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
+
+    tstr << ' ' << key << ' ';
+
+    if (nosel)
+        tstr << ' '; // pickup only
+    else if (!selected_qty)
+        tstr << '-';
+    else if (selected_qty < quantity)
+        tstr << '#';
+    else if (_has_star)
+        tstr << '*';
+    else
+        tstr << '+';
 
     tstr << ' ';
 
-    if (!nosel || tag == "pickup")
-    {
-        tstr << key;
-
-        if (need_cursor)
-            tstr << '[';
-        else
-            tstr << ' ';
-
-        if (nosel)
-            tstr << ' ';
-        else if (!selected_qty)
-            tstr << '-';
-        else if (selected_qty < quantity)
-            tstr << '#';
-        else if (_has_star)
-            tstr << '*';
-        else
-            tstr << '+';
-
-        if (need_cursor)
-            tstr << ']';
-        else
-            tstr << ' ';
-    }
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(*item)) << ")" << " ";
 
@@ -232,7 +222,6 @@ string InvEntry::get_text(bool need_cursor) const
         tstr << "(" << relpos.x << ", " << -relpos.y << ")" << " ";
     }
 
-    tstr << text;
     return tstr.str();
 }
 
@@ -299,12 +288,6 @@ void InvEntry::add_class_hotkeys(const item_def &i)
         add_hotkey(gly);
 }
 
-bool InvEntry::show_cursor = false;
-void InvEntry::set_show_cursor(bool doshow)
-{
-    show_cursor = doshow;
-}
-
 bool InvEntry::show_glyph = false;
 void InvEntry::set_show_glyph(bool doshow)
 {
@@ -318,15 +301,15 @@ void InvEntry::set_show_coordinates(bool doshow)
 }
 
 InvMenu::InvMenu(int mflags)
-    : Menu(mflags, "inventory"), type(menu_type::invlist), pre_select(nullptr),
-      title_annotate(nullptr), _mode_special_drop(false)
+    : Menu((mflags & MF_NOSELECT) ? mflags : (mflags | MF_ARROWS_SELECT),
+                "inventory"),
+        type(menu_type::invlist), pre_select(nullptr),
+        title_annotate(nullptr), _mode_special_drop(false)
 {
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
-        set_flags(mflags | MF_USE_TWO_COLUMNS);
+        set_flags(get_flags() | MF_USE_TWO_COLUMNS);
 #endif
-
-    InvEntry::set_show_cursor(false);
 }
 
 bool InvMenu::mode_special_drop() const
@@ -395,10 +378,10 @@ static bool _item_is_permadrop_candidate(const item_def &item)
         || item_type_has_ids(item.base_type);
 }
 
-void InvMenu::select_item_index(int idx, int qty, bool draw_cursor)
+void InvMenu::select_item_index(int idx, int qty)
 {
     if (type != menu_type::drop)
-        return Menu::select_item_index(idx, qty, draw_cursor);
+        return Menu::select_item_index(idx, qty);
 
     InvEntry *ie = static_cast<InvEntry*>(items[idx]);
 
@@ -412,7 +395,7 @@ void InvMenu::select_item_index(int idx, int qty, bool draw_cursor)
         qty = _mode_special_drop ? -2 : 0;
         ie->set_star(!ie->has_star());
     }
-    Menu::select_item_index(idx, qty, draw_cursor);
+    Menu::select_item_index(idx, qty);
 }
 
 void InvEntry::set_star(bool val)
@@ -838,7 +821,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
 
     vector<InvEntry*> items_in_class;
     const menu_sort_condition *cond = nullptr;
-    if (sort) cond = find_menu_sort_condition();
+    if (sort)
+        cond = find_menu_sort_condition();
 
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {
@@ -949,9 +933,26 @@ string InvMenu::help_key() const
 int InvMenu::getkey() const
 {
     auto mkey = lastch;
-    if (type == menu_type::know && (mkey == 0 || mkey == CK_ENTER))
+#ifndef USE_TILE_LOCAL
+    // hackily normalize some numpad stuff. XX local tiles...
+    if (mkey == CK_NUMPAD_MULTIPLY)
+        mkey = '*';
+    else if (mkey == CK_NUMPAD_ENTER)
+        mkey = CK_ENTER;
+    else if (mkey == CK_NUMPAD_SUBTRACT || mkey == CK_NUMPAD_SUBTRACT2)
+        mkey = '-';
+#endif
+
+    if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER)
+        return mkey;
+    if (type == menu_type::know && mkey == 0) // ??
         return mkey;
 
+    // this is sort of a mess. It seems to be converting a lot of keys to ' '
+    // so that invprompt_flag::escape_only can work right, but it almost
+    // certainly has other effects. Needless to say, it makes modifying key
+    // handling in specific menus pretty annoying, but I don't dare touch it
+    // right now.
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && !key_is_escape(mkey) && mkey != '\\'
         && mkey != ',')
@@ -1045,7 +1046,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags &= ~MF_MULTISELECT;
         }
 
-        new_flags |= MF_ALLOW_FORMATTING;
+        new_flags |= MF_ALLOW_FORMATTING | MF_ARROWS_SELECT;
         new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
@@ -1207,7 +1208,7 @@ static unsigned char _invent_select(const char *title = nullptr,
                                     Menu::selitem_tfn selitemfn = nullptr,
                                     const vector<SelItem> *pre_select = nullptr)
 {
-    InvMenu menu(flags | MF_ALLOW_FORMATTING);
+    InvMenu menu(flags | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
 
     menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);
@@ -1249,33 +1250,6 @@ void display_inventory()
         redraw_screen();
         update_screen();
     }
-}
-
-// Reads in digits for a count and apprends then to val, the
-// return value is the character that stopped the reading.
-static unsigned char _get_invent_quant(unsigned char keyin, int &quant)
-{
-    quant = keyin - '0';
-
-    while (true)
-    {
-        keyin = get_ch();
-
-        if (!isadigit(keyin))
-            break;
-
-        quant *= 10;
-        quant += (keyin - '0');
-
-        if (quant > 9999999)
-        {
-            quant = 9999999;
-            keyin = '\0';
-            break;
-        }
-    }
-
-    return keyin;
 }
 
 static string _drop_selitem_text(const vector<MenuEntry*> *s)
@@ -1335,126 +1309,23 @@ static string _drop_menu_titlefn(const Menu *m, const string &)
  */
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 {
-    unsigned char  keyin = '?'; // TODO: this should not be unsigned, get_ch returns a signed int!
-    int            ret = PROMPT_ABORT;
-
-    bool           need_redraw = false;
-    bool           need_prompt = true;
-    bool           need_getch  = false;
-
     vector<SelItem> items;
-    int count = -1;
-    while (true)
-    {
-        if (need_redraw && !crawl_state.doing_prev_cmd_again)
-        {
-            redraw_screen();
-            update_screen();
-            clear_messages();
-        }
 
-        if (need_prompt)
-        {
-            const string prompt = _drop_prompt(false, false);
-            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt.c_str());
-        }
+    // multi-select some items to drop
+    _invent_select("",
+                      menu_type::drop,
+                      OSEL_ANY,
+                      -1,
+                      MF_MULTISELECT | MF_ALLOW_FILTER,
+                      _drop_menu_titlefn,
+                      &items,
+                      &Options.drop_filter,
+                      _drop_selitem_text,
+                      &preselected_items);
 
-        if (need_getch)
-            keyin = get_ch();
+    for (SelItem &sel : items)
+        sel.slot = letter_to_index(sel.slot);
 
-        need_redraw = false;
-        need_prompt = true;
-        need_getch  = true;
-
-        if (keyin == '_')
-            show_specific_help("pick-up");
-        else if (keyin == '?' || keyin == '*' || keyin == ',')
-        {
-            // The "view inventory listing" mode.
-            const int ch = _invent_select("",
-                                          menu_type::drop,
-                                          OSEL_ANY,
-                                          -1,
-                                          MF_MULTISELECT | MF_ALLOW_FILTER,
-                                          _drop_menu_titlefn,
-                                          &items,
-                                          &Options.drop_filter,
-                                          _drop_selitem_text,
-                                          &preselected_items);
-
-            if (key_is_escape(ch))
-            {
-                keyin       = ch;
-                need_prompt = false;
-                need_getch  = false;
-            }
-            else
-            {
-                keyin       = 0;
-                need_prompt = true;
-                need_getch  = true;
-            }
-
-            if (!items.empty())
-            {
-                if (!crawl_state.doing_prev_cmd_again)
-                {
-                    redraw_screen();
-                    update_screen();
-                    clear_messages();
-                }
-
-                for (SelItem &sel : items)
-                    sel.slot = letter_to_index(sel.slot);
-                return items;
-            }
-
-            need_redraw = !(keyin == '?' || keyin == '*'
-                            || keyin == ',' || keyin == '+');
-        }
-        else if (isadigit(keyin))
-        {
-            // The "read in quantity" mode
-            keyin = _get_invent_quant(keyin, count);
-
-            need_prompt = false;
-            need_getch  = false;
-        }
-        else if (key_is_escape(keyin)
-                || (Options.easy_quit_item_prompts && keyin == ' '))
-        {
-            ret = PROMPT_ABORT;
-            break;
-        }
-        else if (isaalpha(keyin))
-        {
-            ret = letter_to_index(keyin);
-
-            if (!you.inv[ret].defined())
-                mpr("You don't have any such object.");
-            else
-                break;
-        }
-        else if (keyin == ';')
-        {
-            ret = you.last_unequip;
-            break;
-        }
-        else if (!isspace(keyin))
-        {
-            // We've got a character we don't understand...
-            canned_msg(MSG_HUH);
-        }
-        else
-        {
-            // We're going to loop back up, so don't draw another prompt.
-            need_prompt = false;
-        }
-    }
-
-    if (ret != PROMPT_ABORT)
-        items.emplace_back(ret, count, &you.inv[ret]);
     return items;
 }
 
@@ -1657,6 +1528,13 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return false;
 
     if (oper == OPER_REMOVE
+        && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
+        && faith_has_penalty())
+    {
+        return true;
+    }
+
+    if (oper == OPER_PUTON
         && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
         && faith_has_penalty())
     {
@@ -1884,6 +1762,7 @@ int prompt_invent_item(const char *prompt,
             keyin = '*';
     }
 
+    // ugh, why is this done manually
     while (true)
     {
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
@@ -1949,8 +1828,7 @@ int prompt_invent_item(const char *prompt,
             // return '?'. Is this a problem?
             if (keyin == '?' || key_is_escape(keyin) && !auto_list)
                 continue;
-
-            if (keyin == '*')
+            else if (keyin == '*')
             {
                 // let `*` act as a toggle. This is a slightly wacky
                 // implementation in that '?' as a toggle does something
@@ -1962,8 +1840,12 @@ int prompt_invent_item(const char *prompt,
                     keyin = '*';
                 continue;
             }
-
-            if (other_valid_char != 0 && keyin == other_valid_char)
+            else if (keyin == CK_ENTER && items.size() > 0)
+            {
+                // hacky, but lets the inscription checks below trip
+                keyin = items[0].slot;
+            }
+            else if (other_valid_char != 0 && keyin == other_valid_char)
             {
                 // need to handle overrides...ugly code duplication
                 ret = PROMPT_GOT_SPECIAL;
@@ -1982,9 +1864,7 @@ int prompt_invent_item(const char *prompt,
                     break;
             }
         }
-        else if (key_is_escape(keyin)
-                 || (Options.easy_quit_item_prompts
-                     && allow_easy_quit && keyin == ' '))
+        else if (key_is_escape(keyin) || allow_easy_quit && keyin == ' ')
         {
             ret = PROMPT_ABORT;
             break;

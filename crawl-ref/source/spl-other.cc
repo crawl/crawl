@@ -386,6 +386,10 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
     if (cancel_harmful_move(false))
         return spret::abort;
 
+    // held away from the wall
+    if (you.is_constricted())
+        return spret::abort;
+
     coord_def delta = c - you.pos();
     passwall_path p(you, delta, spell_range(SPELL_PASSWALL, pow));
     string fail_msg;

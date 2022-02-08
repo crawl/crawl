@@ -423,13 +423,16 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
     fill_area{fill = 'x', border = 'X'}
 
     local ngb_min = 2
-    local ngb_max = crawl.random_range(3, 8)
+    local ngb_max = crawl.random_range(3, 6)
+    if crawl.one_chance_in(5) then
+      -- sometimes use a higher ngb_max. This may be overridden later
+      ngb_max = crawl.random_range(7, 8)
+    end
     if crawl.one_chance_in(10) then
       -- sometimes use a more cramped layout
       ngb_min = 1
       ngb_max = crawl.random_range(5, 7)
-    end
-    if crawl.one_chance_in(20) then
+    elseif crawl.one_chance_in(20) then
       -- or a wider one
       ngb_min = 3
       ngb_max = 4
@@ -437,11 +440,16 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
     local connchance = util.random_choose_weighted
         { {0, 2}, {5, 1}, {20, 1}, {50, 1}, {100, 1} }
     local top = util.random_choose_weighted
-        { {1, 1}, {20, 1}, {125, 1}, {500, 1}, {999999, 1} }
+        { {1, 1}, {20, 1}, {125, 1} }
+    if ngb_max < 7 then
+        -- high top and ngb_max together generates a big open level
+        -- only allow high top if ngb_max isn't too high
+        top = util.random_choose_weighted { {top, 3}, {500, 1}, {999999, 1} }
+    end
     crawl.dpr("<lightmagenta>delve(" .. ngb_min .. ", " .. ngb_max .. ", " ..
               connchance .. ", -1, " .. top .. ")</lightmagenta>")
     delve(ngb_min, ngb_max, connchance, -1, top)
-    if crawl.coinflip() then
+    if crawl.one_chance_in(4) then
       crawl.dpr("delve: adding water");
       subst('. = @')
       delve(ngb_min, ngb_max, 100, 100, top)

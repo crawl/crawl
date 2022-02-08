@@ -20,6 +20,7 @@
 #include "english.h"
 #include "env.h"
 #include "ghost.h"
+#include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "libutil.h"
@@ -120,6 +121,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
     { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
     { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
+    { ENCH_ANTIMAGIC,       MB_ANTIMAGIC },
+    { ENCH_ANGUISH,         MB_ANGUISH },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -151,7 +154,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return get_trapping_net(mons.pos(), true) == NON_ITEM
                ? MB_WEBBED : MB_CAUGHT;
     case ENCH_WATER_HOLD:
-        if (mons.res_water_drowning() > 0)
+        if (mons.res_water_drowning())
             return MB_WATER_HOLD;
         else
             return MB_WATER_HOLD_DROWN;
@@ -611,6 +614,10 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_SLOW_MOVEMENT);
     if (!actor_is_susceptible_to_vampirism(*m))
         mb.set(MB_CANT_DRAIN);
+    if (m->res_water_drowning())
+        mb.set(MB_RES_DROWN);
+    if (m->clarity())
+        mb.set(MB_CLARITY);
 
     dam = mons_get_damage_level(*m);
 
@@ -659,9 +666,6 @@ monster_info::monster_info(const monster* m, int milev)
     if (you.afraid_of(m))
         mb.set(MB_FEAR_INSPIRING);
 
-    if (testbits(m->flags, MF_ENSLAVED_SOUL))
-        mb.set(MB_ENSLAVED);
-
     if (m->is_shapeshifter() && (m->flags & MF_KNOWN_SHIFTER))
         mb.set(MB_SHAPESHIFTER);
 
@@ -676,6 +680,9 @@ monster_info::monster_info(const monster* m, int milev)
     {
         mb.set(MB_READY_TO_HOWL);
     }
+
+    if (m->is_silenced() && m->has_spells() && m->immune_to_silence())
+        mb.set(MB_SILENCE_IMMUNE);
 
     if (mons_is_pghost(type))
     {
@@ -788,6 +795,9 @@ monster_info::monster_info(const monster* m, int milev)
             }
         }
     }
+
+    if (!mons_has_attacks(*m))
+        mb.set(MB_NO_ATTACKS);
 
     if (mons_has_ranged_attack(*m))
         mb.set(MB_RANGED_ATTACK);
@@ -1042,6 +1052,9 @@ string monster_info::common_name(description_level_type desc) const
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";
 
+    if (type == MONS_BOUND_SOUL && !is(MB_NAME_ZOMBIE) && !nocore)
+        ss << "bound ";
+
     if (is(MB_SPECTRALISED))
         ss << "ghostly ";
 
@@ -1109,6 +1122,10 @@ string monster_info::common_name(description_level_type desc) const
     case MONS_SPECTRAL_THING:
         if (nocore)
             ss << "spectre";
+        break;
+    case MONS_BOUND_SOUL:
+        if (nocore)
+            ss << "bound soul";
         break;
     case MONS_PILLAR_OF_SALT:
         ss << (nocore ? "" : " ") << "shaped pillar of salt";
@@ -1306,20 +1323,20 @@ string monster_info::pluralised_name(bool fullname) const
 
 enum _monster_list_colour_type
 {
-    _MLC_FRIENDLY, _MLC_NEUTRAL, _MLC_GOOD_NEUTRAL, _MLC_STRICT_NEUTRAL,
+    _MLC_FRIENDLY, _MLC_NEUTRAL, _MLC_GOOD_NEUTRAL,
     _MLC_TRIVIAL, _MLC_EASY, _MLC_TOUGH, _MLC_NASTY,
     _NUM_MLC
 };
 
 static const char * const _monster_list_colour_names[_NUM_MLC] =
 {
-    "friendly", "neutral", "good_neutral", "strict_neutral",
+    "friendly", "neutral", "good_neutral",
     "trivial", "easy", "tough", "nasty"
 };
 
 static int _monster_list_colours[_NUM_MLC] =
 {
-    GREEN, BROWN, BROWN, BROWN,
+    GREEN, BROWN, BROWN,
     DARKGREY, LIGHTGREY, YELLOW, LIGHTRED,
 };
 
@@ -1373,23 +1390,20 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     switch (attitude)
     {
     case ATT_FRIENDLY:
-        //out << " (friendly)";
         colour_type = _MLC_FRIENDLY;
         break;
     case ATT_GOOD_NEUTRAL:
-        //out << " (neutral)";
+#if TAG_MAJOR_VERSION == 34
+    case ATT_OLD_STRICT_NEUTRAL:
+#endif
+        if (fellow_slime())
+            out << "(fellow slime)";
         colour_type = _MLC_GOOD_NEUTRAL;
         break;
     case ATT_NEUTRAL:
-        //out << " (neutral)";
         colour_type = _MLC_NEUTRAL;
         break;
-    case ATT_STRICT_NEUTRAL:
-        out << " (fellow slime)";
-        colour_type = _MLC_STRICT_NEUTRAL;
-        break;
     case ATT_HOSTILE:
-        // out << " (hostile)";
         switch (threat)
         {
         case MTHRT_TRIVIAL: colour_type = _MLC_TRIVIAL; break;
@@ -1614,6 +1628,12 @@ bool monster_info::ground_level() const
     return !airborne();
 }
 
+bool monster_info::fellow_slime() const {
+    return attitude == ATT_GOOD_NEUTRAL
+        && have_passive(passive_t::neutral_slimes)
+        && mons_class_is_slime(type);
+}
+
 // Only checks for spells from preset monster spellbooks.
 // Use monster.h's has_spells for knowing a monster has spells
 bool monster_info::has_spells() const
@@ -1640,6 +1660,12 @@ bool monster_info::has_spells() const
         return spells.size() > 0;
 
     return true;
+}
+
+bool monster_info::antimagic_susceptible() const
+{
+    return has_spells()
+       && !get_unique_spells(*this, MON_SPELL_ANTIMAGIC_MASK).empty();
 }
 
 /// What hd does this monster cast spells with? May vary from actual HD.
@@ -1685,9 +1711,13 @@ bool monster_info::has_trivial_ench(enchant_type ench) const
     return flag && is(*flag);
 }
 
-/// Can this monster be debuffed, to the best of the player's knowledge?
-bool monster_info::debuffable() const
+// Can this monster be affected by Yara's Violent Unravelling, to the best of
+// the player's knowledge?
+bool monster_info::unravellable() const
 {
+    if (is(MB_SUMMONED))
+        return true;
+
     // NOTE: assumes that all debuffable enchantments are trivially mapped
     // to MBs.
 

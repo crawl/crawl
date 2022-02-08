@@ -154,7 +154,7 @@ CFWARN_L += -Wextra \
 	    -Wno-type-limits \
 	    -Wno-uninitialized \
 
-DEFINES := $(EXTERNAL_DEFINES)
+DEFINES := -DTOURNEY='"0.28"' $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
 LDFLAGS :=
@@ -382,7 +382,9 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
 ifndef ANDROID
+ifneq ($(uname_S),Haiku)
 EXTRA_LIBS += -pthread
+endif
 endif
 endif
 

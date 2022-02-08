@@ -768,7 +768,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else if (you.see_cell(pos()) && feat_is_watery(env.grid(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
-            interrupt_activity(activity_interrupt::force);
+            interrupt_activity(activity_interrupt::sense_monster);
         }
         break;
 
@@ -1408,7 +1408,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
-    case ENCH_ANTIMAGIC:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
@@ -1417,6 +1416,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
         decay_enchantment(en);
+        break;
+
+    case ENCH_ANTIMAGIC:
+        if (decay_enchantment(en))
+            simple_monster_message(*this, "'s magic is no longer disrupted.");
         break;
 
     case ENCH_ROLLING:
@@ -1757,7 +1761,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WATER_HOLD:
         if (!clear_far_engulf())
         {
-            if (res_water_drowning() <= 0)
+            if (!res_water_drowning())
             {
                 lose_ench_duration(me, -speed_to_duration(speed));
                 int dur = speed_to_duration(speed); // sequence point for randomness
@@ -2075,6 +2079,7 @@ static const char *enchant_names[] =
     "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
+    "anguished",
     "buggy", // NUM_ENCHANTMENTS
 };
 

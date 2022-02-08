@@ -60,6 +60,10 @@ const enchant_type dispellable_enchantments[] =
     ENCH_STILL_WINDS,
     ENCH_CONCENTRATE_VENOM,
     ENCH_MIRROR_DAMAGE,
+    ENCH_BLIND,
+    ENCH_INSANE,
+    ENCH_DAZED,
+    ENCH_ANTIMAGIC,
 };
 
 bool player_is_debuffable();
@@ -67,15 +71,15 @@ bool player_is_cancellable();
 string describe_player_cancellation(bool debuffs_only = false);
 void debuff_player();
 bool monster_is_debuffable(const monster &mon);
+bool monster_can_be_unravelled(const monster &mon);
 void debuff_monster(monster &mon);
 
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
 
-bool entomb(int pow);
-bool cast_imprison(int pow, monster* mons, int source);
+spret cast_tomb(int pow, actor* victim, int source, bool fail);
 
-bool cast_smiting(int pow, monster* mons);
+spret cast_smiting(int pow, monster* mons, bool fail);
 
 string unpacifiable_reason(const monster& mon);
 string unpacifiable_reason(const monster_info& mi);
@@ -101,3 +105,4 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
 
 spret cast_random_effects(int pow, bolt& beam, bool fail);
 void majin_bo_vampirism(monster &mon, int damage);
+void dreamshard_shatter();

@@ -220,33 +220,17 @@ ressentiront.
 
 Kikubaaqudgha pourrait vous en protéger... mais rien de moins sur.
 %%%%
-Animate Remains ability
-
-Réanime un unique corps ou squelette comme suivant. Notez que les zombis et les
-squelettes ne peuvent quitter l'étage dans lequel ils ont été créés.
-%%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Rappelle autour de vous vos serviteurs morts-vivants, où qu'ils soient
 actuellement dans le donjon.
-%%%%
-Injury Mirror ability
-
-Blesse les monstres attaquants en leur réfléchissant les dégâts qu'ils vous
-infligent. Le cout en piété est proportionnel aux domages réfléchis.
-%%%%
-Animate Dead ability
-
-Réanime tous les corps et squelettes qui vous entourent comme suivants. Notez
-que les zombis et les squelettes ne peuvent quitter l'étage dans lequel ils ont
-été créés.
 %%%%
 Drain Life ability
 
 Restaure des points de vie en drainant la force vitale des monstres à
 proximité.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Marquez l'âme d'un monstre vivant et intelligent comme prêt à être fauchée. Une
 fois marquée, le monstre meurt, son âme sera vôtre.
@@ -259,10 +243,6 @@ Invocations.
 
 Notez que les âmes asservies peuvent vous suivre au-delà du niveau où elles ont
 été créée.
-%%%%
-Animate Remains or Dead ability
-
-Si vous voyez cette description, c'est que vous avez rencontré un bug.
 %%%%
 Heroism ability
 

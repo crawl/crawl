@@ -917,13 +917,13 @@ private:
 
 public:
     MacroEditMenu()
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ALWAYS_SHOW_MORE
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
                 | MF_ARROWS_SELECT | MF_WRAP),
           selected_new_key(false), keymc(KMC_NONE), edited_keymaps(false)
     {
         set_tag("macros");
 #ifdef USE_TILE_LOCAL
-        set_min_col_width(80);
+        set_min_col_width(MIN_COLS);
 #endif
         action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
@@ -1115,8 +1115,8 @@ public:
     {
     public:
         MappingEditMenu(keyseq _key, keyseq _action, MacroEditMenu &_parent)
-            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
-                    | MF_ALWAYS_SHOW_MORE, "", KMC_MENU),
+            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT,
+                    "", KMC_MENU),
               key(_key), action(_action), abort(false),
               parent(_parent),
               doing_key_input(false), doing_raw_action_input(false)

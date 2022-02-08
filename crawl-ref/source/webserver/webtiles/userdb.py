@@ -10,14 +10,9 @@ from base64 import urlsafe_b64encode
 from tornado.escape import to_unicode
 from tornado.escape import utf8
 
-import config
-from config import crypt_algorithm
-from config import crypt_salt_length
-from config import max_passwd_length
-from config import nick_regex
-from config import password_db
-from util import send_email
-from util import validate_email_address
+from webtiles import config, util
+from webtiles.util import send_email
+from webtiles.util import validate_email_address
 
 try:
     from typing import Any, Optional, Tuple, Union
@@ -43,21 +38,11 @@ class crawl_db(object):
             self.conn.close()
 
 
-def setup_settings_path():  # type: () -> str
-    try:
-        return str(config.settings_db)  # type: ignore
-    except AttributeError:
-        return os.path.join(os.path.dirname(password_db), "user_settings.db3")
-
-
-settings_db = setup_settings_path()
-
-
 def ensure_settings_db_exists():  # type: () -> None
-    if os.path.exists(settings_db):
+    if os.path.exists(config.get('settings_db')):
         return
     logging.warn("User settings database didn't exist at '%s'; creating it now.",
-                 settings_db)
+                 config.get('settings_db'))
     create_settings_db()
 
 
@@ -68,13 +53,13 @@ def create_settings_db():  # type: () -> None
             mutelist TEXT DEFAULT ''
         );
     """
-    with crawl_db(settings_db) as db:
+    with crawl_db(config.get('settings_db')) as db:
         db.c.execute(schema)
         db.conn.commit()
 
 
 def get_mutelist(username):  # type: (str) -> Optional[str]
-    with crawl_db(settings_db) as db:
+    with crawl_db(config.get('settings_db')) as db:
         db.c.execute("select mutelist from mutesettings where username=? collate nocase",
                      (username,))
         result = db.c.fetchone()
@@ -87,7 +72,7 @@ def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
 
     # n.b. the following will wipe out any columns not mentioned, if there
     # ever are any...
-    with crawl_db(settings_db) as db:
+    with crawl_db(config.get('settings_db')) as db:
         query = """
             INSERT OR REPLACE INTO mutesettings
                 (username, mutelist)
@@ -101,8 +86,8 @@ def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
 # from dgamelaunch.h
 DGLACCT_ADMIN = 1
 DGLACCT_LOGIN_LOCK = 2
-DGLACCT_PASSWD_LOCK = 4
-DGLACCT_EMAIL_LOCK = 8
+DGLACCT_PASSWD_LOCK = 4 # unused by crawl
+DGLACCT_EMAIL_LOCK = 8  # unused by crawl
 
 
 def dgl_is_admin(flags):  # type: (int) -> bool
@@ -117,7 +102,7 @@ def dgl_is_banned(flags):  # type: (int) -> bool
 
 def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
     """Returns user data in a tuple (userid, email)."""
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         query = """
             SELECT id, email, flags
             FROM dglusers
@@ -132,35 +117,37 @@ def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
         return None
 
 
-def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[str]
-    """Returns the correctly cased username."""
-    passwd = passwd[0:max_passwd_length]
+def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[str, str]]
+    """Returns the correctly cased username and a reason for failure."""
+    passwd = passwd[0:config.get('max_passwd_length')]
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         query = """
-            SELECT username, password
+            SELECT username, password, flags
             FROM dglusers
             WHERE username=?
             COLLATE NOCASE
         """
         db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[str, str]]
+        result = db.c.fetchone()  # type: Optional[Tuple[str, str, str]]
 
-    if result and crypt.crypt(passwd, result[1]) == result[1]:
-        return result[0]
+    if dgl_is_banned(result[2]):
+        return result[0], 'Account is disabled.'
+    elif result and crypt.crypt(passwd, result[1]) == result[1]:
+        return result[0], None
     else:
-        return None
+        return None, None
 
 
 def ensure_user_db_exists():  # type: () -> None
-    if os.path.exists(password_db):
+    if os.path.exists(config.get('password_db')):
         return
     logging.warn("User database didn't exist; creating it now.")
     create_user_db()
 
 
 def create_user_db():  # type: () -> None
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         schema = ("CREATE TABLE dglusers (id integer primary key," +
                   " username text, email text, env text," +
                   " password text, flags integer);")
@@ -174,7 +161,7 @@ def create_user_db():  # type: () -> None
 
 def upgrade_user_db():  # type: () -> None
     """Automatically upgrades the database."""
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         query = "SELECT name FROM sqlite_master WHERE type='table';"
         tables = [i[0] for i in db.c.execute(query)]
 
@@ -195,11 +182,12 @@ def make_salt(saltlen):  # type: (int) -> str
 
 
 def encrypt_pw(passwd):  # type: (str) -> str
-    passwd = passwd[0:max_passwd_length]
+    passwd = passwd[0:config.get('max_passwd_length')]
+    crypt_algorithm = config.get('crypt_algorithm')
     if crypt_algorithm == "broken":
         salt = passwd
     elif crypt_algorithm:
-        salt = "${}${}$".format(crypt_algorithm, make_salt(crypt_salt_length))
+        salt = "${}${}$".format(crypt_algorithm, make_salt(config.get('crypt_salt_length')))
     else:
         salt = make_salt(2)
     return crypt.crypt(passwd, salt)
@@ -214,12 +202,12 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
         if result:
             return result
     username = username.strip()
-    if not re.match(nick_regex, username):
+    if not re.match(config.get('nick_regex'), username):
         return "Invalid username!"
 
     crypted_pw = encrypt_pw(passwd)
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("select username from dglusers where username=? collate nocase",
                      (username,))
         result = db.c.fetchone()
@@ -227,7 +215,7 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
     if result:
         return "User already exists!"
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         query = """
             INSERT INTO dglusers
                 (username, email, password, flags, env)
@@ -245,7 +233,7 @@ def change_password(userid, passwd):
 
     crypted_pw = encrypt_pw(passwd)
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("update dglusers set password=? where id=?",
                      (crypted_pw, userid))
         # invalidate any recovery tokens that might exist, even for normal
@@ -262,11 +250,54 @@ def change_email(user_id, email):  # type: (str, str) -> Optional[str]
     if result:
         return result
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("update dglusers set email=? where id=?", (email, user_id))
         db.conn.commit()
 
     return None
+
+def set_ban(username, banned=True):
+    with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, flags
+            FROM dglusers
+            WHERE username=?
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (username,))
+        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+        if not result:
+            return "Invalid username!"
+        if banned and dgl_is_banned(result[1]):
+            return "User '%s' is already banned." % username
+        elif not banned and not dgl_is_banned(result[1]):
+            return "User '%s' isn't currently banned." % username
+        if banned and dgl_is_admin(result[1]):
+            return "Remove admin flag before banning."
+
+        if banned:
+            new_flags = result[1] | DGLACCT_LOGIN_LOCK
+        else:
+            new_flags = result[1] & ~DGLACCT_LOGIN_LOCK
+        db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
+                    (new_flags, result[0]))
+        db.c.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                     (result[0],))
+        db.conn.commit()
+    return None
+
+
+def get_bans():
+    with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, username, flags
+            FROM dglusers
+            WHERE (flags & ?) <> 0
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (DGLACCT_LOGIN_LOCK,))
+        result = db.c.fetchall()
+        return [x[1] for x in result]
 
 
 def find_recovery_token(token):
@@ -275,7 +306,7 @@ def find_recovery_token(token):
     token_hash_obj = hashlib.sha256(utf8(token))
     token_hash = token_hash_obj.hexdigest()
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         query = """
             SELECT
                 u.id,
@@ -319,7 +350,7 @@ def update_user_password_from_token(token, passwd):
     userid, username, token_error = find_recovery_token(token)
 
     if userid and not token_error:
-        with crawl_db(password_db) as db:
+        with crawl_db(config.get('password_db')) as db:
             db.c.execute("update dglusers set password=? where id=?",
                          (crypted_pw, userid))
             db.c.execute("delete from recovery_tokens where user_id=?",
@@ -331,12 +362,12 @@ def update_user_password_from_token(token, passwd):
 def clear_password_token(username):
     if not username:
         return False, "Invalid username"
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("select id from dglusers where username=? collate nocase", (username,))
         result = db.c.fetchone()
     if not result:
         return False, "Invalid username"
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("delete from recovery_tokens where user_id=?",
                      (result[0],))
         db.conn.commit()
@@ -350,7 +381,7 @@ def create_password_token(userid):
     token_hash_obj = hashlib.sha256(token)
     token_hash = token_hash_obj.hexdigest()
     # store hash in db
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("insert into recovery_tokens(token, token_time, user_id) "
                      "values (?,datetime('now'),?)", (token_hash, userid))
         db.conn.commit()
@@ -358,7 +389,7 @@ def create_password_token(userid):
 
 def generate_token_email(token):
     # send email
-    lobby_url = getattr(config, 'lobby_url', '')  # note: hack to satisfy mypy
+    lobby_url = config.get('lobby_url', '')
     url_text = lobby_url + "?ResetToken=" + to_unicode(token)
 
     msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.
@@ -389,7 +420,7 @@ def generate_forgot_password(username):
     if not username:
         return False, "Empty username"
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("select id from dglusers where username=? collate nocase", (username,))
         result = db.c.fetchone()
     if not result:
@@ -411,7 +442,7 @@ def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
     if email_error:
         return False, email_error
 
-    with crawl_db(password_db) as db:
+    with crawl_db(config.get('password_db')) as db:
         db.c.execute("select id from dglusers where email=? collate nocase", (email,))
         result = db.c.fetchone()
     if not result:

@@ -248,7 +248,7 @@ bool zin_donate_gold()
 {
     if (you.gold == 0)
     {
-        mpr("You don't have anything to sacrifice.");
+        mpr("You have nothing to donate!");
         return false;
     }
 
@@ -275,7 +275,7 @@ bool zin_donate_gold()
     if (donation < 1)
     {
         simple_god_message(" finds your generosity lacking.");
-        return false;
+        return true;
     }
 
     you.duration[DUR_PIETY_POOL] += donation;
@@ -1207,9 +1207,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
 static void _zin_saltify(monster* mon)
 {
     const coord_def where = mon->pos();
-    const monster_type pillar_type =
-        mons_is_zombified(*mon) ? mons_zombie_base(*mon)
-                                : mons_species(mon->type);
+    const monster_type pillar_type = mons_species(mons_base_type(*mon));
     const int hd = mon->get_hit_dice();
 
     simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
@@ -1259,6 +1257,32 @@ void zin_remove_divine_stamina()
     notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA], true);
     you.duration[DUR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
+}
+
+spret zin_imprison(const coord_def& target, bool fail)
+{
+    monster* mons = monster_at(target);
+    if (mons == nullptr || !you.can_see(*mons))
+    {
+        mpr("You can see no monster there to imprison!");
+        return spret::abort;
+    }
+
+    if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
+    {
+        mpr("You cannot imprison that!");
+        return spret::abort;
+    }
+
+    if (mons->friendly() || mons->good_neutral())
+    {
+        mpr("You cannot imprison a law-abiding creature!");
+        return spret::abort;
+    }
+
+    int power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
+
+    return cast_tomb(power, mons, -GOD_ZIN, fail);
 }
 
 void zin_sanctuary()
@@ -1335,38 +1359,30 @@ void elyvilon_purification()
     you.redraw_evasion = true;
 }
 
-bool elyvilon_divine_vigour()
+void elyvilon_divine_vigour()
 {
-    bool success = false;
+    if (you.duration[DUR_DIVINE_VIGOUR])
+        return;
 
-    if (!you.duration[DUR_DIVINE_VIGOUR])
+    mprf("%s grants you divine vigour.",
+         god_name(GOD_ELYVILON).c_str());
+
+    const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
+    const int old_hp_max = you.hp_max;
+    const int old_mp_max = you.max_magic_points;
+    you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
+    you.set_duration(DUR_DIVINE_VIGOUR,
+                     40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
+
+    calc_hp();
+    inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
+    calc_mp();
+    if (old_mp_max > 0)
     {
-        mprf("%s grants you divine vigour.",
-             god_name(GOD_ELYVILON).c_str());
-
-        const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        const int old_hp_max = you.hp_max;
-        const int old_mp_max = you.max_magic_points;
-        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
-        you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
-
-        calc_hp();
-        inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
-        calc_mp();
-        if (old_mp_max > 0)
-        {
-            inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
-                     / old_mp_max
-                   - you.magic_points);
-        }
-
-        success = true;
+        inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
+                 / old_mp_max
+               - you.magic_points);
     }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return success;
 }
 
 void elyvilon_remove_divine_vigour()
@@ -1522,7 +1538,10 @@ bool beogh_gift_item()
     direction(spd, args);
 
     if (!spd.isValid)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     monster* mons = monster_at(spd.target);
     if (!beogh_can_gift_items_to(mons, false))
@@ -1667,28 +1686,20 @@ bool beogh_resurrect()
     return true;
 }
 
-bool yred_injury_mirror()
-{
-    return in_good_standing(GOD_YREDELEMNUL, 1)
-           && you.duration[DUR_MIRROR_DAMAGE]
-           && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
-}
-
-bool yred_can_enslave_soul(monster* mon)
+bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon)
-           && !mons_enslaved_body_and_soul(*mon)
-           && mon->attitude != ATT_FRIENDLY
-           && mons_intel(*mon) >= I_HUMAN;
+           && !mons_bound_body_and_soul(*mon)
+           && mon->attitude != ATT_FRIENDLY;
 }
 
-void yred_make_enslaved_soul(monster* mon, bool force_hostile)
+void yred_make_bound_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon
-    ASSERT(mons_enslaved_body_and_soul(*mon));
+    ASSERT(mons_bound_body_and_soul(*mon));
 
     add_daction(DACT_OLD_CHARMD_SOULS_POOF);
-    remove_enslaved_soul_companion();
+    remove_bound_soul_companion();
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
@@ -1724,7 +1735,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
-    define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
+    define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
     // If the original monster has been levelled up, its HD might be different
     // from its class HD, in which case its HP should be rerolled to match.
@@ -1734,10 +1745,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         roll_zombie_hp(mon);
     }
 
-    mon->colour = ETC_UNHOLY;
-
     mon->flags |= MF_NO_REWARD;
-    mon->flags |= MF_ENSLAVED_SOUL;
 
     // If the original monster type has melee abilities, make sure
     // its spectral thing has them as well.
@@ -1757,6 +1765,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
+    mons_att_changed(mon);
+
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
@@ -1766,6 +1776,9 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     {
         invalidate_agrid();
     }
+
+    // schedule our actual revival for the end of this combat round
+    avoided_death_fineff::schedule(mon);
 
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
@@ -2068,7 +2081,7 @@ static int _slouch_monsters(coord_def where)
     return 1;
 }
 
-bool cheibriados_slouch()
+spret cheibriados_slouch(bool fail)
 {
     int count = apply_area_visible(_slouchable, you.pos());
     if (!count)
@@ -2076,18 +2089,20 @@ bool cheibriados_slouch()
                    true, 'n'))
         {
             canned_msg(MSG_OK);
-            return false;
+            return spret::abort;
         }
 
     targeter_radius hitfunc(&you, LOS_DEFAULT);
-    if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
-        return false;
+    if (stop_attack_prompt(hitfunc, "Slouch", _act_slouchable))
+        return spret::abort;
+
+    fail_check();
 
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
     apply_area_visible(_slouch_monsters, you.pos());
-    return true;
+    return spret::success;
 }
 
 static void _run_time_step()
@@ -2535,7 +2550,7 @@ void spare_beogh_convert()
     }
 }
 
-bool dithmenos_shadow_step()
+spret dithmenos_shadow_step(bool fail)
 {
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius() > -1);
@@ -2553,7 +2568,10 @@ bool dithmenos_shadow_step()
     dist sdirect;
     direction(sdirect, args);
     if (!sdirect.isValid || tgt.landing_site.origin())
-        return false;
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
 
     // Check for hazards.
     bool zot_trap_prompted = false,
@@ -2567,7 +2585,8 @@ bool dithmenos_shadow_step()
         if (!cloud_prompted
             && !check_moveto_cloud(site, "shadow step", &cloud_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
 
         if (!zot_trap_prompted)
@@ -2578,8 +2597,8 @@ bool dithmenos_shadow_step()
                 if (!check_moveto_trap(site, "shadow step",
                                        &trap_prompted))
                 {
-                    you.turn_is_over = false;
-                    return false;
+                    canned_msg(MSG_OK);
+                    return spret::abort;
                 }
                 zot_trap_prompted = true;
             }
@@ -2587,8 +2606,8 @@ bool dithmenos_shadow_step()
                      && !check_moveto_trap(site, "shadow step",
                                            &trap_prompted))
             {
-                you.turn_is_over = false;
-                return false;
+                canned_msg(MSG_OK);
+                return spret::abort;
             }
         }
 
@@ -2596,16 +2615,20 @@ bool dithmenos_shadow_step()
             && !check_moveto_exclusion(site, "shadow step",
                                        &exclusion_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
 
         if (!terrain_prompted
             && !check_moveto_terrain(site, "shadow step", "",
                                      &terrain_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
     }
+
+    fail_check();
 
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
@@ -2613,7 +2636,7 @@ bool dithmenos_shadow_step()
     if (!you.move_to_pos(tgt.landing_site))
     {
         mpr("Something blocks your shadow step.");
-        return true;
+        return spret::success;
     }
 
     const actor *victim = actor_at(sdirect.target);
@@ -2623,7 +2646,7 @@ bool dithmenos_shadow_step()
     // This helps to evade splash upon landing on water.
     moveto_location_effects(env.grid(old_pos), true, old_pos);
 
-    return true;
+    return spret::success;
 }
 
 static potion_type _gozag_potion_list[][4] =
@@ -3537,7 +3560,7 @@ spret qazlal_elemental_force(bool fail)
     return spret::success;
 }
 
-bool qazlal_disaster_area()
+spret qazlal_disaster_area(bool fail)
 {
     bool friendlies = false;
     vector<coord_def> targets;
@@ -3574,7 +3597,7 @@ bool qazlal_disaster_area()
     if (targets.empty())
     {
         mpr("There isn't enough space here!");
-        return false;
+        return spret::abort;
     }
 
     if (friendlies
@@ -3582,8 +3605,10 @@ bool qazlal_disaster_area()
                   "them?", true, 'n'))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     mprf(MSGCH_GOD, "Nature churns violently around you!");
 
@@ -3608,7 +3633,7 @@ bool qazlal_disaster_area()
     }
     scaled_delay(200);
 
-    return true;
+    return spret::success;
 }
 
 static map<ability_type, const sacrifice_def *> sacrifice_data_map;
@@ -4861,7 +4886,10 @@ bool ru_power_leap()
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return false;         // early return
+        }
 
         monster* beholder = you.get_beholder(beam.target);
         if (beholder)
@@ -5050,6 +5078,7 @@ bool ru_apocalypse()
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
             true, 'n'))
         {
+            canned_msg(MSG_OK);
             return false;
         }
     }
@@ -5278,7 +5307,10 @@ spret uskayaw_grand_finale(bool fail)
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return spret::abort;   // early return
+        }
 
         mons = monster_at(beam.target);
         if (!mons || !you.can_see(*mons))
@@ -5883,7 +5915,10 @@ spret wu_jian_wall_jump_ability()
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return spret::abort; // early return
+        }
 
         if (wu_jian_can_wall_jump(beam.target, wj_error))
             break;
@@ -5925,31 +5960,9 @@ bool okawaru_duel_active()
     return false;
 }
 
-spret okawaru_duel(bool fail)
+spret okawaru_duel(const coord_def& target, bool fail)
 {
-    if (okawaru_duel_active() || player_in_branch(BRANCH_ARENA))
-    {
-        mpr("You are already engaged in single combat!");
-        return spret::abort;
-    }
-
-    dist spd;
-    bolt beam;
-    beam.range = LOS_MAX_RANGE;
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE;
-    args.needs_path = false;
-    if (!spell_direction(spd, beam, &args))
-        return spret::abort;
-
-    if (beam.target == you.pos())
-    {
-        mpr("You cannot duel yourself!");
-        return spret::abort;
-    }
-
-    monster* mons = monster_at(beam.target);
+    monster* mons = monster_at(target);
     if (!mons || !you.can_see(*mons))
     {
         mpr("You can see no monster there to duel!");
@@ -6000,6 +6013,8 @@ spret okawaru_duel(bool fail)
     mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
+    if (mons_is_elven_twin(mons))
+        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
     monster_cleanup(mons);
 
     stop_delay(true);

@@ -287,7 +287,7 @@ end
 local function is_candidate_for_attack(x,y)
   m = monster.get_monster_at(x, y)
   --if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:name()) end
-  if not m or m:attitude() ~= ATT_HOSTILE then
+  if not m then
     return false
   end
   if m:name() == "butterfly"
@@ -301,7 +301,11 @@ local function is_candidate_for_attack(x,y)
     end
     return false
   end
-  return true
+  if m:attitude() == ATT_HOSTILE
+      or m:attitude() == ATT_NEUTRAL and m:is("insane") then
+    return true
+  end
+  return false
 end
 
 local function get_target(no_move)

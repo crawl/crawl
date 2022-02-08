@@ -592,14 +592,11 @@ void trap_def::trigger(actor& triggerer)
         // Don't try to re-net the player when they're already netted/webbed.
         if (you.attribute[ATTR_HELD])
             break;
-        // Reduce brutality of traps.
-        if (!you_trigger && !one_chance_in(3))
-            break;
 
         bool triggered = you_trigger;
         if (m)
         {
-            if (mons_intel(*m) < I_HUMAN)
+            if (mons_intel(*m) < I_HUMAN || !one_chance_in(3))
             {
                 // Not triggered, trap stays.
                 simple_monster_message(*m, " fails to trigger a net trap.");
@@ -1085,7 +1082,18 @@ void roll_trap_effects()
         && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
 
-/***
+static string _malev_msg()
+{
+    return make_stringf("A sourceless malevolence fills %s...",
+                        branches[you.where_are_you].longname);
+}
+
+static void _print_malev()
+{
+    mpr(_malev_msg());
+}
+
+/**
  * Separate from roll_trap_effects so the trap triggers when crawl is in an
  * appropriate state
  */
@@ -1107,11 +1115,11 @@ void do_trap_effects()
     if (env.absdepth0 > 3)
         available_traps.push_back(TRAP_ALARM);
 
-    mprf("A sudden malevolence fills the %s...", branches[you.where_are_you].shortname);
     switch (*random_iterator(available_traps))
     {
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
+            _print_malev();
             if (you.do_shaft(false))
                 _shafted_in(branches[you.where_are_you]) = true;
             break;
@@ -1121,14 +1129,19 @@ void do_trap_effects()
             // silenced, to avoid "travel only while silenced" behaviour.
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
+            _print_malev();
             mprf("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
             break;
 
         case TRAP_TELEPORT:
-            you_teleport_now(false, true, "A teleportation trap spontaneously manifests!");
+        {
+            string msg = make_stringf("%s and a teleportation trap spontaneously manifests!",
+                                      _malev_msg().c_str());
+            you_teleport_now(false, true, msg);
             break;
+        }
 
         // Other cases shouldn't be possible, but having a default here quiets
         // compiler warnings

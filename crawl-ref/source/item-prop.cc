@@ -147,12 +147,14 @@ static const armour_def Armour_prop[] =
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_BUCKLER,              "buckler",                3,  -8,   45,
+    { ARM_ORB,                 "orb",                     0,   0,   90,
+        EQ_SHIELD,      SIZE_LITTLE, SIZE_GIANT, true },
+    { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
-    { ARM_KITE_SHIELD,               "kite shield",                 8,  -30,  45,
-        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true    },
-    { ARM_TOWER_SHIELD,         "tower shield",          13,  -50,  45,
-        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true  },
+    { ARM_KITE_SHIELD,         "kite shield",             8, -100,  45,
+        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true },
+    { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  45,
+        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true },
 
     // Following all ARM_ entries for the benefit of util/gather_items
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
@@ -978,10 +980,6 @@ void set_ident_flags(item_def &item, iflags_t flags)
     if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item)
         && _is_affordable(item))
     {
-        if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1 << item.brand;
-        if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1 << item.brand;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
@@ -1180,7 +1178,8 @@ bool armour_is_enchantable(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
     return item.sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
-        && item.sub_type != ARM_SCARF;
+        && item.sub_type != ARM_SCARF
+        && item.sub_type != ARM_ORB;
 }
 
 /**
@@ -1847,7 +1846,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         if (is_shield(item))
             skills.insert(SK_SHIELDS);
 
-        if (gives_ability(item))
+        if (gives_ability(item) || get_armour_ego_type(item) == SPARM_ENERGY)
             skills.insert(SK_EVOCATIONS);
     }
 
@@ -2166,11 +2165,11 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_IMMOLATION,     RARITY_UNCOMMON },
     { SCR_VULNERABILITY,  RARITY_UNCOMMON },
     { SCR_SUMMONING,      RARITY_RARE },
-    { SCR_ACQUIREMENT,    RARITY_RARE },
     { SCR_SILENCE,        RARITY_RARE },
     { SCR_BRAND_WEAPON,   RARITY_RARE },
     { SCR_TORMENT,        RARITY_RARE },
     { SCR_HOLY_WORD,      RARITY_RARE },
+    { SCR_ACQUIREMENT,    RARITY_VERY_RARE },
 };
 
 item_rarity_type consumable_rarity(const item_def &item)
@@ -2300,6 +2299,9 @@ int get_armour_willpower(const item_def &arm, bool check_artp)
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_WILLPOWER)
         res += WL_PIP;
+
+    if (get_armour_ego_type(arm) == SPARM_GUILE)
+        res -= 2 * WL_PIP;
 
     if (check_artp && is_artefact(arm))
         res += WL_PIP * artefact_property(arm, ARTP_WILLPOWER);
@@ -2734,6 +2736,13 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
+           && get_armour_slot(item) == EQ_SHIELD
+           && item.sub_type != ARM_ORB;
+}
+
+bool is_offhand(const item_def &item)
+{
+    return item.base_type == OBJ_ARMOUR
            && get_armour_slot(item) == EQ_SHIELD;
 }
 
@@ -2749,11 +2758,16 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     return hand == HANDS_TWO;
 }
 
+// Returns true if the worn shield has the reflection ego. Used only for
+// messaging, to distinguish between a reflective shield and ego reflection.
 bool shield_reflects(const item_def &shield)
 {
-    ASSERT(is_shield(shield));
+    return is_shield(shield) && get_armour_ego_type(shield) == SPARM_REFLECTION;
+}
 
-    return get_armour_ego_type(shield) == SPARM_REFLECTION;
+int guile_adjust_willpower(int wl)
+{
+    return max(0, wl - 2 * WL_PIP);
 }
 
 string item_base_name(const item_def &item)
@@ -2814,11 +2828,13 @@ void seen_item(item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
     {
-        // Known brands will be set in set_item_flags().
+        // XXX: the first two are unsigned integers because
+        // they used to be a bitfield tracking brands as well
+        // and are marshalled to the save file as such.
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_weapon[item.sub_type] = 1U;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_armour[item.sub_type] = 1U;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }

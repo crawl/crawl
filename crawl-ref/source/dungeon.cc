@@ -1013,7 +1013,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     // Is this a valid upwards or exit stair out of a branch? In general,
     // ensure that each region has a stone stair up.
 
-    if (feature_mimic_at(c))
+    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
         return false;
 
     if (feat_is_stone_stair_up(env.grid(c))
@@ -1028,8 +1028,6 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
-    case DNGN_ENTER_HELL:
-        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -1037,7 +1035,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
 
 static bool _is_exit_stair(const coord_def &c)
 {
-    if (feature_mimic_at(c))
+    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
         return false;
 
     // Branch entries, portals, and abyss entries are not considered exit
@@ -1056,8 +1054,6 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
-    case DNGN_ENTER_HELL:
-        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -1228,7 +1224,7 @@ static void _fixup_hell_stairs()
         if (feat_is_stone_stair_up(env.grid(*ri))
             || env.grid(*ri) == DNGN_ESCAPE_HATCH_UP)
         {
-            _set_grd(*ri, DNGN_ENTER_HELL);
+            _set_grd(*ri, branches[you.where_are_you].escape_feature);
         }
     }
 }
@@ -2243,6 +2239,8 @@ static bool _branch_entrances_are_connected()
     // stone stairs.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
+        if (env.grid(*ri) == DNGN_ENTER_HELL)
+            continue;
         if (!feat_is_branch_entrance(env.grid(*ri)))
             continue;
         if (!_has_connected_stone_stairs_from(*ri))
@@ -3773,6 +3771,8 @@ static void _place_branch_entrances(bool use_vaults)
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
+        if (env.grid(*ri) == DNGN_ENTER_HELL)
+            continue;
         if (!feat_is_branch_entrance(env.grid(*ri)))
             continue;
 
@@ -5143,9 +5143,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         break;
     case ATT_GOOD_NEUTRAL:
         mg.behaviour = BEH_GOOD_NEUTRAL;
-        break;
-    case ATT_STRICT_NEUTRAL:
-        mg.behaviour = BEH_STRICT_NEUTRAL;
         break;
     default:
         break;

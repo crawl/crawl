@@ -210,32 +210,16 @@ kan føle det.
 
 Kikubaaqudgha kan vælge at beskytte dig mod smerten ... eller lade være.
 %%%%
-Animate Remains ability
-
-Genoplever et enkelt kadaver eller skelet som din følgesvend. Bemærk at zombier
-og skeletter ikke kan forlade det niveau, de blev skabt på.
-%%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Kalder dine udøde følgesvende tilbage fra hvor som helst i de underjordiske
 gange til din umiddelbare nærhed.
-%%%%
-Injury Mirror ability
-
-Beskadiger angribende uhyrer ved at reflektere den skade de forvolder dig,
-tilbage på dem. Din fromhed reduceres afhængigt af hvor meget skade der
-reflekteres.
-%%%%
-Animate Dead ability
-
-Genopliver alle kadavere og skeletter i nærheden af dig som følgesvende. Bemærk
-at zombier og skeletter ikke kan forlade det niveau, de blev skabt på.
 %%%%
 Drain Life ability
 
 Helbred dig selv ved at dræne livskraft fra uhyrerne omkring dig.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Mærker et levende, intelligent uhyres sjæl som værende moden til at blive
 plukket. Når det mærkede uhyre dør, vil dets sjæl være din.
@@ -246,10 +230,6 @@ sjæl markeret, og kun en sjæl kan trælbindes af gangen. Mærkningen er endvid
 afhængig af dine færdigheder med påkaldelser.
 
 Bemærk, at trælbundne sjæle kan følge dig væk fra det niveau, de blev skabt på.
-%%%%
-Animate Remains or Dead ability
-
-Hvis du får denne beskrivelse er det en fejl.
 %%%%
 Heroism ability
 
