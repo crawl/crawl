@@ -74,6 +74,7 @@ static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster& mons);
 static bool _monster_move(monster* mons);
 static bool _monster_swaps_places(monster* mon, const coord_def& delta);
+static bool _do_move_monster(monster& mons, const coord_def& delta);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -1875,6 +1876,11 @@ void handle_monster_move(monster* mons)
                 else
                     fight_melee(mons, &you);
 
+                // chance to confusedly whack itself at the same time. Handled
+                // separately for monsters in _monster_move.
+                if (!new_target && mons->confused() && one_chance_in(6))
+                    _do_move_monster(*mons, coord_def(0,0));
+
                 _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
                 mmov.reset();
@@ -3130,6 +3136,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     if (f == you.pos())
     {
+        // XX is this actually reachable?
         fight_melee(&mons, &you);
         return true;
     }
@@ -3328,7 +3335,7 @@ static bool _monster_move(monster* mons)
     }
 
     // Let's not even bother with this if mmov is zero.
-    if (mmov.origin())
+    if (mmov.origin() && !mons->confused())
         return false;
 
     for (int count_x = 0; count_x < 3; count_x++)
@@ -3478,6 +3485,8 @@ static bool _monster_move(monster* mons)
     if (good_move[mmov.x + 1][mmov.y + 1] && !mmov.origin())
     {
         // Check for attacking player.
+        // XX is this actually reachable? this exact condition is already dealt
+        // with in handle_monster_move
         if (mons->pos() + mmov == you.pos())
         {
             ret = fight_melee(mons, &you);
@@ -3514,7 +3523,7 @@ static bool _monster_move(monster* mons)
             {
                 ret = _monster_swaps_places(mons, mmov);
             }
-            else
+            else if (!mmov.origin()) // confused self-hit handled below
             {
                 fight_melee(mons, targ);
                 ret = true;
@@ -3565,6 +3574,10 @@ static bool _monster_move(monster* mons)
     }
 
     // This handles the chance for the monster to hit itself.
+    // n.b. this is reachable by hitting another monster and having mmov.reset()
+    // called. I'm taking this as a sort of intentional slapstick effect and
+    // leaving it in place. (It's also reachable in a few other rare cases
+    // where mmov.reset() is called.)
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(*mons, mmov);
 
