@@ -3237,13 +3237,23 @@ static void _display_attack_delay()
     const bool at_min_delay = weapon
                               && you.skill(item_attack_skill(*weapon))
                                  >= weapon_min_delay_skill(*weapon);
+    const bool shield_penalty = you.adjusted_shield_penalty() > 0;
+    const bool armour_penalty = is_slowed_by_armour(weapon)
+                                && you.adjusted_body_armour_penalty() > 0;
+    string penalty_msg = "";
+    if (shield_penalty || armour_penalty)
+    {
+        penalty_msg =
+            make_stringf( " (and is slowed by your %s)",
+                         shield_penalty && armour_penalty ? "shield and armour" :
+                         shield_penalty ? "shield" : "armour");
+    }
 
     mprf("Your attack delay is about %.1f%s%s.",
          delay / 10.0f,
          at_min_delay ?
             " (and cannot be improved with additional weapon skill)" : "",
-         you.adjusted_shield_penalty() ?
-            " (and is slowed by your insufficient shield skill)" : "");
+         penalty_msg.c_str());
 }
 
 // forward declaration

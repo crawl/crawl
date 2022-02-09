@@ -836,8 +836,9 @@ This is also rather important. Most worn armour improves your Armour Class,
 which decreases the amount of damage you take from most types of injury. The
 heavier an armour is, the more AC (armour class) it will provide, at the expense
 of your EV (evasion) and stealth. Wearing heavy armour also increases your
-chances of miscasting spells, an effect which is only slightly reduced by your
-Armour skill. These penalties are larger if you have low Strength.
+chances of miscasting spells and slow your attacks with missile weapons, effects
+which are only slightly reduced by your Armour skill. These penalties are larger
+if you have low Strength.
 
 A shield normally increases neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
@@ -2214,8 +2215,16 @@ There are a number of individual weapon skills for missile weapons:
 
 Throwing is the skill for all things hurled without a launcher: boomerangs,
 javelins, nets, darts, etc. The other skills refer to various types of ranged
-weapons. Since the motion of using a sling and throwing a stone are somewhat
-similar, these skills crosstrain:
+weapons.
+
+Just as with melee weapons, ranged weapon skills and throwing skills increase
+the speed at which you attack, along with slightly increasing your accuracy
+and damage. Missile weapons, unlike melee or throwing weapons, are slowed by
+wearing heavy armour. Increasing your Strength and Armour skill will partially
+mitigate this.
+
+Since the motion of using a sling and throwing a stone are somewhat similar,
+these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2240,7 +2249,7 @@ Armour
   Having a high Armour skill means that you are skilled at wearing armour of all
   kinds, multiplying the protection provided not just by body armour but also
   by cloaks, gloves, etc. It also very slightly mitigates the penalties to
-  spellcasting from wearing heavy armour.
+  spellcasting and missile weapon speed from wearing heavy armour.
 
 Dodging
   A high Dodging skill helps you to evade melee and ranged attacks more

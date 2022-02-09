@@ -1216,6 +1216,26 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (below_target)
         _append_skill_target_desc(description, skill, mindelay_skill);
+
+    if (is_slowed_by_armour(&item))
+    {
+        description += "\nHeavy armour slows attacks with this";
+        const int penalty_scale = 100;
+        const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale);
+        if (armour_penalty)
+        {
+            const bool significant = armour_penalty >= penalty_scale;
+            if (significant)
+                description += make_stringf(" (currently +%.1f", armour_penalty / (10.0f * penalty_scale));
+            else
+                description += " (currently only slightly";
+            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            if (body_armour)
+                description += (significant ? " from " : " by ") + body_armour->name(DESC_YOUR);
+            description += ")";
+        }
+        description += ".";
+    }
 }
 
 static string _handedness_string(const item_def &item)
@@ -1884,6 +1904,23 @@ static string _describe_armour(const item_def &item, bool verbose)
         && !is_offhand(item))
     {
         description += _armour_ac_change(item);
+    }
+
+    const int DELAY_SCALE = 100;
+    const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
+    if (crawl_state.need_save
+        && verbose
+        && aevp
+        && _you_are_wearing_item(item)
+        && is_slowed_by_armour(you.weapon()))
+    {
+        description += "\n\nWith your current strength and Armour skill, "
+                       "it slows attacks with missile weapons (like "
+                        + you.weapon()->name(DESC_YOUR) + ") ";
+        if (aevp >= DELAY_SCALE)
+            description += make_stringf("by %.1f.", aevp / (10.0f * DELAY_SCALE));
+        else
+            description += "only slightly.";
     }
 
     return description;
