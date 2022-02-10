@@ -805,30 +805,8 @@ static bool _mons_is_highlighted(const monster* mons)
 static bool _advise_use_wand()
 {
     for (auto &obj : you.inv)
-    {
-        if (!obj.defined())
-            continue;
-
-        if (obj.base_type != OBJ_WANDS)
-            continue;
-
-        // Wand type unknown, might be useful.
-        if (!item_type_known(obj))
+        if (obj.defined() && obj.base_type == OBJ_WANDS && obj.sub_type != WAND_DIGGING)
             return true;
-
-        // Can it be used to fight?
-        switch (obj.sub_type)
-        {
-        case WAND_FLAME:
-        case WAND_PARALYSIS:
-        case WAND_ICEBLAST:
-        case WAND_CHARMING:
-        case WAND_ACID:
-        case WAND_MINDBURST:
-            return true;
-        }
-    }
-
     return false;
 }
 
@@ -1912,7 +1890,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         if (_advise_use_wand())
         {
-            text << "\n\nOr you could e<w>%</w>oke a wand to deal damage.";
+            text << "\n\nOr you could e<w>%</w>oke a wand to harm or weaken "
+                 << "your foes.";
             cmd.push_back(CMD_EVOKE);
         }
         break;
