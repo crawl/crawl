@@ -568,7 +568,7 @@ ITEM:   potion of experience ident:type q:1 /\
 MONS:   orc warlord
 : bailey_setup(_G)
 SUBST:  I = t., 1 = 11.
-NSUBST: 2 = 5:2 / *=2.
+NSUBST: 2 = 3:2 / *=2.
 MAP
 ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
