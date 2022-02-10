@@ -758,9 +758,6 @@ void trap_def::trigger(actor& triggerer)
         break;
     }
 
-    if (you_trigger)
-        learned_something_new(HINT_SEEN_TRAP, p);
-
     if (trap_destroyed)
         destroy(know_trap_destroyed);
 }
