@@ -175,7 +175,7 @@ static void _fill_newgame_choice_for_hints(newgame_def& choice, hints_types type
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def& choice)
 {
-    string prompt = "<white>You must be new here indeed!</white>"
+    string prompt = "<white>Welcome!</white>"
         "\n\n"
         "<cyan>You can be:</cyan>";
     auto prompt_ui = make_shared<Text>(formatted_string::parse_string(prompt));
@@ -694,9 +694,6 @@ void taken_new_item(object_class_type item_type)
     case OBJ_BOOKS:
         learned_something_new(HINT_SEEN_SPBOOK);
         break;
-    case OBJ_CORPSES:
-        learned_something_new(HINT_SEEN_CARRION);
-        break;
     case OBJ_WEAPONS:
         learned_something_new(HINT_SEEN_WEAPON);
         break;
@@ -968,15 +965,6 @@ void hints_first_item(const item_def &item)
     if (!Hints.hints_events[HINT_SEEN_FIRST_OBJECT]
         || Hints.hints_just_triggered)
     {
-        // NOTE: Since a new player might not think to pick up a
-        // corpse (and why should they?), HINT_SEEN_CARRION is done when a
-        // corpse is first seen.
-        if (!Hints.hints_just_triggered
-            && item.base_type == OBJ_CORPSES
-            && !monster_at(item.pos))
-        {
-            learned_something_new(HINT_SEEN_CARRION, item.pos);
-        }
         return;
     }
 
@@ -1283,33 +1271,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Weapons and armour that have unusual descriptions like this "
                 "are much more likely to be of higher enchantment or have "
                 "special properties, good or bad.";
-        break;
-
-    case HINT_SEEN_CARRION:
-        // TODO: Specialcase skeletons!
-
-        if (gc.x <= 0 || gc.y <= 0) // XXX: only relevant for carrion shops?
-            text << "Ah, a corpse!";
-        else
-        {
-            int i = you.visible_igrd(gc);
-            if (i == NON_ITEM)
-                text << "Ah, a corpse!";
-            else
-            {
-                text << "That <console>";
-                string glyph = glyph_to_tagstr(get_item_glyph(env.item[i]));
-                const string::size_type found = glyph.find("%");
-                if (found != string::npos)
-                    glyph.replace(found, 1, "percent");
-                text << glyph << " ";
-                text << "</console>is a corpse.";
-#ifdef USE_TILE
-                tiles.place_cursor(CURSOR_TUTORIAL, gc);
-                tiles.add_text_tag(TAG_TUTORIAL, env.item[i].name(DESC_A), gc);
-#endif
-            }
-        }
         break;
 
     case HINT_SEEN_JEWELLERY:
@@ -3188,7 +3149,6 @@ string hints_describe_item(const item_def &item)
             break;
 
         case OBJ_CORPSES:
-            Hints.hints_events[HINT_SEEN_CARRION] = false;
             ostr << "Skeletons and corpses can be used as components for "
                     "certain necromantic spells. Apart from that, they are "
                     "largely useless.";
