@@ -39,6 +39,16 @@ Xom smiles on you.
 
 "Catch!"
 %%%%
+# gifting you an orb
+Xom orb gift
+
+"Is this the Orb you wanted?"
+
+"Many adventurers have sought this Orb."
+
+w:3
+"Ponder my incredible Orb!"
+%%%%
 ####################
 # friendly summons
 ####################

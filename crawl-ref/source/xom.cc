@@ -649,6 +649,8 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;
     }
+    else if (base == OBJ_ARMOUR && subtype == ARM_ORB && one_chance_in(4))
+        god_speaks(GOD_XOM, _get_xom_speech("orb gift").c_str());
 
     _try_brand_switch(thing_created);
 
