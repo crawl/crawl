@@ -996,7 +996,6 @@ static string _describe_portal(const coord_def &gc)
                 "shops. It will disappear if you don't enter it soon, "
                 "so hurry. ";
     }
-    // Sewers can appear on D:3-6, ossuaries D:4-8.
     else
     {
         text =  "is a portal to an optional level, offering extra loot in "
@@ -1131,7 +1130,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<w>%</w> to quaff it.\n"
                 "Once you've identified a potion, either with a scroll of "
                 "identification or by drinking it, you'll automatically "
-                "recognize all other potions of the same type; this means "
+                "recognize all other potions of the same type. This means "
                 "it's sometimes useful to drink potions just to identify them.";
         cmd.push_back(CMD_QUAFF);
         break;
@@ -1145,7 +1144,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<w>%</w> to read it.\n"
                 "Once you've identified a scroll, either with a scroll of "
                 "identification or by reading it, you'll automatically "
-                "recognize all other scrolls of the same type; this means "
+                "recognize all other scrolls of the same type. This means "
                 "it's sometimes useful to read scrolls just to identify them.";
         cmd.push_back(CMD_READ);
         break;
@@ -1322,9 +1321,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console> ('<yellow>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_GOLD))
              << "</yellow>')</console>"
-                ". Unlike most other objects in Crawl it takes up no space in "
-                "your inventory and can't be dropped. Gold can be used to buy "
-                "items from shops, and is appreciated by certain gods.";
+                ". Press <w>%</w> to see how much you have. Gold is used in "
+                "shops you'll find as you explore.";
+        cmd.push_back(CMD_LIST_GOLD);
         break;
 
     case HINT_SEEN_STAIRS:
@@ -1378,7 +1377,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
                 " (or by <w>left-clicking</w>)"
 #endif
-                ", like stairs; unlike stairs, however, hatches are a one-way "
+                ", like stairs. Unlike stairs, however, hatches are a one-way "
                 "trip, so be careful when descending!";
         cmd.push_back(CMD_GO_UPSTAIRS);
         cmd.push_back(CMD_GO_DOWNSTAIRS);
@@ -1397,18 +1396,20 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
 #endif
-        text << "is the entrance to a different branch of the dungeon, "
-                "which might have different terrain, level layout and "
-                "monsters from the current main branch you're in. Some "
-                "branches contain only a single level, and others are many "
-                "levels deep. They can also contain entrances to other "
-                "branches."
+        text << "is the entrance to a different branch of the dungeon. "
+                "Each branch has different terrain and monsters, and some "
+                "contain entrances to other branches. You can learn more by "
+                "examining this entrance "
+#ifdef USE_TILE
+                "by hovering your mouse over its tile.";
+#else
+                "by pressing <w>%</w> and moving the cursor onto it.";
+        cmd.push_back(CMD_LOOK_AROUND);
+#endif
+        text << "\n\nSome branches will be much safer and more rewarding than "
+                "your current branch. Others can be very dangerous, better "
+                "visited when your character is more powerful.";
 
-                "\n\nThe first three branches you'll encounter are the "
-                "Temple, the Lair and the Orcish Mines. While the Lair"
-                "and the Mines can be dangerous for the new adventurer, "
-                "the Temple is completely safe and contains a number of "
-                "altars at which you might convert to a new god.";
         break;
 
     case HINT_SEEN_PORTAL:
@@ -1482,12 +1483,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SEEN_TRAP:
-        if (you.pos() == gc)
-            text << "Oops... you just triggered a trap. ";
-        else
-            text << "You just discovered a trap. ";
-
-        text << "You'll occasionally stumble into these nasty constructions";
+        text << "You just discovered a trap. You'll occasionally find these "
+                "nasty constructions";
 #ifndef USE_TILE
         {
             cglyph_t g = get_cell_glyph(gc);
@@ -1535,9 +1532,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (you_worship(GOD_NO_GOD)
             && Hints.hints_type == HINT_MAGIC_CHAR)
         {
-            text << "\n\nThe simplest god for an unexperienced conjurer is "
-                    "probably Vehumet, though Sif Muna is a good second "
-                    "choice.";
+            text << "\n\nThe simplest god for an inexperienced conjurer is "
+                    "probably Vehumet, though many other gods, like Sif Muna, "
+                    "can also work well.";
         }
         break;
 
@@ -1619,7 +1616,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_NEW_LEVEL:
         text << "Well done! Reaching a new experience level is always a "
-                "nice event: you get more health and magic points, and "
+                "nice event. You get more health and magic points, and "
                 "occasionally increases to your attributes: strength, "
                 "intelligence, and dexterity.";
 
@@ -1925,10 +1922,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_YOU_MUTATED:
-        text << "Mutations can be obtained from several sources, among them "
-                "potions, spell miscasts, and overuse of strong enchantments "
-                "like invisibility. The gods Zin and Jiyva will cure your "
-                "mutations. Check your mutations with <w>%</w>.";
+        text << "Mutations can be good or bad. Potions of mutation are the most "
+                "common way to remove bad mutations, though they can also give "
+                "you new ones.";
         cmd.push_back(CMD_DISPLAY_MUTATIONS);
         break;
 
