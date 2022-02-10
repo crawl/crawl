@@ -45,7 +45,9 @@ enum hints_event_type
     HINT_SEEN_MISSILES,
     HINT_SEEN_ARMOUR,
     HINT_SEEN_RANDART,
+#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_CARRION,
+#endif
     HINT_SEEN_GOLD,
     // encountered dungeon features
     HINT_SEEN_STAIRS,
