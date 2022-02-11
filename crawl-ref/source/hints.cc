@@ -1983,17 +1983,21 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_CONVERT:
         switch (you.religion)
         {
-                // gods without traditional piety
-            case GOD_XOM:
-                return print_hint("HINT_CONVERT Xom");
-            case GOD_GOZAG:
-                return print_hint("HINT_CONVERT Gozag");
-            case GOD_RU:
-                return print_hint("HINT_CONVERT Ru");
-            case GOD_USKAYAW:
-                return print_hint("HINT_CONVERT Uskayaw");
-            default:
-                print_hint("HINT_CONVERT");
+            // gods without traditional piety
+        case GOD_ASHENZARI:
+            return print_hint("HINT_CONVERT Ashenzari");
+        case GOD_GOZAG:
+            return print_hint("HINT_CONVERT Gozag");
+        case GOD_RU:
+            return print_hint("HINT_CONVERT Ru");
+        case GOD_USKAYAW:
+            return print_hint("HINT_CONVERT Uskayaw");
+        case GOD_XOM:
+            return print_hint("HINT_CONVERT Xom");
+        case GOD_YREDELEMNUL:
+            return print_hint("HINT_CONVERT Yredelemnul");
+        default:
+            print_hint("HINT_CONVERT");
 
         }
 
