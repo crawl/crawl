@@ -2057,69 +2057,72 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                         "return to your old faith, you'll have to find an "
                         "altar dedicated to " << old_god_name << " where";
             }
-            text << " you can re-convert, and all will be well. Otherwise "
-                    "you'll have to weather this god's displeasure until all "
-                    "divine wrath is spent.";
+            text << " you can re-convert, and all will be well.";
 
-        }
-        else
-        {
-            bool angry = false;
-            if (is_good_god(old_god))
+            if (god_hates_your_god(old_god, new_god))
             {
-                if (is_good_god(new_god))
-                {
-                    text << "Fortunately, it seems that " << old_god_name <<
-                            " didn't mind your converting to " << new_god_name
-                         << ". ";
-
-                    if (old_piety > piety_breakpoint(0))
-                        text << "You even kept some of your piety! ";
-
-                    text << "Note that this kind of alliance only exists "
-                            "between the three good gods, so don't expect this "
-                            "to be the norm.";
-                }
-                else if (!god_hates_your_god(old_god))
-                {
-                    text << "Fortunately, it seems that " << old_god_name <<
-                            " didn't mind your converting to " << new_god_name
-                         << ". That's because " << old_god_name << " is one of "
-                            "the good gods who generally are rather forgiving "
-                            "about change of faith - unless you switch over to "
-                            "the path of evil, in which case their retribution "
-                            "can be nasty indeed!";
-                }
-                else
-                {
-                    text << "Looks like " << old_god_name << " didn't "
-                            "appreciate your converting to " << new_god_name
-                         << "! But really, changing from one of the good gods "
-                            "to an evil one, what did you expect!? For any god "
-                            "not on the opposing side of the faith, "
-                         << old_god_name << " would have been much more "
-                            "forgiving. ";
-
-                    angry = true;
-                }
+                text << "Otherwise, you'll have to weather this god's "
+                        "displeasure until their divine wrath is spent.";
             }
-            else if (god_hates_your_god(old_god))
+
+            break;
+        }
+
+        bool angry = false;
+        if (is_good_god(old_god))
+        {
+            if (is_good_god(new_god))
             {
-                text << "Looks like " << old_god_name << " didn't appreciate "
-                        "your converting to " << new_god_name << "! (Actually, "
-                        "only the three good gods will usually be forgiving "
-                        "about this kind of faithlessness.) ";
+                text << "Fortunately, it seems that " << old_god_name <<
+                        " didn't mind your converting to " << new_god_name
+                     << ". ";
+
+                if (old_piety > piety_breakpoint(0))
+                    text << "You even kept some of your piety! ";
+
+                text << "Note that this kind of alliance only exists "
+                        "between the three good gods, so don't expect this "
+                        "to be the norm.";
+            }
+            else if (!god_hates_your_god(old_god))
+            {
+                text << "Fortunately, it seems that " << old_god_name <<
+                        " didn't mind your converting to " << new_god_name
+                     << ". That's because " << old_god_name << " is one of "
+                        "the good gods who generally are rather forgiving "
+                        "about change of faith - unless you switch over to "
+                        "the path of evil, in which case their retribution "
+                        "can be nasty indeed!";
+            }
+            else
+            {
+                text << "Looks like " << old_god_name << " didn't "
+                        "appreciate your converting to " << new_god_name
+                     << "! But really, changing from one of the good gods "
+                        "to an evil one, what did you expect!? For any god "
+                        "not on the opposing side of the faith, "
+                     << old_god_name << " would have been much more "
+                        "forgiving. ";
 
                 angry = true;
             }
+        }
+        else if (god_hates_your_god(old_god))
+        {
+            text << "Looks like " << old_god_name << " didn't appreciate "
+                    "your converting to " << new_god_name << "! (Actually, "
+                    "only the three good gods will usually be forgiving "
+                    "about this kind of faithlessness.) ";
 
-            if (angry)
-            {
-                text << "Unfortunately, while converting back would appease "
-                     << old_god_name << ", it would annoy " << new_god_name
-                     << ", so you're stuck with having to suffer the wrath of "
-                        "one god or another.";
-            }
+            angry = true;
+        }
+
+        if (angry)
+        {
+            text << "Unfortunately, while converting back would appease "
+                 << old_god_name << ", it would annoy " << new_god_name
+                 << ", so you're stuck with having to suffer the wrath of "
+                    "one god or another.";
         }
 
         break;
