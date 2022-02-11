@@ -1929,16 +1929,14 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_ABILITY_GOD:
-        switch (you.religion)
+        if (get_god_abilities(true, false).size())
         {
-        // Gods where first granted ability is passive.
-        case GOD_ASHENZARI:
-        case GOD_BEOGH:
-        case GOD_MAKHLEB:
-        case GOD_VEHUMET:
-        case GOD_XOM:
-        case GOD_SHINING_ONE:
-            // TODO: update me
+            text << "You just gained a divine ability. Press <w>%</w> to "
+                    "take a look at your abilities or to use one of them.";
+            cmd.push_back(CMD_USE_ABILITY);
+        }
+        else
+        {
             text << "You just gained a divine ability. Press <w>%</w> "
 #ifdef USE_TILE
                     "or press <w>Shift</w> and <w>right-click</w> on the "
@@ -1946,14 +1944,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
                     "to take a look at your abilities.";
             cmd.push_back(CMD_DISPLAY_RELIGION);
-            break;
-
-        // Gods where first granted ability is active.
-        default:
-            text << "You just gained a divine ability. Press <w>%</w> to "
-                    "take a look at your abilities or to use one of them.";
-            cmd.push_back(CMD_USE_ABILITY);
-            break;
         }
         break;
 
