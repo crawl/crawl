@@ -1198,9 +1198,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         else if (mon->friendly() && !crawl_state.game_is_arena())
             mon->foe = MHITYOU;
 
-        if (you.see_cell(mon->pos()))
-            learned_something_new(HINT_FLEEING_MONSTER);
-
         break;
 
     case ME_CORNERED:

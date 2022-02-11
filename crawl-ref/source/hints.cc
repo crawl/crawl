@@ -2108,19 +2108,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_ADJUST_INVENTORY);
         break;
 
-    case HINT_FLEEING_MONSTER:
-        if (Hints.hints_type != HINT_BERSERK_CHAR)
-            return;
-
-        text << "Now that monster is scared of you! Note that you do not "
-                "absolutely have to follow it. Rather, you can let it run "
-                "away. Sometimes, though, it can be useful to attack a "
-                "fleeing creature by throwing something after it. If you "
-                "have any stones in your <w>%</w>nventory, you can look "
-                "at one of them to read an explanation of how to do this.";
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
-        break;
-
     case HINT_MONSTER_HIGHLIGHT:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
