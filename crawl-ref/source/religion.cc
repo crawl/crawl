@@ -2556,7 +2556,8 @@ void dock_piety(int piety_loss, int penance)
         if (last_penance_lecture != you.num_turns)
         {
             god_speaks(you.religion,
-                       "\"You will pay for your transgression, mortal!\"");
+                       you.religion == GOD_JIYVA ? "Furious gurgling surrounds you!"
+                       : "\"You will pay for your transgression, mortal!\"");
         }
         last_penance_lecture = you.num_turns;
 
