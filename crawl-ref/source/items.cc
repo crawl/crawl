@@ -2118,11 +2118,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     note_inscribe_item(item);
 
     if (crawl_state.game_is_hints())
-    {
         taken_new_item(item.base_type);
-        if (is_artefact(item))
-            learned_something_new(HINT_SEEN_RANDART);
-    }
 
     you.last_pickup[item.link] = quant_got;
     quiver::on_actions_changed(true);

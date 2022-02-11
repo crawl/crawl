@@ -2177,10 +2177,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_A), gc);
 #endif
         text << "That monster is friendly to you and will attack your "
-                "enemies, though you'll get only part of the experience for "
-                "monsters damaged by allies, compared to what you'd get for "
-                "doing all the work yourself. You can command your allies by "
-                "pressing <w>%</w>.";
+                "enemies. You can command your allies by pressing <w>%</w>.";
         cmd.push_back(CMD_SHOUT);
 
         if (!mons_att_wont_attack(m->attitude))
@@ -2383,15 +2380,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_YOU_RESIST:
-        text << "There are many dangers in Crawl. Luckily, there are ways to "
-                "(at least partially) resist some of them, if you are "
-                "fortunate enough to find them. There are two basic variants "
-                "of resistances: the innate willpower that depends on your "
-                "species, grows with experience level, and protects against"
-                "many magical effects; and the specific resistances against "
-                "certain other effects, e.g. fire or draining.\n"
-                "You can find items in the dungeon or gain mutations that will "
-                "increase (or lower) one or more of your resistances. To view "
+        text << "Most attacks in Crawl are defended against by your AC. Some, "
+                "like fire or draining attacks, can be further reduced by "
+                "specific resistances. Other magical effects, such as Slow "
+                "or Confusion hexes, are resisted by your Willpower. You'll "
+                "find items that increase both kinds of resistances.\nTo view "
                 "your current set of resistances, "
 #ifdef USE_TILE
                 "<w>right-click</w> on the player avatar.";
@@ -2480,9 +2473,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_GAINED_SPELLCASTING:
         text << "As your Spellcasting skill increases, you will be able to "
-             << "memorise more spells, and will suffer "
-             << "somewhat fewer failures when you cast them.\n"
-             << "Press <w>%</w> "
+                "memorise more spells, and will have somewhat more MP. You'll "
+                "also become slightly better at casting all kinds of spells.\n"
+                "Press <w>%</w> "
 #ifdef USE_TILE_LOCAL
              << "(or click on the <w>skill button</w> in the command panel) "
 #endif
@@ -2803,7 +2796,7 @@ string hints_describe_item(const item_def &item)
                 {
                     // It grants a resistance.
                     ostr << "\nThis weapon offers its wearer protection from "
-                            "certain sources. For an overview of your "
+                            "certain damage sources. For an overview of your "
                             "resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
                             " or click on your avatar with the <w>right mouse "
@@ -2880,16 +2873,6 @@ string hints_describe_item(const item_def &item)
                     ostr << "To attack a monster, you can simply walk into it.";
             }
 
-            if (!item_type_known(item)
-                && (is_artefact(item)
-                    || get_equip_desc(item) != ISFLAG_NO_DESC))
-            {
-                ostr << "\n\nWeapons and armour that have unusual descriptions "
-                     << "like this are much more likely to be of higher "
-                     << "enchantment or have special properties, good or bad.";
-
-                Hints.hints_events[HINT_SEEN_RANDART] = false;
-            }
             Hints.hints_events[HINT_SEEN_WEAPON] = false;
             break;
         }
@@ -3227,13 +3210,6 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
 
     switch (feat)
     {
-    case DNGN_ORCISH_IDOL:
-    case DNGN_GRANITE_STATUE:
-        ostr << "It's just a harmless statue - or is it?\nEven if not "
-                "a danger by themselves, statues often mark special "
-                "areas, dangerous ones or ones harbouring treasure.";
-        break;
-
     case DNGN_TRAP_TELEPORT:
     case DNGN_TRAP_TELEPORT_PERMANENT:
     case DNGN_TRAP_ALARM:
@@ -3507,34 +3483,18 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
                 "better than to send you the same way.\n\n";
         dangerous = true;
     }
-    else
+    // Don't call friendly monsters dangerous.
+    else if (!mons_att_wont_attack(mi.attitude))
     {
-        const int tier = mons_demon_tier(mi.type);
-        if (tier > 0)
+        if (mi.threat == MTHRT_NASTY)
         {
-            ostr << "This monster is a demon of the "
-                 << (tier == 1 ? "highest" :
-                     tier == 2 ? "second-highest" :
-                     tier == 3 ? "middle" :
-                     tier == 4 ? "second-lowest" :
-                     tier == 5 ? "lowest"
-                               : "buggy")
-                 << " tier.\n\n";
+            ostr << "This monster appears to be really dangerous!\n";
+            dangerous = true;
         }
-
-        // Don't call friendly monsters dangerous.
-        if (!mons_att_wont_attack(mi.attitude))
+        else if (mi.threat == MTHRT_TOUGH)
         {
-            if (mi.threat == MTHRT_NASTY)
-            {
-                ostr << "This monster appears to be really dangerous!\n";
-                dangerous = true;
-            }
-            else if (mi.threat == MTHRT_TOUGH)
-            {
-                ostr << "This monster appears to be quite dangerous.\n";
-                dangerous = true;
-            }
+            ostr << "This monster appears to be quite dangerous.\n";
+            dangerous = true;
         }
     }
 
