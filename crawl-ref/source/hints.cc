@@ -1704,8 +1704,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Being skilled in a particular type of ranged attack will let "
                 "you deal more damage when using the appropriate weapons. It "
                 "is usually best to concentrate on one type of ranged attack "
-                "(including spells), and to use a melee weapon as a backup "
-                "for fighting weak enemies.";
+                "(including spells).";
         break;
 
     case HINT_CHOOSE_STAT:
@@ -2169,25 +2168,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     }
 
     case HINT_WIELD_WEAPON:
-    {
-        int wpn = you.equip[EQ_WEAPON];
-        if (Hints.hints_type == HINT_RANGER_CHAR && wpn != -1
-            && you.inv[wpn].is_type(OBJ_WEAPONS, WPN_SHORTBOW))
-        {
-            text << "You can easily switch between weapons in slots a and "
-                    "b by pressing <w>%</w>.";
-            cmd.push_back(CMD_WEAPON_SWAP);
-        }
-        else
-        {
-            text << "You can easily switch back to your weapon in slot a by "
-                    "pressing <w>%</w>. To change the slot of an item, press "
-                    "<w>%i</w> and choose the appropriate slots.";
-            cmd.push_back(CMD_WEAPON_SWAP);
-            cmd.push_back(CMD_ADJUST_INVENTORY);
-        }
+        text << "You can easily switch back to your weapon in slot a by "
+                "pressing <w>%</w>. To change the slot of an item, press "
+                "<w>%i</w> and choose the appropriate slots.";
+        cmd.push_back(CMD_WEAPON_SWAP);
+        cmd.push_back(CMD_ADJUST_INVENTORY);
         break;
-    }
+
     case HINT_FLEEING_MONSTER:
         if (Hints.hints_type != HINT_BERSERK_CHAR)
             return;

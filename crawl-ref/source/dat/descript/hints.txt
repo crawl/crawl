@@ -47,8 +47,7 @@ risky, but makes you faster and beefier.
 %%%%
 death ranger melee
 
-Your bow and arrows are extremely powerful against distant monsters. Be sure to
-collect all arrows lying around in the dungeon.
+Your bow and arrows are extremely powerful against distant monsters.
 %%%%
 death random 0
 
