@@ -1034,6 +1034,7 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_GAINED_RANGED_SKILL:
     case HINT_CHOOSE_STAT:
     case HINT_AUTO_EXCLUSION:
+    case HINT_MALEVOLENCE:
         return true;
     default:
         return false;
@@ -1651,6 +1652,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<w>Intelligence</w> makes your spells more reliable and "
                 "powerful.\n"
                 "<w>Dexterity</w> increases your evasion and stealth.";
+        break;
+
+    case HINT_MALEVOLENCE:
+        text << "As you explore the dungeon and reveal new tiles, bad things "
+                "will sometimes randomly happen to you. When this happens, "
+                "pause, think carefully, and be ready to use consumables or "
+                "abilities. Fight to survive!";
         break;
 
     case HINT_YOU_ENCHANTED:

@@ -1145,6 +1145,8 @@ void do_trap_effects()
         default:
             break;
     }
+
+    learned_something_new(HINT_MALEVOLENCE);
 }
 
 level_id generic_shaft_dest(level_id place)
