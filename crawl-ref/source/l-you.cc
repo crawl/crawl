@@ -806,36 +806,6 @@ static int l_you_abil_table(lua_State *ls)
     return 1;
 }
 
-/*** Known items.
- * @treturn table The list of identifiable item subtypes you know.
- * @function known_items
- */
-static int you_known_items(lua_State *ls)
-{
-    lua_newtable(ls);
-    int index = 0;
-    for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
-    {
-        object_class_type basetype = (object_class_type)ii;
-        if (!item_type_has_ids(basetype))
-            continue;
-        for (const auto subtype : all_item_subtypes(basetype))
-        {
-            if (basetype == OBJ_JEWELLERY && subtype >= NUM_RINGS && subtype < AMU_FIRST_AMULET)
-                continue;
-            if (you.type_ids[basetype][subtype] ) {
-                item_def it = item_def();
-                it.base_type = basetype;
-                it.sub_type  = subtype;
-                lua_pushstring(ls, it.name(DESC_PLAIN, true).c_str());
-                lua_rawseti(ls, -2, ++index);
-            }
-        }
-    }
-    return 1;
-}
-
-
 /*** Get the current state of item identification as a list of strings.
  * @treturn table The list of names of known identifiable items.
  * @function known_items
