@@ -197,9 +197,8 @@ Shield
 Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
-  Abbreviated to "Str". Increases your damage with melee and ranged weapons
-  (except for long and short blades). Affects your ability to use heavy armours
-  effectively.
+  Abbreviated to "Str". Increases your damage with melee weapons (except for long
+  and short blades). Reduces penalties from wearing heavy armour.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -207,9 +206,9 @@ Intelligence
 
 Dexterity
   Abbreviated to "Dex". Increases your accuracy with melee and ranged weapons,
-  and your damage with long and short blades. Significantly affects your ability
-  to dodge attacks aimed at you, your general effectiveness with shields, your
-  stealth, and your effectiveness when stabbing unaware enemies.
+  and your damage with ranged weapons and long and short blades. Significantly
+  affects your ability to dodge attacks aimed at you, your effectiveness with
+  shields, your stealth, and your effectiveness when stabbing unaware enemies.
 
 These primary attributes grow permanently from gaining levels, and may
 increase or decrease temporarily from mutations or while using certain
