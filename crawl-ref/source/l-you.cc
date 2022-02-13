@@ -806,6 +806,7 @@ static int l_you_abil_table(lua_State *ls)
     return 1;
 }
 
+
 /*** Get the current state of item identification as a list of strings.
  * @treturn table The list of names of known identifiable items.
  * @function known_items
