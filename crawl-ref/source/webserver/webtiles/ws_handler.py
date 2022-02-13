@@ -797,7 +797,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def register(self, username, password, email):
         error = userdb.register_user(username, password, email)
         if error is None:
-            self.logger.info("Registered user %s.", username)
+            self.logger.info("Registered user %s (IP: %s, email: %s).",
+                            username, self.request.remote_ip, email)
             self.do_login(username)
         else:
             self.logger.info("Registration attempt failed for username %s: %s",
