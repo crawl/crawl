@@ -224,6 +224,12 @@ player_url = None
 # new_accounts_disabled = True
 # new_accounts_hold = True
 
+# If set to True, a SIGHUP triggers an attempt to reload the config and game
+# data. Some values cannot be reloaded (including this one), and to reset a
+# value to its default, you need to explicitly set the value rather than
+# comment it out.
+# hup_reloads_config = True
+
 # Only for development:
 # This is insecure; do not set development_mode = True in production!
 # development_mode = False

@@ -145,6 +145,14 @@ def signal_handler(signum, frame):
         # through about 2020.
         stop_everything()
 
+def reload_signal_handler(signum, frame):
+    logging.info("Received signal %i, reloading config.", signum)
+    try:
+        IOLoop.current().add_callback_from_signal(config.reload)
+    except AttributeError:
+        logging.error("Incompatible Tornado version")
+
+
 def bind_server():
     settings = {
         "static_path": config.get('static_path'),
@@ -531,8 +539,11 @@ def run():
         daemonize()
 
     signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
+    if (config.get('hup_reloads_config')):
+        signal.signal(signal.SIGHUP, reload_signal_handler)
+    else:
+        signal.signal(signal.SIGHUP, signal_handler)
 
     if config.get('umask') is not None:
         os.umask(config.get('umask'))
