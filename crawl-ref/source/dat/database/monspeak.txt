@@ -1728,7 +1728,7 @@ VISUAL:Something foul drips from @the_monster@'s claws.
 
 VISUAL:@The_monster@'s eyes glow red.
 
-VISUAL: @The_monster@'s tail lashes.
+VISUAL:@The_monster@'s tail lashes.
 
 @The_monster@ shouts @at_foe@, "You think you're better than me?"
 
@@ -4845,7 +4845,7 @@ VISUAL:@The_monster@ grins malevolently.
 
 @The_monster@ lets out a long cackle.
 
-VISUAL: @The_monster@ glitters frostily.
+VISUAL:@The_monster@ glitters frostily.
 
 @The_monster@ screams @at_foe@, "Die!"
 
@@ -4854,7 +4854,7 @@ _Josephina_rare_
 
 VISUAL:@The_monster@ grinds @possessive@ teeth.
 
-VISUAL: One of @The_monster@'s icy fingers falls off.
+VISUAL:One of @The_monster@'s icy fingers falls off.
 
 @The_monster@ says @to_foe@, "I'll make a rug of your skin."
 
@@ -4946,13 +4946,13 @@ _Lodul_common_
 
 @The_monster@ lets out a whooping war cry.
 
-VISUAL: @The_monster@ jingles a heavy purse and winks.
+VISUAL:@The_monster@ jingles a heavy purse and winks.
 
 @The_monster@ shouts @at_foe@, "Intruder!"
 
 @The_monster@ says @to_foe@, "I guard Vaults good! You no get in!"
 
-VISUAL: @The_monster@ stamps @possessive@ feet.
+VISUAL:@The_monster@ stamps @possessive@ feet.
 %%%%
 _Lodul_rare_
 
@@ -4960,7 +4960,7 @@ _Lodul_rare_
 
 @The_monster@ shouts @at_foe@, "Taste the thunder!"
 
-VISUAL: @The_monster@ adjusts @possessive@ apparatus.
+VISUAL:@The_monster@ adjusts @possessive@ apparatus.
 
 @The_monster@ shouts, "Zap! Ha ha ha, made you jump."
 
