@@ -149,7 +149,7 @@ spret cast_summon_cactus(int pow, god_type god, bool fail)
 
 spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
@@ -197,7 +197,7 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
 spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -254,7 +254,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 
 spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
 {
-    if (caster->is_player() && rude_stop_summoning_prompt())
+    if (caster->is_player() && stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -496,7 +496,7 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
 
 spret cast_summon_mana_viper(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -841,7 +841,7 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
 spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -862,7 +862,7 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 
 spret cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -923,7 +923,7 @@ static map<monster_type, const char*> _imp_summon_messages = {
  */
 spret cast_call_imp(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -1148,7 +1148,7 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
 spret cast_malign_gateway(actor * caster, int pow, god_type god,
                           bool fail, bool test)
 {
-    if (caster->is_player() && rude_stop_summoning_prompt())
+    if (caster->is_player() && stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     coord_def point = find_gateway_location(caster);
@@ -1181,7 +1181,7 @@ spret cast_malign_gateway(actor * caster, int pow, god_type god,
 
 spret cast_summon_horrible_things(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -1696,7 +1696,7 @@ vector<coord_def> find_animatable_skeletons(coord_def c)
 
 spret cast_animate_skeleton(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     vector<coord_def> skeletons = find_animatable_skeletons(you.pos());
@@ -1742,7 +1742,7 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
 
 spret cast_animate_dead(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -1780,7 +1780,7 @@ int find_simulacrable_corpse(coord_def c)
  */
 spret cast_simulacrum(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     int co = find_simulacrable_corpse(you.pos());
@@ -1846,7 +1846,7 @@ monster_type pick_random_wraith()
 
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     monster* m = monster_at(where);
@@ -2024,7 +2024,7 @@ void init_servitor(monster* servitor, actor* caster, int pow)
 
 spret cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();
@@ -2067,7 +2067,7 @@ dice_def battlesphere_damage(int pow)
 
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
-    if (agent->is_player() && rude_stop_summoning_prompt())
+    if (agent->is_player() && stop_summoning_poison_immune_prompt())
         return spret::abort;
 
     fail_check();

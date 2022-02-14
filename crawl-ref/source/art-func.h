@@ -1345,8 +1345,7 @@ static void _BATTLE_unequip(item_def */*item*/, bool */*show_msgs*/)
 static void _BATTLE_world_reacts(item_def */*item*/)
 {
     if (!find_battlesphere(&you)
-        && there_are_monsters_nearby(true, true, false)
-        && rude_stop_summoning_reason().empty())
+        && there_are_monsters_nearby(true, true, false))
     {
         cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
                           GOD_NO_GOD, false);

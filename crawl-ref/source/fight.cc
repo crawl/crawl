@@ -1165,11 +1165,8 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     }
 }
 
-string rude_stop_summoning_reason()
+static string stop_summoning_poison_immune_reason()
 {
-    if (you.duration[DUR_TOXIC_RADIANCE])
-        return "toxic aura";
-
     if (you.duration[DUR_NOXIOUS_BOG])
         return "noxious bog";
 
@@ -1179,20 +1176,16 @@ string rude_stop_summoning_reason()
     return "";
 }
 
-/**
- * Does the player have a hostile duration up that would/could cause
- * a summon to be abjured? If so, prompt the player as to whether they
- * want to continue to create their summon. Note that this prompt is never a
- * penance prompt, because we don't cause penance when monsters enter line of
- * sight when OTR is active, regardless of how they entered LOS.
- *
- * @param verb    The verb to be used in the prompt. Defaults to "summon".
- * @return        True if the player wants to abort.
- */
-bool rude_stop_summoning_prompt(string verb)
+static string rude_stop_summoning_reason()
 {
-    string which = rude_stop_summoning_reason();
+    if (you.duration[DUR_TOXIC_RADIANCE])
+        return "toxic aura";
 
+    return stop_summoning_poison_immune_reason();
+}
+
+static bool stop_summoning_prompt(string verb, string which)
+{
     if (which.empty())
         return false;
 
@@ -1212,6 +1205,26 @@ bool rude_stop_summoning_prompt(string verb)
         canned_msg(MSG_OK);
         return true;
     }
+}
+
+/**
+ * Does the player have a hostile duration up that would/could cause
+ * a summon to be abjured? If so, prompt the player as to whether they
+ * want to continue to create their summon. Note that this prompt is never a
+ * penance prompt, because we don't cause penance when monsters enter line of
+ * sight when OTR is active, regardless of how they entered LOS.
+ *
+ * @param verb    The verb to be used in the prompt. Defaults to "summon".
+ * @return        True if the player wants to abort.
+ */
+bool rude_stop_summoning_prompt(string verb)
+{
+    return stop_summoning_prompt(verb, rude_stop_summoning_reason());
+}
+
+bool stop_summoning_poison_immune_prompt(string verb)
+{
+    return stop_summoning_prompt(verb, stop_summoning_poison_immune_reason());
 }
 
 bool can_reach_attack_between(coord_def source, coord_def target,
