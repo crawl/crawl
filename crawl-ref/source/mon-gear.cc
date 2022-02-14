@@ -633,6 +633,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_TWO_HEADED_OGRE,         { DOUBLE_OGRE_WEAPONS } },
         { MONS_IRON_GIANT,              { DOUBLE_OGRE_WEAPONS } },
+        { MONS_LODUL,
+            { { { WPN_DIRE_FLAIL,       9 },
+                { WPN_GREAT_MACE,       1 },
+        } } },
         { MONS_IRONBOUND_THUNDERHULK,
             { { { WPN_DIRE_FLAIL,       9 },
                 { WPN_GREAT_MACE,       1 },
@@ -2152,8 +2156,17 @@ static void _give_armour(monster* mon, int level)
 
 static void _give_gold(monster* mon, int level)
 {
-    const int it = items(false, OBJ_GOLD, 0, level);
-    give_specific_item(mon, it);
+    switch (mon->type)
+    {
+    case MONS_LODUL:
+        give_specific_item(mon, items(false, OBJ_GOLD, 0, ISPEC_GIFT));
+        break;
+    case MONS_MAURICE:
+        give_specific_item(mon, items(false, OBJ_GOLD, 0, level));
+        break;
+    default:
+        break;
+    }
 }
 
 void give_weapon(monster *mons, int level_number)
@@ -2175,9 +2188,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
-    if (mons->type == MONS_MAURICE)
-        _give_gold(mons, level_number);
-
+    _give_gold(mons, level_number);
     _give_book(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);

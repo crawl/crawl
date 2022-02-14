@@ -1797,6 +1797,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
+    { MONS_LODUL,           { {}, {{ BAND_OGRE_MAGE, {6, 10} }}}},
     { MONS_BALRUG,          { {0, 0, []() { return !player_in_hell(); }},
                                    {{ BAND_BALRUG, {2, 5}, true }}}},
     { MONS_CACODEMON,       { {}, {{ BAND_CACODEMON, {1, 4}, true }}}},

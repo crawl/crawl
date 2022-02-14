@@ -3733,6 +3733,7 @@ static const spell_type smitey_spells[] = {
     SPELL_AIRSTRIKE,
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_CALL_DOWN_DAMNATION,
+    SPELL_CALL_DOWN_LIGHTNING,
     SPELL_FIRE_STORM,
     SPELL_SHATTER,
     SPELL_POLAR_VORTEX,          // dubious

@@ -4934,6 +4934,38 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_fake_spell_effect_@
 ### END Kirke ###
 %%%%
+############ LODUL ### A thunderhulk ogre warchief
+Lodul
+
+@_Lodul_common_@
+
+w:5
+@_Lodul_rare_@
+%%%%
+_Lodul_common_
+
+@The_monster@ lets out a whooping war cry.
+
+VISUAL: @The_monster@ jingles a heavy purse and winks.
+
+@The_monster@ shouts @at_foe@, "Intruder!"
+
+@The_monster@ says @to_foe@, "I guard Vaults good! You no get in!"
+
+VISUAL: @The_monster@ stamps @possessive@ feet.
+%%%%
+_Lodul_rare_
+
+@The_monster@ says @to_foe@, "Work for me? I pay good."
+
+@The_monster@ shouts @at_foe@, "Taste the thunder!"
+
+VISUAL: @The_monster@ adjusts @possessive@ apparatus.
+
+@The_monster@ shouts, "Zap! Ha ha ha, made you jump."
+
+@The_monster@ roars, "I Iron Bound! You Brass... Trash!"
+%%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
 

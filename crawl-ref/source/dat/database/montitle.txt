@@ -171,6 +171,10 @@ Kirke title
 
 Kirke, Weaver of Myths
 %%%%
+Lodul title
+
+Lodul the Thundrous
+%%%%
 Lom Lobon title
 
 Lom Lobon, Demon Lord of Forbidden Knowledge

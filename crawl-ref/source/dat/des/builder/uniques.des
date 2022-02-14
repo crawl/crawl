@@ -181,6 +181,10 @@ NAME:   uniq_kirke
 DEPTH:  D:12-, Lair:4-, Elf:1, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Kirke band")
 
+NAME:   uniq_lodul
+DEPTH:  D:10-14
+: place_unique(_G, "Lodul band")
+
 NAME:   uniq_louise
 DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Louise")

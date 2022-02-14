@@ -1885,6 +1885,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('O') Lodul.
+    {  MST_LODUL,
+      {
+       { SPELL_CALL_DOWN_LIGHTNING, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('Q') Tengu.
     {  MST_SOJOBO,
       {

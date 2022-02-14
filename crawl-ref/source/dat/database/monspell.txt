@@ -128,7 +128,7 @@ Goad Beasts cast
 
 @The_monster@ goads on nearby beasts.
 %%%%
-ironbound thunderhulk cast
+Call Down Lightning cast
 
 Electricity crackles from @the_monster@'s apparatus.
 %%%%
