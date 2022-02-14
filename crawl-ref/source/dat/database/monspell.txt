@@ -524,6 +524,21 @@ Paralyse Xtahua cast
 
 @The_monster@ thunders ferociously @at@ @target@!
 %%%%
+Vv cast
+
+VISUAL:@The_monster@ gestures sharply.
+
+VISUAL:@The_monster@ stamps @possessive@ foot.
+
+VISUAL:@The_monster@ slams @possessive@ palms together.
+
+w:3
+VISUAL:@The_monster@ makes an elaborate arcing motion.
+%%%%
+unseen Vv cast
+
+You hear the sound of rock striking rock.
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

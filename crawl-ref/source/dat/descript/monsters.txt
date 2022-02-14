@@ -504,6 +504,13 @@ Vashnia
 An elite marksnaga who leads a skilled team of sharpshooters. She is
 particularly skilled in translocation magic.
 %%%%
+Vv
+
+One of the Stoneborn, formed untold aeons ago with supreme command over rock.
+Her people shelter deep within the living earth, so whatever has forced Vv
+into the oppressive openness of the Dungeon must be dire indeed. But whatever
+it is, she's not talking...
+%%%%
 Xtahua
 
 An ancient and mighty dragon.

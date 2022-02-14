@@ -368,6 +368,10 @@ NAME:   uniq_sojobo
 DEPTH:  Depths, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Sojobo band")
 
+NAME:   uniq_vv
+DEPTH:  Depths:2-, Zot:1-4, Crypt, Tomb
+: place_unique(_G, "Vv")
+
 NAME:   uniq_xtahua
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Xtahua")

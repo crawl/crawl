@@ -1990,6 +1990,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('9') Mobile constructs.
+    {  MST_VV,
+      {
+       { SPELL_ERUPTION, 20, MON_SPELL_MAGICAL },
+       { SPELL_PYROCLASTIC_SURGE, 40, MON_SPELL_MAGICAL },
+       { SPELL_CREEPING_FROST, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('@') Human (or close enough to) uniques.
     {  MST_JESSICA,
       {

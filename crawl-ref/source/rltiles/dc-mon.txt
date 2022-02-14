@@ -452,8 +452,10 @@ octopode MONS_OCTOPODE
 %sdir mon/animals
 bunyip MONS_BUNYIP
 
-## Golems ('8')
+## Golems ('9')
 %rim 0
+%sdir mon/unique
+vv MONS_VV
 %sdir mon/nonliving
 crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
@@ -470,7 +472,7 @@ toenail_golem MONS_TOENAIL_GOLEM
 flesh_golem MONS_FLESH_GOLEM
 %rim 1
 
-## Statues and statue-like things (also '8')
+## Statues and statue-like things ('8')
 %sdir mon/unique
 roxanne MONS_ROXANNE
 %sdir mon/statues

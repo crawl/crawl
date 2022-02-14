@@ -307,6 +307,10 @@ Vashnia title
 
 Vashnia the Elite Marksnaga
 %%%%
+Vv title
+
+Vv the Exile
+%%%%
 Xtahua title
 
 Xtahua the Ancient
