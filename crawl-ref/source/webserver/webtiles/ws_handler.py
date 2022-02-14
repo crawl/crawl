@@ -630,6 +630,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.username = username
         self.user_id, self.user_email, self.user_flags = userdb.get_user_info(username)
         self.logger.extra["username"] = username
+        if userdb.dgl_is_banned(self.user_flags):
+            # XX consolidate with other ban check / login fail code somehow.
+            # Also checked in userdb.user_passwd_match.
+            fail_reason = 'Account is disabled.'
+            self.logger.warning("Failed login for user %s: %s", self.username,
+                                    fail_reason)
+            self.send_message("login_fail", reason=fail_reason)
+            return
 
         def login_callback(result):
             success = result == 0

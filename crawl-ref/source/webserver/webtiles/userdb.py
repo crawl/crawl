@@ -121,6 +121,9 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[s
     """Returns the correctly cased username and a reason for failure."""
     passwd = passwd[0:config.get('max_passwd_length')]
 
+    # TODO: this all gets recollected when get_user_info is called shortly
+    # after on a succesful login, consolidate? (Mostly mitigated by token
+    # logins though)
     with crawl_db(config.get('password_db')) as db:
         query = """
             SELECT username, password, flags
@@ -131,6 +134,7 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[s
         db.c.execute(query, (username,))
         result = db.c.fetchone()  # type: Optional[Tuple[str, str, str]]
 
+    # a banned player should never return true for the password check
     if result and dgl_is_banned(result[2]):
         return result[0], 'Account is disabled.'
     elif result and crypt.crypt(passwd, result[1]) == result[1]:
