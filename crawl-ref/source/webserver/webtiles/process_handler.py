@@ -549,10 +549,20 @@ class CrawlProcessHandlerBase(object):
         except (OSError, IOError):
             pass
 
+    def account_restricted(self):
+        # convenience function to check the ws_handler data.
+        # this won't work with dgl games, but an account hold sets a dgl ban
+        # flag so they can't log in that way
+        r = self.get_primary_receiver()
+        return r and r.account_restricted()
+
     def lobby_entry(self):
+        u = self.username
+        if self.account_restricted():
+            u = "[account hold] " + u
         entry = {
             "id": self.id,
-            "username": self.username,
+            "username": u,
             "spectator_count": self.watcher_count(),
             "idle_time": (self.idle_time() if self.is_idle() else 0),
             "game_id": self.game_params["id"],

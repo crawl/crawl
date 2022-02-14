@@ -1061,6 +1061,16 @@ function (exports, $, key_conversion, chat, comm) {
         $("#admin_panel").show();
     }
 
+    function set_account_hold()
+    {
+        $("#account_restricted").show();
+    }
+
+    function clear_account_hold()
+    {
+        $("#account_restricted").hide();
+    }
+
     function login_required(data)
     {
         cleanup();
@@ -1195,7 +1205,10 @@ function (exports, $, key_conversion, chat, comm) {
 
     function make_watch_link(data)
     {
-        return "<a href='#watch-" + data.username + "'></a>";
+        if (data.username.startsWith("[account hold]"))
+            return "<b></b>"; // don't linkify, watching disabled
+        else
+            return "<a href='#watch-" + data.username + "'></a>";
     }
 
     function format_duration(seconds)
@@ -1503,6 +1516,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         "go_lobby": go_lobby,
         "go_admin": go_admin,
+        "set_account_hold": set_account_hold,
+        "clear_account_hold": clear_account_hold,
         "login_required": login_required,
         "game_started": crawl_started,
         "game_ended": crawl_ended,

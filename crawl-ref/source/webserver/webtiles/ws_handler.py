@@ -51,11 +51,14 @@ def do_lobby_updates():
         if not game.process:
             # handled immediately in `remove_in_lobbys`, ignore here
             continue
+        admin_only = game.account_restricted()
 
         game_entry = game.lobby_entry()
         # Queue up the collected lobby changes in each socket. This loop is
         # synchronous.
         for socket in lobby_sockets:
+            if admin_only and not socket.is_admin():
+                continue
             socket.queue_message("lobby_entry", **game_entry)
 
     # ...and finally, flush all the updates. This loop may be asynchronous.
@@ -95,7 +98,7 @@ def write_dgl_status_file():
                              str(socket.process.idle_time()),
                              str(socket.process.watcher_count()))
                         for socket in list(sockets)
-                        if socket.username and socket.is_running()]
+                        if socket.username and socket.show_in_lobby()]
     try:
         status_target = config.get('dgl_status_file')
         status_dir = os.path.dirname(status_target)
@@ -341,13 +344,26 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def is_in_lobby(self):
         return not self.is_running() and self.watched_game is None
 
-    def send_lobby(self):
+    def send_lobby_data(self):
         self.queue_message("lobby_clear")
         from webtiles.process_handler import processes
         for process in list(processes.values()):
+            if process.account_restricted() and not self.is_admin():
+                continue
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
+
+    def send_lobby(self):
+        self.send_lobby_data()
         self.send_lobby_html()
+
+    def account_restricted(self):
+        return not self.username or userdb.dgl_account_hold(self.user_flags)
+
+    def show_in_lobby(self):
+        return (self.is_running()
+            and self.process.process
+            and not self.account_restricted())
 
     def send_announcement(self, text):
         # TODO: something in lobby?
@@ -654,8 +670,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             self.queue_message("login_success", username=username,
                                admin=self.is_admin())
+            if self.account_restricted():
+                self.queue_message("set_account_hold")
             if self.watched_game:
                 self.watched_game.update_watcher_description()
+            elif self.is_admin():
+                self.send_lobby()
             else:
                 self.send_lobby_html()
 
@@ -765,11 +785,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.is_running():
             self.process.stop()
 
+        if self.account_restricted():
+            self.send_message("login_fail", reason="Account restricted; spectating unavailable")
+            self.go_lobby()
+            return
+
         from webtiles.process_handler import processes
         procs = [process for process in list(processes.values())
                  if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
+            r = process.get_primary_receiver()
+            if r and r.account_restricted():
+                self.go_lobby()
+                return
             if self.watched_game:
                 if self.watched_game == process:
                     return
@@ -794,9 +823,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             receiver = self.watched_game
 
         if receiver:
+            if self.account_restricted():
+                self.send_message("chat",
+                        content='Account restricted; chat unavailable')
+                return
             if self.username is None:
-                self.send_message("chat", content
-                                  = 'You need to log in to send messages!')
+                self.send_message("chat",
+                        content='You need to log in to send messages!')
                 return
 
             if not receiver.handle_chat_command(self, text):
@@ -818,7 +851,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def change_password(self, cur_password, new_password):
         if self.username is None:
-            self.send_message("change_password_fail", reason = "You need to log in to change your password.")
+            self.send_message("change_password_fail",
+                    reason="You need to log in to change your password.")
+            return
+
+        if self.account_restricted():
+            self.send_message("change_password_fail",
+                    reason="Account restricted; change password unavailable.")
             return
 
         if not userdb.user_passwd_match(self.username, cur_password):
@@ -842,6 +881,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def change_email(self, email):
         if self.username is None:
             self.send_message("change_email_fail", reason = "You need to log in to change your email")
+            return
+        if self.account_restricted():
+            self.send_message("change_email_fail",
+                    reason="Account restricted; change email unavailable.")
             return
         error = userdb.change_email(self.user_id, email)
         if error is None:

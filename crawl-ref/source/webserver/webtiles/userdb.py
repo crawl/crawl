@@ -86,18 +86,22 @@ def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
 # from dgamelaunch.h
 DGLACCT_ADMIN = 1
 DGLACCT_LOGIN_LOCK = 2
-DGLACCT_PASSWD_LOCK = 4 # unused by crawl
-DGLACCT_EMAIL_LOCK = 8  # unused by crawl
+DGLACCT_PASSWD_LOCK = 4 # used by webtiles only for account holds
+DGLACCT_EMAIL_LOCK = 8  # used by webtiles only for account holds
 
+# not used by dgamelaunch, used by webtiles
+DGLACCT_ACCOUNT_HOLD = 16
 
 def dgl_is_admin(flags):  # type: (int) -> bool
     return bool(flags & DGLACCT_ADMIN)
 
 
 def dgl_is_banned(flags):  # type: (int) -> bool
-    return bool(flags & DGLACCT_LOGIN_LOCK)
+    return bool(flags & DGLACCT_LOGIN_LOCK) and not dgl_account_hold(flags)
 
-# TODO: something with other lock flags?
+
+def dgl_account_hold(flags):  # type: (int) -> bool
+    return bool(flags & DGLACCT_ACCOUNT_HOLD)
 
 
 def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
@@ -199,6 +203,10 @@ def encrypt_pw(passwd):  # type: (str) -> str
 
 def register_user(username, passwd, email):  # type: (str, str, str) -> Optional[str]
     """Returns an error message or None on success."""
+    if config.get('new_accounts_disabled'):
+        # XX show a message before they enter form data...
+        return "New account creation is disabled."
+
     if passwd == "":
         return "The password can't be empty!"
     if email:  # validate the email only if it is provided
@@ -207,7 +215,9 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
             return result
     username = username.strip()
     if not re.match(config.get('nick_regex'), username):
-        return "Invalid username!"
+        return "Account creation failed."
+    if config.get('nick_check_fun') and not config.get('nick_check_fun')(username):
+        return "Account creation failed."
 
     crypted_pw = encrypt_pw(passwd)
 
@@ -219,14 +229,19 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
     if result:
         return "User already exists!"
 
+    flags = 0
+    if config.get('new_accounts_hold'):
+        flags = (flags | DGLACCT_LOGIN_LOCK | DGLACCT_EMAIL_LOCK
+                       | DGLACCT_PASSWD_LOCK | DGLACCT_ACCOUNT_HOLD)
+
     with crawl_db(config.get('password_db')) as db:
         query = """
             INSERT INTO dglusers
                 (username, email, password, flags, env)
             VALUES
-                (?, ?, ?, 0, '')
+                (?, ?, ?, ?, '')
         """
-        db.c.execute(query, (username, email, crypted_pw))
+        db.c.execute(query, (username, email, crypted_pw, flags))
         db.conn.commit()
 
     return None
@@ -238,6 +253,19 @@ def change_password(userid, passwd):
     crypted_pw = encrypt_pw(passwd)
 
     with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, flags
+            FROM dglusers
+            WHERE username=?
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (username,))
+        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+        if not result:
+            return "Invalid username!"
+        if (result[1] & DGLACCT_PASSWD_LOCK):
+            return "Account has a password lock!"
+
         db.c.execute("update dglusers set password=? where id=?",
                      (crypted_pw, userid))
         # invalidate any recovery tokens that might exist, even for normal
@@ -255,6 +283,18 @@ def change_email(user_id, email):  # type: (str, str) -> Optional[str]
         return result
 
     with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, flags
+            FROM dglusers
+            WHERE username=?
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (username,))
+        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+        if not result:
+            return "Invalid username!"
+        if result[1] & DGLACCT_EMAIL_LOCK:
+            return "Account has an email lock!"
         db.c.execute("update dglusers set email=? where id=?", (email, user_id))
         db.conn.commit()
 
@@ -272,6 +312,7 @@ def set_ban(username, banned=True):
         result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
         if not result:
             return "Invalid username!"
+
         if banned and dgl_is_banned(result[1]):
             return "User '%s' is already banned." % username
         elif not banned and not dgl_is_banned(result[1]):
@@ -279,10 +320,55 @@ def set_ban(username, banned=True):
         if banned and dgl_is_admin(result[1]):
             return "Remove admin flag before banning."
 
+        # this is more of a sanity check than anything, the cli clears both
+        if not banned and (result[1] & DGLACCT_ACCOUNT_HOLD):
+            return "Clear account hold to clear ban flag"
+
         if banned:
-            new_flags = result[1] | DGLACCT_LOGIN_LOCK
+            # escalate from an account hold to a ban if necessary
+            new_flags = result[1] & ~DGLACCT_ACCOUNT_HOLD
+            new_flags = new_flags | DGLACCT_LOGIN_LOCK
         else:
-            new_flags = result[1] & ~DGLACCT_LOGIN_LOCK
+            # clean up any lingering lock flags
+            new_flags = result[1] & ~(DGLACCT_LOGIN_LOCK
+                                        | DGLACCT_EMAIL_LOCK
+                                        | DGLACCT_PASSWD_LOCK)
+        db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
+                    (new_flags, result[0]))
+        db.c.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                     (result[0],))
+        db.conn.commit()
+    return None
+
+
+def set_account_hold(username, hold=True):
+    with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, flags
+            FROM dglusers
+            WHERE username=?
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (username,))
+        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+        if not result:
+            return "Invalid username!"
+        # this will override bans
+        if hold and dgl_account_hold(result[1]):
+            return "User '%s' is already on hold." % username
+        elif not hold and not dgl_account_hold(result[1]):
+            return "User '%s' isn't currently on hold." % username
+        if hold and dgl_is_admin(result[1]):
+            return "Remove admin flag before setting an account hold."
+
+        # account holds set the ban flag so that dgamelaunch can't be used to
+        # get around the restrictions. XX dgamelaunch messaging wording?
+        hold_flags = (DGLACCT_LOGIN_LOCK | DGLACCT_EMAIL_LOCK
+                        | DGLACCT_PASSWD_LOCK | DGLACCT_ACCOUNT_HOLD)
+        if hold:
+            new_flags = result[1] | hold_flags
+        else:
+            new_flags = result[1] & ~hold_flags
         db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
                     (new_flags, result[0]))
         db.c.execute("DELETE FROM recovery_tokens WHERE user_id=?",
@@ -301,7 +387,9 @@ def get_bans():
         """
         db.c.execute(query, (DGLACCT_LOGIN_LOCK,))
         result = db.c.fetchall()
-        return [x[1] for x in result]
+        bans = [x[1] for x in result if dgl_is_banned(x[2])]
+        holds = [x[1] for x in result if dgl_account_hold(x[2])]
+        return (bans, holds)
 
 
 def find_recovery_token(token):

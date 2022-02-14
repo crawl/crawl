@@ -151,8 +151,13 @@ ssl_port = 8081
 
 # kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 
+# a nick is allowed if it matches this regex
 # nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 # max_passwd_length = 20
+
+# or you can define a function that returns true on an acceptable nick:
+# def nick_check_fun(s):
+#     return s != "plog"
 
 # Set to True to allow users to request a password reset email. Some settings
 # must be properly configured for this to work:
@@ -211,6 +216,13 @@ pidfile = None
 # For example: "http://crawl.akrasiac.org/scoring/players/%s.html"
 # Set to None to disable player page hyperlinks
 player_url = None
+
+# set one of these for various moderation modes. Disabled preempts hold. In
+# account hold mode, new accounts cannot use chat, cannot spectate, and do
+# not appear in the lobby until explicitly approved by an admin. They can still
+# play. (Of course, they can still log out and spectate as anon.)
+# new_accounts_disabled = True
+# new_accounts_hold = True
 
 # Only for development:
 # This is insecure; do not set development_mode = True in production!
