@@ -4243,8 +4243,8 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     // attempting to enslave monsters that might be affected.
     else if (flavour == BEAM_CHARM)
     {
-        string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
-        if (rude_stop_summoning_prompt(verb))
+        const string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
+        if (stop_summoning_prompt(monster_info(mon).resists(), verb))
         {
             beam_cancelled = true;
             finish_beam();

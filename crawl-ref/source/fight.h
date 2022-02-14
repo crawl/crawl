@@ -8,6 +8,7 @@
 #include <list>
 #include <functional>
 
+#include "mon-enum.h"
 #include "target.h"
 #include "wu-jian-attack-type.h"
 
@@ -84,8 +85,9 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
 
-string rude_stop_summoning_reason();
-bool rude_stop_summoning_prompt(string verb = "summon");
+string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
+bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
+                           string verb = "summon");
 
 bool can_reach_attack_between(coord_def source, coord_def target,
                               reach_type range);

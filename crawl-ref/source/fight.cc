@@ -1165,17 +1165,17 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     }
 }
 
-string rude_stop_summoning_reason()
+string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
 {
-    if (you.duration[DUR_TOXIC_RADIANCE])
+    if (get_resist(resists, MR_RES_POISON) <= 0
+        && you.duration[DUR_TOXIC_RADIANCE])
+    {
         return "toxic aura";
-
-    if (you.duration[DUR_NOXIOUS_BOG])
+    }
+    if (you.duration[DUR_NOXIOUS_BOG] && !(flags & M_FLIES))
         return "noxious bog";
-
     if (you.duration[DUR_VORTEX])
         return "polar vortex";
-
     return "";
 }
 
@@ -1186,32 +1186,31 @@ string rude_stop_summoning_reason()
  * penance prompt, because we don't cause penance when monsters enter line of
  * sight when OTR is active, regardless of how they entered LOS.
  *
- * @param verb    The verb to be used in the prompt. Defaults to "summon".
- * @return        True if the player wants to abort.
+ * @param resists   What does the summon resist?
+ * @param verb      The verb to be used in the prompt.
+ * @return          True if the player wants to abort.
  */
-bool rude_stop_summoning_prompt(string verb)
+bool stop_summoning_prompt(resists_t resists, string verb)
 {
-    string which = rude_stop_summoning_reason();
-
-    if (which.empty())
+    if (crawl_state.disables[DIS_CONFIRMATIONS]
+        || crawl_state.which_god_acting() == GOD_XOM)
+    {
         return false;
+    }
 
-    if (crawl_state.disables[DIS_CONFIRMATIONS])
-        return false;
-
-    if (crawl_state.which_god_acting() == GOD_XOM)
+    // TODO: take flags as well (or a set of monster types..?)
+    const string noun = stop_summoning_reason(resists, M_NO_FLAGS);
+    if (noun.empty())
         return false;
 
     string prompt = make_stringf("Really %s while emitting a %s?",
-                                 verb.c_str(), which.c_str());
+                                 verb.c_str(), noun.c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
-    else
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
+
+    canned_msg(MSG_OK);
+    return true;
 }
 
 bool can_reach_attack_between(coord_def source, coord_def target,
