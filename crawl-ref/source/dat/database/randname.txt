@@ -750,7 +750,7 @@ w:5
 "Gaze Upon Infinity"
 
 w:5
-"I Knew You'd Do That"
+"I Foresaw This"
 
 w:5
 of Ouranomancy
@@ -1132,7 +1132,7 @@ heavily jewelled
 
 ichor-stained
 
-distressingly furry
+surprisingly fuzzy
 
 tattered
 
@@ -1168,7 +1168,7 @@ jewelled
 
 ichor-stained
 
-distressingly furry
+surprisingly fuzzy
 
 spiked
 
