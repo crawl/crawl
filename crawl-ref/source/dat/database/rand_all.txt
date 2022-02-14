@@ -626,6 +626,8 @@ Lies
 
 Lives
 
+Loafs
+
 Lovers
 
 Mice
@@ -964,9 +966,13 @@ Barnacled
 
 Beastly
 
-Bedazzling
+Bedazzled
 
 Bellicose
+
+Beloved
+
+Bequeathed
 
 Bespelled
 
@@ -974,13 +980,23 @@ Bright
 
 Burning
 
+Bursted
+
+w:5
 Burnt
 
 Carved
 
 Caustic
 
+Clean
+
 Cleverly Designed
+
+Charmed
+
+w:5
+Charred
 
 Contumacious
 
@@ -1018,6 +1034,8 @@ Eye-covered
 
 Fabulous
 
+Fae
+
 Feral
 
 Ferocious
@@ -1029,6 +1047,8 @@ Filigreed
 Floral
 
 Freezing
+
+Fresh
 
 w:5
 Futuristic
@@ -1050,6 +1070,8 @@ Hairy
 Haunted
 
 Histrionic
+
+Impish
 
 Indestructible
 
@@ -1092,6 +1114,8 @@ Puckish
 
 Quiescent
 
+Quick
+
 Reasonable
 
 Resonant
@@ -1099,6 +1123,8 @@ Resonant
 Rotten
 
 Sandy
+
+Scuffed
 
 Sharp
 
@@ -1121,6 +1147,8 @@ Sufficient
 
 Tentacled
 
+Terrible
+
 Toothy
 
 Tortured
@@ -1128,6 +1156,8 @@ Tortured
 Transparent
 
 Ubiquitous
+
+Unbearable
 
 Verdant
 
