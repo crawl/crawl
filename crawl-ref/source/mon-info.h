@@ -207,6 +207,8 @@ enum monster_info_flags
     MB_RES_DROWN,
     MB_ANGUISH,
     MB_CLARITY,
+    MB_DISTRACTED_ONLY,
+    MB_CANT_SEE_YOU,
     NUM_MB_FLAGS
 };
 

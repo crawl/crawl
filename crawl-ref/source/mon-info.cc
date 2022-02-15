@@ -19,6 +19,7 @@
 #include "coordit.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "ghost.h"
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
@@ -655,6 +656,15 @@ monster_info::monster_info(const monster* m, int milev)
         monster_info_flags flag = ench_to_mb(*m, entry.first);
         if (flag != NUM_MB_FLAGS)
             mb.set(flag);
+    }
+
+    if (!m->friendly())
+    {
+        const stab_type st = find_stab_type(&you, *m, false);
+        if (st == STAB_INVISIBLE && !mb[MB_BLIND])
+            mb.set(MB_CANT_SEE_YOU);
+        else if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
+            mb.set(MB_DISTRACTED_ONLY);
     }
 
     if (type == MONS_SILENT_SPECTRE)
