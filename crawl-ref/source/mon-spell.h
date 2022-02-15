@@ -1613,6 +1613,14 @@ static const mon_spellbook mspell_list[] =
     // Uniques' spellbooks
     // ---------------------
 
+    // ('a') "Ancients".
+    {  MST_ZENATA,
+      {
+       { SPELL_RESONANCE_STRIKE, 40, MON_SPELL_WIZARD },
+       { SPELL_SHEZAS_DANCE, 30, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('c') Centaurs and such.
     {  MST_NESSOS,
       {

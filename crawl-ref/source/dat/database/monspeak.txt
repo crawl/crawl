@@ -6345,6 +6345,44 @@ _Xtahua_rare_
 @The_monster@ roars, "BAH! BLOODY ADVENTURERS." @player_only@
 ## END Xtahua ##
 %%%%
+############ ZENATA ### A cultist of constructs
+Zenata
+
+@_Zenata_common_@
+
+w:5
+@_Zenata_rare_@
+%%%%
+_Zenata_common_
+
+VISUAL:@The_monster@ polishes a blade.
+
+Strange mechanisms whir as @The_monster@ focuses on @foe@.
+
+VISUAL:A stray blade cuts @The_monster@'s own flesh. She ignores it.
+
+# A Deepness in the Sky, more or less
+@The_monster@ howls @at_foe@, "I'll flense you until there's nothing left!"
+
+@The_monster@ shouts @at_foe@, "I'll hammer you into slag!"
+
+@The_monster@ screams, "I nearly understand... Get out of my way!"
+%%%%
+_Zenata_rare_
+
+@The_monster@ says, "Look what I've done to myself! Think you can do worse?"
+
+@The_monster@ laughs @at_foe@, "Think you're sharper than me?"
+
+# SHODAN!
+@The_monster@ scoffs, "How can you challenge a perfect, immortal machine?"
+
+@The_monsters@ wonders, "When I cut you open, what secrets will I find?"
+
+@The_monster@ mutters, "I can hear her whispering... but she's dead. She's dead!"
+
+@The_monster@ says, "I'll bring them back. Then they'll show me... everything..."
+%%%%
 ##########################################
 # Specific non-unique monsters
 ##########################################
