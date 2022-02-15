@@ -4244,8 +4244,9 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     else if (flavour == BEAM_CHARM)
     {
         string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
+        monster_info mi = monster_info(mon);
 
-        bool stop = mon->res_poison() <= 0
+        bool stop = get_resist(mi.resists(), MR_RES_POISON) <= 0
                   ? rude_stop_summoning_prompt(verb)
                   : stop_summoning_poison_immune_prompt(verb);
 
