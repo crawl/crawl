@@ -4250,7 +4250,8 @@ void bolt::handle_stop_attack_prompt(monster* mon)
                   ? rude_stop_summoning_prompt(verb)
                   : stop_summoning_poison_immune_prompt(verb);
 
-        if (stop) {
+        if (stop) 
+        {
             beam_cancelled = true;
             finish_beam();
             prompted = true;
