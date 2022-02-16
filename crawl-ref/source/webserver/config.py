@@ -77,6 +77,11 @@ game_data_no_cache = True
 #    by default loads games as defined in `games.d/*.yaml`).
 #
 # All options in this config are documented in games.d/base.yaml.
+# the directory name can be changed with `games_config_dir`, and set to None
+# to disable yaml loading.
+# games_config_dir = None
+
+# Example of a games dictionary:
 games = OrderedDict([
     ("dcss-web-trunk", dict(
         name = "Play trunk",

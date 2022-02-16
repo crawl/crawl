@@ -46,16 +46,19 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
        the mismatch of settings between the player and new spectators might
        cause spectating to fail until the player restarts with new settings.
     """
-    conf_subdir = "games.d"
     import webtiles.config
-    base_path = os.path.join(webtiles.config.server_path, conf_subdir)
-    if not os.path.exists(base_path):
-        logging.warn("YAML game data directory does not exist: '%s'" % base_path)
-        return existing_games
-    delta = collections.OrderedDict()  # type: GamesConfig
-    delta_messages = []
+    conf_subdir = webtiles.config.get('games_config_dir')
     new_games = collections.OrderedDict()  # type: GamesConfig
     new_games.update(existing_games)
+    if not conf_subdir:
+        logging.info("Skipping game data directory")
+        return new_games
+    base_path = os.path.join(webtiles.config.server_path, conf_subdir)
+    if not os.path.exists(base_path):
+        logging.warn("Game data directory for YAML configuration does not exist: '%s'" % base_path)
+        return new_games
+    delta = collections.OrderedDict()  # type: GamesConfig
+    delta_messages = []
     for file_name in sorted(os.listdir(base_path)):
         path = os.path.join(base_path, file_name)
         if not file_name.endswith('.yaml') and not file_name.endswith('.yml'):

@@ -107,6 +107,7 @@ defaults = {
     'no_cache': False,
     'live_debug': False,
     'lobby_update_rate': 2,
+    'games_config_dir': 'games.d',
 }
 
 def get(key, default=None):
