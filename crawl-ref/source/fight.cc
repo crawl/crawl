@@ -1165,34 +1165,34 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     }
 }
 
-static string stop_summoning_poison_immune_reason()
+static bool stop_summoning_prompt(string verb,
+                                  duration_type effects[],
+                                  unsigned short size)
 {
-    if (you.duration[DUR_NOXIOUS_BOG])
-        return "noxious bog";
-
-    if (you.duration[DUR_VORTEX])
-        return "polar vortex";
-
-    return "";
-}
-
-static string rude_stop_summoning_reason()
-{
-    if (you.duration[DUR_TOXIC_RADIANCE])
-        return "toxic aura";
-
-    return stop_summoning_poison_immune_reason();
-}
-
-static bool stop_summoning_prompt(string verb, string which)
-{
-    if (which.empty())
-        return false;
-
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
 
     if (crawl_state.which_god_acting() == GOD_XOM)
+        return false;
+
+    static map<duration_type, string> dungerous_effects_messages = {
+        {DUR_TOXIC_RADIANCE, "toxic aura"},
+        {DUR_NOXIOUS_BOG,    "noxious bog"},
+        {DUR_VORTEX,         "polar vortex"},
+    };
+
+    string which = "";
+
+    for (unsigned short i = 0; i < size; i++)
+    {
+        const duration_type checked_effect = effects[i];
+
+        if (you.duration[checked_effect]) {
+            which = dungerous_effects_messages[checked_effect];
+        }
+    }
+
+    if (which.empty())
         return false;
 
     string prompt = make_stringf("Really %s while emitting a %s?",
@@ -1200,11 +1200,9 @@ static bool stop_summoning_prompt(string verb, string which)
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
-    else
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
+
+    canned_msg(MSG_OK);
+    return true;
 }
 
 /**
@@ -1217,14 +1215,16 @@ static bool stop_summoning_prompt(string verb, string which)
  * @param verb    The verb to be used in the prompt. Defaults to "summon".
  * @return        True if the player wants to abort.
  */
-bool rude_stop_summoning_prompt(string verb)
+bool stop_summoning_prompt(string verb)
 {
-    return stop_summoning_prompt(verb, rude_stop_summoning_reason());
+    static duration_type effects[3] = {DUR_TOXIC_RADIANCE, DUR_NOXIOUS_BOG, DUR_VORTEX};
+    return stop_summoning_prompt(verb, effects, 3);
 }
 
-bool stop_summoning_poison_immune_prompt(string verb)
+bool stop_summoning_poison_resistance_prompt(string verb)
 {
-    return stop_summoning_prompt(verb, stop_summoning_poison_immune_reason());
+    static duration_type effects[2] = {DUR_NOXIOUS_BOG, DUR_VORTEX};
+    return stop_summoning_prompt(verb, effects, 2);
 }
 
 bool can_reach_attack_between(coord_def source, coord_def target,

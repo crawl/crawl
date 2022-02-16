@@ -4245,12 +4245,12 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     {
         string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
         monster_info mi = monster_info(mon);
+        bool has_rpois = get_resist(mi.resists(), MR_RES_POISON) > 0;
 
-        bool stop = get_resist(mi.resists(), MR_RES_POISON) <= 0
-                  ? rude_stop_summoning_prompt(verb)
-                  : stop_summoning_poison_immune_prompt(verb);
+        bool stop = has_rpois ? stop_summoning_poison_resistance_prompt(verb)
+                              : stop_summoning_prompt(verb);
 
-        if (stop) 
+        if (stop)
         {
             beam_cancelled = true;
             finish_beam();

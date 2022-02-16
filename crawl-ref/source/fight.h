@@ -84,8 +84,8 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
 
-bool rude_stop_summoning_prompt(string verb = "summon");
-bool stop_summoning_poison_immune_prompt(string verb = "summon");
+bool stop_summoning_prompt(string verb = "summon");
+bool stop_summoning_poison_resistance_prompt(string verb = "summon");
 
 bool can_reach_attack_between(coord_def source, coord_def target,
                               reach_type range);
