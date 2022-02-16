@@ -5081,12 +5081,29 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (brdepth[mspec.place.branch] > 1)
         {
             if (type == RANDOM_SUPER_OOD)
-                mspec.place.depth = mspec.place.depth * 2 + 4; // TODO: why?
-            else if (type == RANDOM_MODERATE_OOD)
-                mspec.place.depth += 5;
+            {
+                // Super OODs use 2*depth + 4 which goes very deep, generating
+                // a guaranteed "boss" for vaultsmiths to use. In dungeon it
+                // ramps up slowly from 2*depth in the range D:1-8 (becoming
+                // deeper than a moderate OOD a from D:6-) to the full meaning
+                // at D:12.
+                int plus = 4;
+                if (mspec.place.branch == BRANCH_DUNGEON)
+                    plus = max(0, min(mspec.place.depth - 8, 4));
 
-            if (mspec.place.branch == BRANCH_DUNGEON && starting_depth <= 8)
-                mspec.place.depth = min(mspec.place.depth, starting_depth * 2);
+                mspec.place.depth = mspec.place.depth * 2 + plus;
+            }
+            else if (type == RANDOM_MODERATE_OOD)
+            {
+                mspec.place.depth += 5;
+                // From D:1-4 moderate OODs are capped at depth * 2, starting
+                // on D:5 this cap no longer does anything.
+                if (mspec.place.branch == BRANCH_DUNGEON)
+                {
+                    mspec.place.depth = min(mspec.place.depth,
+                                            starting_depth * 2);
+                }
+            }
         }
         fuzz_ood = false;
         type = RANDOM_MONSTER;
