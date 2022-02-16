@@ -375,12 +375,13 @@ def reset_token_commands(args):
 
 
 def ban_commands(args):
-    if args.list:
+    if args.list or args.list_holds:
         banned, held = userdb.get_bans()
-        if len(banned):
-            print("Banned users: " + ", ".join(banned))
-        else:
-            print("No banned users!")
+        if args.list:
+            if len(banned):
+                print("Banned users: " + ", ".join(banned))
+            else:
+                print("No banned users!")
         if len(held):
             print("Account holds: " + ", ".join(held))
         else:
@@ -449,6 +450,8 @@ def parse_args_util():
     parser_ban.add_argument('--clear', type=str, help='Clear a ban/hold for a user.')
     parser_ban.add_argument('--list', action='store_true',
             help='List current banned users and account holds.')
+    parser_ban.add_argument('--list-holds', action='store_true',
+            help='List current account holds.')
     parser_ban.add_argument ('--clear-holds', action='store_true',
             help='Clear all current account holds')
     result = parser.parse_args()
@@ -456,7 +459,7 @@ def parse_args_util():
     if result.mode == "password" and not result.reset and not result.clear_reset:
         parser_pw.print_help()
         sys.exit()
-    elif result.mode == "ban" and not result.add and not result.clear and not result.list and not result.hold and not result.clear_holds:
+    elif result.mode == "ban" and not result.add and not result.clear and not result.list and not result.hold and not result.clear_holds and not result.list_holds:
         parser_ban.print_help()
         sys.exit()
 
