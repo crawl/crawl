@@ -509,6 +509,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not self.client_closed:
             self.reset_timeout()
 
+    def update_db_info(self):
+        self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
+        self.logger.extra["username"] = self.username
+        if userdb.dgl_is_banned(self.user_flags):
+            return False
+        return True
+
     def start_crawl(self, game_id):
         if config.get('dgl_mode') and game_id not in config.games:
             self.go_lobby()
@@ -534,6 +541,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # invalidate cached save info for lobby
         # TODO: invalidate for other sockets of the same player?
         self.invalidate_saveslot_cache(game_id)
+
+        # update flags in case an account hold has been released or added, or
+        # the player has been banned.
+        if not self.update_db_info():
+            self.go_lobby()
+            return
 
         from webtiles import process_handler
 
@@ -644,9 +657,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def do_login(self, username):
         self.username = username
-        self.user_id, self.user_email, self.user_flags = userdb.get_user_info(username)
-        self.logger.extra["username"] = username
-        if userdb.dgl_is_banned(self.user_flags):
+        if not self.update_db_info():
             # XX consolidate with other ban check / login fail code somehow.
             # Also checked in userdb.user_passwd_match.
             fail_reason = 'Account is disabled.'
@@ -785,8 +796,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.is_running():
             self.process.stop()
 
+        if not self.update_db_info():
+            self.go_lobby()
+            return
+
         if self.account_restricted():
-            self.send_message("login_fail", reason="Account restricted; spectating unavailable")
+            self.send_message("auth_error",
+                        reason="Account restricted; spectating unavailable")
             self.go_lobby()
             return
 
@@ -850,6 +866,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.send_message("start_change_password")
 
     def change_password(self, cur_password, new_password):
+        if not self.update_db_info():
+            self.send_message("change_password_fail", reason="Account is disabled")
+            return
+
         if self.username is None:
             self.send_message("change_password_fail",
                     reason="You need to log in to change your password.")
@@ -867,7 +887,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         error = userdb.change_password(self.user_id, new_password)
         if error is None:
-            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
             self.logger.info("User %s changed password.", self.username)
             self.send_message("change_password_done")
         else:
@@ -879,6 +898,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.send_message("start_change_email", email = self.user_email)
 
     def change_email(self, email):
+        if not self.update_db_info():
+            self.send_message("change_email_fail", reason="Account is disabled")
+            return
+
         if self.username is None:
             self.send_message("change_email_fail", reason = "You need to log in to change your email")
             return
@@ -888,9 +911,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         error = userdb.change_email(self.user_id, email)
         if error is None:
-            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
-            self.logger.info("User %s changed email to %s.", self.username, email if email else "null")
-            self.send_message("change_email_done", email = email)
+            self.update_db_info()
+            self.logger.info("User %s changed email to %s.",
+                self.username, self.user_email if self.user_email else "null")
+            self.send_message("change_email_done", email = self.user_email)
         else:
             self.logger.info("Failed to change username for %s: %s", self.username, error)
             self.send_message("change_email_fail", reason = error)
@@ -932,7 +956,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         if self.is_running():
             self.process.stop()
-        elif self.watched_game:
+
+        if self.username and userdb.dgl_is_banned(self.user_flags):
+            # force a logout. Note that this doesn't check the db at this point
+            # in order to reduce i/o a bit.
+            fail_reason = 'Account is disabled.'
+            self.logger.warning("Logging out user %s: %s", self.username,
+                                    fail_reason)
+            self.username = self.user_email = self.user_flags = self.user_id = None
+            self.send_message("go_lobby")
+            self.send_lobby_html()
+            self.send_message("logout", reason=fail_reason)
+            return
+
+        if self.watched_game:
             self.stop_watching()
             self.send_message("go_lobby")
             self.send_lobby()

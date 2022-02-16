@@ -459,17 +459,18 @@ function (exports, $, key_conversion, chat, comm) {
         return false;
     }
 
-    function login_failed(data)
+    function auth_error(data)
     {
         var reason = data.reason;
         if (reason)
-        {
             $("#login_message").html(reason);
-        }
         else
-        {
             $("#login_message").html("Login failed.");
-        }
+    }
+
+    function login_failed(data)
+    {
+        auth_error(data);
         $("#login_form").show();
         $("#reg_link").show();
         $("#forgot_link").show();
@@ -522,7 +523,13 @@ function (exports, $, key_conversion, chat, comm) {
         return $.cookie("login");
     }
 
-    function logout()
+    function handle_logout(data)
+    {
+        logout(false);
+        auth_error(data);
+    }
+
+    function logout(force_reload=true)
     {
         if (get_login_cookie())
         {
@@ -533,9 +540,21 @@ function (exports, $, key_conversion, chat, comm) {
         }
         current_user = null;
         admin_user = false;
+        $("#login_form").show();
+        $("#reg_link").show();
+        $("#forgot_link").show();
+        $('#chem_link').hide();
+        $('#chpw_link').hide();
+        $("#logout_link").hide();
+        $("#play_now").html("");
+
         $("#admin_panel_button").hide();
         $("#admin_panel").hide();
-        location.reload();
+        // unless this results from a player click directly, it'll prompt the
+        // player. So we skip it for a logout message from the server. This
+        // *should* be ok, maybe with some glitches.
+        if (force_reload)
+            location.reload();
     }
 
     function toggle_admin_panel()
@@ -1525,6 +1544,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         "login_success": logged_in,
         "login_fail": login_failed,
+        "auth_error": auth_error,
+        "logout": handle_logout,
         "login_cookie": set_login_cookie,
         "register_fail": register_failed,
         "start_change_email": start_change_email,
