@@ -1148,7 +1148,7 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
 spret cast_malign_gateway(actor * caster, int pow, god_type god,
                           bool fail, bool test)
 {
-    if (caster->is_player() && rude_stop_summoning_prompt())
+    if (!test && caster->is_player() && stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     coord_def point = find_gateway_location(caster);
