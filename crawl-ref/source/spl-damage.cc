@@ -1676,8 +1676,11 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     beam.source = wielder->pos();
     beam.target = where;
     beam.hit = AUTOMATIC_HIT;
-    beam.loudness = 7;
     beam.explode();
+
+    // We need to do this separately from the beam, since explosions reset
+    // noise values & visual beams don't cause noise regardless.
+    noisy(7, where);
 
     counted_monster_list affected_monsters;
     for (adjacent_iterator ai(where, false); ai; ++ai)
