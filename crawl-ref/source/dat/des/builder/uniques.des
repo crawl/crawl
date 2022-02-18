@@ -311,17 +311,17 @@ MONS:   the Enchantress band
 : place_unique(_G, "the Enchantress band")
 
 NAME:   uniq_frederick
-DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Frederick")
 
 NAME:   uniq_jory
-DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Jory")
 
 NAME:   uniq_josephina
 # Higher weight to compensate for Josephine.
 WEIGHT: 15
-DEPTH:  Depths:2-, Zot:1-4, Crypt, Tomb
+DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Josephine")
 
 NAME:   uniq_margery
@@ -333,7 +333,7 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 
 NAME:   uniq_mara
 DEPTH:  Depths, !Depths:$, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-
-DEPTH:  Vaults:2-, Crypt, Tomb
+DEPTH:  Vaults:2-
 : place_unique(_G, "Mara")
 
 NAME:   uniq_mennas
@@ -357,7 +357,7 @@ DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
 
 NAME:   uniq_parghit
-DEPTH:  Depths:3-, Zot:1-4, Crypt, Tomb
+DEPTH:  Depths:3-, Zot:1-4
 : place_unique(_G, "Parghit")
 
 NAME:   uniq_saint_roka
@@ -365,11 +365,11 @@ DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sojobo
-DEPTH:  Depths, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths, Vaults:2-, Crypt
 : place_unique(_G, "Sojobo band")
 
 NAME:   uniq_vv
-DEPTH:  Depths:2-, Zot:1-4, Crypt, Tomb
+DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Vv")
 
 NAME:   uniq_xtahua
@@ -377,7 +377,7 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Xtahua")
 
 NAME:   uniq_zenata
-DEPTH:  Depths:2-, Zot:1-4, Crypt, Tomb
+DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Zenata")
 
 ################################################################################
