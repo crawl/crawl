@@ -571,6 +571,7 @@ static void _show_commandline_options_help()
 #endif
     puts("  -playable-json   list playable species, jobs, and character combos.");
     puts("  -branches-json   list branch data.");
+    puts("  -no-player-bones do not write player's info to bones files.");
 
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
