@@ -81,6 +81,17 @@ spret cast_death_channel(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+spret cast_animate_dead(int pow, bool fail)
+{
+    fail_check();
+    mpr("You call upon the dead to rise.");
+
+    you.increase_duration(DUR_ANIMATE_DEAD, 20 + random2(1 + pow), 100);
+    you.props[ANIMATE_DEAD_POWER_KEY] = pow;
+
+    return spret::success;
+}
+
 void start_recall(recall_t type)
 {
     // Assemble the recall list.

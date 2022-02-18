@@ -1387,11 +1387,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're being held away from the wall.";
         break;
 
-    case SPELL_ANIMATE_DEAD:
-        if (temp && !animate_dead(&you, 1, BEH_FRIENDLY, MHITYOU, &you, "", GOD_NO_GOD, false))
-            return "there is nothing nearby to animate!";
-        break;
-
     case SPELL_ANIMATE_SKELETON:
         if (temp && find_animatable_skeletons(you.pos()).empty())
             return "there is nothing nearby to animate!";

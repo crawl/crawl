@@ -58,6 +58,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "sprint.h" // SPRINT_MULTIPLIER
 #include "state.h"
@@ -1318,6 +1319,20 @@ static void _yred_reap(monster &mons, bool expl)
                          SPELL_NO_SPELL, you.religion);
 }
 
+static bool _animate_dead_reap(monster &mons)
+{
+    if (! you.duration[DUR_ANIMATE_DEAD])
+        return false;
+
+    int rd = 0;
+    if (you.props.exists(ANIMATE_DEAD_POWER_KEY))
+        rd = you.props[ANIMATE_DEAD_POWER_KEY].get_int();
+    if (!x_chance_in_y(100 + rd, 200))
+        return false;
+
+    return _mons_reaped(you, mons);
+}
+
 static bool _reaping(monster &mons)
 {
     if (!mons.props.exists(REAPING_DAMAGE_KEY))
@@ -2387,7 +2402,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
 
-        if (!corpse_consumed && coinflip() && _reaping(mons))
+        if (!corpse_consumed && coinflip() && 
+                (_animate_dead_reap(mons) || _reaping(mons)))
             corpse_consumed = true;
     }
 

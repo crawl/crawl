@@ -676,11 +676,6 @@ static bool _kikubaaqudgha_retribution()
         }
     }
 
-    // Every act of retribution causes corpses in view to rise against
-    // you.
-    animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
-                 _god_wrath_name(god), god);
-
     return true;
 }
 

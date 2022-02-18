@@ -45,10 +45,9 @@ higher power, the spirit becomes more durable.
 %%%%
 Animate Dead spell
 
-Reanimates all corpses and skeletons in the vicinity as followers. This magic
-is unstable, so eventually those reanimated will crumble to dust. Zombies and
-skeletons cannot leave the level they were created on. The resilience of
-zombies raised by this spell increases with spell power.
+For some time after casting this, living creatures killed by the caster will rise
+as zombies. The chance of reanimating a monster and the duration of the effect
+increase with spell power. Zombies cannot leave the level they were created on.
 %%%%
 Animate Skeleton spell
 

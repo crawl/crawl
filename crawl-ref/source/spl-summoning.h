@@ -82,7 +82,6 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 
 vector<coord_def> find_animatable_skeletons(coord_def c);
 spret cast_animate_skeleton(int pow, god_type god, bool fail);
-spret cast_animate_dead(int pow, god_type god, bool fail);
 int animate_dead(actor *caster, int pow, beh_type beha,
                  unsigned short hitting, actor *as = nullptr, string nas = "",
                  god_type god = GOD_NO_GOD, bool actual = true);
