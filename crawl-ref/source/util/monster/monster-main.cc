@@ -309,6 +309,12 @@ static string mi_calc_freeze_damage(monster* mons)
     return dice_def_string(freeze_damage(pow));
 }
 
+static string mi_calc_irradiate_damage(const monster &mon)
+{
+    const int pow = mons_power_for_hd(SPELL_IRRADIATE, mon.get_hit_dice());
+    return dice_def_string(irradiate_damage(pow));
+}
+
 /**
  * @return e.g.: "2d6", "5-12".
  */
@@ -345,6 +351,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;
+        case SPELL_IRRADIATE:
+            return mi_calc_irradiate_damage(*monster);
         case SPELL_VAMPIRIC_DRAINING:
             return mi_calc_vampiric_drain_damage(monster);
         case SPELL_MAJOR_HEALING:
