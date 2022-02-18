@@ -1376,8 +1376,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 
     case SPELL_ANIMATE_SKELETON:
         return make_unique<targeter_multiposition>(&you, find_animatable_skeletons(you.pos()), AFF_MAYBE);
-    case SPELL_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, simple_find_corpses(), AFF_YES);
     case SPELL_SIMULACRUM:
         return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
     case SPELL_BLINK:

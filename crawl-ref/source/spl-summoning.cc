@@ -1740,20 +1740,6 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_animate_dead(int pow, god_type god, bool fail)
-{
-    if (rude_stop_summoning_prompt())
-        return spret::abort;
-
-    fail_check();
-    canned_msg(MSG_CALL_DEAD);
-
-    if (!animate_dead(&you, pow, BEH_FRIENDLY, MHITYOU, &you, "", god))
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return spret::success;
-}
-
 // returns an item index, or -1 on failure
 int find_simulacrable_corpse(coord_def c)
 {
