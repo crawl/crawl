@@ -97,6 +97,7 @@ games = OrderedDict([
         # cwd = ".",
         morgue_url = None,
         show_save_info = True,
+        allowed_with_hold = True,
         # milestone_path = "./rcs/milestones",
         send_json_options = True,
         # env = {"LANG": "en_US.UTF8"},
@@ -233,7 +234,8 @@ player_url = None
 # data. Some values cannot be reloaded (including this one), and to reset a
 # value to its default, you need to explicitly set the value rather than
 # comment it out.
-# hup_reloads_config = True
+# If not explicitly set, this defaults to False.
+hup_reloads_config = True
 
 # Only for development:
 # This is insecure; do not set development_mode = True in production!

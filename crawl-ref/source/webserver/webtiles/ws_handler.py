@@ -468,8 +468,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
             try:
+                games = config.games
+                if self.account_restricted():
+                    games = {g:games[g] for g in games if self.game_id_allowed(g)}
                 play_html = to_unicode(self.render_string("game_links.html",
-                                                  games = config.games,
+                                                  games = games,
                                                   save_info = self.save_info,
                                                   disabled = disable_check))
                 self.send_message("set_game_links", content = play_html)
@@ -516,6 +519,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return False
         return True
 
+    def game_id_allowed(self, game_id):
+        if game_id not in config.games:
+            return False
+        if not self.account_restricted():
+            return True
+        game = config.games[game_id]
+        # for now, if this isn't set, default to allow. However, if the
+        # version doesn't support `-no-player-bones` it will still fail to
+        # start.
+        return "allowed_with_hold" not in game or game["allowed_with_hold"]
+
     def start_crawl(self, game_id):
         if config.get('dgl_mode') and game_id not in config.games:
             self.go_lobby()
@@ -544,7 +558,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         # update flags in case an account hold has been released or added, or
         # the player has been banned.
-        if not self.update_db_info():
+        if (not self.update_db_info() # ban check happens here
+                or not self.game_id_allowed(game_id)):
             self.go_lobby()
             return
 

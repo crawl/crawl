@@ -596,6 +596,9 @@ class CrawlProcessHandlerBase(object):
                                          self.username + ".macro"),
                  "-morgue", self.config_path("morgue_path")]
 
+        if self.account_restricted():
+            call += ["-no-player-bones"]
+
         if "options" in game:
             call += game["options"]
 

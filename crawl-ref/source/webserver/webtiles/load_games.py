@@ -122,8 +122,8 @@ def validate_game_dict(game):
                 'socket_path', 'client_path')
     optional = ('dir_path', 'cwd', 'morgue_url', 'milestone_path',
                 'send_json_options', 'options', 'env', 'separator',
-                'show_save_info')
-    boolean = ('send_json_options', 'show_save_info')
+                'show_save_info', 'allowed_with_hold')
+    boolean = ('send_json_options', 'show_save_info', 'allowed_with_hold')
     string_array = ('options',)
     string_dict = ('env', )
     for prop in required:
