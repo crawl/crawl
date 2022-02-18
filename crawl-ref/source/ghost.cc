@@ -22,6 +22,7 @@
 #include "mon-transit.h"
 #include "mpr.h"
 #include "ng-input.h"
+#include "options.h"
 #include "skills.h"
 #include "spl-util.h"
 #include "state.h"
@@ -809,6 +810,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
 const vector<ghost_demon> ghost_demon::find_ghosts(bool include_player)
 {
     vector<ghost_demon> gs;
+    if (Options.no_player_bones)
+        include_player = false;
 
     if (include_player && you.undead_state(false) == US_ALIVE)
     {
