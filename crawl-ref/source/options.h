@@ -307,6 +307,7 @@ public:
 #endif
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
+    bool           no_player_bones;   // don't save player's info in bones files
 
     // internal use only:
     int         sc_entries;      // # of score entries

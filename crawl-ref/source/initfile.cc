@@ -1956,7 +1956,7 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), seed_from_rc(0),
-    no_save(false), language(lang_t::EN), lang_name(nullptr)
+    no_save(false), no_player_bones(false), language(lang_t::EN), lang_name(nullptr)
 {
     reset_options();
 }
@@ -4119,6 +4119,7 @@ enum commandline_option_type
     CLO_WIZARD,
     CLO_EXPLORE,
     CLO_NO_SAVE,
+    CLO_NO_PLAYER_BONES,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
     CLO_THROTTLE,
@@ -4144,9 +4145,9 @@ static const char *cmd_ops[] =
     "objstat", "iters", "force-map", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "pregen", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
-    "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
-    "branches-json", "save-json", "gametypes-json", "bones",
+    "print-charset", "tutorial", "wizard", "explore", "no-save",
+    "no-player-bones", "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
+    "playable-json", "branches-json", "save-json", "gametypes-json", "bones",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -5335,6 +5336,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_NO_SAVE:
             if (!rc_only)
                 Options.no_save = true;
+            break;
+
+        case CLO_NO_PLAYER_BONES:
+            if (!rc_only)
+                Options.no_player_bones = true;
             break;
 
 #ifdef USE_TILE_WEB
