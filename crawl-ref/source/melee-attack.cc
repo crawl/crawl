@@ -3477,6 +3477,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.get_mutation_level(MUT_HORNS) && !one_chance_in(3);
 
     case UNAT_TAILSLAP:
+        // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
         return you.has_tail()
                // constricting tails are too slow to slap
                && !you.has_mutation(MUT_CONSTRICTING_TAIL)
