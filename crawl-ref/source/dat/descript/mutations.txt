@@ -862,8 +862,8 @@ You are inexperienced, and unable to fully gain 27 levels.
 %%%%
 missing an eye mutation
 
-You are missing an eye, making it more difficult to aim and lowering your
-accuracy for attacks.
+You are missing an eye, reducing the accuracy of your physical and magical
+attacks.
 %%%%
 no potions mutation
 
