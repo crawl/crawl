@@ -139,10 +139,6 @@ fangs mutation
 
 You have sharp teeth, allowing you to bite foes when launching melee attacks.
 Each level of this mutation makes your teeth sharper, longer, and stronger.
-
-This ability has up to a 40% chance (at XL 27) of triggering per attack, and the
-chances of hitting are determined primarily by XL, Dexterity, Fighting skill,
-and any slaying bonuses.
 %%%%
 acidic bite mutation
 
@@ -162,9 +158,9 @@ attacks if you aren't wearing gloves. Each level of this mutation makes your
 nails sharper, longer, and stronger. The third level of this mutation prevents
 you from wearing gloves.
 
-The primary damage bonus requires using an unarmed attack, and the off-hand
-effect is a damage bonus on top of the regular off-hand punch, and therefore
-requires a free off-hand.
+The primary damage bonus requires using an unarmed attack. The off-hand effect
+is a damage bonus for the regular off-hand punch, and therefore requires a free
+off-hand.
 %%%%
 demonic touch mutation
 
@@ -207,8 +203,7 @@ mutation allows you to constrict foes with your tail when attacking in melee.
 Your tail can constrict only one enemy at a time, and every attack at this
 mutation level will begin or renew a constriction attempt. The chances of
 succeeding are determined primarily by Dexterity, Fighting skill, and any
-slaying bonuses. This kind of tail is too slow to be used for direct melee
-attacks.
+slaying bonuses.
 %%%%
 stinger mutation
 
@@ -438,10 +433,8 @@ increases the magnitude of this effect.
 foul stench mutation
 
 Foes who strike you in melee sometimes cause you to emit a cloud of foul
-miasma, slowing and severely poisoning those caught within. Each level of
-this mutation increases the likelihood of this (10%, 25%, 50%), though your
-miasma cannot replace other clouds. This mutation also grants you immunity to
-miasma (from any source).
+miasma, slowing and severely poisoning those caught within. This mutation also
+grants you immunity to miasma (from any source).
 %%%%
 passive freeze mutation
 
@@ -527,16 +520,12 @@ corrupting presence mutation
 When you injure a foe, your presence may intensify the damage, corroding their
 weapons and defenses. The second level of this mutation makes matters even
 worse, adding a chance that your wretched victims may become mutated and
-deformed. Each of these effects has an (independent) 8.3% chance of triggering.
+deformed.
 %%%%
 black mark mutation
 
 When you strike a foe in melee, the black mark on your body may debilitate
 them. This can weaken foes, drain their health, or disrupt their magic.
-
-This effect has a 20% chance of triggering on a melee attack that does any
-damage, and if it triggers, the effect is chosen randomly from whichever
-of the three effects the monster is susceptible to.
 %%%%
 aura of silence mutation
 
