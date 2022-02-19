@@ -3444,6 +3444,8 @@ void melee_attack::chaos_affect_actor(actor *victim)
  */
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
+    // If you change anything in this function, you should also
+    // change the matching logic in dat/descript/mutations.txt.
     if (atk != UNAT_CONSTRICT && atk != UNAT_TOUCH
         && 30 + you.experience_level <= random2(60))
     {
