@@ -3134,9 +3134,9 @@ skeletal bat
 A bat skeleton without the decency to lie unmoving like dead bats are supposed
 to.
 %%%%
-spriggan baker
+spriggan hatter
 
-A spriggan that has mastered the culinary arts.
+A spriggan who is going slightly mad from the toxic fumes of their craft.
 %%%%
 water elementalist statue
 
