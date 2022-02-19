@@ -1030,35 +1030,6 @@ battlesphere
  But I am”
     -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
 %%%%
-blowgun
-
-“Along the Upper Caiary-Uaupes blow-guns are made from the stems of a variety
- of palm (Iriartea setigera Martius)... The Indian selects two stems of such
- sizes that the smaller will exactly fit within the larger. After these stems
- have been carefully dried and the pith cleared out with a long rod, the bore
- is made smooth by drawing back and forth through it a little bunch of
- tree-fern roots. The smaller stem is then inserted in the larger, so that one
- will serve to correct any crookedness that may exist in the other. The wooden
- mouth-piece is then fitted to one end, and about three and one half feet from
- it, a boar's tooth is fastened on the gun by some gummy substance, for a
- sight. Over the outside the maker winds spirally a strip of the dark shiny
- bark of a creeper which gives it an ornamental finish, and his blow-gun is
- complete.
-
- The arrows are from ten to fourteen inches long, and of the thickness of an
- ordinary lucifer match. Those of the Indians of the Caiary-Uaupes are made
- from the midrib of a palm leaf or of the spinous processes of the Patawa
- (Enocarpus Batawa) sharpened to a point at one end and wound near the other
- with a delicate sort of wild cotton which grows in a pod upon a large tree
- (Bombax ceiba). This mass of cotton is just big enough to fill the tube when
- the arrow is gently pressed into it. The point is dipped into poison, allowed
- to dry, and redipped until well coated. The exact composition of this poison
- is unknown, and probably varies in different localities; but it would seem
- that the chief ingredient is always the juice of a Strychnos plant. It is
- known among different tribes by many names; such as Curari, Ourari, Urari and
- Woorali.”
-    -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
-%%%%
 boggart
 
 “He thinks every bush a boggart.”
@@ -1879,6 +1850,11 @@ jelly
  A splotch, a blotch...”
     -Burt Bacharach and Mack David, “Beware of the Blob”. 1958.
 %%%%
+kite shield
+
+“...for the shield may be as important for victory, as the sword or spear.”
+    -Charles Darwin, “The Origin of Species”. 1859.
+%%%%
 kobold
 
 “Kobolds are harmless.”
@@ -2206,14 +2182,6 @@ Necromutation spell
  Stay dead, stay dead, stay dead
  Stay dead and outta this world”
     -Norma Tanega, “You’re Dead”. 1966
-%%%%
-needle
-
-“I pray that, risen from the dead,
- I may in glory stand—
- A crown, perhaps, upon my head,
- But a needle in my hand.”
-    -Eugene Field, “Grandma's Prayer”. late 19th cent.
 %%%%
 neqoxec
 
@@ -2963,11 +2931,6 @@ shapeshifter
     -Homer, _The Odyssey_, IV, 602-14.
      trans. George Chapman, 1857.
 %%%%
-shield
-
-“...for the shield may be as important for victory, as the sword or spear.”
-    -Charles Darwin, “The Origin of Species”. 1859.
-%%%%
 shortbow
 
 “You are the bows from which your children as living arrows are sent forth.”
@@ -3034,12 +2997,6 @@ sky beast
 “Her own mother lived the latter years of her life in the horrible suspicion
  that electricity was dripping invisibly all over the house.”
     -James Thurber, _My Life and Hard Times_. 1934.
-%%%%
-slave
-
-“Who rebels? Who rises in arms? Rarely the slave, but almost always the
- oppressor turned slave.”
-    -E.M. Cioran, _History and Utopia_. 1960.
 %%%%
 slime creature
 
@@ -3687,10 +3644,6 @@ wand of polymorph
 “Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in
  seinem Bett zu einem ungeheueren Ungeziefer verwandelt.”
     -Franz Kafka, _Die Verwandlung_. 1915
-%%%%
-wand of random effects
-
-<wand>
 %%%%
 wandering mushroom
 
