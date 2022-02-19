@@ -1449,7 +1449,26 @@ int get_unrandart_num(const char *name)
         if (art == uname || art.find(quoted) != string::npos)
             return UNRAND_START + i;
     }
-    return SPWPN_NORMAL;
+    return 0;
+}
+
+int extant_unrandart_by_exact_name(string name)
+{
+    static map<string,int> cache;
+    if (cache.empty())
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
+        {
+            const int id = UNRAND_START + i;
+            if (unranddata[i].flags & UNRAND_FLAG_NOGEN
+                && id != UNRAND_DRAGONSKIN /* ew */)
+            {
+                continue;
+            }
+            cache[lowercase_string(unranddata[i].name)] = id;
+        }
+    }
+    return lookup(cache, lowercase(name), 0);
 }
 
 static bool _randart_is_redundant(const item_def &item,

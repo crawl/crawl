@@ -152,5 +152,6 @@ bool artp_potentially_good(artefact_prop_type prop);
 bool artp_potentially_bad(artefact_prop_type prop);
 
 int get_unrandart_num(const char *name);
+int extant_unrandart_by_exact_name(string name);
 
 void unrand_reacts();
