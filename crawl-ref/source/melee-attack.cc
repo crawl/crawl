@@ -896,6 +896,7 @@ public:
     }
     virtual int get_base_chance() const { return chance; }
     virtual bool xl_based_chance() const { return true; }
+    virtual string describe() const;
 protected:
     const int damage;
     // Per-attack trigger percent, before accounting for XL.
@@ -1243,7 +1244,7 @@ bool melee_attack::player_aux_unarmed()
         if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender, true))
             continue;
 
-        to_hit = random2(calc_your_to_hit_aux_unarmed());
+        to_hit = random2(aux_to_hit());
         to_hit += post_roll_to_hit_modifiers(to_hit, false, true);
 
         handle_noise(defender->pos());
@@ -3211,6 +3212,11 @@ void melee_attack::emit_foul_stench()
     }
 }
 
+static int _minotaur_headbutt_chance()
+{
+    return 23 + you.experience_level;
+}
+
 void melee_attack::do_minotaur_retaliation()
 {
     if (!defender->is_player())
@@ -3249,37 +3255,32 @@ void melee_attack::do_minotaur_retaliation()
         // You are in a non-minotaur form.
         return;
     }
-    // This will usually be 2, but could be 3 if the player mutated more.
-    const int mut = you.get_mutation_level(MUT_HORNS);
 
-    if (x_chance_in_y(45 + you.experience_level * 2, 200))
+    if (!x_chance_in_y(_minotaur_headbutt_chance(), 100))
+        return;
+
+    // Use the same damage formula as a regular headbutt.
+    int dmg = AUX_HEADBUTT.get_damage();
+    dmg = player_stat_modify_damage(dmg);
+    dmg = random2(dmg);
+    dmg = player_apply_fighting_skill(dmg, true);
+    dmg = player_apply_misc_modifiers(dmg);
+    dmg = player_apply_slaying_bonuses(dmg, true);
+    dmg = player_apply_final_multipliers(dmg, true);
+    int hurt = attacker->apply_ac(dmg);
+
+    mpr("You furiously retaliate!");
+    dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
+    if (hurt <= 0)
     {
-        // Use the same damage formula as a regular headbutt.
-        int dmg = 5 + mut * 3;
-        dmg = player_stat_modify_damage(dmg);
-        dmg = random2(dmg);
-        dmg = player_apply_fighting_skill(dmg, true);
-        dmg = player_apply_misc_modifiers(dmg);
-        dmg = player_apply_slaying_bonuses(dmg, true);
-        dmg = player_apply_final_multipliers(dmg, true);
-        int hurt = attacker->apply_ac(dmg);
-
-        mpr("You furiously retaliate!");
-        dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
-        if (hurt <= 0)
-        {
-            mprf("You headbutt %s, but do no damage.",
-                 attacker->name(DESC_THE).c_str());
-            return;
-        }
-        else
-        {
-            mprf("You headbutt %s%s",
-                 attacker->name(DESC_THE).c_str(),
-                 attack_strength_punctuation(hurt).c_str());
-            attacker->hurt(&you, hurt);
-        }
+        mprf("You headbutt %s, but do no damage.",
+             attacker->name(DESC_THE).c_str());
+        return;
     }
+    mprf("You headbutt %s%s",
+         attacker->name(DESC_THE).c_str(),
+         attack_strength_punctuation(hurt).c_str());
+    attacker->hurt(&you, hurt);
 }
 
 /** For UNRAND_STARLIGHT's dazzle effect, only against monsters.
@@ -3480,6 +3481,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
        return false;
     }
 
+    // XXX: dedup with aux_attack_desc()
     switch (atk)
     {
     case UNAT_CONSTRICT:
@@ -3525,31 +3527,6 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     default:
         return false;
     }
-}
-
-// TODO: Potentially move this, may or may not belong here (may not
-// even belong as its own function, could be integrated with the general
-// to-hit method
-// Returns the to-hit for your extra unarmed attacks.
-// DOES NOT do the final roll (i.e., random2(your_to_hit)).
-int melee_attack::calc_your_to_hit_aux_unarmed()
-{
-    int your_to_hit;
-
-    your_to_hit = 1300
-                + you.dex() * 75
-                + you.skill(SK_FIGHTING, 30);
-    your_to_hit /= 100;
-
-    if (you.get_mutation_level(MUT_EYEBALLS))
-        your_to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
-
-    if (you.duration[DUR_VERTIGO])
-        your_to_hit -= 5;
-
-    your_to_hit += slaying_bonus();
-
-    return your_to_hit;
 }
 
 bool melee_attack::using_weapon() const
@@ -3681,4 +3658,58 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
            && !you.vampire_alive
            && actor_is_susceptible_to_vampirism(*mon)
            && mons_has_blood(mon->type);
+}
+
+string aux_attack_desc(mutation_type mut)
+{
+    // XXX: dedup with _extra_aux_attack()
+    switch (mut)
+    {
+    case MUT_HOOVES:
+    case MUT_TALONS:
+    case MUT_TENTACLE_SPIKE:
+        return AUX_KICK.describe();
+    case MUT_BEAK:
+        return AUX_PECK.describe();
+    case MUT_HORNS:
+        return AUX_HEADBUTT.describe();
+    case MUT_STINGER:
+    case MUT_ARMOURED_TAIL:
+    case MUT_WEAKNESS_STINGER:
+    case MUT_MERTAIL:
+        return AUX_TAILSLAP.describe();
+    case MUT_ACIDIC_BITE:
+    case MUT_ANTIMAGIC_BITE:
+        return AUX_BITE.describe();
+    case MUT_DEMONIC_TOUCH:
+        return AUX_TOUCH.describe();
+    case MUT_REFLEXIVE_HEADBUTT:
+        return make_stringf("\nTrigger chance:  %d%%\n"
+                              "Base damage:     %d\n\n",
+                            _minotaur_headbutt_chance(),
+                            AUX_HEADBUTT.get_damage());
+    default:
+        return "";
+    }
+}
+
+string AuxAttackType::describe() const
+{
+    const int to_hit = aux_to_hit();
+    string to_hit_pips = "";
+    // Each pip is 10 to-hit. Since to-hit is rolled before we compare it to
+    // defender evasion, for these pips to be comparable to monster EV pips,
+    // these need to be twice as large.
+    for (int i = 0; i < to_hit / 10; ++i)
+    {
+        to_hit_pips += "+";
+        if (i % 5 == 4)
+            to_hit_pips += " ";
+    }
+    return make_stringf("\nTrigger chance:  %d%%\n"
+                          "Accuracy:        %s\n"
+                          "Base damage:     %d\n\n",
+                        get_chance(),
+                        to_hit_pips.c_str(),
+                        get_damage());
 }

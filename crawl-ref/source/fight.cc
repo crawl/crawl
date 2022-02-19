@@ -64,6 +64,28 @@ int melee_confuse_chance(int HD)
 }
 
 /**
+ * What is the player's to-hit for aux attacks, before randomization?
+ */
+int aux_to_hit()
+{
+    int to_hit = 1300
+                + you.dex() * 75
+                + you.skill(SK_FIGHTING, 30);
+    to_hit /= 100;
+
+    if (you.get_mutation_level(MUT_EYEBALLS))
+        to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
+
+    if (you.duration[DUR_VERTIGO])
+        to_hit -= 5;
+
+    to_hit += slaying_bonus();
+
+    return to_hit;
+
+}
+
+/**
  * Return the odds of an attack with the given to-hit bonus hitting a defender with the
  * given EV, rounded to the nearest percent.
  *

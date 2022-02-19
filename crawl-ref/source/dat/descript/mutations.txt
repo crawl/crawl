@@ -125,19 +125,15 @@ drawing attention to your activities.
 # ------ Auxes -----
 horns mutation
 
-You have horns on your head. These allow you to gore foes on about {{
-    return math.floor(((100 * (you.xl() + 30)) / 59) * 2 / 3)
-}}% of melee attacks, increasing with your XL. If they hit, these gore attacks
-have base damage 5 + 3 * mutation level. The horns prevent you from wearing
-helmets, and the third level of this mutation prevents you from wearing any
-type of headgear.
+You have horns on your head, allowing you to try to gore foes when launching
+melee attacks, but preventing you from wearing helmets. Each level of this mutation
+increases the damage of your gore attacks. The third level of this mutation
+prevents you from wearing any type of headgear.
 %%%%
 beak mutation
 
-You have a beak for a mouth. This allows you to peck at foes on about {{
-    return math.floor(((100 * (you.xl() + 30)) / 59) * 2 / 3)
-}}% of melee attacks (increasing with your XL), with base damage 6 if it hits.
-However, it prevents you from wearing helmets.
+You have a beak for a mouth, allowing you to peck at foes when launching melee
+attacks, but preventing you from wearing helmets.
 %%%%
 fangs mutation
 
@@ -152,20 +148,12 @@ acidic bite mutation
 
 You have acidic saliva, allowing you to bite foes and apply corrosion to them
 when launching melee attacks.
-
-This ability has up to a 40% chance (at XL 27) of triggering per attack, and
-the chances of successfully hitting are determined primarily by Dexterity,
-Fighting skill, and any slaying bonuses.
 %%%%
 antimagic bite mutation
 
 You have a thirst for magic, allowing you to bite foes when launching melee
 attacks. This restores your magical reserves and also disrupts magical foes,
 sometimes leaving them unable to act.
-
-This ability's chances of triggering are determined solely by experience level
-(50% at XL 1 up to 95% at XL 27), and the chances of successfully hitting are
-determined primarily by Dexterity, Fighting skill, and any slaying bonuses.
 %%%%
 claws mutation
 
@@ -185,22 +173,12 @@ attacks to take additional damage which ignores armour. Each level of this
 mutation inflicts more damage. The third level of this mutation prevents you
 from wearing gloves, and also causes your off-hand attacks to reduce your foes'
 willpower.
-
-This ability has a 40% chance of triggering per attack (unaffected by XL), and
-the chances of successfully hitting are determined primarily by Dexterity,
-Fighting skill, and any slaying bonuses. The amount of damage is determined
-entirely by mutation level. It requires a free offhand.
 %%%%
 hooves mutation
 
 You have hooves, allowing you to kick foes when launching melee attacks if you
 aren't wearing boots. Each level of this mutation makes your hooves harder and
 stronger. The third level of this mutation prevents you from wearing boots.
-
-This ability's chances of triggering are determined solely by experience level
-(50% at XL 1 up to 95% at XL 27), and when triggered, the chances of
-successfully hitting are determined primarily by Dexterity, Fighting skill, and
-any slaying bonuses.
 %%%%
 talons mutation
 
@@ -208,11 +186,6 @@ You have sharp toenails, allowing you to kick foes when launching melee attacks
 if you aren't wearing boots. Each level of this mutation makes your nails
 sharper, longer, and stronger. The third level of this mutation prevents you
 from wearing boots.
-
-This ability's chances of triggering are determined solely by experience level
-(50% at XL 1, 95% at XL 27), and when triggered, the chances of successfully
-hitting are determined primarily by Dexterity, Fighting skill, and any slaying
-bonuses.
 %%%%
 antennae mutation
 
@@ -226,11 +199,6 @@ tentacle spike mutation
 You have a spiked tentacle, allowing you to pierce foes when launching melee
 attacks. Each level of this mutation makes your spike sharper, longer, and
 stronger.
-
-This ability's chances of triggering are determined solely by experience level
-(50% at XL 1, 95% at XL 27), and when triggered, the chances of successfully
-hitting are determined primarily by Dexterity, Fighting skill, and any slaying
-bonuses.
 %%%%
 naga tail mutation
 
@@ -247,10 +215,6 @@ stinger mutation
 You have a venomous barb on the end of your tail, allowing you to sting foes
 when launching melee attacks. Each level of this mutation makes your stinger
 sharper, longer, and stronger.
-
-This ability has up to a 50% chance (at XL 27) of triggering per attack, and
-the chances of successfully hitting are determined primarily by Dexterity,
-Fighting skill, and any slaying bonuses.
 %%%%
 weakness stinger mutation
 
@@ -258,19 +222,11 @@ You have a thin, red tail, allowing you to tail-slap foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
 into a sharp stinger. The third level of this mutation causes the stinger to
 inflict brief weakness on those unfortunate enough to be struck by it.
-
-This ability has up to a 50% chance (at XL 27) of triggering per attack, and
-the chances of successfully hitting are determined primarily by Dexterity,
-Fighting skill, and any slaying bonuses.
 %%%%
 armoured tail mutation
 
 You have a large armoured tail, allowing you to tail-slap foes when launching
 melee attacks.
-
-This ability has up to a 50% chance of triggering per attack, and the chances of
-successfully hitting are determined primarily by Dexterity, Fighting skill, and
-any slaying bonuses.
 %%%%
 pseudopods mutation
 
@@ -279,10 +235,6 @@ melee attacks, but somewhat reducing the amount of protection provided by body
 armour. This has no effect on protection provided by armour enchantments, nor
 on the defensive benefits of training the Armour skill. Each level of this
 mutation makes your pseudopods larger and stronger.
-
-This slap effect has up to a 66% chance (at XL 27) of triggering per attack,
-and the chances of successfully hitting are determined primarily by Dexterity,
-Fighting skill, and any slaying bonuses.
 %%%%
 # ------ Resistance mutations -----
 steam resistance mutation
@@ -716,10 +668,7 @@ shaped, preventing you from wearing an extra set of gloves or magical rings.
 retaliatory headbutt mutation
 
 When a foe misses you in melee, you may reflexively retaliate, attempting to
-gore your attacker with your horns. The chances of a successful hit are
-determined by experience level, with up to a 50% chance of success at XL 27. If
-successful, the amount of damage is determined primarily by the size of horns,
-Strength, Fighting skill, and any slaying bonuses.
+gore your attacker with your horns.
 %%%%
 multi-lived mutation
 
@@ -775,10 +724,6 @@ Your morphogenic matrix is unstable, allowing your lower body to shift to
 a powerful aquatic tail when in shallow or deep water. It will quickly
 reform into legs once you leave the water. When in merform, your tail allows
 you to tail-slap foes when launching melee attacks.
-
-The tail-slap ability has up to a 50% chance (at XL 27) of triggering per
-attack, and the chances of successfully hitting are determined primarily by
-Dexterity, Fighting skill, and any slaying bonuses.
 %%%%
 +LOS mutation
 

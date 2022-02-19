@@ -3972,6 +3972,7 @@ void describe_mutation(mutation_type mut)
                                   mutation_max_levels(mut));
     }
     inf.body << get_mutation_desc(mut);
+
     show_description(inf);
 }
 
