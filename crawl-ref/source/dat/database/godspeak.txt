@@ -97,6 +97,17 @@ Xom alters the dungeon around you.
 ##################
 # Xom nastiness
 ##################
+# miscast strength 0, mostly harmless
+Xom zero miscast effect
+
+Xom almost notices you.
+
+Xom's attention almost turns to you for a moment.
+
+Xom's power almost touches on you for a moment.
+
+You almost hear Xom's maniacal laughter.
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
