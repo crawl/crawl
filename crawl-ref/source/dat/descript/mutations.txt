@@ -759,11 +759,6 @@ Golden eyeballs sprout from your flesh like mushrooms, confusing your foes.
 Each level of this mutation improves your accuracy with weapons, unarmed
 attacks, auxiliary attacks, and spells. The third level of this mutation also
 allows you to see invisible foes.
-
-The confusion effect has a chance of triggering on any attack attempt. This
-chance determined by the mutation level (5%, 10%, 15%), and the chance of
-succeeding if triggered is determined by the monster's willpower, modified by
-mutation level.
 %%%%
 translucent skin mutation
 
@@ -774,9 +769,7 @@ accuracy further.
 tendrils mutation
 
 When struck in melee, the slimy tendrils covering your body may grab your
-attacker's weapon and yank it from their grasp, disarming them. This has a base
-20% chance of triggering on attack attempt, and this chance is further modified
-by the monster's level. There is no effect on enemies that do not use weapons.
+attacker's weapon and yank it from their grasp, disarming them.
 %%%%
 jelly sensing items mutation
 
@@ -785,15 +778,12 @@ You have a small jelly attached to you that senses nearby items.
 jelly absorbing missiles mutation
 
 When struck by a missile (such as an arrow or crossbow bolt), a jelly on your
-body may eat it, healing you somewhat. This effect has a 50% chance of
-triggering as long as your health is not full.
+body may eat it, healing you somewhat.
 %%%%
 engulf mutation
 
 Your melee attacks may engulf living foes that are your size or smaller.
-Those foes will be silenced and unable to breathe. This effect has a 50%
-chance of triggering on a damaging melee attack, as long as the enemy has
-a susceptible physical form.
+Those foes will be silenced and unable to breathe.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink while threatened mutation
