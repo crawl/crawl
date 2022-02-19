@@ -163,6 +163,18 @@ void UseItemMenu::populate_list()
     }
 }
 
+static void _note_tele_cancel(MenuEntry* entry)
+{
+    auto ie = dynamic_cast<InvEntry *>(entry);
+    if (ie && ie->item
+        && ie->item->base_type == OBJ_SCROLLS
+        && ie->item->sub_type == SCR_TELEPORTATION
+        && you.duration[DUR_TELEPORT])
+    {
+        ie->text += " (cancels current teleport)";
+    }
+}
+
 void UseItemMenu::populate_menu()
 {
     if (item_inv.empty())
@@ -211,6 +223,8 @@ void UseItemMenu::populate_menu()
                         // is counterintuitive/useless
                         if (item_type_filter != OSEL_UNIDENT)
                             entry->hotkeys.pop_back();
+                        if (item_type_filter == OBJ_SCROLLS)
+                            _note_tele_cancel(entry);
                         return entry;
                     });
     }
@@ -234,6 +248,8 @@ void UseItemMenu::populate_menu()
                     {
                         // hacky: remove the class hotkey
                         entry->hotkeys.pop_back();
+                        if (item_type_filter == OBJ_SCROLLS)
+                            _note_tele_cancel(entry);
                         return entry;
                     });
     }
