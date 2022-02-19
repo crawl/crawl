@@ -1081,16 +1081,16 @@ m...b
 mm.bb
 ENDMAP
 
-# Sells wands with 66% more charges than the usual item-generation maximum,
-# with a matching 66% markup (rounded up to 70% because of how greed works.)
+# Sells wands with 25% more charges than the usual item-generation maximum,
+# with a 50% markup.
 NAME:    nicolae_shop_overcharged_wands
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KFEAT:   S = general shop type:Overcharged suffix:Wands greed:17 count:6 ; \
-         wand of digging charges:15 | wand of iceblast charges:25 | \
-         wand of acid charges:25 | wand of charming charges:25 | \
-         wand of paralysis charges:25 | wand of polymorph charges:25 | \
-         wand of mindburst charges:40 | wand of flame charges:55
+KFEAT:   S = general shop type:Overcharged suffix:Wands greed:15 count:6 ; \
+         wand of digging charges:11 | wand of iceblast charges:18 | \
+         wand of acid charges:18 | wand of charming charges:18 | \
+         wand of paralysis charges:18 | wand of polymorph charges:18 | \
+         wand of mindburst charges:30 | wand of flame charges:40
 SHUFFLE: bv/bc/cv/bm/vm/cm
 MAP
 .......
