@@ -881,15 +881,25 @@ bool melee_attack::check_unrand_effects()
 class AuxAttackType
 {
 public:
-    AuxAttackType(int _damage, string _name) :
-    damage(_damage), name(_name) { };
+    AuxAttackType(int _damage, int _chance, string _name) :
+    damage(_damage), chance(_chance), name(_name) { };
 public:
     virtual int get_damage() const { return damage; };
     virtual int get_brand() const { return SPWPN_NORMAL; };
     virtual string get_name() const { return name; };
     virtual string get_verb() const { return get_name(); };
+    int get_chance() const {
+        const int base = get_base_chance();
+        if (xl_based_chance())
+            return base * (30 + you.experience_level) / 59;
+        return base;
+    }
+    virtual int get_base_chance() const { return chance; }
+    virtual bool xl_based_chance() const { return true; }
 protected:
     const int damage;
+    // Per-attack trigger percent, before accounting for XL.
+    const int chance;
     const string name;
 };
 
@@ -897,14 +907,15 @@ class AuxConstrict: public AuxAttackType
 {
 public:
     AuxConstrict()
-    : AuxAttackType(0, "grab") { };
+    : AuxAttackType(0, 100, "grab") { };
+    bool xl_based_chance() const override { return false; }
 };
 
 class AuxKick: public AuxAttackType
 {
 public:
     AuxKick()
-    : AuxAttackType(5, "kick") { };
+    : AuxAttackType(5, 100, "kick") { };
 
     int get_damage() const override
     {
@@ -946,7 +957,7 @@ class AuxHeadbutt: public AuxAttackType
 {
 public:
     AuxHeadbutt()
-    : AuxAttackType(5, "headbutt") { };
+    : AuxAttackType(5, 67, "headbutt") { };
 
     int get_damage() const override
     {
@@ -958,14 +969,14 @@ class AuxPeck: public AuxAttackType
 {
 public:
     AuxPeck()
-    : AuxAttackType(6, "peck") { };
+    : AuxAttackType(6, 67, "peck") { };
 };
 
 class AuxTailslap: public AuxAttackType
 {
 public:
     AuxTailslap()
-    : AuxAttackType(6, "tail-slap") { };
+    : AuxAttackType(6, 50, "tail-slap") { };
 
     int get_damage() const override
     {
@@ -987,7 +998,7 @@ class AuxPunch: public AuxAttackType
 {
 public:
     AuxPunch()
-    : AuxAttackType(5, "punch") { };
+    : AuxAttackType(5, 0, "punch") { };
 
     int get_damage() const override
     {
@@ -1016,13 +1027,20 @@ public:
         return name;
     }
 
+    int get_base_chance() const override
+    {
+        // Huh, this is a bit low. 5% at 0 UC, 50% at 27 UC..!
+        // We don't div-rand-round because we want this to be
+        // consistent for mut descriptions.
+        return 5 + you.skill(SK_UNARMED_COMBAT, 5) / 3;
+    }
 };
 
 class AuxBite: public AuxAttackType
 {
 public:
     AuxBite()
-    : AuxAttackType(1, "bite") { };
+    : AuxAttackType(1, 40, "bite") { };
 
     int get_damage() const override
     {
@@ -1044,13 +1062,20 @@ public:
 
         return SPWPN_NORMAL;
     }
+
+    int get_base_chance() const override
+    {
+        if (you.get_mutation_level(MUT_ANTIMAGIC_BITE))
+            return 100;
+        return chance;
+    }
 };
 
 class AuxPseudopods: public AuxAttackType
 {
 public:
     AuxPseudopods()
-    : AuxAttackType(4, "bludgeon") { };
+    : AuxAttackType(4, 67, "bludgeon") { };
 
     int get_damage() const override
     {
@@ -1062,7 +1087,7 @@ class AuxTentacles: public AuxAttackType
 {
 public:
     AuxTentacles()
-    : AuxAttackType(12, "squeeze") { };
+    : AuxAttackType(12, 67, "squeeze") { };
 };
 
 
@@ -1070,7 +1095,7 @@ class AuxTouch: public AuxAttackType
 {
 public:
     AuxTouch()
-    : AuxAttackType(3, "touch") { };
+    : AuxAttackType(3, 40, "touch") { };
 
     int get_damage() const override
     {
@@ -1085,6 +1110,8 @@ public:
 
         return SPWPN_NORMAL;
     }
+
+    bool xl_based_chance() const override { return false; }
 };
 
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
@@ -1146,16 +1173,11 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 /**
  * Decide whether the player gets a bonus punch attack.
  *
- * Partially random.
- *
  * @return  Whether the player gets a bonus punch aux attack on this attack.
  */
 bool melee_attack::player_gets_aux_punch()
 {
     if (!get_form()->can_offhand_punch())
-        return false;
-
-    if (!attacker->fights_well_unarmed())
         return false;
 
     // No punching with a shield or 2-handed wpn.
@@ -3444,13 +3466,11 @@ void melee_attack::chaos_affect_actor(actor *victim)
  */
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
-    // If you change anything in this function, you should also
-    // change the matching logic in dat/descript/mutations.txt.
-    if (atk != UNAT_CONSTRICT && atk != UNAT_TOUCH
-        && 30 + you.experience_level <= random2(60))
-    {
+    ASSERT(atk >= UNAT_FIRST_ATTACK);
+    ASSERT(atk <= UNAT_LAST_ATTACK);
+    const AuxAttackType* const aux = aux_attack_types[atk - UNAT_FIRST_ATTACK];
+    if (!x_chance_in_y(aux->get_chance(), 100))
         return false;
-    }
 
     if (wu_jian_attack != WU_JIAN_ATTACK_NONE
         && !x_chance_in_y(1, wu_jian_number_of_targets))
@@ -3473,37 +3493,34 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
                || you.get_mutation_level(MUT_TENTACLE_SPIKE);
 
     case UNAT_PECK:
-        return you.get_mutation_level(MUT_BEAK) && !one_chance_in(3);
+        return you.get_mutation_level(MUT_BEAK);
 
     case UNAT_HEADBUTT:
-        return you.get_mutation_level(MUT_HORNS) && !one_chance_in(3);
+        return you.get_mutation_level(MUT_HORNS);
 
     case UNAT_TAILSLAP:
         // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
         return you.has_tail()
                // constricting tails are too slow to slap
-               && !you.has_mutation(MUT_CONSTRICTING_TAIL)
-               && coinflip();
+               && !you.has_mutation(MUT_CONSTRICTING_TAIL);
 
     case UNAT_PSEUDOPODS:
-        return you.has_usable_pseudopods() && !one_chance_in(3);
+        return you.has_usable_pseudopods();
 
     case UNAT_TENTACLES:
-        return you.has_usable_tentacles() && !one_chance_in(3);
+        return you.has_usable_tentacles();
 
     case UNAT_BITE:
         return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
                || (you.has_usable_fangs()
-                   || you.get_mutation_level(MUT_ACIDIC_BITE))
-                   && x_chance_in_y(2, 5);
+                   || you.get_mutation_level(MUT_ACIDIC_BITE));
 
     case UNAT_PUNCH:
         return player_gets_aux_punch();
 
     case UNAT_TOUCH:
         return you.get_mutation_level(MUT_DEMONIC_TOUCH)
-               && you.has_usable_offhand()
-               && x_chance_in_y(2, 5);
+               && you.has_usable_offhand();
 
     default:
         return false;

@@ -694,7 +694,6 @@ public:
     string unarmed_attack_name(string default_name="Nothing wielded") const;
 
     bool fumbles_attack() override;
-    bool fights_well_unarmed() override;
 
     void attacking(actor *other) override;
     bool can_go_berserk() const override;
