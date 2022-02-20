@@ -4437,6 +4437,9 @@ static void _print_version()
 
 static void _print_save_version(char *name)
 {
+    // Ensure that the savedir option is set correctly on the first parse_args
+    // pass.
+    Options.reset_paths();
     try
     {
         string filename = name;
