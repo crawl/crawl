@@ -542,6 +542,11 @@ word of chaos mutation
 
 You can speak a Word of Chaos with <input>$cmd[CMD_USE_ABILITY]</input>.
 %%%%
+words of power mutation
+When you read a scroll of holy word or torment, your divine nature empowers the
+magic, dealing extra damage to monsters that are affected. This does not shield
+you from suffering the scroll's normal effects, when applicable.
+%%%%
 freezing cloud immunity mutation
 
 You are immune to freezing clouds.

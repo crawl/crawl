@@ -2283,6 +2283,12 @@ static const mutation_def mut_data[] =
   {"You feel more mortal.", "", ""},
 },
 
+{ MUT_WORDS_OF_POWER, 0, 1, mutflag::good, false, "words of power",
+{"Your divinity infuses more power into scrolls of torment and holy word.", "", ""},
+{"Thy tongue art a sword of truth.", "", ""},
+{"Thy words: mundane and plain.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

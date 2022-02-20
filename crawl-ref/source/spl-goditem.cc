@@ -1020,6 +1020,8 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     {
         if (source == HOLY_WORD_ZIN)
             simple_monster_message(*mons, " is blasted by Zin's holy word!");
+        else if (you.has_mutation(MUT_WORDS_OF_POWER))
+            simple_monster_message(*mons, " is blasted by your holy word!");
         else
             simple_monster_message(*mons, " convulses!");
 
@@ -1199,7 +1201,8 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
     god_conduct_trigger conducts[3];
     int hploss = max(0, mons->hit_points *
-                        (50 - mons->res_negative_energy() * 5) / 100 - 1);
+                        (((you.has_mutation(MUT_WORDS_OF_POWER)) ? 6 : 5) *
+                        (50 - mons->res_negative_energy() * 5) / 500 - 1));
 
     if (hploss)
     {
