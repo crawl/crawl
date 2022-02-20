@@ -402,11 +402,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     return
                 if returncode == 0:
                     try:
-                        save_dict = json_decode(data)[load_games.game_modes[game_key]]
+                        save_dict = json_decode(data)[config.game_modes[game_key]]
                         if not save_dict["loadable"]:
                             # the save in this slot is in use.
                             self.save_info[game_key] = "[playing]" # TODO: something better??
-                        elif load_games.game_modes[game_key] == save_dict["game_type"]:
+                        elif config.game_modes[game_key] == save_dict["game_type"]:
                             # save in the slot matches the game type we are
                             # checking.
                             self.save_info[game_key] = "[" + save_dict["short_desc"] + "]"
