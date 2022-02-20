@@ -183,7 +183,7 @@ can hope for is to avoid letting Xom grow bored!
 %%%%
 HINT_CONVERT Yredelemnul
 
-You've just converted to worshipping <w>Yredelemnul</w>. Unlike other gods, 
+You've just converted to worshipping <w>Yredelemnul</w>. Unlike other gods,
 Yredelemnul only cares about souls. Your enemies may rise to serve you after
 death, and you can expend them to invoke Yredelemnul's aid.
 %%%%
