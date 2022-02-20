@@ -980,10 +980,10 @@ NORETURN void print_save_json(const char *name)
         }
         else
         {
-            // ugh. This is a heavy-handed way to ensure that the savedir
-            // option is set correctly on the first parse_args pass.
-            // TODO: test on dgl...
-            Options.reset_options();
+            // Ensure that the savedir option is set correctly on the first
+            // parse_args pass.
+            // TODO: read initfile for local games?
+            Options.reset_paths();
 
             // treat `name` as a character name. Prints an empty json dict
             // if this is wrong (or if the character has no saves).
