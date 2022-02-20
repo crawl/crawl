@@ -1267,12 +1267,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         break;
 
-    case HINT_SEEN_RANDART:
-        text << "Weapons and armour that have unusual descriptions like this "
-                "are much more likely to be of higher enchantment or have "
-                "special properties, good or bad.";
-        break;
-
     case HINT_SEEN_JEWELLERY:
         text << "You have picked up a piece of jewellery, either a ring"
              << "<console> ('<w>"
@@ -2989,8 +2983,6 @@ string hints_describe_item(const item_def &item)
                 ostr << "\n\nWeapons and armour that have unusual descriptions "
                      << "like this are much more likely to be of higher "
                      << "enchantment or have special properties, good or bad.";
-
-                Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
             if (wearable)
             {
