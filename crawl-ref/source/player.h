@@ -78,6 +78,7 @@ static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 
 class targeter;
 class Delay;
+struct player_save_info;
 
 int player_stealth();
 
@@ -475,6 +476,8 @@ protected:
 public:
     player();
     virtual ~player();
+
+    void init_from_save_info(const player_save_info &s);
 
     void init_skills();
 

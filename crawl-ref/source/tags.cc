@@ -71,6 +71,7 @@
 #include "mutation.h"
 #include "place.h"
 #include "player-stats.h"
+#include "player-save-info.h"
 #include "prompt.h" // index_to_letter
 #include "religion.h"
 #include "skills.h"
@@ -2288,23 +2289,26 @@ static const char* old_gods[]=
     "Ashenzari",
 };
 
-void tag_read_char(reader &th, uint8_t /*format*/, uint8_t major, uint8_t minor)
+player_save_info tag_read_char_info(reader &th, uint8_t /*format*/,
+                                    uint8_t major, uint8_t minor)
 {
-    // Important: values out of bounds are good here, the save browser needs to
+    player_save_info r;
+    // Important: the beginning of this chunk is read in
+    // files.cc:_read_char_chunk, which handles loading save version info.
+    // Values out of bounds are good here, the save browser needs to
     // be forward-compatible. We validate them only on an actual restore.
-    you.your_name         = unmarshallString2(th);
-    you.prev_save_version = unmarshallString2(th);
-    dprf("Saved character %s, version: %s", you.your_name.c_str(),
-                                            you.prev_save_version.c_str());
+    r.name = unmarshallString2(th);
+    r.prev_save_version = unmarshallString2(th);
+    dprf("Saved character %s, version: %s", r.name.c_str(),
+                                            r.prev_save_version.c_str());
 
-    you.species           = static_cast<species_type>(unmarshallUByte(th));
-    you.char_class        = static_cast<job_type>(unmarshallUByte(th));
-    you.experience_level  = unmarshallByte(th);
-    you.chr_class_name    = unmarshallString2(th);
-    you.religion          = static_cast<god_type>(unmarshallUByte(th));
-    you.jiyva_second_name = unmarshallString2(th);
-
-    you.wizard            = unmarshallBoolean(th);
+    r.species = static_cast<species_type>(unmarshallUByte(th));
+    r.job = static_cast<job_type>(unmarshallUByte(th));
+    r.experience_level = unmarshallByte(th);
+    r.class_name = unmarshallString2(th);
+    r.religion = static_cast<god_type>(unmarshallUByte(th));
+    r.jiyva_second_name = unmarshallString2(th);
+    r.wizard = unmarshallBoolean(th);
 
     // this was mistakenly inserted in the middle for a few tag versions - this
     // just makes sure that games generated in that time period are still
@@ -2312,42 +2316,44 @@ void tag_read_char(reader &th, uint8_t /*format*/, uint8_t major, uint8_t minor)
 #if TAG_CHR_FORMAT == 0
     // TAG_MINOR_EXPLORE_MODE and TAG_MINOR_FIX_EXPLORE_MODE
     if (major == 34 && (minor >= 121 && minor < 130))
-        you.explore = unmarshallBoolean(th);
+        r.explore = unmarshallBoolean(th);
 #endif
 
-    crawl_state.type = (game_type) unmarshallUByte(th);
+    r.saved_game_type = static_cast<game_type>(unmarshallUByte(th));
     // normalize invalid game types so they can be treated uniformly elsewhere
-    if (crawl_state.type > NUM_GAME_TYPE)
-        crawl_state.type = NUM_GAME_TYPE;
+    if (r.saved_game_type > NUM_GAME_TYPE)
+        r.saved_game_type = NUM_GAME_TYPE;
 
-    // prevent an ASSERT in game_is_tutorial on game types from the future
-    if (crawl_state.game_is_valid_type() && crawl_state.game_is_tutorial())
-        crawl_state.map = unmarshallString2(th);
-    else
-        crawl_state.map = "";
+    if (r.saved_game_type == GAME_TYPE_TUTORIAL)
+        r.map = unmarshallString2(th);
 
     if (major > 32 || major == 32 && minor > 26)
     {
-        you.chr_species_name = unmarshallString2(th);
-        you.chr_god_name     = unmarshallString2(th);
+        r.species_name = unmarshallString2(th);
+        r.god_name = unmarshallString2(th);
     }
     else
     {
-        if (you.species >= 0 && you.species < (int)ARRAYSZ(old_species))
-            you.chr_species_name = old_species[you.species];
-        else
-            you.chr_species_name = "Yak";
-        if (you.religion >= 0 && you.religion < (int)ARRAYSZ(old_gods))
-            you.chr_god_name = old_gods[you.religion];
-        else
-            you.chr_god_name = "Marduk";
+        if (r.species >= 0 && r.species < (int)ARRAYSZ(old_species))
+            r.species_name = old_species[you.species];
+
+        if (r.religion >= 0 && r.religion < (int)ARRAYSZ(old_gods))
+            r.god_name = old_gods[you.religion];
     }
 
     if (major > 34 || major == 34 && minor >= 29)
-        crawl_state.map = unmarshallString2(th);
+        r.map = unmarshallString2(th);
 
     if (major > 34 || major == 34 && minor >= 130)
-        you.explore = unmarshallBoolean(th);
+        r.explore = unmarshallBoolean(th);
+
+    return r;
+}
+
+void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
+{
+    player_save_info s = tag_read_char_info(th, format, major, minor);
+    you.init_from_save_info(s);
 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -2554,11 +2560,14 @@ static void _tag_read_you(reader &th)
 {
     int count;
 
+    // these `you` values come from the "chr" chunk, but aren't validated during
+    // the reading of that chunk. Let's make sure they actually make sense...
     ASSERT(species::is_valid(you.species));
     ASSERT(job_type_valid(you.char_class));
     ASSERT_RANGE(you.experience_level, 1, 28);
     ASSERT(you.religion < NUM_GODS);
     ASSERT_RANGE(crawl_state.type, GAME_TYPE_UNSPECIFIED + 1, NUM_GAME_TYPE);
+    // now start reading the chunk proper
     you.last_mid          = unmarshallInt(th);
     you.piety             = unmarshallUByte(th);
     ASSERT(you.piety <= MAX_PIETY);

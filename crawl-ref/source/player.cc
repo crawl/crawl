@@ -5193,20 +5193,46 @@ player_save_info& player_save_info::operator=(const player& rhs)
 {
     // TODO: maybe seed, version?
     name             = rhs.your_name;
-    experience       = rhs.experience;
-    experience_level = rhs.experience_level;
-    wizard           = rhs.wizard || rhs.suppress_wizard;
+    prev_save_version = rhs.prev_save_version;
     species          = rhs.species;
-    species_name     = rhs.chr_species_name;
+    job              = rhs.char_class;
+    experience_level = rhs.experience_level;
     class_name       = rhs.chr_class_name;
     religion         = rhs.religion;
+    jiyva_second_name = rhs.jiyva_second_name;
+    wizard           = rhs.wizard || rhs.suppress_wizard;
+    species_name     = rhs.chr_species_name;
     god_name         = rhs.chr_god_name;
-    jiyva_second_name= rhs.jiyva_second_name;
+    explore          = rhs.explore;
+
+    // doll data used only for startup menu, ignore?
 
     // [ds] Perhaps we should move game type to player?
     saved_game_type  = crawl_state.type;
+    map = crawl_state.map;
 
     return *this;
+}
+
+void player::init_from_save_info(const player_save_info &s)
+{
+    your_name         = s.name;
+    prev_save_version = s.prev_save_version;
+    species           = s.species;
+    char_class        = s.job;
+    experience_level  = s.experience_level;
+    chr_class_name    = s.class_name;
+    religion          = s.religion;
+    jiyva_second_name = s.jiyva_second_name;
+    wizard            = s.wizard;
+    chr_species_name  = s.species_name;
+    chr_god_name      = s.god_name;
+    explore           = s.explore;
+    // do not copy doll data?
+
+    // side effect alert!
+    crawl_state.type = s.saved_game_type;
+    crawl_state.map = s.map;
 }
 
 bool player_save_info::operator<(const player_save_info& rhs) const

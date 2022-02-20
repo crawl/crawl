@@ -135,7 +135,7 @@ static bool _ghost_version_compatible(const save_version &version);
 
 static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
-static bool _read_char_chunk(package *save);
+static player_save_info _read_character_info(package *save);
 
 static bool _convert_obsolete_species();
 
@@ -160,27 +160,6 @@ static bool is_save_file_name(const string &name)
     if (off <= 0)
         return false;
     return !strcasecmp(name.c_str() + off, SAVE_SUFFIX);
-}
-
-// Returns the save_info from the save.
-static player_save_info _read_character_info(package *save)
-{
-    player_save_info fromfile;
-
-    // Backup before we clobber "you".
-    const player backup(you);
-    unwind_var<game_type> gtype(crawl_state.type);
-
-    try // need a redundant try block just so we can restore the backup
-    {   // (or risk an = operator on you getting misused)
-        fromfile.save_loadable = _read_char_chunk(save);
-        fromfile = you;
-    }
-    catch (ext_fail_exception &E) {}
-
-    you = backup;
-
-    return fromfile;
 }
 
 vector<string> get_dir_files_sorted(const string &dirname)
@@ -3055,13 +3034,14 @@ static bool _restore_game(const string& filename)
 
     you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
-    if (!_read_char_chunk(you.save))
+    player_save_info save_info = _read_character_info(you.save);
+    if (!save_info.save_loadable)
     {
         // Note: if we are here, the save info was properly read, it would
         // raise an exception otherwise.
-        if (yesno(("There is an existing game for name '" + you.your_name +
+        if (yesno(("There is an existing game for name '" + save_info.name +
                    "' from an incompatible version of Crawl ("
-                   + you.prev_save_version + ").\n"
+                   + save_info.prev_save_version + ").\n"
                    "Unless you reinstall that version, you can't load it.\n"
                    "Do you want to DELETE that game and start a new one?"
                   ).c_str(),
@@ -3072,40 +3052,41 @@ static bool _restore_game(const string& filename)
             return false;
         }
         if (Options.remember_name)
-            crawl_state.default_startup_name = you.your_name; // for main menu
+            crawl_state.default_startup_name = save_info.name; // for main menu
         you.save->abort();
         delete you.save;
         you.save = 0;
         game_ended(game_exit::abort,
-            you.your_name + " is from an incompatible version and can't be loaded.");
+                save_info.name
+                + " is from an incompatible version and can't be loaded.");
     }
 
     if (!crawl_state.bypassed_startup_menu
         && menu_game_type != crawl_state.type)
     {
         if (!yesno(("You already have a "
-                        + _type_name_processed(crawl_state.type) +
-                    " game saved under the name '" + you.your_name + "';\n"
+                        + _type_name_processed(save_info.saved_game_type) +
+                    " game saved under the name '" + save_info.name + "';\n"
                     "do you want to load that instead?").c_str(),
                    true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
+            // explicitly don't set default startup name here
             game_ended(game_exit::abort,
                 "Please use a different name to start a new " +
                 _type_name_processed(menu_game_type) + " game, then.");
         }
     }
-
     if (Options.remember_name)
-        crawl_state.default_startup_name = you.your_name; // for main menu
+        crawl_state.default_startup_name = save_info.name; // for main menu
 
-    if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
-        && version_is_stable(you.prev_save_version.c_str()))
+    if (numcmp(save_info.prev_save_version.c_str(), Version::Long, 2) == -1
+        && version_is_stable(save_info.prev_save_version.c_str()))
     {
         if (!yesno(("This game comes from a previous release of Crawl (" +
-                    you.prev_save_version + ").\n\nIf you load it now,"
+                    save_info.prev_save_version + ").\n\nIf you load it now,"
                     " you won't be able to go back. Continue?").c_str(),
                     true, 'n'))
         {
@@ -3113,9 +3094,11 @@ static bool _restore_game(const string& filename)
             delete you.save;
             you.save = 0;
             game_ended(game_exit::abort, "Please use version " +
-                you.prev_save_version + " to load " + you.your_name + " then.");
+                save_info.prev_save_version
+                + " to load " + save_info.name + " then.");
         }
     }
+    you.init_from_save_info(save_info);
 
     you.on_current_level = false; // we aren't on the current level until
                                   // everything is fully loaded
@@ -3369,19 +3352,29 @@ static bool _convert_obsolete_species()
     return false;
 }
 
-static bool _read_char_chunk(package *save)
+static bool _loadable_save_ver(int major, int minor)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (major == 33 && minor == TAG_MINOR_0_11)
+        return true;
+#endif
+    return major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION;
+}
+
+static player_save_info _read_character_info(package *save)
 {
     reader inf(save, "chr");
 
     try
     {
+        player_save_info result;
         const auto version = get_save_version(inf);
         const auto major = version.major, minor = version.minor;
         uint8_t format;
 
         unsigned int len = unmarshallInt(inf);
         if (len > 1024) // something is fishy
-            fail("Save file corrupted (info > 1KB)");
+            fail("Save file `%s` corrupted (info > 1KB)", save->get_filename().c_str());
         vector<unsigned char> buf;
         buf.resize(len);
         inf.read(&buf[0], len);
@@ -3395,24 +3388,22 @@ static bool _read_char_chunk(package *save)
             format = 0;
 
         if (format > TAG_CHR_FORMAT)
-            fail("Incompatible character data");
+            fail("Incompatible character data from the future in `%s`",
+                                        save->get_filename().c_str());
 
-        tag_read_char(th, format, major, minor);
+        result = tag_read_char_info(th, format, major, minor);
 
         // Check if we read everything only on the exact same version,
         // but that's the common case.
         if (major == TAG_MAJOR_VERSION && minor == TAG_MINOR_VERSION)
             inf.fail_if_not_eof("chr");
 
-#if TAG_MAJOR_VERSION == 34
-        if (major == 33 && minor == TAG_MINOR_0_11)
-            return true;
-#endif
-        return major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION;
+        result.save_loadable = _loadable_save_ver(major, minor);
+        return result;
     }
     catch (short_read_exception &E)
     {
-        fail("Save file corrupted");
+        fail("Save file `%s` corrupted (short read)", save->get_filename().c_str());
     };
 }
 
