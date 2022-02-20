@@ -3388,8 +3388,10 @@ static player_save_info _read_character_info(package *save)
             format = 0;
 
         if (format > TAG_CHR_FORMAT)
+        {
             fail("Incompatible character data from the future in `%s`",
                                         save->get_filename().c_str());
+        }
 
         result = tag_read_char_info(th, format, major, minor);
 
