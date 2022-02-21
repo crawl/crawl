@@ -15,15 +15,11 @@
 # webtiles.config). If something like client.html raises an exception, this
 # will trigger 500 errors across the whole server.
 
+import collections
 import logging
 import os
 
 import yaml
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict # type: ignore
 
 # directory to look for `games.d` files among other things.
 server_path = os.path.dirname(os.path.abspath(__file__))
@@ -82,7 +78,9 @@ game_data_no_cache = True
 # games_config_dir = None
 
 # Example of a games dictionary:
-games = OrderedDict([
+# use of an OrderedDict (pre python 3.6) is necessary to show the lobby in
+# a stable order.
+games = collections.OrderedDict([
     ("dcss-web-trunk", dict(
         name = "Play trunk",
         crawl_binary = "./crawl",

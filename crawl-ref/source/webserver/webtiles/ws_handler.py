@@ -1,4 +1,5 @@
 import codecs
+import collections
 import datetime
 import errno
 import logging
@@ -468,9 +469,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
             try:
-                games = config.games
+                # post py3.6, this can all be done with a dictionary
+                # comprehension, but before that we need to manually keep
+                # the order
                 if self.account_restricted():
-                    games = {g:games[g] for g in games if self.game_id_allowed(g)}
+                    games = collections.OrderedDict()
+                    for g in config.games:
+                        if self.game_id_allowed(g):
+                            games[g] = config.games[g]
+                else:
+                    games = config.games
                 play_html = to_unicode(self.render_string("game_links.html",
                                                   games = games,
                                                   save_info = self.save_info,
