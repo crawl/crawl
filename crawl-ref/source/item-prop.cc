@@ -630,7 +630,7 @@ static const weapon_def Weapon_prop[] =
         SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
     { WPN_FUSTIBALUS,        "fustibalus",         11, -2, 15,
-        SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
+        SK_SLINGS,       SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
         DAMV_NON_MELEE, 2, 99, 150, RANGED_BRANDS },
 
     { WPN_HAND_CROSSBOW,     "hand crossbow",      10,  3, 15,
@@ -640,7 +640,7 @@ static const weapon_def Weapon_prop[] =
         SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 5, 10, 45, RANGED_BRANDS },
     { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23, -2, 23,
-        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+        SK_CROSSBOWS,    SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 0, 2, 100, RANGED_BRANDS },
 
     { WPN_SHORTBOW,          "shortbow",           10,  2, 15,
