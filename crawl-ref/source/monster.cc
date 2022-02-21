@@ -1336,6 +1336,10 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
                 || wtype == WPN_DEMON_TRIDENT;
         }
 
+        // Amaemon's venom whip is part of his whole schtick!
+        if (mons->type == MONS_AMAEMON)
+            return wtype == WPN_DEMON_WHIP;
+
         // Donald kept dropping his shield. I hate that.
         if (mons->type == MONS_DONALD)
             return mons->hands_reqd(weapon) == HANDS_ONE;
