@@ -47,7 +47,7 @@ run_one()
     ;;
     11|qw)
         echo "rc: test/stress/qw.rc" 1>&2
-        $CRAWL -rc test/stress/qw.rc
+        $CRAWL -rc test/stress/qw/qw.rc -extra-opt-first qw_auto_start=true
     ;;
     test) # Not in "all".
         echo "crawl -test" 1>&2

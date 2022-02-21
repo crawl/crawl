@@ -31,3 +31,6 @@
 [submodule "crawl-ref/source/contrib/sdl2-mixer"]
 	path = crawl-ref/source/contrib/sdl2-mixer
 	url = https://github.com/crawl/crawl-sdl2-mixer.git
+[submodule "crawl-ref/source/test/stress/qw"]
+	path = crawl-ref/source/test/stress/qw
+	url = https://github.com/crawl/qw.git
