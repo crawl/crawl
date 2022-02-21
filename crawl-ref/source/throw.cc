@@ -545,8 +545,8 @@ static void _throw_noise(actor* act, const item_def &ammo)
         return;
 
     const item_def* launcher = act->weapon();
-    if (launcher == nullptr || launcher->base_type != OBJ_WEAPONS)
-        return; // can never happen..?
+    if (launcher == nullptr || !is_range_weapon(*launcher))
+        return; // moooom, players are tossing their weapons again
 
     int         level = 0;
     const char* msg   = nullptr;
