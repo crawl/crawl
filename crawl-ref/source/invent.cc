@@ -469,7 +469,7 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any wands.";
     case OBJ_JEWELLERY:
         return "You aren't carrying any pieces of jewellery.";
-    case OSEL_THROWABLE:
+    case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
         return "You aren't carrying any items that you can evoke.";
@@ -1078,9 +1078,11 @@ bool item_is_selected(const item_def &i, int selector)
     case OBJ_MISSILES:
         return itype == OBJ_MISSILES || itype == OBJ_WEAPONS;
 
-    case OSEL_THROWABLE:
+    case OSEL_LAUNCHING:
         return itype == OBJ_MISSILES
-            && is_launched(&you, i) != launch_retval::FUMBLED;
+                        && is_launched(&you, i) != launch_retval::FUMBLED
+                || itype == OBJ_WEAPONS && is_range_weapon(i)
+                                        && item_is_equipped(i);
 
     case OBJ_WEAPONS:
     case OSEL_WIELD:

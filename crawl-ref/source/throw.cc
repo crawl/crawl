@@ -270,11 +270,11 @@ static int _fire_prompt_for_item()
 #endif
 
     int slot = -1;
-    if (any_items_of_type(OSEL_THROWABLE))
+    if (any_items_of_type(OSEL_LAUNCHING))
     {
         slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    menu_type::invlist,
-                                   OSEL_THROWABLE, OPER_FIRE,
+                                   OSEL_LAUNCHING, OPER_FIRE,
                                    invprompt_flag::no_warning); // handled in quiver
     }
     else
@@ -325,7 +325,7 @@ bool fire_warn_if_impossible(bool silent, item_def *weapon)
         if (!weapon || !is_range_weapon(*weapon))
         {
             if (!silent)
-                mprf("You cannot throw anything while %s.", held_status());
+                mprf("You cannot throw/fire anything while %s.", held_status());
             return true;
         }
         else
@@ -394,7 +394,7 @@ void throw_item_no_quiver(dist *target)
 
     if (you.has_mutation(MUT_NO_GRASPING))
     {
-        mpr("You can't grasp things well enough to throw them.");
+        mpr("You can't grasp things well enough to throw or fire them.");
         return;
     }
 
@@ -412,7 +412,10 @@ void throw_item_no_quiver(dist *target)
 
     // first find an action
     string warn;
-    auto a = quiver::ammo_to_action(_fire_prompt_for_item(), true);
+    int slot = _fire_prompt_for_item();
+    auto a = (you.weapon() && you.weapon()->link == slot && is_range_weapon(*you.weapon()))
+        ? quiver::get_primary_action() // XX quiver::launching_to_action(slot)?
+        : quiver::ammo_to_action(slot, true);
 
     // handles slot == -1
     if (!a || !a->is_valid())

@@ -552,6 +552,8 @@ namespace quiver
 
             // TODO: is there any use case for allowing targeting in this case?
             // if this check isn't here, it is treated as a clumsy melee attack
+            // XX this messaging is obsolete without ammo, but is this
+            // reachable somehow?
             if (weapon && is_range_weapon(*weapon))
             {
                 mprf("You do not have any ammo quivered for %s.",
