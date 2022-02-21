@@ -521,6 +521,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def update_db_info(self):
+        if not self.username:
+            return True # caller needs to check for anon if necessary
         self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
         self.logger.extra["username"] = self.username
         if userdb.dgl_is_banned(self.user_flags):
