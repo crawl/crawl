@@ -133,8 +133,18 @@ void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
 item_def* fire_target_behaviour::active_item()
 {
     const int slot = action.get_item();
-    if (slot == -1)
-        return nullptr;
+    item_def *launcher = action.get_launcher();
+    if (slot == -1) {
+        if (is_range_weapon(*launcher))
+        {
+            item_def fake_proj;
+            item_def *thrown = &fake_proj;
+            populate_fake_projectile(*launcher, *thrown);
+            return thrown;
+        }
+        else
+            return nullptr;
+    }
     else
         return &you.inv[slot];
 }
