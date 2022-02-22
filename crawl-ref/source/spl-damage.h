@@ -13,6 +13,8 @@ struct dice_def;
 class dist;
 
 const int DEFAULT_SHATTER_DICE = 3;
+const int FLAT_DISCHARGE_ARC_DAMAGE = 3;
+
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
 #define FLAME_WAVE_POWER_KEY "flame_wave_power"
@@ -39,6 +41,7 @@ spret cast_freeze(int pow, monster* mons, bool fail);
 dice_def freeze_damage(int pow);
 spret cast_airstrike(int pow, coord_def target, bool fail);
 int airstrike_space_around(coord_def target, bool count_invis);
+int airstrike_base_max_damage(int pow);
 spret cast_shatter(int pow, bool fail);
 dice_def shatter_damage(int pow, monster *mons = nullptr);
 int terrain_shatter_chance(coord_def where, const actor &agent);
@@ -54,6 +57,7 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test=fal
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
+int discharge_max_damage(int pow);
 dice_def base_fragmentation_damage(int pow);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,

@@ -991,6 +991,8 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     return empty_space;
 }
 
+static const int AIRSTRIKE_POWER_DIV = 7;
+
 spret cast_airstrike(int pow, coord_def target, bool fail)
 {
     if (cell_is_solid(target))
@@ -1022,7 +1024,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
     const int empty_space = airstrike_space_around(target, true);
 
-    int hurted = empty_space * 2 + random2avg(2 + div_rand_round(pow, 7), 2);
+    int hurted = empty_space * 2 + random2avg(2 + div_rand_round(pow, AIRSTRIKE_POWER_DIV), 2);
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
@@ -1039,6 +1041,13 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
         you.pet_target = mons->mindex();
 
     return spret::success;
+}
+
+// maximum damage before accounting for empty space
+// used for damage display
+int airstrike_base_max_damage(int pow)
+{
+    return 1 + (pow + AIRSTRIKE_POWER_DIV - 1) / AIRSTRIKE_POWER_DIV;
 }
 
 dice_def base_fragmentation_damage(int pow)
@@ -2431,6 +2440,8 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
     return spret::success;
 }
 
+static const int DISCHARGE_POWER_DIV = 8;
+
 static int _discharge_monsters(const coord_def &where, int pow,
                                const actor &agent, int remaining)
 {
@@ -2439,8 +2450,14 @@ static int _discharge_monsters(const coord_def &where, int pow,
     if (!victim || !victim->alive())
         return 0;
 
-    int damage = (&agent == victim) ? 1 + random2(2 + div_rand_round(pow,15))
-                                    : 3 + random2(4 + div_rand_round(pow,8));
+    int damage = 0;
+    if (&agent == victim)
+        damage = 1 + random2(2 + div_rand_round(pow, 15));
+    else
+    {
+        damage = FLAT_DISCHARGE_ARC_DAMAGE
+                 + random2(4 + div_rand_round(pow, DISCHARGE_POWER_DIV));
+    }
 
     bolt beam;
     beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
@@ -2586,6 +2603,12 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
         }
     }
     return spret::success;
+}
+
+int discharge_max_damage(int pow)
+{
+    return FLAT_DISCHARGE_ARC_DAMAGE
+           + (pow + DISCHARGE_POWER_DIV - 1) / DISCHARGE_POWER_DIV;
 }
 
 static bool _elec_not_immune(const actor *act)
