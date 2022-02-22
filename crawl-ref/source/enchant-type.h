@@ -201,6 +201,7 @@ enum enchant_type
     ENCH_CONCENTRATE_VENOM,
     ENCH_FIRE_CHAMPION,
     ENCH_ANGUISH,
+    ENCH_SIMULACRUM,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
