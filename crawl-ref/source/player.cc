@@ -5544,7 +5544,8 @@ bool player::missile_repulsion() const
     return get_mutation_level(MUT_DISTORTION_FIELD) == 3
         || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
         || scan_artefacts(ARTP_RMSL)
-        || have_passive(passive_t::upgraded_storm_shield);
+        || have_passive(passive_t::upgraded_storm_shield)
+        || get_mutation_level(MUT_DEMONIC_WINGS) == 3;
 }
 
 /**
@@ -6443,7 +6444,8 @@ bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT)
         || get_mutation_level(MUT_BIG_WINGS)
-        || has_mutation(MUT_FLOAT);
+        || has_mutation(MUT_FLOAT)
+        || get_mutation_level(MUT_DEMONIC_WINGS) >= 2;
 }
 
 /**

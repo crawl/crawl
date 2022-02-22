@@ -1777,6 +1777,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_DEMONIC_WINGS, 0, 3, mutflag::good, true,
+  "demonic wings",
+
+  {"You can flap your wings for a burst of speed.",
+   "You have enormous, batlike wings.",
+   "You can repel projectiles with your wings."},
+
+  {"You begin to grow a pair of wings.",
+   "Your leathery wings reach full size, and you take to the air.",
+   "Your supernatural reflexes can evade projectiles while flying."},
+
+  {"", "", ""},
+},
+
 { MUT_COLD_BLOODED, 0, 1, mutflag::bad, true,
   "cold-blooded",
 

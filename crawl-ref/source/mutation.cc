@@ -95,7 +95,8 @@ static const body_facet_def _body_facets[] =
     { EQ_GLOVES, MUT_CLAWS },
     { EQ_GLOVES, MUT_DEMONIC_TOUCH },
     { EQ_BOOTS, MUT_HOOVES },
-    { EQ_CLOAK, MUT_WEAKNESS_STINGER }
+    { EQ_CLOAK, MUT_WEAKNESS_STINGER },
+    { EQ_CLOAK, MUT_DEMONIC_WINGS }
 };
 
 vector<mutation_type> get_removed_mutations()
@@ -2007,6 +2008,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             ash_check_bondage();
             break;
 
+        case MUT_DEMONIC_WINGS:
+            if (cur_base_level == 2 && !you.melded[EQ_CLOAK])
+                remove_one_equip(EQ_CLOAK, false, true);
+            // Intentional fall-through
         case MUT_WEAKNESS_STINGER:
             // DS stinger forces cloaks off at 3.
             if (cur_base_level >= 3 && !you.melded[EQ_CLOAK])
@@ -2690,6 +2695,8 @@ static const facet_def _demon_facets[] =
     { 0, { MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER, MUT_WEAKNESS_STINGER },
       { -33, -33, -33 } },
     { 0, { MUT_DEMONIC_TOUCH, MUT_DEMONIC_TOUCH, MUT_DEMONIC_TOUCH },
+      { -33, -33, -33 } },
+    { 0, { MUT_DEMONIC_WINGS, MUT_DEMONIC_WINGS, MUT_DEMONIC_WINGS },
       { -33, -33, -33 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
