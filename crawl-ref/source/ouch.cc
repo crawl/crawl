@@ -609,7 +609,8 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
         int count_created = 0;
         for (int i = 0; i < how_many; ++i)
         {
-            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), damager->mindex());
+            const int mindex = damager->alive() ? damager->mindex() : MHITNOT;
+            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), mindex);
             mg.set_summoned(&you, 2, 0, you.religion);
 
             if (create_monster(mg))
