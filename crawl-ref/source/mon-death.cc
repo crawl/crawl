@@ -1235,6 +1235,19 @@ static void _make_derived_undead(monster* mons, bool quiet,
             mons->get_experience_level(), agent_name, message);
 }
 
+static void _make_simulacra(monster* mons, int pow, god_type god)
+{
+    // Number of simulacra is a function of power.
+    int count  = 1 + random2(1 + div_rand_round(pow, 20));
+
+    for (int i = 0; i < count; ++i)
+    {
+        _make_derived_undead(mons, true, MONS_SIMULACRUM, BEH_FRIENDLY,
+                SPELL_SIMULACRUM, god);
+    }
+    mpr("A freezing mist starts to gather...");
+}
+
 static void _druid_final_boon(const monster* mons)
 {
     vector<monster*> beasts;
@@ -2386,11 +2399,17 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
         else if (was_visible && could_give_xp)
         {
-            // no doubling up with yred and death channel
+            // no doubling up with yred and death channel / simulacrum
             if (have_passive(passive_t::reaping))
             {
                 if (yred_reap_chance())
                     _yred_reap(mons, exploded);
+                corpse_consumed = true;
+            }
+            else if (mons.has_ench(ENCH_SIMULACRUM))
+            {
+                const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
+                _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
                 corpse_consumed = true;
             }
             else if (you.duration[DUR_DEATH_CHANNEL])

@@ -1280,10 +1280,9 @@ eventually covering only the caster, before it times out.
 %%%%
 Simulacrum spell
 
-Creates an icy replica from the corpse of the original being. This magic is
-unstable, so eventually the replica will sublimate into a freezing cloud.
-Simulacra cannot leave the level they were created on. The number of simulacra
-created depends on the size of the creature and spell power.
+Mirrors the soul of a creature in ice. When the creature dies, icy replicas of
+its body burst forth to serve the caster. Simulacra cannot leave the level they
+were created on. The number of simulacra created depends on spell power.
 %%%%
 Siren Song spell
 

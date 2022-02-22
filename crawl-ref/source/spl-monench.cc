@@ -165,3 +165,39 @@ spret cast_vile_clutch(int pow, bolt &beam, bool fail)
 
     return result;
 }
+
+spret cast_simulacrum(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You can't see anything there.");
+        return spret::abort;
+    }
+
+    if (mons->has_ench(ENCH_SIMULACRUM))
+    {
+        mprf("%s's soul is already mirrored in ice!",
+             mons->name(DESC_THE).c_str());
+        return spret::abort;
+    }
+
+    if (!mons_can_be_zombified(*mons))
+    {
+        mpr("You can't make simulacra of that!");
+        return spret::abort;
+    }
+
+    fail_check();
+    int dur = 20 + random2(1 + div_rand_round(pow, 10));
+    mprf("You mirror the soul of %s.", mons->name(DESC_THE).c_str());
+    mons->add_ench(mon_enchant(ENCH_SIMULACRUM, 0, &you, dur * BASELINE_DELAY));
+    mons->props[SIMULACRUM_POWER_KEY] = pow;
+    return spret::success;
+}

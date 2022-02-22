@@ -87,7 +87,6 @@ int animate_dead(actor *caster, int pow, beh_type beha,
                  god_type god = GOD_NO_GOD, bool actual = true);
 
 int find_simulacrable_corpse(coord_def c);
-spret cast_simulacrum(int pow, god_type god, bool fail);
 
 monster_type pick_random_wraith();
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail);

@@ -2098,6 +2098,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_FIRE_CHAMP;
     if (mons.is(MB_ANGUISH))
         ch |= TILE_FLAG_ANGUISH;
+    if (mons.is(MB_SIMULACRUM))
+        ch |= TILE_FLAG_BOUND_SOUL; //for now
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;

@@ -124,6 +124,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
     { ENCH_ANTIMAGIC,       MB_ANTIMAGIC },
     { ENCH_ANGUISH,         MB_ANGUISH },
+    { ENCH_SIMULACRUM,      MB_SIMULACRUM },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

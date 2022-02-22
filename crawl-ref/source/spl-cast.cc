@@ -1206,15 +1206,6 @@ static vector<coord_def> _simple_find_all_hostiles()
     return result;
 }
 
-// wrapper around the simulacrum corpse check
-static vector<coord_def> _find_simulacrable_corpses(const coord_def &c)
-{
-    vector<coord_def> result;
-    if (find_simulacrable_corpse(c) >= 0)
-        result.push_back(c);
-    return result;
-}
-
 // TODO: refactor into target.cc, move custom classes out of target.h
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 {
@@ -1293,6 +1284,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
                                                   0, 1);
     case SPELL_INNER_FLAME:
+        return make_unique<targeter_smite>(&you, range);
+    case SPELL_SIMULACRUM:
         return make_unique<targeter_smite>(&you, range);
     case SPELL_LEDAS_LIQUEFACTION:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS,
@@ -1375,8 +1368,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 
     case SPELL_ANIMATE_SKELETON:
         return make_unique<targeter_multiposition>(&you, find_animatable_skeletons(you.pos()), AFF_MAYBE);
-    case SPELL_SIMULACRUM:
-        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
     case SPELL_BLINK:
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case SPELL_MANIFOLD_ASSAULT:
@@ -2296,9 +2287,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ANIMATE_DEAD:
         return cast_animate_dead(powc, fail);
 
-    case SPELL_SIMULACRUM:
-        return cast_simulacrum(powc, god, fail);
-
     case SPELL_HAUNT:
         return cast_haunt(powc, beam.target, god, fail);
 
@@ -2431,6 +2419,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_INNER_FLAME:
         return cast_inner_flame(spd.target, powc, fail);
+
+    case SPELL_SIMULACRUM:
+        return cast_simulacrum(spd.target, powc, fail);
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
