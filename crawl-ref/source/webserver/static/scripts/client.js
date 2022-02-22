@@ -546,6 +546,7 @@ function (exports, $, key_conversion, chat, comm) {
         $('#chem_link').hide();
         $('#chpw_link').hide();
         $("#logout_link").hide();
+        $("#account_restricted").hide();
         $("#play_now").html("");
 
         $("#admin_panel_button").hide();
