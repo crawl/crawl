@@ -562,8 +562,7 @@ A mace with a short chain connecting the head to the haft.
 fustibalus
 
 A length of wood with a reinforced sling at one end, able to fire projectiles
-at high velocity. It deals more damage when launching purpose-made ammunition,
-rather than stones found on the floor.
+at high velocity.
 %%%%
 giant club
 
@@ -644,8 +643,7 @@ greater numbers of beasts, with lower chances of those beasts being hostile.
 hunting sling
 
 A piece of cloth and leather for launching stones, adequate for hunting small
-game like rabbits or goblins. It deals more damage when launching purpose-made
-ammunition, rather than rocks found on the floor.
+game like rabbits or goblins.
 %%%%
 ice dragon scales
 
