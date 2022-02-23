@@ -455,6 +455,7 @@ void inc_inv_item_quantity(int obj, int amount)
 void inc_mitm_item_quantity(int obj, int amount)
 {
     env.item[obj].quantity += amount;
+    ASSERT(env.item[obj].defined());
 }
 
 void init_item(int item)
