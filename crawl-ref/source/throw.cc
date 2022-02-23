@@ -49,7 +49,7 @@
 #include "viewchar.h"
 #include "view.h"
 
-static int  _fire_prompt_for_item();
+static shared_ptr<quiver::action> _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
 static int  _get_dart_chance(const int hd);
 
@@ -268,36 +268,45 @@ static int _get_dart_chance(const int hd)
 // Returns an item slot, or -1 on abort/failure
 // On failure, returns error text, if any.
 // TODO: consolidate with menu code in quiver.cc?
-static int _fire_prompt_for_item()
+static shared_ptr<quiver::action> _fire_prompt_for_item()
 {
     if (inv_count() < 1)
-        return -1;
+        return nullptr;
 
     // should this sound happen for `f` too? Not sure what the intent is
 #ifdef USE_SOUND
     parse_sound(FIRE_PROMPT_SOUND);
 #endif
 
-    int slot = -1;
-    if (any_items_of_type(OSEL_LAUNCHING))
+    const bool launchables = any_items_of_type(OSEL_LAUNCHING);
+    int slot = PROMPT_GOT_SPECIAL;
+    if (launchables)
     {
-        slot = prompt_invent_item("Fire/throw which item? (* to show all)",
-                                   menu_type::invlist,
-                                   OSEL_LAUNCHING, OPER_FIRE,
-                                   invprompt_flag::no_warning); // handled in quiver
-    }
-    else
-    {
-        slot = prompt_invent_item("Fire/throw which item? (Showing full inventory)",
-                                   menu_type::invlist,
-                                   OSEL_ANY, OPER_FIRE,
-                                   invprompt_flag::no_warning);
+        slot = prompt_invent_item(
+                    "Fire/throw which item? ([<w>*</w>] to toggle full inventory view, [<w>\\</w>] to toss any item)",
+                    menu_type::invlist,
+                    OSEL_LAUNCHING, OPER_FIRE,
+                    invprompt_flag::no_warning // warning handled in quiver
+                        | invprompt_flag::hide_known,
+                    '\\');
     }
 
-    if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
-        return -1;
+    if (slot == PROMPT_GOT_SPECIAL)
+    {
+        // very rudimentary...could at least do `\\` as a toggle
+        slot = prompt_invent_item(launchables
+                                    ? "Throw/toss which item?"
+                                    : "Toss away which item?",
+                    menu_type::invlist,
+                    OSEL_ANY, OPER_FIRE,
+                    invprompt_flag::no_warning
+                            | invprompt_flag::hide_known);
+        return quiver::ammo_to_action(slot, true); // neg values are ok
+    }
 
-    return slot;
+    return (you.weapon() && you.weapon()->link == slot && is_range_weapon(*you.weapon()))
+            ? quiver::get_primary_action() // XX quiver::launching_to_action(slot)?
+            : quiver::ammo_to_action(slot, true);
 }
 
 // Returns false and err text if this item can't be fired.
@@ -421,10 +430,7 @@ void throw_item_no_quiver(dist *target)
 
     // first find an action
     string warn;
-    int slot = _fire_prompt_for_item();
-    auto a = (you.weapon() && you.weapon()->link == slot && is_range_weapon(*you.weapon()))
-        ? quiver::get_primary_action() // XX quiver::launching_to_action(slot)?
-        : quiver::ammo_to_action(slot, true);
+    auto a = _fire_prompt_for_item();
 
     // handles slot == -1
     if (!a || !a->is_valid())
