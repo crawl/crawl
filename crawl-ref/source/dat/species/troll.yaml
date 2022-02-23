@@ -54,7 +54,6 @@ mutations:
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_MONK
-  - JOB_HUNTER
   - JOB_BERSERKER
   - JOB_WARPER
   - JOB_EARTH_ELEMENTALIST
