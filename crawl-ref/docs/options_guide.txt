@@ -1609,7 +1609,7 @@ use_animations += branch_entry
         banished. All animations are enabled by default, and the categories
         that can be enabled/disabled independently are:
 
-          beam             - Animation for casting a beam spell or throwing a
+          beam             - Animation for casting a beam spell or firing a
                              ranged weapon.
           range            - Flashes the screen with an overlay indicating the
                              actual range of an attempted spell, if there are
@@ -1817,16 +1817,15 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         higher priority. Absent action types are not used when cycling
         the quiver. This option also affects autoquivering on game start.
 
-        'launcher' refers to firing the appropriate missile for a
-        wielded weapon (i.e. crossbow, bow, sling). 'throwing' refers to
-        all throwing ammo. Specific throwing ammo types can be refered to
-        by name ('javelin', 'boomerang', 'stone', 'rock', 'net', 'dart'),
-        but order of these only affects order internal to throwing ammo
-        types; 'inscribed' can also be used to control the order of ammo
-        that has been inscribed with "+f". See the "Inscriptions" section of
-        Crawl's manual for more information about inscriptions. Ammo types
-        can be separated with a "/" to indicate that inventory order should
-        determine cycle order. Order within types is determined by letter
+        'launcher' refers to firing a wielded ranged weapon (i.e. crossbow,
+        bow, sling). 'throwing' refers to all throwing ammo. Specific throwing
+        ammo types can be refered to by name ('javelin', 'boomerang', 'stone',
+        'rock', 'net', 'dart'), but order of these only affects order internal
+        to throwing ammo types; 'inscribed' can also be used to control the
+        order of ammo that has been inscribed with "+f". See the "Inscriptions"
+        section of Crawl's manual for more information about inscriptions. Ammo
+        types can be separated with a "/" to indicate that inventory order
+        should determine cycle order. Order within types is determined by letter
         order in the relevant submenu (e.g. inventory for throwing, etc).
 
 fire_order_spell = all
@@ -1855,6 +1854,11 @@ fail_severity_to_quiver = 2
         and automatic quivering. -1 can be used to exclude spells entirely from
         automatic quivering. See fail_severity_to_confirm for a breakdown of
         miscast values.
+
+launcher_autoquiver = true
+        If set to true, change the quiver to the launcher on wielding it;
+        if set to false, the quiver is unchanged on wielding a launcher.
+        (Firing via tab or `v` will still work.).
 
 quiver_menu_focus = false (persistent)
         If set to true, start the quiver menu in "focused" mode where action

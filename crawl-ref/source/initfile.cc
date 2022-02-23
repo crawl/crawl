@@ -239,6 +239,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
         new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
+        new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -669,6 +670,8 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_NET;
     else if (str == "throwing" || str == "ammo")
         return FIRE_THROWING;
+    else if (str == "launcher")
+        return FIRE_LAUNCHER;
     else if (str == "inscribed")
         return FIRE_INSCRIBED;
     else if (str == "spell")

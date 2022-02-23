@@ -22,6 +22,7 @@ enum fire_type
     FIRE_BOOMERANG = 0x0020,
     FIRE_THROWING  = FIRE_DART | FIRE_STONE | FIRE_JAVELIN | FIRE_ROCK
                                | FIRE_NET | FIRE_BOOMERANG,
+    FIRE_LAUNCHER  = 0x0040,
     FIRE_INSCRIBED = 0x1000,   // Only used for _get_fire_order
     FIRE_SPELL     = 0x2000, // TODO: more fine-grained
     FIRE_EVOKABLE  = 0x4000,

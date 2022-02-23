@@ -318,8 +318,7 @@ namespace quiver
 
         bool is_valid() const override
         {
-            // XXX: do we need to re-check whether the player has a launcher?
-            return true;
+            return you.weapon() && is_range_weapon(*you.weapon());
         }
 
         bool is_targeted() const override
@@ -365,8 +364,9 @@ namespace quiver
 
         string quiver_verb() const override
         {
-            const item_def &weapon = *get_launcher();
-            return item_attack_skill(weapon) == SK_SLINGS ? "fire" : "shoot";
+            const item_def *weapon = get_launcher();
+            return weapon && item_attack_skill(*weapon) == SK_SLINGS
+                                                        ? "fire" : "shoot";
         }
 
         formatted_string quiver_description(bool short_desc=false) const override
@@ -401,6 +401,14 @@ namespace quiver
             qdesc += weapon.name(DESC_PLAIN, true);
             return qdesc;
         }
+
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true, bool=false) const override
+        {
+            if (is_valid() && (allow_disabled || is_enabled()))
+                return { make_shared<ranged_action>() };
+            else
+                return { };
+        }
     };
 
     // class isn't intended for quivering per se. Rather, it's a wrapper on
@@ -423,7 +431,11 @@ namespace quiver
                 && !you.confused();
         }
 
-        bool is_valid() const override { return true; }
+        bool is_valid() const override
+        {
+            return !you.weapon() || !is_range_weapon(*you.weapon());
+        }
+
         bool is_targeted() const override { return true; }
 
         string quiver_verb() const override
@@ -745,7 +757,7 @@ namespace quiver
 
         vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true, bool=false) const override
         {
-            if (allow_disabled || is_enabled())
+            if (is_valid() && (allow_disabled || is_enabled()))
                 return { make_shared<melee_action>() };
             else
                 return { };
@@ -2128,6 +2140,8 @@ namespace quiver
     // convert fire_type bitfields to action types
     static void _flag_to_action_types(vector<shared_ptr<action>> &action_types, int flag)
     {
+         if (flag & FIRE_LAUNCHER)
+            action_types.push_back(make_shared<ranged_action>());
         if (flag & FIRE_THROWING) // don't differentiate these, handled internal to ammo_action
             action_types.push_back(make_shared<ammo_action>(-1));
         if (flag & FIRE_SPELL)
@@ -2166,7 +2180,7 @@ namespace quiver
         // This doesn't support ordering ammo subtypes interleaved with anything
         // else
         vector<int> flags_to_check =
-            { FIRE_THROWING, FIRE_SPELL, FIRE_EVOKABLE, FIRE_ABILITY };
+            { FIRE_LAUNCHER, FIRE_THROWING, FIRE_SPELL, FIRE_EVOKABLE, FIRE_ABILITY };
         for (auto f : Options.fire_order)
             for (auto flag : flags_to_check)
                 _check_and_add_actions(action_types, f, flag, done);
@@ -2213,7 +2227,7 @@ namespace quiver
         // back to the current action type if nothing else works.
         for (auto result : action_types)
         {
-            auto n = result->find_next(dir, allow_disabled, false);
+            auto n = result->find_next(dir, allow_disabled, true);
             if (n && n->is_valid())
                 return n;
         }
@@ -2335,6 +2349,11 @@ namespace quiver
         {
             return make_shared<consumable_action>(slot);
         }
+        else if (you.weapon() && you.weapon()->link == slot
+                                && is_range_weapon(*you.weapon()))
+        {
+            return get_primary_action();
+        }
 
         // use ammo as the fallback -- may well end up invalid. This means that
         // by this call, it isn't possible to get toss actions for anything
@@ -2421,7 +2440,9 @@ namespace quiver
     {
         vector<shared_ptr<action>> actions;
         // TODO: this is kind of ugly
-        auto tmp = ammo_action(-1).get_fire_order(true, true);
+        auto tmp = ranged_action().get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = ammo_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
@@ -3088,7 +3109,9 @@ namespace quiver
 
     void on_weapon_changed()
     {
-        // This might be irrelevant now, but let's be safe.
+        if (Options.launcher_autoquiver && you.weapon() && is_range_weapon(*you.weapon()))
+            you.quiver_action.set(get_primary_action());
+
         if (!you.quiver_action.get()->is_valid())
         {
             auto a = you.quiver_action.find_last_valid();
