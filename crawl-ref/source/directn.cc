@@ -3841,7 +3841,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         item_descriptions.push_back(rng_desc);
     }
 
-    if (mon_qvr)
+    if (mon_qvr && !is_launcher_ammo(*mon_qvr))
     {
         const bool net = mon_qvr->sub_type == MI_THROWING_NET;
         const string qvr_desc = net ? mon_qvr->name(DESC_A)

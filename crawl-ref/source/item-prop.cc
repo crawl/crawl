@@ -1906,24 +1906,27 @@ const char *ammo_name(missile_type ammo)
            : Missile_prop[ Missile_index[ammo] ].name;
 }
 
-// Returns true if item can be reasonably thrown without a launcher.
-bool is_throwable(const actor *actor, const item_def &wpn)
+bool is_launcher_ammo(const item_def &wpn)
 {
     if (wpn.base_type != OBJ_MISSILES)
         return false;
 
-#if TAG_MAJOR_VERSION == 34
     switch (wpn.sub_type)
     {
     case MI_ARROW:
     case MI_BOLT:
     case MI_SLING_BULLET:
-        return false;
+        return true;
     default:
-        break;
+        return false;
     }
-#endif
+}
 
+// Returns true if item can be reasonably thrown without a launcher.
+bool is_throwable(const actor *actor, const item_def &wpn)
+{
+    if (wpn.base_type != OBJ_MISSILES || is_launcher_ammo(wpn))
+        return false;
     if (!actor)
         return true;
 
