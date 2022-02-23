@@ -296,7 +296,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         div_rand_round(random_var(adjusted_shield_penalty(DELAY_SCALE)),
                        DELAY_SCALE);
 
-    if (!throwing && is_slowed_by_armour(weap))
+    // Slow attacks with ranged weapons, but not clumsy bashes.
+    // Don't slow throwing attacks while holding a ranged weapon.
+    if (!throwing && is_slowed_by_armour(weap) && projectile)
     {
         const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
