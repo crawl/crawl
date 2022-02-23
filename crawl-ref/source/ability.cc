@@ -334,6 +334,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::none }, // range special-cased
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
+        { ABIL_MUMMY_DECAY, "Decay",
+            0, 0, 0, -1, {}, abflag::max_hp_drain },
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
         { ABIL_END_TRANSFORMATION, "End Transformation",
@@ -1895,6 +1897,41 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_movement_ability(quiet) &&
                                 palentonga_charge_possible(quiet, true);
 
+    case ABIL_MUMMY_DECAY:
+    {
+        if (cloud_at(you.pos()))
+        {
+            if (!quiet)
+                mpr("There's already a cloud here.");
+            return false;
+        }
+        if (env.level_state & LSTATE_STILL_WINDS)
+        {
+            if (!quiet)
+                mpr("The air is too still for clouds to form.");
+            return false;
+        }
+        // fedhas plant..?
+        const monster * const mon = monster_at(you.pos());
+        if (god_protects(&you, mon) && !actor_cloud_immune(*mon, CLOUD_MIASMA))
+        {
+            if (!quiet)
+            {
+                mprf("%s prevents you from harming %s.",
+                     god_name(you.religion).c_str(),
+                     mon->name(DESC_THE).c_str());
+            }
+            return false;
+        }
+        if (is_sanctuary(you.pos())) // !??!?
+        {
+            if (!quiet)
+                mpr("No harmful clouds can form in this sanctuary.");
+            return false;
+        }
+        return true;
+    }
+
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
         {
@@ -2146,6 +2183,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_SHAFT_SELF:
     case ABIL_HEAL_WOUNDS:
     case ABIL_EVOKE_TURN_INVISIBLE:
+    case ABIL_MUMMY_DECAY:
     case ABIL_END_TRANSFORMATION:
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
@@ -3175,6 +3213,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         start_delay<RevivifyDelay>(5);
         break;
 
+    case ABIL_MUMMY_DECAY:
+        mpr("You decay, releasing a cloud of deathly miasma.");
+        place_cloud(CLOUD_MIASMA, you.pos(), random_range(8, 15), &you);
+        drain_player(75, false, true);
+        break;
+
     case ABIL_JIYVA_SLIMIFY:
     {
         fail_check();
@@ -3688,6 +3732,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
                && !you.vampire_alive
                && you.form != transformation::bat;
+    case ABIL_MUMMY_DECAY:
+        return you.has_mutation(MUT_MUMMY_DECAY); // TODO: mut
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
         return you.form == transformation::dragon
@@ -3763,6 +3809,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_TRAN_BAT,
             ABIL_REVIVIFY,
             ABIL_EXSANGUINATE,
+            ABIL_MUMMY_DECAY,
             ABIL_DAMNATION,
             ABIL_WORD_OF_CHAOS,
             ABIL_BLINKBOLT,

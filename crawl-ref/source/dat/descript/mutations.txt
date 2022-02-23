@@ -736,6 +736,10 @@ detect where treasures lay hidden. As you explore the dungeon, nearby item
 locations that you cannot directly see will gain a marker for
 as-yet-undiscovered items.
 %%%%
+voluntary decay mutation
+
+You can emit deathly miasma with <input>$cmd[CMD_USE_ABILITY]</input>.
+%%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
 

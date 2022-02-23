@@ -1895,7 +1895,9 @@ Barachim (Ba)
 
 Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,
-  redemption, or just because they want to.
+  redemption, or just because they want to. Their bodies are ancient, preserved
+  only by a terrible curse; by battling this curse, Mummies can cause themselves
+  to decay, releasing deathly miasma at the cost of their health.
 
   Mummies progress slowly in levels, half again as slowly as Humans in all
   skills except fighting, spellcasting and necromancy. As they increase in

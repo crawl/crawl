@@ -683,6 +683,18 @@ static const mutation_def mut_data[] =
 },
 #endif
 
+{ MUT_MUMMY_DECAY, 0, 1, mutflag::good, false,
+  "voluntary decay",
+
+  {"You can release deathly miasma by letting your body decay.",
+   "",
+   ""},
+
+  {"", "", ""},
+
+  {"", "", ""},
+},
+
 { MUT_NECRO_ENHANCER, 0, 2, mutflag::good, false,
   "in touch with death",
 

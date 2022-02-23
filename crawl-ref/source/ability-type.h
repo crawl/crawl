@@ -58,7 +58,9 @@ enum ability_type
     ABIL_ROLLING_CHARGE,
     // Air Walk
     ABIL_BLINKBOLT,
-    ABIL_MAX_INTRINSIC = ABIL_BLINKBOLT,
+    // Mummies
+    ABIL_MUMMY_DECAY,
+    ABIL_MAX_INTRINSIC = ABIL_MUMMY_DECAY,
 
     // Evoking items.
 #if TAG_MAJOR_VERSION == 34

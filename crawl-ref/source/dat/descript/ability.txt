@@ -844,3 +844,8 @@ Causes the caster to radiate toxic energy, continuously inflicting poison on
 everything in line of sight for as long as the aura lasts. The power of this
 ability scales with the Evocations skill, and this ability is available only
 while wielding the Staff of Olgreb.
+%%%%
+Decay ability
+
+Battle the curse of undeath, causing your corpse to decay and emit a cloud of
+deathly miasma.
