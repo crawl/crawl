@@ -2406,7 +2406,10 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             else if (mons.has_ench(ENCH_SIMULACRUM))
             {
-                _make_simulacra(&mons, 0, GOD_NO_GOD);
+                int simu_pow = 0;
+                if (mons.props.exists(SIMULACRUM_POWER_KEY))
+                    simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
+                _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
                 corpse_consumed = true;
             }
             else if (you.duration[DUR_DEATH_CHANNEL])

@@ -1391,10 +1391,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && find_animatable_skeletons(you.pos()).empty())
             return "there is nothing nearby to animate!";
         break;
-    case SPELL_SIMULACRUM:
-        if (temp && find_simulacrable_corpse(you.pos()) < 0)
-            return "there is nothing here to animate!";
-        break;
 
     case SPELL_DEATH_CHANNEL:
         if (have_passive(passive_t::reaping))

@@ -198,5 +198,6 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     int dur = 20 + random2(1 + div_rand_round(pow, 10));
     mprf("You mirror the soul of %s.", mons->name(DESC_THE).c_str());
     mons->add_ench(mon_enchant(ENCH_SIMULACRUM, 0, &you, dur * BASELINE_DELAY));
+    mons->props[SIMULACRUM_POWER_KEY] = pow;
     return spret::success;
 }
