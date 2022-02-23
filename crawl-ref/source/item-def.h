@@ -140,7 +140,7 @@ public:
 
     bool defined() const;
     bool appearance_initialized() const;
-    bool is_valid(bool info = false) const;
+    bool is_valid(bool info = false, bool error=false) const;
 
     /** Should this item be preserved as far as possible? */
     bool is_critical() const;

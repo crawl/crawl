@@ -4046,17 +4046,18 @@ bool item_type_has_unidentified(object_class_type base_type)
 
 // Checks whether the item is actually a good one.
 // TODO: check brands, etc.
-bool item_def::is_valid(bool iinfo) const
+bool item_def::is_valid(bool iinfo, bool error) const
 {
+    auto channel = error ? MSGCH_ERROR : MSGCH_DIAGNOSTICS;
     if (base_type == OBJ_DETECTED)
     {
         if (!iinfo)
-            dprf("weird detected item");
+            mprf(channel, "weird detected item");
         return iinfo;
     }
     else if (!defined())
     {
-        dprf("undefined");
+        mprf(channel, "undefined item");
         return false;
     }
     const int max_sub = get_max_subtype(base_type);
@@ -4065,22 +4066,22 @@ bool item_def::is_valid(bool iinfo) const
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
         {
             if (!iinfo)
-                dprf("weird subtype and no info");
+                mprf(channel, "weird item subtype and no info");
             if (sub_type > max_sub)
-                dprf("huge subtype");
+                mprf(channel, "huge item subtype");
             if (!item_type_has_unidentified(base_type))
-                dprf("unided item of a type that can't be");
+                mprf(channel, "unided item of a type that can't be");
             return false;
         }
     }
     if (get_colour() == 0)
     {
-        dprf("black item");
-        return false; // No black items.
+        mprf(channel, "item color invalid"); // 0 = BLACK and so invisible
+        return false;
     }
     if (!appearance_initialized())
     {
-        dprf("no rnd");
+        mprf(channel, "item has uninitialized rnd");
         return false; // no items with uninitialized rnd
     }
     return true;
