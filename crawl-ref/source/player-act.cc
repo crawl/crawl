@@ -252,7 +252,8 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     // math.
     const int DELAY_SCALE = 20;
 
-    if (projectile && is_throwable(this, *projectile))
+    const bool throwing = projectile && is_throwable(this, *projectile);
+    if (throwing)
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
@@ -295,7 +296,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         div_rand_round(random_var(adjusted_shield_penalty(DELAY_SCALE)),
                        DELAY_SCALE);
 
-    if (is_slowed_by_armour(weap))
+    if (!throwing && is_slowed_by_armour(weap))
     {
         const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
