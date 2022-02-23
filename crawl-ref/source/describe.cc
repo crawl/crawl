@@ -4989,7 +4989,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << uppercase_first(pronoun) << " cannot regenerate.\n";
     else if (mons_class_fast_regen(mi.type))
         result << uppercase_first(pronoun) << " "
-               << conjugate_verb("regenerate", plural)
+               << conjugate_verb("regenerate", plural) << " "
                << (mi.type == MONS_PARGHIT ? "astonishingly " : "")
                << " quickly.\n";
 
