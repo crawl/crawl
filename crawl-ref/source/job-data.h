@@ -275,7 +275,7 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_TROLL, SP_PALENTONGA, SP_MERFOLK,
       SP_GARGOYLE, SP_DEMONSPAWN, },
     { },
-    { "robe", "potion of ambrosia q:2" },
+    { "robe", "scroll of holy word" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 },
       { SK_STEALTH, 2 }, },
