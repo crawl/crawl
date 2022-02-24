@@ -148,6 +148,15 @@ item_def* newgame_make_item(object_class_type base,
             item.sub_type = ARM_ROBE;
     }
 
+    // If the character can't use a given scroll, hand out a replacement instead.
+    if (item.base_type == OBJ_SCROLLS) {
+        if (item.sub_type == SCR_HOLY_WORD && you.undead_or_demonic())
+            item.sub_type = SCR_IDENTIFY;
+        else if (item.sub_type == SCR_BLINKING || item.sub_type == SCR_TELEPORTATION)
+            if (you.stasis())
+                item.sub_type = SCR_IDENTIFY;
+    }
+
     // Make sure we didn't get a stack of shields or such nonsense.
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
