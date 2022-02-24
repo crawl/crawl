@@ -6270,7 +6270,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_SCORPIONS:
     {
-        const int max_scorps = 1 + div_rand_round(splpow, 60);
+        const int max_scorps = 1 + div_rand_round(splpow, 42);
         const int num_scorps = random_range(1, max_scorps);
         for (int i = 0; i < num_scorps; ++i)
             _summon(*mons, MONS_SCORPION, 2, slot);
