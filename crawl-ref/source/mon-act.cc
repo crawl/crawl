@@ -234,7 +234,8 @@ static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
     return false;
 }
 
-static void _melee_attack_player(monster &mons, monster* ru_target)
+static void _melee_attack_player(monster &mons, monster* ru_target,
+                                 bool opportunity_attack = false)
 {
     if (ru_target)
     {
@@ -246,7 +247,7 @@ static void _melee_attack_player(monster &mons, monster* ru_target)
         fight_melee(&mons, ru_target);
     }
     else
-        fight_melee(&mons, &you);
+        fight_melee(&mons, &you, nullptr, false, opportunity_attack);
 }
 
 static bool _swap_monsters(monster& mover, monster& moved)
@@ -3129,12 +3130,12 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     return false;
 }
 
-void mon_maybe_attack_you(monster& mons)
+void launch_opportunity_attack(monster& mons)
 {
     monster *ru_target = nullptr;
     if (_handle_ru_melee_redirection(mons, &ru_target))
         return;
-    _melee_attack_player(mons, ru_target);
+    _melee_attack_player(mons, ru_target, true);
 }
 
 static bool _do_move_monster(monster& mons, const coord_def& delta)

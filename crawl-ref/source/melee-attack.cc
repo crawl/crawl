@@ -70,7 +70,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(is_cleaving), is_riposte(false), is_projected(false), roll_dist(0),
-    wu_jian_attack(WU_JIAN_ATTACK_NONE),
+    is_opportunity_attack(false), wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
     attack_occurred = false;
@@ -2474,7 +2474,8 @@ bool melee_attack::mons_attack_effects()
         return false;
     }
 
-    if (attacker != defender && attk_flavour == AF_TRAMPLE)
+    // Don't trample while player is moving - either mean or nonsensical
+    if (attacker != defender && attk_flavour == AF_TRAMPLE && !is_opportunity_attack)
         do_knockback();
 
     special_damage = 0;
@@ -2643,7 +2644,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_BLINK_WITH:
-        if (coinflip())
+        if (coinflip() && !is_opportunity_attack)
             blink_fineff::schedule(attacker, defender);
         break;
 
@@ -2840,11 +2841,13 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENSNARE:
-        if (one_chance_in(3))
+        if (!is_opportunity_attack && one_chance_in(3))
             ensnare(defender);
         break;
 
     case AF_CRUSH:
+        if (is_opportunity_attack)
+            break; // Won't work while player is moving
         if (needs_message)
         {
             mprf("%s %s %s.",
@@ -2859,7 +2862,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENGULF:
-        if (x_chance_in_y(2, 3)
+        if (!is_opportunity_attack  // Won't work while player is moving
+            && x_chance_in_y(2, 3)
             && attacker->can_constrict(defender, true, true))
         {
             const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
@@ -3010,7 +3014,9 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_SPIDER:
     {
-        if (!one_chance_in(3))
+        // Don't trigger on opportunity attacks to avoid spawning in the
+        // space that the player is moving to.
+        if (!is_opportunity_attack && !one_chance_in(3))
             break;
 
         if (summon_spider(*attacker, defender->pos(),

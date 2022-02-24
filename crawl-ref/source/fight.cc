@@ -241,10 +241,13 @@ static bool _autoswitch_to_melee()
  *                     defender, and false otherwise.
  * @param simu Is this a simulated attack?  Disables a few problematic
  *             effects such as blood spatter and distortion teleports.
+ * @param opportunity_attack Is this an opportunity_attack? Disables
+ *                          things that affect movement.
  *
  * @return Whether the attack took time (i.e. wasn't cancelled).
  */
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu,
+                 bool opportunity_attack)
 {
     ASSERT(attacker); // XXX: change to actor &attacker
     ASSERT(defender); // XXX: change to actor &defender
@@ -384,8 +387,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         melee_attack melee_attk(attacker, defender, attack_number,
                                 effective_attack_number);
 
-        if (simu)
-            melee_attk.simu = true;
+        melee_attk.simu = simu;
+        melee_attk.is_opportunity_attack = opportunity_attack;
 
         // If the attack fails out, keep effective_attack_number up to
         // date so that we don't cause excess energy loss in monsters

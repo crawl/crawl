@@ -36,6 +36,6 @@ void handle_monster_move(monster* mon);
 
 void queue_monster_for_action(monster* mons);
 
-void mon_maybe_attack_you(monster &mon);
+void launch_opportunity_attack(monster &mon);
 
 #define ENERGY_SUBMERGE(entry) (max(entry->energy_usage.swim / 2, 1))

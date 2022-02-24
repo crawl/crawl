@@ -262,15 +262,12 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
 
         simple_monster_message(*mon, " attacks as you move away!");
         const int old_energy = mon->speed_increment;
-        mon_maybe_attack_you(*mon);
+        launch_opportunity_attack(*mon);
         // Refund up to 10 energy (1 turn) from the attack.
         // Thus, only slow attacking monsters use energy for these.
-        // EXCEPTION: phantoms stay adjacent after a hit, so they need to use
-        // up energy, or you ping-pong everywhere and it looks ridiculous.
-        if (you.pos() == orig_pos)
-            mon->speed_increment = min(mon->speed_increment + 10, old_energy);
+        mon->speed_increment = min(mon->speed_increment + 10, old_energy);
 
-        if (you.pending_revival)
+        if (you.pending_revival || you.pos() != orig_pos)
             return;
     }
 }

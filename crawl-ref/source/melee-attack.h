@@ -39,6 +39,7 @@ public:
     bool         is_riposte;      // long blade retaliation attack
     bool         is_projected;    // projected weapon spell attack
     int          roll_dist;       // palentonga rolling charge distance
+    bool         is_opportunity_attack; // monster up to no good
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
