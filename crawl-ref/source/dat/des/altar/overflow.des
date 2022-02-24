@@ -5511,20 +5511,27 @@ TAGS:    temple_overflow_generic_15 temple_overflow_generic_14 \
   else
     altarcount = tonumber(get_overflow_altar_count(_G))
   end
+  if not altarcount then
+    altarcount = 9
+  end
   -- altar arrangements by row. rows of 3 have G or T at the ends.
   -- 9: 3/3/3. 10: 3/4/3. 11: 4/3/4. 12: 4/4/4. 13: 4/5/4. 14: 5/4/5. 15: 5/5/5.
   if altarcount >= 13 then
-    subst("T:F")
+    subst("T=F")
   end
   if altarcount % 2 == 0 then
-    subst("T:.")
-    shuffle("FH")
+    subst("T=.")
+    subst("F=Z")
+    subst("H=F")
+    subst("Z=H")
   end
   if altarcount >= 11 then
-    subst("G:D")
+    subst("G=D")
   end
   if altarcount >= 11 and altarcount <= 13 then
-    shuffle("DE")
+    subst("D=Z")
+    subst("E=D")
+    subst("Z=E")
   end
 }}
 SUBST:   DF : B
