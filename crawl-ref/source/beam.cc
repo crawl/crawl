@@ -4312,8 +4312,8 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
 void bolt::tracer_affect_monster(monster* mon)
 {
-    // Ignore unseen monsters.
-    if (!agent() || !agent()->can_see(*mon))
+    // Ignore unseen monsters (other than the caster).
+    if (!agent() || !agent()->can_see(*mon) && agent()->as_monster() != mon)
         return;
 
     if (flavour == BEAM_UNRAVELLING && monster_can_be_unravelled(*mon))
