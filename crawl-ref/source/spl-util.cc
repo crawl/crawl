@@ -1396,10 +1396,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (have_passive(passive_t::reaping))
             return "you are already reaping souls!";
         break;
-
-    case SPELL_CORPSE_ROT:
-        if (temp && corpse_rot(&you, 0, false) == spret::abort)
-            return "there is nothing fresh enough to decay nearby.";
+        
         // fallthrough
     case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:

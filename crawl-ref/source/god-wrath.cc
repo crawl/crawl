@@ -643,13 +643,7 @@ static bool _kikubaaqudgha_retribution()
                                : "Kikubaaqudgha's malice focuses upon you.");
 
     if (!_count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
-    {
-        // Either zombies, or corpse rot + skeletons.
         kiku_receive_corpses(you.experience_level * 4);
-
-        if (coinflip())
-            corpse_rot();
-    }
 
     if (x_chance_in_y(you.experience_level, 27))
     {

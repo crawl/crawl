@@ -1365,6 +1365,46 @@ static bool _reaping(monster &mons)
     return _mons_reaped(*killer, mons);
 }
 
+static void _corpse_rot(monster &mons, int pow)
+{
+    if (!mons_can_be_zombified(mons))
+        return;
+    
+    coord_def center = you.pos();
+    int rot = 1 + random2(1 + div_rand_round(pow, 25));
+    
+    for (fair_adjacent_iterator ai(center); ai; ++ai)
+    {
+        if (rot == 0)
+            break;
+
+        if (cell_is_solid(*ai) || cloud_at(*ai))
+            continue;
+
+        place_cloud(CLOUD_MIASMA, *ai, 2 + random2avg(8, 2), &you);
+        --rot;
+    }
+
+    // Continue out to radius 2 if radius 1 is full
+    if (rot)
+    {
+        for (distance_iterator di(center, true, true, 2); di; ++di)
+        {
+            if (rot == 0)
+                break;
+
+            if (cell_is_solid(*di) || cloud_at(*di))
+                continue;
+
+            place_cloud(CLOUD_MIASMA, *di, 2 + random2avg(8, 2), &you);
+            --rot;
+        }
+    }
+
+    if (rot)
+        mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
+}
+
 static bool _god_will_bless_follower(monster* victim)
 {
     return have_passive(passive_t::bless_followers)
@@ -2424,6 +2464,15 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!corpse_consumed && coinflip() && 
                 (_animate_dead_reap(mons) || _reaping(mons)))
             corpse_consumed = true;
+            
+        // currently allowing this to stack with other death effects -hm
+        if (you.duration[DUR_CORPSE_ROT])
+        {
+            int rot_pow = 0;
+                if (you.props.exists(CORPSE_ROT_POWER_KEY))
+                    rot_pow = you.props[CORPSE_ROT_POWER_KEY].get_int();
+            _corpse_rot(mons, rot_pow);
+        }
     }
 
     if (!wizard && !submerged && !was_banished)

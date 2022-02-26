@@ -9,6 +9,7 @@
 using std::vector;
 
 #define ANIMATE_DEAD_POWER_KEY "animate_dead_power"
+#define CORPSE_ROT_POWER_KEY "corpse_rot_power"
 
 class actor;
 

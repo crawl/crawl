@@ -785,10 +785,10 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CORPSE_ROT, "Corpse Rot",
-    spschool::necromancy | spschool::air,
-    spflag::area | spflag::neutral | spflag::unclean,
-    2,
-    50,
+    spschool::necromancy | spschool::air | spschool::poison,
+    spflag::helpful | spflag::utility | spflag::selfench | spflag::unclean,
+    4,
+    100,
     -1, -1,
     2, 0,
     TILEG_CORPSE_ROT,
