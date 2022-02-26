@@ -685,27 +685,39 @@ static void _handle_channeling(int cost)
     const int sources = 3 * player_equip_unrand(UNRAND_WUCAD_MU)
                         + 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
 
+    // Channeling items test evo skill in order to activate.
     if (!x_chance_in_y(sources * you.skill(SK_EVOCATIONS), 108))
         return;
 
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
-    // The chance of backfiring goes down with evo skill and up with cost.
-    if (!one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+    // Passed the skill test, now recover some mana.
+    // A small boon for failures: Recover mana even on a backfire.
     {
         mpr("Magical energy flows into your mind!");
-        inc_mp(cost, true);
-        return;
+        // slightly over half the mana; a better refund for lower level spells
+        inc_mp(cost / 2 + 1, true);
     }
 
-    mpr(random_choose("Weird images run through your mind.",
-                      "Your head hurts.",
-                      "You feel a strange surge of energy.",
-                      "You feel uncomfortable."));
-    if (coinflip())
-        confuse_player(2 + random2(4));
-    else
-        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+    // The chance to avoid a backfire goes up with evo skill and down with cost.
+    int skillminuscost = max(you.skill(SK_EVOCATIONS) - cost, 1);
+
+    // print a helpful message if backfire chance is 100%
+    if (skillminuscost <= 1)
+        mprf(MSGCH_WARN, "You aren't skilled enough to handle this power!");
+
+    // Test skill once more, to see if the channeling backfired.
+    if (one_chance_in(skillminuscost))
+        {
+            mpr(random_choose("Weird images run through your mind.",
+                            "Your head hurts.",
+                            "You feel a strange surge of energy.",
+                            "You feel uncomfortable."));
+            if (coinflip())
+                confuse_player(2 + random2(4));
+            else
+                lose_stat(STAT_INT, 1 + random2avg(5, 2));
+        }
 }
 
 /**
