@@ -589,6 +589,12 @@ static const duration_def duration_data[] =
       "You are reanimating the dead.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your reaping aura expires.", _end_animate_dead },
       { "Your reaping aura is weakening.", 1 }}, 6},
+    { DUR_CORPSE_ROT,
+      MAGENTA, "Rot",
+      "corpse rot", "corpse rot",
+      "You are producing miasma from the slain.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your miasmic aura fades." },
+      { "Your miasmic aura is weakening.", 1 }}, 6},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

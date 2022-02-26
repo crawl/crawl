@@ -231,5 +231,6 @@ enum duration_type
     DUR_OOZEMANCY,
     DUR_FIERY_ARMOUR,
     DUR_ANIMATE_DEAD,
+    DUR_CORPSE_ROT,
     NUM_DURATIONS
 };

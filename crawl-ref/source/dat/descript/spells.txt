@@ -373,7 +373,7 @@ affected creature appreciably easier to hit.
 %%%%
 Corpse Rot spell
 
-Rapidly accelerates the decomposition of any corpses lying around the caster,
+Rapidly accelerates the decomposition of living monsters slain by the caster,
 and gathers the foul miasmic vapour around the caster. The clouds eat away at
 the life force of any creature they envelop.
 %%%%

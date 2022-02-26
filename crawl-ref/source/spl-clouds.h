@@ -18,9 +18,6 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
 spret cast_ring_of_flames(int power, bool fail);
 void manage_fire_shield();
 
-spret cast_corpse_rot(int pow, bool fail);
-spret corpse_rot(actor* caster = nullptr, int pow = 0, bool actual = true);
-
 void holy_flames(monster* caster, actor* defender);
 
 spret cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,

@@ -1681,7 +1681,9 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AWAKEN_FOREST:
     case SPELL_DRUIDS_CALL:
     case SPELL_SUMMON_HOLIES:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_CORPSE_ROT:
+#endif
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
     case SPELL_FIRE_SUMMON:
@@ -5949,10 +5951,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_irradiate(splpow, *mons, false);
         return;
 
-    case SPELL_CORPSE_ROT:
-        corpse_rot(mons);
-        return;
-
     case SPELL_SUMMON_GREATER_DEMON:
         duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
 
@@ -7730,7 +7728,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
                 return ai_action::good();
         return ai_action::bad();
 
-    case SPELL_CORPSE_ROT:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:

@@ -1265,8 +1265,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range, 0, 1);
     case SPELL_STARBURST:
         return make_unique<targeter_starburst>(&you, range, pow);
-    case SPELL_CORPSE_ROT:
-        return make_unique<targeter_corpse_rot>();
     case SPELL_IRRADIATE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
@@ -2332,6 +2330,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_EXCRUCIATING_WOUNDS:
         return cast_excruciating_wounds(powc, fail);
+        
+    case SPELL_CORPSE_ROT:
+        return cast_corpse_rot(powc, fail);
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:
@@ -2401,9 +2402,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_MANIFOLD_ASSAULT:
         return cast_manifold_assault(powc, fail);
-
-    case SPELL_CORPSE_ROT:
-        return cast_corpse_rot(powc, fail);
 
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(powc, beam.target, fail);
