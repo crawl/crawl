@@ -2009,9 +2009,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
 
         case MUT_DEMONIC_WINGS:
-            if (cur_base_level == 2 && !you.melded[EQ_CLOAK])
-                remove_one_equip(EQ_CLOAK, false, true);
-            // Intentional fall-through
         case MUT_WEAKNESS_STINGER:
             // DS stinger forces cloaks off at 3.
             if (cur_base_level >= 3 && !you.melded[EQ_CLOAK])

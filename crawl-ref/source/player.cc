@@ -1923,6 +1923,16 @@ void update_acrobat_status()
     you.redraw_evasion = true;
 }
 
+void update_demonic_slaying_movement()
+{
+    if (!you.get_mutation_level(MUT_DEMONIC_WINGS))
+        return;
+    // this is just a test; use DUR_SLAYMOVE if this feature is worthy of
+    // further effort
+    you.duration[DUR_WEREBLOOD] = you.time_taken+1;
+    you.redraw_status_lights = true;
+}
+
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
 static int _player_evasion_size_factor(bool base = false)
@@ -5544,8 +5554,7 @@ bool player::missile_repulsion() const
     return get_mutation_level(MUT_DISTORTION_FIELD) == 3
         || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
         || scan_artefacts(ARTP_RMSL)
-        || have_passive(passive_t::upgraded_storm_shield)
-        || get_mutation_level(MUT_DEMONIC_WINGS) == 3;
+        || have_passive(passive_t::upgraded_storm_shield);
 }
 
 /**

@@ -1278,7 +1278,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear that with your sharp stinger!");
             return false;
         }
-        if (you.get_mutation_level(MUT_DEMONIC_WINGS) >= 2)
+        if (you.get_mutation_level(MUT_DEMONIC_WINGS) == 3)
         {
             if (verbose)
                 mpr("You can't wear that over your leathery wings!");

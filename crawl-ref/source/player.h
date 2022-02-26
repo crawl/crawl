@@ -973,6 +973,7 @@ bool player_can_hear(const coord_def& p, int hear_distance = 999);
 bool player_is_shapechanged();
 
 void update_acrobat_status();
+void update_demonic_slaying_movement();
 
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();

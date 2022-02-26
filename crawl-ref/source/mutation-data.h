@@ -1780,16 +1780,16 @@ static const mutation_def mut_data[] =
 { MUT_DEMONIC_WINGS, 0, 3, mutflag::good, true,
   "demonic wings",
 
-  {"You can flap your new wings for a burst of speed. (Rampage)",
-   "You have enormous, batlike wings.\n\
-    You can rampage with your wings.",
-   "You have enormous, batlike wings.\n\
-    You can repel projectiles with your wings.\n\
-    You can rampage with your wings."},
+  {"After you move, you can hit harder with your next attack.",
+   "You have enormous, batlike wings.\n"
+   "After you move, you can hit harder with your next attack.",
+   "You have enormous, batlike wings.\n"
+   "You can rampage with your wings.\n"
+   "After you move, you can hit harder with your next attack."},
 
-  {"You begin to grow a pair of wings.",
-   "Your leathery wings reach full size, and you take to the air.",
-   "Your supernatural reflexes can evade projectiles while flying."},
+  {"Small, batlike wings begin to sprout from your back.",
+   "Your leathery wings grow larger, and you take to the air.",
+   "Your massive wings can give you a burst of speed. (Rampage)"},
 
   {"", "", ""},
 },
