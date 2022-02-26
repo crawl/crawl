@@ -1757,7 +1757,8 @@ void attack::player_stab_check()
     // so upgrade the stab type for !stab and the Spriggan's Knife here
     if (using_weapon()
         && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
-        && st != STAB_NO_STAB)
+        && st != STAB_NO_STAB
+        && coinflip())
     {
         st = STAB_SLEEPING;
     }
