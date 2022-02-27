@@ -771,11 +771,11 @@ than the creature it mirrors.
 %%%%
 phial of floods
 
-An enchanted vessel brimming over with elemental water. Removing the stopper
-unleashes a torrent of water from the phial, dealing damage to the target and
-flooding the nearby area. Any creatures hit by the wave are also engulfed in
-water, silencing them temporarily. The strength of the torrent and the duration
-of the flooding are increased with Evocations skill.
+An enchanted vessel of elemental water. Removing the stopper unleashes a torrent
+of water, smashing the target and flooding the nearby area. If any creatures
+engulfed by the wave need air to breathe, they'll be unable to cast spells until
+they recover. The strength of the torrent and the duration of the flooding
+increase with Evocations skill.
 %%%%
 piece from Xom's chessboard
 
