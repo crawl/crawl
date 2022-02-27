@@ -76,7 +76,8 @@ of @player_doom@
 w:8
 of @death_or_doom@
 
- w:1 of @_verbing_@ @death_or_doom@
+w:1
+of @_verbing_@ @death_or_doom@
 
 w:6
 of @_adjective_@ @_strategy_or_justice_@
@@ -750,6 +751,9 @@ w:5
 "Gaze Upon Infinity"
 
 w:5
+"I Knew You'd Do That"
+
+w:5
 "I Foresaw This"
 
 w:5
@@ -1132,7 +1136,7 @@ heavily jewelled
 
 ichor-stained
 
-surprisingly fuzzy
+distressingly furry
 
 tattered
 
@@ -1168,7 +1172,7 @@ jewelled
 
 ichor-stained
 
-surprisingly fuzzy
+distressingly furry
 
 spiked
 
