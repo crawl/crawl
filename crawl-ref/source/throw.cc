@@ -48,6 +48,7 @@
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
+#include "mon-project.h"
 
 static shared_ptr<quiver::action> _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
@@ -620,7 +621,8 @@ void throw_it(quiver::action &a)
 
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
-    const bool teleport = is_pproj_active();
+
+    const bool teleport = is_pproj_active() && !is_unrandom_artefact(*launcher, UNRAND_SORCERERS_SHORTBOW);
 
     if (you.confused())
     {
@@ -810,7 +812,7 @@ void throw_it(quiver::action &a)
     mprf("You %s%s %s.",
           teleport ? "magically " : "",
           is_thrown ? "throw" : launcher ? "shoot" : "toss away",
-          ammo_name.c_str());
+          is_unrandom_artefact(*launcher, UNRAND_SORCERERS_SHORTBOW) ? "an orblet of destruction" : ammo_name.c_str());
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
@@ -846,7 +848,10 @@ void throw_it(quiver::action &a)
             Hints.hints_throw_counter++;
 
         pbolt.drop_item = !returning && !tossing;
-        pbolt.fire();
+        if (!is_unrandom_artefact(*launcher, UNRAND_SORCERERS_SHORTBOW))
+            pbolt.fire();
+        else
+            cast_iood(&you, 50, &pbolt, 0, 0, MHITNOT, false, false, true);
 
         // For returning ammo, check for mulching before the return step
         if (tossing)

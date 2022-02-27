@@ -6354,7 +6354,7 @@ bool bolt::nasty_to(const monster* mon) const
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
     if (flavour == BEAM_DEVASTATION)
-        return mon->type != MONS_ORB_OF_DESTRUCTION;
+        return (mon->type != MONS_ORB_OF_DESTRUCTION && mon->type != MONS_ORBLET_OF_DESTRUCTION);
 
     // Take care of other non-enchantments.
     if (!is_enchantment())

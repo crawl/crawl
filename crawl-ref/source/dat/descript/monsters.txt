@@ -1914,6 +1914,13 @@ massive inertia. A smart and agile person may move out of its path, causing it
 to miss its target. It cannot be avoided by Dodging skill, and is able to make
 sharp turns to hit adjacent targets.
 %%%%
+orblet of destruction
+
+A conjured globe of pure magic that homes onto a designated target, albeit with
+massive inertia. A smart and agile person may move out of its path, causing it
+to miss its target. It cannot be avoided by Dodging skill, and is able to make
+sharp turns to hit adjacent targets.
+%%%%
 orb of fire
 
 A globe of raw primordial fire, capable of impressive pyrotechnics, and of

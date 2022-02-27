@@ -1640,6 +1640,20 @@ BRAND:      SPWPN_PROTECTION
 INSCRIP:    meekguard
 DBRAND:     It provides extra protection to wielders with little health.
 
+ENUM: SORCERERS_SHORTBOW
+NAME: sorcerer's shortbow
+OBJ: OBJ_WEAPONS/WPN_SHORTBOW
+COLOUR: ETC_MAGIC
+TILE:    urand_piercer
+TILE_EQ: bow_two
+INSCRIP: orblet,
+BOOL: seeinv
+DBRAND: It fires miniature orbs of destruction instead of arrows.
++
++Its damage is unaffected by the wielder's attributes.
++
++Missiles fired with this weapon are too unstable to be sent through portals.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
