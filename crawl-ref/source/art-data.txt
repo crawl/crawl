@@ -1640,6 +1640,18 @@ BRAND:      SPWPN_PROTECTION
 INSCRIP:    meekguard
 DBRAND:     It provides extra protection to wielders with little health.
 
+ENUM:       MINDARMOUR
+NAME:       Mindarmour of the Mentalist Mutant
+OBJ:        OBJ_ARMOUR/ARM_HELMET
+PLUS:       +3
+WILL:       1
+COLOUR:     ETC_DARK
+TILE:       urand_buckethead
+TILE_EQ:    buckethead
+BOOL:       seeinv, fly
+INSCRIP:    Inacc
+DESCRIP:    It reduces the accuracy of all your attacks.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
