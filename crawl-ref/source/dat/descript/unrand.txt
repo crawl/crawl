@@ -722,3 +722,9 @@ staff of the Meek
 A sacred relic of the Monks of St. Lee, followers of the renunciate archmage. Just
 as St. Lee sought to atone for the destruction his spells wrought by protecting
 others, so his staff protects its wielder.
+%%%%
+Mindarmour of the Mentalist Mutant
+
+An imposing helm that covers the entire head, including one's face. Somehow those
+wearing it can nonetheless sense the world around them. It was forged by a mutant
+whose rivalry with another mutant resulted in a decades-long war.
