@@ -55,6 +55,7 @@
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
@@ -1963,10 +1964,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
                 if (you.species == SP_GHOUL
                     && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                    && coinflip())
+                    && grid_distance(you.pos(), mons.pos()) <= 1)
                 {
                     hp_heal += 1 + random2avg(1 + you.experience_level, 3);
+                    restore_stat(STAT_INT, 1, false, true);
                 }
+
                 if (have_passive(passive_t::restore_hp_mp_vs_evil))
                 {
                     hp_heal = random2(1 + 2 * mons.get_experience_level());

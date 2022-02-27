@@ -25,6 +25,7 @@ enum timed_effect_type
     TIMER_ABYSS_SPEED,
     TIMER_JIYVA,
     TIMER_EVOLUTION,
+    TIMER_GHOUL_HUNGER,
 #if TAG_MAJOR_VERSION == 34
     TIMER_BRIBE_TIMEOUT,
 #endif
