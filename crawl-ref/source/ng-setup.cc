@@ -152,6 +152,18 @@ item_def* newgame_make_item(object_class_type base,
     if (item.base_type == OBJ_SCROLLS && is_useless_item(item, false, true))
             item.sub_type = SCR_IDENTIFY;
 
+    // Hand out curing to replace unusable potions, or an ident scroll
+    if (item.base_type == OBJ_POTIONS && is_useless_item(item, false, true))
+    {
+        if (!you.has_mutation(MUT_NO_DRINK))
+            item.sub_type = POT_CURING;
+        else
+        {
+            item.base_type = OBJ_SCROLLS;
+            item.sub_type = SCR_IDENTIFY;
+        }
+    }
+
     // Make sure we didn't get a stack of shields or such nonsense.
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
