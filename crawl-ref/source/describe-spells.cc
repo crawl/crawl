@@ -389,6 +389,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return glaciate_damage(pow, 3);
         case SPELL_CONJURE_BALL_LIGHTNING:
             return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
+        case SPELL_ERUPTION:
+            return eruption_damage();
         default:
             break;
     }
@@ -420,6 +422,8 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTBLUE;
         case SPELL_IOOD:
             return LIGHTMAGENTA;
+        case SPELL_ERUPTION:
+            return RED;
         default:
             break;
     }
