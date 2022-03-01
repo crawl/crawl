@@ -478,7 +478,9 @@ move_again:
         monster* mons = (victim && victim->is_monster()) ?
             (monster*) victim : 0;
 
-        if (mons && mons_is_projectile(victim->type))
+        // orblets of destruction will ignore other orblets
+        if (mons && mons_is_projectile(victim->type)
+            && !(orblet && victim->type == MONS_ORBLET_OF_DESTRUCTION))
         {
             // Weak orbs just fizzle instead of exploding.
             if (mons->props[IOOD_DIST].get_int() < 2
@@ -500,7 +502,7 @@ move_again:
                     return true;
                 }
             }
-            else if (!orblet)
+            else
             {
                 if (mon.observable())
                     mpr("The orbs collide in a blinding explosion!");
