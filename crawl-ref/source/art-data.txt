@@ -1646,8 +1646,7 @@ OBJ: OBJ_WEAPONS/WPN_SHORTBOW
 COLOUR: ETC_MAGIC
 TILE:    urand_piercer
 TILE_EQ: bow_two
-INSCRIP: orblet,
-BOOL: seeinv
+INSCRIP: orblet
 DBRAND: It fires miniature orbs of destruction instead of arrows.
 +
 +Its damage is unaffected by the wielder's attributes.
