@@ -1231,3 +1231,60 @@ int archer_bonus_damage(int hd)
 {
     return hd * 4 / 3;
 }
+
+/**
+ * Do weapons that use the given skill use strength or dex to increase damage?
+ */
+bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon)
+{
+    if (!using_weapon)
+        return true;
+    switch (wpn_skill)
+    {
+    case SK_LONG_BLADES:
+    case SK_SHORT_BLADES:
+    case SK_CROSSBOWS:
+    case SK_BOWS:
+    case SK_SLINGS:
+        return false;
+    default:
+        return true;
+    }
+}
+
+/**
+ * Apply the player's attributes to multiply damage dealt with the given weapon skill.
+ */
+int stat_modify_damage(int damage, skill_type wpn_skill, bool using_weapon)
+{
+    // At 10 strength, damage is multiplied by 1.0
+    // Each point of strength over 10 increases this by 0.025 (2.5%),
+    // strength below 10 reduces the multiplied by the same amount.
+    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
+    // Ranged weapons and short/long blades use dex instead.
+    const bool use_str = weapon_uses_strength(wpn_skill, using_weapon);
+    const int attr = use_str ? you.strength() : you.dex();
+    damage *= max(1.0, 75 + 2.5 * attr);
+    damage /= 100;
+
+    return damage;
+}
+
+int apply_weapon_skill(int damage, skill_type wpn_skill, bool random)
+{
+    const int sklvl = you.skill(wpn_skill, 100);
+    damage *= 2500 + maybe_random2(sklvl + 1, random);
+    damage /= 2500;
+    return damage;
+}
+
+int apply_fighting_skill(int damage, bool aux, bool random)
+{
+    const int base = aux? 40 : 30;
+    const int sklvl = you.skill(SK_FIGHTING, 100);
+
+    damage *= base * 100 + maybe_random2(sklvl + 1, random);
+    damage /= base * 100;
+
+    return damage;
+}

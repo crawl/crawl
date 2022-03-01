@@ -1286,11 +1286,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     if (atk != UNAT_TOUCH)
     {
-        aux_damage  = player_stat_modify_damage(aux_damage);
+        aux_damage  = stat_modify_damage(aux_damage, SK_UNARMED_COMBAT, false);
 
         aux_damage  = random2(aux_damage);
 
-        aux_damage  = player_apply_fighting_skill(aux_damage, true);
+        aux_damage  = apply_fighting_skill(aux_damage, true, true);
 
         aux_damage  = player_apply_misc_modifiers(aux_damage);
 
@@ -3266,9 +3266,9 @@ void melee_attack::do_minotaur_retaliation()
 
     // Use the same damage formula as a regular headbutt.
     int dmg = AUX_HEADBUTT.get_damage();
-    dmg = player_stat_modify_damage(dmg);
+    dmg = stat_modify_damage(dmg, SK_UNARMED_COMBAT, false);
     dmg = random2(dmg);
-    dmg = player_apply_fighting_skill(dmg, true);
+    dmg = apply_fighting_skill(dmg, true, true);
     dmg = player_apply_misc_modifiers(dmg);
     dmg = player_apply_slaying_bonuses(dmg, true);
     dmg = player_apply_final_multipliers(dmg, true);

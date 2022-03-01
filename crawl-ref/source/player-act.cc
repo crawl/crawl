@@ -246,7 +246,12 @@ brand_type player::damage_brand(int)
  */
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
-    const item_def* weap = weapon();
+    return attack_delay_with(projectile, rescale, weapon());
+}
+
+random_var player::attack_delay_with(const item_def *projectile, bool rescale,
+                                     const item_def *weap) const
+{
     random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.

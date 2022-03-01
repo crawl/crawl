@@ -615,6 +615,8 @@ public:
     int         damage_type(int which_attack = -1) override;
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
+    random_var  attack_delay_with(const item_def *projectile, bool rescale,
+                                  const item_def *weapon) const;
     int         constriction_damage(bool direct) const override;
     bool        constriction_does_damage(bool /* direct */) const override
                     { return true; };
