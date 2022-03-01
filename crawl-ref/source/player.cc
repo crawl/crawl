@@ -3232,8 +3232,17 @@ static void _display_tohit()
  */
 static void _display_attack_delay()
 {
-    int delay = you.attack_delay(nullptr, false).expected();
     const item_def* weapon = you.weapon();
+    int delay;
+    if (weapon && is_range_weapon(*weapon))
+    {
+        item_def fake_proj;
+        populate_fake_projectile(*weapon, fake_proj);
+        delay = you.attack_delay(&fake_proj, false).expected();
+    }
+    else
+        delay = you.attack_delay(nullptr, false).expected();
+
     const bool at_min_delay = weapon
                               && you.skill(item_attack_skill(*weapon))
                                  >= weapon_min_delay_skill(*weapon);
