@@ -285,7 +285,7 @@ static bool _iood_shielded(monster& mon, actor &victim)
 dice_def iood_damage(int pow, int dist, bool random, bool orblet)
 {
     if (orblet) {
-        return dice_def(5, 5);
+        return dice_def(6, 6);
     }
     int flat = 60;
 

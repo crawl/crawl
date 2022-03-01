@@ -1209,7 +1209,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
             mindelay_skill / 10);
     } else {
         description += make_stringf(
-        "Damage: 5d5,  Base attack delay: %.1f"
+        "Damage: 6d6,  Base attack delay: %.1f"
         "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
             (float) property(item, PWPN_SPEED) / 10,
             (float) weapon_min_delay(item, item_brand_known(item)) / 10,
