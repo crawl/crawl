@@ -345,7 +345,9 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     if (dist < 2)
         beam.hit_verb = "weakly hits";
     beam.ex_size = 1;
-    beam.loudness = 7;
+    if (!orblet) {
+        beam.loudness = 7;
+    }
 
     monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 
