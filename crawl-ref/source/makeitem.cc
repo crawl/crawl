@@ -970,11 +970,14 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_SHADOWS:
         return type == ARM_SCARF;
 
+    case SPARM_ENERGY:
+        if (slot == EQ_GLOVES)
+            return true;
+        // deliberate fall-through
     case SPARM_LIGHT:
     case SPARM_RAGE:
     case SPARM_MAYHEM:
     case SPARM_GUILE:
-    case SPARM_ENERGY:
         return type == ARM_ORB;
 
     case NUM_SPECIAL_ARMOURS:
