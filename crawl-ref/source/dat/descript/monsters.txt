@@ -211,6 +211,12 @@ Grum
 
 A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 %%%%
+Grunn
+
+A brutally twisted undead gnoll in the eternal service of Ereshkigal, lord of
+Tartarus. Legend has it that he sold his soul to return his most beloved hunting
+dog to life. Whether that hound is a member of his current pack, none can say.
+%%%%
 Harold
 
 A middle-aged bounty hunter, anxious to retire after one final job. He hopes to

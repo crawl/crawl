@@ -492,6 +492,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_HALBERD,          1 },
                 { WPN_GLAIVE,           1 },
         }, { 1, -2, 1 } } },
+        { MONS_GRUNN,
+            { { { WPN_GLAIVE,            2 },
+                { WPN_BARDICHE,          1 },
+        }, { 1, 4, 9 }, { { SPWPN_DRAINING, 1 } } } },
         { MONS_CRAZY_YIUF,
             { { { WPN_QUARTERSTAFF, 1 } },
             { 1, 2, 4 },
@@ -1216,6 +1220,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             force_item = true;
         }
         break;
+    case MONS_GRUNN:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_CURSES))
+            make_item_unrandart(item, UNRAND_CURSES);
+        break;
 
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
@@ -1789,6 +1797,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_ROBIN:
     case MONS_SPRIGGAN_BERSERKER:
     case MONS_IRONBOUND_THUNDERHULK:
+    case MONS_GRUNN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;

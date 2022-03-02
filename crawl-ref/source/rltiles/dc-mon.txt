@@ -1042,6 +1042,7 @@ robin MONS_ROBIN
 %rim 1
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
+grunn MONS_GRUNN
 %sdir mon/humanoids
 %rim 0
 goblin MONS_GOBLIN
