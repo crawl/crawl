@@ -173,31 +173,37 @@ ENDMAP
 
 ##############################################################################
 # Was evilmike_arrival_teleporters
+# Now with all new transporters!
 NAME:    evilmike_arrival_plus
 TAGS:    arrival
 ORIENT:  float
-SHUFFLE: GTVt1`
+SHUFFLE: GTVt1`, HIJK
 SUBST:   `=.
 SUBST:   X:Y. , Y:xx.
 MONS:    plant
+SUBST:   H = @, I = @
+MARKER:  J = lua:transp_loc("evilmike")
+MARKER:  K = lua:transp_dest_loc("evilmike")
 MAP
-       x+x
-      xx.xx
-      xY.Yx
-      xX.Xx
-      xX.Xx
-     xx...xx
- xxxxx..G..xxxxx
-xxYXX.......XXYxx
-+.....G.{.G.....+
-xxYXX.......XXYxx
- xxxxx..G..xxxxx
-     xx...xx
-      xX.Xx
-      xX.Xx
-      xY.Yx
-      xx.xx
-       x+x
+         H
+        x+x
+       xx.xx
+       xY.Yx
+       xX.Xx
+       xX.Xx
+      xx...xx
+  xxxxx..G..xxxxx
+ xxYXX.......XXYxx
+K+.....G.{.G.....+I
+ xxYXX.......XXYxx
+  xxxxx..G..xxxxx
+      xx...xx
+       xX.Xx
+       xX.Xx
+       xY.Yx
+       xx.xx
+        x+x
+         J
 ENDMAP
 
 ##############################################################
