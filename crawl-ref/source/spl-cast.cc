@@ -399,6 +399,7 @@ int raw_spell_fail(spell_type spell)
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
+    chance2 += 4 * player_equip_unrand(UNRAND_MINDARMOUR);
 
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
 
@@ -488,7 +489,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         power = apply_enhancement(power, _spell_enhancement(spell));
 
         // Wild magic boosts spell power but decreases success rate.
-        power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
+        power *= (10 + 3 * (you.get_mutation_level(MUT_WILD_MAGIC)
+                          + player_equip_unrand(UNRAND_MINDARMOUR)));
         power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
 
         // Augmentation boosts spell power at high HP.

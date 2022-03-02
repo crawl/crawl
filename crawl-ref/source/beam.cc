@@ -18,6 +18,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -3207,6 +3208,14 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment(bool resistible)
 {
+    // Mental intrusion detected. Mindarmour activated!
+    if (has_saving_throw() && player_equip_unrand(UNRAND_MINDARMOUR)) {
+        if (!you.duration[DUR_MINDARMOUR])
+            mpr("Your mental armour activates!");
+        you.increase_duration(DUR_MINDARMOUR, 5 + random2(10), 20);
+        you.redraw_armour_class = true;
+        obvious_effect = true;
+    }
     if (resistible
         && has_saving_throw()
         && you.check_willpower(agent(true), ench_power) > 0)

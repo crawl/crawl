@@ -6039,6 +6039,9 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 
+    if (duration[DUR_MINDARMOUR])
+        AC += 300;
+
     if (duration[DUR_SPWPN_PROTECTION])
     {
         AC += 700;
@@ -6354,6 +6357,9 @@ int player_willpower(bool temp)
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
         rm += WL_PIP * 2;
+
+    if (you.duration[DUR_MINDARMOUR] && temp)
+        rm += WL_PIP;
 
     // Enchantment/environment effect
     if ((you.duration[DUR_LOWERED_WL]

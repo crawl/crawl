@@ -578,6 +578,11 @@ static const duration_def duration_data[] =
       "on blink cooldown", "blink cooldown",
       "You are unable to blink.", D_NO_FLAGS,
       {{ "You feel stable enough to blink again."}}},
+    { DUR_MINDARMOUR,
+      LIGHTBLUE, "",
+      "protected from physical damage", "mindarmour",
+      "Your helm is protecting you from physical damage.", D_DISPELLABLE,
+      {{ "Your mental armour fades." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

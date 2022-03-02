@@ -1644,13 +1644,13 @@ ENUM:       MINDARMOUR
 NAME:       Mindarmour of the Mentalist Mutant
 OBJ:        OBJ_ARMOUR/ARM_HELMET
 PLUS:       +3
-WILL:       1
+STR:        +3
 COLOUR:     ETC_DARK
 TILE:       urand_buckethead
 TILE_EQ:    buckethead
-BOOL:       seeinv, fly
-INSCRIP:    Inacc
-DESCRIP:    It reduces the accuracy of all your attacks.
+BOOL:       seeinv
+INSCRIP:    Inacc WildMagic
+DESCRIP:    It reduces the accuracy of all your attacks. Your spells are harder to cast, but more powerful.
 
 # This entry must always be last.
 ENUM:   DUMMY2
