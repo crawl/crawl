@@ -3645,3 +3645,74 @@ v.l...l.v
 v.......v
 vvv...vvv
 ENDMAP
+
+##############################################################################
+# most teleporter vaults are dangerous, especially for new players.
+# here's a no-stress scenario in which they can try out teleporters
+NAME:    spicycebolla_arrival_teleporter_tutorial
+TAGS:    arrival no_monster_gen no_pool_fixup
+ORIENT:  float
+FTILE:   .GATUVYt>{EFJK : floor_pebble_blue
+COLOUR:  . : blue
+SUBST:   A = wW, G : GATUVYt
+SHUFFLE: -!
+SUBST:   - : .:40 W
+SUBST:   ! : .
+SHUFFLE: EJ/FK
+MARKER:  E = lua:transp_loc("tut_entry")
+MARKER:  F = lua:transp_dest_loc("tut_stairs")
+MARKER:  J = lua:transp_dest_loc("tut_entry")
+MARKER:  K = lua:transp_loc("tut_stairs")
+MAP
+ AAAA!AAA
+Awww!wwwwA
+www!wwwwwwA
+wwAW!WAwwww
+wAW...WAwwA
+wW.J>K.WwwwA
+wAW.G.WAwwww
+wwAWWWAwwwwA
+AwwwwwwwwwwwA
+ AwwwwAWWWAww
+ wwwwAW.G.WAw
+ AwwwW.E{F.Ww
+  AwwAW...WAw
+  wwwwAW-WAww
+  Awwwwww-www
+   Awwww-wwwA
+    AAA@AAAA
+ENDMAP
+
+##############################################################
+NAME:    spicycebolla_arrival_xxxplode
+TAGS:    arrival transparent
+ORIENT:  float
+SUBST:   X : tXXXX
+SHUFFLE: xX
+SUBST:   X:xX, X:.mw, x:xxvc, t:tttgw
+TILE:    t = dngn_tree_dead
+COLOUR:  t = darkgrey / brown
+: set_feature_name("tree", "dead tree")
+MAP
+    X           X
+   xxXxx  X  xxXxx
+  @xxxXxx . xxXxxx@
+ xx.xxxXx . xXxxx.xx
+Xxxx.xxXxx.xxXxx.xxxX
+ Xxxx.xxXx.xXxx.xxxX
+ xXxxx.xXx.xXx.xxxXx
+ xxXXxx.xx.xx.xxXXxx
+  xxxXXx.X.X.xXXxxx
+    xxxxX.X.Xxxxx
+ X.......X{X.......X
+    xxxxX.X.Xxxxx
+  xxxXXx.X.X.xXXxxx
+ xxXXxx.xx.xx.xxXXxx
+ xXxxx.xXx.xXx.xxxXx
+ Xxxx.xxXx.xXxx.xxxX
+Xxxx.xxXxx.xxXxx.xxxX
+ xx.xxxXx . xXxxx.xx
+  @xxxXxx . xxXxxx@
+   xxXxx  X  xxXxx
+    X           X
+ENDMAP
