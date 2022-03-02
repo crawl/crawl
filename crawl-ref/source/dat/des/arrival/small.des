@@ -3591,3 +3591,41 @@ xxxxxxxppprrrrrr.._-x
            x--xxx--xx
            xxxxxxxxxx
 ENDMAP
+
+##############################################################################
+# most teleporter vaults are dangerous, especially for new players.
+# here's a no-stress scenario in which they can try out teleporters
+NAME:    spicycebolla_arrival_teleporter_tutorial
+TAGS:    arrival no_monster_gen no_pool_fixup
+ORIENT:  float
+FTILE:   .GAT}{EFJK : none:30 / floor_marble:5 / floor_pebble_blue
+COLOUR:  . : blue:5 / none
+SUBST:   A = wW, ? = W., G : .GAT
+SUBST:   ? = W:15 . w:5, ! = W.:20
+SUBST:   _ : .:40 W
+SUBST:   T : wwwwT
+KFEAT:   T = mangrove
+SHUFFLE: EJ/FK
+MARKER:  E = lua:transp_loc("tut_entry")
+MARKER:  F = lua:transp_dest_loc("tut_stairs")
+MARKER:  J = lua:transp_dest_loc("tut_entry")
+MARKER:  K = lua:transp_loc("tut_stairs")
+MAP
+ AA?@?AAA
+Awww_wwwwA
+wwww_wwwwwA
+wwAW_WAwwww
+wAW...WAwwA
+wW.J>K.WwwwA
+wAW.G.WAwwww
+wwAWWWAwwwwA
+AwwwwwwwwwwwA
+ AwwwwAWWWAww
+ wwwwAW.G.WAw
+ AwwwW.E{F.Ww
+  AwwAW...WAw
+  wwwwAW!WAww
+  Awww??!?www
+   AwwT?!TwwA
+    AAAT!@?A
+ENDMAP
