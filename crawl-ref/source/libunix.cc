@@ -100,7 +100,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background = f
  * @brief Change the foreground colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal color with attached highlight.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -111,7 +111,7 @@ static curses_style curs_attr_bg(int col);
  * @brief Change the background colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal color with attached highlight.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -122,19 +122,19 @@ static curses_style curs_attr_fg(int col);
  * @brief Get curses attributes for the passed internal color combination.
  *
  * Performs colour mapping for both default colours as well as the color map.
- * Additionally, this function takes into consideration a passed brand.
+ * Additionally, this function takes into consideration a passed highlight.
  *
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
  *  The internal colour for the background.
- * @param brand
- *  Internal color branding information.
+ * @param highlight
+ *  Internal color highlighting information.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
  */
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand);
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight);
 
 /**
  * @brief Returns a curses color pair index for the passed fg/bg combo.
@@ -584,7 +584,14 @@ int getch_ck()
 #ifdef KEY_RESIZE
         case -KEY_RESIZE: return CK_RESIZE;
 #endif
-        case -KEY_BTAB: return CK_SHIFT_TAB;
+        case -KEY_BTAB:  return CK_SHIFT_TAB;
+        // may or may not be defined depending on the terminal. Escape codes
+        // are the xterm convention, other terminals may do different things
+        // and ncurses may or may not handle them correctly.
+        case -KEY_SR:    return CK_SHIFT_UP;     // \033[1;2A
+        case -KEY_SLEFT: return CK_SHIFT_LEFT;   // \033[1;2D
+        case -KEY_SRIGHT: return CK_SHIFT_RIGHT; // \033[1;2C
+        case -KEY_SF:    return CK_SHIFT_DOWN;   // \033[1;2B
         default:         return c;
         }
     }
@@ -912,15 +919,15 @@ bool is_cursor_enabled()
     return cursor_is_enabled;
 }
 
-static inline unsigned get_brand(int col)
+static inline unsigned get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
            (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
                                             : unsigned{CHATTR_NORMAL};
 }
@@ -959,7 +966,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
         if ((fg_curses & COLFLAG_CURSES_BRIGHTEN)
-            && (Options.bold_brightens_foreground
+            && (Options.bold_brightens_foreground != MB_FALSE
                 || Options.best_effort_brighten_foreground))
         {
             style.attr |= WA_BOLD;
@@ -973,6 +980,11 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         {
             style.attr |= WA_BLINK;
         }
+    }
+    else if (Options.bold_brightens_foreground == MB_TRUE
+                && (fg_curses & COLFLAG_CURSES_BRIGHTEN))
+    {
+        style.attr |= WA_BOLD;
     }
 
     if (monochrome_output_requested)
@@ -993,31 +1005,31 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
 static curses_style curs_attr_bg(int col)
 {
     BG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
 }
 
 // see declaration
 static curses_style curs_attr_fg(int col)
 {
     FG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
 }
 
 // see declaration
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand)
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight)
 {
     COLOURS fg_mod = fg;
     COLOURS bg_mod = bg;
     attr_t flags = 0;
 
     // calculate which curses flags we need...
-    if (brand != CHATTR_NORMAL)
+    if (highlight != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_style(brand);
+        flags |= convert_to_curses_style(highlight);
 
         // Allow highlights to override the current background color.
-        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-            bg_mod = static_cast<COLOURS>((brand & CHATTR_COLMASK) >> 8);
+        if ((highlight & CHATTR_ATTRMASK) == CHATTR_HILITE)
+            bg_mod = static_cast<COLOURS>((highlight & CHATTR_COLMASK) >> 8);
     }
 
     // Respect color remapping.
@@ -1041,7 +1053,7 @@ static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand)
     ret.attr |= flags;
 
     // Reverse color manually to ensure correct brightening attrs.
-    if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
+    if ((highlight & CHATTR_ATTRMASK) == CHATTR_REVERSE)
         return flip_colour(ret);
 
     return ret;
@@ -1124,6 +1136,27 @@ static bool curs_can_use_extended_colors()
     return Options.allow_extended_colours && COLORS >= NUM_TERM_COLOURS;
 }
 
+lib_display_info::lib_display_info()
+    : type(
+#ifdef USE_TILE_WEB
+        "Console/Webtiles"
+#elif defined(USE_TILE_LOCAL)
+        "SDL Tiles"
+#else
+        "Console"
+#endif
+        ),
+    term(termname()),
+    fg_colors(
+        (curs_can_use_extended_colors()
+                || Options.bold_brightens_foreground != MB_FALSE)
+        ? 16 : 8),
+    bg_colors(
+        (curs_can_use_extended_colors() || Options.blink_brightens_background)
+        ? 16 : 8)
+{
+}
+
 // see declaration
 static bool curs_color_combo_has_pair(short fg, short bg)
 {
@@ -1157,10 +1190,17 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     short fg_default_to_compare = fg_default;
     short bg_default_to_compare = bg_default;
 
-    // Adjust the expected output color depending on the game options.
+    // Adjust the brighten bits of the expected output color depending on the
+    // game options, so we are doing an apples to apples comparison. If we
+    // aren't using extended colors, *and* we aren't applying a bold to
+    // brighten, then brightened colors are guaranteed not to be different
+    // than unbrightened colors. With just a `best_effort..` option set, don't
+    // undo brightening as it isn't assumed to be safe. It is this
+    // transformation that can result in black on black if a player incorrectly
+    // sets one of these options.
     if (!curs_can_use_extended_colors())
     {
-        if (!Options.bold_brightens_foreground)
+        if (Options.bold_brightens_foreground == MB_FALSE)
         {
             fg_to_compare = fg & ~COLFLAG_CURSES_BRIGHTEN;
             fg_default_to_compare = fg_default & ~COLFLAG_CURSES_BRIGHTEN;
@@ -1393,6 +1433,22 @@ void textcolour(int col)
 #endif
 }
 
+COLOURS default_hover_colour()
+{
+    // DARKGREY backgrounds go to black with 8 colors. I think this is
+    // generally what we want, rather than applying a workaround (like the
+    // DARKGREY -> BLUE foreground trick), but this means that using a
+    // DARKGREY hover, which arguably looks better in 16colors, won't work.
+    // DARKGREY is also not safe under bold_brightens_foreground, since a
+    // terminal that supports this won't necessarily handle a bold background.
+
+    // n.b. if your menu uses just one color, and you set that as the hover,
+    // you will get automatic color inversion. That is generally the safest
+    // option where possible.
+    return (curs_can_use_extended_colors() || Options.blink_brightens_background)
+                 ? DARKGREY : BLUE;
+}
+
 void textbackground(int col)
 {
     const auto style = curs_attr_bg(col);
@@ -1522,8 +1578,10 @@ static curses_style flip_colour(curses_style style)
             {
                 style.attr |= WA_BLINK;
             }
+            // XX I don't *think* this logic should apply for
+            // bold_brightens_foreground = force...
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
-                && (Options.bold_brightens_foreground
+                && (Options.bold_brightens_foreground != MB_FALSE
                     || Options.best_effort_brighten_foreground))
             {
                 style.attr |= WA_BOLD;

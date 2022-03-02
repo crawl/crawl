@@ -42,7 +42,6 @@ bool is_bad_mutation(mutation_type mut);
 bool is_good_mutation(mutation_type mut);
 bool is_body_facet(mutation_type mut);
 bool is_slime_mutation(mutation_type mut);
-bool undead_mutation_rot();
 
 bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
@@ -63,8 +62,7 @@ void validate_mutations(bool debug_msg=false);
 
 bool delete_mutation(mutation_type which_mutation, const string &reason,
                      bool failMsg = true,
-                     bool force_mutation = false, bool god_gift = false,
-                     bool disallow_mismatch = false);
+                     bool force_mutation = false, bool god_gift = false);
 
 bool delete_all_mutations(const string &reason);
 

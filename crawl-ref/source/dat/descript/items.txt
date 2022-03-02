@@ -55,11 +55,6 @@ arbalest
 A large piece of machinery used for firing bolts, braced with steel and cranked
 with a windlass. It takes some time to load and fire.
 %%%%
-arrow
-
-A long shafted projectile intended to be shot with a shortbow or longbow,
-fletched with feathers at one end and a point at the other.
-%%%%
 bardiche
 
 A long pole with an enormous, cleaving blade on one end.
@@ -71,10 +66,6 @@ Armour for the scaly midsections of nagas and palentongas.
 battleaxe
 
 A large war axe with a formidable double-sided head.
-%%%%
-bolt
-
-A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
 %%%%
 book of air
 
@@ -118,8 +109,8 @@ why he would deign to share his secrets with others.
 %%%%
 book of burglary
 
-A book containing many diverse spells useful for theft, breaking and entering,
-and other miscellaneous larceny.
+A book containing spells useful for theft, breaking and entering, and other
+miscellaneous larceny.
 %%%%
 book of callings
 
@@ -433,8 +424,9 @@ An axe with langets, spikes, a lengthed haft and a single-bladed crescent head.
 buckler
 
 A small piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+cumbersome to wear, and slightly impedes the evasion, spellcasting ability, and
+attack speed of the wearer. These penalties will be reduced and eventually
+eliminated with increased Shields skill.
 %%%%
 chain mail
 
@@ -570,8 +562,7 @@ A mace with a short chain connecting the head to the haft.
 fustibalus
 
 A length of wood with a reinforced sling at one end, able to fire projectiles
-at high velocity. It deals more damage when launching purpose-made ammunition,
-rather than stones found on the floor.
+at high velocity.
 %%%%
 giant club
 
@@ -652,8 +643,7 @@ greater numbers of beasts, with lower chances of those beasts being hostile.
 hunting sling
 
 A piece of cloth and leather for launching stones, adequate for hunting small
-game like rabbits or goblins. It deals more damage when launching purpose-made
-ammunition, rather than rocks found on the floor.
+game like rabbits or goblins.
 %%%%
 ice dragon scales
 
@@ -682,7 +672,8 @@ kite shield
 
 A piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+speed of the wearer. These penalties will be reduced and eventually eliminated
+with increased Shields skill.
 %%%%
 lajatang
 
@@ -739,6 +730,11 @@ An extremely rare book, powerful and sinister. Many foolhardy magicians have
 tried to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
 %%%%
+orb
+
+A sphere of crystal, carried in place of a shield. Magic scintilliates within
+its interior.
+%%%%
 orb of zot
 
 An invaluable artefact. Once you have escaped to the surface with it, your
@@ -775,11 +771,11 @@ than the creature it mirrors.
 %%%%
 phial of floods
 
-An enchanted vessel brimming over with elemental water. Removing the stopper
-unleashes a torrent of water from the phial, dealing damage to the target and
-flooding the nearby area. Any creatures hit by the wave are also engulfed in
-water, silencing them temporarily. The strength of the torrent and the duration
-of the flooding are increased with Evocations skill.
+An enchanted vessel of elemental water. Removing the stopper unleashes a torrent
+of water, smashing the target and flooding the nearby area. If any creatures
+engulfed by the wave need air to breathe, they'll be unable to cast spells until
+they recover. The strength of the torrent and the duration of the flooding
+increase with Evocations skill.
 %%%%
 piece from Xom's chessboard
 
@@ -1146,11 +1142,6 @@ short sword
 
 A personal stabbing weapon with a short grip.
 %%%%
-sling bullet
-
-A small, heavy projectile specially shaped for use with slings. It is more
-effective as ammunition than simple stones.
-%%%%
 spear
 
 A hunting weapon consisting of a wooden shaft with a pointed metal head
@@ -1212,7 +1203,7 @@ resistance to scalding steam), but it is extremely light and supple.
 stone
 
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
-thrown by hand or launched with a sling.
+thrown to cause minor damage.
 %%%%
 shadow dragon scales
 
@@ -1245,8 +1236,9 @@ free, if they live long enough.
 tower shield
 
 A large piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+cumbersome to wear, and greatly impedes the evasion, spellcasting ability, and
+attack speed of the wearer. These penalties will be reduced and eventually
+eliminated with increased Shields skill.
 %%%%
 tin of tremorstones
 

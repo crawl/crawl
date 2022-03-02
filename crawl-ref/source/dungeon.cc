@@ -1013,7 +1013,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     // Is this a valid upwards or exit stair out of a branch? In general,
     // ensure that each region has a stone stair up.
 
-    if (feature_mimic_at(c))
+    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
         return false;
 
     if (feat_is_stone_stair_up(env.grid(c))
@@ -1028,8 +1028,6 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
-    case DNGN_ENTER_HELL:
-        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -1037,7 +1035,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
 
 static bool _is_exit_stair(const coord_def &c)
 {
-    if (feature_mimic_at(c))
+    if (feature_mimic_at(c) || env.grid(c) == DNGN_EXIT_HELL)
         return false;
 
     // Branch entries, portals, and abyss entries are not considered exit
@@ -1056,8 +1054,6 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
         return true;
-    case DNGN_ENTER_HELL:
-        return parent_branch(you.where_are_you) == BRANCH_VESTIBULE;
     default:
         return false;
     }
@@ -1228,7 +1224,7 @@ static void _fixup_hell_stairs()
         if (feat_is_stone_stair_up(env.grid(*ri))
             || env.grid(*ri) == DNGN_ESCAPE_HATCH_UP)
         {
-            _set_grd(*ri, DNGN_ENTER_HELL);
+            _set_grd(*ri, branches[you.where_are_you].escape_feature);
         }
     }
 }
@@ -1587,11 +1583,9 @@ static int _num_items_wanted(int absdepth0)
     if (branches[you.where_are_you].branch_flags & brflag::no_items)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
-        return 10 + random2avg(85, 2); // rich level!
-    else if (absdepth0 < 3)
-        return 3 + roll_dice(3, 7); // thin loot on early floors
+        return 9 + random2avg(80, 2); // rich level!
     else
-        return 3 + roll_dice(3, 10);
+        return 3 + roll_dice(3, 9);
 }
 
 static int _mon_die_size()
@@ -2243,6 +2237,8 @@ static bool _branch_entrances_are_connected()
     // stone stairs.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
+        if (env.grid(*ri) == DNGN_ENTER_HELL)
+            continue;
         if (!feat_is_branch_entrance(env.grid(*ri)))
             continue;
         if (!_has_connected_stone_stairs_from(*ri))
@@ -3773,6 +3769,8 @@ static void _place_branch_entrances(bool use_vaults)
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
+        if (env.grid(*ri) == DNGN_ENTER_HELL)
+            continue;
         if (!feat_is_branch_entrance(env.grid(*ri)))
             continue;
 
@@ -4799,63 +4797,59 @@ static object_class_type _superb_object_class()
             10, OBJ_MISCELLANY);
 }
 
+static int _concretize_level(int spec_level, int dgn_level)
+{
+    if (spec_level >= 0)
+        return spec_level;
+
+    if (dgn_level == INVALID_ABSDEPTH)
+        dgn_level = env.absdepth0;
+
+    switch (spec_level)
+    {
+    case ISPEC_DAMAGED:
+    case ISPEC_BAD:
+    case ISPEC_RANDART:
+        return spec_level;
+    case ISPEC_STAR:
+        return 5 + dgn_level * 2;
+    case ISPEC_SUPERB:
+        return ISPEC_GOOD_ITEM;
+    default:
+        return dgn_level;
+    }
+}
+
+static object_class_type _concretize_type(const item_spec &spec)
+{
+    if (spec.base_type != OBJ_RANDOM)
+        return spec.base_type;
+    if (spec.props.exists(MIMIC_KEY))
+        return get_random_item_mimic_type();
+    if (spec.level == ISPEC_SUPERB)
+        return _superb_object_class();
+    if (spec.level == ISPEC_ACQUIREMENT)
+        return shuffled_acquirement_classes(false)[0];
+    return spec.base_type;
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
-                   int level)
+                   int dgn_level)
 {
     // Dummy object?
     if (spec.base_type == OBJ_UNASSIGNED)
         return NON_ITEM;
 
-    if (level == INVALID_ABSDEPTH)
-        level = env.absdepth0;
-
-    object_class_type base_type = spec.base_type;
-    bool acquire = false;
-
-    if (spec.level >= 0)
-        level = spec.level;
-    else
-    {
-        bool adjust_type = false;
-        switch (spec.level)
-        {
-        case ISPEC_DAMAGED:
-        case ISPEC_BAD:
-        case ISPEC_RANDART:
-            level = spec.level;
-            break;
-        case ISPEC_STAR:
-            level = 5 + level * 2;
-            break;
-        case ISPEC_SUPERB:
-            adjust_type = true;
-            level = ISPEC_GOOD_ITEM;
-            break;
-        case ISPEC_ACQUIREMENT:
-            adjust_type = true;
-            acquire = true;
-            break;
-        default:
-            break;
-        }
-
-        if (spec.props.exists(MIMIC_KEY) && base_type == OBJ_RANDOM)
-            base_type = get_random_item_mimic_type();
-        else if (adjust_type && base_type == OBJ_RANDOM)
-        {
-            base_type = acquire ? shuffled_acquirement_classes(false)[0]
-                                : _superb_object_class();
-        }
-    }
+    const int level = _concretize_level(spec.level, dgn_level);
+    const object_class_type base_type = _concretize_type(spec);
 
     int useless_tries = 0;
-
     while (true)
     {
         int item_made = NON_ITEM;
 
-        if (acquire)
+        if (spec.level == ISPEC_ACQUIREMENT)
         {
             item_made = acquirement_create_item(base_type,
                                                 spec.acquirement_source,
@@ -4879,29 +4873,24 @@ int dgn_place_item(const item_spec &spec,
 
         if (item_made == NON_ITEM || item_made == -1)
             return NON_ITEM;
-        else
-        {
-            item_def &item(env.item[item_made]);
-            item.pos = where;
 
-            if (_apply_item_props(item, spec, (useless_tries >= 10), false))
-            {
-                dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
-                    env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
-                    where.x, where.y);
-                env.level_map_mask(where) |= MMT_NO_TRAP;
-                return item_made;
-            }
-            else
-            {
-                // _apply_item_props will not generate a rune you already have,
-                // so don't bother looping.
-                if (base_type == OBJ_RUNES)
-                    return NON_ITEM;
-                useless_tries++;
-            }
+        item_def &item(env.item[item_made]);
+        item.pos = where;
+
+        if (_apply_item_props(item, spec, useless_tries >= 10, false))
+        {
+            dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
+                env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
+                where.x, where.y);
+            env.level_map_mask(where) |= MMT_NO_TRAP;
+            return item_made;
         }
 
+        // _apply_item_props will not generate a rune you already have,
+        // so don't bother looping.
+        if (base_type == OBJ_RUNES)
+            return NON_ITEM;
+        useless_tries++;
     }
 
 }
@@ -4926,24 +4915,6 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 
     const item_spec spec = sitems.get_item(index);
     dgn_place_item(spec, where);
-}
-
-static void _give_animated_weapon_ammo(monster &mon)
-{
-    const item_def *launcher = mon.launcher();
-    if (!launcher)
-        return;
-
-    const item_def *missiles = mon.missiles();
-    if (missiles && missiles->launched_by(*launcher))
-        return;
-
-    const int ammo_type = fires_ammo_type(*launcher);
-    const int thing_created = items(false, OBJ_MISSILES, ammo_type, 1);
-    if (thing_created == NON_ITEM)
-        return;
-
-    give_specific_item(&mon, thing_created);
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
@@ -4979,30 +4950,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 spec.ego = SP_FORBID_EGO;
         }
 
-        int item_level = mspec.place.absdepth();
-
-        if (spec.level >= 0)
-            item_level = spec.level;
-        else
-        {
-            // TODO: merge this with the equivalent switch in dgn_place_item,
-            // and maybe even handle ISPEC_ACQUIREMENT.
-            switch (spec.level)
-            {
-            case ISPEC_STAR:
-                item_level = 5 + item_level * 2;
-                break;
-            case ISPEC_SUPERB:
-                item_level = ISPEC_GOOD_ITEM;
-                break;
-            case ISPEC_DAMAGED:
-            case ISPEC_BAD:
-            case ISPEC_RANDART:
-                item_level = spec.level;
-                break;
-            }
-        }
-
+        const int item_level = _concretize_level(spec.level,
+                                                 mspec.place.absdepth());
         for (int useless_tries = 0; true; useless_tries++)
         {
             int item_made;
@@ -5043,11 +4992,6 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     {
         mon->swap_weapons(MB_FALSE);
     }
-
-    // Make dancing launchers less pathetic.
-    // XX this should be done on creation, not placement?
-    if (mons_class_is_animated_weapon(mon->type))
-        _give_animated_weapon_ammo(*mon);
 }
 
 static bool _should_veto_unique(monster_type type)
@@ -5083,12 +5027,29 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (brdepth[mspec.place.branch] > 1)
         {
             if (type == RANDOM_SUPER_OOD)
-                mspec.place.depth = mspec.place.depth * 2 + 4; // TODO: why?
-            else if (type == RANDOM_MODERATE_OOD)
-                mspec.place.depth += 5;
+            {
+                // Super OODs use 2*depth + 4 which goes very deep, generating
+                // a guaranteed "boss" for vaultsmiths to use. In dungeon it
+                // ramps up slowly from 2*depth in the range D:1-8 (becoming
+                // deeper than a moderate OOD a from D:6-) to the full meaning
+                // at D:12.
+                int plus = 4;
+                if (mspec.place.branch == BRANCH_DUNGEON)
+                    plus = max(0, min(mspec.place.depth - 8, 4));
 
-            if (mspec.place.branch == BRANCH_DUNGEON && starting_depth <= 8)
-                mspec.place.depth = min(mspec.place.depth, starting_depth * 2);
+                mspec.place.depth = mspec.place.depth * 2 + plus;
+            }
+            else if (type == RANDOM_MODERATE_OOD)
+            {
+                mspec.place.depth += 5;
+                // From D:1-4 moderate OODs are capped at depth * 2, starting
+                // on D:5 this cap no longer does anything.
+                if (mspec.place.branch == BRANCH_DUNGEON)
+                {
+                    mspec.place.depth = min(mspec.place.depth,
+                                            starting_depth * 2);
+                }
+            }
         }
         fuzz_ood = false;
         type = RANDOM_MONSTER;
@@ -5143,9 +5104,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         break;
     case ATT_GOOD_NEUTRAL:
         mg.behaviour = BEH_GOOD_NEUTRAL;
-        break;
-    case ATT_STRICT_NEUTRAL:
-        mg.behaviour = BEH_STRICT_NEUTRAL;
         break;
     default:
         break;

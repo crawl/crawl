@@ -1,5 +1,7 @@
 import codecs
+import collections
 import datetime
+import errno
 import logging
 import os
 import random
@@ -17,13 +19,7 @@ from tornado.escape import to_unicode
 from tornado.escape import utf8
 from tornado.ioloop import IOLoop
 
-import auth
-import checkoutput
-import config
-import userdb
-import util
-import load_games
-from util import *
+from webtiles import auth, checkoutput, config, userdb, util, load_games
 
 try:
     from typing import Dict, Set, Tuple, Any, Union, Optional
@@ -56,11 +52,14 @@ def do_lobby_updates():
         if not game.process:
             # handled immediately in `remove_in_lobbys`, ignore here
             continue
+        admin_only = game.account_restricted()
 
         game_entry = game.lobby_entry()
         # Queue up the collected lobby changes in each socket. This loop is
         # synchronous.
         for socket in lobby_sockets:
+            if admin_only and not socket.is_admin():
+                continue
             socket.queue_message("lobby_entry", **game_entry)
 
     # ...and finally, flush all the updates. This loop may be asynchronous.
@@ -70,7 +69,7 @@ def do_lobby_updates():
 def do_periodic_lobby_updates():
     # TODO: in the Future, refactor as a simple async loop
     do_lobby_updates()
-    rate = getattr(config, "lobby_update_rate", 2)
+    rate = config.get('lobby_update_rate')
     IOLoop.current().add_timeout(time.time() + rate, do_periodic_lobby_updates)
 
 def update_all_lobbys(game):
@@ -100,16 +99,23 @@ def write_dgl_status_file():
                              str(socket.process.idle_time()),
                              str(socket.process.watcher_count()))
                         for socket in list(sockets)
-                        if socket.username and socket.is_running()]
+                        if socket.username and socket.show_in_lobby()]
     try:
-        with open(config.dgl_status_file, "w") as f:
+        status_target = config.get('dgl_status_file')
+        status_dir = os.path.dirname(status_target)
+        # generally created by other things sooner or later, but if we don't do
+        # this preemptively here, there's lot of warnings until that happens.
+        if not os.path.exists(status_dir):
+            os.makedirs(status_dir)
+            logging.warning("Creating dgl status file location '%s'", status_dir)
+        with open(status_target, "w") as f:
             f.write("\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
 
 def status_file_timeout():
     write_dgl_status_file()
-    IOLoop.current().add_timeout(time.time() + config.status_file_update_rate,
+    IOLoop.current().add_timeout(time.time() + config.get('status_file_update_rate'),
                                  status_file_timeout)
 
 def find_user_sockets(username):
@@ -118,7 +124,7 @@ def find_user_sockets(username):
             yield socket
 
 def find_running_game(charname, start):
-    from process_handler import processes
+    from webtiles.process_handler import processes
     for process in list(processes.values()):
         if (process.where.get("name") == charname and
             process.where.get("start") == start):
@@ -130,7 +136,7 @@ def _milestone_files():
     # First we collect all milestone files explicitly specified in the config.
     files = set()
 
-    top_level_milestones = getattr(config, 'milestone_file', None)
+    top_level_milestones = config.get('milestone_file')
     if top_level_milestones is not None:
         if not isinstance(top_level_milestones, list):
             top_level_milestones = [top_level_milestones]
@@ -163,10 +169,10 @@ milestone_file_tailers = []
 def start_reading_milestones():
     milestone_files = _milestone_files()
     for f in milestone_files:
-        milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
+        milestone_file_tailers.append(util.FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):
-    data = parse_where_data(line)
+    data = util.parse_where_data(line)
     if "name" not in data:
         return
     game = find_running_game(data.get("name"), data.get("start"))
@@ -313,16 +319,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.reset_timeout()
 
-        if config.max_connections < len(sockets):
+        if config.get('max_connections') < len(sockets):
             self.append_message("connection_closed('The maximum number of "
                               + "connections has been reached, sorry :(');")
             self.close()
         elif shutting_down:
             self.close()
         else:
-            if config.dgl_mode:
-                if hasattr(config, "autologin") and config.autologin:
-                    self.do_login(config.autologin)
+            if config.get('dgl_mode'):
+                if config.get('autologin'):
+                    self.do_login(config.get('autologin'))
                 self.send_lobby()
             else:
                 self.start_crawl(None)
@@ -339,13 +345,26 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def is_in_lobby(self):
         return not self.is_running() and self.watched_game is None
 
-    def send_lobby(self):
+    def send_lobby_data(self):
         self.queue_message("lobby_clear")
-        from process_handler import processes
+        from webtiles.process_handler import processes
         for process in list(processes.values()):
+            if process.account_restricted() and not self.is_admin():
+                continue
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
+
+    def send_lobby(self):
+        self.send_lobby_data()
         self.send_lobby_html()
+
+    def account_restricted(self):
+        return not self.username or userdb.dgl_account_hold(self.user_flags)
+
+    def show_in_lobby(self):
+        return (self.is_running()
+            and self.process.process
+            and not self.account_restricted())
 
     def send_announcement(self, text):
         # TODO: something in lobby?
@@ -384,11 +403,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     return
                 if returncode == 0:
                     try:
-                        save_dict = json_decode(data)[load_games.game_modes[game_key]]
+                        save_dict = json_decode(data)[config.game_modes[game_key]]
                         if not save_dict["loadable"]:
                             # the save in this slot is in use.
                             self.save_info[game_key] = "[playing]" # TODO: something better??
-                        elif load_games.game_modes[game_key] == save_dict["game_type"]:
+                        elif config.game_modes[game_key] == save_dict["game_type"]:
                             # save in the slot matches the game type we are
                             # checking.
                             self.save_info[game_key] = "[" + save_dict["short_desc"] + "]"
@@ -450,8 +469,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
             try:
+                # post py3.6, this can all be done with a dictionary
+                # comprehension, but before that we need to manually keep
+                # the order
+                if self.account_restricted():
+                    games = collections.OrderedDict()
+                    for g in config.games:
+                        if self.game_id_allowed(g):
+                            games[g] = config.games[g]
+                else:
+                    games = config.games
                 play_html = to_unicode(self.render_string("game_links.html",
-                                                  games = config.games,
+                                                  games = games,
                                                   save_info = self.save_info,
                                                   disabled = disable_check))
                 self.send_message("set_game_links", content = play_html)
@@ -474,7 +503,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = False
         self.send_message("ping")
         self.timeout = IOLoop.current().add_timeout(
-                                        time.time() + config.connection_timeout,
+                                        time.time() + config.get('connection_timeout'),
                                         self.check_connection)
 
     def check_connection(self):
@@ -484,19 +513,45 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Connection timed out.")
             self.close()
         else:
-            if self.is_running() and self.process.idle_time() > config.max_idle_time:
+            if self.is_running() and self.process.idle_time() > config.get('max_idle_time'):
                 self.logger.info("Stopping crawl after idle time limit.")
                 self.process.stop()
 
         if not self.client_closed:
             self.reset_timeout()
 
+    def update_db_info(self):
+        if not self.username:
+            return True # caller needs to check for anon if necessary
+        # won't detect a change in hold state on first login...
+        old_restriction = self.user_flags is not None and self.account_restricted()
+        self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
+        self.logger.extra["username"] = self.username
+        if userdb.dgl_is_banned(self.user_flags):
+            return False
+        if old_restriction and not self.account_restricted():
+            self.logger.info("[Account] Hold cleared for user %s (IP: %s)",
+                                        self.username, self.request.remote_ip)
+
+        return True
+
+    def game_id_allowed(self, game_id):
+        if game_id not in config.games:
+            return False
+        if not self.account_restricted():
+            return True
+        game = config.games[game_id]
+        # for now, if this isn't set, default to allow. However, if the
+        # version doesn't support `-no-player-bones` it will still fail to
+        # start.
+        return "allowed_with_hold" not in game or game["allowed_with_hold"]
+
     def start_crawl(self, game_id):
-        if config.dgl_mode and game_id not in config.games:
+        if config.get('dgl_mode') and game_id not in config.games:
             self.go_lobby()
             return
 
-        if config.dgl_mode:
+        if config.get('dgl_mode'):
             game_params = dict(config.games[game_id])
             if self.username == None:
                 if self.watched_game:
@@ -517,9 +572,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # TODO: invalidate for other sockets of the same player?
         self.invalidate_saveslot_cache(game_id)
 
-        import process_handler
+        # update flags in case an account hold has been released or added, or
+        # the player has been banned.
+        if (not self.update_db_info() # ban check happens here
+                or not self.game_id_allowed(game_id)):
+            self.go_lobby()
+            return
 
-        if config.dgl_mode:
+        from webtiles import process_handler
+
+        if config.get('dgl_mode'):
             game_params["id"] = game_id
             args = (game_params, self.username, self.logger)
             self.process = process_handler.CrawlProcessHandler(*args)
@@ -544,7 +606,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process.handle_notification(self.process.username,
                             "'/help' to see available chat commands")
 
-            if config.dgl_mode:
+            if config.get('dgl_mode'):
                 if self.process.where == {}:
                     # If location info was found, the lobbys were already
                     # updated by set_where_data
@@ -552,7 +614,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 update_global_status()
 
     def _on_crawl_end(self):
-        if config.dgl_mode:
+        if config.get('dgl_mode'):
             remove_in_lobbys(self.process)
 
         reason = self.process.exit_reason
@@ -572,14 +634,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
                 self.invalidate_saveslot_cache(self.game_id)
 
-                if config.dgl_mode:
+                if config.get('dgl_mode'):
                     if not self.watched_game:
                         self.send_message("go_lobby")
                         self.send_lobby()
                 else:
                     self.start_crawl(None)
 
-        if config.dgl_mode:
+        if config.get('dgl_mode'):
             update_global_status()
 
         if shutting_down and len(sockets) == 0:
@@ -597,13 +659,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # differently, and given that we're deprecating tornado 2.4
                 # it doesn't seem worth implementing right now. Just stick with
                 # the old synchronous approach for backwards compatibility.
-                p = subprocess.Popen([config.init_player_program, self.username],
+                p = subprocess.Popen([config.get('init_player_program'), self.username],
                                          stdout = f, stderr = subprocess.STDOUT)
                 callback(p.wait())
             else:
                 # TODO: do we need to care about the streams at all here?
                 p = tornado.process.Subprocess(
-                        [config.init_player_program, self.username],
+                        [config.get('init_player_program'), self.username],
                         stdout = f, stderr = subprocess.STDOUT)
                 p.set_exit_callback(callback)
 
@@ -626,8 +688,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def do_login(self, username):
         self.username = username
-        self.user_id, self.user_email, self.user_flags = userdb.get_user_info(username)
-        self.logger.extra["username"] = username
+        self.user_flags = None
+        if not self.update_db_info():
+            # XX consolidate with other ban check / login fail code somehow.
+            # Also checked in userdb.user_passwd_match.
+            fail_reason = 'Account is disabled.'
+            self.logger.warning("[Account] Failed login for user %s: %s", self.username,
+                                    fail_reason)
+            self.send_message("login_fail", reason=fail_reason)
+            return
 
         def login_callback(result):
             success = result == 0
@@ -644,21 +713,30 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             self.queue_message("login_success", username=username,
                                admin=self.is_admin())
+            if self.account_restricted():
+                self.queue_message("set_account_hold")
             if self.watched_game:
                 self.watched_game.update_watcher_description()
+            elif self.is_admin():
+                self.send_lobby()
             else:
                 self.send_lobby_html()
 
         self.init_user(login_callback)
 
     def login(self, username, password):
-        real_username = userdb.user_passwd_match(username, password)
-        if real_username:
+        real_username, fail_reason = userdb.user_passwd_match(username, password)
+        if real_username and fail_reason is None:
             self.logger.info("User %s logging in from %s.",
                                         real_username, self.request.remote_ip)
             self.do_login(real_username)
+        elif fail_reason:
+            self.logger.warning("Failed login for user %s (IP: %s): %s",
+                            real_username, self.request.remote_ip, fail_reason)
+            self.send_message("login_fail", reason = fail_reason)
         else:
-            self.logger.warning("Failed login for user %s.", username)
+            self.logger.warning("Failed login for user %s  (IP: %s).", username,
+                            self.request.remote_ip)
             self.send_message("login_fail")
 
     def token_login(self, cookie):
@@ -676,7 +754,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         cookie = auth.log_in_as_user(self, self.username)
         self.send_message("login_cookie", cookie = cookie,
-                          expires = config.login_token_lifetime)
+                          expires = config.get('login_token_lifetime'))
 
     def forget_login_cookie(self, cookie):
         auth.forget_login_cookie(cookie)
@@ -713,7 +791,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def rcfile_path(self, game_id):
         if game_id not in config.games: return None
         if not self.username: return None
-        path = dgl_format_str(config.games[game_id]["rcfile_path"],
+        path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
         return os.path.join(path, self.username + ".rc")
 
@@ -752,11 +830,25 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.is_running():
             self.process.stop()
 
-        from process_handler import processes
+        if not self.update_db_info():
+            self.go_lobby()
+            return
+
+        if self.account_restricted():
+            self.send_message("auth_error",
+                        reason="Account restricted; spectating unavailable")
+            self.go_lobby()
+            return
+
+        from webtiles.process_handler import processes
         procs = [process for process in list(processes.values())
                  if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
+            r = process.get_primary_receiver()
+            if r and r.account_restricted():
+                self.go_lobby()
+                return
             if self.watched_game:
                 if self.watched_game == process:
                     return
@@ -781,9 +873,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             receiver = self.watched_game
 
         if receiver:
+            if self.account_restricted():
+                self.send_message("chat",
+                        content='Account restricted; chat unavailable')
+                return
             if self.username is None:
-                self.send_message("chat", content
-                                  = 'You need to log in to send messages!')
+                self.send_message("chat",
+                        content='You need to log in to send messages!')
                 return
 
             if not receiver.handle_chat_command(self, text):
@@ -792,19 +888,30 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def register(self, username, password, email):
         error = userdb.register_user(username, password, email)
         if error is None:
-            self.logger.info("Registered user %s.", username)
+            self.logger.info("[Account] Registered user %s (IP: %s, email: %s).",
+                            username, self.request.remote_ip, email)
             self.do_login(username)
         else:
-            self.logger.info("Registration attempt failed for username %s: %s",
-                             username, error)
+            self.logger.info("[Account] Registration attempt failed for user %s (IP: %s): %s",
+                             username, self.request.remote_ip, error)
             self.send_message("register_fail", reason = error)
 
     def start_change_password(self):
         self.send_message("start_change_password")
 
     def change_password(self, cur_password, new_password):
+        if not self.update_db_info():
+            self.send_message("change_password_fail", reason="Account is disabled")
+            return
+
         if self.username is None:
-            self.send_message("change_password_fail", reason = "You need to log in to change your password.")
+            self.send_message("change_password_fail",
+                    reason="You need to log in to change your password.")
+            return
+
+        if self.account_restricted():
+            self.send_message("change_password_fail",
+                    reason="Account restricted; change password unavailable.")
             return
 
         if not userdb.user_passwd_match(self.username, cur_password):
@@ -814,7 +921,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         error = userdb.change_password(self.user_id, new_password)
         if error is None:
-            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
             self.logger.info("User %s changed password.", self.username)
             self.send_message("change_password_done")
         else:
@@ -826,20 +932,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.send_message("start_change_email", email = self.user_email)
 
     def change_email(self, email):
+        if not self.update_db_info():
+            self.send_message("change_email_fail", reason="Account is disabled")
+            return
+
         if self.username is None:
             self.send_message("change_email_fail", reason = "You need to log in to change your email")
             return
+        if self.account_restricted():
+            self.send_message("change_email_fail",
+                    reason="Account restricted; change email unavailable.")
+            return
         error = userdb.change_email(self.user_id, email)
         if error is None:
-            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
-            self.logger.info("User %s changed email to %s.", self.username, email if email else "null")
-            self.send_message("change_email_done", email = email)
+            self.update_db_info()
+            self.logger.info("User %s changed email to %s.",
+                self.username, self.user_email if self.user_email else "null")
+            self.send_message("change_email_done", email = self.user_email)
         else:
             self.logger.info("Failed to change username for %s: %s", self.username, error)
             self.send_message("change_email_fail", reason = error)
 
     def forgot_password(self, email):
-        if not getattr(config, "allow_password_reset", False):
+        if not config.get("allow_password_reset", False):
             return
         sent, error = userdb.send_forgot_password(email)
         if error is None:
@@ -871,10 +986,24 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("reset_password_fail", reason = error)
 
     def go_lobby(self):
-        if not config.dgl_mode: return
+        if not config.get('dgl_mode'):
+            return
         if self.is_running():
             self.process.stop()
-        elif self.watched_game:
+
+        if self.username and userdb.dgl_is_banned(self.user_flags):
+            # force a logout. Note that this doesn't check the db at this point
+            # in order to reduce i/o a bit.
+            fail_reason = 'Account is disabled.'
+            self.logger.warning("[Account] Logging out user %s: %s",
+                                    self.username, fail_reason)
+            self.username = self.user_email = self.user_flags = self.user_id = None
+            self.send_message("go_lobby")
+            self.send_lobby_html()
+            self.send_message("logout", reason=fail_reason)
+            return
+
+        if self.watched_game:
             self.stop_watching()
             self.send_message("go_lobby")
             self.send_lobby()
@@ -897,12 +1026,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.send_message("rcfile_contents", contents = contents)
 
     def set_rc(self, game_id, contents):
-        rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
+        rcfile_path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
-        with open(rcfile_path, 'wb') as f:
-            # TODO: is binary + encode necessary in py 3?
-            f.write(utf8(contents))
+        try:
+            with open(rcfile_path, 'wb') as f:
+                # TODO: is binary + encode necessary in py 3?
+                f.write(utf8(contents))
+        except Exception:
+            self.logger.warning(
+                    "Couldn't save rcfile for %s!",
+                    self.username, exc_info=True)
+            return False
+        return True
 
     def on_message(self, message): # type: (Union[str, bytes]) -> None
         try:

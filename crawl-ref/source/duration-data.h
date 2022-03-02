@@ -68,7 +68,7 @@ enum duration_flags : uint32_t
 };
 
 /// A description of the behaviour when a duration begins 'expiring'.
-struct midpoint_msg
+struct expiring_msg
 {
     /// What message should be printed when the duration begins expiring?
     const char* msg;
@@ -96,8 +96,8 @@ struct decrement_rules
 {
     /// What happens when the duration ends?
     end_effect end;
-    /// What happens when a duration hits 50% remaining.
-    midpoint_msg mid_msg;
+    /// What happens when a duration passes its expire_threshold.
+    expiring_msg expire_msg;
     /// Should the message be MSGCH_RECOVERY instead of MSGCH_DURATION?
     bool recovery;
 };
@@ -622,7 +622,6 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
       "You are constricted by grasping roots.", D_NO_FLAGS},
-    { DUR_SHAFT_IMMUNITY, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_NOXIOUS_BOG,
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
@@ -682,5 +681,6 @@ static const duration_def duration_data[] =
     { DUR_DEVICE_SURGE, 0, "", "", "old device surge", "", D_NO_FLAGS},
     { DUR_LIFESAVING, 0, "", "", "old lifesaving", "", D_NO_FLAGS},
     { DUR_MIRROR_DAMAGE, 0, "", "", "old injury mirror", "", D_NO_FLAGS},
+    { DUR_SHAFT_IMMUNITY, 0, "", "", "old shaft immunity", "", D_NO_FLAGS, {{""}}},
 #endif
 };

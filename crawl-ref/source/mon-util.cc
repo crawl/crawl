@@ -44,6 +44,7 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-explode.h"
 #include "mon-place.h"
@@ -732,7 +733,8 @@ bool mons_gives_xp(const monster& victim, const actor& agent)
         && !victim.has_ench(ENCH_ABJ)              // not-really-summons
         && !victim.has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
         && mons_class_gives_xp(victim.type)        // class must reward xp
-        && !testbits(victim.flags, MF_WAS_NEUTRAL) // no neutral monsters
+        && (!testbits(victim.flags, MF_WAS_NEUTRAL)// no neutral monsters
+            || victim.has_ench(ENCH_MAD))          // ...except frenzied ones
         && !testbits(victim.flags, MF_NO_REWARD)   // no reward for no_reward
         && !mon_killed_friend;
 }
@@ -1495,7 +1497,6 @@ bool mons_can_be_blinded(monster_type mc)
     return !mons_class_flag(mc, M_UNBLINDABLE);
 }
 
-
 /**
  * Can this kind of monster be dazzled?
  *
@@ -1716,8 +1717,7 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
         return false;
 
     if (mon.has_ench(ENCH_FRIENDLY_BRIBED)
-        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)
-            || stair == DNGN_ENTER_HELL || stair == DNGN_EXIT_HELL))
+        && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)))
     {
         return false;
     }
@@ -2104,7 +2104,8 @@ string mon_attack_name(attack_type attack, bool with_object)
  */
 bool is_plain_attack_type(attack_type attack)
 {
-    switch (attack) {
+    switch (attack)
+    {
         case AT_CONSTRICT:  // constriction
         case AT_ENGULF:     // water hold
         case AT_POUNCE:     // webbing
@@ -2835,7 +2836,6 @@ void define_monster(monster& mons, bool friendly)
     mons.bind_melee_flags();
 
     mons_load_spells(mons);
-    mons.bind_spell_flags();
 
     // Reset monster enchantments.
     mons.enchantments.clear();
@@ -2851,7 +2851,6 @@ void define_monster(monster& mons, bool friendly)
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
         mons.bind_melee_flags();
-        mons.bind_spell_flags();
         break;
     }
 
@@ -3311,8 +3310,7 @@ bool mons_self_destructs(const monster& m)
 
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
-    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL
-           || fr == ATT_STRICT_NEUTRAL;
+    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL;
 }
 
 mon_attitude_type mons_attitude(const monster& m)
@@ -3658,7 +3656,7 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
         return true;
 
     for (const mon_spell_slot &slot : mon.spells)
-        if (_ms_ranged_spell(slot.spell, attack_only, ench_too))
+        if (_ms_ranged_spell(slot.spell, attack_only, ench_too) && mons_spell_range(mon, slot.spell) > 1)
             return true;
 
     return false;
@@ -3666,20 +3664,7 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
 
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
-    // Ugh.
-    const item_def *weapon  = mon->launcher();
-    const item_def *primary = mon->mslot_item(MSLOT_WEAPON);
-    const item_def *missile = mon->missiles();
-
-    // We don't have a usable ranged weapon if a different cursed weapon
-    // is presently equipped.
-    if (weapon != primary && primary && primary->cursed())
-        return false;
-
-    if (!missile)
-        return false;
-
-    return is_launched(mon, weapon, *missile) != launch_retval::FUMBLED;
+    return mon->launcher() != nullptr;
 }
 
 static bool _mons_has_attack_wand(const monster& mon)
@@ -3748,6 +3733,7 @@ static const spell_type smitey_spells[] = {
     SPELL_AIRSTRIKE,
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_CALL_DOWN_DAMNATION,
+    SPELL_CALL_DOWN_LIGHTNING,
     SPELL_FIRE_STORM,
     SPELL_SHATTER,
     SPELL_POLAR_VORTEX,          // dubious
@@ -5021,6 +5007,10 @@ bool mons_is_player_shadow(const monster& mon)
         && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
 }
 
+// Zero-damage attacks with special effects (constriction, drowning, pure fire,
+// etc.) aren't counted, since this is used to decide whether the monster can
+// go berserk or be weakened, both of which require an attack with non-zero
+// base damage.
 bool mons_has_attacks(const monster& mon)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);

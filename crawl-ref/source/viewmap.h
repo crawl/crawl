@@ -84,6 +84,7 @@ bool is_feature(char32_t feature, const coord_def& where);
 bool show_map(level_pos &spec_place,
               bool travel_mode, bool allow_offlevel);
 void process_map_command(command_type cmd);
+level_pos map_follow_stairs(bool up, const coord_def &pos);
 
 bool emphasise(const coord_def& where);
 vector<coord_def> search_path_around_point(coord_def centre);

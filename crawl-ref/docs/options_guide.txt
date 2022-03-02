@@ -26,13 +26,14 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 pickup_thrown, assign_item_slot, pickup_menu_limit,
-                drop_filter, auto_hide_spells
+                drop_filter
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
-3-c     Branding (Item and Monster Highlighting).
-                friend_brand, neutral_brand, stab_brand, may_stab_brand,
-                heap_brand, feature_item_brand, trap_item_brand
+3-c     Dungeon View Item and Monster Highlighting.
+                friend_highlight, neutral_highlight, stab_highlight,
+                may_stab_highlight, heap_highlight, feature_item_highlight,
+                trap_item_highlight
 3-d     Level Map Functions.
                 level_map_cursor_step
 3-e     Viewport Display Options.
@@ -53,17 +54,17 @@ The contents of this text are:
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
-                force_ability_targeter, allow_self_target,
-                easy_quit_item_prompts, ability_menu, spell_menu,
-                easy_floor_use, sort_menus, spell_slot, item_slot,
+                force_ability_targeter, allow_self_target, ability_menu,
+                spell_menu, easy_floor_use, sort_menus, spell_slot, item_slot,
                 ability_slot, autofight_stop, autofight_warning,
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop,
                 autofight_caught, autofight_wait, autofight_prompt_range,
                 automagic_enable, automagic_slot, automagic_fight,
                 automagic_stop, fail_severity_to_confirm, easy_door,
                 warn_hatches, enable_recast_spell, confirm_action,
-                regex_search, autopickup_search, bad_item_prompt
-3-h     Message and Display Improvements.
+                regex_search, autopickup_search, bad_item_prompt,
+                auto_hide_spells, menu_arrow_control
+3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
@@ -84,7 +85,7 @@ The contents of this text are:
 3-j     Quivers, firing, and ammo.
                 fire_items_start, fire_order, fire_order_spell,
                 fire_order_ability, fail_severity_to_quiver,
-                launcher_autoquiver
+                quiver_menu_focus
 3-k     Message Channels.
                 plain, prompt, god, duration, danger, warning, recovery,
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
@@ -129,7 +130,7 @@ The contents of this text are:
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
                 tile_weapon_offsets, tile_shield_offsets,
-                tile_web_mouse_control
+                tile_web_mouse_control, tile_web_mobile_input_helper
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -171,10 +172,22 @@ The contents of this text are:
 0-  Generalities on options.
 ============================
 
+The standard way of adjusting an option from the default is to manually
+set it in your options file; see (0-a) and (0-c) below for details. A small
+number of options are saved automatically from their current values in the
+relevant in-game user interface; these are marked with "(persistent)" in
+their documentation and can be overridden by a manual setting in the
+options file.
+
 0-a     Standard and additional option files.
 ---------------------------------------------
 
-Crawl uses the first file of the following list as its option file:
+In online play, choose "edit rc" from the webtiles game selection screen,
+or enter the rc file editor via ssh.
+
+In offline play, Crawl uses the first file of the following list as its option
+file:
+
 * settings/init.txt
 * init.txt (in the Crawl directory)
 * .crawlrc (in the Unix home directory)
@@ -183,7 +196,8 @@ Alternatively, you can use the command line option
     -rc <file>
 which tells Crawl to use precisely that file.
 
-On the starting screen, Crawl tells you which init file it uses, if any.
+On the starting screen, Crawl tells you which init file it uses, if any. The
+Crawl directory location is system-specific.
 
 It is possible to include additional files within the options file via
     include = <file>
@@ -404,18 +418,17 @@ name_bypasses_menu = true
         menu and jump right to a game or character selection (if there is no
         save).
 
-default_manual_training = false
+default_manual_training = false (persistent)
         When set to true, new characters will start with skill training
         set to manual mode instead of automatic mode. This will also set the
         [!] selection on the skill (m) menu to "cost" by default, instead of
         "training".
 
 autopickup_starting_ammo = true
-        When set, at game start, autopickup is forced on (as per the \
-        menu) for the player's starting ammunition type (including stones
-        for Earth Elementalists and arrows for Transmuters). Even when this
-        option is set, autopickup of those items can be disabled from the
-        \ menu once the game has begun.
+        When set, at game start, autopickup is forced on (as per the \ menu)
+        for the player's starting ammunition type (including stones for Earth
+        Elementalists). Even when this option is set, autopickup of those items
+        can be disabled from the \ menu once the game has begun.
 
 game_seed = none
         A number indicating the seed to initialize the random number generator
@@ -608,10 +621,6 @@ drop_filter += <regex>, <regex>, ...
         set/clear selection of items that match the filter
         expression(s).
 
-auto_hide_spells = false
-        When set to true, spells added to the library will automatically be
-        hidden.
-
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
 
@@ -624,13 +633,14 @@ detected_item_colour = green
 remembered_monster_colour = darkgrey
         The colour for monsters you have seen before.
 
-3-c     Branding (Item and monster highlighting).
+3-c     Dungeon View Item and monster highlighting
 -------------------------------------------------
 
-Branding refers to displaying particular monsters (e.g. summons) or
-items in a special way; special as in reversing fore- and background.
-There are several branding choices (these will not work everywhere; it
-depends on OS and terminal):
+These options allow controlling the way certain monsters and items are shown
+in console dungeon view, by changing their colour or reversing fore- and
+background. There are several highlighting choices (these will not work
+everywhere; it depends on OS and terminal):
+   none             -- disable highlighting for the category
    standout         -- often the same as reverse, might be underline or
                        dim
    bold             -- used by colour curses for brightening foreground
@@ -640,52 +650,49 @@ depends on OS and terminal):
    reverse          -- this will probably work
    dim              -- probably no effect
    underline        -- this will probably work
-   highlight:colour -- set background colour of branded monsters to
+   highlight:colour -- set background colour of highlighted monsters to
                        "colour"
 The last can be abbreviated to hi:colour.
 See part DOS and Windows (5-b) for dos_use_background_intensity.
 
-By default, only two of the item brands are active (and set to reverse):
-   heap_brand, feature_item_brand
-They can be deactivated by setting them to "none".
+Previously these options were named `..._brand`, and the old names are
+available for backwards-compatibility.
 
-friend_brand = hi:green
-        Brand friends in some way. This is very helpful for summoners. The
+friend_highlight = hi:green
+        Highlight friends in some way. This is very helpful for summoners. The
         default setting shows friends with a green background. If the friend is
         itself green, it'll show up as black on green.
 
-neutral_brand = hi:lightgrey
-        Brand neutral monsters in some way. Useful both to get out of
+neutral_highlight = hi:lightgrey
+        Highlight neutral monsters in some way. Useful both to get out of
         a neutral monster's path, and to avoid accidentally killing it.
         The default setting shows neutrals with a dark grey background. Since
         there are no darkgrey monster glyphs anymore, this works fine.
 
-stab_brand = hi:blue
-        Some deities object to you stabbing monsters. Certain backgrounds
-        specialise in stabbing monsters. Still other characters are
-        happy if they spot a monster before the monster spots them. In
-        all these cases, it helps to identify monsters that are unaware
-        of the character (and hence susceptible to being stabbed) without
-        using the 'x' command. All the normal 'brand' options apply.
+stab_highlight = hi:blue
+        This option highlights monsters that are fully unaware of the player
+        and therefore are will not attack, and are guaranteed to take stab
+        damage if attacked appropriately by the player.
 
-may_stab_brand = hi:yellow
-        Stabbing may be possible even if the monster is not asleep (if
-        it's confused or distracted, for instance). This option brands
-        monsters that you *might* be able to stab.
+may_stab_highlight = hi:brown
+        This option highlights monsters that are having trouble paying
+        attention to the player by, for example, being confused or
+        distracted. These monsters may be able to be stabbed, depending
+        on Stealth and weapon skill levels and various other factors, and will
+        (at least) have trouble attacking the player with their current status.
 
-heap_brand = reverse
-        Brand heaps of items (more than one item or stack).
+heap_highlight = reverse
+        Highlights heaps of items (more than one item or stack).
 
-feature_item_brand = reverse
-        Brands features (stairs, shops, altars) that would otherwise be
-        hidden by items. If you use this brand, the items on the square
-        are hidden by the feature symbol and the feature symbol is
-        branded.
+feature_item_highlight = reverse
+        Highlights features (stairs, shops, altars) that would otherwise be
+        hidden by items. If you use this option, the item glyph(s) on the
+        square are hidden by the feature symbol.
 
-trap_item_brand = reverse
-        Brands traps that would otherwise be hidden by items. If you
-        use this brand, the items on the square are hidden by the trap
-        symbol (^) and the trap symbol is branded.
+trap_item_highlights = reverse
+        Highlights traps that would otherwise be hidden by items. If you
+        use this option, the item glyph(s) on the square are hidden by the trap
+        symbol (^).
 
 3-d     Level Map Functions.
 ----------------------------
@@ -1044,10 +1051,10 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
-force_spell_targeter = hailstorm, starburst, frozen ramparts, maxwell's
-                       capacitive coupling, ignition, eringya's noxious bog,
-                       cause fear, alistair's intoxication, discord, dispersal,
-                       metabolic englaciation, dazzling flash, flame wave
+force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
+                       eringya's noxious bog, cause fear, alistair's
+                       intoxication, discord, dispersal, metabolic englaciation,
+                       dazzling flash, flame wave, anguish
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1076,13 +1083,6 @@ allow_self_target = prompt
         you will be required to confirm self-targeting. This option has no
         effect on area-effect spells, such as Mephitic Cloud, where you are
         always a valid target.
-
-easy_quit_item_prompts = true
-        Setting this option to true allows the quitting of item listing
-        with Space (as well as Escape, which always works). These lists
-        are essentially all of those that are requesting an inventory
-        item and accept '?' and '*'. The identify list will never easy
-        quit.
 
 ability_menu = true
         Always show the full-screen 'a'bility menu. If false, 'a' prompts
@@ -1391,7 +1391,17 @@ autopickup_search = false
 bad_item_prompt = true
         Ask for confirmation before using bad or dangerous scrolls and potions.
 
-3-h     Messages and Display Enhancements.
+auto_hide_spells = false
+        When set to true, spells added to the library will automatically be
+        hidden.
+
+menu_arrow_control = true
+        If set to false, disable using arrow keys to control menu selection.
+        This has no effect on mouse interactions with menus, and only affects
+        menus that use hotkeys for selection. (E.g. the main menu for local
+        play is not affected.)
+
+3-h     Message and Display Enhancements.
 ------------------------------------------
 
 hp_warning = 10
@@ -1569,7 +1579,7 @@ default_show_all_skills = false
         even untrained and untrainable ones. As usual, '*' toggles back to
         trainable mode. This option does not affect hints and tutorial games.
 
-monster_list_colour = friendly:green, neutral:brown, good_neutral:brown, strict_neutral:brown
+monster_list_colour = friendly:green, neutral:brown, good_neutral:brown
 monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lightred
         (List option)
         Change the colours used to display monster names in the monster list.
@@ -1579,7 +1589,6 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lig
              friendly       - green
              neutral        - brown ("indifferent")
              good_neutral   - brown ("peaceful")
-             strict_neutral - brown ("fellow slime")
 
            Threat levels for hostile monsters:
              trivial        - darkgrey
@@ -1589,10 +1598,6 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lig
 
          Removing a key with -= currently has the same effect as setting its
          colour to lightgrey.
-
-         Note that, for TSO worshippers, monsters whom it is forbidden to
-         attack will appear in the "evil colour" (magenta by default)
-         regardless of this option.
 
 view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
@@ -1604,7 +1609,7 @@ use_animations += branch_entry
         banished. All animations are enabled by default, and the categories
         that can be enabled/disabled independently are:
 
-          beam             - Animation for casting a beam spell or throwing a
+          beam             - Animation for casting a beam spell or firing a
                              ranged weapon.
           range            - Flashes the screen with an overlay indicating the
                              actual range of an attempted spell, if there are
@@ -1682,17 +1687,19 @@ action_panel_show_unidentified = false
         When set to true, the action panel will show unidentified scrolls
         and potions. This option is only available on Webtiles.
 
-action_panel_scale = 100
+action_panel_scale = 100 (persistent)
         A percentage scale factor to apply to the action panel. This option is
         automatically saved between games, and only available on Webtiles.
 
-action_panel_orientation = (horizontal | vertical)
-        When set to 'horizontal' (the default), the action panel will be
-        placed along the top edge of the screen. When set to 'vertical', the panel will be placed along the left edge. This option is automatically
-        saved between games, and is only available on Webtiles.
+action_panel_orientation = horizontal (persistent)
+        (values: horizontal | vertical)
+        When set to 'horizontal', the action panel will be placed along the top
+        edge of the screen. When set to 'vertical', the panel will be placed
+        along the left edge. This option is automatically saved between games,
+        and is only available on Webtiles.
 
-action_panel_font_family = monospace
-action_panel_font_size = 16
+action_panel_font_family = monospace (persistent)
+action_panel_font_size = 16 (persistent)
         Font used for displaying quantities of items in the action panel.
         The size option is automatically saved between games, and both are only
         available on Webtiles.
@@ -1810,16 +1817,15 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         higher priority. Absent action types are not used when cycling
         the quiver. This option also affects autoquivering on game start.
 
-        'launcher' refers to firing the appropriate missile for a
-        wielded weapon (i.e. crossbow, bow, sling). 'throwing' refers to
-        all throwing ammo. Specific throwing ammo types can be refered to
-        by name ('javelin', 'boomerang', 'stone', 'rock', 'net', 'dart'),
-        but order of these only affects order internal to throwing ammo
-        types; 'inscribed' can also be used to control the order of ammo
-        that has been inscribed with "+f". See the "Inscriptions" section of
-        Crawl's manual for more information about inscriptions. Ammo types
-        can be separated with a "/" to indicate that inventory order should
-        determine cycle order. Order within types is determined by letter
+        'launcher' refers to firing a wielded ranged weapon (i.e. crossbow,
+        bow, sling). 'throwing' refers to all throwing ammo. Specific throwing
+        ammo types can be refered to by name ('javelin', 'boomerang', 'stone',
+        'rock', 'net', 'dart'), but order of these only affects order internal
+        to throwing ammo types; 'inscribed' can also be used to control the
+        order of ammo that has been inscribed with "+f". See the "Inscriptions"
+        section of Crawl's manual for more information about inscriptions. Ammo
+        types can be separated with a "/" to indicate that inventory order
+        should determine cycle order. Order within types is determined by letter
         order in the relevant submenu (e.g. inventory for throwing, etc).
 
 fire_order_spell = all
@@ -1850,11 +1856,17 @@ fail_severity_to_quiver = 2
         miscast values.
 
 launcher_autoquiver = true
-        If set to true, change the main quiver to launcher ammo on wielding
-        that launcher; if set to false, the main quiver is unaffected by
-        wielding a launcher. (Firing via tab or `v` still work.).
+        If set to true, change the quiver to the launcher on wielding it;
+        if set to false, the quiver is unchanged on wielding a launcher.
+        (Firing via tab or `v` will still work.).
 
-(See also pickup_thrown in 3-a, and the various autofight settings in 3-g.)
+quiver_menu_focus = false (persistent)
+        If set to true, start the quiver menu in "focused" mode where action
+        lettering is drawn from item/spell/ability lettering and only one of
+        these can be selected at a time. Otherwise, any action can be selected
+        from the menu, but lettering is not stable in this menu. This option
+        is persistent so that the current value in the quiver menu is saved
+        across games and automatically reloaded unless set explicitly.
 
 3-k     Message Channels.
 -------------------------
@@ -2353,6 +2365,13 @@ tile_web_mouse_control = true
         WebTiles. Regardless of the value of the setting, the minimap will
         respond to mouse control.
 
+tile_web_mobile_input_helper = auto
+        This option controls an optional auxiliary input field in the WebTiles
+        interface that can be focused to enable the vitual keyboard on mobile
+        devices. When set to true or false, the field is manually enabled or
+        disabled. When set to auto, the field is only shown on devices with
+        a touch screen.
+
 4-  Character Dump.
 ===================
 
@@ -2803,6 +2822,10 @@ fake_lang = <lang1>[,<lang2>[,...]]
 read_persist_options = false
         When set to true, the game will read additional options from
         the lua variable c_persist.options if it contains a string.
+        This option has no effect unless explicitly used in scripting.
+        This option is persistent so that the current value as set in
+        the skill menu is saved across games and automatically reloaded,
+        unless set explicitly.
 
 5-b     DOS and Windows.
 ------------------------
@@ -2810,13 +2833,47 @@ read_persist_options = false
 dos_use_background_intensity = false
         On DOS and Windows, if you're using a console that can do
         high-intensity background colours, set this option to true for
-        superior friend-branding. If your console doesn't like this
+        superior friend-highlighting. If your console doesn't like this
         option, some friendly monsters will appear as blinking
         characters (and setting this option to false may be advisable to
         preserve your sanity in such cases).
 
 5-c     Unix.
 -------------
+allow_extended_colours = true
+        Atempt to use more than the eight basic terminal colours for crawl's
+        bright colours. Most modern terminals should use this setting. If
+        successful, this puts console into 16-color mode.
+
+        If this option is enabled and there are enough colours available in
+        the terminal, use the terminal's extended colour palette directly for
+        internal colours.
+
+        An appropriate TERM environment variable must be set for this option to
+        function as expected for capable terminals. For example:
+          * XTerm, MacOS Terminal, or iTerm: xterm-256color
+          * gnome-terminal: vte-256color
+          * PuTTY: putty-256color
+            (set in 'Connection->Data->Terminal-type string')
+
+        If these conditions are not met, crawl will fall back to 8-colour mode
+        and use character attributes to render bright colours, with dark blue
+        as a "fallback" color for rendering dark grey on black. In 8-colour
+        mode, one of the following options may be better.
+
+bold_brightens_foreground = false
+        For 8-colour mode, assume that a bold text attribute will end up
+        brightening the foreground colour. If set to `force` instead of `true`,
+        bright colours will be bolded even in 16-colour mode. Otherwise,
+        this option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+        If enabled in 8 color mode on a terminal where the assumption that bold
+        changes the color does not hold, this will result in invisible glyphs
+        for normal/bright colour combos of the same base colour. For example,
+        in the dungeon display, if squares that are out of line of sight appear
+        black, you should not set this to `true`.
+
 blink_brightens_background = false
         For 8-colour mode, assume that a blink text attribute will end up
         brightening the background colour.
@@ -2827,12 +2884,6 @@ blink_brightens_background = false
 
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
-
-bold_brightens_foreground = false
-        For 8-colour mode, assume that a bold text attribute will end up
-        brightening the foreground colour.
-
-        See blink_brightens_background for more information.
 
 best_effort_brighten_background = false
         If set to true, try to brighten a background colour using blink even if
@@ -2855,25 +2906,6 @@ best_effort_brighten_foreground = true
 
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
-
-allow_extended_colours = true
-        Allow an *attempt* to use more than the eight basic terminal colours
-        for crawl's bright colours. Most modern terminals should use this
-        setting.
-
-        If this option is enabled and there are enough colours available in
-        the terminal, use the terminal's extended colour palette directly for
-        internal colours.
-
-        An appropriate TERM environment variable must be set for this option to
-        function as expected for capable terminals. For example:
-          * XTerm: xterm-256color
-          * gnome-terminal: vte-256color
-          * PuTTY: putty-256color
-            (set in 'Connection->Data->Terminal-type string')
-
-        If these conditions are not met, crawl will fall back to 8-colour mode
-        and use character attributes to render bright colours.
 
 background_colour = black
         Sets the default background colour by name (defaults to BLACK).

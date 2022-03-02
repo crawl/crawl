@@ -684,6 +684,10 @@ static bool is_ash_portal(dungeon_feature_type feat)
     switch (feat)
     {
     case DNGN_ENTER_HELL:
+    case DNGN_EXIT_DIS:
+    case DNGN_EXIT_GEHENNA:
+    case DNGN_EXIT_COCYTUS:
+    case DNGN_EXIT_TARTARUS:
     case DNGN_ENTER_ABYSS: // for completeness
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
@@ -768,16 +772,18 @@ bool ash_has_skill_boost(skill_type sk)
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 {
     unsigned int skill_points = 0;
+    const int scale = 10;
+    const int skill_boost = scale * (you.skill_boost[sk] * 3 + 2) / 2;
 
-    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
-                    * max(scaled_skill, 1) * species_apt_factor(sk);
+    skill_points += skill_boost * (piety_rank() + 1) * max(scaled_skill, 1)
+                    * species_apt_factor(sk) / scale;
     return skill_points;
 }
 
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // ( curses * 2 + 1 ) * (piety_rank + 1) * skill_level
+    // ( curses * 3 / 2 + 1 ) * (piety_rank + 1) * skill_level
 
     unsigned int skill_points = you.skill_points[sk]
                   + get_crosstrain_points(sk)
@@ -1013,14 +1019,14 @@ void qazlal_element_adapt(beam_type flavour, int strength)
  *
  * @return bool Whether or not whether the worshipper will attempt to interfere.
  */
-bool does_ru_wanna_redirect(monster* mon)
+bool does_ru_wanna_redirect(const monster &mon)
 {
     return have_passive(passive_t::aura_of_power)
-            && !mon->friendly()
-            && you.see_cell_no_trans(mon->pos())
-            && !mons_is_firewood(*mon)
-            && !mon->submerged()
-            && !mons_is_projectile(mon->type);
+            && !mon.friendly()
+            && you.see_cell_no_trans(mon.pos())
+            && !mons_is_firewood(mon)
+            && !mon.submerged()
+            && !mons_is_projectile(mon.type);
 }
 
 /**
@@ -1188,26 +1194,28 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item)
     if (!mon)
         return;
 
-    int ammo_index = get_mitm_slot(10);
-    if (ammo_index != NON_ITEM)
+    const int ammo_index = get_mitm_slot(10);
+    if (ammo_index == NON_ITEM)
     {
-        item_def& new_item = env.item[ammo_index];
-        new_item.base_type = item.base_type;
-        new_item.sub_type  = item.sub_type;
-        new_item.quantity  = 1;
-        new_item.rnd = 1;
-        new_item.flags    |= ISFLAG_SUMMONED;
-        mon->inv[MSLOT_MISSILE] = ammo_index;
-
-        mon->target = clamp_in_bounds(d.target);
-
-        bolt beem;
-        beem.set_target(d);
-        setup_monster_throw_beam(mon, beem);
-        beem.item = &env.item[mon->inv[MSLOT_MISSILE]];
-        mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
+        shadow_monster_reset(mon);
+        return;
     }
 
+    item_def& new_item = env.item[ammo_index];
+    new_item.base_type = item.base_type;
+    new_item.sub_type  = item.sub_type;
+    new_item.quantity  = 1;
+    new_item.rnd = 1;
+    new_item.flags    |= ISFLAG_SUMMONED;
+    mon->inv[MSLOT_MISSILE] = ammo_index;
+
+    mon->target = clamp_in_bounds(d.target);
+
+    bolt beem;
+    beem.set_target(d);
+    setup_monster_throw_beam(mon, beem);
+    beem.item = &new_item;
+    mons_throw(mon, beem);
     shadow_monster_reset(mon);
 }
 

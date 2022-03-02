@@ -289,6 +289,9 @@ tileidx_t tilep_equ_shield(const item_def &item)
         case ARM_TOWER_SHIELD:
             return _modrng(item.rnd, TILEP_HAND2_TOWER_SHIELD_FIRST_NORM,
                            TILEP_HAND2_TOWER_SHIELD_LAST_NORM);
+        case ARM_ORB:
+            return _modrng(item.rnd, TILEP_HAND2_ORB_FIRST,
+                           TILEP_HAND2_ORB_LAST);
         default: return 0;
     }
 }
@@ -397,8 +400,25 @@ tileidx_t tilep_equ_helm(const item_def &item)
         case ARM_CAP:
 #endif
         case ARM_HAT:
-            return _modrng(item.rnd, TILEP_HELM_HAT_FIRST_NORM,
-                           TILEP_HELM_HAT_LAST_NORM);
+        {
+            auto equip_tile = tileidx_enchant_equ(item, TILE_THELM_HAT, false);
+            if (item.props.exists(ITEM_TILE_KEY))
+                equip_tile = item.props[ITEM_TILE_KEY].get_short();
+            switch (equip_tile)
+            {
+            case TILE_THELM_ARCHER:
+                return TILEP_HELM_ARCHER;
+            case TILE_THELM_ARCHER2:
+                return TILEP_HELM_ARCHER2;
+            case TILE_THELM_HAT_EXPLORER:
+                return TILEP_HELM_EXPLORER;
+            case TILE_THELM_HAT_EXPLORER2:
+                return TILEP_HELM_EXPLORER2;
+            default:
+                return _modrng(item.rnd, TILEP_HELM_HAT_FIRST_NORM,
+                               TILEP_HELM_HAT_LAST_NORM);
+            }
+        }
 
         case ARM_HELMET:
             return _modrng(item.rnd, TILEP_HELM_FIRST_NORM,

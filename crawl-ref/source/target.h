@@ -68,14 +68,6 @@ private:
     explosion_map exp_map_min, exp_map_max;
 };
 
-class targeter_unravelling : public targeter_beam
-{
-public:
-    targeter_unravelling(const actor *act, int range, int pow);
-    bool set_aim(coord_def a) override;
-    bool valid_aim(coord_def a) override;
-};
-
 class targeter_view : public targeter
 {
 public:
@@ -118,6 +110,14 @@ class targeter_transference : public targeter_smite
 public:
     targeter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
+};
+
+class targeter_unravelling : public targeter_smite
+{
+public:
+    targeter_unravelling();
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
 };
 
 class targeter_fragment : public targeter_smite
@@ -525,5 +525,12 @@ class targeter_intoxicate : public targeter_multimonster
 {
 public:
     targeter_intoxicate();
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_anguish : public targeter_multimonster
+{
+public:
+    targeter_anguish();
     bool affects_monster(const monster_info& mon) override;
 };

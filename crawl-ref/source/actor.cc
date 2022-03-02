@@ -117,12 +117,15 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_willpower(int power)
+int actor::check_willpower(const actor* source, int power)
 {
-    const int wl = willpower();
+    int wl = willpower();
 
     if (wl == WILL_INVULN)
         return 100;
+
+    if (source && source->wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE))
+        wl = guile_adjust_willpower(wl);
 
     const int adj_pow = ench_power_stepdown(power);
 
@@ -245,7 +248,8 @@ int actor::angry(bool items) const
     if (!items)
         return anger;
 
-    return anger + scan_artefacts(ARTP_ANGRY);
+    return anger + 20 * wearing_ego(EQ_ALL_ARMOUR, SPARM_RAGE)
+                 + scan_artefacts(ARTP_ANGRY);
 }
 
 bool actor::clarity(bool items) const
@@ -260,8 +264,8 @@ bool actor::faith(bool items) const
 
 int actor::archmagi(bool items) const
 {
-    return items && (wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI)
-                     || scan_artefacts(ARTP_ARCHMAGI));
+    return items ? wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI)
+                   + scan_artefacts(ARTP_ARCHMAGI) : 0;
 }
 
 /**
@@ -283,7 +287,9 @@ bool actor::no_cast(bool items) const
 
 bool actor::reflection(bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_REFLECTION);
+    return items &&
+           (wearing(EQ_AMULET, AMU_REFLECTION)
+            || wearing_ego(EQ_ALL_ARMOUR, SPARM_REFLECTION));
 }
 
 bool actor::extra_harm(bool items) const

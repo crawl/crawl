@@ -7,8 +7,7 @@
 
 #include "player.h"
 
-void gift_ammo_to_orc(monster* orc);
-
 bool bless_follower(monster* follower = nullptr,
                     god_type god = you.religion,
-                    bool force = false);
+                    bool force = false,
+                    bool allow_upgrades = true);

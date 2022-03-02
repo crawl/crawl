@@ -30,7 +30,6 @@ class monster;
 
 #define SAME_ATTITUDE(x) ((x)->friendly()       ? BEH_FRIENDLY :   \
                           (x)->good_neutral()   ? BEH_GOOD_NEUTRAL : \
-                          (x)->strict_neutral() ? BEH_STRICT_NEUTRAL :  \
                           (x)->neutral()        ? BEH_NEUTRAL           \
                                                 : BEH_HOSTILE)
 
@@ -45,6 +44,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);
+
+bool mons_will_goldify(const monster &mons);
 
 item_def* place_monster_corpse(const monster& mons, bool force = false);
 

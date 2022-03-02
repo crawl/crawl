@@ -64,6 +64,28 @@ int melee_confuse_chance(int HD)
 }
 
 /**
+ * What is the player's to-hit for aux attacks, before randomization?
+ */
+int aux_to_hit()
+{
+    int to_hit = 1300
+                + you.dex() * 75
+                + you.skill(SK_FIGHTING, 30);
+    to_hit /= 100;
+
+    if (you.get_mutation_level(MUT_EYEBALLS))
+        to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
+
+    if (you.duration[DUR_VERTIGO])
+        to_hit -= 5;
+
+    to_hit += slaying_bonus();
+
+    return to_hit;
+
+}
+
+/**
  * Return the odds of an attack with the given to-hit bonus hitting a defender with the
  * given EV, rounded to the nearest percent.
  *
@@ -888,6 +910,9 @@ int weapon_min_delay_skill(const item_def &weapon)
 int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
+    if (is_unrandom_artefact(weapon, UNRAND_WOODCUTTERS_AXE))
+        return base;
+
     int min_delay = base/2;
 
     // Short blades can get up to at least unarmed speed.
@@ -922,46 +947,6 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
 int mons_weapon_damage_rating(const item_def &launcher)
 {
     return property(launcher, PWPN_DAMAGE) + launcher.plus;
-}
-
-// Returns a rough estimate of damage from firing/throwing missile.
-int mons_missile_damage(monster* mons, const item_def *launch,
-                        const item_def *missile)
-{
-    if (!missile || (!launch && !is_throwable(mons, *missile)))
-        return 0;
-
-    const int missile_damage = property(*missile, PWPN_DAMAGE) / 2 + 1;
-    const int launch_damage  = launch? property(*launch, PWPN_DAMAGE) : 0;
-    return max(0, launch_damage + missile_damage);
-}
-
-int mons_usable_missile(monster* mons, item_def **launcher)
-{
-    *launcher = nullptr;
-    item_def *launch = nullptr;
-    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-    {
-        if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
-        {
-            if (is_range_weapon(*item))
-                launch = item;
-        }
-    }
-
-    const item_def *missiles = mons->missiles();
-    if (launch && missiles && !missiles->launched_by(*launch))
-        launch = nullptr;
-
-    const int fdam = mons_missile_damage(mons, launch, missiles);
-
-    if (!fdam)
-        return NON_ITEM;
-    else
-    {
-        *launcher = launch;
-        return missiles->index();
-    }
 }
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
@@ -1015,7 +1000,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (mon->neutral() && is_good_god(you.religion))
+    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_INSANE))
     {
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
@@ -1162,17 +1147,17 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     }
 }
 
-string rude_stop_summoning_reason()
+string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
 {
-    if (you.duration[DUR_TOXIC_RADIANCE])
+    if (get_resist(resists, MR_RES_POISON) <= 0
+        && you.duration[DUR_TOXIC_RADIANCE])
+    {
         return "toxic aura";
-
-    if (you.duration[DUR_NOXIOUS_BOG])
+    }
+    if (you.duration[DUR_NOXIOUS_BOG] && !(flags & M_FLIES))
         return "noxious bog";
-
     if (you.duration[DUR_VORTEX])
         return "polar vortex";
-
     return "";
 }
 
@@ -1183,32 +1168,31 @@ string rude_stop_summoning_reason()
  * penance prompt, because we don't cause penance when monsters enter line of
  * sight when OTR is active, regardless of how they entered LOS.
  *
- * @param verb    The verb to be used in the prompt. Defaults to "summon".
- * @return        True if the player wants to abort.
+ * @param resists   What does the summon resist?
+ * @param verb      The verb to be used in the prompt.
+ * @return          True if the player wants to abort.
  */
-bool rude_stop_summoning_prompt(string verb)
+bool stop_summoning_prompt(resists_t resists, string verb)
 {
-    string which = rude_stop_summoning_reason();
-
-    if (which.empty())
+    if (crawl_state.disables[DIS_CONFIRMATIONS]
+        || crawl_state.which_god_acting() == GOD_XOM)
+    {
         return false;
+    }
 
-    if (crawl_state.disables[DIS_CONFIRMATIONS])
-        return false;
-
-    if (crawl_state.which_god_acting() == GOD_XOM)
+    // TODO: take flags as well (or a set of monster types..?)
+    const string noun = stop_summoning_reason(resists, M_NO_FLAGS);
+    if (noun.empty())
         return false;
 
     string prompt = make_stringf("Really %s while emitting a %s?",
-                                 verb.c_str(), which.c_str());
+                                 verb.c_str(), noun.c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
-    else
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
+
+    canned_msg(MSG_OK);
+    return true;
 }
 
 bool can_reach_attack_between(coord_def source, coord_def target,

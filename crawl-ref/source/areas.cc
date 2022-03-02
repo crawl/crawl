@@ -596,6 +596,8 @@ int player::halo_radius() const
 
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
+    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+        size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         size = max(size, 2);
 
@@ -620,6 +622,7 @@ static int _mons_class_halo_radius(monster_type type)
     case MONS_SERAPH:
         return 7; // highest rank among sentient ones
     case MONS_HOLY_SWINE:
+    case MONS_SUN_MOTH:
         return 1;  // only notionally holy
     case MONS_MENNAS:
         return 2;  // ???  Low on grace or what?
@@ -634,6 +637,9 @@ int monster::halo_radius() const
     int size = -1;
 
     if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
+        size = 3;
+
+    if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = 3;
 
     if (!(holiness() & MH_HOLY))

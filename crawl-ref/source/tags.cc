@@ -71,10 +71,12 @@
 #include "mutation.h"
 #include "place.h"
 #include "player-stats.h"
+#include "player-save-info.h"
 #include "prompt.h" // index_to_letter
 #include "religion.h"
 #include "skills.h"
 #include "species.h"
+#include "spl-damage.h" // vortex_power_key
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1044,6 +1046,11 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
             x = DNGN_DEMONIC_TREE;
         }
     }
+    if (minor_version < TAG_MINOR_SPLIT_HELL_GATE && x == DNGN_ENTER_HELL
+        && player_in_hell())
+    {
+        x = branches[you.where_are_you].exit_stairs;
+    }
 #else
     UNUSED(minor_version);
 #endif
@@ -1671,9 +1678,7 @@ static void _tag_construct_you(writer &th)
 
     marshallByte(th, you.piety_hysteresis);
 
-    you.m_quiver_history.save(th);
     you.quiver_action.save(QUIVER_MAIN_SAVE_KEY);
-    you.launcher_action.save(QUIVER_LAUNCHER_SAVE_KEY);
 
     CANARY;
 
@@ -2284,23 +2289,26 @@ static const char* old_gods[]=
     "Ashenzari",
 };
 
-void tag_read_char(reader &th, uint8_t /*format*/, uint8_t major, uint8_t minor)
+player_save_info tag_read_char_info(reader &th, uint8_t /*format*/,
+                                    uint8_t major, uint8_t minor)
 {
-    // Important: values out of bounds are good here, the save browser needs to
+    player_save_info r;
+    // Important: the beginning of this chunk is read in
+    // files.cc:_read_char_chunk, which handles loading save version info.
+    // Values out of bounds are good here, the save browser needs to
     // be forward-compatible. We validate them only on an actual restore.
-    you.your_name         = unmarshallString2(th);
-    you.prev_save_version = unmarshallString2(th);
-    dprf("Saved character %s, version: %s", you.your_name.c_str(),
-                                            you.prev_save_version.c_str());
+    r.name = unmarshallString2(th);
+    r.prev_save_version = unmarshallString2(th);
+    dprf("Saved character %s, version: %s", r.name.c_str(),
+                                            r.prev_save_version.c_str());
 
-    you.species           = static_cast<species_type>(unmarshallUByte(th));
-    you.char_class        = static_cast<job_type>(unmarshallUByte(th));
-    you.experience_level  = unmarshallByte(th);
-    you.chr_class_name    = unmarshallString2(th);
-    you.religion          = static_cast<god_type>(unmarshallUByte(th));
-    you.jiyva_second_name = unmarshallString2(th);
-
-    you.wizard            = unmarshallBoolean(th);
+    r.species = static_cast<species_type>(unmarshallUByte(th));
+    r.job = static_cast<job_type>(unmarshallUByte(th));
+    r.experience_level = unmarshallByte(th);
+    r.class_name = unmarshallString2(th);
+    r.religion = static_cast<god_type>(unmarshallUByte(th));
+    r.jiyva_second_name = unmarshallString2(th);
+    r.wizard = unmarshallBoolean(th);
 
     // this was mistakenly inserted in the middle for a few tag versions - this
     // just makes sure that games generated in that time period are still
@@ -2308,42 +2316,44 @@ void tag_read_char(reader &th, uint8_t /*format*/, uint8_t major, uint8_t minor)
 #if TAG_CHR_FORMAT == 0
     // TAG_MINOR_EXPLORE_MODE and TAG_MINOR_FIX_EXPLORE_MODE
     if (major == 34 && (minor >= 121 && minor < 130))
-        you.explore = unmarshallBoolean(th);
+        r.explore = unmarshallBoolean(th);
 #endif
 
-    crawl_state.type = (game_type) unmarshallUByte(th);
+    r.saved_game_type = static_cast<game_type>(unmarshallUByte(th));
     // normalize invalid game types so they can be treated uniformly elsewhere
-    if (crawl_state.type > NUM_GAME_TYPE)
-        crawl_state.type = NUM_GAME_TYPE;
+    if (r.saved_game_type > NUM_GAME_TYPE)
+        r.saved_game_type = NUM_GAME_TYPE;
 
-    // prevent an ASSERT in game_is_tutorial on game types from the future
-    if (crawl_state.game_is_valid_type() && crawl_state.game_is_tutorial())
-        crawl_state.map = unmarshallString2(th);
-    else
-        crawl_state.map = "";
+    if (r.saved_game_type == GAME_TYPE_TUTORIAL)
+        r.map = unmarshallString2(th);
 
     if (major > 32 || major == 32 && minor > 26)
     {
-        you.chr_species_name = unmarshallString2(th);
-        you.chr_god_name     = unmarshallString2(th);
+        r.species_name = unmarshallString2(th);
+        r.god_name = unmarshallString2(th);
     }
     else
     {
-        if (you.species >= 0 && you.species < (int)ARRAYSZ(old_species))
-            you.chr_species_name = old_species[you.species];
-        else
-            you.chr_species_name = "Yak";
-        if (you.religion >= 0 && you.religion < (int)ARRAYSZ(old_gods))
-            you.chr_god_name = old_gods[you.religion];
-        else
-            you.chr_god_name = "Marduk";
+        if (r.species >= 0 && r.species < (int)ARRAYSZ(old_species))
+            r.species_name = old_species[you.species];
+
+        if (r.religion >= 0 && r.religion < (int)ARRAYSZ(old_gods))
+            r.god_name = old_gods[you.religion];
     }
 
     if (major > 34 || major == 34 && minor >= 29)
-        crawl_state.map = unmarshallString2(th);
+        r.map = unmarshallString2(th);
 
     if (major > 34 || major == 34 && minor >= 130)
-        you.explore = unmarshallBoolean(th);
+        r.explore = unmarshallBoolean(th);
+
+    return r;
+}
+
+void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
+{
+    player_save_info s = tag_read_char_info(th, format, major, minor);
+    you.init_from_save_info(s);
 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -2550,11 +2560,14 @@ static void _tag_read_you(reader &th)
 {
     int count;
 
+    // these `you` values come from the "chr" chunk, but aren't validated during
+    // the reading of that chunk. Let's make sure they actually make sense...
     ASSERT(species::is_valid(you.species));
     ASSERT(job_type_valid(you.char_class));
     ASSERT_RANGE(you.experience_level, 1, 28);
     ASSERT(you.religion < NUM_GODS);
     ASSERT_RANGE(crawl_state.type, GAME_TYPE_UNSPECIFIED + 1, NUM_GAME_TYPE);
+    // now start reading the chunk proper
     you.last_mid          = unmarshallInt(th);
     you.piety             = unmarshallUByte(th);
     ASSERT(you.piety <= MAX_PIETY);
@@ -3719,9 +3732,9 @@ static void _tag_read_you(reader &th)
 
     you.piety_hysteresis = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 34
     you.m_quiver_history.load(th);
 
-#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)
         unmarshallByte(th);
     if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
@@ -3991,6 +4004,15 @@ static void _tag_read_you(reader &th)
         you.props.erase("tornado_since");
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_VORTEX_POWER
+        && you.duration[DUR_VORTEX])
+    {
+        // trying to calculate power here is scary and won't work well.
+        // instead, just give em a high power vortex. let em have fun.
+        // it's one vortex. how much could it cost, mennas? 20 sultanas?
+        you.props[VORTEX_POWER_KEY] = 150;
+    }
+
 #endif
 }
 
@@ -4225,9 +4247,13 @@ static void _tag_read_you_items(reader &th)
 
     // preconditions: need to have read items, and you (incl props).
     you.quiver_action.load(QUIVER_MAIN_SAVE_KEY);
-    you.launcher_action.load(QUIVER_LAUNCHER_SAVE_KEY);
-
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MOSTLY_REMOVE_AMMO)
+    {
+        quiver::action_cycler ac;
+        ac.load(QUIVER_LAUNCHER_SAVE_KEY);
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP)
     {
         const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];
@@ -4725,12 +4751,15 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
         return;
 
 #if TAG_MAJOR_VERSION == 34
-    if (!item.is_valid(iinfo))
+    if (!item.is_valid(iinfo, true))
     {
         string name;
         item_def dummy = item;
         if (!item.quantity)
-            name = "(quantity: 0) ", dummy.quantity = 1;
+        {
+            name = "(quantity: 0) ";
+            dummy.quantity = 1;
+        }
         name += dummy.name(DESC_PLAIN, true);
         die("Invalid item: %s", name.c_str());
     }
@@ -5800,6 +5829,14 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
 #endif
         mi._colour = unmarshallInt(th);
     unmarshallUnsigned(th, mi.attitude);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
+        && mi.attitude == ATT_OLD_STRICT_NEUTRAL)
+    {
+        mi.attitude = ATT_GOOD_NEUTRAL;
+    }
+#endif
+
     unmarshallUnsigned(th, mi.threat);
     unmarshallUnsigned(th, mi.dam);
     unmarshallUnsigned(th, mi.fire_blocker);
@@ -6655,6 +6692,13 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
+        && m.attitude == ATT_OLD_STRICT_NEUTRAL)
+    {
+        m.attitude = ATT_GOOD_NEUTRAL;
+    }
+#endif
     m.foe      = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     // In 0.16 alpha we briefly allowed YOU_FAULTLESS as a monster's foe.

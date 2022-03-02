@@ -284,7 +284,6 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     {
         orc->hit_points = max(1, random_range(orc->max_hit_points / 5,
                                               orc->max_hit_points * 2 / 5));
-        avoided_death_fineff::schedule(orc);
     }
 
     mons_make_god_gift(*orc, GOD_BEOGH);
@@ -294,6 +293,10 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     behaviour_event(orc, ME_ALERT);
 
     mons_att_changed(orc);
+
+    // put the actual revival at the end of the round
+    if (conv == conv_t::deathbed || conv == conv_t::deathbed_follower)
+        avoided_death_fineff::schedule(orc);
 }
 
 static void _fedhas_neutralise_plant(monster* plant)
@@ -334,7 +337,7 @@ static void _jiyva_convert_slime(monster* slime)
         }
     }
 
-    slime->attitude = ATT_STRICT_NEUTRAL;
+    slime->attitude = ATT_GOOD_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
     mons_make_god_gift(*slime, GOD_JIYVA);

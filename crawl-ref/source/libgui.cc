@@ -92,6 +92,21 @@ void textbackground(int bg)
     TextRegion::textbackground(bg);
 }
 
+COLOURS default_hover_colour()
+{
+    return DARKGREY;
+}
+
+lib_display_info::lib_display_info()
+    : type("SDL Tiles"),
+    term("N/A"),
+    // this means that the lib supports the 16 ansi colors, not that it can't
+    // do more
+    fg_colors(16),
+    bg_colors(16)
+{
+}
+
 void set_cursor_enabled(bool enabled)
 {
     if (enabled)

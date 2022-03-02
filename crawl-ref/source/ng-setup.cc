@@ -136,7 +136,7 @@ item_def* newgame_make_item(object_class_type base,
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
     if (item.base_type == OBJ_ARMOUR
-        && !can_wear_armour(item, false, false))
+        && !can_wear_armour(item, false, true))
     {
         if (item.sub_type == ARM_HELMET || item.sub_type == ARM_HAT)
             item.sub_type = ARM_HAT;
@@ -152,9 +152,7 @@ item_def* newgame_make_item(object_class_type base,
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
     // If that didn't help, nothing will.
-    // However, wanderer randbooks aren't yet initialized and all other
-    // starting books are guaranteed to be useful at game start.
-    if (item.base_type != OBJ_BOOKS && is_useless_item(item, false, true))
+    if (is_useless_item(item, false, true))
     {
         item = item_def();
         return nullptr;
@@ -169,12 +167,6 @@ item_def* newgame_make_item(object_class_type base,
 
     if (item.base_type == OBJ_MISSILES)
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
-    // You can get the books without the corresponding items as a wanderer.
-    else if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_GEOMANCY)
-        _autopickup_ammo(MI_STONE);
-    // You probably want to pick up both.
-    if (item.is_type(OBJ_MISSILES, MI_SLING_BULLET))
-        _autopickup_ammo(MI_STONE);
 
     origin_set_startequip(item);
 
@@ -197,35 +189,6 @@ static void _give_ranged_weapon(weapon_type weapon, int plus)
     }
 }
 
-static void _give_ammo(weapon_type weapon, int plus)
-{
-    ASSERT(weapon != NUM_WEAPONS);
-
-    switch (weapon)
-    {
-    case WPN_THROWN:
-        if (species::can_throw_large_rocks(you.species))
-            newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
-        else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
-            newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 8 + 2 * plus);
-        else
-            newgame_make_item(OBJ_MISSILES, MI_JAVELIN, 5 + plus);
-        newgame_make_item(OBJ_MISSILES, MI_THROWING_NET, 2);
-        break;
-    case WPN_SHORTBOW:
-        newgame_make_item(OBJ_MISSILES, MI_ARROW, 20);
-        break;
-    case WPN_HAND_CROSSBOW:
-        newgame_make_item(OBJ_MISSILES, MI_BOLT, 20);
-        break;
-    case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_MISSILES, MI_SLING_BULLET, 20);
-        break;
-    default:
-        break;
-    }
-}
-
 static void _give_job_spells(job_type job)
 {
     vector<spell_type> spells = get_job_spells(job);
@@ -242,7 +205,7 @@ static void _give_job_spells(job_type job)
         return;
     }
 
-    library_add_spells(spells);
+    library_add_spells(spells, true);
 
     const spell_type first_spell = spells[0];
     if (!spell_is_useless(first_spell, false, true)
@@ -345,9 +308,6 @@ void give_items_skills(const newgame_def& ng)
     give_job_skills(you.char_class);
     _give_job_spells(you.char_class);
 
-    if (job_gets_ranged_weapons(you.char_class))
-        _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
-
     if (you.has_mutation(MUT_NO_GRASPING))
         you.skills[SK_THROWING] = 0;
 
@@ -440,19 +400,6 @@ void setup_game(const newgame_def& ng,
     }
 
     _setup_generic(ng, normal_dungeon_setup);
-}
-
-static void _free_up_slot(char letter)
-{
-    for (int slot = 0; slot < ENDOFPACK; ++slot)
-    {
-        if (!you.inv[slot].defined())
-        {
-            swap_inv_slots(letter_to_index(letter),
-                           slot, false);
-            break;
-        }
-    }
 }
 
 static bool _spell_triggered_by(spell_type to_trigger, spell_type trigger)
@@ -580,13 +527,6 @@ static void _setup_generic(const newgame_def& ng,
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();
-
-    // Leave the a/b slots open so if the first thing you pick up is a weapon,
-    // you can use ' to swap between your items.
-    if (you.char_class == JOB_EARTH_ELEMENTALIST)
-        _free_up_slot('a');
-    if (you.char_class == JOB_ARCANE_MARKSMAN && ng.weapon != WPN_THROWN)
-        _free_up_slot('b');
 
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())

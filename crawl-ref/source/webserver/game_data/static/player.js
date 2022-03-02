@@ -42,8 +42,9 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             old_value = max;
         player["old_" + propname] = value;
         var increase = old_value < value;
+        // XX should both of these be floor?
         var full_bar = Math.round(10000 * (increase ? old_value : value) / max);
-        var change_bar = Math.round(10000 * Math.abs(old_value - value) / max);
+        var change_bar = Math.floor(10000 * Math.abs(old_value - value) / max);
         // Use poison_survival to display our remaining hp after poison expires.
         if (name == "hp")
         {
@@ -438,13 +439,6 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
         $("#stats_weapon").html(wielded_weapon());
 
-        // show launcher ammo to the right of the weapon, if it isn't currently
-        // shown in the regular quiver
-        if (player.launcher_item >= 0 && player.launcher_item != player.quiver_item)
-            $("#stats_launcher_quiver").html(inventory_item_desc(player.launcher_item, true));
-        else
-            $("#stats_launcher_quiver").html("");
-
         $("#stats_quiver").html(quiver());
     }
 
@@ -527,7 +521,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
                 piety_rank: 0, penance: false,
                 status: [],
                 inv: {}, equip: {},
-                quiver_item: -1, launcher_item: -1,
+                quiver_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},
                 wizard: 0,

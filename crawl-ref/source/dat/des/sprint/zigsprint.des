@@ -751,15 +751,12 @@ KITEM:    H = demon blade mundane ident:all plus:5, \
               triple sword mundane ident:all plus:5
 KITEM:    I = lajatang mundane ident:all plus:5
 KITEM:    J = hand crossbow mundane ident:all plus:5, \
-              bolt q:1000 mundane ident:all, \
               arbalest mundane ident:all plus:5, \
               triple crossbow mundane ident:all plus:5, \
               shortbow mundane ident:all plus:5, \
-              arrow q:1000 mundane ident:all, \
               longbow mundane ident:all plus:5, \
               hunting sling mundane ident:all plus:5, \
-              fustibalus mundane ident:all plus:5, \
-              sling bullet q:1000 mundane ident:all
+              fustibalus mundane ident:all plus:5
 KITEM:    K = potion of curing q:9 ident:all, \
               potion of heal wounds q:9 ident:all, \
               potion of berserk rage q:2 ident:all, \

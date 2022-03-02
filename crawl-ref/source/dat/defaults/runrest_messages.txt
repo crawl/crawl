@@ -21,13 +21,11 @@ stop += You feel you are being watched
 stop += [Ss]omething.* misses you.
 stop += emerges from the mists of memory
 
-# Traps
-#
-ignore += You found a web!
-stop += found.*trap
-stop += You have blundered into a Zot trap
-stop += You (are sucked|fall) into a shaft and drop
+# Traps and doors
+stop += A sourceless malevolence
 stop += A sentinel's mark forms upon you\.
+stop += it creaks loudly
+stop += flies open with a bang
 
 ## Zot is coming!
 stop += You have lingered too long
@@ -53,6 +51,20 @@ stop += You now have enough gold to
 #
 ignore += Your skin is crawling a little less now.
 ignore += of your corpse armour falls away.
+
+# Transformation endings.
+# Badforms (and tree) excluded since we might be resting those off
+ignore += transformation is almost over\.
+ignore += transformation has ended\.
+ignore += reverts? to (its|their) normal proportions\.
+ignore += revert to a slightly less stony form\.
+ignore += revert to your normal fleshy form\.
+ignore += warm up again\.
+ignore += feel yourself come back to life\.
+ignore += feel your undeath return to normal\.
+ignore += (talons|horns|tentacle spike) disappear
+ignore += feel less shadowy\.
+ignore += you emerge from the shadows\.
 
 # Uskayaw -- ignore all Uskayaw power gain/loss messages since they happen constantly
 #

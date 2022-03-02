@@ -355,6 +355,8 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_SHADOWS:
             case SPARM_RAMPAGING:
             case SPARM_INFUSION:
+            case SPARM_LIGHT:
+            case SPARM_ENERGY:
                 valued += 50;
                 break;
 
@@ -363,6 +365,9 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_REFLECTION:
             case SPARM_SPIRIT_SHIELD:
             case SPARM_HARM:
+            case SPARM_RAGE:
+            case SPARM_MAYHEM:
+            case SPARM_GUILE:
                 valued += 20;
                 break;
 
@@ -432,8 +437,10 @@ unsigned int item_value(item_def item, bool ident)
 
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                if (good) valued += (valued * item.plus) / 4;
-                else      valued += (valued * item.plus) / 2;
+                if (good)
+                    valued += (valued * item.plus) / 4;
+                else
+                    valued += (valued * item.plus) / 2;
             }
         }
         break;
@@ -816,20 +823,6 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
     return true;
 }
 
-static string _hyphenated_letters(int how_many, char first)
-{
-    string s = "<w>";
-    s += first;
-    s += "</w>";
-    if (how_many > 1)
-    {
-        s += "-<w>";
-        s += first + how_many - 1;
-        s += "</w>";
-    }
-    return s;
-}
-
 enum shopping_order
 {
     ORDER_TYPE,
@@ -880,9 +873,8 @@ class ShopEntry : public InvEntry
 {
     ShopMenu& menu;
 
-    string get_text(bool need_cursor = false) const override
+    string get_text() const override
     {
-        need_cursor = need_cursor && show_cursor;
         const int cost = item_price(*item, menu.shop);
         const int total_cost = menu.selected_cost();
         const bool on_list = shopping_list.is_on_list(*item, &menu.pos);
@@ -904,12 +896,10 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+        return make_stringf(" <%s>%c %c </%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
-                            need_cursor ? '[' : ' ',
                             selected() ? '+' : on_list ? '$' : '-',
-                            need_cursor ? ']' : ' ',
                             keystr.c_str(),
                             itemstr.c_str(),
                             cost,
@@ -934,9 +924,10 @@ public:
     }
 };
 
+// XX why is this MF_QUIET_SELECT?
 ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase)
     : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
-               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
+                | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
       shop(_shop),
       pos(_pos),
       can_purchase(_can_purchase)
@@ -1008,25 +999,25 @@ void ShopMenu::update_help()
         //You have 0 gold pieces.
         //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
         //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
-#if defined(USE_TILE) && !defined(TOUCH_UI)
+#if defined(USE_TILE_LOCAL) && !defined(TOUCH_UI)
         "[<w>Esc</w>/<w>R-Click</w>] exit  "
 #else
         //               "/R-Click"
         "[<w>Esc</w>] exit          "
 #endif
-        "%s  [%s] %s\n"
-        "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
+        "%s  %s %s\n"
+        "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
         !can_purchase ? " " " "  "  " "       "  "          " :
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
                                      "[<w>!</w>] buy|<w>examine</w> items",
-        _hyphenated_letters(item_count(), 'a').c_str(),
+        hyphenated_hotkey_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for purchase" : "examine item",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
         !can_purchase ? " " "     "  "               " :
                         "[<w>Enter</w>] make purchase",
-        _hyphenated_letters(item_count(), 'A').c_str())));
+        hyphenated_hotkey_letters(item_count(), 'A').c_str())));
 }
 
 void ShopMenu::purchase_selected()
@@ -1119,7 +1110,7 @@ void ShopMenu::purchase_selected()
 
     // Since the old ShopEntrys may now point to past the end of shop.stock (or
     // just the wrong place in general) nuke the whole thing and start over.
-    deleteAll(items);
+    clear();
     init_entries();
     resort();
 
@@ -1209,7 +1200,6 @@ bool ShopMenu::process_key(int keyin)
             update_more();
         }
         return true;
-    case ' ':
     case CK_MOUSE_CLICK:
     case CK_ENTER:
         if (can_purchase)
@@ -2062,8 +2052,45 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
+    ShoppingListMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
+            | MF_INIT_HOVER) {}
     bool view_only {false};
+
+    string get_keyhelp(bool) const override
+    {
+        string s = make_stringf("<yellow>You have %d gold pieces</yellow>\n", you.gold);
+
+        if (view_only)
+            s += "<lightgrey>Choose to examine item  ";
+        else
+        {
+            s += "<lightgrey>[<w>!</w>] ";
+            switch (menu_action)
+            {
+            case ACT_EXECUTE:
+                s += "<w>travel</w>|examine|delete";
+                break;
+            case ACT_EXAMINE:
+                s += "travel|<w>examine</w>|delete";
+                break;
+            default:
+                s += "travel|examine|<w>delete</w>";
+                break;
+            }
+
+            s += " items    ";
+        }
+        if (items.size() > 0)
+        {
+            // could be dropped if there's ever more interesting hotkeys
+            s += hyphenated_hotkey_letters(items.size(), 'a')
+                    + " choose item</lightgray>";
+        }
+        return pad_more_with(s, "<lightgrey>[<w>Esc</w>] exit</lightgrey>");
+    }
+
+    friend class ShoppingList;
 
 protected:
     virtual formatted_string calc_title() override;
@@ -2075,34 +2102,11 @@ formatted_string ShoppingListMenu::calc_title()
     const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
     fs.textcolour(title->colour);
-    fs.cprintf("%d %s%s, total cost %d gp",
+    fs.cprintf("Shopping list: %d %s%s, total cost %d gold pieces",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1 ? "s" : "",
                 total_cost);
 
-    string s = "<lightgrey>  [<w>a-z</w>] ";
-
-    if (view_only)
-    {
-        fs += formatted_string::parse_string(s + "<w>examine</w>");
-        return fs;
-    }
-
-    switch (menu_action)
-    {
-    case ACT_EXECUTE:
-        s += "<w>travel</w>|examine|delete";
-        break;
-    case ACT_EXAMINE:
-        s += "travel|<w>examine</w>|delete";
-        break;
-    default:
-        s += "travel|examine|<w>delete</w>";
-        break;
-    }
-
-    s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
-    fs += formatted_string::parse_string(s);
     return fs;
 }
 
@@ -2184,12 +2188,6 @@ void ShoppingList::display(bool view_only)
     mtitle->quantity = list->size();
     shopmenu.set_title(mtitle);
 
-    string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
-    shopmenu.set_more(formatted_string::parse_string(more_str));
-
-    shopmenu.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
-                        | MF_ALLOW_FORMATTING);
-
     fill_out_menu(shopmenu);
 
     shopmenu.on_single_selection =
@@ -2207,7 +2205,7 @@ void ShoppingList::display(bool view_only)
             if (cost > you.gold)
             {
                 string prompt =
-                   make_stringf("You cannot afford %s; travel there "
+                   make_stringf("Travel to: %s\nYou cannot afford this item; travel there "
                                 "anyway? (y/N)",
                                 describe_thing(*thing, DESC_A).c_str());
                 clrscr();
@@ -2258,6 +2256,7 @@ void ShoppingList::display(bool view_only)
 
             shopmenu.clear();
             fill_out_menu(shopmenu);
+            shopmenu.update_more();
             shopmenu.update_menu(true);
         }
         else

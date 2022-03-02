@@ -874,7 +874,7 @@ TAGS:    no_item_gen no_monster_gen transparent
 DEPTH:   Orc
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
-KMONS:   3 = orc warrior / orc ; arbalest . bolt . spear | hand axe | mace
+KMONS:   3 = orc warrior / orc ; arbalest . spear | hand axe | mace
 KMONS:   4 = orc priest / orc / nothing
 KMONS:   5 = orc wizard / nothing
 KMONS:   6 = ogre / two-headed ogre / troll / deep troll / ogre mage / nothing
@@ -904,10 +904,10 @@ NAME:   mines_bat_river
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Orc
 MONS:   bat
-MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | shortbow ego:vorpal . arrow q:10
+MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | shortbow ego:vorpal
 NSUBST: . = 2:2 / 2:c
 NSUBST: c = *: 2 .
-KITEM:  d = arrow q:1
+# There were arrows here. They're gone now. Sorry
 NSUBST: b = 3:1 / 10:d / 4:e / *: .:20 1:1 d:2 e:2
 : dgn.delayed_decay(_G, 'e', 'bat corpse')
 SHUFFLE: ABC
@@ -938,7 +938,7 @@ ENDMAP
 NAME:   rock_pile
 TAGS:   no_item_gen no_monster_gen transparent
 DEPTH:  Orc
-MONS:   orc ; hunting sling . stone q:30, boulder beetle
+MONS:   orc ; hunting sling, boulder beetle
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
 NSUBST: b = 1:2 / 5:1 / *:d
@@ -1478,10 +1478,10 @@ NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc warrior w:1 ; arbalest . bolt . halberd | war axe | morningstar /\
-         orc w:10 ; arbalest . bolt . trident | hand axe | mace
-MONS:    orc warrior ; arbalest . bolt . glaive | broad axe | battleaxe | great mace
-MONS:    orc knight ; arbalest . bolt . glaive | broad axe | great mace
+MONS:    orc warrior w:1 ; arbalest . halberd | war axe | morningstar /\
+         orc w:10 ; arbalest . trident | hand axe | mace
+MONS:    orc warrior ; arbalest . glaive | broad axe | battleaxe | great mace
+MONS:    orc knight ; arbalest . glaive | broad axe | great mace
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21
 SUBST:   3 = 23

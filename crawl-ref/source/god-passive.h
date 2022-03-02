@@ -293,7 +293,7 @@ int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
-bool does_ru_wanna_redirect(monster* mon);
+bool does_ru_wanna_redirect(const monster &mon);
 ru_interference get_ru_attack_interference_level();
 monster* shadow_monster(bool equip = true);
 void shadow_monster_reset(monster *mon);

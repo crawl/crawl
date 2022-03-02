@@ -518,6 +518,7 @@ capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
 thermic_engine THERMIC_ENGINE
+throatcutter THROATCUTTER
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -828,6 +829,11 @@ tower_shield_quartered TOWER_SHIELD_QUARTERED
 tower_shield_teal TOWER_SHIELD_TEAL
 tower_shield_spiral TOWER_SHIELD_SPIRAL TOWER_SHIELD_LAST_NORM
 
+## orbs
+orb1 ORB1 ORB_FIRST
+orb2 ORB2
+orb3 ORB3 ORB_LAST
+
 ##unrand (or unique) shields
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
@@ -1053,6 +1059,10 @@ turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
+hat_archer ARCHER
+hat_archer2 ARCHER2
+hat_explorer EXPLORER
+hat_explorer2 EXPLORER2
 
 ## Mutations
 horns1 HORNS1

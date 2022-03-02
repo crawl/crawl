@@ -1387,12 +1387,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             }
 
             // Setting this is redundant for dancing weapons, however
-            // we do care about the above indentification. -- bwr
-            if (!mons_class_is_animated_weapon(mons->type)
-                && mons->get_defining_object())
-            {
-                auxkilldata = mons->get_defining_object()->name(DESC_A);
-            }
+            // we do care about the above identification. -- bwr
+            if (!mons_class_is_animated_weapon(mons->type))
+                auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
@@ -3069,7 +3066,8 @@ void mark_milestone(const string &type, const string &milestone,
     xl.add_field("type", "%s", type.c_str());
     xl.add_field("milestone", "%s", milestone.c_str());
 #ifdef USE_TILE_WEB
-    tiles.send_milestone(xl);
+    if (!crawl_state.game_crashed)
+        tiles.send_milestone(xl);
 #endif
 #ifdef DGL_MILESTONES
 #ifndef SCORE_WIZARD_CHARACTERS

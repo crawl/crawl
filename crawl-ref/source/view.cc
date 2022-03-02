@@ -180,40 +180,18 @@ void seen_monsters_react(int stealth)
     }
 }
 
-static string _desc_mons_type_map(map<monster_type, int> types)
-{
-    string message;
-    unsigned int count = 1;
-    for (const auto &entry : types)
-    {
-        string name;
-        description_level_type desc;
-        if (entry.second == 1)
-            desc = DESC_A;
-        else
-            desc = DESC_PLAIN;
-
-        name = mons_type_name(entry.first, desc);
-        if (entry.second > 1)
-        {
-            name = make_stringf("%d %s", entry.second,
-                                pluralise_monster(name).c_str());
-        }
-
-        message += name;
-        if (count == types.size() - 1)
-            message += " and ";
-        else if (count < types.size())
-            message += ", ";
-        ++count;
-    }
-    return message;
-}
-
 static monster_type _mons_genus_keep_uniques(monster_type mc)
 {
     return mons_is_unique(mc) ? mc : mons_genus(mc);
 }
+
+typedef struct
+{
+    const monster *mon;
+    string name;
+    int count;
+    bool genus;
+} details;
 
 /**
  * Monster list simplification
@@ -224,7 +202,7 @@ static monster_type _mons_genus_keep_uniques(monster_type mc)
  * @param types monster types and the number of monster for each type.
  * @param genera monster genera and the number of monster for each genus.
  */
-static void _genus_factoring(map<monster_type, int> &types,
+static void _genus_factoring(map<const string, details> &types,
                              map<monster_type, int> &genera)
 {
     monster_type genus = MONS_NO_MONSTER;
@@ -246,24 +224,29 @@ static void _genus_factoring(map<monster_type, int> &types,
     }
 
     genera.erase(genus);
+
+    const monster *mon = nullptr;
+
     auto it = types.begin();
     do
     {
-        if (_mons_genus_keep_uniques(it->first) != genus)
+        if (_mons_genus_keep_uniques(it->second.mon->type) != genus)
         {
             ++it;
             continue;
         }
 
         // This genus has a single monster type. Can't factor.
-        if (it->second == num)
+        if (it->second.count == num)
             return;
 
+        mon = it->second.mon;
         types.erase(it++);
-
     } while (it != types.end());
+    ASSERT(mon); // There is a match as genera contains the monsters in types.
 
-    types[genus] = num;
+    const auto name = mons_type_name(genus, DESC_PLAIN);
+    types[name] = {mon, name, num, true};
 }
 
 static bool _is_weapon_worth_listing(const unique_ptr<item_def> &wpn)
@@ -300,9 +283,17 @@ static bool _is_mon_equipment_worth_listing(const monster_info &mi)
         || _is_item_worth_listing(mi.inv[MSLOT_MISSILE]);
 }
 
+/// Return whether or not monster_info::_core_name() describes the inventory
+/// for the monster "mon".
+static bool _does_core_name_include_inventory(const monster *mon)
+{
+    return mon->type == MONS_DANCING_WEAPON || mon->type == MONS_SPECTRAL_WEAPON
+           || mon->type == MONS_ANIMATED_ARMOUR;
+}
+
 /// Return a warning for the player about newly-seen monsters, as appropriate.
 static string _monster_headsup(const vector<monster*> &monsters,
-                               const map<monster_type, int> &types,
+                               const unordered_set<const monster*> &single,
                                bool divine)
 {
     string warning_msg = "";
@@ -321,6 +312,11 @@ static string _monster_headsup(const vector<monster*> &monsters,
         if (!divine && monsters.size() == 1)
             continue; // don't give redundant warnings for enemies
 
+        // Don't repeat inventory. Non-single monsters may be merged, in which
+        // case the name is just the name of the monster type.
+        if (_does_core_name_include_inventory(mon) && single.count(mon))
+            continue;
+
         if (warning_msg.size())
             warning_msg += " ";
 
@@ -329,7 +325,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
             monname = mon->pronoun(PRONOUN_SUBJECTIVE);
         else if (mon->type == MONS_DANCING_WEAPON)
             monname = "There";
-        else if (types.at(mon->type) == 1)
+        else if (single.count(mon))
             monname = mon->full_name(DESC_THE);
         else
             monname = mon->full_name(DESC_A);
@@ -375,9 +371,9 @@ static string _monster_headsup(const vector<monster*> &monsters,
 
 /// Let Ash/Zin warn the player about newly-seen monsters, as appropriate.
 static void _divine_headsup(const vector<monster*> &monsters,
-                            const map<monster_type, int> &types)
+                            const unordered_set<const monster*> &single)
 {
-    const string warnings = _monster_headsup(monsters, types, true);
+    const string warnings = _monster_headsup(monsters, single, true);
     if (!warnings.size())
         return;
 
@@ -391,30 +387,77 @@ static void _divine_headsup(const vector<monster*> &monsters,
 }
 
 static void _secular_headsup(const vector<monster*> &monsters,
-                             const map<monster_type, int> &types)
+                             const unordered_set<const monster*> &single)
 {
-    const string warnings = _monster_headsup(monsters, types, false);
+    const string warnings = _monster_headsup(monsters, single, false);
     if (!warnings.size())
         return;
     mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
 }
 
-static map<monster_type, int> _count_monster_types(const vector<monster*>& monsters,
-                                                   const unsigned int max_types = UINT_MAX)
+/**
+ * Calculate a list of monster types and genera from a list of monsters.
+ *
+ * @param monsters      A list of monsters (who may have just become visible)
+ * @param[out] single   A list of the monsters in "monsters" which are to be
+ *                      described separately ("a hog", not one of "2 hogs").
+ * @param[out] species  A list of the monsters in "monsters" which are to be
+ *                      described. Each element contains a monster, the number
+ *                      of monsters to be included, and whether to refer to the
+ *                      monster using the genus rather than the monster details.
+ */
+static void _count_monster_types(const vector<monster*> &monsters,
+                                    unordered_set<const monster*> &single,
+                                 vector<details> &species)
 {
-    map<monster_type, int> types;
+    const unsigned int max_types = 4;
+
     map<monster_type, int> genera; // This is the plural for genus!
+    map<const string, details> species_s; // select which species to show
     for (const monster *mon : monsters)
     {
-        const monster_type type = mon->type;
-        types[type]++;
-        genera[_mons_genus_keep_uniques(type)]++;
+        const string name = mon->name(DESC_PLAIN);
+        auto &det = species_s[name];
+        det = {mon, name, det.count+1, false};
+        genera[_mons_genus_keep_uniques(mon->type)]++;
     }
 
-    while (types.size() > max_types && !genera.empty())
-        _genus_factoring(types, genera);
+    // Don't merge named monsters (ghosts and the like). They're exciting!
+    while (species_s.size() > max_types && !genera.empty())
+        _genus_factoring(species_s, genera);
 
-    return types;
+    map <const monster*, details> species_o; // put species in an order
+    for (const auto &sp : species_s)
+    {
+        const auto det = sp.second;
+        species_o[det.mon] = det;
+        if (1 == det.count)
+            single.insert(det.mon);
+    }
+
+    // Build a vector of species/genera sorted by one of the monsters from each.
+    for (const auto &sp : species_o)
+        species.push_back(sp.second);
+}
+
+
+static string _describe_monsters_from_species(const vector<details> &species)
+{
+    return comma_separated_fn(species.begin(), species.end(),
+        [] (const details &det)
+        {
+            string name = det.name;
+            if (mons_is_unique(det.mon->type))
+                return name;
+            else if (det.count > 1 && det.genus)
+            {
+                auto genus = mons_genus(det.mon->type);
+                name = " "+pluralise(mons_type_name(genus, DESC_PLAIN));
+            }
+            else if (det.count > 1)
+                name = " "+pluralise(det.name);
+            return apply_description(DESC_A, name, det.count);
+        });
 }
 
 /**
@@ -425,7 +468,11 @@ static map<monster_type, int> _count_monster_types(const vector<monster*>& monst
  */
 string describe_monsters_condensed(const vector<monster*>& monsters)
 {
-    return _desc_mons_type_map(_count_monster_types(monsters, 4));
+    unordered_set<const monster*> single;
+    vector<details> species;
+    _count_monster_types(monsters, single, species);
+
+    return _describe_monsters_from_species(species);
 }
 
 /**
@@ -439,15 +486,18 @@ string describe_monsters_condensed(const vector<monster*>& monsters)
 static void _handle_comes_into_view(const vector<string> &msgs,
                                     const vector<monster*> monsters)
 {
+    unordered_set<const monster*> single;
+    vector<details> species;
+    _count_monster_types(monsters, single, species);
+
     if (monsters.size() == 1)
         mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
     else
         mprf(MSGCH_MONSTER_WARNING, "%s come into view.",
-             describe_monsters_condensed(monsters).c_str());
+             _describe_monsters_from_species(species).c_str());
 
-    const auto& types = _count_monster_types(monsters);
-    _divine_headsup(monsters, types);
-    _secular_headsup(monsters, types);
+    _divine_headsup(monsters, single);
+    _secular_headsup(monsters, single);
 }
 
 /// If the player has the shout mutation, maybe shout at newly-seen monsters.
@@ -1021,7 +1071,9 @@ static update_flags player_view_update_at(const coord_def &gc)
     {
         if (!crawl_state.game_is_arena()
             && cell_triggers_conduct(gc)
-            && !player_in_branch(BRANCH_TEMPLE))
+            && !player_in_branch(BRANCH_TEMPLE)
+            && !player_in_branch(BRANCH_ABYSS)
+            && !(player_in_branch(BRANCH_SLIME) && you_worship(GOD_JIYVA)))
         {
             did_god_conduct(DID_EXPLORATION, 2500);
             const int density = env.density ? env.density : 2000;

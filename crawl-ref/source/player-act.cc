@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
+#include "artefact.h" // is_unrandom_artefact (woodcutter)
 #include "coordit.h"
 #include "dgn-event.h"
 #include "english.h"
@@ -30,6 +31,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "state.h"
 #include "terrain.h"
 #include "transform.h"
@@ -233,14 +235,14 @@ brand_type player::damage_brand(int)
 
 
 /**
- * Return the delay caused by attacking with your weapon and this projectile.
+ * Return the delay caused by attacking with your weapon or this projectile.
  *
- * @param projectile  The projectile to be fired/thrown, if any.
- * @param rescale     Whether to re-scale the time to account for the fact that
- *                    finesse doesn't stack with haste.
- * @return            A random_var representing the range of possible values of
- *                    attack delay. It can be casted to an int, in which case
- *                    its value is determined by the appropriate rolls.
+ * @param projectile  The projectile to be thrown, if any.
+ * @param rescale         Whether to re-scale the time to account for the fact that
+ *                   finesse doesn't stack with haste.
+ * @return           A random_var representing the range of possible values of
+ *                   attack delay. It can be casted to an int, in which case
+ *                   its value is determined by the appropriate rolls.
  */
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
@@ -250,7 +252,8 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     // math.
     const int DELAY_SCALE = 20;
 
-    if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
+    const bool throwing = projectile && is_throwable(this, *projectile);
+    if (throwing)
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
@@ -269,9 +272,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
     }
-    else if (weap &&
-             (projectile ? projectile->launched_by(*weap)
-                         : is_melee_weapon(*weap)))
+    else if (weap)
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
         // Cap skill contribution to mindelay skill, so that rounding
@@ -280,6 +281,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
                                   10 * weapon_min_delay_skill(*weap));
 
         attk_delay = random_var(property(*weap, PWPN_SPEED));
+        if (is_unrandom_artefact(*weap, UNRAND_WOODCUTTERS_AXE))
+            return attk_delay;
+
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
         if (get_weapon_brand(*weap) == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
@@ -291,6 +295,14 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     attk_delay +=
         div_rand_round(random_var(adjusted_shield_penalty(DELAY_SCALE)),
                        DELAY_SCALE);
+
+    // Slow attacks with ranged weapons, but not clumsy bashes.
+    // Don't slow throwing attacks while holding a ranged weapon.
+    if (!throwing && is_slowed_by_armour(weap) && projectile)
+    {
+        const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
+        attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
+    }
 
     if (you.duration[DUR_FINESSE])
     {
@@ -489,11 +501,22 @@ static string _hand_name_singular(bool temp)
     if (you.has_usable_tentacles())
         return "tentacle";
 
+    // Storm Form inactivates the paws mutation, but graphically, a Felid's
+    // electric body still maintains similar anatomy.
+    if (temp && you.form == transformation::storm
+        && you.species == SP_FELID)
+    {
+        return "paw";
+    }
+
     // For flavor reasons, use "fists" instead of "hands" in various places,
     // but if the creature does have a custom hand name, let the above code
     // preempt it.
-    if (temp && you.form == transformation::statue)
+    if (temp && (you.form == transformation::statue
+                 || you.form == transformation::storm))
+    {
         return "fist";
+    }
 
     // player has no usable claws, but has the mutation -- they are suppressed
     // by something. (The species names will give the wrong answer for this
@@ -638,10 +661,8 @@ string player::arm_name(bool plural, bool *can_plural) const
  *
  * @return  A string describing the player's UC attack 'weapon'.
  */
-string player::unarmed_attack_name() const
+string player::unarmed_attack_name(string default_name) const
 {
-    string default_name = "Nothing wielded";
-
     if (has_usable_claws(true))
     {
         if (you.has_mutation(MUT_FANGS))
@@ -844,7 +865,7 @@ int player::constriction_damage(bool direct) const
         return roll_dice(2, div_rand_round(strength(), 5));
 
     return roll_dice(2, div_rand_round(70 +
-                calc_spell_power(SPELL_BORGNJORS_VILE_CLUTCH, true), 20));
+               you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
 }
 
 bool player::is_dragonkind() const

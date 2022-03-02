@@ -230,11 +230,12 @@ end
 -- scrolls with a low chance of silence, vulnerability or acquirement (lowest)
 function trove.good_scroll (e)
     e.item([[scroll of enchant weapon / scroll of brand weapon w:3 /
-             scroll of enchant armour / scroll of identify w:20 /
-             scroll of magic mapping w:5 / scroll of blinking /
+             scroll of enchant armour / scroll of immolation w:8 /
+             scroll of magic mapping w:8 / scroll of blinking /
              scroll of silence w:2 / scroll of acquirement w:1 /
              scroll of teleportation w:20 / scroll of vulnerability w:2 /
-             scroll of holy word w:8 / scroll of fog w:8]])
+             scroll of holy word w:8 / scroll of fog w:8 /
+             scroll of torment w:8 / scroll of summoning w:1 ]])
 end
 
 function trove.place_fog(e, type, strength)
@@ -812,7 +813,7 @@ MONS:    golden dragon zombie
 MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
 ITEM:    gold dragon scales / storm dragon scales / fire dragon scales / troll leather armour / any useful armour good_item
-ITEM:    arrow good_item / bolt good_item
+ITEM:    javelin good_item / dart good_item
 ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
 SHUFFLE: 123
 SHUFFLE: defg

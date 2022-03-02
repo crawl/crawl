@@ -97,7 +97,7 @@ Drain Life ability
 Leczy twe punkty życia poprzez wyssanie siły życiowej z otaczających cię
 potworków.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Zaznacz duszę żyjącego inteligentnego potworka jako  owoc do zebrania. Gdy
 zaznaczony potworek zginie, jego dusza będzie twoja. Zniewolona dusza będzie

@@ -60,6 +60,7 @@
 #include "player-equip.h"
 #include "player.h"
 #include "prompt.h"
+#include "potion.h"
 #include "quiver.h"
 #include "randbook.h"
 #include "religion.h"
@@ -322,6 +323,11 @@ stack_iterator stack_iterator::operator++(int)
     return copy;
 }
 
+bool stack_iterator::operator==(const stack_iterator& rhs) const
+{
+    return cur_link == rhs.cur_link;
+}
+
 mon_inv_iterator::mon_inv_iterator(monster& _mon)
     : mon(_mon)
 {
@@ -449,6 +455,7 @@ void inc_inv_item_quantity(int obj, int amount)
 void inc_mitm_item_quantity(int obj, int amount)
 {
     env.item[obj].quantity += amount;
+    ASSERT(env.item[obj].defined());
 }
 
 void init_item(int item)
@@ -718,13 +725,24 @@ int count_movable_items(int obj)
  * @param[in] obj The location link; an index in env.item.
  * @param exclude_stationary If true, don't include stationary items.
 */
-vector<const item_def*> item_list_on_square(int obj)
+vector<item_def*> item_list_on_square(int obj)
+{
+    vector<item_def*> items;
+    for (stack_iterator si(obj); si; ++si)
+        items.push_back(& (*si));
+    return items;
+}
+
+// no overloading by return type, so some ugly code duplication. (There may be
+// cleverer template things to do.)
+vector<const item_def*> const_item_list_on_square(int obj)
 {
     vector<const item_def*> items;
     for (stack_iterator si(obj); si; ++si)
         items.push_back(& (*si));
     return items;
 }
+
 
 bool need_to_autopickup()
 {
@@ -860,7 +878,7 @@ void item_check()
 
     ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
-    auto items = item_list_on_square(you.visible_igrd(you.pos()));
+    auto items = const_item_list_on_square(you.visible_igrd(you.pos()));
 
     if (items.empty())
         return;
@@ -953,10 +971,13 @@ static bool _id_floor_item(item_def &item)
         if (fully_identified(item))
             return false;
 
+        // autopickup hack for previously-unknown items
+        if (item_needs_autopickup(item))
+            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         identify_item(item);
-        bool should_pickup = item_needs_autopickup(item);
-        if (!should_pickup)
-            set_item_autopickup(item, AP_FORCE_OFF);
+        // but skip ones that we discover to be useless
+        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+            item.props.erase(NEEDS_AUTOPICKUP_KEY);
         return true;
     }
 
@@ -975,7 +996,8 @@ void pickup_menu(int item_link)
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
 
-    auto items = item_list_on_square(item_link);
+    // XX why is this const?
+    auto items = const_item_list_on_square(item_link);
     ASSERT(items.size());
 
     string prompt = "Pick up what? " + slot_description()
@@ -1844,6 +1866,13 @@ void add_held_books_to_library()
     }
 }
 
+static void _give_abyssal_rune_xp()
+{
+    mpr("For a moment you glimpse the secrets of this dreadful place.");
+    potionlike_effect(POT_EXPERIENCE, 80);
+    level_change();
+}
+
 /**
  * Place a rune into the player's inventory.
  *
@@ -1860,6 +1889,10 @@ static void _get_rune(const item_def& it, bool quiet)
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
         mprf("You pick up the %s rune and feel its power.",
              rune_type_name(it.sub_type));
+
+        if (it.sub_type == RUNE_ABYSSAL && !crawl_state.game_is_sprint())
+            _give_abyssal_rune_xp();
+
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");
@@ -2085,11 +2118,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     note_inscribe_item(item);
 
     if (crawl_state.game_is_hints())
-    {
         taken_new_item(item.base_type);
-        if (is_artefact(item))
-            learned_something_new(HINT_SEEN_RANDART);
-    }
 
     you.last_pickup[item.link] = quant_got;
     quiver::on_actions_changed(true);
@@ -2460,6 +2489,28 @@ const item_def* top_item_at(const coord_def& where)
     return (link == NON_ITEM) ? nullptr : &env.item[link];
 }
 
+static bool _check_dangerous_drop(const item_def & item)
+{
+    if (!feat_eliminates_items(env.grid(you.pos())))
+        return true;
+
+    string prompt = "Are you sure you want to drop " + item.name(DESC_THE)
+                  + " into "
+                  + feature_description_at(you.pos(), false, DESC_A) + "? "
+                  + "You won't be able to retrieve "
+                  + (item.quantity == 1 ? "it." : "them.");
+
+    // don't interrupt delays; this might do something strange to macros
+    // that trigger it, but the main way drops interact with delays is
+    // through multidrop and armour delays
+    if (yesno(prompt.c_str(), true, 'n', true, false))
+        return true;
+
+    canned_msg(MSG_OK);
+    return false;
+}
+
+
 /**
  * Drop an item, possibly starting up a delay to do so.
  *
@@ -2471,10 +2522,14 @@ const item_def* top_item_at(const coord_def& where)
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
+
     item_def &item = you.inv[item_dropped];
 
     if (quant_drop < 0 || quant_drop > item.quantity)
         quant_drop = item.quantity;
+
+    if (!_check_dangerous_drop(item))
+        return false;
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
@@ -2697,7 +2752,7 @@ static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
  */
 void drop()
 {
-    if (inv_count() < 1 && you.gold == 0)
+    if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;
@@ -3284,9 +3339,7 @@ equipment_type item_equip_slot(const item_def& item)
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
     return item_equip_slot(item) != EQ_NONE
-           || quiver_too
-                && (you.quiver_action.item_is_quivered(item)
-                    || you.launcher_action.item_is_quivered(item));
+           || quiver_too && you.quiver_action.item_is_quivered(item);
 }
 
 bool item_is_melded(const item_def& item)
@@ -3308,17 +3361,14 @@ bool item_def::cursed() const
     return flags & ISFLAG_CURSED;
 }
 
-bool item_def::launched_by(const item_def &launcher) const
-{
-    if (base_type != OBJ_MISSILES)
-        return false;
-    const missile_type mt = fires_ammo_type(launcher);
-    return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
-}
-
 int item_def::index() const
 {
     return this - env.item.buffer();
+}
+
+bool valid_item_index(int i)
+{
+    return i >= 0 && i < MAX_ITEMS;
 }
 
 int item_def::armour_rating() const
@@ -3437,19 +3487,16 @@ colour_t item_def::missile_colour() const
     {
         case MI_STONE:
             return BROWN;
-        case MI_SLING_BULLET:
-            return CYAN;
         case MI_LARGE_ROCK:
             return LIGHTGREY;
-        case MI_ARROW:
-            return BLUE;
 #if TAG_MAJOR_VERSION == 34
+        case MI_ARROW:
         case MI_NEEDLE:
+        case MI_BOLT:
+        case MI_SLING_BULLET:
 #endif
         case MI_DART:
             return WHITE;
-        case MI_BOLT:
-            return LIGHTBLUE;
         case MI_JAVELIN:
             return RED;
         case MI_THROWING_NET:
@@ -3501,6 +3548,7 @@ colour_t item_def::armour_colour() const
         case ARM_ANIMAL_SKIN:
             return LIGHTGREY;
         case ARM_CRYSTAL_PLATE_ARMOUR:
+        case ARM_ORB:
             return WHITE;
         case ARM_KITE_SHIELD:
         case ARM_TOWER_SHIELD:
@@ -3981,17 +4029,18 @@ bool item_type_has_unidentified(object_class_type base_type)
 
 // Checks whether the item is actually a good one.
 // TODO: check brands, etc.
-bool item_def::is_valid(bool iinfo) const
+bool item_def::is_valid(bool iinfo, bool error) const
 {
+    auto channel = error ? MSGCH_ERROR : MSGCH_DIAGNOSTICS;
     if (base_type == OBJ_DETECTED)
     {
         if (!iinfo)
-            dprf("weird detected item");
+            mprf(channel, "weird detected item");
         return iinfo;
     }
     else if (!defined())
     {
-        dprf("undefined");
+        mprf(channel, "undefined item");
         return false;
     }
     const int max_sub = get_max_subtype(base_type);
@@ -4000,22 +4049,22 @@ bool item_def::is_valid(bool iinfo) const
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
         {
             if (!iinfo)
-                dprf("weird subtype and no info");
+                mprf(channel, "weird item subtype and no info");
             if (sub_type > max_sub)
-                dprf("huge subtype");
+                mprf(channel, "huge item subtype");
             if (!item_type_has_unidentified(base_type))
-                dprf("unided item of a type that can't be");
+                mprf(channel, "unided item of a type that can't be");
             return false;
         }
     }
     if (get_colour() == 0)
     {
-        dprf("black item");
-        return false; // No black items.
+        mprf(channel, "item color invalid"); // 0 = BLACK and so invisible
+        return false;
     }
     if (!appearance_initialized())
     {
-        dprf("no rnd");
+        mprf(channel, "item has uninitialized rnd");
         return false; // no items with uninitialized rnd
     }
     return true;
@@ -4277,8 +4326,10 @@ bool get_item_by_name(item_def *item, const char* specs,
             string buf_lwr = lowercase_string(buf);
             special_wanted = 0;
             size_t best_index = 10000;
+            const int brand_index = max(static_cast<int>(NUM_SPECIAL_WEAPONS),
+                                        static_cast<int>(NUM_SPECIAL_ARMOURS));
 
-            for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
+            for (int i = SPWPN_NORMAL + 1; i < brand_index; ++i)
             {
                 item->brand = i;
                 size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);
@@ -4668,7 +4719,7 @@ static void _identify_last_item(item_def &item)
         item.props[NEEDS_AUTOPICKUP_KEY] = true;
     }
 
-    set_ident_type(item, true);
+    set_ident_type(item, true, false);
 
     if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
         item.props.erase(NEEDS_AUTOPICKUP_KEY);

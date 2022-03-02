@@ -341,7 +341,13 @@ spret frog_hop(bool fail, dist *target)
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
     const int hop_range = frog_hop_range();
-    targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
+    targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS, false,
+                       [](const coord_def &p){
+        if (is_feat_dangerous(env.grid(p), true))
+            return false;
+        const actor* act = actor_at(p);
+        return !act || !you.can_see(*act);
+    });
     tgt.obeys_mesmerise = true;
 
     while (true)
@@ -935,7 +941,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
                 interrupt_activity(activity_interrupt::teleport);
                 if (!reason.empty())
                     mpr(reason);
-                mprf("You are suddenly yanked towards %s nearby monster%s!",
+                mprf("You are yanked towards %s nearby monster%s!",
                      mons_near_target > 1 ? "some" : "a",
                      mons_near_target > 1 ? "s" : "");
             }
@@ -1123,7 +1129,10 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
 
     fail_check();
 
-    mpr("Space momentarily warps into an impossible shape!");
+    if (player_equip_unrand(UNRAND_AUTUMN_KATANA))
+        mpr("Space folds impossibly around your blade!");
+    else
+        mpr("Space momentarily warps into an impossible shape!");
 
     const int initial_time = you.time_taken;
 
@@ -1367,13 +1376,13 @@ static int _disperse_monster(monster& mon, int pow)
     if (mon.no_tele())
         return false;
 
-    if (mon.check_willpower(pow) > 0)
+    if (mon.check_willpower(&you, pow) > 0)
         monster_blink(&mon);
     else
         monster_teleport(&mon, true);
 
     // Moving the monster may have killed it in apply_location_effects.
-    if (mon.alive() && mon.check_willpower(pow) <= 0)
+    if (mon.alive() && mon.check_willpower(&you, pow) <= 0)
         mon.confuse(&you, 1 + random2avg(pow / 10, 2));
 
     return true;

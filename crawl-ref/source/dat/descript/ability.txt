@@ -95,8 +95,8 @@ Dig ability
 
 Allows making tunnels through soft rock and rusted grates. Activating the
 ability has no cost and simply prepares you to start digging; once active,
-moving into a wall will start tunnelling. Doing so makes some noise and is a
-little slower than walking.
+moving into a wall will start tunnelling. Doing so makes some noise and drains
+the user's maximum health.
 
 Once active, activating the ability again or making any non-digging movement
 action will cancel the Dig status.
@@ -242,15 +242,16 @@ Invocations skill.
 %%%%
 Bind Soul ability
 
-Marks a monster's soul as ripe for the taking. Living, holy and demonic
-monsters can be targeted (excepting most lords of Pandemonium), as long as they
-are relatively uninjured. The duration of the mark is dependent on Invocations
-skill. If the monster dies while still marked, its soul will become yours.
+Marks a monster's soul as ripe for the taking. If the monster dies before the mark
+expires, it will return as a bound soul, still retaining the equipment, spells and
+abilities it had in life.
 
-The bound soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. The bound soul will follow its captor
-through stairs and come when recalled from a different level. However, only one
-soul can be enslaved at a time.
+Living, holy and demonic monsters can be targeted (excepting most lords of
+Pandemonium), as long as they are relatively uninjured. The duration of the mark
+is dependent on Invocations skill.
+
+The bound soul will follow its captor through stairs, and can be recalled from
+other levels. Only one soul can be bound at a time.
 %%%%
 # Okawaru
 Heroism ability
@@ -272,8 +273,8 @@ with no escape until you either emerge victorious or are slain.
 # Makhleb
 Minor Destruction ability
 
-Shoots a random harmful blast at the targeted creature. Damage and accuracy
-are increased by Invocations skill.
+Shoots a weak blast of fire, lightning, stone, acid, or negative energy at the
+targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Lesser Servant of Makhleb ability
 
@@ -282,8 +283,8 @@ demon hostile.
 %%%%
 Major Destruction ability
 
-[[Major Destruction spell]] Damage and accuracy are increased by Invocations
-skill.
+Shoots a piercing bolt of fire, lightning, magma, acid, or negative energy at
+the targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Greater Servant of Makhleb ability
 
@@ -792,9 +793,8 @@ invisibility, and obscure the vision of those outside the storm.
 %%%%
 Fiery Armour ability
 
-Armour yourself in fire, burning up some incoming attacks and searing foes
-foolish enough to strike you in melee. This armour lasts quite a long time
-before finally burning out.
+Armour yourself in fire, providing +7 AC and searing foes foolish enough to
+strike you in melee. The fire takes quite a long time to burn out.
 %%%%
 Foxfire Swarm ability
 

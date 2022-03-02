@@ -244,7 +244,7 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  */
 LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 /*** Drowning resistance (rDrown).
- * @treturn int resistance level
+ * @treturn boolean
  * @function res_drowning
  */
 LUARET1(you_res_drowning, boolean, you.res_water_drowning())
@@ -807,6 +807,36 @@ static int l_you_abil_table(lua_State *ls)
 }
 
 
+/*** Get the current state of item identification as a list of strings.
+ * @treturn table The list of names of known identifiable items.
+ * @function known_items
+ */
+static int you_known_items(lua_State *ls)
+{
+    lua_newtable(ls);
+    int index = 0;
+    for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
+    {
+        object_class_type basetype = (object_class_type)ii;
+        if (!item_type_has_ids(basetype))
+            continue;
+        for (const auto subtype : all_item_subtypes(basetype))
+        {
+            if (basetype == OBJ_JEWELLERY && subtype >= NUM_RINGS && subtype < AMU_FIRST_AMULET)
+                continue;
+            if (you.type_ids[basetype][subtype]) {
+                item_def it = item_def();
+                it.base_type = basetype;
+                it.sub_type  = subtype;
+                lua_pushstring(ls, it.name(DESC_PLAIN, true).c_str());
+                lua_rawseti(ls, -2, ++index);
+            }
+        }
+    }
+    return 1;
+}
+
+
 /*** Activate an ability by name, supplying a target where relevant. If the
  * ability is not targeted, the target is ignored. An invalid target will
  * open interactive targeting.
@@ -1174,32 +1204,23 @@ LUAFN(you_status)
 
 LUAFN(you_quiver_valid)
 {
-    // 0 = launcher quiver
-    // 1 = regular quiver
-    // this order is slightly weird but is aimed at forward compatibility
-    const int q_num = luaL_safe_checkint(ls, 1);
-    auto &q = q_num == 0 ? you.launcher_action : you.quiver_action;
-    PLUARET(boolean, !q.is_empty() && q.get()->is_valid());
+    PLUARET(boolean, !you.quiver_action.is_empty()
+                   && you.quiver_action.get()->is_valid());
 }
 
 LUAFN(you_quiver_enabled)
 {
-    // 0 = launcher quiver
-    // 1 = regular quiver
-    const int q_num = luaL_safe_checkint(ls, 1);
-    auto &q = q_num == 0 ? you.launcher_action : you.quiver_action;
-    PLUARET(boolean, !q.is_empty() && q.get()->is_enabled());
+    PLUARET(boolean, !you.quiver_action.is_empty()
+                   && you.quiver_action.get()->is_enabled());
 }
 
 LUAFN(you_quiver_uses_mp)
 {
-    // ignore launcher quiver here
     PLUARET(boolean, quiver::get_secondary_action()->uses_mp());
 }
 
 LUAFN(you_quiver_allows_autofight)
 {
-    // don't bother with launcher quiver
     PLUARET(boolean, quiver::get_secondary_action()->allow_autofight());
 }
 
@@ -1217,6 +1238,7 @@ static const struct luaL_reg you_clib[] =
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
     { "ability_table", l_you_abil_table },
+    { "known_items" , you_known_items },
     { "name"        , you_name },
     { "race"        , you_race },
     { "hand"        , you_hand },

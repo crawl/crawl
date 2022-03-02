@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=860, initial-scale=1.0">
   </head>
   <body>
     <noscript>Please enable javascript!</noscript>
@@ -161,6 +162,11 @@
 
       <div id="banner">{% include banner.html %}</div>
 
+      <div id="account_restricted" style="display:none;">
+        This account is being held for administrator approval. Until approved,
+        community features and some game modes may be restricted, and games
+        will not be visible to other players.
+      </div>
       <div>
         <div id="admin_panel_button" style="display:none;">
           <span><a href="javascript:">Toggle admin panel</a></span>

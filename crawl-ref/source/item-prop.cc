@@ -147,12 +147,14 @@ static const armour_def Armour_prop[] =
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_BUCKLER,              "buckler",                3,  -8,   45,
+    { ARM_ORB,                 "orb",                     0,   0,   90,
+        EQ_SHIELD,      SIZE_LITTLE, SIZE_GIANT, true },
+    { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
-    { ARM_KITE_SHIELD,               "kite shield",                 8,  -30,  45,
-        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true    },
-    { ARM_TOWER_SHIELD,         "tower shield",          13,  -50,  45,
-        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true  },
+    { ARM_KITE_SHIELD,         "kite shield",             8, -100,  45,
+        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true },
+    { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  45,
+        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true },
 
     // Following all ARM_ entries for the benefit of util/gather_items
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
@@ -624,27 +626,27 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 0, 0, 0, {}, },
 #endif
 
-    { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,
-        SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_STONE,
+    { WPN_HUNTING_SLING,     "hunting sling",       7,  0, 15,
+        SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
-    { WPN_FUSTIBALUS,        "fustibalus",          8, -1, 14,
-        SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_STONE,
-        DAMV_NON_MELEE, 2, 2, 150, RANGED_BRANDS },
+    { WPN_FUSTIBALUS,        "fustibalus",         10, -2, 16,
+        SK_SLINGS,       SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
+        DAMV_NON_MELEE, 2, 99, 150, RANGED_BRANDS },
 
-    { WPN_HAND_CROSSBOW,     "hand crossbow",      12,  5, 15,
+    { WPN_HAND_CROSSBOW,     "hand crossbow",       8,  3, 15,
         SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 7, 10, 35, RANGED_BRANDS },
-    { WPN_ARBALEST,          "arbalest",           18,  2, 19,
+    { WPN_ARBALEST,          "arbalest",           15,  0, 18,
         SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 5, 10, 45, RANGED_BRANDS },
-    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    22,  0, 23,
-        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    21, -2, 23,
+        SK_CROSSBOWS,    SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 0, 2, 100, RANGED_BRANDS },
 
-    { WPN_SHORTBOW,          "shortbow",            9,  2, 13,
+    { WPN_SHORTBOW,          "shortbow",            9,  2, 15,
         SK_BOWS,         SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 8, 10, 30, RANGED_BRANDS },
-    { WPN_LONGBOW,           "longbow",            15,  0, 17,
+    { WPN_LONGBOW,           "longbow",            13,  0, 18,
         SK_BOWS,         SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 2, 10, 45, RANGED_BRANDS },
 };
@@ -656,24 +658,23 @@ struct missile_def
     int         dam;
     int         mulch_rate;
     int         price;
-    bool        throwable;
 };
 
 static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
-    { MI_DART,          "dart",          0, 12, 2,  true  },
+    { MI_DART,          "dart",          0, 12, 2  },
 #if TAG_MAJOR_VERSION == 34
-    { MI_NEEDLE,        "needle",        0, 12, 2,  false },
+    { MI_NEEDLE,        "needle",        0, 12, 2  },
 #endif
-    { MI_STONE,         "stone",         2, 8,  1,  true  },
-    { MI_ARROW,         "arrow",         0, 8,  2,  false },
-    { MI_BOLT,          "bolt",          0, 8,  2,  false },
-    { MI_LARGE_ROCK,    "large rock",   20, 25, 7,  true  },
-    { MI_SLING_BULLET,  "sling bullet",  4, 8,  5,  false },
-    { MI_JAVELIN,       "javelin",      10, 20, 8,  true  },
-    { MI_THROWING_NET,  "throwing net",  0, 0,  30, true  },
-    { MI_BOOMERANG,     "boomerang",     6, 20, 5,  true  },
+    { MI_STONE,         "stone",         2, 8,  1  },
+    { MI_ARROW,         "arrow",         0, 1,  2  },
+    { MI_BOLT,          "bolt",          0, 1,  2  },
+    { MI_LARGE_ROCK,    "large rock",   20, 25, 7  },
+    { MI_SLING_BULLET,  "sling bullet",  0, 1,  5  },
+    { MI_JAVELIN,       "javelin",      10, 20, 8  },
+    { MI_THROWING_NET,  "throwing net",  0, 0,  30 },
+    { MI_BOOMERANG,     "boomerang",     6, 20, 5  },
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -824,6 +825,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_FOOD,      FOOD_UNUSED },
     { OBJ_FOOD,      FOOD_FRUIT },
     { OBJ_FOOD,      FOOD_RATION },
+    { OBJ_MISSILES,  MI_ARROW },
+    { OBJ_MISSILES,  MI_BOLT },
+    { OBJ_MISSILES,  MI_SLING_BULLET },
 #endif
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
@@ -978,10 +982,6 @@ void set_ident_flags(item_def &item, iflags_t flags)
     if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item)
         && _is_affordable(item))
     {
-        if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1 << item.brand;
-        if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1 << item.brand;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
@@ -1180,7 +1180,8 @@ bool armour_is_enchantable(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
     return item.sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
-        && item.sub_type != ARM_SCARF;
+        && item.sub_type != ARM_SCARF
+        && item.sub_type != ARM_ORB;
 }
 
 /**
@@ -1747,20 +1748,17 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
  */
 skill_type item_attack_skill(const item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS)
-        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
-    else if (item.base_type == OBJ_STAVES)
-        return SK_STAVES;
-    else if (item.base_type == OBJ_MISSILES && (!has_launcher(item)
-                || item.is_type(OBJ_MISSILES, MI_STONE)))
+    switch (item.base_type)
     {
+    case OBJ_WEAPONS:
+        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
+    case OBJ_STAVES:
+        return SK_STAVES;
+    case OBJ_MISSILES:
         return SK_THROWING;
+    default:
+        return SK_FIGHTING;
     }
-    // don't return skills for non-throwable ammo: without the launcher they're
-    // just chaff. (Or at least, I think this is the motivation.)
-
-    // This is used to mark that only fighting applies.
-    return SK_FIGHTING;
 }
 
 /**
@@ -1847,7 +1845,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         if (is_shield(item))
             skills.insert(SK_SHIELDS);
 
-        if (gives_ability(item))
+        if (gives_ability(item) || get_armour_ego_type(item) == SPARM_ENERGY)
             skills.insert(SK_EVOCATIONS);
     }
 
@@ -1892,17 +1890,14 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 //
 // Launcher and ammo functions:
 //
-missile_type fires_ammo_type(const item_def &item)
-{
-    if (item.base_type != OBJ_WEAPONS)
-        return MI_NONE;
-
-    return Weapon_prop[Weapon_index[item.sub_type]].ammo;
-}
-
 bool is_range_weapon(const item_def &item)
 {
     return is_weapon(item) && is_ranged_weapon_type(item.sub_type);
+}
+
+bool is_slowed_by_armour(const item_def *item)
+{
+    return item && is_range_weapon(*item);
 }
 
 const char *ammo_name(missile_type ammo)
@@ -1911,68 +1906,50 @@ const char *ammo_name(missile_type ammo)
            : Missile_prop[ Missile_index[ammo] ].name;
 }
 
-const char *ammo_name(const item_def &bow)
+bool is_launcher_ammo(const item_def &wpn)
 {
-    ASSERT(is_range_weapon(bow));
-    return ammo_name(fires_ammo_type(bow));
-}
+    if (wpn.base_type != OBJ_MISSILES)
+        return false;
 
-const char *ammo_name(const weapon_type bow)
-{
-    missile_type mi = Weapon_prop[Weapon_index[bow]].ammo;
-    ASSERT(mi != MI_NONE);
-    return ammo_name(mi);
-}
-
-// Returns true if item has an associated launcher.
-bool has_launcher(const item_def &ammo)
-{
-    ASSERT(ammo.base_type == OBJ_MISSILES);
-    return ammo.sub_type != MI_LARGE_ROCK
-#if TAG_MAJOR_VERSION == 34
-           && ammo.sub_type != MI_DART
-#endif
-           && ammo.sub_type != MI_JAVELIN
-           && ammo.sub_type != MI_BOOMERANG
-           && ammo.sub_type != MI_THROWING_NET;
+    switch (wpn.sub_type)
+    {
+    case MI_ARROW:
+    case MI_BOLT:
+    case MI_SLING_BULLET:
+        return true;
+    default:
+        return false;
+    }
 }
 
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn)
 {
-    if (wpn.base_type != OBJ_MISSILES)
+    if (wpn.base_type != OBJ_MISSILES || is_launcher_ammo(wpn))
         return false;
+    if (!actor)
+        return true;
 
-    if (actor)
-    {
-        const size_type bodysize = actor->body_size();
-
-        if (wpn.sub_type == MI_LARGE_ROCK)
-            return actor->can_throw_large_rocks();
-
-        if (bodysize < SIZE_MEDIUM
-            && wpn.sub_type == MI_JAVELIN)
-        {
-            return false;
-        }
-    }
-
-    return Missile_prop[Missile_index[wpn.sub_type]].throwable;
+    if (wpn.sub_type == MI_LARGE_ROCK)
+        return actor->can_throw_large_rocks();
+    return wpn.sub_type != MI_JAVELIN || actor->body_size() >= SIZE_MEDIUM;
 }
 
 // Decide if something is launched or thrown.
-launch_retval is_launched(const actor *actor, const item_def *launcher,
-                          const item_def &missile)
+launch_retval is_launched(const actor *actor, const item_def &missile)
 {
-    if (missile.base_type != OBJ_MISSILES)
-        return launch_retval::FUMBLED;
-
-    if (launcher && missile.launched_by(*launcher))
-        return launch_retval::LAUNCHED;
-
     return is_throwable(actor, missile) ? launch_retval::THROWN : launch_retval::FUMBLED;
 }
 
+// Sorry about this.
+void populate_fake_projectile(const item_def &wep, item_def &fake_proj)
+{
+    ASSERT(is_weapon(wep) && is_ranged_weapon_type(wep.sub_type));
+    fake_proj.base_type = OBJ_MISSILES;
+    fake_proj.sub_type  = Weapon_prop[Weapon_index[wep.sub_type]].ammo;
+    fake_proj.quantity  = 1;
+    fake_proj.rnd       = 1;
+}
 
 /**
  * Returns whether a given missile will always destroyed on impact.
@@ -2166,11 +2143,11 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_IMMOLATION,     RARITY_UNCOMMON },
     { SCR_VULNERABILITY,  RARITY_UNCOMMON },
     { SCR_SUMMONING,      RARITY_RARE },
-    { SCR_ACQUIREMENT,    RARITY_RARE },
     { SCR_SILENCE,        RARITY_RARE },
     { SCR_BRAND_WEAPON,   RARITY_RARE },
     { SCR_TORMENT,        RARITY_RARE },
     { SCR_HOLY_WORD,      RARITY_RARE },
+    { SCR_ACQUIREMENT,    RARITY_VERY_RARE },
 };
 
 item_rarity_type consumable_rarity(const item_def &item)
@@ -2300,6 +2277,9 @@ int get_armour_willpower(const item_def &arm, bool check_artp)
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_WILLPOWER)
         res += WL_PIP;
+
+    if (get_armour_ego_type(arm) == SPARM_GUILE)
+        res -= 2 * WL_PIP;
 
     if (check_artp && is_artefact(arm))
         res += WL_PIP * artefact_property(arm, ARTP_WILLPOWER);
@@ -2734,6 +2714,13 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
+           && get_armour_slot(item) == EQ_SHIELD
+           && item.sub_type != ARM_ORB;
+}
+
+bool is_offhand(const item_def &item)
+{
+    return item.base_type == OBJ_ARMOUR
            && get_armour_slot(item) == EQ_SHIELD;
 }
 
@@ -2749,11 +2736,16 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     return hand == HANDS_TWO;
 }
 
+// Returns true if the worn shield has the reflection ego. Used only for
+// messaging, to distinguish between a reflective shield and ego reflection.
 bool shield_reflects(const item_def &shield)
 {
-    ASSERT(is_shield(shield));
+    return is_shield(shield) && get_armour_ego_type(shield) == SPARM_REFLECTION;
+}
 
-    return get_armour_ego_type(shield) == SPARM_REFLECTION;
+int guile_adjust_willpower(int wl)
+{
+    return max(0, wl - 2 * WL_PIP);
 }
 
 string item_base_name(const item_def &item)
@@ -2814,11 +2806,13 @@ void seen_item(item_def &item)
 {
     if (!is_artefact(item) && _is_affordable(item))
     {
-        // Known brands will be set in set_item_flags().
+        // XXX: the first two are unsigned integers because
+        // they used to be a bitfield tracking brands as well
+        // and are marshalled to the save file as such.
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_weapon[item.sub_type] = 1U;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_armour[item.sub_type] = 1U;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }

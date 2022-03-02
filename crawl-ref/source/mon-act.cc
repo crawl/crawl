@@ -74,6 +74,7 @@ static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster& mons);
 static bool _monster_move(monster* mons);
 static bool _monster_swaps_places(monster* mon, const coord_def& delta);
+static bool _do_move_monster(monster& mons, const coord_def& delta);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -150,7 +151,9 @@ static void _monster_regenerate(monster* mons)
         return;
     }
 
-    if (mons_class_fast_regen(mons->type)
+    if (mons->type == MONS_PARGHIT)
+        mons->heal(27); // go whoosh
+    else if (mons_class_fast_regen(mons->type)
         || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
     {
@@ -191,6 +194,44 @@ static void _handle_manticore_barbs(monster& mons)
             mons.update_ench(barbs);
         }
     }
+}
+
+// Returns true iff the monster does nothing.
+static bool _handle_ru_redirection(monster &mons, monster **new_target)
+{
+    // Check to see if your religion redirects the attack
+    if (!does_ru_wanna_redirect(mons))
+        return false;
+
+    const ru_interference interference =
+            get_ru_attack_interference_level();
+    if (interference == DO_BLOCK_ATTACK)
+    {
+        simple_monster_message(mons,
+            " is stunned by your conviction and fails to attack.",
+            MSGCH_GOD);
+        return true;
+    }
+    if (interference == DO_REDIRECT_ATTACK)
+    {
+        // get a target
+        int pfound = 0;
+        for (adjacent_iterator ai(mons.pos(), false); ai; ++ai)
+        {
+            monster* candidate = monster_at(*ai);
+            if (candidate == nullptr
+                || mons_is_projectile(candidate->type)
+                || mons_is_firewood(*candidate)
+                || candidate->friendly())
+            {
+                continue;
+            }
+            ASSERT(candidate);
+            if (one_chance_in(++pfound))
+                *new_target = candidate;
+        }
+    }
+    return false;
 }
 
 static bool _swap_monsters(monster& mover, monster& moved)
@@ -261,12 +302,6 @@ static bool _do_mon_spell(monster* mons)
 {
     if (handle_mon_spell(mons))
     {
-        // If a Pan lord/pghost is known to be a spellcaster, it's safer
-        // to assume it has ranged spells too. For others, it'd just
-        // lead to unnecessary false positives.
-        if (mons_is_ghost_demon(mons->type))
-            mons->flags |= MF_SEEN_RANGED;
-
         mmov.reset();
         return true;
     }
@@ -512,7 +547,8 @@ static const string BATTY_TURNS_KEY = "BATTY_TURNS";
 
 static void _handle_battiness(monster &mons)
 {
-    if (!mons_is_batty(mons)) return;
+    if (!mons_is_batty(mons))
+        return;
     mons.behaviour = BEH_WANDER;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;
@@ -1010,13 +1046,8 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
 
     mons_cast(&mons, beem, mzap, MON_SPELL_EVOKE, false);
 
-    if (was_visible)
-    {
-        if (wand.charges <= 0)
-            mprf("The now-empty wand crumbles to dust.");
-        else
-            mons.flags |= MF_SEEN_RANGED;
-    }
+    if (was_visible && wand.charges <= 0)
+        mprf("The now-empty wand crumbles to dust.");
 
     if (wand.charges <= 0)
         dec_mitm_item_quantity(wand.index(), 1);
@@ -1063,6 +1094,9 @@ static bool _handle_wand(monster& mons)
 
     const spell_type mzap =
         spell_in_wand(static_cast<wand_type>(wand->sub_type));
+
+    if (!ai_action::is_viable(monster_spell_goodness(&mons, mzap)))
+        return false;
 
     if (!setup_mons_cast(&mons, beem, mzap, true))
         return false;
@@ -1117,17 +1151,20 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (mons_is_fleeing(*mons) || mons->pacified())
         return false;
 
-    item_def *launcher = nullptr;
-    const item_def *weapon = nullptr;
-    const int mon_item = mons_usable_missile(mons, &launcher);
-
-    if (mon_item == NON_ITEM || !env.item[mon_item].defined())
-        return false;
+    const item_def *launcher = mons->launcher();
+    item_def fake_proj;
+    item_def *missile = &fake_proj;
+    if (launcher)
+        populate_fake_projectile(*launcher, fake_proj);
+    else
+    {
+        missile = mons->missiles();
+        if (!missile || !is_throwable(mons, *missile))
+            return false;
+    }
 
     if (player_or_mon_in_sanct(*mons))
         return false;
-
-    item_def *missile = &env.item[mon_item];
 
     const actor *act = actor_at(beem.target);
     ASSERT(missile->base_type == OBJ_MISSILES);
@@ -1164,14 +1201,6 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
     }
 
-    if (launcher)
-    {
-        // If the attack needs a launcher that we can't wield, bail out.
-        weapon = mons->mslot_item(MSLOT_WEAPON);
-        if (weapon && weapon != launcher && weapon->cursed())
-            return false;
-    }
-
     // Ok, we'll try it.
     setup_monster_throw_beam(mons, beem);
 
@@ -1183,7 +1212,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
     ru_interference interference = DO_NOTHING;
     // See if Ru worshippers block or redirect the attack.
-    if (does_ru_wanna_redirect(mons))
+    if (does_ru_wanna_redirect(*mons))
     {
         interference = get_ru_attack_interference_level();
         if (interference == DO_BLOCK_ATTACK)
@@ -1239,11 +1268,11 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         // Monsters shouldn't shoot if fleeing, so let them "turn to attack".
         make_mons_stop_fleeing(mons);
 
-        if (launcher && launcher != weapon)
+        if (launcher && launcher != mons->weapon())
             mons->swap_weapons();
 
         beem.name.clear();
-        return mons_throw(mons, beem, mon_item, teleport);
+        return mons_throw(mons, beem, teleport);
     }
 
     return false;
@@ -1708,7 +1737,7 @@ void handle_monster_move(monster* mons)
         && !mons->wont_attack())
     {
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
-        if (bernoulli(gold, 3.0/100.0))
+        if (x_chance_in_y(3 * gold, 100))
         {
             simple_monster_message(*mons,
                 " is distracted by your dazzling golden aura.");
@@ -1817,45 +1846,19 @@ void handle_monster_move(monster* mons)
                 && !mons->has_ench(ENCH_CHARM)
                 && !mons->has_ench(ENCH_HEXED))
             {
-                monster* new_target = 0;
+                monster* new_target = nullptr;
+                // XXX: why does this check exist?
                 if (!mons->wont_attack())
                 {
                     // Otherwise, if it steps into you, cancel other targets.
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
 
-                    // Check to see if your religion redirects the attack
-                    if (does_ru_wanna_redirect(mons))
+                    if (_handle_ru_redirection(*mons, &new_target))
                     {
-                        ru_interference interference =
-                                get_ru_attack_interference_level();
-                        if (interference == DO_BLOCK_ATTACK)
-                        {
-                            simple_monster_message(*mons,
-                                " is stunned by your conviction and fails to attack.",
-                                MSGCH_GOD);
-                            mons->speed_increment -= non_move_energy;
-                            return;
-                        }
-                        else if (interference == DO_REDIRECT_ATTACK)
-                        {
-                            // get a target
-                            int pfound = 0;
-                            for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-                            {
-                                monster* candidate = monster_at(*ai);
-                                if (candidate == nullptr
-                                    || mons_is_projectile(candidate->type)
-                                    || mons_is_firewood(*candidate)
-                                    || candidate->friendly())
-                                {
-                                    continue;
-                                }
-                                ASSERT(candidate);
-                                if (one_chance_in(++pfound))
-                                    new_target = candidate;
-                            }
-                        }
+                        mons->speed_increment -= non_move_energy;
+                        DEBUG_ENERGY_USE("_handle_ru_redirection()");
+                        return;
                     }
                 }
 
@@ -1870,6 +1873,11 @@ void handle_monster_move(monster* mons)
                 }
                 else
                     fight_melee(mons, &you);
+
+                // chance to confusedly whack itself at the same time. Handled
+                // separately for monsters in _monster_move.
+                if (!new_target && mons->confused() && one_chance_in(6))
+                    _do_move_monster(*mons, coord_def(0,0));
 
                 _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
@@ -2171,7 +2179,7 @@ static void _post_monster_move(monster* mons)
                 }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER,
                                     random_range(50, 80),
-                                    TERRAIN_CHANGE_FLOOD, mons);
+                                    TERRAIN_CHANGE_FLOOD, mons->mid);
             }
     }
 
@@ -2612,7 +2620,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         if (!you.can_see(mons))
         {
             mprf("Something unseen %s", open_str.c_str());
-            interrupt_activity(activity_interrupt::force);
+            interrupt_activity(activity_interrupt::sense_monster);
         }
         else if (!you_are_delayed())
         {
@@ -3126,6 +3134,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     if (f == you.pos())
     {
+        // XX is this actually reachable?
         fight_melee(&mons, &you);
         return true;
     }
@@ -3166,7 +3175,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door bursts into shrapnel!");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " bursts through the door, destroying it!");
@@ -3192,7 +3201,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                 if (!you.can_see(mons))
                 {
                     mpr("The door mysteriously vanishes.");
-                    interrupt_activity(activity_interrupt::force);
+                    interrupt_activity(activity_interrupt::sense_monster);
                 }
                 else
                     simple_monster_message(mons, " eats the door!");
@@ -3324,7 +3333,7 @@ static bool _monster_move(monster* mons)
     }
 
     // Let's not even bother with this if mmov is zero.
-    if (mmov.origin())
+    if (mmov.origin() && !mons->confused())
         return false;
 
     for (int count_x = 0; count_x < 3; count_x++)
@@ -3474,6 +3483,8 @@ static bool _monster_move(monster* mons)
     if (good_move[mmov.x + 1][mmov.y + 1] && !mmov.origin())
     {
         // Check for attacking player.
+        // XX is this actually reachable? this exact condition is already dealt
+        // with in handle_monster_move
         if (mons->pos() + mmov == you.pos())
         {
             ret = fight_melee(mons, &you);
@@ -3510,7 +3521,7 @@ static bool _monster_move(monster* mons)
             {
                 ret = _monster_swaps_places(mons, mmov);
             }
-            else
+            else if (!mmov.origin()) // confused self-hit handled below
             {
                 fight_melee(mons, targ);
                 ret = true;
@@ -3561,6 +3572,10 @@ static bool _monster_move(monster* mons)
     }
 
     // This handles the chance for the monster to hit itself.
+    // n.b. this is reachable by hitting another monster and having mmov.reset()
+    // called. I'm taking this as a sort of intentional slapstick effect and
+    // leaving it in place. (It's also reachable in a few other rare cases
+    // where mmov.reset() is called.)
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(*mons, mmov);
 

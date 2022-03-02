@@ -89,7 +89,7 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
 
 spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -109,7 +109,7 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -134,7 +134,7 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
 spret cast_summon_cactus(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -149,7 +149,7 @@ spret cast_summon_cactus(int pow, god_type god, bool fail)
 
 spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
@@ -197,7 +197,7 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
 spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -217,7 +217,7 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
-    if (caster->is_player() && rude_stop_summoning_prompt())
+    if (caster->is_player() && stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -254,7 +254,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 
 spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
 {
-    if (caster->is_player() && rude_stop_summoning_prompt())
+    if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -300,7 +300,8 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    if (rude_stop_summoning_prompt("call dragons"))
+    // Quicksilver and storm dragons don't have rPois, but that's fine.
+    if (stop_summoning_prompt(MR_RES_POISON, "call dragons"))
         return spret::abort;
 
     fail_check();
@@ -309,13 +310,14 @@ spret cast_dragon_call(int pow, bool fail)
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
     you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
+    you.props[DRAGON_CALL_POWER_KEY].get_int() = pow;
 
     return spret::success;
 }
 
 static void _place_dragon()
 {
-    const int pow = calc_spell_power(SPELL_DRAGON_CALL, true);
+    const int pow = you.props[DRAGON_CALL_POWER_KEY].get_int();
     monster_type mon = _choose_dragon_type(pow, you.religion, true);
     int mp_cost = random_range(2, 3);
 
@@ -495,7 +497,7 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
 
 spret cast_summon_mana_viper(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -840,7 +842,7 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
 spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -861,7 +863,7 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 
 spret cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -922,7 +924,7 @@ static map<monster_type, const char*> _imp_summon_messages = {
  */
 spret cast_call_imp(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -1022,9 +1024,8 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
 
 spret cast_summon_demon(int pow)
 {
-    // Chaos spawn, orange demons and sixfirhies are not rPois
-    if (rude_stop_summoning_prompt())
-        return spret::abort;
+    // Don't prompt here, since this is invoked automatically by the
+    // obsidian axe. The player shouldn't have control.
 
     mpr("You open a gate to Pandemonium!");
 
@@ -1036,7 +1037,8 @@ spret cast_summon_demon(int pow)
 
 spret summon_shadow_creatures()
 {
-    if (rude_stop_summoning_prompt("summon"))
+    // Hard to predict what resistances might come from this.
+    if (stop_summoning_prompt())
         return spret::abort;
 
     mpr("Wisps of shadow whirl around you...");
@@ -1147,7 +1149,7 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
 spret cast_malign_gateway(actor * caster, int pow, god_type god,
                           bool fail, bool test)
 {
-    if (caster->is_player() && rude_stop_summoning_prompt())
+    if (!test && caster->is_player() && stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     coord_def point = find_gateway_location(caster);
@@ -1180,7 +1182,7 @@ spret cast_malign_gateway(actor * caster, int pow, god_type god,
 
 spret cast_summon_horrible_things(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -1232,6 +1234,16 @@ static bool _water_adjacent(coord_def p)
     return false;
 }
 
+
+// Is this area open enough to summon a forest?
+static bool _can_summon_forest(actor &caster)
+{
+    for (adjacent_iterator ai(caster.pos(), false); ai; ++ai)
+        if (count_neighbours_with_func(*ai, &feat_is_solid) == 0)
+            return true;
+    return false;
+}
+
 /**
  * Cast summon forest.
  *
@@ -1245,100 +1257,85 @@ static bool _water_adjacent(coord_def p)
 */
 spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test)
 {
-
-    // Is this area open enough to summon a forest?
-    bool success = false;
-    for (adjacent_iterator ai(caster->pos(), false); ai; ++ai)
-    {
-        if (count_neighbours_with_func(*ai, &feat_is_solid) == 0)
-        {
-            if (test)
-                return spret::success;
-            success = true;
-            break;
-        }
-    }
+    if (!_can_summon_forest(*caster))
+        return spret::abort;
 
     if (test)
-        return spret::abort;
+        return spret::success;
 
     const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
 
-    if (success)
+    // Hm, should dryads have rPois?
+    if (stop_summoning_prompt(MR_NO_FLAGS, "summon a forest"))
+        return spret::abort;
+
+    fail_check();
+    // Replace some rock walls with trees, then scatter a smaller number
+    // of trees on unoccupied floor (such that they do not break connectivity)
+    for (distance_iterator di(caster->pos(), false, true,
+                              LOS_DEFAULT_RANGE); di; ++di)
     {
-        if (rude_stop_summoning_prompt("summon a forest"))
-            return spret::abort;
-
-        fail_check();
-        // Replace some rock walls with trees, then scatter a smaller number
-        // of trees on unoccupied floor (such that they do not break connectivity)
-        for (distance_iterator di(caster->pos(), false, true,
-                                  LOS_DEFAULT_RANGE); di; ++di)
+        if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
+             && x_chance_in_y(pow, 150))
+            || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
+                && !actor_at(*di) && !plant_forbidden_at(*di, true)))
         {
-            if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
-                 && x_chance_in_y(pow, 150))
-                || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
-                    && !actor_at(*di) && !plant_forbidden_at(*di, true)))
-            {
-                temp_change_terrain(*di, DNGN_TREE, duration,
-                        TERRAIN_CHANGE_FORESTED);
-            }
+            temp_change_terrain(*di, DNGN_TREE, duration,
+                    TERRAIN_CHANGE_FORESTED);
         }
-
-        // Maybe make a pond
-        if (coinflip())
-        {
-            coord_def pond = find_gateway_location(caster);
-            int num = random_range(10, 22);
-            int deep = (!one_chance_in(3) ? div_rand_round(num, 3) : 0);
-
-            for (distance_iterator di(pond, true, false, 4); di && num > 0; ++di)
-            {
-                if (env.grid(*di) == DNGN_FLOOR
-                    && (di.radius() == 0 || _water_adjacent(*di))
-                    && x_chance_in_y(4, di.radius() + 3))
-                {
-                    num--;
-                    deep--;
-
-                    dungeon_feature_type feat = DNGN_SHALLOW_WATER;
-                    if (deep > 0 && *di != you.pos())
-                    {
-                        monster* mon = monster_at(*di);
-                        if (!mon || mon->is_habitable_feat(DNGN_DEEP_WATER))
-                            feat = DNGN_DEEP_WATER;
-                    }
-
-                    temp_change_terrain(*di, feat, duration, TERRAIN_CHANGE_FORESTED);
-                }
-            }
-        }
-
-        mpr("A forested plane collides here with a resounding crunch!");
-        noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
-
-        mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, god,
-                                         SPELL_SUMMON_FOREST);
-        dryad_data.hd = 5 + div_rand_round(pow, 18);
-
-        if (monster *dryad = create_monster(dryad_data))
-        {
-            mon_enchant abj = dryad->get_ench(ENCH_ABJ);
-            abj.duration = duration - 10;
-            dryad->update_ench(abj);
-
-            // Pre-awaken the forest just summoned.
-            bolt dummy;
-            mons_cast(dryad, dummy, SPELL_AWAKEN_FOREST,
-                      dryad->spell_slot_flags(SPELL_AWAKEN_FOREST));
-        }
-
-        you.duration[DUR_FORESTED] = duration;
-
-        return spret::success;
     }
 
-    return spret::abort;
+    // Maybe make a pond
+    if (coinflip())
+    {
+        coord_def pond = find_gateway_location(caster);
+        int num = random_range(10, 22);
+        int deep = (!one_chance_in(3) ? div_rand_round(num, 3) : 0);
+
+        for (distance_iterator di(pond, true, false, 4); di && num > 0; ++di)
+        {
+            if (env.grid(*di) == DNGN_FLOOR
+                && (di.radius() == 0 || _water_adjacent(*di))
+                && x_chance_in_y(4, di.radius() + 3))
+            {
+                num--;
+                deep--;
+
+                dungeon_feature_type feat = DNGN_SHALLOW_WATER;
+                if (deep > 0 && *di != you.pos())
+                {
+                    monster* mon = monster_at(*di);
+                    if (!mon || mon->is_habitable_feat(DNGN_DEEP_WATER))
+                        feat = DNGN_DEEP_WATER;
+                }
+
+                temp_change_terrain(*di, feat, duration, TERRAIN_CHANGE_FORESTED);
+            }
+        }
+    }
+
+    mpr("A forested plane collides here with a resounding crunch!");
+    noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
+
+    mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, god,
+                                     SPELL_SUMMON_FOREST);
+    dryad_data.hd = 5 + div_rand_round(pow, 18);
+
+    if (monster *dryad = create_monster(dryad_data))
+    {
+        mon_enchant abj = dryad->get_ench(ENCH_ABJ);
+        abj.duration = duration - 10;
+        dryad->update_ench(abj);
+
+        // Pre-awaken the forest just summoned.
+        bolt dummy;
+        mons_cast(dryad, dummy, SPELL_AWAKEN_FOREST,
+                  dryad->spell_slot_flags(SPELL_AWAKEN_FOREST));
+    }
+
+    you.duration[DUR_FORESTED] = duration;
+
+    return spret::success;
 }
 
 static bool _animatable_remains(const item_def& item)
@@ -1695,7 +1692,7 @@ vector<coord_def> find_animatable_skeletons(coord_def c)
 
 spret cast_animate_skeleton(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON, "raise the dead"))
         return spret::abort;
 
     vector<coord_def> skeletons = find_animatable_skeletons(you.pos());
@@ -1741,7 +1738,7 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
 
 spret cast_animate_dead(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON, "raise the dead"))
         return spret::abort;
 
     fail_check();
@@ -1779,7 +1776,7 @@ int find_simulacrable_corpse(coord_def c)
  */
 spret cast_simulacrum(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON, "raise the dead"))
         return spret::abort;
 
     int co = find_simulacrable_corpse(you.pos());
@@ -1845,7 +1842,7 @@ monster_type pick_random_wraith()
 
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON, "haunt your foes"))
         return spret::abort;
 
     monster* m = monster_at(where);
@@ -1908,8 +1905,6 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return spret::success;
 }
 
-
-
 static spell_type servitor_spells[] =
 {
     // primary spells
@@ -1958,13 +1953,11 @@ bool spell_servitorable(spell_type to_serve)
  *
  * @param mon       The spellforged servitor to be initialized.
  * @param caster    The entity summoning the servitor; may be the player.
+ * @param pow       The caster's spellpower.
  */
-static void _init_servitor_monster(monster &mon, const actor& caster)
+static void _init_servitor_monster(monster &mon, const actor& caster, int pow)
 {
     const monster* caster_mon = caster.as_monster();
-    const int pow = caster_mon ?
-                        6 * caster_mon->spell_hd(SPELL_SPELLFORGED_SERVITOR) :
-                        calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     mon.set_hit_dice(9 + div_rand_round(pow, 14));
     mon.max_hit_points = mon.hit_points = 60 + roll_dice(7, 5); // 67-95
@@ -1996,11 +1989,11 @@ static void _init_servitor_monster(monster &mon, const actor& caster)
     mon.props[CUSTOM_SPELLS_KEY].get_bool() = true;
 }
 
-void init_servitor(monster* servitor, actor* caster)
+void init_servitor(monster* servitor, actor* caster, int pow)
 {
     ASSERT(servitor); // XXX: change to monster &servitor
     ASSERT(caster); // XXX: change to actor &caster
-    _init_servitor_monster(*servitor, *caster);
+    _init_servitor_monster(*servitor, *caster, pow);
 
     if (you.can_see(*caster))
     {
@@ -2025,9 +2018,9 @@ void init_servitor(monster* servitor, actor* caster)
     servitor->props[IDEAL_RANGE_KEY].get_int() = shortest_range;
 }
 
-spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
+spret cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -2036,7 +2029,7 @@ spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
                                 SPELL_SPELLFORGED_SERVITOR);
 
     if (monster* mon = create_monster(mdata))
-        init_servitor(mon, &you);
+        init_servitor(mon, &you, pow);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -2070,7 +2063,7 @@ dice_def battlesphere_damage(int pow)
 
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
-    if (agent->is_player() && rude_stop_summoning_prompt())
+    if (agent->is_player() && stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
@@ -2603,6 +2596,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
+    { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
     { SPELL_SUMMON_HELL_BEAST,        { 0, 8 } },
     { SPELL_SUMMON_UNDEAD,            { 0, 8 } },
@@ -3081,4 +3075,52 @@ spret foxfire_swarm()
     }
     canned_msg(MSG_NOTHING_HAPPENS);
     return spret::fail; // don't spend piety, do spend a turn
+}
+
+bool summon_spider(const actor &agent, coord_def pos, god_type god,
+                        spell_type spell, int pow)
+{
+    monster_type mon = random_choose_weighted(100, MONS_REDBACK,
+                                              100, MONS_JUMPING_SPIDER,
+                                               75, MONS_TARANTELLA,
+                                               50, MONS_CULICIVORA,
+                                               50, MONS_ORB_SPIDER,
+                                               pow / 2, MONS_WOLF_SPIDER);
+
+    monster *mons = create_monster(
+            mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_AUTOFOE)
+                      .set_summoned(&agent, 3, spell, god));
+    if (mons)
+        return true;
+
+    return false;
+}
+
+spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
+{
+    // Can't happen at present, but why not check just to be sure.
+    if (agent.is_player() && stop_summoning_prompt())
+        return spret::abort;
+
+    fail_check();
+
+    int created = 0;
+
+    for (int i = 0; i < 1 + div_rand_round(random2(pow), 80); i++)
+    {
+        if (summon_spider(agent, agent.pos(), god, SPELL_SUMMON_SPIDERS, pow))
+            created++;
+    }
+
+    if (created && you.see_cell(agent.pos()))
+    {
+        mprf("%s %s %s!",
+             agent.name(DESC_THE).c_str(),
+             agent.conj_verb("summon").c_str(),
+             created > 1 ? "spiders" : "a spider");
+    }
+    else if (agent.is_player())
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
 }

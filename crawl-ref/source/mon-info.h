@@ -201,6 +201,12 @@ enum monster_info_flags
     MB_CANT_DRAIN,
     MB_CONCENTRATE_VENOM,
     MB_FIRE_CHAMPION,
+    MB_SILENCE_IMMUNE,
+    MB_ANTIMAGIC,
+    MB_NO_ATTACKS,
+    MB_RES_DROWN,
+    MB_ANGUISH,
+    MB_CLARITY,
     NUM_MB_FLAGS
 };
 
@@ -321,7 +327,7 @@ struct monster_info : public monster_info_base
 
     inline bool neutral() const
     {
-        return attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL || attitude == ATT_STRICT_NEUTRAL;
+        return attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL;
     }
 
     string db_name() const;
@@ -399,13 +405,16 @@ struct monster_info : public monster_info_base
         return props.exists(PRIEST_KEY);
     }
 
+    bool fellow_slime() const;
+
     bool has_spells() const;
+    bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
 
     bool has_trivial_ench(enchant_type ench) const;
-    bool debuffable() const;
+    bool unravellable() const;
 
 protected:
     string _core_name() const;

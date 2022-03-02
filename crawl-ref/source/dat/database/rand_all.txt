@@ -148,6 +148,8 @@ Absentmindedness
 
 Amusement
 
+Attic
+
 Bemusement
 
 Best Wishes
@@ -626,6 +628,8 @@ Lies
 
 Lives
 
+Loafs
+
 Lovers
 
 Mice
@@ -753,37 +757,6 @@ Youths
 Ziggurats
 %%%%
 _verbing_
-Glowing
-
-Smoking
-
-Scorching
-
-Twisting
-
-Shimmering
-
-Freezing
-
-Dripping
-
-Jumping
-
-Leaping
-
-Dancing
-
-Singing
-
-Shouting
-
-Screaming
-
-Muttering
-
-Howling
-
-Glimmering
 
 w:5
 Ageing
@@ -791,34 +764,180 @@ Ageing
 w:5
 Baking
 
-Hungering
+Bedazzling
 
-Devouring
+Bespelling
+
+Blushing
+
+w:5
+Breathing
+
+Brewing
+
+Building
+
+Burning
+
+w:5
+Bursting
+
+Changing
+
+Charming
+
+Chewing
+
+Conjuring
+
+Crafting
+
+Cursing
+
+Dancing
 
 Destroying
 
+Devouring
+
+Disbelieving
+
+w:5
+Dripping
+
+Enchanting
+
+Enfolding
+
+Feeding
+
+Flying
+
+Forging
+
+Fortifying
+
+Freezing
+
+Gazing
+
+w:5
+Glimmering
+
+w:5
+Glowing
+
+Gnashing
+
+Grinning
+
+Growing
+
+Hammering
+
+Healing
+
+Holding
+
+Howling
+
+w:5
+Hugging
+
+Hungering
+
+Hurling
+
+Hurting
+
+Hurtling
+
+Imbibing
+
+Inviting
+
+Jumping
+
+Kissing
+
+Keeping
+
+Leaping
+
+Loving
+
 Lusting
 
-Saving
+w:1
+Malding
+
+Mauling
+
+Mashing
+
+Muttering
+
+Nurturing
+
+Protecting
+
+Rescuing
+
+Riding
+
+Scorching
+
+Screaming
+
+Sharing
+
+Sheltering
+
+Shifting
+
+Shimmering
+
+Shouting
+
+Shrinking
+
+Singing
+
+Smoking
+
+Stopping
+
+Summoning
+
+Supporting
+
+Teaching
+
+Telling
 
 Thieving
+
+Threshing
+
+Transmuting
+
+Twisting
+
+Uplifting
+
+Usurping
+
+Winnowing
 
 Witching
 
 Wizarding
 
-Bespelling
+Writhing
 
-Protecting
-
+# the three classic D&D damage types:
 w:5
-Slicing
-
-w:5
-Chopping
-
-w:5
-Crushing
+Bashing
 
 w:5
 Slashing
@@ -849,9 +968,13 @@ Barnacled
 
 Beastly
 
-Bedazzling
+Bedazzled
 
 Bellicose
+
+Beloved
+
+Bequeathed
 
 Bespelled
 
@@ -859,13 +982,23 @@ Bright
 
 Burning
 
+Bursted
+
+w:5
 Burnt
 
 Carved
 
 Caustic
 
+Clean
+
 Cleverly Designed
+
+Charmed
+
+w:5
+Charred
 
 Contumacious
 
@@ -903,6 +1036,8 @@ Eye-covered
 
 Fabulous
 
+Fae
+
 Feral
 
 Ferocious
@@ -914,6 +1049,8 @@ Filigreed
 Floral
 
 Freezing
+
+Fresh
 
 w:5
 Futuristic
@@ -935,6 +1072,8 @@ Hairy
 Haunted
 
 Histrionic
+
+Impish
 
 Indestructible
 
@@ -977,6 +1116,8 @@ Puckish
 
 Quiescent
 
+Quick
+
 Reasonable
 
 Resonant
@@ -984,6 +1125,8 @@ Resonant
 Rotten
 
 Sandy
+
+Scuffed
 
 Sharp
 
@@ -1006,6 +1149,8 @@ Sufficient
 
 Tentacled
 
+Terrible
+
 Toothy
 
 Tortured
@@ -1013,6 +1158,8 @@ Tortured
 Transparent
 
 Ubiquitous
+
+Unbearable
 
 Verdant
 

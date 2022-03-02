@@ -440,11 +440,18 @@ STONE_STAIRS_UP(III, iii),
 }
 
 PORTAL_ENTRANCE(DNGN_ENTER_DIS, "gateway to the Iron City of Dis", "enter_dis", CYAN),
+PORTAL_EXIT(DNGN_EXIT_DIS, "gateway leading out of Dis", "exit_dis", CYAN),
 PORTAL_ENTRANCE(DNGN_ENTER_GEHENNA, "gateway to the ashen valley of Gehenna", "enter_gehenna", RED),
+PORTAL_EXIT(DNGN_EXIT_GEHENNA, "gateway leading out of Gehenna",
+                "exit_gehenna", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_COCYTUS, "gateway to the freezing wastes of Cocytus", "enter_cocytus", LIGHTCYAN),
+PORTAL_EXIT(DNGN_EXIT_COCYTUS, "gateway leading out of Cocytus",
+                "exit_cocytus", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_TARTARUS, "gateway to the decaying netherworld of Tartarus", "enter_tartarus", MAGENTA),
+PORTAL_EXIT(DNGN_EXIT_TARTARUS, "gateway leading out of Tartarus",
+            "exit_tartarus", MAGENTA),
 PORTAL_ENTRANCE(DNGN_ENTER_HELL, "gateway to Hell", "enter_hell", RED),
-PORTAL_EXIT(DNGN_EXIT_HELL, "gateway back into the Dungeon", "exit_hell", LIGHTRED),
+PORTAL_EXIT(DNGN_EXIT_HELL, "gateway back to the Dungeon", "exit_hell", LIGHTRED),
 
 PORTAL_ENTRANCE(DNGN_ENTER_ABYSS, "one-way gate to the infinite horrors of the Abyss", "enter_abyss", ETC_WARP),
 PORTAL_ENTRANCE(DNGN_EXIT_THROUGH_ABYSS, "exit through the horrors of the Abyss", "exit_through_abyss", ETC_WARP),
@@ -463,7 +470,7 @@ PORTAL_EXIT(DNGN_EXIT_ZOT, "gate leading back out of this place", "exit_zot", MA
 #if TAG_MAJOR_VERSION == 34
 PORTAL_ENTRANCE(DNGN_ENTER_PORTAL_VAULT, "gate leading to a distant place", "enter_portal_vault", ETC_SHIMMER_BLUE),
 #endif
-PORTAL_ENTRANCE(DNGN_ENTER_ZIGGURAT, "gateway to a ziggurat", "enter_ziggurat", ETC_SHIMMER_BLUE),
+PORTAL_ENTRANCE(DNGN_ENTER_ZIGGURAT, "one-way gateway to a ziggurat", "enter_ziggurat", ETC_SHIMMER_BLUE),
 PORTAL_ENTRANCE(DNGN_ENTER_BAZAAR, "gateway to a bazaar", "enter_bazaar", ETC_SHIMMER_BLUE),
 PORTAL_ENTRANCE(DNGN_ENTER_TROVE, "portal to a secret trove of treasure", "enter_trove", BLUE),
 PORTAL_ENTRANCE(DNGN_ENTER_SEWER, "glowing drain", "enter_sewer", LIGHTGREEN),

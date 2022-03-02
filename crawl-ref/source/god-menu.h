@@ -13,7 +13,7 @@ class GodMenuEntry : public MenuEntry
 public:
     GodMenuEntry(god_type god, bool long_name = false);
 
-    virtual string get_text(const bool unused = false) const override;
+    virtual string _get_text_preface() const override;
 
 public:
     god_type god;

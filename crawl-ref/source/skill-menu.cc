@@ -1538,7 +1538,7 @@ void SkillMenu::set_title()
     string t;
     if (is_set(SKMF_EXPERIENCE))
     {
-        t = "You have quaffed a potion of experience. "
+        t = "You have gained great experience. "
             "Select the skills to train.";
     }
 

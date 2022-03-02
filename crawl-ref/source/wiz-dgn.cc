@@ -7,6 +7,7 @@
 
 #include "wiz-dgn.h"
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "branch.h"
 #include "coordit.h"
@@ -504,7 +505,7 @@ bool debug_make_trap(const coord_def& pos)
     }
 
     place_specific_trap(you.pos(), trap);
-    mprf("Created %s, marked it undiscovered.",
+    mprf("Created %s.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
             : trap_at(you.pos())->name(DESC_A).c_str());
@@ -846,6 +847,14 @@ void wizard_recreate_level()
     level_id lev = level_id::current();
     _wizard_level_target = lev;
     dungeon_feature_type stair_taken = DNGN_STONE_STAIRS_DOWN_I;
+
+    if (lev.branch == BRANCH_ABYSS)
+    {
+        // abyss generation is different, and regenerating the abyss
+        // with the below code leads to strange behavior
+        abyss_teleport(true);
+        return;
+    }
 
     if (lev.depth == 1 && lev != BRANCH_DUNGEON)
         stair_taken = branches[lev.branch].entry_stairs;

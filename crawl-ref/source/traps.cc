@@ -592,14 +592,11 @@ void trap_def::trigger(actor& triggerer)
         // Don't try to re-net the player when they're already netted/webbed.
         if (you.attribute[ATTR_HELD])
             break;
-        // Reduce brutality of traps.
-        if (!you_trigger && !one_chance_in(3))
-            break;
 
         bool triggered = you_trigger;
         if (m)
         {
-            if (mons_intel(*m) < I_HUMAN)
+            if (mons_intel(*m) < I_HUMAN || !one_chance_in(3))
             {
                 // Not triggered, trap stays.
                 simple_monster_message(*m, " fails to trigger a net trap.");
@@ -760,9 +757,6 @@ void trap_def::trigger(actor& triggerer)
 #endif
         break;
     }
-
-    if (you_trigger)
-        learned_something_new(HINT_SEEN_TRAP, p);
 
     if (trap_destroyed)
         destroy(know_trap_destroyed);
@@ -1087,7 +1081,7 @@ void roll_trap_effects()
 
 static string _malev_msg()
 {
-    return make_stringf("A sudden malevolence fills %s...",
+    return make_stringf("A sourceless malevolence fills %s...",
                         branches[you.where_are_you].longname);
 }
 
@@ -1151,6 +1145,8 @@ void do_trap_effects()
         default:
             break;
     }
+
+    learned_something_new(HINT_MALEVOLENCE);
 }
 
 level_id generic_shaft_dest(level_id place)

@@ -37,6 +37,7 @@ int branch_ood_cap(branch_type branch)
         return 12;
     case BRANCH_ELF:
     case BRANCH_SWAMP:
+    case BRANCH_SPIDER:
         return 7;
     case BRANCH_CRYPT:
     case BRANCH_TOMB:
@@ -109,7 +110,8 @@ bool positioned_monster_picker::veto(monster_type mon)
     if (in_bounds(pos) && !monster_habitable_grid(mon, env.grid(pos)))
         return true;
     // Optional positional veto
-    if (posveto && posveto(mon, pos)) return true;
+    if (posveto && posveto(mon, pos))
+        return true;
     return monster_picker::veto(mon);
 }
 

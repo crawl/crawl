@@ -48,9 +48,9 @@ mutations:
     MUT_TORMENT_RESISTANCE: 2
     MUT_NO_DRINK: 1
     MUT_HEAT_VULNERABILITY: 1
-  13:
+  3:
     MUT_NECRO_ENHANCER: 1
-  26:
+  13:
     MUT_NECRO_ENHANCER: 1
 recommended_jobs:
   - JOB_CINDER_ACOLYTE

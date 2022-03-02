@@ -95,7 +95,6 @@ static const cloud_data clouds[] = {
       GREEN,                                    // colour
       { TILE_CLOUD_MEPHITIC, CTVARY_DUR },      // tile
       BEAM_MEPHITIC,                            // beam_effect
-      {0, 3},                                   // base, random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name
@@ -1416,7 +1415,8 @@ string desc_cloud_damage(cloud_type cl_type, bool vs_player)
     const cloud_damage &dam_info = clouds[cl_type].damage;
     const int base = _base_dam(dam_info, vs_player);
     const int rand = _rand_dam(dam_info, vs_player);
-    if (rand == 0) {
+    if (rand == 0)
+    {
         if (base == 0)
             return "";
         return make_stringf("%d", base);

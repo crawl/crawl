@@ -1,8 +1,9 @@
 define(["jquery", "comm", "client",
         "./cell_renderer", "./enums", "./options", "./player",
-        "./tileinfo-icons", "./tileinfo-gui", "./util", "./focus-trap", "./ui"],
-function ($, comm, client, cr, enums, options, player, icons, gui, util,
-             focus_trap, ui) {
+        "./tileinfo-icons", "./tileinfo-gui", "./tileinfo-main",
+        "./util", "./focus-trap", "./ui"],
+function ($, comm, client, cr, enums, options, player, icons, gui, main,
+          util, focus_trap, ui) {
     "use strict";
 
     var filtered_inv;
@@ -12,9 +13,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
     var settings_visible;
     var tooltip_timeout = null;
     // Options
+    var panel_disabled;
     var scale, orientation, font_family, font_size;
     var font; // cached font name for the canvas: size (in px) + family
+    var draw_glyphs;
     var selected = -1;
+    const NUM_RESERVED_BUTTONS = 2;
 
     function send_options()
     {
@@ -35,18 +39,9 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
     {
         $("#action-panel-settings").hide();
         $("#action-panel").addClass("hidden");
-        // if there's no inventory to display at all, don't even show the
-        // placeholder button, don't update settings, etc. If this happens
-        // because the player genuinely has nothing, the panel will return
-        // to its prev state once they do. If they've configured it to not
-        // show any items, it should never appear.
-        if (!filtered_inv.length)
-        {
-            // explicitly remove this, in case a player drops consumables with
-            // the panel minimized
-            $("#action-panel-placeholder").addClass("hidden");
-        }
-        else
+        // if the player configured the panel to not show any items,
+        // don't even show the placeholder button, don't update settings, etc.
+        if (!panel_disabled)
         {
             $("#action-panel-placeholder").removeClass("hidden").show();
             // order of these two matters
@@ -162,11 +157,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         }
         $tooltip.css({top: y + 10 + "px",
                      left: x + 10 + "px"});
-        if (slot == -1)
+        if (slot == -2)
         {
             $tooltip.html("<span>Left click: minimize</span><br />"
                           + "<span>Right click: open settings</span>");
         }
+        else if (slot == -1 && game.get_input_mode() == enums.mouse_mode.COMMAND)
+            $tooltip.html("<span>Left click: show main menu</span>");
         else
         {
             var item = filtered_inv[slot];
@@ -305,19 +302,26 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                     hide_tooltip();
                     tooltip_timeout = setTimeout(function()
                     {
-                        show_tooltip(ev.pageX, ev.pageY, selected - 1);
+                        show_tooltip(ev.pageX, ev.pageY,
+                                     selected - NUM_RESERVED_BUTTONS);
                     }, 500);
                 }
             }
             else if (ev.type === "mousedown" && ev.which == 1)
             {
-                if (selected == 0)
+                if (selected == 0) // It should be available even in targeting mode
                     hide_panel();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
-                    && selected > 0 && selected < filtered_inv.length + 1)
+                         && selected == 1)
+                {
+                    comm.send_message("main_menu_action");
+                }
+                else if (game.get_input_mode() == enums.mouse_mode.COMMAND
+                         && selected >= NUM_RESERVED_BUTTONS
+                         && selected < filtered_inv.length + NUM_RESERVED_BUTTONS)
                 {
                     comm.send_message("inv_item_action",
-                                      {slot: filtered_inv[selected - 1].slot});
+                                      {slot: filtered_inv[selected - NUM_RESERVED_BUTTONS].slot});
                 }
             }
             else if (ev.type === "mousedown" && ev.which == 3)
@@ -325,12 +329,60 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                 if (selected == 0) // right click on the x shows settings
                     show_settings(ev);
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
-                    && selected > 0 && selected < filtered_inv.length + 1)
+                         && selected >= NUM_RESERVED_BUTTONS
+                         && selected < filtered_inv.length + NUM_RESERVED_BUTTONS)
                 {
                     comm.send_message("inv_item_describe",
-                                      {slot: filtered_inv[selected - 1].slot});
+                                      {slot: filtered_inv[selected - NUM_RESERVED_BUTTONS].slot});
                 }
             }
+        }
+    }
+
+    function draw_action(texture, tiles, item, offset, scale, needs_cursor, text)
+    {
+        if (item && draw_glyphs)
+        {
+            // ugh, couldn't get this to work without a transform.
+            // Also, I don't know why the font size here looks
+            // different than map view, something about scaling?
+            renderer.ctx.setTransform(scale, 0, 0, scale, 0, 0);
+            // XX just the glyph is not very informative. One idea might
+            // be to tack on the subtype icon, but those are currently
+            // baked into the item tile so this would be a lot of work.
+            renderer.render_glyph(_horizontal() ? offset / scale : 0,
+                                  _horizontal() ? 0 : offset / scale,
+                                  item, true, true);
+            renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        }
+        else
+        {
+            tiles = Array.isArray(tiles) ? tiles : [tiles];
+            tiles.forEach(function (tile) {
+                renderer.draw_tile(tile,
+                                   _horizontal() ? offset : 0,
+                                   _horizontal() ? 0 : offset,
+                                   texture,
+                                   undefined, undefined, undefined, undefined,
+                                   scale);
+            });
+        }
+
+        if (text)
+        {
+            renderer.draw_quantity(text,
+                                   _horizontal() ? offset : 0,
+                                   _horizontal() ? 0 : offset,
+                                   font);
+        }
+
+        if (needs_cursor)
+        {
+            renderer.draw_icon(icons.CURSOR3,
+                               _horizontal() ? offset : 0,
+                               _horizontal() ? 0 : offset,
+                               undefined, undefined,
+                               scale);
         }
     }
 
@@ -339,16 +391,25 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         if (client.is_watching())
             return;
 
-        // Filter
-        filtered_inv = Object.values(player.inv).filter(function (item) {
-            return item.quantity && item.action_panel_order >= 0;
-        });
+        // Have we received the inventory yet?
+        // Note: an empty inventory will still have 52 empty slots.
+        var inventory_initialized = Object.values(player.inv).length;
+        if (!inventory_initialized)
+        {
+            $("#action-panel").addClass("hidden");
+            return;
+        }
 
-        if (minimized || !filtered_inv.length)
+        if (panel_disabled || minimized)
         {
             hide_panel(false);
             return;
         }
+
+        // Filter
+        filtered_inv = Object.values(player.inv).filter(function (item) {
+            return item.quantity && item.action_panel_order >= 0;
+        });
 
         // primary sort: determined by the `action_panel` option
         // secondary sort: determined by inventory lettering
@@ -362,13 +423,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
         // Render
         // renderer here stores unscaled values. (This is different than how
         // it is done for the dungeon rendering.)
-        var adjusted_scale = scale * window.devicePixelRatio;
+        var adjusted_scale = scale * window.devicePixelRatio / 100;
 
-        var cell_width = renderer.cell_width * adjusted_scale / 100;
-        var cell_height = renderer.cell_height * adjusted_scale / 100;
+        var cell_width = renderer.cell_width * adjusted_scale;
+        var cell_height = renderer.cell_height * adjusted_scale;
         var cell_length = _horizontal() ? cell_width
                                         : cell_height;
-        var required_length = cell_length * (filtered_inv.length + 1);
+        var required_length = cell_length * (filtered_inv.length + NUM_RESERVED_BUTTONS);
         var available_length = _horizontal()
                             ? $("#dungeon").width() * window.devicePixelRatio
                             : $("#dungeon").height() * window.devicePixelRatio;
@@ -386,15 +447,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
                               _horizontal() ? panel_length : cell_width,
                               _horizontal() ? cell_height : panel_length);
 
-        // XX This should definitely be a different/custom icon
-        renderer.draw_gui(gui.PROMPT_NO, 0, 0, adjusted_scale / 100);
-        if (selected == 0)
-        {
-            renderer.draw_icon(icons.CURSOR3, 0, 0, undefined, undefined,
-                adjusted_scale / 100);
-        }
+        // XX The "X" should definitely be a different/custom icon
+        // TODO: select tile via something like c++ `tileidx_command`
+        draw_action(gui, gui.PROMPT_NO, null, 0, adjusted_scale, selected == 0);
+        draw_action(gui, gui.CMD_GAME_MENU, null, cell_length, adjusted_scale,
+                    selected == 1);
 
-        var draw_glyphs = options.get("action_panel_glyphs")
+        draw_glyphs = options.get("action_panel_glyphs");
 
         if (draw_glyphs)
         {
@@ -404,48 +463,17 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             renderer.glyph_mode_update_font_metrics();
         }
 
+        // Inventory items
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
-            var offset = cell_length * (idx + 1);
-            item.tile.forEach(function (tile) { // Draw item and brand tiles
-                if (draw_glyphs)
-                {
-                    // ugh, couldn't get this to work without a transform.
-                    // Also, I don't know why the font size here looks
-                    // different than map view, something about scaling?
-                    renderer.ctx.setTransform(scale / 100, 0, 0, scale / 100, 0, 0);
-                    // XX just the glyph is not very informative. One idea might
-                    // be to tack on the subtype icon, but those are currently
-                    // baked into the item tile so this would be a lot of work.
-                    renderer.render_glyph(_horizontal() ? offset * 100 / scale : 0,
-                                      _horizontal() ? 0 : offset * 100 / scale ,
-                                      item, true, true);
-                    renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
-                }
-                else
-                {
-                    renderer.draw_main(tile,
-                                   _horizontal() ? offset : 0,
-                                   _horizontal() ? 0 : offset,
-                                   adjusted_scale / 100);
-                }
-                if (selected == idx + 1)
-                {
-                    renderer.draw_icon(icons.CURSOR3,
-                                       _horizontal() ? offset : 0,
-                                       _horizontal() ? 0 : offset,
-                                       undefined, undefined,
-                                       adjusted_scale / 100);
-                }
-            });
-
+            var offset = cell_length * (idx + NUM_RESERVED_BUTTONS);
             var qty_field_name = item.qty_field;
+            var qty = "";
             if (item.hasOwnProperty(qty_field_name))
-            {
-                renderer.draw_quantity(item[qty_field_name],
-                                       _horizontal() ? offset : 0,
-                                       _horizontal() ? 0 : offset,
-                                       font);
-            }
+                qty = item[qty_field_name];
+            var cursor_required = selected == idx + NUM_RESERVED_BUTTONS;
+
+            draw_action(main, item.tile, item, offset, adjusted_scale,
+                        cursor_required, qty);
         });
 
         if (available_length < required_length)
@@ -454,11 +482,11 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             var x_pos = 0, y_pos = 0;
 
             if (_horizontal())
-                x_pos = available_length - icons.get_tile_info(ellipsis).w * adjusted_scale / 100;
+                x_pos = available_length - icons.get_tile_info(ellipsis).w * adjusted_scale;
             else
-                y_pos = available_length - icons.get_tile_info(ellipsis).h * adjusted_scale / 100;
+                y_pos = available_length - icons.get_tile_info(ellipsis).h * adjusted_scale;
 
-            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, adjusted_scale / 100);
+            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, adjusted_scale);
         }
         $canvas.removeClass("hidden");
     }
@@ -480,12 +508,13 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
 
         // is one of: horizontal, vertical
         var new_orientation = options.get("action_panel_orientation");
-        var new_min = !options.get("action_panel_show");
         if (orientation !== new_orientation)
         {
             orientation = new_orientation;
             update_required = true;
         }
+
+        var new_min = !options.get("action_panel_show");
         if (new_min != minimized)
         {
             minimized = new_min;
@@ -507,6 +536,10 @@ function ($, comm, client, cr, enums, options, player, icons, gui, util,
             _update_font_props();
             update_required = true;
         }
+
+        // The panel should be disabled completely only if the player
+        // set the action_panel option to an empty string in the .rc
+        panel_disabled = options.get("action_panel_disabled");
 
         if (update_required)
         {

@@ -47,8 +47,7 @@ risky, but makes you faster and beefier.
 %%%%
 death ranger melee
 
-Your bow and arrows are extremely powerful against distant monsters. Be sure to
-collect all arrows lying around in the dungeon.
+Your bow and arrows are extremely powerful against distant monsters.
 %%%%
 death random 0
 
@@ -144,14 +143,12 @@ finished random 3
 You can ask other Crawl players for advice and help using any of the community
 resources described at http://crawl.develz.org/
 %%%%
-HINT_CONVERT Xom
+HINT_CONVERT Ashenzari
 
-You've just converted to worshipping <w>Xom</w>. As a follower of Xom, you'll
-be treated like a plaything, randomly helped or harmed for Xom's own amusement.
-
-There is no way to guarantee Xom remains in a good mood - the best any follower
-can hope for is to avoid letting Xom grow bored!
-%%%%
+You've just converted to worshipping <w>Ashenzari</w>. Unlike other gods,
+Ashenzari only cares about curses. As you explore the dungeon, Ashenzari will
+offer curses, locking an item onto you. The more cursed items you wear, the more
+Ashenzari will enhance your skills and otherwise help you.
 HINT_CONVERT Gozag
 
 You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
@@ -175,6 +172,20 @@ monsters. Instead, piety with Uskayaw is gained rapidly in combat as you deal
 damage. The longer you remain in combat and the more damage you deal, the
 greater the powers you will be offered. Once combat ends, Uskayaw's favour will
 be quickly lost, and must be regained in the next battle.
+%%%%
+HINT_CONVERT Xom
+
+You've just converted to worshipping <w>Xom</w>. As a follower of Xom, you'll
+be treated like a plaything, randomly helped or harmed for Xom's own amusement.
+
+There is no way to guarantee Xom remains in a good mood - the best any follower
+can hope for is to avoid letting Xom grow bored!
+%%%%
+HINT_CONVERT Yredelemnul
+
+You've just converted to worshipping <w>Yredelemnul</w>. Unlike other gods,
+Yredelemnul only cares about souls. Your enemies may rise to serve you after
+death, and you can expend them to invoke Yredelemnul's aid.
 %%%%
 HINT_CONVERT
 

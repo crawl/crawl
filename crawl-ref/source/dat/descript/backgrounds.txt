@@ -79,8 +79,7 @@ bewildered foes.
 %%%%
 Hunter
 
-Hunters carry a ranged weapon of their choice, and are also equipped with light
-armour and a short sword.
+Hunters are equipped with light armour and a ranged weapon of their choice.
 %%%%
 Ice Elementalist
 

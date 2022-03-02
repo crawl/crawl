@@ -83,6 +83,7 @@ public:
     vector<string> list_chunks();
     void abort();
     void unlink();
+    string get_filename() { return filename; }
 
     // statistics
     plen_t get_slack();

@@ -384,11 +384,13 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
-            return iood_damage(pow, INFINITE_DISTANCE);
+            return iood_damage(pow, INFINITE_DISTANCE, false);
         case SPELL_GLACIATE:
             return glaciate_damage(pow, 3);
         case SPELL_CONJURE_BALL_LIGHTNING:
             return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
+        case SPELL_ERUPTION:
+            return eruption_damage();
         default:
             break;
     }
@@ -420,6 +422,8 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTBLUE;
         case SPELL_IOOD:
             return LIGHTMAGENTA;
+        case SPELL_ERUPTION:
+            return RED;
         default:
             break;
     }
@@ -486,7 +490,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         }
         if (you.immune_to_hex(spell))
             return "(immune)";
-        return make_stringf("(%d%%)", hex_chance(spell, hd));
+        return make_stringf("(%d%%)", hex_chance(spell, mon_owner));
     }
 
     if (spell == SPELL_SMITING)
@@ -529,7 +533,9 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                            Type                      Level       Known");
+            "\n Spells                            Type                      Level");
+        if (crawl_state.need_save)
+            description.cprintf("       Known");
     }
     description.cprintf("\n");
 
@@ -599,7 +605,7 @@ static void _describe_book(const spellbook_contents &book,
                          _spell_schools(spell);
 
         string known = "";
-        if (!mon_owner)
+        if (!mon_owner && crawl_state.need_save)
             known = you.spell_library[spell] ? "         yes" : "          no";
 
         description.cprintf("%s%d%s\n",
@@ -705,4 +711,26 @@ string describe_item_spells(const item_def &item)
     formatted_string description;
     describe_spellset(item_spellset(item), &item, description);
     return description.tostring();
+}
+
+/**
+ * Return a one-line description of the spells in the given item.
+ *
+ * @param item      The book in question.
+ * @return          A one-line listing of the spells in the given item,
+ *                  including names, schools & levels.
+ */
+string terse_spell_list(const item_def &item)
+{
+    vector<string> spell_descs;
+    for (auto spell : spells_in_book(item))
+    {
+        spell_descs.push_back(make_stringf("%s (L%d %s)",
+                                           spell_title(spell),
+                                           spell_difficulty(spell),
+                                           _spell_schools(spell).c_str()));
+    }
+    // could use comma_separated_fn and skip the intervening vec?
+    return "Spells: " + comma_separated_line(spell_descs.begin(),
+                                             spell_descs.end());
 }

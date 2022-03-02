@@ -3739,13 +3739,6 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
             else
             {
                 const vector<string> slot_vals = split_string(".", spname);
-                if (slot_vals.size() < 2)
-                {
-                    error = make_stringf(
-                        "Invalid spell slot format: '%s' in '%s'",
-                        spname.c_str(), slotspec.c_str());
-                    return;
-                }
                 const spell_type sp(spell_by_name(slot_vals[0]));
                 if (sp == SPELL_NO_SPELL)
                 {
@@ -3761,14 +3754,18 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                     return;
                 }
                 cur_spells[i].spell = sp;
-                const int freq = atoi(slot_vals[1].c_str());
-                if (freq <= 0)
+                int freq = 30;
+                if (slot_vals.size() >= 2)
                 {
-                    error = make_stringf("Need a positive spell frequency;"
-                                         "got '%s' in '%s'",
-                                         slot_vals[1].c_str(),
-                                         spname.c_str());
-                    return;
+                    freq = atoi(slot_vals[1].c_str());
+                    if (freq <= 0)
+                    {
+                        error = make_stringf("Need a positive spell frequency;"
+                                             "got '%s' in '%s'",
+                                             slot_vals[1].c_str(),
+                                             spname.c_str());
+                        return;
+                    }
                 }
                 cur_spells[i].freq = freq;
                 for (size_t j = 2; j < slot_vals.size(); j++)
@@ -3797,12 +3794,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_LONG_RANGE;
                 }
                 if (!(cur_spells[i].flags & MON_SPELL_TYPE_MASK))
-                {
-                    error = make_stringf(
-                        "Spell slot '%s' missing a casting type",
-                        spname.c_str());
-                    return;
-                }
+                    cur_spells[i].flags |= MON_SPELL_MAGICAL;
             }
         }
 
@@ -3849,8 +3841,6 @@ mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
 mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 {
     mons_spec_slot slot;
-
-    slot.fix_slot = strip_tag(spec, "fix_slot");
 
     vector<string> specs = split_string("/", spec);
 
@@ -3922,10 +3912,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.attitude = ATT_HOSTILE;
         else if (att == "friendly")
             mspec.attitude = ATT_FRIENDLY;
-        else if (att == "good_neutral")
+        else if (att == "good_neutral" || att == "fellow_slime")
             mspec.attitude = ATT_GOOD_NEUTRAL;
-        else if (att == "fellow_slime" || att == "strict_neutral")
-            mspec.attitude = ATT_STRICT_NEUTRAL;
         else if (att == "neutral")
             mspec.attitude = ATT_NEUTRAL;
 
@@ -4954,6 +4942,11 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "shadows",
         "rampaging",
         "infusion",
+        "light",
+        "wrath",
+        "mayhem",
+        "guile",
+        "energy",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
@@ -5645,8 +5638,6 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
     // lowercase(spec);
 
     item_spec_slot list;
-
-    list.fix_slot = strip_tag(spec, "fix_slot");
 
     for (const string &specifier : split_string("/", spec))
     {

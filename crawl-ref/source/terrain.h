@@ -81,6 +81,7 @@ dungeon_feature_type altar_for_god(god_type god);
 
 bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
+bool feat_is_hell_subbranch_exit(dungeon_feature_type feat);
 
 bool feat_is_branch_entrance(dungeon_feature_type feat);
 bool feat_is_branch_exit(dungeon_feature_type feat);
@@ -152,7 +153,7 @@ bool is_boring_terrain(dungeon_feature_type feat);
 dungeon_feature_type orig_terrain(coord_def pos);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                         const monster* mon = nullptr);
+                         int mid = MID_NOBODY);
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 bool is_temp_terrain(coord_def pos);
 

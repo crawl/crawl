@@ -549,7 +549,8 @@ static formatted_string _beogh_extra_description()
     bool has_named_followers = false;
     for (auto mons : followers)
     {
-        if (!mons->is_named()) continue;
+        if (!mons->is_named())
+            continue;
         has_named_followers = true;
 
         desc += mons->full_name(DESC_PLAIN);
@@ -924,14 +925,18 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
 
     case GOD_HEPLIAKLQANA:
-        if (have_passive(passive_t::frail))
-            desc.textcolour(god_colour(which_god));
-        else
-            desc.textcolour(DARKGREY);
-
+        // XXX: move this logic back into the usual religion.cc god_powers block?
         have_any = true;
+    {
+        const auto textcol = have_passive(passive_t::frail) ? god_colour(which_god) : DARKGREY;
+        // We need to set textcolour before each line so that it'll display
+        // correctly in webtiles. (It works fine locally regardless.)
+        // Feature request: not this.
+        desc.textcolour(textcol);
         desc.cprintf("Your life essence is reduced. (-10%% HP)\n");
+        desc.textcolour(textcol);
         desc.cprintf("Your ancestor manifests to aid you.\n");
+    }
         break;
 
 #if TAG_MAJOR_VERSION == 34

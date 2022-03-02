@@ -336,9 +336,7 @@ to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
 through, and to gate themselves directly into this realm of chaos. Lugonu will
 protect followers from the normally harmful effects of weapons imbued with the
 distorting energies of the Abyss, and eventually will offer to corrupt a
-follower's weapon in that way. Lugonu expects followers to spread unceasing
-chaos in the overworld, and as such does not grant piety to worshippers while
-they remain in the Abyss itself.
+follower's weapon in that way.
 %%%%
 Makhleb powers
 
@@ -466,12 +464,12 @@ playthings...
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives followers the power to reap corpses and spectres from living
-and ensouled beings, to recall undead followers to their vicinity, and to heal
-by draining the life force of living creatures. Followers can also exchange
-members of their undead collection for Yredelemnul's more powerful servants.
-Eventually, followers will gain the power to fully bind a monster's soul, and
-make it fight for them instead.
+Yredelemnul gives followers the power to raise slain foes from the dead and
+bind them into service. Followers also can recall undead followers to them,
+heal by draining life from the living, and exchange members of their undead
+army for Yredelemnul's more powerful servants. With a large and powerful enough
+mass of the dead, followers can fully bind a foe's soul and make it fight for
+them in death with the full capacities it held in life.
 %%%%
 Zin powers
 
@@ -669,7 +667,7 @@ Those who anger Yredelemnul find themselves beset by legions of the dead.
 Novice adventurers will be assaulted by zombies and skeletons; veterans by
 the strongest of Yredelemnul's undead servants. The victims' own undead
 servants desert them and crumble into dust. A variety of necromantic maladies
-also afflict those stricken by Yredremnul's wrath.
+also afflict those stricken by Yredelemnul's wrath.
 %%%%
 Zin wrath
 

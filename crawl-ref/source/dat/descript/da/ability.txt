@@ -210,7 +210,7 @@ kan føle det.
 
 Kikubaaqudgha kan vælge at beskytte dig mod smerten ... eller lade være.
 %%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Kalder dine udøde følgesvende tilbage fra hvor som helst i de underjordiske
 gange til din umiddelbare nærhed.
@@ -219,7 +219,7 @@ Drain Life ability
 
 Helbred dig selv ved at dræne livskraft fra uhyrerne omkring dig.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Mærker et levende, intelligent uhyres sjæl som værende moden til at blive
 plukket. Når det mærkede uhyre dør, vil dets sjæl være din.

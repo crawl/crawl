@@ -73,8 +73,11 @@ of @_battle_or_war_@
 w:1
 of @player_doom@
 
-w:9
+w:8
 of @death_or_doom@
+
+w:1
+of @_verbing_@ @death_or_doom@
 
 w:6
 of @_adjective_@ @_strategy_or_justice_@
@@ -160,6 +163,15 @@ of @_destiny_name_@
 
 w:9
 of @god_name@'s @divine_esteem@
+
+w:4
+of the @_verbing_@ Gods
+
+w:4
+of the @_adjective_@ God
+
+w:2
+of @god_name@, @_verbing_@
 
 # hardcoded keywords
 w:1
@@ -266,6 +278,15 @@ of @_number_or_qualifier_@ @_thing_names_@
 w:20
 of @god_name@'s @divine_esteem@
 
+w:4
+of the @_verbing_@ Gods
+
+w:4
+of the @_adjective_@ God
+
+w:2
+of @god_name@, @_verbing_@
+
 # hardcoded keywords
 w:1
 of @god_name@
@@ -334,6 +355,15 @@ of @_sky_or_light_@
 w:20
 of @god_name@'s @divine_esteem@
 
+w:4
+of the @_verbing_@ Gods
+
+w:4
+of the @_adjective_@ God
+
+w:2
+of @god_name@, @_verbing_@
+
 of Xom's @_xom_esteem_@
 
 w:7
@@ -354,14 +384,23 @@ of @_number_or_qualifier_@ @_verbing_@ @_thing_names_@
 Trog weapon
 
 # names containing battle and death are more likely
-w:25
+w:20
 of @_power_or_anger_@
 
-w:25
+w:5
+of @_adjective_@ @_power_or_anger_@
+
+w:20
 of @_battle_or_war_@
 
-w:25
+w:5
+of the @_verbing_@ @_battle_or_war_@
+
+w:20
 of @death_or_doom@
+
+w:5
+of @_adjective_@ @death_or_doom@
 
 w:7
 of @_strategy_name_@
@@ -446,6 +485,9 @@ of @player_name@'s @_valour_name_@
 
 w:3
 of Okawaru's @divine_esteem@
+
+w:1
+of Okawaru, @_verbing_@
 
 # and bonus probability for some of the more harmless themes
 of @_strategy_or_justice_@
@@ -532,6 +574,9 @@ w:2
 of Xom's @divine_esteem@
 
 w:2
+"Xom, @_verbing_@ and @_verbing_@"
+
+w:2
 of the @_verbing_@ @_fruit_name_@
 
 # uses the long name
@@ -572,6 +617,9 @@ of Xom's @_xom_esteem_@
 w:2
 of Xom's @divine_esteem@
 
+w:2
+"@_adjective_@ Xom"
+
 # uses the long name
 w:1
 of @xom_name@
@@ -603,6 +651,9 @@ of Xom's @_xom_esteem_@
 
 w:2
 of Xom's @divine_esteem@
+
+w:2
+of @_verbing_@ Xom
 
 # uses the long name
 w:1
@@ -701,6 +752,9 @@ w:5
 
 w:5
 "I Knew You'd Do That"
+
+w:5
+"I Foresaw This"
 
 w:5
 of Ouranomancy

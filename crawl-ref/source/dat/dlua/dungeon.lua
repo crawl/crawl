@@ -697,15 +697,15 @@ dgn.loot_scrolls = [[
     ]]
 
 dgn.loot_potions = [[
-    w:15  potion of haste /
-    w:15  potion of heal wounds /
-    w:10  potion of might /
-    w:10  potion of invisibility /
-    w:10  potion of magic /
-    w:10  potion of mutation /
+    w:16  potion of haste /
+    w:16  potion of heal wounds /
+    w:11  potion of might /
+    w:11  potion of invisibility /
+    w:11  potion of magic /
+    w:11  potion of mutation /
     w:8   potion of cancellation /
-    w:5   potion of brilliance /
-    w:5   potion of resistance /
+    w:7   potion of brilliance /
+    w:7   potion of resistance /
     w:2   potion of experience
     ]]
 

@@ -438,7 +438,8 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     for (size_t i = 0; i < weights.size(); ++i)
     {
         rand -= weights[i];
-        if (rand < 0) return idx + i;
+        if (rand < 0)
+            return idx + i;
     }
 
     return idx;
@@ -873,8 +874,7 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
 
         if (is_unknown_stair(gc)
             && env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT
-            && !(player_in_hell()
-                 && env.map_knowledge(gc).feat() == DNGN_ENTER_HELL))
+            && !feat_is_hell_subbranch_exit(env.map_knowledge(gc).feat()))
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }
