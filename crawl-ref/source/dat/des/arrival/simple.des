@@ -2508,3 +2508,38 @@ tt.........tt
  tt.......tt
   ttt@@@ttt
 ENDMAP
+
+##############################################################
+NAME:    spicycebolla_xxxplode
+TAGS:    arrival transparent
+ORIENT:  float
+SUBST:   A : .A@
+SUBST:   @ = .@@@@
+SUBST:   X : tXXXX
+SHUFFLE: xX
+SUBST:   X:xX, X:.mw, x:xxvc, t:tttgw
+TILE:    t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+    X           X
+  txxXxx  A  xxXxx
+  @xxxXxx . xxXxxx@
+ xx.xxxXx . xXxxx.xx
+Xxxx.xxXxx.xxXxx.xxxX
+ Xxxx.xxXx.xXxx.xxxX
+ xXxxx.xXx.xXx.xxxXx
+ xxXXxx.xxXxx.xxXXxx
+  xxxXXx.x.x.xXXxxx
+    xxxxx.X.xxxxx
+ A..X..X.X{X.X..X..A
+    xxxxx.X.xxxxx
+  xxxXXx.x.x.xXXxxx
+ xxXXxx.xxXxx.xxXXxx
+ xXxxx.xXx.xXx.xxxXx
+ Xxxx.xxXx.xXxx.xxxX
+Xxxx.xxXxx.xxXxx.xxxX
+ xx.xxxXx . xXxxx.xx
+  @xxxXxx . xxXxxx@
+   xxXxx  A  xxXxx
+    X           X
+ENDMAP
