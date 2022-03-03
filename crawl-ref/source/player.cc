@@ -1927,9 +1927,12 @@ void update_demonic_slaying_movement()
 {
     if (!you.get_mutation_level(MUT_DEMONIC_WINGS))
         return;
-    // this is just a test; use DUR_SLAYMOVE if this feature is worthy of
-    // further effort
-    you.duration[DUR_WEREBLOOD] = you.time_taken+1;
+    // try to remind the player occasionally without getting spammy
+    if (!you.duration[DUR_DEMON_DASH]
+        && one_chance_in(you.experience_level * 2))
+        // message is pretty mediocre, XXX. maybe we shouldn't say anything?
+        mpr("As you move, you prepare to strike savagely.");
+    you.duration[DUR_DEMON_DASH] = you.time_taken+1;
     you.redraw_status_lights = true;
 }
 
@@ -3456,6 +3459,9 @@ int slaying_bonus(bool throwing)
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         ret += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+
+    if (you.duration[DUR_DEMON_DASH])
+        ret += 2;
 
     return ret;
 }

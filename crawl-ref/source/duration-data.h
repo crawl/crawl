@@ -578,6 +578,11 @@ static const duration_def duration_data[] =
       "on blink cooldown", "blink cooldown",
       "You are unable to blink.", D_NO_FLAGS,
       {{ "You feel stable enough to blink again."}}},
+    { DUR_DEMON_DASH,
+      BLUE, "Slay +2",
+      "dashing", "dashing",
+      "", D_NO_FLAGS,
+      {{ "" }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
