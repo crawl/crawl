@@ -85,3 +85,8 @@
 # include                 = 0.12_monster_glyphs.txt
 # include                 = 0.13_monster_glyphs.txt
 # include                 = 0.14_monster_glyphs.txt
+explore_stair_denom = 2
+explore_stair_num = 0
+travel_delay = 0
+autopickup_on = 0
+explore_delay = 0

@@ -411,6 +411,8 @@ public:
 
     // How much autoexplore favours visiting squares next to walls.
     int         explore_wall_bias;
+    int         explore_stair_num;
+    int         explore_stair_denom;
 
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;

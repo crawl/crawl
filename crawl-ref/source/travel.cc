@@ -1443,8 +1443,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
             {
                 if (runmode == RMODE_TRAVEL)
                     return next_travel_move;
-                else if (runmode == RMODE_CONNECTIVITY
-                         || !Options.explore_wall_bias)
+                else if (runmode == RMODE_CONNECTIVITY)
                 {
                     return explore_target();
                 }
@@ -1588,6 +1587,23 @@ void travel_pathfind::check_square_greed(const coord_def &c)
         if (Options.explore_wall_bias)
             dist += Options.explore_wall_bias * 3;
 
+        
+        auto min_dist = 1000;
+        for (stair_info si : travel_cache.get_level_info(level_id::current()).get_stairs())
+        {
+            if (si.destination.id == level_above()) {
+                int d = abs(si.position.x - c.x) + abs(si.position.y - c.y);
+            
+                if (d < min_dist) {
+                    min_dist = d;
+                }
+            }
+
+        }
+        
+        // mprf("(%d %d) has min dist %d)", dc.x, dc.y, min_dist);
+        dist = dist * Options.explore_stair_denom + min_dist * Options.explore_stair_num;
+
         greedy_dist = dist;
         greedy_place = c;
     }
@@ -1656,6 +1672,24 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                             dist -= Options.explore_wall_bias;
                     }
                 }
+                auto min_dist = 1000;
+                for (stair_info si : travel_cache.get_level_info(level_id::current()).get_stairs())
+                {
+                    if (si.destination.id == level_above()) {
+                        int d = abs(si.position.x - dc.x) + abs(si.position.y - dc.y);
+                    
+                        if (d < min_dist) {
+                            min_dist = d;
+                        }
+                    }
+
+                }
+                
+                // mprf("(%d %d) has min dist %d)", dc.x, dc.y, min_dist);
+                
+                dist = dist * Options.explore_stair_denom + min_dist * Options.explore_stair_num;
+
+                
 
                 // Replace old target if nearer (or less penalized)
                 if (dist < unexplored_dist || unexplored_dist < 0)
