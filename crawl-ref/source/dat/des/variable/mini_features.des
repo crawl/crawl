@@ -2929,7 +2929,7 @@ KMONS:   p = bush
 FTILE:   .Gtp = floor_dirt
 SUBST:   p = t
 COLOUR:  t = lightred / red / yellow
-TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow 
+TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow
 : else
 KFEAT:   t = demonic_tree
 FTILE:   .Gtp = floor_nerves_magenta
