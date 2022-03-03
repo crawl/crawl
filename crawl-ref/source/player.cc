@@ -1925,12 +1925,12 @@ void update_acrobat_status()
 
 void update_demonic_slaying_movement()
 {
-    if (!you.get_mutation_level(MUT_DEMONIC_WINGS))
+    if (!you.has_mutation(MUT_DEMON_DASH))
         return;
     // try to remind the player occasionally without getting spammy
     if (!you.duration[DUR_DEMON_DASH]
         && one_chance_in(you.experience_level * 2))
-        // message is pretty mediocre, XXX. maybe we shouldn't say anything?
+        // message is pretty mediocre, XXX. maybe shouldn't print any message?
         mpr("As you move, you prepare to strike savagely.");
     you.duration[DUR_DEMON_DASH] = you.time_taken+1;
     you.redraw_status_lights = true;
@@ -6460,7 +6460,7 @@ bool player::racial_permanent_flight() const
     return get_mutation_level(MUT_TENGU_FLIGHT)
         || get_mutation_level(MUT_BIG_WINGS)
         || has_mutation(MUT_FLOAT)
-        || get_mutation_level(MUT_DEMONIC_WINGS) >= 2;
+        || has_mutation(MUT_DEMONIC_WINGS);
 }
 
 /**

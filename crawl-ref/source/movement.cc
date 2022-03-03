@@ -1173,8 +1173,8 @@ void move_player_action(coord_def move)
     if (you_worship(GOD_WU_JIAN) && !attacking && !dug && !rampaged)
         did_wu_jian_attack = wu_jian_post_move_effects(false, initial_position);
 
-    // demonic wings apply "slaymove" at this time, after any WJC attacks happen
-    if (moving)
+    // +2 slay from mut_demon_dash applies now, *after* any WJC attacks happen
+    if (rampaged || (moving && !attacking))
         update_demonic_slaying_movement();
 
     // If you actually moved you are eligible for amulet of the acrobat.

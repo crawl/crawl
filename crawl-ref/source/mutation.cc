@@ -2693,7 +2693,7 @@ static const facet_def _demon_facets[] =
       { -33, -33, -33 } },
     { 0, { MUT_DEMONIC_TOUCH, MUT_DEMONIC_TOUCH, MUT_DEMONIC_TOUCH },
       { -33, -33, -33 } },
-    { 0, { MUT_DEMONIC_WINGS, MUT_DEMONIC_WINGS, MUT_DEMONIC_WINGS },
+    { 0, { MUT_DEMON_DASH, MUT_DEMONIC_WINGS, MUT_DEMON_RAMPAGE },
       { -33, -33, -33 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
