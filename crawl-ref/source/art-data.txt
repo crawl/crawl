@@ -1400,9 +1400,9 @@ DBRAND:  It occasionally heals its wielder for a portion of the damage dealt
 DESCRIP: Its wielder's spells cost health as well as magical power.
 
 ENUM:    GYRE
-NAME:    pair of quick blades "Gyre" and "Gimble"
-OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
-TYPE:    pair of quick blades
+NAME:    pair of short swords "Gyre" and "Gimble"
+OBJ:     OBJ_WEAPONS/WPN_SHORT_SWORD
+TYPE:    pair of short swords
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
