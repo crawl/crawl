@@ -232,7 +232,7 @@ ENDMAP
 
 NAME:  ebering_ecumenical_altar_abandoned
 TAGS:  transparent
-KFEAT: s = abandoned_shop
+KFEAT: S = abandoned_shop
 : ecumenical_altar_setup(_G)
 MAP
 ._.
