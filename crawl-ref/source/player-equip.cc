@@ -699,11 +699,13 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 break;
             }
 
+#if TAG_MAJOR_VERSION == 34
             if (you.duration[DUR_EXCRUCIATING_WOUNDS])
             {
                 ASSERT(real_item.defined());
                 end_weapon_brand(real_item, true);
             }
+#endif
         }
     }
 

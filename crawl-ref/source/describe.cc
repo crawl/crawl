@@ -1453,6 +1453,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
         description += "\nIt is temporarily rebranded; it is actually ";
@@ -1466,6 +1467,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 weapon_brand_desc("weapon", item, false, original) + ".", true);
         }
     }
+#endif
 
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())

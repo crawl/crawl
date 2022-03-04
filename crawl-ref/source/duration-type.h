@@ -58,8 +58,8 @@ enum duration_type
     DUR_DEFLECT_MISSILES,
     DUR_PHASE_SHIFT,
     DUR_SEE_INVISIBLE,
-#endif
     DUR_EXCRUCIATING_WOUNDS,
+#endif
     DUR_DEMONIC_GUARDIAN,       // demonic guardian timeout
     DUR_POWERED_BY_DEATH,
     DUR_SILENCE,

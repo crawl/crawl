@@ -329,7 +329,6 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Pain
     SPELL_NECROTIZE,
     SPELL_AGONY,
-    SPELL_EXCRUCIATING_WOUNDS,
 },
 
 { // Book of Decay
@@ -411,7 +410,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Weapons
     SPELL_PORTAL_PROJECTILE,
-    SPELL_EXCRUCIATING_WOUNDS,
     SPELL_BLADE_HANDS,
 },
 
