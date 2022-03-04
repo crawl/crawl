@@ -2415,6 +2415,12 @@ undulates constantly, dividing spontaneously and then withdrawing when
 threatened. When divided, its deafening chorus of screams can overwhelm the
 minds of even the bravest warriors, leaving them stunned and helpless.
 %%%%
+starflower
+
+A mass of lashing vines and tentacles growing out of the husk of a dead star.
+Space itself runs through the xylem and phloem of its branches, which appear to
+be in many places at once.
+%%%%
 starspawn tentacle
 
 The writhing appendage of a tentacled starspawn, capable of grasping nearly any

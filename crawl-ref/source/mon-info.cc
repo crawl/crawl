@@ -1605,8 +1605,10 @@ reach_type monster_info::reach_range(bool items) const
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const attack_flavour fl = e->attack[i].flavour;
-        if (flavour_has_reach(fl))
-            range = REACH_TWO;
+        if (fl == AF_RIFT)
+            range = REACH_THREE;
+        else if (flavour_has_reach(fl))
+            range = max(REACH_TWO, range);
     }
 
     if (items)

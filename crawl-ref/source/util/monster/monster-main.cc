@@ -1054,6 +1054,7 @@ int main(int argc, char* argv[])
                 case AF_SCARAB:
                     monsterattacks += colour(LIGHTMAGENTA, "(scarab)");
                     break;
+                case AF_RIFT:
                 case AF_DISTORT:
                     monsterattacks += colour(LIGHTBLUE, "(distort)");
                     break;

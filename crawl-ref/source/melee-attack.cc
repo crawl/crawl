@@ -2768,6 +2768,7 @@ void melee_attack::mons_apply_attack_flavour()
         defender->corrode_equipment(atk_name(DESC_THE).c_str());
         break;
 
+    case AF_RIFT:
     case AF_DISTORT:
         distortion_affects_defender();
         break;
