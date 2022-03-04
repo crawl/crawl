@@ -200,7 +200,9 @@ Major Destruction cast
 %%%%
 Sheza's Dance cast
 
-@The_monster@ sends weapons dancing into battle!
+@The_monster@ sends weapons flying into battle!
+
+@The_monster@ waves @possessive@ hand, and dancing weaponry takes to the air.
 %%%%
 Druid's Call cast
 
