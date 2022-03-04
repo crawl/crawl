@@ -1745,11 +1745,10 @@ static bool _give_kiku_gift(bool forced)
     // complement Receive Corpses.
     if (first_gift)
     {
-        chosen_spells.push_back(SPELL_ANIMATE_SKELETON);
+        chosen_spells.push_back(SPELL_NECROTIZE);
         do
         {
-            spell = random_choose(SPELL_PAIN,
-                                  SPELL_CORPSE_ROT,
+            spell = random_choose(SPELL_CORPSE_ROT,
                                   SPELL_SUBLIMATION_OF_BLOOD,
                                   SPELL_VAMPIRIC_DRAINING,
                                   SPELL_AGONY);

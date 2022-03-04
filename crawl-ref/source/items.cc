@@ -805,18 +805,6 @@ static int _item_name_specialness(const item_def& item)
     return 0;
 }
 
-static void _maybe_give_corpse_hint(const item_def& item)
-{
-    if (!crawl_state.game_is_hints_tutorial())
-        return;
-
-    if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
-        && you.has_spell(SPELL_ANIMATE_SKELETON))
-    {
-        learned_something_new(HINT_ANIMATE_CORPSE_SKELETON);
-    }
-}
-
 string item_message(vector<const item_def *> const &items)
 {
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
@@ -889,7 +877,6 @@ void item_check()
         const item_def& it(*items[0]);
         string name = menu_colour_item_name(it, DESC_A);
         strm << "You see here " << name << '.' << endl;
-        _maybe_give_corpse_hint(it);
         return;
     }
 
@@ -912,7 +899,6 @@ void item_check()
         int count = 0;
         for (const item_def *it : items)
         {
-            _maybe_give_corpse_hint(*it);
             if (it->base_type == OBJ_CORPSES)
                 continue;
 

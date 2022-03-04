@@ -1364,8 +1364,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUMMON_FOREST:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS, 0, 2);
 
-    case SPELL_ANIMATE_SKELETON:
-        return make_unique<targeter_multiposition>(&you, find_animatable_skeletons(you.pos()), AFF_MAYBE);
     case SPELL_BLINK:
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case SPELL_MANIFOLD_ASSAULT:
@@ -2278,9 +2276,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SUMMON_FOREST:
         return cast_summon_forest(&you, powc, god, fail);
-
-    case SPELL_ANIMATE_SKELETON:
-        return cast_animate_skeleton(powc, god, fail);
 
     case SPELL_ANIMATE_DEAD:
         return cast_animate_dead(powc, fail);

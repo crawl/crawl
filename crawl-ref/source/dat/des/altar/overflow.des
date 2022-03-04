@@ -4059,9 +4059,7 @@ TAGS:    no_item_gen transparent
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
-ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:pain \
-         numspells:1 / \
-         randbook owner:Kikubaaqudgha disc:necromancy spells:animate_skeleton \
+ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:necrotize \
          numspells:1
 # You already got a direct damage spell by looting the other gods' altars.
 ITEM:    randbook owner:Sif_Muna disc:transmutation numspells:1 slevels:1 / \

@@ -206,6 +206,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_AGONY:
     case BEAM_VILE_CLUTCH:
     case BEAM_VAMPIRIC_DRAINING:
+    case BEAM_NECROTIZE:
         elem = ETC_UNHOLY;
         break;
     case BEAM_DISPEL_UNDEAD:
@@ -5203,6 +5204,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_PAIN:
+    case BEAM_NECROTIZE:
         rc = mon->res_negative_energy(intrinsic_only) < 3;
         break;
 
@@ -5453,19 +5455,38 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_PAIN:
     {
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
-        if (dam)
+        if (!dam)
+            return MON_UNAFFECTED;
+        if (you.see_cell(mon->pos()))
         {
-            if (you.see_cell(mon->pos()))
-            {
-                mprf("%s writhes in agony%s",
-                     mon->name(DESC_THE).c_str(),
-                     attack_strength_punctuation(dam).c_str());
-                obvious_effect = true;
-            }
-            mon->hurt(agent(), dam, flavour);
-            return MON_AFFECTED;
+            mprf("%s writhes in agony%s",
+                 mon->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(dam).c_str());
+            obvious_effect = true;
         }
-        return MON_UNAFFECTED;
+        mon->hurt(agent(), dam, flavour);
+        return MON_AFFECTED;
+    }
+
+    case BEAM_NECROTIZE:
+    {
+        const int dam = resist_adjust_damage(mon, flavour, damage.roll());
+        if (!dam)
+            return MON_UNAFFECTED;
+        if (you.see_cell(mon->pos()))
+        {
+            mprf("%s writhes in agony%s",
+                 mon->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(dam).c_str());
+            obvious_effect = true;
+        }
+        if (mons_can_be_zombified(*mon)
+            && !mons_class_flag(mon->type, M_NO_SKELETON))
+        {
+            mon->add_ench(mon_enchant(ENCH_NECROTIZE, 0, agent(), 1));
+        }
+        mon->hurt(agent(), dam, flavour);
+        return MON_AFFECTED;
     }
 
     case BEAM_AGONY:
@@ -6377,6 +6398,12 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_INNER_FLAME:
             // Co-aligned inner flame is fine.
             return !mons_aligned(mon, agent());
+        case BEAM_NECROTIZE:
+            // HACK: we want to warn when players accidentally aim necrotize
+            // through their skeletal allies. So mark it harmful to pals.
+            if (mons_aligned(mon, agent()))
+                return true;
+            // else fallthrough to generic enchantments
         case BEAM_TELEPORT:
         case BEAM_BECKONING:
         case BEAM_INFESTATION:
@@ -6667,6 +6694,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
     case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
     case BEAM_ENFEEBLE:              return "enfeeble";
+    case BEAM_NECROTIZE:             return "necrotize";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

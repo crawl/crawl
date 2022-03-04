@@ -1798,4 +1798,21 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0
 },
 
+{
+    ZAP_NECROTIZE,
+    "",
+    100,
+    new dicedef_calculator<1, 4, 1, 5>,
+    new tohit_calculator<0, 7, 2>,
+    nullptr,
+    nullptr,
+    BLACK,
+    true,
+    BEAM_NECROTIZE,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    1 // XXX: Should this be soundless?
+},
+
 };

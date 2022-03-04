@@ -550,6 +550,18 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PAIN, "Pain",
     spschool::necromancy,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check
+        | spflag::monster,
+    1,
+    25,
+    5, 5,
+    1, 0,
+    TILEG_PAIN,
+},
+
+{
+    SPELL_NECROTIZE, "Necrotize",
+    spschool::necromancy,
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
     1,
     25,
@@ -561,7 +573,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ANIMATE_SKELETON, "Animate Skeleton",
     spschool::necromancy,
-    spflag::utility,
+    spflag::utility | spflag::monster,
     1,
     50,
     -1, -1,

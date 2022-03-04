@@ -3074,11 +3074,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return false;
 
     case OBJ_CORPSES:
-        if ( you.has_spell(SPELL_ANIMATE_SKELETON))
-        {
-            return false;
-        }
-
         return true;
 
     case OBJ_MISCELLANY:
