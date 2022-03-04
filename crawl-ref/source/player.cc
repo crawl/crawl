@@ -1927,13 +1927,13 @@ void update_demonic_slaying_movement()
 {
     if (!you.has_mutation(MUT_DEMON_DASH))
         return;
-    // try to remind the player occasionally without getting spammy
+/*    // try to remind the player occasionally without getting spammy
     if (!you.duration[DUR_DEMON_DASH]
         && one_chance_in(you.experience_level * 2))
         // message is pretty mediocre, XXX. maybe shouldn't print any message?
-        mpr("As you move, you prepare to strike savagely.");
+        mpr("You dash forward with supernatural grace."); */
     you.duration[DUR_DEMON_DASH] = you.time_taken+1;
-    you.redraw_status_lights = true;
+    you.redraw_evasion = true;
 }
 
 // An evasion factor based on the player's body size, smaller == higher
@@ -2011,6 +2011,9 @@ static int _player_evasion_bonuses()
     // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
+
+    if (you.duration[DUR_DEMON_DASH])
+        evbonus += 3;
 
     return evbonus;
 }
@@ -3459,9 +3462,6 @@ int slaying_bonus(bool throwing)
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         ret += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
-
-    if (you.duration[DUR_DEMON_DASH])
-        ret += 2;
 
     return ret;
 }
