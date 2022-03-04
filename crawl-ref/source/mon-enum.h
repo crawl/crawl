@@ -140,6 +140,7 @@ enum attack_flavour
     AF_SEAR,
     AF_BARBS,
     AF_SPIDER,
+    AF_REACH_DISTO,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

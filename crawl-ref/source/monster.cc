@@ -5868,7 +5868,12 @@ reach_type monster::reach_range() const
     {
         const mon_attack_def attk(mons_attack_spec(*this, i));
         if (flavour_has_reach(attk.flavour) && attk.damage)
+        {
+        if (!flavour_has_disto(attk.flavour))
             range = REACH_TWO;
+        else
+            range = REACH_THREE;
+        }
     }
 
     const item_def *wpn = primary_weapon();
