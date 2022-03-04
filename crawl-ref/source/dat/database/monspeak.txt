@@ -4414,6 +4414,43 @@ Pluto
 Cujo
 ## END Grum ##
 %%%%
+############ GRUNN ### Grum has fallen on hard times
+Grunn
+
+@_Grunn_common_@
+
+w:2
+@_Grunn_rare_@
+%%%%
+_Grunn_common_
+
+# All of the common Grum lines are fine, so let's use em.
+@_Grum_common_@
+%%%%
+_Grunn_rare_
+
+VISUAL:One of @the_monster@'s claws falls out.
+
+VISUAL:@The_monster@ pats at a spot of missing fur and sighs.
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "My dogs and I will have a feast tonight..."
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "I don't need to eat anymore, but I'll make an exception for you."
+
+@The_monster@ asks, "What kind of bones do @player_genus_plural@ have? My dogs are dying to find out." @player_only@
+
+@The_monster@ looks @at_foe@ and @_Grum_verb_@, "Time to put down the runt of the litter."
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "Me and @_Grum_dog_name_@ will play fetch with your bones!"
+
+@The_monster@ shouts, "Faster, @_Grum_dog_name_@! Kill! Kill!"
+
+@The_monster@ lets out out a long, sad whine.
+
+@The_monster@ says, "Selling your soul isn't that bad. What the hell, right?"
+
+@The_monster@ moans, "It's cold... so cold."
+%%%%
 ############ HAROLD ### A middle aged man, anxious to retire after killing you.
 Harold
 
