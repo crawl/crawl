@@ -375,7 +375,7 @@ Corpse Rot spell
 
 Rapidly accelerates the decomposition of living monsters slain by the caster,
 and gathers the foul miasmic vapour around the caster. The clouds eat away at
-the life force of any creature they envelop. 
+the life force of any creature they envelop.
 %%%%
 Corrosive Bolt spell
 
@@ -1281,7 +1281,7 @@ eventually covering only the caster, before it times out.
 Simulacrum spell
 
 Mirrors the soul of a creature in ice. When the creature dies, icy replicas of
-its body burst forth to serve the caster. Simulacra cannot leave the level they 
+its body burst forth to serve the caster. Simulacra cannot leave the level they
 were created on. The number of simulacra created depends on spell power.
 %%%%
 Siren Song spell

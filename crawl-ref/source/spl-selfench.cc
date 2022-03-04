@@ -252,7 +252,7 @@ spret cast_corpse_rot(int pow, bool fail)
     fail_check();
     mpr("You radiate decay.");
 
-    you.increase_duration(DUR_CORPSE_ROT, 
+    you.increase_duration(DUR_CORPSE_ROT,
                             10 + random2(1 + div_rand_round(pow * 3, 5)), 50);
     you.props[CORPSE_ROT_POWER_KEY] = pow;
 

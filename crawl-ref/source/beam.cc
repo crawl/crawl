@@ -5463,7 +5463,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_UNAFFECTED;
     }
-    
+
     case BEAM_NECROTIZE:
     {
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
@@ -5475,7 +5475,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                      mon->name(DESC_THE).c_str(),
                      attack_strength_punctuation(dam).c_str());
                 obvious_effect = true;
-                if(mons_can_be_zombified(*mon) 
+                if (mons_can_be_zombified(*mon)
                     && !mons_class_flag(mon->type, M_NO_SKELETON))
                 {
                     mon->add_ench(mon_enchant(ENCH_NECROTIZE, 0, agent(), 1));

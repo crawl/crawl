@@ -1379,7 +1379,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (have_passive(passive_t::reaping))
             return "you are already reaping souls!";
         break;
-        
+
         // fallthrough
     case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:

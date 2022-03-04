@@ -187,7 +187,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
              mons->name(DESC_THE).c_str());
         return spret::abort;
     }
-    
+
     if (!mons_can_be_zombified(*mons))
     {
         mpr("You can't make simulacra of that!");

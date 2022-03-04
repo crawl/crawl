@@ -550,7 +550,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PAIN, "Pain",
     spschool::necromancy,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check 
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check
         | spflag::monster,
     1,
     25,

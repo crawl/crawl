@@ -2331,7 +2331,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return cast_vile_clutch(powc, beam, fail);
-        
+
     case SPELL_CORPSE_ROT:
         return cast_corpse_rot(powc, fail);
 
@@ -2418,7 +2418,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_INNER_FLAME:
         return cast_inner_flame(spd.target, powc, fail);
-        
+
     case SPELL_SIMULACRUM:
         return cast_simulacrum(spd.target, powc, fail);
 

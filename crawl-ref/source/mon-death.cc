@@ -1338,13 +1338,13 @@ static bool _animate_dead_reap(monster &mons)
 {
     if (! you.duration[DUR_ANIMATE_DEAD])
         return false;
-    
+
     int rd = 0;
     if (you.props.exists(ANIMATE_DEAD_POWER_KEY))
         rd = you.props[ANIMATE_DEAD_POWER_KEY].get_int();
     if (!x_chance_in_y(100 + rd, 200))
         return false;
-    
+
     return _mons_reaped(you, mons);
 }
 
@@ -1370,10 +1370,10 @@ static void _corpse_rot(monster &mons, int pow)
 {
     if (!mons_can_be_zombified(mons))
         return;
-    
+
     coord_def center = you.pos();
     int rot = 1 + random2(1 + div_rand_round(pow, 25));
-    
+
     for (fair_adjacent_iterator ai(center); ai; ++ai)
     {
         if (rot == 0)
@@ -2462,10 +2462,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
 
-        if (!corpse_consumed && coinflip() && 
+        if (!corpse_consumed && coinflip() &&
                 (_animate_dead_reap(mons) || _reaping(mons)))
+        {
             corpse_consumed = true;
-            
+        }
+
         if (!corpse_consumed && mons.has_ench(ENCH_NECROTIZE))
         {
             _make_derived_undead(&mons, !death_message, MONS_SKELETON,
@@ -2474,7 +2476,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                      GOD_NO_GOD);
             corpse_consumed = true;
         }
-            
+
         // currently allowing this to stack with other death effects -hm
         if (you.duration[DUR_CORPSE_ROT])
         {
