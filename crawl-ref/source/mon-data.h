@@ -4125,7 +4125,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     // semi-sapient, gurgling plants? what horror!!!
     I_ANIMAL, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_PLANT,
-    {TILEP_MONS_OKLOB_ABYSS2}, TILE_ERROR
+    {TILEP_MONS_STARFLOWER}, TILE_ERROR
 },
 
 {
