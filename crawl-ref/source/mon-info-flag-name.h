@@ -120,7 +120,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SICK, "sick", "sick", "sick"},
     { MB_WEAK, "weak", "weak", "weak"},
     { MB_LIGHTLY_DRAINED, "drained", "lightly drained", "drained"},
-    { MB_HEAVILY_DRAINED, "drained", "heavily drained", "drained"},
+    { MB_HEAVILY_DRAINED, "very drained", "heavily drained", "very drained"},
     { MB_SAP_MAGIC, "magic-sapped", "magic-sapped", "magic-sapped"},
     { MB_GLOWING, "corona", "softly glowing", "coronas"},
     { MB_WATERLOGGED, "waterlogged", "waterlogged", "waterlogged"},
