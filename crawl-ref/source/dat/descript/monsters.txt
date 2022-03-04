@@ -2405,6 +2405,12 @@ undulates constantly, dividing spontaneously and then withdrawing when
 threatened. When divided, its deafening chorus of screams can overwhelm the
 minds of even the bravest warriors, leaving them stunned and helpless.
 %%%%
+starflower
+
+A mass of writhing vines and drooling tentacles. It yearns to thrash and bash
+any abyssal intruders, reaching into rifts to silence any minds who dare sing
+songs that starspawn can't understand. Far distant cousin of the oklob plant.
+%%%%
 starspawn tentacle
 
 The writhing appendage of a tentacled starspawn, capable of grasping nearly any
