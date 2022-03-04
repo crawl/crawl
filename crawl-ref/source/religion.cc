@@ -1306,9 +1306,12 @@ static bool _jiyva_mutate()
     return to_give == 0 || deleted;
 }
 
-bool vehumet_is_offering(spell_type spell)
+// Is Vehumet offering this? With "only" only return true if this is the only
+// reason the player can learn the spell now.
+bool vehumet_is_offering(spell_type spell, bool only)
 {
-    return you.vehumet_gifts.count(spell);
+    return you.vehumet_gifts.count(spell)
+           && !(only && you.spell_library[spell]);
 }
 
 void vehumet_accept_gift(spell_type spell)
