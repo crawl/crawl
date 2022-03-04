@@ -1133,6 +1133,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_STARFLOWER,
+      {
+       { SPELL_HARPOON_SHOT, 80, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('Q') Tengu.
     {  MST_TENGU_CONJURER,
       {
