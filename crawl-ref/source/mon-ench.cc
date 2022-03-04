@@ -1416,6 +1416,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
     case ENCH_SIMULACRUM:
+    case ENCH_NECROTIZE:
         decay_enchantment(en);
         break;
 
@@ -2080,7 +2081,7 @@ static const char *enchant_names[] =
     "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
-    "anguished", "simulacra",
+    "anguished", "simulacra", "necrotizing",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2348,6 +2349,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EMPOWERED_SPELLS:
         cturn = 20 * 10 / _mod_speed(10, mons->speed);
         break;
+    case ENCH_NECROTIZE:
+        return 10;
     case ENCH_RING_OF_THUNDER:
     case ENCH_RING_OF_FLAMES:
     case ENCH_RING_OF_CHAOS:

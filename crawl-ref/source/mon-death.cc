@@ -1211,7 +1211,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         // No undead 0-headed hydras, sorry.
         if (mons->heads() == 0)
         {
-            if (!quiet)
+            if (!quiet && which_z != MONS_SKELETON)
                 mprf("A %s mist gathers momentarily, then fades.", mist);
             return;
         }
@@ -1230,6 +1230,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     string monster_name = "";
 
     string message = quiet ? "" :
+        which_z == MONS_SKELETON ? make_stringf("A skeleton leaps to life!") :
         make_stringf("A %s mist starts to gather...", mist);
 
     make_derived_undead_fineff::schedule(mons->pos(), mg,
@@ -2464,6 +2465,15 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!corpse_consumed && coinflip() && 
                 (_animate_dead_reap(mons) || _reaping(mons)))
             corpse_consumed = true;
+            
+        if (!corpse_consumed && mons.has_ench(ENCH_NECROTIZE))
+        {
+            _make_derived_undead(&mons, !death_message, MONS_SKELETON,
+                                     BEH_FRIENDLY,
+                                     SPELL_NECROTIZE,
+                                     GOD_NO_GOD);
+            corpse_consumed = true;
+        }
             
         // currently allowing this to stack with other death effects -hm
         if (you.duration[DUR_CORPSE_ROT])

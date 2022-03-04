@@ -120,5 +120,6 @@ enum zap_type
     ZAP_STUNNING_BURST,
     ZAP_FLAME_WAVE,
     ZAP_ENFEEBLE,
+    ZAP_NECROTIZE,
     NUM_ZAPS
 };

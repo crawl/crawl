@@ -1169,7 +1169,6 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     switch (spell)
     {
     case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
     case SPELL_DEATH_CHANNEL:
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:
@@ -1385,11 +1384,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you aren't next to any passable walls.";
         if (you.is_constricted())
             return "you're being held away from the wall.";
-        break;
-
-    case SPELL_ANIMATE_SKELETON:
-        if (temp && find_animatable_skeletons(you.pos()).empty())
-            return "there is nothing nearby to animate!";
         break;
 
     case SPELL_DEATH_CHANNEL:

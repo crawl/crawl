@@ -533,5 +533,6 @@ enum spell_type : int
     SPELL_ENFEEBLE,
     SPELL_SUMMON_SPIDERS,
     SPELL_ANGUISH,
+    SPELL_NECROTIZE,
     NUM_SPELLS
 };
