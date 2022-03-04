@@ -198,6 +198,10 @@ Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
 %%%%
+Sheza's Dance cast
+
+@The_monster@ sends weapons dancing into battle!
+%%%%
 Druid's Call cast
 
 @The_monster@ calls out to the beasts of the wild!

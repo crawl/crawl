@@ -2001,9 +2001,9 @@ static const mon_spellbook mspell_list[] =
     // ('9') Mobile constructs.
     {  MST_VV,
       {
-       { SPELL_ERUPTION, 20, MON_SPELL_MAGICAL },
-       { SPELL_PYROCLASTIC_SURGE, 40, MON_SPELL_MAGICAL },
-       { SPELL_CREEPING_FROST, 20, MON_SPELL_MAGICAL },
+       { SPELL_ERUPTION, 25, MON_SPELL_MAGICAL },
+       { SPELL_PYROCLASTIC_SURGE, 50, MON_SPELL_MAGICAL },
+       { SPELL_CREEPING_FROST, 25, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2060,9 +2060,10 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_JOSEPHINA,
       {
-       { SPELL_SERACFALL, 24, MON_SPELL_WIZARD },
+       { SPELL_SERACFALL, 36, MON_SPELL_WIZARD },
        { SPELL_GHOSTLY_FIREBALL, 24, MON_SPELL_WIZARD },
        { SPELL_BIND_SOULS, 24, MON_SPELL_WIZARD },
+       { SPELL_FLASH_FREEZE, 12, MON_SPELL_WIZARD },
       }
     },
 

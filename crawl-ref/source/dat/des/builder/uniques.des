@@ -376,10 +376,6 @@ NAME:   uniq_xtahua
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Xtahua")
 
-NAME:   uniq_zenata
-DEPTH:  Depths:2-, Zot:1-4, Crypt
-: place_unique(_G, "Zenata")
-
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
 ################################################################################
@@ -427,6 +423,10 @@ DEPTH:  Tomb, Crypt
 NAME:   uniq_tiamat
 DEPTH:  Zot
 : place_unique(_G, "Tiamat band")
+
+NAME:   uniq_zenata
+DEPTH:  Vaults:1-4, Elf, Crypt
+: place_unique(_G, "Zenata")
 
 NAME:   uniq_cerebov
 DEPTH:  Pan
