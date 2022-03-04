@@ -1775,15 +1775,8 @@ static bool _give_kiku_gift(bool forced)
             spell = random_choose(SPELL_ANGUISH,
                                   SPELL_DISPEL_UNDEAD,
                                   SPELL_BORGNJORS_VILE_CLUTCH,
-                                  SPELL_EXCRUCIATING_WOUNDS,
                                   SPELL_DEATH_CHANNEL,
                                   SPELL_SIMULACRUM);
-
-            if (you.has_mutation(MUT_NO_GRASPING)
-                && spell == SPELL_EXCRUCIATING_WOUNDS)
-            {
-                spell = SPELL_NO_SPELL;
-            }
 
             if (find(begin(chosen_spells), end(chosen_spells), spell)
                 != end(chosen_spells))

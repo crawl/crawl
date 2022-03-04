@@ -78,7 +78,6 @@
 #include "spl-monench.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
@@ -170,12 +169,6 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     {
         canned_msg(MSG_OK);
         return false;
-    }
-
-    if (you.duration[DUR_EXCRUCIATING_WOUNDS]) // just in case
-    {
-        ASSERT(you.weapon());
-        end_weapon_brand(*you.weapon());
     }
 
     string old_name = wpn.name(DESC_A);

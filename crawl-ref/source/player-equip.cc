@@ -35,7 +35,6 @@
 #include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-wpnench.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "xom.h"
@@ -705,12 +704,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
             case SPWPN_ACID:
                 mprf("%s stops oozing corrosive slime.", msg.c_str());
                 break;
-            }
-
-            if (you.duration[DUR_EXCRUCIATING_WOUNDS])
-            {
-                ASSERT(real_item.defined());
-                end_weapon_brand(real_item, true);
             }
         }
     }

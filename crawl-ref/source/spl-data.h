@@ -1231,17 +1231,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
-    spschool::necromancy,
-    spflag::helpful,
-    5,
-    200,
-    -1, -1,
-    5, 5,
-    TILEG_EXCRUCIATING_WOUNDS,
-},
-
-{
     SPELL_PORTAL_PROJECTILE, "Portal Projectile",
     spschool::translocation | spschool::hexes,
     spflag::none,
@@ -3659,6 +3648,7 @@ AXED_SPELL(SPELL_VORTEX, "Vortex")
 AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
 AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
 AXED_SPELL(SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe")
+AXED_SPELL(SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds")
 #endif
 
 };

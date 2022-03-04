@@ -521,13 +521,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
-        && you.duration[DUR_EXCRUCIATING_WOUNDS])
-    {
-        SAY(mpr("You cannot break your focus on the pain!"));
-        return false;
-    }
-
-    if (!ignore_temporary_disability
         && player_equip_unrand(UNRAND_DEMON_AXE)
         && you.beheld())
     {
@@ -2570,8 +2563,6 @@ bool god_hates_brand(const int brand)
 
 static void _rebrand_weapon(item_def& wpn)
 {
-    if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
-        end_weapon_brand(wpn);
     const brand_type old_brand = get_weapon_brand(wpn);
     monster * spect = find_spectral_weapon(&you);
     if (&wpn == you.weapon() && old_brand == SPWPN_SPECTRAL && spect)

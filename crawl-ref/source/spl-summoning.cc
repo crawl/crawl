@@ -50,7 +50,6 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"

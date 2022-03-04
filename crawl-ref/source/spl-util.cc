@@ -1289,17 +1289,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your current blood level is not sufficient.";
         break;
 
-    case SPELL_EXCRUCIATING_WOUNDS:
-        if (is_useless_skill(SK_NECROMANCY))
-            return "you lack the necromantic skill to inflict true pain.";
-        if (temp
-            && (!you.weapon()
-                || you.weapon()->base_type != OBJ_WEAPONS
-                || !is_brandable_weapon(*you.weapon(), true)))
-        {
-            return "you aren't wielding a brandable weapon.";
-        }
-        // intentional fallthrough to portal projectile
     case SPELL_PORTAL_PROJECTILE:
         if (you.has_mutation(MUT_NO_GRASPING))
             return "this spell is useless without hands.";
@@ -1913,6 +1902,7 @@ const set<spell_type> removed_spells =
     SPELL_VORTEX,
     SPELL_GOAD_BEASTS,
     SPELL_TELEPORT_SELF,
+    SPELL_EXCRUCIATING_WOUNDS,
 #endif
 };
 

@@ -4303,6 +4303,22 @@ static void _tag_read_you_items(reader &th)
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
             god_id_item(you.inv[i], true);
+
+    if (you.duration[DUR_EXCRUCIATING_WOUNDS])
+    {
+        ASSERT(you.props.exists(ORIGINAL_BRAND_KEY));
+        item_def *weapon = you.weapon();
+        ASSERT(weapon);
+        set_item_ego_type(*weapon, OBJ_WEAPONS, you.props[ORIGINAL_BRAND_KEY]);
+        you.props.erase(ORIGINAL_BRAND_KEY);
+        you.duration[DUR_EXCRUCIATING_WOUNDS] = 0;
+        if (get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC)
+            calc_mp();
+        // In principle, we should check to see if the weapon was originally
+        // holy AND if you're in lich form, and unwield the weapon if so.
+        // However, this is a corner case that involves a lot of scary side
+        // effects while loading. Let it slide.
+    }
 #endif
 }
 
