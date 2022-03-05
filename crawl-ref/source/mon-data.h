@@ -4114,9 +4114,9 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     // resists are loosely a marriage of oklob + tentacle horror
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ACID,
     10, MONS_PLANT, MONS_STARFLOWER, MH_PLANT, 60,
-    { {AT_CONSTRICT, AF_CRUSH, 9},
-      {AT_TENTACLE_SLAP, AF_REACH_DISTO, 9},
-      {AT_TENTACLE_SLAP, AF_REACH_DISTO, 9},
+    { {AT_TENTACLE_SLAP, AF_REACH_DISTO, 13},
+      {AT_TENTACLE_SLAP, AF_REACH_DISTO, 17},
+      {AT_CONSTRICT, AF_CRUSH, 22},
       AT_NO_ATK  },
     // using 'X' class monsters to ballpark wild guesses for hp and damage
     // specifically: working from large abom, thrasher, monstro, and starspawn
