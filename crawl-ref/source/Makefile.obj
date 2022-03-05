@@ -556,6 +556,7 @@ tile-env.h.o \
 tile-flags.h.o \
 tile-inventory-flags.h.o \
 tile-player-flag-cut.h.o \
+tile-status-icons.h.o \
 tileview.h.o \
 tileweb.h.o \
 tileweb-text.h.o \

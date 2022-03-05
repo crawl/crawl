@@ -1635,6 +1635,17 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_tileidx(next_pc.cloud);
         }
 
+        if (next_pc.icons != current_pc.icons)
+        {
+            json_open_array("icons");
+            for (const tileidx_t icon : next_pc.icons)
+            {
+                json_write_comma(); // skipped for the first one
+                write_tileidx(icon);
+            }
+            json_close_array();
+        }
+
         if (next_pc.is_bloody != current_pc.is_bloody)
             json_write_bool("bloody", next_pc.is_bloody);
 
