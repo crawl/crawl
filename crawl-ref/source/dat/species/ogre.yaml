@@ -46,6 +46,7 @@ mutations:
   1:
     MUT_TOUGH_SKIN: 1
 recommended_jobs:
+  - JOB_GLADIATOR
   - JOB_BERSERKER
   - JOB_CINDER_ACOLYTE
   - JOB_WIZARD

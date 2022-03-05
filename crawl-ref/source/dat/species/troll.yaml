@@ -53,7 +53,7 @@ mutations:
     MUT_SHAGGY_FUR: 1
 recommended_jobs:
   - JOB_FIGHTER
-  - JOB_MONK
+  - JOB_GLADIATOR
   - JOB_BERSERKER
   - JOB_WARPER
   - JOB_EARTH_ELEMENTALIST

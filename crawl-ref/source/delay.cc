@@ -368,7 +368,7 @@ void EquipOffDelay::start()
 
 void MemoriseDelay::start()
 {
-    if (vehumet_is_offering(spell))
+    if (vehumet_is_offering(spell, true))
     {
         string message = make_stringf(" grants you knowledge of %s.",
             spell_title(spell));

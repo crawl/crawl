@@ -501,7 +501,7 @@ STR:     7
 NAME:     glaive of the Guard
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
 FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
-PLUS:     +8
+PLUS:     +5
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
@@ -1406,7 +1406,7 @@ TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
-PLUS:    7
+PLUS:    12
 BRAND:   SPWPN_PROTECTION
 FB_BRAND: SPWPN_VORPAL
 

@@ -114,15 +114,16 @@ healing. If you lose all of your hp you die.
 
 To survive, you will need to develop a few basic tactics:
 
- - Never fight more than one monster if you can help it. Always back into a
-   corridor so that they must fight you one-on-one.
- - If you are badly wounded, you can run away from monsters to buy some time.
-   Try losing them in corridors, or as a very last resort find a place where
-   you can run around in circles to heal while the monster chases you.
- - Remember to use projectiles before engaging monsters in close combat.
  - Rest between encounters. The `s`, `.`, delete or keypad-5 commands make you
    rest for one turn, while pressing `5` or Shift-and-keypad-5 make you rest
    for a longer time (you will stop resting when fully healed).
+ - Never fight more than one monster if you can help it. Always back into a
+   corridor so that they must fight you one-on-one.
+ - Consumable items like scrolls and potions won't do you any good when you're
+   dead, and most are more effective when used at the start of a tough fight
+   than when you're near death. Try identifying some ahead of time by 'wasting'
+   one from a stack while in a safe spot.
+ - Remember to use projectiles before engaging monsters in close combat.
  - Learn when to run away from things you can't handle - this is important!
    It is often wise to skip a dangerous level. But don't overdo this.
 

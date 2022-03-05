@@ -1219,20 +1219,30 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (is_slowed_by_armour(&item))
     {
-        description += "\nHeavy armour slows attacks with this";
         const int penalty_scale = 100;
         const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale);
+        description += "\n";
         if (armour_penalty)
         {
+            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            description += (body_armour ? uppercase_first(
+                                              body_armour->name(DESC_YOUR))
+                                        : "Your heavy armour");
+
             const bool significant = armour_penalty >= penalty_scale;
             if (significant)
-                description += make_stringf(" (currently +%.1f", armour_penalty / (10.0f * penalty_scale));
+            {
+                description +=
+                    make_stringf(" slows your attacks with this weapon by %.1f",
+                                 armour_penalty / (10.0f * penalty_scale));
+            }
             else
-                description += " (currently only slightly";
-            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-            if (body_armour)
-                description += (significant ? " from " : " by ") + body_armour->name(DESC_YOUR);
-            description += ")";
+                description += " slightly slows your attacks with this weapon";
+        }
+        else
+        {
+            description += "Wearing heavy armour would reduce your attack "
+                           "speed with this weapon";
         }
         description += ".";
     }

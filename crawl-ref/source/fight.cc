@@ -384,8 +384,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         melee_attack melee_attk(attacker, defender, attack_number,
                                 effective_attack_number);
 
-        if (simu)
-            melee_attk.simu = true;
+        melee_attk.simu = simu;
 
         // If the attack fails out, keep effective_attack_number up to
         // date so that we don't cause excess energy loss in monsters

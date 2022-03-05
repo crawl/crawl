@@ -482,7 +482,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
 
 static void _create_monster_wand(const item_def &corpse, bool silent)
 {
-
     const coord_def pos = item_pos(corpse);
     if (pos.origin())
         return;
@@ -2500,6 +2499,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             _maybe_drop_monster_organ(*corpse, silent);
     }
 
+    ASSERT(mons.type != MONS_NO_MONSTER);
+
     if (mons.is_divine_companion()
         && killer != KILL_RESET
         && !(mons.flags & MF_BANISHED))
@@ -2612,6 +2613,8 @@ void end_flayed_effect(monster* ghost)
 void monster_cleanup(monster* mons)
 {
     crawl_state.mon_gone(mons);
+
+    ASSERT(mons->type != MONS_NO_MONSTER);
 
     if (mons->has_ench(ENCH_AWAKEN_FOREST))
     {

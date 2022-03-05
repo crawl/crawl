@@ -4311,7 +4311,11 @@ static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bol
     // TODO: scale by power?
     const int count = random_range(2, 4);
     for (int i = 0; i < count; i++)
-        _summon(mons, MONS_DANCING_WEAPON, 3, slot);
+    {
+        monster* mon = _summon(mons, MONS_DANCING_WEAPON, 3, slot);
+        if (mon)
+            mon->add_ench(ENCH_HASTE);
+    }
 }
 
 static void _mons_cast_haunt(monster* mons)

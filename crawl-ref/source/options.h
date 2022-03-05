@@ -591,6 +591,7 @@ public:
     int         tile_window_ratio;
     maybe_bool  tile_use_small_layout;
 #endif
+    int         tile_sidebar_pixels;
     int         tile_cell_pixels;
     int         tile_viewport_scale;
     int         tile_map_scale;

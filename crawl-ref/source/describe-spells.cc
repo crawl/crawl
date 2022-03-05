@@ -391,6 +391,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
         case SPELL_ERUPTION:
             return eruption_damage();
+        case SPELL_LRD:
+            return base_fragmentation_damage(pow);
         default:
             break;
     }
@@ -504,7 +506,8 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";
-    return make_stringf("(%s%dd%d)", mult.c_str(), dam.num, dam.size);
+    const char* asterisk = spell == SPELL_LRD ? "*" : "";
+    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
 }
 
 /**
