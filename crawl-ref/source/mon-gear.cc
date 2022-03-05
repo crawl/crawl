@@ -1446,7 +1446,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                 break;
         }
-        if (one_chance_in(4) && !mons_summoned)
+        if (one_chance_in(8) && !mons_summoned)
         {
             weap_type  = MI_THROWING_NET;
             qty        = 1;
