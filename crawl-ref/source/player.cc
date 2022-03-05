@@ -3928,7 +3928,7 @@ int get_real_mp(bool include_items)
     return enp;
 }
 
-/// Does the player currently regenerate hp? Used for resting.
+/// Does the player currently regenerate hp through non-god means?
 bool player_regenerates_hp()
 {
     if (you.has_mutation(MUT_NO_REGENERATION) || regeneration_is_inhibited())
@@ -5315,7 +5315,9 @@ bool player::is_banished() const
 bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
-    return (!player_regenerates_hp()
+    // We check whether either we regenerate HP in general, or whether 
+    // we are regenerating right now.
+    return ((player_regen() == 0 && !player_regenerates_hp())
                 || _should_stop_resting(hp, hp_max))
         && (!player_regenerates_mp()
                 || _should_stop_resting(magic_points, max_magic_points))
