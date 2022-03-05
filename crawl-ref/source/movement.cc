@@ -255,7 +255,7 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
             || !mon->can_see(you)
             // only let monsters attack if they might follow you
             || !mon->may_have_action_energy() || mon->is_stationary()
-            /*|| !one_chance_in(3)*/)
+            || !one_chance_in(3))
         {
             continue;
         }
