@@ -5315,7 +5315,7 @@ bool player::is_banished() const
 bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
-    // We check whether either we regenerate HP in general, or whether 
+    // We check whether either we regenerate HP in general, or whether
     // we are regenerating right now.
     return ((player_regen() == 0 && !player_regenerates_hp())
                 || _should_stop_resting(hp, hp_max))
