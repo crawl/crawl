@@ -4371,7 +4371,10 @@ VISUAL:@The_monster@ is momentarily distracted by a flea in @possessive@ coat.
 
 @The_monster@ @_Grum_verb_@ @at_foe@, "Me and @_Grum_dog_name_@ will play fetch with your bones!"
 
+@The_monster@ @_Grum_verb_@, "Who's a good boy? That's right, @_Grum_dog_name_@... you are!" 
+
 # stupid dog pun
+
 @The_monster@ @_Grum_verb_@ @at_foe@, "You will fight me? This will be... rough!"
 
 @The_monster@ shouts, "Release the hounds!"
@@ -4393,25 +4396,34 @@ barks
 %%%%
 _Grum_dog_name_
 
+Bowser
+
+Cujo
+
+Duke
+
 Fido
+
+Fluffy
+
+Junior
+
+King
+
+Lady
+
+Pluto
 
 Rex
 
 Rover
 
+Sparky
+
 Spot
 
 Spike
 
-Duke
-
-Junior
-
-Sparky
-
-Pluto
-
-Cujo
 ## END Grum ##
 %%%%
 ############ HAROLD ### A middle aged man, anxious to retire after killing you.
@@ -4965,6 +4977,18 @@ VISUAL:@The_monster@ adjusts @possessive@ apparatus.
 @The_monster@ shouts, "Zap! Ha ha ha, made you jump."
 
 @The_monster@ roars, "I Iron Bound! You Brass... Trash!"
+
+@The_monster@ grins wickedly and says, "Money make world go round."
+
+@The_monster@ winks @at foe@ and says, "Everything have price."
+
+@The_monster@ says, "All wealth is product of labor."
+
+@The_monster@ says, "Productive ogre is happy ogre."
+
+@The_monster@ says, "I proud of my employees."
+
+@The_monster@ says, "@The_monster@ motto: Secure Vault? My fault!"
 %%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
