@@ -1940,7 +1940,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             // killing born-friendly monsters.
             if (could_give_xp
                 && !mons_is_object(mons.type)
-                && (you.species == SP_GHOUL
+                && (you.has_mutation(MUT_DEVOUR_ON_KILL)
                     || (have_passive(passive_t::restore_hp)
                         || have_passive(passive_t::mp_on_kill)
                         || have_passive(passive_t::restore_hp_mp_vs_evil)
@@ -1960,7 +1960,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     hp_heal = (1 + mons.get_experience_level()) / 2
                             + random2(mons.get_experience_level() / 2);
                 }
-                if (you.species == SP_GHOUL
+                if (you.has_mutation(MUT_DEVOUR_ON_KILL)
                     && mons.holiness() & (MH_NATURAL | MH_PLANT)
                     && coinflip())
                 {
