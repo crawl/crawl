@@ -2058,7 +2058,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     // clouds where it's standing!
 
     monster* mon = monster_at(where);
-    if (invalid_monster(mon) || mon == agent)
+    if (invalid_monster(mon) || mon == agent || tracer && !agent->can_see(*mon))
         return 0;
 
     // how poisoned is the victim?

@@ -1268,7 +1268,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_dig>(range);
 
     // untargeted spells -- everything beyond here is a static targeter
-    // TODO ignite poison
     case SPELL_HAILSTORM:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range, 0, 2);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
