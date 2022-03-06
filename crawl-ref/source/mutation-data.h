@@ -2283,6 +2283,12 @@ static const mutation_def mut_data[] =
   {"You feel more mortal.", "", ""},
 },
 
+{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true /* but irrelevant */, "devour on kill",
+  {"You thrive by killing the living.", "", ""},
+  {"You feel hungry for flesh.", "", ""},
+  {"You feel less hungry for flesh.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =
