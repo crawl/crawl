@@ -911,3 +911,8 @@ no transmutations magic mutation
 
 Your Transmutations skill is 0 and you cannot train the skill.
 %%%%
+devour on kill mutation
+
+When you kill living creatures you have a chance to devour their life force
+and restore hit points.
+%%%%
