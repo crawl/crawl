@@ -1504,6 +1504,40 @@ bool mons_will_goldify(const monster &mons)
                    && !player_in_branch(BRANCH_ABYSS);
 }
 
+static void _pakellas_excess_mp(int mp_heal)
+{
+    if (!have_passive(passive_t::bottle_mp)
+        || !mp_heal
+        || !you.can_drink(false))
+    {
+        return;
+    }
+
+    simple_god_message(" collects the excess magic power.");
+    you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
+
+    if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
+        && (feat_has_solid_floor(env.grid(you.pos()))
+            || (feat_is_watery(env.grid(you.pos()))
+                && species::likes_water(you.species))))
+    {
+        int thing_created = items(true, OBJ_POTIONS,
+                                  POT_MAGIC, 1, 0,
+                                  GOD_PAKELLAS);
+        if (thing_created != NON_ITEM)
+        {
+            move_item_to_grid(&thing_created, you.pos(), true);
+            env.item[thing_created].quantity = 1;
+            env.item[thing_created].flags |= ISFLAG_KNOW_TYPE;
+            // not a conventional gift, but use the same
+            // messaging
+            simple_god_message(" grants you a gift!");
+            you.attribute[ATTR_PAKELLAS_EXTRA_MP]
+                += POT_MAGIC_MP;
+        }
+    }
+}
+
 /**
  * Kill off a monster.
  *
@@ -1936,99 +1970,66 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
 
+            int hp_heal = 0, mp_heal = 0;
             // Divine and innate health and mana restoration doesn't happen when
             // killing born-friendly monsters.
-            if (could_give_xp
-                && !mons_is_object(mons.type)
-                && (you.has_mutation(MUT_DEVOUR_ON_KILL)
-                    || (have_passive(passive_t::restore_hp)
-                        || have_passive(passive_t::mp_on_kill)
-                        || have_passive(passive_t::restore_hp_mp_vs_evil)
-                           && mons.evil())
-                       && !player_under_penance()
-                       && (random2(you.piety) >= piety_breakpoint(0))
-#if TAG_MAJOR_VERSION == 34
-                    || you_worship(GOD_PAKELLAS)
-#endif
-                   )
-                )
+            const bool valid_heal_source = could_give_xp
+                && !mons_is_object(mons.type);
+            const bool can_divine_heal = valid_heal_source
+                && !player_under_penance()
+                && random2(you.piety) >= piety_breakpoint(0);
+
+            if (valid_heal_source
+                && you.has_mutation(MUT_DEVOUR_ON_KILL)
+                && mons.holiness() & (MH_NATURAL | MH_PLANT)
+                && coinflip())
             {
-                int hp_heal = 0, mp_heal = 0;
-
-                if (have_passive(passive_t::restore_hp))
-                {
-                    hp_heal = (1 + mons.get_experience_level()) / 2
-                            + random2(mons.get_experience_level() / 2);
-                }
-                if (you.has_mutation(MUT_DEVOUR_ON_KILL)
-                    && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                    && coinflip())
-                {
-                    hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-                }
-                if (have_passive(passive_t::restore_hp_mp_vs_evil))
-                {
-                    hp_heal = random2(1 + 2 * mons.get_experience_level());
-                    mp_heal = random2(2 + mons.get_experience_level() / 3);
-                }
-
-                if (have_passive(passive_t::mp_on_kill))
-                {
-                    mp_heal = 1 + random2(mons.get_experience_level() / 2);
-#if TAG_MAJOR_VERSION == 34
-                    if (you.religion == GOD_PAKELLAS)
-                        mp_heal = random2(2 + mons.get_experience_level() / 6);
-#endif
-                }
-
-                if (hp_heal && you.hp < you.hp_max
-                    && !you.duration[DUR_DEATHS_DOOR])
-                {
-                    canned_msg(MSG_GAIN_HEALTH);
-                    inc_hp(hp_heal);
-                }
-
-                if (mp_heal && you.magic_points < you.max_magic_points)
-                {
-                    int tmp = min(you.max_magic_points - you.magic_points,
-                                  mp_heal);
-                    canned_msg(MSG_GAIN_MAGIC);
-                    inc_mp(mp_heal);
-                    mp_heal -= tmp;
-                }
-
-#if TAG_MAJOR_VERSION == 34
-                // perhaps this should go to its own function
-                if (mp_heal
-                    && have_passive(passive_t::bottle_mp)
-                    && you.can_drink(false))
-                {
-                    simple_god_message(" collects the excess magic power.");
-                    you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
-
-                    if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
-                        && (feat_has_solid_floor(env.grid(you.pos()))
-                            || feat_is_watery(env.grid(you.pos()))
-                               && species::likes_water(you.species)))
-                    {
-                        int thing_created = items(true, OBJ_POTIONS,
-                                                  POT_MAGIC, 1, 0,
-                                                  GOD_PAKELLAS);
-                        if (thing_created != NON_ITEM)
-                        {
-                            move_item_to_grid(&thing_created, you.pos(), true);
-                            env.item[thing_created].quantity = 1;
-                            env.item[thing_created].flags |= ISFLAG_KNOW_TYPE;
-                            // not a conventional gift, but use the same
-                            // messaging
-                            simple_god_message(" grants you a gift!");
-                            you.attribute[ATTR_PAKELLAS_EXTRA_MP]
-                                += POT_MAGIC_MP;
-                        }
-                    }
-                }
-#endif
+                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
             }
+
+            if (can_divine_heal && have_passive(passive_t::restore_hp))
+            {
+                hp_heal += (1 + mons.get_experience_level()) / 2
+                        + random2(mons.get_experience_level() / 2);
+            }
+            if (can_divine_heal
+                && have_passive(passive_t::restore_hp_mp_vs_evil)
+                && mons.evil())
+            {
+                hp_heal += random2(1 + 2 * mons.get_experience_level());
+                mp_heal += random2(2 + mons.get_experience_level() / 3);
+            }
+            if (can_divine_heal && have_passive(passive_t::mp_on_kill))
+                mp_heal += 1 + random2(mons.get_experience_level() / 2);
+#if TAG_MAJOR_VERSION == 34
+            if (can_divine_heal && you_worship(GOD_PAKELLAS))
+                mp_heal += random2(2 + mons.get_experience_level() / 6);
+#endif
+
+            if (hp_heal && you.hp < you.hp_max
+                && !you.duration[DUR_DEATHS_DOOR])
+            {
+                canned_msg(MSG_GAIN_HEALTH);
+                inc_hp(hp_heal);
+            }
+
+#if TAG_MAJOR_VERSION > 34
+            if (mp_heal && you.magic_points < you.max_magic_points)
+            {
+                canned_msg(MSG_GAIN_MAGIC);
+                inc_mp(mp_heal);
+            }
+#elif TAG_MAJOR_VERSION == 34
+            if (mp_heal && you.magic_points < you.max_magic_points)
+            {
+                int tmp = min(you.max_magic_points - you.magic_points,
+                              mp_heal);
+                canned_msg(MSG_GAIN_MAGIC);
+                inc_mp(mp_heal);
+                mp_heal -= tmp;
+                _pakellas_excess_mp(mp_heal);
+            }
+#endif
 
             if (gives_real_xp && you_worship(GOD_RU) && you.piety < 200
                 && one_chance_in(2))
