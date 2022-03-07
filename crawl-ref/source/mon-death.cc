@@ -1504,6 +1504,7 @@ bool mons_will_goldify(const monster &mons)
                    && !player_in_branch(BRANCH_ABYSS);
 }
 
+#if TAG_MAJOR_VERSION == 34
 static void _pakellas_excess_mp(int mp_heal)
 {
     if (!have_passive(passive_t::bottle_mp)
@@ -1537,6 +1538,7 @@ static void _pakellas_excess_mp(int mp_heal)
         }
     }
 }
+#endif
 
 /**
  * Kill off a monster.
