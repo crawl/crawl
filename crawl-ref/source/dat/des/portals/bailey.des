@@ -85,9 +85,9 @@ function easy_axe_fighter(e)
 end
 
 function hard_axe_fighter(e)
-  e.mons("w:8 orc warrior ; war axe | broad axe w:2 | battleaxe w:1 . \
+  e.mons("w:9 orc warrior ; war axe | broad axe w:2 | battleaxe w:1 . \
                             ring mail | scale mail | chain mail | plate armour / \
-          w:2 orc knight ; war axe | broad axe w:2 | battleaxe w:1 . \
+          w:1 orc knight ; war axe | broad axe w:2 | battleaxe w:1 . \
                            ring mail | scale mail | chain mail | plate armour")
 end
 
@@ -642,7 +642,7 @@ NSUBST: E = 1:+ / *:c
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
-SUBST:  2 = 223.
+SUBST:  2 = 22223..
 SUBST:  1 = 1 2:1 .
 ITEM:   good_item crystal plate armour / good_item plate armour w:20 /\
         good_item gold dragon scales w:3 / good_item ice dragon scales w:3 /\
@@ -697,7 +697,7 @@ MONS:   orc warrior w:5 ; arbalest  . ring mail | scale mail / \
 : orc_knight_with_polearm(_G)
 MONS:   orc knight
 SUBST:  1 = 111., 2 = 233.
-NSUBST: 4 = 1:4 / *=4332.
+NSUBST: 4 = 1:4 / *=433322..
 SUBST:  W : W..
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
@@ -770,8 +770,8 @@ ITEM:   scroll of enchant weapon ident:type /\
 SUBST:  1 = 11.
 SUBST:  2 = 22.
 SUBST:  3 = 32.
-SUBST:  4 = 432.
-SUBST:  5 = 433
+SUBST:  4 = 43322..
+SUBST:  5 = 4333
 NSUBST: ! = 1:deee / *:e
 NSUBST: ? = 1:fffg / *:g
 MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
@@ -1058,7 +1058,7 @@ ITEM:   any armour good_item no_pickup
 MONS: deep elf pyromancer / deep elf zephyrmancer w:5
 SUBST:  1 = 1...
 NSUBST: d = 2:$ / 4:d / * = e|
-NSUBST: 2 = 3:2 / * = 2..., 3 = 1:3 / * = 2....
+NSUBST: 2 = 2:2 / * = 2..., 3 = 1:3 / * = 2....
 FTILE:  -t = floor_grass
 : bailey_setup(_G)
 MAP
@@ -1109,13 +1109,13 @@ ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
 MONS:    orc zombie ; spear, orc warrior zombie ; trident | halberd
 MONS:    gargoyle
-MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism \
-             | glaive ego:vampirism w:3 | bardiche ego:vampirism w:1 \
+MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:3 \
+             | bardiche ego:vampirism w:1 \
              . scale mail | chain mail
 NSUBST:  d = 2=d / 2=e / | /  dde|, f = f / f..
 NSUBST:  ; = 20=t. / ., - = 4=G / 12=1. / .
 NSUBST:  2 = 5=2 / 2., 3 = 6=3 / 3..., 4 = 3=4 / 4., 5 = 5 / G
-NSUBST:  ! = 6 / 6G / G
+NSUBST:  ! = 6 / G
 SHUFFLE: A<
 TILE:    t = dngn_tree_dead, G = dngn_gravestone
 COLOUR:  t = w:5 lightgrey / w:5 darkgrey / brown
@@ -1237,11 +1237,11 @@ MONS:   ogre ; halberd | glaive w:3
 MONS:   spriggan ; spear | trident
 MONS:   two-headed ogre ; halberd | glaive w:3 | bardiche w:1 . \
                           halberd | glaive w:3 | bardiche w:1
-KMONS:  D = steam dragon / acid dragon
+KMONS:  D = steam dragon / acid dragon w:3
 KFEAT:  D = deep_water
 SUBST:  ! = t:20 x c:3, - = t c:30 x
-NSUBST: ' = 24 = 1... / 4 = 2... / *:.
-NSUBST: " = 2:2 / 12 = 2... / *:., 3 = 1:3 / *:.
+NSUBST: ' = 20 = 1... / 2 = 2... / *:.
+NSUBST: " = 1:2 / 12 = 2... / *:., 3 = 1:3 / *:.
 NSUBST:  d = 1:e / * = ddddddde
 FTILE:  ;tA< = floor_grass
 : bailey_setup(_G)
