@@ -4149,7 +4149,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_TRAMPLE,           "knock back the defender" },
         { AF_REACH_STING,       "cause poisoning" },
         { AF_REACH_TONGUE,      "deal extra acid damage" },
-        { AF_REACH_DISTO,       "cause wild translocation effects" },
+        { AF_RIFT,              "cause wild translocation effects" },
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
         { AF_SPIDER,            "summon a spider" },

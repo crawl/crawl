@@ -2187,19 +2187,7 @@ bool flavour_has_reach(attack_flavour flavour)
         case AF_REACH:
         case AF_REACH_STING:
         case AF_REACH_TONGUE:
-        case AF_REACH_DISTO:
-            return true;
-        default:
-            return false;
-    }
-}
-
-bool flavour_has_disto(attack_flavour flavour)
-{
-    switch (flavour)
-    {
-        case AF_REACH_DISTO:
-        case AF_DISTORT:
+        case AF_RIFT:
             return true;
         default:
             return false;
