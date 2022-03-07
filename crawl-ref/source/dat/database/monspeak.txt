@@ -4007,7 +4007,7 @@ _Erica_rare_
 @The_monster@ screams @at_foe@, "You'll never get it!"
 
 @The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
-
+%%%%
 Erica killed
 
 w:20
@@ -4015,7 +4015,7 @@ __NONE
 
 w:1
 @The_monster@ screams, "I'm too good to die like this!"
-
+%%%%
 Erica banished
 
 w:20
