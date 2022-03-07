@@ -5591,7 +5591,6 @@ Nikola
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 
 @The_monster@ mumbles, "They said I was mad..."
-
 %%%%
 Nikola killed
 
@@ -5600,7 +5599,6 @@ __NONE
 
 w:1
 @The_monster@ gasps, "All these years in service of science have brought nothing but insults and humiliation..."
-
 %%%%
 Nikola banished
 
