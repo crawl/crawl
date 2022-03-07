@@ -4106,20 +4106,20 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     {TILEP_MONS_OKLOB_PLANT}, TILE_ERROR
 },
 
-// the infamous "abyssal oklob"
-// uses harpoon shot to reel you in, then it distortion-slaps you away
+// the infamous "abyssal oklob". be afraid! and maybe also annoyed!
+// uses harpoon shot to reel you in, then it distortion-slaps you around
 {
     MONS_STARFLOWER, 'P', LIGHTMAGENTA, "starflower",
     M_STATIONARY,
-    // resists are loosely a marriage of oklob + tentacle horror
+    // resists are loosely a hybrid of oklob + tentacle horror. terrifying!
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ACID,
     10, MONS_PLANT, MONS_STARFLOWER, MH_PLANT | MH_DEMONIC, 60,
-    { {AT_TENTACLE_SLAP, AF_RIFT, 13},
+    { {AT_TENTACLE_SLAP, AF_RIFT, 22},
       {AT_TENTACLE_SLAP, AF_RIFT, 17},
-      {AT_TENTACLE_SLAP, 22}, // one tentacle that's shorter than the others
+      {AT_TENTACLE_SLAP, AF_PLAIN, 13}, // one shorter tentacle. horrific!
       AT_NO_ATK  },
     // using 'X' class monsters to ballpark wild guesses for hp and damage
-    // specifically: working from large abom, thrasher, monstro, and starspawn
+    // specifically: based on large abom, thrasher, monstro, and starspawn
     16, 900,
     16, 0, MST_STARFLOWER, false, S_GURGLE,
     // semi-sapient, gurgling plants? what horror!!!
