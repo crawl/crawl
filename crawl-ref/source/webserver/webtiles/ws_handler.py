@@ -834,7 +834,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.go_lobby()
             return
 
-        if self.account_restricted():
+        if self.username and self.account_restricted():
             self.send_message("auth_error",
                         reason="Account restricted; spectating unavailable")
             self.go_lobby()
