@@ -4007,6 +4007,23 @@ _Erica_rare_
 @The_monster@ screams @at_foe@, "You'll never get it!"
 
 @The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
+
+Erica killed
+
+w:20
+__NONE
+
+w:1
+@The_monster@ screams, "I'm too good to die like this!"
+
+Erica banished
+
+w:20
+__NONE
+
+w:1
+@The_monster@ screams, "I'll be back!"
+
 ## END Erica ##
 %%%%
 ############ EROLCHA ### A vicious ogre capable of casting
@@ -5572,6 +5589,26 @@ Nikola
 @The_monster@ says, "You don't look like a good insulator."
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
+
+@The_monster@ mumbles, "They said I was mad..."
+
+%%%%
+Nikola killed
+
+w:10
+__NONE
+
+w:1
+@The_monster@ gasps, "All these years in service of science have brought nothing but insults and humiliation..."
+
+%%%%
+Nikola banished
+
+w:10
+__NONE
+
+w:1
+@The_monster@ gasps, "Oh my word, it's full of stars..."
 %%%%
 ############ Pikel ######## A big kobold trading souls of the damned
 Pikel
@@ -5905,7 +5942,7 @@ _Roxanne_rare_
 
 @The_monster@ wonders, "Maybe oil would work? Probably not."
 
-@The_monster@ states @to_foe@, "You'll be worm food in some minutes, I'll endure [millennia|aeons]."
+@The_monster@ states @to_foe@, "You'll be worm food in some minutes. I'll endure [millennia|aeons]."
 
 @The_monster@ says @to_foe@, "A mighty warrior you might be, a mason you are not!"
 
