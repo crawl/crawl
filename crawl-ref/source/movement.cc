@@ -252,6 +252,7 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
             || !mons_has_attacks(*mon)
             || mon->confused()
             || mon->incapacitated()
+            || mons_is_fleeing(*mon)
             || !mon->can_see(you)
             // only let monsters attack if they might follow you
             || !mon->may_have_action_energy() || mon->is_stationary()
