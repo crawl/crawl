@@ -1,4 +1,4 @@
-Stone Soup 0.29-a0 (through 0.20.29-a0-273-g831066)
+Stone Soup 0.29-a0 (through 0.29-a0-274-g17cd264cf)
 ---------------------------------------------------
 
 Branches, Environment
