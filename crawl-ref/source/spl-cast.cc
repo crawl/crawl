@@ -392,9 +392,11 @@ int raw_spell_fail(spell_type spell)
     int chance2 = max((((chance + 426) * chance + 82670) * chance + 7245398)
                       / 262144, 0);
 
+#if TAG_MAJOR_VERSION == 34
     chance2 += get_form()->spellcasting_penalty;
     if (you.duration[DUR_EXCRUCIATING_WOUNDS])
         chance2 += 10; // same as spider form
+#endif
 
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
