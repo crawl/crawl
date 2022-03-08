@@ -5042,6 +5042,28 @@ _Maggie_rare_
 @The_monster@ shouts @at_foe@, "Leave me alone!"
 
 @The_monster@ mutters to herself, "Master Lance won't take me back. This is the way forward."
+%%%%
+Maggie killed
+
+w:10
+__NONE
+
+w:1
+@The_monster@ bemoans, "Does the illustrious tale of @The_monster@ really end here?"
+
+@The_monster@ bemoans, "I'm too young to die!"
+
+@The_monster@ pouts, "I had so many more dragons to slay!"
+%%%%
+Maggie banished
+
+w:10
+__NONE
+
+w:1
+@The_monster@ groans, "Eek! Not the Abyss! That place is such a drag!"
+
+@The_monster@ says wistfully, "How many dragons are there in the Abyss, I wonder?"
 ## END Maggie ##
 %%%%
 ############ MARA ### A powerful demon lord, Lord of Illusions
@@ -5093,7 +5115,7 @@ _Mara_rare_
 
 @The_monster@ boasts, "I am lord over the four continents and the two thousand adjacent isles."
 %%%%
-############ MARGERY ### A powerful sorceress, guarding the ORB
+############ MARGERY ### A powerful sorceress, guarding the ORB. Older Maggie.
 Margery
 
 @_Margery_common_@
@@ -5154,7 +5176,28 @@ VISUAL:@The_monster@ looks very self-confident.
 
 @The_monster@ screams @at_foe@, "Death is my middle name!"
 
+@The_monster@ screams @at_foe@, "I've slain countless dragons!"
+
 @The_monster@ screams, "The ORB is only a tale, but I will kill you anyway!" @player_only@
+%%%%
+Margery killed
+
+w:10
+__NONE
+
+w:1
+@The_monster@ screams, "The Hell Knights will avenge me!"
+
+@The_monster@ screams, "I'm too experienced to die like this!"
+%%%%
+Margery banished
+
+w:10
+__NONE
+
+w:1
+@The_monster@ screams, "Not again!"
+%%%%
 ## END Margery
 %%%%
 ############ MAURICE ### A thief.
