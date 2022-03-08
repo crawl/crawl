@@ -4997,7 +4997,7 @@ VISUAL:@The_monster@ adjusts @possessive@ apparatus.
 
 @The_monster@ grins wickedly and says, "Money make world go round."
 
-@The_monster@ winks @at foe@ and says, "Everything have price."
+@The_monster@ winks @at_foe@ and says, "Everything have price."
 
 @The_monster@ says, "All wealth is product of labor."
 
