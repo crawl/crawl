@@ -5086,24 +5086,25 @@ _Maggie_rare_
 %%%%
 Maggie killed
 
-w:10
 __NONE
 
 w:1
 @The_monster@ bemoans, "Does the illustrious tale of @The_monster@ really end here?"
 
+w:1
 @The_monster@ bemoans, "I'm too young to die!"
 
+w:1
 @The_monster@ pouts, "I had so many more dragons to slay!"
 %%%%
 Maggie banished
 
-w:10
 __NONE
 
 w:1
 @The_monster@ groans, "Eek! Not the Abyss! That place is such a drag!"
 
+w:1
 @The_monster@ says wistfully, "How many dragons are there in the Abyss, I wonder?"
 ## END Maggie ##
 %%%%
@@ -5223,17 +5224,16 @@ VISUAL:@The_monster@ looks very self-confident.
 %%%%
 Margery killed
 
-w:10
 __NONE
 
 w:1
 @The_monster@ screams, "The Hell Knights will avenge me!"
 
+w:1
 @The_monster@ screams, "I'm too experienced to die like this!"
 %%%%
 Margery banished
 
-w:10
 __NONE
 
 w:1
@@ -5661,7 +5661,6 @@ Nikola
 %%%%
 Nikola killed
 
-w:10
 __NONE
 
 w:1
@@ -5669,7 +5668,6 @@ w:1
 %%%%
 Nikola banished
 
-w:10
 __NONE
 
 w:1
