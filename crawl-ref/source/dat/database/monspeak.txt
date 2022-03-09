@@ -4033,6 +4033,14 @@ VISUAL:@The_monster@ tries to grin evilly.
 %%%%
 _Erolcha_rare_
 
+VISUAL:@The_monster@ snaps @possessive@ thick fingers, creating a shower of harmless magic sparks.
+
+VISUAL:@The_monster@ points at a small @_frog_food_@ and it vanishes in a puff of purple smoke.
+
+VISUAL:@The_monster@ waggles @possessive@ fingers and briefly turns transparent.
+
+VISUAL:@The_monster@ attempts to snap @possessive@ fingers, but fails.
+
 @The_monster@ screams @at_foe@, "Eat!"
 
 @The_monster@ screams @at_foe@, "Stand! Erolcha hit you!"
@@ -4044,6 +4052,23 @@ _Erolcha_rare_
 @The_monster@ screams @at_foe@, "Erolcha happy to kill you!"
 
 @The_monster@ screams @at_foe@, "Erolcha angry!"
+%%%%
+Erolcha killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ screams @at_foe@, "Erolcha die as Erolcha live! Screaming!"
+%%%%
+Erolcha banished
+
+w:2
+__NONE
+
+w:1
+@The_monster@ screams, "Wait! Erolcha supposed to do that!"
+
 ## END Erolcha ##
 %%%%
 ############ EUSTACHIO ### apprentice summoner, has funny ideas about honour
@@ -4131,6 +4156,24 @@ w:1
 @The_monster@ says, "Even the Halls of Hell could not contain me."
 
 @The_monster@ says, "I will defeat you, of this I have no doubt!" @player_only@
+%%%%
+Frances killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ mutters, "Carry well the scars I've left on you..."
+%%%%
+Frances banished
+
+w:2
+__NONE
+
+w:1
+@The_monster@ curses, "I've bested a lord of Pandemonium. The Abyss won't hold me."
+
+## END Frances ##
 %%%%
 ############ FREDERICK ### An extremely smug (& powerful) demigod
 Frederick
@@ -4663,6 +4706,24 @@ VISUAL:@The_monster@ gazes at @foe@ [hypnotically|seductively].
 
 # On the Beach, Above & Beyond presents OceanLab
 @The_monster@ says @to_foe@, "There's nothing like you and me, on the beach..."
+
+%%%%
+Ilsuiw killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ whispers to the tides, "Carry me to my rest..."
+%%%%
+Ilsuiw banished
+
+w:2
+__NONE
+
+w:1
+VISUAL:@The_monster@ reaches @possessive@ hands out to the waves and wails as she vanishes. 
+
 ## END Ilsuiw ##
 %%%%
 ############ JESSICA ### A sorceress disturbed by player
@@ -4930,9 +4991,31 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 
 @The_monster@ shouts @at_foe@, "You pig! I'll make you look the way you deserve."
 
+@The_monster@ whispers @to_foe@, "You'd look cute with a curly little tail."
+
+@The_monster@ whispers @to_foe@, "No @player_genus@ can resist me..."
+
 @_wizard_common_spell_@
+
 @_fake_spell_effect_@
-### END Kirke ###
+%%%%
+Kirke killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ curses, "No... my little piggies..."
+%%%%
+Kirke banished
+
+w:2
+__NONE
+
+w:1
+@The_monster@ cries, "But... who will take care of my piggies?"
+
+## END Kirke ##
 %%%%
 ############ LODUL ### A thunderhulk ogre warchief
 Lodul
@@ -5005,7 +5088,23 @@ _Louise_rare_
 @The_monster@ says, "Who do you take me for, some common mercenary?"
 
 @The_monster@ says, "It's the perfect time of year for a holiday!"
-### END Louise
+%%%%
+Louise killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ gasps, "Don't look for the ORB... it's... pointless..."
+%%%%
+Louise banished
+
+w:2
+__NONE
+
+w:1
+@The_monster@ says, "I've come back once... I'll do it again!"
+## END Louise ##
 %%%%
 ############ Maggie ### Younger Margery
 Maggie
@@ -5676,6 +5775,26 @@ VISUAL:@The_monster@ looks around for something heavy to throw at @foe@.
 
 #I suppose this line may not fit if the player is of certain species...
 @The_monster@ says @to_foe@, "@Foe_genus@ for dinner? Sounds delicious!"
+%%%%
+Polyphemus killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ groans, "Watch over my herd for me, will you?"
+%%%%
+Polyphemus banished
+
+w:2
+__NONE
+
+w:1
+@The_monster@ bellows, "You've tricked me!"
+
+w:1
+VISUAL:@The_monster@ groans and reaches out for @possessive@ herd as it vanishes.
+
 ## END Polyphemus ##
 %%%%
 ############ PRINCE RIBBIT ### Prince turned into frog
@@ -5736,7 +5855,7 @@ baby bat
 blue-tailed skink
 ## END Prince Ribbit ##
 %%%%
-############ PSYCHE ### An insane sorceress
+############ PSYCHE ### An insane sorceress, mad with grief
 Psyche
 
 @_Psyche_common_@
@@ -5799,8 +5918,28 @@ VISUAL:@The_monster@ sucks @possessive@ thumb.
 
 @The_monster@ shouts @at_foe@, "I hope that you are sorry for that!"
 
+@The_monster@ wails @at_foe@, "I couldn't save them!"
+
 # Copyright U2?
 @The_monster@ whispers @to_foe@, "Hold me, thrill me, kiss me, kill me."
+
+%%%%
+Psyche killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ exults, "The sweet release of death!"
+%%%%
+Psyche banished
+
+w:2
+__NONE
+
+w:1
+@The_monster@ cries, "You'll find me, won't you?"
+
 ## END Psyche ##
 %%%%
 ############ PARGI ### A teased troll
@@ -6080,6 +6219,56 @@ _Sigmund_rare_
 VISUAL:@The_monster@ smiles chillingly.
 ## END Sigmund ##
 %%%%
+
+############ SNORG ### An insatiable troll
+Snorg
+
+@_Snorg_common_@
+
+w:5
+@_Snorg_rare_@
+%%%%
+_Snorg_common_
+
+VISUAL:@The_monster@ pats @possessive@ sizable gut.
+
+VISUAL:@The_monster@ beckons gently.
+
+VISUAL:@The_monster@ smiles kindly.
+
+VISUAL:A flash of anger passes briefly over @The_monster@'s face.
+
+VISUAL:@The_monster@ draws @possessive@ long claws delicately across @possessive@ gut.
+%%%%
+_Snorg_rare_
+
+@The_monster@ remarks @to_foe@, "Ah, I'm absolutely famished!"
+
+@The_monster@ remarks @to_foe@, "Ah, I could eat a centaur!"
+
+@The_monster@ remarks conversationally @at_foe@, "Have you been eating enough, dearie?"
+
+@The_monster@ says @at_foe@, "Come over for dinner, dearie."
+
+%%%%
+Snorg killed
+
+w:2
+__NONE
+
+w:1
+@The_monster@ says, "I was... only hungry... dearie..."
+%%%%
+Snorg banished
+
+w:2
+__NONE
+
+w:1
+@The_monster@ says, "Not the Abyss, dearie! Demons are so bony..."
+## END Snorg
+%%%%
+
 ############ SOJOBO ### tengu queen
 Sojobo
 
