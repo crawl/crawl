@@ -4035,7 +4035,7 @@ _Erolcha_rare_
 
 VISUAL:@The_monster@ snaps @possessive@ thick fingers, creating a shower of harmless magic sparks.
 
-VISUAL:@The_monster@ points at a small @_frog_food_@ and it vanishes in a puff of purple smoke.
+VISUAL:@The_monster@ banishes a nearby @_frog_food_@ to the Abyss and laughs.
 
 VISUAL:@The_monster@ waggles @possessive@ fingers and briefly turns transparent.
 
@@ -4055,7 +4055,7 @@ VISUAL:@The_monster@ attempts to snap @possessive@ fingers, but fails.
 %%%%
 Erolcha killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -4063,7 +4063,7 @@ w:1
 %%%%
 Erolcha banished
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -4159,7 +4159,7 @@ w:1
 %%%%
 Frances killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -4167,10 +4167,10 @@ w:1
 %%%%
 Frances banished
 
-w:2
+w:5
 __NONE
 
-w:1
+w:1111
 @The_monster@ curses, "I've bested a lord of Pandemonium. The Abyss won't hold me."
 
 ## END Frances ##
@@ -4710,7 +4710,7 @@ VISUAL:@The_monster@ gazes at @foe@ [hypnotically|seductively].
 %%%%
 Ilsuiw killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -4718,7 +4718,7 @@ w:1
 %%%%
 Ilsuiw banished
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -5001,7 +5001,7 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 %%%%
 Kirke killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -5009,7 +5009,7 @@ w:1
 %%%%
 Kirke banished
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -5091,7 +5091,7 @@ _Louise_rare_
 %%%%
 Louise killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -5099,7 +5099,7 @@ w:1
 %%%%
 Louise banished
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -5778,7 +5778,7 @@ VISUAL:@The_monster@ looks around for something heavy to throw at @foe@.
 %%%%
 Polyphemus killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -5786,14 +5786,14 @@ w:1
 %%%%
 Polyphemus banished
 
-w:2
+w:5
 __NONE
 
 w:1
 @The_monster@ bellows, "You've tricked me!"
 
 w:1
-VISUAL:@The_monster@ groans and reaches out for @possessive@ herd as it vanishes.
+VISUAL:@The_monster@ groans and reaches out for @possessive@ herd as he vanishes.
 
 ## END Polyphemus ##
 %%%%
@@ -5926,7 +5926,7 @@ VISUAL:@The_monster@ sucks @possessive@ thumb.
 %%%%
 Psyche killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -5934,7 +5934,7 @@ w:1
 %%%%
 Psyche banished
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -6253,7 +6253,7 @@ _Snorg_rare_
 %%%%
 Snorg killed
 
-w:2
+w:5
 __NONE
 
 w:1
@@ -6261,7 +6261,7 @@ w:1
 %%%%
 Snorg banished
 
-w:2
+w:5
 __NONE
 
 w:1
