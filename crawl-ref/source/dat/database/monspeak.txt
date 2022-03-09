@@ -4170,7 +4170,7 @@ Frances banished
 w:5
 __NONE
 
-w:1111
+w:1
 @The_monster@ curses, "I've bested a lord of Pandemonium. The Abyss won't hold me."
 
 ## END Frances ##
