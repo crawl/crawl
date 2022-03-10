@@ -5001,7 +5001,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << uppercase_first(pronoun) << " "
                << conjugate_verb("regenerate", plural) << " "
                << (mi.type == MONS_PARGHIT ? "astonishingly " : "")
-               << " quickly.\n";
+               << "quickly.\n";
 
     const char* mon_size = get_size_adj(mi.body_size(), true);
     if (mon_size)
