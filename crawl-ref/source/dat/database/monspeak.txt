@@ -1821,7 +1821,7 @@ You hear demonic laughter.
 
 @The_monster@ screams @at_foe@, "Bow down before your king! Bow! Bow!!" @player_only@
 %%%%
-############ AZRAEL ### efreet
+############ AZRAEL ### A powerful, belligerent efreet.
 Azrael
 
 @_Azrael_common_@
@@ -1878,6 +1878,23 @@ else
     return "arms"
 end
 }}
+
+%%%%
+Azrael killed
+
+w:5
+__NONE
+
+w:1
+@The_monster@ curses, "May you be [perpetually|incessantly] haunted by my [exasperating|inconvenient|incommodious|loquacious] ghost!"
+%%%%
+Azrael banished
+
+w:5
+__NONE
+
+w:1
+@The_monster@ swears, "May the stars themselves pierce the shadows of the dungeon to lead me back to your heartless visage!"
 ## END Azrael ##
 %%%%
 
@@ -4786,6 +4803,25 @@ _Jorgrun_rare_
 @The_monster@ says, "I've ne'er se'n tha particular type o' rock formation 'fore."
 
 @The_monster@ says, "A few more walls knocked out 'ere an' thar an' 'tis whole place will come crashin' down."
+
+
+%%%%
+Jorgrun killed
+
+w:5
+__NONE
+
+w:1
+@The_monster@ mutters, "I return... ter tha earth..."
+%%%%
+Jorgrun banished
+
+w:5
+__NONE
+
+w:1
+@The_monster@ curses, "Ach! Me stars and garters!"
+
 ## END Jorgrun ##
 %%%%
 ############ JORY ### A powerful vampire Lord.
@@ -6276,6 +6312,10 @@ Sojobo
 
 w:5
 @_Sojobo_rare_@
+
+w:2
+@_Sojobo_advice_@
+
 %%%%
 _Sojobo_common_
 
@@ -6296,6 +6336,51 @@ _Sojobo_rare_
 @The_monster@ barks @at_foe@, "Your form is terrible!"
 
 @The_monster@ sneers @at_foe@, "There are one thousand and one flaws in your strategy!"
+
+%%%%
+_Sojobo_advice_ 
+
+# Sojobo was said to train warriors, in order to oppose Buddhism and create a more warlike world
+# Paraphrasings from Sun Tzu's 'The Art of War'. Good DCSS advice!
+
+@The_monster@ says @to_foe@, "Appear weak when you are strong, and strong when you are weak."
+
+@The_monster@ says @to_foe@, "Know thy enemy, and know thyself."
+
+@The_monster@ says @to_foe@, "Let your plans be as dark and impenetrable as the night."
+
+@The_monster@ says @to_foe@, "All warfare is based on deception."
+
+@The_monster@ says @to_foe@, "The wise warrior avoids unnecessary battles."
+
+@The_monster@ says @to_foe@, "The whole secret lies in confusing the enemy."
+
+@The_monster@ says @to_foe@, "Avoid what is strong, and strike at what is weak."
+
+@The_monster@ says @to_foe@, "Attack is the secret of defense."
+
+@The_monster@ says @to_foe@, "The expert in battle moves the enemy, and is not moved by them."
+
+@The_monster@ says @to_foe@, "Appear where you are not expected."
+
+@The_monster@ says @to_foe@, "Ponder and deliberate before you make a move."
+
+%%%%
+Sojobo killed
+
+w:5
+__NONE
+
+w:1
+@The_monster@ sternly utters, "Use what I've taught you... to bring war and disarray to the lower reaches..."
+%%%%
+Sojobo banished
+
+w:5
+__NONE
+
+w:1
+@The_monster@ says @to_foe@, "Well done... the wise warrior avoids unnecessary battles."
 ## END Sojobo
 %%%%
 ############ SONJA ### female kobold assassin
