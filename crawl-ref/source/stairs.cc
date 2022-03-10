@@ -755,7 +755,26 @@ void floor_transition(dungeon_feature_type how,
     if (how == DNGN_EXIT_DUNGEON)
     {
         you.depth = 0;
-        mpr("You have escaped!");
+
+        int num_runes = static_cast<int>(you.runes.count());
+        //string player_title = "Master Archer";
+
+        if(player_has_orb() && num_runes >= you.obtainable_runes){
+            mprf("You have escaped, wielding the unimaginable power of the Orb and all %d runes of Zot.", num_runes);
+            if(you.species == SP_DEMIGOD){
+                mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood, supplanting GODX to become the God of %s.", "Title");
+            }
+        }
+        else if(player_has_orb()){
+            mprf("You have escaped, wielding the unimaginable power of the Orb and %d runes of Zot.", num_runes);
+            if(you.species == SP_DEMIGOD){
+                mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood, supplanting GODX to become the %s God.", "player_title()");
+            }
+        }
+        else{
+            mpr("You have escaped!");
+        }
+
         ouch(INSTANT_DEATH, player_has_orb() ? KILLED_BY_WINNING
                                              : KILLED_BY_LEAVING);
     }
