@@ -4024,6 +4024,23 @@ _Erica_rare_
 @The_monster@ screams @at_foe@, "You'll never get it!"
 
 @The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
+%%%%
+Erica killed
+
+w:20
+__NONE
+
+w:1
+@The_monster@ screams, "I'm too good to die like this!"
+%%%%
+Erica banished
+
+w:20
+__NONE
+
+w:1
+@The_monster@ screams, "I'll be back!"
+
 ## END Erica ##
 %%%%
 ############ EROLCHA ### A vicious ogre capable of casting
@@ -4431,7 +4448,10 @@ VISUAL:@The_monster@ is momentarily distracted by a flea in @possessive@ coat.
 
 @The_monster@ @_Grum_verb_@ @at_foe@, "Me and @_Grum_dog_name_@ will play fetch with your bones!"
 
+@The_monster@ @_Grum_verb_@, "Who's a good boy? That's right, @_Grum_dog_name_@... you are!" 
+
 # stupid dog pun
+
 @The_monster@ @_Grum_verb_@ @at_foe@, "You will fight me? This will be... rough!"
 
 @The_monster@ shouts, "Release the hounds!"
@@ -4453,25 +4473,34 @@ barks
 %%%%
 _Grum_dog_name_
 
+Bowser
+
+Cujo
+
+Duke
+
 Fido
+
+Fluffy
+
+Junior
+
+King
+
+Lady
+
+Pluto
 
 Rex
 
 Rover
 
+Sparky
+
 Spot
 
 Spike
 
-Duke
-
-Junior
-
-Sparky
-
-Pluto
-
-Cujo
 ## END Grum ##
 %%%%
 ############ HAROLD ### A middle aged man, anxious to retire after killing you.
@@ -5084,6 +5113,18 @@ VISUAL:@The_monster@ adjusts @possessive@ apparatus.
 @The_monster@ shouts, "Zap! Ha ha ha, made you jump."
 
 @The_monster@ roars, "I Iron Bound! You Brass... Trash!"
+
+@The_monster@ grins wickedly and says, "Money make world go round."
+
+@The_monster@ winks @at_foe@ and says, "Everything have price."
+
+@The_monster@ says, "All wealth is product of labor."
+
+@The_monster@ says, "Productive ogre is happy ogre."
+
+@The_monster@ says, "I proud of my employees."
+
+@The_monster@ says, "@The_monster@ motto: Secure Vault? My fault!"
 %%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
@@ -5177,6 +5218,29 @@ _Maggie_rare_
 @The_monster@ shouts @at_foe@, "Leave me alone!"
 
 @The_monster@ mutters to herself, "Master Lance won't take me back. This is the way forward."
+%%%%
+Maggie killed
+
+__NONE
+
+w:1
+@The_monster@ bemoans, "Does the illustrious tale of @The_monster@ really end here?"
+
+w:1
+@The_monster@ bemoans, "I'm too young to die!"
+
+w:1
+@The_monster@ pouts, "I had so many more dragons to slay!"
+%%%%
+Maggie banished
+
+__NONE
+
+w:1
+@The_monster@ groans, "Eek! Not the Abyss! That place is such a drag!"
+
+w:1
+@The_monster@ says wistfully, "How many dragons are there in the Abyss, I wonder?"
 ## END Maggie ##
 %%%%
 ############ MARA ### A powerful demon lord, Lord of Illusions
@@ -5228,7 +5292,7 @@ _Mara_rare_
 
 @The_monster@ boasts, "I am lord over the four continents and the two thousand adjacent isles."
 %%%%
-############ MARGERY ### A powerful sorceress, guarding the ORB
+############ MARGERY ### A powerful sorceress, guarding the ORB. Older Maggie.
 Margery
 
 @_Margery_common_@
@@ -5289,7 +5353,27 @@ VISUAL:@The_monster@ looks very self-confident.
 
 @The_monster@ screams @at_foe@, "Death is my middle name!"
 
+@The_monster@ screams @at_foe@, "I've slain countless dragons!"
+
 @The_monster@ screams, "The ORB is only a tale, but I will kill you anyway!" @player_only@
+%%%%
+Margery killed
+
+__NONE
+
+w:1
+@The_monster@ screams, "The Hell Knights will avenge me!"
+
+w:1
+@The_monster@ screams, "I'm too experienced to die like this!"
+%%%%
+Margery banished
+
+__NONE
+
+w:1
+@The_monster@ screams, "Not again!"
+%%%%
 ## END Margery
 %%%%
 ############ MAURICE ### A thief.
@@ -5707,6 +5791,22 @@ Nikola
 @The_monster@ says, "You don't look like a good insulator."
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
+
+@The_monster@ mumbles, "They said I was mad..."
+%%%%
+Nikola killed
+
+__NONE
+
+w:1
+@The_monster@ gasps, "All these years in service of science have brought nothing but insults and humiliation..."
+%%%%
+Nikola banished
+
+__NONE
+
+w:1
+@The_monster@ gasps, "Oh my word, it's full of stars..."
 %%%%
 ############ Pikel ######## A big kobold trading souls of the damned
 Pikel
@@ -6080,7 +6180,7 @@ _Roxanne_rare_
 
 @The_monster@ wonders, "Maybe oil would work? Probably not."
 
-@The_monster@ states @to_foe@, "You'll be worm food in some minutes, I'll endure [millennia|aeons]."
+@The_monster@ states @to_foe@, "You'll be worm food in some minutes. I'll endure [millennia|aeons]."
 
 @The_monster@ says @to_foe@, "A mighty warrior you might be, a mason you are not!"
 
