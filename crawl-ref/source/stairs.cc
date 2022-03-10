@@ -756,14 +756,6 @@ void floor_transition(dungeon_feature_type how,
     {
         you.depth = 0;
         mpr("You have escaped!");
-		
-		// todo(rosstin): add random short messages for winning the game based on your religion
-		if(player_has_orb()){
-			mprf(MSGCH_GOD, you.religion,
-                 "With the power of the orb, you spread the gospel of %s far and wide.",
-                 god_name(you.religion).c_str());
-		}
-		
         ouch(INSTANT_DEATH, player_has_orb() ? KILLED_BY_WINNING
                                              : KILLED_BY_LEAVING);
     }

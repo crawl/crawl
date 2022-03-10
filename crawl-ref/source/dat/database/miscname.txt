@@ -108,8 +108,6 @@ pretty good
 %%%%
 welcome_spam
 
-#todo(rosstin): add many more welcome message
-
 Will you prevail where others failed? Will you find the Orb of Zot?
 
 The heart of this dungeon contains the @_great_adj_@ artefact, the Orb of Zot.
