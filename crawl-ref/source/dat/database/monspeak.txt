@@ -4501,6 +4501,23 @@ Spot
 
 Spike
 
+%%%%
+Grum killed
+
+w:5
+__NONE
+
+w:1
+@The_monster@ gasps with @possessive@ last breath, "You'll take care of @_Grum_dog_name_@ for me, won't you?"
+%%%%
+Grum banished
+
+w:5
+__NONE
+
+w:1
+@The_monster@ wails, "What will @_Grum_dog_name_@ do without me?"
+
 ## END Grum ##
 %%%%
 ############ HAROLD ### A middle aged man, anxious to retire after killing you.
@@ -5124,7 +5141,27 @@ VISUAL:@The_monster@ adjusts @possessive@ apparatus.
 
 @The_monster@ says, "I proud of my employees."
 
-@The_monster@ says, "@The_monster@ motto: Secure Vault? My fault!"
+@The_monster@ says, "Lodul motto: Secure Vault? My fault!"
+
+@The_monster@ frowns @at_foe@ and says, "You violating area security."
+
+%%%%
+Lodul killed
+
+w:5
+__NONE
+
+w:1
+@The_monster@ says, "Lodul... just happy... to have lived... providing financial opportunities for ogre small business owners..."
+%%%%
+Lodul banished
+
+w:5
+__NONE
+
+w:1
+@The_monster@'s voice trails off into the void, "You wait! Lodul will bring affordable security to Abyss..."
+## END Lodul ##
 %%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
