@@ -38,6 +38,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "skills.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -758,17 +759,27 @@ void floor_transition(dungeon_feature_type how,
 
         int num_runes = static_cast<int>(you.runes.count());
         //string player_title = "Master Archer";
+        const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
 
         if(player_has_orb() && num_runes >= you.obtainable_runes){
             mprf("You have escaped, wielding the unimaginable power of the Orb and all %d runes of Zot.", num_runes);
             if(you.species == SP_DEMIGOD){
-                mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood, supplanting GODX to become the God of %s.", "Title");
+                mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood, supplanting GODX to become the God of %s.", "SKILL");
             }
         }
         else if(player_has_orb()){
             mprf("You have escaped, wielding the unimaginable power of the Orb and %d runes of Zot.", num_runes);
             if(you.species == SP_DEMIGOD){
-                mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood, supplanting GODX to become the %s God.", "player_title()");
+
+//if(best_skill)
+
+                if(sk == SK_FIRE_MAGIC){
+                    mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood, snuffing out Ignis to become the new God of Fire.");
+                }
+                else{
+                    mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood, supplanting GODX to become the %s God.", "SKILL");
+                }
+
             }
         }
         else{
