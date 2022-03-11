@@ -5,7 +5,12 @@
 
 #pragma once
 
-string win_messages_religion(god_type god = you.religion);
-string win_messages_demigod(skill_type sk);
+#include <string>
+#include "enum.h"
+
+void test_blank_function();
+
+std::string win_messages_religion(god_type god = you.religion);
+std::string win_messages_demigod(skill_type sk);
 
 

@@ -60,6 +60,7 @@ dungeon.o \
 end.o \
 english.o \
 errors.o \
+escape.o \
 evoke.o \
 exclude.o \
 exercise.o \

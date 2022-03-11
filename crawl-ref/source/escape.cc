@@ -3,26 +3,32 @@
  * @brief Print an appropriate message about your character when escaping.
 **/
 
-
 //todo(rosstin) what needs included?
+
+
+#include "escape.h"
+
+#include <sstream>
+#include <cstring>
+#include <string>
 
 #include "AppHdr.h"
 
-#include "decks.h"
 #include "describe.h"
 #include "english.h"
+#include "enum.h"
 #include "invent.h"
-#include "item-prop.h"
-#include "items.h"
 #include "item-status-flag-type.h"
-#include "known-items.h"
 #include "libutil.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "unicode.h"
-
 	
-string win_messages_religion(god_type god){
+void test_blank_function(){
+	// nothing
+}
+	
+std::string win_messages_religion(god_type god){
 	switch(god){
 		case GOD_ASHENZARI:
 			return "";
@@ -83,7 +89,7 @@ string win_messages_religion(god_type god){
 }
 }
 
-string win_messages_demigod(skill_type sk){
+std::string win_messages_demigod(skill_type sk){
 	switch(sk){
 		// fighting and melee weapons
 		case SK_FIGHTING:

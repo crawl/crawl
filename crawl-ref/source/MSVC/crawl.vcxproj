@@ -928,6 +928,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\eq-type.h" />
     <ClInclude Include="..\equipment-type.h" />
     <ClInclude Include="..\errors.h" />
+    <ClInclude Include="..\escape.h" />
     <ClInclude Include="..\evoke.h" />
     <ClInclude Include="..\exclude.h" />
     <ClInclude Include="..\exercise.h" />

@@ -142,6 +142,9 @@
     <ClCompile Include="..\dgn-height.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\escape.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
     <ClCompile Include="..\xom.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1240,6 +1243,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\errors.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\escape.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\evoke.h">

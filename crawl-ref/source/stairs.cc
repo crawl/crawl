@@ -1282,9 +1282,10 @@ void print_escape_message(){
 void print_win_message(){
 	if(you.species == SP_DEMIGOD){
 		const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-		mpr(win_messages_demigod(sk));
+		test_blank_function();
+		//mpr(win_messages_demigod(sk));
 	}
 	else {
-		mpr(win_messages_religion(you.religion));
+		//mpr(win_messages_religion(you.religion));
 	}
 }
