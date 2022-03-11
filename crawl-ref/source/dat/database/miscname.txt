@@ -68,7 +68,6 @@ Seething terrors besiege your sanity!
 Lucidity slithers from your feeble grasp.
 
 %%%%
-# Random relationships
 _random_relationship_
 
 parent
@@ -124,7 +123,6 @@ nibling
 classmate
 
 %%%%
-# Random intimate relationships
 _random_intimate_relationship_
 
 lover
@@ -140,6 +138,28 @@ mate
 girlfriend
 
 boyfriend
+
+%%%%
+_random_distant_relationship_
+
+great-grandfather
+
+great-grandmother
+
+great-grandparent
+
+long-lost uncle
+
+long-lost aunt
+
+long-lost identical twin
+
+great-granduncle
+
+great-grandaunt
+
+ancient ancestor
+
 %%%%
 _random_desirable_shop_object_plural_
 
@@ -298,6 +318,8 @@ fabled
 
 fabulous
 
+fantabulous
+
 glorious
 
 incredible
@@ -328,7 +350,7 @@ pretty good
 %%%%
 welcome_spam
 
-# Classic Orb-related welcome messages
+## Classic Orb-related welcome messages ##
 
 w:100
 Will you prevail where others failed? Will you find the Orb of Zot?
@@ -365,85 +387,49 @@ The Orb of Zot is coveted for many reasons. Will you seize it for your own?
 
 ## Reasons to find the Orb ##
 
-You came to the dungeon on a dare, to seek the @_great_adj_@ Orb of Zot.
+They say that the @_great_adj_@ Orb of Zot can cure any disease.
 
-Your people enter the dungeon as an initiation rite, to seek the @_great_adj_@ Orb of Zot.
+When life is no longer worth living, people come to seek the @_great_adj_@ Orb of Zot, deep within this dungeon.
 
-They say that finding the @_great_adj_@ Orb of Zot will cure your crippling depression.
-
-You entered the dungeon to impress your @_random_relationship_@, by retrieving the @_great_adj_@ Orb of Zot.
-
-They say that finding the @_great_adj_@ Orb of Zot will cure your terminal disease.
-
-Life has become so incredibly boring that you've decided to seek the @_great_adj_@ Orb of Zot, deep within this dungeon.
-
-To escape your tedious obligations, you've entered the dungeon to seek the @_great_adj_@ Orb of Zot.
-
-In order to win a tournament, you've entered the dungeon to seek the @_great_adj_@ Orb of Zot.
-
-You don't even care if you find the @_great_adj_@ Orb of Zot. Whatever.
-
-The @_great_adj_@ Orb of Zot is said to be the ultimate fashion accessory. You will find it.
-
-The @_great_adj_@ Orb of Zot is said to make the holder incredibly lucky. Will you be lucky enough to find it?
-
-Your people say that the @_great_adj_@ Orb of Zot was stolen from them many eons ago. It's your destiny to retrieve it.
+The @_great_adj_@ Orb of Zot is said to make the holder incredibly lucky. Will you be fortunate enough to find it?
 
 A smirking vizier told you that the @_great_adj_@ Orb of Zot is just a short ways into this dungeon.
 
-Your @_random_relationship_@ was meant to retrieve the Orb of Zot, but they were busy today.
+They say that the @_great_adj_@ Orb of Zot, held deep within this dungeon, is the most enthralling orb of them all.
 
-You've always admired orbs from afar. Today is the day you actualize your dreams.
+They say that finding the @_great_adj_@ Orb of Zot will erase one's past sins. It lies below, deep within this dungeon.
 
-You've pondered many orbs, but they say that the @_great_adj_@ Orb of Zot is the most enthralling orb of them all.
+They say that a @_random_dangerous_monster_@ guards the @_great_adj_@ Orb of Zot, deep within this dungeon.
 
-Your people forced you into the dungeon to get rid of you. But you'll show them when you retrieve the @_great_adj_@ Orb of Zot, deep within this dungeon.
+The @_great_adj_@ Orb of Zot, secreted deep in this dungeon, is said to grant immortality.
 
-You were exiled to the dungeon for a crime you didn't commit. But surely if you retrieve the Orb of Zot, you'll be forgiven.
+They say that the light that shines forth from the Orb makes the wielder irresistable. It lies below, deep within this dungeon.
 
-You entered the dungeon out of shame. Surely if you retrieve the @_great_adj_@ Orb of Zot, you'll be able to hold your head up high again.
-
-You just think orbs are neat.
-
-They say that a @_random_dangerous_monster_@ guards the @_great_adj_@ Orb of Zot. You'd like to meet one. 
-
-The @_great_adj_@ Orb of Zot is said to grant immortality.
-
-They say that the light that shines forth from the Orb makes the wielder irresistable.
-
-Seeking the Orb is an honorable death among your people.
+They say that seeking the Orb leads one to an honorable death.
 
 They say that the Orb can make you young again.
 
-They say that the Orb can bring the dead back to life. You hope so.
+They say that the Orb can bring the dead back to life.
 
-You've found a buyer for the Orb of Zot. Now you just have to obtain it.
+They say that the Orb of Zot can be sold for immeasurable riches. It can be found somewhere in this very dungeon...
 
-The fortune teller told you that seeking the @_great_adj_@ Orb of Zot was your own personal legend.
+Your friend said that finding the Orb of Zot would be easy. It's just a few floors down this dungeon.
 
-A sneering elder told you that you'd never find the @_great_adj_@ Orb of Zot. You'll show them.
+A sneering elder told you that you'd never find the @_great_adj_@ Orb of Zot. It's somewhere in this dungeon, deep below...
 
-Your friend said that finding the Orb of Zot would be easy.
+They say that the @_great_adj_@ Orb of Zot can sense your desire for it. You will claim it anyway.
 
-You hope finding the Orb will make up for all your crimes. But you're not sure.
+The @_great_adj_@ Orb of Zot is said to be the ultimate fashion accessory. You will find it.
 
-The @_great_adj_@ Orb of Zot will make a perfect apology gift.
+They say the @_great_adj_@ Orb of Zot makes a perfect apology gift. It's somewhere deep in these depths.
 
-The @_great_adj_@ Orb of Zot belongs in a museum.
+They say that the @_great_adj_@ Orb of Zot belongs in a museum.
 
-The @_great_adj_@ Orb of Zot is the last artefact you need for your collection of misappropriated cultural relics.
-
-Finding the @_great_adj_@ Orb of Zot is the only way you can live up to your parents' impossible expectations of you.
+What could lie inside this dungeon? Treasure, death? The @_great_adj_@ Orb of Zot?
 
 ## Non-orb-related reasons to enter the dungeon ##
 
-They say that an entrance to @_random_hell_branch_@ is somewhere near the bottom of the dungeon. You've always wanted to see it.
-
-Your @_random_relationship_@ went missing while exploring @_random_dungeon_location_@, and you've come to find them.
-
-You've always wanted to visit @_random_dungeon_location_@.
-
-They say that portals to the infinite plane of the Abyss lie somewhere in the dungeon. You've always wanted to behold the infinite.
+They say that an entrance to @_random_hell_branch_@ is somewhere near the bottom of the dungeon.
 
 They say that incredible treasures lie deep within @_random_dungeon_location_@.
 
@@ -451,57 +437,51 @@ Tourist guides say that travelers simply must visit @_random_dungeon_location_@ 
 
 Tourist guides say that travelers simply must visit @_random_hell_branch_@ when traveling through these lands.
 
-You've always wanted to see a @_random_dangerous_monster_@ up close. They say you can find one somewhere deep in the dungeon.
+They say you can find a @_random_dangerous_monster_@ somewhere deep in the dungeon.
 
-Your @_random_relationship_@ was a famed naturalist. Their dying wish was for you to complete their research on the @_random_dangerous_monster_@.
+A famed naturalist died researching a @_random_dangerous_monster_@. You can find them in this very dungeon.
 
-Your thirst for blood made you a pariah among your people, but in the dungeon, your lust for death will be your greatest asset.
+A thirst for blood makes one a pariah in the outside world, but in the dungeon a lust for death is a great asset.
 
-You came upon the entrance to this dungeon purely by chance. You wonder what's inside?
+A travelling jester said that your mother was a @_random_dangerous_monster_@, and that it bore you deep within this dungeon.
 
-They say that you were born in the dungeon. Perhaps you'll find the creature that bore you deep inside.
+For months you've dreamed of the dungeon every night. Perhaps it's better to face the horrors within than continue dreaming of them.
 
-They say that you were born in the dungeon. Perhaps that's why you've always felt out of place in the world above.
+A local newspaper will pay a princely sum for an interview with @_random_guaranteed_unique_@. They say you can find them deep within this dungeon.
 
-For months you've dreamed of the dungeon every night. You've decided you'd rather face the horrors within than spend another minute dreaming of them.
+The dungeon is the perfect place to escape the light of the sun.
 
-Your psychologist told you that entering the dungeon was the only way to quell your irrational fear of meeting a @_random_dangerous_monster_@.
+Some people consider entering the dungeon a form of suicide.
 
-You've always been attracted to dungeons.
-
-You just think dungeons are neat.
-
-They say that the Slime Pits house the Royal Jelly. You'd like to see that.
-
-Your ex-@_random_intimate_relationship_@ told you to go to Hell. There are many entrances at the bottom of the dungeon.
-
-They say that Geryon is the gatekeeper of Hell. You'd like to meet him.
-
-You've been assigned to interview @_random_guaranteed_unique_@ for a local newspaper. They say you can meet them deep within the dungeon.
-
-You've always hated the sun. The dungeon is the perfect place to escape its cursed light.
-
-You have a rare skin condition. You've decided to enter the dungeon to escape natural sunlight for a while.
-
-You've lived a long, full life. It's time now, to enter the dungeon.
-
-Entering the dungeon is a form of suicide among your people.
-
-You wish to match your might against a @_random_dangerous_monster_@. They say you can find one here, deep within the dungeon.
-
-You wish to match your might against @_random_guaranteed_unique_@. They say you can find them here, deep within the dungeon.
-
-They say the dungeon contains the most lurid spellbooks known to man. You've come to satisfy your curiosity.
+They say the dungeon contains the most lurid spellbooks known to man.
 
 They say that those who explore the dungeon will be granted the sacred power of the gods.
 
-You've heard that there's a shop deep within the dungeon that sells very good, very cheap @_random_desirable_shop_object_plural_@. Hopefully you can find just enough gold to buy one.
+You've heard that there's a shop deep within the dungeon that sells very good, very cheap @_random_desirable_shop_object_plural_@.
+
+## Personal reasons to enter the dungeon ##
+
+Your psychologist said that entering the dungeon was the only way to overcome your irrational fear of meeting a @_random_dangerous_monster_@.
+
+Your ex-@_random_intimate_relationship_@ told you to go to Hell. There are many entrances at the bottom of the dungeon.
+
+You came to the dungeon on a dare, to seek the @_great_adj_@ Orb of Zot.
+
+A fortune teller told you that seeking the @_great_adj_@ Orb of Zot was your own personal legend.
+
+They say that the @_great_adj_@ Orb of Zot was stolen from your people many eons ago. It lies somewhere deep within this very dungeon.
+
+They say your @_random_distant_relationship_@ was meant to retrieve the Orb of Zot, but failed. Will you succeed?
 
 Your @_random_relationship_@ told you to meet them at @_random_dungeon_location_@. You're late.
 
 Your @_random_relationship_@ told you to meet them at @_random_hell_branch_@. You're late.
 
 You received a letter from @_random_guaranteed_unique_@, telling you to meet them deep within the dungeon.
+
+They say that finding the @_great_adj_@ Orb of Zot will cure your crippling depression.
+
+They say your @_random_distant_relationship_@ went missing while exploring @_random_dungeon_location_@.
 
 %%%%
 # things that surround us on Halloween
