@@ -1262,30 +1262,3 @@ void new_level(bool restore)
     if (player_in_branch(BRANCH_ZIGGURAT))
         you.zig_max = max(you.zig_max, you.depth);
 }
-
-void print_escape_message(){
-	int num_runes = static_cast<int>(you.runes.count());
-
-	if(player_has_orb() && num_runes >= you.obtainable_runes){
-		mprf("You have escaped, carrying the Orb and all %d runes of Zot!", num_runes);
-		print_win_message();
-	}
-	else if(player_has_orb()){
-		mprf("You have escaped, carrying the Orb and %d runes of Zot!", num_runes);
-		print_win_message();
-	}
-	else{
-		mpr("You have escaped!");
-	}
-}
-
-void print_win_message(){
-	if(you.species == SP_DEMIGOD){
-		const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-		test_blank_function();
-		//mpr(win_messages_demigod(sk));
-	}
-	else {
-		//mpr(win_messages_religion(you.religion));
-	}
-}

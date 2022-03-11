@@ -20,14 +20,37 @@
 #include "invent.h"
 #include "item-status-flag-type.h"
 #include "libutil.h"
+#include "message.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "unicode.h"
-	
-void test_blank_function(){
-	// nothing
+		
+void print_escape_message(){
+	int num_runes = static_cast<int>(you.runes.count());
+
+	if(player_has_orb() && num_runes >= you.obtainable_runes){
+		mprf("You have escaped, carrying the Orb and all %d runes of Zot!", num_runes);
+		print_win_message();
+	}
+	else if(player_has_orb()){
+		mprf("You have escaped, carrying the Orb and %d runes of Zot!", num_runes);
+		print_win_message();
+	}
+	else{
+		mpr("You have escaped!");
+	}
 }
-	
+
+void print_win_message(){
+	if(you.species == SP_DEMIGOD){
+		const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+		mpr(win_messages_demigod(sk));
+	}
+	else {
+		mpr(win_messages_religion(you.religion));
+	}
+}
+
 std::string win_messages_religion(god_type god){
 	switch(god){
 		case GOD_ASHENZARI:
