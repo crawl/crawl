@@ -760,6 +760,8 @@ void floor_transition(dungeon_feature_type how,
         int num_runes = static_cast<int>(you.runes.count());
         const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
 
+        // TODO(Rosstin): Move this to a more appropriate file.
+
         if(player_has_orb() && num_runes >= you.obtainable_runes){
             mprf("You have escaped, wielding the unimaginable power of the Orb and all %d runes of Zot.", num_runes);
         }
