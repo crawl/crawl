@@ -773,73 +773,105 @@ void floor_transition(dungeon_feature_type how,
                     // fighting and melee weapons
                     case SK_FIGHTING:
                         mprf("With the Orb's power, you shed your mortal half and ascend to Godhood, wresting victory over Okawaru to become the new God of Battle.");
+                        break;
                     case SK_SHORT_BLADES:
                         mprf("With the Orb's power, you shed your mortal half and ascend to Godhood, backstabbing Dithmenos to become the new God of Knives.");
+                        break;
                     case SK_LONG_BLADES:
                         mprf("With the Orb's power and your skill with the sword, you best Okawaru in a duel, becoming the new God of Blades.");
+                        break;
                     case SK_AXES:
                         mprf("With the Orb's power and your mighty axe, you slaughter Trog, becoming the new God of Axes.");
+                        break;
                     case SK_MACES_FLAILS:
                         mprf("With the Orb's power and your skill with the mace, you crush Okawaru, becoming the God of Maces.");
+                        break;
                     case SK_POLEARMS:
                         mprf("With the Orb's power and your skill with the polearm, you skewer Okawaru from a distance, becoming the God of Polearms.");
+                        break;
                     case SK_STAVES:
                         mprf("With the Orb's power and your skill with staves, you batter Okawaru into submission, becoming the God of Staves.");
+                        break;
                     case SK_UNARMED_COMBAT: // Usk, Wu Jian
                         mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                        break;
                     // ranged weapons
                     case SK_SLINGS:
                         mprf("With the Orb's power and your singular sling, you smite down Trog, becoming the God of Slings.");
+                        break;
                     case SK_BOWS:
                         mprf("With the Orb's power and trusty bow, you snipe down Okawaru, becoming the God of Bows.");
+                        break;
                     case SK_CROSSBOWS:
                         mprf("With the Orb's power and your skill with the Crossbow, you puncture FOO, becoming the new God of FOO.");
+                        break;
                     case SK_THROWING:
                         mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                        break;
                     // defensive skills
                     case SK_ARMOUR:
                         mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                        break;
                     case SK_DODGING:
                         mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                        break;
                     case SK_STEALTH:
                         mprf("With the Orb's power, you slip into the darkness and dispatch Dithmenos, becoming the new God of Shadows.");
+                        break;
                     case SK_SHIELDS: // Chei, TSO
                         mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                        break;
                     // spellcasting skills
                     case SK_SPELLCASTING: // Sif
                         mprf("With the Orb's power and your overwhelming knowledge of spells, your magical knowledge surpasses even Sif Muna, and you become the new God of Magic.");
+                        break;
                     case SK_CONJURATIONS: // Veh
                         mprf("With the Orb's power and your skill with destructive magic, you best Vehumet, becoming the new God of Conjurations.");
+                        break;
                     case SK_HEXES: // Ru
                         mprf("With the Orb's power and your clever maledictions, you beguile Ru, becoming the God of Hexes.");
+                        break;
                     case SK_SUMMONINGS: // Makh
                         mprf("With the Orb's power and your skill with calling otherworldly beings, you supplant Makhleb, becoming the God of Bindings.");
+                        break;
                     case SK_NECROMANCY: // Kiku, Yred, Tartarus
                         mprf("With the Orb's power and your mastery over death, you supplant Kikubaaqudgha, becoming the new God of Death.");
                         //mprf("With the Orb's power and your mastery over death, you supplant Yredelemnul, becoming the new God of Death.");
                         //mprf("With the Orb's power and your mastery over death, you claim dominion over Tartarus, becoming the new God of Death.");
+                        break;
                     case SK_TRANSLOCATIONS: // Lugonu
                         mprf("With the Orb's power and your mastery over the weave of space, you slip past Lugonu's defenses, mastering the Abyss and becoming God of the Warp.");
+                        break;
                     case SK_TRANSMUTATIONS: // Zin, Jivya (Xom?)
                         mprf("With the Orb's power and your ever-changing form, you corrupt the purity of Zin, becoming the God of Shapeshifting.");
                         // mprf("With the Orb's power and your ever-changing form, you supplant Jivya, becoming the God of Shapeshifting.");
+                        break;
                     case SK_FIRE_MAGIC: // Ignis, Gehenna
                         mprf("With the Orb's power, you shed your mortal half and ascend to Godhood, snuffing out Ignis to become the new God of Fire.");
                         //mprf("With the Orb's power and flames wreathing you, you claim the throne of Gehenna, becoming the new God of Fire.");
+                        break;
                     case SK_ICE_MAGIC:
                         mprf("With the Orb's power and your mastery of the bitter cold, you claim dominion of Cocytus, becoming the God of Ice.");
+                        break;
                     case SK_AIR_MAGIC:
                         mprf("With the Orb's power and your mastery of the air, you supplant Qazlal Stormbringer, becoming the new God of Storms.");
+                        break;
                     case SK_EARTH_MAGIC:
                         mprf("With the Orb's power and the very firmament supporting you, you ascend to the throne of The Iron City of Dis, becoming the God of Earth.");
+                        break;
                     case SK_POISON_MAGIC: // jivya or fedhas
                         mprf("With the Orb's power and powerful poisons, you take Jivya's place and become the God of Venom.");
                         //mprf("With the Orb's power and powerful poisons, you supplant Fedhas Madash and become the God of Venom.");                        
+                        break;
                     // invocations (impossible since demigods can't train it)
                     // evocations
                     case SK_EVOCATIONS: // Nemelex Xobeh, Gozag
                         mprf("With the Orb's power and your trusty magical devices, you supplant Nemelex Xobeh, becoming the new God of Evocations.");
                         //mprf("With the Orb's power and your trove of magical devices, you supplant Gozag Ym Sagoz, becoming the God of Evocations.");
+                        break;
+                    default:
+                        mprf("With the Orb's power, you shed your mortal shell and ascend to Godhood.");
+                        break;
                 }
             }
         }
