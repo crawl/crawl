@@ -793,7 +793,12 @@ void floor_transition(dungeon_feature_type how,
                         mprf("With the Orb's power and your skill with staves, you batter Okawaru into submission, becoming the God of Staves.");
                         break;
                     case SK_UNARMED_COMBAT: // Usk, Wu Jian
-                        mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                        if(you.strength() >= you.dex()){
+                            mprf("With the Orb's power and your strong body, you outdance even Uskayaw, becoming the God of Wrestling.");
+                        }
+                        else{
+                            mprf("With the Orb's power and the skills of your body, you crush the Wu Jian Council, becoming the God of Martial Arts.");
+                        }
                         break;
                     // ranged weapons
                     case SK_SLINGS:
@@ -803,23 +808,26 @@ void floor_transition(dungeon_feature_type how,
                         mprf("With the Orb's power and trusty bow, you snipe down Okawaru, becoming the God of Bows.");
                         break;
                     case SK_CROSSBOWS:
-                        mprf("With the Orb's power and your skill with the Crossbow, you puncture FOO, becoming the new God of FOO.");
+                        mprf("With the Orb's power and your skill with the Crossbow, you pierce Okawaru's defenses, becoming the God of Crossbows.");
                         break;
                     case SK_THROWING:
-                        mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                        mprf("With the Orb's power and your mighty projectiles, you cast down Okawaru, becoming the new God of Throwing.");
                         break;
                     // defensive skills
-                    case SK_ARMOUR:
-                        mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                    case SK_ARMOUR: // Chei? Ash?
+                        mprf("With the Orb's power and your insurmountable defenses, you gradually unseat Cheibriados, becoming the God of Armour.");
+                        //mprf("With the Orb's power and your mastery of sartorial defenses, you supplant Ashenzari, becoming the God of Armour.");
+                        //TSO?
                         break;
-                    case SK_DODGING:
-                        mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                    case SK_DODGING: // Usk?
+                        mprf("With the Orb's power and your untouchable moves, you outdance even Uskayaw, becoming the God of Dodging.");
+                        // wu jian?
                         break;
                     case SK_STEALTH:
                         mprf("With the Orb's power, you slip into the darkness and dispatch Dithmenos, becoming the new God of Shadows.");
                         break;
-                    case SK_SHIELDS: // Chei, TSO
-                        mprf("With the Orb's power and your skill with the FOO, you defeat FOO, becoming the new God of FOO.");
+                    case SK_SHIELDS: // Chei, TSO?
+                        mprf("With the Orb's power and unparallelled mastery of the shield, you block the Shining One's efforts to thwart you, and become the God of Shields.");
                         break;
                     // spellcasting skills
                     case SK_SPELLCASTING: // Sif
