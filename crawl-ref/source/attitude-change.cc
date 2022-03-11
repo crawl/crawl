@@ -321,7 +321,7 @@ static void _jiyva_convert_slime(monster* slime)
 
     behaviour_event(slime, ME_ALERT);
 
-    if (you.can_see(*slime))
+    if (you.can_see(*slime)) 
     {
         if (mons_genus(slime->type) == MONS_FLOATING_EYE)
         {
