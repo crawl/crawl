@@ -314,4 +314,112 @@ You hear your own voice laughing maniacally!
 
 You hear your own voice screaming in agony!
 
+
+## Epilogues for Religion ##
+%%%%
+epilogue_jiyva
+
+You spread the dominion of slime across the world, returning all beings to the shapeless ooze from which we all sprang.
+
+## Epilogues for Demigods ##
+%%%%
+epilogue_demigod_fighting
+
+You shed your mortal half and ascend to Godhood, wresting victory over Okawaru to become the new God of Battle.
+
+%%%%
+epilogue_demigod_short_blades
+
+You shed your mortal half and ascend to Godhood, backstabbing Dithmenos to become the new God of Knives.
+
+%%%%
+epilogue_demigod_long_blades
+
+With your skill with the sword, you best Okawaru in a duel to the death, becoming the new God of Blades.
+
+%%%%
+epilogue_demigod_axes
+
+With your mighty axe, you slaughter Trog, becoming the new God of Axes.
+
+%%%%
+epilogue_demigod_maces_flails
+
+With your mighty bludgeon, you crush Okawaru, becoming the God of Maces.
+
+%%%%
+epilogue_demigod_polearms
+
+With your lengthy weapon, you pierce Okawaru's defenses, becoming the God of Polearms.
+
+%%%%
+epilogue_demigod_staves
+You shed your mortal half and ascend to Godhood. You batter Okawaru into submission with your mighty staff, becoming the God of Staves.
+
+%%%%
+epilogue_demigod_unarmed_strength
+
+With your strong body, you outdance even Uskayaw, becoming the God of Wrestling.
+
+%%%%
+epilogue_demigod_unarmed_dex
+
+With your lithe body, you out-spar the Wu Jian Council, becoming the God of Martial Arts.
+
+%%%%
+epilogue_demigod_slings
+
+With your singular sling, you smite down Trog, becoming the God of Slings.
+
+%%%%
+epilogue_demigod_bows
+
+With your trusty bow, you snipe down Okawaru, becoming the God of Bows.
+
+%%%%
+epilogue_demigod_crossbows
+
+With your fearsome ballista, you pierce Okawaru's defenses, becoming the God of Crossbows.
+
+%%%%
+epilogue_demigod_throwing
+
+With your mighty projectiles, you cast down Okawaru, becoming the new God of Throwing.
+
+With your mighty projectiles, you cast down Trog, becoming the new God of Throwing.
+
+%%%%
+epilogue_demigod_armour
+
+With your insurmountable defenses, you gradually unseat Cheibriados, becoming the God of Armour.
+
+With your mastery of sartorial accoutrements, you supplant Ashenzari, becoming the God of Armour.
+
+%%%%
+epilogue_demigod_dodging
+
+With your untouchable moves, you outdance even Uskayaw, becoming the God of Dodging.
+
+With your untouchable moves, you outmaneuver the Wu Jian Council, becoming the God of Dodging.
+
+%%%%
+epilogue_demigod_stealth
+
+You slip into the darkness and dispatch Dithmenos, becoming the new God of Shadows.
+
+%%%%
+epilogue_demigod_shields
+
+With your unparallelled mastery of the shield, you block the Shining One's efforts to thwart you, and become the God of Shields.
+
+%%%%
+epilogue_demigod_spellcasting
+
+With your overwhelming knowledge of spells, your magical knowledge surpasses even Sif Muna, and you become the new God of Magic.
+
+%%%%
+epilogue_demigod_foo
+
+You shed your mortal half and ascend to godhood.
+
 %%%%
