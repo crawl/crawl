@@ -117,7 +117,6 @@ bool beogh_resurrect();
 bool yred_can_bind_soul(monster* mon);
 void yred_make_bound_soul(monster* mon, bool force_hostile = false);
 
-bool kiku_receive_corpses(int pow);
 bool kiku_gift_capstone_spells();
 
 bool fedhas_passthrough_class(const monster_type mc);

@@ -377,8 +377,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         // Kikubaaqudgha
-        { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
-            3, 0, 2, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_KIKU_TORMENT, "Torment",
             4, 0, 8, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
@@ -2083,8 +2081,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_WU_JIAN_HEAVENLY_STORM:
         return make_unique<targeter_radius>(&you, LOS_SOLID, 2);
-    case ABIL_KIKU_RECEIVE_CORPSES:
-        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
     case ABIL_CHEIBRIADOS_TIME_BEND:
     case ABIL_USKAYAW_STOMP:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
@@ -2740,11 +2736,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         // included in default force_more_message
         if (!bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
             return spret::abort;
-        break;
-
-    case ABIL_KIKU_RECEIVE_CORPSES:
-        fail_check();
-        kiku_receive_corpses(you.skill(SK_NECROMANCY, 4));
         break;
 
     case ABIL_KIKU_TORMENT:

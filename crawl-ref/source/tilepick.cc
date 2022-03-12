@@ -3582,8 +3582,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_TSO_BLESS_WEAPON:
         return TILEG_ABILITY_TSO_BLESS_WEAPON;
     // Kiku
-    case ABIL_KIKU_RECEIVE_CORPSES:
-        return TILEG_ABILITY_KIKU_RECEIVE_CORPSES;
     case ABIL_KIKU_TORMENT:
         return TILEG_ABILITY_KIKU_TORMENT;
     case ABIL_KIKU_BLESS_WEAPON:

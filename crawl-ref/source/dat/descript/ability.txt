@@ -198,12 +198,6 @@ Permanently blesses a weapon of your choice with the holy wrath of the Shining
 One. Demon weapons will be converted into a more powerful sacred weapon. This
 blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
-# Kikubaaqudgha
-Receive Corpses ability
-
-Creates one or more reanimatable monster corpses nearby. The number and
-freshness of these are dependent on Necromancy skill.
-%%%%
 Torment ability
 
 Open a link to the spirit of the dead, making all living creatures in sight
