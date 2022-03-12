@@ -206,9 +206,10 @@ freshness of these are dependent on Necromancy skill.
 %%%%
 Torment ability
 
-Sacrifices an adjacent cadaver to make all living creatures in sight experience
-all the pain that being suffered in its life. This damage is never directly
-lethal. Kikubaaqudgha will always at least partially shield you from the effect.
+Open a link to the spirit of the dead, making all living creatures in sight
+experience all the pain that spirit suffered in its life. This damage is never
+directly lethal. Kikubaaqudgha will always at least partially shield you from
+the effect.
 %%%%
 Brand Weapon With Pain ability
 
