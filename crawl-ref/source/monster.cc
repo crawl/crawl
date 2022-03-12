@@ -1540,9 +1540,9 @@ bool monster::wants_weapon(const item_def &weap) const
 
 bool monster::wants_armour(const item_def &item) const
 {
-    // Monsters that are capable of dual wielding won't pick up shields.
+    // Monsters that are capable of dual wielding won't pick up shields or orbs.
     // Neither will monsters that are already wielding a two-hander.
-    if (is_shield(item)
+    if (is_offhand(item)
         && (mons_wields_two_weapons(*this)
             || mslot_item(MSLOT_WEAPON)
                && hands_reqd(*mslot_item(MSLOT_WEAPON))
