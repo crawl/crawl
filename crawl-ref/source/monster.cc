@@ -5167,8 +5167,14 @@ bool monster::has_action_energy() const
 
 bool monster::may_have_action_energy() const
 {
-    const int max_gain = (speed * you.time_taken + 9) / 10;
+    const int max_gain = (speed * you.time_taken + 9) / BASELINE_DELAY;
     return speed_increment + max_gain >= ENERGY_THRESHOLD;
+}
+
+/// At the player's current movement speed, will they eventually outpace this monster?
+bool monster::outpaced_by_player() const
+{
+    return speed * you.time_taken < action_energy(EUT_MOVE) * BASELINE_DELAY;
 }
 
 /// If a monster had enough energy to act this turn, change it so it doesn't.
