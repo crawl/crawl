@@ -2897,10 +2897,10 @@ string hints_describe_item(const item_def &item)
                         "skill to remove the penalty.";
             }
             else if (Hints.hints_type == HINT_RANGER_CHAR
-                     && is_shield(item))
+                     && is_offhand(item))
             {
                 ostr << "\nNote that many ranged weapons are two handed and so "
-                        "cannot be used with a shield.";
+                        "cannot be used with an offhand item.";
             }
 
             if (!item_type_known(item)
