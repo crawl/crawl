@@ -1101,7 +1101,8 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     }
 
     // Similarly, monsters won't pick up shields if they're
-    // wielding (or alt-wielding) a two-handed weapon.
+    // wielding (or alt-wielding) a two-handed weapon, or
+    // wielding two weapons.
     if (slot == MSLOT_SHIELD)
     {
         const item_def* wpn = mslot_item(MSLOT_WEAPON);
@@ -1109,6 +1110,8 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
         if (wpn && hands_reqd(*wpn) == HANDS_TWO)
             return false;
         if (alt && hands_reqd(*alt) == HANDS_TWO)
+            return false;
+        if (mons_wields_two_weapons(*this) && wpn && alt)
             return false;
     }
 
