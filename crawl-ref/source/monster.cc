@@ -1552,7 +1552,7 @@ bool monster::wants_armour(const item_def &item) const
     }
 
     // Don't pick up new armour if we've been gifted something by the player.
-    if (is_shield(item) && props.exists(BEOGH_SH_GIFT_KEY))
+    if (is_offhand(item) && props.exists(BEOGH_SH_GIFT_KEY))
         return false;
     else if (props.exists(BEOGH_ARM_GIFT_KEY))
         return false;

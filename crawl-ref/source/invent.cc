@@ -1120,7 +1120,7 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_BEOGH_GIFT:
         return (itype == OBJ_WEAPONS
-                || is_shield(i)
+                || is_offhand(i)
                 || itype == OBJ_ARMOUR
                    && get_armour_slot(i) == EQ_BODY_ARMOUR)
                 && !item_is_equipped(i);

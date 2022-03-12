@@ -1558,7 +1558,7 @@ bool beogh_gift_item()
 
     item_def& gift = you.inv[item_slot];
 
-    const bool shield = is_shield(gift);
+    const bool shield = is_offhand(gift);
     const bool body_armour = gift.base_type == OBJ_ARMOUR
                              && get_armour_slot(gift) == EQ_BODY_ARMOUR;
     const bool weapon = gift.base_type == OBJ_WEAPONS;
