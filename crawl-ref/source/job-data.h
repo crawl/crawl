@@ -232,7 +232,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_HUNTER, {
     "Hu", "Hunter",
-    4, 3, 5,
+    3, 1, 8,
     { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_OGRE, SP_TROLL, },
     { },
     { "leather armour", "scroll of immolation" },
