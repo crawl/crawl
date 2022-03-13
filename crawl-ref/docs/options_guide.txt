@@ -1964,12 +1964,21 @@ macros += M \{9} za
         This options adds a macro or keymap.
 
         Each definition consists of exactly three arguments separated by
-        spaces. The first one describes whether it is a macro or a keymap:
-        "M" macro,
-        "K"  default context keymap,
-        "K1" level-map context keymap,
-        "K2" targeting context keymap
-        "K3" confirmation context keymap.
+        spaces. The first one describes whether it is a macro or a keymap.
+        Keymaps are generally most useful for renaming keys entirely and are
+        processed before macros. If you don't know which to use, you probably
+        want a macro.
+
+        "M" macros (processed when entering game commands)
+
+        Specialized keymap contexts:
+        "K1" level-map context keymap (during the `X` view only)
+        "K2" targeting context keymap (during targeting and `x` view)
+        "K3" confirmation context keymap (when responding to a y/n prompt)
+        "K4" menu context keymap (all menus, except the skill menu)
+
+        Default keymap context:
+        "K" default context keymap (any other context)
 
         The second argument describes the trigger key and consists the
         character or keycode of that key (for example 'a', 'A' or \{9} for the
