@@ -153,21 +153,19 @@ sometimes leaving them unable to act.
 %%%%
 claws mutation
 
-You have sharp nails, increasing the strength of your unarmed and off-hand
-attacks if you aren't wearing gloves. Each level of this mutation makes your
+You have sharp nails, increasing the strength of your main-hand unarmed attacks
+if you aren't wearing gloves. If your off-hand is free, the strength of your
+off-hand punch attacks is also increased. Each level of this mutation makes your
 nails sharper, longer, and stronger. The third level of this mutation prevents
 you from wearing gloves.
-
-The primary damage bonus requires using an unarmed attack. The off-hand effect
-is a damage bonus for the regular off-hand punch, and therefore requires a free
-off-hand.
 %%%%
 demonic touch mutation
 
-Your hands glow with unholy energy, causing those struck by your off-hand
-attacks to take additional damage which ignores armour. Each level of this
-mutation inflicts more damage. The third level of this mutation prevents you
-from wearing gloves, and also causes your off-hand attacks to reduce your foes'
+Your hands glow with unholy energy, allowing you to inflict irresistible damage
+when launching melee attacks as long as your off-hand is free. Your touch
+attacks deal damage which ignores armour, and each level of this mutation
+increases the damage dealt. The third level of this mutation prevents you from
+wearing gloves, and also causes your touch attacks to reduce your foes'
 willpower.
 %%%%
 hooves mutation
