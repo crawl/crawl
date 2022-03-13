@@ -1740,17 +1740,18 @@ static bool _give_kiku_gift(bool forced)
     vector<spell_type> chosen_spells;
     spell_type spell;
 
-    // Each set should guarantee the player at least one corpse-using spell, to
-    // complement Receive Corpses.
+    // The first set should guarantee the player at least one ally spell, to
+    // complement the bonus undead passive.
     if (first_gift)
     {
         chosen_spells.push_back(SPELL_NECROTIZE);
         do
         {
-            spell = random_choose(SPELL_CORPSE_ROT,
-                                  SPELL_SUBLIMATION_OF_BLOOD,
+            spell = random_choose(SPELL_SUBLIMATION_OF_BLOOD,
                                   SPELL_VAMPIRIC_DRAINING,
-                                  SPELL_AGONY);
+                                  SPELL_ANGUISH,
+                                  SPELL_ANIMATE_DEAD
+                                  );
 
             if (!you.can_bleed(false) && spell == SPELL_SUBLIMATION_OF_BLOOD)
                 spell = SPELL_NO_SPELL;
@@ -1768,11 +1769,11 @@ static bool _give_kiku_gift(bool forced)
     }
     else
     {
-        chosen_spells.push_back(SPELL_ANIMATE_DEAD);
         do
         {
-            spell = random_choose(SPELL_ANGUISH,
-                                  SPELL_DISPEL_UNDEAD,
+            spell = random_choose(SPELL_DISPEL_UNDEAD,
+                                  SPELL_CORPSE_ROT,
+                                  SPELL_AGONY,
                                   SPELL_BORGNJORS_VILE_CLUTCH,
                                   SPELL_DEATH_CHANNEL,
                                   SPELL_SIMULACRUM);
