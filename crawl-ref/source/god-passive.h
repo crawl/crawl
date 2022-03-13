@@ -265,6 +265,9 @@ enum class passive_t
 
     // Immunity to spectral mist clouds
     r_spectral_mist,
+
+        /// Kiku grants bonus undead
+        bonus_undead,
 };
 
 enum ru_interference
