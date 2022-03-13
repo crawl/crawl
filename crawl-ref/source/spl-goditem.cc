@@ -1095,7 +1095,7 @@ void torment_player(const actor *attacker, torment_source_type taux)
             // 24% to 80% chance for other sources.
             else if (random2(250) < you.piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
-                hploss -= random2(hploss - 1);
+                hploss -= (1 + random2(hploss - 1));
                 simple_god_message(" partially shields you from torment!");
             }
         }
