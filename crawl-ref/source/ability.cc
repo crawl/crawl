@@ -461,7 +461,7 @@ static vector<ability_def> &_get_ability_list()
             7, scaling_cost::fixed(5), 10, -1, {fail_basis::invo, 70, 4, 25},
             abflag::none },
         { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
-            10, 0, 28, -1, {fail_basis::invo, 80, 4, 25}, abflag::pain },
+            2, 0, 28, -1, {fail_basis::invo, 80, 4, 25}, abflag::pain },
         { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
