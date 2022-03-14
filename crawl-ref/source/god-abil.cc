@@ -1959,7 +1959,7 @@ static bool _lugonu_warp_monster(monster& mon, int pow)
     if (coinflip())
         return false;
 
-    if (!mon.friendly())
+    if (!mon.friendly()&&!mon.neutral())
         behaviour_event(&mon, ME_ANNOY, &you);
 
     mon.hurt(&you, 1 + random2(pow / 6));
