@@ -173,7 +173,7 @@ static const armour_def Armour_prop[] =
         ARMF_RES_NEG),
     DRAGON_ARMOUR(STORM,       "storm",                  10, -150,  800,
         ARMF_RES_ELEC),
-    DRAGON_ARMOUR(SHADOW,      "shadow",                 10, -150,  800,
+    DRAGON_ARMOUR(SHADOW,      "shadow",                 11, -150,  800,
         ard(ARMF_STEALTH, 4)),
     DRAGON_ARMOUR(GOLD,        "gold",                   12, -230,  800,
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
