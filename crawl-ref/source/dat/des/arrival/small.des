@@ -3809,3 +3809,28 @@ MAP
          ..p.
           ..
 ENDMAP
+
+NAME:    spicycebolla_arrival_ecumenical
+TAGS:    arrival uniq_ecumenical_altar chance_ecumenical_altar
+KMASK:   -_Tt)n = opaque
+ORIENT:  float
+KFEAT:   _ = altar_ecumenical
+RTILE:   c = wall_hall
+FTILE:   -.ptT{)n+ = floor_hall
+SHUFFLE: ptT / pTt / tGG / mGT
+KMONS:   p = bush
+WEIGHT:  3333333
+MAP
+  ccccccccc
+ ccnnnTnnncc
+ cnt-T_T-tnc
+ cn-------nc
+ cnt--)--tnc
+ cnnnnnnnnnc
+ cn...{...nc
+ cn.......nc
+ cnT.p.p.Tnc
+ ccn.n.n.ncc
+''cc+c+c+cc''
+'''''''''''''
+ENDMAP
