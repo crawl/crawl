@@ -3507,7 +3507,7 @@ ORIENT:   float
 SHUFFLE:  pqr
 SUBST:    s:xxxtw, p:x, q:x, r:@
 SUBST:    ' = '..
-KPROP:    u = bloody
+KPROP:    ' = bloody
 MAP
    xpppx
    x'''x
