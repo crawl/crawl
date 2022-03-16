@@ -3714,3 +3714,101 @@ Xxxx.xxXxx.xxXxx.xxxX
    xxXxx  X  xxXxx
     X           X
 ENDMAP
+
+##############################################################
+# Another transporter tutorial. This teaches that using a transporter can be
+# risky: the 'porter takes you from pretty safe terrain to a wide open space.
+NAME:    spicycebolla_arrival_risky_transporter
+TAGS:    arrival transparent
+ORIENT:  float
+# the actual transporters
+SHUFFLE: JKF
+MARKER:  E = lua:transp_loc("tut_risky")
+MARKER:  F = lua:transp_dest_loc("tut_risky")
+# minor cosmetic variations
+SHUFFLE: NO
+SUBST:   N:x, O:.
+SUBST:   x : xxxxxxccvb
+MAP
+ @@@.N.OO@
+@...NNOO..
+@...NxO...
+@..FxxK...
+.xxxmxmxxx
+xxxxxmmxx.
+...JmmEx.x
+...OxNx{x@
+..OONx.x.x
+@OO.x.x@x
+ENDMAP
+
+NAME:   spicycebolla_arrival_clurvy
+TAGS:   arrival transparent
+ORIENT: float
+MONS:   plant / bush w:2, fungus, withered plant, butterfly
+SUBST:  ' = .p
+SUBST:  t = t:30 1:15 .:5
+SUBST:  p = 1:30 .:10
+: if crawl.one_chance_in(5) then
+NSUBST: . = 3:A / .
+SUBST:  t = ttG
+TILE:   G = dngn_crumbled_column
+COLOUR: G = white
+: set_feature_name("granite_statue", "broken pillar")
+: end
+: if crawl.one_chance_in(5) then
+NSUBST: . = 1:J / 3:K / 1:V / .
+: end
+: if crawl.one_chance_in(5) then
+NSUBST: 1 = 4:4 / 1, . = 5:U / .
+: end
+: if crawl.one_chance_in(5) then
+COLOUR: t = yellow w:5 / red w:5 / brown
+SUBST:  1 = 1222
+: elseif crawl.one_chance_in(5) then
+SUBST:  1 = 3, U = VVVJK
+KFEAT:  t = petrified_tree
+: end
+KFEAT:  J = abandoned_shop / shaft trap / granite_statue
+KFEAT:  K = web trap
+KITEM:  K = skeleton / corpse / nothing
+MAP
+   ..p.. ..p..
+ ...ptp...ptp..
+...tttp'.'ptpp..
+..pttp...pt'...
+..'ptp..'.p.'p..
+ ...p......{ptp.
+  ....'...ppttp.
+    .'...pttttp.
+     ...'ppttp..
+      ...'p'pp..
+       ...ptp..
+        ...pp..
+         ..p..
+         ....
+ENDMAP
+
+NAME:    spicycebolla_arrival_ecumenical
+TAGS:    arrival uniq_ecumenical_altar transparent
+KMASK:   -_Tt)n = opaque
+ORIENT:  float
+KFEAT:   _ = altar_ecumenical
+RTILE:   c = wall_hall
+FTILE:   -.ptT{)n+ = floor_hall
+SHUFFLE: ptT / pTt / tGG / tGT
+KMONS:   p = bush
+MAP
+  ccccccccc
+ ccnnnTnnncc
+ cnt-T_T-tnc
+ cn-------nc
+ cnt--)--tnc
+ cnnnnnnnnnc
+ cn...{...nc
+ cn.......nc
+ cnT.p.p.Tnc
+ ccn.n.n.ncc
+''cc+c+c+cc''
+'''''''''''''
+ENDMAP

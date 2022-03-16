@@ -2509,3 +2509,45 @@ tt.........tt
  tt.......tt
   ttt@@@ttt
 ENDMAP
+
+NAME:     spicycebolla_green_bress_n_ham
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+SHUFFLE:  yz
+SUBST:    y : xb, z : mb
+MAP
+       zzz@
+ ....zzyyy...
+ .zzzyy...yz.
+@.yyy.....yz.
+zy........yz.
+zy.........yz
+zy....t....yz
+ zy....{....yz
+ zy.........yz
+ .zy........yz
+ .zy.....yyy.@
+ .zy...yyzzz.
+ ...yyyzz....
+   @zzz
+ENDMAP
+
+NAME:     spicycebolla_green_bress_n_ham_2
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+MAP
+m       c@c  m
+ m     cc.c m
+  m  ccc.ccm
+cccm c.c.cm
+@.ccmcc.cm
+cc..cmc.mccc
+ ccc..WWcc{c
+  cAccWW..ccc
+  cccm.cmc..cc
+    mc.ccmcc.@
+   mc.c.c mccc
+  mcc.ccc  m
+ m c.cc     m
+m  c@c       m
+ENDMAP
