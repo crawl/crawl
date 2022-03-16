@@ -3716,3 +3716,49 @@ Xxxx.xxXxx.xxXxx.xxxX
    xxXxx  X  xxXxx
     X           X
 ENDMAP
+##############################################################
+# Another transporter tutorial. This teaches that using a transporter can be
+# risky: the 'porter takes you from pretty safe terrain to a wide open space.
+NAME:    spicycebolla_arrival_risky_transporter
+TAGS:    arrival
+ORIENT:  float
+# the actual transporters
+NSUBST:  F = F / '
+: if crawl.one_chance_in(5) then
+SHUFFLE: JKF
+: end
+SHUFFLE: JK
+# bonus transporters only 1/3 of the time
+SHUFFLE: JK/LL/LL
+MARKER:  E = lua:transp_loc("tut_risky")
+MARKER:  F = lua:transp_dest_loc("tut_risky")
+MARKER:  J = lua:transp_dest_loc("tut_bonus")
+MARKER:  K = lua:transp_loc("tut_bonus")
+# minor cosmetic variations
+SHUFFLE: N/O
+SUBST:   N:x, O:., L:.
+SUBST:   x : xxxxxxccvb
+: if crawl.one_chance_in(4) then
+SUBST:   . = .:40 ' -:6 W:4
+FTILE:   EFJK{ = floor_pebble_brown / none
+: elseif crawl.one_chance_in(5) then
+SUBST:   . : '
+FTILE:   EFJK{ = floor_pebble_brown
+: end
+FTILE:   ' = floor_pebble_brown
+FTILE:   - = floor_mud
+SUBST:   ' = . T:1 V:1
+NSUBST:  - = t / d / .
+ITEM:    stone
+MAP
+ @@@.N.OO@
+@.F.NNOO..
+@FF.NxO...
+@...xx...K
+.xxxxxxxxx
+xxxxxxxxx.
+J...xxEx.x
+...OxNx{x@
+..OONx.x.x
+@OO.x.x@x
+ENDMAP
