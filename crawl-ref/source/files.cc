@@ -1211,9 +1211,7 @@ static void _grab_followers()
         if (fol->wont_attack() && !mons_can_use_stairs(*fol))
         {
             non_stair_using_allies++;
-            // If the class can normally use stairs it
-            // must have been a summon
-            if (mons_class_can_use_stairs(fol->type))
+            if (fol->is_summoned() || mons_is_conjured(fol->type))
                 non_stair_using_summons++;
         }
     }
