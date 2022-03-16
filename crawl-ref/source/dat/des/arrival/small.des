@@ -3794,20 +3794,20 @@ KFEAT:  J = abandoned_shop / shaft trap / granite_statue
 KFEAT:  K = web trap
 KITEM:  K = skeleton / corpse / nothing
 MAP
-    .p.   .p..
+   ..p.. ..p..
  ...ptp...ptp..
 ...tttp'.'ptpp..
-..pttp...pt'..
-..'ptp..'.p.'p.
+..pttp...pt'...
+..'ptp..'.p.'p..
  ...p......{ptp.
   ....'...ppttp.
     .'...pttttp.
-     ...'ppttp.
-      ...'p'pp.
-       ...ptp.
-        ...pp.
-         ..p.
-          ..
+     ...'ppttp..
+      ...'p'pp..
+       ...ptp..
+        ...pp..
+         ..p..
+         ....
 ENDMAP
 
 NAME:    spicycebolla_arrival_ecumenical
@@ -3819,7 +3819,6 @@ RTILE:   c = wall_hall
 FTILE:   -.ptT{)n+ = floor_hall
 SHUFFLE: ptT / pTt / tGG / mGT
 KMONS:   p = bush
-WEIGHT:  3333333
 MAP
   ccccccccc
  ccnnnTnnncc
