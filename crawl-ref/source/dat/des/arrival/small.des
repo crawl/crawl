@@ -3647,9 +3647,9 @@ vvv...vvv
 ENDMAP
 
 ##############################################################################
-# most teleporter vaults are dangerous, especially for new players.
-# here's a no-stress scenario in which they can try out teleporters
-NAME:    spicycebolla_arrival_teleporter_tutorial
+# most transporter vaults are dangerous, especially for new players.
+# here's a no-stress scenario in which they can try out transporters.
+NAME:    spicycebolla_arrival_transporter_tutorial
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 FTILE:   .GATUVYt>{EFJK : floor_pebble_blue
@@ -3664,7 +3664,7 @@ MARKER:  F = lua:transp_dest_loc("tut_stairs")
 MARKER:  J = lua:transp_dest_loc("tut_entry")
 MARKER:  K = lua:transp_loc("tut_stairs")
 MAP
- AAAA!AAA
+ AAAA@AAA
 Awww!wwwwA
 www!wwwwwwA
 wwAW!WAwwww
