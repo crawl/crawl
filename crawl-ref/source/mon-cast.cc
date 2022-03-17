@@ -2418,11 +2418,11 @@ static bool _seal_doors_and_stairs(const monster* warden,
 }
 
 /// Can the caster see the given target's cell and a wall next to them?
-static bool _near_visible_wall(const monster &caster, const actor &target)
+static bool _near_visible_wall(const monster &caster, coord_def targ)
 {
-    if (!caster.see_cell_no_trans(target.pos()))
+    if (!caster.see_cell_no_trans(targ))
         return false;
-    for (adjacent_iterator ai(target.pos()); ai; ++ai)
+    for (adjacent_iterator ai(targ); ai; ++ai)
     {
         if (cell_is_solid(*ai)
             && env.grid(*ai) != DNGN_MALIGN_GATEWAY
@@ -2466,7 +2466,7 @@ static ai_action::goodness _foe_near_wall(const monster &caster)
     if (!foe)
         return ai_action::bad();
 
-    if (_near_visible_wall(caster, *foe))
+    if (_near_visible_wall(caster, foe->pos()))
         return ai_action::good();
     return ai_action::bad();
 }
@@ -2496,7 +2496,7 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
 {
     bool visible_effect = false;
     // Freeze the player.
-    if (!caster.wont_attack() && _near_visible_wall(caster, you))
+    if (!caster.wont_attack() && _near_visible_wall(caster, you.pos()))
         visible_effect |= _creeping_frost_freeze(you.pos(), beam);
 
     // Freeze the player's friends.
@@ -2504,19 +2504,27 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
     {
         actor* target = actor_at(*vi);
         if (!target)
+        {
+            if (!cell_is_solid(*vi) && _near_visible_wall(caster, *vi))
+                visible_effect |= beam.explosion_draw_cell(*vi);
             continue;
+        }
 
         monster *mon = target->as_monster();
         if (!mon || mons_aligned(&caster, mon))
+        {
+            if (mon && !you.can_see(*mon) && _near_visible_wall(caster, *vi))
+                visible_effect |= beam.explosion_draw_cell(*vi);
             continue;
-        if (_near_visible_wall(caster, *mon))
+        }
+        if (_near_visible_wall(caster, mon->pos()))
             visible_effect |= _creeping_frost_freeze(mon->pos(), beam);
     }
     if (visible_effect)
     {
         viewwindow(false);
         update_screen();
-        scaled_delay(25);
+        scaled_delay(50);
     }
 }
 
