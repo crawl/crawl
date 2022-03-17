@@ -206,17 +206,13 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_NO_POTIONS:
-        // Don't double the light if under a duration
-        if (!player_in_branch(BRANCH_COCYTUS) || you.duration[DUR_NO_POTIONS])
-            break;
-        // use -Potion as a base
-        _fill_inf_from_ddef(DUR_NO_POTIONS, inf);
-        inf.short_text = "frozen potions";
-        inf.long_text  = "Your potions are frozen solid.";
-        // intentional fallthrough
-    case DUR_NO_POTIONS:
-        if (!you.can_drink(false))
-            inf.light_colour = DARKGREY;
+        if (you.duration[DUR_NO_POTIONS] || player_in_branch(BRANCH_COCYTUS))
+        {
+            inf.light_colour = !you.can_drink(false) ? DARKGREY : RED;
+            inf.light_text   = "-Potion";
+            inf.short_text   = "unable to drink";
+            inf.long_text    = "You cannot drink potions.";
+        }
         break;
 
     case DUR_SWIFTNESS:

@@ -446,14 +446,6 @@ static const duration_def duration_data[] =
       "on dragon call cooldown", "dragon call cooldown",
       "You are unable to call dragons.", D_NO_FLAGS,
       {{ "You can once more reach out to the dragon horde." }}},
-    { DUR_NO_POTIONS,
-      RED, "-Potion",
-      "unable to drink", "no potions",
-      "You cannot drink potions.", D_NO_FLAGS,
-      {{ "", []() {
-          if (you.can_drink())
-              mprf(MSGCH_RECOVERY, "You can drink potions again.");
-      }}}},
     { DUR_QAZLAL_FIRE_RES,
       LIGHTBLUE, "rF+",
       "protected from fire", "qazlal fire resistance",
@@ -633,8 +625,16 @@ static const duration_def duration_data[] =
     { DUR_HEAVENLY_STORM, 0, "", "in a heavenly storm", "heavenly storm",
       "Heavenly clouds are increasing your accuracy and damage.", D_NO_FLAGS,
       {{ "", wu_jian_decrement_heavenly_storm }}},
-    { DUR_NO_SCROLLS, 0, "", "", "", "", D_NO_FLAGS,
-      {{ "You can read scrolls again." }, {}, true }},
+    { DUR_NO_POTIONS, 0, "", "", "no potions", "", D_NO_FLAGS,
+      {{ "", []() {
+          if (you.can_drink() && !player_in_branch(BRANCH_COCYTUS))
+              mprf(MSGCH_RECOVERY, "You can drink potions again.");
+      }}}},
+    { DUR_NO_SCROLLS, 0, "", "", "no scrolls", "", D_NO_FLAGS,
+      {{ "", []() {
+          if (!you.duration[DUR_BRAINLESS] && !player_in_branch(BRANCH_GEHENNA))
+              mprf(MSGCH_RECOVERY, "You can read scrolls again.");
+      }}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
