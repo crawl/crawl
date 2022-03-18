@@ -914,28 +914,33 @@ tc_exclude_circle = red
           excluded_circle: the colour for travel exclusions apart from
                            centre
 
-runrest_ignore_message += <regex>, <regex>, ...
-runrest_stop_message += <regex>, <regex>, ...
+runrest_ignore_message ^= <regex>, <regex>, ...
+runrest_stop_message ^= <regex>, <regex>, ...
         (List option)
-        Use these to force messages to interrupt travel and resting, or
-        not. These are matched against full message text. To limit a
-        substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-k below on Message
-        Channels). For instance, if you want travel to stop when you're
-        hit by divine retribution, you could use:
-             runrest_stop_message += god:wrath finds you
+        Use these to force messages to interrupt travel and resting, or not.
+        These are matched against full message text. To limit a substring
+        match to a message channel, prefix the substring with the channel name
+        and a colon (see section 3-k below on Message Channels). For instance,
+        if you want travel to stop when you're hit by divine retribution, you
+        could use:
+             runrest_stop_message ^= god:wrath finds you
+
         Or to remind yourself to renew expiring spells:
-             runrest_stop_message += Your transformation is almost over
-             runrest_stop_message += You are starting to lose your buoyancy
+             runrest_stop_message ^= Your transformation is almost over
+             runrest_stop_message ^= You are starting to lose your buoyancy
+
         Or you can explicitly ignore some messages:
-             runrest_ignore_message += pleased with you,exalted
+             runrest_ignore_message ^= pleased with you,exalted
 
-        Note that monster talk and dungeon noises already do not
-        interrupt running or resting, by default.
+        Note that monster talk and dungeon noises already do not interrupt
+        running or resting, by default.
 
-        Multiple lines can be used. The earliest match among both
-        ignore and stop messages overrides later lines. The file
-        runrest_messages.txt contains a number of default settings.
+        Multiple lines can be used. The earliest match among both ignore and
+        stop messages overrides later lines. The file runrest_messages.txt
+        contains a number of default settings. These options accept `^=` to
+        prepend and `+=` to add; the former is necessary in order to override
+        defaults, including overriding defaults for `ignore` matches with
+        `stop` matches and vice versa.
 
         Resetting either option has the effect of resetting both.
 
