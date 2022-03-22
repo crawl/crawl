@@ -763,7 +763,7 @@ with both melee and conjurations. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Hexer ability
 
-Remembers your ancestor as a hexer, a cunning rogue capable of skilled
+Remembers your ancestor as a hexer, a cunning rogue capable of swift
 knifework and debilitating spellcasting. This choice is permanent and cannot be
 undone.
 %%%%
