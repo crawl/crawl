@@ -1829,7 +1829,7 @@ dice_def irradiate_damage(int pow, bool random)
 {
     const int dice = 3;
     const int max_dam = 40 + (random ? div_rand_round(pow, 2) : pow / 2);
-    return calc_dice(dice, max_dam);
+    return calc_dice(dice, max_dam, random);
 }
 
 /**
