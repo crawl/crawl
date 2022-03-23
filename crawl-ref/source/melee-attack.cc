@@ -2639,7 +2639,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_BLINK:
         // blinking can kill, delay the call
-        if (one_chance_in(3))
+        if (one_chance_in(3) && !crawl_state.player_moving)
             blink_fineff::schedule(attacker);
         break;
 
