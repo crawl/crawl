@@ -2337,7 +2337,9 @@ static bool _abort_if_stationary()
 
 static bool _cleansing_flame_affects(const actor *act)
 {
-    return act->res_holy_energy() < 3;
+    return act->res_holy_energy() < 3
+           && (!act->is_monster()
+               || !always_shoot_through_monster(&you, *act->as_monster()));
 }
 
 static string _vampire_str_int_info_blurb(string stats_affected)
