@@ -2588,7 +2588,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
 
-        if (stop_attack_prompt(hitfunc, "spit at", _acid_breath_can_hit))
+        if (stop_attack_prompt(hitfunc, "spit acid", _acid_breath_can_hit))
             return spret::abort;
 
         fail_check();
@@ -2727,8 +2727,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         targeter_radius hitfunc(&you, LOS_SOLID, 2);
         {
-            if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
+            if (stop_attack_prompt(hitfunc, "invoke Cleansing Flame",
+                                   _cleansing_flame_affects))
+            {
                 return spret::abort;
+            }
         }
         fail_check();
         cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
