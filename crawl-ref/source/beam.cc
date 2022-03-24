@@ -4456,7 +4456,7 @@ void glaciate_freeze(monster* mon, killer_type englaciator,
     }
 }
 
-static void _acid_splash_monsters(monster* mon, actor* agent)
+static void _acid_splash_monsters(const bolt& beam, monster* mon, actor* agent)
 {
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
@@ -4464,6 +4464,12 @@ static void _acid_splash_monsters(monster* mon, actor* agent)
         {
             if (victim == agent)
                 continue;
+
+            if (victim->is_monster()
+                && beam.ignores_monster(victim->as_monster()))
+            {
+                continue;
+            }
 
             if (you.see_cell(*ai))
             {
@@ -5025,7 +5031,7 @@ void bolt::affect_monster(monster* mon)
         }
         // Acid splash from yellow draconians.
         if (origin_spell == SPELL_ACID_SPLASH)
-            _acid_splash_monsters(mon, agent());
+            _acid_splash_monsters(*this, mon, agent());
         // Now hurt monster.
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
     }
