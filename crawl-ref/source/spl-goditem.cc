@@ -1306,8 +1306,7 @@ void majin_bo_vampirism(monster &mon, int damage)
     dprf("Majin bo might trigger, dam: %d.", damage);
 
     if (damage < 1 || !actor_is_susceptible_to_vampirism(mon)
-        || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR]
-        || x_chance_in_y(2, 5))
+        || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR])
     {
         return;
     }
