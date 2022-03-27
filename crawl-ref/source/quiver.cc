@@ -689,6 +689,7 @@ namespace quiver
                 monster *midmons;
                 if ((midmons = monster_at(middle))
                     && !midmons->submerged()
+                    && !god_protects(&you, midmons, true)
                     && coinflip())
                 {
                     success = false;
