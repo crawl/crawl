@@ -218,8 +218,8 @@ KFEAT: 8 = granite_statue / w:2 fountain_blood / w:1 floor
 :        nothing, any scroll / nothing")
 : kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic ident:type /\
 :        nothing, any potion / nothing")
-KITEM: & = book of necromancy / book of death / book of unlife / book of pain /\
-           book of decay / w:12 nothing
+KITEM: & = book of necromancy / book of death / book of unlife / book of decay /\
+           w:12 nothing
 KMONS: P = withered plant
   : elseif occupant == 1 then
 MONS:  wizard / ogre mage / deep elf sorcerer

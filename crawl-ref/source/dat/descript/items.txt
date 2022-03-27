@@ -246,13 +246,6 @@ book of party tricks
 A book containing a variety of fun spells guaranteed to liven up any wizarding
 party, as well as a number of toasts, jokes, and party games.
 %%%%
-book of pain
-
-A magical book said to have been written by the demon-queen Ereshkigal, who
-delights in the painful death of mortals. Some would say that it would be best
-to consider the book's origin before putting it to use, but wizards are rarely
-deterred by such concerns.
-%%%%
 book of power
 
 A book of powerful and destructive magic spells, rumbling and shuddering with

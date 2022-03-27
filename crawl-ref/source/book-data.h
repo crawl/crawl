@@ -142,6 +142,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Necromancy
     SPELL_NECROTIZE,
     SPELL_VAMPIRIC_DRAINING,
+    SPELL_AGONY,
 },
 
 {   // Book of Callings
@@ -326,10 +327,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { // Book of Pain
     SPELL_NECROTIZE,
     SPELL_AGONY,
 },
+#endif
 
 { // Book of Decay
     SPELL_CORPSE_ROT,
