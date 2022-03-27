@@ -152,7 +152,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Maledictions
-    SPELL_TUKIMAS_DANCE,
     SPELL_ANGUISH,
     SPELL_ENFEEBLE,
 },
@@ -412,6 +411,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Weapons
+    SPELL_TUKIMAS_DANCE,
     SPELL_PORTAL_PROJECTILE,
     SPELL_BLADE_HANDS,
 },
