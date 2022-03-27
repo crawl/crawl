@@ -97,7 +97,7 @@ ENDMAP
 ################################################################################
 
 NAME:   uniq_amaemon
-DEPTH:  D:8-12, Orc:1, Lair:1-4
+DEPTH:  D:8-11, Lair:1-3
 WEIGHT: 5, 15(Lair)
 : place_unique(_G, "Amaemon band")
 
