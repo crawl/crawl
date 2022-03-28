@@ -196,7 +196,7 @@ lost to the flaying.
 %%%%
 Weak status
 
-Your physical attacks do less damage.
+Your melee attacks do 25% less damage.
 %%%%
 Frozen status
 
