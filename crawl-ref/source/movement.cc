@@ -853,7 +853,7 @@ void move_player_action(coord_def move)
             // abuse, since trying to move (not attack) takes no time, and
             // shouldn't. Just force confused trees to use ctrl.
             mpr("You cannot move. (Use ctrl+direction or * direction to "
-                "attack without moving.)");
+                "attack while stationary and confused.)");
             return;
         }
 
