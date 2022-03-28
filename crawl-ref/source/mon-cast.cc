@@ -2520,7 +2520,7 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
         if (_near_visible_wall(caster, mon->pos()))
             visible_effect |= _creeping_frost_freeze(mon->pos(), beam);
     }
-    if (visible_effect)
+    if (visible_effect && Options.use_animations & UA_MONSTER)
     {
         viewwindow(false);
         update_screen();
