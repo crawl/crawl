@@ -1909,7 +1909,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::lich:
-        drain_player(50, true, true);
+        drain_player(3 * raw_spell_fail(SPELL_NECROMUTATION), true, true);
         break;
 
     case transformation::appendage:
@@ -2249,4 +2249,13 @@ bool draconian_dragon_exception()
     return species::is_draconian(you.species)
            && (you.form == transformation::dragon
                || !form_changed_physiology());
+}
+
+//lichform hack to prevent cheese. not great code.
+{
+    if (you.form == transformation::lich)
+        if you.gear_change = true
+            untransform();
+        else
+            break;
 }
