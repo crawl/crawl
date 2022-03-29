@@ -1919,14 +1919,17 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (!form_keeps_mutations(which_trans))
         you.stop_directly_constricting_all(false);
 
-    // Stop being constricted if we are now too large.
+    // Stop being constricted if we are now too large, or are now immune.
     if (you.is_directly_constricted())
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         ASSERT(constrictor);
 
-        if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
+        if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY)
+            || you.res_constrict())
+        {
             you.stop_being_constricted();
+        }
     }
 
 
