@@ -311,7 +311,7 @@ static const form_entry formdata[] =
     "bellow", 0, "", "", "place yourself before", "air",
     { { "cleaving", "Your electrical attacks strike out in all directions at once." },
       { "", "You are incredibly evasive." },
-      { "insubstantial", "Your insubstantial body is immune to petrification and being set on fire"}
+      { "insubstantial", "Your insubstantial body is immune to petrification, constriction, and being set on fire"}
     }
 }
 
