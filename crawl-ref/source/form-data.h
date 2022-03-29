@@ -303,7 +303,7 @@ static const form_entry formdata[] =
 {
     transformation::storm, MONS_TWISTER, "Storm", "storm-form", "storm",
     "a lightning-filled tempest!",
-    EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY | MR_RES_STICKY_FLAME
+    EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY | MR_RES_STICKY_FLAME,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     10, 10, 0, true, 0, true, -1,
     SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },
