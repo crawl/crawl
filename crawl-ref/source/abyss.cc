@@ -85,7 +85,7 @@ static coord_def _place_feature_near(const coord_def &centre,
                                      int radius,
                                      dungeon_feature_type candidate,
                                      dungeon_feature_type replacement,
-                                     int tries, bool not_seen = false)
+                                     int tries)
 {
     coord_def cp = INVALID_COORD;
     for (int i = 0; i < tries; ++i)
@@ -96,9 +96,6 @@ static coord_def _place_feature_near(const coord_def &centre,
         cp = centre + offset;
 
         if (cp == centre || !in_bounds(cp))
-            continue;
-
-        if (not_seen && cell_see_cell_nocache(cp, centre))
             continue;
 
         if (env.grid(cp) == candidate)
@@ -1641,15 +1638,6 @@ static void _abyss_generate_new_area()
     place_transiting_monsters();
 }
 
-// Check if there is a path between the abyss centre and an exit location.
-static bool _abyss_has_path(const coord_def &to)
-{
-    ASSERT(env.grid(to) == DNGN_EXIT_ABYSS);
-
-    monster_pathfind pf;
-    return pf.init_pathfind(ABYSS_CENTRE, to);
-}
-
 // Generate the initial (proto) Abyss level. The proto Abyss is where
 // the player lands when they arrive in the Abyss from elsewhere.
 // _generate_area generates all other Abyss areas.
@@ -1659,7 +1647,6 @@ void generate_abyss()
     env.level_layout_types.insert("abyss");
     destroy_abyss();
 
-retry:
     _initialize_abyss_state();
 
     dprf(DIAG_ABYSS, "generate_abyss(); turn_on_level: %d",
@@ -1679,19 +1666,12 @@ retry:
     check_map_validity();
 
     // If we're starting out in the Abyss, make sure the starting grid is
-    // an altar to Lugonu and there's an exit near-by.
+    // an exit.
     // Otherwise, we start out on floor and there's a chance there's an
     // altar near-by.
     if (player_in_starting_abyss())
     {
-        env.grid(ABYSS_CENTRE) = DNGN_ALTAR_LUGONU;
-        const coord_def eloc = _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 2,
-                                                   DNGN_FLOOR, DNGN_EXIT_ABYSS,
-                                                   50, true);
-        // Now make sure there is a path from the abyss centre to the exit.
-        // If for some reason an exit could not be placed, don't bother.
-        if (eloc == INVALID_COORD || !_abyss_has_path(eloc))
-            goto retry;
+        env.grid(ABYSS_CENTRE) = DNGN_EXIT_ABYSS;
     }
     else
     {
