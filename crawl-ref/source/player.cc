@@ -2008,7 +2008,7 @@ bool acrospider_boost_active()
 }
 
     if (acrospider_boost_active())
-        evbonus += you.props[TRANSFORM_POW_KEY].get_int() / 12 - 2;
+        evbonus += you.props[TRANSFORM_POW_KEY].get_int() / 7;
 
     return evbonus;
 }

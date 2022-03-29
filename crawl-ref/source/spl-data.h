@@ -866,7 +866,7 @@ static const struct spell_desc spelldata[] =
     spschool::transmutation | spschool::poison,
     spflag::helpful | spflag::chaotic | spflag::utility,
     3,
-    100,
+    50,
     -1, -1,
     2, 0,
     TILEG_SPIDER_FORM,
