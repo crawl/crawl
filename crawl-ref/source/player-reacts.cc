@@ -599,11 +599,36 @@ static void _decrement_durations()
             you.props.erase(EMERGENCY_FLIGHT_KEY);
         }
 
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
+        bool last_forever = false;
+        switch(you.form)
         {
-            untransform();
+        case transformation::appendage:
+            last_forever = you.has_spell(SPELL_BEASTLY_APPENDAGE) && calc_spell_power(SPELL_BEASTLY_APPENDAGE, true) >= 50;
+            break;
+        case transformation::spider:
+            last_forever = you.has_spell(SPELL_SPIDER_FORM) && calc_spell_power(SPELL_SPIDER_FORM, true) >= 10;
+            break;
+        case transformation::ice_beast:
+            last_forever = you.has_spell(SPELL_ICE_FORM) && calc_spell_power(SPELL_ICE_FORM, true) >= 20;
+            break;
+        case transformation::statue:
+            last_forever = you.has_spell(SPELL_STATUE_FORM) && calc_spell_power(SPELL_STATUE_FORM, true) >= 40;
+            break;
+        case transformation::dragon:
+            last_forever = you.has_spell(SPELL_DRAGON_FORM) && calc_spell_power(SPELL_DRAGON_FORM, true) >= 50;
+            break;
+        case transformation::lich:
+            last_forever = you.has_spell(SPELL_NECROMUTATION) && calc_spell_power(SPELL_NECROMUTATION, true) >= 0;
+            break;
+        case transformation::storm:
+            last_forever = you.has_spell(SPELL_STORM_FORM) && calc_spell_power(SPELL_STORM_FORM, true) >= 50;
+            break;
+        default: break;
         }
+        if(!last_forever || you.transform_uncancellable)
+            if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr,
+                    random2(3), "Your transformation is almost over."))
+                untransform();
     }
 
     if (you.attribute[ATTR_SWIFTNESS] >= 0)

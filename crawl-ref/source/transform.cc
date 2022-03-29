@@ -1009,6 +1009,23 @@ public:
     }
 };
 
+class FormIce : public Form
+{
+private:
+    FormIce() : Form(transformation::ice_beast) { }
+    DISALLOW_COPY_AND_ASSIGN(FormIce);
+public:
+    static const FormIce &instance() { static FormIce inst; return inst; }
+
+    int get_base_unarmed_damage() const override
+    {
+        int power = 0;
+        if (you.props.exists(TRANSFORM_POW_KEY))
+            power = you.props[TRANSFORM_POW_KEY].get_int();
+        return 10 + div_rand_round(power, 25);
+    }
+};
+
 #if TAG_MAJOR_VERSION == 34
 
 class FormHydra : public Form
@@ -1802,6 +1819,9 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     if (which_trans == transformation::storm)
         set_airform_power(pow);
+
+    if (which_trans == transformation::ice_beast)
+        set_iceform_power(pow);
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
