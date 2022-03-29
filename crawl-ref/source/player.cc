@@ -1999,6 +1999,17 @@ static int _player_evasion_bonuses()
     if (acrobat_boost_active())
         evbonus += 15;
 
+bool acrospider_boost_active()
+{
+    return you.form == transformation::spider
+           && you.duration[DUR_ACROBAT]
+           && (!you.caught())
+           && (!you.is_constricted());
+}
+
+    if (acrospider_boost_active())
+        evbonus += you.props[TRANSFORM_POW_KEY].get_int() / 12 - 2;
+
     return evbonus;
 }
 
