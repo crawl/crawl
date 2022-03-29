@@ -1908,6 +1908,10 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         you.redraw_status_lights = true;
         break;
 
+    case transformation::lich:
+        drain_player(50, true, true);
+        break;
+
     case transformation::appendage:
         {
             auto& apps = you.props[APPENDAGE_KEY].get_vector();
