@@ -151,8 +151,8 @@ Blade Hands spell
 {{
     local hands = you.hand() .. "s"
     return "Causes long, scythe-shaped blades to grow from the " ..
-           "caster's " .. hands .. ", increasing melee damage " ..
-           "significantly."
+           "caster's " .. hands .. " for a short time, increasing " ..
+           "melee damage significantly."
 }}
 
 While transformed, equipped weapons, shields, and gloves are melded, and
