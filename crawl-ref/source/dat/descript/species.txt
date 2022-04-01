@@ -77,6 +77,11 @@ Kobold
 Kobolds are attuned to the shadows and can only see or be seen at a close range.
 They are small and a little fragile, and are talented in most skills.
 %%%%
+Mayflytaur
+
+Half insect, half human, Mayflytaurs have incredibly short lifespans but have
+evolved to be exceptionally overpowered in just about every imaginable way.
+%%%%
 Merfolk
 
 Half fish, half human, Merfolk are citizens of both water and land. They are
