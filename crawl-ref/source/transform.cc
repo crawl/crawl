@@ -1539,7 +1539,6 @@ static mutation_type appendages[] =
     MUT_HORNS,
     MUT_TENTACLE_SPIKE,
     MUT_TALONS,
-    MUT_DEFORMED,
     MUT_BEAST_PLATE
 };
 
@@ -1828,9 +1827,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     if (which_trans == transformation::storm)
         set_airform_power(pow);
-
-    if (which_trans == transformation::ice_beast)
-        set_iceform_power(pow);
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
