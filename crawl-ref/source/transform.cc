@@ -1914,7 +1914,8 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::lich:
-        drain_player(3 * raw_spell_fail(SPELL_NECROMUTATION), true, true);
+    int wiz_deux = (100 - fail_reduce) * 3
+        drain_player(3 * raw_spell_fail(SPELL_NECROMUTATION) + wiz_deux, true, true);
         break;
 
     case transformation::appendage:
@@ -2259,8 +2260,6 @@ bool draconian_dragon_exception()
 //lichform hack to prevent cheese. not great code.
 {
     if (you.form == transformation::lich)
-        if you.gear_change = true
-            untransform();
-        else
-            break;
+        if (you.equip[EQ_BODY_ARMOUR])
+            untransform(true);
 }
