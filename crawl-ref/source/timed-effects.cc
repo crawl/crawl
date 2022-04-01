@@ -1270,17 +1270,19 @@ void decr_zot_clock()
     if (!zot_clock_active())
         return;
     int &zot = _zot_clock();
+
+    const int div = you.has_mutation(MUT_SHORT_LIFESPAN) ? 10 : 1;
     if (zot == -1)
     {
         // new branch
-        zot = MAX_ZOT_CLOCK - ZOT_CLOCK_PER_FLOOR;
+        zot = MAX_ZOT_CLOCK - ZOT_CLOCK_PER_FLOOR / div;
     }
     else
     {
         // old branch, new floor
         if (bezotted())
             mpr("As you enter the new level, Zot loses track of you.");
-        zot = max(0, zot - ZOT_CLOCK_PER_FLOOR);
+        zot = max(0, zot - ZOT_CLOCK_PER_FLOOR / div);
     }
 }
 

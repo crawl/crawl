@@ -3992,6 +3992,7 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_GHOUL:
             return TILEG_SP_GHOUL;
         case SP_TENGU:
+        case SP_MAYFLYTAUR:
             return TILEG_SP_TENGU;
         case SP_MERFOLK:
             return TILEG_SP_MERFOLK;

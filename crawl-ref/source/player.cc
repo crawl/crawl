@@ -4194,7 +4194,7 @@ int get_player_poisoning()
     {
         // Approximate the effect of damage shaving by giving the first
         // 25 points of poison damage for 'free'
-        if (you.species == SP_DEEP_DWARF)
+        if (you.species == SP_DEEP_DWARF || you.species == SP_MAYFLYTAUR)
             return max(0, (you.duration[DUR_POISONING] / 1000) - 25);
         else
             return you.duration[DUR_POISONING] / 1000;
@@ -4283,7 +4283,8 @@ void handle_player_poison(int delay)
     // of poison. Stronger poison will do the same damage as for non-DD
     // until it goes below the threshold, which is a bit weird, but
     // so is damage shaving.
-    if (you.species == SP_DEEP_DWARF && you.duration[DUR_POISONING] - decrease < 25000)
+    if ((you.species == SP_DEEP_DWARF || you.species == SP_MAYFLYTAUR)
+        && you.duration[DUR_POISONING] - decrease < 25000)
     {
         dmg = (you.duration[DUR_POISONING] / 1000)
             - (25000 / 1000);
@@ -4358,7 +4359,7 @@ int poison_survival()
         return you.hp;
     const int rr = player_regen();
     const bool chei = have_passive(passive_t::slow_poison);
-    const bool dd = (you.species == SP_DEEP_DWARF);
+    const bool dd = (you.species == SP_DEEP_DWARF || you.species == SP_MAYFLYTAUR);
     const int amount = you.duration[DUR_POISONING];
     const double full_aut = _poison_dur_to_aut(amount);
     // Calculate the poison amount at which regen starts to beat poison.
