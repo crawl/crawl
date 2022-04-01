@@ -3548,6 +3548,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PHASE_SHIFT, "Phase Shift",
+    spschool::translocation,
+    spflag::no_ghost,
+    1,
+    25,
+    2, 2,
+    1, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -3600,7 +3611,6 @@ AXED_SPELL(SPELL_IRON_ELEMENTALS, "Summon Iron Elementals")
 AXED_SPELL(SPELL_LETHAL_INFUSION, "Lethal Infusion")
 AXED_SPELL(SPELL_MELEE, "Melee")
 AXED_SPELL(SPELL_MISLEAD, "Mislead")
-AXED_SPELL(SPELL_PHASE_SHIFT, "Phase Shift")
 AXED_SPELL(SPELL_POISON_WEAPON, "Poison Weapon")
 AXED_SPELL(SPELL_RANDOM_BOLT, "Random Bolt")
 AXED_SPELL(SPELL_REARRANGE_PIECES, "Rearrange the Pieces")

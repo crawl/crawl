@@ -367,6 +367,7 @@ static const map<job_type, job_def> job_data =
     3, 5, 4,
     { SP_FELID, SP_DEEP_DWARF, SP_SPRIGGAN, SP_PALENTONGA, SP_BASE_DRACONIAN, },
     {
+        SPELL_PHASE_SHIFT,
         SPELL_BLINK,
         SPELL_BECKONING,
         SPELL_GRAVITAS,

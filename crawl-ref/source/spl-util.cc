@@ -1647,6 +1647,9 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return true; // TODO
 
+    case SPELL_PHASE_SHIFT:
+        return find_near_hostiles(range).empty();
+
     default:
         break;
     }
@@ -1887,7 +1890,6 @@ const set<spell_type> removed_spells =
     SPELL_MELEE,
     SPELL_MIASMA_CLOUD,
     SPELL_MISLEAD,
-    SPELL_PHASE_SHIFT,
     SPELL_POISON_CLOUD,
     SPELL_POISON_WEAPON,
     SPELL_RANDOM_BOLT,

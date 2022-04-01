@@ -89,6 +89,9 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim,
 spret cast_scorch(int pow, bool fail);
 dice_def scorch_damage(int pow, bool random);
 
+spret cast_phase_shift(int pow, bool fail);
+dice_def phase_shift_damage(int pow, bool random);
+
 vector<coord_def> get_ignition_blast_sources(const actor *agent,
                                              bool tracer = false);
 spret cast_ignition(const actor *caster, int pow, bool fail);

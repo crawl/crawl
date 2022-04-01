@@ -19,6 +19,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "delay.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -1823,6 +1824,102 @@ vector<coord_def> find_near_hostiles(int range)
         }
     }
     return hostiles;
+}
+
+/// Thank, Xom.
+static vector<monster*> _rearrangeable_pieces()
+{
+    vector<monster* > mons;
+    if (player_stair_delay() || monster_at(you.pos()))
+        return mons;
+
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_is_tentacle_or_tentacle_segment(mi->type))
+            mons.push_back(*mi);
+    }
+    return mons;
+}
+
+dice_def phase_shift_damage(int pow, bool random)
+{
+    const int max_dam = 5 + (random ? div_rand_round(pow, 5) : pow / 5);
+    return calc_dice(2, max_dam);
+}
+
+static void _animate_phase_shift(coord_def p)
+{
+    if (!(Options.use_animations & UA_BEAM))
+        return;
+
+#ifdef USE_TILE
+    view_add_tile_overlay(p, tileidx_zap(RED));
+#endif
+#ifndef USE_TILE_LOCAL
+    view_add_glyph_overlay(p, { dchar_glyph(DCHAR_FIRED_ZAP),
+                               static_cast<unsigned short>(RED) });
+#endif
+
+    viewwindow(false);
+    update_screen();
+    scaled_delay(50);
+}
+
+spret cast_phase_shift(int pow, bool fail)
+{
+    fail_check();
+
+    const int range = spell_range(SPELL_PHASE_SHIFT, pow);
+    monster* targ = nullptr;
+    int seen = 0;
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mons = monster_at(*ri);
+        if (!mons
+            || mons->wont_attack()
+            || !_act_worth_targeting(you, *mons))
+        {
+            continue;
+        }
+        ++seen;
+        if (one_chance_in(seen))
+            targ = mons;
+    }
+    if (!targ)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    vector<monster*> mons = _rearrangeable_pieces();
+
+    // Swap places with a random monster.
+    monster* mon = targ;
+    swap_with_monster(mon);
+
+    const int base_dam = phase_shift_damage(pow, true).roll();
+    const int post_ac_dam = max(0, targ->apply_ac(base_dam));
+
+    mprf("Phase rearrange %s%s.", targ->name(DESC_THE).c_str(),
+        post_ac_dam ? "" : " but do no damage");
+    const coord_def p = targ->pos();
+    noisy(spell_effect_noise(SPELL_PHASE_SHIFT), p);
+
+    bolt beam;
+    beam.flavour = BEAM_MAGIC;
+    const int damage = mons_adjust_flavoured(targ, beam, post_ac_dam);
+    _player_hurt_monster(*targ, damage, beam.flavour);
+
+    if (!targ->alive())
+    {
+        _animate_phase_shift(p);
+        return spret::success;
+    }
+
+    you.pet_target = targ->mindex();
+
+    _animate_phase_shift(targ->pos());
+    return spret::success;
 }
 
 dice_def irradiate_damage(int pow, bool random)

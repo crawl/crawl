@@ -1393,6 +1393,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_flame_wave>(range);
     case SPELL_GOLUBRIAS_PASSAGE:
         return make_unique<targeter_passage>(range);
+    case SPELL_PHASE_SHIFT:
+        return make_unique<targeter_multiposition>(&you, find_near_hostiles(range));
 
     default:
         break;
@@ -2195,6 +2197,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CHAIN_LIGHTNING:
         return cast_chain_lightning(powc, you, fail);
+
+    case SPELL_PHASE_SHIFT:
+        return cast_phase_shift(powc, fail);
 
     case SPELL_DISPERSAL:
         return cast_dispersal(powc, fail);

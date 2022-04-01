@@ -1105,6 +1105,13 @@ Phantom Mirror spell
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
 %%%%
+Phase Shift spell
+
+This magic combines the phases of the two objects and separates them into 
+opposite positions. The two objects suffer minor coordinate damage in the 
+process of phase shift. To put it simply, you can swap positions with a 
+random foe. And you and the foe will suffer some damage.
+%%%%
 Plane Rend spell
 
 Summons some of the greater threats from one of the Pits of Slime, the Elven
