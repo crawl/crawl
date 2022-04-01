@@ -113,11 +113,15 @@ Beastly Appendage spell
     else
         return "Causes monstrous horns and talons to grow from the caster's " ..
                "body, granting them a chance of making an extra attack in " ..
-               "melee. It is not powerful enough to enhance " ..
-               "appendages that are already nonhuman."
+               "melee. Also, beastly plates grow from the user, halving " ..
+               "the user's armour but granting a little armour. " ..
+               "It is not powerful enough to enhance appendages"
+               "that are already nonhuman."
     end
 
 At maximum power, the effects of this spell last until cancelled.
+
+While transformed, casting spells becomes somewhat more difficult.
 }}
 
 While transformed, auxiliary armour on the affected body parts is melded.

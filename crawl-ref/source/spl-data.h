@@ -2011,7 +2011,7 @@ static const struct spell_desc spelldata[] =
     spschool::transmutation,
     spflag::helpful | spflag::chaotic,
     1,
-    50,
+    25,
     -1, -1,
     1, 0,
     TILEG_BEASTLY_APPENDAGE,

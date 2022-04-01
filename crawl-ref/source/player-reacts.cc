@@ -603,7 +603,7 @@ static void _decrement_durations()
         switch(you.form)
         {
         case transformation::appendage:
-            last_forever = you.has_spell(SPELL_BEASTLY_APPENDAGE) && calc_spell_power(SPELL_BEASTLY_APPENDAGE, true) >= 50;
+            last_forever = you.has_spell(SPELL_BEASTLY_APPENDAGE) && calc_spell_power(SPELL_BEASTLY_APPENDAGE, true) >= 5;
             break;
         case transformation::spider:
             last_forever = you.has_spell(SPELL_SPIDER_FORM) && calc_spell_power(SPELL_SPIDER_FORM, true) >= 10;

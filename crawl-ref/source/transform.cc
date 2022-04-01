@@ -874,6 +874,9 @@ public:
                 case MUT_TALONS:
                     msg << "Your feet morph into talons. ";
                     break;
+                case MUT_BEAST_PLATE:
+                    msg << "Beastly plates of armour form from your bones.";
+                    break;
                 default:
                     die("Unknown appendage type");
                     break;
@@ -1534,6 +1537,8 @@ static mutation_type appendages[] =
     MUT_HORNS,
     MUT_TENTACLE_SPIKE,
     MUT_TALONS,
+    MUT_DEFORMED,
+    MUT_BEAST_PLATE
 };
 
 static int _beastly_level(mutation_type mut)
@@ -1542,6 +1547,8 @@ static int _beastly_level(mutation_type mut)
     {
         case MUT_TENTACLE_SPIKE:
             return 3;
+        case MUT_BEAST_PLATE:
+            return 1;
         default:
             return 2;
     }

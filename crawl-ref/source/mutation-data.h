@@ -2289,6 +2289,10 @@ static const mutation_def mut_data[] =
   {"You feel less hungry for flesh.", "", ""},
 },
 
+{ MUT_BEAST_PLATE, 0, 1, mutflag::good, true, "beastly plates",
+  {"You have poorly fitting protective plates.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =
