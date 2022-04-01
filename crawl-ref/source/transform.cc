@@ -1025,7 +1025,7 @@ public:
         int power = 0;
         if (you.props.exists(TRANSFORM_POW_KEY))
             power = you.props[TRANSFORM_POW_KEY].get_int();
-        return 10 + div_rand_round(power, 25);
+        return 9 + div_rand_round(power, 15);
     }
 };
 
