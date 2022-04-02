@@ -249,17 +249,23 @@ vector<string> TextDB::_expand_file_list() const
             string dir = _directory.substr(0,_directory.length()-1);
             dir = datafile_path(dir, false, true, dir_exists);
             vector<string> matched = get_dir_files_ext(dir, file.substr(1));
-            input_files.insert(input_files.end(), matched.begin(), matched.end());
+            dir = canonicalise_file_separator(dir + "/");
+            for (const string& file_name: matched)
+            {
+                input_files.push_back(dir + file_name);
+            }
         }
         else
         {
-            input_files.push_back(file);
+            string full_input_path = _directory + file;
+            full_input_path = datafile_path(full_input_path, !_parent);
+            input_files.push_back(full_input_path);
         }
     }
 
     if (_test_mode && string(_db_name) == "translate")
     {
-        string test_file = string("../../../test/i18n/") + Options.lang_name + "/test.txt";
+        string test_file = string("./test/i18n/") + Options.lang_name + "/test.txt";
         test_file = canonicalise_file_separator(test_file);
         input_files.push_back(test_file);
     }
@@ -275,8 +281,7 @@ bool TextDB::_needs_update() const
 
     for (const string &file : _expand_file_list())
     {
-        string full_input_path = _directory + file;
-        full_input_path = datafile_path(full_input_path, !_parent);
+        string full_input_path = file;
         time_t mtime = file_modtime(full_input_path);
 #ifdef __ANDROID__
         if (file_exists(full_input_path))
@@ -340,8 +345,7 @@ void TextDB::_regenerate_db()
         end(1, true, "Unable to open DB: %s", db_path.c_str());
     for (const string &file : _expand_file_list())
     {
-        string full_input_path = _directory + file;
-        full_input_path = datafile_path(full_input_path, !_parent);
+        string full_input_path = file;
         char buf[20];
         time_t mtime = file_modtime(full_input_path);
         snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
