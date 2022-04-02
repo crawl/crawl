@@ -1623,9 +1623,14 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
 
-    // Beastly plates don't act if you are deformed, or can't wear armour. Wonky implementation for Octopodes.
-    if (you.has_innate_mutation(MUT_DEFORMED || MUT_NO_ARMOUR || MUT_TENTACLE_ARMS)
-        && (mutat == MUT_BEAST_PLATE))
+    // Beastly plates don't act if you are deformed, or can't wear body armour. Wonky.
+    if ((you.has_innate_mutation(MUT_DEFORMED)
+         || you.has_innate_mutation(MUT_NO_ARMOUR)
+         || you.has_innate_mutation(MUT_TENTACLE_ARMS)
+        && mutat == MUT_BEAST_PLATE)
+        return true;
+
+    if (you.species == SP_DRACONIAN)
         return true;
 
     // Already immune.
