@@ -38,7 +38,7 @@ int main()
     Options.lang_name = "fr";
     SysEnv.crawl_dir = ".";
     setlocale(LC_ALL, "");
-    databaseSystemInit();
+    databaseSystemInit(true);
     init_localisation("fr");
 
     string msg;

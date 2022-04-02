@@ -27,7 +27,7 @@ extern "C" {
 
 #define DPTR_COERCE char *
 
-void databaseSystemInit();
+void databaseSystemInit(bool test_mode = false);
 void databaseSystemShutdown();
 
 typedef bool (*db_find_filter)(string key, string body);

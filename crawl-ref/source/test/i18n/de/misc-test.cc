@@ -38,7 +38,7 @@ int main()
     Options.lang_name = "de";
     SysEnv.crawl_dir = ".";
     setlocale(LC_ALL, "");
-    databaseSystemInit();
+    databaseSystemInit(true);
     init_localisation("de");
 
     string s = "Eure Zaubersprüche";

@@ -155,6 +155,8 @@ static TextDB& FAQDB         = AllDBs[8];
 static TextDB& HintsDB       = AllDBs[9];
 static TextDB& TranslateDB   = AllDBs[10];
 
+static bool _test_mode = false;
+
 static string _db_cache_path(string db, const char *lang)
 {
     if (lang)
@@ -254,6 +256,14 @@ vector<string> TextDB::_expand_file_list() const
             input_files.push_back(file);
         }
     }
+
+    if (_test_mode && string(_db_name) == "translate")
+    {
+        string test_file = string("../../../test/i18n/") + Options.lang_name + "/test.txt";
+        test_file = canonicalise_file_separator(test_file);
+        input_files.push_back(test_file);
+    }
+
     return input_files;
 }
 
@@ -359,8 +369,9 @@ void TextDB::_regenerate_db()
 
 #define NUM_DB ARRAYSZ(AllDBs)
 
-void databaseSystemInit()
+void databaseSystemInit(bool test_mode)
 {
+    _test_mode = test_mode;
     for (unsigned int i = 0; i < NUM_DB; i++)
         AllDBs[i].init();
 }
