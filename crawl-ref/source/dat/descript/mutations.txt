@@ -914,3 +914,11 @@ devour on kill mutation
 When you kill living creatures you have a chance to devour their life force
 and restore hit points.
 %%%%
+beastly plates mutation
+
+Beastly plates grow from your skin. These plates provide some protection,
+though shapes your body in a human way, somewhat reducing the amount of
+protection provided by body armour. This has no effect on protection provided
+by armour enchantments, nor on the defensive benefits of training the Armour
+skill.
+%%%%

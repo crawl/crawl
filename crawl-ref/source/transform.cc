@@ -193,6 +193,8 @@ int FormDuration::power_bonus(int pow) const
     {
         case PS_NONE:
             return 0;
+        case PS_THIRD:
+            return random(pow/3);
         case PS_SINGLE:
             return random2(pow);
         case PS_ONE_AND_A_HALF:
@@ -874,6 +876,9 @@ public:
                 case MUT_TALONS:
                     msg << "Your feet morph into talons. ";
                     break;
+                case MUT_BEAST_PLATE:
+                    msg << "Beastly plates of armour form from your bones.";
+                    break;
                 default:
                     die("Unknown appendage type");
                     break;
@@ -1006,6 +1011,23 @@ public:
         // there's special casing in base_hand_name to get "fists"
         string hand = you.base_hand_name(true, true);
         return make_stringf("Storm %s", hand.c_str());
+    }
+};
+
+class FormIce : public Form
+{
+private:
+    FormIce() : Form(transformation::ice_beast) { }
+    DISALLOW_COPY_AND_ASSIGN(FormIce);
+public:
+    static const FormIce &instance() { static FormIce inst; return inst; }
+
+    int get_base_unarmed_damage() const override
+    {
+        int power = 0;
+        if (you.props.exists(TRANSFORM_POW_KEY))
+            power = you.props[TRANSFORM_POW_KEY].get_int();
+        return 9 + div_rand_round(power, 15);
     }
 };
 
@@ -1517,6 +1539,7 @@ static mutation_type appendages[] =
     MUT_HORNS,
     MUT_TENTACLE_SPIKE,
     MUT_TALONS,
+    MUT_BEAST_PLATE
 };
 
 static int _beastly_level(mutation_type mut)
@@ -1525,6 +1548,8 @@ static int _beastly_level(mutation_type mut)
     {
         case MUT_TENTACLE_SPIKE:
             return 3;
+        case MUT_BEAST_PLATE:
+            return 1;
         default:
             return 2;
     }
@@ -1888,6 +1913,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         you.redraw_status_lights = true;
         break;
 
+    case transformation::lich:
+    int wiz_deux = (100 - fail_reduce) * 3
+        drain_player(3 * raw_spell_fail(SPELL_NECROMUTATION) + wiz_deux, true, true);
+        break;
+
     case transformation::appendage:
         {
             auto& apps = you.props[APPENDAGE_KEY].get_vector();
@@ -2225,4 +2255,11 @@ bool draconian_dragon_exception()
     return species::is_draconian(you.species)
            && (you.form == transformation::dragon
                || !form_changed_physiology());
+}
+
+//lichform hack to prevent cheese. not great code.
+{
+    if (you.form == transformation::lich)
+        if (you.equip[EQ_BODY_ARMOUR])
+            untransform(true);
 }

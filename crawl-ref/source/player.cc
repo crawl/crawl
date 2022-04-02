@@ -1999,6 +1999,17 @@ static int _player_evasion_bonuses()
     if (acrobat_boost_active())
         evbonus += 15;
 
+bool acrospider_boost_active()
+{
+    return you.form == transformation::spider
+           && you.duration[DUR_ACROBAT]
+           && (!you.caught())
+           && (!you.is_constricted());
+}
+
+    if (acrospider_boost_active())
+        evbonus += div_rand_round(you.props[TRANSFORM_POW_KEY].get_int(), 7);
+
     return evbonus;
 }
 
@@ -5730,6 +5741,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
     if (get_armour_slot(armour) == EQ_BODY_ARMOUR
             && (get_mutation_level(MUT_DEFORMED)
                 || get_mutation_level(MUT_PSEUDOPODS)))
+                || get_mutation_level(MUT_BEAST_PLATE)))
     {
         return AC - base / 2;
     }
@@ -5829,6 +5841,7 @@ vector<mutation_ac_changes> all_mutation_ac_changes = {
     ,mutation_ac_changes(MUT_TOUGH_SKIN,             mutation_activity_type::PARTIAL, ONE_TWO_THREE)
     ,mutation_ac_changes(MUT_SHAGGY_FUR,             mutation_activity_type::PARTIAL, ONE_TWO_THREE)
     ,mutation_ac_changes(MUT_PHYSICAL_VULNERABILITY, mutation_activity_type::PARTIAL, {-5,-10,-15})
+    ,mutation_ac_changes(MUT_BEAST_PLATE,           mutation_activity_type::PARTIAL, {3,3,3})
     // Scale mutations are more easily disabled (forms etc.). This appears to be for flavour reasons.
     // Preserved behaviour from before mutation ac was turned to data.
     ,mutation_ac_changes(MUT_IRIDESCENT_SCALES,      mutation_activity_type::FULL,    {2, 4, 6})

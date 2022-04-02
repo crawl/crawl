@@ -133,6 +133,7 @@ int fail_severity(spell_type spell);
 int failure_rate_colour(spell_type spell);
 int failure_rate_to_int(int fail);
 string failure_rate_to_string(int fail);
+int fail_reduce(void);
 
 int power_to_barcount(int power);
 
