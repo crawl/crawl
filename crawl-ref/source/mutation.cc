@@ -1622,14 +1622,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
         return true;
 
-
-    // Beastly plates don't act if you are innately deformed, or can't wear armour. Wonky implementation for Octopodes.
-    if (you.has_innate_mutation(MUT_DEFORMED))
-         || you.has_innate_mutation(MUT_TENTACLE_ARMS))
-         || you.has_innate_mutation(MUT_NO_ARMOUR))
-        && (mutat == MUT_BEAST_PLATE))
-        return true;
-
     // Already immune.
     if (you.is_nonliving(false) && mutat == MUT_POISON_RESISTANCE)
         return true;
