@@ -1621,8 +1621,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
         return true;
-
-
+  
     // Beastly plates don't act if you are deformed, or can't wear body armour. Wonky.
     if ((you.has_innate_mutation(MUT_DEFORMED)
          || you.has_innate_mutation(MUT_NO_ARMOUR)
