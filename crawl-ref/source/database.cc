@@ -279,9 +279,8 @@ bool TextDB::_needs_update() const
     string ts;
     bool no_files = true;
 
-    for (const string &file : _expand_file_list())
+    for (const string &full_input_path : _expand_file_list())
     {
-        string full_input_path = file;
         time_t mtime = file_modtime(full_input_path);
 #ifdef __ANDROID__
         if (file_exists(full_input_path))
@@ -343,9 +342,8 @@ void TextDB::_regenerate_db()
     string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
-    for (const string &file : _expand_file_list())
+    for (const string &full_input_path : _expand_file_list())
     {
-        string full_input_path = file;
         char buf[20];
         time_t mtime = file_modtime(full_input_path);
         snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
