@@ -1,8 +1,9 @@
+TAG_MAJOR_VERSION: 34
 enum: SP_MAYFLYTAUR
 monster: MONS_BUTTERFLY
 name: "Mayflytaur"
 short_name: "My"
-difficulty: Advanced
+difficulty: False
 aptitudes:
   xp: 0
   hp: 2
@@ -64,9 +65,6 @@ mutations:
 fake_mutations:
   - long: You are resistant to damage.
     short: damage resistance
-recommended_jobs:
-  - JOB_DELVER
-  - JOB_WANDERER
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_POLEARMS

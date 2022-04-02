@@ -789,7 +789,11 @@ void reset_damage_counters()
 
 bool can_shave_damage()
 {
-    return you.species == SP_DEEP_DWARF || you.species == SP_MAYFLYTAUR;
+    return you.species == SP_DEEP_DWARF
+#if TAG_MAJOR_VERSION == 34
+    || you.species == SP_MAYFLYTAUR
+#endif
+    ;
 }
 
 int do_shave_damage(int dam)
