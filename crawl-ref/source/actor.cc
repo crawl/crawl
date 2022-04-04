@@ -752,16 +752,24 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
 
-    string but;
+    string target = defender.name(DESC_THE);
+
     if (damage <= 0 && is_player()
         && you.can_see(defender))
     {
-        but = " but do no damage.";
+        // zero-damage player attack
+        if (vile_clutch)
+        {
+            mprf("The zombie hands constrict %s but do no damage.",
+                 target.c_str());
+        }
+        else
+            mprf("You constrict %s but do no damage.", target.c_str());
     }
-
-    if (is_player() || you.can_see(*this))
+    else if (is_player() || you.can_see(*this))
     {
         string attacker_desc;
+        bool direct_player_attack = false;
         bool force_plural = false;
         if (vile_clutch)
         {
@@ -774,34 +782,33 @@ void actor::constriction_damage_defender(actor &defender, int duration)
             force_plural = true;
         }
         else if (is_player())
-            attacker_desc = "You"; // noloc
+            direct_player_attack = true;
         else
             attacker_desc = name(DESC_THE);
 
-        string target = defender.name(DESC_THE);
-
         string msg;
-        if (attacker_desc == "You")
+        if (direct_player_attack) 
             msg = localise("You constrict %s", target);
         else if (defender.is_player())
+        {
             if (force_plural)
                 msg = localise("%s constrict you", attacker_desc);
             else
                 msg = localise("%s constricts you", attacker_desc);
+        }
         else
+        {
             if (force_plural)
                 msg = localise("%s constrict %s", attacker_desc, target);
             else
                 msg = localise("%s constricts %s", attacker_desc, target);
+        }
 
 #ifdef DEBUG_DIAGNOSTICS
         msg += make_stringf(" for %d", damage);
 #endif
 
-        if (!but.empty())
-            msg += localise(but);
-        else
-            msg = add_attack_strength_punct(msg, damage, false);
+        msg = add_attack_strength_punct(msg, damage, false);
 
         mpr_nolocalise(msg);
     }
@@ -817,10 +824,7 @@ void actor::constriction_damage_defender(actor &defender, int duration)
         msg += make_stringf(" for %d", damage);
 #endif
 
-        if (!but.empty())
-            msg += localise(but);
-        else
-            msg = add_attack_strength_punct(msg, damage, false);
+        msg = add_attack_strength_punct(msg, damage, false);
 
         mpr_nolocalise(msg);
     }

@@ -924,10 +924,14 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     const int orig_hurted = freeze_damage(pow).roll();
     // calculate the resist adjustment to punctuate
     int hurted = mons_adjust_flavoured(mons, beam, orig_hurted, false);
-    mprf("You freeze %s%s",
-         mons->name(DESC_THE).c_str(),
-         hurted ? " but do no damage."
-                : attack_strength_punctuation(hurted).c_str());
+    if (hurted > 0)
+    {
+        string msg = localise("You freeze %s", mons->name(DESC_THE));
+        msg = add_attack_strength_punct(msg, hurted, false);
+        mpr_nolocalise(msg);
+    }
+    else
+        mprf("You freeze %s but do no damage.", mons->name(DESC_THE).c_str());
 
     // print the resist message and expose to the cold
     mons_adjust_flavoured(mons, beam, orig_hurted);

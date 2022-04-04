@@ -736,32 +736,35 @@ Ihr verliert den Halt auf {dat}%s.
 %s loses hold of %s.
 %s verliert den Halt auf {dat}%s.
 %%%%
-" but do no damage."
-, fügt aber keinen Schaden zu.
+The zombie hands constrict %s but do no damage.
+Die Zombiehände schnüren {acc}%s ab, fügen aber keinen Schaden zu.
+%%%%
+You constrict %s but do no damage.
+Ihr schnürt {acc}%s ab, fügt aber keinen Schaden zu.
 %%%%
 The grasping roots
-
+Die greifenden Wurzeln
 %%%%
 You constrict %s
-Ihr verengt {acc}%s
+Ihr schnürt {acc}%s ab
 %%%%
 %s constrict you
-
+%s schnüren Euch ab
 %%%%
 %s constricts you
-%s verengt Euch
+%s schnürt Euch ab
 %%%%
 %s constrict %s
-
+%s schnüren {acc}%s ab
 %%%%
 %s constricts %s
-%s verengt {acc}%s
+%s schnürt {acc}%s ab
 %%%%
 You are constricted
-
+Ihr werdet abgeschnürt
 %%%%
 %s is constricted
-
+%s wird abgeschnürt
 %%%%
 You are unaffected.
 Ihr seid nicht betroffen.
@@ -16115,6 +16118,9 @@ Ihr versucht {acc}%s anzugreifen, zuckst aber vor Angst zurück!
 You engulf %s in ooze!
 
 %%%%
+" but do no damage."
+, fügt aber keinen Schaden zu.
+%%%%
 quick blade "Gimble"
 
 %%%%
@@ -27949,7 +27955,7 @@ Sound blasts the surrounding area!
 You feel very cold.
 Ihr fühlt Euch sehr kalt.
 %%%%
-You freeze %s%s
+You freeze %s but do no damage.
 
 %%%%
 The air twists around and strikes %s%s%s
