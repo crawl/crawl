@@ -90,9 +90,13 @@ InvEntry::InvEntry(const item_def &i)
     if (item_is_stationary_net(i))
     {
         actor *trapped = actor_at(i.pos);
-        text += make_stringf(" (holding %s)",
-                            trapped ? trapped->name(DESC_A).c_str()
-                                    : "nobody"); // buggy net, but don't crash
+        if (trapped)
+            text += localise(" (holding %s)", trapped->name(DESC_A));
+        else
+        {
+            // buggy net, but don't crash
+            text += " (holding nobody)"; // noloc
+        }
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
@@ -321,7 +325,8 @@ void InvEntry::set_show_coordinates(bool doshow)
 }
 
 InvMenu::InvMenu(int mflags)
-    : Menu(mflags, "inventory"), type(menu_type::invlist), pre_select(nullptr),
+    : Menu(mflags, "inventory"), // noloc
+      type(menu_type::invlist), pre_select(nullptr),
       title_annotate(nullptr), _mode_special_drop(false)
 {
 #ifdef USE_TILE_LOCAL
@@ -864,6 +869,23 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     const menu_sort_condition *cond = nullptr;
     if (sort) cond = find_menu_sort_condition();
 
+    // calculate max object classname length
+    // since we have to localise the class names for this, we keep a copy,
+    // to avoid having to localise again later
+    int max_classname_width = 0;
+    map<int, string> classnames;
+    for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
+    {
+        int i = inv_order[obj];
+        if (!inv_class[i])
+            continue;
+        string classname = localise(item_class_name(i));
+        classnames[i] = classname;
+        int width = strwidth(classname);
+        if (width > max_classname_width)
+            max_classname_width = width;
+    }
+
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {
         int i = inv_order[obj];
@@ -871,7 +893,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        string subtitle = item_class_name(i);
+        string subtitle = classnames[i];
 
         // Mention the class selection shortcuts.
         if (is_set(MF_MULTISELECT))
@@ -880,14 +902,10 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             get_class_hotkeys(i, glyphs);
             if (!glyphs.empty())
             {
-                // longest string
-                const string str = "Magical Staves ";
-                subtitle += string(strwidth(str) - strwidth(subtitle),
+                subtitle += string(1 + max_classname_width - strwidth(subtitle),
                                    ' ');
-                subtitle += "(select all with <w>";
-                for (char gly : glyphs)
-                    subtitle += gly;
-                subtitle += "</w><blue>)";
+                subtitle += localise("(select all with <w>%s</w><blue>)",
+                                     string(glyphs.begin(), glyphs.end()));
             }
         }
         add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
@@ -916,9 +934,9 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             if (tag == "pickup")
             {
                 if (ie->item && item_is_stationary(*ie->item))
-                    ie->tag = "nopickup";
+                    ie->tag = "nopickup"; // noloc
                 else
-                    ie->tag = "pickup";
+                    ie->tag = "pickup"; // noloc
             }
             if (get_flags() & MF_NOSELECT)
                 ie->hotkeys.clear();
@@ -966,8 +984,10 @@ vector<SelItem> InvMenu::get_selitems() const
 
 string InvMenu::help_key() const
 {
-    return type == menu_type::drop || type == menu_type::pickup ? "pick-up"
-                                                                : "";
+    if (type == menu_type::drop || type == menu_type::pickup)
+        return "pick-up"; // noloc (key)
+    else
+        return "";
 }
 
 int InvMenu::getkey() const
@@ -1013,7 +1033,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return "Armour";
         case OBJ_WANDS:      return "Wands";
 #if TAG_MAJOR_VERSION == 34
-        case OBJ_FOOD:       return "Comestibles";
+        case OBJ_FOOD:       return "Comestibles"; // noloc (obsolete)
 #endif
         case OBJ_SCROLLS:    return "Scrolls";
         case OBJ_JEWELLERY:  return "Jewellery";
@@ -1021,7 +1041,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_BOOKS:      return "Books";
         case OBJ_STAVES:     return "Magical Staves";
 #if TAG_MAJOR_VERSION == 34
-        case OBJ_RODS:       return "Rods";
+        case OBJ_RODS:       return "Rods"; // noloc (obsolete)
 #endif
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
@@ -1041,7 +1061,7 @@ const char* item_slot_name(equipment_type type)
     case EQ_GLOVES:      return "gloves";
     case EQ_BOOTS:       return "boots";
     case EQ_SHIELD:      return "shield";
-    case EQ_BODY_ARMOUR: return "body";
+    case EQ_BODY_ARMOUR: return "body"; // noloc
     default:             return "";
     }
 }
@@ -1320,27 +1340,35 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
         }
     }
 
-    return make_stringf(" (%u%s turn%s)",
-                        (unsigned int)s->size(),
-                        extraturns? "+" : "",
-                        s->size() > 1? "s" : "");
+    int turns = (int)s->size();
+    if (turns == 1 && !extraturns)
+        return localise(" (1 turn)");
+    else if (turns == 1)
+        return localise(" (1+ turns)");
+    else if (!extraturns)
+        return localise(" (%d turns)", turns);
+    else
+        return localise(" (%d+ turns)", turns);
 }
 
 static string _drop_prompt(bool as_menu_title, bool menu_autopickup_mode)
 {
+    const int min_title_width = 40;
     string prompt_base;
 
     if (as_menu_title && menu_autopickup_mode)
-        prompt_base = "Drop (and turn off autopickup for) what? ";
-    else if (as_menu_title)
-        prompt_base = "Drop what?                               ";
+        prompt_base = localise("Drop (and turn off autopickup for) what?");
     else
-        prompt_base = "Drop what? ";
-    return prompt_base + slot_description()
+        prompt_base = localise("Drop what?");
+
+    if (as_menu_title && strwidth(prompt_base) < min_title_width)
+        prompt_base += string(min_title_width - strwidth(prompt_base), ' ');
+
+    return prompt_base + " " + slot_description() + " "
 #ifdef TOUCH_UI
-                          + " (<Enter> or tap header to drop)";
+                          + localise("(<Enter> or tap header to drop)");
 #else
-                          + " (_ for help)";
+                          + localise("(_ for help)");
 #endif
 }
 
@@ -1379,9 +1407,9 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 
         if (need_prompt)
         {
-            const string prompt = _drop_prompt(false, false);
-            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt.c_str());
+            string prompt = _drop_prompt(false, false);
+            prompt += localise(" (<w>?</w> for menu, <w>Esc</w> to quit)");
+            mpr_nolocalise(MSGCH_PROMPT, prompt);
         }
 
         if (need_getch)
@@ -1541,6 +1569,7 @@ bool check_old_item_warning(const item_def& item,
                             bool check_melded)
 {
     item_def old_item;
+    string item_name = old_item.name(DESC_INVENTORY);
     string prompt;
     bool penance = false;
     if (oper == OPER_WIELD) // can we safely unwield old item?
@@ -1556,7 +1585,7 @@ bool check_old_item_warning(const item_def& item,
         if (!needs_handle_warning(old_item, OPER_WIELD, penance))
             return true;
 
-        prompt += "Really unwield ";
+        prompt = localise("Really unwield %s?", item_name);
     }
     else if (oper == OPER_WEAR) // can we safely take off old item?
     {
@@ -1573,7 +1602,7 @@ bool check_old_item_warning(const item_def& item,
         if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
             return true;
 
-        prompt += "Really take off ";
+        prompt = localise("Really take off %s?", item_name);
     }
     else if (oper == OPER_PUTON) // can we safely remove old item?
     {
@@ -1590,7 +1619,8 @@ bool check_old_item_warning(const item_def& item,
             if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
                 return true;
 
-            prompt += "Really remove ";
+            if (old_item.cursed())
+                prompt = localise("Really remove %s?", item_name);
         }
         else // rings handled in prompt_ring_to_remove
             return true;
@@ -1600,35 +1630,33 @@ bool check_old_item_warning(const item_def& item,
 
     // now ask
     if (old_item.cursed())
-        prompt += "and destroy ";
-    prompt += old_item.name(DESC_INVENTORY);
-    prompt += "?";
+        prompt += localise(" Item will be destroyed.");
     if (penance)
-        prompt += " This could place you under penance!";
+        prompt += localise(" This could place you under penance!");
     return yesno(prompt.c_str(), false, 'n');
 }
 
-static string _operation_verb(operation_types oper)
+static string _confirm_operation_prompt(operation_types oper)
 {
     switch (oper)
     {
-    case OPER_WIELD:          return "wield";
-    case OPER_QUAFF:          return "quaff";
-    case OPER_DROP:           return "drop";
-    case OPER_TAKEOFF:        return "take off";
-    case OPER_WEAR:           return "wear";
-    case OPER_PUTON:          return "put on";
-    case OPER_REMOVE:         return "remove";
-    case OPER_READ:           return "read";
-    case OPER_MEMORISE:       return "memorise from";
-    case OPER_ZAP:            return "zap";
-    case OPER_FIRE:           return "fire";
-    case OPER_EVOKE:          return "evoke";
-    case OPER_DESTROY:        return "destroy";
-    case OPER_QUIVER:         return "quiver";
+    case OPER_WIELD:          return "Really wield %s?";
+    case OPER_QUAFF:          return "Really quaff %s?";
+    case OPER_DROP:           return "Really drop %s?";
+    case OPER_TAKEOFF:        return "Really take off %s?";
+    case OPER_WEAR:           return "Really wear %s?";
+    case OPER_PUTON:          return "Really put on %s?";
+    case OPER_REMOVE:         return "Really remove %s?";
+    case OPER_READ:           return "Really read %s?";
+    case OPER_MEMORISE:       return "Really memorise from %s?";
+    case OPER_ZAP:            return "Really zap %s?";
+    case OPER_FIRE:           return "Really fire %s?";
+    case OPER_EVOKE:          return "Really evoke %s?";
+    case OPER_DESTROY:        return "Really destroy %s?";
+    case OPER_QUIVER:         return "Really quiver %s?";
     case OPER_ANY:
     default:
-        return "choose";
+        return "Really choose %s?";
     }
 }
 
@@ -1829,17 +1857,25 @@ bool check_warning_inscriptions(const item_def& item,
         }
 
         // XXX: duplicates a check in delay.cc:_finish_delay()
-        string prompt = "Really " + _operation_verb(oper) + " ";
-        prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
-                                      : item.name(DESC_A));
+        string prompt = _confirm_operation_prompt(oper);
+        string item_name = (in_inventory(item) ? item.name(DESC_INVENTORY)
+                                               : item.name(DESC_A));
+        prompt = localise(prompt, item_name);
+
+        bool teleporting = false;
         if (needs_notele_warning(item, oper)
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {
-            prompt += " while about to teleport";
+            teleporting = true;
         }
-        prompt += "?";
-        if (penance)
+
+        if (penance && teleporting)
+            prompt += " This could place you under penance AND you're about to teleport!";
+        else if (penance)
             prompt += " This could place you under penance!";
+        else if (teleporting)
+            prompt += " You're about to teleport!";
+
         return yesno(prompt.c_str(), false, 'n')
                && check_old_item_warning(item, oper);
     }
@@ -1912,6 +1948,9 @@ int prompt_invent_item(const char *prompt,
             keyin = '*';
     }
 
+    // localise prompt
+    string loc_prompt = localise(prompt ? prompt : "");
+
     while (true)
     {
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
@@ -1922,8 +1961,9 @@ int prompt_invent_item(const char *prompt,
 
         if (need_prompt)
         {
-            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt);
+            string msg = loc_prompt;
+            msg += localise(" (<w>?</w> for menu, <w>Esc</w> to quit)");
+            mpr_nolocalise(MSGCH_PROMPT, msg);
         }
         else
             flush_prev_message();
@@ -1957,7 +1997,8 @@ int prompt_invent_item(const char *prompt,
 
             while (true)
             {
-                keyin = _invent_select(prompt, mtype, current_type_expected, -1,
+                keyin = _invent_select(loc_prompt.c_str(), mtype,
+                                       current_type_expected, -1,
                                        mflags, nullptr, &items);
 
                 if (allow_list_known && keyin == '\\')
@@ -2110,7 +2151,7 @@ bool item_is_evokable(const item_def &item, bool unskilled,
                       bool msg, bool equip)
 {
     const string error = item_is_melded(item)
-            ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
+            ? "That item is melded into your body."
             : "That item can only be evoked when wielded.";
 
     const bool no_evocables = you.get_mutation_level(MUT_NO_ARTIFICE);

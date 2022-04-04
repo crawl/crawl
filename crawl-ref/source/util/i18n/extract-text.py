@@ -342,6 +342,8 @@ for filename in files:
                     continue
                 if re.search(r'set_sync_id\s*\(', line):
                     continue
+                if re.search(r'compare_item', line):
+                    continue
 
                 # just a find
                 if re.search(r'\bstrstr\s*\(', line):

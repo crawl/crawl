@@ -42,10 +42,16 @@ Buch
 staff
 Stecken
 %%%%
+magical staff
+magischer Stecken
+%%%%
 orb
 Kugel
 %%%%
 miscellaneous
+Verschiedenes
+%%%%
+misc
 Verschiedenes
 %%%%
 corpse

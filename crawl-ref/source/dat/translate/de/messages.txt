@@ -9958,272 +9958,224 @@ Noch keine Highscores...
 # invent.cc
 ##################
 %%%%
-inventory
-
-%%%%
 You aren't carrying anything.
 Ihr tragt nichts.
 %%%%
 You aren't carrying any weapons.
-
+Ihr tragt keine Waffen.
 %%%%
 You aren't carrying any weapons that can be blessed.
-
+Ihr tragt keine Waffen, die gesegnet werden können.
 %%%%
 Your armour is currently melded into you.
-
+Eure Rüstung ist bereits mit Euch fusioniert.
 %%%%
 You aren't carrying any currently wearable armour.
-
+Ihr habt keine Rüsting bei Euch, die Ihr im Moment anziehen könnt.
 %%%%
 You aren't carrying any wearable armour.
-
+Ihr habt keine Rüsting bei Euch, die Ihr anziehen könnt.
 %%%%
 You don't have any unidentified items.
-
+Ihr habt keine unidentifizierte Gegenstände.
 %%%%
 You aren't carrying any armour which can be enchanted further.
-
+Ihr habt keine Rüsting bei Euch, die weiter bezaubert werden kann.
 %%%%
 You don't have any corpses.
-
+Ihr habt keine Leichen.
 %%%%
 You aren't carrying any potions.
-
+Ihr habt keine Zaubertränke.
 %%%%
 You aren't carrying any scrolls.
-
+Ihr habt keine Schriftrollen.
 %%%%
 You don't have any books.
-
+Ihr habt keine Bücher bei Euch.
 %%%%
 You aren't carrying any wands.
-
+Ihr habt keine Zauberstäbe bei Euch.
 %%%%
 You aren't carrying any pieces of jewellery.
-
+Ihr habt keinen Schmuck bei Euch.
 %%%%
 You aren't carrying any items that might be thrown or fired.
-
+Ihr habt keine Gegenstände bei Euch, die geschossen oder geworfen werden können.
 %%%%
 You aren't carrying any items that you can evoke without wielding.
-
+Ihr habt keine Gegenstände bei Euch, mit dem Ihr evozieren könnt ohne.
 %%%%
 You aren't carrying any items that you can evoke.
-
+Ihr habt keine Gegenstände bei Euch, mit dem Ihr evozieren könnt, ohne sie zu führen.
 %%%%
 None of your equipped items are cursed.
 Keiner Eurer ausgerüsteten Gegenstände ist verflucht.
 %%%%
 You aren't carrying any weapons that can be branded.
-
+Ihr habt keine Waffen bei Euch, die durchtränken werden können.
 %%%%
 You aren't carrying any weapons that can be enchanted.
-
+Ihr habt keine Waffen bei Euch, die verzaubert werden können.
 %%%%
 You aren't carrying anything you can give to a follower.
-
+Ihr habt nichts bei Euch, das Ihr einem Anhänger geben könnt.
 %%%%
 You aren't wearing any cursable items.
-
+Ihr habt nichts an, das verflucht werden kann.
 %%%%
 You aren't wearing any uncursed rings.
-
+Ihr habt keinen nichtverfluchten Ring an.
 %%%%
 You don't have any quiverable items.
-
+Ihr habt nichts bei Euch, das in den Köcher kommen kann.
 %%%%
 You aren't carrying any such object.
-
+Ihr habt keinen solchen Gegenstand bei Euch.
 %%%%
-basename
-
-%%%%
-qualname
-
-%%%%
-fullname
-
-%%%%
-dbname
-
-%%%%
-curse
-
-%%%%
-art
-
-%%%%
-charged
-
-%%%%
-qty
-
-%%%%
-slot
-
-%%%%
-"Magical Staves "
-
-%%%%
-(select all with <w>
-
-%%%%
-</w><blue>)
-
-%%%%
-nopickup
-
-%%%%
-pick-up
-
-%%%%
-magical staff
-
-%%%%
-misc
-
+(select all with <w>%s</w><blue>)
+(alle mit <w>%s</w><blue> wählen)
 %%%%
 Hand Weapons
-
+Handwaffen
 %%%%
 Missiles
-
+Geschosse
 %%%%
 Wands
-
+Zauberstäbe
 %%%%
 Scrolls
-
+Schriftrollen
 %%%%
 Jewellery
-
+Schmuck
 %%%%
 Potions
-
+Zaubertränke
 %%%%
 Books
-
+Bücher
 %%%%
 Magical Staves
-
+Magische Stecken
 %%%%
 Orbs of Power
-
+Kugeln der Macht
 %%%%
 Miscellaneous
-
+Verschiedenes
 %%%%
 Carrion
-
+Aas
 %%%%
 Runes of Zot
-
+Runen von Zot
 %%%%
-body
-
+" (1 turn)"
+" (1 Runde)"
 %%%%
-" (%u%s turn%s)"
-
+" (1+ turns)"
+" (1+ Runden)"
 %%%%
-"Drop (and turn off autopickup for) what? "
-
+" (%d turns)"
+" (%d Runden)"
 %%%%
-"Drop what?                               "
-
+" (%d+ turns)"
+" (%d+ Runden)"
 %%%%
-"Drop what? "
-
+Drop (and turn off autopickup for) what?
+Was wird abgesetzt (und die automatische Abholung dafür ausgeschaltet)?
 %%%%
-" (<Enter> or tap header to drop)"
-
+Drop what?
+Was wird abgesetzt?
 %%%%
-" (_ for help)"
-
+(<Enter> or tap header to drop)
+(<Enter> oder Kopfzeile tippen abzulegen)
 %%%%
-%s (<w>?</w> for menu, <w>Esc</w> to quit)
-%s (<w>?</w> für Menü, <w>Esc</w> zum Beenden)
+(_ for help)
+(_ für Hilfe)
+%%%%
+" (<w>?</w> for menu, <w>Esc</w> to quit)"
+" (<w>?</w> für Menü, <w>Esc</w> zu beenden)"
 %%%%
 You don't have any such object.
 Ihr habt kein solches Objekt.
 %%%%
-"Really unwield "
-
+Really unwield %s?
+Wirklich {acc}%s verstauen?
 %%%%
-"Really take off "
-
+Really take off %s?
+Wirklich {acc}%s ablegen?
 %%%%
-"Really remove "
-
+Really remove %s?
+Wirklich {acc}%s ablegen?
 %%%%
-"and destroy "
-
+" Item will be destroyed."
+" Gegenstand wird zerstört werden."
 %%%%
 " This could place you under penance!"
-
+" Das könnte Buße erzeugen!"
 %%%%
-wield
-
+Really wield %s?
+Wirklich %s führen?
 %%%%
-quaff
-
+Really quaff %s?
+Wirklich %s trinken?
 %%%%
-drop
-
+Really drop %s?
+Wirklich %s absetzen?
 %%%%
-take off
-
+Really wear %s?
+Wirklich %s anziehen?
 %%%%
-wear
-
+Really put on %s?
+Wirklich %s anlegen?
 %%%%
-put on
-
+Really read %s?
+Wirklich %s lesen?
 %%%%
-remove
-
+Really memorise from %s?
+Wirklich von %s memorieren?
 %%%%
-read
-
+Really zap %s?
+Wirklich %s zaubern?
 %%%%
-memorise from
-
+Really fire %s?
+Wirklich %s schießen?
 %%%%
-evoke
-
+Really evoke %s?
+Wirklich %s evozieren?
 %%%%
-destroy
-
+Really destroy %s?
+Wirklich %s zerstören?
 %%%%
-quiver
-
+Really quiver %s?
+Wirklich %s in den Köcher stecken?
 %%%%
-choose
-
+Really choose %s?
+Wirklich %s wählen?
 %%%%
-"Really "
-
+" This could place you under penance AND you're about to teleport!"
+" Das könnte Euch unter Strafe stellen UND Ihr werdet gleich teleportieren!"
 %%%%
-" while about to teleport"
-
+" You're about to teleport!"
+" Ihr werdet gleich teleportieren!"
 %%%%
 That's the wrong kind of item! (Use * to select it.)
-Das ist die falsche Art von Gegenstand! (Verwende *, um ihn auszuwählen.)
+Das ist die falsche Art Gegenstand! (* verwenden, um ihn auszuwählen.)
 %%%%
-"Your "
-
-%%%%
-" is melded into your body."
-
+That item is melded into your body.
+Dieser Gegenstand ist mit Eurem Körper fusioniert.
 %%%%
 That item can only be evoked when wielded.
-
+Dieser Gegenstand kann nur evoziert werden, wenn er handgehabt würde!
 %%%%
 That item cannot be used by those hated by all!
 Dieser Gegenstand kann nicht von denen benutzt werden, die von allen gehasst werden!
 %%%%
 That item cannot be evoked!
-Dieser Gegenstand kann nicht beschworen werden!
+Dieser Gegenstand kann nicht evoziert werden!
 %%%%
 
 ##################
@@ -10280,6 +10232,9 @@ Wield which item (- for none, * to show all)?
 %%%%
 You are already wielding that!
 Das schwingt Ihr schon!
+%%%%
+"Really unwield "
+
 %%%%
 "You can't shoot while berserk! Really wield "
 
@@ -10739,6 +10694,9 @@ There are many items here.
 " (<Enter> or tap header to pick up)"
 
 %%%%
+" (_ for help)"
+
+%%%%
 Select pick up quantity by entering a number, then select the item
 
 %%%%
@@ -10917,7 +10875,7 @@ Sorry, no books on that skill today.
 Sorry, heute keine Bücher über diese Fertigkeit.
 %%%%
 You have identified the last %s.
-Ihr habt die letzten%s identifiziert.
+Ihr habt den letzten Gegenstand der Art "%s" identifiziert.
 %%%%
 
 ##################
@@ -11090,11 +11048,8 @@ Recognised items. (- for unrecognised, select to toggle autopickup)
 You recognise all items. (Select to toggle autopickup)
 
 %%%%
-(_ for help)
-
-%%%%
 Other Items
-
+Andere Gegenstände
 %%%%
 
 ##################
@@ -11862,10 +11817,25 @@ stacks
 quantity
 
 %%%%
+slot
+
+%%%%
 ininventory
 
 %%%%
+wield
+
+%%%%
+wear
+
+%%%%
 puton
+
+%%%%
+remove
+
+%%%%
+drop
 
 %%%%
 dropped
@@ -11896,6 +11866,12 @@ description
 
 %%%%
 pluses
+
+%%%%
+destroy
+
+%%%%
+inventory
 
 %%%%
 inslot
@@ -13933,6 +13909,9 @@ lua_marker: Erwartete Tabelle, habe es nicht verstanden.
 %%%%
 Couldn't find table.
 Tisch konnte nicht gefunden werden.
+%%%%
+read
+
 %%%%
 lua_marker: write error: %s
 
@@ -16651,6 +16630,9 @@ empowered
 spells empowered
 
 %%%%
+charged
+
+%%%%
 fully charged
 
 %%%%
@@ -17739,6 +17721,9 @@ eye-stalk
 leaf
 
 %%%%
+body
+
+%%%%
 rhizome
 
 %%%%
@@ -17943,6 +17928,9 @@ The barbed spikes dig painfully into your body as you move.
 
 %%%%
 The barbed spikes snap loose.
+
+%%%%
+"Your "
 
 %%%%
 " will break if you move. Continue?"
@@ -23098,9 +23086,6 @@ Zap
 
 %%%%
 action
-
-%%%%
-Really quiver %s?
 
 %%%%
 Quiver which item? (- for none, * to toggle full inventory)
@@ -30429,16 +30414,16 @@ Sim auf %s abbrechen
 ##################
 %%%%
 "Enter name of item (or ITEM spec): "
-Namen des Artikels (oder die ITEM-Spezifikation):
+"Namen des Objekts (oder die Objekt-Spezifikation): "
 %%%%
 ) - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls
-) - Waffen (- Raketen [- Rüstungen / - Zauberstäbe? - Schriftrollen
+) - Waffen    ( - Geschosse   [ - Rüstung   / - Zauberstäbe   ? - Schriftrollen
 %%%%
 = - jewellery   ! - potions   : - books   | - staves   }  - miscellany
-= - Schmuck! - Tränke: - Bücher | - Dauben} - Verschiedenes
+= - Schmuck   ! - Tränke      : - Bücher    | - Stecken       } - Verschiedenes
 %%%%
 X - corpses     $ - gold    0  - the Orb
-
+X - Leichen   $ - Gold        0 - die Kugel
 %%%%
 ESC - exit
 ESC - exit
