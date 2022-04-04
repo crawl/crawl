@@ -1367,24 +1367,6 @@ MAP
                .       .       .       .
 ENDMAP
 
-NAME:   hellmonk_warped_wall
-TAGS:   transparent ruin
-DEPTH:  D:6-, Lair, Depths
-WEIGHT: 5
-ORIENT: float
-TILE:   c = wall_stone_smooth
-SUBST:  . : .......W
-MAP
-                                .........@
-........                      ..cccccccccc
-cccccccc....                ..ccccccc.....
-@....ccccccc..             .cccc.....
-     ....ccccc.............ccc..
-         ...cccccccccccccccc..
-            .....cccccc.....
-                 ......
-ENDMAP
-
 NAME:   hellmonk_crumbling_castle
 TAGS:   transparent ruin
 DEPTH:  D:6-, Depths

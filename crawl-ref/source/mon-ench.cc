@@ -618,9 +618,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                          : me.ench == ENCH_HEXED ? "hexed"
                                                  : "bribed");
 
-                mprf("You can %s detect the %s.",
+                mprf("You can %s detect %s.",
                      friendly() ? "once again" : "no longer",
-                     name(DESC_PLAIN, true).c_str());
+                     name(DESC_THE, true).c_str());
             }
 
             autotoggle_autopickup(friendly());

@@ -3992,6 +3992,9 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_GHOUL:
             return TILEG_SP_GHOUL;
         case SP_TENGU:
+#if TAG_MAJOR_VERSION == 34
+        case SP_MAYFLYTAUR:
+#endif
             return TILEG_SP_TENGU;
         case SP_MERFOLK:
             return TILEG_SP_MERFOLK;
