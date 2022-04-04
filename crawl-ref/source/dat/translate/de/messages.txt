@@ -9955,1208 +9955,6 @@ Noch keine Highscores...
 %%%%
 
 ##################
-# initfile.cc
-##################
-%%%%
-50:yellow, 25:red
-
-%%%%
-3:red
-
-%%%%
-avoid
-
-%%%%
-approach
-
-%%%%
-open
-
-%%%%
-false
-
-%%%%
-true
-
-%%%%
-morgue/
-
-%%%%
-#646464
-
-%%%%
-!?/=([)}:|
-
-%%%%
-#ff7788
-
-%%%%
-#001122
-
-%%%%
-#775544
-
-%%%%
-#ff00ff
-
-%%%%
-#552266
-
-%%%%
-#6B301B
-
-%%%%
-#997700
-
-%%%%
-#333333
-
-%%%%
-#005544
-
-%%%%
-#552211
-
-%%%%
-#222266
-
-%%%%
-#444499
-
-%%%%
-#660000
-
-%%%%
-#446633
-
-%%%%
-#ffdd00
-
-%%%%
-#aa6644
-
-%%%%
-#0000ff
-
-%%%%
-#5200aa
-
-%%%%
-#666666
-
-%%%%
-#114455
-
-%%%%
-#558855
-
-%%%%
-minimap, command, inventory, command2, spell, ability, monster
-
-%%%%
-minimap, inventory, command, spell, ability, monster
-
-%%%%
-monospace
-
-%%%%
-plain
-
-%%%%
-prompt
-
-%%%%
-god
-
-%%%%
-duration
-
-%%%%
-danger
-
-%%%%
-warning
-
-%%%%
-recovery
-
-%%%%
-sound
-
-%%%%
-talk
-
-%%%%
-equipment
-
-%%%%
-multiturn
-
-%%%%
-examine
-
-%%%%
-diagnostic
-
-%%%%
-error
-
-%%%%
-tutorial
-
-%%%%
-sling
-
-%%%%
-crossbow
-
-%%%%
-thrown
-
-%%%%
-rocks
-
-%%%%
-boomerangs
-
-%%%%
-javelins
-
-%%%%
-viable
-
-%%%%
-normal
-
-%%%%
-seeded
-
-%%%%
-arena
-
-%%%%
-sprint
-
-%%%%
-hints
-
-%%%%
-Bad enemy_hp_colour: %s\n
-
-%%%%
-named
-
-%%%%
-enemy
-
-%%%%
-memorise
-
-%%%%
-interrupt_armour_on = hp_loss, monster_attack, monster, mimic
-
-%%%%
-interrupt_armour_off = interrupt_armour_on
-
-%%%%
-interrupt_drop_item = interrupt_armour_on
-
-%%%%
-interrupt_jewellery_on = interrupt_armour_on
-
-%%%%
-interrupt_memorise = hp_loss, monster_attack, stat
-
-%%%%
-interrupt_butcher = interrupt_armour_on, teleport, stat
-
-%%%%
-interrupt_exsanguinate = interrupt_butcher
-
-%%%%
-interrupt_revivify = interrupt_butcher
-
-%%%%
-interrupt_multidrop = hp_loss, monster_attack, teleport, stat
-
-%%%%
-interrupt_macro = interrupt_multidrop
-
-%%%%
-interrupt_travel = interrupt_butcher, hit_monster, sense_monster
-
-%%%%
-interrupt_run = interrupt_travel, message
-
-%%%%
-interrupt_rest = interrupt_run, full_hp, full_mp, ancestor_hp
-
-%%%%
-interrupt_ascending_stairs = teleport
-
-%%%%
-interrupt_descending_stairs = teleport
-
-%%%%
-"interrupt_drop_item = "
-
-%%%%
-interrupt_jewellery_off =
-
-%%%%
-Unknown delay: %s\n
-
-%%%%
-Delay interrupt name "%s" not recognised.\n
-
-%%%%
-./
-
-%%%%
-HOME
-
-%%%%
-saves/
-
-%%%%
-.crawl
-
-%%%%
-settings/
-
-%%%%
-pickup: true
-
-%%%%
-launcher, throwing, inscribed, spell, evokable, ability
-
-%%%%
-all
-
-%%%%
-tiles
-
-%%%%
-header,hiscore,stats,misc,inventory,skills,spells,overview,mutations,messages,screenshot,monlist,kills,notes,screenshots,vaults,skill_gains,action_counts
-
-%%%%
-Invalid glyph override: %X
-Ungültige Glyphenüberschreibung:%X
-%%%%
-Unknown ability '%s'\n
-
-%%%%
-Unknown spell '%s'\n
-
-%%%%
-Unknown monster: "%s"
-
-%%%%
-{
-
-%%%%
-.crawl/init.txt
-
-%%%%
-.crawlrc
-
-%%%%
-../settings
-
-%%%%
-clua/stash.lua
-
-%%%%
-clua/delays.lua
-
-%%%%
-clua/autofight.lua
-
-%%%%
-clua/automagic.lua
-
-%%%%
-clua/kills.lua
-
-%%%%
-defaults/autopickup_exceptions.txt
-
-%%%%
-defaults/runrest_messages.txt
-
-%%%%
-defaults/standard_colours.txt
-
-%%%%
-defaults/menu_colours.txt
-
-%%%%
-defaults/glyph_colours.txt
-
-%%%%
-defaults/messages.txt
-
-%%%%
-defaults/misc.txt
-
-%%%%
-center_on_scroll := centre_on_scroll
-
-%%%%
-extra opts first
-
-%%%%
-~/.crawlrc
-
-%%%%
-extra opts last
-
-%%%%
-]==])
-
-%%%%
-User lua is disabled in this build! `%s`
-
-%%%%
-crawl.setopt([==[
-
-%%%%
-User lua is disabled in this build! (file: %s)
-
-%%%%
-Save directory
-
-%%%%
-Cannot create save directory '%s'
-
-%%%%
-Morgue directory
-
-%%%%
-Cannot create morgue directory '%s'
-
-%%%%
-friend
-
-%%%%
-other
-
-%%%%
-Can't find base tile "%s" of variant tile "%s"
-
-%%%%
-Unknown tile: "%s"
-
-%%%%
-Invalid setting for tile_player_tile: "%s"
-
-%%%%
-Invalid %s tile offsets: "%s"
-
-%%%%
-$
-
-%%%%
-" = false"
-
-%%%%
-" = true"
-
-%%%%
-" = "
-
-%%%%
-Setting crawl_dir to `%s`.
-
-%%%%
-Bad bindkey bracketing in '%s'
-Schlechte Bindkey-Belichtungsreihe in '%s'
-%%%%
-No key in bindkey directive '%s'
-Kein Schlüssel in der Bindkey-Direktive '%s'
-%%%%
-Invalid key '%s' in bindkey directive '%s'
-Ungültiger Schlüssel '%s' in der Bindkey-Direktive '%s'
-%%%%
-Invalid keyseq '%s' in bindkey directive '%s'
-
-%%%%
-No command name for bindkey directive '%s'
-Kein Befehlsname für die Bindkey-Direktive '%s'
-%%%%
-No command named '%s'
-Kein Befehl mit dem Namen '%s'
-%%%%
-Bad object type '%*s' for autopickup.\n
-
-%%%%
-Bad character set, using default: %s\n
-
-%%%%
-No translations for language '%s'.\nLanguages with at least partial translation: %s
-
-%%%%
-lua_file failed: clua not enabled on this build!
-
-%%%%
-Bad colour -- %s=%d or %s=%d\n
-
-%%%%
-Bad channel -- %s
-
-%%%%
-Bad colour -- %s
-
-%%%%
-;
-
-%%%%
-Bad fire item start index: %s\n
-
-%%%%
-Unknown show_god_gift value: %s\n
-
-%%%%
-Unknown wiz_mode option: %s\n
-
-%%%%
-Unknown explore_mode option: %s\n
-
-%%%%
-Autoinscribe string must have exactly one colon: %s\n
-
-%%%%
-Autoinscribe pattern is empty: %s\n
-
-%%%%
-Autoinscribe result is empty: %s\n
-
-%%%%
-Error parsing autoinscribe string: %s\n
-
-%%%%
-Bad monster_list_colour string: %s\n
-
-%%%%
-Bad monster_list_colour: %s
-
-%%%%
-Bad monster_list_colour key: %s\n
-
-%%%%
-Bad skill level to note -- %s\n
-
-%%%%
-Error parsing %s string: %s\n
-
-%%%%
-"macro "
-
-%%%%
-playermons
-
-%%%%
-Unknown value for tile_display_mode: '%s' (possible values: tiles/glyphs/hybrid
-
-%%%%
-No variable named '%s' to make constant
-
-%%%%
-'%s' is already a constant
-
-%%%%
-%
-
-%%%%
-Full pregeneration is not allowed on this build of crawl.
-
-%%%%
-Unknown value '%s' for pregen_dungeon.
-
-%%%%
-Expected a decimal value for tile_viewport_scale, but got '%s'.
-
-%%%%
-Expected a decimal value for tile_map_scale, but got '%s'.
-
-%%%%
-dwarven
-
-%%%%
-jäger
-
-%%%%
-jägerkin
-
-%%%%
-jager
-
-%%%%
-jagerkin
-
-%%%%
-jaeger
-
-%%%%
-jaegerkin
-
-%%%%
-de
-
-%%%%
-german
-
-%%%%
-kraut
-
-%%%%
-jerry
-
-%%%%
-fritz
-
-%%%%
-futhark
-
-%%%%
-runes
-
-%%%%
-runic
-
-%%%%
-wide
-
-%%%%
-doublewidth
-
-%%%%
-fullwidth
-
-%%%%
-grunt
-
-%%%%
-sgrunt
-
-%%%%
-butt
-
-%%%%
-buttbot
-
-%%%%
-tef
-
-%%%%
-english
-
-%%%%
-en
-
-%%%%
-c
-
-%%%%
-cs
-
-%%%%
-czech
-
-%%%%
-český
-
-%%%%
-cesky
-
-%%%%
-da
-
-%%%%
-danish
-
-%%%%
-dansk
-
-%%%%
-deutsch
-
-%%%%
-el
-
-%%%%
-greek
-
-%%%%
-ελληνικά
-
-%%%%
-ελληνικα
-
-%%%%
-es
-
-%%%%
-spanish
-
-%%%%
-español
-
-%%%%
-espanol
-
-%%%%
-fi
-
-%%%%
-finnish
-
-%%%%
-suomi
-
-%%%%
-fr
-
-%%%%
-french
-
-%%%%
-français
-
-%%%%
-francais
-
-%%%%
-hu
-
-%%%%
-hungarian
-
-%%%%
-magyar
-
-%%%%
-it
-
-%%%%
-italian
-
-%%%%
-italiano
-
-%%%%
-ja
-
-%%%%
-japanese
-
-%%%%
-日本人
-
-%%%%
-ko
-
-%%%%
-korean
-
-%%%%
-한국의
-
-%%%%
-lt
-
-%%%%
-lithuanian
-
-%%%%
-lietuvos
-
-%%%%
-lv
-
-%%%%
-latvian
-
-%%%%
-lettish
-
-%%%%
-latvijas
-
-%%%%
-latviešu
-
-%%%%
-latvieshu
-
-%%%%
-latviesu
-
-%%%%
-nl
-
-%%%%
-dutch
-
-%%%%
-nederlands
-
-%%%%
-pl
-
-%%%%
-polish
-
-%%%%
-polski
-
-%%%%
-pt
-
-%%%%
-portuguese
-
-%%%%
-português
-
-%%%%
-portugues
-
-%%%%
-ru
-
-%%%%
-russian
-
-%%%%
-русский
-
-%%%%
-русскии
-
-%%%%
-sv
-
-%%%%
-swedish
-
-%%%%
-svenska
-
-%%%%
-zh
-
-%%%%
-chinese
-
-%%%%
-中国的
-
-%%%%
-中國的
-
-%%%%
-Too many fake langs; maximum is %d
-
-%%%%
-Invalid fake-lang format: %s
-
-%%%%
-Lang %s doesn't take a value
-
-%%%%
-Invalid value '%s' provided for lang
-
-%%%%
-Unknown language %s!
-
-%%%%
-Cannot find %sfile "%s".
-
-%%%%
-Cannot include %sfile: %s
-
-%%%%
-Options error: %s (%s:%d)
-
-%%%%
-Library/Application Support/
-
-%%%%
-SIMPLEMAIL
-
-%%%%
-0
-
-%%%%
-MAIL
-
-%%%%
-scores
-
-%%%%
-name
-
-%%%%
-species
-
-%%%%
-background
-
-%%%%
-dir
-
-%%%%
-rc
-
-%%%%
-rcdir
-
-%%%%
-tscores
-
-%%%%
-vscores
-
-%%%%
-scorefile
-
-%%%%
-morgue
-
-%%%%
-macro
-
-%%%%
-mapstat
-
-%%%%
-dump-disconnect
-
-%%%%
-objstat
-
-%%%%
-iters
-
-%%%%
-force-map
-
-%%%%
-dump-maps
-
-%%%%
-test
-
-%%%%
-script
-
-%%%%
-builddb
-
-%%%%
-help
-
-%%%%
-version
-
-%%%%
-seed
-
-%%%%
-pregen
-
-%%%%
-save-version
-
-%%%%
-extra-opt-first
-
-%%%%
-extra-opt-last
-
-%%%%
-sprint-map
-
-%%%%
-edit-save
-
-%%%%
-print-charset
-
-%%%%
-explore
-
-%%%%
-no-save
-
-%%%%
-gdb
-
-%%%%
-no-gdb
-
-%%%%
-nogdb
-
-%%%%
-throttle
-
-%%%%
-no-throttle
-
-%%%%
-playable-json
-
-%%%%
-branches-json
-
-%%%%
-save-json
-
-%%%%
-gametypes-json
-
-%%%%
-bones
-
-%%%%
-webtiles-socket
-
-%%%%
-await-connection
-
-%%%%
-print-webtiles-options
-
-%%%%
-/proc/self/exe
-
-%%%%
-Crawl version %s%s
-
-%%%%
-Save file version %d.%d%s
-
-%%%%
-chr
-
-%%%%
-Save file is invalid.
-
-%%%%
-Save file version for %s is %d.%d\n
-
-%%%%
-ls
-
-%%%%
-get
-
-%%%%
-put
-
-%%%%
-rm
-
-%%%%
-repack
-
-%%%%
-info
-
-%%%%
-merge
-
-%%%%
-rewrite
-
-%%%%
-Usage: crawl --edit-save <name> <command>, where <command> may be:\n  ls                          list the chunks\n  info                        list detailed chunk and frag info\n  get <chunk> [<chunkfile>]   extract a chunk into <chunkfile>\n  put <chunk> [<chunkfile>]   import a chunk from <chunkfile>\n     <chunkfile> defaults to "chunk"; use "-" for stdout/stdin\n  rm <chunk>                  delete a chunk\n  repack                      defrag and reclaim unused space\n
-
-%%%%
-Too few arguments for %s.\n
-
-%%%%
-Too many arguments for %s.\n
-
-%%%%
-Unknown command: %s.\n
-
-%%%%
-Invalid chunk name "%s".\n
-
-%%%%
-No such chunk in the save file.\n
-
-%%%%
-chunk
-
-%%%%
--
-
-%%%%
-Can't open "%s" for writing
-
-%%%%
-Error writing "%s"
-
-%%%%
-Write error on close of "%s"
-
-%%%%
-Can't read "%s"
-
-%%%%
-Error reading "%s"
-
-%%%%
-.tmp
-
-%%%%
-Chunks: (size compressed/uncompressed, fragments, name)\n
-
-%%%%
-Fragmentation:    %u/%u (%4.2f)\n
-
-%%%%
-Unused space:     %u/%u (%u%%)\n
-
-%%%%
-"File doesn't exist: "
-
-%%%%
-"Couldn't write to bones file "
-
-%%%%
-Bones file '
-
-%%%%
-"', version "
-
-%%%%
-:\n
-
-%%%%
-#######################\n
-
-%%%%
-" XL"
-
-%%%%
-"No matching ghosts for "
-
-%%%%
-Empty ghost file.\n
-
-%%%%
-" ghosts total\n"
-
-%%%%
-Rewriting '
-
-%%%%
-'
-
-%%%%
-" without ghost '"
-
-%%%%
-" duplicates removed"
-
-%%%%
-No matching ghosts for '
-
-%%%%
-'\n
-
-%%%%
-"Too many ghosts! Capping merge at "
-
-%%%%
-Writing empty bones file
-
-%%%%
-"Writing "
-
-%%%%
-" ghosts"
-
-%%%%
-" to "
-
-%%%%
-Usage: crawl --bones <command> ARGS, where <command> may be:\n  ls <file> [<name>] [--long] List the ghosts in <file>\n                              --long shows full monster descriptions\n  merge <file1> <file2>       Merge two bones files together, rewriting into\n                              <file2>. Capped at %d; read in reverse order.\n  rm <file> <name>            Rewrite a ghost file without <name>\n  rewrite <file> [--dedup]    Rewrite a ghost file, fixing up version etc.\n
-
-%%%%
-'%s' doesn't exist!\n
-
-%%%%
---long
-
-%%%%
-Unknown extra option to ls: '%s'\n
-
-%%%%
---dedup
-
-%%%%
-Unknown extra argument to rewrite: '%s'\n
-
-%%%%
-Bones file '%s' is from the future (%d.%d), this instance of crawl needs %d.%d.\n
-
-%%%%
-Error: %s\n
-
-%%%%
-=
-
-%%%%
-mapstat and objstat are available only in DEBUG_STATISTICS builds.
-
-%%%%
-list
-
-%%%%
--script must specify comma-separated script names
-
-%%%%
-GDB disabled via the command line.
-
-%%%%
-UNICODE\n
-
-%%%%
-This option is for DGL use only.\n
-
-%%%%
-Cannot find -rcdir "%s"
-
-%%%%
-any:
-
-%%%%
-inv:
-
-%%%%
-drop:
-
-%%%%
-pickup:
-
-%%%%
-know:
-
-%%%%
-auto:
-
-%%%%
-equipped, basename, qualname, curse, qty
-
-%%%%
-
-##################
 # invent.cc
 ##################
 %%%%
@@ -11947,6 +10745,9 @@ Select pick up quantity by entering a number, then select the item
 "found "
 
 %%%%
+it
+
+%%%%
 Original Equipment
 
 %%%%
@@ -12274,6 +11075,9 @@ manuals
 spellbooks
 
 %%%%
+runes
+
+%%%%
 "unknown "
 
 %%%%
@@ -12374,6 +11178,9 @@ long
 must be a string "long", "short", or "major"
 
 %%%%
+tutorial
+
+%%%%
 ranger
 
 %%%%
@@ -12423,6 +11230,9 @@ sendkeys
 
 %%%%
 playsound
+
+%%%%
+version
 
 %%%%
 crawl
@@ -12481,6 +11291,9 @@ unknown thing to disable: %s
 : (
 
 %%%%
+%
+
+%%%%
 seed: %
 
 %%%%
@@ -12535,6 +11348,9 @@ Can't set floor to black.
 
 %%%%
 No such colour as '
+
+%%%%
+'
 
 %%%%
 Can't set rock to black.
@@ -12619,6 +11435,9 @@ Expected map-bounds check fn and action fn.
 
 %%%%
 Expected vault_placement
+
+%%%%
+name
 
 %%%%
 filename
@@ -13096,6 +11915,9 @@ findray
 start
 
 %%%%
+dir
+
+%%%%
 advance
 
 %%%%
@@ -13329,6 +12151,9 @@ turns
 time
 
 %%%%
+memorise
+
+%%%%
 abilities
 
 %%%%
@@ -13336,6 +12161,9 @@ race
 
 %%%%
 genus
+
+%%%%
+god
 
 %%%%
 mp
@@ -13811,6 +12639,9 @@ edit keymaps
 
 %%%%
 "] "
+
+%%%%
+macro
 
 %%%%
 regular keymap
@@ -14882,6 +13713,9 @@ Fatal lua error while resolving subvault '%s'
 Could not fit '%s' in (%d,%d) to (%d, %d).
 
 %%%%
+;
+
+%%%%
 Invalid spell slot format: '%s' in '%s'
 
 %%%%
@@ -14961,6 +13795,9 @@ Index out of range: %d
 
 %%%%
 " spectre"
+
+%%%%
+-
 
 %%%%
 archmagi
@@ -16344,6 +15181,12 @@ Ihr werdet in das Netz verwickelt!
 %%%%
 You get stuck in the web!
 Ihr steckt im Web fest!
+%%%%
+true
+
+%%%%
+false
+
 %%%%
 maybe
 
@@ -18174,6 +17017,9 @@ extremely fast
 
 %%%%
 very fast
+
+%%%%
+normal
 
 %%%%
 with wands
@@ -22220,6 +21066,12 @@ background-sub
 species-sub
 
 %%%%
+background
+
+%%%%
+species
+
+%%%%
 "+ - Recommended "
 
 %%%%
@@ -22266,6 +21118,12 @@ sub-items
 
 %%%%
 large rocks
+
+%%%%
+boomerangs
+
+%%%%
+javelins
 
 %%%%
 " and throwing nets"
@@ -26229,6 +25087,9 @@ focus
 useful
 
 %%%%
+all
+
+%%%%
 modified
 
 %%%%
@@ -26263,6 +25124,9 @@ freeform
 
 %%%%
 highlighter
+
+%%%%
+0
 
 %%%%
 "Enter a skill target for %s: "
@@ -29204,6 +28068,9 @@ b
 .*
 
 %%%%
+{
+
+%%%%
 Enter for "%s"
 
 %%%%
@@ -29223,6 +28090,9 @@ Too many matches; use a more specific search.
 Zu viele Übereinstimmungen; verwende eine spezifischere Suche.
 %%%%
 %d match%s
+
+%%%%
+es
 
 %%%%
 <lightgrey>: only useless items found; press <w>=</w> to show.                    </lightgrey>
@@ -29919,6 +28789,9 @@ suddenly appears
 
 %%%%
 moves
+
+%%%%
+" to "
 
 %%%%
 swap_features(): No boring squares on level?
@@ -30895,6 +29768,9 @@ Have to go through %s. Continue?
 
 %%%%
 intertravel
+
+%%%%
+explore
 
 %%%%
 unopened runed door
