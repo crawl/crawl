@@ -1411,6 +1411,22 @@ MAP
      ...                             ...
 ENDMAP
 
+NAME:   crystal_passage
+DEPTH:  D, Depths
+TAGS:   transparent extra no_monster_gen
+KITEM:   d = any potion
+MAP
+xxxb@bxxx
+xxxb.bxxx
+xxxb.bxxx
+bbbT.Tbbb
+@...d...@
+bbbT.Tbbb
+xxxb.bxxx
+xxxb.bxxx
+xxxb@bxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.

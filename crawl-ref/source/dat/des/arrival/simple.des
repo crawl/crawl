@@ -2508,3 +2508,44 @@ tt.........tt
  tt.......tt
   ttt@@@ttt
 ENDMAP
+
+NAME:   reono_arrival_forest_river
+TAGS:   arrival no_monster_gen no_trap_gen no_pool_fixup
+ORIENT: float
+SUBST:  w = w:5 W:1 t:2
+MAP
+ttttttttt
+twwwtwwwt
+twww{wwwt
+twwwWwwwt
+twwwWwwwt
+twwwWwwwt
+twwwWwwwt
+twwwWwwwt
+twwwWwwwt
+twwwWwwwt
+twwwWwwwt
+twwwWwwwt
+twww@wwwt
+ENDMAP
+
+NAME:   reono_arrival_mine
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: float
+SUBST:  x = x:10 c:5 v:3 b:3
+MAP
+xxxxxxxxx
+xxxx{xxxx
+xxxxx.xxx
+xxxx.xxxx
+xxx.xxxxx
+xxxx.xxxx
+xxxxx.xxx
+xxxx.xxxx
+xxx.xxxxx
+xxxx.xxxx
+xxxxx.xxx
+xxxx@xxxx
+ENDMAP
+
+################################################################################
