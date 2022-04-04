@@ -37,6 +37,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "localise.h"
 #include "menu.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -422,8 +423,8 @@ UIHiscoresMenu::UIHiscoresMenu()
     title_hbox->add_child(move(tile));
 #endif
 
-    auto title = make_shared<Text>(formatted_string(
-                "Dungeon Crawl Stone Soup: High Scores", YELLOW));
+    string str = localise("Dungeon Crawl Stone Soup: High Scores");
+    auto title = make_shared<Text>(formatted_string(str, YELLOW));
     title->set_margin_for_sdl(0, 0, 0, 16);
     title_hbox->add_child(move(title));
 
@@ -444,7 +445,8 @@ UIHiscoresMenu::UIHiscoresMenu()
     }
     else
     {
-        auto placeholder = formatted_string("No high scores yet...", DARKGRAY);
+        string msg = localise("No high scores yet...");
+        auto placeholder = formatted_string(msg, DARKGRAY);
         m_root->add_child(make_shared<Text>(placeholder));
         initial_focus = this;
     }

@@ -9938,971 +9938,20 @@ Fehler, keine Nachricht für '%s'.
 # hiscores.cc
 ##################
 %%%%
-0.1
-
-%%%%
-scores
-
-%%%%
--
-
-%%%%
-logfile
-
-%%%%
-a+
-
-%%%%
 failed to open score file for writing
-
+Konnte Highscoresdatei fürs Schreiben nicht offen
 %%%%
 unable to truncate scorefile
-
+Konnte Highscoresdatei nicht trunkieren
 %%%%
 ERROR: failure writing to the logfile.
 FEHLER: Fehler beim Schreiben in die Protokolldatei.
 %%%%
-r
-
-%%%%
-No scores.
-
-%%%%
-.txt
-
-%%%%
-<<
-
-%%%%
 Dungeon Crawl Stone Soup: High Scores
-
+Dungeon Crawl Stone Soup: Highscores
 %%%%
 No high scores yet...
-
-%%%%
-"Shot "
-
-%%%%
-shot
-
-%%%%
-"Hit "
-
-%%%%
-"volley "
-
-%%%%
-hit from afar
-
-%%%%
-blasted
-
-%%%%
-Jan
-
-%%%%
-Feb
-
-%%%%
-Mar
-
-%%%%
-Apr
-
-%%%%
-May
-
-%%%%
-June
-
-%%%%
-July
-
-%%%%
-Aug
-
-%%%%
-Sept
-
-%%%%
-Oct
-
-%%%%
-Nov
-
-%%%%
-Dec
-
-%%%%
-mon
-
-%%%%
-pois
-
-%%%%
-cloud
-
-%%%%
-beam
-
-%%%%
-stupidity
-
-%%%%
-weakness
-
-%%%%
-clumsiness
-
-%%%%
-leaving
-
-%%%%
-winning
-
-%%%%
-quitting
-
-%%%%
-wizmode
-
-%%%%
-starvation
-
-%%%%
-burning
-
-%%%%
-xom
-
-%%%%
-rotting
-
-%%%%
-targeting
-
-%%%%
-spore
-
-%%%%
-petrification
-
-%%%%
-bounce
-
-%%%%
-disintegration
-
-%%%%
-headbutt
-
-%%%%
-rolling
-
-%%%%
-spines
-
-%%%%
-frailty
-
-%%%%
-barbs
-
-%%%%
-collision
-
-%%%%
-zot
-
-%%%%
-constriction
-
-%%%%
-Thief
-
-%%%%
-Death Knight
-
-%%%%
-Paladin
-
-%%%%
-Reaver
-
-%%%%
-Healer
-
-%%%%
-Th
-
-%%%%
-DK
-
-%%%%
-Re
-
-%%%%
-St
-
-%%%%
-Jr
-
-%%%%
-Pr
-
-%%%%
-He
-
-%%%%
-Sk
-
-%%%%
-Hill Dwarf
-
-%%%%
-Ogre-Mage
-
-%%%%
-Grey Elf
-
-%%%%
-Gnome
-
-%%%%
-Mountain Dwarf
-
-%%%%
-Unknown (buggy) species!
-
-%%%%
-El
-
-%%%%
-HD
-
-%%%%
-OM
-
-%%%%
-GE
-
-%%%%
-MD
-
-%%%%
-SE
-
-%%%%
-LO
-
-%%%%
-v
-
-%%%%
-vsavrv
-
-%%%%
-vsav
-
-%%%%
-tiles
-
-%%%%
-sc
-
-%%%%
-name
-
-%%%%
-race
-
-%%%%
-cls
-
-%%%%
-xl
-
-%%%%
-char
-
-%%%%
-sk
-
-%%%%
-sklev
-
-%%%%
-title
-
-%%%%
-ktyp
-
-%%%%
-killer
-
-%%%%
-kaux
-
-%%%%
-ikiller
-
-%%%%
-kpath
-
-%%%%
-banisher
-
-%%%%
-br
-
-%%%%
-lvl
-
-%%%%
-absdepth
-
-%%%%
-map
-
-%%%%
-mapdesc
-
-%%%%
-killermap
-
-%%%%
-hp
-
-%%%%
-mhp
-
-%%%%
-mmhp
-
-%%%%
-mp
-
-%%%%
-mmp
-
-%%%%
-bmmp
-
-%%%%
-dam
-
-%%%%
-sdam
-
-%%%%
-tdam
-
-%%%%
-str
-
-%%%%
-int
-
-%%%%
-dex
-
-%%%%
-ac
-
-%%%%
-ev
-
-%%%%
-sh
-
-%%%%
-god
-
-%%%%
-pen
-
-%%%%
-wiz
-
-%%%%
-explore
-
-%%%%
-start
-
-%%%%
-end
-
-%%%%
-dur
-
-%%%%
-turn
-
-%%%%
-aut
-
-%%%%
-urune
-
-%%%%
-nrune
-
-%%%%
-kills
-
-%%%%
-maxskills
-
-%%%%
-fifteenskills
-
-%%%%
-status
-
-%%%%
-goldfound
-
-%%%%
-goldspent
-
-%%%%
-zigscompleted
-
-%%%%
-zigdeepest
-
-%%%%
-scrollsused
-
-%%%%
-potionsused
-
-%%%%
-seed
-
-%%%%
--sprint.1
-
-%%%%
-vlong
-
-%%%%
-lv
-
-%%%%
-explbr
-
-%%%%
-place
-
-%%%%
-tmsg
-
-%%%%
-vmsg
-
-%%%%
-their own shadow
-
-%%%%
-themself
-
-%%%%
-" (shapeshifter)"
-
-%%%%
-" (glowing shapeshifter)"
-
-%%%%
-" the pandemonium lord"
-
-%%%%
-" (illusionary)"
-
-%%%%
-unique
-
-%%%%
-" by "
-
-%%%%
-"ed to "
-
-%%%%
-unknown source
-
-%%%%
-dgn.persist.calc_score
-
-%%%%
->db
-
-%%%%
-%
-
-%%%%
-The game lasted %s (%d turns).
-
-%%%%
-Slain
-
-%%%%
-Mangled
-
-%%%%
-Demolished
-
-%%%%
-Annihilated
-
-%%%%
-" damage"
-
-%%%%
-"Shot with "
-
-%%%%
-"Hit by "
-
-%%%%
-" thrown by "
-
-%%%%
-W
-
-%%%%
-E
-
-%%%%
-%8d %s the %s (level %d
-
-%%%%
-%8d %s the %s %s (level %d
-
-%%%%
-" HPs"
-
-%%%%
-) *WIZ*
-
-%%%%
-) *EXPLORE*
-
-%%%%
-Began as a%s %s %s
-
-%%%%
-" on "
-
-%%%%
-Was a %sPlaything of Xom.
-
-%%%%
-"Favourite "
-
-%%%%
-Was %s of %s%s
-
-%%%%
-the Champion
-
-%%%%
-a High Priest
-
-%%%%
-an Elder
-
-%%%%
-a Priest
-
-%%%%
-a Believer
-
-%%%%
-a Follower
-
-%%%%
-an Initiate
-
-%%%%
-" (penitent)."
-
-%%%%
-"slain by "
-
-%%%%
-" headbutt"
-
-%%%%
-"Headbutted by "
-
-%%%%
-"squashed by "
-
-%%%%
-"Rolled over by "
-
-%%%%
-" spines"
-
-%%%%
-"Impaled on "
-
-%%%%
-Succumbed to poison
-
-%%%%
-"poisoned by "
-
-%%%%
-"Succumbed to "
-
-%%%%
-their own
-
-%%%%
-"cloud of "
-
-%%%%
-" ["
-
-%%%%
-self
-
-%%%%
-]
-
-%%%%
-Engulfed by %s%s %s
-
-%%%%
-" cloud of"
-
-%%%%
-"%s by "
-
-%%%%
-Killed by their own %s
-
-%%%%
-Killed %s
-
-%%%%
-"Killed by "
-
-%%%%
-"Killed from afar by "
-
-%%%%
-Turned to ash by lava
-
-%%%%
-Took a swim in molten lava
-
-%%%%
-fell apart
-
-%%%%
-Soaked and fell apart
-
-%%%%
-Sank and fell apart
-
-%%%%
-"drowned by "
-
-%%%%
-"Drowned by "
-
-%%%%
-drowned
-
-%%%%
-Drowned
-
-%%%%
-Forgot to exist
-
-%%%%
-Forgot to breathe
-
-%%%%
-collapsed
-
-%%%%
-Collapsed under their own weight
-
-%%%%
-Slipped on a banana peel
-
-%%%%
-Killed by triggering %s
-
-%%%%
-Got out of the dungeon
-
-%%%%
-Safely got out of the dungeon
-
-%%%%
-Got out of the dungeon alive
-
-%%%%
-escaped
-
-%%%%
-Escaped with the Orb
-
-%%%%
-quit
-
-%%%%
-Quit the game
-
-%%%%
-Entered wizard mode
-
-%%%%
-drained
-
-%%%%
-Drained of all life
-
-%%%%
-Starved to death
-
-%%%%
-Frozen to death
-
-%%%%
-burnt
-
-%%%%
-"Incinerated by "
-
-%%%%
-Burnt to a crisp
-
-%%%%
-wild magic
-
-%%%%
-Killed by wild magic
-
-%%%%
-Killed %s%s
-
-%%%%
-"by "
-
-%%%%
-Killed for Xom's enjoyment
-
-%%%%
-Rotted away
-
-%%%%
-shot self
-
-%%%%
-"Killed themself with "
-
-%%%%
-bad targeting
-
-%%%%
-"a badly aimed "
-
-%%%%
-reflected bolt
-
-%%%%
-"Killed by a reflected "
-
-%%%%
-"... reflected by "
-
-%%%%
-bounced beam
-
-%%%%
-"Killed themself with a bounced "
-
-%%%%
-suicidal targeting
-
-%%%%
-"Shot themself with "
-
-%%%%
-a beam
-
-%%%%
-"Killed by an exploding "
-
-%%%%
-smitten by Shining One
-
-%%%%
-Smitten by the Shining One
-
-%%%%
-smitten by Beogh
-
-%%%%
-Smitten by Beogh
-
-%%%%
-Turned to stone
-
-%%%%
-died
-
-%%%%
-Died
-
-%%%%
-fell downstairs
-
-%%%%
-Fell down a flight of stairs
-
-%%%%
-fell through a gate
-
-%%%%
-Fell down through a gate
-
-%%%%
-"Splashed by "
-
-%%%%
-" acid"
-
-%%%%
-Splashed with acid
-
-%%%%
-asphyx
-
-%%%%
-Asphyxiated
-
-%%%%
-divine wrath
-
-%%%%
-Blew themself up
-
-%%%%
-"Blown up by "
-
-%%%%
-Killed by mirror damage
-
-%%%%
-"Became unviable by "
-
-%%%%
-Succumbed to barbed spike wounds
-
-%%%%
-" throw"
-
-%%%%
-"Thrown by "
-
-%%%%
-" collision"
-
-%%%%
-"Collided with "
-
-%%%%
-Tarried too long and was consumed by Zot
-
-%%%%
-"Constricted to death by "
-
-%%%%
-Nibbled to death by software bugs
-
-%%%%
-"... caused by "
-
-%%%%
-[
-
-%%%%
-... %s %d rune%s
-
-%%%%
-and
-
-%%%%
-with
-
-%%%%
-... wielding %s
-
-%%%%
-"... with "
-
-%%%%
-"... by "
-
-%%%%
-"... with an "
-
-%%%%
-"... with a "
-
-%%%%
-... %s by %s
-
-%%%%
-caused
-
-%%%%
-awakened
-
-%%%%
-generated
-
-%%%%
-invoked
-
-%%%%
-"... "
-
-%%%%
-... while paralysed
-
-%%%%
-... while petrified
-
-%%%%
-::
-
-%%%%
-=
-
-%%%%
-milestones
-
-%%%%
-oplace
-
-%%%%
-time
-
-%%%%
-type
-
-%%%%
-milestone
-
+Noch keine Highscores...
 %%%%
 
 ##################
@@ -11015,6 +10064,9 @@ plain
 
 %%%%
 prompt
+
+%%%%
+god
 
 %%%%
 duration
@@ -11180,6 +10232,9 @@ launcher, throwing, inscribed, spell, evokable, ability
 
 %%%%
 all
+
+%%%%
+tiles
 
 %%%%
 header,hiscore,stats,misc,inventory,skills,spells,overview,mutations,messages,screenshot,monlist,kills,notes,screenshots,vaults,skill_gains,action_counts
@@ -11410,6 +10465,9 @@ No variable named '%s' to make constant
 '%s' is already a constant
 
 %%%%
+%
+
+%%%%
 Full pregeneration is not allowed on this build of crawl.
 
 %%%%
@@ -11614,6 +10672,9 @@ lithuanian
 lietuvos
 
 %%%%
+lv
+
+%%%%
 latvian
 
 %%%%
@@ -11731,6 +10792,12 @@ SIMPLEMAIL
 MAIL
 
 %%%%
+scores
+
+%%%%
+name
+
+%%%%
 species
 
 %%%%
@@ -11794,6 +10861,9 @@ help
 version
 
 %%%%
+seed
+
+%%%%
 pregen
 
 %%%%
@@ -11813,6 +10883,9 @@ edit-save
 
 %%%%
 print-charset
+
+%%%%
+explore
 
 %%%%
 no-save
@@ -11918,6 +10991,9 @@ No such chunk in the save file.\n
 
 %%%%
 chunk
+
+%%%%
+-
 
 %%%%
 Can't open "%s" for writing
@@ -12032,6 +11108,9 @@ Bones file '%s' is from the future (%d.%d), this instance of crawl needs %d.%d.\
 
 %%%%
 Error: %s\n
+
+%%%%
+=
 
 %%%%
 mapstat and objstat are available only in DEBUG_STATISTICS builds.
@@ -13106,6 +12185,9 @@ Vanquished Creatures
 "spectral "
 
 %%%%
+" (shapeshifter)"
+
+%%%%
 "The ghost of "
 
 %%%%
@@ -13170,6 +12252,9 @@ write
 
 %%%%
 summary
+
+%%%%
+kills
 
 %%%%
 
@@ -13266,6 +12351,9 @@ equals
 
 %%%%
 Invalid message filter object
+
+%%%%
+<<
 
 %%%%
 traceback
@@ -13539,6 +12627,9 @@ filename
 depth
 
 %%%%
+place
+
+%%%%
 tags
 
 %%%%
@@ -13570,6 +12661,9 @@ lrockcol
 
 %%%%
 normalise
+
+%%%%
+map
 
 %%%%
 mons
@@ -13723,6 +12817,9 @@ width
 # l-dgnevt.cc
 ##################
 %%%%
+type
+
+%%%%
 dest
 
 %%%%
@@ -13736,6 +12833,9 @@ arg2
 
 %%%%
 dgnevent
+
+%%%%
+turn
 
 %%%%
 unused
@@ -13964,6 +13064,9 @@ damage
 accuracy
 
 %%%%
+ac
+
+%%%%
 encumbrance
 
 %%%%
@@ -13988,6 +13091,9 @@ items
 ##################
 %%%%
 findray
+
+%%%%
+start
 
 %%%%
 advance
@@ -14058,6 +13164,9 @@ Don't have a property called '%s'.
 No such enchantment: %s
 
 %%%%
+unique
+
+%%%%
 hd
 
 %%%%
@@ -14065,6 +13174,9 @@ beh
 
 %%%%
 muse
+
+%%%%
+hp
 
 %%%%
 targetx
@@ -14188,6 +13300,9 @@ view
 No such monster: '%s'.
 
 %%%%
+wiz
+
+%%%%
 
 ##################
 # l-you.cc
@@ -14211,13 +13326,25 @@ Unknown skill name `%s`
 turns
 
 %%%%
+time
+
+%%%%
 abilities
+
+%%%%
+race
 
 %%%%
 genus
 
 %%%%
+mp
+
+%%%%
 skill
+
+%%%%
+xl
 
 %%%%
 transform
@@ -14265,7 +13392,13 @@ constricted
 constricting
 
 %%%%
+status
+
+%%%%
 where
+
+%%%%
+absdepth
 
 %%%%
 los
@@ -14538,6 +13671,9 @@ card
 feature
 
 %%%%
+cloud
+
+%%%%
 " Enter a single letter to list %s displayed by that symbol."
 
 %%%%
@@ -14639,6 +13775,9 @@ default
 
 %%%%
 menu
+
+%%%%
+targeting
 
 %%%%
 confirmation
@@ -16148,6 +15287,9 @@ You pierce %s.
 tentacle spike
 
 %%%%
+headbutt
+
+%%%%
 You headbutt %s
 Ihr versetzt {dat}%s einen Kopfstoß
 %%%%
@@ -17066,10 +16208,16 @@ strong
 fleeing
 
 %%%%
+rotting
+
+%%%%
 summoned
 
 %%%%
 charmed
+
+%%%%
+burning
 
 %%%%
 webbed
@@ -17129,6 +16277,9 @@ firewood
 suppressed
 
 %%%%
+rolling
+
+%%%%
 wretched
 
 %%%%
@@ -17136,6 +16287,9 @@ screamed
 
 %%%%
 retching
+
+%%%%
+barbs
 
 %%%%
 icemail
@@ -18503,6 +17657,9 @@ awaken vines
 
 %%%%
 permabribed
+
+%%%%
+drained
 
 %%%%
 repel missiles
@@ -21011,6 +20168,9 @@ Your magical capacity is very low. (-20% MP)
 Your magical capacity is extremely low. (-30% MP)
 
 %%%%
+wild magic
+
+%%%%
 Your spells are a little harder to cast, but a little more powerful.
 
 %%%%
@@ -22649,6 +21809,9 @@ The darkness flees at your approach.
 The shadows grow bolder once more.
 
 %%%%
+xom
+
+%%%%
 good
 
 %%%%
@@ -22679,6 +21842,12 @@ qazlal
 
 %%%%
 [+
+
+%%%%
+]
+
+%%%%
+[
 
 %%%%
 You can breathe fire.
@@ -23439,6 +22608,9 @@ Ring
 
 %%%%
 )</darkgrey>
+
+%%%%
+" ["
 
 %%%%
 "<w>@:</w> "
@@ -26827,6 +25999,9 @@ FEHLER: Sache kann nicht von Einkaufsliste gelöscht werden!
 Your shopping list is now empty.
 Eure Einkaufsliste ist jetzt leer.
 %%%%
+" on "
+
+%%%%
 this level
 
 %%%%
@@ -27950,6 +27125,9 @@ Something sends a blast of sound all around you.
 
 %%%%
 Sound blasts the surrounding area!
+
+%%%%
+blasted
 
 %%%%
 You feel very cold.
@@ -30219,6 +29397,9 @@ slowed movement
 Your movement is slowed on this liquid ground.
 
 %%%%
+Aug
+
+%%%%
 %s is glowing red.
 
 %%%%
@@ -30558,6 +29739,9 @@ Error writing to %s
 Error: monster %s in %s at (%d,%d)
 Fehler: Monster%s in%s bei (%d,%d)
 %%%%
+dgn.persist.calc_score
+
+%%%%
 Failed to save Lua data: %s
 Fehler beim Speichern der Lua-Daten:%s
 %%%%
@@ -30565,6 +29749,9 @@ Git:
 
 %%%%
 Dead monster %s in transit list in saved game, ignoring.
+
+%%%%
+Mountain Dwarf
 
 %%%%
 The Shining One
@@ -32688,13 +31875,22 @@ Welches Monster?
 buggy spell
 
 %%%%
+E
+
+%%%%
 M
+
+%%%%
+W
 
 %%%%
 P
 
 %%%%
 V
+
+%%%%
+br
 
 %%%%
 in
