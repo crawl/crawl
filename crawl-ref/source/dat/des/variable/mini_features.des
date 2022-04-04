@@ -3268,6 +3268,21 @@ v..vvv.vvv..v..vvv.vvv.
     ..v..   .   ..
 ENDMAP
 
+NAME:   reono_crystal_passage
+DEPTH:  D, Depths
+TAGS:   transparent extra decor
+MAP
+mmmm@mmmm
+mbbm.mbbm
+mbbm.mbbm
+mmmm.mmmm
+@.......@
+mmmm.mmmm
+mbbm.mbbm
+mbbm.mbbm
+mmmm@mmmm
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
